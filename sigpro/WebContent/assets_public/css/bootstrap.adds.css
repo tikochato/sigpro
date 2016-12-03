@@ -1,0 +1,10 @@
+@CHARSET "UTF-8";
+
+.div-center {
+   margin-right: auto;
+   margin-left: auto;
+}
+
+.no-border{
+	border:0px solid transparent;
+}
