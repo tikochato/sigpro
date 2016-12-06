@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" metadata-complete="false" version="3.1">
+  <display-name>Sigpro</display-name>
+  <welcome-file-list>
+    <welcome-file>main.jsp</welcome-file>
+  </welcome-file-list>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/error.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/notfound.jsp</location>
+  </error-page>
+  <listener>
+    <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
+  </listener>
+  <filter>
+    <display-name>JsessionId Filter</display-name>
+    <filter-name>jsessionIdAvoiderFilter</filter-name>
+    <filter-class>shiro.utilities.CJsessionIdAvoiderFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>jsessionIdAvoiderFilter</filter-name>
+    <url-pattern>/login.jsp</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
+  <filter>
+    <filter-name>ShiroFilter</filter-name>
+    <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>ShiroFilter</filter-name>
+    <url-pattern>/*</url-pattern> 
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+  </filter-mapping>
+  <session-config>
+    <session-timeout>30</session-timeout>
+    <tracking-mode>COOKIE</tracking-mode>
+  </session-config>
+  <resource-ref>
+    <description>Main DS</description>
+    <res-ref-name>jdbc/sigpro</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+  </resource-ref>
+  <resource-ref>
+    <description>Local DS</description>
+    <res-ref-name>jdbc/TestDB</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+  </resource-ref>
+</web-app>
