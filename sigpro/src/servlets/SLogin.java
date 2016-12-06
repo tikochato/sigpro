@@ -75,7 +75,7 @@ public class SLogin extends HttpServlet {
 
 			try {
 				currentUser.login(token);
-				Usuario user=UsuarioDAO.getUsusuario(map.get("username").toLowerCase());
+				Usuario user=UsuarioDAO.getUsuario(map.get("username").toLowerCase());
 				CShiro.setAttribute("username", user.getUsuario());
 				CShiro.setAttribute("user",user);
 				response.getWriter().write("{ \"success\": true }");

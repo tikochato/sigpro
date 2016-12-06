@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.gson.GsonBuilder;
 
-
 @WebServlet("/SFormaEjemploGrid")
 public class SFormaEjemploGrid extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -91,6 +90,5 @@ public class SFormaEjemploGrid extends HttpServlet {
 			output.close();
 
 		}
-
 	}
 }

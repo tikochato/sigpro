@@ -61,7 +61,6 @@ public class SFormaEjemplo extends HttpServlet {
 			sb.append(str);
 		}
 		;
-		System.out.println(sb.toString());
 		Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String action = map.get("action");
 

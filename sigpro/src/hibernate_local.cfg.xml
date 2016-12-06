@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+    	<property name="hibernate.connection.datasource">java:comp/env/jdbc/TestDB</property>
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.search.autoregister_listeners">true</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
+        <property name="hibernate.enable_lazy_load_no_trans">true</property>
+        <property name="hibernate.validator.apply_to_ddl">false</property>
+        <mapping class="pojo.ProductoPropiedad" />
+        <mapping class="pojo.RiesgoTipo" />
+        <mapping class="pojo.HitoResultado" />
+        <mapping class="pojo.UsuarioPermiso" />
+        <mapping class="pojo.ProyectoPropiedad" />
+        <mapping class="pojo.ProyectoPropiedadCatalogo" />
+        <mapping class="pojo.Desembolso" />
+        <mapping class="pojo.FormularioItemValor" />
+        <mapping class="pojo.RiesgoPropiedad" />
+        <mapping class="pojo.Recurso" />
+        <mapping class="pojo.MetaTipo" />
+        <mapping class="pojo.ObjetoFormulario" />
+        <mapping class="pojo.FormularioItemTipo" />
+        <mapping class="pojo.ProductoPropiedadValor" />
+        <mapping class="pojo.Proyecto" />
+        <mapping class="pojo.Entidad" />
+        <mapping class="pojo.FormularioItem" />
+        <mapping class="pojo.Usuario" />
+        <mapping class="pojo.Producto" />
+        <mapping class="pojo.ComponentePropiedad" />
+        <mapping class="pojo.RtipoPropiedad" />
+        <mapping class="pojo.DatoTipo" />
+        <mapping class="pojo.ComponentePropiedadValor" />
+        <mapping class="pojo.RecursoUnidadMedida" />
+        <mapping class="pojo.ComponenteTipo" />
+        <mapping class="pojo.Rol" />
+        <mapping class="pojo.Meta" />
+        <mapping class="pojo.Riesgo" />
+        <mapping class="pojo.Permiso" />
+        <mapping class="pojo.RecursoTipo" />
+        <mapping class="pojo.PtipoPropiedad" />
+        <mapping class="pojo.MetaUnidadMedida" />
+        <mapping class="pojo.MetaValor" />
+        <mapping class="pojo.ProductoTipo" />
+        <mapping class="pojo.DesembolsoTipo" />
+        <mapping class="pojo.ProyectoPropedadValor" />
+        <mapping class="pojo.CtipoPropiedad" />
+        <mapping class="pojo.ObjetoRecurso" />
+        <mapping class="pojo.Formulario" />
+        <mapping class="pojo.ProdtipoPropiedad" />
+        <mapping class="pojo.ProyectoTipo" />
+        <mapping class="pojo.RectipoPropiedad" />
+        <mapping class="pojo.RiesgoPropiedadValor" />
+        <mapping class="pojo.FormularioTipo" />
+        <mapping class="pojo.ObjetoRiesgo" />
+        <mapping class="pojo.Colaborador" />
+        <mapping class="pojo.RolPermiso" />
+        <mapping class="pojo.HitoTipo" />
+        <mapping class="pojo.RecursoPropiedad" />
+        <mapping class="pojo.Cooperante" />
+        <mapping class="pojo.UnidadEjecutora" />
+        <mapping class="pojo.Hito" />
+        <mapping class="pojo.Componente" />
+    </session-factory>
+</hibernate-configuration>

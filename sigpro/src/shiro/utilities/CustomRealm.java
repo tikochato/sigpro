@@ -37,7 +37,7 @@ public class CustomRealm extends JdbcRealm {
 	    if (username == null) 
 	      return null;
 	     
-	    Usuario user = UsuarioDAO.getUsusuario(username);
+	    Usuario user = UsuarioDAO.getUsuario(username);
 	    if (user == null) 
 	      return null;
 	    
