@@ -11,24 +11,23 @@ import org.hibernate.cfg.Configuration;
 public class CHibernateSession {
 
 	private static final SessionFactory sessionFactory;
-	
+
 	static {
 		try {
 			Configuration configuration = new Configuration();
-		    
-		    InitialContext context = new InitialContext();
-		    DataSource ds = (DataSource) context.lookup("java:comp/env/jdbc/sigpro");
-		    try{
-		    	Connection conn = ds.getConnection();
-		    	conn.isClosed();
-		    	configuration.configure();
-		    }
-		    catch(Exception e){
-		    	configuration.configure("hibernate_local.cfg.xml");
-		    }
-		    
-		    sessionFactory = configuration.buildSessionFactory();
-		    
+
+			try {
+				InitialContext context = new InitialContext();
+				DataSource ds = (DataSource) context.lookup("java:comp/env/jdbc/sigpro");
+				Connection conn = ds.getConnection();
+				conn.isClosed();
+				configuration.configure();
+			} catch (Exception e) {
+				configuration.configure("hibernate_local.cfg.xml");
+			}
+
+			sessionFactory = configuration.buildSessionFactory();
+
 		} catch (Throwable ex) {
 			System.err.println("Initial SessionFactory creation failed." + ex);
 			throw new ExceptionInInitializerError(ex);
@@ -39,6 +38,3 @@ public class CHibernateSession {
 		return sessionFactory;
 	}
 }
-
-
-
