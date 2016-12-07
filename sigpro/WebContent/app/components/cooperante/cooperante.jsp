@@ -11,7 +11,8 @@
     			</div>
     		</div>
     		<div class="col-sm-12" align="center">
-				<div id="maingrid" ui-grid="cooperantec.gridOptions" ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination>
+				<div id="maingrid" ui-grid="cooperantec.gridOptions" ui-grid-save-state 
+						ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination>
 					<div class="grid_loading" ng-hide="!cooperantec.mostrarcargando">
 				  	<div class="msg">
 				      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
