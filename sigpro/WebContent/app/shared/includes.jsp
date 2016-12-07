@@ -36,6 +36,8 @@
 <script type="text/javascript" src="/assets/libs/smart-table.min.js"></script>
 <script type="text/javascript" src="/assets/libs/ng-file-upload-shim.min.js"></script> 
 <script type="text/javascript" src="/assets/libs/ng-file-upload.min.js"></script> 
+<script type="text/javascript" src="/assets/libs/angular-flash.min.js"></script>
+<script type="text/javascript" src="/assets/libs/utilidades.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/assets/css/angular-bootstrap-toggle.min.css" />
 <script type="text/javascript" src="/assets/libs/angular/angular-bootstrap-toggle.js"></script>

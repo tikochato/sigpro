@@ -1,13 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<style type="text/css">
-
-.myGrid {
-	width: 100%;
-	height: 600px;
-}
-</style>
-
 	<div ng-controller="cooperanteController as cooperantec" class="maincontainer all_page" id="title">
 		<h3>Cooperantes</h3><br/>
 		<div class="row" align="center" ng-hide="cooperantec.mostraringreso">
@@ -29,6 +21,16 @@
 					</div>
 				  </div>
 				</div>
+				<ul uib-pagination total-items="cooperantec.totalCooperantes" 
+						ng-model="cooperantec.paginaActual" 
+						max-size="cooperante.numeroMaximoPaginas" 
+						first-text="Primero"
+						last-text="Último"
+						next-text="Siguiente"
+						previous-text="Anterior"
+						class="pagination-sm" boundary-links="true" force-ellipses="true"
+						ng-change="cooperantec.cambioPagina()"
+				></ul>
 			</div>
 		</div>
 		<div class="row" ng-show="cooperantec.mostraringreso">
@@ -84,5 +86,4 @@
     			</div>
     		</div>
 		</div>
-
 	</div>

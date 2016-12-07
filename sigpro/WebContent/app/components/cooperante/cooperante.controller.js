@@ -1,7 +1,7 @@
-var app = angular.module('cooperanteController', [ 'ngTouch' ]);
+var app = angular.module('cooperanteController', [ 'ngTouch']);
 
-app.controller('cooperanteController',['$scope','$http','$interval','i18nService',
-		function($scope, $http, $interval,i18nService) {
+app.controller('cooperanteController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams',
+		function($scope, $http, $interval,i18nService,$utilidades,$routeParams) {
 			var mi=this;
 			
 			i18nService.setCurrentLang('es');
@@ -10,6 +10,9 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.cooperante;
 			mi.mostraringreso=false;
 			mi.esnuevo = false;
+			mi.totalCooperantes = 0;
+			mi.paginaActual = 1;
+			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			
 			mi.gridOptions = {
 					enableRowSelection : true,
@@ -18,7 +21,8 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 					modifierKeysToMultiSelect: false,
 					noUnselect: true,
 					enableFiltering: true,
-					data: [],
+					enablePaginationControls: false,
+				    paginationPageSize: $utilidades.elementosPorPagina,
 					columnDefs : [ 
 						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 						{ name: 'codigo', width: 150, displayName: 'Código', cellClass: 'grid-align-right' },
@@ -36,9 +40,9 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 				});
 			};
 			
-			mi.cargarTabla = function(){
+			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SCooperante', { accion: 'getCooperantes' }).success(
+				$http.post('/SCooperante', { accion: 'getCooperantesPagin', pagina: pagina, numerocooperantes: $utilidades.elementosPorPagina }).success(
 						function(response) {
 							mi.cooperantes = response.cooperantes;
 							mi.gridOptions.data = mi.cooperantes;
@@ -46,7 +50,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 						});
 			}
 			
-			mi.cargarTabla();
+			mi.cargarTabla(mi.paginaActual);
 
 			
 			mi.guardar=function(){
@@ -59,11 +63,11 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 					descripcion: mi.cooperante.descripcion
 				}).success(function(response){
 					if(response.success){
-						alert('Cooperante '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+						$utilidades.mensaje('success','Cooperante '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.cargarTabla();
 					}
 					else
-						alert('Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Cooperante')
+						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Cooperante');
 				});
 			};
 
@@ -74,15 +78,15 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 						id: mi.cooperante.id
 					}).success(function(response){
 						if(response.success){
-							alert('Cooperante borrado con éxito');
+							$utilidades.mensaje('success','Cooperante borrado con éxito');
 							mi.cargarTabla();
 						}
 						else
-							alert('Error al borrar el Cooperante');
+							$utilidades.mensaje('danger','Error al borrar el Cooperante');
 					});
 				}
 				else
-					alert('Debe seleccionar el Cooperante que desea borrar');
+					$utilidades.mensaje('warning','Debe seleccionar el Cooperante que desea borrar');
 			};
 
 			mi.nuevo = function() {
@@ -98,13 +102,37 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 					mi.esnuevo = false;
 				}
 				else
-					alert('Debe seleccionar el Cooperante que desea editar');
+					$utilidades.mensaje('warning','Debe seleccionar el Cooperante que desea editar');
 			}
 
 			mi.cancelar = function() {
 				mi.mostraringreso=false;
 			}
 			
+			mi.guardarEstado=function(){
+				var estado = mi.gridApi.saveState.save();
+				var tabla_data = { action: 'guardaEstado', grid:'cooperantes', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
+				$http.post('/SEstadoTabla', tabla_data).then(function(response){
+					
+				});
+			}
 			
+			if($routeParams.reset_grid=='rv'){
+				mi.guardarEstado();
+		    }
+		    else{
+		    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'cooperantes', t: (new Date()).getTime()}).then(function(response){
+			    	  if(response.data.success && response.data.estado!='')
+			    		  mi.gridApi.saveState.restore( $scope, response.data.estado);
+			    	  $scope.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
+				      $scope.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
+				      $scope.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+				      $scope.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+				  });
+		    }
+			
+			mi.cambioPagina=function(){
+				mi.cargarTabla(mi.paginaActual);
+			}
 			
 		} ]);

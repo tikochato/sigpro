@@ -150,3 +150,11 @@ nav.navbar{
 .operation_buttons{
 	margin-bottom: 15px;
 }
+
+.div_alertas{
+	position: absolute;
+	bottom: 30px;
+	width: 100%;
+	font-size: 16px;
+	padding: 0 40px 0 40px;
+}

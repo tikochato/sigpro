@@ -75,7 +75,30 @@ public class SCooperante extends HttpServlet {
 		Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String accion = map.get("accion");
 		String response_text="";
-		if(accion.equals("getCooperantes")){
+		if(accion.equals("getCooperantesPagina")){
+			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
+			int numeroCooperantes = map.get("numerocooperantes")!=null  ? Integer.parseInt(map.get("numerocooperantes")) : 0;
+			List<Cooperante> cooperantes = CooperanteDAO.getCooperantes();
+			List<stcooperante> stcooperantes=new ArrayList<stcooperante>();
+			for(Cooperante cooperante:cooperantes){
+				stcooperante temp =new stcooperante();
+				temp.codigo = cooperante.getCodigo();
+				temp.descripcion = cooperante.getDescripcion();
+				temp.estado = cooperante.getEstado();
+				temp.fechaActualizacion = Utils.formatDate(cooperante.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDate(cooperante.getFechaCreacion());
+				temp.id = cooperante.getId();
+				temp.nombre = cooperante.getNombre();
+				temp.usuarioActualizo = cooperante.getUsuarioActualizo();
+				temp.usuarioCreo = cooperante.getUsarioCreo();
+				stcooperantes.add(temp);
+			}
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(stcooperantes);
+	        response_text = String.join("", "\"cooperantes\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}
+		else if(accion.equals("getCooperantes")){
 			List<Cooperante> cooperantes = CooperanteDAO.getCooperantes();
 			List<stcooperante> stcooperantes=new ArrayList<stcooperante>();
 			for(Cooperante cooperante:cooperantes){

@@ -3,9 +3,9 @@
  */
 var app = angular.module('sigpro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate', 'ngTouch', 
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
-                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize']);
+                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades']);
 
-app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($routeProvider, $locationProvider,FlashProvider) {
 	   $locationProvider.hashPrefix('!');
 	   //$locationProvider.html5Mode(true);
 	   $routeProvider
@@ -38,7 +38,10 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
             		}
             	}
             });*/
-    }]);
+            ;
+	   FlashProvider.setTimeout(5000);
+	   FlashProvider.setShowClose(true);
+}]);
 
 app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	   var modules = [
