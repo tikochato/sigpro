@@ -18,17 +18,6 @@ public class CHibernateSession {
 
 			try {
 				InitialContext context = new InitialContext();
-<<<<<<< Upstream, based on origin/master
-				DataSource ds = (DataSource) context.lookup("java:comp/env/jdbc/sigpro");
-				Connection conn = ds.getConnection();
-				conn.isClosed();
-				configuration.configure();
-			} catch (Exception e) {
-				configuration.configure("hibernate_local.cfg.xml");
-			}
-
-			sessionFactory = configuration.buildSessionFactory();		    
-=======
 			    DataSource ds = (DataSource) context.lookup("java:comp/env/jdbc/sigpro");
 		    	Connection conn = ds.getConnection();
 		    	conn.isClosed();
@@ -41,7 +30,6 @@ public class CHibernateSession {
 		    
 		    sessionFactory = configuration.buildSessionFactory();
 		    
->>>>>>> 7751d0b Creada la forma de Cooperantes
 		} catch (Throwable ex) {
 			System.err.println("Initial SessionFactory creation failed." + ex);
 			throw new ExceptionInInitializerError(ex);
