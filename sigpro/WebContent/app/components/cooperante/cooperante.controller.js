@@ -13,6 +13,9 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.totalCooperantes = 0;
 			mi.paginaActual = 1;
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
+			mi.elementosPorPagina = $utilidades.elementosPorPagina;
+			
+			
 			
 			mi.gridOptions = {
 					enableRowSelection : true,
@@ -42,16 +45,13 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SCooperante', { accion: 'getCooperantesPagin', pagina: pagina, numerocooperantes: $utilidades.elementosPorPagina }).success(
+				$http.post('/SCooperante', { accion: 'getCooperantesPagina', pagina: pagina, numerocooperantes: $utilidades.elementosPorPagina }).success(
 						function(response) {
 							mi.cooperantes = response.cooperantes;
 							mi.gridOptions.data = mi.cooperantes;
 							mi.mostrarcargando = false;
 						});
 			}
-			
-			mi.cargarTabla(mi.paginaActual);
-
 			
 			mi.guardar=function(){
 				$http.post('/SCooperante', {
@@ -105,7 +105,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 					$utilidades.mensaje('warning','Debe seleccionar el Cooperante que desea editar');
 			}
 
-			mi.cancelar = function() {
+			mi.irATabla = function() {
 				mi.mostraringreso=false;
 			}
 			
@@ -134,5 +134,11 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.cambioPagina=function(){
 				mi.cargarTabla(mi.paginaActual);
 			}
+			
+			$http.post('/SCooperante', { accion: 'numeroCooperantes' }).success(
+					function(response) {
+						mi.totalCooperantes = response.totalcooperantes;
+						mi.cargarTabla(1);
+					});
 			
 		} ]);

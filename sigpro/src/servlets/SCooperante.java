@@ -78,7 +78,7 @@ public class SCooperante extends HttpServlet {
 		if(accion.equals("getCooperantesPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroCooperantes = map.get("numerocooperantes")!=null  ? Integer.parseInt(map.get("numerocooperantes")) : 0;
-			List<Cooperante> cooperantes = CooperanteDAO.getCooperantes();
+			List<Cooperante> cooperantes = CooperanteDAO.getCooperantesPagina(pagina, numeroCooperantes);
 			List<stcooperante> stcooperantes=new ArrayList<stcooperante>();
 			for(Cooperante cooperante:cooperantes){
 				stcooperante temp =new stcooperante();
@@ -154,6 +154,9 @@ public class SCooperante extends HttpServlet {
 			}
 			else
 				response_text = "{ \"success\": false }";
+		}
+		else if(accion.equals("numeroCooperantes")){
+			response_text = String.join("","{ \"success\": true, \"totalcooperantes\":",CooperanteDAO.getTotalCooperantes().toString()," }");
 		}
 		else{
 			response_text = "{ \"success\": false }";

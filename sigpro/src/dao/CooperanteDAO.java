@@ -8,6 +8,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import pojo.Cooperante;
 import utilities.CHibernateSession;
@@ -104,6 +105,40 @@ public class CooperanteDAO {
 		}
 		catch(Throwable e){
 			CLogger.write("5", CooperanteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<Cooperante> getCooperantesPagina(int pagina, int numerocooperantes){
+		List<Cooperante> ret = new ArrayList<Cooperante>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Cooperante> criteria = session.createQuery("SELECT c FROM Cooperante c WHERE estado = 1",Cooperante.class);
+			criteria.setFirstResult(((pagina-1)*(numerocooperantes)));
+			criteria.setMaxResults(numerocooperantes);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("6", CooperanteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Long getTotalCooperantes(){
+		Long ret=0L;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM Cooperante c WHERE c.estado=1",Long.class);
+			ret = conteo.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("7", CooperanteDAO.class, e);
 		}
 		finally{
 			session.close();

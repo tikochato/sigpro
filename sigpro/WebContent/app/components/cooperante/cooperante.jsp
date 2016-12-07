@@ -23,7 +23,8 @@
 				</div>
 				<ul uib-pagination total-items="cooperantec.totalCooperantes" 
 						ng-model="cooperantec.paginaActual" 
-						max-size="cooperante.numeroMaximoPaginas" 
+						max-size="cooperantec.numeroMaximoPaginas" 
+						items-per-page="cooperantec.elementosPorPagina"
 						first-text="Primero"
 						last-text="Último"
 						next-text="Siguiente"
@@ -39,7 +40,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-success" ng-click="cooperantec.guardar()">Guardar</label>
-			        <label class="btn btn-danger" ng-click="cooperantec.cancelar()">Cancelar</label>
+			        <label class="btn btn-primary" ng-click="cooperantec.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
 			<div class="col-sm-12">
@@ -82,7 +83,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-success" ng-click="cooperantec.guardar()">Guardar</label>
-			        <label class="btn btn-danger" ng-click="cooperantec.cancelar()">Cancelar</label>
+			        <label class="btn btn-danger" ng-click="cooperantec.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
 		</div>
