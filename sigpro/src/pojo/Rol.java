@@ -1,16 +1,12 @@
 package pojo;
-// Generated Dec 5, 2016 7:40:54 PM by Hibernate Tools 5.2.0.Beta1
+// Generated Dec 6, 2016 7:21:47 PM by Hibernate Tools 5.2.0.Beta1
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,7 +21,8 @@ public class Rol implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -547233844092466361L;
+	private static final long serialVersionUID = -4079668200063253281L;
+	
 	private Integer id;
 	private String nombre;
 	private String descripcion;
@@ -34,7 +31,6 @@ public class Rol implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private Set<RolPermiso> rolPermisos = new HashSet<RolPermiso>(0);
 
 	public Rol() {
 	}
@@ -47,7 +43,7 @@ public class Rol implements java.io.Serializable {
 	}
 
 	public Rol(String nombre, String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, Set<RolPermiso> rolPermisos) {
+			Date fechaActualizacion, int estado) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
@@ -55,7 +51,6 @@ public class Rol implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.rolPermisos = rolPermisos;
 	}
 
 	@Id
@@ -133,15 +128,6 @@ public class Rol implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rol")
-	public Set<RolPermiso> getRolPermisos() {
-		return this.rolPermisos;
-	}
-
-	public void setRolPermisos(Set<RolPermiso> rolPermisos) {
-		this.rolPermisos = rolPermisos;
 	}
 
 }

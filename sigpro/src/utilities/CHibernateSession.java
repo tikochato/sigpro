@@ -26,8 +26,7 @@ public class CHibernateSession {
 				configuration.configure("hibernate_local.cfg.xml");
 			}
 
-			sessionFactory = configuration.buildSessionFactory();
-
+			sessionFactory = configuration.buildSessionFactory();		    
 		} catch (Throwable ex) {
 			System.err.println("Initial SessionFactory creation failed." + ex);
 			throw new ExceptionInInitializerError(ex);
