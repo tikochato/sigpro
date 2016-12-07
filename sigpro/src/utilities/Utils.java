@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -98,6 +100,13 @@ public class Utils {
 			return defaultValue;
 		}
 
+	}
+	
+	public static String formatDate(Date date){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		if(date!=null)
+			return sdf.format(date);
+		return "";
 	}
 
 }

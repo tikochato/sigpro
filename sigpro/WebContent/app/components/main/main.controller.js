@@ -20,6 +20,9 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 		    .when('/formaejemplo',{
             	template: '<div load-on-demand="\'formaejemploController\'" class="all_page"></div>'
             })
+            .when('/cooperante',{
+            	template: '<div load-on-demand="\'cooperanteController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -43,6 +46,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'formaejemploController',
 	    	   script: '/app/components/formaejemplo/formaejemplo.controller.js',
 	    	   template: '/app/components/formaejemplo/formaejemplo.jsp'
+	       },
+	       {
+	    	   name: 'cooperanteController',
+	    	   script: '/app/components/cooperante/cooperante.controller.js',
+	    	   template: '/app/components/cooperante/cooperante.jsp'
 	       }
 	   ];
 	   $loadOnDemandProvider.config(modules);

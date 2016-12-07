@@ -23,7 +23,7 @@ public class CooperanteDAO {
 
 			CriteriaQuery<Cooperante> criteria = builder.createQuery(Cooperante.class);
 			Root<Cooperante> root = criteria.from(Cooperante.class);
-			criteria.select( root );
+			criteria.select( root ).where(builder.equal(root.get("estado"),1));
 			ret = session.createQuery( criteria ).getResultList();
 		}
 		catch(Throwable e){
@@ -44,7 +44,7 @@ public class CooperanteDAO {
 			CriteriaQuery<Cooperante> criteria = builder.createQuery(Cooperante.class);
 			Root<Cooperante> root = criteria.from(Cooperante.class);
 			criteria.select( root );
-			criteria.where( builder.equal( root.get("id"), id ) );
+			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
 			ret = session.createQuery( criteria ).getSingleResult();
 		}
 		catch(Throwable e){

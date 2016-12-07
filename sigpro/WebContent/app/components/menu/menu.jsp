@@ -20,6 +20,7 @@
 	                    <a href="#" uib-dropdown-toggle><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Ejemplos <b class="caret"></b></a>
 	                     <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
 	                     	<li role="menuitem"><a href="#!/formaejemplo">Forma Ejemplo</a></li>
+	                     	<li role="menuitem"><a href="#!/cooperante">Cooperante</a></li>
 	                     </ul>
 	                </li>
 	            </ul>
