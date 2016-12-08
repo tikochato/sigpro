@@ -36,7 +36,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
 					],
 					onRegisterApi: function(gridApi) {
-						$scope.gridApi = gridApi;
+						mi.gridApi = gridApi;
 						gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 							mi.cooperante = row.entity;
 						});
@@ -46,12 +46,12 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 					    }
 					    else{
 					    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'cooperantes', t: (new Date()).getTime()}).then(function(response){
-						    	  if(response.data.success && response.data.estado!='')
-						    	  $scope.gridApi.saveState.restore( $scope, response.data.estado);
-						    	  $scope.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
-							      $scope.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
-							      $scope.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
-							      $scope.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+						      if(response.data.success && response.data.estado!='')
+						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+						    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
+							      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
+							      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+							      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
 							  });
 					    }
 					}
@@ -128,7 +128,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			}
 			
 			mi.guardarEstado=function(){
-				var estado = $scope.gridApi.saveState.save();
+				var estado = mi.gridApi.saveState.save();
 				var tabla_data = { action: 'guardaEstado', grid:'cooperantes', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
 				$http.post('/SEstadoTabla', tabla_data).then(function(response){
 					
