@@ -74,7 +74,6 @@ public class SEstadoTabla extends HttpServlet {
 				tablatexto=map.get("grid");
 				String estadotexto = "";
 				estadotexto = map.get("estado");
-				System.out.println("----->"+usuariotexto+" -- "+tablatexto+" -- "+estadotexto);
 				if(usuariotexto!=null&&tablatexto!=null&&estadotexto!=null){
 					EstadotablaId Estadotablaid = new EstadotablaId(usuariotexto, tablatexto);
 					Estadotabla Estadotabla = new Estadotabla(Estadotablaid,estadotexto);
@@ -87,7 +86,6 @@ public class SEstadoTabla extends HttpServlet {
 			else if(action.compareTo("getEstado")==0){
 				String usuariotexto="";
 				usuariotexto = "visita";
-				System.out.println(usuariotexto);
 				String tablatexto="";
 				tablatexto=map.get("grid");
 				if(usuariotexto!=null&& tablatexto!=null){
