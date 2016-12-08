@@ -3,3 +3,5 @@
 /hibernate.properties
 /hibernate.reveng.xml
 /log4j.properties
+/hibernate_tmp.cfg.xml
+/hibernate_tmp.reveng.xml
