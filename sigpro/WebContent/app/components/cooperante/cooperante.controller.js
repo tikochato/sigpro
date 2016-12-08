@@ -1,9 +1,10 @@
 var app = angular.module('cooperanteController', [ 'ngTouch']);
 
-app.controller('cooperanteController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams',
-		function($scope, $http, $interval,i18nService,$utilidades,$routeParams) {
+app.controller('cooperanteController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants',
+		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants) {
 			var mi=this;
 			
+			$window.document.title = 'SIGPRO - Cooperantes';
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
 			mi.cooperantes = [];
@@ -33,15 +34,28 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 					    { name: 'usuarioCreo', displayName: 'Usuario Creación'},
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
-					]
+					],
+					onRegisterApi: function(gridApi) {
+						$scope.gridApi = gridApi;
+						gridApi.selection.on.rowSelectionChanged($scope,function(row) {
+							mi.cooperante = row.entity;
+						});
+						
+						if($routeParams.reiniciar_vista=='rv'){
+							mi.guardarEstado();
+					    }
+					    else{
+					    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'cooperantes', t: (new Date()).getTime()}).then(function(response){
+						    	  if(response.data.success && response.data.estado!='')
+						    	  $scope.gridApi.saveState.restore( $scope, response.data.estado);
+						    	  $scope.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
+							      $scope.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
+							      $scope.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+							      $scope.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+							  });
+					    }
+					}
 				};
-			
-			mi.gridOptions.onRegisterApi = function(gridApi) {
-				mi.gridApi = gridApi;
-				gridApi.selection.on.rowSelectionChanged($scope,function(row) {
-					mi.cooperante = row.entity;
-				});
-			};
 			
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
@@ -54,21 +68,25 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			}
 			
 			mi.guardar=function(){
-				$http.post('/SCooperante', {
-					accion: 'guardarCooperante',
-					esnuevo: mi.esnuevo,
-					id: mi.cooperante.id,
-					codigo: mi.cooperante.codigo,
-					nombre: mi.cooperante.nombre,
-					descripcion: mi.cooperante.descripcion
-				}).success(function(response){
-					if(response.success){
-						$utilidades.mensaje('success','Cooperante '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
-						mi.cargarTabla();
-					}
-					else
-						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Cooperante');
-				});
+				if(mi.cooperante!=null && mi.cooperante.codigo!='' && mi.cooperante.nombre!=''){
+					$http.post('/SCooperante', {
+						accion: 'guardarCooperante',
+						esnuevo: mi.esnuevo,
+						id: mi.cooperante.id,
+						codigo: mi.cooperante.codigo,
+						nombre: mi.cooperante.nombre,
+						descripcion: mi.cooperante.descripcion
+					}).success(function(response){
+						if(response.success){
+							$utilidades.mensaje('success','Cooperante '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+							mi.cargarTabla();
+						}
+						else
+							$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Cooperante');
+					});
+				}
+				else
+					$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
 			};
 
 			mi.borrar = function() {
@@ -110,29 +128,22 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			}
 			
 			mi.guardarEstado=function(){
-				var estado = mi.gridApi.saveState.save();
+				var estado = $scope.gridApi.saveState.save();
 				var tabla_data = { action: 'guardaEstado', grid:'cooperantes', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
 				$http.post('/SEstadoTabla', tabla_data).then(function(response){
 					
 				});
 			}
 			
-			if($routeParams.reset_grid=='rv'){
-				mi.guardarEstado();
-		    }
-		    else{
-		    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'cooperantes', t: (new Date()).getTime()}).then(function(response){
-			    	  if(response.data.success && response.data.estado!='')
-			    		  mi.gridApi.saveState.restore( $scope, response.data.estado);
-			    	  $scope.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
-				      $scope.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
-				      $scope.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
-				      $scope.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
-				  });
-		    }
-			
 			mi.cambioPagina=function(){
 				mi.cargarTabla(mi.paginaActual);
+			}
+			
+			mi.reiniciarVista=function(){
+				if($location.path()=='/cooperante/rv')
+					$route.reload();
+				else
+					$location.path('/cooperante/rv');
 			}
 			
 			$http.post('/SCooperante', { accion: 'numeroCooperantes' }).success(

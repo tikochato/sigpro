@@ -20,7 +20,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
 		    .when('/formaejemplo',{
             	template: '<div load-on-demand="\'formaejemploController\'" class="all_page"></div>'
             })
-            .when('/cooperante',{
+            .when('/cooperante/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'cooperanteController\'" class="all_page"></div>'
             })
             /*.when('/salir',{
@@ -73,6 +73,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	$scope.hidebar = false;
 	
 	numeral.language('es', numeral_language);
+	$window.document.title = 'MINFIN - SIGPRO';
 	
 	$document.bind('scroll', function(){
 		if($document[0].body.scrollTop > 15){

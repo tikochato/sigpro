@@ -7,7 +7,7 @@
 <%@ include file="/app/shared/includes.jsp"%>
 
 <script src="/app/components/main/main.controller.js"></script>
-<title>MINFIN - Tableros</title>
+<title>MINFIN - SIGPRO</title>
 </head>
 <body ng-app="sigpro" ng-controller="MainController as mainController">
 <%@ include file="/app/components/menu/menu.jsp" %>
