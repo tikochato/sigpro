@@ -23,6 +23,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/cooperante/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'cooperanteController\'" class="all_page"></div>'
             })
+            .when('/proyecto/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -54,6 +57,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'cooperanteController',
 	    	   script: '/app/components/cooperante/cooperante.controller.js',
 	    	   template: '/app/components/cooperante/cooperante.jsp'
+	       },
+	       {
+	    	   name: 'proyectoController',
+	    	   script: '/app/components/proyecto/proyecto.controller.js',
+	    	   template: '/app/components/proyecto/proyecto.jsp'
 	       }
 	   ];
 	   $loadOnDemandProvider.config(modules);
