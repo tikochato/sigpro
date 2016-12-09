@@ -21,6 +21,7 @@
 	                     <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
 	                     	<li role="menuitem"><a href="#!/formaejemplo">Forma Ejemplo</a></li>
 	                     	<li role="menuitem"><a href="#!/cooperante">Cooperante</a></li>
+	                     	<li role="menuitem"><a href="#!/proyecto">Proyecto</a></li>
 	                     </ul>
 	                </li>
 	            </ul>
