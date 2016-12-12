@@ -26,6 +26,13 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/proyecto/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
             })
+            .when('/entidad',{
+            	template: '<div load-on-demand="\'moduloEntidad\'" class="all_page"></div>'
+            })            
+            .when('/unidadEjecutora',{
+            	template: '<div load-on-demand="\'moduloUnidadEjecutora\'" class="all_page"></div>'
+            })            
+
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -62,6 +69,14 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'proyectoController',
 	    	   script: '/app/components/proyecto/proyecto.controller.js',
 	    	   template: '/app/components/proyecto/proyecto.jsp'
+	       }, {
+	    	   name: 'moduloEntidad',
+	    	   script: '/app/components/entidades/entidades.controller.js',
+	    	   template: '/app/components/entidades/entidades.jsp'
+	       }, {
+	    	   name: 'moduloUnidadEjecutora',
+	    	   script: '/app/components/unidadejecutora/unidadejecutora.controller.js',
+	    	   template: '/app/components/unidadejecutora/unidadejecutora.jsp'
 	       }
 	   ];
 	   $loadOnDemandProvider.config(modules);
