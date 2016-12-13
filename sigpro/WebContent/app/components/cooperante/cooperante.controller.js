@@ -1,7 +1,7 @@
-var app = angular.module('cooperanteController', [ 'ngTouch']);
+var app = angular.module('cooperanteController', []);
 
-app.controller('cooperanteController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants',
-		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants) {
+app.controller('cooperanteController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
+		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 			var mi=this;
 			
 			$window.document.title = 'SIGPRO - Cooperantes';
@@ -15,8 +15,6 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.paginaActual = 1;
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
-			
-			
 			
 			mi.gridOptions = {
 					enableRowSelection : true,
@@ -89,19 +87,31 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 					$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
 			};
 
-			mi.borrar = function() {
+			mi.borrar = function(ev) {
 				if(mi.cooperante!=null){
-					$http.post('/SCooperante', {
-						accion: 'borrarCooperante',
-						id: mi.cooperante.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Cooperante borrado con éxito');
-							mi.cargarTabla();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar el Cooperante');
-					});
+					var confirm = $mdDialog.confirm()
+				          .title('Confirmación de borrado')
+				          .textContent('¿Desea borrar el Cooperante "'+mi.cooperante.nombre+'"?')
+				          .ariaLabel('Confirmación de borrado')
+				          .targetEvent(ev)
+				          .ok('Borrar')
+				          .cancel('Cancelar');
+	
+				    $mdDialog.show(confirm).then(function() {
+				    	$http.post('/SCooperante', {
+							accion: 'borrarCooperante',
+							id: mi.cooperante.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Cooperante borrado con éxito');
+								mi.cargarTabla();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar el Cooperante');
+						});
+				    }, function() {
+				    
+				    });
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar el Cooperante que desea borrar');

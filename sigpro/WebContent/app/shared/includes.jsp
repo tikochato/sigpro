@@ -8,12 +8,15 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/timeline/angular-timeline-animations.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/timeline/angular-timeline-bootstrap.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/timeline/angular-timeline.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/angular-material.min.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/main.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.adds.css" />
 <script type="text/javascript" src="/assets/libs/angular/angular.js"></script>
 <script type="text/javascript" src="/assets/libs/angular/angular-route.min.js"></script>
 <script type="text/javascript" src="/assets/libs/angular/angular-animate.min.js"></script>
-<script type="text/javascript" src="/assets/libs/angular/angular-touch.min.js"></script> 
+<script type="text/javascript" src="/assets/libs/angular/angular-touch.min.js"></script>
+<script type="text/javascript" src="/assets/libs/angular/angular-messages.min.js"></script>
+<script type="text/javascript" src="/assets/libs/angular/angular-aria.min.js"></script>
 <script type="text/javascript" src="/assets/libs/ui-bootstrap-tpls-1.2.1.min.js"></script> 
 <script type="text/javascript" src="/assets/libs/moment.min.js"></script>
 <script type="text/javascript" src="/assets/libs/Chart.min.js"></script>
@@ -37,6 +40,7 @@
 <script type="text/javascript" src="/assets/libs/ng-file-upload-shim.min.js"></script> 
 <script type="text/javascript" src="/assets/libs/ng-file-upload.min.js"></script> 
 <script type="text/javascript" src="/assets/libs/angular-flash.min.js"></script>
+<script type="text/javascript" src="/assets/libs/angular-material.min.js"></script>
 <script type="text/javascript" src="/assets/libs/utilidades.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/assets/css/angular-bootstrap-toggle.min.css" />
