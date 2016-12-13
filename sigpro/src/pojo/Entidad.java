@@ -1,11 +1,15 @@
 package pojo;
-// Generated 9/12/2016 10:11:37 AM by Hibernate Tools 5.2.0.Beta1
+// Generated 13/12/2016 12:20:53 PM by Hibernate Tools 5.2.0.Beta1
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -15,13 +19,10 @@ import javax.persistence.Table;
 @Table(name = "entidad", catalog = "sigpro")
 public class Entidad implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3342943632600083410L;
 	private Integer entidad;
 	private String nombre;
 	private String abreviatura;
+	private Set<UnidadEjecutora> unidadEjecutoras = new HashSet<UnidadEjecutora>(0);
 
 	public Entidad() {
 	}
@@ -30,9 +31,10 @@ public class Entidad implements java.io.Serializable {
 		this.nombre = nombre;
 	}
 
-	public Entidad(String nombre, String abreviatura) {
+	public Entidad(String nombre, String abreviatura, Set<UnidadEjecutora> unidadEjecutoras) {
 		this.nombre = nombre;
 		this.abreviatura = abreviatura;
+		this.unidadEjecutoras = unidadEjecutoras;
 	}
 
 	@Id
@@ -63,6 +65,15 @@ public class Entidad implements java.io.Serializable {
 
 	public void setAbreviatura(String abreviatura) {
 		this.abreviatura = abreviatura;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "entidad")
+	public Set<UnidadEjecutora> getUnidadEjecutoras() {
+		return this.unidadEjecutoras;
+	}
+
+	public void setUnidadEjecutoras(Set<UnidadEjecutora> unidadEjecutoras) {
+		this.unidadEjecutoras = unidadEjecutoras;
 	}
 
 }
