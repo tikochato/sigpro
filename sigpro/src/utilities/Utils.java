@@ -76,8 +76,6 @@ public class Utils {
 
 		jsonText = String.join("", "\"" + nombre + "\":", jsonText);
 
-		jsonText = String.join("", "{\"success\":true,", jsonText, "}");
-
 		return jsonText;
 	}
 
