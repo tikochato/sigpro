@@ -26,6 +26,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/proyecto/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
             })
+            .when('/proyectotipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'proyectotipoController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -62,6 +65,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'proyectoController',
 	    	   script: '/app/components/proyecto/proyecto.controller.js',
 	    	   template: '/app/components/proyecto/proyecto.jsp'
+	       },
+	       {
+	    	   name: 'proyectotipoController',
+	    	   script: '/app/components/proyecto/proyectotipo.controller.js',
+	    	   template: '/app/components/proyecto/proyectotipo.jsp'
 	       }
 	   ];
 	   $loadOnDemandProvider.config(modules);

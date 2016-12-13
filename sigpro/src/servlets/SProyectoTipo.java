@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -91,6 +92,36 @@ public class SProyectoTipo extends HttpServlet {
 		else if(accion.equals("numeroProyectoTipos")){
 			response_text = String.join("","{ \"success\": true, \"totalproyectotipos\":",ProyectoTipoDAO.getTotalProyectoTipos().toString()," }");
 		}
+		else if(accion.equals("guardarCooperante")){
+			boolean result = false;
+			boolean esnuevo = map.get("esnuevo").equals("true");
+			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			if(id>0 || esnuevo){
+				
+				String nombre = map.get("nombre");
+				String descripcion = map.get("descripcion");
+				ProyectoTipo proyectoTipo;
+				if(esnuevo){
+					proyectoTipo = new ProyectoTipo(nombre, descripcion, 
+							"admin",null,new DateTime().toDate(),null,1,null,null);
+							
+					
+				}
+				else{
+					proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(id);
+					
+					proyectoTipo.setNombre(nombre);
+					proyectoTipo.setDescripcion(descripcion);
+					proyectoTipo.setUsuarioActualizo("admin");
+					proyectoTipo.setFechaActualizacion(new DateTime().toDate());
+				}
+				result = ProyectoTipoDAO.guardarProyectoTipo(proyectoTipo);
+				response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
+			}
+			else
+				response_text = "{ \"success\": false }";
+		}
+		
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
 		

@@ -37,6 +37,45 @@ public class ProyectoTipoDAO {
 		return ret;
 	}
 	
+	public static ProyectoTipo getProyectoTipoPorId(int id){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		ProyectoTipo ret = null;
+		try{
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+
+			CriteriaQuery<ProyectoTipo> criteria = builder.createQuery(ProyectoTipo.class);
+			Root<ProyectoTipo> root = criteria.from(ProyectoTipo.class);
+			criteria.select( root );
+			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
+			ret = session.createQuery( criteria ).getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("2", CooperanteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean guardarProyectoTipo(ProyectoTipo proyectotipo){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			session.saveOrUpdate(proyectotipo);
+			session.getTransaction().commit();
+			ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("3", ProyectoTipoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	public static List<ProyectoTipo> getProyectosTipoPagina(int pagina, int numeroproyectotipos){
 		List<ProyectoTipo> ret = new ArrayList<ProyectoTipo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -47,7 +86,7 @@ public class ProyectoTipoDAO {
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("2", ProyectoTipo.class, e);
+			CLogger.write("4", ProyectoTipo.class, e);
 		}
 		finally{
 			session.close();
@@ -63,7 +102,7 @@ public class ProyectoTipoDAO {
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
-			CLogger.write("3", ProyectoTipoDAO.class, e);
+			CLogger.write("5", ProyectoTipoDAO.class, e);
 		}
 		finally{
 			session.close();

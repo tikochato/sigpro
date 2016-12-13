@@ -1,17 +1,17 @@
 var app = angular.module('proyectotipoController', [ 'ngTouch']);
 
-app.controller('cooperanteController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants',
+app.controller('proyectotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants) {
 		var mi=this;
 		
 		$window.document.title = 'SIGPRO - Tipo Proyecto';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
-		mi.cooperantes = [];
-		mi.cooperante;
+		mi.proyectotipos = [];
+		mi.proyectotipo;
 		mi.mostraringreso=false;
 		mi.esnuevo = false;
-		mi.totalCooperantes = 0;
+		mi.totalProcetotipos = 0;
 		mi.paginaActual = 1;
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
@@ -58,13 +58,44 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 		
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SCooperante', { accion: 'getCooperantesPagina', pagina: pagina, numerocooperantes: $utilidades.elementosPorPagina }).success(
+			$http.post('/SProyectoTipo', { accion: 'getProyectoTipoPagina', pagina: pagina, numerocooperantes: $utilidades.elementosPorPagina }).success(
 					function(response) {
-						mi.cooperantes = response.cooperantes;
-						mi.gridOptions.data = mi.cooperantes;
+						mi.proyectotipos = response.poryectotipos;
+						mi.gridOptions.data = mi.proyectotipos;
 						mi.mostrarcargando = false;
 					});
 		}
+		
+		mi.guardar=function(){
+			if(mi.proyectotipo!=null  && mi.proyectotipo.nombre!=''){
+				$http.post('/SProyectoTipo', {
+					accion: 'guardarProyectotipo',
+					esnuevo: mi.esnuevo,
+					id: mi.proyectotipo.id,
+					nombre: mi.proyectotipo.nombre,
+					descripcion: mi.proyectotipo.descripcion
+				}).success(function(response){
+					if(response.success){
+						$utilidades.mensaje('success','Tipo Proyecto '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+						mi.cargarTabla();
+					}
+					else
+						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo Proyecto');
+				});
+			}
+			else
+				$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
+		};
+		
+		
+		
+		
+		mi.nuevo = function() {
+			mi.mostraringreso=true;
+			mi.esnuevo = true;
+			mi.proyectotipo = null;
+			mi.gridApi.selection.clearSelectedRows();
+		};
 		
 		
 	
@@ -78,7 +109,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 		
 		mi.guardarEstado=function(){
 			var estado = mi.gridApi.saveState.save();
-			var tabla_data = { action: 'guardaEstado', grid:'cooperantes', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
+			var tabla_data = { action: 'guardaEstado', grid:'proyectotipos', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
 			$http.post('/SEstadoTabla', tabla_data).then(function(response){
 				
 			});
@@ -89,15 +120,15 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 		}
 		
 		mi.reiniciarVista=function(){
-			if($location.path()=='/cooperante/rv')
+			if($location.path()=='/proyectotipo/rv')
 				$route.reload();
 			else
-				$location.path('/cooperante/rv');
+				$location.path('/proyectotipo/rv');
 		}
 		
-		$http.post('/SCooperante', { accion: 'numeroCooperantes' }).success(
+		$http.post('/SProyectoTipo', { accion: 'numeroProyectoTipos' }).success(
 				function(response) {
-					mi.totalCooperantes = response.totalcooperantes;
+					mi.totalProyectotipos = response.totalproyectotipos;
 					mi.cargarTabla(1);
 				});
 		
