@@ -33,6 +33,7 @@
                          <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
                             <li role="menuitem"><a href="#!/entidad">Entidad</a></li>
                             <li role="menuitem"><a href="#!/unidadEjecutora">Unidad Ejecutora</a></li>
+	                     	<li role="menuitem"><a href="#!/colaborador">Colaborador</a></li>
                          </ul>
                     </li>
 	            </ul>

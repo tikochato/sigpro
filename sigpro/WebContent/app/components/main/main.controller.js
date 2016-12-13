@@ -32,6 +32,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/unidadEjecutora',{
             	template: '<div load-on-demand="\'moduloUnidadEjecutora\'" class="all_page"></div>'
             })            
+            .when('/colaborador',{
+            	template: '<div load-on-demand="\'moduloColaborador\'" class="all_page"></div>'
+            })            
 
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -77,6 +80,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'moduloUnidadEjecutora',
 	    	   script: '/app/components/unidadejecutora/unidadejecutora.controller.js',
 	    	   template: '/app/components/unidadejecutora/unidadejecutora.jsp'
+	       }, {
+	    	   name: 'moduloColaborador',
+	    	   script: '/app/components/colaborador/colaborador.controller.js',
+	    	   template: '/app/components/colaborador/colaborador.jsp'
 	       }
 	   ];
 	   $loadOnDemandProvider.config(modules);
