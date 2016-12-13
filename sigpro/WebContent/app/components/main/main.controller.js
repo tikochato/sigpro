@@ -1,9 +1,9 @@
 /**
- * 
+ *
  */
-var app = angular.module('sigpro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate', 'ngTouch', 
+var app = angular.module('sigpro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
-                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades']);
+                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','ngAria','ngMaterial','ngMessages']);
 
 app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($routeProvider, $locationProvider,FlashProvider) {
 	   $locationProvider.hashPrefix('!');
@@ -26,9 +26,13 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/proyecto/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
             })
-            .when('/proyectotipo/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'proyectotipoController\'" class="all_page"></div>'
+            .when('/entidad',{
+            	template: '<div load-on-demand="\'moduloEntidad\'" class="all_page"></div>'
             })
+            .when('/unidadEjecutora',{
+            	template: '<div load-on-demand="\'moduloUnidadEjecutora\'" class="all_page"></div>'
+            })
+
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -37,7 +41,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
 	        				    if(response.data.success)
 	        				    	window.location.href = '/login.jsp';
 	        			 	}, function errorCallback(response){
-	        			 		
+
 	        			 	}
 	        			 );
             			return true;
@@ -65,11 +69,14 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'proyectoController',
 	    	   script: '/app/components/proyecto/proyecto.controller.js',
 	    	   template: '/app/components/proyecto/proyecto.jsp'
-	       },
-	       {
-	    	   name: 'proyectotipoController',
-	    	   script: '/app/components/proyecto/proyectotipo.controller.js',
-	    	   template: '/app/components/proyecto/proyectotipo.jsp'
+	       }, {
+	    	   name: 'moduloEntidad',
+	    	   script: '/app/components/entidades/entidades.controller.js',
+	    	   template: '/app/components/entidades/entidades.jsp'
+	       }, {
+	    	   name: 'moduloUnidadEjecutora',
+	    	   script: '/app/components/unidadejecutora/unidadejecutora.controller.js',
+	    	   template: '/app/components/unidadejecutora/unidadejecutora.jsp'
 	       }
 	   ];
 	   $loadOnDemandProvider.config(modules);
@@ -87,10 +94,10 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
    function($scope,$document,deviceDetector,$rootScope,$location,$window){
 	$scope.lastscroll = 0;
 	$scope.hidebar = false;
-	
+
 	numeral.language('es', numeral_language);
 	$window.document.title = 'MINFIN - SIGPRO';
-	
+
 	$document.bind('scroll', function(){
 		if($document[0].body.scrollTop > 15){
 			if ($scope.lastscroll>$document[0].body.scrollTop) { //Scroll to Top
@@ -102,14 +109,14 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 		}
 		$scope.lastscroll = $document[0].body.scrollTop;
 	});
-	
+
 	$scope.hideBarFromMenu=function(){
 		$scope.hidebar = true;
 		document.getElementById("title").scrollIntoView()
 	}
-	
+
 	$scope.device = deviceDetector;
-	
+
 	$rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
 		if (location.hostname !== "localhost" || location.hostname !== "127.0.0.1"){
 			$window.ga('create', 'UA-74443600-2', 'auto');
@@ -117,6 +124,3 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 		}
     });
 }]);
-
-
-
