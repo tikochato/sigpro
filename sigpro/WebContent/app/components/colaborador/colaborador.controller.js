@@ -4,11 +4,13 @@
 var moduloColaborador = angular.module('moduloColaborador', [ 'ngTouch' ]);
 
 moduloColaborador.controller('controlColaborador', [ '$scope', '$routeParams',
-		'$uibModal', '$http', '$interval', 'i18nService', 'Utilidades',
-		'$timeout', '$log', controlColaborador ]);
+		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',
+		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log',
+		controlColaborador ]);
 
-function controlColaborador($scope, $routeParams, $uibModal, $http, $interval,
-		i18nService, $utilidades, $timeout, $log) {
+function controlColaborador($scope, $routeParams, $route, $window, $location,
+		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
+		$timeout, $log) {
 	i18nService.setCurrentLang('es');
 	var mi = this;
 
@@ -117,39 +119,54 @@ function controlColaborador($scope, $routeParams, $uibModal, $http, $interval,
 			mi.gridApi.selection.on.rowSelectionChanged($scope,
 					mi.seleccionarEntidad);
 
-			mi.gridApi.colMovable.on.columnPositionChanged($scope,
-					mi.guardarVista);
-			mi.gridApi.colResizable.on.columnSizeChanged($scope,
-					mi.guardarVista);
-			mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarVista);
-			mi.gridApi.core.on.filterChanged($scope, mi.guardarVista);
-			mi.gridApi.core.on.sortChanged($scope, mi.guardarVista);
+			if ($routeParams.reiniciar_vista == 'rv') {
+				mi.guardarEstado();
+			} else {
+				$http.post('/SEstadoTabla', {
+					action : 'getEstado',
+					grid : 'colaborador',
+					t : (new Date()).getTime()
+				}).then(
+						function(response) {
+
+							if (response.data.success
+									&& response.data.estado != '') {
+								mi.gridApi.saveState.restore($scope,
+										response.data.estado);
+							}
+
+							mi.gridApi.colMovable.on.columnPositionChanged(
+									$scope, mi.guardarEstado);
+							mi.gridApi.colResizable.on.columnSizeChanged(
+									$scope, mi.guardarEstado);
+							mi.gridApi.core.on.columnVisibilityChanged($scope,
+									mi.guardarEstado);
+							mi.gridApi.core.on.sortChanged($scope,
+									mi.guardarEstado);
+						});
+			}
 		}
 	}
 
-	mi.guardarVista = function() {
-		var state = mi.gridApi.saveState.save();
-	};
+	mi.guardarEstado = function() {
+		var estado = mi.gridApi.saveState.save();
 
-	mi.restoreState = function() {
-		$timeout(function() {
-			mi.state = mi.gridApi.saveState.save();
-			if (mi.state)
-				mi.gridApi.saveState.restore($scope, mi.state);
+		var tabla_data = {
+			action : 'guardaEstado',
+			grid : 'colaborador',
+			estado : JSON.stringify(estado),
+			t : (new Date()).getTime()
+		};
+		$http.post('/SEstadoTabla', tabla_data).then(function(response) {
+
 		});
 	}
 
-	mi.guardarEstado = function() {
-		var estado = mi.state;
-
-		var datos = {
-			accion : 'guardar',
-			grid : 'entidades',
-			estado : JSON.stringify(estado),
-			tiempo : (new Date()).getTime()
-		};
-		$http.post('/SGuardarEstadoGrid', datos).then(function(response) {
-		});
+	mi.reiniciarVista = function() {
+		if ($location.path() == '/colaborador/rv')
+			$route.reload();
+		else
+			$location.path('/colaborador/rv');
 	}
 
 	mi.nuevo = function() {
@@ -203,8 +220,7 @@ function controlColaborador($scope, $routeParams, $uibModal, $http, $interval,
 			mi.validarUsuario();
 
 		} else {
-			$utilidades.mensaje('warning',
-					'Debe seleccionar un COLABORADOR');
+			$utilidades.mensaje('warning', 'Debe seleccionar un COLABORADOR');
 		}
 
 	};
@@ -259,7 +275,7 @@ function controlColaborador($scope, $routeParams, $uibModal, $http, $interval,
 				unidadEjecutora : mi.unidadEjecutora,
 				usuario : mi.usuario
 			};
-			
+
 			$log.info(datos);
 
 			$http.post('/SColaborador', datos).then(
@@ -307,7 +323,7 @@ function controlColaborador($scope, $routeParams, $uibModal, $http, $interval,
 	};
 
 	mi.usuarioValido = false;
-	
+
 	mi.validarUsuario = function() {
 		$http.post('/SColaborador', {
 			accion : 'validarUsuario',
@@ -316,8 +332,8 @@ function controlColaborador($scope, $routeParams, $uibModal, $http, $interval,
 			mi.usuarioValido = response.data.success;
 		});
 	}
-	
-	mi.usuarioCambio = function(){
+
+	mi.usuarioCambio = function() {
 		mi.usuarioValido = false;
 	}
 

@@ -18,6 +18,13 @@
       </div>
     </div>
     <div class="col-sm-12" align="center">
+      <div style="height: 35px;">
+		<div style="text-align: right;">
+			<div class="btn-group" role="group" aria-label="">
+				<a class="btn btn-default" href ng-click="colaborador.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
+			</div>
+		</div>
+	  </div>
       <div id="grid1" ui-grid="colaborador.opcionesGrid" ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination>
         <div class="grid_loading" ng-hide="!colaborador.mostrarCargando">
           <div class="msg">

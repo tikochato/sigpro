@@ -36,6 +36,13 @@
 	                     	<li role="menuitem"><a href="#!/colaborador">Colaborador</a></li>
                          </ul>
                     </li>
+                    <li uib-dropdown>
+                         <a href="#" uib-dropdown-toggle><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Producto <b class="caret"></b></a>
+                         <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                            <li role="menuitem"><a href="#!/productoTipo">Tipos de Producto</a></li>
+                            <li role="menuitem"><a href="#!/productoPropiedad">Propiedades de Producto</a></li>
+                         </ul>
+                    </li>
 	            </ul>
 	            <ul class="nav navbar-nav navbar-right">
 		            <li><a href="/SLogout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Salir</a></li>
