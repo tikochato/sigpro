@@ -6,6 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.subject.Subject;
 import shiro.utilities.CShiro;
@@ -41,6 +42,8 @@ public class SLogout extends HttpServlet {
 		Subject currentUser = CShiro.getSubject();
 		if(currentUser!=null){
 			currentUser.logout();
+			HttpSession sesionweb = request.getSession();
+			sesionweb.invalidate();
 			//response.getWriter().write("{ \"success\": true }");
 		}
 		response.sendRedirect("/");

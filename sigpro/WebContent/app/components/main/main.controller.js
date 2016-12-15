@@ -1,7 +1,7 @@
 /**
- * 
+ *
  */
-var app = angular.module('sigpro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',  
+var app = angular.module('sigpro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
                                        'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','ngAria','ngMaterial','ngMessages']);
 
@@ -28,16 +28,16 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             })
             .when('/entidad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloEntidad\'" class="all_page"></div>'
-            })            
+            })
             .when('/unidadEjecutora/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloUnidadEjecutora\'" class="all_page"></div>'
-            })            
+            })
             .when('/colaborador/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloColaborador\'" class="all_page"></div>'
-            })            
+            })
             .when('/productoTipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProductoTipo\'" class="all_page"></div>'
-            })            
+            })
             .when('/productoPropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProductoPropiedad\'" class="all_page"></div>'
             })            
@@ -50,7 +50,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
 	        				    if(response.data.success)
 	        				    	window.location.href = '/login.jsp';
 	        			 	}, function errorCallback(response){
-	        			 		
+
 	        			 	}
 	        			 );
             			return true;
@@ -99,6 +99,7 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   script: '/app/components/productopropiedad/productopropiedad.controller.js',
 	    	   template: '/app/components/productopropiedad/productopropiedad.jsp'
 	       }
+
 	   ];
 	   $loadOnDemandProvider.config(modules);
 }]);
@@ -115,10 +116,10 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
    function($scope,$document,deviceDetector,$rootScope,$location,$window){
 	$scope.lastscroll = 0;
 	$scope.hidebar = false;
-	
+
 	numeral.language('es', numeral_language);
 	$window.document.title = 'MINFIN - SIGPRO';
-	
+
 	$document.bind('scroll', function(){
 		if($document[0].body.scrollTop > 15){
 			if ($scope.lastscroll>$document[0].body.scrollTop) { //Scroll to Top
@@ -130,14 +131,14 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 		}
 		$scope.lastscroll = $document[0].body.scrollTop;
 	});
-	
+
 	$scope.hideBarFromMenu=function(){
 		$scope.hidebar = true;
 		document.getElementById("title").scrollIntoView()
 	}
-	
+
 	$scope.device = deviceDetector;
-	
+
 	$rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
 		if (location.hostname !== "localhost" || location.hostname !== "127.0.0.1"){
 			$window.ga('create', 'UA-74443600-2', 'auto');
@@ -145,6 +146,3 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 		}
     });
 }]);
-
-
-

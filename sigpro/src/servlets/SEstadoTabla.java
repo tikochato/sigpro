@@ -6,6 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.io.BufferedReader;
 import java.io.OutputStream;
@@ -70,6 +71,10 @@ public class SEstadoTabla extends HttpServlet {
 			if(action.compareTo("guardaEstado")==0){
 				String usuariotexto="";
 				usuariotexto="visita";
+				HttpSession sesionweb = request.getSession();
+				if(sesionweb.getAttribute("usuario")!=null){
+					usuariotexto=sesionweb.getAttribute("usuario").toString();
+				}
 				String tablatexto="";
 				tablatexto=map.get("grid");
 				String estadotexto = "";
