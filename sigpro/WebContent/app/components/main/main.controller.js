@@ -31,7 +31,11 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             })            
             .when('/unidadEjecutora',{
             	template: '<div load-on-demand="\'moduloUnidadEjecutora\'" class="all_page"></div>'
-            })            
+            })   
+            /*.when('/login',{
+            	template: '<div load-on-demand="\'loginController\'" class="all_page"></div>'
+            })*/            
+
 
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -78,6 +82,7 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   script: '/app/components/unidadejecutora/unidadejecutora.controller.js',
 	    	   template: '/app/components/unidadejecutora/unidadejecutora.jsp'
 	       }
+	       
 	   ];
 	   $loadOnDemandProvider.config(modules);
 }]);
