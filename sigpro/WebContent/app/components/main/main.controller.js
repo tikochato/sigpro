@@ -32,10 +32,6 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/unidadEjecutora',{
             	template: '<div load-on-demand="\'moduloUnidadEjecutora\'" class="all_page"></div>'
             })   
-            /*.when('/login',{
-            	template: '<div load-on-demand="\'loginController\'" class="all_page"></div>'
-            })*/            
-
 
             /*.when('/salir',{
             	templateUrl : '<div></div>',
