@@ -1,14 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@ page import="org.apache.shiro.SecurityUtils" %>
+	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="cooperanteController as cooperantec" class="maincontainer all_page" id="title">
 		<h3>Cooperantes</h3><br/>
 		<div class="row" align="center" ng-hide="cooperantec.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-primary" ng-click="cooperantec.nuevo()">Nuevo</label>
-			        <label class="btn btn-primary" ng-click="cooperantec.editar()">Editar</label>
-			        <label class="btn btn-primary" ng-click="cooperantec.borrar()">Borrar</label>
-    			</div>
+			       <shiro:hasPermission name="crearCooperante">
+			       		<label class="btn btn-primary" ng-click="cooperantec.nuevo()">Nuevo</label>
+			       </shiro:hasPermission> 
+			       <shiro:hasPermission name="editarCooperante"><label class="btn btn-primary" ng-click="cooperantec.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="eliminarCooperante">
+			       		<label class="btn btn-primary" ng-click="cooperantec.borrar()">Borrar</label>
+			       </shiro:hasPermission>
+			        
+			        
+    			</div>				
     		</div>
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
