@@ -26,11 +26,20 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/proyecto/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
             })
-            .when('/entidad',{
+            .when('/entidad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloEntidad\'" class="all_page"></div>'
             })            
-            .when('/unidadEjecutora',{
+            .when('/unidadEjecutora/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloUnidadEjecutora\'" class="all_page"></div>'
+            })            
+            .when('/colaborador/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'moduloColaborador\'" class="all_page"></div>'
+            })            
+            .when('/productoTipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'moduloProductoTipo\'" class="all_page"></div>'
+            })            
+            .when('/productoPropiedad/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'moduloProductoPropiedad\'" class="all_page"></div>'
             })            
 
             /*.when('/salir',{
@@ -77,6 +86,18 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'moduloUnidadEjecutora',
 	    	   script: '/app/components/unidadejecutora/unidadejecutora.controller.js',
 	    	   template: '/app/components/unidadejecutora/unidadejecutora.jsp'
+	       }, {
+	    	   name: 'moduloColaborador',
+	    	   script: '/app/components/colaborador/colaborador.controller.js',
+	    	   template: '/app/components/colaborador/colaborador.jsp'
+	       }, {
+	    	   name: 'moduloProductoTipo',
+	    	   script: '/app/components/productotipo/productotipo.controller.js',
+	    	   template: '/app/components/productotipo/productotipo.jsp'
+	       }, {
+	    	   name: 'moduloProductoPropiedad',
+	    	   script: '/app/components/productopropiedad/productopropiedad.controller.js',
+	    	   template: '/app/components/productopropiedad/productopropiedad.jsp'
 	       }
 	   ];
 	   $loadOnDemandProvider.config(modules);

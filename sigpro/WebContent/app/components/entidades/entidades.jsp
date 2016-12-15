@@ -14,6 +14,13 @@
       </div>
     </div>
     <div class="col-sm-12" align="center">
+      <div style="height: 35px;">
+		<div style="text-align: right;">
+			<div class="btn-group" role="group" aria-label="">
+				<a class="btn btn-default" href ng-click="entidad.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
+			</div>
+		</div>
+	  </div>
       <div id="grid1" ui-grid="entidad.entidades_gridOptions" ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination>
         <div class="grid_loading" ng-hide="!entidad.mostrarCargando">
           <div class="msg">
@@ -43,30 +50,35 @@
     <div class="col-sm-12 operation_buttons" align="right">
 
       <div class="btn-group">
-        <label class="btn btn-success" ng-click="entidad.guardar()">Guardar</label> 
+        <label class="btn btn-success" ng-click="form.$valid ? entidad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
         <label class="btn btn-danger" ng-click="entidad.cancelar()">Cancelar</label>
       </div>
 
     </div>
 
-    <div class="col-sm-12">
+    <div>
 
-      <form class="css-form" novalidate>
+      <form name="form" class="css-form" novalidate>
 
-        <div class="form-group">
-          <label for="campo1">* Entidad</label> 
-          <input type="number" class="form-control" id="campo1" placeholder="entidad" ng-model="entidad.entidad" ng-readonly="!entidad.esNuevo" style="width: 200px;" required />
-        </div>
+			<div class="row">
+		        <div class="form-group col-sm-2" ng-class="{ 'has-error' : form.campo1.$invalid }">
+		          <label for="campo1">* Entidad</label> 
+		          <input type="number" class="form-control" id="campo1" name="campo1"  placeholder="entidad" ng-model="entidad.entidad" ng-readonly="!entidad.esNuevo" required />
+		        </div>
+		    </div>
 
-        <div class="form-group">
-          <label for="campo2">* Nombre Entidad</label> 
-          <input type="text" class="form-control" id="campo2" placeholder="nombre entidad" ng-model="entidad.nombre" ng-readonly="!entidad.esNuevo" required />
-        </div>
-
-        <div class="form-group">
-          <label for="campo3">Abreviatura</label> 
-          <input type="text" class="form-control" id="campo3" placeholder="abreviatura" ng-model="entidad.abreviatura" style="width: 200px;">
-        </div>
+			<div class="row">
+				<div class="form-group col-sm-10" ng-class="{ 'has-error' : form.campo2.$invalid }">
+				  <label for="campo2">* Nombre Entidad</label> 
+				  <input type="text" class="form-control" id="campo2" name="campo2" placeholder="nombre entidad" ng-model="entidad.nombre" ng-readonly="!entidad.esNuevo" required />
+				</div>
+				
+		        <div class="form-group col-sm-2" ng-class="{ 'has-error' : form.campo3.$invalid }">
+		          <label for="campo3">Abreviatura</label> 
+		          <input type="text" class="form-control" id="campo3" name="campo3" placeholder="abreviatura" ng-model="entidad.abreviatura">
+		        </div>
+			</div>
+        
 
       </form>
 
@@ -75,7 +87,7 @@
 
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
-        <label class="btn btn-success" ng-click="entidad.guardar()">Guardar</label> 
+        <label class="btn btn-success" ng-click="form.$valid ? entidad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
         <label class="btn btn-danger" ng-click="entidad.cancelar()">Cancelar</label>
       </div>
     </div>
