@@ -14,6 +14,8 @@ function controlUnidadEjecutora($scope, $routeParams, $route, $window,
 		$utilidades, $timeout, $log) {
 	i18nService.setCurrentLang('es');
 	var mi = this;
+	
+	$window.document.title = 'SIGPRO - Unidad Ejecutora';
 
 	mi.esForma = false;
 
@@ -285,11 +287,11 @@ function controlUnidadEjecutora($scope, $routeParams, $route, $window,
 
 moduloUnidadEjecutora.controller('modalBuscarEntidad', [ '$uibModalInstance',
 		'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-		'$timeout', '$log', modalBuscarEntidad ]);
+		'$timeout', '$log', 'titulo', 'mensaje', modalBuscarEntidad ]);
 
 function modalBuscarEntidad($uibModalInstance, $scope, $http, $interval,
-		i18nService, $utilidades, $timeout, $log) {
-
+		i18nService, $utilidades, $timeout, $log, titulo, mensaje) {
+	
 	var mi = this;
 
 	mi.totalElementos = 0;
