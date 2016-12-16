@@ -13,6 +13,8 @@ function controlEntidad($scope, $routeParams, $route, $window, $location,
 		$timeout, $log) {
 	i18nService.setCurrentLang('es');
 	var mi = this;
+	
+	$window.document.title = 'SIGPRO - Entidad';
 
 	mi.totalEntidades = 0;
 	mi.paginaActual = 1;
