@@ -10,7 +10,6 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import pojo.Cooperante;
 import pojo.ProyectoTipo;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -103,6 +102,26 @@ public class ProyectoTipoDAO {
 		}
 		catch(Throwable e){
 			CLogger.write("5", ProyectoTipoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean eliminarProyectoTipo(ProyectoTipo proyectoTipo){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			
+			proyectoTipo.setEstado(0);
+			session.beginTransaction();
+			session.update(proyectoTipo);
+			session.getTransaction().commit();
+			ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("6", ProyectoTipoDAO.class, e);
 		}
 		finally{
 			session.close();

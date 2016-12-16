@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
@@ -22,7 +24,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ProyectoTipoDAO;
+import dao.PtipoPropiedadDAO;
+import pojo.ProyectoPropiedad;
 import pojo.ProyectoTipo;
+import pojo.PtipoPropiedad;
+import pojo.PtipoPropiedadId;
 import utilities.Utils;
 
 
@@ -43,7 +49,6 @@ public class SProyectoTipo extends HttpServlet {
     public SProyectoTipo() {
         super();
     }
-
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
@@ -78,8 +83,6 @@ public class SProyectoTipo extends HttpServlet {
 				temp.estado = proyectotipo.getEstado();
 				temp.fechaActualizacion = Utils.formatDate(proyectotipo.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(proyectotipo.getFechaCreacion());
-				
-				
 				temp.usuarioActualizo = proyectotipo.getUsuarioActualizo();
 				temp.usuarioCreo = proyectotipo.getUsarioCreo();
 				stcooperantes.add(temp);
@@ -92,7 +95,7 @@ public class SProyectoTipo extends HttpServlet {
 		else if(accion.equals("numeroProyectoTipos")){
 			response_text = String.join("","{ \"success\": true, \"totalproyectotipos\":",ProyectoTipoDAO.getTotalProyectoTipos().toString()," }");
 		}
-		else if(accion.equals("guardarCooperante")){
+		else if(accion.equals("guardarProyectotipo")){
 			boolean result = false;
 			boolean esnuevo = map.get("esnuevo").equals("true");
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
@@ -101,27 +104,62 @@ public class SProyectoTipo extends HttpServlet {
 				String nombre = map.get("nombre");
 				String descripcion = map.get("descripcion");
 				ProyectoTipo proyectoTipo;
+				
 				if(esnuevo){
 					proyectoTipo = new ProyectoTipo(nombre, descripcion, 
 							"admin",null,new DateTime().toDate(),null,1,null,null);
-							
-					
 				}
 				else{
 					proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(id);
-					
 					proyectoTipo.setNombre(nombre);
 					proyectoTipo.setDescripcion(descripcion);
 					proyectoTipo.setUsuarioActualizo("admin");
 					proyectoTipo.setFechaActualizacion(new DateTime().toDate());
+					Set<PtipoPropiedad> propiedades_temp = proyectoTipo.getPtipoPropiedads();
+					proyectoTipo.setPtipoPropiedads(null);
+					if (propiedades_temp!=null){
+						for (PtipoPropiedad ptipoPropiedad : propiedades_temp){
+							PtipoPropiedadDAO.eliminarTotalPtipoPropiedad(ptipoPropiedad);
+						}
+					}
 				}
 				result = ProyectoTipoDAO.guardarProyectoTipo(proyectoTipo);
-				response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
+				
+				String[] idsPropiedades =  map.get("propiedades") != null ? map.get("propiedades").toString().split(",") : null;
+				if (idsPropiedades !=null){
+					Set<PtipoPropiedad> ptipoPropiedades = new HashSet<PtipoPropiedad>(0);
+					for (String idPropiedad : idsPropiedades){
+						PtipoPropiedadId ptipoPropiedadId = new PtipoPropiedadId(proyectoTipo.getId(), Integer.parseInt(idPropiedad));
+						
+						ProyectoPropiedad proyectoPropiedad = new ProyectoPropiedad();
+						proyectoPropiedad.setId(Integer.parseInt(idPropiedad));
+						
+						PtipoPropiedad ptipoPropiedad = new PtipoPropiedad(
+								ptipoPropiedadId,
+								proyectoPropiedad,
+								proyectoTipo, 
+								"admin", new DateTime().toDate());
+						ptipoPropiedades.add(ptipoPropiedad);
+					}	
+					proyectoTipo.setPtipoPropiedads(ptipoPropiedades);
+				}
+				
+				result = ProyectoTipoDAO.guardarProyectoTipo(proyectoTipo);
+				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
+						+ "\"id\": " + proyectoTipo.getId() +" }");
 			}
 			else
 				response_text = "{ \"success\": false }";
 		}
-		
+		else if(accion.equals("borrarProyectoTipo")){
+			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			if(id>0){
+				ProyectoTipo proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(id);
+				response_text = String.join("","{ \"success\": ",(ProyectoTipoDAO.eliminarProyectoTipo(proyectoTipo) ? "true" : "false")," }");
+			}
+			else
+				response_text = "{ \"success\": false }";
+		}
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
 		
