@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<%@ page import="org.apache.shiro.SecurityUtils" %>
+<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <div ng-controller="controlUnidadEjecutora as unidad" class="maincontainer all_page">
 
   <script type="text/ng-template" id="buscarEntidad.jsp">
@@ -13,10 +14,16 @@
   <div class="row" align="center" ng-hide="unidad.esForma">
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
-        <label class="btn btn-primary" ng-click="unidad.nuevo()">Nueva</label> <label class="btn btn-primary" ng-click="unidad.editar()">Editar</label>
+      	<shiro:hasPermission name="crearEntidad">
+        <label class="btn btn-primary" ng-click="unidad.nuevo()">Nueva</label>
+      	</shiro:hasPermission> 
+      	<shiro:hasPermission name="editarEntidad">
+        <label class="btn btn-primary" ng-click="unidad.editar()">Editar</label>
+      	</shiro:hasPermission>
       </div>
     </div>
-    <div class="col-sm-12" align="center">
+    <shiro:hasPermission name="verEntidad">
+     <div class="col-sm-12" align="center">
       <div style="height: 35px;">
 		<div style="text-align: right;">
 			<div class="btn-group" role="group" aria-label="">
@@ -35,6 +42,8 @@
         last-text="Último" next-text="Siguiente" previous-text="Anterior" class="pagination-sm" boundary-links="true" force-ellipses="true" ng-change="unidad.cambioPagina()"
       ></ul>
     </div>
+    </shiro:hasPermission>
+   
   </div>
 
   <div class="row" ng-show="unidad.esForma">
