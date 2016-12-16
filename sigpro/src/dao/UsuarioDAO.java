@@ -6,8 +6,8 @@ import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.hibernate.Session;
-import java.util.Date;
 
+import java.util.Date;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -16,6 +16,7 @@ import pojo.Usuario;
 import pojo.UsuarioPermiso;
 import pojo.UsuarioPermisoId;
 import pojo.Permiso;
+import pojo.Usuariolog;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -37,7 +38,18 @@ public class UsuarioDAO {
 	}
 
 	public static void userLoginHistory(String usuario) {
-		// TODO Auto-generated method stub
+		Usuariolog usuariolog = new Usuariolog(usuario,new Date());
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			session.saveOrUpdate(usuariolog);
+			session.getTransaction().commit();
+		}catch(Throwable e){
+			CLogger.write("3", EstadoTablaDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
 		
 	}
 

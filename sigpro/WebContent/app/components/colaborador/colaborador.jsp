@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<%@ page import="org.apache.shiro.SecurityUtils" %>
+<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <div ng-controller="controlColaborador as colaborador" class="maincontainer all_page">
 
   <script type="text/ng-template" id="buscarUnidadEjecutora.jsp">
@@ -13,11 +14,16 @@
   <div align="center" ng-hide="colaborador.esForma">
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
-        <label class="btn btn-primary" ng-click="colaborador.nuevo()">Nuevo</label> 
-        <label class="btn btn-primary" ng-click="colaborador.editar()">Editar</label>
+      	<shiro:hasPermission name="crearColaborador">
+        	<label class="btn btn-primary" ng-click="colaborador.nuevo()">Nuevo</label> 
+      	</shiro:hasPermission>
+      	<shiro:hasPermission name="editarColaborador">
+        	<label class="btn btn-primary" ng-click="colaborador.editar()">Editar</label>
+      	</shiro:hasPermission>
       </div>
     </div>
-    <div class="col-sm-12" align="center">
+    <shiro:hasPermission name="verColaborador">
+     <div class="col-sm-12" align="center">
       <div style="height: 35px;">
 		<div style="text-align: right;">
 			<div class="btn-group" role="group" aria-label="">
@@ -47,6 +53,8 @@
         ng-change="colaborador.cambioPagina()"
       ></ul>
     </div>
+    </shiro:hasPermission>
+   
   </div>
 
   <div ng-show="colaborador.esForma">

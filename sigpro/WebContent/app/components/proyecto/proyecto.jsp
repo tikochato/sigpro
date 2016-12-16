@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="org.apache.shiro.SecurityUtils" %>
+<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <style type="text/css">
 .myGrid {
 	width: 100%;
@@ -14,15 +16,26 @@
 	<div class="row" align="center" ng-hide="controller.esColapsado">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
+			<shiro:hasPermission name="crearProyecto">
 				<label class="btn btn-primary" ng-click="controller.nuevo()">Nuevo</label>
-				<label class="btn btn-primary" ng-click="controller.editar()">Editar</label> <label
-					class="btn btn-primary" ng-click="controller.borrar()">Borrar</label>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="editarProyecto">
+				<label class="btn btn-primary" ng-click="controller.editar()">Editar</label> 
+			</shiro:hasPermission>				
+			<shiro:hasPermission name="eliminarProyecto">
+				<label class="btn btn-primary" ng-click="controller.borrar()">Borrar</label>
+			</shiro:hasPermission>
+			
 			</div>
 		</div>
+		<shiro:hasPermission name="verProyecto">
 		<div class="col-sm-12" align="center">
 			<div style="height: 35px;">
 					<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
+					<shiro:hasPermission name="verProyecto">
 						<a class="btn btn-default" href ng-click="controller.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
+					</shiro:hasPermission>
+						
 					</div>
 					</div>
 				</div>
@@ -38,7 +51,7 @@
 					  </span>
 					</div>
 				  </div>
-				</div>
+			</div>
 				<ul uib-pagination total-items="cooperantec.totalCooperantes" 
 						ng-model="cooperantec.paginaActual" 
 						max-size="cooperante.numeroMaximoPaginas" 
@@ -50,6 +63,10 @@
 						ng-change="cooperantec.cambioPagina()"
 				></ul>
 		</div>
+		
+		</shiro:hasPermission>
+		
+		
 	</div>
 	<div class="row" ng-show="controller.esColapsado">
 		<h4 ng-hide="!controller.esNuevo">Nuevo Proyecto</h4>
