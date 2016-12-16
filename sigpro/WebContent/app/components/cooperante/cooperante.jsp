@@ -18,6 +18,7 @@
 			        
     			</div>				
     		</div>
+    		<shiro:hasPermission name="verCooperante">
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
 					<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
@@ -49,6 +50,8 @@
 						ng-change="cooperantec.cambioPagina()"
 				></ul>
 			</div>
+    		</shiro:hasPermission>
+    		
 		</div>
 		<div class="row" ng-show="cooperantec.mostraringreso">
 			<h4 ng-hide="!cooperantec.esnuevo">Nuevo cooperante</h4>
@@ -59,6 +62,7 @@
 			        <label class="btn btn-primary" ng-click="cooperantec.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
+			
 			<div class="col-sm-12">
 				<form>
 						<div class="form-group">
@@ -97,10 +101,12 @@
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>
 			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="cooperantec.guardar()">Guardar</label>
-			        <label class="btn btn-primary" ng-click="cooperantec.irATabla()">Ir a Tabla</label>
-    			</div>
+				<div class="col-sm-12 operation_buttons" align="right">
+					<div class="btn-group">
+				        <label class="btn btn-success" ng-click="cooperantec.guardar()">Guardar</label>
+				        <label class="btn btn-primary" ng-click="cooperantec.irATabla()">Ir a Tabla</label>
+	    			</div>
+	    		</div>
     		</div>
 		</div>
 	</div>
