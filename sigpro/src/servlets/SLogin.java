@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
@@ -76,6 +77,8 @@ public class SLogin extends HttpServlet {
 			try {
 				currentUser.login(token);
 				Usuario user=UsuarioDAO.getUsuario(map.get("username").toLowerCase());
+				HttpSession sesionweb = request.getSession();
+				sesionweb.setAttribute("usuario", user.getUsuario());
 				CShiro.setAttribute("username", user.getUsuario());
 				CShiro.setAttribute("user",user);
 				response.getWriter().write("{ \"success\": true }");

@@ -65,5 +65,6 @@
         <mapping class="pojo.UnidadEjecutora" />
         <mapping class="pojo.Hito" />
         <mapping class="pojo.Componente" />
+        <mapping class="pojo.Usuariolog" />
     </session-factory>
 </hibernate-configuration>

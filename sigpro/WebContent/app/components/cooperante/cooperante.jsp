@@ -1,15 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@ page import="org.apache.shiro.SecurityUtils" %>
+	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="cooperanteController as cooperantec" class="maincontainer all_page" id="title">
 		<h3>Cooperantes</h3><br/>
 		<div class="row" align="center" ng-hide="cooperantec.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-primary" ng-click="cooperantec.nuevo()">Nuevo</label>
-			        <label class="btn btn-primary" ng-click="cooperantec.editar()">Editar</label>
-			        <label class="btn btn-primary" ng-click="cooperantec.borrar()">Borrar</label>
-    			</div>
+			       <shiro:hasPermission name="crearCooperante">
+			       		<label class="btn btn-primary" ng-click="cooperantec.nuevo()">Nuevo</label>
+			       </shiro:hasPermission> 
+			       <shiro:hasPermission name="editarCooperante"><label class="btn btn-primary" ng-click="cooperantec.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="eliminarCooperante">
+			       		<label class="btn btn-primary" ng-click="cooperantec.borrar()">Borrar</label>
+			       </shiro:hasPermission>
+			        
+			        
+    			</div>				
     		</div>
+    		<shiro:hasPermission name="verCooperante">
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
 					<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
@@ -41,6 +50,8 @@
 						ng-change="cooperantec.cambioPagina()"
 				></ul>
 			</div>
+    		</shiro:hasPermission>
+    		
 		</div>
 		<div class="row" ng-show="cooperantec.mostraringreso">
 			<h4 ng-hide="!cooperantec.esnuevo">Nuevo cooperante</h4>
@@ -51,6 +62,7 @@
 			        <label class="btn btn-primary" ng-click="cooperantec.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
+			
 			<div class="col-sm-12">
 				<form>
 						<div class="form-group">
@@ -89,10 +101,12 @@
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>
 			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="cooperantec.guardar()">Guardar</label>
-			        <label class="btn btn-primary" ng-click="cooperantec.irATabla()">Ir a Tabla</label>
-    			</div>
+				<div class="col-sm-12 operation_buttons" align="right">
+					<div class="btn-group">
+				        <label class="btn btn-success" ng-click="cooperantec.guardar()">Guardar</label>
+				        <label class="btn btn-primary" ng-click="cooperantec.irATabla()">Ir a Tabla</label>
+	    			</div>
+	    		</div>
     		</div>
 		</div>
 	</div>

@@ -7,27 +7,12 @@ import org.apache.shiro.authc.SaltedAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.realm.jdbc.JdbcRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.mariadb.jdbc.MariaDbDataSource;
-
+import org.hibernate.Session;
 import dao.UsuarioDAO;
 import pojo.Usuario;
-import utilities.CLogger;
-import utilities.CProperties;
+import utilities.CHibernateSession;
 
 public class CustomRealm extends JdbcRealm {
-	
-	public CustomRealm() {
-		super();
-		MariaDbDataSource mariadbDS = new MariaDbDataSource();
-		try {
-			mariadbDS.setUrl(String.join("", "jdbc:mysql://",CProperties.getmemsql_host(),":", String.valueOf(CProperties.getmemsql_port()), "/", CProperties.getmemsql_schema()));
-			mariadbDS.setUser(CProperties.getmemsql_user());
-			mariadbDS.setPassword(CProperties.getmemsql_password());
-			this.setDataSource(mariadbDS);
-		} catch (Exception e) {
-			CLogger.write("1", CustomRealm.class, e);
-		}
-	}
 	
 	@Override
 	  protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
@@ -37,13 +22,27 @@ public class CustomRealm extends JdbcRealm {
 	    if (username == null) 
 	      return null;
 	     
-	    Usuario user = UsuarioDAO.getUsuario(username);
-	    if (user == null) 
-	      return null;
-	    
-	    SaltedAuthenticationInfo info = new CustomSaltedAuthenticationInfo(username, user.getPassword(), user.getSalt());
-	 
-	    return info;
+	    Session session = CHibernateSession.getSessionFactory().openSession();
+		session.beginTransaction();
+		try {
+			//UserDAO userDAO = new UserDAO(session);
+			//UsuarioDAO usuarioDAO = new UsuarioDAO();
+			final Usuario user = UsuarioDAO.getUsuario(username);
+
+			if (user == null) {
+				System.out.println("No account found for user [" + username + "]");
+				return null;
+			}
+
+			// return salted credentials
+			SaltedAuthenticationInfo info = new CustomSaltedAuthenticationInfo(
+					username, user.getPassword(), user.getSalt());
+
+			return info;
+		} finally {
+			session.getTransaction().commit();
+			if (session.isOpen()) session.close();
+		}
 	  }
 	
 	@Override

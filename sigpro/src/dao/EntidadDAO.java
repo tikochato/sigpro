@@ -76,6 +76,7 @@ public class EntidadDAO {
 	    nuevaEntidad = new Entidad();
 	    nuevaEntidad.setEntidad(entidad);
 	    nuevaEntidad.setNombre(nombre);
+	    nuevaEntidad.setAbreviatura(abreviatura);
 	    nuevaEntidad.setUnidadEjecutoras(null);
 
 	    Session session = CHibernateSession.getSessionFactory().openSession();
@@ -96,13 +97,15 @@ public class EntidadDAO {
 	return ret;
     }
 
-    public static boolean actualizarEntidad(int entidad, String Iniciales) {
+    public static boolean actualizarEntidad(int entidad, String abreviatura) {
 
 	Entidad existeEntidad = getEntidad(entidad);
 	boolean ret = false;
 
 	if (existeEntidad != null) {
 
+		existeEntidad.setAbreviatura(abreviatura);
+		
 	    Session session = CHibernateSession.getSessionFactory().openSession();
 	    try {
 		session.beginTransaction();
@@ -152,7 +155,7 @@ public class EntidadDAO {
 	    EstructuraEntidad entidad = new EstructuraEntidad();
 	    entidad.entidad = entidadPojo.getEntidad();
 	    entidad.nombre = entidadPojo.getNombre();
-	    entidad.abreviatura = "";
+	    entidad.abreviatura = entidadPojo.getAbreviatura();
 
 	    entidades.add(entidad);
 	}
