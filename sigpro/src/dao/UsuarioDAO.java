@@ -17,6 +17,7 @@ import pojo.UsuarioPermiso;
 import pojo.UsuarioPermisoId;
 import pojo.Permiso;
 import pojo.Usuariolog;
+import pojo.UsuariologId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -38,7 +39,8 @@ public class UsuarioDAO {
 	}
 
 	public static void userLoginHistory(String usuario) {
-		Usuariolog usuariolog = new Usuariolog(usuario, new DateTime().toDate());
+		UsuariologId usuariologid = new UsuariologId(usuario, new DateTime().toDate());
+		Usuariolog usuariolog = new Usuariolog(usuariologid);
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
