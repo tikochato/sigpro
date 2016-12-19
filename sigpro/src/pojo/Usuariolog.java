@@ -15,6 +15,10 @@ import javax.persistence.Table;
 @Table(name = "usuariolog", catalog = "sigpro")
 public class Usuariolog implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5762512060655483094L;
 	private UsuariologId id;
 
 	public Usuariolog() {

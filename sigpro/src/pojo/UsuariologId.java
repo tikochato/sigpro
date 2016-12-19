@@ -11,6 +11,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class UsuariologId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4157142863885596420L;
 	private String usuario;
 	private Date fecha;
 
