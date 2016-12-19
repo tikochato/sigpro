@@ -10,7 +10,6 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import pojo.Cooperante;
 import pojo.Proyecto;
 import utilities.CHibernateSession;
 import utilities.CLogger;

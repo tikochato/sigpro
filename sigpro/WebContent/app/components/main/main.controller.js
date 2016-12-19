@@ -50,7 +50,6 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
 	        				    if(response.data.success)
 	        				    	window.location.href = '/login.jsp';
 	        			 	}, function errorCallback(response){
-
 	        			 	}
 	        			 );
             			return true;
