@@ -26,8 +26,6 @@
 	                     <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
 	                     	<li role="menuitem"><a href="#!/formaejemplo">Forma Ejemplo</a></li>
 	                     	<li role="menuitem"><a href="#!/cooperante">Cooperante</a></li>
-	                     	<li role="menuitem"><a href="#!/proyecto">Proyecto</a></li>
-	                     	<li role="menuitem"><a href="#!/proyectotipo">Tipo Proyecto</a></li>
 	                     </ul>
 	                </li>
                     <li uib-dropdown>
@@ -43,6 +41,14 @@
                          <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
                             <li role="menuitem"><a href="#!/productoTipo">Tipos de Producto</a></li>
                             <li role="menuitem"><a href="#!/productoPropiedad">Propiedades de Producto</a></li>
+                         </ul>
+                    </li>
+                    <li uib-dropdown>
+                         <a href="#" uib-dropdown-toggle><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Proyecto <b class="caret"></b></a>
+                         <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                            <li role="menuitem"><a href="#!/proyecto">Proyecto</a></li>
+                            <li role="menuitem"><a href="#!/proyectotipo">Tipo de Proyecto</a></li>
+                            <li role="menuitem"><a href="#!/desembolsotipo">Tipo Desembolso</a></li>
                          </ul>
                     </li>
 	            </ul>
