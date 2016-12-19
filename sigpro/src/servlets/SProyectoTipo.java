@@ -107,7 +107,7 @@ public class SProyectoTipo extends HttpServlet {
 				
 				if(esnuevo){
 					proyectoTipo = new ProyectoTipo(nombre, descripcion, 
-							"admin",null,new DateTime().toDate(),null,1,null,null);
+							"admin",null,new DateTime().toDate(),null,1,null,new HashSet<PtipoPropiedad>(0));
 				}
 				else{
 					proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(id);
@@ -123,14 +123,13 @@ public class SProyectoTipo extends HttpServlet {
 						}
 					}
 				}
+				
 				result = ProyectoTipoDAO.guardarProyectoTipo(proyectoTipo);
 				
 				String[] idsPropiedades =  map.get("propiedades") != null ? map.get("propiedades").toString().split(",") : null;
-				if (idsPropiedades !=null){
-					Set<PtipoPropiedad> ptipoPropiedades = new HashSet<PtipoPropiedad>(0);
+				if (idsPropiedades !=null && idsPropiedades.length>0){
 					for (String idPropiedad : idsPropiedades){
 						PtipoPropiedadId ptipoPropiedadId = new PtipoPropiedadId(proyectoTipo.getId(), Integer.parseInt(idPropiedad));
-						
 						ProyectoPropiedad proyectoPropiedad = new ProyectoPropiedad();
 						proyectoPropiedad.setId(Integer.parseInt(idPropiedad));
 						
@@ -139,9 +138,13 @@ public class SProyectoTipo extends HttpServlet {
 								proyectoPropiedad,
 								proyectoTipo, 
 								"admin", new DateTime().toDate());
-						ptipoPropiedades.add(ptipoPropiedad);
-					}	
-					proyectoTipo.setPtipoPropiedads(ptipoPropiedades);
+						
+						ptipoPropiedad.setProyectoTipo(proyectoTipo);
+						if (proyectoTipo.getPtipoPropiedads() == null){
+							proyectoTipo.setPtipoPropiedads(new HashSet<PtipoPropiedad>(0));
+						}
+						proyectoTipo.getPtipoPropiedads().add(ptipoPropiedad);
+					}
 				}
 				
 				result = ProyectoTipoDAO.guardarProyectoTipo(proyectoTipo);
