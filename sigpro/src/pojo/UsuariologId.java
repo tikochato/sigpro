@@ -1,5 +1,5 @@
 package pojo;
-// Generated 19/12/2016 12:37:44 PM by Hibernate Tools 5.2.0.Beta1
+// Generated 19/12/2016 12:43:38 PM by Hibernate Tools 5.2.0.Beta1
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -17,16 +17,12 @@ public class UsuariologId implements java.io.Serializable {
 	public UsuariologId() {
 	}
 
-	public UsuariologId(Date fecha) {
-		this.fecha = fecha;
-	}
-
 	public UsuariologId(String usuario, Date fecha) {
 		this.usuario = usuario;
 		this.fecha = fecha;
 	}
 
-	@Column(name = "usuario", length = 32)
+	@Column(name = "usuario", nullable = false, length = 32)
 	public String getUsuario() {
 		return this.usuario;
 	}

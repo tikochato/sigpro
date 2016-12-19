@@ -1,5 +1,5 @@
 package pojo;
-// Generated 19/12/2016 12:37:44 PM by Hibernate Tools 5.2.0.Beta1
+// Generated 19/12/2016 12:43:38 PM by Hibernate Tools 5.2.0.Beta1
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -26,7 +26,8 @@ public class Usuariolog implements java.io.Serializable {
 
 	@EmbeddedId
 
-	@AttributeOverrides({ @AttributeOverride(name = "usuario", column = @Column(name = "usuario", length = 32)),
+	@AttributeOverrides({
+			@AttributeOverride(name = "usuario", column = @Column(name = "usuario", nullable = false, length = 32)),
 			@AttributeOverride(name = "fecha", column = @Column(name = "fecha", nullable = false, length = 19)) })
 	public UsuariologId getId() {
 		return this.id;
