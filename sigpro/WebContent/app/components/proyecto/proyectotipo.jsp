@@ -5,7 +5,8 @@
     	<%@ include file="/app/components/proyecto/buscarpropiedad.jsp"%>
   	</script>
 		<h3>Tipo de Proyecto</h3><br/>
-		<div class="row" align="center" ng-hide="proyectotipoc.mostraringreso">
+		
+		<div class="row" align="center" ng-if="!proyectotipoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-primary" ng-click="proyectotipoc.nuevo()">Nuevo</label>
@@ -45,7 +46,8 @@
 				></ul>
 			</div>
 		</div>
-		<div class="row" ng-show="proyectotipoc.mostraringreso">
+		
+		<div class="row" ng-if="proyectotipoc.mostraringreso">
 			<h4 ng-hide="!proyectotipoc.esnuevo">Nuevo cooperante</h4>
 			<h4 ng-hide="proyectotipoc.esnuevo">Edición de cooperante</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
@@ -56,9 +58,6 @@
     		</div>
 			<div class="col-sm-12">
 				<form>
-					<uib-tabset active="active">
-					<br/>
-						<uib-tab index="0" heading="Tipo Proyecti">
 							<div class="form-group">
 								<label for="id">ID</label>
 	    						<label class="form-control" id="id">{{ proyectotipoc.proyectotipo.id }}</label>
@@ -88,8 +87,7 @@
 								<label for="fechaActualizacion">Fecha de actualizacion</label>
 	    						<label class="form-control" id="usuarioCreo">{{ proyectotipoc.proyectotipo.fechaActualizacion }}</label>
 							</div>
-						</uib-tab>
-						<uib-tab index="2" heading="Propiedades">
+						
 							<br/>
 							<div style="height: 35px;">
 								<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
@@ -107,7 +105,7 @@
 							
 							<div id="proyectoPropiedadgrid" ui-grid="proyectotipoc.gridOptionsProyectoPropiedad" ui-grid-save-state  
 									ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination class="grid"
-									ng-show="proyectotipoc.mostrarPropiedad"
+									
 									>
 								<div class="grid_loading" ng-hide="!proyectotipoc.mostrarcargandoProyProp">
 							  	<div class="msg">
@@ -117,10 +115,7 @@
 								  </span>
 								</div>
 							  </div>
-							</div> 
-						
-						</uib-tab>					
-					</uib-tabset>
+							</div>
 				</form>
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>

@@ -17,16 +17,13 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		
 		
+		
 		//--
 		mi.proyectopropiedades =[];
 		mi.proyectopropiedad =null;
 		mi.mostrarcargandoProyProp=true;
 		mi.mostrarPropiedad = false;
 		mi.paginaActualPropiedades=1;
-		
-		
-		
-		
 		
 		mi.gridOptions = {
 				enableRowSelection : true,
@@ -214,7 +211,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 		};
 		
 		mi.cargarTablaPropiedades = function(pagina){
-			var deferred = $q.defer();
+			
 			mi.mostrarcargandoProyProp=true;
 			$http.post('/SProyectoPropiedad', 
 					{ 
@@ -223,21 +220,15 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 						idProyectoTipo:mi.proyectotipo!=null ? mi.proyectotipo.id : null, 
 						numeroproyectopropiedad: $utilidades.elementosPorPagina }).success(
 				function(response) {
-					deferred.resolve(response.proyectopropiedades);
-					//mi.proyectopropiedades = response.proyectopropiedades;
-					//mi.gridOptionsProyectoPropiedad.data = mi.proyectopropiedades;
+					
+					mi.proyectopropiedades = response.proyectopropiedades;
+					mi.gridOptionsProyectoPropiedad.data = mi.proyectopropiedades;
 					mi.mostrarcargandoProyProp = false;
-					//mi.mostrarPropiedad = true;
+					mi.mostrarPropiedad = true;
 				});
-			return deferred.promise;
+			
 		}
 		
-		var carga = mi.cargarTablaPropiedades(1);
-		
-		carga.then(function(data){
-			mi.gridOptionsProyectoPropiedad.data = data;
-			mi.mostrarPropiedad = true;
-		})
 		
 		
 		
@@ -371,7 +362,7 @@ function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval, i18nS
     			mi.mostrarCargando = false;
     	    }
     	});
-    	return deferred.promise;
+    	
      };
      
      

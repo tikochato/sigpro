@@ -149,7 +149,7 @@ public class ProyectoTipo implements java.io.Serializable {
 		this.proyectos = proyectos;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyectoTipo", cascade = CascadeType.ALL )
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyectoTipo", cascade = CascadeType.ALL   )
 	public Set<PtipoPropiedad> getPtipoPropiedads() {
 		return this.ptipoPropiedads;
 	}
