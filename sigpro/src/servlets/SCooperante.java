@@ -149,9 +149,11 @@ public class SCooperante extends HttpServlet {
 				response_text = "{ \"success\": false }";
 		}
 		else if(accion.equals("borrarCooperante")){
+			HttpSession sesionweb = request.getSession();
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
 				Cooperante cooperante = CooperanteDAO.getCooperantePorId(id);
+				cooperante.setUsuarioActualizo(sesionweb.getAttribute("usuario").toString());
 				response_text = String.join("","{ \"success\": ",(CooperanteDAO.eliminarCooperante(cooperante) ? "true" : "false")," }");
 			}
 			else
