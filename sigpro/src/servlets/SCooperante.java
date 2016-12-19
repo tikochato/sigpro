@@ -139,7 +139,7 @@ public class SCooperante extends HttpServlet {
 					cooperante.setCodigo(codigo);
 					cooperante.setNombre(nombre);
 					cooperante.setDescripcion(descripcion);
-					cooperante.setUsuarioActualizo("admin");
+					cooperante.setUsuarioActualizo(sesionweb.getAttribute("usuario").toString());
 					cooperante.setFechaActualizacion(new DateTime().toDate());
 				}
 				result = CooperanteDAO.guardarCooperante(cooperante);
