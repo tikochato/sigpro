@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 5, 2016 7:40:54 PM by Hibernate Tools 5.2.0.Beta1
+// Generated 20/12/2016 11:26:44 AM by Hibernate Tools 5.2.0.Beta1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6982264195466878039L;
+	private static final long serialVersionUID = 7489971002950015416L;
 	private Integer id;
 	private Cooperante cooperante;
 	private ProyectoTipo proyectoTipo;
@@ -45,6 +45,7 @@ public class Proyecto implements java.io.Serializable {
 	private Set<Hito> hitos = new HashSet<Hito>(0);
 	private Set<ObjetoRecurso> objetoRecursos = new HashSet<ObjetoRecurso>(0);
 	private Set<ProyectoPropedadValor> proyectoPropedadValors = new HashSet<ProyectoPropedadValor>(0);
+	private Set<Meta> metas = new HashSet<Meta>(0);
 	private Set<ObjetoRiesgo> objetoRiesgos = new HashSet<ObjetoRiesgo>(0);
 	private Set<Componente> componentes = new HashSet<Componente>(0);
 	private Set<ObjetoFormulario> objetoFormularios = new HashSet<ObjetoFormulario>(0);
@@ -68,7 +69,7 @@ public class Proyecto implements java.io.Serializable {
 			String descripcion, int snip, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Set<Desembolso> desembolsos,
 			Set<FormularioItemValor> formularioItemValors, Set<Hito> hitos, Set<ObjetoRecurso> objetoRecursos,
-			Set<ProyectoPropedadValor> proyectoPropedadValors, Set<ObjetoRiesgo> objetoRiesgos,
+			Set<ProyectoPropedadValor> proyectoPropedadValors, Set<Meta> metas, Set<ObjetoRiesgo> objetoRiesgos,
 			Set<Componente> componentes, Set<ObjetoFormulario> objetoFormularios) {
 		this.cooperante = cooperante;
 		this.proyectoTipo = proyectoTipo;
@@ -86,6 +87,7 @@ public class Proyecto implements java.io.Serializable {
 		this.hitos = hitos;
 		this.objetoRecursos = objetoRecursos;
 		this.proyectoPropedadValors = proyectoPropedadValors;
+		this.metas = metas;
 		this.objetoRiesgos = objetoRiesgos;
 		this.componentes = componentes;
 		this.objetoFormularios = objetoFormularios;
@@ -250,6 +252,15 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setProyectoPropedadValors(Set<ProyectoPropedadValor> proyectoPropedadValors) {
 		this.proyectoPropedadValors = proyectoPropedadValors;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
+	public Set<Meta> getMetas() {
+		return this.metas;
+	}
+
+	public void setMetas(Set<Meta> metas) {
+		this.metas = metas;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")

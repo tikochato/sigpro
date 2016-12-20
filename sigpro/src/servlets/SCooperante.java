@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.joda.time.DateTime;
 
@@ -120,6 +121,7 @@ public class SCooperante extends HttpServlet {
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("guardarCooperante")){
+			HttpSession sesionweb = request.getSession();
 			boolean result = false;
 			boolean esnuevo = map.get("esnuevo").equals("true");
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
@@ -130,14 +132,14 @@ public class SCooperante extends HttpServlet {
 				Cooperante cooperante;
 				if(esnuevo){
 					cooperante = new Cooperante(codigo, nombre, descripcion, 
-							"admin", null, new DateTime().toDate(), null, 1, null);
+							sesionweb.getAttribute("usuario").toString(), null, new DateTime().toDate(), null, 1, null);
 				}
 				else{
 					cooperante = CooperanteDAO.getCooperantePorId(id);
 					cooperante.setCodigo(codigo);
 					cooperante.setNombre(nombre);
 					cooperante.setDescripcion(descripcion);
-					cooperante.setUsuarioActualizo("admin");
+					cooperante.setUsuarioActualizo(sesionweb.getAttribute("usuario").toString());
 					cooperante.setFechaActualizacion(new DateTime().toDate());
 				}
 				result = CooperanteDAO.guardarCooperante(cooperante);
@@ -147,9 +149,11 @@ public class SCooperante extends HttpServlet {
 				response_text = "{ \"success\": false }";
 		}
 		else if(accion.equals("borrarCooperante")){
+			HttpSession sesionweb = request.getSession();
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
 				Cooperante cooperante = CooperanteDAO.getCooperantePorId(id);
+				cooperante.setUsuarioActualizo(sesionweb.getAttribute("usuario").toString());
 				response_text = String.join("","{ \"success\": ",(CooperanteDAO.eliminarCooperante(cooperante) ? "true" : "false")," }");
 			}
 			else
