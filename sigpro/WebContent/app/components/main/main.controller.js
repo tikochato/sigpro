@@ -47,7 +47,13 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             })  
             .when('/desembolsotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'desembolsotipoController\'" class="all_page"></div>'
-            })  
+            })
+            .when('/metaunidadmedida/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'metaunidadmedidaController\'" class="all_page"></div>'
+            })
+            .when('/metatipos/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'metatipoController\'" class="all_page"></div>'
+            })
 
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -114,6 +120,14 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'desembolsotipoController',
 	    	   script: '/app/components/desembolso/desembolsotipo.controller.js',
 	    	   template: '/app/components/desembolso/desembolsotipo.jsp'
+	       },{
+	    	   name: 'metaunidadmedidaController',
+	    	   script: '/app/components/metaunidadmedida/metaunidadmedida.controller.js',
+	    	   template: '/app/components/metaunidadmedida/metaunidadmedida.jsp'
+	       },{
+	    	   name: 'metatipoController',
+	    	   script: '/app/components/metatipo/metatipo.controller.js',
+	    	   template: '/app/components/metatipo/metatipo.jsp'
 	       }
 
 	   ];

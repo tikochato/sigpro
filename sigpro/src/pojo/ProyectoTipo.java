@@ -1,10 +1,9 @@
 package pojo;
-// Generated Dec 5, 2016 7:40:54 PM by Hibernate Tools 5.2.0.Beta1
+// Generated 20/12/2016 11:26:44 AM by Hibernate Tools 5.2.0.Beta1
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -148,7 +147,7 @@ public class ProyectoTipo implements java.io.Serializable {
 		this.proyectos = proyectos;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyectoTipo" )
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyectoTipo")
 	public Set<PtipoPropiedad> getPtipoPropiedads() {
 		return this.ptipoPropiedads;
 	}

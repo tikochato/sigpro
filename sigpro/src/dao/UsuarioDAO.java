@@ -7,7 +7,7 @@ import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.hibernate.Session;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -17,6 +17,7 @@ import pojo.UsuarioPermiso;
 import pojo.UsuarioPermisoId;
 import pojo.Permiso;
 import pojo.Usuariolog;
+import pojo.UsuariologId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -38,7 +39,8 @@ public class UsuarioDAO {
 	}
 
 	public static void userLoginHistory(String usuario) {
-		Usuariolog usuariolog = new Usuariolog(usuario,new Date());
+		UsuariologId usuariologid = new UsuariologId(usuario, new DateTime().toDate());
+		Usuariolog usuariolog = new Usuariolog(usuariologid);
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
@@ -91,7 +93,7 @@ public class UsuarioDAO {
 			String hashedPasswordBase64 = new Sha256Hash(passwordTextoPlano, salt,1024).toBase64();
 			usuario.setPassword(hashedPasswordBase64);
 			usuario.setSalt(salt.toString());
-			usuario.setFechaCreacion(new Date());
+			usuario.setFechaCreacion(new DateTime().toDate());
 			usuario.setEstado(1);
 			session.save(usuario);
 			session.getTransaction().commit();

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 5, 2016 7:40:54 PM by Hibernate Tools 5.2.0.Beta1
+// Generated 20/12/2016 11:26:44 AM by Hibernate Tools 5.2.0.Beta1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,11 +25,11 @@ public class MetaUnidadMedida implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6246754870563901325L;
+	private static final long serialVersionUID = -8756963487041427734L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
-	private String usarioCreo;
+	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
@@ -39,11 +39,11 @@ public class MetaUnidadMedida implements java.io.Serializable {
 	public MetaUnidadMedida() {
 	}
 
-	public MetaUnidadMedida(String nombre, String descripcion, String usarioCreo, String usuarioActualizo,
+	public MetaUnidadMedida(String nombre, String descripcion, String usuarioCreo, String usuarioActualizo,
 			Date fechaCreacion, Date fechaActualizacion, Integer estado, Set<Meta> metas) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
-		this.usarioCreo = usarioCreo;
+		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
@@ -81,13 +81,13 @@ public class MetaUnidadMedida implements java.io.Serializable {
 		this.descripcion = descripcion;
 	}
 
-	@Column(name = "usario_creo", length = 30)
-	public String getUsarioCreo() {
-		return this.usarioCreo;
+	@Column(name = "usuario_creo", length = 30)
+	public String getUsuarioCreo() {
+		return this.usuarioCreo;
 	}
 
-	public void setUsarioCreo(String usarioCreo) {
-		this.usarioCreo = usarioCreo;
+	public void setUsuarioCreo(String usuarioCreo) {
+		this.usuarioCreo = usuarioCreo;
 	}
 
 	@Column(name = "usuario_actualizo", length = 30)
