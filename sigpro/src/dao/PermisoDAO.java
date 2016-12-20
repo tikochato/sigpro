@@ -1,6 +1,5 @@
 package dao;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -77,6 +76,19 @@ public class PermisoDAO {
 			
 		}catch(Throwable e){
 			CLogger.write("4",PermisoDAO.class,e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Permiso getPermisoById(Integer idpermiso){
+		Permiso ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			ret = (Permiso)session.get(Permiso.class,idpermiso );
+		}catch(Throwable e){
+			CLogger.write("1",PermisoDAO.class,e);
 		}finally{
 			session.close();
 		}
