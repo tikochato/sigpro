@@ -40,7 +40,20 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             })
             .when('/productoPropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProductoPropiedad\'" class="all_page"></div>'
-            })            
+            }) 
+            
+            .when('/proyectotipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'proyectotipoController\'" class="all_page"></div>'
+            })  
+            .when('/desembolsotipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'desembolsotipoController\'" class="all_page"></div>'
+            })
+            .when('/metaunidadmedida/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'metaunidadmedidaController\'" class="all_page"></div>'
+            })
+            .when('/metatipos/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'metatipoController\'" class="all_page"></div>'
+            })
 
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -50,7 +63,6 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
 	        				    if(response.data.success)
 	        				    	window.location.href = '/login.jsp';
 	        			 	}, function errorCallback(response){
-
 	        			 	}
 	        			 );
             			return true;
@@ -98,6 +110,24 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'moduloProductoPropiedad',
 	    	   script: '/app/components/productopropiedad/productopropiedad.controller.js',
 	    	   template: '/app/components/productopropiedad/productopropiedad.jsp'
+	       },
+	       {
+	    	   name: 'proyectotipoController',
+	    	   script: '/app/components/proyecto/proyectotipo.controller.js',
+	    	   template: '/app/components/proyecto/proyectotipo.jsp'
+	       },
+	       {
+	    	   name: 'desembolsotipoController',
+	    	   script: '/app/components/desembolso/desembolsotipo.controller.js',
+	    	   template: '/app/components/desembolso/desembolsotipo.jsp'
+	       },{
+	    	   name: 'metaunidadmedidaController',
+	    	   script: '/app/components/metaunidadmedida/metaunidadmedida.controller.js',
+	    	   template: '/app/components/metaunidadmedida/metaunidadmedida.jsp'
+	       },{
+	    	   name: 'metatipoController',
+	    	   script: '/app/components/metatipo/metatipo.controller.js',
+	    	   template: '/app/components/metatipo/metatipo.jsp'
 	       }
 
 	   ];
