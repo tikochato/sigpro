@@ -51,6 +51,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/metaunidadmedida/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'metaunidadmedidaController\'" class="all_page"></div>'
             })
+            .when('/metatipos/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'metatipoController\'" class="all_page"></div>'
+            })
 
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -121,6 +124,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'metaunidadmedidaController',
 	    	   script: '/app/components/metaunidadmedida/metaunidadmedida.controller.js',
 	    	   template: '/app/components/metaunidadmedida/metaunidadmedida.jsp'
+	       },{
+	    	   name: 'metatipoController',
+	    	   script: '/app/components/metatipo/metatipo.controller.js',
+	    	   template: '/app/components/metatipo/metatipo.jsp'
 	       }
 
 	   ];
