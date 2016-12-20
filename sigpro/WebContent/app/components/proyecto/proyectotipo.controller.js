@@ -17,7 +17,6 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		
 		
-		
 		//--
 		mi.proyectopropiedades =[];
 		mi.proyectopropiedad =null;
@@ -230,9 +229,6 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 		}
 		
 		
-		
-		
-		
 		mi.cargarTotalPropiedades = function(){
 			$http.post('/SProyectoPropiedad', { accion: 'numeroProyectoPropiedades' }).success(
 					function(response) {
@@ -250,8 +246,24 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 						break;
 					}
 				}
+				mi.proyectopropiedad = null;
 			}else{
 				$utilidades.mensaje('warning','Debe seleccionar la Propiedad que desea eliminar');
+			}
+		}
+		
+		mi.eliminarPropiedad2 = function(row){
+			var index = mi.proyectopropiedades.indexOf(row);
+	        if (index !== -1) {
+	            mi.proyectopropiedades.splice(index, 1);
+	        }
+		}
+		
+		mi.seleccionTabla = function(row){
+			if (mi.proyectopropiedad !=null && mi.proyectopropiedad.id == row.id){
+				mi.proyectopropiedad = null;
+			}else{
+				mi.proyectopropiedad = row;
 			}
 		}
 		
@@ -283,7 +295,6 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 			});
 			
 			modalInstance.result.then(function(selectedItem) {
-				
 				mi.proyectopropiedades.push(selectedItem);
 				
 			}, function() {

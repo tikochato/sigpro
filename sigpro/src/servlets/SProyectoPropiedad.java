@@ -20,10 +20,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ProyectoPropiedadDAO;
-import dao.ProyectoTipoDAO;
+
 import pojo.ProyectoPropiedad;
-import pojo.ProyectoTipo;
-import servlets.SProyectoTipo.stproyectotipo;
 import utilities.Utils;
 
 
@@ -42,19 +40,15 @@ public class SProyectoPropiedad extends HttpServlet {
 		String fechaActualizacion;
 		int estado;
 	}
-       
     
     public SProyectoPropiedad() {
         super();
-       
     }
 
-	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
 
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();
@@ -74,7 +68,6 @@ public class SProyectoPropiedad extends HttpServlet {
 		
 		if(accion.equals("getProyectoPropiedadPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numeroProyectoPropiedad = map.get("numeroproyectopropiedad")!=null  ? Integer.parseInt(map.get("numeroproyectopropiedad")) : 0;
 			int idProyectoPropiedad = map.get("idProyectoTipo")!=null  ? Integer.parseInt(map.get("idProyectoTipo")) : 0;
 			
 			List<ProyectoPropiedad> proyectopropiedades = ProyectoPropiedadDAO.getProyectoPropiedadesPorTipoProyectoPagina(pagina, idProyectoPropiedad);

@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -149,7 +148,7 @@ public class ProyectoTipo implements java.io.Serializable {
 		this.proyectos = proyectos;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyectoTipo", cascade = CascadeType.ALL   )
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyectoTipo" )
 	public Set<PtipoPropiedad> getPtipoPropiedads() {
 		return this.ptipoPropiedads;
 	}
