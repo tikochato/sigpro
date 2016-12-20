@@ -34,6 +34,7 @@
                             <li role="menuitem"><a href="#!/entidad">Entidad</a></li>
                             <li role="menuitem"><a href="#!/unidadEjecutora">Unidad Ejecutora</a></li>
 	                     	<li role="menuitem"><a href="#!/colaborador">Colaborador</a></li>
+	                     	<li role="menuitem"><a href="#!/metaunidadmedida">Unidad de Medidas para Metas</a></li>
                          </ul>
                     </li>
                     <li uib-dropdown>
