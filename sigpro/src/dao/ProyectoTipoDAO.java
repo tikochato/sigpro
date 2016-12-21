@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.ProyectoTipo;
+import pojo.PtipoPropiedad;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -63,6 +64,13 @@ public class ProyectoTipoDAO {
 		try{
 			session.beginTransaction();
 			session.saveOrUpdate(proyectotipo);
+			session.flush();
+			
+			for (PtipoPropiedad propiedad : proyectotipo.getPtipoPropiedads()){
+				session.saveOrUpdate(propiedad);	
+			}
+			session.flush();
+			
 			session.getTransaction().commit();
 			ret = true;
 		}

@@ -92,7 +92,7 @@ public class SProyecto extends HttpServlet {
 			response.setHeader("Content-Encoding", "gzip");
 			response.setCharacterEncoding("UTF-8");
 			
-			List <datos> datos_ = new ArrayList();
+			List <datos> datos_ = new ArrayList<datos>();
 			for (Proyecto proyecto : proyectos){
 				datos dato = new datos();
 				dato.id = proyecto.getId();
@@ -188,7 +188,7 @@ public class SProyecto extends HttpServlet {
 
 		} else if (accion.equals("cargar_cooperantes")){
 			List<Cooperante> cooperantes = CooperanteDAO.getCooperantes();
-			List<listas> listas_ = new ArrayList();
+			List<listas> listas_ = new ArrayList<listas>();
 			for (Cooperante cooperante : cooperantes){
 				listas lista = new listas();
 				lista.id = cooperante.getId();
@@ -203,7 +203,7 @@ public class SProyecto extends HttpServlet {
 		}
 		else if (accion.equals("cargar_proyectotipos")){
 			List<ProyectoTipo> proyectotipos = ProyectoTipoDAO.getProyectoTipos();
-			List<listas> listas_ = new ArrayList();
+			List<listas> listas_ = new ArrayList<listas>();
 			for (ProyectoTipo proyectoTipo : proyectotipos){
 				listas lista = new listas();
 				lista.id =  proyectoTipo.getId();
@@ -218,7 +218,7 @@ public class SProyecto extends HttpServlet {
 		}
 		else if (accion.equals("cargar_unidadesejecturoas")){
 			List<UnidadEjecutora> UnidadesEjecutoras = UnidadEjecutoraDAO.getUnidadEjecutoras();
-			List<listas> listas_ = new ArrayList();
+			List<listas> listas_ = new ArrayList<>();
 			for (UnidadEjecutora unidadEjecutora : UnidadesEjecutoras){
 				listas lista = new listas();
 				lista.id =  unidadEjecutora.getUnidadEjecutora();
