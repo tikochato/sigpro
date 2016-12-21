@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -22,6 +23,7 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.MetaUnidadMedidaDAO;
 import pojo.MetaUnidadMedida;
+import utilities.Utils;
 
 /**
  * Servlet implementation class SMetaUnidadMedida
@@ -33,6 +35,18 @@ public class SMetaUnidadMedida extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
+	
+	public class stunidadmeta{
+		Integer id;
+		String nombre;
+		String descripcion;
+		Integer estado;
+		String fechaCreacion;
+		String fechaActualizacion;
+		String usuarioCreo;
+		String usuarioActulizo;
+	}
+	
     public SMetaUnidadMedida() {
         super();
     }
@@ -65,15 +79,40 @@ public class SMetaUnidadMedida extends HttpServlet {
 			int numenumeroMetaUnidadMedidas = map.get("numerometaunidadmedidas")!=null  ? Integer.parseInt(map.get("numerometaunidadmedidas")) : 0;
 			List<MetaUnidadMedida> MetaUnidadMedidas = MetaUnidadMedidaDAO.getMetaUnidadMedidasPagina(pagina, numenumeroMetaUnidadMedidas);
 			
-			
-			response_text=new GsonBuilder().serializeNulls().create().toJson(MetaUnidadMedidas);
-	        response_text = String.join("", "\"MetaUnidadMedidas\":",response_text);
+			List<stunidadmeta> stunidad = new ArrayList<stunidadmeta>();
+			for(MetaUnidadMedida metaunidad:MetaUnidadMedidas){
+				stunidadmeta temp = new stunidadmeta();
+				temp.descripcion = metaunidad.getDescripcion();
+				temp.estado = metaunidad.getEstado();
+				temp.fechaActualizacion = Utils.formatDate(metaunidad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDate(metaunidad.getFechaCreacion());
+				temp.id = metaunidad.getId();
+				temp.nombre = metaunidad.getNombre();
+				temp.usuarioActulizo = metaunidad.getUsuarioActualizo();
+				temp.usuarioCreo = metaunidad.getUsuarioCreo();
+				stunidad.add(temp);
+			}
+			response_text=new GsonBuilder().serializeNulls().create().toJson(stunidad);
+			response_text = String.join("", "\"MetaUnidadMedidas\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("getMetaUnidadMedidas")){
 			List<MetaUnidadMedida> MetaUnidadMedidas = MetaUnidadMedidaDAO.getMetaUnidadMedidas();
-			response_text=new GsonBuilder().serializeNulls().create().toJson(MetaUnidadMedidas);
-	        response_text = String.join("", "\"MetaUnidadMedidas\":",response_text);
+			List<stunidadmeta> stunidad = new ArrayList<stunidadmeta>();
+			for(MetaUnidadMedida metaunidad:MetaUnidadMedidas){
+				stunidadmeta temp = new stunidadmeta();
+				temp.descripcion = metaunidad.getDescripcion();
+				temp.estado = metaunidad.getEstado();
+				temp.fechaActualizacion = Utils.formatDate(metaunidad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDate(metaunidad.getFechaCreacion());
+				temp.id = metaunidad.getId();
+				temp.nombre = metaunidad.getNombre();
+				temp.usuarioActulizo = metaunidad.getUsuarioActualizo();
+				temp.usuarioCreo = metaunidad.getUsuarioCreo();
+				stunidad.add(temp);
+			}
+			response_text=new GsonBuilder().serializeNulls().create().toJson(stunidad);
+			response_text = String.join("", "\"MetaUnidadMedidas\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("guardarMetaUnidadMedida")){

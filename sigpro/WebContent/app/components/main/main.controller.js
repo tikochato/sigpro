@@ -54,7 +54,12 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/metatipos/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'metatipoController\'" class="all_page"></div>'
             })
-
+            .when('/meta/:id/:tipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'metaController\'" class="all_page"></div>'
+            })
+            .when('/test',{
+            	template: '<div load-on-demand="\'testController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -128,6 +133,15 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'metatipoController',
 	    	   script: '/app/components/metatipo/metatipo.controller.js',
 	    	   template: '/app/components/metatipo/metatipo.jsp'
+	       },
+	       {
+	    	   name: 'metaController',
+	    	   script: '/app/components/meta/meta.controller.js',
+	    	   template: '/app/components/meta/meta.jsp'
+	       },{
+	    	   name: 'testController',
+	    	   script: '/app/components/test/test.controller.js',
+	    	   template: '/app/components/test/test.jsp'
 	       }
 
 	   ];
