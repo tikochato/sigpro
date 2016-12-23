@@ -52,6 +52,7 @@
                             <li role="menuitem"><a href="#!/proyectotipo">Tipo de Proyecto</a></li>
                             <li role="menuitem"><a href="#!/desembolsotipo">Tipo Desembolso</a></li>
                             <li role="menuitem"><a href="#!/desembolso">Desembolso</a></li>
+                            <li role="menuitem"><a href="#!/componente">Componente</a></li>
                          </ul>
                     </li>
 	            </ul>

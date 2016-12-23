@@ -75,7 +75,7 @@ public class SDesembolso extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		HttpSession sesionweb = request.getSession();
-		String usuario = sesionweb.getAttribute("usuario").toString();
+		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		
 		Gson gson = new Gson();
 		Type type = new TypeToken<Map<String, String>>(){}.getType();
