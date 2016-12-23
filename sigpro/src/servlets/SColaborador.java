@@ -65,7 +65,7 @@ public class SColaborador extends HttpServlet {
 		String segundoNombre = parametro.get("segundoNombre");
 		String primerApellido = parametro.get("primerApellido");
 		String segundoApellido = parametro.get("segundoApellido");
-		Integer cui = Utils.String2Int(parametro.get("cui"), 0);
+		Long cui = Utils.String2Long(parametro.get("cui"));
 		Integer codigoUnidadEjecutora = Utils.String2Int(parametro.get("unidadEjecutora"), -1);
 		String usuario = parametro.get("usuario");
 
@@ -83,7 +83,7 @@ public class SColaborador extends HttpServlet {
 		String segundoNombre = parametro.get("segundoNombre");
 		String primerApellido = parametro.get("primerApellido");
 		String segundoApellido = parametro.get("segundoApellido");
-		Integer cui = Utils.String2Int(parametro.get("cui"), 0);
+		Long cui = Utils.String2Long(parametro.get("cui"));
 		Integer codigoUnidadEjecutora = Utils.String2Int(parametro.get("unidadEjecutora"), -1);
 		String usuario = parametro.get("usuario");
 

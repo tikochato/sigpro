@@ -1,7 +1,5 @@
-/**
- * 
- */
-var moduloProductoTipo = angular.module('moduloProductoTipo', [ 'ngTouch' ]);
+var moduloProductoTipo = angular.module('moduloProductoTipo', [ 'ngTouch',
+		'smart-table' ]);
 
 moduloProductoTipo.controller('controlProductoTipo', [ '$scope',
 		'$routeParams', '$route', '$window', '$location', '$mdDialog',
@@ -22,6 +20,8 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
+
+	mi.propiedadesTipo = [];
 
 	mi.cambioPagina = function() {
 		mi.cargarData(mi.paginaActual);
@@ -151,6 +151,9 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 		mi.codigo = "";
 		mi.nombre = "";
 		mi.descripcion = "";
+
+		mi.propiedadesTipo = [];
+
 	}
 
 	mi.limpiarSeleccion = function() {
@@ -174,6 +177,20 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 			mi.codigo = mi.entidadSeleccionada.id;
 			mi.nombre = mi.entidadSeleccionada.nombre;
 			mi.descripcion = mi.entidadSeleccionada.descripcion;
+
+			mi.mostrarCargando = true;
+
+			var datos = {
+				accion : 'tipoPropiedades',
+				codigoTipo : mi.entidadSeleccionada.id
+			};
+
+			$http.post('/SProductoTipo', datos).then(function(response) {
+				if (response.data.success) {
+					mi.propiedadesTipo = response.data.productoTipos;
+					mi.mostrarCargando = false;
+				}
+			});
 
 		} else {
 			$utilidades.mensaje('warning',
@@ -234,7 +251,8 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 				accion : 'crear',
 				nombre : mi.nombre,
 				descripcion : mi.descripcion,
-				usuario : 'temporal'
+				usuario : 'temporal',
+				propiedades : JSON.stringify(mi.propiedadesTipo)
 			};
 
 			$http.post('/SProductoTipo', datos).then(
@@ -258,10 +276,9 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 				codigo : mi.codigo,
 				nombre : mi.nombre,
 				descripcion : mi.descripcion,
-				usuario : 'temporal'
+				usuario : 'temporal',
+				propiedades : JSON.stringify(mi.propiedadesTipo)
 			};
-
-			$log.info(datos);
 
 			$http.post('/SProductoTipo', datos).then(
 					function(response) {
@@ -283,6 +300,182 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 
 	mi.cancelar = function() {
 		mi.esForma = false;
+	};
+
+	mi.eliminarPropiedad = function(index) {
+		for (var i = 0; i < mi.propiedadesTipo.length; i++) {
+			if (mi.propiedadesTipo[i].estado === "E") {
+				index++;
+				continue;
+			}
+
+			if (i == index) {
+				if (mi.propiedadesTipo[index].estado === "C") {
+					mi.propiedadesTipo[index].estado = "E";
+				} else if (mi.propiedadesTipo[index].estado === "N") {
+					mi.propiedadesTipo.splice(index, 1)
+				}
+			}
+		}
+	};
+
+	mi.agregarPropiedad = function() {
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'buscarPropiedad.jsp',
+			controller : 'modalBuscarPropiedad',
+			controllerAs : 'modalBuscar',
+			backdrop : 'static',
+			size : 'md'
+		});
+
+		modalInstance.result.then(function(selectedItem) {
+			var codigo = mi.codigo
+
+			if (!$utilidades.esNumero(codigo)) {
+				codigo = -1;
+			}
+
+			if (mi.verificarPropiedad(codigo, selectedItem.id)) {
+				mi.propiedadesTipo.push({
+					idTipo : codigo,
+					tipo : mi.nombre,
+					idPropiedad : selectedItem.id,
+					propiedad : selectedItem.nombre,
+					idPropiedadTipo : selectedItem.idTipo,
+					propiedadTipo : selectedItem.tipo,
+					estado : 'N'
+				});
+			} else {
+				$utilidades.mensaje('warning',
+						'Propiedad agregada anteriormente');
+			}
+		}, function() {
+		});
+
+	};
+
+	mi.verificarPropiedad = function(codigoTipo, codigoPropiedad) {
+		for (var i = 0; i < mi.propiedadesTipo.length; i++) {
+			if (mi.propiedadesTipo[i].idTipo === codigoTipo
+					&& mi.propiedadesTipo[i].idPropiedad === codigoPropiedad) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+}
+
+moduloProductoTipo.controller('modalBuscarPropiedad', [ '$uibModalInstance',
+		'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+		'$timeout', '$log', modalBuscarPropiedad ]);
+
+function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval,
+		i18nService, $utilidades, $timeout, $log) {
+
+	var mi = this;
+
+	mi.totalElementos = 0;
+	mi.paginaActual = 1;
+	mi.numeroMaximoPaginas = 5;
+	mi.elementosPorPagina = 9;
+
+	mi.mostrarCargando = false;
+	mi.data = [];
+
+	mi.itemSeleccionado = null;
+	mi.seleccionado = false;
+
+	$http.post('/SProductoPropiedad', {
+		accion : 'totalElementos'
+	}).success(function(response) {
+		mi.totalElementos = response.total;
+		mi.cargarData(1);
+	});
+
+	mi.opcionesGrid = {
+		data : mi.data,
+		columnDefs : [ {
+			displayName : 'Id',
+			name : 'id',
+			cellClass : 'grid-align-right',
+			type : 'number',
+			width : 150,
+			visible : false
+		}, {
+			displayName : 'Nombre',
+			name : 'nombre',
+			cellClass : 'grid-align-left'
+		}, {
+			displayName : 'Id Tipo',
+			name : 'idTipo',
+			cellClass : 'grid-align-right',
+			type : 'number',
+			width : 150,
+			visible : false
+		}, {
+			displayName : 'Tipo',
+			name : 'tipo',
+			cellClass : 'grid-align-left'
+		} ],
+		enableRowSelection : true,
+		enableRowHeaderSelection : false,
+		multiSelect : false,
+		modifierKeysToMultiSelect : false,
+		noUnselect : false,
+		enableFiltering : true,
+		enablePaginationControls : false,
+		paginationPageSize : 5,
+		onRegisterApi : function(gridApi) {
+			mi.gridApi = gridApi;
+
+			mi.gridApi.selection.on.rowSelectionChanged($scope,
+					mi.seleccionarEntidad);
+		}
+	}
+
+	mi.seleccionarEntidad = function(row) {
+		mi.itemSeleccionado = row.entity;
+		mi.seleccionado = row.isSelected;
+	};
+
+	mi.cargarData = function(pagina) {
+		var datos = {
+			accion : 'cargar',
+			pagina : pagina,
+			registros : mi.elementosPorPagina
+		};
+
+		mi.mostrarCargando = true;
+		$http.post('/SProductoPropiedad', datos).then(function(response) {
+			if (response.data.success) {
+
+				mi.data = response.data.productoPropiedades;
+				mi.opcionesGrid.data = mi.data;
+
+				mi.mostrarCargando = false;
+			}
+		});
+	};
+
+	mi.cambioPagina = function() {
+		mi.cargarData(mi.paginaActual);
+	}
+
+	mi.ok = function() {
+		if (mi.seleccionado) {
+			$uibModalInstance.close(mi.itemSeleccionado);
+		} else {
+			$utilidades.mensaje('warning', 'Debe seleccionar una PROPIEDAD');
+		}
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
 	};
 
 }
