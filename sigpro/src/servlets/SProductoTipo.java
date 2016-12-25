@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dao.ProdTipoPropiedadDAO;
 import dao.ProductoTipoDAO;
 import utilities.Utils;
 
@@ -40,7 +41,9 @@ public class SProductoTipo extends HttpServlet {
 			eliminar(parametro, response);
 		} else if (parametro.get("accion").compareTo("totalElementos") == 0) {
 			total(response);
-		}		
+		} else if (parametro.get("accion").compareTo("tipoPropiedades") == 0) {
+			listarPropiedades(parametro, response);
+		}
 	}
 
 	private void listar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
@@ -64,8 +67,9 @@ public class SProductoTipo extends HttpServlet {
 		String nombre = parametro.get("nombre");
 		String descripcion = parametro.get("descripcion");
 		String usuario = parametro.get("usuario");
+		String propiedades = parametro.get("propiedades");
 
-		boolean creado = ProductoTipoDAO.guardar(-1, nombre, descripcion, usuario);
+		boolean creado = ProductoTipoDAO.guardar(-1, nombre, descripcion, propiedades, usuario);
 
 		if (creado) {
 			listar(parametro, response);
@@ -77,8 +81,9 @@ public class SProductoTipo extends HttpServlet {
 		String nombre = parametro.get("nombre");
 		String descripcion = parametro.get("descripcion");
 		String usuario = parametro.get("usuario");
+		String propiedades = parametro.get("propiedades");
 
-		boolean actualizado = ProductoTipoDAO.actualizar(codigo, nombre, descripcion, usuario);
+		boolean actualizado = ProductoTipoDAO.actualizar(codigo, nombre, descripcion, propiedades, usuario);
 		if (actualizado) {
 			listar(parametro, response);
 		}
@@ -93,11 +98,27 @@ public class SProductoTipo extends HttpServlet {
 			listar(parametro, response);
 		}
 	}
-	
+
 	private void total(HttpServletResponse response) throws IOException {
 		Long total = ProductoTipoDAO.getTotal();
 
 		String resultadoJson = "{\"success\":true, \"total\":" + total + "}";
+
+		Utils.writeJSon(response, resultadoJson);
+	}
+
+	private void listarPropiedades(Map<String, String> parametro, HttpServletResponse response) throws IOException {
+		Integer codigoTipo = Utils.String2Int(parametro.get("codigoTipo"), 0);
+
+		String resultadoJson = "";
+
+		resultadoJson = ProdTipoPropiedadDAO.getJson(codigoTipo);
+
+		if (Utils.isNullOrEmpty(resultadoJson)) {
+			resultadoJson = "{\"success\":false}";
+		} else {
+			resultadoJson = "{\"success\":true," + resultadoJson + "}";
+		}
 
 		Utils.writeJSon(response, resultadoJson);
 	}

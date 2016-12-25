@@ -24,7 +24,7 @@ public class ColaboradorDAO {
 		String primerApellido;
 		String segundoApellido;
 		String otrosApellidos;
-		Integer cui;
+		Long cui;
 		Integer unidadEjecutora;
 		String nombreUnidadEjecutora;
 		String usuario;
@@ -50,7 +50,7 @@ public class ColaboradorDAO {
 	}
 
 	public static boolean guardar(Integer codigo, String primerNombre, String segundoNombre, String otrosNombres,
-			String primerApellido, String segundoApellido, String otrosApellidos, Integer cui,
+			String primerApellido, String segundoApellido, String otrosApellidos, Long cui,
 			Integer codigoUnidadEjecutora, String usuario) {
 
 		Colaborador pojo = getColaborador(codigo);
@@ -85,7 +85,7 @@ public class ColaboradorDAO {
 	}
 
 	public static boolean actualizar(Integer codigo, String primerNombre, String segundoNombre, String otrosNombres,
-			String primerApellido, String segundoApellido, String otrosApellidos, Integer cui,
+			String primerApellido, String segundoApellido, String otrosApellidos, Long cui,
 			Integer codigoUnidadEjecutora, String usuario) {
 
 		Colaborador pojo = getColaborador(codigo);

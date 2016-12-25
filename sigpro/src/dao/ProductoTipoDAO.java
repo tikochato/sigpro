@@ -42,7 +42,8 @@ public class ProductoTipoDAO {
 		return ret;
 	}
 
-	public static boolean guardar(Integer codigo, String nombre, String descripcion, String usuario) {
+	public static boolean guardar(Integer codigo, String nombre, String descripcion, String propiedades,
+			String usuario) {
 
 		ProductoTipo pojo = getProductoTipo(codigo);
 		boolean ret = false;
@@ -54,16 +55,19 @@ public class ProductoTipoDAO {
 			pojo.setEstado(1);
 			pojo.setUsuarioCreo(usuario);
 			pojo.setFechaCreacion(new Date());
-			
+
 			pojo.setProdtipoPropiedads(null);
 			pojo.setProductos(null);
 
 			Session session = CHibernateSession.getSessionFactory().openSession();
+
 			try {
 				session.beginTransaction();
-				session.save(pojo);
+				Integer id = (Integer) session.save(pojo);
 				session.getTransaction().commit();
-				ret = true;
+
+				ret = ProdTipoPropiedadDAO.persistirPropiedades(id, propiedades, usuario);
+
 			} catch (Throwable e) {
 				CLogger.write("2", ProductoTipoDAO.class, e);
 			} finally {
@@ -74,7 +78,8 @@ public class ProductoTipoDAO {
 		return ret;
 	}
 
-	public static boolean actualizar(Integer codigo, String nombre, String descripcion, String usuario) {
+	public static boolean actualizar(Integer codigo, String nombre, String descripcion, String propiedades,
+			String usuario) {
 
 		ProductoTipo pojo = getProductoTipo(codigo);
 		boolean ret = false;
@@ -90,7 +95,8 @@ public class ProductoTipoDAO {
 				session.beginTransaction();
 				session.update(pojo);
 				session.getTransaction().commit();
-				ret = true;
+
+				ret = ProdTipoPropiedadDAO.persistirPropiedades(codigo, propiedades, usuario);
 			} catch (Throwable e) {
 				CLogger.write("3", ProductoTipoDAO.class, e);
 			} finally {
@@ -131,7 +137,8 @@ public class ProductoTipoDAO {
 		List<ProductoTipo> ret = new ArrayList<ProductoTipo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<ProductoTipo> criteria = session.createQuery("SELECT e FROM ProductoTipo e where e.estado = 1", ProductoTipo.class);
+			Query<ProductoTipo> criteria = session.createQuery("SELECT e FROM ProductoTipo e where e.estado = 1",
+					ProductoTipo.class);
 			criteria.setFirstResult(((pagina - 1) * (registros)));
 			criteria.setMaxResults(registros);
 			ret = criteria.getResultList();
@@ -168,7 +175,8 @@ public class ProductoTipoDAO {
 		Long ret = 0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<Long> conteo = session.createQuery("SELECT count(e.id) FROM ProductoTipo e  where e.estado = 1", Long.class);
+			Query<Long> conteo = session.createQuery("SELECT count(e.id) FROM ProductoTipo e  where e.estado = 1",
+					Long.class);
 			ret = conteo.getSingleResult();
 		} catch (Throwable e) {
 			CLogger.write("7", ProductoTipoDAO.class, e);
