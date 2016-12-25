@@ -60,6 +60,12 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/test',{
             	template: '<div load-on-demand="\'testController\'" class="all_page"></div>'
             })
+            .when('/desembolso/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'desembolsoController\'" class="all_page"></div>'
+            })
+            .when('/componente/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'componenteController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -142,6 +148,17 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'testController',
 	    	   script: '/app/components/test/test.controller.js',
 	    	   template: '/app/components/test/test.jsp'
+	       },
+	       {
+	    	   name: 'desembolsoController',
+	    	   script: '/app/components/desembolso/desembolso.controller.js',
+	    	   template: '/app/components/desembolso/desembolso.jsp'
+	       },
+	       {
+	    	   name: 'componenteController',
+	    	   script: '/app/components/componente/componente.controller.js',
+	    	   template: '/app/components/componente/componente.jsp'
+
 	       }
 
 	   ];
