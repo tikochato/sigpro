@@ -10,49 +10,46 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import pojo.ComponenteTipo;
-import pojo.CtipoPropiedad;
+import pojo.HitoTipo;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
-public class ComponenteTipoDAO {
-
-	public static List<ComponenteTipo> getComponenteTipos(){
-		List<ComponenteTipo> ret = new ArrayList<ComponenteTipo>();
+public class HitoTipoDAO {
+	
+	public static List<HitoTipo> getHitoTipos(){
+		List<HitoTipo> ret = new ArrayList<HitoTipo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
-			CriteriaQuery<ComponenteTipo> criteria = builder.createQuery(ComponenteTipo.class);
-			Root<ComponenteTipo> root = criteria.from(ComponenteTipo.class);
+			CriteriaQuery<HitoTipo> criteria = builder.createQuery(HitoTipo.class);
+			Root<HitoTipo> root = criteria.from(HitoTipo.class);
 			criteria.select( root ).where(builder.equal(root.get("estado"),1));
 			ret = session.createQuery( criteria ).getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("1", ComponenteTipoDAO.class, e);
+			CLogger.write("1", HitoTipoDAO.class, e);
 		}
 		finally{
 			session.close();
 		}
 		return ret;
 	}
-		
-
 	
-	public static ComponenteTipo getComponenteTipoPorId(int id){
+	public static HitoTipo getHitoTipoPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
-		ComponenteTipo ret = null;
+		HitoTipo ret = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
-			CriteriaQuery<ComponenteTipo> criteria = builder.createQuery(ComponenteTipo.class);
-			Root<ComponenteTipo> root = criteria.from(ComponenteTipo.class);
+			CriteriaQuery<HitoTipo> criteria = builder.createQuery(HitoTipo.class);
+			Root<HitoTipo> root = criteria.from(HitoTipo.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
 			ret = session.createQuery( criteria ).getSingleResult();
 		}
 		catch(Throwable e){
-			CLogger.write("2", ComponenteTipoDAO.class, e);
+			CLogger.write("2", HitoTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -60,24 +57,17 @@ public class ComponenteTipoDAO {
 		return ret;
 	}
 	
-	public static boolean guardarComponenteTipo(ComponenteTipo compoenntetipo){
+	public static boolean guardarHitoTipo(HitoTipo hitotipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			session.saveOrUpdate(compoenntetipo);
-			session.flush();
-			
-			for (CtipoPropiedad propiedad : compoenntetipo.getCtipoPropiedads()){
-				session.saveOrUpdate(propiedad);	
-			}
-			session.flush();
-			
+			session.saveOrUpdate(hitotipo);
 			session.getTransaction().commit();
 			ret = true;
 		}
 		catch(Throwable e){
-			CLogger.write("3", ComponenteTipoDAO.class, e);
+			CLogger.write("3", HitoTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -85,23 +75,18 @@ public class ComponenteTipoDAO {
 		return ret;
 	}
 	
-	
-	
-	
-	
-	public static boolean eliminarComponenteTipo(ComponenteTipo componenteTipo){
+	public static boolean eliminarHitoTipo(HitoTipo hitotipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			
-			componenteTipo.setEstado(0);
+			hitotipo.setEstado(0);
 			session.beginTransaction();
-			session.update(componenteTipo);
+			session.update(hitotipo);
 			session.getTransaction().commit();
 			ret = true;
 		}
 		catch(Throwable e){
-			CLogger.write("6",ComponenteTipoDAO.class, e);
+			CLogger.write("4", HitoTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -109,19 +94,17 @@ public class ComponenteTipoDAO {
 		return ret;
 	}
 	
-	
-	
-	public static boolean eliminarTotalComponenteTipo(ComponenteTipo componenteTipo){
+	public static boolean eliminarTotalHitoTipo(HitoTipo hitotipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			session.delete(componenteTipo);
+			session.delete(hitotipo);
 			session.getTransaction().commit();
 			ret = true;
 		}
 		catch(Throwable e){
-			CLogger.write("5", ComponenteTipoDAO.class, e);
+			CLogger.write("5", HitoTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -129,18 +112,17 @@ public class ComponenteTipoDAO {
 		return ret;
 	}
 	
-	
-	public static List<ComponenteTipo> getComponenteTiposPagina(int pagina, int numerocomponentestipo){
-		List<ComponenteTipo> ret = new ArrayList<ComponenteTipo>();
+	public static List<HitoTipo> getHitoTiposPagina(int pagina, int numerohitotipo){
+		List<HitoTipo> ret = new ArrayList<HitoTipo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<ComponenteTipo> criteria = session.createQuery("SELECT c FROM ComponenteTipo c WHERE estado = 1",ComponenteTipo.class);
-			criteria.setFirstResult(((pagina-1)*(numerocomponentestipo)));
-			criteria.setMaxResults(numerocomponentestipo);
+			Query<HitoTipo> criteria = session.createQuery("SELECT c FROM HitoTipo c WHERE estado = 1",HitoTipo.class);
+			criteria.setFirstResult(((pagina-1)*(numerohitotipo)));
+			criteria.setMaxResults(numerohitotipo);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("6", ComponenteTipoDAO.class, e);
+			CLogger.write("6", HitoTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -148,19 +130,20 @@ public class ComponenteTipoDAO {
 		return ret;
 	}
 	
-	public static Long getTotalComponenteTipo(){
+	public static Long getTotalHitoTipos(){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM ComponenteTipo c WHERE c.estado=1",Long.class);
+			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM HitoTipo c WHERE c.estado=1",Long.class);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
-			CLogger.write("7", ComponenteTipoDAO.class, e);
+			CLogger.write("7", HitoTipoDAO.class, e);
 		}
 		finally{
 			session.close();
 		}
 		return ret;
 	}
+
 }

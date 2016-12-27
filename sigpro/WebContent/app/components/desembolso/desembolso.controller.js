@@ -17,7 +17,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
 			mi.desembolsotipoid;
 			mi.desembolsonombre;
-			mi.proyectoid;
+			mi.proyectoid = $routeParams.pproyectoid;
 			mi.fecha = new Date();
 			
 			mi.gridOptions = {
@@ -157,6 +157,10 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 					$utilidades.mensaje('warning','Debe seleccionar el Desembolso que desea editar');
 			};
 
+			$http.post('/SProyecto', { accion: 'obtenerProyectoPorId',id: $routeParams.pproyectoid }).success(
+					function(response) {
+						mi.proyectonombre = response.nombre;
+			});
 			
 			$http.post('/SDesembolso', { accion: 'numeroDesembolsos' }).success(
 					function(response) {

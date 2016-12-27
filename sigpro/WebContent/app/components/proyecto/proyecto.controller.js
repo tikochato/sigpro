@@ -133,7 +133,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.esNuevo = false;
 		}
 		else
-			$utilidades.mensaje('warning','Debe seleccionar el Cooperante que desea editar');
+			$utilidades.mensaje('warning','Debe seleccionar el Proyecto que desea editar');
 	}
 	
 	mi.irATabla = function() {
@@ -159,7 +159,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			$location.path('/proyecto/rv');
 	}
 	
-	$http.post('/SCooperante', { accion: 'numeroProyectos' }).success(
+	$http.post('/SProyecto', { accion: 'numeroProyectos' }).success(
 			function(response) {
 				mi.totalProyectos = response.totalproyectos;
 				mi.cargarTabla(1);
@@ -180,7 +180,25 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				function(response) {
 					mi.unidadesejecutoras = response.entidades;
 		});
-	}
+	};
+	
+	mi.irADesembolsos=function(proyectoid){
+		if(mi.entidadseleccionada!=null){
+			$location.path('/desembolso/'+proyectoid);
+		}
+		else
+			$utilidades.mensaje('warning','Debe seleccionar el Proyecto para ver los Desembolsos');
+		
+	};
+	
+	mi.irAComponentes=function(proyectoid){
+		if(mi.entidadseleccionada!=null){
+			$location.path('/componente/'+ mi.proyectoid );
+		}
+		else
+			$utilidades.mensaje('warning','Debe seleccionar el Proyecto para ver los Desembolsos');
+		
+	};
 	
 	
 } ]);

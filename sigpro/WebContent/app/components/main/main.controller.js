@@ -66,6 +66,12 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/componente/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'componenteController\'" class="all_page"></div>'
             })
+            .when('/componentetipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'componentetipoController\'" class="all_page"></div>'
+            })
+            .when('/hitotipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'hitotipoController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -158,6 +164,16 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'componenteController',
 	    	   script: '/app/components/componente/componente.controller.js',
 	    	   template: '/app/components/componente/componente.jsp'
+	       },
+	       {
+	    	   name: 'componentetipoController',
+	    	   script: '/app/components/componentetipo/componentetipo.controller.js',
+	    	   template: '/app/components/componentetipo/componentetipo.jsp'
+	       },
+	       {
+	    	   name: 'hitotipoController',
+	    	   script: '/app/components/hitotipo/hitotipo.controller.js',
+	    	   template: '/app/components/hitotipo/hitotipo.jsp'
 
 	       }
 
