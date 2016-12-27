@@ -16,169 +16,155 @@ import utilities.CLogger;
 import utilities.Utils;
 
 class EstructuraEntidad {
-    Integer entidad;
-    String nombre;
-    String abreviatura;
+	Integer entidad;
+	String nombre;
+	String abreviatura;
 }
 
 public class EntidadDAO {
 
-    public static List<Entidad> getEntidades() {
-	List<Entidad> entidades = new ArrayList<Entidad>();
+	public static List<Entidad> getEntidades() {
+		List<Entidad> entidades = new ArrayList<Entidad>();
 
-	Session session = CHibernateSession.getSessionFactory().openSession();
-	try {
-	    CriteriaBuilder builder = session.getCriteriaBuilder();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try {
+			CriteriaBuilder builder = session.getCriteriaBuilder();
 
-	    CriteriaQuery<Entidad> criteria = builder.createQuery(Entidad.class);
-	    Root<Entidad> root = criteria.from(Entidad.class);
-	    criteria.select(root);
-	    entidades = session.createQuery(criteria).getResultList();
+			CriteriaQuery<Entidad> criteria = builder.createQuery(Entidad.class);
+			Root<Entidad> root = criteria.from(Entidad.class);
+			criteria.select(root);
+			entidades = session.createQuery(criteria).getResultList();
 
-	}
-	catch (Throwable e) {
-	    CLogger.write("1", EntidadDAO.class, e);
-	}
-	finally {
-	    session.close();
-	}
+		} catch (Throwable e) {
+			CLogger.write("1", EntidadDAO.class, e);
+		} finally {
+			session.close();
+		}
 
-	return entidades;
-    }
-
-    public static Entidad getEntidad(Integer entidad) {
-	Session session = CHibernateSession.getSessionFactory().openSession();
-	Entidad ret = null;
-	try {
-	    CriteriaBuilder builder = session.getCriteriaBuilder();
-
-	    CriteriaQuery<Entidad> criteria = builder.createQuery(Entidad.class);
-	    Root<Entidad> root = criteria.from(Entidad.class);
-	    criteria.select(root);
-	    criteria.where(builder.equal(root.get("entidad"), entidad));
-	    ret = session.createQuery(criteria).getSingleResult();
-	}
-	catch (Throwable e) {
-	    CLogger.write("2", EntidadDAO.class, e);
-	}
-	finally {
-	    session.close();
-	}
-	return ret;
-    }
-
-    public static boolean guardarEntidad(int entidad, String nombre, String abreviatura) {
-
-	Entidad nuevaEntidad = getEntidad(entidad);
-	boolean ret = false;
-
-	if (nuevaEntidad == null) {
-	    nuevaEntidad = new Entidad();
-	    nuevaEntidad.setEntidad(entidad);
-	    nuevaEntidad.setNombre(nombre);
-	    nuevaEntidad.setAbreviatura(abreviatura);
-	    nuevaEntidad.setUnidadEjecutoras(null);
-
-	    Session session = CHibernateSession.getSessionFactory().openSession();
-	    try {
-		session.beginTransaction();
-		session.save(nuevaEntidad);
-		session.getTransaction().commit();
-		ret = true;
-	    }
-	    catch (Throwable e) {
-		CLogger.write("3", EntidadDAO.class, e);
-	    }
-	    finally {
-		session.close();
-	    }
+		return entidades;
 	}
 
-	return ret;
-    }
+	public static Entidad getEntidad(Integer entidad) {
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		Entidad ret = null;
+		try {
+			CriteriaBuilder builder = session.getCriteriaBuilder();
 
-    public static boolean actualizarEntidad(int entidad, String abreviatura) {
-
-	Entidad existeEntidad = getEntidad(entidad);
-	boolean ret = false;
-
-	if (existeEntidad != null) {
-
-		existeEntidad.setAbreviatura(abreviatura);
-		
-	    Session session = CHibernateSession.getSessionFactory().openSession();
-	    try {
-		session.beginTransaction();
-		session.update(existeEntidad);
-		session.getTransaction().commit();
-		ret = true;
-	    }
-	    catch (Throwable e) {
-		CLogger.write("4", EntidadDAO.class, e);
-	    }
-	    finally {
-		session.close();
-	    }
+			CriteriaQuery<Entidad> criteria = builder.createQuery(Entidad.class);
+			Root<Entidad> root = criteria.from(Entidad.class);
+			criteria.select(root);
+			criteria.where(builder.equal(root.get("entidad"), entidad));
+			ret = session.createQuery(criteria).getSingleResult();
+		} catch (Throwable e) {
+			CLogger.write("2", EntidadDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
 	}
 
-	return ret;
-    }
+	public static boolean guardarEntidad(int entidad, String nombre, String abreviatura) {
 
-    public static List<Entidad> getEntidadesPagina(int pagina, int registros) {
-	List<Entidad> ret = new ArrayList<Entidad>();
-	Session session = CHibernateSession.getSessionFactory().openSession();
-	try {
-	    Query<Entidad> criteria = session.createQuery("SELECT e FROM Entidad e", Entidad.class);
-	    criteria.setFirstResult(((pagina
-	                              - 1 )
-	                             * (registros ) ));
-	    criteria.setMaxResults(registros);
-	    ret = criteria.getResultList();
-	}
-	catch (Throwable e) {
-	    CLogger.write("5", EntidadDAO.class, e);
-	}
-	finally {
-	    session.close();
-	}
-	return ret;
-    }
+		Entidad nuevaEntidad = getEntidad(entidad);
+		boolean ret = false;
 
-    public static String getJsonEntidades(int pagina, int registros) {
-	String jsonEntidades = "";
+		if (nuevaEntidad == null) {
+			nuevaEntidad = new Entidad();
+			nuevaEntidad.setEntidad(entidad);
+			nuevaEntidad.setNombre(nombre);
+			nuevaEntidad.setAbreviatura(abreviatura);
+			nuevaEntidad.setUnidadEjecutoras(null);
 
-	List<Entidad> entidadesPojo = getEntidadesPagina(pagina, registros);
+			Session session = CHibernateSession.getSessionFactory().openSession();
+			try {
+				session.beginTransaction();
+				session.save(nuevaEntidad);
+				session.getTransaction().commit();
+				ret = true;
+			} catch (Throwable e) {
+				CLogger.write("3", EntidadDAO.class, e);
+			} finally {
+				session.close();
+			}
+		}
 
-	List<EstructuraEntidad> entidades = new ArrayList<EstructuraEntidad>();
-
-	for (Entidad entidadPojo : entidadesPojo) {
-	    EstructuraEntidad entidad = new EstructuraEntidad();
-	    entidad.entidad = entidadPojo.getEntidad();
-	    entidad.nombre = entidadPojo.getNombre();
-	    entidad.abreviatura = entidadPojo.getAbreviatura();
-
-	    entidades.add(entidad);
+		return ret;
 	}
 
-	jsonEntidades = Utils.getJSonString("entidades", entidades);
+	public static boolean actualizarEntidad(int entidad, String abreviatura) {
 
-	return jsonEntidades;
-    }
+		Entidad existeEntidad = getEntidad(entidad);
+		boolean ret = false;
 
-    public static Long getTotalEntidades() {
-	Long ret = 0L;
-	Session session = CHibernateSession.getSessionFactory().openSession();
-	try {
-	    Query<Long> conteo = session.createQuery("SELECT count(e.entidad) FROM Entidad e", Long.class);
-	    ret = conteo.getSingleResult();
+		if (existeEntidad != null) {
+
+			existeEntidad.setAbreviatura(abreviatura);
+
+			Session session = CHibernateSession.getSessionFactory().openSession();
+			try {
+				session.beginTransaction();
+				session.update(existeEntidad);
+				session.getTransaction().commit();
+				ret = true;
+			} catch (Throwable e) {
+				CLogger.write("4", EntidadDAO.class, e);
+			} finally {
+				session.close();
+			}
+		}
+
+		return ret;
 	}
-	catch (Throwable e) {
-	    CLogger.write("7", CooperanteDAO.class, e);
+
+	public static List<Entidad> getEntidadesPagina(int pagina, int registros) {
+		List<Entidad> ret = new ArrayList<Entidad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try {
+			Query<Entidad> criteria = session.createQuery("SELECT e FROM Entidad e", Entidad.class);
+			criteria.setFirstResult(((pagina - 1) * (registros)));
+			criteria.setMaxResults(registros);
+			ret = criteria.getResultList();
+		} catch (Throwable e) {
+			CLogger.write("5", EntidadDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
 	}
-	finally {
-	    session.close();
+
+	public static String getJsonEntidades(int pagina, int registros) {
+		String jsonEntidades = "";
+
+		List<Entidad> entidadesPojo = getEntidadesPagina(pagina, registros);
+
+		List<EstructuraEntidad> entidades = new ArrayList<EstructuraEntidad>();
+
+		for (Entidad entidadPojo : entidadesPojo) {
+			EstructuraEntidad entidad = new EstructuraEntidad();
+			entidad.entidad = entidadPojo.getEntidad();
+			entidad.nombre = entidadPojo.getNombre();
+			entidad.abreviatura = entidadPojo.getAbreviatura();
+
+			entidades.add(entidad);
+		}
+
+		jsonEntidades = Utils.getJSonString("entidades", entidades);
+
+		return jsonEntidades;
 	}
-	return ret;
-    }
+
+	public static Long getTotalEntidades() {
+		Long ret = 0L;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try {
+			Query<Long> conteo = session.createQuery("SELECT count(e.entidad) FROM Entidad e", Long.class);
+			ret = conteo.getSingleResult();
+		} catch (Throwable e) {
+			CLogger.write("7", EntidadDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
+	}
 
 }

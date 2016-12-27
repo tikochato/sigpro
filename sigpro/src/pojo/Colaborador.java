@@ -1,5 +1,5 @@
 package pojo;
-// Generated 20/12/2016 11:26:44 AM by Hibernate Tools 5.2.0.Beta1
+// Generated Dec 5, 2016 7:40:54 PM by Hibernate Tools 5.2.0.Beta1
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,7 +29,7 @@ public class Colaborador implements java.io.Serializable {
 	private String snombre;
 	private String papellido;
 	private String sapellido;
-	private Integer cui;
+	private Long cui;
 
 	public Colaborador() {
 	}
@@ -40,7 +40,7 @@ public class Colaborador implements java.io.Serializable {
 	}
 
 	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String snombre,
-			String papellido, String sapellido, Integer cui) {
+			String papellido, String sapellido, Long cui) {
 		this.unidadEjecutora = unidadEjecutora;
 		this.usuario = usuario;
 		this.pnombre = pnombre;
@@ -119,11 +119,11 @@ public class Colaborador implements java.io.Serializable {
 	}
 
 	@Column(name = "cui")
-	public Integer getCui() {
+	public Long getCui() {
 		return this.cui;
 	}
 
-	public void setCui(Integer cui) {
+	public void setCui(Long cui) {
 		this.cui = cui;
 	}
 

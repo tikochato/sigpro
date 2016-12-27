@@ -34,20 +34,35 @@ public class Utils {
 
 			request.setCharacterEncoding("UTF-8");
 
-			Gson gson = new Gson();
-
-			Type type = new TypeToken<Map<String, String>>() {
-			}.getType();
+			String str;
+			BufferedReader br = request.getReader();
 
 			StringBuilder sb = new StringBuilder();
-			BufferedReader br = request.getReader();
-			String str;
 
 			while ((str = br.readLine()) != null) {
 				sb.append(str);
 			}
 
-			map = gson.fromJson(sb.toString(), type);
+			map = getParams(sb.toString());
+
+		} catch (Exception e) {
+
+		}
+
+		return map;
+	}
+
+	public static Map<String, String> getParams(String json) {
+
+		Map<String, String> map = null;
+
+		try {
+			Gson gson = new Gson();
+
+			Type type = new TypeToken<Map<String, String>>() {
+			}.getType();
+
+			map = gson.fromJson(json, type);
 
 		} catch (Exception e) {
 
@@ -79,17 +94,17 @@ public class Utils {
 		return jsonText;
 	}
 
-	public static int String2Int(String value) {
+	public static Integer String2Int(String value) {
 
 		return String2Int(value, 0);
 
 	}
 
-	public static int String2Int(String value, int defaultValue) {
+	public static Integer String2Int(String value, Integer defaultValue) {
 
 		try {
 
-			int val = Integer.parseInt(value);
+			Integer val = Integer.parseInt(value);
 
 			return val;
 
@@ -99,10 +114,31 @@ public class Utils {
 		}
 
 	}
-	
-	public static String formatDate(Date date){
+
+	public static Long String2Long(String value) {
+
+		return String2Long(value, 0l);
+
+	}
+
+	public static Long String2Long(String value, Long defaultValue) {
+
+		try {
+
+			Long val = Long.parseLong(value);
+
+			return val;
+
+		} catch (NumberFormatException e) {
+
+			return defaultValue;
+		}
+
+	}
+
+	public static String formatDate(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		if(date!=null)
+		if (date != null)
 			return sdf.format(date);
 		return "";
 	}

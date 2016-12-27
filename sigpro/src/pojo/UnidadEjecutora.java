@@ -1,13 +1,11 @@
 package pojo;
-// Generated 20/12/2016 11:26:44 AM by Hibernate Tools 5.2.0.Beta1
+// Generated Dec 5, 2016 7:40:54 PM by Hibernate Tools 5.2.0.Beta1
 
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -47,8 +45,6 @@ public class UnidadEjecutora implements java.io.Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
-
 	@Column(name = "unidad_ejecutora", unique = true, nullable = false)
 	public Integer getUnidadEjecutora() {
 		return this.unidadEjecutora;
