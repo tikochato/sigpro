@@ -69,7 +69,6 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 						mi.componentetipos = response.componentetipos;
 						mi.gridOptions.data = mi.componentetipos;
 						mi.mostrarcargando = false;
-						mi.componentetipo = null;
 					});
 		}
 		
@@ -97,7 +96,6 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 						mi.esnuevo = false;
 						mi.componentetipo.id = response.id;
 						mi.cargarTabla();
-						
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo Componente');
@@ -116,7 +114,6 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Componente que desea editar');
 		}
-		
 		
 		mi.borrar = function(ev) {
 			if(mi.componentetipo!=null){
@@ -216,7 +213,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 			mi.mostrarcargandoProyProp=true;
 			$http.post('/SComponentePropiedad', 
 					{ 
-						accion: 'getComponentePropiedadPagina',
+						accion: 'getComponentePropiedadPaginaPorTipo',
 						pagina: pagina,
 						idComponenteTipo:mi.componentetipo!=null ? mi.componentetipo.id : null, 
 						numerocomponentepropiedad: $utilidades.elementosPorPagina }).success(

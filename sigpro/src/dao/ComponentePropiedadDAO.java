@@ -72,13 +72,6 @@ public class ComponentePropiedadDAO {
 		return ret;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
 	public static ComponentePropiedad getComponentePropiedadPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		ComponentePropiedad ret = null;
@@ -92,7 +85,7 @@ public class ComponentePropiedadDAO {
 			ret = session.createQuery( criteria ).getSingleResult();
 		}
 		catch(Throwable e){
-			CLogger.write("3", ComponentePropiedadDAO.class, e);
+			CLogger.write("4", ComponentePropiedadDAO.class, e);
 		}
 		finally{
 			session.close();

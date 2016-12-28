@@ -3,7 +3,7 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="componentepropiedadController as componentepropiedadc" class="maincontainer all_page" id="title">
-		<h3>Cooperantes</h3><br/>
+		<h3>Propiedad Componente</h3><br/>
 		<div class="row" align="center" ng-hide="componentepropiedadc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
@@ -71,8 +71,15 @@
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="componentepropiedadc.cooperante.nombre">
+    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="componentepropiedadc.componentepropiedad.nombre">
 						</div>
+						<div class="form-group">
+							<label for="nombre">* Tipo dato</label>
+							<select class="form-control" ng-model="componentepropiedadc.componentepropiedad.datotipoid" >
+								<option value="">Seleccione una opción</option>
+								<option ng-repeat="opciones in componentepropiedadc.tipodatos" value="{{opciones.id}}">{{opciones.nombre}}</option>
+							</select>
+						</div>	
 						<div class="form-group">
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="componentepropiedadc.componentepropiedad.descripcion">

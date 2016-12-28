@@ -15,6 +15,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			mi.paginaActual = 1;
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
+			mi.tipodatos = [];
 			
 			mi.gridOptions = {
 					enableRowSelection : true,
@@ -29,7 +30,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 					    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
 					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-					    { name: 'datotipo', displayName: 'Tipo dato', cellClass: 'grid-align-left', enableFiltering: false},
+					    { name: 'datotiponombre', displayName: 'Tipo dato', cellClass: 'grid-align-left', enableFiltering: false},
 					    { name: 'usuarioCreo', displayName: 'Usuario Creación'},
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
 					],
@@ -57,7 +58,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SComponentePropiedad', { accion: 'geComponentePropiedadesPagina', pagina: pagina, numerocomponentepropiedades: $utilidades.elementosPorPagina }).success(
+				$http.post('/SComponentePropiedad', { accion: 'getComponentePropiedadPagina', pagina: pagina, numerocomponentepropiedades: $utilidades.elementosPorPagina }).success(
 						function(response) {
 							mi.componentepropiedades = response.componentepropiedades;
 							mi.gridOptions.data = mi.componentepropiedades;
@@ -72,10 +73,13 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 						esnuevo: mi.esnuevo,
 						id: mi.componentepropiedad.id,
 						nombre: mi.componentepropiedad.nombre,
-						descripcion: mi.componentepropiedad.descripcion
+						descripcion: mi.componentepropiedad.descripcion,
+						datoTipoId: mi.componentepropiedad.datotipoid
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Propiedad Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+							mi.componentepropiedad.id = response.id;
+							mi.esnuevo = false;
 							mi.cargarTabla();
 						}
 						else
@@ -159,6 +163,10 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 					function(response) {
 						mi.totalComponentePropiedades = response.totalcomponentepropiedades;
 						mi.cargarTabla(1);
-					});
+			});
+			$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
+					function(response) {
+						mi.tipodatos = response.datoTipos;
+			});
 			
 		} ]);

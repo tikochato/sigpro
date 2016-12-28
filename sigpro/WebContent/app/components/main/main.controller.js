@@ -180,7 +180,7 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'componentepropiedadController',
-	    	   script: '/app/components/componentepropiedad/componentepropiedad.ontroller.js',
+	    	   script: '/app/components/componentepropiedad/componentepropiedad.controller.js',
 	    	   template: '/app/components/componentepropiedad/componentepropiedad.jsp'
 	       }
 

@@ -93,7 +93,7 @@ public class SComponentePropiedad extends HttpServlet {
 				temp.nombre = componentepropiedad.getNombre();
 				temp.descripcion = componentepropiedad.getDescripcion();
 				temp.datotipoid = componentepropiedad.getDatoTipo().getId();
-				temp.datotiponombre = componentepropiedad.getNombre();
+				temp.datotiponombre = componentepropiedad.getDatoTipo().getNombre();
 				temp.fechaActualizacion = Utils.formatDate(componentepropiedad.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(componentepropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = componentepropiedad.getUsuarioActualizo();
@@ -115,7 +115,7 @@ public class SComponentePropiedad extends HttpServlet {
 				temp.nombre = componentepropiedad.getNombre();
 				temp.descripcion = componentepropiedad.getDescripcion();
 				temp.datotipoid = componentepropiedad.getDatoTipo().getId();
-				temp.datotiponombre = componentepropiedad.getNombre();
+				temp.datotiponombre = componentepropiedad.getDatoTipo().getNombre();
 				temp.fechaActualizacion = Utils.formatDate(componentepropiedad.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(componentepropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = componentepropiedad.getUsuarioActualizo();
@@ -152,16 +152,20 @@ public class SComponentePropiedad extends HttpServlet {
 		else if(accion.equals("numeroComponentePropiedadesDisponibles")){
 			response_text = String.join("","{ \"success\": true, \"totalcomponentepropiedades\":",ComponentePropiedadDAO.getTotalComponentePropiedades().toString()," }");
 		}
+		else if(accion.equals("numeroComponentePropiedades")){
+			response_text = String.join("","{ \"success\": true, \"totalcomponentepropiedades\":",ComponentePropiedadDAO.getTotalComponentePropiedad().toString()," }");
+		}
 		else if(accion.equals("guardarComponentePropiedad")){
 			
+
 			boolean result = false;
 			boolean esnuevo = map.get("esnuevo").equals("true");
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0 || esnuevo){
-				String codigo = map.get("codigo");
+				
 				String nombre = map.get("nombre");
 				String descripcion = map.get("descripcion");
-				int datoTipoId = Integer.parseInt(map.get("datoTipoId"));
+				int datoTipoId = map.get("datoTipoId")!=null ? Integer.parseInt(map.get("datoTipoId")) : 0;
 				DatoTipo datoTipo = new DatoTipo();
 				datoTipo.setId(datoTipoId);
 				
@@ -178,12 +182,13 @@ public class SComponentePropiedad extends HttpServlet {
 					componentePropiedad.setFechaActualizacion(new DateTime().toDate());
 				}
 				result = ComponentePropiedadDAO.guardarComponentePropiedad(componentePropiedad);
-				response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
+				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
+						+ "\"id\": " + componentePropiedad.getId() +" }");
 			}
 			else
 				response_text = "{ \"success\": false }";
 		}	
-		else if(accion.equals("borrarCooperante")){
+		else if(accion.equals("borrarComponentePropiedad")){
 			
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
