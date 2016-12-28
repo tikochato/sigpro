@@ -44,7 +44,6 @@ public class Producto implements java.io.Serializable {
 	private Set<ProductoPropiedadValor> productoPropiedadValors = new HashSet<ProductoPropiedadValor>(0);
 	private Set<Actividad> actividads = new HashSet<Actividad>(0);
 	private Set<FormularioItemValor> formularioItemValors = new HashSet<FormularioItemValor>(0);
-	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<Meta> metas = new HashSet<Meta>(0);
 	private Set<Riesgo> riesgos = new HashSet<Riesgo>(0);
 
@@ -65,7 +64,7 @@ public class Producto implements java.io.Serializable {
 			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, Integer estado, Set<ObjetoRecurso> objetoRecursos,
 			Set<ObjetoFormulario> objetoFormularios, Set<ProductoPropiedadValor> productoPropiedadValors,
-			Set<Actividad> actividads, Set<FormularioItemValor> formularioItemValors, Set<Producto> productos,
+			Set<Actividad> actividads, Set<FormularioItemValor> formularioItemValors, 
 			Set<Meta> metas, Set<Riesgo> riesgos) {
 		this.componente = componente;
 		this.producto = producto;
@@ -82,7 +81,6 @@ public class Producto implements java.io.Serializable {
 		this.productoPropiedadValors = productoPropiedadValors;
 		this.actividads = actividads;
 		this.formularioItemValors = formularioItemValors;
-		this.productos = productos;
 		this.metas = metas;
 		this.riesgos = riesgos;
 	}
@@ -237,15 +235,6 @@ public class Producto implements java.io.Serializable {
 
 	public void setFormularioItemValors(Set<FormularioItemValor> formularioItemValors) {
 		this.formularioItemValors = formularioItemValors;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
-	public Set<Producto> getProductos() {
-		return this.productos;
-	}
-
-	public void setProductos(Set<Producto> productos) {
-		this.productos = productos;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
