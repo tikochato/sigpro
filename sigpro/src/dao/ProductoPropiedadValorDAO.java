@@ -15,8 +15,8 @@ import org.hibernate.query.Query;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import pojo.ProdtipoPropiedad;
-import pojo.ProdtipoPropiedadId;
+import pojo.ProductoPropiedadValor;
+import pojo.ProductoPropiedadValorId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 import utilities.Utils;
@@ -27,25 +27,26 @@ public class ProductoPropiedadValorDAO {
 	static class EstructuraPojo {
 		Integer propiedadid;
 		Integer productoid;
-		
+
 		Integer valorEntero;
 		String valorString;
 		BigDecimal valorDecimal;
 		Date valorTiempo;
-		
+
 		String estado;
 	}
 
-	public static ProdtipoPropiedad getProductoPropiedad(Integer codigoPropiedad, Integer codigoProducto) {
+	public static ProductoPropiedadValor getProductoPropiedadValor(Integer propiedadId, Integer productoId) {
 		Session session = CHibernateSession.getSessionFactory().openSession();
-		ProdtipoPropiedad ret = null;
+		ProductoPropiedadValor ret = null;
 		try {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
-			CriteriaQuery<ProdtipoPropiedad> criteria = builder.createQuery(ProdtipoPropiedad.class);
-			Root<ProdtipoPropiedad> root = criteria.from(ProdtipoPropiedad.class);
+			CriteriaQuery<ProductoPropiedadValor> criteria = builder.createQuery(ProductoPropiedadValor.class);
+			Root<ProductoPropiedadValor> root = criteria.from(ProductoPropiedadValor.class);
 			criteria.select(root);
-			criteria.where(builder.equal(root.get("id"), new ProdtipoPropiedadId(codigoTipo, codigoPropiedad)));
+			criteria.where(builder.equal(root.get("id"),
+					new ProductoPropiedadValorId(propiedadId, productoId, "", new Date())));
 			ret = session.createQuery(criteria).getSingleResult();
 		} catch (Throwable e) {
 			CLogger.write("1", ProductoPropiedadValorDAO.class, e);
@@ -55,18 +56,15 @@ public class ProductoPropiedadValorDAO {
 		return ret;
 	}
 
-	public static boolean guardar(Integer codigoTipo, Integer codigoPropiedad, String usuario) {
+	public static boolean guardar(Integer propiedadId, Integer productoId, String usuario) {
 
-		ProdtipoPropiedad pojo = geProdtipoPropiedad(codigoTipo, codigoPropiedad);
+		ProductoPropiedadValor pojo = getProductoPropiedadValor(propiedadId, propiedadId);
 		boolean ret = false;
 
 		if (pojo == null) {
-			pojo = new ProdtipoPropiedad();
-			pojo.setId(new ProdtipoPropiedadId(codigoTipo, codigoPropiedad));
-			pojo.setProductoTipo(ProductoTipoDAO.getProductoTipo(codigoTipo));
-			pojo.setProductoPropiedad(ProductoPropiedadDAO.getProductoPropiedad(codigoPropiedad));
-			pojo.setUsuarioCreo(usuario);
-			pojo.setFechaCreacion(new Date());
+			pojo = new ProductoPropiedadValor();
+
+			pojo.setId(new ProductoPropiedadValorId(propiedadId, productoId, usuario, new Date()));
 
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try {
@@ -84,20 +82,13 @@ public class ProductoPropiedadValorDAO {
 		return ret;
 	}
 
-	public static boolean actualizar(Integer codigoTipo, Integer codigoPropiedad, String nombre, String descripcion,
+	public static boolean actualizar(Integer propiedadId, Integer productoId, String nombre, String descripcion,
 			String usuario) {
 
-		ProdtipoPropiedad pojo = geProdtipoPropiedad(codigoTipo, codigoPropiedad);
+		ProductoPropiedadValor pojo = getProductoPropiedadValor(propiedadId, productoId);
 		boolean ret = false;
 
 		if (pojo != null) {
-
-			pojo.setId(new ProdtipoPropiedadId(codigoTipo, codigoPropiedad));
-			pojo.setProductoTipo(ProductoTipoDAO.getProductoTipo(codigoTipo));
-			pojo.setProductoPropiedad(ProductoPropiedadDAO.getProductoPropiedad(codigoPropiedad));
-
-			pojo.setUsuarioActualizo(usuario);
-			pojo.setFechaActualizacion(new Date());
 
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try {
@@ -115,9 +106,9 @@ public class ProductoPropiedadValorDAO {
 		return ret;
 	}
 
-	public static boolean eliminar(Integer codigoTipo, Integer codigoPropiedad, String usuario) {
+	public static boolean eliminar(Integer propiedadId, Integer productoId, String usuario) {
 
-		ProdtipoPropiedad pojo = geProdtipoPropiedad(codigoTipo, codigoPropiedad);
+		ProductoPropiedadValor pojo = getProductoPropiedadValor(propiedadId, productoId);
 		boolean ret = false;
 
 		if (pojo != null) {
@@ -138,13 +129,13 @@ public class ProductoPropiedadValorDAO {
 		return ret;
 	}
 
-	public static List<ProdtipoPropiedad> getPagina(int pagina, int registros, Integer codigoTipo) {
-		List<ProdtipoPropiedad> ret = new ArrayList<ProdtipoPropiedad>();
+	public static List<ProductoPropiedadValor> getPagina(int pagina, int registros, Integer productoId) {
+		List<ProductoPropiedadValor> ret = new ArrayList<ProductoPropiedadValor>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<ProdtipoPropiedad> criteria = session.createQuery(
-					"SELECT e FROM ProdtipoPropiedad e where e.productoTipoid = " + codigoTipo,
-					ProdtipoPropiedad.class);
+			Query<ProductoPropiedadValor> criteria = session.createQuery(
+					"SELECT e FROM ProductoPropiedadValor e where e.id.productoId = " + productoId,
+					ProductoPropiedadValor.class);
 			criteria.setFirstResult(((pagina - 1) * (registros)));
 			criteria.setMaxResults(registros);
 			ret = criteria.getResultList();
@@ -156,16 +147,16 @@ public class ProductoPropiedadValorDAO {
 		return ret;
 	}
 
-	public static String getJson(int pagina, int registros, Integer codigoTipo) {
+	public static String getJson(int pagina, int registros, Integer productoId) {
 		String jsonEntidades = "";
 
-		List<ProdtipoPropiedad> pojos = getPagina(pagina, registros, codigoTipo);
+		List<ProductoPropiedadValor> pojos = getPagina(pagina, registros, productoId);
 
 		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
 
-		for (ProdtipoPropiedad pojo : pojos) {
+		for (ProductoPropiedadValor pojo : pojos) {
 			EstructuraPojo estructuraPojo = new EstructuraPojo();
-			
+
 			estructuraPojo.estado = "C";
 
 			listaEstructuraPojos.add(estructuraPojo);
@@ -180,7 +171,7 @@ public class ProductoPropiedadValorDAO {
 		Long ret = 0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<Long> conteo = session.createQuery("SELECT count(e.id) FROM ProdtipoPropiedad e", Long.class);
+			Query<Long> conteo = session.createQuery("SELECT count(e) FROM ProductoPropiedadValor e", Long.class);
 			ret = conteo.getSingleResult();
 		} catch (Throwable e) {
 			CLogger.write("7", ProductoPropiedadValorDAO.class, e);
@@ -190,13 +181,13 @@ public class ProductoPropiedadValorDAO {
 		return ret;
 	}
 
-	public static List<ProdtipoPropiedad> getTipoPropiedades(Integer codigoTipo) {
-		List<ProdtipoPropiedad> ret = new ArrayList<ProdtipoPropiedad>();
+	public static List<ProductoPropiedadValor> getTipoPropiedades(Integer productoId) {
+		List<ProductoPropiedadValor> ret = new ArrayList<ProductoPropiedadValor>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<ProdtipoPropiedad> criteria = session.createQuery(
-					"SELECT e FROM ProdtipoPropiedad e where e.id.productoTipoid = :id", ProdtipoPropiedad.class);
-			criteria.setParameter("id", codigoTipo);
+			Query<ProductoPropiedadValor> criteria = session.createQuery(
+					"SELECT e FROM ProductoPropiedadValor e where e.id.productoid = :id", ProductoPropiedadValor.class);
+			criteria.setParameter("id", productoId);
 			ret = criteria.getResultList();
 		} catch (Throwable e) {
 			CLogger.write("8", ProductoPropiedadValorDAO.class, e);
@@ -206,21 +197,15 @@ public class ProductoPropiedadValorDAO {
 		return ret;
 	}
 
-	public static String getJson(Integer codigoTipo) {
+	public static String getJson(Integer productoId) {
 		String jsonEntidades = "";
 
-		List<ProdtipoPropiedad> pojos = getTipoPropiedades(codigoTipo);
+		List<ProductoPropiedadValor> pojos = getTipoPropiedades(productoId);
 
 		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
 
-		for (ProdtipoPropiedad pojo : pojos) {
+		for (ProductoPropiedadValor pojo : pojos) {
 			EstructuraPojo estructuraPojo = new EstructuraPojo();
-			estructuraPojo.idTipo = pojo.getProductoTipo().getId();
-			estructuraPojo.tipo = pojo.getProductoTipo().getNombre();
-			estructuraPojo.idPropiedad = pojo.getProductoPropiedad().getId();
-			estructuraPojo.propiedad = pojo.getProductoPropiedad().getNombre();
-			estructuraPojo.idPropiedadTipo = pojo.getProductoPropiedad().getDatoTipo().getId();
-			estructuraPojo.propiedadTipo = pojo.getProductoPropiedad().getDatoTipo().getNombre();
 			estructuraPojo.estado = "C";
 
 			listaEstructuraPojos.add(estructuraPojo);
@@ -231,7 +216,7 @@ public class ProductoPropiedadValorDAO {
 		return jsonEntidades;
 	}
 
-	public static boolean persistirValores(Integer idTipo, String propiedades, String usuario) {
+	public static boolean persistirValores(Integer productoId, String propiedades, String usuario) {
 		boolean ret = false;
 
 		Gson gson = new Gson();
@@ -242,9 +227,9 @@ public class ProductoPropiedadValorDAO {
 		for (EstructuraPojo pojo : pojos) {
 
 			if (pojo.estado.equalsIgnoreCase("N")) {
-				ret = guardar(idTipo, pojo.idPropiedad, usuario);
+				ret = guardar(productoId, pojo.propiedadid, usuario);
 			} else if (pojo.estado.equalsIgnoreCase("E")) {
-				ret = eliminar(pojo.idTipo, pojo.idPropiedad, usuario);
+				ret = eliminar(pojo.productoid, pojo.propiedadid, usuario);
 			}
 		}
 

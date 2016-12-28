@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dao.ComponenteDAO;
 import dao.ProductoDAO;
 import utilities.Utils;
 
@@ -69,10 +70,20 @@ public class SProducto extends HttpServlet {
 	private void crear(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		String nombre = parametro.get("nombre");
 		String descripcion = parametro.get("descripcion");
+		Integer componente = Utils.String2Int(parametro.get("componente"));
+		Integer productoPadre = Utils.String2Int(parametro.get("productoPadre"));
+		Integer tipo = Utils.String2Int(parametro.get("tipo"));
+		String formulariosItemValor = parametro.get("formulariosItemValor");
+		String metas = parametro.get("metas");
+		String objetoFormularios = parametro.get("objetoFormularios");
+		String objetoRecursos = parametro.get("objetoRecursos");
+		String objetoRiesgos = parametro.get("objetoRiesgos");
+		String productoPropiedadValor = parametro.get("productoPropiedadValor");
+		String productos = parametro.get("productos");
 		String usuario = parametro.get("usuario");
-		String propiedades = parametro.get("propiedades");
 
-		boolean creado = ProductoDAO.guardar(-1, nombre, descripcion, propiedades, usuario);
+		boolean creado = ProductoDAO.guardar(nombre, descripcion, componente, productoPadre, tipo, formulariosItemValor,
+				metas, objetoFormularios, objetoRecursos, objetoRiesgos, productoPropiedadValor, productos, usuario);
 
 		if (creado) {
 			listar(parametro, response);
@@ -83,10 +94,21 @@ public class SProducto extends HttpServlet {
 		int codigo = Utils.String2Int(parametro.get("codigo"), -1);
 		String nombre = parametro.get("nombre");
 		String descripcion = parametro.get("descripcion");
+		Integer componente = Utils.String2Int(parametro.get("componente"));
+		Integer productoPadre = Utils.String2Int(parametro.get("productoPadre"));
+		Integer tipo = Utils.String2Int(parametro.get("tipo"));
+		String formulariosItemValor = parametro.get("formulariosItemValor");
+		String metas = parametro.get("metas");
+		String objetoFormularios = parametro.get("objetoFormularios");
+		String objetoRecursos = parametro.get("objetoRecursos");
+		String objetoRiesgos = parametro.get("objetoRiesgos");
+		String productoPropiedadValor = parametro.get("productoPropiedadValor");
+		String productos = parametro.get("productos");
 		String usuario = parametro.get("usuario");
-		String propiedades = parametro.get("propiedades");
 
-		boolean actualizado = ProductoDAO.actualizar(codigo, nombre, descripcion, propiedades, usuario);
+		boolean actualizado = ProductoDAO.actualizar(codigo, nombre, descripcion, componente, productoPadre, tipo,
+				formulariosItemValor, metas, objetoFormularios, objetoRecursos, objetoRiesgos, productoPropiedadValor,
+				productos, usuario);
 		if (actualizado) {
 			listar(parametro, response);
 		}
@@ -103,7 +125,7 @@ public class SProducto extends HttpServlet {
 	}
 
 	private void total(HttpServletResponse response) throws IOException {
-		Long total = ProductoDAO.getTotal();
+		Long total = ProductoDAO.getTotalProductos();
 
 		String resultadoJson = "{\"success\":true, \"total\":" + total + "}";
 
@@ -133,7 +155,7 @@ public class SProducto extends HttpServlet {
 
 		String resultadoJson = "";
 
-		resultadoJson = ProductoDAO.getProductosPagina(pagina, registros);
+		resultadoJson = Utils.getJSonString("productos", ProductoDAO.getProductosPagina(pagina, registros));
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";
@@ -150,7 +172,7 @@ public class SProducto extends HttpServlet {
 
 		String resultadoJson = "";
 
-		resultadoJson = ProdTipoPropiedadDAO.getJson(codigoTipo);
+		resultadoJson = Utils.getJSonString("productos", ComponenteDAO.getComponentesPagina(pagina, registros));
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";
