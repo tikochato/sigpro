@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 27, 2016 7:02:33 PM by Hibernate Tools 5.2.0.CR1
+// Generated Dec 28, 2016 1:25:08 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +22,7 @@ public class Entidad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8817581293638378973L;
+	private static final long serialVersionUID = 4606272840099404393L;
 	private Integer entidad;
 	private String nombre;
 	private String abreviatura;
@@ -35,8 +35,9 @@ public class Entidad implements java.io.Serializable {
 		this.nombre = nombre;
 	}
 
-	public Entidad(String nombre, Set<UnidadEjecutora> unidadEjecutoras) {
+	public Entidad(String nombre, String abreviatura, Set<UnidadEjecutora> unidadEjecutoras) {
 		this.nombre = nombre;
+		this.abreviatura = abreviatura;
 		this.unidadEjecutoras = unidadEjecutoras;
 	}
 
@@ -60,8 +61,8 @@ public class Entidad implements java.io.Serializable {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	
-	@Column(name = "abreviatura", nullable = true, length = 1000)
+
+	@Column(name = "abreviatura", length = 100)
 	public String getAbreviatura() {
 		return this.abreviatura;
 	}

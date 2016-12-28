@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 27, 2016 7:02:33 PM by Hibernate Tools 5.2.0.CR1
+// Generated Dec 28, 2016 1:25:08 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,12 +27,12 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6695250032596815903L;
+	private static final long serialVersionUID = -6343544306668025599L;
 	private Integer id;
 	private Componente componente;
 	private Producto producto;
 	private ProductoTipo productoTipo;
-	private String name;
+	private String nombre;
 	private String descripcion;
 	private String usuarioCreo;
 	private String usuarioActualizo;
@@ -51,17 +51,17 @@ public class Producto implements java.io.Serializable {
 	public Producto() {
 	}
 
-	public Producto(Componente componente, Producto producto, ProductoTipo productoTipo, String name,
+	public Producto(Componente componente, Producto producto, ProductoTipo productoTipo, String nombre,
 			String usuarioCreo, Date fechaCreacion) {
 		this.componente = componente;
 		this.producto = producto;
 		this.productoTipo = productoTipo;
-		this.name = name;
+		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public Producto(Componente componente, Producto producto, ProductoTipo productoTipo, String name,
+	public Producto(Componente componente, Producto producto, ProductoTipo productoTipo, String nombre,
 			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, Integer estado, Set<ObjetoRecurso> objetoRecursos,
 			Set<ObjetoFormulario> objetoFormularios, Set<ProductoPropiedadValor> productoPropiedadValors,
@@ -70,7 +70,7 @@ public class Producto implements java.io.Serializable {
 		this.componente = componente;
 		this.producto = producto;
 		this.productoTipo = productoTipo;
-		this.name = name;
+		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
@@ -129,13 +129,13 @@ public class Producto implements java.io.Serializable {
 		this.productoTipo = productoTipo;
 	}
 
-	@Column(name = "name", nullable = false, length = 1000)
-	public String getName() {
-		return this.name;
+	@Column(name = "nombre", nullable = false, length = 1000)
+	public String getNombre() {
+		return this.nombre;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	@Column(name = "descripcion", length = 4000)

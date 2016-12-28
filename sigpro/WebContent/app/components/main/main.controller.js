@@ -75,6 +75,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/componentepropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'componentepropiedadController\'" class="all_page"></div>'
             })
+            .when('/recursounidadmedida/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'recursounidadmedidaController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -182,6 +185,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'componentepropiedadController',
 	    	   script: '/app/components/componentepropiedad/componentepropiedad.controller.js',
 	    	   template: '/app/components/componentepropiedad/componentepropiedad.jsp'
+	       },{
+	    	   name: 'recursounidadmedidaController',
+	    	   script: '/app/components/recursounidadmedida/recursounidadmedida.controller.js',
+	    	   template: '/app/components/recursounidadmedida/recursounidadmedida.jsp'
 	       }
 
 	   ];
