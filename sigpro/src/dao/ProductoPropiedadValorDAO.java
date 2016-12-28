@@ -45,8 +45,7 @@ public class ProductoPropiedadValorDAO {
 			CriteriaQuery<ProductoPropiedadValor> criteria = builder.createQuery(ProductoPropiedadValor.class);
 			Root<ProductoPropiedadValor> root = criteria.from(ProductoPropiedadValor.class);
 			criteria.select(root);
-			criteria.where(builder.equal(root.get("id"),
-					new ProductoPropiedadValorId(propiedadId, productoId, "", new Date())));
+			criteria.where(builder.equal(root.get("id"), new ProductoPropiedadValorId(propiedadId, productoId)));
 			ret = session.createQuery(criteria).getSingleResult();
 		} catch (Throwable e) {
 			CLogger.write("1", ProductoPropiedadValorDAO.class, e);
@@ -64,7 +63,25 @@ public class ProductoPropiedadValorDAO {
 		if (pojo == null) {
 			pojo = new ProductoPropiedadValor();
 
-			pojo.setId(new ProductoPropiedadValorId(propiedadId, productoId, usuario, new Date()));
+			pojo.setId(new ProductoPropiedadValorId(propiedadId, productoId));
+			pojo.setProducto(ProductoDAO.getProductoPorId(productoId));
+			pojo.setProductoPropiedad(ProductoPropiedadDAO.getProductoPropiedad(propiedadId));
+
+			BigDecimal valorDecimal = new BigDecimal(0.0);
+			pojo.setValorDecimal(valorDecimal);
+
+			Integer valorEntero = 0;
+			pojo.setValorEntero(valorEntero);
+
+			String valorString = "";
+			pojo.setValorString(valorString);
+
+			Date valorTiempo = new Date();
+			pojo.setValorTiempo(valorTiempo);
+
+			pojo.setUsuarioCreo(usuario);
+			pojo.setFechaCreacion(new Date());
+			pojo.setEstado(1);
 
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try {
@@ -82,13 +99,38 @@ public class ProductoPropiedadValorDAO {
 		return ret;
 	}
 
-	public static boolean actualizar(Integer propiedadId, Integer productoId, String nombre, String descripcion,
+	public static <T> boolean actualizar(Integer propiedadId, Integer productoId, Object valor, T tipo,
 			String usuario) {
 
 		ProductoPropiedadValor pojo = getProductoPropiedadValor(propiedadId, productoId);
 		boolean ret = false;
 
 		if (pojo != null) {
+
+			if (tipo instanceof String) {
+
+			} else if (tipo instanceof Integer) {
+
+			} else if (tipo instanceof BigDecimal) {
+
+			} else if (tipo instanceof Date) {
+
+			}
+
+			BigDecimal valorDecimal = new BigDecimal(0.0);
+			pojo.setValorDecimal(valorDecimal);
+
+			Integer valorEntero = 0;
+			pojo.setValorEntero(valorEntero);
+
+			String valorString = "";
+			pojo.setValorString(valorString);
+
+			Date valorTiempo = new Date();
+			pojo.setValorTiempo(valorTiempo);
+
+			pojo.setUsuarioCreo(usuario);
+			pojo.setFechaCreacion(new Date());
 
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try {
@@ -157,6 +199,14 @@ public class ProductoPropiedadValorDAO {
 		for (ProductoPropiedadValor pojo : pojos) {
 			EstructuraPojo estructuraPojo = new EstructuraPojo();
 
+			estructuraPojo.productoid = pojo.getProducto().getId();
+			estructuraPojo.propiedadid = pojo.getProductoPropiedad().getId();
+
+			estructuraPojo.valorEntero = pojo.getValorEntero();
+			estructuraPojo.valorString = pojo.getValorString();
+			estructuraPojo.valorDecimal = pojo.getValorDecimal();
+			estructuraPojo.valorTiempo = pojo.getValorTiempo();
+
 			estructuraPojo.estado = "C";
 
 			listaEstructuraPojos.add(estructuraPojo);
@@ -181,7 +231,7 @@ public class ProductoPropiedadValorDAO {
 		return ret;
 	}
 
-	public static List<ProductoPropiedadValor> getTipoPropiedades(Integer productoId) {
+	public static List<ProductoPropiedadValor> getProductoPropiedadValor(Integer productoId) {
 		List<ProductoPropiedadValor> ret = new ArrayList<ProductoPropiedadValor>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
@@ -200,12 +250,20 @@ public class ProductoPropiedadValorDAO {
 	public static String getJson(Integer productoId) {
 		String jsonEntidades = "";
 
-		List<ProductoPropiedadValor> pojos = getTipoPropiedades(productoId);
+		List<ProductoPropiedadValor> pojos = getProductoPropiedadValor(productoId);
 
 		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
 
 		for (ProductoPropiedadValor pojo : pojos) {
 			EstructuraPojo estructuraPojo = new EstructuraPojo();
+
+			estructuraPojo.productoid = pojo.getProducto().getId();
+			estructuraPojo.propiedadid = pojo.getProductoPropiedad().getId();
+
+			estructuraPojo.valorEntero = pojo.getValorEntero();
+			estructuraPojo.valorString = pojo.getValorString();
+			estructuraPojo.valorDecimal = pojo.getValorDecimal();
+			estructuraPojo.valorTiempo = pojo.getValorTiempo();
 			estructuraPojo.estado = "C";
 
 			listaEstructuraPojos.add(estructuraPojo);

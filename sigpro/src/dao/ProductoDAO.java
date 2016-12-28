@@ -31,6 +31,8 @@ public class ProductoDAO {
 
 		Integer idProductoTipo;
 		String productoTipo;
+
+		Integer estado;
 	}
 
 	public static List<Producto> getProductos() {
@@ -182,46 +184,42 @@ public class ProductoDAO {
 	}
 
 	public static boolean guardar(String nombre, String descripcion, Integer componente, Integer productoPadre,
-			Integer tipo, String formulariosItemValor, String metas, String objetoFormularios, String objetoRecursos,
-			String objetoRiesgos, String productoPropiedadValor, String productos, String usuario) {
+			Integer tipo, String recursos, String formularios, String propiedades, String actividades,
+			String formularioValores, String productos, String metas, String riesgos, String usuario) {
 		boolean ret = false;
 
-		Producto prod = new Producto();
+		Producto pojo = new Producto();
 
-		prod.setName(nombre);
-		prod.setDescripcion(descripcion);
+		pojo.setName(nombre);
+		pojo.setDescripcion(descripcion);
 
-		prod.setComponente(ComponenteDAO.getComponentePorId(componente));
+		pojo.setComponente(componente != null ? ComponenteDAO.getComponentePorId(componente) : null);
+		pojo.setProducto(productoPadre != null ? ProductoDAO.getProductoPorId(productoPadre) : null);
+		pojo.setProductoTipo(tipo != null ? ProductoTipoDAO.getProductoTipo(tipo) : null);
 
-		if (productoPadre != null)
-			prod.setProducto(ProductoDAO.getProductoPorId(productoPadre));
-		else
-			prod.setProducto(null);
+		pojo.setObjetoRecursos(null);
+		pojo.setObjetoFormularios(null);
+		pojo.setProductoPropiedadValors(null);
+		pojo.setActividads(null);
+		pojo.setFormularioItemValors(null);
+		pojo.setProductos(null);
+		pojo.setMetas(null);
+		pojo.setRiesgos(null);
 
-		prod.setProductoTipo(ProductoTipoDAO.getProductoTipo(tipo));
-
-		prod.setFormularioItemValors(null);
-		prod.setMetas(null);
-		prod.setObjetoFormularios(null);
-		prod.setObjetoRecursos(null);
-		prod.setObjetoRiesgos(null);
-		prod.setProductoPropiedadValors(null);
-		prod.setProductos(null);
-
-		prod.setUsuarioCreo(usuario);
-		prod.setFechaCreacion(new Date());
+		pojo.setUsuarioCreo(usuario);
+		pojo.setFechaCreacion(new Date());
 
 		Session session = CHibernateSession.getSessionFactory().openSession();
-		Integer id = null;
+		Integer productoId = null;
 		try {
 			session.beginTransaction();
-			id = (Integer) session.save(prod);
+			productoId = (Integer) session.save(pojo);
 			session.getTransaction().commit();
 
 			ret = true;
 
 		} catch (Throwable e) {
-			CLogger.write("3", ProductoDAO.class, e);
+			CLogger.write("8", ProductoDAO.class, e);
 		} finally {
 			session.close();
 		}
@@ -229,53 +227,76 @@ public class ProductoDAO {
 	}
 
 	public static boolean actualizar(Integer productoId, String nombre, String descripcion, Integer componente,
-			Integer productoPadre, Integer tipo, String formulariosItemValor, String metas, String objetoFormularios,
-			String objetoRecursos, String objetoRiesgos, String productoPropiedadValor, String productos,
+			Integer productoPadre, Integer tipo, String recursos, String formularios, String propiedades,
+			String actividades, String formularioValores, String productos, String metas, String riesgos,
 			String usuario) {
 		boolean ret = false;
-		Producto prod = new Producto();
-		prod.setName(nombre);
-		prod.setDescripcion(descripcion);
 
-		prod.setComponente(ComponenteDAO.getComponentePorId(componente));
+		Producto pojo = getProductoPorId(productoId);
 
-		if (productoPadre != null)
-			prod.setProducto(ProductoDAO.getProductoPorId(productoPadre));
-		else
-			prod.setProducto(null);
+		if (pojo != null) {
+			pojo.setName(nombre);
+			pojo.setDescripcion(descripcion);
 
-		prod.setProductoTipo(ProductoTipoDAO.getProductoTipo(tipo));
+			pojo.setComponente(componente != null ? ComponenteDAO.getComponentePorId(componente) : null);
+			pojo.setProducto(productoPadre != null ? ProductoDAO.getProductoPorId(productoPadre) : null);
+			pojo.setProductoTipo(tipo != null ? ProductoTipoDAO.getProductoTipo(tipo) : null);
 
-		prod.setFormularioItemValors(null);
-		prod.setMetas(null);
-		prod.setObjetoFormularios(null);
-		prod.setObjetoRecursos(null);
-		prod.setObjetoRiesgos(null);
-		prod.setProductoPropiedadValors(null);
-		prod.setProductos(null);
+			pojo.setObjetoRecursos(null);
+			pojo.setObjetoFormularios(null);
+			pojo.setProductoPropiedadValors(null);
+			pojo.setActividads(null);
+			pojo.setFormularioItemValors(null);
+			pojo.setProductos(null);
+			pojo.setMetas(null);
+			pojo.setRiesgos(null);
 
-		prod.setUsuarioCreo(usuario);
-		prod.setFechaCreacion(new Date());
+			pojo.setUsuarioActualizo(usuario);
+			pojo.setFechaActualizacion(new Date());
 
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		Integer id = null;
-		try {
-			session.beginTransaction();
-			id = (Integer) session.save(prod);
-			session.getTransaction().commit();
+			Session session = CHibernateSession.getSessionFactory().openSession();
+			try {
+				session.beginTransaction();
+				session.update(pojo);
+				session.getTransaction().commit();
 
-			ret = true;
+				ret = true;
 
-		} catch (Throwable e) {
-			CLogger.write("3", ProductoDAO.class, e);
-		} finally {
-			session.close();
+			} catch (Throwable e) {
+				CLogger.write("9", ProductoDAO.class, e);
+			} finally {
+				session.close();
+			}
 		}
 		return ret;
 	}
 
 	public static boolean eliminar(Integer productoId, String usuario) {
-		return true;
+		boolean ret = false;
+
+		Producto pojo = getProductoPorId(productoId);
+
+		if (pojo != null) {
+			pojo.setEstado(0);
+
+			Session session = CHibernateSession.getSessionFactory().openSession();
+
+			try {
+				session.beginTransaction();
+				session.update(pojo);
+				session.getTransaction().commit();
+
+				ret = true;
+
+			} catch (Throwable e) {
+				CLogger.write("10", ProductoDAO.class, e);
+			} finally {
+				session.close();
+			}
+		}
+
+		return ret;
+
 	}
 
 }
