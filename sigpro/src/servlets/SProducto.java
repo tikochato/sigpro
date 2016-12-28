@@ -68,22 +68,28 @@ public class SProducto extends HttpServlet {
 	}
 
 	private void crear(Map<String, String> parametro, HttpServletResponse response) throws IOException {
+
 		String nombre = parametro.get("nombre");
 		String descripcion = parametro.get("descripcion");
+
 		Integer componente = Utils.String2Int(parametro.get("componente"));
 		Integer productoPadre = Utils.String2Int(parametro.get("productoPadre"));
 		Integer tipo = Utils.String2Int(parametro.get("tipo"));
-		String formulariosItemValor = parametro.get("formulariosItemValor");
-		String metas = parametro.get("metas");
-		String objetoFormularios = parametro.get("objetoFormularios");
-		String objetoRecursos = parametro.get("objetoRecursos");
-		String objetoRiesgos = parametro.get("objetoRiesgos");
-		String productoPropiedadValor = parametro.get("productoPropiedadValor");
+
+		// todos estos pueden o deben ser JSON con la EstructuraPojo de su
+		// respectivo DAO
+		String recursos = parametro.get("recursos");
+		String formularios = parametro.get("formularios");
+		String propiedades = parametro.get("propiedades");
+		String actividades = parametro.get("actividades");
+		String formularioValores = parametro.get("formularioValores");
 		String productos = parametro.get("productos");
+		String metas = parametro.get("metas");
+		String riesgos = parametro.get("riesgos");
 		String usuario = parametro.get("usuario");
 
-		boolean creado = ProductoDAO.guardar(nombre, descripcion, componente, productoPadre, tipo, formulariosItemValor,
-				metas, objetoFormularios, objetoRecursos, objetoRiesgos, productoPropiedadValor, productos, usuario);
+		boolean creado = ProductoDAO.guardar(nombre, descripcion, componente, productoPadre, tipo, recursos,
+				formularios, propiedades, actividades, formularioValores, productos, metas, riesgos, usuario);
 
 		if (creado) {
 			listar(parametro, response);
@@ -91,24 +97,29 @@ public class SProducto extends HttpServlet {
 	}
 
 	private void actualizar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
-		int codigo = Utils.String2Int(parametro.get("codigo"), -1);
+
+		int productoId = Utils.String2Int(parametro.get("codigo"), -1);
 		String nombre = parametro.get("nombre");
 		String descripcion = parametro.get("descripcion");
+
 		Integer componente = Utils.String2Int(parametro.get("componente"));
 		Integer productoPadre = Utils.String2Int(parametro.get("productoPadre"));
 		Integer tipo = Utils.String2Int(parametro.get("tipo"));
-		String formulariosItemValor = parametro.get("formulariosItemValor");
-		String metas = parametro.get("metas");
-		String objetoFormularios = parametro.get("objetoFormularios");
-		String objetoRecursos = parametro.get("objetoRecursos");
-		String objetoRiesgos = parametro.get("objetoRiesgos");
-		String productoPropiedadValor = parametro.get("productoPropiedadValor");
+
+		// todos estos pueden o deben ser JSON con la EstructuraPojo de su
+		// respectivo DAO
+		String recursos = parametro.get("recursos");
+		String formularios = parametro.get("formularios");
+		String propiedades = parametro.get("propiedades");
+		String actividades = parametro.get("actividades");
+		String formularioValores = parametro.get("formularioValores");
 		String productos = parametro.get("productos");
+		String metas = parametro.get("metas");
+		String riesgos = parametro.get("riesgos");
 		String usuario = parametro.get("usuario");
 
-		boolean actualizado = ProductoDAO.actualizar(codigo, nombre, descripcion, componente, productoPadre, tipo,
-				formulariosItemValor, metas, objetoFormularios, objetoRecursos, objetoRiesgos, productoPropiedadValor,
-				productos, usuario);
+		boolean actualizado = ProductoDAO.actualizar(productoId, nombre, descripcion, componente, productoPadre, tipo,
+				recursos, formularios, propiedades, actividades, formularioValores, productos, metas, riesgos, usuario);
 		if (actualizado) {
 			listar(parametro, response);
 		}
