@@ -1,13 +1,13 @@
 package dao;
 import org.hibernate.Session;
 
-import pojo.Estadotabla;
-import pojo.EstadotablaId;
+import pojo.EstadoTabla;
+import pojo.EstadoTablaId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
 public class EstadoTablaDAO {
-	public static boolean saveEstadoTabla(Estadotabla estadotabla){
+	public static boolean saveEstadoTabla(EstadoTabla estadotabla){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -28,9 +28,9 @@ public class EstadoTablaDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		String ret = "";
 		try{
-			EstadotablaId estadotablaid = new EstadotablaId(usuario,tabla);
-			Estadotabla estadotabla = (Estadotabla) session.get(Estadotabla.class,estadotablaid);
-			ret=estadotabla.getEstado();
+			EstadoTablaId estadotablaid = new EstadoTablaId(usuario,tabla);
+			EstadoTabla estadotabla = (EstadoTabla) session.get(EstadoTabla.class,estadotablaid);
+			ret=estadotabla.getValores();
 		}catch(Throwable e){
 			CLogger.write("3", EstadoTablaDAO.class, e);
 		}
