@@ -38,7 +38,7 @@
 					</div>
 				  </div>
 				</div>
-				<ul uib-pagination total-items="metaunidadc.totalCooperantes" 
+				<ul uib-pagination total-items="metaunidadc.totalmedidas" 
 						ng-model="metaunidadc.paginaActual" 
 						max-size="metaunidadc.numeroMaximoPaginas" 
 						items-per-page="metaunidadc.elementosPorPagina"
