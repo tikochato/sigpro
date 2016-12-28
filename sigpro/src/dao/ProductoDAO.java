@@ -181,18 +181,20 @@ public class ProductoDAO {
 		return jsonEntidades;
 	}
 
-	public static boolean guardar(String nombre, String descripcion, Integer componente, Integer producto, Integer tipo,
-			String formulariosItemValor, String metas, String objetoFormularios, String objetosRecursos,
-			String objetoRiesgos, String productoPropiedadValor, String Producto, String usuario) {
+	public static boolean guardar(String nombre, String descripcion, Integer componente, Integer productoPadre,
+			Integer tipo, String formulariosItemValor, String metas, String objetoFormularios, String objetoRecursos,
+			String objetoRiesgos, String productoPropiedadValor, String productos, String usuario) {
 		boolean ret = false;
+
 		Producto prod = new Producto();
+
 		prod.setName(nombre);
 		prod.setDescripcion(descripcion);
 
 		prod.setComponente(ComponenteDAO.getComponentePorId(componente));
 
-		if (producto != null)
-			prod.setProducto(ProductoDAO.getProductoPorId(producto));
+		if (productoPadre != null)
+			prod.setProducto(ProductoDAO.getProductoPorId(productoPadre));
 		else
 			prod.setProducto(null);
 
@@ -213,12 +215,11 @@ public class ProductoDAO {
 		Integer id = null;
 		try {
 			session.beginTransaction();
-			id = (Integer) session.save(Producto);
+			id = (Integer) session.save(prod);
 			session.getTransaction().commit();
-			
+
 			ret = true;
-			
-			
+
 		} catch (Throwable e) {
 			CLogger.write("3", ProductoDAO.class, e);
 		} finally {
@@ -226,4 +227,55 @@ public class ProductoDAO {
 		}
 		return ret;
 	}
+
+	public static boolean actualizar(Integer productoId, String nombre, String descripcion, Integer componente,
+			Integer productoPadre, Integer tipo, String formulariosItemValor, String metas, String objetoFormularios,
+			String objetoRecursos, String objetoRiesgos, String productoPropiedadValor, String productos,
+			String usuario) {
+		boolean ret = false;
+		Producto prod = new Producto();
+		prod.setName(nombre);
+		prod.setDescripcion(descripcion);
+
+		prod.setComponente(ComponenteDAO.getComponentePorId(componente));
+
+		if (productoPadre != null)
+			prod.setProducto(ProductoDAO.getProductoPorId(productoPadre));
+		else
+			prod.setProducto(null);
+
+		prod.setProductoTipo(ProductoTipoDAO.getProductoTipo(tipo));
+
+		prod.setFormularioItemValors(null);
+		prod.setMetas(null);
+		prod.setObjetoFormularios(null);
+		prod.setObjetoRecursos(null);
+		prod.setObjetoRiesgos(null);
+		prod.setProductoPropiedadValors(null);
+		prod.setProductos(null);
+
+		prod.setUsuarioCreo(usuario);
+		prod.setFechaCreacion(new Date());
+
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		Integer id = null;
+		try {
+			session.beginTransaction();
+			id = (Integer) session.save(prod);
+			session.getTransaction().commit();
+
+			ret = true;
+
+		} catch (Throwable e) {
+			CLogger.write("3", ProductoDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
+	}
+
+	public static boolean eliminar(Integer productoId, String usuario) {
+		return true;
+	}
+
 }
