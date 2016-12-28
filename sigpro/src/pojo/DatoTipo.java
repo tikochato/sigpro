@@ -1,5 +1,5 @@
 package pojo;
-// Generated 20/12/2016 11:26:44 AM by Hibernate Tools 5.2.0.Beta1
+// Generated Dec 27, 2016 7:02:33 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,12 +22,13 @@ public class DatoTipo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8041387820979209256L;
+	private static final long serialVersionUID = -3547022947827139362L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
 	private Set<ComponentePropiedad> componentePropiedads = new HashSet<ComponentePropiedad>(0);
 	private Set<ProyectoPropiedad> proyectoPropiedads = new HashSet<ProyectoPropiedad>(0);
+	private Set<ActividadPropiedad> actividadPropiedads = new HashSet<ActividadPropiedad>(0);
 	private Set<ProductoPropiedad> productoPropiedads = new HashSet<ProductoPropiedad>(0);
 
 	public DatoTipo() {
@@ -38,11 +39,13 @@ public class DatoTipo implements java.io.Serializable {
 	}
 
 	public DatoTipo(String nombre, String descripcion, Set<ComponentePropiedad> componentePropiedads,
-			Set<ProyectoPropiedad> proyectoPropiedads, Set<ProductoPropiedad> productoPropiedads) {
+			Set<ProyectoPropiedad> proyectoPropiedads, Set<ActividadPropiedad> actividadPropiedads,
+			Set<ProductoPropiedad> productoPropiedads) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.componentePropiedads = componentePropiedads;
 		this.proyectoPropiedads = proyectoPropiedads;
+		this.actividadPropiedads = actividadPropiedads;
 		this.productoPropiedads = productoPropiedads;
 	}
 
@@ -92,6 +95,15 @@ public class DatoTipo implements java.io.Serializable {
 
 	public void setProyectoPropiedads(Set<ProyectoPropiedad> proyectoPropiedads) {
 		this.proyectoPropiedads = proyectoPropiedads;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "datoTipo")
+	public Set<ActividadPropiedad> getActividadPropiedads() {
+		return this.actividadPropiedads;
+	}
+
+	public void setActividadPropiedads(Set<ActividadPropiedad> actividadPropiedads) {
+		this.actividadPropiedads = actividadPropiedads;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "datoTipo")

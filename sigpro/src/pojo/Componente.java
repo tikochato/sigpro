@@ -1,5 +1,5 @@
 package pojo;
-// Generated 20/12/2016 11:26:44 AM by Hibernate Tools 5.2.0.Beta1
+// Generated Dec 27, 2016 7:02:33 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Componente implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7840014608337942647L;
+	private static final long serialVersionUID = 8367809323144567515L;
 	private Integer id;
 	private ComponenteTipo componenteTipo;
 	private Proyecto proyecto;
@@ -38,11 +38,11 @@ public class Componente implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
+	private Set<Meta> metas = new HashSet<Meta>(0);
 	private Set<ObjetoFormulario> objetoFormularios = new HashSet<ObjetoFormulario>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
-	private Set<Meta> metas = new HashSet<Meta>(0);
+	private Set<Riesgo> riesgos = new HashSet<Riesgo>(0);
 	private Set<ComponentePropiedadValor> componentePropiedadValors = new HashSet<ComponentePropiedadValor>(0);
-	private Set<ObjetoRiesgo> objetoRiesgos = new HashSet<ObjetoRiesgo>(0);
 	private Set<FormularioItemValor> formularioItemValors = new HashSet<FormularioItemValor>(0);
 	private Set<ObjetoRecurso> objetoRecursos = new HashSet<ObjetoRecurso>(0);
 
@@ -61,9 +61,9 @@ public class Componente implements java.io.Serializable {
 
 	public Componente(ComponenteTipo componenteTipo, Proyecto proyecto, String nombre, String descripcion,
 			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Set<ObjetoFormulario> objetoFormularios, Set<Producto> productos, Set<Meta> metas,
-			Set<ComponentePropiedadValor> componentePropiedadValors, Set<ObjetoRiesgo> objetoRiesgos,
-			Set<FormularioItemValor> formularioItemValors, Set<ObjetoRecurso> objetoRecursos) {
+			Set<Meta> metas, Set<ObjetoFormulario> objetoFormularios, Set<Producto> productos, Set<Riesgo> riesgos,
+			Set<ComponentePropiedadValor> componentePropiedadValors, Set<FormularioItemValor> formularioItemValors,
+			Set<ObjetoRecurso> objetoRecursos) {
 		this.componenteTipo = componenteTipo;
 		this.proyecto = proyecto;
 		this.nombre = nombre;
@@ -73,11 +73,11 @@ public class Componente implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
+		this.metas = metas;
 		this.objetoFormularios = objetoFormularios;
 		this.productos = productos;
-		this.metas = metas;
+		this.riesgos = riesgos;
 		this.componentePropiedadValors = componentePropiedadValors;
-		this.objetoRiesgos = objetoRiesgos;
 		this.formularioItemValors = formularioItemValors;
 		this.objetoRecursos = objetoRecursos;
 	}
@@ -180,6 +180,15 @@ public class Componente implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")
+	public Set<Meta> getMetas() {
+		return this.metas;
+	}
+
+	public void setMetas(Set<Meta> metas) {
+		this.metas = metas;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")
 	public Set<ObjetoFormulario> getObjetoFormularios() {
 		return this.objetoFormularios;
 	}
@@ -198,12 +207,12 @@ public class Componente implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")
-	public Set<Meta> getMetas() {
-		return this.metas;
+	public Set<Riesgo> getRiesgos() {
+		return this.riesgos;
 	}
 
-	public void setMetas(Set<Meta> metas) {
-		this.metas = metas;
+	public void setRiesgos(Set<Riesgo> riesgos) {
+		this.riesgos = riesgos;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")
@@ -213,15 +222,6 @@ public class Componente implements java.io.Serializable {
 
 	public void setComponentePropiedadValors(Set<ComponentePropiedadValor> componentePropiedadValors) {
 		this.componentePropiedadValors = componentePropiedadValors;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")
-	public Set<ObjetoRiesgo> getObjetoRiesgos() {
-		return this.objetoRiesgos;
-	}
-
-	public void setObjetoRiesgos(Set<ObjetoRiesgo> objetoRiesgos) {
-		this.objetoRiesgos = objetoRiesgos;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")

@@ -11,24 +11,25 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.ComponenteTipo;
+import pojo.CtipoPropiedad;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
 public class ComponenteTipoDAO {
 
-	/*public static List<Cooperante> getCooperantes(){
-		List<Cooperante> ret = new ArrayList<Cooperante>();
+	public static List<ComponenteTipo> getComponenteTipos(){
+		List<ComponenteTipo> ret = new ArrayList<ComponenteTipo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
-			CriteriaQuery<Cooperante> criteria = builder.createQuery(Cooperante.class);
-			Root<Cooperante> root = criteria.from(Cooperante.class);
+			CriteriaQuery<ComponenteTipo> criteria = builder.createQuery(ComponenteTipo.class);
+			Root<ComponenteTipo> root = criteria.from(ComponenteTipo.class);
 			criteria.select( root ).where(builder.equal(root.get("estado"),1));
 			ret = session.createQuery( criteria ).getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("1", CooperanteDAO.class, e);
+			CLogger.write("1", ComponenteTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -36,22 +37,22 @@ public class ComponenteTipoDAO {
 		return ret;
 	}
 		
+
 	
-	
-	public static Cooperante getCooperantePorId(int id){
+	public static ComponenteTipo getComponenteTipoPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
-		Cooperante ret = null;
+		ComponenteTipo ret = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
-			CriteriaQuery<Cooperante> criteria = builder.createQuery(Cooperante.class);
-			Root<Cooperante> root = criteria.from(Cooperante.class);
+			CriteriaQuery<ComponenteTipo> criteria = builder.createQuery(ComponenteTipo.class);
+			Root<ComponenteTipo> root = criteria.from(ComponenteTipo.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
 			ret = session.createQuery( criteria ).getSingleResult();
 		}
 		catch(Throwable e){
-			CLogger.write("2", CooperanteDAO.class, e);
+			CLogger.write("2", ComponenteTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -59,17 +60,24 @@ public class ComponenteTipoDAO {
 		return ret;
 	}
 	
-	public static boolean guardarCooperante(Cooperante cooperante){
+	public static boolean guardarComponenteTipo(ComponenteTipo compoenntetipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			session.saveOrUpdate(cooperante);
+			session.saveOrUpdate(compoenntetipo);
+			session.flush();
+			
+			for (CtipoPropiedad propiedad : compoenntetipo.getCtipoPropiedads()){
+				session.saveOrUpdate(propiedad);	
+			}
+			session.flush();
+			
 			session.getTransaction().commit();
 			ret = true;
 		}
 		catch(Throwable e){
-			CLogger.write("3", CooperanteDAO.class, e);
+			CLogger.write("3", ComponenteTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -77,18 +85,23 @@ public class ComponenteTipoDAO {
 		return ret;
 	}
 	
-	public static boolean eliminarCooperante(Cooperante cooperante){
+	
+	
+	
+	
+	public static boolean eliminarComponenteTipo(ComponenteTipo componenteTipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			cooperante.setEstado(0);
+			
+			componenteTipo.setEstado(0);
 			session.beginTransaction();
-			session.update(cooperante);
+			session.update(componenteTipo);
 			session.getTransaction().commit();
 			ret = true;
 		}
 		catch(Throwable e){
-			CLogger.write("4", CooperanteDAO.class, e);
+			CLogger.write("6",ComponenteTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -96,24 +109,26 @@ public class ComponenteTipoDAO {
 		return ret;
 	}
 	
-	public static boolean eliminarTotalCooperante(Cooperante cooperante){
+	
+	
+	public static boolean eliminarTotalComponenteTipo(ComponenteTipo componenteTipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			session.delete(cooperante);
+			session.delete(componenteTipo);
 			session.getTransaction().commit();
 			ret = true;
 		}
 		catch(Throwable e){
-			CLogger.write("5", CooperanteDAO.class, e);
+			CLogger.write("5", ComponenteTipoDAO.class, e);
 		}
 		finally{
 			session.close();
 		}
 		return ret;
 	}
-	*/
+	
 	
 	public static List<ComponenteTipo> getComponenteTiposPagina(int pagina, int numerocomponentestipo){
 		List<ComponenteTipo> ret = new ArrayList<ComponenteTipo>();

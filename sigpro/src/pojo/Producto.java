@@ -1,5 +1,5 @@
 package pojo;
-// Generated 20/12/2016 11:26:44 AM by Hibernate Tools 5.2.0.Beta1
+// Generated Dec 27, 2016 7:02:33 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 9076859303426410508L;
+	private static final long serialVersionUID = -6695250032596815903L;
 	private Integer id;
 	private Componente componente;
 	private Producto producto;
@@ -41,11 +41,12 @@ public class Producto implements java.io.Serializable {
 	private Integer estado;
 	private Set<ObjetoRecurso> objetoRecursos = new HashSet<ObjetoRecurso>(0);
 	private Set<ObjetoFormulario> objetoFormularios = new HashSet<ObjetoFormulario>(0);
-	private Set<ObjetoRiesgo> objetoRiesgos = new HashSet<ObjetoRiesgo>(0);
 	private Set<ProductoPropiedadValor> productoPropiedadValors = new HashSet<ProductoPropiedadValor>(0);
+	private Set<Actividad> actividads = new HashSet<Actividad>(0);
 	private Set<FormularioItemValor> formularioItemValors = new HashSet<FormularioItemValor>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<Meta> metas = new HashSet<Meta>(0);
+	private Set<Riesgo> riesgos = new HashSet<Riesgo>(0);
 
 	public Producto() {
 	}
@@ -63,9 +64,9 @@ public class Producto implements java.io.Serializable {
 	public Producto(Componente componente, Producto producto, ProductoTipo productoTipo, String name,
 			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, Integer estado, Set<ObjetoRecurso> objetoRecursos,
-			Set<ObjetoFormulario> objetoFormularios, Set<ObjetoRiesgo> objetoRiesgos,
-			Set<ProductoPropiedadValor> productoPropiedadValors, Set<FormularioItemValor> formularioItemValors,
-			Set<Producto> productos, Set<Meta> metas) {
+			Set<ObjetoFormulario> objetoFormularios, Set<ProductoPropiedadValor> productoPropiedadValors,
+			Set<Actividad> actividads, Set<FormularioItemValor> formularioItemValors, Set<Producto> productos,
+			Set<Meta> metas, Set<Riesgo> riesgos) {
 		this.componente = componente;
 		this.producto = producto;
 		this.productoTipo = productoTipo;
@@ -78,11 +79,12 @@ public class Producto implements java.io.Serializable {
 		this.estado = estado;
 		this.objetoRecursos = objetoRecursos;
 		this.objetoFormularios = objetoFormularios;
-		this.objetoRiesgos = objetoRiesgos;
 		this.productoPropiedadValors = productoPropiedadValors;
+		this.actividads = actividads;
 		this.formularioItemValors = formularioItemValors;
 		this.productos = productos;
 		this.metas = metas;
+		this.riesgos = riesgos;
 	}
 
 	@Id
@@ -211,21 +213,21 @@ public class Producto implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
-	public Set<ObjetoRiesgo> getObjetoRiesgos() {
-		return this.objetoRiesgos;
-	}
-
-	public void setObjetoRiesgos(Set<ObjetoRiesgo> objetoRiesgos) {
-		this.objetoRiesgos = objetoRiesgos;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
 	public Set<ProductoPropiedadValor> getProductoPropiedadValors() {
 		return this.productoPropiedadValors;
 	}
 
 	public void setProductoPropiedadValors(Set<ProductoPropiedadValor> productoPropiedadValors) {
 		this.productoPropiedadValors = productoPropiedadValors;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
+	public Set<Actividad> getActividads() {
+		return this.actividads;
+	}
+
+	public void setActividads(Set<Actividad> actividads) {
+		this.actividads = actividads;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
@@ -253,6 +255,15 @@ public class Producto implements java.io.Serializable {
 
 	public void setMetas(Set<Meta> metas) {
 		this.metas = metas;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
+	public Set<Riesgo> getRiesgos() {
+		return this.riesgos;
+	}
+
+	public void setRiesgos(Set<Riesgo> riesgos) {
+		this.riesgos = riesgos;
 	}
 
 }

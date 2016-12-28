@@ -25,22 +25,26 @@
 			<shiro:hasPermission name="eliminarProyecto">
 				<label class="btn btn-primary" ng-click="controller.borrar()">Borrar</label>
 			</shiro:hasPermission>
-			
 			</div>
 		</div>
 		<shiro:hasPermission name="verProyecto">
 		<div class="col-sm-12" align="center">
 			<div style="height: 35px;">
-					<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
+				<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
 					<shiro:hasPermission name="verProyecto">
 						<a class="btn btn-default" href ng-click="controller.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
 					</shiro:hasPermission>
 						
 					</div>
-					</div>
 				</div>
-			<br/>
-		
+			</div>
+			<div align="left">
+			<div class="btn-group">
+				<label class="btn btn-success" ng-click="controller.irADesembolsos(controller.entidadseleccionada.id)">Desembolsos</label>
+				<label class="btn btn-success" ng-click="controller.irAComponentes(controller.entidadseleccionada.id)">Componentes</label>
+			</div>
+			</div>
+			
 			<div id="grid1" ui-grid="controller.gridOpciones" ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination
 				ui-grid-pagination>
 				<div class="grid_loading" ng-hide="!controller.mostrarcargando">
