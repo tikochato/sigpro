@@ -1,11 +1,13 @@
 package pojo;
-// Generated 13/12/2016 12:20:53 PM by Hibernate Tools 5.2.0.Beta1
+// Generated Dec 27, 2016 7:02:33 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -20,7 +22,7 @@ public class Entidad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4606272840099404393L;
+	private static final long serialVersionUID = 8817581293638378973L;
 	private Integer entidad;
 	private String nombre;
 	private String abreviatura;
@@ -33,13 +35,14 @@ public class Entidad implements java.io.Serializable {
 		this.nombre = nombre;
 	}
 
-	public Entidad(String nombre, String abreviatura, Set<UnidadEjecutora> unidadEjecutoras) {
+	public Entidad(String nombre, Set<UnidadEjecutora> unidadEjecutoras) {
 		this.nombre = nombre;
-		this.abreviatura = abreviatura;
 		this.unidadEjecutoras = unidadEjecutoras;
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
+
 	@Column(name = "entidad", unique = true, nullable = false)
 	public Integer getEntidad() {
 		return this.entidad;
@@ -57,8 +60,8 @@ public class Entidad implements java.io.Serializable {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
-	@Column(name = "abreviatura", length = 50)
+	
+	@Column(name = "abreviatura", nullable = true, length = 1000)
 	public String getAbreviatura() {
 		return this.abreviatura;
 	}

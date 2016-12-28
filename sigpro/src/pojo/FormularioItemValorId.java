@@ -1,8 +1,6 @@
 package pojo;
-// Generated 20/12/2016 11:26:44 AM by Hibernate Tools 5.2.0.Beta1
+// Generated Dec 27, 2016 7:02:33 PM by Hibernate Tools 5.2.0.CR1
 
-import java.math.BigDecimal;
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
@@ -15,49 +13,20 @@ public class FormularioItemValorId implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3670181596151409703L;
+	private static final long serialVersionUID = -1913564726665461566L;
 	private int formularioItemid;
-	private int valorEntero;
-	private String valorString;
-	private Date valorTiempo;
-	private BigDecimal valorDecimal;
 	private int proyectoid;
 	private int componenteid;
 	private int productoid;
-	private String usuarioCreo;
-	private String usuarioActualizo;
-	private Date fechaCreacion;
-	private Date fechaActualizacion;
 
 	public FormularioItemValorId() {
 	}
 
-	public FormularioItemValorId(int formularioItemid, int valorEntero, int proyectoid, int componenteid,
-			int productoid, String usuarioCreo, Date fechaCreacion) {
+	public FormularioItemValorId(int formularioItemid, int proyectoid, int componenteid, int productoid) {
 		this.formularioItemid = formularioItemid;
-		this.valorEntero = valorEntero;
 		this.proyectoid = proyectoid;
 		this.componenteid = componenteid;
 		this.productoid = productoid;
-		this.usuarioCreo = usuarioCreo;
-		this.fechaCreacion = fechaCreacion;
-	}
-
-	public FormularioItemValorId(int formularioItemid, int valorEntero, String valorString, Date valorTiempo,
-			BigDecimal valorDecimal, int proyectoid, int componenteid, int productoid, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion) {
-		this.formularioItemid = formularioItemid;
-		this.valorEntero = valorEntero;
-		this.valorString = valorString;
-		this.valorTiempo = valorTiempo;
-		this.valorDecimal = valorDecimal;
-		this.proyectoid = proyectoid;
-		this.componenteid = componenteid;
-		this.productoid = productoid;
-		this.usuarioCreo = usuarioCreo;
-		this.usuarioActualizo = usuarioActualizo;
-		this.fechaCreacion = fechaCreacion;
-		this.fechaActualizacion = fechaActualizacion;
 	}
 
 	@Column(name = "formulario_itemid", nullable = false)
@@ -67,42 +36,6 @@ public class FormularioItemValorId implements java.io.Serializable {
 
 	public void setFormularioItemid(int formularioItemid) {
 		this.formularioItemid = formularioItemid;
-	}
-
-	@Column(name = "valor_entero", nullable = false)
-	public int getValorEntero() {
-		return this.valorEntero;
-	}
-
-	public void setValorEntero(int valorEntero) {
-		this.valorEntero = valorEntero;
-	}
-
-	@Column(name = "valor_string", length = 4000)
-	public String getValorString() {
-		return this.valorString;
-	}
-
-	public void setValorString(String valorString) {
-		this.valorString = valorString;
-	}
-
-	@Column(name = "valor_tiempo", length = 19)
-	public Date getValorTiempo() {
-		return this.valorTiempo;
-	}
-
-	public void setValorTiempo(Date valorTiempo) {
-		this.valorTiempo = valorTiempo;
-	}
-
-	@Column(name = "valor_decimal", precision = 15)
-	public BigDecimal getValorDecimal() {
-		return this.valorDecimal;
-	}
-
-	public void setValorDecimal(BigDecimal valorDecimal) {
-		this.valorDecimal = valorDecimal;
 	}
 
 	@Column(name = "proyectoid", nullable = false)
@@ -132,42 +65,6 @@ public class FormularioItemValorId implements java.io.Serializable {
 		this.productoid = productoid;
 	}
 
-	@Column(name = "usuario_creo", nullable = false, length = 30)
-	public String getUsuarioCreo() {
-		return this.usuarioCreo;
-	}
-
-	public void setUsuarioCreo(String usuarioCreo) {
-		this.usuarioCreo = usuarioCreo;
-	}
-
-	@Column(name = "usuario_actualizo", length = 30)
-	public String getUsuarioActualizo() {
-		return this.usuarioActualizo;
-	}
-
-	public void setUsuarioActualizo(String usuarioActualizo) {
-		this.usuarioActualizo = usuarioActualizo;
-	}
-
-	@Column(name = "fecha_creacion", nullable = false, length = 19)
-	public Date getFechaCreacion() {
-		return this.fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
-
-	@Column(name = "fecha_actualizacion", length = 19)
-	public Date getFechaActualizacion() {
-		return this.fechaActualizacion;
-	}
-
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
-
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -178,48 +75,18 @@ public class FormularioItemValorId implements java.io.Serializable {
 		FormularioItemValorId castOther = (FormularioItemValorId) other;
 
 		return (this.getFormularioItemid() == castOther.getFormularioItemid())
-				&& (this.getValorEntero() == castOther.getValorEntero())
-				&& ((this.getValorString() == castOther.getValorString())
-						|| (this.getValorString() != null && castOther.getValorString() != null
-								&& this.getValorString().equals(castOther.getValorString())))
-				&& ((this.getValorTiempo() == castOther.getValorTiempo())
-						|| (this.getValorTiempo() != null && castOther.getValorTiempo() != null
-								&& this.getValorTiempo().equals(castOther.getValorTiempo())))
-				&& ((this.getValorDecimal() == castOther.getValorDecimal())
-						|| (this.getValorDecimal() != null && castOther.getValorDecimal() != null
-								&& this.getValorDecimal().equals(castOther.getValorDecimal())))
 				&& (this.getProyectoid() == castOther.getProyectoid())
 				&& (this.getComponenteid() == castOther.getComponenteid())
-				&& (this.getProductoid() == castOther.getProductoid())
-				&& ((this.getUsuarioCreo() == castOther.getUsuarioCreo())
-						|| (this.getUsuarioCreo() != null && castOther.getUsuarioCreo() != null
-								&& this.getUsuarioCreo().equals(castOther.getUsuarioCreo())))
-				&& ((this.getUsuarioActualizo() == castOther.getUsuarioActualizo())
-						|| (this.getUsuarioActualizo() != null && castOther.getUsuarioActualizo() != null
-								&& this.getUsuarioActualizo().equals(castOther.getUsuarioActualizo())))
-				&& ((this.getFechaCreacion() == castOther.getFechaCreacion())
-						|| (this.getFechaCreacion() != null && castOther.getFechaCreacion() != null
-								&& this.getFechaCreacion().equals(castOther.getFechaCreacion())))
-				&& ((this.getFechaActualizacion() == castOther.getFechaActualizacion())
-						|| (this.getFechaActualizacion() != null && castOther.getFechaActualizacion() != null
-								&& this.getFechaActualizacion().equals(castOther.getFechaActualizacion())));
+				&& (this.getProductoid() == castOther.getProductoid());
 	}
 
 	public int hashCode() {
 		int result = 17;
 
 		result = 37 * result + this.getFormularioItemid();
-		result = 37 * result + this.getValorEntero();
-		result = 37 * result + (getValorString() == null ? 0 : this.getValorString().hashCode());
-		result = 37 * result + (getValorTiempo() == null ? 0 : this.getValorTiempo().hashCode());
-		result = 37 * result + (getValorDecimal() == null ? 0 : this.getValorDecimal().hashCode());
 		result = 37 * result + this.getProyectoid();
 		result = 37 * result + this.getComponenteid();
 		result = 37 * result + this.getProductoid();
-		result = 37 * result + (getUsuarioCreo() == null ? 0 : this.getUsuarioCreo().hashCode());
-		result = 37 * result + (getUsuarioActualizo() == null ? 0 : this.getUsuarioActualizo().hashCode());
-		result = 37 * result + (getFechaCreacion() == null ? 0 : this.getFechaCreacion().hashCode());
-		result = 37 * result + (getFechaActualizacion() == null ? 0 : this.getFechaActualizacion().hashCode());
 		return result;
 	}
 

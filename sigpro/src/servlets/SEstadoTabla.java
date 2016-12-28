@@ -16,8 +16,8 @@ import java.util.zip.GZIPOutputStream;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import dao.EstadoTablaDAO;
-import pojo.Estadotabla;
-import pojo.EstadotablaId;
+import pojo.EstadoTabla;
+import pojo.EstadoTablaId;
 
 /**
  * Servlet implementation class SEstadoTabla
@@ -80,8 +80,8 @@ public class SEstadoTabla extends HttpServlet {
 				String estadotexto = "";
 				estadotexto = map.get("estado");
 				if(usuariotexto!=null&&tablatexto!=null&&estadotexto!=null){
-					EstadotablaId Estadotablaid = new EstadotablaId(usuariotexto, tablatexto);
-					Estadotabla Estadotabla = new Estadotabla(Estadotablaid,estadotexto);
+					EstadoTablaId Estadotablaid = new EstadoTablaId(usuariotexto, tablatexto);
+					EstadoTabla Estadotabla = new EstadoTabla(Estadotablaid,estadotexto);
 					EstadoTablaDAO.saveEstadoTabla(Estadotabla);
 				}else{
 					response_text = String.join("", "{\"success\":false, \"error\":\"uno o mas parametros vacios\" }");
