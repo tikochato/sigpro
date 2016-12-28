@@ -1,5 +1,6 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,16 +25,18 @@ public class ProductoPropiedadValorDAO {
 
 	/// estad C:Cargado, N:Nuevo, E:Eliminado
 	static class EstructuraPojo {
-		Integer idTipo;
-		String tipo;
-		Integer idPropiedad;
-		String propiedad;
-		Integer idPropiedadTipo;
-		String propiedadTipo;
+		Integer propiedadid;
+		Integer productoid;
+		
+		Integer valorEntero;
+		String valorString;
+		BigDecimal valorDecimal;
+		Date valorTiempo;
+		
 		String estado;
 	}
 
-	public static ProdtipoPropiedad geProdtipoPropiedad(Integer codigoTipo, Integer codigoPropiedad) {
+	public static ProdtipoPropiedad getProductoPropiedad(Integer codigoPropiedad, Integer codigoProducto) {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		ProdtipoPropiedad ret = null;
 		try {
@@ -162,12 +165,7 @@ public class ProductoPropiedadValorDAO {
 
 		for (ProdtipoPropiedad pojo : pojos) {
 			EstructuraPojo estructuraPojo = new EstructuraPojo();
-			estructuraPojo.idTipo = pojo.getProductoTipo().getId();
-			estructuraPojo.tipo = pojo.getProductoTipo().getNombre();
-			estructuraPojo.idPropiedad = pojo.getProductoPropiedad().getId();
-			estructuraPojo.propiedad = pojo.getProductoPropiedad().getNombre();
-			estructuraPojo.idPropiedadTipo = pojo.getProductoPropiedad().getDatoTipo().getId();
-			estructuraPojo.propiedadTipo = pojo.getProductoPropiedad().getDatoTipo().getNombre();
+			
 			estructuraPojo.estado = "C";
 
 			listaEstructuraPojos.add(estructuraPojo);
@@ -233,7 +231,7 @@ public class ProductoPropiedadValorDAO {
 		return jsonEntidades;
 	}
 
-	public static boolean persistirPropiedades(Integer idTipo, String propiedades, String usuario) {
+	public static boolean persistirValores(Integer idTipo, String propiedades, String usuario) {
 		boolean ret = false;
 
 		Gson gson = new Gson();
@@ -242,10 +240,10 @@ public class ProductoPropiedadValorDAO {
 		}.getType());
 
 		for (EstructuraPojo pojo : pojos) {
-			
-			if(pojo.estado.equalsIgnoreCase("N")){
+
+			if (pojo.estado.equalsIgnoreCase("N")) {
 				ret = guardar(idTipo, pojo.idPropiedad, usuario);
-			}else if(pojo.estado.equalsIgnoreCase("E")){
+			} else if (pojo.estado.equalsIgnoreCase("E")) {
 				ret = eliminar(pojo.idTipo, pojo.idPropiedad, usuario);
 			}
 		}
