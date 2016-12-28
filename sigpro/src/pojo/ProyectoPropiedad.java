@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 27, 2016 7:02:33 PM by Hibernate Tools 5.2.0.CR1
+// Generated Dec 28, 2016 1:25:08 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class ProyectoPropiedad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5513925946213727948L;
+	private static final long serialVersionUID = -2782668688165357180L;
 	private Integer id;
 	private DatoTipo datoTipo;
 	private String nombre;
@@ -53,8 +53,7 @@ public class ProyectoPropiedad implements java.io.Serializable {
 
 	public ProyectoPropiedad(DatoTipo datoTipo, String nombre, String descripcion, String usuarioCreo,
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Set<PtipoPropiedad> ptipoPropiedads,
-			Set<ProyectoPropedadValor> proyectoPropedadValors) {
+			Set<PtipoPropiedad> ptipoPropiedads, Set<ProyectoPropedadValor> proyectoPropedadValors) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;

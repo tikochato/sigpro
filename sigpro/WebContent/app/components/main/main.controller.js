@@ -72,6 +72,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/hitotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'hitotipoController\'" class="all_page"></div>'
             })
+            .when('/recursounidadmedida/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'recursounidadmedidaController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -174,7 +177,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'hitotipoController',
 	    	   script: '/app/components/hitotipo/hitotipo.controller.js',
 	    	   template: '/app/components/hitotipo/hitotipo.jsp'
-
+	       },{
+	    	   name: 'recursounidadmedidaController',
+	    	   script: '/app/components/recursounidadmedida/recursounidadmedida.controller.js',
+	    	   template: '/app/components/recursounidadmedida/recursounidadmedida.jsp'
 	       }
 
 	   ];
