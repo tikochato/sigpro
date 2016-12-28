@@ -55,7 +55,7 @@ public class ProductoPropiedadValorDAO {
 		return ret;
 	}
 
-	public static boolean guardar(Integer propiedadId, Integer productoId, String usuario) {
+	public static <T> boolean guardar(Integer propiedadId, Integer productoId, Object valor, T tipo, String usuario) {
 
 		ProductoPropiedadValor pojo = getProductoPropiedadValor(propiedadId, propiedadId);
 		boolean ret = false;

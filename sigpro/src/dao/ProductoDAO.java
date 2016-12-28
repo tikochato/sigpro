@@ -163,14 +163,14 @@ public class ProductoDAO {
 		for (Producto pojo : pojos) {
 			EstructuraPojo estructuraPojo = new EstructuraPojo();
 			estructuraPojo.id = pojo.getId();
-			estructuraPojo.nombre = pojo.getName();
+			estructuraPojo.nombre = pojo.getNombre();
 			estructuraPojo.descripcion = pojo.getDescripcion();
 
 			estructuraPojo.idComponente = pojo.getComponente().getId();
 			estructuraPojo.componente = pojo.getComponente().getNombre();
 
 			estructuraPojo.idProducto = pojo.getProducto().getId();
-			estructuraPojo.producto = pojo.getProducto().getName();
+			estructuraPojo.producto = pojo.getProducto().getNombre();
 
 			estructuraPojo.idProductoTipo = pojo.getProductoTipo().getId();
 			estructuraPojo.productoTipo = pojo.getProductoTipo().getNombre();
@@ -190,7 +190,7 @@ public class ProductoDAO {
 
 		Producto pojo = new Producto();
 
-		pojo.setName(nombre);
+		pojo.setNombre(nombre);
 		pojo.setDescripcion(descripcion);
 
 		pojo.setComponente(componente != null ? ComponenteDAO.getComponentePorId(componente) : null);
@@ -235,21 +235,12 @@ public class ProductoDAO {
 		Producto pojo = getProductoPorId(productoId);
 
 		if (pojo != null) {
-			pojo.setName(nombre);
+			pojo.setNombre(nombre);
 			pojo.setDescripcion(descripcion);
 
 			pojo.setComponente(componente != null ? ComponenteDAO.getComponentePorId(componente) : null);
 			pojo.setProducto(productoPadre != null ? ProductoDAO.getProductoPorId(productoPadre) : null);
 			pojo.setProductoTipo(tipo != null ? ProductoTipoDAO.getProductoTipo(tipo) : null);
-
-			pojo.setObjetoRecursos(null);
-			pojo.setObjetoFormularios(null);
-			pojo.setProductoPropiedadValors(null);
-			pojo.setActividads(null);
-			pojo.setFormularioItemValors(null);
-			pojo.setProductos(null);
-			pojo.setMetas(null);
-			pojo.setRiesgos(null);
 
 			pojo.setUsuarioActualizo(usuario);
 			pojo.setFechaActualizacion(new Date());
