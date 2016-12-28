@@ -37,7 +37,6 @@ public class ProyectoPropiedad implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private Set<ProyectoPropiedadCatalogo> proyectoPropiedadCatalogos = new HashSet<ProyectoPropiedadCatalogo>(0);
 	private Set<PtipoPropiedad> ptipoPropiedads = new HashSet<PtipoPropiedad>(0);
 	private Set<ProyectoPropedadValor> proyectoPropedadValors = new HashSet<ProyectoPropedadValor>(0);
 
@@ -54,7 +53,7 @@ public class ProyectoPropiedad implements java.io.Serializable {
 
 	public ProyectoPropiedad(DatoTipo datoTipo, String nombre, String descripcion, String usuarioCreo,
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Set<ProyectoPropiedadCatalogo> proyectoPropiedadCatalogos, Set<PtipoPropiedad> ptipoPropiedads,
+			Set<PtipoPropiedad> ptipoPropiedads,
 			Set<ProyectoPropedadValor> proyectoPropedadValors) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
@@ -64,7 +63,6 @@ public class ProyectoPropiedad implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.proyectoPropiedadCatalogos = proyectoPropiedadCatalogos;
 		this.ptipoPropiedads = ptipoPropiedads;
 		this.proyectoPropedadValors = proyectoPropedadValors;
 	}
@@ -154,15 +152,6 @@ public class ProyectoPropiedad implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyectoPropiedad")
-	public Set<ProyectoPropiedadCatalogo> getProyectoPropiedadCatalogos() {
-		return this.proyectoPropiedadCatalogos;
-	}
-
-	public void setProyectoPropiedadCatalogos(Set<ProyectoPropiedadCatalogo> proyectoPropiedadCatalogos) {
-		this.proyectoPropiedadCatalogos = proyectoPropiedadCatalogos;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyectoPropiedad")
