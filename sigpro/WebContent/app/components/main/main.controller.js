@@ -66,6 +66,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/componente/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'componenteController\'" class="all_page"></div>'
             })
+            .when('/permisos',{
+            	template: '<div load-on-demand="\'permisoController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -158,6 +161,12 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'componenteController',
 	    	   script: '/app/components/componente/componente.controller.js',
 	    	   template: '/app/components/componente/componente.jsp'
+
+	       },
+	       {
+	    	   name: 'permisoController',
+	    	   script: '/app/components/permiso/permiso.controller.js',
+	    	   template: '/app/components/permiso/permiso.jsp'
 
 	       }
 

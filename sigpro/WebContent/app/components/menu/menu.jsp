@@ -36,6 +36,7 @@
 	                     	<li role="menuitem"><a href="#!/colaborador">Colaborador</a></li>
 	                     	<li role="menuitem"><a href="#!/metaunidadmedida">Unidad de Medidas para Metas</a></li>
 	                     	<li role="menuitem"><a href="#!/metatipos">Tipos de Meta</a></li>
+	                     	<li role="menuitem"><a href="#!/permisos">Permisos</a></li>
                          </ul>
                     </li>
                     <li uib-dropdown>
