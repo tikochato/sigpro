@@ -202,7 +202,6 @@ public class ProductoDAO {
 		pojo.setProductoPropiedadValors(null);
 		pojo.setActividads(null);
 		pojo.setFormularioItemValors(null);
-		pojo.setProductos(null);
 		pojo.setMetas(null);
 		pojo.setRiesgos(null);
 
