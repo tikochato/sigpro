@@ -16,19 +16,18 @@ import utilities.CHibernateSession;
 import utilities.CLogger;
 
 public class ComponentePropiedadDAO {
-	
+
 	public static List<ComponentePropiedad> getComponentePropiedadesPorTipoComponentePagina(int pagina,int idTipoComponente){
 		List<ComponentePropiedad> ret = new ArrayList<ComponentePropiedad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<ComponentePropiedad> criteria = session.createQuery("select p from ComponentePropiedad p " 
-					+ "inner join p.ctipoPropiedads ptp " 
+			Query<ComponentePropiedad> criteria = session.createQuery("select p from ComponentePropiedad p "
+					+ "inner join p.ctipoPropiedads ptp "
 					+ "inner join ptp.componenteTipo pt  "
 					+ "where pt.id =  " + idTipoComponente + " ",ComponentePropiedad.class);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
-			e.printStackTrace();
 			CLogger.write("1", ComponentePropiedadDAO.class, e);
 		}
 		finally{
@@ -36,7 +35,7 @@ public class ComponentePropiedadDAO {
 		}
 		return ret;
 	}
-	
+
 	public static Long getTotalComponentePropiedades(){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -57,7 +56,7 @@ public class ComponentePropiedadDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			Query<ComponentePropiedad> criteria = session.createQuery("select p from ComponentePropiedad p  "
-					+ (idPropiedades!=null && idPropiedades.length()>0 ?  " where p.id not in ("+ idPropiedades + ")" : "") 
+					+ (idPropiedades!=null && idPropiedades.length()>0 ?  " where p.id not in ("+ idPropiedades + ")" : "")
 					,ComponentePropiedad.class);
 			criteria.setFirstResult(((pagina-1)*(numerocomponentepropiedades)));
 			criteria.setMaxResults(numerocomponentepropiedades);
@@ -71,7 +70,7 @@ public class ComponentePropiedadDAO {
 		}
 		return ret;
 	}
-	
+
 	public static ComponentePropiedad getComponentePropiedadPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		ComponentePropiedad ret = null;
@@ -92,7 +91,7 @@ public class ComponentePropiedadDAO {
 		}
 		return ret;
 	}
-	
+
 	public static boolean guardarComponentePropiedad(ComponentePropiedad componentePropiedad){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -110,7 +109,7 @@ public class ComponentePropiedadDAO {
 		}
 		return ret;
 	}
-	
+
 	public static boolean eliminarComponentePropiedad(ComponentePropiedad componentePropiedad){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -129,7 +128,7 @@ public class ComponentePropiedadDAO {
 		}
 		return ret;
 	}
-	
+
 	public static boolean eliminarTotalComponentePropiedad(ComponentePropiedad componentePropiedad){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -147,7 +146,7 @@ public class ComponentePropiedadDAO {
 		}
 		return ret;
 	}
-	
+
 	public static List<ComponentePropiedad> getComponentePropiedadesPagina(int pagina, int numeroComponentePropiedades){
 		List<ComponentePropiedad> ret = new ArrayList<ComponentePropiedad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -165,7 +164,7 @@ public class ComponentePropiedadDAO {
 		}
 		return ret;
 	}
-	
+
 	public static Long getTotalComponentePropiedad(){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -181,7 +180,7 @@ public class ComponentePropiedadDAO {
 		}
 		return ret;
 	}
-	
-	
+
+
 
 }

@@ -78,6 +78,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/recursounidadmedida/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'recursounidadmedidaController\'" class="all_page"></div>'
             })
+            .when('/riesgopropiedad/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'riesgopropiedadController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -189,6 +192,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'recursounidadmedidaController',
 	    	   script: '/app/components/recursounidadmedida/recursounidadmedida.controller.js',
 	    	   template: '/app/components/recursounidadmedida/recursounidadmedida.jsp'
+	       },{
+	    	   name: 'riesgopropiedadController',
+	    	   script: '/app/components/riesgopropiedad/riesgopropiedad.controller.js',
+	    	   template: '/app/components/riesgopropiedad/riesgopropiedad.jsp'
 	       }
 
 	   ];
