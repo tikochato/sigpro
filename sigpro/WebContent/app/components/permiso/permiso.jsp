@@ -10,48 +10,48 @@
 }
 </style>
 
-	<div ng-controller="permisoController" class="maincontainer all_page" id="title">
+	<div ng-controller="permisoController as permisosc" class="maincontainer all_page" id="title">
 		<h3>Permisos</h3><br/>
-		<div class="row" align="center" ng-hide="isCollapsed">
+		<div class="row" align="center" ng-hide="permisosc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="crearCooperante">
-						<label class="btn btn-primary" ng-click="newRow()">Nuevo</label>
+						<label class="btn btn-primary" ng-click="permisosc.newRow()">Nuevo</label>
 					</shiro:hasPermission>
 					<shiro:hasPermission name="editarCooperante">
-						<label class="btn btn-primary" ng-click="editRow()">Editar</label>
+						<label class="btn btn-primary" ng-click="permisosc.editRow()">Editar</label>
 					</shiro:hasPermission>
 					<shiro:hasPermission name="eliminarCooperante">
-						<label class="btn btn-primary" ng-click="deleteRow()">Borrar</label>
+						<label class="btn btn-primary" ng-click="permisosc.deleteRow()">Borrar</label>
 					</shiro:hasPermission>
     			</div>
     		</div>
     		<shiro:hasPermission name="verCooperante">
     			<div class="col-sm-12" align="center">
-				<div id="grid1" ui-grid="gridOptions" ui-grid-selection ui-grid-pagination class="myGrid"></div>
+				<div id="grid1" ui-grid="permisosc.gridOptions" ui-grid-selection ui-grid-pagination class="permisosc.myGrid"></div>
 			</div>
     		</shiro:hasPermission>
     		
 		</div>
 		<shiro:hasPermission name="verCooperante">
-		<div class="row" ng-show="isCollapsed">
+		<div class="row" ng-show="permisosc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="save()">Guardar</label>
-			        <label class="btn btn-danger" ng-click="cancel()">Cancelar</label>
+			        <label class="btn btn-success" ng-click="permisosc.save()">Guardar</label>
+			        <label class="btn btn-danger" ng-click="permisosc.cancel()">Cancelar</label>
     			</div>
     		</div>
 			<div class="col-sm-12">
 				<form>
 						<div class="form-group">
 							<label for="nombre">Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="permisoSelected.nombre">
+    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="permisosc.permisoSelected.nombre">
 						</div>
 						<div class="form-group">
 							<label for="Descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="permisoSelected.descripcion">
+    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="permisosc.permisoSelected.descripcion">
 						</div>
-						<div class="form-group" ng-repeat="field in fields">
+						<div class="form-group" ng-repeat="field in permisosc.fields">
 							<label for="field.id">{{ field.label }}</label>
 							<div ng-switch="field.type">
 								<input ng-switch-when="string" type="text" id="{{ 'field_'+field.id }}" ng-model="field.value" class="form-control" />
@@ -79,8 +79,8 @@
 			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="save()">Guardar</label>
-			        <label class="btn btn-danger" ng-click="cancel()">Cancelar</label>
+			        <label class="btn btn-success" ng-click="permisosc.save()">Guardar</label>
+			        <label class="btn btn-danger" ng-click="permisosc.cancel()">Cancelar</label>
     			</div>
     		</div>
 		</div>
