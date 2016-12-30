@@ -101,6 +101,7 @@ public class RiesgoPropiedadDAO {
 			ret = true;
 		}
 		catch(Throwable e){
+			e.printStackTrace();
 			CLogger.write("5", RiesgoPropiedadDAO.class, e);
 		}
 		finally{
