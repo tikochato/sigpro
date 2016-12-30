@@ -12,9 +12,6 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import pojo.ProductoPropiedadValor;
 import pojo.ProductoPropiedadValorId;
 import utilities.CHibernateSession;
@@ -23,7 +20,7 @@ import utilities.Utils;
 
 public class ProductoPropiedadValorDAO {
 
-	/// estad C:Cargado, N:Nuevo, E:Eliminado
+
 	static class EstructuraPojo {
 		Integer propiedadid;
 		Integer productoid;
@@ -55,7 +52,8 @@ public class ProductoPropiedadValorDAO {
 		return ret;
 	}
 
-	public static <T> boolean guardar(Integer propiedadId, Integer productoId, Object valor, T tipo, String usuario) {
+	public static boolean guardar(Integer propiedadId, Integer productoId, BigDecimal valorDecimal, Integer valorEntero,
+			String valorTexto, Date valorTiempo, String usuario) {
 
 		ProductoPropiedadValor pojo = getProductoPropiedadValor(propiedadId, propiedadId);
 		boolean ret = false;
@@ -67,16 +65,9 @@ public class ProductoPropiedadValorDAO {
 			pojo.setProducto(ProductoDAO.getProductoPorId(productoId));
 			pojo.setProductoPropiedad(ProductoPropiedadDAO.getProductoPropiedad(propiedadId));
 
-			BigDecimal valorDecimal = new BigDecimal(0.0);
 			pojo.setValorDecimal(valorDecimal);
-
-			Integer valorEntero = 0;
 			pojo.setValorEntero(valorEntero);
-
-			String valorString = "";
-			pojo.setValorString(valorString);
-
-			Date valorTiempo = new Date();
+			pojo.setValorString(valorTexto);
 			pojo.setValorTiempo(valorTiempo);
 
 			pojo.setUsuarioCreo(usuario);
@@ -99,38 +90,20 @@ public class ProductoPropiedadValorDAO {
 		return ret;
 	}
 
-	public static <T> boolean actualizar(Integer propiedadId, Integer productoId, Object valor, T tipo,
-			String usuario) {
+	public static boolean actualizar(Integer propiedadId, Integer productoId, BigDecimal valorDecimal,
+			Integer valorEntero, String valorTexto, Date valorTiempo, String usuario) {
 
 		ProductoPropiedadValor pojo = getProductoPropiedadValor(propiedadId, productoId);
 		boolean ret = false;
 
 		if (pojo != null) {
-
-			if (tipo instanceof String) {
-
-			} else if (tipo instanceof Integer) {
-
-			} else if (tipo instanceof BigDecimal) {
-
-			} else if (tipo instanceof Date) {
-
-			}
-
-			BigDecimal valorDecimal = new BigDecimal(0.0);
 			pojo.setValorDecimal(valorDecimal);
-
-			Integer valorEntero = 0;
 			pojo.setValorEntero(valorEntero);
-
-			String valorString = "";
-			pojo.setValorString(valorString);
-
-			Date valorTiempo = new Date();
+			pojo.setValorString(valorTexto);
 			pojo.setValorTiempo(valorTiempo);
 
-			pojo.setUsuarioCreo(usuario);
-			pojo.setFechaCreacion(new Date());
+			pojo.setUsuarioActualizo(usuario);
+			pojo.setFechaActualizacion(new Date());
 
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try {
@@ -274,22 +247,24 @@ public class ProductoPropiedadValorDAO {
 		return jsonEntidades;
 	}
 
-	public static boolean persistirValores(Integer productoId, String propiedades, String usuario) {
-		boolean ret = false;
+	public static boolean persistirValores(Integer productoid, String propiedades, String usuario) {
+		boolean ret = true;
 
-		Gson gson = new Gson();
-
-		List<EstructuraPojo> pojos = gson.fromJson(propiedades, new TypeToken<List<EstructuraPojo>>() {
-		}.getType());
-
-		for (EstructuraPojo pojo : pojos) {
-
-			if (pojo.estado.equalsIgnoreCase("N")) {
-				ret = guardar(productoId, pojo.propiedadid, usuario);
-			} else if (pojo.estado.equalsIgnoreCase("E")) {
-				ret = eliminar(pojo.productoid, pojo.propiedadid, usuario);
-			}
-		}
+		// Gson gson = new Gson();
+		//
+		// List<EstructuraPojo> pojos = gson.fromJson(propiedades, new
+		// TypeToken<List<EstructuraPojo>>() {
+		// }.getType());
+		//
+		// for (EstructuraPojo pojo : pojos) {
+		// if (pojo.estado.equalsIgnoreCase("N")) {
+		// ret = guardar(pojo.propiedadid, productoid, pojo.valorDecimal,
+		// pojo.valorEntero, pojo.valorString,
+		// pojo.valorTiempo, usuario);
+		// } else if (pojo.estado.equalsIgnoreCase("E")) {
+		// ret = eliminar(pojo.productoid, pojo.propiedadid, usuario);
+		// }
+		// }
 
 		return ret;
 	}

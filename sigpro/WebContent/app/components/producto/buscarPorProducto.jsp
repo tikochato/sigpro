@@ -13,6 +13,7 @@
 					</div>
 				</div>
 			</div>
+			
 			<div align="center"
 				ng-show="modalBuscar.totalElementos > modalBuscar.elementosPorPagina">
 				<ul uib-pagination total-items="modalBuscar.totalElementos"

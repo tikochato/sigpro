@@ -18,6 +18,7 @@ import utilities.Utils;
 
 public class ProductoDAO {
 
+	
 	static class EstructuraPojo {
 		Integer id;
 		String nombre;
@@ -166,14 +167,20 @@ public class ProductoDAO {
 			estructuraPojo.nombre = pojo.getNombre();
 			estructuraPojo.descripcion = pojo.getDescripcion();
 
-			estructuraPojo.idComponente = pojo.getComponente().getId();
-			estructuraPojo.componente = pojo.getComponente().getNombre();
+			if (pojo.getComponente() != null) {
+				estructuraPojo.idComponente = pojo.getComponente().getId();
+				estructuraPojo.componente = pojo.getComponente().getNombre();
+			}
 
-			estructuraPojo.idProducto = pojo.getProducto().getId();
-			estructuraPojo.producto = pojo.getProducto().getNombre();
+			if (pojo.getProducto() != null) {
+				estructuraPojo.idProducto = pojo.getProducto().getId();
+				estructuraPojo.producto = pojo.getProducto().getNombre();
+			}
 
-			estructuraPojo.idProductoTipo = pojo.getProductoTipo().getId();
-			estructuraPojo.productoTipo = pojo.getProductoTipo().getNombre();
+			if (pojo.getProductoTipo() != null) {
+				estructuraPojo.idProductoTipo = pojo.getProductoTipo().getId();
+				estructuraPojo.productoTipo = pojo.getProductoTipo().getNombre();
+			}
 
 			listaEstructuraPojos.add(estructuraPojo);
 		}
@@ -184,8 +191,7 @@ public class ProductoDAO {
 	}
 
 	public static boolean guardar(String nombre, String descripcion, Integer componente, Integer productoPadre,
-			Integer tipo, String recursos, String formularios, String propiedades, String actividades,
-			String formularioValores, String productos, String metas, String riesgos, String usuario) {
+			Integer tipo, String propiedades, String actividades, String usuario) {
 		boolean ret = false;
 
 		Producto pojo = new Producto();
@@ -193,29 +199,26 @@ public class ProductoDAO {
 		pojo.setNombre(nombre);
 		pojo.setDescripcion(descripcion);
 
-		pojo.setComponente(componente != null ? ComponenteDAO.getComponentePorId(componente) : null);
-		pojo.setProducto(productoPadre != null ? ProductoDAO.getProductoPorId(productoPadre) : null);
-		pojo.setProductoTipo(tipo != null ? ProductoTipoDAO.getProductoTipo(tipo) : null);
+		pojo.setComponente(componente > 0 ? ComponenteDAO.getComponentePorId(componente) : null);
+		pojo.setProducto(productoPadre > 0 ? ProductoDAO.getProductoPorId(productoPadre) : null);
+		pojo.setProductoTipo(tipo > 0 ? ProductoTipoDAO.getProductoTipo(tipo) : null);
 
-		pojo.setObjetoRecursos(null);
-		pojo.setObjetoFormularios(null);
 		pojo.setProductoPropiedadValors(null);
 		pojo.setActividads(null);
-		pojo.setFormularioItemValors(null);
-		pojo.setMetas(null);
-		pojo.setRiesgos(null);
 
 		pojo.setUsuarioCreo(usuario);
 		pojo.setFechaCreacion(new Date());
 
+		pojo.setEstado(1);
+
 		Session session = CHibernateSession.getSessionFactory().openSession();
-		Integer productoId = null;
+		Integer productoid = null;
 		try {
 			session.beginTransaction();
-			productoId = (Integer) session.save(pojo);
+			productoid = (Integer) session.save(pojo);
 			session.getTransaction().commit();
 
-			ret = true;
+			ret = ProductoPropiedadValorDAO.persistirValores(productoid, propiedades, usuario);
 
 		} catch (Throwable e) {
 			CLogger.write("8", ProductoDAO.class, e);
@@ -226,9 +229,7 @@ public class ProductoDAO {
 	}
 
 	public static boolean actualizar(Integer productoId, String nombre, String descripcion, Integer componente,
-			Integer productoPadre, Integer tipo, String recursos, String formularios, String propiedades,
-			String actividades, String formularioValores, String productos, String metas, String riesgos,
-			String usuario) {
+			Integer productoPadre, Integer tipo, String propiedades, String actividades, String usuario) {
 		boolean ret = false;
 
 		Producto pojo = getProductoPorId(productoId);
@@ -250,7 +251,7 @@ public class ProductoDAO {
 				session.update(pojo);
 				session.getTransaction().commit();
 
-				ret = true;
+				ret = ProductoPropiedadValorDAO.persistirValores(productoId, propiedades, usuario);
 
 			} catch (Throwable e) {
 				CLogger.write("9", ProductoDAO.class, e);

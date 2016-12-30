@@ -15,6 +15,7 @@ import utilities.Utils;
 
 @WebServlet("/SProducto")
 public class SProducto extends HttpServlet {
+	
 	private static final long serialVersionUID = 1457438583225714402L;
 
 	public SProducto() {
@@ -78,18 +79,12 @@ public class SProducto extends HttpServlet {
 
 		// todos estos pueden o deben ser JSON con la EstructuraPojo de su
 		// respectivo DAO
-		String recursos = parametro.get("recursos");
-		String formularios = parametro.get("formularios");
 		String propiedades = parametro.get("propiedades");
 		String actividades = parametro.get("actividades");
-		String formularioValores = parametro.get("formularioValores");
-		String productos = parametro.get("productos");
-		String metas = parametro.get("metas");
-		String riesgos = parametro.get("riesgos");
 		String usuario = parametro.get("usuario");
 
-		boolean creado = ProductoDAO.guardar(nombre, descripcion, componente, productoPadre, tipo, recursos,
-				formularios, propiedades, actividades, formularioValores, productos, metas, riesgos, usuario);
+		boolean creado = ProductoDAO.guardar(nombre, descripcion, componente, productoPadre, tipo, propiedades,
+				actividades, usuario);
 
 		if (creado) {
 			listar(parametro, response);
@@ -108,18 +103,12 @@ public class SProducto extends HttpServlet {
 
 		// todos estos pueden o deben ser JSON con la EstructuraPojo de su
 		// respectivo DAO
-		String recursos = parametro.get("recursos");
-		String formularios = parametro.get("formularios");
 		String propiedades = parametro.get("propiedades");
 		String actividades = parametro.get("actividades");
-		String formularioValores = parametro.get("formularioValores");
-		String productos = parametro.get("productos");
-		String metas = parametro.get("metas");
-		String riesgos = parametro.get("riesgos");
 		String usuario = parametro.get("usuario");
 
 		boolean actualizado = ProductoDAO.actualizar(productoId, nombre, descripcion, componente, productoPadre, tipo,
-				recursos, formularios, propiedades, actividades, formularioValores, productos, metas, riesgos, usuario);
+				propiedades, actividades, usuario);
 		if (actualizado) {
 			listar(parametro, response);
 		}

@@ -3,7 +3,8 @@
 <%@ page import="org.apache.shiro.SecurityUtils"%>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 
-<div ng-controller="controlProducto as productoTipo" class="maincontainer all_page">
+<div ng-controller="controlProducto as producto" class="maincontainer all_page">
+
 	<script type="text/ng-template" id="buscarPorProducto.jsp">
 	    <%@ include file="/app/components/producto/buscarPorProducto.jsp"%>
 	</script>
@@ -86,14 +87,42 @@
 					<div class="form-group col-sm-12"
 						ng-class="{ 'has-error' : form.campo1.$invalid }">
 						<label for="campo1">* Nombre:</label> 
-						<input type="text" class="form-control" id="campo1" name="campo1" placeholder="Nombre de tipo" ng-model="producto.nombre" required />
+						<input type="text" class="form-control" id="campo1" name="campo1" placeholder="Nombre del producto" ng-model="producto.nombre" required />
 					</div>
 
 					<div class="form-group col-sm-12"
-						ng-class="{ 'has-error' : form.campo3.$invalid }">
-						<label for="campo3">* Descripción:</label> 
-						<input type="text" class="form-control" id="campo3" name="campo3" placeholder="Descripcion de tipo" ng-model="producto.descripcion" required />
+						ng-class="{ 'has-error' : form.campo2.$invalid }">
+						<label for="campo2">* Descripción:</label> 
+						<input type="text" class="form-control" id="campo2" name="campo2" placeholder="Descripcion del producto" ng-model="producto.descripcion" required />
 					</div>
+					
+					<div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo3.$invalid }">
+			          <label for="campo3">* Tipo:</label>
+			          <div class="input-group">
+			            <input type="hidden" class="form-control" ng-model="producto.tipo" /> 
+			            <input type="text" class="form-control" id="campo3" name="campo3" placeholder="Tipo de producto" ng-model="producto.tipoNombre" ng-readonly="true" required/>
+			            <span class="input-group-addon" ng-click="producto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
+			          </div>
+			        </div>
+
+					<div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo4.$invalid }">
+			          <label for="campo4">* Componente:</label>
+			          <div class="input-group">
+			            <input type="hidden" class="form-control" ng-model="producto.componente" /> 
+			            <input type="text" class="form-control" id="campo4" name="campo4" placeholder="Componente al que pertenece" ng-model="producto.componenteNombre" ng-readonly="true" required/>
+			            <span class="input-group-addon" ng-click="producto.buscarComponente()"><i class="glyphicon glyphicon-search"></i></span>
+			          </div>
+			        </div>
+
+					<div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo5.$invalid }">
+			          <label for="campo5">Producto:</label>
+			          <div class="input-group">
+			            <input type="hidden" class="form-control" ng-model="producto.productoPadre" /> 
+			            <input type="text" class="form-control" id="campo5" name="campo5" placeholder="Producto padre" ng-model="producto.productoPadreNombre" ng-readonly="true"/>
+			            <span class="input-group-addon" ng-click="producto.buscarProducto()"><i class="glyphicon glyphicon-search"></i></span>
+			          </div>
+			        </div>
+					
 				</div>
 			</form>
 		</div>
@@ -103,7 +132,7 @@
 		<h4>Propiedades</h4>
 		<div>
 			<div class="col-sm-12" align="center">
-				<table st-table="producto.propiedadesTipo" class="table table-striped" style="width: 400px;" ng-hide="producto.mostrarCargando">
+				<table st-table="producto.propiedadesValor" class="table table-striped" style="width: 400px;" ng-hide="producto.mostrarCargando">
 					<thead>
 						<tr>
 							<th>Nombre</th>
@@ -112,17 +141,12 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr st-select-row="row" st-select-mode="single" ng-repeat="propiedad in producto.propiedadesTipo | filter: { estado: '!E'} track by $index">
+						<tr st-select-row="row" st-select-mode="single" ng-repeat="propiedad in producto.propiedadesValor | filter: { estado: '!E'} track by $index">
 							<td>{{propiedad.propiedad}}</td>
 							<td>{{propiedad.propiedadTipo}}</td>
-							<td align="center"><span ng-click="producto.eliminarPropiedad($index)" uib-tooltip="Eliminar Propiedad"><i style="color: red; font-size: 20px;" class="glyphicon glyphicon-minus-sign"></i></span></td>
+							<td align="center"><span ng-click="producto.editarPropiedadValor($index)" uib-tooltip="Editar Propiedad"><i style="color: red; font-size: 20px;" class="glyphicon glyphicon-pencil"></i></span></td>
 						</tr>
 					</tbody>
-					<tfoot>
-						<tr>
-							<td colspan="3" align="center"><span ng-click="producto.agregarPropiedad()" uib-tooltip="Agregar Propiedad"><i style="color: blue; font-size: 20px;" class="glyphicon glyphicon-plus-sign"></i></span></td>
-						</tr>				
-					</tfoot>
 				</table>
 				<div class="grid_loading" ng-hide="!producto.mostrarCargando">
 					<div class="msg">

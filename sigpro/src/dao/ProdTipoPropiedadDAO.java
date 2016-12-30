@@ -22,7 +22,6 @@ import utilities.Utils;
 
 public class ProdTipoPropiedadDAO {
 
-	/// estad C:Cargado, N:Nuevo, E:Eliminado
 	static class EstructuraPojo {
 		Integer idTipo;
 		String tipo;
