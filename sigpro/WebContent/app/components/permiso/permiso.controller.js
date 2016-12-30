@@ -9,28 +9,28 @@ app
 						'$interval',
 						'$q',
 						function($scope, $http, $interval, $q) {
-
-							$scope.entityselected = null;
-							$scope.isNew = false;
-							$scope.fields = {};
+							var mi=this;
+							mi.entityselected = null;
+							mi.isNew = false;
+							mi.fields = {};
 
 							/*$http.post('/SPermiso',
 									{ action : 'load' }).success(function(data) {
-										$scope.fields = data;
+										mi.fields = data;
 							});*/
 
-							$scope.today = function() {
-								$scope.dt = new Date();
+							mi.today = function() {
+								mi.dt = new Date();
 							};
 							
-							$scope.today();
+							mi.today();
 
-							/*$scope.gridOptions = {
+							/*mi.gridOptions = {
 								enableRowSelection : true,
 								enableRowHeaderSelection : false
 							};*/
 
-							$scope.gridOptions = {
+							mi.gridOptions = {
 								enableRowSelection : true,
 								enableRowHeaderSelection : false,
 								paginationPageSizes : [ 25, 50, 75 ],
@@ -52,15 +52,14 @@ app
 							};
 							$http.post('/SPermiso',
 									{ action : 'getPermisos' }).success(function(data) {
-										console.log(data.permisos);
-										$scope.gridOptions.data =  data.permisos;
+										mi.gridOptions.data =  data.permisos;
 							});
 
-							$scope.gridOptions.multiSelect = false;
-							$scope.gridOptions.modifierKeysToMultiSelect = false;
-							$scope.gridOptions.noUnselect = true;
-							$scope.gridOptions.onRegisterApi = function(gridApi) {
-								$scope.gridApi = gridApi;
+							mi.gridOptions.multiSelect = false;
+							mi.gridOptions.modifierKeysToMultiSelect = false;
+							mi.gridOptions.noUnselect = true;
+							mi.gridOptions.onRegisterApi = function(gridApi) {
+								mi.gridApi = gridApi;
 
 								gridApi.selection.on
 										.rowSelectionChanged(
@@ -69,18 +68,18 @@ app
 													var msg = 'row selected '
 															+ row;
 
-													$scope.permisoSelected = row.entity;
+													mi.permisoSelected = row.entity;
 													console.log(row);
-													//$scope.gender.selected = $scope.entityselected.gender;
+													//mi.gender.selected = mi.entityselected.gender;
 												});
 
 							};
 
-							$scope.open2 = function() {
-								$scope.popup2.opened = true;
+							mi.open2 = function() {
+								mi.popup2.opened = true;
 							};
 
-							$scope.dateOptions = {
+							mi.dateOptions = {
 
 								formatYear : 'yy',
 								maxDate : new Date(2020, 5, 22),
@@ -88,17 +87,17 @@ app
 								startingDay : 1
 							};
 
-							$scope.popup2 = {
+							mi.popup2 = {
 								opened : false
 							};
 							
 							/*
-							$scope.save = function() {
-								if ($scope.isNew) {
+							mi.save = function() {
+								if (mi.isNew) {
 									var param_data = {
 										action : 'save',
-										first_name : $scope.entityselected.nombre,
-										last_name : $scope.entityselected.descripcion
+										first_name : mi.entityselected.nombre,
+										last_name : mi.entityselected.descripcion
 
 									};
 									$http
@@ -127,15 +126,15 @@ app
 																	+ '/'
 																	+ yyyy;
 
-															$scope.gridOptions.data
+															mi.gridOptions.data
 																	.push({
 																		"id" : response.data.id,
 
-																		"nombre" : $scope.entityselected.nombre,
-																		"descripcion" : $scope.entityselected.descripcion
+																		"nombre" : mi.entityselected.nombre,
+																		"descripcion" : mi.entityselected.descripcion
 
 																	});
-															$scope.isCollapsed = false;
+															mi.isCollapsed = false;
 
 														}
 
@@ -144,9 +143,9 @@ app
 								} else {
 									var param_data = {
 										action : 'update',
-										emp_no : $scope.entityselected.id,
-										first_name : $scope.entityselected.nombre,
-										last_name : $scope.entityselected.descripcion
+										emp_no : mi.entityselected.id,
+										first_name : mi.entityselected.nombre,
+										last_name : mi.entityselected.descripcion
 
 									};
 									$http
@@ -156,18 +155,18 @@ app
 											.then(function(response) {
 												if (response.data.success) {
 													
-													$scope.isCollapsed = false;
+													mi.isCollapsed = false;
 												}
 
 											});
 								}
 							}*/
 
-							$scope.deleteRow = function() {
+							mi.deleteRow = function() {
 
 								var param_data = {
 									action : 'delete',
-									emp_no : $scope.entityselected.id
+									emp_no : mi.entityselected.id
 								};
 								$http
 										.post(
@@ -177,16 +176,16 @@ app
 												function(response) {
 
 													if (response.data.success) {
-														if ($scope.entityselected != null) {
-															var index = $scope.gridOptions.data
-																	.indexOf($scope.entityselected);
+														if (mi.entityselected != null) {
+															var index = mi.gridOptions.data
+																	.indexOf(mi.entityselected);
 															if (index >= 0) {
-																$scope.gridOptions.data
+																mi.gridOptions.data
 																		.splice(
 																				index,
 																				1);
 															}
-															$scope.entityselected == null;
+															mi.entityselected == null;
 
 														}
 
@@ -196,33 +195,33 @@ app
 
 							};
 
-							$scope.newRow = function() {
+							mi.newRow = function() {
 
 								var formularios = loadform();
 								
-								$scope.isCollapsed = true;
-								$scope.entityselected = null;
-								$scope.isNew = true;
+								mi.isCollapsed = true;
+								mi.entityselected = null;
+								mi.isNew = true;
 							}
 
-							$scope.editRow = function() {
-								$scope.isCollapsed = true;
-								$scope.isNew = false;
+							mi.editRow = function() {
+								mi.isCollapsed = true;
+								mi.isNew = false;
 							}
 
-							$scope.cancel = function() {
-								$scope.isCollapsed = false;
-								$scope.entityselected = null;
+							mi.cancel = function() {
+								mi.isCollapsed = false;
+								mi.entityselected = null;
 							}
 							
 							var deferred = $q.defer();
-							$scope.currDate = new Date();
-							$scope.onlyNumbers = /^[0-9]+$/;
+							mi.currDate = new Date();
+							mi.onlyNumbers = /^[0-9]+$/;
 
 							function loadform() {
 								$http.post('/SPermiso',
 										{action: 'getPermisos'}).success(function(data) {
-									$scope.fields = data;
+									mi.fields = data;
 								});
 							};
 
