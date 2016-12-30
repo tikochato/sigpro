@@ -66,6 +66,15 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/componente/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'componenteController\'" class="all_page"></div>'
             })
+            .when('/componentetipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'componentetipoController\'" class="all_page"></div>'
+            })
+            .when('/hitotipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'hitotipoController\'" class="all_page"></div>'
+            })
+            .when('/recursounidadmedida/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'recursounidadmedidaController\'" class="all_page"></div>'
+            })
             .when('/permisos',{
             	template: '<div load-on-demand="\'permisoController\'" class="all_page"></div>'
             })
@@ -161,13 +170,24 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'componenteController',
 	    	   script: '/app/components/componente/componente.controller.js',
 	    	   template: '/app/components/componente/componente.jsp'
-
 	       },
 	       {
+	    	   name: 'componentetipoController',
+	    	   script: '/app/components/componentetipo/componentetipo.controller.js',
+	    	   template: '/app/components/componentetipo/componentetipo.jsp'
+	       },
+	       {
+	    	   name: 'hitotipoController',
+	    	   script: '/app/components/hitotipo/hitotipo.controller.js',
+	    	   template: '/app/components/hitotipo/hitotipo.jsp'
+	       },{
+	    	   name: 'recursounidadmedidaController',
+	    	   script: '/app/components/recursounidadmedida/recursounidadmedida.controller.js',
+	    	   template: '/app/components/recursounidadmedida/recursounidadmedida.jsp'
+	       }, {
 	    	   name: 'permisoController',
 	    	   script: '/app/components/permiso/permiso.controller.js',
 	    	   template: '/app/components/permiso/permiso.jsp'
-
 	       }
 
 	   ];

@@ -7,6 +7,8 @@
     	<%@ include file="/app/components/desembolso/buscarDesembolsoTipo.jsp"%>
   	</script>
 		<h3>Desembolso</h3><br/>
+		<h4>{{ desembolsoc.proyectonombre }}</h4><br/>
+		
 		<div class="row" align="center" ng-if="!desembolsoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">

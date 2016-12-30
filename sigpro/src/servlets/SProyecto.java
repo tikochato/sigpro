@@ -154,8 +154,6 @@ public class SProyecto extends HttpServlet {
 					proyecto.setUsuarioCreo("admin");
 					proyecto.setFechaCreacion(new Date());
 					
-					
-					
 				}else{
 					proyecto = ProyectoDAO.getProyectoPorId(Integer.parseInt(datos.get("id")));
 					proyecto.setNombre(datos.get("nombre"));
@@ -232,9 +230,6 @@ public class SProyecto extends HttpServlet {
 			response.getWriter().write(response_text);
 		}
 		
-		
-		
-		
 		else if(accion.equals("borrarProyecto")){
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
@@ -250,6 +245,18 @@ public class SProyecto extends HttpServlet {
 			response_text = String.join("","{ \"success\": true, \"totalproyectos\":",ProyectoDAO.getTotalProyectos().toString()," }");
 			response.getWriter().write(response_text);
 		
+		}
+		else if(accion.equals("obtenerProyectoPorId")){
+			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			Proyecto proyecto = ProyectoDAO.getProyectoPorId(id);
+			response_text = String.join("","{ \"success\": ",(proyecto!=null && proyecto.getId()!=null ? "true" : "false"),", "
+					+ "\"id\": " + (proyecto!=null ? proyecto.getId():"") +", "
+					+ "\"nombre\": \"" + (proyecto!=null ? proyecto.getNombre():"") +"\" }");
+			response.getWriter().write(response_text);
+							
+		}else{
+			response_text = "{ \"success\": false }";
+			response.getWriter().write(response_text);
 		}
 		
 

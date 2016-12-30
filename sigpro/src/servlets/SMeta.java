@@ -155,7 +155,7 @@ public class SMeta extends HttpServlet {
 				Meta Meta;
 				if(esnuevo){
 					Meta = new Meta(componente, metaTipo, metaUnidadMedida, producto,proyecto, nombre, descripcion, 
-							"admin", null, new DateTime().toDate(), null, 1, null);
+							"admin", null, new DateTime().toDate(), null, 1, proyecto!=null ? 1 : (componente!=null ? 2 : 3), null);
 				}
 				else{
 					Meta = MetaDAO.getMetaPorId(id);
@@ -229,7 +229,7 @@ public class SMeta extends HttpServlet {
 			switch(tipo){
 				case 1: Proyecto proyecto = ProyectoDAO.getProyectoPorId(id); nombre = (proyecto!=null) ? proyecto.getNombre() : ""; break;
 				case 2: Componente componente = ComponenteDAO.getComponentePorId(id); nombre = (componente!=null) ? componente.getNombre() : ""; break;
-				case 3: Producto producto = ProductoDAO.getProductoPorId(id); nombre = (producto!=null) ? producto.getName() : ""; break;
+				case 3: Producto producto = ProductoDAO.getProductoPorId(id); nombre = (producto!=null) ? producto.getNombre() : ""; break;
 			}
 	        response_text = String.join("", "\"nombre\":\"",nombre,"\"");
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
