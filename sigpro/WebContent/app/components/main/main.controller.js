@@ -75,8 +75,14 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/hitotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'hitotipoController\'" class="all_page"></div>'
             })
+            .when('/componentepropiedad/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'componentepropiedadController\'" class="all_page"></div>'
+            })
             .when('/recursounidadmedida/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'recursounidadmedidaController\'" class="all_page"></div>'
+            })
+            .when('/riesgopropiedad/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'riesgopropiedadController\'" class="all_page"></div>'
             })
             .when('/permisos',{
             	template: '<div load-on-demand="\'permisoController\'" class="all_page"></div>'
@@ -187,10 +193,19 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'hitotipoController',
 	    	   script: '/app/components/hitotipo/hitotipo.controller.js',
 	    	   template: '/app/components/hitotipo/hitotipo.jsp'
+	       },
+	       {
+	    	   name: 'componentepropiedadController',
+	    	   script: '/app/components/componentepropiedad/componentepropiedad.controller.js',
+	    	   template: '/app/components/componentepropiedad/componentepropiedad.jsp'
 	       },{
 	    	   name: 'recursounidadmedidaController',
 	    	   script: '/app/components/recursounidadmedida/recursounidadmedida.controller.js',
 	    	   template: '/app/components/recursounidadmedida/recursounidadmedida.jsp'
+	       },{
+	    	   name: 'riesgopropiedadController',
+	    	   script: '/app/components/riesgopropiedad/riesgopropiedad.controller.js',
+	    	   template: '/app/components/riesgopropiedad/riesgopropiedad.jsp'
 	       }, {
 	    	   name: 'permisoController',
 	    	   script: '/app/components/permiso/permiso.controller.js',
