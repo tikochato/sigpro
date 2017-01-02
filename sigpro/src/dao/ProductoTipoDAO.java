@@ -17,6 +17,7 @@ import utilities.CLogger;
 import utilities.Utils;
 
 public class ProductoTipoDAO {
+	
 	static class EstructuraPojo {
 		Integer id;
 		String nombre;
