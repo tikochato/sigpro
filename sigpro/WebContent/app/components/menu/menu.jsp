@@ -36,13 +36,15 @@
 	                     	<li role="menuitem"><a href="#!/colaborador">Colaborador</a></li>
 	                     	<li role="menuitem"><a href="#!/metaunidadmedida">Unidad de Medidas para Metas</a></li>
 	                     	<li role="menuitem"><a href="#!/metatipos">Tipos de Meta</a></li>
+	                     	<li role="menuitem"><a href="#!/permisos">Permisos</a></li>
                          </ul>
                     </li>
                     <li uib-dropdown>
                          <a href="#" uib-dropdown-toggle><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Producto <b class="caret"></b></a>
                          <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-                            <li role="menuitem"><a href="#!/productoTipo">Tipos de Producto</a></li>
-                            <li role="menuitem"><a href="#!/productoPropiedad">Propiedades de Producto</a></li>
+                            <li role="menuitem"><a href="#!/productoPropiedad">Propiedades</a></li>
+                            <li role="menuitem"><a href="#!/productoTipo">Tipos</a></li>
+                            <li role="menuitem"><a href="#!/producto">Producto</a></li>
                          </ul>
                     </li>
                     <li uib-dropdown>

@@ -22,7 +22,6 @@ import utilities.Utils;
 
 public class ProdTipoPropiedadDAO {
 
-	/// estad C:Cargado, N:Nuevo, E:Eliminado
 	static class EstructuraPojo {
 		Integer idTipo;
 		String tipo;
@@ -33,7 +32,7 @@ public class ProdTipoPropiedadDAO {
 		String estado;
 	}
 
-	public static ProdtipoPropiedad geProdtipoPropiedad(Integer codigoTipo, Integer codigoPropiedad) {
+	public static ProdtipoPropiedad getProdtipoPropiedad(Integer codigoTipo, Integer codigoPropiedad) {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		ProdtipoPropiedad ret = null;
 		try {
@@ -54,7 +53,7 @@ public class ProdTipoPropiedadDAO {
 
 	public static boolean guardar(Integer codigoTipo, Integer codigoPropiedad, String usuario) {
 
-		ProdtipoPropiedad pojo = geProdtipoPropiedad(codigoTipo, codigoPropiedad);
+		ProdtipoPropiedad pojo = getProdtipoPropiedad(codigoTipo, codigoPropiedad);
 		boolean ret = false;
 
 		if (pojo == null) {
@@ -84,7 +83,7 @@ public class ProdTipoPropiedadDAO {
 	public static boolean actualizar(Integer codigoTipo, Integer codigoPropiedad, String nombre, String descripcion,
 			String usuario) {
 
-		ProdtipoPropiedad pojo = geProdtipoPropiedad(codigoTipo, codigoPropiedad);
+		ProdtipoPropiedad pojo = getProdtipoPropiedad(codigoTipo, codigoPropiedad);
 		boolean ret = false;
 
 		if (pojo != null) {
@@ -114,7 +113,7 @@ public class ProdTipoPropiedadDAO {
 
 	public static boolean eliminar(Integer codigoTipo, Integer codigoPropiedad, String usuario) {
 
-		ProdtipoPropiedad pojo = geProdtipoPropiedad(codigoTipo, codigoPropiedad);
+		ProdtipoPropiedad pojo = getProdtipoPropiedad(codigoTipo, codigoPropiedad);
 		boolean ret = false;
 
 		if (pojo != null) {

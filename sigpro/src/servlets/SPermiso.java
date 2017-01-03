@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.PermisoDAO;
@@ -109,9 +110,23 @@ public class SPermiso extends HttpServlet {
 				
 			}else if(action.compareTo("getPermisos")==0){
 				List <Permiso> permisos = PermisoDAO.getPermisos();
-				List <stpermiso> stpermisos = new <stpermiso> ArrayList();
-				
-			}else if(action.compareTo("getPermiso")==0){
+				List <stpermiso> stpermisos = new  ArrayList <stpermiso>();
+				for(Permiso permiso:permisos)
+				{
+					stpermiso tmp = new stpermiso();
+					tmp.id = permiso.getId();
+					tmp.nombre = permiso.getNombre();
+					tmp.descripcion= permiso.getDescripcion();
+					tmp.usuarioCreo=permiso.getUsuarioCreo();
+					tmp.fechaCreacion= permiso.getFechaCreacion();
+					tmp.usuarioActualizo=permiso.getUsuarioActualizo();
+					tmp.fechaActualizacion= permiso.getFechaActualizacion();
+					tmp.estado = permiso.getEstado();
+					stpermisos.add(tmp);
+				}
+				response_text=new GsonBuilder().serializeNulls().create().toJson(stpermisos);
+		        response_text = String.join("", "\"permisos\":",response_text);
+		        response_text = String.join("", "{\"success\":true,", response_text,"}");
 				
 			}
 		}else{

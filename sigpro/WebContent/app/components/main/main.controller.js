@@ -41,6 +41,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/productoPropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProductoPropiedad\'" class="all_page"></div>'
             }) 
+            .when('/producto/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'moduloProducto\'" class="all_page"></div>'
+            }) 
             
             .when('/proyectotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectotipoController\'" class="all_page"></div>'
@@ -80,6 +83,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             })
             .when('/riesgopropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgopropiedadController\'" class="all_page"></div>'
+            })
+            .when('/permisos',{
+            	template: '<div load-on-demand="\'permisoController\'" class="all_page"></div>'
             })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -136,6 +142,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'moduloProductoPropiedad',
 	    	   script: '/app/components/productopropiedad/productopropiedad.controller.js',
 	    	   template: '/app/components/productopropiedad/productopropiedad.jsp'
+	       }, {
+	    	   name: 'moduloProducto',
+	    	   script: '/app/components/producto/producto.controller.js',
+	    	   template: '/app/components/producto/producto.jsp'
 	       },
 	       {
 	    	   name: 'proyectotipoController',
@@ -196,6 +206,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'riesgopropiedadController',
 	    	   script: '/app/components/riesgopropiedad/riesgopropiedad.controller.js',
 	    	   template: '/app/components/riesgopropiedad/riesgopropiedad.jsp'
+	       }, {
+	    	   name: 'permisoController',
+	    	   script: '/app/components/permiso/permiso.controller.js',
+	    	   template: '/app/components/permiso/permiso.jsp'
 	       }
 
 	   ];
