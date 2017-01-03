@@ -77,7 +77,6 @@ public class RiesgoTipoDAO {
 			ret = true;
 		}
 		catch(Throwable e){
-			e.printStackTrace();
 			CLogger.write("3", RiesgoTipoDAO.class, e);
 		}
 		finally{
