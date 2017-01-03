@@ -67,14 +67,17 @@ public class RiesgoTipoDAO {
 			session.saveOrUpdate(riesgotipo);
 			session.flush();
 			
-			for (RtipoPropiedad propiedad : riesgotipo.getRtipoPropiedads()){
-				session.saveOrUpdate(propiedad);	
+			if (riesgotipo.getRtipoPropiedads() !=null){
+				for (RtipoPropiedad propiedad : riesgotipo.getRtipoPropiedads()){
+					session.saveOrUpdate(propiedad);	
+				}
 			}
 			session.flush();
 			session.getTransaction().commit();
 			ret = true;
 		}
 		catch(Throwable e){
+			e.printStackTrace();
 			CLogger.write("3", RiesgoTipoDAO.class, e);
 		}
 		finally{

@@ -59,6 +59,7 @@
                             <li role="menuitem"><a href="#!/componentetipo">Tipo Componente</a></li>
                             <li role="menuitem"><a href="#!/hitotipo">Tipo Hito</a></li>
                             <li role="menuitem"><a href="#!/riesgopropiedad">Propiedad Riesgo</a></li>
+                            <li role="menuitem"><a href="#!/riesgotipo">Tipo Riesgo</a></li>
                          </ul>
                     </li>
 	            </ul>

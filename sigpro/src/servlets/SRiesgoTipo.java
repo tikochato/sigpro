@@ -85,7 +85,7 @@ public class SRiesgoTipo extends HttpServlet {
 		String accion = map.get("accion");
 		String response_text="";
 		
-		if(accion.equals("getComponentetiposPagina")){
+		if(accion.equals("getRiesgotiposPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroRiesgoTipo = map.get("numeroriesgostipo")!=null  ? Integer.parseInt(map.get("numeroriesgostipo")) : 0;
 			List<RiesgoTipo> riesgotipos = RiesgoTipoDAO.getRiesgoTiposPagina(pagina, numeroRiesgoTipo);
@@ -123,6 +123,7 @@ public class SRiesgoTipo extends HttpServlet {
 				
 				if(esnuevo){
 					riesgoTipo = new RiesgoTipo(nombre, usuario, new DateTime().toDate(), 1);
+					riesgoTipo.setDescripcion(descripcion);
 				}
 				else{
 					riesgoTipo = RiesgoTipoDAO.getRiesgoTipoPorId(id);
@@ -132,7 +133,7 @@ public class SRiesgoTipo extends HttpServlet {
 					riesgoTipo.setFechaActualizacion(new DateTime().toDate());
 					Set<RtipoPropiedad> propiedades_temp = riesgoTipo.getRtipoPropiedads();
 					riesgoTipo.setRtipoPropiedads(null);
-					if (propiedades_temp!=null){
+					if (propiedades_temp!=null && propiedades_temp.size()>0){
 						for (RtipoPropiedad rtipoPropiedad : propiedades_temp){
 							RtipoPropiedadDAO.eliminarTotalRtipoPropiedad(rtipoPropiedad);
 						}
