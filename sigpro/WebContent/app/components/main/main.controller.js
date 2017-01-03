@@ -90,6 +90,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/riesgotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgotipoController\'" class="all_page"></div>'
             })
+            .when('/riesgo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'riesgoController\'" class="all_page"></div>'
+            })
             
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -218,6 +221,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'riesgotipoController',
 	    	   script: '/app/components/riesgotipo/riesgotipo.controller.js',
 	    	   template: '/app/components/riesgotipo/riesgotipo.jsp'
+	       }, {
+	    	   name: 'riesgoController',
+	    	   script: '/app/components/riesgo/riesgo.controller.js',
+	    	   template: '/app/components/riesgo/riesgo.jsp'
 	       }
 
 	   ];
