@@ -16,13 +16,13 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="crearCooperante">
-						<label class="btn btn-primary" ng-click="permisosc.newRow()">Nuevo</label>
+						<label class="btn btn-primary" ng-click="permisosc.nuevoPermiso()">Nuevo</label>
 					</shiro:hasPermission>
 					<shiro:hasPermission name="editarCooperante">
-						<label class="btn btn-primary" ng-click="permisosc.editRow()">Editar</label>
+						<label class="btn btn-primary" ng-click="permisosc.editarPermiso()">Editar</label>
 					</shiro:hasPermission>
 					<shiro:hasPermission name="eliminarCooperante">
-						<label class="btn btn-primary" ng-click="permisosc.deleteRow()">Borrar</label>
+						<label class="btn btn-primary" ng-click="permisosc.borrarPermiso()">Borrar</label>
 					</shiro:hasPermission>
     			</div>
     		</div>
@@ -37,7 +37,7 @@
 		<div class="row" ng-show="permisosc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="permisosc.save()">Guardar</label>
+			        <label class="btn btn-success" ng-click="permisosc.guardarPermiso()">Guardar</label>
 			        <label class="btn btn-danger" ng-click="permisosc.cancel()">Cancelar</label>
     			</div>
     		</div>
@@ -79,7 +79,7 @@
 			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="permisosc.save()">Guardar</label>
+			        <label class="btn btn-success" ng-click="permisosc.guardarPermiso()">Guardar</label>
 			        <label class="btn btn-danger" ng-click="permisosc.cancel()">Cancelar</label>
     			</div>
     		</div>

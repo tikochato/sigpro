@@ -7,12 +7,17 @@ app.controller(
   '$http',
   '$interval',
   '$q',
-  function($scope, $http, $interval, $q) {
+  'Utilidades',
+  'uiGridConstants',
+  '$mdDialog',
+  function($scope, $http, $interval, $q,$utilidades,uiGridConstants,$mdDialog) {
 	var mi=this;
 	mi.entityselected = null;
 	mi.isNew = false;
 	mi.fields = {};
-
+	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
+	mi.elementosPorPagina = $utilidades.elementosPorPagina;
+	mi.permisoSelected={id:"",nombre:"", descripcion:""};
 	/*$http.post('/SPermiso',
 	{ action : 'load' }).success(function(data) {
 	mi.fields = data;
@@ -35,10 +40,10 @@ app.controller(
 		paginationPageSize : 25,
 		data : [],
 		columnDefs : [ {
-			name : 'Id',
+			name : 'ID',
 			field : 'id'
 		}, {
-			name : 'Nombres',
+			name : 'Nombre',
 			field : 'nombre'
 		}, {
 			name : 'Descripcion',
@@ -49,7 +54,7 @@ app.controller(
 
 	};
 	$http.post('/SPermiso',
-			{ action : 'getPermisos' }).success(function(data) {
+			{ accion : 'getPermisos' }).success(function(data) {
 			mi.gridOptions.data =  data.permisos;
 	});
 	mi.gridOptions.multiSelect = false;
@@ -63,9 +68,7 @@ app.controller(
 			function(row) {
 			var msg = 'row selected '
 			+ row;
-
 			mi.permisoSelected = row.entity;
-    		console.log(row);
 			//mi.gender.selected = mi.entityselected.gender;
 		});
 
@@ -85,82 +88,12 @@ app.controller(
 	mi.popup2 = {
  	  opened : false
 	};
-							
-							/*
-							mi.save = function() {
-								if (mi.isNew) {
-									var param_data = {
-										action : 'save',
-										first_name : mi.entityselected.nombre,
-										last_name : mi.entityselected.descripcion
-
-									};
-									$http
-											.post(
-													'/SABCGrid',
-													param_data)
-											.then(
-													function(response) {
-														if (response.data.success) {
-															var today = new Date();
-															var dd = today
-																	.getDate();
-															var mm = today
-																	.getMonth() + 1;
-
-															var yyyy = today
-																	.getFullYear();
-															if (dd < 10) {
-																dd = '0' + dd
-															}
-															if (mm < 10) {
-																mm = '0' + mm
-															}
-															var today = dd
-																	+ '/' + mm
-																	+ '/'
-																	+ yyyy;
-
-															mi.gridOptions.data
-																	.push({
-																		"id" : response.data.id,
-
-																		"nombre" : mi.entityselected.nombre,
-																		"descripcion" : mi.entityselected.descripcion
-
-																	});
-															mi.isCollapsed = false;
-
-														}
-
-													});
-
-								} else {
-									var param_data = {
-										action : 'update',
-										emp_no : mi.entityselected.id,
-										first_name : mi.entityselected.nombre,
-										last_name : mi.entityselected.descripcion
-
-									};
-									$http
-											.post(
-													'/SABCGrid',
-													param_data)
-											.then(function(response) {
-												if (response.data.success) {
-													
-													mi.isCollapsed = false;
-												}
-
-											});
-								}
-							}*/
-
+						
+						
 	mi.deleteRow = function() {
 
 		var param_data = {
-			action : 'delete',
+			accion : 'delete',
 			emp_no : mi.entityselected.id
 		};
 		$http.post(
@@ -204,13 +137,106 @@ app.controller(
 	mi.onlyNumbers = /^[0-9]+$/;
 	function loadform() {
 		$http.post('/SPermiso',
-			{action: 'getPermisos'}).success(
+			{accion: 'getPermisos'}).success(
 				function(data) {
 					mi.fields = data;
 		});
 	};
 
-							
-
-
+	mi.nuevoPermiso=function(){
+		var formularios = loadform();						
+		mi.isCollapsed = true;
+		mi.entityselected = null;
+		mi.isNew = true;
+		mi.permisoSelected.nombre="",
+		mi.permisoSelected.descripcion="";
+	};					
+	mi.guardarPermiso=function(){		
+		if(mi.permisoSelected.nombre!="" && mi.permisoSelected.descripcion!=""){
+			if(mi.isNew){
+				$http.post('/SPermiso',
+					{
+						accion: 'guardarPermiso',
+						nombre:mi.permisoSelected.nombre,
+						descripcion:mi.permisoSelected.descripcion
+					}).success(
+						function(data) {
+							if(data.success){
+								console.log(data);
+								mi.gridOptions.data
+								.push({
+									"id" : data.data,
+									"nombre" : mi.permisoSelected.nombre,
+									"descripcion" : mi.permisoSelected.descripcion
+								});
+								mi.isCollapsed = false;
+							}
+				});
+			}else{
+				$http.post('/SPermiso',
+						{
+							accion: 'editarPermiso',
+							id:mi.permisoSelected.id,
+							nombre:mi.permisoSelected.nombre,
+							descripcion:mi.permisoSelected.descripcion
+						}).success(
+							function(data) {
+								if(data.success){
+									/*mi.gridOptions.data
+									.push({
+										"id" : data.data,
+										"nombre" : mi.permisoSelected.nombre,
+										"descripcion" : mi.permisoSelected.descripcion
+									});*/
+									loadform();
+									mi.isCollapsed = false;
+								}
+					});
+			}
+		}else{
+			$utilidades.mensaje('danger','Llene los campos');
+		}
+	};
+	mi.borrarPermiso=function(ev){
+		mi.isCollapsed = false;
+		if(mi.permisoSelected.id!=""){
+			var confirm = $mdDialog.confirm()
+	          .title('Confirmación de borrado')
+	          .textContent('¿Desea borrar el permiso "'+mi.permisoSelected.nombre+'"?')
+	          .ariaLabel('Confirmación de borrado')
+	          .targetEvent(ev)
+	          .ok('Borrar')
+	          .cancel('Cancelar');
+			$mdDialog.show(confirm).then(function() {
+		    	$http.post('/SPermiso', {
+					accion: 'eliminarPermiso',
+					id: mi.permisoSelected.id
+				}).success(function(response){
+					console.log(response);
+					if(response.success){
+						$utilidades.mensaje('success','Permiso borrado con éxito');
+						loadform();
+						mi.permisoSelected={id:"",nombre:"", descripcion:""};
+					}
+					else
+						$utilidades.mensaje('danger','Error al borrar el Permiso');
+				});
+		    }, function() {
+		    
+		    });
+		}else{
+			console.log(mi.permisoSelected);
+		    $utilidades.mensaje('danger','Seleccione un permiso');
+		}
+	};
+	
+	
+	mi.editarPermiso=function(){
+		if(mi.permisoSelected.id!=""){
+			mi.isCollapsed = true;
+			mi.isNew=false;
+		}else{
+			$utilidades.mensaje('danger','Seleccione un permiso');
+		}
+	};
 } ]);

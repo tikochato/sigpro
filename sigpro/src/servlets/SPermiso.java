@@ -71,7 +71,7 @@ public class SPermiso extends HttpServlet {
 	    };
 	    Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String action = "";
-		action = map.get("action");
+		action = map.get("accion");
 		if(action!=null){
 			if(action.compareTo("guardarPermiso")==0){
 				String nombrePermiso = map.get("nombre");
@@ -79,7 +79,7 @@ public class SPermiso extends HttpServlet {
 				if(nombrePermiso!=null && descripcionPermiso!=null){
 					HttpSession sesionweb = request.getSession();
 					Permiso permiso = new Permiso(nombrePermiso,descripcionPermiso,sesionweb.getAttribute("usuario").toString(),new DateTime().toDate(),1);
-					response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false")," }");
+					response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false"),", \"data\":",permiso.getId().toString(),"  }");
 				}else{
 					response_text = String.join("", "{\"success\":false, \"error\":\"parametro vacio\" }");
 				}
@@ -89,11 +89,12 @@ public class SPermiso extends HttpServlet {
 				Integer idPermiso = Integer.parseInt(map.get("id").toString());
 				if(nombrePermiso!=null && descripcionPermiso!=null && idPermiso !=null ){
 					HttpSession sesionweb = request.getSession();
-					Permiso permiso = PermisoDAO.getPermiso(nombrePermiso);
+					Permiso permiso = PermisoDAO.getPermisoById(idPermiso);
 					permiso.setDescripcion(descripcionPermiso);
+					permiso.setNombre(nombrePermiso);
 					permiso.setUsuarioActualizo(sesionweb.getAttribute("usuario").toString());
 					permiso.setFechaActualizacion(new DateTime().toDate());
-					response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false")," }");
+					response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false"),", \"data\":",permiso.getId().toString()," }");
 				}else{
 					response_text = String.join("", "{\"success\":false, \"error\":\"parametro vacio\" }");
 				}
