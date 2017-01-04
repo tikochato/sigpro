@@ -7,6 +7,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
+import org.hibernate.query.Query;
+
 import pojo.Permiso;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -92,6 +94,39 @@ public class PermisoDAO {
 		}finally{
 			session.close();
 		}
+		return ret;
+	}
+	
+	public static List<Permiso> getPermisosPagina(int pagina, int numeroPermisos){
+		List <Permiso> ret = new ArrayList <Permiso>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query <Permiso> criteria = session.createQuery("FROM Permiso  where estado= :estado",Permiso.class);
+			criteria.setParameter("estado", 1);
+			criteria.setFirstResult(((pagina-1)*(numeroPermisos)));
+			criteria.setMaxResults(numeroPermisos);
+			ret = criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("6", HitoTipoDAO.class, e);		
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	public static Long getTotalPermisos(){
+		Long ret = 0L;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Long> conteo = session.createQuery("SELECT count(p.id) FROM Permiso p WHERE p.estado=1",Long.class);
+			ret = conteo.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("7", HitoTipoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
 		return ret;
 	}
 }

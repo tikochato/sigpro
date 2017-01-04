@@ -7,32 +7,26 @@ app.controller(
   '$http',
   '$interval',
   '$q',
+  'i18nService',
   'Utilidades',
+  '$routeParams',
   'uiGridConstants',
   '$mdDialog',
-  function($scope, $http, $interval, $q,$utilidades,uiGridConstants,$mdDialog) {
+  '$window',
+  '$location',
+  '$route',
+  function($scope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route) {
 	var mi=this;
+	$window.document.title = 'SIGPRO - Permisos';
+	i18nService.setCurrentLang('es');
+	mi.mostrarcargando=true;
 	mi.entityselected = null;
-	mi.isNew = false;
-	mi.fields = {};
+	mi.esNuevo = false;
+	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
-	mi.permisoSelected={id:"",nombre:"", descripcion:""};
-	/*$http.post('/SPermiso',
-	{ action : 'load' }).success(function(data) {
-	mi.fields = data;
-	});*/
-
-	mi.today = function() {
-		mi.dt = new Date();
-	};
-							
+	mi.permisoSelected={id:"",nombre:"", descripcion:""};			
 	mi.today();
-							/*mi.gridOptions = {
-								enableRowSelection : true,
-								enableRowHeaderSelection : false
-							};*/
-
 	mi.gridOptions = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -53,10 +47,14 @@ app.controller(
 		],
 
 	};
-	$http.post('/SPermiso',
-			{ accion : 'getPermisos' }).success(function(data) {
-			mi.gridOptions.data =  data.permisos;
-	});
+	mi.cargarTabla=function(pagina){
+		$http.post('/SPermiso',
+				{ accion : 'getPermisosPagina',  pagina: pagina, numeroPermisos: $utilidades.elementosPorPagina  }).success(function(data) {
+				mi.gridOptions.data =  data.permisos;
+				mi.mostrarcargando=false;
+		});
+	};
+	
 	mi.gridOptions.multiSelect = false;
 	mi.gridOptions.modifierKeysToMultiSelect = false;
 	mi.gridOptions.noUnselect = true;
@@ -69,91 +67,43 @@ app.controller(
 			var msg = 'row selected '
 			+ row;
 			mi.permisoSelected = row.entity;
-			//mi.gender.selected = mi.entityselected.gender;
 		});
-
+		if($routeParams.reiniciar_vista=='rv'){
+			mi.guardarEstado();
+	    }
+	    else{
+	    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'permisos', t: (new Date()).getTime()}).then(function(response){
+		      if(response.data.success && response.data.estado!='')
+		    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+		    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
+			      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
+			      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+			      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+			  });
+	    }
 	};
 
-    mi.open2 = function() {
-    	mi.popup2.opened = true;
-	};
-
-	mi.dateOptions = {
-		formatYear : 'yy',
-		maxDate : new Date(2020, 5, 22),
-		minDate : new Date(1900, 1, 1),
-		startingDay : 1
-	};
-
-	mi.popup2 = {
- 	  opened : false
-	};
+   
 						
 						
-	mi.deleteRow = function() {
+	
 
-		var param_data = {
-			accion : 'delete',
-			emp_no : mi.entityselected.id
-		};
-		$http.post(
-			'/SABCGrid',
-			param_data).then(
-			 function(response) {
-				if (response.data.success) {
-					if (mi.entityselected != null) {
-						var index = mi.gridOptions.data.indexOf(mi.entityselected);
-						if (index >= 0) {
-							mi.gridOptions.data.splice(index,1);
-						}
-						mi.entityselected == null;
+	
 
-					}
-				}
-
-		});
-
-	};
-
-	mi.newRow = function() {
-		var formularios = loadform();						
-		mi.isCollapsed = true;
-		mi.entityselected = null;
-		mi.isNew = true;
-	}
-
-    mi.editRow = function() {
-		mi.isCollapsed = true;
-		mi.isNew = false;
-	}
-
-	mi.cancel = function() {
+	mi.cancelar = function() {
 		mi.isCollapsed = false;
-		mi.entityselected = null;
 	}
-							
-	var deferred = $q.defer();
-	mi.currDate = new Date();
-	mi.onlyNumbers = /^[0-9]+$/;
-	function loadform() {
-		$http.post('/SPermiso',
-			{accion: 'getPermisos'}).success(
-				function(data) {
-					mi.fields = data;
-		});
-	};
-
+	
 	mi.nuevoPermiso=function(){
-		var formularios = loadform();						
+		var formularios = mi.cargarTabla(mi.paginaActual);						
 		mi.isCollapsed = true;
 		mi.entityselected = null;
-		mi.isNew = true;
-		mi.permisoSelected.nombre="",
-		mi.permisoSelected.descripcion="";
+		mi.esNuevo = true;
+		mi.permisoSelected = {id:"",nombre:"", descripcion:""};
 	};					
 	mi.guardarPermiso=function(){		
-		if(mi.permisoSelected.nombre!="" && mi.permisoSelected.descripcion!=""){
-			if(mi.isNew){
+		if(mi.permisoSelected.nombre!=="" && mi.permisoSelected.descripcion!==""){
+			if(mi.esNuevo){
 				$http.post('/SPermiso',
 					{
 						accion: 'guardarPermiso',
@@ -162,7 +112,6 @@ app.controller(
 					}).success(
 						function(data) {
 							if(data.success){
-								console.log(data);
 								mi.gridOptions.data
 								.push({
 									"id" : data.data,
@@ -182,13 +131,7 @@ app.controller(
 						}).success(
 							function(data) {
 								if(data.success){
-									/*mi.gridOptions.data
-									.push({
-										"id" : data.data,
-										"nombre" : mi.permisoSelected.nombre,
-										"descripcion" : mi.permisoSelected.descripcion
-									});*/
-									loadform();
+									mi.cargarTabla(mi.paginaactual);
 									mi.isCollapsed = false;
 								}
 					});
@@ -199,7 +142,7 @@ app.controller(
 	};
 	mi.borrarPermiso=function(ev){
 		mi.isCollapsed = false;
-		if(mi.permisoSelected.id!=""){
+		if(mi.permisoSelected.id!==""){
 			var confirm = $mdDialog.confirm()
 	          .title('Confirmación de borrado')
 	          .textContent('¿Desea borrar el permiso "'+mi.permisoSelected.nombre+'"?')
@@ -212,10 +155,9 @@ app.controller(
 					accion: 'eliminarPermiso',
 					id: mi.permisoSelected.id
 				}).success(function(response){
-					console.log(response);
 					if(response.success){
 						$utilidades.mensaje('success','Permiso borrado con éxito');
-						loadform();
+						mi.cargarTabla(mi.paginaActual);
 						mi.permisoSelected={id:"",nombre:"", descripcion:""};
 					}
 					else
@@ -225,18 +167,42 @@ app.controller(
 		    
 		    });
 		}else{
-			console.log(mi.permisoSelected);
 		    $utilidades.mensaje('danger','Seleccione un permiso');
 		}
 	};
 	
 	
 	mi.editarPermiso=function(){
-		if(mi.permisoSelected.id!=""){
+		if(mi.permisoSelected.id!==""){
 			mi.isCollapsed = true;
-			mi.isNew=false;
+			mi.esNuevo=false;
 		}else{
 			$utilidades.mensaje('danger','Seleccione un permiso');
 		}
 	};
+	
+	mi.reiniciarVista=function(){
+		if($location.path()=='/permisos/rv')
+			$route.reload();
+		else
+			$location.path('/permisos/rv');
+	};
+	
+	mi.cambiarPagina=function(){
+		mi.cargarTabla(mi.paginaActual);
+	};
+	
+	mi.guardarEstado=function(){
+		var estado = mi.gridApi.saveState.save();
+		var tabla_data = { action: 'guardaEstado', grid:'permisos', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
+		$http.post('/SEstadoTabla', tabla_data).then(function(response){
+			
+		});
+	}
+	
+	$http.post('/SPermiso', { accion: 'getTotalPermisos' }).success(
+			function(response) {
+				mi.totalPermisos = response.totalPermisos;
+				mi.cargarTabla(mi.paginaActual);
+	});
 } ]);

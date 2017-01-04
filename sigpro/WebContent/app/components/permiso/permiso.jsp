@@ -28,7 +28,35 @@
     		</div>
     		<shiro:hasPermission name="verCooperante">
     			<div class="col-sm-12" align="center">
-				<div id="grid1" ui-grid="permisosc.gridOptions" ui-grid-selection ui-grid-pagination class="permisosc.myGrid"></div>
+    			<div style="height: 35px;">
+					<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
+						<a class="btn btn-default" href ng-click="permisosc.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
+					</div>
+					</div>
+				</div>
+				<br/>
+				<div id="grid1" ui-grid="permisosc.gridOptions" ui-grid-save-state 
+						ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination class="permisosc.myGrid">
+						<div class="grid_loading" ng-hide="!permisosc.mostrarcargando">
+				  	<div class="msg">
+				      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
+						  <br /><br />
+						  <b>Cargando, por favor espere...</b>
+					  </span>
+					</div>
+				  </div>
+				</div>
+				<ul uib-pagination total-items="permisosc.totalPermisos" 
+						ng-model="permisosc.paginaActual" 
+						max-size="permisosc.numeroMaximoPaginas" 
+						items-per-page="permisosc.elementosPorPagina"
+						first-text="Primero"
+						last-text="Último"
+						next-text="Siguiente"
+						previous-text="Anterior"
+						class="pagination-sm" boundary-links="true" force-ellipses="true"
+						ng-change="permisosc.cambiarPagina()"
+				></ul>
 			</div>
     		</shiro:hasPermission>
     		
@@ -38,7 +66,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-success" ng-click="permisosc.guardarPermiso()">Guardar</label>
-			        <label class="btn btn-danger" ng-click="permisosc.cancel()">Cancelar</label>
+			        <label class="btn btn-primary" ng-click="permisosc.cancelar()">Ir a Tabla</label>
     			</div>
     		</div>
 			<div class="col-sm-12">
@@ -51,36 +79,12 @@
 							<label for="Descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="permisosc.permisoSelected.descripcion">
 						</div>
-						<div class="form-group" ng-repeat="field in permisosc.fields">
-							<label for="field.id">{{ field.label }}</label>
-							<div ng-switch="field.type">
-								<input ng-switch-when="string" type="text" id="{{ 'field_'+field.id }}" ng-model="field.value" class="form-control" />
-								<input ng-switch-when="entero" type="text" id="{{ 'field_'+field.id }}" numbers-Only ng-model="field.value" class="form-control" />
-								<input ng-switch-when="decimal" type="number" id="{{ 'field_'+field.id }}" ng-model="field.value" class="form-control" />
-								<input ng-switch-when="boolean" type="checkbox" id="{{ 'field_'+field.id }}" ng-model="field.value" />
-								<p ng-switch-when="date" class="input-group">
-									<input type="text" id="{{ 'field_'+field.id }}" class="form-control" uib-datepicker-popup ng-model="field.value" is-open="field.isOpen"
-														datepicker-options="dateOptions" close-text="Cerrar" /><span
-														class="input-group-btn">
-														<button type="button" class="btn btn-default"
-															ng-click="open($index)">
-															<i class="glyphicon glyphicon-calendar"></i>
-														</button>
-													</span>
-								</p>
-								<select ng-switch-when="select" id="{{ 'field_'+field.id }}" class="form-control" ng-model="x.value">
-													<option value="">Seleccione una opción</option>
-													<option ng-repeat="number in field.options"
-														value="{{number.value}}">{{number.label}}</option>
-								</select>
-							</div>
-						</div>
 				</form>
 			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-success" ng-click="permisosc.guardarPermiso()">Guardar</label>
-			        <label class="btn btn-danger" ng-click="permisosc.cancel()">Cancelar</label>
+			        <label class="btn btn-primary" ng-click="permisosc.cancelar()">Ir a Tabla</label>
     			</div>
     		</div>
 		</div>
