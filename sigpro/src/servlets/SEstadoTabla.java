@@ -89,8 +89,8 @@ public class SEstadoTabla extends HttpServlet {
 
 			}
 			else if(action.compareTo("getEstado")==0){
-				String usuariotexto="";
-				usuariotexto = "visita";
+				HttpSession sesionweb = request.getSession();
+				String usuariotexto=sesionweb.getAttribute("usuario").toString();
 				String tablatexto="";
 				tablatexto=map.get("grid");
 				if(usuariotexto!=null&& tablatexto!=null){
