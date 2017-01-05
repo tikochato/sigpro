@@ -1,27 +1,27 @@
-var app = angular.module('componentetipoController', [ 'ngTouch']);
+var app = angular.module('riesgotipoController', [ 'ngTouch']);
 
-app.controller('componentetipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal',
+app.controller('riesgotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal) {
 		var mi=this;
 		
-		$window.document.title = 'SIGPRO - Tipo Componente';
+		$window.document.title = 'SIGPRO - Tipo Riesgo';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
-		mi.componentetipos = [];
-		mi.componentetipo;
+		mi.riesgotipos = [];
+		mi.riesgotipo;
 		mi.mostraringreso=false;
 		mi.esnuevo = false;
-		mi.totalComponentetipos = 0;
+		mi.totalRiesgotipos = 0;
 		mi.paginaActual = 1;
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		
 		
 		//--
-		mi.componentepropiedades =[];
-		mi.componentepropiedad =null;
-		mi.mostrarcargandoCompProp=true;
-		mi.mostrarPropiedadComponente = false;
+		mi.riesgopropiedades =[];
+		mi.riesgopropiedad =null;
+		mi.mostrarcargandoRieProp=true;
+		mi.mostrarPropiedadRiesgo = false;
 		mi.paginaActualPropiedades=1;
 		
 		mi.gridOptions = {
@@ -43,14 +43,14 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 				onRegisterApi: function(gridApi) {
 					mi.gridApi = gridApi;
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
-						mi.componentetipo = row.entity;
+						mi.riesgotipo = row.entity;
 					});
 					
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
 				    }
 				    else{
-				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'componenteTipos', t: (new Date()).getTime()}).then(function(response){
+				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'riesgoTipos', t: (new Date()).getTime()}).then(function(response){
 					      if(response.data.success && response.data.estado!='')
 					    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
 					    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
@@ -64,41 +64,41 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 		
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SComponenteTipo', { accion: 'getComponentetiposPagina', pagina: pagina, numerocomponentetipos: $utilidades.elementosPorPagina }).success(
+			$http.post('/SRiesgoTipo', { accion: 'getRiesgotiposPagina', pagina: pagina, numeroriesgotipos: $utilidades.elementosPorPagina }).success(
 					function(response) {
-						mi.componentetipos = response.componentetipos;
-						mi.gridOptions.data = mi.componentetipos;
+						mi.riesgotipos = response.riesgotipos;
+						mi.gridOptions.data = mi.riesgotipos;
 						mi.mostrarcargando = false;
 					});
 		}
 		
 		mi.guardar=function(){
-			if(mi.componentetipo!=null  && mi.componentetipo.nombre!=''){
+			if(mi.riesgotipo!=null  && mi.riesgotipo.nombre!=''){
 				var idspropiedad="";
-				for (i = 0 ; i<mi.componentepropiedades.length ; i ++){
+				for (i = 0 ; i<mi.riesgopropiedades.length ; i ++){
 					if (i==0){
-						idspropiedad = idspropiedad.concat("",mi.componentepropiedades[i].id); 
+						idspropiedad = idspropiedad.concat("",mi.riesgopropiedades[i].id); 
 					}else{
-						idspropiedad = idspropiedad.concat(",",mi.componentepropiedades[i].id);
+						idspropiedad = idspropiedad.concat(",",mi.riesgopropiedades[i].id);
 					}
 				}
 				
-				$http.post('/SComponenteTipo', {
-					accion: 'guardarComponentetipo',
+				$http.post('/SRiesgoTipo', {
+					accion: 'guardarRiesgotipo',
 					esnuevo: mi.esnuevo,
-					id: mi.componentetipo.id,
-					nombre: mi.componentetipo.nombre,
-					descripcion: mi.componentetipo.descripcion,
+					id: mi.riesgotipo.id,
+					nombre: mi.riesgotipo.nombre,
+					descripcion: mi.riesgotipo.descripcion,
 					propiedades: idspropiedad.length > 0 ? idspropiedad : null
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success','Tipo Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+						$utilidades.mensaje('success','Tipo Riesgo '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
-						mi.componentetipo.id = response.id;
+						mi.riesgotipo.id = response.id;
 						mi.cargarTabla();
 					}
 					else
-						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo Componente');
+						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo Riesgo');
 				});
 			}
 			else
@@ -106,50 +106,50 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 		};
 		
 		mi.editar = function() {
-			if(mi.componentetipo!=null){
+			if(mi.riesgotipo!=null){
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.cargarTotalPropiedades();
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Componente que desea editar');
+				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Riesgo que desea editar');
 		}
 		
 		mi.borrar = function(ev) {
-			if(mi.componentetipo!=null){
+			if(mi.riesgotipo!=null){
 				var confirm = $mdDialog.confirm()
 			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar el tipo de componente "'+mi.componentetipo.nombre+'"?')
+			          .textContent('¿Desea borrar el tipo de riesgo "'+mi.riesgotipo.nombre+'"?')
 			          .ariaLabel('Confirmación de borrado')
 			          .targetEvent(ev)
 			          .ok('Borrar')
 			          .cancel('Cancelar');
 
 			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SComponenteTipo', {
-						accion: 'borrarComponenteTipo',
-						id: mi.componentetipo.id
+			    	$http.post('/SRiesgoTipo', {
+						accion: 'borrarRiesgoTipo',
+						id: mi.riesgotipo.id
 					}).success(function(response){
 						if(response.success){
-							$utilidades.mensaje('success','Tipo Componente borrado con éxito');
-							mi.componentetipo = null;
+							$utilidades.mensaje('success','Tipo Riesgo borrado con éxito');
+							mi.riesgotipo = null;
 							mi.cargarTabla();
 						}
 						else
-							$utilidades.mensaje('danger','Error al borrar el Tipo Componente');
+							$utilidades.mensaje('danger','Error al borrar el Tipo Riesgo');
 					});
 			    }, function() {
 			    
 			    });
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar el Tipo Componente que desea borrar');
+				$utilidades.mensaje('warning','Debe seleccionar el Tipo Riesgo que desea borrar');
 		};
 		
 		mi.nuevo = function() {
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
-			mi.componentetipo = null;
+			mi.riesgotipo = null;
 			mi.gridApi.selection.clearSelectedRows();
 			mi.cargarTotalPropiedades();
 		};
@@ -160,9 +160,8 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 		
 		mi.guardarEstado=function(){
 			var estado = mi.gridApi.saveState.save();
-			var tabla_data = { action: 'guardaEstado', grid:'componentetipos', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
-			$http.post('/SEstadoTabla', tabla_data).then(function(response){
-				
+			var tabla_data = { action: 'guardaEstado', grid:'riesgotipos', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
+			$http.post('/SEstadoTabla', tabla_data).then(function(response){				
 			});
 		}
 		
@@ -171,21 +170,21 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 		}
 		
 		mi.reiniciarVista=function(){
-			if($location.path()=='/componentetipo/rv')
+			if($location.path()=='/riesgotipo/rv')
 				$route.reload();
 			else
-				$location.path('/componentetipo/rv');
+				$location.path('/riesgotipo/rv');
 		}
 		
-		$http.post('/SComponenteTipo', { accion: 'numeroComponenteTipos' }).success(
+		$http.post('/SRiesgoTipo', { accion: 'numeroRiesgoTipos' }).success(
 				function(response) {
-					mi.totalComponentetipos = response.totalcomponentetipos;
+					mi.totalRiesgotipos = response.totalcomponentetipos;
 					mi.cargarTabla(1);
 				}
 		);
 		//----
 		
-		mi.gridOptionscomponentePropiedad = {
+		mi.gridOptionsriesgoPropiedad = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
 				multiSelect: false,
@@ -204,24 +203,23 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 				onRegisterApi: function(gridApi) {
 					mi.gridApi = gridApi;
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
-						mi.componentepropiedad = row.entity;
+						mi.riesgopropiedad = row.entity;
 					});
 				}
 		};
 		
 		mi.cargarTablaPropiedades = function(pagina){
 			mi.mostrarcargandoProyProp=true;
-			$http.post('/SComponentePropiedad', 
+			$http.post('/SRiesgoPropiedad', 
 					{ 
-						accion: 'getComponentePropiedadPaginaPorTipo',
+						accion: 'getRiesgoPropiedadPaginaPorTipo',
 						pagina: pagina,
-						idComponenteTipo:mi.componentetipo!=null ? mi.componentetipo.id : null, 
-						numerocomponentepropiedad: $utilidades.elementosPorPagina }).success(
+						idRiesgoTipo:mi.riesgotipo!=null ? mi.riesgotipo.id : null, 
+						numeroriesgopropiedad: $utilidades.elementosPorPagina }).success(
 				function(response) {
-					
-					mi.componentepropiedades = response.componentepropiedades;
-					mi.gridOptionscomponentePropiedad.data = mi.componentepropiedades;
-					mi.mostrarcargandoCompProp = false;
+					mi.riesgopropiedades = response.riesgopropiedades;
+					mi.gridOptionsriesgoPropiedad.data = mi.riesgopropiedades;
+					mi.mostrarcargandoRieProp = false;
 					mi.mostrarPropiedad = true;
 				});
 			
@@ -230,38 +228,38 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 		mi.cargarTotalPropiedades = function(){
 			$http.post('/SComponentePropiedad', { accion: 'numeroComponentePropiedades' }).success(
 					function(response) {
-						mi.totalComponentepropiedades = response.totalcomponentepropiedades;
+						mi.totalRiesgopropiedades = response.totalriesgopropiedades;
 						mi.cargarTablaPropiedades(mi.paginaActualPropiedades);
 					}
 			);
 		}
 		
 		mi.eliminarPropiedad = function(){
-			if (mi.componentepropiedad != null){
-				for (i = 0 ; i<mi.componentepropiedades.length ; i ++){
-					if (mi.componentepropiedades[i].id === mi.componentepropiedad.id){
-						mi.componentepropiedades.splice (i,1);
+			if (mi.riesgopropiedad != null){
+				for (i = 0 ; i<mi.riesgopropiedades.length ; i ++){
+					if (mi.riesgopropiedades[i].id === mi.riesgopropiedad.id){
+						mi.riesgopropiedades.splice (i,1);
 						break;
 					}
 				}
-				mi.componentepropiedad = null;
+				mi.riesgopropiedad = null;
 			}else{
 				$utilidades.mensaje('warning','Debe seleccionar la Propiedad que desea eliminar');
 			}
 		}
 		
 		mi.eliminarPropiedad2 = function(row){
-			var index = mi.componentepropiedades.indexOf(row);
+			var index = mi.riesgopropiedades.indexOf(row);
 	        if (index !== -1) {
-	            mi.componentepropiedades.splice(index, 1);
+	            mi.riesgopropiedades.splice(index, 1);
 	        }
 		}
 		
 		mi.seleccionTabla = function(row){
-			if (mi.componentepropiedad !=null && mi.componentepropiedad.id == row.id){
-				mi.componentepropiedad = null;
+			if (mi.riesgopropiedad !=null && mi.riesgopropiedad.id == row.id){
+				mi.riesgopropiedad = null;
 			}else{
-				mi.componentepropiedad = row;
+				mi.riesgopropiedad = row;
 			}
 		}
 		
@@ -270,8 +268,8 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 			    animation : 'true',
 			    ariaLabelledBy : 'modal-title',
 			    ariaDescribedBy : 'modal-body',
-			    templateUrl : 'buscarcomponentepropiedad.jsp',
-			    controller : 'modalBuscarComponentePropiedad',
+			    templateUrl : 'buscarriesgopropiedad.jsp',
+			    controller : 'modalBuscarRiesgoPropiedad',
 			    controllerAs : 'modalBuscar',
 			    backdrop : 'static',
 			    size : 'md',
@@ -279,11 +277,11 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 					idspropiedad : function() {
 						var idspropiedad = "";
 						var propiedadTemp;
-						for (i = 0, len =mi.componentepropiedades.length;  i < len; i++) {
+						for (i = 0, len =mi.riesgopropiedades.length;  i < len; i++) {
 				    		if (i == 0){
-				    			idspropiedad = idspropiedad.concat("",mi.componentepropiedades[i].id);
+				    			idspropiedad = idspropiedad.concat("",mi.riesgopropiedades[i].id);
 				    		}else{
-				    			idspropiedad = idspropiedad.concat(",",mi.componentepropiedades[i].id);
+				    			idspropiedad = idspropiedad.concat(",",mi.riesgopropiedades[i].id);
 				    		}
 				    	}
 					    return idspropiedad;
@@ -293,19 +291,19 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 			});
 			
 			modalInstance.result.then(function(selectedItem) {
-				mi.componentepropiedades.push(selectedItem);
+				mi.riesgopropiedades.push(selectedItem);
 				
 			}, function() {
 			});
 		}
 } ]);
 
-app.controller('modalBuscarComponentePropiedad', [
+app.controller('modalBuscarRiesgoPropiedad', [
 	'$uibModalInstance', '$scope', '$http', '$interval', 'i18nService',
-	'Utilidades', '$timeout', '$log','idspropiedad', modalBuscarComponentePropiedad
+	'Utilidades', '$timeout', '$log','idspropiedad', modalBuscarRiesgoPropiedad
 ]);
 
-function modalBuscarComponentePropiedad($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log,idspropiedad) {
+function modalBuscarRiesgoPropiedad($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log,idspropiedad) {
 	
 	var mi = this;
 
@@ -320,8 +318,8 @@ function modalBuscarComponentePropiedad($uibModalInstance, $scope, $http, $inter
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
 	
-    $http.post('/SComponentePropiedad', {
-    	accion : 'numerocomponenteoPropiedadesDisponibles'
+    $http.post('/SRoesgpPropiedad', {
+    	accion : 'numeroriesgoPropiedadesDisponibles'
         }).success(function(response) {
     	mi.totalElementos = response.totalcomponentepropiedades;
     	mi.elementosPorPagina = mi.totalElementos;
@@ -356,14 +354,14 @@ function modalBuscarComponentePropiedad($uibModalInstance, $scope, $http, $inter
 
     mi.cargarData = function(pagina) {
     	var datos = {
-    	    accion : 'getComponentePropiedadesTotalDisponibles',
+    	    accion : 'getRiesgoPropiedadesTotalDisponibles',
     	    pagina : pagina,
     	    idspropiedades: idspropiedad,
     	    registros : mi.elementosPorPagina
     	};
 
     	mi.mostrarCargando = true;
-    	$http.post('/SComponentePropiedad', datos).then(function(response) {
+    	$http.post('/SRiesgoPropiedad', datos).then(function(response) {
     	    if (response.data.success) {
     	    	mi.data = response.data.componentepropiedades;
     	    	mi.opcionesGrid.data = mi.data;

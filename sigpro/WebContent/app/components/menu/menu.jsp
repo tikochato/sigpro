@@ -42,8 +42,9 @@
                     <li uib-dropdown>
                          <a href="#" uib-dropdown-toggle><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Producto <b class="caret"></b></a>
                          <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-                            <li role="menuitem"><a href="#!/productoTipo">Tipos de Producto</a></li>
-                            <li role="menuitem"><a href="#!/productoPropiedad">Propiedades de Producto</a></li>
+                            <li role="menuitem"><a href="#!/productoPropiedad">Propiedades</a></li>
+                            <li role="menuitem"><a href="#!/productoTipo">Tipos</a></li>
+                            <li role="menuitem"><a href="#!/producto">Producto</a></li>
                          </ul>
                     </li>
                     <li uib-dropdown>
@@ -54,8 +55,10 @@
                             <li role="menuitem"><a href="#!/desembolsotipo">Tipo Desembolso</a></li>
                             <li role="menuitem"><a href="#!/desembolso">Desembolso</a></li>
                             <li role="menuitem"><a href="#!/componente">Componente</a></li>
+                            <li role="menuitem"><a href="#!/componentepropiedad">Propiedad Componente</a></li>
                             <li role="menuitem"><a href="#!/componentetipo">Tipo Componente</a></li>
                             <li role="menuitem"><a href="#!/hitotipo">Tipo Hito</a></li>
+                            <li role="menuitem"><a href="#!/riesgopropiedad">Propiedad Riesgo</a></li>
                          </ul>
                     </li>
 	            </ul>
