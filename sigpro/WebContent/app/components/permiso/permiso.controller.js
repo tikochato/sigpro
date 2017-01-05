@@ -25,8 +25,7 @@ app.controller(
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
-	mi.permisoSelected={id:"",nombre:"", descripcion:""};			
-	mi.today();
+	mi.permisoSelected={id:"",nombre:"", descripcion:""};	
 	mi.gridOptions = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
