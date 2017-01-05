@@ -10,6 +10,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -50,9 +52,10 @@ public class SRegistro extends HttpServlet {
 		String nuevousuario = map.get("usuario").toLowerCase();
 		String nuevopassword = map.get("password");
 		String nuevomail = map.get("mail").toLowerCase();
+		HttpSession sesionweb = request.getSession();
 		if(nuevousuario!=null && nuevopassword!=null && nuevomail != null){
 			if(nuevousuario.compareTo("")!=0 && nuevopassword.compareTo("")!=0 && nuevomail.compareTo("")!=0){
-				boolean registro = UsuarioDAO.registroUsuario(nuevousuario, nuevomail, nuevopassword);
+				boolean registro = UsuarioDAO.registroUsuario(nuevousuario, nuevomail, nuevopassword,sesionweb.getAttribute("usuario").toString());
 				if(registro){
 					response.getWriter().write("{ \"success\": true, \"message\":\"Usuario registrado exitosamente\" }");
 				}else{
