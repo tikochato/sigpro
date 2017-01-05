@@ -200,7 +200,11 @@ public class SRiesgo extends HttpServlet {
 					riesgo.setDescripcion(descripcion);
 				}
 				else{
+					
 					riesgo = RiesgoDAO.getRiesgoPorId(id);
+					riesgo.setComponente(componente);
+					riesgo.setProducto(producto);
+					riesgo.setRiesgoTipo(riesgoTipo);
 					riesgo.setNombre(nombre);
 					riesgo.setDescripcion(descripcion);
 					riesgo.setUsuarioActualizo(usuario);

@@ -155,6 +155,12 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 
 		mi.editar = function() {
 			if(mi.riesgo!=null){
+				mi.riestoTipoid = mi.riesgo.riesgotipoid;
+				mi.riesgoTipoNombre = mi.riesgo.riesgotiponombre;
+				mi.componenteid = mi.riesgo.componenteid;
+				mi.componenteNombre = mi.riesgo.componentenombre;
+				mi.productoid = mi.riesgo.productoid;
+				mi.productoNombre = mi.riesgo.productonombre;
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 			}
