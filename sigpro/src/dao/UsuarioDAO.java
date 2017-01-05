@@ -6,7 +6,7 @@ import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.hibernate.Session;
-
+import org.hibernate.query.Query;
 import org.joda.time.DateTime;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -18,6 +18,9 @@ import pojo.UsuarioLogId;
 import pojo.UsuarioPermiso;
 import pojo.UsuarioPermisoId;
 import pojo.Permiso;
+
+import java.util.ArrayList;
+import java.util.List;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -69,7 +72,9 @@ public class UsuarioDAO {
 				UsuarioPermisoId usuariopermisoid = new UsuarioPermisoId(usuario,permiso.getId());
 				UsuarioPermiso usuariopermiso = (UsuarioPermiso) session.get(UsuarioPermiso.class, usuariopermisoid);
 				if(usuariopermiso!=null){
-					ret = true;
+					if(usuariopermiso.getEstado()==1){
+						ret = true;
+					}
 				}
 			}
 			
@@ -80,7 +85,7 @@ public class UsuarioDAO {
 		return ret;
 	}
 	
-	public static boolean registroUsuario(String cadenausuario, String email, String passwordTextoPlano){
+	public static boolean registroUsuario(String cadenausuario, String email, String passwordTextoPlano, String usuarioCreo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -94,6 +99,7 @@ public class UsuarioDAO {
 			usuario.setPassword(hashedPasswordBase64);
 			usuario.setSalt(salt.toString());
 			usuario.setFechaCreacion(new DateTime().toDate());
+			usuario.setUsuarioCreo(usuarioCreo);
 			usuario.setEstado(1);
 			session.save(usuario);
 			session.getTransaction().commit();
@@ -107,5 +113,121 @@ public class UsuarioDAO {
 		
 		return ret;		
 	}
+	public static boolean asignarPermisosUsuario(String usuario, List <Integer> permisos,String usuarioTexto){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			for(int i =0; i<permisos.size();i++){
+				UsuarioPermisoId usuariopermisoid = new UsuarioPermisoId(usuario, permisos.get(i));
+				UsuarioPermiso usuariopermiso = new UsuarioPermiso();
+				usuariopermiso.setId(usuariopermisoid);
+				usuariopermiso.setUsuarioCreo(usuarioTexto);
+				usuariopermiso.setEstado(1);
+				usuariopermiso.setFechaCreacion(new DateTime().toDate());
+				session.save(usuariopermiso);
+				if( i % 20 == 0 ){
+					session.flush();
+		            session.clear();
+		        }
+			}
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("2", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
+	public static boolean desactivarPermisosUsuario(String usuario, List <Integer> permisos, String usuarioTexto){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			for(int i =0; i<permisos.size();i++){
+				UsuarioPermisoId usuariopermisoid = new UsuarioPermisoId(usuario, permisos.get(i));
+				UsuarioPermiso usuariopermiso= (UsuarioPermiso)session.get(UsuarioPermiso.class, usuariopermisoid);
+				usuariopermiso.setUsuarioActualizo(usuarioTexto);
+				usuariopermiso.setEstado(0);
+				usuariopermiso.setFechaActualizacion(new DateTime().toDate());
+				session.saveOrUpdate(usuariopermiso);
+				if( i % 20 == 0 ){
+					session.flush();
+		            session.clear();
+		        }
+			}
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("3", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean existeUsuario(String usuario){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			if (session.get(Usuario.class,usuario)!=null){
+				ret=true;
+			}
+		}
+		catch(Throwable e){
+			CLogger.write("5", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
+	public static boolean desactivarUsuario(String usuario, String usuarioActualizo){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			Usuario usuarioDesactivado = (Usuario) session.get(Usuario.class,usuario);
+			usuarioDesactivado.setEstado(0);
+			usuarioDesactivado.setUsuarioActualizo(usuarioActualizo);
+			usuarioDesactivado.setFechaActualizacion(new DateTime().toDate());
+			session.saveOrUpdate(usuarioDesactivado);
+			session.getTransaction().commit();
+			ret=true;
+		}
+		catch(Throwable e){
+			CLogger.write("5", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
+	public static List <UsuarioPermiso> getPermisosActivosUsuario(String usuario){
+		List <UsuarioPermiso> ret = new ArrayList <UsuarioPermiso> ();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			Query<UsuarioPermiso> criteria = session.createQuery("FROM UsuarioPermiso where usuario=:usuario", UsuarioPermiso.class);
+			criteria.setParameter("usuario", usuario);
+			ret = criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("6", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	
 }
