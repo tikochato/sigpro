@@ -145,4 +145,40 @@ public class RiesgoDAO {
 		}
 		return ret;
 	}
+	
+	public static List<Riesgo> getRiesgosPaginaPorProyecto (int pagina, int numeroRiesgos, int proyectoId){
+		List<Riesgo> ret = new ArrayList<Riesgo>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Riesgo> criteria = session.createQuery("SELECT r FROM Riesgo r WHERE r.estado = 1  and r.proyecto.id = :proyId ",Riesgo.class);
+			criteria.setParameter("proyId", proyectoId);
+			criteria.setFirstResult(((pagina-1)*(numeroRiesgos)));
+			criteria.setMaxResults(numeroRiesgos);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("8", RiesgoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Long getTotalRiesgosPorProyecto(int proyectoId){
+		Long ret=0L;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Long> conteo = session.createQuery("SELECT count(r.id) FROM Riesgo r WHERE r.estado=1 and r.proyecto.id = :proyId",Long.class);
+			conteo.setParameter("proyId",proyectoId);
+			ret = conteo.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("9", RiesgoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

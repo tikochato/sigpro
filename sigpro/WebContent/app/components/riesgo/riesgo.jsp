@@ -7,7 +7,8 @@
     		<%@ include file="/app/components/riesgo/buscarRiesgoTipo.jsp"%>
   	    </script>
 		<h3>Riesgos</h3><br/>
-		<div class="row" align="center" ng-hide="riesgoc.mostraringreso">
+		<h4>{{ riesgoc.proyectoNombre }}</h4><br/>
+		<div class="row" align="center" ng-if="!riesgoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="crearCooperante">
@@ -53,7 +54,7 @@
 			</div>
     		</shiro:hasPermission>
 		</div>
-		<div class="row" ng-show="riesgoc.mostraringreso">
+		<div class="row" ng-if="riesgoc.mostraringreso">
 			<h4 ng-hide="!riesgoc.esnuevo">Nuevo riesgo</h4>
 			<h4 ng-hide="riesgoc.esnuevo">Edición de riesgo</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
@@ -78,8 +79,26 @@
 							<label for="campo3">* Tipo Riesgo:</label>
 				          	<div class="input-group">
 				            	<input type="hidden" class="form-control" ng-model="riesgoc.riesgoTipoid" /> 
-				            	<input type="text" class="form-control" id="icomptipo" name="icomptipo" placeholder="Nombre Tipo Riesgo" ng-model="riesgoc.riesgoTipoNombre" ng-readonly="true" required/>
+				            	<input type="text" class="form-control" id="irietipo" name="irietipo" placeholder="Nombre Tipo Riesgo" ng-model="riesgoc.riesgoTipoNombre" ng-readonly="true" required/>
 				            	<span class="input-group-addon" ng-click="riesgoc.buscarRiesgoTipo()"><i class="glyphicon glyphicon-search"></i></span>
+				          	</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="campo3">* Componente:</label>
+				          	<div class="input-group">
+				            	<input type="hidden" class="form-control" ng-model="riesgoc.componenteid" /> 
+				            	<input type="text" class="form-control" id="icomp" name="icomp" placeholder="Nombre Componente" ng-model="riesgoc.componenteNombre" ng-readonly="true" required/>
+				            	<span class="input-group-addon" ng-click="riesgoc.buscarComponente()"><i class="glyphicon glyphicon-search"></i></span>
+				          	</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="campo3">* Producto:</label>
+				          	<div class="input-group">
+				            	<input type="hidden" class="form-control" ng-model="riesgoc.productoid" /> 
+				            	<input type="text" class="form-control" id="iprod" name="iprod" placeholder="Nombre Producto" ng-model="riesgoc.productoNombre" ng-readonly="true" required/>
+				            	<span class="input-group-addon" ng-click="riesgoc.buscarProducto()"><i class="glyphicon glyphicon-search"></i></span>
 				          	</div>
 						</div>
 						

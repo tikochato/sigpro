@@ -90,7 +90,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/riesgotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgotipoController\'" class="all_page"></div>'
             })
-            .when('/riesgo/:reiniciar_vista?',{
+            .when('/riesgo/:proyecto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgoController\'" class="all_page"></div>'
             })
             

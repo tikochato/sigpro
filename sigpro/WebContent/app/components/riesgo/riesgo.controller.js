@@ -1,7 +1,7 @@
 var app = angular.module('riesgoController', []);
 
-app.controller('riesgoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal) {
+app.controller('riesgoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
 		var mi=this;
 		
 		$window.document.title = 'SIGPRO - Riesgos';
@@ -15,8 +15,21 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.paginaActual = 1;
 		mi.riesgoTipoid = "";
 		mi.riesgoTipoNombre="";
+		mi.componenteid = "";
+		mi.componenteNombre="";
+		mi.productoid="";
+		mi.productoNombre="";
+		mi.proyectoid = 0;
+		mi.proyectoNombre="";
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
+		
+		
+		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id }).success(
+				function(response) {
+					mi.proyectoid = response.id;
+					mi.proyectoNombre = response.nombre;
+		});
 		
 		mi.gridOptions = {
 				enableRowSelection : true,
@@ -58,7 +71,9 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SRiesgo', { accion: 'getRiesgosPagina', pagina: pagina, numeroriesgos: $utilidades.elementosPorPagina }).success(
+			$http.post('/SRiesgo', { accion: 'getRiesgosPaginaPorProyecto', pagina: pagina, 
+				numeroriesgos: $utilidades.elementosPorPagina, proyectoid:$routeParams.proyecto_id }).success(
+
 					function(response) {
 						mi.riesgos = response.riesgos;
 						mi.gridOptions.data = mi.riesgos;
@@ -67,13 +82,16 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		}
 		
 		mi.guardar=function(){
-			if(mi.riesgo!=null && mi.riesgo.nombre!='' && mi.riesgoTipoid!=''){
+			if(mi.riesgo!=null && mi.riesgo.nombre!='' && mi.riesgoTipoid!=''
+				&& mi.componenteid!='' && mi.productoid!=''){
 				$http.post('/SRiesgo', {
 					accion: 'guardarRiesgo',
 					esnuevo: mi.esnuevo,
-					riesgotipoid : mi.riesgoTipoid,
 					id: mi.riesgo.id,
-					proyectoid: 1, //parametro
+					proyectoid: mi.proyectoid,
+					riesgotipoid : mi.riesgoTipoid,
+					componenteid: mi.componenteid,
+					productoid: mi.productoid,
 					nombre: mi.riesgo.nombre,
 					descripcion: mi.riesgo.descripcion
 				}).success(function(response){
@@ -126,6 +144,12 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
 			mi.riesgo = null;
+			mi.riesgoTipoid = "";
+			mi.riesgoTipoNombre="";
+			mi.componenteid = "";
+			mi.componenteNombre="";
+			mi.productoid="";
+			mi.productoNombre="";
 			mi.gridApi.selection.clearSelectedRows();
 		};
 
@@ -146,7 +170,6 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			var estado = mi.gridApi.saveState.save();
 			var tabla_data = { action: 'guardaEstado', grid:'riesgos', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
 			$http.post('/SEstadoTabla', tabla_data).then(function(response){
-				
 			});
 		}
 		
@@ -155,56 +178,107 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		}
 		
 		mi.reiniciarVista=function(){
-			if($location.path()=='/riesgo/rv')
+			if($location.path()==('/riesgo/'+ mi.proyectoid + '/rv'))
 				$route.reload();
 			else
-				$location.path('/riesgo/rv');
+				$location.path('/riesgo/'+ mi.proyectoid + '/rv');
 		}
 		
-		$http.post('/SRiesgo', { accion: 'numeroRiesgos' }).success(
+		$http.post('/SRiesgo', { accion: 'numeroRiesgosPorProyecto',proyectoid:$routeParams.proyecto_id }).success(
 				function(response) {
 					mi.totalRiesgos = response.totalriesgos;
 					mi.cargarTabla(1);
 		});
 		
-		mi.buscarRiesgoTipo = function(titulo, mensaje) {
-
+		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga) {
+			var resultado = $q.defer();
 			var modalInstance = $uibModal.open({
 				animation : 'true',
 				ariaLabelledBy : 'modal-title',
 				ariaDescribedBy : 'modal-body',
 				templateUrl : 'buscarRiesgoTipo.jsp',
-				controller : 'modalBuscarRiesgoTipo',
+				controller : 'buscarRiesgoTipo',
 				controllerAs : 'modalBuscar',
 				backdrop : 'static',
 				size : 'md',
 				resolve : {
-					titulo : function() {
-						return titulo;
+					$servlet : function() {
+						return servlet;
 					},
-					mensaje : function() {
-						return mensaje;
+					$accionServlet : function() {
+						return accionServlet;
+					},
+					$datosCarga : function() {
+						return datosCarga;
 					}
 				}
-
 			});
-
-			modalInstance.result.then(function(selectedItem) {
-				mi.riesgoTipoid = selectedItem.id;
-				mi.riesgoTipoNombre = selectedItem.nombre;
-
-			}, function() {
+			
+			modalInstance.result.then(function(itemSeleccionado) {
+				resultado.resolve(itemSeleccionado);
 			});
+			return resultado.promise;
+	};
+	
+	mi.buscarRiesgoTipo = function() {
+		var resultado = mi.llamarModalBusqueda('/SRiesgoTipo', {
+			accion : 'numeroComponenteTipos'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getRiesgotiposPagina',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		});
+
+		resultado.then(function(itemSeleccionado) {
+			mi.riesgoTipoid = itemSeleccionado.id;
+			mi.riesgoTipoNombre = itemSeleccionado.nombre;
+		});
+	};
+	
+	mi.buscarComponente = function() {
+		var resultado = mi.llamarModalBusqueda('/SComponente', {
+			accion : 'numeroComponentes'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getComponentesPagina',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		});
+
+		resultado.then(function(itemSeleccionado) {
+			mi.componenteid= itemSeleccionado.id;
+			mi.componenteNombre = itemSeleccionado.nombre;
+		});
+	};
+	
+	mi.buscarProducto = function() {
+		var resultado = mi.llamarModalBusqueda('/SProducto', {
+			accion : 'totalElementos'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'cargar',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		});
+
+		resultado.then(function(itemSeleccionado) {
+			mi.productoid= itemSeleccionado.id;
+			mi.productoNombre = itemSeleccionado.nombre;
+		});
 	};
 			
 } ]);
 
-app.controller('modalBuscarRiesgoTipo', [ '$uibModalInstance',
+app.controller('buscarRiesgoTipo', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', 'titulo', 'mensaje', modalBuscarRiesgoTipo ]);
+	'$timeout', '$log', '$servlet', '$accionServlet', '$datosCarga', buscarRiesgoTipo ]);
 
-function modalBuscarRiesgoTipo($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, titulo, mensaje) {
+function buscarRiesgoTipo($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $servlet,$accionServlet,$datosCarga) {
 	
 	var mi = this;
 
@@ -218,15 +292,14 @@ function modalBuscarRiesgoTipo($uibModalInstance, $scope, $http, $interval,
 
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
-
-	$http.post('/SRiesgoTipo', {
-		accion : 'numeroComponenteTipos'
-	}).success(function(response) {
-		mi.totalElementos = response.totalriesgos;
-		mi.elementosPorPagina = mi.totalElementos;
+	
+	$http.post($servlet, $accionServlet).success(function(response) {
+		for ( var key in response) {
+			mi.totalElementos = response[key];
+		}
 		mi.cargarData(1);
 	});
-
+	
 	mi.opcionesGrid = {
 		data : mi.data,
 		columnDefs : [ {
@@ -236,7 +309,7 @@ function modalBuscarRiesgoTipo($uibModalInstance, $scope, $http, $interval,
 			type : 'number',
 			width : 70
 		}, {
-			displayName : 'Nombre Riesgo',
+			displayName : 'Nombre',
 			name : 'nombre',
 			cellClass : 'grid-align-left'
 		} ],
@@ -259,22 +332,22 @@ function modalBuscarRiesgoTipo($uibModalInstance, $scope, $http, $interval,
 		mi.itemSeleccionado = row.entity;
 		mi.seleccionado = row.isSelected;
 	};
-
+	
 	mi.cargarData = function(pagina) {
-		var datos = {
-			accion : 'cargar',
-			pagina : pagina,
-			registros : mi.elementosPorPagina
-		};
-
 		mi.mostrarCargando = true;
-		$http.post('/SRiesgoTipo', {accion : 'getRiesgotiposPagina'}).then(function(response) {
-			if (response.data.success) {
-				mi.data = response.data.riesgotipos;
-				mi.opcionesGrid.data = mi.data;
-				mi.mostrarCargando = false;
-			}
-		});
+		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina)).then(
+				function(response) {
+					if (response.data.success) {
+
+						for ( var key in response.data) {
+							if (key != 'success')
+								mi.data = response.data[key];
+						}
+						mi.opcionesGrid.data = mi.data;
+
+						mi.mostrarCargando = false;
+					}
+				});
 	};
 
 	mi.cambioPagina = function() {
@@ -292,5 +365,4 @@ function modalBuscarRiesgoTipo($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
-
 }

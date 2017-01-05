@@ -23,6 +23,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.RiesgoDAO;
+import pojo.Componente;
+import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Riesgo;
 import pojo.RiesgoTipo;
@@ -44,6 +46,10 @@ public class SRiesgo extends HttpServlet {
 		String fechaActualizacion;
 		Integer riesgotipoid;
 		String riesgotiponombre;
+		Integer componenteid;
+		String componentenombre;
+		Integer productoid;
+		String productonombre;
 		int estado;
 	}
        
@@ -97,6 +103,10 @@ public class SRiesgo extends HttpServlet {
 				temp.usuarioCreo = riesgo.getUsuarioCreo();
 				temp.riesgotipoid = riesgo.getRiesgoTipo().getId();
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
+				temp.componenteid = riesgo.getComponente().getId();
+				temp.componentenombre = riesgo.getComponente().getNombre();
+				temp.productoid = riesgo.getProducto().getId();
+				temp.productonombre = riesgo.getProducto().getNombre();
 				striesgos.add(temp);
 			}
 			
@@ -104,6 +114,35 @@ public class SRiesgo extends HttpServlet {
 	        response_text = String.join("", "\"riesgos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
+		else if(accion.equals("getRiesgosPaginaPorProyecto")){
+			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
+			int proyectoid = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
+			int numeroRiesgos = map.get("numeroriesgos")!=null  ? Integer.parseInt(map.get("numeroriesgos")) : 0;
+			List<Riesgo> riesgos = RiesgoDAO.getRiesgosPaginaPorProyecto(pagina, numeroRiesgos,proyectoid);
+			List<striesgo> striesgos=new ArrayList<striesgo>();
+			for(Riesgo riesgo:riesgos){
+				striesgo temp =new striesgo();
+				temp.descripcion = riesgo.getDescripcion();
+				temp.estado = riesgo.getEstado();
+				temp.fechaActualizacion = Utils.formatDate(riesgo.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDate(riesgo.getFechaCreacion());
+				temp.id = riesgo.getId();
+				temp.nombre = riesgo.getNombre();
+				temp.usuarioActualizo = riesgo.getUsuarioActualizo();
+				temp.usuarioCreo = riesgo.getUsuarioCreo();
+				temp.riesgotipoid = riesgo.getRiesgoTipo().getId();
+				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
+				temp.componenteid = riesgo.getComponente().getId();
+				temp.componentenombre = riesgo.getComponente().getNombre();
+				temp.productoid = riesgo.getProducto().getId();
+				temp.productonombre = riesgo.getProducto().getNombre();
+				striesgos.add(temp);
+			}
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(striesgos);
+	        response_text = String.join("", "\"riesgos\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		} 
 		else if(accion.equals("getRiesgos")){
 			List<Riesgo> riesgos = RiesgoDAO.getRiesgos();
 			List<striesgo> striesgos=new ArrayList<striesgo>();
@@ -119,6 +158,10 @@ public class SRiesgo extends HttpServlet {
 				temp.usuarioCreo = riesgo.getUsuarioCreo();
 				temp.riesgotipoid = riesgo.getRiesgoTipo().getId();
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
+				temp.componenteid = riesgo.getComponente().getId();
+				temp.componentenombre = riesgo.getComponente().getNombre();
+				temp.productoid = riesgo.getProducto().getId();
+				temp.productonombre = riesgo.getProducto().getNombre();
 				striesgos.add(temp);
 			}
 			
@@ -135,6 +178,8 @@ public class SRiesgo extends HttpServlet {
 				String descripcion = map.get("descripcion");
 				int riesgotipoid = Integer.parseInt(map.get("riesgotipoid"));
 				int proyectoid= Integer.parseInt(map.get("proyectoid"));
+				int componenteid= Integer.parseInt(map.get("componenteid"));
+				int productoid= Integer.parseInt(map.get("productoid"));
 				
 				RiesgoTipo riesgoTipo= new RiesgoTipo();
 				riesgoTipo.setId(riesgotipoid);
@@ -142,10 +187,17 @@ public class SRiesgo extends HttpServlet {
 				Proyecto proyecto = new Proyecto();
 				proyecto .setId(proyectoid);
 				
+				Componente componente = new Componente();
+				componente.setId(componenteid);
+				
+				Producto producto = new Producto();
+				producto.setId(productoid);
+				
 				Riesgo riesgo;
 				if(esnuevo){
-					riesgo = new Riesgo(null, null, proyecto
+					riesgo = new Riesgo(componente, producto, proyecto
 							,riesgoTipo, nombre, usuario, new DateTime().toDate(), 1);
+					riesgo.setDescripcion(descripcion);
 				}
 				else{
 					riesgo = RiesgoDAO.getRiesgoPorId(id);
@@ -175,13 +227,16 @@ public class SRiesgo extends HttpServlet {
 		else if(accion.equals("numeroRiesgos")){
 			response_text = String.join("","{ \"success\": true, \"totalriesgos\":",RiesgoDAO.getTotalRiesgos().toString()," }");
 		}
+		else if(accion.equals("numeroRiesgosPorProyecto")){
+			int proyectoid = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
+			response_text = String.join("","{ \"success\": true, \"totalriesgos\":",RiesgoDAO.getTotalRiesgosPorProyecto(proyectoid).toString()," }");
+		}
 		else{
 			response_text = "{ \"success\": false }";
 		}
 		
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
-		
         
         OutputStream output = response.getOutputStream();
 		GZIPOutputStream gz = new GZIPOutputStream(output);
