@@ -214,8 +214,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   template: '/app/components/permiso/permiso.jsp'
 	       }, {
 	    	   name: 'usuarioController',
-	    	   script: '/app/components/usuario/usuario.controller.js',
-	    	   template: '/app/components/usuario/usuario.jsp'
+	    	   script: '/app/components/usuarios/usuario.controller.js',
+	    	   template: '/app/components/usuarios/usuario.jsp'
 	       }
 
 	   ];
