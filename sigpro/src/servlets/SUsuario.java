@@ -85,7 +85,7 @@ public class SUsuario extends HttpServlet {
 			if(accion.compareTo("registroUsuario")==0){
 				String nuevousuario = map.get("usuario").toLowerCase();
 				String nuevopassword = map.get("password");
-				String nuevomail = map.get("mail").toLowerCase();
+				String nuevomail = map.get("email").toLowerCase();
 				HttpSession sesionweb = request.getSession();
 				if(nuevousuario!=null && nuevopassword!=null && nuevomail != null){
 					if(!UsuarioDAO.existeUsuario(nuevousuario)){
