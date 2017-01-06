@@ -30,10 +30,10 @@ public class PermisoDAO {
 		finally{
 			session.close();
 		}
-		
+
 		return ret;
 	}
-	
+
 	public static boolean guardarPermiso(Permiso permiso){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -47,7 +47,7 @@ public class PermisoDAO {
 		}finally{
 			session.close();
 		}
-		
+
 		return ret;
 	}
 	public static Permiso getPermiso(String nombrepermiso){
@@ -75,7 +75,7 @@ public class PermisoDAO {
 			session.saveOrUpdate(permiso);
 			session.getTransaction().commit();
 			ret = true;
-			
+
 		}catch(Throwable e){
 			CLogger.write("4",PermisoDAO.class,e);
 		}finally{
@@ -83,7 +83,7 @@ public class PermisoDAO {
 		}
 		return ret;
 	}
-	
+
 	public static Permiso getPermisoById(Integer idpermiso){
 		Permiso ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -96,7 +96,7 @@ public class PermisoDAO {
 		}
 		return ret;
 	}
-	
+
 	public static List<Permiso> getPermisosPagina(int pagina, int numeroPermisos){
 		List <Permiso> ret = new ArrayList <Permiso>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -107,7 +107,7 @@ public class PermisoDAO {
 			criteria.setMaxResults(numeroPermisos);
 			ret = criteria.getResultList();
 		}catch(Throwable e){
-			CLogger.write("6", HitoTipoDAO.class, e);		
+			CLogger.write("6", PermisoDAO.class, e);
 		}finally{
 			session.close();
 		}
@@ -121,12 +121,12 @@ public class PermisoDAO {
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
-			CLogger.write("7", HitoTipoDAO.class, e);
+			CLogger.write("7", PermisoDAO.class, e);
 		}
 		finally{
 			session.close();
 		}
-		
+
 		return ret;
 	}
 }
