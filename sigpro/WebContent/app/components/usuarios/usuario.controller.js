@@ -1,7 +1,7 @@
-var app = angular.module('usuariosController', [ 'ngTouch', 'ui.grid.edit' ]);
+var app = angular.module('usuarioController', [ 'ngTouch', 'ui.grid.edit' ]);
 
 app.controller(
- 'usuariosController',
+ 'usuarioController',
  [
   '$scope',
   '$http',
