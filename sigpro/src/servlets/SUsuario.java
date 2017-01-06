@@ -20,6 +20,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.UsuarioDAO;
+import pojo.Usuario;
 import pojo.UsuarioPermiso;
 import utilities.Utils;
 
@@ -39,6 +40,14 @@ public class SUsuario extends HttpServlet {
 		String fechaCreacion;
 		String fechaActualizacion;
 		int estado;
+	}
+	class stusuario{
+		String usuario;
+		String email;
+		String usuarioCreo;
+		String usuarioActualizo;
+		String fechaCreacion;
+		String fechaActualizacion;
 	}
        
     /**
@@ -185,6 +194,27 @@ public class SUsuario extends HttpServlet {
 					respuesta = String.join("", "{\"success\":true,", respuesta,"}");
 					response.getWriter().write(respuesta);
 				}
+			}else if(accion.compareTo("getUsuarios")==0){
+				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
+				int numeroUsuarios = map.get("numeroUsuarios")!=null  ? Integer.parseInt(map.get("numeroUsuarios")) : 0;
+				List <Usuario>  usuarios = UsuarioDAO.getUsuarios(pagina, numeroUsuarios);
+				List <stusuario> stusuarios = new ArrayList <stusuario>();
+				for(Usuario usuario: usuarios){
+					stusuario usuariotmp =new  stusuario();
+					usuariotmp.usuario =usuario.getUsuario();
+					usuariotmp.email = usuario.getEmail();
+					usuariotmp.usuarioCreo=usuario.getUsuarioCreo();
+					usuariotmp.usuarioActualizo= usuario.getUsuarioActualizo();
+					usuariotmp.fechaCreacion=Utils.formatDate(usuario.getFechaCreacion());
+					usuariotmp.fechaActualizacion=Utils.formatDate(usuario.getFechaActualizacion());
+					stusuarios.add(usuariotmp);
+				}
+				String respuesta = new GsonBuilder().serializeNulls().create().toJson(stusuarios);
+				respuesta = String.join("", "\"usuarios\": ",respuesta);
+				respuesta = String.join("", "{\"success\":true,", respuesta,"}");
+				response.getWriter().write(respuesta);
+			}else if(accion.compareTo("getTotalUsuarios")==0){
+				response.getWriter().write(String.join("","{ \"success\": true, \"totalPermisos\":",UsuarioDAO.getTotalUsuarios().toString()," }"));
 			}
 		}else{
 			response.getWriter().write("{ \"success\": false, \"error\":\"No se enviaron los parametros deseados\" }");
