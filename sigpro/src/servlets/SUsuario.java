@@ -80,7 +80,7 @@ public class SUsuario extends HttpServlet {
 
 	    Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String accion = "";
-		accion = map.get("action");
+		accion = map.get("accion");
 		if(accion!=null){
 			if(accion.compareTo("registroUsuario")==0){
 				String nuevousuario = map.get("usuario").toLowerCase();
