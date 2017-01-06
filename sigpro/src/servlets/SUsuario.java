@@ -98,28 +98,23 @@ public class SUsuario extends HttpServlet {
 									Gson entradaJson = new Gson();
 									Type tipo = new TypeToken<List<Integer>>() {}.getType();
 									List<Integer> permisos = entradaJson.fromJson(permisosAsignados, tipo);
-									boolean asignacion = UsuarioDAO.asignarPermisosUsuario(nuevousuario, permisos, usuarioCreo);
-									if(asignacion){
-										response.getWriter().write("{ \"success\": true, \"message\":\"Usuario creado y asignación de permisos exitosa\" }");
-									}else{
-										response.getWriter().write("{ \"success\": true, \"message\":\"Usuario creado, asignación de permisos no exitosa\" }");
-									}
+									response_text = String.join("","{ \"success\": ",(UsuarioDAO.asignarPermisosUsuario(nuevousuario, permisos, usuarioCreo) ? "true ,  \"message\":\"Usuario creado y asignación de permisos exitosa\" " : "true, \"message\":\"Usuario creado, asignación de permisos no exitosa\""),"}");
 								}else{
-									response.getWriter().write("{ \"success\": true, \"message\":\"Usuario creado\" }");
+									response_text = String.join("", "{\"success\":true, \"message\":\"usuario creado exitosamente\" }");
 								}
 								
 							}else{
-								response.getWriter().write("{ \"success\": false, \"error\":\"Error al registrar nuevo usuario\" }");
+								response_text = String.join("", "{ \"success\": false, \"error\":\"Error al registrar nuevo usuario\" }");
 							}
 						}else{
-							response.getWriter().write("{ \"success\": false, \"error\":\"Parametros vacios\" }");
+							response_text = String.join("", "{ \"success\": false, \"error\":\"Parametros vacios\" }");
 						}
 					}else{
-						response.getWriter().write("{ \"success\": false, \"error\":\"Ya existe ese usuario\" }");
+						response_text = String.join("", "{ \"success\": false, \"error\":\"Ya existe ese usuario\" }");
 					}
 					
 				}else{
-					response.getWriter().write("{ \"success\": false, \"error\":\"No se enviaron los parametros deseados\" }");
+					response_text = String.join("", "{ \"success\": false, \"error\":\"No se enviaron los parametros deseados\" }");
 				}
 				
 			}else if(accion.compareTo("actualizarPermisos")==0){
@@ -142,9 +137,9 @@ public class SUsuario extends HttpServlet {
 						eliminacion = UsuarioDAO.desactivarPermisosUsuario(usuario, permisos, usuarioActualizo);
 					}
 					if(asignacion || eliminacion){
-						response.getWriter().write("{ \"success\": true, \"mensaje\":\"asginación de permisos exitosa\" }");
+						response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualización de permisos exitosa\" }");
 					}else{
-						response.getWriter().write("{ \"success\": false, \"error\":\"no se actualizaron los permisos\" }");
+						response_text = String.join("","{ \"success\": false, \"error\":\"no se actualizaron los permisos\" }");
 					}
 				}
 			}else if(accion.compareTo("eliminarUsuario")==0){
@@ -160,14 +155,9 @@ public class SUsuario extends HttpServlet {
 					}
 					boolean eliminarPermisos = UsuarioDAO.desactivarPermisosUsuario(usuario, permisos, usuarioActualizo);
 					if(eliminarPermisos){
-						boolean eliminarUsuario = UsuarioDAO.desactivarUsuario(usuario, usuarioActualizo);
-						if(eliminarUsuario){
-							response.getWriter().write("{ \"success\": true, \"mensaje\":\"eliminación exitosa\" }");
-						}else{
-							response.getWriter().write("{ \"success\": false, \"error\":\"error en la eliminación\" }");
-						}
+						response_text = String.join("","{ \"success\": ",( UsuarioDAO.desactivarUsuario(usuario, usuarioActualizo) ? "true" : "false")," }");
 					}else{
-						response.getWriter().write("{ \"success\": true, \"mensaje\":\"asginación de permisos exitosa\" }");
+						response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo eliminar el usuario\" }");
 					}
 				}
 			}else if(accion.compareTo("obtenerPermisos")==0){
@@ -190,9 +180,8 @@ public class SUsuario extends HttpServlet {
 						}
 					}
 					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stpermisos);
-					respuesta = String.join("", "\"permisos\":",respuesta);
-					respuesta = String.join("", "{\"success\":true,", respuesta,"}");
-					response.getWriter().write(respuesta);
+					response_text  = String.join("", "\"permisos\":",respuesta);
+					response_text = String.join("", "{\"success\":true,", response_text ,"}");
 				}
 			}else if(accion.compareTo("getUsuarios")==0){
 				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
@@ -210,17 +199,17 @@ public class SUsuario extends HttpServlet {
 					stusuarios.add(usuariotmp);
 				}
 				String respuesta = new GsonBuilder().serializeNulls().create().toJson(stusuarios);
-				respuesta = String.join("", "\"usuarios\": ",respuesta);
-				respuesta = String.join("", "{\"success\":true,", respuesta,"}");
-				response.getWriter().write(respuesta);
+				response_text = String.join("", "\"usuarios\": ",respuesta);
+				response_text = String.join("", "{\"success\":true,", response_text,"}");
 			}else if(accion.compareTo("getTotalUsuarios")==0){
-				response.getWriter().write(String.join("","{ \"success\": true, \"totalPermisos\":",UsuarioDAO.getTotalUsuarios().toString()," }"));
+				response_text=String.join("","{ \"success\": true, \"totalPermisos\":",UsuarioDAO.getTotalUsuarios().toString()," }") ;
 			}
 		}else{
-			response.getWriter().write("{ \"success\": false, \"error\":\"No se enviaron los parametros deseados\" }");
+			response_text = String.join("","{ \"success\": false, \"error\":\"No se enviaron los parametros deseados\" }");
 		}
-		response.getWriter().flush();
-		response.getWriter().close();
+        gz.write(response_text.getBytes("UTF-8"));
+        gz.close();
+        output.close();
 	}
 
 }
