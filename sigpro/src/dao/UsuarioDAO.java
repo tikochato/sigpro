@@ -229,5 +229,35 @@ public class UsuarioDAO {
 		return ret;
 	}
 	
+	public static List <Usuario> getUsuarios(int pagina, int numeroUsuarios){
+		List <Usuario> ret = new ArrayList<Usuario> ();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query <Usuario> criteria = session.createQuery("FROM Usuario where estado =:estado", Usuario.class);
+			criteria.setParameter("estado",1);
+			criteria.setFirstResult(((pagina-1)*(numeroUsuarios)));
+			criteria.setMaxResults(numeroUsuarios);
+			ret =criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("7", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Long getTotalUsuarios(){
+		Long ret = 0L;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Long> conteo = session.createQuery("SELECT count(u.usuario) FROM Usuario u WHERE u.estado=1",Long.class);
+			ret = conteo.getSingleResult();
+		}catch(Throwable e){
+			CLogger.write("8", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;		
+	}
 	
 }
