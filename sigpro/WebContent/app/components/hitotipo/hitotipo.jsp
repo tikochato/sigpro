@@ -36,7 +36,7 @@
 					</div>
 				  </div>
 				</div>
-				<ul uib-pagination total-items="hitotipoc.totalCooperantes" 
+				<ul uib-pagination total-items="hitotipoc.totalHitotipo" 
 						ng-model="hitotipoc.paginaActual" 
 						max-size="hitotipoc.numeroMaximoPaginas" 
 						items-per-page="hitotipoc.elementosPorPagina"

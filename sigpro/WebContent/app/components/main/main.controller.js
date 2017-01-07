@@ -89,6 +89,15 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
              .when('/usuarios/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'usuarioController\'" class="all_page"></div>'
             })
+            .when('/riesgotipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'riesgotipoController\'" class="all_page"></div>'
+            })
+            .when('/riesgo/:proyecto_id?/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'riesgoController\'" class="all_page"></div>'
+            })
+            .when('/hito/:proyecto_id?/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'hitoController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -216,6 +225,18 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'usuarioController',
 	    	   script: '/app/components/usuarios/usuario.controller.js',
 	    	   template: '/app/components/usuarios/usuario.jsp'
+         },{
+	    	   name: 'riesgotipoController',
+	    	   script: '/app/components/riesgotipo/riesgotipo.controller.js',
+	    	   template: '/app/components/riesgotipo/riesgotipo.jsp'
+	       }, {
+	    	   name: 'riesgoController',
+	    	   script: '/app/components/riesgo/riesgo.controller.js',
+	    	   template: '/app/components/riesgo/riesgo.jsp'
+	       }, {
+	    	   name: 'hitoController',
+	    	   script: '/app/components/hito/hito.controller.js',
+	    	   template: '/app/components/hito/hito.jsp'
 	       }
 
 	   ];

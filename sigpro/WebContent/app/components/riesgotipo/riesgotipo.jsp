@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<div ng-controller="riesgotipoController as reisgotipoc"
+<div ng-controller="riesgotipoController as riesgotipoc"
 	class="maincontainer all_page" id="title">
 
-	<script type="text/ng-template" id="buscarreisgopropiedad.jsp">
+	<script type="text/ng-template" id="buscarriesgopropiedad.jsp">
     	<%@ include file="/app/components/riesgotipo/buscarriesgopropiedad.jsp"%>
   	</script>
 	<h3>Tipo de Riesgo</h3>
