@@ -72,12 +72,20 @@
 			<div class="col-sm-12">
 				<form>
 						<div class="form-group">
-							<label for="nombre">Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="usuarioc.permisoSelected.nombre">
+							<label for="nombre">Usuario</label>
+    						<input type="text" class="form-control" id="usuario" placeholder="Usuario" ng-model="usuarioc.usuarioSelected.usuario">
 						</div>
 						<div class="form-group">
-							<label for="Descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="usuarioc.permisoSelected.descripcion">
+							<label for="Descripcion">Correo</label>
+    						<input type="text" class="form-control" id="correo" placeholder="Correo electrónico" ng-model="usuarioc.usuarioSelected.email">
+						</div>
+						<div class="form-group" ng-show="usuarioc.esNuevo">
+							<label for="Descripcion">Contraseña</label>
+    						<input type="password" class="form-control" id="password1" placeholder="Contraseña" ng-model="usuarioc.claves.password1">
+						</div>
+						<div class="form-group" ng-show="usuarioc.esNuevo">
+							<label for="Descripcion">Vuelva a ingresar la contraseña</label>
+    						<input type="password" class="form-control" id="password2" placeholder="Contraseña" ng-model="usuarioc.claves.password2">
 						</div>
 				</form>
 			</div>

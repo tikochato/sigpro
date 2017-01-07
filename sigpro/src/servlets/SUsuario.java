@@ -86,14 +86,14 @@ public class SUsuario extends HttpServlet {
 				String nuevousuario = map.get("usuario").toLowerCase();
 				String nuevopassword = map.get("password");
 				String nuevomail = map.get("email").toLowerCase();
+				String permisosAsignados = map.get("permisos");
 				HttpSession sesionweb = request.getSession();
-				if(nuevousuario!=null && nuevopassword!=null && nuevomail != null){
+				if(nuevousuario!=null && nuevopassword!=null && nuevomail != null && permisosAsignados!=null){
 					if(!UsuarioDAO.existeUsuario(nuevousuario)){
 						if(nuevousuario.compareTo("")!=0 && nuevopassword.compareTo("")!=0 && nuevomail.compareTo("")!=0){
 							String usuarioCreo =sesionweb.getAttribute("usuario").toString();
 							boolean registro = UsuarioDAO.registroUsuario(nuevousuario, nuevomail, nuevopassword,usuarioCreo);
 							if(registro){
-								String permisosAsignados = map.get("permisos");
 								if(permisosAsignados.compareTo("[]")!=0){
 									Gson entradaJson = new Gson();
 									Type tipo = new TypeToken<List<Integer>>() {}.getType();
@@ -159,6 +159,8 @@ public class SUsuario extends HttpServlet {
 					}else{
 						response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo eliminar el usuario\" }");
 					}
+				}else{
+					response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo eliminar el usuario\" }");
 				}
 			}else if(accion.compareTo("obtenerPermisos")==0){
 				String usuario = map.get("usuario");

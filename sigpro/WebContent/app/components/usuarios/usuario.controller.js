@@ -26,7 +26,10 @@ app.controller(
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 	mi.permisoSelected={id:"",nombre:"", descripcion:""};	
-	mi.usuariosSelected={usuario:"", email:"",password:""};
+	mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+	mi.claves={password1:"", password2:""};
+	mi.nuevosPermisos=[];
+	mi.permisosEliminados=[];
 	mi.gridOptions = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -57,6 +60,7 @@ app.controller(
 				{ accion : 'getUsuarios',  pagina: pagina, numeroUsuarios: $utilidades.elementosPorPagina  }).success(function(data) {
 				mi.gridOptions.data =  data.usuarios;
 				mi.mostrarcargando=false;
+				mi.isCollapsed = false;
 		});
 	};
 	
@@ -71,7 +75,7 @@ app.controller(
 			function(row) {
 			var msg = 'row selected '
 			+ row;
-			mi.permisoSelected = row.entity;
+			mi.usuariosSelected = row.entity;
 		});
 		if($routeParams.reiniciar_vista=='rv'){
 			mi.guardarEstado();
@@ -105,78 +109,85 @@ app.controller(
 		mi.entityselected = null;
 		mi.esNuevo = true;
 		mi.permisoSelected = {id:"",nombre:"", descripcion:""};
-	};	*/				
-	/*mi.guardarPermiso=function(){		
-		if(mi.permisoSelected.nombre!=="" && mi.permisoSelected.descripcion!==""){
-			if(mi.esNuevo){
-				$http.post('/SPermiso',
-					{
-						accion: 'guardarPermiso',
-						nombre:mi.permisoSelected.nombre,
-						descripcion:mi.permisoSelected.descripcion
-					}).success(
-						function(data) {
-							if(data.success){
-								mi.gridOptions.data
-								.push({
-									"id" : data.data,
-									"nombre" : mi.permisoSelected.nombre,
-									"descripcion" : mi.permisoSelected.descripcion
-								});
-								mi.isCollapsed = false;
-							}
-				});
+	};	*/			
+	
+	mi.nuevoUsuario=function(){
+		mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+		mi.isCollapsed = true;
+		mi.entityselected = null;
+		mi.esNuevo = true;
+	};
+	
+	mi.guardarUsuario=function(){
+		if(mi.esNuevo){
+			if(mi.claves.password1!=="" && mi.claves.password2!=="" && mi.usuarioSelected.usuario!=="" && mi.usuarioSelected.email!==""){
+				if(validarEmail(mi.usuarioSelected.email)){
+					if(mi.claves.password1===mi.claves.password2){
+						mi.usuarioSelected.password= mi.claves.password1;
+						$http.post('/SUsuario',
+								{
+									accion: 'registroUsuario',
+									usuario:mi.usuarioSelected.usuario,
+									email:mi.usuarioSelected.email,
+									password:mi.usuarioSelected.password,
+									permisos:JSON.stringify(mi.nuevosPermisos)
+								}).success(
+									function(data) {
+										if(data.success){
+											mi.cargarTabla(mi.paginaActual);
+											mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+										}
+							});
+					}else{
+						$utilidades.mensaje('danger','No coinciden la contraseña y su confirmación.');
+					}
+				}else{
+					$utilidades.mensaje('danger','correo electrónico no válido.');
+				}
+				
 			}else{
-				$http.post('/SPermiso',
-						{
-							accion: 'editarPermiso',
-							id:mi.permisoSelected.id,
-							nombre:mi.permisoSelected.nombre,
-							descripcion:mi.permisoSelected.descripcion
-						}).success(
-							function(data) {
-								if(data.success){
-									mi.cargarTabla(mi.paginaactual);
-									mi.isCollapsed = false;
-								}
-					});
+				$utilidades.mensaje('danger','Los campos no deben de quedar vacios.');
 			}
 		}else{
-			$utilidades.mensaje('danger','Llene los campos');
+			
 		}
-	};*/
+	};
 	
-	/*mi.borrarPermiso=function(ev){
-		mi.isCollapsed = false;
-		if(mi.permisoSelected.id!==""){
+	
+	
+	mi.eliminarUsuario=function(ev){
+		if(mi.usuariosSelected.usuario!==""){
 			var confirm = $mdDialog.confirm()
 	          .title('Confirmación de borrado')
-	          .textContent('¿Desea borrar el permiso "'+mi.permisoSelected.nombre+'"?')
+	          .textContent('¿Desea borrar al usuario "'+mi.usuariosSelected.usuario+'"?')
 	          .ariaLabel('Confirmación de borrado')
 	          .targetEvent(ev)
 	          .ok('Borrar')
 	          .cancel('Cancelar');
 			$mdDialog.show(confirm).then(function() {
-		    	$http.post('/SPermiso', {
-					accion: 'eliminarPermiso',
-					id: mi.permisoSelected.id
+		    	$http.post('/SUsuario', {
+					accion: 'eliminarUsuario',
+					usuario: mi.usuariosSelected.usuario
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success','Permiso borrado con éxito');
+						$utilidades.mensaje('success','Usuario elimiado con éxito');
 						mi.cargarTabla(mi.paginaActual);
-						mi.permisoSelected={id:"",nombre:"", descripcion:""};
+						mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
 					}
 					else
-						$utilidades.mensaje('danger','Error al borrar el Permiso');
+						$utilidades.mensaje('danger','Error al eliminar el usuario');
 				});
 		    }, function() {
 		    
 		    });
 		}else{
-		    $utilidades.mensaje('danger','Seleccione un permiso');
+		    $utilidades.mensaje('danger','Seleccione un usuario');
 		}
-	};*/
-	
+	};
+	function validarEmail(email) {
+	    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	    return re.test(email);
+	}
 	
 	/*mi.editarPermiso=function(){
 		if(mi.permisoSelected.id!==""){
