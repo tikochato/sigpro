@@ -1,0 +1,357 @@
+var app = angular.module('hitoController', []);
+
+app.controller('hitoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
+		var mi=this;
+		
+		$window.document.title = 'SIGPRO - Hitos';
+		i18nService.setCurrentLang('es');
+		mi.mostrarcargando=true;
+		mi.hitos = [];
+		mi.hito;
+		mi.mostraringreso=false;
+		mi.esnuevo = false;
+		mi.hitotipoid ="";
+		mi.hitotipoNombre="";
+		mi.totalHitos = 0;
+		mi.paginaActual = 1;
+		mi.proyectoid = 0;
+		mi.proyectoNombre="";
+		mi.formatofecha = 'dd/MM/yyyy';
+		mi.hitodatotipoid = "";
+		mi.hitoresultado="";
+		mi.hitoresultadocomentario;
+		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
+		mi.elementosPorPagina = $utilidades.elementosPorPagina;
+		
+		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id }).success(
+				function(response) {
+					mi.proyectoid = response.id;
+					mi.proyectoNombre = response.nombre;
+		});
+		
+		mi.gridOptions = {
+				enableRowSelection : true,
+				enableRowHeaderSelection : false,
+				multiSelect: false,
+				modifierKeysToMultiSelect: false,
+				noUnselect: true,
+				enableFiltering: true,
+				enablePaginationControls: false,
+			    paginationPageSize: $utilidades.elementosPorPagina,
+				columnDefs : [ 
+					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
+				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
+				    { name: 'hitotiponombre', width: 200, displayName: 'Tipo Hito',cellClass: 'grid-align-left' },
+				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
+				    { name: 'usuarioCreo', displayName: 'Usuario Creación'},
+				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
+				],
+				onRegisterApi: function(gridApi) {
+					mi.gridApi = gridApi;
+					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
+						mi.hito = row.entity;
+					});
+					
+					if($routeParams.reiniciar_vista=='rv'){
+						mi.guardarEstado();
+				    }
+				    else{
+				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'hitos', t: (new Date()).getTime()}).then(function(response){
+					      if(response.data.success && response.data.estado!='')
+					    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+					    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
+						      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
+						      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+						      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+						  });
+				    }
+				}
+		};
+		
+		mi.fechaOptions = {
+			    formatYear: 'yy',
+			    maxDate: new Date(2020, 5, 22),
+			    minDate: new Date(1990,1,1),
+			    startingDay: 1
+		};
+		
+		mi.popupfecha = function() {
+		    mi.popupfecha.abierto = false;
+		};
+		
+		mi.popupfecharesultado = function() {
+		    mi.popupfecharesultado.abierto = false;
+		};
+		
+		mi.cargarTabla = function(pagina){
+			mi.mostrarcargando=true;
+			$http.post('/SHito', { accion: 'getHitosPagina', pagina: pagina, numerohitos: $utilidades.elementosPorPagina }).success(
+					function(response) {
+						mi.hitos = response.hitos;
+						mi.gridOptions.data = mi.hitos;
+						mi.mostrarcargando = false;
+					});
+		}
+		
+		mi.guardar=function(){
+			if(mi.hito!=null && mi.hito.fecha!='' && mi.hito.nombre!=''){
+				$http.post('/SHito', {
+					accion: 'guardarHito',
+					esnuevo: mi.esnuevo,
+					id: mi.hito.id,
+					proyectoid: mi.proyectoid,
+					nombre: mi.hito.nombre,
+					hitotipoid: mi.hitotipoid,
+					fecha:moment(mi.fecha).format('DD/MM/YYYY'),
+					resultado: (mi.hitodatotipoid==5 ? moment(mi.hitoresultado).format('DD/MM/YYYY') : mi.hitoresultado),
+					comentario : mi.hitoresultadocomentario,
+					datotipoid: mi.hitodatotipoid,
+					descripcion:  mi.hito.descripcion
+				}).success(function(response){
+					if(response.success){
+						$utilidades.mensaje('success','Hito '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+						mi.esnuevo = false;
+						mi.hito.id = response.id;
+						mi.cargarTabla();
+					}
+					else
+						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Hito');
+				});
+			}
+			else
+				$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
+		};
+	
+		mi.borrar = function(ev) {
+			if(mi.hito!=null){
+				var confirm = $mdDialog.confirm()
+			          .title('Confirmación de borrado')
+			          .textContent('¿Desea borrar el Hito "'+mi.hito.nombre+'"?')
+			          .ariaLabel('Confirmación de borrado')
+			          .targetEvent(ev)
+			          .ok('Borrar')
+			          .cancel('Cancelar');
+	
+			    $mdDialog.show(confirm).then(function() {
+			    	$http.post('/SHito', {
+						accion: 'borrarHito',
+						id: mi.hito.id
+					}).success(function(response){
+						if(response.success){
+							$utilidades.mensaje('success','Hito borrado con éxito');
+							mi.cargarTabla();
+						}
+						else
+							$utilidades.mensaje('danger','Error al borrar el Hito');
+					});
+			    }, function() {
+			    
+			    });
+			}
+			else
+				$utilidades.mensaje('warning','Debe seleccionar el Hito que desea borrar');
+		};
+	
+		mi.nuevo = function() {
+			mi.mostraringreso=true;
+			mi.esnuevo = true;
+			mi.hito = null;
+			mi.gridApi.selection.clearSelectedRows();
+		};
+	
+		mi.editar = function() {
+			if(mi.hito!=null){
+				mi.fecha = moment(mi.hito.fecha, 'DD/MM/YYYY').toDate();
+				mi.hitotipoid = mi.hito.hitotipoid;
+				mi.hitotipoNombre= mi.hito.hitotiponombre;
+				mi.hitoresultadocomentario = mi.hito.comentario;
+				mi.hitodatotipoid = mi.hito.datotipoid;
+				mi.mostraringreso = true;
+				mi.hitoresultado = (mi.hitodatotipoid==5 ? moment(mi.hito.resultado, 'DD/MM/YYYY').toDate() : mi.hito.resultado),
+				mi.esnuevo = false;
+			}
+			else
+				$utilidades.mensaje('warning','Debe seleccionar el Hito que desea editar');
+		}
+	
+		mi.irATabla = function() {
+			mi.mostraringreso=false;
+		}
+		
+		mi.guardarEstado=function(){
+			var estado = mi.gridApi.saveState.save();
+			var tabla_data = { action: 'guardaEstado', grid:'hitos', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
+			$http.post('/SEstadoTabla', tabla_data).then(function(response){
+				
+			});
+		}
+		
+		mi.cambioPagina=function(){
+			mi.cargarTabla(mi.paginaActual);
+		}
+		
+		mi.reiniciarVista=function(){
+			if($location.path()=='/hito/rv')
+				$route.reload();
+			else
+				$location.path('/hito/rv');
+		}
+		
+		mi.abirpopup = function() {
+			 mi.popupfecha.abierto = true;
+		};
+		
+		mi.abirpopupreultado = function() {
+			 mi.popupfecharesultado.abierto = true;
+		};
+
+		
+		$http.post('/SHito', { accion: 'numeroHitos' }).success(
+				function(response) {
+					mi.totalHitos = response.totalhitos;
+					mi.cargarTabla(1);
+		});
+		
+		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga) {
+			var resultado = $q.defer();
+			var modalInstance = $uibModal.open({
+				animation : 'true',
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				templateUrl : 'buscarHitoTipo.jsp',
+				controller : 'buscarHitoTipo',
+				controllerAs : 'modalBuscar',
+				backdrop : 'static',
+				size : 'md',
+				resolve : {
+					$servlet : function() {
+						return servlet;
+					},
+					$accionServlet : function() {
+						return accionServlet;
+					},
+					$datosCarga : function() {
+						return datosCarga;
+					}
+				}
+			});
+			
+			modalInstance.result.then(function(itemSeleccionado) {
+				resultado.resolve(itemSeleccionado);
+			});
+			return resultado.promise;
+	};
+	
+	mi.buscarHitoTipo = function() {
+		var resultado = mi.llamarModalBusqueda('/SHitoTipo', {
+			accion : 'numeroHitoTipos'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getHitoTiposPagina',
+				pagina : pagina,
+				numeroHitoTipos : elementosPorPagina
+			};
+		});
+
+		resultado.then(function(itemSeleccionado) {
+			mi.hitotipoid = itemSeleccionado.id;
+			mi.hitotipoNombre = itemSeleccionado.nombre;
+			mi.hitodatotipoid = itemSeleccionado.datotipoid;
+		});
+	};
+		
+} ]);
+
+app.controller('buscarHitoTipo', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log', '$servlet', '$accionServlet', '$datosCarga', buscarHitoTipo ]);
+
+function buscarHitoTipo($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $servlet,$accionServlet,$datosCarga) {
+	
+	var mi = this;
+
+	mi.totalElementos = 0;
+	mi.paginaActual = 1;
+	mi.numeroMaximoPaginas = 5;
+	mi.elementosPorPagina = 9;
+
+	mi.mostrarCargando = false;
+	mi.data = [];
+
+	mi.itemSeleccionado = null;
+	mi.seleccionado = false;
+	
+	$http.post($servlet, $accionServlet).success(function(response) {
+		for ( var key in response) {
+			mi.totalElementos = response[key];
+		}
+		mi.cargarData(1);
+	});
+	
+	mi.opcionesGrid = {
+		data : mi.data,
+		columnDefs : [ {
+			displayName : 'ID',
+			name : 'id',
+			cellClass : 'grid-align-right',
+			type : 'number',
+			width : 70
+		}, {
+			displayName : 'Nombre',
+			name : 'nombre',
+			cellClass : 'grid-align-left'
+		} ],
+		enableRowSelection : true,
+		enableRowHeaderSelection : false,
+		multiSelect : false,
+		modifierKeysToMultiSelect : false,
+		noUnselect : false,
+		enableFiltering : true,
+		enablePaginationControls : false,
+		paginationPageSize : 5,
+		onRegisterApi : function(gridApi) {
+			mi.gridApi = gridApi;
+			mi.gridApi.selection.on.rowSelectionChanged($scope,
+					mi.seleccionarTipoRiesgo);
+		}
+	}
+
+	mi.seleccionarTipoRiesgo = function(row) {
+		mi.itemSeleccionado = row.entity;
+		mi.seleccionado = row.isSelected;
+	};
+	
+	mi.cargarData = function(pagina) {
+		mi.mostrarCargando = true;
+		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina)).then(
+				function(response) {
+					if (response.data.success) {
+
+						for ( var key in response.data) {
+							if (key != 'success')
+								mi.data = response.data[key];
+						}
+						mi.opcionesGrid.data = mi.data;
+						mi.mostrarCargando = false;
+					}
+				});
+	};
+
+	mi.cambioPagina = function() {
+		mi.cargarData(mi.paginaActual);
+	}
+
+	mi.ok = function() {
+		if (mi.seleccionado) {
+			$uibModalInstance.close(mi.itemSeleccionado);
+		} else {
+			$utilidades.mensaje('warning', 'Debe seleccionar un Tipo Hito');
+		}
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+}

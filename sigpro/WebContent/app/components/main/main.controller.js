@@ -93,6 +93,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/riesgo/:proyecto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgoController\'" class="all_page"></div>'
             })
+            .when('/hito/:proyecto_id?/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'hitoController\'" class="all_page"></div>'
+            })
             
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -225,6 +228,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'riesgoController',
 	    	   script: '/app/components/riesgo/riesgo.controller.js',
 	    	   template: '/app/components/riesgo/riesgo.jsp'
+	       }, {
+	    	   name: 'hitoController',
+	    	   script: '/app/components/hito/hito.controller.js',
+	    	   template: '/app/components/hito/hito.jsp'
 	       }
 
 	   ];
