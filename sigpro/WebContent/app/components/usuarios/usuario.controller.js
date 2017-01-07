@@ -102,14 +102,7 @@ app.controller(
 	mi.cancelar = function() {
 		mi.isCollapsed = false;
 	}
-	
-	/*mi.nuevoPermiso=function(){
-		var formularios = mi.cargarTabla(mi.paginaActual);						
-		mi.isCollapsed = true;
-		mi.entityselected = null;
-		mi.esNuevo = true;
-		mi.permisoSelected = {id:"",nombre:"", descripcion:""};
-	};	*/			
+				
 	
 	mi.nuevoUsuario=function(){
 		mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
@@ -189,21 +182,14 @@ app.controller(
 	    return re.test(email);
 	}
 	
-	/*mi.editarPermiso=function(){
-		if(mi.permisoSelected.id!==""){
-			mi.isCollapsed = true;
-			mi.esNuevo=false;
-		}else{
-			$utilidades.mensaje('danger','Seleccione un permiso');
-		}
-	};*/
 	
-	/*mi.reiniciarVista=function(){
-		if($location.path()=='/permisos/rv')
+	
+	mi.reiniciarVista=function(){
+		if($location.path()=='/usuarios/rv')
 			$route.reload();
 		else
-			$location.path('/permisos/rv');
-	};*/
+			$location.path('/usuarios/rv');
+	};
 	
 	mi.cambiarPagina=function(){
 		mi.cargarTabla(mi.paginaActual);
