@@ -34,7 +34,7 @@ import utilities.Utils;
 @WebServlet("/SComponente")
 public class SComponente extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+
 	class stcomponente{
 		Integer id;
 		String nombre;
@@ -47,7 +47,7 @@ public class SComponente extends HttpServlet {
 		String componentetiponombre;
 		int estado;
 	}
-       
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -100,7 +100,7 @@ public class SComponente extends HttpServlet {
 				temp.componentetiponombre = componente.getComponenteTipo().getNombre();
 				stcomponentes.add(temp);
 			}
-			
+
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stcomponentes);
 	        response_text = String.join("", "\"componentes\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
@@ -110,7 +110,7 @@ public class SComponente extends HttpServlet {
 			List<stcomponente> stcomponentes=new ArrayList<stcomponente>();
 			for(Componente componente:componentes){
 				stcomponente temp =new stcomponente();
-				
+
 				temp.descripcion = componente.getDescripcion();
 				temp.estado = componente.getEstado();
 				temp.fechaActualizacion = Utils.formatDate(componente.getFechaActualizacion());
@@ -123,7 +123,7 @@ public class SComponente extends HttpServlet {
 				temp.componentetiponombre = componente.getComponenteTipo().getNombre();
 				stcomponentes.add(temp);
 			}
-			
+
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stcomponentes);
 	        response_text = String.join("", "\"componentes\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
@@ -137,13 +137,13 @@ public class SComponente extends HttpServlet {
 				String descripcion = map.get("descripcion");
 				int componentetipoid = Integer.parseInt(map.get("componentetipoid"));
 				int proyectoid= Integer.parseInt(map.get("proyectoid"));
-				
+
 				ComponenteTipo componenteTipo= new ComponenteTipo();
 				componenteTipo.setId(componentetipoid);
-				
+
 				Proyecto proyecto = new Proyecto();
 				proyecto .setId(proyectoid);
-				
+
 				Componente componente;
 				if(esnuevo){
 					componente = new Componente(componenteTipo, proyecto, nombre, usuario, new DateTime().toDate(), 1);
@@ -156,7 +156,7 @@ public class SComponente extends HttpServlet {
 					componente.setFechaActualizacion(new DateTime().toDate());
 				}
 				result = ComponenteDAO.guardarComponente(componente);
-				
+
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 						+ "\"id\": " + componente.getId() +" }");
 			}
@@ -174,16 +174,16 @@ public class SComponente extends HttpServlet {
 				response_text = "{ \"success\": false }";
 		}
 		else if(accion.equals("numeroComponentes")){
-			response_text = String.join("","{ \"success\": true, \"totalomponentes\":",ComponenteDAO.getTotalComponentes().toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalcomponentes\":",ComponenteDAO.getTotalComponentes().toString()," }");
 		}
 		else{
 			response_text = "{ \"success\": false }";
 		}
-		
+
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
-		
-        
+
+
         OutputStream output = response.getOutputStream();
 		GZIPOutputStream gz = new GZIPOutputStream(output);
         gz.write(response_text.getBytes("UTF-8"));

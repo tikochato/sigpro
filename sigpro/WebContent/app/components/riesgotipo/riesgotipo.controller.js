@@ -318,10 +318,10 @@ function modalBuscarRiesgoPropiedad($uibModalInstance, $scope, $http, $interval,
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
 	
-    $http.post('/SRoesgpPropiedad', {
+    $http.post('/SRiesgoPropiedad', {
     	accion : 'numeroriesgoPropiedadesDisponibles'
         }).success(function(response) {
-    	mi.totalElementos = response.totalcomponentepropiedades;
+    	mi.totalElementos = response.totalriesgopropiedades;
     	mi.elementosPorPagina = mi.totalElementos;
     	mi.cargarData(1);
     });
@@ -363,7 +363,7 @@ function modalBuscarRiesgoPropiedad($uibModalInstance, $scope, $http, $interval,
     	mi.mostrarCargando = true;
     	$http.post('/SRiesgoPropiedad', datos).then(function(response) {
     	    if (response.data.success) {
-    	    	mi.data = response.data.componentepropiedades;
+    	    	mi.data = response.data.riesgopropiedades;
     	    	mi.opcionesGrid.data = mi.data;
     			mi.mostrarCargando = false;
     	    }

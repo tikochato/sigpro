@@ -38,8 +38,10 @@ public class SHitoTipo extends HttpServlet {
 		String fechaCreacion;
 		String fechaActualizacion;
 		int estado;
+		int datotipoid;
+		String datotiponombre;
 	}
-       
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -74,19 +76,20 @@ public class SHitoTipo extends HttpServlet {
 		String response_text="";
 		if(accion.equals("getHitoTiposPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numeroHitoTipos = map.get("numerohitotiposs")!=null  ? Integer.parseInt(map.get("numerohitotiposs")) : 0;
+			int numeroHitoTipos = map.get("numerohitotipos")!=null  ? Integer.parseInt(map.get("numerohitotipos")) : 0;
 			List<HitoTipo> hitotipos = HitoTipoDAO.getHitoTiposPagina(pagina, numeroHitoTipos);
 			List<sthitotipo> sthitotipos=new ArrayList<sthitotipo>();
 			for(HitoTipo hitotipo:hitotipos){
 				sthitotipo temp =new sthitotipo();
-				
 				temp.descripcion = hitotipo.getDescripcion();
-				temp.estado = hitotipo.getEstado();	
+				temp.estado = hitotipo.getEstado();
 				temp.id = hitotipo.getId();
 				temp.nombre = hitotipo.getNombre();
+				temp.datotipoid = 5;   // arreglar cuando actualicen pojos
+				temp.datotiponombre = "texto";
 				sthitotipos.add(temp);
 			}
-			
+
 			response_text=new GsonBuilder().serializeNulls().create().toJson(sthitotipos);
 	        response_text = String.join("", "\"hitotipos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
@@ -100,9 +103,11 @@ public class SHitoTipo extends HttpServlet {
 				temp.estado = hitotipo.getEstado();
 				temp.id = hitotipo.getId();
 				temp.nombre = hitotipo.getNombre();
+				temp.datotipoid = 3;   // arreglar cuando actualicen pojos
+				temp.datotiponombre = "texto";
 				sthitotipos.add(temp);
 			}
-			
+
 			response_text=new GsonBuilder().serializeNulls().create().toJson(sthitotipos);
 	        response_text = String.join("", "\"hitotipos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
@@ -112,13 +117,12 @@ public class SHitoTipo extends HttpServlet {
 			boolean esnuevo = map.get("esnuevo").equals("true");
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0 || esnuevo){
-				
+
 				String nombre = map.get("nombre");
 				String descripcion = map.get("descripcion");
 				HitoTipo hitotipo;
 				if(esnuevo){
 					hitotipo = new  HitoTipo(nombre, descripcion, 1,null ) ;
-							
 				}
 				else{
 					hitotipo = HitoTipoDAO.getHitoTipoPorId(id);
@@ -147,17 +151,16 @@ public class SHitoTipo extends HttpServlet {
 		else{
 			response_text = "{ \"success\": false }";
 		}
-		
+
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
-		
-        
+
         OutputStream output = response.getOutputStream();
 		GZIPOutputStream gz = new GZIPOutputStream(output);
         gz.write(response_text.getBytes("UTF-8"));
         gz.close();
         output.close();
 	}
-	
+
 
 }
