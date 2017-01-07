@@ -20,10 +20,11 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.PermisoDAO;
 import pojo.Permiso;
+import utilities.Utils;
+
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 /**
  * Servlet implementation class SPermiso
@@ -38,8 +39,8 @@ public class SPermiso extends HttpServlet {
 		String descripcion;
 		String usuarioCreo;
 		String usuarioActualizo;
-		Date fechaCreacion;
-		Date fechaActualizacion;
+		String fechaCreacion;
+		String fechaActualizacion;
 		int estado;
 	}
     /**
@@ -71,7 +72,7 @@ public class SPermiso extends HttpServlet {
 	    };
 	    Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String action = "";
-		action = map.get("action");
+		action = map.get("accion");
 		if(action!=null){
 			if(action.compareTo("guardarPermiso")==0){
 				String nombrePermiso = map.get("nombre");
@@ -79,7 +80,7 @@ public class SPermiso extends HttpServlet {
 				if(nombrePermiso!=null && descripcionPermiso!=null){
 					HttpSession sesionweb = request.getSession();
 					Permiso permiso = new Permiso(nombrePermiso,descripcionPermiso,sesionweb.getAttribute("usuario").toString(),new DateTime().toDate(),1);
-					response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false")," }");
+					response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false"),", \"data\":",permiso.getId().toString(),"  }");
 				}else{
 					response_text = String.join("", "{\"success\":false, \"error\":\"parametro vacio\" }");
 				}
@@ -89,11 +90,12 @@ public class SPermiso extends HttpServlet {
 				Integer idPermiso = Integer.parseInt(map.get("id").toString());
 				if(nombrePermiso!=null && descripcionPermiso!=null && idPermiso !=null ){
 					HttpSession sesionweb = request.getSession();
-					Permiso permiso = PermisoDAO.getPermiso(nombrePermiso);
+					Permiso permiso = PermisoDAO.getPermisoById(idPermiso);
 					permiso.setDescripcion(descripcionPermiso);
+					permiso.setNombre(nombrePermiso);
 					permiso.setUsuarioActualizo(sesionweb.getAttribute("usuario").toString());
 					permiso.setFechaActualizacion(new DateTime().toDate());
-					response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false")," }");
+					response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false"),", \"data\":",permiso.getId().toString()," }");
 				}else{
 					response_text = String.join("", "{\"success\":false, \"error\":\"parametro vacio\" }");
 				}
@@ -102,7 +104,10 @@ public class SPermiso extends HttpServlet {
 			else if(action.compareTo("eliminarPermiso")==0){
 				String idPermiso = map.get("id").toString();
 				if(idPermiso!=null){
+					HttpSession sesionweb = request.getSession();
 					Permiso permiso = PermisoDAO.getPermisoById(Integer.parseInt(idPermiso));
+					permiso.setUsuarioActualizo(sesionweb.getAttribute("usuario").toString());
+					permiso.setFechaActualizacion(new DateTime().toDate());
 					response_text = String.join("","{ \"success\": ",(PermisoDAO.eliminarPermiso(permiso) ? "true" : "false")," }");
 				}else{
 					response_text = String.join("", "{\"success\":false, \"error\":\"parametro vacio\" }");
@@ -118,9 +123,9 @@ public class SPermiso extends HttpServlet {
 					tmp.nombre = permiso.getNombre();
 					tmp.descripcion= permiso.getDescripcion();
 					tmp.usuarioCreo=permiso.getUsuarioCreo();
-					tmp.fechaCreacion= permiso.getFechaCreacion();
+					tmp.fechaCreacion= Utils.formatDate(permiso.getFechaCreacion());
 					tmp.usuarioActualizo=permiso.getUsuarioActualizo();
-					tmp.fechaActualizacion= permiso.getFechaActualizacion();
+					tmp.fechaActualizacion=Utils.formatDate( permiso.getFechaActualizacion());
 					tmp.estado = permiso.getEstado();
 					stpermisos.add(tmp);
 				}
@@ -128,6 +133,31 @@ public class SPermiso extends HttpServlet {
 		        response_text = String.join("", "\"permisos\":",response_text);
 		        response_text = String.join("", "{\"success\":true,", response_text,"}");
 				
+			}else if(action.compareTo("getPermisosPagina")==0){
+				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
+				int numeroPermisos = map.get("numeroPermisos")!=null  ? Integer.parseInt(map.get("numeroPermisos")) : 0;
+				List <Permiso> permisos = PermisoDAO.getPermisosPagina(pagina, numeroPermisos);
+				List <stpermiso> stpermisos = new ArrayList <stpermiso>();
+				for(Permiso permiso:permisos)
+				{
+					stpermiso tmp = new stpermiso();
+					tmp.id = permiso.getId();
+					tmp.nombre = permiso.getNombre();
+					tmp.descripcion= permiso.getDescripcion();
+					tmp.usuarioCreo=permiso.getUsuarioCreo();
+					tmp.fechaCreacion=Utils.formatDate(permiso.getFechaCreacion());
+					tmp.usuarioActualizo=permiso.getUsuarioActualizo();
+					tmp.fechaActualizacion= Utils.formatDate(permiso.getFechaActualizacion());
+					tmp.estado = permiso.getEstado();
+					stpermisos.add(tmp);
+				}
+				response_text=new GsonBuilder().serializeNulls().create().toJson(stpermisos);
+		        response_text = String.join("", "\"permisos\":",response_text);
+		        response_text = String.join("", "{\"success\":true,", response_text,"}");
+				
+			}
+			else if(action.compareTo("getTotalPermisos")==0){
+				response_text = String.join("","{ \"success\": true, \"totalPermisos\":",PermisoDAO.getTotalPermisos().toString()," }");
 			}
 		}else{
 			response_text = String.join("", "{\"success\":false, \"error\":\"falta parametro de accion\" }");

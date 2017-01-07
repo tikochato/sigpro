@@ -40,14 +40,13 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             })
             .when('/productoPropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProductoPropiedad\'" class="all_page"></div>'
-            }) 
+            })
             .when('/producto/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProducto\'" class="all_page"></div>'
-            }) 
-            
+            })
             .when('/proyectotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectotipoController\'" class="all_page"></div>'
-            })  
+            })
             .when('/desembolsotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'desembolsotipoController\'" class="all_page"></div>'
             })
@@ -84,7 +83,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/riesgopropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgopropiedadController\'" class="all_page"></div>'
             })
-            .when('/permisos',{
+            .when('/permisos/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'permisoController\'" class="all_page"></div>'
             })
             .when('/riesgotipo/:reiniciar_vista?',{
