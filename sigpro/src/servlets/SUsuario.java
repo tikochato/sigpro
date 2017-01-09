@@ -20,6 +20,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.UsuarioDAO;
+import pojo.Permiso;
 import pojo.Usuario;
 import pojo.UsuarioPermiso;
 import utilities.Utils;
@@ -48,6 +49,12 @@ public class SUsuario extends HttpServlet {
 		String usuarioActualizo;
 		String fechaCreacion;
 		String fechaActualizacion;
+	}
+	
+	class stpermiso{
+		Integer id;
+		String nombre;
+		String descripcion;
 	}
        
     /**
@@ -205,6 +212,22 @@ public class SUsuario extends HttpServlet {
 				response_text = String.join("", "{\"success\":true,", response_text,"}");
 			}else if(accion.compareTo("getTotalUsuarios")==0){
 				response_text=String.join("","{ \"success\": true, \"totalPermisos\":",UsuarioDAO.getTotalUsuarios().toString()," }") ;
+			}else if(accion.compareTo("getPermisosDisponibles")==0){
+				String usuario = map.get("usuario");
+				if(usuario !=null){
+					List <Permiso> permisos = UsuarioDAO.getPermisosDisponibles(usuario);
+					List <stpermiso> stpermisos = new ArrayList <stpermiso>();
+					for(Permiso permiso: permisos){
+						stpermiso tmp = new stpermiso();
+						tmp.id = permiso.getId();
+						tmp.nombre=permiso.getNombre();
+						tmp.descripcion = permiso.getDescripcion();
+						stpermisos.add(tmp);
+					}
+					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stpermisos);
+					response_text = String.join("", "\"permisos\": ",respuesta);
+					response_text = String.join("", "{\"success\":true,", response_text,"}");
+				}
 			}
 		}else{
 			response_text = String.join("","{ \"success\": false, \"error\":\"No se enviaron los parametros deseados\" }");

@@ -229,6 +229,22 @@ public class UsuarioDAO {
 		return ret;
 	}
 	
+	public static List <Permiso> getPermisosDisponibles (String usuario){
+		List <Permiso> ret = new ArrayList <Permiso> ();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			Query<Permiso> criteria = session.createQuery("FROM Permiso where id not in (Select permiso from UsuarioPermiso where usuariousuario =:usuario )", Permiso.class);
+			criteria.setParameter("usuario", usuario);
+			ret = criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("6", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	public static List <Usuario> getUsuarios(int pagina, int numeroUsuarios){
 		List <Usuario> ret = new ArrayList<Usuario> ();
 		Session session = CHibernateSession.getSessionFactory().openSession();
