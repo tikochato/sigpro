@@ -5,6 +5,9 @@
 <script type="text/ng-template" id="buscarPermiso.jsp">
    	<%@ include file="/app/components/usuarios/buscarPermiso.jsp"%>
 </script>
+<script type="text/ng-template" id="cambiarPassword.jsp">
+   	<%@ include file="/app/components/usuarios/cambiarPassword.jsp"%>
+</script>
 <style type="text/css">
 
 .myGrid {
@@ -69,6 +72,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-success" ng-click="usuarioc.guardarUsuario()">Guardar</label>
+			        <label class="btn btn-default" ng-click="usuarioc.cambiarPassword()" ng-show="!usuarioc.esNuevo">Cambiar Contraseña</label>
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()">Ir a Tabla</label>
     			</div>
     		</div>
@@ -99,10 +103,12 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-success" ng-click="usuarioc.guardarUsuario()">Guardar</label>
+			        <label class="btn btn-default" ng-click="usuarioc.cambiarPassword()" ng-show="!usuarioc.esNuevo">Cambiar Contraseña</label>
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()">Ir a Tabla</label>
     		</div>
     	</div>
 		</div>
+		<h3>Permisos</h3><br/>
 		<div align="center">
 				<div style="height: 35px; width: 75%">
 					<div style="text-align: right;">
