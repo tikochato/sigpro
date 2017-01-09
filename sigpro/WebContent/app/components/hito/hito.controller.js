@@ -15,7 +15,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 		mi.hitotipoNombre="";
 		mi.totalHitos = 0;
 		mi.paginaActual = 1;
-		mi.proyectoid = 0;
+		mi.proyectoid = $routeParams.pproyectoid;
 		mi.proyectoNombre="";
 		mi.formatofecha = 'dd/MM/yyyy';
 		mi.hitodatotipoid = "";
@@ -23,6 +23,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 		mi.hitoresultadocomentario;
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
+		
 		
 		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id }).success(
 				function(response) {
@@ -86,7 +87,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 		
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SHito', { accion: 'getHitosPagina', pagina: pagina, numerohitos: $utilidades.elementosPorPagina }).success(
+			$http.post('/SHito', { accion: 'getHitosPaginaPorProyecto', pagina: pagina, numerohitos: $utilidades.elementosPorPagina, proyectoid:$routeParams.proyecto_id }).success(
 					function(response) {
 						mi.hitos = response.hitos;
 						mi.gridOptions.data = mi.hitos;
@@ -192,10 +193,10 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 		}
 		
 		mi.reiniciarVista=function(){
-			if($location.path()=='/hito/rv')
+			if($location.path()==('/hito/'+ mi.proyectoid + '/rv'))
 				$route.reload();
 			else
-				$location.path('/hito/rv');
+				$location.path('/hito/'+ mi.proyectoid + '/rv');
 		}
 		
 		mi.abirpopup = function() {
