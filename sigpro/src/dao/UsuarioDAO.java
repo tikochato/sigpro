@@ -218,7 +218,7 @@ public class UsuarioDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			Query<UsuarioPermiso> criteria = session.createQuery("FROM UsuarioPermiso where usuario=:usuario", UsuarioPermiso.class);
+			Query<UsuarioPermiso> criteria = session.createQuery("FROM UsuarioPermiso where usuariousuario=:usuario", UsuarioPermiso.class);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getResultList();
 		}catch(Throwable e){
