@@ -34,7 +34,7 @@ public class SUsuario extends HttpServlet {
 	
 	class stusuarioPermiso{
 		Integer idPermiso;
-		String nombrePermiso;
+		String nombre;
 		String descripcion;
 		String usuarioCreo;
 		String usuarioActualizo;
@@ -179,12 +179,13 @@ public class SUsuario extends HttpServlet {
 						for(UsuarioPermiso usuarioPermiso : permisos){
 							stusuarioPermiso usuariopermiso = new stusuarioPermiso();
 							usuariopermiso.idPermiso=usuarioPermiso.getId().getPermisoid();
-							usuariopermiso.nombrePermiso=usuarioPermiso.getPermiso().getNombre();
+							usuariopermiso.nombre=usuarioPermiso.getPermiso().getNombre();
 							usuariopermiso.descripcion=usuarioPermiso.getPermiso().getDescripcion();
 							usuariopermiso.usuarioCreo=usuarioPermiso.getUsuarioCreo();
 							usuariopermiso.usuarioActualizo=usuarioPermiso.getUsuarioActualizo();
 							usuariopermiso.fechaCreacion=Utils.formatDate(usuarioPermiso.getFechaCreacion());
 							usuariopermiso.fechaActualizacion=Utils.formatDate(usuarioPermiso.getFechaActualizacion());
+							usuariopermiso.estado= usuarioPermiso.getEstado();
 							stpermisos.add(usuariopermiso);
 						}
 					}
@@ -227,6 +228,29 @@ public class SUsuario extends HttpServlet {
 					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stpermisos);
 					response_text = String.join("", "\"permisos\": ",respuesta);
 					response_text = String.join("", "{\"success\":true,", response_text,"}");
+				}
+			}else if(accion.compareTo("editarUsuario")==0){
+				String usuario =map.get("usuario");
+				if(usuario!=null){
+					Usuario usuarioEdicion = UsuarioDAO.getUsuario(usuario);
+					if(usuarioEdicion!=null){
+						String email = map.get("email");
+						if(email!=null){
+							usuarioEdicion.setEmail(email);
+							if(UsuarioDAO.editarUsuario(usuarioEdicion)){
+								response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualización de usuario exitosa.\" }");
+							}else{
+								response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo actualizar al usuario. \" }");
+							}
+							
+						}else{
+							response_text = String.join("","{ \"success\": false, \"error\":\"no se encontró al usuario. \" }");
+						}
+					}else{
+						response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros correctos \" }");
+					}
+				}else{
+					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros correctos \" }");
 				}
 			}
 		}else{

@@ -212,13 +212,28 @@ public class UsuarioDAO {
 		
 		return ret;
 	}
+	public static boolean editarUsuario(Usuario usuario){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			session.saveOrUpdate(usuario);
+			session.getTransaction().commit();
+			ret=true;
+		}catch(Throwable e){
+			CLogger.write("5", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
 	
 	public static List <UsuarioPermiso> getPermisosActivosUsuario(String usuario){
 		List <UsuarioPermiso> ret = new ArrayList <UsuarioPermiso> ();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			Query<UsuarioPermiso> criteria = session.createQuery("FROM UsuarioPermiso where usuariousuario=:usuario", UsuarioPermiso.class);
+			Query<UsuarioPermiso> criteria = session.createQuery("FROM UsuarioPermiso where usuariousuario=:usuario and estado = 1", UsuarioPermiso.class);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getResultList();
 		}catch(Throwable e){

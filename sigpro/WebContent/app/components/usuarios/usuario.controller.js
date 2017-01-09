@@ -15,7 +15,9 @@ app.controller(
   '$window',
   '$location',
   '$route',
-  function($scope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route) {
+  '$q',
+  '$uibModal',
+  function($scope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route,$q,$uibModal) {
 	var mi=this;
 	$window.document.title = 'SIGPRO - Usuarios';
 	i18nService.setCurrentLang('es');
@@ -30,6 +32,8 @@ app.controller(
 	mi.claves={password1:"", password2:""};
 	mi.nuevosPermisos=[];
 	mi.permisosEliminados=[];
+	var usuarioMail ="";
+	mi.permisosAsignados=[];
 	mi.gridOptions = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -76,6 +80,7 @@ app.controller(
 			var msg = 'row selected '
 			+ row;
 			mi.usuariosSelected = row.entity;
+			usuarioMail= mi.usuariosSelected.email;
 		});
 		if($routeParams.reiniciar_vista=='rv'){
 			mi.guardarEstado();
@@ -105,6 +110,9 @@ app.controller(
 				
 	
 	mi.nuevoUsuario=function(){
+		mi.claves.password1="";
+		mi.claves.password2="";
+		mi.permisosAsignados=[];
 		mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
 		mi.isCollapsed = true;
 		mi.entityselected = null;
@@ -113,16 +121,16 @@ app.controller(
 	
 	mi.guardarUsuario=function(){
 		if(mi.esNuevo){
-			if(mi.claves.password1!=="" && mi.claves.password2!=="" && mi.usuarioSelected.usuario!=="" && mi.usuarioSelected.email!==""){
-				if(validarEmail(mi.usuarioSelected.email)){
+			if(mi.claves.password1!=="" && mi.claves.password2!=="" && mi.usuariosSelected.usuario!=="" && mi.usuariosSelected.email!==""){
+				if(validarEmail(mi.usuariosSelected.email)){
 					if(mi.claves.password1===mi.claves.password2){
-						mi.usuarioSelected.password= mi.claves.password1;
+						mi.usuariosSelected.password= mi.claves.password1;
 						$http.post('/SUsuario',
 								{
 									accion: 'registroUsuario',
-									usuario:mi.usuarioSelected.usuario,
-									email:mi.usuarioSelected.email,
-									password:mi.usuarioSelected.password,
+									usuario:mi.usuariosSelected.usuario,
+									email:mi.usuariosSelected.email,
+									password:mi.usuariosSelected.password,
 									permisos:JSON.stringify(mi.nuevosPermisos)
 								}).success(
 									function(data) {
@@ -142,7 +150,73 @@ app.controller(
 				$utilidades.mensaje('danger','Los campos no deben de quedar vacios.');
 			}
 		}else{
-			
+			if(mi.usuariosSelected.email!==""){
+				if(validarEmail(mi.usuariosSelected.email)){
+					if(usuarioMail===mi.usuariosSelected.email){
+						if(mi.nuevosPermisos.length==0 && mi.permisosEliminados.length==0){
+							$utilidades.mensaje('danger','No se ha realizado ningún cambio.');
+							
+						}else{
+							$http.post('/SUsuario',
+									{
+										accion: 'actualizarPermisos',
+										usuario:mi.usuariosSelected.usuario,
+										permisosNuevos:JSON.stringify(mi.nuevosPermisos),
+										permisosEliminados:JSON.stringify(mi.permisosEliminados)
+									}).success(
+										function(data) {
+											if(data.success){
+												mi.cargarTabla(mi.paginaActual);
+												mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+											}
+								});
+						}
+						
+					}else{
+						$http.post('/SUsuario',
+								{
+									accion: 'editarUsuario',
+									usuario:mi.usuariosSelected.usuario,
+									email:mi.usuariosSelected.email
+								}).success(
+									function(data) {
+										console.log(data);
+										if(data.success){
+											if(mi.nuevosPermisos.length==0 && mi.permisosEliminados.length==0){
+												mi.isCollapsed = false;
+												mi.cargarTabla(mi.paginaActual);
+												mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+											}else{
+												$http.post('/SUsuario',
+														{
+															accion: 'actualizarPermisos',
+															usuario:mi.usuariosSelected.usuario,
+															permisosNuevos:JSON.stringify(mi.nuevosPermisos),
+															permisosEliminados:JSON.stringify(mi.permisosEliminados)
+														}).success(
+															function(data) {
+																if(data.success){
+																	mi.isCollapsed = false;
+																	mi.cargarTabla(mi.paginaActual);
+																	mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+																}
+													});
+												
+											}
+										}else {
+											$utilidades.mensaje('danger','No se pudo realizar cambios.');
+										}
+										
+							});
+						
+					}
+				}else{
+					$utilidades.mensaje('danger','correo electrónico no válido.');
+				}
+				
+			}else{
+				$utilidades.mensaje('danger','Los campos no deben de quedar vacios.');
+			}
 		}
 	};
 	
@@ -182,6 +256,17 @@ app.controller(
 	    return re.test(email);
 	}
 	
+	mi.editarUsuario=function(){
+		
+		mi.isCollapsed = true;
+		mi.esNuevo=false;
+		$http.post('/SUsuario', {
+    		accion:'obtenerPermisos',
+    		usuario: mi.usuariosSelected.usuario
+    	}).then(function(response) {
+    	    mi.permisosAsignados =response.data.permisos;
+    	});
+	};
 	
 	
 	mi.reiniciarVista=function(){
@@ -203,9 +288,139 @@ app.controller(
 		});
 	}
 	
+
+	mi.buscarPermiso = function(titulo, mensaje) {
+		var modalInstance = $uibModal.open({
+		    animation : 'true',
+		    ariaLabelledBy : 'modal-title',
+		    ariaDescribedBy : 'modal-body',
+		    templateUrl : 'buscarPermiso.jsp',
+		    controller : 'modalBuscarPermiso',
+		    controllerAs : 'modalBuscar',
+		    backdrop : 'static',
+		    size : 'md',
+		    resolve : {
+		    	infoPermisos: function(){
+		    		var parametros={nuevo:mi.esNuevo, usuario:mi.usuariosSelected.usuario};
+		    		return  parametros;
+		    	}
+		    }
+
+		});
+		
+		modalInstance.result.then(function(permisoSeleccionado) {
+			mi.permisosAsignados.push(permisoSeleccionado);
+			mi.nuevosPermisos.push(permisoSeleccionado.id);
+		}, function() {
+		});
+	}
+	
+	mi.eliminarPermiso= function(permiso){
+		var indice = mi.permisosAsignados.indexOf(permiso);
+		if (indice !== -1) {
+	       mi.permisosAsignados.splice(indice, 1);
+	       mi.nuevosPermisos.splice(indice,1);
+	    }
+		if(!mi.esNuevo){
+			mi.permisosEliminados.push(permiso.idPermiso);
+		}
+	};
+	
 	$http.post('/SUsuario', { accion: 'getTotalUsuarios' }).success(
 			function(response) {
 				mi.totalUsuarios = response.totalUsuarios;
 				mi.cargarTabla(mi.paginaActual);
 	});
 } ]);
+
+app.controller('modalBuscarPermiso', [
+	'$uibModalInstance', '$scope', '$http', '$interval', 'i18nService',
+	'Utilidades', '$timeout', '$log','infoPermisos', modalBuscarPermiso
+]);
+
+function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log, infoPermisos) {
+	
+	var mi = this;
+	if(infoPermisos.nuevo){
+		mi.mostrarCargando = true;
+    	$http.post('/SPermiso', {
+    		accion:'getPermisos'
+    	}).then(function(response) {
+    	    if (response.data.success) {
+    	    	mi.data = response.data.permisos;
+    	    	mi.opcionesGrid.data = mi.data;
+    			mi.mostrarCargando = false;
+    	    }
+    	});
+	}else{
+		 $http.post('/SUsuario', {
+		    	accion : 'getPermisosDisponibles',
+		    	usuario:infoPermisos.usuario
+		        }).success(function(response) {
+		        	mi.data = response.permisos;
+	    	    	mi.opcionesGrid.data = mi.data;
+	    			mi.mostrarCargando = false;
+		    });
+	}
+	mi.totalElementos = 0;
+	mi.paginaActual = 1;
+	mi.numeroMaximoPaginas = 5;
+	mi.elementosPorPagina = 9;
+	
+	mi.mostrarCargando = false;
+	mi.data = [];
+	
+	mi.itemSeleccionado = null;
+	mi.seleccionado = false;
+	
+   
+   
+    mi.opcionesGrid = {
+		data : mi.data,
+		columnDefs : [
+			{
+				displayName : 'Permiso', 
+				name : 'nombre', 
+				cellClass : 'grid-align-right', 
+				type : 'text', width : 150
+			
+			}, 
+			{ 
+				displayName : 'Descripción', 
+				name : 'descripcion', 
+				cellClass : 'grid-align-left'
+			}
+		],
+		enableRowSelection : true,
+		enableRowHeaderSelection : false,
+		multiSelect : false,
+		modifierKeysToMultiSelect : false,
+		noUnselect : false,
+		enableFiltering : true,
+		enablePaginationControls : false,
+		paginationPageSize : 5,
+		onRegisterApi : function(gridApi) {
+		    mi.gridApi = gridApi;
+		    mi.gridApi.selection.on.rowSelectionChanged($scope,
+			    mi.seleccionarPermiso);
+		}
+    }
+    
+    mi.seleccionarPermiso = function(row) {
+    	mi.itemSeleccionado = row.entity;
+    	mi.seleccionado = row.isSelected;
+    };
+
+
+     mi.ok = function() {
+    	if (mi.seleccionado) {
+    	    $uibModalInstance.close(mi.itemSeleccionado);
+    	} else {
+    	    $utilidades.mensaje('warning', 'Debe seleccionar una Propiedad');
+    	}
+     };
+
+     mi.cancel = function() {
+    	$uibModalInstance.dismiss('cancel');
+     };
+}

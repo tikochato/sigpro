@@ -2,7 +2,10 @@
 	pageEncoding="UTF-8"%>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-<style type="text/css">
+<script type="text/ng-template" id="buscarPermiso.jsp">
+   	<%@ include file="/app/components/usuarios/buscarPermiso.jsp"%>
+</script>
+<style type="text/css">	
 
 .myGrid {
 	width: 100%;
@@ -71,13 +74,17 @@
     		</div>
 			<div class="col-sm-12">
 				<form>
-						<div class="form-group">
+						<div class="form-group" ng-show="usuarioc.esNuevo">
 							<label for="nombre">Usuario</label>
-    						<input type="text" class="form-control" id="usuario" placeholder="Usuario" ng-model="usuarioc.usuarioSelected.usuario">
+    						<input type="text" class="form-control" id="usuario" placeholder="Usuario" ng-model="usuarioc.usuariosSelected.usuario">
+						</div>
+						<div class="form-group" ng-show="!usuarioc.esNuevo">
+							<label for="nombre">Usuario</label>
+    						<input type="text" class="form-control" id="usuario" placeholder="Usuario" ng-model="usuarioc.usuariosSelected.usuario" readonly>
 						</div>
 						<div class="form-group">
 							<label for="Descripcion">Correo</label>
-    						<input type="text" class="form-control" id="correo" placeholder="Correo electrónico" ng-model="usuarioc.usuarioSelected.email">
+    						<input type="text" class="form-control" id="correo" placeholder="Correo electrónico" ng-model="usuarioc.usuariosSelected.email">
 						</div>
 						<div class="form-group" ng-show="usuarioc.esNuevo">
 							<label for="Descripcion">Contraseña</label>
@@ -95,6 +102,46 @@
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()">Ir a Tabla</label>
     			</div>
     		</div>
+    			<div align="center">
+					<div style="height: 35px; width: 75%">
+						<div style="text-align: right;">
+							<div class="btn-group" role="group" aria-label="">
+								<a class="btn btn-default" href
+									ng-click="usuarioc.buscarPermiso()" role="button"
+									uib-tooltip="Asignar nuevo permiso" tooltip-placement="left">
+									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+					
+					<table style="width: 75%;"
+					st-table="usuarioc.permisosAsignados"
+					class="table table-striped  table-bordered">
+					<thead >
+						<tr>
+							<th>Nombre</th>
+							<th>Descripicon</th>
+							<th style="width: 30px;">Quitar</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr st-select-row="row"
+							ng-repeat="row in usuarioc.permisosAsignados">
+							<td>{{row.nombre}}</td>	
+							<td>{{row.descripcion}}</td>
+							<td>
+								<button type="button"
+									ng-click="usuarioc.eliminarPermiso(row)"
+									class="btn btn-sm btn-danger">
+									<i class="glyphicon glyphicon-minus-sign"> </i>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</div>
 		</div>
 		</shiro:hasPermission>
 		
