@@ -30,6 +30,7 @@ public class UsuarioDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Usuario ret = null;
 		try{
+			session.beginTransaction();
 			ret = (Usuario) session.get(Usuario.class,usuario);
 		}
 		catch(Throwable e){
@@ -112,6 +113,31 @@ public class UsuarioDAO {
 		}
 		
 		return ret;		
+	}
+	public static boolean cambiarPassword(String usuario,String password, String usuarioActualizo){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			Usuario usuarioCambio= (Usuario) session.get(Usuario.class,usuario);
+			if(usuarioCambio!=null){
+				RandomNumberGenerator rng = new SecureRandomNumberGenerator();
+				Object salt = rng.nextBytes();
+				String hashedPasswordBase64 = new Sha256Hash(password, salt,1024).toBase64();
+				usuarioCambio.setPassword(hashedPasswordBase64);
+				usuarioCambio.setSalt(salt.toString());
+				usuarioCambio.setUsuarioActualizo(usuarioActualizo);
+				usuarioCambio.setFechaActualizacion(new DateTime().toDate());
+				session.saveOrUpdate(usuarioCambio);
+				session.getTransaction().commit();
+				ret = true;
+			} 
+		}catch(Throwable e){
+			CLogger.write("2", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
 	}
 	public static boolean asignarPermisosUsuario(String usuario, List <Integer> permisos,String usuarioTexto){
 		boolean ret =false;
@@ -212,11 +238,13 @@ public class UsuarioDAO {
 		
 		return ret;
 	}
-	public static boolean editarUsuario(Usuario usuario){
+	public static boolean editarUsuario(Usuario usuario, String usuarioActualizo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
+			usuario.setUsuarioActualizo(usuarioActualizo);
+			usuario.setFechaActualizacion(new DateTime().toDate());
 			session.saveOrUpdate(usuario);
 			session.getTransaction().commit();
 			ret=true;

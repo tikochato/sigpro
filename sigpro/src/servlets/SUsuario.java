@@ -237,7 +237,8 @@ public class SUsuario extends HttpServlet {
 						String email = map.get("email");
 						if(email!=null){
 							usuarioEdicion.setEmail(email);
-							if(UsuarioDAO.editarUsuario(usuarioEdicion)){
+							HttpSession sesionweb = request.getSession();
+							if(UsuarioDAO.editarUsuario(usuarioEdicion, sesionweb.getAttribute("usuario").toString())){
 								response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualización de usuario exitosa.\" }");
 							}else{
 								response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo actualizar al usuario. \" }");
@@ -251,6 +252,20 @@ public class SUsuario extends HttpServlet {
 					}
 				}else{
 					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros correctos \" }");
+				}
+			}else if(accion.compareTo("cambiarPassword")==0){
+				String usuario = map.get("usuario");
+				String nuevoPassword = map.get("password");
+				if(usuario!=null && nuevoPassword != null){
+					HttpSession sesionweb = request.getSession();
+					if(UsuarioDAO.cambiarPassword(usuario, nuevoPassword,sesionweb.getAttribute("usuario").toString())){
+						response_text = String.join("","{ \"success\": true, \"mensaje\":\"cambio de password exitoso.\" }");
+					}else{
+						response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo cambiar el password.\" }");
+					}
+					
+				}else{
+					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros deseados.\" }");
 				}
 			}
 		}else{
