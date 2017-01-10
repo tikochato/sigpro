@@ -20,6 +20,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.UsuarioDAO;
+import pojo.Permiso;
 import pojo.Usuario;
 import pojo.UsuarioPermiso;
 import utilities.Utils;
@@ -33,7 +34,7 @@ public class SUsuario extends HttpServlet {
 	
 	class stusuarioPermiso{
 		Integer idPermiso;
-		String nombrePermiso;
+		String nombre;
 		String descripcion;
 		String usuarioCreo;
 		String usuarioActualizo;
@@ -48,6 +49,12 @@ public class SUsuario extends HttpServlet {
 		String usuarioActualizo;
 		String fechaCreacion;
 		String fechaActualizacion;
+	}
+	
+	class stpermiso{
+		Integer id;
+		String nombre;
+		String descripcion;
 	}
        
     /**
@@ -172,12 +179,13 @@ public class SUsuario extends HttpServlet {
 						for(UsuarioPermiso usuarioPermiso : permisos){
 							stusuarioPermiso usuariopermiso = new stusuarioPermiso();
 							usuariopermiso.idPermiso=usuarioPermiso.getId().getPermisoid();
-							usuariopermiso.nombrePermiso=usuarioPermiso.getPermiso().getNombre();
+							usuariopermiso.nombre=usuarioPermiso.getPermiso().getNombre();
 							usuariopermiso.descripcion=usuarioPermiso.getPermiso().getDescripcion();
 							usuariopermiso.usuarioCreo=usuarioPermiso.getUsuarioCreo();
 							usuariopermiso.usuarioActualizo=usuarioPermiso.getUsuarioActualizo();
 							usuariopermiso.fechaCreacion=Utils.formatDate(usuarioPermiso.getFechaCreacion());
 							usuariopermiso.fechaActualizacion=Utils.formatDate(usuarioPermiso.getFechaActualizacion());
+							usuariopermiso.estado= usuarioPermiso.getEstado();
 							stpermisos.add(usuariopermiso);
 						}
 					}
@@ -205,6 +213,60 @@ public class SUsuario extends HttpServlet {
 				response_text = String.join("", "{\"success\":true,", response_text,"}");
 			}else if(accion.compareTo("getTotalUsuarios")==0){
 				response_text=String.join("","{ \"success\": true, \"totalPermisos\":",UsuarioDAO.getTotalUsuarios().toString()," }") ;
+			}else if(accion.compareTo("getPermisosDisponibles")==0){
+				String usuario = map.get("usuario");
+				if(usuario !=null){
+					List <Permiso> permisos = UsuarioDAO.getPermisosDisponibles(usuario);
+					List <stpermiso> stpermisos = new ArrayList <stpermiso>();
+					for(Permiso permiso: permisos){
+						stpermiso tmp = new stpermiso();
+						tmp.id = permiso.getId();
+						tmp.nombre=permiso.getNombre();
+						tmp.descripcion = permiso.getDescripcion();
+						stpermisos.add(tmp);
+					}
+					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stpermisos);
+					response_text = String.join("", "\"permisos\": ",respuesta);
+					response_text = String.join("", "{\"success\":true,", response_text,"}");
+				}
+			}else if(accion.compareTo("editarUsuario")==0){
+				String usuario =map.get("usuario");
+				if(usuario!=null){
+					Usuario usuarioEdicion = UsuarioDAO.getUsuario(usuario);
+					if(usuarioEdicion!=null){
+						String email = map.get("email");
+						if(email!=null){
+							usuarioEdicion.setEmail(email);
+							HttpSession sesionweb = request.getSession();
+							if(UsuarioDAO.editarUsuario(usuarioEdicion, sesionweb.getAttribute("usuario").toString())){
+								response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualización de usuario exitosa.\" }");
+							}else{
+								response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo actualizar al usuario. \" }");
+							}
+							
+						}else{
+							response_text = String.join("","{ \"success\": false, \"error\":\"no se encontró al usuario. \" }");
+						}
+					}else{
+						response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros correctos \" }");
+					}
+				}else{
+					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros correctos \" }");
+				}
+			}else if(accion.compareTo("cambiarPassword")==0){
+				String usuario = map.get("usuario");
+				String nuevoPassword = map.get("password");
+				if(usuario!=null && nuevoPassword != null){
+					HttpSession sesionweb = request.getSession();
+					if(UsuarioDAO.cambiarPassword(usuario, nuevoPassword,sesionweb.getAttribute("usuario").toString())){
+						response_text = String.join("","{ \"success\": true, \"mensaje\":\"cambio de password exitoso.\" }");
+					}else{
+						response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo cambiar el password.\" }");
+					}
+					
+				}else{
+					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros deseados.\" }");
+				}
 			}
 		}else{
 			response_text = String.join("","{ \"success\": false, \"error\":\"No se enviaron los parametros deseados\" }");
