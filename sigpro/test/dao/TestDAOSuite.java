@@ -3,7 +3,6 @@ import java.io.File;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -13,7 +12,7 @@ import utilities.CHibernateSession;
 import utilities.TestSetUp;
 
 @RunWith(Suite.class)
-@SuiteClasses({ EstadoTablaDAOTest.class })
+@SuiteClasses({ EstadoTablaDAOTest.class, PermisoDAOTest.class })
 public class TestDAOSuite {
 	private static Configuration config;
     private static SessionFactory factory;	
