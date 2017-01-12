@@ -43,7 +43,7 @@ public class CHibernateSession {
 		return sessionFactory;
 	}
 	
-	public static void changeEnviroment(SessionFactory session){
+	public static void changeEnvinroment(SessionFactory session){
 		sessionFactory = session;
 	}
 }

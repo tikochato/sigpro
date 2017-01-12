@@ -24,7 +24,7 @@ public class TestDAOSuite {
         config.configure(new File("src/hibernate_tmp.cfg.xml"));
         factory = config.buildSessionFactory();
         TestSetUp.setTestState();
-        CHibernateSession.changeEnviroment(factory);
+        CHibernateSession.changeEnvinroment(factory);
    	}
 
 	
