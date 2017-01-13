@@ -29,6 +29,7 @@ import utilities.TestSetUp;
 	,CooperanteDAOTest.class
 	,CTipoPropiedadDAOTest.class
 	,DesembolsoDAOTest.class
+	,EntidadDAOTest.class
 	})
 public class TestDAOSuite {
 	private static Configuration config;
