@@ -16,6 +16,7 @@ import utilities.TestSetUp;
 	EstadoTablaDAOTest.class
 	,PermisoDAOTest.class
 	,DatoTipoDAOTest.class 
+	,ComponenteTipoDAOTest.class
 	})
 public class TestDAOSuite {
 	private static Configuration config;
