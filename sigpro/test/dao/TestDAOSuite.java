@@ -12,7 +12,11 @@ import utilities.CHibernateSession;
 import utilities.TestSetUp;
 
 @RunWith(Suite.class)
-@SuiteClasses({ EstadoTablaDAOTest.class, PermisoDAOTest.class, DatoTipoDAOTest.class })
+@SuiteClasses({ 
+	EstadoTablaDAOTest.class
+	,PermisoDAOTest.class
+	,DatoTipoDAOTest.class 
+	})
 public class TestDAOSuite {
 	private static Configuration config;
     private static SessionFactory factory;	
