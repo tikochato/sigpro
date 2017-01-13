@@ -18,6 +18,7 @@ import utilities.TestSetUp;
 	,DatoTipoDAOTest.class 
 	,ComponenteTipoDAOTest.class
 	,DesembolsoTipoDAOTest.class
+	,HitoTipoDAOTest.class
 	})
 public class TestDAOSuite {
 	private static Configuration config;
