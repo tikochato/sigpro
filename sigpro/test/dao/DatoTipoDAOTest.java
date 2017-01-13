@@ -2,36 +2,18 @@ package dao;
 
 import static org.junit.Assert.*;
 
-import java.awt.List;
-import java.io.File;
-
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import pojo.DatoTipo;
 import utilities.CHibernateSession;
-import utilities.TestSetUp;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 public class DatoTipoDAOTest {
-	private static Configuration config;
-    private static SessionFactory factory;	
-    
-	@BeforeClass
-	public static void before(){
-		config = new Configuration();
-        config.configure(new File("src/hibernate_tmp.cfg.xml"));
-        factory = config.buildSessionFactory();
-        TestSetUp.setTestState();
-        CHibernateSession.changeEnvinroment(factory);
-	}
+
 	
 	@Test
 	public void getDatoTipoTest(){
@@ -73,8 +55,8 @@ public class DatoTipoDAOTest {
 		assertEquals(DatoTipoDAO.actualizar(1, "texto",""), true);
 	}
 	
-	@After
-	public void cleanData(){
+	@AfterClass
+	public static void cleanData(){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -85,7 +67,6 @@ public class DatoTipoDAOTest {
 			session.beginTransaction();
 			session.delete(datoTipoTmp);
 			session.getTransaction().commit();
-			
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
