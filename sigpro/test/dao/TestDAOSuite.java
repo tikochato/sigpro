@@ -25,6 +25,7 @@ import utilities.TestSetUp;
 	,RiesgoTipoDAOTest.class
 	,ColaboradorDAOTest.class
 	,ComponenteDAOTest.class
+	,ComponentePropiedadDAOTest.class
 	})
 public class TestDAOSuite {
 	private static Configuration config;
