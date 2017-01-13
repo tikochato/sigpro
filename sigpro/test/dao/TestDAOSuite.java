@@ -21,6 +21,7 @@ import utilities.TestSetUp;
 	,HitoTipoDAOTest.class
 	,MetaTipoDAOTest.class
 	,ProductoTipoDAOTest.class
+	,ProyectoTipoDAOTest.class
 	})
 public class TestDAOSuite {
 	private static Configuration config;
