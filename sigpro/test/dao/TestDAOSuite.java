@@ -23,6 +23,7 @@ import utilities.TestSetUp;
 	,ProductoTipoDAOTest.class
 	,ProyectoTipoDAOTest.class
 	,RiesgoTipoDAOTest.class
+	,ColaboradorDAOTest.class
 	})
 public class TestDAOSuite {
 	private static Configuration config;
