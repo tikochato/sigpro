@@ -1,19 +1,14 @@
 package dao;
 
 import static org.junit.Assert.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
-import org.hibernate.Session;
-import org.junit.AfterClass;
 import org.junit.Test;
 
 import pojo.ComponenteTipo;
-import utilities.CHibernateSession;
-import org.joda.time.DateTime;
 
 public class ComponenteTipoDAOTest {
+	
+
 	
 	@Test
 	public void getComponenteTiposTest(){
@@ -27,20 +22,17 @@ public class ComponenteTipoDAOTest {
 	
 	@Test
 	public void guardarComponenteTipoTest(){
-		ComponenteTipo componenteTipo = new ComponenteTipo("unit_test","admin", new DateTime().toDate(),1);
-		assertNotNull(ComponenteTipoDAO.guardarComponenteTipo(componenteTipo));
+		assertEquals(ComponenteTipoDAO.guardarComponenteTipo(new ComponenteTipo()),false);
 	}
 	
 	@Test
 	public void eliminarComponenteTipoTest(){
-		ComponenteTipo componenteTipo = new ComponenteTipo("unit_test","admin", new DateTime().toDate(),1);
-		assertNotNull(ComponenteTipoDAO.eliminarComponenteTipo(componenteTipo));
+		assertEquals(ComponenteTipoDAO.eliminarComponenteTipo(new ComponenteTipo()),false);
 	}
 	
 	@Test
 	public void eliminarTotalComponenteTipo(){
-		ComponenteTipo componenteTipo = new ComponenteTipo("unit_test","admin", new DateTime().toDate(),1);
-		assertNotNull(ComponenteTipoDAO.eliminarTotalComponenteTipo(componenteTipo));
+		assertNotNull(ComponenteTipoDAO.eliminarTotalComponenteTipo(new ComponenteTipo()));
 	}
 	
 	@Test
@@ -52,7 +44,7 @@ public class ComponenteTipoDAOTest {
 	public void getTotalComponenteTipo(){
 		assertNotNull(ComponenteTipoDAO.getTotalComponenteTipo());
 	}
-	@AfterClass
+	/*@AfterClass
 	public static void cleanData(){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -69,6 +61,6 @@ public class ComponenteTipoDAOTest {
 		}finally{
 			session.close();
 		}
-	}
+	}*/
 
 }

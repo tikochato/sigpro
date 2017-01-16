@@ -2,17 +2,24 @@ package dao;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import pojo.MetaTipo;
 import utilities.CHibernateSession;
+import utilities.TestSetUp;
 
 public class MetaTipoDAOTest {
+
 	
 	@Test
 	public void getMetaTiposTest(){
@@ -33,20 +40,12 @@ public class MetaTipoDAOTest {
 	}
 	@Test
 	public void eliminarMetaTipoTest(){
-		MetaTipo metaTipo = new MetaTipo();
-		metaTipo.setNombre("unit_test");
-		metaTipo.setDescripcion("unit_test");
-		metaTipo.setUsuarioCreo("admin");
-		metaTipo.setEstado(1);
-		assertNotNull(MetaTipoDAO.eliminarMetaTipo(metaTipo));
+		assertEquals(MetaTipoDAO.eliminarMetaTipo(new MetaTipo()),false);
 	}
 	
 	@Test
 	public void eliminarTotalMetaTipoTest(){
-		MetaTipo metaTipo = new MetaTipo();
-		metaTipo.setNombre("unit_test");
-		metaTipo.setUsuarioCreo("admin");
-		assertNotNull(MetaTipoDAO.eliminarTotalMetaTipo(metaTipo));
+		assertNotNull(MetaTipoDAO.eliminarTotalMetaTipo(new MetaTipo()));
 	}
 	
 	@Test

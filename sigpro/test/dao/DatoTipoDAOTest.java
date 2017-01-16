@@ -2,27 +2,22 @@ package dao;
 
 import static org.junit.Assert.*;
 
-import org.hibernate.Session;
-import org.junit.AfterClass;
+
 import org.junit.Test;
 
-import pojo.DatoTipo;
-import utilities.CHibernateSession;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 public class DatoTipoDAOTest {
 
 	
+	
 	@Test
 	public void getDatoTipoTest(){
-		assertEquals(DatoTipoDAO.getDatoTipo(1).getClass(),DatoTipo.class);
+		assertNotNull(DatoTipoDAO.getDatoTipo(1).getClass());
 	}
 	
 	@Test
 	public void guardarTest(){
-		assertEquals(DatoTipoDAO.guardar(1000, "unit_test", "unit_test"),true);
+		assertEquals(DatoTipoDAO.guardar(0, null, null),false);
 	}
 	
 	
@@ -52,28 +47,10 @@ public class DatoTipoDAOTest {
 	
 	@Test
 	public void actualizarTest(){
-		assertEquals(DatoTipoDAO.actualizar(1, "texto",""), true);
+		assertEquals(DatoTipoDAO.actualizar(0, null,""), false);
 	}
 	
-	@AfterClass
-	public static void cleanData(){
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		try{
-			CriteriaBuilder builder = session.getCriteriaBuilder();
-			CriteriaQuery<DatoTipo> criteria = builder.createQuery(DatoTipo.class);
-			Root<DatoTipo> root = criteria.from(DatoTipo.class);
-			criteria.where( builder.and(builder.equal(root.get("nombre"), "unit_test")));
-			DatoTipo datoTipoTmp =(DatoTipo) session.createQuery( criteria ).getSingleResult();
-			session.beginTransaction();
-			session.delete(datoTipoTmp);
-			session.getTransaction().commit();
-		}catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			session.close();
-		}
-		
-	}
+	
 	
 	
 }
