@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.omg.CORBA.portable.InputStream;
+import java.io.InputStream;
 
 public class ClienteHttp {
 	
@@ -33,7 +33,7 @@ public class ClienteHttp {
 		        connection.getOutputStream());
 		    wr.writeBytes(urlParameters);
 		    wr.close();
-
+		    System.out.println(urlParameters);
 		    //Get Response  
 		    InputStream is = (InputStream) connection.getInputStream();
 		    BufferedReader rd = new BufferedReader(new InputStreamReader(is));
