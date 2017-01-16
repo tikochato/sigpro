@@ -1,3 +1,4 @@
+package suiteTest;
 
 import java.io.File;
 
