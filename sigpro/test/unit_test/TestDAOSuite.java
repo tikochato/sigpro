@@ -1,4 +1,4 @@
-package suiteTest;
+package unit_test;
 
 import java.io.File;
 
