@@ -39,6 +39,7 @@ import utilities.TestSetUp;
 	,ProductoPropiedadDAOTest.class
 	,ProductoPropiedadValorDAOTest.class
 	,ProyectoDAOTest.class
+	,ProyectoPropiedadDAOTest.class
 	})
 public class TestDAOSuite {
 	private static Configuration config;
