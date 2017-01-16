@@ -1,4 +1,4 @@
-package dao;
+
 import java.io.File;
 
 import org.hibernate.SessionFactory;
@@ -10,7 +10,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import utilities.CHibernateSession;
 import utilities.TestSetUp;
-
+import dao.*;
 @RunWith(Suite.class)
 @SuiteClasses({ 
 	EstadoTablaDAOTest.class
@@ -42,9 +42,10 @@ import utilities.TestSetUp;
 	,ProyectoPropiedadDAOTest.class
 	,PtipoPropiedadDAOTest.class
 	,RiesgoDAOTest.class
-	,RiesgoPropiedadDAO.class
-	,RtipoPropiedadDAO.class
-	,UnidadEjecutoraDAO.class
+	,RiesgoPropiedadDAOTest.class
+	,RtipoPropiedadDAOTest.class
+	,UnidadEjecutoraDAOTest.class
+	,UsuarioDAOTest.class
 	})
 public class TestDAOSuite {
 	private static Configuration config;
