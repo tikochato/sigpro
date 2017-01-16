@@ -15,18 +15,16 @@ public class DesembolsoTipoDAOTest {
 	
 	@Test
 	public void getDesembolosTipoPorIdTest(){
-		assertNotNull(DesembolsoTipoDAO.getDesembolosTipoPorId(0).getClass());
+		assertNotNull(DesembolsoTipoDAO.getDesembolosTipoPorId(1).getClass());
 	}
 	
 	@Test
 	public void guardarDesembolsoTipoTest(){
-		//DesembolsoTipo desembolsoTipo = new DesembolsoTipo("unit_test", "unit_test",1, new HashSet<Desembolso>(0));
 		assertEquals(DesembolsoTipoDAO.guardarDesembolsoTipo(new DesembolsoTipo()),false);
 	}
 	
 	@Test
 	public void eliminarDesembolsoTipoTest(){
-		//DesembolsoTipo desembolsoTipo = new DesembolsoTipo("unit_test", "unit_test",1, new HashSet<Desembolso>(0));
 		assertEquals(DesembolsoTipoDAO.eliminarDesembolsoTipo(new DesembolsoTipo()),false);
 	}
 	
