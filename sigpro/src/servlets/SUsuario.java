@@ -265,7 +265,12 @@ public class SUsuario extends HttpServlet {
 				String nuevoPassword = map.get("password");
 				if(usuario!=null && nuevoPassword != null){
 					HttpSession sesionweb = request.getSession();
-					if(UsuarioDAO.cambiarPassword(usuario, nuevoPassword,sesionweb.getAttribute("usuario").toString())){
+					String usuarioActualizo ="";
+					if(sesionweb.getAttribute("usuario")!=null){
+						usuarioActualizo=sesionweb.getAttribute("usuario").toString();
+					}
+					
+					if(UsuarioDAO.cambiarPassword(usuario, nuevoPassword,usuarioActualizo)){
 						response_text = String.join("","{ \"success\": true, \"mensaje\":\"cambio de password exitoso.\" }");
 					}else{
 						response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo cambiar el password.\" }");
