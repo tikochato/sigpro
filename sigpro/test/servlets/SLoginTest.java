@@ -7,7 +7,7 @@ import utils.ClienteHttp;
 import utils.DecodificadorJson;
 public class SLoginTest {
 
-	String direccionServlet = "http://localhost:8080/SUsuario";
+	String direccionServlet = "http://localhost:8080/SLogin";
 	@Test
 	public void loginTest(){
 		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"username\":\"admin\", \"password\":\"etc\"}");
