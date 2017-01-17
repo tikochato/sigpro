@@ -134,7 +134,11 @@ public class SUsuario extends HttpServlet {
 					boolean eliminacion=false;
 					Gson entradaJson = new Gson();
 					Type tipo = new TypeToken<List<Integer>>() {}.getType();
-					String usuarioActualizo =sesionweb.getAttribute("usuario").toString();
+					String usuarioActualizo ="";
+					if(sesionweb.getAttribute("usuario")!=null){
+						usuarioActualizo=sesionweb.getAttribute("usuario").toString();
+					}
+					
 					if(permisosNuevos.compareTo("[]")!=0){
 						List<Integer> permisos = entradaJson.fromJson(permisosNuevos, tipo);
 						asignacion = UsuarioDAO.asignarPermisosUsuario(usuario, permisos, usuarioActualizo);
@@ -153,7 +157,10 @@ public class SUsuario extends HttpServlet {
 				String usuario= map.get("usuario");				
 				if(usuario!=null){
 					HttpSession sesionweb = request.getSession();
-					String usuarioActualizo =sesionweb.getAttribute("usuario").toString();
+					String usuarioActualizo ="";
+					if(sesionweb.getAttribute("usuario")!=null){
+						usuarioActualizo=sesionweb.getAttribute("usuario").toString();
+					}
 					List <UsuarioPermiso> listaPermiso =new ArrayList <UsuarioPermiso>();
 					listaPermiso = UsuarioDAO.getPermisosActivosUsuario(usuario);
 					List <Integer>permisos = new ArrayList <Integer>();
