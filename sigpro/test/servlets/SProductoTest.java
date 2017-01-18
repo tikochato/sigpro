@@ -29,15 +29,15 @@ public class SProductoTest {
 	
 	@Test
 	public void eliminarTest(){
-		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"eliminar\"}");
+		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"borrar\"}");
 		assertEquals(respuesta, "");	
 	}
 	
-	/*@Test
+	@Test
 	public void listarTiposTest(){
 		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"listarTipos\"}");
 		assertEquals(respuesta, "");	
-	}*/
+	}
 	
 	@Test
 	public void totalElementosTest(){
@@ -48,6 +48,12 @@ public class SProductoTest {
 	@Test
 	public void listarProductosTest(){
 		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"listarProductos\",  \"pagina\":\"1\", \"registros\":\"25\"}");
+		assertEquals(respuesta, "");	
+	}
+	
+	@Test
+	public void listarComponentes(){
+		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"listarComponentes\",  \"pagina\":\"1\", \"registros\":\"25\"}");
 		assertEquals(respuesta, "");	
 	}
 }
