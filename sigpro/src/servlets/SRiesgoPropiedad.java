@@ -165,7 +165,7 @@ public class SRiesgoPropiedad extends HttpServlet {
 				
 				RiesgoPropiedad riesgoPropiedad;
 				if(esnuevo){
-					riesgoPropiedad = new RiesgoPropiedad(nombre, usuario, new DateTime().toDate(), 1);
+					riesgoPropiedad = new RiesgoPropiedad(datoTipo,nombre, usuario, new DateTime().toDate(), 1);
 					riesgoPropiedad.setDescripcion(descripcion);
 				}
 				else{

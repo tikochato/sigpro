@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import dao.DatoTipoDAO;
 import dao.HitoTipoDAO;
 import pojo.HitoTipo;
 
@@ -120,9 +121,10 @@ public class SHitoTipo extends HttpServlet {
 
 				String nombre = map.get("nombre");
 				String descripcion = map.get("descripcion");
+				Integer dato_tipo = map.get("dato_tipo")!=null ? Integer.parseInt(map.get("dato_tipo")) : 1;
 				HitoTipo hitotipo;
 				if(esnuevo){
-					hitotipo = new  HitoTipo(nombre, descripcion, 1,null ) ;
+					hitotipo = new  HitoTipo(DatoTipoDAO.getDatoTipo(dato_tipo),nombre, descripcion, 1,null ) ;
 				}
 				else{
 					hitotipo = HitoTipoDAO.getHitoTipoPorId(id);

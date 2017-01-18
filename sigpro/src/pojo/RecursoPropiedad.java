@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 28, 2016 1:25:08 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 18, 2017 10:47:45 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -10,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -25,8 +27,9 @@ public class RecursoPropiedad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1481473273604321192L;
+	private static final long serialVersionUID = -4910602737741678762L;
 	private Integer id;
+	private DatoTipo datoTipo;
 	private String nombre;
 	private String descripcion;
 	private String usuarioCreo;
@@ -40,16 +43,18 @@ public class RecursoPropiedad implements java.io.Serializable {
 	public RecursoPropiedad() {
 	}
 
-	public RecursoPropiedad(String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+	public RecursoPropiedad(DatoTipo datoTipo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+		this.datoTipo = datoTipo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
 	}
 
-	public RecursoPropiedad(String nombre, String descripcion, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, int estado, Set<ObjetoRecurso> objetoRecursos,
-			Set<RectipoPropiedad> rectipoPropiedads) {
+	public RecursoPropiedad(DatoTipo datoTipo, String nombre, String descripcion, String usuarioCreo,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
+			Set<ObjetoRecurso> objetoRecursos, Set<RectipoPropiedad> rectipoPropiedads) {
+		this.datoTipo = datoTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
@@ -71,6 +76,16 @@ public class RecursoPropiedad implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "dato_tipoid", nullable = false)
+	public DatoTipo getDatoTipo() {
+		return this.datoTipo;
+	}
+
+	public void setDatoTipo(DatoTipo datoTipo) {
+		this.datoTipo = datoTipo;
 	}
 
 	@Column(name = "nombre", nullable = false, length = 1000)
