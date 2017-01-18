@@ -75,7 +75,7 @@
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Tipo dato</label>
-							<select class="form-control" ng-model="componentepropiedadc.componentepropiedad.datotipoid" >
+							<select class="form-control" ng-model="componentepropiedadc.datotipoid" >
 								<option value="">Seleccione una opción</option>
 								<option ng-repeat="opciones in componentepropiedadc.tipodatos" value="{{opciones.id}}">{{opciones.nombre}}</option>
 							</select>

@@ -3,7 +3,7 @@ var app = angular.module('componenteController', []);
 app.controller('componenteController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal) {
 		var mi=this;
-		
+
 		$window.document.title = 'SIGPRO - Componentes';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
@@ -12,10 +12,32 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		mi.mostraringreso=false;
 		mi.esnuevo = false;
 		mi.totalComponentes = 0;
+		mi.proyectoid = $routeParams.proyecto_id;
+		mi.proyectoNombre="";
 		mi.paginaActual = 1;
+		mi.datotipoid = "";
+		mi.datotiponombre = "";
+		mi.componentetipoid = "";
+		mi.componentenombre = "";
+		mi.proyectoid = $routeParams.proyecto_id;
+		mi.formatofecha = 'dd/MM/yyyy';
+		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
-		
+
+		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id }).success(
+				function(response) {
+					mi.proyectoid = response.id;
+					mi.proyectoNombre = response.nombre;
+		});
+
+		mi.fechaOptions = {
+				formatYear : 'yy',
+				maxDate : new Date(2020, 5, 22),
+				minDate : new Date(1900, 1, 1),
+				startingDay : 1
+		};
+
 		mi.gridOptions = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
@@ -25,7 +47,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				enableFiltering: true,
 				enablePaginationControls: false,
 			    paginationPageSize: $utilidades.elementosPorPagina,
-				columnDefs : [ 
+				columnDefs : [
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
@@ -37,7 +59,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 						mi.componente = row.entity;
 					});
-					
+
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
 				    }
@@ -52,28 +74,34 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 						  });
 				    }
 				}
-			};
-		
+		};
+
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SComponente', { accion: 'getComponentesPagina', pagina: pagina, numerocomponentes: $utilidades.elementosPorPagina }).success(
+			$http.post('/SComponente', { accion: 'getComponentesPaginaPorProyecto', pagina: pagina, numerocomponentes: $utilidades.elementosPorPagina,proyectoid: $routeParams.proyecto_id }).success(
 					function(response) {
 						mi.componentes = response.componentes;
 						mi.gridOptions.data = mi.componentes;
 						mi.mostrarcargando = false;
 					});
 		}
-		
+
 		mi.guardar=function(){
+			for (campos in mi.camposdinamicos) {
+				if (mi.camposdinamicos[campos].tipo === 'fecha') {
+					mi.camposdinamicos[campos].valor = moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY')
+				}
+			}
 			if(mi.componente!=null && mi.componente.nombre!=''){
 				$http.post('/SComponente', {
 					accion: 'guardarComponente',
 					esnuevo: mi.esnuevo,
-					componentetipoid : mi.componente.componentetipoid,
+					componentetipoid : mi.componentetipoid,
 					id: mi.componente.id,
-					proyectoid: 1, //parametro
+					proyectoid: $routeParams.proyecto_id,
 					nombre: mi.componente.nombre,
-					descripcion: mi.componente.descripcion
+					descripcion: mi.componente.descripcion,
+					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
 					if(response.success){
 						mi.componente.id = response.id;
@@ -113,7 +141,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 							$utilidades.mensaje('danger','Error al borrar el Cooperante');
 					});
 			    }, function() {
-			    
+
 			    });
 			}
 			else
@@ -121,6 +149,10 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		};
 
 		mi.nuevo = function() {
+			mi.datotipoid = "";
+			mi.datotiponombre = "";
+			mi.componentetipoid = "";
+			mi.componentenombre = "";
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
 			mi.componente = null;
@@ -139,32 +171,36 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		mi.irATabla = function() {
 			mi.mostraringreso=false;
 		}
-		
+
 		mi.guardarEstado=function(){
 			var estado = mi.gridApi.saveState.save();
-			var tabla_data = { action: 'guardaEstado', grid:'componentes', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
+			var tabla_data = { action: 'guardaEstado', grid:'componentes', estado: JSON.stringify(estado), t: (new Date()).getTime() };
 			$http.post('/SEstadoTabla', tabla_data).then(function(response){
-				
+
 			});
 		}
-		
+
 		mi.cambioPagina=function(){
 			mi.cargarTabla(mi.paginaActual);
 		}
-		
+
 		mi.reiniciarVista=function(){
-			if($location.path()=='/componente/rv')
+			if($location.path()==('/componente/'+ mi.proyectoid + '/rv'))
 				$route.reload();
 			else
-				$location.path('/componente/rv');
+				$location.path('/componente/'+ mi.proyectoid + '/rv');
 		}
-		
-		$http.post('/SComponente', { accion: 'numeroComponentes' }).success(
+
+		mi.abrirPopupFecha = function(index) {
+			mi.camposdinamicos[index].isOpen = true;
+		};
+
+		$http.post('/SComponente', { accion: 'numeroComponentesPorProyecto',proyectoid:$routeParams.proyecto_id }).success(
 				function(response) {
 					mi.totalComponentes = response.totalcooperantes;
 					mi.cargarTabla(1);
 		});
-		
+
 		mi.buscarComponenteTipo = function(titulo, mensaje) {
 
 			var modalInstance = $uibModal.open({
@@ -184,17 +220,26 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 						return mensaje;
 					}
 				}
-
 			});
 
 			modalInstance.result.then(function(selectedItem) {
-				mi.componente.componentetipoid = selectedItem.id;
-				mi.componente.componentetiponombre = selectedItem.nombre;
+				mi.componentetipoid = selectedItem.id;
+				mi.componentetiponombre = selectedItem.nombre;
+
+				var parametros = {
+						accion: 'getComponentePropiedadPorTipo',
+						idComponente: mi.componente.id,
+						idComponenteTipo: selectedItem.id
+				}
+
+				$http.post('/SComponentePropiedad', parametros).then(function(response){
+					mi.camposdinamicos = response.data.componentepropiedades
+				});
 
 			}, function() {
 			});
 	};
-			
+
 } ]);
 
 app.controller('modalBuscarComponenteTipo', [ '$uibModalInstance',
@@ -203,7 +248,7 @@ app.controller('modalBuscarComponenteTipo', [ '$uibModalInstance',
 
 function modalBuscarComponenteTipo($uibModalInstance, $scope, $http, $interval,
 	i18nService, $utilidades, $timeout, $log, titulo, mensaje) {
-	
+
 	var mi = this;
 
 	mi.totalElementos = 0;
@@ -234,7 +279,7 @@ function modalBuscarComponenteTipo($uibModalInstance, $scope, $http, $interval,
 			type : 'number',
 			width : 70
 		}, {
-			displayName : 'Nombre Entidad',
+			displayName : 'Nombre Tipo',
 			name : 'nombre',
 			cellClass : 'grid-align-left'
 		} ],
@@ -291,5 +336,4 @@ function modalBuscarComponenteTipo($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
-
 }

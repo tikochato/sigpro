@@ -40,6 +40,8 @@ public class SProductoPropiedad extends HttpServlet {
 			eliminar(parametro, response);
 		} else if (parametro.get("accion").compareTo("totalElementos") == 0) {
 			total(response);
+		} else if (parametro.get("accion").compareTo("getProductoPropiedadPorTipo") == 0) {
+			listarProductoPropiedadPorTipo(parametro,response);
 		}
 	}
 
@@ -68,7 +70,7 @@ public class SProductoPropiedad extends HttpServlet {
 		int tipo = Utils.String2Int(parametro.get("tipo"), -1);
 
 		boolean creado = ProductoPropiedadDAO.guardar(-1, nombre, descripcion, usuario, tipo);
-
+		
 		if (creado) {
 			listar(parametro, response);
 		}
@@ -104,6 +106,18 @@ public class SProductoPropiedad extends HttpServlet {
 		String resultadoJson = "{\"success\":true, \"total\":" + total + "}";
 
 		Utils.writeJSon(response, resultadoJson);
+	}
+	
+	private void listarProductoPropiedadPorTipo (Map<String, String> parametro, HttpServletResponse response) throws IOException {
+		int idProducto = Utils.String2Int(parametro.get("idproducto"), -1);
+		int idProductoTio = Utils.String2Int(parametro.get("idproductotipo"), -1);
+		
+		String productoPropiedades = ProductoPropiedadDAO.getJsonPorTipo(idProductoTio,idProducto);
+		
+		if (Utils.isNullOrEmpty(productoPropiedades)) {
+			productoPropiedades = "{\"success\":false}";
+		}
+		Utils.writeJSon(response, productoPropiedades);
 	}
 
 }

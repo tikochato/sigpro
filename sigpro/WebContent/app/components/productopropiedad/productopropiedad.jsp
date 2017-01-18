@@ -62,7 +62,7 @@
 
       <div class="btn-group">
         <label class="btn btn-success" ng-click="form.$valid ? productoPropiedad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
-        <label class="btn btn-danger" ng-click="productoPropiedad.cancelar()">Cancelar</label>
+        <label class="btn btn-primary" ng-click="productoPropiedad.cancelar()">Ir a Tabla</label>
       </div>
 
     </div>
@@ -71,19 +71,19 @@
 	    <form name="form" class="css-form" novalidate>
 	
 	      <div class="row">
-		      <div class="form-group col-sm-3" ng-show="!productoPropiedad.esNuevo">
+		      <div class="form-group col-sm-12" ng-show="!productoPropiedad.esNuevo">
 		        <label for="campo0">ID:</label>
 		        <input type="text" class="form-control" id="campo0" name="campo0" placeholder="ID" ng-model="productoPropiedad.codigo" ng-readonly="true" />
 		      </div>
 	      </div>
 
 	      <div class="row">
-		      <div class="form-group col-sm-10" ng-class="{ 'has-error' : form.campo1.$invalid }">
+		      <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo1.$invalid }">
 		        <label for="campo1">* Nombre:</label> 
 		        <input type="text" class="form-control" id="campo1" name="campo1" placeholder="Nombre" ng-model="productoPropiedad.nombre" required />
 		      </div>
 
-		      <div class="form-group col-sm-2" ng-class="{ 'has-error' : form.campo2.$invalid }">
+		      <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo2.$invalid }">
 		        <label for="campo2">* Tipo:</label>     			
     			<select class="form-control" id="campo2" name="campo2" ng-model="productoPropiedad.datoTipoSeleccionado" ng-options="tipo as tipo.nombre for tipo in productoPropiedad.datoTipos track by tipo.id" required>
 					<option disabled selected value> -- Seleccione Tipo -- </option>
@@ -106,7 +106,7 @@
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
         <label class="btn btn-success" ng-click="form.$valid ? productoPropiedad.guardar() : '' " ng-disabled="!form.$valid">Guardar</label> 
-        <label class="btn btn-danger" ng-click="productoPropiedad.cancelar()">Cancelar</label>
+        <label class="btn btn-primary" ng-click="productoPropiedad.cancelar()">Ir a Tabla</label>
       </div>
     </div>
   </div>

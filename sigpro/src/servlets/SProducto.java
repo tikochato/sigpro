@@ -25,6 +25,7 @@ public class SProducto extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		doPost(request, response);
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -35,7 +36,7 @@ public class SProducto extends HttpServlet {
 		if (parametro.get("accion").compareTo("cargar") == 0) {
 			listar(parametro, response);
 		} else if (parametro.get("accion").compareTo("crear") == 0) {
-			crear(parametro, response);
+			crear(parametro, response,request);
 		} else if (parametro.get("accion").compareTo("actualizar") == 0) {
 			actualizar(parametro, response);
 		} else if (parametro.get("accion").compareTo("borrar") == 0) {
@@ -68,8 +69,7 @@ public class SProducto extends HttpServlet {
 		Utils.writeJSon(response, resultadoJson);
 	}
 
-	private void crear(Map<String, String> parametro, HttpServletResponse response) throws IOException {
-
+	private void crear(Map<String, String> parametro, HttpServletResponse response, HttpServletRequest request) throws IOException {
 		String nombre = parametro.get("nombre");
 		String descripcion = parametro.get("descripcion");
 
@@ -82,6 +82,7 @@ public class SProducto extends HttpServlet {
 		String propiedades = parametro.get("propiedades");
 		String actividades = parametro.get("actividades");
 		String usuario = parametro.get("usuario");
+		
 
 		boolean creado = ProductoDAO.guardar(nombre, descripcion, componente, productoPadre, tipo, propiedades,
 				actividades, usuario);

@@ -3,7 +3,7 @@ var app = angular.module('hitoController', []);
 app.controller('hitoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
 		var mi=this;
-		
+
 		$window.document.title = 'SIGPRO - Hitos';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
@@ -15,7 +15,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 		mi.hitotipoNombre="";
 		mi.totalHitos = 0;
 		mi.paginaActual = 1;
-		mi.proyectoid = $routeParams.pproyectoid;
+		mi.proyectoid = $routeParams.proyecto_id;
 		mi.proyectoNombre="";
 		mi.formatofecha = 'dd/MM/yyyy';
 		mi.hitodatotipoid = "";
@@ -23,14 +23,14 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 		mi.hitoresultadocomentario;
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
-		
-		
+
+
 		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id }).success(
 				function(response) {
 					mi.proyectoid = response.id;
 					mi.proyectoNombre = response.nombre;
 		});
-		
+
 		mi.gridOptions = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
@@ -40,7 +40,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 				enableFiltering: true,
 				enablePaginationControls: false,
 			    paginationPageSize: $utilidades.elementosPorPagina,
-				columnDefs : [ 
+				columnDefs : [
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
 				    { name: 'hitotiponombre', width: 200, displayName: 'Tipo Hito',cellClass: 'grid-align-left' },
@@ -53,7 +53,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 						mi.hito = row.entity;
 					});
-					
+
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
 				    }
@@ -69,22 +69,22 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 				    }
 				}
 		};
-		
+
 		mi.fechaOptions = {
 			    formatYear: 'yy',
 			    maxDate: new Date(2020, 5, 22),
 			    minDate: new Date(1990,1,1),
 			    startingDay: 1
 		};
-		
+
 		mi.popupfecha = function() {
 		    mi.popupfecha.abierto = false;
 		};
-		
+
 		mi.popupfecharesultado = function() {
 		    mi.popupfecharesultado.abierto = false;
 		};
-		
+
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
 			$http.post('/SHito', { accion: 'getHitosPaginaPorProyecto', pagina: pagina, numerohitos: $utilidades.elementosPorPagina, proyectoid:$routeParams.proyecto_id }).success(
@@ -94,7 +94,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 						mi.mostrarcargando = false;
 					});
 		}
-		
+
 		mi.guardar=function(){
 			if(mi.hito!=null && mi.hito.fecha!='' && mi.hito.nombre!=''){
 				$http.post('/SHito', {
@@ -123,7 +123,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 			else
 				$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
 		};
-	
+
 		mi.borrar = function(ev) {
 			if(mi.hito!=null){
 				var confirm = $mdDialog.confirm()
@@ -133,7 +133,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 			          .targetEvent(ev)
 			          .ok('Borrar')
 			          .cancel('Cancelar');
-	
+
 			    $mdDialog.show(confirm).then(function() {
 			    	$http.post('/SHito', {
 						accion: 'borrarHito',
@@ -147,20 +147,20 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 							$utilidades.mensaje('danger','Error al borrar el Hito');
 					});
 			    }, function() {
-			    
+
 			    });
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Hito que desea borrar');
 		};
-	
+
 		mi.nuevo = function() {
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
 			mi.hito = null;
 			mi.gridApi.selection.clearSelectedRows();
 		};
-	
+
 		mi.editar = function() {
 			if(mi.hito!=null){
 				mi.fecha = moment(mi.hito.fecha, 'DD/MM/YYYY').toDate();
@@ -175,45 +175,45 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Hito que desea editar');
 		}
-	
+
 		mi.irATabla = function() {
 			mi.mostraringreso=false;
 		}
-		
+
 		mi.guardarEstado=function(){
 			var estado = mi.gridApi.saveState.save();
-			var tabla_data = { action: 'guardaEstado', grid:'hitos', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
+			var tabla_data = { action: 'guardaEstado', grid:'hitos', estado: JSON.stringify(estado), t: (new Date()).getTime() };
 			$http.post('/SEstadoTabla', tabla_data).then(function(response){
-				
+
 			});
 		}
-		
+
 		mi.cambioPagina=function(){
 			mi.cargarTabla(mi.paginaActual);
 		}
-		
+
 		mi.reiniciarVista=function(){
 			if($location.path()==('/hito/'+ mi.proyectoid + '/rv'))
 				$route.reload();
 			else
 				$location.path('/hito/'+ mi.proyectoid + '/rv');
 		}
-		
+
 		mi.abirpopup = function() {
 			 mi.popupfecha.abierto = true;
 		};
-		
+
 		mi.abirpopupreultado = function() {
 			 mi.popupfecharesultado.abierto = true;
 		};
 
-		
+
 		$http.post('/SHito', { accion: 'numeroHitos' }).success(
 				function(response) {
 					mi.totalHitos = response.totalhitos;
 					mi.cargarTabla(1);
 		});
-		
+
 		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga) {
 			var resultado = $q.defer();
 			var modalInstance = $uibModal.open({
@@ -237,13 +237,13 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 					}
 				}
 			});
-			
+
 			modalInstance.result.then(function(itemSeleccionado) {
 				resultado.resolve(itemSeleccionado);
 			});
 			return resultado.promise;
 	};
-	
+
 	mi.buscarHitoTipo = function() {
 		var resultado = mi.llamarModalBusqueda('/SHitoTipo', {
 			accion : 'numeroHitoTipos'
@@ -261,7 +261,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 			mi.hitodatotipoid = itemSeleccionado.datotipoid;
 		});
 	};
-		
+
 } ]);
 
 app.controller('buscarHitoTipo', [ '$uibModalInstance',
@@ -270,7 +270,7 @@ app.controller('buscarHitoTipo', [ '$uibModalInstance',
 
 function buscarHitoTipo($uibModalInstance, $scope, $http, $interval,
 	i18nService, $utilidades, $timeout, $log, $servlet,$accionServlet,$datosCarga) {
-	
+
 	var mi = this;
 
 	mi.totalElementos = 0;
@@ -283,14 +283,14 @@ function buscarHitoTipo($uibModalInstance, $scope, $http, $interval,
 
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
-	
+
 	$http.post($servlet, $accionServlet).success(function(response) {
 		for ( var key in response) {
 			mi.totalElementos = response[key];
 		}
 		mi.cargarData(1);
 	});
-	
+
 	mi.opcionesGrid = {
 		data : mi.data,
 		columnDefs : [ {
@@ -323,7 +323,7 @@ function buscarHitoTipo($uibModalInstance, $scope, $http, $interval,
 		mi.itemSeleccionado = row.entity;
 		mi.seleccionado = row.isSelected;
 	};
-	
+
 	mi.cargarData = function(pagina) {
 		mi.mostrarCargando = true;
 		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina)).then(

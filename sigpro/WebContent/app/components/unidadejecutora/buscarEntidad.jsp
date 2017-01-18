@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <div class="modal-body" id="modal-body">
   <div class="row">
-    <div class="col-sm-10">
+    <div class="col-sm-12">
       <div id="grid1" ui-grid="modalBuscar.opcionesGrid" ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination>
         <div class="grid_loading" ng-hide="!modalBuscar.mostrarCargando">
           <div class="msg">
@@ -16,13 +16,15 @@
         ></ul>
       </div>
     </div>
-    <div class="col-sm-2">
-      <div class="row">
-        <button class="btn btn-primary" type="button" ng-click="modalBuscar.ok()" style="width: 85%">Ok</button>
-      </div>
-      <div class="row">
-        <button class="btn btn-primary" type="button" ng-click="modalBuscar.cancel()" style="width: 85%">Cancelar</button>
-      </div>
     </div>
+    <br/>
+    <div class="row">
+	    <div class="col-sm-12 operation_buttons" align="right">
+		    <div class="btn-group">
+		        <label class="btn btn-success" ng-click="modalBuscar.ok()"> &nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;</label>
+				<label class="btn btn-primary" ng-click="modalBuscar.cancel()">Cancelar</label>
+	    	</div>
+	      
+	    </div>
   </div>
 </div>

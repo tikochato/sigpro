@@ -115,4 +115,23 @@ public class ProyectoDAO implements java.io.Serializable  {
 		return ret;
 	}
 	
+	public static List<Proyecto> getProyectosPagina(int pagina, int numeroproyecto){
+		List<Proyecto> ret = new ArrayList<Proyecto>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Proyecto> criteria = session.createQuery("SELECT p FROM Proyecto p WHERE p.estado = 1",Proyecto.class);
+			criteria.setFirstResult(((pagina-1)*(numeroproyecto)));
+			criteria.setMaxResults(numeroproyecto);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("6", Proyecto.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	
 }
