@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 28, 2016 1:25:08 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 18, 2017 10:47:45 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,13 +27,13 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6343544306668025599L;
+	private static final long serialVersionUID = 4001952579405990849L;
 	private Integer id;
 	private Componente componente;
-	private Producto producto;
 	private ProductoTipo productoTipo;
 	private String nombre;
 	private String descripcion;
+	private int productoid;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
@@ -50,27 +50,26 @@ public class Producto implements java.io.Serializable {
 	public Producto() {
 	}
 
-	public Producto(Componente componente, Producto producto, ProductoTipo productoTipo, String nombre,
-			String usuarioCreo, Date fechaCreacion) {
+	public Producto(Componente componente, ProductoTipo productoTipo, String nombre, int productoid, String usuarioCreo,
+			Date fechaCreacion) {
 		this.componente = componente;
-		this.producto = producto;
 		this.productoTipo = productoTipo;
 		this.nombre = nombre;
+		this.productoid = productoid;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public Producto(Componente componente, Producto producto, ProductoTipo productoTipo, String nombre,
-			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, Integer estado, Set<ObjetoRecurso> objetoRecursos,
-			Set<ObjetoFormulario> objetoFormularios, Set<ProductoPropiedadValor> productoPropiedadValors,
-			Set<Actividad> actividads, Set<FormularioItemValor> formularioItemValors, 
-			Set<Meta> metas, Set<Riesgo> riesgos) {
+	public Producto(Componente componente, ProductoTipo productoTipo, String nombre, String descripcion, int productoid,
+			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado,
+			Set<ObjetoRecurso> objetoRecursos, Set<ObjetoFormulario> objetoFormularios,
+			Set<ProductoPropiedadValor> productoPropiedadValors, Set<Actividad> actividads,
+			Set<FormularioItemValor> formularioItemValors, Set<Meta> metas, Set<Riesgo> riesgos) {
 		this.componente = componente;
-		this.producto = producto;
 		this.productoTipo = productoTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
+		this.productoid = productoid;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
@@ -108,16 +107,6 @@ public class Producto implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "productoid")
-	public Producto getProducto() {
-		return this.producto;
-	}
-
-	public void setProducto(Producto producto) {
-		this.producto = producto;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "producto_tipoid", nullable = false)
 	public ProductoTipo getProductoTipo() {
 		return this.productoTipo;
@@ -143,6 +132,15 @@ public class Producto implements java.io.Serializable {
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	@Column(name = "productoid", nullable = false)
+	public int getProductoid() {
+		return this.productoid;
+	}
+
+	public void setProductoid(int productoid) {
+		this.productoid = productoid;
 	}
 
 	@Column(name = "usuario_creo", nullable = false, length = 30)

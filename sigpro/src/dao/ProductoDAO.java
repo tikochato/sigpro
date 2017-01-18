@@ -172,11 +172,6 @@ public class ProductoDAO {
 				estructuraPojo.componente = pojo.getComponente().getNombre();
 			}
 
-			if (pojo.getProducto() != null) {
-				estructuraPojo.idProducto = pojo.getProducto().getId();
-				estructuraPojo.producto = pojo.getProducto().getNombre();
-			}
-
 			if (pojo.getProductoTipo() != null) {
 				estructuraPojo.idProductoTipo = pojo.getProductoTipo().getId();
 				estructuraPojo.productoTipo = pojo.getProductoTipo().getNombre();
@@ -200,7 +195,6 @@ public class ProductoDAO {
 		pojo.setDescripcion(descripcion);
 
 		pojo.setComponente(componente > 0 ? ComponenteDAO.getComponentePorId(componente) : null);
-		pojo.setProducto(productoPadre > 0 ? ProductoDAO.getProductoPorId(productoPadre) : null);
 		pojo.setProductoTipo(tipo > 0 ? ProductoTipoDAO.getProductoTipo(tipo) : null);
 
 		pojo.setProductoPropiedadValors(null);
@@ -239,7 +233,6 @@ public class ProductoDAO {
 			pojo.setDescripcion(descripcion);
 
 			pojo.setComponente(componente != null ? ComponenteDAO.getComponentePorId(componente) : null);
-			pojo.setProducto(productoPadre != null ? ProductoDAO.getProductoPorId(productoPadre) : null);
 			pojo.setProductoTipo(tipo != null ? ProductoTipoDAO.getProductoTipo(tipo) : null);
 
 			pojo.setUsuarioActualizo(usuario);

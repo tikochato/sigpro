@@ -2,6 +2,12 @@
 	pageEncoding="UTF-8"%>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+<script type="text/ng-template" id="buscarPermiso.jsp">
+   	<%@ include file="/app/components/usuarios/buscarPermiso.jsp"%>
+</script>
+<script type="text/ng-template" id="cambiarPassword.jsp">
+   	<%@ include file="/app/components/usuarios/cambiarPassword.jsp"%>
+</script>
 <style type="text/css">
 
 .myGrid {
@@ -35,7 +41,7 @@
 					</div>
 				</div>
 				<br/>
-				<div id="grid1" ui-grid="usuarioc.gridOptions" ui-grid-save-state 
+				<div id="grid1" ui-grid="usuarioc.gridOptions" ui-grid-save-state
 						ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination class="usuarioc.myGrid">
 						<div class="grid_loading" ng-hide="!usuarioc.mostrarcargando">
 				  	<div class="msg">
@@ -46,9 +52,9 @@
 					</div>
 				  </div>
 				</div>
-				<ul uib-pagination total-items="usuarioc.totalUsuarios" 
-						ng-model="usuarioc.paginaActual" 
-						max-size="usuarioc.numeroMaximoPaginas" 
+				<ul uib-pagination total-items="usuarioc.totalUsuarios"
+						ng-model="usuarioc.paginaActual"
+						max-size="usuarioc.numeroMaximoPaginas"
 						items-per-page="usuarioc.elementosPorPagina"
 						first-text="Primero"
 						last-text="Último"
@@ -59,25 +65,30 @@
 				></ul>
 			</div>
     		</shiro:hasPermission>
-    		
+
 		</div>
 		<shiro:hasPermission name="verCooperante">
 		<div class="row" ng-show="usuarioc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-success" ng-click="usuarioc.guardarUsuario()">Guardar</label>
+			        <label class="btn btn-default" ng-click="usuarioc.cambiarPassword()" ng-show="!usuarioc.esNuevo">Cambiar Contraseña</label>
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()">Ir a Tabla</label>
     			</div>
     		</div>
 			<div class="col-sm-12">
 				<form>
-						<div class="form-group">
+						<div class="form-group" ng-show="usuarioc.esNuevo">
 							<label for="nombre">Usuario</label>
-    						<input type="text" class="form-control" id="usuario" placeholder="Usuario" ng-model="usuarioc.usuarioSelected.usuario">
+    						<input type="text" class="form-control" id="usuario" placeholder="Usuario" ng-model="usuarioc.usuariosSelected.usuario">
+						</div>
+						<div class="form-group" ng-show="!usuarioc.esNuevo">
+							<label for="nombre">Usuario</label>
+    						<input type="text" class="form-control" id="usuario" placeholder="Usuario" ng-model="usuarioc.usuariosSelected.usuario" readonly>
 						</div>
 						<div class="form-group">
 							<label for="Descripcion">Correo</label>
-    						<input type="text" class="form-control" id="correo" placeholder="Correo electrónico" ng-model="usuarioc.usuarioSelected.email">
+    						<input type="text" class="form-control" id="correo" placeholder="Correo electrónico" ng-model="usuarioc.usuariosSelected.email">
 						</div>
 						<div class="form-group" ng-show="usuarioc.esNuevo">
 							<label for="Descripcion">Contraseña</label>
@@ -92,11 +103,53 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-success" ng-click="usuarioc.guardarUsuario()">Guardar</label>
+			        <label class="btn btn-default" ng-click="usuarioc.cambiarPassword()" ng-show="!usuarioc.esNuevo">Cambiar Contraseña</label>
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()">Ir a Tabla</label>
-    			</div>
     		</div>
+    	</div>
+		</div>
+		<h3>Permisos</h3><br/>
+		<div align="center">
+				<div style="height: 35px; width: 75%">
+					<div style="text-align: right;">
+						<div class="btn-group" role="group" aria-label="">
+							<a class="btn btn-default" href
+								ng-click="usuarioc.buscarPermiso()" role="button"
+								uib-tooltip="Asignar nuevo permiso" tooltip-placement="left">
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+							</a>
+						</div>
+					</div>
+				</div>
+
+				<table style="width: 75%;"
+				st-table="usuarioc.permisosAsignados"
+				class="table table-striped  table-bordered">
+				<thead >
+					<tr>
+						<th>Nombre</th>
+						<th>Descripicon</th>
+						<th style="width: 30px;">Quitar</th>
+
+					</tr>
+				</thead>
+				<tbody>
+					<tr st-select-row="row"
+						ng-repeat="row in usuarioc.permisosAsignados">
+						<td>{{row.nombre}}</td>
+						<td>{{row.descripcion}}</td>
+						<td>
+							<button type="button"
+								ng-click="usuarioc.eliminarPermiso(row)"
+								class="btn btn-sm btn-danger">
+								<i class="glyphicon glyphicon-minus-sign"> </i>
+							</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 		</shiro:hasPermission>
-		
+
 
 	</div>
