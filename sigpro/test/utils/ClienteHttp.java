@@ -7,22 +7,24 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 
+import utilities.CLogger;
+
 public class ClienteHttp {
 	
 	public static String peticionHttp(String url, String parametros){
 		HttpClient httpClient = HttpClientBuilder.create().build(); 
 		String respuesta ="";
 		try {
-
 		    HttpPost request = new HttpPost(url);
 		    StringEntity params =new StringEntity(parametros);
 		    request.addHeader("content-type", "application/x-www-form-urlencoded");
 		    request.setEntity(params);
             ResponseHandler<String> responseHandler = new BasicResponseHandler();
             respuesta =httpClient.execute(request,responseHandler);
+            System.out.println(respuesta);
 
-		}catch (Exception ex) {
-			ex.printStackTrace();
+		}catch (Throwable ex) {
+			CLogger.write("1", ClienteHttp.class, ex);
 		}
 		
 		return respuesta;
