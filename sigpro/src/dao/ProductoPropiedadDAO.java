@@ -2,6 +2,7 @@ package dao;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -12,6 +13,8 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.ProductoPropiedad;
+import pojo.ProductoPropiedadValor;
+import utilities.CFormaDinamica;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 import utilities.Utils;
@@ -24,6 +27,14 @@ public class ProductoPropiedadDAO {
 		Integer idTipo;
 		String tipo;
 	}
+	
+	class stdatadinamico {
+		String id;
+		String tipo;
+		String label;
+		String valor;
+	}
+       
 
 	public static ProductoPropiedad getProductoPropiedad(Integer codigo) {
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -181,6 +192,67 @@ public class ProductoPropiedadDAO {
 		} catch (Throwable e) {
 			CLogger.write("7", ProductoPropiedadDAO.class, e);
 		} finally {
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static String getJsonPorTipo(int idTipoProducto,int idProducto) {
+		List<ProductoPropiedad> productoPropiedades = getProdcutoPropiedadesPorTipo(idTipoProducto);
+		List<HashMap<String,Object>> campos = new ArrayList<>();
+		for(ProductoPropiedad productoPropiedad:productoPropiedades){
+			HashMap <String,Object> campo = new HashMap<String, Object>();
+			campo.put("id", productoPropiedad.getId());
+			campo.put("nombre", productoPropiedad.getNombre());
+			campo.put("tipo", productoPropiedad.getDatoTipo().getId());
+			ProductoPropiedadValor proyectoPropiedadValor = ProductoPropiedadValorDAO.getValorPorProdcutoYPropiedad(productoPropiedad.getId(), idProducto);
+			if (proyectoPropiedadValor !=null ){
+				switch ((Integer) campo.get("tipo")){
+					case 1:
+						campo.put("valor", proyectoPropiedadValor.getValorString());
+						break;
+					case 2:
+						campo.put("valor", proyectoPropiedadValor.getValorEntero());
+						break;
+					case 3:
+						campo.put("valor", proyectoPropiedadValor.getValorDecimal());
+						break;
+					case 5:
+						campo.put("valor", proyectoPropiedadValor.getValorTiempo());
+						break;
+				}
+			}
+			else{
+				campo.put("valor", "");
+			}
+			campos.add(campo);
+		}
+		
+		String response_text = CFormaDinamica.convertirEstructura(campos);
+        response_text = String.join("", "\"productopropiedades\":",response_text);
+        response_text = String.join("", "{\"success\":true,", response_text,"}");
+
+		return response_text;
+	}
+	
+	public static List<ProductoPropiedad> getProdcutoPropiedadesPorTipo(int idTipoPropiedad) {
+		List<ProductoPropiedad> ret = new ArrayList<ProductoPropiedad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<ProductoPropiedad> criteria = session.createQuery("select p from ProductoPropiedad p "
+					+ "inner join p.prodtipoPropiedads ptp "
+					+ "inner join ptp.productoTipo pt "
+					+ "where pt.id = ?1 "
+					+ "and p.estado = 1",ProductoPropiedad.class);
+			criteria.setParameter(1, idTipoPropiedad);
+			ret = criteria.getResultList();
+			
+		}
+		catch(Throwable e){
+			e.printStackTrace();
+			CLogger.write("1", ProyectoPropiedadDAO.class, e);
+		}
+		finally{
 			session.close();
 		}
 		return ret;

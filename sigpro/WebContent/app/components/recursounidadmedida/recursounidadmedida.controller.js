@@ -28,7 +28,7 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 					columnDefs : [ 
 						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 						{ name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
-						{ name: 'simbolo', width: 50, displayName: 'Símbolo', cellClass: 'grid-align-center', enableFiltering: false},
+						{ name: 'simbolo', width: 85, displayName: 'Símbolo', cellClass: 'grid-align-center', enableFiltering: false},
 					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 					    { name: 'usuarioCreo', displayName: 'Usuario Creación'},
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}

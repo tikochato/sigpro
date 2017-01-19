@@ -10,7 +10,6 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-
 import pojo.RiesgoPropiedad;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -174,6 +173,28 @@ public class RiesgoPropiedadDAO {
 		}
 		catch(Throwable e){
 			CLogger.write("9", RiesgoPropiedadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<RiesgoPropiedad> getRiesgoPropiedadesPorTipoRiesgo(int idTipoRiesgo){
+		List<RiesgoPropiedad> ret = new ArrayList<RiesgoPropiedad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<RiesgoPropiedad> criteria = session.createNativeQuery(" select rp.* "
+				+ "from riesgo_tipo rt "
+				+ "join rtipo_propiedad rtp ON rtp.riesgo_tipoid = rt.id "
+				+ "join riesgo_propiedad rp ON rp.id = rtp.riesgo_propiedadid "
+				+ " where rt.id = :idTipoRies",RiesgoPropiedad.class);
+			
+			criteria.setParameter("idTipoRies", idTipoRiesgo);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("10", RiesgoPropiedadDAO.class, e);
 		}
 		finally{
 			session.close();

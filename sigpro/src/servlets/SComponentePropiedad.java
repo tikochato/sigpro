@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -23,8 +24,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ComponentePropiedadDAO;
+import dao.ComponentePropiedadValorDAO;
 import pojo.ComponentePropiedad;
+import pojo.ComponentePropiedadValor;
 import pojo.DatoTipo;
+import utilities.CFormaDinamica;
 import utilities.Utils;
 
 /**
@@ -138,7 +142,7 @@ public class SComponentePropiedad extends HttpServlet {
 				temp.nombre = componentepropiedad.getNombre();
 				temp.descripcion = componentepropiedad.getDescripcion();
 				temp.datotipoid = componentepropiedad.getDatoTipo().getId();
-				temp.datotiponombre = componentepropiedad.getNombre();
+				temp.datotiponombre = componentepropiedad.getDatoTipo().getNombre();
 				temp.fechaActualizacion = Utils.formatDate(componentepropiedad.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(componentepropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = componentepropiedad.getUsuarioActualizo();
@@ -156,8 +160,6 @@ public class SComponentePropiedad extends HttpServlet {
 			response_text = String.join("","{ \"success\": true, \"totalcomponentepropiedades\":",ComponentePropiedadDAO.getTotalComponentePropiedad().toString()," }");
 		}
 		else if(accion.equals("guardarComponentePropiedad")){
-			
-
 			boolean result = false;
 			boolean esnuevo = map.get("esnuevo").equals("true");
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
@@ -180,6 +182,7 @@ public class SComponentePropiedad extends HttpServlet {
 					componentePropiedad.setDescripcion(descripcion);
 					componentePropiedad.setUsuarioActualizo(usuario);
 					componentePropiedad.setFechaActualizacion(new DateTime().toDate());
+					componentePropiedad.setDatoTipo(datoTipo);
 				}
 				result = ComponentePropiedadDAO.guardarComponentePropiedad(componentePropiedad);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
@@ -198,7 +201,46 @@ public class SComponentePropiedad extends HttpServlet {
 			}
 			else
 				response_text = "{ \"success\": false }";
-		}else
+		}
+		else if(accion.equals("getComponentePropiedadPorTipo")){
+			int idComponente = map.get("idComponente")!=null  ? Integer.parseInt(map.get("idComponente")) : 0;
+			int idComponenteTipo = map.get("idComponenteTipo")!=null  ? Integer.parseInt(map.get("idComponenteTipo")) : 0;
+			List<ComponentePropiedad> compoentepropiedades = ComponentePropiedadDAO.getComponentePropiedadesPorTipoComponente(idComponenteTipo);
+			
+			List<HashMap<String,Object>> campos = new ArrayList<>();
+			for(ComponentePropiedad componentepropiedad:compoentepropiedades){
+				HashMap <String,Object> campo = new HashMap<String, Object>();
+				campo.put("id", componentepropiedad.getId());
+				campo.put("nombre", componentepropiedad.getNombre());
+				campo.put("tipo", componentepropiedad.getDatoTipo().getId());
+				ComponentePropiedadValor coomponentePropiedadValor = ComponentePropiedadValorDAO.getValorPorComponenteYPropiedad(componentepropiedad.getId(), idComponente);
+				if (coomponentePropiedadValor !=null ){
+					switch (componentepropiedad.getDatoTipo().getId()){
+						case 1:
+							campo.put("valor", coomponentePropiedadValor.getValorString());
+							break;
+						case 2:
+							campo.put("valor", coomponentePropiedadValor.getValorEntero());
+							break;
+						case 3:
+							campo.put("valor", coomponentePropiedadValor.getValorDecimal());
+							break;
+						case 5:
+							campo.put("valor", coomponentePropiedadValor.getValorTiempo());
+							break;
+					}
+				}
+				else{
+					campo.put("valor", "");
+				}
+				campos.add(campo);
+			}
+			
+			response_text = CFormaDinamica.convertirEstructura(campos);
+	        response_text = String.join("", "\"componentepropiedades\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}
+		else
 			response_text = "{ \"success\": false }";
 		
 		response.setHeader("Content-Encoding", "gzip");

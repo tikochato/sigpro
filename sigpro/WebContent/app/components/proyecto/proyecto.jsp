@@ -11,6 +11,9 @@
 
 <div ng-controller="proyectoController as controller"
 	class="maincontainer all_page" id="title">
+	<script type="text/ng-template" id="buscarPorProyecto.jsp">
+    		<%@ include file="/app/components/proyecto/buscarPorProyecto.jsp"%>
+  	    </script>
 	<h3>Proyectos</h3>
 	<br />
 	<div class="row" align="center" ng-hide="controller.esColapsado">
@@ -40,8 +43,8 @@
 			</div>
 			<div align="left">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="controller.irADesembolsos(controller.entidadseleccionada.id)">Desembolsos</label>
-				<label class="btn btn-success" ng-click="controller.irAComponentes(controller.entidadseleccionada.id)">Componentes</label>
+				<label class="btn btn-success" ng-click="controller.irADesembolsos(controller.proyecto.id)">Desembolsos</label>
+				<label class="btn btn-success" ng-click="controller.irAComponentes(controller.proyecto.id)">Componentes</label>
 			</div>
 			</div>
 			
@@ -56,15 +59,15 @@
 					</div>
 				  </div>
 			</div>
-				<ul uib-pagination total-items="cooperantec.totalCooperantes" 
-						ng-model="cooperantec.paginaActual" 
-						max-size="cooperante.numeroMaximoPaginas" 
+				<ul uib-pagination total-items="controller.totalProyectos" 
+						ng-model="controller.paginaActual" 
+						max-size="controller.numeroMaximoPaginas" 
 						first-text="Primero"
 						last-text="Último"
 						next-text="Siguiente"
 						previous-text="Anterior"
 						class="pagination-sm" boundary-links="true" force-ellipses="true"
-						ng-change="cooperantec.cambioPagina()"
+						ng-change="controller.cambioPagina()"
 				></ul>
 		</div>
 		
@@ -85,80 +88,89 @@
 			
 			<form>
 				<div class="form-group">
+					<label for="id">ID</label>
+  					<label class="form-control" id="id">{{ controller.proyecto.id }}</label>
+				</div>
+				<div class="form-group">
 					<label for="campo1">* Nombre</label> 
-					<input type="text" ng-model="controller.entidadseleccionada.nombre"
+					<input type="text" ng-model="controller.proyecto.nombre"
 						class="form-control" id="t_nombre" placeholder="Nombre">
 				</div>
 
 				<div class="form-group">
 					<label for="campo1">* SNIP</label> 
-					<input type="number" ng-model="controller.entidadseleccionada.snip"
+					<input type="number" ng-model="controller.proyecto.snip"
 						class="form-control" id="n_snip" placeholder="Nombre">
 				</div>
-
+				
 				<div class="form-group">
-				<label for="campo1">* Tipo Proyecto</label>
-					<select  id="s_tipo_proyecto"
-						class="form-control" ng-model="controller.entidadseleccionada.proyectotipoid">
-						<option value="">Seleccione una opción</option>
-						<option ng-repeat="option in controller.proyectotipos"
-							ng-selected="option.selected = controller.entidadseleccionada.proyectotipoid"
-							value="{{option.id}}">{{option.nombre}}
-						</option>
-						
-					</select>
+					<label for="campo3">* Tipo Proyecto</label>
+		          	<div class="input-group">
+		            	<input type="hidden" class="form-control" ng-model="controller.proyectotipoid" /> 
+		            	<input type="text" class="form-control" id="iproyt" name="iproyt" placeholder="Nombre Tipo Proyecto" ng-model="controller.proyectotiponombre" ng-readonly="true" required/>
+		            	<span class="input-group-addon" ng-click="controller.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>
+		          	</div>
+				</div>
+				
+				<div class="form-group" ng-repeat="campo in controller.camposdinamicos">
+							<label for="campo.id">{{ campo.label }}</label>
+							<div ng-switch="campo.tipo">
+								<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
+								<input ng-switch-when="entero" type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" />
+								<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
+								<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+								<p ng-switch-when="fecha" class="input-group">
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+														datepicker-options="controller.fechaOptions" close-text="Cerrar" /><span
+														class="input-group-btn">
+														<button type="button" class="btn btn-default"
+															ng-click="controller.abrirPopupFecha($index)">
+															<i class="glyphicon glyphicon-calendar"></i>
+														</button>
+													</span>
+								</p>
+							</div>
+						</div>
+				
+				<div class="form-group">
+					<label for="campo3">* Unidad Ejecutora</label>
+		          	<div class="input-group">
+		            	<input type="hidden" class="form-control" ng-model="controller.unidadejecutoraid" /> 
+		            	<input type="text" class="form-control" id="iunie" name="iunie" placeholder="Nombre Unidad Ejecutora" ng-model="controller.unidadejecutoranombre" ng-readonly="true" required/>
+		            	<span class="input-group-addon" ng-click="controller.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
+		          	</div>
 				</div>
 				
 				<div class="form-group">
-					<label for="campo1">* Unidad Ejecutra</label>
-					<select  id="s_unidad_ejecutora"
-						class="form-control" ng-model="controller.entidadseleccionada.unidadejecutoraid">
-						<option value="">Seleccione una opción</option>
-						<option ng-repeat="option_ue in controller.unidadesejecutoras"
-							ng-selected="option_ue.selected = controller.entidadseleccionada.unidadejecutoraid"
-							value="{{option_ue.id}}">{{option_ue.nombre}}
-						</option>
-						
-					</select>
+					<label for="campo3">* Cooperante</label>
+		          	<div class="input-group">
+		            	<input type="hidden" class="form-control" ng-model="controller.cooperanteid" /> 
+		            	<input type="text" class="form-control" id="iunie" name="iunie" placeholder="Nombre Cooperante" ng-model="controller.cooperantenombre" ng-readonly="true" required/>
+		            	<span class="input-group-addon" ng-click="controller.buscarCooperante()"><i class="glyphicon glyphicon-search"></i></span>
+		          	</div>
 				</div>
 				
-				<div class="form-group">
-					<label for="campo1">* Cooperante</label>
-					<select  id="s_cooperante"  
-						class="form-control" ng-model="controller.entidadseleccionada.cooperanteid">
-						<option value="">Seleccione una opción</option>
-						<option ng-repeat="option_c in controller.cooperantes" 
-						ng-selected="option_c.id = controller.entidadseleccionada.unidadejecutoraid"
-						value="{{option_c.id}}">{{option_c.nombre}}
-						</option>
-						
-						
-						
-					</select>
-				</div>
-				
-
 				<div class="form-group">
 					<label for="campo2">Descripción</label> 
-					<input type="text" ng-model="controller.entidadseleccionada.descripcion"
+					<input type="text" ng-model="controller.proyecto.descripcion"
 						class="form-control" id="campo2" placeholder="Descripción">
 				</div>
 				
 				<div class="form-group">
 							<label for="usuarioCreo">Usuario que creo</label>
-    						<label class="form-control" id="usuarioCreo">{{ controller.entidadseleccionada.usuariocrea }}</label>
+    						<label class="form-control" id="usuarioCreo">{{ controller.proyecto.usuariocrea }}</label>
 						</div>
 						<div class="form-group">
 							<label for="fechaCreacion">Fecha de creación</label>
-    						<label class="form-control" id="fechaCreacion">{{ controller.entidadseleccionada.fechacrea }}</label>
+    						<label class="form-control" id="fechaCreacion">{{ controller.proyecto.fechacrea }}</label>
 						</div>
 						<div class="form-group">
 							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<label class="form-control" id="usuarioCreo">{{ controller.entidadseleccionada.usuarioActualizo }}</label>
+    						<label class="form-control" id="usuarioCreo">{{ controller.proyecto.usuarioActualizo }}</label>
 						</div>
 						<div class="form-group">
 							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<label class="form-control" id="usuarioCreo">{{ controller.entidadseleccionada.fechaActualizacion }}</label>
+    						<label class="form-control" id="usuarioCreo">{{ controller.proyecto.fechaActualizacion }}</label>
 						</div>
 
 			</form>
