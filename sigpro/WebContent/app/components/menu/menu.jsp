@@ -52,7 +52,7 @@
 	                        <li role="menuitem"><a href="#!/">Tipo de actividades</a></li>
 	                        <li role="menuitem"><a href="#!/hitotipo">Tipo Hito</a></li>
 	                        <li role="menuitem"><a href="#!/metatipos">Tipo de Meta</a></li>
-	                        <li role="menuitem"><a href="#!/">Tipo de Recurso</a></li>
+	                        <li role="menuitem"><a href="#!/recursotipo">Tipo de Recurso</a></li>
 	                        <li role="menuitem"><a href="#!/riesgotipo">Tipo de Riesgo</a></li>
 	                        <li role="menuitem"><a href="#!/metaunidadmedida">Unidad de Medida para Metas</a></li>
 	                        <li role="menuitem"><a href="#!/recursounidadmedida">Unidad de Medida para Recurso</a></li>
