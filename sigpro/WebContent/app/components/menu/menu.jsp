@@ -51,6 +51,7 @@
                     </li>
 	            </ul>
 	            <ul class="nav navbar-nav navbar-right">
+	            	<li><a href=""><span class="glyphicon glyphicon-user" aria-hidden="true"></span><%= session.getAttribute("usuario") %></a></li>
 	            	<shiro:notAuthenticated><li><a href="/login.jsp"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>Entrar</a></li></shiro:notAuthenticated>
 		            <shiro:authenticated><li><a href="/SLogout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Salir</a></li></shiro:authenticated> 
 		            <li><a><span class="glyphicon glyphicon-chevron-up" aria-hidden="true" ng-click="hideBarFromMenu()"></span> </a></li>
