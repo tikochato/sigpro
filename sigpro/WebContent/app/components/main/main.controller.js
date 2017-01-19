@@ -98,6 +98,12 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/hito/:proyecto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'hitoController\'" class="all_page"></div>'
             })
+            .when('/recursotipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'recursotipoController\'" class="all_page"></div>'
+            })
+            .when('/recursounidadmedida/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'recursounidadmedidaController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -237,6 +243,16 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'hitoController',
 	    	   script: '/app/components/hito/hito.controller.js',
 	    	   template: '/app/components/hito/hito.jsp'
+	       },
+	       {
+	    	   name: 'recursotipoController',
+	    	   script: '/app/components/recursotipo/recursotipo.controller.js',
+	    	   template: '/app/components/recursotipo/recursotipo.jsp'
+	       },
+	       {
+	    	   name: 'recursounidadmedidaController',
+	    	   script: '/app/components/recursounidadmedida/recursounidadmedida.controller.js',
+	    	   template: '/app/components/recursounidadmedida/recursounidadmedida.jsp'
 	       }
 
 	   ];

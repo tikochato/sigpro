@@ -14,7 +14,7 @@
 	<div id="mainview" class="all_page">
 		<div ng-view class="all_page"></div>
     </div>
-    <div class="footer">- Minfin 2016 -</div>
+    <div class="footer">- Minfin 2017 -</div>
     <div class="div_alertas">
 		<flash-message name="alertas">
 		</flash-message>
