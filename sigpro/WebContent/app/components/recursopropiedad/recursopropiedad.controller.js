@@ -1,20 +1,21 @@
-var app = angular.module('metaunidadmedidaController', []);
+var app = angular.module('recursopropiedadController', []);
 
-app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
+app.controller('recursopropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 			var mi=this;
 			
-			$window.document.title = 'SIGPRO - Unidades de Medida de Metas';
+			$window.document.title = 'SIGPRO - Recurso Propiedad';
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
-			mi.medidas = [];
-			mi.medida;
+			mi.recursopropiedades = [];
+			mi.recursopropiedad;
 			mi.mostraringreso=false;
-			mi.esnueva = false;
-			mi.totalmedidas = 0;
+			mi.esnuevo = false;
+			mi.totalRecursoPropiedades = 0;
 			mi.paginaActual = 1;
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
+			mi.tipodatos = [];
 			
 			mi.gridOptions = {
 					enableRowSelection : true,
@@ -27,23 +28,23 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 				    paginationPageSize: $utilidades.elementosPorPagina,
 					columnDefs : [ 
 						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-						{ name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
-						{ name: 'simbolo', width: 50, displayName: 'Símbolo', cellClass: 'grid-align-center', enableFiltering: false},
-						{ name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
+					    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
+					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
+					    { name: 'datotiponombre', displayName: 'Tipo dato', cellClass: 'grid-align-left', enableFiltering: false},
 					    { name: 'usuarioCreo', displayName: 'Usuario Creación'},
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
 					],
 					onRegisterApi: function(gridApi) {
 						mi.gridApi = gridApi;
 						gridApi.selection.on.rowSelectionChanged($scope,function(row) {
-							mi.medida = row.entity;
+							mi.recursopropiedad = row.entity;
 						});
 						
 						if($routeParams.reiniciar_vista=='rv'){
 							mi.guardarEstado();
 					    }
 					    else{
-					    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'metaunidadmedidas', t: (new Date()).getTime()}).then(function(response){
+					    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'recursopropiedades', t: (new Date()).getTime()}).then(function(response){
 						      if(response.data.success && response.data.estado!='')
 						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
 						    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
@@ -57,34 +58,32 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 			
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SMetaUnidadMedida', { accion: 'getMetaUnidadMedidasPagina', pagina: pagina, numerometaunidadmedidas: $utilidades.elementosPorPagina }).success(
+				$http.post('/SRecursoPropiedad', { accion: 'getRecursoPropiedadPagina', pagina: pagina, numerorecursopropiedades: $utilidades.elementosPorPagina }).success(
 						function(response) {
-							mi.medidas = response.MetaUnidadMedidas;
-							for(var i=0; i<mi.medidas.length; i++){
-								mi.medidas[i].fechaCreacion = moment(mi.medidas[i].fechaCreacion, 'MMM D, YYYY H:m:s a').format('DD/MM/YYYY');
-							}
-							mi.gridOptions.data = mi.medidas;
+							mi.recursopropiedades = response.recursopropiedades;
+							mi.gridOptions.data = mi.recursopropiedades;
 							mi.mostrarcargando = false;
 						});
 			}
 			
 			mi.guardar=function(){
-				if(mi.medida!=null && mi.medida.nombre!=''){
-					$http.post('/SMetaUnidadMedida', {
-						accion: 'guardarMetaUnidadMedida',
-						esnueva: mi.esnueva,
-						id: mi.medida.id,
-						codigo: mi.medida.codigo,
-						nombre: mi.medida.nombre,
-						descripcion: mi.medida.descripcion,
-						simbolo: mi.medida.simbolo
+				if(mi.recursopropiedad!=null && mi.recursopropiedad.nombre!=''){
+					$http.post('/SRecursoPropiedad', {
+						accion: 'guardarRecursoPropiedad',
+						esnuevo: mi.esnuevo,
+						id: mi.recursopropiedad.id,
+						nombre: mi.recursopropiedad.nombre,
+						descripcion: mi.recursopropiedad.descripcion,
+						datoTipoId: mi.recursopropiedad.datotipoid
 					}).success(function(response){
 						if(response.success){
-							$utilidades.mensaje('success','Medida '+(mi.esnueva ? 'creada' : 'guardada')+' con éxito');
+							$utilidades.mensaje('success','Propiedad Recurso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+							mi.recursopropiedad.id = response.id;
+							mi.esnuevo = false;
 							mi.cargarTabla();
 						}
 						else
-							$utilidades.mensaje('danger','Error al '+(mi.esnueva ? 'crear' : 'guardar')+' la unidad de medida');
+							$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' la Propiedad Recurso');
 					});
 				}
 				else
@@ -92,49 +91,49 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 			};
 
 			mi.borrar = function(ev) {
-				if(mi.medida!=null){
+				if(mi.recursopropiedad!=null){
 					var confirm = $mdDialog.confirm()
 				          .title('Confirmación de borrado')
-				          .textContent('¿Desea borrar la unidad de medida "'+mi.medida.nombre+'"?')
+				          .textContent('¿Desea borrar la Prppiedad Recurso "'+mi.recursopropiedad.nombre+'"?')
 				          .ariaLabel('Confirmación de borrado')
 				          .targetEvent(ev)
 				          .ok('Borrar')
 				          .cancel('Cancelar');
 	
 				    $mdDialog.show(confirm).then(function() {
-				    	$http.post('/SMetaUnidadMedida', {
-							accion: 'borrarMetaUnidadMedida',
-							id: mi.medida.id
+				    	$http.post('/SRecursoPropiedad', {
+							accion: 'borrarRecursoPropiedad',
+							id: mi.recursopropiedad.id
 						}).success(function(response){
 							if(response.success){
-								$utilidades.mensaje('success','Unidad de medida borrada con éxito');
+								$utilidades.mensaje('success','Propiedad Recurso borrado con éxito');
 								mi.cargarTabla();
 							}
 							else
-								$utilidades.mensaje('danger','Error al borrar la unidad de medida');
+								$utilidades.mensaje('danger','Error al borrar la Propiedad Recurso');
 						});
 				    }, function() {
 				    
 				    });
 				}
 				else
-					$utilidades.mensaje('warning','Debe seleccionar la unidad de medida que desea borrar');
+					$utilidades.mensaje('warning','Debe seleccionar la Propiedad Recurso que desea borrar');
 			};
 
 			mi.nueva = function() {
 				mi.mostraringreso=true;
-				mi.esnueva = true;
-				mi.medida = null;
+				mi.esnuevo = true;
+				mi.recursopropiedad = null;
 				mi.gridApi.selection.clearSelectedRows();
 			};
 
 			mi.editar = function() {
-				if(mi.medida!=null){
+				if(mi.recursopropiedad!=null){
 					mi.mostraringreso = true;
-					mi.esnueva = false;
+					mi.esnuevo = false;
 				}
 				else
-					$utilidades.mensaje('warning','Debe seleccionar la unidad de medida que desea editar');
+					$utilidades.mensaje('warning','Debe seleccionar la Propiedad Recurso que desea editar');
 			}
 
 			mi.irATabla = function() {
@@ -143,7 +142,7 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 			
 			mi.guardarEstado=function(){
 				var estado = mi.gridApi.saveState.save();
-				var tabla_data = { action: 'guardaEstado', grid:'metaunidadmedidas', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
+				var tabla_data = { action: 'guardaEstado', grid:'recursopropiedad', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
 				$http.post('/SEstadoTabla', tabla_data).then(function(response){
 					
 				});
@@ -154,16 +153,20 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 			}
 			
 			mi.reiniciarVista=function(){
-				if($location.path()=='/medida/rv')
+				if($location.path()=='/recursopropiedad/rv')
 					$route.reload();
 				else
-					$location.path('/medida/rv');
+					$location.path('/recursopropiedad/rv');
 			}
 			
-			$http.post('/SMetaUnidadMedida', { accion: 'numeroMetaUnidadMedidas' }).success(
+			$http.post('/SRecursoPropiedad', { accion: 'numeroRecursoPropiedades' }).success(
 					function(response) {
-						mi.totalmedidas = response.totalmedidas;
+						mi.totalRecursoPropiedades = response.totalrecursopropiedades;
 						mi.cargarTabla(1);
-					});
+			});
+			$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
+					function(response) {
+						mi.tipodatos = response.datoTipos;
+			});
 			
 		} ]);

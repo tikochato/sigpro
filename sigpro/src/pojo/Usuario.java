@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 18, 2017 10:47:45 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 19, 2017 8:18:07 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -66,7 +66,7 @@ public class Usuario implements java.io.Serializable {
 
 	@Id
 
-	@Column(name = "usuario", unique = true, nullable = false, length = 30)
+	@Column(name = "usuario", nullable = false, length = 30)
 	public String getUsuario() {
 		return this.usuario;
 	}

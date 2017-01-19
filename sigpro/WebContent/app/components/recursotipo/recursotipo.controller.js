@@ -269,7 +269,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 			    animation : 'true',
 			    ariaLabelledBy : 'modal-title',
 			    ariaDescribedBy : 'modal-body',
-			    templateUrl : 'buscarrecursopropiedad.jsp',
+			    templateUrl : '/app/components/recursotipo/buscarrecursopropiedad.jsp',
 			    controller : 'modalBuscarRecursoPropiedad',
 			    controllerAs : 'modalBuscar',
 			    backdrop : 'static',

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 18, 2017 10:47:45 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 19, 2017 8:18:07 AM by Hibernate Tools 5.2.0.CR1
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class ObjetoRecurso implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7564283069739414249L;
+	private static final long serialVersionUID = 1351514108955040586L;
 	private ObjetoRecursoId id;
 	private Componente componente;
 	private Producto producto;
@@ -41,12 +41,14 @@ public class ObjetoRecurso implements java.io.Serializable {
 	private String valorString;
 	private BigDecimal valorDecimal;
 	private Date valorTiempo;
+	private int actividadid;
 
 	public ObjetoRecurso() {
 	}
 
 	public ObjetoRecurso(ObjetoRecursoId id, Componente componente, Producto producto, Proyecto proyecto,
-			Recurso recurso, RecursoPropiedad recursoPropiedad, String usuarioCreo, Date fechaCreacion, int estado) {
+			Recurso recurso, RecursoPropiedad recursoPropiedad, String usuarioCreo, Date fechaCreacion, int estado,
+			int actividadid) {
 		this.id = id;
 		this.componente = componente;
 		this.producto = producto;
@@ -56,12 +58,13 @@ public class ObjetoRecurso implements java.io.Serializable {
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
+		this.actividadid = actividadid;
 	}
 
 	public ObjetoRecurso(ObjetoRecursoId id, Componente componente, Producto producto, Proyecto proyecto,
 			Recurso recurso, RecursoPropiedad recursoPropiedad, String usuarioCreo, String usuarioActualizo,
 			Date fechaCreacion, Date fechaActualizacion, int estado, Integer valorEntero, String valorString,
-			BigDecimal valorDecimal, Date valorTiempo) {
+			BigDecimal valorDecimal, Date valorTiempo, int actividadid) {
 		this.id = id;
 		this.componente = componente;
 		this.producto = producto;
@@ -77,6 +80,7 @@ public class ObjetoRecurso implements java.io.Serializable {
 		this.valorString = valorString;
 		this.valorDecimal = valorDecimal;
 		this.valorTiempo = valorTiempo;
+		this.actividadid = actividadid;
 	}
 
 	@EmbeddedId
@@ -227,6 +231,15 @@ public class ObjetoRecurso implements java.io.Serializable {
 
 	public void setValorTiempo(Date valorTiempo) {
 		this.valorTiempo = valorTiempo;
+	}
+
+	@Column(name = "actividadid", nullable = false)
+	public int getActividadid() {
+		return this.actividadid;
+	}
+
+	public void setActividadid(int actividadid) {
+		this.actividadid = actividadid;
 	}
 
 }
