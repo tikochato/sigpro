@@ -23,7 +23,6 @@ import pojo.Producto;
 import pojo.ProductoPropiedad;
 import pojo.ProductoPropiedadValor;
 import pojo.ProductoPropiedadValorId;
-import pojo.ProyectoPropedadValor;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 import utilities.Utils;
