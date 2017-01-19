@@ -72,8 +72,6 @@ public class SRecursoTipo extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		HttpSession sesionweb = request.getSession();
-		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		Gson gson = new Gson();
 		Type type = new TypeToken<Map<String, String>>(){}.getType();
 		StringBuilder sb = new StringBuilder();
@@ -112,10 +110,13 @@ public class SRecursoTipo extends HttpServlet {
 		else if(accion.equals("numeroRecursoTipos")){
 			response_text = String.join("","{ \"success\": true, \"totalcooperantes\":",RecursoTipoDAO.getTotalRecursoTipo().toString()," }");
 		}
-		else if(accion.equals("guardarComponentetipo")){
+		else if(accion.equals("guardarRecursotipo")){
 			boolean result = false;
 			boolean esnuevo = map.get("esnuevo").equals("true");
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			HttpSession sesionweb = request.getSession();
+			String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
+			
 			if(id>0 || esnuevo){
 				
 				String nombre = map.get("nombre");

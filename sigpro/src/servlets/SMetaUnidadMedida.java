@@ -122,9 +122,10 @@ public class SMetaUnidadMedida extends HttpServlet {
 			if(id>0 || esnuevo){
 				String nombre = map.get("nombre");
 				String descripcion = map.get("descripcion");
+				String simbolo = map.get("simbolo");
 				MetaUnidadMedida MetaUnidadMedida;
 				if(esnuevo){
-					MetaUnidadMedida = new MetaUnidadMedida(nombre, descripcion,"admin",null, new DateTime().toDate(), null, 1, null );
+					MetaUnidadMedida = new MetaUnidadMedida(nombre, descripcion,simbolo,"admin",null, new DateTime().toDate(), null, 1, null );
 				}
 				else{
 					MetaUnidadMedida = MetaUnidadMedidaDAO.getMetaUnidadMedidaPorId(id);

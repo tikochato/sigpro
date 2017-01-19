@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 18, 2017 10:47:45 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 19, 2017 8:18:07 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8730576485694235157L;
+	private static final long serialVersionUID = 1073440190535233287L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
 	private Producto producto;
@@ -35,6 +35,7 @@ public class Actividad implements java.io.Serializable {
 	private String descripcion;
 	private Date fechaInicio;
 	private Date fechaFin;
+	private int porcentajeAvance;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
@@ -45,20 +46,23 @@ public class Actividad implements java.io.Serializable {
 	public Actividad() {
 	}
 
-	public Actividad(ActividadTipo actividadTipo, Producto producto) {
+	public Actividad(ActividadTipo actividadTipo, Producto producto, int porcentajeAvance) {
 		this.actividadTipo = actividadTipo;
 		this.producto = producto;
+		this.porcentajeAvance = porcentajeAvance;
 	}
 
 	public Actividad(ActividadTipo actividadTipo, Producto producto, String nombre, String descripcion,
-			Date fechaInicio, Date fechaFin, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, Integer estado, Set<ActividadPropiedadValor> actividadPropiedadValors) {
+			Date fechaInicio, Date fechaFin, int porcentajeAvance, String usuarioCreo, String usuarioActualizo,
+			Date fechaCreacion, Date fechaActualizacion, Integer estado,
+			Set<ActividadPropiedadValor> actividadPropiedadValors) {
 		this.actividadTipo = actividadTipo;
 		this.producto = producto;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
+		this.porcentajeAvance = porcentajeAvance;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
@@ -135,6 +139,15 @@ public class Actividad implements java.io.Serializable {
 
 	public void setFechaFin(Date fechaFin) {
 		this.fechaFin = fechaFin;
+	}
+
+	@Column(name = "porcentaje_avance", nullable = false)
+	public int getPorcentajeAvance() {
+		return this.porcentajeAvance;
+	}
+
+	public void setPorcentajeAvance(int porcentajeAvance) {
+		this.porcentajeAvance = porcentajeAvance;
 	}
 
 	@Column(name = "usuario_creo", length = 30)

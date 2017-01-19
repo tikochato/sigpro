@@ -78,6 +78,10 @@
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="metaunidadc.medida.descripcion">
 						</div>
 						<div class="form-group">
+							<label for="simbolo">Símbolo</label>
+    						<input type="text" class="form-control" id="simbolo" placeholder="Símbolo" ng-model="metaunidadc.medida.simbolo">
+						</div>
+						<div class="form-group">
 							<label for="usuarioCreo">Usuario que creo</label>
     						<label class="form-control" id="usuarioCreo">{{ metaunidadc.medida.usuarioCreo }}</label>
 						</div>

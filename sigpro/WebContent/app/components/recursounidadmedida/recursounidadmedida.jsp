@@ -74,6 +74,10 @@
     						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="recursounidadc.medida.nombre">
 						</div>
 						<div class="form-group">
+							<label for="simbolo">Símbolo</label>
+    						<input type="text" class="form-control" id="simbolo" placeholder="Símbolo" ng-model="recursounidadc.medida.simbolo">
+						</div>
+						<div class="form-group">
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="recursounidadc.medida.descripcion">
 						</div>
