@@ -23,25 +23,9 @@
 	            <ul class="nav navbar-nav">
 	                <li uib-dropdown>
 	                    <a href="#!/cooperante"><span class="glyphicon" aria-hidden="true"></span> Cooperante</a>
-	                     <!--
-	                     <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-	                     	<li role="menuitem"><a href="#!/formaejemplo">Forma Ejemplo</a></li>
-	                     	<li role="menuitem"><a href="#!/cooperante">Cooperante</a></li>
-	                     </ul>
-	                       -->
 	                </li>
                     <li>
                          <a   href="#!/proyecto"><span class="glyphicon" aria-hidden="true"></span> Proyectos</a>
-                         	
-                         <!--  <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-                            <li role="menuitem"><a href="#!/entidad">Entidad</a></li>
-                            <li role="menuitem"><a href="#!/unidadEjecutora">Unidad Ejecutora</a></li>
-	                     	<li role="menuitem"><a href="#!/colaborador">Colaborador</a></li>
-	                     	<li role="menuitem"><a href="#!/metaunidadmedida">Unidad de Medidas para Metas</a></li>
-	                     	<li role="menuitem"><a href="#!/metatipos">Tipos de Meta</a></li>
-	                     	<li role="menuitem"><a href="#!/permisos">Permisos</a></li>
-	                     	<li role="menuitem"><a href="#!/usuarios">Usuarios</a></li>
-                         </ul> -->
                     </li>
                     <li uib-dropdown>
                          <a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Cat&#225;logos <b class="caret"></b></a>
@@ -56,11 +40,6 @@
 	                        <li role="menuitem"><a href="#!/riesgotipo">Tipo de Riesgo</a></li>
 	                        <li role="menuitem"><a href="#!/metaunidadmedida">Unidad de Medida para Metas</a></li>
 	                        <li role="menuitem"><a href="#!/recursounidadmedida">Unidad de Medida para Recurso</a></li>
-                            <!--
-                            <li role="menuitem"><a href="#!/productoPropiedad">Propiedades</a></li>
-                            <li role="menuitem"><a href="#!/productoTipo">Tipos</a></li>
-                            <li role="menuitem"><a href="#!/producto">Producto</a></li> 
-                             -->
                          </ul>
                     </li>
                     <li uib-dropdown>
@@ -68,21 +47,6 @@
                          <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
                          	<li role="menuitem"><a href="#!/usuarios">Usuarios</a></li>
                          	<li role="menuitem"><a href="#!/permisos">Permisos</a></li>
-                            <!--
-                            <li role="menuitem"><a href="#!/proyecto">Proyecto</a></li>
-                            <li role="menuitem"><a href="#!/proyectotipo">Tipo de Proyecto</a></li>
-                            <li role="menuitem"><a href="#!/desembolsotipo">Tipo Desembolso</a></li>
-                            <li role="menuitem"><a href="#!/desembolso">Desembolso</a></li>
-                            <li role="menuitem"><a href="#!/componente">Componente</a></li>
-                            <li role="menuitem"><a href="#!/componentepropiedad">Propiedad Componente</a></li>
-                            <li role="menuitem"><a href="#!/componentetipo">Tipo Componente</a></li>
-                            <li role="menuitem"><a href="#!/hitotipo">Tipo Hito</a></li>
-                            <li role="menuitem"><a href="#!/hito">Hito</a></li>
-                            <li role="menuitem"><a href="#!/riesgopropiedad">Propiedad Riesgo</a></li>
-                            <li role="menuitem"><a href="#!/riesgotipo">Tipo Riesgo</a></li>
-                            <li role="menuitem"><a href="#!/riesgo">Riesgo</a></li>
-                              -->
-                            
                          </ul>
                     </li>
 	            </ul>
