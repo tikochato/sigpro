@@ -190,32 +190,28 @@ public class SComponente extends HttpServlet {
 
 					for (stdatadinamico data : datos) {
 						ComponentePropiedad componentePropiedad = ComponentePropiedadDAO.getComponentePropiedadPorId(Integer.parseInt(data.id));
-						ComponentePropiedadValorId idValor = new ComponentePropiedadValorId(componente.getId(),Integer.parseInt(data.id), usuario,new DateTime().toDate());
+						ComponentePropiedadValorId idValor = new ComponentePropiedadValorId(componente.getId(),Integer.parseInt(data.id));
+						ComponentePropiedadValor valor = new ComponentePropiedadValor(idValor, componente, componentePropiedad, usuario, new DateTime().toDate()); 
 
 						switch (componentePropiedad.getDatoTipo().getId()){
 							case 1:
-								idValor.setValorString(data.valor);
+								valor.setValorString(data.valor);
 								break;
 							case 2:
-								idValor.setValorEntero(Integer.parseInt(data.valor));
+								valor.setValorEntero(Integer.parseInt(data.valor));
 								break;
 							case 3:
-								idValor.setValorDecimal(new BigDecimal(data.valor));
+								valor.setValorDecimal(new BigDecimal(data.valor));
 								break;
 							case 4:
 
 								break;
 							case 5:
 								SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-								idValor.setValorTiempo(sdf.parse(data.valor));
+								valor.setValorTiempo(sdf.parse(data.valor));
 								break;
 						}
-
-						ComponentePropiedadValor valor = new ComponentePropiedadValor(idValor
-								, componente, componentePropiedad);
-
 						result = (result && ComponentePropiedadValorDAO.guardarComponentePropiedadValor(valor));
-
 					}
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 							+ "\"id\": " + componente.getId() +" }");

@@ -81,7 +81,7 @@ public class SProyectoPropiedad extends HttpServlet {
 				temp.nombre = proyectopropiedad.getNombre();
 				temp.descripcion = proyectopropiedad.getDescripcion();
 				temp.datotipoid = proyectopropiedad.getDatoTipo().getId();
-				temp.datotiponombre = proyectopropiedad.getNombre();
+				temp.datotiponombre = proyectopropiedad.getDatoTipo().getNombre();
 				temp.estado = proyectopropiedad.getEstado();
 				temp.fechaActualizacion = Utils.formatDate(proyectopropiedad.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(proyectopropiedad.getFechaCreacion());	
@@ -105,7 +105,7 @@ public class SProyectoPropiedad extends HttpServlet {
 				temp.nombre = proyectopropiedad.getNombre();
 				temp.descripcion = proyectopropiedad.getDescripcion();
 				temp.datotipoid = proyectopropiedad.getDatoTipo().getId();
-				temp.datotiponombre = proyectopropiedad.getNombre();
+				temp.datotiponombre = proyectopropiedad.getDatoTipo().getNombre();
 				temp.estado = proyectopropiedad.getEstado();
 				temp.fechaActualizacion = Utils.formatDate(proyectopropiedad.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(proyectopropiedad.getFechaCreacion());	

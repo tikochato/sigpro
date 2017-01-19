@@ -1,16 +1,10 @@
 package dao;
 
-import java.text.SimpleDateFormat;
-
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
-
-
-
 
 import pojo.ComponentePropiedadValor;
 import pojo.ComponentePropiedadValorId;
@@ -23,11 +17,10 @@ public class ComponentePropiedadValorDAO {
 		ComponentePropiedadValor ret = null;
 		try {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
 			CriteriaQuery<ComponentePropiedadValor> criteria = builder.createQuery(ComponentePropiedadValor.class);
 			Root<ComponentePropiedadValor> root = criteria.from(ComponentePropiedadValor.class);
 			criteria.select(root);
-			criteria.where(builder.equal(root.get("id"), new ComponentePropiedadValorId(idComponente, idPropiedad, "admin", sdf.parse("2017-01-10 00:00:00"))));
+			criteria.where(builder.equal(root.get("id"), new ComponentePropiedadValorId(idComponente, idPropiedad)));
 			ret = session.createQuery(criteria).getSingleResult();
 		} catch (Throwable e) {
 			CLogger.write("1", ProductoPropiedadValorDAO.class, e);

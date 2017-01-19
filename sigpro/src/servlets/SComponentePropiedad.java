@@ -217,16 +217,16 @@ public class SComponentePropiedad extends HttpServlet {
 				if (coomponentePropiedadValor !=null ){
 					switch (componentepropiedad.getDatoTipo().getId()){
 						case 1:
-							campo.put("valor", coomponentePropiedadValor.getId().getValorString());
+							campo.put("valor", coomponentePropiedadValor.getValorString());
 							break;
 						case 2:
-							campo.put("valor", coomponentePropiedadValor.getId().getValorEntero());
+							campo.put("valor", coomponentePropiedadValor.getValorEntero());
 							break;
 						case 3:
-							campo.put("valor", coomponentePropiedadValor.getId().getValorDecimal());
+							campo.put("valor", coomponentePropiedadValor.getValorDecimal());
 							break;
 						case 5:
-							campo.put("valor", coomponentePropiedadValor.getId().getValorTiempo());
+							campo.put("valor", coomponentePropiedadValor.getValorTiempo());
 							break;
 					}
 				}
