@@ -129,7 +129,9 @@ public class ProductoDAO {
 			Query<Producto> criteria = session.createQuery("SELECT p FROM Producto p WHERE p.estado = 1 "
 					+ (componenteid!=null && componenteid > 0 ? "AND p.componente.id = :idComp " : ""),
 					Producto.class);
-			criteria.setParameter("idComp", componenteid);
+			if (componenteid!=null && componenteid>0){
+				criteria.setParameter("idComp", componenteid);
+			}
 			criteria.setFirstResult(((pagina - 1) * (numeroProductos)));
 			criteria.setMaxResults(numeroProductos);
 			

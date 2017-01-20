@@ -190,10 +190,11 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	}
 
 	mi.reiniciarVista = function() {
-		if ($location.path() == '/producto/rv')
+		if($location.path()==('/producto/'+ $routeParams.componente_id + '/rv'))
 			$route.reload();
 		else
-			$location.path('/producto/rv');
+			$location.path('/producto/'+ $routeParams.componente_id + '/rv');
+		
 	}
 
 	mi.nuevo = function() {
