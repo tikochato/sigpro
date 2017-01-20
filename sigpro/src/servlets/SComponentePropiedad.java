@@ -142,7 +142,7 @@ public class SComponentePropiedad extends HttpServlet {
 				temp.nombre = componentepropiedad.getNombre();
 				temp.descripcion = componentepropiedad.getDescripcion();
 				temp.datotipoid = componentepropiedad.getDatoTipo().getId();
-				temp.datotiponombre = componentepropiedad.getNombre();
+				temp.datotiponombre = componentepropiedad.getDatoTipo().getNombre();
 				temp.fechaActualizacion = Utils.formatDate(componentepropiedad.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(componentepropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = componentepropiedad.getUsuarioActualizo();
