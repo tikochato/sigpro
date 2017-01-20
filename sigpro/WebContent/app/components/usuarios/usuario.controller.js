@@ -20,6 +20,7 @@ app.controller(
   function($scope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route,$q,$uibModal) {
 	var mi=this;
 	$window.document.title = 'SIGPRO - Usuarios';
+	mi.colaboradorSeleccionado =false;
 	i18nService.setCurrentLang('es');
 	mi.mostrarcargando=true;
 	mi.entityselected = null;
@@ -34,6 +35,8 @@ app.controller(
 	mi.permisosEliminados=[];
 	var usuarioMail ="";
 	mi.permisosAsignados=[];
+	mi.colaborador={};
+	mi.mensajeActualizado={mensaje:"buscar colaborador"};
 	mi.gridOptions = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -180,7 +183,6 @@ app.controller(
 									email:mi.usuariosSelected.email
 								}).success(
 									function(data) {
-										console.log(data);
 										if(data.success){
 											if(mi.nuevosPermisos.length==0 && mi.permisosEliminados.length==0){
 												mi.isCollapsed = false;
@@ -363,6 +365,64 @@ app.controller(
 		});
 	};
 	
+	mi.buscarColaborador=function(){
+		var modalInstance = $uibModal.open({
+		    animation : 'true',
+		    ariaLabelledBy : 'modal-title',
+		    ariaDescribedBy : 'modal-body',
+		    templateUrl : 'buscarColaborador.jsp',
+		    controller : 'modalBuscarColaborador',
+		    controllerAs : 'modalBuscar',
+		    backdrop : 'static',
+		    size : 'md',
+		    resolve : {
+		    	infoUsuario: function(){
+		    		var parametros={ usuario:mi.usuariosSelected.usuario};
+		    		return  parametros;
+		    	}
+		    }
+
+		});
+		
+		modalInstance.result.then(function(data) {
+			 mi.colaboradorSeleccionado=true;
+			mi.colaborador=data;
+			mi.mensajeActualizado.mensaje=data.primerApellido+ ", "+data.primerNombre;
+		}, function() {
+		});
+	};
+	
+	mi.asignarColaborador= function(){
+		if(mi.colaboradorSeleccionado){
+			var datos = {
+					accion : 'actualizar',
+					codigo : mi.colaborador.id,
+					primerNombre :  mi.colaborador.primerNombre,
+					segundoNombre :  mi.colaborador.segundoNombre,
+					primerApellido :  mi.colaborador.primerApellido,
+					segundoApellido :  mi.colaborador.segundoApellido,
+					cui :  mi.colaborador.cui,
+					unidadEjecutora :  mi.colaborador.unidadEjecutora,
+					usuario : mi.usuariosSelected.usuario
+				};
+
+				$http.post('/SColaborador', datos).then(
+						function(response) {
+							if (response.data.success) {
+								$utilidades.mensaje('success',
+										'Colaborador actualizado con exito.');
+							} else {
+								$utilidades.mensaje('danger',
+										'Error al actualizar datos...!!!');
+							}
+						});
+		}else{
+			$utilidades.mensaje('danger',
+			'Seleccione un colaborador.');
+		}
+		
+	}
+	
 	$http.post('/SUsuario', { accion: 'getTotalUsuarios' }).success(
 			function(response) {
 				mi.totalUsuarios = response.totalUsuarios;
@@ -485,6 +545,116 @@ function modalPassword($uibModalInstance, $scope, $http, $interval, i18nService,
     	    $utilidades.mensaje('danger', 'La contraseña no debe quedar vacia.');
     	}
      };
+
+     mi.cancel = function() {
+    	$uibModalInstance.dismiss('cancel');
+     };
+}
+
+
+app.controller('modalBuscarColaborador', [
+	'$uibModalInstance', '$scope', '$http', '$interval', 'i18nService',
+	'Utilidades', '$timeout', '$log','infoUsuario',modalBuscarColaborador
+]);
+function modalBuscarColaborador($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log, infoUsuario) {
+	var mi = this;
+
+	mi.totalElementos = 0;
+	mi.paginaActual = 1;
+	mi.numeroMaximoPaginas = 5;
+	mi.elementosPorPagina = 9;
+	
+	mi.mostrarCargando = false;
+	mi.data = [];
+	
+	mi.itemSeleccionado = null;
+	mi.seleccionado = false;
+	
+   
+   
+    mi.opcionesGrid = {
+		data : mi.data,
+		columnDefs : [
+			{
+				displayName : 'Primer nombre', 
+				name : 'primerNombre', 
+				cellClass : 'grid-align-right', 
+				type : 'text'
+			
+			}, 
+			{ 
+				displayName : 'Segundo nombre', 
+				name : 'segundoNombre', 
+				cellClass : 'grid-align-left'
+			}
+			, 
+			{ 
+				displayName : 'Primer apellido', 
+				name : 'primerApellido', 
+				cellClass : 'grid-align-left'
+			}
+			, 
+			{ 
+				displayName : 'Segundo apellido', 
+				name : 'segundoApellido', 
+				cellClass : 'grid-align-left'
+			}
+			, {
+				displayName : 'CUI',
+				name : 'cui',
+				cellClass : 'grid-align-right',
+				type : 'number'
+			}
+			, {
+				displayName : 'Unidad Ejecutora',
+				name : 'nombreUnidadEjecutora',
+				cellClass : 'grid-align-left'
+			}
+		],
+		enableRowSelection : true,
+		enableRowHeaderSelection : false,
+		multiSelect : false,
+		modifierKeysToMultiSelect : false,
+		noUnselect : false,
+		enableFiltering : true,
+		enablePaginationControls : false,
+		paginationPageSize : 5,
+		onRegisterApi : function(gridApi) {
+		    mi.gridApi = gridApi;
+		    mi.gridApi.selection.on.rowSelectionChanged($scope,
+			    mi.seleccionarPermiso);
+		}
+    }
+    var datos = {
+			accion : 'cargar',
+			pagina :1,
+			registros : 100
+		};
+
+		mi.mostrarCargando = true;
+		$http.post('/SColaborador', datos).then(function(response) {
+			if (response.data.success) {
+
+				mi.data = response.data.unidadesEjecutoras;
+				mi.opcionesGrid.data = mi.data;
+
+				mi.mostrarCargando = false;
+			}
+		});
+    mi.seleccionarPermiso = function(row) {
+    	mi.itemSeleccionado = row.entity;
+    	mi.seleccionado = row.isSelected;
+    };
+
+
+     mi.ok = function() {
+    	if (mi.seleccionado) {
+    	    $uibModalInstance.close(mi.itemSeleccionado);
+    	} else {
+    	    $utilidades.mensaje('warning', 'Debe seleccionar un colaborador');
+    	}
+     };
+	
 
      mi.cancel = function() {
     	$uibModalInstance.dismiss('cancel');

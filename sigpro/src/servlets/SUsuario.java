@@ -267,6 +267,16 @@ public class SUsuario extends HttpServlet {
 				}else{
 					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros deseados.\" }");
 				}
+			}else if(accion.compareTo("usuarioActual")==0){
+				HttpSession sesionweb = request.getSession();
+				String usuario_texto = sesionweb.getAttribute("usuario")!=null? sesionweb.getAttribute("usuario").toString(): "";
+				Usuario usuarioActual = UsuarioDAO.getUsuario(usuario_texto);
+				stusuario usuarioStr = new stusuario();
+				usuarioStr.email=usuarioActual.getEmail();
+				usuarioStr.usuario=usuarioActual.getUsuario();
+				String respuesta = new GsonBuilder().serializeNulls().create().toJson(usuarioStr);
+				response_text = String.join("", "\"usuario\": ",respuesta);
+				response_text = String.join("", "{\"success\":true,", response_text,"}");
 			}
 		}else{
 			response_text = String.join("","{ \"success\": false, \"error\":\"No se enviaron los parametros deseados\" }");
