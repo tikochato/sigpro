@@ -36,7 +36,7 @@ public class ProyectoTipoDAOTest {
 	
 	@Test
 	public void eliminarProyectoTipo(){
-		assertNotNull(ProyectoTipoDAO.eliminarProyectoTipo(new ProyectoTipo()));
+		assertEquals(ProyectoTipoDAO.eliminarProyectoTipo(new ProyectoTipo()),false);
 	}
 
 }
