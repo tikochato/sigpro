@@ -146,6 +146,42 @@ public class DesembolsoDAO {
 		return ret;
 	}
 	
+	public static List<Desembolso> getDesembolsosPaginaPorProyecto(int pagina, int numeroDesembolsos, int proyectoId){
+		List<Desembolso> ret = new ArrayList<Desembolso>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Desembolso> criteria = session.createQuery("SELECT d FROM Desembolso d WHERE estado = 1 AND d.proyecto.id = :proyId",Desembolso.class);
+			criteria.setParameter("proyId", proyectoId);
+			criteria.setFirstResult(((pagina-1)*(numeroDesembolsos)));
+			criteria.setMaxResults(numeroDesembolsos);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("8", DesembolsoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Long getTotalDesembolsosPorProyecto(int proyectoId){
+		Long ret=0L;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Long> conteo = session.createQuery("SELECT count(d.id) FROM Desembolso d WHERE d.estado=1 AND d.proyecto.id = :proyId ",Long.class);
+			conteo.setParameter("proyId", proyectoId);
+			ret = conteo.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("9", DesembolsoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	
 	
 

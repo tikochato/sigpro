@@ -200,6 +200,12 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					mi.totalComponentes = response.totalcooperantes;
 					mi.cargarTabla(1);
 		});
+		
+		mi.irAProductos=function(componenteid){
+			if(mi.componente!=null){
+				$location.path('/producto/'+componenteid);
+			}
+		};
 
 		mi.buscarComponenteTipo = function(titulo, mensaje) {
 

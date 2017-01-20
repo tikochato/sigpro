@@ -265,6 +265,17 @@ public class SComponente extends HttpServlet {
 	        response_text = String.join("", "\"componentes\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
+		else if(accion.equals("obtenerComponentePorId")){
+			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			Componente componente = ComponenteDAO.getComponentePorId(id);
+		
+			response_text = String.join("","{ \"success\": ",(componente!=null && componente.getId()!=null ? "true" : "false"),", "
+				+ "\"id\": " + (componente!=null ? componente.getId():"0") +", "
+				+ "\"nombre\": \"" + (componente!=null ? componente.getNombre():"Indefinido") +"\" }");
+			
+
+
+		}
 		else{
 			response_text = "{ \"success\": false }";
 		}

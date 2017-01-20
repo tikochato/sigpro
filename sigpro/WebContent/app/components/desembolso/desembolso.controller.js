@@ -74,7 +74,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SDesembolso', { accion: 'getDesembolsosPagina', pagina: pagina, numerodesembolsos: $utilidades.elementosPorPagina }).success(
+				$http.post('/SDesembolso', { accion: 'getDesembolsosPaginaPorProyecto', pagina: pagina, numerodesembolsos: $utilidades.elementosPorPagina,numerocomponentes: $utilidades.elementosPorPagina,proyectoid: $routeParams.proyecto_id  }).success(
 						function(response) {
 							mi.desembolsos = response.desembolsos;
 							mi.gridOptions.data = mi.desembolsos;
@@ -157,12 +157,12 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 					$utilidades.mensaje('warning','Debe seleccionar el Desembolso que desea editar');
 			};
 
-			$http.post('/SProyecto', { accion: 'obtenerProyectoPorId',id: $routeParams.pproyectoid }).success(
+			$http.post('/SProyecto', { accion: 'obtenerProyectoPorId',id: $routeParams.proyecto_id }).success(
 					function(response) {
 						mi.proyectonombre = response.nombre;
 			});
 			
-			$http.post('/SDesembolso', { accion: 'numeroDesembolsos' }).success(
+			$http.post('/SDesembolso', { accion: 'numeroDesembolsosPorProyecto',proyectoid:$routeParams.proyecto_id }).success(
 					function(response) {
 						mi.totalDesembolsos = response.totaldesembolsos;
 						mi.cargarTabla(1);

@@ -10,6 +10,7 @@
 	</script>
 
 	<h3>{{ producto.esForma ? (producto.esNuevo ? "Nuevo Producto" : "Editar Producto") : "Producto" }}</h3>
+	<h4>{{ producto.componenteNombre }}</h4><br/>
 
 	<br />
   

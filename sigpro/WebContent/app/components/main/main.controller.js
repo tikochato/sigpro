@@ -41,7 +41,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/productoPropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProductoPropiedad\'" class="all_page"></div>'
             })
-            .when('/producto/:reiniciar_vista?',{
+            .when('/producto/:componente_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProducto\'" class="all_page"></div>'
             })
             .when('/proyectotipo/:reiniciar_vista?',{
@@ -62,7 +62,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/test',{
             	template: '<div load-on-demand="\'testController\'" class="all_page"></div>'
             })
-            .when('/desembolso/:reiniciar_vista?',{
+            .when('/desembolso/:proyecto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'desembolsoController\'" class="all_page"></div>'
             })
             .when('/componente/:proyecto_id?/:reiniciar_vista?',{
