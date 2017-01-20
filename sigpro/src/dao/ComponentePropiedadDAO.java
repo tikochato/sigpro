@@ -180,7 +180,26 @@ public class ComponentePropiedadDAO {
 		}
 		return ret;
 	}
-
-
-
+	
+	public static List<ComponentePropiedad> getComponentePropiedadesPorTipoComponente(int idTipoComponente){
+		List<ComponentePropiedad> ret = new ArrayList<ComponentePropiedad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<ComponentePropiedad> criteria = session.createNativeQuery(" select cp.* "
+				+ "from componente_tipo ct "
+				+ "join ctipo_propiedad ctp ON ctp.componente_tipoid = ct.id "
+				+ "join componente_propiedad cp ON cp.id = ctp.componente_propiedadid "
+				+ " where ct.id = :idTipoComp",ComponentePropiedad.class);
+			
+			criteria.setParameter("idTipoComp", idTipoComponente);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("10", ComponentePropiedadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

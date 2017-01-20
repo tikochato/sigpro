@@ -61,7 +61,7 @@
 
       <div class="btn-group">
         <label class="btn btn-success" ng-click="form.$valid ? entidad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
-        <label class="btn btn-danger" ng-click="entidad.cancelar()">Cancelar</label>
+        <label class="btn btn-primary" ng-click="entidad.cancelar()">Ir a Tabla</label>
       </div>
 
     </div>
@@ -71,19 +71,20 @@
       <form name="form" class="css-form" novalidate>
 
 			<div class="row">
-		        <div class="form-group col-sm-2" ng-class="{ 'has-error' : form.campo1.$invalid }">
+		        <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo1.$invalid }">
 		          <label for="campo1">* Entidad</label> 
 		          <input type="number" class="form-control" id="campo1" name="campo1"  placeholder="entidad" ng-model="entidad.entidad" ng-readonly="!entidad.esNuevo" required />
 		        </div>
 		    </div>
 
 			<div class="row">
-				<div class="form-group col-sm-10" ng-class="{ 'has-error' : form.campo2.$invalid }">
+				<div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo2.$invalid }">
 				  <label for="campo2">* Nombre Entidad</label> 
 				  <input type="text" class="form-control" id="campo2" name="campo2" placeholder="nombre entidad" ng-model="entidad.nombre" ng-readonly="!entidad.esNuevo" required />
 				</div>
-				
-		        <div class="form-group col-sm-2" ng-class="{ 'has-error' : form.campo3.$invalid }">
+			</div>
+			<div class="row">
+		        <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo3.$invalid }">
 		          <label for="campo3">Abreviatura</label> 
 		          <input type="text" class="form-control" id="campo3" name="campo3" placeholder="abreviatura" ng-model="entidad.abreviatura">
 		        </div>

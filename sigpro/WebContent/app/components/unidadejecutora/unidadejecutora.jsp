@@ -52,9 +52,8 @@
 
       <div class="btn-group">
         <label class="btn btn-success" ng-click="form.$valid ? unidad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
-        <label class="btn btn-danger" ng-click="unidad.cancelar()">Cancelar</label>
+        <label class="btn btn-primary" ng-click="unidad.cancelar()">Ir a Tabla</label>
       </div>
-
     </div>
 
     <div>
@@ -62,7 +61,7 @@
       <form name="form" class="css-form" novalidate>
 
 		<div class="row">
-	        <div class="form-group col-sm-2" ng-class="{ 'has-error' : form.campo1.$invalid }">
+	        <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo1.$invalid }">
 	          <label for="campo1">* Unidad Ejecutora:</label> 
 	          <input type="number" class="form-control" id="campo1" name="campo1" placeholder="Unidad Ejecutora" ng-model="unidad.codigo" ng-readonly="!unidad.esNuevo" required />
 	        </div>
@@ -91,7 +90,7 @@
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
         <label class="btn btn-success" ng-click="form.$valid ? unidad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
-        <label class="btn btn-danger" ng-click="unidad.cancelar()">Cancelar</label>
+        <label class="btn btn-primary" ng-click="unidad.cancelar()">Ir a Tabla</label>
       </div>
     </div>
   </div>

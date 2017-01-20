@@ -4,8 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -15,17 +16,22 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.CooperanteDAO;
 import dao.ProyectoDAO;
-import dao.ProyectoTipoDAO;
-import dao.UnidadEjecutoraDAO;
+import dao.ProyectoPropiedadDAO;
+import dao.ProyectoPropiedadValorDAO;
 import pojo.Cooperante;
 import pojo.Proyecto;
+import pojo.ProyectoPropedadValor;
+import pojo.ProyectoPropedadValorId;
+import pojo.ProyectoPropiedad;
 import pojo.ProyectoTipo;
 import pojo.UnidadEjecutora;
 import utilities.Utils;
@@ -36,7 +42,7 @@ import utilities.Utils;
 @WebServlet("/SProyecto")
 public class SProyecto extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+
 	class datos {
 		int id;
 		String nombre;
@@ -52,28 +58,32 @@ public class SProyecto extends HttpServlet {
 		String usuariocrea;
 		String fechaactualizacion;
 		String usuarioactualizo;
-		
+
 	};
-	
-	class listas{
-		int id;
-		String nombre;
+
+	class stdatadinamico {
+		String id;
+		String tipo;
+		String label;
+		String valor;
 	}
-       
-    
+
+
     public SProyecto() {
         super();
-        
+
     }
-	
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
-	
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		HttpSession sesionweb = request.getSession();
+		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		Gson gson = new Gson();
-		Type type = new TypeToken<Map<String, String>>() {
-		}.getType();
+		Type type = new TypeToken<Map<String, String>>(){}.getType();
 		StringBuilder sb = new StringBuilder();
 		BufferedReader br = request.getReader();
 		String str;
@@ -81,17 +91,16 @@ public class SProyecto extends HttpServlet {
 			sb.append(str);
 		}
 		;
-		
 		Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String accion = map.get("accion")!=null ? map.get("accion") : "";
 		String response_text = "";
-		
-		if (accion.equals("getProyectoPagin")) {
+
+		if (accion.equals("getProyectos")) {
 			List<Proyecto> proyectos = ProyectoDAO.getProyectos();
-			
+
 			response.setHeader("Content-Encoding", "gzip");
 			response.setCharacterEncoding("UTF-8");
-			
+
 			List <datos> datos_ = new ArrayList<datos>();
 			for (Proyecto proyecto : proyectos){
 				datos dato = new datos();
@@ -100,151 +109,163 @@ public class SProyecto extends HttpServlet {
 				dato.descripcion = proyecto.getDescripcion();
 				dato.snip = proyecto.getSnip();
 				dato.proyectotipo = proyecto.getProyectoTipo().getNombre();
-				dato.proyectotipoid = proyecto.getId();
+				dato.proyectotipoid = proyecto.getProyectoTipo().getId();
 				dato.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
-				dato.unidadejecutoraid = proyecto.getId();
+				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getUnidadEjecutora();
 				dato.cooperante = proyecto.getCooperante().getNombre();
-				dato.cooperanteid = proyecto.getId();
+				dato.cooperanteid = proyecto.getCooperante().getId();
 				dato.fechacrea = Utils.formatDate( proyecto.getFechaCreacion());
 				dato.usuariocrea = proyecto.getUsuarioCreo();
 				dato.fechaactualizacion = Utils.formatDate( proyecto.getFechaActualizacion());
 				dato.usuarioactualizo = proyecto.getUsuarioActualizo();
 				datos_.add(dato);
 			}
-			
+
 			response_text = new GsonBuilder().serializeNulls().create().toJson(datos_);
-			
-			
-			//response_text = new GsonBuilder().serializeNulls().create().toJson(proyectos);
 			response_text = String.join("", "\"entidades\":", response_text);
 			response_text = String.join("", "{\"success\":true,", response_text, "}");
-			
-			OutputStream output = response.getOutputStream();
-			GZIPOutputStream gz = new GZIPOutputStream(output);
-			gz.write(response_text.getBytes("UTF-8"));
-			gz.close();
-			output.close();
-			
-		}else if (accion.equals("guardar")){
+
+
+
+		}else if(accion.equals("getProyectoPagina")){
+			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
+			int numeroProyecto = map.get("numeroproyecto")!=null  ? Integer.parseInt(map.get("numeroproyecto")) : 0;
+			List<Proyecto> proyectos = ProyectoDAO.getProyectosPagina(pagina, numeroProyecto);
+			List<datos> datos_=new ArrayList<datos>();
+			for (Proyecto proyecto : proyectos){
+				datos dato = new datos();
+				dato.id = proyecto.getId();
+				dato.nombre = proyecto.getNombre();
+				dato.descripcion = proyecto.getDescripcion();
+				dato.snip = proyecto.getSnip();
+				dato.proyectotipo = proyecto.getProyectoTipo().getNombre();
+				dato.proyectotipoid = proyecto.getProyectoTipo().getId();
+				dato.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
+				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getUnidadEjecutora();
+				dato.cooperante = proyecto.getCooperante().getNombre();
+				dato.cooperanteid = proyecto.getCooperante().getId();
+				dato.fechacrea = Utils.formatDate( proyecto.getFechaCreacion());
+				dato.usuariocrea = proyecto.getUsuarioCreo();
+				dato.fechaactualizacion = Utils.formatDate( proyecto.getFechaActualizacion());
+				dato.usuarioactualizo = proyecto.getUsuarioActualizo();
+				datos_.add(dato);
+			}
+			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
+	        response_text = String.join("", "\"proyectos\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}
+
+		else if (accion.equals("guardar")){
+			try{
+			boolean result = false;
 			boolean esnuevo = map.get("esnuevo").equals("true");
-			
-			Map<String, String> datos = gson.fromJson(map.get("datos"), type);
+			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			Proyecto proyecto;
-			if (datos!=null && (datos.get("id") !=null && Integer.parseInt(datos.get("id"))>0) || esnuevo){
+			if (id>0 || esnuevo){
+				String nombre = map.get("nombre");
+				int snip = Integer.parseInt(map.get("snip"));
+				String descripcion = map.get("descripcion");
+
+				ProyectoTipo proyectoTipo = new ProyectoTipo();
+				proyectoTipo.setId(Integer.parseInt(map.get("proyectotipoid")));
+
+				UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
+				unidadEjecutora.setUnidadEjecutora(Integer.parseInt(map.get("unidadejecutoraid")));
+
+				Cooperante cooperante = new Cooperante();
+				cooperante.setId(Integer.parseInt(map.get("cooperanteid")));
+
+				type = new TypeToken<List<stdatadinamico>>() {
+				}.getType();
+
+				List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
+
+
 				if(esnuevo){
-					proyecto = new Proyecto();
-					proyecto.setNombre(datos.get("nombre"));
-					proyecto.setDescripcion(datos.get("descripcion"));
-					proyecto.setSnip(Integer.parseInt(datos.get("snip")));
-					proyecto.setEstado(1);
-					
-					ProyectoTipo proyectoTipo = new ProyectoTipo();
-					proyectoTipo.setId(Integer.parseInt(datos.get("proyectotipoid")));
-					
-					UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-					unidadEjecutora.setUnidadEjecutora(Integer.parseInt(datos.get("unidadejecutoraid")));
-					
-					Cooperante cooperante = new Cooperante();
-					cooperante.setId(Integer.parseInt(datos.get("cooperanteid")));
-					
-					proyecto.setProyectoTipo(proyectoTipo);
-					proyecto.setUnidadEjecutora(unidadEjecutora);
-					proyecto.setCooperante(cooperante);
-					
-					proyecto.setUsuarioCreo("admin");
-					proyecto.setFechaCreacion(new Date());
-					
+					proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecutora, nombre, snip, usuario, new DateTime().toDate(), 1);
+					proyecto.setDescripcion(descripcion);
+
 				}else{
-					proyecto = ProyectoDAO.getProyectoPorId(Integer.parseInt(datos.get("id")));
-					proyecto.setNombre(datos.get("nombre"));
-					proyecto.setDescripcion(datos.get("descripcion"));
-					proyecto.setSnip(Integer.parseInt(datos.get("snip")));
-					proyecto.setEstado(1);
-					
-					ProyectoTipo proyectoTipo = new ProyectoTipo();
-					proyectoTipo.setId(Integer.parseInt(datos.get("proyectotipoid")));
-					
-					UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-					unidadEjecutora.setUnidadEjecutora(Integer.parseInt(datos.get("unidadejecutoraid")));
-					
-					Cooperante cooperante = new Cooperante();
-					cooperante.setId(Integer.parseInt(datos.get("cooperanteid")));
-					
+					proyecto = ProyectoDAO.getProyectoPorId(id);
+					proyecto.setNombre(nombre);
+					proyecto.setDescripcion(descripcion);
+					proyecto.setSnip(snip);
 					proyecto.setProyectoTipo(proyectoTipo);
 					proyecto.setUnidadEjecutora(unidadEjecutora);
 					proyecto.setCooperante(cooperante);
-					
-					proyecto.setUsuarioActualizo("admin");
-					proyecto.setFechaActualizacion(new Date());
+					proyecto.setUsuarioActualizo(usuario);
+					proyecto.setFechaActualizacion(new DateTime().toDate());
+
+				   List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
+
+					proyecto.setProyectoPropedadValors(null);
+					if (valores_temp!=null){
+						for (ProyectoPropedadValor valor : valores_temp){
+							valor.setFechaActualizacion(new DateTime().toDate());
+							valor.setUsuarioActualizo("admin");
+							ProyectoPropiedadValorDAO.eliminarProyectoPropiedadValor(valor);
+						}
+					}
 				}
-				boolean result = ProyectoDAO.guardarProyecto(proyecto);
-				response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
+				result = ProyectoDAO.guardarProyecto(proyecto);
+				if (result){
+					for (stdatadinamico data : datos) {
+						ProyectoPropiedad proyectoPropiedad = ProyectoPropiedadDAO.getProyectoPropiedadPorId(Integer.parseInt(data.id));
+						ProyectoPropedadValorId idValor = new ProyectoPropedadValorId(proyecto.getId(),Integer.parseInt(data.id));
+						ProyectoPropedadValor valor = new ProyectoPropedadValor(idValor, proyecto, proyectoPropiedad, usuario, new DateTime().toDate(), 1);
+
+						switch (proyectoPropiedad.getDatoTipo().getId()){
+							case 1:
+								valor.setValorString(data.valor);
+								break;
+							case 2:
+								valor.setValorEntero(Integer.parseInt(data.valor));
+								break;
+							case 3:
+								valor.setValorDecimal(new BigDecimal(data.valor));
+								break;
+							case 4:
+
+								break;
+							case 5:
+								SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+								valor.setValorTiempo(sdf.parse(data.valor));
+								break;
+						}
+						result = (result && ProyectoPropiedadValorDAO.guardarProyectoPropiedadValor(valor));
+					}
+				}
+				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
+						+ "\"id\": " + proyecto.getId() +" }");
 			}else
 				response_text = "{ \"success\": false }";
-			
-			response.getWriter().write(response_text);
 
-		} else if (accion.equals("cargar_cooperantes")){
-			List<Cooperante> cooperantes = CooperanteDAO.getCooperantes();
-			List<listas> listas_ = new ArrayList<listas>();
-			for (Cooperante cooperante : cooperantes){
-				listas lista = new listas();
-				lista.id = cooperante.getId();
-				lista.nombre = cooperante.getNombre();
-				listas_.add(lista);
 			}
-			
-			response_text = new GsonBuilder().serializeNulls().create().toJson(listas_);
-			response_text = String.join("", "\"entidades\":", response_text);
-			response_text = String.join("", "{\"success\":true,", response_text, "}");
-			response.getWriter().write(response_text);
+			catch (Throwable e){
+				response_text = "{ \"success\": false }";
+			}
+
 		}
-		else if (accion.equals("cargar_proyectotipos")){
-			List<ProyectoTipo> proyectotipos = ProyectoTipoDAO.getProyectoTipos();
-			List<listas> listas_ = new ArrayList<listas>();
-			for (ProyectoTipo proyectoTipo : proyectotipos){
-				listas lista = new listas();
-				lista.id =  proyectoTipo.getId();
-				lista.nombre = proyectoTipo.getNombre();
-				listas_.add(lista);
-			} 
-						
-			response_text = new GsonBuilder().serializeNulls().create().toJson(listas_);
-			response_text = String.join("", "\"entidades\":", response_text);
-			response_text = String.join("", "{\"success\":true,", response_text, "}");
-			response.getWriter().write(response_text);
-		}
-		else if (accion.equals("cargar_unidadesejecturoas")){
-			List<UnidadEjecutora> UnidadesEjecutoras = UnidadEjecutoraDAO.getUnidadEjecutoras();
-			List<listas> listas_ = new ArrayList<>();
-			for (UnidadEjecutora unidadEjecutora : UnidadesEjecutoras){
-				listas lista = new listas();
-				lista.id =  unidadEjecutora.getUnidadEjecutora();
-				lista.nombre = unidadEjecutora.getNombre();
-				listas_.add(lista);
-			} 
-						
-			response_text = new GsonBuilder().serializeNulls().create().toJson(listas_);
-			response_text = String.join("", "\"entidades\":", response_text);
-			response_text = String.join("", "{\"success\":true,", response_text, "}");
-			response.getWriter().write(response_text);
-		}
-		
 		else if(accion.equals("borrarProyecto")){
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
 				Proyecto proyecto = ProyectoDAO.getProyectoPorId(id);
+
+				List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
+				if (valores_temp!=null){
+					for (ProyectoPropedadValor valor : valores_temp){
+						valor.setFechaActualizacion(new DateTime().toDate());
+						valor.setUsuarioActualizo("admin");
+						ProyectoPropiedadValorDAO.eliminarProyectoPropiedadValor(valor);
+					}
+				}
 				response_text = String.join("","{ \"success\": ",(ProyectoDAO.eliminarProyecto(proyecto) ? "true" : "false")," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
-			response.getWriter().write(response_text);
-			
 		}
 		else if(accion.equals("numeroProyectos")){
 			response_text = String.join("","{ \"success\": true, \"totalproyectos\":",ProyectoDAO.getTotalProyectos().toString()," }");
-			response.getWriter().write(response_text);
-		
 		}
 		else if(accion.equals("obtenerProyectoPorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
@@ -252,15 +273,24 @@ public class SProyecto extends HttpServlet {
 			response_text = String.join("","{ \"success\": ",(proyecto!=null && proyecto.getId()!=null ? "true" : "false"),", "
 					+ "\"id\": " + (proyecto!=null ? proyecto.getId():"") +", "
 					+ "\"nombre\": \"" + (proyecto!=null ? proyecto.getNombre():"") +"\" }");
-			response.getWriter().write(response_text);
-							
+
+
 		}else{
 			response_text = "{ \"success\": false }";
-			response.getWriter().write(response_text);
-		}
-		
 
-		
+		}
+
+		response.setHeader("Content-Encoding", "gzip");
+		response.setCharacterEncoding("UTF-8");
+
+        OutputStream output = response.getOutputStream();
+		GZIPOutputStream gz = new GZIPOutputStream(output);
+        gz.write(response_text.getBytes("UTF-8"));
+        gz.close();
+        output.close();
+
+
+
 	}
 
 }
