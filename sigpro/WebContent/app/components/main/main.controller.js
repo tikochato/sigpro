@@ -104,6 +104,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/recursounidadmedida/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'recursounidadmedidaController\'" class="all_page"></div>'
             })
+            .when('/usuarioinfo/',{
+            	template: '<div load-on-demand="\'usuarioInfoController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -253,6 +256,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'recursounidadmedidaController',
 	    	   script: '/app/components/recursounidadmedida/recursounidadmedida.controller.js',
 	    	   template: '/app/components/recursounidadmedida/recursounidadmedida.jsp'
+	       },
+	       {
+	    	   name: 'usuarioInfoController',
+	    	   script: '/app/components/usuarios/usuarioInfo.controller.js',
+	    	   template: '/app/components/usuarios/usuarioInfo.jsp'
 	       }
 
 	   ];
