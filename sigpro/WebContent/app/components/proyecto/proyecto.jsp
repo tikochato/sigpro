@@ -41,12 +41,7 @@
 					</div>
 				</div>
 			</div>
-			<div align="left">
-			<div class="btn-group">
-				<label class="btn btn-success" ng-click="controller.irADesembolsos(controller.proyecto.id)">Desembolsos</label>
-				<label class="btn btn-success" ng-click="controller.irAComponentes(controller.proyecto.id)">Componentes</label>
-			</div>
-			</div>
+			
 			
 			<div id="grid1" ui-grid="controller.gridOpciones" ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination
 				ui-grid-pagination>
@@ -77,7 +72,21 @@
 	</div>
 	<div class="row" ng-show="controller.esColapsado">
 		<h4 ng-hide="!controller.esNuevo">Nuevo Proyecto</h4>
-			<h4 ng-hide="controller.esNuevo">Edición de proyecto</h4>
+		<h4 ng-hide="controller.esNuevo">Edición de proyecto</h4>
+		<div class="col-sm-12 operation_buttons" align="left">
+			<div class="btn-group">
+				<label class="btn btn-default" ng-click="controller.irAComponentes(controller.proyecto.id)">Componentes</label>
+				<!-- productos -->
+				<!-- <label class="btn btn-default" ng-click="controller.irAActividades(controller.proyecto.id)">Actividades</label>-->
+				<label class="btn btn-default" ng-click="controller.irAHitos(controller.proyecto.id)">Hitos</label>
+				<!-- metas -->
+				<label class="btn btn-default" ng-click="controller.irADesembolsos(controller.proyecto.id)">Desembolsos</label>
+				<label class="btn btn-default" ng-click="controller.irARiesgos(controller.proyecto.id)">Riesgos</label>
+				<!--  recursos -->
+				
+			</div>
+		</div>
+			
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<label class="btn btn-success" ng-click="controller.guardar()">Guardar</label> 

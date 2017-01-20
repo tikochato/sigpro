@@ -120,8 +120,8 @@ public class SRiesgo extends HttpServlet {
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
 				temp.componenteid = riesgo.getComponente().getId();
 				temp.componentenombre = riesgo.getComponente().getNombre();
-				temp.productoid = riesgo.getProducto().getId();
-				temp.productonombre = riesgo.getProducto().getNombre();
+				temp.productoid = riesgo.getProducto() != null ? riesgo.getProducto().getId() : 0;
+				temp.productonombre = riesgo.getProducto() !=null ? riesgo.getProducto().getNombre() : "";
 				striesgos.add(temp);
 			}
 			
@@ -149,8 +149,8 @@ public class SRiesgo extends HttpServlet {
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
 				temp.componenteid = riesgo.getComponente().getId();
 				temp.componentenombre = riesgo.getComponente().getNombre();
-				temp.productoid = riesgo.getProducto().getId();
-				temp.productonombre = riesgo.getProducto().getNombre();
+				temp.productoid = riesgo.getProducto() != null ? riesgo.getProducto().getId() : 0;
+				temp.productonombre = riesgo.getProducto() !=null ? riesgo.getProducto().getNombre() : "";
 				striesgos.add(temp);
 			}
 			
@@ -175,8 +175,8 @@ public class SRiesgo extends HttpServlet {
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
 				temp.componenteid = riesgo.getComponente().getId();
 				temp.componentenombre = riesgo.getComponente().getNombre();
-				temp.productoid = riesgo.getProducto().getId();
-				temp.productonombre = riesgo.getProducto().getNombre();
+				temp.productoid = riesgo.getProducto() != null ? riesgo.getProducto().getId() : 0;
+				temp.productonombre = riesgo.getProducto() !=null ? riesgo.getProducto().getNombre() : "";
 				striesgos.add(temp);
 			}
 			
