@@ -18,7 +18,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 		
 		
 		mi.recursopropiedades =[];
-		mi.componentepropiedad =null;
+		mi.recursopropiedad =null;
 		mi.mostrarcargandoRecursoProp=true;
 		mi.mostrarPropiedadRecurso = false;
 		mi.paginaActualPropiedades=1;
@@ -49,7 +49,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 						mi.guardarEstado();
 				    }
 				    else{
-				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'componenteTipos', t: (new Date()).getTime()}).then(function(response){
+				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'recursoTipos', t: (new Date()).getTime()}).then(function(response){
 					      if(response.data.success && response.data.estado!='')
 					    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
 					    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
@@ -184,7 +184,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 		);
 		//----
 		
-		mi.gridOptionscomponentePropiedad = {
+		mi.gridOptionsrecursoPropiedad = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
 				multiSelect: false,
@@ -203,7 +203,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 				onRegisterApi: function(gridApi) {
 					mi.gridApi = gridApi;
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
-						mi.componentepropiedad = row.entity;
+						mi.recursopropiedad = row.entity;
 					});
 				}
 		};
@@ -214,12 +214,12 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 					{ 
 						accion: 'getRecursoPropiedadPaginaPorTipo',
 						pagina: pagina,
-						idComponenteTipo:mi.recursotipo!=null ? mi.recursotipo.id : null, 
-						numerocomponentepropiedad: $utilidades.elementosPorPagina }).success(
+						idRecursoTipo:mi.recursotipo!=null ? mi.recursotipo.id : null, 
+						numerorecursopropiedad: $utilidades.elementosPorPagina }).success(
 				function(response) {
 					
 					mi.recursopropiedades = response.recursopropiedades;
-					mi.gridOptionscomponentePropiedad.data = mi.recursopropiedades;
+					mi.gridOptionsrecursoPropiedad.data = mi.recursopropiedades;
 					mi.mostrarcargandoRecursoProp = false;
 					mi.mostrarPropiedad = true;
 				});
@@ -236,14 +236,14 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 		}
 		
 		mi.eliminarPropiedad = function(){
-			if (mi.componentepropiedad != null){
+			if (mi.recursopropiedad != null){
 				for (i = 0 ; i<mi.recursopropiedades.length ; i ++){
-					if (mi.recursopropiedades[i].id === mi.componentepropiedad.id){
+					if (mi.recursopropiedades[i].id === mi.recursopropiedad.id){
 						mi.recursopropiedades.splice (i,1);
 						break;
 					}
 				}
-				mi.componentepropiedad = null;
+				mi.recursopropiedad = null;
 			}else{
 				$utilidades.mensaje('warning','Debe seleccionar la Propiedad que desea eliminar');
 			}
@@ -257,10 +257,10 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 		}
 		
 		mi.seleccionTabla = function(row){
-			if (mi.componentepropiedad !=null && mi.componentepropiedad.id == row.id){
-				mi.componentepropiedad = null;
+			if (mi.recursopropiedad !=null && mi.recursopropiedad.id == row.id){
+				mi.recursopropiedad = null;
 			}else{
-				mi.componentepropiedad = row;
+				mi.recursopropiedad = row;
 			}
 		}
 		

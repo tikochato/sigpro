@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 19, 2017 8:18:07 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4001952579405990849L;
+	private static final long serialVersionUID = -4616099245798122980L;
 	private Integer id;
 	private Componente componente;
 	private ProductoTipo productoTipo;
@@ -39,7 +39,6 @@ public class Producto implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Integer estado;
-	private Set<ObjetoRecurso> objetoRecursos = new HashSet<ObjetoRecurso>(0);
 	private Set<ObjetoFormulario> objetoFormularios = new HashSet<ObjetoFormulario>(0);
 	private Set<ProductoPropiedadValor> productoPropiedadValors = new HashSet<ProductoPropiedadValor>(0);
 	private Set<Actividad> actividads = new HashSet<Actividad>(0);
@@ -62,9 +61,9 @@ public class Producto implements java.io.Serializable {
 
 	public Producto(Componente componente, ProductoTipo productoTipo, String nombre, String descripcion, int productoid,
 			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado,
-			Set<ObjetoRecurso> objetoRecursos, Set<ObjetoFormulario> objetoFormularios,
-			Set<ProductoPropiedadValor> productoPropiedadValors, Set<Actividad> actividads,
-			Set<FormularioItemValor> formularioItemValors, Set<Meta> metas, Set<Riesgo> riesgos) {
+			Set<ObjetoFormulario> objetoFormularios, Set<ProductoPropiedadValor> productoPropiedadValors,
+			Set<Actividad> actividads, Set<FormularioItemValor> formularioItemValors, Set<Meta> metas,
+			Set<Riesgo> riesgos) {
 		this.componente = componente;
 		this.productoTipo = productoTipo;
 		this.nombre = nombre;
@@ -75,7 +74,6 @@ public class Producto implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.objetoRecursos = objetoRecursos;
 		this.objetoFormularios = objetoFormularios;
 		this.productoPropiedadValors = productoPropiedadValors;
 		this.actividads = actividads;
@@ -188,15 +186,6 @@ public class Producto implements java.io.Serializable {
 
 	public void setEstado(Integer estado) {
 		this.estado = estado;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
-	public Set<ObjetoRecurso> getObjetoRecursos() {
-		return this.objetoRecursos;
-	}
-
-	public void setObjetoRecursos(Set<ObjetoRecurso> objetoRecursos) {
-		this.objetoRecursos = objetoRecursos;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")

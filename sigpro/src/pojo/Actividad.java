@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 19, 2017 8:18:07 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1073440190535233287L;
+	private static final long serialVersionUID = 8622249452167939731L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
 	private Producto producto;
@@ -35,7 +35,7 @@ public class Actividad implements java.io.Serializable {
 	private String descripcion;
 	private Date fechaInicio;
 	private Date fechaFin;
-	private int porcentajeAvance;
+	private Integer porcentajeAvance;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
@@ -46,14 +46,13 @@ public class Actividad implements java.io.Serializable {
 	public Actividad() {
 	}
 
-	public Actividad(ActividadTipo actividadTipo, Producto producto, int porcentajeAvance) {
+	public Actividad(ActividadTipo actividadTipo, Producto producto) {
 		this.actividadTipo = actividadTipo;
 		this.producto = producto;
-		this.porcentajeAvance = porcentajeAvance;
 	}
 
 	public Actividad(ActividadTipo actividadTipo, Producto producto, String nombre, String descripcion,
-			Date fechaInicio, Date fechaFin, int porcentajeAvance, String usuarioCreo, String usuarioActualizo,
+			Date fechaInicio, Date fechaFin, Integer porcentajeAvance, String usuarioCreo, String usuarioActualizo,
 			Date fechaCreacion, Date fechaActualizacion, Integer estado,
 			Set<ActividadPropiedadValor> actividadPropiedadValors) {
 		this.actividadTipo = actividadTipo;
@@ -141,12 +140,12 @@ public class Actividad implements java.io.Serializable {
 		this.fechaFin = fechaFin;
 	}
 
-	@Column(name = "porcentaje_avance", nullable = false)
-	public int getPorcentajeAvance() {
+	@Column(name = "porcentaje_avance")
+	public Integer getPorcentajeAvance() {
 		return this.porcentajeAvance;
 	}
 
-	public void setPorcentajeAvance(int porcentajeAvance) {
+	public void setPorcentajeAvance(Integer porcentajeAvance) {
 		this.porcentajeAvance = porcentajeAvance;
 	}
 
