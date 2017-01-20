@@ -9,7 +9,7 @@ moduloProducto.controller('controlProducto', [ '$scope', '$routeParams',
 function controlProducto($scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
 		$timeout, $log, $q) {
-	
+	  
 	i18nService.setCurrentLang('es');
 	
 	var mi = this;
@@ -24,6 +24,15 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 
 	mi.propiedadesValor = [];
+	
+	mi.camposdinamicos = {};
+	mi.formatofecha = 'dd/MM/yyyy';
+	mi.fechaOptions = {
+			formatYear : 'yy',
+			maxDate : new Date(2020, 5, 22),
+			minDate : new Date(1900, 1, 1),
+			startingDay : 1
+	};
 
 	mi.cambioPagina = function() {
 		mi.cargarData(mi.paginaActual);
@@ -403,12 +412,25 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		resultado.then(function(itemSeleccionado) {
 			mi.tipo = itemSeleccionado.id;
 			mi.tipoNombre = itemSeleccionado.nombre;
+			
+			var parametros = { 
+				accion: 'getProductoPropiedadPorTipo', 
+				idproducto: mi.codigo,
+				idproductotipo: itemSeleccionado.id
+			}
+			$http.post('/SProductoPropiedad', parametros).then(function(response){
+				mi.camposdinamicos = response.data.productopropiedades
+			});
 		});
 
 	};
 
 	mi.cambiarTipo = function() {
 
+	};
+	
+	mi.abrirPopupFecha = function(index) {
+		mi.camposdinamicos[index].isOpen = true;
 	};
 
 	mi.buscarComponente = function() {

@@ -3,6 +3,10 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -63,6 +67,49 @@ public class ProyectoPropiedadDAO {
 		}
 		catch(Throwable e){
 			CLogger.write("4", ProyectoPropiedadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<ProyectoPropiedad> getProyectoPropiedadesPorTipoProyecto(int idTipoProyecto){
+		List<ProyectoPropiedad> ret = new ArrayList<ProyectoPropiedad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<ProyectoPropiedad> criteria = session.createNativeQuery(" select pp.* "
+				+ "from proyecto_tipo pt "
+				+ "join ptipo_propiedad ptp ON ptp.proyecto_tipoid = pt.id "
+				+ "join proyecto_propiedad pp ON pp.id = ptp.proyecto_propiedadid "
+				+ " where pt.id = :idTipoProy",ProyectoPropiedad.class);
+			
+			criteria.setParameter("idTipoProy", idTipoProyecto);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("5", RiesgoPropiedadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static ProyectoPropiedad getProyectoPropiedadPorId(int id){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		ProyectoPropiedad ret = null;
+		try{
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+
+			CriteriaQuery<ProyectoPropiedad> criteria = builder.createQuery(ProyectoPropiedad.class);
+			Root<ProyectoPropiedad> root = criteria.from(ProyectoPropiedad.class);
+			criteria.select( root );
+			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal( root.get("estado"), 1 )));
+			ret = session.createQuery( criteria ).getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("6", ProyectoPropiedadDAO.class, e);
 		}
 		finally{
 			session.close();

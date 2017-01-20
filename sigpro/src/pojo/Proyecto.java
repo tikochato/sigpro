@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 19, 2017 8:18:07 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2176612152461551153L;
+	private static final long serialVersionUID = -6235549621708983254L;
 	private Integer id;
 	private Cooperante cooperante;
 	private ProyectoTipo proyectoTipo;
@@ -43,7 +43,6 @@ public class Proyecto implements java.io.Serializable {
 	private Set<Desembolso> desembolsos = new HashSet<Desembolso>(0);
 	private Set<FormularioItemValor> formularioItemValors = new HashSet<FormularioItemValor>(0);
 	private Set<Hito> hitos = new HashSet<Hito>(0);
-	private Set<ObjetoRecurso> objetoRecursos = new HashSet<ObjetoRecurso>(0);
 	private Set<Meta> metas = new HashSet<Meta>(0);
 	private Set<ProyectoPropedadValor> proyectoPropedadValors = new HashSet<ProyectoPropedadValor>(0);
 	private Set<Riesgo> riesgos = new HashSet<Riesgo>(0);
@@ -68,9 +67,9 @@ public class Proyecto implements java.io.Serializable {
 	public Proyecto(Cooperante cooperante, ProyectoTipo proyectoTipo, UnidadEjecutora unidadEjecutora, String nombre,
 			String descripcion, int snip, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Set<Desembolso> desembolsos,
-			Set<FormularioItemValor> formularioItemValors, Set<Hito> hitos, Set<ObjetoRecurso> objetoRecursos,
-			Set<Meta> metas, Set<ProyectoPropedadValor> proyectoPropedadValors, Set<Riesgo> riesgos,
-			Set<Componente> componentes, Set<ObjetoFormulario> objetoFormularios) {
+			Set<FormularioItemValor> formularioItemValors, Set<Hito> hitos, Set<Meta> metas,
+			Set<ProyectoPropedadValor> proyectoPropedadValors, Set<Riesgo> riesgos, Set<Componente> componentes,
+			Set<ObjetoFormulario> objetoFormularios) {
 		this.cooperante = cooperante;
 		this.proyectoTipo = proyectoTipo;
 		this.unidadEjecutora = unidadEjecutora;
@@ -85,7 +84,6 @@ public class Proyecto implements java.io.Serializable {
 		this.desembolsos = desembolsos;
 		this.formularioItemValors = formularioItemValors;
 		this.hitos = hitos;
-		this.objetoRecursos = objetoRecursos;
 		this.metas = metas;
 		this.proyectoPropedadValors = proyectoPropedadValors;
 		this.riesgos = riesgos;
@@ -234,15 +232,6 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setHitos(Set<Hito> hitos) {
 		this.hitos = hitos;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
-	public Set<ObjetoRecurso> getObjetoRecursos() {
-		return this.objetoRecursos;
-	}
-
-	public void setObjetoRecursos(Set<ObjetoRecurso> objetoRecursos) {
-		this.objetoRecursos = objetoRecursos;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")

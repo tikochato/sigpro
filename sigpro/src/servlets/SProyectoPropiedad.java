@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -20,8 +21,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ProyectoPropiedadDAO;
-
+import dao.ProyectoPropiedadValorDAO;
+import pojo.ProyectoPropedadValor;
 import pojo.ProyectoPropiedad;
+import utilities.CFormaDinamica;
 import utilities.Utils;
 
 
@@ -78,7 +81,7 @@ public class SProyectoPropiedad extends HttpServlet {
 				temp.nombre = proyectopropiedad.getNombre();
 				temp.descripcion = proyectopropiedad.getDescripcion();
 				temp.datotipoid = proyectopropiedad.getDatoTipo().getId();
-				temp.datotiponombre = proyectopropiedad.getNombre();
+				temp.datotiponombre = proyectopropiedad.getDatoTipo().getNombre();
 				temp.estado = proyectopropiedad.getEstado();
 				temp.fechaActualizacion = Utils.formatDate(proyectopropiedad.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(proyectopropiedad.getFechaCreacion());	
@@ -102,7 +105,7 @@ public class SProyectoPropiedad extends HttpServlet {
 				temp.nombre = proyectopropiedad.getNombre();
 				temp.descripcion = proyectopropiedad.getDescripcion();
 				temp.datotipoid = proyectopropiedad.getDatoTipo().getId();
-				temp.datotiponombre = proyectopropiedad.getNombre();
+				temp.datotiponombre = proyectopropiedad.getDatoTipo().getNombre();
 				temp.estado = proyectopropiedad.getEstado();
 				temp.fechaActualizacion = Utils.formatDate(proyectopropiedad.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(proyectopropiedad.getFechaCreacion());	
@@ -111,6 +114,44 @@ public class SProyectoPropiedad extends HttpServlet {
 				stproyectopropiedad.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stproyectopropiedad);
+	        response_text = String.join("", "\"proyectopropiedades\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}
+		else if(accion.equals("getProyectoPropiedadPorTipo")){
+			int idProyecto = map.get("idProyecto")!=null  ? Integer.parseInt(map.get("idProyecto")) : 0;
+			int idProyectoTipo = map.get("idProyectoTipo")!=null  ? Integer.parseInt(map.get("idProyectoTipo")) : 0;
+			List<ProyectoPropiedad> proyectoPropiedades = ProyectoPropiedadDAO.getProyectoPropiedadesPorTipoProyecto(idProyectoTipo);
+			
+			List<HashMap<String,Object>> campos = new ArrayList<>();
+			for(ProyectoPropiedad proyectoPropiedad:proyectoPropiedades){
+				HashMap <String,Object> campo = new HashMap<String, Object>();
+				campo.put("id", proyectoPropiedad.getId());
+				campo.put("nombre", proyectoPropiedad.getNombre());
+				campo.put("tipo", proyectoPropiedad.getDatoTipo().getId());
+				ProyectoPropedadValor proyectoPropiedadValor = ProyectoPropiedadValorDAO.getValorPorProyectoYPropiedad(proyectoPropiedad.getId(), idProyecto);
+				if (proyectoPropiedadValor !=null ){
+					switch ((Integer) campo.get("tipo")){
+						case 1:
+							campo.put("valor", proyectoPropiedadValor.getValorString());
+							break;
+						case 2:
+							campo.put("valor", proyectoPropiedadValor.getValorEntero());
+							break;
+						case 3:
+							campo.put("valor", proyectoPropiedadValor.getValorDecimal());
+							break;
+						case 5:
+							campo.put("valor", proyectoPropiedadValor.getValorTiempo());
+							break;
+					}
+				}
+				else{
+					campo.put("valor", "");
+				}
+				campos.add(campo);
+			}
+			
+			response_text = CFormaDinamica.convertirEstructura(campos);
 	        response_text = String.join("", "\"proyectopropiedades\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}

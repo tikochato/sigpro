@@ -145,7 +145,6 @@ public class SRecursoTipo extends HttpServlet {
 				
 				String[] idsPropiedades =  map.get("propiedades") != null ? map.get("propiedades").toString().split(",") : null;
 				if (idsPropiedades !=null && idsPropiedades.length>0){
-					System.out.println(idsPropiedades.length);
 					for (String idPropiedad : idsPropiedades){
 						RectipoPropiedadId rtipoPropiedadId = new RectipoPropiedadId(recursoTipo.getId(), Integer.parseInt(idPropiedad));
 						RecursoPropiedad recursoPropiedad = new RecursoPropiedad();

@@ -65,7 +65,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/desembolso/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'desembolsoController\'" class="all_page"></div>'
             })
-            .when('/componente/:reiniciar_vista?',{
+            .when('/componente/:proyecto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'componenteController\'" class="all_page"></div>'
             })
             .when('/componentetipo/:reiniciar_vista?',{

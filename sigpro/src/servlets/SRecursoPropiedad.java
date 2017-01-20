@@ -83,8 +83,8 @@ public class SRecursoPropiedad extends HttpServlet {
 		
 		if(accion.equals("getRecursoPropiedadPaginaPorTipo")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int idRecursoPropiedad = map.get("idRecursoPropiedad")!=null  ? Integer.parseInt(map.get("idRecursoPropiedad")) : 0;
-			List<RecursoPropiedad> recursopropiedades = RecursoPropiedadDAO.getRecursoPropiedadesPorTipoRecursoPagina(pagina, idRecursoPropiedad);
+			int idTipoRecurso = map.get("idRecursoTipo")!=null  ? Integer.parseInt(map.get("idRecursoTipo")) : 0;
+			List<RecursoPropiedad> recursopropiedades = RecursoPropiedadDAO.getRecursoPropiedadesPorTipoRecursoPagina(pagina, idTipoRecurso);
 			List<strecursopropiedad> strecursopropiedad=new ArrayList<strecursopropiedad>();
 			for(RecursoPropiedad recursopropiedad:recursopropiedades){
 				strecursopropiedad temp =new strecursopropiedad();
@@ -170,7 +170,7 @@ public class SRecursoPropiedad extends HttpServlet {
 				
 				RecursoPropiedad componentePropiedad;
 				if(esnuevo){
-					componentePropiedad = new RecursoPropiedad(datoTipo, nombre, usuario, new DateTime().toDate(), 1);
+					componentePropiedad = new RecursoPropiedad(datoTipo, nombre, descripcion, usuario,null, new DateTime().toDate(), null, 1, null);
 				}
 				else{
 					componentePropiedad = RecursoPropiedadDAO.getRecursoPropiedadPorId(id);

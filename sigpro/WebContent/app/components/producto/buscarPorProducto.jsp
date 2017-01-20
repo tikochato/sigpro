@@ -29,8 +29,6 @@
 	</div>
 </div>
 <div class="modal-footer">
-	<button class="btn btn-primary" type="button" ng-click="modalBuscar.ok()">Ok</button>
-
-	<button class="btn btn-primary" type="button" ng-click="modalBuscar.cancel()">Cancelar</button>
-	
+	<label class="btn btn-success" ng-click="modalBuscar.ok()"> &nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;</label>
+	<label class="btn btn-primary" ng-click="modalBuscar.cancel()">Cancelar</label>
 </div>

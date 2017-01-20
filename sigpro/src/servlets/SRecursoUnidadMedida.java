@@ -41,6 +41,7 @@ public class SRecursoUnidadMedida extends HttpServlet {
 		Integer id;
 		String nombre;
 		String descripcion;
+		String simbolo;
 		Integer estado;
 		String fechaCreacion;
 		String fechaActualizacion;
@@ -84,6 +85,7 @@ public class SRecursoUnidadMedida extends HttpServlet {
 			for(RecursoUnidadMedida recursounidad:RecursoUnidadMedidas){
 				stunidadrecurso temp = new stunidadrecurso();
 				temp.descripcion = recursounidad.getDescripcion();
+				temp.simbolo = recursounidad.getSimbolo();
 				temp.estado = recursounidad.getEstado();
 				temp.fechaActualizacion = Utils.formatDate(recursounidad.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(recursounidad.getFechaCreacion());
@@ -103,6 +105,7 @@ public class SRecursoUnidadMedida extends HttpServlet {
 			for(RecursoUnidadMedida recursounidad:RecursoUnidadMedidas){
 				stunidadrecurso temp = new stunidadrecurso();
 				temp.descripcion = recursounidad.getDescripcion();
+				temp.simbolo = recursounidad.getSimbolo();
 				temp.estado = recursounidad.getEstado();
 				temp.fechaActualizacion = Utils.formatDate(recursounidad.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(recursounidad.getFechaCreacion());
@@ -134,6 +137,7 @@ public class SRecursoUnidadMedida extends HttpServlet {
 					RecursoUnidadMedida = RecursoUnidadMedidaDAO.getRecursoUnidadMedidaPorId(id);
 					RecursoUnidadMedida.setNombre(nombre);
 					RecursoUnidadMedida.setDescripcion(descripcion);
+					RecursoUnidadMedida.setSimbolo(simbolo);
 					RecursoUnidadMedida.setUsuarioActualizo(usuario);
 					RecursoUnidadMedida.setFechaActualizacion(new DateTime().toDate());
 				}

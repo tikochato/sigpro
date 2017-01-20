@@ -16,6 +16,12 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
 			mi.tipodatos = [];
+			mi.datoTipoSeleccionado;
+			
+			$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
+					function(response) {
+						mi.tipodatos = response.datoTipos;
+			});
 			
 			mi.gridOptions = {
 					enableRowSelection : true,
@@ -38,6 +44,10 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 						mi.gridApi = gridApi;
 						gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 							mi.recursopropiedad = row.entity;
+							mi.tipodatos.forEach(function(tipo,index){
+								if(tipo.id==mi.recursopropiedad.datotipoid)
+									mi.datoTipoSeleccionado=tipo;
+							});
 						});
 						
 						if($routeParams.reiniciar_vista=='rv'){
@@ -74,7 +84,7 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 						id: mi.recursopropiedad.id,
 						nombre: mi.recursopropiedad.nombre,
 						descripcion: mi.recursopropiedad.descripcion,
-						datoTipoId: mi.recursopropiedad.datotipoid
+						datoTipoId: mi.datoTipoSeleccionado.id
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Propiedad Recurso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
@@ -164,9 +174,6 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 						mi.totalRecursoPropiedades = response.totalrecursopropiedades;
 						mi.cargarTabla(1);
 			});
-			$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
-					function(response) {
-						mi.tipodatos = response.datoTipos;
-			});
+			
 			
 		} ]);

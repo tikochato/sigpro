@@ -1,9 +1,12 @@
 package dao;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.lang.reflect.Type;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -11,7 +14,13 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.joda.time.DateTime;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import pojo.Producto;
+import pojo.ProductoPropiedad;
 import pojo.ProductoPropiedadValor;
 import pojo.ProductoPropiedadValorId;
 import utilities.CHibernateSession;
@@ -31,6 +40,12 @@ public class ProductoPropiedadValorDAO {
 		Date valorTiempo;
 
 		String estado;
+	}
+	class stdatadinamico {
+		String id;
+		String tipo;
+		String label;
+		String valor;
 	}
 
 	public static ProductoPropiedadValor getProductoPropiedadValor(Integer propiedadId, Integer productoId) {
@@ -249,24 +264,86 @@ public class ProductoPropiedadValorDAO {
 
 	public static boolean persistirValores(Integer productoid, String propiedades, String usuario) {
 		boolean ret = true;
+		try{
+			Gson gson = new Gson();
+			Type type = new TypeToken<List<stdatadinamico>>() {
+			}.getType();
+			List<stdatadinamico> datos = gson.fromJson(propiedades, type);
+			Producto producto = new Producto();
+			producto.setId(productoid);
+			
+			for (stdatadinamico data : datos) {
+				ProductoPropiedad productoPropiedad = ProductoPropiedadDAO.getProductoPropiedad(Integer.parseInt(data.id));
+				ProductoPropiedadValorId idValor = new ProductoPropiedadValorId(Integer.parseInt(data.id),productoid);
+				ProductoPropiedadValor valor = new ProductoPropiedadValor(idValor, producto, productoPropiedad, usuario, new DateTime().toDate());
 
-		// Gson gson = new Gson();
-		//
-		// List<EstructuraPojo> pojos = gson.fromJson(propiedades, new
-		// TypeToken<List<EstructuraPojo>>() {
-		// }.getType());
-		//
-		// for (EstructuraPojo pojo : pojos) {
-		// if (pojo.estado.equalsIgnoreCase("N")) {
-		// ret = guardar(pojo.propiedadid, productoid, pojo.valorDecimal,
-		// pojo.valorEntero, pojo.valorString,
-		// pojo.valorTiempo, usuario);
-		// } else if (pojo.estado.equalsIgnoreCase("E")) {
-		// ret = eliminar(pojo.productoid, pojo.propiedadid, usuario);
-		// }
-		// }
+				switch (productoPropiedad.getDatoTipo().getId()){
+					case 1:
+						valor.setValorString(data.valor);
+						break;
+					case 2:
+						valor.setValorEntero(Integer.parseInt(data.valor));
+						break;
+					case 3:
+						valor.setValorDecimal(new BigDecimal(data.valor));
+						break;
+					case 4:
 
+						break;
+					case 5:
+						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+						valor.setValorTiempo(sdf.parse(data.valor));
+						break;
+				}
+				ret = (ret && ProductoPropiedadValorDAO.guardarProductoPropiedadValor(valor));
+			}
+			
+		}
+		catch (Exception e){
+			return false;
+		}
 		return ret;
 	}
+	
+	public static ProductoPropiedadValor getValorPorProdcutoYPropiedad(int idPropiedad,int idProducto){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		ProductoPropiedadValor ret = null;
+		try {
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<ProductoPropiedadValor> criteria = builder.createQuery(ProductoPropiedadValor.class);
+			Root<ProductoPropiedadValor> root = criteria.from(ProductoPropiedadValor.class);
+			criteria.select(root);
+			criteria.where(builder.equal(root.get("id"), new ProductoPropiedadValorId( idPropiedad,idProducto)));
+			ret = session.createQuery(criteria).getSingleResult();
+		} catch (Throwable e) {
+			CLogger.write("9", ProductoPropiedadValorDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean guardarProductoPropiedadValor(ProductoPropiedadValor productoPropiedadValor){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			session.saveOrUpdate(productoPropiedadValor);
+			session.getTransaction().commit();
+			ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("10", ProductoPropiedadValorDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	
+	
+	
+	
 
 }

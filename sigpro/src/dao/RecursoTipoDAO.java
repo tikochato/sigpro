@@ -68,8 +68,10 @@ public class RecursoTipoDAO {
 			session.saveOrUpdate(recursotipo);
 			session.flush();
 			
-			for (RectipoPropiedad propiedad : recursotipo.getRectipoPropiedads()){
-				session.saveOrUpdate(propiedad);	
+			if(recursotipo.getRectipoPropiedads()!=null){
+				for (RectipoPropiedad propiedad : recursotipo.getRectipoPropiedads()){
+					session.saveOrUpdate(propiedad);	
+				}
 			}
 			session.flush();
 			
