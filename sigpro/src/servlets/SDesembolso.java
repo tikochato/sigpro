@@ -30,7 +30,6 @@ import dao.DesembolsoDAO;
 import pojo.Desembolso;
 import pojo.DesembolsoTipo;
 import pojo.Proyecto;
-
 import utilities.Utils;
 
 /**
@@ -203,6 +202,38 @@ public class SDesembolso extends HttpServlet {
 		}
 		else if(accion.equals("numeroDesembolsos")){
 			response_text = String.join("","{ \"success\": true, \"totaldesembolsos\":",DesembolsoDAO.getTotalDesembolsos().toString()," }");
+		}
+		else if(accion.equals("numeroDesembolsosPorProyecto")){
+			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
+			response_text = String.join("","{ \"success\": true, \"totaldesembolsos\":",DesembolsoDAO.getTotalDesembolsosPorProyecto(proyectoId).toString()," }");
+		}
+		else if(accion.equals("getDesembolsosPaginaPorProyecto")){
+			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
+			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
+			int numeroDesembolsos = map.get("numerodesembolsos")!=null  ? Integer.parseInt(map.get("numerodesembolsos")) : 0;
+			List<Desembolso> desembolsos = DesembolsoDAO.getDesembolsosPaginaPorProyecto(pagina, numeroDesembolsos,proyectoId);
+			List<stdesembolso> stdesembolsos=new ArrayList<stdesembolso>();
+			for(Desembolso desembolso:desembolsos){
+				stdesembolso temp =new stdesembolso();
+				temp.id = desembolso.getId();
+				temp.fecha = Utils.formatDate(desembolso.getFecha());
+				temp.monto = desembolso.getMonto();
+				temp.tipocambio = desembolso.getTipoCambio();
+				temp.estado = desembolso.getEstado();
+				temp.desembolsotipoid = desembolso.getDesembolsoTipo().getId();
+				temp.desembolsotipo = desembolso.getDesembolsoTipo().getNombre();
+				temp.proyecto = desembolso.getProyecto().getNombre();
+				temp.proyectoid = desembolso.getProyecto().getId();
+				temp.fechaActualizacion = Utils.formatDate(desembolso.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDate(desembolso.getFechaCreacion());
+				temp.usuarioActualizo = desembolso.getUsuarioActualizo();
+				temp.usuarioCreo = desembolso.getUsuarioCreo();
+				stdesembolsos.add(temp);
+			}
+
+			response_text=new GsonBuilder().serializeNulls().create().toJson(stdesembolsos);
+	        response_text = String.join("", "\"desembolsos\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else{
 			response_text = "{ \"success\": false }";

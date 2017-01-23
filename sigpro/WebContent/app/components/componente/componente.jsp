@@ -60,6 +60,13 @@
 		<div class="row" ng-show="componentec.mostraringreso">
 			<h4 ng-hide="!componentec.esnuevo">Nuevo componente</h4>
 			<h4 ng-hide="componentec.esnuevo">Edición de componente</h4>
+			<div class="col-sm-12 operation_buttons" align="left">
+			<div class="btn-group">
+				<label class="btn btn-default" ng-click="componentec.irAProductos(componentec.componente.id)">Productos</label>
+				
+				
+			</div>
+		</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-success" ng-click="componentec.guardar()">Guardar</label>

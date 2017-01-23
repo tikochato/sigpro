@@ -122,14 +122,19 @@ public class ProductoDAO {
 		return ret;
 	}
 
-	public static List<Producto> getProductosPagina(int pagina, int numeroProductos) {
+	public static List<Producto> getProductosPagina(int pagina, int numeroProductos,Integer componenteid) {
 		List<Producto> ret = new ArrayList<Producto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<Producto> criteria = session.createQuery("SELECT p FROM Producto p WHERE p.estado = 1",
+			Query<Producto> criteria = session.createQuery("SELECT p FROM Producto p WHERE p.estado = 1 "
+					+ (componenteid!=null && componenteid > 0 ? "AND p.componente.id = :idComp " : ""),
 					Producto.class);
+			if (componenteid!=null && componenteid>0){
+				criteria.setParameter("idComp", componenteid);
+			}
 			criteria.setFirstResult(((pagina - 1) * (numeroProductos)));
 			criteria.setMaxResults(numeroProductos);
+			
 			ret = criteria.getResultList();
 		} catch (Throwable e) {
 			CLogger.write("6", ProductoDAO.class, e);
@@ -139,12 +144,17 @@ public class ProductoDAO {
 		return ret;
 	}
 
-	public static Long getTotalProductos() {
+	public static Long getTotalProductos(Integer componenteid) {
 		Long ret = 0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<Long> conteo = session.createQuery("SELECT count(p.id) FROM Producto p WHERE p.estado = 1",
+			Query<Long> conteo = session.createQuery("SELECT count(p.id) FROM Producto p WHERE p.estado = 1  "
+					+ (componenteid!=null && componenteid > 0 ? "AND p.componente.id = :idComp " : ""),
 					Long.class);
+			
+			if (componenteid!=null && componenteid > 0){
+				conteo.setParameter("idComp", componenteid);
+			}
 			ret = conteo.getSingleResult();
 		} catch (Throwable e) {
 			CLogger.write("7", ProductoDAO.class, e);
@@ -154,10 +164,10 @@ public class ProductoDAO {
 		return ret;
 	}
 
-	public static String getJson(int pagina, int registros) {
+	public static String getJson(int pagina, int registros,Integer componenteid) {
 		String jsonEntidades = "";
 
-		List<Producto> pojos = getProductosPagina(pagina, registros);
+		List<Producto> pojos = getProductosPagina(pagina, registros,componenteid);
 
 		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
 

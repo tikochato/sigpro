@@ -233,17 +233,25 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		if(mi.proyecto!=null){
 			$location.path('/desembolso/'+proyectoid);
 		}
-		else
-			$utilidades.mensaje('warning','Debe seleccionar el Proyecto para ver los Desembolsos');
 
 	};
 
 	mi.irAComponentes=function(proyectoid){
 		if(mi.proyecto!=null){
-			$location.path('/componente/'+ mi.proyectoid );
+			$location.path('/componente/'+ proyectoid );
 		}
-		else
-			$utilidades.mensaje('warning','Debe seleccionar el Proyecto para ver los Desembolsos');
+	};
+	
+	mi.irARiesgos=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/riesgo/'+  proyectoid );
+		}
+	};
+	
+	mi.irAHitos=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/hito/'+ proyectoid );
+		}
 	};
 
 	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {

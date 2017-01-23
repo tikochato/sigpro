@@ -13,6 +13,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	i18nService.setCurrentLang('es');
 	
 	var mi = this;
+	mi.componenteid = $routeParams.componente_id;
 
 	$window.document.title = 'SIGPRO - Producto';
 
@@ -26,6 +27,13 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.propiedadesValor = [];
 	
 	mi.camposdinamicos = {};
+	
+	$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id }).success(
+			function(response) {
+				mi.componenteid = response.id;
+				mi.componenteNombre = response.nombre;
+	});
+	
 	mi.formatofecha = 'dd/MM/yyyy';
 	mi.fechaOptions = {
 			formatYear : 'yy',
@@ -51,7 +59,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		var datos = {
 			accion : 'cargar',
 			pagina : pagina,
-			registros : mi.elementosPorPagina
+			registros : mi.elementosPorPagina,
+			componenteid : $routeParams.componente_id
 		};
 
 		mi.mostrarCargando = true;
@@ -181,10 +190,11 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	}
 
 	mi.reiniciarVista = function() {
-		if ($location.path() == '/producto/rv')
+		if($location.path()==('/producto/'+ $routeParams.componente_id + '/rv'))
 			$route.reload();
 		else
-			$location.path('/producto/rv');
+			$location.path('/producto/'+ $routeParams.componente_id + '/rv');
+		
 	}
 
 	mi.nuevo = function() {
