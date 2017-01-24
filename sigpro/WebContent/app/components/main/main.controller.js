@@ -104,6 +104,12 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/recursounidadmedida/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'recursounidadmedidaController\'" class="all_page"></div>'
             })
+            .when('/formulariotipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'formulariotipoController\'" class="all_page"></div>'
+            })
+            .when('/proyectopropiedad/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'proyectopropiedadController\'" class="all_page"></div>'
+            })
             .when('/usuarioinfo/',{
             	template: '<div load-on-demand="\'usuarioInfoController\'" class="all_page"></div>'
             })
@@ -256,6 +262,16 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'recursounidadmedidaController',
 	    	   script: '/app/components/recursounidadmedida/recursounidadmedida.controller.js',
 	    	   template: '/app/components/recursounidadmedida/recursounidadmedida.jsp'
+	       },
+	       {
+	    	   name: 'formulariotipoController',
+	    	   script: '/app/components/formulariotipo/formulariotipo.controller.js',
+	    	   template: '/app/components/formulariotipo/formulariotipo.jsp'
+	       },
+	       {
+	    	   name: 'proyectopropiedadController',
+	    	   script: '/app/components/proyectopropiedad/proyectopropiedad.controller.js',
+	    	   template: '/app/components/proyectopropiedad/proyectopropiedad.jsp'
 	       },
 	       {
 	    	   name: 'usuarioInfoController',

@@ -1,22 +1,22 @@
-var app = angular.module('riesgopropiedadController', []);
+var app = angular.module('formulariotipoController', [ 'ngTouch']);
 
-app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
+app.controller('formulariotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal',
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal) {
 		var mi=this;
-
-		$window.document.title = 'SIGPRO - Propiedad Riesgo';
+		
+		$window.document.title = 'SIGPRO - Tipo Formulario';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
-		mi.riesgopropiedades = [];
-		mi.riesgopropiedad;
+		mi.formulariotipos = [];
+		mi.formulariotipo;
 		mi.mostraringreso=false;
 		mi.esnuevo = false;
-		mi.totalRiesgoPropiedades = 0;
+		mi.totalFormulariotipos = 0;
 		mi.paginaActual = 1;
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
-		mi.tipodatos = [];
-
+		
+		
 		mi.gridOptions = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
@@ -26,25 +26,24 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 				enableFiltering: true,
 				enablePaginationControls: false,
 			    paginationPageSize: $utilidades.elementosPorPagina,
-				columnDefs : [
+				columnDefs : [ 
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-				    { name: 'datotiponombre', displayName: 'Tipo dato', cellClass: 'grid-align-left', enableFiltering: false},
 				    { name: 'usuarioCreo', displayName: 'Usuario Creación'},
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
 				],
 				onRegisterApi: function(gridApi) {
 					mi.gridApi = gridApi;
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
-						mi.riesgopropiedad = row.entity;
+						mi.formulariotipo = row.entity;
 					});
-
+					
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
 				    }
 				    else{
-				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'riesgopropiedades', t: (new Date()).getTime()}).then(function(response){
+				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'formulariotipos', t: (new Date()).getTime()}).then(function(response){
 					      if(response.data.success && response.data.estado!='')
 					    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
 					    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
@@ -54,120 +53,117 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 						  });
 				    }
 				}
-			};
-
+		};
+		
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SRiesgoPropiedad', { accion: 'getRiesgoPropiedadPagina', pagina: pagina, numeroriesgopropiedades: $utilidades.elementosPorPagina }).success(
+			$http.post('/SFormularioTipo', { accion: 'getFormulariotiposPagina', pagina: pagina, numeroformulariotipos: $utilidades.elementosPorPagina }).success(
 					function(response) {
-						mi.riesgopropiedades = response.riesgopropiedades;
-						mi.gridOptions.data = mi.riesgopropiedades;
+						mi.formulariotipos = response.formulariotipos;
+						mi.gridOptions.data = mi.formulariotipos;
 						mi.mostrarcargando = false;
 					});
 		}
-
+		
 		mi.guardar=function(){
-			if(mi.riesgopropiedad!=null && mi.riesgopropiedad.nombre!=''){
-				$http.post('/SRiesgoPropiedad', {
-					accion: 'guardarRiesgoPropiedad',
+			if(mi.formulariotipo!=null  && mi.formulariotipo.nombre!=''){
+				
+				
+				$http.post('/SFormularioTipo', {
+					accion: 'guardarFormulariotipo',
 					esnuevo: mi.esnuevo,
-					id: mi.riesgopropiedad.id,
-					nombre: mi.riesgopropiedad.nombre,
-					descripcion: mi.riesgopropiedad.descripcion,
-					datoTipoId: mi.riesgopropiedad.datotipoid
+					id: mi.formulariotipo.id,
+					nombre: mi.formulariotipo.nombre,
+					descripcion: mi.formulariotipo.descripcion,
+					
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success','Propiedad Riesgo '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
-						mi.riesgopropiedad.id = response.id;
+						$utilidades.mensaje('success','Tipo Formulario '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
+						mi.formulariotipo.id = response.id;
 						mi.cargarTabla();
 					}
 					else
-						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' la Propiedad Riesgo');
+						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo Formulario');
 				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
 		};
-
+		
+		mi.editar = function() {
+			if(mi.formulariotipo!=null){
+				mi.mostraringreso = true;
+				mi.esnuevo = false;
+			}
+			else
+				$utilidades.mensaje('warning','Debe seleccionar el Tipo de RFormulario que desea editar');
+		}
+		
 		mi.borrar = function(ev) {
-			if(mi.riesgopropiedad!=null){
+			if(mi.formulariotipo!=null){
 				var confirm = $mdDialog.confirm()
 			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar la Propiedad Riesgo "'+mi.riesgopropiedad.nombre+'"?')
+			          .textContent('¿Desea borrar el tipo de formulario "'+mi.formulariotipo.nombre+'"?')
 			          .ariaLabel('Confirmación de borrado')
 			          .targetEvent(ev)
 			          .ok('Borrar')
 			          .cancel('Cancelar');
 
 			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SRiesgoPropiedad', {
-						accion: 'borrarRiesgoPropiedad',
-						id: mi.riesgopropiedad.id
+			    	$http.post('/SFormularioTipo', {
+						accion: 'borrarFormularioTipo',
+						id: mi.formulariotipo.id
 					}).success(function(response){
 						if(response.success){
-							$utilidades.mensaje('success','Propiedad Riesgo borrado con éxito');
+							$utilidades.mensaje('success','Tipo Formulario borrado con éxito');
+							mi.formulariotipo = null;
 							mi.cargarTabla();
 						}
 						else
-							$utilidades.mensaje('danger','Error al borrar la Propiedad Riesgo');
+							$utilidades.mensaje('danger','Error al borrar el Tipo Formulario');
 					});
 			    }, function() {
-
+			    
 			    });
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar la Propiedad Riesgo que desea borrar');
+				$utilidades.mensaje('warning','Debe seleccionar el Tipo Formulario que desea borrar');
 		};
-
+		
 		mi.nuevo = function() {
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
-			mi.riesgopropiedad = null;
+			mi.formulariotipo = null;
 			mi.gridApi.selection.clearSelectedRows();
 		};
-
-		mi.editar = function() {
-			if(mi.riesgopropiedad!=null){
-				mi.mostraringreso = true;
-				mi.esnuevo = false;
-			}
-			else
-				$utilidades.mensaje('warning','Debe seleccionar la Propiedad Riesgo que desea editar');
-		}
-
+	
 		mi.irATabla = function() {
 			mi.mostraringreso=false;
 		}
-
+		
 		mi.guardarEstado=function(){
 			var estado = mi.gridApi.saveState.save();
-			var tabla_data = { action: 'guardaEstado', grid:'riesgopropiedades', estado: JSON.stringify(estado), t: (new Date()).getTime() };
-			$http.post('/SEstadoTabla', tabla_data).then(function(response){
-
+			var tabla_data = { action: 'guardaEstado', grid:'formulariotipos', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
+			$http.post('/SEstadoTabla', tabla_data).then(function(response){				
 			});
 		}
-
+		
 		mi.cambioPagina=function(){
 			mi.cargarTabla(mi.paginaActual);
 		}
-
+		
 		mi.reiniciarVista=function(){
-			if($location.path()=='/riesgopropiedad/rv')
+			if($location.path()=='/formulariotipo/rv')
 				$route.reload();
 			else
-				$location.path('/riesgopropiedad/rv');
+				$location.path('/formulariotipo/rv');
 		}
-
-		$http.post('/SRiesgoPropiedad', { accion: 'numeroRiesgoPropiedades' }).success(
+		
+		$http.post('/SFormularioTipo', { accion: 'numeroFormularioTipos' }).success(
 				function(response) {
-					mi.totalRiesgoPropiedades = response.totalriesgopropiedades;
+					mi.totalFormulariotipos = response.totalformulariotipos;
 					mi.cargarTabla(1);
-		});
-		$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
-				function(response) {
-					mi.tipodatos = response.datoTipos;
-		});
-
-	}
-]);
+				}
+		);	
+} ]);
