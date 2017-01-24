@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 24, 2017 1:17:58 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 24, 2017 3:13:19 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class FormularioTipo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1934425128368174405L;
+	private static final long serialVersionUID = 404088550339060097L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
@@ -34,22 +34,20 @@ public class FormularioTipo implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private int formularioid;
 	private Set<Formulario> formularios = new HashSet<Formulario>(0);
 
 	public FormularioTipo() {
 	}
 
-	public FormularioTipo(String nombre, String usarioCreo, Date fechaCreacion, int estado, int formularioid) {
+	public FormularioTipo(String nombre, String usarioCreo, Date fechaCreacion, int estado) {
 		this.nombre = nombre;
 		this.usarioCreo = usarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
-		this.formularioid = formularioid;
 	}
 
 	public FormularioTipo(String nombre, String descripcion, String usarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, int estado, int formularioid, Set<Formulario> formularios) {
+			Date fechaCreacion, Date fechaActualizacion, int estado, Set<Formulario> formularios) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usarioCreo = usarioCreo;
@@ -57,7 +55,6 @@ public class FormularioTipo implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.formularioid = formularioid;
 		this.formularios = formularios;
 	}
 
@@ -136,15 +133,6 @@ public class FormularioTipo implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
-	}
-
-	@Column(name = "formularioid", nullable = false)
-	public int getFormularioid() {
-		return this.formularioid;
-	}
-
-	public void setFormularioid(int formularioid) {
-		this.formularioid = formularioid;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formularioTipo")
