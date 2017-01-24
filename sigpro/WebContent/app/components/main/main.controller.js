@@ -110,6 +110,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/proyectopropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectopropiedadController\'" class="all_page"></div>'
             })
+            .when('/usuarioinfo/',{
+            	template: '<div load-on-demand="\'usuarioInfoController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -269,6 +272,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'proyectopropiedadController',
 	    	   script: '/app/components/proyectopropiedad/proyectopropiedad.controller.js',
 	    	   template: '/app/components/proyectopropiedad/proyectopropiedad.jsp'
+	       },
+	       {
+	    	   name: 'usuarioInfoController',
+	    	   script: '/app/components/usuarios/usuarioInfo.controller.js',
+	    	   template: '/app/components/usuarios/usuarioInfo.jsp'
 	       }
 
 	   ];
