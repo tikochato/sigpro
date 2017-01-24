@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 24, 2017 1:17:58 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 24, 2017 3:13:19 PM by Hibernate Tools 5.2.0.CR1
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class FormularioItemOpcion implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3318232499036573679L;
+	private static final long serialVersionUID = 2610028273412130513L;
 	private Integer id;
 	private FormularioItem formularioItem;
 	private String etiqueta;
@@ -33,6 +33,11 @@ public class FormularioItemOpcion implements java.io.Serializable {
 	private String valorString;
 	private Date valorTiempo;
 	private BigDecimal valorDecimal;
+	private Integer estado;
+	private String usuarioCreo;
+	private Integer usuarioActualizacion;
+	private Date fechaCreacion;
+	private Date fechaActualizacion;
 
 	public FormularioItemOpcion() {
 	}
@@ -42,13 +47,19 @@ public class FormularioItemOpcion implements java.io.Serializable {
 	}
 
 	public FormularioItemOpcion(FormularioItem formularioItem, String etiqueta, Integer valorEntero, String valorString,
-			Date valorTiempo, BigDecimal valorDecimal) {
+			Date valorTiempo, BigDecimal valorDecimal, Integer estado, String usuarioCreo, Integer usuarioActualizacion,
+			Date fechaCreacion, Date fechaActualizacion) {
 		this.formularioItem = formularioItem;
 		this.etiqueta = etiqueta;
 		this.valorEntero = valorEntero;
 		this.valorString = valorString;
 		this.valorTiempo = valorTiempo;
 		this.valorDecimal = valorDecimal;
+		this.estado = estado;
+		this.usuarioCreo = usuarioCreo;
+		this.usuarioActualizacion = usuarioActualizacion;
+		this.fechaCreacion = fechaCreacion;
+		this.fechaActualizacion = fechaActualizacion;
 	}
 
 	@Id
@@ -117,6 +128,53 @@ public class FormularioItemOpcion implements java.io.Serializable {
 
 	public void setValorDecimal(BigDecimal valorDecimal) {
 		this.valorDecimal = valorDecimal;
+	}
+
+	@Column(name = "estado")
+	public Integer getEstado() {
+		return this.estado;
+	}
+
+	public void setEstado(Integer estado) {
+		this.estado = estado;
+	}
+
+	@Column(name = "usuario_creo", length = 30)
+	public String getUsuarioCreo() {
+		return this.usuarioCreo;
+	}
+
+	public void setUsuarioCreo(String usuarioCreo) {
+		this.usuarioCreo = usuarioCreo;
+	}
+
+	@Column(name = "usuario_actualizacion")
+	public Integer getUsuarioActualizacion() {
+		return this.usuarioActualizacion;
+	}
+
+	public void setUsuarioActualizacion(Integer usuarioActualizacion) {
+		this.usuarioActualizacion = usuarioActualizacion;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_creacion", length = 19)
+	public Date getFechaCreacion() {
+		return this.fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_actualizacion", length = 19)
+	public Date getFechaActualizacion() {
+		return this.fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
 	}
 
 }
