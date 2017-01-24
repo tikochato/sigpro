@@ -214,7 +214,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 			mi.mostrarcargandoProyProp=true;
 			$http.post('/SProyectoPropiedad', 
 					{ 
-						accion: 'getProyectoPropiedadPagina',
+						accion: 'getProyectoPropiedadPaginaPorTipoProy',
 						pagina: pagina,
 						idProyectoTipo:mi.proyectotipo!=null ? mi.proyectotipo.id : null, 
 						numeroproyectopropiedad: $utilidades.elementosPorPagina }).success(

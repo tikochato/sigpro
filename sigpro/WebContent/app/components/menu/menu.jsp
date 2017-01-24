@@ -51,6 +51,7 @@
                     <li uib-dropdown>
                          <a href="#" uib-dropdown-toggle><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Proyecto <b class="caret"></b></a>
                          <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                         <li role="menuitem"><a href="#!/proyectopropiedad">Propiedades Proyecto</a></li>
                             <li role="menuitem"><a href="#!/proyecto">Proyecto</a></li>
                             <li role="menuitem"><a href="#!/proyectotipo">Tipo de Proyecto</a></li>
                             <li role="menuitem"><a href="#!/desembolsotipo">Tipo Desembolso</a></li>
@@ -63,6 +64,7 @@
                             <li role="menuitem"><a href="#!/riesgopropiedad">Propiedad Riesgo</a></li>
                             <li role="menuitem"><a href="#!/riesgotipo">Tipo Riesgo</a></li>
                             <li role="menuitem"><a href="#!/riesgo">Riesgo</a></li>
+                            <li role="menuitem"><a href="#!/formulariotipo">Tipo Formulario</a></li>
                          </ul>
                     </li>
 	            </ul>

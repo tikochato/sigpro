@@ -48,7 +48,7 @@ public class SRiesgoPropiedad extends HttpServlet {
 		String fechaCreacion;
 		String fechaActualizacion;
 	}
-       
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -60,7 +60,7 @@ public class SRiesgoPropiedad extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
+		
 	}
 
 	/**
@@ -82,8 +82,8 @@ public class SRiesgoPropiedad extends HttpServlet {
 		Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String accion = map.get("accion");
 		String response_text="";
-		
-		
+
+
 		if(accion.equals("getRiesgoPropiedadPaginaPorTipo")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int idRiesgoTipo = map.get("idRiesgoTipo")!=null  ? Integer.parseInt(map.get("idRiesgoTipo")) : 0;
@@ -94,9 +94,9 @@ public class SRiesgoPropiedad extends HttpServlet {
 				temp.id = riesgopropiedad.getId();
 				temp.nombre = riesgopropiedad.getNombre();
 				temp.descripcion = riesgopropiedad.getDescripcion();
-				
+
 				temp.fechaActualizacion = Utils.formatDate(riesgopropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(riesgopropiedad.getFechaCreacion());	
+				temp.fechaCreacion = Utils.formatDate(riesgopropiedad.getFechaCreacion());
 				temp.usuarioActualizo = riesgopropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = riesgopropiedad.getUsuarioCreo();
 				striesgopropiedad.add(temp);
@@ -107,7 +107,7 @@ public class SRiesgoPropiedad extends HttpServlet {
 		}
 		else if(accion.equals("getRiesgoPropiedadPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numeroRiesgoPropiedad = map.get("numeroriesgopropiedad")!=null  ? Integer.parseInt(map.get("numeroriesgopropiedad")) : 0;			
+			int numeroRiesgoPropiedad = map.get("numeroriesgopropiedad")!=null  ? Integer.parseInt(map.get("numeroriesgopropiedad")) : 0;
 			List<RiesgoPropiedad> riesgopropiedades = RiesgoPropiedadDAO.getRiesgoPropiedadesPagina(pagina,numeroRiesgoPropiedad);
 			List<striesgopropiedad> striesgopropiedad=new ArrayList<striesgopropiedad>();
 			for(RiesgoPropiedad riesgopropiedad:riesgopropiedades){
@@ -118,7 +118,7 @@ public class SRiesgoPropiedad extends HttpServlet {
 				//temp.datotipoid = riesgopropiedad.getDatoTipo().getId();
 				//temp.datotiponombre = riesgopropiedad.getDatoTipo().getNombre();
 				temp.fechaActualizacion = Utils.formatDate(riesgopropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(riesgopropiedad.getFechaCreacion());	
+				temp.fechaCreacion = Utils.formatDate(riesgopropiedad.getFechaCreacion());
 				temp.usuarioActualizo = riesgopropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = riesgopropiedad.getUsuarioCreo();
 				striesgopropiedad.add(temp);
@@ -141,7 +141,7 @@ public class SRiesgoPropiedad extends HttpServlet {
 				//temp.datotipoid = riesgopropiedad.getDatoTipo().getId();
 				//temp.datotiponombre = riesgopropiedad.getDatoTipo.getNombre();
 				temp.fechaActualizacion = Utils.formatDate(riesgopropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(riesgopropiedad.getFechaCreacion());	
+				temp.fechaCreacion = Utils.formatDate(riesgopropiedad.getFechaCreacion());
 				temp.usuarioActualizo = riesgopropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = riesgopropiedad.getUsuarioCreo();
 				streisgopropiedad.add(temp);
@@ -166,7 +166,7 @@ public class SRiesgoPropiedad extends HttpServlet {
 				int datoTipoId = map.get("datoTipoId")!=null ? Integer.parseInt(map.get("datoTipoId")) : 0;
 				DatoTipo datoTipo = new DatoTipo();
 				datoTipo.setId(datoTipoId);
-				
+
 				RiesgoPropiedad riesgoPropiedad;
 				if(esnuevo){
 					riesgoPropiedad = new RiesgoPropiedad(datoTipo,nombre, usuario, new DateTime().toDate(), 1);
@@ -185,9 +185,9 @@ public class SRiesgoPropiedad extends HttpServlet {
 			}
 			else
 				response_text = "{ \"success\": false }";
-		}	
+		}
 		else if(accion.equals("borrarComponentePropiedad")){
-			
+
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
 				RiesgoPropiedad riesgoPropiedad = RiesgoPropiedadDAO.getRiesgoPropiedadPorId(id);
@@ -201,7 +201,7 @@ public class SRiesgoPropiedad extends HttpServlet {
 			int idRiesgo = map.get("idRiesgo")!=null  ? Integer.parseInt(map.get("idRiesgo")) : 0;
 			int idRiesgoTipo = map.get("idRiesgoTipo")!=null  ? Integer.parseInt(map.get("idRiesgoTipo")) : 0;
 			List<RiesgoPropiedad> riesgopropiedades = RiesgoPropiedadDAO.getRiesgoPropiedadesPorTipoRiesgo(idRiesgoTipo);
-			
+
 			List<HashMap<String,Object>> campos = new ArrayList<>();
 			for(RiesgoPropiedad riesgopropiedad:riesgopropiedades){
 				HashMap <String,Object> campo = new HashMap<String, Object>();
@@ -231,24 +231,24 @@ public class SRiesgoPropiedad extends HttpServlet {
 				}
 				campos.add(campo);
 			}
-			
+
 			response_text = CFormaDinamica.convertirEstructura(campos);
 	        response_text = String.join("", "\"componentepropiedades\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else
 			response_text = "{ \"success\": false }";
-		
+
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
-		
+
         OutputStream output = response.getOutputStream();
 		GZIPOutputStream gz = new GZIPOutputStream(output);
         gz.write(response_text.getBytes("UTF-8"));
         gz.close();
         output.close();
 	}
-		
-	
+
+
 
 }
