@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 24, 2017 1:17:58 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class RecursoPropiedad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5309007862320291340L;
+	private static final long serialVersionUID = -4910602737741678762L;
 	private Integer id;
 	private DatoTipo datoTipo;
 	private String nombre;
@@ -37,6 +37,7 @@ public class RecursoPropiedad implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
+	private Set<ObjetoRecurso> objetoRecursos = new HashSet<ObjetoRecurso>(0);
 	private Set<RectipoPropiedad> rectipoPropiedads = new HashSet<RectipoPropiedad>(0);
 
 	public RecursoPropiedad() {
@@ -52,7 +53,7 @@ public class RecursoPropiedad implements java.io.Serializable {
 
 	public RecursoPropiedad(DatoTipo datoTipo, String nombre, String descripcion, String usuarioCreo,
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Set<RectipoPropiedad> rectipoPropiedads) {
+			Set<ObjetoRecurso> objetoRecursos, Set<RectipoPropiedad> rectipoPropiedads) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -61,6 +62,7 @@ public class RecursoPropiedad implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
+		this.objetoRecursos = objetoRecursos;
 		this.rectipoPropiedads = rectipoPropiedads;
 	}
 
@@ -149,6 +151,15 @@ public class RecursoPropiedad implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "recursoPropiedad")
+	public Set<ObjetoRecurso> getObjetoRecursos() {
+		return this.objetoRecursos;
+	}
+
+	public void setObjetoRecursos(Set<ObjetoRecurso> objetoRecursos) {
+		this.objetoRecursos = objetoRecursos;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "recursoPropiedad")
