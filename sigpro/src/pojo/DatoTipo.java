@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 28, 2016 1:25:08 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,14 +22,17 @@ public class DatoTipo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3547022947827139362L;
+	private static final long serialVersionUID = -8937177412703120803L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
 	private Set<ComponentePropiedad> componentePropiedads = new HashSet<ComponentePropiedad>(0);
+	private Set<RiesgoPropiedad> riesgoPropiedads = new HashSet<RiesgoPropiedad>(0);
 	private Set<ProyectoPropiedad> proyectoPropiedads = new HashSet<ProyectoPropiedad>(0);
 	private Set<ActividadPropiedad> actividadPropiedads = new HashSet<ActividadPropiedad>(0);
 	private Set<ProductoPropiedad> productoPropiedads = new HashSet<ProductoPropiedad>(0);
+	private Set<RecursoPropiedad> recursoPropiedads = new HashSet<RecursoPropiedad>(0);
+	private Set<HitoTipo> hitoTipos = new HashSet<HitoTipo>(0);
 
 	public DatoTipo() {
 	}
@@ -39,14 +42,18 @@ public class DatoTipo implements java.io.Serializable {
 	}
 
 	public DatoTipo(String nombre, String descripcion, Set<ComponentePropiedad> componentePropiedads,
-			Set<ProyectoPropiedad> proyectoPropiedads, Set<ActividadPropiedad> actividadPropiedads,
-			Set<ProductoPropiedad> productoPropiedads) {
+			Set<RiesgoPropiedad> riesgoPropiedads, Set<ProyectoPropiedad> proyectoPropiedads,
+			Set<ActividadPropiedad> actividadPropiedads, Set<ProductoPropiedad> productoPropiedads,
+			Set<RecursoPropiedad> recursoPropiedads, Set<HitoTipo> hitoTipos) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.componentePropiedads = componentePropiedads;
+		this.riesgoPropiedads = riesgoPropiedads;
 		this.proyectoPropiedads = proyectoPropiedads;
 		this.actividadPropiedads = actividadPropiedads;
 		this.productoPropiedads = productoPropiedads;
+		this.recursoPropiedads = recursoPropiedads;
+		this.hitoTipos = hitoTipos;
 	}
 
 	@Id
@@ -89,6 +96,15 @@ public class DatoTipo implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "datoTipo")
+	public Set<RiesgoPropiedad> getRiesgoPropiedads() {
+		return this.riesgoPropiedads;
+	}
+
+	public void setRiesgoPropiedads(Set<RiesgoPropiedad> riesgoPropiedads) {
+		this.riesgoPropiedads = riesgoPropiedads;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "datoTipo")
 	public Set<ProyectoPropiedad> getProyectoPropiedads() {
 		return this.proyectoPropiedads;
 	}
@@ -113,6 +129,24 @@ public class DatoTipo implements java.io.Serializable {
 
 	public void setProductoPropiedads(Set<ProductoPropiedad> productoPropiedads) {
 		this.productoPropiedads = productoPropiedads;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "datoTipo")
+	public Set<RecursoPropiedad> getRecursoPropiedads() {
+		return this.recursoPropiedads;
+	}
+
+	public void setRecursoPropiedads(Set<RecursoPropiedad> recursoPropiedads) {
+		this.recursoPropiedads = recursoPropiedads;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "datoTipo")
+	public Set<HitoTipo> getHitoTipos() {
+		return this.hitoTipos;
+	}
+
+	public void setHitoTipos(Set<HitoTipo> hitoTipos) {
+		this.hitoTipos = hitoTipos;
 	}
 
 }

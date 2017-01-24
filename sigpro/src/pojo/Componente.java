@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 28, 2016 1:25:08 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Componente implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8367809323144567515L;
+	private static final long serialVersionUID = -2591177330410838253L;
 	private Integer id;
 	private ComponenteTipo componenteTipo;
 	private Proyecto proyecto;
@@ -44,7 +44,6 @@ public class Componente implements java.io.Serializable {
 	private Set<Riesgo> riesgos = new HashSet<Riesgo>(0);
 	private Set<ComponentePropiedadValor> componentePropiedadValors = new HashSet<ComponentePropiedadValor>(0);
 	private Set<FormularioItemValor> formularioItemValors = new HashSet<FormularioItemValor>(0);
-	private Set<ObjetoRecurso> objetoRecursos = new HashSet<ObjetoRecurso>(0);
 
 	public Componente() {
 	}
@@ -62,8 +61,7 @@ public class Componente implements java.io.Serializable {
 	public Componente(ComponenteTipo componenteTipo, Proyecto proyecto, String nombre, String descripcion,
 			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
 			Set<Meta> metas, Set<ObjetoFormulario> objetoFormularios, Set<Producto> productos, Set<Riesgo> riesgos,
-			Set<ComponentePropiedadValor> componentePropiedadValors, Set<FormularioItemValor> formularioItemValors,
-			Set<ObjetoRecurso> objetoRecursos) {
+			Set<ComponentePropiedadValor> componentePropiedadValors, Set<FormularioItemValor> formularioItemValors) {
 		this.componenteTipo = componenteTipo;
 		this.proyecto = proyecto;
 		this.nombre = nombre;
@@ -79,7 +77,6 @@ public class Componente implements java.io.Serializable {
 		this.riesgos = riesgos;
 		this.componentePropiedadValors = componentePropiedadValors;
 		this.formularioItemValors = formularioItemValors;
-		this.objetoRecursos = objetoRecursos;
 	}
 
 	@Id
@@ -231,15 +228,6 @@ public class Componente implements java.io.Serializable {
 
 	public void setFormularioItemValors(Set<FormularioItemValor> formularioItemValors) {
 		this.formularioItemValors = formularioItemValors;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")
-	public Set<ObjetoRecurso> getObjetoRecursos() {
-		return this.objetoRecursos;
-	}
-
-	public void setObjetoRecursos(Set<ObjetoRecurso> objetoRecursos) {
-		this.objetoRecursos = objetoRecursos;
 	}
 
 }

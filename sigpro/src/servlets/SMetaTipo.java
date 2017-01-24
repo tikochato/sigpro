@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.joda.time.DateTime;
 
@@ -65,6 +66,8 @@ public class SMetaTipo extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();
 		Type type = new TypeToken<Map<String, String>>(){}.getType();
+		HttpSession sesionweb = request.getSession();
+		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		StringBuilder sb = new StringBuilder();
 		BufferedReader br = request.getReader();
 		String str;
@@ -124,7 +127,7 @@ public class SMetaTipo extends HttpServlet {
 				String descripcion = map.get("descripcion");
 				MetaTipo MetaTipo;
 				if(esnuevo){
-					MetaTipo = new MetaTipo(nombre, descripcion,"admin",null, new DateTime().toDate(), null, 1, null );
+					MetaTipo = new MetaTipo(nombre, descripcion,usuario,null, new DateTime().toDate(), null, 1, null );
 				}
 				else{
 					MetaTipo = MetaTipoDAO.getMetaTipoPorId(id);
@@ -143,7 +146,7 @@ public class SMetaTipo extends HttpServlet {
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
 				MetaTipo MetaTipo = MetaTipoDAO.getMetaTipoPorId(id);
-				MetaTipo.setUsuarioActualizo("admin");
+				MetaTipo.setUsuarioActualizo(usuario);
 				MetaTipo.setFechaActualizacion(new DateTime().toDate());
 				response_text = String.join("","{ \"success\": ",(MetaTipoDAO.eliminarMetaTipo(MetaTipo) ? "true" : "false")," }");
 			}

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 28, 2016 1:25:08 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -13,22 +13,20 @@ public class ObjetoRecursoId implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3747405664009322090L;
+	private static final long serialVersionUID = 3605572930091366297L;
 	private int recursoid;
 	private int recursoPropiedadid;
-	private int proyectoid;
-	private int componenteid;
-	private int productoid;
+	private int objetoid;
+	private int tipoObjeto;
 
 	public ObjetoRecursoId() {
 	}
 
-	public ObjetoRecursoId(int recursoid, int recursoPropiedadid, int proyectoid, int componenteid, int productoid) {
+	public ObjetoRecursoId(int recursoid, int recursoPropiedadid, int objetoid, int tipoObjeto) {
 		this.recursoid = recursoid;
 		this.recursoPropiedadid = recursoPropiedadid;
-		this.proyectoid = proyectoid;
-		this.componenteid = componenteid;
-		this.productoid = productoid;
+		this.objetoid = objetoid;
+		this.tipoObjeto = tipoObjeto;
 	}
 
 	@Column(name = "recursoid", nullable = false)
@@ -49,31 +47,22 @@ public class ObjetoRecursoId implements java.io.Serializable {
 		this.recursoPropiedadid = recursoPropiedadid;
 	}
 
-	@Column(name = "proyectoid", nullable = false)
-	public int getProyectoid() {
-		return this.proyectoid;
+	@Column(name = "objetoid", nullable = false)
+	public int getObjetoid() {
+		return this.objetoid;
 	}
 
-	public void setProyectoid(int proyectoid) {
-		this.proyectoid = proyectoid;
+	public void setObjetoid(int objetoid) {
+		this.objetoid = objetoid;
 	}
 
-	@Column(name = "componenteid", nullable = false)
-	public int getComponenteid() {
-		return this.componenteid;
+	@Column(name = "tipo_objeto", nullable = false)
+	public int getTipoObjeto() {
+		return this.tipoObjeto;
 	}
 
-	public void setComponenteid(int componenteid) {
-		this.componenteid = componenteid;
-	}
-
-	@Column(name = "productoid", nullable = false)
-	public int getProductoid() {
-		return this.productoid;
-	}
-
-	public void setProductoid(int productoid) {
-		this.productoid = productoid;
+	public void setTipoObjeto(int tipoObjeto) {
+		this.tipoObjeto = tipoObjeto;
 	}
 
 	public boolean equals(Object other) {
@@ -87,9 +76,8 @@ public class ObjetoRecursoId implements java.io.Serializable {
 
 		return (this.getRecursoid() == castOther.getRecursoid())
 				&& (this.getRecursoPropiedadid() == castOther.getRecursoPropiedadid())
-				&& (this.getProyectoid() == castOther.getProyectoid())
-				&& (this.getComponenteid() == castOther.getComponenteid())
-				&& (this.getProductoid() == castOther.getProductoid());
+				&& (this.getObjetoid() == castOther.getObjetoid())
+				&& (this.getTipoObjeto() == castOther.getTipoObjeto());
 	}
 
 	public int hashCode() {
@@ -97,9 +85,8 @@ public class ObjetoRecursoId implements java.io.Serializable {
 
 		result = 37 * result + this.getRecursoid();
 		result = 37 * result + this.getRecursoPropiedadid();
-		result = 37 * result + this.getProyectoid();
-		result = 37 * result + this.getComponenteid();
-		result = 37 * result + this.getProductoid();
+		result = 37 * result + this.getObjetoid();
+		result = 37 * result + this.getTipoObjeto();
 		return result;
 	}
 

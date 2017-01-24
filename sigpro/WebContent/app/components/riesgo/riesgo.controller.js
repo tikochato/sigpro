@@ -21,6 +21,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.productoNombre="";
 		mi.proyectoid = 0;
 		mi.proyectoNombre="";
+		mi.camposdinamicos = {};
+		mi.formatofecha = 'dd/MM/yyyy';
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		
@@ -30,6 +32,13 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					mi.proyectoid = response.id;
 					mi.proyectoNombre = response.nombre;
 		});
+		
+		mi.fechaOptions = {
+				formatYear : 'yy',
+				maxDate : new Date(2020, 5, 22),
+				minDate : new Date(1900, 1, 1),
+				startingDay : 1
+		};
 		
 		mi.gridOptions = {
 				enableRowSelection : true,
@@ -82,6 +91,13 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		}
 		
 		mi.guardar=function(){
+			
+			for (campos in mi.camposdinamicos) {
+				if (mi.camposdinamicos[campos].tipo === 'fecha') {
+					mi.camposdinamicos[campos].valor = moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY')
+				}
+			}
+			
 			if(mi.riesgo!=null && mi.riesgo.nombre!='' && mi.riesgoTipoid!=''
 				&& mi.componenteid!='' && mi.productoid!=''){
 				$http.post('/SRiesgo', {
@@ -93,7 +109,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					componenteid: mi.componenteid,
 					productoid: mi.productoid,
 					nombre: mi.riesgo.nombre,
-					descripcion: mi.riesgo.descripcion
+					descripcion: mi.riesgo.descripcion,
+					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
 					if(response.success){
 						mi.riesgo.id = response.id;
@@ -150,12 +167,13 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			mi.componenteNombre="";
 			mi.productoid="";
 			mi.productoNombre="";
+			mi.camposdinamicos = {};
 			mi.gridApi.selection.clearSelectedRows();
 		};
 
 		mi.editar = function() {
 			if(mi.riesgo!=null){
-				mi.riestoTipoid = mi.riesgo.riesgotipoid;
+				mi.riesgoTipoid = mi.riesgo.riesgotipoid;
 				mi.riesgoTipoNombre = mi.riesgo.riesgotiponombre;
 				mi.componenteid = mi.riesgo.componenteid;
 				mi.componenteNombre = mi.riesgo.componentenombre;
@@ -163,6 +181,17 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				mi.productoNombre = mi.riesgo.productonombre;
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
+				
+				var parametros = { 
+						accion: 'getRiesgoPropiedadPorTipo', 
+						idRiesgo: mi.riesgo.id,
+						idRiesgoTipo: mi.riesgoTipoid
+				}
+				
+				$http.post('/SRiesgoPropiedad', parametros).then(function(response){
+					
+					mi.camposdinamicos = response.data.componentepropiedades
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Riesgo que desea editar');
@@ -189,6 +218,10 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			else
 				$location.path('/riesgo/'+ mi.proyectoid + '/rv');
 		}
+		
+		mi.abrirPopupFecha = function(index) {
+			mi.camposdinamicos[index].isOpen = true;
+		};
 		
 		$http.post('/SRiesgo', { accion: 'numeroRiesgosPorProyecto',proyectoid:$routeParams.proyecto_id }).success(
 				function(response) {
@@ -240,6 +273,16 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		resultado.then(function(itemSeleccionado) {
 			mi.riesgoTipoid = itemSeleccionado.id;
 			mi.riesgoTipoNombre = itemSeleccionado.nombre;
+			
+			var parametros = { 
+					accion: 'getRiesgoPropiedadPorTipo', 
+					idRiesgo: mi.riesgo.id,
+					idRiesgoTipo: itemSeleccionado.id
+			}
+			
+			$http.post('/SRiesgoPropiedad', parametros).then(function(response){
+				mi.camposdinamicos = response.data.componentepropiedades
+			});
 		});
 	};
 	

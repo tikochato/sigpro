@@ -9,10 +9,11 @@ moduloProducto.controller('controlProducto', [ '$scope', '$routeParams',
 function controlProducto($scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
 		$timeout, $log, $q) {
-	
+	  
 	i18nService.setCurrentLang('es');
 	
 	var mi = this;
+	mi.componenteid = $routeParams.componente_id;
 
 	$window.document.title = 'SIGPRO - Producto';
 
@@ -24,6 +25,22 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 
 	mi.propiedadesValor = [];
+	
+	mi.camposdinamicos = {};
+	
+	$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id }).success(
+			function(response) {
+				mi.componenteid = response.id;
+				mi.componenteNombre = response.nombre;
+	});
+	
+	mi.formatofecha = 'dd/MM/yyyy';
+	mi.fechaOptions = {
+			formatYear : 'yy',
+			maxDate : new Date(2020, 5, 22),
+			minDate : new Date(1900, 1, 1),
+			startingDay : 1
+	};
 
 	mi.cambioPagina = function() {
 		mi.cargarData(mi.paginaActual);
@@ -42,7 +59,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		var datos = {
 			accion : 'cargar',
 			pagina : pagina,
-			registros : mi.elementosPorPagina
+			registros : mi.elementosPorPagina,
+			componenteid : $routeParams.componente_id
 		};
 
 		mi.mostrarCargando = true;
@@ -172,10 +190,11 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	}
 
 	mi.reiniciarVista = function() {
-		if ($location.path() == '/producto/rv')
+		if($location.path()==('/producto/'+ $routeParams.componente_id + '/rv'))
 			$route.reload();
 		else
-			$location.path('/producto/rv');
+			$location.path('/producto/'+ $routeParams.componente_id + '/rv');
+		
 	}
 
 	mi.nuevo = function() {
@@ -403,12 +422,25 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		resultado.then(function(itemSeleccionado) {
 			mi.tipo = itemSeleccionado.id;
 			mi.tipoNombre = itemSeleccionado.nombre;
+			
+			var parametros = { 
+				accion: 'getProductoPropiedadPorTipo', 
+				idproducto: mi.codigo,
+				idproductotipo: itemSeleccionado.id
+			}
+			$http.post('/SProductoPropiedad', parametros).then(function(response){
+				mi.camposdinamicos = response.data.productopropiedades
+			});
 		});
 
 	};
 
 	mi.cambiarTipo = function() {
 
+	};
+	
+	mi.abrirPopupFecha = function(index) {
+		mi.camposdinamicos[index].isOpen = true;
 	};
 
 	mi.buscarComponente = function() {

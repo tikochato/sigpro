@@ -22,51 +22,36 @@
 		    <div class="collapse navbar-collapse" id="navBar">
 	            <ul class="nav navbar-nav">
 	                <li uib-dropdown>
-	                    <a href="#" uib-dropdown-toggle><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Ejemplos <b class="caret"></b></a>
-	                     <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-	                     	<li role="menuitem"><a href="#!/formaejemplo">Forma Ejemplo</a></li>
-	                     	<li role="menuitem"><a href="#!/cooperante">Cooperante</a></li>
-	                     </ul>
+	                    <a href="#!/cooperante"><span class="glyphicon" aria-hidden="true"></span> Cooperante</a>
 	                </li>
+                    <li>
+                         <a   href="#!/proyecto"><span class="glyphicon" aria-hidden="true"></span> Proyectos</a>
+                    </li>
                     <li uib-dropdown>
-                         <a href="#" uib-dropdown-toggle><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Admin <b class="caret"></b></a>
+                         <a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Cat&#225;logos <b class="caret"></b></a>
                          <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-                            <li role="menuitem"><a href="#!/entidad">Entidad</a></li>
-                            <li role="menuitem"><a href="#!/unidadEjecutora">Unidad Ejecutora</a></li>
-	                     	<li role="menuitem"><a href="#!/colaborador">Colaborador</a></li>
-	                     	<li role="menuitem"><a href="#!/metaunidadmedida">Unidad de Medidas para Metas</a></li>
-	                     	<li role="menuitem"><a href="#!/metatipos">Tipos de Meta</a></li>
-	                     	<li role="menuitem"><a href="#!/permisos">Permisos</a></li>
-	                     	<li role="menuitem"><a href="#!/usuarios">Usuarios</a></li>
+	                        <li role="menuitem"><a href="#!/proyectotipo">Tipo de Proyecto</a></li>
+	                        <li role="menuitem"><a href="#!/componentetipo">Tipo de Componente</a></li>
+	                        <li role="menuitem"><a href="#!/productoTipo">Tipo de Producto</a></li>
+	                        <li role="menuitem"><a href="#!/">Tipo de actividades</a></li>
+	                        <li role="menuitem"><a href="#!/hitotipo">Tipo Hito</a></li>
+	                        <li role="menuitem"><a href="#!/metatipos">Tipo de Meta</a></li>
+	                        <li role="menuitem"><a href="#!/recursotipo">Tipo de Recurso</a></li>
+	                        <li role="menuitem"><a href="#!/riesgotipo">Tipo de Riesgo</a></li>
+	                        <li role="menuitem"><a href="#!/metaunidadmedida">Unidad de Medida para Metas</a></li>
+	                        <li role="menuitem"><a href="#!/recursounidadmedida">Unidad de Medida para Recurso</a></li>
                          </ul>
                     </li>
                     <li uib-dropdown>
-                         <a href="#" uib-dropdown-toggle><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Producto <b class="caret"></b></a>
+                         <a href="" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Usuarios <b class="caret"></b></a>
                          <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-                            <li role="menuitem"><a href="#!/productoPropiedad">Propiedades</a></li>
-                            <li role="menuitem"><a href="#!/productoTipo">Tipos</a></li>
-                            <li role="menuitem"><a href="#!/producto">Producto</a></li>
-                         </ul>
-                    </li>
-                    <li uib-dropdown>
-                         <a href="#" uib-dropdown-toggle><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Proyecto <b class="caret"></b></a>
-                         <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-                            <li role="menuitem"><a href="#!/proyecto">Proyecto</a></li>
-                            <li role="menuitem"><a href="#!/proyectotipo">Tipo de Proyecto</a></li>
-                            <li role="menuitem"><a href="#!/desembolsotipo">Tipo Desembolso</a></li>
-                            <li role="menuitem"><a href="#!/desembolso">Desembolso</a></li>
-                            <li role="menuitem"><a href="#!/componente">Componente</a></li>
-                            <li role="menuitem"><a href="#!/componentepropiedad">Propiedad Componente</a></li>
-                            <li role="menuitem"><a href="#!/componentetipo">Tipo Componente</a></li>
-                            <li role="menuitem"><a href="#!/hitotipo">Tipo Hito</a></li>
-                            <li role="menuitem"><a href="#!/hito">Hito</a></li>
-                            <li role="menuitem"><a href="#!/riesgopropiedad">Propiedad Riesgo</a></li>
-                            <li role="menuitem"><a href="#!/riesgotipo">Tipo Riesgo</a></li>
-                            <li role="menuitem"><a href="#!/riesgo">Riesgo</a></li>
+                         	<li role="menuitem"><a href="#!/usuarios">Usuarios</a></li>
+                         	<li role="menuitem"><a href="#!/permisos">Permisos</a></li>
                          </ul>
                     </li>
 	            </ul>
 	            <ul class="nav navbar-nav navbar-right">
+	            	<shiro:authenticated><li><a href="#!/usuarioinfo"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Mi info.</a></li></shiro:authenticated>
 	            	<shiro:notAuthenticated><li><a href="/login.jsp"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>Entrar</a></li></shiro:notAuthenticated>
 		            <shiro:authenticated><li><a href="/SLogout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Salir</a></li></shiro:authenticated> 
 		            <li><a><span class="glyphicon glyphicon-chevron-up" aria-hidden="true" ng-click="hideBarFromMenu()"></span> </a></li>

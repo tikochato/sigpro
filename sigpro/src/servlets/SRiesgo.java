@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,10 +25,15 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.RiesgoDAO;
+import dao.RiesgoPropiedadDAO;
+import dao.RiesgoPropiedadValorDAO;
 import pojo.Componente;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Riesgo;
+import pojo.RiesgoPropiedad;
+import pojo.RiesgoPropiedadValor;
+import pojo.RiesgoPropiedadValorId;
 import pojo.RiesgoTipo;
 import utilities.Utils;
 
@@ -52,6 +59,14 @@ public class SRiesgo extends HttpServlet {
 		String productonombre;
 		int estado;
 	}
+	
+	class stdatadinamico {
+		String id;
+		String tipo;
+		String label;
+		String valor;
+	}
+
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -105,8 +120,8 @@ public class SRiesgo extends HttpServlet {
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
 				temp.componenteid = riesgo.getComponente().getId();
 				temp.componentenombre = riesgo.getComponente().getNombre();
-				temp.productoid = riesgo.getProducto().getId();
-				temp.productonombre = riesgo.getProducto().getNombre();
+				temp.productoid = riesgo.getProducto() != null ? riesgo.getProducto().getId() : 0;
+				temp.productonombre = riesgo.getProducto() !=null ? riesgo.getProducto().getNombre() : "";
 				striesgos.add(temp);
 			}
 			
@@ -134,8 +149,8 @@ public class SRiesgo extends HttpServlet {
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
 				temp.componenteid = riesgo.getComponente().getId();
 				temp.componentenombre = riesgo.getComponente().getNombre();
-				temp.productoid = riesgo.getProducto().getId();
-				temp.productonombre = riesgo.getProducto().getNombre();
+				temp.productoid = riesgo.getProducto() != null ? riesgo.getProducto().getId() : 0;
+				temp.productonombre = riesgo.getProducto() !=null ? riesgo.getProducto().getNombre() : "";
 				striesgos.add(temp);
 			}
 			
@@ -160,8 +175,8 @@ public class SRiesgo extends HttpServlet {
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
 				temp.componenteid = riesgo.getComponente().getId();
 				temp.componentenombre = riesgo.getComponente().getNombre();
-				temp.productoid = riesgo.getProducto().getId();
-				temp.productonombre = riesgo.getProducto().getNombre();
+				temp.productoid = riesgo.getProducto() != null ? riesgo.getProducto().getId() : 0;
+				temp.productonombre = riesgo.getProducto() !=null ? riesgo.getProducto().getNombre() : "";
 				striesgos.add(temp);
 			}
 			
@@ -170,53 +185,103 @@ public class SRiesgo extends HttpServlet {
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("guardarRiesgo")){
-			boolean result = false;
-			boolean esnuevo = map.get("esnuevo").equals("true");
-			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-			if(id>0 || esnuevo){
-				String nombre = map.get("nombre");
-				String descripcion = map.get("descripcion");
-				int riesgotipoid = Integer.parseInt(map.get("riesgotipoid"));
-				int proyectoid= Integer.parseInt(map.get("proyectoid"));
-				int componenteid= Integer.parseInt(map.get("componenteid"));
-				int productoid= Integer.parseInt(map.get("productoid"));
-				
-				RiesgoTipo riesgoTipo= new RiesgoTipo();
-				riesgoTipo.setId(riesgotipoid);
-				
-				Proyecto proyecto = new Proyecto();
-				proyecto .setId(proyectoid);
-				
-				Componente componente = new Componente();
-				componente.setId(componenteid);
-				
-				Producto producto = new Producto();
-				producto.setId(productoid);
-				
-				Riesgo riesgo;
-				if(esnuevo){
-					riesgo = new Riesgo(componente, producto, proyecto
-							,riesgoTipo, nombre, usuario, new DateTime().toDate(), 1);
-					riesgo.setDescripcion(descripcion);
+			try{
+				boolean result = false;
+				boolean esnuevo = map.get("esnuevo").equals("true");
+				int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+				if(id>0 || esnuevo){
+					String nombre = map.get("nombre");
+					String descripcion = map.get("descripcion");
+					int riesgotipoid = Integer.parseInt(map.get("riesgotipoid"));
+					int proyectoid= Integer.parseInt(map.get("proyectoid"));
+					int componenteid= Integer.parseInt(map.get("componenteid"));
+					int productoid= Integer.parseInt(map.get("productoid"));
+					
+					RiesgoTipo riesgoTipo= new RiesgoTipo();
+					riesgoTipo.setId(riesgotipoid);
+					
+					Proyecto proyecto = new Proyecto();
+					proyecto .setId(proyectoid);
+					
+					Componente componente = new Componente();
+					componente.setId(componenteid);
+					
+					Producto producto = new Producto();
+					producto.setId(productoid);
+					
+					type = new TypeToken<List<stdatadinamico>>() {
+					}.getType();
+	
+					List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
+					
+					Riesgo riesgo;
+					if(esnuevo){
+						riesgo = new Riesgo(componente, producto, proyecto
+								,riesgoTipo, nombre, usuario, new DateTime().toDate(), 1);
+						riesgo.setDescripcion(descripcion);
+					}
+					else{
+						
+						riesgo = RiesgoDAO.getRiesgoPorId(id);
+						riesgo.setComponente(componente);
+						riesgo.setProducto(producto);
+						riesgo.setRiesgoTipo(riesgoTipo);
+						riesgo.setNombre(nombre);
+						riesgo.setDescripcion(descripcion);
+						riesgo.setUsuarioActualizo(usuario);
+						riesgo.setFechaActualizacion(new DateTime().toDate());
+					}
+					result = RiesgoDAO.guardarRiesgo(riesgo);
+					
+					List<RiesgoPropiedadValor> valores_temp = RiesgoPropiedadValorDAO.getRiesgoPropiedadadesValoresPorRiesgo(riesgo.getId());
+					
+					riesgo.setRiesgoPropiedadValors(null);
+					if (valores_temp!=null){
+						for (RiesgoPropiedadValor valor : valores_temp){
+							RiesgoPropiedadValorDAO.eliminarRiesgoPropiedadValor(valor);
+						}
+					}
+					
+					for (stdatadinamico data : datos) {
+						RiesgoPropiedad riesgoPropiedad = RiesgoPropiedadDAO.getRiesgoPropiedadPorId(Integer.parseInt(data.id));
+						RiesgoPropiedadValorId idValor = new RiesgoPropiedadValorId(riesgo.getId(),Integer.parseInt(data.id));
+						RiesgoPropiedadValor valor = new RiesgoPropiedadValor(idValor, riesgo, 
+								riesgoPropiedad, 1, usuario, new DateTime().toDate());
+	
+						switch (1){  //// id del tipo de dato
+							case 1:
+								valor.setValorString(data.valor);
+								break;
+							case 2:
+								valor.setValorEntero(Integer.parseInt(data.valor));
+								break;
+							case 3:
+								valor.setValorDecimal(new BigDecimal(data.valor));
+								break;
+							case 4:
+	
+								break;
+							case 5:
+								SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+								valor.setValorTiempo(sdf.parse(data.valor));
+								break;
+						}
+	
+						result = (result && RiesgoPropiedadValorDAO.guardarRiesgoPropiedadValor(valor));
+					}
+					
+					
+					
+					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
+							+ "\"id\": " + riesgo.getId() +" }");
 				}
 				else{
-					
-					riesgo = RiesgoDAO.getRiesgoPorId(id);
-					riesgo.setComponente(componente);
-					riesgo.setProducto(producto);
-					riesgo.setRiesgoTipo(riesgoTipo);
-					riesgo.setNombre(nombre);
-					riesgo.setDescripcion(descripcion);
-					riesgo.setUsuarioActualizo(usuario);
-					riesgo.setFechaActualizacion(new DateTime().toDate());
+					response_text = "{ \"success\": false }";
 				}
-				result = RiesgoDAO.guardarRiesgo(riesgo);
-				
-				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + riesgo.getId() +" }");
 			}
-			else
+			catch (Throwable e){
 				response_text = "{ \"success\": false }";
+			}
 		}
 		else if(accion.equals("borrarRiesgo")){
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 28, 2016 1:25:08 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,12 +25,12 @@ public class RecursoTipo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1440246447873763085L;
+	private static final long serialVersionUID = -6540153125473885231L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
 	private String usuarioCreo;
-	private Integer usuarioActualizacion;
+	private String usuarioActualizacion;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
@@ -47,7 +47,7 @@ public class RecursoTipo implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public RecursoTipo(String nombre, String descripcion, String usuarioCreo, Integer usuarioActualizacion,
+	public RecursoTipo(String nombre, String descripcion, String usuarioCreo, String usuarioActualizacion,
 			Date fechaCreacion, Date fechaActualizacion, int estado, Set<RectipoPropiedad> rectipoPropiedads,
 			Set<Recurso> recursos) {
 		this.nombre = nombre;
@@ -100,12 +100,12 @@ public class RecursoTipo implements java.io.Serializable {
 		this.usuarioCreo = usuarioCreo;
 	}
 
-	@Column(name = "usuario_actualizacion")
-	public Integer getUsuarioActualizacion() {
+	@Column(name = "usuario_actualizacion", length = 30)
+	public String getUsuarioActualizacion() {
 		return this.usuarioActualizacion;
 	}
 
-	public void setUsuarioActualizacion(Integer usuarioActualizacion) {
+	public void setUsuarioActualizacion(String usuarioActualizacion) {
 		this.usuarioActualizacion = usuarioActualizacion;
 	}
 

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -23,8 +24,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.RiesgoPropiedadDAO;
+import dao.RiesgoPropiedadValorDAO;
 import pojo.RiesgoPropiedad;
+import pojo.RiesgoPropiedadValor;
 import pojo.DatoTipo;
+import utilities.CFormaDinamica;
 import utilities.Utils;
 
 /**
@@ -165,7 +169,7 @@ public class SRiesgoPropiedad extends HttpServlet {
 				
 				RiesgoPropiedad riesgoPropiedad;
 				if(esnuevo){
-					riesgoPropiedad = new RiesgoPropiedad(nombre, usuario, new DateTime().toDate(), 1);
+					riesgoPropiedad = new RiesgoPropiedad(datoTipo,nombre, usuario, new DateTime().toDate(), 1);
 					riesgoPropiedad.setDescripcion(descripcion);
 				}
 				else{
@@ -192,7 +196,47 @@ public class SRiesgoPropiedad extends HttpServlet {
 			}
 			else
 				response_text = "{ \"success\": false }";
-		}else
+		}
+		else if(accion.equals("getRiesgoPropiedadPorTipo")){
+			int idRiesgo = map.get("idRiesgo")!=null  ? Integer.parseInt(map.get("idRiesgo")) : 0;
+			int idRiesgoTipo = map.get("idRiesgoTipo")!=null  ? Integer.parseInt(map.get("idRiesgoTipo")) : 0;
+			List<RiesgoPropiedad> riesgopropiedades = RiesgoPropiedadDAO.getRiesgoPropiedadesPorTipoRiesgo(idRiesgoTipo);
+			
+			List<HashMap<String,Object>> campos = new ArrayList<>();
+			for(RiesgoPropiedad riesgopropiedad:riesgopropiedades){
+				HashMap <String,Object> campo = new HashMap<String, Object>();
+				campo.put("id", riesgopropiedad.getId());
+				campo.put("nombre", riesgopropiedad.getNombre());
+				//campo.put("tipo", riesgopropiedad.getDatoTipo().getId());
+				campo.put("tipo", 1);
+				RiesgoPropiedadValor riesgoPropiedadValor = RiesgoPropiedadValorDAO.getValorPorRiesgoYPropiedad(riesgopropiedad.getId(), idRiesgo);
+				if (riesgoPropiedadValor !=null ){
+					switch ((Integer) campo.get("tipo")){
+						case 1:
+							campo.put("valor", riesgoPropiedadValor.getValorString());
+							break;
+						case 2:
+							campo.put("valor", riesgoPropiedadValor.getValorEntero());
+							break;
+						case 3:
+							campo.put("valor", riesgoPropiedadValor.getValorDecimal());
+							break;
+						case 5:
+							campo.put("valor", riesgoPropiedadValor.getValorTiempo());
+							break;
+					}
+				}
+				else{
+					campo.put("valor", "");
+				}
+				campos.add(campo);
+			}
+			
+			response_text = CFormaDinamica.convertirEstructura(campos);
+	        response_text = String.join("", "\"componentepropiedades\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}
+		else
 			response_text = "{ \"success\": false }";
 		
 		response.setHeader("Content-Encoding", "gzip");

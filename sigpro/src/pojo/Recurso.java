@@ -1,9 +1,7 @@
 package pojo;
-// Generated Dec 28, 2016 1:25:08 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +10,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,7 +24,7 @@ public class Recurso implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -542857027270659448L;
+	private static final long serialVersionUID = -6028138994764323732L;
 	private Integer id;
 	private RecursoTipo recursoTipo;
 	private RecursoUnidadMedida recursoUnidadMedida;
@@ -38,7 +35,6 @@ public class Recurso implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private Set<ObjetoRecurso> objetoRecursos = new HashSet<ObjetoRecurso>(0);
 
 	public Recurso() {
 	}
@@ -53,8 +49,7 @@ public class Recurso implements java.io.Serializable {
 	}
 
 	public Recurso(RecursoTipo recursoTipo, RecursoUnidadMedida recursoUnidadMedida, String nombre, String descripcion,
-			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Set<ObjetoRecurso> objetoRecursos) {
+			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado) {
 		this.recursoTipo = recursoTipo;
 		this.recursoUnidadMedida = recursoUnidadMedida;
 		this.nombre = nombre;
@@ -64,7 +59,6 @@ public class Recurso implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.objetoRecursos = objetoRecursos;
 	}
 
 	@Id
@@ -162,15 +156,6 @@ public class Recurso implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "recurso")
-	public Set<ObjetoRecurso> getObjetoRecursos() {
-		return this.objetoRecursos;
-	}
-
-	public void setObjetoRecursos(Set<ObjetoRecurso> objetoRecursos) {
-		this.objetoRecursos = objetoRecursos;
 	}
 
 }

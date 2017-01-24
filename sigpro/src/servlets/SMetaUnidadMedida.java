@@ -40,6 +40,7 @@ public class SMetaUnidadMedida extends HttpServlet {
 		Integer id;
 		String nombre;
 		String descripcion;
+		String simbolo;
 		Integer estado;
 		String fechaCreacion;
 		String fechaActualizacion;
@@ -83,6 +84,7 @@ public class SMetaUnidadMedida extends HttpServlet {
 			for(MetaUnidadMedida metaunidad:MetaUnidadMedidas){
 				stunidadmeta temp = new stunidadmeta();
 				temp.descripcion = metaunidad.getDescripcion();
+				temp.simbolo = metaunidad.getSimbolo();
 				temp.estado = metaunidad.getEstado();
 				temp.fechaActualizacion = Utils.formatDate(metaunidad.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(metaunidad.getFechaCreacion());
@@ -102,6 +104,7 @@ public class SMetaUnidadMedida extends HttpServlet {
 			for(MetaUnidadMedida metaunidad:MetaUnidadMedidas){
 				stunidadmeta temp = new stunidadmeta();
 				temp.descripcion = metaunidad.getDescripcion();
+				temp.simbolo = metaunidad.getSimbolo();
 				temp.estado = metaunidad.getEstado();
 				temp.fechaActualizacion = Utils.formatDate(metaunidad.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(metaunidad.getFechaCreacion());
@@ -122,14 +125,16 @@ public class SMetaUnidadMedida extends HttpServlet {
 			if(id>0 || esnuevo){
 				String nombre = map.get("nombre");
 				String descripcion = map.get("descripcion");
+				String simbolo = map.get("simbolo");
 				MetaUnidadMedida MetaUnidadMedida;
 				if(esnuevo){
-					MetaUnidadMedida = new MetaUnidadMedida(nombre, descripcion,"admin",null, new DateTime().toDate(), null, 1, null );
+					MetaUnidadMedida = new MetaUnidadMedida(nombre, descripcion,simbolo,"admin",null, new DateTime().toDate(), null, 1, null );
 				}
 				else{
 					MetaUnidadMedida = MetaUnidadMedidaDAO.getMetaUnidadMedidaPorId(id);
 					MetaUnidadMedida.setNombre(nombre);
 					MetaUnidadMedida.setDescripcion(descripcion);
+					MetaUnidadMedida.setSimbolo(simbolo);
 					MetaUnidadMedida.setUsuarioActualizo("admin");
 					MetaUnidadMedida.setFechaActualizacion(new DateTime().toDate());
 				}

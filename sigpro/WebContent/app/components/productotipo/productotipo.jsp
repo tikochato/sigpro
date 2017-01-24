@@ -68,7 +68,7 @@
 
 			<div class="btn-group">
 				<label class="btn btn-success" ng-click="form.$valid ? productoTipo.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
-				<label class="btn btn-danger" ng-click="productoTipo.cancelar()">Cancelar</label>
+				<label class="btn btn-primary" ng-click="productoTipo.cancelar()">Ir a Tabla</label>
 			</div>
 
 		</div>
@@ -134,13 +134,12 @@
 		</div>
 
 		<div class="col-sm-12" align="center">Los campos marcados con * son obligatorios</div>
-
 		<br />
 		
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<label class="btn btn-success" ng-click="form.$valid ? productoTipo.guardar() : '' " ng-disabled="!form.$valid">Guardar</label> 
-				<label class="btn btn-danger" ng-click="productoTipo.cancelar()">Cancelar</label>
+				<label class="btn btn-primary" ng-click="productoTipo.cancelar()">Ir a Taba</label>
 			</div>
 		</div>
 	</div>

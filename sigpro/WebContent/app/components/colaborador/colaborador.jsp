@@ -63,7 +63,7 @@
 
       <div class="btn-group">
         <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : ''" ng-disabled="!form.$valid || !colaborador.usuarioValido">Guardar</label> 
-        <label class="btn btn-danger" ng-click="colaborador.cancelar()">Cancelar</label>
+        <label class="btn btn-primary" ng-click="colaborador.cancelar()">Ir a Tabla</label>
       </div>
 
     </div>
@@ -72,7 +72,7 @@
 	    <form name="form" class="css-form" novalidate>
 	
 	      <div class="row">
-		      <div class="form-group col-sm-3" ng-show="!colaborador.esNuevo">
+		      <div class="form-group col-sm-12" ng-show="!colaborador.esNuevo">
 		        <label for="campo0">ID:</label> 
 		        <input type="text" class="form-control" id="campo0" name="campo0" placeholder="ID" ng-model="colaborador.codigo" ng-readonly="true" />
 		      </div>
@@ -101,7 +101,7 @@
 	      </div>
 	
 	      <div class="row">
-		      <div class="form-group col-sm-3" ng-class="{ 'has-error' : form.campo5.$invalid }">
+		      <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo5.$invalid }">
 		        <label for="campo5">* CUI:</label> 
 		        <input type="number" id="campo5" name="campo5" class="form-control"  placeholder="CUI" ng-model="colaborador.cui" ng-maxlength="13" required />
 		      </div>
@@ -119,15 +119,14 @@
 	      </div>
 	
 	      <div class="row">
-		      <div class="form-group col-sm-3" ng-class="{ 'has-error' : form.campo7.$invalid || !colaborador.usuarioValido }">
+		      <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo7.$invalid || !colaborador.usuarioValido }">
 		        <label for="campo6">* Usuario:</label> 
 		        <div class="input-group">
 		          <input type="text" id="campo7" name="campo7" class="form-control" placeholder="Usuario" ng-model="colaborador.usuario" ng-change="colaborador.usuarioCambio()" required/>
-		          <span class="input-group-addon" ng-click="colaborador.validarUsuario()"><i class="glyphicon glyphicon-ok"></i></span>
+		          <span class="input-group-addon" ng-click="colaborador.validarUsuario()" uib-tooltip="Validar Usuario" ><i class="glyphicon glyphicon-ok"></i></span>
 		        </div>
 		      </div>
 	      </div>
-	      
 	    </form>
     </div>
   
@@ -136,9 +135,8 @@
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
         <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : '' " ng-disabled="!form.$valid || !colaborador.usuarioValido">Guardar</label> 
-        <label class="btn btn-danger" ng-click="colaborador.cancelar()">Cancelar</label>
+        <label class="btn btn-primary" ng-click="colaborador.cancelar()">Ir a Tabla</label>
       </div>
     </div>
   </div>
-
 </div>

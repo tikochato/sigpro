@@ -10,9 +10,10 @@
 	</script>
 
 	<h3>{{ producto.esForma ? (producto.esNuevo ? "Nuevo Producto" : "Editar Producto") : "Producto" }}</h3>
+	<h4>{{ producto.componenteNombre }}</h4><br/>
 
 	<br />
-
+  
 	<div align="center" ng-hide="producto.esForma">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
@@ -69,7 +70,7 @@
 
 			<div class="btn-group">
 				<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
-				<label class="btn btn-danger" ng-click="producto.cancelar()">Cancelar</label>
+				<label class="btn btn-primary" ng-click="producto.cancelar()">Ir a Tabla</label>
 			</div>
 
 		</div>
@@ -122,7 +123,25 @@
 			            <span class="input-group-addon" ng-click="producto.buscarProducto()"><i class="glyphicon glyphicon-search"></i></span>
 			          </div>
 			        </div>
-					
+			        
+			        <div class="form-group col-sm-12" ng-repeat="campo in producto.camposdinamicos">
+						<label for="campo.id">{{ campo.label }}</label>
+						<div ng-switch="campo.tipo">
+							<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
+							<input ng-switch-when="entero" type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" />
+							<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
+							<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+							<p ng-switch-when="fecha" class="input-group">
+								<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{producto.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+										datepicker-options="producto.fechaOptions" close-text="Cerrar" />
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default" ng-click="producto.abrirPopupFecha($index)">
+										<i class="glyphicon glyphicon-calendar"></i>
+									</button>
+								</span>
+							</p>
+						</div>
+						</div>
 				</div>
 			</form>
 		</div>
@@ -164,7 +183,7 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : '' " ng-disabled="!form.$valid">Guardar</label> 
-				<label class="btn btn-danger" ng-click="producto.cancelar()">Cancelar</label>
+				<label class="btn btn-primary" ng-click="producto.cancelar()">Ir a Tabla</label>
 			</div>
 		</div>
 	</div>

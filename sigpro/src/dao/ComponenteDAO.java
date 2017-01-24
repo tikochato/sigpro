@@ -144,4 +144,40 @@ public class ComponenteDAO {
 		}
 		return ret;
 	}
+	
+	public static List<Componente> getComponentesPaginaPorProyecto(int pagina, int numeroComponentes, int proyectoId){
+		List<Componente> ret = new ArrayList<Componente>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Componente> criteria = session.createQuery("SELECT c FROM Componente c WHERE estado = 1 AND c.proyecto.id = :proyId",Componente.class);
+			criteria.setParameter("proyId", proyectoId);
+			criteria.setFirstResult(((pagina-1)*(numeroComponentes)));
+			criteria.setMaxResults(numeroComponentes);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("8", ComponenteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Long getTotalComponentesPorProyecto(int proyectoId){
+		Long ret=0L;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM Componente c WHERE c.estado=1 AND c.proyecto.id = :proyId ",Long.class);
+			conteo.setParameter("proyId", proyectoId);
+			ret = conteo.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("9", ComponenteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

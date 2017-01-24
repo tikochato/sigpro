@@ -24,7 +24,6 @@ public class SProducto extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		doPost(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -35,13 +34,13 @@ public class SProducto extends HttpServlet {
 		if (parametro.get("accion").compareTo("cargar") == 0) {
 			listar(parametro, response);
 		} else if (parametro.get("accion").compareTo("crear") == 0) {
-			crear(parametro, response);
+			crear(parametro, response,request);
 		} else if (parametro.get("accion").compareTo("actualizar") == 0) {
 			actualizar(parametro, response);
 		} else if (parametro.get("accion").compareTo("borrar") == 0) {
 			eliminar(parametro, response);
 		} else if (parametro.get("accion").compareTo("totalElementos") == 0) {
-			total(response);
+			total(parametro,response);
 		} else if (parametro.get("accion").compareTo("listarTipos") == 0) {
 			listarTipos(parametro, response);
 		} else if (parametro.get("accion").compareTo("listarProductos") == 0) {
@@ -52,12 +51,13 @@ public class SProducto extends HttpServlet {
 	}
 
 	private void listar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
+		int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
 		int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 		int registros = Utils.String2Int(parametro.get("registros"), 20);
 
 		String resultadoJson = "";
 
-		resultadoJson = ProductoDAO.getJson(pagina, registros);
+		resultadoJson = ProductoDAO.getJson(pagina, registros,componenteid);
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";
@@ -68,8 +68,7 @@ public class SProducto extends HttpServlet {
 		Utils.writeJSon(response, resultadoJson);
 	}
 
-	private void crear(Map<String, String> parametro, HttpServletResponse response) throws IOException {
-
+	private void crear(Map<String, String> parametro, HttpServletResponse response, HttpServletRequest request) throws IOException {
 		String nombre = parametro.get("nombre");
 		String descripcion = parametro.get("descripcion");
 
@@ -82,6 +81,7 @@ public class SProducto extends HttpServlet {
 		String propiedades = parametro.get("propiedades");
 		String actividades = parametro.get("actividades");
 		String usuario = parametro.get("usuario");
+		
 
 		boolean creado = ProductoDAO.guardar(nombre, descripcion, componente, productoPadre, tipo, propiedades,
 				actividades, usuario);
@@ -124,8 +124,9 @@ public class SProducto extends HttpServlet {
 		}
 	}
 
-	private void total(HttpServletResponse response) throws IOException {
-		Long total = ProductoDAO.getTotalProductos();
+	private void total(Map<String, String> parametro,HttpServletResponse response) throws IOException {
+		int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
+		Long total = ProductoDAO.getTotalProductos(componenteid);
 
 		String resultadoJson = "{\"success\":true, \"total\":" + total + "}";
 
@@ -135,10 +136,12 @@ public class SProducto extends HttpServlet {
 	private void listarTipos(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 		int registros = Utils.String2Int(parametro.get("registros"), 20);
+		int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
+		
 
 		String resultadoJson = "";
 
-		resultadoJson = ProductoDAO.getJson(pagina, registros);
+		resultadoJson = ProductoDAO.getJson(pagina, registros,componenteid);
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";
@@ -152,10 +155,11 @@ public class SProducto extends HttpServlet {
 	private void listarProductos(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 		int registros = Utils.String2Int(parametro.get("registros"), 20);
+		int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
 
 		String resultadoJson = "";
 
-		resultadoJson = Utils.getJSonString("productos", ProductoDAO.getProductosPagina(pagina, registros));
+		resultadoJson = Utils.getJSonString("productos", ProductoDAO.getProductosPagina(pagina, registros,componenteid));
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";

@@ -52,8 +52,8 @@
 	</div>
 
 	<div class="row" ng-if="proyectotipoc.mostraringreso">
-		<h4 ng-hide="!proyectotipoc.esnuevo">Nuevo cooperante</h4>
-		<h4 ng-hide="proyectotipoc.esnuevo">Edición de cooperante</h4>
+		<h4 ng-hide="!proyectotipoc.esnuevo">Nuevo tipo de proyecto</h4>
+		<h4 ng-hide="proyectotipoc.esnuevo">Edición tipo de proyecto</h4>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<label class="btn btn-success" ng-click="proyectotipoc.guardar()">Guardar</label>

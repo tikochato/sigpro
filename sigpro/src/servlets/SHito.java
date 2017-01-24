@@ -204,7 +204,7 @@ public class SHito extends HttpServlet {
 				int datotipoid = Integer.parseInt(map.get("datotipoid"));
 				String comentario = map.get("comentario");
 				int hitoTipoId = Integer.parseInt(map.get("hitotipoid"));
-				int proyectoId = Integer.parseInt(map.get("hitotipoid"));
+				int proyectoId = Integer.parseInt(map.get("proyectoid"));
 				
 				Hito hito;
 				HitoTipo hitoTipo = new HitoTipo();

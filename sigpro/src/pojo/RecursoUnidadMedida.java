@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 28, 2016 1:25:08 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,12 +25,13 @@ public class RecursoUnidadMedida implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1699715413952644970L;
+	private static final long serialVersionUID = -8753125967142024919L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
+	private String simbolo;
 	private int estado;
-	private String usarioCreo;
+	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
@@ -39,19 +40,20 @@ public class RecursoUnidadMedida implements java.io.Serializable {
 	public RecursoUnidadMedida() {
 	}
 
-	public RecursoUnidadMedida(String nombre, int estado, String usarioCreo, Date fechaCreacion) {
+	public RecursoUnidadMedida(String nombre, int estado, String usuarioCreo, Date fechaCreacion) {
 		this.nombre = nombre;
 		this.estado = estado;
-		this.usarioCreo = usarioCreo;
+		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public RecursoUnidadMedida(String nombre, String descripcion, int estado, String usarioCreo,
+	public RecursoUnidadMedida(String nombre, String descripcion, String simbolo, int estado, String usuarioCreo,
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Set<Recurso> recursos) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
+		this.simbolo = simbolo;
 		this.estado = estado;
-		this.usarioCreo = usarioCreo;
+		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
@@ -88,6 +90,15 @@ public class RecursoUnidadMedida implements java.io.Serializable {
 		this.descripcion = descripcion;
 	}
 
+	@Column(name = "simbolo", length = 10)
+	public String getSimbolo() {
+		return this.simbolo;
+	}
+
+	public void setSimbolo(String simbolo) {
+		this.simbolo = simbolo;
+	}
+
 	@Column(name = "estado", nullable = false)
 	public int getEstado() {
 		return this.estado;
@@ -97,13 +108,13 @@ public class RecursoUnidadMedida implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@Column(name = "usario_creo", nullable = false, length = 30)
-	public String getUsarioCreo() {
-		return this.usarioCreo;
+	@Column(name = "usuario_creo", nullable = false, length = 30)
+	public String getUsuarioCreo() {
+		return this.usuarioCreo;
 	}
 
-	public void setUsarioCreo(String usarioCreo) {
-		this.usarioCreo = usarioCreo;
+	public void setUsuarioCreo(String usuarioCreo) {
+		this.usuarioCreo = usuarioCreo;
 	}
 
 	@Column(name = "usuario_actualizo", length = 30)

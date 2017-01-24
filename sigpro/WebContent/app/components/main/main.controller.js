@@ -41,7 +41,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/productoPropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProductoPropiedad\'" class="all_page"></div>'
             })
-            .when('/producto/:reiniciar_vista?',{
+            .when('/producto/:componente_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProducto\'" class="all_page"></div>'
             })
             .when('/proyectotipo/:reiniciar_vista?',{
@@ -62,10 +62,10 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/test',{
             	template: '<div load-on-demand="\'testController\'" class="all_page"></div>'
             })
-            .when('/desembolso/:reiniciar_vista?',{
+            .when('/desembolso/:proyecto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'desembolsoController\'" class="all_page"></div>'
             })
-            .when('/componente/:reiniciar_vista?',{
+            .when('/componente/:proyecto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'componenteController\'" class="all_page"></div>'
             })
             .when('/componentetipo/:reiniciar_vista?',{
@@ -97,6 +97,15 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             })
             .when('/hito/:proyecto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'hitoController\'" class="all_page"></div>'
+            })
+            .when('/recursotipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'recursotipoController\'" class="all_page"></div>'
+            })
+            .when('/recursounidadmedida/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'recursounidadmedidaController\'" class="all_page"></div>'
+            })
+            .when('/usuarioinfo/',{
+            	template: '<div load-on-demand="\'usuarioInfoController\'" class="all_page"></div>'
             })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -237,6 +246,21 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'hitoController',
 	    	   script: '/app/components/hito/hito.controller.js',
 	    	   template: '/app/components/hito/hito.jsp'
+	       },
+	       {
+	    	   name: 'recursotipoController',
+	    	   script: '/app/components/recursotipo/recursotipo.controller.js',
+	    	   template: '/app/components/recursotipo/recursotipo.jsp'
+	       },
+	       {
+	    	   name: 'recursounidadmedidaController',
+	    	   script: '/app/components/recursounidadmedida/recursounidadmedida.controller.js',
+	    	   template: '/app/components/recursounidadmedida/recursounidadmedida.jsp'
+	       },
+	       {
+	    	   name: 'usuarioInfoController',
+	    	   script: '/app/components/usuarios/usuarioInfo.controller.js',
+	    	   template: '/app/components/usuarios/usuarioInfo.jsp'
 	       }
 
 	   ];

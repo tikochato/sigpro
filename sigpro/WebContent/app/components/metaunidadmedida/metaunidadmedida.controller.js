@@ -28,7 +28,8 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 					columnDefs : [ 
 						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 						{ name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
-					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
+						{ name: 'simbolo', width: 85, displayName: 'Símbolo', cellClass: 'grid-align-center', enableFiltering: false},
+						{ name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 					    { name: 'usuarioCreo', displayName: 'Usuario Creación'},
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
 					],
@@ -75,10 +76,11 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 						id: mi.medida.id,
 						codigo: mi.medida.codigo,
 						nombre: mi.medida.nombre,
-						descripcion: mi.medida.descripcion
+						descripcion: mi.medida.descripcion,
+						simbolo: mi.medida.simbolo
 					}).success(function(response){
 						if(response.success){
-							$utilidades.mensaje('success','medida '+(mi.esnueva ? 'creada' : 'guardada')+' con éxito');
+							$utilidades.mensaje('success','Medida '+(mi.esnueva ? 'creada' : 'guardada')+' con éxito');
 							mi.cargarTabla();
 						}
 						else
@@ -152,10 +154,10 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 			}
 			
 			mi.reiniciarVista=function(){
-				if($location.path()=='/medida/rv')
+				if($location.path()=='/metaunidadmedida/rv')
 					$route.reload();
 				else
-					$location.path('/medida/rv');
+					$location.path('/metaunidadmedida/rv');
 			}
 			
 			$http.post('/SMetaUnidadMedida', { accion: 'numeroMetaUnidadMedidas' }).success(

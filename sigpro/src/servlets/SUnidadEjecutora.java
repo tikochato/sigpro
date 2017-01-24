@@ -61,37 +61,37 @@ public class SUnidadEjecutora extends HttpServlet {
     }
 
     private void crear(Map<String, String> parametro, HttpServletResponse response) throws IOException {
-	int codigo = Utils.String2Int(parametro.get("codigo"));
-	String nombre = parametro.get("nombre");
-	int codigoEntidad = Utils.String2Int(parametro.get("entidad"));
-
-	boolean creado = UnidadEjecutoraDAO.guardar(codigo, nombre, codigoEntidad);
-
-	if (creado) {
-	    listar(parametro, response);
-	}
+		int codigo = Utils.String2Int(parametro.get("codigo"));
+		String nombre = parametro.get("nombre");
+		int codigoEntidad = Utils.String2Int(parametro.get("entidad"));
+	
+		boolean creado = UnidadEjecutoraDAO.guardar(codigo, nombre, codigoEntidad);
+	
+		if (creado) {
+		    listar(parametro, response);
+		}
     }
 
     private void actualizar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
-	int codigo = Utils.String2Int(parametro.get("codigo"));
-	String nombre = parametro.get("nombre");
-	int codigoEntidad = Utils.String2Int(parametro.get("entidad"));
-
-	boolean actualizado = UnidadEjecutoraDAO.actualizar(codigo, nombre, codigoEntidad);
-
-	if (actualizado) {
-	    listar(parametro, response);
-	}
+		int codigo = Utils.String2Int(parametro.get("codigo"));
+		String nombre = parametro.get("nombre");
+		int codigoEntidad = Utils.String2Int(parametro.get("entidad"));
+	
+		boolean actualizado = UnidadEjecutoraDAO.actualizar(codigo, nombre, codigoEntidad);
+	
+		if (actualizado) {
+		    listar(parametro, response);
+		}
     }
 
     private void total(HttpServletResponse response) throws IOException {
-	Long total = UnidadEjecutoraDAO.getTotal();
-
-	String resultadoJson = "{\"success\":true, \"total\":"
-	                       + total
-	                       + "}";
-
-	Utils.writeJSon(response, resultadoJson);
+		Long total = UnidadEjecutoraDAO.getTotal();
+	
+		String resultadoJson = "{\"success\":true, \"total\":"
+		                       + total
+		                       + "}";
+	
+		Utils.writeJSon(response, resultadoJson);
     }
 
 }

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 28, 2016 1:25:08 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,8 +24,9 @@ public class HitoTipo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5259416777540558823L;
+	private static final long serialVersionUID = -4100089454630677181L;
 	private Integer id;
+	private DatoTipo datoTipo;
 	private String nombre;
 	private String descripcion;
 	private int estado;
@@ -32,11 +35,13 @@ public class HitoTipo implements java.io.Serializable {
 	public HitoTipo() {
 	}
 
-	public HitoTipo(int estado) {
+	public HitoTipo(DatoTipo datoTipo, int estado) {
+		this.datoTipo = datoTipo;
 		this.estado = estado;
 	}
 
-	public HitoTipo(String nombre, String descripcion, int estado, Set<Hito> hitos) {
+	public HitoTipo(DatoTipo datoTipo, String nombre, String descripcion, int estado, Set<Hito> hitos) {
+		this.datoTipo = datoTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.estado = estado;
@@ -53,6 +58,16 @@ public class HitoTipo implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "dato_tipoid", nullable = false)
+	public DatoTipo getDatoTipo() {
+		return this.datoTipo;
+	}
+
+	public void setDatoTipo(DatoTipo datoTipo) {
+		this.datoTipo = datoTipo;
 	}
 
 	@Column(name = "nombre", length = 1000)

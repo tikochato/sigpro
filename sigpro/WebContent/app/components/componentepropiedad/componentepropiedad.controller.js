@@ -12,6 +12,8 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			mi.mostraringreso=false;
 			mi.esnuevo = false;
 			mi.totalComponentePropiedades = 0;
+			mi.datotipoid = "";
+			mi.datotiponombre = "";
 			mi.paginaActual = 1;
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
@@ -74,7 +76,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 						id: mi.componentepropiedad.id,
 						nombre: mi.componentepropiedad.nombre,
 						descripcion: mi.componentepropiedad.descripcion,
-						datoTipoId: mi.componentepropiedad.datotipoid
+						datoTipoId: mi.datotipoid
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Propiedad Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
@@ -121,6 +123,8 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			};
 
 			mi.nuevo = function() {
+				mi.datotipoid = "";
+				mi.datotiponombre = "";
 				mi.mostraringreso=true;
 				mi.esnuevo = true;
 				mi.componentepropiedad = null;
@@ -129,6 +133,8 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 
 			mi.editar = function() {
 				if(mi.componentepropiedad!=null){
+					mi.datotipoid = mi.componentepropiedad.datotipoid;
+					mi.datotiponombre = mi.componentepropiedad.datotiponombre;
 					mi.mostraringreso = true;
 					mi.esnuevo = false;
 				}

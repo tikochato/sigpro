@@ -118,9 +118,10 @@ public class UsuarioDAO {
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			session.beginTransaction();
+			//session.beginTransaction();
 			Usuario usuarioCambio= (Usuario) session.get(Usuario.class,usuario);
 			if(usuarioCambio!=null){
+				session.beginTransaction();
 				RandomNumberGenerator rng = new SecureRandomNumberGenerator();
 				Object salt = rng.nextBytes();
 				String hashedPasswordBase64 = new Sha256Hash(password, salt,1024).toBase64();
