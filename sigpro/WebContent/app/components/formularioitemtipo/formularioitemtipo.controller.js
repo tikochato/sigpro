@@ -55,9 +55,9 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 			
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SDesembolsoTipo', { accion: 'getDesembolsotiposPagina', pagina: pagina, numerodesembolsotipos: $utilidades.elementosPorPagina }).success(
+				$http.post('/SFormularioItemTipo', { accion: 'getFormularioItemtiposPagina', pagina: pagina, numeroformularioitemtipos: $utilidades.elementosPorPagina }).success(
 						function(response) {
-							mi.formularioitemtipos = response.desembolsotipos;
+							mi.formularioitemtipos = response.guardarFormularioItemTipo;
 							mi.gridOptions.data = mi.formularioitemtipos;
 							mi.mostrarcargando = false;
 						});
@@ -81,10 +81,10 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 			}
 			
 			mi.reiniciarVista=function(){
-				if($location.path()=='/desembolsotipo/rv')
+				if($location.path()=='/formularioitemtipo/rv')
 					$route.reload();
 				else
-					$location.path('/desembolsotipo/rv');
+					$location.path('/formularioitemtipo/rv');
 			}
 			
 			mi.nuevo = function() {
@@ -95,22 +95,23 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 			};
 			
 			mi.guardar=function(){
-				if(mi.formularioitemtipo!=null && mi.formularioitemtipo.nombre!=''){
-					$http.post('/SDesembolsoTipo', {
-						accion: 'guardarDesembolsoTipo',
+				if(mi.formularioitemtipo!=null && mi.formularioitemtipo.nombre!='' && mi.formularioitemtipo.datotipo!=null){
+					$http.post('/SFormularioItemTipo', {
+						accion: 'guardarFormularioItemTipo',
 						esnuevo: mi.esnuevo,
 						id: mi.formularioitemtipo.id,
 						nombre: mi.formularioitemtipo.nombre,
-						descripcion: mi.formularioitemtipo.descripcion
+						descripcion: mi.formularioitemtipo.descripcion,
+						datotipoid: mi.formularioitemtipo.datotipo.id
 					}).success(function(response){
 						if(response.success){
 							mi.formularioitemtipo.id = response.id;
-							$utilidades.mensaje('success','Tipo Demsembolso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+							$utilidades.mensaje('success','Tipo de Itme de Formulario '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.esnuevo = false;
 							mi.cargarTabla();
 						}
 						else
-							$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Tipo desembolso');
+							$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Tipo de Item de Formulario');
 					});
 				}
 				else
@@ -123,43 +124,43 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 					mi.esnuevo = false;
 				}
 				else
-					$utilidades.mensaje('warning','Debe seleccionar el Tipo Desembolso que desea editar');
+					$utilidades.mensaje('warning','Debe seleccionar el Tipo de Item de Formulario que desea editar');
 			}
 			
 			mi.borrar = function(ev) {
 				if(mi.formularioitemtipo!=null){
 					var confirm = $mdDialog.confirm()
 				          .title('Confirmación de borrado')
-				          .textContent('¿Desea borrar el Tipo Desembolso "'+mi.formularioitemtipo.nombre+'"?')
+				          .textContent('¿Desea borrar el Tipo Item de fomrulario "'+mi.formularioitemtipo.nombre+'"?')
 				          .ariaLabel('Confirmación de borrado')
 				          .targetEvent(ev)
 				          .ok('Borrar')
 				          .cancel('Cancelar');
 	
 				    $mdDialog.show(confirm).then(function() {
-				    	$http.post('/SDesembolsoTipo', {
-							accion: 'borrarDesembolsoTipo',
+				    	$http.post('/SFormularioItemTipo', {
+							accion: 'borrarFormularioItemTipo',
 							id: mi.formularioitemtipo.id
 						}).success(function(response){
 							if(response.success){
-								$utilidades.mensaje('success','Tipo Desembolos fue borrado con éxito');
+								$utilidades.mensaje('success','Tipo de Item de Formulario fue borrado con éxito');
 								mi.cargarTabla();
 							}
 							else
-								$utilidades.mensaje('danger','Error al borrar el Tipo Desembolso');
+								$utilidades.mensaje('danger','Error al borrar el Tipo De Item de Formulario');
 						});
 				    }, function() {
 				    
 				    });
 				}
 				else
-					$utilidades.mensaje('warning','Debe seleccionar el Tipo Desembolso que desea borrar');
+					$utilidades.mensaje('warning','Debe seleccionar el Tipo De Item de Formulario que desea borrar');
 			};
 
 			
-			$http.post('/SDesembolsoTipo', { accion: 'numeroDesembolsoTipo' }).success(
+			$http.post('/SFormularioItemTipo', { accion: 'numeroFormularioItemTipos' }).success(
 				function(response) {
-					mi.totalFormularioItmeTipos = response.totaldesembolsotipo;
+					mi.totalFormularioItmeTipos = response.totalformularioitemtipos;
 					mi.cargarTabla(1);
 			});
 			
