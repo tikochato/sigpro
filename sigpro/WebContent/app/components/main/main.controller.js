@@ -113,6 +113,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/usuarioinfo/',{
             	template: '<div load-on-demand="\'usuarioInfoController\'" class="all_page"></div>'
             })
+            .when('/recurso/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'recursoController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -277,6 +280,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'usuarioInfoController',
 	    	   script: '/app/components/usuarios/usuarioInfo.controller.js',
 	    	   template: '/app/components/usuarios/usuarioInfo.jsp'
+	       },
+	       {
+	    	   name: 'recursoController',
+	    	   script: '/app/components/recurso/recurso.controller.js',
+	    	   template: '/app/components/recurso/recurso.jsp'
 	       }
 
 	   ];

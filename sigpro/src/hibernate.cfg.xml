@@ -32,6 +32,7 @@
         <mapping class="pojo.FormularioItem" />
         <mapping class="pojo.FormularioItemTipo" />
         <mapping class="pojo.FormularioItemValor" />
+        <mapping class="pojo.FormularioItemOpcion" />
         <mapping class="pojo.FormularioTipo" />
         <mapping class="pojo.Hito" />
         <mapping class="pojo.HitoResultado" />
