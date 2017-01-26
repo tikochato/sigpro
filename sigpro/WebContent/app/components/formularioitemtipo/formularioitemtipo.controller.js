@@ -13,8 +13,16 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 			mi.esnuevo = false;
 			mi.totalFormularioItmeTipos = 0;
 			mi.paginaActual = 1;
+			mi.tipodatos = [];
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
+			
+			mi.columnaOrdenada=null;
+			mi.ordenDireccion = null;
+			
+			mi.filtros = [];
+			mi.orden = null;
+
 			
 			mi.gridOptions = {
 				enableRowSelection : true,
@@ -25,17 +33,47 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 				enableFiltering: true,
 				enablePaginationControls: false,
 			    paginationPageSize: $utilidades.elementosPorPagina,
+			    useExternalFiltering: true,
+			    useExternalSorting: true,
 				columnDefs : [ 
-					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
+					{ name: 'id', width: 60, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
+				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
+						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.formularioitemtipoc.filtrar($event,1)"></input></div>'
+				    },
+				    { name: 'datotiponombre', displayName: 'Tipo de dato', width: 150, cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false},
+				    { name: 'usuarioCreo', displayName: 'Usuario Creo', width: 200, cellClass: 'grid-align-left',
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.formularioitemtipoc.filtrar($event,2)"></input></div>'
+				    },
+				    { name: 'fechaCreacion', displayName: 'Fecha Creación', width: 200, cellClass: 'grid-align-left', 
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.formularioitemtipoc.filtrar($event,3)"></input></div>'
+				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false}
-				    
+				    				    
 				],
 				onRegisterApi: function(gridApi) {
 					mi.gridApi = gridApi;
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 						mi.formularioitemtipo = row.entity;
 					});
+					
+					gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+						if(sortColumns.length==1){
+							grid.appScope.formularioitemtipoc.columnaOrdenada=sortColumns[0].field;
+							grid.appScope.formularioitemtipoc.ordenDireccion = sortColumns[0].sort.direction;
+							
+							grid.appScope.formularioitemtipoc.cargarTabla(grid.appScope.formularioitemtipoc.paginaActual);
+						}
+						else if(sortColumns.length>1){
+							sortColumns[0].unsort();
+						}
+						else{
+							if(grid.appScope.formularioitemtipoc.columnaOrdenada!=null){
+								grid.appScope.formularioitemtipoc.columnaOrdenada=null;
+								grid.appScope.formularioitemtipoc.ordenDireccion=null;
+							}
+						}
+							
+					} );
 					
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
@@ -55,14 +93,17 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 			
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SFormularioItemTipo', { accion: 'getFormularioItemtiposPagina', pagina: pagina, numeroformularioitemtipos: $utilidades.elementosPorPagina }).success(
+				$http.post('/SFormularioItemTipo', { accion: 'getFormularioItemtiposPagina', pagina: pagina, numeroformularioitemtipos: $utilidades.elementosPorPagina,
+					filtro_nombre: mi.filtros['nombre'], 
+					filtro_usuario_creo: mi.filtros['usuarioCreo'], 
+					filtro_fecha_creacion: mi.filtros['fechaCreacion'],
+					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion}).success(
 						function(response) {
-							mi.formularioitemtipos = response.guardarFormularioItemTipo;
+							mi.formularioitemtipos = response.formularioitemtipos;
 							mi.gridOptions.data = mi.formularioitemtipos;
 							mi.mostrarcargando = false;
 						});
 			}
-			
 			
 			mi.irATabla = function() {
 				mi.mostraringreso=false;
@@ -122,6 +163,10 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 				if(mi.formularioitemtipo!=null){
 					mi.mostraringreso = true;
 					mi.esnuevo = false;
+					mi.formularioitemtipo.datotipo = {
+							"id" : mi.formularioitemtipo.datotipoid,
+							"nombre" : mi.formularioitemtipo.datotiponombre
+					}
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar el Tipo de Item de Formulario que desea editar');
@@ -156,12 +201,29 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 				else
 					$utilidades.mensaje('warning','Debe seleccionar el Tipo De Item de Formulario que desea borrar');
 			};
+			
+			mi.filtrar = function(evt,tipo){
+				if(evt.keyCode==13){
+					switch(tipo){
+						case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
+						case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
+						case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
+							
+					}
+					mi.cargarTabla(mi.paginaActual);
+				}
+			}
 
 			
 			$http.post('/SFormularioItemTipo', { accion: 'numeroFormularioItemTipos' }).success(
 				function(response) {
 					mi.totalFormularioItmeTipos = response.totalformularioitemtipos;
 					mi.cargarTabla(1);
+			});
+			
+			$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
+					function(response) {
+						mi.tipodatos = response.datoTipos;
 			});
 			
 }]);

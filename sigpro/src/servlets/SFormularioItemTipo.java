@@ -40,7 +40,7 @@ public class SFormularioItemTipo extends HttpServlet {
 		Integer id;
 		String nombre;
 		String descripcion;
-		String usuarioCreacion;
+		String usuarioCreo;
 		String usuarioActualizacion;
 		String fechaCreacion;
 		String fechaActualizacion;
@@ -96,7 +96,14 @@ public class SFormularioItemTipo extends HttpServlet {
 		if(accion.equals("getFormularioItemtiposPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroFormularioItemTipos = map.get("numeroformularioitemtipos")!=null  ? Integer.parseInt(map.get("numeroformularioitemtipos")) : 0;
-			List<FormularioItemTipo> formularioItemTipos = FormularioItemTipoDAO.geFormularioItemTiposPagina(pagina, numeroFormularioItemTipos);
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<FormularioItemTipo> formularioItemTipos = FormularioItemTipoDAO.geFormularioItemTiposPagina(pagina, numeroFormularioItemTipos, 
+					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,
+					columna_ordenada, orden_direccion);
 			List<stformularioitemtipo> stdesembolsotipos = new ArrayList<stformularioitemtipo>();
 			
 			for(FormularioItemTipo formularioItemTipo :formularioItemTipos){
@@ -104,7 +111,7 @@ public class SFormularioItemTipo extends HttpServlet {
 				temp.id = formularioItemTipo.getId();
 				temp.nombre = formularioItemTipo.getNombre();
 				temp.descripcion = formularioItemTipo.getDescripcion();
-				temp.usuarioCreacion = formularioItemTipo.getUsuarioCreo();
+				temp.usuarioCreo = formularioItemTipo.getUsuarioCreo();
 				temp.usuarioActualizacion = formularioItemTipo.getUsuarioActualizacion()+"";
 				temp.fechaCreacion = Utils.formatDate(formularioItemTipo.getFechaCreacion());
 				temp.fechaActualizacion = Utils.formatDate(formularioItemTipo.getFechaActualizacion());
@@ -144,7 +151,7 @@ public class SFormularioItemTipo extends HttpServlet {
 					formularioItemTipo.setNombre(nombre);
 					formularioItemTipo.setDescripcion(descripcion);	
 					formularioItemTipo.setFechaActualizacion(new DateTime().toDate());
-					formularioItemTipo.setUsuarioActualizacion(1);
+					formularioItemTipo.setUsuarioActualizacion(usuario);
 					formularioItemTipo.setDatoTipo(datoTipo);
 				}
 				result = FormularioItemTipoDAO.guardarFormularioItemTipo(formularioItemTipo);

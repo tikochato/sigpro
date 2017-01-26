@@ -73,8 +73,33 @@
     						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="formularioitemtipoc.formularioitemtipo.nombre">
 						</div>
 						<div class="form-group">
+							<label for="nombre">* Tipo dato</label>
+							<select class="form-control" ng-model="formularioitemtipoc.formularioitemtipo.datotipo"
+								ng-options="tipo as tipo.nombre for tipo in formularioitemtipoc.tipodatos track by tipo.id"
+								ng-readonly="true" 
+								ng-disabled="!formularioitemtipoc.esnuevo" >
+								<option value="">Seleccione una opción</option>
+							</select>
+						</div>
+						<div class="form-group">
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="formularioitemtipoc.formularioitemtipo.descripcion">
+						</div>
+						<div class="form-group">
+							<label for="usuarioCreo">Usuario que creo</label>
+    						<label class="form-control" id="usuarioCreo">{{ formularioitemtipoc.formularioitemtipo.usuarioCreo }}</label>
+						</div>
+						<div class="form-group">
+							<label for="fechaCreacion">Fecha de creación</label>
+    						<label class="form-control" id="fechaCreacion">{{ formularioitemtipoc.formularioitemtipo.fechaCreacion }}</label>
+						</div>
+						<div class="form-group">
+							<label for="usuarioActualizo">Usuario que actualizo</label>
+    						<label class="form-control" id="usuarioActualizo">{{ formularioitemtipoc.formularioitemtipo.usuarioActualizacion }}</label>
+						</div>
+						<div class="form-group">
+							<label for="fechaActualizacion">Fecha de actualizacion</label>
+    						<label class="form-control" id="usuarioCreo">{{ formularioitemtipoc.formularioitemtipo.fechaActualizacion }}</label>
 						</div>
 				</form>
 			</div>
