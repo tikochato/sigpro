@@ -102,31 +102,69 @@ app.controller(
 	};					
 	mi.guardarPermiso=function(){		
 		if(mi.permisoSelected.nombre!=="" && mi.permisoSelected.descripcion!==""){
-			if(mi.esNuevo){
+			var idSend=0;
+			if(!mi.esNuevo){
+				idSend=mi.permisoSelected.id;
+			}
+			$http.post('/SPermiso',
+					{
+						accion: 'guardarPermiso',
+						nombre:mi.permisoSelected.nombre,
+						descripcion:mi.permisoSelected.descripcion,
+						esnuevo:mi.esNuevo,
+						id:idSend
+					}).success(
+						function(data) {
+							if(data.success){
+								if(mi.esNuevo){
+									mi.gridOptions.data
+									.push({
+										"id" : data.data,
+										"nombre" : mi.permisoSelected.nombre,
+										"descripcion" : mi.permisoSelected.descripcion
+									});
+									mi.isCollapsed = false;
+								}else{
+									mi.cargarTabla(mi.paginaactual);
+									mi.isCollapsed = false;
+								}
+								
+							}
+				});
+			/*if(mi.esNuevo){
 				$http.post('/SPermiso',
 					{
 						accion: 'guardarPermiso',
 						nombre:mi.permisoSelected.nombre,
-						descripcion:mi.permisoSelected.descripcion
+						descripcion:mi.permisoSelected.descripcion,
+						esnuevo:mi.esNuevo,
+						id:0
 					}).success(
 						function(data) {
 							if(data.success){
-								mi.gridOptions.data
-								.push({
-									"id" : data.data,
-									"nombre" : mi.permisoSelected.nombre,
-									"descripcion" : mi.permisoSelected.descripcion
-								});
-								mi.isCollapsed = false;
+								if(mi.esNuevo){
+									mi.gridOptions.data
+									.push({
+										"id" : data.data,
+										"nombre" : mi.permisoSelected.nombre,
+										"descripcion" : mi.permisoSelected.descripcion
+									});
+									mi.isCollapsed = false;
+								}else{
+									mi.cargarTabla(mi.paginaactual);
+									mi.isCollapsed = false;
+								}
+								
 							}
 				});
 			}else{
 				$http.post('/SPermiso',
 						{
-							accion: 'editarPermiso',
+							accion: 'guardarPermiso',
 							id:mi.permisoSelected.id,
 							nombre:mi.permisoSelected.nombre,
-							descripcion:mi.permisoSelected.descripcion
+							descripcion:mi.permisoSelected.descripcion,
+							esnuevo:mi.esNuevo,
 						}).success(
 							function(data) {
 								if(data.success){
@@ -134,7 +172,7 @@ app.controller(
 									mi.isCollapsed = false;
 								}
 					});
-			}
+			}*/
 		}else{
 			$utilidades.mensaje('danger','Llene los campos');
 		}
