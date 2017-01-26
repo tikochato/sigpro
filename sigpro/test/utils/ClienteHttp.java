@@ -41,7 +41,7 @@ public class ClienteHttp {
 	        entrada.close();  
 	        ret = response.toString();
 		}catch(Exception e){
-			CLogger.write("1",ClienteHttp2.class,e);
+			CLogger.write("1",ClienteHttp.class,e);
 		}		
 		return ret;
 	
