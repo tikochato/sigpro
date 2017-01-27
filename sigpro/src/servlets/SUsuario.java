@@ -49,6 +49,7 @@ public class SUsuario extends HttpServlet {
 		String usuarioActualizo;
 		String fechaCreacion;
 		String fechaActualizacion;
+		String password;
 	}
 	
 	class stpermiso{
@@ -178,6 +179,7 @@ public class SUsuario extends HttpServlet {
 					usuariotmp.usuarioActualizo= usuario.getUsuarioActualizo();
 					usuariotmp.fechaCreacion=Utils.formatDate(usuario.getFechaCreacion());
 					usuariotmp.fechaActualizacion=Utils.formatDate(usuario.getFechaActualizacion());
+					usuariotmp.password=usuario.getPassword();
 					stusuarios.add(usuariotmp);
 				}
 				String respuesta = new GsonBuilder().serializeNulls().create().toJson(stusuarios);

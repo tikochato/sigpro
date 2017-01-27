@@ -37,6 +37,9 @@ app.controller(
 	mi.permisosAsignados=[];
 	mi.colaborador={};
 	mi.mensajeActualizado={mensaje:"buscar colaborador"};
+	mi.cambioPassword= false;
+	mi.mostrarCambioPassword = false;
+	var passwordLocal="";
 	mi.gridOptions = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -109,6 +112,8 @@ app.controller(
 
 	mi.cancelar = function() {
 		mi.isCollapsed = false;
+		mi.cambioPassword= false;
+		mi.mostrarCambioPassword = false;
 	}
 				
 	
@@ -158,7 +163,7 @@ app.controller(
 		}else{
 			if(mi.usuariosSelected.email!==""){
 				if(validarEmail(mi.usuariosSelected.email)){
-					if(usuarioMail===mi.usuariosSelected.email){
+					if(usuarioMail===mi.usuariosSelected.email && passwordLocal=== mi.usuariosSelected.password){
 						if(mi.nuevosPermisos.length==0 && mi.permisosEliminados.length==0){
 							$utilidades.mensaje('danger','No se ha realizado ningún cambio.');
 							
@@ -173,7 +178,18 @@ app.controller(
 										function(data) {
 											if(data.success){
 												mi.cargarTabla(mi.paginaActual);
+												if(mi.usuariosSelected.password!==passwordLocal){
+													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
+															function(response) {
+																if(response.success){
+																	 $utilidades.mensaje('success', 'cambio de contraseña Exitoso.');
+																}else{
+																	$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
+																}
+													});
+												}
 												mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+												
 											}
 								});
 						}
@@ -191,7 +207,18 @@ app.controller(
 											if(mi.nuevosPermisos.length==0 && mi.permisosEliminados.length==0){
 												mi.isCollapsed = false;
 												mi.cargarTabla(mi.paginaActual);
-												mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+												if(mi.usuariosSelected.password!==passwordLocal){
+													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
+															function(response) {
+																if(response.success){
+																	mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+																	 $utilidades.mensaje('success', 'Edición de usuario cambio de contraseña Exitoso.');
+																}else{
+																	$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
+																}
+													});
+												}
+												
 											}else{
 												$http.post('/SUsuario',
 														{
@@ -202,11 +229,22 @@ app.controller(
 														}).success(
 															function(data) {
 																if(data.success){
-																	mi.paginaActual=1;
-																	$utilidades.mensaje('success','información actualizada exitosamente.');
-																	mi.isCollapsed = false;
-																	mi.cargarTabla(mi.paginaActual);
-																	mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+																	
+																	if(mi.usuariosSelected.password!==passwordLocal){
+																		$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
+																				function(response) {
+																					if(response.success){
+																						mi.paginaActual=1;
+																						$utilidades.mensaje('success','información actualizada exitosamente.');
+																						mi.isCollapsed = false;
+																						mi.cargarTabla(mi.paginaActual);
+																						mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};																						
+																					}else{
+																						$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
+																					}
+																		});
+																	}
+																	
 																}
 													});
 												
@@ -268,6 +306,7 @@ app.controller(
 		if(mi.usuariosSelected.usuario!==""){
 			mi.isCollapsed = true;
 			mi.esNuevo=false;
+			passwordLocal=mi.usuariosSelected.password;
 			$http.post('/SUsuario', {
 	    		accion:'obtenerPermisos',
 	    		usuario: mi.usuariosSelected.usuario
@@ -338,7 +377,8 @@ app.controller(
 		}
 	};
 	mi.cambiarPassword=function(){
-		var modalInstance = $uibModal.open({
+		mi.mostrarCambioPassword=!mi.mostrarCambioPassword;
+		/*var modalInstance = $uibModal.open({
 		    animation : 'true',
 		    ariaLabelledBy : 'modal-title',
 		    ariaDescribedBy : 'modal-body',
@@ -368,7 +408,7 @@ app.controller(
 				});
 			}
 		}, function() {
-		});
+		});*/
 	};
 	
 	mi.buscarColaborador=function(){
