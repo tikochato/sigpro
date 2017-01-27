@@ -3,9 +3,10 @@
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <style type="text/css">
-.myGrid {
-	width: 100%;
-	height: 600px;
+	input[type=number]::-webkit-outer-spin-button,
+	input[type=number]::-webkit-inner-spin-button {
+    	-webkit-appearance: none;
+    	margin: 0;
 }
 </style>
 
@@ -56,7 +57,8 @@
 			</div>
 				<ul uib-pagination total-items="controller.totalProyectos" 
 						ng-model="controller.paginaActual" 
-						max-size="controller.numeroMaximoPaginas" 
+						max-size="controller.numeroMaximoPaginas"
+						items-per-page="controller.elementosPorPagina" 
 						first-text="Primero"
 						last-text="Último"
 						next-text="Siguiente"
@@ -102,7 +104,7 @@
 				</div>
 				<div class="form-group">
 					<label for="campo1">* Nombre</label> 
-					<input type="text" ng-model="controller.proyecto.nombre"
+					<input type="text" ng-model="controller.proyecto.nombre" 
 						class="form-control" id="t_nombre" placeholder="Nombre">
 				</div>
 

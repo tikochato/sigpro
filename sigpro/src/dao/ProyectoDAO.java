@@ -99,12 +99,25 @@ public class ProyectoDAO implements java.io.Serializable  {
 		return ret;
 	}
 	
-	public static Long getTotalProyectos(){
+	public static Long getTotalProyectos(String filtro_nombre, Integer filtro_snip,String filtro_usuario_creo, 
+			String filtro_fecha_creacion){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(p.id) FROM Proyecto p WHERE p.estado=1",Long.class);
-			ret = conteo.getSingleResult();
+			String query = "SELECT count(p.id) FROM Proyecto p WHERE p.estado=1 ";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " p.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " p.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			if (filtro_snip > 0)
+				query_a = String.join("", query_a,(query_a.length()>0 ? "OR" : "" )," str(p.snip) LIKE '%",filtro_snip.toString(),"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			Query<Long> criteria = session.createQuery(query,Long.class);
+			
+			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
 			CLogger.write("5", ProyectoDAO.class, e);
@@ -115,11 +128,26 @@ public class ProyectoDAO implements java.io.Serializable  {
 		return ret;
 	}
 	
-	public static List<Proyecto> getProyectosPagina(int pagina, int numeroproyecto){
+	public static List<Proyecto> getProyectosPagina(int pagina, int numeroproyecto,
+			String filtro_nombre, Integer filtro_snip,String filtro_usuario_creo, 
+			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion){
 		List<Proyecto> ret = new ArrayList<Proyecto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Proyecto> criteria = session.createQuery("SELECT p FROM Proyecto p WHERE p.estado = 1",Proyecto.class);
+			String query = "SELECT p FROM Proyecto p WHERE p.estado = 1";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " p.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " p.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			if (filtro_snip > 0)
+				query_a = String.join("", query_a,(query_a.length()>0 ? "OR" : "" )," str(p.snip) LIKE '%",filtro_snip.toString(),"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
+			Query<Proyecto> criteria = session.createQuery(query,Proyecto.class);
+			
 			criteria.setFirstResult(((pagina-1)*(numeroproyecto)));
 			criteria.setMaxResults(numeroproyecto);
 			ret = criteria.getResultList();
