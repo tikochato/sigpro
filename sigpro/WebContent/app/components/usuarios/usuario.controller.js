@@ -139,6 +139,8 @@ app.controller(
 								}).success(
 									function(data) {
 										if(data.success){
+											mi.paginaActual=1;
+											$utilidades.mensaje('success','Usuario creado exitosamente!');
 											mi.cargarTabla(mi.paginaActual);
 											mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
 										}
@@ -200,6 +202,8 @@ app.controller(
 														}).success(
 															function(data) {
 																if(data.success){
+																	mi.paginaActual=1;
+																	$utilidades.mensaje('success','información actualizada exitosamente.');
 																	mi.isCollapsed = false;
 																	mi.cargarTabla(mi.paginaActual);
 																	mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};

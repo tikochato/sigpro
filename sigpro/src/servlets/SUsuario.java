@@ -89,42 +89,7 @@ public class SUsuario extends HttpServlet {
 		String accion = "";
 		accion = map.get("accion");
 		if(accion!=null){
-			if(accion.compareTo("registroUsuario")==0){
-				String nuevousuario = map.get("usuario").toLowerCase();
-				String nuevopassword = map.get("password");
-				String nuevomail = map.get("email").toLowerCase();
-				String permisosAsignados = map.get("permisos");
-				HttpSession sesionweb = request.getSession();
-				if(nuevousuario!=null && nuevopassword!=null && nuevomail != null && permisosAsignados!=null){
-					if(!UsuarioDAO.existeUsuario(nuevousuario)){
-						if(nuevousuario.compareTo("")!=0 && nuevopassword.compareTo("")!=0 && nuevomail.compareTo("")!=0){
-							String usuarioCreo =sesionweb.getAttribute("usuario").toString();
-							boolean registro = UsuarioDAO.registroUsuario(nuevousuario, nuevomail, nuevopassword,usuarioCreo);
-							if(registro){
-								if(permisosAsignados.compareTo("[]")!=0){
-									Gson entradaJson = new Gson();
-									Type tipo = new TypeToken<List<Integer>>() {}.getType();
-									List<Integer> permisos = entradaJson.fromJson(permisosAsignados, tipo);
-									response_text = String.join("","{ \"success\": ",(UsuarioDAO.asignarPermisosUsuario(nuevousuario, permisos, usuarioCreo) ? "true ,  \"message\":\"Usuario creado y asignación de permisos exitosa\" " : "true, \"message\":\"Usuario creado, asignación de permisos no exitosa\""),"}");
-								}else{
-									response_text = String.join("", "{\"success\":true, \"message\":\"usuario creado exitosamente\" }");
-								}
-								
-							}else{
-								response_text = String.join("", "{ \"success\": false, \"error\":\"Error al registrar nuevo usuario\" }");
-							}
-						}else{
-							response_text = String.join("", "{ \"success\": false, \"error\":\"Parametros vacios\" }");
-						}
-					}else{
-						response_text = String.join("", "{ \"success\": false, \"error\":\"Ya existe ese usuario\" }");
-					}
-					
-				}else{
-					response_text = String.join("", "{ \"success\": false, \"error\":\"No se enviaron los parametros deseados\" }");
-				}
-				
-			}else if(accion.compareTo("actualizarPermisos")==0){
+			 if(accion.compareTo("actualizarPermisos")==0){
 				String usuario = map.get("usuario");
 				String permisosNuevos = map.get("permisosNuevos");
 				String permisosEliminados = map.get("permisosEliminados");
@@ -235,30 +200,6 @@ public class SUsuario extends HttpServlet {
 					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stpermisos);
 					response_text = String.join("", "\"permisos\": ",respuesta);
 					response_text = String.join("", "{\"success\":true,", response_text,"}");
-				}
-			}else if(accion.compareTo("editarUsuario")==0){
-				String usuario =map.get("usuario");
-				if(usuario!=null){
-					Usuario usuarioEdicion = UsuarioDAO.getUsuario(usuario);
-					if(usuarioEdicion!=null){
-						String email = map.get("email");
-						if(email!=null){
-							usuarioEdicion.setEmail(email);
-							HttpSession sesionweb = request.getSession();
-							if(UsuarioDAO.editarUsuario(usuarioEdicion, sesionweb.getAttribute("usuario").toString())){
-								response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualización de usuario exitosa.\" }");
-							}else{
-								response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo actualizar al usuario. \" }");
-							}
-							
-						}else{
-							response_text = String.join("","{ \"success\": false, \"error\":\"no se encontró al usuario. \" }");
-						}
-					}else{
-						response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros correctos \" }");
-					}
-				}else{
-					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros correctos \" }");
 				}
 			}else if(accion.compareTo("cambiarPassword")==0){
 				String usuario = map.get("usuario");
