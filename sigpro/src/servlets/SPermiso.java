@@ -83,7 +83,6 @@ public class SPermiso extends HttpServlet {
 					Permiso permiso = new Permiso(nombrePermiso,descripcionPermiso,sesionweb.getAttribute("usuario").toString(),new DateTime().toDate(),1);
 					response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false"),", \"data\":",permiso.getId().toString(),"  }");
 				}else{
-					//response_text = String.join("", "{\"success\":false, \"error\":\"parametro vacio\" }");
 					Integer idPermiso = Integer.parseInt(map.get("id").toString());
 					if(nombrePermiso!=null && descripcionPermiso!=null && idPermiso !=null ){
 						HttpSession sesionweb = request.getSession();
@@ -97,22 +96,6 @@ public class SPermiso extends HttpServlet {
 						response_text = String.join("", "{\"success\":false, \"error\":\"parametro vacio\" }");
 					}
 				}
-			}else if(action.compareTo("editarPermiso")==0){
-				String nombrePermiso = map.get("nombre");
-				String descripcionPermiso = map.get("descripcion");
-				Integer idPermiso = Integer.parseInt(map.get("id").toString());
-				if(nombrePermiso!=null && descripcionPermiso!=null && idPermiso !=null ){
-					HttpSession sesionweb = request.getSession();
-					Permiso permiso = PermisoDAO.getPermisoById(idPermiso);
-					permiso.setDescripcion(descripcionPermiso);
-					permiso.setNombre(nombrePermiso);
-					permiso.setUsuarioActualizo(sesionweb.getAttribute("usuario").toString());
-					permiso.setFechaActualizacion(new DateTime().toDate());
-					response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false"),", \"data\":",permiso.getId().toString()," }");
-				}else{
-					response_text = String.join("", "{\"success\":false, \"error\":\"parametro vacio\" }");
-				}
-				
 			}
 			else if(action.compareTo("eliminarPermiso")==0){
 				String idPermiso = map.get("id").toString();
