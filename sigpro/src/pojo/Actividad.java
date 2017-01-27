@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 24, 2017 3:13:19 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,10 +27,9 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8622249452167939731L;
+	private static final long serialVersionUID = -1712502388286383678L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
-	private Producto producto;
 	private String nombre;
 	private String descripcion;
 	private Date fechaInicio;
@@ -41,22 +40,27 @@ public class Actividad implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Integer estado;
+	private Integer snip;
+	private Integer programa;
+	private Integer subprograma;
+	private Integer proyecto;
+	private Integer actividadObra;
+	private Set<ObjetoActividad> objetoActividads = new HashSet<ObjetoActividad>(0);
 	private Set<ActividadPropiedadValor> actividadPropiedadValors = new HashSet<ActividadPropiedadValor>(0);
 
 	public Actividad() {
 	}
 
-	public Actividad(ActividadTipo actividadTipo, Producto producto) {
+	public Actividad(ActividadTipo actividadTipo) {
 		this.actividadTipo = actividadTipo;
-		this.producto = producto;
 	}
 
-	public Actividad(ActividadTipo actividadTipo, Producto producto, String nombre, String descripcion,
-			Date fechaInicio, Date fechaFin, Integer porcentajeAvance, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, Integer estado,
+	public Actividad(ActividadTipo actividadTipo, String nombre, String descripcion, Date fechaInicio, Date fechaFin,
+			Integer porcentajeAvance, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Date fechaActualizacion, Integer estado, Integer snip, Integer programa, Integer subprograma,
+			Integer proyecto, Integer actividadObra, Set<ObjetoActividad> objetoActividads,
 			Set<ActividadPropiedadValor> actividadPropiedadValors) {
 		this.actividadTipo = actividadTipo;
-		this.producto = producto;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.fechaInicio = fechaInicio;
@@ -67,6 +71,12 @@ public class Actividad implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
+		this.snip = snip;
+		this.programa = programa;
+		this.subprograma = subprograma;
+		this.proyecto = proyecto;
+		this.actividadObra = actividadObra;
+		this.objetoActividads = objetoActividads;
 		this.actividadPropiedadValors = actividadPropiedadValors;
 	}
 
@@ -90,16 +100,6 @@ public class Actividad implements java.io.Serializable {
 
 	public void setActividadTipo(ActividadTipo actividadTipo) {
 		this.actividadTipo = actividadTipo;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "productoid", nullable = false)
-	public Producto getProducto() {
-		return this.producto;
-	}
-
-	public void setProducto(Producto producto) {
-		this.producto = producto;
 	}
 
 	@Column(name = "nombre", length = 200)
@@ -194,6 +194,60 @@ public class Actividad implements java.io.Serializable {
 
 	public void setEstado(Integer estado) {
 		this.estado = estado;
+	}
+
+	@Column(name = "snip")
+	public Integer getSnip() {
+		return this.snip;
+	}
+
+	public void setSnip(Integer snip) {
+		this.snip = snip;
+	}
+
+	@Column(name = "programa")
+	public Integer getPrograma() {
+		return this.programa;
+	}
+
+	public void setPrograma(Integer programa) {
+		this.programa = programa;
+	}
+
+	@Column(name = "subprograma")
+	public Integer getSubprograma() {
+		return this.subprograma;
+	}
+
+	public void setSubprograma(Integer subprograma) {
+		this.subprograma = subprograma;
+	}
+
+	@Column(name = "proyecto")
+	public Integer getProyecto() {
+		return this.proyecto;
+	}
+
+	public void setProyecto(Integer proyecto) {
+		this.proyecto = proyecto;
+	}
+
+	@Column(name = "actividad_obra")
+	public Integer getActividadObra() {
+		return this.actividadObra;
+	}
+
+	public void setActividadObra(Integer actividadObra) {
+		this.actividadObra = actividadObra;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actividad")
+	public Set<ObjetoActividad> getObjetoActividads() {
+		return this.objetoActividads;
+	}
+
+	public void setObjetoActividads(Set<ObjetoActividad> objetoActividads) {
+		this.objetoActividads = objetoActividads;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actividad")

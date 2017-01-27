@@ -170,7 +170,7 @@ public class SRecursoPropiedad extends HttpServlet {
 				
 				RecursoPropiedad componentePropiedad;
 				if(esnuevo){
-					componentePropiedad = new RecursoPropiedad(datoTipo, nombre, descripcion, usuario,null, new DateTime().toDate(),null, 1, null, null);
+					componentePropiedad = new RecursoPropiedad(datoTipo, nombre, descripcion, usuario,null, new DateTime().toDate(),null, 1, null);
 				}
 				else{
 					componentePropiedad = RecursoPropiedadDAO.getRecursoPropiedadPorId(id);

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 24, 2017 3:13:19 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,11 +27,8 @@ public class Riesgo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3256135490377303462L;
+	private static final long serialVersionUID = 310111696184422923L;
 	private Integer id;
-	private Componente componente;
-	private Producto producto;
-	private Proyecto proyecto;
 	private RiesgoTipo riesgoTipo;
 	private String nombre;
 	private String descripcion;
@@ -41,16 +38,13 @@ public class Riesgo implements java.io.Serializable {
 	private Date fechaActualizacion;
 	private int estado;
 	private Integer tipoRelacion;
+	private Set<ObjetoRiesgo> objetoRiesgos = new HashSet<ObjetoRiesgo>(0);
 	private Set<RiesgoPropiedadValor> riesgoPropiedadValors = new HashSet<RiesgoPropiedadValor>(0);
 
 	public Riesgo() {
 	}
 
-	public Riesgo(Componente componente, Producto producto, Proyecto proyecto, RiesgoTipo riesgoTipo, String nombre,
-			String usuarioCreo, Date fechaCreacion, int estado) {
-		this.componente = componente;
-		this.producto = producto;
-		this.proyecto = proyecto;
+	public Riesgo(RiesgoTipo riesgoTipo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
 		this.riesgoTipo = riesgoTipo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
@@ -58,13 +52,9 @@ public class Riesgo implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public Riesgo(Componente componente, Producto producto, Proyecto proyecto, RiesgoTipo riesgoTipo, String nombre,
-			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, Integer tipoRelacion,
-			Set<RiesgoPropiedadValor> riesgoPropiedadValors) {
-		this.componente = componente;
-		this.producto = producto;
-		this.proyecto = proyecto;
+	public Riesgo(RiesgoTipo riesgoTipo, String nombre, String descripcion, String usuarioCreo, String usuarioActualizo,
+			Date fechaCreacion, Date fechaActualizacion, int estado, Integer tipoRelacion,
+			Set<ObjetoRiesgo> objetoRiesgos, Set<RiesgoPropiedadValor> riesgoPropiedadValors) {
 		this.riesgoTipo = riesgoTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -74,6 +64,7 @@ public class Riesgo implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
 		this.tipoRelacion = tipoRelacion;
+		this.objetoRiesgos = objetoRiesgos;
 		this.riesgoPropiedadValors = riesgoPropiedadValors;
 	}
 
@@ -87,36 +78,6 @@ public class Riesgo implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "componenteid", nullable = false)
-	public Componente getComponente() {
-		return this.componente;
-	}
-
-	public void setComponente(Componente componente) {
-		this.componente = componente;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "productoid", nullable = false)
-	public Producto getProducto() {
-		return this.producto;
-	}
-
-	public void setProducto(Producto producto) {
-		this.producto = producto;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "proyectoid", nullable = false)
-	public Proyecto getProyecto() {
-		return this.proyecto;
-	}
-
-	public void setProyecto(Proyecto proyecto) {
-		this.proyecto = proyecto;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -201,6 +162,15 @@ public class Riesgo implements java.io.Serializable {
 
 	public void setTipoRelacion(Integer tipoRelacion) {
 		this.tipoRelacion = tipoRelacion;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "riesgo")
+	public Set<ObjetoRiesgo> getObjetoRiesgos() {
+		return this.objetoRiesgos;
+	}
+
+	public void setObjetoRiesgos(Set<ObjetoRiesgo> objetoRiesgos) {
+		this.objetoRiesgos = objetoRiesgos;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "riesgo")

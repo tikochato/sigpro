@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 24, 2017 3:13:19 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,11 +24,13 @@ public class UnidadEjecutora implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4923049907482107666L;
+	private static final long serialVersionUID = 686411589189656585L;
 	private Integer unidadEjecutora;
 	private Entidad entidad;
 	private String nombre;
+	private Set<Componente> componentes = new HashSet<Componente>(0);
 	private Set<Colaborador> colaboradors = new HashSet<Colaborador>(0);
+	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<Proyecto> proyectos = new HashSet<Proyecto>(0);
 
 	public UnidadEjecutora() {
@@ -39,10 +41,13 @@ public class UnidadEjecutora implements java.io.Serializable {
 		this.nombre = nombre;
 	}
 
-	public UnidadEjecutora(Entidad entidad, String nombre, Set<Colaborador> colaboradors, Set<Proyecto> proyectos) {
+	public UnidadEjecutora(Entidad entidad, String nombre, Set<Componente> componentes, Set<Colaborador> colaboradors,
+			Set<Producto> productos, Set<Proyecto> proyectos) {
 		this.entidad = entidad;
 		this.nombre = nombre;
+		this.componentes = componentes;
 		this.colaboradors = colaboradors;
+		this.productos = productos;
 		this.proyectos = proyectos;
 	}
 
@@ -78,12 +83,30 @@ public class UnidadEjecutora implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unidadEjecutora")
+	public Set<Componente> getComponentes() {
+		return this.componentes;
+	}
+
+	public void setComponentes(Set<Componente> componentes) {
+		this.componentes = componentes;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unidadEjecutora")
 	public Set<Colaborador> getColaboradors() {
 		return this.colaboradors;
 	}
 
 	public void setColaboradors(Set<Colaborador> colaboradors) {
 		this.colaboradors = colaboradors;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unidadEjecutora")
+	public Set<Producto> getProductos() {
+		return this.productos;
+	}
+
+	public void setProductos(Set<Producto> productos) {
+		this.productos = productos;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unidadEjecutora")
