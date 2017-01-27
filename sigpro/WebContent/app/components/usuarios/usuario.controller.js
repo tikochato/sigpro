@@ -212,7 +212,7 @@ app.controller(
 															function(response) {
 																if(response.success){
 																	mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
-																	 $utilidades.mensaje('success', 'Edición de usuario cambio de contraseña Exitoso.');
+																	 $utilidades.mensaje('success', 'actualizacion de datos exitosa.');
 																}else{
 																	$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
 																}
@@ -243,6 +243,8 @@ app.controller(
 																						$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
 																					}
 																		});
+																	}else{
+																		$utilidades.mensaje('success','información actualizada exitosamente.');
 																	}
 																	
 																}
