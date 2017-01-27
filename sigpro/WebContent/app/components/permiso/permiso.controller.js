@@ -31,16 +31,19 @@ app.controller(
 		enableRowHeaderSelection : false,
 		paginationPageSizes : [ 25, 50, 75 ],
 		paginationPageSize : 25,
+		enableFiltering: true,
 		data : [],
 		columnDefs : [ {
 			name : 'ID',
-			field : 'id'
+			field : 'id',
+			enableFiltering: false
 		}, {
 			name : 'Nombre',
 			field : 'nombre'
 		}, {
 			name : 'Descripcion',
-			field : 'descripcion'
+			field : 'descripcion',
+			enableFiltering: false
 		}
 
 		],
