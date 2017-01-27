@@ -35,7 +35,7 @@ public class FormularioItemTipo implements java.io.Serializable {
 	private Integer estado;
 	private String usuarioCreo;
 	private Date fechaCreacion;
-	private Integer usuarioActualizacion;
+	private String usuarioActualizacion;
 	private Date fechaActualizacion;
 	private Set<FormularioItem> formularioItems = new HashSet<FormularioItem>(0);
 
@@ -48,7 +48,7 @@ public class FormularioItemTipo implements java.io.Serializable {
 	}
 
 	public FormularioItemTipo(DatoTipo datoTipo, String nombre, String descripcion, Integer estado, String usuarioCreo,
-			Date fechaCreacion, Integer usuarioActualizacion, Date fechaActualizacion,
+			Date fechaCreacion, String usuarioActualizacion, Date fechaActualizacion,
 			Set<FormularioItem> formularioItems) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
@@ -130,11 +130,11 @@ public class FormularioItemTipo implements java.io.Serializable {
 	}
 
 	@Column(name = "usuario_actualizacion")
-	public Integer getUsuarioActualizacion() {
+	public String getUsuarioActualizacion() {
 		return this.usuarioActualizacion;
 	}
 
-	public void setUsuarioActualizacion(Integer usuarioActualizacion) {
+	public void setUsuarioActualizacion(String usuarioActualizacion) {
 		this.usuarioActualizacion = usuarioActualizacion;
 	}
 

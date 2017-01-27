@@ -116,6 +116,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/recurso/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'recursoController\'" class="all_page"></div>'
             })
+             .when('/formularioitemtipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'formularioitemtipoController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -285,6 +288,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'recursoController',
 	    	   script: '/app/components/recurso/recurso.controller.js',
 	    	   template: '/app/components/recurso/recurso.jsp'
+	       },
+	       {
+	    	   name: 'formularioitemtipoController',
+	    	   script: '/app/components/formularioitemtipo/formularioitemtipo.controller.js',
+	    	   template: '/app/components/formularioitemtipo/formularioitemtipo.jsp'
 	       }
 
 	   ];

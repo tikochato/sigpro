@@ -9,12 +9,12 @@
 				<div class="btn-group">
 			       <shiro:hasPermission name="crearCooperante">
 			       		<label class="btn btn-primary" ng-click="proyectopropiedadc.nuevo()">Nuevo</label>
-			       </shiro:hasPermission> 
+			       </shiro:hasPermission>
 			       <shiro:hasPermission name="editarCooperante"><label class="btn btn-primary" ng-click="proyectopropiedadc.editar()">Editar</label></shiro:hasPermission>
 			       <shiro:hasPermission name="eliminarCooperante">
 			       		<label class="btn btn-primary" ng-click="proyectopropiedadc.borrar()">Borrar</label>
 			       </shiro:hasPermission>
-    			</div>				
+    			</div>
     		</div>
     		<shiro:hasPermission name="verCooperante">
     		<div class="col-sm-12" align="center">
@@ -27,7 +27,7 @@
 					</div>
 				</div>
 				<br/>
-				<div id="maingrid" ui-grid="proyectopropiedadc.gridOptions" ui-grid-save-state 
+				<div id="maingrid" ui-grid="proyectopropiedadc.gridOptions" ui-grid-save-state
 						ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination class="grid">
 					<div class="grid_loading" ng-hide="!proyectopropiedadc.mostrarcargando">
 				  	<div class="msg">
@@ -38,9 +38,9 @@
 					</div>
 				  </div>
 				</div>
-				<ul uib-pagination total-items="proyectopropiedadc.totalProyectoPropiedades" 
-						ng-model="proyectopropiedadc.paginaActual" 
-						max-size="proyectopropiedadc.numeroMaximoPaginas" 
+				<ul uib-pagination total-items="proyectopropiedadc.totalProyectoPropiedades"
+						ng-model="proyectopropiedadc.paginaActual"
+						max-size="proyectopropiedadc.numeroMaximoPaginas"
 						items-per-page="proyectopropiedadc.elementosPorPagina"
 						first-text="Primero"
 						last-text="Último"
@@ -51,7 +51,7 @@
 				></ul>
 			</div>
     		</shiro:hasPermission>
-    		
+
 		</div>
 		<div class="row" ng-show="proyectopropiedadc.mostraringreso">
 			<h4 ng-hide="!proyectopropiedadc.esnuevo">Nueva Propiedad</h4>
@@ -62,7 +62,7 @@
 			        <label class="btn btn-primary" ng-click="proyectopropiedadc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
-			
+
 			<div class="col-sm-12">
 				<form>
 						<div class="form-group">
@@ -75,12 +75,11 @@
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Tipo dato</label>
-							<select class="form-control" ng-model="proyectopropiedadc.proyectopropiedad.datotipoid" 
+							<select class="form-control" ng-model="proyectopropiedadc.proyectopropiedad.datotipoid"
 								ng-options="tipo as tipo.nombre for tipo in proyectopropiedadc.tipodatos track by tipo.id">
 								<option value="">Seleccione una opción</option>
-								<!-- <option ng-repeat="opciones in proyectopropiedadc.tipodatos" value="{{opciones.id}}">{{opciones.nombre}}</option>-->
 							</select>
-						</div>	
+						</div>
 						<div class="form-group">
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="proyectopropiedadc.proyectopropiedad.descripcion">
