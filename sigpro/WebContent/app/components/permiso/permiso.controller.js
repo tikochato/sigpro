@@ -124,55 +124,20 @@ app.controller(
 										"descripcion" : mi.permisoSelected.descripcion
 									});
 									mi.isCollapsed = false;
+									$utilidades.mensaje('success','Permiso agregado exitosamente');
 								}else{
-									mi.cargarTabla(mi.paginaactual);
+									mi.paginaActual=1;
+									mi.cargarTabla(mi.paginaActual);
 									mi.isCollapsed = false;
+									$utilidades.mensaje('success','Permiso actualizado exitosamente');
 								}
-								
+							}else{
+								mi.isCollapsed = false;
+								$utilidades.mensaje('danger','No se pudieron aplicar los cambios');
 							}
+							
 				});
-			/*if(mi.esNuevo){
-				$http.post('/SPermiso',
-					{
-						accion: 'guardarPermiso',
-						nombre:mi.permisoSelected.nombre,
-						descripcion:mi.permisoSelected.descripcion,
-						esnuevo:mi.esNuevo,
-						id:0
-					}).success(
-						function(data) {
-							if(data.success){
-								if(mi.esNuevo){
-									mi.gridOptions.data
-									.push({
-										"id" : data.data,
-										"nombre" : mi.permisoSelected.nombre,
-										"descripcion" : mi.permisoSelected.descripcion
-									});
-									mi.isCollapsed = false;
-								}else{
-									mi.cargarTabla(mi.paginaactual);
-									mi.isCollapsed = false;
-								}
-								
-							}
-				});
-			}else{
-				$http.post('/SPermiso',
-						{
-							accion: 'guardarPermiso',
-							id:mi.permisoSelected.id,
-							nombre:mi.permisoSelected.nombre,
-							descripcion:mi.permisoSelected.descripcion,
-							esnuevo:mi.esNuevo,
-						}).success(
-							function(data) {
-								if(data.success){
-									mi.cargarTabla(mi.paginaactual);
-									mi.isCollapsed = false;
-								}
-					});
-			}*/
+			
 		}else{
 			$utilidades.mensaje('danger','Llene los campos');
 		}
