@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 24, 2017 3:13:19 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class FormularioItemTipo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1632556447021523511L;
+	private static final long serialVersionUID = 6313897633514996384L;
 	private Integer id;
 	private DatoTipo datoTipo;
 	private String nombre;
@@ -129,7 +129,7 @@ public class FormularioItemTipo implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	@Column(name = "usuario_actualizacion")
+	@Column(name = "usuario_actualizacion", length = 30)
 	public String getUsuarioActualizacion() {
 		return this.usuarioActualizacion;
 	}

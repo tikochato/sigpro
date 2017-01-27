@@ -118,10 +118,6 @@ public class SRiesgo extends HttpServlet {
 				temp.usuarioCreo = riesgo.getUsuarioCreo();
 				temp.riesgotipoid = riesgo.getRiesgoTipo().getId();
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
-				temp.componenteid = riesgo.getComponente().getId();
-				temp.componentenombre = riesgo.getComponente().getNombre();
-				temp.productoid = riesgo.getProducto() != null ? riesgo.getProducto().getId() : 0;
-				temp.productonombre = riesgo.getProducto() !=null ? riesgo.getProducto().getNombre() : "";
 				striesgos.add(temp);
 			}
 			
@@ -147,10 +143,6 @@ public class SRiesgo extends HttpServlet {
 				temp.usuarioCreo = riesgo.getUsuarioCreo();
 				temp.riesgotipoid = riesgo.getRiesgoTipo().getId();
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
-				temp.componenteid = riesgo.getComponente().getId();
-				temp.componentenombre = riesgo.getComponente().getNombre();
-				temp.productoid = riesgo.getProducto() != null ? riesgo.getProducto().getId() : 0;
-				temp.productonombre = riesgo.getProducto() !=null ? riesgo.getProducto().getNombre() : "";
 				striesgos.add(temp);
 			}
 			
@@ -173,10 +165,6 @@ public class SRiesgo extends HttpServlet {
 				temp.usuarioCreo = riesgo.getUsuarioCreo();
 				temp.riesgotipoid = riesgo.getRiesgoTipo().getId();
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
-				temp.componenteid = riesgo.getComponente().getId();
-				temp.componentenombre = riesgo.getComponente().getNombre();
-				temp.productoid = riesgo.getProducto() != null ? riesgo.getProducto().getId() : 0;
-				temp.productonombre = riesgo.getProducto() !=null ? riesgo.getProducto().getNombre() : "";
 				striesgos.add(temp);
 			}
 			
@@ -216,15 +204,12 @@ public class SRiesgo extends HttpServlet {
 					
 					Riesgo riesgo;
 					if(esnuevo){
-						riesgo = new Riesgo(componente, producto, proyecto
-								,riesgoTipo, nombre, usuario, new DateTime().toDate(), 1);
+						riesgo = new Riesgo(riesgoTipo, nombre, usuario, new DateTime().toDate(), 1);
 						riesgo.setDescripcion(descripcion);
 					}
 					else{
 						
 						riesgo = RiesgoDAO.getRiesgoPorId(id);
-						riesgo.setComponente(componente);
-						riesgo.setProducto(producto);
 						riesgo.setRiesgoTipo(riesgoTipo);
 						riesgo.setNombre(nombre);
 						riesgo.setDescripcion(descripcion);

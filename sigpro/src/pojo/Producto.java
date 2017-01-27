@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 24, 2017 3:13:19 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,10 +27,11 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4616099245798122980L;
+	private static final long serialVersionUID = 8178567093453688144L;
 	private Integer id;
 	private Componente componente;
 	private ProductoTipo productoTipo;
+	private UnidadEjecutora unidadEjecutora;
 	private String nombre;
 	private String descripcion;
 	private int productoid;
@@ -39,33 +40,36 @@ public class Producto implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Integer estado;
-	private Set<ObjetoFormulario> objetoFormularios = new HashSet<ObjetoFormulario>(0);
+	private Integer snip;
+	private Integer programa;
+	private Integer subprograma;
+	private Integer proyecto;
+	private Integer actividadObra;
 	private Set<ProductoPropiedadValor> productoPropiedadValors = new HashSet<ProductoPropiedadValor>(0);
-	private Set<Actividad> actividads = new HashSet<Actividad>(0);
-	private Set<FormularioItemValor> formularioItemValors = new HashSet<FormularioItemValor>(0);
 	private Set<Meta> metas = new HashSet<Meta>(0);
-	private Set<Riesgo> riesgos = new HashSet<Riesgo>(0);
 
 	public Producto() {
 	}
 
-	public Producto(Componente componente, ProductoTipo productoTipo, String nombre, int productoid, String usuarioCreo,
-			Date fechaCreacion) {
+	public Producto(Componente componente, ProductoTipo productoTipo, UnidadEjecutora unidadEjecutora, String nombre,
+			int productoid, String usuarioCreo, Date fechaCreacion) {
 		this.componente = componente;
 		this.productoTipo = productoTipo;
+		this.unidadEjecutora = unidadEjecutora;
 		this.nombre = nombre;
 		this.productoid = productoid;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public Producto(Componente componente, ProductoTipo productoTipo, String nombre, String descripcion, int productoid,
-			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado,
-			Set<ObjetoFormulario> objetoFormularios, Set<ProductoPropiedadValor> productoPropiedadValors,
-			Set<Actividad> actividads, Set<FormularioItemValor> formularioItemValors, Set<Meta> metas,
-			Set<Riesgo> riesgos) {
+	public Producto(Componente componente, ProductoTipo productoTipo, UnidadEjecutora unidadEjecutora, String nombre,
+			String descripcion, int productoid, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Date fechaActualizacion, Integer estado, Integer snip, Integer programa, Integer subprograma,
+			Integer proyecto, Integer actividadObra, Set<ProductoPropiedadValor> productoPropiedadValors,
+			Set<Meta> metas) {
 		this.componente = componente;
 		this.productoTipo = productoTipo;
+		this.unidadEjecutora = unidadEjecutora;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.productoid = productoid;
@@ -74,12 +78,13 @@ public class Producto implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.objetoFormularios = objetoFormularios;
+		this.snip = snip;
+		this.programa = programa;
+		this.subprograma = subprograma;
+		this.proyecto = proyecto;
+		this.actividadObra = actividadObra;
 		this.productoPropiedadValors = productoPropiedadValors;
-		this.actividads = actividads;
-		this.formularioItemValors = formularioItemValors;
 		this.metas = metas;
-		this.riesgos = riesgos;
 	}
 
 	@Id
@@ -112,6 +117,16 @@ public class Producto implements java.io.Serializable {
 
 	public void setProductoTipo(ProductoTipo productoTipo) {
 		this.productoTipo = productoTipo;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "unidad_ejecutoraunidad_ejecutora", nullable = false)
+	public UnidadEjecutora getUnidadEjecutora() {
+		return this.unidadEjecutora;
+	}
+
+	public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
+		this.unidadEjecutora = unidadEjecutora;
 	}
 
 	@Column(name = "nombre", nullable = false, length = 1000)
@@ -188,13 +203,49 @@ public class Producto implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
-	public Set<ObjetoFormulario> getObjetoFormularios() {
-		return this.objetoFormularios;
+	@Column(name = "snip")
+	public Integer getSnip() {
+		return this.snip;
 	}
 
-	public void setObjetoFormularios(Set<ObjetoFormulario> objetoFormularios) {
-		this.objetoFormularios = objetoFormularios;
+	public void setSnip(Integer snip) {
+		this.snip = snip;
+	}
+
+	@Column(name = "programa")
+	public Integer getPrograma() {
+		return this.programa;
+	}
+
+	public void setPrograma(Integer programa) {
+		this.programa = programa;
+	}
+
+	@Column(name = "subprograma")
+	public Integer getSubprograma() {
+		return this.subprograma;
+	}
+
+	public void setSubprograma(Integer subprograma) {
+		this.subprograma = subprograma;
+	}
+
+	@Column(name = "proyecto")
+	public Integer getProyecto() {
+		return this.proyecto;
+	}
+
+	public void setProyecto(Integer proyecto) {
+		this.proyecto = proyecto;
+	}
+
+	@Column(name = "actividad_obra")
+	public Integer getActividadObra() {
+		return this.actividadObra;
+	}
+
+	public void setActividadObra(Integer actividadObra) {
+		this.actividadObra = actividadObra;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
@@ -207,39 +258,12 @@ public class Producto implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
-	public Set<Actividad> getActividads() {
-		return this.actividads;
-	}
-
-	public void setActividads(Set<Actividad> actividads) {
-		this.actividads = actividads;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
-	public Set<FormularioItemValor> getFormularioItemValors() {
-		return this.formularioItemValors;
-	}
-
-	public void setFormularioItemValors(Set<FormularioItemValor> formularioItemValors) {
-		this.formularioItemValors = formularioItemValors;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
 	public Set<Meta> getMetas() {
 		return this.metas;
 	}
 
 	public void setMetas(Set<Meta> metas) {
 		this.metas = metas;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
-	public Set<Riesgo> getRiesgos() {
-		return this.riesgos;
-	}
-
-	public void setRiesgos(Set<Riesgo> riesgos) {
-		this.riesgos = riesgos;
 	}
 
 }

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 24, 2017 3:13:19 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -13,16 +13,18 @@ public class ObjetoFormularioId implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5257387370823729339L;
+	private static final long serialVersionUID = 5788297290599764323L;
 	private int formularioid;
-	private int objetoTipoid;
+	private int objetoTipo;
+	private int objetoId;
 
 	public ObjetoFormularioId() {
 	}
 
-	public ObjetoFormularioId(int formularioid, int objetoTipoid) {
+	public ObjetoFormularioId(int formularioid, int objetoTipo, int objetoId) {
 		this.formularioid = formularioid;
-		this.objetoTipoid = objetoTipoid;
+		this.objetoTipo = objetoTipo;
+		this.objetoId = objetoId;
 	}
 
 	@Column(name = "formularioid", nullable = false)
@@ -34,13 +36,22 @@ public class ObjetoFormularioId implements java.io.Serializable {
 		this.formularioid = formularioid;
 	}
 
-	@Column(name = "objeto_tipoid", nullable = false)
-	public int getObjetoTipoid() {
-		return this.objetoTipoid;
+	@Column(name = "objeto_tipo", nullable = false)
+	public int getObjetoTipo() {
+		return this.objetoTipo;
 	}
 
-	public void setObjetoTipoid(int objetoTipoid) {
-		this.objetoTipoid = objetoTipoid;
+	public void setObjetoTipo(int objetoTipo) {
+		this.objetoTipo = objetoTipo;
+	}
+
+	@Column(name = "objeto_id", nullable = false)
+	public int getObjetoId() {
+		return this.objetoId;
+	}
+
+	public void setObjetoId(int objetoId) {
+		this.objetoId = objetoId;
 	}
 
 	public boolean equals(Object other) {
@@ -53,14 +64,16 @@ public class ObjetoFormularioId implements java.io.Serializable {
 		ObjetoFormularioId castOther = (ObjetoFormularioId) other;
 
 		return (this.getFormularioid() == castOther.getFormularioid())
-				&& (this.getObjetoTipoid() == castOther.getObjetoTipoid());
+				&& (this.getObjetoTipo() == castOther.getObjetoTipo())
+				&& (this.getObjetoId() == castOther.getObjetoId());
 	}
 
 	public int hashCode() {
 		int result = 17;
 
 		result = 37 * result + this.getFormularioid();
-		result = 37 * result + this.getObjetoTipoid();
+		result = 37 * result + this.getObjetoTipo();
+		result = 37 * result + this.getObjetoId();
 		return result;
 	}
 

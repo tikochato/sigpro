@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 24, 2017 3:13:19 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,10 +25,9 @@ public class ObjetoRecurso implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8939961051469783628L;
+	private static final long serialVersionUID = 6673865031125672481L;
 	private ObjetoRecursoId id;
 	private Recurso recurso;
-	private RecursoPropiedad recursoPropiedad;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
@@ -42,22 +41,19 @@ public class ObjetoRecurso implements java.io.Serializable {
 	public ObjetoRecurso() {
 	}
 
-	public ObjetoRecurso(ObjetoRecursoId id, Recurso recurso, RecursoPropiedad recursoPropiedad, String usuarioCreo,
-			Date fechaCreacion, int estado) {
+	public ObjetoRecurso(ObjetoRecursoId id, Recurso recurso, String usuarioCreo, Date fechaCreacion, int estado) {
 		this.id = id;
 		this.recurso = recurso;
-		this.recursoPropiedad = recursoPropiedad;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
 	}
 
-	public ObjetoRecurso(ObjetoRecursoId id, Recurso recurso, RecursoPropiedad recursoPropiedad, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Integer valorEntero,
-			String valorString, BigDecimal valorDecimal, Date valorTiempo) {
+	public ObjetoRecurso(ObjetoRecursoId id, Recurso recurso, String usuarioCreo, String usuarioActualizo,
+			Date fechaCreacion, Date fechaActualizacion, int estado, Integer valorEntero, String valorString,
+			BigDecimal valorDecimal, Date valorTiempo) {
 		this.id = id;
 		this.recurso = recurso;
-		this.recursoPropiedad = recursoPropiedad;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
@@ -73,9 +69,8 @@ public class ObjetoRecurso implements java.io.Serializable {
 
 	@AttributeOverrides({
 			@AttributeOverride(name = "recursoid", column = @Column(name = "recursoid", nullable = false)),
-			@AttributeOverride(name = "recursoPropiedadid", column = @Column(name = "recurso_propiedadid", nullable = false)),
 			@AttributeOverride(name = "objetoid", column = @Column(name = "objetoid", nullable = false)),
-			@AttributeOverride(name = "tipoObjeto", column = @Column(name = "tipo_objeto", nullable = false)) })
+			@AttributeOverride(name = "objetoTipo", column = @Column(name = "objeto_tipo", nullable = false)) })
 	public ObjetoRecursoId getId() {
 		return this.id;
 	}
@@ -92,16 +87,6 @@ public class ObjetoRecurso implements java.io.Serializable {
 
 	public void setRecurso(Recurso recurso) {
 		this.recurso = recurso;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "recurso_propiedadid", nullable = false, insertable = false, updatable = false)
-	public RecursoPropiedad getRecursoPropiedad() {
-		return this.recursoPropiedad;
-	}
-
-	public void setRecursoPropiedad(RecursoPropiedad recursoPropiedad) {
-		this.recursoPropiedad = recursoPropiedad;
 	}
 
 	@Column(name = "usuario_creo", nullable = false, length = 30)

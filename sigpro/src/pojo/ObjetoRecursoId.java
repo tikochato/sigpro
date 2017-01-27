@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 24, 2017 3:13:19 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -13,20 +13,18 @@ public class ObjetoRecursoId implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3605572930091366297L;
+	private static final long serialVersionUID = 2710107472232022626L;
 	private int recursoid;
-	private int recursoPropiedadid;
 	private int objetoid;
-	private int tipoObjeto;
+	private int objetoTipo;
 
 	public ObjetoRecursoId() {
 	}
 
-	public ObjetoRecursoId(int recursoid, int recursoPropiedadid, int objetoid, int tipoObjeto) {
+	public ObjetoRecursoId(int recursoid, int objetoid, int objetoTipo) {
 		this.recursoid = recursoid;
-		this.recursoPropiedadid = recursoPropiedadid;
 		this.objetoid = objetoid;
-		this.tipoObjeto = tipoObjeto;
+		this.objetoTipo = objetoTipo;
 	}
 
 	@Column(name = "recursoid", nullable = false)
@@ -38,15 +36,6 @@ public class ObjetoRecursoId implements java.io.Serializable {
 		this.recursoid = recursoid;
 	}
 
-	@Column(name = "recurso_propiedadid", nullable = false)
-	public int getRecursoPropiedadid() {
-		return this.recursoPropiedadid;
-	}
-
-	public void setRecursoPropiedadid(int recursoPropiedadid) {
-		this.recursoPropiedadid = recursoPropiedadid;
-	}
-
 	@Column(name = "objetoid", nullable = false)
 	public int getObjetoid() {
 		return this.objetoid;
@@ -56,13 +45,13 @@ public class ObjetoRecursoId implements java.io.Serializable {
 		this.objetoid = objetoid;
 	}
 
-	@Column(name = "tipo_objeto", nullable = false)
-	public int getTipoObjeto() {
-		return this.tipoObjeto;
+	@Column(name = "objeto_tipo", nullable = false)
+	public int getObjetoTipo() {
+		return this.objetoTipo;
 	}
 
-	public void setTipoObjeto(int tipoObjeto) {
-		this.tipoObjeto = tipoObjeto;
+	public void setObjetoTipo(int objetoTipo) {
+		this.objetoTipo = objetoTipo;
 	}
 
 	public boolean equals(Object other) {
@@ -74,19 +63,16 @@ public class ObjetoRecursoId implements java.io.Serializable {
 			return false;
 		ObjetoRecursoId castOther = (ObjetoRecursoId) other;
 
-		return (this.getRecursoid() == castOther.getRecursoid())
-				&& (this.getRecursoPropiedadid() == castOther.getRecursoPropiedadid())
-				&& (this.getObjetoid() == castOther.getObjetoid())
-				&& (this.getTipoObjeto() == castOther.getTipoObjeto());
+		return (this.getRecursoid() == castOther.getRecursoid()) && (this.getObjetoid() == castOther.getObjetoid())
+				&& (this.getObjetoTipo() == castOther.getObjetoTipo());
 	}
 
 	public int hashCode() {
 		int result = 17;
 
 		result = 37 * result + this.getRecursoid();
-		result = 37 * result + this.getRecursoPropiedadid();
 		result = 37 * result + this.getObjetoid();
-		result = 37 * result + this.getTipoObjeto();
+		result = 37 * result + this.getObjetoTipo();
 		return result;
 	}
 
