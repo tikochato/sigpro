@@ -15,7 +15,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.proyectotipos = [];
 	mi.unidadesejecutoras = [];
 	mi.poryectotipoid = "";
-	mi.proyectotiponombre="";
+	mi.proyectotiponombre=""; 
 	mi.unidadejecutoraid="";
 	mi.unidadejecutoranombre="";
 	mi.cooperanteid="";
@@ -145,6 +145,10 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				proyectotipoid: mi.poryectotipoid,
 				unidadejecutoraid: mi.unidadejecutoraid,
 				cooperanteid: mi.cooperanteid,
+				programa: mi.programa,
+				subprograma: mi.subprograma,
+				proyecto_: mi.proyecto_,
+				obra:mi. obra,
 				esnuevo: mi.esNuevo,
 				
 				datadinamica : JSON.stringify(mi.camposdinamicos)
@@ -192,7 +196,12 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		mi.esColapsado = true;
 		mi.proyecto = null;
 		mi.esNuevo = true;
+		mi.programa="";
+		mi.subprograma="";
+		mi.proyecto_="";
+		mi.obra="";
 		mi.camposdinamicos = {};
+		
 		mi.gridApi.selection.clearSelectedRows();
 
 	};
@@ -207,6 +216,10 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.cooperantenombre=mi.proyecto.cooperante;
 			mi.esColapsado = true;
 			mi.esNuevo = false;
+			mi.programa = mi.proyecto.programa;
+			mi.subprograma = mi.proyecto.subprograma;
+			mi.proyecto_ = mi.proyecto.proyecto;
+			mi.obra = mi.proyecto.obra;
 
 			var parametros = {
 					accion: 'getProyectoPropiedadPorTipo',

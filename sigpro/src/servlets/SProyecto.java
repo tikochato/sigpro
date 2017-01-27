@@ -58,7 +58,10 @@ public class SProyecto extends HttpServlet {
 		String usuarioCreo;
 		String fechaactualizacion;
 		String usuarioactualizo;
-
+		Integer programa;
+		Integer subprograma;
+		Integer proyecto;
+		Integer obra;
 	};
 
 	class stdatadinamico {
@@ -118,6 +121,10 @@ public class SProyecto extends HttpServlet {
 				dato.usuarioCreo = proyecto.getUsuarioCreo();
 				dato.fechaactualizacion = Utils.formatDate( proyecto.getFechaActualizacion());
 				dato.usuarioactualizo = proyecto.getUsuarioActualizo();
+				dato.programa = proyecto.getPrograma();
+				dato.subprograma = proyecto.getSubprograma();
+				dato.proyecto = proyecto.getProyecto();
+				dato.obra = proyecto.getActividadObra();
 				datos_.add(dato);
 			}
 
@@ -156,6 +163,10 @@ public class SProyecto extends HttpServlet {
 				dato.usuarioCreo = proyecto.getUsuarioCreo();
 				dato.fechaactualizacion = Utils.formatDate( proyecto.getFechaActualizacion());
 				dato.usuarioactualizo = proyecto.getUsuarioActualizo();
+				dato.programa = proyecto.getPrograma();
+				dato.subprograma = proyecto.getSubprograma();
+				dato.proyecto = proyecto.getProyecto();
+				dato.obra = proyecto.getActividadObra();
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -173,6 +184,10 @@ public class SProyecto extends HttpServlet {
 				String nombre = map.get("nombre");
 				int snip = Integer.parseInt(map.get("snip"));
 				String descripcion = map.get("descripcion");
+				Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
+				Integer subPrograma = map.get("subprograma")!=null ?  Integer.parseInt(map.get("subprograma")) : null;
+				Integer proyecto_ = map.get("proyecto_")!=null ? Integer.parseInt(map.get("proyecto_")) : null;
+				Integer obra = map.get("obra")!=null ? Integer.parseInt(map.get("obra")):null;
 
 				ProyectoTipo proyectoTipo = new ProyectoTipo();
 				proyectoTipo.setId(Integer.parseInt(map.get("proyectotipoid")));
@@ -190,8 +205,10 @@ public class SProyecto extends HttpServlet {
 
 
 				if(esnuevo){
-					proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecutora, nombre, snip, usuario, new DateTime().toDate(), 1);
-					proyecto.setDescripcion(descripcion);
+					proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion
+							, usuario, null, new DateTime().toDate(), null, 1, snip
+							,programa , subPrograma, proyecto_, obra, 
+							null, null, null, null, null);
 
 				}else{
 					proyecto = ProyectoDAO.getProyectoPorId(id);
@@ -289,7 +306,6 @@ public class SProyecto extends HttpServlet {
 
 		}else{
 			response_text = "{ \"success\": false }";
-
 		}
 
 		response.setHeader("Content-Encoding", "gzip");

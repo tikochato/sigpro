@@ -34,6 +34,7 @@ import pojo.ComponentePropiedadValor;
 import pojo.ComponentePropiedadValorId;
 import pojo.ComponenteTipo;
 import pojo.Proyecto;
+import pojo.UnidadEjecutora;
 import utilities.Utils;
 
 /**
@@ -157,6 +158,10 @@ public class SComponente extends HttpServlet {
 
 					ComponenteTipo componenteTipo= new ComponenteTipo();
 					componenteTipo.setId(componentetipoid);
+					
+					UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
+					unidadEjecutora.setUnidadEjecutora(1);
+					
 
 					Proyecto proyecto = new Proyecto();
 					proyecto .setId(proyectoid);
@@ -168,7 +173,9 @@ public class SComponente extends HttpServlet {
 
 					Componente componente;
 					if(esnuevo){
-						componente = new Componente(componenteTipo, proyecto, nombre, usuario, new DateTime().toDate(), 1);
+						
+						
+						componente = new Componente(componenteTipo, proyecto,unidadEjecutora, nombre, usuario, new DateTime().toDate(), 1);
 						componente.setDescripcion(descripcion);
 					}
 					else{
