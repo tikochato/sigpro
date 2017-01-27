@@ -130,11 +130,12 @@ app.controller(
 						mi.usuariosSelected.password= mi.claves.password1;
 						$http.post('/SUsuario',
 								{
-									accion: 'registroUsuario',
+									accion: 'guardarUsuario',
 									usuario:mi.usuariosSelected.usuario,
 									email:mi.usuariosSelected.email,
 									password:mi.usuariosSelected.password,
-									permisos:JSON.stringify(mi.nuevosPermisos)
+									permisos:JSON.stringify(mi.nuevosPermisos),
+									esnuevo:true
 								}).success(
 									function(data) {
 										if(data.success){
@@ -178,9 +179,10 @@ app.controller(
 					}else{
 						$http.post('/SUsuario',
 								{
-									accion: 'editarUsuario',
+									accion: 'guardarUsuario',
 									usuario:mi.usuariosSelected.usuario,
-									email:mi.usuariosSelected.email
+									email:mi.usuariosSelected.email,
+									esnuevo:false
 								}).success(
 									function(data) {
 										if(data.success){
