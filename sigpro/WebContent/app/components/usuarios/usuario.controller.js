@@ -376,40 +376,6 @@ app.controller(
 			mi.permisosEliminados.push(permiso.idPermiso);
 		}
 	};
-	mi.cambiarPassword=function(){
-		mi.mostrarCambioPassword=!mi.mostrarCambioPassword;
-		/*var modalInstance = $uibModal.open({
-		    animation : 'true',
-		    ariaLabelledBy : 'modal-title',
-		    ariaDescribedBy : 'modal-body',
-		    templateUrl : 'cambiarPassword.jsp',
-		    controller : 'modalPassword',
-		    controllerAs : 'modalPassword',
-		    backdrop : 'static',
-		    size : 'md',
-		    resolve : {
-		    	infoUsuario: function(){
-		    		var parametros={ usuario:mi.usuariosSelected.usuario};
-		    		return  parametros;
-		    	}
-		    }
-
-		});
-		
-		modalInstance.result.then(function(password) {
-			if(password.password!==""){
-				$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: password.usuario,	password:password.password}).success(
-						function(response) {
-							if(response.success){
-								 $utilidades.mensaje('success', 'cambio de contraseña Exitoso.');
-							}else{
-								$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
-							}
-				});
-			}
-		}, function() {
-		});*/
-	};
 	
 	mi.buscarColaborador=function(){
 		var modalInstance = $uibModal.open({
@@ -569,33 +535,7 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 }
 
 
-app.controller('modalPassword', [
-	'$uibModalInstance', '$scope', '$http', '$interval', 'i18nService',
-	'Utilidades', '$timeout', '$log','infoUsuario',modalPassword
-]);
-function modalPassword($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log, infoUsuario) {
-	
-	var mi = this;
-	mi.password={password1:"", password2:""};
-	
-     mi.ok = function() {
-    	if (mi.password.password1!=="" && mi.password.password2!=="") {
-    		if(mi.password.password1 === mi.password.password2){
-    			$uibModalInstance.close({usuario:infoUsuario.usuario, password: mi.password.password1});
-    		}else{
-    			$uibModalInstance.close({usuario:infoUsuario.usuario, password: ""});
-    			$utilidades.mensaje('danger', 'La contraseña y su confirmación no coinciden.');
-    		}
-    	} else {
-    		$uibModalInstance.close({usuario:infoUsuario.usuario, password: ""});
-    	    $utilidades.mensaje('danger', 'La contraseña no debe quedar vacia.');
-    	}
-     };
 
-     mi.cancel = function() {
-    	$uibModalInstance.dismiss('cancel');
-     };
-}
 
 
 app.controller('modalBuscarColaborador', [
