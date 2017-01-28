@@ -31,16 +31,19 @@ app.controller(
 		enableRowHeaderSelection : false,
 		paginationPageSizes : [ 25, 50, 75 ],
 		paginationPageSize : 25,
+		enableFiltering: true,
 		data : [],
 		columnDefs : [ {
 			name : 'ID',
-			field : 'id'
+			field : 'id',
+			enableFiltering: false
 		}, {
 			name : 'Nombre',
 			field : 'nombre'
 		}, {
 			name : 'Descripcion',
-			field : 'descripcion'
+			field : 'descripcion',
+			enableFiltering: false
 		}
 
 		],
@@ -102,39 +105,42 @@ app.controller(
 	};					
 	mi.guardarPermiso=function(){		
 		if(mi.permisoSelected.nombre!=="" && mi.permisoSelected.descripcion!==""){
-			if(mi.esNuevo){
-				$http.post('/SPermiso',
+			var idSend=0;
+			if(!mi.esNuevo){
+				idSend=mi.permisoSelected.id;
+			}
+			$http.post('/SPermiso',
 					{
 						accion: 'guardarPermiso',
 						nombre:mi.permisoSelected.nombre,
-						descripcion:mi.permisoSelected.descripcion
+						descripcion:mi.permisoSelected.descripcion,
+						esnuevo:mi.esNuevo,
+						id:idSend
 					}).success(
 						function(data) {
 							if(data.success){
-								mi.gridOptions.data
-								.push({
-									"id" : data.data,
-									"nombre" : mi.permisoSelected.nombre,
-									"descripcion" : mi.permisoSelected.descripcion
-								});
-								mi.isCollapsed = false;
-							}
-				});
-			}else{
-				$http.post('/SPermiso',
-						{
-							accion: 'editarPermiso',
-							id:mi.permisoSelected.id,
-							nombre:mi.permisoSelected.nombre,
-							descripcion:mi.permisoSelected.descripcion
-						}).success(
-							function(data) {
-								if(data.success){
-									mi.cargarTabla(mi.paginaactual);
+								if(mi.esNuevo){
+									mi.gridOptions.data
+									.push({
+										"id" : data.data,
+										"nombre" : mi.permisoSelected.nombre,
+										"descripcion" : mi.permisoSelected.descripcion
+									});
 									mi.isCollapsed = false;
+									$utilidades.mensaje('success','Permiso agregado exitosamente');
+								}else{
+									mi.paginaActual=1;
+									mi.cargarTabla(mi.paginaActual);
+									mi.isCollapsed = false;
+									$utilidades.mensaje('success','Permiso actualizado exitosamente');
 								}
-					});
-			}
+							}else{
+								mi.isCollapsed = false;
+								$utilidades.mensaje('danger','No se pudieron aplicar los cambios');
+							}
+							
+				});
+			
 		}else{
 			$utilidades.mensaje('danger','Llene los campos');
 		}

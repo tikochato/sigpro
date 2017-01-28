@@ -37,6 +37,9 @@ app.controller(
 	mi.permisosAsignados=[];
 	mi.colaborador={};
 	mi.mensajeActualizado={mensaje:"buscar colaborador"};
+	mi.cambioPassword= false;
+	mi.mostrarCambioPassword = false;
+	var passwordLocal="";
 	mi.gridOptions = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -109,6 +112,8 @@ app.controller(
 
 	mi.cancelar = function() {
 		mi.isCollapsed = false;
+		mi.cambioPassword= false;
+		mi.mostrarCambioPassword = false;
 	}
 				
 	
@@ -130,14 +135,17 @@ app.controller(
 						mi.usuariosSelected.password= mi.claves.password1;
 						$http.post('/SUsuario',
 								{
-									accion: 'registroUsuario',
+									accion: 'guardarUsuario',
 									usuario:mi.usuariosSelected.usuario,
 									email:mi.usuariosSelected.email,
 									password:mi.usuariosSelected.password,
-									permisos:JSON.stringify(mi.nuevosPermisos)
+									permisos:JSON.stringify(mi.nuevosPermisos),
+									esnuevo:true
 								}).success(
 									function(data) {
 										if(data.success){
+											mi.paginaActual=1;
+											$utilidades.mensaje('success','Usuario creado exitosamente!');
 											mi.cargarTabla(mi.paginaActual);
 											mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
 										}
@@ -155,7 +163,7 @@ app.controller(
 		}else{
 			if(mi.usuariosSelected.email!==""){
 				if(validarEmail(mi.usuariosSelected.email)){
-					if(usuarioMail===mi.usuariosSelected.email){
+					if(usuarioMail===mi.usuariosSelected.email && passwordLocal=== mi.usuariosSelected.password){
 						if(mi.nuevosPermisos.length==0 && mi.permisosEliminados.length==0){
 							$utilidades.mensaje('danger','No se ha realizado ningún cambio.');
 							
@@ -170,7 +178,18 @@ app.controller(
 										function(data) {
 											if(data.success){
 												mi.cargarTabla(mi.paginaActual);
+												if(mi.usuariosSelected.password!==passwordLocal){
+													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
+															function(response) {
+																if(response.success){
+																	 $utilidades.mensaje('success', 'cambio de contraseña Exitoso.');
+																}else{
+																	$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
+																}
+													});
+												}
 												mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+												
 											}
 								});
 						}
@@ -178,16 +197,28 @@ app.controller(
 					}else{
 						$http.post('/SUsuario',
 								{
-									accion: 'editarUsuario',
+									accion: 'guardarUsuario',
 									usuario:mi.usuariosSelected.usuario,
-									email:mi.usuariosSelected.email
+									email:mi.usuariosSelected.email,
+									esnuevo:false
 								}).success(
 									function(data) {
 										if(data.success){
 											if(mi.nuevosPermisos.length==0 && mi.permisosEliminados.length==0){
 												mi.isCollapsed = false;
 												mi.cargarTabla(mi.paginaActual);
-												mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+												if(mi.usuariosSelected.password!==passwordLocal){
+													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
+															function(response) {
+																if(response.success){
+																	mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+																	 $utilidades.mensaje('success', 'actualizacion de datos exitosa.');
+																}else{
+																	$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
+																}
+													});
+												}
+												
 											}else{
 												$http.post('/SUsuario',
 														{
@@ -198,9 +229,24 @@ app.controller(
 														}).success(
 															function(data) {
 																if(data.success){
-																	mi.isCollapsed = false;
-																	mi.cargarTabla(mi.paginaActual);
-																	mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+																	
+																	if(mi.usuariosSelected.password!==passwordLocal){
+																		$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
+																				function(response) {
+																					if(response.success){
+																						mi.paginaActual=1;
+																						$utilidades.mensaje('success','información actualizada exitosamente.');
+																						mi.isCollapsed = false;
+																						mi.cargarTabla(mi.paginaActual);
+																						mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};																						
+																					}else{
+																						$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
+																					}
+																		});
+																	}else{
+																		$utilidades.mensaje('success','información actualizada exitosamente.');
+																	}
+																	
 																}
 													});
 												
@@ -262,6 +308,7 @@ app.controller(
 		if(mi.usuariosSelected.usuario!==""){
 			mi.isCollapsed = true;
 			mi.esNuevo=false;
+			passwordLocal=mi.usuariosSelected.password;
 			$http.post('/SUsuario', {
 	    		accion:'obtenerPermisos',
 	    		usuario: mi.usuariosSelected.usuario
@@ -330,39 +377,6 @@ app.controller(
 		if(!mi.esNuevo){
 			mi.permisosEliminados.push(permiso.idPermiso);
 		}
-	};
-	mi.cambiarPassword=function(){
-		var modalInstance = $uibModal.open({
-		    animation : 'true',
-		    ariaLabelledBy : 'modal-title',
-		    ariaDescribedBy : 'modal-body',
-		    templateUrl : 'cambiarPassword.jsp',
-		    controller : 'modalPassword',
-		    controllerAs : 'modalPassword',
-		    backdrop : 'static',
-		    size : 'md',
-		    resolve : {
-		    	infoUsuario: function(){
-		    		var parametros={ usuario:mi.usuariosSelected.usuario};
-		    		return  parametros;
-		    	}
-		    }
-
-		});
-		
-		modalInstance.result.then(function(password) {
-			if(password.password!==""){
-				$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: password.usuario,	password:password.password}).success(
-						function(response) {
-							if(response.success){
-								 $utilidades.mensaje('success', 'cambio de contraseña Exitoso.');
-							}else{
-								$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
-							}
-				});
-			}
-		}, function() {
-		});
 	};
 	
 	mi.buscarColaborador=function(){
@@ -523,33 +537,7 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 }
 
 
-app.controller('modalPassword', [
-	'$uibModalInstance', '$scope', '$http', '$interval', 'i18nService',
-	'Utilidades', '$timeout', '$log','infoUsuario',modalPassword
-]);
-function modalPassword($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log, infoUsuario) {
-	
-	var mi = this;
-	mi.password={password1:"", password2:""};
-	
-     mi.ok = function() {
-    	if (mi.password.password1!=="" && mi.password.password2!=="") {
-    		if(mi.password.password1 === mi.password.password2){
-    			$uibModalInstance.close({usuario:infoUsuario.usuario, password: mi.password.password1});
-    		}else{
-    			$uibModalInstance.close({usuario:infoUsuario.usuario, password: ""});
-    			$utilidades.mensaje('danger', 'La contraseña y su confirmación no coinciden.');
-    		}
-    	} else {
-    		$uibModalInstance.close({usuario:infoUsuario.usuario, password: ""});
-    	    $utilidades.mensaje('danger', 'La contraseña no debe quedar vacia.');
-    	}
-     };
 
-     mi.cancel = function() {
-    	$uibModalInstance.dismiss('cancel');
-     };
-}
 
 
 app.controller('modalBuscarColaborador', [

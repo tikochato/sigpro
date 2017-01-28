@@ -16,7 +16,6 @@ app.controller('loginController', [
 			if(this.username!='' && this.password!=''){
 				var data = { username: this.username, password: this.password};
 				$http.post('/SLogin', data).then(function(response){
-					console.log(response);
 					if(response.data.success==true)
 					   	window.location.href = '/main.jsp';
 					 else

@@ -20,7 +20,7 @@ public class ProyectoTipoDAOTest {
 	
 	@Test
 	public void guardarProyectoTipoTest(){
-		assertNotNull(ProyectoTipoDAO.guardarProyectoTipo(new ProyectoTipo()));
+		assertEquals(ProyectoTipoDAO.guardarProyectoTipo(new ProyectoTipo()),false);
 	}
 	
 	@Test
@@ -36,7 +36,7 @@ public class ProyectoTipoDAOTest {
 	
 	@Test
 	public void eliminarProyectoTipo(){
-		assertNotNull(ProyectoTipoDAO.eliminarProyectoTipo(new ProyectoTipo()));
+		assertEquals(ProyectoTipoDAO.eliminarProyectoTipo(new ProyectoTipo()),false);
 	}
 
 }
