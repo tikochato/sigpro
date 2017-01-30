@@ -429,7 +429,7 @@ app.controller(
 						function(response) {
 							if (response.data.success) {
 								$utilidades.mensaje('success',
-										'Colaborador actualizado con exito.');
+										'Colaborador asignado con exito.');
 							} else {
 								$utilidades.mensaje('danger',
 										'Error al actualizar datos...!!!');
