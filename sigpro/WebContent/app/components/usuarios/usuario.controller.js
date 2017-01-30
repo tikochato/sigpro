@@ -619,13 +619,13 @@ function modalBuscarColaborador($uibModalInstance, $scope, $http, $interval, i18
 		}
     }
     var datos = {
-			accion : 'cargar',
+			accion : 'getColaboradores',
 			pagina :1,
 			registros : 100
 		};
 
 		mi.mostrarCargando = true;
-		$http.post('/SColaborador', datos).then(function(response) {
+		$http.post('/SUsuario', datos).then(function(response) {
 			if (response.data.success) {
 
 				mi.data = response.data.unidadesEjecutoras;

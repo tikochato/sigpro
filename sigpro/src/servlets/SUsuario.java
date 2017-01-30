@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import dao.ColaboradorDAO;
 import dao.UsuarioDAO;
 import pojo.Colaborador;
 import pojo.Permiso;
@@ -299,6 +300,16 @@ public class SUsuario extends HttpServlet {
 					}
 				}else{
 					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros correctos \" }");
+				}
+			}else if(accion.compareTo("getColaboradores")==0){
+				String resultadoJson = "";
+
+				resultadoJson = ColaboradorDAO.getJson2();
+
+				if (Utils.isNullOrEmpty(resultadoJson)) {
+					response_text = "{\"success\":false}";
+				} else {
+					response_text = "{\"success\":true," + resultadoJson + "}";
 				}
 			}
 		}else{
