@@ -20,6 +20,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.UsuarioDAO;
+import pojo.Colaborador;
 import pojo.Permiso;
 import pojo.Usuario;
 import pojo.UsuarioPermiso;
@@ -50,6 +51,7 @@ public class SUsuario extends HttpServlet {
 		String fechaCreacion;
 		String fechaActualizacion;
 		String password;
+		String colaborador;
 	}
 	
 	class stpermiso{
@@ -180,6 +182,10 @@ public class SUsuario extends HttpServlet {
 					usuariotmp.fechaCreacion=Utils.formatDate(usuario.getFechaCreacion());
 					usuariotmp.fechaActualizacion=Utils.formatDate(usuario.getFechaActualizacion());
 					usuariotmp.password=usuario.getPassword();
+					Colaborador colaborador_tmp=UsuarioDAO.getColaborador(usuariotmp.usuario);
+					if(colaborador_tmp!=null){
+						usuariotmp.colaborador=colaborador_tmp.getPapellido()+", "+colaborador_tmp.getPnombre();
+					}				
 					stusuarios.add(usuariotmp);
 				}
 				String respuesta = new GsonBuilder().serializeNulls().create().toJson(stusuarios);
