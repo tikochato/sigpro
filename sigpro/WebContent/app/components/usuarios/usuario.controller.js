@@ -40,6 +40,7 @@ app.controller(
 	mi.cambioPassword= false;
 	mi.mostrarCambioPassword = false;
 	var passwordLocal="";
+	mi.tieneColaborador=false;
 	mi.gridOptions = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -114,6 +115,7 @@ app.controller(
 		mi.isCollapsed = false;
 		mi.cambioPassword= false;
 		mi.mostrarCambioPassword = false;
+		mi.tieneColaborador=false;
 	}
 				
 	
@@ -309,6 +311,9 @@ app.controller(
 			mi.isCollapsed = true;
 			mi.esNuevo=false;
 			passwordLocal=mi.usuariosSelected.password;
+			if(mi.usuariosSelected.colaborador!=null){
+				mi.tieneColaborador=true;
+			}
 			$http.post('/SUsuario', {
 	    		accion:'obtenerPermisos',
 	    		usuario: mi.usuariosSelected.usuario
