@@ -90,7 +90,6 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 								grid.appScope.componentec.ordenDireccion=null;
 							}
 						}
-							
 					});
 
 					if($routeParams.reiniciar_vista=='rv'){
@@ -216,6 +215,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				mi.componentetiponombre=mi.componente.componentetiponombre;
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
+				mi.buscarDatosDinamicos();
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Componente que desea editar');
@@ -229,7 +229,6 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			var estado = mi.gridApi.saveState.save();
 			var tabla_data = { action: 'guardaEstado', grid:'componentes', estado: JSON.stringify(estado), t: (new Date()).getTime() };
 			$http.post('/SEstadoTabla', tabla_data).then(function(response){
-
 			});
 		}
 
@@ -281,8 +280,6 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 						mi.cargarTabla(mi.paginaActual);
 			});
 		}
-
-		
 		
 		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
 			var resultado = $q.defer();
@@ -335,18 +332,21 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			resultado.then(function(itemSeleccionado) {
 				mi.componentetipoid = itemSeleccionado.id;
 				mi.componentetiponombre = itemSeleccionado.nombre;
-
-				var parametros = {
-						accion: 'getComponentePropiedadPorTipo',
-						idComponente: mi.componente!=null ? mi.componente.id : 0,
-						idComponenteTipo: itemSeleccionado.id
-				}
-
-				$http.post('/SComponentePropiedad', parametros).then(function(response){
-					mi.camposdinamicos = response.data.componentepropiedades
-				});
+				mi.buscarDatosDinamicos();
 			});
 		};
+		
+		mi.buscarDatosDinamicos = function (){
+			var parametros = {
+					accion: 'getComponentePropiedadPorTipo',
+					idComponente: mi.componente!=null ? mi.componente.id : 0,
+					idComponenteTipo: mi.componentetipoid
+			}
+
+			$http.post('/SComponentePropiedad', parametros).then(function(response){
+				mi.camposdinamicos = response.data.componentepropiedades
+			});
+		}
 		
 		mi.buscarUnidadEjecutora = function() {
 			var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
@@ -364,8 +364,6 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				mi.unidadejecutoranombre = itemSeleccionado.nombreUnidadEjecutora;
 			});
 		};
-		
-
 } ]);
 
 app.controller('buscarPorComponente', [ '$uibModalInstance',
