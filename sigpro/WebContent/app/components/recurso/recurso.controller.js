@@ -26,8 +26,7 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 		mi.ordenDireccion = null;
 		
 		mi.filtros = [];
-		mi.orden = null;
-
+		
 		mi.fechaOptions = {
 				formatYear : 'yy',
 				maxDate : new Date(2030, 5, 22),

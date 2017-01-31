@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class FormularioItemOpcion implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2610028273412130513L;
+	private static final long serialVersionUID = 142202333285042255L;
 	private Integer id;
 	private FormularioItem formularioItem;
 	private String etiqueta;
@@ -33,7 +33,7 @@ public class FormularioItemOpcion implements java.io.Serializable {
 	private String valorString;
 	private Date valorTiempo;
 	private BigDecimal valorDecimal;
-	private Integer estado;
+	private int estado;
 	private String usuarioCreo;
 	private Integer usuarioActualizacion;
 	private Date fechaCreacion;
@@ -42,12 +42,17 @@ public class FormularioItemOpcion implements java.io.Serializable {
 	public FormularioItemOpcion() {
 	}
 
-	public FormularioItemOpcion(FormularioItem formularioItem) {
+	public FormularioItemOpcion(FormularioItem formularioItem, String etiqueta, int estado, String usuarioCreo,
+			Date fechaCreacion) {
 		this.formularioItem = formularioItem;
+		this.etiqueta = etiqueta;
+		this.estado = estado;
+		this.usuarioCreo = usuarioCreo;
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	public FormularioItemOpcion(FormularioItem formularioItem, String etiqueta, Integer valorEntero, String valorString,
-			Date valorTiempo, BigDecimal valorDecimal, Integer estado, String usuarioCreo, Integer usuarioActualizacion,
+			Date valorTiempo, BigDecimal valorDecimal, int estado, String usuarioCreo, Integer usuarioActualizacion,
 			Date fechaCreacion, Date fechaActualizacion) {
 		this.formularioItem = formularioItem;
 		this.etiqueta = etiqueta;
@@ -84,7 +89,7 @@ public class FormularioItemOpcion implements java.io.Serializable {
 		this.formularioItem = formularioItem;
 	}
 
-	@Column(name = "etiqueta", length = 4000)
+	@Column(name = "etiqueta", nullable = false, length = 4000)
 	public String getEtiqueta() {
 		return this.etiqueta;
 	}
@@ -130,16 +135,16 @@ public class FormularioItemOpcion implements java.io.Serializable {
 		this.valorDecimal = valorDecimal;
 	}
 
-	@Column(name = "estado")
-	public Integer getEstado() {
+	@Column(name = "estado", nullable = false)
+	public int getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(Integer estado) {
+	public void setEstado(int estado) {
 		this.estado = estado;
 	}
 
-	@Column(name = "usuario_creo", length = 30)
+	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
 	}
@@ -158,7 +163,7 @@ public class FormularioItemOpcion implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_creacion", length = 19)
+	@Column(name = "fecha_creacion", nullable = false, length = 19)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}

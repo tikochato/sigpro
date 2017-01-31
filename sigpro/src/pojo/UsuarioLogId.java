@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -11,10 +11,6 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class UsuarioLogId implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6423161861790498513L;
 	private String usuario;
 	private Date fecha;
 

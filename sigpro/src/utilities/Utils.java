@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -141,6 +142,27 @@ public class Utils {
 		if (date != null)
 			return sdf.format(date);
 		return "";
+	}
+	
+	public static Date dateFromString(String date){
+		Date rdate=null;
+		if(date!=null && date.length()>0){
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/YYYY");
+			try {
+				rdate = sdf.parse(date);
+			} catch (ParseException e) {
+				
+			}
+		}
+		return rdate;
+	}
+	
+	public static Integer getParameterInteger(Map<String, String> map,String name){
+		Integer ret = null;
+		if(name!=null && name.length()>0 && map!=null){
+			ret = (map.get(name)!=null && map.get(name).length()>0) ? Integer.parseInt(map.get(name)) : null;
+		}
+		return ret;
 	}
 
 }

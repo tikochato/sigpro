@@ -18,6 +18,11 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 			mi.tipodatos = [];
 			mi.datoTipoSeleccionado;
 			
+			mi.columnaOrdenada=null;
+			mi.ordenDireccion = null;
+			
+			mi.filtros = [];
+			
 			$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
 					function(response) {
 						mi.tipodatos = response.datoTipos;
@@ -32,13 +37,21 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 					enableFiltering: true,
 					enablePaginationControls: false,
 				    paginationPageSize: $utilidades.elementosPorPagina,
+				    useExternalFiltering: true,
+				    useExternalSorting: true,
 					columnDefs : [ 
 						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-					    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
+					    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
+							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,1)"></input></div>'
+					    },
 					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 					    { name: 'datotiponombre', displayName: 'Tipo dato', cellClass: 'grid-align-left', enableFiltering: false},
-					    { name: 'usuarioCreo', displayName: 'Usuario Creación'},
-					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
+					    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,2)"></input></div>'
+					    },
+					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,3)"></input></div>'
+					    }
 					],
 					onRegisterApi: function(gridApi) {
 						mi.gridApi = gridApi;
@@ -50,6 +63,26 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 							});
 						});
 						
+						gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+							if(sortColumns.length==1){
+								grid.appScope.recursopropiedadc.columnaOrdenada=sortColumns[0].field;
+								grid.appScope.recursopropiedadc.ordenDireccion = sortColumns[0].sort.direction;
+								for(var i = 0; i<sortColumns.length-1; i++)
+									sortColumns[i].unsort();
+								grid.appScope.recursopropiedadc.cargarTabla(grid.appScope.recursopropiedadc.paginaActual);
+							}
+							else if(sortColumns.length>1){
+								sortColumns[0].unsort();
+							}
+							else{
+								if(grid.appScope.recursopropiedadc.columnaOrdenada!=null){
+									grid.appScope.recursopropiedadc.columnaOrdenada=null;
+									grid.appScope.recursopropiedadc.ordenDireccion=null;
+								}
+							}
+								
+						} );
+						
 						if($routeParams.reiniciar_vista=='rv'){
 							mi.guardarEstado();
 					    }
@@ -60,7 +93,6 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 						    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
 							      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
 							      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
-							      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
 							  });
 					    }
 					}
@@ -68,7 +100,11 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 			
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SRecursoPropiedad', { accion: 'getRecursoPropiedadPagina', pagina: pagina, numerorecursopropiedades: $utilidades.elementosPorPagina }).success(
+				$http.post('/SRecursoPropiedad', { accion: 'getRecursoPropiedadPagina', pagina: pagina, numerorecursopropiedades: $utilidades.elementosPorPagina,
+					filtro_nombre: mi.filtros['nombre'], 
+					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
+					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+					}).success(
 						function(response) {
 							mi.recursopropiedades = response.recursopropiedades;
 							mi.gridOptions.data = mi.recursopropiedades;
@@ -167,6 +203,18 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 					$route.reload();
 				else
 					$location.path('/recursopropiedad/rv');
+			}
+			
+			mi.filtrar = function(evt,tipo){
+				if(evt.keyCode==13){
+					switch(tipo){
+						case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
+						case 2: mi.filtros['usuario_creo'] = evt.currentTarget.value; break;
+						case 3: mi.filtros['fecha_creacion'] = evt.currentTarget.value; break;
+							
+					}
+					mi.cargarTabla(mi.paginaActual);
+				}
 			}
 			
 			$http.post('/SRecursoPropiedad', { accion: 'numeroRecursoPropiedades' }).success(

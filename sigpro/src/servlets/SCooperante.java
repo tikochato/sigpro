@@ -79,7 +79,14 @@ public class SCooperante extends HttpServlet {
 		if(accion.equals("getCooperantesPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroCooperantes = map.get("numerocooperantes")!=null  ? Integer.parseInt(map.get("numerocooperantes")) : 0;
-			List<Cooperante> cooperantes = CooperanteDAO.getCooperantesPagina(pagina, numeroCooperantes);
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_codigo = map.get("filtro_codigo");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<Cooperante> cooperantes = CooperanteDAO.getCooperantesPagina(pagina, numeroCooperantes,
+					filtro_codigo,filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			List<stcooperante> stcooperantes=new ArrayList<stcooperante>();
 			for(Cooperante cooperante:cooperantes){
 				stcooperante temp =new stcooperante();
@@ -160,7 +167,11 @@ public class SCooperante extends HttpServlet {
 				response_text = "{ \"success\": false }";
 		}
 		else if(accion.equals("numeroCooperantes")){
-			response_text = String.join("","{ \"success\": true, \"totalcooperantes\":",CooperanteDAO.getTotalCooperantes().toString()," }");
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_codigo = map.get("filtro_codigo");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			response_text = String.join("","{ \"success\": true, \"totalcooperantes\":",CooperanteDAO.getTotalCooperantes(filtro_codigo,filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
 		else{
 			response_text = "{ \"success\": false }";

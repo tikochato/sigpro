@@ -1,6 +1,3 @@
-/**
- *
- */
 var app = angular.module('sigpro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
                                        'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','ngAria','ngMaterial','ngMessages']);
@@ -118,6 +115,15 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             })
              .when('/formularioitemtipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'formularioitemtipoController\'" class="all_page"></div>'
+            })
+            .when('/actividad/:objeto_id?/:objeto_tipo?/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'actividadController\'" class="all_page"></div>'
+            })
+            .when('/actividadtipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'actividadtipoController\'" class="all_page"></div>'
+            })
+            .when('/actividadpropiedad/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'actividadpropiedadController\'" class="all_page"></div>'
             })
             .when('/formulario/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'formularioController\'" class="all_page"></div>'
@@ -296,6 +302,21 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'formularioitemtipoController',
 	    	   script: '/app/components/formularioitemtipo/formularioitemtipo.controller.js',
 	    	   template: '/app/components/formularioitemtipo/formularioitemtipo.jsp'
+	       },
+	       {
+	    	   name: 'actividadController',
+	    	   script: '/app/components/actividad/actividad.controller.js',
+	    	   template: '/app/components/actividad/actividad.jsp'
+	       },
+	       {
+	    	   name: 'actividadtipoController',
+	    	   script: '/app/components/actividadtipo/actividadtipo.controller.js',
+	    	   template: '/app/components/actividadtipo/actividadtipo.jsp'
+	       },
+	       {
+	    	   name: 'actividadpropiedadController',
+	    	   script: '/app/components/actividadpropiedad/actividadpropiedad.controller.js',
+	    	   template: '/app/components/actividadpropiedad/actividadpropiedad.jsp'
 	       },
 	       {
 	    	   name: 'formularioController',

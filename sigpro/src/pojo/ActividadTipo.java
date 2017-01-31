@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class ActividadTipo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4042357835716003524L;
+	private static final long serialVersionUID = 7976243848579272994L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
@@ -33,15 +33,22 @@ public class ActividadTipo implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private Integer estado;
+	private int estado;
 	private Set<AtipoPropiedad> atipoPropiedads = new HashSet<AtipoPropiedad>(0);
 	private Set<Actividad> actividads = new HashSet<Actividad>(0);
 
 	public ActividadTipo() {
 	}
 
+	public ActividadTipo(String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+		this.nombre = nombre;
+		this.usuarioCreo = usuarioCreo;
+		this.fechaCreacion = fechaCreacion;
+		this.estado = estado;
+	}
+
 	public ActividadTipo(String nombre, String descripcion, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, Integer estado, Set<AtipoPropiedad> atipoPropiedads,
+			Date fechaCreacion, Date fechaActualizacion, int estado, Set<AtipoPropiedad> atipoPropiedads,
 			Set<Actividad> actividads) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -66,7 +73,7 @@ public class ActividadTipo implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "nombre", length = 200)
+	@Column(name = "nombre", nullable = false, length = 200)
 	public String getNombre() {
 		return this.nombre;
 	}
@@ -84,7 +91,7 @@ public class ActividadTipo implements java.io.Serializable {
 		this.descripcion = descripcion;
 	}
 
-	@Column(name = "usuario_creo", length = 30)
+	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
 	}
@@ -103,7 +110,7 @@ public class ActividadTipo implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_creacion", length = 19)
+	@Column(name = "fecha_creacion", nullable = false, length = 19)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}
@@ -122,12 +129,12 @@ public class ActividadTipo implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Column(name = "estado")
-	public Integer getEstado() {
+	@Column(name = "estado", nullable = false)
+	public int getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(Integer estado) {
+	public void setEstado(int estado) {
 		this.estado = estado;
 	}
 

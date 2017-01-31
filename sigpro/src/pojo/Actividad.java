@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,39 +27,51 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1712502388286383678L;
+	private static final long serialVersionUID = -3656539252044012783L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
 	private String nombre;
 	private String descripcion;
 	private Date fechaInicio;
 	private Date fechaFin;
-	private Integer porcentajeAvance;
+	private int porcentajeAvance;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private Integer estado;
-	private Integer snip;
+	private int estado;
+	private Long snip;
 	private Integer programa;
 	private Integer subprograma;
 	private Integer proyecto;
 	private Integer actividadObra;
-	private Set<ObjetoActividad> objetoActividads = new HashSet<ObjetoActividad>(0);
+	private int objetoId;
+	private int objetoTipo;
 	private Set<ActividadPropiedadValor> actividadPropiedadValors = new HashSet<ActividadPropiedadValor>(0);
+	private Set<ActividadUsuario> actividadUsuarios = new HashSet<ActividadUsuario>(0);
 
 	public Actividad() {
 	}
 
-	public Actividad(ActividadTipo actividadTipo) {
+	public Actividad(ActividadTipo actividadTipo, String nombre, Date fechaInicio, Date fechaFin, int porcentajeAvance,
+			String usuarioCreo, Date fechaCreacion, int estado, int objetoId, int objetoTipo) {
 		this.actividadTipo = actividadTipo;
+		this.nombre = nombre;
+		this.fechaInicio = fechaInicio;
+		this.fechaFin = fechaFin;
+		this.porcentajeAvance = porcentajeAvance;
+		this.usuarioCreo = usuarioCreo;
+		this.fechaCreacion = fechaCreacion;
+		this.estado = estado;
+		this.objetoId = objetoId;
+		this.objetoTipo = objetoTipo;
 	}
 
 	public Actividad(ActividadTipo actividadTipo, String nombre, String descripcion, Date fechaInicio, Date fechaFin,
-			Integer porcentajeAvance, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, Integer estado, Integer snip, Integer programa, Integer subprograma,
-			Integer proyecto, Integer actividadObra, Set<ObjetoActividad> objetoActividads,
-			Set<ActividadPropiedadValor> actividadPropiedadValors) {
+			int porcentajeAvance, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
+			Integer actividadObra, int objetoId, int objetoTipo, Set<ActividadPropiedadValor> actividadPropiedadValors,
+			Set<ActividadUsuario> actividadUsuarios) {
 		this.actividadTipo = actividadTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -76,8 +88,10 @@ public class Actividad implements java.io.Serializable {
 		this.subprograma = subprograma;
 		this.proyecto = proyecto;
 		this.actividadObra = actividadObra;
-		this.objetoActividads = objetoActividads;
+		this.objetoId = objetoId;
+		this.objetoTipo = objetoTipo;
 		this.actividadPropiedadValors = actividadPropiedadValors;
+		this.actividadUsuarios = actividadUsuarios;
 	}
 
 	@Id
@@ -102,7 +116,7 @@ public class Actividad implements java.io.Serializable {
 		this.actividadTipo = actividadTipo;
 	}
 
-	@Column(name = "nombre", length = 200)
+	@Column(name = "nombre", nullable = false, length = 200)
 	public String getNombre() {
 		return this.nombre;
 	}
@@ -121,7 +135,7 @@ public class Actividad implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_inicio", length = 19)
+	@Column(name = "fecha_inicio", nullable = false, length = 19)
 	public Date getFechaInicio() {
 		return this.fechaInicio;
 	}
@@ -131,7 +145,7 @@ public class Actividad implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_fin", length = 19)
+	@Column(name = "fecha_fin", nullable = false, length = 19)
 	public Date getFechaFin() {
 		return this.fechaFin;
 	}
@@ -140,16 +154,16 @@ public class Actividad implements java.io.Serializable {
 		this.fechaFin = fechaFin;
 	}
 
-	@Column(name = "porcentaje_avance")
-	public Integer getPorcentajeAvance() {
+	@Column(name = "porcentaje_avance", nullable = false)
+	public int getPorcentajeAvance() {
 		return this.porcentajeAvance;
 	}
 
-	public void setPorcentajeAvance(Integer porcentajeAvance) {
+	public void setPorcentajeAvance(int porcentajeAvance) {
 		this.porcentajeAvance = porcentajeAvance;
 	}
 
-	@Column(name = "usuario_creo", length = 30)
+	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
 	}
@@ -168,7 +182,7 @@ public class Actividad implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_creacion", length = 19)
+	@Column(name = "fecha_creacion", nullable = false, length = 19)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}
@@ -187,21 +201,21 @@ public class Actividad implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Column(name = "estado")
-	public Integer getEstado() {
+	@Column(name = "estado", nullable = false)
+	public int getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(Integer estado) {
+	public void setEstado(int estado) {
 		this.estado = estado;
 	}
 
 	@Column(name = "snip")
-	public Integer getSnip() {
+	public Long getSnip() {
 		return this.snip;
 	}
 
-	public void setSnip(Integer snip) {
+	public void setSnip(Long snip) {
 		this.snip = snip;
 	}
 
@@ -241,13 +255,22 @@ public class Actividad implements java.io.Serializable {
 		this.actividadObra = actividadObra;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actividad")
-	public Set<ObjetoActividad> getObjetoActividads() {
-		return this.objetoActividads;
+	@Column(name = "objeto_id", nullable = false)
+	public int getObjetoId() {
+		return this.objetoId;
 	}
 
-	public void setObjetoActividads(Set<ObjetoActividad> objetoActividads) {
-		this.objetoActividads = objetoActividads;
+	public void setObjetoId(int objetoId) {
+		this.objetoId = objetoId;
+	}
+
+	@Column(name = "objeto_tipo", nullable = false)
+	public int getObjetoTipo() {
+		return this.objetoTipo;
+	}
+
+	public void setObjetoTipo(int objetoTipo) {
+		this.objetoTipo = objetoTipo;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actividad")
@@ -257,6 +280,15 @@ public class Actividad implements java.io.Serializable {
 
 	public void setActividadPropiedadValors(Set<ActividadPropiedadValor> actividadPropiedadValors) {
 		this.actividadPropiedadValors = actividadPropiedadValors;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actividad")
+	public Set<ActividadUsuario> getActividadUsuarios() {
+		return this.actividadUsuarios;
+	}
+
+	public void setActividadUsuarios(Set<ActividadUsuario> actividadUsuarios) {
+		this.actividadUsuarios = actividadUsuarios;
 	}
 
 }

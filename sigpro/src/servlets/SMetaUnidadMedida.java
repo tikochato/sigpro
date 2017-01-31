@@ -78,7 +78,13 @@ public class SMetaUnidadMedida extends HttpServlet {
 		if(accion.equals("getMetaUnidadMedidasPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numenumeroMetaUnidadMedidas = map.get("numerometaunidadmedidas")!=null  ? Integer.parseInt(map.get("numerometaunidadmedidas")) : 0;
-			List<MetaUnidadMedida> MetaUnidadMedidas = MetaUnidadMedidaDAO.getMetaUnidadMedidasPagina(pagina, numenumeroMetaUnidadMedidas);
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<MetaUnidadMedida> MetaUnidadMedidas = MetaUnidadMedidaDAO.getMetaUnidadMedidasPagina(pagina, numenumeroMetaUnidadMedidas,
+					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			
 			List<stunidadmeta> stunidad = new ArrayList<stunidadmeta>();
 			for(MetaUnidadMedida metaunidad:MetaUnidadMedidas){
@@ -156,7 +162,10 @@ public class SMetaUnidadMedida extends HttpServlet {
 				response_text = "{ \"success\": false }";
 		}
 		else if(accion.equals("numeroMetaUnidadMedidas")){
-			response_text = String.join("","{ \"success\": true, \"totalMetaUnidadMedidas\":",MetaUnidadMedidaDAO.getTotalMetaUnidadMedidas().toString()," }");
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			response_text = String.join("","{ \"success\": true, \"totalMetaUnidadMedidas\":",MetaUnidadMedidaDAO.getTotalMetaUnidadMedidas(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
 		else{
 			response_text = "{ \"success\": false }";
