@@ -42,15 +42,16 @@
 								<div ng-hide="!usuarioc.esoculto">
 									{{usuarioc.usuarioActual.email}}
 								</div>
+								<input ng-show="!usuarioc.esoculto" class="form-control" type="text" placeholder="Correo electrónico" ng-model="usuarioc.usuarioActual.email" />
 							</div>
 							<div class="form-group col-sm-6" ng-show="!usuarioc.esoculto">
 								<label for="Descripcion">Password</label>
-								<input ng-hide="!usuarioc.esoculto" type="password" ng-mode="usuarioc.usuarioActual.password">
+								<input class="form-control" type="password" ng-model="usuarioc.usuarioActual.password" />
 									
 							</div>
 							
 							
-    						<input type="text" class="form-control" id="correo" placeholder="Correo electrónico" ng-model="usuarioc.usuarioActual.email" ng-hide="usuarioc.esoculto">
+    						<!--<input type="text" class="form-control" id="correo" placeholder="Correo electrónico" ng-model="usuarioc.usuarioActual.email" ng-hide="usuarioc.esoculto">  -->
 						</div>
 						<div ng-show="!usuarioc.esoculto">
 							<div class="row">
