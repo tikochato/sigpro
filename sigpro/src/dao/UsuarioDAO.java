@@ -17,6 +17,7 @@ import pojo.UsuarioLog;
 import pojo.UsuarioLogId;
 import pojo.UsuarioPermiso;
 import pojo.UsuarioPermisoId;
+import pojo.Colaborador;
 import pojo.Permiso;
 
 import java.util.ArrayList;
@@ -320,4 +321,33 @@ public class UsuarioDAO {
 		return ret;		
 	}
 	
+	public static Colaborador getColaborador(String usuario) {
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		Colaborador ret = null;
+		try {
+			Query <Colaborador> criteria = session.createQuery("FROM Colaborador where usuariousuario =:usuario", Colaborador.class);
+			criteria.setParameter("usuario",usuario);
+			ret =criteria.getSingleResult();
+		} catch (Throwable e) {
+			CLogger.write("2", ColaboradorDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List <Usuario> getUsuariosDisponibles(){
+		List <Usuario> ret = new ArrayList<Usuario> ();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query <Usuario> criteria = session.createQuery("FROM Usuario where estado =:estado", Usuario.class);
+			criteria.setParameter("estado",1);
+			ret =criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("7", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
 }

@@ -6,6 +6,9 @@
   <script type="text/ng-template" id="buscarUnidadEjecutora.jsp">
     <%@ include file="/app/components/colaborador/buscarUnidadEjecutora.jsp"%>
   </script>
+   <script type="text/ng-template" id="buscarUsuario.jsp">
+    <%@ include file="/app/components/colaborador/buscarUsuario.jsp"%>
+  </script>
 
   <h3>{{ colaborador.esForma ? (colaborador.esNuevo ? "Nuevo Colaborador" : "Editar Colaborador") : "Colaborador" }}</h3>
 
@@ -122,8 +125,8 @@
 		      <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo7.$invalid || !colaborador.usuarioValido }">
 		        <label for="campo6">* Usuario:</label> 
 		        <div class="input-group">
-		          <input type="text" id="campo7" name="campo7" class="form-control" placeholder="Usuario" ng-model="colaborador.usuario" ng-change="colaborador.usuarioCambio()" required/>
-		          <span class="input-group-addon" ng-click="colaborador.validarUsuario()" uib-tooltip="Validar Usuario" ><i class="glyphicon glyphicon-ok"></i></span>
+		          <input type="text" id="campo7" name="campo7" class="form-control" placeholder="Usuario" ng-model="colaborador.usuario"  ng-disabled="true" required/>
+		          <span class="input-group-addon" ng-click="colaborador.buscarUsuario()" uib-tooltip="Validar Usuario" ><i class="glyphicon glyphicon-search"></i></span>
 		        </div>
 		      </div>
 	      </div>

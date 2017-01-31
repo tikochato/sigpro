@@ -21,19 +21,7 @@ app.controller(
 	var mi=this;
 	$window.document.title = 'SIGPRO - Usuario';
 	i18nService.setCurrentLang('es');
-	mi.mostrarcargando=true;
-	mi.entityselected = null;
-	mi.esNuevo = false;
-	mi.paginaActual = 1;
-	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
-	mi.elementosPorPagina = $utilidades.elementosPorPagina;
-	mi.permisoSelected={id:"",nombre:"", descripcion:""};	
-	mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
-	mi.claves={password1:"", password2:""};
-	mi.nuevosPermisos=[];
-	mi.permisosEliminados=[];
-	var usuarioMail ="";
-	mi.permisosAsignados=[];
+	mi.edicion=false;
 	
    
 	mi.usuarioActual={usuario:"", email:""};
@@ -126,8 +114,7 @@ app.controller(
 			function(response) {
 				if(response.success){
 					 console.log(response);
-					 mi.usuarioActual.usuario=response.usuario.usuario;
-					 mi.usuarioActual.email=response.usuario.email;
+					 mi.usuarioActual=response.usuario;
 					 usuarioMail  =response.usuario.email;
 				}else{
 					$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');

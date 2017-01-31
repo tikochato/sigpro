@@ -46,7 +46,8 @@
                          <a href="" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Usuarios <b class="caret"></b></a>
                          <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
                          	<li role="menuitem"><a href="#!/usuarios">Usuarios</a></li>
-                         	<li role="menuitem"><a href="#!/permisos">Permisos</a></li>
+                         	<li role="menuitem"><a href="#!/permisos">Permisos</a></li>                         	
+                         	<li role="menuitem"><a href="#!/colaborador">Colaboradores</a></li>
                          </ul>
                     </li>
 	            </ul>

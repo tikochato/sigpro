@@ -11,7 +11,11 @@
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
         <property name="hibernate.enable_lazy_load_no_trans">true</property>
         <property name="hibernate.validator.apply_to_ddl">false</property>
-         <mapping class="pojo.Actividad" />
+        <mapping class="pojo.Actividad" />
+        <mapping class="pojo.ActividadUsuario" />
+        <mapping class="pojo.ComponenteUsuario" />
+        <mapping class="pojo.ProyectoUsuario" />
+        <mapping class="pojo.ProductoUsuario" />
         <mapping class="pojo.ActividadPropiedad" />
         <mapping class="pojo.ActividadPropiedadValor" />
         <mapping class="pojo.ActividadTipo" />
