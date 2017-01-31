@@ -335,4 +335,19 @@ public class UsuarioDAO {
 		}
 		return ret;
 	}
+	
+	public static List <Usuario> getUsuariosDisponibles(){
+		List <Usuario> ret = new ArrayList<Usuario> ();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query <Usuario> criteria = session.createQuery("FROM Usuario where estado =:estado", Usuario.class);
+			criteria.setParameter("estado",1);
+			ret =criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("7", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
 }

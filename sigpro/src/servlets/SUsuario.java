@@ -311,6 +311,26 @@ public class SUsuario extends HttpServlet {
 				} else {
 					response_text = "{\"success\":true," + resultadoJson + "}";
 				}
+			}else if(accion.compareTo("getUsuariosDisponibles")==0){
+				List <Usuario>  usuarios = UsuarioDAO.getUsuariosDisponibles();
+				List <stusuario> stusuarios = new ArrayList <stusuario>();
+				for(Usuario usuario: usuarios){
+					if(UsuarioDAO.getColaborador(usuario.getUsuario())==null){
+						stusuario usuariotmp =new  stusuario();
+						usuariotmp.usuario =usuario.getUsuario();
+						usuariotmp.email = usuario.getEmail();
+						usuariotmp.usuarioCreo=usuario.getUsuarioCreo();
+						usuariotmp.usuarioActualizo= usuario.getUsuarioActualizo();
+						usuariotmp.fechaCreacion=Utils.formatDate(usuario.getFechaCreacion());
+						usuariotmp.fechaActualizacion=Utils.formatDate(usuario.getFechaActualizacion());
+						stusuarios.add(usuariotmp);
+					}
+							
+					
+				}
+				String respuesta = new GsonBuilder().serializeNulls().create().toJson(stusuarios);
+				response_text = String.join("", "\"usuarios\": ",respuesta);
+				response_text = String.join("", "{\"success\":true,", response_text,"}");
 			}
 		}else{
 			response_text = String.join("","{ \"success\": false, \"error\":\"No se enviaron los parametros deseados\" }");
