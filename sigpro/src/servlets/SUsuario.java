@@ -53,6 +53,13 @@ public class SUsuario extends HttpServlet {
 		String fechaActualizacion;
 		String password;
 		String colaborador;
+		String pnombre;
+		String snombre;
+		String papellido;
+		String sapellido;
+		Long cui;
+		String unidad_ejecutora;
+	
 	}
 	
 	class stpermiso{
@@ -233,9 +240,20 @@ public class SUsuario extends HttpServlet {
 				HttpSession sesionweb = request.getSession();
 				String usuario_texto = sesionweb.getAttribute("usuario")!=null? sesionweb.getAttribute("usuario").toString(): "";
 				Usuario usuarioActual = UsuarioDAO.getUsuario(usuario_texto);
+				Colaborador  colaboradorActual = UsuarioDAO.getColaborador(usuario_texto);
 				stusuario usuarioStr = new stusuario();
 				usuarioStr.email=usuarioActual.getEmail();
 				usuarioStr.usuario=usuarioActual.getUsuario();
+				usuarioStr.password=usuarioActual.getPassword();
+				if(colaboradorActual!=null){
+					usuarioStr.cui=colaboradorActual.getCui();
+					usuarioStr.pnombre=colaboradorActual.getPnombre();
+					usuarioStr.snombre=colaboradorActual.getSnombre();
+					usuarioStr.papellido=colaboradorActual.getPapellido();
+					usuarioStr.sapellido=colaboradorActual.getSapellido();
+					usuarioStr.unidad_ejecutora=colaboradorActual.getUnidadEjecutora().getNombre().toString();
+				}
+				
 				String respuesta = new GsonBuilder().serializeNulls().create().toJson(usuarioStr);
 				response_text = String.join("", "\"usuario\": ",respuesta);
 				response_text = String.join("", "{\"success\":true,", response_text,"}");
