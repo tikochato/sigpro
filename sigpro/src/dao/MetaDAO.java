@@ -126,7 +126,9 @@ public class MetaDAO {
 		return ret;
 	}
 	
-	public static List<Meta> getMetasPagina(int pagina, int numeroMetas, int id, int tipo){
+	public static List<Meta> getMetasPagina(int pagina, int numeroMetas, int id, int tipo,
+			String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion,
+			String columna_ordenada, String orden_direccion){
 		List<Meta> ret = new ArrayList<Meta>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -137,7 +139,18 @@ public class MetaDAO {
 				case 3: where = "m.producto.id = "; break;
 			}
 			where = String.join("", where, String.valueOf(id));
-			Query<Meta> criteria = session.createQuery(String.join("","SELECT m FROM Meta m WHERE estado = 1 and ",where),Meta.class);
+			String query = String.join("","SELECT m FROM Meta m WHERE estado = 1 and ",where);
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " m.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " m.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(m.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join(""," AND (",query_a,")") : ""));
+			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
+			
+			Query<Meta> criteria = session.createQuery(query,Meta.class);
 			criteria.setFirstResult(((pagina-1)*(numeroMetas)));
 			criteria.setMaxResults(numeroMetas);
 			ret = criteria.getResultList();
@@ -151,11 +164,20 @@ public class MetaDAO {
 		return ret;
 	}
 	
-	public static Long getTotalMetas(){
+	public static Long getTotalMetas(String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(m.id) FROM Meta m WHERE m.estado=1",Long.class);
+			String query = "SELECT count(m.id) FROM Meta m WHERE m.estado=1";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " m.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " m.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(m.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){

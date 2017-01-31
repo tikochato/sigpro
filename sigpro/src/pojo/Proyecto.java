@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2648603962036560243L;
+	private static final long serialVersionUID = 1209726396972426274L;
 	private Integer id;
 	private Cooperante cooperante;
 	private ProyectoTipo proyectoTipo;
@@ -48,6 +48,7 @@ public class Proyecto implements java.io.Serializable {
 	private Set<Hito> hitos = new HashSet<Hito>(0);
 	private Set<Meta> metas = new HashSet<Meta>(0);
 	private Set<ProyectoPropedadValor> proyectoPropedadValors = new HashSet<ProyectoPropedadValor>(0);
+	private Set<ProyectoUsuario> proyectoUsuarios = new HashSet<ProyectoUsuario>(0);
 	private Set<Componente> componentes = new HashSet<Componente>(0);
 
 	public Proyecto() {
@@ -69,7 +70,8 @@ public class Proyecto implements java.io.Serializable {
 			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, int snip, Integer programa, Integer subprograma, Integer proyecto,
 			Integer actividadObra, Set<Desembolso> desembolsos, Set<Hito> hitos, Set<Meta> metas,
-			Set<ProyectoPropedadValor> proyectoPropedadValors, Set<Componente> componentes) {
+			Set<ProyectoPropedadValor> proyectoPropedadValors, Set<ProyectoUsuario> proyectoUsuarios,
+			Set<Componente> componentes) {
 		this.cooperante = cooperante;
 		this.proyectoTipo = proyectoTipo;
 		this.unidadEjecutora = unidadEjecutora;
@@ -89,6 +91,7 @@ public class Proyecto implements java.io.Serializable {
 		this.hitos = hitos;
 		this.metas = metas;
 		this.proyectoPropedadValors = proyectoPropedadValors;
+		this.proyectoUsuarios = proyectoUsuarios;
 		this.componentes = componentes;
 	}
 
@@ -278,6 +281,15 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setProyectoPropedadValors(Set<ProyectoPropedadValor> proyectoPropedadValors) {
 		this.proyectoPropedadValors = proyectoPropedadValors;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
+	public Set<ProyectoUsuario> getProyectoUsuarios() {
+		return this.proyectoUsuarios;
+	}
+
+	public void setProyectoUsuarios(Set<ProyectoUsuario> proyectoUsuarios) {
+		this.proyectoUsuarios = proyectoUsuarios;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")

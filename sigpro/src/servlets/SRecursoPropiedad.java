@@ -105,8 +105,14 @@ public class SRecursoPropiedad extends HttpServlet {
 		}
 		else if(accion.equals("getRecursoPropiedadPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numeroRecursoPropiedad = map.get("numerorecursopropiedad")!=null  ? Integer.parseInt(map.get("numerorecursopropiedad")) : 0;			
-			List<RecursoPropiedad> recursopropiedades = RecursoPropiedadDAO.getRecursoPropiedadesPagina(pagina,numeroRecursoPropiedad);
+			int numeroRecursoPropiedad = map.get("numerorecursopropiedad")!=null  ? Integer.parseInt(map.get("numerorecursopropiedad")) : 0;	
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<RecursoPropiedad> recursopropiedades = RecursoPropiedadDAO.getRecursoPropiedadesPagina(pagina,numeroRecursoPropiedad,
+					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			List<strecursopropiedad> strecursopropiedad=new ArrayList<strecursopropiedad>();
 			for(RecursoPropiedad recursopropiedad:recursopropiedades){
 				strecursopropiedad temp =new strecursopropiedad();
@@ -152,7 +158,11 @@ public class SRecursoPropiedad extends HttpServlet {
 			response_text = String.join("","{ \"success\": true, \"totalrecursopropiedades\":",RecursoPropiedadDAO.getTotalRecursoPropiedades().toString()," }");
 		}
 		else if(accion.equals("numeroRecursoPropiedades")){
-			response_text = String.join("","{ \"success\": true, \"totalrecursopropiedades\":",RecursoPropiedadDAO.getTotalRecursoPropiedad().toString()," }");
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			response_text = String.join("","{ \"success\": true, \"totalrecursopropiedades\":",RecursoPropiedadDAO.getTotalRecursoPropiedad(
+					filtro_nombre,filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
 		else if(accion.equals("guardarRecursoPropiedad")){
 			

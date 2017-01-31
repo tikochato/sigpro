@@ -87,7 +87,13 @@ public class SRecursoTipo extends HttpServlet {
 		if(accion.equals("getRecursotiposPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroRecursosTipo = map.get("numerorecursostipo")!=null  ? Integer.parseInt(map.get("numerorecursostipo")) : 0;
-			List<RecursoTipo> recursostipos = RecursoTipoDAO.getRecursoTiposPagina(pagina, numeroRecursosTipo);
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<RecursoTipo> recursostipos = RecursoTipoDAO.getRecursoTiposPagina(pagina, numeroRecursosTipo,
+					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			List<strecursotipo> strecursotipos=new ArrayList<strecursotipo>();
 			for(RecursoTipo recursotipo:recursostipos){
 				strecursotipo temp =new strecursotipo();
@@ -108,7 +114,10 @@ public class SRecursoTipo extends HttpServlet {
 		}
 		
 		else if(accion.equals("numeroRecursoTipos")){
-			response_text = String.join("","{ \"success\": true, \"totalcooperantes\":",RecursoTipoDAO.getTotalRecursoTipo().toString()," }");
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			response_text = String.join("","{ \"success\": true, \"totalcooperantes\":",RecursoTipoDAO.getTotalRecursoTipo(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
 		else if(accion.equals("guardarRecursotipo")){
 			boolean result = false;

@@ -81,7 +81,12 @@ public class SMetaTipo extends HttpServlet {
 		if(accion.equals("getMetaTiposPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numenumeroMetaTipos = map.get("numerometatipo")!=null  ? Integer.parseInt(map.get("numerometatipo")) : 0;
-			List<MetaTipo> MetaTipos = MetaTipoDAO.getMetaTiposPagina(pagina, numenumeroMetaTipos);
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<MetaTipo> MetaTipos = MetaTipoDAO.getMetaTiposPagina(pagina, numenumeroMetaTipos,filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			List<sttipometa> sttipo = new ArrayList<sttipometa>();
 			for(MetaTipo metatipo:MetaTipos){
 				sttipometa temp = new sttipometa();
@@ -154,7 +159,10 @@ public class SMetaTipo extends HttpServlet {
 				response_text = "{ \"success\": false }";
 		}
 		else if(accion.equals("numeroMetaTipos")){
-			response_text = String.join("","{ \"success\": true, \"totalMetaTipos\":",MetaTipoDAO.getTotalMetaTipos().toString()," }");
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			response_text = String.join("","{ \"success\": true, \"totalMetaTipos\":",MetaTipoDAO.getTotalMetaTipos(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
 		else{
 			response_text = "{ \"success\": false }";

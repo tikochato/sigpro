@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +21,7 @@ public class Colaborador implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3420468992589116429L;
+	private static final long serialVersionUID = -4416898377762352164L;
 	private Integer id;
 	private UnidadEjecutora unidadEjecutora;
 	private Usuario usuario;
@@ -34,9 +34,12 @@ public class Colaborador implements java.io.Serializable {
 	public Colaborador() {
 	}
 
-	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario) {
+	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String papellido, Long cui) {
 		this.unidadEjecutora = unidadEjecutora;
 		this.usuario = usuario;
+		this.pnombre = pnombre;
+		this.papellido = papellido;
+		this.cui = cui;
 	}
 
 	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String snombre,
@@ -82,7 +85,7 @@ public class Colaborador implements java.io.Serializable {
 		this.usuario = usuario;
 	}
 
-	@Column(name = "pnombre")
+	@Column(name = "pnombre", nullable = false)
 	public String getPnombre() {
 		return this.pnombre;
 	}
@@ -100,7 +103,7 @@ public class Colaborador implements java.io.Serializable {
 		this.snombre = snombre;
 	}
 
-	@Column(name = "papellido")
+	@Column(name = "papellido", nullable = false)
 	public String getPapellido() {
 		return this.papellido;
 	}
@@ -118,7 +121,7 @@ public class Colaborador implements java.io.Serializable {
 		this.sapellido = sapellido;
 	}
 
-	@Column(name = "cui")
+	@Column(name = "cui", nullable = false)
 	public Long getCui() {
 		return this.cui;
 	}

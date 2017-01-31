@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8178567093453688144L;
+	private static final long serialVersionUID = -6579894750609076174L;
 	private Integer id;
 	private Componente componente;
 	private ProductoTipo productoTipo;
@@ -45,6 +45,7 @@ public class Producto implements java.io.Serializable {
 	private Integer subprograma;
 	private Integer proyecto;
 	private Integer actividadObra;
+	private Set<ProductoUsuario> productoUsuarios = new HashSet<ProductoUsuario>(0);
 	private Set<ProductoPropiedadValor> productoPropiedadValors = new HashSet<ProductoPropiedadValor>(0);
 	private Set<Meta> metas = new HashSet<Meta>(0);
 
@@ -65,8 +66,8 @@ public class Producto implements java.io.Serializable {
 	public Producto(Componente componente, ProductoTipo productoTipo, UnidadEjecutora unidadEjecutora, String nombre,
 			String descripcion, int productoid, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, Integer estado, Integer snip, Integer programa, Integer subprograma,
-			Integer proyecto, Integer actividadObra, Set<ProductoPropiedadValor> productoPropiedadValors,
-			Set<Meta> metas) {
+			Integer proyecto, Integer actividadObra, Set<ProductoUsuario> productoUsuarios,
+			Set<ProductoPropiedadValor> productoPropiedadValors, Set<Meta> metas) {
 		this.componente = componente;
 		this.productoTipo = productoTipo;
 		this.unidadEjecutora = unidadEjecutora;
@@ -83,6 +84,7 @@ public class Producto implements java.io.Serializable {
 		this.subprograma = subprograma;
 		this.proyecto = proyecto;
 		this.actividadObra = actividadObra;
+		this.productoUsuarios = productoUsuarios;
 		this.productoPropiedadValors = productoPropiedadValors;
 		this.metas = metas;
 	}
@@ -246,6 +248,15 @@ public class Producto implements java.io.Serializable {
 
 	public void setActividadObra(Integer actividadObra) {
 		this.actividadObra = actividadObra;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
+	public Set<ProductoUsuario> getProductoUsuarios() {
+		return this.productoUsuarios;
+	}
+
+	public void setProductoUsuarios(Set<ProductoUsuario> productoUsuarios) {
+		this.productoUsuarios = productoUsuarios;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")

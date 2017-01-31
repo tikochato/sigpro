@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class FormularioItemTipo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6313897633514996384L;
+	private static final long serialVersionUID = 4259636783217482318L;
 	private Integer id;
 	private DatoTipo datoTipo;
 	private String nombre;
@@ -42,9 +42,11 @@ public class FormularioItemTipo implements java.io.Serializable {
 	public FormularioItemTipo() {
 	}
 
-	public FormularioItemTipo(DatoTipo datoTipo, String nombre) {
+	public FormularioItemTipo(DatoTipo datoTipo, String nombre, String usuarioCreo, Date fechaCreacion) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
+		this.usuarioCreo = usuarioCreo;
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	public FormularioItemTipo(DatoTipo datoTipo, String nombre, String descripcion, Integer estado, String usuarioCreo,
@@ -110,7 +112,7 @@ public class FormularioItemTipo implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@Column(name = "usuario_creo", length = 30)
+	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
 	}
@@ -120,7 +122,7 @@ public class FormularioItemTipo implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_creacion", length = 19)
+	@Column(name = "fecha_creacion", nullable = false, length = 19)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}

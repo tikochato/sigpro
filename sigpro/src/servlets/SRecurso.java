@@ -208,7 +208,10 @@ public class SRecurso extends HttpServlet {
 				response_text = "{ \"success\": false }";
 		}
 		else if(accion.equals("numeroRecursos")){
-			response_text = String.join("","{ \"success\": true, \"totalrecursos\":",RecursoDAO.getTotalRecursos().toString()," }");
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			response_text = String.join("","{ \"success\": true, \"totalrecursos\":",RecursoDAO.getTotalRecursos(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
 		else if(accion.equals("numeroRecursosPorObjeto")){
 			int objetoId = map.get("objetoid")!=null  ? Integer.parseInt(map.get("objetoid")) : 0;

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 27, 2017 10:39:58 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import javax.persistence.AttributeOverride;
@@ -24,7 +24,7 @@ public class ProdtipoPropiedad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5761630676930793134L;
+	private static final long serialVersionUID = -1062279495911906317L;
 	private ProdtipoPropiedadId id;
 	private ProductoPropiedad productoPropiedad;
 	private ProductoTipo productoTipo;
@@ -36,10 +36,13 @@ public class ProdtipoPropiedad implements java.io.Serializable {
 	public ProdtipoPropiedad() {
 	}
 
-	public ProdtipoPropiedad(ProdtipoPropiedadId id, ProductoPropiedad productoPropiedad, ProductoTipo productoTipo) {
+	public ProdtipoPropiedad(ProdtipoPropiedadId id, ProductoPropiedad productoPropiedad, ProductoTipo productoTipo,
+			String usuarioCreo, Date fechaCreacion) {
 		this.id = id;
 		this.productoPropiedad = productoPropiedad;
 		this.productoTipo = productoTipo;
+		this.usuarioCreo = usuarioCreo;
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	public ProdtipoPropiedad(ProdtipoPropiedadId id, ProductoPropiedad productoPropiedad, ProductoTipo productoTipo,
@@ -86,7 +89,7 @@ public class ProdtipoPropiedad implements java.io.Serializable {
 		this.productoTipo = productoTipo;
 	}
 
-	@Column(name = "usuario_creo", length = 30)
+	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
 	}
@@ -105,7 +108,7 @@ public class ProdtipoPropiedad implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_creacion", length = 19)
+	@Column(name = "fecha_creacion", nullable = false, length = 19)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}
