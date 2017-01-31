@@ -15,6 +15,12 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 		mi.paginaActual = 1;
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
+		
+		mi.columnaOrdenada=null;
+		mi.ordenDireccion = null;
+		
+		mi.filtros = [];
+		mi.orden = null;
 
 
 		//--
@@ -33,18 +39,46 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 				enableFiltering: true,
 				enablePaginationControls: false,
 			    paginationPageSize: $utilidades.elementosPorPagina,
+			    useExternalFiltering: true,
+			    useExternalSorting: true,
 				columnDefs : [
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
+				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left'
+				    	,filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.proyectotipoc.filtrar($event,1)" style="width:175px;"></input></div>'
+				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-				    { name: 'usuarioCreo', displayName: 'Usuario Creación'},
-				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
+				    { name: 'usarioCreo', displayName: 'Usuario Creación' 
+				    	,filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.proyectotipoc.filtrar($event,2)"></input></div>'
+				    },
+				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.proyectotipoc.filtrar($event,3)" ></input></div>'
+				    }
 				],
 				onRegisterApi: function(gridApi) {
 					mi.gridApi = gridApi;
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 						mi.proyectotipo = row.entity;
 					});
+					
+					
+					gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+							if(sortColumns.length==1){
+								grid.appScope.proyectotipoc.columnaOrdenada=sortColumns[0].field;
+								grid.appScope.proyectotipoc.ordenDireccion = sortColumns[0].sort.direction;
+								grid.appScope.proyectotipoc.cargarTabla(grid.appScope.proyectotipoc.paginaActual);
+							}
+							else if(sortColumns.length>1){
+								sortColumns[0].unsort();
+							}
+							else{
+								if(grid.appScope.proyectotipoc.columnaOrdenada!=null){
+									grid.appScope.proyectotipoc.columnaOrdenada=null;
+									grid.appScope.proyectotipoc.ordenDireccion=null;
+								}
+							}
+								
+						} );
+					
 
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
@@ -64,7 +98,13 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SProyectoTipo', { accion: 'getProyectoTipoPagina', pagina: pagina, numerocooperantes: $utilidades.elementosPorPagina }).success(
+			$http.post('/SProyectoTipo', { accion: 'getProyectoTipoPagina', pagina: pagina, numeroproyectotipo: $utilidades.elementosPorPagina
+				,filtro_nombre: mi.filtros['nombre'] 
+				,filtro_usuario_creo: mi.filtros['usuarioCreo']
+			    ,filtro_fecha_creacion: mi.filtros['fechaCreacion']
+			    ,columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+			    }).success(
+			
 					function(response) {
 						mi.proyectotipos = response.poryectotipos;
 						mi.gridOptions.data = mi.proyectotipos;
@@ -184,6 +224,28 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 					mi.cargarTabla(1);
 				}
 		);
+		
+		mi.filtrar = function(evt,tipo){
+			if(evt.keyCode==13){
+				switch(tipo){
+					case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
+					case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
+					case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
+				}
+				mi.obtenerTotalProyectotipos();
+			}
+		}
+		
+		mi.obtenerTotalProyectotipos = function(){
+			$http.post('/SProyectoTipo', { accion: 'numeroProyectoTipos',
+				filtro_nombre: mi.filtros['nombre'], 
+				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'] }).then(
+					function(response) {
+						mi.totalProyectotipos = response.data.totalproyectotipos;
+						mi.paginaActual = 1;
+						mi.cargarTabla(mi.paginaActual);
+			});
+		}
 		//----
 		mi.gridOptionsProyectoPropiedad = {
 				enableRowSelection : true,

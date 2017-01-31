@@ -201,9 +201,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		mi.proyecto_="";
 		mi.obra="";
 		mi.camposdinamicos = {};
-		
 		mi.gridApi.selection.clearSelectedRows();
-
 	};
 
 	mi.editar = function() {

@@ -2,6 +2,9 @@
 	pageEncoding="UTF-8"%>
 <div ng-controller="formularioController as formularioc"
 	class="maincontainer all_page" id="title">
+	<script type="text/ng-template" id="buscarPorFormulario.jsp">
+    		<%@ include file="/app/components/formulario/buscarPorFormulario.jsp"%>
+  	</script>
 	<h3>Formularios</h3>
 	<br />
 	<div class="row" align="center" ng-if="!formularioc.mostraringreso">
@@ -57,15 +60,23 @@
 		<div class="col-sm-12">
 			<form>
 				<div class="form-group">
-					<label for="id">ID</label> <label class="form-control" id="id">{{
-						formularioc.formulario.id }}</label>
+					<label for="id">ID</label> <label class="form-control" id="id">{{ formularioc.formulario.id }}</label>
 				</div>
-
 				<div class="form-group">
 					<label for="nombre">* Código</label> <input type="text"
-						class="form-control" id="nombre" placeholder="Nombre"
+						class="form-control" id="nombre" placeholder="Código"
 						ng-model="formularioc.formulario.codigo">
 				</div>
+				
+				<div class="form-group">
+					<label for="campo3">* Tipo Formulario</label>
+		          	<div class="input-group">
+		            	<input type="hidden" class="form-control" ng-model="formularioc.formulariotipoid" /> 
+		            	<input type="text" class="form-control" id="iproyt" name="iproyt" placeholder="Nombre Tipo Formulario" ng-model="formularioc.formulariotiponombre" ng-readonly="true" required/>
+		            	<span class="input-group-addon" ng-click="formularioc.buscarFormularioTipo()"><i class="glyphicon glyphicon-search"></i></span>
+		          	</div>
+				</div>
+				
 				<div class="form-group">
 					<label for="descripcion">Descripción</label> <input type="text"
 						class="form-control" id="descripcion" placeholder="Descripción"
@@ -98,8 +109,8 @@
 						<div style="text-align: right;">
 							<div class="btn-group" role="group" aria-label="">
 								<a class="btn btn-default" href
-									ng-click="formularioc.buscarPropiedad()" role="button"
-									uib-tooltip="Asignar nueva propiedad" tooltip-placement="left">
+									ng-click="formularioc.buscarFormularioItem()" role="button"
+									uib-tooltip="Asignar nuevo item" tooltip-placement="left">
 									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 								</a>
 							</div>
@@ -107,7 +118,7 @@
 					</div>
 					
 					<table style="width: 75%;"
-					st-table="formularioc.proyectopropiedades"
+					st-table="formularioc.formularioitemtipos"
 					class="table table-striped  table-bordered">
 					<thead >
 						<tr>
@@ -121,7 +132,7 @@
 					</thead>
 					<tbody>
 						<tr st-select-row="row"
-							ng-repeat="row in formularioc.proyectopropiedades">
+							ng-repeat="row in formularioc.formularioitemtipos">
 							<td>{{row.id}}</td>
 							<td>{{row.nombre}}</td>
 							<td>{{row.descripcion}}</td>
@@ -145,8 +156,7 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<label class="btn btn-success" ng-click="formularioc.guardar()">Guardar</label>
-				<label class="btn btn-primary" ng-click="formularioc.irATabla()">Ir
-					a Tabla</label>
+				<label class="btn btn-primary" ng-click="formularioc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>
 	</div>
