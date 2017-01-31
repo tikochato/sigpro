@@ -55,6 +55,13 @@ public class SComponente extends HttpServlet {
 		Integer componentetipoid;
 		String componentetiponombre;
 		int estado;
+		Integer snip;
+		Integer programa;
+		Integer subprograma;
+		Integer proyecto_;
+		Integer obra;
+		int unidadejecutoraid;
+		String unidadejecutoranombre;
 	}
 
 	class stdatadinamico {
@@ -75,7 +82,16 @@ public class SComponente extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
+		String response_text = "{ \"success\": false }";
+		
+		response.setHeader("Content-Encoding", "gzip");
+		response.setCharacterEncoding("UTF-8");
+		
+        OutputStream output = response.getOutputStream();
+		GZIPOutputStream gz = new GZIPOutputStream(output);
+        gz.write(response_text.getBytes("UTF-8"));
+        gz.close();
+        output.close();
 	}
 
 	/**
@@ -114,6 +130,13 @@ public class SComponente extends HttpServlet {
 				temp.usuarioCreo = componente.getUsuarioCreo();
 				temp.componentetipoid = componente.getComponenteTipo().getId();
 				temp.componentetiponombre = componente.getComponenteTipo().getNombre();
+				temp.snip = componente.getSnip();
+				temp.programa = componente.getPrograma();
+				temp.subprograma = componente.getSubprograma();
+				temp.proyecto_ = componente.getProyecto_1();
+				temp.obra = componente.getActividadObra();
+				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
+				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				stcomponentes.add(temp);
 			}
 
@@ -137,6 +160,13 @@ public class SComponente extends HttpServlet {
 				temp.usuarioCreo = componente.getUsuarioCreo();
 				temp.componentetipoid = componente.getComponenteTipo().getId();
 				temp.componentetiponombre = componente.getComponenteTipo().getNombre();
+				temp.snip = componente.getSnip();
+				temp.programa = componente.getPrograma();
+				temp.subprograma = componente.getSubprograma();
+				temp.proyecto_ = componente.getProyecto_1();
+				temp.obra = componente.getActividadObra();
+				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
+				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				stcomponentes.add(temp);
 			}
 
@@ -152,15 +182,22 @@ public class SComponente extends HttpServlet {
 				if(id>0 || esnuevo){
 					String nombre = map.get("nombre");
 					String descripcion = map.get("descripcion");
-					int componentetipoid = Integer.parseInt(map.get("componentetipoid"));
-					int proyectoid= Integer.parseInt(map.get("proyectoid"));
+					int componentetipoid = map.get("componentetipoid")!=null ? Integer.parseInt(map.get("componentetipoid")) : 0;
+					int proyectoid= map.get("proyectoid")!=null ? Integer.parseInt(map.get("proyectoid")) : 0;
+					int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;
+					
+					int snip = map.get("snip")!=null ? Integer.parseInt(map.get("snip")) : 0;
+					Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
+					Integer subPrograma = map.get("subprograma")!=null ?  Integer.parseInt(map.get("subprograma")) : null;
+					Integer proyecto_ = map.get("proyecto_")!=null ? Integer.parseInt(map.get("proyecto_")) : null;
+					Integer obra = map.get("obra")!=null ? Integer.parseInt(map.get("obra")):null;
 
 
 					ComponenteTipo componenteTipo= new ComponenteTipo();
 					componenteTipo.setId(componentetipoid);
 					
 					UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-					unidadEjecutora.setUnidadEjecutora(1);
+					unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
 					
 
 					Proyecto proyecto = new Proyecto();
@@ -173,10 +210,9 @@ public class SComponente extends HttpServlet {
 
 					Componente componente;
 					if(esnuevo){
-						
-						
-						componente = new Componente(componenteTipo, proyecto,unidadEjecutora, nombre, usuario, new DateTime().toDate(), 1);
-						componente.setDescripcion(descripcion);
+						componente = new Componente(componenteTipo, proyecto, unidadEjecutora, nombre
+								, descripcion, usuario, null, new DateTime().toDate(),null, 1
+								, snip, programa, subPrograma, proyecto_, obra, null, null, null);
 					}
 					else{
 						componente = ComponenteDAO.getComponentePorId(id);
@@ -184,6 +220,11 @@ public class SComponente extends HttpServlet {
 						componente.setDescripcion(descripcion);
 						componente.setUsuarioActualizo(usuario);
 						componente.setFechaActualizacion(new DateTime().toDate());
+						componente.setSnip(snip);
+						componente.setPrograma(programa);
+						componente.setSubprograma(subPrograma);
+						componente.setProyecto_1(proyecto_);
+						componente.setActividadObra(obra);
 					}
 					result = ComponenteDAO.guardarComponente(componente);
 
@@ -265,6 +306,13 @@ public class SComponente extends HttpServlet {
 				temp.usuarioCreo = componente.getUsuarioCreo();
 				temp.componentetipoid = componente.getComponenteTipo().getId();
 				temp.componentetiponombre = componente.getComponenteTipo().getNombre();
+				temp.snip = componente.getSnip();
+				temp.programa = componente.getPrograma();
+				temp.subprograma = componente.getSubprograma();
+				temp.proyecto_ = componente.getProyecto_1();
+				temp.obra = componente.getActividadObra();
+				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
+				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				stcomponentes.add(temp);
 			}
 
