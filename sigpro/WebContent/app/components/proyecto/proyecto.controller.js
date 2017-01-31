@@ -15,7 +15,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.proyectotipos = [];
 	mi.unidadesejecutoras = [];
 	mi.poryectotipoid = "";
-	mi.proyectotiponombre="";
+	mi.proyectotiponombre=""; 
 	mi.unidadejecutoraid="";
 	mi.unidadejecutoranombre="";
 	mi.cooperanteid="";
@@ -25,6 +25,12 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 	mi.totalProyectos = 0;
+	
+	mi.columnaOrdenada=null;
+	mi.ordenDireccion = null;
+	
+	mi.filtros = [];
+	mi.orden = null;
 
 	mi.fechaOptions = {
 			formatYear : 'yy',
@@ -42,15 +48,25 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		enableFiltering: true,
 		enablePaginationControls: false,
 	    paginationPageSize: $utilidades.elementosPorPagina,
+	    useExternalFiltering: true,
+	    useExternalSorting: true,
 		columnDefs : [
 			{ name: 'id', width: 60, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left' },
-			{ name : 'snip', width: 60, displayName : 'SNIP', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-			{ name : 'proyectotipo',   displayName : 'Tipo proyecto' ,cellClass: 'grid-align-left' },
-			{ name : 'unidadejecutora',   displayName : 'Unidad Ejecutora' ,cellClass: 'grid-align-left' },
-			{ name : 'cooperante',  width:200, displayName : 'Cooperante' ,cellClass: 'grid-align-left' },
-			{ name: 'usuariocrea', width: 120, displayName: 'Usuario Creación'},
-		    { name: 'fechacrea', width: 100, displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
+			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left', width:200, 
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.controller.filtrar($event,1)" style="width:175px;"></input></div>'
+			},
+			{ name : 'snip', width: 60, displayName : 'SNIP', cellClass: 'grid-align-right', type: 'number', 
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="number" ng-keypress="grid.appScope.controller.filtrar($event,2)" style="width:40px;  "></input></div>'
+			},
+			{ name : 'proyectotipo', width:180,   displayName : 'Tipo proyecto' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
+			{ name : 'unidadejecutora', width:180,   displayName : 'Unidad Ejecutora' ,cellClass: 'grid-align-left', enableFiltering: false , enableSorting: false },
+			{ name : 'cooperante',  width:200, displayName : 'Cooperante' ,cellClass: 'grid-align-left',  enableFiltering: false , enableSorting: false },
+			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.controller.filtrar($event,3)" style="width:90px;"></input></div>'
+			},
+		    { name: 'fechaCreacion', width: 100, displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.controller.filtrar($event,4)" style="width:80px;" ></input></div>'
+		    }
 
 		],
 		onRegisterApi: function(gridApi) {
@@ -58,6 +74,25 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 				mi.proyecto = row.entity;
 			});
+			
+			gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+				if(sortColumns.length==1){
+					grid.appScope.controller.columnaOrdenada=sortColumns[0].field;
+					grid.appScope.controller.ordenDireccion = sortColumns[0].sort.direction;
+					
+					grid.appScope.controller.cargarTabla(grid.appScope.controller.paginaActual);
+				}
+				else if(sortColumns.length>1){
+					sortColumns[0].unsort();
+				}
+				else{
+					if(grid.appScope.controller.columnaOrdenada!=null){
+						grid.appScope.controller.columnaOrdenada=null;
+						grid.appScope.controller.ordenDireccion=null;
+					}
+				}
+					
+			} );
 
 			if($routeParams.reiniciar_vista=='rv'){
 				mi.guardarEstado();
@@ -79,7 +114,11 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.cargarTabla = function(pagina){
 		mi.mostrarcargando=true;
 		$http.post('/SProyecto', { accion: 'getProyectoPagina', pagina: pagina,
-			numeroproyecto:  $utilidades.elementosPorPagina }).success(
+			numeroproyecto:  $utilidades.elementosPorPagina,
+			filtro_nombre: mi.filtros['nombre'], filtro_snip: mi.filtros['snip'], 
+			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
+			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+			}).success(
 				function(response) {
 					mi.entidades = response.proyectos;
 					mi.gridOpciones.data = mi.entidades;
@@ -106,7 +145,12 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				proyectotipoid: mi.poryectotipoid,
 				unidadejecutoraid: mi.unidadejecutoraid,
 				cooperanteid: mi.cooperanteid,
+				programa: mi.programa,
+				subprograma: mi.subprograma,
+				proyecto_: mi.proyecto_,
+				obra:mi. obra,
 				esnuevo: mi.esNuevo,
+				
 				datadinamica : JSON.stringify(mi.camposdinamicos)
 			};
 			$http.post('/SProyecto',param_data).then(
@@ -122,8 +166,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 		}else
 			$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
-
-
 	 }
 
 	mi.borrar = function() {
@@ -154,9 +196,12 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		mi.esColapsado = true;
 		mi.proyecto = null;
 		mi.esNuevo = true;
+		mi.programa="";
+		mi.subprograma="";
+		mi.proyecto_="";
+		mi.obra="";
 		mi.camposdinamicos = {};
 		mi.gridApi.selection.clearSelectedRows();
-
 	};
 
 	mi.editar = function() {
@@ -169,6 +214,10 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.cooperantenombre=mi.proyecto.cooperante;
 			mi.esColapsado = true;
 			mi.esNuevo = false;
+			mi.programa = mi.proyecto.programa;
+			mi.subprograma = mi.proyecto.subprograma;
+			mi.proyecto_ = mi.proyecto.proyecto;
+			mi.obra = mi.proyecto.obra;
 
 			var parametros = {
 					accion: 'getProyectoPropiedadPorTipo',
@@ -185,7 +234,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 						case "entero":
 							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
 							break;
-
 					}
 
 				}
@@ -202,7 +250,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.guardarEstado=function(){
 		var estado = mi.gridApi.saveState.save();
-		var tabla_data = { action: 'guardaEstado', grid:'proyecto', estado: JSON.stringify(estado), t: (new Date()).getTime() };
+		var tabla_data = { action: 'guardaEstado', grid:'proyceto', estado: JSON.stringify(estado), t: (new Date()).getTime() };
 		$http.post('/SEstadoTabla', tabla_data).then(function(response){
 
 		});
@@ -222,6 +270,29 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.abrirPopupFecha = function(index) {
 		mi.camposdinamicos[index].isOpen = true;
 	};
+	
+	mi.filtrar = function(evt,tipo){
+		if(evt.keyCode==13){
+			switch(tipo){
+				case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
+				case 2: mi.filtros['snip'] = evt.currentTarget.value; break;
+				case 3: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
+				case 4: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
+			}
+			mi.obtenerTotalProyectos();
+		}
+	}
+	
+	mi.obtenerTotalProyectos = function(){
+		$http.post('/SProyecto', { accion: 'numeroProyectos',
+			filtro_nombre: mi.filtros['nombre'], filtro_snip: mi.filtros['snip'],
+			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+				function(response) {
+					mi.totalProyectos = response.data.totalproyectos;
+					mi.paginaActual = 1;
+					mi.cargarTabla(mi.paginaActual);
+		});
+	}
 
 	$http.post('/SProyecto', { accion: 'numeroProyectos' }).success(
 			function(response) {

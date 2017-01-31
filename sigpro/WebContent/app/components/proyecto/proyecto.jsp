@@ -3,9 +3,10 @@
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <style type="text/css">
-.myGrid {
-	width: 100%;
-	height: 600px;
+	input[type=number]::-webkit-outer-spin-button,
+	input[type=number]::-webkit-inner-spin-button {
+    	-webkit-appearance: none;
+    	margin: 0;
 }
 </style>
 
@@ -56,7 +57,8 @@
 			</div>
 				<ul uib-pagination total-items="controller.totalProyectos" 
 						ng-model="controller.paginaActual" 
-						max-size="controller.numeroMaximoPaginas" 
+						max-size="controller.numeroMaximoPaginas"
+						items-per-page="controller.elementosPorPagina" 
 						first-text="Primero"
 						last-text="Último"
 						next-text="Siguiente"
@@ -102,7 +104,7 @@
 				</div>
 				<div class="form-group">
 					<label for="campo1">* Nombre</label> 
-					<input type="text" ng-model="controller.proyecto.nombre"
+					<input type="text" ng-model="controller.proyecto.nombre" 
 						class="form-control" id="t_nombre" placeholder="Nombre">
 				</div>
 
@@ -111,7 +113,24 @@
 					<input type="number" ng-model="controller.proyecto.snip"
 						class="form-control" id="n_snip" placeholder="Nombre">
 				</div>
-				
+				<div class="form-grup" style="padding: 0px;">
+					<div class="form-group col-sm-3" >
+					       <label for="campo1">Programa</label> 
+					       <input type="number" class="form-control" id="campo1" name="campo1" placeholder="Programa" ng-model="controller.programa"  />
+					</div>
+					<div class="form-group col-sm-3" >
+					  <label for="campo2">Sub-Programa</label> 
+					  <input type="number" class="form-control" id="campo2" name="campo2" placeholder="Sub-programa" ng-model="controllerr.subprograma" />
+					</div>
+					<div class="form-group col-sm-3" >
+					  <label for="campo3">Proyecto:</label> 
+					  <input type="number" class="form-control" id="campo3" name="campo3" placeholder="Proyecto" ng-model="controller.proyecto_" required />
+					</div>					
+					<div class="form-group col-sm-3" >
+					  <label for="campo4">Obra</label> 
+					  <input type="number" class="form-control" id="campo4" name="campo4" placeholder="Obra" ng-model="controller.obra" ng-maxlength="4"/>
+					</div>
+				</div>
 				<div class="form-group">
 					<label for="campo3">* Tipo Proyecto</label>
 		          	<div class="input-group">

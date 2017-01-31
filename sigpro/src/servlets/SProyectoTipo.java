@@ -16,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.joda.time.DateTime;
 
@@ -39,7 +40,7 @@ public class SProyectoTipo extends HttpServlet {
 		Integer id;
 		String nombre;
 		String descripcion;
-		String usuarioCreo;
+		String usarioCreo;
 		String usuarioActualizo;
 		String fechaCreacion;
 		String fechaActualizacion;
@@ -57,6 +58,8 @@ public class SProyectoTipo extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
+		HttpSession sesionweb = request.getSession();
+		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		Gson gson = new Gson();
 		Type type = new TypeToken<Map<String, String>>(){}.getType();
 		StringBuilder sb = new StringBuilder();
@@ -72,7 +75,14 @@ public class SProyectoTipo extends HttpServlet {
 		if(accion.equals("getProyectoTipoPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroProyectoTipos = map.get("numeroproyectotipo")!=null  ? Integer.parseInt(map.get("numeroproyectotipo")) : 0;
-			List<ProyectoTipo> proyectotipos = ProyectoTipoDAO.getProyectosTipoPagina(pagina, numeroProyectoTipos);
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			
+			
+			List<ProyectoTipo> proyectotipos = ProyectoTipoDAO.getProyectosTipoPagina(pagina, numeroProyectoTipos, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			List<stproyectotipo> stcooperantes=new ArrayList<stproyectotipo>();
 			for(ProyectoTipo proyectotipo:proyectotipos){
 				stproyectotipo temp =new stproyectotipo();
@@ -84,7 +94,7 @@ public class SProyectoTipo extends HttpServlet {
 				temp.fechaActualizacion = Utils.formatDate(proyectotipo.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(proyectotipo.getFechaCreacion());
 				temp.usuarioActualizo = proyectotipo.getUsuarioActualizo();
-				temp.usuarioCreo = proyectotipo.getUsarioCreo();
+				temp.usarioCreo = proyectotipo.getUsarioCreo();
 				stcooperantes.add(temp);
 			}
 			
@@ -93,7 +103,10 @@ public class SProyectoTipo extends HttpServlet {
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("numeroProyectoTipos")){
-			response_text = String.join("","{ \"success\": true, \"totalproyectotipos\":",ProyectoTipoDAO.getTotalProyectoTipos().toString()," }");
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			response_text = String.join("","{ \"success\": true, \"totalproyectotipos\":",ProyectoTipoDAO.getTotalProyectoTipos(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
 		else if(accion.equals("guardarProyectotipo")){
 			boolean result = false;
@@ -107,13 +120,13 @@ public class SProyectoTipo extends HttpServlet {
 				
 				if(esnuevo){
 					proyectoTipo = new ProyectoTipo(nombre, descripcion, 
-							"admin",null,new DateTime().toDate(),null,1,null,new HashSet<PtipoPropiedad>(0));
+							usuario,null,new DateTime().toDate(),null,1,null,new HashSet<PtipoPropiedad>(0));
 				}
 				else{
 					proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(id);
 					proyectoTipo.setNombre(nombre);
 					proyectoTipo.setDescripcion(descripcion);
-					proyectoTipo.setUsuarioActualizo("admin");
+					proyectoTipo.setUsuarioActualizo(usuario);
 					proyectoTipo.setFechaActualizacion(new DateTime().toDate());
 					Set<PtipoPropiedad> propiedades_temp = proyectoTipo.getPtipoPropiedads();
 					proyectoTipo.setPtipoPropiedads(null);
@@ -137,7 +150,7 @@ public class SProyectoTipo extends HttpServlet {
 								ptipoPropiedadId,
 								proyectoPropiedad,
 								proyectoTipo, 
-								"admin", new DateTime().toDate());
+								usuario, new DateTime().toDate());
 						
 						ptipoPropiedad.setProyectoTipo(proyectoTipo);
 						if (proyectoTipo.getPtipoPropiedads() == null){

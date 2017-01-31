@@ -119,6 +119,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
              .when('/formularioitemtipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'formularioitemtipoController\'" class="all_page"></div>'
             })
+            .when('/formulario/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'formularioController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -293,6 +296,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'formularioitemtipoController',
 	    	   script: '/app/components/formularioitemtipo/formularioitemtipo.controller.js',
 	    	   template: '/app/components/formularioitemtipo/formularioitemtipo.jsp'
+	       },
+	       {
+	    	   name: 'formularioController',
+	    	   script: '/app/components/formulario/formulario.controller.js',
+	    	   template: '/app/components/formulario/formulario.jsp'
 	       }
 
 	   ];
