@@ -40,6 +40,7 @@ app.controller(
 	mi.cambioPassword= false;
 	mi.mostrarCambioPassword = false;
 	var passwordLocal="";
+	mi.tieneColaborador=false;
 	mi.gridOptions = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -114,6 +115,7 @@ app.controller(
 		mi.isCollapsed = false;
 		mi.cambioPassword= false;
 		mi.mostrarCambioPassword = false;
+		mi.tieneColaborador=false;
 	}
 				
 	
@@ -309,6 +311,9 @@ app.controller(
 			mi.isCollapsed = true;
 			mi.esNuevo=false;
 			passwordLocal=mi.usuariosSelected.password;
+			if(mi.usuariosSelected.colaborador!=null){
+				mi.tieneColaborador=true;
+			}
 			$http.post('/SUsuario', {
 	    		accion:'obtenerPermisos',
 	    		usuario: mi.usuariosSelected.usuario
@@ -424,7 +429,7 @@ app.controller(
 						function(response) {
 							if (response.data.success) {
 								$utilidades.mensaje('success',
-										'Colaborador actualizado con exito.');
+										'Colaborador asignado con exito.');
 							} else {
 								$utilidades.mensaje('danger',
 										'Error al actualizar datos...!!!');
@@ -614,13 +619,13 @@ function modalBuscarColaborador($uibModalInstance, $scope, $http, $interval, i18
 		}
     }
     var datos = {
-			accion : 'cargar',
+			accion : 'getColaboradores',
 			pagina :1,
 			registros : 100
 		};
 
 		mi.mostrarCargando = true;
-		$http.post('/SColaborador', datos).then(function(response) {
+		$http.post('/SUsuario', datos).then(function(response) {
 			if (response.data.success) {
 
 				mi.data = response.data.unidadesEjecutoras;

@@ -19,7 +19,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import dao.ColaboradorDAO;
 import dao.UsuarioDAO;
+import pojo.Colaborador;
 import pojo.Permiso;
 import pojo.Usuario;
 import pojo.UsuarioPermiso;
@@ -50,6 +52,14 @@ public class SUsuario extends HttpServlet {
 		String fechaCreacion;
 		String fechaActualizacion;
 		String password;
+		String colaborador;
+		String pnombre;
+		String snombre;
+		String papellido;
+		String sapellido;
+		Long cui;
+		String unidad_ejecutora;
+	
 	}
 	
 	class stpermiso{
@@ -180,6 +190,10 @@ public class SUsuario extends HttpServlet {
 					usuariotmp.fechaCreacion=Utils.formatDate(usuario.getFechaCreacion());
 					usuariotmp.fechaActualizacion=Utils.formatDate(usuario.getFechaActualizacion());
 					usuariotmp.password=usuario.getPassword();
+					Colaborador colaborador_tmp=UsuarioDAO.getColaborador(usuariotmp.usuario);
+					if(colaborador_tmp!=null){
+						usuariotmp.colaborador=colaborador_tmp.getPapellido()+", "+colaborador_tmp.getPnombre();
+					}				
 					stusuarios.add(usuariotmp);
 				}
 				String respuesta = new GsonBuilder().serializeNulls().create().toJson(stusuarios);
@@ -226,9 +240,20 @@ public class SUsuario extends HttpServlet {
 				HttpSession sesionweb = request.getSession();
 				String usuario_texto = sesionweb.getAttribute("usuario")!=null? sesionweb.getAttribute("usuario").toString(): "";
 				Usuario usuarioActual = UsuarioDAO.getUsuario(usuario_texto);
+				Colaborador  colaboradorActual = UsuarioDAO.getColaborador(usuario_texto);
 				stusuario usuarioStr = new stusuario();
 				usuarioStr.email=usuarioActual.getEmail();
 				usuarioStr.usuario=usuarioActual.getUsuario();
+				usuarioStr.password=usuarioActual.getPassword();
+				if(colaboradorActual!=null){
+					usuarioStr.cui=colaboradorActual.getCui();
+					usuarioStr.pnombre=colaboradorActual.getPnombre();
+					usuarioStr.snombre=colaboradorActual.getSnombre();
+					usuarioStr.papellido=colaboradorActual.getPapellido();
+					usuarioStr.sapellido=colaboradorActual.getSapellido();
+					usuarioStr.unidad_ejecutora=colaboradorActual.getUnidadEjecutora().getNombre().toString();
+				}
+				
 				String respuesta = new GsonBuilder().serializeNulls().create().toJson(usuarioStr);
 				response_text = String.join("", "\"usuario\": ",respuesta);
 				response_text = String.join("", "{\"success\":true,", response_text,"}");
@@ -294,6 +319,36 @@ public class SUsuario extends HttpServlet {
 				}else{
 					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros correctos \" }");
 				}
+			}else if(accion.compareTo("getColaboradores")==0){
+				String resultadoJson = "";
+
+				resultadoJson = ColaboradorDAO.getJson2();
+
+				if (Utils.isNullOrEmpty(resultadoJson)) {
+					response_text = "{\"success\":false}";
+				} else {
+					response_text = "{\"success\":true," + resultadoJson + "}";
+				}
+			}else if(accion.compareTo("getUsuariosDisponibles")==0){
+				List <Usuario>  usuarios = UsuarioDAO.getUsuariosDisponibles();
+				List <stusuario> stusuarios = new ArrayList <stusuario>();
+				for(Usuario usuario: usuarios){
+					if(UsuarioDAO.getColaborador(usuario.getUsuario())==null){
+						stusuario usuariotmp =new  stusuario();
+						usuariotmp.usuario =usuario.getUsuario();
+						usuariotmp.email = usuario.getEmail();
+						usuariotmp.usuarioCreo=usuario.getUsuarioCreo();
+						usuariotmp.usuarioActualizo= usuario.getUsuarioActualizo();
+						usuariotmp.fechaCreacion=Utils.formatDate(usuario.getFechaCreacion());
+						usuariotmp.fechaActualizacion=Utils.formatDate(usuario.getFechaActualizacion());
+						stusuarios.add(usuariotmp);
+					}
+							
+					
+				}
+				String respuesta = new GsonBuilder().serializeNulls().create().toJson(stusuarios);
+				response_text = String.join("", "\"usuarios\": ",respuesta);
+				response_text = String.join("", "{\"success\":true,", response_text,"}");
 			}
 		}else{
 			response_text = String.join("","{ \"success\": false, \"error\":\"No se enviaron los parametros deseados\" }");

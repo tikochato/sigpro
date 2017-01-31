@@ -339,6 +339,32 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 	mi.usuarioCambio = function() {
 		mi.usuarioValido = false;
 	}
+	
+	mi.buscarUsuario=function(){
+		var modalInstance = $uibModal.open({
+		    animation : 'true',
+		    ariaLabelledBy : 'modal-title',
+		    ariaDescribedBy : 'modal-body',
+		    templateUrl : 'buscarUsuario.jsp',
+		    controller : 'modalBuscarUsuario',
+		    controllerAs : 'modalBuscar',
+		    backdrop : 'static',
+		    size : 'md',
+		    resolve : {
+		    	infoUsuario: function(){
+		    		var parametros={ usuario:""};
+		    		return  parametros;
+		    	}
+		    }
+
+		});
+		
+		modalInstance.result.then(function(data) {
+			mi.usuario=data.usuario;
+			mi.usuarioValido=data.success;
+		}, function() {
+		});
+	};
 
 }
 
@@ -449,3 +475,91 @@ function modalBuscarUnidadEjecutora($uibModalInstance, $scope, $http,
 	};
 
 }
+
+moduloColaborador.controller('modalBuscarUsuario', [
+	'$uibModalInstance', '$scope', '$http', '$interval', 'i18nService',
+	'Utilidades', '$timeout', '$log','infoUsuario',modalBuscarUsuario
+]);
+function modalBuscarUsuario($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log, infoUsuario) {
+	var mi = this;
+
+	mi.totalElementos = 0;
+	mi.paginaActual = 1;
+	mi.numeroMaximoPaginas = 5;
+	mi.elementosPorPagina = 9;
+	
+	mi.mostrarCargando = false;
+	mi.data = [];
+	
+	mi.itemSeleccionado = null;
+	mi.seleccionado = false;
+	
+   
+   
+    mi.opcionesGrid = {
+		data : mi.data,
+		columnDefs : [
+			{
+				displayName : 'Usuario', 
+				name : 'usuario', 
+				cellClass : 'grid-align-right', 
+				type : 'text',width : 150
+			
+			}, 
+			{ 
+				displayName : 'Correo', 
+				name : 'email', 
+				cellClass : 'grid-align-left'
+			}
+			
+		],
+		enableRowSelection : true,
+		enableRowHeaderSelection : false,
+		multiSelect : false,
+		modifierKeysToMultiSelect : false,
+		noUnselect : false,
+		enableFiltering : true,
+		enablePaginationControls : false,
+		paginationPageSize : 5,
+		onRegisterApi : function(gridApi) {
+		    mi.gridApi = gridApi;
+		    mi.gridApi.selection.on.rowSelectionChanged($scope,
+			    mi.seleccionarPermiso);
+		}
+    }
+    var datos = {
+			accion : 'getUsuariosDisponibles',
+			pagina :1,
+			registros : 100
+		};
+
+		mi.mostrarCargando = true;
+		$http.post('/SUsuario', datos).then(function(response) {
+			if (response.data.success) {
+
+				mi.data = response.data.usuarios;
+				mi.opcionesGrid.data = mi.data;
+
+				mi.mostrarCargando = false;
+			}
+		});
+    mi.seleccionarPermiso = function(row) {
+    	mi.itemSeleccionado = row.entity;
+    	mi.seleccionado = row.isSelected;
+    };
+
+
+     mi.ok = function() {
+    	if (mi.seleccionado) {
+    	    $uibModalInstance.close({usuario:mi.itemSeleccionado.usuario, success:true});
+    	} else {
+    	    $utilidades.mensaje('warning', 'Debe seleccionar un colaborador');
+    	}
+     };
+	
+
+     mi.cancel = function() {
+    	$uibModalInstance.dismiss('cancel');
+     };
+}
+

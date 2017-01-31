@@ -35,12 +35,12 @@ public class CooperanteDAOTest {
 	
 	@Test
 	public void getCooperantesPaginaTest(){
-		assertNotNull(CooperanteDAO.getCooperantesPagina(1, 1));
+		assertNotNull(CooperanteDAO.getCooperantesPagina(1, 1, "", "", "", "", "",""));
 	}
 	
 	@Test
 	public void getTotalCooperantesTest(){
-		assertEquals(CooperanteDAO.getTotalCooperantes().getClass(),Long.class);
+		assertEquals(CooperanteDAO.getTotalCooperantes("","","","").getClass(),Long.class);
 	}
 
 }

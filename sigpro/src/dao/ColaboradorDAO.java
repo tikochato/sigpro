@@ -160,6 +160,34 @@ public class ColaboradorDAO {
 
 		return jsonEntidades;
 	}
+	public static String getJson2() {
+		String jsonEntidades = "";
+
+		List<Colaborador> pojos = getPagina(1, 10000);
+
+		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
+
+		for (Colaborador pojo : pojos) {
+			if(pojo.getUsuario()==null){
+				EstructuraPojo estructuraPojo = new EstructuraPojo();
+				estructuraPojo.id = pojo.getId();
+				estructuraPojo.primerNombre = pojo.getPnombre();
+				estructuraPojo.segundoNombre = pojo.getSnombre();
+				estructuraPojo.primerApellido = pojo.getPapellido();
+				estructuraPojo.segundoApellido = pojo.getSapellido();
+				estructuraPojo.cui = pojo.getCui();
+				estructuraPojo.usuario = pojo.getUsuario().getUsuario();
+				estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora().getUnidadEjecutora();
+				estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
+				listaEstructuraPojos.add(estructuraPojo);
+			}
+			
+		}
+
+		jsonEntidades = Utils.getJSonString("unidadesEjecutoras", listaEstructuraPojos);
+
+		return jsonEntidades;
+	}
 
 	public static Long getTotal() {
 		Long ret = 0L;

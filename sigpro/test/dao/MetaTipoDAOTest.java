@@ -32,12 +32,12 @@ public class MetaTipoDAOTest {
 	
 	@Test
 	public void getMetaTiposPaginaTest(){
-		assertNotNull(MetaTipoDAO.getMetaTiposPagina(1, 1));
+		assertNotNull(MetaTipoDAO.getMetaTiposPagina(1, 1, "", "", "", "", ""));
 	}
 	
 	@Test
 	public void getTotalMetaTiposTest(){
-		assertEquals(MetaTipoDAO.getTotalMetaTipos().getClass(),Long.class);
+		assertEquals(MetaTipoDAO.getTotalMetaTipos("","","").getClass(),Long.class);
 	}
 	
 	
