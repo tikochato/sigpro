@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class FormularioItem implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3008738647551115893L;
+	private static final long serialVersionUID = 2291788632844898856L;
 	private Integer id;
 	private Formulario formulario;
 	private FormularioItemTipo formularioItemTipo;
@@ -38,6 +38,7 @@ public class FormularioItem implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
+	private Set<FormularioItemOpcion> formularioItemOpcions = new HashSet<FormularioItemOpcion>(0);
 	private Set<FormularioItemValor> formularioItemValors = new HashSet<FormularioItemValor>(0);
 
 	public FormularioItem() {
@@ -56,7 +57,7 @@ public class FormularioItem implements java.io.Serializable {
 
 	public FormularioItem(Formulario formulario, FormularioItemTipo formularioItemTipo, String texto, int orden,
 			String usuarioCreo, Integer usuarioActualizacion, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Set<FormularioItemValor> formularioItemValors) {
+			Set<FormularioItemOpcion> formularioItemOpcions, Set<FormularioItemValor> formularioItemValors) {
 		this.formulario = formulario;
 		this.formularioItemTipo = formularioItemTipo;
 		this.texto = texto;
@@ -66,6 +67,7 @@ public class FormularioItem implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
+		this.formularioItemOpcions = formularioItemOpcions;
 		this.formularioItemValors = formularioItemValors;
 	}
 
@@ -164,6 +166,15 @@ public class FormularioItem implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formularioItem")
+	public Set<FormularioItemOpcion> getFormularioItemOpcions() {
+		return this.formularioItemOpcions;
+	}
+
+	public void setFormularioItemOpcions(Set<FormularioItemOpcion> formularioItemOpcions) {
+		this.formularioItemOpcions = formularioItemOpcions;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "formularioItem")

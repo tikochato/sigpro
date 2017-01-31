@@ -9,12 +9,12 @@
 				<div class="btn-group">
 			       <shiro:hasPermission name="crearCooperante">
 			       		<label class="btn btn-primary" ng-click="riesgopropiedadc.nuevo()">Nuevo</label>
-			       </shiro:hasPermission> 
+			       </shiro:hasPermission>
 			       <shiro:hasPermission name="editarCooperante"><label class="btn btn-primary" ng-click="riesgopropiedadc.editar()">Editar</label></shiro:hasPermission>
 			       <shiro:hasPermission name="eliminarCooperante">
 			       		<label class="btn btn-primary" ng-click="riesgopropiedadc.borrar()">Borrar</label>
 			       </shiro:hasPermission>
-    			</div>				
+    			</div>
     		</div>
     		<shiro:hasPermission name="verCooperante">
     		<div class="col-sm-12" align="center">
@@ -27,7 +27,7 @@
 					</div>
 				</div>
 				<br/>
-				<div id="maingrid" ui-grid="riesgopropiedadc.gridOptions" ui-grid-save-state 
+				<div id="maingrid" ui-grid="riesgopropiedadc.gridOptions" ui-grid-save-state
 						ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination class="grid">
 					<div class="grid_loading" ng-hide="!riesgopropiedadc.mostrarcargando">
 				  	<div class="msg">
@@ -38,9 +38,9 @@
 					</div>
 				  </div>
 				</div>
-				<ul uib-pagination total-items="riesgopropiedadc.totalCooperantes" 
-						ng-model="riesgopropiedadc.paginaActual" 
-						max-size="riesgopropiedadc.numeroMaximoPaginas" 
+				<ul uib-pagination total-items="riesgopropiedadc.totalRiesgoPropiedades" 
+						ng-model="riesgopropiedadc.paginaActual"
+						max-size="riesgopropiedadc.numeroMaximoPaginas"
 						items-per-page="riesgopropiedadc.elementosPorPagina"
 						first-text="Primero"
 						last-text="Último"
@@ -51,7 +51,7 @@
 				></ul>
 			</div>
     		</shiro:hasPermission>
-    		
+
 		</div>
 		<div class="row" ng-show="riesgopropiedadc.mostraringreso">
 			<h4 ng-hide="!riesgopropiedadc.esnuevo">Nueva Propiedad</h4>
@@ -62,7 +62,7 @@
 			        <label class="btn btn-primary" ng-click="riesgopropiedadc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
-			
+
 			<div class="col-sm-12">
 				<form>
 						<div class="form-group">
@@ -79,7 +79,7 @@
 								<option value="">Seleccione una opción</option>
 								<option ng-repeat="opciones in riesgopropiedadc.tipodatos" value="{{opciones.id}}">{{opciones.nombre}}</option>
 							</select>
-						</div>	
+						</div>
 						<div class="form-group">
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="riesgopropiedadc.riesgopropiedad.descripcion">

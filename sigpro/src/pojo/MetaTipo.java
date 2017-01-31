@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class MetaTipo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5050494193633598924L;
+	private static final long serialVersionUID = 3790508041417353870L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
@@ -33,14 +33,21 @@ public class MetaTipo implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private Integer estado;
+	private int estado;
 	private Set<Meta> metas = new HashSet<Meta>(0);
 
 	public MetaTipo() {
 	}
 
+	public MetaTipo(String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+		this.nombre = nombre;
+		this.usuarioCreo = usuarioCreo;
+		this.fechaCreacion = fechaCreacion;
+		this.estado = estado;
+	}
+
 	public MetaTipo(String nombre, String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, Integer estado, Set<Meta> metas) {
+			Date fechaActualizacion, int estado, Set<Meta> metas) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
@@ -63,7 +70,7 @@ public class MetaTipo implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "nombre", length = 1000)
+	@Column(name = "nombre", nullable = false, length = 1000)
 	public String getNombre() {
 		return this.nombre;
 	}
@@ -81,7 +88,7 @@ public class MetaTipo implements java.io.Serializable {
 		this.descripcion = descripcion;
 	}
 
-	@Column(name = "usuario_creo", length = 30)
+	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
 	}
@@ -100,7 +107,7 @@ public class MetaTipo implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_creacion", length = 19)
+	@Column(name = "fecha_creacion", nullable = false, length = 19)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}
@@ -119,12 +126,12 @@ public class MetaTipo implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Column(name = "estado")
-	public Integer getEstado() {
+	@Column(name = "estado", nullable = false)
+	public int getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(Integer estado) {
+	public void setEstado(int estado) {
 		this.estado = estado;
 	}
 

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,68 +27,72 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6235549621708983254L;
+	private static final long serialVersionUID = 1209726396972426274L;
 	private Integer id;
 	private Cooperante cooperante;
 	private ProyectoTipo proyectoTipo;
 	private UnidadEjecutora unidadEjecutora;
 	private String nombre;
 	private String descripcion;
-	private int snip;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
+	private int snip;
+	private Integer programa;
+	private Integer subprograma;
+	private Integer proyecto;
+	private Integer actividadObra;
 	private Set<Desembolso> desembolsos = new HashSet<Desembolso>(0);
-	private Set<FormularioItemValor> formularioItemValors = new HashSet<FormularioItemValor>(0);
 	private Set<Hito> hitos = new HashSet<Hito>(0);
 	private Set<Meta> metas = new HashSet<Meta>(0);
 	private Set<ProyectoPropedadValor> proyectoPropedadValors = new HashSet<ProyectoPropedadValor>(0);
-	private Set<Riesgo> riesgos = new HashSet<Riesgo>(0);
+	private Set<ProyectoUsuario> proyectoUsuarios = new HashSet<ProyectoUsuario>(0);
 	private Set<Componente> componentes = new HashSet<Componente>(0);
-	private Set<ObjetoFormulario> objetoFormularios = new HashSet<ObjetoFormulario>(0);
 
 	public Proyecto() {
 	}
 
 	public Proyecto(Cooperante cooperante, ProyectoTipo proyectoTipo, UnidadEjecutora unidadEjecutora, String nombre,
-			int snip, String usuarioCreo, Date fechaCreacion, int estado) {
+			String usuarioCreo, Date fechaCreacion, int estado, int snip) {
 		this.cooperante = cooperante;
 		this.proyectoTipo = proyectoTipo;
 		this.unidadEjecutora = unidadEjecutora;
 		this.nombre = nombre;
-		this.snip = snip;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
+		this.snip = snip;
 	}
 
 	public Proyecto(Cooperante cooperante, ProyectoTipo proyectoTipo, UnidadEjecutora unidadEjecutora, String nombre,
-			String descripcion, int snip, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, Set<Desembolso> desembolsos,
-			Set<FormularioItemValor> formularioItemValors, Set<Hito> hitos, Set<Meta> metas,
-			Set<ProyectoPropedadValor> proyectoPropedadValors, Set<Riesgo> riesgos, Set<Componente> componentes,
-			Set<ObjetoFormulario> objetoFormularios) {
+			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Date fechaActualizacion, int estado, int snip, Integer programa, Integer subprograma, Integer proyecto,
+			Integer actividadObra, Set<Desembolso> desembolsos, Set<Hito> hitos, Set<Meta> metas,
+			Set<ProyectoPropedadValor> proyectoPropedadValors, Set<ProyectoUsuario> proyectoUsuarios,
+			Set<Componente> componentes) {
 		this.cooperante = cooperante;
 		this.proyectoTipo = proyectoTipo;
 		this.unidadEjecutora = unidadEjecutora;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
-		this.snip = snip;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
+		this.snip = snip;
+		this.programa = programa;
+		this.subprograma = subprograma;
+		this.proyecto = proyecto;
+		this.actividadObra = actividadObra;
 		this.desembolsos = desembolsos;
-		this.formularioItemValors = formularioItemValors;
 		this.hitos = hitos;
 		this.metas = metas;
 		this.proyectoPropedadValors = proyectoPropedadValors;
-		this.riesgos = riesgos;
+		this.proyectoUsuarios = proyectoUsuarios;
 		this.componentes = componentes;
-		this.objetoFormularios = objetoFormularios;
 	}
 
 	@Id
@@ -151,15 +155,6 @@ public class Proyecto implements java.io.Serializable {
 		this.descripcion = descripcion;
 	}
 
-	@Column(name = "snip", nullable = false)
-	public int getSnip() {
-		return this.snip;
-	}
-
-	public void setSnip(int snip) {
-		this.snip = snip;
-	}
-
 	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
@@ -207,6 +202,51 @@ public class Proyecto implements java.io.Serializable {
 		this.estado = estado;
 	}
 
+	@Column(name = "snip", nullable = false)
+	public int getSnip() {
+		return this.snip;
+	}
+
+	public void setSnip(int snip) {
+		this.snip = snip;
+	}
+
+	@Column(name = "programa")
+	public Integer getPrograma() {
+		return this.programa;
+	}
+
+	public void setPrograma(Integer programa) {
+		this.programa = programa;
+	}
+
+	@Column(name = "subprograma")
+	public Integer getSubprograma() {
+		return this.subprograma;
+	}
+
+	public void setSubprograma(Integer subprograma) {
+		this.subprograma = subprograma;
+	}
+
+	@Column(name = "proyecto")
+	public Integer getProyecto() {
+		return this.proyecto;
+	}
+
+	public void setProyecto(Integer proyecto) {
+		this.proyecto = proyecto;
+	}
+
+	@Column(name = "actividad_obra")
+	public Integer getActividadObra() {
+		return this.actividadObra;
+	}
+
+	public void setActividadObra(Integer actividadObra) {
+		this.actividadObra = actividadObra;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
 	public Set<Desembolso> getDesembolsos() {
 		return this.desembolsos;
@@ -214,15 +254,6 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setDesembolsos(Set<Desembolso> desembolsos) {
 		this.desembolsos = desembolsos;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
-	public Set<FormularioItemValor> getFormularioItemValors() {
-		return this.formularioItemValors;
-	}
-
-	public void setFormularioItemValors(Set<FormularioItemValor> formularioItemValors) {
-		this.formularioItemValors = formularioItemValors;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
@@ -253,12 +284,12 @@ public class Proyecto implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
-	public Set<Riesgo> getRiesgos() {
-		return this.riesgos;
+	public Set<ProyectoUsuario> getProyectoUsuarios() {
+		return this.proyectoUsuarios;
 	}
 
-	public void setRiesgos(Set<Riesgo> riesgos) {
-		this.riesgos = riesgos;
+	public void setProyectoUsuarios(Set<ProyectoUsuario> proyectoUsuarios) {
+		this.proyectoUsuarios = proyectoUsuarios;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
@@ -268,15 +299,6 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setComponentes(Set<Componente> componentes) {
 		this.componentes = componentes;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
-	public Set<ObjetoFormulario> getObjetoFormularios() {
-		return this.objetoFormularios;
-	}
-
-	public void setObjetoFormularios(Set<ObjetoFormulario> objetoFormularios) {
-		this.objetoFormularios = objetoFormularios;
 	}
 
 }

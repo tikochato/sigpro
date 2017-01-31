@@ -208,8 +208,7 @@ public class ProductoDAO {
 		pojo.setProductoTipo(tipo > 0 ? ProductoTipoDAO.getProductoTipo(tipo) : null);
 
 		pojo.setProductoPropiedadValors(null);
-		pojo.setActividads(null);
-
+		
 		pojo.setUsuarioCreo(usuario);
 		pojo.setFechaCreacion(new Date());
 

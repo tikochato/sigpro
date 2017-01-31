@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import javax.persistence.AttributeOverride;
@@ -24,7 +24,7 @@ public class RolPermiso implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7805734339771843527L;
+	private static final long serialVersionUID = 5748528209144059792L;
 	private RolPermisoId id;
 	private Permiso permiso;
 	private Rol rol;
@@ -32,19 +32,22 @@ public class RolPermiso implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private Integer estado;
+	private int estado;
 
 	public RolPermiso() {
 	}
 
-	public RolPermiso(RolPermisoId id, Permiso permiso, Rol rol) {
+	public RolPermiso(RolPermisoId id, Permiso permiso, Rol rol, String usuarioCreo, Date fechaCreacion, int estado) {
 		this.id = id;
 		this.permiso = permiso;
 		this.rol = rol;
+		this.usuarioCreo = usuarioCreo;
+		this.fechaCreacion = fechaCreacion;
+		this.estado = estado;
 	}
 
 	public RolPermiso(RolPermisoId id, Permiso permiso, Rol rol, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, Integer estado) {
+			Date fechaCreacion, Date fechaActualizacion, int estado) {
 		this.id = id;
 		this.permiso = permiso;
 		this.rol = rol;
@@ -87,7 +90,7 @@ public class RolPermiso implements java.io.Serializable {
 		this.rol = rol;
 	}
 
-	@Column(name = "usuario_creo", length = 30)
+	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
 	}
@@ -106,7 +109,7 @@ public class RolPermiso implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_creacion", length = 19)
+	@Column(name = "fecha_creacion", nullable = false, length = 19)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}
@@ -125,12 +128,12 @@ public class RolPermiso implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Column(name = "estado")
-	public Integer getEstado() {
+	@Column(name = "estado", nullable = false)
+	public int getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(Integer estado) {
+	public void setEstado(int estado) {
 		this.estado = estado;
 	}
 

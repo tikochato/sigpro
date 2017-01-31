@@ -15,6 +15,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ProyectoPropiedadDAO;
 import dao.ProyectoPropiedadValorDAO;
+import pojo.DatoTipo;
 import pojo.ProyectoPropedadValor;
 import pojo.ProyectoPropiedad;
 import utilities.CFormaDinamica;
@@ -49,11 +53,13 @@ public class SProyectoPropiedad extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
+		HttpSession sesionweb = request.getSession();
+		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		Gson gson = new Gson();
 		Type type = new TypeToken<Map<String, String>>(){}.getType();
 		StringBuilder sb = new StringBuilder();
@@ -67,9 +73,30 @@ public class SProyectoPropiedad extends HttpServlet {
 		String accion = map.get("accion");
 		String response_text="";
 		
-		
-		
 		if(accion.equals("getProyectoPropiedadPagina")){
+			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
+			int idProyectoPropiedad = map.get("idProyectoTipo")!=null  ? Integer.parseInt(map.get("idProyectoTipo")) : 0;
+			List<ProyectoPropiedad> proyectopropiedades = ProyectoPropiedadDAO.getProyectoPropiedadesPagina(pagina, idProyectoPropiedad);
+			List<stproyectopropiedad> stproyectopropiedad=new ArrayList<stproyectopropiedad>();
+			for(ProyectoPropiedad proyectopropiedad:proyectopropiedades){
+				stproyectopropiedad temp =new stproyectopropiedad();
+				temp.id = proyectopropiedad.getId();
+				temp.nombre = proyectopropiedad.getNombre();
+				temp.descripcion = proyectopropiedad.getDescripcion();
+				temp.datotipoid = proyectopropiedad.getDatoTipo().getId();
+				temp.datotiponombre = proyectopropiedad.getDatoTipo().getNombre();
+				temp.estado = proyectopropiedad.getEstado();
+				temp.fechaActualizacion = Utils.formatDate(proyectopropiedad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDate(proyectopropiedad.getFechaCreacion());	
+				temp.usuarioActualizo = proyectopropiedad.getUsuarioActualizo();
+				temp.usuarioCreo = proyectopropiedad.getUsuarioCreo();
+				stproyectopropiedad.add(temp);
+			}
+			response_text=new GsonBuilder().serializeNulls().create().toJson(stproyectopropiedad);
+	        response_text = String.join("", "\"proyectopropiedades\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}
+		else if(accion.equals("getProyectoPropiedadPaginaPorTipoProy")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int idProyectoPropiedad = map.get("idProyectoTipo")!=null  ? Integer.parseInt(map.get("idProyectoTipo")) : 0;
 			
@@ -155,7 +182,56 @@ public class SProyectoPropiedad extends HttpServlet {
 	        response_text = String.join("", "\"proyectopropiedades\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
+		
+		
+		else if(accion.equals("guardarProyectoPropiedad")){
+			boolean result = false;
+			boolean esnuevo = map.get("esnuevo").equals("true");
+			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			if(id>0 || esnuevo){
+				String nombre = map.get("nombre");
+				String descripcion = map.get("descripcion");
+				int datoTipoId = map.get("datoTipoId")!=null ? Integer.parseInt(map.get("datoTipoId")) : 0;
+				
+				DatoTipo datoTipo = new DatoTipo();
+				datoTipo.setId(datoTipoId);
+
+				ProyectoPropiedad proyectoPropiedad;
+				if(esnuevo){
+					proyectoPropiedad = new ProyectoPropiedad(datoTipo,nombre, usuario, new DateTime().toDate(), 1);
+					proyectoPropiedad.setDescripcion(descripcion);
+				}
+				else{
+					proyectoPropiedad = ProyectoPropiedadDAO.getProyectoPropiedadPorId(id);
+					proyectoPropiedad.setNombre(nombre);
+					proyectoPropiedad.setDescripcion(descripcion);
+					proyectoPropiedad.setUsuarioActualizo(usuario);
+					proyectoPropiedad.setFechaActualizacion(new DateTime().toDate());
+					proyectoPropiedad.setDatoTipo(datoTipo);
+				}
+				result = ProyectoPropiedadDAO.guardarProyectoPropiedad(proyectoPropiedad);
+				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
+						+ "\"id\": " + proyectoPropiedad.getId() +" }");
+			}
+			else
+				response_text = "{ \"success\": false }";
+		}
+		else if(accion.equals("borrarProyectoPropiedad")){
+
+			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			if(id>0){
+				ProyectoPropiedad proyectoPropiedad = ProyectoPropiedadDAO.getProyectoPropiedadPorId(id);
+				proyectoPropiedad.setUsuarioActualizo(usuario);
+				response_text = String.join("","{ \"success\": ",(ProyectoPropiedadDAO.eliminarProyectoPropiedad(proyectoPropiedad) ? "true" : "false")," }");
+			}
+			else
+				response_text = "{ \"success\": false }";
+		}
 		else if(accion.equals("numeroProyectoPropiedadesDisponibles")){
+			String idsPropiedades = map.get("idspropiedades")!=null ? map.get("idspropiedades").toString()   : "0";
+			response_text = String.join("","{ \"success\": true, \"totalproyectopropiedades\":",ProyectoPropiedadDAO.getTotalProyectoPropiedadesDisponibles(idsPropiedades).toString()," }");
+		}
+		else if(accion.equals("numeroProyectoPropiedades")){
 			response_text = String.join("","{ \"success\": true, \"totalproyectopropiedades\":",ProyectoPropiedadDAO.getTotalProyectoPropiedades().toString()," }");
 		}
 		

@@ -32,6 +32,7 @@
         <mapping class="pojo.FormularioItem" />
         <mapping class="pojo.FormularioItemTipo" />
         <mapping class="pojo.FormularioItemValor" />
+        <mapping class="pojo.FormularioItemOpcion" />
         <mapping class="pojo.FormularioTipo" />
         <mapping class="pojo.Hito" />
         <mapping class="pojo.HitoResultado" />
@@ -42,6 +43,10 @@
         <mapping class="pojo.MetaValor" />
         <mapping class="pojo.ObjetoFormulario" />
         <mapping class="pojo.ObjetoRecurso" />
+        <mapping class="pojo.ObjetoActividad" />
+        <mapping class="pojo.ObjetoActividadId" />
+        <mapping class="pojo.ObjetoRiesgo" />
+        <mapping class="pojo.ObjetoRiesgoId" />
         <mapping class="pojo.Permiso" />
         <mapping class="pojo.ProdtipoPropiedad" />
         <mapping class="pojo.Producto" />

@@ -3,7 +3,7 @@ var app = angular.module('riesgopropiedadController', []);
 app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 		var mi=this;
-		
+
 		$window.document.title = 'SIGPRO - Propiedad Riesgo';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
@@ -16,7 +16,7 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		mi.tipodatos = [];
-		
+
 		mi.gridOptions = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
@@ -26,7 +26,7 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 				enableFiltering: true,
 				enablePaginationControls: false,
 			    paginationPageSize: $utilidades.elementosPorPagina,
-				columnDefs : [ 
+				columnDefs : [
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
@@ -39,12 +39,12 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 						mi.riesgopropiedad = row.entity;
 					});
-					
+
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
 				    }
 				    else{
-				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'componentepropiedades', t: (new Date()).getTime()}).then(function(response){
+				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'riesgopropiedades', t: (new Date()).getTime()}).then(function(response){
 					      if(response.data.success && response.data.estado!='')
 					    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
 					    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
@@ -55,7 +55,7 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 				    }
 				}
 			};
-		
+
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
 			$http.post('/SRiesgoPropiedad', { accion: 'getRiesgoPropiedadPagina', pagina: pagina, numeroriesgopropiedades: $utilidades.elementosPorPagina }).success(
@@ -65,7 +65,7 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 						mi.mostrarcargando = false;
 					});
 		}
-		
+
 		mi.guardar=function(){
 			if(mi.riesgopropiedad!=null && mi.riesgopropiedad.nombre!=''){
 				$http.post('/SRiesgoPropiedad', {
@@ -89,7 +89,7 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 			else
 				$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
 		};
-	
+
 		mi.borrar = function(ev) {
 			if(mi.riesgopropiedad!=null){
 				var confirm = $mdDialog.confirm()
@@ -99,7 +99,7 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 			          .targetEvent(ev)
 			          .ok('Borrar')
 			          .cancel('Cancelar');
-	
+
 			    $mdDialog.show(confirm).then(function() {
 			    	$http.post('/SRiesgoPropiedad', {
 						accion: 'borrarRiesgoPropiedad',
@@ -110,23 +110,23 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 							mi.cargarTabla();
 						}
 						else
-							$utilidades.mensaje('danger','Error al borrar la Riesgo Componente');
+							$utilidades.mensaje('danger','Error al borrar la Propiedad Riesgo');
 					});
 			    }, function() {
-			    
+
 			    });
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar la Propiedad Riesgo que desea borrar');
 		};
-	
+
 		mi.nuevo = function() {
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
 			mi.riesgopropiedad = null;
 			mi.gridApi.selection.clearSelectedRows();
 		};
-	
+
 		mi.editar = function() {
 			if(mi.riesgopropiedad!=null){
 				mi.mostraringreso = true;
@@ -135,30 +135,30 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 			else
 				$utilidades.mensaje('warning','Debe seleccionar la Propiedad Riesgo que desea editar');
 		}
-	
+
 		mi.irATabla = function() {
 			mi.mostraringreso=false;
 		}
-		
+
 		mi.guardarEstado=function(){
 			var estado = mi.gridApi.saveState.save();
-			var tabla_data = { action: 'guardaEstado', grid:'riesgopropiedad', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
+			var tabla_data = { action: 'guardaEstado', grid:'riesgopropiedades', estado: JSON.stringify(estado), t: (new Date()).getTime() };
 			$http.post('/SEstadoTabla', tabla_data).then(function(response){
-				
+
 			});
 		}
-		
+
 		mi.cambioPagina=function(){
 			mi.cargarTabla(mi.paginaActual);
 		}
-		
+
 		mi.reiniciarVista=function(){
 			if($location.path()=='/riesgopropiedad/rv')
 				$route.reload();
 			else
 				$location.path('/riesgopropiedad/rv');
 		}
-		
+
 		$http.post('/SRiesgoPropiedad', { accion: 'numeroRiesgoPropiedades' }).success(
 				function(response) {
 					mi.totalRiesgoPropiedades = response.totalriesgopropiedades;
@@ -168,6 +168,6 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 				function(response) {
 					mi.tipodatos = response.datoTipos;
 		});
-		
-	} 
+
+	}
 ]);

@@ -1,7 +1,9 @@
 package pojo;
-// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -10,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,69 +27,52 @@ public class ObjetoFormulario implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1849078949317284926L;
+	private static final long serialVersionUID = 5686780110824348318L;
 	private ObjetoFormularioId id;
-	private Componente componente;
 	private Formulario formulario;
-	private FormularioTipo formularioTipo;
-	private Producto producto;
-	private Proyecto proyecto;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
+	private Set<FormularioItemValor> formularioItemValors = new HashSet<FormularioItemValor>(0);
 
 	public ObjetoFormulario() {
 	}
 
-	public ObjetoFormulario(ObjetoFormularioId id, Formulario formulario, FormularioTipo formularioTipo,
-			String usuarioCreo, Date fechaCreacion, int estado) {
+	public ObjetoFormulario(ObjetoFormularioId id, Formulario formulario, String usuarioCreo, Date fechaCreacion,
+			int estado) {
 		this.id = id;
 		this.formulario = formulario;
-		this.formularioTipo = formularioTipo;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
 	}
 
-	public ObjetoFormulario(ObjetoFormularioId id, Componente componente, Formulario formulario,
-			FormularioTipo formularioTipo, Producto producto, Proyecto proyecto, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado) {
+	public ObjetoFormulario(ObjetoFormularioId id, Formulario formulario, String usuarioCreo, String usuarioActualizo,
+			Date fechaCreacion, Date fechaActualizacion, int estado, Set<FormularioItemValor> formularioItemValors) {
 		this.id = id;
-		this.componente = componente;
 		this.formulario = formulario;
-		this.formularioTipo = formularioTipo;
-		this.producto = producto;
-		this.proyecto = proyecto;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
+		this.formularioItemValors = formularioItemValors;
 	}
 
 	@EmbeddedId
 
 	@AttributeOverrides({
 			@AttributeOverride(name = "formularioid", column = @Column(name = "formularioid", nullable = false)),
-			@AttributeOverride(name = "objetoTipoid", column = @Column(name = "objeto_tipoid", nullable = false)) })
+			@AttributeOverride(name = "objetoTipo", column = @Column(name = "objeto_tipo", nullable = false)),
+			@AttributeOverride(name = "objetoId", column = @Column(name = "objeto_id", nullable = false)) })
 	public ObjetoFormularioId getId() {
 		return this.id;
 	}
 
 	public void setId(ObjetoFormularioId id) {
 		this.id = id;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "componenteid")
-	public Componente getComponente() {
-		return this.componente;
-	}
-
-	public void setComponente(Componente componente) {
-		this.componente = componente;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -97,36 +83,6 @@ public class ObjetoFormulario implements java.io.Serializable {
 
 	public void setFormulario(Formulario formulario) {
 		this.formulario = formulario;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "objeto_tipoid", nullable = false, insertable = false, updatable = false)
-	public FormularioTipo getFormularioTipo() {
-		return this.formularioTipo;
-	}
-
-	public void setFormularioTipo(FormularioTipo formularioTipo) {
-		this.formularioTipo = formularioTipo;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "productoid")
-	public Producto getProducto() {
-		return this.producto;
-	}
-
-	public void setProducto(Producto producto) {
-		this.producto = producto;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "proyectoid")
-	public Proyecto getProyecto() {
-		return this.proyecto;
-	}
-
-	public void setProyecto(Proyecto proyecto) {
-		this.proyecto = proyecto;
 	}
 
 	@Column(name = "usuario_creo", nullable = false, length = 30)
@@ -174,6 +130,15 @@ public class ObjetoFormulario implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "objetoFormulario")
+	public Set<FormularioItemValor> getFormularioItemValors() {
+		return this.formularioItemValors;
+	}
+
+	public void setFormularioItemValors(Set<FormularioItemValor> formularioItemValors) {
+		this.formularioItemValors = formularioItemValors;
 	}
 
 }

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 19, 2017 7:44:41 PM by Hibernate Tools 5.2.0.CR1
+// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -10,6 +10,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -25,16 +26,17 @@ public class FormularioItemValor implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2050203097844093174L;
+	private static final long serialVersionUID = -473359597829774496L;
 	private FormularioItemValorId id;
-	private Componente componente;
 	private FormularioItem formularioItem;
-	private Producto producto;
-	private Proyecto proyecto;
+	private ObjetoFormulario objetoFormulario;
 	private int valorEntero;
 	private String valorString;
 	private Date valorTiempo;
 	private BigDecimal valorDecimal;
+	private int proyectoid;
+	private int componenteid;
+	private int productoid;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
@@ -43,31 +45,34 @@ public class FormularioItemValor implements java.io.Serializable {
 	public FormularioItemValor() {
 	}
 
-	public FormularioItemValor(FormularioItemValorId id, Componente componente, FormularioItem formularioItem,
-			Producto producto, Proyecto proyecto, int valorEntero, String usuarioCreo, Date fechaCreacion) {
+	public FormularioItemValor(FormularioItemValorId id, FormularioItem formularioItem,
+			ObjetoFormulario objetoFormulario, int valorEntero, int proyectoid, int componenteid, int productoid,
+			String usuarioCreo, Date fechaCreacion) {
 		this.id = id;
-		this.componente = componente;
 		this.formularioItem = formularioItem;
-		this.producto = producto;
-		this.proyecto = proyecto;
+		this.objetoFormulario = objetoFormulario;
 		this.valorEntero = valorEntero;
+		this.proyectoid = proyectoid;
+		this.componenteid = componenteid;
+		this.productoid = productoid;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public FormularioItemValor(FormularioItemValorId id, Componente componente, FormularioItem formularioItem,
-			Producto producto, Proyecto proyecto, int valorEntero, String valorString, Date valorTiempo,
-			BigDecimal valorDecimal, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion) {
+	public FormularioItemValor(FormularioItemValorId id, FormularioItem formularioItem,
+			ObjetoFormulario objetoFormulario, int valorEntero, String valorString, Date valorTiempo,
+			BigDecimal valorDecimal, int proyectoid, int componenteid, int productoid, String usuarioCreo,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion) {
 		this.id = id;
-		this.componente = componente;
 		this.formularioItem = formularioItem;
-		this.producto = producto;
-		this.proyecto = proyecto;
+		this.objetoFormulario = objetoFormulario;
 		this.valorEntero = valorEntero;
 		this.valorString = valorString;
 		this.valorTiempo = valorTiempo;
 		this.valorDecimal = valorDecimal;
+		this.proyectoid = proyectoid;
+		this.componenteid = componenteid;
+		this.productoid = productoid;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
@@ -78,25 +83,15 @@ public class FormularioItemValor implements java.io.Serializable {
 
 	@AttributeOverrides({
 			@AttributeOverride(name = "formularioItemid", column = @Column(name = "formulario_itemid", nullable = false)),
-			@AttributeOverride(name = "proyectoid", column = @Column(name = "proyectoid", nullable = false)),
-			@AttributeOverride(name = "componenteid", column = @Column(name = "componenteid", nullable = false)),
-			@AttributeOverride(name = "productoid", column = @Column(name = "productoid", nullable = false)) })
+			@AttributeOverride(name = "objetoFormularioformularioid", column = @Column(name = "objeto_formularioformularioid", nullable = false)),
+			@AttributeOverride(name = "objetoFormularioobjetoTipoid", column = @Column(name = "objeto_formularioobjeto_tipoid", nullable = false)),
+			@AttributeOverride(name = "objetoFormularioobjetoId", column = @Column(name = "objeto_formularioobjeto_id", nullable = false)) })
 	public FormularioItemValorId getId() {
 		return this.id;
 	}
 
 	public void setId(FormularioItemValorId id) {
 		this.id = id;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "componenteid", nullable = false, insertable = false, updatable = false)
-	public Componente getComponente() {
-		return this.componente;
-	}
-
-	public void setComponente(Componente componente) {
-		this.componente = componente;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -110,23 +105,16 @@ public class FormularioItemValor implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "productoid", nullable = false, insertable = false, updatable = false)
-	public Producto getProducto() {
-		return this.producto;
+	@JoinColumns({
+			@JoinColumn(name = "objeto_formularioformularioid", referencedColumnName = "formularioid", nullable = false, insertable = false, updatable = false),
+			@JoinColumn(name = "objeto_formularioobjeto_tipoid", referencedColumnName = "objeto_tipo", nullable = false, insertable = false, updatable = false),
+			@JoinColumn(name = "objeto_formularioobjeto_id", referencedColumnName = "objeto_id", nullable = false, insertable = false, updatable = false) })
+	public ObjetoFormulario getObjetoFormulario() {
+		return this.objetoFormulario;
 	}
 
-	public void setProducto(Producto producto) {
-		this.producto = producto;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "proyectoid", nullable = false, insertable = false, updatable = false)
-	public Proyecto getProyecto() {
-		return this.proyecto;
-	}
-
-	public void setProyecto(Proyecto proyecto) {
-		this.proyecto = proyecto;
+	public void setObjetoFormulario(ObjetoFormulario objetoFormulario) {
+		this.objetoFormulario = objetoFormulario;
 	}
 
 	@Column(name = "valor_entero", nullable = false)
@@ -164,6 +152,33 @@ public class FormularioItemValor implements java.io.Serializable {
 
 	public void setValorDecimal(BigDecimal valorDecimal) {
 		this.valorDecimal = valorDecimal;
+	}
+
+	@Column(name = "proyectoid", nullable = false)
+	public int getProyectoid() {
+		return this.proyectoid;
+	}
+
+	public void setProyectoid(int proyectoid) {
+		this.proyectoid = proyectoid;
+	}
+
+	@Column(name = "componenteid", nullable = false)
+	public int getComponenteid() {
+		return this.componenteid;
+	}
+
+	public void setComponenteid(int componenteid) {
+		this.componenteid = componenteid;
+	}
+
+	@Column(name = "productoid", nullable = false)
+	public int getProductoid() {
+		return this.productoid;
+	}
+
+	public void setProductoid(int productoid) {
+		this.productoid = productoid;
 	}
 
 	@Column(name = "usuario_creo", nullable = false, length = 30)

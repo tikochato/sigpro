@@ -54,6 +54,8 @@ public class ProyectoPropiedadDAO {
 		}
 		return ret;
 	}
+	
+	
 	public static List<ProyectoPropiedad> getProyectoPropiedadPaginaTotalDisponibles(int pagina, int numeroproyectopropiedades, String idPropiedades){
 		List<ProyectoPropiedad> ret = new ArrayList<ProyectoPropiedad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -110,6 +112,99 @@ public class ProyectoPropiedadDAO {
 		}
 		catch(Throwable e){
 			CLogger.write("6", ProyectoPropiedadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Long getTotalProyectoPropiedadesDisponibles(String idPropiedades){
+		Long ret=0L;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Long> conteo = session.createQuery("select count(p.id) from ProyectoPropiedad p  WHERE p.estado = 1 "
+					+ (idPropiedades!=null && idPropiedades.length()>0 ?  " and p.id not in ("+ idPropiedades + ")" : "") 
+					,Long.class);
+					
+			ret = conteo.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("7", ProyectoPropiedadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<ProyectoPropiedad> getProyectoPropiedadesPagina(int pagina, int numeroProyectoPropiedades){
+		List<ProyectoPropiedad> ret = new ArrayList<ProyectoPropiedad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<ProyectoPropiedad> criteria = session.createQuery("SELECT p FROM ProyectoPropiedad p where p.estado = 1 ",ProyectoPropiedad.class);
+			criteria.setFirstResult(((pagina-1)*(numeroProyectoPropiedades)));
+			criteria.setMaxResults(numeroProyectoPropiedades);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("8", ProyectoPropiedadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean guardarProyectoPropiedad(ProyectoPropiedad proyectoPropiedad){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			session.saveOrUpdate(proyectoPropiedad);
+			session.getTransaction().commit();
+			ret = true;
+		}
+		catch(Throwable e){
+			e.printStackTrace();
+			CLogger.write("9", ProyectoPropiedadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean eliminarProyectoPropiedad(ProyectoPropiedad proyectoPropiedad){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			proyectoPropiedad.setEstado(0);
+			session.beginTransaction();
+			session.update(proyectoPropiedad);
+			session.getTransaction().commit();
+			ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("10", ProyectoPropiedadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean eliminarTotalProyectoPropiedad(ProyectoPropiedad proyectoPropiedad){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			session.delete(proyectoPropiedad);
+			session.getTransaction().commit();
+			ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("11", ProyectoPropiedadDAO.class, e);
 		}
 		finally{
 			session.close();

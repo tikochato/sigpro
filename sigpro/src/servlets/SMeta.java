@@ -110,7 +110,12 @@ public class SMeta extends HttpServlet {
 			int numenumeroMetas = map.get("numeroMeta")!=null  ? Integer.parseInt(map.get("numeroMeta")) : 0;
 			Integer id =  map.get("id")!=null  ? Integer.parseInt(map.get("id")) : 0;
 			Integer tipo =  map.get("tipo")!=null  ? Integer.parseInt(map.get("tipo")) : 0;
-			List<Meta> Metas = MetaDAO.getMetasPagina(pagina, numenumeroMetas, id, tipo);
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<Meta> Metas = MetaDAO.getMetasPagina(pagina, numenumeroMetas, id, tipo,filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			List<stmeta> tmetas = new ArrayList<stmeta>();
 			for(Meta meta : Metas){
 				stmeta temp = new stmeta();
@@ -185,7 +190,10 @@ public class SMeta extends HttpServlet {
 				response_text = "{ \"success\": false }";
 		}
 		else if(accion.equals("numeroMetas")){
-			response_text = String.join("","{ \"success\": true, \"totalMetas\":",MetaDAO.getTotalMetas().toString()," }");
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			response_text = String.join("","{ \"success\": true, \"totalMetas\":",MetaDAO.getTotalMetas(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
 		else if(accion.equals("getMetasTipos")){
 			List<MetaTipo> MetaTipos = MetaTipoDAO.getMetaTipos();

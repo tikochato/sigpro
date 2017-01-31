@@ -41,7 +41,7 @@
 					</div>
 				</div>
 			</div>
-			<ul uib-pagination total-items="proyectotipoc.totalCooperantes"
+			<ul uib-pagination total-items="proyectotipoc.totalProyectotipos"
 				ng-model="proyectotipoc.paginaActual"
 				max-size="proyectotipoc.numeroMaximoPaginas"
 				items-per-page="proyectotipoc.elementosPorPagina"
@@ -112,7 +112,7 @@
 							</div>
 						</div>
 					</div>
-					
+
 					<table style="width: 75%;"
 					st-table="proyectotipoc.proyectopropiedades"
 					class="table table-striped  table-bordered">
@@ -152,8 +152,7 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<label class="btn btn-success" ng-click="proyectotipoc.guardar()">Guardar</label>
-				<label class="btn btn-primary" ng-click="proyectotipoc.irATabla()">Ir
-					a Tabla</label>
+				<label class="btn btn-primary" ng-click="proyectotipoc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>
 	</div>
