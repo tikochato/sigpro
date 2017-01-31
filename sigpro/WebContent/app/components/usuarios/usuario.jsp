@@ -75,7 +75,6 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-success" ng-click="usuarioc.guardarUsuario()">Guardar</label>
-			        <label class="btn btn-success" ng-click="usuarioc.cambiarPassword()" ng-show="!usuarioc.esNuevo">Cambiar Contraseña</label>
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()">Ir a Tabla</label>
     			</div>
     		</div>
@@ -85,13 +84,17 @@
 							<label for="nombre">Usuario</label>
     						<input type="text" class="form-control" id="usuario" placeholder="Usuario" ng-model="usuarioc.usuariosSelected.usuario">
 						</div>
-						<div class="form-group" ng-show="!usuarioc.esNuevo">
+						<div class="form-group" ng-show="!usuarioc.esNuevo && !usuarioc.mostrarCambioPassword">
 							<label for="nombre">Usuario</label>
     						<input type="text" class="form-control" id="usuario" placeholder="Usuario" ng-model="usuarioc.usuariosSelected.usuario" readonly>
 						</div>
-						<div class="form-group">
-							<label for="Descripcion">Correo</label>
+						<div class="form-group" ng-show="!usuarioc.mostrarCambioPassword">
+							<label for="Descripcion" >Correo</label>
     						<input type="text" class="form-control" id="correo" placeholder="Correo electrónico" ng-model="usuarioc.usuariosSelected.email">
+						</div>
+						<div class="form-group" ng-show="!usuarioc.esNuevo">
+							<label for="Descripcion">Contraseña</label>
+    						<input type="password" class="form-control" id="password1" placeholder="Contraseña" ng-model="usuarioc.usuariosSelected.password">
 						</div>
 						<div class="form-group" ng-show="usuarioc.esNuevo">
 							<label for="Descripcion">Contraseña</label>
@@ -100,13 +103,12 @@
 						<div class="form-group" ng-show="usuarioc.esNuevo">
 							<label for="Descripcion">Vuelva a ingresar la contraseña</label>
     						<input type="password" class="form-control" id="password2" placeholder="Contraseña" ng-model="usuarioc.claves.password2">
-						</div>
+						</div>						
 				</form>
 			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-success" ng-click="usuarioc.guardarUsuario()">Guardar</label>
-			        <label class="btn btn-success" ng-click="usuarioc.cambiarPassword()" ng-show="!usuarioc.esNuevo">Cambiar Contraseña</label>
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()">Ir a Tabla</label>
     		</div>
     	</div>
