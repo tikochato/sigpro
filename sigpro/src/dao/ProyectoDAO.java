@@ -19,17 +19,20 @@ public class ProyectoDAO implements java.io.Serializable  {
 	
 	private static final long serialVersionUID = 1L;
 
-	public static List<Proyecto> getProyectos(){
+	public static List<Proyecto> getProyectos(String usuario){
 		List<Proyecto> ret = new ArrayList<Proyecto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			CriteriaBuilder builder = session.getCriteriaBuilder();
+			Query<Proyecto> criteria = session.createQuery("FROM Proyecto where id  in (Select proyectoid from ProyectoUsuario where usuario =:usuario )", Proyecto.class);
+			criteria.setParameter("usuario", usuario);
+			ret =   (List<Proyecto>)criteria.getResultList();
+			/*CriteriaBuilder builder = session.getCriteriaBuilder();
 
 			CriteriaQuery<Proyecto> criteria = builder.createQuery(Proyecto.class);
 			Root<Proyecto> root = criteria.from(Proyecto.class);
 			
 			criteria.select( root );
-			ret = (List<Proyecto>) session.createQuery( criteria ).getResultList();
+			ret = (List<Proyecto>) session.createQuery( criteria ).getResultList();*/
 		}
 		catch(Throwable e){
 			CLogger.write("1", Proyecto.class, e);
