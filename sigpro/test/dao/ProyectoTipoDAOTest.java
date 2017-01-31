@@ -25,13 +25,13 @@ public class ProyectoTipoDAOTest {
 	
 	@Test
 	public void getProyectosTipoPaginaTest(){
-		assertNotNull(ProyectoTipoDAO.getProyectosTipoPagina(1, 1));
+		assertNotNull(ProyectoTipoDAO.getProyectosTipoPagina(1, 1,"", "", "", "", ""));
 	}
 	
 	
 	@Test 
 	public void getTotalProyectoTiposTest(){
-		assertEquals(ProyectoTipoDAO.getTotalProyectoTipos().getClass(),Long.class);
+		assertEquals(ProyectoTipoDAO.getTotalProyectoTipos( "", "", "").getClass(),Long.class);
 	}
 	
 	@Test

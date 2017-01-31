@@ -34,11 +34,11 @@ public class MetaUnidadMedidaDAOTest {
 	
 	@Test
 	public void getMetaUnidadMedidasPaginaTest(){
-		assertNotNull(MetaUnidadMedidaDAO.getMetaUnidadMedidasPagina(1, 1));
+		assertNotNull(MetaUnidadMedidaDAO.getMetaUnidadMedidasPagina(1, 1, "", "", "", "", ""));
 	}
 	
 	@Test
 	public void getTotalMetaUnidadMedidasTest(){
-		assertEquals(MetaUnidadMedidaDAO.getTotalMetaUnidadMedidas().getClass(),Long.class);
+		assertEquals(MetaUnidadMedidaDAO.getTotalMetaUnidadMedidas( "", "", "").getClass(),Long.class);
 	}
 }
