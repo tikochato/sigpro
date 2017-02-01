@@ -3,10 +3,6 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -23,7 +19,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 		List<Proyecto> ret = new ArrayList<Proyecto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Proyecto> criteria = session.createQuery("FROM Proyecto where id  in (Select proyectoid from ProyectoUsuario where usuario =:usuario )", Proyecto.class);
+			Query<Proyecto> criteria = session.createQuery("FROM Proyecto p where p.id in (SELECT u.id.proyectoid from ProyectoUsuario u where u.id.usuario=:usuario )", Proyecto.class);
 			criteria.setParameter("usuario", usuario);
 			ret =   (List<Proyecto>)criteria.getResultList();
 		}
@@ -55,17 +51,13 @@ public class ProyectoDAO implements java.io.Serializable  {
 		return ret;
 	}
 	
-	public static Proyecto getProyectoPorId(int id){
+	public static Proyecto getProyectoPorId(int id, String usuario){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Proyecto ret = null;
 		try{
-			CriteriaBuilder builder = session.getCriteriaBuilder();
-
-			CriteriaQuery<Proyecto> criteria = builder.createQuery(Proyecto.class);
-			Root<Proyecto> root = criteria.from(Proyecto.class);
-			criteria.select( root );
-			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
-			ret = session.createQuery( criteria ).getSingleResult();
+			Query<Proyecto> criteria = session.createQuery("FROM Proyecto where id in (SELECT u.id.proyectoid from ProyectoUsuario u where u.id.usuario=:usuario )", Proyecto.class);
+			criteria.setParameter("usuario", usuario);
+			 ret = (Proyecto) criteria.getSingleResult();;
 		}
 		catch(Throwable e){
 			CLogger.write("3", ProyectoDAO.class, e);
@@ -112,7 +104,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 				query_a = String.join("", query_a,(query_a.length()>0 ? "OR" : "" )," str(p.snip) LIKE '%",filtro_snip.toString(),"%' ");
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			if(usuario!=null)
-				query = String.join(" ", query, "AND p.id in (Select proyectoid from ProyectoUsuario where usuario=:usuario)");			
+				query = String.join("", query, " AND p.id in (SELECT u.id.proyectoid from ProyectoUsuario u where u.id.usuario=:usuario )");			
 			Query<Long> criteria = session.createQuery(query,Long.class);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getSingleResult();
@@ -128,7 +120,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 	
 	public static List<Proyecto> getProyectosPagina(int pagina, int numeroproyecto,
 			String filtro_nombre, Integer filtro_snip,String filtro_usuario_creo, 
-			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion){
+			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion, String usuario){
 		List<Proyecto> ret = new ArrayList<Proyecto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -144,8 +136,10 @@ public class ProyectoDAO implements java.io.Serializable  {
 				query_a = String.join("", query_a,(query_a.length()>0 ? "OR" : "" )," str(p.snip) LIKE '%",filtro_snip.toString(),"%' ");
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
+			if(usuario!=null)
+				query = String.join("", query, " AND p.id in (SELECT u.id.proyectoid from ProyectoUsuario u where u.id.usuario=:usuario )");	
 			Query<Proyecto> criteria = session.createQuery(query,Proyecto.class);
-			
+			criteria.setParameter("usuario", usuario);
 			criteria.setFirstResult(((pagina-1)*(numeroproyecto)));
 			criteria.setMaxResults(numeroproyecto);
 			ret = criteria.getResultList();
