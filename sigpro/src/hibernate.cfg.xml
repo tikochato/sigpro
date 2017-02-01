@@ -13,9 +13,13 @@
         <property name="hibernate.validator.apply_to_ddl">false</property>
         <mapping class="pojo.Actividad" />
         <mapping class="pojo.ActividadUsuario" />
+        <mapping class="pojo.ActividadUsuarioId" />
         <mapping class="pojo.ComponenteUsuario" />
+        <mapping class="pojo.ComponenteUsuarioId" />
         <mapping class="pojo.ProyectoUsuario" />
+        <mapping class="pojo.ProyectoUsuarioId" />
         <mapping class="pojo.ProductoUsuario" />
+        <mapping class="pojo.ProductoUsuarioId" />
         <mapping class="pojo.ActividadPropiedad" />
         <mapping class="pojo.ActividadPropiedadValor" />
         <mapping class="pojo.ActividadTipo" />
