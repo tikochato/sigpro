@@ -3,8 +3,8 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="componenteController as componentec" class="maincontainer all_page" id="title">
-	    <script type="text/ng-template" id="buscarComponenteTipo.jsp">
-    		<%@ include file="/app/components/componente/buscarComponenteTipo.jsp"%>
+	    <script type="text/ng-template" id="buscarPorComponente.jsp">
+    		<%@ include file="/app/components/componente/buscarPorComponente.jsp"%>
   	    </script>
 		<h3>Componentes</h3><br/>
 		<h4>{{ componentec.proyectoNombre }}</h4><br/>
@@ -42,7 +42,7 @@
 					</div>
 				  </div>
 				</div>
-				<ul uib-pagination total-items="componentec.totalCooperantes"
+				<ul uib-pagination total-items="componentec.totalComponentes"
 						ng-model="componentec.paginaActual"
 						max-size="componentec.numeroMaximoPaginas"
 						items-per-page="componentec.elementosPorPagina"
@@ -83,6 +83,38 @@
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
     						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="componentec.componente.nombre">
+						</div>
+						
+						<div class="form-group">
+							<label for="campo1">* SNIP</label> 
+							<input type="number" ng-model="componentec.componente.snip" class="form-control" id="n_snip" placeholder="Nombre">
+						</div>
+						<div class="form-grup" >
+							<div class="form-group col-sm-3" style="padding: 0px; " >
+							       <label for="campo1">Programa</label> 
+							       <input type="number" class="form-control" id="campo1" name="campo1" placeholder="Programa" ng-model="componentec.componente.programa"  />
+							</div>
+							<div class="form-group col-sm-3" style="padding: 0px;" >
+							  <label for="campo2">Sub-Programa</label> 
+							  <input type="number" class="form-control" id="campo2" name="campo2" placeholder="Sub-programa" ng-model="componentec.componente.subprograma" />
+							</div>
+							<div class="form-group col-sm-3" style="padding: 0px; " >
+							  <label for="campo3">Proyecto:</label> 
+							  <input type="number" class="form-control" id="campo3" name="campo3" placeholder="Proyecto" ng-model="componentec.componente.proyecto_" required />
+							</div>					
+							<div class="form-group col-sm-3" style="padding: 0px;">
+							  <label for="campo4">Obra</label> 
+							  <input type="number" class="form-control" id="campo4" name="campo4" placeholder="Obra" ng-model="componentec.componente.obra" ng-maxlength="4"/>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="campo3">* Unidad Ejecturoa</label>
+				          	<div class="input-group">
+				            	<input type="hidden" class="form-control" ng-model="componentec.unidadejecutoraid" />
+				            	<input type="text" class="form-control" id="iunejec" name="iunejec" placeholder="Nombre Unidad Ejecutora" ng-model="componentec.unidadejecutoranombre" ng-readonly="true" required/>
+				            	<span class="input-group-addon" ng-click="componentec.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
+				          	</div>
 						</div>
 
 						<div class="form-group">
