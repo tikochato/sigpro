@@ -26,13 +26,6 @@ public class ProyectoDAO implements java.io.Serializable  {
 			Query<Proyecto> criteria = session.createQuery("FROM Proyecto where id  in (Select proyectoid from ProyectoUsuario where usuario =:usuario )", Proyecto.class);
 			criteria.setParameter("usuario", usuario);
 			ret =   (List<Proyecto>)criteria.getResultList();
-			/*CriteriaBuilder builder = session.getCriteriaBuilder();
-
-			CriteriaQuery<Proyecto> criteria = builder.createQuery(Proyecto.class);
-			Root<Proyecto> root = criteria.from(Proyecto.class);
-			
-			criteria.select( root );
-			ret = (List<Proyecto>) session.createQuery( criteria ).getResultList();*/
 		}
 		catch(Throwable e){
 			CLogger.write("1", Proyecto.class, e);
@@ -103,7 +96,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 	}
 	
 	public static Long getTotalProyectos(String filtro_nombre, Integer filtro_snip,String filtro_usuario_creo, 
-			String filtro_fecha_creacion){
+			String filtro_fecha_creacion, String usuario){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -118,8 +111,10 @@ public class ProyectoDAO implements java.io.Serializable  {
 			if (filtro_snip > 0)
 				query_a = String.join("", query_a,(query_a.length()>0 ? "OR" : "" )," str(p.snip) LIKE '%",filtro_snip.toString(),"%' ");
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			if(usuario!=null)
+				query = String.join(" ", query, "AND p.id in (Select proyectoid from ProyectoUsuario where usuario=:usuario)");			
 			Query<Long> criteria = session.createQuery(query,Long.class);
-			
+			criteria.setParameter("usuario", usuario);
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
