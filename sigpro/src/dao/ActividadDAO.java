@@ -166,12 +166,13 @@ public class ActividadDAO {
 		return ret;
 	}
 	
-	public static List<Actividad> getActividadsPaginaPorProyecto(int pagina, int numeroActividads, int proyectoId){
+	public static List<Actividad> getActividadsPaginaPorObjeto(int pagina, int numeroActividads, int objetoId, int objetoTipo){
 		List<Actividad> ret = new ArrayList<Actividad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Actividad> criteria = session.createQuery("SELECT c FROM Actividad c WHERE estado = 1 AND c.proyecto.id = :proyId",Actividad.class);
-			criteria.setParameter("proyId", proyectoId);
+			Query<Actividad> criteria = session.createQuery("SELECT c FROM Actividad c WHERE estado = 1 AND c.objetoId = :objetoId AND c.objetoTipo = :objetoTipo ",Actividad.class);
+			criteria.setParameter("objetoId", objetoId);
+			criteria.setParameter("objetoTipo", objetoTipo);
 			criteria.setFirstResult(((pagina-1)*(numeroActividads)));
 			criteria.setMaxResults(numeroActividads);
 			ret = criteria.getResultList();
@@ -185,12 +186,13 @@ public class ActividadDAO {
 		return ret;
 	}
 	
-	public static Long getTotalActividadsPorProyecto(int proyectoId){
+	public static Long getTotalActividadsPorObjeto(int objetoId, int objetoTipo){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM Actividad c WHERE c.estado=1 AND c.proyecto.id = :proyId ",Long.class);
-			conteo.setParameter("proyId", proyectoId);
+			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM Actividad c WHERE c.estado=1 AND c.objetoId = :objetoId AND c.objetoTipo = :objetoTipo ",Long.class);
+			conteo.setParameter("objetoId", objetoId);
+			conteo.setParameter("objetoTipo", objetoTipo);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
