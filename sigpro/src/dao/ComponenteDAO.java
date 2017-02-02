@@ -3,10 +3,6 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -22,12 +18,6 @@ public class ComponenteDAO {
 			Query<Componente> criteria = session.createQuery("FROM Componente p where estado = 1 AND p.id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )", Componente.class);
 			criteria.setParameter("usuario", usuario);
 			ret =   (List<Componente>)criteria.getResultList();
-			/*CriteriaBuilder builder = session.getCriteriaBuilder();
-
-			CriteriaQuery<Componente> criteria = builder.createQuery(Componente.class);
-			Root<Componente> root = criteria.from(Componente.class);
-			criteria.select( root ).where(builder.equal(root.get("estado"),1));
-			ret = session.createQuery( criteria ).getResultList();*/
 		}
 		catch(Throwable e){
 			CLogger.write("1", ComponenteDAO.class, e);
