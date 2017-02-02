@@ -147,7 +147,7 @@ public class Utils {
 	public static Date dateFromString(String date){
 		Date rdate=null;
 		if(date!=null && date.length()>0){
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/YYYY");
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			try {
 				rdate = sdf.parse(date);
 			} catch (ParseException e) {

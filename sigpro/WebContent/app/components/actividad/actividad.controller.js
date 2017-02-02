@@ -15,6 +15,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.objetoid = $routeParams.objeto_id;
 		mi.objetotipo = $routeParams.objeto_tipo;
 		mi.objetoNombre="";
+		mi.objetTipoNombre = "";
 		mi.paginaActual = 1;
 		mi.datotipoid = "";
 		mi.datotiponombre = "";
@@ -30,16 +31,24 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		
 		mi.filtros = [];
 
-		$http.post('/SObjeto', { accion: 'obtenerObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo }).success(
+		$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo }).success(
 				function(response) {
 					mi.objetoid = response.id;
 					mi.objetoNombre = response.nombre;
+					mi.objetoTipoNombre = response.tiponombre;
 		});
 
 		mi.fechaOptions = {
 				formatYear : 'yy',
-				maxDate : new Date(2030, 12, 31),
-				minDate : new Date(1950, 1, 1),
+				maxDate : new Date(2050, 12, 31),
+				minDate : new Date(1990, 1, 1),
+				startingDay : 1
+		};
+		
+		mi.ff_opciones = {
+				formatYear : 'yy',
+				maxDate : new Date(2050, 12, 31),
+				minDate : new Date(1990, 1, 1),
 				startingDay : 1
 		};
 
@@ -71,6 +80,9 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					mi.gridApi = gridApi;
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 						mi.actividad = row.entity;
+						mi.actividad.fechaInicio = moment(mi.actividad.fechaInicio,'DD/MM/YYYY').toDate();
+						mi.actividad.fechaFin = moment(mi.actividad.fechaFin,'DD/MM/YYYY').toDate();
+						mi.ff_opciones.minDate = mi.actividad.fechaInicio;
 					});
 					
 					gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
@@ -129,16 +141,18 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					mi.camposdinamicos[campos].valor = moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY')
 				}
 			}
-			if(mi.actividad!=null && mi.actividad.nombre!=''){
+			if(mi.actividad!=null && !form.input.$error.required){
 				$http.post('/SActividad', {
 					accion: 'guardarActividad',
 					esnuevo: mi.esnuevo,
-					actividadtipoid : mi.actividadtipoid,
+					actividadtipoid : mi.actividad.actividadtipoid,
 					id: mi.actividad.id,
 					objetoid: $routeParams.objeto_id,
 					objetotipo: mi.objetotipo,
 					nombre: mi.actividad.nombre,
 					descripcion: mi.actividad.descripcion,
+					fechainicio: moment(mi.actividad.fechaInicio).format('DD/MM/YYYY'),
+					fechafin: moment(mi.actividad.fechaFin).format('DD/MM/YYYY'),
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
 					if(response.success){
@@ -230,8 +244,28 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		}
 
 		mi.abrirPopupFecha = function(index) {
-			mi.camposdinamicos[index].isOpen = true;
+			if(index<1000){
+				mi.camposdinamicos[index].isOpen = true;
+			}
+			else{
+				switch(index){
+					case 1000: mi.fi_abierto = true; break;
+					case 1001: mi.ff_abierto =  true; break;
+				}
+			}
+				
 		};
+		
+		mi.actualizarfechafin =  function(){
+			if(mi.actividad.fechaInicio!=''){
+				var m = moment(mi.actividad.fechaInicio);
+				if(m.isValid()){
+					mi.ff_opciones.minDate = m.toDate();
+					if(mi.actividad.fechaFin!=null && mi.actividad.fechaFin<mi.actividad.fechaInicio)
+						mi.actividad.fechaFin = mi.actividad.fechaInicio;
+				}
+			}
+		}
 
 		$http.post('/SActividad', { accion: 'numeroActividadesPorObjeto',objetoid:$routeParams.objeto_id, tipo: mi.objetotipo }).success(
 				function(response) {
