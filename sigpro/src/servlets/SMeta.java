@@ -158,7 +158,7 @@ public class SMeta extends HttpServlet {
 				MetaUnidadMedida metaUnidadMedida = MetaUnidadMedidaDAO.getMetaUnidadMedidaPorId(idUnidadMedida);
 				String descripcion = map.get("descripcion");
 				Componente componente=map.get("componente")!=null ? ComponenteDAO.getComponentePorId(Integer.parseInt(map.get("componente")),usuario) : null;
-				Producto producto = map.get("producto")!=null ? ProductoDAO.getProductoPorId(Integer.parseInt(map.get("producto"))) : null;
+				Producto producto = map.get("producto")!=null ? ProductoDAO.getProductoPorId(Integer.parseInt(map.get("producto")),usuario) : null;
 				Proyecto proyecto = map.get("proyecto")!=null ? ProyectoDAO.getProyectoPorId(Integer.parseInt(map.get("proyecto")),usuario) : null;
 				Meta Meta;
 				if(esnuevo){
@@ -240,7 +240,7 @@ public class SMeta extends HttpServlet {
 			switch(tipo){
 				case 1: Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario); nombre = (proyecto!=null) ? proyecto.getNombre() : ""; break;
 				case 2: Componente componente = ComponenteDAO.getComponentePorId(id,usuario); nombre = (componente!=null) ? componente.getNombre() : ""; break;
-				case 3: Producto producto = ProductoDAO.getProductoPorId(id); nombre = (producto!=null) ? producto.getNombre() : ""; break;
+				case 3: Producto producto = ProductoDAO.getProductoPorId(id,usuario); nombre = (producto!=null) ? producto.getNombre() : ""; break;
 			}
 	        response_text = String.join("", "\"nombre\":\"",nombre,"\"");
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");

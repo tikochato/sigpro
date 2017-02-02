@@ -55,7 +55,8 @@ public class ProyectoDAO implements java.io.Serializable  {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Proyecto ret = null;
 		try{
-			Query<Proyecto> criteria = session.createQuery("FROM Proyecto where id in (SELECT u.id.proyectoid from ProyectoUsuario u where u.id.usuario=:usuario )", Proyecto.class);
+			Query<Proyecto> criteria = session.createQuery("FROM Proyecto where id=:id AND id in (SELECT u.id.proyectoid from ProyectoUsuario u where u.id.usuario=:usuario )", Proyecto.class);
+			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
 			 ret = (Proyecto) criteria.getSingleResult();;
 		}

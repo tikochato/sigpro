@@ -36,16 +36,13 @@ public class ProductoDAO {
 		Integer estado;
 	}
 
-	public static List<Producto> getProductos() {
+	public static List<Producto> getProductos(String usuario) {
 		List<Producto> ret = new ArrayList<Producto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			CriteriaBuilder builder = session.getCriteriaBuilder();
-
-			CriteriaQuery<Producto> criteria = builder.createQuery(Producto.class);
-			Root<Producto> root = criteria.from(Producto.class);
-			criteria.select(root).where(builder.equal(root.get("estado"), 1));
-			ret = session.createQuery(criteria).getResultList();
+			Query<Producto> criteria = session.createQuery("FROM Producto p where p.id in (SELECT u.id.productoid from ProductoUsuario u where u.id.usuario=:usuario )", Producto.class);
+			criteria.setParameter("usuario", usuario);
+			ret =   (List<Producto>)criteria.getResultList();
 		} catch (Throwable e) {
 			CLogger.write("1", ProductoDAO.class, e);
 		} finally {
@@ -54,17 +51,14 @@ public class ProductoDAO {
 		return ret;
 	}
 
-	public static Producto getProductoPorId(int id) {
+	public static Producto getProductoPorId(int id, String usuario) {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Producto ret = null;
 		try {
-			CriteriaBuilder builder = session.getCriteriaBuilder();
-
-			CriteriaQuery<Producto> criteria = builder.createQuery(Producto.class);
-			Root<Producto> root = criteria.from(Producto.class);
-			criteria.select(root);
-			criteria.where(builder.and(builder.equal(root.get("id"), id), builder.equal(root.get("estado"), 1)));
-			ret = session.createQuery(criteria).getSingleResult();
+			Query<Producto> criteria = session.createQuery("FROM Producto where id=:id AND id in (SELECT u.id.productoid from ProductoUsuario u where u.id.usuario=:usuario )", Producto.class);
+			criteria.setParameter("id", id);
+			criteria.setParameter("usuario", usuario);
+			 ret = (Producto) criteria.getSingleResult();;
 		} catch (Throwable e) {
 			CLogger.write("2", ProductoDAO.class, e);
 		} finally {
@@ -122,13 +116,14 @@ public class ProductoDAO {
 		return ret;
 	}
 
-	public static List<Producto> getProductosPagina(int pagina, int numeroProductos,Integer componenteid) {
+	public static List<Producto> getProductosPagina(int pagina, int numeroProductos,Integer componenteid, String usuario) {
 		List<Producto> ret = new ArrayList<Producto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			Query<Producto> criteria = session.createQuery("SELECT p FROM Producto p WHERE p.estado = 1 "
-					+ (componenteid!=null && componenteid > 0 ? "AND p.componente.id = :idComp " : ""),
+					+ (componenteid!=null && componenteid > 0 ? "AND p.componente.id = :idComp " : "") + " AND p.id in (SELECT u.id.productoid from ProductoUsuario u where u.id.usuario=:usuario )",
 					Producto.class);
+			criteria.setParameter("usuario", usuario);
 			if (componenteid!=null && componenteid>0){
 				criteria.setParameter("idComp", componenteid);
 			}
@@ -144,14 +139,14 @@ public class ProductoDAO {
 		return ret;
 	}
 
-	public static Long getTotalProductos(Integer componenteid) {
+	public static Long getTotalProductos(Integer componenteid, String usuario) {
 		Long ret = 0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			Query<Long> conteo = session.createQuery("SELECT count(p.id) FROM Producto p WHERE p.estado = 1  "
-					+ (componenteid!=null && componenteid > 0 ? "AND p.componente.id = :idComp " : ""),
+					+ (componenteid!=null && componenteid > 0 ? "AND p.componente.id = :idComp " : "") + " AND p.id in (SELECT u.id.productoid from ProductoUsuario u where u.id.usuario=:usuario )",
 					Long.class);
-			
+			conteo.setParameter("usuario", usuario);
 			if (componenteid!=null && componenteid > 0){
 				conteo.setParameter("idComp", componenteid);
 			}
@@ -164,10 +159,10 @@ public class ProductoDAO {
 		return ret;
 	}
 
-	public static String getJson(int pagina, int registros,Integer componenteid) {
+	public static String getJson(int pagina, int registros,Integer componenteid, String usuario) {
 		String jsonEntidades = "";
 
-		List<Producto> pojos = getProductosPagina(pagina, registros,componenteid);
+		List<Producto> pojos = getProductosPagina(pagina, registros,componenteid,usuario);
 
 		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
 
@@ -235,7 +230,7 @@ public class ProductoDAO {
 			Integer productoPadre, Integer tipo, String propiedades, String actividades, String usuario) {
 		boolean ret = false;
 
-		Producto pojo = getProductoPorId(productoId);
+		Producto pojo = getProductoPorId(productoId,usuario);
 
 		if (pojo != null) {
 			pojo.setNombre(nombre);
@@ -267,7 +262,7 @@ public class ProductoDAO {
 	public static boolean eliminar(Integer productoId, String usuario) {
 		boolean ret = false;
 
-		Producto pojo = getProductoPorId(productoId);
+		Producto pojo = getProductoPorId(productoId,usuario);
 
 		if (pojo != null) {
 			pojo.setEstado(0);
