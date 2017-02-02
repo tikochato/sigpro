@@ -164,7 +164,7 @@ public class SComponenteTipo extends HttpServlet {
 				
 				String[] idsPropiedades =  map.get("propiedades") != null ? map.get("propiedades").toString().split(",") : null;
 				if (idsPropiedades !=null && idsPropiedades.length>0){
-					System.out.println(idsPropiedades.length);
+					
 					for (String idPropiedad : idsPropiedades){
 						CtipoPropiedadId ctipoPropiedadId = new CtipoPropiedadId(componenteTipo.getId(), Integer.parseInt(idPropiedad));
 						ComponentePropiedad componentePropiedad = new ComponentePropiedad();
