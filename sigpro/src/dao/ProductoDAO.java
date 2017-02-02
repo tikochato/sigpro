@@ -204,7 +204,7 @@ public class ProductoDAO {
 		pojo.setNombre(nombre);
 		pojo.setDescripcion(descripcion);
 
-		pojo.setComponente(componente > 0 ? ComponenteDAO.getComponentePorId(componente) : null);
+		pojo.setComponente(componente > 0 ? ComponenteDAO.getComponentePorId(componente, usuario) : null);
 		pojo.setProductoTipo(tipo > 0 ? ProductoTipoDAO.getProductoTipo(tipo) : null);
 
 		pojo.setProductoPropiedadValors(null);
@@ -241,7 +241,7 @@ public class ProductoDAO {
 			pojo.setNombre(nombre);
 			pojo.setDescripcion(descripcion);
 
-			pojo.setComponente(componente != null ? ComponenteDAO.getComponentePorId(componente) : null);
+			pojo.setComponente(componente != null ? ComponenteDAO.getComponentePorId(componente,usuario) : null);
 			pojo.setProductoTipo(tipo != null ? ProductoTipoDAO.getProductoTipo(tipo) : null);
 
 			pojo.setUsuarioActualizo(usuario);

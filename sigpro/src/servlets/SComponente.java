@@ -100,7 +100,7 @@ public class SComponente extends HttpServlet {
 		if(accion.equals("getComponentesPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroCooperantes = map.get("numerocomponentes")!=null  ? Integer.parseInt(map.get("numerocomponentes")) : 0;
-			List<Componente> componentes = ComponenteDAO.getComponentesPagina(pagina, numeroCooperantes);
+			List<Componente> componentes = ComponenteDAO.getComponentesPagina(pagina, numeroCooperantes,usuario);
 			List<stcomponente> stcomponentes=new ArrayList<stcomponente>();
 			for(Componente componente:componentes){
 				stcomponente temp =new stcomponente();
@@ -122,7 +122,7 @@ public class SComponente extends HttpServlet {
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("getComponentes")){
-			List<Componente> componentes = ComponenteDAO.getComponentes();
+			List<Componente> componentes = ComponenteDAO.getComponentes(usuario);
 			List<stcomponente> stcomponentes=new ArrayList<stcomponente>();
 			for(Componente componente:componentes){
 				stcomponente temp =new stcomponente();
@@ -179,7 +179,7 @@ public class SComponente extends HttpServlet {
 						componente.setDescripcion(descripcion);
 					}
 					else{
-						componente = ComponenteDAO.getComponentePorId(id);
+						componente = ComponenteDAO.getComponentePorId(id,usuario);
 						componente.setNombre(nombre);
 						componente.setDescripcion(descripcion);
 						componente.setUsuarioActualizo(usuario);
@@ -233,7 +233,7 @@ public class SComponente extends HttpServlet {
 		else if(accion.equals("borrarComponente")){
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
-				Componente componente = ComponenteDAO.getComponentePorId(id);
+				Componente componente = ComponenteDAO.getComponentePorId(id,usuario);
 				componente.setUsuarioActualizo(usuario);
 				response_text = String.join("","{ \"success\": ",(ComponenteDAO.eliminarComponente(componente) ? "true" : "false")," }");
 			}
@@ -241,17 +241,17 @@ public class SComponente extends HttpServlet {
 				response_text = "{ \"success\": false }";
 		}
 		else if(accion.equals("numeroComponentes")){
-			response_text = String.join("","{ \"success\": true, \"totalcomponentes\":",ComponenteDAO.getTotalComponentes().toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalcomponentes\":",ComponenteDAO.getTotalComponentes(usuario).toString()," }");
 		}
 		else if(accion.equals("numeroComponentesPorProyecto")){
 			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
-			response_text = String.join("","{ \"success\": true, \"totalcomponentes\":",ComponenteDAO.getTotalComponentesPorProyecto(proyectoId).toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalcomponentes\":",ComponenteDAO.getTotalComponentesPorProyecto(proyectoId,usuario).toString()," }");
 		}
 		else if(accion.equals("getComponentesPaginaPorProyecto")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
 			int numeroCooperantes = map.get("numerocomponentes")!=null  ? Integer.parseInt(map.get("numerocomponentes")) : 0;
-			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(pagina, numeroCooperantes,proyectoId);
+			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(pagina, numeroCooperantes,proyectoId,usuario);
 			List<stcomponente> stcomponentes=new ArrayList<stcomponente>();
 			for(Componente componente:componentes){
 				stcomponente temp =new stcomponente();
@@ -274,7 +274,7 @@ public class SComponente extends HttpServlet {
 		}
 		else if(accion.equals("obtenerComponentePorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-			Componente componente = ComponenteDAO.getComponentePorId(id);
+			Componente componente = ComponenteDAO.getComponentePorId(id,usuario);
 		
 			response_text = String.join("","{ \"success\": ",(componente!=null && componente.getId()!=null ? "true" : "false"),", "
 				+ "\"id\": " + (componente!=null ? componente.getId():"0") +", "

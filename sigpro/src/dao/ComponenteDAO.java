@@ -15,16 +15,19 @@ import utilities.CHibernateSession;
 import utilities.CLogger;
 
 public class ComponenteDAO {
-	public static List<Componente> getComponentes(){
+	public static List<Componente> getComponentes(String usuario){
 		List<Componente> ret = new ArrayList<Componente>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			CriteriaBuilder builder = session.getCriteriaBuilder();
+			Query<Componente> criteria = session.createQuery("FROM Componente p where estado = 1 AND p.id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )", Componente.class);
+			criteria.setParameter("usuario", usuario);
+			ret =   (List<Componente>)criteria.getResultList();
+			/*CriteriaBuilder builder = session.getCriteriaBuilder();
 
 			CriteriaQuery<Componente> criteria = builder.createQuery(Componente.class);
 			Root<Componente> root = criteria.from(Componente.class);
 			criteria.select( root ).where(builder.equal(root.get("estado"),1));
-			ret = session.createQuery( criteria ).getResultList();
+			ret = session.createQuery( criteria ).getResultList();*/
 		}
 		catch(Throwable e){
 			CLogger.write("1", ComponenteDAO.class, e);
@@ -35,17 +38,14 @@ public class ComponenteDAO {
 		return ret;
 	}
 	
-	public static Componente getComponentePorId(int id){
+	public static Componente getComponentePorId(int id, String usuario){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Componente ret = null;
 		try{
-			CriteriaBuilder builder = session.getCriteriaBuilder();
-
-			CriteriaQuery<Componente> criteria = builder.createQuery(Componente.class);
-			Root<Componente> root = criteria.from(Componente.class);
-			criteria.select( root );
-			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
-			ret = session.createQuery( criteria ).getSingleResult();
+			Query<Componente> criteria = session.createQuery("FROM Componente where id=:id AND id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )", Componente.class);
+			criteria.setParameter("id", id);
+			criteria.setParameter("usuario", usuario);
+			 ret = (Componente) criteria.getSingleResult();
 		}
 		catch(Throwable e){
 			CLogger.write("2", ComponenteDAO.class, e);
@@ -111,11 +111,12 @@ public class ComponenteDAO {
 		return ret;
 	}
 	
-	public static List<Componente> getComponentesPagina(int pagina, int numeroComponentes){
+	public static List<Componente> getComponentesPagina(int pagina, int numeroComponentes, String usuario){
 		List<Componente> ret = new ArrayList<Componente>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Componente> criteria = session.createQuery("SELECT c FROM Componente c WHERE estado = 1",Componente.class);
+			Query<Componente> criteria = session.createQuery("SELECT c FROM Componente c WHERE estado = 1 AND c.id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )",Componente.class);
+			criteria.setParameter("usuario", usuario);
 			criteria.setFirstResult(((pagina-1)*(numeroComponentes)));
 			criteria.setMaxResults(numeroComponentes);
 			ret = criteria.getResultList();
@@ -129,11 +130,12 @@ public class ComponenteDAO {
 		return ret;
 	}
 	
-	public static Long getTotalComponentes(){
+	public static Long getTotalComponentes(String usuario){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM Componente c WHERE c.estado=1",Long.class);
+			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM Componente c WHERE c.estado=1 AND  c.id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )",Long.class);
+			conteo.setParameter("usuario", usuario);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
@@ -145,12 +147,13 @@ public class ComponenteDAO {
 		return ret;
 	}
 	
-	public static List<Componente> getComponentesPaginaPorProyecto(int pagina, int numeroComponentes, int proyectoId){
+	public static List<Componente> getComponentesPaginaPorProyecto(int pagina, int numeroComponentes, int proyectoId, String usuario){
 		List<Componente> ret = new ArrayList<Componente>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Componente> criteria = session.createQuery("SELECT c FROM Componente c WHERE estado = 1 AND c.proyecto.id = :proyId",Componente.class);
+			Query<Componente> criteria = session.createQuery("SELECT c FROM Componente c WHERE estado = 1 AND c.proyecto.id = :proyId AND  c.id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )",Componente.class);
 			criteria.setParameter("proyId", proyectoId);
+			criteria.setParameter("usuario", usuario);
 			criteria.setFirstResult(((pagina-1)*(numeroComponentes)));
 			criteria.setMaxResults(numeroComponentes);
 			ret = criteria.getResultList();
@@ -164,12 +167,13 @@ public class ComponenteDAO {
 		return ret;
 	}
 	
-	public static Long getTotalComponentesPorProyecto(int proyectoId){
+	public static Long getTotalComponentesPorProyecto(int proyectoId , String usuario){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM Componente c WHERE c.estado=1 AND c.proyecto.id = :proyId ",Long.class);
+			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM Componente c WHERE c.estado=1 AND c.proyecto.id = :proyId AND  c.id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )",Long.class);
 			conteo.setParameter("proyId", proyectoId);
+			conteo.setParameter("usuario", usuario);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
