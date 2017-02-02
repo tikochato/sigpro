@@ -12,12 +12,17 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			mi.mostraringreso=false;
 			mi.esnuevo = false;
 			mi.totalComponentePropiedades = 0;
-			mi.datotipoid = "";
-			mi.datotiponombre = "";
+			
 			mi.paginaActual = 1;
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
 			mi.tipodatos = [];
+			
+			mi.columnaOrdenada=null;
+			mi.ordenDireccion = null;
+
+			mi.filtros = [];
+			mi.orden = null;
 			
 			mi.gridOptions = {
 					enableRowSelection : true,
@@ -28,19 +33,46 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 					enableFiltering: true,
 					enablePaginationControls: false,
 				    paginationPageSize: $utilidades.elementosPorPagina,
+				    useExternalFiltering: true,
+				    useExternalSorting: true,
 					columnDefs : [ 
 						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-					    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
+					    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left', 
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentepropiedadc.filtrar($event,1)"></input></div>',
+					    },
 					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-					    { name: 'datotiponombre', displayName: 'Tipo dato', cellClass: 'grid-align-left', enableFiltering: false},
-					    { name: 'usuarioCreo', displayName: 'Usuario Creación'},
-					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
+					    { name: 'datotiponombre', displayName: 'Tipo dato', cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false},
+					    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentepropiedadc.filtrar($event,2)" ></input></div>'
+					    },
+					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentepropiedadc.filtrar($event,3)" style="width:80px;" ></input></div>'
+					    }
 					],
 					onRegisterApi: function(gridApi) {
 						mi.gridApi = gridApi;
 						gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 							mi.componentepropiedad = row.entity;
 						});
+						
+						gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+							if(sortColumns.length==1){
+								grid.appScope.componentepropiedadc.columnaOrdenada=sortColumns[0].field;
+								grid.appScope.componentepropiedadc.ordenDireccion = sortColumns[0].sort.direction;
+								
+								grid.appScope.componentepropiedadc.cargarTabla(grid.appScope.componentepropiedadc.paginaActual);
+							}
+							else if(sortColumns.length>1){
+								sortColumns[0].unsort();
+							}
+							else{
+								if(grid.appScope.componentepropiedadc.columnaOrdenada!=null){
+									grid.appScope.componentepropiedadc.columnaOrdenada=null;
+									grid.appScope.componentepropiedadc.ordenDireccion=null;
+								}
+							}
+								
+						} );
 						
 						if($routeParams.reiniciar_vista=='rv'){
 							mi.guardarEstado();
@@ -60,7 +92,12 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SComponentePropiedad', { accion: 'getComponentePropiedadPagina', pagina: pagina, numerocomponentepropiedades: $utilidades.elementosPorPagina }).success(
+				$http.post('/SComponentePropiedad', { accion: 'getComponentePropiedadPagina', pagina: pagina, numerocomponentepropiedades: $utilidades.elementosPorPagina,
+					numeroproyecto:  $utilidades.elementosPorPagina,
+					filtro_nombre: mi.filtros['nombre'], 
+					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
+					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion		
+					}).success(
 						function(response) {
 							mi.componentepropiedades = response.componentepropiedades;
 							mi.gridOptions.data = mi.componentepropiedades;
@@ -76,7 +113,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 						id: mi.componentepropiedad.id,
 						nombre: mi.componentepropiedad.nombre,
 						descripcion: mi.componentepropiedad.descripcion,
-						datoTipoId: mi.datotipoid
+						datoTipoId: mi.datotipo.id
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Propiedad Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
@@ -123,8 +160,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			};
 
 			mi.nuevo = function() {
-				mi.datotipoid = "";
-				mi.datotiponombre = "";
+				mi.datotipo = null;
 				mi.mostraringreso=true;
 				mi.esnuevo = true;
 				mi.componentepropiedad = null;
@@ -133,10 +169,12 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 
 			mi.editar = function() {
 				if(mi.componentepropiedad!=null){
-					mi.datotipoid = mi.componentepropiedad.datotipoid;
-					mi.datotiponombre = mi.componentepropiedad.datotiponombre;
 					mi.mostraringreso = true;
 					mi.esnuevo = false;
+					mi.datotipo = {
+							"id" : mi.componentepropiedad.datotipoid,
+							"nombre" : mi.componentepropiedad.datotiponombre
+					}
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar la Propiedad Componente que desea editar');
@@ -148,7 +186,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			
 			mi.guardarEstado=function(){
 				var estado = mi.gridApi.saveState.save();
-				var tabla_data = { action: 'guardaEstado', grid:'componentepropiedad', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
+				var tabla_data = { action: 'guardaEstado', grid:'componentepropiedades', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
 				$http.post('/SEstadoTabla', tabla_data).then(function(response){
 					
 				});
@@ -163,6 +201,28 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 					$route.reload();
 				else
 					$location.path('/componentepropiedad/rv');
+			}
+			
+			mi.filtrar = function(evt,tipo){
+				if(evt.keyCode==13){
+					switch(tipo){
+						case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
+						case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
+						case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
+					}
+					mi.obtenerTotalProyectos();
+				}
+			}
+
+			mi.obtenerTotalProyectos = function(){
+				$http.post('/SComponentePropiedad', { accion: 'numeroComponentePropiedades',
+					filtro_nombre: mi.filtros['nombre'],
+					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+						function(response) {
+							mi.totalComponentePropiedades = response.totalcomponentepropiedades;
+							mi.paginaActual = 1;
+							mi.cargarTabla(mi.paginaActual);
+				});
 			}
 			
 			$http.post('/SComponentePropiedad', { accion: 'numeroComponentePropiedades' }).success(

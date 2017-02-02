@@ -40,7 +40,7 @@ public class ComponentePropiedadDAO {
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(p.id) FROM CompoentePropiedad p ",Long.class);
+			Query<Long> conteo = session.createQuery("SELECT count(p.id) FROM ComponentePropiedad p ",Long.class);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
@@ -147,11 +147,26 @@ public class ComponentePropiedadDAO {
 		return ret;
 	}
 
-	public static List<ComponentePropiedad> getComponentePropiedadesPagina(int pagina, int numeroComponentePropiedades){
+	public static List<ComponentePropiedad> getComponentePropiedadesPagina(int pagina, int numeroComponentePropiedades , 
+			String filtro_nombre, String filtro_usuario_creo, 
+			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion){
 		List<ComponentePropiedad> ret = new ArrayList<ComponentePropiedad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<ComponentePropiedad> criteria = session.createQuery("SELECT c FROM ComponentePropiedad c ",ComponentePropiedad.class);
+			
+			String query = "SELECT c FROM ComponentePropiedad c ";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " c.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(c.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","WHERE (",query_a,")") : ""));
+			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
+			
+			Query<ComponentePropiedad> criteria = session.createQuery(query,ComponentePropiedad.class);
 			criteria.setFirstResult(((pagina-1)*(numeroComponentePropiedades)));
 			criteria.setMaxResults(numeroComponentePropiedades);
 			ret = criteria.getResultList();
@@ -165,11 +180,25 @@ public class ComponentePropiedadDAO {
 		return ret;
 	}
 
-	public static Long getTotalComponentePropiedad(){
+	public static Long getTotalComponentePropiedad(String filtro_nombre, String filtro_usuario_creo 
+			,String filtro_fecha_creacion){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM ComponentePropiedad c ",Long.class);
+			
+			String query = "SELECT count(c.id) FROM ComponentePropiedad c ";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " c.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(c.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","WHERE (",query_a,")") : ""));
+			
+			
+			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
