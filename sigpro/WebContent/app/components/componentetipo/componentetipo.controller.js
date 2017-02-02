@@ -24,6 +24,12 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 		mi.mostrarPropiedadComponente = false;
 		mi.paginaActualPropiedades=1;
 		
+		mi.columnaOrdenada=null;
+		mi.ordenDireccion = null;
+
+		mi.filtros = [];
+		mi.orden = null;
+		
 		mi.gridOptions = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
@@ -35,16 +41,40 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 			    paginationPageSize: $utilidades.elementosPorPagina,
 				columnDefs : [ 
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
+				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' ,
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentetipoc.filtrar($event,1)" ></input></div>'
+				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-				    { name: 'usuarioCreo', displayName: 'Usuario Creación'},
-				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
+				    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentetipoc.filtrar($event,2)" ></input></div>'
+				    },
+				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentetipoc.filtrar($event,3)"  ></input></div>'	
+				    }
 				],
 				onRegisterApi: function(gridApi) {
 					mi.gridApi = gridApi;
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 						mi.componentetipo = row.entity;
 					});
+					
+					gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+						if(sortColumns.length==1){
+							grid.appScope.componentetipoc.columnaOrdenada=sortColumns[0].field;
+							grid.appScope.componentetipoc.ordenDireccion = sortColumns[0].sort.direction;
+
+							grid.appScope.componentetipoc.cargarTabla(grid.appScope.componentetipoc.paginaActual);
+						}
+						else if(sortColumns.length>1){
+							sortColumns[0].unsort();
+						}
+						else{
+							if(grid.appScope.componentetipoc.columnaOrdenada!=null){
+								grid.appScope.componentetipoc.columnaOrdenada=null;
+								grid.appScope.componentetipoc.ordenDireccion=null;
+							}
+						}
+					} );
 					
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
@@ -64,7 +94,10 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 		
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SComponenteTipo', { accion: 'getComponentetiposPagina', pagina: pagina, numerocomponentetipos: $utilidades.elementosPorPagina }).success(
+			$http.post('/SComponenteTipo', { accion: 'getComponentetiposPagina', pagina: pagina, numerocomponentetipos: $utilidades.elementosPorPagina,
+				filtro_nombre: mi.filtros['nombre'],
+				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion }).success(
 					function(response) {
 						mi.componentetipos = response.componentetipos;
 						mi.gridOptions.data = mi.componentetipos;
@@ -158,6 +191,8 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 			mi.mostraringreso=false;
 		}
 		
+		
+		
 		mi.guardarEstado=function(){
 			var estado = mi.gridApi.saveState.save();
 			var tabla_data = { action: 'guardaEstado', grid:'componentetipos', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
@@ -183,6 +218,28 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 					mi.cargarTabla(1);
 				}
 		);
+		
+		mi.filtrar = function(evt,tipo){
+			if(evt.keyCode==13){
+				switch(tipo){
+					case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
+					case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
+					case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
+				}
+				mi.obtenerTotalProyectos();
+			}
+		}
+
+		mi.obtenerTotalProyectos = function(){
+			$http.post('/SComponenteTipo', { accion: 'numeroComponenteTipos',
+				filtro_nombre: mi.filtros['nombre'],
+				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+					function(response) {
+						mi.totalComponentetipos = response.data.totalcomponentetipos;
+						mi.paginaActual = 1;
+						mi.cargarTabla(mi.paginaActual);
+			});
+		}
 		//----
 		
 		mi.gridOptionscomponentePropiedad = {

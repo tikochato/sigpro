@@ -2,6 +2,11 @@
 	pageEncoding="UTF-8"%>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+	<style type="text/css">
+	.anchocolumna {
+	 	width: 20%;
+		}
+	</style>
 	<div ng-controller="componenteController as componentec" class="maincontainer all_page" id="title">
 	    <script type="text/ng-template" id="buscarPorComponente.jsp">
     		<%@ include file="/app/components/componente/buscarPorComponente.jsp"%>
@@ -69,50 +74,53 @@
 		</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="componentec.guardar()">Guardar</label>
+			        <label class="btn btn-success" ng-click="form.$valid ? componentec.guardar() : ''" ng-disabled="!form.$valid" >Guardar</label>
 			        <label class="btn btn-primary" ng-click="componentec.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
 
 			<div class="col-sm-12">
-				<form>
+				<form name="form" id="form">
 						<div class="form-group">
 							<label for="id">ID</label>
     						<label class="form-control" id="id">{{ componentec.componente.id }}</label>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="componentec.componente.nombre">
+    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="componentec.componente.nombre" ng-required="true">
 						</div>
 						
 						<div class="form-group">
-							<label for="campo1">* SNIP</label> 
+							<label for="campo1">SNIP</label> 
 							<input type="number" ng-model="componentec.componente.snip" class="form-control" id="n_snip" placeholder="Nombre">
 						</div>
-						<div class="form-grup" >
-							<div class="form-group col-sm-3" style="padding: 0px; " >
-							       <label for="campo1">Programa</label> 
+						<div class="form-grup row" >
+							<div class="form-group col-sm-2 anchocolumna"  >
+							       <label for="campo1 " >Programa</label> 
 							       <input type="number" class="form-control" id="campo1" name="campo1" placeholder="Programa" ng-model="componentec.componente.programa"  />
 							</div>
-							<div class="form-group col-sm-3" style="padding: 0px;" >
+							<div class="form-group col-sm-2 anchocolumna"  >
 							  <label for="campo2">Sub-Programa</label> 
 							  <input type="number" class="form-control" id="campo2" name="campo2" placeholder="Sub-programa" ng-model="componentec.componente.subprograma" />
 							</div>
-							<div class="form-group col-sm-3" style="padding: 0px; " >
-							  <label for="campo3">Proyecto:</label> 
-							  <input type="number" class="form-control" id="campo3" name="campo3" placeholder="Proyecto" ng-model="componentec.componente.proyecto_" required />
+							<div class="form-group col-sm-2 anchocolumna"  >
+							  <label for="campo3">Proyecto</label> 
+							  <input type="number" class="form-control" id="campo3" name="campo3" placeholder="Proyecto" ng-model="componentec.componente.proyecto_" />
 							</div>					
-							<div class="form-group col-sm-3" style="padding: 0px;">
+							<div class="form-group col-sm-2 anchocolumna" >
 							  <label for="campo4">Obra</label> 
 							  <input type="number" class="form-control" id="campo4" name="campo4" placeholder="Obra" ng-model="componentec.componente.obra" ng-maxlength="4"/>
+							</div>
+							<div class="form-group col-sm-2 anchocolumna" >
+							  <label for="campo5">Fuente</label> 
+							  <input type="number" class="form-control" id="campo5" name="campo5" placeholder="Fuente" ng-model="componentec.componente.fuente" ng-maxlength="4"/>
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label for="campo3">* Unidad Ejecturoa</label>
 				          	<div class="input-group">
-				            	<input type="hidden" class="form-control" ng-model="componentec.unidadejecutoraid" />
-				            	<input type="text" class="form-control" id="iunejec" name="iunejec" placeholder="Nombre Unidad Ejecutora" ng-model="componentec.unidadejecutoranombre" ng-readonly="true" required/>
+				            	<input type="text" class="form-control" id="iunejec" name="iunejec" placeholder="Nombre Unidad Ejecutora" ng-model="componentec.unidadejecutoranombre" ng-readonly="true" ng-required="true"/>
 				            	<span class="input-group-addon" ng-click="componentec.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
 				          	</div>
 						</div>
@@ -120,8 +128,7 @@
 						<div class="form-group">
 							<label for="campo3">* Tipo Componente</label>
 				          	<div class="input-group">
-				            	<input type="hidden" class="form-control" ng-model="componentec.componentetipoid" />
-				            	<input type="text" class="form-control" id="icomptipo" name="icomptipo" placeholder="Nombre Tipo Componente" ng-model="componentec.componentetiponombre" ng-readonly="true" required/>
+				            	<input type="text" class="form-control" id="icomptipo" name="icomptipo" placeholder="Nombre Tipo Componente" ng-model="componentec.componentetiponombre" ng-readonly="true" ng-required="true"/>
 				            	<span class="input-group-addon" ng-click="componentec.buscarComponenteTipo()"><i class="glyphicon glyphicon-search"></i></span>
 				          	</div>
 						</div>
@@ -136,7 +143,7 @@
 								<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
 								<p ng-switch-when="fecha" class="input-group">
 									<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{componentec.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="mi.fechaOptions" close-text="Cerrar" /><span
+														datepicker-options="mi.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Limpiar" /><span
 														class="input-group-btn">
 														<button type="button" class="btn btn-default"
 															ng-click="componentec.abrirPopupFecha($index)">
@@ -178,7 +185,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="componentec.guardar()">Guardar</label>
+				        <label class="btn btn-success" ng-click="form.$valid ? componentec.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 				        <label class="btn btn-primary" ng-click="componentec.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

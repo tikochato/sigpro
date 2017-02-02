@@ -62,6 +62,7 @@ public class SProyecto extends HttpServlet {
 		Integer subprograma;
 		Integer proyecto;
 		Integer obra;
+		Integer fuente;
 	};
 
 	class stdatadinamico {
@@ -134,6 +135,7 @@ public class SProyecto extends HttpServlet {
 				dato.subprograma = proyecto.getSubprograma();
 				dato.proyecto = proyecto.getProyecto();
 				dato.obra = proyecto.getActividadObra();
+				//dato.fuente = proyecto.getFuente();
 				datos_.add(dato);
 			}
 
@@ -147,7 +149,6 @@ public class SProyecto extends HttpServlet {
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroProyecto = map.get("numeroproyecto")!=null  ? Integer.parseInt(map.get("numeroproyecto")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
-			
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
@@ -176,6 +177,7 @@ public class SProyecto extends HttpServlet {
 				dato.subprograma = proyecto.getSubprograma();
 				dato.proyecto = proyecto.getProyecto();
 				dato.obra = proyecto.getActividadObra();
+				//dato.fuente = proyecto.getFuente();
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -193,10 +195,11 @@ public class SProyecto extends HttpServlet {
 				String nombre = map.get("nombre");
 				int snip = map.get("snip")!=null ? Integer.parseInt(map.get("snip")) : 0;
 				String descripcion = map.get("descripcion");
-				Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
-				Integer subPrograma = map.get("subprograma")!=null ?  Integer.parseInt(map.get("subprograma")) : null;
-				Integer proyecto_ = map.get("proyecto_")!=null ? Integer.parseInt(map.get("proyecto_")) : null;
-				Integer obra = map.get("obra")!=null ? Integer.parseInt(map.get("obra")):null;
+				Integer programa = map.get("programa")!=null && map.get("programa").length()>0 ? Integer.parseInt(map.get("programa")) : null;
+				Integer subPrograma = map.get("subprograma")!=null && map.get("subprograma").length()>0 ?  Integer.parseInt(map.get("subprograma")) : null;
+				Integer proyecto_ = map.get("proyecto_")!=null && map.get("proyecto_").length()>0 ? Integer.parseInt(map.get("proyecto_")) : null;
+				Integer obra = map.get("obra")!=null && map.get("obra").length()>0  ? Integer.parseInt(map.get("obra")):null;
+				//Integer fuente = map.get("fuente")!=null && map.get("fuente").length()>0  ? Integer.parseInt(map.get("fuente")):null;
 
 				ProyectoTipo proyectoTipo = new ProyectoTipo();
 				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): 0);

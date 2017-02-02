@@ -60,6 +60,7 @@ public class SComponente extends HttpServlet {
 		Integer subprograma;
 		Integer proyecto_;
 		Integer obra;
+		Integer fuente;
 		int unidadejecutoraid;
 		String unidadejecutoranombre;
 	}
@@ -135,6 +136,7 @@ public class SComponente extends HttpServlet {
 				temp.subprograma = componente.getSubprograma();
 				temp.proyecto_ = componente.getProyecto_1();
 				temp.obra = componente.getActividadObra();
+				//temp.fuente = componente.getFuente();
 				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				stcomponentes.add(temp);
@@ -165,6 +167,7 @@ public class SComponente extends HttpServlet {
 				temp.subprograma = componente.getSubprograma();
 				temp.proyecto_ = componente.getProyecto_1();
 				temp.obra = componente.getActividadObra();
+				//temp.fuente = componente.getFuente();
 				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				stcomponentes.add(temp);
@@ -187,10 +190,11 @@ public class SComponente extends HttpServlet {
 					int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;
 					
 					int snip = map.get("snip")!=null ? Integer.parseInt(map.get("snip")) : 0;
-					Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
-					Integer subPrograma = map.get("subprograma")!=null ?  Integer.parseInt(map.get("subprograma")) : null;
-					Integer proyecto_ = map.get("proyecto_")!=null ? Integer.parseInt(map.get("proyecto_")) : null;
-					Integer obra = map.get("obra")!=null ? Integer.parseInt(map.get("obra")):null;
+					Integer programa = map.get("programa")!=null && map.get("programa").length()>0 ? Integer.parseInt(map.get("programa")) : null;
+					Integer subPrograma = map.get("subprograma")!=null && map.get("subprograma").length()>0 ?  Integer.parseInt(map.get("subprograma")) : null;
+					Integer proyecto_ = map.get("proyecto_")!=null && map.get("proyecto_").length()>0 ? Integer.parseInt(map.get("proyecto_")) : null;
+					Integer obra = map.get("obra")!=null && map.get("obra").length()>0  ? Integer.parseInt(map.get("obra")):null;
+					//Integer fuente = map.get("fuente")!=null && map.get("fuente").length()>0  ? Integer.parseInt(map.get("fuente")):null;
 
 
 					ComponenteTipo componenteTipo= new ComponenteTipo();

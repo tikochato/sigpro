@@ -2,12 +2,18 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-
+<style type="text/css">
+	.anchocolumna {
+	 	width: 20%;
+	}
+</style>
 <div ng-controller="proyectoController as controller"
 	class="maincontainer all_page" id="title">
+
 	<script type="text/ng-template" id="buscarPorProyecto.jsp">
     		<%@ include file="/app/components/proyecto/buscarPorProyecto.jsp"%>
-  	    </script>
+  	 </script>
+
 	<h3>Proyectos</h3>
 	<br />
 	<div class="row" align="center" ng-hide="controller.esColapsado">
@@ -17,8 +23,8 @@
 				<label class="btn btn-primary" ng-click="controller.nuevo()">Nuevo</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="editarProyecto">
-				<label class="btn btn-primary" ng-click="controller.editar()">Editar</label> 
-			</shiro:hasPermission>				
+				<label class="btn btn-primary" ng-click="controller.editar()">Editar</label>
+			</shiro:hasPermission>
 			<shiro:hasPermission name="eliminarProyecto">
 				<label class="btn btn-primary" ng-click="controller.borrar()">Borrar</label>
 			</shiro:hasPermission>
@@ -31,11 +37,11 @@
 					<shiro:hasPermission name="verProyecto">
 						<a class="btn btn-default" href ng-click="controller.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
 					</shiro:hasPermission>
-						
+
 					</div>
 				</div>
 			</div>
-			
+
 			<div id="grid1" ui-grid="controller.gridOpciones" ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination
 				ui-grid-pagination>
 				<div class="grid_loading" ng-hide="!controller.mostrarcargando">
@@ -47,10 +53,10 @@
 					</div>
 				  </div>
 			</div>
-				<ul uib-pagination total-items="controller.totalProyectos" 
-						ng-model="controller.paginaActual" 
+				<ul uib-pagination total-items="controller.totalProyectos"
+						ng-model="controller.paginaActual"
 						max-size="controller.numeroMaximoPaginas"
-						items-per-page="controller.elementosPorPagina" 
+						items-per-page="controller.elementosPorPagina"
 						first-text="Primero"
 						last-text="Último"
 						next-text="Siguiente"
@@ -59,10 +65,10 @@
 						ng-change="controller.cambioPagina()"
 				></ul>
 		</div>
-		
+
 		</shiro:hasPermission>
-		
-		
+
+
 	</div>
 	<div class="row" ng-show="controller.esColapsado">
 		<h4 ng-hide="!controller.esNuevo">Nuevo Proyecto</h4>
@@ -77,60 +83,65 @@
 				<label class="btn btn-default" ng-click="controller.irADesembolsos(controller.proyecto.id)">Desembolsos</label>
 				<label class="btn btn-default" ng-click="controller.irARiesgos(controller.proyecto.id)">Riesgos</label>
 				<!--  recursos -->
-				
+
 			</div>
 		</div>
-			
+
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid">Guardar</label> 
+				<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid">Guardar</label>
 				<label class="btn btn-primary" ng-click="controller.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>
 		<div class="col-sm-12">
-			
 			<form name="form">
 				<div class="form-group">
 					<label for="id">ID</label>
   					<label class="form-control" id="id">{{ controller.proyecto.id }}</label>
 				</div>
 				<div class="form-group" show-errors >
-					<label for="inombre">* Nombre</label> 
-					<input type="text" name="inombre" id="inombre" ng-model="controller.proyecto.nombre" 
+					<label for="inombre">* Nombre</label>
+					<input type="text" name="inombre" id="inombre" ng-model="controller.proyecto.nombre"
 						class="form-control" placeholder="Nombre" required >
 				</div>
 
 				<div class="form-group"  >
-					<label for="isnip">* SNIP</label> 
+					<label for="isnip">* SNIP</label>
 					<input type="number" name="isnip" id="isnip"  ng-model="controller.proyecto.snip"
 						class="form-control" placeholder="Nombre" ng-required="true">
 				</div>
 				<div class="form-grup" style="padding: 0px;">
-					<div class="form-group col-sm-3" >
-					       <label for="iprog">Programa</label> 
+				<div class="form-group row" >
+					<div class="form-group col-sm-2 anchocolumna" >
+					       <label for="iprog">Programa</label>
 					       <input type="number" class="form-control" id="iprog" name="iprog" placeholder="Programa" ng-model="controller.programa"  />
 					</div>
-					<div class="form-group col-sm-3" >
-					  <label for="isubprog">Sub-Programa</label> 
+					<div class="form-group col-sm-2 anchocolumna" >
+					  <label for="isubprog">Sub-Programa</label>
 					  <input type="number" class="form-control" id="isubprog" name="isubprog" placeholder="Sub-programa" ng-model="controller.subprograma" />
 					</div>
-					<div class="form-group col-sm-3" >
-					  <label for="iproy_">Proyecto:</label> 
+					<div class="form-group col-sm-2 anchocolumna" >
+					  <label for="iproy_">Proyecto:</label>
 					  <input type="number" class="form-control" id="iproy_" name="iproy_" placeholder="Proyecto" ng-model="controller.proyecto_"  />
-					</div>					
-					<div class="form-group col-sm-3" >
-					  <label for="iobra">Obra</label> 
+					</div>
+					<div class="form-group col-sm-2 anchocolumna" >
+					  <label for="iobra">Obra</label>
 					  <input type="number" class="form-control" id="iobra" name="iobra" placeholder="Obra" ng-model="controller.obra" ng-maxlength="4"/>
 					</div>
+					<div class="form-group col-sm-2 anchocolumna" >
+					  <label for="campo5">Fuente</label>
+					  <input type="number" class="form-control" id="campo5" name="campo5" placeholder="Fuente" ng-model="controller.fuente" ng-maxlength="4"/>
+					</div>
+				</div>
 				</div>
 				<div class="form-group" >
 					<label for="campo3">* Tipo Proyecto</label>
-		          	<div class="input-group"> 
+		          	<div class="input-group">
 		            	<input type="text" class="form-control" id="iproyt" name="iproyt" placeholder="Nombre Tipo Proyecto" ng-model="controller.proyectotiponombre" ng-readonly="true" ng-required="true"/>
 		            	<span class="input-group-addon" ng-click="controller.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 		          	</div>
 				</div>
-				
+
 				<div class="form-group" ng-repeat="campo in controller.camposdinamicos">
 							<label for="campo.id">{{ campo.label }}</label>
 							<div ng-switch="campo.tipo">
@@ -150,7 +161,7 @@
 								</p>
 							</div>
 						</div>
-				
+
 				<div class="form-group">
 					<label for="campo3">* Unidad Ejecutora</label>
 		          	<div class="input-group">
@@ -158,22 +169,22 @@
 		            	<span class="input-group-addon" ng-click="controller.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
 		          	</div>
 				</div>
-				
+
 				<div class="form-group" >
 					<label for="campo3">* Cooperante</label>
 		          	<div class="input-group">
-		            	<input type="hidden" class="form-control" ng-model="controller.cooperanteid" /> 
+		            	<input type="hidden" class="form-control" ng-model="controller.cooperanteid" />
 		            	<input type="text" class="form-control" id="icoope" name="icoope" placeholder="Nombre Cooperante" ng-model="controller.cooperantenombre" ng-readonly="true" ng-required="true"/>
 		            	<span class="input-group-addon" ng-click="controller.buscarCooperante()"><i class="glyphicon glyphicon-search"></i></span>
 		          	</div>
 				</div>
-				
+
 				<div class="form-group">
-					<label for="campo2">Descripción</label> 
+					<label for="campo2">Descripción</label>
 					<input type="text" ng-model="controller.proyecto.descripcion"
 						class="form-control" id="campo2" placeholder="Descripción">
 				</div>
-				
+
 				<div class="form-group">
 							<label for="usuarioCreo">Usuario que creo</label>
     						<label class="form-control" id="usuarioCreo">{{ controller.proyecto.usuariocrea }}</label>
@@ -195,7 +206,7 @@
 		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid">Guardar</label> 
+				<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid">Guardar</label>
 				<label class="btn btn-primary" ng-click="controller.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>
