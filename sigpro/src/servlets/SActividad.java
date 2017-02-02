@@ -55,6 +55,7 @@ public class SActividad extends HttpServlet {
 		String fechaFin;
 		Integer actividadtipoid;
 		String actividadtiponombre;
+		Integer porcentajeavance;
 		int estado;
 	}
 
@@ -121,6 +122,7 @@ public class SActividad extends HttpServlet {
 				temp.usuarioCreo = actividad.getUsuarioCreo();
 				temp.actividadtipoid = actividad.getActividadTipo().getId();
 				temp.actividadtiponombre = actividad.getActividadTipo().getNombre();
+				temp.porcentajeavance = actividad.getPorcentajeAvance();
 				stactividads.add(temp);
 			}
 
@@ -133,7 +135,6 @@ public class SActividad extends HttpServlet {
 			List<stactividad> stactividads=new ArrayList<stactividad>();
 			for(Actividad actividad:actividads){
 				stactividad temp =new stactividad();
-
 				temp.descripcion = actividad.getDescripcion();
 				temp.estado = actividad.getEstado();
 				temp.fechaActualizacion = Utils.formatDate(actividad.getFechaActualizacion());
@@ -144,6 +145,7 @@ public class SActividad extends HttpServlet {
 				temp.usuarioCreo = actividad.getUsuarioCreo();
 				temp.actividadtipoid = actividad.getActividadTipo().getId();
 				temp.actividadtiponombre = actividad.getActividadTipo().getNombre();
+				temp.porcentajeavance = actividad.getPorcentajeAvance();
 				stactividads.add(temp);
 			}
 
@@ -170,6 +172,7 @@ public class SActividad extends HttpServlet {
 					Integer actividadObra= Utils.getParameterInteger(map, "actividadobra");
 					Integer objetoId = Utils.getParameterInteger(map, "objetoid");
 					Integer objetoTipo = Utils.getParameterInteger(map, "objetotipo");
+					Integer porcentajeAvance = Utils.getParameterInteger(map, "porcentajeavance");
 					
 					ActividadTipo actividadTipo= new ActividadTipo();
 					actividadTipo.setId(actividadtipoid);
@@ -182,7 +185,7 @@ public class SActividad extends HttpServlet {
 					Actividad actividad;
 					if(esnuevo){
 						actividad = new Actividad(actividadTipo, nombre, descripcion, fechaInicio, fechaFin, 
-								0, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, actividadObra, 
+								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, actividadObra, 
 								objetoId, objetoTipo,
 								null,null);
 					}
@@ -194,6 +197,7 @@ public class SActividad extends HttpServlet {
 						actividad.setFechaActualizacion(new DateTime().toDate());
 						actividad.setFechaInicio(fechaInicio);
 						actividad.setFechaFin(fechaFin);
+						actividad.setPorcentajeAvance(porcentajeAvance);
 					}
 					result = ActividadDAO.guardarActividad(actividad);
 
@@ -283,6 +287,7 @@ public class SActividad extends HttpServlet {
 				temp.usuarioCreo = actividad.getUsuarioCreo();
 				temp.actividadtipoid = actividad.getActividadTipo().getId();
 				temp.actividadtiponombre = actividad.getActividadTipo().getNombre();
+				temp.porcentajeavance = actividad.getPorcentajeAvance();
 				stactividads.add(temp);
 			}
 

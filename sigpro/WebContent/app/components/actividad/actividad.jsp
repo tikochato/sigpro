@@ -64,7 +64,7 @@
 		</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="actividadc.guardar()">Guardar</label>
+			        <label class="btn btn-success" ng-click="form.$valid ? actividadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 			        <label class="btn btn-primary" ng-click="actividadc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
@@ -83,8 +83,8 @@
 						<div class="form-group">
 							<label for="campo3">* Tipo de Actividad</label>
 				          	<div class="input-group">
-				            	<input type="hidden" class="form-control" ng-model="actividadc.actividadtipoid" ng-required="true" />
-				            	<input type="text" class="form-control" placeholder="Tipo de Actividad" ng-model="actividadc.actividad.actividadtiponombre" ng-readonly="true" required/>
+				            	<input type="hidden" class="form-control" ng-model="actividadc.actividadtipoid" />
+				            	<input type="text" class="form-control" placeholder="Tipo de Actividad" ng-model="actividadc.actividad.actividadtiponombre" ng-readonly="true" ng-required="true"/>
 				            	<span class="input-group-addon" ng-click="actividadc.buscarActividadTipo()"><i class="glyphicon glyphicon-search"></i></span>
 				          	</div>
 						</div>
@@ -98,8 +98,8 @@
 									<label>* Fecha de Inicio</label>
 		    						<p class="input-group">
 									<input type="text" class="form-control" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaInicio" is-open="actividadc.fi_abierto"
-														datepicker-options="actividadc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Inicio" ng-change="actividadc.actualizarfechafin()"  /><span
-														class="input-group-btn" ng-required="true">
+														datepicker-options="actividadc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Inicio" ng-change="actividadc.actualizarfechafin()" ng-required="true" />
+														<span class="input-group-btn">
 														<button type="button" class="btn btn-default"
 															ng-click="actividadc.abrirPopupFecha(1000)">
 															<i class="glyphicon glyphicon-calendar"></i>
@@ -113,8 +113,8 @@
 									<label>* Fecha de Fin</label>
 		    						<p class="input-group">
 									<input type="text" class="form-control" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaFin" is-open="actividadc.ff_abierto"
-														datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Fin" /><span
-														class="input-group-btn" ng-required="true">
+														datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Fin" ng-required="true" /><span
+														class="input-group-btn">
 														<button type="button" class="btn btn-default"
 															ng-click="actividadc.abrirPopupFecha(1001)">
 															<i class="glyphicon glyphicon-calendar"></i>
@@ -123,6 +123,10 @@
 									</p>
 								</div>
 							</div>
+						</div>
+						<div class="form-group">
+							<label for="descripcion">Avance %</label>
+    						<input type="number" class="form-control" placeholder="% de Avance" ng-model="actividadc.actividad.porcentajeavance" ng-required="true" min="0" max="100">
 						</div>
 						<div class="form-group" ng-repeat="campo in actividadc.camposdinamicos">
 							<label for="campo.id">{{ campo.label }}</label>
@@ -170,7 +174,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="actividadc.guardar()">Guardar</label>
+				        <label class="btn btn-success" ng-click="form.$valid ? actividadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 				        <label class="btn btn-primary" ng-click="actividadc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

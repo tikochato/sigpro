@@ -135,13 +135,13 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					});
 		}
 
-		mi.guardar=function(){
+		mi.guardar=function(valid){
 			for (campos in mi.camposdinamicos) {
 				if (mi.camposdinamicos[campos].tipo === 'fecha') {
 					mi.camposdinamicos[campos].valor = moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY')
 				}
 			}
-			if(mi.actividad!=null && !form.input.$error.required){
+			if(mi.actividad!=null){
 				$http.post('/SActividad', {
 					accion: 'guardarActividad',
 					esnuevo: mi.esnuevo,
@@ -153,6 +153,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					descripcion: mi.actividad.descripcion,
 					fechainicio: moment(mi.actividad.fechaInicio).format('DD/MM/YYYY'),
 					fechafin: moment(mi.actividad.fechaFin).format('DD/MM/YYYY'),
+					porcentajeavance: mi.actividad.porcentajeavance,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
 					if(response.success){
