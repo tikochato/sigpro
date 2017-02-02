@@ -15,7 +15,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.proyectotipos = [];
 	mi.unidadesejecutoras = [];
 	mi.poryectotipoid = "";
-	mi.proyectotiponombre=""; 
+	mi.proyectotiponombre="";
 	mi.unidadejecutoraid="";
 	mi.unidadejecutoranombre="";
 	mi.cooperanteid="";
@@ -25,17 +25,17 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 	mi.totalProyectos = 0;
-	
+
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion = null;
-	
+
 	mi.filtros = [];
 	mi.orden = null;
 
 	mi.fechaOptions = {
 			formatYear : 'yy',
 			maxDate : new Date(2020, 5, 22),
-			minDate : new Date(1900, 1, 1),
+			minDate : new Date(2000, 1, 1),
 			startingDay : 1
 	};
 
@@ -52,34 +52,30 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	    useExternalSorting: true,
 		columnDefs : [
 			{ name: 'id', width: 60, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left', width:200, 
+			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left', 
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.controller.filtrar($event,1)" style="width:175px;"></input></div>'
 			},
-			{ name : 'snip', width: 60, displayName : 'SNIP', cellClass: 'grid-align-right', type: 'number', 
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="number" ng-keypress="grid.appScope.controller.filtrar($event,2)" style="width:40px;  "></input></div>'
-			},
-			{ name : 'proyectotipo', width:180,   displayName : 'Tipo proyecto' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
-			{ name : 'unidadejecutora', width:180,   displayName : 'Unidad Ejecutora' ,cellClass: 'grid-align-left', enableFiltering: false , enableSorting: false },
-			{ name : 'cooperante',  width:200, displayName : 'Cooperante' ,cellClass: 'grid-align-left',  enableFiltering: false , enableSorting: false },
+			{ name : 'proyectotipo',    displayName : 'Tipo proyecto' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
+			{ name : 'unidadejecutora',    displayName : 'Unidad Ejecutora' ,cellClass: 'grid-align-left', enableFiltering: false , enableSorting: false },
+			{ name : 'cooperante',   displayName : 'Cooperante' ,cellClass: 'grid-align-left',  enableFiltering: false , enableSorting: false },
 			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.controller.filtrar($event,3)" style="width:90px;"></input></div>'
 			},
 		    { name: 'fechaCreacion', width: 100, displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.controller.filtrar($event,4)" style="width:80px;" ></input></div>'
 		    }
-
 		],
 		onRegisterApi: function(gridApi) {
 			mi.gridApi = gridApi;
 			gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 				mi.proyecto = row.entity;
 			});
-			
+
 			gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
 				if(sortColumns.length==1){
 					grid.appScope.controller.columnaOrdenada=sortColumns[0].field;
 					grid.appScope.controller.ordenDireccion = sortColumns[0].sort.direction;
-					
+
 					grid.appScope.controller.cargarTabla(grid.appScope.controller.paginaActual);
 				}
 				else if(sortColumns.length>1){
@@ -91,7 +87,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 						grid.appScope.controller.ordenDireccion=null;
 					}
 				}
-					
 			} );
 
 			if($routeParams.reiniciar_vista=='rv'){
@@ -115,7 +110,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		mi.mostrarcargando=true;
 		$http.post('/SProyecto', { accion: 'getProyectoPagina', pagina: pagina,
 			numeroproyecto:  $utilidades.elementosPorPagina,
-			filtro_nombre: mi.filtros['nombre'], filtro_snip: mi.filtros['snip'], 
+			filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
 			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
 			}).success(
@@ -127,15 +122,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	}
 
 
-	mi.guardar = function(){
+	mi.guardar = function(esvalido){
 		for (campos in mi.camposdinamicos) {
 			if (mi.camposdinamicos[campos].tipo === 'fecha') {
 				mi.camposdinamicos[campos].valor = moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY')
 			}
 		}
-		if(mi.proyecto!=null &&  mi.proyecto.nombre!='' && mi.proyecto.snip!=''
-			&& mi.poryectotipoid!='' && mi.unidadejecutoraid !=''
-			&& mi.cooperanteid!=''){
+		if(esvalido){
 			var param_data = {
 				accion : 'guardar',
 				id: mi.proyecto.id,
@@ -150,7 +143,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				proyecto_: mi.proyecto_,
 				obra:mi. obra,
 				esnuevo: mi.esNuevo,
-				
+
 				datadinamica : JSON.stringify(mi.camposdinamicos)
 			};
 			$http.post('/SProyecto',param_data).then(
@@ -270,22 +263,21 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.abrirPopupFecha = function(index) {
 		mi.camposdinamicos[index].isOpen = true;
 	};
-	
+
 	mi.filtrar = function(evt,tipo){
 		if(evt.keyCode==13){
 			switch(tipo){
 				case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
-				case 2: mi.filtros['snip'] = evt.currentTarget.value; break;
-				case 3: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
-				case 4: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
+				case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
+				case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
 			}
 			mi.obtenerTotalProyectos();
 		}
 	}
-	
+
 	mi.obtenerTotalProyectos = function(){
 		$http.post('/SProyecto', { accion: 'numeroProyectos',
-			filtro_nombre: mi.filtros['nombre'], filtro_snip: mi.filtros['snip'],
+			filtro_nombre: mi.filtros['nombre'], 
 			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
 				function(response) {
 					mi.totalProyectos = response.data.totalproyectos;
@@ -312,13 +304,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			$location.path('/componente/'+ proyectoid );
 		}
 	};
-	
+
 	mi.irARiesgos=function(proyectoid){
 		if(mi.proyecto!=null){
 			$location.path('/riesgo/'+  proyectoid );
 		}
 	};
-	
+
 	mi.irAHitos=function(proyectoid){
 		if(mi.proyecto!=null){
 			$location.path('/hito/'+ proyectoid );

@@ -3,7 +3,7 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="componentepropiedadController as componentepropiedadc" class="maincontainer all_page" id="title">
-		<h3>Propiedad Componente</h3><br/>
+		<h3>Propiedad de Componentes</h3><br/>
 		<div class="row" align="center" ng-hide="componentepropiedadc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
@@ -38,7 +38,7 @@
 					</div>
 				  </div>
 				</div>
-				<ul uib-pagination total-items="componentepropiedadc.totalCooperantes"
+				<ul uib-pagination total-items="componentepropiedadc.totalComponentePropiedades"
 						ng-model="componentepropiedadc.paginaActual"
 						max-size="componentepropiedadc.numeroMaximoPaginas"
 						items-per-page="componentepropiedadc.elementosPorPagina"
@@ -75,9 +75,13 @@
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Tipo dato</label>
-							<select class="form-control" ng-model="componentepropiedadc.datotipoid" >
+							
+							
+							<select class="form-control" ng-model="componentepropiedadc.datotipo"
+								ng-options="tipo as tipo.nombre for tipo in componentepropiedadc.tipodatos track by tipo.id"
+								ng-readonly="true" 
+								ng-disabled="!componentepropiedadc.esnuevo" >
 								<option value="">Seleccione una opción</option>
-								<option ng-repeat="opciones in componentepropiedadc.tipodatos" value="{{opciones.id}}">{{opciones.nombre}}</option>
 							</select>
 						</div>
 						<div class="form-group">
