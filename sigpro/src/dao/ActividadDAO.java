@@ -3,10 +3,6 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -15,16 +11,13 @@ import utilities.CHibernateSession;
 import utilities.CLogger;
 
 public class ActividadDAO {
-	public static List<Actividad> getActividads(){
+	public static List<Actividad> getActividads(String usuario){
 		List<Actividad> ret = new ArrayList<Actividad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			CriteriaBuilder builder = session.getCriteriaBuilder();
-
-			CriteriaQuery<Actividad> criteria = builder.createQuery(Actividad.class);
-			Root<Actividad> root = criteria.from(Actividad.class);
-			criteria.select( root ).where(builder.equal(root.get("estado"),1));
-			ret = session.createQuery( criteria ).getResultList();
+			Query<Actividad> criteria = session.createQuery("FROM Actividad p where p.id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )", Actividad.class);
+			criteria.setParameter("usuario", usuario);
+			ret = (List<Actividad>) criteria.getResultList();
 		}
 		catch(Throwable e){
 			CLogger.write("1", ActividadDAO.class, e);
@@ -35,17 +28,14 @@ public class ActividadDAO {
 		return ret;
 	}
 	
-	public static Actividad getActividadPorId(int id){
+	public static Actividad getActividadPorId(int id, String usuario){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Actividad ret = null;
 		try{
-			CriteriaBuilder builder = session.getCriteriaBuilder();
-
-			CriteriaQuery<Actividad> criteria = builder.createQuery(Actividad.class);
-			Root<Actividad> root = criteria.from(Actividad.class);
-			criteria.select( root );
-			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
-			ret = session.createQuery( criteria ).getSingleResult();
+			Query<Actividad> criteria = session.createQuery("FROM Actividad where id=:id AND id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )", Actividad.class);
+			criteria.setParameter("id", id);
+			criteria.setParameter("usuario", usuario);
+			ret = (Actividad) criteria.getSingleResult();
 		}
 		catch(Throwable e){
 			CLogger.write("2", ActividadDAO.class, e);
@@ -113,7 +103,7 @@ public class ActividadDAO {
 	
 	public static List<Actividad> getActividadsPagina(int pagina, int numeroActividads,
 			String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion,
-			String columna_ordenada, String orden_direccion){
+			String columna_ordenada, String orden_direccion, String usuario){
 		List<Actividad> ret = new ArrayList<Actividad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -126,8 +116,10 @@ public class ActividadDAO {
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(c.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			query = String.join("", query, " AND c.id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario ) ");	
 			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
 			Query<Actividad> criteria = session.createQuery(query,Actividad.class);
+			criteria.setParameter("usuario", usuario);
 			criteria.setFirstResult(((pagina-1)*(numeroActividads)));
 			criteria.setMaxResults(numeroActividads);
 			ret = criteria.getResultList();
@@ -141,7 +133,7 @@ public class ActividadDAO {
 		return ret;
 	}
 	
-	public static Long getTotalActividads(String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion){
+	public static Long getTotalActividads(String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion, String usuario){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -153,8 +145,10 @@ public class ActividadDAO {
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " c.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(c.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join("", query, " AND c.id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario ) ");	
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			Query<Long> conteo = session.createQuery(query,Long.class);
+			conteo.setParameter("usuario", usuario);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
@@ -166,12 +160,13 @@ public class ActividadDAO {
 		return ret;
 	}
 	
-	public static List<Actividad> getActividadsPaginaPorProyecto(int pagina, int numeroActividads, int proyectoId){
+	public static List<Actividad> getActividadsPaginaPorProyecto(int pagina, int numeroActividads, int proyectoId, String usuario){
 		List<Actividad> ret = new ArrayList<Actividad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Actividad> criteria = session.createQuery("SELECT c FROM Actividad c WHERE estado = 1 AND c.proyecto.id = :proyId",Actividad.class);
+			Query<Actividad> criteria = session.createQuery("SELECT c FROM Actividad c WHERE estado = 1 AND c.proyecto.id = :proyId AND c.id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )",Actividad.class);
 			criteria.setParameter("proyId", proyectoId);
+			criteria.setParameter("usuario", usuario);
 			criteria.setFirstResult(((pagina-1)*(numeroActividads)));
 			criteria.setMaxResults(numeroActividads);
 			ret = criteria.getResultList();
@@ -185,12 +180,13 @@ public class ActividadDAO {
 		return ret;
 	}
 	
-	public static Long getTotalActividadsPorProyecto(int proyectoId){
+	public static Long getTotalActividadsPorProyecto(int proyectoId, String usuario){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM Actividad c WHERE c.estado=1 AND c.proyecto.id = :proyId ",Long.class);
+			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM Actividad c WHERE c.estado=1 AND c.proyecto.id = :proyId AND c.id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )",Long.class);
 			conteo.setParameter("proyId", proyectoId);
+			conteo.setParameter("usuario", usuario);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
