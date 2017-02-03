@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 3, 2017 7:56:02 AM by Hibernate Tools 5.2.0.CR1
+// Generated Feb 3, 2017 9:12:33 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -24,10 +24,6 @@ import javax.persistence.TemporalType;
 @Table(name = "componente", catalog = "sigpro")
 public class Componente implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 9100030062043805686L;
 	private Integer id;
 	private ComponenteTipo componenteTipo;
 	private Proyecto proyecto;
@@ -39,14 +35,13 @@ public class Componente implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private Integer snip;
+	private Long snip;
 	private Integer programa;
 	private Integer subprograma;
 	private Integer proyecto_1;
 	private Integer actividadObra;
 	private Integer fuente;
 	private Set<ComponenteUsuario> componenteUsuarios = new HashSet<ComponenteUsuario>(0);
-	private Set<Meta> metas = new HashSet<Meta>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<ComponentePropiedadValor> componentePropiedadValors = new HashSet<ComponentePropiedadValor>(0);
 
@@ -66,9 +61,9 @@ public class Componente implements java.io.Serializable {
 
 	public Componente(ComponenteTipo componenteTipo, Proyecto proyecto, UnidadEjecutora unidadEjecutora, String nombre,
 			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, Integer snip, Integer programa, Integer subprograma,
+			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma,
 			Integer proyecto_1, Integer actividadObra, Integer fuente, Set<ComponenteUsuario> componenteUsuarios,
-			Set<Meta> metas, Set<Producto> productos, Set<ComponentePropiedadValor> componentePropiedadValors) {
+			Set<Producto> productos, Set<ComponentePropiedadValor> componentePropiedadValors) {
 		this.componenteTipo = componenteTipo;
 		this.proyecto = proyecto;
 		this.unidadEjecutora = unidadEjecutora;
@@ -86,7 +81,6 @@ public class Componente implements java.io.Serializable {
 		this.actividadObra = actividadObra;
 		this.fuente = fuente;
 		this.componenteUsuarios = componenteUsuarios;
-		this.metas = metas;
 		this.productos = productos;
 		this.componentePropiedadValors = componentePropiedadValors;
 	}
@@ -199,11 +193,11 @@ public class Componente implements java.io.Serializable {
 	}
 
 	@Column(name = "snip")
-	public Integer getSnip() {
+	public Long getSnip() {
 		return this.snip;
 	}
 
-	public void setSnip(Integer snip) {
+	public void setSnip(Long snip) {
 		this.snip = snip;
 	}
 
@@ -259,15 +253,6 @@ public class Componente implements java.io.Serializable {
 
 	public void setComponenteUsuarios(Set<ComponenteUsuario> componenteUsuarios) {
 		this.componenteUsuarios = componenteUsuarios;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")
-	public Set<Meta> getMetas() {
-		return this.metas;
-	}
-
-	public void setMetas(Set<Meta> metas) {
-		this.metas = metas;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")

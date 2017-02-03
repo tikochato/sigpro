@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 3, 2017 7:56:02 AM by Hibernate Tools 5.2.0.CR1
+// Generated Feb 3, 2017 9:12:33 AM by Hibernate Tools 5.2.0.CR1
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -22,10 +22,6 @@ import javax.persistence.TemporalType;
 @Table(name = "objeto_recurso", catalog = "sigpro")
 public class ObjetoRecurso implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6673865031125672481L;
 	private ObjetoRecursoId id;
 	private Recurso recurso;
 	private String usuarioCreo;

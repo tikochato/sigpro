@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 3, 2017 7:56:02 AM by Hibernate Tools 5.2.0.CR1
+// Generated Feb 3, 2017 9:12:33 AM by Hibernate Tools 5.2.0.CR1
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -18,10 +18,6 @@ import javax.persistence.Table;
 @Table(name = "componente_usuario", catalog = "sigpro")
 public class ComponenteUsuario implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1717989244404741296L;
 	private ComponenteUsuarioId id;
 	private Componente componente;
 

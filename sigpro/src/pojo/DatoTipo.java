@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 3, 2017 7:56:02 AM by Hibernate Tools 5.2.0.CR1
+// Generated Feb 3, 2017 9:12:33 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,10 +19,6 @@ import javax.persistence.Table;
 @Table(name = "dato_tipo", catalog = "sigpro")
 public class DatoTipo implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2995071848021641400L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
@@ -31,6 +27,7 @@ public class DatoTipo implements java.io.Serializable {
 	private Set<ProyectoPropiedad> proyectoPropiedads = new HashSet<ProyectoPropiedad>(0);
 	private Set<ActividadPropiedad> actividadPropiedads = new HashSet<ActividadPropiedad>(0);
 	private Set<FormularioItemTipo> formularioItemTipos = new HashSet<FormularioItemTipo>(0);
+	private Set<Meta> metas = new HashSet<Meta>(0);
 	private Set<ProductoPropiedad> productoPropiedads = new HashSet<ProductoPropiedad>(0);
 	private Set<RecursoPropiedad> recursoPropiedads = new HashSet<RecursoPropiedad>(0);
 	private Set<HitoTipo> hitoTipos = new HashSet<HitoTipo>(0);
@@ -44,7 +41,7 @@ public class DatoTipo implements java.io.Serializable {
 
 	public DatoTipo(String nombre, String descripcion, Set<ComponentePropiedad> componentePropiedads,
 			Set<RiesgoPropiedad> riesgoPropiedads, Set<ProyectoPropiedad> proyectoPropiedads,
-			Set<ActividadPropiedad> actividadPropiedads, Set<FormularioItemTipo> formularioItemTipos,
+			Set<ActividadPropiedad> actividadPropiedads, Set<FormularioItemTipo> formularioItemTipos, Set<Meta> metas,
 			Set<ProductoPropiedad> productoPropiedads, Set<RecursoPropiedad> recursoPropiedads,
 			Set<HitoTipo> hitoTipos) {
 		this.nombre = nombre;
@@ -54,6 +51,7 @@ public class DatoTipo implements java.io.Serializable {
 		this.proyectoPropiedads = proyectoPropiedads;
 		this.actividadPropiedads = actividadPropiedads;
 		this.formularioItemTipos = formularioItemTipos;
+		this.metas = metas;
 		this.productoPropiedads = productoPropiedads;
 		this.recursoPropiedads = recursoPropiedads;
 		this.hitoTipos = hitoTipos;
@@ -132,6 +130,15 @@ public class DatoTipo implements java.io.Serializable {
 
 	public void setFormularioItemTipos(Set<FormularioItemTipo> formularioItemTipos) {
 		this.formularioItemTipos = formularioItemTipos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "datoTipo")
+	public Set<Meta> getMetas() {
+		return this.metas;
+	}
+
+	public void setMetas(Set<Meta> metas) {
+		this.metas = metas;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "datoTipo")

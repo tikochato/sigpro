@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 3, 2017 7:56:02 AM by Hibernate Tools 5.2.0.CR1
+// Generated Feb 3, 2017 9:12:33 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -24,16 +24,10 @@ import javax.persistence.TemporalType;
 @Table(name = "meta", catalog = "sigpro")
 public class Meta implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8878546985620322121L;
 	private Integer id;
-	private Componente componente;
+	private DatoTipo datoTipo;
 	private MetaTipo metaTipo;
 	private MetaUnidadMedida metaUnidadMedida;
-	private Producto producto;
-	private Proyecto proyecto;
 	private String nombre;
 	private String descripcion;
 	private String usuarioCreo;
@@ -41,33 +35,30 @@ public class Meta implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Integer estado;
-	private Integer tipoRelacion;
+	private Integer objetoId;
+	private Integer objetoTipo;
 	private Set<MetaValor> metaValors = new HashSet<MetaValor>(0);
 
 	public Meta() {
 	}
 
-	public Meta(Componente componente, MetaTipo metaTipo, MetaUnidadMedida metaUnidadMedida, Producto producto,
-			Proyecto proyecto, String nombre, String usuarioCreo, Date fechaCreacion) {
-		this.componente = componente;
+	public Meta(DatoTipo datoTipo, MetaTipo metaTipo, MetaUnidadMedida metaUnidadMedida, String nombre,
+			String usuarioCreo, Date fechaCreacion) {
+		this.datoTipo = datoTipo;
 		this.metaTipo = metaTipo;
 		this.metaUnidadMedida = metaUnidadMedida;
-		this.producto = producto;
-		this.proyecto = proyecto;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public Meta(Componente componente, MetaTipo metaTipo, MetaUnidadMedida metaUnidadMedida, Producto producto,
-			Proyecto proyecto, String nombre, String descripcion, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, Integer estado, Integer tipoRelacion,
+	public Meta(DatoTipo datoTipo, MetaTipo metaTipo, MetaUnidadMedida metaUnidadMedida, String nombre,
+			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Date fechaActualizacion, Integer estado, Integer objetoId, Integer objetoTipo,
 			Set<MetaValor> metaValors) {
-		this.componente = componente;
+		this.datoTipo = datoTipo;
 		this.metaTipo = metaTipo;
 		this.metaUnidadMedida = metaUnidadMedida;
-		this.producto = producto;
-		this.proyecto = proyecto;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
@@ -75,7 +66,8 @@ public class Meta implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.tipoRelacion = tipoRelacion;
+		this.objetoId = objetoId;
+		this.objetoTipo = objetoTipo;
 		this.metaValors = metaValors;
 	}
 
@@ -92,13 +84,13 @@ public class Meta implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "componenteid", nullable = false)
-	public Componente getComponente() {
-		return this.componente;
+	@JoinColumn(name = "dato_tipoid", nullable = false)
+	public DatoTipo getDatoTipo() {
+		return this.datoTipo;
 	}
 
-	public void setComponente(Componente componente) {
-		this.componente = componente;
+	public void setDatoTipo(DatoTipo datoTipo) {
+		this.datoTipo = datoTipo;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -119,26 +111,6 @@ public class Meta implements java.io.Serializable {
 
 	public void setMetaUnidadMedida(MetaUnidadMedida metaUnidadMedida) {
 		this.metaUnidadMedida = metaUnidadMedida;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "productoid", nullable = false)
-	public Producto getProducto() {
-		return this.producto;
-	}
-
-	public void setProducto(Producto producto) {
-		this.producto = producto;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "proyectoid", nullable = false)
-	public Proyecto getProyecto() {
-		return this.proyecto;
-	}
-
-	public void setProyecto(Proyecto proyecto) {
-		this.proyecto = proyecto;
 	}
 
 	@Column(name = "nombre", nullable = false, length = 1000)
@@ -206,13 +178,22 @@ public class Meta implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@Column(name = "tipo_relacion")
-	public Integer getTipoRelacion() {
-		return this.tipoRelacion;
+	@Column(name = "objeto_id")
+	public Integer getObjetoId() {
+		return this.objetoId;
 	}
 
-	public void setTipoRelacion(Integer tipoRelacion) {
-		this.tipoRelacion = tipoRelacion;
+	public void setObjetoId(Integer objetoId) {
+		this.objetoId = objetoId;
+	}
+
+	@Column(name = "objeto_tipo")
+	public Integer getObjetoTipo() {
+		return this.objetoTipo;
+	}
+
+	public void setObjetoTipo(Integer objetoTipo) {
+		this.objetoTipo = objetoTipo;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "meta")

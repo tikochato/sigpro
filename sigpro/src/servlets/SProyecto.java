@@ -47,7 +47,7 @@ public class SProyecto extends HttpServlet {
 		int id;
 		String nombre;
 		String descripcion;
-		int snip;
+		Long snip;
 		int proyectotipoid;
 		String proyectotipo;
 		String unidadejecutora;
@@ -193,7 +193,7 @@ public class SProyecto extends HttpServlet {
 			Proyecto proyecto;
 			if (id>0 || esnuevo){
 				String nombre = map.get("nombre");
-				int snip = map.get("snip")!=null ? Integer.parseInt(map.get("snip")) : 0;
+				Long snip = map.get("snip")!=null ? Long.parseLong(map.get("snip")) : 0;
 				String descripcion = map.get("descripcion");
 				Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
 				Integer subPrograma = map.get("subprograma")!=null ?  Integer.parseInt(map.get("subprograma")) : null;
@@ -220,7 +220,7 @@ public class SProyecto extends HttpServlet {
 					proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion
 							, usuario, null, new DateTime().toDate(), null, 1, snip
 							,programa , subPrograma, proyecto_, obra, fuente,
-							null, null, null, null, null,null);
+							null, null, null, null, null);
 
 				}else{
 					proyecto = ProyectoDAO.getProyectoPorId(id);
