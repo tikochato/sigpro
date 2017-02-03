@@ -76,7 +76,9 @@
 						<div class="form-group">
 							<label for="nombre">* Tipo dato</label>
 							<select class="form-control" ng-model="proyectopropiedadc.proyectopropiedad.datotipoid"
-								ng-options="tipo as tipo.nombre for tipo in proyectopropiedadc.tipodatos track by tipo.id">
+								ng-options="tipo as tipo.nombre for tipo in proyectopropiedadc.tipodatos track by tipo.id"
+								ng-readonly="true"
+								ng-disabled="!proyectopropiedadc.esnuevo">
 								<option value="">Seleccione una opción</option>
 							</select>
 						</div>

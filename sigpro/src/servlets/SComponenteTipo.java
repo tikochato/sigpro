@@ -57,14 +57,23 @@ public class SComponenteTipo extends HttpServlet {
      */
     public SComponenteTipo() {
         super();
-        // TODO Auto-generated constructor stub
+        
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
+		String response_text = "{ \"success\": false }";
+		
+		response.setHeader("Content-Encoding", "gzip");
+		response.setCharacterEncoding("UTF-8");
+		
+        OutputStream output = response.getOutputStream();
+		GZIPOutputStream gz = new GZIPOutputStream(output);
+        gz.write(response_text.getBytes("UTF-8"));
+        gz.close();
+        output.close();
 	}
 
 	/**

@@ -23,12 +23,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ComponenteDAO;
+import dao.DatoTipoDAO;
 import dao.MetaDAO;
 import dao.MetaTipoDAO;
 import dao.MetaUnidadMedidaDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import pojo.Componente;
+import pojo.DatoTipo;
 import pojo.Meta;
 import pojo.MetaTipo;
 import pojo.MetaUnidadMedida;
@@ -42,7 +44,7 @@ import utilities.Utils;
 @WebServlet("/SMeta")
 public class SMeta extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-     
+
 	public class stmeta{
 		Integer id;
 		String nombre;
@@ -59,8 +61,10 @@ public class SMeta extends HttpServlet {
 		String fechaCreacion;
 		String usuarioActualizo;
 		String fechaActualizacion;
+		Integer objetoId;
+		Integer objetoTipo;
 	}
-	
+
 	public class sttipometa{
 		Integer id;
 		String nombre;
@@ -71,7 +75,7 @@ public class SMeta extends HttpServlet {
 		String usuarioCreo;
 		String usuarioActulizo;
 	}
-	
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -83,7 +87,7 @@ public class SMeta extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
+
 	}
 
 	/**
@@ -122,9 +126,8 @@ public class SMeta extends HttpServlet {
 				temp.id = meta.getId();
 				temp.nombre = meta.getNombre();
 				temp.descripcion = meta.getDescripcion();
-				temp.proyecto = meta.getProyecto()!=null ? meta.getProyecto().getId() :  null;
-				temp.componente = meta.getComponente()!=null ? meta.getComponente().getId() : null;
-				temp.producto = meta.getComponente()!=null ? meta.getComponente().getId() : null;
+				temp.objetoId = meta.getObjetoId();
+				temp.objetoTipo = meta.getObjetoTipo();
 				temp.estado = meta.getEstado();
 				temp.fechaActualizacion = Utils.formatDate(meta.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(meta.getFechaCreacion());
@@ -157,13 +160,14 @@ public class SMeta extends HttpServlet {
 				Integer idUnidadMedida = map.get("unidadmetaid")!=null ? Integer.parseInt(map.get("unidadmetaid")) : 0;
 				MetaUnidadMedida metaUnidadMedida = MetaUnidadMedidaDAO.getMetaUnidadMedidaPorId(idUnidadMedida);
 				String descripcion = map.get("descripcion");
-				Componente componente=map.get("componente")!=null ? ComponenteDAO.getComponentePorId(Integer.parseInt(map.get("componente")),usuario) : null;
-				Producto producto = map.get("producto")!=null ? ProductoDAO.getProductoPorId(Integer.parseInt(map.get("producto")),usuario) : null;
-				Proyecto proyecto = map.get("proyecto")!=null ? ProyectoDAO.getProyectoPorId(Integer.parseInt(map.get("proyecto")),usuario) : null;
+				Integer datoTipoId = Utils.getParameterInteger(map, "datotipo");
+				DatoTipo datoTipo = DatoTipoDAO.getDatoTipo(datoTipoId);
+				Integer objetoId = Utils.getParameterInteger(map, "objetoId");
+				Integer objetoTipo = Utils.getParameterInteger(map, "objetoTipo");
 				Meta Meta;
 				if(esnuevo){
-					Meta = new Meta(componente, metaTipo, metaUnidadMedida, producto,proyecto, nombre, descripcion, 
-							usuario, null, new DateTime().toDate(), null, 1, proyecto!=null ? 1 : (componente!=null ? 2 : 3), null);
+					Meta = new Meta(datoTipo, metaTipo, metaUnidadMedida, nombre, descripcion,
+							usuario, null, new DateTime().toDate(), null, 1, objetoId, objetoTipo, null);
 				}
 				else{
 					Meta = MetaDAO.getMetaPorId(id);
@@ -248,11 +252,11 @@ public class SMeta extends HttpServlet {
 		else{
 			response_text = "{ \"success\": false }";
 		}
-		
+
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
-		
-        
+
+
         OutputStream output = response.getOutputStream();
 		GZIPOutputStream gz = new GZIPOutputStream(output);
         gz.write(response_text.getBytes("UTF-8"));

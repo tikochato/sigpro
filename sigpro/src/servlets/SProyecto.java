@@ -47,7 +47,7 @@ public class SProyecto extends HttpServlet {
 		int id;
 		String nombre;
 		String descripcion;
-		int snip;
+		Long snip;
 		int proyectotipoid;
 		String proyectotipo;
 		String unidadejecutora;
@@ -62,6 +62,7 @@ public class SProyecto extends HttpServlet {
 		Integer subprograma;
 		Integer proyecto;
 		Integer obra;
+		Integer fuente;
 	};
 
 	class stdatadinamico {
@@ -78,7 +79,16 @@ public class SProyecto extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		String response_text = "{ \"success\": false }";
+
+		response.setHeader("Content-Encoding", "gzip");
+		response.setCharacterEncoding("UTF-8");
+
+        OutputStream output = response.getOutputStream();
+		GZIPOutputStream gz = new GZIPOutputStream(output);
+        gz.write(response_text.getBytes("UTF-8"));
+        gz.close();
+        output.close();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -125,6 +135,7 @@ public class SProyecto extends HttpServlet {
 				dato.subprograma = proyecto.getSubprograma();
 				dato.proyecto = proyecto.getProyecto();
 				dato.obra = proyecto.getActividadObra();
+				dato.fuente = proyecto.getFuente();
 				datos_.add(dato);
 			}
 
@@ -138,14 +149,13 @@ public class SProyecto extends HttpServlet {
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroProyecto = map.get("numeroproyecto")!=null  ? Integer.parseInt(map.get("numeroproyecto")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
-			int filtro_snip = Integer.parseInt(map.get("filtro_snip")!=null  && map.get("filtro_snip").trim().length()>0? map.get("filtro_snip") : "0");
+
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
-			
-			List<Proyecto> proyectos = ProyectoDAO.getProyectosPagina(pagina, numeroProyecto, 
-					filtro_nombre, filtro_snip, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion, usuario);
+			List<Proyecto> proyectos = ProyectoDAO.getProyectosPagina(pagina, numeroProyecto,
+					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion,usuario);
 			List<datos> datos_=new ArrayList<datos>();
 			for (Proyecto proyecto : proyectos){
 				datos dato = new datos();
@@ -182,12 +192,13 @@ public class SProyecto extends HttpServlet {
 			Proyecto proyecto;
 			if (id>0 || esnuevo){
 				String nombre = map.get("nombre");
-				int snip = map.get("snip")!=null ? Integer.parseInt(map.get("snip")) : 0;
+				Long snip = map.get("snip")!=null ? Long.parseLong(map.get("snip")) : 0;
 				String descripcion = map.get("descripcion");
 				Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
 				Integer subPrograma = map.get("subprograma")!=null ?  Integer.parseInt(map.get("subprograma")) : null;
 				Integer proyecto_ = map.get("proyecto_")!=null ? Integer.parseInt(map.get("proyecto_")) : null;
 				Integer obra = map.get("obra")!=null ? Integer.parseInt(map.get("obra")):null;
+				Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
 
 				ProyectoTipo proyectoTipo = new ProyectoTipo();
 				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): 0);
@@ -205,7 +216,10 @@ public class SProyecto extends HttpServlet {
 
 
 				if(esnuevo){
-					proyecto = new Proyecto();
+					proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion
+							, usuario, null, new DateTime().toDate(), null, 1, snip
+							,programa , subPrograma, proyecto_, obra, fuente,
+							null, null, null, null, null);
 
 				}else{
 					proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
@@ -288,10 +302,9 @@ public class SProyecto extends HttpServlet {
 		}
 		else if(accion.equals("numeroProyectos")){
 			String filtro_nombre = map.get("filtro_nombre");
-			int filtro_snip = map.get("filtro_snip")!=null  && map.get("filtro_snip").trim().length()>0 ? Integer.parseInt( map.get("filtro_snip")) : 0;
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			response_text = String.join("","{ \"success\": true, \"totalproyectos\":",ProyectoDAO.getTotalProyectos(filtro_nombre, filtro_snip, filtro_usuario_creo, filtro_fecha_creacion,usuario).toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalproyectos\":",ProyectoDAO.getTotalProyectos(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,usuario).toString()," }");
 		}
 		else if(accion.equals("obtenerProyectoPorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;

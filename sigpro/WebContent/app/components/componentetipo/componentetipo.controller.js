@@ -321,10 +321,10 @@ function modalBuscarComponentePropiedad($uibModalInstance, $scope, $http, $inter
 	mi.seleccionado = false;
 	
     $http.post('/SComponentePropiedad', {
-    	accion : 'numerocomponenteoPropiedadesDisponibles'
+    	accion : 'numeroComponentePropiedadesDisponibles'
         }).success(function(response) {
     	mi.totalElementos = response.totalcomponentepropiedades;
-    	mi.elementosPorPagina = mi.totalElementos;
+    	//mi.elementosPorPagina = mi.totalElementos;
     	mi.cargarData(1);
     });
     
@@ -341,7 +341,7 @@ function modalBuscarComponentePropiedad($uibModalInstance, $scope, $http, $inter
 		noUnselect : false,
 		enableFiltering : true,
 		enablePaginationControls : false,
-		paginationPageSize : 5,
+		paginationPageSize : mi.elementosPorPagina,
 		onRegisterApi : function(gridApi) {
 		    mi.gridApi = gridApi;
 		    mi.gridApi.selection.on.rowSelectionChanged($scope,

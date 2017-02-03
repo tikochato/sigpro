@@ -51,8 +51,16 @@ public class SActividad extends HttpServlet {
 		String usuarioActualizo;
 		String fechaCreacion;
 		String fechaActualizacion;
+		String fechaInicio;
+		String fechaFin;
 		Integer actividadtipoid;
 		String actividadtiponombre;
+		Integer porcentajeavance;
+		Integer programa;
+		Integer subprograma;
+		Integer proyecto;
+		Integer actividadObra;
+		Integer fuente;
 		int estado;
 	}
 
@@ -119,6 +127,12 @@ public class SActividad extends HttpServlet {
 				temp.usuarioCreo = actividad.getUsuarioCreo();
 				temp.actividadtipoid = actividad.getActividadTipo().getId();
 				temp.actividadtiponombre = actividad.getActividadTipo().getNombre();
+				temp.porcentajeavance = actividad.getPorcentajeAvance();
+				temp.programa = actividad.getPrograma();
+				temp.subprograma = actividad.getSubprograma();
+				temp.proyecto = actividad.getProyecto();
+				temp.actividadObra = actividad.getActividadObra();
+				temp.fuente = actividad.getFuente();
 				stactividads.add(temp);
 			}
 
@@ -131,7 +145,6 @@ public class SActividad extends HttpServlet {
 			List<stactividad> stactividads=new ArrayList<stactividad>();
 			for(Actividad actividad:actividads){
 				stactividad temp =new stactividad();
-
 				temp.descripcion = actividad.getDescripcion();
 				temp.estado = actividad.getEstado();
 				temp.fechaActualizacion = Utils.formatDate(actividad.getFechaActualizacion());
@@ -142,6 +155,12 @@ public class SActividad extends HttpServlet {
 				temp.usuarioCreo = actividad.getUsuarioCreo();
 				temp.actividadtipoid = actividad.getActividadTipo().getId();
 				temp.actividadtiponombre = actividad.getActividadTipo().getNombre();
+				temp.porcentajeavance = actividad.getPorcentajeAvance();
+				temp.programa = actividad.getPrograma();
+				temp.subprograma = actividad.getSubprograma();
+				temp.proyecto = actividad.getProyecto();
+				temp.actividadObra = actividad.getActividadObra();
+				temp.fuente = actividad.getFuente();
 				stactividads.add(temp);
 			}
 
@@ -158,7 +177,7 @@ public class SActividad extends HttpServlet {
 					String nombre = map.get("nombre");
 					String descripcion = map.get("descripcion");
 					int actividadtipoid = Integer.parseInt(map.get("actividadtipoid"));
-					
+
 					Date fechaInicio = Utils.dateFromString(map.get("fechainicio"));
 					Date fechaFin = Utils.dateFromString(map.get("fechafin"));
 					Long snip = Utils.String2Long(map.get("snip"));
@@ -166,21 +185,23 @@ public class SActividad extends HttpServlet {
 					Integer subprograma= Utils.getParameterInteger(map, "subprograma");
 					Integer proyecto= Utils.getParameterInteger(map, "proyecto");
 					Integer actividadObra= Utils.getParameterInteger(map, "actividadobra");
+					Integer fuente= Utils.getParameterInteger(map, "fuente");
 					Integer objetoId = Utils.getParameterInteger(map, "objetoid");
 					Integer objetoTipo = Utils.getParameterInteger(map, "objetotipo");
-					
+					Integer porcentajeAvance = Utils.getParameterInteger(map, "porcentajeavance");
+
 					ActividadTipo actividadTipo= new ActividadTipo();
 					actividadTipo.setId(actividadtipoid);
 
 					type = new TypeToken<List<stdatadinamico>>() {
 					}.getType();
 
-					List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
+					List<stdatadinamico> datos = (map.get("datadinamica")!=null && map.get("datadinamica").compareTo("{}")!=0) ?  gson.fromJson(map.get("datadinamica"), type) : new ArrayList<stdatadinamico>();
 
 					Actividad actividad;
 					if(esnuevo){
-						actividad = new Actividad(actividadTipo, nombre, descripcion, fechaInicio, fechaFin, 
-								0, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, actividadObra, 
+						actividad = new Actividad(actividadTipo, nombre, descripcion, fechaInicio, fechaFin,
+								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, actividadObra, fuente,
 								objetoId, objetoTipo,
 								null,null);
 					}
@@ -190,6 +211,14 @@ public class SActividad extends HttpServlet {
 						actividad.setDescripcion(descripcion);
 						actividad.setUsuarioActualizo(usuario);
 						actividad.setFechaActualizacion(new DateTime().toDate());
+						actividad.setFechaInicio(fechaInicio);
+						actividad.setFechaFin(fechaFin);
+						actividad.setPorcentajeAvance(porcentajeAvance);
+						actividad.setPrograma(programa);
+						actividad.setSubprograma(subprograma);
+						actividad.setProyecto(proyecto);
+						actividad.setActividadObra(actividadObra);
+						actividad.setFuente(fuente);
 					}
 					result = ActividadDAO.guardarActividad(actividad);
 
@@ -204,8 +233,8 @@ public class SActividad extends HttpServlet {
 					for (stdatadinamico data : datos) {
 						ActividadPropiedad actividadPropiedad = ActividadPropiedadDAO.getActividadPropiedadPorId(Integer.parseInt(data.id));
 						ActividadPropiedadValorId idValor = new ActividadPropiedadValorId(actividad.getId(),Integer.parseInt(data.id));
-						ActividadPropiedadValor valor = new ActividadPropiedadValor(idValor, actividad, actividadPropiedad,null, null, null, null, 
-								usuario, null, new DateTime().toDate(), null, 1); 
+						ActividadPropiedadValor valor = new ActividadPropiedadValor(idValor, actividad, actividadPropiedad,null, null, null, null,
+								usuario, null, new DateTime().toDate(), null, 1);
 
 						switch (actividadPropiedad.getDatoTipo().getId()){
 							case 1:
@@ -253,15 +282,18 @@ public class SActividad extends HttpServlet {
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			response_text = String.join("","{ \"success\": true, \"totalactividads\":",ActividadDAO.getTotalActividads(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,usuario).toString()," }");
 		}
-		else if(accion.equals("numeroActividadsPorProyecto")){
-			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
-			response_text = String.join("","{ \"success\": true, \"totalactividads\":",ActividadDAO.getTotalActividadsPorProyecto(proyectoId,usuario).toString()," }");
+		else if(accion.equals("numeroActividadesPorObjeto")){
+			int objetoId = map.get("objetoid")!=null  ? Integer.parseInt(map.get("objetoid")) : 0;
+			int objetoTipo = map.get("tipo")!=null  ? Integer.parseInt(map.get("tipo")) : 0;
+			response_text = String.join("","{ \"success\": true, \"totalactividads\":",ActividadDAO.getTotalActividadsPorObjeto(objetoId, objetoTipo, usuario).toString()," }");
 		}
-		else if(accion.equals("getActividadsPaginaPorProyecto")){
+		else if(accion.equals("getActividadesPaginaPorObjeto")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
-			int numeroCooperantes = map.get("numeroactividads")!=null  ? Integer.parseInt(map.get("numeroactividads")) : 0;
-			List<Actividad> actividads = ActividadDAO.getActividadsPaginaPorProyecto(pagina, numeroCooperantes,proyectoId,usuario);
+
+			int objetoId = map.get("objetoid")!=null  ? Integer.parseInt(map.get("objetoid")) : 0;
+			int objetoTipo = map.get("tipo")!=null  ? Integer.parseInt(map.get("tipo")) : 0;
+			int numeroActividads = map.get("numeroactividads")!=null  ? Integer.parseInt(map.get("numeroactividads")) : 0;
+			List<Actividad> actividads = ActividadDAO.getActividadsPaginaPorObjeto(pagina, numeroActividads, objetoId, objetoTipo,usuario);
 			List<stactividad> stactividads=new ArrayList<stactividad>();
 			for(Actividad actividad:actividads){
 				stactividad temp =new stactividad();
@@ -269,27 +301,35 @@ public class SActividad extends HttpServlet {
 				temp.estado = actividad.getEstado();
 				temp.fechaActualizacion = Utils.formatDate(actividad.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDate(actividad.getFechaCreacion());
+				temp.fechaInicio = Utils.formatDate(actividad.getFechaInicio());
+				temp.fechaFin = Utils.formatDate(actividad.getFechaFin());
 				temp.id = actividad.getId();
 				temp.nombre = actividad.getNombre();
 				temp.usuarioActualizo = actividad.getUsuarioActualizo();
 				temp.usuarioCreo = actividad.getUsuarioCreo();
 				temp.actividadtipoid = actividad.getActividadTipo().getId();
 				temp.actividadtiponombre = actividad.getActividadTipo().getNombre();
+				temp.porcentajeavance = actividad.getPorcentajeAvance();
+				temp.programa = actividad.getPrograma();
+				temp.subprograma = actividad.getSubprograma();
+				temp.proyecto = actividad.getProyecto();
+				temp.actividadObra = actividad.getActividadObra();
+				temp.fuente = actividad.getFuente();
 				stactividads.add(temp);
 			}
 
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stactividads);
-	        response_text = String.join("", "\"actividads\":",response_text);
+	        response_text = String.join("", "\"actividades\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("obtenerActividadPorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			Actividad actividad = ActividadDAO.getActividadPorId(id,usuario);
-		
+
 			response_text = String.join("","{ \"success\": ",(actividad!=null && actividad.getId()!=null ? "true" : "false"),", "
 				+ "\"id\": " + (actividad!=null ? actividad.getId():"0") +", "
 				+ "\"nombre\": \"" + (actividad!=null ? actividad.getNombre():"Indefinido") +"\" }");
-			
+
 
 
 		}

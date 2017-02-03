@@ -7,7 +7,7 @@
     		<%@ include file="/app/components/actividad/buscarActividadTipo.jsp"%>
   	    </script>
 		<h3>Actividades</h3><br/>
-		<h4>{{ actividadc.objetoNombre }}</h4><br/>
+		<h4>{{ actividadc.objetoTipoNombre }} {{ actividadc.objetoNombre }}</h4><br/>
 		<div class="row" align="center" ng-hide="actividadc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
@@ -64,32 +64,70 @@
 		</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="actividadc.guardar()">Guardar</label>
+			        <label class="btn btn-success" ng-click="form.$valid ? actividadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 			        <label class="btn btn-primary" ng-click="actividadc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
 
 			<div class="col-sm-12">
-				<form>
+				<form name="form">
 						<div class="form-group">
 							<label for="id">ID</label>
     						<label class="form-control" id="id">{{ actividadc.actividad.id }}</label>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="actividadc.actividad.nombre">
+    						<input type="text" class="form-control" name="nombre" placeholder="Nombre" ng-model="actividadc.actividad.nombre" ng-required="true">
 						</div>
 
 						<div class="form-group">
 							<label for="campo3">* Tipo de Actividad</label>
 				          	<div class="input-group">
 				            	<input type="hidden" class="form-control" ng-model="actividadc.actividadtipoid" />
-				            	<input type="text" class="form-control" placeholder="Tipo de Actividad" ng-model="actividadc.actividadtiponombre" ng-readonly="true" required/>
+				            	<input type="text" class="form-control" placeholder="Tipo de Actividad" ng-model="actividadc.actividad.actividadtiponombre" ng-readonly="true" ng-required="true"/>
 				            	<span class="input-group-addon" ng-click="actividadc.buscarActividadTipo()"><i class="glyphicon glyphicon-search"></i></span>
 				          	</div>
 						</div>
-
-
+						<div class="form-group">
+							<label for="descripcion">Descripción</label>
+    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="actividadc.actividad.descripcion">
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>* Fecha de Inicio</label>
+		    						<p class="input-group">
+									<input type="text" class="form-control" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaInicio" is-open="actividadc.fi_abierto"
+														datepicker-options="actividadc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Inicio" ng-change="actividadc.actualizarfechafin()" ng-required="true" />
+														<span class="input-group-btn">
+														<button type="button" class="btn btn-default"
+															ng-click="actividadc.abrirPopupFecha(1000)">
+															<i class="glyphicon glyphicon-calendar"></i>
+														</button>
+													</span>
+									</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>* Fecha de Fin</label>
+		    						<p class="input-group">
+									<input type="text" class="form-control" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaFin" is-open="actividadc.ff_abierto"
+														datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Fin" ng-required="true" /><span
+														class="input-group-btn">
+														<button type="button" class="btn btn-default"
+															ng-click="actividadc.abrirPopupFecha(1001)">
+															<i class="glyphicon glyphicon-calendar"></i>
+														</button>
+													</span>
+									</p>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="descripcion">Avance %</label>
+    						<input type="number" class="form-control" placeholder="% de Avance" ng-model="actividadc.actividad.porcentajeavance" ng-required="true" min="0" max="100">
+						</div>
 						<div class="form-group" ng-repeat="campo in actividadc.camposdinamicos">
 							<label for="campo.id">{{ campo.label }}</label>
 							<div ng-switch="campo.tipo">
@@ -99,7 +137,7 @@
 								<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
 								<p ng-switch-when="fecha" class="input-group">
 									<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="mi.fechaOptions" close-text="Cerrar" /><span
+														datepicker-options="mi.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" /><span
 														class="input-group-btn">
 														<button type="button" class="btn btn-default"
 															ng-click="actividadc.abrirPopupFecha($index)">
@@ -114,26 +152,23 @@
 								</select>
 							</div>
 						</div>
-						
-						<div class="form-group">
-							<label for="descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="actividadc.actividad.descripcion">
-						</div>
-						<div class="form-group">
-							<label for="usuarioCreo">Usuario que creo</label>
-    						<label class="form-control" id="usuarioCreo">{{ actividadc.actividad.usuarioCreo }}</label>
-						</div>
-						<div class="form-group">
-							<label for="fechaCreacion">Fecha de creación</label>
-    						<label class="form-control" id="fechaCreacion">{{ actividadc.actividad.fechaCreacion }}</label>
-						</div>
-						<div class="form-group">
-							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<label class="form-control" id="usuarioCreo">{{ actividadc.actividad.usuarioActualizo }}</label>
-						</div>
-						<div class="form-group">
-							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<label class="form-control" id="usuarioCreo">{{ actividadc.actividad.fechaActualizacion }}</label>
+						<div class="panel panel-default">
+							<div class="form-group">
+								<label for="usuarioCreo">Usuario que creo</label>
+	    						<p class="form-control-static">{{ actividadc.actividad.usuarioCreo }}</p>
+							</div>
+							<div class="form-group">
+								<label for="fechaCreacion">Fecha de creación</label>
+	    						<p class="form-control-static">{{ actividadc.actividad.fechaCreacion }}</p>
+							</div>
+							<div class="form-group">
+								<label for="usuarioActualizo">Usuario que actualizo</label>
+	    						<p class="form-control-static">{{ actividadc.actividad.usuarioActualizo }}</p>
+							</div>
+							<div class="form-group">
+								<label for="fechaActualizacion">Fecha de actualizacion</label>
+	    						<p class="form-control-static">{{ actividadc.actividad.fechaActualizacion }}</p>
+							</div>
 						</div>
 				</form>
 			</div>
@@ -141,7 +176,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="actividadc.guardar()">Guardar</label>
+				        <label class="btn btn-success" ng-click="form.$valid ? actividadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 				        <label class="btn btn-primary" ng-click="actividadc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>
