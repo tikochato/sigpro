@@ -152,21 +152,23 @@
 								</select>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="usuarioCreo">Usuario que creo</label>
-    						<p class="form-control-static">{{ actividadc.actividad.usuarioCreo }}</p>
-						</div>
-						<div class="form-group">
-							<label for="fechaCreacion">Fecha de creación</label>
-    						<p class="form-control-static">{{ actividadc.actividad.fechaCreacion }}</p>
-						</div>
-						<div class="form-group">
-							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<p class="form-control-static">{{ actividadc.actividad.usuarioActualizo }}</p>
-						</div>
-						<div class="form-group">
-							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<p class="form-control-static">{{ actividadc.actividad.fechaActualizacion }}</p>
+						<div class="panel panel-default">
+							<div class="form-group">
+								<label for="usuarioCreo">Usuario que creo</label>
+	    						<p class="form-control-static">{{ actividadc.actividad.usuarioCreo }}</p>
+							</div>
+							<div class="form-group">
+								<label for="fechaCreacion">Fecha de creación</label>
+	    						<p class="form-control-static">{{ actividadc.actividad.fechaCreacion }}</p>
+							</div>
+							<div class="form-group">
+								<label for="usuarioActualizo">Usuario que actualizo</label>
+	    						<p class="form-control-static">{{ actividadc.actividad.usuarioActualizo }}</p>
+							</div>
+							<div class="form-group">
+								<label for="fechaActualizacion">Fecha de actualizacion</label>
+	    						<p class="form-control-static">{{ actividadc.actividad.fechaActualizacion }}</p>
+							</div>
 						</div>
 				</form>
 			</div>

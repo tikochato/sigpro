@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
+// Generated Feb 3, 2017 7:56:02 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3656539252044012783L;
+	private static final long serialVersionUID = 6055388057378220467L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
 	private String nombre;
@@ -45,6 +45,7 @@ public class Actividad implements java.io.Serializable {
 	private Integer subprograma;
 	private Integer proyecto;
 	private Integer actividadObra;
+	private Integer fuente;
 	private int objetoId;
 	private int objetoTipo;
 	private Set<ActividadPropiedadValor> actividadPropiedadValors = new HashSet<ActividadPropiedadValor>(0);
@@ -70,8 +71,8 @@ public class Actividad implements java.io.Serializable {
 	public Actividad(ActividadTipo actividadTipo, String nombre, String descripcion, Date fechaInicio, Date fechaFin,
 			int porcentajeAvance, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
-			Integer actividadObra, int objetoId, int objetoTipo, Set<ActividadPropiedadValor> actividadPropiedadValors,
-			Set<ActividadUsuario> actividadUsuarios) {
+			Integer actividadObra, Integer fuente, int objetoId, int objetoTipo,
+			Set<ActividadPropiedadValor> actividadPropiedadValors, Set<ActividadUsuario> actividadUsuarios) {
 		this.actividadTipo = actividadTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -88,6 +89,7 @@ public class Actividad implements java.io.Serializable {
 		this.subprograma = subprograma;
 		this.proyecto = proyecto;
 		this.actividadObra = actividadObra;
+		this.fuente = fuente;
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
 		this.actividadPropiedadValors = actividadPropiedadValors;
@@ -253,6 +255,15 @@ public class Actividad implements java.io.Serializable {
 
 	public void setActividadObra(Integer actividadObra) {
 		this.actividadObra = actividadObra;
+	}
+
+	@Column(name = "fuente")
+	public Integer getFuente() {
+		return this.fuente;
+	}
+
+	public void setFuente(Integer fuente) {
+		this.fuente = fuente;
 	}
 
 	@Column(name = "objeto_id", nullable = false)

@@ -62,6 +62,7 @@ public class SProyecto extends HttpServlet {
 		Integer subprograma;
 		Integer proyecto;
 		Integer obra;
+		Integer fuente;
 	};
 
 	class stdatadinamico {
@@ -134,6 +135,7 @@ public class SProyecto extends HttpServlet {
 				dato.subprograma = proyecto.getSubprograma();
 				dato.proyecto = proyecto.getProyecto();
 				dato.obra = proyecto.getActividadObra();
+				dato.fuente = proyecto.getFuente();
 				datos_.add(dato);
 			}
 
@@ -197,7 +199,8 @@ public class SProyecto extends HttpServlet {
 				Integer subPrograma = map.get("subprograma")!=null ?  Integer.parseInt(map.get("subprograma")) : null;
 				Integer proyecto_ = map.get("proyecto_")!=null ? Integer.parseInt(map.get("proyecto_")) : null;
 				Integer obra = map.get("obra")!=null ? Integer.parseInt(map.get("obra")):null;
-
+				Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
+				
 				ProyectoTipo proyectoTipo = new ProyectoTipo();
 				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): 0);
 
@@ -216,7 +219,7 @@ public class SProyecto extends HttpServlet {
 				if(esnuevo){
 					proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion
 							, usuario, null, new DateTime().toDate(), null, 1, snip
-							,programa , subPrograma, proyecto_, obra,
+							,programa , subPrograma, proyecto_, obra, fuente,
 							null, null, null, null, null,null);
 
 				}else{
