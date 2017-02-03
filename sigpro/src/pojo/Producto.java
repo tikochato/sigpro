@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jan 31, 2017 11:52:49 AM by Hibernate Tools 5.2.0.CR1
+// Generated Feb 3, 2017 9:12:33 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6579894750609076174L;
+	private static final long serialVersionUID = 3552899831378054361L;
 	private Integer id;
 	private Componente componente;
 	private ProductoTipo productoTipo;
@@ -40,14 +40,14 @@ public class Producto implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Integer estado;
-	private Integer snip;
+	private Long snip;
 	private Integer programa;
 	private Integer subprograma;
 	private Integer proyecto;
 	private Integer actividadObra;
+	private Integer fuente;
 	private Set<ProductoUsuario> productoUsuarios = new HashSet<ProductoUsuario>(0);
 	private Set<ProductoPropiedadValor> productoPropiedadValors = new HashSet<ProductoPropiedadValor>(0);
-	private Set<Meta> metas = new HashSet<Meta>(0);
 
 	public Producto() {
 	}
@@ -65,9 +65,9 @@ public class Producto implements java.io.Serializable {
 
 	public Producto(Componente componente, ProductoTipo productoTipo, UnidadEjecutora unidadEjecutora, String nombre,
 			String descripcion, int productoid, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, Integer estado, Integer snip, Integer programa, Integer subprograma,
-			Integer proyecto, Integer actividadObra, Set<ProductoUsuario> productoUsuarios,
-			Set<ProductoPropiedadValor> productoPropiedadValors, Set<Meta> metas) {
+			Date fechaActualizacion, Integer estado, Long snip, Integer programa, Integer subprograma,
+			Integer proyecto, Integer actividadObra, Integer fuente, Set<ProductoUsuario> productoUsuarios,
+			Set<ProductoPropiedadValor> productoPropiedadValors) {
 		this.componente = componente;
 		this.productoTipo = productoTipo;
 		this.unidadEjecutora = unidadEjecutora;
@@ -84,9 +84,9 @@ public class Producto implements java.io.Serializable {
 		this.subprograma = subprograma;
 		this.proyecto = proyecto;
 		this.actividadObra = actividadObra;
+		this.fuente = fuente;
 		this.productoUsuarios = productoUsuarios;
 		this.productoPropiedadValors = productoPropiedadValors;
-		this.metas = metas;
 	}
 
 	@Id
@@ -206,11 +206,11 @@ public class Producto implements java.io.Serializable {
 	}
 
 	@Column(name = "snip")
-	public Integer getSnip() {
+	public Long getSnip() {
 		return this.snip;
 	}
 
-	public void setSnip(Integer snip) {
+	public void setSnip(Long snip) {
 		this.snip = snip;
 	}
 
@@ -250,6 +250,15 @@ public class Producto implements java.io.Serializable {
 		this.actividadObra = actividadObra;
 	}
 
+	@Column(name = "fuente")
+	public Integer getFuente() {
+		return this.fuente;
+	}
+
+	public void setFuente(Integer fuente) {
+		this.fuente = fuente;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
 	public Set<ProductoUsuario> getProductoUsuarios() {
 		return this.productoUsuarios;
@@ -266,15 +275,6 @@ public class Producto implements java.io.Serializable {
 
 	public void setProductoPropiedadValors(Set<ProductoPropiedadValor> productoPropiedadValors) {
 		this.productoPropiedadValors = productoPropiedadValors;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
-	public Set<Meta> getMetas() {
-		return this.metas;
-	}
-
-	public void setMetas(Set<Meta> metas) {
-		this.metas = metas;
 	}
 
 }

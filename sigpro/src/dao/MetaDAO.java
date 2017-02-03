@@ -65,18 +65,6 @@ public class MetaDAO {
 			session.saveOrUpdate(Meta);
 			session.getTransaction().commit();
 			session.beginTransaction();
-			if(Meta.getProducto()!=null){
-				Meta.getProducto().getMetas().add(Meta);
-				ProductoDAO.guardarProducto(Meta.getProducto());
-			}
-			if(Meta.getComponente()!=null){
-				Meta.getComponente().getMetas().add(Meta);
-				ComponenteDAO.guardarComponente(Meta.getComponente());
-			}
-			if(Meta.getProyecto()!=null){
-				Meta.getProyecto().getMetas().add(Meta);
-				ProyectoDAO.guardarProyecto(Meta.getProyecto());
-			}
 			session.getTransaction().commit();
 			ret = true;
 		}

@@ -55,7 +55,7 @@ public class SComponente extends HttpServlet {
 		Integer componentetipoid;
 		String componentetiponombre;
 		int estado;
-		Integer snip;
+		Long snip;
 		Integer programa;
 		Integer subprograma;
 		Integer proyecto_;
@@ -136,7 +136,7 @@ public class SComponente extends HttpServlet {
 				temp.subprograma = componente.getSubprograma();
 				temp.proyecto_ = componente.getProyecto_1();
 				temp.obra = componente.getActividadObra();
-				//temp.fuente = componente.getFuente();
+				temp.fuente = componente.getFuente();
 				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				stcomponentes.add(temp);
@@ -167,7 +167,7 @@ public class SComponente extends HttpServlet {
 				temp.subprograma = componente.getSubprograma();
 				temp.proyecto_ = componente.getProyecto_1();
 				temp.obra = componente.getActividadObra();
-				//temp.fuente = componente.getFuente();
+				temp.fuente = componente.getFuente();
 				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				stcomponentes.add(temp);
@@ -189,14 +189,13 @@ public class SComponente extends HttpServlet {
 					int proyectoid= map.get("proyectoid")!=null ? Integer.parseInt(map.get("proyectoid")) : 0;
 					int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;
 					
-					int snip = map.get("snip")!=null ? Integer.parseInt(map.get("snip")) : 0;
-					Integer programa = map.get("programa")!=null && map.get("programa").length()>0 ? Integer.parseInt(map.get("programa")) : null;
-					Integer subPrograma = map.get("subprograma")!=null && map.get("subprograma").length()>0 ?  Integer.parseInt(map.get("subprograma")) : null;
-					Integer proyecto_ = map.get("proyecto_")!=null && map.get("proyecto_").length()>0 ? Integer.parseInt(map.get("proyecto_")) : null;
-					Integer obra = map.get("obra")!=null && map.get("obra").length()>0  ? Integer.parseInt(map.get("obra")):null;
-					//Integer fuente = map.get("fuente")!=null && map.get("fuente").length()>0  ? Integer.parseInt(map.get("fuente")):null;
+					Long snip = map.get("snip")!=null ? Long.parseLong(map.get("snip")) : null;
 
-
+					Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
+					Integer subPrograma = map.get("subprograma")!=null ?  Integer.parseInt(map.get("subprograma")) : null;
+					Integer proyecto_ = map.get("proyecto_")!=null ? Integer.parseInt(map.get("proyecto_")) : null;
+					Integer obra = map.get("obra")!=null ? Integer.parseInt(map.get("obra")):null;
+					Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
 					ComponenteTipo componenteTipo= new ComponenteTipo();
 					componenteTipo.setId(componentetipoid);
 					
@@ -214,9 +213,10 @@ public class SComponente extends HttpServlet {
 
 					Componente componente;
 					if(esnuevo){
-						componente = new Componente(componenteTipo, proyecto, unidadEjecutora, nombre
-								, descripcion, usuario, null, new DateTime().toDate(),null, 1, 
-								snip, programa, subPrograma, proyecto_, obra, null, null, null, null);
+						componente = new Componente(componenteTipo, proyecto, unidadEjecutora, nombre, 
+								descripcion, usuario, null, new DateTime().toDate(), null, 1, 
+								snip, programa, subPrograma, proyecto_, obra, fuente, null, null, null);
+						
 						
 					}
 					else{
@@ -230,6 +230,7 @@ public class SComponente extends HttpServlet {
 						componente.setSubprograma(subPrograma);
 						componente.setProyecto_1(proyecto_);
 						componente.setActividadObra(obra);
+						componente.getFuente();
 					}
 					result = ComponenteDAO.guardarComponente(componente);
 
@@ -326,6 +327,7 @@ public class SComponente extends HttpServlet {
 				temp.subprograma = componente.getSubprograma();
 				temp.proyecto_ = componente.getProyecto_1();
 				temp.obra = componente.getActividadObra();
+				temp.fuente = componente.getFuente();
 				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				stcomponentes.add(temp);
