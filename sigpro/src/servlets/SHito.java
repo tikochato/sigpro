@@ -68,7 +68,16 @@ public class SHito extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
+		String response_text = "{ \"success\": false }";
+
+		response.setHeader("Content-Encoding", "gzip");
+		response.setCharacterEncoding("UTF-8");
+
+        OutputStream output = response.getOutputStream();
+		GZIPOutputStream gz = new GZIPOutputStream(output);
+        gz.write(response_text.getBytes("UTF-8"));
+        gz.close();
+        output.close();
 	}
 
 	/**
@@ -236,13 +245,13 @@ public class SHito extends HttpServlet {
 				
 				switch(datotipoid){
 					case 1: 
-						valorEntero = Integer.parseInt(map.get("resultado"));
+						valorEntero =map.get("resultado")!=null && map.get("resultado").length()>0 ? Integer.parseInt(map.get("resultado")) : null;
 						break;
 					case 2:
 						valorString = map.get("resultado");
 						break;
 					case 3:
-						valorDecimal = new BigDecimal(map.get("resultado"));
+						valorDecimal = map.get("resultado")!=null && map.get("resultado").length()>0 ? new BigDecimal(map.get("resultado")) : null;
 						break;
 					/*case 4:
 						if (map.get("resultado").equals("true")){
@@ -251,7 +260,7 @@ public class SHito extends HttpServlet {
 							valorBool = false;
 						}*/
 					case 5:
-						valorTiempo = sdf.parse(map.get("resultado"));
+						valorTiempo =map.get("resultado")!=null ? sdf.parse(map.get("resultado")) : null;
 						break;
 				}
 				
@@ -303,10 +312,18 @@ public class SHito extends HttpServlet {
 			response_text = String.join("","{ \"success\": true, \"totalhitos\":",HitoDAO.getTotalHitos().toString()," }");
 		} 
 		else if(accion.equals("getHitosPaginaPorProyecto")){
+			
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroHitos = map.get("numerohitos")!=null  ? Integer.parseInt(map.get("numerohitos")) : 0;
 			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
-			List<Hito> hitos = HitoDAO.getHitosPaginaPorProyecto(pagina, numeroHitos,proyectoId);
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			
+			List<Hito> hitos = HitoDAO.getHitosPaginaPorProyecto(pagina, numeroHitos,proyectoId,
+					filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);
 			List<sthito> sthitos=new ArrayList<sthito>();
 			for(Hito hito:hitos){
 				sthito temp =new sthito();
@@ -328,8 +345,12 @@ public class SHito extends HttpServlet {
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("numeroHitosPorProyecto")){
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
-			response_text = String.join("","{ \"success\": true, \"totalhitos\":",HitoDAO.getTotalHitosPorProyecto(proyectoId).toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalhitos\":",HitoDAO.
+					getTotalHitosPorProyecto(proyectoId,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion).toString()," }");
 		} 
 		else{
 			response_text = "{ \"success\": false }";

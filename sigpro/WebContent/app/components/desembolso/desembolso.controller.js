@@ -20,6 +20,12 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.proyectoid = $routeParams.pproyectoid;
 			mi.fecha = new Date();
 			
+			mi.columnaOrdenada=null;
+			mi.ordenDireccion = null;
+
+			mi.filtros = [];
+			mi.orden = null;
+			
 			mi.gridOptions = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
@@ -29,21 +35,45 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 				enableFiltering: true,
 				enablePaginationControls: false,
 			    paginationPageSize: $utilidades.elementosPorPagina,
+			    useExternalFiltering: true,
+			    useExternalSorting: true,
 				columnDefs : [ 
 					{ name: 'id', width: 65, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-					{ name: 'fecha', width: 100, displayName: 'Fecha', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
+					{ name: 'fecha',  displayName: 'Fecha', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.desembolsoc.filtrar($event,1)" ></input></div>'
+					},
 					{ name: 'monto', width: 100, displayName: 'Monto', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-					{ name: 'proyecto', width: 200, displayName: 'Proyecto',cellClass: 'grid-align-left' },
-					{ name: 'desembolsotipo', width: 200, displayName: 'Tipo Desembolso',cellClass: 'grid-align-left' },
-					{ name: 'tipocambio', width: 100, displayName: 'Tipo Cambio', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-				    { name: 'usuarioCreo', displayName: 'Usuario Creación'},
-				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
+					{ name: 'desembolsotipo', width: 200, displayName: 'Tipo Desembolso',cellClass: 'grid-align-left',enableFiltering: false, enableSorting: false },
+					{ name: 'tipocambio', width: 100, displayName: 'Tipo Cambio', cellClass: 'grid-align-right', type: 'number', enableFiltering: false, enableSorting: false },
+				    { name: 'usuarioCreo', displayName: 'Usuario Creación',
+						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.desembolsoc.filtrar($event,2)" ></input></div>'
+				    },
+				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.desembolsoc.filtrar($event,3)" ></input></div>'
+				    }
 				],
 				onRegisterApi: function(gridApi) {
 					mi.gridApi = gridApi;
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 						mi.desembolso = row.entity;
 					});
+					
+					gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+						if(sortColumns.length==1){
+							grid.appScope.desembolsoc.columnaOrdenada=sortColumns[0].field;
+							grid.appScope.desembolsoc.ordenDireccion = sortColumns[0].sort.direction;
+							grid.appScope.desembolsoc.cargarTabla(grid.appScope.desembolsoc.paginaActual);
+						}
+						else if(sortColumns.length>1){
+							sortColumns[0].unsort();
+						}
+						else{
+							if(grid.appScope.desembolsoc.columnaOrdenada!=null){
+								grid.appScope.desembolsoc.columnaOrdenada=null;
+								grid.appScope.desembolsoc.ordenDireccion=null;
+							}
+						}
+					} );
 					
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
@@ -74,11 +104,15 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SDesembolso', { accion: 'getDesembolsosPaginaPorProyecto', pagina: pagina, numerodesembolsos: $utilidades.elementosPorPagina,numerocomponentes: $utilidades.elementosPorPagina,proyectoid: $routeParams.proyecto_id  }).success(
+				$http.post('/SDesembolso', { accion: 'getDesembolsosPaginaPorProyecto', pagina: pagina, numerodesembolsos: $utilidades.elementosPorPagina,
+					proyectoid: $routeParams.proyecto_id,numeroproyecto:  $utilidades.elementosPorPagina,
+					filtro_fecha: mi.filtros['fecha'], filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
+					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+					}).success(
+				
 						function(response) {
 							mi.desembolsos = response.desembolsos;
 							mi.gridOptions.data = mi.desembolsos;
-							mi.desembolso = null;
 							mi.mostrarcargando = false;
 						});
 			};
@@ -114,6 +148,8 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 				mi.mostraringreso=true;
 				mi.esnuevo = true;
 				mi.desembolso = null;
+				mi.desembolsotipoid="";
+				mi.desembolsonombre="";
 				mi.gridApi.selection.clearSelectedRows();
 			};
 			
@@ -176,6 +212,28 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 				mi.mostraringreso=false;
 			};
 			
+			mi.filtrar = function(evt,tipo){
+				if(evt.keyCode==13){
+					switch(tipo){
+						case 1: mi.filtros['fecha'] = evt.currentTarget.value; break;
+						case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
+						case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
+					}
+					mi.obtenerTotalProyectos();
+				}
+			};
+
+			mi.obtenerTotalProyectos = function(){
+				$http.post('/SDesembolso', { accion: 'numeroProyectos', proyectoid:$routeParams.proyecto_id,
+					filtro_nombre: mi.filtros['fecha'],
+					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+						function(response) {
+							mi.totalDesembolsos = response.data.totaldesembolsos;
+							mi.paginaActual = 1;
+							mi.cargarTabla(mi.paginaActual);
+				});
+			};
+			
 			mi.guardarEstado=function(){
 				var estado = mi.gridApi.saveState.save();
 				var tabla_data = { action: 'guardaEstado', grid:'desembolso', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
@@ -183,6 +241,10 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 					
 				});
 			};
+			
+			mi.cambioPagina=function(){
+				mi.cargarTabla(mi.paginaActual);
+			}
 			
 			mi.reiniciarVista=function(){
 				if($location.path()=='/desembolso/rv')

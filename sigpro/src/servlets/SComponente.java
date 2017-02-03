@@ -55,7 +55,7 @@ public class SComponente extends HttpServlet {
 		Integer componentetipoid;
 		String componentetiponombre;
 		int estado;
-		Integer snip;
+		Long snip;
 		Integer programa;
 		Integer subprograma;
 		Integer proyecto_;
@@ -189,13 +189,13 @@ public class SComponente extends HttpServlet {
 					int proyectoid= map.get("proyectoid")!=null ? Integer.parseInt(map.get("proyectoid")) : 0;
 					int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;
 					
-					int snip = map.get("snip")!=null ? Integer.parseInt(map.get("snip")) : 0;
+					Long snip = map.get("snip")!=null ? Long.parseLong(map.get("snip")) : null;
+
 					Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
 					Integer subPrograma = map.get("subprograma")!=null ?  Integer.parseInt(map.get("subprograma")) : null;
 					Integer proyecto_ = map.get("proyecto_")!=null ? Integer.parseInt(map.get("proyecto_")) : null;
 					Integer obra = map.get("obra")!=null ? Integer.parseInt(map.get("obra")):null;
 					Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
-
 					ComponenteTipo componenteTipo= new ComponenteTipo();
 					componenteTipo.setId(componentetipoid);
 					
@@ -213,9 +213,10 @@ public class SComponente extends HttpServlet {
 
 					Componente componente;
 					if(esnuevo){
-						componente = new Componente(componenteTipo, proyecto, unidadEjecutora, nombre
-								, descripcion, usuario, null, new DateTime().toDate(),null, 1, 
-								snip, programa, subPrograma, proyecto_, obra, fuente, null, null, null, null);
+						componente = new Componente(componenteTipo, proyecto, unidadEjecutora, nombre, 
+								descripcion, usuario, null, new DateTime().toDate(), null, 1, 
+								snip, programa, subPrograma, proyecto_, obra, fuente, null, null, null);
+						
 						
 					}
 					else{

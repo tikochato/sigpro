@@ -123,7 +123,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					});
 		}
 
-		mi.guardar=function(){
+		mi.guardar=function(esvalido){
 			for (campos in mi.camposdinamicos) {
 				if (mi.camposdinamicos[campos].tipo === 'fecha') {
 					mi.camposdinamicos[campos].valor = moment(mi.camposdinamicos[campos].valor).format('dd/MM/yyyy')
@@ -143,6 +143,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					subprograma: mi.componente.subprograma,
 					proyecto_: mi.componente.proyecto_,
 					obra:mi.componente.obra,
+					fuente: mi.componente.fuente,
 					esnuevo: mi.esnuevo,
 					unidadejecutoraid:mi.unidadejecutoraid,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
@@ -249,7 +250,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 
 		$http.post('/SComponente', { accion: 'numeroComponentesPorProyecto',proyectoid:$routeParams.proyecto_id }).success(
 				function(response) {
-					mi.totalComponentes = response.totalcooperantes;
+					mi.totalComponentes = response.totalcomponentes;
 					mi.cargarTabla(1);
 		});
 		

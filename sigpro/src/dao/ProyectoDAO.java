@@ -16,7 +16,7 @@ import utilities.CLogger;
 
 public class ProyectoDAO implements java.io.Serializable  {
 
-	
+
 	private static final long serialVersionUID = 1L;
 
 	public static List<Proyecto> getProyectos(){
@@ -27,7 +27,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 
 			CriteriaQuery<Proyecto> criteria = builder.createQuery(Proyecto.class);
 			Root<Proyecto> root = criteria.from(Proyecto.class);
-			
+
 			criteria.select( root );
 			ret = (List<Proyecto>) session.createQuery( criteria ).getResultList();
 		}
@@ -37,10 +37,10 @@ public class ProyectoDAO implements java.io.Serializable  {
 		finally{
 			session.close();
 		}
-		
+
 		return ret;
 	}
-	
+
 	public static boolean guardarProyecto(Proyecto proyecto){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -58,7 +58,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 		}
 		return ret;
 	}
-	
+
 	public static Proyecto getProyectoPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Proyecto ret = null;
@@ -79,7 +79,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 		}
 		return ret;
 	}
-	
+
 	public static boolean eliminarProyecto(Proyecto proyecto){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -98,8 +98,8 @@ public class ProyectoDAO implements java.io.Serializable  {
 		}
 		return ret;
 	}
-	
-	public static Long getTotalProyectos(String filtro_nombre, String filtro_usuario_creo, 
+
+	public static Long getTotalProyectos(String filtro_nombre, String filtro_usuario_creo,
 			String filtro_fecha_creacion){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -114,7 +114,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			Query<Long> criteria = session.createQuery(query,Long.class);
-			
+
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
@@ -125,9 +125,9 @@ public class ProyectoDAO implements java.io.Serializable  {
 		}
 		return ret;
 	}
-	
+
 	public static List<Proyecto> getProyectosPagina(int pagina, int numeroproyecto,
-			String filtro_nombre, String filtro_usuario_creo, 
+			String filtro_nombre, String filtro_usuario_creo,
 			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion){
 		List<Proyecto> ret = new ArrayList<Proyecto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -140,11 +140,11 @@ public class ProyectoDAO implements java.io.Serializable  {
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " p.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
-			
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
-			Query<Proyecto> criteria = session.createQuery(query,Proyecto.class);
 			
+			Query<Proyecto> criteria = session.createQuery(query,Proyecto.class);
+
 			criteria.setFirstResult(((pagina-1)*(numeroproyecto)));
 			criteria.setMaxResults(numeroproyecto);
 			ret = criteria.getResultList();
@@ -157,6 +157,6 @@ public class ProyectoDAO implements java.io.Serializable  {
 		}
 		return ret;
 	}
-	
-	
+
+
 }

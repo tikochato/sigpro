@@ -56,13 +56,12 @@
 		<h4 ng-hide="proyectotipoc.esnuevo">Edición tipo de proyecto</h4>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="proyectotipoc.guardar()">Guardar</label>
-				<label class="btn btn-primary" ng-click="proyectotipoc.irATabla()">Ir
-					a Tabla</label>
+				<label class="btn btn-success" ng-click="form.$valid ? proyectotipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				<label class="btn btn-primary" ng-click="proyectotipoc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>
 		<div class="col-sm-12">
-			<form>
+			<form name="form" id="form">
 				<div class="form-group">
 					<label for="id">ID</label> <label class="form-control" id="id">{{
 						proyectotipoc.proyectotipo.id }}</label>
@@ -70,8 +69,7 @@
 
 				<div class="form-group">
 					<label for="nombre">* Nombre</label> <input type="text"
-						class="form-control" id="nombre" placeholder="Nombre"
-						ng-model="proyectotipoc.proyectotipo.nombre">
+						class="form-control" id="nombre" placeholder="Nombre" ng-model="proyectotipoc.proyectotipo.nombre" ng-required="true">
 				</div>
 				<div class="form-group">
 					<label for="descripcion">Descripción</label> <input type="text"
@@ -151,7 +149,7 @@
 		<div align="center">Los campos marcados con * son obligatorios</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="proyectotipoc.guardar()">Guardar</label>
+				<label class="btn btn-success" ng-click="form.$valid ? proyectotipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 				<label class="btn btn-primary" ng-click="proyectotipoc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>

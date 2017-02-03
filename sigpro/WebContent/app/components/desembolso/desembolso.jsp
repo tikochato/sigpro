@@ -62,13 +62,13 @@
 			<h4 ng-hide="desembolsoc.esnuevo">Edición de Desembolso</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="desembolsoc.guardar()">Guardar</label>
+			        <label class="btn btn-success" ng-click="form.$valid ? desembolsoc.guardar(): ''" ng-disabled="!form.$valid">Guardar</label>
 			        <label class="btn btn-primary" ng-click="desembolsoc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
 			
 			<div class="col-sm-12">
-				<form>
+				<form name="form" id="form">
 					<div class="form-group">
 						<label for="id">ID</label>
    						<label class="form-control" id="id">{{ desembolsoc.desembolso.id }}</label>
@@ -78,7 +78,7 @@
 						<label for="id">* Fecha</label>
 						<p class="input-group">
 				          <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="desembolsoc.fecha" is-open="desembolsoc.popup.abierto" 
-				          	datepicker-options="desembolsoc.opcionesFecha" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+				          	datepicker-options="desembolsoc.opcionesFecha"  close-text="Close" alt-input-formats="altInputFormats" ng-required="true" />
 				          <span class="input-group-btn">
 				            <button type="button" class="btn btn-default" ng-click="desembolsoc.mostrarCalendar()"><i class="glyphicon glyphicon-calendar"></i></button>
 				          </span>
@@ -87,38 +87,38 @@
 					
 					<div class="form-group">
 						<label for="monto">* Monto</label>
-   						<input type="number" class="form-control" id="monto" placeholder="Monto" ng-model="desembolsoc.desembolso.monto">
+   						<input type="number" class="form-control" id="monto" placeholder="Monto" ng-model="desembolsoc.desembolso.monto" ng-required="true">
 					</div>
 					
 					<div class="form-group">
 						<label for="tipocambio">* Tipo Cambio</label>
-   						<input type="number" class="form-control" id="tipocambio" placeholder="Tipo Cambio" ng-model="desembolsoc.desembolso.tipocambio">
+   						<input type="number" class="form-control" id="tipocambio" placeholder="Tipo Cambio" ng-model="desembolsoc.desembolso.tipocambio" ng-required="true">
 					</div>
 					
 					<div class="form-group " >
 			          <label for="campo3">* Tipo Desembolso</label>
 			          <div class="input-group">
 			            <input type="hidden" class="form-control" ng-model="desembolsoc.desembolsotipoid" /> 
-			            <input type="text" class="form-control" id="tipodesembolso" name="tipodesembolso" placeholder="Tipo desembolso" ng-model="desembolsoc.desembolsonombre" ng-readonly="true"/>
+			            <input type="text" class="form-control" id="tipodesembolso" name="tipodesembolso" placeholder="Tipo desembolso" ng-model="desembolsoc.desembolsonombre" ng-readonly="true" ng-required="true"/>
 			            <span class="input-group-addon" ng-click="desembolsoc.buscarTipoDesembolso()"><i class="glyphicon glyphicon-search"></i></span>
 			          </div>
 			        </div>
 					
 					<div class="form-group">
 						<label for="usuarioCreo">Usuario que creo</label>
-   						<label class="form-control" id="usuarioCreo">{{ desembolsoc.desembolso.usuarioCreo }}</label>
+   						<p class="form-control-static">{{ desembolsoc.desembolso.usuarioCreo }}</p>
 					</div>
 					<div class="form-group">
 						<label for="fechaCreacion">Fecha de creación</label>
-   						<label class="form-control" id="fechaCreacion">{{ desembolsoc.desembolso.fechaCreacion }}</label>
+   						<p class="form-control-static">{{ desembolsoc.desembolso.fechaCreacion }}</p>
 					</div>
 					<div class="form-group">
 						<label for="usuarioActualizo">Usuario que actualizo</label>
-   						<label class="form-control" id="usuarioCreo">{{ desembolsoc.desembolso.usuarioActualizo }}</label>
+   						<p class="form-control-static">{{ desembolsoc.desembolso.usuarioActualizo }}</p>
 					</div>
 					<div class="form-group">
 						<label for="fechaActualizacion">Fecha de actualizacion</label>
-   						<label class="form-control" id="usuarioCreo">{{ desembolsoc.desembolso.fechaActualizacion }}</label>
+   						<p class="form-control-static">{{ desembolsoc.desembolso.fechaActualizacion }}</p>
 					</div>
 				</form>
 			</div>
@@ -126,7 +126,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="desembolsoc.guardar()">Guardar</label>
+				        <label class="btn btn-success" ng-click="form.$valid ? desembolsoc.guardar(): ''" ng-disabled="!form.$valid">Guardar</label>
 				        <label class="btn btn-primary" ng-click="desembolsoc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

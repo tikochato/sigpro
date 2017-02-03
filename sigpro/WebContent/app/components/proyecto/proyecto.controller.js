@@ -52,17 +52,17 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	    useExternalSorting: true,
 		columnDefs : [
 			{ name: 'id', width: 60, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left', 
+			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.controller.filtrar($event,1)" style="width:175px;"></input></div>'
 			},
 			{ name : 'proyectotipo',    displayName : 'Tipo proyecto' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
 			{ name : 'unidadejecutora',    displayName : 'Unidad Ejecutora' ,cellClass: 'grid-align-left', enableFiltering: false , enableSorting: false },
 			{ name : 'cooperante',   displayName : 'Cooperante' ,cellClass: 'grid-align-left',  enableFiltering: false , enableSorting: false },
 			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.controller.filtrar($event,3)" style="width:90px;"></input></div>'
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.controller.filtrar($event,2)" style="width:90px;"></input></div>'
 			},
 		    { name: 'fechaCreacion', width: 100, displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.controller.filtrar($event,4)" style="width:80px;" ></input></div>'
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.controller.filtrar($event,3)" style="width:80px;" ></input></div>'
 		    }
 		],
 		onRegisterApi: function(gridApi) {
@@ -109,8 +109,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.cargarTabla = function(pagina){
 		mi.mostrarcargando=true;
 		$http.post('/SProyecto', { accion: 'getProyectoPagina', pagina: pagina,
-			numeroproyecto:  $utilidades.elementosPorPagina,
-			filtro_nombre: mi.filtros['nombre'],
+			numeroproyecto:  $utilidades.elementosPorPagina, filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
 			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
 			}).success(
@@ -141,7 +140,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				programa: mi.programa,
 				subprograma: mi.subprograma,
 				proyecto_: mi.proyecto_,
-				obra:mi. obra,
+				obra:mi.obra,
+				fuente: mi.fuente,
 				esnuevo: mi.esNuevo,
 
 				datadinamica : JSON.stringify(mi.camposdinamicos)
@@ -193,6 +193,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		mi.subprograma="";
 		mi.proyecto_="";
 		mi.obra="";
+		mi.fuente="";
 		mi.camposdinamicos = {};
 		mi.gridApi.selection.clearSelectedRows();
 	};
@@ -273,18 +274,18 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			}
 			mi.obtenerTotalProyectos();
 		}
-	}
+	};
 
 	mi.obtenerTotalProyectos = function(){
 		$http.post('/SProyecto', { accion: 'numeroProyectos',
-			filtro_nombre: mi.filtros['nombre'], 
+			filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
 				function(response) {
 					mi.totalProyectos = response.data.totalproyectos;
 					mi.paginaActual = 1;
 					mi.cargarTabla(mi.paginaActual);
 		});
-	}
+	};
 
 	$http.post('/SProyecto', { accion: 'numeroProyectos' }).success(
 			function(response) {
