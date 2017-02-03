@@ -65,7 +65,16 @@ public class SDesembolso extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
+		String response_text = "{ \"success\": false }";
+
+		response.setHeader("Content-Encoding", "gzip");
+		response.setCharacterEncoding("UTF-8");
+
+        OutputStream output = response.getOutputStream();
+		GZIPOutputStream gz = new GZIPOutputStream(output);
+        gz.write(response_text.getBytes("UTF-8"));
+        gz.close();
+        output.close();
 	}
 
 	/**
@@ -155,15 +164,18 @@ public class SDesembolso extends HttpServlet {
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-				BigDecimal monto = new BigDecimal(map.get("monto"));
+				BigDecimal monto = map.get("monto")!=null && map.get("monto").length()>0 ?
+						new BigDecimal(map.get("monto")) : null;
 				BigDecimal tipoCambio = new BigDecimal(map.get("tipocambio"));
 				
 				
 				Proyecto proyecto = new Proyecto();
-				proyecto.setId(Integer.parseInt(map.get("proyectoid")));
+				proyecto.setId(map.get("proyectoid")!=null && map.get("proyectoid").length()>0 ? 
+						Integer.parseInt(map.get("proyectoid")) : null);
 				
 				DesembolsoTipo desembolsoTipo = new DesembolsoTipo();
-				desembolsoTipo.setId(Integer.parseInt(map.get("desembolsotipoid")));
+				desembolsoTipo.setId(map.get("desembolsotipoid")!=null && map.get("desembolsotipoid").length()>0 ? 
+						Integer.parseInt(map.get("desembolsotipoid")): null);
 				
 				
 				Desembolso desembolso;
@@ -204,14 +216,25 @@ public class SDesembolso extends HttpServlet {
 			response_text = String.join("","{ \"success\": true, \"totaldesembolsos\":",DesembolsoDAO.getTotalDesembolsos().toString()," }");
 		}
 		else if(accion.equals("numeroDesembolsosPorProyecto")){
+			String filtro_fecha = map.get("filtro_fecha");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
-			response_text = String.join("","{ \"success\": true, \"totaldesembolsos\":",DesembolsoDAO.getTotalDesembolsosPorProyecto(proyectoId).toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totaldesembolsos\":",DesembolsoDAO.
+					getTotalDesembolsosPorProyecto(proyectoId,filtro_fecha,filtro_usuario_creo,filtro_fecha_creacion).toString()," }");
 		}
 		else if(accion.equals("getDesembolsosPaginaPorProyecto")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
 			int numeroDesembolsos = map.get("numerodesembolsos")!=null  ? Integer.parseInt(map.get("numerodesembolsos")) : 0;
-			List<Desembolso> desembolsos = DesembolsoDAO.getDesembolsosPaginaPorProyecto(pagina, numeroDesembolsos,proyectoId);
+			String filtro_fecha = map.get("filtro_fecha");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<Desembolso> desembolsos = DesembolsoDAO.
+					getDesembolsosPaginaPorProyecto(pagina, numeroDesembolsos,proyectoId
+							,filtro_fecha,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);
 			List<stdesembolso> stdesembolsos=new ArrayList<stdesembolso>();
 			for(Desembolso desembolso:desembolsos){
 				stdesembolso temp =new stdesembolso();

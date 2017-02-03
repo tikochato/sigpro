@@ -109,8 +109,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.cargarTabla = function(pagina){
 		mi.mostrarcargando=true;
 		$http.post('/SProyecto', { accion: 'getProyectoPagina', pagina: pagina,
-			numeroproyecto:  $utilidades.elementosPorPagina,
-			filtro_nombre: mi.filtros['nombre'],
+			numeroproyecto:  $utilidades.elementosPorPagina, filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
 			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
 			}).success(
@@ -275,7 +274,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			}
 			mi.obtenerTotalProyectos();
 		}
-	}
+	};
 
 	mi.obtenerTotalProyectos = function(){
 		$http.post('/SProyecto', { accion: 'numeroProyectos',
@@ -286,7 +285,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					mi.paginaActual = 1;
 					mi.cargarTabla(mi.paginaActual);
 		});
-	}
+	};
 
 	$http.post('/SProyecto', { accion: 'numeroProyectos' }).success(
 			function(response) {
