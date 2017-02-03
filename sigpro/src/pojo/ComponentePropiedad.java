@@ -24,6 +24,10 @@ import javax.persistence.TemporalType;
 @Table(name = "componente_propiedad", catalog = "sigpro")
 public class ComponentePropiedad implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7536351348923490552L;
 	private Integer id;
 	private DatoTipo datoTipo;
 	private String nombre;

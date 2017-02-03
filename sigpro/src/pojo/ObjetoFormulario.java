@@ -24,6 +24,10 @@ import javax.persistence.TemporalType;
 @Table(name = "objeto_formulario", catalog = "sigpro")
 public class ObjetoFormulario implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5686780110824348318L;
 	private ObjetoFormularioId id;
 	private Formulario formulario;
 	private String usuarioCreo;

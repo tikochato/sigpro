@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class RiesgoPropiedadValorId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3833355906005685475L;
 	private int riesgoid;
 	private int riesgoPropiedadid;
 

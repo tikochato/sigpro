@@ -22,6 +22,10 @@ import javax.persistence.TemporalType;
 @Table(name = "recurso_unidad_medida", catalog = "sigpro")
 public class RecursoUnidadMedida implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8753125967142024919L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;

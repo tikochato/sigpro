@@ -19,6 +19,10 @@ import javax.persistence.Table;
 @Table(name = "desembolso_tipo", catalog = "sigpro")
 public class DesembolsoTipo implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3788835023180806226L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;

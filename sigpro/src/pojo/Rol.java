@@ -22,6 +22,10 @@ import javax.persistence.TemporalType;
 @Table(name = "rol", catalog = "sigpro")
 public class Rol implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -547233844092466361L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;

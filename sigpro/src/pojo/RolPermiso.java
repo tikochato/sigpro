@@ -21,6 +21,10 @@ import javax.persistence.TemporalType;
 @Table(name = "rol_permiso", catalog = "sigpro")
 public class RolPermiso implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5748528209144059792L;
 	private RolPermisoId id;
 	private Permiso permiso;
 	private Rol rol;

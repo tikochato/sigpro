@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ProyectoUsuarioId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5272437490933762966L;
 	private int proyectoid;
 	private String usuario;
 

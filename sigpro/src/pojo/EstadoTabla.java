@@ -15,6 +15,10 @@ import javax.persistence.Table;
 @Table(name = "estado_tabla", catalog = "sigpro")
 public class EstadoTabla implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3820706860642481308L;
 	private EstadoTablaId id;
 	private String valores;
 

@@ -18,6 +18,10 @@ import javax.persistence.Table;
 @Table(name = "componente_usuario", catalog = "sigpro")
 public class ComponenteUsuario implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1717989244404741296L;
 	private ComponenteUsuarioId id;
 	private Componente componente;
 

@@ -18,6 +18,10 @@ import javax.persistence.Table;
 @Table(name = "colaborador", catalog = "sigpro")
 public class Colaborador implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4416898377762352164L;
 	private Integer id;
 	private UnidadEjecutora unidadEjecutora;
 	private Usuario usuario;
