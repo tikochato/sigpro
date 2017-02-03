@@ -23,6 +23,12 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 		mi.hitoresultadocomentario;
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
+		
+		mi.columnaOrdenada=null;
+		mi.ordenDireccion = null;
+
+		mi.filtros = [];
+		mi.orden = null;
 
 
 		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id }).success(
@@ -42,17 +48,40 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 			    paginationPageSize: $utilidades.elementosPorPagina,
 				columnDefs : [
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
-				    { name: 'hitotiponombre', width: 200, displayName: 'Tipo Hito',cellClass: 'grid-align-left' },
+				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
+						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.hitoc.filtrar($event,1)" ></input></div>'				    
+					},
+				    { name: 'hitotiponombre', width: 200, displayName: 'Tipo Hito',cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false  },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-				    { name: 'usuarioCreo', displayName: 'Usuario Creación'},
-				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
+				    { name: 'usuarioCreo', displayName: 'Usuario Creación',
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.hitoc.filtrar($event,2)" ></input></div>'
+					},
+				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.hitoc.filtrar($event,3)" ></input></div>'
+				    }
 				],
 				onRegisterApi: function(gridApi) {
 					mi.gridApi = gridApi;
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 						mi.hito = row.entity;
 					});
+					
+					gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+						if(sortColumns.length==1){
+							grid.appScope.hitoc.columnaOrdenada=sortColumns[0].field;
+							grid.appScope.hitoc.ordenDireccion = sortColumns[0].sort.direction;
+							grid.appScope.hitoc.cargarTabla(grid.appScope.hitoc.paginaActual);
+						}
+						else if(sortColumns.length>1){
+							sortColumns[0].unsort();
+						}
+						else{
+							if(grid.appScope.hitoc.columnaOrdenada!=null){
+								grid.appScope.hitoc.columnaOrdenada=null;
+								grid.appScope.hitoc.ordenDireccion=null;
+							}
+						}
+					} );
 
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
@@ -87,7 +116,11 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SHito', { accion: 'getHitosPaginaPorProyecto', pagina: pagina, numerohitos: $utilidades.elementosPorPagina, proyectoid:$routeParams.proyecto_id }).success(
+			$http.post('/SHito', { accion: 'getHitosPaginaPorProyecto', pagina: pagina, numerohitos: $utilidades.elementosPorPagina, proyectoid:$routeParams.proyecto_id,
+				numeroproyecto:  $utilidades.elementosPorPagina,
+				filtro_nombre: mi.filtros['nombre'],
+				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion}).success(
 					function(response) {
 						mi.hitos = response.hitos;
 						mi.gridOptions.data = mi.hitos;
@@ -105,7 +138,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 					nombre: mi.hito.nombre,
 					hitotipoid: mi.hitotipoid,
 					fecha:moment(mi.fecha).format('DD/MM/YYYY'),
-					resultado: (mi.hitodatotipoid==5 ? moment(mi.hitoresultado).format('DD/MM/YYYY') : mi.hitoresultado),
+					resultado: (mi.hitodatotipoid==5 ? (mi.hitoresultado!='' ? moment(mi.hitoresultado).format('DD/MM/YYYY'):null) : mi.hitoresultado),
 					comentario : mi.hitoresultadocomentario,
 					datotipoid: mi.hitodatotipoid,
 					descripcion:  mi.hito.descripcion
@@ -158,7 +191,13 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
 			mi.hito = null;
+			mi.fecha = null;
+			mi.hitotipoid ="";
+			mi.hitotipoNombre="";
+			mi.hitoresultado = null;
+			mi.hitoresultadocomentario = null;
 			mi.gridApi.selection.clearSelectedRows();
+			
 		};
 
 		mi.editar = function() {
@@ -178,6 +217,28 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 
 		mi.irATabla = function() {
 			mi.mostraringreso=false;
+		}
+		
+		mi.filtrar = function(evt,tipo){
+			if(evt.keyCode==13){
+				switch(tipo){
+					case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
+					case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
+					case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
+				}
+				mi.obtenerTotalProyectos();
+			}
+		}
+
+		mi.obtenerTotalProyectos = function(){
+			$http.post('/SHito', { accion: 'numeroHitosPorProyecto', proyectoid:$routeParams.proyecto_id,
+				filtro_nombre: mi.filtros['nombre'],
+				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+					function(response) {
+						mi.totalProyectos = response.data.totalproyectos;
+						mi.paginaActual = 1;
+						mi.cargarTabla(mi.paginaActual);
+			});
 		}
 
 		mi.guardarEstado=function(){
@@ -208,7 +269,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 		};
 
 
-		$http.post('/SHito', { accion: 'numeroHitos' }).success(
+		$http.post('/SHito', { accion: 'numeroHitosPorProyecto',proyectoid:$routeParams.proyecto_id }).success(
 				function(response) {
 					mi.totalHitos = response.totalhitos;
 					mi.cargarTabla(1);

@@ -132,7 +132,7 @@
 					  <label for="campo5">Fuente</label>
 					  <input type="number" class="form-control" id="campo5" name="campo5" placeholder="Fuente" ng-model="controller.fuente" ng-maxlength="4"/>
 					</div>
-				</div>
+controller
 				</div>
 				<div class="form-group" >
 					<label for="campo3">* Tipo Proyecto</label>
@@ -151,7 +151,7 @@
 								<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
 								<p ng-switch-when="fecha" class="input-group">
 									<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Limpiar"/><span
+														datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"/><span
 														class="input-group-btn">
 														<button type="button" class="btn btn-default"
 															ng-click="controller.abrirPopupFecha($index)">
@@ -186,22 +186,21 @@
 				</div>
 
 				<div class="form-group">
-							<label for="usuarioCreo">Usuario que creo</label>
-    						<label class="form-control" id="usuarioCreo">{{ controller.proyecto.usuariocrea }}</label>
-						</div>
-						<div class="form-group">
-							<label for="fechaCreacion">Fecha de creación</label>
-    						<label class="form-control" id="fechaCreacion">{{ controller.proyecto.fechacrea }}</label>
-						</div>
-						<div class="form-group">
-							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<label class="form-control" id="usuarioCreo">{{ controller.proyecto.usuarioActualizo }}</label>
-						</div>
-						<div class="form-group">
-							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<label class="form-control" id="usuarioCreo">{{ controller.proyecto.fechaActualizacion }}</label>
-						</div>
-
+					<label for="usuarioCreo">Usuario que creo</label>
+  					<p class="form-control-static">{{ controller.proyecto.usuarioCreo }}</pl>
+				</div>
+				<div class="form-group">
+					<label for="fechaCreacion">Fecha de creación</label>
+  					<p class="form-control-static">{{ controller.proyecto.fechaCreacion }}</p>
+				</div>
+				<div class="form-group">
+					<label for="usuarioActualizo">Usuario que actualizo</label>
+  					<p class="form-control-static">{{ controller.proyecto.usuarioactualizo }}</p>
+				</div>
+				<div class="form-group">
+					<label for="fechaActualizacion">Fecha de actualizacion</label>
+  					<p class="form-control-static">{{ controller.proyecto.fechaactualizacion }}</p>
+				</div>
 			</form>
 		</div>
 		<div class="col-sm-12 operation_buttons" align="right">

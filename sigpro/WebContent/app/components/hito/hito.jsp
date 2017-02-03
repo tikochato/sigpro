@@ -60,25 +60,27 @@
 			<h4 ng-hide="hitoc.esnuevo">Edición de hito</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="hitoc.guardar()">Guardar</label>
+			        <label class="btn btn-success" ng-click="form.$valid ? hitoc.guardar(): ''" ng-disabled="!form.$valid">Guardar</label>
 			        <label class="btn btn-primary" ng-click="hitoc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
 			
 			<div class="col-sm-12">
-				<form>
+				<form name="form" id="form">
 						<div class="form-group">
 							<label for="id">ID</label>
     						<label class="form-control" id="id">{{ hitoc.hito.id }}</label>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="hitoc.hito.nombre">
+    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="hitoc.hito.nombre" ng-required="true">
 						</div>
 						<div class="form-group">
-							<label for="descripcion">Fecha</label>
+							<label for="descripcion">* Fecha</label>
 							<div class="input-group">
-	    						<input type="text" class="form-control" uib-datepicker-popup="{{hitoc.formatofecha}}" ng-model="hitoc.fecha" is-open="hitoc.popupfecha.abierto" datepicker-options="hitoc.fechaOptions" ng-required="true" close-text="Cerrar" alt-input-formats="altInputFormats" />
+	    						<input type="text" class="form-control" uib-datepicker-popup="{{hitoc.formatofecha}}" ng-model="hitoc.fecha" 
+	    						is-open="hitoc.popupfecha.abierto" datepicker-options="hitoc.fechaOptions"  close-text="Cerrar" 
+	    						alt-input-formats="altInputFormats" current-text="Hoy" clear-text="Borrar" ng-required="true"/>
 						        <span class="input-group-btn">
 						        	<button type="button" class="btn btn-default" ng-click="hitoc.abirpopup()"><i class="glyphicon glyphicon-calendar"></i></button>
 						        </span>
@@ -92,7 +94,7 @@
 							<label for="campo3">* Tipo hito:</label>
 				          	<div class="input-group">
 				            	<input type="hidden" class="form-control" ng-model="hitoc.hitotipoid" /> 
-				            	<input type="text" class="form-control" id="icomptipo" name="icomptipo" placeholder="Nombre Tipo Hito" ng-model="hitoc.hitotipoNombre" ng-readonly="true" required/>
+				            	<input type="text" class="form-control" id="icomptipo" name="icomptipo" placeholder="Nombre Tipo Hito" ng-model="hitoc.hitotipoNombre" ng-readonly="true" ng-required="true"/>
 				            	<span class="input-group-addon" ng-click="hitoc.buscarHitoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 				          	</div>
 						</div>
@@ -142,7 +144,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="hitoc.guardar()">Guardar</label>
+				        <label class="btn btn-success" ng-click="form.$valid ? hitoc.guardar(): ''" ng-disabled="!form.$valid">Guardar</label>
 				        <label class="btn btn-primary" ng-click="hitoc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>
