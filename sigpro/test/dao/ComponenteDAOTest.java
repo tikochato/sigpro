@@ -9,12 +9,12 @@ public class ComponenteDAOTest {
 	
 	@Test
 	public void getComponentesTest(){
-		assertNotNull(ComponenteDAO.getComponentes());
+		assertNotNull(ComponenteDAO.getComponentes(""));
 	} 
 	
 	@Test
 	public void getComponentePorIdTest(){
-		assertNotNull(ComponenteDAO.getComponentePorId(1));
+		assertNotNull(ComponenteDAO.getComponentePorId(1, ""));
 	}
 	
 	@Test
@@ -34,12 +34,12 @@ public class ComponenteDAOTest {
 	
 	@Test
 	public void getComponentesPaginaTest(){
-		assertNotNull(ComponenteDAO.getComponentesPagina(1, 1));
+		assertNotNull(ComponenteDAO.getComponentesPagina(1, 1,""));
 	}
 	
 	@Test
 	public void getTotalComponentesTest(){
-		assertEquals(ComponenteDAO.getTotalComponentes().getClass(), Long.class);
+		assertEquals(ComponenteDAO.getTotalComponentes("").getClass(), Long.class);
 	}
 	
 }

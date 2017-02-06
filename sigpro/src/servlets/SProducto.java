@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.ComponenteDAO;
 import dao.ProductoDAO;
@@ -17,7 +18,7 @@ import utilities.Utils;
 public class SProducto extends HttpServlet {
 	
 	private static final long serialVersionUID = 1457438583225714402L;
-
+	String usuario ="";
 	public SProducto() {
 		super();
 	}
@@ -28,6 +29,9 @@ public class SProducto extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		HttpSession sesionweb = request.getSession();
+		usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 
 		Map<String, String> parametro = Utils.getParams(request);
 
@@ -57,7 +61,7 @@ public class SProducto extends HttpServlet {
 
 		String resultadoJson = "";
 
-		resultadoJson = ProductoDAO.getJson(pagina, registros,componenteid);
+		resultadoJson = ProductoDAO.getJson(pagina, registros,componenteid,usuario);
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";
@@ -126,7 +130,7 @@ public class SProducto extends HttpServlet {
 
 	private void total(Map<String, String> parametro,HttpServletResponse response) throws IOException {
 		int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
-		Long total = ProductoDAO.getTotalProductos(componenteid);
+		Long total = ProductoDAO.getTotalProductos(componenteid,usuario);
 
 		String resultadoJson = "{\"success\":true, \"total\":" + total + "}";
 
@@ -141,7 +145,7 @@ public class SProducto extends HttpServlet {
 
 		String resultadoJson = "";
 
-		resultadoJson = ProductoDAO.getJson(pagina, registros,componenteid);
+		resultadoJson = ProductoDAO.getJson(pagina, registros,componenteid,usuario);
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";
@@ -159,7 +163,7 @@ public class SProducto extends HttpServlet {
 
 		String resultadoJson = "";
 
-		resultadoJson = Utils.getJSonString("productos", ProductoDAO.getProductosPagina(pagina, registros,componenteid));
+		resultadoJson = Utils.getJSonString("productos", ProductoDAO.getProductosPagina(pagina, registros,componenteid,usuario));
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";
@@ -176,7 +180,7 @@ public class SProducto extends HttpServlet {
 
 		String resultadoJson = "";
 
-		resultadoJson = Utils.getJSonString("productos", ComponenteDAO.getComponentesPagina(pagina, registros));
+		resultadoJson = Utils.getJSonString("productos", ComponenteDAO.getComponentesPagina(pagina, registros,usuario));
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";

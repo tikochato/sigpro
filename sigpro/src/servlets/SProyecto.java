@@ -109,7 +109,7 @@ public class SProyecto extends HttpServlet {
 		String response_text = "";
 
 		if (accion.equals("getProyectos")) {
-			List<Proyecto> proyectos = ProyectoDAO.getProyectos();
+			List<Proyecto> proyectos = ProyectoDAO.getProyectos(usuario);
 
 			response.setHeader("Content-Encoding", "gzip");
 			response.setCharacterEncoding("UTF-8");
@@ -153,9 +153,8 @@ public class SProyecto extends HttpServlet {
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
-
 			List<Proyecto> proyectos = ProyectoDAO.getProyectosPagina(pagina, numeroProyecto,
-					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
+					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion,usuario);
 			List<datos> datos_=new ArrayList<datos>();
 			for (Proyecto proyecto : proyectos){
 				datos dato = new datos();
@@ -224,7 +223,7 @@ public class SProyecto extends HttpServlet {
 							null, null, null, null, null);
 
 				}else{
-					proyecto = ProyectoDAO.getProyectoPorId(id);
+					proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 					proyecto.setNombre(nombre);
 					proyecto.setDescripcion(descripcion);
 					proyecto.setSnip(snip);
@@ -287,7 +286,7 @@ public class SProyecto extends HttpServlet {
 		else if(accion.equals("borrarProyecto")){
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
-				Proyecto proyecto = ProyectoDAO.getProyectoPorId(id);
+				Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 
 				List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
 				if (valores_temp!=null){
@@ -306,11 +305,11 @@ public class SProyecto extends HttpServlet {
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			response_text = String.join("","{ \"success\": true, \"totalproyectos\":",ProyectoDAO.getTotalProyectos(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalproyectos\":",ProyectoDAO.getTotalProyectos(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,usuario).toString()," }");
 		}
 		else if(accion.equals("obtenerProyectoPorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-			Proyecto proyecto = ProyectoDAO.getProyectoPorId(id);
+			Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 			response_text = String.join("","{ \"success\": ",(proyecto!=null && proyecto.getId()!=null ? "true" : "false"),", "
 					+ "\"id\": " + (proyecto!=null ? proyecto.getId():"") +", "
 					+ "\"nombre\": \"" + (proyecto!=null ? proyecto.getNombre():"") +"\" }");

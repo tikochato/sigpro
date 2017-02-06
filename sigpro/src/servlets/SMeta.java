@@ -44,7 +44,7 @@ import utilities.Utils;
 @WebServlet("/SMeta")
 public class SMeta extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-     
+
 	public class stmeta{
 		Integer id;
 		String nombre;
@@ -64,7 +64,7 @@ public class SMeta extends HttpServlet {
 		Integer objetoId;
 		Integer objetoTipo;
 	}
-	
+
 	public class sttipometa{
 		Integer id;
 		String nombre;
@@ -75,7 +75,7 @@ public class SMeta extends HttpServlet {
 		String usuarioCreo;
 		String usuarioActulizo;
 	}
-	
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -87,7 +87,7 @@ public class SMeta extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
+
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class SMeta extends HttpServlet {
 				Integer objetoTipo = Utils.getParameterInteger(map, "objetoTipo");
 				Meta Meta;
 				if(esnuevo){
-					Meta = new Meta(datoTipo, metaTipo, metaUnidadMedida, nombre, descripcion, 
+					Meta = new Meta(datoTipo, metaTipo, metaUnidadMedida, nombre, descripcion,
 							usuario, null, new DateTime().toDate(), null, 1, objetoId, objetoTipo, null);
 				}
 				else{
@@ -242,9 +242,9 @@ public class SMeta extends HttpServlet {
 			Integer tipo = map.get("tipo")!=null ? Integer.parseInt(map.get("tipo")) : 0;
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			switch(tipo){
-				case 1: Proyecto proyecto = ProyectoDAO.getProyectoPorId(id); nombre = (proyecto!=null) ? proyecto.getNombre() : ""; break;
-				case 2: Componente componente = ComponenteDAO.getComponentePorId(id); nombre = (componente!=null) ? componente.getNombre() : ""; break;
-				case 3: Producto producto = ProductoDAO.getProductoPorId(id); nombre = (producto!=null) ? producto.getNombre() : ""; break;
+				case 1: Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario); nombre = (proyecto!=null) ? proyecto.getNombre() : ""; break;
+				case 2: Componente componente = ComponenteDAO.getComponentePorId(id,usuario); nombre = (componente!=null) ? componente.getNombre() : ""; break;
+				case 3: Producto producto = ProductoDAO.getProductoPorId(id,usuario); nombre = (producto!=null) ? producto.getNombre() : ""; break;
 			}
 	        response_text = String.join("", "\"nombre\":\"",nombre,"\"");
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
@@ -252,11 +252,11 @@ public class SMeta extends HttpServlet {
 		else{
 			response_text = "{ \"success\": false }";
 		}
-		
+
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
-		
-        
+
+
         OutputStream output = response.getOutputStream();
 		GZIPOutputStream gz = new GZIPOutputStream(output);
         gz.write(response_text.getBytes("UTF-8"));
