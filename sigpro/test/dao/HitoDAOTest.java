@@ -44,12 +44,12 @@ public class HitoDAOTest {
 	
 	@Test
 	public void getHitosPaginaPorProyectoTest(){
-		assertNotNull(HitoDAO.getHitosPaginaPorProyecto(1, 1, 0));
+		assertNotNull(HitoDAO.getHitosPaginaPorProyecto(1, 1, 0,"","","","",""));
 	}
 	
 	@Test
 	public void getTotalHitosPorProyectoTest(){
-		assertEquals(HitoDAO.getTotalHitosPorProyecto(0).getClass(),Long.class);
+		assertEquals(HitoDAO.getTotalHitosPorProyecto(0,"","","").getClass(),Long.class);
 	}
 
 }

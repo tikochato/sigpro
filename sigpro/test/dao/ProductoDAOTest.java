@@ -11,12 +11,12 @@ public class ProductoDAOTest {
 
 	@Test
 	public void getProductosTest(){
-		assertNotNull(ProductoDAO.getProductos());
+		assertNotNull(ProductoDAO.getProductos(""));
 	}
 	
 	@Test
 	public void getProductoPorId(){
-		assertEquals(ProductoDAO.getProductoPorId(0), null);
+		assertEquals(ProductoDAO.getProductoPorId(0,""), null);
 	}
 	
 	@Test
@@ -36,17 +36,17 @@ public class ProductoDAOTest {
 	
 	@Test
 	public void getProductosPaginaTest(){
-		assertNotNull(ProductoDAO.getProductosPagina(1, 1,1));
+		assertNotNull(ProductoDAO.getProductosPagina(1, 1,1,""));
 	}
 	
 	@Test
 	public void getTotalProductosTest(){
-		assertEquals(ProductoDAO.getTotalProductos(1).getClass(),Long.class);
+		assertEquals(ProductoDAO.getTotalProductos(1,"").getClass(),Long.class);
 	}
 	
 	@Test
 	public void getJsonTest(){
-		assertEquals(ProductoDAO.getJson(1, 1,1).getClass(),String.class);
+		assertEquals(ProductoDAO.getJson(1, 1,1,"").getClass(),String.class);
 	}
 	
 	@Test
