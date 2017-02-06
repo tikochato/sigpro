@@ -41,7 +41,7 @@
 					</div>
 				</div>
 			</div>
-			<ul uib-pagination total-items="componentetipoc.totalCooperantes"
+			<ul uib-pagination total-items="componentetipoc.totalComponentetipos"
 				ng-model="componentetipoc.paginaActual"
 				max-size="componentetipoc.numeroMaximoPaginas"
 				items-per-page="componentetipoc.elementosPorPagina"
@@ -56,12 +56,12 @@
 		<h4 ng-hide="componentetipoc.esnuevo">Edición de Tipo Componente</h4>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="componentetipoc.guardar()">Guardar</label>
+				<label class="btn btn-success" ng-click="form.$valid ? componentetipoc.guardar():''" ng-disabled="!form.$valid">Guardar</label>
 				<label class="btn btn-primary" ng-click="componentetipoc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>
 		<div class="col-sm-12">
-			<form>
+			<form name="form" id="form">
 				<div class="form-group">
 					<label for="id">ID</label> 
 					<label class="form-control" id="id">{{componentetipoc.componentetipo.id }}</label>
@@ -69,7 +69,7 @@
 
 				<div class="form-group">
 					<label for="nombre">* Nombre</label> 
-					<input type="text" class="form-control" id="nombre" placeholder="Nombre"ng-model="componentetipoc.componentetipo.nombre">
+					<input type="text" class="form-control" id="nombre" placeholder="Nombre"ng-model="componentetipoc.componentetipo.nombre" ng-required="true">
 				</div>
 				<div class="form-group">
 					<label for="descripcion">Descripción</label> 
@@ -143,7 +143,7 @@
 		<div align="center">Los campos marcados con * son obligatorios</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="componentetipoc.guardar()">Guardar</label>
+				<label class="btn btn-success" ng-click="form.$valid ? componentetipoc.guardar():''" ng-disabled="!form.$valid">Guardar</label>
 				<label class="btn btn-primary" ng-click="componentetipoc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>
