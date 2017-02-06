@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -70,6 +71,8 @@ public class SObjeto extends HttpServlet {
 		Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String accion = map.get("accion");
 		String response_text="";
+		HttpSession sesionweb = request.getSession();
+		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		if(accion.equals("getObjetoPorId")){
 			Integer objetoId= Utils.getParameterInteger(map, "id");
 			Integer objetoTipo= Utils.getParameterInteger(map, "tipo");
@@ -79,22 +82,22 @@ public class SObjeto extends HttpServlet {
 				switch(objetoTipo){
 					case 1: //Proyecto;
 						tiponombre = "Proyecto";
-						Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId);
+						Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId,usuario);
 						nombre = (proyecto!=null) ? proyecto.getNombre() : "";
 						break;
 					case 2: //Componente;
 						tiponombre = "Componente";
-						Componente componente = ComponenteDAO.getComponentePorId(objetoId);
+						Componente componente = ComponenteDAO.getComponentePorId(objetoId,usuario);
 						nombre = (componente!=null) ? componente.getNombre() : "";
 						break;
 					case 3: //Producto
 						tiponombre = "Producto";
-						Producto producto = ProductoDAO.getProductoPorId(objetoId);
+						Producto producto = ProductoDAO.getProductoPorId(objetoId,usuario);
 						nombre = (producto!=null) ? producto.getNombre() : "";
 						break;
 					case 4: //Actividad
 						tiponombre = "Actividad";
-						Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
+						Actividad actividad = ActividadDAO.getActividadPorId(objetoId,usuario);
 						nombre = (actividad!=null) ? actividad.getNombre() : "";
 						break;
 				}
