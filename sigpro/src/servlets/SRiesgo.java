@@ -27,9 +27,6 @@ import com.google.gson.reflect.TypeToken;
 import dao.RiesgoDAO;
 import dao.RiesgoPropiedadDAO;
 import dao.RiesgoPropiedadValorDAO;
-import pojo.Componente;
-import pojo.Producto;
-import pojo.Proyecto;
 import pojo.Riesgo;
 import pojo.RiesgoPropiedad;
 import pojo.RiesgoPropiedadValor;
@@ -53,10 +50,6 @@ public class SRiesgo extends HttpServlet {
 		String fechaActualizacion;
 		Integer riesgotipoid;
 		String riesgotiponombre;
-		Integer componenteid;
-		String componentenombre;
-		Integer productoid;
-		String productonombre;
 		int estado;
 	}
 	
@@ -103,8 +96,14 @@ public class SRiesgo extends HttpServlet {
 		String response_text="";
 		if(accion.equals("getRiesgosPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numeroRiesgos = map.get("numerocomponentes")!=null  ? Integer.parseInt(map.get("numerocomponentes")) : 0;
-			List<Riesgo> riesgos = RiesgoDAO.getRiesgosPagina(pagina, numeroRiesgos);
+			int numeroRiesgos = map.get("numeroriesgos")!=null  ? Integer.parseInt(map.get("numeroriesgos")) : 0;
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<Riesgo> riesgos = RiesgoDAO.getRiesgosPagina(pagina, numeroRiesgos
+					,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);
 			List<striesgo> striesgos=new ArrayList<striesgo>();
 			for(Riesgo riesgo:riesgos){
 				striesgo temp =new striesgo();
@@ -189,22 +188,11 @@ public class SRiesgo extends HttpServlet {
 				if(id>0 || esnuevo){
 					String nombre = map.get("nombre");
 					String descripcion = map.get("descripcion");
-					int riesgotipoid = Integer.parseInt(map.get("riesgotipoid"));
-					int proyectoid= Integer.parseInt(map.get("proyectoid"));
-					int componenteid= Integer.parseInt(map.get("componenteid"));
-					int productoid= Integer.parseInt(map.get("productoid"));
+					int riesgotipoid = map.get("riesgotipoid")!=null && map.get("riesgotipoid").length() > 0 ?
+							Integer.parseInt(map.get("riesgotipoid")) : 0;
 					
 					RiesgoTipo riesgoTipo= new RiesgoTipo();
 					riesgoTipo.setId(riesgotipoid);
-					
-					Proyecto proyecto = new Proyecto();
-					proyecto .setId(proyectoid);
-					
-					Componente componente = new Componente();
-					componente.setId(componenteid);
-					
-					Producto producto = new Producto();
-					producto.setId(productoid);
 					
 					type = new TypeToken<List<stdatadinamico>>() {
 					}.getType();
@@ -213,8 +201,7 @@ public class SRiesgo extends HttpServlet {
 					
 					Riesgo riesgo;
 					if(esnuevo){
-						riesgo = new Riesgo(riesgoTipo, nombre, usuario, new DateTime().toDate(), 1);
-						riesgo.setDescripcion(descripcion);
+						riesgo = new Riesgo(riesgoTipo, nombre, descripcion, usuario, null, new DateTime().toDate(), null, 1, 1, null, null);
 					}
 					else{
 						
@@ -288,7 +275,11 @@ public class SRiesgo extends HttpServlet {
 				response_text = "{ \"success\": false }";
 		}
 		else if(accion.equals("numeroRiesgos")){
-			response_text = String.join("","{ \"success\": true, \"totalriesgos\":",RiesgoDAO.getTotalRiesgos().toString()," }");
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			response_text = String.join("","{ \"success\": true, \"totalriesgos\":",RiesgoDAO
+					.getTotalRiesgos(filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion).toString()," }");
 		}
 		else if(accion.equals("numeroRiesgosPorObjeto")){
 			int objetoId = map.get("objetoid")!=null && map.get("objetoid").length()>0 ?

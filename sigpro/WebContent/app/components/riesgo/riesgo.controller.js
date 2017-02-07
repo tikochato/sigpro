@@ -19,8 +19,6 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.componenteNombre="";
 		mi.productoid="";
 		mi.productoNombre="";
-		mi.proyectoid = 0;
-		mi.proyectoNombre="";
 		mi.camposdinamicos = {};
 		mi.formatofecha = 'dd/MM/yyyy';
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
@@ -33,12 +31,6 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 
 		mi.filtros = [];
 		mi.orden = null;
-		
-		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.objeto_id }).success(
-				function(response) {
-					mi.proyectoid = response.id;
-					mi.proyectoNombre = response.nombre;
-		});
 		
 		mi.fechaOptions = {
 				formatYear : 'yy',
@@ -110,7 +102,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SRiesgo', { accion: 'getRiesgosPaginaPorObjeto', pagina: pagina, 
+			$http.post('/SRiesgo', { accion: 'getRiesgosPagina', pagina: pagina, 
 				numeroriesgos: $utilidades.elementosPorPagina, objetoid:$routeParams.objeto_id,objetotipo:$routeParams.objeto_tipo
 				,filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
@@ -132,8 +124,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				}
 			}
 			
-			if(mi.riesgo!=null && mi.riesgo.nombre!='' && mi.riesgoTipoid!=''
-				&& mi.componenteid!='' && mi.productoid!=''){
+			if(mi.riesgo!=null && mi.riesgo.nombre!='' && mi.riesgoTipoid!=''){
 				$http.post('/SRiesgo', {
 					accion: 'guardarRiesgo',
 					esnuevo: mi.esnuevo,
@@ -141,8 +132,6 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					objetoid: mi.objetoid,
 					objetotipo: mi.objetotipo,
 					riesgotipoid : mi.riesgoTipoid,
-					componenteid: mi.componenteid,
-					productoid: mi.productoid,
 					nombre: mi.riesgo.nombre,
 					descripcion: mi.riesgo.descripcion,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
@@ -270,18 +259,18 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		};
 
 		mi.obtenerTotalRiesgos = function(){
-			$http.post('/SRiesgo', { accion: 'numeroRiesgosPorObjeto',
+			$http.post('/SRiesgo', { accion: 'numeroRiesgos',
 				objetoid:$routeParams.objeto_id,objetotipo:$routeParams.objeto_tipo
 				,filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
 					function(response) {
-						mi.totalProyectos = response.data.totalproyectos;
+						mi.totalRiesgos = response.data.totalriesgos;
 						mi.paginaActual = 1;
 						mi.cargarTabla(mi.paginaActual);
 			});
 		};
 		
-		$http.post('/SRiesgo', { accion: 'numeroRiesgosPorObjeto',objetoid:$routeParams.objeto_id,objetotipo:$routeParams.objeto_tipo }).success(
+		$http.post('/SRiesgo', { accion: 'numeroRiesgos' }).success(
 				function(response) {
 					mi.totalRiesgos = response.totalriesgos;
 					mi.cargarTabla(1);

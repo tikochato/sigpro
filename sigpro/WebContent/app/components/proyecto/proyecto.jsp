@@ -110,7 +110,7 @@
 					<input type="number" name="isnip" id="isnip"  ng-model="controller.proyecto.snip"
 						class="form-control" placeholder="Nombre" ng-required="true">
 				</div>
-				<div class="form-grup" style="padding: 0px;">
+				
 				<div class="form-group row" >
 					<div class="form-group col-sm-2 anchocolumna" >
 					       <label for="iprog">Programa</label>
