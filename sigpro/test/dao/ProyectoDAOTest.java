@@ -10,7 +10,7 @@ public class ProyectoDAOTest {
 	
 	@Test
 	public void getProyectosTest(){
-		assertNotNull(ProyectoDAO.getProyectos());
+		assertNotNull(ProyectoDAO.getProyectos(""));
 	}
 	
 	@Test
@@ -20,7 +20,7 @@ public class ProyectoDAOTest {
 	
 	@Test
 	public void getProyectoPorIdTest(){
-		assertEquals(ProyectoDAO.getProyectoPorId(0),null);
+		assertEquals(ProyectoDAO.getProyectoPorId(0,""),null);
 	}
 	
 	@Test
@@ -30,7 +30,7 @@ public class ProyectoDAOTest {
 	
 	@Test
 	public void getTotalProyectosTest(){
-		assertEquals(ProyectoDAO.getTotalProyectos("",0,"","").getClass(),Long.class);
+		assertEquals(ProyectoDAO.getTotalProyectos("","","","").getClass(),Long.class);
 	}
 
 }

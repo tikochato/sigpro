@@ -37,30 +37,12 @@ public class ComponenteTipoDAOTest {
 	
 	@Test
 	public void getComponenteTiposPagina(){
-		assertNotNull(ComponenteTipoDAO.getComponenteTiposPagina(1, 1));
+		assertNotNull(ComponenteTipoDAO.getComponenteTiposPagina(1, 1,"","","","",""));
 	}
 	
 	@Test
 	public void getTotalComponenteTipo(){
-		assertNotNull(ComponenteTipoDAO.getTotalComponenteTipo());
+		assertNotNull(ComponenteTipoDAO.getTotalComponenteTipo("","",""));
 	}
-	/*@AfterClass
-	public static void cleanData(){
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		try{
-			CriteriaBuilder builder = session.getCriteriaBuilder();
-			CriteriaQuery<ComponenteTipo> criteria = builder.createQuery(ComponenteTipo.class);
-			Root<ComponenteTipo> root = criteria.from(ComponenteTipo.class);
-			criteria.where( builder.and(builder.equal(root.get("nombre"), "unit_test")));
-			ComponenteTipo componenteTipoTmp =(ComponenteTipo) session.createQuery( criteria ).getSingleResult();
-			session.beginTransaction();
-			session.delete(componenteTipoTmp);
-			session.getTransaction().commit();
-		}catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			session.close();
-		}
-	}*/
 
 }

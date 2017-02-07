@@ -43,12 +43,12 @@ public class ComponentePropiedadDAOTest {
 	
 	@Test
 	public void getComponentePropiedadesPaginaTest(){
-		assertNotNull(ComponentePropiedadDAO.getComponentePropiedadesPagina(1, 1));
+		assertNotNull(ComponentePropiedadDAO.getComponentePropiedadesPagina(1, 1, "","","","",""));
 	}
 	
 	@Test
 	public void getTotalComponentePropiedad(){
-		assertEquals(ComponentePropiedadDAO.getTotalComponentePropiedad().getClass(),Long.class);
+		assertEquals(ComponentePropiedadDAO.getTotalComponentePropiedad("","","").getClass(),Long.class);
 	}
 
 }

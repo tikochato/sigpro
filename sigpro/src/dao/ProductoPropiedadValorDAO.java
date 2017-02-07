@@ -77,7 +77,7 @@ public class ProductoPropiedadValorDAO {
 			pojo = new ProductoPropiedadValor();
 
 			pojo.setId(new ProductoPropiedadValorId(propiedadId, productoId));
-			pojo.setProducto(ProductoDAO.getProductoPorId(productoId));
+			pojo.setProducto(ProductoDAO.getProductoPorId(productoId,usuario));
 			pojo.setProductoPropiedad(ProductoPropiedadDAO.getProductoPropiedad(propiedadId));
 
 			pojo.setValorDecimal(valorDecimal);
