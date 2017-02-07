@@ -116,7 +116,8 @@ public class RiesgoDAO {
 		List<Riesgo> ret = new ArrayList<Riesgo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Riesgo> criteria = session.createQuery("SELECT r FROM Riesgo r WHERE r.estado = 1",Riesgo.class);
+			Query<Riesgo> criteria = session.createQuery("SELECT r FROM Riesgo r "
+					+ "WHERE r.estado = 1 ",Riesgo.class);
 			criteria.setFirstResult(((pagina-1)*(numeroRiesgos)));
 			criteria.setMaxResults(numeroRiesgos);
 			ret = criteria.getResultList();
@@ -146,12 +147,30 @@ public class RiesgoDAO {
 		return ret;
 	}
 	
-	public static List<Riesgo> getRiesgosPaginaPorProyecto (int pagina, int numeroRiesgos, int proyectoId){
+	public static List<Riesgo> getRiesgosPaginaPorObjeto (int pagina, int numeroRiesgos, int objetoId, int objetoTipo
+			,String filtro_nombre, String filtro_usuario_creo,
+			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion){
 		List<Riesgo> ret = new ArrayList<Riesgo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Riesgo> criteria = session.createQuery("SELECT r FROM Riesgo r WHERE r.estado = 1  and r.proyecto.id = :proyId ",Riesgo.class);
-			criteria.setParameter("proyId", proyectoId);
+			String query = "SELECT r FROM Riesgo r "
+					+ "join r.objetoRiesgos o "
+					+ "WHERE r.estado = 1 "
+					+ "and o.id.objetoId = :objid "
+					+ "and o.id.objetoTipo = :objetoTipo";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " r.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " r.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(r.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY r.",columna_ordenada,orden_direccion ) : query;
+			
+			Query<Riesgo> criteria = session.createQuery(query,Riesgo.class);
+			criteria.setParameter("objid", objetoId);
+			criteria.setParameter("objetoTipo", objetoTipo);
 			criteria.setFirstResult(((pagina-1)*(numeroRiesgos)));
 			criteria.setMaxResults(numeroRiesgos);
 			ret = criteria.getResultList();
@@ -165,12 +184,29 @@ public class RiesgoDAO {
 		return ret;
 	}
 	
-	public static Long getTotalRiesgosPorProyecto(int proyectoId){
+	public static Long getTotalRiesgosPorProyecto(int objetoId, int objetoTipo
+			,String filtro_nombre, String filtro_usuario_creo,String filtro_fecha_creacion){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(r.id) FROM Riesgo r WHERE r.estado=1 and r.proyecto.id = :proyId",Long.class);
-			conteo.setParameter("proyId",proyectoId);
+			
+			String query = "SELECT count(r.id) FROM Riesgo r "
+					+ "join r.objetoRiesgos o "
+					+ "WHERE r.estado = 1 "
+					+ "and o.id.objetoId = :objid "
+					+ "and o.id.objetoTipo = :objetoTipo ";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " r.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " r.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(r.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			
+			Query<Long> conteo = session.createQuery(query,Long.class);
+			conteo.setParameter("objid",objetoId);
+			conteo.setParameter("objetoTipo", objetoTipo);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){

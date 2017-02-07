@@ -308,7 +308,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.irARiesgos=function(proyectoid){
 		if(mi.proyecto!=null){
-			$location.path('/riesgo/'+  proyectoid );
+			$location.path('/riesgo/1/'+  proyectoid );
 		}
 	};
 

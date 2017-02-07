@@ -125,11 +125,20 @@ public class SRiesgo extends HttpServlet {
 	        response_text = String.join("", "\"riesgos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
-		else if(accion.equals("getRiesgosPaginaPorProyecto")){
+		else if(accion.equals("getRiesgosPaginaPorObjeto")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int proyectoid = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
 			int numeroRiesgos = map.get("numeroriesgos")!=null  ? Integer.parseInt(map.get("numeroriesgos")) : 0;
-			List<Riesgo> riesgos = RiesgoDAO.getRiesgosPaginaPorProyecto(pagina, numeroRiesgos,proyectoid);
+			int objetoId = map.get("objetoid")!=null && map.get("objetoid").length()>0 ?
+					Integer.parseInt(map.get("objetoid")): 0;
+			int objetoTipo = map.get("objetotipo")!=null && map.get("objetotipo").length()>0 ? 
+					Integer.parseInt(map.get("objetotipo")) : 0 ;
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<Riesgo> riesgos = RiesgoDAO.getRiesgosPaginaPorObjeto(pagina, numeroRiesgos,objetoId,objetoTipo
+					,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);
 			List<striesgo> striesgos=new ArrayList<striesgo>();
 			for(Riesgo riesgo:riesgos){
 				striesgo temp =new striesgo();
@@ -281,9 +290,17 @@ public class SRiesgo extends HttpServlet {
 		else if(accion.equals("numeroRiesgos")){
 			response_text = String.join("","{ \"success\": true, \"totalriesgos\":",RiesgoDAO.getTotalRiesgos().toString()," }");
 		}
-		else if(accion.equals("numeroRiesgosPorProyecto")){
-			int proyectoid = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
-			response_text = String.join("","{ \"success\": true, \"totalriesgos\":",RiesgoDAO.getTotalRiesgosPorProyecto(proyectoid).toString()," }");
+		else if(accion.equals("numeroRiesgosPorObjeto")){
+			int objetoId = map.get("objetoid")!=null && map.get("objetoid").length()>0 ?
+					Integer.parseInt(map.get("objetoid")): 0;
+			int objetoTipo = map.get("objetotipo")!=null && map.get("objetotipo").length()>0 ? 
+					Integer.parseInt(map.get("objetotipo")) : 0 ;
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			
+			response_text = String.join("","{ \"success\": true, \"totalriesgos\":",RiesgoDAO
+					.getTotalRiesgosPorProyecto(objetoId,objetoTipo, filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion).toString()," }");
 		}
 		else{
 			response_text = "{ \"success\": false }";

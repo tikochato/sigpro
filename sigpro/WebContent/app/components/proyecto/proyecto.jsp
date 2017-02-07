@@ -102,7 +102,7 @@
 				<div class="form-group" show-errors >
 					<label for="inombre">* Nombre</label>
 					<input type="text" name="inombre" id="inombre" ng-model="controller.proyecto.nombre"
-						class="form-control" placeholder="Nombre" required >
+						class="form-control" placeholder="Nombre" ng-required="true" >
 				</div>
 
 				<div class="form-group"  >
