@@ -62,9 +62,9 @@
 		</div>
 		<div class="col-sm-12">
 			<form name="form" id="form">
-				<div class="form-group">
-					<label for="id">ID</label> <label class="form-control" id="id">{{
-						proyectotipoc.proyectotipo.id }}</label>
+				<div class="form-group" ng-show="!proyectotipoc.esnuevo">
+					<label for="id">ID</label>
+					<p class="form-control-static">{{proyectotipoc.proyectotipo.id }}</p>
 				</div>
 
 				<div class="form-group">
@@ -76,25 +76,21 @@
 						class="form-control" id="descripcion" placeholder="Descripción"
 						ng-model="proyectotipoc.proyectotipo.descripcion">
 				</div>
-				<div class="form-group">
-					<label for="usuarioCreo">Usuario que creo</label> <label
-						class="form-control" id="usuarioCreo">{{
-						proyectotipoc.proyectotipo.usuarioCreo }}</label>
+				<div class="form-group" ng-show="!proyectotipoc.esnuevo">
+					<label for="usuarioCreo">Usuario que creo</label> 
+				    <p class="form-control-static">{{proyectotipoc.proyectotipo.usarioCreo }} </p>
 				</div>
-				<div class="form-group">
-					<label for="fechaCreacion">Fecha de creación</label> <label
-						class="form-control" id="fechaCreacion">{{
-						proyectotipoc.proyectotipo.fechaCreacion }}</label>
+				<div class="form-group" ng-show="!proyectotipoc.esnuevo">
+					<label for="fechaCreacion">Fecha de creación</label> 
+					<p class="form-control-static">{{proyectotipoc.proyectotipo.fechaCreacion }} </p>
 				</div>
-				<div class="form-group">
-					<label for="usuarioActualizo">Usuario que actualizo</label> <label
-						class="form-control" id="usuarioCreo">{{
-						proyectotipoc.proyectotipo.usuarioActualizo }}</label>
+				<div class="form-group" ng-show="!proyectotipoc.esnuevo">
+					<label for="usuarioActualizo">Usuario que actualizo</label>
+					<p class="form-control-static">{{proyectotipoc.proyectotipo.usuarioActualizo }} </p>
 				</div>
-				<div class="form-group">
-					<label for="fechaActualizacion">Fecha de actualizacion</label> <label
-						class="form-control" id="usuarioCreo">{{
-						proyectotipoc.proyectotipo.fechaActualizacion }}</label>
+				<div class="form-group" ng-show="!proyectotipoc.esnuevo">
+					<label for="fechaActualizacion">Fecha de actualizacion</label> 
+					<p class="form-control-static"> {{proyectotipoc.proyectotipo.fechaActualizacion }}</p>
 				</div>
 
 				<br />

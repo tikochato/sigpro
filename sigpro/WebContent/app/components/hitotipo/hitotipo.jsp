@@ -65,7 +65,7 @@
 				<form name="form">
 						<div class="form-group" ng-show="!hitotipoc.esnuevo">
 							<label for="id">ID</label>			
-    						<p class="form-control-static">{{ hitotipoc.hitotipo.id }}</pl>		
+    						<p class="form-control-static">{{ hitotipoc.hitotipo.id }}</p>		
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
