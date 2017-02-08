@@ -189,6 +189,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 	
 		mi.irATabla = function() {
 			mi.mostraringreso=false;
+			mi.esnuevo=false;
 		}
 		
 		
