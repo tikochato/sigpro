@@ -64,8 +64,8 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group" ng-show="!hitotipoc.esnuevo">
-							<label for="id">ID:</label>
-    						<label id="id" style="margin-left:10px; font-size: 1.2em;" >{{ hitotipoc.hitotipo.id }}</label>						
+							<label for="id">ID</label>			
+    						<p class="form-control-static">{{ hitotipoc.hitotipo.id }}</pl>		
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
