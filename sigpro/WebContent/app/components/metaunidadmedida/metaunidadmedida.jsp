@@ -58,20 +58,20 @@
 			<h4 ng-hide="metaunidadc.esnueva">Edición de Unidad de Medida</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="metaunidadc.guardar()">Guardar</label>
+			        <label class="btn btn-success"  ng-click="form.$valid ? metaunidadc.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
 			        <label class="btn btn-primary" ng-click="metaunidadc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
 			
 			<div class="col-sm-12">
-				<form>
-						<div class="form-group">
+				<form name="form">
+						<div class="form-group" ng-show="!metaunidadc.esnueva">
 							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ metaunidadc.medida.id }}</label>
+    						<p class="form-control-static"  id="id">{{ metaunidadc.medida.id }} </p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="metaunidadc.medida.nombre">
+    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="metaunidadc.medida.nombre" ng-required="true">
 						</div>
 						<div class="form-group">
 							<label for="descripcion">Descripción</label>
@@ -81,21 +81,21 @@
 							<label for="simbolo">Símbolo</label>
     						<input type="text" class="form-control" id="simbolo" placeholder="Símbolo" ng-model="metaunidadc.medida.simbolo">
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!metaunidadc.esnueva">
 							<label for="usuarioCreo">Usuario que creo</label>
-    						<label class="form-control" id="usuarioCreo">{{ metaunidadc.medida.usuarioCreo }}</label>
+    						<p class="form-control-static" id="usuarioCreo">{{ metaunidadc.medida.usuarioCreo }} </p>
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!metaunidadc.esnueva">
 							<label for="fechaCreacion">Fecha de creación</label>
-    						<label class="form-control" id="fechaCreacion">{{ metaunidadc.medida.fechaCreacion }}</label>
+    						<p class="form-control-static" id="fechaCreacion">{{ metaunidadc.medida.fechaCreacion }} </p>
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!metaunidadc.esnueva">
 							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<label class="form-control" id="usuarioCreo">{{ metaunidadc.medida.usuarioActualizo }}</label>
+    						<p class="form-control-static" id="usuarioCreo">{{ metaunidadc.medida.usuarioActualizo }} </p>
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!metaunidadc.esnueva">
 							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<label class="form-control" id="usuarioCreo">{{ metaunidadc.medida.fechaActualizacion }}</label>
+    						<p class="form-control-static" id="usuarioCreo">{{ metaunidadc.medida.fechaActualizacion }} </p>
 						</div>
 				</form>
 			</div>
@@ -103,7 +103,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="metaunidadc.guardar()">Guardar</label>
+				        <label class="btn btn-success" ng-click="form.$valid ? metaunidadc.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
 				        <label class="btn btn-primary" ng-click="metaunidadc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>
