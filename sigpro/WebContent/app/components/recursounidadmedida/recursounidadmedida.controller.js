@@ -139,6 +139,7 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 
 			mi.irATabla = function() {
 				mi.mostraringreso=false;
+				mi.esnueva=false;
 			}
 			
 			mi.guardarEstado=function(){
