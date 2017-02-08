@@ -261,7 +261,7 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 							mi.data = response.data.productoTipos;
 							mi.opcionesGrid.data = mi.data;
 							mi.esForma = false;
-
+							mi.esNuevo=false;
 							$utilidades.mensaje('success',
 									'Tipo de Producto guardado con exito.');
 						} else {
@@ -286,7 +286,7 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 							mi.data = response.data.productoTipos;
 							mi.opcionesGrid.data = mi.data;
 							mi.esForma = false;
-
+							mi.esNuevo=false;
 							$utilidades.mensaje('success',
 									'Tipo de Producto actualizado con exito.');
 						} else {
@@ -300,6 +300,7 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 
 	mi.cancelar = function() {
 		mi.esForma = false;
+		mi.esNuevo=false;
 	};
 
 	mi.eliminarPropiedad = function(index) {
