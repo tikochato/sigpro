@@ -61,6 +61,7 @@ public class SProyecto extends HttpServlet {
 		Integer programa;
 		Integer subprograma;
 		Integer proyecto;
+		Integer actividad;
 		Integer obra;
 		Integer fuente;
 	};
@@ -134,7 +135,8 @@ public class SProyecto extends HttpServlet {
 				dato.programa = proyecto.getPrograma();
 				dato.subprograma = proyecto.getSubprograma();
 				dato.proyecto = proyecto.getProyecto();
-				dato.obra = proyecto.getActividadObra();
+				dato.obra = proyecto.getObra();
+				dato.actividad = proyecto.getActividad();
 				dato.fuente = proyecto.getFuente();
 				datos_.add(dato);
 			}
@@ -175,8 +177,9 @@ public class SProyecto extends HttpServlet {
 				dato.programa = proyecto.getPrograma();
 				dato.subprograma = proyecto.getSubprograma();
 				dato.proyecto = proyecto.getProyecto();
-				dato.obra = proyecto.getActividadObra();
-				//dato.fuente = proyecto.getFuente();
+				dato.obra = proyecto.getObra();
+				dato.actividad = proyecto.getActividad();
+				dato.fuente = proyecto.getFuente();
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -198,6 +201,7 @@ public class SProyecto extends HttpServlet {
 				Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
 				Integer subPrograma = map.get("subprograma")!=null ?  Integer.parseInt(map.get("subprograma")) : null;
 				Integer proyecto_ = map.get("proyecto_")!=null ? Integer.parseInt(map.get("proyecto_")) : null;
+				Integer actividad = map.get("actividad")!=null ? Integer.parseInt(map.get("actividad")):null;
 				Integer obra = map.get("obra")!=null ? Integer.parseInt(map.get("obra")):null;
 				Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
 
@@ -219,7 +223,7 @@ public class SProyecto extends HttpServlet {
 				if(esnuevo){
 					proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion
 							, usuario, null, new DateTime().toDate(), null, 1, snip
-							,programa , subPrograma, proyecto_, obra, fuente,
+							,programa , subPrograma, proyecto_,actividad, obra, fuente,
 							null, null, null, null, null);
 
 				}else{
@@ -232,6 +236,12 @@ public class SProyecto extends HttpServlet {
 					proyecto.setCooperante(cooperante);
 					proyecto.setUsuarioActualizo(usuario);
 					proyecto.setFechaActualizacion(new DateTime().toDate());
+					proyecto.setPrograma(programa);
+					proyecto.setSubprograma(subPrograma);
+					proyecto.setProyecto(proyecto_);
+					proyecto.setActividad(actividad);
+					proyecto.setObra(obra);
+					proyecto.setFuente(fuente);
 
 				   List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
 

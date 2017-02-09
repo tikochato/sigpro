@@ -11,7 +11,7 @@ body {
 #mainview{
 	height: calc(100% - 30px);
 	width: 95%;
-	margin: 0 auto;	
+	margin: 0 auto;
 	display: table;
 	padding-top: 51px;
 }
@@ -60,9 +60,9 @@ nav.navbar{
 }
 
 .row-fluid {
-	height: 100%; 
-	display:table-cell; 
-	vertical-align: middle; 
+	height: 100%;
+	display:table-cell;
+	vertical-align: middle;
 	text-align: center;
 }
 
@@ -102,7 +102,7 @@ nav.navbar{
      overflow: visible;
      padding-right: 25px;
 }
-                 
+
 
 .grid_loading{
 	position: absolute;
@@ -132,7 +132,7 @@ nav.navbar{
 }
 
 .context-menu{
-	
+
 }
 
 .context-menu .dropdown-menu {
@@ -146,7 +146,7 @@ nav.navbar{
 .st-sort-descent:before{
 	content: '\25BC';
 }
- 
+
 .operation_buttons{
 	margin-bottom: 15px;
 }
@@ -161,4 +161,8 @@ nav.navbar{
 
 .ng-invalid, .ng-invalid:invalid {
    border-color: #a94442;
+}
+
+.panel-auditoria{
+	padding: 10px;
 }

@@ -141,6 +141,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				subprograma: mi.subprograma,
 				proyecto_: mi.proyecto_,
 				obra:mi.obra,
+				actividad: mi.actividad,
 				fuente: mi.fuente,
 				esnuevo: mi.esNuevo,
 
