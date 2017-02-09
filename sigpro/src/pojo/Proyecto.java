@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 3, 2017 9:12:33 AM by Hibernate Tools 5.2.0.CR1
+// Generated Feb 8, 2017 5:37:26 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3267342525254863469L;
+	private static final long serialVersionUID = 6471996451636349576L;
 	private Integer id;
 	private Cooperante cooperante;
 	private ProyectoTipo proyectoTipo;
@@ -43,7 +43,8 @@ public class Proyecto implements java.io.Serializable {
 	private Integer programa;
 	private Integer subprograma;
 	private Integer proyecto;
-	private Integer actividadObra;
+	private Integer actividad;
+	private Integer obra;
 	private Integer fuente;
 	private Set<Desembolso> desembolsos = new HashSet<Desembolso>(0);
 	private Set<Hito> hitos = new HashSet<Hito>(0);
@@ -68,7 +69,7 @@ public class Proyecto implements java.io.Serializable {
 	public Proyecto(Cooperante cooperante, ProyectoTipo proyectoTipo, UnidadEjecutora unidadEjecutora, String nombre,
 			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
-			Integer actividadObra, Integer fuente, Set<Desembolso> desembolsos, Set<Hito> hitos,
+			Integer actividad, Integer obra, Integer fuente, Set<Desembolso> desembolsos, Set<Hito> hitos,
 			Set<ProyectoPropedadValor> proyectoPropedadValors, Set<ProyectoUsuario> proyectoUsuarios,
 			Set<Componente> componentes) {
 		this.cooperante = cooperante;
@@ -85,7 +86,8 @@ public class Proyecto implements java.io.Serializable {
 		this.programa = programa;
 		this.subprograma = subprograma;
 		this.proyecto = proyecto;
-		this.actividadObra = actividadObra;
+		this.actividad = actividad;
+		this.obra = obra;
 		this.fuente = fuente;
 		this.desembolsos = desembolsos;
 		this.hitos = hitos;
@@ -237,13 +239,22 @@ public class Proyecto implements java.io.Serializable {
 		this.proyecto = proyecto;
 	}
 
-	@Column(name = "actividad_obra")
-	public Integer getActividadObra() {
-		return this.actividadObra;
+	@Column(name = "actividad")
+	public Integer getActividad() {
+		return this.actividad;
 	}
 
-	public void setActividadObra(Integer actividadObra) {
-		this.actividadObra = actividadObra;
+	public void setActividad(Integer actividad) {
+		this.actividad = actividad;
+	}
+
+	@Column(name = "obra")
+	public Integer getObra() {
+		return this.obra;
+	}
+
+	public void setObra(Integer obra) {
+		this.obra = obra;
 	}
 
 	@Column(name = "fuente")

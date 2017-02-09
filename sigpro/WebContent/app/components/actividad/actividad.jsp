@@ -128,6 +128,28 @@
 							<label for="descripcion">Avance %</label>
     						<input type="number" class="form-control" placeholder="% de Avance" ng-model="actividadc.actividad.porcentajeavance" ng-required="true" min="0" max="100">
 						</div>
+						<div class="form-group row" >
+					<div class="form-group col-sm-2 anchocolumna" >
+					       <label for="iprog">Programa</label>
+					       <input type="number" class="form-control" placeholder="Programa" ng-model="controller.programa"  />
+					</div>
+					<div class="form-group col-sm-2 anchocolumna" >
+					  <label for="isubprog">Subprograma</label>
+					  <input type="number" class="form-control" placeholder="Sub-programa" ng-model="controller.subprograma" />
+					</div>
+					<div class="form-group col-sm-2 anchocolumna" >
+					  <label for="iproy_">Proyecto</label>
+					  <input type="number" class="form-control" placeholder="Proyecto" ng-model="controller.proyecto_"  />
+					</div>
+					<div class="form-group col-sm-2 anchocolumna" >
+					  <label for="iobra">Obra</label>
+					  <input type="number" class="form-control" placeholder="Obra" ng-model="controller.obra" ng-maxlength="4"/>
+					</div>
+					<div class="form-group col-sm-2 anchocolumna" >
+					  <label for="campo5">Fuente</label>
+					  <input type="number" class="form-control" placeholder="Fuente" ng-model="controller.fuente" ng-maxlength="4"/>
+					</div>
+				</div>
 						<div class="form-group" ng-repeat="campo in actividadc.camposdinamicos">
 							<label for="campo.id">{{ campo.label }}</label>
 							<div ng-switch="campo.tipo">
@@ -152,10 +174,9 @@
 								</select>
 							</div>
 						</div>
-						<div class="panel panel-default">
+						<div class="well panel-auditoria">
 							<div class="form-group">
-								<label for="usuarioCreo">Usuario que creo</label>
-	    						<p class="form-control-static">{{ actividadc.actividad.usuarioCreo }}</p>
+								<p class="form-control-static"><b>Usuario que creo</b> {{ actividadc.actividad.usuarioCreo }}</p>
 							</div>
 							<div class="form-group">
 								<label for="fechaCreacion">Fecha de creación</label>

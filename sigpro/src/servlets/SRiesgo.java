@@ -201,7 +201,7 @@ public class SRiesgo extends HttpServlet {
 					
 					Riesgo riesgo;
 					if(esnuevo){
-						riesgo = new Riesgo(riesgoTipo, nombre, descripcion, usuario, null, new DateTime().toDate(), null, 1, 1, null, null);
+						riesgo = new Riesgo(riesgoTipo, nombre, descripcion, usuario, null, new DateTime().toDate(), null,1, null, null);
 					}
 					else{
 						

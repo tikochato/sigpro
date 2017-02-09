@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 3, 2017 9:12:33 AM by Hibernate Tools 5.2.0.CR1
+// Generated Feb 8, 2017 5:37:26 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6055388057378220467L;
+	private static final long serialVersionUID = -9096365857500546633L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
 	private String nombre;
@@ -44,7 +44,8 @@ public class Actividad implements java.io.Serializable {
 	private Integer programa;
 	private Integer subprograma;
 	private Integer proyecto;
-	private Integer actividadObra;
+	private Integer actividad;
+	private Integer obra;
 	private Integer fuente;
 	private int objetoId;
 	private int objetoTipo;
@@ -71,7 +72,7 @@ public class Actividad implements java.io.Serializable {
 	public Actividad(ActividadTipo actividadTipo, String nombre, String descripcion, Date fechaInicio, Date fechaFin,
 			int porcentajeAvance, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
-			Integer actividadObra, Integer fuente, int objetoId, int objetoTipo,
+			Integer actividad, Integer obra, Integer fuente, int objetoId, int objetoTipo,
 			Set<ActividadPropiedadValor> actividadPropiedadValors, Set<ActividadUsuario> actividadUsuarios) {
 		this.actividadTipo = actividadTipo;
 		this.nombre = nombre;
@@ -88,7 +89,8 @@ public class Actividad implements java.io.Serializable {
 		this.programa = programa;
 		this.subprograma = subprograma;
 		this.proyecto = proyecto;
-		this.actividadObra = actividadObra;
+		this.actividad = actividad;
+		this.obra = obra;
 		this.fuente = fuente;
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
@@ -248,13 +250,22 @@ public class Actividad implements java.io.Serializable {
 		this.proyecto = proyecto;
 	}
 
-	@Column(name = "actividad_obra")
-	public Integer getActividadObra() {
-		return this.actividadObra;
+	@Column(name = "actividad")
+	public Integer getActividad() {
+		return this.actividad;
 	}
 
-	public void setActividadObra(Integer actividadObra) {
-		this.actividadObra = actividadObra;
+	public void setActividad(Integer actividad) {
+		this.actividad = actividad;
+	}
+
+	@Column(name = "obra")
+	public Integer getObra() {
+		return this.obra;
+	}
+
+	public void setObra(Integer obra) {
+		this.obra = obra;
 	}
 
 	@Column(name = "fuente")

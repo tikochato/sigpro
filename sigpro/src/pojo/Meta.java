@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 3, 2017 9:12:33 AM by Hibernate Tools 5.2.0.CR1
+// Generated Feb 8, 2017 5:37:26 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -58,8 +58,7 @@ public class Meta implements java.io.Serializable {
 
 	public Meta(DatoTipo datoTipo, MetaTipo metaTipo, MetaUnidadMedida metaUnidadMedida, String nombre,
 			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, Integer estado, Integer objetoId, Integer objetoTipo,
-			Set<MetaValor> metaValors) {
+			Date fechaActualizacion, Integer estado, Integer objetoId, Integer objetoTipo, Set<MetaValor> metaValors) {
 		this.datoTipo = datoTipo;
 		this.metaTipo = metaTipo;
 		this.metaUnidadMedida = metaUnidadMedida;
