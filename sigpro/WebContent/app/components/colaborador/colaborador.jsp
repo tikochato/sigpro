@@ -111,21 +111,21 @@
 	      </div>
 	      
 	      <div class="row">
-		      <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo6.$invalid }">
+		      <div class="form-group col-sm-12" >
 				  <label for="campo6">* Nombre Unidad Ejecutora:</label> 
 				  <div class="input-group">
 				    <input type="hidden" class="form-control" ng-model="colaborador.unidadEjecutora" /> 
-				    <input type="text" id="campo6" name="campo6" class="form-control" placeholder="Nombre Unidad Ejecutora" ng-model="colaborador.nombreUnidadEjecutora" ng-disabled="true" required/>
+				    <input type="text" id="campo6" name="campo6" class="form-control" placeholder="Nombre Unidad Ejecutora" ng-model="colaborador.nombreUnidadEjecutora" ng-disabled="true"  ng-required="true"/>
 				    <span class="input-group-addon" ng-click="colaborador.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
 				  </div>
 			  </div>
 	      </div>
 	
 	      <div class="row">
-		      <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo7.$invalid || !colaborador.usuarioValido }">
+		      <div class="form-group col-sm-12" >
 		        <label for="campo6">* Usuario:</label> 
 		        <div class="input-group">
-		          <input type="text" id="campo7" name="campo7" class="form-control" placeholder="Usuario" ng-model="colaborador.usuario"  ng-disabled="true" required/>
+		          <input type="text" id="campo7" name="campo7" class="form-control" placeholder="Usuario" ng-model="colaborador.usuario"  ng-disabled="true" ng-required="true"/>
 		          <span class="input-group-addon" ng-click="colaborador.buscarUsuario()" uib-tooltip="Validar Usuario" ><i class="glyphicon glyphicon-search"></i></span>
 		        </div>
 		      </div>
