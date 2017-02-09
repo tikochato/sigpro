@@ -81,9 +81,9 @@
 
 			<div class="col-sm-12">
 				<form name="form" id="form">
-						<div class="form-group">
+						<div class="form-group" ng-show="!componentec.esnuevo">
 							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ componentec.componente.id }}</label>
+    						<p class="form-control-static" id="id">{{ componentec.componente.id }}</p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
@@ -163,21 +163,21 @@
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="componentec.componente.descripcion">
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!componentec.esnuevo">
 							<label for="usuarioCreo">Usuario que creo</label>
-    						<label class="form-control" id="usuarioCreo">{{ componentec.componente.usuarioCreo }}</label>
+    						<p class="form-control-static" id="usuarioCreo">{{ componentec.componente.usuarioCreo }}</p>
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!componentec.esnuevo">
 							<label for="fechaCreacion">Fecha de creación</label>
-    						<label class="form-control" id="fechaCreacion">{{ componentec.componente.fechaCreacion }}</label>
+    						<p class="form-control-static" id="fechaCreacion">{{ componentec.componente.fechaCreacion }}</p>
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!componentec.esnuevo">
 							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<label class="form-control" id="usuarioCreo">{{ componentec.componente.usuarioActualizo }}</label>
+    						<p class="form-control-static" id="usuarioCreo">{{ componentec.componente.usuarioActualizo }}</p>
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!componentec.esnuevo">
 							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<label class="form-control" id="usuarioCreo">{{ componentec.componente.fechaActualizacion }}</label>
+    						<p class="form-control-static" id="usuarioCreo">{{ componentec.componente.fechaActualizacion }}</p>
 						</div>
 				</form>
 			</div>
