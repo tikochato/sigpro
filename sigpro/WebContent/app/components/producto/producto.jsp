@@ -80,7 +80,8 @@
 
 				<div class="row">
 					<div class="form-group col-sm-3" ng-show="!producto.esNuevo">
-						<label for="campo0">ID:</label> <input type="text" class="form-control" id="campo0" name="campo0" placeholder="ID" ng-model="producto.codigo" ng-readonly="true" />
+						<label for="campo0">ID:</label> 
+						<p class="form-control-static" id="campo0" name="campo0" >{{producto.codigo}}</p>
 					</div>
 				</div>
 
