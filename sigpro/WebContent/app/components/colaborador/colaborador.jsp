@@ -72,7 +72,7 @@
     </div>
     
     <div>
-	    <form name="form" class="css-form" novalidate>
+	    <form name="form" class="css-form">
 	
 	      <div class="row">
 		      <div class="form-group col-sm-12" ng-show="!colaborador.esNuevo">
@@ -82,31 +82,31 @@
 	      </div>
 
 	      <div class="row">
-		      <div class="form-group col-sm-3" ng-class="{ 'has-error' : form.campo1.$invalid }">
+		      <div class="form-group col-sm-3" >
 		        <label for="campo1">* Primer Nombre:</label> 
-		        <input type="text" class="form-control" id="campo1" name="campo1" placeholder="Primer Nombre" ng-model="colaborador.primerNombre" required />
+		        <input type="text" class="form-control" id="campo1" name="campo1" placeholder="Primer Nombre" ng-model="colaborador.primerNombre" ng-required="true" />
 		      </div>
 		
-		      <div class="form-group col-sm-3" ng-class="{ 'has-error' : form.campo2.$invalid }">
+		      <div class="form-group col-sm-3">
 		        <label for="campo2">Segundo Nombre:</label> 
 		        <input type="text" class="form-control" id="campo2" name="campo2" placeholder="Segundo Nombre" ng-model="colaborador.segundoNombre" />
 		      </div>
 		
-		      <div class="form-group col-sm-3" ng-class="{ 'has-error' : form.campo3.$invalid }">
+		      <div class="form-group col-sm-3" >
 		        <label for="campo3">* Primer Apellido:</label> 
-		        <input type="text" class="form-control" id="campo3" name="campo3" placeholder="Primer Apellido" ng-model="colaborador.primerApellido" required />
+		        <input type="text" class="form-control" id="campo3" name="campo3" placeholder="Primer Apellido" ng-model="colaborador.primerApellido" ng-required="true" />
 		      </div>
 		
-		      <div class="form-group col-sm-3" ng-class="{ 'has-error' : form.campo4.$invalid }">
+		      <div class="form-group col-sm-3" >
 		        <label for="campo4">Segundo Apellido:</label> 
 		        <input type="text" class="form-control" id="campo4" name="campo4" placeholder="Segundo Apellido" ng-model="colaborador.segundoApellido" />
 		      </div>
 	      </div>
 	
 	      <div class="row">
-		      <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo5.$invalid }">
+		      <div class="form-group col-sm-12" >
 		        <label for="campo5">* CUI:</label> 
-		        <input type="number" id="campo5" name="campo5" class="form-control"  placeholder="CUI" ng-model="colaborador.cui" ng-maxlength="13" required />
+		        <input type="number" id="campo5" name="campo5" class="form-control"  placeholder="CUI" ng-model="colaborador.cui" ng-maxlength="13" ng-required="true" />
 		      </div>
 	      </div>
 	      
@@ -137,7 +137,7 @@
 
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
-        <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : '' " ng-disabled="!form.$valid || !colaborador.usuarioValido">Guardar</label> 
+        <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : '' " ng-disabled="form.$invalid || !colaborador.usuarioValido">Guardar</label> 
         <label class="btn btn-primary" ng-click="colaborador.cancelar()">Ir a Tabla</label>
       </div>
     </div>
