@@ -114,7 +114,7 @@
 				<div class="form-group row" >
 					<div class="form-group col-sm-2" >
 					       <label for="iprog">Programa</label>
-					       <input type="number" class="form-control" placeholder="Programa" ng-model="controller.programa"  />
+					       <input type="number" class="form-control" placeholder="Programa" ng-model="controller.proyecto.programa"  />
 					</div>
 					<div class="form-group col-sm-2" >
 					  <label for="isubprog">Subprograma</label>
