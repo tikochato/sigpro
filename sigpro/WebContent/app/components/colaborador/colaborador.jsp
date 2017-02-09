@@ -77,7 +77,7 @@
 	      <div class="row">
 		      <div class="form-group col-sm-12" ng-show="!colaborador.esNuevo">
 		        <label for="campo0">ID:</label> 
-		        <input type="text" class="form-control" id="campo0" name="campo0" placeholder="ID" ng-model="colaborador.codigo" ng-readonly="true" />
+		      	<p class="form-control-static" id="campo0" name="campo0">{{colaborador.codigo}} </p>
 		      </div>
 	      </div>
 
