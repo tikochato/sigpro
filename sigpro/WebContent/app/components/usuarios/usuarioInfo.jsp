@@ -45,7 +45,6 @@
 							<div class="form-group col-sm-6" ng-show="!usuarioc.esoculto">
 								<label for="Descripcion">Password</label>
 								<input class="form-control" type="password" ng-model="usuarioc.usuarioActual.password" ng-required="true"/>
-									
 							</div>
 						</div>
 						<div ng-show="!usuarioc.esoculto">
