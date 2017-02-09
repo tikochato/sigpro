@@ -28,6 +28,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	
 	mi.camposdinamicos = {};
 	
+	mi.columnaOrdenada=null;
+	mi.ordenDireccion = null;
+
+	mi.filtros = [];
+	mi.orden = null;
+	
 	$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id }).success(
 			function(response) {
 				mi.componenteid = response.id;
@@ -60,7 +66,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			accion : 'cargar',
 			pagina : pagina,
 			registros : mi.elementosPorPagina,
-			componenteid : $routeParams.componente_id
+			componenteid : $routeParams.componente_id,
+			numeroproyecto:  $utilidades.elementosPorPagina, 
+			filtro_nombre: mi.filtros['nombre'],
+			filtro_usuario_creo: mi.filtros['usuarioCreo'], 
+			filtro_fecha_creacion: mi.filtros['fechaCreacion'],
+			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
 		};
 
 		mi.mostrarCargando = true;
@@ -80,58 +91,22 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 
 	mi.opcionesGrid = {
 		data : mi.data,
-		columnDefs : [ {
-			displayName : 'Id',
-			name : 'id',
-			cellClass : 'grid-align-right',
-			type : 'number',
-			width : 150,
-			visible : false
-		}, {
-			displayName : 'Nombre',
-			name : 'nombre',
-			cellClass : 'grid-align-left'
-		}, {
-			displayName : 'Descripción',
-			name : 'descripcion',
-			cellClass : 'grid-align-left'
-		}, {
-			displayName : 'Id tipo',
-			name : 'idProductoTipo',
-			cellClass : 'grid-align-right',
-			type : 'number',
-			width : 150,
-			visible : false
-		}, {
-			displayName : 'Tipo',
-			name : 'productoTipo',
-			cellClass : 'grid-align-left',
-			visible : false
-		}, {
-			displayName : 'Id componente',
-			name : 'idComponente',
-			cellClass : 'grid-align-right',
-			type : 'number',
-			width : 150,
-			visible : false
-		}, {
-			displayName : 'Componente',
-			name : 'componente',
-			cellClass : 'grid-align-left',
-			visible : false
-		}, {
-			displayName : 'Id Producto',
-			name : 'idProducto',
-			cellClass : 'grid-align-right',
-			type : 'number',
-			width : 150,
-			visible : false
-		}, {
-			displayName : 'Producto',
-			name : 'producto',
-			cellClass : 'grid-align-left',
-			visible : false
-		} ],
+		columnDefs : [ 
+			{displayName : 'Id', name : 'id',cellClass : 'grid-align-right',type : 'number',width : 150,visible : false }, 
+			{ displayName : 'Nombre',name : 'nombre',cellClass : 'grid-align-left',
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.producto.filtrar($event,1)" ></input></div>'
+			}, 
+			{ displayName : 'Descripción', name : 'descripcion', cellClass : 'grid-align-left' },
+			{ displayName : 'Tipo', name : 'productoTipo', cellClass : 'grid-align-left', visible : false},  
+			{ displayName : 'Componente', name : 'componente', cellClass : 'grid-align-left', visible : false },
+			{ displayName : 'Producto', name : 'producto', cellClass : 'grid-align-left', visible : false },
+			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.producto.filtrar($event,2)" ></input></div>'
+			},
+		    { name: 'fechaCreacion', width: 100, displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.producto.filtrar($event,3)"  ></input></div>'
+		    }
+		],
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
 		multiSelect : false,
@@ -144,7 +119,26 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			mi.gridApi = gridApi;
 
 			mi.gridApi.selection.on.rowSelectionChanged($scope,
-					mi.seleccionarEntidad);
+					mi.seleccionarEntidad
+			);
+			
+			gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+				if(sortColumns.length==1){
+					grid.appScope.producto.columnaOrdenada=sortColumns[0].field;
+					grid.appScope.producto.ordenDireccion = sortColumns[0].sort.direction;
+
+					grid.appScope.producto.cargarTabla(grid.appScope.producto.paginaActual);
+				}
+				else if(sortColumns.length>1){
+					sortColumns[0].unsort();
+				}
+				else{
+					if(grid.appScope.producto.columnaOrdenada!=null){
+						grid.appScope.producto.columnaOrdenada=null;
+						grid.appScope.producto.ordenDireccion=null;
+					}
+				}
+			} );
 
 			if ($routeParams.reiniciar_vista == 'rv') {
 				mi.guardarEstado();
@@ -216,6 +210,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 
 		mi.productoPadre = null;
 		mi.productoPadreNombre = "";
+		
+		mi.unidadEjecutora = null;
+		mi.unidadEjecutoraNombre = "";
 
 		mi.propiedadesValor = [];
 
@@ -251,6 +248,19 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 
 			mi.productoPadre = mi.entidadSeleccionada.idProducto;
 			mi.productoPadreNombre = mi.entidadSeleccionada.producto;
+			
+			mi.unidadEjecutora = mi.entidadSeleccionada.unidadEjectuora;
+			mi.unidadEjecutoraNombre = mi.entidadSeleccionada.nombreUnidadEjecutora;
+			
+			mi.snip = mi.entidadSeleccionada.snip;
+			mi.programa = mi.entidadSeleccionada.programa;
+			mi.subprograma = mi.entidadSeleccionada.subprograma;
+			mi.proyecto_ = mi.entidadSeleccionada.proyecto_;
+			mi.obra = mi.entidadSeleccionada.obra;
+			mi.fuente = mi.entidadSeleccionada.fuente;
+			
+			
+			
 
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar un PRODUCTO');
@@ -305,17 +315,25 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			return;
 		}
 
-		if (mi.esNuevo) {
+		
 			var datos = {
-				accion : 'crear',
+				accion : 'guardar',
+				id: mi.codigo,
 				nombre : mi.nombre,
 				descripcion : mi.descripcion,
 				componente : mi.componente,
 				productoPadre : mi.productoPadre,
-				tipo : mi.tipo,
+				tipoproductoid : mi.tipo,
+				unidadEjecutora : mi.unidadEjecutora,
+				snip: mi.snip,
+				programa : mi.programa,
+				subprograma : mi.subprograma,
+				proyecto_ : mi.proyecto_,
+				obra: mi.obra,
+				fuente: mi.fuente,
 				propiedades : JSON.stringify(mi.propiedadesValor),
 				actividades : JSON.stringify(''),
-				usuario : 'temporal'
+				esnuevo : mi.esNuevo
 			};
 
 			$http.post('/SProducto', datos).then(
@@ -331,38 +349,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							$utilidades.mensaje('danger',
 									'Tipo de Producto ya existe...!!!');
 						}
-
 					});
-		} else {
-			var datos = {
-				accion : 'actualizar',
-				codigo : mi.codigo,
-				nombre : mi.nombre,
-				descripcion : mi.descripcion,
-				componente : mi.componente,
-				productoPadre : mi.productoPadre,
-				tipo : mi.tipo,
-				propiedades : JSON.stringify(mi.propiedadesValor),
-				actividades : JSON.stringify(''),
-				usuario : 'temporal'
-			};
-
-			$http.post('/SProducto', datos).then(
-					function(response) {
-						if (response.data.success) {
-							mi.data = response.data.productos;
-							mi.opcionesGrid.data = mi.data;
-							mi.esForma = false;
-
-							$utilidades.mensaje('success',
-									'Tipo de Producto actualizado con exito.');
-						} else {
-							$utilidades.mensaje('danger',
-									'Error al actualizar datos...!!!');
-						}
-					});
-
-		}
+		
 	};
 
 	mi.cancelar = function() {
@@ -372,8 +360,30 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.editarPropiedadValor = function(index) {
 
 	};
+	
+	mi.filtrar = function(evt,tipo){
+		if(evt.keyCode==13){
+			switch(tipo){
+				case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
+				case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
+				case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
+			}
+			mi.obtenerTotalProductos();
+		}
+	};
 
-	mi.llamarModalBusqueda = function(servlet, datosTotal, datosCarga) {
+	mi.obtenerTotalProductos = function(){
+		$http.post('/SProducto', { accion: 'listar',
+			filtro_nombre: mi.filtros['nombre'],
+			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+				function(response) {
+					mi.totalProyectos = response.data.totalproyectos;
+					mi.paginaActual = 1;
+					mi.cargarData(mi.paginaActual);
+		});
+	};
+
+	mi.llamarModalBusqueda = function(servlet, datosTotal, datosCarga, columnaId,columnaNombre) {
 		var resultado = $q.defer();
 
 		var modalInstance = $uibModal.open({
@@ -394,6 +404,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				},
 				$datosCarga : function() {
 					return datosCarga;
+				},
+				$columnaId : function() {
+					return columnaId;
+				},
+				$columnaNombre : function() {
+					return columnaNombre;
 				}
 			}
 
@@ -417,7 +433,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				pagina : pagina,
 				registros : elementosPorPagina
 			};
-		});
+		},'id','nombre');
 
 		resultado.then(function(itemSeleccionado) {
 			mi.tipo = itemSeleccionado.id;
@@ -453,7 +469,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				pagina : pagina,
 				numerocomponentes : elementosPorPagina
 			};
-		});
+		},'id','nombre');
 
 		resultado.then(function(itemSeleccionado) {
 			mi.componente = itemSeleccionado.id;
@@ -472,7 +488,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				pagina : pagina,
 				registros : elementosPorPagina
 			};
-		});
+		},'id','nombre');
 
 		resultado.then(function(itemSeleccionado) {
 			mi.productoPadre = itemSeleccionado.id;
@@ -480,17 +496,34 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		});
 
 	};
+	
+	mi.buscarUnidadEjecutora = function() {
+		var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
+			accion : 'totalElementos'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'cargar',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'unidadEjecutora','nombreUnidadEjecutora');
 
+		resultado.then(function(itemSeleccionado) {
+			mi.unidadEjecutora = itemSeleccionado.unidadEjecutora;
+			mi.unidadEjecutoraNombre = itemSeleccionado.nombreUnidadEjecutora;
+		});
+	};
 }
 
 moduloProducto.controller('modalBuscarPorProducto', [ '$uibModalInstance',
 		'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
 		'$timeout', '$log', '$servlet', '$datosTotal', '$datosCarga',
+		'$columnaId','$columnaNombre',
 		modalBuscarPorProducto ]);
 
 function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
 		i18nService, $utilidades, $timeout, $log, $servlet, $datosTotal,
-		$datosCarga) {
+		$datosCarga,$columnaId,$columnaNombre) {
 
 	var mi = this;
 
@@ -516,14 +549,14 @@ function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
 		data : mi.data,
 		columnDefs : [ {
 			displayName : 'Id',
-			name : 'id',
+			name : $columnaId,
 			cellClass : 'grid-align-right',
 			type : 'number',
 			width : 150,
 			visible : false
 		}, {
 			displayName : 'Nombre',
-			name : 'nombre',
+			name : $columnaNombre,
 			cellClass : 'grid-align-left'
 		} ],
 		enableRowSelection : true,

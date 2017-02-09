@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -19,16 +23,20 @@ public class ProductoDAO {
 		Integer id;
 		String nombre;
 		String descripcion;
-
 		Integer idComponente;
 		String componente;
-
 		Integer idProducto;
 		String producto;
-
 		Integer idProductoTipo;
 		String productoTipo;
-
+		Integer unidadEjectuora;
+		String nombreUnidadEjecutora;
+		Long snip;
+		Integer programa;
+		Integer subprograma;
+		Integer proyecto_;
+		Integer obra;
+		Integer fuente;
 		Integer estado;
 	}
 
@@ -112,13 +120,28 @@ public class ProductoDAO {
 		return ret;
 	}
 
-	public static List<Producto> getProductosPagina(int pagina, int numeroProductos,Integer componenteid, String usuario) {
+	public static List<Producto> getProductosPagina(int pagina, int numeroProductos,Integer componenteid, 
+			String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion, String columna_ordenada, 
+			String orden_direccion,String usuario) {
 		List<Producto> ret = new ArrayList<Producto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<Producto> criteria = session.createQuery("SELECT p FROM Producto p WHERE p.estado = 1 "
-					+ (componenteid!=null && componenteid > 0 ? "AND p.componente.id = :idComp " : "") + " AND p.id in (SELECT u.id.productoid from ProductoUsuario u where u.id.usuario=:usuario )",
-					Producto.class);
+			
+			String query = "SELECT p FROM Producto p WHERE p.estado = 1 "
+					+ (componenteid!=null && componenteid > 0 ? "AND p.componente.id = :idComp " : "");
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " p.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " p.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			if(usuario!=null)
+				query = String.join("", query, " AND p.id in (SELECT u.id.proyectoid from ProyectoUsuario u where u.id.usuario=:usuario )");
+			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
+			
+			Query<Producto> criteria = session.createQuery(query,Producto.class);
 			criteria.setParameter("usuario", usuario);
 			if (componenteid!=null && componenteid>0){
 				criteria.setParameter("idComp", componenteid);
@@ -155,10 +178,14 @@ public class ProductoDAO {
 		return ret;
 	}
 
-	public static String getJson(int pagina, int registros,Integer componenteid, String usuario) {
+	public static String getJson(int pagina, int registros,Integer componenteid, String usuario
+			,String filtro_nombre, String filtro_usuario_creo,
+			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion) {
 		String jsonEntidades = "";
 
-		List<Producto> pojos = getProductosPagina(pagina, registros,componenteid,usuario);
+		List<Producto> pojos = getProductosPagina(pagina, registros,componenteid
+				,filtro_nombre, filtro_usuario_creo,filtro_fecha_creacion
+				,columna_ordenada,orden_direccion,usuario);
 
 		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
 
@@ -167,6 +194,13 @@ public class ProductoDAO {
 			estructuraPojo.id = pojo.getId();
 			estructuraPojo.nombre = pojo.getNombre();
 			estructuraPojo.descripcion = pojo.getDescripcion();
+			estructuraPojo.programa = pojo.getPrograma();
+			estructuraPojo.subprograma = pojo.getSubprograma();
+			estructuraPojo.proyecto_ = pojo.getProyecto();
+			estructuraPojo.obra = pojo.getActividadObra();
+			estructuraPojo.fuente = pojo.getFuente();
+			estructuraPojo.snip = pojo.getSnip();
+			estructuraPojo.estado = pojo.getEstado();
 
 			if (pojo.getComponente() != null) {
 				estructuraPojo.idComponente = pojo.getComponente().getId();
@@ -176,6 +210,15 @@ public class ProductoDAO {
 			if (pojo.getProductoTipo() != null) {
 				estructuraPojo.idProductoTipo = pojo.getProductoTipo().getId();
 				estructuraPojo.productoTipo = pojo.getProductoTipo().getNombre();
+			}
+			if (pojo.getProductoid()>0){
+				Producto producto_temp = getProductoPorId(pojo.getProductoid());
+				estructuraPojo.idProducto = producto_temp.getId();
+				estructuraPojo.producto = producto_temp.getNombre();
+			}
+			if (pojo.getUnidadEjecutora() != null){
+				estructuraPojo.unidadEjectuora = pojo.getUnidadEjecutora().getUnidadEjecutora();
+				estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
 			}
 
 			listaEstructuraPojos.add(estructuraPojo);
@@ -278,9 +321,27 @@ public class ProductoDAO {
 				session.close();
 			}
 		}
-
 		return ret;
-
 	}
+	
+	public static Producto getProductoPorId(int id) {
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		Producto ret = null;
+		try{
+			CriteriaBuilder builder = session.getCriteriaBuilder();
 
+			CriteriaQuery<Producto> criteria = builder.createQuery(Producto.class);
+			Root<Producto> root = criteria.from(Producto.class);
+			criteria.select( root );
+			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
+			ret = session.createQuery( criteria ).getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("2", ProductoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

@@ -10,8 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.joda.time.DateTime;
+
 import dao.ComponenteDAO;
 import dao.ProductoDAO;
+import pojo.Componente;
+import pojo.Producto;
+import pojo.ProductoTipo;
+import pojo.UnidadEjecutora;
 import utilities.Utils;
 
 @WebServlet("/SProducto")
@@ -37,10 +43,8 @@ public class SProducto extends HttpServlet {
 
 		if (parametro.get("accion").compareTo("cargar") == 0) {
 			listar(parametro, response);
-		} else if (parametro.get("accion").compareTo("crear") == 0) {
-			crear(parametro, response,request);
-		} else if (parametro.get("accion").compareTo("actualizar") == 0) {
-			actualizar(parametro, response);
+		} else if (parametro.get("accion").compareTo("guardar") == 0) {
+			guardar(parametro, response,request);
 		} else if (parametro.get("accion").compareTo("borrar") == 0) {
 			eliminar(parametro, response);
 		} else if (parametro.get("accion").compareTo("totalElementos") == 0) {
@@ -58,10 +62,16 @@ public class SProducto extends HttpServlet {
 		int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
 		int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 		int registros = Utils.String2Int(parametro.get("registros"), 20);
+		String filtro_nombre = parametro.get("filtro_nombre");
+		String filtro_usuario_creo = parametro.get("filtro_usuario_creo");
+		String filtro_fecha_creacion = parametro.get("filtro_fecha_creacion");
+		String columna_ordenada = parametro.get("columna_ordenada");
+		String orden_direccion = parametro.get("orden_direccion");
 
 		String resultadoJson = "";
 
-		resultadoJson = ProductoDAO.getJson(pagina, registros,componenteid,usuario);
+		resultadoJson = ProductoDAO.getJson(pagina, registros,componenteid,usuario,filtro_nombre,filtro_usuario_creo
+				,filtro_fecha_creacion,columna_ordenada,orden_direccion);
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";
@@ -71,52 +81,74 @@ public class SProducto extends HttpServlet {
 
 		Utils.writeJSon(response, resultadoJson);
 	}
-
-	private void crear(Map<String, String> parametro, HttpServletResponse response, HttpServletRequest request) throws IOException {
-		String nombre = parametro.get("nombre");
-		String descripcion = parametro.get("descripcion");
-
-		Integer componente = Utils.String2Int(parametro.get("componente"));
-		Integer productoPadre = Utils.String2Int(parametro.get("productoPadre"));
-		Integer tipo = Utils.String2Int(parametro.get("tipo"));
-
-		// todos estos pueden o deben ser JSON con la EstructuraPojo de su
-		// respectivo DAO
-		String propiedades = parametro.get("propiedades");
-		String actividades = parametro.get("actividades");
-		String usuario = parametro.get("usuario");
+	
+	private void guardar(Map<String, String> map, HttpServletResponse response, HttpServletRequest request) throws IOException {
 		
+		
+		boolean esnuevo = map.get("esnuevo").equals("true");
+		int id = Utils.String2Int(map.get("id"));
+		boolean ret = false;
+		
+		if (id>0 || esnuevo){
+			String nombre = map.get("nombre");
+			String descripcion = map.get("descripcion");
 
-		boolean creado = ProductoDAO.guardar(nombre, descripcion, componente, productoPadre, tipo, propiedades,
-				actividades, usuario);
-
-		if (creado) {
-			listar(parametro, response);
+			Integer componenteId = Utils.String2Int(map.get("componente"));
+			Integer productoPadreId = Utils.String2Int(map.get("productoPadre"));
+			Integer tipoproductoId = Utils.String2Int(map.get("tipoproductoid")); 
+			Integer unidadEjecutoraId = Utils.String2Int(map.get("unidadEjecutora"));
+			
+			Long snip = Utils.String2Long(map.get("snip"), null);
+			Integer programa = Utils.String2Int(map.get("programa"), null);
+			Integer subPrograma = Utils.String2Int(map.get("subprograma"), null);
+			Integer proyecto_ = Utils.String2Int(map.get("proyecto_"), null);
+			Integer obra = Utils.String2Int(map.get("obra"), null);
+			Integer fuente = Utils.String2Int(map.get("fuente"), null);
+			
+			Componente componente = new Componente();
+			componente.setId(componenteId);
+			Producto productoPadre = new Producto();
+			productoPadre.setId(productoPadreId);
+			ProductoTipo productoTipo = new ProductoTipo();
+			productoTipo.setId(tipoproductoId);
+			UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
+			unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
+			
+			Producto producto;
+			
+			if (esnuevo){
+				producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, descripcion
+						, productoPadreId, usuario, null, new DateTime().toDate(),null, 1
+						, snip, programa, subPrograma, proyecto_, obra, fuente, null, null);
+			}else{
+				producto = ProductoDAO.getProductoPorId(id);
+				producto.setComponente(componente);
+				producto.setProductoTipo(productoTipo);
+				producto.setUnidadEjecutora(unidadEjecutora);
+				producto.setNombre(nombre);
+				producto.setDescripcion(descripcion);
+				producto.setProductoid(productoPadreId);
+				producto.setSnip(snip);
+				producto.setPrograma(programa);
+				producto.setSubprograma(subPrograma);
+				producto.setProyecto(proyecto_);
+				producto.setActividadObra(obra);
+				producto.setFuente(fuente);
+				producto.setUsuarioActualizo(usuario);
+				producto.setFechaActualizacion(new DateTime().toDate());
+			}
+			
+			ret = ProductoDAO.guardarProducto(producto);
+			
+		}
+		if (ret) {
+			listar(map, response);
 		}
 	}
 
-	private void actualizar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
+	
 
-		int productoId = Utils.String2Int(parametro.get("codigo"), -1);
-		String nombre = parametro.get("nombre");
-		String descripcion = parametro.get("descripcion");
-
-		Integer componente = Utils.String2Int(parametro.get("componente"));
-		Integer productoPadre = Utils.String2Int(parametro.get("productoPadre"));
-		Integer tipo = Utils.String2Int(parametro.get("tipo"));
-
-		// todos estos pueden o deben ser JSON con la EstructuraPojo de su
-		// respectivo DAO
-		String propiedades = parametro.get("propiedades");
-		String actividades = parametro.get("actividades");
-		String usuario = parametro.get("usuario");
-
-		boolean actualizado = ProductoDAO.actualizar(productoId, nombre, descripcion, componente, productoPadre, tipo,
-				propiedades, actividades, usuario);
-		if (actualizado) {
-			listar(parametro, response);
-		}
-	}
+	
 
 	private void eliminar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		int codigo = Utils.String2Int(parametro.get("codigo"), -1);
@@ -142,10 +174,19 @@ public class SProducto extends HttpServlet {
 		int registros = Utils.String2Int(parametro.get("registros"), 20);
 		int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
 		
+		String filtro_nombre = parametro.get("filtro_nombre");
+		String filtro_usuario_creo = parametro.get("filtro_usuario_creo");
+		String filtro_fecha_creacion = parametro.get("filtro_fecha_creacion");
+		String columna_ordenada = parametro.get("columna_ordenada");
+		String orden_direccion = parametro.get("orden_direccion");
+
+		
 
 		String resultadoJson = "";
 
-		resultadoJson = ProductoDAO.getJson(pagina, registros,componenteid,usuario);
+		resultadoJson = ProductoDAO.getJson(pagina, registros,componenteid,usuario,
+				filtro_nombre,filtro_usuario_creo
+				,filtro_fecha_creacion,columna_ordenada,orden_direccion);
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";
@@ -160,10 +201,18 @@ public class SProducto extends HttpServlet {
 		int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 		int registros = Utils.String2Int(parametro.get("registros"), 20);
 		int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
+		String filtro_nombre = parametro.get("filtro_nombre");
+		String filtro_usuario_creo = parametro.get("filtro_usuario_creo");
+		String filtro_fecha_creacion = parametro.get("filtro_fecha_creacion");
+		String columna_ordenada = parametro.get("columna_ordenada");
+		String orden_direccion = parametro.get("orden_direccion");
+
 
 		String resultadoJson = "";
 
-		resultadoJson = Utils.getJSonString("productos", ProductoDAO.getProductosPagina(pagina, registros,componenteid,usuario));
+		resultadoJson = Utils.getJSonString("productos", ProductoDAO.getProductosPagina(pagina, registros,componenteid,usuario,
+				filtro_nombre,filtro_usuario_creo
+				,filtro_fecha_creacion,columna_ordenada,orden_direccion));
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";
