@@ -112,27 +112,30 @@
 				</div>
 				
 				<div class="form-group row" >
-					<div class="form-group col-sm-2 anchocolumna" >
+					<div class="form-group col-sm-2" >
 					       <label for="iprog">Programa</label>
-					       <input type="number" class="form-control" id="iprog" name="iprog" placeholder="Programa" ng-model="controller.programa"  />
+					       <input type="number" class="form-control" placeholder="Programa" ng-model="controller.proyecto.programa"  />
 					</div>
-					<div class="form-group col-sm-2 anchocolumna" >
-					  <label for="isubprog">Sub-Programa</label>
-					  <input type="number" class="form-control" id="isubprog" name="isubprog" placeholder="Sub-programa" ng-model="controller.subprograma" />
+					<div class="form-group col-sm-2" >
+					  <label for="isubprog">Subprograma</label>
+					  <input type="number" class="form-control" ng-model="controller.subprograma" />
 					</div>
-					<div class="form-group col-sm-2 anchocolumna" >
-					  <label for="iproy_">Proyecto:</label>
-					  <input type="number" class="form-control" id="iproy_" name="iproy_" placeholder="Proyecto" ng-model="controller.proyecto_"  />
+					<div class="form-group col-sm-2" >
+					  <label for="iproy_">Proyecto</label>
+					  <input type="number" class="form-control" ng-model="controller.proyecto_"  />
 					</div>
-					<div class="form-group col-sm-2 anchocolumna" >
+					<div class="form-group col-sm-2" >
+					  <label for="iobra">Actividad</label>
+					  <input type="number" class="form-control" ng-model="controller.actividad" ng-maxlength="4"/>
+					</div>
+					<div class="form-group col-sm-2" >
 					  <label for="iobra">Obra</label>
-					  <input type="number" class="form-control" id="iobra" name="iobra" placeholder="Obra" ng-model="controller.obra" ng-maxlength="4"/>
+					  <input type="number" class="form-control" ng-model="controller.obra" ng-maxlength="4"/>
 					</div>
-					<div class="form-group col-sm-2 anchocolumna" >
+					<div class="form-group col-sm-2" >
 					  <label for="campo5">Fuente</label>
-					  <input type="number" class="form-control" id="campo5" name="campo5" placeholder="Fuente" ng-model="controller.fuente" ng-maxlength="4"/>
+					  <input type="number" class="form-control" ng-model="controller.fuente" ng-maxlength="4"/>
 					</div>
-controller
 				</div>
 				<div class="form-group" >
 					<label for="campo3">* Tipo Proyecto</label>

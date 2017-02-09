@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 3, 2017 9:12:33 AM by Hibernate Tools 5.2.0.CR1
+// Generated Feb 8, 2017 5:37:26 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Riesgo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 310111696184422923L;
+	private static final long serialVersionUID = 1660426989288288218L;
 	private Integer id;
 	private RiesgoTipo riesgoTipo;
 	private String nombre;
@@ -37,7 +37,6 @@ public class Riesgo implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private Integer tipoRelacion;
 	private Set<ObjetoRiesgo> objetoRiesgos = new HashSet<ObjetoRiesgo>(0);
 	private Set<RiesgoPropiedadValor> riesgoPropiedadValors = new HashSet<RiesgoPropiedadValor>(0);
 
@@ -53,8 +52,8 @@ public class Riesgo implements java.io.Serializable {
 	}
 
 	public Riesgo(RiesgoTipo riesgoTipo, String nombre, String descripcion, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, int estado, Integer tipoRelacion,
-			Set<ObjetoRiesgo> objetoRiesgos, Set<RiesgoPropiedadValor> riesgoPropiedadValors) {
+			Date fechaCreacion, Date fechaActualizacion, int estado, Set<ObjetoRiesgo> objetoRiesgos,
+			Set<RiesgoPropiedadValor> riesgoPropiedadValors) {
 		this.riesgoTipo = riesgoTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -63,7 +62,6 @@ public class Riesgo implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.tipoRelacion = tipoRelacion;
 		this.objetoRiesgos = objetoRiesgos;
 		this.riesgoPropiedadValors = riesgoPropiedadValors;
 	}
@@ -153,15 +151,6 @@ public class Riesgo implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
-	}
-
-	@Column(name = "tipo_relacion")
-	public Integer getTipoRelacion() {
-		return this.tipoRelacion;
-	}
-
-	public void setTipoRelacion(Integer tipoRelacion) {
-		this.tipoRelacion = tipoRelacion;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "riesgo")

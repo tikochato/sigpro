@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 3, 2017 9:12:33 AM by Hibernate Tools 5.2.0.CR1
+// Generated Feb 8, 2017 5:37:26 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3552899831378054361L;
+	private static final long serialVersionUID = -2750093296734672164L;
 	private Integer id;
 	private Componente componente;
 	private ProductoTipo productoTipo;
@@ -40,11 +40,12 @@ public class Producto implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Integer estado;
-	private Long snip;
+	private Integer snip;
 	private Integer programa;
 	private Integer subprograma;
 	private Integer proyecto;
-	private Integer actividadObra;
+	private Integer actividad;
+	private Integer obra;
 	private Integer fuente;
 	private Set<ProductoUsuario> productoUsuarios = new HashSet<ProductoUsuario>(0);
 	private Set<ProductoPropiedadValor> productoPropiedadValors = new HashSet<ProductoPropiedadValor>(0);
@@ -65,8 +66,8 @@ public class Producto implements java.io.Serializable {
 
 	public Producto(Componente componente, ProductoTipo productoTipo, UnidadEjecutora unidadEjecutora, String nombre,
 			String descripcion, int productoid, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, Integer estado, Long snip, Integer programa, Integer subprograma,
-			Integer proyecto, Integer actividadObra, Integer fuente, Set<ProductoUsuario> productoUsuarios,
+			Date fechaActualizacion, Integer estado, Integer snip, Integer programa, Integer subprograma,
+			Integer proyecto, Integer actividad, Integer obra, Integer fuente, Set<ProductoUsuario> productoUsuarios,
 			Set<ProductoPropiedadValor> productoPropiedadValors) {
 		this.componente = componente;
 		this.productoTipo = productoTipo;
@@ -83,7 +84,8 @@ public class Producto implements java.io.Serializable {
 		this.programa = programa;
 		this.subprograma = subprograma;
 		this.proyecto = proyecto;
-		this.actividadObra = actividadObra;
+		this.actividad = actividad;
+		this.obra = obra;
 		this.fuente = fuente;
 		this.productoUsuarios = productoUsuarios;
 		this.productoPropiedadValors = productoPropiedadValors;
@@ -206,11 +208,11 @@ public class Producto implements java.io.Serializable {
 	}
 
 	@Column(name = "snip")
-	public Long getSnip() {
+	public Integer getSnip() {
 		return this.snip;
 	}
 
-	public void setSnip(Long snip) {
+	public void setSnip(Integer snip) {
 		this.snip = snip;
 	}
 
@@ -241,13 +243,22 @@ public class Producto implements java.io.Serializable {
 		this.proyecto = proyecto;
 	}
 
-	@Column(name = "actividad_obra")
-	public Integer getActividadObra() {
-		return this.actividadObra;
+	@Column(name = "actividad")
+	public Integer getActividad() {
+		return this.actividad;
 	}
 
-	public void setActividadObra(Integer actividadObra) {
-		this.actividadObra = actividadObra;
+	public void setActividad(Integer actividad) {
+		this.actividad = actividad;
+	}
+
+	@Column(name = "obra")
+	public Integer getObra() {
+		return this.obra;
+	}
+
+	public void setObra(Integer obra) {
+		this.obra = obra;
 	}
 
 	@Column(name = "fuente")

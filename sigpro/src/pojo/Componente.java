@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 3, 2017 9:12:33 AM by Hibernate Tools 5.2.0.CR1
+// Generated Feb 8, 2017 5:37:26 PM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Componente implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7270389978455016743L;
+	private static final long serialVersionUID = 4738397983895923095L;
 	private Integer id;
 	private ComponenteTipo componenteTipo;
 	private Proyecto proyecto;
@@ -43,7 +43,8 @@ public class Componente implements java.io.Serializable {
 	private Integer programa;
 	private Integer subprograma;
 	private Integer proyecto_1;
-	private Integer actividadObra;
+	private Integer actividad;
+	private Integer obra;
 	private Integer fuente;
 	private Set<ComponenteUsuario> componenteUsuarios = new HashSet<ComponenteUsuario>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
@@ -66,8 +67,9 @@ public class Componente implements java.io.Serializable {
 	public Componente(ComponenteTipo componenteTipo, Proyecto proyecto, UnidadEjecutora unidadEjecutora, String nombre,
 			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma,
-			Integer proyecto_1, Integer actividadObra, Integer fuente, Set<ComponenteUsuario> componenteUsuarios,
-			Set<Producto> productos, Set<ComponentePropiedadValor> componentePropiedadValors) {
+			Integer proyecto_1, Integer actividad, Integer obra, Integer fuente,
+			Set<ComponenteUsuario> componenteUsuarios, Set<Producto> productos,
+			Set<ComponentePropiedadValor> componentePropiedadValors) {
 		this.componenteTipo = componenteTipo;
 		this.proyecto = proyecto;
 		this.unidadEjecutora = unidadEjecutora;
@@ -82,7 +84,8 @@ public class Componente implements java.io.Serializable {
 		this.programa = programa;
 		this.subprograma = subprograma;
 		this.proyecto_1 = proyecto_1;
-		this.actividadObra = actividadObra;
+		this.actividad = actividad;
+		this.obra = obra;
 		this.fuente = fuente;
 		this.componenteUsuarios = componenteUsuarios;
 		this.productos = productos;
@@ -232,13 +235,22 @@ public class Componente implements java.io.Serializable {
 		this.proyecto_1 = proyecto_1;
 	}
 
-	@Column(name = "actividad_obra")
-	public Integer getActividadObra() {
-		return this.actividadObra;
+	@Column(name = "actividad")
+	public Integer getActividad() {
+		return this.actividad;
 	}
 
-	public void setActividadObra(Integer actividadObra) {
-		this.actividadObra = actividadObra;
+	public void setActividad(Integer actividad) {
+		this.actividad = actividad;
+	}
+
+	@Column(name = "obra")
+	public Integer getObra() {
+		return this.obra;
+	}
+
+	public void setObra(Integer obra) {
+		this.obra = obra;
 	}
 
 	@Column(name = "fuente")
