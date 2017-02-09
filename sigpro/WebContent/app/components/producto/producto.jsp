@@ -78,50 +78,50 @@
 				
 					<div class="form-group" >
 						<label for="campo0">ID:</label> 
-						<input type="text" class="form-control" placeholder="ID" ng-model="producto.codigo" ng-readonly="true" />
+						<input type="text" class="form-control" placeholder="ID" ng-model="producto.producto.id" ng-readonly="true" />
 					</div>
 				
 				
 					<div class="form-group">
 						<label for="campo1">* Nombre:</label> 
-						<input type="text" class="form-control" placeholder="Nombre del producto" ng-model="producto.nombre" ng-required="true" />
+						<input type="text" class="form-control" placeholder="Nombre del producto" ng-model="producto.producto.nombre" ng-required="true" />
 					</div>
 					
 					<div class="form-group"  >
 						<label for="isnip">SNIP</label>
-						<input type="number"   ng-model="producto.snip" class="form-control" placeholder="SNIP" >
+						<input type="number"   ng-model="producto.producto.snip" class="form-control" placeholder="SNIP" >
 					</div>
 				
 					<div class="form-group row" >
-						<div class="form-group col-sm-1 " >
-						</div>
 						<div class="form-group col-sm-2 " >
 						       <label for="iprog">Programa</label>
-						       <input type="number" class="form-control" placeholder="Programa" ng-model="producto.programa"  />
+						       <input type="number" class="form-control" placeholder="Programa" ng-model="producto.producto.programa"  />
 						</div>
 						<div class="form-group col-sm-2 " >
 						  <label for="isubprog">Subprograma</label>
-						  <input type="number" class="form-control" placeholder="Sub-programa" ng-model="producto.subprograma" />
+						  <input type="number" class="form-control" placeholder="Sub-programa" ng-model="producto.producto.subprograma" />
 						</div>
 						<div class="form-group col-sm-2 " >
 						  <label for="iproy_">Proyecto:</label>
-						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="producto.proyecto_"  />
+						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="producto.producto.proyecto_"  />
+						</div>
+						<div class="form-group col-sm-2 " >
+						  <label for="iproy_">Actividad:</label>
+						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="producto.producto.actividad"  />
 						</div>
 						<div class="form-group col-sm-2 " >
 						  <label for="iobra">Obra</label>
-						  <input type="number" class="form-control" placeholder="Obra" ng-model="producto.obra" ng-maxlength="4"/>
+						  <input type="number" class="form-control" placeholder="Obra" ng-model="producto.producto.obra" ng-maxlength="4"/>
 						</div>
 						<div class="form-group col-sm-2 " >
 						  <label for="campo5">Fuente</label>
-						  <input type="number" class="form-control" placeholder="Fuente" ng-model="producto.fuente" ng-maxlength="4"/>
-						</div>
-						<div class="form-group col-sm-1 " >
+						  <input type="number" class="form-control" placeholder="Fuente" ng-model="producto.producto.fuente" ng-maxlength="4"/>
 						</div>
 					</div>
 
 					<div class="form-group" >
 						<label for="campo2">* Descripción:</label> 
-						<input type="text" class="form-control" placeholder="Descripcion del producto" ng-model="producto.descripcion" />
+						<input type="text" class="form-control" placeholder="Descripcion del producto" ng-model="producto.producto.descripcion" />
 					</div>
 					
 					<div class="form-group" >
@@ -174,6 +174,23 @@
 							</p>
 						</div>
 					</div>
+					
+				<div class="form-group">
+					<label for="usuarioCreo">Usuario que creo</label>
+  					<p class="form-control-static">{{ producto.producto.usuarioCreo }}</pl>
+				</div>
+				<div class="form-group">
+					<label for="fechaCreacion">Fecha de creación</label>
+  					<p class="form-control-static">{{ producto.producto.fechaCreacion }}</p>
+				</div>
+				<div class="form-group">
+					<label for="usuarioActualizo">Usuario que actualizo</label>
+  					<p class="form-control-static">{{ producto.producto.usuarioactualizo }}</p>
+				</div>
+				<div class="form-group">
+					<label for="fechaActualizacion">Fecha de actualizacion</label>
+  					<p class="form-control-static">{{ producto.producto.fechaactualizacion }}</p>
+				</div>
 			</form>
 			</div>
 		</div>

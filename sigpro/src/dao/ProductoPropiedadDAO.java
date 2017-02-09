@@ -190,7 +190,7 @@ public class ProductoPropiedadDAO {
 			Query<Long> conteo = session.createQuery("SELECT count(e.id) FROM ProductoPropiedad e  where e.estado = 1", Long.class);
 			ret = conteo.getSingleResult();
 		} catch (Throwable e) {
-			CLogger.write("7", ProductoPropiedadDAO.class, e);
+			CLogger.write("6", ProductoPropiedadDAO.class, e);
 		} finally {
 			session.close();
 		}
@@ -250,7 +250,28 @@ public class ProductoPropiedadDAO {
 		}
 		catch(Throwable e){
 			e.printStackTrace();
-			CLogger.write("1", ProyectoPropiedadDAO.class, e);
+			CLogger.write("7", ProyectoPropiedadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static ProductoPropiedad getProductoPropiedadPorId(int id){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		ProductoPropiedad ret = null;
+		try{
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+
+			CriteriaQuery<ProductoPropiedad> criteria = builder.createQuery(ProductoPropiedad.class);
+			Root<ProductoPropiedad> root = criteria.from(ProductoPropiedad.class);
+			criteria.select( root );
+			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal( root.get("estado"), 1 )));
+			ret = session.createQuery( criteria ).getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("8", ProductoPropiedadDAO.class, e);
 		}
 		finally{
 			session.close();

@@ -1,7 +1,11 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,11 +16,22 @@ import javax.servlet.http.HttpSession;
 
 import org.joda.time.DateTime;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import dao.ComponenteDAO;
 import dao.ProductoDAO;
+import dao.ProductoPropiedadDAO;
+import dao.ProductoPropiedadValorDAO;
+import dao.ProductoUsuarioDAO;
 import pojo.Componente;
 import pojo.Producto;
+import pojo.ProductoPropiedad;
+import pojo.ProductoPropiedadValor;
+import pojo.ProductoPropiedadValorId;
 import pojo.ProductoTipo;
+import pojo.ProductoUsuario;
+import pojo.ProductoUsuarioId;
 import pojo.UnidadEjecutora;
 import utilities.Utils;
 
@@ -25,6 +40,13 @@ public class SProducto extends HttpServlet {
 	
 	private static final long serialVersionUID = 1457438583225714402L;
 	String usuario ="";
+	class stdatadinamico {
+		String id;
+		String tipo;
+		String label;
+		String valor;
+	}
+
 	public SProducto() {
 		super();
 	}
@@ -44,6 +66,7 @@ public class SProducto extends HttpServlet {
 		if (parametro.get("accion").compareTo("cargar") == 0) {
 			listar(parametro, response);
 		} else if (parametro.get("accion").compareTo("guardar") == 0) {
+			
 			guardar(parametro, response,request);
 		} else if (parametro.get("accion").compareTo("borrar") == 0) {
 			eliminar(parametro, response);
@@ -83,13 +106,13 @@ public class SProducto extends HttpServlet {
 	}
 	
 	private void guardar(Map<String, String> map, HttpServletResponse response, HttpServletRequest request) throws IOException {
-		
-		
+		String resultadoJson="";
 		boolean esnuevo = map.get("esnuevo").equals("true");
 		int id = Utils.String2Int(map.get("id"));
+		Producto producto;
 		boolean ret = false;
-		
 		if (id>0 || esnuevo){
+			try{
 			String nombre = map.get("nombre");
 			String descripcion = map.get("descripcion");
 
@@ -100,11 +123,18 @@ public class SProducto extends HttpServlet {
 			
 			Long snip = Utils.String2Long(map.get("snip"), null);
 			Integer programa = Utils.String2Int(map.get("programa"), null);
-			Integer subPrograma = Utils.String2Int(map.get("subprograma"), null);
+			Integer subprograma = Utils.String2Int(map.get("subprograma"), null);
 			Integer proyecto_ = Utils.String2Int(map.get("proyecto_"), null);
 			Integer obra = Utils.String2Int(map.get("obra"), null);
 			Integer fuente = Utils.String2Int(map.get("fuente"), null);
+			Integer actividad = Utils.String2Int(map.get("actividad"), null);
 			
+			Gson gson = new Gson();
+		
+			Type type = new TypeToken<List<stdatadinamico>>() {
+			}.getType();
+
+			List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
 			Componente componente = new Componente();
 			componente.setId(componenteId);
 			Producto productoPadre = new Producto();
@@ -114,12 +144,12 @@ public class SProducto extends HttpServlet {
 			UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
 			unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
 			
-			Producto producto;
-			
 			if (esnuevo){
-				producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, descripcion
-						, productoPadreId, usuario, null, new DateTime().toDate(),null, 1
-						, snip, programa, subPrograma, proyecto_, obra, fuente, null, null);
+				
+				producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, descripcion, 
+						productoPadreId, usuario, null, new DateTime().toDate(), null, 1
+						, snip, programa, subprograma, proyecto_, actividad, obra, fuente, null, null);
+				
 			}else{
 				producto = ProductoDAO.getProductoPorId(id);
 				producto.setComponente(componente);
@@ -130,26 +160,65 @@ public class SProducto extends HttpServlet {
 				producto.setProductoid(productoPadreId);
 				producto.setSnip(snip);
 				producto.setPrograma(programa);
-				producto.setSubprograma(subPrograma);
+				producto.setSubprograma(subprograma);
 				producto.setProyecto(proyecto_);
-				producto.setActividadObra(obra);
+				producto.setObra(obra);
+				producto.setActividad(actividad);
 				producto.setFuente(fuente);
 				producto.setUsuarioActualizo(usuario);
 				producto.setFechaActualizacion(new DateTime().toDate());
 			}
-			
 			ret = ProductoDAO.guardarProducto(producto);
 			
+			if (ret){
+				ProductoUsuarioId productoUsuarioId = new ProductoUsuarioId(producto.getId(), usuario);
+				ProductoUsuario productoUsuario =  new ProductoUsuario(productoUsuarioId, producto, usuario, null, new DateTime().toDate(),null);
+				ProductoUsuarioDAO.guardarProductoUsuario(productoUsuario);
+				
+				for (stdatadinamico data : datos) {
+					
+					
+					ProductoPropiedad producotPropiedad = ProductoPropiedadDAO.getProductoPropiedadPorId(Integer.parseInt(data.id));
+					ProductoPropiedadValorId idValor = new ProductoPropiedadValorId(producto.getId(),Integer.parseInt(data.id));
+					ProductoPropiedadValor valor = new ProductoPropiedadValor(idValor, producto, producotPropiedad, null, null, null, null, 
+							usuario, null, new DateTime().toDate(), null, 1);
+
+					switch (producotPropiedad.getDatoTipo().getId()){
+						case 1:
+							valor.setValorString(data.valor);
+							break;
+						case 2:
+							valor.setValorEntero(Integer.parseInt(data.valor));
+							break;
+						case 3:
+							valor.setValorDecimal(new BigDecimal(data.valor));
+							break;
+						case 4:
+
+							break;
+						case 5:
+							SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+							valor.setValorTiempo(sdf.parse(data.valor));
+							break;
+					}
+					ret = (ret && ProductoPropiedadValorDAO.guardarProductoPropiedadValor(valor));
+				}
+			}
+			
+			resultadoJson = String.join("","{ \"success\": ",(ret ? "true" : "false"),", "
+					+ "\"id\": " + producto.getId() +" }");
+			}
+			catch (Throwable e){
+				resultadoJson = "{ \"success\": false }";
+			}
+			
+		}else {
+			resultadoJson = "{ \"success\": false }";
 		}
-		if (ret) {
-			listar(map, response);
-		}
+		Utils.writeJSon(response, resultadoJson);
 	}
 
 	
-
-	
-
 	private void eliminar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		int codigo = Utils.String2Int(parametro.get("codigo"), -1);
 		String usuario = parametro.get("usuario");
@@ -179,8 +248,6 @@ public class SProducto extends HttpServlet {
 		String filtro_fecha_creacion = parametro.get("filtro_fecha_creacion");
 		String columna_ordenada = parametro.get("columna_ordenada");
 		String orden_direccion = parametro.get("orden_direccion");
-
-		
 
 		String resultadoJson = "";
 

@@ -35,9 +35,15 @@ public class ProductoDAO {
 		Integer programa;
 		Integer subprograma;
 		Integer proyecto_;
+		Integer actividad;
 		Integer obra;
 		Integer fuente;
 		Integer estado;
+		String fechaCreacion;
+		String usuarioCreo;
+		String fechaactualizacion;
+		String usuarioactualizo;
+		
 	}
 
 	public static List<Producto> getProductos(String usuario) {
@@ -197,10 +203,16 @@ public class ProductoDAO {
 			estructuraPojo.programa = pojo.getPrograma();
 			estructuraPojo.subprograma = pojo.getSubprograma();
 			estructuraPojo.proyecto_ = pojo.getProyecto();
-			estructuraPojo.obra = pojo.getActividadObra();
+			estructuraPojo.obra = pojo.getObra();
+			estructuraPojo.actividad = pojo.getActividad();
 			estructuraPojo.fuente = pojo.getFuente();
 			estructuraPojo.snip = pojo.getSnip();
 			estructuraPojo.estado = pojo.getEstado();
+			estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();
+			estructuraPojo.usuarioactualizo = pojo.getUsuarioActualizo();
+			estructuraPojo.fechaCreacion = Utils.formatDate(pojo.getFechaCreacion());
+			estructuraPojo.fechaactualizacion = Utils.formatDate(pojo.getFechaActualizacion());
+			
 
 			if (pojo.getComponente() != null) {
 				estructuraPojo.idComponente = pojo.getComponente().getId();
