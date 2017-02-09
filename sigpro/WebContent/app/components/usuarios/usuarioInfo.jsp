@@ -47,9 +47,6 @@
 								<input class="form-control" type="password" ng-model="usuarioc.usuarioActual.password" ng-required="true"/>
 									
 							</div>
-							
-							
-    						<!--<input type="text" class="form-control" id="correo" placeholder="Correo electrónico" ng-model="usuarioc.usuarioActual.email" ng-hide="usuarioc.esoculto">  -->
 						</div>
 						<div ng-show="!usuarioc.esoculto">
 							<div class="row" ng-show="usuarioc.tieneColaborador">
@@ -85,13 +82,6 @@
 			      </div>
 				</form>
 			</div>
-			<!-- 
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="usuarioc.guardarUsuario()">Guardar</label>
-			        <label class="btn btn-default" ng-click="usuarioc.cambiarPassword()" ng-show="!usuarioc.esNuevo">Cambiar Contraseña</label>
-    		</div>
-			 -->
     	</div>
 	
 	
