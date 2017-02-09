@@ -70,7 +70,7 @@
 
 
 	</div>
-	<div class="row" ng-show="controller.esColapsado">
+	<div class="row main-form" ng-show="controller.esColapsado">
 		<h4 ng-hide="!controller.esNuevo">Nuevo Proyecto</h4>
 		<h4 ng-hide="controller.esNuevo">Edición de proyecto</h4>
 		<div class="col-sm-12 operation_buttons" align="left">
@@ -106,35 +106,35 @@
 				</div>
 
 				<div class="form-group"  >
-					<label for="isnip">* SNIP</label>
+					<label for="isnip">SNIP</label>
 					<input type="number" name="isnip" id="isnip"  ng-model="controller.proyecto.snip"
-						class="form-control" placeholder="Nombre" ng-required="true">
+						class="form-control" placeholder="Nombre">
 				</div>
 				
 				<div class="form-group row" >
 					<div class="form-group col-sm-2" >
 					       <label for="iprog">Programa</label>
-					       <input type="number" class="form-control" placeholder="Programa" ng-model="controller.proyecto.programa"  />
+					       <input type="number" class="form-control" placeholder="Programa" ng-model="controller.proyecto.programa" ng-maxlength="4" style="text-align: center"/>
 					</div>
 					<div class="form-group col-sm-2" >
 					  <label for="isubprog">Subprograma</label>
-					  <input type="number" class="form-control" ng-model="controller.subprograma" />
+					  <input type="number" class="form-control" ng-model="controller.proyecto.subprograma" ng-maxlength="4" style="text-align: center"/>
 					</div>
 					<div class="form-group col-sm-2" >
 					  <label for="iproy_">Proyecto</label>
-					  <input type="number" class="form-control" ng-model="controller.proyecto_"  />
+					  <input type="number" class="form-control" ng-model="controller.proyecto.proyecto" ng-maxlength="4" style="text-align: center"/>
 					</div>
 					<div class="form-group col-sm-2" >
 					  <label for="iobra">Actividad</label>
-					  <input type="number" class="form-control" ng-model="controller.actividad" ng-maxlength="4"/>
+					  <input type="number" class="form-control" ng-model="controller.proyecto.actividad" ng-maxlength="4" style="text-align: center"/>
 					</div>
 					<div class="form-group col-sm-2" >
 					  <label for="iobra">Obra</label>
-					  <input type="number" class="form-control" ng-model="controller.obra" ng-maxlength="4"/>
+					  <input type="number" class="form-control" ng-model="controller.proyecto.obra" ng-maxlength="4" style="text-align: center"/>
 					</div>
 					<div class="form-group col-sm-2" >
 					  <label for="campo5">Fuente</label>
-					  <input type="number" class="form-control" ng-model="controller.fuente" ng-maxlength="4"/>
+					  <input type="number" class="form-control" ng-model="controller.proyecto.fuente" ng-maxlength="4" style="text-align: center"/>
 					</div>
 				</div>
 				<div class="form-group" >
@@ -154,13 +154,13 @@
 								<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
 								<p ng-switch-when="fecha" class="input-group">
 									<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"/><span
-														class="input-group-btn">
-														<button type="button" class="btn btn-default"
-															ng-click="controller.abrirPopupFecha($index)">
-															<i class="glyphicon glyphicon-calendar"></i>
-														</button>
-													</span>
+														datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"/>
+														<span class="input-group-btn">
+															<button type="button" class="btn btn-default"
+																ng-click="controller.abrirPopupFecha($index)">
+																<i class="glyphicon glyphicon-calendar"></i>
+															</button>
+														</span>
 								</p>
 							</div>
 						</div>
@@ -187,22 +187,38 @@
 					<input type="text" ng-model="controller.proyecto.descripcion"
 						class="form-control" id="campo2" placeholder="Descripción">
 				</div>
-
-				<div class="form-group">
-					<label for="usuarioCreo">Usuario que creo</label>
-  					<p class="form-control-static">{{ controller.proyecto.usuarioCreo }}</pl>
-				</div>
-				<div class="form-group">
-					<label for="fechaCreacion">Fecha de creación</label>
-  					<p class="form-control-static">{{ controller.proyecto.fechaCreacion }}</p>
-				</div>
-				<div class="form-group">
-					<label for="usuarioActualizo">Usuario que actualizo</label>
-  					<p class="form-control-static">{{ controller.proyecto.usuarioactualizo }}</p>
-				</div>
-				<div class="form-group">
-					<label for="fechaActualizacion">Fecha de actualizacion</label>
-  					<p class="form-control-static">{{ controller.proyecto.fechaactualizacion }}</p>
+				<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label>
+				  					<p class="form-control-static">{{ controller.proyecto.usuarioCreo }}</pl>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="fechaCreacion">Fecha de creación</label>
+				  					<p class="form-control-static">{{ controller.proyecto.fechaCreacion }}</p>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label>
+				  					<p class="form-control-static">{{ controller.proyecto.usuarioactualizo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label>
+				  					<p class="form-control-static">{{ controller.proyecto.fechaactualizacion }}</p>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</form>
 		</div>

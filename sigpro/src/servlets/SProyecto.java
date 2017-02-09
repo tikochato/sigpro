@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +70,7 @@ public class SProyecto extends HttpServlet {
 		String tipo;
 		String label;
 		String valor;
+		String valor_f;
 	}
 
 
@@ -266,17 +266,16 @@ public class SProyecto extends HttpServlet {
 								valor.setValorString(data.valor);
 								break;
 							case 2:
-								valor.setValorEntero(Integer.parseInt(data.valor));
+								valor.setValorEntero(Utils.String2Int(data.valor, null));
 								break;
 							case 3:
-								valor.setValorDecimal(new BigDecimal(data.valor));
+								valor.setValorDecimal(Utils.String2BigDecimal(data.valor, null));
 								break;
 							case 4:
-
 								break;
 							case 5:
 								SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-								valor.setValorTiempo(sdf.parse(data.valor));
+								valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
 								break;
 						}
 						result = (result && ProyectoPropiedadValorDAO.guardarProyectoPropiedadValor(valor));
