@@ -25,7 +25,7 @@
       	</shiro:hasPermission>
       </div>
     </div>
-    <shiro:hasPermission name="verColaborador">
+    <shiro:hasPermission name="4010">
      <div class="col-sm-12" align="center">
       <div style="height: 35px;">
 		<div style="text-align: right;">

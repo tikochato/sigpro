@@ -24,18 +24,18 @@
 		<div class="row" align="center" ng-hide="usuarioc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-					<shiro:hasPermission name="crearCooperante">
+					<shiro:hasPermission name="34040">
 						<label class="btn btn-primary" ng-click="usuarioc.nuevoUsuario()">Nuevo</label>
 					</shiro:hasPermission>
-					<shiro:hasPermission name="editarCooperante">
+					<shiro:hasPermission name="34020">
 						<label class="btn btn-primary" ng-click="usuarioc.editarUsuario()">Editar</label>
 					</shiro:hasPermission>
-					<shiro:hasPermission name="eliminarCooperante">
+					<shiro:hasPermission name="34030">
 						<label class="btn btn-primary" ng-click="usuarioc.eliminarUsuario()">Borrar</label>
 					</shiro:hasPermission>
     			</div>
     		</div>
-    		<shiro:hasPermission name="verCooperante">
+    		<shiro:hasPermission name="34010">
     			<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
 					<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
@@ -70,7 +70,7 @@
     		</shiro:hasPermission>
 
 		</div>
-		<shiro:hasPermission name="verCooperante">
+		<shiro:hasPermission name="34010">
 		<div class="row" ng-show="usuarioc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">

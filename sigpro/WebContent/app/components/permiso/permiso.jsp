@@ -15,18 +15,18 @@
 		<div class="row" align="center" ng-hide="permisosc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-					<shiro:hasPermission name="crearCooperante">
+					<shiro:hasPermission name="20040">
 						<label class="btn btn-primary" ng-click="permisosc.nuevoPermiso()">Nuevo</label>
 					</shiro:hasPermission>
-					<shiro:hasPermission name="editarCooperante">
+					<shiro:hasPermission name="20020">
 						<label class="btn btn-primary" ng-click="permisosc.editarPermiso()">Editar</label>
 					</shiro:hasPermission>
-					<shiro:hasPermission name="eliminarCooperante">
+					<shiro:hasPermission name="20030">
 						<label class="btn btn-primary" ng-click="permisosc.borrarPermiso()">Borrar</label>
 					</shiro:hasPermission>
     			</div>
     		</div>
-    		<shiro:hasPermission name="verCooperante">
+    		<shiro:hasPermission name="20010">
     			<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
 					<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
@@ -61,7 +61,7 @@
     		</shiro:hasPermission>
     		
 		</div>
-		<shiro:hasPermission name="verCooperante">
+		<shiro:hasPermission name="20010">
 		<div class="row" ng-show="permisosc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
