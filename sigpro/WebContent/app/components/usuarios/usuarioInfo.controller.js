@@ -26,7 +26,7 @@ app.controller(
    
 	mi.usuarioActual={usuario:"", email:""};
 	mi.esoculto= true;
-	
+	mi.tieneColaborador=false;
 	
 	mi.editar=function(){
 		mi.esoculto=!mi.esoculto;
@@ -113,9 +113,11 @@ app.controller(
 	$http.post('/SUsuario', {accion: 'usuarioActual' }).success(
 			function(response) {
 				if(response.success){
-					 console.log(response);
 					 mi.usuarioActual=response.usuario;
 					 usuarioMail  =response.usuario.email;
+					 if(response.usuario.pnombre!=null){
+						 mi.tieneColaborador=true;
+					 }
 				}else{
 					$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
 				}

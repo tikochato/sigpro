@@ -67,9 +67,9 @@
 			
 			<div class="col-sm-12">
 				<form name="form" id="form">
-						<div class="form-group">
+						<div class="form-group" ng-show="!hitoc.esnuevo">
 							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ hitoc.hito.id }}</label>
+    						<p class="form-control-static" id="id">{{ hitoc.hito.id }}</p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
@@ -78,10 +78,10 @@
 						<div class="form-group">
 							<label for="descripcion">* Fecha</label>
 							<div class="input-group">
-	    						<input type="text" class="form-control" uib-datepicker-popup="{{hitoc.formatofecha}}" ng-model="hitoc.fecha" 
+							<input type="text" class="form-control" uib-datepicker-popup="{{hitoc.formatofecha}}" ng-model="hitoc.fecha" 
 	    						is-open="hitoc.popupfecha.abierto" datepicker-options="hitoc.fechaOptions"  close-text="Cerrar" 
-	    						alt-input-formats="altInputFormats" current-text="Hoy" clear-text="Borrar" ng-required="true"/>
-						        <span class="input-group-btn">
+	    						alt-input-formats="altInputFormats" current-text="Hoy" clear-text="Borrar" ng-required="true"/>	
+	    						<span class="input-group-btn">
 						        	<button type="button" class="btn btn-default" ng-click="hitoc.abirpopup()"><i class="glyphicon glyphicon-calendar"></i></button>
 						        </span>
 					        </div>
@@ -122,21 +122,21 @@
     						<input type="text" class="form-control" id="comentario" placeholder="Comentario de resultado" ng-model="hitoc.hitoresultadocomentario">
 						</div>
 						
-						<div class="form-group">
+						<div class="form-group"  ng-show="!hitoc.esnuevo">
 							<label for="usuarioCreo">Usuario que creo</label>
-    						<label class="form-control" id="usuarioCreo">{{ hitoc.hito.usuarioCreo }}</label>
+    						<p class="form-control-static"  id="usuarioCreo">{{ hitoc.hito.usuarioCreo }}</p>
 						</div>
-						<div class="form-group">
+						<div class="form-group"  ng-show="!hitoc.esnuevo">
 							<label for="fechaCreacion">Fecha de creación</label>
-    						<label class="form-control" id="fechaCreacion">{{ hitoc.hito.fechaCreacion }}</label>
+    						<p class="form-control-static" id="fechaCreacion">{{ hitoc.hito.fechaCreacion }}</p>
 						</div>
-						<div class="form-group">
+						<div class="form-group"  ng-show="!hitoc.esnuevo">
 							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<label class="form-control" id="usuarioCreo">{{ hitoc.hito.usuarioActualizo }}</label>
+    						<p class="form-control-static" id="usuarioCreo">{{ hitoc.hito.usuarioActualizo }}</p>
 						</div>
-						<div class="form-group">
+						<div class="form-group"  ng-show="!hitoc.esnuevo">
 							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<label class="form-control" id="usuarioCreo">{{ hitoc.hito.fechaActualizacion }}</label>
+    						<p class="form-control-static" id="usuarioCreo">{{ hitoc.hito.fechaActualizacion }}</p>
 						</div>
 				</form>
 			</div>

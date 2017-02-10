@@ -65,25 +65,27 @@
 		<div class="row" ng-show="permisosc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="permisosc.guardarPermiso()">Guardar</label>
+			        <label class="btn btn-success" ng-click="form.$valid ? permisosc.guardarPermiso() : ''" ng-disabled="form.$invalid">Guardar</label>
 			        <label class="btn btn-primary" ng-click="permisosc.cancelar()">Ir a Tabla</label>
     			</div>
     		</div>
-			<div class="col-sm-12">
-				<form>
-						<div class="form-group">
-							<label for="nombre">Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="permisosc.permisoSelected.nombre">
-						</div>
-						<div class="form-group">
-							<label for="Descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="permisosc.permisoSelected.descripcion">
-						</div>
-				</form>
-			</div>
+    		<form name="form">
+	    		<div class="col-sm-12">
+					
+							<div class="form-group">
+								<label for="nombre">Nombre</label>
+	    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="permisosc.permisoSelected.nombre" ng-required="true">
+							</div>
+							<div class="form-group">
+								<label for="Descripcion">Descripción</label>
+	    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="permisosc.permisoSelected.descripcion" ng-required="true">
+							</div>
+				</div>
+    		</form>
+			
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="permisosc.guardarPermiso()">Guardar</label>
+			        <label class="btn btn-success" ng-click="form.$valid ? permisosc.guardarPermiso() : ''" ng-disabled="form.$invalid">Guardar</label>
 			        <label class="btn btn-primary" ng-click="permisosc.cancelar()">Ir a Tabla</label>
     			</div>
     		</div>

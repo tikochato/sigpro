@@ -367,6 +367,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 
 	mi.cancelar = function() {
 		mi.esForma = false;
+		mi.esNuevo=false;
 	};
 
 	mi.editarPropiedadValor = function(index) {

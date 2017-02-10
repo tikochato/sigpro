@@ -72,60 +72,60 @@
     </div>
     
     <div>
-	    <form name="form" class="css-form" novalidate>
+	    <form name="form" class="css-form">
 	
 	      <div class="row">
 		      <div class="form-group col-sm-12" ng-show="!colaborador.esNuevo">
 		        <label for="campo0">ID:</label> 
-		        <input type="text" class="form-control" id="campo0" name="campo0" placeholder="ID" ng-model="colaborador.codigo" ng-readonly="true" />
+		      	<p class="form-control-static" id="campo0" name="campo0">{{colaborador.codigo}} </p>
 		      </div>
 	      </div>
 
 	      <div class="row">
-		      <div class="form-group col-sm-3" ng-class="{ 'has-error' : form.campo1.$invalid }">
+		      <div class="form-group col-sm-3" >
 		        <label for="campo1">* Primer Nombre:</label> 
-		        <input type="text" class="form-control" id="campo1" name="campo1" placeholder="Primer Nombre" ng-model="colaborador.primerNombre" required />
+		        <input type="text" class="form-control" id="campo1" name="campo1" placeholder="Primer Nombre" ng-model="colaborador.primerNombre" ng-required="true" />
 		      </div>
 		
-		      <div class="form-group col-sm-3" ng-class="{ 'has-error' : form.campo2.$invalid }">
+		      <div class="form-group col-sm-3">
 		        <label for="campo2">Segundo Nombre:</label> 
 		        <input type="text" class="form-control" id="campo2" name="campo2" placeholder="Segundo Nombre" ng-model="colaborador.segundoNombre" />
 		      </div>
 		
-		      <div class="form-group col-sm-3" ng-class="{ 'has-error' : form.campo3.$invalid }">
+		      <div class="form-group col-sm-3" >
 		        <label for="campo3">* Primer Apellido:</label> 
-		        <input type="text" class="form-control" id="campo3" name="campo3" placeholder="Primer Apellido" ng-model="colaborador.primerApellido" required />
+		        <input type="text" class="form-control" id="campo3" name="campo3" placeholder="Primer Apellido" ng-model="colaborador.primerApellido" ng-required="true" />
 		      </div>
 		
-		      <div class="form-group col-sm-3" ng-class="{ 'has-error' : form.campo4.$invalid }">
+		      <div class="form-group col-sm-3" >
 		        <label for="campo4">Segundo Apellido:</label> 
 		        <input type="text" class="form-control" id="campo4" name="campo4" placeholder="Segundo Apellido" ng-model="colaborador.segundoApellido" />
 		      </div>
 	      </div>
 	
 	      <div class="row">
-		      <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo5.$invalid }">
+		      <div class="form-group col-sm-12" >
 		        <label for="campo5">* CUI:</label> 
-		        <input type="number" id="campo5" name="campo5" class="form-control"  placeholder="CUI" ng-model="colaborador.cui" ng-maxlength="13" required />
+		        <input type="number" id="campo5" name="campo5" class="form-control"  placeholder="CUI" ng-model="colaborador.cui" ng-maxlength="13" ng-required="true" />
 		      </div>
 	      </div>
 	      
 	      <div class="row">
-		      <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo6.$invalid }">
+		      <div class="form-group col-sm-12" >
 				  <label for="campo6">* Nombre Unidad Ejecutora:</label> 
 				  <div class="input-group">
 				    <input type="hidden" class="form-control" ng-model="colaborador.unidadEjecutora" /> 
-				    <input type="text" id="campo6" name="campo6" class="form-control" placeholder="Nombre Unidad Ejecutora" ng-model="colaborador.nombreUnidadEjecutora" ng-disabled="true" required/>
+				    <input type="text" id="campo6" name="campo6" class="form-control" placeholder="Nombre Unidad Ejecutora" ng-model="colaborador.nombreUnidadEjecutora" ng-disabled="true"  ng-required="true"/>
 				    <span class="input-group-addon" ng-click="colaborador.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
 				  </div>
 			  </div>
 	      </div>
 	
 	      <div class="row">
-		      <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo7.$invalid || !colaborador.usuarioValido }">
+		      <div class="form-group col-sm-12" >
 		        <label for="campo6">* Usuario:</label> 
 		        <div class="input-group">
-		          <input type="text" id="campo7" name="campo7" class="form-control" placeholder="Usuario" ng-model="colaborador.usuario"  ng-disabled="true" required/>
+		          <input type="text" id="campo7" name="campo7" class="form-control" placeholder="Usuario" ng-model="colaborador.usuario"  ng-disabled="true" ng-required="true"/>
 		          <span class="input-group-addon" ng-click="colaborador.buscarUsuario()" uib-tooltip="Validar Usuario" ><i class="glyphicon glyphicon-search"></i></span>
 		        </div>
 		      </div>
@@ -137,7 +137,7 @@
 
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
-        <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : '' " ng-disabled="!form.$valid || !colaborador.usuarioValido">Guardar</label> 
+        <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : '' " ng-disabled="form.$invalid || !colaborador.usuarioValido">Guardar</label> 
         <label class="btn btn-primary" ng-click="colaborador.cancelar()">Ir a Tabla</label>
       </div>
     </div>

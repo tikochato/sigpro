@@ -34,23 +34,23 @@ public class RiesgoDAOTest {
 	
 	@Test
 	public void getRiesgosPaginaTest(){
-		assertNotNull(RiesgoDAO.getRiesgosPagina(1, 1));
+		assertNotNull(RiesgoDAO.getRiesgosPagina(1, 1, "", "","","",""));
 	}
 	
 	
 	@Test
 	public void getTotalRiesgosTest(){
-		assertEquals(RiesgoDAO.getTotalRiesgos().getClass(),Long.class);
+		assertEquals(RiesgoDAO.getTotalRiesgos("", "","").getClass(),Long.class);
 	}
 	
 	@Test
 	public void getRiesgosPaginaPorProyectoTest(){
-		assertNotNull(RiesgoDAO.getRiesgosPaginaPorProyecto(0,0, 0));
+		assertNotNull(RiesgoDAO.getRiesgosPaginaPorObjeto(0,0, 0,0,"", "","","",""));
 	}
 	
 	@Test
 	public void getTotalRiesgosPorProyectoTest(){
-		assertEquals(RiesgoDAO.getTotalRiesgosPorProyecto(0).getClass(),Long.class);
+		assertEquals(RiesgoDAO.getTotalRiesgosPorProyecto(0,0,"", "","").getClass(),Long.class);
 	}
 	
 	

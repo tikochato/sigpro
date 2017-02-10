@@ -333,6 +333,7 @@ public class SHito extends HttpServlet {
 				temp.fechaCreacion = Utils.formatDate(hito.getFechaCreacion());
 				temp.id = hito.getId();
 				temp.nombre = hito.getNombre();
+				temp.fecha = Utils.formatDate(hito.getFecha());
 				temp.usuarioActualizo = hito.getUsuarioActualizo();
 				temp.usuarioCreo = hito.getUsuarioCreo();
 				temp.hitotipoid = hito.getHitoTipo().getId();

@@ -66,9 +66,9 @@
 			
 			<div class="col-sm-12">
 				<form name="form">
-						<div class="form-group">
+						<div class="form-group" ng-show="!riesgoc.esnuevo">
 							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ riesgoc.riesgo.id }}</label>
+    						<p class="form-control-static" id="id">{{ riesgoc.riesgo.id }}</p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
@@ -113,19 +113,19 @@
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="riesgoc.riesgo.descripcion">
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!riesgoc.esnuevo">
 							<label for="usuarioCreo">Usuario que creo</label>
     						<p class="form-control-static">{{ riesgoc.riesgo.usuarioCreo }}</p>
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!riesgoc.esnuevo">
 							<label for="fechaCreacion">Fecha de creación</label>
     						<p class="form-control-static">{{ riesgoc.riesgo.fechaCreacion }}</p>
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!riesgoc.esnuevo">
 							<label for="usuarioActualizo">Usuario que actualizo</label>
     						<p class="form-control-static">{{ riesgoc.riesgo.usuarioActualizo }}</p>
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!riesgoc.esnuevo">
 							<label for="fechaActualizacion">Fecha de actualizacion</label>
     						<p class="form-control-static">{{ riesgoc.riesgo.fechaActualizacion }}</p>
 						</div>

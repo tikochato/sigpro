@@ -69,9 +69,9 @@
 			
 			<div class="col-sm-12">
 				<form name="form" id="form">
-					<div class="form-group">
+					<div class="form-group" ng-show="!desembolsoc.esnuevo">
 						<label for="id">ID</label>
-   						<label class="form-control" id="id">{{ desembolsoc.desembolso.id }}</label>
+   						<p class="form-control-static" id="id"> {{ desembolsoc.desembolso.id }}</p>
 					</div>
 					
 					<div class="form_group">
@@ -104,19 +104,19 @@
 			          </div>
 			        </div>
 					
-					<div class="form-group">
+					<div class="form-group" ng-show="!desembolsoc.esnuevo">
 						<label for="usuarioCreo">Usuario que creo</label>
    						<p class="form-control-static">{{ desembolsoc.desembolso.usuarioCreo }}</p>
 					</div>
-					<div class="form-group">
+					<div class="form-group" ng-show="!desembolsoc.esnuevo">
 						<label for="fechaCreacion">Fecha de creación</label>
    						<p class="form-control-static">{{ desembolsoc.desembolso.fechaCreacion }}</p>
 					</div>
-					<div class="form-group">
+					<div class="form-group" ng-show="!desembolsoc.esnuevo">
 						<label for="usuarioActualizo">Usuario que actualizo</label>
    						<p class="form-control-static">{{ desembolsoc.desembolso.usuarioActualizo }}</p>
 					</div>
-					<div class="form-group">
+					<div class="form-group" ng-show="!desembolsoc.esnuevo">
 						<label for="fechaActualizacion">Fecha de actualizacion</label>
    						<p class="form-control-static">{{ desembolsoc.desembolso.fechaActualizacion }}</p>
 					</div>
