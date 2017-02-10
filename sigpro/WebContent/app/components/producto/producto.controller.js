@@ -9,24 +9,26 @@ moduloProducto.controller('controlProducto', [ '$scope', '$routeParams',
 function controlProducto($scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
 		$timeout, $log, $q) {
-	  
+	var mi = this;  
 	i18nService.setCurrentLang('es');
-	
-	var mi = this;
-	mi.componenteid = $routeParams.componente_id;
-
 	$window.document.title = 'SIGPRO - Producto';
-
+	mi.componenteid = $routeParams.componente_id;
 	mi.esForma = false;
-
 	mi.totalElementos = 0;
 	mi.paginaActual = 1;
+	mi.entidadSeleccionada = -1;
+	mi.seleccionada = false;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 
 	mi.propiedadesValor = [];
-	
 	mi.camposdinamicos = {};
+	
+	mi.columnaOrdenada=null;
+	mi.ordenDireccion = null;
+
+	mi.filtros = [];
+	mi.orden = null;
 	
 	$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id }).success(
 			function(response) {
@@ -60,7 +62,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			accion : 'cargar',
 			pagina : pagina,
 			registros : mi.elementosPorPagina,
-			componenteid : $routeParams.componente_id
+			componenteid : $routeParams.componente_id,
+			numeroproyecto:  $utilidades.elementosPorPagina, 
+			filtro_nombre: mi.filtros['nombre'],
+			filtro_usuario_creo: mi.filtros['usuarioCreo'], 
+			filtro_fecha_creacion: mi.filtros['fechaCreacion'],
+			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
 		};
 
 		mi.mostrarCargando = true;
@@ -68,83 +75,63 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			if (response.data.success) {
 				mi.data = response.data.productos;
 				mi.opcionesGrid.data = mi.data;
-
 				mi.mostrarCargando = false;
 			}
 		});
-
 	};
 
-	mi.entidadSeleccionada = -1;
-	mi.seleccionada = false;
-
 	mi.opcionesGrid = {
-		data : mi.data,
-		columnDefs : [ {
-			displayName : 'Id',
-			name : 'id',
-			cellClass : 'grid-align-right',
-			type : 'number',
-			width : 150,
-			visible : false
-		}, {
-			displayName : 'Nombre',
-			name : 'nombre',
-			cellClass : 'grid-align-left'
-		}, {
-			displayName : 'Descripción',
-			name : 'descripcion',
-			cellClass : 'grid-align-left'
-		}, {
-			displayName : 'Id tipo',
-			name : 'idProductoTipo',
-			cellClass : 'grid-align-right',
-			type : 'number',
-			width : 150,
-			visible : false
-		}, {
-			displayName : 'Tipo',
-			name : 'productoTipo',
-			cellClass : 'grid-align-left',
-			visible : false
-		}, {
-			displayName : 'Id componente',
-			name : 'idComponente',
-			cellClass : 'grid-align-right',
-			type : 'number',
-			width : 150,
-			visible : false
-		}, {
-			displayName : 'Componente',
-			name : 'componente',
-			cellClass : 'grid-align-left',
-			visible : false
-		}, {
-			displayName : 'Id Producto',
-			name : 'idProducto',
-			cellClass : 'grid-align-right',
-			type : 'number',
-			width : 150,
-			visible : false
-		}, {
-			displayName : 'Producto',
-			name : 'producto',
-			cellClass : 'grid-align-left',
-			visible : false
-		} ],
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
-		multiSelect : false,
-		modifierKeysToMultiSelect : false,
-		noUnselect : false,
-		enableFiltering : true,
-		enablePaginationControls : false,
-		paginationPageSize : $utilidades.elementosPorPagina,
+		multiSelect: false,
+		modifierKeysToMultiSelect: false,
+		noUnselect: true,
+		enableFiltering: true,
+		enablePaginationControls: false,
+	    paginationPageSize: $utilidades.elementosPorPagina,
+	    useExternalFiltering: true,
+	    useExternalSorting: true,
+	    data : mi.data,
+		columnDefs : [ 
+			{displayName : 'Id', name : 'id',cellClass : 'grid-align-right',type : 'number',width : 150,visible : false }, 
+			{ displayName : 'Nombre',name : 'nombre',cellClass : 'grid-align-left',
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.producto.filtrar($event,1)" ></input></div>'
+			}, 
+			{ displayName : 'Descripción', name : 'descripcion', cellClass : 'grid-align-left' },
+			{ displayName : 'Tipo', name : 'productoTipo', cellClass : 'grid-align-left', enableFiltering: false, enableSorting: false},  
+			{ displayName : 'Componente', name : 'componente', cellClass : 'grid-align-left', visible : false },
+			{ displayName : 'Producto', name : 'producto', cellClass : 'grid-align-left', visible : false },
+			{ name: 'usuarioCreo', displayName: 'Usuario Creación',
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.producto.filtrar($event,2)" ></input></div>'
+			},
+		    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.producto.filtrar($event,3)"  ></input></div>'
+		    }
+		],
+		
 		onRegisterApi : function(gridApi) {
 			mi.gridApi = gridApi;
 
-			mi.gridApi.selection.on.rowSelectionChanged($scope,
-					mi.seleccionarEntidad);
+			gridApi.selection.on.rowSelectionChanged($scope,function(row) {
+				mi.producto = row.entity;
+			});
+			
+			gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+				if(sortColumns.length==1){
+					grid.appScope.producto.columnaOrdenada=sortColumns[0].field;
+					grid.appScope.producto.ordenDireccion = sortColumns[0].sort.direction;
+					grid.appScope.producto.cargarData(grid.appScope.producto.paginaActual);
+				}
+				else if(sortColumns.length>1){
+					sortColumns[0].unsort();
+				}
+				else{
+					if(grid.appScope.producto.columnaOrdenada!=null){
+						grid.appScope.producto.columnaOrdenada=null;
+						grid.appScope.producto.ordenDireccion=null;
+					}
+				}
+			} );
 
 			if ($routeParams.reiniciar_vista == 'rv') {
 				mi.guardarEstado();
@@ -187,27 +174,16 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		$http.post('/SEstadoTabla', tabla_data).then(function(response) {
 
 		});
-	}
-
-	mi.reiniciarVista = function() {
-		if($location.path()==('/producto/'+ $routeParams.componente_id + '/rv'))
-			$route.reload();
-		else
-			$location.path('/producto/'+ $routeParams.componente_id + '/rv');
-		
-	}
-
+	};
+	
 	mi.nuevo = function() {
 		mi.limpiarSeleccion();
 
 		mi.esForma = true;
 		mi.entityselected = null;
 		mi.esNuevo = true;
-
-		mi.codigo = "";
-		mi.nombre = "";
-		mi.descripcion = "";
-
+		mi.producto = null;
+		
 		mi.tipo = null;
 		mi.tipoNombre = "";
 
@@ -216,6 +192,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 
 		mi.productoPadre = null;
 		mi.productoPadreNombre = "";
+		
+		mi.unidadEjecutora = null;
+		mi.unidadEjecutoraNombre = "";
 
 		mi.propiedadesValor = [];
 
@@ -231,38 +210,13 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		mi.seleccionada = row.isSelected;
 	};
 
-	mi.editar = function() {
-		if (mi.seleccionada) {
-			mi.limpiarSeleccion();
-
-			mi.esForma = true;
-			mi.entityselected = null;
-			mi.esNuevo = false;
-
-			mi.codigo = mi.entidadSeleccionada.id;
-			mi.nombre = mi.entidadSeleccionada.nombre;
-			mi.descripcion = mi.entidadSeleccionada.descripcion;
-
-			mi.tipo = mi.entidadSeleccionada.idProductoTipo;
-			mi.tipoNombre = mi.entidadSeleccionada.productoTipo;
-
-			mi.componente = mi.entidadSeleccionada.idComponente;
-			mi.componenteNombre = mi.entidadSeleccionada.componente;
-
-			mi.productoPadre = mi.entidadSeleccionada.idProducto;
-			mi.productoPadreNombre = mi.entidadSeleccionada.producto;
-
-		} else {
-			$utilidades.mensaje('warning', 'Debe seleccionar un PRODUCTO');
-		}
-
-	};
+	
 
 	mi.borrar = function(ev) {
-		if (mi.seleccionada) {
+		if (mi.producto!=null) {
 			var confirm = $mdDialog.confirm().title('Confirmación de borrado')
 					.textContent(
-							'¿Desea borrar "' + mi.entidadSeleccionada.nombre
+							'¿Desea borrar "' + mi.producto.nombre
 									+ '"?')
 					.ariaLabel('Confirmación de borrado').targetEvent(ev).ok(
 							'Borrar').cancel('Cancelar');
@@ -279,7 +233,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.borrarConfirmado = function() {
 		var datos = {
 			accion : 'borrar',
-			codigo : mi.entidadSeleccionada.id
+			codigo : mi.producto.id
 		};
 		$http.post('/SProducto', datos).success(
 				function(response) {
@@ -298,24 +252,29 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.guardar = function() {
-		if ($utilidades.esCadenaVacia(mi.nombre)
-				|| $utilidades.esCadenaVacia(mi.descripcion)) {
-			$utilidades.mensaje('danger',
-					'Debe de llenar todos los campos obligatorios');
-			return;
+		for (campos in mi.camposdinamicos) {
+			if (mi.camposdinamicos[campos].tipo === 'fecha') {
+				mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
+			}
 		}
-
-		if (mi.esNuevo) {
 			var datos = {
-				accion : 'crear',
-				nombre : mi.nombre,
-				descripcion : mi.descripcion,
+				accion : 'guardar',
+				id: mi.producto.id,
+				nombre : mi.producto.nombre,
+				descripcion : mi.producto.descripcion,
+				snip: mi.producto.snip,
+				programa : mi.producto.programa,
+				subprograma : mi.producto.subprograma,
+				proyecto_ : mi.producto.proyecto_,
+				actividad: mi.producto.actividad,
+				obra: mi.producto.obra,
+				fuente: mi.producto.fuente,
 				componente : mi.componente,
 				productoPadre : mi.productoPadre,
-				tipo : mi.tipo,
-				propiedades : JSON.stringify(mi.propiedadesValor),
-				actividades : JSON.stringify(''),
-				usuario : 'temporal'
+				tipoproductoid : mi.tipo,
+				unidadEjecutora : mi.unidadEjecutora,
+				datadinamica : JSON.stringify(mi.camposdinamicos),
+				esnuevo : mi.esNuevo
 			};
 
 			$http.post('/SProducto', datos).then(
@@ -323,46 +282,16 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 						if (response.data.success) {
 							mi.data = response.data.productos;
 							mi.opcionesGrid.data = mi.data;
-							mi.esForma = false;
-
-							$utilidades.mensaje('success',
-									'Tipo de Producto guardado con exito.');
+							$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+							mi.esNuevo = false;
+							mi.producto.id = response.data.id;
+							mi.cargarData(mi.paginaActual);
+							
 						} else {
-							$utilidades.mensaje('danger',
-									'Tipo de Producto ya existe...!!!');
-						}
-
-					});
-		} else {
-			var datos = {
-				accion : 'actualizar',
-				codigo : mi.codigo,
-				nombre : mi.nombre,
-				descripcion : mi.descripcion,
-				componente : mi.componente,
-				productoPadre : mi.productoPadre,
-				tipo : mi.tipo,
-				propiedades : JSON.stringify(mi.propiedadesValor),
-				actividades : JSON.stringify(''),
-				usuario : 'temporal'
-			};
-
-			$http.post('/SProducto', datos).then(
-					function(response) {
-						if (response.data.success) {
-							mi.data = response.data.productos;
-							mi.opcionesGrid.data = mi.data;
-							mi.esForma = false;
-
-							$utilidades.mensaje('success',
-									'Tipo de Producto actualizado con exito.');
-						} else {
-							$utilidades.mensaje('danger',
-									'Error al actualizar datos...!!!');
+							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
 						}
 					});
-
-		}
+		
 	};
 
 	mi.cancelar = function() {
@@ -373,8 +302,81 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.editarPropiedadValor = function(index) {
 
 	};
+	
+	mi.editar = function() {
+		if (mi.producto!=null) {
+			mi.esForma = true;
+			mi.entityselected = null;
+			mi.esNuevo = false;
+			
+			mi.tipo = mi.producto.idProductoTipo;
+			mi.tipoNombre = mi.producto.productoTipo;
 
-	mi.llamarModalBusqueda = function(servlet, datosTotal, datosCarga) {
+			mi.componente = mi.producto.idComponente;
+			mi.componenteNombre = mi.producto.componente;
+
+			mi.productoPadre = mi.producto.idProducto;
+			mi.productoPadreNombre = mi.producto.producto;
+			
+			mi.unidadEjecutora = mi.producto.unidadEjectuora;
+			mi.unidadEjecutoraNombre = mi.producto.nombreUnidadEjecutora;
+			
+			var parametros = {
+					accion: 'getProductoPropiedadPorTipo', 
+					idproducto: mi.producto.id,
+					idproductotipo: mi.tipo
+			}
+			$http.post('/SProductoPropiedad', parametros).then(function(response){
+				mi.camposdinamicos = response.data.productopropiedades
+				for (campos in mi.camposdinamicos) {
+					switch (mi.camposdinamicos[campos].tipo){
+						case "fecha":
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+							break;
+						case "entero":
+							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+							break;
+					}
+
+				}
+			});
+		} else {
+			$utilidades.mensaje('warning', 'Debe seleccionar un PRODUCTO');
+		}
+
+	};
+	
+	mi.reiniciarVista = function() {
+		if($location.path()==('/producto/'+ $routeParams.componente_id + '/rv'))
+			$route.reload();
+		else
+			$location.path('/producto/'+ $routeParams.componente_id + '/rv');
+		
+	}
+	
+	mi.filtrar = function(evt,tipo){
+		if(evt.keyCode==13){
+			switch(tipo){
+				case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
+				case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
+				case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
+			}
+			mi.obtenerTotalProductos();
+		}
+	};
+
+	mi.obtenerTotalProductos = function(){
+		$http.post('/SProducto', { accion: 'listar',
+			filtro_nombre: mi.filtros['nombre'],
+			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+				function(response) {
+					mi.totalElementos = response.data.total;
+					mi.paginaActual = 1;
+					mi.cargarData(mi.paginaActual);
+		});
+	};
+
+	mi.llamarModalBusqueda = function(servlet, datosTotal, datosCarga, columnaId,columnaNombre) {
 		var resultado = $q.defer();
 
 		var modalInstance = $uibModal.open({
@@ -395,9 +397,14 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				},
 				$datosCarga : function() {
 					return datosCarga;
+				},
+				$columnaId : function() {
+					return columnaId;
+				},
+				$columnaNombre : function() {
+					return columnaNombre;
 				}
 			}
-
 		});
 
 		modalInstance.result.then(function(itemSeleccionado) {
@@ -409,7 +416,6 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.buscarTipo = function() {
-
 		var resultado = mi.llamarModalBusqueda('/SProductoTipo', {
 			accion : 'totalElementos'
 		}, function(pagina, elementosPorPagina) {
@@ -418,7 +424,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				pagina : pagina,
 				registros : elementosPorPagina
 			};
-		});
+		},'id','nombre');
 
 		resultado.then(function(itemSeleccionado) {
 			mi.tipo = itemSeleccionado.id;
@@ -426,11 +432,17 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			
 			var parametros = { 
 				accion: 'getProductoPropiedadPorTipo', 
-				idproducto: mi.codigo,
+				idproducto: mi.producto.id,
 				idproductotipo: itemSeleccionado.id
 			}
 			$http.post('/SProductoPropiedad', parametros).then(function(response){
-				mi.camposdinamicos = response.data.productopropiedades
+				mi.camposdinamicos = response.data.productopropiedades;
+				for (campos in mi.camposdinamicos) {
+					if (mi.camposdinamicos[campos].tipo === 'fecha') {
+						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null; 
+					}
+				}
+				
 			});
 		});
 
@@ -454,7 +466,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				pagina : pagina,
 				numerocomponentes : elementosPorPagina
 			};
-		});
+		},'id','nombre');
 
 		resultado.then(function(itemSeleccionado) {
 			mi.componente = itemSeleccionado.id;
@@ -473,7 +485,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				pagina : pagina,
 				registros : elementosPorPagina
 			};
-		});
+		},'id','nombre');
 
 		resultado.then(function(itemSeleccionado) {
 			mi.productoPadre = itemSeleccionado.id;
@@ -481,17 +493,34 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		});
 
 	};
+	
+	mi.buscarUnidadEjecutora = function() {
+		var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
+			accion : 'totalElementos'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'cargar',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'unidadEjecutora','nombreUnidadEjecutora');
 
+		resultado.then(function(itemSeleccionado) {
+			mi.unidadEjecutora = itemSeleccionado.unidadEjecutora;
+			mi.unidadEjecutoraNombre = itemSeleccionado.nombreUnidadEjecutora;
+		});
+	};
 }
 
 moduloProducto.controller('modalBuscarPorProducto', [ '$uibModalInstance',
 		'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
 		'$timeout', '$log', '$servlet', '$datosTotal', '$datosCarga',
+		'$columnaId','$columnaNombre',
 		modalBuscarPorProducto ]);
 
 function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
 		i18nService, $utilidades, $timeout, $log, $servlet, $datosTotal,
-		$datosCarga) {
+		$datosCarga,$columnaId,$columnaNombre) {
 
 	var mi = this;
 
@@ -517,14 +546,14 @@ function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
 		data : mi.data,
 		columnDefs : [ {
 			displayName : 'Id',
-			name : 'id',
+			name : $columnaId,
 			cellClass : 'grid-align-right',
 			type : 'number',
 			width : 150,
 			visible : false
 		}, {
 			displayName : 'Nombre',
-			name : 'nombre',
+			name : $columnaNombre,
 			cellClass : 'grid-align-left'
 		} ],
 		enableRowSelection : true,

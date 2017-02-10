@@ -257,28 +257,30 @@ public class SProyecto extends HttpServlet {
 				result = ProyectoDAO.guardarProyecto(proyecto);
 				if (result){
 					for (stdatadinamico data : datos) {
-						ProyectoPropiedad proyectoPropiedad = ProyectoPropiedadDAO.getProyectoPropiedadPorId(Integer.parseInt(data.id));
-						ProyectoPropedadValorId idValor = new ProyectoPropedadValorId(proyecto.getId(),Integer.parseInt(data.id));
-						ProyectoPropedadValor valor = new ProyectoPropedadValor(idValor, proyecto, proyectoPropiedad, usuario, new DateTime().toDate(), 1);
-
-						switch (proyectoPropiedad.getDatoTipo().getId()){
-							case 1:
-								valor.setValorString(data.valor);
-								break;
-							case 2:
-								valor.setValorEntero(Utils.String2Int(data.valor, null));
-								break;
-							case 3:
-								valor.setValorDecimal(Utils.String2BigDecimal(data.valor, null));
-								break;
-							case 4:
-								break;
-							case 5:
-								SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-								valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
-								break;
+						if (data.valor!=null && data.valor.length()>0 && data.valor.compareTo("null")!=0){
+							ProyectoPropiedad proyectoPropiedad = ProyectoPropiedadDAO.getProyectoPropiedadPorId(Integer.parseInt(data.id));
+							ProyectoPropedadValorId idValor = new ProyectoPropedadValorId(proyecto.getId(),Integer.parseInt(data.id));
+							ProyectoPropedadValor valor = new ProyectoPropedadValor(idValor, proyecto, proyectoPropiedad, usuario, new DateTime().toDate(), 1);
+	
+							switch (proyectoPropiedad.getDatoTipo().getId()){
+								case 1:
+									valor.setValorString(data.valor);
+									break;
+								case 2:
+									valor.setValorEntero(Utils.String2Int(data.valor, null));
+									break;
+								case 3:
+									valor.setValorDecimal(Utils.String2BigDecimal(data.valor, null));
+									break;
+								case 4:
+									break;
+								case 5:
+									SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+									valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
+									break;
+							}
+							result = (result && ProyectoPropiedadValorDAO.guardarProyectoPropiedadValor(valor));
 						}
-						result = (result && ProyectoPropiedadValorDAO.guardarProyectoPropiedadValor(valor));
 					}
 				}
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "

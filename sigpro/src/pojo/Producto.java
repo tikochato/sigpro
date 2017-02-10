@@ -40,7 +40,7 @@ public class Producto implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Integer estado;
-	private Integer snip;
+	private Long snip;
 	private Integer programa;
 	private Integer subprograma;
 	private Integer proyecto;
@@ -66,7 +66,7 @@ public class Producto implements java.io.Serializable {
 
 	public Producto(Componente componente, ProductoTipo productoTipo, UnidadEjecutora unidadEjecutora, String nombre,
 			String descripcion, int productoid, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, Integer estado, Integer snip, Integer programa, Integer subprograma,
+			Date fechaActualizacion, Integer estado, Long snip, Integer programa, Integer subprograma,
 			Integer proyecto, Integer actividad, Integer obra, Integer fuente, Set<ProductoUsuario> productoUsuarios,
 			Set<ProductoPropiedadValor> productoPropiedadValors) {
 		this.componente = componente;
@@ -208,11 +208,11 @@ public class Producto implements java.io.Serializable {
 	}
 
 	@Column(name = "snip")
-	public Integer getSnip() {
+	public Long getSnip() {
 		return this.snip;
 	}
 
-	public void setSnip(Integer snip) {
+	public void setSnip(Long snip) {
 		this.snip = snip;
 	}
 

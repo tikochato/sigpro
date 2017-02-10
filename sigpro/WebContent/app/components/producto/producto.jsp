@@ -2,7 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="org.apache.shiro.SecurityUtils"%>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
-
 <div ng-controller="controlProducto as producto" class="maincontainer all_page">
 
 	<script type="text/ng-template" id="buscarPorProducto.jsp">
@@ -64,68 +63,98 @@
 
 	</div>
 
-	<div ng-show="producto.esForma">
-
+	<div ng-show="producto.esForma" class="row main-form">
 		<div class="col-sm-12 operation_buttons" align="right">
-
 			<div class="btn-group">
 				<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
 				<label class="btn btn-primary" ng-click="producto.cancelar()">Ir a Tabla</label>
 			</div>
-
 		</div>
-
 		<div>
+		<div class="col-sm-12">
 			<form name="form" class="css-form" novalidate>
-
 				<div class="row">
 					<div class="form-group col-sm-3" ng-show="!producto.esNuevo">
 						<label for="campo0">ID:</label> 
-						<p class="form-control-static" id="campo0" name="campo0" >{{producto.codigo}}</p>
+						<p class="form-control-static" id="campo0" name="campo0" >{{producto.producto.id}}</p>
 					</div>
-				</div>
-
-				<div class="row">
-					<div class="form-group col-sm-12"
-						ng-class="{ 'has-error' : form.campo1.$invalid }">
+				
+				
+					<div class="form-group">
 						<label for="campo1">* Nombre:</label> 
-						<input type="text" class="form-control" id="campo1" name="campo1" placeholder="Nombre del producto" ng-model="producto.nombre" required />
-					</div>
-
-					<div class="form-group col-sm-12"
-						ng-class="{ 'has-error' : form.campo2.$invalid }">
-						<label for="campo2">* Descripción:</label> 
-						<input type="text" class="form-control" id="campo2" name="campo2" placeholder="Descripcion del producto" ng-model="producto.descripcion" required />
+						<input type="text" class="form-control" placeholder="Nombre del producto" ng-model="producto.producto.nombre" ng-required="true" />
 					</div>
 					
-					<div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo3.$invalid }">
+					<div class="form-group"  >
+						<label for="isnip">SNIP</label>
+						<input type="number"   ng-model="producto.producto.snip" class="form-control" placeholder="SNIP" >
+					</div>
+				
+					<div class="form-group row" >
+						<div class="form-group col-sm-2 " >
+						       <label for="iprog">Programa</label>
+						       <input type="number" class="form-control" placeholder="Programa" ng-model="producto.producto.programa"  ng-maxlength="4" style="text-align: center" />
+						</div>
+						<div class="form-group col-sm-2 " >
+						  <label for="isubprog">Subprograma</label>
+						  <input type="number" class="form-control" placeholder="Sub-programa" ng-model="producto.producto.subprograma" ng-maxlength="4" style="text-align: center" />
+						</div>
+						<div class="form-group col-sm-2 " >
+						  <label for="iproy_">Proyecto:</label>
+						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="producto.producto.proyecto_"  ng-maxlength="4" style="text-align: center" />
+						</div>
+						<div class="form-group col-sm-2 " >
+						  <label for="iproy_">Actividad:</label>
+						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="producto.producto.actividad" ng-maxlength="4" style="text-align: center"  />
+						</div>
+						<div class="form-group col-sm-2 " >
+						  <label for="iobra">Obra</label>
+						  <input type="number" class="form-control" placeholder="Obra" ng-model="producto.producto.obra" ng-maxlength="4" style="text-align: center"/>
+						</div>
+						<div class="form-group col-sm-2 " >
+						  <label for="campo5">Fuente</label>
+						  <input type="number" class="form-control" placeholder="Fuente" ng-model="producto.producto.fuente" ng-maxlength="4" style="text-align: center"/>
+						</div>
+					</div>
+
+					<div class="form-group" >
+						<label for="campo2">* Descripción:</label> 
+						<input type="text" class="form-control" placeholder="Descripcion del producto" ng-model="producto.producto.descripcion" />
+					</div>
+					
+					<div class="form-group" >
 			          <label for="campo3">* Tipo:</label>
-			          <div class="input-group">
-			            <input type="hidden" class="form-control" ng-model="producto.tipo" /> 
-			            <input type="text" class="form-control" id="campo3" name="campo3" placeholder="Tipo de producto" ng-model="producto.tipoNombre" ng-readonly="true" required/>
+			          <div class="input-group"> 
+			            <input type="text" class="form-control" placeholder="Tipo de producto" ng-model="producto.tipoNombre" ng-readonly="true" ng-required="true"/>
 			            <span class="input-group-addon" ng-click="producto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
 			          </div>
 			        </div>
 
-					<div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo4.$invalid }">
+					<div class="form-group" >
 			          <label for="campo4">* Componente:</label>
-			          <div class="input-group">
-			            <input type="hidden" class="form-control" ng-model="producto.componente" /> 
-			            <input type="text" class="form-control" id="campo4" name="campo4" placeholder="Componente al que pertenece" ng-model="producto.componenteNombre" ng-readonly="true" required/>
+			          <div class="input-group"> 
+			            <input type="text" class="form-control" placeholder="Componente al que pertenece" ng-model="producto.componenteNombre" ng-readonly="true" ng-required="true"/>
 			            <span class="input-group-addon" ng-click="producto.buscarComponente()"><i class="glyphicon glyphicon-search"></i></span>
 			          </div>
 			        </div>
 
-					<div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo5.$invalid }">
+					<div class="form-group">
 			          <label for="campo5">Producto:</label>
-			          <div class="input-group">
-			            <input type="hidden" class="form-control" ng-model="producto.productoPadre" /> 
-			            <input type="text" class="form-control" id="campo5" name="campo5" placeholder="Producto padre" ng-model="producto.productoPadreNombre" ng-readonly="true"/>
+			          <div class="input-group"> 
+			            <input type="text" class="form-control" placeholder="Producto padre" ng-model="producto.productoPadreNombre" ng-readonly="true" ng-required="true"/>
 			            <span class="input-group-addon" ng-click="producto.buscarProducto()"><i class="glyphicon glyphicon-search"></i></span>
 			          </div>
 			        </div>
 			        
-			        <div class="form-group col-sm-12" ng-repeat="campo in producto.camposdinamicos">
+			        <div class="form-group">
+			          <label for="campo5">Unidad Ejecutora:</label>
+			          <div class="input-group"> 
+			            <input type="text" class="form-control" placeholder="Producto padre" ng-model="producto.unidadEjecutoraNombre" ng-readonly="true" ng-required="true"/>
+			            <span class="input-group-addon" ng-click="producto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
+			          </div>
+			        </div>
+			        
+			        <div class="form-group" ng-repeat="campo in producto.camposdinamicos">
 						<label for="campo.id">{{ campo.label }}</label>
 						<div ng-switch="campo.tipo">
 							<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
@@ -142,45 +171,47 @@
 								</span>
 							</p>
 						</div>
+					</div>
+					
+				<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label>
+				  					<p class="form-control-static">{{ producto.producto.usuarioCreo }}</pl>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="fechaCreacion">Fecha de creación</label>
+				  					<p class="form-control-static">{{ producto.producto.fechaCreacion }}</p>
+								</div>
+							</div>
 						</div>
-				</div>
-			</form>
-		</div>
-
-		<br />
-
-		<h4>Propiedades</h4>
-		<div>
-			<div class="col-sm-12" align="center">
-				<table st-table="producto.propiedadesValor" class="table table-striped" style="width: 400px;" ng-hide="producto.mostrarCargando">
-					<thead>
-						<tr>
-							<th>Nombre</th>
-							<th>Tipo</th>
-							<th style="width: 5%"></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr st-select-row="row" st-select-mode="single" ng-repeat="propiedad in producto.propiedadesValor | filter: { estado: '!E'} track by $index">
-							<td>{{propiedad.propiedad}}</td>
-							<td>{{propiedad.propiedadTipo}}</td>
-							<td align="center"><span ng-click="producto.editarPropiedadValor($index)" uib-tooltip="Editar Propiedad"><i style="color: red; font-size: 20px;" class="glyphicon glyphicon-pencil"></i></span></td>
-						</tr>
-					</tbody>
-				</table>
-				<div class="grid_loading" ng-hide="!producto.mostrarCargando">
-					<div class="msg">
-						<span><i class="fa fa-spinner fa-spin fa-4x"></i> <br />
-							<br /> <b>Cargando, por favor espere...</b> </span>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label>
+				  					<p class="form-control-static">{{ producto.producto.usuarioactualizo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label>
+				  					<p class="form-control-static">{{ producto.producto.fechaactualizacion }}</p>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
+			</form>
 			</div>
 		</div>
-
-		<div class="col-sm-12" align="center">Los campos marcados con * son obligatorios</div>
-
 		<br />
-		
+		<div class="col-sm-12" align="center">Los campos marcados con * son obligatorios</div>
+		<br />
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : '' " ng-disabled="!form.$valid">Guardar</label> 
