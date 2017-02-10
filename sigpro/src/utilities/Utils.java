@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -109,7 +110,7 @@ public class Utils {
 
 			return val;
 
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 
 			return defaultValue;
 		}
@@ -130,11 +131,21 @@ public class Utils {
 
 			return val;
 
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 
 			return defaultValue;
 		}
 
+	}
+	
+	public static BigDecimal String2BigDecimal(String value, BigDecimal defaultValue) {
+		try {
+			BigDecimal val = new BigDecimal(value);
+			return val;
+
+		} catch (Exception e) {
+			return defaultValue;
+		}
 	}
 
 	public static String formatDate(Date date) {

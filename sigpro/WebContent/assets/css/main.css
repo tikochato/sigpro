@@ -166,3 +166,8 @@ nav.navbar{
 .panel-auditoria{
 	padding: 10px;
 }
+
+.main-form{
+	width: 80%;
+	margin: auto;
+}

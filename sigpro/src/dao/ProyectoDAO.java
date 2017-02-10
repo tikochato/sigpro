@@ -7,6 +7,8 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.Proyecto;
+import pojo.ProyectoUsuario;
+import pojo.ProyectoUsuarioId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -39,6 +41,8 @@ public class ProyectoDAO implements java.io.Serializable  {
 		try{
 			session.beginTransaction();
 			session.saveOrUpdate(proyecto);
+			ProyectoUsuario pu = new ProyectoUsuario(new ProyectoUsuarioId(proyecto.getId(), proyecto.getUsuarioCreo()), proyecto);
+			session.saveOrUpdate(pu);
 			session.getTransaction().commit();
 			ret = true;
 		}

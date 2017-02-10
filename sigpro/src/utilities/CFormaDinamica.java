@@ -59,8 +59,7 @@ public class CFormaDinamica {
 
 	private static String tipoFecha(HashMap<String,Object> campo) {
 		return "{\"id\" :\"" + campo.get("id").toString() + "\"," + "\"tipo\" : \"fecha\"," + "\"label\" : \"" + campo.get("nombre").toString()
-				+ "\"," + "\"valor\" : \""+ campo.get("valor") + "\"," + "\"isOpen\" : false," + "\"dateOptions\" : { "
-				+ "		\"formatYear\" : \"yyyy\"," + "\"startingDay\" : 1" + "}" + "}";
+				+ "\"," + "\"valor\" : \""+ campo.get("valor") + "\" }";
 	}
 
 }

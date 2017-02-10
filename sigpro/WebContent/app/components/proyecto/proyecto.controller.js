@@ -34,8 +34,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.fechaOptions = {
 			formatYear : 'yy',
-			maxDate : new Date(2020, 5, 22),
-			minDate : new Date(2000, 1, 1),
+			maxDate : new Date(2050, 12, 31),
+			minDate : new Date(1990, 1, 1),
 			startingDay : 1
 	};
 
@@ -124,7 +124,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.guardar = function(esvalido){
 		for (campos in mi.camposdinamicos) {
 			if (mi.camposdinamicos[campos].tipo === 'fecha') {
-				mi.camposdinamicos[campos].valor = moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY')
+				mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
 			}
 		}
 		if(esvalido){
@@ -137,14 +137,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				proyectotipoid: mi.poryectotipoid,
 				unidadejecutoraid: mi.unidadejecutoraid,
 				cooperanteid: mi.cooperanteid,
-				programa: mi.programa,
-				subprograma: mi.subprograma,
-				proyecto_: mi.proyecto_,
-				obra:mi.obra,
-				actividad: mi.actividad,
-				fuente: mi.fuente,
+				programa: mi.proyecto.programa,
+				subprograma: mi.proyecto.subprograma,
+				proyecto_: mi.proyecto.proyecto,
+				obra:mi.proyecto.obra,
+				actividad: mi.proyecto.actividad,
+				fuente: mi.proyecto.fuente,
 				esnuevo: mi.esNuevo,
-
 				datadinamica : JSON.stringify(mi.camposdinamicos)
 			};
 			$http.post('/SProyecto',param_data).then(
@@ -209,10 +208,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.cooperantenombre=mi.proyecto.cooperante;
 			mi.esColapsado = true;
 			mi.esNuevo = false;
-			mi.programa = mi.proyecto.programa;
-			mi.subprograma = mi.proyecto.subprograma;
-			mi.proyecto_ = mi.proyecto.proyecto;
-			mi.obra = mi.proyecto.obra;
+			
 
 			var parametros = {
 					accion: 'getProyectoPropiedadPorTipo',
@@ -224,7 +220,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				for (campos in mi.camposdinamicos) {
 					switch (mi.camposdinamicos[campos].tipo){
 						case "fecha":
-							mi.camposdinamicos[campos].valor = moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY')
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
 							break;
 						case "entero":
 							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
@@ -408,6 +404,11 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 			$http.post('/SProyectoPropiedad', parametros).then(function(response){
 				mi.camposdinamicos = response.data.proyectopropiedades
+				for (campos in mi.camposdinamicos) {
+					if (mi.camposdinamicos[campos].tipo === 'fecha') {
+						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null; 
+					}
+				}
 			});
 		});
 	};
