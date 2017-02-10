@@ -234,7 +234,7 @@ public class SComponentePropiedad extends HttpServlet {
 				if (coomponentePropiedadValor !=null ){
 					switch (componentepropiedad.getDatoTipo().getId()){
 						case 1:
-							campo.put("valor", coomponentePropiedadValor.getValorString());
+							campo.put("valor",  coomponentePropiedadValor.getValorString());
 							break;
 						case 2:
 							campo.put("valor", coomponentePropiedadValor.getValorEntero());

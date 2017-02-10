@@ -7,6 +7,8 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.Actividad;
+import pojo.ActividadUsuario;
+import pojo.ActividadUsuarioId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -52,6 +54,8 @@ public class ActividadDAO {
 		try{
 			session.beginTransaction();
 			session.saveOrUpdate(Actividad);
+			ActividadUsuario au = new ActividadUsuario(new ActividadUsuarioId(Actividad.getId(), Actividad.getUsuarioCreo()),Actividad);
+			session.saveOrUpdate(au);
 			session.getTransaction().commit();
 			ret = true;
 		}

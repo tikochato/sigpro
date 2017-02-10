@@ -40,8 +40,8 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 
 		mi.fechaOptions = {
 				formatYear : 'yy',
-				maxDate : new Date(2020, 5, 22),
-				minDate : new Date(2000, 1, 1),
+				maxDate : new Date(2050, 12, 31),
+				minDate : new Date(1990, 1, 1),
 				startingDay : 1
 		};
 		
@@ -126,7 +126,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		mi.guardar=function(esvalido){
 			for (campos in mi.camposdinamicos) {
 				if (mi.camposdinamicos[campos].tipo === 'fecha') {
-					mi.camposdinamicos[campos].valor = moment(mi.camposdinamicos[campos].valor).format('dd/MM/yyyy')
+					mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
 				}
 			}
 			if(mi.componente!=null && mi.componente.nombre!='' && mi.unidadejecutoraid!=''){
@@ -142,6 +142,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					programa: mi.componente.programa,
 					subprograma: mi.componente.subprograma,
 					proyecto_: mi.componente.proyecto_,
+					actividad: mi.componente.actividad,
 					obra:mi.componente.obra,
 					fuente: mi.componente.fuente,
 					esnuevo: mi.esnuevo,
@@ -216,7 +217,27 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				mi.componentetiponombre=mi.componente.componentetiponombre;
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
-				mi.buscarDatosDinamicos();
+				
+				var parametros = {
+						accion: 'getComponentePropiedadPorTipo',
+						idComponente: mi.componente!=null ? mi.componente.id : 0,
+						idComponenteTipo: mi.componentetipoid
+				}
+
+				$http.post('/SComponentePropiedad', parametros).then(function(response){
+					mi.camposdinamicos = response.data.componentepropiedades;
+					for (campos in mi.camposdinamicos) {
+						switch (mi.camposdinamicos[campos].tipo){
+							case "fecha":
+								mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+								break;
+							case "entero":
+								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								break;
+						}
+
+					}
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Componente que desea editar');
@@ -334,21 +355,28 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			resultado.then(function(itemSeleccionado) {
 				mi.componentetipoid = itemSeleccionado.id;
 				mi.componentetiponombre = itemSeleccionado.nombre;
-				mi.buscarDatosDinamicos();
+				var parametros = {
+						accion: 'getComponentePropiedadPorTipo',
+						idComponente: mi.componente!=null ? mi.componente.id : 0,
+						idComponenteTipo: mi.componentetipoid
+				}
+
+				$http.post('/SComponentePropiedad', parametros).then(function(response){
+					mi.camposdinamicos = response.data.componentepropiedades
+					for (campos in mi.camposdinamicos) {
+						switch (mi.camposdinamicos[campos].tipo){
+							case "fecha":
+								mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+								break;
+							case "entero":
+								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								break;
+						}
+
+					}
+				});
 			});
 		};
-		
-		mi.buscarDatosDinamicos = function (){
-			var parametros = {
-					accion: 'getComponentePropiedadPorTipo',
-					idComponente: mi.componente!=null ? mi.componente.id : 0,
-					idComponenteTipo: mi.componentetipoid
-			}
-
-			$http.post('/SComponentePropiedad', parametros).then(function(response){
-				mi.camposdinamicos = response.data.componentepropiedades
-			});
-		}
 		
 		mi.buscarUnidadEjecutora = function() {
 			var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {

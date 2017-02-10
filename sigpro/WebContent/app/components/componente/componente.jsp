@@ -2,11 +2,6 @@
 	pageEncoding="UTF-8"%>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-	<style type="text/css">
-	.anchocolumna {
-	 	width: 20%;
-		}
-	</style>
 	<div ng-controller="componenteController as componentec" class="maincontainer all_page" id="title">
 	    <script type="text/ng-template" id="buscarPorComponente.jsp">
     		<%@ include file="/app/components/componente/buscarPorComponente.jsp"%>
@@ -62,7 +57,7 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row" ng-show="componentec.mostraringreso">
+		<div class="row main-form" ng-show="componentec.mostraringreso">
 			<h4 ng-hide="!componentec.esnuevo">Nuevo componente</h4>
 			<h4 ng-hide="componentec.esnuevo">Edición de componente</h4>
 			<div class="col-sm-12 operation_buttons" align="left">
@@ -95,30 +90,34 @@
 							<input type="number" ng-model="componentec.componente.snip" class="form-control" id="n_snip" placeholder="Nombre">
 						</div>
 						<div class="form-grup row" >
-							<div class="form-group col-sm-2 anchocolumna"  >
+							<div class="form-group col-sm-2"  >
 							       <label for="campo1 " >Programa</label> 
 							       <input type="number" class="form-control" id="campo1" name="campo1" placeholder="Programa" ng-model="componentec.componente.programa"  />
 							</div>
-							<div class="form-group col-sm-2 anchocolumna"  >
-							  <label for="campo2">Sub-Programa</label> 
-							  <input type="number" class="form-control" id="campo2" name="campo2" placeholder="Sub-programa" ng-model="componentec.componente.subprograma" />
+							<div class="form-group col-sm-2"  >
+							  <label for="campo2">Subprograma</label> 
+							  <input type="number" class="form-control" id="campo2" name="campo2" placeholder="Subprograma" ng-model="componentec.componente.subprograma" />
 							</div>
-							<div class="form-group col-sm-2 anchocolumna"  >
+							<div class="form-group col-sm-2"  >
 							  <label for="campo3">Proyecto</label> 
 							  <input type="number" class="form-control" id="campo3" name="campo3" placeholder="Proyecto" ng-model="componentec.componente.proyecto_" />
-							</div>					
-							<div class="form-group col-sm-2 anchocolumna" >
-							  <label for="campo4">Obra</label> 
-							  <input type="number" class="form-control" id="campo4" name="campo4" placeholder="Obra" ng-model="componentec.componente.obra" ng-maxlength="4"/>
 							</div>
-							<div class="form-group col-sm-2 anchocolumna" >
+							<div class="form-group col-sm-2" >
+							  <label for="campo4">Actividad</label> 
+							  <input type="number" class="form-control" placeholder="Actividad" ng-model="componentec.componente.actividad" ng-maxlength="4"/>
+							</div>					
+							<div class="form-group col-sm-2" >
+							  <label for="campo4">Obra</label> 
+							  <input type="number" class="form-control" placeholder="Obra" ng-model="componentec.componente.obra" ng-maxlength="4"/>
+							</div>
+							<div class="form-group col-sm-2" >
 							  <label for="campo5">Fuente</label> 
-							  <input type="number" class="form-control" id="campo5" name="campo5" placeholder="Fuente" ng-model="componentec.componente.fuente" ng-maxlength="4"/>
+							  <input type="number" class="form-control" placeholder="Fuente" ng-model="componentec.componente.fuente" ng-maxlength="4"/>
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="campo3">* Unidad Ejecturoa</label>
+							<label>* Unidad Ejecturoa</label>
 				          	<div class="input-group">
 				            	<input type="text" class="form-control" id="iunejec" name="iunejec" placeholder="Nombre Unidad Ejecutora" ng-model="componentec.unidadejecutoranombre" ng-readonly="true" ng-required="true"/>
 				            	<span class="input-group-addon" ng-click="componentec.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
@@ -126,7 +125,7 @@
 						</div>
 
 						<div class="form-group">
-							<label for="campo3">* Tipo Componente</label>
+							<label>* Tipo Componente</label>
 				          	<div class="input-group">
 				            	<input type="text" class="form-control" id="icomptipo" name="icomptipo" placeholder="Nombre Tipo Componente" ng-model="componentec.componentetiponombre" ng-readonly="true" ng-required="true"/>
 				            	<span class="input-group-addon" ng-click="componentec.buscarComponenteTipo()"><i class="glyphicon glyphicon-search"></i></span>
@@ -143,8 +142,8 @@
 								<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
 								<p ng-switch-when="fecha" class="input-group">
 									<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{componentec.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="mi.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Limpiar" /><span
-														class="input-group-btn">
+														datepicker-options="mi.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Limpiar" />
+													<span class="input-group-btn">
 														<button type="button" class="btn btn-default"
 															ng-click="componentec.abrirPopupFecha($index)">
 															<i class="glyphicon glyphicon-calendar"></i>
@@ -158,26 +157,44 @@
 								</select>
 							</div>
 						</div>
-						
 						<div class="form-group">
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="componentec.componente.descripcion">
 						</div>
-						<div class="form-group" ng-show="!componentec.esnuevo">
-							<label for="usuarioCreo">Usuario que creo</label>
-    						<p class="form-control-static" id="usuarioCreo">{{ componentec.componente.usuarioCreo }}</p>
-						</div>
-						<div class="form-group" ng-show="!componentec.esnuevo">
-							<label for="fechaCreacion">Fecha de creación</label>
-    						<p class="form-control-static" id="fechaCreacion">{{ componentec.componente.fechaCreacion }}</p>
-						</div>
-						<div class="form-group" ng-show="!componentec.esnuevo">
-							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<p class="form-control-static" id="usuarioCreo">{{ componentec.componente.usuarioActualizo }}</p>
-						</div>
-						<div class="form-group" ng-show="!componentec.esnuevo">
-							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<p class="form-control-static" id="usuarioCreo">{{ componentec.componente.fechaActualizacion }}</p>
+						<div class="panel panel-default">
+							<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-sm-6" >
+										<div class="form-group" style="text-align: right">
+											<label for="usuarioCreo">Usuario que creo</label>
+				    						<p class="form-control-static">{{ componentec.componente.usuarioCreo }}</p>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="fechaCreacion">Fecha de creación</label>
+				    						<p class="form-control-static">{{ componentec.componente.fechaCreacion }}</p>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group" style="text-align: right">
+											<label for="usuarioActualizo">Usuario que actualizo</label>
+				    						<p class="form-control-static">{{ componentec.componente.usuarioActualizo }}</p>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="fechaActualizacion">Fecha de actualizacion</label>
+				    						<p class="form-control-static" >{{ componentec.componente.fechaActualizacion }}</p>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 				</form>
 			</div>

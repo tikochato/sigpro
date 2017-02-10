@@ -38,28 +38,27 @@ public class CFormaDinamica {
 	}
 	
 	private static String tipoTexto(HashMap<String,Object> campo) {
-		return "{\"id\" :\"" + campo.get("id").toString() + "\"," + "\"tipo\" : \"texto\"," + "\"label\" : \"" + campo.get("nombre").toString()
-				+ "\"," + "\"valor\" : \""+ campo.get("valor") + "\"," + "\"placeholder\" : \"texto\"}";
+		return String.join("", "{\"id\" :\"", campo.get("id").toString(), "\",\"tipo\" : \"texto\", \"label\" : \"", campo.get("nombre").toString(),
+				"\",\"valor\" : \"", campo.get("valor")!=null ? campo.get("valor").toString() : "", "\", \"placeholder\" : \"texto\"}");
 	}
 
 	private static String tipoEentero(HashMap<String,Object> campo) {
-		return "{\"id\" :\"" + campo.get("id").toString() + "\"," + "\"tipo\" : \"entero\"," + "\"label\" : \"" + campo.get("nombre").toString()
-				+ "\"," + "\"valor\" : \""+ campo.get("valor") + "\"," + "\"placeholder\" : \"cantidad\"}";
+		return String.join("{\"id\" :\"",campo.get("id").toString() ,"\",\"tipo\" : \"entero\",\"label\" : \"", campo.get("nombre").toString(),
+				"\",\"valor\" : \"", campo.get("valor")!=null ? campo.get("valor").toString() : "", "\",\"placeholder\" : \"cantidad\"}");
 	}
 
 	private static String tipoDecimal(HashMap<String,Object> campo) {
-		return "{\"id\" :\"" + campo.get("id").toString() + "\"," + "\"tipo\" : \"decimal\"," + "\"label\" : \"" + campo.get("nombre").toString()
-				+ "\"," + "\"valor\" : \""+ campo.get("valor") + "\"," + "\"placeholder\" : \"cantidad\"}";
+		return String.join("{\"id\" :\"", campo.get("id").toString(), "\"," + "\"tipo\" : \"decimal\",\"label\" : \"",campo.get("nombre").toString(),
+				"\",\"valor\" : \"", campo.get("valor")!=null ? campo.get("valor").toString() : "", "\",\"placeholder\" : \"cantidad\"}");
 	}
 
 	private static String tipoBooleano(HashMap<String,Object> campo) {
-		return "{\"id\" :\"" + campo.get("id").toString() + "\"," + "\"tipo\" : \"booleano\"," + "\"label\" : \"" + campo.get("nombre").toString()
-				+ "\"}";
+		return String.join("{\"id\" :\"", campo.get("id").toString(), "\",\"tipo\" : \"booleano\",\"label\" : \"", campo.get("nombre").toString(),"\"}");
 	}
 
 	private static String tipoFecha(HashMap<String,Object> campo) {
-		return "{\"id\" :\"" + campo.get("id").toString() + "\"," + "\"tipo\" : \"fecha\"," + "\"label\" : \"" + campo.get("nombre").toString()
-				+ "\"," + "\"valor\" : \""+ campo.get("valor") + "\" }";
+		return String.join("{\"id\" :\"", campo.get("id").toString(), "\",\"tipo\" : \"fecha\"," + "\"label\" : \"", campo.get("nombre").toString(),
+				"\",\"valor\" : \"",campo.get("valor")!=null ? campo.get("valor").toString() : "", "\" }");
 	}
 
 }

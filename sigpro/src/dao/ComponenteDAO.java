@@ -7,6 +7,8 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.Componente;
+import pojo.ComponenteUsuario;
+import pojo.ComponenteUsuarioId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -52,6 +54,8 @@ public class ComponenteDAO {
 		try{
 			session.beginTransaction();
 			session.saveOrUpdate(Componente);
+			ComponenteUsuario cu = new ComponenteUsuario(new ComponenteUsuarioId(Componente.getId(), Componente.getUsuarioCreo()), Componente);
+			session.saveOrUpdate(cu);
 			session.getTransaction().commit();
 			ret = true;
 		}

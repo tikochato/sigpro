@@ -189,11 +189,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		mi.esColapsado = true;
 		mi.proyecto = null;
 		mi.esNuevo = true;
-		mi.programa="";
-		mi.subprograma="";
-		mi.proyecto_="";
-		mi.obra="";
-		mi.fuente="";
 		mi.camposdinamicos = {};
 		mi.gridApi.selection.clearSelectedRows();
 	};
@@ -237,6 +232,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.irATabla = function() {
 		mi.esColapsado=false;
+		mi.esNuevo = false;
 	}
 
 	mi.guardarEstado=function(){
@@ -403,7 +399,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			}
 
 			$http.post('/SProyectoPropiedad', parametros).then(function(response){
-				mi.camposdinamicos = response.data.proyectopropiedades
+				mi.camposdinamicos = response.data.proyectopropiedades;
 				for (campos in mi.camposdinamicos) {
 					if (mi.camposdinamicos[campos].tipo === 'fecha') {
 						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null; 

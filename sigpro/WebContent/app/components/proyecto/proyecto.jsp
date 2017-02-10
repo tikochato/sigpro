@@ -2,11 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-<style type="text/css">
-	.anchocolumna {
-	 	width: 20%;
-	}
-</style>
 <div ng-controller="proyectoController as controller"
 	class="maincontainer all_page" id="title">
 
@@ -76,14 +71,9 @@
 		<div class="col-sm-12 operation_buttons" align="left">
 			<div class="btn-group">
 				<label class="btn btn-default" ng-click="controller.irAComponentes(controller.proyecto.id)">Componentes</label>
-				<!-- productos -->
-				<!-- <label class="btn btn-default" ng-click="controller.irAActividades(controller.proyecto.id)">Actividades</label>-->
 				<label class="btn btn-default" ng-click="controller.irAHitos(controller.proyecto.id)">Hitos</label>
-				<!-- metas -->
 				<label class="btn btn-default" ng-click="controller.irADesembolsos(controller.proyecto.id)">Desembolsos</label>
 				<label class="btn btn-default" ng-click="controller.irARiesgos(controller.proyecto.id)">Riesgos</label>
-				<!--  recursos -->
-
 			</div>
 		</div>
 
@@ -99,7 +89,7 @@
 					<label for="id">ID</label>
   					<label class="form-control" id="id">{{ controller.proyecto.id }}</label>
 				</div>
-				<div class="form-group" show-errors >
+				<div class="form-group">
 					<label for="inombre">* Nombre</label>
 					<input type="text" name="inombre" id="inombre" ng-model="controller.proyecto.nombre"
 						class="form-control" placeholder="Nombre" ng-required="true" >
@@ -118,23 +108,23 @@
 					</div>
 					<div class="form-group col-sm-2" >
 					  <label for="isubprog">Subprograma</label>
-					  <input type="number" class="form-control" ng-model="controller.proyecto.subprograma" ng-maxlength="4" style="text-align: center"/>
+					  <input type="number" class="form-control" placeholder="Subprograma" ng-model="controller.proyecto.subprograma" ng-maxlength="4" style="text-align: center"/>
 					</div>
 					<div class="form-group col-sm-2" >
 					  <label for="iproy_">Proyecto</label>
-					  <input type="number" class="form-control" ng-model="controller.proyecto.proyecto" ng-maxlength="4" style="text-align: center"/>
+					  <input type="number" class="form-control" placeholder="Proyecto" ng-model="controller.proyecto.proyecto" ng-maxlength="4" style="text-align: center"/>
 					</div>
 					<div class="form-group col-sm-2" >
 					  <label for="iobra">Actividad</label>
-					  <input type="number" class="form-control" ng-model="controller.proyecto.actividad" ng-maxlength="4" style="text-align: center"/>
+					  <input type="number" class="form-control" placeholder="Actividad" ng-model="controller.proyecto.actividad" ng-maxlength="4" style="text-align: center"/>
 					</div>
 					<div class="form-group col-sm-2" >
 					  <label for="iobra">Obra</label>
-					  <input type="number" class="form-control" ng-model="controller.proyecto.obra" ng-maxlength="4" style="text-align: center"/>
+					  <input type="number" class="form-control" placeholder="Obra" ng-model="controller.proyecto.obra" ng-maxlength="4" style="text-align: center"/>
 					</div>
 					<div class="form-group col-sm-2" >
 					  <label for="campo5">Fuente</label>
-					  <input type="number" class="form-control" ng-model="controller.proyecto.fuente" ng-maxlength="4" style="text-align: center"/>
+					  <input type="number" class="form-control" placeholder="Fuente" ng-model="controller.proyecto.fuente" ng-maxlength="4" style="text-align: center"/>
 					</div>
 				</div>
 				<div class="form-group" >
@@ -162,6 +152,11 @@
 															</button>
 														</span>
 								</p>
+								<select ng-switch-when="select" id="{{ 'campo_'+campo.id }}" class="form-control" ng-model="campo.valor">
+													<option value="">Seleccione una opción</option>
+													<option ng-repeat="number in campo.opciones"
+														value="{{number.valor}}">{{number.label}}</option>
+								</select>
 							</div>
 						</div>
 

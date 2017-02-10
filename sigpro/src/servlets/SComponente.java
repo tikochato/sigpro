@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +56,7 @@ public class SComponente extends HttpServlet {
 		Long snip;
 		Integer programa;
 		Integer subprograma;
-		Integer proyecto_;
+		Integer proyecto;
 		Integer obra;
 		Integer actividad;
 		Integer fuente;
@@ -135,7 +133,7 @@ public class SComponente extends HttpServlet {
 				temp.snip = componente.getSnip();
 				temp.programa = componente.getPrograma();
 				temp.subprograma = componente.getSubprograma();
-				temp.proyecto_ = componente.getProyecto_1();
+				temp.proyecto = componente.getProyecto_1();
 				temp.actividad = componente.getActividad();
 				temp.obra = componente.getObra();
 				temp.fuente = componente.getFuente();
@@ -167,7 +165,7 @@ public class SComponente extends HttpServlet {
 				temp.snip = componente.getSnip();
 				temp.programa = componente.getPrograma();
 				temp.subprograma = componente.getSubprograma();
-				temp.proyecto_ = componente.getProyecto_1();
+				temp.proyecto = componente.getProyecto_1();
 				temp.obra = componente.getObra();
 				temp.actividad = componente.getActividad();
 				temp.fuente = componente.getFuente();
@@ -254,17 +252,16 @@ public class SComponente extends HttpServlet {
 								valor.setValorString(data.valor);
 								break;
 							case 2:
-								valor.setValorEntero(Integer.parseInt(data.valor));
+								valor.setValorEntero(Utils.String2Int(data.valor, null));
 								break;
 							case 3:
-								valor.setValorDecimal(new BigDecimal(data.valor));
+								valor.setValorDecimal(Utils.String2BigDecimal(data.valor,null));
 								break;
 							case 4:
 
 								break;
 							case 5:
-								SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-								valor.setValorTiempo(sdf.parse(data.valor));
+								valor.setValorTiempo(Utils.dateFromString(data.valor));
 								break;
 						}
 						result = (result && ComponentePropiedadValorDAO.guardarComponentePropiedadValor(valor));
@@ -327,7 +324,7 @@ public class SComponente extends HttpServlet {
 				temp.snip = componente.getSnip();
 				temp.programa = componente.getPrograma();
 				temp.subprograma = componente.getSubprograma();
-				temp.proyecto_ = componente.getProyecto_1();
+				temp.proyecto = componente.getProyecto_1();
 				temp.obra = componente.getObra();
 				temp.actividad = componente.getActividad();
 				temp.fuente = componente.getFuente();

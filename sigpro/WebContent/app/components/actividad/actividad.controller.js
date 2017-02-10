@@ -138,7 +138,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.guardar=function(valid){
 			for (campos in mi.camposdinamicos) {
 				if (mi.camposdinamicos[campos].tipo === 'fecha') {
-					mi.camposdinamicos[campos].valor = moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY')
+					mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
 				}
 			}
 			if(mi.actividad!=null){
@@ -154,6 +154,11 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					fechainicio: moment(mi.actividad.fechaInicio).format('DD/MM/YYYY'),
 					fechafin: moment(mi.actividad.fechaFin).format('DD/MM/YYYY'),
 					porcentajeavance: mi.actividad.porcentajeavance,
+					programa: mi.actividad.programa,
+					subprograma: mi.actividad.subprograma,
+					proyecto: mi.actividad.proyecto,
+					actividad: mi.actividad.actividad,
+					obra: mi.actividad.obra,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
 					if(response.success){
@@ -216,6 +221,26 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			if(mi.actividad!=null){
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
+				
+				var parametros = {
+						accion: 'getActividadPropiedadPorTipo',
+						idActividad: mi.actividad!='' ? mi.actividad.id : 0,
+					    idActividadTipo: mi.actividadtipoid
+				}
+				$http.post('/SActividadPropiedad', parametros).then(function(response){
+					mi.camposdinamicos = response.data.proyectopropiedades
+					for (campos in mi.camposdinamicos) {
+						switch (mi.camposdinamicos[campos].tipo){
+							case "fecha":
+								mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+								break;
+							case "entero":
+								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								break;
+						}
+
+					}
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar la Actividad que desea editar');
@@ -223,6 +248,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 
 		mi.irATabla = function() {
 			mi.mostraringreso=false;
+			mi.esNuevo = false;
 		}
 
 		mi.guardarEstado=function(){
@@ -307,7 +333,12 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				}
 
 				$http.post('/SActividadPropiedad', parametros).then(function(response){
-					mi.camposdinamicos = response.data.actividadpropiedades
+					mi.camposdinamicos = response.data.actividadpropiedades;
+					for (campos in mi.camposdinamicos) {
+						if (mi.camposdinamicos[campos].tipo === 'fecha') {
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null; 
+						}
+					}
 				});
 
 			}, function() {
