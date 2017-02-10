@@ -223,6 +223,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 
 		mi.irATabla = function() {
 			mi.mostraringreso=false;
+			mi.esnuevo = false;
 		}
 		
 		mi.guardarEstado=function(){

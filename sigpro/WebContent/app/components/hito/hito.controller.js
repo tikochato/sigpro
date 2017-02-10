@@ -217,6 +217,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 
 		mi.irATabla = function() {
 			mi.mostraringreso=false;
+			mi.esnuevo=false;
 		}
 		
 		mi.filtrar = function(evt,tipo){

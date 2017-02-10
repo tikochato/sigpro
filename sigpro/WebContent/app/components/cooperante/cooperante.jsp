@@ -58,44 +58,44 @@
 			<h4 ng-hide="cooperantec.esnuevo">Edición de cooperante</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="cooperantec.guardar()">Guardar</label>
+			        <label class="btn btn-success" ng-click="form.$valid ? cooperantec.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
 			        <label class="btn btn-primary" ng-click="cooperantec.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
 			
 			<div class="col-sm-12">
-				<form>
-						<div class="form-group">
+				<form name="form">
+						<div class="form-group" ng-show="!cooperantec.esnuevo">
 							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ cooperantec.cooperante.id }}</label>
+    						<p class="form-control-static" id="id" >{{ cooperantec.cooperante.id }} </p>
 						</div>
 						<div class="form-group">
 							<label for="codigo">* Código</label>
-    						<input type="text" class="form-control" id="codigo" placeholder="Código" ng-model="cooperantec.cooperante.codigo">
+    						<input type="text" class="form-control" id="codigo" placeholder="Código" ng-model="cooperantec.cooperante.codigo" ng-required="true">
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="cooperantec.cooperante.nombre">
+    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="cooperantec.cooperante.nombre" ng-required="true">
 						</div>
 						<div class="form-group">
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="cooperantec.cooperante.descripcion">
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!cooperantec.esnuevo">
 							<label for="usuarioCreo">Usuario que creo</label>
-    						<label class="form-control" id="usuarioCreo">{{ cooperantec.cooperante.usuarioCreo }}</label>
+    						<p class="form-control-static" id="usuarioCreo"> {{ cooperantec.cooperante.usuarioCreo }}</p>
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!cooperantec.esnuevo">
 							<label for="fechaCreacion">Fecha de creación</label>
-    						<label class="form-control" id="fechaCreacion">{{ cooperantec.cooperante.fechaCreacion }}</label>
+    						<p class="form-control-static" id="fechaCreacion"> {{ cooperantec.cooperante.fechaCreacion }}</p>
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!cooperantec.esnuevo">
 							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<label class="form-control" id="usuarioCreo">{{ cooperantec.cooperante.usuarioActualizo }}</label>
+    						<p class="form-control-static" id="usuarioCreo"> {{ cooperantec.cooperante.usuarioActualizo }}</p>
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="!cooperantec.esnuevo">
 							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<label class="form-control" id="usuarioCreo">{{ cooperantec.cooperante.fechaActualizacion }}</label>
+    						<p class="form-control-static" id="usuarioCreo" > {{ cooperantec.cooperante.fechaActualizacion }}</p>
 						</div>
 				</form>
 			</div>
@@ -103,7 +103,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="cooperantec.guardar()">Guardar</label>
+				        <label class="btn btn-success" ng-click="form.$valid ? cooperantec.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
 				        <label class="btn btn-primary" ng-click="cooperantec.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

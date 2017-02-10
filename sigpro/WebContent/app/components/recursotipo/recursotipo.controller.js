@@ -192,6 +192,8 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 	
 		mi.irATabla = function() {
 			mi.mostraringreso=false;
+			mi.esnuevo =false;
+			mi.recursotipo={};
 		}
 		
 		mi.guardarEstado=function(){

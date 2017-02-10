@@ -135,6 +135,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 							mi.desembolso.id = response.id;
 							mi.esnuevo = false;
 							mi.cargarTabla();
+							mi.mostraringreso=false;
 						}
 						else
 							$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Desembolso');
@@ -210,6 +211,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			  
 			mi.irATabla = function() {
 				mi.mostraringreso=false;
+				mi.esnuevo=false;
 			};
 			
 			mi.filtrar = function(evt,tipo){

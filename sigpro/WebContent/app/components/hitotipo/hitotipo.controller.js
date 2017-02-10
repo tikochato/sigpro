@@ -134,6 +134,7 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 	
 		mi.irATabla = function() {
 			mi.mostraringreso=false;
+			mi.esnuevo=false;
 		}
 		
 		mi.guardarEstado=function(){

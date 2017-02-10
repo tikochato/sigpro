@@ -73,10 +73,10 @@
 		<div>
 		<div class="col-sm-12">
 			<form name="form" class="css-form" novalidate>
-				
-					<div class="form-group" >
+				<div class="row">
+					<div class="form-group col-sm-3" ng-show="!producto.esNuevo">
 						<label for="campo0">ID:</label> 
-						<input type="text" class="form-control" placeholder="ID" ng-model="producto.producto.id" ng-readonly="true" />
+						<p class="form-control-static" id="campo0" name="campo0" >{{producto.producto.id}}</p>
 					</div>
 				
 				

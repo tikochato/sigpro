@@ -56,20 +56,20 @@
 			<h4 ng-hide="hitotipoc.esnuevo">Edición de Tipo Hito</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="hitotipoc.guardar()">Guardar</label>
+			        <label class="btn btn-success"  ng-click="form.$valid ? hitotipoc.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
 			        <label class="btn btn-primary" ng-click="hitotipoc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
 			
 			<div class="col-sm-12">
-				<form>
-						<div class="form-group">
-							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ hitotipoc.hitotipo.id }}</label>
+				<form name="form">
+						<div class="form-group" ng-show="!hitotipoc.esnuevo">
+							<label for="id">ID</label>			
+    						<p class="form-control-static">{{ hitotipoc.hitotipo.id }}</p>		
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="hitotipoc.hitotipo.nombre">
+    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="hitotipoc.hitotipo.nombre" ng-required="true">
 						</div>
 						<div class="form-group">
 							<label for="descripcion">Descripción</label>
@@ -82,7 +82,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="hitotipoc.guardar()">Guardar</label>
+				        <label class="btn btn-success" ng-click="form.$valid ? hitotipoc.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
 				        <label class="btn btn-primary" ng-click="hitotipoc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

@@ -175,6 +175,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 
 			mi.irATabla = function() {
 				mi.mostraringreso=false;
+				mi.esnueva=false;
 			}
 			
 			mi.guardarEstado=function(){
