@@ -150,10 +150,10 @@
 														</button>
 													</span>
 								</p>
-								<select ng-switch-when="select" id="{{ 'field_'+field.id }}" class="form-control" ng-model="x.value">
+								<select ng-switch-when="select" id="{{ 'field_'+campo.id }}" class="form-control" ng-model="x.value">
 													<option value="">Seleccione una opción</option>
-													<option ng-repeat="number in field.options"
-														value="{{number.value}}">{{number.label}}</option>
+													<option ng-repeat="number in campo.opciones"
+														value="{{number.valor}}">{{number.label}}</option>
 								</select>
 							</div>
 						</div>
@@ -185,8 +185,6 @@
 				    						<p class="form-control-static">{{ componentec.componente.usuarioActualizo }}</p>
 										</div>
 									</div>
-								</div>
-								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label for="fechaActualizacion">Fecha de actualizacion</label>
