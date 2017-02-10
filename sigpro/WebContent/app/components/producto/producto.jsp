@@ -63,10 +63,8 @@
 
 	</div>
 
-	<div ng-show="producto.esForma">
-
+	<div ng-show="producto.esForma" class="row main-form">
 		<div class="col-sm-12 operation_buttons" align="right">
-
 			<div class="btn-group">
 				<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
 				<label class="btn btn-primary" ng-click="producto.cancelar()">Ir a Tabla</label>
@@ -95,27 +93,27 @@
 					<div class="form-group row" >
 						<div class="form-group col-sm-2 " >
 						       <label for="iprog">Programa</label>
-						       <input type="number" class="form-control" placeholder="Programa" ng-model="producto.producto.programa"  />
+						       <input type="number" class="form-control" placeholder="Programa" ng-model="producto.producto.programa"  ng-maxlength="4" style="text-align: center" />
 						</div>
 						<div class="form-group col-sm-2 " >
 						  <label for="isubprog">Subprograma</label>
-						  <input type="number" class="form-control" placeholder="Sub-programa" ng-model="producto.producto.subprograma" />
+						  <input type="number" class="form-control" placeholder="Sub-programa" ng-model="producto.producto.subprograma" ng-maxlength="4" style="text-align: center" />
 						</div>
 						<div class="form-group col-sm-2 " >
 						  <label for="iproy_">Proyecto:</label>
-						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="producto.producto.proyecto_"  />
+						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="producto.producto.proyecto_"  ng-maxlength="4" style="text-align: center" />
 						</div>
 						<div class="form-group col-sm-2 " >
 						  <label for="iproy_">Actividad:</label>
-						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="producto.producto.actividad"  />
+						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="producto.producto.actividad" ng-maxlength="4" style="text-align: center"  />
 						</div>
 						<div class="form-group col-sm-2 " >
 						  <label for="iobra">Obra</label>
-						  <input type="number" class="form-control" placeholder="Obra" ng-model="producto.producto.obra" ng-maxlength="4"/>
+						  <input type="number" class="form-control" placeholder="Obra" ng-model="producto.producto.obra" ng-maxlength="4" style="text-align: center"/>
 						</div>
 						<div class="form-group col-sm-2 " >
 						  <label for="campo5">Fuente</label>
-						  <input type="number" class="form-control" placeholder="Fuente" ng-model="producto.producto.fuente" ng-maxlength="4"/>
+						  <input type="number" class="form-control" placeholder="Fuente" ng-model="producto.producto.fuente" ng-maxlength="4" style="text-align: center"/>
 						</div>
 					</div>
 
@@ -175,21 +173,38 @@
 						</div>
 					</div>
 					
-				<div class="form-group">
-					<label for="usuarioCreo">Usuario que creo</label>
-  					<p class="form-control-static">{{ producto.producto.usuarioCreo }}</pl>
-				</div>
-				<div class="form-group">
-					<label for="fechaCreacion">Fecha de creación</label>
-  					<p class="form-control-static">{{ producto.producto.fechaCreacion }}</p>
-				</div>
-				<div class="form-group">
-					<label for="usuarioActualizo">Usuario que actualizo</label>
-  					<p class="form-control-static">{{ producto.producto.usuarioactualizo }}</p>
-				</div>
-				<div class="form-group">
-					<label for="fechaActualizacion">Fecha de actualizacion</label>
-  					<p class="form-control-static">{{ producto.producto.fechaactualizacion }}</p>
+				<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label>
+				  					<p class="form-control-static">{{ producto.producto.usuarioCreo }}</pl>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="fechaCreacion">Fecha de creación</label>
+				  					<p class="form-control-static">{{ producto.producto.fechaCreacion }}</p>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label>
+				  					<p class="form-control-static">{{ producto.producto.usuarioactualizo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label>
+				  					<p class="form-control-static">{{ producto.producto.fechaactualizacion }}</p>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</form>
 			</div>

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
@@ -45,6 +44,7 @@ public class SProducto extends HttpServlet {
 		String tipo;
 		String label;
 		String valor;
+		String valor_f;
 	}
 
 	public SProducto() {
@@ -176,32 +176,31 @@ public class SProducto extends HttpServlet {
 				ProductoUsuarioDAO.guardarProductoUsuario(productoUsuario);
 				
 				for (stdatadinamico data : datos) {
-					
-					
-					ProductoPropiedad producotPropiedad = ProductoPropiedadDAO.getProductoPropiedadPorId(Integer.parseInt(data.id));
-					ProductoPropiedadValorId idValor = new ProductoPropiedadValorId(producto.getId(),Integer.parseInt(data.id));
-					ProductoPropiedadValor valor = new ProductoPropiedadValor(idValor, producto, producotPropiedad, null, null, null, null, 
-							usuario, null, new DateTime().toDate(), null, 1);
-
-					switch (producotPropiedad.getDatoTipo().getId()){
-						case 1:
-							valor.setValorString(data.valor);
-							break;
-						case 2:
-							valor.setValorEntero(Integer.parseInt(data.valor));
-							break;
-						case 3:
-							valor.setValorDecimal(new BigDecimal(data.valor));
-							break;
-						case 4:
-
-							break;
-						case 5:
-							SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-							valor.setValorTiempo(sdf.parse(data.valor));
-							break;
+					if (data.valor!=null && data.valor.length()>0 && data.valor.compareTo("null")!=0){
+						ProductoPropiedad producotPropiedad = ProductoPropiedadDAO.getProductoPropiedadPorId(Integer.parseInt(data.id));
+						ProductoPropiedadValorId idValor = new ProductoPropiedadValorId(Integer.parseInt(data.id),producto.getId());
+						ProductoPropiedadValor valor = new ProductoPropiedadValor(idValor, producto, producotPropiedad, null, null, null, null, 
+								usuario, null, new DateTime().toDate(), null, 1);
+	
+						switch (producotPropiedad.getDatoTipo().getId()){
+							case 1:
+								valor.setValorString(data.valor);
+								break;
+							case 2:
+								valor.setValorEntero(Utils.String2Int(data.valor, null));
+								break;
+							case 3:
+								valor.setValorDecimal(Utils.String2BigDecimal(data.valor, null));
+								break;
+							case 4:
+								break;
+							case 5:
+								SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+								valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
+								break;
+						}
+						ret = (ret && ProductoPropiedadValorDAO.guardarProductoPropiedadValor(valor));
 					}
-					ret = (ret && ProductoPropiedadValorDAO.guardarProductoPropiedadValor(valor));
 				}
 			}
 			
@@ -231,7 +230,10 @@ public class SProducto extends HttpServlet {
 
 	private void total(Map<String, String> parametro,HttpServletResponse response) throws IOException {
 		int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
-		Long total = ProductoDAO.getTotalProductos(componenteid,usuario);
+		String filtro_nombre = parametro.get("filtro_nombre");
+		String filtro_usuario_creo = parametro.get("filtro_usuario_creo");
+		String filtro_fecha_creacion = parametro.get("filtro_fecha_creacion");
+		Long total = ProductoDAO.getTotalProductos(componenteid,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,usuario);
 
 		String resultadoJson = "{\"success\":true, \"total\":" + total + "}";
 

@@ -252,6 +252,11 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.guardar = function() {
+		for (campos in mi.camposdinamicos) {
+			if (mi.camposdinamicos[campos].tipo === 'fecha') {
+				mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
+			}
+		}
 			var datos = {
 				accion : 'guardar',
 				id: mi.producto.id,
@@ -314,6 +319,26 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			
 			mi.unidadEjecutora = mi.producto.unidadEjectuora;
 			mi.unidadEjecutoraNombre = mi.producto.nombreUnidadEjecutora;
+			
+			var parametros = {
+					accion: 'getProductoPropiedadPorTipo', 
+					idproducto: mi.producto.id,
+					idproductotipo: mi.tipo
+			}
+			$http.post('/SProductoPropiedad', parametros).then(function(response){
+				mi.camposdinamicos = response.data.productopropiedades
+				for (campos in mi.camposdinamicos) {
+					switch (mi.camposdinamicos[campos].tipo){
+						case "fecha":
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+							break;
+						case "entero":
+							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+							break;
+					}
+
+				}
+			});
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar un PRODUCTO');
 		}
@@ -406,11 +431,17 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			
 			var parametros = { 
 				accion: 'getProductoPropiedadPorTipo', 
-				idproducto: mi.codigo,
+				idproducto: mi.producto.id,
 				idproductotipo: itemSeleccionado.id
 			}
 			$http.post('/SProductoPropiedad', parametros).then(function(response){
-				mi.camposdinamicos = response.data.productopropiedades
+				mi.camposdinamicos = response.data.productopropiedades;
+				for (campos in mi.camposdinamicos) {
+					if (mi.camposdinamicos[campos].tipo === 'fecha') {
+						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null; 
+					}
+				}
+				
 			});
 		});
 

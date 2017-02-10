@@ -218,7 +218,7 @@ public class ProductoPropiedadDAO {
 						campo.put("valor", proyectoPropiedadValor.getValorDecimal());
 						break;
 					case 5:
-						campo.put("valor", proyectoPropiedadValor.getValorTiempo());
+						campo.put("valor", Utils.formatDate(proyectoPropiedadValor.getValorTiempo()));
 						break;
 				}
 			}
