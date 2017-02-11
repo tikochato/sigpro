@@ -78,12 +78,18 @@ public class SPermiso extends HttpServlet {
 				String nombrePermiso = map.get("nombre");
 				String descripcionPermiso = map.get("descripcion");
 				boolean esnuevo = map.get("esnuevo").equals("true");
+				Integer idPermiso = Integer.parseInt(map.get("id").toString());
 				if(nombrePermiso!=null && descripcionPermiso!=null && esnuevo){
 					HttpSession sesionweb = request.getSession();
-					Permiso permiso = new Permiso(nombrePermiso,descripcionPermiso,sesionweb.getAttribute("usuario").toString(),new DateTime().toDate(),1);
+					Permiso permiso = new Permiso();
+					permiso.setId(idPermiso);
+					permiso.setNombre(nombrePermiso);
+					permiso.setDescripcion(descripcionPermiso);
+					permiso.setUsuarioCreo(sesionweb.getAttribute("usuario").toString());
+					permiso.setFechaCreacion(new DateTime().toDate());
+					permiso.setEstado(1);
 					response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false"),", \"data\":",permiso.getId().toString(),"  }");
 				}else{
-					Integer idPermiso = Integer.parseInt(map.get("id").toString());
 					if(nombrePermiso!=null && descripcionPermiso!=null && idPermiso !=null ){
 						HttpSession sesionweb = request.getSession();
 						Permiso permiso = PermisoDAO.getPermisoById(idPermiso);

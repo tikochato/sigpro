@@ -115,7 +115,7 @@ app.controller(
 						nombre:mi.permisoSelected.nombre,
 						descripcion:mi.permisoSelected.descripcion,
 						esnuevo:mi.esNuevo,
-						id:idSend
+						id:mi.permisoSelected.id
 					}).success(
 						function(data) {
 							if(data.success){

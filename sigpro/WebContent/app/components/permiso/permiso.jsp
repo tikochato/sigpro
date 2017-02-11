@@ -71,7 +71,15 @@
     		</div>
     		<form name="form">
 	    		<div class="col-sm-12">
-					
+	    					<div class="form-group" ng-show="!permisosc.esNuevo">
+								<label for="id">ID</label>
+								<p class="form-control-static" >{{permisosc.permisoSelected.id}} </p>
+	    						
+							</div>
+							<div class="form-group" ng-show="permisosc.esNuevo">
+								<label for="id1">ID</label>
+	    						<input type="number" class="form-control" id="id" placeholder="Id" ng-model="permisosc.permisoSelected.id" ng-required="permisosc.esNuevo" >
+							</div>
 							<div class="form-group">
 								<label for="nombre">Nombre</label>
 	    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="permisosc.permisoSelected.nombre" ng-required="true">
@@ -79,6 +87,22 @@
 							<div class="form-group">
 								<label for="Descripcion">Descripción</label>
 	    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="permisosc.permisoSelected.descripcion" ng-required="true">
+							</div>
+							<div class="form-group" ng-show="!permisosc.esNuevo">
+								<label for="fechaCreacion">Usuario que creo.</label> 
+								<p class="form-control-static">{{permisosc.permisoSelected.usuarioCreo }} </p>
+							</div>
+							<div class="form-group" ng-show="!permisosc.esNuevo">
+								<label for="fechaCreacion">Fecha de creación</label> 
+								<p class="form-control-static">{{permisosc.permisoSelected.fechaCreacion }} </p>
+							</div>
+							<div class="form-group" ng-show="!permisosc.esNuevo">
+								<label for="fechaCreacion">Usuario que actualizo</label> 
+								<p class="form-control-static">{{permisosc.permisoSelected.usuarioActualizo }} </p>
+							</div>
+							<div class="form-group" ng-show="!permisosc.esNuevo">
+								<label for="fechaCreacion">Fecha de actualizacion</label> 
+								<p class="form-control-static">{{permisosc.permisoSelected.fechaActualizacion }} </p>
 							</div>
 				</div>
     		</form>
