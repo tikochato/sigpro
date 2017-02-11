@@ -92,27 +92,27 @@
 						<div class="form-grup row" >
 							<div class="form-group col-sm-2"  >
 							       <label for="campo1 " >Programa</label> 
-							       <input type="number" class="form-control" id="campo1" name="campo1" placeholder="Programa" ng-model="componentec.componente.programa"  />
+							       <input type="number" class="form-control"  placeholder="Programa" ng-model="componentec.componente.programa"  ng-maxlength="4" style="text-align: center"/>
 							</div>
 							<div class="form-group col-sm-2"  >
 							  <label for="campo2">Subprograma</label> 
-							  <input type="number" class="form-control" id="campo2" name="campo2" placeholder="Subprograma" ng-model="componentec.componente.subprograma" />
+							  <input type="number" class="form-control"  placeholder="Subprograma" ng-model="componentec.componente.subprograma" ng-maxlength="4" style="text-align: center"/>
 							</div>
 							<div class="form-group col-sm-2"  >
 							  <label for="campo3">Proyecto</label> 
-							  <input type="number" class="form-control" id="campo3" name="campo3" placeholder="Proyecto" ng-model="componentec.componente.proyecto_" />
+							  <input type="number" class="form-control"  placeholder="Proyecto" ng-model="componentec.componente.proyecto_" ng-maxlength="4" style="text-align: center"/>
 							</div>
 							<div class="form-group col-sm-2" >
 							  <label for="campo4">Actividad</label> 
-							  <input type="number" class="form-control" placeholder="Actividad" ng-model="componentec.componente.actividad" ng-maxlength="4"/>
+							  <input type="number" class="form-control" placeholder="Actividad" ng-model="componentec.componente.actividad" ng-maxlength="4" style="text-align: center"/>
 							</div>					
 							<div class="form-group col-sm-2" >
 							  <label for="campo4">Obra</label> 
-							  <input type="number" class="form-control" placeholder="Obra" ng-model="componentec.componente.obra" ng-maxlength="4"/>
+							  <input type="number" class="form-control" placeholder="Obra" ng-model="componentec.componente.obra" ng-maxlength="4" style="text-align: center"/>
 							</div>
 							<div class="form-group col-sm-2" >
 							  <label for="campo5">Fuente</label> 
-							  <input type="number" class="form-control" placeholder="Fuente" ng-model="componentec.componente.fuente" ng-maxlength="4"/>
+							  <input type="number" class="form-control" placeholder="Fuente" ng-model="componentec.componente.fuente" ng-maxlength="4" style="text-align: center"/>
 							</div>
 						</div>
 						

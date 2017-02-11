@@ -331,8 +331,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 						case "entero":
 							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
 							break;
+						case "decimal":
+							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+							break;
 					}
-
 				}
 			});
 		} else {
@@ -433,8 +435,16 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			$http.post('/SProductoPropiedad', parametros).then(function(response){
 				mi.camposdinamicos = response.data.productopropiedades;
 				for (campos in mi.camposdinamicos) {
-					if (mi.camposdinamicos[campos].tipo === 'fecha') {
-						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null; 
+					switch (mi.camposdinamicos[campos].tipo){
+						case "fecha":
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+							break;
+						case "entero":
+							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+							break;
+						case "decimal":
+							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+							break;
 					}
 				}
 				

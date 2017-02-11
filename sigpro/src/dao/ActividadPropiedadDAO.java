@@ -208,7 +208,7 @@ public class ActividadPropiedadDAO {
 		try{
 			Query<ActividadPropiedad> criteria = session.createNativeQuery(" select cp.* "
 				+ "from actividad_tipo ct "
-				+ "join ctipo_propiedad ctp ON ctp.actividad_tipoid = ct.id "
+				+ "join atipo_propiedad ctp ON ctp.actividad_tipoid = ct.id "
 				+ "join actividad_propiedad cp ON cp.id = ctp.actividad_propiedadid "
 				+ " where ct.id = :idTipoComp",ActividadPropiedad.class);
 			

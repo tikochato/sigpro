@@ -203,7 +203,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.cooperantenombre=mi.proyecto.cooperante;
 			mi.esColapsado = true;
 			mi.esNuevo = false;
-			
+
 
 			var parametros = {
 					accion: 'getProyectoPropiedadPorTipo',
@@ -402,7 +402,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				mi.camposdinamicos = response.data.proyectopropiedades;
 				for (campos in mi.camposdinamicos) {
 					if (mi.camposdinamicos[campos].tipo === 'fecha') {
-						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null; 
+						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
 					}
 				}
 			});

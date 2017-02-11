@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,6 +69,7 @@ public class SActividad extends HttpServlet {
 		String tipo;
 		String label;
 		String valor;
+		String valor_f;
 	}
 
     /**
@@ -179,8 +179,7 @@ public class SActividad extends HttpServlet {
 				if(id>0 || esnuevo){
 					String nombre = map.get("nombre");
 					String descripcion = map.get("descripcion");
-					int actividadtipoid = Integer.parseInt(map.get("actividadtipoid"));
-
+					int actividadtipoid =Utils.getParameterInteger(map, "actividadtipoid");
 					Date fechaInicio = Utils.dateFromString(map.get("fechainicio"));
 					Date fechaFin = Utils.dateFromString(map.get("fechafin"));
 					Long snip = Utils.String2Long(map.get("snip"));
@@ -242,23 +241,22 @@ public class SActividad extends HttpServlet {
 								usuario, null, new DateTime().toDate(), null, 1);
 
 						switch (actividadPropiedad.getDatoTipo().getId()){
-							case 1:
-								valor.setValorString(data.valor);
-								break;
-							case 2:
-								valor.setValorEntero(Integer.parseInt(data.valor));
-								break;
-							case 3:
-								valor.setValorDecimal(new BigDecimal(data.valor));
-								break;
-							case 4:
-
-								break;
-							case 5:
-								SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-								valor.setValorTiempo(sdf.parse(data.valor));
-								break;
-						}
+						case 1:
+							valor.setValorString(data.valor);
+							break;
+						case 2:
+							valor.setValorEntero(Utils.String2Int(data.valor, null));
+							break;
+						case 3:
+							valor.setValorDecimal(Utils.String2BigDecimal(data.valor, null));
+							break;
+						case 4:
+							break;
+						case 5:
+							SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+							valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
+							break;
+					}
 						result = (result && ActividadPropiedadValorDAO.guardarActividadPropiedadValor(valor));
 					}
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "

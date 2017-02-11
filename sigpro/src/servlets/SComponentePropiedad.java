@@ -243,7 +243,7 @@ public class SComponentePropiedad extends HttpServlet {
 							campo.put("valor", coomponentePropiedadValor.getValorDecimal());
 							break;
 						case 5:
-							campo.put("valor", coomponentePropiedadValor.getValorTiempo());
+							campo.put("valor", Utils.formatDate(coomponentePropiedadValor.getValorTiempo()));
 							break;
 					}
 				}
