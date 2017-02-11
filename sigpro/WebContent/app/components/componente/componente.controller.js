@@ -28,7 +28,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;
-		
+
 		mi.filtros = [];
 		mi.orden = null;
 
@@ -44,7 +44,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				minDate : new Date(1990, 1, 1),
 				startingDay : 1
 		};
-		
+
 		mi.gridOptions = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
@@ -58,11 +58,11 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			    useExternalSorting: true,
 				columnDefs : [
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left', 
+				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
 				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentec.filtrar($event,1)" ></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-				    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
+				    { name: 'usuarioCreo', displayName: 'Usuario Creación',
 				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentec.filtrar($event,2)"></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
@@ -74,7 +74,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 						mi.componente = row.entity;
 					});
-					
+
 					gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
 						if(sortColumns.length==1){
 							grid.appScope.componentec.columnaOrdenada=sortColumns[0].field;
@@ -107,12 +107,12 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				    }
 				}
 		};
-		   
+
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SComponente', { accion: 'getComponentesPaginaPorProyecto', pagina: pagina, numerocomponentes: $utilidades.elementosPorPagina,proyectoid: $routeParams.proyecto_id, 
+			$http.post('/SComponente', { accion: 'getComponentesPaginaPorProyecto', pagina: pagina, numerocomponentes: $utilidades.elementosPorPagina,proyectoid: $routeParams.proyecto_id,
 				numeroproyecto:  $utilidades.elementosPorPagina,
-				filtro_nombre: mi.filtros['nombre'], filtro_snip: mi.filtros['snip'], 
+				filtro_nombre: mi.filtros['nombre'], filtro_snip: mi.filtros['snip'],
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
 				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
 			}).success(
@@ -206,7 +206,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			mi.componente = null;
 			mi.camposdinamicos = {};
 			mi.gridApi.selection.clearSelectedRows();
-			
+
 		};
 
 		mi.editar = function() {
@@ -217,7 +217,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				mi.componentetiponombre=mi.componente.componentetiponombre;
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
-				
+
 				var parametros = {
 						accion: 'getComponentePropiedadPorTipo',
 						idComponente: mi.componente!=null ? mi.componente.id : 0,
@@ -232,6 +232,9 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 								mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
 								break;
 							case "entero":
+								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								break;
+							case "decimal":
 								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
 								break;
 						}
@@ -275,13 +278,13 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					mi.totalComponentes = response.totalcomponentes;
 					mi.cargarTabla(1);
 		});
-		
+
 		mi.irAProductos=function(componenteid){
 			if(mi.componente!=null){
 				$location.path('/producto/'+componenteid);
 			}
 		};
-		
+
 		mi.filtrar = function(evt,tipo){
 			if(evt.keyCode==13){
 				switch(tipo){
@@ -292,7 +295,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				mi.obtenerTotalComponentes();
 			}
 		}
-		
+
 		mi.obtenerTotalComponentes = function(){
 			$http.post('/SComponente', { accion: 'numeroComponentesPorProyecto', proyectoid: $routeParams.proyecto_id,
 				filtro_nombre: mi.filtros['nombre'],
@@ -303,7 +306,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 						mi.cargarTabla(mi.paginaActual);
 			});
 		}
-		
+
 		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
 			var resultado = $q.defer();
 			var modalInstance = $uibModal.open({
@@ -339,8 +342,8 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			});
 			return resultado.promise;
 		};
-		
-		
+
+
 		mi.buscarComponenteTipo = function() {
 			var resultado = mi.llamarModalBusqueda('/SComponenteTipo', {
 				accion : 'numeroComponenteTipos'
@@ -377,7 +380,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				});
 			});
 		};
-		
+
 		mi.buscarUnidadEjecutora = function() {
 			var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
 				accion : 'totalElementos'

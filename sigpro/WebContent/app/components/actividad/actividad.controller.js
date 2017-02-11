@@ -145,7 +145,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				$http.post('/SActividad', {
 					accion: 'guardarActividad',
 					esnuevo: mi.esnuevo,
-					actividadtipoid : mi.actividad.actividadtipoid,
+					actividadtipoid : mi.actividadtipoid,
 					id: mi.actividad.id,
 					objetoid: $routeParams.objeto_id,
 					objetotipo: mi.objetotipo,
@@ -220,6 +220,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.editar = function() {
 			if(mi.actividad!=null){
 				mi.mostraringreso = true;
+				mi.actividadtipoid = mi.actividad.actividadtipoid;
 				mi.esnuevo = false;
 				
 				var parametros = {
@@ -328,7 +329,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 
 				var parametros = {
 						accion: 'getActividadPropiedadPorTipo',
-						idActividad: mi.actividad.id,
+						idActividad: mi.actividad!=null ? mi.actividad.id : 0,
 						idActividadTipo: selectedItem.id
 				}
 

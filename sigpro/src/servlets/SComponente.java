@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class SComponente extends HttpServlet {
 		Long snip;
 		Integer programa;
 		Integer subprograma;
-		Integer proyecto;
+		Integer proyecto_;
 		Integer obra;
 		Integer actividad;
 		Integer fuente;
@@ -69,6 +70,7 @@ public class SComponente extends HttpServlet {
 		String tipo;
 		String label;
 		String valor;
+		String valor_f;
 	}
 
     /**
@@ -133,7 +135,7 @@ public class SComponente extends HttpServlet {
 				temp.snip = componente.getSnip();
 				temp.programa = componente.getPrograma();
 				temp.subprograma = componente.getSubprograma();
-				temp.proyecto = componente.getProyecto_1();
+				temp.proyecto_ = componente.getProyecto_1();
 				temp.actividad = componente.getActividad();
 				temp.obra = componente.getObra();
 				temp.fuente = componente.getFuente();
@@ -165,7 +167,7 @@ public class SComponente extends HttpServlet {
 				temp.snip = componente.getSnip();
 				temp.programa = componente.getPrograma();
 				temp.subprograma = componente.getSubprograma();
-				temp.proyecto = componente.getProyecto_1();
+				temp.proyecto_ = componente.getProyecto_1();
 				temp.obra = componente.getObra();
 				temp.actividad = componente.getActividad();
 				temp.fuente = componente.getFuente();
@@ -261,7 +263,8 @@ public class SComponente extends HttpServlet {
 
 								break;
 							case 5:
-								valor.setValorTiempo(Utils.dateFromString(data.valor));
+								SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+								valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
 								break;
 						}
 						result = (result && ComponentePropiedadValorDAO.guardarComponentePropiedadValor(valor));
@@ -324,7 +327,7 @@ public class SComponente extends HttpServlet {
 				temp.snip = componente.getSnip();
 				temp.programa = componente.getPrograma();
 				temp.subprograma = componente.getSubprograma();
-				temp.proyecto = componente.getProyecto_1();
+				temp.proyecto_ = componente.getProyecto_1();
 				temp.obra = componente.getObra();
 				temp.actividad = componente.getActividad();
 				temp.fuente = componente.getFuente();

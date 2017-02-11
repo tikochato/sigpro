@@ -73,7 +73,7 @@
 				<form name="form">
 						<div class="form-group">
 							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ actividadc.actividad.id }}</label>
+    						<p class="form-control-static">{{ actividadc.actividad.id }}</p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
@@ -83,8 +83,7 @@
 						<div class="form-group">
 							<label for="campo3">* Tipo de Actividad</label>
 				          	<div class="input-group">
-				            	<input type="hidden" class="form-control" ng-model="actividadc.actividadtipoid" />
-				            	<input type="text" class="form-control" placeholder="Tipo de Actividad" ng-model="actividadc.actividad.actividadtiponombre" ng-readonly="true" ng-required="true"/>
+				            	<input type="text" class="form-control" placeholder="Tipo de Actividad" ng-model="actividadc.actividadtiponombre" ng-readonly="true" ng-required="true"/>
 				            	<span class="input-group-addon" ng-click="actividadc.buscarActividadTipo()"><i class="glyphicon glyphicon-search"></i></span>
 				          	</div>
 						</div>
