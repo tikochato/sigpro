@@ -72,7 +72,7 @@
 		</div>
 		<div>
 		<div class="col-sm-12">
-			<form name="form" class="css-form" novalidate>
+			<form name="form" class="css-form">
 				
 					<div class="form-group col-sm-3" ng-show="!producto.esNuevo">
 						<label for="campo0">ID:</label> 

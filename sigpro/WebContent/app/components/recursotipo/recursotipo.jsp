@@ -51,7 +51,7 @@
 		</div>
 	</div>
 
-	<div class="row" ng-if="recursotipoc.mostraringreso">
+	<div class="row main-form" ng-if="recursotipoc.mostraringreso">
 		<h4 ng-hide="!recursotipoc.esnuevo">Nuevo Tipo de Recurso</h4>
 		<h4 ng-hide="recursotipoc.esnuevo">Edición de Tipo de Recurso</h4>
 		<div class="col-sm-12 operation_buttons" align="right">
@@ -75,21 +75,38 @@
 					<label for="descripcion">Descripción</label> 
 					<input type="text"class="form-control" id="descripcion" placeholder="Descripción"ng-model="recursotipoc.recursotipo.descripcion" ng-required="true">
 				</div>
-				<div class="form-group" ng-show="!recursotipoc.esnuevo">
-					<label for="usuarioCreo">Usuario que creo</label>
-					<p class="form-control-static"  id="usuarioCreo"> {{ recursotipoc.recursotipo.usuarioCreo }}</p>
-				</div>
-				<div class="form-group" ng-show="!recursotipoc.esnuevo">
-					<label for="fechaCreacion">Fecha de creación</label> 
-					<p class="form-control-static" id="fechaCreacion">{{ recursotipoc.recursotipo.fechaCreacion }} </p>
-				</div>
-				<div class="form-group" ng-show="!recursotipoc.esnuevo">
-					<label for="usuarioActualizo">Usuario que actualizo</label> 
-					<p class="form-control-static" id="usuarioCreo">{{ recursotipoc.recursotipo.usuarioActualizo }} </p>
-				</div>
-				<div class="form-group" ng-show="!recursotipoc.esnuevo">
-					<label for="fechaActualizacion">Fecha de actualizacion</label> 
-					<p class="form-control-static" id="usuarioCreo"> {{ recursotipoc.recursotipo.fechaActualizacion }}</p>
+				<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label> 
+									<p class="form-control-static"> {{ recursotipoc.recursotipo.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label for="fechaCreacion">Fecha de creación</label>
+									<p class="form-control-static" id="fechaCreacion"> {{ recursotipoc.recursotipo.fechaCreacion }} </p>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ recursotipoc.recursotipo.usuarioActualizo }} </p>
+								</div>	
+							</div>
+							<div class="col-sm-6">		
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ recursotipoc.recursotipo.fechaActualizacion }} </p>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<br />
@@ -105,7 +122,7 @@
 							</div>
 						</div>
 					</div>
-					
+					<br/>
 					<table style="width: 75%;"
 					st-table="recursotipoc.recursopropiedades"
 					class="table table-striped  table-bordered">

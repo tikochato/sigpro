@@ -113,7 +113,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 						id: mi.actividadpropiedad.id,
 						nombre: mi.actividadpropiedad.nombre,
 						descripcion: mi.actividadpropiedad.descripcion,
-						datoTipoId: mi.datotipoid
+						datoTipoId: mi.actividadpropiedad.datotipoid.id
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Propiedad de Actividad '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
@@ -174,6 +174,10 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 					mi.datotiponombre = mi.actividadpropiedad.datotiponombre;
 					mi.mostraringreso = true;
 					mi.esnuevo = false;
+					mi.actividadpropiedad.datotipoid = {
+							"id" : mi.actividadpropiedad.datotipoid,
+							"nombre" : mi.actividadpropiedad.datotiponombre
+					}
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar la Propiedad de Actividad que desea editar');

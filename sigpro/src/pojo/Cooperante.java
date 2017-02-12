@@ -30,7 +30,7 @@ public class Cooperante implements java.io.Serializable {
 	private String codigo;
 	private String nombre;
 	private String descripcion;
-	private String usarioCreo;
+	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
@@ -40,20 +40,20 @@ public class Cooperante implements java.io.Serializable {
 	public Cooperante() {
 	}
 
-	public Cooperante(String codigo, String nombre, String usarioCreo, Date fechaCreacion, int estado) {
+	public Cooperante(String codigo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
 		this.codigo = codigo;
 		this.nombre = nombre;
-		this.usarioCreo = usarioCreo;
+		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
 	}
 
-	public Cooperante(String codigo, String nombre, String descripcion, String usarioCreo, String usuarioActualizo,
+	public Cooperante(String codigo, String nombre, String descripcion, String usuarioCreo, String usuarioActualizo,
 			Date fechaCreacion, Date fechaActualizacion, int estado, Set<Proyecto> proyectos) {
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
-		this.usarioCreo = usarioCreo;
+		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
@@ -100,13 +100,13 @@ public class Cooperante implements java.io.Serializable {
 		this.descripcion = descripcion;
 	}
 
-	@Column(name = "usario_creo", nullable = false, length = 30)
-	public String getUsarioCreo() {
-		return this.usarioCreo;
+	@Column(name = "usuario_creo", nullable = false, length = 30)
+	public String getUsuarioCreo() {
+		return this.usuarioCreo;
 	}
 
-	public void setUsarioCreo(String usarioCreo) {
-		this.usarioCreo = usarioCreo;
+	public void setUsuarioCreo(String usuarioCreo) {
+		this.usuarioCreo = usuarioCreo;
 	}
 
 	@Column(name = "usuario_actualizo", length = 30)

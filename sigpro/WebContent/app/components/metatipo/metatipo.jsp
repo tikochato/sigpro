@@ -53,7 +53,7 @@
     		</shiro:hasPermission>
     		
 		</div>
-		<div class="row" ng-show="metatipoc.mostraringreso">
+		<div class="row main-form" ng-show="metatipoc.mostraringreso">
 			<h4 ng-hide="!metatipoc.esnueva">Nuevo Tipo Meta</h4>
 			<h4 ng-hide="metatipoc.esnueva">Edición de Tipo Meta</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
@@ -77,22 +77,39 @@
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="metatipoc.tipo.descripcion" ng-required="true">
 						</div>
-						<div class="form-group" ng-show="!metatipoc.esnueva">
-							<label for="usuarioCreo">Usuario que creo</label>
-    						<p class="form-control-static" id="usuarioCreo">{{ metatipoc.tipo.usuarioCreo }} </p>
+						<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label> 
+									<p class="form-control-static"> {{ metatipoc.tipo.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label for="fechaCreacion">Fecha de creación</label>
+									<p class="form-control-static" id="fechaCreacion"> {{ metatipoc.tipo.fechaCreacion }} </p>
+								</div>
+							</div>
 						</div>
-						<div class="form-group" ng-show="!metatipoc.esnueva">
-							<label for="fechaCreacion">Fecha de creación</label>
-    						<p class="form-control-static"  id="fechaCreacion">{{ metatipoc.tipo.fechaCreacion }} </p>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ metatipoc.tipo.usuarioActualizo }} </p>
+								</div>	
+							</div>
+							<div class="col-sm-6">		
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ metatipoc.tipo.fechaActualizacion }} </p>
+								</div>
+							</div>
 						</div>
-						<div class="form-group" ng-show="!metatipoc.esnueva">
-							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<p class="form-control-static" id="usuarioCreo">{{ metatipoc.tipo.usuarioActualizo }} </p>
-						</div>
-						<div class="form-group" ng-show="!metatipoc.esnueva">
-							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<p class="form-control-static" id="usuarioCreo">{{ metatipoc.tipo.fechaActualizacion }} </p>
-						</div>
+					</div>
+				</div>
 				</form>
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>

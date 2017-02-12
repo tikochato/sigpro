@@ -11,14 +11,6 @@
 <script type="text/ng-template" id="buscarColaborador.jsp">
    	<%@ include file="/app/components/usuarios/buscarColaborador.jsp"%>
 </script>
-<style type="text/css">
-
-.myGrid {
-	width: 100%;
-	height: 600px;
-}
-</style>
-
 	<div ng-controller="usuarioController as usuarioc" class="maincontainer all_page" id="title">
 		<h3>Usuarios</h3><br/>
 		<div class="row" align="center" ng-hide="usuarioc.isCollapsed">
@@ -71,7 +63,7 @@
 
 		</div>
 		<shiro:hasPermission name="verCooperante">
-		<div class="row" ng-show="usuarioc.isCollapsed">
+		<div class="row main-form" ng-show="usuarioc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid ? usuarioc.guardarUsuario() : '' ) :  (form.$valid ? usuarioc.guardarUsuario() : '' )" ng-disabled="usuarioc.esNuevo ? form1.$invalid : form.$invalid">Guardar</label>

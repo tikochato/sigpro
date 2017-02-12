@@ -18,8 +18,6 @@
 			       <shiro:hasPermission name="eliminarCooperante">
 			       		<label class="btn btn-primary" ng-click="actividadc.borrar()">Borrar</label>
 			       </shiro:hasPermission>
-
-
     			</div>
     		</div>
     		<shiro:hasPermission name="verCooperante">
@@ -177,7 +175,7 @@
 								</select>
 							</div>
 						</div>
-						<div class="panel panel-default">
+				<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">

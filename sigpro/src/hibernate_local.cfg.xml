@@ -13,9 +13,13 @@
         <property name="hibernate.validator.apply_to_ddl">false</property>
         <mapping class="pojo.Actividad" />
         <mapping class="pojo.ActividadUsuario" />
+        <mapping class="pojo.ActividadUsuarioId" />
         <mapping class="pojo.ComponenteUsuario" />
+        <mapping class="pojo.ComponenteUsuarioId" />
         <mapping class="pojo.ProyectoUsuario" />
+        <mapping class="pojo.ProyectoUsuarioId" />
         <mapping class="pojo.ProductoUsuario" />
+        <mapping class="pojo.ProductoUsuarioId" />
         <mapping class="pojo.ActividadPropiedad" />
         <mapping class="pojo.ActividadPropiedadValor" />
         <mapping class="pojo.ActividadTipo" />
@@ -36,6 +40,7 @@
         <mapping class="pojo.FormularioItem" />
         <mapping class="pojo.FormularioItemTipo" />
         <mapping class="pojo.FormularioItemValor" />
+        <mapping class="pojo.FormularioItemOpcion" />
         <mapping class="pojo.FormularioTipo" />
         <mapping class="pojo.Hito" />
         <mapping class="pojo.HitoResultado" />
@@ -46,6 +51,8 @@
         <mapping class="pojo.MetaValor" />
         <mapping class="pojo.ObjetoFormulario" />
         <mapping class="pojo.ObjetoRecurso" />
+        <mapping class="pojo.ObjetoRiesgo" />
+        <mapping class="pojo.ObjetoRiesgoId" />
         <mapping class="pojo.Permiso" />
         <mapping class="pojo.ProdtipoPropiedad" />
         <mapping class="pojo.Producto" />

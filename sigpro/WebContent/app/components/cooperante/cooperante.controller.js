@@ -19,7 +19,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.columnaOrdenada=null;
 			mi.ordenDireccion = null;
 			
-			mi.filtros = [];
+			mi.filtros = ["","","",""];
 			
 			mi.gridOptions = {
 					enableRowSelection : true,
@@ -34,18 +34,18 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 				    useExternalSorting: true,
 					columnDefs : [ 
 						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-						{ name: 'codigo', width: 150, displayName: 'Código', cellClass: 'grid-align-right',
-							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,1)"></input></div>'
+						{ name: 'codigo', width: 150, displayName: 'Código', 
+							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-model="grid.appScope.cooperantec.filtros[\'codigo\']" ng-keypress="grid.appScope.cooperantec.filtrar($event)"></input></div>'
 						},
 					    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
-							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,2)"></input></div>'
+							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-model="grid.appScope.cooperantec.filtros[\'nombre\']" ng-keypress="grid.appScope.cooperantec.filtrar($event)"></input></div>'
 					    },
 					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 					    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
-					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,3)"></input></div>'
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-model="grid.appScope.cooperantec.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.cooperantec.filtrar($event)"></input></div>'
 					    },
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,4)"></input></div>'
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-model="grid.appScope.cooperantec.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.cooperantec.filtrar($event)"></input></div>'
 					    }
 					],
 					onRegisterApi: function(gridApi) {
@@ -194,14 +194,8 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 					$location.path('/cooperante/rv');
 			}
 			
-			mi.filtrar = function(evt,tipo){
+			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
-					switch(tipo){
-						case 1: mi.filtros['codigo'] = evt.currentTarget.value; break;
-						case 2: mi.filtros['nombre'] = evt.currentTarget.value; break;
-						case 3: mi.filtros['usuario_creo'] = evt.currentTarget.value; break;
-						case 4: mi.filtros['fecha_creacion'] = evt.currentTarget.value; break;
-					}
 					mi.cargarTabla(mi.paginaActual);
 				}
 			}

@@ -62,7 +62,7 @@
 
 	</div>
 
-	<div ng-show="productoTipo.esForma">
+	<div class="row main-form" ng-show="productoTipo.esForma">
 
 		<div class="col-sm-12 operation_buttons" align="right">
 
@@ -74,26 +74,24 @@
 		</div>
 
 		<div>
-			<form name="form" class="css-form" novalidate>
+			<form name="form" class="css-form">
 
 				<div class="row">
-					<div class="form-group col-sm-3" ng-show="!productoTipo.esNuevo">
+					<div class="form-group">
 						<label for="campo0">ID:</label>
-						<p class="form-control-static" id="campo0" name="campo0">{{productoTipo.codigo}} </p>
+						<p class="form-control-static">{{productoTipo.codigo}} </p>
 					</div>
 				</div>
 
 				<div class="row">
-					<div class="form-group col-sm-12"
-						ng-class="{ 'has-error' : form.campo1.$invalid }">
-						<label for="campo1">* Nombre:</label> 
-						<input type="text" class="form-control" id="campo1" name="campo1" placeholder="Nombre de tipo" ng-model="productoTipo.nombre" required />
+					<div class="form-group">
+						<label>* Nombre:</label> 
+						<input type="text" class="form-control" placeholder="Nombre de tipo" ng-model="productoTipo.nombre" ng-required="true" />
 					</div>
 
-					<div class="form-group col-sm-12"
-						ng-class="{ 'has-error' : form.campo3.$invalid }">
-						<label for="campo3">* Descripción:</label> 
-						<input type="text" class="form-control" id="campo3" name="campo3" placeholder="Descripcion de tipo" ng-model="productoTipo.descripcion" required />
+					<div class="form-group">
+						<label>* Descripción:</label> 
+						<input type="text" class="form-control" placeholder="Descripcion de tipo" ng-model="productoTipo.descripcion" ng-required="true" />
 					</div>
 				</div>
 			</form>
@@ -101,7 +99,7 @@
 
 		<br />
 
-		<h4>Propiedades</h4>
+		<h5>Propiedades</h5>
 		<div>
 			<div class="col-sm-12" align="center">
 				<table st-table="productoTipo.propiedadesTipo" class="table table-striped" style="width: 400px;" ng-hide="productoTipo.mostrarCargando">
@@ -133,7 +131,39 @@
 				</div>
 			</div>
 		</div>
-
+		<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label> 
+									<p class="form-control-static"> {{ productoTipo.productotipo.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label for="fechaCreacion">Fecha de creación</label>
+									<p class="form-control-static" id="fechaCreacion"> {{ productoTipo.productotipo.fechaCreacion }} </p>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ productoTipo.productotipo.usuarioActualizo }} </p>
+								</div>	
+							</div>
+							<div class="col-sm-6">		
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ productoTipo.productotipo.fechaActualizacion }} </p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 		<div class="col-sm-12" align="center">Los campos marcados con * son obligatorios</div>
 		<br />
 		

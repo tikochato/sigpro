@@ -53,52 +53,71 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row" ng-show="actividadpropiedadc.mostraringreso">
+		<div class="row main-form" ng-show="actividadpropiedadc.mostraringreso">
 			<h4 ng-hide="!actividadpropiedadc.esnuevo">Nueva Propiedad</h4>
 			<h4 ng-hide="actividadpropiedadc.esnuevo">Edición de Propiedad</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="actividadpropiedadc.guardar()">Guardar</label>
+			        <label class="btn btn-success" ng-click="form.$valid ? actividadpropiedadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 			        <label class="btn btn-primary" ng-click="actividadpropiedadc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
 
 			<div class="col-sm-12">
-				<form>
+				<form name="form">
 						<div class="form-group">
 							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ actividadpropiedadc.actividadpropiedad.id }}</label>
+    						<p class="form-control-static">{{ actividadpropiedadc.actividadpropiedad.id }}</p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="actividadpropiedadc.actividadpropiedad.nombre">
+    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="actividadpropiedadc.actividadpropiedad.nombre" ng-required="true">
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Tipo dato</label>
-							<select class="form-control" ng-model="actividadpropiedadc.datotipoid" >
+							<select class="form-control" ng-model="actividadpropiedadc.actividadpropiedad.datotipoid"
+								ng-options="tipo as tipo.nombre for tipo in actividadpropiedadc.tipodatos track by tipo.id"
+								ng-readonly="true"
+								ng-disabled="!actividadpropiedadc.esnuevo" ng-required="true">
 								<option value="">Seleccione una opción</option>
-								<option ng-repeat="opciones in actividadpropiedadc.tipodatos" value="{{opciones.id}}">{{opciones.nombre}}</option>
 							</select>
 						</div>
 						<div class="form-group">
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="actividadpropiedadc.actividadpropiedad.descripcion">
 						</div>
-						<div class="form-group">
-							<label for="usuarioCreo">Usuario que creo</label>
-    						<label class="form-control" id="usuarioCreo">{{ actividadpropiedadc.actividadpropiedad.usuarioCreo }}</label>
-						</div>
-						<div class="form-group">
-							<label for="fechaCreacion">Fecha de creación</label>
-    						<label class="form-control" id="fechaCreacion">{{ actividadpropiedadc.actividadpropiedad.fechaCreacion }}</label>
-						</div>
-						<div class="form-group">
-							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<label class="form-control" id="usuarioCreo">{{ actividadpropiedadc.actividadpropiedad.usuarioActualizo }}</label>
-						</div>
-						<div class="form-group">
-							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<label class="form-control" id="usuarioCreo">{{ actividadpropiedadc.actividadpropiedad.fechaActualizacion }}</label>
+						<div class="panel panel-default">
+							<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group" style="text-align: right">
+											<label for="usuarioCreo">Usuario que creo</label>
+				    						<p class="form-control-static">{{ actividadpropiedadc.actividadpropiedad.usuarioCreo }}</p>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="fechaCreacion">Fecha de creación</label>
+				    						<p class="form-control-static">{{ actividadpropiedadc.actividadpropiedad.fechaCreacion }}</p>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group" style="text-align: right">
+											<label for="usuarioActualizo">Usuario que actualizo</label>
+				    						<p class="form-control-static">{{ actividadpropiedadc.actividadpropiedad.usuarioActualizo }}</p>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="fechaActualizacion">Fecha de actualizacion</label>
+				    						<p class="form-control-static">{{ actividadpropiedadc.actividadpropiedad.fechaActualizacion }}</p>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 				</form>
 			</div>
@@ -106,7 +125,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="actividadpropiedadc.guardar()">Guardar</label>
+				        <label class="btn btn-success" ng-click="form.$valid ? actividadpropiedadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 				        <label class="btn btn-primary" ng-click="actividadpropiedadc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

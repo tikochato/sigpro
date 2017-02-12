@@ -5,19 +5,12 @@
 <script type="text/ng-template" id="cambiarPassword.jsp">
    	<%@ include file="/app/components/usuarios/cambiarPassword.jsp"%>
 </script>
-<style type="text/css">
-
-.myGrid {
-	width: 100%;
-	height: 600px;
-}
-</style>
 
 	<div ng-controller="usuarioInfoController as usuarioc" class="maincontainer all_page" id="title">
 	<shiro:authenticated>
 	<h3><%= session.getAttribute("usuario") %></h3><br/>
 		
-		<div class="row">
+		<div class="row main-form">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<label class="btn btn-primary" ng-click="usuarioc.editar()" ng-hide="!usuarioc.esoculto">Editar</label>
@@ -82,9 +75,5 @@
 				</form>
 			</div>
     	</div>
-	
-	
 	</shiro:authenticated>
-		
-
 	</div>

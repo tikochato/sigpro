@@ -54,38 +54,38 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row" ng-show="recursoc.mostraringreso">
+		<div class="row main-form" ng-show="recursoc.mostraringreso">
 			<h4 ng-hide="!recursoc.esnuevo">Nuevo recurso</h4>
 			<h4 ng-hide="recursoc.esnuevo">Edición de recurso</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="recursoc.guardar()">Guardar</label>
+			        <label class="btn btn-success" ng-click="form.$valid ? recursoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 			        <label class="btn btn-primary" ng-click="recursoc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
 
 			<div class="col-sm-12">
-				<form>
+				<form name="form">
 						<div class="form-group">
 							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ recursoc.recurso.id }}</label>
+    						<p class="form-control-static">{{ recursoc.recurso.id }}</p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="recursoc.recurso.nombre">
+    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="recursoc.recurso.nombre" ng-required="true">
 						</div>
 
 						<div class="form-group">
 							<label for="campo3">* Tipo Recurso</label>
 				          	<div class="input-group">
-				            	<input type="text" class="form-control" id="irectipo" name="irectipo" placeholder="Tipo de Recurso" ng-model="recursoc.recurso.recursotiponombre" ng-readonly="true" required/>
+				            	<input type="text" class="form-control" id="irectipo" name="irectipo" placeholder="Tipo de Recurso" ng-model="recursoc.recurso.recursotiponombre" ng-readonly="true" ng-required="true"/>
 				            	<span class="input-group-addon" ng-click="recursoc.buscarRecursoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 				          	</div>
 						</div>
 						<div class="form-group">
 							<label for="campo3">* Unidad de Medida</label>
 				          	<div class="input-group">
-				            	<input type="text" class="form-control" id="iumedidad" name="iumedidad" placeholder="Unidad de Medida" ng-model="recursoc.recurso.medidanombre" ng-readonly="true" required/>
+				            	<input type="text" class="form-control" id="iumedidad" name="iumedidad" placeholder="Unidad de Medida" ng-model="recursoc.recurso.medidanombre" ng-readonly="true" ng-required="true"/>
 				            	<span class="input-group-addon" ng-click="recursoc.buscarUnidadMedida()"><i class="glyphicon glyphicon-search"></i></span>
 				          	</div>
 						</div>
@@ -119,29 +119,46 @@
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="recursoc.recurso.descripcion">
 						</div>
-						<div class="form-group">
-							<label for="usuarioCreo">Usuario que creo</label>
-    						<label class="form-control" id="usuarioCreo">{{ recursoc.recurso.usuarioCreo }}</label>
+						<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label> 
+									<p class="form-control-static"> {{ recursoc.recurso.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label for="fechaCreacion">Fecha de creación</label>
+									<p class="form-control-static" id="fechaCreacion"> {{ recursoc.recurso.fechaCreacion }} </p>
+								</div>
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="fechaCreacion">Fecha de creación</label>
-    						<label class="form-control" id="fechaCreacion">{{ recursoc.recurso.fechaCreacion }}</label>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ recursoc.recurso.usuarioActualizo }} </p>
+								</div>	
+							</div>
+							<div class="col-sm-6">		
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ recursoc.recurso.fechaActualizacion }} </p>
+								</div>
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<label class="form-control" id="usuarioCreo">{{ recursoc.recurso.usuarioActualizo }}</label>
-						</div>
-						<div class="form-group">
-							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<label class="form-control" id="usuarioCreo">{{ recursoc.recurso.fechaActualizacion }}</label>
-						</div>
+					</div>
+				</div>
 				</form>
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="recursoc.guardar()">Guardar</label>
+				        <label class="btn btn-success" ng-click="form.$valid ? recursoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 				        <label class="btn btn-primary" ng-click="recursoc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

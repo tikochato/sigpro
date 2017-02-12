@@ -123,7 +123,7 @@ public class CooperanteDAO {
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");
 			if(filtro_codigo!=null && filtro_codigo.trim().length()>0)
-				query_a = String.join("",query_a, " str(c.codigo) LIKE '%",filtro_codigo,"%' ");
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(c.codigo) LIKE '%",filtro_codigo,"%' ");
 			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " c.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)

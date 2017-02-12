@@ -60,7 +60,7 @@
    
   </div>
 
-  <div ng-show="colaborador.esForma">
+  <div class="main-form" ng-show="colaborador.esForma">
 
     <div class="col-sm-12 operation_buttons" align="right">
 

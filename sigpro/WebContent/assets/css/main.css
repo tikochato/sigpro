@@ -152,11 +152,12 @@ nav.navbar{
 }
 
 .div_alertas{
-	position: absolute;
-	bottom: 30px;
+	position: fixed;
+	bottom: 10px;
 	width: 100%;
 	font-size: 16px;
 	padding: 0 40px 0 40px;
+	z-index: 1000;
 }
 
 .ng-invalid, .ng-invalid:invalid {

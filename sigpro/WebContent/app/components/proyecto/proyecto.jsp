@@ -68,7 +68,7 @@
 	<div class="row main-form" ng-show="controller.esColapsado">
 		<h4 ng-hide="!controller.esNuevo">Nuevo Proyecto</h4>
 		<h4 ng-hide="controller.esNuevo">Edición de proyecto</h4>
-		<div class="col-sm-12 operation_buttons" align="left">
+		<div class="col-sm-12 operation_buttons" align="left" ng-hide="controler.esNuevo">
 			<div class="btn-group">
 				<label class="btn btn-default" ng-click="controller.irAComponentes(controller.proyecto.id)">Componentes</label>
 				<label class="btn btn-default" ng-click="controller.irAHitos(controller.proyecto.id)">Hitos</label>
@@ -87,7 +87,7 @@
 			<form name="form">
 				<div class="form-group">
 					<label for="id">ID</label>
-  					<label class="form-control" id="id">{{ controller.proyecto.id }}</label>
+  					<p class="form-control-static">{{ controller.proyecto.id }}</p>
 				</div>
 				<div class="form-group">
 					<label for="inombre">* Nombre</label>

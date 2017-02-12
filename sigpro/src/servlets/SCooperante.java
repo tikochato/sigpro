@@ -98,7 +98,7 @@ public class SCooperante extends HttpServlet {
 				temp.id = cooperante.getId();
 				temp.nombre = cooperante.getNombre();
 				temp.usuarioActualizo = cooperante.getUsuarioActualizo();
-				temp.usuarioCreo = cooperante.getUsarioCreo();
+				temp.usuarioCreo = cooperante.getUsuarioCreo();
 				stcooperantes.add(temp);
 			}
 			
@@ -119,7 +119,7 @@ public class SCooperante extends HttpServlet {
 				temp.id = cooperante.getId();
 				temp.nombre = cooperante.getNombre();
 				temp.usuarioActualizo = cooperante.getUsuarioActualizo();
-				temp.usuarioCreo = cooperante.getUsarioCreo();
+				temp.usuarioCreo = cooperante.getUsuarioCreo();
 				stcooperantes.add(temp);
 			}
 			
