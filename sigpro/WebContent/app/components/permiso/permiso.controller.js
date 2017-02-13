@@ -36,13 +36,16 @@ app.controller(
 		columnDefs : [ {
 			name : 'ID',
 			field : 'id',
+			cellClass : 'grid-align-left',
 			enableFiltering: false
 		}, {
 			name : 'Nombre',
+			cellClass : 'grid-align-left',
 			field : 'nombre'
 		}, {
 			name : 'Descripcion',
 			field : 'descripcion',
+			cellClass : 'grid-align-left',
 			enableFiltering: false
 		}
 
