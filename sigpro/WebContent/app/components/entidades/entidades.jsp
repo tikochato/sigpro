@@ -12,7 +12,7 @@
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
       	<shiro:hasPermission name="crearEntidad">
-      		<label class="btn btn-primary" ng-click="entidad.nuevo()">Nueva</label>
+      		<label class="btn btn-primary" ng-click="entidad.nueva()">Nueva</label>
       	</shiro:hasPermission>
       	<shiro:hasPermission name="editarEntidad">
         	<label class="btn btn-primary" ng-click="entidad.editar()">Editar</label>
@@ -29,6 +29,7 @@
 				</div>
 			</div>
 		  </div>
+		  <br/>
 	      <div id="grid1" ui-grid="entidad.entidades_gridOptions" ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination>
 	        <div class="grid_loading" ng-hide="!entidad.mostrarCargando">
 	          <div class="msg">
@@ -55,7 +56,7 @@
 
   </div>
 
-  <div class="row" ng-show="entidad.esForma">
+  <div class="row main-form" ng-show="entidad.esForma">
 
     <div class="col-sm-12 operation_buttons" align="right">
 
@@ -71,26 +72,24 @@
       <form name="form" class="css-form" novalidate>
 
 			<div class="row">
-		        <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo1.$invalid }">
-		          <label for="campo1">* Entidad</label>
-		          <input type="number" class="form-control" id="campo1" name="campo1"  placeholder="entidad" ng-model="entidad.entidad" ng-readonly="!entidad.esNuevo" required />
+		        <div class="form-group col-sm-12">
+		          <label>* Entidad</label>
+		          <input type="number" class="form-control" placeholder="Código Entidad" ng-model="entidad.entidad.entidad" ng-readonly="!entidad.esNuevo" ng-required="true" />
 		        </div>
 		    </div>
 
 			<div class="row">
-				<div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo2.$invalid }">
+				<div class="form-group col-sm-12" >
 				  <label for="campo2">* Nombre Entidad</label>
-				  <input type="text" class="form-control" id="campo2" name="campo2" placeholder="nombre entidad" ng-model="entidad.nombre" ng-readonly="!entidad.esNuevo" required />
+				  <input type="text" class="form-control" id="campo2" name="campo2" placeholder="Nombre Entidad" ng-model="entidad.entidad.nombre" ng-readonly="!entidad.esNuevo" ng-required="true" />
 				</div>
 			</div>
 			<div class="row">
-		        <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo3.$invalid }">
+		        <div class="form-group col-sm-12">
 		          <label for="campo3">Abreviatura</label>
-		          <input type="text" class="form-control" id="campo3" name="campo3" placeholder="abreviatura" ng-model="entidad.abreviatura">
+		          <input type="text" class="form-control" placeholder="Abreviatura" ng-model="entidad.entidad.abreviatura">
 		        </div>
 			</div>
-
-
       </form>
 
     </div>

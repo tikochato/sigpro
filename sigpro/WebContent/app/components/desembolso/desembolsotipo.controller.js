@@ -16,6 +16,8 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
 			
+			mi.filtros=[];
+			
 			mi.gridOptions = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
@@ -25,9 +27,13 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 				enableFiltering: true,
 				enablePaginationControls: false,
 			    paginationPageSize: $utilidades.elementosPorPagina,
+			    useExternalFiltering: true,
+			    useExternalSorting: true,
 				columnDefs : [ 
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
+				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left', 
+						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.desembolsotipoc.filtros[\'nombre\']"  ng-keypress="grid.appScope.desembolsotipoc.filtrar($event)" ></input></div>'
+				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false}
 				    
 				],
@@ -37,17 +43,36 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 						mi.desembolsotipo = row.entity;
 					});
 					
+					gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+						if(sortColumns.length==1){
+							grid.appScope.desembolsotipoc.columnaOrdenada=sortColumns[0].field;
+							grid.appScope.desembolsotipoc.ordenDireccion = sortColumns[0].sort.direction;
+							grid.appScope.desembolsotipoc.cargarTabla(grid.appScope.desembolsotipoc.paginaActual);
+						}
+						else if(sortColumns.length>1){
+							sortColumns[0].unsort();
+						}
+						else{
+							if(grid.appScope.desembolsotipoc.columnaOrdenada!=null){
+								grid.appScope.desembolsotipoc.columnaOrdenada=null;
+								grid.appScope.desembolsotipoc.ordenDireccion=null;
+							}
+						}
+					} );
+					
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
+						 mi.obtenerTotalDesembolsoTipos();
 				    }
 				    else{
 				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'desembolsotipo', t: (new Date()).getTime()}).then(function(response){
-					      if(response.data.success && response.data.estado!='')
-					    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
-					    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
-						      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
-						      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
-						      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+				    		  if(response.data.success && response.data.estado!=''){
+						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+						    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
+							      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
+							      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+				    		  }
+				    		  mi.obtenerTotalDesembolsoTipos();
 						  });
 				    }
 				}
@@ -55,7 +80,9 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 			
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SDesembolsoTipo', { accion: 'getDesembolsotiposPagina', pagina: pagina, numerodesembolsotipos: $utilidades.elementosPorPagina }).success(
+				$http.post('/SDesembolsoTipo', { accion: 'getDesembolsotiposPagina', pagina: pagina, numerodesembolsotipos: $utilidades.elementosPorPagina,
+					filtro_nombre: mi.filtros['nombre'], columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion }).success(
+				
 						function(response) {
 							mi.desembolsotipos = response.desembolsotipos;
 							mi.gridOptions.data = mi.desembolsotipos;
@@ -90,12 +117,12 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 			mi.nuevo = function() {
 				mi.mostraringreso=true;
 				mi.esnuevo = true;
-				mi.desembolsotipo = null;
+				mi.desembolsotipo = {};
 				mi.gridApi.selection.clearSelectedRows();
 			};
 			
 			mi.guardar=function(){
-				if(mi.desembolsotipo!=null && mi.desembolsotipo.nombre!=''){
+				if(mi.desembolsotipo!=null){
 					$http.post('/SDesembolsoTipo', {
 						accion: 'guardarDesembolsoTipo',
 						esnuevo: mi.esnuevo,
@@ -118,7 +145,7 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 			};
 			
 			mi.editar = function() {
-				if(mi.desembolsotipo!=null){
+				if(mi.desembolsotipo!=null && mi.desembolsotipo.id!=null){
 					mi.mostraringreso = true;
 					mi.esnuevo = false;
 				}
@@ -127,7 +154,7 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 			}
 			
 			mi.borrar = function(ev) {
-				if(mi.desembolsotipo!=null){
+				if(mi.desembolsotipo!=null && mi.desembolsotipo.id!=null){
 					var confirm = $mdDialog.confirm()
 				          .title('Confirmación de borrado')
 				          .textContent('¿Desea borrar el Tipo Desembolso "'+mi.desembolsotipo.nombre+'"?')
@@ -156,11 +183,18 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 					$utilidades.mensaje('warning','Debe seleccionar el Tipo Desembolso que desea borrar');
 			};
 
+			mi.obtenerTotalDesembolsoTipos = function(){
+				$http.post('/SDesembolsoTipo', { accion: 'numeroDesembolsoTipo', filtro_nombre: mi.filtros['nombre'] }).success(
+					function(response) {
+						mi.totalDesembolsoTipo = response.totaldesembolsotipo;
+						mi.cargarTabla(1);
+				});
+			}
 			
-			$http.post('/SDesembolsoTipo', { accion: 'numeroDesembolsoTipo' }).success(
-				function(response) {
-					mi.totalDesembolsoTipo = response.totaldesembolsotipo;
-					mi.cargarTabla(1);
-			});
+			mi.filtrar = function(evt){
+				if(evt.keyCode==13){
+					mi.obtenerTotalDesembolsoTipos();
+				}
+			};
 			
 }]);

@@ -52,21 +52,21 @@
     		</shiro:hasPermission>
     		
 		</div>
-		<div class="row" ng-show="formularioitemtipoc.mostraringreso">
+		<div class="row main-form" ng-show="formularioitemtipoc.mostraringreso">
 			<h4 ng-hide="!formularioitemtipoc.esnuevo">Nuevo Tipo de Item de Formulario</h4>
 			<h4 ng-hide="formularioitemtipoc.esnuevo">Edición de Tipo de Item de Formulario</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="formularioitemtipoc.guardar()">Guardar</label>
+			        <label class="btn btn-success" ng-click="form.$valid ? formularioitemtipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 			        <label class="btn btn-primary" ng-click="formularioitemtipoc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
 			
 			<div class="col-sm-12">
-				<form>
+				<form name="form">
 						<div class="form-group">
 							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ formularioitemtipoc.formularioitemtipo.id }}</label>
+    						<p class="form-control-static" >{{ formularioitemtipoc.formularioitemtipo.id }}</p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
@@ -85,29 +85,46 @@
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="formularioitemtipoc.formularioitemtipo.descripcion">
 						</div>
-						<div class="form-group">
-							<label for="usuarioCreo">Usuario que creo</label>
-    						<label class="form-control" id="usuarioCreo">{{ formularioitemtipoc.formularioitemtipo.usuarioCreo }}</label>
+						<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label> 
+									<p class="form-control-static" id="usuarioCreo"> {{ formularioitemtipoc.formularioitemtipo.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label for="fechaCreacion">Fecha de creación</label>
+									<p class="form-control-static" id="fechaCreacion"> {{ formularioitemtipoc.formularioitemtipo.fechaCreacion }} </p>
+								</div>
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="fechaCreacion">Fecha de creación</label>
-    						<label class="form-control" id="fechaCreacion">{{ formularioitemtipoc.formularioitemtipo.fechaCreacion }}</label>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ formularioitemtipoc.formularioitemtipo.usuarioActualizo }} </p>
+								</div>	
+							</div>
+							<div class="col-sm-6">		
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ formularioitemtipoc.formularioitemtipo.fechaActualizacion }} </p>
+								</div>
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<label class="form-control" id="usuarioActualizo">{{ formularioitemtipoc.formularioitemtipo.usuarioActualizacion }}</label>
-						</div>
-						<div class="form-group">
-							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<label class="form-control" id="usuarioCreo">{{ formularioitemtipoc.formularioitemtipo.fechaActualizacion }}</label>
-						</div>
+					</div>
+				</div>
 				</form>
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="formularioitemtipoc.guardar()">Guardar</label>
+				        <label class="btn btn-success"  ng-click="form.$valid ? formularioitemtipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 				        <label class="btn btn-primary" ng-click="formularioitemtipoc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

@@ -23,6 +23,7 @@
       	<shiro:hasPermission name="editarColaborador">
         	<label class="btn btn-primary" ng-click="colaborador.editar()">Editar</label>
       	</shiro:hasPermission>
+      		<label class="btn btn-primary" ng-click="colaborador.borrar()">Borrar</label>
       </div>
     </div>
     <shiro:hasPermission name="4010">
@@ -34,6 +35,7 @@
 			</div>
 		</div>
 	  </div>
+	  <br/>
       <div id="grid1" ui-grid="colaborador.opcionesGrid" ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination>
         <div class="grid_loading" ng-hide="!colaborador.mostrarCargando">
           <div class="msg">
@@ -60,9 +62,9 @@
    
   </div>
 
-  <div ng-show="colaborador.esForma">
+  <div class="main-form" ng-show="colaborador.esForma">
 
-    <div class="col-sm-12 operation_buttons" align="right">
+    <div class="operation_buttons" align="right">
 
       <div class="btn-group">
         <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : ''" ng-disabled="!form.$valid || !colaborador.usuarioValido">Guardar</label> 
@@ -73,49 +75,40 @@
     
     <div>
 	    <form name="form" class="css-form">
-	
 	      <div class="row">
-		      <div class="form-group col-sm-12" ng-show="!colaborador.esNuevo">
-		        <label for="campo0">ID:</label> 
-		      	<p class="form-control-static" id="campo0" name="campo0">{{colaborador.codigo}} </p>
-		      </div>
-	      </div>
-
-	      <div class="row">
-		      <div class="form-group col-sm-3" >
-		        <label for="campo1">* Primer Nombre:</label> 
-		        <input type="text" class="form-control" id="campo1" name="campo1" placeholder="Primer Nombre" ng-model="colaborador.primerNombre" ng-required="true" />
+		      <div class="form-group" >
+		        <label>* Primer Nombre:</label> 
+		        <input type="text" class="form-control" placeholder="Primer Nombre" ng-model="colaborador.colaborador.primerNombre" ng-required="true" />
 		      </div>
 		
-		      <div class="form-group col-sm-3">
-		        <label for="campo2">Segundo Nombre:</label> 
-		        <input type="text" class="form-control" id="campo2" name="campo2" placeholder="Segundo Nombre" ng-model="colaborador.segundoNombre" />
+		      <div class="form-group">
+		        <label>Segundo Nombre:</label> 
+		        <input type="text" class="form-control" placeholder="Segundo Nombre" ng-model="colaborador.colaborador.segundoNombre" />
 		      </div>
 		
-		      <div class="form-group col-sm-3" >
-		        <label for="campo3">* Primer Apellido:</label> 
-		        <input type="text" class="form-control" id="campo3" name="campo3" placeholder="Primer Apellido" ng-model="colaborador.primerApellido" ng-required="true" />
+		      <div class="form-group" >
+		        <label>* Primer Apellido:</label> 
+		        <input type="text" class="form-control" placeholder="Primer Apellido" ng-model="colaborador.colaborador.primerApellido" ng-required="true" />
 		      </div>
 		
-		      <div class="form-group col-sm-3" >
-		        <label for="campo4">Segundo Apellido:</label> 
-		        <input type="text" class="form-control" id="campo4" name="campo4" placeholder="Segundo Apellido" ng-model="colaborador.segundoApellido" />
+		      <div class="form-group" >
+		        <label>Segundo Apellido:</label> 
+		        <input type="text" class="form-control" placeholder="Segundo Apellido" ng-model="colaborador.colaborador.segundoApellido" />
 		      </div>
 	      </div>
 	
 	      <div class="row">
-		      <div class="form-group col-sm-12" >
-		        <label for="campo5">* CUI:</label> 
-		        <input type="number" id="campo5" name="campo5" class="form-control"  placeholder="CUI" ng-model="colaborador.cui" ng-maxlength="13" ng-required="true" />
+		      <div class="form-group" >
+		        <label>* CUI:</label> 
+		        <input type="number" class="form-control"  placeholder="CUI" ng-model="colaborador.colaborador.cui" ng-maxlength="13" ng-required="true" />
 		      </div>
 	      </div>
 	      
 	      <div class="row">
 		      <div class="form-group col-sm-12" >
-				  <label for="campo6">* Nombre Unidad Ejecutora:</label> 
+				  <label>* Nombre Unidad Ejecutora:</label> 
 				  <div class="input-group">
-				    <input type="hidden" class="form-control" ng-model="colaborador.unidadEjecutora" /> 
-				    <input type="text" id="campo6" name="campo6" class="form-control" placeholder="Nombre Unidad Ejecutora" ng-model="colaborador.nombreUnidadEjecutora" ng-disabled="true"  ng-required="true"/>
+				    <input type="text" class="form-control" placeholder="Nombre Unidad Ejecutora" ng-model="colaborador.colaborador.nombreUnidadEjecutora" ng-disabled="true"  ng-required="true"/>
 				    <span class="input-group-addon" ng-click="colaborador.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
 				  </div>
 			  </div>
@@ -125,11 +118,45 @@
 		      <div class="form-group col-sm-12" >
 		        <label for="campo6">* Usuario:</label> 
 		        <div class="input-group">
-		          <input type="text" id="campo7" name="campo7" class="form-control" placeholder="Usuario" ng-model="colaborador.usuario"  ng-disabled="true" ng-required="true"/>
+		          <input type="text" class="form-control" placeholder="Usuario" ng-model="colaborador.colaborador.usuario"  ng-disabled="true" ng-required="true"/>
 		          <span class="input-group-addon" ng-click="colaborador.buscarUsuario()" uib-tooltip="Validar Usuario" ><i class="glyphicon glyphicon-search"></i></span>
 		        </div>
 		      </div>
 	      </div>
+	      <br/>
+		  <div class="panel panel-default" ng-show="!colaborador.esNuevo">
+			<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group" style="text-align: right">
+							<label for="usuarioCreo">Usuario que creo</label>
+									<p class="form-control-static">{{ colaborador.colaborador.usuarioCreo }}</p>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="fechaCreacion">Fecha de creación</label>
+			 						<p class="form-control-static">{{ colaborador.colaborador.fechaCreacion }}</p>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group" style="text-align: right">
+							<label for="usuarioActualizo">Usuario que actualizo</label>
+			 						<p class="form-control-static">{{ colaborador.colaborador.usuarioActualizo }}</p>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="fechaActualizacion">Fecha de actualizacion</label>
+			 						<p class="form-control-static">{{ colaborador.colaborador.fechaActualizacion }}</p>
+						</div>
+					</div>
+				</div>
+			 </div>
+			</div>
 	    </form>
     </div>
   

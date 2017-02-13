@@ -7,6 +7,8 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.Actividad;
+import pojo.ActividadUsuario;
+import pojo.ActividadUsuarioId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -52,6 +54,8 @@ public class ActividadDAO {
 		try{
 			session.beginTransaction();
 			session.saveOrUpdate(Actividad);
+			ActividadUsuario au = new ActividadUsuario(new ActividadUsuarioId(Actividad.getId(), Actividad.getUsuarioCreo()),Actividad);
+			session.saveOrUpdate(au);
 			session.getTransaction().commit();
 			ret = true;
 		}
@@ -161,11 +165,24 @@ public class ActividadDAO {
 	}
 
 
-	public static List<Actividad> getActividadsPaginaPorObjeto(int pagina, int numeroActividads, int objetoId, int objetoTipo, String usuario){
+	public static List<Actividad> getActividadsPaginaPorObjeto(int pagina, int numeroActividads, int objetoId, int objetoTipo,String filtro_nombre, String filtro_usuario_creo,
+			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion, String usuario){
 		List<Actividad> ret = new ArrayList<Actividad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Actividad> criteria = session.createQuery("SELECT c FROM Actividad c WHERE estado = 1 AND c.objetoId = :objetoId AND c.objetoTipo = :objetoTipo AND c.id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )",Actividad.class);
+			String query = "SELECT a FROM Actividad a WHERE a.estado = 1 AND a.objetoId = :objetoId AND a.objetoTipo = :objetoTipo ";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " a.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " a.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(a.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			if(usuario!=null)
+				query = String.join("", query, " AND a.id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )");
+			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query," ORDER BY",columna_ordenada,orden_direccion ) : query;
+			Query<Actividad> criteria = session.createQuery(query,Actividad.class);
 			criteria.setParameter("objetoId", objetoId);
 			criteria.setParameter("objetoTipo", objetoTipo);
 			criteria.setParameter("usuario", usuario);
@@ -182,15 +199,27 @@ public class ActividadDAO {
 		return ret;
 	}
 	
-	public static Long getTotalActividadsPorObjeto(int objetoId, int objetoTipo, String usuario){
+	public static Long getTotalActividadsPorObjeto(int objetoId, int objetoTipo, String filtro_nombre, String filtro_usuario_creo,
+			String filtro_fecha_creacion, String usuario){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM Actividad c WHERE c.estado=1 AND c.objetoId = :objetoId AND c.objetoTipo = :objetoTipo AND c.id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )",Long.class);
-			conteo.setParameter("objetoId", objetoId);
-			conteo.setParameter("objetoTipo", objetoTipo);
-			conteo.setParameter("usuario", usuario);
-			ret = conteo.getSingleResult();
+			String query = "SELECT count(a.id) FROM Actividad a WHERE a.estado=1 and a.objetoId=:objetoId and a.objetoTipo=:objetoTipo ";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " a.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " a.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(a.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			if(usuario!=null)
+				query = String.join("", query, " AND a.id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )");
+			Query<Long> criteria = session.createQuery(query,Long.class);
+			criteria.setParameter("objetoId", objetoId);
+			criteria.setParameter("objetoTipo", objetoTipo);
+			criteria.setParameter("usuario", usuario);
+			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
 			CLogger.write("9", ActividadDAO.class, e);

@@ -54,25 +54,25 @@
     		</shiro:hasPermission>
     		
 		</div>
-		<div class="row" ng-show="metac.mostraringreso">
+		<div class="row main-form" ng-show="metac.mostraringreso">
 			<h4 ng-hide="!metac.esnueva">Nueva meta</h4>
 			<h4 ng-hide="metac.esnueva">Edición de meta</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="metac.guardar()">Guardar</label>
+			        <label class="btn btn-success" ng-click="form.$valid ? metac.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 			        <label class="btn btn-primary" ng-click="metac.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
 			
 			<div class="col-sm-12">
-				<form>
+				<form name="form">
 						<div class="form-group">
 							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ metac.meta.id }}</label>
+    						<p class="form-control-static">{{ metac.meta.id }}</p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="metac.meta.nombre">
+    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="metac.meta.nombre" ng-required="true">
 						</div>
 						<div class="form-group">
 							<label for="descripcion">Descripción</label>
@@ -80,7 +80,7 @@
 						</div>
 						<div class="form-group">
 							<label for="campo1">* Tipo Meta</label>
-							<select  class="form-control" ng-model="metac.meta.tipoMetaId">
+							<select  class="form-control" ng-model="metac.meta.tipoMetaId" ng-required="true">
 								<option value="">Seleccione una opción</option>
 								<option ng-repeat="opcion in metac.metatipos"
 									ng-selected="option.selected = metac.meta.tipoMetaId"
@@ -91,7 +91,7 @@
 						</div>
 						<div class="form-group">
 							<label for="campo1">* Unidad de Medida</label>
-							<select  class="form-control" ng-model="metac.meta.unidadMedidaId">
+							<select  class="form-control" ng-model="metac.meta.unidadMedidaId" ng-required="true">
 								<option value="">Seleccione una opción</option>
 								<option ng-repeat="opcion in metac.metaunidades"
 									ng-selected="option.selected = metac.meta.unidadMedidaId"
@@ -100,29 +100,46 @@
 								
 							</select>
 						</div>
-						<div class="form-group">
-							<label for="usuarioCreo">Usuario que creo</label>
-    						<label class="form-control" id="usuarioCreo">{{ metac.meta.usuarioCreo }}</label>
+						<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label> 
+									<p class="form-control-static"> {{ metac.meta.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label for="fechaCreacion">Fecha de creación</label>
+									<p class="form-control-static" id="fechaCreacion"> {{ metac.meta.fechaCreacion }} </p>
+								</div>
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="fechaCreacion">Fecha de creación</label>
-    						<label class="form-control" id="fechaCreacion">{{ metac.meta.fechaCreacion }}</label>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ metac.meta.usuarioActualizo }} </p>
+								</div>	
+							</div>
+							<div class="col-sm-6">		
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ metac.meta.fechaActualizacion }} </p>
+								</div>
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<label class="form-control" id="usuarioCreo">{{ metac.meta.usuarioActualizo }}</label>
-						</div>
-						<div class="form-group">
-							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<label class="form-control" id="usuarioCreo">{{ metac.meta.fechaActualizacion }}</label>
-						</div>
+					</div>
+				</div>
 				</form>
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="metac.guardar()">Guardar</label>
+				        <label class="btn btn-success" ng-click="form.$valid ? metac.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 				        <label class="btn btn-primary" ng-click="metac.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

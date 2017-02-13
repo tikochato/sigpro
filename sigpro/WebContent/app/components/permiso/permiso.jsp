@@ -35,7 +35,7 @@
 					</div>
 				</div>
 				<br/>
-				<div id="grid1" ui-grid="permisosc.gridOptions" ui-grid-save-state 
+				<div id="grid1" ui-grid="permisosc.gridOptions" ui-grid-save-state
 						ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination class="permisosc.myGrid">
 						<div class="grid_loading" ng-hide="!permisosc.mostrarcargando">
 				  	<div class="msg">
@@ -46,9 +46,9 @@
 					</div>
 				  </div>
 				</div>
-				<ul uib-pagination total-items="permisosc.totalPermisos" 
-						ng-model="permisosc.paginaActual" 
-						max-size="permisosc.numeroMaximoPaginas" 
+				<ul uib-pagination total-items="permisosc.totalPermisos"
+						ng-model="permisosc.paginaActual"
+						max-size="permisosc.numeroMaximoPaginas"
 						items-per-page="permisosc.elementosPorPagina"
 						first-text="Primero"
 						last-text="Último"
@@ -59,10 +59,10 @@
 				></ul>
 			</div>
     		</shiro:hasPermission>
-    		
+
 		</div>
 		<shiro:hasPermission name="20010">
-		<div class="row" ng-show="permisosc.isCollapsed">
+		<div class="row  main-form" ng-show="permisosc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-success" ng-click="form.$valid ? permisosc.guardarPermiso() : ''" ng-disabled="form.$invalid">Guardar</label>
@@ -74,39 +74,56 @@
 	    					<div class="form-group" ng-show="!permisosc.esNuevo">
 								<label for="id">ID</label>
 								<p class="form-control-static" >{{permisosc.permisoSelected.id}} </p>
-	    						
+
 							</div>
 							<div class="form-group" ng-show="permisosc.esNuevo">
 								<label for="id1">ID</label>
 	    						<input type="number" class="form-control" id="id" placeholder="Id" ng-model="permisosc.permisoSelected.id" ng-required="permisosc.esNuevo" >
 							</div>
 							<div class="form-group">
-								<label for="nombre">Nombre</label>
+								<label for="nombre">* Nombre</label>
 	    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="permisosc.permisoSelected.nombre" ng-required="true">
 							</div>
 							<div class="form-group">
 								<label for="Descripcion">Descripción</label>
 	    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="permisosc.permisoSelected.descripcion" ng-required="true">
 							</div>
-							<div class="form-group" ng-show="!permisosc.esNuevo">
-								<label for="fechaCreacion">Usuario que creo.</label> 
-								<p class="form-control-static">{{permisosc.permisoSelected.usuarioCreo }} </p>
+							<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;" >Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label>
+									<p class="form-control-static"> {{ permisosc.permisoSelected.usuarioCreo }}</p>
+								</div>
 							</div>
-							<div class="form-group" ng-show="!permisosc.esNuevo">
-								<label for="fechaCreacion">Fecha de creación</label> 
-								<p class="form-control-static">{{permisosc.permisoSelected.fechaCreacion }} </p>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label for="fechaCreacion">Fecha de creación</label>
+									<p class="form-control-static" id="fechaCreacion"> {{ permisosc.permisoSelected.fechaCreacion }} </p>
+								</div>
 							</div>
-							<div class="form-group" ng-show="!permisosc.esNuevo">
-								<label for="fechaCreacion">Usuario que actualizo</label> 
-								<p class="form-control-static">{{permisosc.permisoSelected.usuarioActualizo }} </p>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label>
+									<p class="form-control-static" id="usuarioCreo">{{ permisosc.permisoSelected.usuarioActualizo }} </p>
+								</div>
 							</div>
-							<div class="form-group" ng-show="!permisosc.esNuevo">
-								<label for="fechaCreacion">Fecha de actualizacion</label> 
-								<p class="form-control-static">{{permisosc.permisoSelected.fechaActualizacion }} </p>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label>
+									<p class="form-control-static" id="usuarioCreo">{{ permisosc.permisoSelected.fechaActualizacion }} </p>
+								</div>
 							</div>
+						</div>
+					</div>
+				</div>
 				</div>
     		</form>
-			
+
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-success" ng-click="form.$valid ? permisosc.guardarPermiso() : ''" ng-disabled="form.$invalid">Guardar</label>
@@ -115,6 +132,6 @@
     		</div>
 		</div>
 		</shiro:hasPermission>
-		
+
 
 	</div>

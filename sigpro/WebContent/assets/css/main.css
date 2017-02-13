@@ -6,6 +6,7 @@ html {
 
 body {
 	height: 100%;
+	background-color: transparent;
 }
 
 #mainview{
@@ -152,11 +153,12 @@ nav.navbar{
 }
 
 .div_alertas{
-	position: absolute;
-	bottom: 30px;
+	position: fixed;
+	bottom: 10px;
 	width: 100%;
 	font-size: 16px;
 	padding: 0 40px 0 40px;
+	z-index: 1000;
 }
 
 .ng-invalid, .ng-invalid:invalid {
@@ -170,4 +172,16 @@ nav.navbar{
 .main-form{
 	width: 80%;
 	margin: auto;
+}
+
+.table-propiedades{
+	background-color: white;
+}
+
+.navbar-inverse{
+	background-color: #1f3b6a;
+}
+
+.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {
+	background-color: #1f3b6a;
 }

@@ -28,7 +28,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;
-		
+
 		mi.filtros = [];
 		mi.orden = null;
 
@@ -40,11 +40,11 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 
 		mi.fechaOptions = {
 				formatYear : 'yy',
-				maxDate : new Date(2020, 5, 22),
-				minDate : new Date(2000, 1, 1),
+				maxDate : new Date(2050, 12, 31),
+				minDate : new Date(1990, 1, 1),
 				startingDay : 1
 		};
-		
+
 		mi.gridOptions = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
@@ -58,15 +58,15 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			    useExternalSorting: true,
 				columnDefs : [
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left', 
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentec.filtrar($event,1)" ></input></div>'
+				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.componentec.filtros[\'nombre\']"  ng-keypress="grid.appScope.componentec.filtrar($event)" ></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-				    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentec.filtrar($event,2)"></input></div>'
+				    { name: 'usuarioCreo', displayName: 'Usuario Creación',
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.componentec.filtros[\'usuarioCreo\']"  ng-keypress="grid.appScope.componentec.filtrar($event)"></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentec.filtrar($event,3)"  ></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.componentec.filtros[\'fechaCreacion\']"  ng-keypress="grid.appScope.componentec.filtrar($event)"  ></input></div>'
 				    }
 				],
 				onRegisterApi: function(gridApi) {
@@ -74,7 +74,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 						mi.componente = row.entity;
 					});
-					
+
 					gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
 						if(sortColumns.length==1){
 							grid.appScope.componentec.columnaOrdenada=sortColumns[0].field;
@@ -94,25 +94,28 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
+						mi.obtenerTotalComponentes();
 				    }
 				    else{
 				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'componentes', t: (new Date()).getTime()}).then(function(response){
-					      if(response.data.success && response.data.estado!='')
-					    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
-					    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
-						      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
-						      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
-						      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+						      if(response.data.success && response.data.estado!=''){
+						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+						    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
+							      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
+							      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+						      }
+						      mi.obtenerTotalComponentes();
 						  });
+				    	  
 				    }
 				}
 		};
-		   
+
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SComponente', { accion: 'getComponentesPaginaPorProyecto', pagina: pagina, numerocomponentes: $utilidades.elementosPorPagina,proyectoid: $routeParams.proyecto_id, 
+			$http.post('/SComponente', { accion: 'getComponentesPaginaPorProyecto', pagina: pagina, numerocomponentes: $utilidades.elementosPorPagina,proyectoid: $routeParams.proyecto_id,
 				numeroproyecto:  $utilidades.elementosPorPagina,
-				filtro_nombre: mi.filtros['nombre'], filtro_snip: mi.filtros['snip'], 
+				filtro_nombre: mi.filtros['nombre'], filtro_snip: mi.filtros['snip'],
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
 				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
 			}).success(
@@ -126,7 +129,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		mi.guardar=function(esvalido){
 			for (campos in mi.camposdinamicos) {
 				if (mi.camposdinamicos[campos].tipo === 'fecha') {
-					mi.camposdinamicos[campos].valor = moment(mi.camposdinamicos[campos].valor).format('dd/MM/yyyy')
+					mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
 				}
 			}
 			if(mi.componente!=null && mi.componente.nombre!='' && mi.unidadejecutoraid!=''){
@@ -142,6 +145,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					programa: mi.componente.programa,
 					subprograma: mi.componente.subprograma,
 					proyecto_: mi.componente.proyecto_,
+					actividad: mi.componente.actividad,
 					obra:mi.componente.obra,
 					fuente: mi.componente.fuente,
 					esnuevo: mi.esnuevo,
@@ -163,7 +167,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		};
 
 		mi.borrar = function(ev) {
-			if(mi.componente!=null){
+			if(mi.componente!=null && mi.componente.id!=null){
 				var confirm = $mdDialog.confirm()
 			          .title('Confirmación de borrado')
 			          .textContent('¿Desea borrar el Componente "'+mi.componente.nombre+'"?')
@@ -202,10 +206,10 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			mi.componentetiponombre="";
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
-			mi.componente = null;
+			mi.componente = {};
 			mi.camposdinamicos = {};
 			mi.gridApi.selection.clearSelectedRows();
-			
+
 		};
 
 		mi.editar = function() {
@@ -216,7 +220,30 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				mi.componentetiponombre=mi.componente.componentetiponombre;
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
-				mi.buscarDatosDinamicos();
+
+				var parametros = {
+						accion: 'getComponentePropiedadPorTipo',
+						idComponente: mi.componente!=null ? mi.componente.id : 0,
+						idComponenteTipo: mi.componentetipoid
+				}
+
+				$http.post('/SComponentePropiedad', parametros).then(function(response){
+					mi.camposdinamicos = response.data.componentepropiedades;
+					for (campos in mi.camposdinamicos) {
+						switch (mi.camposdinamicos[campos].tipo){
+							case "fecha":
+								mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+								break;
+							case "entero":
+								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								break;
+							case "decimal":
+								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								break;
+						}
+
+					}
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Componente que desea editar');
@@ -249,29 +276,19 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			mi.camposdinamicos[index].isOpen = true;
 		};
 
-		$http.post('/SComponente', { accion: 'numeroComponentesPorProyecto',proyectoid:$routeParams.proyecto_id }).success(
-				function(response) {
-					mi.totalComponentes = response.totalcomponentes;
-					mi.cargarTabla(1);
-		});
 		
 		mi.irAProductos=function(componenteid){
 			if(mi.componente!=null){
 				$location.path('/producto/'+componenteid);
 			}
 		};
-		
+
 		mi.filtrar = function(evt,tipo){
 			if(evt.keyCode==13){
-				switch(tipo){
-					case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
-					case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
-					case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
-				}
 				mi.obtenerTotalComponentes();
 			}
 		}
-		
+
 		mi.obtenerTotalComponentes = function(){
 			$http.post('/SComponente', { accion: 'numeroComponentesPorProyecto', proyectoid: $routeParams.proyecto_id,
 				filtro_nombre: mi.filtros['nombre'],
@@ -282,7 +299,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 						mi.cargarTabla(mi.paginaActual);
 			});
 		}
-		
+
 		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
 			var resultado = $q.defer();
 			var modalInstance = $uibModal.open({
@@ -318,8 +335,8 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			});
 			return resultado.promise;
 		};
-		
-		
+
+
 		mi.buscarComponenteTipo = function() {
 			var resultado = mi.llamarModalBusqueda('/SComponenteTipo', {
 				accion : 'numeroComponenteTipos'
@@ -334,22 +351,29 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			resultado.then(function(itemSeleccionado) {
 				mi.componentetipoid = itemSeleccionado.id;
 				mi.componentetiponombre = itemSeleccionado.nombre;
-				mi.buscarDatosDinamicos();
+				var parametros = {
+						accion: 'getComponentePropiedadPorTipo',
+						idComponente: mi.componente!=null ? mi.componente.id : 0,
+						idComponenteTipo: mi.componentetipoid
+				}
+
+				$http.post('/SComponentePropiedad', parametros).then(function(response){
+					mi.camposdinamicos = response.data.componentepropiedades
+					for (campos in mi.camposdinamicos) {
+						switch (mi.camposdinamicos[campos].tipo){
+							case "fecha":
+								mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+								break;
+							case "entero":
+								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								break;
+						}
+
+					}
+				});
 			});
 		};
-		
-		mi.buscarDatosDinamicos = function (){
-			var parametros = {
-					accion: 'getComponentePropiedadPorTipo',
-					idComponente: mi.componente!=null ? mi.componente.id : 0,
-					idComponenteTipo: mi.componentetipoid
-			}
 
-			$http.post('/SComponentePropiedad', parametros).then(function(response){
-				mi.camposdinamicos = response.data.componentepropiedades
-			});
-		}
-		
 		mi.buscarUnidadEjecutora = function() {
 			var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
 				accion : 'totalElementos'

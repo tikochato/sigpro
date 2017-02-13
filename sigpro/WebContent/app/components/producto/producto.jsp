@@ -72,8 +72,8 @@
 		</div>
 		<div>
 		<div class="col-sm-12">
-			<form name="form" class="css-form" novalidate>
-				<div class="row">
+			<form name="form" class="css-form">
+				
 					<div class="form-group col-sm-3" ng-show="!producto.esNuevo">
 						<label for="campo0">ID:</label> 
 						<p class="form-control-static" id="campo0" name="campo0" >{{producto.producto.id}}</p>
@@ -118,7 +118,7 @@
 					</div>
 
 					<div class="form-group" >
-						<label for="campo2">* Descripción:</label> 
+						<label for="campo2"> Descripción:</label> 
 						<input type="text" class="form-control" placeholder="Descripcion del producto" ng-model="producto.producto.descripcion" />
 					</div>
 					
@@ -127,14 +127,6 @@
 			          <div class="input-group"> 
 			            <input type="text" class="form-control" placeholder="Tipo de producto" ng-model="producto.tipoNombre" ng-readonly="true" ng-required="true"/>
 			            <span class="input-group-addon" ng-click="producto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
-			          </div>
-			        </div>
-
-					<div class="form-group" >
-			          <label for="campo4">* Componente:</label>
-			          <div class="input-group"> 
-			            <input type="text" class="form-control" placeholder="Componente al que pertenece" ng-model="producto.componenteNombre" ng-readonly="true" ng-required="true"/>
-			            <span class="input-group-addon" ng-click="producto.buscarComponente()"><i class="glyphicon glyphicon-search"></i></span>
 			          </div>
 			        </div>
 

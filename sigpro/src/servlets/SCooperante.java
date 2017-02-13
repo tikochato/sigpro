@@ -93,12 +93,12 @@ public class SCooperante extends HttpServlet {
 				temp.codigo = cooperante.getCodigo();
 				temp.descripcion = cooperante.getDescripcion();
 				temp.estado = cooperante.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(cooperante.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(cooperante.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(cooperante.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(cooperante.getFechaCreacion());
 				temp.id = cooperante.getId();
 				temp.nombre = cooperante.getNombre();
 				temp.usuarioActualizo = cooperante.getUsuarioActualizo();
-				temp.usuarioCreo = cooperante.getUsarioCreo();
+				temp.usuarioCreo = cooperante.getUsuarioCreo();
 				stcooperantes.add(temp);
 			}
 			
@@ -114,12 +114,12 @@ public class SCooperante extends HttpServlet {
 				temp.codigo = cooperante.getCodigo();
 				temp.descripcion = cooperante.getDescripcion();
 				temp.estado = cooperante.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(cooperante.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(cooperante.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(cooperante.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(cooperante.getFechaCreacion());
 				temp.id = cooperante.getId();
 				temp.nombre = cooperante.getNombre();
 				temp.usuarioActualizo = cooperante.getUsuarioActualizo();
-				temp.usuarioCreo = cooperante.getUsarioCreo();
+				temp.usuarioCreo = cooperante.getUsuarioCreo();
 				stcooperantes.add(temp);
 			}
 			

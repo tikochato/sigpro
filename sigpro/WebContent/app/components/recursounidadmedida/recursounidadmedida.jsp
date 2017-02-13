@@ -53,7 +53,7 @@
     		</shiro:hasPermission>
     		
 		</div>
-		<div class="row" ng-show="recursounidadc.mostraringreso">
+		<div class="row main-form" ng-show="recursounidadc.mostraringreso">
 			<h4 ng-hide="!recursounidadc.esnueva">Nueva Unidad de Medidad</h4>
 			<h4 ng-hide="recursounidadc.esnueva">Edición de Unidad de Medida</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
@@ -67,7 +67,7 @@
 				<form name="form">
 						<div class="form-group" ng-show="!recursounidadc.esnueva">
 							<label for="id">ID</label>
-    						<p class="form-control-static" id="id" >{{ recursounidadc.medida.id }} </p>
+    						<p class="form-control-static">{{ recursounidadc.medida.id }} </p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
@@ -81,22 +81,39 @@
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="recursounidadc.medida.descripcion">
 						</div>
-						<div class="form-group" ng-show="!recursounidadc.esnueva">
-							<label for="usuarioCreo">Usuario que creo</label>
-    						<p class="form-control-static" id="usuarioCreo"> {{ recursounidadc.medida.usuarioCreo }}</p>
+						<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label> 
+									<p class="form-control-static"> {{ recursounidadc.medida.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label for="fechaCreacion">Fecha de creación</label>
+									<p class="form-control-static" id="fechaCreacion"> {{ recursounidadc.medida.fechaCreacion }} </p>
+								</div>
+							</div>
 						</div>
-						<div class="form-group" ng-show="!recursounidadc.esnueva">
-							<label for="fechaCreacion">Fecha de creación</label>
-    						<p class="form-control-static" id="fechaCreacion">{{ recursounidadc.medida.fechaCreacion }} </p>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ recursounidadc.medida.usuarioActualizo }} </p>
+								</div>	
+							</div>
+							<div class="col-sm-6">		
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ recursounidadc.medida.fechaActualizacion }} </p>
+								</div>
+							</div>
 						</div>
-						<div class="form-group" ng-show="!recursounidadc.esnueva">
-							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<p class="form-control-static" id="usuarioCreo">{{ recursounidadc.medida.usuarioActualizo }} </p>
-						</div>
-						<div class="form-group" ng-show="!recursounidadc.esnueva">
-							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<p class="form-control-static" id="usuarioCreo">{{ recursounidadc.medida.fechaActualizacion }} </p>
-						</div>
+					</div>
+				</div>
 				</form>
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>

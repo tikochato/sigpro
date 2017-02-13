@@ -51,50 +51,68 @@
 		</div>
 	</div>
 
-	<div class="row" ng-if="actividadtipoc.mostraringreso">
+	<div class="row main-form" ng-if="actividadtipoc.mostraringreso">
 		<h4 ng-hide="!actividadtipoc.esnuevo">Nuevo Tipo Componente</h4>
 		<h4 ng-hide="actividadtipoc.esnuevo">Edición de Tipo Componente</h4>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="actividadtipoc.guardar()">Guardar</label>
+				<label class="btn btn-success" ng-click="form.$valid ? actividadtipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 				<label class="btn btn-primary" ng-click="actividadtipoc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>
 		<div class="col-sm-12">
-			<form>
+			<form name="form">
 				<div class="form-group">
-					<label for="id">ID</label> 
-					<label class="form-control" id="id">{{actividadtipoc.actividadtipo.id }}</label>
+					<label >ID</label> 
+					<p class="form-control-static">{{actividadtipoc.actividadtipo.id }}</p>
 				</div>
 
 				<div class="form-group">
 					<label for="nombre">* Nombre</label> 
-					<input type="text" class="form-control" id="nombre" placeholder="Nombre"ng-model="actividadtipoc.actividadtipo.nombre">
+					<input type="text" class="form-control" id="nombre" placeholder="Nombre"ng-model="actividadtipoc.actividadtipo.nombre" ng-required="true">
 				</div>
 				<div class="form-group">
 					<label for="descripcion">Descripción</label> 
 					<input type="text"class="form-control" id="descripcion" placeholder="Descripción"ng-model="actividadtipoc.actividadtipo.descripcion">
 				</div>
-				<div class="form-group">
-					<label for="usuarioCreo">Usuario que creo</label> 
-					<label class="form-control" id="usuarioCreo">{{ actividadtipoc.actividadtipo.usuarioCreo }}</label>
+				<br/>
+				<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label>Usuario que creo</label> 
+									<p class="form-control-static">{{ actividadtipoc.actividadtipo.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Fecha de creación</label> 
+									<p class="form-control-static">{{ actividadtipoc.actividadtipo.fechaCreacion }}</p>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label>Usuario que actualizo</label> 
+									<p class="form-control-static">{{ actividadtipoc.actividadtipo.usuarioActualizo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Fecha de actualizacion</label> 
+									<p class="form-control-static">{{ actividadtipoc.actividadtipo.fechaActualizacion }}</p>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="form-group">
-					<label for="fechaCreacion">Fecha de creación</label> 
-					<label class="form-control" id="fechaCreacion">{{ actividadtipoc.actividadtipo.fechaCreacion }}</label>
-				</div>
-				<div class="form-group">
-					<label for="usuarioActualizo">Usuario que actualizo</label> 
-					<label class="form-control" id="usuarioCreo">{{ actividadtipoc.actividadtipo.usuarioActualizo }}</label>
-				</div>
-				<div class="form-group">
-					<label for="fechaActualizacion">Fecha de actualizacion</label> 
-					<label class="form-control" id="usuarioCreo">{{ actividadtipoc.actividadtipo.fechaActualizacion }}</label>
-				</div>
-
 				<br />
 				<div align="center">
-					<div style="height: 35px; width: 75%">
+					<h5>Propiedades</h5>
+					<div style="height: 35px;" >
 						<div style="text-align: right;">
 							<div class="btn-group" role="group" aria-label="">
 								<a class="btn btn-default" href
@@ -105,10 +123,10 @@
 							</div>
 						</div>
 					</div>
-					
-					<table style="width: 75%;"
+					<br/>
+					<table
 					st-table="actividadtipoc.actividadpropiedades"
-					class="table table-striped  table-bordered">
+					class="table table-striped table-bordered table-hover table-propiedades">
 					<thead >
 						<tr>
 							<th>ID</th>
@@ -143,7 +161,7 @@
 		<div align="center">Los campos marcados con * son obligatorios</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="actividadtipoc.guardar()">Guardar</label>
+				<label class="btn btn-success" ng-click="form.$valid ? actividadtipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 				<label class="btn btn-primary" ng-click="actividadtipoc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>

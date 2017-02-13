@@ -57,7 +57,7 @@
     		</shiro:hasPermission>
     		
 		</div>
-		<div class="row" ng-show="desembolsoc.mostraringreso">
+		<div class="row main-form" ng-show="desembolsoc.mostraringreso">
 			<h4 ng-hide="!desembolsoc.esnuevo">Nuevo Desembolso</h4>
 			<h4 ng-hide="desembolsoc.esnuevo">Edición de Desembolso</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
@@ -98,28 +98,44 @@
 					<div class="form-group " >
 			          <label for="campo3">* Tipo Desembolso</label>
 			          <div class="input-group">
-			            <input type="hidden" class="form-control" ng-model="desembolsoc.desembolsotipoid" /> 
-			            <input type="text" class="form-control" id="tipodesembolso" name="tipodesembolso" placeholder="Tipo desembolso" ng-model="desembolsoc.desembolsonombre" ng-readonly="true" ng-required="true"/>
+			            <input type="text" class="form-control" placeholder="Tipo desembolso" ng-model="desembolsoc.desembolso.desembolsotipo" ng-readonly="true" ng-required="true"/>
 			            <span class="input-group-addon" ng-click="desembolsoc.buscarTipoDesembolso()"><i class="glyphicon glyphicon-search"></i></span>
 			          </div>
 			        </div>
-					
-					<div class="form-group" ng-show="!desembolsoc.esnuevo">
-						<label for="usuarioCreo">Usuario que creo</label>
-   						<p class="form-control-static">{{ desembolsoc.desembolso.usuarioCreo }}</p>
+			        <br/>
+					<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label>
+			   						<p class="form-control-static">{{ desembolsoc.desembolso.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="fechaCreacion">Fecha de creación</label>
+			   						<p class="form-control-static">{{ desembolsoc.desembolso.fechaCreacion }}</p>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label>
+			   						<p class="form-control-static">{{ desembolsoc.desembolso.usuarioActualizo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label>
+			   						<p class="form-control-static">{{ desembolsoc.desembolso.fechaActualizacion }}</p>
+								</div>
+							</div>
+						</div>
 					</div>
-					<div class="form-group" ng-show="!desembolsoc.esnuevo">
-						<label for="fechaCreacion">Fecha de creación</label>
-   						<p class="form-control-static">{{ desembolsoc.desembolso.fechaCreacion }}</p>
-					</div>
-					<div class="form-group" ng-show="!desembolsoc.esnuevo">
-						<label for="usuarioActualizo">Usuario que actualizo</label>
-   						<p class="form-control-static">{{ desembolsoc.desembolso.usuarioActualizo }}</p>
-					</div>
-					<div class="form-group" ng-show="!desembolsoc.esnuevo">
-						<label for="fechaActualizacion">Fecha de actualizacion</label>
-   						<p class="form-control-static">{{ desembolsoc.desembolso.fechaActualizacion }}</p>
-					</div>
+				</div>
 				</form>
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>

@@ -187,8 +187,6 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		mi.tipo = null;
 		mi.tipoNombre = "";
 
-		mi.componente = null;
-		mi.componenteNombre = "";
 
 		mi.productoPadre = null;
 		mi.productoPadreNombre = "";
@@ -269,7 +267,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				actividad: mi.producto.actividad,
 				obra: mi.producto.obra,
 				fuente: mi.producto.fuente,
-				componente : mi.componente,
+				componente : $routeParams.componente_id,
 				productoPadre : mi.productoPadre,
 				tipoproductoid : mi.tipo,
 				unidadEjecutora : mi.unidadEjecutora,
@@ -312,9 +310,6 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			mi.tipo = mi.producto.idProductoTipo;
 			mi.tipoNombre = mi.producto.productoTipo;
 
-			mi.componente = mi.producto.idComponente;
-			mi.componenteNombre = mi.producto.componente;
-
 			mi.productoPadre = mi.producto.idProducto;
 			mi.productoPadreNombre = mi.producto.producto;
 			
@@ -336,8 +331,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 						case "entero":
 							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
 							break;
+						case "decimal":
+							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+							break;
 					}
-
 				}
 			});
 		} else {
@@ -438,8 +435,16 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			$http.post('/SProductoPropiedad', parametros).then(function(response){
 				mi.camposdinamicos = response.data.productopropiedades;
 				for (campos in mi.camposdinamicos) {
-					if (mi.camposdinamicos[campos].tipo === 'fecha') {
-						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null; 
+					switch (mi.camposdinamicos[campos].tipo){
+						case "fecha":
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+							break;
+						case "entero":
+							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+							break;
+						case "decimal":
+							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+							break;
 					}
 				}
 				
@@ -454,25 +459,6 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	
 	mi.abrirPopupFecha = function(index) {
 		mi.camposdinamicos[index].isOpen = true;
-	};
-
-	mi.buscarComponente = function() {
-
-		var resultado = mi.llamarModalBusqueda('/SComponente', {
-			accion : 'numeroComponentes'
-		}, function(pagina, elementosPorPagina) {
-			return {
-				accion : 'getComponentesPagina',
-				pagina : pagina,
-				numerocomponentes : elementosPorPagina
-			};
-		},'id','nombre');
-
-		resultado.then(function(itemSeleccionado) {
-			mi.componente = itemSeleccionado.id;
-			mi.componenteNombre = itemSeleccionado.nombre;
-		});
-
 	};
 
 	mi.buscarProducto = function() {

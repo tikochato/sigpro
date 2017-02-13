@@ -18,8 +18,6 @@
 			       <shiro:hasPermission name="eliminarCooperante">
 			       		<label class="btn btn-primary" ng-click="actividadc.borrar()">Borrar</label>
 			       </shiro:hasPermission>
-
-
     			</div>
     		</div>
     		<shiro:hasPermission name="verCooperante">
@@ -57,7 +55,7 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row" ng-show="actividadc.mostraringreso">
+		<div class="row main-form" ng-show="actividadc.mostraringreso">
 			<h4 ng-hide="!actividadc.esnuevo">Nueva actividad</h4>
 			<h4 ng-hide="actividadc.esnuevo">Edición de actividad</h4>
 			<div class="col-sm-12 operation_buttons" align="left">
@@ -73,7 +71,7 @@
 				<form name="form">
 						<div class="form-group">
 							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ actividadc.actividad.id }}</label>
+    						<p class="form-control-static">{{ actividadc.actividad.id }}</p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
@@ -83,7 +81,6 @@
 						<div class="form-group">
 							<label for="campo3">* Tipo de Actividad</label>
 				          	<div class="input-group">
-				            	<input type="hidden" class="form-control" ng-model="actividadc.actividadtipoid" />
 				            	<input type="text" class="form-control" placeholder="Tipo de Actividad" ng-model="actividadc.actividad.actividadtiponombre" ng-readonly="true" ng-required="true"/>
 				            	<span class="input-group-addon" ng-click="actividadc.buscarActividadTipo()"><i class="glyphicon glyphicon-search"></i></span>
 				          	</div>
@@ -129,32 +126,36 @@
     						<input type="number" class="form-control" placeholder="% de Avance" ng-model="actividadc.actividad.porcentajeavance" ng-required="true" min="0" max="100">
 						</div>
 						<div class="form-group row" >
-					<div class="form-group col-sm-2 anchocolumna" >
-					       <label for="iprog">Programa</label>
-					       <input type="number" class="form-control" placeholder="Programa" ng-model="controller.programa"  />
-					</div>
-					<div class="form-group col-sm-2 anchocolumna" >
-					  <label for="isubprog">Subprograma</label>
-					  <input type="number" class="form-control" placeholder="Sub-programa" ng-model="controller.subprograma" />
-					</div>
-					<div class="form-group col-sm-2 anchocolumna" >
-					  <label for="iproy_">Proyecto</label>
-					  <input type="number" class="form-control" placeholder="Proyecto" ng-model="controller.proyecto_"  />
-					</div>
-					<div class="form-group col-sm-2 anchocolumna" >
-					  <label for="iobra">Obra</label>
-					  <input type="number" class="form-control" placeholder="Obra" ng-model="controller.obra" ng-maxlength="4"/>
-					</div>
-					<div class="form-group col-sm-2 anchocolumna" >
-					  <label for="campo5">Fuente</label>
-					  <input type="number" class="form-control" placeholder="Fuente" ng-model="controller.fuente" ng-maxlength="4"/>
-					</div>
-				</div>
+							<div class="form-group col-sm-2" >
+							       <label for="iprog">Programa</label>
+							       <input type="number" class="form-control" placeholder="Programa" ng-model="actividadc.actividad.programa" ng-maxlength="4" min="0" style="text-align: center"/>
+							</div>
+							<div class="form-group col-sm-2" >
+							  <label for="isubprog">Subprograma</label>
+							  <input type="number" class="form-control" placeholder="Subprograma" ng-model="actividadc.actividad.subprograma" ng-maxlength="4" min="0" style="text-align: center"/>
+							</div>
+							<div class="form-group col-sm-2" >
+							  <label for="iproy_">Proyecto</label>
+							  <input type="number" class="form-control" placeholder="Proyecto" ng-model="actividadc.actividad.proyecto" ng-maxlength="4" min="0" style="text-align: center"/>
+							</div>
+							<div class="form-group col-sm-2" >
+							  <label for="iobra">Actividad</label>
+							  <input type="number" class="form-control" placeholder="Actividad" ng-model="actividadc.actividad.actividad" ng-maxlength="4" min="0" style="text-align: center"/>
+							</div>
+							<div class="form-group col-sm-2" >
+							  <label for="iobra">Obra</label>
+							  <input type="number" class="form-control" placeholder="Obra" ng-model="actividadc.actividad.obra" ng-maxlength="4" min="0" style="text-align: center"/>
+							</div>
+							<div class="form-group col-sm-2" >
+							  <label for="campo5">Fuente</label>
+							  <input type="number" class="form-control" placeholder="Fuente" ng-model="actividadc.actividad.fuente" ng-maxlength="4" min="0" style="text-align: center"/>
+							</div>
+						</div>
 						<div class="form-group" ng-repeat="campo in actividadc.camposdinamicos">
 							<label for="campo.id">{{ campo.label }}</label>
 							<div ng-switch="campo.tipo">
 								<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
-								<input ng-switch-when="entero" type="text" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" />
+								<input ng-switch-when="entero" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
 								<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
 								<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
 								<p ng-switch-when="fecha" class="input-group">
@@ -167,30 +168,48 @@
 														</button>
 													</span>
 								</p>
-								<select ng-switch-when="select" id="{{ 'field_'+field.id }}" class="form-control" ng-model="x.value">
+								<select ng-switch-when="select" id="{{ 'campo_'+campo.id }}" class="form-control" ng-model="campo.valor">
 													<option value="">Seleccione una opción</option>
-													<option ng-repeat="number in field.options"
-														value="{{number.value}}">{{number.label}}</option>
+													<option ng-repeat="number in campo.opciones"
+														value="{{number.valor}}">{{number.label}}</option>
 								</select>
 							</div>
 						</div>
-						<div class="well panel-auditoria">
-							<div class="form-group">
-								<p class="form-control-static"><b>Usuario que creo</b> {{ actividadc.actividad.usuarioCreo }}</p>
+				<br/>
+				<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label>
+				  					<p class="form-control-static">{{ actividadc.actividad.usuarioCreo }}</pl>
+								</div>
 							</div>
-							<div class="form-group">
-								<label for="fechaCreacion">Fecha de creación</label>
-	    						<p class="form-control-static">{{ actividadc.actividad.fechaCreacion }}</p>
-							</div>
-							<div class="form-group">
-								<label for="usuarioActualizo">Usuario que actualizo</label>
-	    						<p class="form-control-static">{{ actividadc.actividad.usuarioActualizo }}</p>
-							</div>
-							<div class="form-group">
-								<label for="fechaActualizacion">Fecha de actualizacion</label>
-	    						<p class="form-control-static">{{ actividadc.actividad.fechaActualizacion }}</p>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="fechaCreacion">Fecha de creación</label>
+				  					<p class="form-control-static">{{ actividadc.actividad.fechaCreacion }}</p>
+								</div>
 							</div>
 						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label>
+				  					<p class="form-control-static">{{ actividadc.actividad.usuarioActualizo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label>
+				  					<p class="form-control-static">{{ actividadc.actividad.fechaActualizacion }}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+							
 				</form>
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>

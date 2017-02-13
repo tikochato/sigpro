@@ -28,16 +28,16 @@ public class EntidadDAOTest {
 	
 	@Test
 	public void getEntidadesPaginaTest(){
-		assertNotNull(EntidadDAO.getEntidadesPagina(1, 1));
+		assertNotNull(EntidadDAO.getEntidadesPagina(1, 1,"","","","",""));
 	}
 	
 	@Test
 	public void getJsonEntidadesTest(){
-		assertEquals(EntidadDAO.getJsonEntidades(0, 1).getClass(),String.class);
+		assertEquals(EntidadDAO.getJsonEntidades(0, 1,"","","","","").getClass(),String.class);
 	}
 	
 	@Test
 	public void getTotalEntidadesTest(){
-		assertEquals(EntidadDAO.getTotalEntidades().getClass(), Long.class);
+		assertEquals(EntidadDAO.getTotalEntidades("","","").getClass(), Long.class);
 	}
 }

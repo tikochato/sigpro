@@ -38,15 +38,15 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 					columnDefs : [ 
 						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 					    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left', 
-					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentepropiedadc.filtrar($event,1)"></input></div>',
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.componentepropiedadc.filtros[\'nombre\']" ng-keypress="grid.appScope.componentepropiedadc.filtrar($event)"></input></div>',
 					    },
 					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 					    { name: 'datotiponombre', displayName: 'Tipo dato', cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false},
 					    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
-					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentepropiedadc.filtrar($event,2)" ></input></div>'
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.componentepropiedadc.filtros[\'usuarioCreo\']" ng-keypress="grid.appScope.componentepropiedadc.filtrar($event)" ></input></div>'
 					    },
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentepropiedadc.filtrar($event,3)" style="width:80px;" ></input></div>'
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.componentepropiedadc.filtros[\'fechaCreacion\']" ng-keypress="grid.appScope.componentepropiedadc.filtrar($event)" style="width:80px;" ></input></div>'
 					    }
 					],
 					onRegisterApi: function(gridApi) {
@@ -76,15 +76,17 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 						
 						if($routeParams.reiniciar_vista=='rv'){
 							mi.guardarEstado();
+							mi.obtenerTotalComponentePropiedades();
 					    }
 					    else{
 					    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'componentepropiedades', t: (new Date()).getTime()}).then(function(response){
-						      if(response.data.success && response.data.estado!='')
-						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
-						    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
-							      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
-							      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
-							      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+							      if(response.data.success && response.data.estado!=''){
+							    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+							    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
+								      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
+								      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+							      }
+							      mi.obtenerTotalComponentePropiedades();
 							  });
 					    }
 					}
@@ -106,7 +108,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			}
 			
 			mi.guardar=function(){
-				if(mi.componentepropiedad!=null && mi.componentepropiedad.nombre!=''){
+				if(mi.componentepropiedad!=null){
 					$http.post('/SComponentePropiedad', {
 						accion: 'guardarComponentePropiedad',
 						esnuevo: mi.esnuevo,
@@ -130,7 +132,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			};
 
 			mi.borrar = function(ev) {
-				if(mi.componentepropiedad!=null){
+				if(mi.componentepropiedad!=null && mi.componentepropiedad.id!=null){
 					var confirm = $mdDialog.confirm()
 				          .title('Confirmación de borrado')
 				          .textContent('¿Desea borrar la Prppiedad Componente "'+mi.componentepropiedad.nombre+'"?')
@@ -163,12 +165,12 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 				mi.datotipo = null;
 				mi.mostraringreso=true;
 				mi.esnuevo = true;
-				mi.componentepropiedad = null;
+				mi.componentepropiedad = {};
 				mi.gridApi.selection.clearSelectedRows();
 			};
 
 			mi.editar = function() {
-				if(mi.componentepropiedad!=null){
+				if(mi.componentepropiedad!=null && mi.componentepropiedad.id!=null){
 					mi.mostraringreso = true;
 					mi.esnuevo = false;
 					mi.datotipo = {
@@ -203,18 +205,13 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 					$location.path('/componentepropiedad/rv');
 			}
 			
-			mi.filtrar = function(evt,tipo){
+			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
-					switch(tipo){
-						case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
-						case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
-						case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
-					}
-					mi.obtenerTotalProyectos();
+					mi.obtenerTotalComponentePropiedades();
 				}
 			}
 
-			mi.obtenerTotalProyectos = function(){
+			mi.obtenerTotalComponentePropiedades = function(){
 				$http.post('/SComponentePropiedad', { accion: 'numeroComponentePropiedades',
 					filtro_nombre: mi.filtros['nombre'],
 					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(

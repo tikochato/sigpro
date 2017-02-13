@@ -46,7 +46,7 @@
    
   </div>
 
-  <div class="row" ng-show="unidad.esForma">
+  <div class="row main-form" ng-show="unidad.esForma">
 
     <div class="col-sm-12 operation_buttons" align="right">
 
@@ -58,29 +58,61 @@
 
     <div>
 
-      <form name="form" class="css-form" novalidate>
+      <form name="form">
 
 		<div class="row">
-	        <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo1.$invalid }">
-	          <label for="campo1">* Unidad Ejecutora:</label> 
-	          <input type="number" class="form-control" id="campo1" name="campo1" placeholder="Unidad Ejecutora" ng-model="unidad.codigo" ng-readonly="!unidad.esNuevo" required />
+	        <div class="form-group">
+	          <label>* Unidad Ejecutora:</label> 
+	          <input type="number" class="form-control" id="campo1" name="campo1" placeholder="Unidad Ejecutora" ng-model="unidad.codigo" ng-readonly="!unidad.esNuevo" ng-required="true" />
 	        </div>
         </div>
 
 		<div class="row">
-	        <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo2.$invalid }">
+	        <div class="form-group">
 	          <label for="campo2">* Nombre Unidad Ejecutora:</label> 
-	          <input type="text" class="form-control" id="campo2" name="campo2" placeholder="Nombre Unidad Ejecutora" ng-model="unidad.nombre" required />
+	          <input type="text" class="form-control" placeholder="Nombre Unidad Ejecutora" ng-model="unidad.nombre" ng-required="true" />
 	        </div>
 	
 	        <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo3.$invalid }">
-	          <label for="campo3">* Entidad:</label>
+	          <label>* Entidad:</label>
 	          <div class="input-group">
-	            <input type="hidden" class="form-control" ng-model="unidad.entidad" /> 
-	            <input type="text" class="form-control" id="campo3" name="campo3" placeholder="Nombre Entidad" ng-model="unidad.nombreEntidad" ng-readonly="true" required/>
+	            <input type="text" class="form-control" id="campo3" name="campo3" placeholder="Nombre Entidad" ng-model="unidad.nombreEntidad" ng-readonly="true" ng-required="true"/>
 	            <span class="input-group-addon" ng-click="unidad.buscarEntidad()"><i class="glyphicon glyphicon-search"></i></span>
 	          </div>
 	        </div>
+	        <div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label> 
+									<p class="form-control-static"> {{ unidad.unidad.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label for="fechaCreacion">Fecha de creación</label>
+									<p class="form-control-static" id="fechaCreacion"> {{ unidad.unidad.fechaCreacion }} </p>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ unidad.unidad.usuarioActualizo }} </p>
+								</div>	
+							</div>
+							<div class="col-sm-6">		
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ unidad.unidad.fechaActualizacion }} </p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 		</div>
       </form>
 

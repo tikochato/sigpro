@@ -17,11 +17,14 @@ import utilities.CLogger;
 
 public class DesembolsoTipoDAO {
 	
-	public static Long getTotalDesembolsoTipo(){
+	public static Long getTotalDesembolsoTipo(String filtro_nombre){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(d.id) FROM DesembolsoTipo WHERE d.estado=1",Long.class);
+			String query = "SELECT count(d.id) FROM DesembolsoTipo WHERE d.estado=1";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query = String.join("",query, " AND d.nombre LIKE '%",filtro_nombre,"%'");
+			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
@@ -91,11 +94,15 @@ public class DesembolsoTipoDAO {
 		return ret;
 	}
 	
-	public static List<DesembolsoTipo> geDesembolsoTiposPagina(int pagina, int numeroDesembolsoTipos){
+	public static List<DesembolsoTipo> geDesembolsoTiposPagina(int pagina, int numeroDesembolsoTipos, String filtro_nombre, String columna_ordenada, String orden_direccion){
 		List<DesembolsoTipo> ret = new ArrayList<DesembolsoTipo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<DesembolsoTipo> criteria = session.createQuery("SELECT d FROM DesembolsoTipo d WHERE estado = 1",DesembolsoTipo.class);
+			String query = "SELECT d FROM DesembolsoTipo d WHERE estado = 1 ";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query = String.join("",query, " AND d.nombre LIKE '%",filtro_nombre,"%'");
+			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query," ORDER BY",columna_ordenada,orden_direccion ) : query;
+			Query<DesembolsoTipo> criteria = session.createQuery(query,DesembolsoTipo.class);
 			criteria.setFirstResult(((pagina-1)*(numeroDesembolsoTipos)));
 			criteria.setMaxResults(numeroDesembolsoTipos);
 			ret = criteria.getResultList();

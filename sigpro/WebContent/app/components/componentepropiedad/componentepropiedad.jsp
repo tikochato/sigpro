@@ -53,34 +53,32 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row" ng-show="componentepropiedadc.mostraringreso">
+		<div class="row main-form" ng-show="componentepropiedadc.mostraringreso">
 			<h4 ng-hide="!componentepropiedadc.esnuevo">Nueva Propiedad</h4>
 			<h4 ng-hide="componentepropiedadc.esnuevo">Edición de Propiedad</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="componentepropiedadc.guardar()">Guardar</label>
+			        <label class="btn btn-success" ng-click="form.$valid ? componentepropiedadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 			        <label class="btn btn-primary" ng-click="componentepropiedadc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
 
 			<div class="col-sm-12">
-				<form>
+				<form name="form">
 						<div class="form-group">
-							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ componentepropiedadc.componentepropiedad.id }}</label>
+							<label>ID</label>
+    						<p class="form-control-static">{{ componentepropiedadc.componentepropiedad.id }}</p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="componentepropiedadc.componentepropiedad.nombre">
+    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="componentepropiedadc.componentepropiedad.nombre" ng-required="true">
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Tipo dato</label>
-							
-							
 							<select class="form-control" ng-model="componentepropiedadc.datotipo"
 								ng-options="tipo as tipo.nombre for tipo in componentepropiedadc.tipodatos track by tipo.id"
 								ng-readonly="true" 
-								ng-disabled="!componentepropiedadc.esnuevo" >
+								ng-disabled="!componentepropiedadc.esnuevo" ng-required="true">
 								<option value="">Seleccione una opción</option>
 							</select>
 						</div>
@@ -88,21 +86,39 @@
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="componentepropiedadc.componentepropiedad.descripcion">
 						</div>
-						<div class="form-group">
-							<label for="usuarioCreo">Usuario que creo</label>
-    						<label class="form-control" id="usuarioCreo">{{ componentepropiedadc.componentepropiedad.usuarioCreo }}</label>
-						</div>
-						<div class="form-group">
-							<label for="fechaCreacion">Fecha de creación</label>
-    						<label class="form-control" id="fechaCreacion">{{ componentepropiedadc.componentepropiedad.fechaCreacion }}</label>
-						</div>
-						<div class="form-group">
-							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<label class="form-control" id="usuarioCreo">{{ componentepropiedadc.componentepropiedad.usuarioActualizo }}</label>
-						</div>
-						<div class="form-group">
-							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<label class="form-control" id="usuarioCreo">{{ componentepropiedadc.componentepropiedad.fechaActualizacion }}</label>
+						<br/>
+						<div class="panel panel-default">
+							<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group" style="text-align: right">
+											<label for="usuarioCreo">Usuario que creo</label>
+				    						<p class="form-control-static">{{ componentepropiedadc.componentepropiedad.usuarioCreo }}</p>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="fechaCreacion">Fecha de creación</label>
+				    						<p class="form-control-static">{{ componentepropiedadc.componentepropiedad.fechaCreacion }}</p>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group" style="text-align: right">
+											<label for="usuarioActualizo">Usuario que actualizo</label>
+				    						<p class="form-control-static">{{ componentepropiedadc.componentepropiedad.usuarioActualizo }}</p>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="fechaActualizacion">Fecha de actualizacion</label>
+				    						<p class="form-control-static">{{ componentepropiedadc.componentepropiedad.fechaActualizacion }}</p>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 				</form>
 			</div>
@@ -110,7 +126,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="componentepropiedadc.guardar()">Guardar</label>
+				        <label class="btn btn-success" ng-click="form.$valid ? componentepropiedadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 				        <label class="btn btn-primary" ng-click="componentepropiedadc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

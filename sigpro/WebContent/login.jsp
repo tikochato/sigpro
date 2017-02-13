@@ -2,7 +2,6 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html ng-app="loginController">
-<!-- <html ng-app="sigpro">  -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ include file="/app/shared/includes.jsp"%>
@@ -15,7 +14,7 @@
 		<div class="row-fluid">
 		<form class="login-form">
 			<div class="panel panel-default">
-			  <div class="panel-heading">Sigpro</div>
+			  <div class="panel-heading" style="background-color: #1f3b6a; color: #ffffff;">Sigpro</div>
 			  <div class="panel-body">
 			    <label for="user" class="sr-only">Usuario</label>
 		        <input ng-model="login.username" ng-change="showerror=false" type="text" 
@@ -30,6 +29,6 @@
 			</div>
 		</form>
 	    </div>
-</div> <!-- /container -->
+</div>
 </body>
 </html>

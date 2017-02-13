@@ -11,14 +11,6 @@
 <script type="text/ng-template" id="buscarColaborador.jsp">
    	<%@ include file="/app/components/usuarios/buscarColaborador.jsp"%>
 </script>
-<style type="text/css">
-
-.myGrid {
-	width: 100%;
-	height: 600px;
-}
-</style>
-
 	<div ng-controller="usuarioController as usuarioc" class="maincontainer all_page" id="title">
 		<h3>Usuarios</h3><br/>
 		<div class="row" align="center" ng-hide="usuarioc.isCollapsed">
@@ -71,7 +63,7 @@
 
 		</div>
 		<shiro:hasPermission name="34010">
-		<div class="row" ng-show="usuarioc.isCollapsed">
+		<div class="row main-form" ng-show="usuarioc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid ? usuarioc.guardarUsuario() : '' ) :  (form.$valid ? usuarioc.guardarUsuario() : '' )" ng-disabled="usuarioc.esNuevo ? form1.$invalid : form.$invalid">Guardar</label>
@@ -80,7 +72,7 @@
     		</div>
 			<div class="col-sm-12">
 				<form name="form">
-						
+
 						<div class="form-group" ng-show="!usuarioc.esNuevo && !usuarioc.mostrarCambioPassword">
 							<label for="nombre">Usuario</label>
     						<input type="text" class="form-control" id="usuario" placeholder="Usuario" ng-model="usuarioc.usuariosSelected.usuario" readonly>
@@ -93,7 +85,7 @@
 							<label for="Descripcion">Contraseña</label>
     						<input type="password" class="form-control" id="password1" placeholder="Contraseña" ng-model="usuarioc.usuariosSelected.password" ng-required="true">
 						</div>
-										
+
 				</form>
 				<form name="form1">
 					<div class="form-group" ng-show="usuarioc.esNuevo">
@@ -107,8 +99,8 @@
 						<div class="form-group" ng-show="usuarioc.esNuevo">
 							<label for="Descripcion">Vuelva a ingresar la contraseña</label>
     						<input type="password" class="form-control" id="password2" placeholder="Contraseña" ng-model="usuarioc.claves.password2" ng-required="true">
-						</div>		
-						
+						</div>
+
 				</form>
 			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
@@ -120,17 +112,17 @@
 		</div>
 		<div class="row" ng-show="usuarioc.isCollapsed&&usuarioc.usuariosSelected.usuario!==''">
 		<div class="form-group col-sm-3">
-		   <label for="campo6">Colaborador:</label> 
+		   <label for="campo6">Colaborador:</label>
 		   <div class="input-group" ng-show="!usuarioc.tieneColaborador">
 		   		<button  class="btn btn-default" style="width:100%;" ng-click="usuarioc.buscarColaborador()"> {{usuarioc.mensajeActualizado.mensaje}}</button>
-		   		<span class="input-group-addon" ng-click="usuarioc.asignarColaborador()"><i class="glyphicon glyphicon-ok"></i></span>       
+		   		<span class="input-group-addon" ng-click="usuarioc.asignarColaborador()"><i class="glyphicon glyphicon-ok"></i></span>
 		   </div>
 		   <div class="input-group" ng-show="usuarioc.tieneColaborador">
-		   		<button  class="btn btn-default" style="width:100%;font-size:1.2em;"> {{usuarioc.usuariosSelected.colaborador}}</button>     
+		   		<button  class="btn btn-default" style="width:100%;font-size:1.2em;"> {{usuarioc.usuariosSelected.colaborador}}</button>
 		   </div>
 		</div>
 		</div>
-		
+
 		<h3 ng-show="usuarioc.isCollapsed">Permisos</h3><br/>
 		<div align="center" ng-show="usuarioc.isCollapsed">
 				<div style="height: 35px; width: 75%">

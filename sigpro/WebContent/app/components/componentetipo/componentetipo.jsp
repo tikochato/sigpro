@@ -51,7 +51,7 @@
 		</div>
 	</div>
 
-	<div class="row" ng-if="componentetipoc.mostraringreso">
+	<div class="row main-form" ng-if="componentetipoc.mostraringreso">
 		<h4 ng-hide="!componentetipoc.esnuevo">Nuevo Tipo Componente</h4>
 		<h4 ng-hide="componentetipoc.esnuevo">Edición de Tipo Componente</h4>
 		<div class="col-sm-12 operation_buttons" align="right">
@@ -75,24 +75,42 @@
 					<label for="descripcion">Descripción</label> 
 					<input type="text"class="form-control" id="descripcion" placeholder="Descripción"ng-model="componentetipoc.componentetipo.descripcion">
 				</div>
-				<div class="form-group"  ng-show="!componentetipoc.esnuevo">
-					<label for="usuarioCreo">Usuario que creo</label> 
-					<p class="form-control-static" id="usuarioCreo"> {{ componentetipoc.componentetipo.usuarioCreo }}</p>
+				<br/>
+				<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label> 
+									<p class="form-control-static" id="usuarioCreo"> {{ componentetipoc.componentetipo.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label for="fechaCreacion">Fecha de creación</label>
+									<p class="form-control-static" id="fechaCreacion"> {{ componentetipoc.componentetipo.fechaCreacion }} </p>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ componentetipoc.componentetipo.usuarioActualizo }} </p>
+								</div>	
+							</div>
+							<div class="col-sm-6">		
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ componentetipoc.componentetipo.fechaActualizacion }} </p>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="form-group"  ng-show="!componentetipoc.esnuevo">
-					<label for="fechaCreacion">Fecha de creación</label>
-					<p class="form-control-static" id="fechaCreacion"> {{ componentetipoc.componentetipo.fechaCreacion }} </p>
-				</div>
-				<div class="form-group"  ng-show="!componentetipoc.esnuevo">
-					<label for="usuarioActualizo">Usuario que actualizo</label> 
-					<p class="form-control-static" id="usuarioCreo">{{ componentetipoc.componentetipo.usuarioActualizo }} </p>
-				</div>
-				<div class="form-group"  ng-show="!componentetipoc.esnuevo">
-					<label for="fechaActualizacion">Fecha de actualizacion</label> 
-					<p class="form-control-static" id="usuarioCreo">{{ componentetipoc.componentetipo.fechaActualizacion }} </p>
-				</div>
-
 				<br />
+				<h5>Propiedades</h5>
 				<div align="center">
 					<div style="height: 35px; width: 75%">
 						<div style="text-align: right;">
@@ -105,7 +123,7 @@
 							</div>
 						</div>
 					</div>
-					
+					<br/>
 					<table style="width: 75%;"
 					st-table="componentetipoc.componentepropiedades"
 					class="table table-striped  table-bordered">

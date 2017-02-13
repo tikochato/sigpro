@@ -54,7 +54,7 @@
 			</div>
     		</shiro:hasPermission>
 		</div>
-		<div class="row" ng-if="riesgoc.mostraringreso">
+		<div class="row main-form" ng-if="riesgoc.mostraringreso">
 			<h4 ng-hide="!riesgoc.esnuevo">Nuevo riesgo</h4>
 			<h4 ng-hide="riesgoc.esnuevo">Edición de riesgo</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
@@ -68,7 +68,7 @@
 				<form name="form">
 						<div class="form-group" ng-show="!riesgoc.esnuevo">
 							<label for="id">ID</label>
-    						<p class="form-control-static" id="id">{{ riesgoc.riesgo.id }}</p>
+    						<p class="form-control-static">{{ riesgoc.riesgo.id }}</p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
@@ -78,8 +78,7 @@
 						<div class="form-group">
 							<label for="campo3">* Tipo Riesgo:</label>
 				          	<div class="input-group">
-				            	<input type="hidden" class="form-control" ng-model="riesgoc.riesgoTipoid" /> 
-				            	<input type="text" class="form-control" id="irietipo" name="irietipo" placeholder="Nombre Tipo Riesgo" ng-model="riesgoc.riesgoTipoNombre" ng-readonly="true" required/>
+				            	<input type="text" class="form-control" id="irietipo" name="irietipo" placeholder="Nombre Tipo Riesgo" ng-model="riesgoc.riesgoTipoNombre" ng-readonly="true" ng-required="true"/>
 				            	<span class="input-group-addon" ng-click="riesgoc.buscarRiesgoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 				          	</div>
 						</div>
@@ -113,22 +112,39 @@
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="riesgoc.riesgo.descripcion">
 						</div>
-						<div class="form-group" ng-show="!riesgoc.esnuevo">
-							<label for="usuarioCreo">Usuario que creo</label>
-    						<p class="form-control-static">{{ riesgoc.riesgo.usuarioCreo }}</p>
+						<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label> 
+									<p class="form-control-static"> {{ riesgoc.riesgo.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label for="fechaCreacion">Fecha de creación</label>
+									<p class="form-control-static" id="fechaCreacion"> {{ riesgoc.riesgo.fechaCreacion }} </p>
+								</div>
+							</div>
 						</div>
-						<div class="form-group" ng-show="!riesgoc.esnuevo">
-							<label for="fechaCreacion">Fecha de creación</label>
-    						<p class="form-control-static">{{ riesgoc.riesgo.fechaCreacion }}</p>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ riesgoc.riesgo.usuarioActualizo }} </p>
+								</div>	
+							</div>
+							<div class="col-sm-6">		
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ riesgoc.riesgo.fechaActualizacion }} </p>
+								</div>
+							</div>
 						</div>
-						<div class="form-group" ng-show="!riesgoc.esnuevo">
-							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<p class="form-control-static">{{ riesgoc.riesgo.usuarioActualizo }}</p>
-						</div>
-						<div class="form-group" ng-show="!riesgoc.esnuevo">
-							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<p class="form-control-static">{{ riesgoc.riesgo.fechaActualizacion }}</p>
-						</div>
+					</div>
+				</div>
 				</form>
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>

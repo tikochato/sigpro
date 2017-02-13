@@ -48,19 +48,20 @@
 		</div>
 	</div>
 
-	<div class="row" ng-if="formularioc.mostraringreso">
+	<div class="row main-form" ng-show="formularioc.mostraringreso">
 		<h4 ng-hide="!formularioc.esnuevo">Nuevo Formulario</h4>
 		<h4 ng-hide="formularioc.esnuevo">Edición de Formulario</h4>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="formularioc.guardar()">Guardar</label>
+				<label class="btn btn-success" ng-click="form.$valid ? formularioc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 				<label class="btn btn-primary" ng-click="formularioc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>
 		<div class="col-sm-12">
-			<form>
+			<form name="form">
 				<div class="form-group">
-					<label for="id">ID</label> <label class="form-control" id="id">{{ formularioc.formulario.id }}</label>
+					<label for="id">ID</label> 
+					<p class="form-control-static">{{ formularioc.formulario.id }}</p>
 				</div>
 				<div class="form-group">
 					<label for="nombre">* Código</label> <input type="text"
@@ -82,25 +83,38 @@
 						class="form-control" id="descripcion" placeholder="Descripción"
 						ng-model="formularioc.formulario.descripcion">
 				</div>
-				<div class="form-group">
-					<label for="usuarioCreo">Usuario que creo</label> <label
-						class="form-control" id="usuarioCreo">{{
-						formularioc.formulario.usuarioCreo }}</label>
-				</div>
-				<div class="form-group">
-					<label for="fechaCreacion">Fecha de creación</label> <label
-						class="form-control" id="fechaCreacion">{{
-						formularioc.formulario.fechaCreacion }}</label>
-				</div>
-				<div class="form-group">
-					<label for="usuarioActualizo">Usuario que actualizo</label> <label
-						class="form-control" id="usuarioCreo">{{
-						formularioc.formulario.usuarioActualizo }}</label>
-				</div>
-				<div class="form-group">
-					<label for="fechaActualizacion">Fecha de actualizacion</label> <label
-						class="form-control" id="usuarioCreo">{{
-						formularioc.formulario.fechaActualizacion }}</label>
+				<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label> 
+									<p class="form-control-static" id="usuarioCreo"> {{ formularioc.formulario.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label for="fechaCreacion">Fecha de creación</label>
+									<p class="form-control-static" id="fechaCreacion"> {{ formularioc.formulario.fechaCreacion }} </p>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ formularioc.formulario.usuarioActualizo }} </p>
+								</div>	
+							</div>
+							<div class="col-sm-6">		
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ formularioc.formulario.fechaActualizacion }} </p>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<br />
@@ -148,14 +162,15 @@
 					</tbody>
 				</table>
 				</div>
-
+				
+				
 			</form>
 		</div>
 		<br />
 		<div align="center">Los campos marcados con * son obligatorios</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="formularioc.guardar()">Guardar</label>
+				<label class="btn btn-success" ng-click="form.$valid ? formularioc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
 				<label class="btn btn-primary" ng-click="formularioc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>

@@ -155,6 +155,13 @@ public class Utils {
 		return "";
 	}
 	
+	public static String formatDateHour(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+		if (date != null)
+			return sdf.format(date);
+		return "";
+	}
+	
 	public static Date dateFromString(String date){
 		Date rdate=null;
 		if(date!=null && date.length()>0){

@@ -53,21 +53,21 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row" ng-show="riesgopropiedadc.mostraringreso">
+		<div class="row main-form" ng-show="riesgopropiedadc.mostraringreso">
 			<h4 ng-hide="!riesgopropiedadc.esnuevo">Nueva Propiedad</h4>
 			<h4 ng-hide="riesgopropiedadc.esnuevo">Edición de Propiedad</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="riesgopropiedadc.guardar()">Guardar</label>
+			        <label class="btn btn-success" ng-click="form.$valid ? riesgopropiedadc.guardar() : ''"  ng-disabled="!form.$valid">Guardar</label>
 			        <label class="btn btn-primary" ng-click="riesgopropiedadc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
 
 			<div class="col-sm-12">
-				<form>
+				<form name="form">
 						<div class="form-group">
 							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ riesgopropiedadc.riesgopropiedad.id }}</label>
+    						<p class="form-control-static">{{ riesgopropiedadc.riesgopropiedad.id }}</p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
@@ -84,29 +84,46 @@
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="riesgopropiedadc.riesgopropiedad.descripcion">
 						</div>
-						<div class="form-group">
-							<label for="usuarioCreo">Usuario que creo</label>
-    						<label class="form-control" id="usuarioCreo">{{ riesgopropiedadc.riesgopropiedad.usuarioCreo }}</label>
+						<div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label> 
+									<p class="form-control-static"> {{ riesgopropiedadc.riesgopropiedad.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label for="fechaCreacion">Fecha de creación</label>
+									<p class="form-control-static" id="fechaCreacion"> {{ riesgopropiedadc.riesgopropiedad.fechaCreacion }} </p>
+								</div>
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="fechaCreacion">Fecha de creación</label>
-    						<label class="form-control" id="fechaCreacion">{{ riesgopropiedadc.riesgopropiedad.fechaCreacion }}</label>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ riesgopropiedadc.riesgopropiedad.usuarioActualizo }} </p>
+								</div>	
+							</div>
+							<div class="col-sm-6">		
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ riesgopropiedadc.riesgopropiedad.fechaActualizacion }} </p>
+								</div>
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="usuarioActualizo">Usuario que actualizo</label>
-    						<label class="form-control" id="usuarioCreo">{{ riesgopropiedadc.riesgopropiedad.usuarioActualizo }}</label>
-						</div>
-						<div class="form-group">
-							<label for="fechaActualizacion">Fecha de actualizacion</label>
-    						<label class="form-control" id="usuarioCreo">{{ riesgopropiedadc.riesgopropiedad.fechaActualizacion }}</label>
-						</div>
+					</div>
+				</div>
 				</form>
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="riesgopropiedadc.guardar()">Guardar</label>
+				        <label class="btn btn-success" ng-click="form.$valid ? riesgopropiedadc.guardar() : ''"  ng-disabled="!form.$valid">Guardar</label>
 				        <label class="btn btn-primary" ng-click="riesgopropiedadc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

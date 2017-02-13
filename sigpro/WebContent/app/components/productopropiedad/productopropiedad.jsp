@@ -56,7 +56,7 @@
    
   </div>
 
-  <div ng-show="productoPropiedad.esForma">
+  <div class="row main-form" ng-show="productoPropiedad.esForma">
 
     <div class="col-sm-12 operation_buttons" align="right">
 
@@ -71,30 +71,62 @@
 	    <form name="form" class="css-form" novalidate>
 	
 	      <div class="row">
-		      <div class="form-group col-sm-12" ng-show="!productoPropiedad.esNuevo">
-		        <label for="campo0">ID:</label>
-		        <input type="text" class="form-control" id="campo0" name="campo0" placeholder="ID" ng-model="productoPropiedad.codigo" ng-readonly="true" />
+		      <div class="form-group ">
+		        <label>ID:</label>
+		        <p class="form-control-static">{{ productoPropiedad.codigo }}</p>
 		      </div>
 	      </div>
 
 	      <div class="row">
-		      <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo1.$invalid }">
+		      <div class="form-group">
 		        <label for="campo1">* Nombre:</label> 
-		        <input type="text" class="form-control" id="campo1" name="campo1" placeholder="Nombre" ng-model="productoPropiedad.nombre" required />
+		        <input type="text" class="form-control" placeholder="Nombre" ng-model="productoPropiedad.nombre" ng-required="true" />
 		      </div>
 
-		      <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo2.$invalid }">
+		      <div class="form-group">
 		        <label for="campo2">* Tipo:</label>     			
-    			<select class="form-control" id="campo2" name="campo2" ng-model="productoPropiedad.datoTipoSeleccionado" ng-options="tipo as tipo.nombre for tipo in productoPropiedad.datoTipos track by tipo.id" required>
+    			<select class="form-control" ng-model="productoPropiedad.datoTipoSeleccionado" ng-options="tipo as tipo.nombre for tipo in productoPropiedad.datoTipos track by tipo.id" ng-required="true">
 					<option disabled selected value> -- Seleccione Tipo -- </option>
 				</select>
     		 </div>
 		
-		      <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo3.$invalid }">
-		        <label for="campo3">* Descripción:</label> 
-		        <input type="text" class="form-control" id="campo3" name="campo3" placeholder="Descripción" ng-model="productoPropiedad.descripcion" required />
+		      <div class="form-group">
+		        <label for="campo3">Descripción:</label> 
+		        <input type="text" class="form-control" placeholder="Descripción" ng-model="productoPropiedad.descripcion"/>
 		      </div>
-		      
+		      <div class="panel panel-default">
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo">Usuario que creo</label> 
+									<p class="form-control-static"> {{ productoPropiedad.productopropiedad.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label for="fechaCreacion">Fecha de creación</label>
+									<p class="form-control-static" id="fechaCreacion"> {{ productoPropiedad.productopropiedad.fechaCreacion }} </p>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioActualizo">Usuario que actualizo</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ productoPropiedad.productopropiedad.usuarioActualizo }} </p>
+								</div>	
+							</div>
+							<div class="col-sm-6">		
+								<div class="form-group">
+									<label for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ productoPropiedad.productopropiedad.fechaActualizacion }} </p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 		      
 	      </div>
 	      

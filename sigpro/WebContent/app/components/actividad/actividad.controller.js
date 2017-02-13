@@ -66,14 +66,14 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				columnDefs : [
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
-						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,1)"></input></div>'
+						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.actividadc.filtros[\'nombre\']" ng-keypress="grid.appScope.actividadc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 				    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,2)"></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.actividadc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.actividadc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,3)"></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.actividadc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.actividadc.filtrar($event)"></input></div>'
 				    }
 				],
 				onRegisterApi: function(gridApi) {
@@ -107,15 +107,19 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
+						 mi.obtenerTotalActividades();
 				    }
 				    else{
 				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'actividades', t: (new Date()).getTime()}).then(function(response){
-					      if(response.data.success && response.data.estado!='')
-					    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
-					    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
-						      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
-						      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+						      if(response.data.success && response.data.estado!='')
+						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+						      mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
+							  mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
+							  mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+						      
+						      mi.obtenerTotalActividades();
 						  });
+				    	  
 				    }
 				}
 		};
@@ -138,7 +142,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.guardar=function(valid){
 			for (campos in mi.camposdinamicos) {
 				if (mi.camposdinamicos[campos].tipo === 'fecha') {
-					mi.camposdinamicos[campos].valor = moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY')
+					mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
 				}
 			}
 			if(mi.actividad!=null){
@@ -154,12 +158,17 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					fechainicio: moment(mi.actividad.fechaInicio).format('DD/MM/YYYY'),
 					fechafin: moment(mi.actividad.fechaFin).format('DD/MM/YYYY'),
 					porcentajeavance: mi.actividad.porcentajeavance,
+					programa: mi.actividad.programa,
+					subprograma: mi.actividad.subprograma,
+					proyecto: mi.actividad.proyecto,
+					actividad: mi.actividad.actividad,
+					obra: mi.actividad.obra,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
 					if(response.success){
 						mi.actividad.id = response.id;
 						$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardado')+' con éxito');
-						mi.cargarTabla();
+						mi.obtenerTotalActividades();
 						mi.esnuevo = false;
 					}
 					else
@@ -171,7 +180,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		};
 
 		mi.borrar = function(ev) {
-			if(mi.actividad!=null){
+			if(mi.actividad!=null && mi.actividad.id!=null){
 				var confirm = $mdDialog.confirm()
 			          .title('Confirmación de borrado')
 			          .textContent('¿Desea borrar la Actividad "'+mi.actividad.nombre+'"?')
@@ -188,7 +197,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 						if(response.success){
 							$utilidades.mensaje('success','Actividad borrada con éxito');
 							mi.actividad = null;
-							mi.cargarTabla();
+							mi.obtenerTotalActividades();
 						}
 						else
 							$utilidades.mensaje('danger','Error al borrar la Actividad');
@@ -208,14 +217,35 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			mi.actividadnombre = "";
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
-			mi.actividad = null;
+			mi.actividad = {};
 			mi.gridApi.selection.clearSelectedRows();
 		};
 
 		mi.editar = function() {
-			if(mi.actividad!=null){
+			if(mi.actividad!=null && mi.actividad.id!=null){
 				mi.mostraringreso = true;
+				mi.actividadtipoid = mi.actividad.actividadtipoid;
 				mi.esnuevo = false;
+				
+				var parametros = {
+						accion: 'getActividadPropiedadPorTipo',
+						idActividad: mi.actividad.id,
+					    idActividadTipo: mi.actividad.actividadtipoid
+				}
+				$http.post('/SActividadPropiedad', parametros).then(function(response){
+					mi.camposdinamicos = response.data.actividadpropiedades
+					for (campos in mi.camposdinamicos) {
+						switch (mi.camposdinamicos[campos].tipo){
+							case "fecha":
+								mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+								break;
+							case "entero":
+								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								break;
+						}
+
+					}
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar la Actividad que desea editar');
@@ -223,6 +253,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 
 		mi.irATabla = function() {
 			mi.mostraringreso=false;
+			mi.esNuevo = false;
 		}
 
 		mi.guardarEstado=function(){
@@ -267,13 +298,23 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				}
 			}
 		}
-
-		$http.post('/SActividad', { accion: 'numeroActividadesPorObjeto',objetoid:$routeParams.objeto_id, tipo: mi.objetotipo }).success(
-				function(response) {
-					mi.totalActividades = response.totalactividades;
-					mi.cargarTabla(1);
-		});
 		
+		mi.filtrar = function(evt){
+			if(evt.keyCode==13){
+				mi.obtenerTotalActividades();
+			}
+		};
+
+		
+		mi.obtenerTotalActividades=function(){
+			$http.post('/SActividad', { accion: 'numeroActividadesPorObjeto',objetoid:$routeParams.objeto_id, tipo: mi.objetotipo,
+				filtro_nombre: mi.filtros['nombre'],
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+					function(response) {
+						mi.totalActividades = response.totalactividades;
+						mi.cargarTabla(1);
+			});
+		};
 		
 		mi.buscarActividadTipo = function(titulo, mensaje) {
 
@@ -297,17 +338,22 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			});
 
 			modalInstance.result.then(function(selectedItem) {
-				mi.actividadtipoid = selectedItem.id;
-				mi.actividadtiponombre = selectedItem.nombre;
+				mi.actividad.actividadtipoid = selectedItem.id;
+				mi.actividad.actividadtiponombre = selectedItem.nombre;
 
 				var parametros = {
 						accion: 'getActividadPropiedadPorTipo',
-						idActividad: mi.actividad.id,
+						idActividad: mi.actividad!=null ? mi.actividad.id : 0,
 						idActividadTipo: selectedItem.id
 				}
 
 				$http.post('/SActividadPropiedad', parametros).then(function(response){
-					mi.camposdinamicos = response.data.actividadpropiedades
+					mi.camposdinamicos = response.data.actividadpropiedades;
+					for (campos in mi.camposdinamicos) {
+						if (mi.camposdinamicos[campos].tipo === 'fecha') {
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null; 
+						}
+					}
 				});
 
 			}, function() {

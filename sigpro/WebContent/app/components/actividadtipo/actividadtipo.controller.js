@@ -43,14 +43,14 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 				columnDefs : [ 
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left', 
-						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,1)"></input></div>'
+						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.actividadtipoc.filtros[\'nombre\']" ng-keypress="grid.appScope.actividadtipoc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 				    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,2)"></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.actividadtipoc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.actividadtipoc.filtrar($event)"></input></div>'
 				    },
-				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'', 
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,3)"></input></div>'
+				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', 
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.actividadtipoc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.actividadtipoc.filtrar($event)"></input></div>'
 				    }
 				],
 				onRegisterApi: function(gridApi) {
@@ -81,14 +81,17 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 					
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
+						mi.obtenerTotalActividadPropiedades();
 				    }
 				    else{
 				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'actividadTipos', t: (new Date()).getTime()}).then(function(response){
-					      if(response.data.success && response.data.estado!='')
-					    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
-					    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
-						      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
-						      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+						      if(response.data.success && response.data.estado!=''){
+						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+						    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
+							      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
+							      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+						      }
+						      mi.obtenerTotalActividadPropiedades();
 						  });
 				    }
 				}
@@ -142,7 +145,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 		};
 		
 		mi.editar = function() {
-			if(mi.actividadtipo!=null){
+			if(mi.actividadtipo!=null && mi.actividadtipo.id!=null){
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.cargarTotalPropiedades();
@@ -152,7 +155,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 		}
 		
 		mi.borrar = function(ev) {
-			if(mi.actividadtipo!=null){
+			if(mi.actividadtipo!=null && mi.actividadtipo.id!=null){
 				var confirm = $mdDialog.confirm()
 			          .title('Confirmación de borrado')
 			          .textContent('¿Desea borrar el tipo de actividad "'+mi.actividadtipo.nombre+'"?')
@@ -185,7 +188,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 		mi.nuevo = function() {
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
-			mi.actividadtipo = null;
+			mi.actividadtipo = {};
 			mi.gridApi.selection.clearSelectedRows();
 			mi.cargarTotalPropiedades();
 		};
@@ -215,22 +218,18 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 		
 		mi.filtrar = function(evt,tipo){
 			if(evt.keyCode==13){
-				switch(tipo){
-					case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
-					case 2: mi.filtros['usuario_creo'] = evt.currentTarget.value; break;
-					case 3: mi.filtros['fecha_creacion'] = evt.currentTarget.value; break;
-						
-				}
 				mi.cargarTabla(mi.paginaActual);
 			}
 		}
 		
-		$http.post('/SActividadTipo', { accion: 'numeroActividadTipos' }).success(
+		mi.obtenerTotalActividadPropiedades=function(){
+			$http.post('/SActividadTipo', { accion: 'numeroActividadTipos' }).success(
 				function(response) {
 					mi.totalActividadtipos = response.totalactividadtipos;
 					mi.cargarTabla(1);
 				}
-		);
+			);
+		}
 		//----
 		
 		mi.gridOptionsactividadPropiedad = {
