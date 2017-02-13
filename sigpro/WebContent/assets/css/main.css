@@ -177,3 +177,11 @@ nav.navbar{
 .table-propiedades{
 	background-color: white;
 }
+
+.navbar-inverse{
+	background-color: #1f3b6a;
+}
+
+.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {
+	background-color: #1f3b6a;
+}
