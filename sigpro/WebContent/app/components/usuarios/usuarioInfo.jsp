@@ -15,32 +15,28 @@
 				<div class="btn-group">
 					<label class="btn btn-primary" ng-click="usuarioc.editar()" ng-hide="!usuarioc.esoculto">Editar</label>
 			        <label class="btn btn-success" ng-show="!usuarioc.esoculto" ng-click="usuarioc.guardarUsuario()" ng-disabled="form.$invalid" >Guardar</label>
-			        <label class="btn btn-primary" ng-click="usuarioc.editar()" ng-hide="usuarioc.esoculto">cancelar</label>
+			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()" ng-hide="usuarioc.esoculto">cancelar</label>
     			</div>
     		</div>
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group" >
 							<label for="nombre">Usuario:</label>
-							<div ng-hide="!usuarioc.esoculto">
-								{{usuarioc.usuarioActual.usuario}}
-							</div>
-    						<p class="form-control-static"  ng-hide="usuarioc.esoculto">{{usuarioc.usuarioActual.usuario}}</p>
+    						<p class="form-control-static">{{usuarioc.usuarioActual.usuario}}</p>
 						</div>
-						<div class="row">
-							<div class="form-group col-sm-6">
-								<label for="Descripcion">Correo</label>
-								<div ng-hide="!usuarioc.esoculto">
-									{{usuarioc.usuarioActual.email}}
-								</div>
-								<input ng-show="!usuarioc.esoculto" class="form-control" type="text" placeholder="Correo electrónico" ng-model="usuarioc.usuarioActual.email" ng-required="true"/>
-							</div>
-							<div class="form-group col-sm-6" ng-show="!usuarioc.esoculto">
+						<div class="form-group" ng-show="usuarioc.esoculto" >
+							<label for="nombre">Correo:</label>
+    						<p class="form-control-static">{{usuarioc.usuarioActual.email}}</p>
+						</div>
+						<div class="form-group" ng-show="!usuarioc.esoculto" >
+							<label for="nombre">Correo:</label>
+    						<input  class="form-control" type="text" placeholder="Correo electrónico" ng-model="usuarioc.usuarioActual.email" ng-required="true"/>
+						</div>
+						<div class="form-group" ng-show="!usuarioc.esoculto">
 								<label for="Descripcion">Password</label>
 								<input class="form-control" type="password" ng-model="usuarioc.usuarioActual.password" ng-required="true"/>
-							</div>
 						</div>
-						<div ng-show="!usuarioc.esoculto">
+						<div ng-if="!usuarioc.esoculto">
 							<div class="row" ng-show="usuarioc.tieneColaborador">
 								
 						      <div class="form-group col-sm-3" >

@@ -35,6 +35,19 @@ app.controller(
 	    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	    return re.test(email);
 	}
+	mi.cancelar=function(){
+		mi.esoculto=!mi.esoculto;
+		$http.post('/SUsuario', {accion: 'usuarioActual' }).success(
+				function(response) {
+					if(response.success){
+						 mi.usuarioActual=response.usuario;
+						 usuarioMail  =response.usuario.email;
+						 if(response.usuario.pnombre!=null){
+							 mi.tieneColaborador=true;
+						 }
+					}
+		});
+	};
 	mi.guardarUsuario=function(){
 		console.log("he");
 		console.log(usuarioMail);
@@ -118,8 +131,6 @@ app.controller(
 					 if(response.usuario.pnombre!=null){
 						 mi.tieneColaborador=true;
 					 }
-				}else{
-					$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
 				}
 	});
 	
