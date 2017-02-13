@@ -105,10 +105,6 @@ app.controller(
 	};					
 	mi.guardarPermiso=function(){		
 		if(mi.permisoSelected.nombre!=="" && mi.permisoSelected.descripcion!==""){
-			var idSend=0;
-			if(!mi.esNuevo){
-				idSend=mi.permisoSelected.id;
-			}
 			$http.post('/SPermiso',
 					{
 						accion: 'guardarPermiso',
