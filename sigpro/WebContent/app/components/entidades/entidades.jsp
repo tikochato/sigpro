@@ -11,15 +11,15 @@
   <div class="row" align="center" ng-hide="entidad.esForma">
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
-      	<shiro:hasPermission name="crearEntidad">
+      	<shiro:hasPermission name="1040">
       		<label class="btn btn-primary" ng-click="entidad.nueva()">Nueva</label>
       	</shiro:hasPermission>
-      	<shiro:hasPermission name="editarEntidad">
+      	<shiro:hasPermission name="1020">
         	<label class="btn btn-primary" ng-click="entidad.editar()">Editar</label>
       	</shiro:hasPermission>
       </div>
     </div>
-    <shiro:hasPermission name="verEntidad">
+    <shiro:hasPermission name="10010">
     	  <div class="col-sm-12" align="center">
 	      <div style="height: 35px;">
 			<div style="text-align: right;">
