@@ -75,6 +75,7 @@
 					<label for="descripcion">Descripción</label> 
 					<input type="text"class="form-control" id="descripcion" placeholder="Descripción"ng-model="actividadtipoc.actividadtipo.descripcion">
 				</div>
+				<br/>
 				<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
@@ -110,7 +111,8 @@
 				</div>
 				<br />
 				<div align="center">
-					<div style="height: 35px; width: 75%">
+					<h5>Propiedades</h5>
+					<div style="height: 35px;" >
 						<div style="text-align: right;">
 							<div class="btn-group" role="group" aria-label="">
 								<a class="btn btn-default" href
@@ -121,10 +123,10 @@
 							</div>
 						</div>
 					</div>
-					
-					<table style="width: 75%;"
+					<br/>
+					<table
 					st-table="actividadtipoc.actividadpropiedades"
-					class="table table-striped  table-bordered">
+					class="table table-striped table-bordered table-hover table-propiedades">
 					<thead >
 						<tr>
 							<th>ID</th>

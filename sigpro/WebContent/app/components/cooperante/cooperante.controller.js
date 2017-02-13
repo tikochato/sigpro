@@ -19,7 +19,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.columnaOrdenada=null;
 			mi.ordenDireccion = null;
 			
-			mi.filtros = ["","","",""];
+			mi.filtros = [];
 			
 			mi.gridOptions = {
 					enableRowSelection : true,
@@ -42,10 +42,10 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 					    },
 					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 					    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
-					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-model="grid.appScope.cooperantec.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.cooperantec.filtrar($event)"></input></div>'
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-model="grid.appScope.cooperantec.filtros[\'usuarioCreo\']" ng-keypress="grid.appScope.cooperantec.filtrar($event)"></input></div>'
 					    },
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-model="grid.appScope.cooperantec.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.cooperantec.filtrar($event)"></input></div>'
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-model="grid.appScope.cooperantec.filtros[\'fechaCreacion\']" ng-keypress="grid.appScope.cooperantec.filtrar($event)"></input></div>'
 					    }
 					],
 					onRegisterApi: function(gridApi) {
@@ -76,14 +76,17 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 						
 						if($routeParams.reiniciar_vista=='rv'){
 							mi.guardarEstado();
+							 mi.obtenerTotalCooperantes();
 					    }
 					    else{
 					    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'cooperantes', t: (new Date()).getTime()}).then(function(response){
-						      if(response.data.success && response.data.estado!='')
-						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
-						    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
-							      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
-							      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+							      if(response.data.success && response.data.estado!=''){
+							    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+							    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
+								      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
+								      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+							      }
+							      mi.obtenerTotalCooperantes();
 							  });
 					    }
 					}
@@ -93,7 +96,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 				mi.mostrarcargando=true;
 				$http.post('/SCooperante', { accion: 'getCooperantesPagina', pagina: pagina, numerocooperantes: $utilidades.elementosPorPagina,
 					filtro_nombre: mi.filtros['nombre'],  filtro_codigo: mi.filtros['codigo'],
-					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
+					filtro_usuario_creo: mi.filtros['usuarioCcreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
 					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion}).success(
 						function(response) {
 							mi.cooperantes = response.cooperantes;
@@ -103,7 +106,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			}
 			
 			mi.guardar=function(){
-				if(mi.cooperante!=null && mi.cooperante.codigo!='' && mi.cooperante.nombre!=''){
+				if(mi.cooperante!=null){
 					$http.post('/SCooperante', {
 						accion: 'guardarCooperante',
 						esnuevo: mi.esnuevo,
@@ -125,7 +128,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			};
 
 			mi.borrar = function(ev) {
-				if(mi.cooperante!=null){
+				if(mi.cooperante!=null && mi.cooperante.id!=null){
 					var confirm = $mdDialog.confirm()
 				          .title('Confirmación de borrado')
 				          .textContent('¿Desea borrar el Cooperante "'+mi.cooperante.nombre+'"?')
@@ -157,12 +160,12 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.nuevo = function() {
 				mi.mostraringreso=true;
 				mi.esnuevo = true;
-				mi.cooperante = null;
+				mi.cooperante = {};
 				mi.gridApi.selection.clearSelectedRows();
 			};
 
 			mi.editar = function() {
-				if(mi.cooperante!=null){
+				if(mi.cooperante!=null && mi.cooperante.id!=null){
 					mi.mostraringreso = true;
 					mi.esnuevo = false;
 				}
@@ -200,14 +203,16 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 				}
 			}
 			
-			$http.post('/SCooperante', { accion: 'numeroCooperantes',
-				filtro_nombre: mi.filtros['nombre'], filtro_codigo: mi.filtros['codigo'],
-				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']
-			}).success(
+			mi.obtenerTotalCooperantes=function(){
+				$http.post('/SCooperante', { accion: 'numeroCooperantes',
+					filtro_nombre: mi.filtros['nombre'], filtro_codigo: mi.filtros['codigo'],
+					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']
+				}).success(
+				
+						function(response) {
+							mi.totalCooperantes = response.totalcooperantes;
+							mi.cargarTabla(1);
+						});
+			}
 			
-					function(response) {
-						mi.totalCooperantes = response.totalcooperantes;
-						mi.cargarTabla(1);
-					});
-			
-		} ]);
+			} ]);

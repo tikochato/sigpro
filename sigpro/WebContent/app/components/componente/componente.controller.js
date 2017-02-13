@@ -59,14 +59,14 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				columnDefs : [
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentec.filtrar($event,1)" ></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.componentec.filtros[\'nombre\']"  ng-keypress="grid.appScope.componentec.filtrar($event)" ></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 				    { name: 'usuarioCreo', displayName: 'Usuario Creación',
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentec.filtrar($event,2)"></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.componentec.filtros[\'usuarioCreo\']"  ng-keypress="grid.appScope.componentec.filtrar($event)"></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.componentec.filtrar($event,3)"  ></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.componentec.filtros[\'fechaCreacion\']"  ng-keypress="grid.appScope.componentec.filtrar($event)"  ></input></div>'
 				    }
 				],
 				onRegisterApi: function(gridApi) {
@@ -94,16 +94,19 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
+						mi.obtenerTotalComponentes();
 				    }
 				    else{
 				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'componentes', t: (new Date()).getTime()}).then(function(response){
-					      if(response.data.success && response.data.estado!='')
-					    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
-					    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
-						      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
-						      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
-						      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+						      if(response.data.success && response.data.estado!=''){
+						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+						    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
+							      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
+							      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+						      }
+						      mi.obtenerTotalComponentes();
 						  });
+				    	  
 				    }
 				}
 		};
@@ -164,7 +167,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		};
 
 		mi.borrar = function(ev) {
-			if(mi.componente!=null){
+			if(mi.componente!=null && mi.componente.id!=null){
 				var confirm = $mdDialog.confirm()
 			          .title('Confirmación de borrado')
 			          .textContent('¿Desea borrar el Componente "'+mi.componente.nombre+'"?')
@@ -203,7 +206,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			mi.componentetiponombre="";
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
-			mi.componente = null;
+			mi.componente = {};
 			mi.camposdinamicos = {};
 			mi.gridApi.selection.clearSelectedRows();
 
@@ -273,12 +276,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			mi.camposdinamicos[index].isOpen = true;
 		};
 
-		$http.post('/SComponente', { accion: 'numeroComponentesPorProyecto',proyectoid:$routeParams.proyecto_id }).success(
-				function(response) {
-					mi.totalComponentes = response.totalcomponentes;
-					mi.cargarTabla(1);
-		});
-
+		
 		mi.irAProductos=function(componenteid){
 			if(mi.componente!=null){
 				$location.path('/producto/'+componenteid);
@@ -287,11 +285,6 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 
 		mi.filtrar = function(evt,tipo){
 			if(evt.keyCode==13){
-				switch(tipo){
-					case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
-					case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
-					case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
-				}
 				mi.obtenerTotalComponentes();
 			}
 		}

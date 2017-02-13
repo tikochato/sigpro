@@ -114,8 +114,8 @@ public class SDesembolso extends HttpServlet {
 				temp.desembolsotipo = desembolso.getDesembolsoTipo().getNombre();
 				temp.proyecto = desembolso.getProyecto().getNombre();
 				temp.proyectoid = desembolso.getProyecto().getId();
-				temp.fechaActualizacion = Utils.formatDate(desembolso.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(desembolso.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(desembolso.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(desembolso.getFechaCreacion());
 				temp.usuarioActualizo = desembolso.getUsuarioActualizo();
 				temp.usuarioCreo = desembolso.getUsuarioCreo();
 				stdesembolsos.add(temp);
@@ -139,8 +139,8 @@ public class SDesembolso extends HttpServlet {
 				temp.desembolsotipo = desembolso.getDesembolsoTipo().getNombre();
 				temp.proyecto = desembolso.getProyecto().getNombre();
 				temp.proyectoid = desembolso.getProyecto().getId();
-				temp.fechaActualizacion = Utils.formatDate(desembolso.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(desembolso.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(desembolso.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(desembolso.getFechaCreacion());
 				temp.usuarioActualizo = desembolso.getUsuarioActualizo();
 				temp.usuarioCreo = desembolso.getUsuarioCreo();
 				stdesembolsos.add(temp);
@@ -247,8 +247,8 @@ public class SDesembolso extends HttpServlet {
 				temp.desembolsotipo = desembolso.getDesembolsoTipo().getNombre();
 				temp.proyecto = desembolso.getProyecto().getNombre();
 				temp.proyectoid = desembolso.getProyecto().getId();
-				temp.fechaActualizacion = Utils.formatDate(desembolso.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(desembolso.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(desembolso.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(desembolso.getFechaCreacion());
 				temp.usuarioActualizo = desembolso.getUsuarioActualizo();
 				temp.usuarioCreo = desembolso.getUsuarioCreo();
 				stdesembolsos.add(temp);

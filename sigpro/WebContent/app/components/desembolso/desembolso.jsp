@@ -98,11 +98,11 @@
 					<div class="form-group " >
 			          <label for="campo3">* Tipo Desembolso</label>
 			          <div class="input-group">
-			            <input type="hidden" class="form-control" ng-model="desembolsoc.desembolsotipoid" /> 
-			            <input type="text" class="form-control" id="tipodesembolso" name="tipodesembolso" placeholder="Tipo desembolso" ng-model="desembolsoc.desembolsonombre" ng-readonly="true" ng-required="true"/>
+			            <input type="text" class="form-control" placeholder="Tipo desembolso" ng-model="desembolsoc.desembolso.desembolsotipo" ng-readonly="true" ng-required="true"/>
 			            <span class="input-group-addon" ng-click="desembolsoc.buscarTipoDesembolso()"><i class="glyphicon glyphicon-search"></i></span>
 			          </div>
 			        </div>
+			        <br/>
 					<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">

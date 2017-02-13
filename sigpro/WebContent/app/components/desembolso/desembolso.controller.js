@@ -40,16 +40,16 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 				columnDefs : [ 
 					{ name: 'id', width: 65, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 					{ name: 'fecha',  displayName: 'Fecha', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.desembolsoc.filtrar($event,1)" ></input></div>'
+						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.desembolsoc.filtros[\'fecha\']"  ng-keypress="grid.appScope.desembolsoc.filtrar($event)" ></input></div>'
 					},
 					{ name: 'monto', width: 100, displayName: 'Monto', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 					{ name: 'desembolsotipo', width: 200, displayName: 'Tipo Desembolso',cellClass: 'grid-align-left',enableFiltering: false, enableSorting: false },
 					{ name: 'tipocambio', width: 100, displayName: 'Tipo Cambio', cellClass: 'grid-align-right', type: 'number', enableFiltering: false, enableSorting: false },
 				    { name: 'usuarioCreo', displayName: 'Usuario Creación',
-						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.desembolsoc.filtrar($event,2)" ></input></div>'
+						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.desembolsoc.filtros[\'usuarioCreo\']"  ng-keypress="grid.appScope.desembolsoc.filtrar($event)" ></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.desembolsoc.filtrar($event,3)" ></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.desembolsoc.filtros[\'fechaCreacion\']" ng-keypress="grid.appScope.desembolsoc.filtrar($event)" ></input></div>'
 				    }
 				],
 				onRegisterApi: function(gridApi) {
@@ -77,15 +77,17 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 					
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
+						mi.obtenerTotalDesembolsos();
 				    }
 				    else{
 				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'desembolsos', t: (new Date()).getTime()}).then(function(response){
-					      if(response.data.success && response.data.estado!='')
-					    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
-					    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
-						      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
-						      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
-						      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+				    		  if(response.data.success && response.data.estado!=''){
+						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+						    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
+							      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
+							      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+				    		  }
+				    		  mi.obtenerTotalDesembolsos();
 						  });
 				    }
 				}
@@ -93,8 +95,8 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			
 			mi.opcionesFecha = {
 				    formatYear: 'yyyy',
-				    maxDate: new Date(2020, 5, 22),
-				    minDate : new Date(1900, 1, 1),
+				    maxDate: new Date(2050, 12, 31),
+				    minDate : new Date(1990, 1, 1),
 				    startingDay: 1
 				  };
 			
@@ -118,8 +120,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			};
 			
 			mi.guardar=function(){
-				if(mi.desembolso!=null && mi.desembolso.fecha!='' && mi.desembolso.monto!=''
-					&& mi.desembolso.tipocambio!='' && mi.proyectoid!='' && mi.desembolsotipoid!=''){
+				if(mi.desembolso!=null && mi.proyectoid!=''){
 					$http.post('/SDesembolso', {
 						accion: 'guardarDesembolso',
 						esnuevo: mi.esnuevo,
@@ -128,14 +129,13 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 						monto: mi.desembolso.monto,
 						tipocambio : mi.desembolso.tipocambio,
 						proyectoid : 1,
-						desembolsotipoid : mi.desembolsotipoid
+						desembolsotipoid : mi.desembolso.desembolsotipoid
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Desembolso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.desembolso.id = response.id;
 							mi.esnuevo = false;
-							mi.cargarTabla();
-							mi.mostraringreso=false;
+							mi.obtenerTotalDesembolsos();
 						}
 						else
 							$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Desembolso');
@@ -148,14 +148,14 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.nuevo = function() {
 				mi.mostraringreso=true;
 				mi.esnuevo = true;
-				mi.desembolso = null;
+				mi.desembolso = {};
 				mi.desembolsotipoid="";
 				mi.desembolsonombre="";
 				mi.gridApi.selection.clearSelectedRows();
 			};
 			
 			mi.borrar = function(ev) {
-				if(mi.desembolso!=null){
+				if(mi.desembolso!=null && mi.desembolso.id!=null){
 					var confirm = $mdDialog.confirm()
 				          .title('Confirmación de borrado')
 				          .textContent('¿Desea borrar el Desembolso ?')
@@ -185,7 +185,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			};
 			
 			mi.editar = function() {
-				if(mi.desembolso!=null){
+				if(mi.desembolso!=null && mi.desembolso.id!=null){
 					mi.fecha = moment(mi.desembolso.fecha, 'DD/MM/YYYY').toDate();
 					mi.mostraringreso = true;
 					mi.esnuevo = false;
@@ -199,12 +199,6 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 						mi.proyectonombre = response.nombre;
 			});
 			
-			$http.post('/SDesembolso', { accion: 'numeroDesembolsosPorProyecto',proyectoid:$routeParams.proyecto_id }).success(
-					function(response) {
-						mi.totalDesembolsos = response.totaldesembolsos;
-						mi.cargarTabla(1);
-			});
-			
 			mi.mostrarCalendar = function() {
 			    mi.popup.abierto = true;
 			  };
@@ -214,20 +208,15 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 				mi.esnuevo=false;
 			};
 			
-			mi.filtrar = function(evt,tipo){
+			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
-					switch(tipo){
-						case 1: mi.filtros['fecha'] = evt.currentTarget.value; break;
-						case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
-						case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
-					}
-					mi.obtenerTotalProyectos();
+					mi.obtenerTotalDesembolsos();
 				}
 			};
 
-			mi.obtenerTotalProyectos = function(){
-				$http.post('/SDesembolso', { accion: 'numeroProyectos', proyectoid:$routeParams.proyecto_id,
-					filtro_nombre: mi.filtros['fecha'],
+			mi.obtenerTotalDesembolsos = function(){
+				$http.post('/SDesembolso', { accion: 'numeroDesembolsosPorProyecto', proyectoid:$routeParams.proyecto_id,
+					filtro_fecha: mi.filtros['fecha'],
 					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
 						function(response) {
 							mi.totalDesembolsos = response.data.totaldesembolsos;

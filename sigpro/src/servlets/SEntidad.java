@@ -37,7 +37,7 @@ public class SEntidad extends HttpServlet {
 	} else if (parametro.get("accion").compareTo("actualizar") == 0) {
 	    actualizarEntidad(parametro, response);
 	} else if (parametro.get("accion").compareTo("totalEntidades") == 0) {
-	    totalEntidades(response);
+	    totalEntidades(parametro,response);
 	}
 
     }
@@ -45,10 +45,15 @@ public class SEntidad extends HttpServlet {
     private void listarEntidades(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 	int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 	int registros = Utils.String2Int(parametro.get("registros"), 20);
-
+	String filtro_entidad=parametro.get("filtro_entidad");
+	String filtro_nombre=parametro.get("filtro_nombre");
+	String filtro_abreviatura = parametro.get("filtro_abreviatura");
+	String columna_ordenada = parametro.get("columna_ordenada");
+	String orden_direccion = parametro.get("orden_direccion");
 	String jsonEntidades = "";
 
-	jsonEntidades = EntidadDAO.getJsonEntidades(pagina, registros);
+	jsonEntidades = EntidadDAO.getJsonEntidades(pagina, registros, filtro_entidad, filtro_nombre, filtro_abreviatura,columna_ordenada, orden_direccion
+			);
 
 	if (Utils.isNullOrEmpty(jsonEntidades)) {
 	    jsonEntidades = "{\"success\":false}";
@@ -86,14 +91,17 @@ public class SEntidad extends HttpServlet {
 	}
     }
 
-    private void totalEntidades(HttpServletResponse response) throws IOException {
-	Long total = EntidadDAO.getTotalEntidades();
-
-	String jsonEntidades = "{\"success\":true, \"total\":"
-	                       + total
-	                       + "}";
-
-	Utils.writeJSon(response, jsonEntidades);
+    private void totalEntidades(Map<String, String> parametro,HttpServletResponse response) throws IOException {
+    	String filtro_entidad=parametro.get("filtro_entidad");
+    	String filtro_nombre=parametro.get("filtro_nombre");
+    	String filtro_abreviatura = parametro.get("filtro_abreviatura");
+		Long total = EntidadDAO.getTotalEntidades(filtro_entidad, filtro_nombre, filtro_abreviatura);
+	
+		String jsonEntidades = "{\"success\":true, \"total\":"
+		                       + total
+		                       + "}";
+	
+		Utils.writeJSon(response, jsonEntidades);
 
     }
 

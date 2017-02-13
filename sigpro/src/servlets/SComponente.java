@@ -124,8 +124,8 @@ public class SComponente extends HttpServlet {
 				stcomponente temp =new stcomponente();
 				temp.descripcion = componente.getDescripcion();
 				temp.estado = componente.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(componente.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(componente.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(componente.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(componente.getFechaCreacion());
 				temp.id = componente.getId();
 				temp.nombre = componente.getNombre();
 				temp.usuarioActualizo = componente.getUsuarioActualizo();
@@ -156,8 +156,8 @@ public class SComponente extends HttpServlet {
 
 				temp.descripcion = componente.getDescripcion();
 				temp.estado = componente.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(componente.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(componente.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(componente.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(componente.getFechaCreacion());
 				temp.id = componente.getId();
 				temp.nombre = componente.getNombre();
 				temp.usuarioActualizo = componente.getUsuarioActualizo();
@@ -316,8 +316,8 @@ public class SComponente extends HttpServlet {
 				stcomponente temp =new stcomponente();
 				temp.descripcion = componente.getDescripcion();
 				temp.estado = componente.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(componente.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(componente.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(componente.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(componente.getFechaCreacion());
 				temp.id = componente.getId();
 				temp.nombre = componente.getNombre();
 				temp.usuarioActualizo = componente.getUsuarioActualizo();

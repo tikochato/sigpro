@@ -120,8 +120,8 @@ public class SActividad extends HttpServlet {
 				stactividad temp =new stactividad();
 				temp.descripcion = actividad.getDescripcion();
 				temp.estado = actividad.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(actividad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(actividad.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(actividad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(actividad.getFechaCreacion());
 				temp.id = actividad.getId();
 				temp.nombre = actividad.getNombre();
 				temp.usuarioActualizo = actividad.getUsuarioActualizo();
@@ -223,6 +223,7 @@ public class SActividad extends HttpServlet {
 						actividad.setActividad(iactividad);
 						actividad.setObra(obra);
 						actividad.setFuente(fuente);
+						actividad.setActividadTipo(actividadTipo);
 					}
 					result = ActividadDAO.guardarActividad(actividad);
 
@@ -286,9 +287,13 @@ public class SActividad extends HttpServlet {
 			response_text = String.join("","{ \"success\": true, \"totalactividads\":",ActividadDAO.getTotalActividads(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,usuario).toString()," }");
 		}
 		else if(accion.equals("numeroActividadesPorObjeto")){
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			int objetoId = map.get("objetoid")!=null  ? Integer.parseInt(map.get("objetoid")) : 0;
 			int objetoTipo = map.get("tipo")!=null  ? Integer.parseInt(map.get("tipo")) : 0;
-			response_text = String.join("","{ \"success\": true, \"totalactividads\":",ActividadDAO.getTotalActividadsPorObjeto(objetoId, objetoTipo, usuario).toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalactividads\":",ActividadDAO.getTotalActividadsPorObjeto(objetoId, objetoTipo, filtro_nombre,
+					filtro_usuario_creo, filtro_fecha_creacion,usuario).toString()," }");
 		}
 		else if(accion.equals("getActividadesPaginaPorObjeto")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
@@ -296,14 +301,20 @@ public class SActividad extends HttpServlet {
 			int objetoId = map.get("objetoid")!=null  ? Integer.parseInt(map.get("objetoid")) : 0;
 			int objetoTipo = map.get("tipo")!=null  ? Integer.parseInt(map.get("tipo")) : 0;
 			int numeroActividads = map.get("numeroactividads")!=null  ? Integer.parseInt(map.get("numeroactividads")) : 0;
-			List<Actividad> actividads = ActividadDAO.getActividadsPaginaPorObjeto(pagina, numeroActividads, objetoId, objetoTipo,usuario);
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<Actividad> actividads = ActividadDAO.getActividadsPaginaPorObjeto(pagina, numeroActividads, objetoId, objetoTipo,
+					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion,usuario);
 			List<stactividad> stactividads=new ArrayList<stactividad>();
 			for(Actividad actividad:actividads){
 				stactividad temp =new stactividad();
 				temp.descripcion = actividad.getDescripcion();
 				temp.estado = actividad.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(actividad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(actividad.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(actividad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(actividad.getFechaCreacion());
 				temp.fechaInicio = Utils.formatDate(actividad.getFechaInicio());
 				temp.fechaFin = Utils.formatDate(actividad.getFechaFin());
 				temp.id = actividad.getId();

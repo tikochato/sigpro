@@ -116,11 +116,23 @@ public class EntidadDAO {
 		return ret;
 	}
 
-	public static List<Entidad> getEntidadesPagina(int pagina, int registros) {
+	public static List<Entidad> getEntidadesPagina(int pagina, int registros,
+			String filtro_entidad, String filtro_nombre, String filtro_abreviatura,
+			String columna_ordenada, String orden_direccion) {
 		List<Entidad> ret = new ArrayList<Entidad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<Entidad> criteria = session.createQuery("SELECT e FROM Entidad e", Entidad.class);
+			String query = "SELECT e FROM Entidad e";
+			String query_a="";
+			if(filtro_entidad!=null && filtro_entidad.trim().length()>0)
+				query_a = String.join("",query_a, " str(e.entidad) LIKE '%",filtro_nombre,"%' ");
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " e.nombre LIKE '%", filtro_nombre,"%' ");
+			if(filtro_abreviatura!=null && filtro_abreviatura.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " e.abreviatura LIKE '%", filtro_abreviatura,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","WHERE (",query_a,")") : ""));
+			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
+			Query<Entidad> criteria = session.createQuery(query , Entidad.class);
 			criteria.setFirstResult(((pagina - 1) * (registros)));
 			criteria.setMaxResults(registros);
 			ret = criteria.getResultList();
@@ -132,10 +144,12 @@ public class EntidadDAO {
 		return ret;
 	}
 
-	public static String getJsonEntidades(int pagina, int registros) {
+	public static String getJsonEntidades(int pagina, int registros,
+			String filtro_entidad, String filtro_nombre, String filtro_abreviatura,
+			String columna_ordenada, String orden_direccion) {
 		String jsonEntidades = "";
 
-		List<Entidad> entidadesPojo = getEntidadesPagina(pagina, registros);
+		List<Entidad> entidadesPojo = getEntidadesPagina(pagina, registros, filtro_entidad, filtro_nombre, filtro_abreviatura, columna_ordenada, orden_direccion);
 
 		List<EstructuraEntidad> entidades = new ArrayList<EstructuraEntidad>();
 
@@ -153,11 +167,20 @@ public class EntidadDAO {
 		return jsonEntidades;
 	}
 
-	public static Long getTotalEntidades() {
+	public static Long getTotalEntidades(String filtro_entidad, String filtro_nombre, String filtro_abreviatura) {
 		Long ret = 0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<Long> conteo = session.createQuery("SELECT count(e.entidad) FROM Entidad e", Long.class);
+			String query = "SELECT count(e.entidad) FROM Entidad e ";
+			String query_a="";
+			if(filtro_entidad!=null && filtro_entidad.trim().length()>0)
+				query_a = String.join("",query_a, " str(e.entidad) LIKE '%",filtro_nombre,"%' ");
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " e.nombre LIKE '%", filtro_nombre,"%' ");
+			if(filtro_abreviatura!=null && filtro_abreviatura.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " e.abreviatura LIKE '%", filtro_abreviatura,"%' ");
+			query = query_a.length()>0 ?  String.join("",query, " WHERE ", query_a) : query;
+			Query<Long> conteo = session.createQuery(query, Long.class);
 			ret = conteo.getSingleResult();
 		} catch (Throwable e) {
 			CLogger.write("7", EntidadDAO.class, e);

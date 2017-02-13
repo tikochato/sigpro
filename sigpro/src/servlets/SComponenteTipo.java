@@ -110,8 +110,8 @@ public class SComponenteTipo extends HttpServlet {
 				stcomponentetipo temp =new stcomponentetipo();
 				temp.descripcion = componentetipo.getDescripcion();
 				temp.estado = componentetipo.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(componentetipo.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(componentetipo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(componentetipo.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(componentetipo.getFechaCreacion());
 				temp.id = componentetipo.getId();
 				temp.nombre = componentetipo.getNombre();
 				temp.usuarioActualizo = componentetipo.getUsuarioActualizo();

@@ -23,24 +23,28 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
+	mi.columnaOrdenada=null;
+	mi.ordenDireccion=null;
 
 	mi.cambioPagina = function() {
 		mi.cargarData(mi.paginaActual);
 	}
 
-	$http.post('/SColaborador', {
-		accion : 'totalElementos'
-	}).success(function(response) {
-		mi.totalElementos = response.total;
-		mi.cargarData(1);
-	});
-
+	mi.filtros = [];
 	mi.mostrarCargando = true;
 	mi.data = [];
+	
 	mi.cargarData = function(pagina) {
 		var datos = {
 			accion : 'cargar',
 			pagina : pagina,
+			filtro_pnombre: mi.filtros['pnombre'],
+			filtro_snombre: mi.filtros['snombre'],
+			filtro_papellido: mi.filtros['papellido'],
+			filtro_sapellido: mi.filtros['sapellido'],
+			filtro_cui: mi.filtros['cui'],
+			filtro_unidad_ejecutora: mi.filtros['unidad_ejecutora'],
+			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion,
 			registros : mi.elementosPorPagina
 		};
 
@@ -48,7 +52,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 		$http.post('/SColaborador', datos).then(function(response) {
 			if (response.data.success) {
 
-				mi.data = response.data.unidadesEjecutoras;
+				mi.data = response.data.colaboradores;
 				mi.opcionesGrid.data = mi.data;
 
 				mi.mostrarCargando = false;
@@ -57,57 +61,44 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 
 	};
 
-	mi.entidadSeleccionada = -1;
+	mi.colaborador = null;
 	mi.seleccionada = false;
 
 	mi.opcionesGrid = {
 		data : mi.data,
-		columnDefs : [ {
-			displayName : 'Id',
-			name : 'id',
-			cellClass : 'grid-align-right',
-			type : 'number',
-			width : 150,
-			visible : false
-		}, {
+		columnDefs : [{
 			displayName : 'Primer Nombre',
 			name : 'primerNombre',
-			cellClass : 'grid-align-left'
+			cellClass : 'grid-align-left',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.colaborador.filtros[\'pnombre\']" ng-keypress="grid.appScope.colaborador.filtrar($event)"></input></div>'
 		}, {
 			displayName : 'Segundo Nombre',
 			name : 'segundoNombre',
-			cellClass : 'grid-align-left'
+			cellClass : 'grid-align-left',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.colaborador.filtros[\'snombre\']" ng-keypress="grid.appScope.colaborador.filtrar($event)"></input></div>'
 		}, {
 			displayName : 'Primer Apellido',
 			name : 'primerApellido',
-			cellClass : 'grid-align-left'
+			cellClass : 'grid-align-left',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.colaborador.filtros[\'papellido\']" ng-keypress="grid.appScope.colaborador.filtrar($event)"></input></div>'
 		}, {
 			displayName : 'Segundo Apellido',
 			name : 'segundoApellido',
-			cellClass : 'grid-align-left'
+			cellClass : 'grid-align-left',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.colaborador.filtros[\'sapellido\']" ng-keypress="grid.appScope.colaborador.filtrar($event)"></input></div>'
 		}, {
 			displayName : 'CUI',
 			name : 'cui',
 			cellClass : 'grid-align-right',
 			type : 'number',
-			width : 150
-		}, {
-			displayName : 'Unidad Ejecutora',
-			name : 'unidadEjecutora',
-			cellClass : 'grid-align-right',
-			type : 'number',
 			width : 150,
-			visible : false
-		}, {
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.colaborador.filtros[\'cui\']" ng-keypress="grid.appScope.colaborador.filtrar($event)"></input></div>'
+		},{
 			displayName : 'Nombre Unidad Ejecutora',
 			name : 'nombreUnidadEjecutora',
-			cellClass : 'grid-align-left'
-		}, {
-			displayName : 'Usuario',
-			name : 'usuario',
 			cellClass : 'grid-align-left',
-			visible : false
-		} ],
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.colaborador.filtros[\'unidad_ejecutora\']" ng-keypress="grid.appScope.colaborador.filtrar($event)"></input></div>'
+		}],
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
 		multiSelect : false,
@@ -116,14 +107,38 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 		enableFiltering : true,
 		enablePaginationControls : false,
 		paginationPageSize : $utilidades.elementosPorPagina,
+		useExternalFiltering: true,
+	    useExternalSorting: true,
 		onRegisterApi : function(gridApi) {
 			mi.gridApi = gridApi;
 
-			mi.gridApi.selection.on.rowSelectionChanged($scope,
-					mi.seleccionarEntidad);
+			mi.gridApi.selection.on.rowSelectionChanged($scope,function(row){
+				mi.colaborador = row.entity;
+			});
+			
+			gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+				if(sortColumns.length==1){
+					grid.appScope.colaborador.columnaOrdenada=sortColumns[0].field;
+					grid.appScope.colaborador.ordenDireccion = sortColumns[0].sort.direction;
+					for(var i = 0; i<sortColumns.length-1; i++)
+						sortColumns[i].unsort();
+					grid.appScope.colaborador.cargarData(grid.appScope.colaborador.paginaActual);
+				}
+				else if(sortColumns.length>1){
+					sortColumns[0].unsort();
+				}
+				else{
+					if(grid.appScope.colaborador.columnaOrdenada!=null){
+						grid.appScope.colaborador.columnaOrdenada=null;
+						grid.appScope.colaborador.ordenDireccion=null;
+					}
+				}
+					
+			} );
 
 			if ($routeParams.reiniciar_vista == 'rv') {
 				mi.guardarEstado();
+				mi.obtenerTotalColaboradores();
 			} else {
 				$http.post('/SEstadoTabla', {
 					action : 'getEstado',
@@ -136,16 +151,16 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 									&& response.data.estado != '') {
 								mi.gridApi.saveState.restore($scope,
 										response.data.estado);
-							}
+							}{
 
-							mi.gridApi.colMovable.on.columnPositionChanged(
-									$scope, mi.guardarEstado);
-							mi.gridApi.colResizable.on.columnSizeChanged(
-									$scope, mi.guardarEstado);
-							mi.gridApi.core.on.columnVisibilityChanged($scope,
-									mi.guardarEstado);
-							mi.gridApi.core.on.sortChanged($scope,
-									mi.guardarEstado);
+								mi.gridApi.colMovable.on.columnPositionChanged(
+										$scope, mi.guardarEstado);
+								mi.gridApi.colResizable.on.columnSizeChanged(
+										$scope, mi.guardarEstado);
+								mi.gridApi.core.on.columnVisibilityChanged($scope,
+										mi.guardarEstado);
+							}
+							mi.obtenerTotalColaboradores();
 						});
 			}
 		}
@@ -161,7 +176,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 			t : (new Date()).getTime()
 		};
 		$http.post('/SEstadoTabla', tabla_data).then(function(response) {
-
+			mi.obtenerTotalColaboradores();
 		});
 	}
 
@@ -173,88 +188,47 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 	}
 
 	mi.nuevo = function() {
-		mi.limpiarSeleccion();
-
+		
 		mi.esForma = true;
-		mi.entityselected = null;
+		mi.colaborador = {};
 		mi.esNuevo = true;
 
-		mi.codigo = "";
-		mi.primerNombre = "";
-		mi.segundoNombre = "";
-		mi.primerApellido = "";
-		mi.segundoApellido = "";
-		mi.cui = "";
-		mi.unidadEjecutora = "";
-		mi.nombreUnidadEjecutora = "";
-		mi.usuario = "";
-
 		mi.usuarioValido = false;
-	}
-
-	mi.limpiarSeleccion = function() {
 		mi.gridApi.selection.clearSelectedRows();
-		mi.seleccionada = false;
 	}
 
-	mi.seleccionarEntidad = function(row) {
-		mi.entidadSeleccionada = row.entity;
-		mi.seleccionada = row.isSelected;
-	};
+	
 
 	mi.editar = function() {
-		if (mi.seleccionada) {
-			mi.limpiarSeleccion();
-
+		if (mi.colaborador!=null && mi.colaborador.id!=null) {
 			mi.esForma = true;
-			mi.entityselected = null;
 			mi.esNuevo = false;
-
-			mi.codigo = mi.entidadSeleccionada.id;
-			mi.primerNombre = mi.entidadSeleccionada.primerNombre;
-			mi.segundoNombre = mi.entidadSeleccionada.segundoNombre;
-			mi.primerApellido = mi.entidadSeleccionada.primerApellido;
-			mi.segundoApellido = mi.entidadSeleccionada.segundoApellido;
-			mi.cui = mi.entidadSeleccionada.cui;
-			mi.unidadEjecutora = mi.entidadSeleccionada.unidadEjecutora;
-			mi.nombreUnidadEjecutora = mi.entidadSeleccionada.nombreUnidadEjecutora
-			mi.usuario = mi.entidadSeleccionada.usuario;
 
 			mi.validarUsuario();
 
 		} else {
-			$utilidades.mensaje('warning', 'Debe seleccionar un COLABORADOR');
+			$utilidades.mensaje('warning', 'Debe seleccionar un Conlabordor');
 		}
 
 	};
 
 	mi.guardar = function() {
-		if (!$utilidades.esNumero(mi.cui)
-				|| $utilidades.esCadenaVacia(mi.primerNombre)
-				|| $utilidades.esCadenaVacia(mi.primerApellido)
-				|| $utilidades.esCadenaVacia(mi.nombreUnidadEjecutora)
-				|| $utilidades.esCadenaVacia(mi.usuario)) {
-			$utilidades.mensaje('danger',
-					'Debe de llenar todos los campos obligatorios');
-			return;
-		}
-
 		if (mi.esNuevo) {
 			var datos = {
 				accion : 'crear',
-				primerNombre : mi.primerNombre,
-				segundoNombre : mi.segundoNombre,
-				primerApellido : mi.primerApellido,
-				segundoApellido : mi.segundoApellido,
-				cui : mi.cui,
-				unidadEjecutora : mi.unidadEjecutora,
-				usuario : mi.usuario
+				primerNombre : mi.colaborador.primerNombre,
+				segundoNombre : mi.colaborador.segundoNombre,
+				primerApellido : mi.colaborador.primerApellido,
+				segundoApellido : mi.colaborador.segundoApellido,
+				cui : mi.colaborador.cui,
+				unidadEjecutora : mi.colaborador.unidadEjecutora,
+				usuario : mi.colaborador.usuario
 			};
 
 			$http.post('/SColaborador', datos).then(
 					function(response) {
 						if (response.data.success) {
-							mi.data = response.data.unidadesEjecutoras;
+							mi.data = response.data.colaboradores;
 							mi.opcionesGrid.data = mi.data;
 							mi.esForma = false;
 
@@ -262,30 +236,28 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 									'Colaborador guardado con exito.');
 						} else {
 							$utilidades.mensaje('danger',
-									'Colaborador ya existe...!!!');
+									'Error al guardar al Colaborador.');
 						}
 
 					});
 		} else {
 			var datos = {
 				accion : 'actualizar',
-				codigo : mi.codigo,
-				primerNombre : mi.primerNombre,
-				segundoNombre : mi.segundoNombre,
-				primerApellido : mi.primerApellido,
-				segundoApellido : mi.segundoApellido,
-				cui : mi.cui,
-				unidadEjecutora : mi.unidadEjecutora,
-				usuario : mi.usuario
+				id : mi.colaborador.id,
+				primerNombre : mi.colaborador.primerNombre,
+				segundoNombre : mi.colaborador.segundoNombre,
+				primerApellido : mi.colaborador.primerApellido,
+				segundoApellido : mi.colaborador.segundoApellido,
+				cui : mi.colaborador.cui,
+				unidadEjecutora : mi.colaborador.unidadEjecutora,
+				usuario : mi.colaborador.usuario
 			};
-
-			$log.info(datos);
 
 			$http.post('/SColaborador', datos).then(
 					function(response) {
 
 						if (response.data.success) {
-							mi.data = response.data.unidadesEjecutoras;
+							mi.data = response.data.colaboradores;
 							mi.opcionesGrid.data = mi.data;
 							mi.esForma = false;
 
@@ -293,16 +265,62 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 									'Colaborador actualizado con exito.');
 						} else {
 							$utilidades.mensaje('danger',
-									'Error al actualizar datos...!!!');
+									'Error al actualizar datos.');
 						}
 					});
 
 		}
 	};
+	
+	mi.borrar = function(ev) {
+		if(mi.colaborador!=null && mi.colaborador.id!=null){
+			var confirm = $mdDialog.confirm()
+		          .title('Confirmación de borrado')
+		          .textContent('¿Desea borrar al colaborador "'+mi.colaborador.primerNombre+' '+mi.colaborador.segundoNombre+' '+mi.colaborador.primerApellido+' '+mi.colaborador.segundoApellido+'"?')
+		          .ariaLabel('Confirmación de borrado')
+		          .targetEvent(ev)
+		          .ok('Borrar')
+		          .cancel('Cancelar');
+
+		    $mdDialog.show(confirm).then(function() {
+		    	$http.post('/SColaborador', {
+					accion: 'borrar',
+					id: mi.colaborador.id
+				}).success(function(response){
+					if(response.success){
+						$utilidades.mensaje('success','Colaborador borrado con éxito');
+						mi.colaborador = null;
+						mi.obtenerTotalColaboradores();
+					}
+					else
+						$utilidades.mensaje('danger','Error al borrar al Colaborador');
+				});
+		    }, function() {
+		    
+		    });
+		}
+		else
+			$utilidades.mensaje('warning','Debe seleccionar al Colaborador que desea borrar');
+	};
 
 	mi.cancelar = function() {
 		mi.esForma = false;
 	};
+	
+	mi.filtrar = function(evt,tipo){
+		if(evt.keyCode==13){
+			mi.cargarData(mi.paginaActual);
+		}
+	}
+	
+	mi.obtenerTotalColaboradores=function(){
+		$http.post('/SColaborador', {
+			accion : 'totalElementos'
+		}).success(function(response) {
+			mi.totalElementos = response.total;
+			mi.cargarData(1);
+		});
+	}
 
 	mi.buscarUnidadEjecutora = function(titulo, mensaje) {
 
@@ -318,8 +336,8 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 		});
 
 		modalInstance.result.then(function(selectedItem) {
-			mi.unidadEjecutora = selectedItem.unidadEjecutora;
-			mi.nombreUnidadEjecutora = selectedItem.nombreUnidadEjecutora;
+			mi.colaborador.unidadEjecutora = selectedItem.unidadEjecutora;
+			mi.colaborador.nombreUnidadEjecutora = selectedItem.nombreUnidadEjecutora;
 
 		}, function() {
 		});
@@ -330,7 +348,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 	mi.validarUsuario = function() {
 		$http.post('/SColaborador', {
 			accion : 'validarUsuario',
-			usuario : mi.usuario
+			usuario : mi.colaborador.usuario
 		}).then(function(response) {
 			mi.usuarioValido = response.data.success;
 		});
@@ -360,7 +378,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 		});
 		
 		modalInstance.result.then(function(data) {
-			mi.usuario=data.usuario;
+			mi.colaborador.usuario=data.usuario;
 			mi.usuarioValido=data.success;
 		}, function() {
 		});

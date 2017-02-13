@@ -66,7 +66,7 @@
 				<form name="form">
 						<div class="form-group">
 							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ desembolsotipoc.desembolsotipo.id }}</label>
+    						<p class="form-control-static">{{ desembolsotipoc.desembolsotipo.id }}</p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
@@ -76,6 +76,7 @@
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="desembolsotipoc.desembolsotipo.descripcion">
 						</div>
+						<br/>
 						<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">

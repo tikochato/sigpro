@@ -100,8 +100,8 @@ public class SActividadTipo extends HttpServlet {
 				stactividadtipo temp =new stactividadtipo();
 				temp.descripcion = actividadtipo.getDescripcion();
 				temp.estado = actividadtipo.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(actividadtipo.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(actividadtipo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(actividadtipo.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(actividadtipo.getFechaCreacion());
 				temp.id = actividadtipo.getId();
 				temp.nombre = actividadtipo.getNombre();
 				temp.usuarioActualizo = actividadtipo.getUsuarioActualizo();

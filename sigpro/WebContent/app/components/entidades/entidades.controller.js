@@ -21,16 +21,22 @@ function controlEntidad($scope, $routeParams, $route, $window, $location,
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 
+	mi.filtros=[];
+	
 	mi.cambioPagina = function() {
 		mi.cargarData(mi.paginaActual);
 	}
 
-	$http.post('/SEntidad', {
-		accion : 'totalEntidades'
-	}).success(function(response) {
-		mi.totalEntidades = response.total;
-		mi.cargarData(1);
-	});
+	mi.obtenerTotalEntidades= function(){ $http.post('/SEntidad', {
+			accion : 'totalEntidades',
+			filtro_entidad: mi.filtros['entidad'],
+			filtro_nombre: mi.filtros['nombre'],
+			filtro_abreviatura: mi.filtros['abreviatura']
+		}).success(function(response) {
+			mi.totalEntidades = response.total;
+			mi.cargarData(1);
+		});
+	}
 
 	mi.mostrarCargando = true;
 	mi.data = [];
@@ -38,7 +44,11 @@ function controlEntidad($scope, $routeParams, $route, $window, $location,
 		var datos = {
 			accion : 'cargar',
 			pagina : pagina,
-			registros : mi.elementosPorPagina
+			registros : mi.elementosPorPagina,
+			filtro_entidad: mi.filtros['entidad'],
+			filtro_nombre: mi.filtros['nombre'],
+			filtro_abreviatura: mi.filtros['abreviatura'],
+			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
 		};
 
 		mi.mostrarCargando = true;
@@ -54,7 +64,7 @@ function controlEntidad($scope, $routeParams, $route, $window, $location,
 
 	};
 
-	mi.entidadSeleccionada = -1;
+	mi.entidad = -1;
 	mi.seleccionada = false;
 
 	mi.entidades_gridOptions = {
@@ -64,15 +74,18 @@ function controlEntidad($scope, $routeParams, $route, $window, $location,
 			field : 'entidad',
 			cellClass : 'grid-align-right',
 			type : 'number',
-			width : 150
+			width : 150,
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.entidad.filtros[\'entidad\']" ng-keypress="grid.appScope.entidad.filtrar($event)"></input></div>'
 		}, {
 			name : 'Nombre Entidad',
 			field : 'nombre',
-			cellClass : 'grid-align-left'
+			cellClass : 'grid-align-left',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.entidad.filtros[\'nombre\']" ng-keypress="grid.appScope.entidad.filtrar($event)"></input></div>'
 		}, {
 			name : 'Siglas',
 			field : 'abreviatura',
-			width : 150
+			width : 150,
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.entidad.filtros[\'abreviatura\']" ng-keypress="grid.appScope.entidad.filtrar($event)"></input></div>'
 		} ],
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -82,14 +95,39 @@ function controlEntidad($scope, $routeParams, $route, $window, $location,
 		enableFiltering : true,
 		enablePaginationControls : false,
 		paginationPageSize : $utilidades.elementosPorPagina,
+		useExternalFiltering: true,
+	    useExternalSorting: true,
 		onRegisterApi : function(gridApi) {
 			mi.gridApi = gridApi;
 
 			mi.gridApi.selection.on.rowSelectionChanged($scope,
-					mi.seleccionarEntidad);
+					function(row){
+				mi.entidad = row.entity;
+			});
+			
+			gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+				if(sortColumns.length==1){
+					grid.appScope.entidad.columnaOrdenada=sortColumns[0].field;
+					grid.appScope.entidad.ordenDireccion = sortColumns[0].sort.direction;
+					for(var i = 0; i<sortColumns.length-1; i++)
+						sortColumns[i].unsort();
+					grid.appScope.entidad.cargarData(grid.appScope.entidad.paginaActual);
+				}
+				else if(sortColumns.length>1){
+					sortColumns[0].unsort();
+				}
+				else{
+					if(grid.appScope.entidad.columnaOrdenada!=null){
+						grid.appScope.entidad.columnaOrdenada=null;
+						grid.appScope.entidad.ordenDireccion=null;
+					}
+				}
+					
+			} );
 
 			if ($routeParams.reiniciar_vista == 'rv') {
 				mi.guardarEstado();
+				mi.obtenerTotalEntidades();
 			} else {
 				$http.post('/SEstadoTabla', {
 					action : 'getEstado',
@@ -110,8 +148,8 @@ function controlEntidad($scope, $routeParams, $route, $window, $location,
 									$scope, mi.guardarEstado);
 							mi.gridApi.core.on.columnVisibilityChanged($scope,
 									mi.guardarEstado);
-							mi.gridApi.core.on.sortChanged($scope,
-									mi.guardarEstado);
+							
+							mi.obtenerTotalEntidades();
 						});
 			}
 		}
@@ -138,41 +176,24 @@ function controlEntidad($scope, $routeParams, $route, $window, $location,
 			$location.path('/entidad/rv');
 	}
 
-	mi.nuevo = function() {
+	mi.nueva = function() {
 		mi.esForma = true;
-		mi.entityselected = null;
+		mi.entityselected = {};
 		mi.esNuevo = true;
 
-		mi.entidad = "";
-		mi.nombre = "";
-		mi.abreviatura = "";
+		mi.entidad = {};
 
-		mi.limpiarSeleccion();
-	}
-
-	mi.limpiarSeleccion = function() {
 		mi.gridApi.selection.clearSelectedRows();
-		mi.seleccionada = false;
 	}
-
-	mi.seleccionarEntidad = function(row) {
-		mi.entidadSeleccionada = row.entity;
-		mi.seleccionada = row.isSelected;
-	};
 
 	mi.editar = function() {
-		if (mi.seleccionada) {
-			mi.limpiarSeleccion();
-
+		if (mi.entidad!= null && mi.entidad.entidad!=null) {
 			mi.esForma = true;
 			mi.entityselected = null;
 			mi.esNuevo = false;
 
-			mi.entidad = mi.entidadSeleccionada.entidad;
-			mi.nombre = mi.entidadSeleccionada.nombre;
-			mi.abreviatura = mi.entidadSeleccionada.abreviatura;
 		} else {
-			$utilidades.mensaje('warning', 'Debe seleccionar una ENTIDAD');
+			$utilidades.mensaje('warning', 'Debe seleccionar una Entidad');
 		}
 
 	};
@@ -188,9 +209,9 @@ function controlEntidad($scope, $routeParams, $route, $window, $location,
 
 			var datos = {
 				accion : 'crear',
-				entidad : mi.entidad,
-				nombre : mi.nombre,
-				abreviatura : mi.abreviatura
+				entidad : mi.entidad.entidad,
+				nombre : mi.entidad.nombre,
+				abreviatura : mi.entidad.abreviatura
 			};
 
 			$http.post('/SEntidad', datos).then(
@@ -198,21 +219,19 @@ function controlEntidad($scope, $routeParams, $route, $window, $location,
 						if (response.data.success) {
 							mi.data = response.data.entidades;
 							mi.entidades_gridOptions.data = mi.data;
-							mi.esForma = false;
-
 							$utilidades.mensaje('success',
 									'Entidad guardada con exito.');
 						} else {
 							$utilidades.mensaje('danger',
-									'Entidad ya existe...!!!');
+									'Entidad ya existe.');
 						}
 
 					});
 		} else {
 			var datos = {
 				accion : 'actualizar',
-				entidad : mi.entidad,
-				abreviatura : mi.abreviatura
+				entidad : mi.entidad.entidad,
+				abreviatura : mi.entidad.abreviatura
 			};
 
 			$http.post('/SEntidad', datos).then(
@@ -220,13 +239,11 @@ function controlEntidad($scope, $routeParams, $route, $window, $location,
 						if (response.data.success) {
 							mi.data = response.data.entidades;
 							mi.entidades_gridOptions.data = mi.data;
-							mi.esForma = false;
-
 							$utilidades.mensaje('success',
 									'Entidad actualizada con exito.');
 						} else {
 							$utilidades.mensaje('danger',
-									'Error al actualizar datos...!!!');
+									'Error al actualizar datos.');
 						}
 					});
 
@@ -236,28 +253,11 @@ function controlEntidad($scope, $routeParams, $route, $window, $location,
 	mi.cancelar = function() {
 		mi.esForma = false;
 	};
-
-	mi.mostrarMensaje = function(titulo, mensaje) {
-
-		$uibModal.open({
-			animation : 'true',
-			ariaLabelledBy : 'modal-title',
-			ariaDescribedBy : 'modal-body',
-			templateUrl : 'mensajeEntidades.jsp',
-			controller : 'modalMensajeEntidades',
-			controllerAs : 'modalMess',
-			backdrop : 'static',
-			size : 'sm',
-			resolve : {
-				titulo : function() {
-					return titulo;
-				},
-				mensaje : function() {
-					return mensaje;
-				}
-			}
-
-		});
+	
+	mi.filtrar = function(evt){
+		if(evt.keyCode==13){
+			mi.obtenerTotalEntidades();
+		}
 	};
 
 }

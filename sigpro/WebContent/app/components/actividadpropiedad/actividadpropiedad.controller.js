@@ -4,7 +4,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 			var mi=this;
 			
-			$window.document.title = 'SIGPRO - Propiedad de Actividad';
+			$window.document.title = 'SIGPRO - Propiedades de Actividad';
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
 			mi.actividadpropiedades = [];
@@ -38,15 +38,15 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 					columnDefs : [ 
 						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 					    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
-							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,1)"></input></div>'
+							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.actividadpropiedadc.filtros[\'nombre\']" ng-keypress="grid.appScope.actividadpropiedadc.filtrar($event)"></input></div>'
 					    },
 					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 					    { name: 'datotiponombre', displayName: 'Tipo dato', cellClass: 'grid-align-left', enableFiltering: false},
 					    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
-					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,2)"></input></div>'
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.actividadpropiedadc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.actividadpropiedadc.filtrar($event)"></input></div>'
 					    },
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,3)"></input></div>'
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.actividadpropiedadc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.actividadpropiedadc.filtrar($event)"></input></div>'
 					    }
 					],
 					onRegisterApi: function(gridApi) {
@@ -77,15 +77,19 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 						
 						if($routeParams.reiniciar_vista=='rv'){
 							mi.guardarEstado();
+							mi.obtenerTotalActividadPropiedades();
 					    }
 					    else{
 					    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'actividadpropiedades', t: (new Date()).getTime()}).then(function(response){
-						      if(response.data.success && response.data.estado!='')
-						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
-						    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
-							      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
-							      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+							      if(response.data.success && response.data.estado!=''){
+							    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+							    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
+								      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
+								      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+							      }
+							      mi.obtenerTotalActividadPropiedades();
 							  });
+					    	 
 					    }
 					}
 				};
@@ -130,7 +134,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 			};
 
 			mi.borrar = function(ev) {
-				if(mi.actividadpropiedad!=null){
+				if(mi.actividadpropiedad!=null && mi.actividadpropiedad.id!=null){
 					var confirm = $mdDialog.confirm()
 				          .title('Confirmación de borrado')
 				          .textContent('¿Desea borrar la Prppiedad de Actividad "'+mi.actividadpropiedad.nombre+'"?')
@@ -164,12 +168,12 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 				mi.datotiponombre = "";
 				mi.mostraringreso=true;
 				mi.esnuevo = true;
-				mi.actividadpropiedad = null;
+				mi.actividadpropiedad = {};
 				mi.gridApi.selection.clearSelectedRows();
 			};
 
 			mi.editar = function() {
-				if(mi.actividadpropiedad!=null){
+				if(mi.actividadpropiedad!=null && mi.actividadpropiedad.id!=null){
 					mi.datotipoid = mi.actividadpropiedad.datotipoid;
 					mi.datotiponombre = mi.actividadpropiedad.datotiponombre;
 					mi.mostraringreso = true;
@@ -208,21 +212,19 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 			
 			mi.filtrar = function(evt,tipo){
 				if(evt.keyCode==13){
-					switch(tipo){
-						case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
-						case 2: mi.filtros['usuario_creo'] = evt.currentTarget.value; break;
-						case 3: mi.filtros['fecha_creacion'] = evt.currentTarget.value; break;
-							
-					}
 					mi.cargarTabla(mi.paginaActual);
 				}
 			}
 			
-			$http.post('/SActividadPropiedad', { accion: 'numeroActividadPropiedades' }).success(
-					function(response) {
-						mi.totalActividadPropiedades = response.totalactividadpropiedades;
-						mi.cargarTabla(1);
-			});
+			mi.obtenerTotalActividadPropiedades = function(){
+				$http.post('/SActividadPropiedad', { accion: 'numeroActividadPropiedades', filtro_nombre: mi.filtros['nombre'], 
+					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+						function(response) {
+							mi.totalActividadPropiedades = response.totalactividadpropiedades;
+							mi.cargarTabla(1);
+				});
+			}
+			
 			$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
 					function(response) {
 						mi.tipodatos = response.datoTipos;

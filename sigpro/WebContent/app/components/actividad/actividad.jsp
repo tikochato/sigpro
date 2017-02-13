@@ -81,7 +81,7 @@
 						<div class="form-group">
 							<label for="campo3">* Tipo de Actividad</label>
 				          	<div class="input-group">
-				            	<input type="text" class="form-control" placeholder="Tipo de Actividad" ng-model="actividadc.actividadtiponombre" ng-readonly="true" ng-required="true"/>
+				            	<input type="text" class="form-control" placeholder="Tipo de Actividad" ng-model="actividadc.actividad.actividadtiponombre" ng-readonly="true" ng-required="true"/>
 				            	<span class="input-group-addon" ng-click="actividadc.buscarActividadTipo()"><i class="glyphicon glyphicon-search"></i></span>
 				          	</div>
 						</div>
@@ -128,34 +128,34 @@
 						<div class="form-group row" >
 							<div class="form-group col-sm-2" >
 							       <label for="iprog">Programa</label>
-							       <input type="number" class="form-control" placeholder="Programa" ng-model="actividadc.actividad.programa" ng-maxlength="4" style="text-align: center"/>
+							       <input type="number" class="form-control" placeholder="Programa" ng-model="actividadc.actividad.programa" ng-maxlength="4" min="0" style="text-align: center"/>
 							</div>
 							<div class="form-group col-sm-2" >
 							  <label for="isubprog">Subprograma</label>
-							  <input type="number" class="form-control" placeholder="Subprograma" ng-model="actividadc.actividad.subprograma" ng-maxlength="4" style="text-align: center"/>
+							  <input type="number" class="form-control" placeholder="Subprograma" ng-model="actividadc.actividad.subprograma" ng-maxlength="4" min="0" style="text-align: center"/>
 							</div>
 							<div class="form-group col-sm-2" >
 							  <label for="iproy_">Proyecto</label>
-							  <input type="number" class="form-control" placeholder="Proyecto" ng-model="actividadc.actividad.proyecto" ng-maxlength="4" style="text-align: center"/>
+							  <input type="number" class="form-control" placeholder="Proyecto" ng-model="actividadc.actividad.proyecto" ng-maxlength="4" min="0" style="text-align: center"/>
 							</div>
 							<div class="form-group col-sm-2" >
 							  <label for="iobra">Actividad</label>
-							  <input type="number" class="form-control" placeholder="Actividad" ng-model="actividadc.actividad.actividad" ng-maxlength="4" style="text-align: center"/>
+							  <input type="number" class="form-control" placeholder="Actividad" ng-model="actividadc.actividad.actividad" ng-maxlength="4" min="0" style="text-align: center"/>
 							</div>
 							<div class="form-group col-sm-2" >
 							  <label for="iobra">Obra</label>
-							  <input type="number" class="form-control" placeholder="Obra" ng-model="actividadc.actividad.obra" ng-maxlength="4" style="text-align: center"/>
+							  <input type="number" class="form-control" placeholder="Obra" ng-model="actividadc.actividad.obra" ng-maxlength="4" min="0" style="text-align: center"/>
 							</div>
 							<div class="form-group col-sm-2" >
 							  <label for="campo5">Fuente</label>
-							  <input type="number" class="form-control" placeholder="Fuente" ng-model="actividadc.actividad.fuente" ng-maxlength="4" style="text-align: center"/>
+							  <input type="number" class="form-control" placeholder="Fuente" ng-model="actividadc.actividad.fuente" ng-maxlength="4" min="0" style="text-align: center"/>
 							</div>
 						</div>
 						<div class="form-group" ng-repeat="campo in actividadc.camposdinamicos">
 							<label for="campo.id">{{ campo.label }}</label>
 							<div ng-switch="campo.tipo">
 								<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
-								<input ng-switch-when="entero" type="text" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" />
+								<input ng-switch-when="entero" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
 								<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
 								<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
 								<p ng-switch-when="fecha" class="input-group">
@@ -175,6 +175,7 @@
 								</select>
 							</div>
 						</div>
+				<br/>
 				<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
@@ -196,13 +197,13 @@
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
 									<label for="usuarioActualizo">Usuario que actualizo</label>
-				  					<p class="form-control-static">{{ actividadc.actividad.usuarioactualizo }}</p>
+				  					<p class="form-control-static">{{ actividadc.actividad.usuarioActualizo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
 									<label for="fechaActualizacion">Fecha de actualizacion</label>
-				  					<p class="form-control-static">{{ actividadc.actividad.fechaactualizacion }}</p>
+				  					<p class="form-control-static">{{ actividadc.actividad.fechaActualizacion }}</p>
 								</div>
 							</div>
 						</div>

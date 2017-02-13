@@ -106,8 +106,8 @@ public class SComponentePropiedad extends HttpServlet {
 				temp.descripcion = componentepropiedad.getDescripcion();
 				temp.datotipoid = componentepropiedad.getDatoTipo().getId();
 				temp.datotiponombre = componentepropiedad.getDatoTipo().getNombre();
-				temp.fechaActualizacion = Utils.formatDate(componentepropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(componentepropiedad.getFechaCreacion());	
+				temp.fechaActualizacion = Utils.formatDateHour(componentepropiedad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(componentepropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = componentepropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = componentepropiedad.getUsuarioCreo();
 				stcomponentepropiedad.add(temp);
@@ -134,8 +134,8 @@ public class SComponentePropiedad extends HttpServlet {
 				temp.descripcion = componentepropiedad.getDescripcion();
 				temp.datotipoid = componentepropiedad.getDatoTipo().getId();
 				temp.datotiponombre = componentepropiedad.getDatoTipo().getNombre();
-				temp.fechaActualizacion = Utils.formatDate(componentepropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(componentepropiedad.getFechaCreacion());	
+				temp.fechaActualizacion = Utils.formatDateHour(componentepropiedad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(componentepropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = componentepropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = componentepropiedad.getUsuarioCreo();
 				stcomponentepropiedad.add(temp);
@@ -157,8 +157,8 @@ public class SComponentePropiedad extends HttpServlet {
 				temp.descripcion = componentepropiedad.getDescripcion();
 				temp.datotipoid = componentepropiedad.getDatoTipo().getId();
 				temp.datotiponombre = componentepropiedad.getDatoTipo().getNombre();
-				temp.fechaActualizacion = Utils.formatDate(componentepropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(componentepropiedad.getFechaCreacion());	
+				temp.fechaActualizacion = Utils.formatDateHour(componentepropiedad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(componentepropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = componentepropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = componentepropiedad.getUsuarioCreo();
 				stcomponentepropiedad.add(temp);
