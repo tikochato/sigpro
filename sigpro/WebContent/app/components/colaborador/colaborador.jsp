@@ -17,13 +17,15 @@
   <div align="center" ng-hide="colaborador.esForma">
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
-      	<shiro:hasPermission name="crearColaborador">
+      	<shiro:hasPermission name="4040">
         	<label class="btn btn-primary" ng-click="colaborador.nuevo()">Nuevo</label> 
       	</shiro:hasPermission>
-      	<shiro:hasPermission name="editarColaborador">
+      	<shiro:hasPermission name="4020">
         	<label class="btn btn-primary" ng-click="colaborador.editar()">Editar</label>
       	</shiro:hasPermission>
-      		<label class="btn btn-primary" ng-click="colaborador.borrar()">Borrar</label>
+      	<shiro:hasPermission name="4030">
+      			<label class="btn btn-primary" ng-click="colaborador.borrar()">Borrar</label>
+      	</shiro:hasPermission>
       </div>
     </div>
     <shiro:hasPermission name="4010">
