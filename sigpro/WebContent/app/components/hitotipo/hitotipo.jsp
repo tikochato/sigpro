@@ -63,51 +63,62 @@
 			
 			<div class="col-sm-12">
 				<form name="form">
-						<div class="form-group" ng-show="!hitotipoc.esnuevo">
-							<label for="id">ID</label>			
-    						<p class="form-control-static">{{ hitotipoc.hitotipo.id }}</p>		
-						</div>
-						<div class="form-group">
-							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="hitotipoc.hitotipo.nombre" ng-required="true">
-						</div>
-						<div class="form-group">
-							<label for="descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="hitotipoc.hitotipo.descripcion">
-						</div>
-						<div class="panel panel-default">
+					<div class="form-group" ng-show="!hitotipoc.esnuevo">
+						<label for="id">ID</label>			
+   						<p class="form-control-static">{{ hitotipoc.hitotipo.id }}</p>		
+					</div>
+					<div class="form-group">
+						<label for="nombre">* Nombre</label>
+   						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="hitotipoc.hitotipo.nombre" ng-required="true">
+					</div>
+					<div class="form-group">
+				        <label for="campo2">* Tipo:</label>     			
+		    			<select class="form-control" ng-model="hitotipoc.datoTipoSeleccionado" ng-options="tipo as tipo.nombre for tipo in hitotipoc.datoTipos track by tipo.id" ng-required="true"
+		    			ng-readonly="true" ng-disabled="!hitotipoc.esnuevo" ng-required="true" >
+							<option disabled selected value> -- Seleccione Tipo -- </option>
+						</select>
+		    		 </div>
+					<div class="form-group">
+						<label for="descripcion">Descripción</label>
+   						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="hitotipoc.hitotipo.descripcion">
+					</div>
+					
+					<br/>
+				<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static"> {{ hitotipoc.hitotipo.usuarioCreo }}</p>
+									<label for="usuarioCreo">Usuario que creo</label>
+				  					<p class="form-control-static">{{ hitotipoc.hitotipo.usuarioCreo }}</pl>
 								</div>
 							</div>
 							<div class="col-sm-6">
-								<div class="form-group" >
+								<div class="form-group">
 									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ hitotipoc.hitotipo.fechaCreacion }} </p>
+				  					<p class="form-control-static">{{ hitotipoc.hitotipo.fechaCreacion }}</p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ hitotipoc.hitotipo.usuarioActualizo }} </p>
-								</div>	
+									<label for="usuarioActualizo">Usuario que actualizo</label>
+				  					<p class="form-control-static">{{ hitotipoc.hitotipo.usuarioActualizo }}</p>
+								</div>
 							</div>
-							<div class="col-sm-6">		
+							<div class="col-sm-6">
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ hitotipoc.hitotipo.fechaActualizacion }} </p>
+									<label for="fechaActualizacion">Fecha de actualizacion</label>
+				  					<p class="form-control-static">{{ hitotipoc.hitotipo.fechaActualizacion }}</p>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+						
+						
 				</form>
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>

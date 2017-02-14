@@ -10,7 +10,7 @@ public class DesembolsoTipoDAOTest {
 	
 	@Test
 	public void getTotalDesenbolseTipoTest(){
-		assertNotNull(DesembolsoTipoDAO.getTotalDesembolsoTipo());
+		assertNotNull(DesembolsoTipoDAO.getTotalDesembolsoTipo(""));
 	}
 	
 	@Test
@@ -30,7 +30,7 @@ public class DesembolsoTipoDAOTest {
 	
 	@Test
 	public void  getDesembolsoTiposPagina(){
-		assertNotNull(DesembolsoTipoDAO.geDesembolsoTiposPagina(1,1));
+		assertNotNull(DesembolsoTipoDAO.geDesembolsoTiposPagina(1,1,"","",""));
 	}
 	
 }

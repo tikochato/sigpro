@@ -38,6 +38,7 @@
 						</div>
 					</div>
 				</div>
+				<br/>
 				<div id="grid1" ui-grid="producto.opcionesGrid"
 					ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns
 					ui-grid-selection ui-grid-pinning ui-grid-pagination>
@@ -64,6 +65,9 @@
 	</div>
 
 	<div ng-show="producto.esForma" class="row main-form">
+		<h4 ng-hide="!actividadc.esnuevo">Nueva Producto</h4>
+			<h4 ng-hide="actividadc.esnuevo">Edición de Producto</h4>
+			<div class="col-sm-12 operation_buttons" align="left"></div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 

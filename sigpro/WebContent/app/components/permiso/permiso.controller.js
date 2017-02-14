@@ -36,13 +36,16 @@ app.controller(
 		columnDefs : [ {
 			name : 'ID',
 			field : 'id',
+			cellClass : 'grid-align-left',
 			enableFiltering: false
 		}, {
 			name : 'Nombre',
+			cellClass : 'grid-align-left',
 			field : 'nombre'
 		}, {
 			name : 'Descripcion',
 			field : 'descripcion',
+			cellClass : 'grid-align-left',
 			enableFiltering: false
 		}
 
@@ -105,10 +108,6 @@ app.controller(
 	};					
 	mi.guardarPermiso=function(){		
 		if(mi.permisoSelected.nombre!=="" && mi.permisoSelected.descripcion!==""){
-			var idSend=0;
-			if(!mi.esNuevo){
-				idSend=mi.permisoSelected.id;
-			}
 			$http.post('/SPermiso',
 					{
 						accion: 'guardarPermiso',

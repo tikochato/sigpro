@@ -49,18 +49,23 @@ app.controller(
 		data : [],
 		columnDefs : [ {
 			name : 'Usuario',
+			cellClass : 'grid-align-left',
 			field : 'usuario'
 		}, {
 			name : 'Correo',
+			cellClass : 'grid-align-left',
 			field : 'email'
 		}, {
 			name : 'Fecha Creación',
+			cellClass : 'grid-align-left',
 			field : 'fechaCreacion'
 		}, {
 			name: 'Usuario creó',
+			cellClass : 'grid-align-left',
 			field: 'usuarioCreo'
 		},{
 			name: 'Usuario Actualizó',
+			cellClass : 'grid-align-left',
 			field: 'usuarioActualizo'
 		}
 		],
