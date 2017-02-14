@@ -223,8 +223,8 @@ public class ProductoDAO {
 			estructuraPojo.estado = pojo.getEstado();
 			estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();
 			estructuraPojo.usuarioactualizo = pojo.getUsuarioActualizo();
-			estructuraPojo.fechaCreacion = Utils.formatDate(pojo.getFechaCreacion());
-			estructuraPojo.fechaactualizacion = Utils.formatDate(pojo.getFechaActualizacion());
+			estructuraPojo.fechaCreacion = Utils.formatDateHour(pojo.getFechaCreacion());
+			estructuraPojo.fechaactualizacion = Utils.formatDateHour(pojo.getFechaActualizacion());
 			
 
 			if (pojo.getComponente() != null) {
