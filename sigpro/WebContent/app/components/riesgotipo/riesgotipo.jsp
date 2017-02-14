@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@ page import="org.apache.shiro.SecurityUtils" %>
+	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <div ng-controller="riesgotipoController as riesgotipoc"
 	class="maincontainer all_page" id="title">
 
@@ -13,12 +15,19 @@
 	<div class="row" align="center" ng-if="!riesgotipoc.mostraringreso">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-primary" ng-click="riesgotipoc.nuevo()">Nuevo</label>
-				<label class="btn btn-primary" ng-click="riesgotipoc.editar()">Editar</label>
-				<label class="btn btn-primary" ng-click="riesgotipoc.borrar()">Borrar</label>
+				<shiro:hasPermission name="32040">
+					<label class="btn btn-primary" ng-click="riesgotipoc.nuevo()">Nuevo</label>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="32020">
+					<label class="btn btn-primary" ng-click="riesgotipoc.editar()">Editar</label>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="32030">
+					<label class="btn btn-primary" ng-click="riesgotipoc.borrar()">Borrar</label>
+				</shiro:hasPermission>
 			</div>
 		</div>
-		<div class="col-sm-12" align="center">
+		<shiro:hasPermission name="32010">
+			<div class="col-sm-12" align="center">
 			<div style="height: 35px;">
 				<div style="text-align: right;">
 					<div class="btn-group" role="group" aria-label="">
@@ -49,6 +58,7 @@
 				previous-text="Anterior" class="pagination-sm" boundary-links="true"
 				force-ellipses="true" ng-change="riesgotipoc.cambioPagina()"></ul>
 		</div>
+		</shiro:hasPermission>
 	</div>
 
 	<div class="row main-form" ng-if="riesgotipoc.mostraringreso">
