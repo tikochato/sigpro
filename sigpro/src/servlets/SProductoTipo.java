@@ -40,7 +40,7 @@ public class SProductoTipo extends HttpServlet {
 		} else if (parametro.get("accion").compareTo("borrar") == 0) {
 			eliminar(parametro, response);
 		} else if (parametro.get("accion").compareTo("totalElementos") == 0) {
-			total(response);
+			total(parametro,response);
 		} else if (parametro.get("accion").compareTo("tipoPropiedades") == 0) {
 			listarPropiedades(parametro, response);
 		}
@@ -49,10 +49,15 @@ public class SProductoTipo extends HttpServlet {
 	private void listar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 		int registros = Utils.String2Int(parametro.get("registros"), 20);
+		String filtro_nombre = parametro.get("filtro_nombre");
+		String filtro_usuario_creo = parametro.get("filtro_usuario_creo");
+		String filtro_fecha_creacion = parametro.get("filtro_fecha_creacion");
+		String columna_ordenada = parametro.get("columna_ordenada");
+		String orden_direccion = parametro.get("orden_direccion");
 
 		String resultadoJson = "";
 
-		resultadoJson = ProductoTipoDAO.getJson(pagina, registros);
+		resultadoJson = ProductoTipoDAO.getJson(pagina, registros,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);;
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";
@@ -99,8 +104,11 @@ public class SProductoTipo extends HttpServlet {
 		}
 	}
 
-	private void total(HttpServletResponse response) throws IOException {
-		Long total = ProductoTipoDAO.getTotal();
+	private void total(Map<String, String> parametro,HttpServletResponse response) throws IOException {
+		String filtro_nombre = parametro.get("filtro_nombre");
+		String filtro_usuario_creo = parametro.get("filtro_usuario_creo");
+		String filtro_fecha_creacion = parametro.get("filtro_fecha_creacion");
+		Long total = ProductoTipoDAO.getTotal(filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion);
 
 		String resultadoJson = "{\"success\":true, \"total\":" + total + "}";
 
