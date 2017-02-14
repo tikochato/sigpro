@@ -107,7 +107,7 @@
 								<input ng-switch-when="4" type="checkbox"  ng-model="hitoc.hitoresultado" />
 								<p ng-switch-when="5" class="input-group">
 									<input type="text"  class="form-control" uib-datepicker-popup="{{hitoc.formatofecha}}" ng-model="hitoc.hitoresultado" is-open="hitoc.popupfecharesultado.abierto"
-											datepicker-options="hitoc.fechaOptions" close-text="Cerrar" />
+											datepicker-options="hitoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" />
 									<span class="input-group-btn">
 										<button type="button" class="btn btn-default" ng-click="hitoc.abirpopupreultado()">
 											<i class="glyphicon glyphicon-calendar"></i>
@@ -121,39 +121,39 @@
 							<label for="descripcion">Comentario</label>
     						<input type="text" class="form-control" id="comentario" placeholder="Comentario de resultado" ng-model="hitoc.hitoresultadocomentario">
 						</div>
-						
-						<div class="panel panel-default">
+					<br/>
+					<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
-					<div class="panel-body">
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static"> {{ hitoc.hito.usuarioCreo }}</p>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group" style="text-align: right">
+										<label for="usuarioCreo">Usuario que creo</label> 
+										<p class="form-control-static"> {{ hitoc.hito.usuarioCreo }}</p>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group" >
+										<label for="fechaCreacion">Fecha de creación</label>
+										<p class="form-control-static" id="fechaCreacion"> {{ hitoc.hito.fechaCreacion }} </p>
+									</div>
 								</div>
 							</div>
-							<div class="col-sm-6">
-								<div class="form-group" >
-									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ hitoc.hito.fechaCreacion }} </p>
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group" style="text-align: right">
+										<label for="usuarioActualizo">Usuario que actualizo</label> 
+										<p class="form-control-static" id="usuarioCreo">{{ hitoc.hito.usuarioActualizo }} </p>
+									</div>	
+								</div>
+								<div class="col-sm-6">		
+									<div class="form-group">
+										<label for="fechaActualizacion">Fecha de actualizacion</label> 
+										<p class="form-control-static" id="usuarioCreo">{{ hitoc.hito.fechaActualizacion }} </p>
+									</div>
 								</div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ hitoc.hito.usuarioActualizo }} </p>
-								</div>	
-							</div>
-							<div class="col-sm-6">		
-								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ hitoc.hito.fechaActualizacion }} </p>
-								</div>
-							</div>
-						</div>
-					</div>
 				</div>
 				</form>
 			</div>

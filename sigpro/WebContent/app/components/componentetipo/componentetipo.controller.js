@@ -107,7 +107,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 		}
 		
 		mi.guardar=function(){
-			if(mi.componentetipo!=null){
+			if(mi.componentetipo!=null && mi.componentetipo.nombre!=null){
 				var idspropiedad="";
 				for (i = 0 ; i<mi.componentepropiedades.length ; i ++){
 					if (i==0){

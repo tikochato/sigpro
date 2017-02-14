@@ -3,7 +3,7 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="proyectopropiedadController as proyectopropiedadc" class="maincontainer all_page" id="title">
-		<h3>Propiedad Proyecto</h3><br/>
+		<h3>Propiedades de Proyecto</h3><br/>
 		<div class="row" align="center" ng-hide="proyectopropiedadc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
@@ -38,6 +38,8 @@
 					</div>
 				  </div>
 				</div>
+				<br/>
+				<div class="total-rows">Total de {{  proyectopropiedadc.totalProyectoPropiedades + (proyectopropiedadc.totalProyectoPropiedades == 1 ? " Propiedad" : " Propiedades" ) }}</div>
 				<ul uib-pagination total-items="proyectopropiedadc.totalProyectoPropiedades"
 						ng-model="proyectopropiedadc.paginaActual"
 						max-size="proyectopropiedadc.numeroMaximoPaginas"
@@ -86,6 +88,7 @@
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="proyectopropiedadc.proyectopropiedad.descripcion">
 						</div>
+						<br/>
 						<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">

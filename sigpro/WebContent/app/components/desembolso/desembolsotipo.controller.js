@@ -122,7 +122,7 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 			};
 			
 			mi.guardar=function(){
-				if(mi.desembolsotipo!=null){
+				if(mi.desembolsotipo!=null && mi.desembolsotipo.nombre!=null){
 					$http.post('/SDesembolsoTipo', {
 						accion: 'guardarDesembolsoTipo',
 						esnuevo: mi.esnuevo,

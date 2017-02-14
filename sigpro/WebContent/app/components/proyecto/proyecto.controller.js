@@ -53,16 +53,16 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		columnDefs : [
 			{ name: 'id', width: 60, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left',
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.controller.filtrar($event,1)" style="width:175px;"></input></div>'
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'nombre\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>'
 			},
 			{ name : 'proyectotipo',    displayName : 'Tipo proyecto' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
 			{ name : 'unidadejecutora',    displayName : 'Unidad Ejecutora' ,cellClass: 'grid-align-left', enableFiltering: false , enableSorting: false },
 			{ name : 'cooperante',   displayName : 'Cooperante' ,cellClass: 'grid-align-left',  enableFiltering: false , enableSorting: false },
 			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.controller.filtrar($event,2)" style="width:90px;"></input></div>'
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'usuario_creo\']"  ng-keypress="grid.appScope.controller.filtrar($event)" style="width:90px;"></input></div>'
 			},
 		    { name: 'fechaCreacion', width: 100, displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.controller.filtrar($event,3)" style="width:80px;" ></input></div>'
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:80px;" ></input></div>'
 		    }
 		],
 		onRegisterApi: function(gridApi) {
@@ -91,15 +91,17 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 			if($routeParams.reiniciar_vista=='rv'){
 				mi.guardarEstado();
+				mi.obtenerTotalProyectos();
 		    }
 		    else{
 		    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'proyceto', t: (new Date()).getTime()}).then(function(response){
-			      if(response.data.success && response.data.estado!='')
-			    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+		    		  if(response.data.success && response.data.estado!='')
+		    			  mi.gridApi.saveState.restore( $scope, response.data.estado);
 			    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
 				      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
 				      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
 				      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+				      mi.obtenerTotalProyectos();
 				  });
 		    }
 		}
@@ -110,7 +112,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		mi.mostrarcargando=true;
 		$http.post('/SProyecto', { accion: 'getProyectoPagina', pagina: pagina,
 			numeroproyecto:  $utilidades.elementosPorPagina, filtro_nombre: mi.filtros['nombre'],
-			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
+			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
 			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
 			}).success(
 				function(response) {
@@ -127,7 +129,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
 			}
 		}
-		if(esvalido){
+		if(mi.proyecto!=null && mi.proyecto.nombre!=null){
 			var param_data = {
 				accion : 'guardar',
 				id: mi.proyecto.id,
@@ -151,7 +153,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					if (response.data.success) {
 						mi.proyecto.id = response.data.id;
 						$utilidades.mensaje('success','Proyecto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
-						mi.cargarTabla();
+						mi.obtenerTotalProyectos();
 						mi.esNuevo = false;
 					}else
 						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Proyecto');
@@ -162,14 +164,14 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	 }
 
 	mi.borrar = function() {
-		if(mi.proyecto !=null){
+		if(mi.proyecto !=null && mi.proyecto.id!=null){
 			$http.post('/SProyecto', {
 				accion: 'borrarProyecto',
 				id: mi.proyecto.id
 			}).success(function(response){
 				if(response.success){
 					$utilidades.mensaje('success','Proyecto borrado con éxito');
-					mi.cargarTabla();
+					mi.obtenerTotalProyectos();
 				}
 				else
 					$utilidades.mensaje('danger','Error al borrar el Proyecto');
@@ -187,14 +189,14 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		mi.cooperanteid="";
 		mi.cooperantenombre="";
 		mi.esColapsado = true;
-		mi.proyecto = null;
+		mi.proyecto = {};
 		mi.esNuevo = true;
 		mi.camposdinamicos = {};
 		mi.gridApi.selection.clearSelectedRows();
 	};
 
 	mi.editar = function() {
-		if(mi.proyecto!=null){
+		if(mi.proyecto!=null && mi.proyecto.id!=null){
 			mi.poryectotipoid = mi.proyecto.proyectotipoid;
 			mi.proyectotiponombre=mi.proyecto.proyectotipo;
 			mi.unidadejecutoraid=mi.proyecto.unidadejecutoraid;
@@ -258,13 +260,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		mi.camposdinamicos[index].isOpen = true;
 	};
 
-	mi.filtrar = function(evt,tipo){
+	mi.filtrar = function(evt){
 		if(evt.keyCode==13){
-			switch(tipo){
-				case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
-				case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
-				case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
-			}
 			mi.obtenerTotalProyectos();
 		}
 	};
@@ -272,19 +269,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.obtenerTotalProyectos = function(){
 		$http.post('/SProyecto', { accion: 'numeroProyectos',
 			filtro_nombre: mi.filtros['nombre'],
-			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).then(
 				function(response) {
 					mi.totalProyectos = response.data.totalproyectos;
 					mi.paginaActual = 1;
 					mi.cargarTabla(mi.paginaActual);
 		});
 	};
-
-	$http.post('/SProyecto', { accion: 'numeroProyectos' }).success(
-			function(response) {
-				mi.totalProyectos = response.totalproyectos;
-				mi.cargarTabla(1);
-	});
 
 	mi.irADesembolsos=function(proyectoid){
 		if(mi.proyecto!=null){

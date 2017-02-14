@@ -45,19 +45,19 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.cambioPagina = function() {
-		mi.cargarData(mi.paginaActual);
+		mi.cargarTabla(mi.paginaActual);
 	}
 
 	$http.post('/SProducto', {
 		accion : 'totalElementos'
 	}).success(function(response) {
 		mi.totalElementos = response.total;
-		mi.cargarData(1);
+		mi.cargarTabla(1);
 	});
 
 	mi.mostrarCargando = true;
 	mi.data = [];
-	mi.cargarData = function(pagina) {
+	mi.cargarTabla = function(pagina) {
 		var datos = {
 			accion : 'cargar',
 			pagina : pagina,
@@ -93,7 +93,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	    useExternalSorting: true,
 	    data : mi.data,
 		columnDefs : [ 
-			{displayName : 'Id', name : 'id',cellClass : 'grid-align-right',type : 'number',width : 150,visible : false }, 
+			{displayName : 'Id',  width: 100, name : 'id',cellClass : 'grid-align-right',type : 'number',width : 150 }, 
 			{ displayName : 'Nombre',name : 'nombre',cellClass : 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.producto.filtrar($event,1)" ></input></div>'
 			}, 
@@ -120,7 +120,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				if(sortColumns.length==1){
 					grid.appScope.producto.columnaOrdenada=sortColumns[0].field;
 					grid.appScope.producto.ordenDireccion = sortColumns[0].sort.direction;
-					grid.appScope.producto.cargarData(grid.appScope.producto.paginaActual);
+					
+					for(var i = 0; i<sortColumns.length-1; i++)
+						sortColumns[i].unsort();
+					grid.appScope.producto.cargarTabla(grid.appScope.producto.paginaActual);
 				}
 				else if(sortColumns.length>1){
 					sortColumns[0].unsort();
@@ -133,32 +136,22 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				}
 			} );
 
-			if ($routeParams.reiniciar_vista == 'rv') {
+			if($routeParams.reiniciar_vista=='rv'){
 				mi.guardarEstado();
-			} else {
-				$http.post('/SEstadoTabla', {
-					action : 'getEstado',
-					grid : 'producto',
-					t : (new Date()).getTime()
-				}).then(
-						function(response) {
-
-							if (response.data.success
-									&& response.data.estado != '') {
-								mi.gridApi.saveState.restore($scope,
-										response.data.estado);
-							}
-
-							mi.gridApi.colMovable.on.columnPositionChanged(
-									$scope, mi.guardarEstado);
-							mi.gridApi.colResizable.on.columnSizeChanged(
-									$scope, mi.guardarEstado);
-							mi.gridApi.core.on.columnVisibilityChanged($scope,
-									mi.guardarEstado);
-							mi.gridApi.core.on.sortChanged($scope,
-									mi.guardarEstado);
-						});
-			}
+				mi.obtenerTotalProductos();
+		    }
+		    else{
+		    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'producto', t: (new Date()).getTime()}).then(function(response){
+				      if(response.data.success && response.data.estado!='')
+				    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+				      mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
+					  mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
+					  mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+				      
+					  mi.obtenerTotalProductos();
+				  });
+		    	  
+		    }
 		}
 	}
 
@@ -238,7 +231,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 					if (response.success) {
 						$utilidades.mensaje('success',
 								'Tipo de Producto borrado con éxito');
-						mi.cargarData(1);
+						mi.cargarTabla(1);
 					} else
 						$utilidades.mensaje('danger',
 								'Error al borrar el Tipo de Producto');
@@ -283,7 +276,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.esNuevo = false;
 							mi.producto.id = response.data.id;
-							mi.cargarData(mi.paginaActual);
+							mi.cargarTabla(mi.paginaActual);
 							
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
@@ -295,10 +288,6 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.cancelar = function() {
 		mi.esForma = false;
 		mi.esNuevo=false;
-	};
-
-	mi.editarPropiedadValor = function(index) {
-
 	};
 	
 	mi.editar = function() {
@@ -369,7 +358,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				function(response) {
 					mi.totalElementos = response.data.total;
 					mi.paginaActual = 1;
-					mi.cargarData(mi.paginaActual);
+					mi.cargarTabla(mi.paginaActual);
 		});
 	};
 
@@ -525,7 +514,7 @@ function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
 		for ( var key in response) {
 			mi.totalElementos = response[key];
 		}
-		mi.cargarData(1);
+		mi.cargarTabla(1);
 	});
 
 	mi.opcionesGrid = {
@@ -563,7 +552,7 @@ function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
 		mi.seleccionado = row.isSelected;
 	};
 
-	mi.cargarData = function(pagina) {
+	mi.cargarTabla = function(pagina) {
 		mi.mostrarCargando = true;
 		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina)).then(
 				function(response) {
@@ -582,7 +571,7 @@ function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
 	};
 
 	mi.cambioPagina = function() {
-		mi.cargarData(mi.paginaActual);
+		mi.cargarTabla(mi.paginaActual);
 	}
 
 	mi.ok = function() {

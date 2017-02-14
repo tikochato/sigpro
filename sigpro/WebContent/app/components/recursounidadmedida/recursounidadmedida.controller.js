@@ -16,6 +16,11 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
 			
+			mi.columnaOrdenada=null;
+			mi.ordenDireccion = null;
+			
+			mi.filtros = [];
+			
 			mi.gridOptions = {
 					enableRowSelection : true,
 					enableRowHeaderSelection : false,
@@ -25,13 +30,21 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 					enableFiltering: true,
 					enablePaginationControls: false,
 				    paginationPageSize: $utilidades.elementosPorPagina,
+				    useExternalFiltering: true,
+				    useExternalSorting: true,
 					columnDefs : [ 
 						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-						{ name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
+						{ name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
+							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.recursounidadc.filtros[\'nombre\']"  ng-keypress="grid.appScope.recursounidadc.filtrar($event)"></input></div>'
+						},
 						{ name: 'simbolo', width: 85, displayName: 'Símbolo', cellClass: 'grid-align-center', enableFiltering: false},
 					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-					    { name: 'usuarioCreo', displayName: 'Usuario Creación'},
-					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
+					    { name: 'usuarioCreo', displayName: 'Usuario Creación',
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.recursounidadc.filtros[\'usuario_creo\']"  ng-keypress="grid.appScope.recursounidadc.filtrar($event)"></input></div>'
+					    },
+					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.recursounidadc.filtros[\'fecha_creacion\']"  ng-keypress="grid.appScope.recursounidadc.filtrar($event)"></input></div>'
+						}
 					],
 					onRegisterApi: function(gridApi) {
 						mi.gridApi = gridApi;
@@ -39,17 +52,38 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 							mi.medida = row.entity;
 						});
 						
+						gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+							if(sortColumns.length==1){
+								grid.appScope.recursounidadc.columnaOrdenada=sortColumns[0].field;
+								grid.appScope.recursounidadc.ordenDireccion = sortColumns[0].sort.direction;
+								for(var i = 0; i<sortColumns.length-1; i++)
+									sortColumns[i].unsort();
+								grid.appScope.recursounidadc.cargarTabla(grid.appScope.recursounidadc.paginaActual);
+							}
+							else if(sortColumns.length>1){
+								sortColumns[0].unsort();
+							}
+							else{
+								if(grid.appScope.recursounidadc.columnaOrdenada!=null){
+									grid.appScope.recursounidadc.columnaOrdenada=null;
+									grid.appScope.recursounidadc.ordenDireccion=null;
+								}
+							}
+								
+						} );
+						
 						if($routeParams.reiniciar_vista=='rv'){
 							mi.guardarEstado();
+							mi.obtenerTotalUnidadesMedida();
 					    }
 					    else{
 					    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'recursosunidadmedidas', t: (new Date()).getTime()}).then(function(response){
-						      if(response.data.success && response.data.estado!='')
-						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+					    		  if(response.data.success && response.data.estado!='')
+					    			  mi.gridApi.saveState.restore( $scope, response.data.estado);
 						    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
 							      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
 							      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
-							      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+							      mi.obtenerTotalUnidadesMedida();
 							  });
 					    }
 					}
@@ -57,12 +91,14 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 			
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SRecursoUnidadMedida', { accion: 'getRecursoUnidadMedidasPagina', pagina: pagina, numerorecursounidadmedidas: $utilidades.elementosPorPagina }).success(
+				$http.post('/SRecursoUnidadMedida', { accion: 'getRecursoUnidadMedidasPagina', pagina: pagina, numerorecursounidadmedidas: $utilidades.elementosPorPagina,
+					filtro_nombre: mi.filtros['nombre'], 
+					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
+					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+					}).success(
+				
 						function(response) {
 							mi.medidas = response.RecursoUnidadMedidas;
-							for(var i=0; i<mi.medidas.length; i++){
-								mi.medidas[i].fechaCreacion = moment(mi.medidas[i].fechaCreacion, 'MMM D, YYYY H:m:s a').format('DD/MM/YYYY');
-							}
 							mi.gridOptions.data = mi.medidas;
 							mi.mostrarcargando = false;
 						});
@@ -81,7 +117,7 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','medida '+(mi.esnueva ? 'creada' : 'guardada')+' con éxito');
-							mi.cargarTabla();
+							mi.obtenerTotalUnidadesMedida();
 						}
 						else
 							$utilidades.mensaje('danger','Error al '+(mi.esnueva ? 'crear' : 'guardar')+' la unidad de medida');
@@ -92,7 +128,7 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 			};
 
 			mi.borrar = function(ev) {
-				if(mi.medida!=null){
+				if(mi.medida!=null && mi.medida.id!=null){
 					var confirm = $mdDialog.confirm()
 				          .title('Confirmación de borrado')
 				          .textContent('¿Desea borrar la unidad de medida "'+mi.medida.nombre+'"?')
@@ -108,7 +144,7 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Unidad de medida borrada con éxito');
-								mi.cargarTabla();
+								mi.obtenerTotalUnidadesMedida();
 							}
 							else
 								$utilidades.mensaje('danger','Error al borrar la unidad de medida');
@@ -124,12 +160,12 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 			mi.nueva = function() {
 				mi.mostraringreso=true;
 				mi.esnueva = true;
-				mi.medida = null;
+				mi.medida = {};
 				mi.gridApi.selection.clearSelectedRows();
 			};
 
 			mi.editar = function() {
-				if(mi.medida!=null){
+				if(mi.medida!=null && mi.medida.id!=null){
 					mi.mostraringreso = true;
 					mi.esnueva = false;
 				}
@@ -160,11 +196,21 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 				else
 					$location.path('/recursounidadmedida/rv');
 			}
+			mi.obtenerTotalUnidadesMedida = function(){
+				$http.post('/SRecursoUnidadMedida', { accion: 'numeroRecursoUnidadMedidas',
+					filtro_nombre: mi.filtros['nombre'], 
+					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']}).success(
+				
+						function(response) {
+							mi.totalmedidas = response.totalRecursoUnidadMedidas;
+							mi.cargarTabla(1);
+						});
+				
+			}
 			
-			$http.post('/SRecursoUnidadMedida', { accion: 'numeroRecursoUnidadMedidas' }).success(
-					function(response) {
-						mi.totalmedidas = response.totalmedidas;
-						mi.cargarTabla(1);
-					});
-			
-		} ]);
+			mi.filtrar = function(evt){
+				if(evt.keyCode==13){
+					mi.obtenerTotalUnidadesMedida();
+				}
+			}
+}]);

@@ -91,8 +91,8 @@ public class SProyectoTipo extends HttpServlet {
 				temp.descripcion = proyectotipo.getDescripcion();
 				
 				temp.estado = proyectotipo.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(proyectotipo.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(proyectotipo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(proyectotipo.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(proyectotipo.getFechaCreacion());
 				temp.usuarioActualizo = proyectotipo.getUsuarioActualizo();
 				temp.usarioCreo = proyectotipo.getUsarioCreo();
 				stcooperantes.add(temp);

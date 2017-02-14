@@ -129,8 +129,8 @@ public class SMeta extends HttpServlet {
 				temp.objetoId = meta.getObjetoId();
 				temp.objetoTipo = meta.getObjetoTipo();
 				temp.estado = meta.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(meta.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(meta.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(meta.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(meta.getFechaCreacion());
 				temp.tipoMetaId = meta.getMetaTipo().getId();
 				temp.tipoMetaNombre = meta.getMetaTipo().getNombre();
 				temp.unidadMedidaId = meta.getMetaUnidadMedida().getId();
@@ -197,7 +197,9 @@ public class SMeta extends HttpServlet {
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			response_text = String.join("","{ \"success\": true, \"totalMetas\":",MetaDAO.getTotalMetas(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
+			Integer id =  map.get("id")!=null  ? Integer.parseInt(map.get("id")) : 0;
+			Integer tipo =  map.get("tipo")!=null  ? Integer.parseInt(map.get("tipo")) : 0;
+			response_text = String.join("","{ \"success\": true, \"totalMetas\":",MetaDAO.getTotalMetas(id, tipo,filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
 		else if(accion.equals("getMetasTipos")){
 			List<MetaTipo> MetaTipos = MetaTipoDAO.getMetaTipos();

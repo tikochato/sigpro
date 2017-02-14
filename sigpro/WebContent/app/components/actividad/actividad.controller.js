@@ -145,7 +145,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
 				}
 			}
-			if(mi.actividad!=null){
+			if(mi.actividad!=null && mi.actividad.nombre!=null){
 				$http.post('/SActividad', {
 					accion: 'guardarActividad',
 					esnuevo: mi.esnuevo,

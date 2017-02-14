@@ -128,9 +128,9 @@ public class SProyecto extends HttpServlet {
 				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getUnidadEjecutora();
 				dato.cooperante = proyecto.getCooperante().getNombre();
 				dato.cooperanteid = proyecto.getCooperante().getId();
-				dato.fechaCreacion = Utils.formatDate( proyecto.getFechaCreacion());
+				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
 				dato.usuarioCreo = proyecto.getUsuarioCreo();
-				dato.fechaactualizacion = Utils.formatDate( proyecto.getFechaActualizacion());
+				dato.fechaactualizacion = Utils.formatDateHour( proyecto.getFechaActualizacion());
 				dato.usuarioactualizo = proyecto.getUsuarioActualizo();
 				dato.programa = proyecto.getPrograma();
 				dato.subprograma = proyecto.getSubprograma();
@@ -170,9 +170,9 @@ public class SProyecto extends HttpServlet {
 				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getUnidadEjecutora();
 				dato.cooperante = proyecto.getCooperante().getNombre();
 				dato.cooperanteid = proyecto.getCooperante().getId();
-				dato.fechaCreacion = Utils.formatDate( proyecto.getFechaCreacion());
+				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
 				dato.usuarioCreo = proyecto.getUsuarioCreo();
-				dato.fechaactualizacion = Utils.formatDate( proyecto.getFechaActualizacion());
+				dato.fechaactualizacion = Utils.formatDateHour( proyecto.getFechaActualizacion());
 				dato.usuarioactualizo = proyecto.getUsuarioActualizo();
 				dato.programa = proyecto.getPrograma();
 				dato.subprograma = proyecto.getSubprograma();

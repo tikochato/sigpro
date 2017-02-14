@@ -35,14 +35,14 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 					columnDefs : [ 
 						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 						{ name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
-							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,1)"></input></div>'
+							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.metatipoc.filtros[\'nombre\']" ng-keypress="grid.appScope.metatipoc.filtrar($event)"></input></div>'
 						},
 					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 					    { name: 'usuarioCreo', displayName: 'Usuario Creación',
-					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,2)"></input></div>'
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.metatipoc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.metatipoc.filtrar($event)"></input></div>'
 					    },
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,3)"></input></div>'
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.metatipoc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.metatipoc.filtrar($event)"></input></div>'
 					    }
 					],
 					onRegisterApi: function(gridApi) {
@@ -73,15 +73,16 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 						
 						if($routeParams.reiniciar_vista=='rv'){
 							mi.guardarEstado();
+							mi.obtenerTotalMetaTipos();
 					    }
 					    else{
 					    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'metatipos', t: (new Date()).getTime()}).then(function(response){
-						      if(response.data.success && response.data.estado!='')
-						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+					    		  if(response.data.success && response.data.estado!='')
+					    			  mi.gridApi.saveState.restore( $scope, response.data.estado);
 						    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
 							      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
 							      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
-							      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+							      mi.obtenerTotalMetaTipos();
 							  });
 					    }
 					}
@@ -97,16 +98,13 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 				
 						function(response) {
 							mi.tipos = response.MetaTipos;
-							for(var i=0; i<mi.tipos.length; i++){
-								mi.tipos[i].fechaCreacion = moment(mi.tipos[i].fechaCreacion, 'MMM D, YYYY H:m:s a').format('DD/MM/YYYY');
-							}
 							mi.gridOptions.data = mi.tipos;
 							mi.mostrarcargando = false;
 						});
 			}
 			
 			mi.guardar=function(){
-				if(mi.tipo!=null && mi.tipo.nombre!=''){
+				if(mi.tipo!=null && mi.tipo.nombre!=null){
 					$http.post('/SMetaTipo', {
 						accion: 'guardarMetaTipo',
 						esnueva: mi.esnueva,
@@ -117,7 +115,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Tipo meta  '+(mi.esnueva ? 'creado' : 'guardado')+' con éxito');
-							mi.cargarTabla();
+							mi.obtenerTotalMetaTipos();
 						}
 						else
 							$utilidades.mensaje('danger','Error al '+(mi.esnueva ? 'crear' : 'guardar')+' el tipo de meta');
@@ -128,7 +126,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 			};
 
 			mi.borrar = function(ev) {
-				if(mi.tipo!=null){
+				if(mi.tipo!=null && mi.tipo.id!=null){
 					var confirm = $mdDialog.confirm()
 				          .title('Confirmación de borrado')
 				          .textContent('¿Desea borrar el tipo de meta "'+mi.tipo.nombre+'"?')
@@ -160,12 +158,12 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 			mi.nueva = function() {
 				mi.mostraringreso=true;
 				mi.esnueva = true;
-				mi.tipo = null;
+				mi.tipo = {};
 				mi.gridApi.selection.clearSelectedRows();
 			};
 
 			mi.editar = function() {
-				if(mi.tipo!=null){
+				if(mi.tipo!=null && mi.tipo.id!=null){
 					mi.mostraringreso = true;
 					mi.esnueva = false;
 				}
@@ -197,22 +195,20 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 					$location.path('/metatipos/rv');
 			}
 			
-			mi.filtrar = function(evt,tipo){
+			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
-					switch(tipo){
-						case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
-						case 2: mi.filtros['usuario_creo'] = evt.currentTarget.value; break;
-						case 3: mi.filtros['fecha_creacion'] = evt.currentTarget.value; break;
-							
-					}
 					mi.cargarTabla(mi.paginaActual);
 				}
 			}
 			
-			$http.post('/SMetaTipo', { accion: 'numeroMetaTipos' }).success(
-					function(response) {
-						mi.totaltipos = response.totaltipos;
-						mi.cargarTabla(1);
-					});
-			
-		} ]);
+			mi.obtenerTotalMetaTipos =  function(){
+				$http.post('/SMetaTipo', { accion: 'numeroMetaTipos', filtro_nombre: mi.filtros['nombre'], 
+					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+						function(response) {
+							mi.totaltipos = response.totaltipos;
+							mi.cargarTabla(1);
+						});
+				
+				}
+			} 
+]);

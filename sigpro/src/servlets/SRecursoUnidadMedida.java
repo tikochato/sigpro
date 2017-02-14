@@ -46,7 +46,7 @@ public class SRecursoUnidadMedida extends HttpServlet {
 		String fechaCreacion;
 		String fechaActualizacion;
 		String usuarioCreo;
-		String usuarioActulizo;
+		String usuarioActualizo;
 	}
 	
     public SRecursoUnidadMedida() {
@@ -79,7 +79,13 @@ public class SRecursoUnidadMedida extends HttpServlet {
 		if(accion.equals("getRecursoUnidadMedidasPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numenumeroRecursoUnidadMedidas = map.get("numerorecursounidadmedidas")!=null  ? Integer.parseInt(map.get("numerorecursounidadmedidas")) : 0;
-			List<RecursoUnidadMedida> RecursoUnidadMedidas = RecursoUnidadMedidaDAO.getRecursoUnidadMedidasPagina(pagina, numenumeroRecursoUnidadMedidas);
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<RecursoUnidadMedida> RecursoUnidadMedidas = RecursoUnidadMedidaDAO.getRecursoUnidadMedidasPagina(pagina, numenumeroRecursoUnidadMedidas,
+					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			
 			List<stunidadrecurso> stunidad = new ArrayList<stunidadrecurso>();
 			for(RecursoUnidadMedida recursounidad:RecursoUnidadMedidas){
@@ -87,11 +93,11 @@ public class SRecursoUnidadMedida extends HttpServlet {
 				temp.descripcion = recursounidad.getDescripcion();
 				temp.simbolo = recursounidad.getSimbolo();
 				temp.estado = recursounidad.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(recursounidad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(recursounidad.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(recursounidad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(recursounidad.getFechaCreacion());
 				temp.id = recursounidad.getId();
 				temp.nombre = recursounidad.getNombre();
-				temp.usuarioActulizo = recursounidad.getUsuarioActualizo();
+				temp.usuarioActualizo = recursounidad.getUsuarioActualizo();
 				temp.usuarioCreo = recursounidad.getUsuarioCreo();
 				stunidad.add(temp);
 			}
@@ -107,11 +113,11 @@ public class SRecursoUnidadMedida extends HttpServlet {
 				temp.descripcion = recursounidad.getDescripcion();
 				temp.simbolo = recursounidad.getSimbolo();
 				temp.estado = recursounidad.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(recursounidad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(recursounidad.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(recursounidad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(recursounidad.getFechaCreacion());
 				temp.id = recursounidad.getId();
 				temp.nombre = recursounidad.getNombre();
-				temp.usuarioActulizo = recursounidad.getUsuarioActualizo();
+				temp.usuarioActualizo = recursounidad.getUsuarioActualizo();
 				temp.usuarioCreo = recursounidad.getUsuarioCreo();
 				stunidad.add(temp);
 			}
@@ -159,7 +165,10 @@ public class SRecursoUnidadMedida extends HttpServlet {
 				response_text = "{ \"success\": false }";
 		}
 		else if(accion.equals("numeroRecursoUnidadMedidas")){
-			response_text = String.join("","{ \"success\": true, \"totalRecursoUnidadMedidas\":",RecursoUnidadMedidaDAO.getTotalRecursoUnidadMedidas().toString()," }");
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			response_text = String.join("","{ \"success\": true, \"totalRecursoUnidadMedidas\":",RecursoUnidadMedidaDAO.getTotalRecursoUnidadMedidas(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
 		else{
 			response_text = "{ \"success\": false }";

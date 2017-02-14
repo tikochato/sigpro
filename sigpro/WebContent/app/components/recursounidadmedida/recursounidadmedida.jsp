@@ -38,6 +38,8 @@
 					</div>
 				  </div>
 				</div>
+				<br/>
+				<div class="total-rows">Total de {{  recursounidadc.totalmedidas + (recursounidadc.totalmedidas == 1 ? " Unidad de Medida" : " Unidades de Medida" ) }}</div>
 				<ul uib-pagination total-items="recursounidadc.totalmedidas" 
 						ng-model="recursounidadc.paginaActual" 
 						max-size="recursounidadc.numeroMaximoPaginas" 
@@ -81,6 +83,7 @@
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="recursounidadc.medida.descripcion">
 						</div>
+						<br/>
 						<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">

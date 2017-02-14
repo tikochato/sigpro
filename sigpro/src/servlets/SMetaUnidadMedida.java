@@ -45,7 +45,7 @@ public class SMetaUnidadMedida extends HttpServlet {
 		String fechaCreacion;
 		String fechaActualizacion;
 		String usuarioCreo;
-		String usuarioActulizo;
+		String usuarioActualizo;
 	}
 	
     public SMetaUnidadMedida() {
@@ -92,11 +92,11 @@ public class SMetaUnidadMedida extends HttpServlet {
 				temp.descripcion = metaunidad.getDescripcion();
 				temp.simbolo = metaunidad.getSimbolo();
 				temp.estado = metaunidad.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(metaunidad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(metaunidad.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(metaunidad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(metaunidad.getFechaCreacion());
 				temp.id = metaunidad.getId();
 				temp.nombre = metaunidad.getNombre();
-				temp.usuarioActulizo = metaunidad.getUsuarioActualizo();
+				temp.usuarioActualizo = metaunidad.getUsuarioActualizo();
 				temp.usuarioCreo = metaunidad.getUsuarioCreo();
 				stunidad.add(temp);
 			}
@@ -112,11 +112,11 @@ public class SMetaUnidadMedida extends HttpServlet {
 				temp.descripcion = metaunidad.getDescripcion();
 				temp.simbolo = metaunidad.getSimbolo();
 				temp.estado = metaunidad.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(metaunidad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(metaunidad.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(metaunidad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(metaunidad.getFechaCreacion());
 				temp.id = metaunidad.getId();
 				temp.nombre = metaunidad.getNombre();
-				temp.usuarioActulizo = metaunidad.getUsuarioActualizo();
+				temp.usuarioActualizo = metaunidad.getUsuarioActualizo();
 				temp.usuarioCreo = metaunidad.getUsuarioCreo();
 				stunidad.add(temp);
 			}

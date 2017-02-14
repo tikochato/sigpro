@@ -39,6 +39,8 @@
 					</div>
 				  </div>
 				</div>
+				<br/>
+				<div class="total-rows">Total de {{  recursoc.totalRecursos + (recursoc.totalRecursos == 1 ? " Recurso" : " Recursos" ) }}</div>
 				<ul uib-pagination total-items="recursoc.totalRecursos"
 						ng-model="recursoc.paginaActual"
 						max-size="recursoc.numeroMaximoPaginas"
@@ -119,6 +121,7 @@
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="recursoc.recurso.descripcion">
 						</div>
+						<br/>
 						<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">

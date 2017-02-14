@@ -112,11 +112,24 @@ public class HitoTipoDAO {
 		return ret;
 	}
 	
-	public static List<HitoTipo> getHitoTiposPagina(int pagina, int numerohitotipo){
+	public static List<HitoTipo> getHitoTiposPagina(int pagina, int numerohitotipo,
+			String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion,
+			String columna_ordenada, String orden_direccion){
 		List<HitoTipo> ret = new ArrayList<HitoTipo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<HitoTipo> criteria = session.createQuery("SELECT c FROM HitoTipo c WHERE estado = 1",HitoTipo.class);
+			String query = "SELECT c FROM HitoTipo c WHERE estado = 1";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " c.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(c.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
+			
+			Query<HitoTipo> criteria = session.createQuery(query,HitoTipo.class);
 			criteria.setFirstResult(((pagina-1)*(numerohitotipo)));
 			criteria.setMaxResults(numerohitotipo);
 			ret = criteria.getResultList();
@@ -130,11 +143,20 @@ public class HitoTipoDAO {
 		return ret;
 	}
 	
-	public static Long getTotalHitoTipos(){
+	public static Long getTotalHitoTipos(String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM HitoTipo c WHERE c.estado=1",Long.class);
+			String query = "SELECT count(c.id) FROM HitoTipo c WHERE c.estado=1";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " c.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(c.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){

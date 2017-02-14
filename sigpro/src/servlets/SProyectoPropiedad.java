@@ -76,8 +76,15 @@ public class SProyectoPropiedad extends HttpServlet {
 		if(accion.equals("getProyectoPropiedadPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int idProyectoPropiedad = map.get("idProyectoTipo")!=null  ? Integer.parseInt(map.get("idProyectoTipo")) : 0;
-			List<ProyectoPropiedad> proyectopropiedades = ProyectoPropiedadDAO.getProyectoPropiedadesPagina(pagina, idProyectoPropiedad);
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<ProyectoPropiedad> proyectopropiedades = ProyectoPropiedadDAO.getProyectoPropiedadesPagina(pagina, idProyectoPropiedad,
+					 filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			List<stproyectopropiedad> stproyectopropiedad=new ArrayList<stproyectopropiedad>();
+			
 			for(ProyectoPropiedad proyectopropiedad:proyectopropiedades){
 				stproyectopropiedad temp =new stproyectopropiedad();
 				temp.id = proyectopropiedad.getId();
@@ -86,8 +93,8 @@ public class SProyectoPropiedad extends HttpServlet {
 				temp.datotipoid = proyectopropiedad.getDatoTipo().getId();
 				temp.datotiponombre = proyectopropiedad.getDatoTipo().getNombre();
 				temp.estado = proyectopropiedad.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(proyectopropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(proyectopropiedad.getFechaCreacion());	
+				temp.fechaActualizacion = Utils.formatDateHour(proyectopropiedad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(proyectopropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = proyectopropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = proyectopropiedad.getUsuarioCreo();
 				stproyectopropiedad.add(temp);
@@ -110,8 +117,8 @@ public class SProyectoPropiedad extends HttpServlet {
 				temp.datotipoid = proyectopropiedad.getDatoTipo().getId();
 				temp.datotiponombre = proyectopropiedad.getDatoTipo().getNombre();
 				temp.estado = proyectopropiedad.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(proyectopropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(proyectopropiedad.getFechaCreacion());	
+				temp.fechaActualizacion = Utils.formatDateHour(proyectopropiedad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(proyectopropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = proyectopropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = proyectopropiedad.getUsuarioCreo();
 				stproyectopropiedad.add(temp);
@@ -134,8 +141,8 @@ public class SProyectoPropiedad extends HttpServlet {
 				temp.datotipoid = proyectopropiedad.getDatoTipo().getId();
 				temp.datotiponombre = proyectopropiedad.getDatoTipo().getNombre();
 				temp.estado = proyectopropiedad.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(proyectopropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(proyectopropiedad.getFechaCreacion());	
+				temp.fechaActualizacion = Utils.formatDateHour(proyectopropiedad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(proyectopropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = proyectopropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = proyectopropiedad.getUsuarioCreo();
 				stproyectopropiedad.add(temp);
@@ -232,7 +239,10 @@ public class SProyectoPropiedad extends HttpServlet {
 			response_text = String.join("","{ \"success\": true, \"totalproyectopropiedades\":",ProyectoPropiedadDAO.getTotalProyectoPropiedadesDisponibles(idsPropiedades).toString()," }");
 		}
 		else if(accion.equals("numeroProyectoPropiedades")){
-			response_text = String.join("","{ \"success\": true, \"totalproyectopropiedades\":",ProyectoPropiedadDAO.getTotalProyectoPropiedades().toString()," }");
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			response_text = String.join("","{ \"success\": true, \"totalproyectopropiedades\":",ProyectoPropiedadDAO.getTotalProyectoPropiedades(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
 		
 		response.setHeader("Content-Encoding", "gzip");

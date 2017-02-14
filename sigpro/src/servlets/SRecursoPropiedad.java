@@ -93,8 +93,8 @@ public class SRecursoPropiedad extends HttpServlet {
 				temp.descripcion = recursopropiedad.getDescripcion();
 				temp.datotipoid = recursopropiedad.getDatoTipo().getId();
 				temp.datotiponombre = recursopropiedad.getDatoTipo().getNombre();
-				temp.fechaActualizacion = Utils.formatDate(recursopropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(recursopropiedad.getFechaCreacion());	
+				temp.fechaActualizacion = Utils.formatDateHour(recursopropiedad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(recursopropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = recursopropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = recursopropiedad.getUsuarioCreo();
 				strecursopropiedad.add(temp);
@@ -121,8 +121,8 @@ public class SRecursoPropiedad extends HttpServlet {
 				temp.descripcion = recursopropiedad.getDescripcion();
 				temp.datotipoid = recursopropiedad.getDatoTipo().getId();
 				temp.datotiponombre = recursopropiedad.getDatoTipo().getNombre();
-				temp.fechaActualizacion = Utils.formatDate(recursopropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(recursopropiedad.getFechaCreacion());	
+				temp.fechaActualizacion = Utils.formatDateHour(recursopropiedad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(recursopropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = recursopropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = recursopropiedad.getUsuarioCreo();
 				strecursopropiedad.add(temp);
@@ -144,8 +144,8 @@ public class SRecursoPropiedad extends HttpServlet {
 				temp.descripcion = recursopropiedad.getDescripcion();
 				temp.datotipoid = recursopropiedad.getDatoTipo().getId();
 				temp.datotiponombre = recursopropiedad.getNombre();
-				temp.fechaActualizacion = Utils.formatDate(recursopropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(recursopropiedad.getFechaCreacion());	
+				temp.fechaActualizacion = Utils.formatDateHour(recursopropiedad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(recursopropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = recursopropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = recursopropiedad.getUsuarioCreo();
 				strecursopropiedad.add(temp);

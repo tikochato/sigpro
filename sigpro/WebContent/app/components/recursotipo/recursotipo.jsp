@@ -6,7 +6,7 @@
 	<script type="text/ng-template" id="buscarcomponentepropiedad.jsp">
     	<%@ include file="/app/components/recursotipo/buscarrecursopropiedad.jsp"%>
   	</script>
-	<h3>Tipo de Recurso</h3>
+	<h3>Tipos de Recurso</h3>
 	<br />
 
 
@@ -41,6 +41,8 @@
 					</div>
 				</div>
 			</div>
+			<br/>
+			<div class="total-rows">Total de {{  recursotipoc.totalRecursos + (recursotipoc.totalRecursos == 1 ? " Tipo de Recurso" : " Tipos de Recurso" ) }}</div>
 			<ul uib-pagination total-items="recursotipoc.totalRecursos"
 				ng-model="recursotipoc.paginaActual"
 				max-size="recursotipoc.numeroMaximoPaginas"
@@ -75,6 +77,7 @@
 					<label for="descripcion">Descripción</label> 
 					<input type="text"class="form-control" id="descripcion" placeholder="Descripción"ng-model="recursotipoc.recursotipo.descripcion" ng-required="true">
 				</div>
+				<br/>
 				<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
@@ -111,6 +114,7 @@
 
 				<br />
 				<div align="center">
+				<h5>Propiedades</h5>
 					<div style="height: 35px; width: 75%">
 						<div style="text-align: right;">
 							<div class="btn-group" role="group" aria-label="">

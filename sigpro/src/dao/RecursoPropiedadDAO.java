@@ -136,7 +136,7 @@ public class RecursoPropiedadDAO {
 		List<RecursoPropiedad> ret = new ArrayList<RecursoPropiedad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = "SELECT c FROM RecursoPropiedad c ";
+			String query = "SELECT c FROM RecursoPropiedad c WHERE c.estado =1 ";
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");
@@ -164,7 +164,7 @@ public class RecursoPropiedadDAO {
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = "SELECT count(c.id) FROM RecursoPropiedad c ";
+			String query = "SELECT count(c.id) FROM RecursoPropiedad c WHERE c.estado = 1 ";
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");

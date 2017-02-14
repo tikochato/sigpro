@@ -106,7 +106,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			}
 			
 			mi.guardar=function(){
-				if(mi.cooperante!=null){
+				if(mi.cooperante!=null && mi.cooperante.nombre!=null){
 					$http.post('/SCooperante', {
 						accion: 'guardarCooperante',
 						esnuevo: mi.esnuevo,

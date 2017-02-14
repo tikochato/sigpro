@@ -41,6 +41,8 @@
 					</div>
 				</div>
 			</div>
+			<br/>
+			<div class="total-rows">Total de {{  proyectotipoc.totalProyectotipos + (proyectotipoc.totalProyectotipos == 1 ? " Tipo de Proyecto" : " Tipos de Proyectos" ) }}</div>
 			<ul uib-pagination total-items="proyectotipoc.totalProyectotipos"
 				ng-model="proyectotipoc.paginaActual"
 				max-size="proyectotipoc.numeroMaximoPaginas"
@@ -76,25 +78,9 @@
 						class="form-control" id="descripcion" placeholder="Descripción"
 						ng-model="proyectotipoc.proyectotipo.descripcion">
 				</div>
-				<div class="form-group" ng-show="!proyectotipoc.esnuevo">
-					<label for="usuarioCreo">Usuario que creo</label> 
-				    <p class="form-control-static">{{proyectotipoc.proyectotipo.usarioCreo }} </p>
-				</div>
-				<div class="form-group" ng-show="!proyectotipoc.esnuevo">
-					<label for="fechaCreacion">Fecha de creación</label> 
-					<p class="form-control-static">{{proyectotipoc.proyectotipo.fechaCreacion }} </p>
-				</div>
-				<div class="form-group" ng-show="!proyectotipoc.esnuevo">
-					<label for="usuarioActualizo">Usuario que actualizo</label>
-					<p class="form-control-static">{{proyectotipoc.proyectotipo.usuarioActualizo }} </p>
-				</div>
-				<div class="form-group" ng-show="!proyectotipoc.esnuevo">
-					<label for="fechaActualizacion">Fecha de actualizacion</label> 
-					<p class="form-control-static"> {{proyectotipoc.proyectotipo.fechaActualizacion }}</p>
-				</div>
-
 				<br />
 				<div align="center">
+					<h5>Propiedades</h5>
 					<div style="height: 35px; width: 75%">
 						<div style="text-align: right;">
 							<div class="btn-group" role="group" aria-label="">
@@ -106,7 +92,7 @@
 							</div>
 						</div>
 					</div>
-
+					<br/>
 					<table style="width: 75%;"
 					st-table="proyectotipoc.proyectopropiedades"
 					class="table table-striped  table-bordered">

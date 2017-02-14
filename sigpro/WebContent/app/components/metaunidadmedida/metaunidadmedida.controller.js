@@ -35,15 +35,15 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 					columnDefs : [ 
 						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 						{ name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
-							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,1)"></input></div>'
+							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.metaunidadc.filtros[\'nombre\']"  ng-keypress="grid.appScope.metaunidadc.filtrar($event,1)"></input></div>'
 						},
 						{ name: 'simbolo', width: 85, displayName: 'Símbolo', cellClass: 'grid-align-center', enableFiltering: false},
 						{ name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 					    { name: 'usuarioCreo', displayName: 'Usuario Creación',
-					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,2)"></input></div>'
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.metaunidadc.filtros[\'usuario_creo\']"  ng-keypress="grid.appScope.metaunidadc.filtrar($event,2)"></input></div>'
 					    },
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,3)"></input></div>'
+					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.metaunidadc.filtros[\'fecha_creacion\']"  ng-keypress="grid.appScope.metaunidadc.filtrar($event,3)"></input></div>'
 					    }
 					],
 					onRegisterApi: function(gridApi) {
@@ -74,14 +74,16 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 						
 						if($routeParams.reiniciar_vista=='rv'){
 							mi.guardarEstado();
+							mi.obtenerTotalMetaUnidades();
 					    }
 					    else{
 					    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'metaunidadmedidas', t: (new Date()).getTime()}).then(function(response){
-						      if(response.data.success && response.data.estado!='')
-						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+					    		  if(response.data.success && response.data.estado!='')
+					    			  mi.gridApi.saveState.restore( $scope, response.data.estado);
 						    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
 							      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
 							      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+							      mi.obtenerTotalMetaUnidades();
 							  });
 					    }
 					}
@@ -97,16 +99,13 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 				
 						function(response) {
 							mi.medidas = response.MetaUnidadMedidas;
-							for(var i=0; i<mi.medidas.length; i++){
-								mi.medidas[i].fechaCreacion = moment(mi.medidas[i].fechaCreacion, 'MMM D, YYYY H:m:s a').format('DD/MM/YYYY');
-							}
 							mi.gridOptions.data = mi.medidas;
 							mi.mostrarcargando = false;
 						});
 			}
 			
 			mi.guardar=function(){
-				if(mi.medida!=null && mi.medida.nombre!=''){
+				if(mi.medida!=null && mi.medida.nombre!=null){
 					$http.post('/SMetaUnidadMedida', {
 						accion: 'guardarMetaUnidadMedida',
 						esnueva: mi.esnueva,
@@ -118,7 +117,7 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Medida '+(mi.esnueva ? 'creada' : 'guardada')+' con éxito');
-							mi.cargarTabla();
+							mi.obtenerTotalMetaUnidades();
 						}
 						else
 							$utilidades.mensaje('danger','Error al '+(mi.esnueva ? 'crear' : 'guardar')+' la unidad de medida');
@@ -129,7 +128,7 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 			};
 
 			mi.borrar = function(ev) {
-				if(mi.medida!=null){
+				if(mi.medida!=null && mi.medida.id!=null){
 					var confirm = $mdDialog.confirm()
 				          .title('Confirmación de borrado')
 				          .textContent('¿Desea borrar la unidad de medida "'+mi.medida.nombre+'"?')
@@ -145,7 +144,7 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Unidad de medida borrada con éxito');
-								mi.cargarTabla();
+								mi.obtenerTotalMetaUnidades();
 							}
 							else
 								$utilidades.mensaje('danger','Error al borrar la unidad de medida');
@@ -161,12 +160,12 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 			mi.nueva = function() {
 				mi.mostraringreso=true;
 				mi.esnueva = true;
-				mi.medida = null;
+				mi.medida = {};
 				mi.gridApi.selection.clearSelectedRows();
 			};
 
 			mi.editar = function() {
-				if(mi.medida!=null){
+				if(mi.medida!=null && mi.medida.id!=null){
 					mi.mostraringreso = true;
 					mi.esnueva = false;
 				}
@@ -198,22 +197,19 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 					$location.path('/metaunidadmedida/rv');
 			}
 			
-			mi.filtrar = function(evt,tipo){
+			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
-					switch(tipo){
-						case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
-						case 2: mi.filtros['usuario_creo'] = evt.currentTarget.value; break;
-						case 3: mi.filtros['fecha_creacion'] = evt.currentTarget.value; break;
-							
-					}
-					mi.cargarTabla(mi.paginaActual);
+					mi.obtenerTotalMetaUnidades();
 				}
 			}
 			
-			$http.post('/SMetaUnidadMedida', { accion: 'numeroMetaUnidadMedidas' }).success(
-					function(response) {
-						mi.totalmedidas = response.totalmedidas;
-						mi.cargarTabla(1);
-					});
-			
-		} ]);
+			mi.obtenerTotalMetaUnidades = function(){
+				$http.post('/SMetaUnidadMedida', { accion: 'numeroMetaUnidadMedidas' }).success(
+						function(response) {
+							mi.totalmedidas = response.totalmedidas;
+							mi.cargarTabla(1);
+						});
+				
+				} 
+			}
+]);
