@@ -26,6 +26,10 @@ public class ProductoPropiedadDAO {
 		String descripcion;
 		Integer idTipo;
 		String tipo;
+		String usuarioCreo;
+		String usuarioActualizo;
+		String fechaCreacion;
+		String fechaActualizacion;
 	}
 	
 	class stdatadinamico {
@@ -144,11 +148,23 @@ public class ProductoPropiedadDAO {
 		return ret;
 	}
 
-	public static List<ProductoPropiedad> getPagina(int pagina, int registros) {
+	public static List<ProductoPropiedad> getPagina(int pagina, int registros, String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion,
+			String columna_ordenada, String orden_direccion) {
 		List<ProductoPropiedad> ret = new ArrayList<ProductoPropiedad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<ProductoPropiedad> criteria = session.createQuery("SELECT e FROM ProductoPropiedad e where e.estado = 1", ProductoPropiedad.class);
+			String query = "SELECT e FROM ProductoPropiedad e where e.estado = 1";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " e.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " e.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(e.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
+			
+			Query<ProductoPropiedad> criteria = session.createQuery(query, ProductoPropiedad.class);
 			criteria.setFirstResult(((pagina - 1) * (registros)));
 			criteria.setMaxResults(registros);
 			ret = criteria.getResultList();
@@ -160,10 +176,11 @@ public class ProductoPropiedadDAO {
 		return ret;
 	}
 
-	public static String getJson(int pagina, int registros) {
+	public static String getJson(int pagina, int registros ,String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion,
+			String columna_ordenada, String orden_direccion) {
 		String jsonEntidades = "";
 
-		List<ProductoPropiedad> pojos = getPagina(pagina, registros);
+		List<ProductoPropiedad> pojos = getPagina(pagina, registros, filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);
 
 		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
 
@@ -174,6 +191,10 @@ public class ProductoPropiedadDAO {
 			estructuraPojo.descripcion = pojo.getDescripcion();
 			estructuraPojo.idTipo = pojo.getDatoTipo().getId();
 			estructuraPojo.tipo = pojo.getDatoTipo().getNombre();
+			estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();
+			estructuraPojo.usuarioActualizo = pojo.getUsuarioActualizo();
+			estructuraPojo.fechaCreacion = Utils.formatDateHour(pojo.getFechaCreacion());
+			estructuraPojo.fechaActualizacion =Utils.formatDateHour(pojo.getFechaActualizacion());
 
 			listaEstructuraPojos.add(estructuraPojo);
 		}
@@ -183,11 +204,20 @@ public class ProductoPropiedadDAO {
 		return jsonEntidades;
 	}
 
-	public static Long getTotal() {
+	public static Long getTotal(String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion) {
 		Long ret = 0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<Long> conteo = session.createQuery("SELECT count(e.id) FROM ProductoPropiedad e  where e.estado = 1", Long.class);
+				String query = "SELECT count(e.id) FROM ProductoPropiedad e  where e.estado = 1";
+				String query_a="";
+				if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+					query_a = String.join("",query_a, " e.nombre LIKE '%",filtro_nombre,"%' ");
+				if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+					query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " e.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+				if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+					query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(e.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+				query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));				
+			Query<Long> conteo = session.createQuery(query, Long.class);
 			ret = conteo.getSingleResult();
 		} catch (Throwable e) {
 			CLogger.write("6", ProductoPropiedadDAO.class, e);

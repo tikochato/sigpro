@@ -8,7 +8,7 @@
 	    <%@ include file="/app/components/productotipo/buscarPropiedad.jsp"%>
 	</script>
 
-	<h3>{{ productoTipo.esForma ? (productoTipo.esNuevo ? "Nuevo Tipo de Producto" : "Editar Tipo de Producto") : "Tipo de Producto" }}</h3>
+	<h3>Tipo de Producto</h3>
 
 	<br />
 
@@ -37,6 +37,7 @@
 						</div>
 					</div>
 				</div>
+				<br/>
 				<div id="grid1" ui-grid="productoTipo.opcionesGrid"
 					ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns
 					ui-grid-selection ui-grid-pinning ui-grid-pagination>
@@ -49,6 +50,8 @@
 						</div>
 					</div>
 				</div>
+				<br/>
+				<div class="total-rows">Total de {{  productoTipo.totalElementos + (productoTipo.totalElementos == 1 ? " Tipo de producto" : " Tipos de producto" ) }}</div>
 				<ul uib-pagination total-items="productoTipo.totalElementos"
 					ng-model="productoTipo.paginaActual"
 					max-size="productoTipo.numeroMaximoPaginas"
@@ -63,6 +66,8 @@
 	</div>
 
 	<div class="row main-form" ng-show="productoTipo.esForma">
+		<h4 ng-hide="!productoTipo.esNuevo">Nuevo tipo de producto</h4>
+	  	<h4 ng-hide="productoTipo.esNuevo">Edición de tipo de producto</h4>
 
 		<div class="col-sm-12 operation_buttons" align="right">
 
@@ -100,28 +105,45 @@
 		<br />
 
 		<h5>Propiedades</h5>
-		<div>
-			<div class="col-sm-12" align="center">
-				<table st-table="productoTipo.propiedadesTipo" class="table table-striped" style="width: 400px;" ng-hide="productoTipo.mostrarCargando">
-					<thead>
-						<tr>
-							<th>Nombre</th>
-							<th>Tipo</th>
-							<th style="width: 5%"></th>
-						</tr>
-					</thead>
-					<tbody>
+		<div align="center">
+			
+			<div style="height: 35px; width: 75%">
+						<div style="text-align: right;">
+							<div class="btn-group" role="group" aria-label="">
+								<a class="btn btn-default" href
+									ng-click="productoTipo.agregarPropiedad()" role="button"
+									uib-tooltip="Asignar nueva propiedad" tooltip-placement="left">
+									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<table style="width: 75%;" st-table="productoTipo.propiedadesTipo" class="table table-striped  table-bordered">
+						<thead >
+							<tr>
+								<th>ID</th>
+								<th>Nombre</th>
+								<th>Descripicon</th>
+								<th>Tipo Dato</th>
+								<th style="width: 30px;">Quitar</th>
+	
+							</tr>
+						</thead>
+						<tbody>
 						<tr st-select-row="row" st-select-mode="single" ng-repeat="propiedad in productoTipo.propiedadesTipo | filter: { estado: '!E'} track by $index">
+							<td>{{propiedad.idPropiedad}}</td>
 							<td>{{propiedad.propiedad}}</td>
+							<td>{{propiedad.descripcion}}</td>
 							<td>{{propiedad.propiedadTipo}}</td>
-							<td align="center"><span ng-click="productoTipo.eliminarPropiedad($index)" uib-tooltip="Eliminar Propiedad"><i style="color: red; font-size: 20px;" class="glyphicon glyphicon-minus-sign"></i></span></td>
+							<td align="center">
+								<button type="button"
+									 ng-click="productoTipo.eliminarPropiedad($index)"
+									class="btn btn-sm btn-danger">
+									<i class="glyphicon glyphicon-minus-sign"> </i>
+								</button>
 						</tr>
 					</tbody>
-					<tfoot>
-						<tr>
-							<td colspan="3" align="center"><span ng-click="productoTipo.agregarPropiedad()" uib-tooltip="Agregar Propiedad"><i style="color: blue; font-size: 20px;" class="glyphicon glyphicon-plus-sign"></i></span></td>
-						</tr>				
-					</tfoot>
 				</table>
 				<div class="grid_loading" ng-hide="!productoTipo.mostrarCargando">
 					<div class="msg">
@@ -129,7 +151,7 @@
 							<br /> <b>Cargando, por favor espere...</b> </span>
 					</div>
 				</div>
-			</div>
+			
 		</div>
 		<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
@@ -138,13 +160,13 @@
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
 									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static"> {{ productoTipo.productotipo.usuarioCreo }}</p>
+									<p class="form-control-static"> {{ productoTipo.entidadSeleccionada.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
 									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ productoTipo.productotipo.fechaCreacion }} </p>
+									<p class="form-control-static" id="fechaCreacion"> {{ productoTipo.entidadSeleccionada.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
@@ -152,13 +174,13 @@
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
 									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ productoTipo.productotipo.usuarioActualizo }} </p>
+									<p class="form-control-static" id="usuarioCreo">{{ productoTipo.entidadSeleccionada.usuairoActulizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
 									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ productoTipo.productotipo.fechaActualizacion }} </p>
+									<p class="form-control-static" id="usuarioCreo">{{ productoTipo.entidadSeleccionada.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>
