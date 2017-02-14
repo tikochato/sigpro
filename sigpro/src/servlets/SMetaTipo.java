@@ -44,7 +44,7 @@ public class SMetaTipo extends HttpServlet {
 		String fechaCreacion;
 		String fechaActualizacion;
 		String usuarioCreo;
-		String usuarioActulizo;
+		String usuarioActualizo;
 	}
 	
     public SMetaTipo() {
@@ -92,11 +92,11 @@ public class SMetaTipo extends HttpServlet {
 				sttipometa temp = new sttipometa();
 				temp.descripcion = metatipo.getDescripcion();
 				temp.estado = metatipo.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(metatipo.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(metatipo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(metatipo.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(metatipo.getFechaCreacion());
 				temp.id = metatipo.getId();
 				temp.nombre = metatipo.getNombre();
-				temp.usuarioActulizo = metatipo.getUsuarioActualizo();
+				temp.usuarioActualizo = metatipo.getUsuarioActualizo();
 				temp.usuarioCreo = metatipo.getUsuarioCreo();
 				sttipo.add(temp);
 			}
@@ -111,11 +111,11 @@ public class SMetaTipo extends HttpServlet {
 				sttipometa temp = new sttipometa();
 				temp.descripcion = metatipo.getDescripcion();
 				temp.estado = metatipo.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(metatipo.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(metatipo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(metatipo.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(metatipo.getFechaCreacion());
 				temp.id = metatipo.getId();
 				temp.nombre = metatipo.getNombre();
-				temp.usuarioActulizo = metatipo.getUsuarioActualizo();
+				temp.usuarioActualizo = metatipo.getUsuarioActualizo();
 				temp.usuarioCreo = metatipo.getUsuarioCreo();
 				sttipo.add(temp);
 			}

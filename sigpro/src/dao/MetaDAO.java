@@ -120,14 +120,7 @@ public class MetaDAO {
 		List<Meta> ret = new ArrayList<Meta>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String where="";
-			switch(tipo){
-				case 1: where = "m.proyecto.id = "; break;
-				case 2: where = "m.componente.id = "; break;
-				case 3: where = "m.producto.id = "; break;
-			}
-			where = String.join("", where, String.valueOf(id));
-			String query = String.join("","SELECT m FROM Meta m WHERE estado = 1 and ",where);
+			String query = "SELECT m FROM Meta m WHERE m.estado = 1 and m.objetoId=:objetoId AND m.objetoTipo=:objetoTipo ";
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " m.nombre LIKE '%",filtro_nombre,"%' ");
@@ -139,6 +132,8 @@ public class MetaDAO {
 			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
 			
 			Query<Meta> criteria = session.createQuery(query,Meta.class);
+			criteria.setParameter("objetoId", id);
+			criteria.setParameter("objetoTipo", tipo);
 			criteria.setFirstResult(((pagina-1)*(numeroMetas)));
 			criteria.setMaxResults(numeroMetas);
 			ret = criteria.getResultList();
@@ -152,11 +147,11 @@ public class MetaDAO {
 		return ret;
 	}
 	
-	public static Long getTotalMetas(String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion){
+	public static Long getTotalMetas(Integer id, Integer tipo,String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = "SELECT count(m.id) FROM Meta m WHERE m.estado=1";
+			String query = "SELECT count(m.id) FROM Meta m WHERE m.estado=1 AND m.objetoId = :objetoId AND m.objetoTipo = :objetotipo ";
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " m.nombre LIKE '%",filtro_nombre,"%' ");
@@ -166,6 +161,8 @@ public class MetaDAO {
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(m.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			Query<Long> conteo = session.createQuery(query,Long.class);
+			conteo.setParameter("objetoId", id);
+			conteo.setParameter("objetotipo", tipo);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){

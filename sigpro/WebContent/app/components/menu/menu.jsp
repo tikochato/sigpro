@@ -34,7 +34,7 @@
                          	<li role="menuitem"><a href="#!/actividadtipo">Tipo de Actividad</a></li>
                          	<li role="menuitem"><a href="#!/componentetipo">Tipo de Componente</a></li>
                          	<li role="menuitem"><a href="#!/hitotipo">Tipo Hito</a></li>
-                         	<li role="menuitem"><a href="#!/metatipos">Tipo de Meta</a></li>
+                         	<li role="menuitem"><a href="#!/metatipo">Tipo de Meta</a></li>
 	                        <li role="menuitem"><a href="#!/productoTipo">Tipo de Producto</a></li>
 	                        <li role="menuitem"><a href="#!/proyectotipo">Tipo de Proyecto</a></li>
 	                        <li role="menuitem"><a href="#!/recursotipo">Tipo de Recurso</a></li>

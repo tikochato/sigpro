@@ -44,14 +44,14 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 				columnDefs : [
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left'
-				    	,filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.proyectotipoc.filtrar($event,1)" style="width:175px;"></input></div>'
+				    	,filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.proyectotipoc.filtros[\'nombre\']" ng-keypress="grid.appScope.proyectotipoc.filtrar($event)" style="width:175px;"></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 				    { name: 'usarioCreo', displayName: 'Usuario Creación' 
-				    	,filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.proyectotipoc.filtrar($event,2)"></input></div>'
+				    	,filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.proyectotipoc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.proyectotipoc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.proyectotipoc.filtrar($event,3)" ></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.proyectotipoc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.proyectotipoc.filtrar($event)" ></input></div>'
 				    }
 				],
 				onRegisterApi: function(gridApi) {
@@ -82,15 +82,16 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
+						mi.obtenerTotalProyectotipos();
 				    }
 				    else{
 				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'proyectoTipos', t: (new Date()).getTime()}).then(function(response){
-					      if(response.data.success && response.data.estado!='')
-					    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+				    		  if(response.data.success && response.data.estado!='')
+				    			  mi.gridApi.saveState.restore( $scope, response.data.estado);
 					    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
 						      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
 						      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
-						      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+						      mi.obtenerTotalProyectotipos();
 						  });
 				    }
 				}
@@ -100,8 +101,8 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 			mi.mostrarcargando=true;
 			$http.post('/SProyectoTipo', { accion: 'getProyectoTipoPagina', pagina: pagina, numeroproyectotipo: $utilidades.elementosPorPagina
 				,filtro_nombre: mi.filtros['nombre'] 
-				,filtro_usuario_creo: mi.filtros['usuarioCreo']
-			    ,filtro_fecha_creacion: mi.filtros['fechaCreacion']
+				,filtro_usuario_creo: mi.filtros['usuario_creo']
+			    ,filtro_fecha_creacion: mi.filtros['fecha_creacion']
 			    ,columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
 			    }).success(
 			
@@ -135,7 +136,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 						$utilidades.mensaje('success','Tipo Proyecto '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 						mi.proyectotipo.id = response.id;
-						mi.cargarTabla();
+						mi.obtenerTotalProyectotipos();
 
 					}
 					else
@@ -147,7 +148,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 		};
 
 		mi.editar = function() {
-			if(mi.proyectotipo!=null){
+			if(mi.proyectotipo!=null && mi.proyectotipo.id!=null){
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.cargarTotalPropiedades();
@@ -158,7 +159,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 
 
 		mi.borrar = function(ev) {
-			if(mi.proyectotipo!=null){
+			if(mi.proyectotipo!=null && mi.proyectotipo.id!=null){
 				var confirm = $mdDialog.confirm()
 			          .title('Confirmación de borrado')
 			          .textContent('¿Desea borrar el tipo de proyecto "'+mi.proyectotipo.nombre+'"?')
@@ -174,7 +175,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Tipo Proyecto borrado con éxito');
-							mi.cargarTabla();
+							mi.obtenerTotalProyectotipos();
 						}
 						else
 							$utilidades.mensaje('danger','Error al borrar el Tipo Proyecto');
@@ -190,7 +191,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 		mi.nuevo = function() {
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
-			mi.proyectotipo = null;
+			mi.proyectotipo = {};
 			mi.gridApi.selection.clearSelectedRows();
 			mi.cargarTotalPropiedades();
 		};
@@ -218,20 +219,8 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 				$location.path('/proyectotipo/rv');
 		}
 
-		$http.post('/SProyectoTipo', { accion: 'numeroProyectoTipos' }).success(
-				function(response) {
-					mi.totalProyectotipos = response.totalproyectotipos;
-					mi.cargarTabla(1);
-				}
-		);
-		
-		mi.filtrar = function(evt,tipo){
+		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
-				switch(tipo){
-					case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
-					case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
-					case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
-				}
 				mi.obtenerTotalProyectotipos();
 			}
 		}

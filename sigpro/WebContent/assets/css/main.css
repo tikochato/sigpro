@@ -185,3 +185,9 @@ nav.navbar{
 .navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {
 	background-color: #1f3b6a;
 }
+
+.total-rows{
+	font-size: 12px;
+	font-weight: bold;
+	text-align: right;
+}

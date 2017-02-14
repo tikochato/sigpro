@@ -36,7 +36,7 @@
 					</div>
 				</div>
 			</div>
-
+			<br/>
 			<div id="grid1" ui-grid="controller.gridOpciones" ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination
 				ui-grid-pagination>
 				<div class="grid_loading" ng-hide="!controller.mostrarcargando">
@@ -48,6 +48,8 @@
 					</div>
 				  </div>
 			</div>
+			<br/>
+			<div class="total-rows">Total de {{  controller.totalProyectos + (controller.totalProyectos == 1 ? " Proyecto" : " Proyectos" ) }}</div>
 				<ul uib-pagination total-items="controller.totalProyectos"
 						ng-model="controller.paginaActual"
 						max-size="controller.numeroMaximoPaginas"
@@ -182,6 +184,7 @@
 					<input type="text" ng-model="controller.proyecto.descripcion"
 						class="form-control" id="campo2" placeholder="Descripción">
 				</div>
+				<br/>
 				<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">

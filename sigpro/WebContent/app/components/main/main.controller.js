@@ -50,7 +50,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/metaunidadmedida/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'metaunidadmedidaController\'" class="all_page"></div>'
             })
-            .when('/metatipos/:reiniciar_vista?',{
+            .when('/metatipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'metatipoController\'" class="all_page"></div>'
             })
             .when('/meta/:id/:tipo/:reiniciar_vista?',{
