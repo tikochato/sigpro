@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="org.apache.shiro.SecurityUtils" %>
+<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <div ng-controller="proyectotipoController as proyectotipoc"
 	class="maincontainer all_page" id="title">
 
@@ -13,11 +15,18 @@
 	<div class="row" align="center" ng-if="!proyectotipoc.mostraringreso">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-primary" ng-click="proyectotipoc.nuevo()">Nuevo</label>
-				<label class="btn btn-primary" ng-click="proyectotipoc.editar()">Editar</label>
-				<label class="btn btn-primary" ng-click="proyectotipoc.borrar()">Borrar</label>
+				<shiro:hasPermission name="36040">
+					<label class="btn btn-primary" ng-click="proyectotipoc.nuevo()">Nuevo</label>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="36020">
+					<label class="btn btn-primary" ng-click="proyectotipoc.editar()">Editar</label>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="36030">
+					<label class="btn btn-primary" ng-click="proyectotipoc.borrar()">Borrar</label>
+				</shiro:hasPermission>
 			</div>
 		</div>
+		<shiro:hasPermission name="36010">
 		<div class="col-sm-12" align="center">
 			<div style="height: 35px;">
 				<div style="text-align: right;">
@@ -51,6 +60,7 @@
 				previous-text="Anterior" class="pagination-sm" boundary-links="true"
 				force-ellipses="true" ng-change="proyectotipoc.cambioPagina()"></ul>
 		</div>
+		</shiro:hasPermission>	
 	</div>
 
 	<div class="row main-form" ng-if="proyectotipoc.mostraringreso">
