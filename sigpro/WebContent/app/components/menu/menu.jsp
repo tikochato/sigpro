@@ -17,49 +17,49 @@
 	                <span class="icon-bar"></span>
 	            </label>
 	            <a class="navbar-brand" href="/main.jsp"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Inicio</a>
-		    </div>
-		    
+		    </div>		    
 		    <div class="collapse navbar-collapse" id="navBar">
 	            <ul class="nav navbar-nav">
 	                <li uib-dropdown>
-	                    <a href="#!/cooperante"><span class="glyphicon" aria-hidden="true"></span> Cooperante</a>
+	                	<shiro:hasPermission name="8010"><a href="#!/cooperante"><span class="glyphicon" aria-hidden="true"></span> Cooperante</a></shiro:hasPermission>	                    
 	                </li>
                     <li>
-                         <a   href="#!/proyecto"><span class="glyphicon" aria-hidden="true"></span> Proyectos</a>
+                    	<shiro:hasPermission name="24010"><a   href="#!/proyecto"><span class="glyphicon" aria-hidden="true"></span> Proyectos</a></shiro:hasPermission>                       
                     </li>
                     <li uib-dropdown>
                          <a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Catálogos <b class="caret"></b></a>
                          <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-                         	<li role="menuitem"><a href="#!/cooperante">Cooperantes</a></li>
-                         	<li role="menuitem"><a href="#!/actividadtipo">Tipo de Actividad</a></li>
-                         	<li role="menuitem"><a href="#!/componentetipo">Tipo de Componente</a></li>
-                         	<li role="menuitem"><a href="#!/hitotipo">Tipo Hito</a></li>
-                         	<li role="menuitem"><a href="#!/metatipo">Tipo de Meta</a></li>
-	                        <li role="menuitem"><a href="#!/productoTipo">Tipo de Producto</a></li>
-	                        <li role="menuitem"><a href="#!/proyectotipo">Tipo de Proyecto</a></li>
-	                        <li role="menuitem"><a href="#!/recursotipo">Tipo de Recurso</a></li>
-	                        <li role="menuitem"><a href="#!/riesgotipo">Tipo de Riesgo</a></li>
-	                        <li role="menuitem"><a href="#!/metaunidadmedida">Unidad de Medida para Metas</a></li>
-	                        <li role="menuitem"><a href="#!/recursounidadmedida">Unidad de Medida para Recurso</a></li>
+                         	<shiro:hasPermission name="8010"><li role="menuitem"><a href="#!/cooperante">Cooperantes</a></li></shiro:hasPermission>
+                         	<shiro:hasPermission name="3010"><li role="menuitem"><a href="#!/actividadtipo">Tipo de Actividad</a></li></shiro:hasPermission>                         	
+                         	<shiro:hasPermission name="7010"><li role="menuitem"><a href="#!/componentetipo">Tipo de Componente</a></li></shiro:hasPermission>                         	
+                         	<shiro:hasPermission name="16010"><li role="menuitem"><a href="#!/hitotipo">Tipo Hito</a></li></shiro:hasPermission>                         	
+                         	<shiro:hasPermission name="18010"><li role="menuitem"><a href="#!/metatipo">Tipo de Meta</a></li></shiro:hasPermission>                         	
+	                        <shiro:hasPermission name="23010"> <li role="menuitem"><a href="#!/productoTipo">Tipo de Producto</a></li></shiro:hasPermission>
+	                        <shiro:hasPermission name="36010"><li role="menuitem"><a href="#!/proyectotipo">Tipo de Proyecto</a></li></shiro:hasPermission>
+	                        <shiro:hasPermission name="28010"> <li role="menuitem"><a href="#!/recursotipo">Tipo de Recurso</a></li></shiro:hasPermission>
+	                        <shiro:hasPermission name="32010"><li role="menuitem"><a href="#!/riesgotipo">Tipo de Riesgo</a></li></shiro:hasPermission>
+	                        <shiro:hasPermission name="19010"><li role="menuitem"><a href="#!/metaunidadmedida">Unidad de Medida para Metas</a></li></shiro:hasPermission>
+	                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/recursounidadmedida">Unidad de Medida para Recurso</a></li></shiro:hasPermission>
                          </ul>
                     </li>
                     <li uib-dropdown>
                          <a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Propiedades <b class="caret"></b></a>
                          <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-	                        <li role="menuitem"><a href="#!/actividadpropiedad">Actividad</a></li>
-	                        <li role="menuitem"><a href="#!/componentepropiedad">Componente</a></li>
-	                        <li role="menuitem"><a href="#!/productopropiedad">Producto</a></li>
-	                        <li role="menuitem"><a href="#!/proyectopropiedad">Proyecto</a></li>
-	                        <li role="menuitem"><a href="#!/recursopropiedad">Recurso</a></li>
-	                        <li role="menuitem"><a href="#!/riesgopropiedad">Riesgo</a></li>
+                         	<shiro:hasPermission name="2010"><li role="menuitem"><a href="#!/actividadpropiedad">Actividad</a></li></shiro:hasPermission>	                      
+	                        <shiro:hasPermission name="6010"> <li role="menuitem"><a href="#!/componentepropiedad">Componente</a></li></shiro:hasPermission>	                       
+	                        <shiro:hasPermission name="22010"> <li role="menuitem"><a href="#!/productopropiedad">Producto</a></li></shiro:hasPermission>	                       
+	                        <shiro:hasPermission name="25010"><li role="menuitem"><a href="#!/proyectopropiedad">Proyecto</a></li></shiro:hasPermission>	                        
+	                        <shiro:hasPermission name="27010"><li role="menuitem"><a href="#!/recursopropiedad">Recurso</a></li></shiro:hasPermission>	                        
+	                        <shiro:hasPermission name="31010"> <li role="menuitem"><a href="#!/riesgopropiedad">Riesgo</a></li></shiro:hasPermission>	                       
 	                     </ul>
                     </li>
                     <li uib-dropdown>
                          <a href="" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Usuarios <b class="caret"></b></a>
                          <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-                         	<li role="menuitem"><a href="#!/usuarios">Usuarios</a></li>
-                         	<li role="menuitem"><a href="#!/permisos">Permisos</a></li>                         	
-                         	<li role="menuitem"><a href="#!/colaborador">Colaboradores</a></li>
+                         	<shiro:hasPermission name="34010"><li role="menuitem"><a href="#!/usuarios">Usuarios</a></li></shiro:hasPermission>                         	
+                         	<shiro:hasPermission name="20010"><li role="menuitem"><a href="#!/permisos">Permisos</a></li></shiro:hasPermission>                         	  
+                         	<shiro:hasPermission name="4010"><li role="menuitem"><a href="#!/colaborador">Colaboradores</a></li></shiro:hasPermission>                       	
+                         	
                          </ul>
                     </li>
 	            </ul>
