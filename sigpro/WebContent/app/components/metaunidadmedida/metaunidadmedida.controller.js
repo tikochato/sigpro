@@ -105,7 +105,7 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 			}
 			
 			mi.guardar=function(){
-				if(mi.medida!=null && mi.medida.id!=null){
+				if(mi.medida!=null && mi.medida.nombre!=null){
 					$http.post('/SMetaUnidadMedida', {
 						accion: 'guardarMetaUnidadMedida',
 						esnueva: mi.esnueva,

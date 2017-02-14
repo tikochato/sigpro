@@ -99,8 +99,8 @@ public class SRecursoTipo extends HttpServlet {
 				strecursotipo temp =new strecursotipo();
 				temp.descripcion = recursotipo.getDescripcion();
 				temp.estado = recursotipo.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(recursotipo.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(recursotipo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(recursotipo.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(recursotipo.getFechaCreacion());
 				temp.id = recursotipo.getId();
 				temp.nombre = recursotipo.getNombre();
 				temp.usuarioActualizo = recursotipo.getUsuarioActualizacion();

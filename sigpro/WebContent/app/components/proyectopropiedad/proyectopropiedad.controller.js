@@ -102,7 +102,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 		}
 		
 		mi.guardar=function(){
-			if(mi.proyectopropiedad!=null && mi.proyectopropiedad.id!=null && mi.proyectopropiedad.datotipoid!=null){
+			if(mi.proyectopropiedad!=null && mi.proyectopropiedad.datotipoid!=null){
 				$http.post('/SProyectoPropiedad', {
 					accion: 'guardarProyectoPropiedad',
 					esnuevo: mi.esnuevo,

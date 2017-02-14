@@ -108,8 +108,8 @@ public class SRecurso extends HttpServlet {
 				strecurso temp =new strecurso();
 				temp.descripcion = recurso.getDescripcion();
 				temp.estado = recurso.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(recurso.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(recurso.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(recurso.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(recurso.getFechaCreacion());
 				temp.id = recurso.getId();
 				temp.nombre = recurso.getNombre();
 				temp.recursotipoid = recurso.getRecursoTipo().getId();
@@ -135,8 +135,8 @@ public class SRecurso extends HttpServlet {
 
 				temp.descripcion = recurso.getDescripcion();
 				temp.estado = recurso.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(recurso.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(recurso.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(recurso.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(recurso.getFechaCreacion());
 				temp.id = recurso.getId();
 				temp.nombre = recurso.getNombre();
 				temp.recursotipoid = recurso.getRecursoTipo().getId();
@@ -229,8 +229,8 @@ public class SRecurso extends HttpServlet {
 				strecurso temp =new strecurso();
 				temp.descripcion = recurso.getDescripcion();
 				temp.estado = recurso.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(recurso.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(recurso.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(recurso.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(recurso.getFechaCreacion());
 				temp.id = recurso.getId();
 				temp.nombre = recurso.getNombre();
 				temp.recursotipoid = recurso.getRecursoTipo().getId();

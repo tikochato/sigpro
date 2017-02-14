@@ -42,14 +42,14 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 				columnDefs : [ 
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left', 
-						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,1)"></input></div>'
+						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.recursotipoc.filtros[\'nombre\']"  ng-keypress="grid.appScope.recursotipoc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 				    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,2)"></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.recursotipoc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.recursotipoc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,3)"></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.recursotipoc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.recursotipoc.filtrar($event)"></input></div>'
 				    }
 				],
 				onRegisterApi: function(gridApi) {
@@ -80,14 +80,16 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 					
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
+						mi.obtenerTotalRecursoTipos();
 				    }
 				    else{
 				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'recursoTipos', t: (new Date()).getTime()}).then(function(response){
-					      if(response.data.success && response.data.estado!='')
-					    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+				    		  if(response.data.success && response.data.estado!='')
+				    			  mi.gridApi.saveState.restore( $scope, response.data.estado);
 					    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
 						      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
 						      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+						      mi.obtenerTotalRecursoTipos();
 						  });
 				    }
 				}
@@ -131,7 +133,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 						$utilidades.mensaje('success','Tipo de Recurso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 						mi.recursotipo.id = response.id;
-						mi.cargarTabla();
+						mi.obtenerTotalRecursoTipos();
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo de Recurso');
@@ -142,7 +144,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 		};
 		
 		mi.editar = function() {
-			if(mi.recursotipo!=null){
+			if(mi.recursotipo!=null && mi.recursotipo.id!=null){
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.cargarTotalPropiedades();
@@ -152,7 +154,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 		}
 		
 		mi.borrar = function(ev) {
-			if(mi.recursotipo!=null){
+			if(mi.recursotipo!=null && mi.recursotipo.id!=null){
 				var confirm = $mdDialog.confirm()
 			          .title('Confirmación de borrado')
 			          .textContent('¿Desea borrar el tipo de recurso "'+mi.recursotipo.nombre+'"?')
@@ -169,7 +171,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 						if(response.success){
 							$utilidades.mensaje('success','Tipo de Recurso borrado con éxito');
 							mi.recursotipo = null;
-							mi.cargarTabla();
+							mi.obtenerTotalRecursoTipos();
 						}
 						else
 							$utilidades.mensaje('danger','Error al borrar el Tipo de Recurso');
@@ -185,7 +187,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 		mi.nuevo = function() {
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
-			mi.recursotipo = null;
+			mi.recursotipo = {};
 			mi.gridApi.selection.clearSelectedRows();
 			mi.cargarTotalPropiedades();
 		};
@@ -215,24 +217,21 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 				$location.path('/recursotipo/rv');
 		}
 		
-		mi.filtrar = function(evt,tipo){
+		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
-				switch(tipo){
-					case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
-					case 2: mi.filtros['usuario_creo'] = evt.currentTarget.value; break;
-					case 3: mi.filtros['fecha_creacion'] = evt.currentTarget.value; break;
-						
-				}
-				mi.cargarTabla(mi.paginaActual);
+				mi.obtenerTotalRecursoTipos();
 			}
 		}
 		
-		$http.post('/SRecursoTipo', { accion: 'numeroRecursoTipos' }).success(
-				function(response) {
-					mi.totalRecursotipos = response.totalrecursotipos;
-					mi.cargarTabla(1);
-				}
-		);
+		mi.obtenerTotalRecursoTipos = function(){
+			$http.post('/SRecursoTipo', { accion: 'numeroRecursoTipos',filtro_nombre: mi.filtros['nombre'], 
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+					function(response) {
+						mi.totalRecursotipos = response.totalrecursotipos;
+						mi.cargarTabla(1);
+					}
+			);
+		}
 		//----
 		
 		mi.gridOptionsrecursoPropiedad = {

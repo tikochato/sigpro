@@ -129,7 +129,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
 			}
 		}
-		if(mi.proyecto!=null && mi.proyecto.id!=null){
+		if(mi.proyecto!=null && mi.proyecto.nombre!=null){
 			var param_data = {
 				accion : 'guardar',
 				id: mi.proyecto.id,

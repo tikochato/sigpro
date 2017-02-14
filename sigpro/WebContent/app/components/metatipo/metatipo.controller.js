@@ -104,7 +104,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 			}
 			
 			mi.guardar=function(){
-				if(mi.tipo!=null && mi.tipo.id!=null){
+				if(mi.tipo!=null && mi.tipo.nombre!=null){
 					$http.post('/SMetaTipo', {
 						accion: 'guardarMetaTipo',
 						esnueva: mi.esnueva,

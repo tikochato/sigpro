@@ -108,7 +108,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			}
 			
 			mi.guardar=function(){
-				if(mi.componentepropiedad!=null){
+				if(mi.componentepropiedad!=null && mi.componentepropiedad.nombre!=null){
 					$http.post('/SComponentePropiedad', {
 						accion: 'guardarComponentePropiedad',
 						esnuevo: mi.esnuevo,

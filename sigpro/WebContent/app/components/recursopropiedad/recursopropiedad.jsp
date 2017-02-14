@@ -38,6 +38,8 @@
 					</div>
 				  </div>
 				</div>
+				<br/>
+				<div class="total-rows">Total de {{  recursopropiedadc.totalRecursoPropiedades + (recursopropiedadc.totalRecursoPropiedades == 1 ? " Propiedad" : " Propiedades" ) }}</div>
 				<ul uib-pagination total-items="recursopropiedadc.totalRecursoPropiedades"
 						ng-model="recursopropiedadc.paginaActual"
 						max-size="recursopropiedadc.numeroMaximoPaginas"
@@ -83,6 +85,7 @@
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="recursopropiedadc.recursopropiedad.descripcion">
 						</div>
+						<br/>
 						<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">

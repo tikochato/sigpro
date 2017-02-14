@@ -29,7 +29,7 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 		
 		mi.fechaOptions = {
 				formatYear : 'yy',
-				maxDate : new Date(2030, 5, 22),
+				maxDate : new Date(2030, 12, 31),
 				minDate : new Date(1950, 1, 1),
 				startingDay : 1
 		};
@@ -48,14 +48,14 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 				columnDefs : [
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
-						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,1)"></input></div>'
+						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.recursoc.filtros[\'nombre\']" ng-keypress="grid.appScope.recursoc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 				    { name: 'usuarioCreo', displayName: 'Usuario Creación',
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,2)"></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.recursoc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.recursoc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.recursoc.filtrar($event,3)"></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.recursoc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.recursoc.filtrar($event)"></input></div>'
 				    }
 				],
 				onRegisterApi: function(gridApi) {
@@ -86,14 +86,16 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
+						mi.obtenerTotalRecursos();
 				    }
 				    else{
 				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'recursos', t: (new Date()).getTime()}).then(function(response){
-					      if(response.data.success && response.data.estado!='')
-					    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
+				    		  if(response.data.success && response.data.estado!='')
+				    			  mi.gridApi.saveState.restore( $scope, response.data.estado);
 					    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
 						      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
 						      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+						      mi.obtenerTotalRecursos();
 						  });
 				    }
 				}
@@ -119,7 +121,7 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 					mi.camposdinamicos[campos].valor = moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY');
 				}
 			}
-			if(mi.recurso!=null && mi.recurso.nombre!=''){
+			if(mi.recurso!=null && mi.recurso.id!=null){
 				$http.post('/SRecurso', {
 					accion: 'guardarRecurso',
 					esnuevo: mi.esnuevo,
@@ -133,7 +135,7 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 					if(response.success){
 						mi.recurso.id = response.id;
 						$utilidades.mensaje('success','Recurso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
-						mi.cargarTabla();
+						mi.obtenerTotalRecursos();
 						mi.esnuevo = false;
 					}
 					else
@@ -145,7 +147,7 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 		};
 
 		mi.borrar = function(ev) {
-			if(mi.recurso!=null){
+			if(mi.recurso!=null && mi.recurso.id!=null){
 				var confirm = $mdDialog.confirm()
 			          .title('Confirmación de borrado')
 			          .textContent('¿Desea borrar el Recurso "'+mi.recurso.nombre+'"?')
@@ -161,8 +163,8 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Recurso borrado con éxito');
-							mi.recurso = null;
-							mi.cargarTabla();
+							mi.recurso = {};
+							mi.obtenerTotalRecursos();
 						}
 						else
 							$utilidades.mensaje('danger','Error al borrar el Recurso');
@@ -182,12 +184,12 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 			mi.recursonombre = "";
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
-			mi.recurso = null;
+			mi.recurso = {};
 			mi.gridApi.selection.clearSelectedRows();
 		};
 
 		mi.editar = function() {
-			if(mi.recurso!=null){
+			if(mi.recurso!=null && mi.recurso.id!=null){
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 			}
@@ -222,23 +224,22 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 			mi.camposdinamicos[index].isOpen = true;
 		};
 		
-		mi.filtrar = function(evt,tipo){
+		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
-				switch(tipo){
-					case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
-					case 2: mi.filtros['usuario_creo'] = evt.currentTarget.value; break;
-					case 3: mi.filtros['fecha_creacion'] = evt.currentTarget.value; break;
-						
-				}
-				mi.cargarTabla(mi.paginaActual);
+				mi.obtenerTotalRecursos();
 			}
 		}
 
-		$http.post('/SRecurso', { accion: 'numeroRecursos'}).success(
-				function(response) {
-					mi.totalRecursos = response.totalrecursos;
-					mi.cargarTabla(1);
-		});
+		mi.obtenerTotalRecursos = function(){
+			$http.post('/SRecurso', { accion: 'numeroRecursos',
+				filtro_nombre: mi.filtros['nombre'], 
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']
+				}).success(
+					function(response) {
+						mi.totalRecursos = response.totalrecursos;
+						mi.cargarTabla(1);
+			});
+		}
 
 		mi.buscarRecursoTipo = function(titulo, mensaje) {
 
