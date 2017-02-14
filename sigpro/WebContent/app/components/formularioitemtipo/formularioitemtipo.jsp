@@ -7,17 +7,17 @@
 		<div class="row" align="center" ng-if="!formularioitemtipoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			       <shiro:hasPermission name="crearCooperante">
+			       <shiro:hasPermission name="13040">
 			       		<label class="btn btn-primary" ng-click="formularioitemtipoc.nuevo()">Nuevo</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="editarCooperante"><label class="btn btn-primary" ng-click="formularioitemtipoc.editar()">Editar</label></shiro:hasPermission>
-			       <shiro:hasPermission name="eliminarCooperante">
+			       <shiro:hasPermission name="13020"><label class="btn btn-primary" ng-click="formularioitemtipoc.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="13030">
 			       		<label class="btn btn-primary" ng-click="formularioitemtipoc.borrar()">Borrar</label>
 			       </shiro:hasPermission>
 			        			        
     			</div>				
     		</div>
-    		<shiro:hasPermission name="verCooperante">
+    		<shiro:hasPermission name="13010">
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
 					<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
