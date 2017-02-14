@@ -13,27 +13,25 @@ public class ColaboradorDAOTest {
 	
 	@Test
 	public void guardarTest(){
-		assertNotNull(ColaboradorDAO.guardar(1, "unit_test", "unit_test", "", "unit_Test", "unit_test", "unit_test", 0L, 1, "admin"));
+		assertNotNull(ColaboradorDAO.guardar(1, "unit_test", "unit_test", "", "unit_Test", "unit_test", "unit_test", 0L, 1, "admin", "",null));
 	}
 	
-	@Test
-	public void actualizarTest(){
-		assertNotNull(ColaboradorDAO.actualizar(1, "unit_test", "unit_test", "", "unit_Test", "unit_test", "unit_test", 0L, 1, "admin"));
-	}
+
+
 	
 	@Test
 	public void getPaginaTest(){
-		assertNotNull(ColaboradorDAO.getPagina(1, 1));
+		assertNotNull(ColaboradorDAO.getPagina(1, 1,"","","","","","","",""));
 	}
 	
 	@Test
 	public void getJsonTest(){
-		assertEquals(ColaboradorDAO.getJson(1, 1).getClass(),String.class);
+		assertEquals(ColaboradorDAO.getJson(1, 1,"","","","","","","","").getClass(),String.class);
 	}
 	
 	@Test
 	public void getTotalTest(){
-		assertEquals(ColaboradorDAO.getTotal().getClass(), Long.class);
+		assertEquals(ColaboradorDAO.getTotal("","","","","","").getClass(), Long.class);
 	}
 	
 	@Test

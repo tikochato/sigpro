@@ -78,7 +78,7 @@
 							</div>
 							<div class="form-group" ng-show="permisosc.esNuevo">
 								<label for="id1">ID</label>
-	    						<p class="form-control-static"  id="id">{{ permisosc.permisoSelected.id }}</p>
+	    						<input type="number" class="form-control" id="id" placeholder="Id" ng-model="permisosc.permisoSelected.id" ng-required="permisosc.esNuevo" >
 							</div>
 							<div class="form-group">
 								<label for="nombre">* Nombre</label>
@@ -89,7 +89,7 @@
 	    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="permisosc.permisoSelected.descripcion" ng-required="true">
 							</div>
 							<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading" style="text-align: center;" >Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">

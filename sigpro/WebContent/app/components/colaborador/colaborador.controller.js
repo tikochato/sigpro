@@ -305,6 +305,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 
 	mi.cancelar = function() {
 		mi.esForma = false;
+		mi.esNuevo= false;
 	};
 	
 	mi.filtrar = function(evt,tipo){

@@ -75,38 +75,30 @@
     
     <div>
 	    <form name="form" class="css-form">
-	
 	      <div class="row">
-		      <div class="form-group col-sm-12">
-		        <label>ID:</label> 
-		      	<p class="form-control-static">{{colaborador.id}} </p>
-		      </div>
-	      </div>
-
-	      <div class="row">
-		      <div class="form-group col-sm-3" >
+		      <div class="form-group" >
 		        <label>* Primer Nombre:</label> 
 		        <input type="text" class="form-control" placeholder="Primer Nombre" ng-model="colaborador.colaborador.primerNombre" ng-required="true" />
 		      </div>
 		
-		      <div class="form-group col-sm-3">
+		      <div class="form-group">
 		        <label>Segundo Nombre:</label> 
 		        <input type="text" class="form-control" placeholder="Segundo Nombre" ng-model="colaborador.colaborador.segundoNombre" />
 		      </div>
 		
-		      <div class="form-group col-sm-3" >
+		      <div class="form-group" >
 		        <label>* Primer Apellido:</label> 
 		        <input type="text" class="form-control" placeholder="Primer Apellido" ng-model="colaborador.colaborador.primerApellido" ng-required="true" />
 		      </div>
 		
-		      <div class="form-group col-sm-3" >
+		      <div class="form-group" >
 		        <label>Segundo Apellido:</label> 
 		        <input type="text" class="form-control" placeholder="Segundo Apellido" ng-model="colaborador.colaborador.segundoApellido" />
 		      </div>
 	      </div>
 	
 	      <div class="row">
-		      <div class="form-group col-sm-12" >
+		      <div class="form-group" >
 		        <label>* CUI:</label> 
 		        <input type="number" class="form-control"  placeholder="CUI" ng-model="colaborador.colaborador.cui" ng-maxlength="13" ng-required="true" />
 		      </div>
@@ -132,39 +124,39 @@
 		      </div>
 	      </div>
 	      <br/>
-						<div class="panel panel-default">
-							<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
-							<div class="panel-body">
-								<div class="row">
-									<div class="col-sm-6">
-										<div class="form-group" style="text-align: right">
-											<label for="usuarioCreo">Usuario que creo</label>
-				    						<p class="form-control-static">{{ colaborador.colaborador.usuarioCreo }}</p>
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label for="fechaCreacion">Fecha de creación</label>
-				    						<p class="form-control-static">{{ colaborador.colaborador.fechaCreacion }}</p>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-sm-6">
-										<div class="form-group" style="text-align: right">
-											<label for="usuarioActualizo">Usuario que actualizo</label>
-				    						<p class="form-control-static">{{ colaborador.colaborador.usuarioActualizo }}</p>
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label for="fechaActualizacion">Fecha de actualizacion</label>
-				    						<p class="form-control-static">{{ colaborador.colaborador.fechaActualizacion }}</p>
-										</div>
-									</div>
-								</div>
-							</div>
+		  <div class="panel panel-default" ng-show="!colaborador.esNuevo">
+			<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group" style="text-align: right">
+							<label for="usuarioCreo">Usuario que creo</label>
+									<p class="form-control-static">{{ colaborador.colaborador.usuarioCreo }}</p>
 						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="fechaCreacion">Fecha de creación</label>
+			 						<p class="form-control-static">{{ colaborador.colaborador.fechaCreacion }}</p>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group" style="text-align: right">
+							<label for="usuarioActualizo">Usuario que actualizo</label>
+			 						<p class="form-control-static">{{ colaborador.colaborador.usuarioActualizo }}</p>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="fechaActualizacion">Fecha de actualizacion</label>
+			 						<p class="form-control-static">{{ colaborador.colaborador.fechaActualizacion }}</p>
+						</div>
+					</div>
+				</div>
+			 </div>
+			</div>
 	    </form>
     </div>
   
