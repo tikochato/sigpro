@@ -30,6 +30,7 @@
 			</div>
 		</div>
 	  </div>
+	  <br/>
       <div id="grid1" ui-grid="productoPropiedad.opcionesGrid" ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination>
         <div class="grid_loading" ng-hide="!productoPropiedad.mostrarCargando">
           <div class="msg">
@@ -37,6 +38,8 @@
           </div>
         </div>
       </div>
+      <br/>
+      <div class="total-rows">Total de {{  productoPropiedad.totalElementos + (productoPropiedad.totalElementos == 1 ? " Propiedad de Producto" : " Propiedades de Producto" ) }}</div>
       <ul uib-pagination 
       	total-items="productoPropiedad.totalElementos" 
       	ng-model="productoPropiedad.paginaActual" 
@@ -57,6 +60,8 @@
   </div>
 
   <div class="row main-form" ng-show="productoPropiedad.esForma">
+	  <h4 ng-hide="!productoPropiedad.esNuevo">Nueva propiedad de producto</h4>
+	  <h4 ng-hide="productoPropiedad.esNuevo">Edición de propiedad de producto</h4>
 
     <div class="col-sm-12 operation_buttons" align="right">
 
@@ -64,7 +69,6 @@
         <label class="btn btn-success" ng-click="form.$valid ? productoPropiedad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
         <label class="btn btn-primary" ng-click="productoPropiedad.cancelar()">Ir a Tabla</label>
       </div>
-
     </div>
     
     <div>
@@ -85,7 +89,8 @@
 
 		      <div class="form-group">
 		        <label for="campo2">* Tipo:</label>     			
-    			<select class="form-control" ng-model="productoPropiedad.datoTipoSeleccionado" ng-options="tipo as tipo.nombre for tipo in productoPropiedad.datoTipos track by tipo.id" ng-required="true">
+    			<select class="form-control" ng-model="productoPropiedad.datoTipoSeleccionado" ng-options="tipo as tipo.nombre for tipo in productoPropiedad.datoTipos track by tipo.id" ng-required="true"
+    			ng-readonly="true" ng-disabled="!productoPropiedad.esNuevo" ng-required="true">
 					<option disabled selected value> -- Seleccione Tipo -- </option>
 				</select>
     		 </div>
@@ -101,13 +106,13 @@
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
 									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static"> {{ productoPropiedad.productopropiedad.usuarioCreo }}</p>
+									<p class="form-control-static"> {{ productoPropiedad.entidadSeleccionada.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
 									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ productoPropiedad.productopropiedad.fechaCreacion }} </p>
+									<p class="form-control-static" id="fechaCreacion"> {{ productoPropiedad.entidadSeleccionada.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
@@ -115,13 +120,13 @@
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
 									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ productoPropiedad.productopropiedad.usuarioActualizo }} </p>
+									<p class="form-control-static" id="usuarioCreo">{{ productoPropiedad.entidadSeleccionada.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
 									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ productoPropiedad.productopropiedad.fechaActualizacion }} </p>
+									<p class="form-control-static" id="usuarioCreo">{{ productoPropiedad.entidadSeleccionada.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>

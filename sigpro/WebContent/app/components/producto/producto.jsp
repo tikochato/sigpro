@@ -51,6 +51,8 @@
 						</div>
 					</div>
 				</div>
+				<br/>
+			<div class="total-rows">Total de {{  producto.totalElementos + (producto.totalElementos == 1 ? " Producto" : " Productos" ) }}</div>
 				<ul uib-pagination total-items="producto.totalElementos"
 					ng-model="producto.paginaActual"
 					max-size="producto.numeroMaximoPaginas"

@@ -220,8 +220,6 @@ public class SProducto extends HttpServlet {
 	
 	private void eliminar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		int codigo = Utils.String2Int(parametro.get("codigo"), -1);
-		String usuario = parametro.get("usuario");
-
 		boolean eliminado = ProductoDAO.eliminar(codigo, usuario);
 		if (eliminado) {
 			listar(parametro, response);

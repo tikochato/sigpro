@@ -26,31 +26,35 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 	mi.datoTipos = [];
 	mi.datoTipoSeleccionado = null;
 	
-	$http.post('/SDatoTipo', {
-		accion : 'cargarCombo'
-	}).success(function(response) {
+	mi.columnaOrdenada=null;
+	mi.ordenDireccion = null;
+	
+	mi.filtros = [];
+	
+	$http.post('/SDatoTipo', {accion : 'cargarCombo'}).success(function(response) {
 		mi.datoTipos = response.datoTipos;
 	});
 	
 
 	mi.cambioPagina = function() {
-		mi.cargarData(mi.paginaActual);
+		mi.cargarTabla(mi.paginaActual);
 	}
 
-	$http.post('/SProductoPropiedad', {
-		accion : 'totalElementos'
-	}).success(function(response) {
+	$http.post('/SProductoPropiedad', {accion : 'totalElementos'}).success(function(response) {
 		mi.totalElementos = response.total;
-		mi.cargarData(1);
+		mi.cargarTabla(1);
 	});
 
 	mi.mostrarCargando = true;
 	mi.data = [];
-	mi.cargarData = function(pagina) {
+	mi.cargarTabla = function(pagina) {
 		var datos = {
 			accion : 'cargar',
 			pagina : pagina,
-			registros : mi.elementosPorPagina
+			registros : mi.elementosPorPagina,
+			filtro_nombre: mi.filtros['nombre'], 
+			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
+			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
 		};
 
 		mi.mostrarCargando = true;
@@ -59,7 +63,6 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 
 				mi.data = response.data.productoPropiedades;
 				mi.opcionesGrid.data = mi.data;
-
 				mi.mostrarCargando = false;
 			}
 		});
@@ -70,34 +73,6 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 	mi.seleccionada = false;
 
 	mi.opcionesGrid = {
-		data : mi.data,
-		columnDefs : [ {
-			displayName : 'Id',
-			name : 'id',
-			cellClass : 'grid-align-right',
-			type : 'number',
-			width : 150,
-			visible : false
-		}, {
-			displayName : 'Nombre',
-			name : 'nombre',
-			cellClass : 'grid-align-left'
-		}, {
-			displayName : 'Id Tipo',
-			name : 'idTipo',
-			cellClass : 'grid-align-right',
-			type : 'number',
-			width : 150,
-			visible : false
-		}, {
-			displayName : 'Tipo',
-			name : 'tipo',
-			cellClass : 'grid-align-left'
-		}, {
-			displayName : 'Descripción',
-			name : 'descripcion',
-			cellClass : 'grid-align-left'
-		} ],
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
 		multiSelect : false,
@@ -106,36 +81,63 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 		enableFiltering : true,
 		enablePaginationControls : false,
 		paginationPageSize : $utilidades.elementosPorPagina,
+		useExternalFiltering: true,
+	    useExternalSorting: true,
+		data : mi.data,
+		columnDefs : [
+			{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
+		    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.productoPropiedad.filtros[\'nombre\']" ng-keypress="grid.appScope.productoPropiedad.filtrar($event)"></input></div>'
+		    },
+		    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
+		    {displayName : 'Tipo', name : 'tipo', cellClass : 'grid-align-left', enableFiltering: false, enableSorting: false},
+		    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
+		    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.productoPropiedad.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.productoPropiedad.filtrar($event)"></input></div>'
+		    },
+		    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+		    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.productoPropiedad.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.productoPropiedad.filtrar($event)"></input></div>'
+		    }
+		 ],		
 		onRegisterApi : function(gridApi) {
 			mi.gridApi = gridApi;
 
 			mi.gridApi.selection.on.rowSelectionChanged($scope,
 					mi.seleccionarEntidad);
+			
+			gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+				if(sortColumns.length==1){
+					grid.appScope.productoPropiedad.columnaOrdenada=sortColumns[0].field;
+					grid.appScope.productoPropiedad.ordenDireccion = sortColumns[0].sort.direction;
+					for(var i = 0; i<sortColumns.length-1; i++)
+						sortColumns[i].unsort();
+					grid.appScope.productoPropiedad.cargarTabla(grid.appScope.productoPropiedad.paginaActual);
+				}
+				else if(sortColumns.length>1){
+					sortColumns[0].unsort();
+				}
+				else{
+					if(grid.appScope.productoPropiedad.columnaOrdenada!=null){
+						grid.appScope.productoPropiedad.columnaOrdenada=null;
+						grid.appScope.productoPropiedad.ordenDireccion=null;
+					}
+				}
+					
+			} );
 
 			if ($routeParams.reiniciar_vista == 'rv') {
 				mi.guardarEstado();
+				 mi.obtenerTotalProductoPropiedades();
 			} else {
-				$http.post('/SEstadoTabla', {
-					action : 'getEstado',
-					grid : 'productoPropiedad',
-					t : (new Date()).getTime()
-				}).then(
+				$http.post('/SEstadoTabla', { action : 'getEstado', grid : 'productoPropiedad', t : (new Date()).getTime()}).then(
 						function(response) {
-
-							if (response.data.success
-									&& response.data.estado != '') {
-								mi.gridApi.saveState.restore($scope,
-										response.data.estado);
+							if (response.data.success && response.data.estado != '') {
+								mi.gridApi.saveState.restore($scope, response.data.estado);
 							}
-
-							mi.gridApi.colMovable.on.columnPositionChanged(
-									$scope, mi.guardarEstado);
-							mi.gridApi.colResizable.on.columnSizeChanged(
-									$scope, mi.guardarEstado);
-							mi.gridApi.core.on.columnVisibilityChanged($scope,
-									mi.guardarEstado);
-							mi.gridApi.core.on.sortChanged($scope,
-									mi.guardarEstado);
+							mi.gridApi.colMovable.on.columnPositionChanged( $scope, mi.guardarEstado);
+							mi.gridApi.colResizable.on.columnSizeChanged( $scope, mi.guardarEstado);
+							mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
+							mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+							mi.obtenerTotalProductoPropiedades();
 						});
 			}
 		}
@@ -153,13 +155,6 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 		$http.post('/SEstadoTabla', tabla_data).then(function(response) {
 
 		});
-	}
-
-	mi.reiniciarVista = function() {
-		if ($location.path() == '/productoPropiedad/rv')
-			$route.reload();
-		else
-			$location.path('/productoPropiedad/rv');
 	}
 
 	mi.nuevo = function() {
@@ -238,7 +233,7 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 					if (response.success) {
 						$utilidades.mensaje('success',
 								'Propiedad de Producto borrado con éxito');
-						mi.cargarData(1);
+						mi.cargarTabla(1);
 					} else
 						$utilidades.mensaje('danger',
 								'Error al borrar el Tipo de Producto');
@@ -273,7 +268,8 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 						if (response.data.success) {
 							mi.data = response.data.productoPropiedades;
 							mi.opcionesGrid.data = mi.data;
-							mi.esForma = false;
+							mi.esNuevo = false;
+							mi.obtenerTotalProductoPropiedades();
 
 							$utilidades.mensaje('success',
 									'Propiedad de Producto guardado con exito.');
@@ -299,7 +295,8 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 						if (response.data.success) {
 							mi.data = response.data.productoPropiedades;
 							mi.opcionesGrid.data = mi.data;
-							mi.esForma = false;
+							mi.esNuevo = false;
+							mi.obtenerTotalProductoPropiedades();
 
 							$utilidades.mensaje('success',
 									'Propiedad de Producto actualizado con exito.');
@@ -314,6 +311,30 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 
 	mi.cancelar = function() {
 		mi.esForma = false;
+	};
+	
+	mi.reiniciarVista = function() {
+		if ($location.path() == '/productoPropiedad/rv')
+			$route.reload();
+		else
+			$location.path('/productoPropiedad/rv');
+	}
+	
+	mi.filtrar = function(evt){
+		if(evt.keyCode==13){
+			mi.obtenerTotalProductoPropiedades();
+		}
+	};
+
+	
+	mi.obtenerTotalProductoPropiedades=function(){
+		$http.post('/SProductoPropiedad', { accion: 'totalElementos',objetoid:$routeParams.objeto_id, tipo: mi.objetotipo,
+			filtro_nombre: mi.filtros['nombre'],
+			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+				function(response) {
+					mi.totalElementos = response.total;
+					mi.cargarTabla(1);
+		});
 	};
 
 }

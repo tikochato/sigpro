@@ -188,6 +188,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		mi.unidadEjecutoraNombre = "";
 
 		mi.propiedadesValor = [];
+		mi.producto = {};
 
 	}
 
@@ -204,7 +205,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	
 
 	mi.borrar = function(ev) {
-		if (mi.producto!=null) {
+		if (mi.producto!=null && mi.producto.id!=null) {
 			var confirm = $mdDialog.confirm().title('Confirmación de borrado')
 					.textContent(
 							'¿Desea borrar "' + mi.producto.nombre
@@ -291,11 +292,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 	
 	mi.editar = function() {
-		if (mi.producto!=null) {
+		if (mi.producto!=null && mi.producto.id!=null) {
 			mi.esForma = true;
 			mi.entityselected = null;
 			mi.esNuevo = false;
-			
 			mi.tipo = mi.producto.idProductoTipo;
 			mi.tipoNombre = mi.producto.productoTipo;
 
@@ -352,7 +352,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.obtenerTotalProductos = function(){
-		$http.post('/SProducto', { accion: 'listar',
+		$http.post('/SProducto', { accion: 'totalElementos',
 			filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
 				function(response) {
@@ -562,9 +562,7 @@ function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
 							if (key != 'success')
 								mi.data = response.data[key];
 						}
-
 						mi.opcionesGrid.data = mi.data;
-
 						mi.mostrarCargando = false;
 					}
 				});
