@@ -85,6 +85,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
+						 mi.obtenerTotalHitos();
 				    }
 				    else{
 				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'hitos', t: (new Date()).getTime()}).then(function(response){
@@ -94,6 +95,8 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 						      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
 						      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
 						      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+						      
+						      mi.obtenerTotalHitos();
 						  });
 				    }
 				}
@@ -158,7 +161,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 		};
 
 		mi.borrar = function(ev) {
-			if(mi.hito!=null){
+			if(mi.hito!=null && mi.hito.id){
 				var confirm = $mdDialog.confirm()
 			          .title('Confirmación de borrado')
 			          .textContent('¿Desea borrar el Hito "'+mi.hito.nombre+'"?')
@@ -190,7 +193,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 		mi.nuevo = function() {
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
-			mi.hito = null;
+			mi.hito = {};
 			mi.fecha = null;
 			mi.hitotipoid ="";
 			mi.hitotipoNombre="";
@@ -198,17 +201,24 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 			mi.hitoresultadocomentario = null;
 			mi.gridApi.selection.clearSelectedRows();
 			
+			
 		};
 
 		mi.editar = function() {
-			if(mi.hito!=null){
+			if(mi.hito!=null && mi.hito.id !=null){
 				mi.fecha = moment(mi.hito.fecha, 'DD/MM/YYYY').toDate();
 				mi.hitotipoid = mi.hito.hitotipoid;
 				mi.hitotipoNombre= mi.hito.hitotiponombre;
 				mi.hitoresultadocomentario = mi.hito.comentario;
 				mi.hitodatotipoid = mi.hito.datotipoid;
 				mi.mostraringreso = true;
-				mi.hitoresultado = (mi.hitodatotipoid==5 ? moment(mi.hito.resultado, 'DD/MM/YYYY').toDate() : mi.hito.resultado),
+				if (mi.hitodatotipoid === 3){
+					mi.hitoresultado = Number(mi.hito.resultado);
+				}else if (mi.hitodatotipoid === 5){
+					mi.hitoresultado = (mi.hitodatotipoid==5 ? moment(mi.hito.resultado, 'DD/MM/YYYY').toDate() : mi.hito.resultado);
+				}else {
+					mi.hitoresultado = mi.hito.resultado;
+				}
 				mi.esnuevo = false;
 			}
 			else
@@ -227,16 +237,16 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 					case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
 					case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
 				}
-				mi.obtenerTotalProyectos();
+				mi.obtenerTotalHitos();
 			}
 		}
 
-		mi.obtenerTotalProyectos = function(){
+		mi.obtenerTotalHitos = function(){
 			$http.post('/SHito', { accion: 'numeroHitosPorProyecto', proyectoid:$routeParams.proyecto_id,
 				filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
 					function(response) {
-						mi.totalProyectos = response.data.totalproyectos;
+						mi.totalProyectos = response.data.totalhitos;
 						mi.paginaActual = 1;
 						mi.cargarTabla(mi.paginaActual);
 			});
