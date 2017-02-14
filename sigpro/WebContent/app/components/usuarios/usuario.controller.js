@@ -46,6 +46,7 @@ app.controller(
 		enableRowHeaderSelection : false,
 		paginationPageSizes : [ 25, 50, 75 ],
 		paginationPageSize : 25,
+		enableFiltering: true,
 		data : [],
 		columnDefs : [ {
 			name : 'Usuario',
@@ -56,17 +57,23 @@ app.controller(
 			cellClass : 'grid-align-left',
 			field : 'email'
 		}, {
-			name : 'Fecha Creación',
-			cellClass : 'grid-align-left',
-			field : 'fechaCreacion'
-		}, {
-			name: 'Usuario creó',
+			name: 'Usuario creo',
 			cellClass : 'grid-align-left',
 			field: 'usuarioCreo'
-		},{
-			name: 'Usuario Actualizó',
+		}, {
+			name : 'Fecha creación',
 			cellClass : 'grid-align-left',
-			field: 'usuarioActualizo'
+			field : 'fechaCreacion'
+		},{
+			name: 'Usuario actualizo',
+			cellClass : 'grid-align-left',
+			field: 'usuarioActualizo',
+			enableFiltering: false
+		},{
+			name: 'Fecha actualizacion',
+			cellClass : 'grid-align-left',
+			field: 'usuarioActualizo',
+			enableFiltering: false
 		}
 		],
 
