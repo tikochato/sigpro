@@ -14,6 +14,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 import dao.DatoTipoDAO;
 import dao.HitoTipoDAO;
 import pojo.HitoTipo;
+import utilities.Utils;
 
 /**
  * Servlet implementation class SHitoTipo
@@ -39,23 +43,32 @@ public class SHitoTipo extends HttpServlet {
 		String fechaCreacion;
 		String fechaActualizacion;
 		int estado;
-		int datotipoid;
-		String datotiponombre;
+		int idTipo;
+		String tipo;
+		
 	}
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public SHitoTipo() {
-        super();
-        // TODO Auto-generated constructor stub
+        super();   
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
+		String response_text = "{ \"success\": false }";
+
+		response.setHeader("Content-Encoding", "gzip");
+		response.setCharacterEncoding("UTF-8");
+
+        OutputStream output = response.getOutputStream();
+		GZIPOutputStream gz = new GZIPOutputStream(output);
+        gz.write(response_text.getBytes("UTF-8"));
+        gz.close();
+        output.close();
 	}
 
 	/**
@@ -63,6 +76,8 @@ public class SHitoTipo extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
+		HttpSession sesionweb = request.getSession();
+		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		Gson gson = new Gson();
 		Type type = new TypeToken<Map<String, String>>(){}.getType();
 		StringBuilder sb = new StringBuilder();
@@ -78,16 +93,26 @@ public class SHitoTipo extends HttpServlet {
 		if(accion.equals("getHitoTiposPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroHitoTipos = map.get("numerohitotipos")!=null  ? Integer.parseInt(map.get("numerohitotipos")) : 0;
-			List<HitoTipo> hitotipos = HitoTipoDAO.getHitoTiposPagina(pagina, numeroHitoTipos);
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<HitoTipo> hitotipos = HitoTipoDAO.getHitoTiposPagina(pagina, numeroHitoTipos,filtro_nombre,filtro_usuario_creo,
+					filtro_fecha_creacion,columna_ordenada,orden_direccion);
 			List<sthitotipo> sthitotipos=new ArrayList<sthitotipo>();
 			for(HitoTipo hitotipo:hitotipos){
 				sthitotipo temp =new sthitotipo();
 				temp.descripcion = hitotipo.getDescripcion();
-				temp.estado = hitotipo.getEstado();
 				temp.id = hitotipo.getId();
 				temp.nombre = hitotipo.getNombre();
-				temp.datotipoid = 5;   // arreglar cuando actualicen pojos
-				temp.datotiponombre = "texto";
+				temp.idTipo = hitotipo.getDatoTipo().getId();
+				temp.tipo = hitotipo.getDatoTipo().getNombre();
+				temp.usuarioCreo = hitotipo.getUsuarioCreo();
+				temp.usuarioActualizo = hitotipo.getUsuarioActualizo();
+				temp.fechaCreacion = Utils.formatDateHour(hitotipo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(hitotipo.getFechaActualizacion());
+				temp.estado = hitotipo.getEstado();
 				sthitotipos.add(temp);
 			}
 
@@ -104,8 +129,12 @@ public class SHitoTipo extends HttpServlet {
 				temp.estado = hitotipo.getEstado();
 				temp.id = hitotipo.getId();
 				temp.nombre = hitotipo.getNombre();
-				temp.datotipoid = 3;   // arreglar cuando actualicen pojos
-				temp.datotiponombre = "texto";
+				temp.idTipo = hitotipo.getDatoTipo().getId();
+				temp.tipo = hitotipo.getDatoTipo().getNombre();
+				temp.usuarioCreo = hitotipo.getUsuarioCreo();
+				temp.usuarioActualizo = hitotipo.getUsuarioActualizo();
+				temp.fechaCreacion = Utils.formatDateHour(hitotipo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(hitotipo.getFechaActualizacion());
 				sthitotipos.add(temp);
 			}
 
@@ -121,15 +150,18 @@ public class SHitoTipo extends HttpServlet {
 
 				String nombre = map.get("nombre");
 				String descripcion = map.get("descripcion");
-				Integer dato_tipo = map.get("dato_tipo")!=null ? Integer.parseInt(map.get("dato_tipo")) : 1;
+				Integer dato_tipo = map.get("dato_tipo")!=null ? Integer.parseInt(map.get("dato_tipo")) : 0;
 				HitoTipo hitotipo;
 				if(esnuevo){
-					hitotipo = new  HitoTipo(DatoTipoDAO.getDatoTipo(dato_tipo),nombre, descripcion, 1,null ) ;
+					hitotipo = new  HitoTipo(DatoTipoDAO.getDatoTipo(dato_tipo),nombre, descripcion, 1
+							,usuario,null,new DateTime().toDate(),null,null ) ;
 				}
 				else{
 					hitotipo = HitoTipoDAO.getHitoTipoPorId(id);
 					hitotipo.setNombre(nombre);
 					hitotipo.setDescripcion(descripcion);
+					hitotipo.setUsuarioActualizo(usuario);
+					hitotipo.setFechaActualizacion(new DateTime().toDate());
 				}
 				result = HitoTipoDAO.guardarHitoTipo(hitotipo);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
@@ -148,7 +180,12 @@ public class SHitoTipo extends HttpServlet {
 				response_text = "{ \"success\": false }";
 		}
 		else if(accion.equals("numeroHitoTipos")){
-			response_text = String.join("","{ \"success\": true, \"totalhitotipos\":",HitoTipoDAO.getTotalHitoTipos().toString()," }");
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			
+			response_text = String.join("","{ \"success\": true, \"totalhitotipos\":",HitoTipoDAO.getTotalHitoTipos(
+					filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion).toString()," }");
 		}
 		else{
 			response_text = "{ \"success\": false }";
