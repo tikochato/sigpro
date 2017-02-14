@@ -26,16 +26,16 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
             .when('/entidad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloEntidad\'" class="all_page"></div>'
             })
-            .when('/unidadEjecutora/:reiniciar_vista?',{
+            .when('/unidadejecutora/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloUnidadEjecutora\'" class="all_page"></div>'
             })
             .when('/colaborador/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloColaborador\'" class="all_page"></div>'
             })
-            .when('/productoTipo/:reiniciar_vista?',{
+            .when('/productotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProductoTipo\'" class="all_page"></div>'
             })
-            .when('/productoPropiedad/:reiniciar_vista?',{
+            .when('/productopropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProductoPropiedad\'" class="all_page"></div>'
             })
             .when('/producto/:componente_id?/:reiniciar_vista?',{
