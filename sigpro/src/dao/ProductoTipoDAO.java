@@ -52,7 +52,7 @@ public class ProductoTipoDAO {
 			String usuario) {
 
 		ProductoTipo pojo = getProductoTipo(codigo);
-		Integer ret = null;
+		
 		boolean retCampos = false;
 
 		if (pojo == null) {
