@@ -59,10 +59,10 @@ public class ProductoPropiedadDAO {
 		return ret;
 	}
 
-	public static boolean guardar(Integer codigo, String nombre, String descripcion, String usuario, Integer tipo) {
+	public static Integer guardar(Integer codigo, String nombre, String descripcion, String usuario, Integer tipo) {
 
 		ProductoPropiedad pojo = getProductoPropiedad(codigo);
-		boolean ret = false;
+		Integer ret = null;
 
 		if (pojo == null) {
 			pojo = new ProductoPropiedad();
@@ -82,7 +82,7 @@ public class ProductoPropiedadDAO {
 				session.beginTransaction();
 				session.save(pojo);
 				session.getTransaction().commit();
-				ret = true;
+				ret = pojo.getId();
 			} catch (Throwable e) {
 				CLogger.write("2", ProductoPropiedadDAO.class, e);
 			} finally {

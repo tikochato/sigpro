@@ -270,7 +270,7 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 							mi.opcionesGrid.data = mi.data;
 							mi.esNuevo = false;
 							mi.obtenerTotalProductoPropiedades();
-
+							mi.codigo = response.data.id;
 							$utilidades.mensaje('success',
 									'Propiedad de Producto guardado con exito.');
 						} else {

@@ -87,11 +87,13 @@ public class SProductoTipo extends HttpServlet {
 		String nombre = parametro.get("nombre");
 		String descripcion = parametro.get("descripcion");
 		String propiedades = parametro.get("propiedades");
-		boolean creado = ProductoTipoDAO.guardar(-1, nombre, descripcion, propiedades, usuario);
+		Integer creado = ProductoTipoDAO.guardar(-1, nombre, descripcion, propiedades, usuario);
 
-		if (creado) {
-			listar(parametro, response);
-		}
+		String resultadoJson = String.join("","{ \"success\": ",(creado!=null ? "true" : "false"),", "
+				+ "\"id\": " + creado +" }");
+		 
+
+		Utils.writeJSon(response, resultadoJson);
 	}
 
 	private void actualizar(Map<String, String> parametro, HttpServletResponse response,String usuario) throws IOException {
@@ -101,9 +103,8 @@ public class SProductoTipo extends HttpServlet {
 		String propiedades = parametro.get("propiedades");
 
 		boolean actualizado = ProductoTipoDAO.actualizar(codigo, nombre, descripcion, propiedades, usuario);
-		if (actualizado) {
-			listar(parametro, response);
-		}
+		String resultadoJson = String.join("","{ \"success\": ",(actualizado ? "true" : "false") + "}");
+		Utils.writeJSon(response, resultadoJson);
 	}
 
 	private void eliminar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
