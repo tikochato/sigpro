@@ -36,8 +36,7 @@ app.controller(
 		columnDefs : [ {
 			name : 'ID',
 			field : 'id',
-			cellClass : 'grid-align-left',
-			enableFiltering: false
+			cellClass : 'grid-align-left'
 		}, {
 			name : 'Nombre',
 			cellClass : 'grid-align-left',
@@ -47,7 +46,26 @@ app.controller(
 			field : 'descripcion',
 			cellClass : 'grid-align-left',
 			enableFiltering: false
+		}, {
+			name : 'Usuario creo',
+			field : 'usuarioCreo',
+			cellClass : 'grid-align-left'
+		}, {
+			name : 'Fecha creacion',
+			field : 'fechaCreacion',
+			cellClass : 'grid-align-left'
+		}, {
+			name : 'Usuario actualizo',
+			field : 'usuarioActualizo',
+			cellClass : 'grid-align-left',
+			enableFiltering: false
+		}, {
+			name : 'Fecha actualizacion',
+			field : 'fechaActualizacion',
+			cellClass : 'grid-align-left',
+			enableFiltering: false
 		}
+		
 
 		],
 

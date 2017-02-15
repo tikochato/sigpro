@@ -14,18 +14,18 @@
 	<div class="row" align="center" ng-hide="controller.esColapsado">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-			<shiro:hasPermission name="crearProyecto">
+			<shiro:hasPermission name="24040">
 				<label class="btn btn-primary" ng-click="controller.nuevo()">Nuevo</label>
 			</shiro:hasPermission>
-			<shiro:hasPermission name="editarProyecto">
+			<shiro:hasPermission name="24020">
 				<label class="btn btn-primary" ng-click="controller.editar()">Editar</label>
 			</shiro:hasPermission>
-			<shiro:hasPermission name="eliminarProyecto">
+			<shiro:hasPermission name="24030">
 				<label class="btn btn-primary" ng-click="controller.borrar()">Borrar</label>
 			</shiro:hasPermission>
 			</div>
 		</div>
-		<shiro:hasPermission name="verProyecto">
+		<shiro:hasPermission name="24010">
 		<div class="col-sm-12" align="center">
 			<div style="height: 35px;">
 				<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">

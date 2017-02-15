@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="org.apache.shiro.SecurityUtils" %>
+<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <div ng-controller="formulariotipoController as formulariotipoc"
 	class="maincontainer all_page" id="title">
 	<h3>Tipo de Formulario</h3>
@@ -7,12 +9,19 @@
 	<div class="row" align="center" ng-if="!formulariotipoc.mostraringreso">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-primary" ng-click="formulariotipoc.nuevo()">Nuevo</label>
-				<label class="btn btn-primary" ng-click="formulariotipoc.editar()">Editar</label>
-				<label class="btn btn-primary" ng-click="formulariotipoc.borrar()">Borrar</label>
+				<shiro:hasPermission name="14040">
+					<label class="btn btn-primary" ng-click="formulariotipoc.nuevo()">Nuevo</label>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="14020">
+					<label class="btn btn-primary" ng-click="formulariotipoc.editar()">Editar</label>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="14030">
+					<label class="btn btn-primary" ng-click="formulariotipoc.borrar()">Borrar</label>
+				</shiro:hasPermission>
 			</div>
 		</div>
-		<div class="col-sm-12" align="center">
+		<shiro:hasPermission name="14010">
+			<div class="col-sm-12" align="center">
 			<div style="height: 35px;">
 				<div style="text-align: right;">
 					<div class="btn-group" role="group" aria-label="">
@@ -43,6 +52,8 @@
 				previous-text="Anterior" class="pagination-sm" boundary-links="true"
 				force-ellipses="true" ng-change="formulariotipoc.cambioPagina()"></ul>
 		</div>
+		</shiro:hasPermission>
+		
 	</div>
 
 	<div class="row main-form" ng-show="formulariotipoc.mostraringreso">

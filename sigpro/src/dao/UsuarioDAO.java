@@ -68,7 +68,7 @@ public class UsuarioDAO {
 			CriteriaQuery<Permiso> criteria = builder.createQuery(Permiso.class);
 			Root<Permiso> root = criteria.from(Permiso.class);
 			criteria.select( root );
-			criteria.where( builder.equal( root.get("nombre"), permisonombre ) );
+			criteria.where( builder.equal( root.get("id"), permisonombre ) );
 			Permiso permiso = session.createQuery( criteria ).getSingleResult();
 			if(permiso !=null){
 				UsuarioPermisoId usuariopermisoid = new UsuarioPermisoId(usuario,permiso.getId());

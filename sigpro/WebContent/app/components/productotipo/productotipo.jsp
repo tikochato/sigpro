@@ -15,18 +15,18 @@
 	<div align="center" ng-hide="productoTipo.esForma">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<shiro:hasPermission name="crearTipoProducto">
+				<shiro:hasPermission name="23040">
 					<label class="btn btn-primary" ng-click="productoTipo.nuevo()">Nuevo</label>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="editarTipoProducto">
+				<shiro:hasPermission name="23020">
 					<label class="btn btn-primary" ng-click="productoTipo.editar()">Editar</label>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="eliminarTipoProducto">
+				<shiro:hasPermission name="23030">
 					<label class="btn btn-primary" ng-click="productoTipo.borrar()">Borrar</label>
 				</shiro:hasPermission>
 			</div>
 		</div>
-		<shiro:hasPermission name="verTipoProducto">
+		<shiro:hasPermission name="23010">
 			<div class="col-sm-12" align="center">
 				<div style="height: 35px;">
 					<div style="text-align: right;">

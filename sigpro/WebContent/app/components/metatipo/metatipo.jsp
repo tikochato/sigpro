@@ -7,18 +7,18 @@
 		<div class="row" align="center" ng-hide="metatipoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			       <shiro:hasPermission name="crearCooperante">
+			       <shiro:hasPermission name="18040">
 			       		<label class="btn btn-primary" ng-click="metatipoc.nueva()">Nuevo</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="editarCooperante"><label class="btn btn-primary" ng-click="metatipoc.editar()">Editar</label></shiro:hasPermission>
-			       <shiro:hasPermission name="eliminarCooperante">
+			       <shiro:hasPermission name="18020"><label class="btn btn-primary" ng-click="metatipoc.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="18030">
 			       		<label class="btn btn-primary" ng-click="metatipoc.borrar()">Borrar</label>
 			       </shiro:hasPermission>
 			        
 			        
     			</div>				
     		</div>
-    		<shiro:hasPermission name="verCooperante">
+    		<shiro:hasPermission name="18010">
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
 					<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">

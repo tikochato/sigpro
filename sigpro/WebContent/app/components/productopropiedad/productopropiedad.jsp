@@ -10,18 +10,18 @@
   <div align="center" ng-hide="productoPropiedad.esForma">
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
-      	<shiro:hasPermission name="crearPropiedadProducto">
+      	<shiro:hasPermission name="22040">
         	<label class="btn btn-primary" ng-click="productoPropiedad.nuevo()">Nueva</label> 
       	</shiro:hasPermission>
-      	<shiro:hasPermission name="editarPropiedadProducto">
+      	<shiro:hasPermission name="22020">
         	<label class="btn btn-primary" ng-click="productoPropiedad.editar()">Editar</label>
       	</shiro:hasPermission>
-      	<shiro:hasPermission name="eliminarPropiedadProducto">
+      	<shiro:hasPermission name="22030">
         	<label class="btn btn-primary" ng-click="productoPropiedad.borrar()">Borrar</label>
       	</shiro:hasPermission>
       </div>
     </div>
-    <shiro:hasPermission name="verTipoProducto">
+    <shiro:hasPermission name="22010">
      <div class="col-sm-12" align="center">
       <div style="height: 35px;">
 		<div style="text-align: right;">
