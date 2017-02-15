@@ -51,14 +51,14 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				columnDefs : [ 
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' ,
-					  filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.riesgoc.filtrar($event,1)"></input></div>'
+						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.riesgoc.filtros[\'nombre\']" ng-keypress="grid.appScope.riesgoc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 				    { name: 'usuarioCreo', displayName: 'Usuario Creación' ,
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.riesgoc.filtrar($event,2)" ></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.riesgoc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.riesgoc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'', 
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.riesgoc.filtrar($event,3)" ></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.riesgoc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.riesgoc.filtrar($event)"></input></div>'
 				    }
 				],
 				onRegisterApi: function(gridApi) {
@@ -71,6 +71,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 						if(sortColumns.length==1){
 							grid.appScope.riesgoc.columnaOrdenada=sortColumns[0].field;
 							grid.appScope.riesgoc.ordenDireccion = sortColumns[0].sort.direction;
+							for(var i = 0; i<sortColumns.length-1; i++)
+								sortColumns[i].unsort();
 							grid.appScope.riesgoc.cargarTabla(grid.appScope.riesgoc.paginaActual);
 						}
 						else if(sortColumns.length>1){
@@ -86,6 +88,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
+						mi.obtenerTotalRiesgos();
 				    }
 				    else{
 				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'riesgos', t: (new Date()).getTime()}).then(function(response){
@@ -95,6 +98,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 						      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
 						      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
 						      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+						      mi.obtenerTotalRiesgos();
 						  });
 				    }
 				}
@@ -105,7 +109,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			$http.post('/SRiesgo', { accion: 'getRiesgosPagina', pagina: pagina, 
 				numeroriesgos: $utilidades.elementosPorPagina, objetoid:$routeParams.objeto_id,objetotipo:$routeParams.objeto_tipo
 				,filtro_nombre: mi.filtros['nombre'],
-				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
 				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
 				}).success(
 
@@ -120,7 +124,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			
 			for (campos in mi.camposdinamicos) {
 				if (mi.camposdinamicos[campos].tipo === 'fecha') {
-					mi.camposdinamicos[campos].valor = moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY')
+					mi.camposdinamicos[campos].valor_f = moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY')
 				}
 			}
 			
@@ -151,7 +155,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		};
 
 		mi.borrar = function(ev) {
-			if(mi.riesgo!=null){
+			if(mi.riesgo!=null && mi.riesgo.id!=null){
 				var confirm = $mdDialog.confirm()
 			          .title('Confirmación de borrado')
 			          .textContent('¿Desea borrar el Riesgo "'+mi.riesgo.nombre+'"?')
@@ -184,7 +188,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.nuevo = function() {
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
-			mi.riesgo = null;
+			mi.riesgo = {};
 			mi.riesgoTipoid = "";
 			mi.riesgoTipoNombre="";
 			mi.componenteid = "";
@@ -196,7 +200,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		};
 
 		mi.editar = function() {
-			if(mi.riesgo!=null){
+			if(mi.riesgo!=null && mi.riesgo.id!=null){
 				mi.riesgoTipoid = mi.riesgo.riesgotipoid;
 				mi.riesgoTipoNombre = mi.riesgo.riesgotiponombre;
 				mi.componenteid = mi.riesgo.componenteid;
@@ -213,8 +217,20 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				}
 				
 				$http.post('/SRiesgoPropiedad', parametros).then(function(response){
-					
-					mi.camposdinamicos = response.data.componentepropiedades
+					mi.camposdinamicos = response.data.componentepropiedades;					
+					for (campos in mi.camposdinamicos) {
+						switch (mi.camposdinamicos[campos].tipo){
+							case "fecha":
+								mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+								break;
+							case "entero":
+								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								break;
+							case "decimal":
+								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								break;
+						}
+					}
 				});
 			}
 			else
@@ -238,23 +254,20 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		}
 		
 		mi.reiniciarVista=function(){
-			if($location.path()==('/riesgo/'+ mi.objetotipo + '/' + mi.objetoid + '/rv'))
+			if($location.path()==('/riesgo/rv'))
 				$route.reload();
 			else
-				$location.path('/riesgo/'+ mi.objetotipo + '/' + mi.objetoid + '/rv');
+				$location.path('/riesgo/rv');
 		}
 		
 		mi.abrirPopupFecha = function(index) {
 			mi.camposdinamicos[index].isOpen = true;
 		};
 		
-		mi.filtrar = function(evt,tipo){
+		
+		
+		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
-				switch(tipo){
-					case 1: mi.filtros['nombre'] = evt.currentTarget.value; break;
-					case 2: mi.filtros['usuarioCreo'] = evt.currentTarget.value; break;
-					case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
-				}
 				mi.obtenerTotalRiesgos();
 			}
 		};
@@ -263,7 +276,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			$http.post('/SRiesgo', { accion: 'numeroRiesgos',
 				objetoid:$routeParams.objeto_id,objetotipo:$routeParams.objeto_tipo
 				,filtro_nombre: mi.filtros['nombre'],
-				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).then(
 					function(response) {
 						mi.totalRiesgos = response.data.totalriesgos;
 						mi.paginaActual = 1;
@@ -324,12 +337,26 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			
 			var parametros = { 
 					accion: 'getRiesgoPropiedadPorTipo', 
-					idRiesgo: mi.riesgo.id,
+					idRiesgo: mi.riesgo!=null ? mi.riesgo.id : 0,
 					idRiesgoTipo: itemSeleccionado.id
 			}
 			
 			$http.post('/SRiesgoPropiedad', parametros).then(function(response){
-				mi.camposdinamicos = response.data.componentepropiedades
+				mi.camposdinamicos = response.data.componentepropiedades;
+				for (campos in mi.camposdinamicos) {
+					switch (mi.camposdinamicos[campos].tipo){
+						case "fecha":
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+							break;
+						case "entero":
+							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+							break;
+						case "decimal":
+							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+							break;
+					}
+				}
+				
 			});
 		});
 	};

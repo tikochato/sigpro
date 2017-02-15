@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +57,7 @@ public class SRiesgo extends HttpServlet {
 		String tipo;
 		String label;
 		String valor;
+		String valor_f;
 	}
 
        
@@ -72,7 +72,16 @@ public class SRiesgo extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
+		String response_text = "{ \"success\": false }";
+
+		response.setHeader("Content-Encoding", "gzip");
+		response.setCharacterEncoding("UTF-8");
+
+        OutputStream output = response.getOutputStream();
+		GZIPOutputStream gz = new GZIPOutputStream(output);
+        gz.write(response_text.getBytes("UTF-8"));
+        gz.close();
+        output.close();
 	}
 
 	/**
@@ -109,8 +118,8 @@ public class SRiesgo extends HttpServlet {
 				striesgo temp =new striesgo();
 				temp.descripcion = riesgo.getDescripcion();
 				temp.estado = riesgo.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(riesgo.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(riesgo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(riesgo.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(riesgo.getFechaCreacion());
 				temp.id = riesgo.getId();
 				temp.nombre = riesgo.getNombre();
 				temp.usuarioActualizo = riesgo.getUsuarioActualizo();
@@ -224,31 +233,31 @@ public class SRiesgo extends HttpServlet {
 					}
 					
 					for (stdatadinamico data : datos) {
-						RiesgoPropiedad riesgoPropiedad = RiesgoPropiedadDAO.getRiesgoPropiedadPorId(Integer.parseInt(data.id));
-						RiesgoPropiedadValorId idValor = new RiesgoPropiedadValorId(riesgo.getId(),Integer.parseInt(data.id));
-						RiesgoPropiedadValor valor = new RiesgoPropiedadValor(idValor, riesgo, 
-								riesgoPropiedad, 1, usuario, new DateTime().toDate());
-	
-						switch (1){  //// id del tipo de dato
+						if (data.valor!=null && data.valor.length()>0 && data.valor.compareTo("null")!=0){
+							RiesgoPropiedad riesgoPropiedad = RiesgoPropiedadDAO.getRiesgoPropiedadPorId(Integer.parseInt(data.id));
+							RiesgoPropiedadValorId idValor = new RiesgoPropiedadValorId(riesgo.getId(),Integer.parseInt(data.id));
+							RiesgoPropiedadValor valor = new RiesgoPropiedadValor(idValor, riesgo, 
+									riesgoPropiedad, 1, usuario, new DateTime().toDate());
+		
+							switch (riesgoPropiedad.getDatoTipo().getId()){
 							case 1:
 								valor.setValorString(data.valor);
 								break;
 							case 2:
-								valor.setValorEntero(Integer.parseInt(data.valor));
+								valor.setValorEntero(Utils.String2Int(data.valor, null));
 								break;
 							case 3:
-								valor.setValorDecimal(new BigDecimal(data.valor));
+								valor.setValorDecimal(Utils.String2BigDecimal(data.valor, null));
 								break;
 							case 4:
-	
 								break;
 							case 5:
 								SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-								valor.setValorTiempo(sdf.parse(data.valor));
+								valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
 								break;
 						}
-	
-						result = (result && RiesgoPropiedadValorDAO.guardarRiesgoPropiedadValor(valor));
+							result = (result && RiesgoPropiedadValorDAO.guardarRiesgoPropiedadValor(valor));
+						}
 					}
 					
 					

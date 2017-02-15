@@ -40,6 +40,8 @@
 					</div>
 				  </div>
 				</div>
+				<br/>
+				<div class="total-rows">Total de {{  riesgoc.totalRiesgos + (riesgoc.totalRiesgos == 1 ? " Riresgo" : " Riesgos" ) }}</div>
 				<ul uib-pagination total-items="riesgoc.totalRiesgos" 
 						ng-model="riesgoc.paginaActual" 
 						max-size="riesgoc.numeroMaximoPaginas" 
@@ -92,7 +94,7 @@
 								<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
 								<p ng-switch-when="fecha" class="input-group">
 									<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{riesgoc.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="mi.fechaOptions" close-text="Cerrar" /><span
+														datepicker-options="mi.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" /><span
 														class="input-group-btn">
 														<button type="button" class="btn btn-default"
 															ng-click="riesgoc.abrirPopupFecha($index)">
