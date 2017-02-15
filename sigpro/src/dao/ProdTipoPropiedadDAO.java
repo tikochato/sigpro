@@ -240,13 +240,17 @@ public class ProdTipoPropiedadDAO {
 		List<EstructuraPojo> pojos = gson.fromJson(propiedades, new TypeToken<List<EstructuraPojo>>() {
 		}.getType());
 
-		for (EstructuraPojo pojo : pojos) {
-			
-			if(pojo.estado.equalsIgnoreCase("N")){
-				ret = guardar(idTipo, pojo.idPropiedad, usuario);
-			}else if(pojo.estado.equalsIgnoreCase("E")){
-				ret = eliminar(pojo.idTipo, pojo.idPropiedad, usuario);
+		if (!pojos.isEmpty()){
+			for (EstructuraPojo pojo : pojos) {
+				
+				if(pojo.estado.equalsIgnoreCase("N")){
+					ret = guardar(idTipo, pojo.idPropiedad, usuario);
+				}else if(pojo.estado.equalsIgnoreCase("E")){
+					ret = eliminar(pojo.idTipo, pojo.idPropiedad, usuario);
+				}
 			}
+		}else{
+			ret = true;
 		}
 
 		return ret;

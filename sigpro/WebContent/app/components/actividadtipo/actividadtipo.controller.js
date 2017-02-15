@@ -218,7 +218,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 		
 		mi.filtrar = function(evt,tipo){
 			if(evt.keyCode==13){
-				mi.cargarTabla(mi.paginaActual);
+				mi.obtenerTotalActividadPropiedades();
 			}
 		}
 		

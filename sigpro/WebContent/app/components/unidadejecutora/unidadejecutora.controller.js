@@ -141,10 +141,10 @@ function controlUnidadEjecutora($scope, $routeParams, $route, $window,
 	}
 
 	mi.reiniciarVista = function() {
-		if ($location.path() == '/unidadEjecutora/rv')
+		if ($location.path() == '/unidadejecutora/rv')
 			$route.reload();
 		else
-			$location.path('/unidadEjecutora/rv');
+			$location.path('/unidadejecutora/rv');
 	}
 
 	mi.nuevo = function() {

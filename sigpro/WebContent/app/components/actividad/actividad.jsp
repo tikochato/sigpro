@@ -40,7 +40,9 @@
 					</div>
 				  </div>
 				</div>
-				<ul uib-pagination total-items="actividadc.totalCooperantes"
+				<br/>
+				<div class="total-rows">Total de {{  actividadc.totalActividades + (actividadc.totalActividades == 1 ? " Actividad" : " Actividades" ) }}</div>
+				<ul uib-pagination total-items="actividadc.totalActividades"
 						ng-model="actividadc.paginaActual"
 						max-size="actividadc.numeroMaximoPaginas"
 						items-per-page="actividadc.elementosPorPagina"

@@ -241,7 +241,6 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
 								break;
 						}
-
 					}
 				});
 			}
@@ -294,7 +293,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
 					function(response) {
-						mi.totalComponentes = response.data.totalcooperantes;
+						mi.totalComponentes = response.data.totalcomponentes;
 						mi.paginaActual = 1;
 						mi.cargarTabla(mi.paginaActual);
 			});
@@ -365,6 +364,9 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 								mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
 								break;
 							case "entero":
+								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								break;
+							case "decimal":
 								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
 								break;
 						}

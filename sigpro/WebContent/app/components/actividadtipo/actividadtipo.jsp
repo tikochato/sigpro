@@ -50,7 +50,9 @@
 					</div>
 				</div>
 			</div>
-			<ul uib-pagination total-items="actividadtipoc.totalCooperantes"
+			<br/>
+			<div class="total-rows">Total de {{  actividadtipoc.totalActividadtipos + (actividadtipoc.totalActividadtipos == 1 ? " Tipo de Actividad" : " Tipos de actividades" ) }}</div>
+			<ul uib-pagination total-items="actividadtipoc.totalActividadtipos"
 				ng-model="actividadtipoc.paginaActual"
 				max-size="actividadtipoc.numeroMaximoPaginas"
 				items-per-page="actividadtipoc.elementosPorPagina"

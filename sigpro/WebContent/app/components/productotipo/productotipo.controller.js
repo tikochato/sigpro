@@ -196,9 +196,6 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 			mi.nombre = mi.entidadSeleccionada.nombre;
 			mi.descripcion = mi.entidadSeleccionada.descripcion;
 
-
-			mi.mostrarCargando = true;
-
 			var datos = {
 				accion : 'tipoPropiedades',
 				codigoTipo : mi.entidadSeleccionada.id
@@ -207,7 +204,7 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 			$http.post('/SProductoTipo', datos).then(function(response) {
 				if (response.data.success) {
 					mi.propiedadesTipo = response.data.productoTipos;
-					mi.mostrarCargando = false;
+			
 				}
 			});
 

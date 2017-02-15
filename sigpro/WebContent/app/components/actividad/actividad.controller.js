@@ -242,6 +242,9 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 							case "entero":
 								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
 								break;
+							case "decimal":
+								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								break;
 						}
 
 					}
@@ -350,9 +353,18 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				$http.post('/SActividadPropiedad', parametros).then(function(response){
 					mi.camposdinamicos = response.data.actividadpropiedades;
 					for (campos in mi.camposdinamicos) {
-						if (mi.camposdinamicos[campos].tipo === 'fecha') {
-							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null; 
+						switch (mi.camposdinamicos[campos].tipo){
+							case "fecha":
+								mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+								break;
+							case "entero":
+								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								break;
+							case "decimal":
+								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								break;
 						}
+
 					}
 				});
 

@@ -51,8 +51,8 @@
 				</div>
 			</div>
 			<br/>
-			<div class="total-rows">Total de {{  recursotipoc.totalRecursos + (recursotipoc.totalRecursos == 1 ? " Tipo de Recurso" : " Tipos de Recurso" ) }}</div>
-			<ul uib-pagination total-items="recursotipoc.totalRecursos"
+			<div class="total-rows">Total de {{  recursotipoc.totalRecursotipos + (recursotipoc.totalRecursotipos == 1 ? " Tipo de Recurso" : " Tipos de Recurso" ) }}</div>
+			<ul uib-pagination total-items="recursotipoc.totalRecursotipos"
 				ng-model="recursotipoc.paginaActual"
 				max-size="recursotipoc.numeroMaximoPaginas"
 				items-per-page="recursotipoc.elementosPorPagina"
@@ -77,16 +77,16 @@
 			<form name ="form">
 				<div class="form-group" ng-show="!recursotipoc.esnuevo">
 					<label for="id">ID</label> 
-					<p class="form-control-static" id="id"> {{recursotipoc.recursotipo.id }}</p>
+					<p class="form-control-static" > {{recursotipoc.recursotipo.id }}</p>
 				</div>
 
 				<div class="form-group">
 					<label for="nombre">* Nombre</label> 
-					<input type="text" class="form-control" id="nombre" placeholder="Nombre"ng-model="recursotipoc.recursotipo.nombre" ng-required="true">
+					<input type="text" class="form-control"  placeholder="Nombre"ng-model="recursotipoc.recursotipo.nombre" ng-required="true">
 				</div>
 				<div class="form-group">
 					<label for="descripcion">Descripción</label> 
-					<input type="text"class="form-control" id="descripcion" placeholder="Descripción"ng-model="recursotipoc.recursotipo.descripcion" ng-required="true">
+					<input type="text"class="form-control"  placeholder="Descripción"ng-model="recursotipoc.recursotipo.descripcion" >
 				</div>
 				<br/>
 				<div class="panel panel-default">

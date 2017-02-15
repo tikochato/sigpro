@@ -212,7 +212,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 			
 			mi.filtrar = function(evt,tipo){
 				if(evt.keyCode==13){
-					mi.cargarTabla(mi.paginaActual);
+					mi.obtenerTotalActividadPropiedades();
 				}
 			}
 			

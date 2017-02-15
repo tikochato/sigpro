@@ -2,12 +2,16 @@ package servlets;
 
 import java.io.IOException;
 import java.util.Map;
+import java.io.OutputStream;
+import java.util.zip.GZIPOutputStream;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.ProdTipoPropiedadDAO;
 import dao.ProductoTipoDAO;
@@ -23,20 +27,31 @@ public class SProductoTipo extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		doPost(request, response);
+		String response_text = "{ \"success\": false }";
+
+		response.setHeader("Content-Encoding", "gzip");
+		response.setCharacterEncoding("UTF-8");
+
+        OutputStream output = response.getOutputStream();
+		GZIPOutputStream gz = new GZIPOutputStream(output);
+        gz.write(response_text.getBytes("UTF-8"));
+        gz.close();
+        output.close();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		Map<String, String> parametro = Utils.getParams(request);
+		HttpSession sesionweb = request.getSession();
+		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 
 		if (parametro.get("accion").compareTo("cargar") == 0) {
 			listar(parametro, response);
 		} else if (parametro.get("accion").compareTo("crear") == 0) {
-			crear(parametro, response);
+			crear(parametro, response,usuario);
 		} else if (parametro.get("accion").compareTo("actualizar") == 0) {
-			actualizar(parametro, response);
+			actualizar(parametro, response,usuario);
 		} else if (parametro.get("accion").compareTo("borrar") == 0) {
 			eliminar(parametro, response);
 		} else if (parametro.get("accion").compareTo("totalElementos") == 0) {
@@ -68,12 +83,10 @@ public class SProductoTipo extends HttpServlet {
 		Utils.writeJSon(response, resultadoJson);
 	}
 
-	private void crear(Map<String, String> parametro, HttpServletResponse response) throws IOException {
+	private void crear(Map<String, String> parametro, HttpServletResponse response, String usuario) throws IOException {
 		String nombre = parametro.get("nombre");
 		String descripcion = parametro.get("descripcion");
-		String usuario = parametro.get("usuario");
 		String propiedades = parametro.get("propiedades");
-
 		boolean creado = ProductoTipoDAO.guardar(-1, nombre, descripcion, propiedades, usuario);
 
 		if (creado) {
@@ -81,11 +94,10 @@ public class SProductoTipo extends HttpServlet {
 		}
 	}
 
-	private void actualizar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
+	private void actualizar(Map<String, String> parametro, HttpServletResponse response,String usuario) throws IOException {
 		int codigo = Utils.String2Int(parametro.get("codigo"), -1);
 		String nombre = parametro.get("nombre");
 		String descripcion = parametro.get("descripcion");
-		String usuario = parametro.get("usuario");
 		String propiedades = parametro.get("propiedades");
 
 		boolean actualizado = ProductoTipoDAO.actualizar(codigo, nombre, descripcion, propiedades, usuario);
