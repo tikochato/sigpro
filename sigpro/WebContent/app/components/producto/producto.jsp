@@ -135,14 +135,6 @@
 			            <span class="input-group-addon" ng-click="producto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
 			          </div>
 			        </div>
-
-					<div class="form-group">
-			          <label for="campo5">Producto:</label>
-			          <div class="input-group"> 
-			            <input type="text" class="form-control" placeholder="Producto padre" ng-model="producto.productoPadreNombre" ng-readonly="true" ng-required="true"/>
-			            <span class="input-group-addon" ng-click="producto.buscarProducto()"><i class="glyphicon glyphicon-search"></i></span>
-			          </div>
-			        </div>
 			        
 			        <div class="form-group">
 			          <label for="campo5">Unidad Ejecutora:</label>

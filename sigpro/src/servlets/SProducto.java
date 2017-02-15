@@ -147,7 +147,7 @@ public class SProducto extends HttpServlet {
 			if (esnuevo){
 				
 				producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, descripcion, 
-						productoPadreId, usuario, null, new DateTime().toDate(), null, 1
+						 usuario, null, new DateTime().toDate(), null, 1
 						, snip, programa, subprograma, proyecto_, actividad, obra, fuente, null, null);
 				
 			}else{
@@ -157,7 +157,6 @@ public class SProducto extends HttpServlet {
 				producto.setUnidadEjecutora(unidadEjecutora);
 				producto.setNombre(nombre);
 				producto.setDescripcion(descripcion);
-				producto.setProductoid(productoPadreId);
 				producto.setSnip(snip);
 				producto.setPrograma(programa);
 				producto.setSubprograma(subprograma);
