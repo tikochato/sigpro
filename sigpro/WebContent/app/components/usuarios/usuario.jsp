@@ -100,7 +100,14 @@
 							<label for="Descripcion">Vuelva a ingresar la contraseña</label>
     						<input type="password" class="form-control" id="password2" placeholder="Contraseña" ng-model="usuarioc.claves.password2" ng-required="true">
 						</div>
-
+						<div class="form-group" >
+					        <label for="campo6">Colaborador</label>
+					        <div class="input-group">
+					          <input type="text" class="form-control" placeholder="Usuario" ng-model="usuarioc.usuariosSelected.colaborador"  ng-disabled="true" />
+					          <span class="input-group-addon"  ng-click="usuarioc.colaboradorSeleccionado ? '' : usuarioc.buscarColaborador()" uib-tooltip="Validar Usuario" ><i class="glyphicon glyphicon-search"></i></span>
+					        </div>
+					      </div>
+						<br>
 				</form>
 			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
@@ -110,8 +117,8 @@
     		</div>
     	</div>
 		</div>
-		<div class="row" ng-show="usuarioc.isCollapsed&&usuarioc.usuariosSelected.usuario!==''">
-		<div class="form-group ">
+		<div>
+		<!--<div class="form-group ">
 		   <label for="campo6">Colaborador</label>
 		   <div class="input-group" ng-show="!usuarioc.tieneColaborador">
 		   		<button  class="btn btn-default" style="width:100%;" ng-click="usuarioc.buscarColaborador()"> {{usuarioc.mensajeActualizado.mensaje}}</button>
@@ -120,14 +127,8 @@
 		   <div class="input-group" ng-show="usuarioc.tieneColaborador">
 		   		<button  class="btn btn-default" style="width:100%;font-size:1.2em;"> {{usuarioc.usuariosSelected.colaborador}}</button>
 		   </div>
-		</div>
-		<div class="form-group" >
-		        <label for="campo6">Colaborador</label> 
-		        <div class="input-group">
-		          <input type="text" class="form-control" placeholder="Usuario" ng-model="colaborador.colaborador.usuario"  ng-disabled="true" ng-required="true"/>
-		          <span class="input-group-addon"  ng-click="usuarioc.buscarColaborador()" uib-tooltip="Validar Usuario" ><i class="glyphicon glyphicon-search"></i></span>
-		        </div>
-		      </div>
+		</div>-->
+		
 		</div>
 
 		<h3 ng-show="usuarioc.isCollapsed">Permisos</h3><br/>

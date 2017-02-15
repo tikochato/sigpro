@@ -28,8 +28,8 @@ app.controller(
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
-	mi.permisoSelected={id:"",nombre:"", descripcion:""};	
-	mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+	mi.permisoSelected={id:"",nombre:"", descripcion:""};
+	mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
 	mi.claves={password1:"", password2:""};
 	mi.nuevosPermisos=[];
 	mi.permisosEliminados=[];
@@ -86,7 +86,7 @@ app.controller(
 				mi.isCollapsed = false;
 		});
 	};
-	
+
 	mi.gridOptions.multiSelect = false;
 	mi.gridOptions.modifierKeysToMultiSelect = false;
 	mi.gridOptions.noUnselect = true;
@@ -116,12 +116,12 @@ app.controller(
 	    }
 	};
 
-   
-						
-						
-	
 
-	
+
+
+
+
+
 
 	mi.cancelar = function() {
 		mi.isCollapsed = false;
@@ -129,18 +129,18 @@ app.controller(
 		mi.mostrarCambioPassword = false;
 		mi.tieneColaborador=false;
 	}
-				
-	
+
+
 	mi.nuevoUsuario=function(){
 		mi.claves.password1="";
 		mi.claves.password2="";
 		mi.permisosAsignados=[];
-		mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+		mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
 		mi.isCollapsed = true;
 		mi.entityselected = null;
 		mi.esNuevo = true;
 	};
-	
+
 	mi.guardarUsuario=function(){
 		if(mi.esNuevo){
 			if(mi.claves.password1!=="" && mi.claves.password2!=="" && mi.usuariosSelected.usuario!=="" && mi.usuariosSelected.email!==""){
@@ -170,7 +170,7 @@ app.controller(
 				}else{
 					$utilidades.mensaje('danger','correo electrónico no válido.');
 				}
-				
+
 			}else{
 				$utilidades.mensaje('danger','Los campos no deben de quedar vacios.');
 			}
@@ -180,7 +180,7 @@ app.controller(
 					if(usuarioMail===mi.usuariosSelected.email && passwordLocal=== mi.usuariosSelected.password){
 						if(mi.nuevosPermisos.length==0 && mi.permisosEliminados.length==0){
 							$utilidades.mensaje('danger','No se ha realizado ningún cambio.');
-							
+
 						}else{
 							$http.post('/SUsuario',
 									{
@@ -202,12 +202,12 @@ app.controller(
 																}
 													});
 												}
-												mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
-												
+												mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
+
 											}
 								});
 						}
-						
+
 					}else{
 						$http.post('/SUsuario',
 								{
@@ -232,7 +232,7 @@ app.controller(
 																}
 													});
 												}
-												
+
 											}else{
 												$http.post('/SUsuario',
 														{
@@ -243,7 +243,7 @@ app.controller(
 														}).success(
 															function(data) {
 																if(data.success){
-																	
+
 																	if(mi.usuariosSelected.password!==passwordLocal){
 																		$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
 																				function(response) {
@@ -252,7 +252,7 @@ app.controller(
 																						$utilidades.mensaje('success','información actualizada exitosamente.');
 																						mi.isCollapsed = false;
 																						mi.cargarTabla(mi.paginaActual);
-																						mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};																						
+																						mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
 																					}else{
 																						$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
 																					}
@@ -260,30 +260,34 @@ app.controller(
 																	}else{
 																		$utilidades.mensaje('success','información actualizada exitosamente.');
 																	}
-																	
+
 																}
 													});
-												
+
 											}
 										}else {
 											$utilidades.mensaje('danger','No se pudo realizar cambios.');
 										}
-										
+
 							});
-						
+
 					}
 				}else{
 					$utilidades.mensaje('danger','correo electrónico no válido.');
 				}
-				
+
 			}else{
 				$utilidades.mensaje('danger','Los campos no deben de quedar vacios.');
 			}
 		}
-	};
-	
-	
-	
+    if(mi.colaboradorSeleccionado){
+      mi.asignarColaborador();
+    }
+
+  };
+
+
+
 	mi.eliminarUsuario=function(ev){
 		if(mi.usuariosSelected.usuario!==""){
 			var confirm = $mdDialog.confirm()
@@ -301,13 +305,13 @@ app.controller(
 					if(response.success){
 						$utilidades.mensaje('success','Usuario elimiado con éxito');
 						mi.cargarTabla(mi.paginaActual);
-						mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
+						mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
 					}
 					else
 						$utilidades.mensaje('danger','Error al eliminar el usuario');
 				});
 		    }, function() {
-		    
+
 		    });
 		}else{
 		    $utilidades.mensaje('danger','Seleccione un usuario');
@@ -317,7 +321,7 @@ app.controller(
 	    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	    return re.test(email);
 	}
-	
+
 	mi.editarUsuario=function(){
 		if(mi.usuariosSelected.usuario!==""){
 			mi.isCollapsed = true;
@@ -335,29 +339,29 @@ app.controller(
 		}else{
 			$utilidades.mensaje('danger','Seleccione un usuario');
 		}
-		
+
 	};
-	
-	
+
+
 	mi.reiniciarVista=function(){
 		if($location.path()=='/usuarios/rv')
 			$route.reload();
 		else
 			$location.path('/usuarios/rv');
 	};
-	
+
 	mi.cambiarPagina=function(){
 		mi.cargarTabla(mi.paginaActual);
 	};
-	
+
 	mi.guardarEstado=function(){
 		var estado = mi.gridApi.saveState.save();
-		var tabla_data = { action: 'guardaEstado', grid:'usuarios', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
+		var tabla_data = { action: 'guardaEstado', grid:'usuarios', estado: JSON.stringify(estado), t: (new Date()).getTime() };
 		$http.post('/SEstadoTabla', tabla_data).then(function(response){
-			
+
 		});
 	}
-	
+
 
 	mi.buscarPermiso = function(titulo, mensaje) {
 		var modalInstance = $uibModal.open({
@@ -377,14 +381,14 @@ app.controller(
 		    }
 
 		});
-		
+
 		modalInstance.result.then(function(permisoSeleccionado) {
 			mi.permisosAsignados.push(permisoSeleccionado);
 			mi.nuevosPermisos.push(permisoSeleccionado.id);
 		}, function() {
 		});
 	}
-	
+
 	mi.eliminarPermiso= function(permiso){
 		var indice = mi.permisosAsignados.indexOf(permiso);
 		if (indice !== -1) {
@@ -395,7 +399,7 @@ app.controller(
 			mi.permisosEliminados.push(permiso.idPermiso);
 		}
 	};
-	
+
 	mi.buscarColaborador=function(){
 		var modalInstance = $uibModal.open({
 		    animation : 'true',
@@ -414,7 +418,7 @@ app.controller(
 		    }
 
 		});
-		
+
 		modalInstance.result.then(function(data) {
 			 mi.colaboradorSeleccionado=true;
 			mi.colaborador=data;
@@ -422,7 +426,7 @@ app.controller(
 		}, function() {
 		});
 	};
-	
+
 	mi.asignarColaborador= function(){
 		if(mi.colaboradorSeleccionado){
 			var datos = {
@@ -451,9 +455,9 @@ app.controller(
 			$utilidades.mensaje('danger',
 			'Seleccione un colaborador.');
 		}
-		
+
 	}
-	
+
 	$http.post('/SUsuario', { accion: 'getTotalUsuarios' }).success(
 			function(response) {
 				mi.totalUsuarios = response.totalUsuarios;
@@ -467,7 +471,7 @@ app.controller('modalBuscarPermiso', [
 ]);
 
 function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log, infoPermisos) {
-	
+
 	var mi = this;
 	if(infoPermisos.nuevo){
 		mi.mostrarCargando = true;
@@ -494,28 +498,28 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = 5;
 	mi.elementosPorPagina = 9;
-	
+
 	mi.mostrarCargando = false;
 	mi.data = [];
-	
+
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
-	
-   
-   
+
+
+
     mi.opcionesGrid = {
 		data : mi.data,
 		columnDefs : [
 			{
-				displayName : 'Permiso', 
-				name : 'nombre', 
-				cellClass : 'grid-align-right', 
+				displayName : 'Permiso',
+				name : 'nombre',
+				cellClass : 'grid-align-right',
 				type : 'text', width : 150
-			
-			}, 
-			{ 
-				displayName : 'Descripción', 
-				name : 'descripcion', 
+
+			},
+			{
+				displayName : 'Descripción',
+				name : 'descripcion',
 				cellClass : 'grid-align-left'
 			}
 		],
@@ -533,7 +537,7 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 			    mi.seleccionarPermiso);
 		}
     }
-    
+
     mi.seleccionarPermiso = function(row) {
     	mi.itemSeleccionado = row.entity;
     	mi.seleccionado = row.isSelected;
@@ -568,40 +572,40 @@ function modalBuscarColaborador($uibModalInstance, $scope, $http, $interval, i18
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = 5;
 	mi.elementosPorPagina = 9;
-	
+
 	mi.mostrarCargando = false;
 	mi.data = [];
-	
+
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
-	
-   
-   
+
+
+
     mi.opcionesGrid = {
 		data : mi.data,
 		columnDefs : [
 			{
-				displayName : 'Primer nombre', 
-				name : 'primerNombre', 
-				cellClass : 'grid-align-right', 
+				displayName : 'Primer nombre',
+				name : 'primerNombre',
+				cellClass : 'grid-align-right',
 				type : 'text'
-			
-			}, 
-			{ 
-				displayName : 'Segundo nombre', 
-				name : 'segundoNombre', 
+
+			},
+			{
+				displayName : 'Segundo nombre',
+				name : 'segundoNombre',
 				cellClass : 'grid-align-left'
 			}
-			, 
-			{ 
-				displayName : 'Primer apellido', 
-				name : 'primerApellido', 
+			,
+			{
+				displayName : 'Primer apellido',
+				name : 'primerApellido',
 				cellClass : 'grid-align-left'
 			}
-			, 
-			{ 
-				displayName : 'Segundo apellido', 
-				name : 'segundoApellido', 
+			,
+			{
+				displayName : 'Segundo apellido',
+				name : 'segundoApellido',
 				cellClass : 'grid-align-left'
 			}
 			, {
@@ -659,7 +663,7 @@ function modalBuscarColaborador($uibModalInstance, $scope, $http, $interval, i18
     	    $utilidades.mensaje('warning', 'Debe seleccionar un colaborador');
     	}
      };
-	
+
 
      mi.cancel = function() {
     	$uibModalInstance.dismiss('cancel');
