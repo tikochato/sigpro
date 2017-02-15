@@ -41,6 +41,7 @@ app.controller(
 	mi.mostrarCambioPassword = false;
 	var passwordLocal="";
 	mi.tieneColaborador=false;
+	mi.filtros=[];
 	mi.gridOptions = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -48,22 +49,28 @@ app.controller(
 		paginationPageSize : 25,
 		enableFiltering: true,
 		data : [],
+		useExternalFiltering: true,
+		useExternalSorting: true,
 		columnDefs : [ {
 			name : 'Usuario',
 			cellClass : 'grid-align-left',
-			field : 'usuario'
+			field : 'usuario',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.usuarioc.filtros[\'usuario\']" ng-keypress="grid.appScope.usuarioc.filtrar($event)" style="width:175px;"></input></div>'
 		}, {
 			name : 'Correo',
 			cellClass : 'grid-align-left',
-			field : 'email'
+			field : 'email',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.usuarioc.filtros[\'email\']" ng-keypress="grid.appScope.usuarioc.filtrar($event)" style="width:175px;"></input></div>'
 		}, {
 			name: 'Usuario creo',
 			cellClass : 'grid-align-left',
-			field: 'usuarioCreo'
+			field: 'usuarioCreo',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.usuarioc.filtros[\'usuariocreo\']" ng-keypress="grid.appScope.usuarioc.filtrar($event)" style="width:175px;"></input></div>'
 		}, {
 			name : 'Fecha creación',
 			cellClass : 'grid-align-left',
-			field : 'fechaCreacion'
+			field : 'fechaCreacion',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.usuarioc.filtros[\'fechacreacion\']" ng-keypress="grid.appScope.usuarioc.filtrar($event)" style="width:175px;"></input></div>'
 		},{
 			name: 'Usuario actualizo',
 			cellClass : 'grid-align-left',
@@ -457,6 +464,12 @@ app.controller(
 		}
 
 	}
+	
+	mi.filtrar = function(evt){
+		if(evt.keyCode==13){
+			console.log(mi.filtros);
+		}
+	};
 
 	$http.post('/SUsuario', { accion: 'getTotalUsuarios' }).success(
 			function(response) {
