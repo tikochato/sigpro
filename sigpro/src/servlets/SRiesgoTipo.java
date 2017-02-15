@@ -61,7 +61,16 @@ public class SRiesgoTipo extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
+		String response_text = "{ \"success\": false }";
+
+		response.setHeader("Content-Encoding", "gzip");
+		response.setCharacterEncoding("UTF-8");
+
+        OutputStream output = response.getOutputStream();
+		GZIPOutputStream gz = new GZIPOutputStream(output);
+        gz.write(response_text.getBytes("UTF-8"));
+        gz.close();
+        output.close();
 	}
 
 	/**
@@ -88,14 +97,20 @@ public class SRiesgoTipo extends HttpServlet {
 		if(accion.equals("getRiesgotiposPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroRiesgoTipo = map.get("numeroriesgostipo")!=null  ? Integer.parseInt(map.get("numeroriesgostipo")) : 0;
-			List<RiesgoTipo> riesgotipos = RiesgoTipoDAO.getRiesgoTiposPagina(pagina, numeroRiesgoTipo);
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<RiesgoTipo> riesgotipos = RiesgoTipoDAO.getRiesgoTiposPagina(pagina, numeroRiesgoTipo,
+					filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);
 			List<striesgotipo> striesgotipos=new ArrayList<striesgotipo>();
 			for(RiesgoTipo riesgotipo:riesgotipos){
 				striesgotipo temp =new striesgotipo();
 				temp.descripcion = riesgotipo.getDescripcion();
 				temp.estado = riesgotipo.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(riesgotipo.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(riesgotipo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(riesgotipo.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(riesgotipo.getFechaCreacion());
 				temp.id = riesgotipo.getId();
 				temp.nombre = riesgotipo.getNombre();
 				temp.usuarioActualizo = riesgotipo.getUsuarioActualizo();
@@ -109,7 +124,11 @@ public class SRiesgoTipo extends HttpServlet {
 		}
 		
 		else if(accion.equals("numeroRiesgoTipos")){
-			response_text = String.join("","{ \"success\": true, \"totalriesgos\":",RiesgoTipoDAO.getTotalRiesgoTipo().toString()," }");
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			response_text = String.join("","{ \"success\": true, \"totalriesgos\":",RiesgoTipoDAO.getTotalRiesgoTipo(
+					filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion).toString()," }");
 		}
 		else if(accion.equals("guardarRiesgotipo")){
 			boolean result = false;
@@ -122,8 +141,7 @@ public class SRiesgoTipo extends HttpServlet {
 				RiesgoTipo riesgoTipo;
 				
 				if(esnuevo){
-					riesgoTipo = new RiesgoTipo(nombre, usuario, new DateTime().toDate(), 1);
-					riesgoTipo.setDescripcion(descripcion);
+					riesgoTipo = new RiesgoTipo(nombre, descripcion, usuario, null, new DateTime().toDate(), null, 1, null, null);
 				}
 				else{
 					riesgoTipo = RiesgoTipoDAO.getRiesgoTipoPorId(id);
@@ -178,7 +196,6 @@ public class SRiesgoTipo extends HttpServlet {
 				response_text = "{ \"success\": false }";
 		}else
 			response_text = "{ \"success\": false }";
-		
 		
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");

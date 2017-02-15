@@ -38,6 +38,8 @@
 					</div>
 				  </div>
 				</div>
+				<br/>
+				<div class="total-rows">Total de {{  riesgopropiedadc.totalRiesgoPropiedades + (riesgopropiedadc.totalRiesgoPropiedades == 1 ? " Proyecto" : " Proyectos" ) }}</div>
 				<ul uib-pagination total-items="riesgopropiedadc.totalRiesgoPropiedades" 
 						ng-model="riesgopropiedadc.paginaActual"
 						max-size="riesgopropiedadc.numeroMaximoPaginas"
@@ -71,13 +73,15 @@
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="riesgopropiedadc.riesgopropiedad.nombre">
+    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="riesgopropiedadc.riesgopropiedad.nombre" ng-required="true">
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Tipo dato</label>
-							<select class="form-control" ng-model="riesgopropiedadc.riesgopropiedad.datotipoid" >
+							<select class="form-control" ng-model="riesgopropiedadc.riesgopropiedad.datotipoid"
+								ng-options="tipo as tipo.nombre for tipo in riesgopropiedadc.tipodatos track by tipo.id"
+								ng-readonly="true"
+								ng-disabled="!riesgopropiedadc.esnuevo" ng-required="true">
 								<option value="">Seleccione una opción</option>
-								<option ng-repeat="opciones in riesgopropiedadc.tipodatos" value="{{opciones.id}}">{{opciones.nombre}}</option>
 							</select>
 						</div>
 						<div class="form-group">

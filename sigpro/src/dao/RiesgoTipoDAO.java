@@ -128,11 +128,24 @@ public class RiesgoTipoDAO {
 	}
 	
 	
-	public static List<RiesgoTipo> getRiesgoTiposPagina(int pagina, int numeroriesgostipo){
+	public static List<RiesgoTipo> getRiesgoTiposPagina(int pagina, int numeroriesgostipo,
+			String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion,
+			String columna_ordenada, String orden_direccion ){
 		List<RiesgoTipo> ret = new ArrayList<RiesgoTipo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<RiesgoTipo> criteria = session.createQuery("SELECT r FROM RiesgoTipo r WHERE estado = 1",RiesgoTipo.class);
+			String query = "SELECT r FROM RiesgoTipo r WHERE estado = 1";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " r.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " r.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(r.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
+			
+			Query<RiesgoTipo> criteria = session.createQuery(query,RiesgoTipo.class);
 			criteria.setFirstResult(((pagina-1)*(numeroriesgostipo)));
 			criteria.setMaxResults(numeroriesgostipo);
 			ret = criteria.getResultList();
@@ -146,11 +159,20 @@ public class RiesgoTipoDAO {
 		return ret;
 	}
 	
-	public static Long getTotalRiesgoTipo(){
+	public static Long getTotalRiesgoTipo(String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(r.id) FROM RiesgoTipo r WHERE r.estado=1",Long.class);
+			String query = "SELECT count(r.id) FROM RiesgoTipo r WHERE r.estado=1 ";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " r.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " r.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(r.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
