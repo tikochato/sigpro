@@ -101,7 +101,7 @@
 	
 	      <div class="row">
 		      <div class="form-group" >
-		        <label>* CUI:</label> 
+		        <label>* CUI</label> 
 		        <input type="number" class="form-control"  placeholder="CUI" ng-model="colaborador.colaborador.cui" ng-maxlength="13" ng-required="true" />
 		      </div>
 	      </div>
