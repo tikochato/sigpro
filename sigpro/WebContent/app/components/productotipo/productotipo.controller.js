@@ -276,13 +276,14 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 						if (response.data.success) {
 							mi.data = response.data.productoTipos;
 							mi.opcionesGrid.data = mi.data;
-							mi.esForma = false;
+							mi.codigo = response.data.id;
 							mi.esNuevo=false;
 							$utilidades.mensaje('success',
-									'Tipo de Producto guardado con exito.');
+									'El tipo de prodcuto se creo con éxito.');
+							mi.obtenerTotalProductoTipo();
 						} else {
 							$utilidades.mensaje('danger',
-									'Tipo de Producto ya existe...!!!');
+									'Error la guardar el tipo de producto');
 						}
 
 					});
@@ -301,13 +302,13 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 						if (response.data.success) {
 							mi.data = response.data.productoTipos;
 							mi.opcionesGrid.data = mi.data;
-							mi.esForma = false;
 							mi.esNuevo=false;
 							$utilidades.mensaje('success',
-									'Tipo de Producto actualizado con exito.');
+									'El tipo de producto se guardo con éxito');
+							mi.obtenerTotalProductoTipo();
 						} else {
 							$utilidades.mensaje('danger',
-									'Error al actualizar datos...!!!');
+									'Error al guardar el tipo de producto');
 						}
 					});
 
