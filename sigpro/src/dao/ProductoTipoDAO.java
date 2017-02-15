@@ -48,11 +48,12 @@ public class ProductoTipoDAO {
 		return ret;
 	}
 
-	public static boolean guardar(Integer codigo, String nombre, String descripcion, String propiedades,
+	public static Integer guardar(Integer codigo, String nombre, String descripcion, String propiedades,
 			String usuario) {
 
 		ProductoTipo pojo = getProductoTipo(codigo);
-		boolean ret = false;
+		
+		boolean retCampos = false;
 
 		if (pojo == null) {
 			pojo = new ProductoTipo();
@@ -71,9 +72,9 @@ public class ProductoTipoDAO {
 				session.beginTransaction();
 				Integer id = (Integer) session.save(pojo);
 				session.getTransaction().commit();
-
+				
 				if (propiedades!=null && propiedades.length()>0 && !propiedades.isEmpty())
-					ret = ProdTipoPropiedadDAO.persistirPropiedades(id, propiedades, usuario);
+					retCampos = ProdTipoPropiedadDAO.persistirPropiedades(id, propiedades, usuario);
 
 			} catch (Throwable e) {
 				CLogger.write("2", ProductoTipoDAO.class, e);
@@ -82,7 +83,7 @@ public class ProductoTipoDAO {
 			}
 		}
 
-		return ret;
+		return retCampos ? pojo.getId() : null ;
 	}
 
 	public static boolean actualizar(Integer codigo, String nombre, String descripcion, String propiedades,
