@@ -79,22 +79,22 @@
 	    <form name="form" class="css-form">
 	      <div class="row">
 		      <div class="form-group" >
-		        <label>* Primer Nombre:</label> 
+		        <label>* Primer Nombre</label> 
 		        <input type="text" class="form-control" placeholder="Primer Nombre" ng-model="colaborador.colaborador.primerNombre" ng-required="true" />
 		      </div>
 		
 		      <div class="form-group">
-		        <label>Segundo Nombre:</label> 
+		        <label>Segundo Nombre</label> 
 		        <input type="text" class="form-control" placeholder="Segundo Nombre" ng-model="colaborador.colaborador.segundoNombre" />
 		      </div>
 		
 		      <div class="form-group" >
-		        <label>* Primer Apellido:</label> 
+		        <label>* Primer Apellido</label> 
 		        <input type="text" class="form-control" placeholder="Primer Apellido" ng-model="colaborador.colaborador.primerApellido" ng-required="true" />
 		      </div>
 		
 		      <div class="form-group" >
-		        <label>Segundo Apellido:</label> 
+		        <label>Segundo Apellido</label> 
 		        <input type="text" class="form-control" placeholder="Segundo Apellido" ng-model="colaborador.colaborador.segundoApellido" />
 		      </div>
 	      </div>
@@ -107,8 +107,8 @@
 	      </div>
 	      
 	      <div class="row">
-		      <div class="form-group col-sm-12" >
-				  <label>* Nombre Unidad Ejecutora:</label> 
+		      <div class="form-group" >
+				  <label>* Nombre Unidad Ejecutora</label> 
 				  <div class="input-group">
 				    <input type="text" class="form-control" placeholder="Nombre Unidad Ejecutora" ng-model="colaborador.colaborador.nombreUnidadEjecutora" ng-disabled="true"  ng-required="true"/>
 				    <span class="input-group-addon" ng-click="colaborador.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
@@ -117,8 +117,8 @@
 	      </div>
 	
 	      <div class="row">
-		      <div class="form-group col-sm-12" >
-		        <label for="campo6">* Usuario:</label> 
+		      <div class="form-group" >
+		        <label for="campo6">* Usuario</label> 
 		        <div class="input-group">
 		          <input type="text" class="form-control" placeholder="Usuario" ng-model="colaborador.colaborador.usuario"  ng-disabled="true" ng-required="true"/>
 		          <span class="input-group-addon" ng-click="colaborador.buscarUsuario()" uib-tooltip="Validar Usuario" ><i class="glyphicon glyphicon-search"></i></span>
