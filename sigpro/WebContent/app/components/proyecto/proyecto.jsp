@@ -100,7 +100,7 @@
 				<div class="form-group"  >
 					<label for="isnip">SNIP</label>
 					<input type="number" name="isnip" id="isnip"  ng-model="controller.proyecto.snip"
-						class="form-control" placeholder="Nombre">
+						class="form-control" placeholder="SNIP">
 				</div>
 				
 				<div class="form-group row" >
