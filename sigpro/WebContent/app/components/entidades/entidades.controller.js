@@ -199,14 +199,7 @@ function controlEntidad($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.guardar = function() {
-		if (mi.esNuevo) {
-			if (!$utilidades.esNumero(mi.entidad)
-					|| $utilidades.esCadenaVacia(mi.nombre)) {
-				$utilidades.mensaje('danger',
-						'Debe de llenar todos los campos obligatorios');
-				return;
-			}
-
+		if (mi.esNuevo && mi.entidad.nombre!='') {
 			var datos = {
 				accion : 'crear',
 				entidad : mi.entidad.entidad,

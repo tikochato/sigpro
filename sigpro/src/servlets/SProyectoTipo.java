@@ -139,7 +139,7 @@ public class SProyectoTipo extends HttpServlet {
 				
 				result = ProyectoTipoDAO.guardarProyectoTipo(proyectoTipo);
 				
-				String[] idsPropiedades =  map.get("propiedades") != null ? map.get("propiedades").toString().split(",") : null;
+				String[] idsPropiedades =  map.get("propiedades") != null && map.get("propiedades").length()>0 ? map.get("propiedades").toString().split(",") : null;
 				if (idsPropiedades !=null && idsPropiedades.length>0){
 					for (String idPropiedad : idsPropiedades){
 						PtipoPropiedadId ptipoPropiedadId = new PtipoPropiedadId(proyectoTipo.getId(), Integer.parseInt(idPropiedad));

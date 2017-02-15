@@ -60,26 +60,24 @@
 
       <form name="form">
 
-		<div class="row">
-	        <div class="form-group">
+		    <div class="form-group">
 	          <label>* Unidad Ejecutora:</label> 
 	          <input type="number" class="form-control" id="campo1" name="campo1" placeholder="Unidad Ejecutora" ng-model="unidad.codigo" ng-readonly="!unidad.esNuevo" ng-required="true" />
 	        </div>
-        </div>
-
-		<div class="row">
-	        <div class="form-group">
+        
+		    <div class="form-group">
 	          <label for="campo2">* Nombre Unidad Ejecutora:</label> 
 	          <input type="text" class="form-control" placeholder="Nombre Unidad Ejecutora" ng-model="unidad.nombre" ng-required="true" />
 	        </div>
-	
-	        <div class="form-group col-sm-12" ng-class="{ 'has-error' : form.campo3.$invalid }">
+		
+		    <div class="form-group" ng-required="true">
 	          <label>* Entidad:</label>
 	          <div class="input-group">
 	            <input type="text" class="form-control" id="campo3" name="campo3" placeholder="Nombre Entidad" ng-model="unidad.nombreEntidad" ng-readonly="true" ng-required="true"/>
 	            <span class="input-group-addon" ng-click="unidad.buscarEntidad()"><i class="glyphicon glyphicon-search"></i></span>
 	          </div>
 	        </div>
+	        <br/>
 	        <div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
@@ -113,8 +111,7 @@
 						</div>
 					</div>
 				</div>
-		</div>
-      </form>
+	  </form>
 
     </div>
     <div align="center">Los campos marcados con * son obligatorios</div>
