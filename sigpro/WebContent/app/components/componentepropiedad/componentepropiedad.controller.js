@@ -216,17 +216,13 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 					filtro_nombre: mi.filtros['nombre'],
 					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
 						function(response) {
-							mi.totalComponentePropiedades = response.totalcomponentepropiedades;
+							mi.totalComponentePropiedades = response.data.totalcomponentepropiedades;
 							mi.paginaActual = 1;
 							mi.cargarTabla(mi.paginaActual);
 				});
 			}
 			
-			$http.post('/SComponentePropiedad', { accion: 'numeroComponentePropiedades' }).success(
-					function(response) {
-						mi.totalComponentePropiedades = response.totalcomponentepropiedades;
-						mi.cargarTabla(1);
-			});
+			
 			$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
 					function(response) {
 						mi.tipodatos = response.datoTipos;

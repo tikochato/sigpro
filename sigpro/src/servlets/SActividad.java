@@ -83,7 +83,16 @@ public class SActividad extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
+		String response_text = "{ \"success\": false }";
+
+		response.setHeader("Content-Encoding", "gzip");
+		response.setCharacterEncoding("UTF-8");
+
+        OutputStream output = response.getOutputStream();
+		GZIPOutputStream gz = new GZIPOutputStream(output);
+        gz.write(response_text.getBytes("UTF-8"));
+        gz.close();
+        output.close();
 	}
 
 	/**
@@ -236,29 +245,31 @@ public class SActividad extends HttpServlet {
 					}
 
 					for (stdatadinamico data : datos) {
-						ActividadPropiedad actividadPropiedad = ActividadPropiedadDAO.getActividadPropiedadPorId(Integer.parseInt(data.id));
-						ActividadPropiedadValorId idValor = new ActividadPropiedadValorId(actividad.getId(),Integer.parseInt(data.id));
-						ActividadPropiedadValor valor = new ActividadPropiedadValor(idValor, actividad, actividadPropiedad,null, null, null, null,
-								usuario, null, new DateTime().toDate(), null, 1);
-
-						switch (actividadPropiedad.getDatoTipo().getId()){
-						case 1:
-							valor.setValorString(data.valor);
-							break;
-						case 2:
-							valor.setValorEntero(Utils.String2Int(data.valor, null));
-							break;
-						case 3:
-							valor.setValorDecimal(Utils.String2BigDecimal(data.valor, null));
-							break;
-						case 4:
-							break;
-						case 5:
-							SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-							valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
-							break;
-					}
-						result = (result && ActividadPropiedadValorDAO.guardarActividadPropiedadValor(valor));
+						if (data.valor!=null && data.valor.length()>0 && data.valor.compareTo("null")!=0){
+							ActividadPropiedad actividadPropiedad = ActividadPropiedadDAO.getActividadPropiedadPorId(Integer.parseInt(data.id));
+							ActividadPropiedadValorId idValor = new ActividadPropiedadValorId(actividad.getId(),Integer.parseInt(data.id));
+							ActividadPropiedadValor valor = new ActividadPropiedadValor(idValor, actividad, actividadPropiedad,null, null, null, null,
+									usuario, null, new DateTime().toDate(), null, 1);
+	
+							switch (actividadPropiedad.getDatoTipo().getId()){
+							case 1:
+								valor.setValorString(data.valor);
+								break;
+							case 2:
+								valor.setValorEntero(Utils.String2Int(data.valor, null));
+								break;
+							case 3:
+								valor.setValorDecimal(Utils.String2BigDecimal(data.valor, null));
+								break;
+							case 4:
+								break;
+							case 5:
+								SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+								valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
+								break;
+							}
+							result = (result && ActividadPropiedadValorDAO.guardarActividadPropiedadValor(valor));
+						}
 					}
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 							+ "\"id\": " + actividad.getId() +" }");
@@ -284,7 +295,7 @@ public class SActividad extends HttpServlet {
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			response_text = String.join("","{ \"success\": true, \"totalactividads\":",ActividadDAO.getTotalActividads(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,usuario).toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalactividades\":",ActividadDAO.getTotalActividads(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,usuario).toString()," }");
 		}
 		else if(accion.equals("numeroActividadesPorObjeto")){
 			String filtro_nombre = map.get("filtro_nombre");
@@ -292,7 +303,7 @@ public class SActividad extends HttpServlet {
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			int objetoId = map.get("objetoid")!=null  ? Integer.parseInt(map.get("objetoid")) : 0;
 			int objetoTipo = map.get("tipo")!=null  ? Integer.parseInt(map.get("tipo")) : 0;
-			response_text = String.join("","{ \"success\": true, \"totalactividads\":",ActividadDAO.getTotalActividadsPorObjeto(objetoId, objetoTipo, filtro_nombre,
+			response_text = String.join("","{ \"success\": true, \"totalactividades\":",ActividadDAO.getTotalActividadsPorObjeto(objetoId, objetoTipo, filtro_nombre,
 					filtro_usuario_creo, filtro_fecha_creacion,usuario).toString()," }");
 		}
 		else if(accion.equals("getActividadesPaginaPorObjeto")){

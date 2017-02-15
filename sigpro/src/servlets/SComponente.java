@@ -245,29 +245,33 @@ public class SComponente extends HttpServlet {
 					}
 
 					for (stdatadinamico data : datos) {
-						ComponentePropiedad componentePropiedad = ComponentePropiedadDAO.getComponentePropiedadPorId(Integer.parseInt(data.id));
-						ComponentePropiedadValorId idValor = new ComponentePropiedadValorId(componente.getId(),Integer.parseInt(data.id));
-						ComponentePropiedadValor valor = new ComponentePropiedadValor(idValor, componente, componentePropiedad, usuario, new DateTime().toDate());
-
-						switch (componentePropiedad.getDatoTipo().getId()){
-							case 1:
-								valor.setValorString(data.valor);
-								break;
-							case 2:
-								valor.setValorEntero(Utils.String2Int(data.valor, null));
-								break;
-							case 3:
-								valor.setValorDecimal(Utils.String2BigDecimal(data.valor,null));
-								break;
-							case 4:
-
-								break;
-							case 5:
-								SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-								valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
-								break;
+						if (data.valor!=null && data.valor.length()>0 && data.valor.compareTo("null")!=0){
+							
+						
+							ComponentePropiedad componentePropiedad = ComponentePropiedadDAO.getComponentePropiedadPorId(Integer.parseInt(data.id));
+							ComponentePropiedadValorId idValor = new ComponentePropiedadValorId(componente.getId(),Integer.parseInt(data.id));
+							ComponentePropiedadValor valor = new ComponentePropiedadValor(idValor, componente, componentePropiedad, usuario, new DateTime().toDate());
+	
+							switch (componentePropiedad.getDatoTipo().getId()){
+								case 1:
+									valor.setValorString(data.valor);
+									break;
+								case 2:
+									valor.setValorEntero(Utils.String2Int(data.valor, null));
+									break;
+								case 3:
+									valor.setValorDecimal(Utils.String2BigDecimal(data.valor,null));
+									break;
+								case 4:
+	
+									break;
+								case 5:
+									SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+									valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
+									break;
+							}
+							result = (result && ComponentePropiedadValorDAO.guardarComponentePropiedadValor(valor));
 						}
-						result = (result && ComponentePropiedadValorDAO.guardarComponentePropiedadValor(valor));
 					}
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 							+ "\"id\": " + componente.getId() +" }");

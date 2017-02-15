@@ -117,7 +117,7 @@ public class SRecursoTipo extends HttpServlet {
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			response_text = String.join("","{ \"success\": true, \"totalcooperantes\":",RecursoTipoDAO.getTotalRecursoTipo(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalrecursotipos\":",RecursoTipoDAO.getTotalRecursoTipo(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
 		else if(accion.equals("guardarRecursotipo")){
 			boolean result = false;
@@ -155,7 +155,7 @@ public class SRecursoTipo extends HttpServlet {
 				String[] idsPropiedades =  map.get("propiedades") != null ? map.get("propiedades").toString().split(",") : null;
 				if (idsPropiedades !=null && idsPropiedades.length>0){
 					for (String idPropiedad : idsPropiedades){
-						RectipoPropiedadId rtipoPropiedadId = new RectipoPropiedadId(recursoTipo.getId(), Integer.parseInt(idPropiedad));
+						RectipoPropiedadId rtipoPropiedadId = new RectipoPropiedadId(Integer.parseInt(idPropiedad),recursoTipo.getId());
 						RecursoPropiedad recursoPropiedad = new RecursoPropiedad();
 						recursoPropiedad.setId(Integer.parseInt(idPropiedad));
 						

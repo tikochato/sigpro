@@ -314,10 +314,10 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 	};
 	
 	mi.reiniciarVista = function() {
-		if ($location.path() == '/productoPropiedad/rv')
+		if ($location.path() == '/productopropiedad/rv')
 			$route.reload();
 		else
-			$location.path('/productoPropiedad/rv');
+			$location.path('/productopropiedad/rv');
 	}
 	
 	mi.filtrar = function(evt){
