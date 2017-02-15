@@ -2,13 +2,16 @@
  * 
  */
 
-var app = angular.module('loginController', [
-	'ngTouch'
+var app = angular.module('sipro', [
+	'ngTouch','ngUtilidades'
 ]);
 
 app.controller('loginController', [
-	'$scope','$http',function($scope,$http){
+	'$scope','$http','Utilidades','$window',function($scope,$http,$utilidades,$window){
+		
+		$window.document.title = $utilidades.sistema_nombre + ' - Actividades';
 		var mi = this;
+		mi.sistema_nombre =  $utilidades.sistema_nombre;
 		mi.username = "";
 		mi.password = "";
 		$scope.showerror = false;

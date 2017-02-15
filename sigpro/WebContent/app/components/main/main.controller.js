@@ -1,10 +1,11 @@
-var app = angular.module('sigpro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
+var app = angular.module('sipro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
                                        'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','ngAria','ngMaterial','ngMessages']);
 
-app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($routeProvider, $locationProvider,FlashProvider) {
+app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($routeProvider, $locationProvider,FlashProvider) {
 	   $locationProvider.hashPrefix('!');
 	   //$locationProvider.html5Mode(true);
+	   
 	   $routeProvider
 	   		/*.when('/main',{
         		templateUrl : '',
@@ -14,8 +15,8 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
         			}
         		}
         	})*/
-		    .when('/formaejemplo',{
-            	template: '<div load-on-demand="\'formaejemploController\'" class="all_page"></div>'
+		    .when('/gantt',{
+            	template: '<div load-on-demand="\'ganttController\'" class="all_page"></div>'
             })
             .when('/cooperante/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'cooperanteController\'" class="all_page"></div>'
@@ -153,9 +154,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider', function ($ro
 app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	   var modules = [
 	       {
-	    	   name: 'formaejemploController',
-	    	   script: '/app/components/formaejemplo/formaejemplo.controller.js',
-	    	   template: '/app/components/formaejemplo/formaejemplo.jsp'
+	    	   name: 'ganttController',
+	    	   script: '/app/components/gantt/gantt.controller.js',
+	    	   template: '/app/components/gantt/gantt.jsp'
 	       },
 	       {
 	    	   name: 'cooperanteController',
@@ -343,13 +344,13 @@ app.config(['uiGmapGoogleMapApiProvider',function(uiGmapGoogleMapApiProvider) {
     });
 }]);
 
-app.controller('MainController',['$scope','$document','deviceDetector','$rootScope','$location','$window',
-   function($scope,$document,deviceDetector,$rootScope,$location,$window){
+app.controller('MainController',['$scope','$document','deviceDetector','$rootScope','$location','$window','Utilidades',
+   function($scope,$document,deviceDetector,$rootScope,$location,$window,$utilidades){
 	$scope.lastscroll = 0;
 	$scope.hidebar = false;
 
 	numeral.language('es', numeral_language);
-	$window.document.title = 'MINFIN - SIGPRO';
+	//$window.document.title =  'MINFIN - '+$utilidades.sistema_nombre;
 
 	$document.bind('scroll', function(){
 		if($document[0].body.scrollTop > 15){
