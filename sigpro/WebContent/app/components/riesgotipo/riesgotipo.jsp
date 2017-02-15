@@ -41,7 +41,9 @@
 					</div>
 				</div>
 			</div>
-			<ul uib-pagination total-items="riesgotipoc.totalRiesgos"
+			<br/>
+			<div class="total-rows">Total de {{  riesgotipoc.totalRiesgotipos + (riesgotipoc.totalRiesgotipos == 1 ? " Tipo de Riesgos" : " Tipos de Riesgos" ) }}</div>
+			<ul uib-pagination total-items="riesgotipoc.totalRiesgotipos"
 				ng-model="riesgotipoc.paginaActual"
 				max-size="riesgotipoc.numeroMaximoPaginas"
 				items-per-page="riesgotipoc.elementosPorPagina"

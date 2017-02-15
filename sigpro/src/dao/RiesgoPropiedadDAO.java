@@ -38,7 +38,7 @@ public class RiesgoPropiedadDAO {
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(p.id) FROM RiesgoPropiedad p ",Long.class);
+			Query<Long> conteo = session.createQuery("SELECT count(p.id) FROM RiesgoPropiedad p where p.estado = 1",Long.class);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
@@ -146,11 +146,25 @@ public class RiesgoPropiedadDAO {
 		return ret;
 	}
 	
-	public static List<RiesgoPropiedad> getRiesgoPropiedadesPagina(int pagina, int numeroRiesgoPropiedades){
+	public static List<RiesgoPropiedad> getRiesgoPropiedadesPagina(int pagina, int numeroRiesgoPropiedades,
+			String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion,
+			String columna_ordenada, String orden_direccion){
 		List<RiesgoPropiedad> ret = new ArrayList<RiesgoPropiedad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<RiesgoPropiedad> criteria = session.createQuery("SELECT r FROM RiesgoPropiedad r ",RiesgoPropiedad.class);
+			
+			String query = "SELECT r FROM RiesgoPropiedad r where r.estado = 1 ";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " r.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " r.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(r.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
+			
+			Query<RiesgoPropiedad> criteria = session.createQuery(query,RiesgoPropiedad.class);
 			criteria.setFirstResult(((pagina-1)*(numeroRiesgoPropiedades)));
 			criteria.setMaxResults(numeroRiesgoPropiedades);
 			ret = criteria.getResultList();
@@ -164,11 +178,21 @@ public class RiesgoPropiedadDAO {
 		return ret;
 	}
 	
-	public static Long getTotalRiesgoPropiedad(){
+	public static Long getTotalRiesgoPropiedad(String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(r.id) FROM RiesgoPropiedad r ",Long.class);
+			String query = "SELECT count(r.id) FROM RiesgoPropiedad r where r.estado = 1 ";
+			String query_a="";
+			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+				query_a = String.join("",query_a, " r.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " r.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(r.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			
+			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){

@@ -16,6 +16,10 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		
+		mi.filtros=[];
+		mi.columnaOrdenada=null;
+		mi.ordenDireccion = null;
+		
 		
 		//--
 		mi.riesgopropiedades =[];
@@ -33,12 +37,20 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 				enableFiltering: true,
 				enablePaginationControls: false,
 			    paginationPageSize: $utilidades.elementosPorPagina,
+			    useExternalFiltering: true,
+			    useExternalSorting: true,
 				columnDefs : [ 
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
+					{ name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
+						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.riesgotipoc.filtros[\'nombre\']" ng-keypress="grid.appScope.riesgotipoc.filtrar($event)"></input></div>'
+				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-				    { name: 'usuarioCreo', displayName: 'Usuario Creación'},
-				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
+				    { name: 'usuarioCreo', displayName: 'Usuario Creación',
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.riesgotipoc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.riesgotipoc.filtrar($event)"></input></div>'
+				    },
+				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.riesgotipoc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.riesgotipoc.filtrar($event)"></input></div>'
+				    }
 				],
 				onRegisterApi: function(gridApi) {
 					mi.gridApi = gridApi;
@@ -46,8 +58,29 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 						mi.riesgotipo = row.entity;
 					});
 					
+					gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
+						if(sortColumns.length==1){
+							grid.appScope.riesgotipoc.columnaOrdenada=sortColumns[0].field;
+							grid.appScope.riesgotipoc.ordenDireccion = sortColumns[0].sort.direction;
+							for(var i = 0; i<sortColumns.length-1; i++)
+								sortColumns[i].unsort();
+							grid.appScope.riesgotipoc.cargarTabla(grid.appScope.riesgotipoc.paginaActual);
+						}
+						else if(sortColumns.length>1){
+							sortColumns[0].unsort();
+						}
+						else{
+							if(grid.appScope.riesgotipoc.columnaOrdenada!=null){
+								grid.appScope.riesgotipoc.columnaOrdenada=null;
+								grid.appScope.riesgotipoc.ordenDireccion=null;
+							}
+						}
+							
+					} );
+					
 					if($routeParams.reiniciar_vista=='rv'){
 						mi.guardarEstado();
+						mi.obtenerTotalTipoRiesgos();
 				    }
 				    else{
 				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'riesgoTipos', t: (new Date()).getTime()}).then(function(response){
@@ -57,6 +90,7 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 						      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
 						      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
 						      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
+						      mi.obtenerTotalTipoRiesgos();
 						  });
 				    }
 				}
@@ -64,7 +98,11 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 		
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SRiesgoTipo', { accion: 'getRiesgotiposPagina', pagina: pagina, numeroriesgotipos: $utilidades.elementosPorPagina }).success(
+			$http.post('/SRiesgoTipo', { accion: 'getRiesgotiposPagina', pagina: pagina, numeroriesgotipos: $utilidades.elementosPorPagina,
+				objetoid: $routeParams.objeto_id, tipo: mi.objetotipo, filtro_nombre: mi.filtros['nombre'], 
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+			}).success(
 					function(response) {
 						mi.riesgotipos = response.riesgotipos;
 						mi.gridOptions.data = mi.riesgotipos;
@@ -176,12 +214,23 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 				$location.path('/riesgotipo/rv');
 		}
 		
-		$http.post('/SRiesgoTipo', { accion: 'numeroRiesgoTipos' }).success(
-				function(response) {
-					mi.totalRiesgotipos = response.totalcomponentetipos;
-					mi.cargarTabla(1);
-				}
-		);
+		mi.filtrar = function(evt){
+			if(evt.keyCode==13){
+				mi.obtenerTotalTipoRiesgos();
+			}
+		}
+		
+		mi.obtenerTotalTipoRiesgos = function(){
+			$http.post('/SRiesgoTipo', { accion: 'numeroRiesgoTipos',
+				filtro_nombre: mi.filtros['nombre'], 
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).then(
+					function(response) {
+						mi.totalRiesgotipos = response.data.totalriesgos;
+						mi.paginaActual = 1;
+						mi.cargarTabla(mi.paginaActual);
+			});
+		}
+		
 		//----
 		
 		mi.gridOptionsriesgoPropiedad = {
