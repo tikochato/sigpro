@@ -40,7 +40,7 @@ public class SProyectoTipo extends HttpServlet {
 		Integer id;
 		String nombre;
 		String descripcion;
-		String usarioCreo;
+		String usuarioCreo;
 		String usuarioActualizo;
 		String fechaCreacion;
 		String fechaActualizacion;
@@ -94,7 +94,7 @@ public class SProyectoTipo extends HttpServlet {
 				temp.fechaActualizacion = Utils.formatDateHour(proyectotipo.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDateHour(proyectotipo.getFechaCreacion());
 				temp.usuarioActualizo = proyectotipo.getUsuarioActualizo();
-				temp.usarioCreo = proyectotipo.getUsarioCreo();
+				temp.usuarioCreo = proyectotipo.getUsarioCreo();
 				stcooperantes.add(temp);
 			}
 			
