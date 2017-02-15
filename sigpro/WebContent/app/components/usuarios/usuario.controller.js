@@ -72,7 +72,7 @@ app.controller(
 		},{
 			name: 'Fecha actualizacion',
 			cellClass : 'grid-align-left',
-			field: 'usuarioActualizo',
+			field: 'fechaActualizacion',
 			enableFiltering: false
 		}
 		],
