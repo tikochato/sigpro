@@ -51,6 +51,8 @@
 					</div>
 				</div>
 			</div>
+			<br/>
+			<div class="total-rows">Total de {{  componentetipoc.totalComponentetipos + (componentetipoc.totalComponentetipos == 1 ? " Tipo de Componente" : " Tipos de Compoentes" ) }}</div>
 			<ul uib-pagination total-items="componentetipoc.totalComponentetipos"
 				ng-model="componentetipoc.paginaActual"
 				max-size="componentetipoc.numeroMaximoPaginas"

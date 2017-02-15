@@ -34,7 +34,6 @@ public class Producto implements java.io.Serializable {
 	private UnidadEjecutora unidadEjecutora;
 	private String nombre;
 	private String descripcion;
-	private int productoid;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
@@ -54,18 +53,17 @@ public class Producto implements java.io.Serializable {
 	}
 
 	public Producto(Componente componente, ProductoTipo productoTipo, UnidadEjecutora unidadEjecutora, String nombre,
-			int productoid, String usuarioCreo, Date fechaCreacion) {
+			String usuarioCreo, Date fechaCreacion) {
 		this.componente = componente;
 		this.productoTipo = productoTipo;
 		this.unidadEjecutora = unidadEjecutora;
 		this.nombre = nombre;
-		this.productoid = productoid;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 	}
 
 	public Producto(Componente componente, ProductoTipo productoTipo, UnidadEjecutora unidadEjecutora, String nombre,
-			String descripcion, int productoid, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, Integer estado, Long snip, Integer programa, Integer subprograma,
 			Integer proyecto, Integer actividad, Integer obra, Integer fuente, Set<ProductoUsuario> productoUsuarios,
 			Set<ProductoPropiedadValor> productoPropiedadValors) {
@@ -74,7 +72,6 @@ public class Producto implements java.io.Serializable {
 		this.unidadEjecutora = unidadEjecutora;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
-		this.productoid = productoid;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
@@ -151,15 +148,7 @@ public class Producto implements java.io.Serializable {
 		this.descripcion = descripcion;
 	}
 
-	@Column(name = "productoid", nullable = false)
-	public int getProductoid() {
-		return this.productoid;
-	}
-
-	public void setProductoid(int productoid) {
-		this.productoid = productoid;
-	}
-
+	
 	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;

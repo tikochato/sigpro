@@ -72,7 +72,8 @@ public class ProductoTipoDAO {
 				Integer id = (Integer) session.save(pojo);
 				session.getTransaction().commit();
 
-				ret = ProdTipoPropiedadDAO.persistirPropiedades(id, propiedades, usuario);
+				if (propiedades!=null && propiedades.length()>0 && !propiedades.isEmpty())
+					ret = ProdTipoPropiedadDAO.persistirPropiedades(id, propiedades, usuario);
 
 			} catch (Throwable e) {
 				CLogger.write("2", ProductoTipoDAO.class, e);

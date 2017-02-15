@@ -118,7 +118,7 @@ public class SActividadTipo extends HttpServlet {
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			response_text = String.join("","{ \"success\": true, \"totalcooperantes\":",ActividadTipoDAO.getTotalActividadTipo(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalactividadtipos\":",ActividadTipoDAO.getTotalActividadTipo(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
 		else if(accion.equals("guardarActividadtipo")){
 			boolean result = false;

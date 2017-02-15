@@ -24,8 +24,6 @@ public class ProductoDAO {
 		String descripcion;
 		Integer idComponente;
 		String componente;
-		Integer idProducto;
-		String producto;
 		Integer idProductoTipo;
 		String productoTipo;
 		Integer unidadEjectuora;
@@ -236,11 +234,7 @@ public class ProductoDAO {
 				estructuraPojo.idProductoTipo = pojo.getProductoTipo().getId();
 				estructuraPojo.productoTipo = pojo.getProductoTipo().getNombre();
 			}
-			if (pojo.getProductoid()>0){
-				Producto producto_temp = getProductoPorId(pojo.getProductoid());
-				estructuraPojo.idProducto = producto_temp.getId();
-				estructuraPojo.producto = producto_temp.getNombre();
-			}
+			
 			if (pojo.getUnidadEjecutora() != null){
 				estructuraPojo.unidadEjectuora = pojo.getUnidadEjecutora().getUnidadEjecutora();
 				estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();

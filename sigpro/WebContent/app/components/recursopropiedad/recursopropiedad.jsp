@@ -73,17 +73,20 @@
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="recursopropiedadc.recursopropiedad.nombre" ng-required="true">
+    						<input type="text" class="form-control"  placeholder="Nombre" ng-model="recursopropiedadc.recursopropiedad.nombre" ng-required="true">
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Tipo dato</label>
 							<select class="form-control" 
 								ng-model="recursopropiedadc.datoTipoSeleccionado" 
-								ng-options="opcion as opcion.nombre for opcion in recursopropiedadc.tipodatos" ng-required="true"></select>
+								ng-options="opcion as opcion.nombre for opcion in recursopropiedadc.tipodatos" ng-required="true"
+								ng-readonly="true" 
+								ng-disabled="!recursopropiedadc.esnuevo" 
+								></select>
 						</div>
 						<div class="form-group">
 							<label for="descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="recursopropiedadc.recursopropiedad.descripcion">
+    						<input type="text" class="form-control" placeholder="Descripción" ng-model="recursopropiedadc.recursopropiedad.descripcion" >
 						</div>
 						<br/>
 						<div class="panel panel-default">

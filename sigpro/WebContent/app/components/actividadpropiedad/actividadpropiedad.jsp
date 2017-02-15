@@ -38,7 +38,9 @@
 					</div>
 				  </div>
 				</div>
-				<ul uib-pagination total-items="actividadpropiedadc.totalCooperantes"
+				<br/>
+				<div class="total-rows">Total de {{  actividadpropiedadc.totalActividadPropiedades + (actividadpropiedadc.totalActividadPropiedades == 1 ? " Propiedade de Actividad" : " Propiedades de Actividad" ) }}</div>
+				<ul uib-pagination total-items="actividadpropiedadc.totalActividadPropiedades"
 						ng-model="actividadpropiedadc.paginaActual"
 						max-size="actividadpropiedadc.numeroMaximoPaginas"
 						items-per-page="actividadpropiedadc.elementosPorPagina"

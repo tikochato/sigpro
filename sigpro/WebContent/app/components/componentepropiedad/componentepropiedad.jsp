@@ -38,6 +38,8 @@
 					</div>
 				  </div>
 				</div>
+				<br/>
+			<div class="total-rows">Total de {{  componentepropiedadc.totalComponentePropiedades + (componentepropiedadc.totalComponentePropiedades == 1 ? " Componente" : " Componentes" ) }}</div>
 				<ul uib-pagination total-items="componentepropiedadc.totalComponentePropiedades"
 						ng-model="componentepropiedadc.paginaActual"
 						max-size="componentepropiedadc.numeroMaximoPaginas"
