@@ -12,6 +12,7 @@ app.provider('Utilidades', function() {
 
 				dataFactory.elementosPorPagina = 20;
 				dataFactory.numeroMaximoPaginas = 5;
+				dataFactory.sistema_nombre = "SIPRO";
 
 				dataFactory.mensaje = function(tipo, texto) {
 					return $alertas.create(tipo, texto, 5000, {

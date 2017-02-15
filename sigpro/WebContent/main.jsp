@@ -7,9 +7,9 @@
 <%@ include file="/app/shared/includes.jsp"%>
 
 <script src="/app/components/main/main.controller.js"></script>
-<title>MINFIN - SIGPRO</title>
+<title></title>
 </head>
-<body ng-app="sigpro" ng-controller="MainController as mainController">
+<body ng-app="sipro" ng-controller="MainController as mainController">
 <%@ include file="/app/components/menu/menu.jsp" %>
 	<div id="mainview" class="all_page">
 		<div ng-view class="all_page"></div>
