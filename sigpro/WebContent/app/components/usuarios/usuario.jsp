@@ -104,7 +104,7 @@
 					        <label for="campo6">Colaborador</label>
 					        <div class="input-group">
 					          <input type="text" class="form-control" placeholder="Usuario" ng-model="usuarioc.usuariosSelected.colaborador"  ng-disabled="true" />
-					          <span class="input-group-addon"  ng-click="usuarioc.colaboradorSeleccionado ? '' : usuarioc.buscarColaborador()" uib-tooltip="Validar Usuario" ><i class="glyphicon glyphicon-search"></i></span>
+					          <span class="input-group-addon"  ng-click="usuarioc.tieneColaborador ? '' : usuarioc.buscarColaborador()" uib-tooltip="buscar colaborador"><i class="glyphicon glyphicon-search"></i></span>
 					        </div>
 					      </div>
 						<br>
