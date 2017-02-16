@@ -117,19 +117,7 @@
     		</div>
     	</div>
 		</div>
-		<div>
-		<!--<div class="form-group ">
-		   <label for="campo6">Colaborador</label>
-		   <div class="input-group" ng-show="!usuarioc.tieneColaborador">
-		   		<button  class="btn btn-default" style="width:100%;" ng-click="usuarioc.buscarColaborador()"> {{usuarioc.mensajeActualizado.mensaje}}</button>
-		   		<span class="input-group-addon" ng-click="usuarioc.asignarColaborador()"><i class="glyphicon glyphicon-ok"></i></span>
-		   </div>
-		   <div class="input-group" ng-show="usuarioc.tieneColaborador">
-		   		<button  class="btn btn-default" style="width:100%;font-size:1.2em;"> {{usuarioc.usuariosSelected.colaborador}}</button>
-		   </div>
-		</div>-->
 		
-		</div>
 
 		<h3 ng-show="usuarioc.isCollapsed">Permisos</h3><br/>
 		<div align="center" ng-show="usuarioc.isCollapsed">
