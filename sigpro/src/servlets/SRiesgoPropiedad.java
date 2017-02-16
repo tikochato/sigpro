@@ -241,6 +241,9 @@ public class SRiesgoPropiedad extends HttpServlet {
 						case 3:
 							campo.put("valor", riesgoPropiedadValor.getValorDecimal());
 							break;
+						case 4:
+							campo.put("valor", riesgoPropiedadValor.getValorEntero()==1 ? true : false);
+							break;	
 						case 5:
 							campo.put("valor", Utils.formatDate(riesgoPropiedadValor.getValorTiempo()));
 							break;
