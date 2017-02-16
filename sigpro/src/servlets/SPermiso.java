@@ -48,7 +48,6 @@ public class SPermiso extends HttpServlet {
      */
     public SPermiso() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	

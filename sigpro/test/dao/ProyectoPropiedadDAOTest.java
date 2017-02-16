@@ -14,7 +14,7 @@ public class ProyectoPropiedadDAOTest {
 	
 	@Test
 	public void getTotalProyectoPropiedadesTest(){
-		assertEquals(ProyectoPropiedadDAO.getTotalProyectoPropiedades().getClass(),Long.class);
+		assertEquals(ProyectoPropiedadDAO.getTotalProyectoPropiedades("","","").getClass(),Long.class);
 	}
 	
 	@Test

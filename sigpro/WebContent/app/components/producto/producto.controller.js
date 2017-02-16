@@ -29,6 +29,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 
 	mi.filtros = [];
 	mi.orden = null;
+	mi.esNuevo = false;
 	
 	$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id }).success(
 			function(response) {
@@ -180,10 +181,6 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		mi.tipo = null;
 		mi.tipoNombre = "";
 
-
-		mi.productoPadre = null;
-		mi.productoPadreNombre = "";
-		
 		mi.unidadEjecutora = null;
 		mi.unidadEjecutoraNombre = "";
 
@@ -361,6 +358,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 					mi.cargarTabla(mi.paginaActual);
 		});
 	};
+	
+	mi.irAActividades=function(){
+		if(mi.producto.id!=null){
+			$location.path('/actividad/'+ mi.producto.id +'/3' );
+		}
+	};
 
 	mi.llamarModalBusqueda = function(servlet, datosTotal, datosCarga, columnaId,columnaNombre) {
 		var resultado = $q.defer();
@@ -524,8 +527,7 @@ function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
 			name : $columnaId,
 			cellClass : 'grid-align-right',
 			type : 'number',
-			width : 150,
-			visible : false
+			width : 150
 		}, {
 			displayName : 'Nombre',
 			name : $columnaNombre,

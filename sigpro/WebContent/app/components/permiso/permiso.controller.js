@@ -137,22 +137,15 @@ app.controller(
 						function(data) {
 							if(data.success){
 								if(mi.esNuevo){
-									mi.gridOptions.data
-									.push({
-										"id" : data.data,
-										"nombre" : mi.permisoSelected.nombre,
-										"descripcion" : mi.permisoSelected.descripcion
-									});
-									mi.isCollapsed = false;
+									mi.paginaActual=1;
+									mi.cargarTabla(mi.paginaActual);
 									$utilidades.mensaje('success','Permiso agregado exitosamente');
 								}else{
 									mi.paginaActual=1;
 									mi.cargarTabla(mi.paginaActual);
-									mi.isCollapsed = false;
 									$utilidades.mensaje('success','Permiso actualizado exitosamente');
 								}
 							}else{
-								mi.isCollapsed = false;
 								$utilidades.mensaje('danger','No se pudieron aplicar los cambios');
 							}
 							

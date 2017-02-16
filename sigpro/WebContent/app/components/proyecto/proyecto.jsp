@@ -70,10 +70,10 @@
 	<div class="row main-form" ng-show="controller.esColapsado">
 		<h4 ng-hide="!controller.esNuevo">Nuevo Proyecto</h4>
 		<h4 ng-hide="controller.esNuevo">Edición de proyecto</h4>
-		<div class="col-sm-12 operation_buttons" align="left" ng-hide="controler.esNuevo">
+		<div class="operation_buttons" align="left" ng-hide="controller.esNuevo">
 			<div class="btn-group">
 				<label class="btn btn-default" ng-click="controller.irAComponentes(controller.proyecto.id)">Componentes</label>
-				<label class="btn btn-default" ng-click="controller.irAHitos(controller.proyecto.id)">Hitos</label>
+				<label class="btn btn-default" ng-click="controller.irAHitos(controller.proyecto.id)" >Hitos</label>
 				<label class="btn btn-default" ng-click="controller.irADesembolsos(controller.proyecto.id)">Desembolsos</label>
 				<label class="btn btn-default" ng-click="controller.irARiesgos(controller.proyecto.id)">Riesgos</label>
 			</div>
@@ -100,7 +100,7 @@
 				<div class="form-group"  >
 					<label for="isnip">SNIP</label>
 					<input type="number" name="isnip" id="isnip"  ng-model="controller.proyecto.snip"
-						class="form-control" placeholder="Nombre">
+						class="form-control" placeholder="SNIP">
 				</div>
 				
 				<div class="form-group row" >

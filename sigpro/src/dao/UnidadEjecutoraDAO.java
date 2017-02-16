@@ -21,6 +21,10 @@ public class UnidadEjecutoraDAO {
 		String nombreUnidadEjecutora;
 		Integer entidad;
 		String nombreEntidad;
+		String usuarioCreo;
+		String usuarioActualizo;
+		String fechaCreacion;
+		String fechaActualizacion;
 	}
 
 	public static UnidadEjecutora getUnidadEjecutora(Integer unidadEjecutora) {
@@ -131,6 +135,7 @@ public class UnidadEjecutoraDAO {
 			estructuraPojo.nombreUnidadEjecutora = pojo.getNombre();
 			estructuraPojo.entidad = pojo.getEntidad().getEntidad();
 			estructuraPojo.nombreEntidad = pojo.getEntidad().getNombre();
+			
 
 			listaEstructuraPojos.add(estructuraPojo);
 		}

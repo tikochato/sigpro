@@ -88,11 +88,13 @@ public class SProductoPropiedad extends HttpServlet {
 
 		int tipo = Utils.String2Int(parametro.get("tipo"), -1);
 
-		boolean creado = ProductoPropiedadDAO.guardar(-1, nombre, descripcion, usuario , tipo);
+		Integer creado = ProductoPropiedadDAO.guardar(-1, nombre, descripcion, usuario , tipo);
 		
-		if (creado) {
-			listar(parametro, response);
-		}
+		String resultadoJson = String.join("","{ \"success\": ",(creado!=null ? "true" : "false"),", "
+				+ "\"id\": " + creado +" }");
+		 
+
+		Utils.writeJSon(response, resultadoJson);
 	}
 
 	private void actualizar(Map<String, String> parametro, HttpServletResponse response,String usuario) throws IOException {

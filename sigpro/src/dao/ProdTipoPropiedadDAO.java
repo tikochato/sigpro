@@ -75,6 +75,8 @@ public class ProdTipoPropiedadDAO {
 			} finally {
 				session.close();
 			}
+		}else{
+			ret = true;
 		}
 
 		return ret;
@@ -233,7 +235,7 @@ public class ProdTipoPropiedadDAO {
 	}
 
 	public static boolean persistirPropiedades(Integer idTipo, String propiedades, String usuario) {
-		boolean ret = false;
+		boolean ret = true;
 
 		Gson gson = new Gson();
 
