@@ -36,12 +36,12 @@ public class PermisoDAOTest {
 	
 	@Test
 	public void getPermisoPagina(){
-		assertNotNull(PermisoDAO.getPermisosPagina(1, 1));
+		assertNotNull(PermisoDAO.getPermisosPagina(1, 1,"","","",""));
 	}
 	
 	@Test
 	public void getTotalPermiso(){
-		assertNotNull(PermisoDAO.getTotalPermisos());
+		assertNotNull(PermisoDAO.getTotalPermisos("","","",""));
 	}
 	
 	@Test

@@ -48,7 +48,6 @@ public class SPermiso extends HttpServlet {
      */
     public SPermiso() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	
@@ -138,7 +137,11 @@ public class SPermiso extends HttpServlet {
 			}else if(action.compareTo("getPermisosPagina")==0){
 				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 				int numeroPermisos = map.get("numeroPermisos")!=null  ? Integer.parseInt(map.get("numeroPermisos")) : 0;
-				List <Permiso> permisos = PermisoDAO.getPermisosPagina(pagina, numeroPermisos);
+				String filtro_id = map.get("filtro_id");
+				String filtro_usuario_creo = map.get("filtro_usuario_creo");
+				String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+				String filtro_nombre= map.get("filtro_nombre");
+				List <Permiso> permisos = PermisoDAO.getPermisosPagina(pagina, numeroPermisos, filtro_id,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion);
 				List <stpermiso> stpermisos = new ArrayList <stpermiso>();
 				for(Permiso permiso:permisos)
 				{
@@ -159,7 +162,11 @@ public class SPermiso extends HttpServlet {
 				
 			}
 			else if(action.compareTo("getTotalPermisos")==0){
-				response_text = String.join("","{ \"success\": true, \"totalPermisos\":",PermisoDAO.getTotalPermisos().toString()," }");
+				String filtro_id = map.get("filtro_id");
+				String filtro_usuario_creo = map.get("filtro_usuario_creo");
+				String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+				String filtro_nombre= map.get("filtro_nombre");
+				response_text = String.join("","{ \"success\": true, \"totalPermisos\":",PermisoDAO.getTotalPermisos(filtro_id,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion).toString()," }");
 			}
 		}else{
 			response_text = String.join("", "{\"success\":false, \"error\":\"falta parametro de accion\" }");

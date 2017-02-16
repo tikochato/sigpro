@@ -62,12 +62,12 @@ public class UsuarioDAOTest {
 	
 	@Test
 	public void getUsuariosTest(){
-		assertNotNull(UsuarioDAO.getUsuarios(1, 1));
+		assertNotNull(UsuarioDAO.getUsuarios(1, 1, "","","",""));
 	}
 	
 	@Test
 	public void getTotalUsuariosTest(){
-		assertEquals(UsuarioDAO.getTotalUsuarios().getClass(),Long.class);
+		assertEquals(UsuarioDAO.getTotalUsuarios("","","","").getClass(),Long.class);
 	}
 	
 	

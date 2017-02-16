@@ -19,7 +19,7 @@ app.controller(
   '$uibModal',
   function($scope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route,$q,$uibModal) {
 	var mi=this;
-	$window.document.title = 'SIGPRO - Usuario';
+	$window.document.title =$utilidades.sistema_nombre+' - Info';
 	i18nService.setCurrentLang('es');
 	mi.edicion=false;
 	

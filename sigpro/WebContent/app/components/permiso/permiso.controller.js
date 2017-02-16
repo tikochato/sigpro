@@ -26,21 +26,26 @@ app.controller(
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 	mi.permisoSelected={id:"",nombre:"", descripcion:""};	
+	mi.filtros=[];
 	mi.gridOptions = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
 		paginationPageSizes : [ 25, 50, 75 ],
 		paginationPageSize : 25,
 		enableFiltering: true,
+		useExternalFiltering: true,
+		useExternalSorting: true,
 		data : [],
 		columnDefs : [ {
 			name : 'ID',
 			field : 'id',
-			cellClass : 'grid-align-left'
+			cellClass : 'grid-align-left',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.permisosc.filtros[\'id\']" ng-keypress="grid.appScope.permisosc.filtrar($event)" style="width:175px;"></input></div>'
 		}, {
 			name : 'Nombre',
 			cellClass : 'grid-align-left',
-			field : 'nombre'
+			field : 'nombre',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.permisosc.filtros[\'nombre\']" ng-keypress="grid.appScope.permisosc.filtrar($event)" style="width:175px;"></input></div>'
 		}, {
 			name : 'Descripcion',
 			field : 'descripcion',
@@ -49,11 +54,13 @@ app.controller(
 		}, {
 			name : 'Usuario creo',
 			field : 'usuarioCreo',
-			cellClass : 'grid-align-left'
+			cellClass : 'grid-align-left',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.permisosc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.permisosc.filtrar($event)" style="width:175px;"></input></div>'
 		}, {
 			name : 'Fecha creacion',
 			field : 'fechaCreacion',
-			cellClass : 'grid-align-left'
+			cellClass : 'grid-align-left',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.permisosc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.permisosc.filtrar($event)" style="width:175px;"></input></div>'
 		}, {
 			name : 'Usuario actualizo',
 			field : 'usuarioActualizo',
@@ -72,7 +79,8 @@ app.controller(
 	};
 	mi.cargarTabla=function(pagina){
 		$http.post('/SPermiso',
-				{ accion : 'getPermisosPagina',  pagina: pagina, numeroPermisos: $utilidades.elementosPorPagina  }).success(function(data) {
+				{ accion : 'getPermisosPagina',  pagina: pagina, numeroPermisos: mi.elementosPorPagina ,filtro_id: mi.filtros['id'],filtro_nombre: mi.filtros['nombre'],
+			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).success(function(data) {
 				mi.gridOptions.data =  data.permisos;
 				mi.mostrarcargando=false;
 		});
@@ -137,22 +145,15 @@ app.controller(
 						function(data) {
 							if(data.success){
 								if(mi.esNuevo){
-									mi.gridOptions.data
-									.push({
-										"id" : data.data,
-										"nombre" : mi.permisoSelected.nombre,
-										"descripcion" : mi.permisoSelected.descripcion
-									});
-									mi.isCollapsed = false;
+									mi.paginaActual=1;
+									mi.cargarTabla(mi.paginaActual);
 									$utilidades.mensaje('success','Permiso agregado exitosamente');
 								}else{
 									mi.paginaActual=1;
 									mi.cargarTabla(mi.paginaActual);
-									mi.isCollapsed = false;
 									$utilidades.mensaje('success','Permiso actualizado exitosamente');
 								}
 							}else{
-								mi.isCollapsed = false;
 								$utilidades.mensaje('danger','No se pudieron aplicar los cambios');
 							}
 							
@@ -224,7 +225,18 @@ app.controller(
 	
 	$http.post('/SPermiso', { accion: 'getTotalPermisos' }).success(
 			function(response) {
-				mi.totalPermisos = response.totalPermisos;
+				mi.elementosPorPagina = response.totalPermisos;
 				mi.cargarTabla(mi.paginaActual);
 	});
+	
+	mi.filtrar = function(evt){
+		if(evt.keyCode==13){
+			$http.post('/SUsuario', { accion: 'getTotalPermisos',	filtro_id: mi.filtros['id'],filtro_nombre: mi.filtros['nombre'],
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).success(
+					function(response) {
+						mi.elementosPorPagina = response.totalPermisos;
+						mi.cargarTabla(mi.paginaActual);
+			});
+		}
+	};
 } ]);
