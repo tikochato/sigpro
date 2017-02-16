@@ -213,13 +213,12 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 			}
 		};
 
-
 		mi.obtenerTotalHitoTipos=function(){
 			$http.post('/SHitoTipo', { accion: 'numeroHitoTipos',
 				filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
 					function(response) {
-						mi.totalActividades = response.totalactividades;
+						mi.totalHitotipo = response.totalhitotipos;
 						mi.cargarTabla(1);
 			});
 		};
