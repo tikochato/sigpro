@@ -146,7 +146,7 @@ public class SProyecto extends HttpServlet {
 			response_text = String.join("", "{\"success\":true,", response_text, "}");
 
 
-
+ 
 		}else if(accion.equals("getProyectoPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroProyecto = map.get("numeroproyecto")!=null  ? Integer.parseInt(map.get("numeroproyecto")) : 0;
