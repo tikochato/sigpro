@@ -80,14 +80,14 @@
 		<div class="col-sm-12">
 			<form name="form" class="css-form">
 				
-					<div class="form-group col-sm-3" ng-show="!producto.esNuevo">
-						<label for="campo0">ID:</label> 
+					<div class="form-group">
+						<label>Id</label> 
 						<p class="form-control-static" id="campo0" name="campo0" >{{producto.producto.id}}</p>
 					</div>
 				
 				
 					<div class="form-group">
-						<label for="campo1">* Nombre:</label> 
+						<label>* Nombre</label> 
 						<input type="text" class="form-control" placeholder="Nombre del producto" ng-model="producto.producto.nombre" ng-required="true" />
 					</div>
 					
@@ -97,39 +97,39 @@
 					</div>
 				
 					<div class="form-group row" >
-						<div class="form-group col-sm-2 " >
+						<div class="form-group col-sm-2" >
 						       <label for="iprog">Programa</label>
 						       <input type="number" class="form-control" placeholder="Programa" ng-model="producto.producto.programa"  ng-maxlength="4" style="text-align: center" />
 						</div>
-						<div class="form-group col-sm-2 " >
+						<div class="form-group col-sm-2" >
 						  <label for="isubprog">Subprograma</label>
 						  <input type="number" class="form-control" placeholder="Sub-programa" ng-model="producto.producto.subprograma" ng-maxlength="4" style="text-align: center" />
 						</div>
-						<div class="form-group col-sm-2 " >
-						  <label for="iproy_">Proyecto:</label>
+						<div class="form-group col-sm-2" >
+						  <label for="iproy_">Proyecto</label>
 						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="producto.producto.proyecto_"  ng-maxlength="4" style="text-align: center" />
 						</div>
-						<div class="form-group col-sm-2 " >
-						  <label for="iproy_">Actividad:</label>
+						<div class="form-group col-sm-2" >
+						  <label for="iproy_">Actividad</label>
 						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="producto.producto.actividad" ng-maxlength="4" style="text-align: center"  />
 						</div>
-						<div class="form-group col-sm-2 " >
+						<div class="form-group col-sm-2" >
 						  <label for="iobra">Obra</label>
 						  <input type="number" class="form-control" placeholder="Obra" ng-model="producto.producto.obra" ng-maxlength="4" style="text-align: center"/>
 						</div>
-						<div class="form-group col-sm-2 " >
+						<div class="form-group col-sm-2" >
 						  <label for="campo5">Fuente</label>
 						  <input type="number" class="form-control" placeholder="Fuente" ng-model="producto.producto.fuente" ng-maxlength="4" style="text-align: center"/>
 						</div>
 					</div>
 
 					<div class="form-group" >
-						<label for="campo2"> Descripción:</label> 
+						<label for="campo2"> Descripción</label> 
 						<input type="text" class="form-control" placeholder="Descripcion del producto" ng-model="producto.producto.descripcion" />
 					</div>
 					
 					<div class="form-group" >
-			          <label for="campo3">* Tipo:</label>
+			          <label for="campo3">* Tipo</label>
 			          <div class="input-group"> 
 			            <input type="text" class="form-control" placeholder="Tipo de producto" ng-model="producto.tipoNombre" ng-readonly="true" ng-required="true"/>
 			            <span class="input-group-addon" ng-click="producto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
@@ -137,9 +137,9 @@
 			        </div>
 			        
 			        <div class="form-group">
-			          <label for="campo5">Unidad Ejecutora:</label>
+			          <label for="campo5">Unidad Ejecutora</label>
 			          <div class="input-group"> 
-			            <input type="text" class="form-control" placeholder="Producto padre" ng-model="producto.unidadEjecutoraNombre" ng-readonly="true" ng-required="true"/>
+			            <input type="text" class="form-control" placeholder="Unidad Ejecutora" ng-model="producto.unidadEjecutoraNombre" ng-readonly="true" ng-required="true"/>
 			            <span class="input-group-addon" ng-click="producto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
 			          </div>
 			        </div>
@@ -147,13 +147,13 @@
 			        <div class="form-group" ng-repeat="campo in producto.camposdinamicos">
 						<label for="campo.id">{{ campo.label }}</label>
 						<div ng-switch="campo.tipo">
-							<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
-							<input ng-switch-when="entero" type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" />
-							<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
-							<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+							<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{ campo.label }}" />
+							<input ng-switch-when="entero" type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" placeholder="{{ campo.label }}"/>
+							<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control"placeholder="{{ campo.label }}" />
+							<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" placeholder="{{ campo.label }}"/>
 							<p ng-switch-when="fecha" class="input-group">
 								<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{producto.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-										datepicker-options="producto.fechaOptions" close-text="Cerrar" />
+										datepicker-options="producto.fechaOptions" close-text="Cerrar" placeholder="{{ campo.label }}"/>
 								<span class="input-group-btn">
 									<button type="button" class="btn btn-default" ng-click="producto.abrirPopupFecha($index)">
 										<i class="glyphicon glyphicon-calendar"></i>

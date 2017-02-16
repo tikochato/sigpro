@@ -524,8 +524,7 @@ function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
 			name : $columnaId,
 			cellClass : 'grid-align-right',
 			type : 'number',
-			width : 150,
-			visible : false
+			width : 150
 		}, {
 			displayName : 'Nombre',
 			name : $columnaNombre,
