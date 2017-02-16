@@ -29,6 +29,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 
 	mi.filtros = [];
 	mi.orden = null;
+	mi.esNuevo = false;
 	
 	$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id }).success(
 			function(response) {
@@ -360,6 +361,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 					mi.paginaActual = 1;
 					mi.cargarTabla(mi.paginaActual);
 		});
+	};
+	
+	mi.irAActividades=function(productoid){
+		if(mi.productoid!=null){
+			$location.path('/actividad/'+ producto +'/3' );
+		}
 	};
 
 	mi.llamarModalBusqueda = function(servlet, datosTotal, datosCarga, columnaId,columnaNombre) {
