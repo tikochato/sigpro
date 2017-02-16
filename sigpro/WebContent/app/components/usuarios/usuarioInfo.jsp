@@ -21,21 +21,42 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group" >
-							<label for="nombre">Usuario:</label>
+							<label for="nombre">Usuario</label>
     						<p class="form-control-static">{{usuarioc.usuarioActual.usuario}}</p>
 						</div>
 						<div class="form-group" ng-show="usuarioc.esoculto" >
-							<label for="nombre">Correo:</label>
+							<label for="nombre">Correo</label>
     						<p class="form-control-static">{{usuarioc.usuarioActual.email}}</p>
 						</div>
 						<div class="form-group" ng-show="!usuarioc.esoculto" >
-							<label for="nombre">Correo:</label>
+							<label for="nombre">Correo</label>
     						<input  class="form-control" type="text" placeholder="Correo electrónico" ng-model="usuarioc.usuarioActual.email" ng-required="true"/>
 						</div>
 						<div class="form-group" ng-show="!usuarioc.esoculto">
 								<label for="Descripcion">Password</label>
 								<input class="form-control" type="password" ng-model="usuarioc.usuarioActual.password" ng-required="true"/>
 						</div>
+						<div class="row" ng-show="usuarioc.esoculto">
+						      <div class="form-group" >
+						        <label for="campo1">Primer Nombre</label> 
+						        <p class="form-control-static">{{usuarioc.usuarioActual.pnombre}}</p>
+						      </div>
+						
+						      <div class="form-group" >
+						        <label for="campo2">Segundo Nombre</label> 
+						      	 <p class="form-control-static">{{usuarioc.usuarioActual.snombre}}</p>
+						      </div>
+						
+						      <div class="form-group" >
+						        <label for="campo3">Primer Apellido</label> 
+							    <p class="form-control-static">{{usuarioc.usuarioActual.papellido}}</p>
+						      </div>
+						
+						      <div class="form-group">
+						        <label for="campo4">Segundo Apellido</label> 
+						      	 <p class="form-control-static">{{usuarioc.usuarioActual.sapellido}}</p>
+						      </div>
+					      </div>
 						<div ng-if="!usuarioc.esoculto">
 							<div class="row" ng-show="usuarioc.tieneColaborador">
 								
