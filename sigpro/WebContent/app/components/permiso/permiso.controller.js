@@ -143,12 +143,10 @@ app.controller(
 										"nombre" : mi.permisoSelected.nombre,
 										"descripcion" : mi.permisoSelected.descripcion
 									});
-									mi.isCollapsed = false;
 									$utilidades.mensaje('success','Permiso agregado exitosamente');
 								}else{
 									mi.paginaActual=1;
 									mi.cargarTabla(mi.paginaActual);
-									mi.isCollapsed = false;
 									$utilidades.mensaje('success','Permiso actualizado exitosamente');
 								}
 							}else{
