@@ -132,13 +132,12 @@
 				          	</div>
 						</div>
 
-
 						<div class="form-group" ng-repeat="campo in componentec.camposdinamicos">
 							<label for="campo.id">{{ campo.label }}</label>
 							<div ng-switch="campo.tipo">
-								<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
-								<input ng-switch-when="entero" type="text" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" />
-								<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
+								<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
+								<input ng-switch-when="entero" type="text" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
+								<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
 								<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
 								<p ng-switch-when="fecha" class="input-group">
 									<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{componentec.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
