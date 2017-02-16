@@ -124,18 +124,23 @@ public class Utils {
 	}
 
 	public static Long String2Long(String value, Long defaultValue) {
-
 		try {
-
 			Long val = Long.parseLong(value);
-
 			return val;
-
 		} catch (Exception e) {
-
 			return defaultValue;
 		}
-
+	}
+	
+	public static Integer String2Boolean(String value, Integer defaultValue) {
+		try {
+			if(value!=null && value.compareTo("true")==0)
+				return 	1;
+			else
+				return 0;
+		} catch (Exception e) {
+			return defaultValue;
+		}
 	}
 	
 	public static BigDecimal String2BigDecimal(String value, BigDecimal defaultValue) {

@@ -150,7 +150,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 						$utilidades.mensaje('success','Hito '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 						mi.hito.id = response.id;
-						mi.cargarTabla();
+						mi.obtenerTotalHitos();
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Hito');
@@ -177,7 +177,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Hito borrado con éxito');
-							mi.cargarTabla();
+							mi.obtenerTotalHitos();
 						}
 						else
 							$utilidades.mensaje('danger','Error al borrar el Hito');
@@ -212,12 +212,18 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 				mi.hitoresultadocomentario = mi.hito.comentario;
 				mi.hitodatotipoid = mi.hito.datotipoid;
 				mi.mostraringreso = true;
-				if (mi.hitodatotipoid === 3){
-					mi.hitoresultado = Number(mi.hito.resultado);
-				}else if (mi.hitodatotipoid === 5){
-					mi.hitoresultado = (mi.hitodatotipoid==5 ? moment(mi.hito.resultado, 'DD/MM/YYYY').toDate() : mi.hito.resultado);
-				}else {
-					mi.hitoresultado = mi.hito.resultado;
+				switch(mi.hitodatotipoid){
+					case 3: 
+						mi.hitoresultado = Number(mi.hito.resultado);
+						break;
+					case 4:
+						mi.hitoresultado = mi.hito.resultado=='true' ? true : false;
+						break;
+					case 5:
+						mi.hitoresultado = (mi.hitodatotipoid==5 ? moment(mi.hito.resultado, 'DD/MM/YYYY').toDate() : mi.hito.resultado);
+						break;
+					default:
+						mi.hitoresultado = mi.hito.resultado;
 				}
 				mi.esnuevo = false;
 			}
@@ -279,12 +285,15 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 			 mi.popupfecharesultado.abierto = true;
 		};
 
+		mi.change = function(){
+			console.log("hello", mi.hitoresultado);
+		}
 
-		$http.post('/SHito', { accion: 'numeroHitosPorProyecto',proyectoid:$routeParams.proyecto_id }).success(
+		/*$http.post('/SHito', { accion: 'numeroHitosPorProyecto',proyectoid:$routeParams.proyecto_id }).success(
 				function(response) {
 					mi.totalHitos = response.totalhitos;
 					mi.cargarTabla(1);
-		});
+		});*/
 
 		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga) {
 			var resultado = $q.defer();
@@ -330,7 +339,8 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 		resultado.then(function(itemSeleccionado) {
 			mi.hitotipoid = itemSeleccionado.id;
 			mi.hitotipoNombre = itemSeleccionado.nombre;
-			mi.hitodatotipoid = itemSeleccionado.datotipoid;
+			mi.hitodatotipoid = itemSeleccionado.idTipo;
+			console.log(mi.hitodatotipoid);
 		});
 	};
 
