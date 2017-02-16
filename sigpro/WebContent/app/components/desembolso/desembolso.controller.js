@@ -17,7 +17,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
 			mi.desembolsotipoid;
 			mi.desembolsonombre;
-			mi.proyectoid = $routeParams.pproyectoid;
+			mi.proyectoid = $routeParams.proyecto_id;
 			mi.fecha = new Date();
 			
 			mi.columnaOrdenada=null;
@@ -128,7 +128,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 						fecha: moment(mi.fecha).format('DD/MM/YYYY'),
 						monto: mi.desembolso.monto,
 						tipocambio : mi.desembolso.tipocambio,
-						proyectoid : 1,
+						proyectoid : $routeParams.proyecto_id,
 						desembolsotipoid : mi.desembolso.desembolsotipoid
 					}).success(function(response){
 						if(response.success){
