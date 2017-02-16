@@ -74,7 +74,7 @@
     <div>
 	    <form name="form" class="css-form" novalidate>
 	
-	      <div class="row">
+	      <div class="row col-sm-12">
 		      <div class="form-group ">
 		        <label>Id</label>
 		        <p class="form-control-static">{{ productoPropiedad.codigo }}</p>
