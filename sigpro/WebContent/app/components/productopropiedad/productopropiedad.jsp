@@ -74,21 +74,21 @@
     <div>
 	    <form name="form" class="css-form" novalidate>
 	
-	      <div class="row">
+	      <div class="row col-sm-12">
 		      <div class="form-group ">
-		        <label>ID:</label>
+		        <label>Id</label>
 		        <p class="form-control-static">{{ productoPropiedad.codigo }}</p>
 		      </div>
 	      </div>
 
 	      <div class="row">
 		      <div class="form-group">
-		        <label for="campo1">* Nombre:</label> 
+		        <label for="campo1">* Nombre</label> 
 		        <input type="text" class="form-control" placeholder="Nombre" ng-model="productoPropiedad.nombre" ng-required="true" />
 		      </div>
 
 		      <div class="form-group">
-		        <label for="campo2">* Tipo:</label>     			
+		        <label for="campo2">* Tipo</label>     			
     			<select class="form-control" ng-model="productoPropiedad.datoTipoSeleccionado" ng-options="tipo as tipo.nombre for tipo in productoPropiedad.datoTipos track by tipo.id" ng-required="true"
     			ng-readonly="true" ng-disabled="!productoPropiedad.esNuevo" ng-required="true">
 					<option disabled selected value> -- Seleccione Tipo -- </option>
@@ -96,7 +96,7 @@
     		 </div>
 		
 		      <div class="form-group">
-		        <label for="campo3">Descripción:</label> 
+		        <label for="campo3">Descripción</label> 
 		        <input type="text" class="form-control" placeholder="Descripción" ng-model="productoPropiedad.descripcion"/>
 		      </div>
 		      <div class="panel panel-default">

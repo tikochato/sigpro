@@ -81,27 +81,26 @@
 		<div>
 			<form name="form" class="css-form">
 
-				<div class="row">
+				<div class="row col-sm-12 ">
 					<div class="form-group">
-						<label for="campo0">ID:</label>
+						<label for="campo0">Id</label>
 						<p class="form-control-static">{{productoTipo.codigo}} </p>
 					</div>
 				</div>
 
 				<div class="row">
 					<div class="form-group">
-						<label>* Nombre:</label> 
+						<label>* Nombre</label> 
 						<input type="text" class="form-control" placeholder="Nombre de tipo" ng-model="productoTipo.nombre" ng-required="true" />
 					</div>
 
 					<div class="form-group">
-						<label>* Descripción:</label> 
+						<label>* Descripción</label> 
 						<input type="text" class="form-control" placeholder="Descripcion de tipo" ng-model="productoTipo.descripcion" ng-required="true" />
 					</div>
 				</div>
 			</form>
 		</div>
-
 		<br />
 
 		<h5>Propiedades</h5>
