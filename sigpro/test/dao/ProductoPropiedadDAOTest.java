@@ -29,16 +29,16 @@ public class ProductoPropiedadDAOTest {
 	
 	@Test
 	public void getPaginaTest(){
-		assertNotNull (ProductoPropiedadDAO.getPagina(1, 1));
+		assertNotNull (ProductoPropiedadDAO.getPagina(1, 1,"","","","",""));
 	}
 	
 	@Test
 	public void getJsonTest(){
-		assertEquals(ProductoPropiedadDAO.getJson(1, 1).getClass(), String.class);
+		assertEquals(ProductoPropiedadDAO.getJson(1, 1,"","","","","").getClass(), String.class);
 	}
 	
 	@Test
 	public void getTotalTest(){
-		assertEquals(ProductoPropiedadDAO.getTotal().getClass(),Long.class);
+		assertEquals(ProductoPropiedadDAO.getTotal("","","").getClass(),Long.class);
 	}
 }
