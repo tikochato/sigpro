@@ -18,7 +18,7 @@
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()" ng-hide="usuarioc.esoculto">cancelar</label>
     			</div>
     		</div>
-			<div class="col-sm-12">
+			<div>
 				<form name="form">
 						<div class="form-group" >
 							<label for="nombre">Usuario</label>
@@ -36,7 +36,7 @@
 								<label for="Descripcion">Password</label>
 								<input class="form-control" type="password" ng-model="usuarioc.usuarioActual.password" ng-required="true"/>
 						</div>
-						<div class="row" ng-show="usuarioc.esoculto">
+						<div ng-show="usuarioc.esoculto">
 						      <div class="form-group" >
 						        <label for="campo1">Primer Nombre</label> 
 						        <p class="form-control-static">{{usuarioc.usuarioActual.pnombre}}</p>
@@ -58,31 +58,31 @@
 						      </div>
 					      </div>
 						<div ng-if="!usuarioc.esoculto">
-							<div class="row" ng-show="usuarioc.tieneColaborador">
+							<div  ng-show="usuarioc.tieneColaborador">
 								
-						      <div class="form-group col-sm-3" >
+						      <div class="form-group" >
 						        <label for="campo1">Primer Nombre:</label> 
 						        <input type="text" class="form-control" id="campo1" name="campo1" placeholder="Primer Nombre" ng-model="usuarioc.usuarioActual.pnombre" ng-required="usuarioc.tieneColaborador"/>
 						      </div>
 						
-						      <div class="form-group col-sm-3" >
+						      <div class="form-group" >
 						        <label for="campo2">Segundo Nombre:</label> 
 						        <input type="text" class="form-control" id="campo2" name="campo2" placeholder="Segundo Nombre" ng-model="usuarioc.usuarioActual.snombre" />
 						      </div>
 						
-						      <div class="form-group col-sm-3" >
+						      <div class="form-group" >
 						        <label for="campo3">Primer Apellido:</label> 
 						        <input type="text" class="form-control" id="campo3" name="campo3" placeholder="Primer Apellido" ng-model="usuarioc.usuarioActual.papellido" ng-required="usuarioc.tieneColaborador" />
 						      </div>
 						
-						      <div class="form-group col-sm-3">
+						      <div class="form-group">
 						        <label for="campo4">Segundo Apellido:</label> 
 						        <input type="text" class="form-control" id="campo4" name="campo4" placeholder="Segundo Apellido" ng-model="usuarioc.usuarioActual.sapellido" />
 						      </div>
 					      </div>
 			
-					      <div class="row" ng-show="usuarioc.tieneColaborador">
-						      <div class="form-group col-sm-12" >
+					      <div ng-show="usuarioc.tieneColaborador">
+						      <div class="form-group" >
 						        <label for="campo5">* CUI:</label> 
 						        <input type="number" id="campo5" name="campo5" class="form-control"  placeholder="CUI" ng-model="usuarioc.usuarioActual.cui" ng-maxlength="13" ng-required="usuarioc.tieneColaborador"/>
 						      </div>
