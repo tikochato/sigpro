@@ -118,7 +118,7 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 						$utilidades.mensaje('success','Propiedad Riesgo '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.riesgopropiedad.id = response.id;
 						mi.esnuevo = false;
-						mi.cargarTabla();
+						mi.obtenerTotalRiesgoPropiedades();
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' la Propiedad Riesgo');
