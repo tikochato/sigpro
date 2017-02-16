@@ -17,7 +17,7 @@ app.controller(
   '$route',
   function($scope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route) {
 	var mi=this;
-	$window.document.title = 'SIGPRO - Permisos';
+	$window.document.title = $utilidades.sistema_nombre+' - Permisos';
 	i18nService.setCurrentLang('es');
 	mi.mostrarcargando=true;
 	mi.entityselected = null;

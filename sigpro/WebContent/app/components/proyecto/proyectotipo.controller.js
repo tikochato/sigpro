@@ -4,7 +4,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal) {
 		var mi=this;
 
-		$window.document.title = 'SIGPRO - Tipo Proyecto';
+		$window.document.title = $utilidades.sistema_nombre+' - Tipo Proyecto';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.proyectotipos = [];

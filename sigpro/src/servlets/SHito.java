@@ -245,6 +245,9 @@ public class SHito extends HttpServlet {
 						case 3://decimal
 							valorDecimal =Utils.String2BigDecimal(map.get("resultado"),null);
 							break;
+						case 4://booleano
+							valorEntero =Utils.String2Boolean(  map.get("resultado"),null);
+							break;
 						case 5://fecha
 							SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 							valorTiempo = (map.get("resultado").compareTo("")!=0 ? sdf.parse(map.get("resultado")) : null);
@@ -340,7 +343,7 @@ public class SHito extends HttpServlet {
 							temp.resultado = hitoResultado.getValorDecimal().toString();
 							break;
 						case 4:
-							temp.resultado = "false";
+							temp.resultado = hitoResultado.getValorEntero()==1 ? "true" : "false";
 							break;
 						case 5:
 							SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");

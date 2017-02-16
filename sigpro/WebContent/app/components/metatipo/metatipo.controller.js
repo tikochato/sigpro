@@ -4,7 +4,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 			var mi=this;
 			
-			$window.document.title = 'SIGPRO - Tipos de Meta';
+			$window.document.title = $utilidades.sistema_nombre+' - Tipos de Meta';
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
 			mi.tipos = [];

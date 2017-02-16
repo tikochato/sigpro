@@ -4,7 +4,7 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 		var mi=this;
 
-		$window.document.title = 'SIGPRO - Propiedad Riesgo';
+		$window.document.title = $utilidades.sistema_nombre+' - Propiedad Riesgo';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.riesgopropiedades = [];
@@ -118,7 +118,7 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 						$utilidades.mensaje('success','Propiedad Riesgo '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.riesgopropiedad.id = response.id;
 						mi.esnuevo = false;
-						mi.cargarTabla();
+						mi.obtenerTotalRiesgoPropiedades();
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' la Propiedad Riesgo');

@@ -91,7 +91,7 @@
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="hitoc.hito.descripcion">
 						</div>
 						<div class="form-group">
-							<label for="campo3">* Tipo hito:</label>
+							<label for="campo3">* Tipo hito</label>
 				          	<div class="input-group">
 				            	<input type="hidden" class="form-control" ng-model="hitoc.hitotipoid" /> 
 				            	<input type="text" class="form-control" id="icomptipo" name="icomptipo" placeholder="Nombre Tipo Hito" ng-model="hitoc.hitotipoNombre" ng-readonly="true" ng-required="true"/>
@@ -99,12 +99,12 @@
 				          	</div>
 						</div>
 						<div class="form-group" ng-if="hitoc.hitotipoid>0">
-							<label for="campo3">Resultado:</label>
+							<label for="campo3">Resultado</label>
 							<div ng-switch="hitoc.hitodatotipoid">
 								<input ng-switch-when="1" type="text"  ng-model="hitoc.hitoresultado" class="form-control" />
 								<input ng-switch-when="2" type="text"  numbers-Only ng-model="hitoc.hitoresultado" class="form-control" />
 								<input ng-switch-when="3" type="number"  ng-model="hitoc.hitoresultado" class="form-control" />
-								<input ng-switch-when="4" type="checkbox"  ng-model="hitoc.hitoresultado" />
+								<input ng-switch-when="4" type="checkbox" ng-model="hitoc.hitoresultado"/>
 								<p ng-switch-when="5" class="input-group">
 									<input type="text"  class="form-control" uib-datepicker-popup="{{hitoc.formatofecha}}" ng-model="hitoc.hitoresultado" is-open="hitoc.popupfecharesultado.abierto"
 											datepicker-options="hitoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" />

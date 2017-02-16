@@ -4,7 +4,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 		var mi=this;
 		
-		$window.document.title = 'SIGPRO - Propiedad Proyecto';
+		$window.document.title = $utilidades.sistema_nombre+' - Propiedad Proyecto';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.proyectopropiedades = [];

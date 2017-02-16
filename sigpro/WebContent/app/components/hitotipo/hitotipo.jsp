@@ -36,6 +36,8 @@
 					</div>
 				  </div>
 				</div>
+				<br/>
+			<div class="total-rows">Total de {{  hitotipoc.totalHitotipo + (hitotipoc.totalHitotipo == 1 ? " tipo de hito" : " tipos de hito" ) }}</div>
 				<ul uib-pagination total-items="hitotipoc.totalHitotipo" 
 						ng-model="hitotipoc.paginaActual" 
 						max-size="hitotipoc.numeroMaximoPaginas" 

@@ -107,7 +107,7 @@ public class SDesembolsoTipo extends HttpServlet {
 				String descripcion = map.get("descripcion");
 				DesembolsoTipo  desembolsoTipo;
 				if(esnuevo){
-					desembolsoTipo = new DesembolsoTipo(nombre, descripcion, 1, null,usuario ,null, new Date(), null);
+					desembolsoTipo = new DesembolsoTipo(nombre, descripcion, 1, usuario ,null, new Date(), null, null);
 					
 				}
 				else{

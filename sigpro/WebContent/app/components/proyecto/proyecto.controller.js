@@ -5,6 +5,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	var mi = this;
 	i18nService.setCurrentLang('es');
+	
+	$window.document.title = $utilidades.sistema_nombre+' - Proyectos';
+	
 	mi.proyecto = null;
 	mi.esNuevo = false;
 	mi.campos = {};
@@ -219,15 +222,18 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				mi.camposdinamicos = response.data.proyectopropiedades
 				for (campos in mi.camposdinamicos) {
 					switch (mi.camposdinamicos[campos].tipo){
-						case "fecha":
-							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
-							break;
-						case "entero":
-							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
-							break;
-						case "decimal":
-							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
-							break;
+					case "fecha":
+						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+						break;
+					case "entero":
+						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
+						break;
+					case "decimal":
+						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
+						break;
+					case "booleano":
+						mi.camposdinamicos[campos].valor = mi.camposdinamicos[campos].valor == 'true' ? true : false;
+						break;
 					}
 				}
 			});
@@ -403,10 +409,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
 							break;
 						case "entero":
-							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
 							break;
 						case "decimal":
-							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
+							break;
+						case "booleano":
+							mi.camposdinamicos[campos].valor = mi.camposdinamicos[campos].valor == 'true' ? true : false;
 							break;
 					}
 				}

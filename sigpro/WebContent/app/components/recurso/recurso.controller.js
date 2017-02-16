@@ -4,7 +4,7 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal) {
 		var mi=this;
 
-		$window.document.title = 'SIGPRO - Recursos';
+		$window.document.title = $utilidades.sistema_nombre+' - Recursos';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.recursos = [];

@@ -53,7 +53,8 @@ public class CFormaDinamica {
 	}
 
 	private static String tipoBooleano(HashMap<String,Object> campo) {
-		return String.join("","{\"id\" :\"", campo.get("id").toString(), "\",\"tipo\" : \"booleano\",\"label\" : \"", campo.get("nombre").toString(),"\"}");
+		return String.join("","{\"id\" :\"", campo.get("id").toString(), "\",\"tipo\" : \"booleano\",\"label\" : \"", campo.get("nombre").toString(),
+				"\",\"valor\" : \"",campo.get("valor")!=null ? campo.get("valor").toString() : "", "\" }");
 	}
 
 	private static String tipoFecha(HashMap<String,Object> campo) {

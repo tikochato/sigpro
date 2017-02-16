@@ -4,7 +4,7 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 		var mi=this;
 		
-		$window.document.title = 'SIGPRO - Tipo Hito';
+		$window.document.title = $utilidades.sistema_nombre+' - Tipo Hito';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.hitotipo = [];
@@ -43,14 +43,14 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 				columnDefs : [ 
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 					{ name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
-						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.hitotipoc.filtros[\'nombre\']" ng-keypress="grid.appScope.hitotipoc.filtrar($event)"></input></div>'
+						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.hitotipoc.filtros[\'nombre\']" ng-keypress="grid.appScope.hitotipoc.filtrar($event)" style="width:175px;"></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 				    { name: 'usuarioCreo', displayName: 'Usuario Creación',
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.hitotipoc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.hitotipoc.filtrar($event)"></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"style="width: 90%;" ng-model="grid.appScope.hitotipoc.filtros[\'usuario_creo\']"  ng-keypress="grid.appScope.hitotipoc.filtrar($event)" style="width:90px;"></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.hitotipoc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.hitotipoc.filtrar($event)"></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.hitotipoc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.hitotipoc.filtrar($event)" style="width:80px;" ></input></div>'
 				    }
 				],
 				onRegisterApi: function(gridApi) {
@@ -63,8 +63,7 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 						if(sortColumns.length==1){
 							grid.appScope.hitotipoc.columnaOrdenada=sortColumns[0].field;
 							grid.appScope.hitotipoc.ordenDireccion = sortColumns[0].sort.direction;
-							for(var i = 0; i<sortColumns.length-1; i++)
-								sortColumns[i].unsort();
+
 							grid.appScope.hitotipoc.cargarTabla(grid.appScope.hitotipoc.paginaActual);
 						}
 						else if(sortColumns.length>1){
@@ -76,7 +75,6 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 								grid.appScope.hitotipoc.ordenDireccion=null;
 							}
 						}
-
 					} );
 					
 					if($routeParams.reiniciar_vista=='rv'){
@@ -103,12 +101,10 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 				filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] ,
 				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion }).success(
-			
 					function(response) {
 						mi.hitotipos = response.hitotipos;
 						mi.gridOptions.data = mi.hitotipos;
 						mi.mostrarcargando = false;
-						mi.hitotipo = null;
 					});
 		}
 		
@@ -217,21 +213,16 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 			}
 		};
 
-
 		mi.obtenerTotalHitoTipos=function(){
 			$http.post('/SHitoTipo', { accion: 'numeroHitoTipos',
 				filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
 					function(response) {
-						mi.totalActividades = response.totalactividades;
+						mi.totalHitotipo = response.totalhitotipos;
 						mi.cargarTabla(1);
 			});
 		};
 		
-		$http.post('/SHitoTipo', { accion: 'numeroHitoTipos' }).success(
-				function(response) {
-					mi.totalHitotipo = response.totalhitotipo;
-					mi.cargarTabla(1);
-				});
+		
 		
 	} ]);

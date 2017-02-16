@@ -4,7 +4,7 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 			var mi=this;
 			
-			$window.document.title = 'SIGPRO - Tipo Desembolso';
+			$window.document.title = $utilidades.sistema_nombre+' - Tipo Desembolso';
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
 			mi.desembolsotipos = [];

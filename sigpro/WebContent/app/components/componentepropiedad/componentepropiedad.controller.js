@@ -4,7 +4,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 			var mi=this;
 			
-			$window.document.title = 'SIGPRO - Componente Propiedad';
+			$window.document.title = $utilidades.sistema_nombre+' - Componente Propiedad';
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
 			mi.componentepropiedades = [];

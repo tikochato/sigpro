@@ -4,7 +4,7 @@ app.controller('formulariotipoController',['$scope','$http','$interval','i18nSer
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal) {
 		var mi=this;
 		
-		$window.document.title = 'SIGPRO - Tipo Formulario';
+		$window.document.title = $utilidades.sistema_nombre+' - Tipo Formulario';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.formulariotipos = [];
