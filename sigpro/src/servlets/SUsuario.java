@@ -59,6 +59,7 @@ public class SUsuario extends HttpServlet {
 		String sapellido;
 		Long cui;
 		String unidad_ejecutora;
+		int id;
 	
 	}
 	
@@ -259,7 +260,8 @@ public class SUsuario extends HttpServlet {
 					usuarioStr.snombre=colaboradorActual.getSnombre();
 					usuarioStr.papellido=colaboradorActual.getPapellido();
 					usuarioStr.sapellido=colaboradorActual.getSapellido();
-					usuarioStr.unidad_ejecutora=colaboradorActual.getUnidadEjecutora().getNombre().toString();
+					usuarioStr.unidad_ejecutora=String.valueOf(colaboradorActual.getUnidadEjecutora().getUnidadEjecutora());
+					usuarioStr.id=colaboradorActual.getId();
 				}
 				
 				String respuesta = new GsonBuilder().serializeNulls().create().toJson(usuarioStr);
