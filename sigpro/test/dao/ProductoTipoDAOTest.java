@@ -25,12 +25,12 @@ public class ProductoTipoDAOTest {
 	
 	@Test
 	public void  getPaginaTest(){
-		assertNotNull(ProductoTipoDAO.getPagina(1, 1));
+		assertNotNull(ProductoTipoDAO.getPagina(1, 1,"","","","",""));
 	}
 	
 	@Test
 	public void getJsonTest(){
-		assertEquals(ProductoTipoDAO.getJson(1, 1).getClass(),String.class);
+		assertEquals(ProductoTipoDAO.getJson(1, 1,"","","","","").getClass(),String.class);
 	}
 	
 	@Test
@@ -40,7 +40,7 @@ public class ProductoTipoDAOTest {
 	
 	@Test
 	public void getTotalTest(){
-		assertEquals(ProductoTipoDAO.getTotal().getClass(),Long.class);
+		assertEquals(ProductoTipoDAO.getTotal("","","").getClass(),Long.class);
 	}
 	
 }

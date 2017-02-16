@@ -40,7 +40,7 @@ public class MetaDAOTest {
 	
 	@Test
 	public void getTotalMetasTest(){
-		assertEquals(MetaDAO.getTotalMetas("","","").getClass(),Long.class);
+		assertEquals(MetaDAO.getTotalMetas(0,0,"","","").getClass(),Long.class);
 	}
 	
 

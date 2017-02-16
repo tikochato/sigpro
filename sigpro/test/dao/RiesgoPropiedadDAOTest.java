@@ -41,12 +41,12 @@ public class RiesgoPropiedadDAOTest {
 	
 	@Test
 	public void getRiesgoPropiedadesPaginaTest(){
-		assertNotNull(RiesgoPropiedadDAO.getRiesgoPropiedadesPagina(0, 0));
+		assertNotNull(RiesgoPropiedadDAO.getRiesgoPropiedadesPagina(0, 0,"","","","",""));
 	}
 	
 	@Test
 	public void getTotalRiesgoPropiedadTest(){
-		assertEquals(RiesgoPropiedadDAO.getTotalRiesgoPropiedad().getClass(),Long.class);
+		assertEquals(RiesgoPropiedadDAO.getTotalRiesgoPropiedad("","","").getClass(),Long.class);
 	}
 	
 }
