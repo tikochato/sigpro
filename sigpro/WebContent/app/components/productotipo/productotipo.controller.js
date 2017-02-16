@@ -440,8 +440,7 @@ function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval,
 			name : 'id',
 			cellClass : 'grid-align-right',
 			type : 'number',
-			width : 150,
-			visible : false
+			width : 80
 		}, {
 			displayName : 'Nombre',
 			name : 'nombre',
