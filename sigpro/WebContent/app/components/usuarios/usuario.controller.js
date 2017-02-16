@@ -19,7 +19,7 @@ app.controller(
   '$uibModal',
   function($scope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route,$q,$uibModal) {
 	var mi=this;
-	$window.document.title = 'SIGPRO - Usuarios';
+	$window.document.title =$utilidades.sistema_nombre+' - Usuario';
 	mi.colaboradorSeleccionado =false;
 	i18nService.setCurrentLang('es');
 	mi.mostrarcargando=true;
@@ -41,6 +41,7 @@ app.controller(
 	mi.mostrarCambioPassword = false;
 	var passwordLocal="";
 	mi.tieneColaborador=false;
+	mi.filtros=[];
 	mi.gridOptions = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -48,22 +49,28 @@ app.controller(
 		paginationPageSize : 25,
 		enableFiltering: true,
 		data : [],
+		useExternalFiltering: true,
+		useExternalSorting: true,
 		columnDefs : [ {
 			name : 'Usuario',
 			cellClass : 'grid-align-left',
-			field : 'usuario'
+			field : 'usuario',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.usuarioc.filtros[\'usuario\']" ng-keypress="grid.appScope.usuarioc.filtrar($event)" style="width:175px;"></input></div>'
 		}, {
 			name : 'Correo',
 			cellClass : 'grid-align-left',
-			field : 'email'
+			field : 'email',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.usuarioc.filtros[\'email\']" ng-keypress="grid.appScope.usuarioc.filtrar($event)" style="width:175px;"></input></div>'
 		}, {
 			name: 'Usuario creo',
 			cellClass : 'grid-align-left',
-			field: 'usuarioCreo'
+			field: 'usuarioCreo',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.usuarioc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.usuarioc.filtrar($event)" style="width:175px;"></input></div>'
 		}, {
 			name : 'Fecha creación',
 			cellClass : 'grid-align-left',
-			field : 'fechaCreacion'
+			field : 'fechaCreacion',
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.usuarioc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.usuarioc.filtrar($event)" style="width:175px;"></input></div>'
 		},{
 			name: 'Usuario actualizo',
 			cellClass : 'grid-align-left',
@@ -80,10 +87,11 @@ app.controller(
 	};
 	mi.cargarTabla=function(pagina){
 		$http.post('/SUsuario',
-				{ accion : 'getUsuarios',  pagina: pagina, numeroUsuarios: $utilidades.elementosPorPagina  }).success(function(data) {
+				{ accion : 'getUsuarios',  pagina: pagina, numeroUsuarios: mi.elementosPorPagina,filtro_usuario: mi.filtros['usuario'],filtro_email: mi.filtros['email'],
+			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(function(data) {
 				mi.gridOptions.data =  data.usuarios;
 				mi.mostrarcargando=false;
-				mi.isCollapsed = false;
+				
 		});
 	};
 
@@ -161,7 +169,6 @@ app.controller(
 											mi.paginaActual=1;
 											$utilidades.mensaje('success','Usuario creado exitosamente!');
 											mi.cargarTabla(mi.paginaActual);
-											mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
 										}
 							});
 					}else{
@@ -225,7 +232,6 @@ app.controller(
 													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
 															function(response) {
 																if(response.success){
-																	mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
 																	 $utilidades.mensaje('success', 'actualizacion de datos exitosa.');
 																}else{
 																	$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
@@ -457,8 +463,20 @@ app.controller(
 		}
 
 	}
+	
+	mi.filtrar = function(evt){
+		if(evt.keyCode==13){
+			$http.post('/SUsuario', { accion: 'getTotalUsuarios',	filtro_usuario: mi.filtros['usuario'],filtro_email: mi.filtros['email'],
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).success(
+					function(response) {
+						mi.elementosPorPagina = response.totalUsuarios;
+						mi.cargarTabla(mi.paginaActual);
+			});
+		}
+	};
 
-	$http.post('/SUsuario', { accion: 'getTotalUsuarios' }).success(
+	$http.post('/SUsuario', { accion: 'getTotalUsuarios', 	filtro_nombre: mi.filtros['nombre'],
+		filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],filtro_email:mi.filtros["email"]  }).success(
 			function(response) {
 				mi.totalUsuarios = response.totalUsuarios;
 				mi.cargarTabla(mi.paginaActual);
