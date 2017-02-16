@@ -12,7 +12,7 @@
 	<h3>Proyectos</h3>
 	<br />
 	<div class="row" align="center" ng-hide="controller.esColapsado">
-		<div class="operation_buttons" align="right">
+		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 			<shiro:hasPermission name="24040">
 				<label class="btn btn-primary" ng-click="controller.nuevo()">Nuevo</label>
