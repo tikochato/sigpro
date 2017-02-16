@@ -83,7 +83,7 @@ app.controller(
 				{ accion : 'getUsuarios',  pagina: pagina, numeroUsuarios: $utilidades.elementosPorPagina  }).success(function(data) {
 				mi.gridOptions.data =  data.usuarios;
 				mi.mostrarcargando=false;
-				mi.isCollapsed = false;
+				
 		});
 	};
 
@@ -161,7 +161,6 @@ app.controller(
 											mi.paginaActual=1;
 											$utilidades.mensaje('success','Usuario creado exitosamente!');
 											mi.cargarTabla(mi.paginaActual);
-											mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
 										}
 							});
 					}else{
@@ -225,7 +224,6 @@ app.controller(
 													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
 															function(response) {
 																if(response.success){
-																	mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:""};
 																	 $utilidades.mensaje('success', 'actualizacion de datos exitosa.');
 																}else{
 																	$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
