@@ -4,7 +4,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal) {
 		var mi=this;
 		
-		$window.document.title = 'SIGPRO - Tipos de Actividad';
+		$window.document.title = $utilidades.sistema_nombre+' - Tipos de Actividad';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.actividadtipos = [];

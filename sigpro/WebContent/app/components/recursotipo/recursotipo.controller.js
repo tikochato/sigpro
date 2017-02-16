@@ -4,7 +4,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal) {
 		var mi=this;
 		
-		$window.document.title = 'SIGPRO - Tipo Recurso';
+		$window.document.title = $utilidades.sistema_nombre+' - Tipo Recurso';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.recursotipos = [];

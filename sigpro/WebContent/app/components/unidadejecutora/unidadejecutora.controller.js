@@ -15,7 +15,7 @@ function controlUnidadEjecutora($scope, $routeParams, $route, $window,
 	i18nService.setCurrentLang('es');
 	var mi = this;
 	
-	$window.document.title = 'SIGPRO - Unidad Ejecutora';
+	$window.document.title = $utilidades.sistema_nombre+' - Unidad Ejecutora';
 
 	mi.esForma = false;
 

@@ -174,6 +174,9 @@ public class SProyectoPropiedad extends HttpServlet {
 						case 3:
 							campo.put("valor", proyectoPropiedadValor.getValorDecimal());
 							break;
+						case 4:
+							campo.put("valor", proyectoPropiedadValor.getValorEntero()==1 ? true : false);
+							break;
 						case 5:
 							campo.put("valor", Utils.formatDate(proyectoPropiedadValor.getValorTiempo()));
 							break;

@@ -4,7 +4,7 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 			var mi=this;
 			
-			$window.document.title = 'SIGPRO - Unidades de Medida de Metas';
+			$window.document.title = $utilidades.sistema_nombre+' - Unidades de Medida de Metas';
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
 			mi.medidas = [];

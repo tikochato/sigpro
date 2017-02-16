@@ -4,7 +4,7 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 			var mi=this;
 			
-			$window.document.title = 'SIGPRO - Recurso Propiedad';
+			$window.document.title = $utilidades.sistema_nombre+' - Recurso Propiedad';
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
 			mi.recursopropiedades = [];

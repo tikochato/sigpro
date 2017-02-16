@@ -14,7 +14,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 	i18nService.setCurrentLang('es');
 	var mi = this;
 
-	$window.document.title = 'SIGPRO - Colaborador';
+	$window.document.title = $utilidades.sistema_nombre+' - Colaborador';
 
 	
 	mi.esForma = false;

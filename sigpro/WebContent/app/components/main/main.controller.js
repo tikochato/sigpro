@@ -350,7 +350,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	$scope.hidebar = false;
 
 	numeral.language('es', numeral_language);
-	//$window.document.title =  'MINFIN - '+$utilidades.sistema_nombre;
+	$window.document.title =  'MINFIN - '+$utilidades.sistema_nombre;
 
 	$document.bind('scroll', function(){
 		if($document[0].body.scrollTop > 15){

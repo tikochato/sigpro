@@ -11,7 +11,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		$timeout, $log, $q) {
 	var mi = this;  
 	i18nService.setCurrentLang('es');
-	$window.document.title = 'SIGPRO - Producto';
+	$window.document.title = $utilidades.sistema_nombre+' - Producto';
 	mi.componenteid = $routeParams.componente_id;
 	mi.esForma = false;
 	mi.totalElementos = 0;

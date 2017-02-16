@@ -124,7 +124,7 @@ public class CExcel {
 	
 	public void setCellFormula(String formula, int irow, int icell,String style, boolean bold){
 		cell = sheet.getRow(irow) != null ? (sheet.getRow(irow).getCell(icell)!=null ? sheet.getRow(irow).getCell(icell) : sheet.getRow(irow).createCell(icell)) : sheet.createRow(irow).createCell(icell);
-		cell.setCellType(Cell.CELL_TYPE_FORMULA);
+		//cell.setCellType(Cell.CELL_TYPE_FORMULA);
 		cell.setCellFormula(formula);
 		switch(style){
 			case "currency": cell.setCellStyle(bold ?  cs_currency_bold : cs_currency); break;

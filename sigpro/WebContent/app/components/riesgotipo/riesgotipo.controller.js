@@ -4,7 +4,7 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal) {
 		var mi=this;
 		
-		$window.document.title = 'SIGPRO - Tipo Riesgo';
+		$window.document.title = $utilidades.sistema_nombre+' - Tipo Riesgo';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.riesgotipos = [];

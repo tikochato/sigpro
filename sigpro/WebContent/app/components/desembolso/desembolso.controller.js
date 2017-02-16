@@ -4,7 +4,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal) {
 			var mi=this;
 			
-			$window.document.title = 'SIGPRO - Desembolso';
+			$window.document.title = $utilidades.sistema_nombre+' - Desembolso';
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
 			mi.desembolsos = [];
@@ -17,7 +17,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
 			mi.desembolsotipoid;
 			mi.desembolsonombre;
-			mi.proyectoid = $routeParams.pproyectoid;
+			mi.proyectoid = $routeParams.proyecto_id;
 			mi.fecha = new Date();
 			
 			mi.columnaOrdenada=null;
@@ -128,7 +128,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 						fecha: moment(mi.fecha).format('DD/MM/YYYY'),
 						monto: mi.desembolso.monto,
 						tipocambio : mi.desembolso.tipocambio,
-						proyectoid : 1,
+						proyectoid : $routeParams.proyecto_id,
 						desembolsotipoid : mi.desembolso.desembolsotipoid
 					}).success(function(response){
 						if(response.success){
@@ -266,8 +266,8 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 
 				instanciaModal.result.then(function(selectedItem) {
 					
-					mi.desembolsotipoid = selectedItem.id;
-					mi.desembolsonombre = selectedItem.nombre;
+					mi.desembolso.desembolsotipoid = selectedItem.id;
+					mi.desembolso.desembolsotipo = selectedItem.nombre;
 
 				}, function() {
 				});
@@ -308,7 +308,7 @@ function modalBuscarDesembolsoTipo($uibModalInstance, $scope, $http, $interval,
 	mi.opcionesGrid = {
 		data : mi.data,
 		columnDefs : [ {
-			displayName : 'ID', name : 'id', cellClass : 'grid-align-right',
+			displayName : 'ID', width: 100, name : 'id', cellClass : 'grid-align-right',
 		}, {
 			displayName : 'Tipo desembolso',
 			name : 'nombre',

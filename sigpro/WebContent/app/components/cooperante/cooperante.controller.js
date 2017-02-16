@@ -4,7 +4,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 			var mi=this;
 			
-			$window.document.title = 'SIGPRO - Cooperantes';
+			$window.document.title = $utilidades.sistema_nombre+' - Cooperantes';
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
 			mi.cooperantes = [];

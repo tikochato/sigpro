@@ -234,6 +234,9 @@ public class SActividadPropiedad extends HttpServlet {
 						case 3:
 							campo.put("valor", coomponentePropiedadValor.getValorDecimal());
 							break;
+						case 4:
+							campo.put("valor", coomponentePropiedadValor.getValorEntero()==1 ? true : false);
+							break;	
 						case 5:
 							campo.put("valor", Utils.formatDate(coomponentePropiedadValor.getValorTiempo()));
 							break;

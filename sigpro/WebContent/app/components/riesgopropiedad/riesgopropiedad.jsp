@@ -39,7 +39,7 @@
 				  </div>
 				</div>
 				<br/>
-				<div class="total-rows">Total de {{  riesgopropiedadc.totalRiesgoPropiedades + (riesgopropiedadc.totalRiesgoPropiedades == 1 ? " Proyecto" : " Proyectos" ) }}</div>
+				<div class="total-rows">Total de {{  riesgopropiedadc.totalRiesgoPropiedades + (riesgopropiedadc.totalRiesgoPropiedades == 1 ? " Riesgo" : " Riesgos" ) }}</div>
 				<ul uib-pagination total-items="riesgopropiedadc.totalRiesgoPropiedades" 
 						ng-model="riesgopropiedadc.paginaActual"
 						max-size="riesgopropiedadc.numeroMaximoPaginas"
