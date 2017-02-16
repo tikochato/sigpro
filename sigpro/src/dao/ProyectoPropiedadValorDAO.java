@@ -25,7 +25,7 @@ public class ProyectoPropiedadValorDAO {
 			CriteriaQuery<ProyectoPropedadValor> criteria = builder.createQuery(ProyectoPropedadValor.class);
 			Root<ProyectoPropedadValor> root = criteria.from(ProyectoPropedadValor.class);
 			criteria.select(root);
-			criteria.where(builder.equal(root.get("id"), new ProyectoPropedadValorId(idProyecto, idPropiedad)));
+			criteria.where(builder.equal(root.get("id"), new ProyectoPropedadValorId(idProyecto, idPropiedad)),builder.equal(root.get("estado"), 1));
 			ret = session.createQuery(criteria).getSingleResult();
 		} catch (Throwable e) {
 			CLogger.write("1", ProyectoPropiedadValorDAO.class, e);

@@ -273,6 +273,7 @@ public class SProyecto extends HttpServlet {
 									valor.setValorDecimal(Utils.String2BigDecimal(data.valor, null));
 									break;
 								case 4:
+									valor.setValorEntero(Utils.String2Boolean(data.valor, null));
 									break;
 								case 5:
 									SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
