@@ -12,7 +12,7 @@
 	<h3>Proyectos</h3>
 	<br />
 	<div class="row" align="center" ng-hide="controller.esColapsado">
-		<div class="col-sm-12 operation_buttons" align="right">
+		<div class="operation_buttons" align="right">
 			<div class="btn-group">
 			<shiro:hasPermission name="24040">
 				<label class="btn btn-primary" ng-click="controller.nuevo()">Nuevo</label>
@@ -70,7 +70,7 @@
 	<div class="row main-form" ng-show="controller.esColapsado">
 		<h4 ng-hide="!controller.esNuevo">Nuevo Proyecto</h4>
 		<h4 ng-hide="controller.esNuevo">Edición de proyecto</h4>
-		<div class="col-sm-12 operation_buttons" align="left" ng-hide="controler.esNuevo">
+		<div class="operation_buttons" align="left" ng-hide="controler.esNuevo">
 			<div class="btn-group">
 				<label class="btn btn-default" ng-click="controller.irAComponentes(controller.proyecto.id)" ng-hide="controler.esNuevo">Componentes</label>
 				<label class="btn btn-default" ng-click="controller.irAHitos(controller.proyecto.id)" ng-hide="controler.esNuevo">Hitos</label>
