@@ -224,10 +224,13 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 								mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
 								break;
 							case "entero":
-								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
 								break;
 							case "decimal":
-								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
+								break;
+							case "booleano":
+								mi.camposdinamicos[campos].valor = mi.camposdinamicos[campos].valor == 'true' ? true : false;
 								break;
 						}
 					}
@@ -345,15 +348,18 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				mi.camposdinamicos = response.data.componentepropiedades;
 				for (campos in mi.camposdinamicos) {
 					switch (mi.camposdinamicos[campos].tipo){
-						case "fecha":
-							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
-							break;
-						case "entero":
-							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
-							break;
-						case "decimal":
-							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
-							break;
+					case "fecha":
+						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+						break;
+					case "entero":
+						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
+						break;
+					case "decimal":
+						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
+						break;
+					case "booleano":
+						mi.camposdinamicos[campos].valor = mi.camposdinamicos[campos].valor == 'true' ? true : false;
+						break;
 					}
 				}
 				

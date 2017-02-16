@@ -8,6 +8,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import pojo.RiesgoPropiedadValor;
 import pojo.RiesgoPropiedadValorId;
@@ -24,7 +25,7 @@ public class RiesgoPropiedadValorDAO {
 			Root<RiesgoPropiedadValor> root = criteria.from(RiesgoPropiedadValor.class);
 			criteria.select(root);
 			
-			criteria.where(builder.equal(root.get("id"), new RiesgoPropiedadValorId(idRiesgo, idPropiedad)));
+			criteria.where(builder.equal(root.get("id"), new RiesgoPropiedadValorId(idRiesgo, idPropiedad)),builder.equal( root.get("estado"), 1));
 			ret = session.createQuery(criteria).getSingleResult();
 		} catch (Throwable e) {
 			CLogger.write("1", RiesgoPropiedadValorDAO.class, e);
@@ -93,12 +94,14 @@ public class RiesgoPropiedadValorDAO {
 		List<RiesgoPropiedadValor> ret = new ArrayList<RiesgoPropiedadValor>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			CriteriaBuilder builder = session.getCriteriaBuilder();
-
-			CriteriaQuery<RiesgoPropiedadValor> criteria = builder.createQuery(RiesgoPropiedadValor.class);
-			Root<RiesgoPropiedadValor> root = criteria.from(RiesgoPropiedadValor.class);
-			criteria.select( root ).where( builder.and(builder.equal( root.get("riesgoid"), idRiesgo ),builder.equal(root.get("estado"), 1)));
-			ret = session.createQuery( criteria ).getResultList();
+			Query<RiesgoPropiedadValor> criteria = session.createNativeQuery(" select * "
+					+ "from riesgo_propiedad_valor rpv "
+					+ "join riesgo r on r.id = rpv.riesgoid "
+					+ "where r.id = :idRies "
+					+ "and rpv.estado = 1 ",RiesgoPropiedadValor.class);
+			
+			criteria.setParameter("idRies", idRiesgo);
+			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
 			CLogger.write("5", RiesgoPropiedadValorDAO.class, e);
