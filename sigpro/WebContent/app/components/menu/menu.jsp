@@ -32,7 +32,7 @@
                          	<shiro:hasPermission name="3010"><li role="menuitem"><a href="#!/actividadtipo">Tipo de Actividad</a></li></shiro:hasPermission>                         	
                          	<shiro:hasPermission name="7010"><li role="menuitem"><a href="#!/componentetipo">Tipo de Componente</a></li></shiro:hasPermission>   
                          	<shiro:hasPermission name="35010"><li role="menuitem"><a href="#!/desembolsotipo">Tipo de Desembolso</a></li></shiro:hasPermission>
-                         	<shiro:hasPermission name="16010"><li role="menuitem"><a href="#!/hitotipo">Tipo Hito</a></li></shiro:hasPermission>                         	
+                         	<shiro:hasPermission name="16010"><li role="menuitem"><a href="#!/hitotipo">Tipo de Hito</a></li></shiro:hasPermission>                         	
                          	<shiro:hasPermission name="18010"><li role="menuitem"><a href="#!/metatipo">Tipo de Meta</a></li></shiro:hasPermission>                         	
 	                        <shiro:hasPermission name="23010"> <li role="menuitem"><a href="#!/productotipo">Tipo de Producto</a></li></shiro:hasPermission>
 	                        <shiro:hasPermission name="36010"><li role="menuitem"><a href="#!/proyectotipo">Tipo de Proyecto</a></li></shiro:hasPermission>

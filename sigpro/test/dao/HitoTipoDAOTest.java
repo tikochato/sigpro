@@ -33,12 +33,12 @@ public class HitoTipoDAOTest {
 	
 	@Test
 	public void getHitoTiposPaginaTest(){
-		assertNotNull(HitoTipoDAO.getHitoTiposPagina(1, 1));
+		assertNotNull(HitoTipoDAO.getHitoTiposPagina(1, 1,"","","","",""));
 	}
 	
 	@Test
 	public void getTotalHitoTiposTest(){
-		assertEquals(HitoTipoDAO.getTotalHitoTipos().getClass(),Long.class);
+		assertEquals(HitoTipoDAO.getTotalHitoTipos("","","").getClass(),Long.class);
 	}
 
 }
