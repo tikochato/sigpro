@@ -509,12 +509,21 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 
     mi.opcionesGrid = {
 		data : mi.data,
+		enableFiltering: true,
 		columnDefs : [
 			{
-				displayName : 'Permiso',
+				displayName : 'ID',
+				name : 'id',
+				cellClass : 'grid-align-right',
+				enableFiltering: true,
+				type : 'text', width : 150
+
+			},
+			{
+				displayName : 'nombre',
 				name : 'nombre',
 				cellClass : 'grid-align-right',
-				type : 'text', width : 150
+				enableFiltering: true
 
 			},
 			{
