@@ -161,7 +161,7 @@ public class Utils {
 	}
 	
 	public static String formatDateHour(Date date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss a");
 		if (date != null)
 			return sdf.format(date);
 		return "";
@@ -186,6 +186,13 @@ public class Utils {
 			ret = (map.get(name)!=null && map.get(name).length()>0) ? Integer.parseInt(map.get(name)) : null;
 		}
 		return ret;
+	}
+	
+	public static String formatDateHour24(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+		if (date != null)
+			return sdf.format(date);
+		return "";
 	}
 
 }
