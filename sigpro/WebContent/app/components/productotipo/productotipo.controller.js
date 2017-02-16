@@ -12,7 +12,7 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 	i18nService.setCurrentLang('es');
 	var mi = this;
 
-	$window.document.title = 'SIGPRO - Producto Tipo';
+	$window.document.title = $utilidades.sistema_nombre+' - Producto Tipo';
 
 	mi.esForma = false;
 

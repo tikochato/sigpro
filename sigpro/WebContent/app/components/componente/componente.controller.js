@@ -4,7 +4,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
 		var mi=this;
 
-		$window.document.title = 'SIGPRO - Componentes';
+		$window.document.title = $utilidades.sistema_nombre+' - Componentes';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.componentes = [];

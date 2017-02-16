@@ -5,6 +5,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	var mi = this;
 	i18nService.setCurrentLang('es');
+	
+	$window.document.title = $utilidades.sistema_nombre+' - Proyectos';
+	
 	mi.proyecto = null;
 	mi.esNuevo = false;
 	mi.campos = {};

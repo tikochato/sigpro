@@ -4,7 +4,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 			var mi=this;
 			
-			$window.document.title = 'SIGPRO - Propiedades de Actividad';
+			$window.document.title = $utilidades.sistema_nombre+' - Propiedades de Actividad';
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
 			mi.actividadpropiedades = [];

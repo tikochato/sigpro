@@ -4,7 +4,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
 		var mi=this;
 
-		$window.document.title = 'SIGPRO - Hitos';
+		$window.document.title = $utilidades.sistema_nombre+' - Hitos';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.hitos = [];
@@ -285,16 +285,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 			 mi.popupfecharesultado.abierto = true;
 		};
 
-		mi.change = function(){
-			console.log("hello", mi.hitoresultado);
-		}
-
-		/*$http.post('/SHito', { accion: 'numeroHitosPorProyecto',proyectoid:$routeParams.proyecto_id }).success(
-				function(response) {
-					mi.totalHitos = response.totalhitos;
-					mi.cargarTabla(1);
-		});*/
-
+		
 		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga) {
 			var resultado = $q.defer();
 			var modalInstance = $uibModal.open({

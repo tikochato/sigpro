@@ -4,7 +4,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
 		var mi=this;
 		
-		$window.document.title = 'SIGPRO - Riesgos';
+		$window.document.title = $utilidades.sistema_nombre+' - Riesgos';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.riesgos = [];

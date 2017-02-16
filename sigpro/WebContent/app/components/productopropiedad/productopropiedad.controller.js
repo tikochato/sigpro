@@ -14,7 +14,7 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 	i18nService.setCurrentLang('es');
 	var mi = this;
 
-	$window.document.title = 'SIGPRO - Producto Propiedad';
+	$window.document.title = $utilidades.sistema_nombre+' - Producto Propiedad';
 
 	mi.esForma = false;
 

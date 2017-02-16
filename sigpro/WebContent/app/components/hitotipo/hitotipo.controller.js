@@ -4,7 +4,7 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 		var mi=this;
 		
-		$window.document.title = 'SIGPRO - Tipo Hito';
+		$window.document.title = $utilidades.sistema_nombre+' - Tipo Hito';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.hitotipo = [];

@@ -104,7 +104,7 @@
 								<input ng-switch-when="1" type="text"  ng-model="hitoc.hitoresultado" class="form-control" />
 								<input ng-switch-when="2" type="text"  numbers-Only ng-model="hitoc.hitoresultado" class="form-control" />
 								<input ng-switch-when="3" type="number"  ng-model="hitoc.hitoresultado" class="form-control" />
-								<input ng-switch-when="4" type="checkbox" ng-model="hitoc.hitoresultado" ng-change="hitoc.change()"/>
+								<input ng-switch-when="4" type="checkbox" ng-model="hitoc.hitoresultado"/>
 								<p ng-switch-when="5" class="input-group">
 									<input type="text"  class="form-control" uib-datepicker-popup="{{hitoc.formatofecha}}" ng-model="hitoc.hitoresultado" is-open="hitoc.popupfecharesultado.abierto"
 											datepicker-options="hitoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" />

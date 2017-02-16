@@ -4,7 +4,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal) {
 		var mi=this;
 
-		$window.document.title = 'SIGPRO - Actividades';
+		$window.document.title = $utilidades.sistema_nombre+' - Actividades';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.actividades = [];
@@ -244,6 +244,9 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 								break;
 							case "decimal":
 								mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+								break;
+							case "booleano":
+								mi.camposdinamicos[campos].valos = mi.camposdinamicos[campos].valor == 'true' ? true : false;
 								break;
 						}
 
