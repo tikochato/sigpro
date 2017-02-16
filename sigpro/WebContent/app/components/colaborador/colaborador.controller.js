@@ -230,7 +230,6 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 						if (response.data.success) {
 							mi.data = response.data.colaboradores;
 							mi.opcionesGrid.data = mi.data;
-							mi.esForma = false;
 
 							$utilidades.mensaje('success',
 									'Colaborador guardado con exito.');
