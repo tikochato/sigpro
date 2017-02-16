@@ -33,12 +33,12 @@ public class RiesgoTipoDAOTest {
 	
 	@Test
 	public void getRiesgoTiposPaginaTest(){
-		assertNotNull(RiesgoTipoDAO.getRiesgoTiposPagina(1,1));
+		assertNotNull(RiesgoTipoDAO.getRiesgoTiposPagina(1,1,"","","","",""));
 	}
 	
 	@Test
 	public void getTotalRiesgoTipoTest(){
-		assertEquals(RiesgoTipoDAO.getTotalRiesgoTipo().getClass(), Long.class);
+		assertEquals(RiesgoTipoDAO.getTotalRiesgoTipo("","","").getClass(), Long.class);
 	}
 
 }
