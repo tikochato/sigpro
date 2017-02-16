@@ -67,11 +67,11 @@
 	</div>
 
 	<div ng-show="producto.esForma" class="row main-form">
-		<h4 ng-hide="!actividadc.esnuevo">Nueva Producto</h4>
-		<h4 ng-hide="actividadc.esnuevo">Edición de Producto</h4>
+		<h4 ng-hide="!producto.esNuevo">Nueva Producto</h4>
+		<h4 ng-hide="producto.esNuevo">Edición de Producto</h4>
 		<div class="col-sm-12 operation_buttons" align="left" ng-hide="producto.esNuevo">
 			<div class="btn-group">
-				<label class="btn btn-default" ng-click="producto.irAActividades(producto.producto.id)">Actividades</label>
+				<label class="btn btn-default" ng-click="producto.irAActividades()">Actividades</label>
 			</div>
 		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
