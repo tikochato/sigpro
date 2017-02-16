@@ -179,7 +179,11 @@ public class SUsuario extends HttpServlet {
 			}else if(accion.compareTo("getUsuarios")==0){
 				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 				int numeroUsuarios = map.get("numeroUsuarios")!=null  ? Integer.parseInt(map.get("numeroUsuarios")) : 0;
-				List <Usuario>  usuarios = UsuarioDAO.getUsuarios(pagina, numeroUsuarios);
+				String filtro_email = map.get("filtro_email");
+				String filtro_usuario_creo = map.get("filtro_usuario_creo");
+				String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+				String filtro_usuario= map.get("filtro_usuario");
+				List <Usuario>  usuarios = UsuarioDAO.getUsuarios(pagina, numeroUsuarios, filtro_usuario,filtro_email,filtro_usuario_creo,filtro_fecha_creacion);
 				List <stusuario> stusuarios = new ArrayList <stusuario>();
 				for(Usuario usuario: usuarios){
 					stusuario usuariotmp =new  stusuario();
@@ -200,7 +204,11 @@ public class SUsuario extends HttpServlet {
 				response_text = String.join("", "\"usuarios\": ",respuesta);
 				response_text = String.join("", "{\"success\":true,", response_text,"}");
 			}else if(accion.compareTo("getTotalUsuarios")==0){
-				response_text=String.join("","{ \"success\": true, \"totalPermisos\":",UsuarioDAO.getTotalUsuarios().toString()," }") ;
+				String filtro_email = map.get("filtro_email");
+				String filtro_usuario_creo = map.get("filtro_usuario_creo");
+				String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+				String filtro_usuario= map.get("filtro_usuario");
+				response_text=String.join("","{ \"success\": true, \"totalUsuarios\":",UsuarioDAO.getTotalUsuarios(filtro_usuario,filtro_email,filtro_usuario_creo,filtro_fecha_creacion).toString()," }") ;
 			}else if(accion.compareTo("getPermisosDisponibles")==0){
 				String usuario = map.get("usuario");
 				if(usuario !=null){

@@ -290,11 +290,23 @@ public class UsuarioDAO {
 		return ret;
 	}
 	
-	public static List <Usuario> getUsuarios(int pagina, int numeroUsuarios){
+	public static List <Usuario> getUsuarios(int pagina, int numeroUsuarios, String usuario, String email, String filtro_usuario_creo,
+			String filtro_fecha_creacion){
 		List <Usuario> ret = new ArrayList<Usuario> ();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query <Usuario> criteria = session.createQuery("FROM Usuario where estado =:estado", Usuario.class);
+			String query = "FROM Usuario u where estado =:estado";
+			String query_a="";
+			if(usuario!=null && usuario.trim().length()>0)
+				query_a = String.join("",query_a, " u.usuario LIKE '%",usuario,"%' ");
+			if(email!=null && email.trim().length()>0)
+				query_a = String.join("",query_a, " u.email LIKE '%",email,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " u.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(u.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND ",query_a,"") : ""));
+			Query <Usuario> criteria = session.createQuery(query, Usuario.class);
 			criteria.setParameter("estado",1);
 			criteria.setFirstResult(((pagina-1)*(numeroUsuarios)));
 			criteria.setMaxResults(numeroUsuarios);
@@ -307,11 +319,23 @@ public class UsuarioDAO {
 		return ret;
 	}
 	
-	public static Long getTotalUsuarios(){
+	public static Long getTotalUsuarios( String usuario, String email, String filtro_usuario_creo,
+			String filtro_fecha_creacion){
 		Long ret = 0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(u.usuario) FROM Usuario u WHERE u.estado=1",Long.class);
+			String query ="SELECT count(u.usuario) FROM Usuario u WHERE u.estado=1";
+			String query_a="";
+			if(usuario!=null && usuario.trim().length()>0)
+				query_a = String.join("",query_a, " u.usuario LIKE '%",usuario,"%' ");
+			if(email!=null && email.trim().length()>0)
+				query_a = String.join("",query_a, " u.email LIKE '%",email,"%' ");
+			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " u.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(u.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
 		}catch(Throwable e){
 			CLogger.write("8", UsuarioDAO.class, e);

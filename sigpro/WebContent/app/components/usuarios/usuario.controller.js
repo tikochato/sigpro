@@ -65,12 +65,12 @@ app.controller(
 			name: 'Usuario creo',
 			cellClass : 'grid-align-left',
 			field: 'usuarioCreo',
-			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.usuarioc.filtros[\'usuariocreo\']" ng-keypress="grid.appScope.usuarioc.filtrar($event)" style="width:175px;"></input></div>'
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.usuarioc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.usuarioc.filtrar($event)" style="width:175px;"></input></div>'
 		}, {
 			name : 'Fecha creación',
 			cellClass : 'grid-align-left',
 			field : 'fechaCreacion',
-			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.usuarioc.filtros[\'fechacreacion\']" ng-keypress="grid.appScope.usuarioc.filtrar($event)" style="width:175px;"></input></div>'
+			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.usuarioc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.usuarioc.filtrar($event)" style="width:175px;"></input></div>'
 		},{
 			name: 'Usuario actualizo',
 			cellClass : 'grid-align-left',
@@ -87,7 +87,8 @@ app.controller(
 	};
 	mi.cargarTabla=function(pagina){
 		$http.post('/SUsuario',
-				{ accion : 'getUsuarios',  pagina: pagina, numeroUsuarios: $utilidades.elementosPorPagina  }).success(function(data) {
+				{ accion : 'getUsuarios',  pagina: pagina, numeroUsuarios: mi.elementosPorPagina,filtro_usuario: mi.filtros['usuario'],filtro_email: mi.filtros['email'],
+			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(function(data) {
 				mi.gridOptions.data =  data.usuarios;
 				mi.mostrarcargando=false;
 				
@@ -466,10 +467,17 @@ app.controller(
 	mi.filtrar = function(evt){
 		if(evt.keyCode==13){
 			console.log(mi.filtros);
+			$http.post('/SUsuario', { accion: 'getTotalUsuarios',	filtro_usuario: mi.filtros['usuario'],filtro_email: mi.filtros['email'],
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).success(
+					function(response) {
+						mi.elementosPorPagina = response.totalUsuarios;
+						mi.cargarTabla(mi.paginaActual);
+			});
 		}
 	};
 
-	$http.post('/SUsuario', { accion: 'getTotalUsuarios' }).success(
+	$http.post('/SUsuario', { accion: 'getTotalUsuarios', 	filtro_nombre: mi.filtros['nombre'],
+		filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],filtro_email:mi.filtros["email"]  }).success(
 			function(response) {
 				mi.totalUsuarios = response.totalUsuarios;
 				mi.cargarTabla(mi.paginaActual);
