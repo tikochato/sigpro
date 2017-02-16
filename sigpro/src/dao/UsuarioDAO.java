@@ -300,7 +300,7 @@ public class UsuarioDAO {
 			if(usuario!=null && usuario.trim().length()>0)
 				query_a = String.join("",query_a, " u.usuario LIKE '%",usuario,"%' ");
 			if(email!=null && email.trim().length()>0)
-				query_a = String.join("",query_a, " u.email LIKE '%",email,"%' ");
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :"") ," u.email LIKE '%",email,"%' ");
 			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " u.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
@@ -329,7 +329,7 @@ public class UsuarioDAO {
 			if(usuario!=null && usuario.trim().length()>0)
 				query_a = String.join("",query_a, " u.usuario LIKE '%",usuario,"%' ");
 			if(email!=null && email.trim().length()>0)
-				query_a = String.join("",query_a, " u.email LIKE '%",email,"%' ");
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " u.email LIKE '%",email,"%' ");
 			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " u.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)

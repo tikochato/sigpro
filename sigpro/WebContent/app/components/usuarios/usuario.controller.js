@@ -466,7 +466,6 @@ app.controller(
 	
 	mi.filtrar = function(evt){
 		if(evt.keyCode==13){
-			console.log(mi.filtros);
 			$http.post('/SUsuario', { accion: 'getTotalUsuarios',	filtro_usuario: mi.filtros['usuario'],filtro_email: mi.filtros['email'],
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).success(
 					function(response) {
