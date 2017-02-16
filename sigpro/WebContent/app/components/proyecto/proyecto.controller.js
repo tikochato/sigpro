@@ -113,7 +113,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		$http.post('/SProyecto', { accion: 'getProyectoPagina', pagina: pagina,
 			numeroproyecto:  $utilidades.elementosPorPagina, filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t:moment().unix()
 			}).success(
 				function(response) {
 					mi.entidades = response.proyectos;
@@ -146,7 +146,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				actividad: mi.proyecto.actividad,
 				fuente: mi.proyecto.fuente,
 				esnuevo: mi.esNuevo,
-				datadinamica : JSON.stringify(mi.camposdinamicos)
+				datadinamica : JSON.stringify(mi.camposdinamicos),
+				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(
 				function(response) {
@@ -167,7 +168,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		if(mi.proyecto !=null && mi.proyecto.id!=null){
 			$http.post('/SProyecto', {
 				accion: 'borrarProyecto',
-				id: mi.proyecto.id
+				id: mi.proyecto.id,
+				t:moment().unix()
 			}).success(function(response){
 				if(response.success){
 					$utilidades.mensaje('success','Proyecto borrado con éxito');
@@ -210,7 +212,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			var parametros = {
 					accion: 'getProyectoPropiedadPorTipo',
 					idProyecto: mi.proyecto!=''?mi.proyecto.id:0,
-				    idProyectoTipo: mi.poryectotipoid
+				    idProyectoTipo: mi.poryectotipoid,
+				    t:moment().unix()
 			}
 			$http.post('/SProyectoPropiedad', parametros).then(function(response){
 				mi.camposdinamicos = response.data.proyectopropiedades
@@ -241,7 +244,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.guardarEstado=function(){
 		var estado = mi.gridApi.saveState.save();
-		var tabla_data = { action: 'guardaEstado', grid:'proyceto', estado: JSON.stringify(estado), t: (new Date()).getTime() };
+		var tabla_data = { action: 'guardaEstado', grid:'proyceto', estado: JSON.stringify(estado) };
 		$http.post('/SEstadoTabla', tabla_data).then(function(response){
 
 		});
@@ -269,9 +272,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	};
 
 	mi.obtenerTotalProyectos = function(){
-		$http.post('/SProyecto', { accion: 'numeroProyectos',
+		$http.post('/SProyecto', { accion: 'numeroProyectos',t:moment().unix(),
 			filtro_nombre: mi.filtros['nombre'],
-			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).then(
+			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  } ).then(
 				function(response) {
 					mi.totalProyectos = response.data.totalproyectos;
 					mi.paginaActual = 1;
@@ -388,7 +391,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			var parametros = {
 					accion: 'getProyectoPropiedadPorTipo',
 					idProyecto: mi.proyecto!=''?mi.poryectotipoid.id:0,
-					idProyectoTipo: itemSeleccionado.id
+					idProyectoTipo: itemSeleccionado.id,
+					t:moment().unix()
 			}
 
 			$http.post('/SProyectoPropiedad', parametros).then(function(response){
@@ -430,7 +434,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.buscarCooperante = function() {
 		var resultado = mi.llamarModalBusqueda('/SCooperante', {
-			accion : 'numeroCooperantes'
+			accion : 'numeroCooperantes', t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getCooperantesPagina',
