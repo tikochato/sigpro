@@ -181,10 +181,6 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		mi.tipo = null;
 		mi.tipoNombre = "";
 
-
-		mi.productoPadre = null;
-		mi.productoPadreNombre = "";
-		
 		mi.unidadEjecutora = null;
 		mi.unidadEjecutoraNombre = "";
 
@@ -363,9 +359,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		});
 	};
 	
-	mi.irAActividades=function(productoid){
-		if(mi.productoid!=null){
-			$location.path('/actividad/'+ producto +'/3' );
+	mi.irAActividades=function(){
+		if(mi.producto.id!=null){
+			$location.path('/actividad/'+ mi.producto.id +'/3' );
 		}
 	};
 
