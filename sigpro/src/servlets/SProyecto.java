@@ -195,7 +195,7 @@ public class SProyecto extends HttpServlet {
 			Proyecto proyecto;
 			if (id>0 || esnuevo){
 				String nombre = map.get("nombre");
-				Long snip = map.get("snip")!=null ? Long.parseLong(map.get("snip")) : 0;
+				Long snip = map.get("snip")!=null ? Long.parseLong(map.get("snip")) : null;
 				String descripcion = map.get("descripcion");
 
 				Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
@@ -206,13 +206,13 @@ public class SProyecto extends HttpServlet {
 				Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
 
 				ProyectoTipo proyectoTipo = new ProyectoTipo();
-				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): 0);
+				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): null);
 
 				UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-				unidadEjecutora.setUnidadEjecutora(map.get("unidadejecutoraid")!=null ? Integer.parseInt(map.get("unidadejecutoraid")): 0);
+				unidadEjecutora.setUnidadEjecutora(map.get("unidadejecutoraid")!=null ? Integer.parseInt(map.get("unidadejecutoraid")): null);
 
 				Cooperante cooperante = new Cooperante();
-				cooperante.setId(map.get("cooperanteid")!=null ? Integer.parseInt(map.get("cooperanteid")): 0);
+				cooperante.setId(map.get("cooperanteid")!=null ? Integer.parseInt(map.get("cooperanteid")): null);
 
 				type = new TypeToken<List<stdatadinamico>>() {
 				}.getType();
