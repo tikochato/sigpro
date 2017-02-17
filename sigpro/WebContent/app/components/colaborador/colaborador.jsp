@@ -169,7 +169,6 @@
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
       	<shiro:hasPermission name="4020">
-      		
         <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : '' " ng-disabled="form.$invalid || !colaborador.usuarioValido">Guardar</label>
       	</shiro:hasPermission> 
         <label class="btn btn-primary" ng-click="colaborador.cancelar()">Ir a Tabla</label>
