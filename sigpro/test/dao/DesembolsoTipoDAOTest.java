@@ -15,7 +15,7 @@ public class DesembolsoTipoDAOTest {
 	
 	@Test
 	public void getDesembolosTipoPorIdTest(){
-		assertNotNull(DesembolsoTipoDAO.getDesembolosTipoPorId(1).getClass());
+		assertEquals(DesembolsoTipoDAO.getDesembolosTipoPorId(1),null);
 	}
 	
 	@Test

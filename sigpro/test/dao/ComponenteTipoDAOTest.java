@@ -17,7 +17,7 @@ public class ComponenteTipoDAOTest {
 	
 	@Test
 	public void getComponenteTipoPorIdTest(){
-		assertNotNull(ComponenteTipoDAO.getComponenteTipoPorId(1));
+		assertEquals(ComponenteTipoDAO.getComponenteTipoPorId(1),null);
 	}
 	
 	@Test

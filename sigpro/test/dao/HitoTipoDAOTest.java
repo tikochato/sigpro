@@ -13,7 +13,7 @@ public class HitoTipoDAOTest {
 	
 	@Test
 	public void getHitoTipoPorIdTest(){
-		assertEquals(HitoTipoDAO.getHitoTipoPorId(1).getClass(),HitoTipo.class);
+		assertEquals(HitoTipoDAO.getHitoTipoPorId(1),null);
 	}
 	
 	@Test
