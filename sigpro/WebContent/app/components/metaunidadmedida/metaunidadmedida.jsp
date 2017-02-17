@@ -10,7 +10,7 @@
 			       <shiro:hasPermission name="19040">
 			       		<label class="btn btn-primary" ng-click="metaunidadc.nueva()">Nueva</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="19020"><label class="btn btn-primary" ng-click="metaunidadc.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="19010"><label class="btn btn-primary" ng-click="metaunidadc.editar()">Editar</label></shiro:hasPermission>
 			       <shiro:hasPermission name="19030">
 			       		<label class="btn btn-primary" ng-click="metaunidadc.borrar()">Borrar</label>
 			       </shiro:hasPermission>
@@ -58,7 +58,9 @@
 			<h4 ng-hide="metaunidadc.esnueva">Edición de Unidad de Medida</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success"  ng-click="form.$valid ? metaunidadc.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
+					<shiro:hasPermission name="19020">
+			        	<label class="btn btn-success"  ng-click="form.$valid ? metaunidadc.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
+			        </shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="metaunidadc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
@@ -121,7 +123,9 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="form.$valid ? metaunidadc.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
+						<shiro:hasPermission name="19020">
+				        	<label class="btn btn-success" ng-click="form.$valid ? metaunidadc.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
+						</shiro:hasPermission>
 				        <label class="btn btn-primary" ng-click="metaunidadc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>
