@@ -18,7 +18,7 @@
 				<shiro:hasPermission name="3040">
 					<label class="btn btn-primary" ng-click="actividadtipoc.nuevo()">Nuevo</label>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="3020">
+				<shiro:hasPermission name="3010">
 					<label class="btn btn-primary" ng-click="actividadtipoc.editar()">Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="3030">
@@ -69,7 +69,9 @@
 		<h4 ng-hide="actividadtipoc.esnuevo">Edición de Tipo Componente</h4>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="form.$valid ? actividadtipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				<shiro:hasPermission name="3020">
+					<label class="btn btn-success" ng-click="form.$valid ? actividadtipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				</shiro:hasPermission>
 				<label class="btn btn-primary" ng-click="actividadtipoc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>
@@ -174,7 +176,9 @@
 		<div align="center">Los campos marcados con * son obligatorios</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="form.$valid ? actividadtipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				<shiro:hasPermission name="3020">
+					<label class="btn btn-success" ng-click="form.$valid ? actividadtipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				</shiro:hasPermission>
 				<label class="btn btn-primary" ng-click="actividadtipoc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>
