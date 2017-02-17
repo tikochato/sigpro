@@ -62,12 +62,10 @@
                          	
                          </ul>
                     </li>
+                    <li uib-dropdown>
+	                	<shiro:hasPermission name="24010"><a   href="#!/gantt/1"><span class="glyphicon" aria-hidden="true"></span> Gantt</a></shiro:hasPermission>	                    
+	                </li>
 	            </ul>
-	            <ul>
-	            	<li>
-                    	<shiro:hasPermission name="24010"><a   href="#!/gantt/1"><span class="glyphicon" aria-hidden="true"></span> Gantt</a></shiro:hasPermission>                       
-                    </li>
-                </ul>
 	            <ul class="nav navbar-nav navbar-right">
 	            	<shiro:authenticated><li><a href="#!/usuarioinfo"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Mi info.</a></li></shiro:authenticated>
 	            	<shiro:notAuthenticated><li><a href="/login.jsp"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>Entrar</a></li></shiro:notAuthenticated>
