@@ -49,16 +49,15 @@ app.controller(
 		});
 	};
 	mi.guardarUsuario=function(){
-		console.log("he");
-		console.log(usuarioMail);
 		if(mi.usuarioActual.email!==""){
 			if(validarEmail(mi.usuarioActual.email)){
 				if(usuarioMail!==mi.usuarioActual.email){
 					$http.post('/SUsuario',
 							{
-								accion: 'editarUsuario',
+								accion: 'guardarUsuario',
 								usuario:mi.usuarioActual.usuario,
-								email:mi.usuarioActual.email
+								email:mi.usuarioActual.email,
+								esnuevo:false
 							}).success(
 								function(data) {
 									console.log(data);
@@ -77,7 +76,32 @@ app.controller(
 			}else{
 				$utilidades.mensaje('danger','correo electrónico no válido.');
 			}
-			
+		if(mi.tieneColaborador){
+			var datos = {
+					accion : 'actualizar',
+					id : mi.usuarioActual.id,
+					primerNombre : mi.usuarioActual.pnombre,
+					segundoNombre : mi.usuarioActual.snombre,
+					primerApellido : mi.usuarioActual.papellido,
+					segundoApellido : mi.usuarioActual.sapellido,
+					cui : mi.usuarioActual.cui,
+					unidadEjecutora : mi.usuarioActual.unidad_ejecutora,
+					usuario : mi.usuarioActual.usuario
+				};
+
+				$http.post('/SColaborador', datos).then(
+						function(response) {
+
+							if (response.data.success) {
+								mi.data = response.data.colaboradores;
+								$utilidades.mensaje('success',
+										'Colaborador actualizado con exito.');
+							} else {
+								$utilidades.mensaje('danger',
+										'Error al actualizar datos.');
+							}
+						});
+		}
 		}else{
 			$utilidades.mensaje('danger','Los campos no deben de quedar vacios.');
 		}
