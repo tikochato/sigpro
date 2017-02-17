@@ -189,7 +189,7 @@ public class Utils {
 	}
 	
 	public static String formatDateHour24(Date date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:SS");
 		if (date != null)
 			return sdf.format(date);
 		return "";
