@@ -312,6 +312,12 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			$location.path('/hito/'+ proyectoid );
 		}
 	};
+	
+	mi.irAGantt=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/gantt/'+ proyectoid );
+		}
+	};
 
 	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
 		var resultado = $q.defer();
