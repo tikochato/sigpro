@@ -13,7 +13,7 @@ body {
 	height: calc(100% - 30px);
 	width: 95%;
 	margin: 0 auto;
-	display: table;
+	display: block;
 	padding-top: 51px;
 }
 
@@ -194,4 +194,7 @@ nav.navbar{
 
 .gantt-chart{
 	overflow-x: hidden;
+	height: 100%;
+	width: 100%;
+	position: relative;
 }

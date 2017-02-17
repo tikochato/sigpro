@@ -6,7 +6,6 @@
 	    <h3>Gantt</h3>
 	    <br/>
 	    <div class="gantt-chart">
-			<ds:gantt-chart id="ganttChartView" items="ganttc.items" settings="ganttc.settings" auto-refresh="{{ true }}">
-	    	</ds:gantt-chart>
+			<div ds:gantt-chart id="ganttChartView" items="items" settings="settings" auto-refresh="{{ true }}"></div>
     	</div>
 	</div>

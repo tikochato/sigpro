@@ -15,7 +15,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
         			}
         		}
         	})*/
-		    .when('/gantt',{
+		    .when('/gantt/:proyectoId?',{
             	template: '<div load-on-demand="\'ganttController\'" class="all_page"></div>'
             })
             .when('/cooperante/:reiniciar_vista?',{
