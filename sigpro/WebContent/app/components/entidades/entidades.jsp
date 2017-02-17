@@ -14,7 +14,7 @@
       	<shiro:hasPermission name="1040">
       		<label class="btn btn-primary" ng-click="entidad.nueva()">Nueva</label>
       	</shiro:hasPermission>
-      	<shiro:hasPermission name="1020">
+      	<shiro:hasPermission name="1010">
         	<label class="btn btn-primary" ng-click="entidad.editar()">Editar</label>
       	</shiro:hasPermission>
       </div>
@@ -61,7 +61,9 @@
     <div class="col-sm-12 operation_buttons" align="right">
 
       <div class="btn-group">
-        <label class="btn btn-success" ng-click="form.$valid ? entidad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+      	<shiro:hasPermission name="1020">
+        	<label class="btn btn-success" ng-click="form.$valid ? entidad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+        </shiro:hasPermission>
         <label class="btn btn-primary" ng-click="entidad.cancelar()">Ir a Tabla</label>
       </div>
 
@@ -97,7 +99,9 @@
 
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
-        <label class="btn btn-success" ng-click="form.$valid ? entidad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+      	<shiro:hasPermission name="1020">      		
+        	<label class="btn btn-success" ng-click="form.$valid ? entidad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+      	</shiro:hasPermission>
         <label class="btn btn-primary" ng-click="entidad.cancelar()">Ir a Tabla</label>
       </div>
     </div>
