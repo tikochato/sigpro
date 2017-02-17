@@ -22,10 +22,12 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
+import dao.HitoDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import pojo.Actividad;
 import pojo.Componente;
+import pojo.Hito;
 import pojo.Producto;
 import pojo.Proyecto;
 import utilities.Utils;
@@ -89,20 +91,28 @@ public class SGantt extends HttpServlet {
 							if (fechaPrimeraActividad==null) {
 								fechaPrimeraActividad = actividad.getFechaInicio();
 							}
-							items = String.join(",", construirItem(actividad.getNombre(), 3, true, actividad.getFechaInicio(), actividad.getFechaFin()),items);
+							items = String.join(",", construirItem(actividad.getNombre(), 3, true, actividad.getFechaInicio(), actividad.getFechaFin(),false),items);
 						}
-						items = String.join(",",construirItem(producto.getNombre(),2, true, fechaPrimeraActividad, null),items);
+						items = String.join(",",construirItem(producto.getNombre(),2, true, fechaPrimeraActividad, null,false),items);
 					}
-					items = String.join(",",construirItem(componente.getNombre(),1, true, fechaPrimeraActividad, null),items);
+					items = String.join(",",construirItem(componente.getNombre(),1, true, fechaPrimeraActividad, null,false),items);
 				}
-				items = String.join(",",construirItem(proyecto.getNombre(),null, true, fechaPrimeraActividad, null),items);
+				items = items.substring(0,items.length()-1);
+				items = String.join(",",construirItem(proyecto.getNombre(),null, true, fechaPrimeraActividad, null,false),items);
+				List<Hito> hitos = HitoDAO.getHitosPaginaPorProyecto(0, 0, proyectoId, null, null, null, null, null);
+				
+				for (Hito hito:hitos){
+					items = String.join(",",items, construirItem(hito.getNombre(), 1, null, hito.getFecha(), null,true));
+				}
 			}
 			
-			items = String.join("","{\"items\" : [", items.substring(0,items.length()-1),"]}");
-			response.setHeader("Content-Encoding", "gzip");
-			response.setCharacterEncoding("UTF-8");
-
+			items = String.join("","{\"items\" : [", items,"]}");
+			
 		}
+		
+		response.setHeader("Content-Encoding", "gzip");
+		response.setCharacterEncoding("UTF-8");
+		
         OutputStream output = response.getOutputStream();
 		GZIPOutputStream gz = new GZIPOutputStream(output);
         gz.write(items.getBytes("UTF-8"));
@@ -111,14 +121,15 @@ public class SGantt extends HttpServlet {
 		
 	}
 	
-	private String construirItem(String content,Integer identation,boolean isExpanded,Date start,Date finish){
+	private String construirItem(String content,Integer identation,Boolean isExpanded,Date start,Date finish
+			,boolean isMilestone){
 		return String.join("", "{\"content\" :\"",content,"\",",
 				identation!=null ? "\"indentation\" :" : "", identation!=null ? identation.toString() :"",identation!=null ? "," : "", 
-				"\"isExpanded\" :\"" ,isExpanded ? "true" : "false","\",",
+				isExpanded!=null ? "\"isExpanded\" :\"":"" ,isExpanded!=null ? (isExpanded ? "true" : "false"):"",isExpanded!=null ?"\",":"",
 				start !=null ? "\"start\" :\"" : "", start!=null ? Utils.formatDateHour24(start) :"", start!=null ? "\"" : "",
 			    start!=null && finish!=null ? "," : "",
 				finish!=null ? "\"finish\" :\"" : "",finish!=null ? Utils.formatDateHour24(start) : "",finish!=null ?"\"":"",
-				",\"isMilestone\":false",
+				",\"isMilestone\":",isMilestone? "\"true\"" : "\"false\"",
 				"}"
 			);
 	}
