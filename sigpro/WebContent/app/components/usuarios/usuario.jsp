@@ -19,7 +19,7 @@
 					<shiro:hasPermission name="34040">
 						<label class="btn btn-primary" ng-click="usuarioc.nuevoUsuario()">Nuevo</label>
 					</shiro:hasPermission>
-					<shiro:hasPermission name="34020">
+					<shiro:hasPermission name="34010">
 						<label class="btn btn-primary" ng-click="usuarioc.editarUsuario()">Editar</label>
 					</shiro:hasPermission>
 					<shiro:hasPermission name="34030">
@@ -66,7 +66,9 @@
 		<div class="row main-form" ng-show="usuarioc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid ? usuarioc.guardarUsuario() : '' ) :  (form.$valid ? usuarioc.guardarUsuario() : '' )" ng-disabled="usuarioc.esNuevo ? form1.$invalid : form.$invalid">Guardar</label>
+					<shiro:hasPermission name="34020">
+						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid ? usuarioc.guardarUsuario() : '' ) :  (form.$valid ? usuarioc.guardarUsuario() : '' )" ng-disabled="usuarioc.esNuevo ? form1.$invalid : form.$invalid">Guardar</label>
+					</shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()">Ir a Tabla</label>
     			</div>
     		</div>
@@ -112,7 +114,9 @@
 			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid ? usuarioc.guardarUsuario() : '' ) :  (form.$valid ? usuarioc.guardarUsuario() : '' )" ng-disabled="usuarioc.esNuevo ? form1.$invalid : form.$invalid">Guardar</label>
+			        <shiro:hasPermission name="34020">
+						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid ? usuarioc.guardarUsuario() : '' ) :  (form.$valid ? usuarioc.guardarUsuario() : '' )" ng-disabled="usuarioc.esNuevo ? form1.$invalid : form.$invalid">Guardar</label>
+					</shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()">Ir a Tabla</label>
     		</div>
     	</div>
