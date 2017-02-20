@@ -157,7 +157,6 @@
 				        <shiro:hasPermission name="30020">
 				        	<label class="btn btn-success" ng-click="form.$valid ? riesgoc.guardar() : ''"  ng-disabled="!form.$valid">Guardar</label></shiro:hasPermission>
 				        <label class="btn btn-primary" ng-click="riesgoc.irATabla()">Ir a Tabla</label>
-				        <label class="btn btn-primary" ng-click="riesgoc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>
     		</div>
