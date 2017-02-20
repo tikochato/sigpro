@@ -38,6 +38,8 @@
 					</div>
 				  </div>
 				</div>
+				<br/>
+			<div class="total-rows">Total de {{  metaunidadc.totalmedidas + (metaunidadc.totalmedidas == 1 ? " unidad de medida" : " unidad de medida" ) }}</div>
 				<ul uib-pagination total-items="metaunidadc.totalmedidas" 
 						ng-model="metaunidadc.paginaActual" 
 						max-size="metaunidadc.numeroMaximoPaginas" 
