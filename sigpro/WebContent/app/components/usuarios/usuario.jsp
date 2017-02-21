@@ -122,8 +122,7 @@
     	</div>
 		</div>
 		
-
-		<h3 ng-show="usuarioc.isCollapsed">Permisos</h3><br/>
+		<div align="center"><h5 ng-show="usuarioc.isCollapsed">Permisos</h5><br/></div>
 		<div align="center" ng-show="usuarioc.isCollapsed">
 				<div style="height: 35px; width: 75%">
 					<div style="text-align: right;">
