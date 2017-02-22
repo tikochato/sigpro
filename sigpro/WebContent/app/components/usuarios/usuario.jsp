@@ -62,7 +62,6 @@
     		</shiro:hasPermission>
 
 		</div>
-		<shiro:hasPermission name="34010">
 		<div class="row main-form" ng-show="usuarioc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
@@ -121,9 +120,12 @@
     		</div>
     	</div>
 		</div>
-		
-		<div align="center"><h5 ng-show="usuarioc.isCollapsed">Permisos</h5><br/></div>
+		<div class="row">
+			<div class="col-sm-12">
+			
 		<div align="center" ng-show="usuarioc.isCollapsed">
+				<h5 ng-show="usuarioc.isCollapsed">Permisos</h5>
+				<br>
 				<div style="height: 35px; width: 75%">
 					<div style="text-align: right;">
 						<div class="btn-group" role="group" aria-label="">
@@ -163,7 +165,9 @@
 				</tbody>
 			</table>
 		</div>
-		</shiro:hasPermission>
+		</div>
+		
+		</div>
 
 
 	</div>
