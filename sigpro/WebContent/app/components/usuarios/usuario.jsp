@@ -125,7 +125,6 @@
 			
 		<div align="center" ng-show="usuarioc.isCollapsed">
 				<h5 ng-show="usuarioc.isCollapsed">Permisos</h5>
-				<br>
 				<div style="height: 35px; width: 75%">
 					<div style="text-align: right;">
 						<div class="btn-group" role="group" aria-label="">
@@ -137,10 +136,10 @@
 						</div>
 					</div>
 				</div>
-
-				<table style="width: 75%; overflow-y: scroll;height: 200px;display: block;"
+				<br>
+				<table style="width: 75%; overflow-y: scroll;height: 175px;display: block;"
 				st-table="usuarioc.permisosAsignados"
-				class="table table-striped  table-bordered">
+				class="table table-striped  table-bordered table-hover table-propiedades">
 				<thead >
 					<tr>
 						<th style="width: 5%;">Nombre</th>
