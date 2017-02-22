@@ -9,6 +9,10 @@
    <script type="text/ng-template" id="buscarUsuario.jsp">
     <%@ include file="/app/components/colaborador/buscarUsuario.jsp"%>
   </script>
+  <shiro:lacksPermission name="4010">
+	<p ng-init="colaborador.redireccionSinPermisos()"></p>
+  </shiro:lacksPermission>
+  
 
   <h3>{{ colaborador.esForma ? (colaborador.esNuevo ? "Nuevo Colaborador" : "Editar Colaborador") : "Colaborador" }}</h3>
 
