@@ -6,6 +6,9 @@
 	    <script type="text/ng-template" id="buscarPorComponente.jsp">
     		<%@ include file="/app/components/componente/buscarPorComponente.jsp"%>
   	    </script>
+  	    <shiro:lacksPermission name="5010">
+			<p ng-init="componentec.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Componentes</h3><br/>
 		<h4>{{ componentec.proyectoNombre }}</h4><br/>
 		<div class="row" align="center" ng-hide="componentec.mostraringreso">
