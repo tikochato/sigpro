@@ -29,7 +29,7 @@
 		<div class="col-sm-12" align="center">
 			<div style="height: 35px;">
 				<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
-					<shiro:hasPermission name="verProyecto">
+					<shiro:hasPermission name="24010">
 						<a class="btn btn-default" href ng-click="controller.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
 					</shiro:hasPermission>
 
