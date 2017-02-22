@@ -138,12 +138,12 @@
 					</div>
 				</div>
 
-				<table style="width: 75%;"
+				<table style="width: 75%; overflow-y: scroll;height: 200px;display: block;"
 				st-table="usuarioc.permisosAsignados"
 				class="table table-striped  table-bordered">
 				<thead >
 					<tr>
-						<th>Nombre</th>
+						<th style="width: 5%;">Nombre</th>
 						<th>Descripicon</th>
 						<th style="width: 30px;">Quitar</th>
 
