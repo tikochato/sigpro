@@ -8,6 +8,9 @@
 	<script type="text/ng-template" id="buscarcomponentepropiedad.jsp">
     	<%@ include file="/app/components/componentetipo/buscarcomponentepropiedad.jsp"%>
   	</script>
+  	<shiro:lacksPermission name="7010">
+		<p ng-init="componentetipoc.redireccionSinPermisos()"></p>
+	</shiro:lacksPermission>
 	<h3>Tipo de Componente</h3>
 	<br />
 
