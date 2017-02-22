@@ -7,9 +7,7 @@
     		<%@ include file="/app/components/recurso/buscarRecursoTipo.jsp"%>
   	    </script>
   	    <shiro:lacksPermission name="26010">
-  	   	<p ng-init="recursoc.redireccionSinPermisos()"></p>
-  	   	
-			  	   
+  	   		<p ng-init="recursoc.redireccionSinPermisos()"></p>
   	    </shiro:lacksPermission>
 		<h3>Recursos</h3><br/>
 		<div class="row" align="center" ng-hide="recursoc.mostraringreso">
