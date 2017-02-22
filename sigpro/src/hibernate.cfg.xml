@@ -59,6 +59,9 @@
         <mapping class="pojo.ProductoPropiedad" />
         <mapping class="pojo.ProductoPropiedadValor" />
         <mapping class="pojo.ProductoTipo" />
+        <mapping class="pojo.ProgramaPropiedad" />
+        <mapping class="pojo.ProgramaTipo" />
+        <mapping class="pojo.ProgtipoPropiedad" />
         <mapping class="pojo.Proyecto" />
         <mapping class="pojo.ProyectoPropedadValor" />
         <mapping class="pojo.ProyectoPropiedad" />
