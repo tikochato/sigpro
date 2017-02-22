@@ -312,6 +312,11 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			$location.path('/hito/'+ proyectoid );
 		}
 	};
+	mi.irAActividades=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/actividad/'+ proyectoid +'/1' );
+		}
+	};
 	
 	mi.irAGantt=function(proyectoid){
 		if(mi.proyecto!=null){

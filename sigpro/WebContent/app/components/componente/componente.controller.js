@@ -287,6 +287,13 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				$location.path('/producto/'+componenteid);
 			}
 		};
+		
+		mi.irAActividades=function(componenteid){
+			if(mi.componente!=null){
+				$location.path('/actividad/'+ componenteid +'/2' );
+			}
+		};
+		
 
 		mi.filtrar = function(evt,tipo){
 			if(evt.keyCode==13){
