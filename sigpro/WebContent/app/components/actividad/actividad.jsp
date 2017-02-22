@@ -6,6 +6,9 @@
 	    <script type="text/ng-template" id="buscarActividadTipo.jsp">
     		<%@ include file="/app/components/actividad/buscarActividadTipo.jsp"%>
   	    </script>
+  	    <shiro:lacksPermission name="1010">
+			<p ng-init="actividadc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Actividades</h3><br/>
 		<h4>{{ actividadc.objetoTipoNombre }} {{ actividadc.objetoNombre }}</h4><br/>
 		<div class="row" align="center" ng-hide="actividadc.mostraringreso">
