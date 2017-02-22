@@ -6,6 +6,9 @@
 	<script type="text/ng-template" id="buscarDesembolsoTipo.jsp">
     	<%@ include file="/app/components/desembolso/buscarDesembolsoTipo.jsp"%>
   	</script>
+  		<shiro:lacksPermission name="9010">
+			<p ng-init="desembolsoc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Desembolso</h3><br/>
 		<h4>{{ desembolsoc.proyectonombre }}</h4><br/>
 		
