@@ -21,7 +21,11 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
-		
+		mi.redireccionSinPermisos=function(){
+			$window.location.href = '/main.jsp';
+			$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');
+			
+		}
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;
 		
