@@ -8,6 +8,9 @@
 	<script type="text/ng-template" id="buscaractividadpropiedad.jsp">
     	<%@ include file="/app/components/actividadtipo/buscaractividadpropiedad.jsp"%>
   	</script>
+  	 <shiro:lacksPermission name=3010">
+			<p ng-init="actividadtipoc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 	<h3>Tipo de Actividad</h3>
 	<br />
 
