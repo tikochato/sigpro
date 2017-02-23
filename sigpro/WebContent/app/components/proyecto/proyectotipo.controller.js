@@ -23,7 +23,10 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 		mi.orden = null;
 
 
-		//--
+		mi.redireccionSinPermisos=function(){
+			$window.location.href = '/main.jsp';
+			$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
+		}
 		mi.proyectopropiedades =[];
 		mi.proyectopropiedad =null;
 		mi.mostrarcargandoProyProp=true;
