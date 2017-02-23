@@ -25,7 +25,11 @@ app.controller(
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
-	mi.permisoSelected={id:"",nombre:"", descripcion:""};	
+	mi.permisoSelected={id:"",nombre:"", descripcion:""};
+	mi.redireccionSinPermisos=function(){
+		$window.location.href = '/main.jsp';
+		$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
+	}
 	mi.filtros=[];
 	mi.gridOptions = {
 		enableRowSelection : true,
