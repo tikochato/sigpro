@@ -8,7 +8,9 @@
 	<script type="text/ng-template" id="buscarPorProyecto.jsp">
     		<%@ include file="/app/components/proyecto/buscarPorProyecto.jsp"%>
   	 </script>
-
+	<shiro:lacksPermission name="24010">
+		<p ng-init="controller.redireccionSinPermisos()"></p>
+	</shiro:lacksPermission>
 	<h3>Proyectos</h3>
 	<br />
 	<div class="row" align="center" ng-hide="controller.esColapsado">
