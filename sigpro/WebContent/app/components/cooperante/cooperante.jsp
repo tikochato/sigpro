@@ -3,6 +3,9 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="cooperanteController as cooperantec" class="maincontainer all_page" id="title">
+		<shiro:lacksPermission name="8010">
+			<p ng-init="cooperantec.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Cooperantes</h3><br/>
 		<div class="row" align="center" ng-hide="cooperantec.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
@@ -10,7 +13,7 @@
 			       <shiro:hasPermission name="8040">
 			       		<label class="btn btn-primary" ng-click="cooperantec.nuevo()">Nuevo</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="8020"><label class="btn btn-primary" ng-click="cooperantec.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="8010"><label class="btn btn-primary" ng-click="cooperantec.editar()">Editar</label></shiro:hasPermission>
 			       <shiro:hasPermission name="8030">
 			       		<label class="btn btn-primary" ng-click="cooperantec.borrar()">Borrar</label>
 			       </shiro:hasPermission>
@@ -58,7 +61,9 @@
 			<h4 ng-hide="cooperantec.esnuevo">Edición de cooperante</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="form.$valid ? cooperantec.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
+					<shiro:hasPermission name="8020">
+			        	<label class="btn btn-success" ng-click="form.$valid ? cooperantec.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
+			        </shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="cooperantec.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
@@ -121,7 +126,9 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="form.$valid ? cooperantec.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
+						<shiro:hasPermission name="8020">
+							<label class="btn btn-success" ng-click="form.$valid ? cooperantec.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
+						</shiro:hasPermission>
 				        <label class="btn btn-primary" ng-click="cooperantec.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

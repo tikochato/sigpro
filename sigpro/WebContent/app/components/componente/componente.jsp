@@ -6,6 +6,9 @@
 	    <script type="text/ng-template" id="buscarPorComponente.jsp">
     		<%@ include file="/app/components/componente/buscarPorComponente.jsp"%>
   	    </script>
+  	    <shiro:lacksPermission name="5010">
+			<p ng-init="componentec.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Componentes</h3><br/>
 		<h4>{{ componentec.proyectoNombre }}</h4><br/>
 		<div class="row" align="center" ng-hide="componentec.mostraringreso">
@@ -14,7 +17,7 @@
 			       <shiro:hasPermission name="5040">
 			       		<label class="btn btn-primary" ng-click="componentec.nuevo()">Nuevo</label>
 			       </shiro:hasPermission>
-			       <shiro:hasPermission name="5020"><label class="btn btn-primary" ng-click="componentec.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="5010"><label class="btn btn-primary" ng-click="componentec.editar()">Editar</label></shiro:hasPermission>
 			       <shiro:hasPermission name="5030">
 			       		<label class="btn btn-primary" ng-click="componentec.borrar()">Borrar</label>
 			       </shiro:hasPermission>
@@ -70,7 +73,9 @@
 		</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="form.$valid ? componentec.guardar() : ''" ng-disabled="!form.$valid" >Guardar</label>
+					<shiro:hasPermission name="5020">						
+			        	<label class="btn btn-success" ng-click="form.$valid ? componentec.guardar() : ''" ng-disabled="!form.$valid" >Guardar</label>
+					</shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="componentec.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
@@ -200,7 +205,9 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="form.$valid ? componentec.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+						<shiro:hasPermission name="5020">
+							<label class="btn btn-success" ng-click="form.$valid ? componentec.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+						</shiro:hasPermission>
 				        <label class="btn btn-primary" ng-click="componentec.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

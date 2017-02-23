@@ -14,7 +14,7 @@ public class MetaTipoDAOTest {
 	}
 	@Test
 	public void getMetaTipoPorIdTest(){
-		assertNotNull(MetaTipoDAO.getMetaTipoPorId(1));
+		assertEquals(MetaTipoDAO.getMetaTipoPorId(1),null);
 	}
 	@Test
 	public void guardarMetaTipoTest(){

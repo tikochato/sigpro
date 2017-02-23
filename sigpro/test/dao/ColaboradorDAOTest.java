@@ -8,7 +8,7 @@ public class ColaboradorDAOTest {
 	
 	@Test
 	public void getColaboradorTest(){
-		assertNotNull(ColaboradorDAO.getColaborador(1));
+		assertNull(ColaboradorDAO.getColaborador(0));
 	}
 	
 	@Test

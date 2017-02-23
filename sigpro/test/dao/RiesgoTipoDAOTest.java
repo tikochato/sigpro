@@ -13,7 +13,7 @@ public class RiesgoTipoDAOTest {
 	
 	@Test
 	public  void getRiesgoTipoPorIdTest(){
-		assertNotNull(RiesgoTipoDAO.getRiesgoTipoPorId(1));
+		assertNull(RiesgoTipoDAO.getRiesgoTipoPorId(1));
 	}
 	
 	@Test

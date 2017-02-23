@@ -15,7 +15,7 @@
 				<shiro:hasPermission name="12040">
 					<label class="btn btn-primary" ng-click="formularioc.nuevo()">Nuevo</label>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="12020">
+				<shiro:hasPermission name="12010">
 				<label class="btn btn-primary" ng-click="formularioc.editar()">Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="12030">
@@ -64,7 +64,9 @@
 		<h4 ng-hide="formularioc.esnuevo">Edición de Formulario</h4>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="form.$valid ? formularioc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				<shiro:hasPermission name="12020">
+					<label class="btn btn-success" ng-click="form.$valid ? formularioc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				</shiro:hasPermission>
 				<label class="btn btn-primary" ng-click="formularioc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>
@@ -181,7 +183,9 @@
 		<div align="center">Los campos marcados con * son obligatorios</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="form.$valid ? formularioc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				<shiro:hasPermission name="12020">
+					<label class="btn btn-success" ng-click="form.$valid ? formularioc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				</shiro:hasPermission>
 				<label class="btn btn-primary" ng-click="formularioc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>

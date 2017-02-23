@@ -23,7 +23,7 @@ public class ComponentePropiedadDAOTest {
 	
 	@Test
 	public void getComponentePropiedadPorIdTest(){
-		assertNotNull(ComponentePropiedadDAO.getComponentePropiedadPorId(1));
+		assertNull(ComponentePropiedadDAO.getComponentePropiedadPorId(0));
 	}
 	
 	@Test

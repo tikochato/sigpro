@@ -6,6 +6,9 @@
 	<script type="text/ng-template" id="buscarDesembolsoTipo.jsp">
     	<%@ include file="/app/components/desembolso/buscarDesembolsoTipo.jsp"%>
   	</script>
+  		<shiro:lacksPermission name="9010">
+			<p ng-init="desembolsoc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Desembolso</h3><br/>
 		<h4>{{ desembolsoc.proyectonombre }}</h4><br/>
 		
@@ -15,7 +18,7 @@
 			       <shiro:hasPermission name="9040">
 			       		<label class="btn btn-primary" ng-click="desembolsoc.nuevo()">Nuevo</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="9020"><label class="btn btn-primary" ng-click="desembolsoc.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="9010"><label class="btn btn-primary" ng-click="desembolsoc.editar()">Editar</label></shiro:hasPermission>
 			       <shiro:hasPermission name="9030">
 			       		<label class="btn btn-primary" ng-click="desembolsoc.borrar()">Borrar</label>
 			       </shiro:hasPermission>
@@ -62,7 +65,9 @@
 			<h4 ng-hide="desembolsoc.esnuevo">Edición de Desembolso</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="form.$valid ? desembolsoc.guardar(): ''" ng-disabled="!form.$valid">Guardar</label>
+					<shiro:hasPermission name="9020">
+			        	<label class="btn btn-success" ng-click="form.$valid ? desembolsoc.guardar(): ''" ng-disabled="!form.$valid">Guardar</label>
+			        </shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="desembolsoc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
@@ -142,7 +147,9 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="form.$valid ? desembolsoc.guardar(): ''" ng-disabled="!form.$valid">Guardar</label>
+						<shiro:hasPermission name="9020">
+				        	<label class="btn btn-success" ng-click="form.$valid ? desembolsoc.guardar(): ''" ng-disabled="!form.$valid">Guardar</label>
+				        </shiro:hasPermission>
 				        <label class="btn btn-primary" ng-click="desembolsoc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

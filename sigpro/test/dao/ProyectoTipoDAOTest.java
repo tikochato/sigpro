@@ -15,7 +15,7 @@ public class ProyectoTipoDAOTest {
 	
 	@Test
 	public void getProyectoTipoPorIdTest(){
-		assertNotNull(ProyectoTipoDAO.getProyectoTipoPorId(1));
+		assertNull(ProyectoTipoDAO.getProyectoTipoPorId(1));
 	}
 	
 	@Test

@@ -12,7 +12,7 @@ public class DatoTipoDAOTest {
 	
 	@Test
 	public void getDatoTipoTest(){
-		assertNotNull(DatoTipoDAO.getDatoTipo(1).getClass());
+		assertEquals(DatoTipoDAO.getDatoTipo(1),null);
 	}
 	
 	@Test
