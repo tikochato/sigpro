@@ -25,7 +25,10 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 	
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion = null;
-	
+	mi.redireccionSinPermisos=function(){
+		$window.location.href = '/main.jsp';
+		$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
+	}
 	mi.filtros = [];
 
 	mi.cambioPagina = function() {

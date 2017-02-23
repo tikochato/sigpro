@@ -7,6 +7,9 @@
 	<script type="text/ng-template" id="buscarPorProducto.jsp">
 	    <%@ include file="/app/components/producto/buscarPorProducto.jsp"%>
 	</script>
+	<shiro:lacksPermission name="21010">
+		<p ng-init="producto.redireccionSinPermisos()"></p>
+	</shiro:lacksPermission>
 
 	<h3>{{ producto.esForma ? (producto.esNuevo ? "Nuevo Producto" : "Editar Producto") : "Producto" }}</h3>
 	<h4>{{ producto.componenteNombre }}</h4><br/>

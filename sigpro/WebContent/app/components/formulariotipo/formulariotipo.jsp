@@ -4,6 +4,9 @@
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <div ng-controller="formulariotipoController as formulariotipoc"
 	class="maincontainer all_page" id="title">
+	<shiro:lacksPermission name="14010">
+		<p ng-init="formulariotipoc.redireccionSinPermisos()"></p>
+	</shiro:lacksPermission>
 	<h3>Tipo de Formulario</h3>
 	<br />
 	<div class="row" align="center" ng-if="!formulariotipoc.mostraringreso">

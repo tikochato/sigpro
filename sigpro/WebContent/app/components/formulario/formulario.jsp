@@ -7,6 +7,9 @@
 	<script type="text/ng-template" id="buscarPorFormulario.jsp">
     		<%@ include file="/app/components/formulario/buscarPorFormulario.jsp"%>
   	</script>
+  	<shiro:lacksPermission name="12010">
+		<p ng-init="formularioc.redireccionSinPermisos()"></p>
+	</shiro:lacksPermission>
 	<h3>Formularios</h3>
 	<br />
 	<div class="row" align="center" ng-if="!formularioc.mostraringreso">

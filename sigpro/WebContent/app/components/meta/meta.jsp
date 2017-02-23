@@ -3,6 +3,9 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="metaController as metac" class="maincontainer all_page" id="title">
+		<shiro:lacksPermission name="17010">
+			<p ng-init="metac.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Metas de {{ metac.nombreTipoPcp }}</h3><br/>
 		<h4>{{ metac.nombrePcp }}</h4><br/>
 		<div class="row" align="center" ng-hide="metac.mostraringreso">

@@ -3,6 +3,9 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="desembolsotipoController as desembolsotipoc" class="maincontainer all_page" id="title">
+		<shiro:lacksPermission name="35010">
+			<p ng-init="desembolsotipoc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Tipo Desembolso</h3><br/>
 		<div class="row" align="center" ng-if="!desembolsotipoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">

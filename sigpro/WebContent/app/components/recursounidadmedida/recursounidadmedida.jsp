@@ -3,6 +3,9 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="recursounidadmedidaController as recursounidadc" class="maincontainer all_page" id="title">
+		<shiro:lacksPermission name="29010">
+			<p ng-init="recursounidadc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Unidades de Medida de Recursos</h3><br/>
 		<div class="row" align="center" ng-hide="recursounidadc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">

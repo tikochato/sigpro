@@ -11,6 +11,9 @@
 </style>
 
 	<div ng-controller="permisoController as permisosc" class="maincontainer all_page" id="title">
+		<shiro:lacksPermission name="20010">
+			<p ng-init="permisosc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Permisos</h3><br/>
 		<div class="row" align="center" ng-hide="permisosc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">

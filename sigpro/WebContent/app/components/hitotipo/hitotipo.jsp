@@ -3,6 +3,9 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="hitotipoController as hitotipoc" class="maincontainer all_page" id="title">
+		<shiro:lacksPermission name="16010">
+			<p ng-init="hitotipoc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Tipo Hito</h3><br/>
 		<div class="row" align="center" ng-hide="hitotipoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
