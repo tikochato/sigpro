@@ -19,7 +19,10 @@ app.controller('formularioController',['$scope','$http','$interval','i18nService
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 
 
-		//--
+		mi.redireccionSinPermisos=function(){
+			$window.location.href = '/main.jsp';
+			$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
+		}
 		mi.formularioitemtipos =[];
 		mi.formularioitemtipo =null;
 		mi.mostrarcargandoFormItem=true;
