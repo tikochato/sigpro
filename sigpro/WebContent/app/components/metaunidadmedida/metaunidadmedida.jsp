@@ -3,6 +3,9 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="metaunidadmedidaController as metaunidadc" class="maincontainer all_page" id="title">
+		<shiro:lacksPermission name="19010">
+			<p ng-init="metaunidadc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Unidades de Medida de Metas</h3><br/>
 		<div class="row" align="center" ng-hide="metaunidadc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
