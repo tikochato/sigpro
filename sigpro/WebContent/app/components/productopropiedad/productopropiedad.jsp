@@ -2,7 +2,9 @@
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <div ng-controller="controlProductoPropiedad as productoPropiedad" class="maincontainer all_page">
-
+	<shiro:lacksPermission name="22010">
+		<p ng-init="productoPropiedad.redireccionSinPermisos()"></p>
+	</shiro:lacksPermission>
   <h3>{{ productoPropiedad.esForma ? (productoPropiedad.esNuevo ? "Nueva Propiedad de Producto" : "Editar Propiedad de Producto") : "Propiedad de Producto" }}</h3>
 
   <br />
