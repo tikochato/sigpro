@@ -135,6 +135,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/programapropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'programapropiedadController\'" class="all_page"></div>'
             })
+            .when('/programatipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'programatipoController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -338,7 +341,12 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'programapropiedadController',
 	    	   script: '/app/components/programapropiedad/programapropiedad.controller.js',
 	    	   template: '/app/components/programapropiedad/programapropiedad.jsp'
-	       }
+	       },
+	       {
+	    	   name: 'programatipoController',
+	    	   script: '/app/components/programatipo/programatipo.controller.js',
+	    	   template: '/app/components/programatipo/programatipo.jsp'
+	       },
 
 	   ];
 	   $loadOnDemandProvider.config(modules);

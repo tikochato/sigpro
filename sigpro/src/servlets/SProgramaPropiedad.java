@@ -111,7 +111,7 @@ public class SProgramaPropiedad extends HttpServlet {
 	        response_text = String.join("", "\"programapropiedades\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
-		else if(accion.equals("getProgramaPropiedadPaginaPorTipoProy")){
+		else if(accion.equals("getProgramaPropiedadPaginaPorTipoProg")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int idProgramaPropiedad = map.get("idProgramaTipo")!=null  ? Integer.parseInt(map.get("idProgramaTipo")) : 0;
 			

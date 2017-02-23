@@ -29,6 +29,7 @@
                     <li uib-dropdown>
                          <a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Catálogos <b class="caret"></b></a>
                          <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                         <shiro:hasPermission name="36010"><li role="menuitem"><a href="#!/programatipo">Tipo de Programa</a></li></shiro:hasPermission>
                          	<shiro:hasPermission name="3010"><li role="menuitem"><a href="#!/actividadtipo">Tipo de Actividad</a></li></shiro:hasPermission>                         	
                          	<shiro:hasPermission name="7010"><li role="menuitem"><a href="#!/componentetipo">Tipo de Componente</a></li></shiro:hasPermission>   
                          	<shiro:hasPermission name="35010"><li role="menuitem"><a href="#!/desembolsotipo">Tipo de Desembolso</a></li></shiro:hasPermission>
