@@ -69,11 +69,11 @@
 				<form name="form">
 						<div class="form-group">
 							<label for="id">ID</label>
-    						<label class="form-control" id="id">{{ programapropiedadc.programapropiedad.id }}</label>
+    						<p class="form-control-static">{{ programapropiedadc.programapropiedad.id }}</p>
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="programapropiedadc.programapropiedad.nombre" ng-required="true">
+    						<input type="text" class="form-control"  placeholder="Nombre" ng-model="programapropiedadc.programapropiedad.nombre" ng-required="true">
 						</div>
 						<div class="form-group">
 							<label for="nombre">* Tipo dato</label>
@@ -86,7 +86,7 @@
 						</div>
 						<div class="form-group">
 							<label for="descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="programapropiedadc.programapropiedad.descripcion">
+    						<input type="text" class="form-control" placeholder="Descripción" ng-model="programapropiedadc.programapropiedad.descripcion">
 						</div>
 						<br/>
 						<div class="panel panel-default">
@@ -102,7 +102,7 @@
 							<div class="col-sm-6">
 								<div class="form-group" >
 									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ programapropiedadc.programapropiedad.fechaCreacion }} </p>
+									<p class="form-control-static" > {{ programapropiedadc.programapropiedad.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
@@ -110,13 +110,13 @@
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
 									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ programapropiedadc.programapropiedad.usuarioActualizo }} </p>
+									<p class="form-control-static" >{{ programapropiedadc.programapropiedad.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
 									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ programapropiedadc.programapropiedad.fechaActualizacion }} </p>
+									<p class="form-control-static" >{{ programapropiedadc.programapropiedad.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>
