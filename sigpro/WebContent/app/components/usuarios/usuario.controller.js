@@ -41,6 +41,10 @@ app.controller(
 	mi.mostrarCambioPassword = false;
 	var passwordLocal="";
 	mi.tieneColaborador=false;
+	mi.redireccionSinPermisos=function(){
+		$window.location.href = '/main.jsp';
+		$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
+	}
 	mi.filtros=[];
 	mi.gridOptions = {
 		enableRowSelection : true,
