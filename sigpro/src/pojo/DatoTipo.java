@@ -28,6 +28,7 @@ public class DatoTipo implements java.io.Serializable {
 	private String descripcion;
 	private Set<ComponentePropiedad> componentePropiedads = new HashSet<ComponentePropiedad>(0);
 	private Set<RiesgoPropiedad> riesgoPropiedads = new HashSet<RiesgoPropiedad>(0);
+	private Set<ProgramaPropiedad> programaPropiedads = new HashSet<ProgramaPropiedad>(0);
 	private Set<ProyectoPropiedad> proyectoPropiedads = new HashSet<ProyectoPropiedad>(0);
 	private Set<ActividadPropiedad> actividadPropiedads = new HashSet<ActividadPropiedad>(0);
 	private Set<FormularioItemTipo> formularioItemTipos = new HashSet<FormularioItemTipo>(0);
@@ -44,14 +45,16 @@ public class DatoTipo implements java.io.Serializable {
 	}
 
 	public DatoTipo(String nombre, String descripcion, Set<ComponentePropiedad> componentePropiedads,
-			Set<RiesgoPropiedad> riesgoPropiedads, Set<ProyectoPropiedad> proyectoPropiedads,
-			Set<ActividadPropiedad> actividadPropiedads, Set<FormularioItemTipo> formularioItemTipos, Set<Meta> metas,
+			Set<RiesgoPropiedad> riesgoPropiedads, Set<ProgramaPropiedad> programaPropiedads,
+			Set<ProyectoPropiedad> proyectoPropiedads, Set<ActividadPropiedad> actividadPropiedads,
+			Set<FormularioItemTipo> formularioItemTipos, Set<Meta> metas,
 			Set<ProductoPropiedad> productoPropiedads, Set<RecursoPropiedad> recursoPropiedads,
 			Set<HitoTipo> hitoTipos) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.componentePropiedads = componentePropiedads;
 		this.riesgoPropiedads = riesgoPropiedads;
+		this.programaPropiedads = programaPropiedads;
 		this.proyectoPropiedads = proyectoPropiedads;
 		this.actividadPropiedads = actividadPropiedads;
 		this.formularioItemTipos = formularioItemTipos;
@@ -107,6 +110,15 @@ public class DatoTipo implements java.io.Serializable {
 
 	public void setRiesgoPropiedads(Set<RiesgoPropiedad> riesgoPropiedads) {
 		this.riesgoPropiedads = riesgoPropiedads;
+	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "datoTipo")
+	public Set<ProgramaPropiedad> getProgramaPropiedads() {
+		return this.programaPropiedads;
+	}
+
+	public void setProgramaPropiedads(Set<ProgramaPropiedad> programaPropiedads) {
+		this.programaPropiedads = programaPropiedads;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "datoTipo")

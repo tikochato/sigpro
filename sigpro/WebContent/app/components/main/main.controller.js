@@ -132,6 +132,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/formulario/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'formularioController\'" class="all_page"></div>'
             })
+            .when('/programapropiedad/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'programapropiedadController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -330,6 +333,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'formularioController',
 	    	   script: '/app/components/formulario/formulario.controller.js',
 	    	   template: '/app/components/formulario/formulario.jsp'
+	       },
+	       {
+	    	   name: 'programapropiedadController',
+	    	   script: '/app/components/programapropiedad/programapropiedad.controller.js',
+	    	   template: '/app/components/programapropiedad/programapropiedad.jsp'
 	       }
 
 	   ];
