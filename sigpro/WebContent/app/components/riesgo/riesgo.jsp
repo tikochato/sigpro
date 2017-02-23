@@ -6,6 +6,9 @@
 	    <script type="text/ng-template" id="buscarRiesgoTipo.jsp">
     		<%@ include file="/app/components/riesgo/buscarRiesgoTipo.jsp"%>
   	    </script>
+  	    <shiro:lacksPermission name="30010">
+			<p ng-init="riesgoc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Riesgos</h3><br/>
 		<h4>{{ riesgoc.proyectoNombre }}</h4><br/>
 		<div class="row" align="center" ng-if="!riesgoc.mostraringreso">
