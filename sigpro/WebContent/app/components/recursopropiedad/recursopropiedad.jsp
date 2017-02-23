@@ -3,6 +3,9 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="recursopropiedadController as recursopropiedadc" class="maincontainer all_page" id="title">
+		<shiro:lacksPermission name="27010">
+			<p ng-init="recursopropiedadc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Propiedad Recurso</h3><br/>
 		<div class="row" align="center" ng-hide="recursopropiedadc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
