@@ -19,7 +19,10 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 
 			mi.columnaOrdenada=null;
 			mi.ordenDireccion = null;
-
+			mi.redireccionSinPermisos=function(){
+				$window.location.href = '/main.jsp';
+				$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
+			}
 			mi.filtros = [];
 			mi.orden = null;
 

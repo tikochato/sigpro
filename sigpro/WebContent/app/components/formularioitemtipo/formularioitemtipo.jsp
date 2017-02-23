@@ -3,6 +3,9 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="formularioitemtipoController as formularioitemtipoc" class="maincontainer all_page" id="title">
+		<shiro:lacksPermission name="13010">
+			<p ng-init="formularioitemtipoc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Tipo Item de Formulario</h3><br/>
 		<div class="row" align="center" ng-if="!formularioitemtipoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
