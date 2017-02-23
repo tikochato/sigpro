@@ -7,7 +7,9 @@
 	<script type="text/ng-template" id="buscarPropiedad.jsp">
 	    <%@ include file="/app/components/productotipo/buscarPropiedad.jsp"%>
 	</script>
-
+	<shiro:lacksPermission name="22010">
+		<p ng-init="productoTipo.redireccionSinPermisos()"></p>
+	</shiro:lacksPermission>
 	<h3>Tipo de Producto</h3>
 
 	<br />
