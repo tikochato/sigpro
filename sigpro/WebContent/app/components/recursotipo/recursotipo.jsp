@@ -8,6 +8,9 @@
 	<script type="text/ng-template" id="buscarcomponentepropiedad.jsp">
     	<%@ include file="/app/components/recursotipo/buscarrecursopropiedad.jsp"%>
   	</script>
+  	<shiro:lacksPermission name="28010">
+		<p ng-init="recursotipoc.redireccionSinPermisos()"></p>
+	</shiro:lacksPermission>
 	<h3>Tipos de Recurso</h3>
 	<br />
 
