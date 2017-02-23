@@ -10,7 +10,7 @@
 			       <shiro:hasPermission name="31040">
 			       		<label class="btn btn-primary" ng-click="riesgopropiedadc.nuevo()">Nuevo</label>
 			       </shiro:hasPermission>
-			       <shiro:hasPermission name="31020"><label class="btn btn-primary" ng-click="riesgopropiedadc.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="31010"><label class="btn btn-primary" ng-click="riesgopropiedadc.editar()">Editar</label></shiro:hasPermission>
 			       <shiro:hasPermission name="31030">
 			       		<label class="btn btn-primary" ng-click="riesgopropiedadc.borrar()">Borrar</label>
 			       </shiro:hasPermission>
@@ -60,7 +60,9 @@
 			<h4 ng-hide="riesgopropiedadc.esnuevo">Edición de Propiedad</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="form.$valid ? riesgopropiedadc.guardar() : ''"  ng-disabled="!form.$valid">Guardar</label>
+					<shiro:hasPermission name="31020">
+			        	<label class="btn btn-success" ng-click="form.$valid ? riesgopropiedadc.guardar() : ''"  ng-disabled="!form.$valid">Guardar</label>
+			        </shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="riesgopropiedadc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
@@ -127,7 +129,9 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="form.$valid ? riesgopropiedadc.guardar() : ''"  ng-disabled="!form.$valid">Guardar</label>
+				        <shiro:hasPermission name="31020">
+			        		<label class="btn btn-success" ng-click="form.$valid ? riesgopropiedadc.guardar() : ''"  ng-disabled="!form.$valid">Guardar</label>
+			        	</shiro:hasPermission>
 				        <label class="btn btn-primary" ng-click="riesgopropiedadc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

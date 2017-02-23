@@ -19,7 +19,7 @@
 					<shiro:hasPermission name="34040">
 						<label class="btn btn-primary" ng-click="usuarioc.nuevoUsuario()">Nuevo</label>
 					</shiro:hasPermission>
-					<shiro:hasPermission name="34020">
+					<shiro:hasPermission name="34010">
 						<label class="btn btn-primary" ng-click="usuarioc.editarUsuario()">Editar</label>
 					</shiro:hasPermission>
 					<shiro:hasPermission name="34030">
@@ -62,11 +62,12 @@
     		</shiro:hasPermission>
 
 		</div>
-		<shiro:hasPermission name="34010">
 		<div class="row main-form" ng-show="usuarioc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid ? usuarioc.guardarUsuario() : '' ) :  (form.$valid ? usuarioc.guardarUsuario() : '' )" ng-disabled="usuarioc.esNuevo ? form1.$invalid : form.$invalid">Guardar</label>
+					<shiro:hasPermission name="34020">
+						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid ? usuarioc.guardarUsuario() : '' ) :  (form.$valid ? usuarioc.guardarUsuario() : '' )" ng-disabled="usuarioc.esNuevo ? form1.$invalid : form.$invalid">Guardar</label>
+					</shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()">Ir a Tabla</label>
     			</div>
     		</div>
@@ -112,15 +113,18 @@
 			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid ? usuarioc.guardarUsuario() : '' ) :  (form.$valid ? usuarioc.guardarUsuario() : '' )" ng-disabled="usuarioc.esNuevo ? form1.$invalid : form.$invalid">Guardar</label>
+			        <shiro:hasPermission name="34020">
+						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid ? usuarioc.guardarUsuario() : '' ) :  (form.$valid ? usuarioc.guardarUsuario() : '' )" ng-disabled="usuarioc.esNuevo ? form1.$invalid : form.$invalid">Guardar</label>
+					</shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()">Ir a Tabla</label>
     		</div>
     	</div>
 		</div>
-		
-
-		<h3 ng-show="usuarioc.isCollapsed">Permisos</h3><br/>
+		<div class="row">
+			<div class="col-sm-12">
+			
 		<div align="center" ng-show="usuarioc.isCollapsed">
+				<h5 ng-show="usuarioc.isCollapsed">Permisos</h5>
 				<div style="height: 35px; width: 75%">
 					<div style="text-align: right;">
 						<div class="btn-group" role="group" aria-label="">
@@ -132,13 +136,13 @@
 						</div>
 					</div>
 				</div>
-
-				<table style="width: 75%;"
+				<br>
+				<table style="width: 75%; overflow-y: scroll;height: 175px;display: block;"
 				st-table="usuarioc.permisosAsignados"
-				class="table table-striped  table-bordered">
+				class="table table-striped  table-bordered table-hover table-propiedades">
 				<thead >
 					<tr>
-						<th>Nombre</th>
+						<th style="width: 5%;">Nombre</th>
 						<th>Descripicon</th>
 						<th style="width: 30px;">Quitar</th>
 
@@ -160,7 +164,9 @@
 				</tbody>
 			</table>
 		</div>
-		</shiro:hasPermission>
+		</div>
+		
+		</div>
 
 
 	</div>

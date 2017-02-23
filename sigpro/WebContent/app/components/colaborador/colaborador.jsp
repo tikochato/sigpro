@@ -9,6 +9,10 @@
    <script type="text/ng-template" id="buscarUsuario.jsp">
     <%@ include file="/app/components/colaborador/buscarUsuario.jsp"%>
   </script>
+  <shiro:lacksPermission name="4010">
+	<p ng-init="colaborador.redireccionSinPermisos()"></p>
+  </shiro:lacksPermission>
+  
 
   <h3>{{ colaborador.esForma ? (colaborador.esNuevo ? "Nuevo Colaborador" : "Editar Colaborador") : "Colaborador" }}</h3>
 
@@ -20,7 +24,7 @@
       	<shiro:hasPermission name="4040">
         	<label class="btn btn-primary" ng-click="colaborador.nuevo()">Nuevo</label> 
       	</shiro:hasPermission>
-      	<shiro:hasPermission name="4020">
+      	<shiro:hasPermission name="4010">
         	<label class="btn btn-primary" ng-click="colaborador.editar()">Editar</label>
       	</shiro:hasPermission>
       	<shiro:hasPermission name="4030">
@@ -69,7 +73,9 @@
     <div class="operation_buttons" align="right">
 
       <div class="btn-group">
-        <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : ''" ng-disabled="!form.$valid || !colaborador.usuarioValido">Guardar</label> 
+      	<shiro:hasPermission name="4020">
+      	<label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : ''" ng-disabled="!form.$valid || !colaborador.usuarioValido">Guardar</label>
+      	</shiro:hasPermission>         
         <label class="btn btn-primary" ng-click="colaborador.cancelar()">Ir a Tabla</label>
       </div>
 
@@ -166,7 +172,9 @@
 
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
-        <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : '' " ng-disabled="form.$invalid || !colaborador.usuarioValido">Guardar</label> 
+      	<shiro:hasPermission name="4020">
+        <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : '' " ng-disabled="form.$invalid || !colaborador.usuarioValido">Guardar</label>
+      	</shiro:hasPermission> 
         <label class="btn btn-primary" ng-click="colaborador.cancelar()">Ir a Tabla</label>
       </div>
     </div>

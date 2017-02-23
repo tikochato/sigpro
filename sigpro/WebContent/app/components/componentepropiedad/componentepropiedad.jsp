@@ -3,6 +3,9 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="componentepropiedadController as componentepropiedadc" class="maincontainer all_page" id="title">
+		<shiro:lacksPermission name="6010">
+			<p ng-init="componentepropiedadc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Propiedad de Componentes</h3><br/>
 		<div class="row" align="center" ng-hide="componentepropiedadc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
@@ -10,7 +13,7 @@
 			       <shiro:hasPermission name="6040">
 			       		<label class="btn btn-primary" ng-click="componentepropiedadc.nuevo()">Nuevo</label>
 			       </shiro:hasPermission>
-			       <shiro:hasPermission name="6020"><label class="btn btn-primary" ng-click="componentepropiedadc.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="6010"><label class="btn btn-primary" ng-click="componentepropiedadc.editar()">Editar</label></shiro:hasPermission>
 			       <shiro:hasPermission name="6030">
 			       		<label class="btn btn-primary" ng-click="componentepropiedadc.borrar()">Borrar</label>
 			       </shiro:hasPermission>
@@ -60,7 +63,9 @@
 			<h4 ng-hide="componentepropiedadc.esnuevo">Edición de Propiedad</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success" ng-click="form.$valid ? componentepropiedadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+					<shiro:hasPermission name="6020">
+						<label class="btn btn-success" ng-click="form.$valid ? componentepropiedadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+					</shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="componentepropiedadc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
@@ -128,7 +133,9 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="form.$valid ? componentepropiedadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+						<shiro:hasPermission name="6020">
+							<label class="btn btn-success" ng-click="form.$valid ? componentepropiedadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+						</shiro:hasPermission>
 				        <label class="btn btn-primary" ng-click="componentepropiedadc.irATabla()">Ir a Tabla</label>
 	    			</div>
 	    		</div>

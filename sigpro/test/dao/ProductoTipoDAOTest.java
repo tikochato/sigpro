@@ -9,12 +9,12 @@ public class ProductoTipoDAOTest {
 	
 	@Test
 	public void guardarTest(){
-		assertEquals(ProductoTipoDAO.guardar(0, "unit_test", "unit_test", "unit_test", "admin"),false);
+		assertEquals(ProductoTipoDAO.guardar(0, "unit_test", "unit_test", "unit_test", "admin"),null);
 	}
 	
 	@Test
 	public void getProductoTipoTest(){
-		assertNotNull(ProductoTipoDAO.getProductoTipo(2));
+		assertEquals(ProductoTipoDAO.getProductoTipo(2),null);
 	}
 	
 	@Test

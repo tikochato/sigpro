@@ -10,7 +10,7 @@
 			       <shiro:hasPermission name="18040">
 			       		<label class="btn btn-primary" ng-click="metatipoc.nueva()">Nuevo</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="18020"><label class="btn btn-primary" ng-click="metatipoc.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="18010"><label class="btn btn-primary" ng-click="metatipoc.editar()">Editar</label></shiro:hasPermission>
 			       <shiro:hasPermission name="18030">
 			       		<label class="btn btn-primary" ng-click="metatipoc.borrar()">Borrar</label>
 			       </shiro:hasPermission>
@@ -58,7 +58,9 @@
 			<h4 ng-hide="metatipoc.esnueva">Edición de Tipo Meta</h4>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <label class="btn btn-success"ng-click="form.$valid ? metatipoc.guardar(): ''" ng-disabled="form.$invalid">Guardar</label>
+					<shiro:hasPermission name="18020">
+			        	<label class="btn btn-success"ng-click="form.$valid ? metatipoc.guardar(): ''" ng-disabled="form.$invalid">Guardar</label>
+					</shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="metatipoc.irATabla()">Ir a Tabla</label>
     			</div>
     		</div>
@@ -117,7 +119,9 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-				        <label class="btn btn-success" ng-click="form.$valid ? metatipoc.guardar(): ''" ng-disabled="form.$invalid">Guardar</label>
+						<shiro:hasPermission name="18020">
+				        	<label class="btn btn-success" ng-click="form.$valid ? metatipoc.guardar(): ''" ng-disabled="form.$invalid">Guardar</label>
+						</shiro:hasPermission>
 				        <label class="btn btn-primary" ng-click="metatipoc.irATabla()" >Ir a Tabla</label>
 	    			</div>
 	    		</div>
