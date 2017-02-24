@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -23,8 +24,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ProgramaPropiedadDAO;
+import dao.ProgramaPropiedadValorDAO;
 import pojo.DatoTipo;
 import pojo.ProgramaPropiedad;
+import pojo.ProgramaPropiedadValor;
+import utilities.CFormaDinamica;
 import utilities.Utils;
 
 /**
@@ -117,18 +121,18 @@ public class SProgramaPropiedad extends HttpServlet {
 			
 			List<ProgramaPropiedad> programaPropiedades = ProgramaPropiedadDAO.getProgramaPropiedadesPorTipoProgramaPagina(pagina, idProgramaPropiedad);
 			List<stprogramapropiedad> stprogramapropiedad=new ArrayList<stprogramapropiedad>();
-			for(ProgramaPropiedad proyectopropiedad:programaPropiedades){
+			for(ProgramaPropiedad programapropiedad:programaPropiedades){
 				stprogramapropiedad temp =new stprogramapropiedad();
-				temp.id = proyectopropiedad.getId();
-				temp.nombre = proyectopropiedad.getNombre();
-				temp.descripcion = proyectopropiedad.getDescripcion();
-				temp.datotipoid = proyectopropiedad.getDatoTipo().getId();
-				temp.datotiponombre = proyectopropiedad.getDatoTipo().getNombre();
-				temp.estado = proyectopropiedad.getEstado();
-				temp.fechaActualizacion = Utils.formatDateHour(proyectopropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDateHour(proyectopropiedad.getFechaCreacion());	
-				temp.usuarioActualizo = proyectopropiedad.getUsuarioActualizo();
-				temp.usuarioCreo = proyectopropiedad.getUsuarioCreo();
+				temp.id = programapropiedad.getId();
+				temp.nombre = programapropiedad.getNombre();
+				temp.descripcion = programapropiedad.getDescripcion();
+				temp.datotipoid = programapropiedad.getDatoTipo().getId();
+				temp.datotiponombre = programapropiedad.getDatoTipo().getNombre();
+				temp.estado = programapropiedad.getEstado();
+				temp.fechaActualizacion = Utils.formatDateHour(programapropiedad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(programapropiedad.getFechaCreacion());	
+				temp.usuarioActualizo = programapropiedad.getUsuarioActualizo();
+				temp.usuarioCreo = programapropiedad.getUsuarioCreo();
 				stprogramapropiedad.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stprogramapropiedad);
@@ -141,21 +145,62 @@ public class SProgramaPropiedad extends HttpServlet {
 			int numeroProgramaPropiedad = map.get("numeroprogramapropiedad")!=null  ? Integer.parseInt(map.get("numeroprogramapropiedad")) : 0;
 			List<ProgramaPropiedad> programapropiedades = ProgramaPropiedadDAO.getProgramaPropiedadPaginaTotalDisponibles(pagina, numeroProgramaPropiedad,idsPropiedades);
 			List<stprogramapropiedad> stprogramapropiedad=new ArrayList<stprogramapropiedad>();
-			for(ProgramaPropiedad proyectopropiedad:programapropiedades){
+			for(ProgramaPropiedad programapropiedad:programapropiedades){
 				stprogramapropiedad temp =new stprogramapropiedad();
-				temp.id = proyectopropiedad.getId();
-				temp.nombre = proyectopropiedad.getNombre();
-				temp.descripcion = proyectopropiedad.getDescripcion();
-				temp.datotipoid = proyectopropiedad.getDatoTipo().getId();
-				temp.datotiponombre = proyectopropiedad.getDatoTipo().getNombre();
-				temp.estado = proyectopropiedad.getEstado();
-				temp.fechaActualizacion = Utils.formatDateHour(proyectopropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDateHour(proyectopropiedad.getFechaCreacion());	
-				temp.usuarioActualizo = proyectopropiedad.getUsuarioActualizo();
-				temp.usuarioCreo = proyectopropiedad.getUsuarioCreo();
+				temp.id = programapropiedad.getId();
+				temp.nombre = programapropiedad.getNombre();
+				temp.descripcion = programapropiedad.getDescripcion();
+				temp.datotipoid = programapropiedad.getDatoTipo().getId();
+				temp.datotiponombre = programapropiedad.getDatoTipo().getNombre();
+				temp.estado = programapropiedad.getEstado();
+				temp.fechaActualizacion = Utils.formatDateHour(programapropiedad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(programapropiedad.getFechaCreacion());	
+				temp.usuarioActualizo = programapropiedad.getUsuarioActualizo();
+				temp.usuarioCreo = programapropiedad.getUsuarioCreo();
 				stprogramapropiedad.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stprogramapropiedad);
+	        response_text = String.join("", "\"programapropiedades\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}
+		else if(accion.equals("getProgramaPropiedadPorTipo")){
+			int idPrograma = map.get("idPrograma")!=null  ? Integer.parseInt(map.get("idPrograma")) : 0;
+			int idProgramaTipo = map.get("idProgramaTipo")!=null  ? Integer.parseInt(map.get("idProgramaTipo")) : 0;
+			List<ProgramaPropiedad> programaPropiedades = ProgramaPropiedadDAO.getProgramaPropiedadesPorTipoPrograma(idProgramaTipo);
+			
+			List<HashMap<String,Object>> campos = new ArrayList<>();
+			for(ProgramaPropiedad programaPropiedad:programaPropiedades){
+				HashMap <String,Object> campo = new HashMap<String, Object>();
+				campo.put("id", programaPropiedad.getId());
+				campo.put("nombre", programaPropiedad.getNombre());
+				campo.put("tipo", programaPropiedad.getDatoTipo().getId());
+				ProgramaPropiedadValor programaPropiedadValor = ProgramaPropiedadValorDAO.getValorPorProgramaYPropiedad(programaPropiedad.getId(), idPrograma);
+				if (programaPropiedadValor !=null ){
+					switch ((Integer) campo.get("tipo")){
+						case 1:
+							campo.put("valor", programaPropiedadValor.getValorString());
+							break;
+						case 2:
+							campo.put("valor", programaPropiedadValor.getValorEntero());
+							break;
+						case 3:
+							campo.put("valor", programaPropiedadValor.getValorDecimal());
+							break;
+						case 4:
+							campo.put("valor", programaPropiedadValor.getValorEntero()==1 ? true : false);
+							break;
+						case 5:
+							campo.put("valor", Utils.formatDate(programaPropiedadValor.getValorTiempo()));
+							break;
+					}
+				}
+				else{
+					campo.put("valor", "");
+				}
+				campos.add(campo);
+			}
+			
+			response_text = CFormaDinamica.convertirEstructura(campos);
 	        response_text = String.join("", "\"programapropiedades\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
@@ -210,7 +255,7 @@ public class SProgramaPropiedad extends HttpServlet {
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			response_text = String.join("","{ \"success\": true, \"totalproyectopropiedades\":",ProgramaPropiedadDAO.getTotalProgramaPropiedades(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalprogramapropiedades\":",ProgramaPropiedadDAO.getTotalProgramaPropiedades(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
 		
 		response.setHeader("Content-Encoding", "gzip");

@@ -34,6 +34,7 @@ public class ProgramaTipo implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
+	private Set<Programa> programas = new HashSet<Programa>(0);
 	private Set<ProgtipoPropiedad> progtipoPropiedads = new HashSet<ProgtipoPropiedad>(0);
 
 	public ProgramaTipo() {
@@ -47,7 +48,8 @@ public class ProgramaTipo implements java.io.Serializable {
 	}
 
 	public ProgramaTipo(String nombre, String descripcion, String usarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, int estado, Set<ProgtipoPropiedad> progtipoPropiedads) {
+			Date fechaCreacion, Date fechaActualizacion, int estado,Set<Programa> programas,
+			Set<ProgtipoPropiedad> progtipoPropiedads) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usarioCreo = usarioCreo;
@@ -55,6 +57,7 @@ public class ProgramaTipo implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
+		this.programas = programas;
 		this.progtipoPropiedads = progtipoPropiedads;
 	}
 
@@ -133,6 +136,15 @@ public class ProgramaTipo implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
+	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "programaTipo")
+	public Set<Programa> getProgramas() {
+		return this.programas;
+	}
+
+	public void setProgramas(Set<Programa> programas) {
+		this.programas = programas;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "programaTipo")

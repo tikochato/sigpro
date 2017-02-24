@@ -130,8 +130,7 @@ public class SProgramaTipo extends HttpServlet {
 				ProgramaTipo programaTipo;
 				
 				if(esnuevo){
-					programaTipo = new ProgramaTipo(nombre, descripcion, usuario, null, new DateTime().toDate(), null
-							, 1, new HashSet<ProgtipoPropiedad>(0));
+					programaTipo = new ProgramaTipo(nombre, descripcion, usuario, null, new DateTime().toDate(), null, 1, null, null);
 				}
 				else{
 					programaTipo = ProgramaTipoDAO.getProgramaTipoPorId(id);
