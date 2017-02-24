@@ -1,33 +1,26 @@
-var app = angular.module('proyectoController', [ 'ngTouch' ]);
+var app = angular.module('programaController', [ 'ngTouch' ]);
 
-app.controller('proyectoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
+app.controller('programaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
 
 	var mi = this;
 	i18nService.setCurrentLang('es');
 	
-	$window.document.title = $utilidades.sistema_nombre+' - Proyectos';
+	$window.document.title = $utilidades.sistema_nombre+' - Programas';
 	
-	mi.proyecto = null;
+	mi.programa = null;
 	mi.esNuevo = false;
 	mi.campos = {};
 	mi.esColapsado = false;
 	mi.mostrarcargando=true;
 	mi.paginaActual = 1;
-	mi.cooperantes = [];
-	mi.proyectotipos = [];
-	mi.unidadesejecutoras = [];
-	mi.poryectotipoid = "";
-	mi.proyectotiponombre="";
-	mi.unidadejecutoraid="";
-	mi.unidadejecutoranombre="";
-	mi.cooperanteid="";
-	mi.cooperantenombre="";
+	mi.programatipoid = "";
+	mi.programatiponombre="";
 	mi.camposdinamicos = {};
 	mi.formatofecha = 'dd/MM/yyyy';
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
-	mi.totalProyectos = 0;
+	mi.totalProgramas = 0;
 
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion = null;
@@ -56,55 +49,53 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		columnDefs : [
 			{ name: 'id', width: 60, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left',
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'nombre\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>'
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.programac.filtros[\'nombre\']" ng-keypress="grid.appScope.programac.filtrar($event)" ></input></div>'
 			},
-			{ name : 'proyectotipo',    displayName : 'Tipo proyecto' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
-			{ name : 'unidadejecutora',    displayName : 'Unidad Ejecutora' ,cellClass: 'grid-align-left', enableFiltering: false , enableSorting: false },
-			{ name : 'cooperante',   displayName : 'Cooperante' ,cellClass: 'grid-align-left',  enableFiltering: false , enableSorting: false },
-			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'usuario_creo\']"  ng-keypress="grid.appScope.controller.filtrar($event)" style="width:90px;"></input></div>'
+			{ name : 'programatipo',    displayName : 'Tipo programa' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
+			{ name: 'usuarioCreo',  displayName: 'Usuario Creación',
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"style="width: 90%;" ng-model="grid.appScope.programac.filtros[\'usuario_creo\']"  ng-keypress="grid.appScope.programac.filtrar($event)" ></input></div>'
 			},
-		    { name: 'fechaCreacion', width: 100, displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:80px;" ></input></div>'
+		    { name: 'fechaCreacion',  displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.programac.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.programac.filtrar($event)"  ></input></div>'
 		    }
 		],
 		onRegisterApi: function(gridApi) {
 			mi.gridApi = gridApi;
 			gridApi.selection.on.rowSelectionChanged($scope,function(row) {
-				mi.proyecto = row.entity;
+				mi.programa = row.entity;
 			});
 
 			gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
 				if(sortColumns.length==1){
-					grid.appScope.controller.columnaOrdenada=sortColumns[0].field;
-					grid.appScope.controller.ordenDireccion = sortColumns[0].sort.direction;
+					grid.appScope.programac.columnaOrdenada=sortColumns[0].field;
+					grid.appScope.programac.ordenDireccion = sortColumns[0].sort.direction;
 
-					grid.appScope.controller.cargarTabla(grid.appScope.controller.paginaActual);
+					grid.appScope.programac.cargarTabla(grid.appScope.programac.paginaActual);
 				}
 				else if(sortColumns.length>1){
 					sortColumns[0].unsort();
 				}
 				else{
-					if(grid.appScope.controller.columnaOrdenada!=null){
-						grid.appScope.controller.columnaOrdenada=null;
-						grid.appScope.controller.ordenDireccion=null;
+					if(grid.appScope.programac.columnaOrdenada!=null){
+						grid.appScope.programac.columnaOrdenada=null;
+						grid.appScope.programac.ordenDireccion=null;
 					}
 				}
 			} );
 
 			if($routeParams.reiniciar_vista=='rv'){
 				mi.guardarEstado();
-				mi.obtenerTotalProyectos();
+				mi.obtenerTotalProgramas();
 		    }
 		    else{
-		    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'proyceto', t: (new Date()).getTime()}).then(function(response){
+		    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'programa', t: (new Date()).getTime()}).then(function(response){
 		    		  if(response.data.success && response.data.estado!='')
 		    			  mi.gridApi.saveState.restore( $scope, response.data.estado);
 			    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
 				      mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
 				      mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
 				      mi.gridApi.core.on.sortChanged($scope, mi.guardarEstado);
-				      mi.obtenerTotalProyectos();
+				      mi.obtenerTotalProgramas();
 				  });
 		    }
 		}
@@ -113,13 +104,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.cargarTabla = function(pagina){
 		mi.mostrarcargando=true;
-		$http.post('/SProyecto', { accion: 'getProyectoPagina', pagina: pagina,
-			numeroproyecto:  $utilidades.elementosPorPagina, filtro_nombre: mi.filtros['nombre'],
+		$http.post('/SPrograma', { accion: 'getProgramaPagina', pagina: pagina,
+			numeroprograma:  $utilidades.elementosPorPagina, filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
 			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t:moment().unix()
 			}).success(
 				function(response) {
-					mi.entidades = response.proyectos;
+					mi.entidades = response.programas;
 					mi.gridOpciones.data = mi.entidades;
 					mi.mostrarcargando = false;
 				});
@@ -132,35 +123,26 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
 			}
 		}
-		if(mi.proyecto!=null && mi.proyecto.nombre!=null){
+		if(mi.programa!=null && mi.programa.nombre!=null){
 			var param_data = {
 				accion : 'guardar',
-				id: mi.proyecto.id,
-				nombre: mi.proyecto.nombre,
-				snip: mi.proyecto.snip,
-				descripcion:mi.proyecto.descripcion,
-				proyectotipoid: mi.poryectotipoid,
-				unidadejecutoraid: mi.unidadejecutoraid,
-				cooperanteid: mi.cooperanteid,
-				programa: mi.proyecto.programa,
-				subprograma: mi.proyecto.subprograma,
-				proyecto_: mi.proyecto.proyecto,
-				obra:mi.proyecto.obra,
-				actividad: mi.proyecto.actividad,
-				fuente: mi.proyecto.fuente,
+				id: mi.programa.id,
+				nombre: mi.programa.nombre,
+				descripcion:mi.programa.descripcion,
+				programatipoid: mi.programatipoid,
 				esnuevo: mi.esNuevo,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				t:moment().unix()
 			};
-			$http.post('/SProyecto',param_data).then(
+			$http.post('/SPrograma',param_data).then(
 				function(response) {
 					if (response.data.success) {
-						mi.proyecto.id = response.data.id;
-						$utilidades.mensaje('success','Proyecto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
-						mi.obtenerTotalProyectos();
+						mi.programa.id = response.data.id;
+						$utilidades.mensaje('success','Programa '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+						mi.obtenerTotalProgramas();
 						mi.esNuevo = false;
 					}else
-						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Proyecto');
+						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crearo' : 'guardar')+' el Programa');
 			});
 
 		}else
@@ -168,72 +150,65 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	 }
 
 	mi.borrar = function(ev) {
-		if(mi.proyecto !=null && mi.proyecto.id!=null){
-			
+		if(mi.programa !=null && mi.programa.id!=null){
 			var confirm = $mdDialog.confirm()
-	        .title('Confirmación de borrado')
-	        .textContent('¿Desea borrar el Proyecto "'+mi.proyecto.nombre+'"?')
-	        .ariaLabel('Confirmación de borrado')
-	        .targetEvent(ev)
-	        .ok('Borrar')
-	        .cancel('Cancelar');
+	          .title('Confirmación de borrado')
+	          .textContent('¿Desea borrar el programa "'+mi.programa.nombre+'"?')
+	          .ariaLabel('Confirmación de borrado')
+	          .targetEvent(ev)
+	          .ok('Borrar')
+	          .cancel('Cancelar');
 			
 			$mdDialog.show(confirm).then(function() {
-				$http.post('/SProyecto', {
-					accion: 'borrarProyecto',
-					id: mi.proyecto.id,
+				$http.post('/SPrograma', {
+					accion: 'borrarPrograma',
+					id: mi.programa.id,
 					t:moment().unix()
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success','Proyecto borrado con éxito');
-						mi.proyecto = null;
-						mi.obtenerTotalProyectos();
+						$utilidades.mensaje('success','Programa borrado con éxito');
+						mi.programa = null;
+						mi.obtenerTotalProgramas();
 					}
 					else
-						$utilidades.mensaje('danger','Error al borrar el Proyecto');
-				});
-			}, function() {
-			    
-		    });
+						$utilidades.mensaje('danger','Error al borrar el Programa');
+				
+				 }, function() {
+					    
+				    });
+			
+			
+			});
 		}
 		else
-			$utilidades.mensaje('warning','Debe seleccionar el Proyecto que desea borrar');
+			$utilidades.mensaje('warning','Debe seleccionar el Programa que desea borrar');
 	};
 
 	mi.nuevo = function (){
-		mi.poryectotipoid = "";
-		mi.proyectotiponombre="";
-		mi.unidadejecutoraid="";
-		mi.unidadejecutoranombre="";
-		mi.cooperanteid="";
-		mi.cooperantenombre="";
+		mi.programatipoid = "";
+		mi.programatiponombre="";
 		mi.esColapsado = true;
-		mi.proyecto = {};
+		mi.programa = {};
 		mi.esNuevo = true;
 		mi.camposdinamicos = {};
 		mi.gridApi.selection.clearSelectedRows();
 	};
 
 	mi.editar = function() {
-		if(mi.proyecto!=null && mi.proyecto.id!=null){
-			mi.poryectotipoid = mi.proyecto.proyectotipoid;
-			mi.proyectotiponombre=mi.proyecto.proyectotipo;
-			mi.unidadejecutoraid=mi.proyecto.unidadejecutoraid;
-			mi.unidadejecutoranombre=mi.proyecto.unidadejecutora;
-			mi.cooperanteid=mi.proyecto.cooperanteid;
-			mi.cooperantenombre=mi.proyecto.cooperante;
+		if(mi.programa!=null && mi.programa.id!=null){
+			mi.programatipoid = mi.programa.programatipoid;
+			mi.programatiponombre=mi.programa.programatipo;
 			mi.esColapsado = true;
 			mi.esNuevo = false;
 
-
 			var parametros = {
-					accion: 'getProyectoPropiedadPorTipo',
-					idProyecto: mi.proyecto!=''?mi.proyecto.id:0,
-				    idProyectoTipo: mi.poryectotipoid,
+					accion: 'getProgramaPropiedadPorTipo',
+					idPrograma: mi.programa!=''? mi.programa.id:0,
+				    idProgramaTipo: mi.programatipoid,
 				    t:moment().unix()
 			}
-			$http.post('/SProyectoPropiedad', parametros).then(function(response){
-				mi.camposdinamicos = response.data.proyectopropiedades
+			$http.post('/SProgramaPropiedad', parametros).then(function(response){
+				mi.camposdinamicos = response.data.programapropiedades
 				for (campos in mi.camposdinamicos) {
 					switch (mi.camposdinamicos[campos].tipo){
 					case "fecha":
@@ -254,7 +229,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 		}
 		else
-			$utilidades.mensaje('warning','Debe seleccionar el Proyecto que desea editar');
+			$utilidades.mensaje('warning','Debe seleccionar el Programa que desea editar');
 	}
 
 	mi.irATabla = function() {
@@ -264,7 +239,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.guardarEstado=function(){
 		var estado = mi.gridApi.saveState.save();
-		var tabla_data = { action: 'guardaEstado', grid:'proyceto', estado: JSON.stringify(estado) };
+		var tabla_data = { action: 'guardaEstado', grid:'programa', estado: JSON.stringify(estado) };
 		$http.post('/SEstadoTabla', tabla_data).then(function(response){
 
 		});
@@ -275,10 +250,10 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	}
 
 	mi.reiniciarVista=function(){
-		if($location.path()=='/proyecto/rv')
+		if($location.path()=='/programa/rv')
 			$route.reload();
 		else
-			$location.path('/proyecto/rv');
+			$location.path('/programa/rv');
 	}
 
 	mi.abrirPopupFecha = function(index) {
@@ -287,54 +262,24 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.filtrar = function(evt){
 		if(evt.keyCode==13){
-			mi.obtenerTotalProyectos();
+			mi.obtenerTotalProgramas();
 		}
 	};
 
-	mi.obtenerTotalProyectos = function(){
-		$http.post('/SProyecto', { accion: 'numeroProyectos',t:moment().unix(),
+	mi.obtenerTotalProgramas = function(){
+		$http.post('/SPrograma', { accion: 'numeroProgramas',t:moment().unix(),
 			filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  } ).then(
 				function(response) {
-					mi.totalProyectos = response.data.totalproyectos;
+					mi.totalProgramas = response.data.totalprogramas;
 					mi.paginaActual = 1;
 					mi.cargarTabla(mi.paginaActual);
 		});
 	};
 
-	mi.irADesembolsos=function(proyectoid){
-		if(mi.proyecto!=null){
-			$location.path('/desembolso/'+proyectoid);
-		}
-
-	};
-
-	mi.irAComponentes=function(proyectoid){
-		if(mi.proyecto!=null){
-			$location.path('/componente/'+ proyectoid );
-		}
-	};
-
-	mi.irARiesgos=function(proyectoid){
-		if(mi.proyecto!=null){
-			$location.path('/riesgo/' );
-		}
-	};
-
-	mi.irAHitos=function(proyectoid){
-		if(mi.proyecto!=null){
-			$location.path('/hito/'+ proyectoid );
-		}
-	};
-	mi.irAActividades=function(proyectoid){
-		if(mi.proyecto!=null){
-			$location.path('/actividad/'+ proyectoid +'/1' );
-		}
-	};
-	
-	mi.irAGantt=function(proyectoid){
-		if(mi.proyecto!=null){
-			$location.path('/gantt/'+ proyectoid );
+	mi.irAProyectos=function(programaid){
+		if(mi.programa!=null){
+			$location.path('/proyecto/'+ programaid );
 		}
 	};
 
@@ -344,8 +289,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			animation : 'true',
 			ariaLabelledBy : 'modal-title',
 			ariaDescribedBy : 'modal-body',
-			templateUrl : 'buscarPorProyecto.jsp',
-			controller : 'buscarPorProyecto',
+			templateUrl : 'buscarPorPrograma.jsp',
+			controller : 'buscarPorPrograma',
 			controllerAs : 'modalBuscar',
 			backdrop : 'static',
 			size : 'md',
@@ -374,60 +319,30 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		return resultado.promise;
 	};
 
-	mi.llamarModalBusquedaUnidadEjec = function(servlet, accionServlet, datosCarga) {
-		var resultado = $q.defer();
-		var modalInstance = $uibModal.open({
-			animation : 'true',
-			ariaLabelledBy : 'modal-title',
-			ariaDescribedBy : 'modal-body',
-			templateUrl : 'buscarPorProyecto.jsp',
-			controller : 'buscarPorProyectoUnidadEjec',
-			controllerAs : 'modalBuscar',
-			backdrop : 'static',
-			size : 'md',
-			resolve : {
-				$servlet : function() {
-					return servlet;
-				},
-				$accionServlet : function() {
-					return accionServlet;
-				},
-				$datosCarga : function() {
-					return datosCarga;
-				}
-			}
-		});
-
-		modalInstance.result.then(function(itemSeleccionado) {
-			resultado.resolve(itemSeleccionado);
-		});
-		return resultado.promise;
-	};
-
-	mi.buscarProyectoTipo = function() {
-		var resultado = mi.llamarModalBusqueda('/SProyectoTipo', {
-			accion : 'numeroProyectoTipos'
+	mi.buscarProgramaTipo = function() {
+		var resultado = mi.llamarModalBusqueda('/SProgramaTipo', {
+			accion : 'numeroProgramaTipos'
 		}, function(pagina, elementosPorPagina) {
 			return {
-				accion : 'getProyectoTipoPagina',
+				accion : 'getProgramaTipoPagina',
 				pagina : pagina,
 				registros : elementosPorPagina
 			};
 		},'id','nombre');
 
 		resultado.then(function(itemSeleccionado) {
-			mi.poryectotipoid= itemSeleccionado.id;
-			mi.proyectotiponombre = itemSeleccionado.nombre;
+			mi.programatipoid= itemSeleccionado.id;
+			mi.programatiponombre = itemSeleccionado.nombre;
 
 			var parametros = {
-					accion: 'getProyectoPropiedadPorTipo',
-					idProyecto: mi.proyecto!=''?mi.poryectotipoid.id:0,
-					idProyectoTipo: itemSeleccionado.id,
+					accion: 'getProgramaPropiedadPorTipo',
+					idPrograma: mi.programa!=''? mi.programa.id:0,
+					idProgramaTipo: itemSeleccionado.id,
 					t:moment().unix()
 			}
 
-			$http.post('/SProyectoPropiedad', parametros).then(function(response){
-				mi.camposdinamicos = response.data.proyectopropiedades;
+			$http.post('/SProgramaPropiedad', parametros).then(function(response){
+				mi.camposdinamicos = response.data.programapropiedades;
 				for (campos in mi.camposdinamicos) {
 					switch (mi.camposdinamicos[campos].tipo){
 						case "fecha":
@@ -448,49 +363,15 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		});
 	};
 
-	mi.buscarUnidadEjecutora = function() {
-		var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
-			accion : 'totalElementos'
-		}, function(pagina, elementosPorPagina) {
-			return {
-				accion : 'cargar',
-				pagina : pagina,
-				registros : elementosPorPagina
-			};
-		},'unidadEjecutora','nombreUnidadEjecutora');
-
-		resultado.then(function(itemSeleccionado) {
-			mi.unidadejecutoraid= itemSeleccionado.unidadEjecutora;
-			mi.unidadejecutoranombre = itemSeleccionado.nombreUnidadEjecutora;
-
-		});
-	};
-
-	mi.buscarCooperante = function() {
-		var resultado = mi.llamarModalBusqueda('/SCooperante', {
-			accion : 'numeroCooperantes', t:moment().unix()
-		}, function(pagina, elementosPorPagina) {
-			return {
-				accion : 'getCooperantesPagina',
-				pagina : pagina,
-				registros : elementosPorPagina
-			};
-		},'id','nombre');
-
-		resultado.then(function(itemSeleccionado) {
-			mi.cooperanteid= itemSeleccionado.id;
-			mi.cooperantenombre = itemSeleccionado.nombre;
-
-		});
-	};
+	
 } ]);
 
-app.controller('buscarPorProyecto', [ '$uibModalInstance',
+app.controller('buscarPorPrograma', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
 	'$timeout', '$log', '$servlet', '$accionServlet', '$datosCarga',
-	'$columnaId','$columnaNombre',buscarPorProyecto ]);
+	'$columnaId','$columnaNombre',buscarPorPrograma ]);
 
-function buscarPorProyecto($uibModalInstance, $scope, $http, $interval,
+function buscarPorPrograma($uibModalInstance, $scope, $http, $interval,
 	i18nService, $utilidades, $timeout, $log, $servlet,$accionServlet,$datosCarga,$columnaId,$columnaNombre) {
 
 	var mi = this;

@@ -10,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -22,6 +24,7 @@ import javax.persistence.TemporalType;
 @Table(name = "programa", catalog = "sipro")
 public class Programa implements java.io.Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
@@ -30,22 +33,22 @@ public class Programa implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private int programaTipoid;
+	private ProgramaTipo programaTipo;
 	private Set<ProgramaPropiedadValor> programaPropiedadValors = new HashSet<ProgramaPropiedadValor>(0);
 
 	public Programa() {
 	}
 
-	public Programa(String nombre, String usuarioCreo, Date fechaCreacion, int estado, int programaTipoid) {
+	public Programa(String nombre, String usuarioCreo, Date fechaCreacion, int estado, ProgramaTipo programaTipo) {
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
-		this.programaTipoid = programaTipoid;
+		this.programaTipo = programaTipo;
 	}
 
 	public Programa(String nombre, String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, int programaTipoid,
+			Date fechaActualizacion, int estado, ProgramaTipo programaTipo,
 			Set<ProgramaPropiedadValor> programaPropiedadValors) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -54,7 +57,7 @@ public class Programa implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.programaTipoid = programaTipoid;
+		this.programaTipo = programaTipo;
 		this.programaPropiedadValors = programaPropiedadValors;
 	}
 
@@ -135,13 +138,14 @@ public class Programa implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@Column(name = "programa_tipoid", nullable = false)
-	public int getProgramaTipoid() {
-		return this.programaTipoid;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "programa_tipoid", nullable = false)
+	public ProgramaTipo getProgramaTipo() {
+		return this.programaTipo;
 	}
 
-	public void setProgramaTipoid(int programaTipoid) {
-		this.programaTipoid = programaTipoid;
+	public void setProgramaTipo(ProgramaTipo programaTipo) {
+		this.programaTipo = programaTipo;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "programa")

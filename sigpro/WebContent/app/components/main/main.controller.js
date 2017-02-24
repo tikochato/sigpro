@@ -138,6 +138,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/programatipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'programatipoController\'" class="all_page"></div>'
             })
+            .when('/programa/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'programaController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -346,6 +349,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'programatipoController',
 	    	   script: '/app/components/programatipo/programatipo.controller.js',
 	    	   template: '/app/components/programatipo/programatipo.jsp'
+	       },
+	       {
+	    	   name: 'programaController',
+	    	   script: '/app/components/programa/programa.controller.js',
+	    	   template: '/app/components/programa/programa.jsp'
 	       },
 
 	   ];

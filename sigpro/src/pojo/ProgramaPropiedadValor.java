@@ -22,6 +22,10 @@ import javax.persistence.TemporalType;
 @Table(name = "programa_propiedad_valor", catalog = "sipro")
 public class ProgramaPropiedadValor implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ProgramaPropiedadValorId id;
 	private Programa programa;
 	private ProgramaPropiedad programaPropiedad;
