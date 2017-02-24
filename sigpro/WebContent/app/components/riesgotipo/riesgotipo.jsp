@@ -8,6 +8,9 @@
 	<script type="text/ng-template" id="buscarriesgopropiedad.jsp">
     	<%@ include file="/app/components/riesgotipo/buscarriesgopropiedad.jsp"%>
   	</script>
+  	<shiro:lacksPermission name="32010">
+		<p ng-init="riesgotipoc.redireccionSinPermisos()"></p>
+	</shiro:lacksPermission>
 	<h3>Tipo de Riesgo</h3>
 	<br />
 

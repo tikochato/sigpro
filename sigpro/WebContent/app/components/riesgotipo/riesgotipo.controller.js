@@ -16,6 +16,10 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		
+		mi.redireccionSinPermisos=function(){
+			$window.location.href = '/main.jsp';
+			$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
+		}
 		mi.filtros=[];
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;

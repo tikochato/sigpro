@@ -3,6 +3,9 @@
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 
 <div ng-controller="controlEntidad as entidad" class="maincontainer all_page">
+	<shiro:lacksPermission name="10010">
+			<p ng-init="entidad.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 
   <h3>{{ entidad.esForma ? (entidad.esNuevo ? "Nueva Entidad" : "Editar Entidad") : "Entidades" }}</h3>
 

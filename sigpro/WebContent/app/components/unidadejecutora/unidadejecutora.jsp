@@ -6,7 +6,9 @@
   <script type="text/ng-template" id="buscarEntidad.jsp">
     <%@ include file="/app/components/unidadejecutora/buscarEntidad.jsp"%>
   </script>
-
+	<shiro:lacksPermission name="33010">
+		<p ng-init="unidad.redireccionSinPermisos()"></p>
+	</shiro:lacksPermission>
   <h3>{{ unidad.esForma ? (unidad.esNuevo ? "Nueva Unidad Ejecutora" : "Editar Unidad Ejecutora") : "Unidad Ejecutora" }}</h3>
 
   <br />

@@ -6,6 +6,9 @@
 		<script type="text/ng-template" id="buscarHitoTipo.jsp">
     		<%@ include file="/app/components/hito/buscarHitoTipo.jsp"%>
   	    </script>
+  	    <shiro:lacksPermission name="15010">
+			<p ng-init="hitoc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>	
 		<h3>Hitos</h3><br/>
 		<h4>{{ hitoc.proyectoNombre }}</h4><br/>
 		<div class="row" align="center" ng-hide="hitoc.mostraringreso">

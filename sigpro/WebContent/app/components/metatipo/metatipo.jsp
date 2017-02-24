@@ -3,6 +3,9 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="metatipoController as metatipoc" class="maincontainer all_page" id="title">
+		<shiro:lacksPermission name="18010">
+			<p ng-init="metatipoc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Tipos de Metas</h3><br/>
 		<div class="row" align="center" ng-hide="metatipoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">

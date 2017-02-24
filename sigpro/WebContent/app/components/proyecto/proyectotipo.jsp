@@ -8,6 +8,9 @@
 	<script type="text/ng-template" id="buscarpropiedad.jsp">
     	<%@ include file="/app/components/proyecto/buscarpropiedad.jsp"%>
   	</script>
+  	<shiro:lacksPermission name="36010">
+		<p ng-init="proyectotipoc.redireccionSinPermisos()"></p>
+	</shiro:lacksPermission>
 	<h3>Tipo de Proyecto</h3>
 	<br />
 

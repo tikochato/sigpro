@@ -12,6 +12,9 @@
    	<%@ include file="/app/components/usuarios/buscarColaborador.jsp"%>
 </script>
 	<div ng-controller="usuarioController as usuarioc" class="maincontainer all_page" id="title">
+		<shiro:lacksPermission name="34010">
+			<p ng-init="usuarioc.redireccionSinPermisos()"></p>
+		</shiro:lacksPermission>
 		<h3>Usuarios</h3><br/>
 		<div class="row" align="center" ng-hide="usuarioc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
