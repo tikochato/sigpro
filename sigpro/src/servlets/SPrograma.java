@@ -7,8 +7,10 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
@@ -27,11 +29,15 @@ import com.google.gson.reflect.TypeToken;
 import dao.ProgramaDAO;
 import dao.ProgramaPropiedadDAO;
 import dao.ProgramaPropiedadValorDAO;
+import dao.ProgramaProyectoDAO;
 import pojo.Programa;
 import pojo.ProgramaPropiedad;
 import pojo.ProgramaPropiedadValor;
 import pojo.ProgramaPropiedadValorId;
+import pojo.ProgramaProyecto;
+import pojo.ProgramaProyectoId;
 import pojo.ProgramaTipo;
+import pojo.Proyecto;
 import utilities.Utils;
 
 /**
@@ -159,7 +165,7 @@ public class SPrograma extends HttpServlet {
 				List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
 
 				if(esnuevo){
-					programa = new Programa(nombre, descripcion, usuario, null, new Date(), null, 1, programaTipo, null);
+					programa = new Programa(programaTipo,nombre, descripcion, usuario, null, new Date(), null, 1,  null,null);
 
 				}else{
 					programa = ProgramaDAO.getProgramaPorId(id);
@@ -179,8 +185,46 @@ public class SPrograma extends HttpServlet {
 							ProgramaPropiedadValorDAO.eliminarProgramaPropiedadValor(valor);
 						}
 					}
+					
+					Set<ProgramaProyecto> programaproyecto_temp = programa.getProgramaProyectos();
+					programa.setProgramaProyectos(null);
+					if (programaproyecto_temp!=null){
+						for (ProgramaProyecto programaProyecto : programaproyecto_temp){
+							ProgramaProyectoDAO.eliminarProgramaProyecto(programaProyecto);
+						}
+					}
+					
 				}
 				result = ProgramaDAO.guardarPrograma(programa);
+				
+				
+				if (result){
+					String[] idsProyectos =  map.get("idsproyectos") != null && map.get("idsproyectos").trim().length()>0 ? map.get("idsproyectos").toString().trim().split(",") : null;
+					if (idsProyectos !=null && idsProyectos.length>0){
+						for (String idProyecto : idsProyectos){
+							ProgramaProyectoId programaProyectodId = new ProgramaProyectoId(programa.getId(), Integer.parseInt(idProyecto));
+							Proyecto proyecto = new Proyecto();
+							proyecto.setId(Integer.parseInt(idProyecto));
+							
+							ProgramaProyecto programaProyecto = new ProgramaProyecto(
+									programaProyectodId, 
+									programa, 
+									proyecto, usuario, null, 
+									new Date(), null
+									, 1);
+							
+							if (programa.getProgramaProyectos() == null){
+								programa.setProgramaProyectos(new HashSet<ProgramaProyecto>(0));
+							}
+							programa.getProgramaProyectos().add(programaProyecto);
+						}
+					}
+					result = ProgramaDAO.guardarPrograma(programa);
+				}
+				
+				
+				
+				
 				if (result && datos!=null){
 					for (stdatadinamico data : datos) {
 						if (data.valor!=null && data.valor.length()>0 && data.valor.compareTo("null")!=0){
@@ -252,7 +296,8 @@ public class SPrograma extends HttpServlet {
 					+ "\"id\": " + (programa!=null ? programa.getId():"") +", "
 					+ "\"nombre\": \"" + (programa!=null ? programa.getNombre():"") +"\" }");
 
-		}else{
+		}else
+		{
 			response_text = "{ \"success\": false }";
 		}
 

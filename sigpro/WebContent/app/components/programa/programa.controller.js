@@ -129,6 +129,16 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
 			}
 		}
+		
+		var idsproyectos="";
+		for (i = 0 ; i<mi.proyectos.length ; i ++){
+			if (i==0){
+				idsproyectos = idsproyectos.concat("",mi.proyectos[i].id);
+			}else{
+				idsproyectos = idsproyectos.concat(",",mi.proyectos[i].id);
+			}
+		}
+		
 		if(mi.programa!=null && mi.programa.nombre!=null){
 			var param_data = {
 				accion : 'guardar',
@@ -138,6 +148,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				programatipoid: mi.programatipoid,
 				esnuevo: mi.esNuevo,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
+				idsproyectos:idsproyectos,
 				t:moment().unix()
 			};
 			$http.post('/SPrograma',param_data).then(
@@ -197,6 +208,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 		mi.programa = {};
 		mi.esNuevo = true;
 		mi.camposdinamicos = {};
+		mi.proyectos =[];
 		mi.gridApi.selection.clearSelectedRows();
 	};
 
@@ -231,6 +243,17 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 						break;
 					}
 				}
+			});
+			
+			parametros = {
+					accion: 'obtenerProyectosPorPrograma',
+					idPrograma: mi.programa!=''? mi.programa.id:0,
+				    t:moment().unix()
+			}
+			
+			$http.post('/SProyecto', parametros).then(function(response){
+				mi.proyectos = response.data.proyectos;
+				
 			});
 
 		}
@@ -288,6 +311,13 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			$location.path('/proyecto/'+ programaid );
 		}
 	};
+	
+	mi.eliminarProyecto = function(row){
+		var index = mi.proyectos.indexOf(row);
+        if (index !== -1) {
+            mi.proyectos.splice(index, 1);
+        }
+	}
 
 	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
 		var resultado = $q.defer();
@@ -316,6 +346,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				$columnaNombre : function() {
 					return columnaNombre;
 				}
+				
 			}
 		});
 
@@ -371,13 +402,26 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	
 	
 	mi.buscarProyecto = function() {
+		var idsproyectos = "";
+		var proyectoTemp;
+		for (i = 0, len =mi.proyectos.length;  i < len; i++) {
+    		if (i == 0){
+    			idsproyectos = idsproyectos.concat("",mi.proyectos[i].id);
+    		}else{
+    			idsproyectos = idsproyectos.concat(",",mi.proyectos[i].id);
+    		}
+    	}
+	    
+	    
 		var resultado = mi.llamarModalBusqueda('/SProyecto', {
-			accion : 'numeroProyectos'
+			accion : 'numeroProyectosDisponibles',
+			idsproyectos:idsproyectos	
 		}, function(pagina, elementosPorPagina) {
 			return {
-				accion : 'getProyectoPagina',
+				accion : 'getProyectoPaginaDisponibles',
 				pagina : pagina,
-				registros : elementosPorPagina
+				registros : elementosPorPagina,
+				idsproyectos:idsproyectos
 			};
 		},'id','nombre');
 

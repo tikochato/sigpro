@@ -127,7 +127,7 @@
 					<input type="text" ng-model="programac.programa.descripcion"
 						class="form-control" id="campo2" placeholder="Descripción">
 				</div>
-				
+				<br />
 				<div align="center">
 					<h5>Proyectos </h5>
 					<div style="height: 35px; width: 75%">
@@ -162,7 +162,7 @@
 							<td>{{row.descripcion}}</td>
 							<td>
 								<button type="button"
-									ng-click="progrmac.eliminarProyecto(row)"
+									ng-click="programac.eliminarProyecto(row)"
 									class="btn btn-sm btn-danger">
 									<i class="glyphicon glyphicon-minus-sign"> </i>
 								</button>

@@ -185,8 +185,46 @@ public class SProyecto extends HttpServlet {
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
 	        response_text = String.join("", "\"proyectos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}else if(accion.equals("getProyectoPaginaDisponibles")){
+			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
+			int numeroProyecto = map.get("numeroproyecto")!=null  ? Integer.parseInt(map.get("numeroproyecto")) : 0;
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			String idsProyectos = map.get("idsproyectos");
+			List<Proyecto> proyectos = ProyectoDAO.getProyectosPaginaDisponibles(pagina, numeroProyecto,
+					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion,idsProyectos);
+			List<datos> datos_=new ArrayList<datos>();
+			for (Proyecto proyecto : proyectos){
+				datos dato = new datos();
+				dato.id = proyecto.getId();
+				dato.nombre = proyecto.getNombre();
+				dato.descripcion = proyecto.getDescripcion();
+				dato.snip = proyecto.getSnip();
+				dato.proyectotipo = proyecto.getProyectoTipo().getNombre();
+				dato.proyectotipoid = proyecto.getProyectoTipo().getId();
+				dato.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
+				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getUnidadEjecutora();
+				dato.cooperante = proyecto.getCooperante().getNombre();
+				dato.cooperanteid = proyecto.getCooperante().getId();
+				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
+				dato.usuarioCreo = proyecto.getUsuarioCreo();
+				dato.fechaactualizacion = Utils.formatDateHour( proyecto.getFechaActualizacion());
+				dato.usuarioactualizo = proyecto.getUsuarioActualizo();
+				dato.programa = proyecto.getPrograma();
+				dato.subprograma = proyecto.getSubprograma();
+				dato.proyecto = proyecto.getProyecto();
+				dato.obra = proyecto.getObra();
+				dato.actividad = proyecto.getActividad();
+				dato.fuente = proyecto.getFuente();
+				datos_.add(dato);
+			}
+			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
+	        response_text = String.join("", "\"proyectos\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
-
 		else if (accion.equals("guardar")){
 			try{
 			boolean result = false;
@@ -219,12 +257,11 @@ public class SProyecto extends HttpServlet {
 
 				List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
 
-
 				if(esnuevo){
 					proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion
 							, usuario, null, new DateTime().toDate(), null, 1, snip
 							,programa , subPrograma, proyecto_,actividad, obra, fuente,
-							null, null, null, null, null);
+							null, null, null, null, null, null);
 
 				}else{
 					proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
@@ -284,6 +321,7 @@ public class SProyecto extends HttpServlet {
 						}
 					}
 				}
+				
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 						+ "\"id\": " + proyecto.getId() +" }");
 			}else
@@ -319,6 +357,13 @@ public class SProyecto extends HttpServlet {
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			response_text = String.join("","{ \"success\": true, \"totalproyectos\":",ProyectoDAO.getTotalProyectos(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,usuario).toString()," }");
 		}
+		else if(accion.equals("numeroProyectosDisponibles")){
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String idsProyectos = map.get("idsproyectos");
+			response_text = String.join("","{ \"success\": true, \"totalproyectos\":",ProyectoDAO.getTotalProyectosDisponibles(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,idsProyectos).toString()," }");
+		}
 		else if(accion.equals("obtenerProyectoPorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
@@ -326,7 +371,25 @@ public class SProyecto extends HttpServlet {
 					+ "\"id\": " + (proyecto!=null ? proyecto.getId():"") +", "
 					+ "\"nombre\": \"" + (proyecto!=null ? proyecto.getNombre():"") +"\" }");
 
-		}else{
+		}else if(accion.equals("obtenerProyectosPorPrograma")){
+			Integer idPrograma = map.get("idPrograma")!=null ? Integer.parseInt(map.get("idPrograma")) : 0;
+			List<Proyecto> proyectos = ProyectoDAO.getProyectosPorPrograma(idPrograma);
+			List<datos> datos_=new ArrayList<datos>();
+			for (Proyecto proyecto : proyectos){
+				datos dato = new datos();
+				dato.id = proyecto.getId();
+				dato.nombre = proyecto.getNombre();
+				dato.descripcion = proyecto.getDescripcion();
+				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
+				dato.usuarioCreo = proyecto.getUsuarioCreo();
+				datos_.add(dato);
+			}
+			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
+	        response_text = String.join("", "\"proyectos\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+
+		}
+		else{
 			response_text = "{ \"success\": false }";
 		}
 
