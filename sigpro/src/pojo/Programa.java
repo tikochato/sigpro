@@ -1,5 +1,5 @@
 package pojo;
-// Generated 23/02/2017 10:17:00 AM by Hibernate Tools 5.2.0.CR1
+// Generated 27/02/2017 11:04:39 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -24,8 +24,12 @@ import javax.persistence.TemporalType;
 @Table(name = "programa", catalog = "sipro")
 public class Programa implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 	private Integer id;
+	private ProgramaTipo programaTipo;
 	private String nombre;
 	private String descripcion;
 	private String usuarioCreo;
@@ -33,23 +37,24 @@ public class Programa implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private ProgramaTipo programaTipo;
 	private Set<ProgramaPropiedadValor> programaPropiedadValors = new HashSet<ProgramaPropiedadValor>(0);
+	private Set<ProgramaProyecto> programaProyectos = new HashSet<ProgramaProyecto>(0);
 
 	public Programa() {
 	}
 
-	public Programa(String nombre, String usuarioCreo, Date fechaCreacion, int estado, ProgramaTipo programaTipo) {
+	public Programa(ProgramaTipo programaTipo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+		this.programaTipo = programaTipo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
-		this.programaTipo = programaTipo;
 	}
 
-	public Programa(String nombre, String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, ProgramaTipo programaTipo,
-			Set<ProgramaPropiedadValor> programaPropiedadValors) {
+	public Programa(ProgramaTipo programaTipo, String nombre, String descripcion, String usuarioCreo,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
+			Set<ProgramaPropiedadValor> programaPropiedadValors, Set<ProgramaProyecto> programaProyectos) {
+		this.programaTipo = programaTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
@@ -57,8 +62,8 @@ public class Programa implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.programaTipo = programaTipo;
 		this.programaPropiedadValors = programaPropiedadValors;
+		this.programaProyectos = programaProyectos;
 	}
 
 	@Id
@@ -71,6 +76,16 @@ public class Programa implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "programa_tipoid", nullable = false)
+	public ProgramaTipo getProgramaTipo() {
+		return this.programaTipo;
+	}
+
+	public void setProgramaTipo(ProgramaTipo programaTipo) {
+		this.programaTipo = programaTipo;
 	}
 
 	@Column(name = "nombre", nullable = false, length = 2000)
@@ -138,16 +153,6 @@ public class Programa implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "programa_tipoid", nullable = false)
-	public ProgramaTipo getProgramaTipo() {
-		return this.programaTipo;
-	}
-
-	public void setProgramaTipo(ProgramaTipo programaTipo) {
-		this.programaTipo = programaTipo;
-	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "programa")
 	public Set<ProgramaPropiedadValor> getProgramaPropiedadValors() {
 		return this.programaPropiedadValors;
@@ -155,6 +160,15 @@ public class Programa implements java.io.Serializable {
 
 	public void setProgramaPropiedadValors(Set<ProgramaPropiedadValor> programaPropiedadValors) {
 		this.programaPropiedadValors = programaPropiedadValors;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "programa")
+	public Set<ProgramaProyecto> getProgramaProyectos() {
+		return this.programaProyectos;
+	}
+
+	public void setProgramaProyectos(Set<ProgramaProyecto> programaProyectos) {
+		this.programaProyectos = programaProyectos;
 	}
 
 }

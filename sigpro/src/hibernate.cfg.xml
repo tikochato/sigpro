@@ -67,6 +67,7 @@
         <mapping class="pojo.Proyecto" />
         <mapping class="pojo.ProyectoPropedadValor" />
         <mapping class="pojo.ProyectoPropiedad" />
+        <mapping class="pojo.ProgramaProyecto" />
         <mapping class="pojo.ProyectoTipo" />
         <mapping class="pojo.PtipoPropiedad" />
         <mapping class="pojo.RectipoPropiedad" />

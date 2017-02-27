@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.Programa;
+import pojo.ProgramaProyecto;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -37,6 +38,15 @@ public class ProgramaDAO implements java.io.Serializable {
 		try{
 			session.beginTransaction();
 			session.saveOrUpdate(programa);
+			session.flush();
+			
+			if (programa.getProgramaProyectos()!=null){
+				for (ProgramaProyecto programaProyecto : programa.getProgramaProyectos()){
+					session.saveOrUpdate(programaProyecto);
+				}
+			}
+			session.flush();
+			
 			session.getTransaction().commit();
 			ret = true;
 		}
