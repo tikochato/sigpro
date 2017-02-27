@@ -127,6 +127,51 @@
 					<input type="text" ng-model="programac.programa.descripcion"
 						class="form-control" id="campo2" placeholder="Descripción">
 				</div>
+				
+				<div align="center">
+					<h5>Proyectos </h5>
+					<div style="height: 35px; width: 75%">
+						<div style="text-align: right;">
+							<div class="btn-group" role="group" aria-label="">
+								<a class="btn btn-default" href
+									ng-click="programac.buscarProyecto()" role="button"
+									uib-tooltip="Asignar un nuevo proyecto" tooltip-placement="left">
+									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<table style="width: 75%;"
+					st-table="programac.proyectos"
+					class="table table-striped  table-bordered">
+					<thead >
+						<tr>
+							<th>ID</th>
+							<th>Nombre</th>
+							<th>Descripicon</th>
+							<th>Tipo Dato</th>
+							<th style="width: 30px;">Quitar</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr st-select-row="row"
+							ng-repeat="row in programac.proyectos">
+							<td>{{row.id}}</td>
+							<td>{{row.nombre}}</td>
+							<td>{{row.descripcion}}</td>
+							<td>
+								<button type="button"
+									ng-click="progrmac.eliminarProyecto(row)"
+									class="btn btn-sm btn-danger">
+									<i class="glyphicon glyphicon-minus-sign"> </i>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</div>
 				<br/>
 				<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>

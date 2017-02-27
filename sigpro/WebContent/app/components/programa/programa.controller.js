@@ -27,6 +27,12 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 
 	mi.filtros = [];
 	mi.orden = null;
+	
+	mi.proyectos =[];
+	mi.proyecto =null;
+	mi.mostrarcargandoProyecto=true;
+	mi.mostrarProyecto = false;
+	mi.paginaActualProyectos=1;
 
 	mi.fechaOptions = {
 			formatYear : 'yy',
