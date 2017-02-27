@@ -368,6 +368,23 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			});
 		});
 	};
+	
+	
+	mi.buscarProyecto = function() {
+		var resultado = mi.llamarModalBusqueda('/SProyecto', {
+			accion : 'numeroProyectos'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getProyectoPagina',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'id','nombre');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.proyectos.push(itemSeleccionado);
+		});
+	};
 
 	
 } ]);

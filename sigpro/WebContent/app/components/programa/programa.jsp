@@ -150,7 +150,6 @@
 							<th>ID</th>
 							<th>Nombre</th>
 							<th>Descripicon</th>
-							<th>Tipo Dato</th>
 							<th style="width: 30px;">Quitar</th>
 
 						</tr>
