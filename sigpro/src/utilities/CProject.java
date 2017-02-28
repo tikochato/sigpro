@@ -61,8 +61,6 @@ public class CProject {
 		      items = String.join(",", construirItem(task.getName(),null,true,task.getStart(),task.getFinish(),false));
 		      listaJerarquica(task, "\t");
 		   }
-
-		   System.out.println();
 		return items;
 	}
 	
@@ -71,7 +69,6 @@ public class CProject {
 		indetnacion ++;
 		for (Task child : task.getChildTasks())
 		{
-	      System.out.println(indent + "Tarea: " + child.getName() + " Fecha Inicio=" + Utils.formatDate(task.getStart()) + " Fecha Fonal = " + Utils.formatDate(task.getFinish()));
 	      listaJerarquica(child, indent + "\t");
 	      
 	      items = String.join(",", items, construirItem(child.getName(),indetnacion,true,task.getStart(),task.getFinish(),false));
