@@ -30,33 +30,25 @@ import pojo.Componente;
 import pojo.Hito;
 import pojo.Producto;
 import pojo.Proyecto;
+import utilities.CProject;
 import utilities.Utils;
 
-/**
- * Servlet implementation class SGantt
- */
+
 @WebServlet("/SGantt")
 public class SGantt extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    
     public SGantt() {
         super();
         
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		HttpSession sesionweb = request.getSession();
@@ -107,6 +99,13 @@ public class SGantt extends HttpServlet {
 			}
 			
 			items = String.join("","{\"items\" : [", items,"]}");
+			
+		}else if(accion.equals("cargar")){
+			String nombre = map.get("nombre");
+			CProject project = new CProject(nombre);
+			
+			
+			items = String.join("","{\"items\" : [", project.getTask(project.getProject()),"]}");
 			
 		}
 		

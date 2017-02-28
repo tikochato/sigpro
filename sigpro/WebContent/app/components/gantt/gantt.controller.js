@@ -106,5 +106,28 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 					
 		});	
 		
+		mi.cargar=function(){
+			$http.post('/SGantt', { accion: 'cargar',t:moment().unix(), nombre: 'ejemplo.mpp', } ).then(
+				function(response) {
+					var items = response.data.items;
+					$scope.settings.displayedTime = moment(items[0].start,'DD/MM/YYYY hh:mm:ss').toDate();
+					
+					for(var i=0; i< items.length; i++){
+						if(items[i].start)
+							items[i].start = moment(items[i].start,'DD/MM/YYYY hh:mm:ss').toDate();
+						if(items[i].finish)
+							items[i].finish = moment(items[i].finish,'DD/MM/YYYY hh:mm:ss').toDate();
+						if(items[i].identation)
+							items[i].indentation = Number(items[i].indentation);
+						items[i].expandend = items[i].expanded=='true' ? true : false;
+						items[i].isMilestone = items[i].isMilestone=='true' ? true : false;
+					}
+					$scope.items = items;
+					$scope.settings.timelineStart =items[0].start;
+					ganttChartView = document.getElementById('ganttChartView');
+				}
+			);
+		};
+		
 	}
 ]);
