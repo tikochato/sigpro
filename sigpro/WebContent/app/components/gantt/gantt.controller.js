@@ -53,14 +53,26 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		// Default Columns
 		var columns = DlhSoft.Controls.GanttChartView.getDefaultColumns(items, settings);
 		
-		columns.splice(1, 0, {
+		columns.splice(0, 0, {
+		    header: 'Orden', 
+		    width: 50,
+		    isReadOnly: true,
+		    cellStyle: 'text-align: right;',
+		    cellTemplate: function (item) {
+		    	//return DlhSoft.Controls.GanttChartView.numberInputColumnTemplateBase(document, 50, function(){ return item.index+1 }, function(value){ item.index=value+1 })
+		    	return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document,  function(){ return item.index+1 })
+		        //return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return mi.getStatus(item); });
+		    }
+		});
+		
+		columns.splice(2, 0, {
 		    header: 'Estado', width: 120,
 		    cellTemplate: function (item) {
 		        return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return mi.getStatus(item); });
 		    }
 		});
 		
-		columns.splice(1, 0, {
+		columns.splice(2, 0, {
 		    header: '', width: 30,
 		    cellTemplate: function (item) {
 		        var rectangle = document.createElement('div');
@@ -70,17 +82,27 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		    }
 		});
 		
-		columns.splice(7,1);
+		columns.splice(8,1);
 		
-		columns[0].header = '';
-		columns[0].width = 300;
-		columns[3].header = 'Inicio';
-		columns[4].header = 'Fin';
-		columns[5].header = 'Hito';
-		columns[5].isReadOnly = true;
-		columns[6].header = 'Completada';
+		columns[1].header = 'Nombre';
+		columns[1].width = 300;
+		columns[4].header = 'Inicio';
+		columns[5].header = 'Fin';
+		columns[6].header = 'Hito';
+		columns[6].isReadOnly = true;
+		columns[7].header = 'Completada';
 		
 		settings.columns = columns;
+		
+		settings.itemPropertyChangeHandler = function (item, propertyName, isDirect, isFinal) {
+		    if (isDirect && isFinal){
+		    	if(propertyName=='start' || propertyName=='finish' || propertyName=='content' || propertyName=='completedFinish'){
+		    		console.log(item.content + '.' + propertyName + ' changed.');
+		    		console.log(item);
+		    	}
+		    }
+		}
+		
 		$scope.settings = settings;
 		
 		var ganttChartView;
