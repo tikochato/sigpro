@@ -14,11 +14,11 @@
 	<div id="mainview" class="all_page">
 		<div ng-view class="all_page"></div>
     </div>
-    <div class="footer">- Minfin 2017 -</div>
     <div class="div_alertas">
 		<flash-message name="alertas">
 		</flash-message>
 	</div>
+	<div class="footer"><div style="text-align: center; width: 100%;">- MINFIN 2017 -</div></div>
 </body>
 </html>
 

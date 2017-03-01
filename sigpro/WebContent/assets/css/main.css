@@ -45,6 +45,7 @@ nav.navbar{
 .maincontainer{
 	margin: 15px;
 	padding-top: 15px;
+	padding-bottom: 30px;
 }
 
 .glyphicon {
@@ -129,7 +130,10 @@ nav.navbar{
 
 
 .footer{
-	text-align: center;
+	padding: 5px 0px 10px 0px;
+	bottom: 0px;
+	width: 100%;
+	display: flex;
 }
 
 .context-menu{
