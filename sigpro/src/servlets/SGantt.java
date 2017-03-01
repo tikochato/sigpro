@@ -108,6 +108,18 @@ public class SGantt extends HttpServlet {
 			items = String.join("","{\"items\" : [", project.getTask(project.getProject()),"]}");
 			
 		}
+		else if(accion.equals("exportar")){
+			try{
+				Integer proyectoId = map.get("proyecto_id")!=null && map.get("proyecto_id").trim().length()>0 ? Integer.parseInt(map.get("proyecto_id")) : 0;
+				CProject project = new CProject("");
+				project.generaMPP(proyectoId, usuario);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			
+			
+		}
 		
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
@@ -127,7 +139,7 @@ public class SGantt extends HttpServlet {
 				isExpanded!=null ? "\"isExpanded\" :\"":"" ,isExpanded!=null ? (isExpanded ? "true" : "false"):"",isExpanded!=null ?"\",":"",
 				start !=null ? "\"start\" :\"" : "", start!=null ? Utils.formatDateHour24(start) :"", start!=null ? "\"" : "",
 			    start!=null && finish!=null ? "," : "",
-				finish!=null ? "\"finish\" :\"" : "",finish!=null ? Utils.formatDateHour24(start) : "",finish!=null ?"\"":"",
+				finish!=null ? "\"finish\" :\"" : "",finish!=null ? Utils.formatDateHour24(finish) : "",finish!=null ?"\"":"",
 				",\"isMilestone\":",isMilestone? "\"true\"" : "\"false\"",
 				"}"
 			);

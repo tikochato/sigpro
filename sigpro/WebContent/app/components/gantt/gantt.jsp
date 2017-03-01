@@ -8,6 +8,7 @@
 	    <div class="operation_buttons" align="left" >
 			<div class="btn-group">
 				<label class="btn btn-default" ng-click="ganttc.cargar()">Cargar archivo</label>
+				<label class="btn btn-default" ng-click="ganttc.exportar()">Exportar archivo</label>
 			</div>
 		</div>
 	    <div class="gantt-chart">
