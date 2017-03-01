@@ -61,8 +61,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 
 	};
 	mi.redireccionSinPermisos=function(){
-		$window.location.href = '/main.jsp';
-		$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
+		$window.location.href = '/main.jsp#!/forbidden';		
 	}
 	mi.colaborador = null;
 	mi.seleccionada = false;
