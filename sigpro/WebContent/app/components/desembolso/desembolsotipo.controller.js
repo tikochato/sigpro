@@ -15,10 +15,6 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 			mi.paginaActual = 1;
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
-			mi.redireccionSinPermisos=function(){
-				$window.location.href = '/main.jsp';
-				$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-			}
 			mi.filtros=[];
 			
 			mi.gridOptions = {
@@ -81,6 +77,9 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 				}
 			};
 			
+			mi.redireccionSinPermisos=function(){
+				$window.location.href = '/main.jsp#!/forbidden';		
+			}
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
 				$http.post('/SDesembolsoTipo', { accion: 'getDesembolsotiposPagina', pagina: pagina, numerodesembolsotipos: $utilidades.elementosPorPagina,
