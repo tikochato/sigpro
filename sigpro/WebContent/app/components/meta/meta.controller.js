@@ -23,10 +23,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			
 			mi.columnaOrdenada=null;
 			mi.ordenDireccion = null;
-			mi.redireccionSinPermisos=function(){
-				$window.location.href = '/main.jsp';
-				$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-			}
+			
 			mi.filtros = [];
 			
 			switch($routeParams.tipo){
@@ -133,7 +130,9 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 							mi.mostrarcargando = false;
 						});
 			}
-			
+			mi.redireccionSinPermisos=function(){
+				$window.location.href = '/main.jsp#!/forbidden';		
+			}
 			mi.guardar=function(){
 				if(mi.meta!=null && mi.meta.nombre!='' && mi.meta.tipoMetaId>0 && mi.meta.unidadMedidaId>0 ){
 					$http.post('/SMeta', {

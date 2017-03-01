@@ -16,10 +16,6 @@ app.controller('formulariotipoController',['$scope','$http','$interval','i18nSer
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		
-		mi.redireccionSinPermisos=function(){
-			$window.location.href = '/main.jsp';
-			$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-		}
 		mi.gridOptions = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
@@ -67,7 +63,9 @@ app.controller('formulariotipoController',['$scope','$http','$interval','i18nSer
 						mi.mostrarcargando = false;
 					});
 		}
-		
+		mi.redireccionSinPermisos=function(){
+			$window.location.href = '/main.jsp#!/forbidden';		
+		}
 		mi.guardar=function(){
 			if(mi.formulariotipo!=null  && mi.formulariotipo.nombre!=''){
 				

@@ -16,10 +16,6 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		mi.tipodatos = [];
-		mi.redireccionSinPermisos=function(){
-			$window.location.href = '/main.jsp';
-			$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-		}
 		mi.filtros=[];
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;
@@ -103,7 +99,9 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 						mi.mostrarcargando = false;
 					});
 		}
-		
+		mi.redireccionSinPermisos=function(){
+			$window.location.href = '/main.jsp#!/forbidden';		
+		}
 		mi.guardar=function(){
 			if(mi.proyectopropiedad!=null && mi.proyectopropiedad.datotipoid!=null){
 				$http.post('/SProyectoPropiedad', {

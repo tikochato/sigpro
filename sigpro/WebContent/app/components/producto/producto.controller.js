@@ -26,10 +26,6 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion = null;
-	mi.redireccionSinPermisos=function(){
-		$window.location.href = '/main.jsp';
-		$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-	}
 	mi.filtros = [];
 	mi.orden = null;
 	mi.esNuevo = false;
@@ -59,6 +55,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		mi.cargarTabla(1);
 	});
 
+	
 	mi.mostrarCargando = true;
 	mi.data = [];
 	mi.cargarTabla = function(pagina) {
@@ -172,7 +169,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 
 		});
 	};
-	
+	mi.redireccionSinPermisos=function(){
+		$window.location.href = '/main.jsp#!/forbidden';		
+	}
 	mi.nuevo = function() {
 		mi.limpiarSeleccion();
 

@@ -18,10 +18,6 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 			
 			mi.columnaOrdenada=null;
 			mi.ordenDireccion = null;
-			mi.redireccionSinPermisos=function(){
-				$window.location.href = '/main.jsp';
-				$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-			}
 			mi.filtros = [];
 			
 			mi.gridOptions = {
@@ -105,7 +101,9 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 							mi.mostrarcargando = false;
 						});
 			}
-			
+			mi.redireccionSinPermisos=function(){
+				$window.location.href = '/main.jsp#!/forbidden';		
+			}
 			mi.guardar=function(){
 				if(mi.tipo!=null && mi.tipo.nombre!=null){
 					$http.post('/SMetaTipo', {

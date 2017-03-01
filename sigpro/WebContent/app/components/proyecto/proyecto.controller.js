@@ -31,10 +31,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion = null;
-	mi.redireccionSinPermisos=function(){
-		$window.location.href = '/main.jsp';
-		$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-	}
 	mi.filtros = [];
 	mi.orden = null;
 
@@ -113,7 +109,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		}
 	};
 
-
+	mi.redireccionSinPermisos=function(){
+		$window.location.href = '/main.jsp#!/forbidden';		
+	}
 	mi.cargarTabla = function(pagina){
 		mi.mostrarcargando=true;
 		$http.post('/SProyecto', { accion: 'getProyectoPagina', pagina: pagina,
