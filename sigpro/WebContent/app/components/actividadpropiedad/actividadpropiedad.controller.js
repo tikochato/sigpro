@@ -23,10 +23,6 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 			mi.ordenDireccion = null;
 			
 			mi.filtros = [];
-			mi.redireccionSinPermisos=function(){
-				$window.location.href = '/main.jsp';
-				$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-			}
 			mi.gridOptions = {
 					enableRowSelection : true,
 					enableRowHeaderSelection : false,
@@ -96,7 +92,9 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 					    }
 					}
 				};
-			
+			mi.redireccionSinPermisos=function(){
+				$window.location.href = '/main.jsp#!/forbidden';		
+			}
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
 				$http.post('/SActividadPropiedad', { accion: 'getActividadPropiedadPagina', pagina: pagina, numeroactividadpropiedades: $utilidades.elementosPorPagina,
