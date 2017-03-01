@@ -26,10 +26,6 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 		
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;
-		mi.redireccionSinPermisos=function(){
-			$window.location.href = '/main.jsp';
-			$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-		}
 		mi.filtros = [];
 		mi.orden = null;
 
@@ -192,7 +188,9 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Hito que desea borrar');
 		};
-
+		mi.redireccionSinPermisos=function(){
+			$window.location.href = '/main.jsp#!/forbidden';		
+		}
 		mi.nuevo = function() {
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
