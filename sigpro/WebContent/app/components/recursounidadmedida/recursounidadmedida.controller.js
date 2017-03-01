@@ -18,10 +18,6 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 			
 			mi.columnaOrdenada=null;
 			mi.ordenDireccion = null;
-			mi.redireccionSinPermisos=function(){
-				$window.location.href = '/main.jsp';
-				$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-			}
 			mi.filtros = [];
 			
 			mi.gridOptions = {
@@ -106,7 +102,9 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 							mi.mostrarcargando = false;
 						});
 			}
-			
+			mi.redireccionSinPermisos=function(){
+				$window.location.href = '/main.jsp#!/forbidden';		
+			}
 			mi.guardar=function(){
 				if(mi.medida!=null && mi.medida.nombre!=''){
 					$http.post('/SRecursoUnidadMedida', {
