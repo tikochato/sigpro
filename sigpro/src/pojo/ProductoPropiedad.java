@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 8, 2017 5:37:26 PM by Hibernate Tools 5.2.0.CR1
+// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class ProductoPropiedad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8129584083132128144L;
+	private static final long serialVersionUID = 9161809575830341485L;
 	private Integer id;
 	private DatoTipo datoTipo;
 	private String nombre;
@@ -36,22 +36,23 @@ public class ProductoPropiedad implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private Integer estado;
+	private int estado;
 	private Set<ProductoPropiedadValor> productoPropiedadValors = new HashSet<ProductoPropiedadValor>(0);
 	private Set<ProdtipoPropiedad> prodtipoPropiedads = new HashSet<ProdtipoPropiedad>(0);
 
 	public ProductoPropiedad() {
 	}
 
-	public ProductoPropiedad(DatoTipo datoTipo, String nombre, String usuarioCreo, Date fechaCreacion) {
+	public ProductoPropiedad(DatoTipo datoTipo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
+		this.estado = estado;
 	}
 
 	public ProductoPropiedad(DatoTipo datoTipo, String nombre, String descripcion, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
 			Set<ProductoPropiedadValor> productoPropiedadValors, Set<ProdtipoPropiedad> prodtipoPropiedads) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
@@ -143,12 +144,12 @@ public class ProductoPropiedad implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Column(name = "estado")
-	public Integer getEstado() {
+	@Column(name = "estado", nullable = false)
+	public int getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(Integer estado) {
+	public void setEstado(int estado) {
 		this.estado = estado;
 	}
 

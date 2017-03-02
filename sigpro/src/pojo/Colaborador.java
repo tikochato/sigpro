@@ -1,14 +1,12 @@
 package pojo;
-// Generated Feb 8, 2017 5:37:26 PM by Hibernate Tools 5.2.0.CR1
+// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
 
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
-
-import java.util.Date;
-
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,7 +24,7 @@ public class Colaborador implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4416898377762352164L;
+	private static final long serialVersionUID = 435780884214465956L;
 	private Integer id;
 	private UnidadEjecutora unidadEjecutora;
 	private Usuario usuario;
@@ -35,7 +33,7 @@ public class Colaborador implements java.io.Serializable {
 	private String papellido;
 	private String sapellido;
 	private Long cui;
-	private Integer estado;
+	private int estado;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
@@ -44,7 +42,8 @@ public class Colaborador implements java.io.Serializable {
 	public Colaborador() {
 	}
 
-	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String papellido, Long cui, Integer estado, String usuarioCreo, Date fechaCreacion) {
+	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String papellido, Long cui,
+			int estado, String usuarioCreo, Date fechaCreacion) {
 		this.unidadEjecutora = unidadEjecutora;
 		this.usuario = usuario;
 		this.pnombre = pnombre;
@@ -56,7 +55,8 @@ public class Colaborador implements java.io.Serializable {
 	}
 
 	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String snombre,
-			String papellido, String sapellido, Long cui, Integer estado,String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion) {
+			String papellido, String sapellido, Long cui, int estado, String usuarioCreo, String usuarioActualizo,
+			Date fechaCreacion, Date fechaActualizacion) {
 		this.unidadEjecutora = unidadEjecutora;
 		this.usuario = usuario;
 		this.pnombre = pnombre;
@@ -66,8 +66,8 @@ public class Colaborador implements java.io.Serializable {
 		this.cui = cui;
 		this.estado = estado;
 		this.usuarioCreo = usuarioCreo;
-		this.fechaCreacion = fechaCreacion;
 		this.usuarioActualizo = usuarioActualizo;
+		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
@@ -147,16 +147,16 @@ public class Colaborador implements java.io.Serializable {
 	public void setCui(Long cui) {
 		this.cui = cui;
 	}
-	
+
 	@Column(name = "estado", nullable = false)
-	public Integer getEstado() {
+	public int getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(Integer estado) {
+	public void setEstado(int estado) {
 		this.estado = estado;
 	}
-	
+
 	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;

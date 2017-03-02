@@ -82,6 +82,15 @@
         <mapping class="pojo.Rol" />
         <mapping class="pojo.RolPermiso" />
         <mapping class="pojo.RtipoPropiedad" />
+        <mapping class="pojo.SubprodtipoPropiedad" />
+        <mapping class="pojo.SubprodtipoPropiedadId" />
+        <mapping class="pojo.Subproducto" />
+        <mapping class="pojo.SubproductoPropiedad" />
+        <mapping class="pojo.SubproductoPropiedadValor" />
+        <mapping class="pojo.SubproductoPropiedadValorId" />
+        <mapping class="pojo.SubproductoTipo" />
+        <mapping class="pojo.SubproductoUsuario" />
+        <mapping class="pojo.SubproductoUsuarioId" />
         <mapping class="pojo.UnidadEjecutora" />
         <mapping class="pojo.Usuario" />
         <mapping class="pojo.UsuarioLog" />

@@ -201,6 +201,8 @@ public class SActividad extends HttpServlet {
 					Integer objetoId = Utils.getParameterInteger(map, "objetoid");
 					Integer objetoTipo = Utils.getParameterInteger(map, "objetotipo");
 					Integer porcentajeAvance = Utils.getParameterInteger(map, "porcentajeavance");
+					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
+					String duracionDimension = map.get("duracionDimension");
 
 					ActividadTipo actividadTipo= new ActividadTipo();
 					actividadTipo.setId(actividadtipoid);
@@ -214,7 +216,7 @@ public class SActividad extends HttpServlet {
 					if(esnuevo){
 						actividad = new Actividad(actividadTipo, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra, fuente,
-								objetoId, objetoTipo,
+								objetoId, objetoTipo,duracion,duracionDimension,null,null,
 								null,null);
 					}
 					else{

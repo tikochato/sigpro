@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 8, 2017 5:37:26 PM by Hibernate Tools 5.2.0.CR1
+// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2750093296734672164L;
+	private static final long serialVersionUID = 6212224308996422047L;
 	private Integer id;
 	private Componente componente;
 	private ProductoTipo productoTipo;
@@ -47,6 +47,7 @@ public class Producto implements java.io.Serializable {
 	private Integer obra;
 	private Integer fuente;
 	private Set<ProductoUsuario> productoUsuarios = new HashSet<ProductoUsuario>(0);
+	private Set<Subproducto> subproductos = new HashSet<Subproducto>(0);
 	private Set<ProductoPropiedadValor> productoPropiedadValors = new HashSet<ProductoPropiedadValor>(0);
 
 	public Producto() {
@@ -66,7 +67,7 @@ public class Producto implements java.io.Serializable {
 			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, Integer estado, Long snip, Integer programa, Integer subprograma,
 			Integer proyecto, Integer actividad, Integer obra, Integer fuente, Set<ProductoUsuario> productoUsuarios,
-			Set<ProductoPropiedadValor> productoPropiedadValors) {
+			Set<Subproducto> subproductos, Set<ProductoPropiedadValor> productoPropiedadValors) {
 		this.componente = componente;
 		this.productoTipo = productoTipo;
 		this.unidadEjecutora = unidadEjecutora;
@@ -85,6 +86,7 @@ public class Producto implements java.io.Serializable {
 		this.obra = obra;
 		this.fuente = fuente;
 		this.productoUsuarios = productoUsuarios;
+		this.subproductos = subproductos;
 		this.productoPropiedadValors = productoPropiedadValors;
 	}
 
@@ -148,7 +150,6 @@ public class Producto implements java.io.Serializable {
 		this.descripcion = descripcion;
 	}
 
-	
 	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
@@ -266,6 +267,15 @@ public class Producto implements java.io.Serializable {
 
 	public void setProductoUsuarios(Set<ProductoUsuario> productoUsuarios) {
 		this.productoUsuarios = productoUsuarios;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
+	public Set<Subproducto> getSubproductos() {
+		return this.subproductos;
+	}
+
+	public void setSubproductos(Set<Subproducto> subproductos) {
+		this.subproductos = subproductos;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")

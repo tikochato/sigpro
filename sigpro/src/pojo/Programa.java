@@ -1,5 +1,5 @@
 package pojo;
-// Generated 27/02/2017 11:04:39 AM by Hibernate Tools 5.2.0.CR1
+// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Programa implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -7960975687187201906L;
 	private Integer id;
 	private ProgramaTipo programaTipo;
 	private String nombre;
@@ -36,24 +36,20 @@ public class Programa implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private int estado;
-	private Set<ProgramaPropiedadValor> programaPropiedadValors = new HashSet<ProgramaPropiedadValor>(0);
+	private Integer estado;
 	private Set<ProgramaProyecto> programaProyectos = new HashSet<ProgramaProyecto>(0);
+	private Set<ProgramaPropiedadValor> programaPropiedadValors = new HashSet<ProgramaPropiedadValor>(0);
 
 	public Programa() {
 	}
 
-	public Programa(ProgramaTipo programaTipo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+	public Programa(ProgramaTipo programaTipo) {
 		this.programaTipo = programaTipo;
-		this.nombre = nombre;
-		this.usuarioCreo = usuarioCreo;
-		this.fechaCreacion = fechaCreacion;
-		this.estado = estado;
 	}
 
 	public Programa(ProgramaTipo programaTipo, String nombre, String descripcion, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Set<ProgramaPropiedadValor> programaPropiedadValors, Set<ProgramaProyecto> programaProyectos) {
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado,
+			Set<ProgramaProyecto> programaProyectos, Set<ProgramaPropiedadValor> programaPropiedadValors) {
 		this.programaTipo = programaTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -62,8 +58,8 @@ public class Programa implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.programaPropiedadValors = programaPropiedadValors;
 		this.programaProyectos = programaProyectos;
+		this.programaPropiedadValors = programaPropiedadValors;
 	}
 
 	@Id
@@ -88,7 +84,7 @@ public class Programa implements java.io.Serializable {
 		this.programaTipo = programaTipo;
 	}
 
-	@Column(name = "nombre", nullable = false, length = 2000)
+	@Column(name = "nombre", length = 2000)
 	public String getNombre() {
 		return this.nombre;
 	}
@@ -106,7 +102,7 @@ public class Programa implements java.io.Serializable {
 		this.descripcion = descripcion;
 	}
 
-	@Column(name = "usuario_creo", nullable = false, length = 30)
+	@Column(name = "usuario_creo", length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
 	}
@@ -125,7 +121,7 @@ public class Programa implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_creacion", nullable = false, length = 19)
+	@Column(name = "fecha_creacion", length = 19)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}
@@ -144,22 +140,13 @@ public class Programa implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Column(name = "estado", nullable = false)
-	public int getEstado() {
+	@Column(name = "estado")
+	public Integer getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(int estado) {
+	public void setEstado(Integer estado) {
 		this.estado = estado;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "programa")
-	public Set<ProgramaPropiedadValor> getProgramaPropiedadValors() {
-		return this.programaPropiedadValors;
-	}
-
-	public void setProgramaPropiedadValors(Set<ProgramaPropiedadValor> programaPropiedadValors) {
-		this.programaPropiedadValors = programaPropiedadValors;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "programa")
@@ -169,6 +156,15 @@ public class Programa implements java.io.Serializable {
 
 	public void setProgramaProyectos(Set<ProgramaProyecto> programaProyectos) {
 		this.programaProyectos = programaProyectos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "programa")
+	public Set<ProgramaPropiedadValor> getProgramaPropiedadValors() {
+		return this.programaPropiedadValors;
+	}
+
+	public void setProgramaPropiedadValors(Set<ProgramaPropiedadValor> programaPropiedadValors) {
+		this.programaPropiedadValors = programaPropiedadValors;
 	}
 
 }

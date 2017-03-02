@@ -1,5 +1,5 @@
 package pojo;
-// Generated 27/02/2017 11:04:39 AM by Hibernate Tools 5.2.0.CR1
+// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import javax.persistence.AttributeOverride;
@@ -24,7 +24,7 @@ public class ProgramaProyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -939795092107463732L;
 	private ProgramaProyectoId id;
 	private Programa programa;
 	private Proyecto proyecto;
@@ -37,13 +37,10 @@ public class ProgramaProyecto implements java.io.Serializable {
 	public ProgramaProyecto() {
 	}
 
-	public ProgramaProyecto(ProgramaProyectoId id, Programa programa, Proyecto proyecto, String usuarioCreo,
-			Date fechaCreacion) {
+	public ProgramaProyecto(ProgramaProyectoId id, Programa programa, Proyecto proyecto) {
 		this.id = id;
 		this.programa = programa;
 		this.proyecto = proyecto;
-		this.usuarioCreo = usuarioCreo;
-		this.fechaCreacion = fechaCreacion;
 	}
 
 	public ProgramaProyecto(ProgramaProyectoId id, Programa programa, Proyecto proyecto, String usuarioCreo,
@@ -91,7 +88,7 @@ public class ProgramaProyecto implements java.io.Serializable {
 		this.proyecto = proyecto;
 	}
 
-	@Column(name = "usuario_creo", nullable = false, length = 30)
+	@Column(name = "usuario_creo", length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
 	}
@@ -110,7 +107,7 @@ public class ProgramaProyecto implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_creacion", nullable = false, length = 19)
+	@Column(name = "fecha_creacion", length = 19)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}

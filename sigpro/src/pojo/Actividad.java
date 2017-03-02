@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 8, 2017 5:37:26 PM by Hibernate Tools 5.2.0.CR1
+// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -9096365857500546633L;
+	private static final long serialVersionUID = -8465719206395031988L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
 	private String nombre;
@@ -49,6 +49,10 @@ public class Actividad implements java.io.Serializable {
 	private Integer fuente;
 	private int objetoId;
 	private int objetoTipo;
+	private int duracion;
+	private String duracionDimension;
+	private Integer predObjetoId;
+	private Integer predObjetoTipo;
 	private Set<ActividadPropiedadValor> actividadPropiedadValors = new HashSet<ActividadPropiedadValor>(0);
 	private Set<ActividadUsuario> actividadUsuarios = new HashSet<ActividadUsuario>(0);
 
@@ -56,7 +60,8 @@ public class Actividad implements java.io.Serializable {
 	}
 
 	public Actividad(ActividadTipo actividadTipo, String nombre, Date fechaInicio, Date fechaFin, int porcentajeAvance,
-			String usuarioCreo, Date fechaCreacion, int estado, int objetoId, int objetoTipo) {
+			String usuarioCreo, Date fechaCreacion, int estado, int objetoId, int objetoTipo, int duracion,
+			String duracionDimension) {
 		this.actividadTipo = actividadTipo;
 		this.nombre = nombre;
 		this.fechaInicio = fechaInicio;
@@ -67,12 +72,15 @@ public class Actividad implements java.io.Serializable {
 		this.estado = estado;
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
+		this.duracion = duracion;
+		this.duracionDimension = duracionDimension;
 	}
 
 	public Actividad(ActividadTipo actividadTipo, String nombre, String descripcion, Date fechaInicio, Date fechaFin,
 			int porcentajeAvance, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
-			Integer actividad, Integer obra, Integer fuente, int objetoId, int objetoTipo,
+			Integer actividad, Integer obra, Integer fuente, int objetoId, int objetoTipo, int duracion,
+			String duracionDimension, Integer predObjetoId, Integer predObjetoTipo,
 			Set<ActividadPropiedadValor> actividadPropiedadValors, Set<ActividadUsuario> actividadUsuarios) {
 		this.actividadTipo = actividadTipo;
 		this.nombre = nombre;
@@ -94,6 +102,10 @@ public class Actividad implements java.io.Serializable {
 		this.fuente = fuente;
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
+		this.duracion = duracion;
+		this.duracionDimension = duracionDimension;
+		this.predObjetoId = predObjetoId;
+		this.predObjetoTipo = predObjetoTipo;
 		this.actividadPropiedadValors = actividadPropiedadValors;
 		this.actividadUsuarios = actividadUsuarios;
 	}
@@ -293,6 +305,42 @@ public class Actividad implements java.io.Serializable {
 
 	public void setObjetoTipo(int objetoTipo) {
 		this.objetoTipo = objetoTipo;
+	}
+
+	@Column(name = "duracion", nullable = false)
+	public int getDuracion() {
+		return this.duracion;
+	}
+
+	public void setDuracion(int duracion) {
+		this.duracion = duracion;
+	}
+
+	@Column(name = "duracion_dimension", nullable = false, length = 1)
+	public String getDuracionDimension() {
+		return this.duracionDimension;
+	}
+
+	public void setDuracionDimension(String duracionDimension) {
+		this.duracionDimension = duracionDimension;
+	}
+
+	@Column(name = "pred_objeto_id")
+	public Integer getPredObjetoId() {
+		return this.predObjetoId;
+	}
+
+	public void setPredObjetoId(Integer predObjetoId) {
+		this.predObjetoId = predObjetoId;
+	}
+
+	@Column(name = "pred_objeto_tipo")
+	public Integer getPredObjetoTipo() {
+		return this.predObjetoTipo;
+	}
+
+	public void setPredObjetoTipo(Integer predObjetoTipo) {
+		this.predObjetoTipo = predObjetoTipo;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actividad")

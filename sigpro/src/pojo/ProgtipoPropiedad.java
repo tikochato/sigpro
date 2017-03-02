@@ -1,5 +1,5 @@
 package pojo;
-// Generated 22/02/2017 11:25:59 AM by Hibernate Tools 5.2.0.CR1
+// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import javax.persistence.AttributeOverride;
@@ -61,8 +61,8 @@ public class ProgtipoPropiedad implements java.io.Serializable {
 	@EmbeddedId
 
 	@AttributeOverrides({
-			@AttributeOverride(name = "programaTipoid", column = @Column(name = "programa_tipoid", nullable = false)),
-			@AttributeOverride(name = "programaPropiedadid", column = @Column(name = "programa_propiedadid", nullable = false)) })
+			@AttributeOverride(name = "programaPropiedadid", column = @Column(name = "programa_propiedadid", nullable = false)),
+			@AttributeOverride(name = "programaTipoid", column = @Column(name = "programa_tipoid", nullable = false)) })
 	public ProgtipoPropiedadId getId() {
 		return this.id;
 	}
@@ -91,7 +91,7 @@ public class ProgtipoPropiedad implements java.io.Serializable {
 		this.programaTipo = programaTipo;
 	}
 
-	@Column(name = "usuario_creo", nullable = false, length = 30)
+	@Column(name = "usuario_creo", length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
 	}
@@ -110,7 +110,7 @@ public class ProgtipoPropiedad implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_creacion", nullable = false, length = 19)
+	@Column(name = "fecha_creacion", length = 19)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}

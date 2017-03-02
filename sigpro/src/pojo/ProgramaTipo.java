@@ -1,5 +1,5 @@
 package pojo;
-// Generated 22/02/2017 11:25:59 AM by Hibernate Tools 5.2.0.CR1
+// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,40 +25,33 @@ public class ProgramaTipo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 9017266179481623262L;
+	private static final long serialVersionUID = 6112759131314697922L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
-	private String usarioCreo;
+	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private int estado;
-	private Set<Programa> programas = new HashSet<Programa>(0);
+	private Integer estado;
 	private Set<ProgtipoPropiedad> progtipoPropiedads = new HashSet<ProgtipoPropiedad>(0);
+	private Set<Programa> programas = new HashSet<Programa>(0);
 
 	public ProgramaTipo() {
 	}
 
-	public ProgramaTipo(String nombre, String usarioCreo, Date fechaCreacion, int estado) {
-		this.nombre = nombre;
-		this.usarioCreo = usarioCreo;
-		this.fechaCreacion = fechaCreacion;
-		this.estado = estado;
-	}
-
-	public ProgramaTipo(String nombre, String descripcion, String usarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, int estado,Set<Programa> programas,
-			Set<ProgtipoPropiedad> progtipoPropiedads) {
+	public ProgramaTipo(String nombre, String descripcion, String usuarioCreo, String usuarioActualizo,
+			Date fechaCreacion, Date fechaActualizacion, Integer estado, Set<ProgtipoPropiedad> progtipoPropiedads,
+			Set<Programa> programas) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
-		this.usarioCreo = usarioCreo;
+		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.programas = programas;
 		this.progtipoPropiedads = progtipoPropiedads;
+		this.programas = programas;
 	}
 
 	@Id
@@ -73,7 +66,7 @@ public class ProgramaTipo implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "nombre", nullable = false, length = 1000)
+	@Column(name = "nombre", length = 100)
 	public String getNombre() {
 		return this.nombre;
 	}
@@ -91,13 +84,13 @@ public class ProgramaTipo implements java.io.Serializable {
 		this.descripcion = descripcion;
 	}
 
-	@Column(name = "usario_creo", nullable = false, length = 30)
-	public String getUsarioCreo() {
-		return this.usarioCreo;
+	@Column(name = "usuario_creo", length = 30)
+	public String getUsuarioCreo() {
+		return this.usuarioCreo;
 	}
 
-	public void setUsarioCreo(String usarioCreo) {
-		this.usarioCreo = usarioCreo;
+	public void setUsuarioCreo(String usuarioCreo) {
+		this.usuarioCreo = usuarioCreo;
 	}
 
 	@Column(name = "usuario_actualizo", length = 30)
@@ -110,7 +103,7 @@ public class ProgramaTipo implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_creacion", nullable = false, length = 19)
+	@Column(name = "fecha_creacion", length = 19)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}
@@ -129,22 +122,13 @@ public class ProgramaTipo implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Column(name = "estado", nullable = false)
-	public int getEstado() {
+	@Column(name = "estado")
+	public Integer getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(int estado) {
+	public void setEstado(Integer estado) {
 		this.estado = estado;
-	}
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "programaTipo")
-	public Set<Programa> getProgramas() {
-		return this.programas;
-	}
-
-	public void setProgramas(Set<Programa> programas) {
-		this.programas = programas;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "programaTipo")
@@ -154,6 +138,15 @@ public class ProgramaTipo implements java.io.Serializable {
 
 	public void setProgtipoPropiedads(Set<ProgtipoPropiedad> progtipoPropiedads) {
 		this.progtipoPropiedads = progtipoPropiedads;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "programaTipo")
+	public Set<Programa> getProgramas() {
+		return this.programas;
+	}
+
+	public void setProgramas(Set<Programa> programas) {
+		this.programas = programas;
 	}
 
 }
