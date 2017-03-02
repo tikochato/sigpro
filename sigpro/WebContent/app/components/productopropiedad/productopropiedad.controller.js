@@ -28,10 +28,6 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 	
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion = null;
-	mi.redireccionSinPermisos=function(){
-		$window.location.href = '/main.jsp';
-		$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-	}
 	mi.filtros = [];
 	
 	$http.post('/SDatoTipo', {accion : 'cargarCombo'}).success(function(response) {
@@ -159,7 +155,9 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 
 		});
 	}
-
+	mi.redireccionSinPermisos=function(){
+		$window.location.href = '/main.jsp#!/forbidden';		
+	}
 	mi.nuevo = function() {
 		mi.limpiarSeleccion();
 

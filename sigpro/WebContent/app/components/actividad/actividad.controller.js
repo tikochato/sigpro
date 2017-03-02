@@ -30,10 +30,6 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.ordenDireccion = null;
 		
 		mi.filtros = [];
-		mi.redireccionSinPermisos=function(){
-			$window.location.href = '/main.jsp';
-			$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-		}
 		$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo }).success(
 				function(response) {
 					mi.objetoid = response.id;
@@ -126,7 +122,9 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				    }
 				}
 		};
-
+		mi.redireccionSinPermisos=function(){
+			$window.location.href = '/main.jsp#!/forbidden';		
+		}
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
 			$http.post('/SActividad', { accion: 'getActividadesPaginaPorObjeto', pagina: pagina, numeroactividades: $utilidades.elementosPorPagina, 

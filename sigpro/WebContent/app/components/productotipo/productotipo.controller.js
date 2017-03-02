@@ -25,10 +25,6 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 	
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion = null;
-	mi.redireccionSinPermisos=function(){
-		$window.location.href = '/main.jsp';
-		$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-	}
 	mi.filtros = [];
 
 	mi.cambioPagina = function() {
@@ -154,7 +150,9 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 
 		});
 	}
-
+	mi.redireccionSinPermisos=function(){
+		$window.location.href = '/main.jsp#!/forbidden';		
+	}
 	mi.reiniciarVista = function() {
 		if ($location.path() == '/productoTipo/rv')
 			$route.reload();

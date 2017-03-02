@@ -141,6 +141,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/programa/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'programaController\'" class="all_page"></div>'
             })
+            .when("/:redireccion?",{
+            	controller:"MainController"
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -368,14 +371,14 @@ app.config(['uiGmapGoogleMapApiProvider',function(uiGmapGoogleMapApiProvider) {
     });
 }]);
 
-app.controller('MainController',['$scope','$document','deviceDetector','$rootScope','$location','$window','Utilidades',
-   function($scope,$document,deviceDetector,$rootScope,$location,$window,$utilidades){
+app.controller('MainController',['$scope','$document','deviceDetector','$rootScope','$location','$window','Utilidades', "$routeParams",
+   function($scope,$document,deviceDetector,$rootScope,$location,$window,$utilidades, $routeParams){
 	$scope.lastscroll = 0;
 	$scope.hidebar = false;
 
 	numeral.language('es', numeral_language);
 	$window.document.title =  'MINFIN - '+$utilidades.sistema_nombre;
-
+	
 	$document.bind('scroll', function(){
 		if($document[0].body.scrollTop > 15){
 			if ($scope.lastscroll>$document[0].body.scrollTop) { //Scroll to Top
@@ -396,6 +399,9 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	$scope.device = deviceDetector;
 
 	$rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+		if($routeParams.redireccion=="forbidden"){
+			$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');	
+		}
 		if (location.hostname !== "localhost" || location.hostname !== "127.0.0.1"){
 			$window.ga('create', 'UA-74443600-2', 'auto');
 			$window.ga('send', 'pageview', $location.path());

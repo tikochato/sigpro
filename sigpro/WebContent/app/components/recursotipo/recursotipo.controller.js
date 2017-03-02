@@ -25,10 +25,6 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 		
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;
-		mi.redireccionSinPermisos=function(){
-			$window.location.href = '/main.jsp';
-			$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-		}
 		mi.filtros = [];
 		
 		mi.gridOptions = {
@@ -112,7 +108,9 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 						mi.mostrarcargando = false;
 					});
 		}
-		
+		mi.redireccionSinPermisos=function(){
+			$window.location.href = '/main.jsp#!/forbidden';		
+		}
 		mi.guardar=function(){
 			if(mi.recursotipo!=null  && mi.recursotipo.nombre!=''){
 				var idspropiedad="";

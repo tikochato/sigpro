@@ -25,10 +25,6 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 		
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;
-		mi.redireccionSinPermisos=function(){
-			$window.location.href = '/main.jsp';
-			$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-		}
 		mi.filtros = [];
 		mi.orden = null;
 		
@@ -108,7 +104,9 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 						mi.mostrarcargando = false;
 					});
 		}
-		
+		mi.redireccionSinPermisos=function(){
+			$window.location.href = '/main.jsp#!/forbidden';		
+		}
 		mi.guardar=function(){
 			if(mi.componentetipo!=null && mi.componentetipo.nombre!=null){
 				var idspropiedad="";

@@ -20,10 +20,6 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 			
 			mi.columnaOrdenada=null;
 			mi.ordenDireccion = null;
-			mi.redireccionSinPermisos=function(){
-				$window.location.href = '/main.jsp';
-				$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-			}
 			mi.filtros = [];
 			
 			$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
@@ -116,7 +112,9 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 							mi.mostrarcargando = false;
 						});
 			}
-			
+			mi.redireccionSinPermisos=function(){
+				$window.location.href = '/main.jsp#!/forbidden';		
+			}
 			mi.guardar=function(){
 				if(mi.recursopropiedad!=null && mi.recursopropiedad.nombre!=''){
 					$http.post('/SRecursoPropiedad', {

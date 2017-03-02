@@ -59,10 +59,6 @@ function controlUnidadEjecutora($scope, $routeParams, $route, $window,
 
 	mi.entidadSeleccionada = -1;
 	mi.seleccionada = false;
-	mi.redireccionSinPermisos=function(){
-		$window.location.href = '/main.jsp';
-		$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');			
-	}
 	mi.opcionesGrid = {
 		data : mi.data,
 		columnDefs : [ {
@@ -149,7 +145,9 @@ function controlUnidadEjecutora($scope, $routeParams, $route, $window,
 		else
 			$location.path('/unidadejecutora/rv');
 	}
-
+	mi.redireccionSinPermisos=function(){
+		$window.location.href = '/main.jsp#!/forbidden';		
+	}
 	mi.nuevo = function() {
 		mi.esForma = true;
 		mi.entityselected = null;
