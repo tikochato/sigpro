@@ -1,5 +1,5 @@
 package pojo;
-// Generated 22/02/2017 11:25:59 AM by Hibernate Tools 5.2.0.CR1
+// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -14,23 +14,14 @@ public class ProgtipoPropiedadId implements java.io.Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -5154611946077674905L;
-	private int programaTipoid;
 	private int programaPropiedadid;
+	private int programaTipoid;
 
 	public ProgtipoPropiedadId() {
 	}
 
-	public ProgtipoPropiedadId(int programaTipoid, int programaPropiedadid) {
-		this.programaTipoid = programaTipoid;
+	public ProgtipoPropiedadId(int programaPropiedadid, int programaTipoid) {
 		this.programaPropiedadid = programaPropiedadid;
-	}
-
-	@Column(name = "programa_tipoid", nullable = false)
-	public int getProgramaTipoid() {
-		return this.programaTipoid;
-	}
-
-	public void setProgramaTipoid(int programaTipoid) {
 		this.programaTipoid = programaTipoid;
 	}
 
@@ -43,6 +34,16 @@ public class ProgtipoPropiedadId implements java.io.Serializable {
 		this.programaPropiedadid = programaPropiedadid;
 	}
 
+	@Column(name = "programa_tipoid", nullable = false)
+	public int getProgramaTipoid() {
+		return this.programaTipoid;
+	}
+
+	public void setProgramaTipoid(int programaTipoid) {
+		this.programaTipoid = programaTipoid;
+	}
+
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -52,15 +53,16 @@ public class ProgtipoPropiedadId implements java.io.Serializable {
 			return false;
 		ProgtipoPropiedadId castOther = (ProgtipoPropiedadId) other;
 
-		return (this.getProgramaTipoid() == castOther.getProgramaTipoid())
-				&& (this.getProgramaPropiedadid() == castOther.getProgramaPropiedadid());
+		return (this.getProgramaPropiedadid() == castOther.getProgramaPropiedadid())
+				&& (this.getProgramaTipoid() == castOther.getProgramaTipoid());
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 
-		result = 37 * result + this.getProgramaTipoid();
 		result = 37 * result + this.getProgramaPropiedadid();
+		result = 37 * result + this.getProgramaTipoid();
 		return result;
 	}
 

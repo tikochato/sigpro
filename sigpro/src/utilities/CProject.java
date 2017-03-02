@@ -3,7 +3,9 @@ package utilities;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.ChildLoader;
 
@@ -27,7 +29,7 @@ import pojo.Proyecto;
 public class CProject {
 	
 	
-	class item {
+	class stitem {
 		int id;
 		Integer idUnico;
 		String contenido;
@@ -35,15 +37,19 @@ public class CProject {
 		Boolean expandido;
 		Date fechaInicial;
 		Date fechaFinal;
+		int duracion;
+		String unidades;
 		boolean esHito;
 		List<Relation> predecesor;
+		
 	}
 	
 	ProjectReader reader;
 	ProjectFile project;
 	Integer indetnacion;
 	String itemsProject;
-	HashMap<Integer,item> items;
+	
+	HashMap<Integer,stitem> items;
 	
 	
 	
@@ -86,12 +92,25 @@ public class CProject {
 		
 		indetnacion = 0;
 		itemsProject = "";
+		items = new HashMap<>();
 		for (Task task : projectFile.getChildTasks())
 		   {
 		      //itemsProject = String.join(",", construirItem(task.getName(),null,true,task.getStart(),task.getFinish(),false));
 		      listaJerarquica(task, "\t");
 		   }
+		
+		Iterator<Map.Entry<Integer, stitem>> entries = items.entrySet().iterator();
+		while (entries.hasNext()) {
+		    Map.Entry<Integer, stitem> item = entries.next();
+		    System.out.println("id=" + item.getValue().id + " Contenido"+ item.getValue().contenido + " indentacion=" +item.getValue().indentacion + " fechaInicial=" + Utils.formatDate(item.getValue().fechaInicial)
+		    + " duracion=" + item.getValue().duracion);
+		    
+		}
+		
 		return itemsProject;
+		
+		
+		
 	}
 	
 	
@@ -101,7 +120,7 @@ public class CProject {
 		indetnacion ++;
 		//itemsProject = String.join(itemsProject.trim().length()>0 ?"," : "",itemsProject,  construirItem(task.getName(),indetnacion,true,task.getStart(),task.getFinish(),task.getMilestone()));
 		
-		item item_ = new item();
+		stitem item_ = new stitem();
 		item_.id = task.getID();
 		item_.contenido = task.getName();
 		item_.indentacion = indetnacion;
@@ -110,8 +129,11 @@ public class CProject {
 		item_.fechaFinal = task.getFinish();
 		item_.esHito = task.getMilestone();
 		item_.predecesor = task.getPredecessors();
+		item_.duracion = (int) task.getDuration().getDuration();
+		item_.unidades = task.getDuration().getUnits().getName();
 		
 		items.put(task.getUniqueID(), item_);
+		
 		
 		for (Task child : task.getChildTasks())
 		{
@@ -166,7 +188,7 @@ public class CProject {
 						Task task4 = task3.addTask();
 						task4.setName(actividad.getNombre());
 						task4.setStart(actividad.getFechaInicio());
-						task4.setFinish(actividad.getFechaFin());
+						task4.setFinish(actividad.getFechaFin()); 
 					}
 				}
 			}

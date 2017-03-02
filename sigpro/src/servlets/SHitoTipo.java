@@ -109,7 +109,7 @@ public class SHitoTipo extends HttpServlet {
 				temp.idTipo = hitotipo.getDatoTipo().getId();
 				temp.tipo = hitotipo.getDatoTipo().getNombre();
 				temp.usuarioCreo = hitotipo.getUsuarioCreo();
-				temp.usuarioActualizo = hitotipo.getUsuarioActualizo();
+				temp.usuarioActualizo = hitotipo.getUsuarioActualizacion();
 				temp.fechaCreacion = Utils.formatDateHour(hitotipo.getFechaCreacion());
 				temp.fechaActualizacion = Utils.formatDateHour(hitotipo.getFechaActualizacion());
 				temp.estado = hitotipo.getEstado();
@@ -132,7 +132,7 @@ public class SHitoTipo extends HttpServlet {
 				temp.idTipo = hitotipo.getDatoTipo().getId();
 				temp.tipo = hitotipo.getDatoTipo().getNombre();
 				temp.usuarioCreo = hitotipo.getUsuarioCreo();
-				temp.usuarioActualizo = hitotipo.getUsuarioActualizo();
+				temp.usuarioActualizo = hitotipo.getUsuarioActualizacion();
 				temp.fechaCreacion = Utils.formatDateHour(hitotipo.getFechaCreacion());
 				temp.fechaActualizacion = Utils.formatDateHour(hitotipo.getFechaActualizacion());
 				sthitotipos.add(temp);
@@ -160,7 +160,7 @@ public class SHitoTipo extends HttpServlet {
 					hitotipo = HitoTipoDAO.getHitoTipoPorId(id);
 					hitotipo.setNombre(nombre);
 					hitotipo.setDescripcion(descripcion);
-					hitotipo.setUsuarioActualizo(usuario);
+					hitotipo.setUsuarioActualizacion(usuario);
 					hitotipo.setFechaActualizacion(new DateTime().toDate());
 				}
 				result = HitoTipoDAO.guardarHitoTipo(hitotipo);

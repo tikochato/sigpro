@@ -105,7 +105,7 @@ public class SProgramaTipo extends HttpServlet {
 				temp.fechaActualizacion = Utils.formatDateHour(programatipo.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDateHour(programatipo.getFechaCreacion());
 				temp.usuarioActualizo = programatipo.getUsuarioActualizo();
-				temp.usuarioCreo = programatipo.getUsarioCreo();
+				temp.usuarioCreo = programatipo.getUsuarioCreo();
 				stcooperantes.add(temp);
 			}
 			

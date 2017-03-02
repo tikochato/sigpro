@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 8, 2017 5:37:26 PM by Hibernate Tools 5.2.0.CR1
+// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class ProductoTipo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5550010613287134407L;
+	private static final long serialVersionUID = -9169245313381802698L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
@@ -33,21 +33,22 @@ public class ProductoTipo implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private Integer estado;
+	private int estado;
 	private Set<ProdtipoPropiedad> prodtipoPropiedads = new HashSet<ProdtipoPropiedad>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 
 	public ProductoTipo() {
 	}
 
-	public ProductoTipo(String nombre, String usuarioCreo, Date fechaCreacion) {
+	public ProductoTipo(String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
+		this.estado = estado;
 	}
 
 	public ProductoTipo(String nombre, String descripcion, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, Integer estado, Set<ProdtipoPropiedad> prodtipoPropiedads,
+			Date fechaCreacion, Date fechaActualizacion, int estado, Set<ProdtipoPropiedad> prodtipoPropiedads,
 			Set<Producto> productos) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -128,12 +129,12 @@ public class ProductoTipo implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Column(name = "estado")
-	public Integer getEstado() {
+	@Column(name = "estado", nullable = false)
+	public int getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(Integer estado) {
+	public void setEstado(int estado) {
 		this.estado = estado;
 	}
 

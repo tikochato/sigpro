@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 8, 2017 5:37:26 PM by Hibernate Tools 5.2.0.CR1
+// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class ProductoPropiedadValor implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 986757557156327465L;
+	private static final long serialVersionUID = 1327065830217664190L;
 	private ProductoPropiedadValorId id;
 	private Producto producto;
 	private ProductoPropiedad productoPropiedad;
@@ -37,23 +37,24 @@ public class ProductoPropiedadValor implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private Integer estado;
+	private int estado;
 
 	public ProductoPropiedadValor() {
 	}
 
 	public ProductoPropiedadValor(ProductoPropiedadValorId id, Producto producto, ProductoPropiedad productoPropiedad,
-			String usuarioCreo, Date fechaCreacion) {
+			String usuarioCreo, Date fechaCreacion, int estado) {
 		this.id = id;
 		this.producto = producto;
 		this.productoPropiedad = productoPropiedad;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
+		this.estado = estado;
 	}
 
 	public ProductoPropiedadValor(ProductoPropiedadValorId id, Producto producto, ProductoPropiedad productoPropiedad,
 			Integer valorEntero, String valorString, BigDecimal valorDecimal, Date valorTiempo, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado) {
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado) {
 		this.id = id;
 		this.producto = producto;
 		this.productoPropiedad = productoPropiedad;
@@ -176,12 +177,12 @@ public class ProductoPropiedadValor implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Column(name = "estado")
-	public Integer getEstado() {
+	@Column(name = "estado", nullable = false)
+	public int getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(Integer estado) {
+	public void setEstado(int estado) {
 		this.estado = estado;
 	}
 

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 8, 2017 5:37:26 PM by Hibernate Tools 5.2.0.CR1
+// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class DesembolsoTipo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3788835023180806226L;
+	private static final long serialVersionUID = 5139108494337064059L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
@@ -39,16 +39,21 @@ public class DesembolsoTipo implements java.io.Serializable {
 	public DesembolsoTipo() {
 	}
 
-	public DesembolsoTipo(String nombre, String descripcion, Integer estado, String usuarioCreo, String usuarioActualizo, Date fechaCreacion, 
-			Date fechaActualizacion,Set<Desembolso> desembolsos) {
+	public DesembolsoTipo(String usuarioCreo, Date fechaCreacion) {
+		this.usuarioCreo = usuarioCreo;
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public DesembolsoTipo(String nombre, String descripcion, Integer estado, String usuarioCreo,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Set<Desembolso> desembolsos) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.estado = estado;
-		this.desembolsos = desembolsos;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
+		this.desembolsos = desembolsos;
 	}
 
 	@Id
@@ -89,7 +94,6 @@ public class DesembolsoTipo implements java.io.Serializable {
 	public void setEstado(Integer estado) {
 		this.estado = estado;
 	}
-	
 
 	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {

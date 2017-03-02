@@ -1,5 +1,5 @@
 package pojo;
-// Generated Feb 8, 2017 5:37:26 PM by Hibernate Tools 5.2.0.CR1
+// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,14 +27,14 @@ public class HitoTipo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4100089454630677181L;
+	private static final long serialVersionUID = -1584402072980730932L;
 	private Integer id;
 	private DatoTipo datoTipo;
 	private String nombre;
 	private String descripcion;
 	private int estado;
 	private String usuarioCreo;
-	private String usuarioActualizo;
+	private String usuarioActualizacion;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Set<Hito> hitos = new HashSet<Hito>(0);
@@ -42,22 +42,23 @@ public class HitoTipo implements java.io.Serializable {
 	public HitoTipo() {
 	}
 
-	public HitoTipo(DatoTipo datoTipo, int estado) {
+	public HitoTipo(DatoTipo datoTipo, int estado, String usuarioCreo, Date fechaCreacion) {
 		this.datoTipo = datoTipo;
 		this.estado = estado;
+		this.usuarioCreo = usuarioCreo;
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	public HitoTipo(DatoTipo datoTipo, String nombre, String descripcion, int estado, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion,Set<Hito> hitos) {
+			String usuarioActualizacion, Date fechaCreacion, Date fechaActualizacion, Set<Hito> hitos) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.estado = estado;
 		this.usuarioCreo = usuarioCreo;
-		this.usuarioActualizo = usuarioActualizo;
+		this.usuarioActualizacion = usuarioActualizacion;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
-		
 		this.hitos = hitos;
 	}
 
@@ -109,7 +110,7 @@ public class HitoTipo implements java.io.Serializable {
 	public void setEstado(int estado) {
 		this.estado = estado;
 	}
-	
+
 	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
@@ -119,13 +120,13 @@ public class HitoTipo implements java.io.Serializable {
 		this.usuarioCreo = usuarioCreo;
 	}
 
-	@Column(name = "usuario_actualizo", length = 30)
-	public String getUsuarioActualizo() {
-		return this.usuarioActualizo;
+	@Column(name = "usuario_actualizacion", length = 30)
+	public String getUsuarioActualizacion() {
+		return this.usuarioActualizacion;
 	}
 
-	public void setUsuarioActualizo(String usuarioActualizo) {
-		this.usuarioActualizo = usuarioActualizo;
+	public void setUsuarioActualizacion(String usuarioActualizacion) {
+		this.usuarioActualizacion = usuarioActualizacion;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -147,7 +148,6 @@ public class HitoTipo implements java.io.Serializable {
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
-
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hitoTipo")
 	public Set<Hito> getHitos() {

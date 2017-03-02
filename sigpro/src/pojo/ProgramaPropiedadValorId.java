@@ -1,5 +1,5 @@
 package pojo;
-// Generated 23/02/2017 10:17:00 AM by Hibernate Tools 5.2.0.CR1
+// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -10,24 +10,18 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ProgramaPropiedadValorId implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
-	private int programaid;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4182214498126800430L;
 	private int programaPropiedadid;
+	private int programaid;
 
 	public ProgramaPropiedadValorId() {
 	}
 
-	public ProgramaPropiedadValorId(int programaid, int programaPropiedadid) {
-		this.programaid = programaid;
+	public ProgramaPropiedadValorId(int programaPropiedadid, int programaid) {
 		this.programaPropiedadid = programaPropiedadid;
-	}
-
-	@Column(name = "programaid", nullable = false)
-	public int getProgramaid() {
-		return this.programaid;
-	}
-
-	public void setProgramaid(int programaid) {
 		this.programaid = programaid;
 	}
 
@@ -40,6 +34,16 @@ public class ProgramaPropiedadValorId implements java.io.Serializable {
 		this.programaPropiedadid = programaPropiedadid;
 	}
 
+	@Column(name = "programaid", nullable = false)
+	public int getProgramaid() {
+		return this.programaid;
+	}
+
+	public void setProgramaid(int programaid) {
+		this.programaid = programaid;
+	}
+
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -49,15 +53,16 @@ public class ProgramaPropiedadValorId implements java.io.Serializable {
 			return false;
 		ProgramaPropiedadValorId castOther = (ProgramaPropiedadValorId) other;
 
-		return (this.getProgramaid() == castOther.getProgramaid())
-				&& (this.getProgramaPropiedadid() == castOther.getProgramaPropiedadid());
+		return (this.getProgramaPropiedadid() == castOther.getProgramaPropiedadid())
+				&& (this.getProgramaid() == castOther.getProgramaid());
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 
-		result = 37 * result + this.getProgramaid();
 		result = 37 * result + this.getProgramaPropiedadid();
+		result = 37 * result + this.getProgramaid();
 		return result;
 	}
 

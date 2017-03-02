@@ -1,5 +1,5 @@
 package pojo;
-// Generated 23/02/2017 10:17:00 AM by Hibernate Tools 5.2.0.CR1
+// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class ProgramaPropiedadValor implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 479546841302733043L;
 	private ProgramaPropiedadValorId id;
 	private Programa programa;
 	private ProgramaPropiedad programaPropiedad;
@@ -37,7 +37,7 @@ public class ProgramaPropiedadValor implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private int estado;
+	private Integer estado;
 
 	public ProgramaPropiedadValor() {
 	}
@@ -54,7 +54,7 @@ public class ProgramaPropiedadValor implements java.io.Serializable {
 
 	public ProgramaPropiedadValor(ProgramaPropiedadValorId id, Programa programa, ProgramaPropiedad programaPropiedad,
 			String valorString, Integer valorEntero, BigDecimal valorDecimal, Date valorTiempo, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado) {
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado) {
 		this.id = id;
 		this.programa = programa;
 		this.programaPropiedad = programaPropiedad;
@@ -72,8 +72,8 @@ public class ProgramaPropiedadValor implements java.io.Serializable {
 	@EmbeddedId
 
 	@AttributeOverrides({
-			@AttributeOverride(name = "programaid", column = @Column(name = "programaid", nullable = false)),
-			@AttributeOverride(name = "programaPropiedadid", column = @Column(name = "programa_propiedadid", nullable = false)) })
+			@AttributeOverride(name = "programaPropiedadid", column = @Column(name = "programa_propiedadid", nullable = false)),
+			@AttributeOverride(name = "programaid", column = @Column(name = "programaid", nullable = false)) })
 	public ProgramaPropiedadValorId getId() {
 		return this.id;
 	}
@@ -129,8 +129,7 @@ public class ProgramaPropiedadValor implements java.io.Serializable {
 		this.valorDecimal = valorDecimal;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "valor_tiempo", length = 19)
+	@Column(name = "valor_tiempo")
 	public Date getValorTiempo() {
 		return this.valorTiempo;
 	}
@@ -139,7 +138,7 @@ public class ProgramaPropiedadValor implements java.io.Serializable {
 		this.valorTiempo = valorTiempo;
 	}
 
-	@Column(name = "usuario_creo", nullable = false, length = 30)
+	@Column(name = "usuario_creo", length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
 	}
@@ -158,7 +157,7 @@ public class ProgramaPropiedadValor implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_creacion", nullable = false, length = 19)
+	@Column(name = "fecha_creacion", length = 19)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}
@@ -177,12 +176,12 @@ public class ProgramaPropiedadValor implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Column(name = "estado", nullable = false)
-	public int getEstado() {
+	@Column(name = "estado")
+	public Integer getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(int estado) {
+	public void setEstado(Integer estado) {
 		this.estado = estado;
 	}
 
