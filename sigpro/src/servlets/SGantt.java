@@ -79,12 +79,13 @@ public class SGantt extends HttpServlet {
 					for (Producto producto : productos){
 						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), 3, 
 								null,null, null, null, null, usuario);
+						if (!actividades.isEmpty()){
 						for (Actividad actividad : actividades){
 							if (fechaPrimeraActividad==null) {
 								fechaPrimeraActividad = actividad.getFechaInicio();
 							}
 							items = String.join(",", construirItem(actividad.getNombre(), 3, true, actividad.getFechaInicio(), actividad.getFechaFin(),false),items);
-						}
+						}}
 						items = String.join(",",construirItem(producto.getNombre(),2, true, fechaPrimeraActividad, null,false),items);
 					}
 					items = String.join(",",construirItem(componente.getNombre(),1, true, fechaPrimeraActividad, null,false),items);
@@ -100,7 +101,7 @@ public class SGantt extends HttpServlet {
 			
 			items = String.join("","{\"items\" : [", items,"]}");
 			
-		}else if(accion.equals("cargar")){
+		}else if(accion.equals("importar")){
 			String nombre = map.get("nombre");
 			CProject project = new CProject(nombre);
 			
@@ -134,7 +135,7 @@ public class SGantt extends HttpServlet {
 	
 	private String construirItem(String content,Integer identation,Boolean isExpanded,Date start,Date finish
 			,boolean isMilestone){
-		return String.join("", "{\"content\" :\"",content,"\",",
+		String cadena = String.join("", "{\"content\" :\"",content,"\",",
 				identation!=null ? "\"indentation\" :" : "", identation!=null ? identation.toString() :"",identation!=null ? "," : "", 
 				isExpanded!=null ? "\"isExpanded\" :\"":"" ,isExpanded!=null ? (isExpanded ? "true" : "false"):"",isExpanded!=null ?"\",":"",
 				start !=null ? "\"start\" :\"" : "", start!=null ? Utils.formatDateHour24(start) :"", start!=null ? "\"" : "",
@@ -143,6 +144,7 @@ public class SGantt extends HttpServlet {
 				",\"isMilestone\":",isMilestone? "\"true\"" : "\"false\"",
 				"}"
 			);
+		return cadena.replaceAll(",,", ",");
 	}
 
 }

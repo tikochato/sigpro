@@ -1,13 +1,13 @@
 package utilities;
 
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.ChildLoader;
 
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
@@ -40,7 +40,7 @@ public class CProject {
 		int duracion;
 		String unidades;
 		boolean esHito;
-		List<Relation> predecesor;
+		Integer []  idPredecesores;
 		
 	}
 	
@@ -96,52 +96,61 @@ public class CProject {
 		for (Task task : projectFile.getChildTasks())
 		   {
 		      //itemsProject = String.join(",", construirItem(task.getName(),null,true,task.getStart(),task.getFinish(),false));
-		      listaJerarquica(task, "\t");
+		      listaJerarquica(task);
 		   }
 		
 		Iterator<Map.Entry<Integer, stitem>> entries = items.entrySet().iterator();
 		while (entries.hasNext()) {
 		    Map.Entry<Integer, stitem> item = entries.next();
-		    System.out.println("id=" + item.getValue().id + " Contenido"+ item.getValue().contenido + " indentacion=" +item.getValue().indentacion + " fechaInicial=" + Utils.formatDate(item.getValue().fechaInicial)
-		    + " duracion=" + item.getValue().duracion);
+		    System.out.println("id=" + item.getValue().id + " Contenido="+ item.getValue().contenido 
+		    		+ " indentacion=" +item.getValue().indentacion + " fechaInicial=" + Utils.formatDate(item.getValue().fechaInicial)
+		    		+ " duracion=" + item.getValue().duracion + " predecesores=" + (item.getValue().idPredecesores!=null ? Arrays.toString(item.getValue().idPredecesores) : ""));
+		    itemsProject =String.join(itemsProject.trim().length()>0 ?",":"",itemsProject,construirItem(item.getValue().contenido, item.getValue().indentacion, item.getValue().expandido
+		    		, item.getValue().fechaInicial, item.getValue().fechaFinal, item.getValue().esHito) );
 		    
 		}
 		
 		return itemsProject;
 		
-		
-		
 	}
 	
 	
 	
-	private void listaJerarquica(Task task, String indent)
+	private void listaJerarquica(Task task)
 	{
 		indetnacion ++;
 		//itemsProject = String.join(itemsProject.trim().length()>0 ?"," : "",itemsProject,  construirItem(task.getName(),indetnacion,true,task.getStart(),task.getFinish(),task.getMilestone()));
-		
 		stitem item_ = new stitem();
-		item_.id = task.getID();
+		item_.id = task.getUniqueID();
 		item_.contenido = task.getName();
 		item_.indentacion = indetnacion;
 		item_.expandido = true;
 		item_.fechaInicial = task.getStart();
 		item_.fechaFinal = task.getFinish();
 		item_.esHito = task.getMilestone();
-		item_.predecesor = task.getPredecessors();
+		item_.idPredecesores = getListaPredecesores(task.getPredecessors());
 		item_.duracion = (int) task.getDuration().getDuration();
 		item_.unidades = task.getDuration().getUnits().getName();
-		
 		items.put(task.getUniqueID(), item_);
 		
 		
 		for (Task child : task.getChildTasks())
 		{
-	      listaJerarquica(child, indent + "\t");
-	      //System.out.println("Tarea: " + child.getName() + " Fecha Inicio=" + Utils.formatDate(child.getStart()) + " Fecha Final = " + Utils.formatDate(child.getFinish()) + "  parentTask=" + child.getParentTask().getName());
-	      
+	      listaJerarquica(child);
 		}
 		indetnacion --;
+	}
+	
+	private Integer [] getListaPredecesores(List<Relation> predecesores){
+		if (predecesores.size()>0){
+			Integer [] arregloPrdecesores = new Integer[predecesores.size()];
+			int i=0;
+			for (Relation relation : predecesores){
+				arregloPrdecesores[i] = relation.getTargetTask().getUniqueID();
+			}
+			return arregloPrdecesores;
+		}
+		return null;
 	}
 	
 	private String construirItem(String content,Integer identation,Boolean isExpanded,Date start,Date finish
@@ -196,9 +205,22 @@ public class CProject {
 			ProjectWriter writer = new MPXWriter();
 			writer.write(project, proyecto.getNombre()  + ".mpx");
 		}
-		
-		
 	}	
+	
+	public void construirTarea(Task task ,String nombre, int duracion,String unidades ,
+			Date fechaInicio, Date fechaFinal , boolean esHito,Integer [] idPredecesores){
+		
+		Relation relation = new Relation(task,task,null,null);
+		task.setName(nombre);
+		task.setDurationText(duracion+"d");
+		task.setStart(fechaInicio);
+		task.setFinish(fechaFinal);
+		//task.getPredecessors().add(task);
+		
+		
+		
+	}
+	
 	 
 	
 	
