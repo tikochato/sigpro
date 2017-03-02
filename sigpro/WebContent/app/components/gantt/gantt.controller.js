@@ -129,7 +129,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		});	
 		
 		mi.cargar=function(){
-			$http.post('/SGantt', { accion: 'cargar',t:moment().unix(), nombre: 'Cronograma.mpp', } ).then(
+			$http.post('/SGantt', { accion: 'importar',t:moment().unix(), nombre: 'Cronograma.mpp', } ).then(
 				function(response) {
 					var items = response.data.items;
 					$scope.settings.displayedTime = moment(items[0].start,'DD/MM/YYYY hh:mm:ss').toDate();
