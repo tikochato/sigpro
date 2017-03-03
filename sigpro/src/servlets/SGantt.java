@@ -104,9 +104,9 @@ public class SGantt extends HttpServlet {
 		}else if(accion.equals("importar")){
 			String nombre = map.get("nombre");
 			CProject project = new CProject(nombre);
+			project.imporatarArchivo(project.getProject(),usuario);
 			
-			
-			items = String.join("","{\"items\" : [", project.getTask(project.getProject()),"]}");
+			//items = String.join("","{\"items\" : [", project.getTask(project.getProject()),"]}");
 			
 		}
 		else if(accion.equals("exportar")){
