@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -11,6 +12,8 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.Producto;
+import pojo.ProductoUsuario;
+import pojo.ProductoUsuarioId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 import utilities.Utils;
@@ -74,12 +77,15 @@ public class ProductoDAO {
 		return ret;
 	}
 
-	public static boolean guardarProducto(Producto Producto) {
+	public static boolean guardarProducto(Producto producto) {
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			session.saveOrUpdate(Producto);
+			session.saveOrUpdate(producto);
+			ProductoUsuario pu = new ProductoUsuario(new ProductoUsuarioId(producto.getId(), producto.getUsuarioCreo()), producto
+					, producto.getUsuarioCreo(), null, new Date(), null);
+			session.saveOrUpdate(pu);
 			session.getTransaction().commit();
 			ret = true;
 		} catch (Throwable e) {
