@@ -25,11 +25,13 @@ import dao.ComponenteDAO;
 import dao.HitoDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
+import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.Componente;
 import pojo.Hito;
 import pojo.Producto;
 import pojo.Proyecto;
+import pojo.Subproducto;
 import utilities.CProject;
 import utilities.Utils;
 
@@ -73,24 +75,37 @@ public class SGantt extends HttpServlet {
 				Date fechaPrimeraActividad = null;
 				List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyecto.getId(),
 						null, null, null, null, null, usuario);
+				int contadoComponente = 0;
 				for (Componente componente :componentes){
+					contadoComponente ++;
 					List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
 							null, null, null, null, null, usuario);
 					for (Producto producto : productos){
-						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), 3, 
-								null,null, null, null, null, usuario);
-						if (!actividades.isEmpty()){
-						for (Actividad actividad : actividades){
-							if (fechaPrimeraActividad==null) {
-								fechaPrimeraActividad = actividad.getFechaInicio();
+						List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(), null, null, null, null, null, usuario);
+						
+						for (Subproducto subproducto : subproductos){
+							
+							List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), 4, 
+									null,null, null, null, null, usuario);
+							if (!actividades.isEmpty()){
+								for (Actividad actividad : actividades){
+									if (fechaPrimeraActividad==null) {
+										fechaPrimeraActividad = actividad.getFechaInicio();
+									}
+									items = String.join(items.trim().length()>0 ? "," : "",items, construirItem(actividad.getNombre(), 4, true, actividad.getFechaInicio(), actividad.getFechaFin(),false));
+								}
 							}
-							items = String.join(",", construirItem(actividad.getNombre(), 3, true, actividad.getFechaInicio(), actividad.getFechaFin(),false),items);
-						}}
-						items = String.join(",",construirItem(producto.getNombre(),2, true, fechaPrimeraActividad, null,false),items);
+							items = String.join(",", construirItem(subproducto.getNombre(),3, true, fechaPrimeraActividad, null,false),items);
+						}
+						items = String.join(",", construirItem(producto.getNombre(),2, true, fechaPrimeraActividad, null,false), items);
 					}
-					items = String.join(",",construirItem(componente.getNombre(),1, true, fechaPrimeraActividad, null,false),items);
+					
+					items = String.join(",",  construirItem(componente.getNombre(),1, true, fechaPrimeraActividad, null,false) ,items);
+					
 				}
-				items = items.substring(0,items.length()-1);
+				
+				
+				
 				items = String.join(",",construirItem(proyecto.getNombre(),null, true, fechaPrimeraActividad, null,false),items);
 				List<Hito> hitos = HitoDAO.getHitosPaginaPorProyecto(0, 0, proyectoId, null, null, null, null, null);
 				
@@ -99,7 +114,10 @@ public class SGantt extends HttpServlet {
 				}
 			}
 			
+			
 			items = String.join("","{\"items\" : [", items,"]}");
+			items.replaceAll(",,", ",");
+			items.replaceAll(", ,", ",");
 			
 		}else if(accion.equals("importar")){
 			String nombre = map.get("nombre");
@@ -124,6 +142,7 @@ public class SGantt extends HttpServlet {
 		
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
+		
 		
         OutputStream output = response.getOutputStream();
 		GZIPOutputStream gz = new GZIPOutputStream(output);
