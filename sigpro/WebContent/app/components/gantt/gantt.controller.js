@@ -15,7 +15,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		$window.document.title = $utilidades.sistema_nombre+' - Gantt';
 		
 		
-		
+		mi.zoom = 2.5;
 		var date = new Date(), year = date.getFullYear(), month = date.getMonth();
 		var items=[];
 		
@@ -48,7 +48,29 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		}
 		var settings = { 
 				areTaskDependencyConstraintsEnabled: true,
-				currentTime: new Date()
+				currentTime: new Date(),
+				itemHeight: 30,
+				barCornerRadius: 8,
+				months: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+				daysOfWeek: ['D','L','M','M','J','V','S'],
+				dateFormatter: function (date){  return moment(date).format("DD/MM/YYYY");  },
+				dateTimeFormatter: function (dateTime) { return moment(dateTime).format("DD/MM/YYYY");  },
+				isMouseWheelZoomEnabled: false,
+				horizontalGridLines: '#e0e0e0',
+				itemTemplate: function (item) {
+				    var document = item.ganttChartView.ownerDocument;
+				    var toolTip = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+				    var toolTipContent = item.content +'\n • ' + (!item.isMilestone ? 'Inicio: ' : 'Fecha: ')  + moment(item.start).format("DD/MM/YYYY");
+				    if (!item.isMilestone)
+				        toolTipContent += '\n • ' + 'Fin: ' + moment(item.finish).format("DD/MM/YYYY");
+				    toolTipContent += (item.parent!=null) ? '\n • ' + 'Padre: '+ item.parent.content : '';
+				    toolTip.appendChild(document.createTextNode(toolTipContent));
+				    return toolTip;
+				},
+				scales:[{ scaleType: 'NonworkingTime', isHeaderVisible: false, isHighlightingVisible: true, highlightingStyle: 'stroke-width: 0; fill: #f8f8f8' },
+			    		{ scaleType: 'Months', headerTextFormat: 'Month', headerStyle: 'padding: 7px 5px; border-right: solid 1px White; border-bottom: solid 1px White; color: gray', isSeparatorVisible: true, separatorStyle: 'stroke: #c8bfe7; stroke-width: 1px' },
+			    		{ scaleType: 'Days', headerTextFormat: 'Day', headerStyle: 'padding: 7px 5px; border-right: solid 1px White; border-bottom: solid 1px White; color: gray', isSeparatorVisible: false, separatorStyle: 'stroke: #c8bfe7; stroke-width: 0.25px' }]
+			    
 		};
 		// Default Columns
 		var columns = DlhSoft.Controls.GanttChartView.getDefaultColumns(items, settings);
@@ -92,6 +114,9 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		columns[6].isReadOnly = true;
 		columns[7].header = 'Completada';
 		
+		for(var i=0; i<columns.length;i++)
+			columns[i].headerClass = 'gantt-chart-header-column';
+		
 		settings.columns = columns;
 		
 		settings.itemPropertyChangeHandler = function (item, propertyName, isDirect, isFinal) {
@@ -105,7 +130,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		
 		$scope.settings = settings;
 		
-		var ganttChartView;
+		mi.ganttChartView;
 		
 		$http.post('/SGantt', { accion: 'getProyecto', proyecto_id: $routeParams.proyectoId }).success(
 				function(response) {
@@ -124,9 +149,24 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 					}
 					$scope.items = items;
 					$scope.settings.timelineStart =items[0].start;
-					ganttChartView = document.getElementById('ganttChartView');
+					mi.ganttChartView = document.getElementById('ganttChartView');
 					
 		});	
+		
+		mi.zoomAcercar = function(){
+			mi.zoom =(mi.zoom<1) ? mi.zoom + 0.05 :  mi.zoom + 1;
+			mi.ganttChartView.setHourWidth(mi.zoom);
+		};
+		
+		mi.zoomAlejar = function(){
+			mi.zoom = (mi.zoom<1) ? mi.zoom - 0.05 :  mi.zoom - 1;
+			if(mi.zoom<0.05){
+				mi.zoom=0.05;
+				$utilidades.mensaje('warning','No puede alejar mas la vista de la gráfica');
+			}
+			else
+				mi.ganttChartView.setHourWidth(mi.zoom);
+		};
 		
 		mi.cargar=function(){
 			$http.post('/SGantt', { accion: 'importar',t:moment().unix(), nombre: 'Cronograma.mpp', } ).then(
@@ -146,7 +186,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 					}
 					$scope.items = items;
 					$scope.settings.timelineStart =items[0].start;
-					ganttChartView = document.getElementById('ganttChartView');
+					mi.ganttChartView = document.getElementById('ganttChartView');
 				}
 			);
 		};
