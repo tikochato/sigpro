@@ -38,7 +38,7 @@ public class Subproducto implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private Integer snip;
+	private Long snip;
 	private Integer programa;
 	private Integer subprograma;
 	private Integer proyecto;
@@ -63,7 +63,7 @@ public class Subproducto implements java.io.Serializable {
 
 	public Subproducto(Producto producto, SubproductoTipo subproductoTipo, String nombre, String descripcion,
 			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Integer snip, Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra,
+			Long snip, Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra,
 			Integer fuente, Set<SubproductoPropiedadValor> subproductoPropiedadValors,
 			Set<SubproductoUsuario> subproductoUsuarios) {
 		this.producto = producto;
@@ -184,11 +184,11 @@ public class Subproducto implements java.io.Serializable {
 	}
 
 	@Column(name = "snip")
-	public Integer getSnip() {
+	public Long getSnip() {
 		return this.snip;
 	}
 
-	public void setSnip(Integer snip) {
+	public void setSnip(Long snip) {
 		this.snip = snip;
 	}
 
