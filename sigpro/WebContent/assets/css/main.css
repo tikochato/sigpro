@@ -197,8 +197,12 @@ nav.navbar{
 }
 
 .gantt-chart{
-	overflow-x: hidden;
-	height: 100%;
-	width: 100%;
+	overflow-y: scroll;
+	height: calc(100% - 105px);
 	position: relative;
+}
+
+.gantt-chart-header-column{
+	padding: 3px;
+	font-weight: bold;
 }
