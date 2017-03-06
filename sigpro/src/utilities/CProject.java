@@ -34,7 +34,9 @@ import pojo.SubproductoTipo;
 import pojo.UnidadEjecutora;
 
 
+
 public class CProject {
+	
 	
 	
 	class stitem {
@@ -55,11 +57,19 @@ public class CProject {
 	}
 	
 	
+	static int COOPERANTE_ID_DEFECTO = 1;
+	static int PROYECTO_TIPO_ID_DEFECTO = 3;
+	static int UNIDAD_EJECUTORA_ID_DEFECTO = 1;
+	static int COMPONENTE_TIPO_ID_DEFECTO = 2;
+	static int PRODUCTO_TIPO_ID_DEFECTO = 7;
+	static int SUBPRODUCTO_TIPO__ID_DEFECTO = 1;
+	static int ACTIVIDAD_ID_DEFECTO = 7;
 	
 	ProjectReader reader;
 	ProjectFile project;
 	Integer indetnacion;
 	String itemsProject;
+	
 	
 	HashMap<Integer,stitem> items;
 	
@@ -156,11 +166,11 @@ public class CProject {
 	
 	public Proyecto crearProyecto(Task task,String usuario){
 		Cooperante cooperante = new Cooperante();
-		cooperante.setId(1);
+		cooperante.setId(COOPERANTE_ID_DEFECTO);
 		ProyectoTipo proyectoTipo = new ProyectoTipo();
-		proyectoTipo.setId(3);
+		proyectoTipo.setId(PROYECTO_TIPO_ID_DEFECTO);
 		UnidadEjecutora unidadEjecturoa = new UnidadEjecutora();
-		unidadEjecturoa.setUnidadEjecutora(1);
+		unidadEjecturoa.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
 		Proyecto proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecturoa
 				, task.getName(), null, usuario, null, new Date(), null, 1
 				, null, null, null, null, null, null, null, null, null, null, null, null, null);
@@ -171,9 +181,9 @@ public class CProject {
 	
 	public Componente crearComponente(Task task,Proyecto proyecto ,String usuario){
 		ComponenteTipo componenteTipo = new ComponenteTipo();
-		componenteTipo.setId(2);
+		componenteTipo.setId(COMPONENTE_TIPO_ID_DEFECTO);
 		UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-		unidadEjecutora.setUnidadEjecutora(2);
+		unidadEjecutora.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
 		
 		
 		Componente componente = new Componente(componenteTipo, proyecto, unidadEjecutora, task.getName(), null, usuario, null, new Date(), null, 1
@@ -184,13 +194,13 @@ public class CProject {
 	
 	public Producto crearProducto (Task task, Componente componente,String usuario){
 		ProductoTipo productoTipo = new ProductoTipo();
-		productoTipo.setId(7);
+		productoTipo.setId(PRODUCTO_TIPO_ID_DEFECTO);
 		UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-		unidadEjecutora.setUnidadEjecutora(2);
+		unidadEjecutora.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
 		
 		Producto producto = new Producto(componente, productoTipo, unidadEjecutora
-				,task.getName() , null, usuario, null, new Date(), null, 
-				null, null, null, null, null, null, null, null, 
+				,task.getName() , null, usuario, null, new Date(), null,1, 
+				 null, null, null, null, null, null, null, 
 				null, null, null);
 		
 		
@@ -199,7 +209,7 @@ public class CProject {
 	
 	public Subproducto crearSubproducto(Task task, Producto producto, String usuario){
 		SubproductoTipo subproductoTipo = new SubproductoTipo();
-		subproductoTipo.setId(1);
+		subproductoTipo.setId(SUBPRODUCTO_TIPO__ID_DEFECTO);
 		Subproducto subproducto = new Subproducto(producto, subproductoTipo, task.getName(), null, usuario, null, new Date(), null, 1, 
 				null, null, null, null, null, null, null, null, null);
 		
@@ -208,7 +218,7 @@ public class CProject {
 	
 	public Actividad crearActividad(Task task,String usuario, Integer objetoId, Integer objetoTipo){
 		ActividadTipo actividadTipo = new ActividadTipo();
-		actividadTipo.setId(6);
+		actividadTipo.setId(ACTIVIDAD_ID_DEFECTO);
 		
 		Integer [] predecesores  = getListaPredecesores(task.getPredecessors());
 		
@@ -328,7 +338,7 @@ public class CProject {
 	
 	
 	
-	public void generaMPP(int idProyecto,String usuario) throws Exception
+	public void exportarProject(int idProyecto,String usuario) throws Exception
 	{
 		Proyecto proyecto = ProyectoDAO.getProyectoPorId(idProyecto, usuario);
 		
