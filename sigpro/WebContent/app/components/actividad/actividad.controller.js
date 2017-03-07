@@ -231,8 +231,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				mi.mostraringreso = true;
 				mi.actividadtipoid = mi.actividad.actividadtipoid;
 				mi.esnuevo = false;
-				mi.coordenadas = actividad.longitud;
-				mi.coordenadas = actividad.latitud;
+				mi.coordenadas = mi.actividad.longitud;
+				mi.coordenadas = mi.actividad.latitud;
 				
 				var parametros = {
 						accion: 'getActividadPropiedadPorTipo',
