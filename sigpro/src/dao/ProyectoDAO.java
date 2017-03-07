@@ -23,7 +23,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 		try{
 			Query<Proyecto> criteria = session.createQuery("FROM Proyecto p where p.id in (SELECT u.id.proyectoid from ProyectoUsuario u where u.id.usuario=:usuario )", Proyecto.class);
 			criteria.setParameter("usuario", usuario);
-			ret =   (List<Proyecto>)criteria.getResultList();
+			ret =   criteria.getResultList();
 		}
 		catch(Throwable e){
 			CLogger.write("1", Proyecto.class, e);
@@ -63,7 +63,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			Query<Proyecto> criteria = session.createQuery("FROM Proyecto where id=:id AND id in (SELECT u.id.proyectoid from ProyectoUsuario u where u.id.usuario=:usuario )", Proyecto.class);
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
-			 ret = (Proyecto) criteria.getSingleResult();;
+			 ret = criteria.getSingleResult();;
 		}
 		catch(Throwable e){
 			CLogger.write("3", ProyectoDAO.class, e);
@@ -227,7 +227,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 					+ "and pp.id.programaid = :idProg", Proyecto.class);
 			
 			criteria.setParameter("idProg", idPrograma);
-			ret =   (List<Proyecto>)criteria.getResultList();
+			ret =   criteria.getResultList();
 		}
 		catch(Throwable e){
 			CLogger.write("9", ProyectoDAO.class, e);

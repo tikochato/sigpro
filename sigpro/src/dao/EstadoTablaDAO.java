@@ -29,7 +29,7 @@ public class EstadoTablaDAO {
 		String ret = "";
 		try{
 			EstadoTablaId estadotablaid = new EstadoTablaId(usuario,tabla);
-			EstadoTabla estadotabla = (EstadoTabla) session.get(EstadoTabla.class,estadotablaid);
+			EstadoTabla estadotabla = session.get(EstadoTabla.class,estadotablaid);
 			ret=estadotabla.getValores();
 		}catch(Throwable e){
 			CLogger.write("3", EstadoTablaDAO.class, e);

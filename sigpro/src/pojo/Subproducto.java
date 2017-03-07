@@ -1,5 +1,5 @@
 package pojo;
-// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
+// Generated Mar 7, 2017 2:35:37 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,10 +27,11 @@ public class Subproducto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2065394514208110107L;
+	private static final long serialVersionUID = 5098017483058729252L;
 	private Integer id;
 	private Producto producto;
 	private SubproductoTipo subproductoTipo;
+	private UnidadEjecutora unidadEjecutora;
 	private String nombre;
 	private String descripcion;
 	private String usuarioCreo;
@@ -45,29 +46,33 @@ public class Subproducto implements java.io.Serializable {
 	private Integer actividad;
 	private Integer obra;
 	private Integer fuente;
+	private String latitud;
+	private String longitud;
 	private Set<SubproductoPropiedadValor> subproductoPropiedadValors = new HashSet<SubproductoPropiedadValor>(0);
 	private Set<SubproductoUsuario> subproductoUsuarios = new HashSet<SubproductoUsuario>(0);
 
 	public Subproducto() {
 	}
 
-	public Subproducto(Producto producto, SubproductoTipo subproductoTipo, String nombre, String usuarioCreo,
-			Date fechaCreacion, int estado) {
+	public Subproducto(Producto producto, SubproductoTipo subproductoTipo, UnidadEjecutora unidadEjecutora,
+			String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
 		this.producto = producto;
 		this.subproductoTipo = subproductoTipo;
+		this.unidadEjecutora = unidadEjecutora;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
 	}
 
-	public Subproducto(Producto producto, SubproductoTipo subproductoTipo, String nombre, String descripcion,
-			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Long snip, Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra,
-			Integer fuente, Set<SubproductoPropiedadValor> subproductoPropiedadValors,
-			Set<SubproductoUsuario> subproductoUsuarios) {
+	public Subproducto(Producto producto, SubproductoTipo subproductoTipo, UnidadEjecutora unidadEjecutora,
+			String nombre, String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
+			Integer actividad, Integer obra, Integer fuente, String latitud, String longitud,
+			Set<SubproductoPropiedadValor> subproductoPropiedadValors, Set<SubproductoUsuario> subproductoUsuarios) {
 		this.producto = producto;
 		this.subproductoTipo = subproductoTipo;
+		this.unidadEjecutora = unidadEjecutora;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
@@ -82,6 +87,8 @@ public class Subproducto implements java.io.Serializable {
 		this.actividad = actividad;
 		this.obra = obra;
 		this.fuente = fuente;
+		this.latitud = latitud;
+		this.longitud = longitud;
 		this.subproductoPropiedadValors = subproductoPropiedadValors;
 		this.subproductoUsuarios = subproductoUsuarios;
 	}
@@ -116,6 +123,16 @@ public class Subproducto implements java.io.Serializable {
 
 	public void setSubproductoTipo(SubproductoTipo subproductoTipo) {
 		this.subproductoTipo = subproductoTipo;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "unidad_ejecutoraunidad_ejecutora", nullable = false)
+	public UnidadEjecutora getUnidadEjecutora() {
+		return this.unidadEjecutora;
+	}
+
+	public void setUnidadEjecutora(UnidadEjecutora unidadEjecutora) {
+		this.unidadEjecutora = unidadEjecutora;
 	}
 
 	@Column(name = "nombre", nullable = false, length = 1000)
@@ -244,6 +261,24 @@ public class Subproducto implements java.io.Serializable {
 
 	public void setFuente(Integer fuente) {
 		this.fuente = fuente;
+	}
+
+	@Column(name = "latitud", length = 30)
+	public String getLatitud() {
+		return this.latitud;
+	}
+
+	public void setLatitud(String latitud) {
+		this.latitud = latitud;
+	}
+
+	@Column(name = "longitud", length = 30)
+	public String getLongitud() {
+		return this.longitud;
+	}
+
+	public void setLongitud(String longitud) {
+		this.longitud = longitud;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subproducto")

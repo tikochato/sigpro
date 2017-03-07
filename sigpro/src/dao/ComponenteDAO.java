@@ -19,7 +19,7 @@ public class ComponenteDAO {
 		try{
 			Query<Componente> criteria = session.createQuery("FROM Componente p where estado = 1 AND p.id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )", Componente.class);
 			criteria.setParameter("usuario", usuario);
-			ret =   (List<Componente>)criteria.getResultList();
+			ret =   criteria.getResultList();
 		}
 		catch(Throwable e){
 			CLogger.write("1", ComponenteDAO.class, e);
@@ -37,7 +37,7 @@ public class ComponenteDAO {
 			Query<Componente> criteria = session.createQuery("FROM Componente where id=:id AND id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )", Componente.class);
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
-			 ret = (Componente) criteria.getSingleResult();
+			 ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
 			CLogger.write("2", ComponenteDAO.class, e);

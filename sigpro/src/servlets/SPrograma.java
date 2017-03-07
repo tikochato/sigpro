@@ -231,7 +231,7 @@ public class SPrograma extends HttpServlet {
 							ProgramaPropiedad programaPropiedad = ProgramaPropiedadDAO.getProgramaPropiedadPorId(Integer.parseInt(data.id));
 							ProgramaPropiedadValorId idValor = new ProgramaPropiedadValorId(programa.getId(),Integer.parseInt(data.id));
 							
-							ProgramaPropiedadValor valor = new ProgramaPropiedadValor(idValor, programa, programaPropiedad, usuario, new DateTime().toDate(), 1);
+							ProgramaPropiedadValor valor = new ProgramaPropiedadValor(idValor, programa, programaPropiedad);
 	
 							switch (programaPropiedad.getDatoTipo().getId()){
 								case 1:
@@ -248,7 +248,6 @@ public class SPrograma extends HttpServlet {
 									break;
 								case 5:
 									SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-									
 									valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
 									break;
 							}

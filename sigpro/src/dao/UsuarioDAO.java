@@ -32,7 +32,7 @@ public class UsuarioDAO {
 		Usuario ret = null;
 		try{
 			session.beginTransaction();
-			ret = (Usuario) session.get(Usuario.class,usuario);
+			ret = session.get(Usuario.class,usuario);
 		}
 		catch(Throwable e){
 			CLogger.write("1", UsuarioDAO.class, e);
@@ -72,7 +72,7 @@ public class UsuarioDAO {
 			Permiso permiso = session.createQuery( criteria ).getSingleResult();
 			if(permiso !=null){
 				UsuarioPermisoId usuariopermisoid = new UsuarioPermisoId(usuario,permiso.getId());
-				UsuarioPermiso usuariopermiso = (UsuarioPermiso) session.get(UsuarioPermiso.class, usuariopermisoid);
+				UsuarioPermiso usuariopermiso = session.get(UsuarioPermiso.class, usuariopermisoid);
 				if(usuariopermiso!=null){
 					if(usuariopermiso.getEstado()==1){
 						ret = true;
@@ -120,7 +120,7 @@ public class UsuarioDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			//session.beginTransaction();
-			Usuario usuarioCambio= (Usuario) session.get(Usuario.class,usuario);
+			Usuario usuarioCambio= session.get(Usuario.class,usuario);
 			if(usuarioCambio!=null){
 				session.beginTransaction();
 				RandomNumberGenerator rng = new SecureRandomNumberGenerator();
@@ -178,7 +178,7 @@ public class UsuarioDAO {
 			session.beginTransaction();
 			for(int i =0; i<permisos.size();i++){
 				UsuarioPermisoId usuariopermisoid = new UsuarioPermisoId(usuario, permisos.get(i));
-				UsuarioPermiso usuariopermiso= (UsuarioPermiso)session.get(UsuarioPermiso.class, usuariopermisoid);
+				UsuarioPermiso usuariopermiso= session.get(UsuarioPermiso.class, usuariopermisoid);
 				usuariopermiso.setUsuarioActualizo(usuarioTexto);
 				usuariopermiso.setEstado(0);
 				usuariopermiso.setFechaActualizacion(new DateTime().toDate());
@@ -223,7 +223,7 @@ public class UsuarioDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			Usuario usuarioDesactivado = (Usuario) session.get(Usuario.class,usuario);
+			Usuario usuarioDesactivado = session.get(Usuario.class,usuario);
 			usuarioDesactivado.setEstado(0);
 			usuarioDesactivado.setUsuarioActualizo(usuarioActualizo);
 			usuarioDesactivado.setFechaActualizacion(new DateTime().toDate());

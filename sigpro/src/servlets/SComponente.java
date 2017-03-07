@@ -217,7 +217,7 @@ public class SComponente extends HttpServlet {
 					if(esnuevo){
 						componente = new Componente(componenteTipo, proyecto, unidadEjecutora, nombre,
 								descripcion, usuario, null, new DateTime().toDate(), null, 1,
-								snip, programa, subPrograma, proyecto_, actividad,obra, fuente, null, null, null);
+								snip, programa, subPrograma, proyecto_, actividad,obra, fuente, null, null, null,null,null);
 					}
 					else{
 						componente = ComponenteDAO.getComponentePorId(id,usuario);

@@ -1,7 +1,7 @@
 var app = angular.module('actividadController', []);
 
-app.controller('actividadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal) {
+app.controller('actividadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$sce','uiGmapGoogleMapApi',
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$sce,uiGmapGoogleMapApi) {
 		var mi=this;
 
 		$window.document.title = $utilidades.sistema_nombre+' - Actividades';
@@ -28,6 +28,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;
+		mi.latitud= "";
+		mi.longitud = "";
 		
 		mi.filtros = [];
 		$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo }).success(
@@ -378,6 +380,26 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			}, function() {
 			});
 	};
+	
+	mi.open = function (posicionlat, posicionlong) {
+		mi.geoposicionlat = posicionlat;
+		mi.geoposicionlong = posicionlong;
+		
+	    var modalInstance = $uibModal.open({
+	      animation: true,
+	      templateUrl: 'map.html',
+	      controller: 'mapCtrl',
+	      resolve: {
+	        glat: function(){
+	        	return $scope.geoposicionlat;
+	        },
+	        glong: function(){
+	        	return $scope.geoposicionlong;
+	        }
+	      }
+	    
+	    });
+	  };
 
 } ]);
 
@@ -475,4 +497,42 @@ function modalBuscarActividadTipo($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
+	
+	
 }
+
+
+
+
+app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogleMapApi','glat','glong',
+         function ($scope, $uibModalInstance,$timeout, uiGmapGoogleMapApi, glat, glong) {
+     	$scope.geoposicionlat = glat != null ? glat : 14.6290845;
+     	$scope.geoposicionlong = glong != null ? glong : -90.5116158;
+     	
+     	$scope.refreshMap = true;
+     	
+     	uiGmapGoogleMapApi.then(function() {
+     		$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong }, 
+     					   zoom: 15,
+     					   height: 400,
+     					   options: {
+     						   streetViewControl: false,
+     						   scrollwheel: true,
+     						  mapTypeId: google.maps.MapTypeId.SATELLITE
+     					   },
+     					   refresh: true
+     					};
+         });
+     	
+     	
+     	
+     	  $scope.ok = function () {
+     	    $uibModalInstance.dismiss('cancel');
+     	    
+     	  };
+
+}]);
+
+
+
+

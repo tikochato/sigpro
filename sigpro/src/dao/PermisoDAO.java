@@ -58,7 +58,7 @@ public class PermisoDAO {
 			CriteriaQuery<Permiso> criteria = builder.createQuery(Permiso.class);
 			Root<Permiso> root = criteria.from(Permiso.class);
 			criteria.where( builder.and(builder.equal(root.get("nombre"), nombrepermiso)));
-			ret = (Permiso) session.createQuery( criteria ).getSingleResult();
+			ret = session.createQuery( criteria ).getSingleResult();
 		}catch(Throwable e){
 			CLogger.write("1",PermisoDAO.class,e);
 		}finally{
@@ -88,7 +88,7 @@ public class PermisoDAO {
 		Permiso ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			ret = (Permiso)session.get(Permiso.class,idpermiso );
+			ret = session.get(Permiso.class,idpermiso );
 		}catch(Throwable e){
 			CLogger.write("1",PermisoDAO.class,e);
 		}finally{

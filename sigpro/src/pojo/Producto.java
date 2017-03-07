@@ -1,5 +1,5 @@
 package pojo;
-// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
+// Generated Mar 7, 2017 2:35:37 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6212224308996422047L;
+	private static final long serialVersionUID = -1764193893089217609L;
 	private Integer id;
 	private Componente componente;
 	private ProductoTipo productoTipo;
@@ -46,6 +46,8 @@ public class Producto implements java.io.Serializable {
 	private Integer actividad;
 	private Integer obra;
 	private Integer fuente;
+	private String latitud;
+	private String longitud;
 	private Set<ProductoUsuario> productoUsuarios = new HashSet<ProductoUsuario>(0);
 	private Set<Subproducto> subproductos = new HashSet<Subproducto>(0);
 	private Set<ProductoPropiedadValor> productoPropiedadValors = new HashSet<ProductoPropiedadValor>(0);
@@ -66,8 +68,9 @@ public class Producto implements java.io.Serializable {
 	public Producto(Componente componente, ProductoTipo productoTipo, UnidadEjecutora unidadEjecutora, String nombre,
 			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, Integer estado, Long snip, Integer programa, Integer subprograma,
-			Integer proyecto, Integer actividad, Integer obra, Integer fuente, Set<ProductoUsuario> productoUsuarios,
-			Set<Subproducto> subproductos, Set<ProductoPropiedadValor> productoPropiedadValors) {
+			Integer proyecto, Integer actividad, Integer obra, Integer fuente, String latitud, String longitud,
+			Set<ProductoUsuario> productoUsuarios, Set<Subproducto> subproductos,
+			Set<ProductoPropiedadValor> productoPropiedadValors) {
 		this.componente = componente;
 		this.productoTipo = productoTipo;
 		this.unidadEjecutora = unidadEjecutora;
@@ -85,6 +88,8 @@ public class Producto implements java.io.Serializable {
 		this.actividad = actividad;
 		this.obra = obra;
 		this.fuente = fuente;
+		this.latitud = latitud;
+		this.longitud = longitud;
 		this.productoUsuarios = productoUsuarios;
 		this.subproductos = subproductos;
 		this.productoPropiedadValors = productoPropiedadValors;
@@ -258,6 +263,24 @@ public class Producto implements java.io.Serializable {
 
 	public void setFuente(Integer fuente) {
 		this.fuente = fuente;
+	}
+
+	@Column(name = "latitud", length = 30)
+	public String getLatitud() {
+		return this.latitud;
+	}
+
+	public void setLatitud(String latitud) {
+		this.latitud = latitud;
+	}
+
+	@Column(name = "longitud", length = 30)
+	public String getLongitud() {
+		return this.longitud;
+	}
+
+	public void setLongitud(String longitud) {
+		this.longitud = longitud;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")

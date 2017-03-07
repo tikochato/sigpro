@@ -19,7 +19,7 @@ public class ActividadDAO {
 		try{
 			Query<Actividad> criteria = session.createQuery("FROM Actividad p where p.id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )", Actividad.class);
 			criteria.setParameter("usuario", usuario);
-			ret = (List<Actividad>) criteria.getResultList();
+			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
 			CLogger.write("1", ActividadDAO.class, e);
@@ -37,7 +37,7 @@ public class ActividadDAO {
 			Query<Actividad> criteria = session.createQuery("FROM Actividad where id=:id AND id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )", Actividad.class);
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
-			ret = (Actividad) criteria.getSingleResult();
+			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
 			CLogger.write("2", ActividadDAO.class, e);

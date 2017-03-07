@@ -156,11 +156,10 @@ public class SProgramaTipo extends HttpServlet {
 						ProgramaPropiedad programaPropiedad = new ProgramaPropiedad();
 						programaPropiedad.setId(Integer.parseInt(idPropiedad));
 						
-						ProgtipoPropiedad progtipoPropiedad = new ProgtipoPropiedad(
-								progtipoPropiedadId,
-								programaPropiedad,
-								programaTipo, 
-								usuario, new DateTime().toDate());
+						ProgtipoPropiedad progtipoPropiedad = new ProgtipoPropiedad(progtipoPropiedadId, 
+								programaPropiedad, programaTipo, usuario, null, new DateTime().toDate(), 
+								null, 1);
+						
 						
 						progtipoPropiedad.setProgramaTipo(programaTipo);
 						if (programaTipo.getProgtipoPropiedads() == null){

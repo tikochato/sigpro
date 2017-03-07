@@ -71,49 +71,57 @@ public class SGantt extends HttpServlet {
 		if(accion.equals("getProyecto")){
 			Integer proyectoId = map.get("proyecto_id")!=null && map.get("proyecto_id").trim().length()>0 ? Integer.parseInt(map.get("proyecto_id")) : 0;
 			Proyecto proyecto = ProyectoDAO.getProyectoPorId(proyectoId, usuario);
+			String items_actividad="";
+			String items_subproducto="";
+			String items_producto="";
+			String items_componente="";
 			if (proyecto !=null){
 				Date fechaPrimeraActividad = null;
 				List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyecto.getId(),
 						null, null, null, null, null, usuario);
-				int contadoComponente = 0;
+				items_componente="";
 				for (Componente componente :componentes){
-					contadoComponente ++;
 					List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
 							null, null, null, null, null, usuario);
+					items_producto="";
 					for (Producto producto : productos){
 						List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(), null, null, null, null, null, usuario);
 						
+						items_subproducto="";
 						for (Subproducto subproducto : subproductos){
 							
 							List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), 4, 
 									null,null, null, null, null, usuario);
+							items_actividad="";
 							if (!actividades.isEmpty()){
+								
 								for (Actividad actividad : actividades){
 									if (fechaPrimeraActividad==null) {
 										fechaPrimeraActividad = actividad.getFechaInicio();
 									}
-									items = String.join(items.trim().length()>0 ? "," : "",items, construirItem(actividad.getNombre(), 4, true, actividad.getFechaInicio(), actividad.getFechaFin(),false));
+									items_actividad = String.join(items_actividad.trim().length()>0 ? "," : "",items_actividad, construirItem(actividad.getNombre(), 4, true, actividad.getFechaInicio(), actividad.getFechaFin(),false));
 								}
 							}
-							items = String.join(",", construirItem(subproducto.getNombre(),3, true, fechaPrimeraActividad, null,false),items);
+							items_subproducto = String.join(items_subproducto.trim().length()>0 ? ",":"", items_subproducto, construirItem(subproducto.getNombre(),3, true, fechaPrimeraActividad, null,false));
+							items_subproducto = items_actividad.trim().length() > 0 ? String.join(",", items_subproducto,items_actividad) : items_subproducto;
 						}
-						items = String.join(",", construirItem(producto.getNombre(),2, true, fechaPrimeraActividad, null,false), items);
+						items_producto = String.join(items_producto.trim().length()>0 ? "," : "",items_producto, construirItem(producto.getNombre(),2, true, fechaPrimeraActividad, null,false));
+						items_producto = items_subproducto.trim().length() > 0 ? String.join(",",items_producto, items_subproducto) : items_producto;
 					}
 					
-					items = String.join(",",  construirItem(componente.getNombre(),1, true, fechaPrimeraActividad, null,false) ,items);
-					
+					items_componente = String.join(items_componente.trim().length()>0 ? "," : "",items_componente,  construirItem(componente.getNombre(),1, true, fechaPrimeraActividad, null,false));					
+					items_componente = items_producto.trim().length() > 0 ? String.join(",", items_componente,items_producto) : items_componente;
 				}
 				
 				
 				
-				items = String.join(",",construirItem(proyecto.getNombre(),null, true, fechaPrimeraActividad, null,false),items);
+				items = String.join(",",construirItem(proyecto.getNombre(),null, true, fechaPrimeraActividad, null,false),items_componente);
 				List<Hito> hitos = HitoDAO.getHitosPaginaPorProyecto(0, 0, proyectoId, null, null, null, null, null);
 				
 				for (Hito hito:hitos){
 					items = String.join(",",items, construirItem(hito.getNombre(), 1, null, hito.getFecha(), null,true));
 				}
 			}
-			
 			
 			items = String.join("","{\"items\" : [", items,"]}");
 			items.replaceAll(",,", ",");
@@ -131,7 +139,7 @@ public class SGantt extends HttpServlet {
 			try{
 				Integer proyectoId = map.get("proyecto_id")!=null && map.get("proyecto_id").trim().length()>0 ? Integer.parseInt(map.get("proyecto_id")) : 0;
 				CProject project = new CProject("");
-				project.generaMPP(proyectoId, usuario);
+				project.exportarProject(proyectoId, usuario);
 			}catch(Exception e){
 				e.printStackTrace();
 			}

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
+// Generated Mar 7, 2017 2:35:37 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Componente implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4738397983895923095L;
+	private static final long serialVersionUID = -8635708408558124494L;
 	private Integer id;
 	private ComponenteTipo componenteTipo;
 	private Proyecto proyecto;
@@ -46,6 +46,8 @@ public class Componente implements java.io.Serializable {
 	private Integer actividad;
 	private Integer obra;
 	private Integer fuente;
+	private String latitud;
+	private String longitud;
 	private Set<ComponenteUsuario> componenteUsuarios = new HashSet<ComponenteUsuario>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<ComponentePropiedadValor> componentePropiedadValors = new HashSet<ComponentePropiedadValor>(0);
@@ -67,7 +69,7 @@ public class Componente implements java.io.Serializable {
 	public Componente(ComponenteTipo componenteTipo, Proyecto proyecto, UnidadEjecutora unidadEjecutora, String nombre,
 			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma,
-			Integer proyecto_1, Integer actividad, Integer obra, Integer fuente,
+			Integer proyecto_1, Integer actividad, Integer obra, Integer fuente, String latitud, String longitud,
 			Set<ComponenteUsuario> componenteUsuarios, Set<Producto> productos,
 			Set<ComponentePropiedadValor> componentePropiedadValors) {
 		this.componenteTipo = componenteTipo;
@@ -87,6 +89,8 @@ public class Componente implements java.io.Serializable {
 		this.actividad = actividad;
 		this.obra = obra;
 		this.fuente = fuente;
+		this.latitud = latitud;
+		this.longitud = longitud;
 		this.componenteUsuarios = componenteUsuarios;
 		this.productos = productos;
 		this.componentePropiedadValors = componentePropiedadValors;
@@ -260,6 +264,24 @@ public class Componente implements java.io.Serializable {
 
 	public void setFuente(Integer fuente) {
 		this.fuente = fuente;
+	}
+
+	@Column(name = "latitud", length = 30)
+	public String getLatitud() {
+		return this.latitud;
+	}
+
+	public void setLatitud(String latitud) {
+		this.latitud = latitud;
+	}
+
+	@Column(name = "longitud", length = 30)
+	public String getLongitud() {
+		return this.longitud;
+	}
+
+	public void setLongitud(String longitud) {
+		this.longitud = longitud;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")

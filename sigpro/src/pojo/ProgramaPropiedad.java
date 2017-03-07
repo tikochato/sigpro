@@ -1,5 +1,5 @@
 package pojo;
-// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
+// Generated Mar 7, 2017 2:35:37 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class ProgramaPropiedad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5928024979385867740L;
+	private static final long serialVersionUID = -6816218451117713274L;
 	private Integer id;
 	private DatoTipo datoTipo;
 	private String nombre;
@@ -43,14 +43,9 @@ public class ProgramaPropiedad implements java.io.Serializable {
 	public ProgramaPropiedad() {
 	}
 
-	public ProgramaPropiedad(DatoTipo datoTipo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+	public ProgramaPropiedad(DatoTipo datoTipo) {
 		this.datoTipo = datoTipo;
-		this.nombre = nombre;
-		this.usuarioCreo = usuarioCreo;
-		this.fechaCreacion = fechaCreacion;
-		this.estado = estado;
 	}
-
 
 	public ProgramaPropiedad(DatoTipo datoTipo, String nombre, String descripcion, String usuarioCreo,
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado,
