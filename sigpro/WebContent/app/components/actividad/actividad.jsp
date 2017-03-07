@@ -1,5 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	  <style>
+		.event_title {
+			font-size: 14px;
+			font-weight: bold;
+		}
+		
+		.carousel-control.right{
+			background-image: none;
+		}
+		
+		.carousel-control.left{
+			background-image: none;
+		}
+	</style>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="actividadController as actividadc" class="maincontainer all_page" id="title">
@@ -115,8 +129,8 @@
 						<div class="form-group">
 							<label for="campo3">Coordenadas</label>
 				          	<div class="input-group">
-				            	<input type="text" class="form-control" placeholder="Latitud,Longitud" ng-model="actividadc.coordenadas" ng-readonly="true" />
-				            	<span class="input-group-addon" ng-click="actividadc.open(actividadc.latitude, actividadc.longitude); $event.stopPropagation();"><i class="glyphicon glyphicon-map-marker"></i></span>
+				            	<input type="text" class="form-control" placeholder="Latitud, Longitud" ng-model="actividadc.coordenadas" ng-readonly="true" />
+				            	<span class="input-group-addon" ng-click="actividadc.open(actividadc.latitude, actividadc.longitude); "><i class="glyphicon glyphicon-map-marker"></i></span>
 				          	</div>
 						</div>
 						
