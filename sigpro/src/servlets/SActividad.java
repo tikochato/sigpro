@@ -61,6 +61,9 @@ public class SActividad extends HttpServlet {
 		Integer actividad;
 		Integer obra;
 		Integer fuente;
+		String Longitud;
+		String Latitud;
+	
 		int estado;
 	}
 
@@ -144,6 +147,8 @@ public class SActividad extends HttpServlet {
 				temp.actividad = actividad.getActividad();
 				temp.obra = actividad.getObra();
 				temp.fuente = actividad.getFuente();
+				temp.Longitud = actividad.getLongitud();
+				temp.Latitud = actividad.getLatitud();
 				stactividads.add(temp);
 			}
 
@@ -173,6 +178,8 @@ public class SActividad extends HttpServlet {
 				temp.actividad = actividad.getActividad();
 				temp.obra = actividad.getObra();
 				temp.fuente = actividad.getFuente();
+				temp.Longitud = actividad.getLongitud();
+				temp.Latitud = actividad.getLatitud();
 				stactividads.add(temp);
 			}
 

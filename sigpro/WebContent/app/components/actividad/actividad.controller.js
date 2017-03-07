@@ -30,6 +30,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.ordenDireccion = null;
 		mi.latitud= "";
 		mi.longitud = "";
+		mi.coordenadas = "";
 		
 		mi.filtros = [];
 		$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo }).success(
@@ -221,6 +222,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
 			mi.actividad = {};
+			mi.coordenadas = "";
 			mi.gridApi.selection.clearSelectedRows();
 		};
 
@@ -229,6 +231,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				mi.mostraringreso = true;
 				mi.actividadtipoid = mi.actividad.actividadtipoid;
 				mi.esnuevo = false;
+				mi.coordenadas = actividad.longitud;
+				mi.coordenadas = actividad.latitud;
 				
 				var parametros = {
 						accion: 'getActividadPropiedadPorTipo',
@@ -515,6 +519,7 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
      		$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong }, 
      					   zoom: 15,
      					   height: 400,
+     					   width: 200,
      					   options: {
      						   streetViewControl: false,
      						   scrollwheel: true,
