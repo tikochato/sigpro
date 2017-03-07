@@ -173,7 +173,7 @@ public class CProject {
 		unidadEjecturoa.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
 		Proyecto proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecturoa
 				, task.getName(), null, usuario, null, new Date(), null, 1
-				, null, null, null, null, null, null, null, null, null, null, null, null, null);
+				, null, null, null, null, null, null, null, null, null, null, null, null, null,null,null);
 		ProyectoDAO.guardarProyecto(proyecto);
 		
 		return ProyectoDAO.guardarProyecto(proyecto) ? proyecto : null;
@@ -187,7 +187,7 @@ public class CProject {
 		
 		
 		Componente componente = new Componente(componenteTipo, proyecto, unidadEjecutora, task.getName(), null, usuario, null, new Date(), null, 1
-				, null, null, null, null, null, null, null, null, null, null);
+				, null, null, null, null, null, null, null, null, null, null,null,null);
 		
 		return ComponenteDAO.guardarComponente(componente) ? componente : null;
 	}
@@ -201,7 +201,7 @@ public class CProject {
 		Producto producto = new Producto(componente, productoTipo, unidadEjecutora
 				,task.getName() , null, usuario, null, new Date(), null,1, 
 				 null, null, null, null, null, null, null, 
-				null, null, null);
+				null, null, null,null,null);
 		
 		
 		return ProductoDAO.guardarProducto(producto) ? producto : null;
@@ -210,8 +210,9 @@ public class CProject {
 	public Subproducto crearSubproducto(Task task, Producto producto, String usuario){
 		SubproductoTipo subproductoTipo = new SubproductoTipo();
 		subproductoTipo.setId(SUBPRODUCTO_TIPO__ID_DEFECTO);
-		Subproducto subproducto = new Subproducto(producto, subproductoTipo, task.getName(), null, usuario, null, new Date(), null, 1, 
-				null, null, null, null, null, null, null, null, null);
+		
+		Subproducto subproducto = new Subproducto(producto, subproductoTipo, null,task.getName(), null, usuario, null, new Date(), null, 1, 
+				null, null, null, null, null, null, null, null, null,null,null);
 		
 		return SubproductoDAO.guardarSubproducto(subproducto) ? subproducto : null;
 	}
@@ -234,7 +235,7 @@ public class CProject {
 				null, null, null , objetoId, objetoTipo, 5, task.getDuration().getUnits().getName()
 				 
 				 ,itemPredecesor!=null ? itemPredecesor.objetoId : null
-						 , itemPredecesor != null ? itemPredecesor.objetoTipo : null, null, null);
+						 , itemPredecesor != null ? itemPredecesor.objetoTipo : null, null, null,null,null);
 		return ActividadDAO.guardarActividad(actividad) ? actividad : null;
 	}
 	

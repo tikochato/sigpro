@@ -23,7 +23,7 @@ public class SubproductoDAO {
 		try {
 			Query<Subproducto> criteria = session.createQuery("FROM Subproducto s where s.id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )", Subproducto.class);
 			criteria.setParameter("usuario", usuario);
-			ret =   (List<Subproducto>)criteria.getResultList();
+			ret =   criteria.getResultList();
 		} catch (Throwable e) {
 			CLogger.write("1", SubproductoDAO.class, e);
 		} finally {
@@ -39,7 +39,7 @@ public class SubproductoDAO {
 			Query<Subproducto> criteria = session.createQuery("FROM Subproducto where id=:id AND id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )", Subproducto.class);
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
-			 ret = (Subproducto) criteria.getSingleResult();;
+			 ret = criteria.getSingleResult();;
 		} catch (Throwable e) {
 			CLogger.write("2", SubproductoDAO.class, e);
 		} finally {

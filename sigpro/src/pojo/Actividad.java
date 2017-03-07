@@ -1,5 +1,5 @@
 package pojo;
-// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
+// Generated Mar 7, 2017 2:35:37 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8465719206395031988L;
+	private static final long serialVersionUID = 1662239078560448076L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
 	private String nombre;
@@ -53,6 +53,8 @@ public class Actividad implements java.io.Serializable {
 	private String duracionDimension;
 	private Integer predObjetoId;
 	private Integer predObjetoTipo;
+	private String latitud;
+	private String longitud;
 	private Set<ActividadPropiedadValor> actividadPropiedadValors = new HashSet<ActividadPropiedadValor>(0);
 	private Set<ActividadUsuario> actividadUsuarios = new HashSet<ActividadUsuario>(0);
 
@@ -80,7 +82,7 @@ public class Actividad implements java.io.Serializable {
 			int porcentajeAvance, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
 			Integer actividad, Integer obra, Integer fuente, int objetoId, int objetoTipo, int duracion,
-			String duracionDimension, Integer predObjetoId, Integer predObjetoTipo,
+			String duracionDimension, Integer predObjetoId, Integer predObjetoTipo, String latitud, String longitud,
 			Set<ActividadPropiedadValor> actividadPropiedadValors, Set<ActividadUsuario> actividadUsuarios) {
 		this.actividadTipo = actividadTipo;
 		this.nombre = nombre;
@@ -106,6 +108,8 @@ public class Actividad implements java.io.Serializable {
 		this.duracionDimension = duracionDimension;
 		this.predObjetoId = predObjetoId;
 		this.predObjetoTipo = predObjetoTipo;
+		this.latitud = latitud;
+		this.longitud = longitud;
 		this.actividadPropiedadValors = actividadPropiedadValors;
 		this.actividadUsuarios = actividadUsuarios;
 	}
@@ -341,6 +345,24 @@ public class Actividad implements java.io.Serializable {
 
 	public void setPredObjetoTipo(Integer predObjetoTipo) {
 		this.predObjetoTipo = predObjetoTipo;
+	}
+
+	@Column(name = "latitud", length = 30)
+	public String getLatitud() {
+		return this.latitud;
+	}
+
+	public void setLatitud(String latitud) {
+		this.latitud = latitud;
+	}
+
+	@Column(name = "longitud", length = 30)
+	public String getLongitud() {
+		return this.longitud;
+	}
+
+	public void setLongitud(String longitud) {
+		this.longitud = longitud;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actividad")

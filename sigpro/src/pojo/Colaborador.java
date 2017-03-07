@@ -1,5 +1,5 @@
 package pojo;
-// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
+// Generated Mar 7, 2017 2:35:37 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -24,7 +24,7 @@ public class Colaborador implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 435780884214465956L;
+	private static final long serialVersionUID = 5907359703480754058L;
 	private Integer id;
 	private UnidadEjecutora unidadEjecutora;
 	private Usuario usuario;

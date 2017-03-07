@@ -52,7 +52,7 @@ public class ProductoDAO {
 		try {
 			Query<Producto> criteria = session.createQuery("FROM Producto p where p.id in (SELECT u.id.productoid from ProductoUsuario u where u.id.usuario=:usuario )", Producto.class);
 			criteria.setParameter("usuario", usuario);
-			ret =   (List<Producto>)criteria.getResultList();
+			ret =   criteria.getResultList();
 		} catch (Throwable e) {
 			CLogger.write("1", ProductoDAO.class, e);
 		} finally {
@@ -68,7 +68,7 @@ public class ProductoDAO {
 			Query<Producto> criteria = session.createQuery("FROM Producto where id=:id AND id in (SELECT u.id.productoid from ProductoUsuario u where u.id.usuario=:usuario )", Producto.class);
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
-			 ret = (Producto) criteria.getSingleResult();;
+			 ret = criteria.getSingleResult();;
 		} catch (Throwable e) {
 			CLogger.write("2", ProductoDAO.class, e);
 		} finally {

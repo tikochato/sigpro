@@ -218,7 +218,8 @@ public class SProgramaPropiedad extends HttpServlet {
 
 				ProgramaPropiedad programaPropiedad;
 				if(esnuevo){
-					programaPropiedad = new ProgramaPropiedad(datoTipo,nombre, usuario, new DateTime().toDate(), 1);
+					programaPropiedad = new ProgramaPropiedad(datoTipo, nombre, null, usuario, null, 
+							new DateTime().toDate(), null, 1, null, null);
 					programaPropiedad.setDescripcion(descripcion);
 				}
 				else{

@@ -21,7 +21,7 @@ public class ProgramaDAO implements java.io.Serializable {
 		try{
 			Query<Programa> criteria = session.createQuery("FROM Programa p where p.estado = 1", Programa.class);
 			
-			ret =   (List<Programa>)criteria.getResultList();
+			ret =   criteria.getResultList();
 		}
 		catch(Throwable e){
 			CLogger.write("1", Programa.class, e);
@@ -66,7 +66,7 @@ public class ProgramaDAO implements java.io.Serializable {
 		try{
 			Query<Programa> criteria = session.createQuery("FROM Programa where id=:id", Programa.class);
 			criteria.setParameter("id", id);
-			ret = (Programa) criteria.getSingleResult();;
+			ret = criteria.getSingleResult();;
 		}
 		catch(Throwable e){
 			CLogger.write("3", ProgramaDAO.class, e);

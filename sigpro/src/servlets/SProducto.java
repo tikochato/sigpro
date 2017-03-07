@@ -149,7 +149,7 @@ public class SProducto extends HttpServlet {
 				
 				producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, descripcion, 
 						 usuario, null, new DateTime().toDate(), null, 1
-						, snip, programa, subprograma, proyecto_, actividad, obra, fuente, null, null,null);
+						, snip, programa, subprograma, proyecto_, actividad, obra, fuente, null, null,null,null,null);
 				
 			}else{
 				producto = ProductoDAO.getProductoPorId(id);

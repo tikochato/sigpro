@@ -261,7 +261,7 @@ public class SProyecto extends HttpServlet {
 					proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion
 							, usuario, null, new DateTime().toDate(), null, 1, snip
 							,programa , subPrograma, proyecto_,actividad, obra, fuente,
-							null, null, null, null, null, null);
+							null, null, null, null, null, null,null,null);
 
 				}else{
 					proyecto = ProyectoDAO.getProyectoPorId(id,usuario);

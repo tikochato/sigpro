@@ -1,5 +1,5 @@
 package pojo;
-// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
+// Generated Mar 7, 2017 2:35:37 PM by Hibernate Tools 5.2.1.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class Desembolso implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1670490896800748139L;
+	private static final long serialVersionUID = -8762109671508732782L;
 	private Integer id;
 	private DesembolsoTipo desembolsoTipo;
 	private Proyecto proyecto;
@@ -33,16 +33,18 @@ public class Desembolso implements java.io.Serializable {
 	private int estado;
 	private BigDecimal monto;
 	private BigDecimal tipoCambio;
+	private Integer montoMonedaOrigen;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
+	private int tipoMonedaid;
 
 	public Desembolso() {
 	}
 
 	public Desembolso(DesembolsoTipo desembolsoTipo, Proyecto proyecto, Date fecha, int estado, BigDecimal monto,
-			BigDecimal tipoCambio, String usuarioCreo, Date fechaCreacion) {
+			BigDecimal tipoCambio, String usuarioCreo, Date fechaCreacion, int tipoMonedaid) {
 		this.desembolsoTipo = desembolsoTipo;
 		this.proyecto = proyecto;
 		this.fecha = fecha;
@@ -51,21 +53,24 @@ public class Desembolso implements java.io.Serializable {
 		this.tipoCambio = tipoCambio;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
+		this.tipoMonedaid = tipoMonedaid;
 	}
 
 	public Desembolso(DesembolsoTipo desembolsoTipo, Proyecto proyecto, Date fecha, int estado, BigDecimal monto,
-			BigDecimal tipoCambio, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion) {
+			BigDecimal tipoCambio, Integer montoMonedaOrigen, String usuarioCreo, String usuarioActualizo,
+			Date fechaCreacion, Date fechaActualizacion, int tipoMonedaid) {
 		this.desembolsoTipo = desembolsoTipo;
 		this.proyecto = proyecto;
 		this.fecha = fecha;
 		this.estado = estado;
 		this.monto = monto;
 		this.tipoCambio = tipoCambio;
+		this.montoMonedaOrigen = montoMonedaOrigen;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
+		this.tipoMonedaid = tipoMonedaid;
 	}
 
 	@Id
@@ -137,6 +142,15 @@ public class Desembolso implements java.io.Serializable {
 		this.tipoCambio = tipoCambio;
 	}
 
+	@Column(name = "monto_moneda_origen")
+	public Integer getMontoMonedaOrigen() {
+		return this.montoMonedaOrigen;
+	}
+
+	public void setMontoMonedaOrigen(Integer montoMonedaOrigen) {
+		this.montoMonedaOrigen = montoMonedaOrigen;
+	}
+
 	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
@@ -173,6 +187,15 @@ public class Desembolso implements java.io.Serializable {
 
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	@Column(name = "tipo_monedaid", nullable = false)
+	public int getTipoMonedaid() {
+		return this.tipoMonedaid;
+	}
+
+	public void setTipoMonedaid(int tipoMonedaid) {
+		this.tipoMonedaid = tipoMonedaid;
 	}
 
 }

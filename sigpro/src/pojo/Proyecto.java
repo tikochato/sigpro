@@ -1,5 +1,5 @@
 package pojo;
-// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
+// Generated Mar 7, 2017 2:35:37 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6684155843257570083L;
+	private static final long serialVersionUID = -4876063306946402560L;
 	private Integer id;
 	private Cooperante cooperante;
 	private ProyectoTipo proyectoTipo;
@@ -46,6 +46,8 @@ public class Proyecto implements java.io.Serializable {
 	private Integer actividad;
 	private Integer obra;
 	private Integer fuente;
+	private String latitud;
+	private String longitud;
 	private Set<Desembolso> desembolsos = new HashSet<Desembolso>(0);
 	private Set<Hito> hitos = new HashSet<Hito>(0);
 	private Set<ProgramaProyecto> programaProyectos = new HashSet<ProgramaProyecto>(0);
@@ -70,9 +72,10 @@ public class Proyecto implements java.io.Serializable {
 	public Proyecto(Cooperante cooperante, ProyectoTipo proyectoTipo, UnidadEjecutora unidadEjecutora, String nombre,
 			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
-			Integer actividad, Integer obra, Integer fuente, Set<Desembolso> desembolsos, Set<Hito> hitos,
-			Set<ProgramaProyecto> programaProyectos, Set<ProyectoPropedadValor> proyectoPropedadValors,
-			Set<ProyectoUsuario> proyectoUsuarios, Set<Componente> componentes) {
+			Integer actividad, Integer obra, Integer fuente, String latitud, String longitud,
+			Set<Desembolso> desembolsos, Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos,
+			Set<ProyectoPropedadValor> proyectoPropedadValors, Set<ProyectoUsuario> proyectoUsuarios,
+			Set<Componente> componentes) {
 		this.cooperante = cooperante;
 		this.proyectoTipo = proyectoTipo;
 		this.unidadEjecutora = unidadEjecutora;
@@ -90,6 +93,8 @@ public class Proyecto implements java.io.Serializable {
 		this.actividad = actividad;
 		this.obra = obra;
 		this.fuente = fuente;
+		this.latitud = latitud;
+		this.longitud = longitud;
 		this.desembolsos = desembolsos;
 		this.hitos = hitos;
 		this.programaProyectos = programaProyectos;
@@ -266,6 +271,24 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setFuente(Integer fuente) {
 		this.fuente = fuente;
+	}
+
+	@Column(name = "latitud", length = 30)
+	public String getLatitud() {
+		return this.latitud;
+	}
+
+	public void setLatitud(String latitud) {
+		this.latitud = latitud;
+	}
+
+	@Column(name = "longitud", length = 30)
+	public String getLongitud() {
+		return this.longitud;
+	}
+
+	public void setLongitud(String longitud) {
+		this.longitud = longitud;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")

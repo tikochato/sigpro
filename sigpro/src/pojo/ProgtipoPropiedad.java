@@ -1,5 +1,5 @@
 package pojo;
-// Generated Mar 1, 2017 5:54:17 PM by Hibernate Tools 5.2.1.Final
+// Generated Mar 7, 2017 2:35:37 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import javax.persistence.AttributeOverride;
@@ -24,7 +24,7 @@ public class ProgtipoPropiedad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 715981777352717124L;
+	private static final long serialVersionUID = 5369371231783762428L;
 	private ProgtipoPropiedadId id;
 	private ProgramaPropiedad programaPropiedad;
 	private ProgramaTipo programaTipo;
@@ -37,13 +37,10 @@ public class ProgtipoPropiedad implements java.io.Serializable {
 	public ProgtipoPropiedad() {
 	}
 
-	public ProgtipoPropiedad(ProgtipoPropiedadId id, ProgramaPropiedad programaPropiedad, ProgramaTipo programaTipo,
-			String usuarioCreo, Date fechaCreacion) {
+	public ProgtipoPropiedad(ProgtipoPropiedadId id, ProgramaPropiedad programaPropiedad, ProgramaTipo programaTipo) {
 		this.id = id;
 		this.programaPropiedad = programaPropiedad;
 		this.programaTipo = programaTipo;
-		this.usuarioCreo = usuarioCreo;
-		this.fechaCreacion = fechaCreacion;
 	}
 
 	public ProgtipoPropiedad(ProgtipoPropiedadId id, ProgramaPropiedad programaPropiedad, ProgramaTipo programaTipo,
