@@ -11,7 +11,7 @@
         </div>
         <div class="modal-body" style="height: 400px;">
             			<ui-gmap-google-map id="mainmap" ng-if="refreshMap" center="map.center" zoom="map.zoom" options="map.options" events="map.events"  >
-							<ui-gmap-marker idkey="1" coords="map.posicion" draggable="true"></ui-gmap-marker>
+							<ui-gmap-marker idkey="1" coords="posicion"></ui-gmap-marker>
 						</ui-gmap-google-map>
 		</div>
         <div class="modal-footer">

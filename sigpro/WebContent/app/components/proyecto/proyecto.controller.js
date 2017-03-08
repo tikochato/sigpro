@@ -630,6 +630,9 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 	$scope.geoposicionlat = glat != null ? glat : 14.6290845;
 	$scope.geoposicionlong = glong != null ? glong : -90.5116158;
 	
+	$scope.posicion = (glat !=null && glong !=null ) ? {latitude: glat, longitude: glong} : null;
+	//$scope.posicion = null;
+	
 	$scope.refreshMap = true;
 	uiGmapGoogleMapApi.then(function() {
 		
@@ -647,16 +650,10 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 		   },
 		   events:{
 			   click: function (map,evtName,evt) {
-				   console.log($scope.posicion);
-				   console.log(map);
-				   
-				   $scope.posicion = evt[0].latLng;
-				  
-				   console.log($scope.posicion);
-				  //console.log(evt.center.lat() + ' ' +  evt.center.lng());
+				   $scope.posicion = {latitude: evt[0].latLng.lat()+"", longitude: evt[0].latLng.lng()+""} ;
+				   $scope.$evalAsync();
 			   }
 		   },
-		   //posicion: (glat !=null && glong !=null ) ? {latitude: glat, longitude: glong} : null,
 		   refresh: true
 		};
 		
@@ -670,7 +667,7 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 
 
 	  $scope.ok = function () {
-	   $uibModalInstance.close($scope.coordenadas);
+	   $uibModalInstance.close($scope.posicion);
 	  };
 
 }]);
