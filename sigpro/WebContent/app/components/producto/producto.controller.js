@@ -29,6 +29,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.filtros = [];
 	mi.orden = null;
 	mi.esNuevo = false;
+	mi.latitud= "";
+	mi.longitud = "";
+	mi.coordenadas = "";
 	
 	$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id }).success(
 			function(response) {
@@ -188,6 +191,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 
 		mi.propiedadesValor = [];
 		mi.producto = {};
+		
+		mi.latitud= "";
+		mi.longitud = "";
+		mi.coordenadas = "";
 
 	}
 
@@ -264,6 +271,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				productoPadre : mi.productoPadre,
 				tipoproductoid : mi.tipo,
 				unidadEjecutora : mi.unidadEjecutora,
+				longitud: mi.longitud,
+				latitud : mi.latitud,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				esnuevo : mi.esNuevo
 			};
@@ -303,6 +312,11 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			
 			mi.unidadEjecutora = mi.producto.unidadEjectuora;
 			mi.unidadEjecutoraNombre = mi.producto.nombreUnidadEjecutora;
+			
+			mi.longitud = mi.producto.longitud;
+			mi.latitud = mi.producto.latitud;
+			mi.coordenadas = (mi.latitud !=null ?  mi.latitud : '') +
+			(mi.latitud!=null ? ', ' : '') + (mi.longitud!=null ? mi.longitud : '');
 			
 			var parametros = {
 					accion: 'getProductoPropiedadPorTipo', 
@@ -490,6 +504,36 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			mi.unidadEjecutoraNombre = itemSeleccionado.nombreUnidadEjecutora;
 		});
 	};
+	
+	mi.open = function (posicionlat, posicionlong) {
+		mi.geoposicionlat = posicionlat;
+		mi.geoposicionlong = posicionlong;
+
+	    var modalInstance = $uibModal.open({
+	      animation: true,
+	      templateUrl: 'map.html',
+	      controller: 'mapCtrl',
+	      resolve: {
+	        glat: function(){
+	        	return $scope.geoposicionlat;
+	        },
+	        glong: function(){
+	        	return $scope.geoposicionlong;
+	        }
+	      }
+
+	    });
+
+	    modalInstance.result.then(function(coordenadas) {
+	    	mi.coordenadas = coordenadas.latitud + ", " + coordenadas.longitud;
+	    	mi.latitud= coordenadas.latitud;
+			mi.longitud = coordenadas.longitud;
+
+	    }, function() {
+		});
+
+	  };
+	  
 }
 
 moduloProducto.controller('modalBuscarPorProducto', [ '$uibModalInstance',
@@ -588,4 +632,37 @@ function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
 		$uibModalInstance.dismiss('cancel');
 	};
 
-}
+};
+
+moduloProducto.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogleMapApi','glat','glong',
+    function ($scope, $uibModalInstance,$timeout, uiGmapGoogleMapApi, glat, glong) {
+	$scope.geoposicionlat = glat != null ? glat : 14.6290845;
+	$scope.geoposicionlong = glong != null ? glong : -90.5116158;
+
+	$scope.refreshMap = true;
+
+	uiGmapGoogleMapApi.then(function() {
+		$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong },
+					   zoom: 15,
+					   height: 400,
+					   width: 200,
+					   options: {
+						   streetViewControl: false,
+						   scrollwheel: true,
+						  draggable: true,
+						  mapTypeId: google.maps.MapTypeId.SATELLITE
+					   },
+					   refresh: true
+					};
+    });
+
+	  $scope.ok = function () {
+
+	   var coordenadas = {};
+	   coordenadas.latitud = $scope.geoposicionlat;
+	   coordenadas.longitud = $scope.geoposicionlong;
+
+	   $uibModalInstance.close(coordenadas);
+	  };
+
+}]);

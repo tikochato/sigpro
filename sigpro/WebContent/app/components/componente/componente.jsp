@@ -1,8 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	 <style>
+		.event_title {
+			font-size: 14px;
+			font-weight: bold;
+		}
+	</style>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="componenteController as componentec" class="maincontainer all_page" id="title">
+		<script type="text/ng-template" id="map.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Mapa de Ubicación</h3>
+        </div>
+        <div class="modal-body" style="height: 400px;">
+            			<ui-gmap-google-map id="mainmap" ng-if="refreshMap" center="map.center" zoom="map.zoom" options="map.options">
+							<ui-gmap-marker idkey="1" coords="map.center" draggable="true"></ui-gmap-marker>
+						</ui-gmap-google-map>
+		</div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+        </div>
+    </script>
+    
 	    <script type="text/ng-template" id="buscarPorComponente.jsp">
     		<%@ include file="/app/components/componente/buscarPorComponente.jsp"%>
   	    </script>
@@ -162,6 +182,16 @@
 								</select>
 							</div>
 						</div>
+						
+						<div class="form-group">
+							<label for="campo3">Coordenadas</label>
+				          	<div class="input-group">
+				            	<input type="text" class="form-control" placeholder="Latitud, Longitud" ng-model="componentec.coordenadas" ng-readonly="true" />
+				            	<span class="input-group-addon" ng-click="componentec.open(componentec.latitude, componentec.longitude); "><i class="glyphicon glyphicon-map-marker"></i></span>
+				          	</div>
+						</div>
+						
+						
 						<div class="form-group">
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="componentec.componente.descripcion">

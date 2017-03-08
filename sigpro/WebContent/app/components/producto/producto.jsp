@@ -3,7 +3,19 @@
 <%@ page import="org.apache.shiro.SecurityUtils"%>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <div ng-controller="controlProducto as producto" class="maincontainer all_page">
-
+	<script type="text/ng-template" id="map.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Mapa de Ubicación</h3>
+        </div>
+        <div class="modal-body" style="height: 400px;">
+            			<ui-gmap-google-map id="mainmap" ng-if="refreshMap" center="map.center" zoom="map.zoom" options="map.options">
+							<ui-gmap-marker idkey="1" coords="map.center" draggable="true"></ui-gmap-marker>
+						</ui-gmap-google-map>
+		</div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+        </div>
+    </script>
 	<script type="text/ng-template" id="buscarPorProducto.jsp">
 	    <%@ include file="/app/components/producto/buscarPorProducto.jsp"%>
 	</script>
@@ -132,6 +144,14 @@
 						</div>
 					</div>
 
+					<div class="form-group">
+						<label >Coordenadas</label>
+			          	<div class="input-group">
+			            	<input type="text" class="form-control" placeholder="Latitud, Longitud" ng-model="producto.coordenadas" ng-readonly="true" />
+			            	<span class="input-group-addon" ng-click="producto.open(producto.latitude, producto.longitude); "><i class="glyphicon glyphicon-map-marker"></i></span>
+			          	</div>
+					</div>
+						
 					<div class="form-group" >
 						<label for="campo2"> Descripción</label> 
 						<input type="text" class="form-control" placeholder="Descripcion del producto" ng-model="producto.producto.descripcion" />

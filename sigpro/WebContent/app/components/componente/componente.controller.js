@@ -30,6 +30,9 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		mi.ordenDireccion = null;
 		mi.filtros = [];
 		mi.orden = null;
+		mi.latitud= "";
+		mi.longitud = "";
+		mi.coordenadas = "";
 
 		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id }).success(
 				function(response) {
@@ -151,6 +154,8 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					fuente: mi.componente.fuente,
 					esnuevo: mi.esnuevo,
 					unidadejecutoraid:mi.unidadejecutoraid,
+					longitud: mi.longitud,
+					latitud : mi.latitud,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
 					if(response.success){
@@ -209,6 +214,9 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			mi.esnuevo = true;
 			mi.componente = {};
 			mi.camposdinamicos = {};
+			mi.latitud= "";
+			mi.longitud = "";
+			mi.coordenadas = "";
 			mi.gridApi.selection.clearSelectedRows();
 
 		};
@@ -221,6 +229,11 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				mi.componentetiponombre=mi.componente.componentetiponombre;
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
+				mi.longitud = mi.componente.longitud;
+				mi.latitud = mi.componente.latitud;
+				mi.coordenadas = (mi.latitud !=null ?  mi.latitud : '') +
+				(mi.latitud!=null ? ', ' : '') + (mi.longitud!=null ? mi.longitud : '');
+
 
 				var parametros = {
 						accion: 'getComponentePropiedadPorTipo',
@@ -405,6 +418,36 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				mi.unidadejecutoranombre = itemSeleccionado.nombreUnidadEjecutora;
 			});
 		};
+		
+		
+		mi.open = function (posicionlat, posicionlong) {
+			mi.geoposicionlat = posicionlat;
+			mi.geoposicionlong = posicionlong;
+
+		    var modalInstance = $uibModal.open({
+		      animation: true,
+		      templateUrl: 'map.html',
+		      controller: 'mapCtrl',
+		      resolve: {
+		        glat: function(){
+		        	return $scope.geoposicionlat;
+		        },
+		        glong: function(){
+		        	return $scope.geoposicionlong;
+		        }
+		      }
+
+		    });
+
+		    modalInstance.result.then(function(coordenadas) {
+		    	mi.coordenadas = coordenadas.latitud + ", " + coordenadas.longitud;
+		    	mi.latitud= coordenadas.latitud;
+				mi.longitud = coordenadas.longitud;
+
+		    }, function() {
+			});
+
+		  };
 } ]);
 
 app.controller('buscarPorComponente', [ '$uibModalInstance',
@@ -500,4 +543,41 @@ function buscarPorComponente($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
-}
+};
+
+app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogleMapApi','glat','glong',
+    function ($scope, $uibModalInstance,$timeout, uiGmapGoogleMapApi, glat, glong) {
+	$scope.geoposicionlat = glat != null ? glat : 14.6290845;
+	$scope.geoposicionlong = glong != null ? glong : -90.5116158;
+
+	$scope.refreshMap = true;
+
+	uiGmapGoogleMapApi.then(function() {
+		$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong },
+					   zoom: 15,
+					   height: 400,
+					   width: 200,
+					   options: {
+						   streetViewControl: false,
+						   scrollwheel: true,
+						  draggable: true,
+						  mapTypeId: google.maps.MapTypeId.SATELLITE
+					   },
+					   refresh: true
+					};
+    });
+
+
+
+	  $scope.ok = function () {
+
+
+	   var coordenadas = {};
+	   coordenadas.latitud = $scope.geoposicionlat;
+	   coordenadas.longitud = $scope.geoposicionlong;
+
+	   $uibModalInstance.close(coordenadas);
+	  };
+
+}]);
+

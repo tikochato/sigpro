@@ -63,6 +63,8 @@ public class SProyecto extends HttpServlet {
 		Integer actividad;
 		Integer obra;
 		Integer fuente;
+		String longitud;
+		String latitud;
 	};
 
 	class stdatadinamico {
@@ -138,6 +140,8 @@ public class SProyecto extends HttpServlet {
 				dato.obra = proyecto.getObra();
 				dato.actividad = proyecto.getActividad();
 				dato.fuente = proyecto.getFuente();
+				dato.longitud = proyecto.getLongitud();
+				dato.latitud = proyecto.getLatitud();
 				datos_.add(dato);
 			}
 
@@ -180,6 +184,8 @@ public class SProyecto extends HttpServlet {
 				dato.obra = proyecto.getObra();
 				dato.actividad = proyecto.getActividad();
 				dato.fuente = proyecto.getFuente();
+				dato.longitud = proyecto.getLongitud();
+				dato.latitud = proyecto.getLatitud();
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -219,6 +225,8 @@ public class SProyecto extends HttpServlet {
 				dato.obra = proyecto.getObra();
 				dato.actividad = proyecto.getActividad();
 				dato.fuente = proyecto.getFuente();
+				dato.longitud = proyecto.getLongitud();
+				dato.latitud = proyecto.getLatitud();
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -242,6 +250,8 @@ public class SProyecto extends HttpServlet {
 				Integer actividad = map.get("actividad")!=null ? Integer.parseInt(map.get("actividad")):null;
 				Integer obra = map.get("obra")!=null ? Integer.parseInt(map.get("obra")):null;
 				Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
+				String longitud = map.get("longitud");
+				String latitud = map.get("latitud");
 
 				ProyectoTipo proyectoTipo = new ProyectoTipo();
 				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): null);
@@ -260,8 +270,8 @@ public class SProyecto extends HttpServlet {
 				if(esnuevo){
 					proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion
 							, usuario, null, new DateTime().toDate(), null, 1, snip
-							,programa , subPrograma, proyecto_,actividad, obra, fuente,
-							null, null, null, null, null, null,null,null);
+							,programa , subPrograma, proyecto_,actividad, obra, fuente,latitud,longitud
+							, null, null, null, null,null,null);
 
 				}else{
 					proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
@@ -279,6 +289,8 @@ public class SProyecto extends HttpServlet {
 					proyecto.setActividad(actividad);
 					proyecto.setObra(obra);
 					proyecto.setFuente(fuente);
+					proyecto.setLongitud(longitud);
+					proyecto.setLatitud(latitud);
 
 				   List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
 
