@@ -526,6 +526,8 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
      	$scope.geoposicionlong = glong != null ? glong : -90.5116158;
 
      	$scope.refreshMap = true;
+     	//$scope.posicion = (glat!=null && glong!=null) ? {latitude: glat, longitude: glong} :  null;
+     	$scope.posicion = null;
 
      	uiGmapGoogleMapApi.then(function() {
      		$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong },
@@ -537,6 +539,13 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
      						   scrollwheel: true,
      						  draggable: true,
      						  mapTypeId: google.maps.MapTypeId.SATELLITE
+     					   },
+     					   events: {
+     						   click: function(map, evtName, evt){
+     							   console.log($scope.posicion);
+     							   $scope.posicion = evt[0].latLng;
+     							   console.log($scope.posicion);
+     						   }
      					   },
      					   refresh: true
      					};

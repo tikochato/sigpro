@@ -39,6 +39,7 @@
 	                        <shiro:hasPermission name="36010"><li role="menuitem"><a href="#!/proyectotipo">Tipo de Proyecto</a></li></shiro:hasPermission>
 	                        <shiro:hasPermission name="28010"> <li role="menuitem"><a href="#!/recursotipo">Tipo de Recurso</a></li></shiro:hasPermission>
 	                        <shiro:hasPermission name="32010"><li role="menuitem"><a href="#!/riesgotipo">Tipo de Riesgo</a></li></shiro:hasPermission>
+	                        <shiro:hasPermission name="23010"> <li role="menuitem"><a href="#!/subproductotipo">Tipo de Subproducto</a></li></shiro:hasPermission>
 	                        <shiro:hasPermission name="19010"><li role="menuitem"><a href="#!/metaunidadmedida">Unidad de Medida para Metas</a></li></shiro:hasPermission>
 	                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/recursounidadmedida">Unidad de Medida para Recurso</a></li></shiro:hasPermission>
                          </ul>
@@ -49,7 +50,8 @@
                          	<shiro:hasPermission name="25010"><li role="menuitem"><a href="#!/programapropiedad">Programa</a></li></shiro:hasPermission>
                          	<shiro:hasPermission name="2010"><li role="menuitem"><a href="#!/actividadpropiedad">Actividad</a></li></shiro:hasPermission>	                      
 	                        <shiro:hasPermission name="6010"> <li role="menuitem"><a href="#!/componentepropiedad">Componente</a></li></shiro:hasPermission>	                       
-	                        <shiro:hasPermission name="22010"> <li role="menuitem"><a href="#!/productopropiedad">Producto</a></li></shiro:hasPermission>	                       
+	                        <shiro:hasPermission name="22010"> <li role="menuitem"><a href="#!/productopropiedad">Producto</a></li></shiro:hasPermission>
+	                        <shiro:hasPermission name="22010"> <li role="menuitem"><a href="#!/subproductopropiedad">Subproducto</a></li></shiro:hasPermission>	                       
 	                        <shiro:hasPermission name="25010"><li role="menuitem"><a href="#!/proyectopropiedad">Proyecto</a></li></shiro:hasPermission>	                        
 	                        <shiro:hasPermission name="27010"><li role="menuitem"><a href="#!/recursopropiedad">Recurso</a></li></shiro:hasPermission>	                        
 	                        <shiro:hasPermission name="31010"> <li role="menuitem"><a href="#!/riesgopropiedad">Riesgo</a></li></shiro:hasPermission>	                       

@@ -1,29 +1,55 @@
 package dao;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-
 import pojo.Subproducto;
-import pojo.SubproductoUsuario;
-import pojo.SubproductoUsuarioId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
+import utilities.Utils;
 
 public class SubproductoDAO {
+
 	
+	static class EstructuraPojo {
+		Integer id;
+		String nombre;
+		String descripcion;
+		Integer idComponente;
+		String componente;
+		Integer idProductoTipo;
+		String productoTipo;
+		Integer unidadEjectuora;
+		String nombreUnidadEjecutora;
+		Long snip;
+		Integer programa;
+		Integer subprograma;
+		Integer proyecto_;
+		Integer actividad;
+		Integer obra;
+		Integer fuente;
+		Integer estado;
+		String fechaCreacion;
+		String usuarioCreo;
+		String fechaactualizacion;
+		String usuarioactualizo;
+		
+	}
+
 	public static List<Subproducto> getSubproductos(String usuario) {
 		List<Subproducto> ret = new ArrayList<Subproducto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<Subproducto> criteria = session.createQuery("FROM Subproducto s where s.id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )", Subproducto.class);
+			Query<Subproducto> criteria = session.createQuery("FROM Subproducto p where p.id in (SELECT u.id.productoid from SubproductoUsuario u where u.id.usuario=:usuario )", Subproducto.class);
 			criteria.setParameter("usuario", usuario);
-			ret =   criteria.getResultList();
+			ret =   (List<Subproducto>)criteria.getResultList();
 		} catch (Throwable e) {
 			CLogger.write("1", SubproductoDAO.class, e);
 		} finally {
@@ -31,15 +57,15 @@ public class SubproductoDAO {
 		}
 		return ret;
 	}
-	
+
 	public static Subproducto getSubproductoPorId(int id, String usuario) {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Subproducto ret = null;
 		try {
-			Query<Subproducto> criteria = session.createQuery("FROM Subproducto where id=:id AND id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )", Subproducto.class);
+			Query<Subproducto> criteria = session.createQuery("FROM Suproducto where id=:id AND id in (SELECT u.id.productoid from SubproductoUsuario u where u.id.usuario=:usuario )", Subproducto.class);
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
-			 ret = criteria.getSingleResult();;
+			 ret = (Subproducto) criteria.getSingleResult();;
 		} catch (Throwable e) {
 			CLogger.write("2", SubproductoDAO.class, e);
 		} finally {
@@ -47,26 +73,23 @@ public class SubproductoDAO {
 		}
 		return ret;
 	}
-	
+
 	public static boolean guardarSubproducto(Subproducto subproducto) {
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
 			session.saveOrUpdate(subproducto);
-			SubproductoUsuario su = new SubproductoUsuario(new SubproductoUsuarioId(subproducto.getId(), subproducto.getUsuarioCreo())
-					, subproducto, subproducto.getUsuarioCreo(), null, new Date(), null);
-			session.save(su);
 			session.getTransaction().commit();
 			ret = true;
 		} catch (Throwable e) {
-			CLogger.write("3", ProductoDAO.class, e);
+			CLogger.write("3", SubproductoDAO.class, e);
 		} finally {
 			session.close();
 		}
 		return ret;
 	}
-	
+
 	public static boolean eliminarSubproducto(Subproducto subproducto) {
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -83,13 +106,13 @@ public class SubproductoDAO {
 		}
 		return ret;
 	}
-	
-	public static boolean eliminarTotalSubproducto(Subproducto subproducto) {
+
+	public static boolean eliminarTotalSubproducto(Subproducto Subproducto) {
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			session.delete(subproducto);
+			session.delete(Subproducto);
 			session.getTransaction().commit();
 			ret = true;
 		} catch (Throwable e) {
@@ -100,34 +123,34 @@ public class SubproductoDAO {
 		return ret;
 	}
 
-	public static List<Subproducto> getSubproductosPagina(int pagina, int numeroSubproductos,Integer productoid, 
+	public static List<Subproducto> getSubproductosPagina(int pagina, int numeroProductos,Integer componenteid, 
 			String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion, String columna_ordenada, 
 			String orden_direccion,String usuario) {
 		List<Subproducto> ret = new ArrayList<Subproducto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			
-			String query = "SELECT s FROM Subproducto s WHERE s.estado = 1 "
-					+ (productoid!=null && productoid > 0 ? "AND s.producto.id = :idProd " : "");
+			String query = "SELECT p FROM Subproducto p WHERE p.estado = 1 "
+					+ (componenteid!=null && componenteid > 0 ? "AND p.componente.id = :idComp " : "");
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
-				query_a = String.join("",query_a, " s.nombre LIKE '%",filtro_nombre,"%' ");
+				query_a = String.join("",query_a, " p.nombre LIKE '%",filtro_nombre,"%' ");
 			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
-				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " s.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " p.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
-				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(s.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			if(usuario!=null)
-				query = String.join("", query, " AND s.id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )");
+				query = String.join("", query, " AND p.id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )");
 			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
 			
 			Query<Subproducto> criteria = session.createQuery(query,Subproducto.class);
 			criteria.setParameter("usuario", usuario);
-			if (productoid!=null && productoid>0){
-				criteria.setParameter("idProd", productoid);
+			if (componenteid!=null && componenteid>0){
+				criteria.setParameter("idComp", componenteid);
 			}
-			criteria.setFirstResult(((pagina - 1) * (numeroSubproductos)));
-			criteria.setMaxResults(numeroSubproductos);
+			criteria.setFirstResult(((pagina - 1) * (numeroProductos)));
+			criteria.setMaxResults(numeroProductos);
 			
 			ret = criteria.getResultList();
 		} catch (Throwable e) {
@@ -138,30 +161,30 @@ public class SubproductoDAO {
 		return ret;
 	}
 
-	public static Long getTotalSubproductos(Integer productoid, String filtro_nombre, String filtro_usuario_creo, 
+	public static Long getTotalSubproductos(Integer componenteid, String filtro_nombre, String filtro_usuario_creo, 
 			String filtro_fecha_creacion, String usuario) {
 		Long ret = 0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			
-			String query = "SELECT count(s.id) FROM Producto s WHERE s.estado = 1 "
-					+ (productoid!=null && productoid > 0 ? "AND s.componente.id = :idProd " : "");
+			String query = "SELECT count(p.id) FROM Subproducto p WHERE p.estado = 1 "
+					+ (componenteid!=null && componenteid > 0 ? "AND p.componente.id = :idComp " : "");
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
-				query_a = String.join("",query_a, " s.nombre LIKE '%",filtro_nombre,"%' ");
+				query_a = String.join("",query_a, " p.nombre LIKE '%",filtro_nombre,"%' ");
 			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
-				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " s.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " p.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
-				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(s.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			if(usuario!=null)
-				query = String.join("", query, " AND s.id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )");
+				query = String.join("", query, " AND p.id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )");
 			
 			
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			conteo.setParameter("usuario", usuario);
-			if (productoid!=null && productoid > 0){
-				conteo.setParameter("idProd", productoid);
+			if (componenteid!=null && componenteid > 0){
+				conteo.setParameter("idComp", componenteid);
 			}
 			ret = conteo.getSingleResult();
 		} catch (Throwable e) {
@@ -172,4 +195,87 @@ public class SubproductoDAO {
 		return ret;
 	}
 
+	public static String getJson(int pagina, int registros,Integer componenteid, String usuario
+			,String filtro_nombre, String filtro_usuario_creo,
+			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion) {
+		String jsonEntidades = "";
+
+		List<Subproducto> pojos = getSubproductosPagina(pagina, registros,componenteid
+				,filtro_nombre, filtro_usuario_creo,filtro_fecha_creacion
+				,columna_ordenada,orden_direccion,usuario);
+
+		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
+
+		for (Subproducto pojo : pojos) {
+			EstructuraPojo estructuraPojo = new EstructuraPojo();
+			estructuraPojo.id = pojo.getId();
+			estructuraPojo.nombre = pojo.getNombre();
+			estructuraPojo.descripcion = pojo.getDescripcion();
+			estructuraPojo.programa = pojo.getPrograma();
+			estructuraPojo.subprograma = pojo.getSubprograma();
+			estructuraPojo.proyecto_ = pojo.getProyecto();
+			estructuraPojo.obra = pojo.getObra();
+			estructuraPojo.actividad = pojo.getActividad();
+			estructuraPojo.fuente = pojo.getFuente();
+			estructuraPojo.snip = pojo.getSnip();
+			estructuraPojo.estado = pojo.getEstado();
+			estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();
+			estructuraPojo.usuarioactualizo = pojo.getUsuarioActualizo();
+			estructuraPojo.fechaCreacion = Utils.formatDateHour(pojo.getFechaCreacion());
+			estructuraPojo.fechaactualizacion = Utils.formatDateHour(pojo.getFechaActualizacion());
+			
+			listaEstructuraPojos.add(estructuraPojo);
+		}
+
+		jsonEntidades = Utils.getJSonString("productos", listaEstructuraPojos);
+
+		return jsonEntidades;
+	}
+
+		public static boolean eliminar(Integer productoId, String usuario) {
+		boolean ret = false;
+
+		Subproducto pojo = getSubproductoPorId(productoId,usuario);
+
+		if (pojo != null) {
+			pojo.setEstado(0);
+
+			Session session = CHibernateSession.getSessionFactory().openSession();
+
+			try {
+				session.beginTransaction();
+				session.update(pojo);
+				session.getTransaction().commit();
+
+				ret = true;
+
+			} catch (Throwable e) {
+				CLogger.write("10", SubproductoDAO.class, e);
+			} finally {
+				session.close();
+			}
+		}
+		return ret;
+	}
+	
+	public static Subproducto getSubproductoPorId(int id) {
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		Subproducto ret = null;
+		try{
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+
+			CriteriaQuery<Subproducto> criteria = builder.createQuery(Subproducto.class);
+			Root<Subproducto> root = criteria.from(Subproducto.class);
+			criteria.select( root );
+			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
+			ret = session.createQuery( criteria ).getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("2", SubproductoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

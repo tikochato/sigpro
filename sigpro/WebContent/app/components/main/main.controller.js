@@ -42,6 +42,15 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/producto/:componente_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProducto\'" class="all_page"></div>'
             })
+            .when('/subproductotipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'moduloSubproductoTipo\'" class="all_page"></div>'
+            })
+            .when('/subproductopropiedad/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'moduloSubproductoPropiedad\'" class="all_page"></div>'
+            })
+            .when('/subproducto/:componente_id?/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'moduloSubproducto\'" class="all_page"></div>'
+            })
             .when('/proyectotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectotipoController\'" class="all_page"></div>'
             })
@@ -203,6 +212,18 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'moduloProducto',
 	    	   script: '/app/components/producto/producto.controller.js',
 	    	   template: '/app/components/producto/producto.jsp'
+	       },{
+	    	   name: 'moduloSubproductoTipo',
+	    	   script: '/app/components/subproductotipo/subproductotipo.controller.js',
+	    	   template: '/app/components/subproductotipo/subproductotipo.jsp'
+	       }, {
+	    	   name: 'moduloSubproductoPropiedad',
+	    	   script: '/app/components/subproductopropiedad/subproductopropiedad.controller.js',
+	    	   template: '/app/components/subproductopropiedad/subproductopropiedad.jsp'
+	       }, {
+	    	   name: 'moduloSubproducto',
+	    	   script: '/app/components/subproducto/subproducto.controller.js',
+	    	   template: '/app/components/subproducto/subproducto.jsp'
 	       },
 	       {
 	    	   name: 'proyectotipoController',
@@ -400,7 +421,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 
 	$rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
 		if($routeParams.redireccion=="forbidden"){
-			$utilidades.mensaje('primary','No tienes permiso de acceder a esta área');	
+			$utilidades.mensaje('danger','No tiene permiso de acceder a esta área');	
 		}
 		if (location.hostname !== "localhost" || location.hostname !== "127.0.0.1"){
 			$window.ga('create', 'UA-74443600-2', 'auto');
