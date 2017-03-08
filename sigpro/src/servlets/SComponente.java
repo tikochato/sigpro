@@ -63,6 +63,8 @@ public class SComponente extends HttpServlet {
 		Integer fuente;
 		int unidadejecutoraid;
 		String unidadejecutoranombre;
+		String latitud;
+		String longitud;
 	}
 
 	class stdatadinamico {
@@ -141,6 +143,8 @@ public class SComponente extends HttpServlet {
 				temp.fuente = componente.getFuente();
 				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+				temp.latitud = componente.getLatitud();
+				temp.longitud = componente.getLongitud();
 				stcomponentes.add(temp);
 			}
 
@@ -173,6 +177,8 @@ public class SComponente extends HttpServlet {
 				temp.fuente = componente.getFuente();
 				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+				temp.latitud = componente.getLatitud();
+				temp.longitud = componente.getLongitud();
 				stcomponentes.add(temp);
 			}
 
@@ -198,6 +204,8 @@ public class SComponente extends HttpServlet {
 					Integer actividad = map.get("actividad")!=null ? Integer.parseInt(map.get("actividad")):null;
 					Integer obra = map.get("obra")!=null ? Integer.parseInt(map.get("obra")):null;
 					Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
+					String latitud = map.get("latitud");
+					String longitud = map.get("longitud");
 					ComponenteTipo componenteTipo= new ComponenteTipo();
 					componenteTipo.setId(componentetipoid);
 
@@ -217,7 +225,7 @@ public class SComponente extends HttpServlet {
 					if(esnuevo){
 						componente = new Componente(componenteTipo, proyecto, unidadEjecutora, nombre,
 								descripcion, usuario, null, new DateTime().toDate(), null, 1,
-								snip, programa, subPrograma, proyecto_, actividad,obra, fuente, null, null, null,null,null);
+								snip, programa, subPrograma, proyecto_, actividad,obra, fuente, latitud,longitud, null,null,null);
 					}
 					else{
 						componente = ComponenteDAO.getComponentePorId(id,usuario);
@@ -233,6 +241,8 @@ public class SComponente extends HttpServlet {
 						componente.setActividad(actividad);
 						componente.setFuente(fuente);
 						componente.getFuente();
+						componente.setLatitud(latitud);
+						componente.setLongitud(longitud);
 					}
 					result = ComponenteDAO.guardarComponente(componente);
 
@@ -337,6 +347,8 @@ public class SComponente extends HttpServlet {
 				temp.fuente = componente.getFuente();
 				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+				temp.latitud = componente.getLatitud();
+				temp.longitud = componente.getLongitud();
 				stcomponentes.add(temp);
 			}
 

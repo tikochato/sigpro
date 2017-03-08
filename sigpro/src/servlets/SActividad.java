@@ -61,8 +61,8 @@ public class SActividad extends HttpServlet {
 		Integer actividad;
 		Integer obra;
 		Integer fuente;
-		String Longitud;
-		String Latitud;
+		String longitud;
+		String latitud;
 	
 		int estado;
 	}
@@ -147,8 +147,8 @@ public class SActividad extends HttpServlet {
 				temp.actividad = actividad.getActividad();
 				temp.obra = actividad.getObra();
 				temp.fuente = actividad.getFuente();
-				temp.Longitud = actividad.getLongitud();
-				temp.Latitud = actividad.getLatitud();
+				temp.longitud = actividad.getLongitud();
+				temp.latitud = actividad.getLatitud();
 				stactividads.add(temp);
 			}
 
@@ -178,8 +178,8 @@ public class SActividad extends HttpServlet {
 				temp.actividad = actividad.getActividad();
 				temp.obra = actividad.getObra();
 				temp.fuente = actividad.getFuente();
-				temp.Longitud = actividad.getLongitud();
-				temp.Latitud = actividad.getLatitud();
+				temp.longitud = actividad.getLongitud();
+				temp.latitud = actividad.getLatitud();
 				stactividads.add(temp);
 			}
 
@@ -244,6 +244,8 @@ public class SActividad extends HttpServlet {
 						actividad.setObra(obra);
 						actividad.setFuente(fuente);
 						actividad.setActividadTipo(actividadTipo);
+						actividad.setLatitud(latitud);
+						actividad.setLongitud(longitud);
 					}
 					result = ActividadDAO.guardarActividad(actividad);
 
@@ -353,6 +355,8 @@ public class SActividad extends HttpServlet {
 				temp.actividad = actividad.getActividad();
 				temp.obra = actividad.getObra();
 				temp.fuente = actividad.getFuente();
+				temp.longitud = actividad.getLongitud();
+				temp.latitud = actividad.getLatitud();
 				stactividads.add(temp);
 			}
 
@@ -367,8 +371,6 @@ public class SActividad extends HttpServlet {
 			response_text = String.join("","{ \"success\": ",(actividad!=null && actividad.getId()!=null ? "true" : "false"),", "
 				+ "\"id\": " + (actividad!=null ? actividad.getId():"0") +", "
 				+ "\"nombre\": \"" + (actividad!=null ? actividad.getNombre():"Indefinido") +"\" }");
-
-
 
 		}
 		else{

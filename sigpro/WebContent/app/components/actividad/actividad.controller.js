@@ -25,13 +25,13 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
-		
+
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;
 		mi.latitud= "";
 		mi.longitud = "";
 		mi.coordenadas = "";
-		
+
 		mi.filtros = [];
 		$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo }).success(
 				function(response) {
@@ -46,7 +46,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				minDate : new Date(1990, 1, 1),
 				startingDay : 1
 		};
-		
+
 		mi.ff_opciones = {
 				formatYear : 'yy',
 				maxDate : new Date(2050, 12, 31),
@@ -71,7 +71,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.actividadc.filtros[\'nombre\']" ng-keypress="grid.appScope.actividadc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-				    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
+				    { name: 'usuarioCreo', displayName: 'Usuario Creación',
 				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.actividadc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.actividadc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
@@ -86,7 +86,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 						mi.actividad.fechaFin = moment(mi.actividad.fechaFin,'DD/MM/YYYY').toDate();
 						mi.ff_opciones.minDate = mi.actividad.fechaInicio;
 					});
-					
+
 					gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
 						if(sortColumns.length==1){
 							grid.appScope.actividadc.columnaOrdenada=sortColumns[0].field;
@@ -104,7 +104,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 								grid.appScope.actividadc.ordenDireccion=null;
 							}
 						}
-							
+
 					} );
 
 					if($routeParams.reiniciar_vista=='rv'){
@@ -118,21 +118,21 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 						      mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
 							  mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
 							  mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
-						      
+
 						      mi.obtenerTotalActividades();
 						  });
-				    	  
+
 				    }
 				}
 		};
 		mi.redireccionSinPermisos=function(){
-			$window.location.href = '/main.jsp#!/forbidden';		
+			$window.location.href = '/main.jsp#!/forbidden';
 		}
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SActividad', { accion: 'getActividadesPaginaPorObjeto', pagina: pagina, numeroactividades: $utilidades.elementosPorPagina, 
+			$http.post('/SActividad', { accion: 'getActividadesPaginaPorObjeto', pagina: pagina, numeroactividades: $utilidades.elementosPorPagina,
 				objetoid: $routeParams.objeto_id, tipo: mi.objetotipo,
-				filtro_nombre: mi.filtros['nombre'], 
+				filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
 				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
 			}).success(
@@ -167,6 +167,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					proyecto: mi.actividad.proyecto,
 					actividad: mi.actividad.actividad,
 					obra: mi.actividad.obra,
+					longitud: mi.longitud,
+					latitud : mi.latitud,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
 					if(response.success){
@@ -222,6 +224,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
 			mi.actividad = {};
+			mi.latitud= "";
+			mi.longitud = "";
 			mi.coordenadas = "";
 			mi.gridApi.selection.clearSelectedRows();
 		};
@@ -231,9 +235,11 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				mi.mostraringreso = true;
 				mi.actividadtipoid = mi.actividad.actividadtipoid;
 				mi.esnuevo = false;
-				mi.coordenadas = mi.actividad.longitud;
-				mi.coordenadas = mi.actividad.latitud;
-				
+				mi.longitud = mi.actividad.longitud;
+				mi.latitud = mi.actividad.latitud;
+				mi.coordenadas = (mi.latitud !=null ?  mi.latitud : '') +
+				(mi.latitud!=null ? ', ' : '') + (mi.longitud!=null ? mi.longitud : '');
+
 				var parametros = {
 						accion: 'getActividadPropiedadPorTipo',
 						idActividad: mi.actividad.id,
@@ -298,9 +304,9 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					case 1001: mi.ff_abierto =  true; break;
 				}
 			}
-				
+
 		};
-		
+
 		mi.actualizarfechafin =  function(){
 			if(mi.actividad.fechaInicio!=''){
 				var m = moment(mi.actividad.fechaInicio);
@@ -311,14 +317,14 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				}
 			}
 		}
-		
+
 		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
 				mi.obtenerTotalActividades();
 			}
 		};
 
-		
+
 		mi.obtenerTotalActividades=function(){
 			$http.post('/SActividad', { accion: 'numeroActividadesPorObjeto',objetoid:$routeParams.objeto_id, tipo: mi.objetotipo,
 				filtro_nombre: mi.filtros['nombre'],
@@ -328,7 +334,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 						mi.cargarTabla(1);
 			});
 		};
-		
+
 		mi.buscarActividadTipo = function(titulo, mensaje) {
 
 			var modalInstance = $uibModal.open({
@@ -384,11 +390,11 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			}, function() {
 			});
 	};
-	
+
 	mi.open = function (posicionlat, posicionlong) {
 		mi.geoposicionlat = posicionlat;
 		mi.geoposicionlong = posicionlong;
-		
+
 	    var modalInstance = $uibModal.open({
 	      animation: true,
 	      templateUrl: 'map.html',
@@ -401,8 +407,17 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 	        	return $scope.geoposicionlong;
 	        }
 	      }
-	    
+
 	    });
+
+	    modalInstance.result.then(function(coordenadas) {
+	    	mi.coordenadas = coordenadas.latitud + ", " + coordenadas.longitud;
+	    	mi.latitud= coordenadas.latitud;
+			mi.longitud = coordenadas.longitud;
+
+	    }, function() {
+		});
+
 	  };
 
 } ]);
@@ -501,43 +516,42 @@ function modalBuscarActividadTipo($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
-	
-	
+
+
 }
-
-
-
 
 app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogleMapApi','glat','glong',
          function ($scope, $uibModalInstance,$timeout, uiGmapGoogleMapApi, glat, glong) {
      	$scope.geoposicionlat = glat != null ? glat : 14.6290845;
      	$scope.geoposicionlong = glong != null ? glong : -90.5116158;
-     	
+
      	$scope.refreshMap = true;
-     	
+
      	uiGmapGoogleMapApi.then(function() {
-     		$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong }, 
+     		$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong },
      					   zoom: 15,
      					   height: 400,
      					   width: 200,
      					   options: {
      						   streetViewControl: false,
      						   scrollwheel: true,
+     						  draggable: true,
      						  mapTypeId: google.maps.MapTypeId.SATELLITE
      					   },
      					   refresh: true
      					};
          });
-     	
-     	
-     	
+
+
+
      	  $scope.ok = function () {
-     	    $uibModalInstance.dismiss('cancel');
-     	    
+
+
+     	   var coordenadas = {};
+     	   coordenadas.latitud = $scope.geoposicionlat;
+     	   coordenadas.longitud = $scope.geoposicionlong;
+
+     	   $uibModalInstance.close(coordenadas);
      	  };
 
 }]);
-
-
-
-

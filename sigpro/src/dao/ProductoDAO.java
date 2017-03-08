@@ -43,6 +43,8 @@ public class ProductoDAO {
 		String usuarioCreo;
 		String fechaactualizacion;
 		String usuarioactualizo;
+		String latitud;
+		String longitud;
 		
 	}
 
@@ -229,6 +231,8 @@ public class ProductoDAO {
 			estructuraPojo.usuarioactualizo = pojo.getUsuarioActualizo();
 			estructuraPojo.fechaCreacion = Utils.formatDateHour(pojo.getFechaCreacion());
 			estructuraPojo.fechaactualizacion = Utils.formatDateHour(pojo.getFechaActualizacion());
+			estructuraPojo.latitud = pojo.getLatitud();
+			estructuraPojo.longitud = pojo.getLongitud();
 			
 
 			if (pojo.getComponente() != null) {

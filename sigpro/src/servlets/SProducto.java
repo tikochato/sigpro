@@ -128,6 +128,8 @@ public class SProducto extends HttpServlet {
 			Integer obra = Utils.String2Int(map.get("obra"), null);
 			Integer fuente = Utils.String2Int(map.get("fuente"), null);
 			Integer actividad = Utils.String2Int(map.get("actividad"), null);
+			String latitud = map.get("latitud");
+			String longitud = map.get("longitud");
 			
 			
 			Gson gson = new Gson();
@@ -149,7 +151,7 @@ public class SProducto extends HttpServlet {
 				
 				producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, descripcion, 
 						 usuario, null, new DateTime().toDate(), null, 1
-						, snip, programa, subprograma, proyecto_, actividad, obra, fuente, null, null,null,null,null);
+						, snip, programa, subprograma, proyecto_, actividad, obra, fuente, latitud, longitud,null,null,null);
 				
 			}else{
 				producto = ProductoDAO.getProductoPorId(id);
@@ -167,6 +169,8 @@ public class SProducto extends HttpServlet {
 				producto.setFuente(fuente);
 				producto.setUsuarioActualizo(usuario);
 				producto.setFechaActualizacion(new DateTime().toDate());
+				producto.setLatitud(latitud);
+				producto.setLongitud(longitud);
 			}
 			ret = ProductoDAO.guardarProducto(producto);
 			
