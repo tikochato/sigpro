@@ -500,8 +500,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	
 	
 	mi.open = function (posicionlat, posicionlong) {
-		mi.geoposicionlat = posicionlat;
-		mi.geoposicionlong = posicionlong;
+		$scope.geoposicionlat = posicionlat;
+		$scope.geoposicionlong = posicionlong;
 
 	    var modalInstance = $uibModal.open({
 	      animation: true,
@@ -519,9 +519,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	    });
 
 	    modalInstance.result.then(function(coordenadas) {
-	    	mi.coordenadas = coordenadas.latitud + ", " + coordenadas.longitud;
-	    	mi.latitud= coordenadas.latitud;
-			mi.longitud = coordenadas.longitud;
+	    	mi.coordenadas = coordenadas.latitude + ", " + coordenadas.longitude;
+	    	mi.latitud= coordenadas.latitude;
+			mi.longitud = coordenadas.longitude;
 
 	    }, function() {
 		});
@@ -629,34 +629,48 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
     function ($scope, $uibModalInstance,$timeout, uiGmapGoogleMapApi, glat, glong) {
 	$scope.geoposicionlat = glat != null ? glat : 14.6290845;
 	$scope.geoposicionlong = glong != null ? glong : -90.5116158;
-
+	
 	$scope.refreshMap = true;
-
 	uiGmapGoogleMapApi.then(function() {
+		
+		
+		
 		$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong },
-					   zoom: 15,
-					   height: 400,
-					   width: 200,
-					   options: {
-						   streetViewControl: false,
-						   scrollwheel: true,
-						  draggable: true,
-						  mapTypeId: google.maps.MapTypeId.SATELLITE
-					   },
-					   refresh: true
-					};
+		   zoom: 15,
+		   height: 400,
+		   width: 200,
+		   options: {
+			   streetViewControl: false,
+			   scrollwheel: true,
+			  draggable: true,
+			  mapTypeId: google.maps.MapTypeId.SATELLITE
+		   },
+		   events:{
+			   click: function (map,evtName,evt) {
+				   console.log($scope.posicion);
+				   console.log(map);
+				   
+				   $scope.posicion = evt[0].latLng;
+				  
+				   console.log($scope.posicion);
+				  //console.log(evt.center.lat() + ' ' +  evt.center.lng());
+			   }
+		   },
+		   //posicion: (glat !=null && glong !=null ) ? {latitude: glat, longitude: glong} : null,
+		   refresh: true
+		};
+		
+		
+		
+		
+		
+		
     });
 
 
 
 	  $scope.ok = function () {
-
-
-	   var coordenadas = {};
-	   coordenadas.latitud = $scope.geoposicionlat;
-	   coordenadas.longitud = $scope.geoposicionlong;
-
-	   $uibModalInstance.close(coordenadas);
+	   $uibModalInstance.close($scope.coordenadas);
 	  };
 
 }]);
