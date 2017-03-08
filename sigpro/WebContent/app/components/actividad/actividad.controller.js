@@ -28,8 +28,6 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;
-		mi.latitud= "";
-		mi.longitud = "";
 		mi.coordenadas = "";
 
 		mi.filtros = [];
@@ -167,8 +165,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					proyecto: mi.actividad.proyecto,
 					actividad: mi.actividad.actividad,
 					obra: mi.actividad.obra,
-					longitud: mi.longitud,
-					latitud : mi.latitud,
+					longitud: mi.actividad.longitud,
+					latitud : mi.actividad.latitud,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
 					if(response.success){
@@ -224,8 +222,6 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
 			mi.actividad = {};
-			mi.latitud= "";
-			mi.longitud = "";
 			mi.coordenadas = "";
 			mi.gridApi.selection.clearSelectedRows();
 		};
@@ -235,10 +231,9 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				mi.mostraringreso = true;
 				mi.actividadtipoid = mi.actividad.actividadtipoid;
 				mi.esnuevo = false;
-				mi.longitud = mi.actividad.longitud;
-				mi.latitud = mi.actividad.latitud;
-				mi.coordenadas = (mi.latitud !=null ?  mi.latitud : '') +
-				(mi.latitud!=null ? ', ' : '') + (mi.longitud!=null ? mi.longitud : '');
+				
+				mi.coordenadas = (mi.actividad.latitud !=null ?  mi.actividad.latitud : '') +
+				(mi.actividad.latitud!=null ? ', ' : '') + (mi.actividad.longitud!=null ? mi.actividad.longitud : '');
 
 				var parametros = {
 						accion: 'getActividadPropiedadPorTipo',
@@ -392,8 +387,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 	};
 
 	mi.open = function (posicionlat, posicionlong) {
-		mi.geoposicionlat = posicionlat;
-		mi.geoposicionlong = posicionlong;
+		$scope.geoposicionlat = posicionlat;
+		$scope.geoposicionlong = posicionlong;
 
 	    var modalInstance = $uibModal.open({
 	      animation: true,
@@ -411,13 +406,13 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 	    });
 
 	    modalInstance.result.then(function(coordenadas) {
-	    	mi.coordenadas = coordenadas.latitud + ", " + coordenadas.longitud;
-	    	mi.latitud= coordenadas.latitud;
-			mi.longitud = coordenadas.longitud;
-
+	    	if (coordenadas !=null){
+		    	mi.coordenadas = coordenadas.latitude + ", " + coordenadas.longitude;
+		    	mi.actividad.latitud= coordenadas.latitude;
+				mi.actividad.longitud = coordenadas.longitude;
+	    	}
 	    }, function() {
 		});
-
 	  };
 
 } ]);
@@ -521,46 +516,34 @@ function modalBuscarActividadTipo($uibModalInstance, $scope, $http, $interval,
 }
 
 app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogleMapApi','glat','glong',
-         function ($scope, $uibModalInstance,$timeout, uiGmapGoogleMapApi, glat, glong) {
-     	$scope.geoposicionlat = glat != null ? glat : 14.6290845;
-     	$scope.geoposicionlong = glong != null ? glong : -90.5116158;
+    function ($scope, $uibModalInstance,$timeout, uiGmapGoogleMapApi, glat, glong) {
+	$scope.geoposicionlat = glat != null ? glat : 14.6290845;
+	$scope.geoposicionlong = glong != null ? glong : -90.5116158;
+	$scope.posicion = (glat !=null && glong !=null ) ? {latitude: glat, longitude: glong} : null;
+	$scope.refreshMap = true;
 
-     	$scope.refreshMap = true;
-     	//$scope.posicion = (glat!=null && glong!=null) ? {latitude: glat, longitude: glong} :  null;
-     	$scope.posicion = null;
+	uiGmapGoogleMapApi.then(function() {
+		$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong },
+		   zoom: 15,
+		   height: 400,
+		   width: 200,
+		   options: {
+			   streetViewControl: false,
+			   scrollwheel: true,
+			  draggable: true,
+			  mapTypeId: google.maps.MapTypeId.SATELLITE
+		   },
+		   events:{
+			   click: function (map,evtName,evt) {
+				   $scope.posicion = {latitude: evt[0].latLng.lat()+"", longitude: evt[0].latLng.lng()+""} ;
+				   $scope.$evalAsync();
+			   }
+		   },
+		   refresh: true
+		};
+    });
 
-     	uiGmapGoogleMapApi.then(function() {
-     		$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong },
-     					   zoom: 15,
-     					   height: 400,
-     					   width: 200,
-     					   options: {
-     						   streetViewControl: false,
-     						   scrollwheel: true,
-     						  draggable: true,
-     						  mapTypeId: google.maps.MapTypeId.SATELLITE
-     					   },
-     					   events: {
-     						   click: function(map, evtName, evt){
-     							   console.log($scope.posicion);
-     							   $scope.posicion = evt[0].latLng;
-     							   console.log($scope.posicion);
-     						   }
-     					   },
-     					   refresh: true
-     					};
-         });
-
-
-
-     	  $scope.ok = function () {
-
-
-     	   var coordenadas = {};
-     	   coordenadas.latitud = $scope.geoposicionlat;
-     	   coordenadas.longitud = $scope.geoposicionlong;
-
-     	   $uibModalInstance.close(coordenadas);
-     	  };
-
+	  $scope.ok = function () {
+		  $uibModalInstance.close($scope.posicion);
+	  };
 }]);

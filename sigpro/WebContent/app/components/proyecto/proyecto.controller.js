@@ -5,9 +5,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	var mi = this;
 	i18nService.setCurrentLang('es');
-	
+
 	$window.document.title = $utilidades.sistema_nombre+' - Proyectos';
-	
+
 	mi.proyecto = null;
 	mi.esNuevo = false;
 	mi.campos = {};
@@ -34,10 +34,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.filtros = [];
 	mi.orden = null;
 
-	mi.latitud= "";
-	mi.longitud = "";
+
 	mi.coordenadas = "";
-	
+
 	mi.fechaOptions = {
 			formatYear : 'yy',
 			maxDate : new Date(2050, 12, 31),
@@ -114,7 +113,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	};
 
 	mi.redireccionSinPermisos=function(){
-		$window.location.href = '/main.jsp#!/forbidden';		
+		$window.location.href = '/main.jsp#!/forbidden';
 	}
 	mi.cargarTabla = function(pagina){
 		mi.mostrarcargando=true;
@@ -154,8 +153,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				actividad: mi.proyecto.actividad,
 				fuente: mi.proyecto.fuente,
 				esnuevo: mi.esNuevo,
-				longitud: mi.longitud,
-				latitud : mi.latitud,
+				longitud: mi.proyecto.longitud,
+				latitud : mi.proyecto.latitud,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				t:moment().unix()
 			};
@@ -176,7 +175,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.borrar = function(ev) {
 		if(mi.proyecto !=null && mi.proyecto.id!=null){
-			
+
 			var confirm = $mdDialog.confirm()
 	        .title('Confirmación de borrado')
 	        .textContent('¿Desea borrar el Proyecto "'+mi.proyecto.nombre+'"?')
@@ -184,7 +183,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	        .targetEvent(ev)
 	        .ok('Borrar')
 	        .cancel('Cancelar');
-			
+
 			$mdDialog.show(confirm).then(function() {
 				$http.post('/SProyecto', {
 					accion: 'borrarProyecto',
@@ -200,7 +199,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 						$utilidades.mensaje('danger','Error al borrar el Proyecto');
 				});
 			}, function() {
-			    
+
 		    });
 		}
 		else
@@ -218,8 +217,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		mi.proyecto = {};
 		mi.esNuevo = true;
 		mi.camposdinamicos = {};
-		mi.latitud= "";
-		mi.longitud = "";
 		mi.coordenadas = "";
 		mi.gridApi.selection.clearSelectedRows();
 	};
@@ -234,10 +231,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.cooperantenombre=mi.proyecto.cooperante;
 			mi.esColapsado = true;
 			mi.esNuevo = false;
-			mi.latitud = mi.proyecto.latitud;
-			mi.longitud = mi.proyecto.longitud;
-			mi.coordenadas = (mi.latitud !=null ?  mi.latitud : '') +
-			(mi.latitud!=null ? ', ' : '') + (mi.longitud!=null ? mi.longitud : '');
+			mi.coordenadas = (mi.proyecto.latitud !=null ?  mi.proyecto.latitud : '') +
+			(mi.proyecto.latitud!=null ? ', ' : '') + (mi.proyecto.longitud!=null ? mi.proyecto.longitud : '');
 
 
 			var parametros = {
@@ -345,7 +340,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			$location.path('/actividad/'+ proyectoid +'/1' );
 		}
 	};
-	
+
 	mi.irAGantt=function(proyectoid){
 		if(mi.proyecto!=null){
 			$location.path('/gantt/'+ proyectoid );
@@ -497,8 +492,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 		});
 	};
-	
-	
+
+
 	mi.open = function (posicionlat, posicionlong) {
 		$scope.geoposicionlat = posicionlat;
 		$scope.geoposicionlong = posicionlong;
@@ -519,15 +514,14 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	    });
 
 	    modalInstance.result.then(function(coordenadas) {
-	    	mi.coordenadas = coordenadas.latitude + ", " + coordenadas.longitude;
-	    	mi.latitud= coordenadas.latitude;
-			mi.longitud = coordenadas.longitude;
-
+	    	if (coordenadas !=null){
+		    	mi.coordenadas = coordenadas.latitude + ", " + coordenadas.longitude;
+		    	mi.proyecto.latitud= coordenadas.latitude;
+				mi.proyecto.longitud = coordenadas.longitude;
+	    	}
 	    }, function() {
 		});
-
 	  };
-	
 } ]);
 
 app.controller('buscarPorProyecto', [ '$uibModalInstance',
@@ -629,15 +623,10 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
     function ($scope, $uibModalInstance,$timeout, uiGmapGoogleMapApi, glat, glong) {
 	$scope.geoposicionlat = glat != null ? glat : 14.6290845;
 	$scope.geoposicionlong = glong != null ? glong : -90.5116158;
-	
 	$scope.posicion = (glat !=null && glong !=null ) ? {latitude: glat, longitude: glong} : null;
-	//$scope.posicion = null;
-	
 	$scope.refreshMap = true;
+
 	uiGmapGoogleMapApi.then(function() {
-		
-		
-		
 		$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong },
 		   zoom: 15,
 		   height: 400,
@@ -656,19 +645,9 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 		   },
 		   refresh: true
 		};
-		
-		
-		
-		
-		
-		
     });
 
-
-
 	  $scope.ok = function () {
-	   $uibModalInstance.close($scope.posicion);
+		  $uibModalInstance.close($scope.posicion);
 	  };
-
 }]);
-
