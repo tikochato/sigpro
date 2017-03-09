@@ -203,7 +203,7 @@
 							<label >Coordenadas</label>
 				          	<div class="input-group">
 				            	<input type="text" class="form-control" placeholder="Latitud, Longitud" ng-model="controller.coordenadas" ng-readonly="true" />
-				            	<span class="input-group-addon" ng-click="controller.open(controller.latitud, controller.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
+				            	<span class="input-group-addon" ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
 				          	</div>
 				</div>
 

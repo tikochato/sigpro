@@ -14,8 +14,8 @@
             <h3 class="modal-title">Mapa de Ubicación</h3>
         </div>
         <div class="modal-body" style="height: 400px;">
-            			<ui-gmap-google-map id="mainmap" ng-if="refreshMap" center="map.center" zoom="map.zoom" options="map.options" events="map.events">
-							<ui-gmap-marker idkey="1" draggable="true" coords="posicion"></ui-gmap-marker>
+            			<ui-gmap-google-map id="mainmap" ng-if="refreshMap" center="map.center" zoom="map.zoom" options="map.options" events="map.events"  >
+							<ui-gmap-marker idkey="1" coords="posicion"></ui-gmap-marker>
 						</ui-gmap-google-map>
 		</div>
         <div class="modal-footer">
@@ -121,7 +121,7 @@
 							<label for="campo3">Coordenadas</label>
 				          	<div class="input-group">
 				            	<input type="text" class="form-control" placeholder="Latitud, Longitud" ng-model="actividadc.coordenadas" ng-readonly="true" />
-				            	<span class="input-group-addon" ng-click="actividadc.open(actividadc.latitude, actividadc.longitude); "><i class="glyphicon glyphicon-map-marker"></i></span>
+				            	<span class="input-group-addon" ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
 				          	</div>
 						</div>
 

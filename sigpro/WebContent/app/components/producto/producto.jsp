@@ -8,8 +8,8 @@
             <h3 class="modal-title">Mapa de Ubicación</h3>
         </div>
         <div class="modal-body" style="height: 400px;">
-            			<ui-gmap-google-map id="mainmap" ng-if="refreshMap" center="map.center" zoom="map.zoom" options="map.options">
-							<ui-gmap-marker idkey="1" coords="map.center" draggable="true"></ui-gmap-marker>
+            			<ui-gmap-google-map id="mainmap" ng-if="refreshMap" center="map.center" zoom="map.zoom" options="map.options" events="map.events"  >
+							<ui-gmap-marker idkey="1" coords="posicion"></ui-gmap-marker>
 						</ui-gmap-google-map>
 		</div>
         <div class="modal-footer">
@@ -144,19 +144,6 @@
 						  <input type="number" class="form-control" placeholder="Fuente" ng-model="producto.producto.fuente" ng-maxlength="4" style="text-align: center"/>
 						</div>
 					</div>
-
-					<div class="form-group">
-						<label >Coordenadas</label>
-			          	<div class="input-group">
-			            	<input type="text" class="form-control" placeholder="Latitud, Longitud" ng-model="producto.coordenadas" ng-readonly="true" />
-			            	<span class="input-group-addon" ng-click="producto.open(producto.latitude, producto.longitude); "><i class="glyphicon glyphicon-map-marker"></i></span>
-			          	</div>
-					</div>
-						
-					<div class="form-group" >
-						<label for="campo2"> Descripción</label> 
-						<input type="text" class="form-control" placeholder="Descripcion del producto" ng-model="producto.producto.descripcion" />
-					</div>
 					
 					<div class="form-group" >
 			          <label for="campo3">* Tipo</label>
@@ -173,6 +160,19 @@
 			            <span class="input-group-addon" ng-click="producto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
 			          </div>
 			        </div>
+			        
+			        <div class="form-group">
+						<label >Coordenadas</label>
+			          	<div class="input-group">
+			            	<input type="text" class="form-control" placeholder="Latitud, Longitud" ng-model="producto.coordenadas" ng-readonly="true" />
+			            	<span class="input-group-addon" ng-click="producto.open(producto.producto.latitud, producto.producto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
+			          	</div>
+					</div>
+						
+					<div class="form-group" >
+						<label for="campo2"> Descripción</label> 
+						<input type="text" class="form-control" placeholder="Descripcion del producto" ng-model="producto.producto.descripcion" />
+					</div>
 			        
 			        <div class="form-group" ng-repeat="campo in producto.camposdinamicos">
 						<label for="campo.id">{{ campo.label }}</label>

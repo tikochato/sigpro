@@ -48,7 +48,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/subproductopropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloSubproductoPropiedad\'" class="all_page"></div>'
             })
-            .when('/subproducto/:componente_id?/:reiniciar_vista?',{
+            .when('/subproducto/:producto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloSubproducto\'" class="all_page"></div>'
             })
             .when('/proyectotipo/:reiniciar_vista?',{
