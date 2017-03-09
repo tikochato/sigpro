@@ -8,28 +8,31 @@
 	<script type="text/ng-template" id="buscarPorPrograma.jsp">
     		<%@ include file="/app/components/programa/buscarPorPrograma.jsp"%>
   	 </script>
+  	 <shiro:lacksPermission name="37010">
+		<p ng-init="programac.redireccionSinPermisos()"></p>
+	</shiro:lacksPermission>
 
 	<h3>Programas</h3>
 	<br />
 	<div class="row" align="center" ng-hide="programac.esColapsado">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-			<shiro:hasPermission name="24040">
+			<shiro:hasPermission name="37040">
 				<label class="btn btn-primary" ng-click="programac.nuevo()">Nuevo</label>
 			</shiro:hasPermission>
-			<shiro:hasPermission name="24010">
+			<shiro:hasPermission name="37010">
 				<label class="btn btn-primary" ng-click="programac.editar()">Editar</label>
 			</shiro:hasPermission>
-			<shiro:hasPermission name="24030">
+			<shiro:hasPermission name="37030">
 				<label class="btn btn-primary" ng-click="programac.borrar()">Borrar</label>
 			</shiro:hasPermission>
 			</div>
 		</div>
-		<shiro:hasPermission name="24010">
+		<shiro:hasPermission name="37010">
 		<div class="col-sm-12" align="center">
 			<div style="height: 35px;">
 				<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
-					<shiro:hasPermission name="24010">
+					<shiro:hasPermission name="37010">
 						<a class="btn btn-default" href ng-click="programac.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
 					</shiro:hasPermission>
 					</div>
@@ -72,7 +75,7 @@
 		
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<shiro:hasPermission name="24020">
+				<shiro:hasPermission name="37020">
 					<label class="btn btn-success" ng-click="form.$valid ? programac.guardar(form.$valid) : ''" ng-disabled="!form.$valid">Guardar</label>
 				</shiro:hasPermission>
 				<label class="btn btn-primary" ng-click="programac.irATabla()">Ir a Tabla</label>
@@ -209,7 +212,7 @@
 		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<shiro:hasPermission name="24020">
+				<shiro:hasPermission name="37020">
 					<label class="btn btn-success" ng-click="form.$valid ? programac.guardar(form.$valid) : ''" ng-disabled="!form.$valid">Guardar</label>
 				</shiro:hasPermission>
 				<label class="btn btn-primary" ng-click="programac.irATabla()">Ir a Tabla</label>
