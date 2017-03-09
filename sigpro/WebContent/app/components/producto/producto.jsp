@@ -86,6 +86,7 @@
 		<h4 ng-hide="producto.esNuevo">Edición de Producto</h4>
 		<div class="col-sm-12 operation_buttons" align="left" ng-hide="producto.esNuevo">
 			<div class="btn-group">
+				<label class="btn btn-default" ng-click="producto.irASubproductos()">Subproductos</label>
 				<label class="btn btn-default" ng-click="producto.irAActividades()">Actividades</label>
 			</div>
 		</div>

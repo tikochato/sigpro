@@ -30,10 +30,10 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	mi.orden = null;
 	mi.esNuevo = false;
 	
-	$http.post('/SProducto', { accion: 'obtenerProductoPorId', id: $routeParams.producto_id }).success(
+	$http.post('/SSubproducto', { accion: 'obtenerSubproductoPorId', id: $routeParams.subproducto_id }).success(
 			function(response) {
-				mi.productoid = response.id;
-				mi.productoNombre = response.nombre;
+				mi.subproductoid = response.id;
+				mi.subproductoNombre = response.nombre;
 	});
 	
 	mi.formatofecha = 'dd/MM/yyyy';
@@ -48,16 +48,10 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 		mi.cargarTabla(mi.paginaActual);
 	}
 
-	$http.post('/SSubproducto', {
-		accion : 'totalElementos'
-	}).success(function(response) {
-		mi.totalElementos = response.total;
-		mi.cargarTabla(1);
-	});
-
 	
 	mi.mostrarCargando = true;
 	mi.data = [];
+	
 	mi.cargarTabla = function(pagina) {
 		var datos = {
 			accion : 'cargar',
@@ -74,7 +68,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 		mi.mostrarCargando = true;
 		$http.post('/SSubproducto', datos).then(function(response) {
 			if (response.data.success) {
-				mi.data = response.data.productos;
+				mi.data = response.data.subproductos;
 				mi.opcionesGrid.data = mi.data;
 				mi.mostrarCargando = false;
 			}
@@ -275,7 +269,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 							mi.opcionesGrid.data = mi.data;
 							$utilidades.mensaje('success','Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.esNuevo = false;
-							mi.producto.id = response.data.id;
+							mi.subproducto.id = response.data.id;
 							mi.cargarTabla(mi.paginaActual);
 							
 						} else {
@@ -332,10 +326,10 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	};
 	
 	mi.reiniciarVista = function() {
-		if($location.path()==('/producto/'+ $routeParams.producto_id + '/rv'))
+		if($location.path()==('/subproducto/'+ $routeParams.producto_id + '/rv'))
 			$route.reload();
 		else
-			$location.path('/producto/'+ $routeParams.producto_id + '/rv');
+			$location.path('/subproducto/'+ $routeParams.producto_id + '/rv');
 		
 	}
 	
@@ -351,7 +345,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.obtenerTotalSubproductos = function(){
-		$http.post('/SSubproducto', { accion: 'totalElementos',
+		$http.post('/SSubproducto', { accion: 'totalElementos', productoid: $routeParams.producto_id,
 			filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
 				function(response) {
@@ -362,7 +356,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	};
 	
 	mi.irAActividades=function(){
-		if(mi.producto.id!=null){
+		if(mi.subproducto.id!=null){
 			$location.path('/actividad/'+ mi.subproducto.id +'/4' );
 		}
 	};
@@ -374,7 +368,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 			animation : 'true',
 			ariaLabelledBy : 'modal-title',
 			ariaDescribedBy : 'modal-body',
-			templateUrl : 'buscarPorProducto.jsp',
+			templateUrl : 'buscarPorSubproducto.jsp',
 			controller : 'modalBuscarPorSubproducto',
 			controllerAs : 'modalBuscar',
 			backdrop : 'static',

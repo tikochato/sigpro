@@ -2,31 +2,31 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="org.apache.shiro.SecurityUtils"%>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
-<div ng-controller="controlProducto as producto" class="maincontainer all_page">
+<div ng-controller="controlSubproducto as subproducto" class="maincontainer all_page">
 
 	<script type="text/ng-template" id="buscarPorProducto.jsp">
-	    <%@ include file="/app/components/producto/buscarPorProducto.jsp"%>
+	    <%@ include file="/app/components/subproducto/buscarPorSubproducto.jsp"%>
 	</script>
 	<shiro:lacksPermission name="21010">
-		<p ng-init="producto.redireccionSinPermisos()"></p>
+		<p ng-init="subproducto.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
 
-	<h3>{{ producto.esForma ? (producto.esNuevo ? "Nuevo Producto" : "Editar Producto") : "Producto" }}</h3>
-	<h4>{{ producto.componenteNombre }}</h4><br/>
+	<h3>{{ subproducto.esForma ? (subproducto.esNuevo ? "Nuevo Subproducto" : "Editar Subproducto") : "Subproducto" }}</h3>
+	<h4>{{ subproducto.componenteNombre }}</h4><br/>
 
 	<br />
   
-	<div align="center" ng-hide="producto.esForma">
+	<div align="center" ng-hide="subproducto.esForma">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="21040">
-					<label class="btn btn-primary" ng-click="producto.nuevo()">Nuevo</label>
+					<label class="btn btn-primary" ng-click="subproducto.nuevo()">Nuevo</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="21010">
-					<label class="btn btn-primary" ng-click="producto.editar()">Editar</label>
+					<label class="btn btn-primary" ng-click="subproducto.editar()">Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="21030">
-					<label class="btn btn-primary" ng-click="producto.borrar()">Borrar</label>
+					<label class="btn btn-primary" ng-click="subproducto.borrar()">Borrar</label>
 				</shiro:hasPermission>
 			</div>
 		</div>
@@ -35,17 +35,17 @@
 				<div style="height: 35px;">
 					<div style="text-align: right;">
 						<div class="btn-group" role="group" aria-label="">
-							<a class="btn btn-default" href ng-click="producto.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left">
+							<a class="btn btn-default" href ng-click="subproducto.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left">
 								<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
 							</a>
 						</div>
 					</div>
 				</div>
 				<br/>
-				<div id="grid1" ui-grid="producto.opcionesGrid"
+				<div id="grid1" ui-grid="subproducto.opcionesGrid"
 					ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns
 					ui-grid-selection ui-grid-pinning ui-grid-pagination>
-					<div class="grid_loading" ng-hide="!producto.mostrarCargando">
+					<div class="grid_loading" ng-hide="!subproducto.mostrarCargando">
 						<div class="msg">
 							<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
 								<br />
@@ -55,34 +55,34 @@
 					</div>
 				</div>
 				<br/>
-			<div class="total-rows">Total de {{  producto.totalElementos + (producto.totalElementos == 1 ? " Producto" : " Productos" ) }}</div>
-				<ul uib-pagination total-items="producto.totalElementos"
-					ng-model="producto.paginaActual"
-					max-size="producto.numeroMaximoPaginas"
-					items-per-page="producto.elementosPorPagina"
+			<div class="total-rows">Total de {{  subproducto.totalElementos + (subproducto.totalElementos == 1 ? " Subproducto" : " Subproductos" ) }}</div>
+				<ul uib-pagination total-items="subproducto.totalElementos"
+					ng-model="subproducto.paginaActual"
+					max-size="subproducto.numeroMaximoPaginas"
+					items-per-page="subproducto.elementosPorPagina"
 					first-text="Primero" last-text="Último" next-text="Siguiente"
 					previous-text="Anterior" class="pagination-sm"
 					boundary-links="true" force-ellipses="true"
-					ng-change="producto.cambioPagina()"></ul>
+					ng-change="subproducto.cambioPagina()"></ul>
 			</div>
 		</shiro:hasPermission>
 
 	</div>
 
-	<div ng-show="producto.esForma" class="row main-form">
-		<h4 ng-hide="!producto.esNuevo">Nueva Producto</h4>
-		<h4 ng-hide="producto.esNuevo">Edición de Producto</h4>
-		<div class="col-sm-12 operation_buttons" align="left" ng-hide="producto.esNuevo">
+	<div ng-show="subproducto.esForma" class="row main-form">
+		<h4 ng-hide="!subproducto.esNuevo">Nueva Subproducto</h4>
+		<h4 ng-hide="subproducto.esNuevo">Edición de Subproducto</h4>
+		<div class="col-sm-12 operation_buttons" align="left" ng-hide="subproducto.esNuevo">
 			<div class="btn-group">
-				<label class="btn btn-default" ng-click="producto.irAActividades()">Actividades</label>
+				<label class="btn btn-default" ng-click="subproducto.irAActividades()">Actividades</label>
 			</div>
 		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="21020">
-					<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
+					<label class="btn btn-success" ng-click="form.$valid ? subproducto.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="producto.cancelar()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="subproducto.cancelar()">Ir a Tabla</label>
 			</div>
 		</div>
 		<div>
@@ -91,69 +91,69 @@
 				
 					<div class="form-group">
 						<label>Id</label> 
-						<p class="form-control-static" id="campo0" name="campo0" >{{producto.producto.id}}</p>
+						<p class="form-control-static" id="campo0" name="campo0" >{{subproducto.subproducto.id}}</p>
 					</div>
 				
 				
 					<div class="form-group">
 						<label>* Nombre</label> 
-						<input type="text" class="form-control" placeholder="Nombre del producto" ng-model="producto.producto.nombre" ng-required="true" />
+						<input type="text" class="form-control" placeholder="Nombre del subproducto" ng-model="subproducto.subproducto.nombre" ng-required="true" />
 					</div>
 					
 					<div class="form-group"  >
 						<label for="isnip">SNIP</label>
-						<input type="number"   ng-model="producto.producto.snip" class="form-control" placeholder="SNIP" >
+						<input type="number"   ng-model="subproducto.subproducto.snip" class="form-control" placeholder="SNIP" >
 					</div>
 				
 					<div class="form-group row" >
 						<div class="form-group col-sm-2" >
 						       <label for="iprog">Programa</label>
-						       <input type="number" class="form-control" placeholder="Programa" ng-model="producto.producto.programa"  ng-maxlength="4" style="text-align: center" />
+						       <input type="number" class="form-control" placeholder="Programa" ng-model="subproducto.subproducto.programa"  ng-maxlength="4" style="text-align: center" />
 						</div>
 						<div class="form-group col-sm-2" >
 						  <label for="isubprog">Subprograma</label>
-						  <input type="number" class="form-control" placeholder="Sub-programa" ng-model="producto.producto.subprograma" ng-maxlength="4" style="text-align: center" />
+						  <input type="number" class="form-control" placeholder="Sub-programa" ng-model="subproducto.subproducto.subprograma" ng-maxlength="4" style="text-align: center" />
 						</div>
 						<div class="form-group col-sm-2" >
 						  <label for="iproy_">Proyecto</label>
-						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="producto.producto.proyecto_"  ng-maxlength="4" style="text-align: center" />
+						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="subproducto.subproducto.proyecto_"  ng-maxlength="4" style="text-align: center" />
 						</div>
 						<div class="form-group col-sm-2" >
 						  <label for="iproy_">Actividad</label>
-						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="producto.producto.actividad" ng-maxlength="4" style="text-align: center"  />
+						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="subproducto.subproducto.actividad" ng-maxlength="4" style="text-align: center"  />
 						</div>
 						<div class="form-group col-sm-2" >
 						  <label for="iobra">Obra</label>
-						  <input type="number" class="form-control" placeholder="Obra" ng-model="producto.producto.obra" ng-maxlength="4" style="text-align: center"/>
+						  <input type="number" class="form-control" placeholder="Obra" ng-model="subproducto.subproducto.obra" ng-maxlength="4" style="text-align: center"/>
 						</div>
 						<div class="form-group col-sm-2" >
 						  <label for="campo5">Fuente</label>
-						  <input type="number" class="form-control" placeholder="Fuente" ng-model="producto.producto.fuente" ng-maxlength="4" style="text-align: center"/>
+						  <input type="number" class="form-control" placeholder="Fuente" ng-model="subproducto.subproducto.fuente" ng-maxlength="4" style="text-align: center"/>
 						</div>
 					</div>
 
 					<div class="form-group" >
 						<label for="campo2"> Descripción</label> 
-						<input type="text" class="form-control" placeholder="Descripcion del producto" ng-model="producto.producto.descripcion" />
+						<input type="text" class="form-control" placeholder="Descripcion del subproducto" ng-model="subproducto.subproducto.descripcion" />
 					</div>
 					
 					<div class="form-group" >
 			          <label for="campo3">* Tipo</label>
 			          <div class="input-group"> 
-			            <input type="text" class="form-control" placeholder="Tipo de producto" ng-model="producto.tipoNombre" ng-readonly="true" ng-required="true"/>
-			            <span class="input-group-addon" ng-click="producto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
+			            <input type="text" class="form-control" placeholder="Tipo de subproducto" ng-model="subproducto.tipoNombre" ng-readonly="true" ng-required="true"/>
+			            <span class="input-group-addon" ng-click="subproducto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
 			          </div>
 			        </div>
 			        
 			        <div class="form-group">
 			          <label for="campo5">Unidad Ejecutora</label>
 			          <div class="input-group"> 
-			            <input type="text" class="form-control" placeholder="Unidad Ejecutora" ng-model="producto.unidadEjecutoraNombre" ng-readonly="true" ng-required="true"/>
-			            <span class="input-group-addon" ng-click="producto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
+			            <input type="text" class="form-control" placeholder="Unidad Ejecutora" ng-model="subproducto.unidadEjecutoraNombre" ng-readonly="true" ng-required="true"/>
+			            <span class="input-group-addon" ng-click="subproducto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
 			          </div>
 			        </div>
 			        
-			        <div class="form-group" ng-repeat="campo in producto.camposdinamicos">
+			        <div class="form-group" ng-repeat="campo in subproducto.camposdinamicos">
 						<label for="campo.id">{{ campo.label }}</label>
 						<div ng-switch="campo.tipo">
 							<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{ campo.label }}" />
@@ -161,10 +161,10 @@
 							<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control"placeholder="{{ campo.label }}" />
 							<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" placeholder="{{ campo.label }}"/>
 							<p ng-switch-when="fecha" class="input-group">
-								<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{producto.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-										datepicker-options="producto.fechaOptions" close-text="Cerrar" placeholder="{{ campo.label }}"/>
+								<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{subproducto.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+										datepicker-options="subproducto.fechaOptions" close-text="Cerrar" placeholder="{{ campo.label }}"/>
 								<span class="input-group-btn">
-									<button type="button" class="btn btn-default" ng-click="producto.abrirPopupFecha($index)">
+									<button type="button" class="btn btn-default" ng-click="subproducto.abrirPopupFecha($index)">
 										<i class="glyphicon glyphicon-calendar"></i>
 									</button>
 								</span>
@@ -179,13 +179,13 @@
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
 									<label for="usuarioCreo">Usuario que creo</label>
-				  					<p class="form-control-static">{{ producto.producto.usuarioCreo }}</pl>
+				  					<p class="form-control-static">{{ subproducto.subproducto.usuarioCreo }}</pl>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
 									<label for="fechaCreacion">Fecha de creación</label>
-				  					<p class="form-control-static">{{ producto.producto.fechaCreacion }}</p>
+				  					<p class="form-control-static">{{ subproducto.subproducto.fechaCreacion }}</p>
 								</div>
 							</div>
 						</div>
@@ -193,13 +193,13 @@
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
 									<label for="usuarioActualizo">Usuario que actualizo</label>
-				  					<p class="form-control-static">{{ producto.producto.usuarioactualizo }}</p>
+				  					<p class="form-control-static">{{ subproducto.subproducto.usuarioactualizo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
 									<label for="fechaActualizacion">Fecha de actualizacion</label>
-				  					<p class="form-control-static">{{ producto.producto.fechaactualizacion }}</p>
+				  					<p class="form-control-static">{{ subproducto.subproducto.fechaactualizacion }}</p>
 								</div>
 							</div>
 						</div>
@@ -214,9 +214,9 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="21020">
-					<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
+					<label class="btn btn-success" ng-click="form.$valid ? subproducto.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="producto.cancelar()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="subproducto.cancelar()">Ir a Tabla</label>
 			</div>
 		</div>
 	</div>

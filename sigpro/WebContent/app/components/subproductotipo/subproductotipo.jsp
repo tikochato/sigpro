@@ -99,8 +99,8 @@
 					</div>
 
 					<div class="form-group">
-						<label>* Descripción</label> 
-						<input type="text" class="form-control" placeholder="Descripcion de tipo" ng-model="subproductoTipo.descripcion" ng-required="true" />
+						<label>Descripción</label> 
+						<input type="text" class="form-control" placeholder="Descripcion de tipo" ng-model="subproductoTipo.descripcion"/>
 					</div>
 				
 		
