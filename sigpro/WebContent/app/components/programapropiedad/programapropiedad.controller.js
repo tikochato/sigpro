@@ -100,7 +100,9 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 						mi.mostrarcargando = false;
 					});
 		}
-		
+		mi.redireccionSinPermisos=function(){
+			$window.location.href = '/main.jsp#!/forbidden';		
+		}
 		mi.guardar=function(){
 			if(mi.programapropiedad!=null && mi.programapropiedad.datotipoid!=null){
 				$http.post('/SProgramaPropiedad', {
