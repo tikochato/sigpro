@@ -3,7 +3,7 @@
 <%@ page import="org.apache.shiro.SecurityUtils"%>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 
-<div ng-controller="controlProductoTipo as productoTipo" class="maincontainer all_page">
+<div ng-controller="controlProductoTipo as productoTipo" class="maincontainer all_page" >
 	<script type="text/ng-template" id="buscarPropiedad.jsp">
 	    <%@ include file="/app/components/productotipo/buscarPropiedad.jsp"%>
 	</script>
@@ -11,9 +11,7 @@
 		<p ng-init="productoTipo.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
 	<h3>Tipo de Producto</h3>
-
 	<br />
-
 	<div align="center" ng-hide="productoTipo.esForma">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
@@ -82,81 +80,76 @@
 
 		</div>
 
-		<div>
+		<div class="col-sm-12">
 			<form name="form" class="css-form">
-
-				<div class="row col-sm-12 ">
+				<div class="form-group">
 					<div class="form-group">
 						<label for="campo0">Id</label>
 						<p class="form-control-static">{{productoTipo.codigo}} </p>
 					</div>
 				</div>
 
-				<div class="row">
-					<div class="form-group">
-						<label>* Nombre</label> 
-						<input type="text" class="form-control" placeholder="Nombre de tipo" ng-model="productoTipo.nombre" ng-required="true" />
-					</div>
-
-					<div class="form-group">
-						<label>* Descripción</label> 
-						<input type="text" class="form-control" placeholder="Descripcion de tipo" ng-model="productoTipo.descripcion" ng-required="true" />
-					</div>
+				
+				<div class="form-group">
+					<label>* Nombre</label> 
+					<input type="text" class="form-control" placeholder="Nombre de tipo" ng-model="productoTipo.nombre" ng-required="true" />
 				</div>
-			</form>
-		</div>
-		<br />
 
-		<h5>Propiedades</h5>
-		<div align="center">
+				<div class="form-group">
+					<label>Descripción</label> 
+					<input type="text" class="form-control" placeholder="Descripcion de tipo" ng-model="productoTipo.descripcion"  />
+				</div>
+				
+				<h5>Propiedades</h5>
+				<div align="center">
+					
+					<div style="height: 35px; width: 75%">
+								<div style="text-align: right;">
+									<div class="btn-group" role="group" aria-label="">
+										<a class="btn btn-default" href
+											ng-click="productoTipo.agregarPropiedad()" role="button"
+											uib-tooltip="Asignar nueva propiedad" tooltip-placement="left">
+											<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+										</a>
+									</div>
+								</div>
+							</div>
+							<br/>
+							<table style="width: 75%;" st-table="productoTipo.propiedadesTipo" class="table table-striped  table-bordered">
+								<thead >
+									<tr>
+										<th>ID</th>
+										<th>Nombre</th>
+										<th>Descripicon</th>
+										<th>Tipo Dato</th>
+										<th style="width: 30px;">Quitar</th>
 			
-			<div style="height: 35px; width: 75%">
-						<div style="text-align: right;">
-							<div class="btn-group" role="group" aria-label="">
-								<a class="btn btn-default" href
-									ng-click="productoTipo.agregarPropiedad()" role="button"
-									uib-tooltip="Asignar nueva propiedad" tooltip-placement="left">
-									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-								</a>
+									</tr>
+								</thead>
+								<tbody>
+								<tr st-select-row="row" st-select-mode="single" ng-repeat="propiedad in productoTipo.propiedadesTipo | filter: { estado: '!E'} track by $index">
+									<td>{{propiedad.idPropiedad}}</td>
+									<td>{{propiedad.propiedad}}</td>
+									<td>{{propiedad.descripcion}}</td>
+									<td>{{propiedad.propiedadTipo}}</td>
+									<td align="center">
+										<button type="button"
+											 ng-click="productoTipo.eliminarPropiedad($index)"
+											class="btn btn-sm btn-danger">
+											<i class="glyphicon glyphicon-minus-sign"> </i>
+										</button>
+								</tr>
+							</tbody>
+						</table>
+						<div class="grid_loading" ng-hide="!productoTipo.mostrarCargando">
+							<div class="msg">
+								<span><i class="fa fa-spinner fa-spin fa-4x"></i> <br />
+									<br /> <b>Cargando, por favor espere...</b> </span>
 							</div>
 						</div>
-					</div>
-					<br/>
-					<table style="width: 75%;" st-table="productoTipo.propiedadesTipo" class="table table-striped  table-bordered">
-						<thead >
-							<tr>
-								<th>ID</th>
-								<th>Nombre</th>
-								<th>Descripicon</th>
-								<th>Tipo Dato</th>
-								<th style="width: 30px;">Quitar</th>
-	
-							</tr>
-						</thead>
-						<tbody>
-						<tr st-select-row="row" st-select-mode="single" ng-repeat="propiedad in productoTipo.propiedadesTipo | filter: { estado: '!E'} track by $index">
-							<td>{{propiedad.idPropiedad}}</td>
-							<td>{{propiedad.propiedad}}</td>
-							<td>{{propiedad.descripcion}}</td>
-							<td>{{propiedad.propiedadTipo}}</td>
-							<td align="center">
-								<button type="button"
-									 ng-click="productoTipo.eliminarPropiedad($index)"
-									class="btn btn-sm btn-danger">
-									<i class="glyphicon glyphicon-minus-sign"> </i>
-								</button>
-						</tr>
-					</tbody>
-				</table>
-				<div class="grid_loading" ng-hide="!productoTipo.mostrarCargando">
-					<div class="msg">
-						<span><i class="fa fa-spinner fa-spin fa-4x"></i> <br />
-							<br /> <b>Cargando, por favor espere...</b> </span>
-					</div>
 				</div>
-			
-		</div>
-		<div class="panel panel-default">
+				<br />
+				<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
@@ -189,6 +182,10 @@
 						</div>
 					</div>
 				</div>
+			
+			</form>
+		</div>
+		
 		<div class="col-sm-12" align="center">Los campos marcados con * son obligatorios</div>
 		<br />
 		

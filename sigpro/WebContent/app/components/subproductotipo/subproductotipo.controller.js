@@ -154,10 +154,10 @@ function controlSubproductoTipo($scope, $routeParams, $route, $window, $location
 		$window.location.href = '/main.jsp#!/forbidden';		
 	}
 	mi.reiniciarVista = function() {
-		if ($location.path() == '/subproductoTipo/rv')
+		if ($location.path() == '/subproductotipo/rv')
 			$route.reload();
 		else
-			$location.path('/subproductoTipo/rv');
+			$location.path('/subproductotipo/rv');
 	}
 
 	mi.nuevo = function() {
