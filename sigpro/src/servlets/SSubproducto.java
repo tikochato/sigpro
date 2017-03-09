@@ -129,6 +129,8 @@ public class SSubproducto extends HttpServlet {
 			Integer obra = Utils.String2Int(map.get("obra"), null);
 			Integer fuente = Utils.String2Int(map.get("fuente"), null);
 			Integer actividad = Utils.String2Int(map.get("actividad"), null);
+			String latitud = map.get("latitud");
+			String longitud = map.get("longitud");
 			
 			
 			Gson gson = new Gson();
@@ -149,7 +151,7 @@ public class SSubproducto extends HttpServlet {
 				
 				subproducto = new Subproducto(producto, subproductoTipo, unidadEjecutora, nombre, descripcion, 
 						 usuario, null, new DateTime().toDate(), null, 1
-						, snip, programa, subprograma, proyecto_, actividad, obra, fuente, null, null,null, null);
+						, snip, programa, subprograma, proyecto_, actividad, obra, fuente, latitud, longitud,null, null);
 				
 			}else{
 				subproducto = SubproductoDAO.getSubproductoPorId(id);
@@ -167,6 +169,8 @@ public class SSubproducto extends HttpServlet {
 				subproducto.setFuente(fuente);
 				subproducto.setUsuarioActualizo(usuario);
 				subproducto.setFechaActualizacion(new DateTime().toDate());
+				subproducto.setLatitud(latitud);
+				subproducto.setLongitud(longitud);
 			}
 			ret = SubproductoDAO.guardarSubproducto(subproducto);
 			

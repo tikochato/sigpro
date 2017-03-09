@@ -4,6 +4,20 @@
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <div ng-controller="controlSubproducto as subproducto" class="maincontainer all_page">
 
+	<script type="text/ng-template" id="map.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Mapa de Ubicación</h3>
+        </div>
+        <div class="modal-body" style="height: 400px;">
+            			<ui-gmap-google-map id="mainmap" ng-if="refreshMap" center="map.center" zoom="map.zoom" options="map.options" events="map.events"  >
+							<ui-gmap-marker idkey="1" coords="posicion"></ui-gmap-marker>
+						</ui-gmap-google-map>
+		</div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+        </div>
+    </script>
+    
 	<script type="text/ng-template" id="buscarPorProducto.jsp">
 	    <%@ include file="/app/components/subproducto/buscarPorSubproducto.jsp"%>
 	</script>
@@ -130,6 +144,14 @@
 						  <label for="campo5">Fuente</label>
 						  <input type="number" class="form-control" placeholder="Fuente" ng-model="subproducto.subproducto.fuente" ng-maxlength="4" style="text-align: center"/>
 						</div>
+					</div>
+					
+					<div class="form-group">
+							<label >Coordenadas</label>
+				          	<div class="input-group">
+				            	<input type="text" class="form-control" placeholder="Latitud, Longitud" ng-model="subproducto.coordenadas" ng-readonly="true" />
+				            	<span class="input-group-addon" ng-click="subproducto.open(subproducto.subproducto.latitud, subproducto.subproducto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
+				          	</div>
 					</div>
 
 					<div class="form-group" >

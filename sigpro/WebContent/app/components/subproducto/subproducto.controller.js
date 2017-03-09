@@ -30,6 +30,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	mi.orden = null;
 	mi.esNuevo = false;
 	
+	mi.coordenadas = "";
+	
 	$http.post('/SSubproducto', { accion: 'obtenerSubproductoPorId', id: $routeParams.subproducto_id }).success(
 			function(response) {
 				mi.subproductoid = response.id;
@@ -182,6 +184,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 
 		mi.propiedadesValor = [];
 		mi.subproducto = {};
+		mi.coordenadas = "";
 
 	}
 
@@ -259,6 +262,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				tiposubproductoid : mi.tipo,
 				unidadEjecutora : mi.unidadEjecutora,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
+				longitud: mi.subproducto.longitud,
+				latitud : mi.subproducto.latitud,
 				esnuevo : mi.esNuevo
 			};
 
@@ -297,6 +302,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 			
 			mi.unidadEjecutora = mi.subproducto.unidadEjectuora;
 			mi.unidadEjecutoraNombre = mi.subproducto.nombreUnidadEjecutora;
+			mi.coordenadas = (mi.subproducto.latitud !=null ?  mi.subproducto.latitud : '') +
+			(mi.subproducto.latitud!=null ? ', ' : '') + (mi.subproducto.longitud!=null ? mi.subproducto.longitud : '');
 			
 			var parametros = {
 					accion: 'getSubproductoPropiedadPorTipo', 
@@ -484,6 +491,36 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 			mi.unidadEjecutoraNombre = itemSeleccionado.nombreUnidadEjecutora;
 		});
 	};
+	
+	mi.open = function (posicionlat, posicionlong) {
+		$scope.geoposicionlat = posicionlat;
+		$scope.geoposicionlong = posicionlong;
+
+	    var modalInstance = $uibModal.open({
+	      animation: true,
+	      templateUrl: 'map.html',
+	      controller: 'mapCtrl',
+	      resolve: {
+	        glat: function(){
+	        	return $scope.geoposicionlat;
+	        },
+	        glong: function(){
+	        	return $scope.geoposicionlong;
+	        }
+	      }
+
+	    });
+
+	    modalInstance.result.then(function(coordenadas) {
+	    	if (coordenadas !=null){
+		    	mi.coordenadas = coordenadas.latitude + ", " + coordenadas.longitude;
+		    	mi.subproducto.latitud= coordenadas.latitude;
+				mi.subproducto.longitud = coordenadas.longitude;
+	    	}
+	    }, function() {
+		});
+	  };
+	  
 }
 
 moduloSubproducto.controller('modalBuscarPorSubproducto', [ '$uibModalInstance',
@@ -582,4 +619,37 @@ function modalBuscarPorSubproducto($uibModalInstance, $scope, $http, $interval,
 		$uibModalInstance.dismiss('cancel');
 	};
 
-}
+};
+
+moduloSubproducto.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogleMapApi','glat','glong',
+    function ($scope, $uibModalInstance,$timeout, uiGmapGoogleMapApi, glat, glong) {
+	$scope.geoposicionlat = glat != null ? glat : 14.6290845;
+	$scope.geoposicionlong = glong != null ? glong : -90.5116158;
+	$scope.posicion = (glat !=null && glong !=null ) ? {latitude: glat, longitude: glong} : null;
+	$scope.refreshMap = true;
+
+	uiGmapGoogleMapApi.then(function() {
+		$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong },
+		   zoom: 15,
+		   height: 400,
+		   width: 200,
+		   options: {
+			   streetViewControl: false,
+			   scrollwheel: true,
+			  draggable: true,
+			  mapTypeId: google.maps.MapTypeId.SATELLITE
+		   },
+		   events:{
+			   click: function (map,evtName,evt) {
+				   $scope.posicion = {latitude: evt[0].latLng.lat()+"", longitude: evt[0].latLng.lng()+""} ;
+				   $scope.$evalAsync();
+			   }
+		   },
+		   refresh: true
+		};
+    });
+
+	  $scope.ok = function () {
+		  $uibModalInstance.close($scope.posicion);
+	  };
+}]);

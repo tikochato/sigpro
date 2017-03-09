@@ -40,6 +40,8 @@ public class SubproductoDAO {
 		String usuarioCreo;
 		String fechaactualizacion;
 		String usuarioactualizo;
+		String latitud;
+		String longitud;
 		
 	}
 
@@ -223,6 +225,8 @@ public class SubproductoDAO {
 			estructuraPojo.usuarioactualizo = pojo.getUsuarioActualizo();
 			estructuraPojo.fechaCreacion = Utils.formatDateHour(pojo.getFechaCreacion());
 			estructuraPojo.fechaactualizacion = Utils.formatDateHour(pojo.getFechaActualizacion());
+			estructuraPojo.latitud = pojo.getLatitud();
+			estructuraPojo.longitud = pojo.getLongitud();
 			
 			if (pojo.getProducto() != null) {
 				estructuraPojo.idProducto = pojo.getProducto().getId();
