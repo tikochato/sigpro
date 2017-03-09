@@ -256,13 +256,6 @@ function controlSubproductoTipo($scope, $routeParams, $route, $window, $location
 	};
 
 	mi.guardar = function() {
-		if ($utilidades.esCadenaVacia(mi.nombre)
-				|| $utilidades.esCadenaVacia(mi.descripcion)) {
-			$utilidades.mensaje('danger',
-					'Debe de llenar todos los campos obligatorios');
-			return;
-		}
-
 		if (mi.esNuevo) {
 			var datos = {
 				accion : 'crear',

@@ -362,6 +362,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		});
 	};
 	
+	mi.irASubproductos=function(){
+		if(mi.producto.id!=null){
+			$location.path('/subproducto/'+ mi.producto.id );
+		}
+	};
+	
 	mi.irAActividades=function(){
 		if(mi.producto.id!=null){
 			$location.path('/actividad/'+ mi.producto.id +'/3' );

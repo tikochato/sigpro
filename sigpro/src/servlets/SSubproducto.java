@@ -24,7 +24,6 @@ import dao.SubproductoDAO;
 import dao.SubproductoPropiedadDAO;
 import dao.SubproductoPropiedadValorDAO;
 import dao.SubproductoUsuarioDAO;
-import pojo.Componente;
 import pojo.Producto;
 import pojo.Subproducto;
 import pojo.SubproductoPropiedad;
@@ -84,7 +83,7 @@ public class SSubproducto extends HttpServlet {
 	}
 
 	private void listar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
-		int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
+		int productoid = Utils.String2Int(parametro.get("productoid"), 0);
 		int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 		int registros = Utils.String2Int(parametro.get("registros"), 20);
 		String filtro_nombre = parametro.get("filtro_nombre");
@@ -95,7 +94,7 @@ public class SSubproducto extends HttpServlet {
 
 		String resultadoJson = "";
 
-		resultadoJson = SubproductoDAO.getJson(pagina, registros,componenteid,usuario,filtro_nombre,filtro_usuario_creo
+		resultadoJson = SubproductoDAO.getJson(pagina, registros,productoid,usuario,filtro_nombre,filtro_usuario_creo
 				,filtro_fecha_creacion,columna_ordenada,orden_direccion);
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
@@ -228,11 +227,11 @@ public class SSubproducto extends HttpServlet {
 	}
 
 	private void total(Map<String, String> parametro,HttpServletResponse response) throws IOException {
-		int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
+		int productoid = Utils.String2Int(parametro.get("productoid"), 0);
 		String filtro_nombre = parametro.get("filtro_nombre");
 		String filtro_usuario_creo = parametro.get("filtro_usuario_creo");
 		String filtro_fecha_creacion = parametro.get("filtro_fecha_creacion");
-		Long total = SubproductoDAO.getTotalSubproductos(componenteid,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,usuario);
+		Long total = SubproductoDAO.getTotalSubproductos(productoid,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,usuario);
 
 		String resultadoJson = "{\"success\":true, \"total\":" + total + "}";
 

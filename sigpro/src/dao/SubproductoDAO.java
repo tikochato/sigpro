@@ -22,10 +22,10 @@ public class SubproductoDAO {
 		Integer id;
 		String nombre;
 		String descripcion;
-		Integer idComponente;
-		String componente;
-		Integer idProductoTipo;
-		String productoTipo;
+		Integer idProducto;
+		String producto;
+		Integer idSubproductoTipo;
+		String subproductoTipo;
 		Integer unidadEjectuora;
 		String nombreUnidadEjecutora;
 		Long snip;
@@ -123,7 +123,7 @@ public class SubproductoDAO {
 		return ret;
 	}
 
-	public static List<Subproducto> getSubproductosPagina(int pagina, int numeroProductos,Integer componenteid, 
+	public static List<Subproducto> getSubproductosPagina(int pagina, int numeroProductos,Integer productoid, 
 			String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion, String columna_ordenada, 
 			String orden_direccion,String usuario) {
 		List<Subproducto> ret = new ArrayList<Subproducto>();
@@ -131,7 +131,7 @@ public class SubproductoDAO {
 		try {
 			
 			String query = "SELECT p FROM Subproducto p WHERE p.estado = 1 "
-					+ (componenteid!=null && componenteid > 0 ? "AND p.componente.id = :idComp " : "");
+					+ (productoid!=null && productoid > 0 ? "AND p.producto.id = :idProducto " : "");
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " p.nombre LIKE '%",filtro_nombre,"%' ");
@@ -146,8 +146,8 @@ public class SubproductoDAO {
 			
 			Query<Subproducto> criteria = session.createQuery(query,Subproducto.class);
 			criteria.setParameter("usuario", usuario);
-			if (componenteid!=null && componenteid>0){
-				criteria.setParameter("idComp", componenteid);
+			if (productoid!=null && productoid>0){
+				criteria.setParameter("idProducto", productoid);
 			}
 			criteria.setFirstResult(((pagina - 1) * (numeroProductos)));
 			criteria.setMaxResults(numeroProductos);
@@ -161,14 +161,14 @@ public class SubproductoDAO {
 		return ret;
 	}
 
-	public static Long getTotalSubproductos(Integer componenteid, String filtro_nombre, String filtro_usuario_creo, 
+	public static Long getTotalSubproductos(Integer productoid, String filtro_nombre, String filtro_usuario_creo, 
 			String filtro_fecha_creacion, String usuario) {
 		Long ret = 0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			
 			String query = "SELECT count(p.id) FROM Subproducto p WHERE p.estado = 1 "
-					+ (componenteid!=null && componenteid > 0 ? "AND p.componente.id = :idComp " : "");
+					+ (productoid!=null && productoid > 0 ? "AND p.producto.id = :idProducto " : "");
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " p.nombre LIKE '%",filtro_nombre,"%' ");
@@ -183,8 +183,8 @@ public class SubproductoDAO {
 			
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			conteo.setParameter("usuario", usuario);
-			if (componenteid!=null && componenteid > 0){
-				conteo.setParameter("idComp", componenteid);
+			if (productoid!=null && productoid > 0){
+				conteo.setParameter("idProducto", productoid);
 			}
 			ret = conteo.getSingleResult();
 		} catch (Throwable e) {
@@ -224,10 +224,25 @@ public class SubproductoDAO {
 			estructuraPojo.fechaCreacion = Utils.formatDateHour(pojo.getFechaCreacion());
 			estructuraPojo.fechaactualizacion = Utils.formatDateHour(pojo.getFechaActualizacion());
 			
+			if (pojo.getProducto() != null) {
+				estructuraPojo.idProducto = pojo.getProducto().getId();
+				estructuraPojo.producto = pojo.getProducto().getNombre();
+			}
+
+			if (pojo.getSubproductoTipo() != null) {
+				estructuraPojo.idSubproductoTipo = pojo.getSubproductoTipo().getId();
+				estructuraPojo.subproductoTipo = pojo.getSubproductoTipo().getNombre();
+			}
+			
+			if (pojo.getUnidadEjecutora() != null){
+				estructuraPojo.unidadEjectuora = pojo.getUnidadEjecutora().getUnidadEjecutora();
+				estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
+			}
+			
 			listaEstructuraPojos.add(estructuraPojo);
 		}
 
-		jsonEntidades = Utils.getJSonString("productos", listaEstructuraPojos);
+		jsonEntidades = Utils.getJSonString("subproductos", listaEstructuraPojos);
 
 		return jsonEntidades;
 	}
