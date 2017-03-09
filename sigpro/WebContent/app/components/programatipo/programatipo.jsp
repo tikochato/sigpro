@@ -8,23 +8,26 @@
 	<script type="text/ng-template" id="buscarpropiedad.jsp">
     	<%@ include file="/app/components/programatipo/buscarpropiedad.jsp"%>
   	</script>
+  	<shiro:lacksPermission name="39010">
+		<p ng-init="programatipoc.redireccionSinPermisos()"></p>
+	</shiro:lacksPermission>
 	<h3>Tipo de Programa</h3>
 	<br />
 	<div class="row" align="center" ng-if="!programatipoc.mostraringreso">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<shiro:hasPermission name="36040">
+				<shiro:hasPermission name="39040">
 					<label class="btn btn-primary" ng-click="programatipoc.nuevo()">Nuevo</label>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="36020">
+				<shiro:hasPermission name="39010">
 					<label class="btn btn-primary" ng-click="programatipoc.editar()">Editar</label>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="36030">
+				<shiro:hasPermission name="39030">
 					<label class="btn btn-primary" ng-click="programatipoc.borrar()">Borrar</label>
 				</shiro:hasPermission>
 			</div>
 		</div>
-		<shiro:hasPermission name="36010">
+		<shiro:hasPermission name="39010">
 		<div class="col-sm-12" align="center">
 			<div style="height: 35px;">
 				<div style="text-align: right;">
@@ -66,7 +69,9 @@
 		<h4 ng-hide="programatipoc.esnuevo">Edición tipo de programa</h4>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="form.$valid ? programatipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				<shiro:hasPermission name="39020">
+					<label class="btn btn-success" ng-click="form.$valid ? programatipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				</shiro:hasPermission>
 				<label class="btn btn-primary" ng-click="programatipoc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>
@@ -171,7 +176,9 @@
 		<div align="center">Los campos marcados con * son obligatorios</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="form.$valid ? programatipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				<shiro:hasPermission name="39020">
+					<label class="btn btn-success" ng-click="form.$valid ? programatipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				</shiro:hasPermission>
 				<label class="btn btn-primary" ng-click="programatipoc.irATabla()">Ir a Tabla</label>
 			</div>
 		</div>
