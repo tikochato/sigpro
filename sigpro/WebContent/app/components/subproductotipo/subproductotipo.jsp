@@ -82,57 +82,54 @@
 
 		</div>
 
-		<div class="row">
-			<form name="form" class="css-form">
+		<div class="col-sm-12">
+			<form name="form" >
 
-				<div class="row col-sm-12 ">
+				<div class="form-group">
 					<div class="form-group">
 						<label for="campo0">Id</label>
 						<p class="form-control-static">{{subproductoTipo.codigo}} </p>
 					</div>
 				</div>
 
-		<div class="row">
-					<div class="form-group">
-						<label>* Nombre</label> 
-						<input type="text" class="form-control" placeholder="Nombre de tipo" ng-model="subproductoTipo.nombre" ng-required="true" />
-					</div>
-
-					<div class="form-group">
-						<label>Descripción</label> 
-						<input type="text" class="form-control" placeholder="Descripcion de tipo" ng-model="subproductoTipo.descripcion"/>
-					</div>
+				<div class="form-group">
+					<label>* Nombre</label> 
+					<input type="text" class="form-control" placeholder="Nombre de tipo" ng-model="subproductoTipo.nombre" ng-required="true" />
+				</div>
+				<div class="form-group">
+					<label>Descripción</label> 
+					<input type="text" class="form-control" placeholder="Descripcion de tipo" ng-model="subproductoTipo.descripcion"/>
+				</div>
 				
-		
-		<br />
-
-		<h5>Propiedades</h5>
-		<div align="center">
-			
-			<div style="height: 35px; width: 75%">
-						<div style="text-align: right;">
-							<div class="btn-group" role="group" aria-label="">
-								<a class="btn btn-default" href
-									ng-click="subproductoTipo.agregarPropiedad()" role="button"
-									uib-tooltip="Asignar nueva propiedad" tooltip-placement="left">
-									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-								</a>
-							</div>
+				<br />
+	
+				<h5>Propiedades</h5>
+				<div align="center">
+					
+				<div style="height: 35px; width: 75%">
+					<div style="text-align: right;">
+						<div class="btn-group" role="group" aria-label="">
+							<a class="btn btn-default" href
+								ng-click="subproductoTipo.agregarPropiedad()" role="button"
+								uib-tooltip="Asignar nueva propiedad" tooltip-placement="left">
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+							</a>
 						</div>
 					</div>
-					<br/>
-					<table style="width: 75%;" st-table="subproductoTipo.propiedadesTipo" class="table table-striped  table-bordered">
-						<thead >
-							<tr>
-								<th>ID</th>
-								<th>Nombre</th>
-								<th>Descripicon</th>
-								<th>Tipo Dato</th>
-								<th style="width: 30px;">Quitar</th>
-	
-							</tr>
-						</thead>
-						<tbody>
+				</div>
+				<br/>
+				<table style="width: 75%;" st-table="subproductoTipo.propiedadesTipo" class="table table-striped  table-bordered">
+					<thead >
+						<tr>
+							<th>ID</th>
+							<th>Nombre</th>
+							<th>Descripicon</th>
+							<th>Tipo Dato</th>
+							<th style="width: 30px;">Quitar</th>
+
+						</tr>
+					</thead>
+					<tbody>
 						<tr st-select-row="row" st-select-mode="single" ng-repeat="propiedad in subproductoTipo.propiedadesTipo | filter: { estado: '!E'} track by $index">
 							<td>{{propiedad.idPropiedad}}</td>
 							<td>{{propiedad.propiedad}}</td>
@@ -153,9 +150,9 @@
 							<br /> <b>Cargando, por favor espere...</b> </span>
 					</div>
 				</div>
-			
-		</div>
-		<div class="panel panel-default">
+			</div>
+			<br/>
+			<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
@@ -188,7 +185,7 @@
 						</div>
 					</div>
 				</div>
-				</div>
+
 			</form>
 		</div>
 		<div class="col-sm-12" align="center">Los campos marcados con * son obligatorios</div>

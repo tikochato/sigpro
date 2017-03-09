@@ -31,13 +31,7 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 		mi.cargarTabla(mi.paginaActual);
 	}
 
-	$http.post('/SProductoTipo', {
-		accion : 'totalElementos'
-	}).success(function(response) {
-		mi.totalElementos = response.total;
-		mi.cargarTabla(1);
-	});
-
+	
 	mi.mostrarCargando = true;
 	mi.data = [];
 	mi.cargarTabla = function(pagina) {
@@ -154,10 +148,10 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 		$window.location.href = '/main.jsp#!/forbidden';		
 	}
 	mi.reiniciarVista = function() {
-		if ($location.path() == '/productoTipo/rv')
+		if ($location.path() == '/productotipo/rv')
 			$route.reload();
 		else
-			$location.path('/productoTipo/rv');
+			$location.path('/productotipo/rv');
 	}
 
 	mi.nuevo = function() {
@@ -256,13 +250,7 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.guardar = function() {
-		if ($utilidades.esCadenaVacia(mi.nombre)
-				|| $utilidades.esCadenaVacia(mi.descripcion)) {
-			$utilidades.mensaje('danger',
-					'Debe de llenar todos los campos obligatorios');
-			return;
-		}
-
+		
 		if (mi.esNuevo) {
 			var datos = {
 				accion : 'crear',
@@ -505,7 +493,7 @@ function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval,
 		if (mi.seleccionado) {
 			$uibModalInstance.close(mi.itemSeleccionado);
 		} else {
-			$utilidades.mensaje('warning', 'Debe seleccionar una PROPIEDAD');
+			$utilidades.mensaje('warning', 'Debe seleccionar una Propiedad');
 		}
 	};
 
