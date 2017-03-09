@@ -49,13 +49,6 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		mi.cargarTabla(mi.paginaActual);
 	}
 
-	$http.post('/SProducto', {
-		accion : 'totalElementos'
-	}).success(function(response) {
-		mi.totalElementos = response.total;
-		mi.cargarTabla(1);
-	});
-
 	
 	mi.mostrarCargando = true;
 	mi.data = [];
@@ -359,7 +352,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.obtenerTotalProductos = function(){
-		$http.post('/SProducto', { accion: 'totalElementos',
+		$http.post('/SProducto', { accion: 'totalElementos',componenteid : $routeParams.componente_id,
 			filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
 				function(response) {
