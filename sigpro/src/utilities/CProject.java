@@ -119,41 +119,46 @@ public class CProject {
 		{
 			if (task.getChildTasks()!=null && task.getChildTasks().size()>0){
 				for (Task task1 : task.getChildTasks()){ //Proyectos
-					System.out.println(task1.getName());
-					Proyecto proyecto = crearProyecto(task1, usuario);
-					cargarItem(task1,proyecto.getId(),1);
+					
 					if (task1.getChildTasks()!=null && task1.getChildTasks().size()>0){
+						System.out.println(task1.getName());
+						Proyecto proyecto = crearProyecto(task1, usuario);
+						cargarItem(task1,proyecto.getId(),1);
 						for (Task task2 : task1.getChildTasks()){ //componentes
-							System.out.println("\t" + task2.getName());
-							Componente componente = crearComponente(task2, proyecto, usuario);
-							cargarItem(task1,componente.getId(),2);
 							if (task2.getChildTasks()!=null && task2.getChildTasks().size()>0){
+								System.out.println("\t" + task2.getName());
+								Componente componente = crearComponente(task2, proyecto, usuario);
+								cargarItem(task2,componente.getId(),2);
 								for (Task task3 : task2.getChildTasks()){ //producto
-									System.out.println("\t\t" + task3.getName());
-									Producto producto = crearProducto(task3, componente, usuario);
-									cargarItem(task1,producto.getId(),3);
 									if (task3.getChildTasks()!=null && task3.getChildTasks().size()>0){
+										System.out.println("\t\t" + task3.getName());
+										Producto producto = crearProducto(task3, componente, usuario);
+										cargarItem(task3,producto.getId(),3);
 										for (Task task4 : task3.getChildTasks()){ //subproductos
-											System.out.println("\t\t\t" + task4.getName());
-											Subproducto subproducto = crearSubproducto(task4, producto, usuario);
-											cargarItem(task1,subproducto.getId(),4);
 											if (task4.getChildTasks()!=null && task4.getChildTasks().size()>0){
+												System.out.println("\t\t\t" + task4.getName());
+												Subproducto subproducto = crearSubproducto(task4, producto, usuario);
+												cargarItem(task4,subproducto.getId(),4);
 												for (Task task5 : task4.getChildTasks()){ //actividades
 													System.out.println("\t\t\t\t" + task5.getName());
 													Actividad actividad = crearActividad(task5, usuario, subproducto.getId(),4);
-													cargarItem(task1,actividad.getId(),5);
+													cargarItem(task5,actividad.getId(),5);
 												}
 											}else{
-												crearActividad(task4, usuario, producto.getId(),3);
+												Actividad actividad = crearActividad(task4, usuario, producto.getId(),3);
+												cargarItem(task4,actividad.getId(),5);
 											}
 										}
 									}else{
-										crearActividad(task3, usuario, componente.getId(),2);
+										Actividad actividad = crearActividad(task3, usuario, componente.getId(),2);
+										cargarItem(task3,actividad.getId(),5);
 									}
 								}
 								
 							}else{
-								crearActividad(task2, usuario, proyecto.getId(),1);
+								Actividad actividad = crearActividad(task2, usuario, proyecto.getId(),1);
+								cargarItem(task2,actividad.getId(),5);
+								
 							}
 						}
 					}else{
@@ -211,7 +216,10 @@ public class CProject {
 		SubproductoTipo subproductoTipo = new SubproductoTipo();
 		subproductoTipo.setId(SUBPRODUCTO_TIPO__ID_DEFECTO);
 		
-		Subproducto subproducto = new Subproducto(producto, subproductoTipo, null,task.getName(), null, usuario, null, new Date(), null, 1, 
+		UnidadEjecutora unidadEjecutroa = new UnidadEjecutora();
+		unidadEjecutroa.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
+		
+		Subproducto subproducto = new Subproducto(producto, subproductoTipo, unidadEjecutroa,task.getName(), null, usuario, null, new Date(), null, 1, 
 				null, null, null, null, null, null, null, null, null,null,null);
 		
 		return SubproductoDAO.guardarSubproducto(subproducto) ? subproducto : null;
@@ -229,10 +237,13 @@ public class CProject {
 		}
 		
 		
+		
 		Actividad actividad = new Actividad(actividadTipo, task.getName(), null, task.getStart(), task.getFinish()
 				,0,usuario, null, new Date(), 
 				null, 1, null, null, null, null, 
-				null, null, null , objetoId, objetoTipo, 5, task.getDuration().getUnits().getName()
+				null, null, null , objetoId, objetoTipo, 
+				(( Double ) task.getDuration().getDuration()).intValue()
+				, task.getDuration().getUnits().getName()
 				 
 				 ,itemPredecesor!=null ? itemPredecesor.objetoId : null
 						 , itemPredecesor != null ? itemPredecesor.objetoTipo : null, null, null,null,null);

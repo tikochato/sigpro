@@ -107,12 +107,17 @@ public class SGantt extends HttpServlet {
 						}
 						items_producto = String.join(items_producto.trim().length()>0 ? "," : "",items_producto, construirItem(producto.getNombre(),2, true, fechaPrimeraActividad, null,false));
 						items_producto = items_subproducto.trim().length() > 0 ? String.join(",",items_producto, items_subproducto) : items_producto;
+						
+						items_actividad = obtenerItemsActividades(producto.getId(),3,3);
+						items_producto = (items_actividad.length()>0 ? String.join(",", items_producto,items_actividad):items_producto);
+						
 					}
-					
 					items_componente = String.join(items_componente.trim().length()>0 ? "," : "",items_componente,  construirItem(componente.getNombre(),1, true, fechaPrimeraActividad, null,false));					
 					items_componente = items_producto.trim().length() > 0 ? String.join(",", items_componente,items_producto) : items_componente;
+					
+					items_actividad = obtenerItemsActividades(componente.getId(),2,2);
+					items_componente = (items_actividad.length()>0 ? String.join(",", items_componente,items_actividad):items_componente);
 				}
-				
 				
 				
 				items = String.join(",",construirItem(proyecto.getNombre(),null, true, fechaPrimeraActividad, null,false),items_componente);
@@ -132,8 +137,6 @@ public class SGantt extends HttpServlet {
 			CProject project = new CProject(nombre);
 			project.imporatarArchivo(project.getProject(),usuario);
 			
-			//items = String.join("","{\"items\" : [", project.getTask(project.getProject()),"]}");
-			
 		}
 		else if(accion.equals("exportar")){
 			try{
@@ -143,9 +146,6 @@ public class SGantt extends HttpServlet {
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-			
-			
-			
 		}
 		
 		response.setHeader("Content-Encoding", "gzip");
@@ -173,5 +173,18 @@ public class SGantt extends HttpServlet {
 			);
 		return cadena.replaceAll(",,", ",");
 	}
-
+	
+	private String obtenerItemsActividades(int objetoId,int objetoTipo,int nivelObjeto){
+		String ret = "";
+		
+		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, objetoId, objetoTipo
+				, null, null, null, null, null, null);
+		
+		if (!actividades.isEmpty()){
+			for (Actividad actividad : actividades){				
+				ret = String.join(ret.trim().length()>0 ? "," : "",ret, construirItem(actividad.getNombre(), nivelObjeto, true, actividad.getFechaInicio(), actividad.getFechaFin(),false));
+			}
+		}
+		return ret;
+	}
 }
