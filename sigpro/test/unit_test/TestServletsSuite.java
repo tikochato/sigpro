@@ -9,7 +9,7 @@ import servlets.*;
 
 @RunWith(Suite.class)
 @SuiteClasses({ 
-	SProyectoTest.class
+	SDesembolsoTest.class
 	/*SColaboradorTest.class,         
 	SComponentePropiedadTest.class, 
 	SComponenteTest.class,          
