@@ -33,4 +33,22 @@ public class SDesembolsoTest {
 		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "false");	
 	}
 	
+	@Test
+	public void numeroDesembolsosTest(){
+		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"numeroDesembolsos\" , \"id\":\"0\" }");
+		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");	
+	}
+	
+	@Test
+	public void numeroDesembolsosPorProyectoTest(){
+		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"numeroDesembolsosPorProyecto\" , \"id\":\"0\" }");
+		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");	
+	}
+	
+	@Test
+	public void getDesembolsosPaginaPorProyectoTest(){
+		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"getDesembolsosPaginaPorProyecto\" , \"id\":\"0\" }");
+		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");	
+	}
+	
 }
