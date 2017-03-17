@@ -11,7 +11,7 @@ public class SProyectoTest {
 	String direccionServlet = "http://localhost:8080/SProyecto";
 	@Test
 	public void getProyectoPaginTest(){
-		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"getProyectoPagin\"}");
+		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"getProyectoPagina\", \"filtro_nombre\":\"test\", \"numeroproyecto\":\"0\", \"pagina\":\"0\", \"filtro_usuario_creo\":\"test\", \"filtro_fecha_creacion\":\"test\", \"columna_ordenada\":\"test\", \"orden_direccion\":\"test\"  }");
 		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");	
 	}
 	
@@ -22,22 +22,22 @@ public class SProyectoTest {
 	}
 	
 	@Test
-	public void cargar_cooperantesTest(){
-		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"cargar_cooperantes\"}");
+	public void getProyectosTest(){
+		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"getProyectos\"}");
 		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");	
 	}
 	
 	@Test
-	public void cargar_proyectotiposTest(){
-		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"cargar_proyectotipos\"}");
+	public void getProyectoPaginaDisponiblesTest(){
+		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"getProyectoPaginaDisponibles\"}");
 		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");	
 	}
 	
 	
 	@Test
-	public void cargar_unidadesejecturoasTest(){
-		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"cargar_unidadesejecturoasTest\"}");
-		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "false");	
+	public void numeroProyectosTest(){
+		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"numeroProyectos\"}");
+		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");	
 	}
 	
 	@Test
@@ -51,5 +51,12 @@ public class SProyectoTest {
 		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"obtenerProyectoPorId\", \"id\":\"0\"}");
 		
 		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "false");	
+	}
+	
+	@Test
+	public void numeroProyectosDisponiblesTest(){
+		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"numeroProyectosDisponibles\", \"id\":\"0\"}");
+		
+		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");	
 	}
 }

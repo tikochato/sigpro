@@ -112,7 +112,9 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 						mi.mostrarcargando = false;
 					});
 		}
-
+		mi.redireccionSinPermisos=function(){
+			$window.location.href = '/main.jsp#!/forbidden';		
+		}
 		mi.guardar=function(){
 			if(mi.programatipo!=null  && mi.programatipo.nombre!=''){
 				var idspropiedad="";

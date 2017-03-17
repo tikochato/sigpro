@@ -7,7 +7,7 @@
 	<script type="text/ng-template" id="buscarPropiedad.jsp">
 	    <%@ include file="/app/components/subproductotipo/buscarPropiedad.jsp"%>
 	</script>
-	<shiro:lacksPermission name="23010">
+	<shiro:lacksPermission name="42010">
 		<p ng-init="subproductoTipo.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
 	<h3>Tipo de Subproducto</h3>
@@ -17,18 +17,18 @@
 	<div align="center" ng-hide="subproductoTipo.esForma">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<shiro:hasPermission name="23040">
+				<shiro:hasPermission name="42040">
 					<label class="btn btn-primary" ng-click="subproductoTipo.nuevo()">Nuevo</label>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="23010">
+				<shiro:hasPermission name="42010">
 					<label class="btn btn-primary" ng-click="subproductoTipo.editar()">Editar</label>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="23030">
+				<shiro:hasPermission name="42030">
 					<label class="btn btn-primary" ng-click="subproductoTipo.borrar()">Borrar</label>
 				</shiro:hasPermission>
 			</div>
 		</div>
-		<shiro:hasPermission name="23010">
+		<shiro:hasPermission name="42010">
 			<div class="col-sm-12" align="center">
 				<div style="height: 35px;">
 					<div style="text-align: right;">
@@ -74,7 +74,7 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 
 			<div class="btn-group">
-				<shiro:hasPermission name="23020">
+				<shiro:hasPermission name="42020">
 					<label class="btn btn-success" ng-click="form.$valid ? subproductoTipo.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
 				</shiro:hasPermission>
 				<label class="btn btn-primary" ng-click="subproductoTipo.cancelar()">Ir a Tabla</label>
@@ -193,10 +193,10 @@
 		
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<shiro:hasPermission name="23020">
+				<shiro:hasPermission name="42020">
 					<label class="btn btn-success" ng-click="form.$valid ? subproductoTipo.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="subproductoTipo.cancelar()">Ir a Taba</label>
+				<label class="btn btn-primary" ng-click="subproductoTipo.cancelar()">Ir a Tabla</label>
 			</div>
 		</div>
 	</div>

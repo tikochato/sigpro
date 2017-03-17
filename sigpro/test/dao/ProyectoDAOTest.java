@@ -32,5 +32,24 @@ public class ProyectoDAOTest {
 	public void getTotalProyectosTest(){
 		assertEquals(ProyectoDAO.getTotalProyectos("","","","").getClass(),Long.class);
 	}
+	
+	@Test
+	public void getProyectosPaginaTest(){
+		assertNotNull(ProyectoDAO.getProyectosPagina(0,0,"","","","","",""));
+	}
+	
+	@Test
+	public void getProyectosPaginaDisponiblesTest(){
+		assertNotNull(ProyectoDAO.getProyectosPaginaDisponibles(0,0,"","","","","",""));
+	}
+	
+	@Test
+	public void getTotalProyectosDisponiblesTest(){
+		assertEquals(ProyectoDAO.getTotalProyectosDisponibles("","","","").getClass(), Long.class);
+	}
+	@Test
+	public void getProyectosPorProgramaTest(){
+		assertNotNull(ProyectoDAO.getProyectosPorPrograma(0));
+	}
 
 }

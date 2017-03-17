@@ -41,5 +41,14 @@ public class ComponenteDAOTest {
 	public void getTotalComponentesTest(){
 		assertEquals(ComponenteDAO.getTotalComponentes("").getClass(), Long.class);
 	}
+
+	@Test
+	public void getComponentesPaginaPorProyectoTest(){
+		assertNotNull(ComponenteDAO.getComponentesPaginaPorProyecto(0,0,0,"","","","","",""));
+	}
 	
+	@Test
+	public void getTotalComponentesPorProyecto(){
+		assertNotNull(ComponenteDAO.getTotalComponentesPorProyecto(0,"","","",""));
+	}
 }

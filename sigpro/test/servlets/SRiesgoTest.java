@@ -18,7 +18,7 @@ public class SRiesgoTest {
 	@Test
 	public void getRiesgosPaginaPorProyectoTest(){
 		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"getRiesgosPaginaPorProyecto\", \"pagina\":\"0\", \"proyectoid\":\"0\", \"numeroriesgos\":\"0\"}");
-		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");		
+		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "false");		
 	}
 	
 	@Test
@@ -44,11 +44,17 @@ public class SRiesgoTest {
 		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"numeroRiesgos\"}");
 		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");		
 	}
+	
+	@Test
+	public void numeroRiesgosPorObjetoTest(){
+		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"numeroRiesgosPorObjeto\"}");
+		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");		
+	}
 
 	
 	@Test
 	public void numeroRiesgosPorProyectoTest(){
 		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"numeroRiesgosPorProyecto\", \"proyectoid\":\"0\"}");
-		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");		
+		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "false");		
 	}
 }

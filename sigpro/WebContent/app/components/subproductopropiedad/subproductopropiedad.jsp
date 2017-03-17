@@ -2,7 +2,7 @@
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <div ng-controller="controlSubproductoPropiedad as subproductoPropiedad" class="maincontainer all_page">
-	<shiro:lacksPermission name="22010">
+	<shiro:lacksPermission name="41010">
 		<p ng-init="subproductoPropiedad.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
   <h3>{{ subproductoPropiedad.esForma ? (subproductoPropiedad.esNuevo ? "Nueva Propiedad de Subproducto" : "Editar Propiedad de Subproducto") : "Propiedad de Subproducto" }}</h3>
@@ -12,18 +12,18 @@
   <div align="center" ng-hide="subproductoPropiedad.esForma">
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
-      	<shiro:hasPermission name="22040">
+      	<shiro:hasPermission name="41040">
         	<label class="btn btn-primary" ng-click="subproductoPropiedad.nuevo()">Nueva</label> 
       	</shiro:hasPermission>
-      	<shiro:hasPermission name="22010">
+      	<shiro:hasPermission name="41010">
         	<label class="btn btn-primary" ng-click="subproductoPropiedad.editar()">Editar</label>
       	</shiro:hasPermission>
-      	<shiro:hasPermission name="22030">
+      	<shiro:hasPermission name="41030">
         	<label class="btn btn-primary" ng-click="subproductoPropiedad.borrar()">Borrar</label>
       	</shiro:hasPermission>
       </div>
     </div>
-    <shiro:hasPermission name="22010">
+    <shiro:hasPermission name="41010">
      <div class="col-sm-12" align="center">
       <div style="height: 35px;">
 		<div style="text-align: right;">
@@ -68,7 +68,7 @@
     <div class="col-sm-12 operation_buttons" align="right">
 
       <div class="btn-group">
-      	<shiro:hasPermission name="22020">
+      	<shiro:hasPermission name="41020">
         	<label class="btn btn-success" ng-click="form.$valid ? subproductoPropiedad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
       	</shiro:hasPermission>
         <label class="btn btn-primary" ng-click="subproductoPropiedad.cancelar()">Ir a Tabla</label>
@@ -146,7 +146,7 @@
 
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
-      <shiro:hasPermission name="22020">
+      <shiro:hasPermission name="41020">
         	<label class="btn btn-success" ng-click="form.$valid ? subproductoPropiedad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
       	</shiro:hasPermission>
         <label class="btn btn-primary" ng-click="subproductoPropiedad.cancelar()">Ir a Tabla</label>

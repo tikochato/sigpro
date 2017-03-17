@@ -122,6 +122,9 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				});
 	}
 
+	mi.redireccionSinPermisos=function(){
+		$window.location.href = '/main.jsp#!/forbidden';		
+	}
 
 	mi.guardar = function(esvalido){
 		for (campos in mi.camposdinamicos) {
