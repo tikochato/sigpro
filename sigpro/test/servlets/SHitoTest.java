@@ -10,7 +10,7 @@ import utils.DecodificadorJson;
 public class SHitoTest {
 	String direccionServlet = "http://localhost:8080/SHito";
 	@Test
-	public void cargarTest(){
+	public void getHitosPaginaTest(){
 		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"getHitosPagina\" ,\"pagina\":\"0\", \"numerohitos\":\"0\"}");
 		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");	
 	}
