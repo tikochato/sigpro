@@ -39,5 +39,23 @@ public class SComponenteTest {
 		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");
 	}
 	
+	@Test
+	public void numeroComponentesPorProyectoTest(){
+		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"numeroComponentesPorProyecto\" }");
+		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");
+	}
+	
+	@Test
+	public void getComponentesPaginaPorProyectoTest(){
+		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"getComponentesPaginaPorProyecto\" }");
+		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");
+	}
+	
+	@Test
+	public void obtenerComponentePorIdTest(){
+		String respuesta =ClienteHttp.peticionHttp(direccionServlet, "{\"accion\":\"getComponentesPaginaPorProyecto\" }");
+		assertEquals(DecodificadorJson.decodificarObjeto(respuesta, "success"), "true");
+	}
+	
 	
 }
