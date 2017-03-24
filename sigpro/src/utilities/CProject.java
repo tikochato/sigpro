@@ -372,13 +372,21 @@ public class CProject {
 					Task task3 = task2.addTask();
 					task3.setName(producto.getNombre());
 					
-					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), 3, 
-							null,null, null, null, null, usuario);
-					for (Actividad actividad : actividades){
+					List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
+							null, null, null, null, null, usuario);
+					
+					for (Subproducto subproducto : subproductos){
 						Task task4 = task3.addTask();
-						task4.setName(actividad.getNombre());
-						task4.setStart(actividad.getFechaInicio());
-						task4.setFinish(actividad.getFechaFin()); 
+						task4.setName(subproducto.getNombre());
+						
+						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), 4, 
+								null,null, null, null, null, usuario);
+						for (Actividad actividad : actividades){
+							Task task5 = task4.addTask();
+							task5.setName(actividad.getNombre());
+							task5.setStart(actividad.getFechaInicio());
+							task5.setFinish(actividad.getFechaFin()); 
+						} 
 					}
 				}
 			}

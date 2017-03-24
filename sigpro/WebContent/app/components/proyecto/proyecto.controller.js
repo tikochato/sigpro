@@ -326,7 +326,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.irARiesgos=function(proyectoid){
 		if(mi.proyecto!=null){
-			$location.path('/riesgo/' );
+			$location.path('/riesgo/' + proyectoid + '/1' );
 		}
 	};
 
@@ -340,10 +340,14 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			$location.path('/actividad/'+ proyectoid +'/1' );
 		}
 	};
-
 	mi.irAGantt=function(proyectoid){
 		if(mi.proyecto!=null){
 			$location.path('/gantt/'+ proyectoid );
+		}
+	};
+	mi.irAMapa=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/mapa/'+ proyectoid );
 		}
 	};
 

@@ -139,6 +139,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					riesgotipoid : mi.riesgoTipoid,
 					nombre: mi.riesgo.nombre,
 					descripcion: mi.riesgo.descripcion,
+					objetoId: $routeParams.objeto_id,
+					objetoTipo:  $routeParams.objeto_tipo,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
 					if(response.success){

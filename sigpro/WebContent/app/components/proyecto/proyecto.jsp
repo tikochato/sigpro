@@ -81,7 +81,6 @@
 
 		</shiro:hasPermission>
 
-
 	</div>
 	<div class="row main-form" ng-show="controller.esColapsado">
 		<h4 ng-hide="!controller.esNuevo">Nuevo Proyecto</h4>
@@ -94,6 +93,7 @@
 				<label class="btn btn-default" ng-click="controller.irARiesgos(controller.proyecto.id)">Riesgos</label>
 				<label class="btn btn-default" ng-click="controller.irAGantt(controller.proyecto.id)">Gantt</label>
 				<label class="btn btn-default" ng-click="controller.irAActividades(controller.proyecto.id)">Actividades</label>
+				<label class="btn btn-default" ng-click="controller.irAMapa(controller.proyecto.id)">Mapa</label>
 			</div>
 		</div>
 

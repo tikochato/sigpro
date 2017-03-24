@@ -89,6 +89,7 @@
 			<div class="btn-group" ng-hide="componentec.esnuevo">
 				<label class="btn btn-default" ng-click="componentec.irAProductos(componentec.componente.id)">Productos</label>
 				<label class="btn btn-default" ng-click="componentec.irAActividades(componentec.componente.id)">Actividades</label>
+				<label class="btn btn-default" ng-click="componentec.irARiesgos(componentec.componente.id)">Riesgos</label>
 			</div>
 		</div>
 			<div class="col-sm-12 operation_buttons" align="right">

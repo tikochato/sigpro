@@ -1,4 +1,4 @@
-var app = angular.module('ganttController', ['DlhSoft.ProjectData.GanttChart.Directives']);
+var app = angular.module('ganttController', ['DlhSoft.ProjectData.GanttChart.Directives','DlhSoft.Kanban.Angular.Components']);
 
 var GanttChartView = DlhSoft.Controls.GanttChartView;
 //Query string syntax: ?theme
@@ -18,6 +18,8 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.zoom = 2.5;
 		var date = new Date(), year = date.getFullYear(), month = date.getMonth();
 		var items=[];
+		
+		mi.nombreArchivo="";
 		
 		mi.getStatus = function (item) {
 		    if (item.hasChildren || item.isMilestone)
@@ -131,8 +133,15 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		$scope.settings = settings;
 		
 		mi.ganttChartView;
+		var formatData = new FormData();
+		 
+		formatData.append("accion",'getProyecto');
+		formatData.append("proyecto_id",$routeParams.proyectoId);
 		
-		$http.post('/SGantt', { accion: 'getProyecto', proyecto_id: $routeParams.proyectoId }).success(
+		$http.post('/SGantt', formatData, {
+			headers: {'Content-Type': undefined},
+			transformRequest: angular.identity
+		 }).success(
 				function(response) {
 					var items = response.items;
 					$scope.settings.displayedTime = moment(items[0].start,'DD/MM/YYYY hh:mm:ss').toDate();
@@ -150,6 +159,23 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 					$scope.items = items;
 					$scope.settings.timelineStart =items[0].start;
 					mi.ganttChartView = document.getElementById('ganttChartView');
+					
+					
+					var predecesores = response.predecesores;
+					
+					for (var predecesor in predecesores){
+						for(var i=0; i< items.length; i++){
+							if (items[i].id === predecesores[predecesor].id){
+								for(var j=0; j< items.length; j++){
+									if (items[j].id == predecesores[predecesor].idPredecesor){
+										items[i].predecessors = [{ item: items[j] }];
+										break;
+									}
+								}
+								break;
+							}
+						}
+					}
 					
 		});	
 		
@@ -169,7 +195,17 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		};
 		
 		mi.cargar=function(){
-			$http.post('/SGantt', { accion: 'importar',t:moment().unix(), nombre: 'Cronograma.mpp', } ).then(
+			if (mi.archivos!=null && mi.arhivos != ''){
+				
+			
+			var formatData = new FormData();
+			formatData.append("file",mi.archivos);  
+			formatData.append("accion",'importar');
+			$http.post('/SGantt',formatData, {
+					headers: {'Content-Type': undefined},
+					transformRequest: angular.identity
+				 } ).then(
+			
 				function(response) {
 					var items = response.data.items;
 					$scope.settings.displayedTime = moment(items[0].start,'DD/MM/YYYY hh:mm:ss').toDate();
@@ -189,15 +225,73 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 					mi.ganttChartView = document.getElementById('ganttChartView');
 				}
 			);
+			}else{
+				$utilidades.mensaje('danger','Debe seleccionar un archivo');
+			}
 		};
 		
 		mi.exportar=function(){
-			$http.post('/SGantt', { accion: 'exportar',t:moment().unix(), proyecto_id: $routeParams.proyectoId }).then(
+			var formatData = new FormData();
+			 
+			formatData.append("accion",'exportar');
+			formatData.append("t",moment().unix());
+			formatData.append("proyecto_id",$routeParams.proyectoId);
+			
+			$http.post('/SGantt', formatData, {
+				headers: {'Content-Type': undefined},
+				transformRequest: angular.identity
+			 }).then(
 				function(response) {
 					
 				}
 			);
 		};
 		
+		
+		 $scope.cargarArchivo = function(event){
+		         mi.archivos = event.target.files[0];      
+		         mi.nombreArchivo = mi.archivos.name;
+		       
+		  };
+		  
+		  
+		  
+		  //  Kanban board
+		  
+		  var KanbanBoard = DlhSoft.Controls.KanbanBoard;
+		// Prepare data.
+		var state1 = { name: 'New' }, state2 = { name: 'In progress', areNewItemButtonsHidden: true }, state3 = { name: 'Done', isCollapsedByDefaultForGroups: true, areNewItemButtonsHidden: true };
+		var states = [state1, state2, state3];
+		var resource1 = { name: 'Resource 1', imageUrl: 'Images/Resource1.png' }, resource2 = { name: 'Resource 2', imageUrl: 'Images/Resource2.png' };
+		var assignableResources = [resource1, resource2];
+		var group1 = { name: 'Story 1', state: state2, assignedResource: resource1 }, group2 = { name: 'Story 2', state: state3, assignedResource: resource2 };
+		var groups = [group1, group2];
+		var itemsKanban = [
+		    { name: 'Task 1', group: group1, state: state1, assignedResource: resource1 },
+		    { name: 'Task 2', group: group1, state: state2, assignedResource: resource1 },
+		    { name: 'Bug 1', group: group1, state: state2, assignedResource:  resource1 },
+		    { name: 'Task 3', group: group1, state: state1, assignedResource: resource2 },
+		    { name: 'Task 4', group: group1, state: state1, assignedResource: resource1 },
+		    { name: 'Task 5', group: group2, state: state1, assignedResource: resource2 },
+		    { name: 'Task 6', group: group2, state: state2, assignedResource: resource2 },
+		    { name: 'Task 7', group: group2, state: state2, assignedResource: resource1 },
+		    { name: 'Task 8', group: group2, state: state3, assignedResource: resource2 }
+		];
+		
+		$scope.itemsKanban = itemsKanban;
 	}
 ]);
+
+
+
+app.directive('customOnChange', function() {
+  return {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      var onChangeHandler = scope.$eval(attrs.customOnChange);
+      element.bind('change', onChangeHandler);
+    }
+  };
+});
+
+

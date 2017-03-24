@@ -102,7 +102,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/riesgotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgotipoController\'" class="all_page"></div>'
             })
-            .when('/riesgo/:reiniciar_vista?',{
+            .when('/riesgo/:objeto_id?/:objeto_tipo?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgoController\'" class="all_page"></div>'
             })
             .when('/hito/:proyecto_id?/:reiniciar_vista?',{
@@ -149,6 +149,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             })
             .when('/programa/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'programaController\'" class="all_page"></div>'
+            })
+            .when('/mapa/:proyecto_id?/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'mapaController\'" class="all_page"></div>'
             })
             .when("/:redireccion?",{
             	controller:"MainController"
@@ -378,6 +381,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'programaController',
 	    	   script: '/app/components/programa/programa.controller.js',
 	    	   template: '/app/components/programa/programa.jsp'
+	       },
+	       {
+	    	   name: 'mapaController',
+	    	   script: '/app/components/mapas/mapa.controller.js',
+	    	   template: '/app/components/mapas/mapa.jsp'
 	       },
 
 	   ];

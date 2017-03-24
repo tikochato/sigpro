@@ -46,6 +46,7 @@
 <script type="text/javascript" src="/assets/libs/ganttchart/DlhSoft.ProjectData.GanttChart.HTML.Controls.js"></script>
 <script type="text/javascript" src="/assets/libs/ganttchart/DlhSoft.ProjectData.GanttChart.HTML.Controls.Extras.js"></script>
 <script type="text/javascript" src="/assets/libs/ganttchart/DlhSoft.ProjectData.GanttChart.Angular.Directives.js"></script>
+<script type="text/javascript" src="/assets/libs/kanbanboard/DlhSoft.Kanban.Angular.Components.js"></script>
 <link rel="stylesheet" type="text/css" href="/assets/css/angular-bootstrap-toggle.min.css" />
 <script type="text/javascript" src="/assets/libs/angular/angular-bootstrap-toggle.js"></script>
 

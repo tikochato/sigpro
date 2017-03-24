@@ -199,6 +199,7 @@ public class SRiesgo extends HttpServlet {
 					String descripcion = map.get("descripcion");
 					int riesgotipoid = map.get("riesgotipoid")!=null && map.get("riesgotipoid").length() > 0 ?
 							Integer.parseInt(map.get("riesgotipoid")) : 0;
+							
 					
 					RiesgoTipo riesgoTipo= new RiesgoTipo();
 					riesgoTipo.setId(riesgotipoid);
@@ -221,7 +222,9 @@ public class SRiesgo extends HttpServlet {
 						riesgo.setUsuarioActualizo(usuario);
 						riesgo.setFechaActualizacion(new DateTime().toDate());
 					}
-					result = RiesgoDAO.guardarRiesgo(riesgo);
+					int objetoId = Utils.String2Int(map.get("objetoId"));
+					int objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+					result = RiesgoDAO.guardarRiesgo(riesgo,objetoId, objetoTipo);
 					
 					List<RiesgoPropiedadValor> valores_temp = RiesgoPropiedadValorDAO.getRiesgoPropiedadadesValoresPorRiesgo(riesgo.getId());
 					

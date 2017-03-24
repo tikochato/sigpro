@@ -373,6 +373,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			$location.path('/actividad/'+ mi.producto.id +'/3' );
 		}
 	};
+	
+	mi.irARiesgos=function(){
+		if(mi.producto.id!=null){
+			$location.path('/riesgo/'+ mi.producto.id +'/3' );
+		}
+	};
 
 	mi.llamarModalBusqueda = function(servlet, datosTotal, datosCarga, columnaId,columnaNombre) {
 		var resultado = $q.defer();

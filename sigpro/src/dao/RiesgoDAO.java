@@ -10,6 +10,8 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojo.ObjetoRiesgo;
+import pojo.ObjetoRiesgoId;
 import pojo.Riesgo;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -57,12 +59,17 @@ public class RiesgoDAO {
 		return ret;
 	}
 	
-	public static boolean guardarRiesgo(Riesgo riesgo){
+	public static boolean guardarRiesgo(Riesgo riesgo,Integer objetoId, Integer objetoTipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
 			session.saveOrUpdate(riesgo);
+			//objeto
+			ObjetoRiesgoId objetoRiesgoId = new ObjetoRiesgoId(riesgo.getId(), objetoId, objetoTipo);
+			ObjetoRiesgo objetoRiesgo = new ObjetoRiesgo(objetoRiesgoId, riesgo, riesgo.getUsuarioCreo(), 
+					riesgo.getUsuarioActualizo(), riesgo.getFechaCreacion(), riesgo.getFechaActualizacion());
+			session.saveOrUpdate(objetoRiesgo);
 			session.getTransaction().commit();
 			ret = true;
 		}
