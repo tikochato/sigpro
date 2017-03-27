@@ -156,6 +156,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when("/:redireccion?",{
             	controller:"MainController"
             })
+            .when('/kanban/:proyectoId?',{
+            	template: '<div load-on-demand="\'ganttController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -387,6 +390,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   script: '/app/components/mapas/mapa.controller.js',
 	    	   template: '/app/components/mapas/mapa.jsp'
 	       },
+	       {
+	    	   name: 'kanbanController',
+	    	   script: '/app/components/gantt/app..js',
+	    	   template: '/app/components/gantt/kanban.jsp'
+	       }
 
 	   ];
 	   $loadOnDemandProvider.config(modules);

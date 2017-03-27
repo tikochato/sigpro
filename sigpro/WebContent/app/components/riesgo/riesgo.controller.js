@@ -105,7 +105,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SRiesgo', { accion: 'getRiesgosPagina', pagina: pagina, 
+			$http.post('/SRiesgo', { accion: 'getRiesgosPaginaPorObjeto', pagina: pagina, 
 				numeroriesgos: $utilidades.elementosPorPagina, objetoid:$routeParams.objeto_id,objetotipo:$routeParams.objeto_tipo
 				,filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
@@ -279,7 +279,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		};
 
 		mi.obtenerTotalRiesgos = function(){
-			$http.post('/SRiesgo', { accion: 'numeroRiesgos',
+			$http.post('/SRiesgo', { accion: 'numeroRiesgosPorObjeto',
 				objetoid:$routeParams.objeto_id,objetotipo:$routeParams.objeto_tipo
 				,filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).then(

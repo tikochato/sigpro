@@ -11,6 +11,7 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/angular-material.min.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/main.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.adds.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/kanban.css" />
 <script type="text/javascript" src="/assets/libs/angular/angular.js"></script>
 <script type="text/javascript" src="/assets/libs/angular/angular-route.min.js"></script>
 <script type="text/javascript" src="/assets/libs/angular/angular-animate.min.js"></script>

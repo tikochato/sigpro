@@ -367,6 +367,12 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 			$location.path('/actividad/'+ mi.subproducto.id +'/4' );
 		}
 	};
+	
+	mi.irARiesgos=function(){
+		if(mi.subproducto.id!=null){
+			$location.path('/riesgo/'+ mi.subproducto.id +'/4' );
+		}
+	};
 
 	mi.llamarModalBusqueda = function(servlet, datosTotal, datosCarga, columnaId,columnaNombre) {
 		var resultado = $q.defer();

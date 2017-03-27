@@ -6,8 +6,8 @@ var GanttChartView = DlhSoft.Controls.GanttChartView;
 var queryString = window.location.search;
 var theme = queryString ? queryString.substr(1) : null;
 
-app.controller('ganttController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout) {
+app.controller('ganttController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q',
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q) {
 
 		var mi=this;
 		var date = new Date(), year = date.getFullYear(), month = date.getMonth();
@@ -255,30 +255,43 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		  };
 		  
 		  
+	    //  Kanban board
 		  
-		  //  Kanban board
-		  
-		  var KanbanBoard = DlhSoft.Controls.KanbanBoard;
-		// Prepare data.
-		var state1 = { name: 'New' }, state2 = { name: 'In progress', areNewItemButtonsHidden: true }, state3 = { name: 'Done', isCollapsedByDefaultForGroups: true, areNewItemButtonsHidden: true };
-		var states = [state1, state2, state3];
-		var resource1 = { name: 'Resource 1', imageUrl: 'Images/Resource1.png' }, resource2 = { name: 'Resource 2', imageUrl: 'Images/Resource2.png' };
-		var assignableResources = [resource1, resource2];
-		var group1 = { name: 'Story 1', state: state2, assignedResource: resource1 }, group2 = { name: 'Story 2', state: state3, assignedResource: resource2 };
-		var groups = [group1, group2];
-		var itemsKanban = [
-		    { name: 'Task 1', group: group1, state: state1, assignedResource: resource1 },
-		    { name: 'Task 2', group: group1, state: state2, assignedResource: resource1 },
-		    { name: 'Bug 1', group: group1, state: state2, assignedResource:  resource1 },
-		    { name: 'Task 3', group: group1, state: state1, assignedResource: resource2 },
-		    { name: 'Task 4', group: group1, state: state1, assignedResource: resource1 },
-		    { name: 'Task 5', group: group2, state: state1, assignedResource: resource2 },
-		    { name: 'Task 6', group: group2, state: state2, assignedResource: resource2 },
-		    { name: 'Task 7', group: group2, state: state2, assignedResource: resource1 },
-		    { name: 'Task 8', group: group2, state: state3, assignedResource: resource2 }
-		];
+		var KanbanBoard = DlhSoft.Controls.KanbanBoard;
+		var formatData = new FormData();
+		 
+		formatData.append("accion",'getKanban');
+		formatData.append("proyecto_id",$routeParams.proyectoId);
+		$scope.states = {};
+		$scope.itemsKanban = null; 
+		$scope.mostrarKanban = false;
 		
-		$scope.itemsKanban = itemsKanban;
+		$http.post('/SGantt', formatData, {
+			headers: {'Content-Type': undefined},
+			transformRequest: angular.identity
+		 }).success(
+				function(response) {
+					var estado1 = { name: 'Nuevo', areNewItemButtonsHidden: true }, 
+					estado2 = { name: 'En progreso', areNewItemButtonsHidden: true }, 
+					estado3 = { name: 'Terminado', isCollapsedByDefaultForGroups: true, areNewItemButtonsHidden: true };
+					var colores = ["#ffe033","#9fc6ee","#008000"];
+					
+					var estados  = [estado1, estado2, estado3];
+					var items  = response.items;
+					
+					for (item in items) {
+					    items[item].state = estados[items[item].estadoId];
+					    items[item].color = colores[items[item].estadoId];
+					    items[item].isReadOnly = true;
+					   
+					}
+					
+					$scope.states  = estados;
+					$scope.itemsKanban = items;
+					$scope.mostrarKanban = true;
+					
+		});	
+		
 	}
 ]);
 

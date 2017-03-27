@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Kanban board sample</title>
+    <!-- Angular framwork. -->
+   
+    <script src="app.js"></script>
+</head>
+<!-- Sample application user interface. -->
+<body ng-app="KanbanBoardSample" ng-controller="MainController">
+    <header>
+        <h1>Kanban board sample</h1>
+    </header>
+    <!-- Kanban board component. -->
+    <ds:kanban-board items="items" groups="groups" states="states" assignable-resources="assignableResources"
+                     on-adding-new-item="initializeNewItem(item)" on-editing-item="deleteItem(item)"
+                     edit-item-button-text="'×'" edit-item-button-tool-tip="'Delete item'"
+                     on-item-state-changed="onItemStateChanged(item, state)" on-item-group-changed="onItemGroupChanged(item, group)">
+    </ds:kanban-board>
+    <!-- Drop zone: provides support for dropping Kanban items to external user interface elements. -->
+    <ds:kanban-item-drop-zone on-drop="moveItemToNextIteration(type, index)"
+                              class="next-iteration-panel" 
+                              title="Drag items to this external panel to set them as future work.">
+        <div class="header">Next iteration - future work</div>
+        <div class="content">
+            <div class="value">{{ nextIteration.groups.length }} story(-ies)</div>
+            <div class="value">{{ nextIteration.items.length }} item(s)</div>
+        </div>
+    </ds:kanban-item-drop-zone>
+</body>
+</html>

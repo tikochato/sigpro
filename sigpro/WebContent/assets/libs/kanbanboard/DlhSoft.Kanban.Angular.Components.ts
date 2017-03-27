@@ -1,76 +1,103 @@
-var DlhSoft;
-(function (DlhSoft) {
-    var Controls;
-    (function (Controls) {
-        var KanbanBoard;
-        (function (KanbanBoard) {
-            var Types = (function () {
-                function Types() {
+﻿module DlhSoft.Controls {
+    export module KanbanBoard {
+        export interface Item {
+            name?: string;
+            group?: Group;
+            state?: State;
+            itemType?: ItemType;
+            assignedResource?: AssignableResource;
+            color?: string;
+            backgroundColor?: string;
+            isReadOnly?: boolean;
+            isEditItemButtonHidden?: boolean;
+            templateUrl?: string;
+        }
+        export interface Group extends Item {
+            isCollapsed?: boolean;
+            areNewItemButtonsHidden?: boolean;
+            areEditItemButtonsHidden?: boolean;
+        }
+        export interface State {
+            name: string;
+            isReadOnly?: boolean;
+            areNewItemButtonsHidden?: boolean;
+            areEditItemButtonsHidden?: boolean;
+            isCollapsedByDefaultForGroups?: boolean;
+            templateUrl?: string;
+        }
+        export interface ItemType {
+            color: string;
+            backgroundColor: string;
+            templateUrl?: string;
+        }
+        export interface AssignableResource {
+            name?: string;
+            imageUrl?: string;
+        }
+        export class Types {
+            item: string;
+            group: string;
+        }
+        export var types: Types = {
+            item: 'item',
+            group: 'group'
+        };
+        export var defaultGroup: Group = {};
+        export var defaultStates: State[] = [
+            { name: 'New' },
+            { name: 'Active', areNewItemButtonsHidden: true },
+            { name: 'Resolved', areNewItemButtonsHidden: true },
+            { name: 'Closed', areNewItemButtonsHidden: true }];
+        export class DefaultItemTypes {
+            task: ItemType;
+            bug: ItemType;
+            story: ItemType;
+            feature: ItemType;
+            epic: ItemType;
+        }
+        export var defaultItemTypes: DefaultItemTypes = {
+            task: { color: '#ffd800', backgroundColor: 'white' },
+            bug: { color: '#ca3838', backgroundColor: '#fff8f4' },
+            story: { color: '#0094ff', backgroundColor: 'white' },
+            feature: { color: '#67157b', backgroundColor: 'white' },
+            epic: { color: '#ff6a00', backgroundColor: 'white' }
+        };
+        export var defaultItemType: ItemType = defaultItemTypes.task;
+        export var defaultGroupType: ItemType = defaultItemTypes.story;
+        export function getItemsInGroupAndState(group: Group, state: State): Item[] {
+            var itemsInGroupAndState: Item[] = [];
+            for (var i = 0; i < this.items.length; i++) {
+                var item: Item = this.items[i];
+                if (item.group === group && item.state === state) {
+                    itemsInGroupAndState.push(item);
                 }
-                return Types;
-            }());
-            KanbanBoard.Types = Types;
-            KanbanBoard.types = {
-                item: 'item',
-                group: 'group'
-            };
-            KanbanBoard.defaultGroup = {};
-            KanbanBoard.defaultStates = [
-                { name: 'New' },
-                { name: 'Active', areNewItemButtonsHidden: true },
-                { name: 'Resolved', areNewItemButtonsHidden: true },
-                { name: 'Closed', areNewItemButtonsHidden: true }];
-            var DefaultItemTypes = (function () {
-                function DefaultItemTypes() {
-                }
-                return DefaultItemTypes;
-            }());
-            KanbanBoard.DefaultItemTypes = DefaultItemTypes;
-            KanbanBoard.defaultItemTypes = {
-                task: { color: '#ffd800', backgroundColor: 'white' },
-                bug: { color: '#ca3838', backgroundColor: '#fff8f4' },
-                story: { color: '#0094ff', backgroundColor: 'white' },
-                feature: { color: '#67157b', backgroundColor: 'white' },
-                epic: { color: '#ff6a00', backgroundColor: 'white' }
-            };
-            KanbanBoard.defaultItemType = KanbanBoard.defaultItemTypes.task;
-            KanbanBoard.defaultGroupType = KanbanBoard.defaultItemTypes.story;
-            function getItemsInGroupAndState(group, state) {
-                var itemsInGroupAndState = [];
-                for (var i = 0; i < this.items.length; i++) {
-                    var item = this.items[i];
-                    if (item.group === group && item.state === state) {
-                        itemsInGroupAndState.push(item);
-                    }
-                }
-                return itemsInGroupAndState;
             }
-            KanbanBoard.getItemsInGroupAndState = getItemsInGroupAndState;
-            ;
-            function getItemsInGroup(group) {
-                var itemsInGroup = [];
-                for (var i = 0; i < this.items.length; i++) {
-                    var item = this.items[i];
-                    if (item.group === group) {
-                        itemsInGroup.push(item);
-                    }
+            return itemsInGroupAndState;
+        };
+        export function getItemsInGroup(group: Group): Item[] {
+            var itemsInGroup: Item[] = [];
+            for (var i = 0; i < this.items.length; i++) {
+                var item: Item = this.items[i];
+                if (item.group === group) {
+                    itemsInGroup.push(item);
                 }
-                return itemsInGroup;
             }
-            KanbanBoard.getItemsInGroup = getItemsInGroup;
-            function getItemsInState(state) {
-                var itemsInState = [];
-                for (var i = 0; i < this.items.length; i++) {
-                    var item = this.items[i];
-                    if (item.state === state) {
-                        itemsInState.push(item);
-                    }
+            return itemsInGroup;
+        }
+        export function getItemsInState(state: State): Item[] {
+            var itemsInState: Item[] = [];
+            for (var i = 0; i < this.items.length; i++) {
+                var item: Item = this.items[i];
+                if (item.state === state) {
+                    itemsInState.push(item);
                 }
-                return itemsInState;
             }
-            KanbanBoard.getItemsInState = getItemsInState;
-            angular.module('DlhSoft.Kanban.Angular.Components', [])
-                .directive('dsKanbanBoard', function () {
+            return itemsInState;
+        }
+
+        declare var angular;
+        angular.module('DlhSoft.Kanban.Angular.Components', [])
+            .directive('dsKanbanBoard', () => {
                 return {
                     restrict: 'EAC',
                     replace: true,
@@ -123,11 +150,9 @@ var DlhSoft;
                         onItemStateChanged: '&?',
                         onItemGroupChanged: '&?',
                         onItemIndexChanged: '&?',
-                        onGroupIndexChanged: '&?',
-                        percentageValue: '=?'
+                        onGroupIndexChanged: '&?'
                     },
                     controller: function ($scope) {
-                        var _this = this;
                         // Force early binding to controller.
                         for (var field in $scope) {
                             if (this[field] === undefined && $scope[field] !== undefined)
@@ -135,57 +160,57 @@ var DlhSoft;
                         }
                         if (!this.groups) {
                             for (var i = 0; i < this.items.length; i++) {
-                                var item = this.items[i];
-                                item.group = KanbanBoard.defaultGroup;
+                                var item: Item = this.items[i];
+                                item.group = defaultGroup;
                             }
-                            this.groups = [KanbanBoard.defaultGroup];
+                            this.groups = [defaultGroup];
                             this.hideGroups = true;
                         }
                         if (!this.states) {
                             for (var i = 0; i < this.items.length; i++) {
-                                var item = this.items[i];
-                                item.state = KanbanBoard.defaultStates[0];
+                                var item: Item = this.items[i];
+                                item.state = defaultStates[0];
                             }
-                            this.states = KanbanBoard.defaultStates;
+                            this.states = defaultStates;
                         }
                         if (!this.groupStates)
                             this.groupStates = this.states;
                         for (var i = 0; i < this.items.length; i++) {
-                            var item = this.items[i];
+                            var item: Item = this.items[i];
                             if (!item.group || this.groups.indexOf(item.group) < 0)
                                 item.group = this.groups[0];
                             if (!item.state || this.states.indexOf(item.state) < 0)
                                 item.state = this.states[0];
                         }
                         for (var i = 0; i < this.groups.length; i++) {
-                            var group = this.groups[i];
+                            var group: Group = this.groups[i];
                             if (!group.state || this.groupStates.indexOf(group.state) < 0)
                                 group.state = this.states[0];
                             if (group.isCollapsed === undefined)
                                 group.isCollapsed = group.state ? group.state.isCollapsedByDefaultForGroups : false;
                         }
                         if (!this.itemType)
-                            this.itemType = KanbanBoard.types.item;
+                            this.itemType = types.item;
                         if (!this.groupType)
-                            this.groupType = KanbanBoard.types.group;
+                            this.groupType = types.group;
                         if (!this.itemNameField)
                             this.itemNameField = 'name';
                         if (!this.groupNameField)
                             this.groupNameField = this.itemNameField;
                         if (!this.itemTypes)
-                            this.itemTypes = KanbanBoard.defaultItemTypes;
+                            this.itemTypes = defaultItemTypes;
                         if (!this.defaultItemType)
-                            this.defaultItemType = KanbanBoard.defaultItemType;
+                            this.defaultItemType = defaultItemType;
                         if (!this.defaultGroupType)
-                            this.defaultGroupType = KanbanBoard.defaultGroupType;
+                            this.defaultGroupType = defaultGroupType;
                         this.getItemsInGroupAndState = getItemsInGroupAndState;
                         this.getItemsInGroup = getItemsInGroup;
                         this.getItemsInState = getItemsInState;
-                        this.getMaxStateInGroup = function (group) {
-                            var maxState = null, maxItemCount = 0;
-                            for (var i = 0; i < _this.states.length; i++) {
-                                var state = _this.states[i];
-                                var itemCount = _this.getItemsInGroupAndState(group, state).length;
+                        this.getMaxStateInGroup = (group: Group): State => {
+                            var maxState: State = null, maxItemCount = 0;
+                            for (var i = 0; i < this.states.length; i++) {
+                                var state: State = this.states[i];
+                                var itemCount = this.getItemsInGroupAndState(group, state).length;
                                 if (itemCount > maxItemCount) {
                                     maxState = state;
                                     maxItemCount = itemCount;
@@ -204,35 +229,35 @@ var DlhSoft;
                         if (!this.collapsedGroupHeight)
                             this.collapsedGroupHeight = 36;
                         if (!this.itemTemplateUrl)
-                            this.itemTemplateUrl = 'assets/libs/kanbanboard/DlhSoft.Kanban.Angular.Components.Templates/kanban-item.html';
+                            this.itemTemplateUrl = 'DlhSoft.Kanban.Angular.Components.Templates/kanban-item.html';
                         if (!this.groupTemplateUrl)
-                            this.groupTemplateUrl = 'assets/libs/kanbanboard/DlhSoft.Kanban.Angular.Components.Templates/kanban-group.html';
+                            this.groupTemplateUrl = 'DlhSoft.Kanban.Angular.Components.Templates/kanban-group.html';
                         if (!this.stateTemplateUrl)
-                            this.stateTemplateUrl = 'assets/libs/kanbanboard/DlhSoft.Kanban.Angular.Components.Templates/kanban-state.html';
-                        var setItemState = function (item, state) {
-                            var previousState = item.state;
+                            this.stateTemplateUrl = 'DlhSoft.Kanban.Angular.Components.Templates/kanban-state.html';
+                        var setItemState = (item: Item, state: State) => {
+                            var previousState: State = item.state;
                             item.state = state;
-                            if (_this.onItemStateChanged)
-                                _this.onItemStateChanged({ item: item, state: state, previousState: previousState });
+                            if (this.onItemStateChanged)
+                                this.onItemStateChanged({ item: item, state: state, previousState: previousState });
                         };
-                        var setItemGroup = function (item, group) {
-                            var previousGroup = item.group;
+                        var setItemGroup = (item: Item, group: Group) => {
+                            var previousGroup: Group = item.group;
                             item.group = group;
-                            if (_this.onItemGroupChanged)
-                                _this.onItemGroupChanged({ item: item, group: group, previousGroup: previousGroup });
+                            if (this.onItemGroupChanged)
+                                this.onItemGroupChanged({ item: item, group: group, previousGroup: previousGroup });
                         };
-                        this.canDropItem = function (type, index, group, state, targetIndex) {
-                            if (type !== KanbanBoard.types.item || targetIndex === index)
+                        this.canDropItem = (type: string, index: number, group: Group, state: State, targetIndex: number): boolean => {
+                            if (type !== types.item || targetIndex === index)
                                 return false;
-                            var item = _this.items[index];
-                            if (_this.canMoveItem)
-                                return _this.canMoveItem({ item: item, index: targetIndex, previousIndex: index, group: group, previouGroup: item.group, state: state, previousState: item.state });
+                            var item: Item = this.items[index];
+                            if (this.canMoveItem)
+                                return this.canMoveItem({ item: item, index: targetIndex, previousIndex: index, group: group, previouGroup: item.group, state: state, previousState: item.state });
                             return true;
                         };
-                        this.onItemDrop = function (type, index, group, state, targetIndex) {
-                            if (type !== KanbanBoard.types.item || targetIndex === index)
+                        this.onItemDrop = function (type: string, index: number, group: Group, state: State, targetIndex: number): void {
+                            if (type !== types.item || targetIndex === index)
                                 return;
-                            var item = this.items[index];
+                            var item: Item = this.items[index];
                             if (group != item.group)
                                 setItemGroup(item, group);
                             if (state != item.state)
@@ -244,22 +269,22 @@ var DlhSoft;
                                     this.onItemIndexChanged({ item: item, index: targetIndex, previousIndex: index });
                             }
                         };
-                        this.canDropGroup = function (type, index, targetIndex) {
-                            if (type !== KanbanBoard.types.group || targetIndex === index)
+                        this.canDropGroup = (type: string, index: number, targetIndex: number): boolean => {
+                            if (type !== types.group || targetIndex === index)
                                 return false;
-                            var group = _this.groups[index];
-                            if (_this.canMoveGroup)
-                                return _this.canMoveGroup({ group: group, index: targetIndex, previousIndex: index });
+                            var group: Group = this.groups[index];
+                            if (this.canMoveGroup)
+                                return this.canMoveGroup({ group: group, index: targetIndex, previousIndex: index });
                             return true;
                         };
-                        this.onGroupDrop = function (type, index, targetIndex) {
-                            if (type !== KanbanBoard.types.group || targetIndex === index)
+                        this.onGroupDrop = (type: string, index: number, targetIndex: number): void => {
+                            if (type !== types.group || targetIndex === index)
                                 return;
-                            var group = _this.groups[index];
-                            _this.groups.splice(index, 1);
-                            _this.groups.splice(targetIndex, 0, group);
-                            if (_this.onGroupIndexChanged)
-                                _this.onGroupIndexChanged({ group: group, index: targetIndex, previousIndex: index });
+                            var group: Group = this.groups[index];
+                            this.groups.splice(index, 1);
+                            this.groups.splice(targetIndex, 0, group);
+                            if (this.onGroupIndexChanged)
+                                this.onGroupIndexChanged({ group: group, index: targetIndex, previousIndex: index });
                         };
                         if (!this.itemsLabel)
                             this.itemsLabel = 'items';
@@ -281,18 +306,18 @@ var DlhSoft;
                             this.editGroupButtonToolTip = this.editItemButtonToolTip;
                         if (!this.newItemName)
                             this.newItemName = 'New item';
-                        this.addNewItem = function (group, state) {
-                            var item = { name: _this.newItemName, group: group, state: state, assignedResource: _this.newItemResource };
-                            _this.items.push(item);
-                            if (_this.onAddingNewItem != null)
-                                _this.onAddingNewItem({ item: item });
+                        this.addNewItem = (group: Group, state: State): void => {
+                            var item: Item = { name: this.newItemName, group: group, state: state, assignedResource: this.newItemResource };
+                            this.items.push(item);
+                            if (this.onAddingNewItem != null)
+                                this.onAddingNewItem({ item: item });
                         };
                     },
                     controllerAs: 'dskb',
-                    templateUrl: 'assets/libs/kanbanboard/DlhSoft.Kanban.Angular.Components.Templates/kanban-board.html'
-                };
+                    templateUrl: 'DlhSoft.Kanban.Angular.Components.Templates/kanban-board.html'
+                }
             })
-                .directive('dsKanbanDraggableItem', function ($timeout) {
+            .directive('dsKanbanDraggableItem', ($timeout) => {
                 return {
                     restrict: 'A',
                     scope: {
@@ -310,7 +335,7 @@ var DlhSoft;
                             event.dataTransfer.effectAllowed = 'move';
                             event.dataTransfer.setData('text', (scope.dragType ? scope.dragType + ':' : '') + scope.dragIndex);
                             parentElement.originalOpacity = parentElement.style.opacity;
-                            $timeout(function () { parentElement.style.opacity = (parentElement.originalOpacity ? parentElement.originalOpacity : 1) / 2; });
+                            $timeout((): void => { parentElement.style.opacity = (parentElement.originalOpacity ? parentElement.originalOpacity : 1) / 2; });
                         }
                         function onDragEnd() {
                             parentElement.style.opacity = parentElement.originalOpacity;
@@ -318,14 +343,14 @@ var DlhSoft;
                         }
                         element.addEventListener('dragstart', onDragStart);
                         element.addEventListener('dragend', onDragEnd);
-                        scope.$on('$destroy', function () {
+                        scope.$on('$destroy', (): void => {
                             element.removeEventListener('dragstart', onDragStart);
                             element.removeEventListener('dragend', onDragEnd);
                         });
                     }
                 };
             })
-                .directive('dsKanbanItemDropZone', function () {
+            .directive('dsKanbanItemDropZone', () => {
                 return {
                     restrict: 'EA',
                     scope: {
@@ -340,7 +365,7 @@ var DlhSoft;
                         function onDrop(event) {
                             var itemInfo = event.dataTransfer.getData('text');
                             var infoSeparatorIndex = itemInfo.indexOf(':');
-                            var type = infoSeparatorIndex >= 0 ? itemInfo.substr(0, infoSeparatorIndex) : KanbanBoard.types.item;
+                            var type = infoSeparatorIndex >= 0 ? itemInfo.substr(0, infoSeparatorIndex) : types.item;
                             var index = parseInt(infoSeparatorIndex >= 0 ? itemInfo.substr(infoSeparatorIndex + 1) : itemInfo);
                             if (!scope.canDrop || scope.canDrop({ type: type, index: index })) {
                                 scope.onDrop({ type: type, index: index });
@@ -350,14 +375,12 @@ var DlhSoft;
                         }
                         element.addEventListener('dragover', onDragOver);
                         element.addEventListener('drop', onDrop);
-                        scope.$on('$destroy', function () {
+                        scope.$on('$destroy', (): void => {
                             element.removeEventListener('drop', onDrop);
                             element.removeEventListener('dragover', onDragOver);
                         });
                     }
                 };
             });
-        })(KanbanBoard = Controls.KanbanBoard || (Controls.KanbanBoard = {}));
-    })(Controls = DlhSoft.Controls || (DlhSoft.Controls = {}));
-})(DlhSoft || (DlhSoft = {}));
-//# sourceMappingURL=DlhSoft.Kanban.Angular.Components.js.map
+    }
+}

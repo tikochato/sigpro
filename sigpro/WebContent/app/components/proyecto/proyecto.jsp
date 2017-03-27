@@ -91,9 +91,9 @@
 				<label class="btn btn-default" ng-click="controller.irAHitos(controller.proyecto.id)" >Hitos</label>
 				<label class="btn btn-default" ng-click="controller.irADesembolsos(controller.proyecto.id)">Desembolsos</label>
 				<label class="btn btn-default" ng-click="controller.irARiesgos(controller.proyecto.id)">Riesgos</label>
-				<label class="btn btn-default" ng-click="controller.irAGantt(controller.proyecto.id)">Gantt</label>
 				<label class="btn btn-default" ng-click="controller.irAActividades(controller.proyecto.id)">Actividades</label>
 				<label class="btn btn-default" ng-click="controller.irAMapa(controller.proyecto.id)">Mapa</label>
+				<label class="btn btn-default" ng-click="controller.irAGantt(controller.proyecto.id)">Gantt</label>
 			</div>
 		</div>
 
