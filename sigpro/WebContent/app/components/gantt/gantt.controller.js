@@ -253,8 +253,6 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		         mi.nombreArchivo = mi.archivos.name;
 		       
 		  };
-		  
-		  
 	    //  Kanban board
 		  
 		var KanbanBoard = DlhSoft.Controls.KanbanBoard;
