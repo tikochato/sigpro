@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -26,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 import dao.RiesgoDAO;
 import dao.RiesgoPropiedadDAO;
 import dao.RiesgoPropiedadValorDAO;
+import pojo.Colaborador;
 import pojo.Riesgo;
 import pojo.RiesgoPropiedad;
 import pojo.RiesgoPropiedadValor;
@@ -49,6 +51,17 @@ public class SRiesgo extends HttpServlet {
 		String fechaActualizacion;
 		Integer riesgotipoid;
 		String riesgotiponombre;
+		String impactoProyectado;
+		Integer impacto;
+		Integer puntuacionImpacto;
+		Integer probabilidad;
+		String gatillosSintomas;
+		String respuesta;
+		Integer colaboradorid;
+		String colaboradorNombre;
+		String riesgosSecundarios;
+		Integer ejecutado;
+		String fechaEjecucion;
 		int estado;
 	}
 	
@@ -126,6 +139,24 @@ public class SRiesgo extends HttpServlet {
 				temp.usuarioCreo = riesgo.getUsuarioCreo();
 				temp.riesgotipoid = riesgo.getRiesgoTipo().getId();
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
+				temp.impactoProyectado = riesgo.getImpactoProyectado();
+				temp.impacto = riesgo.getImpacto();
+				temp.puntuacionImpacto = riesgo.getPuntuacionImpacto();
+				temp.probabilidad = riesgo.getProbabilidad();
+				temp.gatillosSintomas = riesgo.getGatillosSintomas();
+				temp.respuesta = riesgo.getRespuesta();
+				temp.riesgosSecundarios = riesgo.getRiesgosSecundarios();
+				temp.ejecutado = riesgo.getEjecutado();
+				temp.fechaEjecucion = Utils.formatDate(riesgo.getFechaEjecucion());
+				temp.colaboradorid = riesgo.getColaborador().getId();
+				if (riesgo.getColaborador()!=null )
+				temp.colaboradorNombre = String.join(" ", riesgo.getColaborador().getPnombre(),
+						riesgo.getColaborador().getSnombre() !=null ? riesgo.getColaborador().getSnombre() : "",
+						riesgo.getColaborador().getPapellido()!=null ? riesgo.getColaborador().getPapellido() : "",
+						riesgo.getColaborador().getSapellido()!=null ? riesgo.getColaborador().getSapellido() : ""	
+				);
+								
+						
 				striesgos.add(temp);
 			}
 			
@@ -160,6 +191,25 @@ public class SRiesgo extends HttpServlet {
 				temp.usuarioCreo = riesgo.getUsuarioCreo();
 				temp.riesgotipoid = riesgo.getRiesgoTipo().getId();
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
+				temp.impactoProyectado = riesgo.getImpactoProyectado();
+				temp.impacto = riesgo.getImpacto();
+				temp.puntuacionImpacto = riesgo.getPuntuacionImpacto();
+				temp.probabilidad = riesgo.getProbabilidad();
+				temp.riesgosSecundarios = riesgo.getRiesgosSecundarios();
+				temp.gatillosSintomas = riesgo.getGatillosSintomas();
+				temp.respuesta = riesgo.getRespuesta();
+				temp.ejecutado = riesgo.getEjecutado();
+				temp.fechaEjecucion = Utils.formatDate(riesgo.getFechaEjecucion());
+				
+				if (riesgo.getColaborador()!=null ){
+					temp.colaboradorid = riesgo.getColaborador().getId();
+				temp.colaboradorNombre = String.join(" ", riesgo.getColaborador().getPnombre(),
+						riesgo.getColaborador().getSnombre() !=null ? riesgo.getColaborador().getSnombre() : "",
+						riesgo.getColaborador().getPapellido()!=null ? riesgo.getColaborador().getPapellido() : "",
+						riesgo.getColaborador().getSapellido()!=null ? riesgo.getColaborador().getSapellido() : ""	
+				);
+				}
+							
 				striesgos.add(temp);
 			}
 			
@@ -182,6 +232,23 @@ public class SRiesgo extends HttpServlet {
 				temp.usuarioCreo = riesgo.getUsuarioCreo();
 				temp.riesgotipoid = riesgo.getRiesgoTipo().getId();
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
+				temp.impactoProyectado = riesgo.getImpactoProyectado();
+				temp.impacto = riesgo.getImpacto();
+				temp.puntuacionImpacto = riesgo.getPuntuacionImpacto();
+				temp.probabilidad = riesgo.getProbabilidad();
+				temp.gatillosSintomas = riesgo.getGatillosSintomas();
+				temp.respuesta = riesgo.getRespuesta();
+				temp.riesgosSecundarios = riesgo.getRiesgosSecundarios();
+				temp.ejecutado = riesgo.getEjecutado();
+				temp.fechaEjecucion = Utils.formatDate(riesgo.getFechaEjecucion());
+				temp.colaboradorid = riesgo.getColaborador().getId();
+				if (riesgo.getColaborador()!=null )
+				temp.colaboradorNombre = String.join(" ", riesgo.getColaborador().getPnombre(),
+						riesgo.getColaborador().getSnombre() !=null ? riesgo.getColaborador().getSnombre() : "",
+						riesgo.getColaborador().getPapellido()!=null ? riesgo.getColaborador().getPapellido() : "",
+						riesgo.getColaborador().getSapellido()!=null ? riesgo.getColaborador().getSapellido() : ""	
+				);
+							
 				striesgos.add(temp);
 			}
 			
@@ -195,11 +262,29 @@ public class SRiesgo extends HttpServlet {
 				boolean esnuevo = map.get("esnuevo").equals("true");
 				int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 				if(id>0 || esnuevo){
+					
 					String nombre = map.get("nombre");
 					String descripcion = map.get("descripcion");
 					int riesgotipoid = map.get("riesgotipoid")!=null && map.get("riesgotipoid").length() > 0 ?
 							Integer.parseInt(map.get("riesgotipoid")) : 0;
-							
+				    String impactoProyectado = map.get("impactoproyectado");
+				    Integer impacto = Utils.String2Int(map.get("impacto"),null);
+				    Integer puntuacionImpacto = Utils.String2Int(map.get("puntuacionimpoacto"), null);
+				    Integer probabilidad = Utils.String2Int(map.get("probabilidad"),null);
+				    String gatillosOSintomas = map.get("gatillossintomas");
+				    String respuesta = map.get("respuesta");
+				    String riesgosSecundarios = map.get("riesgossecundarios");
+				    Integer ejecutado = Utils.String2Int(map.get("ejecutado"), null);
+				    Date fechaEjecucion = Utils.dateFromString(map.get("fechaejecucion"));
+				    
+				    
+				    Colaborador colaborador = null;
+				    Integer colobaradorId = Utils.String2Int(map.get("colaboradorid"),null);
+				    if (colobaradorId!=null){
+				    	colaborador = new Colaborador();
+				    	colaborador.setId(colobaradorId);
+				    }
+				    
 					
 					RiesgoTipo riesgoTipo= new RiesgoTipo();
 					riesgoTipo.setId(riesgotipoid);
@@ -211,7 +296,13 @@ public class SRiesgo extends HttpServlet {
 					
 					Riesgo riesgo;
 					if(esnuevo){
-						riesgo = new Riesgo(riesgoTipo, nombre, descripcion, usuario, null, new DateTime().toDate(), null,1, null, null);
+						
+						riesgo = new Riesgo(colaborador, riesgoTipo, nombre, descripcion, usuario, null, new Date(), null, 1,
+								impactoProyectado, impacto, puntuacionImpacto, probabilidad, gatillosOSintomas, respuesta, 
+								riesgosSecundarios, ejecutado, fechaEjecucion, null, null);
+						
+						
+						
 					}
 					else{
 						
@@ -221,6 +312,16 @@ public class SRiesgo extends HttpServlet {
 						riesgo.setDescripcion(descripcion);
 						riesgo.setUsuarioActualizo(usuario);
 						riesgo.setFechaActualizacion(new DateTime().toDate());
+						riesgo.setImpactoProyectado(impactoProyectado);
+						riesgo.setImpacto(impacto);
+						riesgo.setPuntuacionImpacto(puntuacionImpacto);
+						riesgo.setProbabilidad(probabilidad);
+						riesgo.setGatillosSintomas(gatillosOSintomas);
+						riesgo.setRespuesta(respuesta);
+						riesgo.setRiesgosSecundarios(riesgosSecundarios);
+						riesgo.setEjecutado(ejecutado);
+						riesgo.setFechaEjecucion(fechaEjecucion);
+						riesgo.setColaborador(colaborador);
 					}
 					int objetoId = Utils.String2Int(map.get("objetoId"));
 					int objetoTipo = Utils.String2Int(map.get("objetoTipo"));

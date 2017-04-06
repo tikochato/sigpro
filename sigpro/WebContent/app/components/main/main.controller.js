@@ -159,6 +159,12 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/kanban/:proyectoId?',{
             	template: '<div load-on-demand="\'ganttController\'" class="all_page"></div>'
             })
+            .when('/matrizriesgo/:proyectoId?',{
+            	template: '<div load-on-demand="\'matrizriesgoController\'" class="all_page"></div>'
+            })
+            .when('/agenda/:proyectoId?',{
+            	template: '<div load-on-demand="\'agendaController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -392,8 +398,18 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'kanbanController',
-	    	   script: '/app/components/gantt/app..js',
+	    	   script: '/app/components/gantt/app.js',
 	    	   template: '/app/components/gantt/kanban.jsp'
+	       },
+	       {
+	    	   name: 'matrizriesgoController',
+	    	   script: '/app/components/reportes/matrizriesgo.controller.js',
+	    	   template: '/app/components/reportes/matrizriesgo.jsp'
+	       },
+	       {
+	    	   name: 'agendaController',
+	    	   script: '/app/components/reportes/agenda/agenda.controller.js',
+	    	   template: '/app/components/reportes/agenda/agenda.jsp'
 	       }
 
 	   ];

@@ -1,9 +1,18 @@
 package utilities;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFCreationHelper;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -12,6 +21,7 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -85,6 +95,11 @@ public class CExcel {
 		
 		cs_normal = workbook.createCellStyle();
 		cs_normal.setFont(font);
+		
+		estilo0();
+		estilo1();
+		estilo2();
+		estilo3();
 		
 	}
 	
@@ -240,5 +255,162 @@ public class CExcel {
 			ret +="+" +column + "" + lineas.get(i) ; 
 		}
 		return ret.substring(1);
+	}
+	//nuevo
+	HSSFWorkbook workbook_ = new HSSFWorkbook();
+	HSSFSheet sheet_;
+	CellStyle estilo_0; //normal;
+	CellStyle estilo_1; //negrita;
+	CellStyle estilo_2; // titulo centrado
+	CellStyle estilo_3; // pie
+	int rownum;
+	
+	public String ExportarExcel(Map<String,Object[]> datos,String titulo){
+		
+		sheet_ = workbook_.createSheet(titulo);
+		String path="";
+		
+		rownum = 6;
+		int columnas=0;
+		
+		for (int i = 0 ;i< datos.size(); i++ ) {
+			Row row = sheet_.createRow(rownum++);
+			Object [] objArr = datos.get(i+"");
+			int cellnum = 0;
+			for (Object obj : objArr) {
+				crearCelda(obj, workbook_, row, cellnum++, rownum==7?1:0);
+			}
+			columnas = objArr.length > columnas? objArr.length : columnas;
+		}
+		setEncabezado(titulo,columnas);
+		piePagina();
+		sheet_.autoSizeColumn(0);
+		sheet_.autoSizeColumn(1);
+		sheet_.autoSizeColumn(2);
+		sheet_.autoSizeColumn(3);
+
+		try {
+			path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".xls");
+			FileOutputStream out = 
+					new FileOutputStream(new File(path));
+			workbook_.write(out);
+			out.close();
+			System.out.println("Se creo el archivo");
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return path;
+	}
+	
+	
+	private Cell crearCelda(Object obj, HSSFWorkbook workbook_,Row row,int cellnum,int estilo){
+		
+		Cell cell = row.createCell(cellnum);
+		
+		if(obj instanceof Date) {
+			cell.setCellValue((Date)obj);
+			HSSFCreationHelper createHelper = workbook_.getCreationHelper();
+			HSSFCellStyle cellStyle         = workbook_.createCellStyle();
+			cellStyle.setDataFormat(
+			createHelper.createDataFormat().getFormat("dd/MM/yyyy")); 
+			cell.setCellStyle(cellStyle);
+
+		}
+		else if(obj instanceof Boolean)
+			cell.setCellValue((Boolean)obj);
+		else if(obj instanceof String)
+			cell.setCellValue((String)obj);
+		else if(obj instanceof Double)
+			cell.setCellValue((Double)obj);
+		else if (obj instanceof Integer ) 
+			cell.setCellValue((Integer) obj);
+		else 
+			System.out.println("otro tipo = " + (obj!=null ? obj.getClass():"null"));
+		
+		if (estilo>0)
+			cell.setCellStyle(obtenerEstilo( estilo));
+		
+		
+		return cell;
+	}
+	
+	private CellStyle obtenerEstilo(int estilo){
+		switch (estilo){
+			case 1: return estilo_1; 
+			case 2: return estilo_2;
+			case 3: return estilo_3;
+			default: return estilo_0;
+		}
+	}
+
+	
+	private void setEncabezado(String titulo,int celdasCombinadas){
+		setCeldaString( "Ministerio de Finanzas Publicas", 0, 0,  true,1);
+		setCeldaString( "Proyecto SIPRO", 1, 0,  true,1);
+		setCeldaString(titulo, 4,0, true,2);
+		conbinarCeldas(4, 4, 0, celdasCombinadas);
+		conbinarCeldas(0, 0, 0, 3);
+		conbinarCeldas(1, 1, 0, 3);
+		
+		
+	}
+	public void setCeldaString(String value, int rownum, int cellnum,
+			boolean negrita,int estilo){
+		Row row = sheet_.createRow(rownum);
+		Cell cell = row.createCell(cellnum);
+		
+		cell = sheet_.getRow(rownum) != null ? (sheet_.getRow(rownum).getCell(cellnum)!=null ? 
+				sheet_.getRow(rownum).getCell(cellnum) : sheet_.getRow(rownum).createCell(cellnum)) : sheet_.createRow(rownum).createCell(cellnum);
+		cell.setCellValue(value);
+		cell.setCellStyle(obtenerEstilo(estilo));
+	}
+	
+	
+	private void estilo0(){
+		estilo_0 =workbook_.createCellStyle();
+		
+	}
+	
+	private void estilo1(){
+		estilo_1 =workbook_.createCellStyle();
+		HSSFFont font = workbook_.createFont();
+		font.setBold(true);
+		font.setFontHeightInPoints((short)11);
+		estilo_1.setFont(font);
+	}
+	
+	private void estilo2(){
+		estilo_2 =workbook_.createCellStyle();
+		HSSFFont font = workbook_.createFont();
+		font.setBold(true);
+		font.setFontHeightInPoints((short)12);
+		estilo_2.setFont(font);
+		
+	}
+	
+	private void estilo3(){
+		estilo_3 =workbook_.createCellStyle();
+		HSSFFont font = workbook_.createFont();
+		font.setBold(false);
+		font.setFontHeightInPoints((short)8);
+		estilo_3.setFont(font);
+	}
+	
+	public void conbinarCeldas(int inicioFila,int finFila, int inicioColumna,int finColumna){
+		sheet_.addMergedRegion(new CellRangeAddress(inicioFila,finFila,inicioColumna,finColumna));
+	}
+	
+	private void piePagina(){
+		rownum=rownum+2;
+		DateTime now = new DateTime();
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("d/M/yyyy h:mm a");
+		setCeldaString("Fecha de Generación: " +fmt.print(now) ,rownum,0,true,3);
+		conbinarCeldas(rownum, rownum, 0, 3);
+		rownum++;
+		setCeldaString("Usuario: " +"admin" ,rownum,0,true,4);
+		conbinarCeldas(rownum, rownum, 0, 3);	
 	}
 }

@@ -19,8 +19,12 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.componenteNombre="";
 		mi.productoid="";
 		mi.productoNombre="";
+		mi.colaboradorid = ""
+		mi.colaboradorNombre = "";
 		mi.camposdinamicos = {};
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.colaboradorid="";
+		mi.colaboradorNombre="";
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		mi.objetoid = $routeParams.objeto_id;
@@ -30,6 +34,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.ordenDireccion = null;
 		mi.filtros = [];
 		mi.orden = null;
+		mi.probabilidades = [{valor:1, nombre:"Bajo"},{valor:2,nombre:"Medio"},{valor:3,nombre:"Alto"}];
 		
 		mi.fechaOptions = {
 				formatYear : 'yy',
@@ -64,6 +69,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					mi.gridApi = gridApi;
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 						mi.riesgo = row.entity;
+						if (mi.riesgo.fechaEjecucion!=null && mi.riesgo.fechaEjecucion != '')
+							mi.riesgo.fechaEjecucion = moment(mi.riesgo.fechaEjecucion,'DD/MM/YYYY').toDate();
 					});
 					
 					gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
@@ -140,6 +147,16 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					nombre: mi.riesgo.nombre,
 					descripcion: mi.riesgo.descripcion,
 					objetoId: $routeParams.objeto_id,
+					impacto: mi.riesgo.impacto,
+					puntuacionimpoacto: mi.riesgo.puntuacionImpacto,
+					impactoproyectado: mi.riesgo.impactoProyectado,
+					probabilidad: mi.probabilidad!=null ? mi.probabilidad.valor : null,
+					gatillossintomas: mi.riesgo.gatillosSintomas,
+					respuesta: mi.riesgo.respuesta,
+					colaboradorid: mi.colaboradorid,
+					riesgossecundarios: mi.riesgo.riesgosSecundarios,
+					ejecutado: mi.ejecutado == true ? 1 : 0 ,
+					fechaejecucion: moment(mi.riesgo.fechaEjecucion).format('DD/MM/YYYY'),
 					objetoTipo:  $routeParams.objeto_tipo,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
@@ -199,6 +216,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			mi.productoid="";
 			mi.productoNombre="";
 			mi.camposdinamicos = {};
+			mi.probabilidad = {}; 
 			mi.gridApi.selection.clearSelectedRows();
 		};
 
@@ -210,8 +228,21 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				mi.componenteNombre = mi.riesgo.componentenombre;
 				mi.productoid = mi.riesgo.productoid;
 				mi.productoNombre = mi.riesgo.productonombre;
+				mi.colaboradorNombre = mi.riesgo.colaboradornombre,
+				mi.colaboradorid = mi.riesgo.colaboradorid;
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
+				mi.colaboradorNombre = mi.riesgo.colaboradorNombre;
+				mi.colaboradorId = mi.riesgo.colaboradorId;
+				if (mi.riesgo.probabilidad !=null && mi.riesgo.probabilidad > 0){
+					mi.probabilidad = {
+							"valor" : mi.riesgo.probabilidad,
+							"nombre" : mi.probabilidades[mi.riesgo.probabilidad - 1].nombre
+					}
+				}else {
+					mi.probabilidad = {};
+				}
+				mi.ejecutado = mi.riesgo.ejecutado == 1;
 				
 				var parametros = { 
 						accion: 'getRiesgoPropiedadPorTipo', 
@@ -267,7 +298,15 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		}
 		
 		mi.abrirPopupFecha = function(index) {
-			mi.camposdinamicos[index].isOpen = true;
+			
+			if(index<1000){
+				mi.camposdinamicos[index].isOpen = true;
+			}
+			else{
+				switch(index){
+					case 1000: mi.fe_abierto = true; break;
+				}
+			}
 		};
 		
 		
@@ -296,14 +335,14 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					mi.cargarTabla(1);
 		});
 		
-		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga) {
+		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
 			var resultado = $q.defer();
 			var modalInstance = $uibModal.open({
 				animation : 'true',
 				ariaLabelledBy : 'modal-title',
 				ariaDescribedBy : 'modal-body',
-				templateUrl : 'buscarRiesgoTipo.jsp',
-				controller : 'buscarRiesgoTipo',
+				templateUrl : 'buscarPorRiesgo.jsp',
+				controller : 'buscarPorRiesgo',
 				controllerAs : 'modalBuscar',
 				backdrop : 'static',
 				size : 'md',
@@ -316,15 +355,24 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					},
 					$datosCarga : function() {
 						return datosCarga;
+					},
+					$columnaId : function() {
+						return columnaId;
+					},
+					$columnaNombre : function() {
+						return columnaNombre;
 					}
 				}
 			});
-			
+
 			modalInstance.result.then(function(itemSeleccionado) {
 				resultado.resolve(itemSeleccionado);
 			});
 			return resultado.promise;
-	};
+		};
+	
+	
+	
 	
 	mi.buscarRiesgoTipo = function() {
 		var resultado = mi.llamarModalBusqueda('/SRiesgoTipo', {
@@ -335,8 +383,9 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				pagina : pagina,
 				registros : elementosPorPagina
 			};
-		});
-
+		},'id','nombre');
+		
+		
 		resultado.then(function(itemSeleccionado) {
 			mi.riesgoTipoid = itemSeleccionado.id;
 			mi.riesgoTipoNombre = itemSeleccionado.nombre;
@@ -370,25 +419,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		});
 	};
 	
-	mi.buscarComponente = function() {
-		var resultado = mi.llamarModalBusqueda('/SComponente', {
-			accion : 'numeroComponentes'
-		}, function(pagina, elementosPorPagina) {
-			return {
-				accion : 'getComponentesPagina',
-				pagina : pagina,
-				registros : elementosPorPagina
-			};
-		});
-
-		resultado.then(function(itemSeleccionado) {
-			mi.componenteid= itemSeleccionado.id;
-			mi.componenteNombre = itemSeleccionado.nombre;
-		});
-	};
-	
-	mi.buscarProducto = function() {
-		var resultado = mi.llamarModalBusqueda('/SProducto', {
+	mi.buscarColaborador = function() {
+		var resultado = mi.llamarModalBusqueda('/SColaborador', {
 			accion : 'totalElementos'
 		}, function(pagina, elementosPorPagina) {
 			return {
@@ -396,22 +428,25 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				pagina : pagina,
 				registros : elementosPorPagina
 			};
-		});
-
+		},'id','nombreCompleto');
+		
+		
 		resultado.then(function(itemSeleccionado) {
-			mi.productoid= itemSeleccionado.id;
-			mi.productoNombre = itemSeleccionado.nombre;
+			mi.colaboradorid = itemSeleccionado.id;
+			mi.colaboradorNombre = itemSeleccionado.nombreCompleto;
+			
 		});
 	};
+	
 			
 } ]);
 
-app.controller('buscarRiesgoTipo', [ '$uibModalInstance',
+app.controller('buscarPorRiesgo', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', '$servlet', '$accionServlet', '$datosCarga', buscarRiesgoTipo ]);
+	'$timeout', '$log', '$servlet', '$accionServlet', '$datosCarga','$columnaId','$columnaNombre',buscarPorRiesgo ]);
 
-function buscarRiesgoTipo($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $servlet,$accionServlet,$datosCarga) {
+function buscarPorRiesgo($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $servlet,$accionServlet,$datosCarga, $columnaId,$columnaNombre) {
 	
 	var mi = this;
 
@@ -437,13 +472,13 @@ function buscarRiesgoTipo($uibModalInstance, $scope, $http, $interval,
 		data : mi.data,
 		columnDefs : [ {
 			displayName : 'ID',
-			name : 'id',
+			name : $columnaId,
 			cellClass : 'grid-align-right',
 			type : 'number',
 			width : 70
 		}, {
 			displayName : 'Nombre',
-			name : 'nombre',
+			name : $columnaNombre,
 			cellClass : 'grid-align-left'
 		} ],
 		enableRowSelection : true,
