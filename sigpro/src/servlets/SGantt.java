@@ -189,9 +189,7 @@ public class SGantt extends HttpServlet {
 
 				CProject project = new CProject(directorioTemporal + "/temp_"+ time.toString());
 
-				//Proyecto proyecto = project.imporatarArchivo(project.getProject(),usuario);
-				Proyecto proyecto = new Proyecto();
-				proyecto.setId(1);
+				Proyecto proyecto = project.imporatarArchivo(project.getProject(),usuario);
 				
 				if (file.exists())
 				{
