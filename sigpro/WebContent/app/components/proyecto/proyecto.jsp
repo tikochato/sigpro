@@ -22,6 +22,9 @@
 	<script type="text/ng-template" id="buscarPorProyecto.jsp">
     		<%@ include file="/app/components/proyecto/buscarPorProyecto.jsp"%>
   	 </script>
+  	 <script type="text/ng-template" id="cargarArchivo.jsp">
+    		<%@ include file="/app/components/proyecto/cargarArchivo.jsp"%>
+  	 </script>
 	<shiro:lacksPermission name="24010">
 		<p ng-init="controller.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
@@ -30,6 +33,9 @@
 	<div class="row" align="center" ng-hide="controller.esColapsado">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
+			<shiro:hasPermission name="24040">
+				<label class="btn btn-primary" ng-click="controller.cargarArchivo()">Desde archivo</label>
+			</shiro:hasPermission>
 			<shiro:hasPermission name="24040">
 				<label class="btn btn-primary" ng-click="controller.nuevo()">Nuevo</label>
 			</shiro:hasPermission>

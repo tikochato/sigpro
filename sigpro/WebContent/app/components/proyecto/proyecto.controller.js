@@ -496,7 +496,41 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 		});
 	};
+	
+	mi.llamarModalArchivo = function() {
+		var resultado = $q.defer();
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'cargarArchivo.jsp',
+			controller : 'cargararchivoController',
+			controllerAs : 'cargararchivoc',
+			backdrop : 'static',
+			size : 'md',
+		});
 
+		modalInstance.result.then(function(respuesta) {
+			resultado.resolve(respuesta);
+		});
+		return resultado.promise;
+	};
+	
+	mi.cargarArchivo = function() {
+		var resultado = mi.llamarModalArchivo();
+
+		resultado.then(function(resultado) {
+			if (resultado.data.success){
+				mi.obtenerTotalProyectos();
+				$utilidades.mensaje('success','Proyecto creado con éxito');
+			}else{
+				$utilidades.mensaje('danger','Error al crear el Proyecto');
+			}
+			
+		});
+	};
+	
+	
 
 	mi.open = function (posicionlat, posicionlong) {
 		$scope.geoposicionlat = posicionlat;
@@ -655,3 +689,56 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 		  $uibModalInstance.close($scope.posicion);
 	  };
 }]);
+
+
+app.controller('cargararchivoController', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log','$q', cargararchivoController ]);
+
+function cargararchivoController($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log,$q) {
+
+	var mi = this;
+	mi.mostrar = true;
+	mi.nombreArchivo="";
+	
+	$scope.cargarArchivo = function(event){
+		var resultado = $q.defer();
+	     mi.archivos = event.files[0];      
+	     mi.nombreArchivo = mi.archivos.name;
+	     resultado.resolve(event.files[0]);
+	     document.getElementById("nombreArchivo").value = mi.nombreArchivo;
+	     return resultado.promise;
+	};
+
+	mi.ok = function() {
+		if (mi.nombreArchivo != '') {
+			mi.cargar();
+		} else {
+			$utilidades.mensaje('warning', 'Debe seleccionar un archivo');
+		}
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+	
+	mi.cargar=function(){
+		if (mi.archivos!=null && mi.arhivos != ''){
+		var formatData = new FormData();
+		formatData.append("file",mi.archivos);  
+		formatData.append("accion",'importar');
+		$http.post('/SGantt',formatData, {
+				headers: {'Content-Type': undefined},
+				transformRequest: angular.identity
+			 } ).then(
+		
+			function(response) {
+				$uibModalInstance.close(response);
+			}
+		);
+		}else{
+			$utilidades.mensaje('danger','Debe seleccionar un archivo');
+		}
+	};
+}

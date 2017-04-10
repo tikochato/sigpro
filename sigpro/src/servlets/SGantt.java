@@ -189,11 +189,22 @@ public class SGantt extends HttpServlet {
 
 				CProject project = new CProject(directorioTemporal + "/temp_"+ time.toString());
 
-				project.imporatarArchivo(project.getProject(),usuario);
+				//Proyecto proyecto = project.imporatarArchivo(project.getProject(),usuario);
+				Proyecto proyecto = new Proyecto();
+				proyecto.setId(1);
+				
 				if (file.exists())
 				{
 					file.delete();
 				}
+				if (proyecto!=null){
+				
+					items = String.join("", "\"proyectoid\":",proyecto.getId().toString());
+				    items = String.join("", "{\"success\":true,",items,"}");
+				}else{
+					items = "{ \"success\": false }";
+				}
+				
 
 		}
 		else if(accion.equals("exportar")){

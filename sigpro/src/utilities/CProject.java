@@ -111,10 +111,11 @@ public class CProject {
 	}
 	
 	
-	public void imporatarArchivo(ProjectFile projectFile, String usuario){
+	public Proyecto imporatarArchivo(ProjectFile projectFile, String usuario){
 		indetnacion = 0;
 		itemsProject = "";
 		items = new HashMap<>();
+		Proyecto proyecto = null;
 		for (Task task : projectFile.getChildTasks())
 		{
 			if (task.getChildTasks()!=null && task.getChildTasks().size()>0){
@@ -122,7 +123,7 @@ public class CProject {
 					
 					if (task1.getChildTasks()!=null && task1.getChildTasks().size()>0){
 						System.out.println(task1.getName());
-						Proyecto proyecto = crearProyecto(task1, usuario);
+						proyecto = crearProyecto(task1, usuario);
 						cargarItem(task1,proyecto.getId(),1);
 						for (Task task2 : task1.getChildTasks()){ //componentes
 							if (task2.getChildTasks()!=null && task2.getChildTasks().size()>0){
@@ -167,6 +168,7 @@ public class CProject {
 				}	
 			}
 		}
+		return proyecto;
 	}
 	
 	public Proyecto crearProyecto(Task task,String usuario){
