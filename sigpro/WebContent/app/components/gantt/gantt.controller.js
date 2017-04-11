@@ -196,7 +196,6 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		
 		mi.cargar=function(){
 			if (mi.archivos!=null && mi.arhivos != ''){
-				
 			
 			var formatData = new FormData();
 			formatData.append("file",mi.archivos);  
@@ -280,8 +279,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 					for (item in items) {
 					    items[item].state = estados[items[item].estadoId];
 					    items[item].color = colores[items[item].estadoId];
-					    items[item].isReadOnly = true;
-					   
+					    items[item].isReadOnly = true;  
 					}
 					
 					$scope.states  = estados;

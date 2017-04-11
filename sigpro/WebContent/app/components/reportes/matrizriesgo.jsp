@@ -3,21 +3,21 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="matrizriesgoController as matrizriesgoc" class="maincontainer all_page" id="title">
-	    
+
   	    <shiro:lacksPermission name="30010">
 			<p ng-init="riesgoc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
 		<h3>Matriz de Riesgos</h3><br/>
 		<h4>{{ riesgoc.proyectoNombre }}</h4><br/>
 		<div class="row" align="center" >
-		
+
 			<div class="operation_buttons" align="left">
 					<div class="btn-group">
 						<label class="btn btn-primary" ng-click="matrizriesgoc.exportarExcel()"><span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Exportar</span></label>
 					</div>
 			</div>
 			<div class="col-sm-12 ">
-				<table st-table="matrizriesgoc.riesgos" st-safe-src="matrizriesgoc.lista" class="table table-condensed table-hover">
+				<table st-table="matrizriesgoc.riesgos" st-safe-src="matrizriesgoc.lista" class="table table-condensed table-hover" >
 					<thead>
 						<tr>
 							<th>Riesgo</th>
@@ -35,7 +35,7 @@
 							<th>Riesgos secundarios</th>
 							<th>¿Ha sido ejecutado?</th>
 							<th>Fecha de Ejecución</th>
-							
+
 						</tr>
 						<tr>
 							<th colspan="7"><input st-search="" class="form-control" placeholder="Buscar" type="text"/></th>
@@ -43,7 +43,7 @@
 					</thead>
 					<tbody>
 					<tr ng-repeat="row in matrizriesgoc.riesgos">
-				
+
 						<td>{{row.idRiesgo}}</td>
 						<td>{{row.objetoTipoNombre}}</td>
 						<td>{{row.nombre}}</td>
@@ -54,13 +54,13 @@
 						<td>
 						<ANY ng-switch="row.probabilidad" >
 							<ANY ng-switch-when="1">
-								Bajo		
+								Bajo
 							</ANY>
 							<ANY ng-switch-when="2">
-								Medio		
+								Medio
 							</ANY>
 							<ANY ng-switch-when="3">
-								Alto		
+								Alto
 							</ANY>
 						</ANY>
 						</td>
@@ -76,6 +76,6 @@
 				</table>
 				<br/>
 			</div>
-		
+
 	</div>
 </div>
