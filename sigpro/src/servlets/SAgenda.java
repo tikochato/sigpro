@@ -160,7 +160,16 @@ public class SAgenda extends HttpServlet {
 				//outStream.flush();
 
 		        response.setContentType("application/ms-excel");
-	            response.setHeader("Content-Disposition", "inline; filename="+"agenda.xls");
+	            
+	            
+	            
+	            response.setHeader("Cache-Control","must-revalidate");
+	            response.setCharacterEncoding("UTF-8");
+	            response.setHeader("Pragma", "public");
+	            response.setHeader("Content-Transfer-Encoding","binary");
+	            response.setHeader("Content-disposition", "attachment; filename=test.xls");
+	            
+	            
 	            
 	           
 	           

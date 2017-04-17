@@ -6,7 +6,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	var mi = this;
 	i18nService.setCurrentLang('es');
 
-	$window.document.title = $utilidades.sistema_nombre+' - Proyectos';
+	$window.document.title = $utilidades.sistema_nombre+' - Préstamos';
 
 	mi.proyecto = null;
 	mi.esNuevo = false;
@@ -60,7 +60,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'nombre\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>'
 			},
-			{ name : 'proyectotipo',    displayName : 'Tipo proyecto' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
+			{ name : 'proyectotipo',    displayName : 'Tipo préstamo' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
 			{ name : 'unidadejecutora',    displayName : 'Unidad Ejecutora' ,cellClass: 'grid-align-left', enableFiltering: false , enableSorting: false },
 			{ name : 'cooperante',   displayName : 'Cooperante' ,cellClass: 'grid-align-left',  enableFiltering: false , enableSorting: false },
 			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',
@@ -162,11 +162,11 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				function(response) {
 					if (response.data.success) {
 						mi.proyecto.id = response.data.id;
-						$utilidades.mensaje('success','Proyecto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+						$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.obtenerTotalProyectos();
 						mi.esNuevo = false;
 					}else
-						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Proyecto');
+						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
 			});
 
 		}else
@@ -178,7 +178,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 			var confirm = $mdDialog.confirm()
 	        .title('Confirmación de borrado')
-	        .textContent('¿Desea borrar el Proyecto "'+mi.proyecto.nombre+'"?')
+	        .textContent('¿Desea borrar el Préstamo "'+mi.proyecto.nombre+'"?')
 	        .ariaLabel('Confirmación de borrado')
 	        .targetEvent(ev)
 	        .ok('Borrar')
@@ -191,19 +191,19 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					t:moment().unix()
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success','Proyecto borrado con éxito');
+						$utilidades.mensaje('success','Préstamo borrado con éxito');
 						mi.proyecto = null;
 						mi.obtenerTotalProyectos();
 					}
 					else
-						$utilidades.mensaje('danger','Error al borrar el Proyecto');
+						$utilidades.mensaje('danger','Error al borrar el Préstamo');
 				});
 			}, function() {
 
 		    });
 		}
 		else
-			$utilidades.mensaje('warning','Debe seleccionar el Proyecto que desea borrar');
+			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea borrar');
 	};
 
 	mi.nuevo = function (){
@@ -263,7 +263,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 		}
 		else
-			$utilidades.mensaje('warning','Debe seleccionar el Proyecto que desea editar');
+			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea editar');
 	}
 
 	mi.irATabla = function() {

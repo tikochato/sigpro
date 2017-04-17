@@ -28,7 +28,7 @@
 	<shiro:lacksPermission name="24010">
 		<p ng-init="controller.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
-	<h3>Proyectos</h3>
+	<h3>Préstamos</h3>
 	<br />
 	<div class="row" align="center" ng-hide="controller.esColapsado">
 		<div class="col-sm-12 operation_buttons" align="right">
@@ -71,7 +71,7 @@
 				  </div>
 			</div>
 			<br/>
-			<div class="total-rows">Total de {{  controller.totalProyectos + (controller.totalProyectos == 1 ? " Proyecto" : " Proyectos" ) }}</div>
+			<div class="total-rows">Total de {{  controller.totalProyectos + (controller.totalProyectos == 1 ? " Préstamo" : " Préstamos" ) }}</div>
 				<ul uib-pagination total-items="controller.totalProyectos"
 						ng-model="controller.paginaActual"
 						max-size="controller.numeroMaximoPaginas"
@@ -156,7 +156,7 @@
 					</div>
 				</div>
 				<div class="form-group" >
-					<label for="campo3">* Tipo Proyecto</label>
+					<label for="campo3">* Tipo Préstamo</label>
 		          	<div class="input-group">
 		            	<input type="text" class="form-control" id="iproyt" name="iproyt" placeholder="Nombre Tipo Proyecto" ng-model="controller.proyectotiponombre" ng-readonly="true" ng-required="true"/>
 		            	<span class="input-group-addon" ng-click="controller.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>

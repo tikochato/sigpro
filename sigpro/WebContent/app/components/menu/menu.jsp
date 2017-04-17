@@ -24,7 +24,7 @@
 	                	<shiro:hasPermission name="8010"><a href="#!/cooperante"><span class="glyphicon" aria-hidden="true"></span> Cooperante</a></shiro:hasPermission>	                    
 	                </li>
                     <li>
-                    	<shiro:hasPermission name="24010"><a   href="#!/proyecto"><span class="glyphicon" aria-hidden="true"></span> Proyectos</a></shiro:hasPermission>                       
+                    	<shiro:hasPermission name="24010"><a   href="#!/proyecto"><span class="glyphicon" aria-hidden="true"></span> Préstamos</a></shiro:hasPermission>                       
                     </li>
                     <li uib-dropdown>
                          <a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Catálogos <b class="caret"></b></a>
