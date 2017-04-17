@@ -236,7 +236,7 @@ public class SMapa extends HttpServlet {
 			switch (objetoTipo){
 			case 1: 
 				Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId, usuario);
-				objeto.nombreOjetoTipo = "Proyecto";
+				objeto.nombreOjetoTipo = "Préstamo";
 				objeto.id = proyecto.getId();
 				objeto.nombre = proyecto.getNombre();
 				objeto.fechaCreacion = Utils.formatDate(proyecto.getFechaCreacion());

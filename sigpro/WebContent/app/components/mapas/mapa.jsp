@@ -109,14 +109,14 @@
 	    
 	    
 	    <div class="operation_buttons" align="right">
-	    	 <div class="checkbox">
+	    	 <div class="checkbox" ng-hide="!mostrarControles">
 			    <label>
 			      <input type="checkbox" ng-model="mostrarTodo" ng-click="mostrar(0)">
 			      Todos
 			    </label>
 			    <label>
 			      <input type="checkbox" ng-model="mostrarProyectos" ng-click="mostrar(1)">
-			      Proyectos
+			      Préstamos
 			    </label>
 			    <label>
 			      <input type="checkbox" ng-model="mostrarComponentes" ng-click="mostrar(2)">

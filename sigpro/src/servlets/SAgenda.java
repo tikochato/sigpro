@@ -244,6 +244,7 @@ public class SAgenda extends HttpServlet {
 					agenda.fechaInicio = "";
 					agenda.fechaFin = "";
 					
+					
 					lstagenda.add(agenda);
 					for (Actividad actividad : actividades ){
 						agenda = new stagenda();

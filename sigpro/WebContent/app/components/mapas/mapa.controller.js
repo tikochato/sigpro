@@ -8,7 +8,6 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 	
 	$scope.mostrarTodo = true;
 	$scope.mostrarObjetoId = 0;
-	$scope.titulo="";
 	$scope.marcas = {};
 	
 	$scope.mostrarTodo=true;
@@ -18,7 +17,9 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 	$scope.mostrarSubproductos = true;
 	$scope.mostrarActividades = true;
 	$scope.proyectoid = $routeParams.proyecto_id;
+	$scope.titulo=$routeParams.proyecto_id != null ? "" : "de Préstamos" ;
 	$scope.accionServlet = $scope.proyectoid!=null ? 'getMarcasPorProyecto' : 'getMarcasProyecto';
+	$scope.mostrarControles = $scope.proyectoid!=null;
 	
 	uiGmapGoogleMapApi.then(function() {
 		$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong },
@@ -80,9 +81,7 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 	  };
 	  
 	  $scope.mostrarInformaicon = function(objetoId , ObjetoTipo){
-		  console.log("aaa");
-		  console.log(objetoId);
-		  console.log(ObjetoTipo);
+		  
 	  }
 	  
 	  
@@ -133,11 +132,5 @@ function modalInformacion($uibModalInstance, $scope, $http, $interval,
 		 $uibModalInstance.dismiss('cancel');
 	 };
 
-
-	
-
-	
-
-	
 
 }

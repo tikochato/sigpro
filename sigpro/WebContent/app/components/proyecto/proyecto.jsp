@@ -89,8 +89,8 @@
 
 	</div>
 	<div class="row main-form" ng-show="controller.esColapsado">
-		<h4 ng-hide="!controller.esNuevo">Nuevo Proyecto</h4>
-		<h4 ng-hide="controller.esNuevo">Edición de proyecto</h4>
+		<h4 ng-hide="!controller.esNuevo">Nuevo Préstamo</h4>
+		<h4 ng-hide="controller.esNuevo">Edición de Préstamo</h4>
 		<div class="operation_buttons" align="left" ng-hide="controller.esNuevo">
 			<div class="btn-group">
 				<label class="btn btn-default" ng-click="controller.irAComponentes(controller.proyecto.id)">Componentes</label>
@@ -158,7 +158,7 @@
 				<div class="form-group" >
 					<label for="campo3">* Tipo Préstamo</label>
 		          	<div class="input-group">
-		            	<input type="text" class="form-control" id="iproyt" name="iproyt" placeholder="Nombre Tipo Proyecto" ng-model="controller.proyectotiponombre" ng-readonly="true" ng-required="true"/>
+		            	<input type="text" class="form-control" id="iproyt" name="iproyt" placeholder="Nombre Tipo Préstamo" ng-model="controller.proyectotiponombre" ng-readonly="true" ng-required="true"/>
 		            	<span class="input-group-addon" ng-click="controller.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 		          	</div>
 				</div>
