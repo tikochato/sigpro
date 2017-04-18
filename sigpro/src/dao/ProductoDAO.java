@@ -20,33 +20,6 @@ import utilities.Utils;
 
 public class ProductoDAO {
 
-	
-	static class EstructuraPojo {
-		Integer id;
-		String nombre;
-		String descripcion;
-		Integer idComponente;
-		String componente;
-		Integer idProductoTipo;
-		String productoTipo;
-		Integer unidadEjectuora;
-		String nombreUnidadEjecutora;
-		Long snip;
-		Integer programa;
-		Integer subprograma;
-		Integer proyecto_;
-		Integer actividad;
-		Integer obra;
-		Integer fuente;
-		Integer estado;
-		String fechaCreacion;
-		String usuarioCreo;
-		String fechaactualizacion;
-		String usuarioactualizo;
-		String latitud;
-		String longitud;
-		
-	}
 
 	public static List<Producto> getProductos(String usuario) {
 		List<Producto> ret = new ArrayList<Producto>();
@@ -201,61 +174,6 @@ public class ProductoDAO {
 			session.close();
 		}
 		return ret;
-	}
-
-	public static String getJson(int pagina, int registros,Integer componenteid, String usuario
-			,String filtro_nombre, String filtro_usuario_creo,
-			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion) {
-		String jsonEntidades = "";
-
-		List<Producto> pojos = getProductosPagina(pagina, registros,componenteid
-				,filtro_nombre, filtro_usuario_creo,filtro_fecha_creacion
-				,columna_ordenada,orden_direccion,usuario);
-
-		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
-
-		for (Producto pojo : pojos) {
-			EstructuraPojo estructuraPojo = new EstructuraPojo();
-			estructuraPojo.id = pojo.getId();
-			estructuraPojo.nombre = pojo.getNombre();
-			estructuraPojo.descripcion = pojo.getDescripcion();
-			estructuraPojo.programa = pojo.getPrograma();
-			estructuraPojo.subprograma = pojo.getSubprograma();
-			estructuraPojo.proyecto_ = pojo.getProyecto();
-			estructuraPojo.obra = pojo.getObra();
-			estructuraPojo.actividad = pojo.getActividad();
-			estructuraPojo.fuente = pojo.getFuente();
-			estructuraPojo.snip = pojo.getSnip();
-			estructuraPojo.estado = pojo.getEstado();
-			estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();
-			estructuraPojo.usuarioactualizo = pojo.getUsuarioActualizo();
-			estructuraPojo.fechaCreacion = Utils.formatDateHour(pojo.getFechaCreacion());
-			estructuraPojo.fechaactualizacion = Utils.formatDateHour(pojo.getFechaActualizacion());
-			estructuraPojo.latitud = pojo.getLatitud();
-			estructuraPojo.longitud = pojo.getLongitud();
-			
-
-			if (pojo.getComponente() != null) {
-				estructuraPojo.idComponente = pojo.getComponente().getId();
-				estructuraPojo.componente = pojo.getComponente().getNombre();
-			}
-
-			if (pojo.getProductoTipo() != null) {
-				estructuraPojo.idProductoTipo = pojo.getProductoTipo().getId();
-				estructuraPojo.productoTipo = pojo.getProductoTipo().getNombre();
-			}
-			
-			if (pojo.getUnidadEjecutora() != null){
-				estructuraPojo.unidadEjectuora = pojo.getUnidadEjecutora().getUnidadEjecutora();
-				estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
-			}
-
-			listaEstructuraPojos.add(estructuraPojo);
-		}
-
-		jsonEntidades = Utils.getJSonString("productos", listaEstructuraPojos);
-
-		return jsonEntidades;
 	}
 
 		public static boolean eliminar(Integer productoId, String usuario) {

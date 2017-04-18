@@ -29,11 +29,6 @@ public class ProductoTipoDAOTest {
 	}
 	
 	@Test
-	public void getJsonTest(){
-		assertEquals(ProductoTipoDAO.getJson(1, 1,"","","","","").getClass(),String.class);
-	}
-	
-	@Test
 	public void eliminarTest(){
 		assertNotNull(ProductoTipoDAO.eliminar(0, "admin"));
 	}
