@@ -1,8 +1,12 @@
 package servlets;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,12 +15,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.GsonBuilder;
+
 import dao.ColaboradorDAO;
+import pojo.Colaborador;
 import utilities.Utils;
 
 @WebServlet("/SColaborador")
 public class SColaborador extends HttpServlet {
 	private static final long serialVersionUID = -6537014370076177564L;
+	
+	static class stcolaborador {
+		Integer id;
+		String primerNombre;
+		String segundoNombre;
+		String otrosNombres;
+		String primerApellido;
+		String segundoApellido;
+		String otrosApellidos;
+		Long cui;
+		Integer unidadEjecutora;
+		String nombreUnidadEjecutora;
+		String usuario;
+		String usuarioCreo;
+		String usuarioActualizo;
+		String fechaCreacion;
+		String fechaActualizacion;
+	}
 
 	public SColaborador() {
 		super();
@@ -24,124 +49,217 @@ public class SColaborador extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		doPost(request, response);
+		String response_text = "{ \"success\": false }";
+
+		response.setHeader("Content-Encoding", "gzip");
+		response.setCharacterEncoding("UTF-8");
+
+        OutputStream output = response.getOutputStream();
+		GZIPOutputStream gz = new GZIPOutputStream(output);
+        gz.write(response_text.getBytes("UTF-8"));
+        gz.close();
+        output.close();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		request.setCharacterEncoding("UTF-8");
 		Map<String, String> parametro = Utils.getParams(request);
 		HttpSession sesionweb = request.getSession();
 		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
-
-		if (parametro.get("accion").compareTo("cargar") == 0) {
-			listar(parametro, response);
-		} else if (parametro.get("accion").compareTo("crear") == 0) {
-			crear(parametro, response, usuario);
-		} else if (parametro.get("accion").compareTo("actualizar") == 0) {
-			actualizar(parametro, response, usuario);
-		} else if (parametro.get("accion").compareTo("borrar") == 0) {
-			borrar(parametro, response, usuario);
-		}else if (parametro.get("accion").compareTo("totalElementos") == 0) {
-			total(parametro,response);
-		} else if (parametro.get("accion").compareTo("validarUsuario") == 0) {
-			validar(parametro, response);
-		}
-	}
-
-	private void listar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
-		int pagina = Utils.String2Int(parametro.get("pagina"), 1);
-		int registros = Utils.String2Int(parametro.get("registros"), 20);
-		String filtro_pnombre = parametro.get("filtro_pnombre");
-		String filtro_snombre = parametro.get("filtro_snombre");
-		String filtro_papellido = parametro.get("filtro_papellido");
-		String filtro_sapellido = parametro.get("filtro_sapellido");
-		String filtro_cui = parametro.get("filtro_cui");
-		String filtro_unidad_ejecutora = parametro.get("filtro_unidad_ejecutora");
-		String columna_ordenada  = parametro.get("columna_ordenada");
-		String orden_direccion = parametro.get("orden_direccion");
-		String resultadoJson = "";
-
-		resultadoJson = ColaboradorDAO.getJson(pagina, registros, filtro_pnombre, filtro_snombre, filtro_papellido, filtro_sapellido, filtro_cui, filtro_unidad_ejecutora,
-				columna_ordenada, orden_direccion);
-
-		if (Utils.isNullOrEmpty(resultadoJson)) {
-			resultadoJson = "{\"success\":false}";
-		} else {
-			resultadoJson = "{\"success\":true," + resultadoJson + "}";
-		}
-
-		Utils.writeJSon(response, resultadoJson);
-	}
-
-	private void crear(Map<String, String> parametro, HttpServletResponse response, String usuarioc) throws IOException {
-		String primerNombre = parametro.get("primerNombre");
-		String segundoNombre = parametro.get("segundoNombre");
-		String primerApellido = parametro.get("primerApellido");
-		String segundoApellido = parametro.get("segundoApellido");
-		Long cui = Utils.String2Long(parametro.get("cui"));
-		Integer codigoUnidadEjecutora = Utils.String2Int(parametro.get("unidadEjecutora"), -1);
-		String usuario = parametro.get("usuario");
-
-		boolean creado = ColaboradorDAO.guardar(-1, primerNombre, segundoNombre, null, primerApellido, segundoApellido,
-				null, cui, codigoUnidadEjecutora, usuario, usuarioc, new Date());
-
-		if (creado) {
-			listar(parametro, response);
-		}
-	}
-
-	private void actualizar(Map<String, String> parametro, HttpServletResponse response, String usuarioc) throws IOException {
-		int id = Utils.String2Int(parametro.get("id"), -1);
-		String primerNombre = parametro.get("primerNombre");
-		String segundoNombre = parametro.get("segundoNombre");
-		String primerApellido = parametro.get("primerApellido");
-		String segundoApellido = parametro.get("segundoApellido");
-		Long cui = Utils.String2Long(parametro.get("cui"));
-		Integer codigoUnidadEjecutora = Utils.String2Int(parametro.get("unidadEjecutora"), -1);
-		String usuario = parametro.get("usuario");
-
-		boolean actualizado = ColaboradorDAO.actualizar(id, primerNombre, segundoNombre, primerApellido,
-				segundoApellido, cui, codigoUnidadEjecutora, usuario, usuarioc);
-
-		if (actualizado) {
-			listar(parametro, response);
-		}
-	}
-	
-	private void borrar(Map<String, String> parametro, HttpServletResponse response, String usuarioc) throws IOException {
-		int id = Utils.String2Int(parametro.get("id"), -1);
-		boolean borrado = ColaboradorDAO.borrar(id, usuarioc);
-		if (borrado) 
-			Utils.writeJSon(response, "{\"success\":true }");
-		else
-			Utils.writeJSon(response, "{\"success\":false }");
-	}
-
-	private void total(Map<String, String> parametro,HttpServletResponse response) throws IOException {
-		String filtro_pnombre = parametro.get("filtro_pnombre");
-		String filtro_snombre = parametro.get("filtro_snombre");
-		String filtro_papellido = parametro.get("filtro_papellido");
-		String filtro_sapellido = parametro.get("filtro_sapellido");
-		String filtro_cui = parametro.get("filtro_cui");
-		String filtro_unidad_ejecutora = parametro.get("filtro_unidad_ejecutora");
-		Long total = ColaboradorDAO.getTotal(filtro_pnombre, filtro_snombre, filtro_papellido, filtro_sapellido, filtro_cui, filtro_unidad_ejecutora);
-
-		String resultadoJson = "{\"success\":true, \"total\":" + total + "}";
-
-		Utils.writeJSon(response, resultadoJson);
-	}
-
-	private void validar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
-		String usuario = parametro.get("usuario");
-		boolean valido = ColaboradorDAO.validarUsuario(usuario);
-
-		String resultadoJson = "{\"success\":false}";;
+		String accion = parametro.get("accion");
+		String response_text="";
 		
-		if(valido)
-			resultadoJson = "{\"success\":true}";
+		if (accion.equals("cargar")) {
+			int pagina = Utils.String2Int(parametro.get("pagina"), 1);
+			int registros = Utils.String2Int(parametro.get("registros"), 20);
+			String filtro_pnombre = parametro.get("filtro_pnombre");
+			String filtro_snombre = parametro.get("filtro_snombre");
+			String filtro_papellido = parametro.get("filtro_papellido");
+			String filtro_sapellido = parametro.get("filtro_sapellido");
+			String filtro_cui = parametro.get("filtro_cui");
+			String filtro_unidad_ejecutora = parametro.get("filtro_unidad_ejecutora");
+			String columna_ordenada  = parametro.get("columna_ordenada");
+			String orden_direccion = parametro.get("orden_direccion");
+			
+			List<Colaborador> colaboradores = ColaboradorDAO.getPagina(pagina, registros, filtro_pnombre, filtro_snombre, filtro_papellido, filtro_sapellido,
+						filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion);
 
-		Utils.writeJSon(response, resultadoJson);
+			List<stcolaborador> listaColaborador = new ArrayList<stcolaborador>();
+
+			for (Colaborador colaborador : colaboradores) {
+				stcolaborador temp = new stcolaborador();
+				temp.id = colaborador.getId();
+				temp.primerNombre = colaborador.getPnombre();
+				temp.segundoNombre = colaborador.getSnombre();
+				temp.primerApellido = colaborador.getPapellido();
+				temp.segundoApellido = colaborador.getSapellido();
+				temp.cui = colaborador.getCui();
+
+				temp.usuario = colaborador.getUsuario().getUsuario();
+				temp.unidadEjecutora = colaborador.getUnidadEjecutora().getUnidadEjecutora();
+				temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
+				
+				temp.usuarioCreo = colaborador.getUsuarioCreo();
+				temp.usuarioActualizo = colaborador.getUsuarioActualizo();
+				temp.fechaCreacion = Utils.formatDateHour(colaborador.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(colaborador.getFechaActualizacion());
+
+				listaColaborador.add(temp);
+			}
+			response_text=new GsonBuilder().serializeNulls().create().toJson(listaColaborador);
+	        response_text = String.join("", "\"colaboradores\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");	
+		
+		} else if (accion.equals("crear")) {
+			String primerNombre = parametro.get("primerNombre");
+			String segundoNombre = parametro.get("segundoNombre");
+			String primerApellido = parametro.get("primerApellido");
+			String segundoApellido = parametro.get("segundoApellido");
+			Long cui = Utils.String2Long(parametro.get("cui"));
+			Integer codigoUnidadEjecutora = Utils.String2Int(parametro.get("unidadEjecutora"), -1);
+			String usuarioParametro = parametro.get("usuario");
+
+			boolean creado = ColaboradorDAO.guardar(-1, primerNombre, segundoNombre, null, primerApellido, segundoApellido,
+					null, cui, codigoUnidadEjecutora, usuarioParametro, usuario, new Date());
+
+			if (creado) {
+				int pagina = Utils.String2Int(parametro.get("pagina"), 1);
+				int registros = Utils.String2Int(parametro.get("registros"), 20);
+				String filtro_pnombre = parametro.get("filtro_pnombre");
+				String filtro_snombre = parametro.get("filtro_snombre");
+				String filtro_papellido = parametro.get("filtro_papellido");
+				String filtro_sapellido = parametro.get("filtro_sapellido");
+				String filtro_cui = parametro.get("filtro_cui");
+				String filtro_unidad_ejecutora = parametro.get("filtro_unidad_ejecutora");
+				String columna_ordenada  = parametro.get("columna_ordenada");
+				String orden_direccion = parametro.get("orden_direccion");
+				
+				List<Colaborador> colaboradores = ColaboradorDAO.getPagina(pagina, registros, filtro_pnombre, filtro_snombre, filtro_papellido, filtro_sapellido,
+							filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion);
+
+				List<stcolaborador> listaColaborador = new ArrayList<stcolaborador>();
+
+				for (Colaborador colaborador : colaboradores) {
+					stcolaborador temp = new stcolaborador();
+					temp.id = colaborador.getId();
+					temp.primerNombre = colaborador.getPnombre();
+					temp.segundoNombre = colaborador.getSnombre();
+					temp.primerApellido = colaborador.getPapellido();
+					temp.segundoApellido = colaborador.getSapellido();
+					temp.cui = colaborador.getCui();
+
+					temp.usuario = colaborador.getUsuario().getUsuario();
+					temp.unidadEjecutora = colaborador.getUnidadEjecutora().getUnidadEjecutora();
+					temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
+					
+					temp.usuarioCreo = colaborador.getUsuarioCreo();
+					temp.usuarioActualizo = colaborador.getUsuarioActualizo();
+					temp.fechaCreacion = Utils.formatDateHour(colaborador.getFechaCreacion());
+					temp.fechaActualizacion = Utils.formatDateHour(colaborador.getFechaActualizacion());
+
+					listaColaborador.add(temp);
+				}
+				response_text=new GsonBuilder().serializeNulls().create().toJson(listaColaborador);
+		        response_text = String.join("", "\"colaboradores\":",response_text);
+		        response_text = String.join("", "{\"success\":true,", response_text,"}");	
+			}
+			
+		} else if (accion.equals("actualizar")) {
+			int id = Utils.String2Int(parametro.get("id"), -1);
+			String primerNombre = parametro.get("primerNombre");
+			String segundoNombre = parametro.get("segundoNombre");
+			String primerApellido = parametro.get("primerApellido");
+			String segundoApellido = parametro.get("segundoApellido");
+			Long cui = Utils.String2Long(parametro.get("cui"));
+			Integer codigoUnidadEjecutora = Utils.String2Int(parametro.get("unidadEjecutora"), -1);
+			String usuarioParametro = parametro.get("usuario");
+
+			boolean actualizado = ColaboradorDAO.actualizar(id, primerNombre, segundoNombre, primerApellido,
+					segundoApellido, cui, codigoUnidadEjecutora, usuarioParametro, usuario);
+
+			if (actualizado) {
+				int pagina = Utils.String2Int(parametro.get("pagina"), 1);
+				int registros = Utils.String2Int(parametro.get("registros"), 20);
+				String filtro_pnombre = parametro.get("filtro_pnombre");
+				String filtro_snombre = parametro.get("filtro_snombre");
+				String filtro_papellido = parametro.get("filtro_papellido");
+				String filtro_sapellido = parametro.get("filtro_sapellido");
+				String filtro_cui = parametro.get("filtro_cui");
+				String filtro_unidad_ejecutora = parametro.get("filtro_unidad_ejecutora");
+				String columna_ordenada  = parametro.get("columna_ordenada");
+				String orden_direccion = parametro.get("orden_direccion");
+			
+				List<Colaborador> colaboradores = ColaboradorDAO.getPagina(pagina, registros, filtro_pnombre, filtro_snombre, filtro_papellido, filtro_sapellido,
+							filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion);
+
+				List<stcolaborador> listaColaborador = new ArrayList<stcolaborador>();
+
+				for (Colaborador colaborador : colaboradores) {
+					stcolaborador temp = new stcolaborador();
+					temp.id = colaborador.getId();
+					temp.primerNombre = colaborador.getPnombre();
+					temp.segundoNombre = colaborador.getSnombre();
+					temp.primerApellido = colaborador.getPapellido();
+					temp.segundoApellido = colaborador.getSapellido();
+					temp.cui = colaborador.getCui();
+
+					temp.usuario = colaborador.getUsuario().getUsuario();
+					temp.unidadEjecutora = colaborador.getUnidadEjecutora().getUnidadEjecutora();
+					temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
+					
+					temp.usuarioCreo = colaborador.getUsuarioCreo();
+					temp.usuarioActualizo = colaborador.getUsuarioActualizo();
+					temp.fechaCreacion = Utils.formatDateHour(colaborador.getFechaCreacion());
+					temp.fechaActualizacion = Utils.formatDateHour(colaborador.getFechaActualizacion());
+
+					listaColaborador.add(temp);
+				}
+				response_text=new GsonBuilder().serializeNulls().create().toJson(listaColaborador);
+		        response_text = String.join("", "\"colaboradores\":",response_text);
+		        response_text = String.join("", "{\"success\":true,", response_text,"}");	
+			
+			}
+			
+		} else if (accion.equals("borrar")) {
+			int id = Utils.String2Int(parametro.get("id"), -1);
+			boolean borrado = ColaboradorDAO.borrar(id, usuario);
+			if (borrado) 
+				Utils.writeJSon(response, "{\"success\":true }");
+			else
+				Utils.writeJSon(response, "{\"success\":false }");
+			
+		}else if (accion.equals("totalElementos")) {
+			String filtro_pnombre = parametro.get("filtro_pnombre");
+			String filtro_snombre = parametro.get("filtro_snombre");
+			String filtro_papellido = parametro.get("filtro_papellido");
+			String filtro_sapellido = parametro.get("filtro_sapellido");
+			String filtro_cui = parametro.get("filtro_cui");
+			String filtro_unidad_ejecutora = parametro.get("filtro_unidad_ejecutora");
+			Long total = ColaboradorDAO.getTotal(filtro_pnombre, filtro_snombre, filtro_papellido, filtro_sapellido, filtro_cui, filtro_unidad_ejecutora);
+
+			response_text = "{\"success\":true, \"total\":" + total + "}";
+
+		} else if (accion.equals("validarUsuario")) {
+			String usuarioParametro = parametro.get("usuario");
+			boolean valido = ColaboradorDAO.validarUsuario(usuarioParametro);
+
+			response_text = "{\"success\":false}";;
+			
+			if(valido){
+				response_text = "{\"success\":true}";
+			}
+			
+		}
+
+		response.setHeader("Content-Encoding", "gzip");
+		response.setCharacterEncoding("UTF-8");
+		
+        OutputStream output = response.getOutputStream();
+		GZIPOutputStream gz = new GZIPOutputStream(output);
+        gz.write(response_text.getBytes("UTF-8"));
+        gz.close();
+        output.close();
 	}
 
 }
