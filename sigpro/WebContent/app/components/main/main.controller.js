@@ -51,7 +51,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/subproducto/:producto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloSubproducto\'" class="all_page"></div>'
             })
-            .when('/proyectotipo/:reiniciar_vista?',{
+            .when('/prestamotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectotipoController\'" class="all_page"></div>'
             })
             .when('/desembolsotipo/:reiniciar_vista?',{
@@ -117,7 +117,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/formulariotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'formulariotipoController\'" class="all_page"></div>'
             })
-            .when('/proyectopropiedad/:reiniciar_vista?',{
+            .when('/prestamopropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectopropiedadController\'" class="all_page"></div>'
             })
             .when('/usuarioinfo/',{
@@ -338,8 +338,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'proyectopropiedadController',
-	    	   script: '/app/components/proyectopropiedad/proyectopropiedad.controller.js',
-	    	   template: '/app/components/proyectopropiedad/proyectopropiedad.jsp'
+	    	   script: '/app/components/prestamopropiedad/proyectopropiedad.controller.js',
+	    	   template: '/app/components/prestamopropiedad/proyectopropiedad.jsp'
 	       },
 	       {
 	    	   name: 'usuarioInfoController',

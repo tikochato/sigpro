@@ -36,7 +36,7 @@
                          	<shiro:hasPermission name="16010"><li role="menuitem"><a href="#!/hitotipo">Tipo de Hito</a></li></shiro:hasPermission>                         	
                          	<shiro:hasPermission name="18010"><li role="menuitem"><a href="#!/metatipo">Tipo de Meta</a></li></shiro:hasPermission>                         	
 	                        <shiro:hasPermission name="23010"> <li role="menuitem"><a href="#!/productotipo">Tipo de Producto</a></li></shiro:hasPermission>
-	                        <shiro:hasPermission name="36010"><li role="menuitem"><a href="#!/proyectotipo">Tipo de Proyecto</a></li></shiro:hasPermission>
+	                        <shiro:hasPermission name="36010"><li role="menuitem"><a href="#!/prestamotipo">Tipo de Prestamo</a></li></shiro:hasPermission>
 	                        <shiro:hasPermission name="28010"> <li role="menuitem"><a href="#!/recursotipo">Tipo de Recurso</a></li></shiro:hasPermission>
 	                        <shiro:hasPermission name="32010"><li role="menuitem"><a href="#!/riesgotipo">Tipo de Riesgo</a></li></shiro:hasPermission>
 	                        <shiro:hasPermission name="23010"> <li role="menuitem"><a href="#!/subproductotipo">Tipo de Subproducto</a></li></shiro:hasPermission>
@@ -52,7 +52,7 @@
 	                        <shiro:hasPermission name="6010"> <li role="menuitem"><a href="#!/componentepropiedad">Componente</a></li></shiro:hasPermission>	                       
 	                        <shiro:hasPermission name="22010"> <li role="menuitem"><a href="#!/productopropiedad">Producto</a></li></shiro:hasPermission>
 	                        <shiro:hasPermission name="22010"> <li role="menuitem"><a href="#!/subproductopropiedad">Subproducto</a></li></shiro:hasPermission>	                       
-	                        <shiro:hasPermission name="25010"><li role="menuitem"><a href="#!/proyectopropiedad">Proyecto</a></li></shiro:hasPermission>	                        
+	                        <shiro:hasPermission name="25010"><li role="menuitem"><a href="#!/prestamopropiedad">Préstamo</a></li></shiro:hasPermission>	                        
 	                        <shiro:hasPermission name="27010"><li role="menuitem"><a href="#!/recursopropiedad">Recurso</a></li></shiro:hasPermission>	                        
 	                        <shiro:hasPermission name="31010"> <li role="menuitem"><a href="#!/riesgopropiedad">Riesgo</a></li></shiro:hasPermission>	                       
 	                     </ul>
@@ -67,7 +67,7 @@
                          </ul>
                     </li>
                     <li uib-dropdown>
-	                	<shiro:hasPermission name="24010"><a   href="#!/gantt/1"><span class="glyphicon" aria-hidden="true"></span> Gantt</a></shiro:hasPermission>	                    
+	                	<shiro:hasPermission name="24010"><a   href="#!/mapa"><span class="glyphicon" aria-hidden="true"></span> Mapa</a></shiro:hasPermission>	                    
 	                </li>
 	            </ul>
 	            <ul class="nav navbar-nav navbar-right">

@@ -4,7 +4,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
 		var mi=this;
 		
-		$window.document.title = $utilidades.sistema_nombre+' - Propiedad Proyecto';
+		$window.document.title = $utilidades.sistema_nombre+' - Propiedad Préstamo';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.proyectopropiedades = [];
@@ -113,13 +113,13 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 					datoTipoId: mi.proyectopropiedad.datotipoid.id
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success','Propiedad Proyecto '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+						$utilidades.mensaje('success','Propiedad de Préstamo '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.proyectopropiedad.id = response.id;
 						mi.esnuevo = false;
 						mi.obtenerTotalProyectoPropiedades();
 					}
 					else
-						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' la Propiedad Proyecto');
+						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' la Propiedad de Préstamo');
 				});
 			}
 			else
@@ -130,7 +130,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 			if(mi.proyectopropiedad!=null && mi.proyectopropiedad.id!=null){
 				var confirm = $mdDialog.confirm()
 			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar la Propiedad Proyecto "'+mi.proyectopropiedad.nombre+'"?')
+			          .textContent('¿Desea borrar la Propiedad Préstamo "'+mi.proyectopropiedad.nombre+'"?')
 			          .ariaLabel('Confirmación de borrado')
 			          .targetEvent(ev)
 			          .ok('Borrar')
@@ -142,18 +142,18 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 						id: mi.proyectopropiedad.id
 					}).success(function(response){
 						if(response.success){
-							$utilidades.mensaje('success','Propiedad Proyecto borrado con éxito');
+							$utilidades.mensaje('success','Propiedad de Préstamo borrado con éxito');
 							mi.obtenerTotalProyectoPropiedades();
 						}
 						else
-							$utilidades.mensaje('danger','Error al borrar la Propiedad Proyecto');
+							$utilidades.mensaje('danger','Error al borrar la Propiedad de Préstamo');
 					});
 			    }, function() {
 			    
 			    });
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar la Propiedad Proyecto que desea borrar');
+				$utilidades.mensaje('warning','Debe seleccionar la Propiedad Préstamo que desea borrar');
 		};
 	
 		mi.nuevo = function() {
@@ -164,7 +164,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 		};
 	
 		mi.editar = function() {
-			if(mi.proyectopropiedad!=null && mi.prouyectopropiedad.id!=null){
+			if(mi.proyectopropiedad!=null && mi.proyectopropiedad.id!=null){
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.proyectopropiedad.datotipoid = {
@@ -174,7 +174,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar la Propiedad Proyecto que desea editar');
+				$utilidades.mensaje('warning','Debe seleccionar la Propiedad de Preéstamo que desea editar');
 		}
 	
 		mi.irATabla = function() {
