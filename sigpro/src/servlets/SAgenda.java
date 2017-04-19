@@ -1,7 +1,7 @@
-package servlets;
+  package servlets;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,12 +15,13 @@ import java.util.zip.GZIPOutputStream;
 
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.shiro.codec.Base64;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -133,58 +134,44 @@ public class SAgenda extends HttpServlet {
 			
 			File file=new File(path);
 			if(file.exists()){
-				
-		        int length = 0;
-		        ServletOutputStream op = response.getOutputStream();
 		        FileInputStream is = null;
-		       
 		        try {
-		          
-		          is = new FileInputStream(file);
-
-		         
+		        	is = new FileInputStream(file);
 		        }
 		        catch (Exception e) {
-		          
+		        	
 		        }
-		        finally {
-		            if (is != null) is.close();
-		        }
+		        //
+		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		        
-		        response.setContentType("application/ms-excel");
-				//response.setContentLength(os.);
+		        int readByte = 0;
+		        byte[] buffer = new byte[2024];
+
+                while(true)
+                {
+                    readByte = is.read(buffer);
+                    if(readByte == -1)
+                    {
+                        break;
+                    }
+                    outByteStream.write(buffer);
+                }
+                
+                file.delete();
+                
+                is.close();
+                outByteStream.flush();
+                outByteStream.close();
+                
+		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+				response.setContentType("application/ms-excel");
+				response.setContentLength(outArray.length);
 				response.setHeader("Expires:", "0"); // eliminates browser caching
-				response.setHeader("Content-Disposition", "attachment; Ejecución_Presupuestaria_.xls");
-				//OutputStream outStream = response.getOutputStream();
-				//outStream.write(os);
-				//outStream.flush();
-
-		        response.setContentType("application/ms-excel");
+				response.setHeader("Content-Disposition", "attachment; Agenda_.xls");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
 	            
-	            
-	            
-	            response.setHeader("Cache-Control","must-revalidate");
-	            response.setCharacterEncoding("UTF-8");
-	            response.setHeader("Pragma", "public");
-	            response.setHeader("Content-Transfer-Encoding","binary");
-	            response.setHeader("Content-disposition", "attachment; filename=test.xls");
-	            
-	            
-	            
-	           
-	           
-
-		        byte[] bbuf = new byte[1024];
-		        DataInputStream in = new DataInputStream(new FileInputStream(file));
-
-		        while ((in != null) && ((length = in.read(bbuf)) != -1))
-		        {
-		            op.write(bbuf,0,length);
-		        }
-
-		        in.close();
-		        op.flush();
-		        op.close();
 			}
 			
 		}

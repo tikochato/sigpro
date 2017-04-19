@@ -21,26 +21,19 @@ app.controller('agendaController',['$scope','$http','$interval','i18nService','U
 	});	
 	 
 	 mi.exportarExcel = function(){
-			$http.post('/SAgenda', { accion: 'exportarExcel', proyectoid:'13',t:moment().unix(), responseType: 'arraybuffer'
+			$http.post('/SAgenda', { accion: 'exportarExcel', proyectoid:'13',t:moment().unix()
 				  } ).then(
-					function(response, status, headers, config) {
-			            var blob = new Blob([response.data], {type: "application/vnd.ms-excel;base64"});
-			            var objectUrl = URL.createObjectURL(blob);
-			            window.open(objectUrl);
-						
-						
-						
-						/*
-						var anchor = angular.element('<a/>');
-					    anchor.attr({
-					         href: 'data:application/ms-excel;base64,' + response.data,
-					         target: '_blank',
-					         download: 'Cuotas_COPEP.xls'
-					     })[0].click(); */
-						
-
-						
-			});
+						  function successCallback(response) {
+								var anchor = angular.element('<a/>');
+							    anchor.attr({
+							         href: 'data:application/ms-excel;base64,' + response.data,
+							         target: '_blank',
+							         download: 'Agenda.xls'
+							     })[0].click();
+							  }.bind(this), function errorCallback(response){
+							 		
+							 	}
+							 );
 		};
 	
 	

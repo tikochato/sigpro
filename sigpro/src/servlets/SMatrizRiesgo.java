@@ -1,6 +1,9 @@
 package servlets;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -17,6 +20,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.codec.Base64;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -141,6 +146,16 @@ public class SMatrizRiesgo extends HttpServlet {
 			response_text=new GsonBuilder().serializeNulls().create().toJson(matriz);
 	        response_text = String.join("", "\"matrizriesgos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+	        
+	        response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
+	        
+	        OutputStream output = response.getOutputStream();
+			GZIPOutputStream gz = new GZIPOutputStream(output);
+	        gz.write(response_text.getBytes("UTF-8"));
+	        gz.close();
+	        output.close();
+	        
 		} else if (accion.equals("exportarExcel")){
 			CExcel excel = new CExcel("MatrizRiesgos",false);
 			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
@@ -195,20 +210,54 @@ public class SMatrizRiesgo extends HttpServlet {
 				fila++;
 				
 			}
-			excel.ExportarExcel(datos, "Matriz de Reisgos");
+			String path = excel.ExportarExcel(datos, "Matriz de Reisgos");
+			File file=new File(path);
+			if(file.exists()){
+		        FileInputStream is = null;
+		        try {
+		        	is = new FileInputStream(file);
+		        }
+		        catch (Exception e) {
+		        	
+		        }
+		        //
+		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		        
+		        int readByte = 0;
+		        byte[] buffer = new byte[2024];
+
+                while(true)
+                {
+                    readByte = is.read(buffer);
+                    if(readByte == -1)
+                    {
+                        break;
+                    }
+                    outByteStream.write(buffer);
+                }
+                
+                file.delete();
+                
+                is.close();
+                outByteStream.flush();
+                outByteStream.close();
+                
+		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+				response.setContentType("application/ms-excel");
+				response.setContentLength(outArray.length);
+				response.setHeader("Expires:", "0"); // eliminates browser caching
+				response.setHeader("Content-Disposition", "attachment; Matriz_Riesgos.xls");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+	            
+			}
 			
 			
 			
 		}
 		
-		response.setHeader("Content-Encoding", "gzip");
-		response.setCharacterEncoding("UTF-8");
-        
-        OutputStream output = response.getOutputStream();
-		GZIPOutputStream gz = new GZIPOutputStream(output);
-        gz.write(response_text.getBytes("UTF-8"));
-        gz.close();
-        output.close();
+		
 	}
 
 }

@@ -295,7 +295,7 @@ public class CExcel {
 					new FileOutputStream(new File(path));
 			workbook_.write(out);
 			out.close();
-			System.out.println("Se creo el archivo");
+			
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -327,8 +327,7 @@ public class CExcel {
 			cell.setCellValue((Double)obj);
 		else if (obj instanceof Integer ) 
 			cell.setCellValue((Integer) obj);
-		else 
-			System.out.println("otro tipo = " + (obj!=null ? obj.getClass():"null"));
+		
 		
 		if (estilo>0)
 			cell.setCellStyle(obtenerEstilo( estilo));

@@ -20,10 +20,10 @@
     </script>
 
 	<script type="text/ng-template" id="buscarPorProyecto.jsp">
-    		<%@ include file="/app/components/proyecto/buscarPorProyecto.jsp"%>
+    		<%@ include file="/app/components/prestamo/buscarPorProyecto.jsp"%>
   	 </script>
   	 <script type="text/ng-template" id="cargarArchivo.jsp">
-    		<%@ include file="/app/components/proyecto/cargarArchivo.jsp"%>
+    		<%@ include file="/app/components/prestamo/cargarArchivo.jsp"%>
   	 </script>
 	<shiro:lacksPermission name="24010">
 		<p ng-init="controller.redireccionSinPermisos()"></p>

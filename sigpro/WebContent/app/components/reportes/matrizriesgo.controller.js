@@ -19,10 +19,18 @@ app.controller('matrizriesgoController',['$scope','$http','$interval','i18nServi
 	 mi.exportarExcel = function(){
 			$http.post('/SMatrizRiesgo', { accion: 'exportarExcel', proyectoid:'13',t:moment().unix(),
 				  } ).then(
-					function(response) {
-
-
-			});
+						  function successCallback(response) {
+								var anchor = angular.element('<a/>');
+							    anchor.attr({
+							         href: 'data:application/ms-excel;base64,' + response.data,
+							         target: '_blank',
+							         download: 'Matriz_Riesgos.xls'
+							     })[0].click();
+							  }.bind(this), function errorCallback(response){
+							 		
+							 	}
+						  
+					);
 		};
 }]);
 

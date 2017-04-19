@@ -252,41 +252,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		         mi.nombreArchivo = mi.archivos.name;
 		       
 		  };
-	    //  Kanban board
-		  
-		var KanbanBoard = DlhSoft.Controls.KanbanBoard;
-		var formatData = new FormData();
-		 
-		formatData.append("accion",'getKanban');
-		formatData.append("proyecto_id",$routeParams.proyectoId);
-		$scope.states = {};
-		$scope.itemsKanban = null; 
-		$scope.mostrarKanban = false;
-		
-		$http.post('/SGantt', formatData, {
-			headers: {'Content-Type': undefined},
-			transformRequest: angular.identity
-		 }).success(
-				function(response) {
-					var estado1 = { name: 'Nuevo', areNewItemButtonsHidden: true }, 
-					estado2 = { name: 'En progreso', areNewItemButtonsHidden: true }, 
-					estado3 = { name: 'Terminado', isCollapsedByDefaultForGroups: true, areNewItemButtonsHidden: true };
-					var colores = ["#ffe033","#9fc6ee","#008000"];
-					
-					var estados  = [estado1, estado2, estado3];
-					var items  = response.items;
-					
-					for (item in items) {
-					    items[item].state = estados[items[item].estadoId];
-					    items[item].color = colores[items[item].estadoId];
-					    items[item].isReadOnly = true;  
-					}
-					
-					$scope.states  = estados;
-					$scope.itemsKanban = items;
-					$scope.mostrarKanban = true;
-					
-		});	
+	   
 		
 	}
 ]);

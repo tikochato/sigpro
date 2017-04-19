@@ -21,7 +21,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/cooperante/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'cooperanteController\'" class="all_page"></div>'
             })
-            .when('/proyecto/:reiniciar_vista?',{
+            .when('/prestamo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
             })
             .when('/entidad/:reiniciar_vista?',{
@@ -156,14 +156,14 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when("/:redireccion?",{
             	controller:"MainController"
             })
-            .when('/kanban/:proyectoId?',{
-            	template: '<div load-on-demand="\'ganttController\'" class="all_page"></div>'
-            })
             .when('/matrizriesgo/:proyectoId?',{
             	template: '<div load-on-demand="\'matrizriesgoController\'" class="all_page"></div>'
             })
             .when('/agenda/:proyectoId?',{
             	template: '<div load-on-demand="\'agendaController\'" class="all_page"></div>'
+            })
+            .when('/kanban/:proyectoId?',{
+            	template: '<div load-on-demand="\'kanbanController\'" class="all_page"></div>'
             })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -198,8 +198,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'proyectoController',
-	    	   script: '/app/components/proyecto/proyecto.controller.js',
-	    	   template: '/app/components/proyecto/proyecto.jsp'
+	    	   script: '/app/components/prestamo/proyecto.controller.js',
+	    	   template: '/app/components/prestamo/proyecto.jsp'
 	       }, {
 	    	   name: 'moduloEntidad',
 	    	   script: '/app/components/entidades/entidades.controller.js',
@@ -239,8 +239,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'proyectotipoController',
-	    	   script: '/app/components/proyecto/proyectotipo.controller.js',
-	    	   template: '/app/components/proyecto/proyectotipo.jsp'
+	    	   script: '/app/components/prestamo/proyectotipo.controller.js',
+	    	   template: '/app/components/prestamo/proyectotipo.jsp'
 	       },
 	       {
 	    	   name: 'desembolsotipoController',
@@ -398,8 +398,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'kanbanController',
-	    	   script: '/app/components/gantt/app.js',
-	    	   template: '/app/components/gantt/kanban.jsp'
+	    	   script: '/app/components/reportes/kanban/kanban.controller.js',
+	    	   template: '/app/components/reportes/kanban/kanban.jsp'
 	       },
 	       {
 	    	   name: 'matrizriesgoController',

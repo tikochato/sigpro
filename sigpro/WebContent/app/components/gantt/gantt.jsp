@@ -27,18 +27,5 @@
 				<div ds:gantt-chart id="ganttChartView" items="items" settings="settings" auto-refresh="{{ true }}" style="min-height: 400px"></div>
 	    	</div>
 			<br/>
-			</div>
-			 <div class="row" align="center" >
-		
-			<div class="kanban-chart" >
-	        	<div ds:kanban-board items="itemsKanban"  states="states" ng-if="mostrarKanban"
-	                     on-adding-new-item="initializeNewItem(item)" on-editing-item="deleteItem(item)"
-	                     edit-item-button-text="'?'" edit-item-button-tool-tip="'Delete item'"
-	                     on-item-state-changed="onItemStateChanged(item, state)" >
-	    		</div ds:kanban-board>
-	    	</div>
-	    	</div>
-		
-		 
-    	
+		</div>
 	</div>
