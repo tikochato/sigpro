@@ -101,7 +101,7 @@ public class SMatrizRiesgo extends HttpServlet {
 				temp.probabilidad = riesgo.getProbabilidad();
 				temp.gatillosSintomas = riesgo.getGatillosSintomas();
 				temp.respuesta = riesgo.getRespuesta();
-				temp.colaboradorNombre = riesgo.getColaborador().getPnombre();
+				temp.colaboradorNombre = riesgo.getColaborador()!=null ? riesgo.getColaborador().getPnombre() : "";
 				temp.riesgosSecundarios = riesgo.getRiesgosSecundarios();
 				temp.ejecutado = riesgo.getEjecutado();
 				temp.fechaEjecucion = Utils.formatDate(riesgo.getFechaEjecucion());
@@ -124,22 +124,24 @@ public class SMatrizRiesgo extends HttpServlet {
 					case 5: temp.objetoTipoNombre = "Actividad"; break;
 					}
 				}
-				switch (temp.probabilidad){
-				case 1: temp.punteoPrioridad = temp.puntuacionImpacto * 0.3;
-						temp.punteoPrioridad =  BigDecimal.valueOf(temp.punteoPrioridad)
+				if (temp.probabilidad!=null){
+					switch (temp.probabilidad){
+						case 1: temp.punteoPrioridad = temp.puntuacionImpacto * 0.3;
+								temp.punteoPrioridad =  BigDecimal.valueOf(temp.punteoPrioridad)
+									    .setScale(2, RoundingMode.HALF_UP)
+									    .doubleValue();
+						break;
+						case 2: temp.punteoPrioridad = temp.puntuacionImpacto * 0.6;
+								temp.punteoPrioridad =  BigDecimal.valueOf(temp.punteoPrioridad)
 							    .setScale(2, RoundingMode.HALF_UP)
 							    .doubleValue();
-				break;
-				case 2: temp.punteoPrioridad = temp.puntuacionImpacto * 0.6;
-						temp.punteoPrioridad =  BigDecimal.valueOf(temp.punteoPrioridad)
-					    .setScale(2, RoundingMode.HALF_UP)
-					    .doubleValue();
-						break;
-				case 3: temp.punteoPrioridad = temp.puntuacionImpacto * 0.9;
-					temp.punteoPrioridad =  BigDecimal.valueOf(temp.punteoPrioridad)
-				    .setScale(2, RoundingMode.HALF_UP)
-				    .doubleValue();
-					break;
+								break;
+						case 3: temp.punteoPrioridad = temp.puntuacionImpacto * 0.9;
+							temp.punteoPrioridad =  BigDecimal.valueOf(temp.punteoPrioridad)
+						    .setScale(2, RoundingMode.HALF_UP)
+						    .doubleValue();
+							break;
+					}
 				}
 				matriz.add(temp);
 			}

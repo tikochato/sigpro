@@ -10,14 +10,14 @@ app.controller('matrizriesgoController',['$scope','$http','$interval','i18nServi
 	i18nService.setCurrentLang('es');
 
 
-	 $http.post('/SMatrizRiesgo', { accion: 'getMatrizRiesgos', proyectoid:'13', t: (new Date()).getTime()})
+	 $http.post('/SMatrizRiesgo', { accion: 'getMatrizRiesgos', proyectoid:$routeParams.proyectoId, t: (new Date()).getTime()})
 	 .then(function(response){
 		 mi.lista = response.data.matrizriesgos;
 		 mi.riesgos = [].concat(mi.lista);
 	});
 
 	 mi.exportarExcel = function(){
-			$http.post('/SMatrizRiesgo', { accion: 'exportarExcel', proyectoid:'13',t:moment().unix(),
+			$http.post('/SMatrizRiesgo', { accion: 'exportarExcel', proyectoid:$routeParams.proyectoId,t:moment().unix(),
 				  } ).then(
 						  function successCallback(response) {
 								var anchor = angular.element('<a/>');

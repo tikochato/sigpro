@@ -403,8 +403,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'matrizriesgoController',
-	    	   script: '/app/components/reportes/matrizriesgo.controller.js',
-	    	   template: '/app/components/reportes/matrizriesgo.jsp'
+	    	   script: '/app/components/reportes/matrizriesgo/matrizriesgo.controller.js',
+	    	   template: '/app/components/reportes/matrizriesgo/matrizriesgo.jsp'
 	       },
 	       {
 	    	   name: 'agendaController',

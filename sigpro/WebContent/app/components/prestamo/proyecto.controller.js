@@ -350,6 +350,23 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			$location.path('/mapa/'+ proyectoid );
 		}
 	};
+	mi.irAKanban=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/kanban/'+ proyectoid );
+		}
+	};
+
+	mi.irAAgenda=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/agenda/'+ proyectoid );
+		}
+	};
+	
+	mi.irAMatrizRiesgos=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/matrizriesgo/'+ proyectoid );
+		}
+	};
 
 	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
 		var resultado = $q.defer();

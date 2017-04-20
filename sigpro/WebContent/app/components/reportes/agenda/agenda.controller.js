@@ -10,7 +10,7 @@ app.controller('agendaController',['$scope','$http','$interval','i18nService','U
 	i18nService.setCurrentLang('es');
 	 
 	 
-	 $http.post('/SAgenda', { accion: 'getAgenda', proyectoid:'13', t: (new Date()).getTime()})
+	 $http.post('/SAgenda', { accion: 'getAgenda', proyectoid:$routeParams.proyectoId, t: (new Date()).getTime()})
 	 .then(function(response){
 		 mi.lista = response.data.agenda;
 		 mi.agenda = [].concat(mi.lista);
@@ -21,7 +21,7 @@ app.controller('agendaController',['$scope','$http','$interval','i18nService','U
 	});	
 	 
 	 mi.exportarExcel = function(){
-			$http.post('/SAgenda', { accion: 'exportarExcel', proyectoid:'13',t:moment().unix()
+			$http.post('/SAgenda', { accion: 'exportarExcel', proyectoid:$routeParams.proyectoId,t:moment().unix()
 				  } ).then(
 						  function successCallback(response) {
 								var anchor = angular.element('<a/>');
