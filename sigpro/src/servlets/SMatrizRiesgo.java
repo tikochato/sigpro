@@ -20,6 +20,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.codec.Base64;
 
@@ -70,8 +71,8 @@ public class SMatrizRiesgo extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		//HttpSession sesionweb = request.getSession();
-		//String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
+		HttpSession sesionweb = request.getSession();
+		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		Gson gson = new Gson();
 		Type type = new TypeToken<Map<String, String>>(){}.getType();
 		StringBuilder sb = new StringBuilder();
@@ -212,7 +213,7 @@ public class SMatrizRiesgo extends HttpServlet {
 				fila++;
 				
 			}
-			String path = excel.ExportarExcel(datos, "Matriz de Reisgos");
+			String path = excel.ExportarExcel(datos, "Matriz de Reisgos",usuario);
 			File file=new File(path);
 			if(file.exists()){
 		        FileInputStream is = null;

@@ -1,4 +1,4 @@
-var app = angular.module('kanbanController', ['DlhSoft.Kanban.Angular.Components']);
+var app = angular.module('porcentajeactividadesController', ['DlhSoft.Kanban.Angular.Components']);
 
 var GanttChartView = DlhSoft.Controls.GanttChartView;
 //Query string syntax: ?theme
@@ -6,31 +6,28 @@ var GanttChartView = DlhSoft.Controls.GanttChartView;
 var queryString = window.location.search;
 var theme = queryString ? queryString.substr(1) : null;
 
-app.controller('kanbanController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q',
+app.controller('porcentajeactividadesController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q) {
 
 		var mi=this;
 		  
 		var KanbanBoard = DlhSoft.Controls.KanbanBoard;
-		var formatData = new FormData();
-		 
-		formatData.append("accion",'getKanban');
-		formatData.append("proyecto_id",$routeParams.proyectoId);
+		
+		
 		$scope.states = {};
 		$scope.itemsKanban = null; 
 		$scope.mostrarKanban = false;
 		
-		$http.post('/SGantt', formatData, {
-			headers: {'Content-Type': undefined},
-			transformRequest: angular.identity
-		 }).success(
+		$http.post('/SPorcentajeActividades', {accion : "getKanban", proyecto_id:$routeParams.proyectoId }).success(
 				function(response) {
-					var estado1 = { name: 'Nuevo', areNewItemButtonsHidden: true }, 
-					estado2 = { name: 'En progreso', areNewItemButtonsHidden: true }, 
-					estado3 = { name: 'Terminado', isCollapsedByDefaultForGroups: true, areNewItemButtonsHidden: true };
-					var colores = ["#ffe033","#9fc6ee","#008000"];
+					var estadoNuevo = { name: 'Nuevo', areNewItemButtonsHidden: true }, 
+					estadoEnProgreso = { name: 'En progreso', areNewItemButtonsHidden: true }, 
+					estadoTerminado = { name: 'Terminado', isCollapsedByDefaultForGroups: true, areNewItemButtonsHidden: true };
+					estadoRetrasado = { name: 'Retrasado', isCollapsedByDefaultForGroups: true, areNewItemButtonsHidden: true };
 					
-					var estados  = [estado1, estado2, estado3];
+					var colores = ["#ffe033","#9fc6ee","#008000","#ff0000"];
+					
+					var estados  = [estadoNuevo, estadoEnProgreso, estadoTerminado,estadoRetrasado];
 					var items  = response.items;
 					
 					for (item in items) {

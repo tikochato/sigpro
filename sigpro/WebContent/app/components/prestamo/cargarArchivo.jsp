@@ -21,6 +21,12 @@
 	            	</span>
 	          	</div>
 	          	
+	          	<div class="grid_loading" ng-hide="!cargararchivoc.mostrarCargando">
+          			<div class="msg">
+		            <span><i class="fa fa-spinner fa-spin fa-4x"></i> <br /> <br /> <b>Cargando, por favor espere...</b> </span>
+		          </div>
+		        </div>
+	          	
 		</div>
 
       

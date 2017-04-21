@@ -129,7 +129,7 @@ public class SAgenda extends HttpServlet {
 				fila++;
 			}
 			
-			String path = excel.ExportarExcel(datos, "Agenda de Actividades");
+			String path = excel.ExportarExcel(datos, "Agenda de Actividades", usuario);
 
 			
 			File file=new File(path);

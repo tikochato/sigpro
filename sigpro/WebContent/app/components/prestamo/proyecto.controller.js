@@ -284,10 +284,10 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	}
 
 	mi.reiniciarVista=function(){
-		if($location.path()=='/proyecto/rv')
+		if($location.path()=='/prestamo/rv')
 			$route.reload();
 		else
-			$location.path('/proyecto/rv');
+			$location.path('/prestamo/rv');
 	}
 
 	mi.abrirPopupFecha = function(index) {
@@ -352,7 +352,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	};
 	mi.irAKanban=function(proyectoid){
 		if(mi.proyecto!=null){
-			$location.path('/kanban/'+ proyectoid );
+			$location.path('/porcentajeactividades/'+ proyectoid );
 		}
 	};
 
@@ -537,6 +537,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		var resultado = mi.llamarModalArchivo();
 
 		resultado.then(function(resultado) {
+			mi.mostrarcargando=false;
 			if (resultado.data.success){
 				mi.obtenerTotalProyectos();
 				$utilidades.mensaje('success','Proyecto creado con éxito');
@@ -718,6 +719,7 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.mostrar = true;
 	mi.nombreArchivo="";
+	mi.mostrarcargando=false;
 	
 	$scope.cargarArchivo = function(event){
 		var resultado = $q.defer();
@@ -742,18 +744,20 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 	
 	mi.cargar=function(){
 		if (mi.archivos!=null && mi.arhivos != ''){
-		var formatData = new FormData();
-		formatData.append("file",mi.archivos);  
-		formatData.append("accion",'importar');
-		$http.post('/SGantt',formatData, {
-				headers: {'Content-Type': undefined},
-				transformRequest: angular.identity
-			 } ).then(
-		
-			function(response) {
-				$uibModalInstance.close(response);
-			}
-		);
+			mi.mostrarcargando=true;
+			var formatData = new FormData();
+			formatData.append("file",mi.archivos);  
+			formatData.append("accion",'importar');
+			$http.post('/SGantt',formatData, {
+					headers: {'Content-Type': undefined},
+					transformRequest: angular.identity
+				 } ).then(
+			
+				function(response) {
+					mi.mostrarcargando=false;
+					$uibModalInstance.close(response);
+				}
+			);
 		}else{
 			$utilidades.mensaje('danger','Debe seleccionar un archivo');
 		}

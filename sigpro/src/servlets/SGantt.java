@@ -213,49 +213,7 @@ public class SGantt extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-		else if(accion.equals("getKanban")){
-			items = "";
-			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
-					null, null, null, null, null, usuario);
-			for (Componente componente : componentes){
-				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
-						null, null, null, null, null, usuario);
-				for (Producto producto : productos){
-					List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
-							null, null, null, null, null, usuario);
-					for (Subproducto subproducto : subproductos){
-						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
-								null, null, null, null, null, usuario);
-						for (Actividad actividad : actividades ){
-							items = String.join(items.length()>0 ? "," : "", items,
-									construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance()));
-						}
-					}
-					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
-							null, null, null, null, null, usuario);
-					for (Actividad actividad : actividades ){
-						items = String.join(items.length()>0 ? "," : "", items,
-								construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance()));
-					}
-
-				}
-				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), OBJETO_ID_COMPONENTE,
-						null, null, null, null, null, usuario);
-				for (Actividad actividad : actividades ){
-					items = String.join(items.length()>0 ? "," : "", items,
-							construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance()));
-				}
-			}
-			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, proyectoId, OBJETO_ID_PROYECTO,
-					null, null, null, null, null, usuario);
-			for (Actividad actividad : actividades ){
-				items = String.join(items.length()>0 ? "," : "", items,
-						construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance()));
-			}
-
-			items = String.join("","{\"items\" : [", items,"]}");
-
-		}
+		
 
 		}catch(Exception e){
 			e.printStackTrace();
@@ -327,18 +285,5 @@ public class SGantt extends HttpServlet {
 		return ret;
 	}
 
-	private String construirItemKanban(String nombre, Integer porcentaje){
-		Integer estado = 0;
-		if (porcentaje == 0){
-			estado = 0;
-		}else if (porcentaje >0 && porcentaje < 100){
-			estado = 1;
-		}else if (porcentaje == 100){
-			estado = 2;
-		}
-		return String.join("", "{\"name\": \"", nombre,"\", \"estadoId\" : " ,estado.toString(),
-				",\"percentageValue\": \"",porcentaje.toString(),"%\"",
-				"}");
-
-	}
+	
 }

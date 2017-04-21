@@ -265,7 +265,7 @@ public class CExcel {
 	CellStyle estilo_3; // pie
 	int rownum;
 	
-	public String ExportarExcel(Map<String,Object[]> datos,String titulo){
+	public String ExportarExcel(Map<String,Object[]> datos,String titulo, String usuario){
 		
 		sheet_ = workbook_.createSheet(titulo);
 		String path="";
@@ -283,7 +283,7 @@ public class CExcel {
 			columnas = objArr.length > columnas? objArr.length : columnas;
 		}
 		setEncabezado(titulo,columnas);
-		piePagina();
+		piePagina(usuario);
 		sheet_.autoSizeColumn(0);
 		sheet_.autoSizeColumn(1);
 		sheet_.autoSizeColumn(2);
@@ -402,14 +402,14 @@ public class CExcel {
 		sheet_.addMergedRegion(new CellRangeAddress(inicioFila,finFila,inicioColumna,finColumna));
 	}
 	
-	private void piePagina(){
+	private void piePagina(String usuario){
 		rownum=rownum+2;
 		DateTime now = new DateTime();
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("d/M/yyyy h:mm a");
 		setCeldaString("Fecha de Generación: " +fmt.print(now) ,rownum,0,true,3);
 		conbinarCeldas(rownum, rownum, 0, 3);
 		rownum++;
-		setCeldaString("Usuario: " +"admin" ,rownum,0,true,4);
+		setCeldaString("Usuario: " + usuario ,rownum,0,true,4);
 		conbinarCeldas(rownum, rownum, 0, 3);	
 	}
 }

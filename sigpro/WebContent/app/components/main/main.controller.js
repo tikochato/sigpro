@@ -162,8 +162,8 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/agenda/:proyectoId?',{
             	template: '<div load-on-demand="\'agendaController\'" class="all_page"></div>'
             })
-            .when('/kanban/:proyectoId?',{
-            	template: '<div load-on-demand="\'kanbanController\'" class="all_page"></div>'
+            .when('/porcentajeactividades/:proyectoId?',{
+            	template: '<div load-on-demand="\'porcentajeactividadesController\'" class="all_page"></div>'
             })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -397,9 +397,9 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   template: '/app/components/mapas/mapa.jsp'
 	       },
 	       {
-	    	   name: 'kanbanController',
-	    	   script: '/app/components/reportes/kanban/kanban.controller.js',
-	    	   template: '/app/components/reportes/kanban/kanban.jsp'
+	    	   name: 'porcentajeactividadesController',
+	    	   script: '/app/components/reportes/porcentajeactividades/porcentajeactividades.controller.js',
+	    	   template: '/app/components/reportes/porcentajeactividades/porcentajeactividades.jsp'
 	       },
 	       {
 	    	   name: 'matrizriesgoController',
