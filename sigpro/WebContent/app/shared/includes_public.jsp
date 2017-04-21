@@ -33,6 +33,7 @@
 <script type="text/javascript" src="/assets/libs/smart-table.min.js"></script>
 <script type="text/javascript" src="/assets/libs/ng-file-upload-shim.min.js"></script> 
 <script type="text/javascript" src="/assets/libs/ng-file-upload.min.js"></script> 
+<script type="text/javascript" src="/assets/libs/contextMenu.js"></script>
 
 <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPq-t4dJ1GV1kdtXoVZfG7PtfEAHrhr00&callback=initMap" type="text/javascript"></script> -->
 <script>

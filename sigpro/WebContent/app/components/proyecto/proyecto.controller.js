@@ -1,4 +1,4 @@
-var app = angular.module('proyectoController', [ 'ngTouch' ]);
+var app = angular.module('proyectoController', [ 'ngTouch', 'ui.bootstrap.contextMenu']);
 
 app.controller('proyectoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
@@ -8,6 +8,26 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	$window.document.title = $utilidades.sistema_nombre+' - Proyectos';
 
+	var filaSeleccionada = 0;
+		
+	mi.menuOptions = [
+        ['<span class="glyphicon glyphicon-pencil"> Editar', function ($itemScope, $event, modelValue, text, $li) {
+      	  mi.editar();
+        }],
+        ['<span class="glyphicon glyphicon-trash"> Borrar', function ($itemScope, $li) {
+      	  mi.borrar();
+        }]
+    ];
+	
+	mi.contextMenu = function (event) {
+        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+        mi.gridApi.selection.selectRow(mi.gridOpciones.data[filaId]);
+    };
+    
+	mi.saluda = function(){
+		console.log("hola");
+	}
+	
 	mi.proyecto = null;
 	mi.esNuevo = false;
 	mi.campos = {};
@@ -55,7 +75,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	    paginationPageSize: $utilidades.elementosPorPagina,
 	    useExternalFiltering: true,
 	    useExternalSorting: true,
-		columnDefs : [
+	    rowTemplate: '<div context-menu="grid.appScope.controller.menuOptions" right-click="grid.appScope.controller.contextMenu($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
+	    columnDefs : [
 			{ name: 'id', width: 60, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'nombre\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>'
@@ -522,6 +543,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	    }, function() {
 		});
 	  };
+	  
+	  
+	  
 } ]);
 
 app.controller('buscarPorProyecto', [ '$uibModalInstance',
@@ -651,3 +675,15 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 		  $uibModalInstance.close($scope.posicion);
 	  };
 }]);
+
+app.directive('rightClick', function($parse) {
+    return function(scope, element, attrs) {
+        var fn = $parse(attrs.rightClick);
+        element.bind('contextmenu', function(event) {
+            scope.$apply(function() {
+                event.preventDefault();
+                fn(scope, {$event:event});
+            });
+        });
+    };
+});

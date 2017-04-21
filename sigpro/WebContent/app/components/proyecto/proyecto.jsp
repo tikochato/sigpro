@@ -25,33 +25,36 @@
 	<shiro:lacksPermission name="24010">
 		<p ng-init="controller.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
-	<h3>Proyectos</h3>
-	<br />
+	
+	<div class="panel panel-default">
+	  <div class="panel-heading"><h3>Proyectos</h3></div>
+	</div>
+	
 	<div class="row" align="center" ng-hide="controller.esColapsado">
+		<br>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 			<shiro:hasPermission name="24040">
-				<label class="btn btn-primary" ng-click="controller.nuevo()">Nuevo</label>
+				<label class="btn btn-primary" ng-click="controller.nuevo()" title="Nuevo">
+				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24010">
-				<label class="btn btn-primary" ng-click="controller.editar()">Editar</label>
+				<label class="btn btn-primary" ng-click="controller.editar()" title="Editar">
+				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24030">
-				<label class="btn btn-primary" ng-click="controller.borrar()">Borrar</label>
+				<label class="btn btn-danger" ng-click="controller.borrar()" title="Borrar">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</shiro:hasPermission>
+			</div>
+			<div class="btn-group" role="group" aria-label="">
+				<shiro:hasPermission name="24010">
+					<a class="btn btn-default" href ng-click="controller.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
+				</shiro:hasPermission>
 			</div>
 		</div>
 		<shiro:hasPermission name="24010">
 		<div class="col-sm-12" align="center">
-			<div style="height: 35px;">
-				<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
-					<shiro:hasPermission name="24010">
-						<a class="btn btn-default" href ng-click="controller.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
-					</shiro:hasPermission>
-
-					</div>
-				</div>
-			</div>
 			<br/>
 			<div id="grid1" ui-grid="controller.gridOpciones" ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination
 				ui-grid-pagination>
@@ -83,28 +86,36 @@
 
 
 	</div>
-	<div class="row main-form" ng-show="controller.esColapsado">
-		<h4 ng-hide="!controller.esNuevo">Nuevo Proyecto</h4>
-		<h4 ng-hide="controller.esNuevo">Edición de proyecto</h4>
-		<div class="operation_buttons" align="left" ng-hide="controller.esNuevo">
-			<div class="btn-group">
-				<label class="btn btn-default" ng-click="controller.irAComponentes(controller.proyecto.id)">Componentes</label>
-				<label class="btn btn-default" ng-click="controller.irAHitos(controller.proyecto.id)" >Hitos</label>
-				<label class="btn btn-default" ng-click="controller.irADesembolsos(controller.proyecto.id)">Desembolsos</label>
-				<label class="btn btn-default" ng-click="controller.irARiesgos(controller.proyecto.id)">Riesgos</label>
-				<label class="btn btn-default" ng-click="controller.irAGantt(controller.proyecto.id)">Gantt</label>
-				<label class="btn btn-default" ng-click="controller.irAActividades(controller.proyecto.id)">Actividades</label>
-			</div>
+	<div class="row second-main-form" ng-show="controller.esColapsado">
+		<div class="page-header">
+			<h1 ng-hide="!controller.esNuevo"><small>Nuevo Proyecto</small></h1>
+			<h1 ng-hide="controller.esNuevo"><small>Edición de proyecto</small></h1>
 		</div>
-
-		<div class="col-sm-12 operation_buttons" align="right">
-			<div class="btn-group">
+		<div class="operation_buttons">
+			<div class="btn-group" ng-hide="controller.esNuevo">
+				<label class="btn btn-default" ng-click="controller.irAComponentes(controller.proyecto.id)" title="Componentes">
+				<span class="glyphicon glyphicon-th"></span> Componentes</label>
+				<label class="btn btn-default" ng-click="controller.irAHitos(controller.proyecto.id)" title="Hitos">
+				<span class="glyphicon glyphicon-screenshot"></span> Hitos</label>
+				<label class="btn btn-default" ng-click="controller.irADesembolsos(controller.proyecto.id)" title="Desembolsos">
+				<span class="glyphicon glyphicon-shopping-cart"></span> Desembolsos</label>
+				<label class="btn btn-default" ng-click="controller.irARiesgos(controller.proyecto.id)" title="Riesgos">
+				<span class="glyphicon glyphicon-warning-sign"></span> Riesgos</label>
+				<label class="btn btn-default" ng-click="controller.irAGantt(controller.proyecto.id)" title="Gantt">
+				<span class="glyphicon glyphicon glyphicon-indent-left"></span> Gantt</label>
+				<label class="btn btn-default" ng-click="controller.irAActividades(controller.proyecto.id)" title="Actividades">
+				<span class="glyphicon glyphicon-th-list"></span> Actividades</label>
+			</div>
+			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">
-					<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid">Guardar</label>
+					<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid" title="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="controller.irATabla()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="controller.irATabla()" title="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
+		<br>
 		<div class="col-sm-12">
 			<form name="form">
 				<div class="form-group">
@@ -251,11 +262,12 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="24020">
-					<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid">Guardar</label>
+					<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid" title="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="controller.irATabla()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="controller.irATabla()" title="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 	</div>
-
 </div>
