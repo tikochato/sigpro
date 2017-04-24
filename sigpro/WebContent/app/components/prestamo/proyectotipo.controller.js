@@ -4,7 +4,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal) {
 		var mi=this;
 
-		$window.document.title = $utilidades.sistema_nombre+' - Tipo Proyecto';
+		$window.document.title = $utilidades.sistema_nombre+' - Tipo Préstamo';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.proyectotipos = [];
@@ -133,14 +133,14 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 					propiedades: idspropiedad
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success','Tipo Proyecto '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+						$utilidades.mensaje('success','Tipo de Préstamo '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 						mi.proyectotipo.id = response.id;
 						mi.obtenerTotalProyectotipos();
 
 					}
 					else
-						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo Proyecto');
+						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo de Préstamo');
 				});
 			}
 			else
@@ -154,7 +154,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 				mi.cargarTotalPropiedades();
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Proyecto que desea editar');
+				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Préstamo que desea editar');
 		}
 
 
@@ -162,7 +162,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 			if(mi.proyectotipo!=null && mi.proyectotipo.id!=null){
 				var confirm = $mdDialog.confirm()
 			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar el tipo de proyecto "'+mi.proyectotipo.nombre+'"?')
+			          .textContent('¿Desea borrar el tipo de préstamo "'+mi.proyectotipo.nombre+'"?')
 			          .ariaLabel('Confirmación de borrado')
 			          .targetEvent(ev)
 			          .ok('Borrar')
@@ -174,18 +174,18 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 						id: mi.proyectotipo.id
 					}).success(function(response){
 						if(response.success){
-							$utilidades.mensaje('success','Tipo Proyecto borrado con éxito');
+							$utilidades.mensaje('success','Tipo de Préstamo borrado con éxito');
 							mi.obtenerTotalProyectotipos();
 						}
 						else
-							$utilidades.mensaje('danger','Error al borrar el Tipo Proyecto');
+							$utilidades.mensaje('danger','Error al borrar el Tipo Préstamo');
 					});
 			    }, function() {
 
 			    });
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar el Tipo Proyecto que desea borrar');
+				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Préstamo que desea borrar');
 		};
 
 		mi.nuevo = function() {

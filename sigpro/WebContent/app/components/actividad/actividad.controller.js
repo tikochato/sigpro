@@ -288,6 +288,12 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			else
 				$location.path('/actividad/'+ mi.objetoid + '/' + mi.objetotipo + '/rv');
 		}
+		
+		mi.irARiesgos=function(actividadid){
+			if(mi.actividad!=null){
+				$location.path('/riesgo/' + actividadid + '/5' );
+			}
+		};
 
 		mi.abrirPopupFecha = function(index) {
 			if(index<1000){

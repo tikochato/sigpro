@@ -88,7 +88,10 @@
 			<h4 ng-hide="!actividadc.esnuevo">Nueva actividad</h4>
 			<h4 ng-hide="actividadc.esnuevo">Edición de actividad</h4>
 			<div class="col-sm-12 operation_buttons" align="left">
-		</div>
+				<div class="btn-group">
+					<label class="btn btn-default" ng-click="actividadc.irARiesgos(actividadc.actividad.id)">Riesgos</label>
+				</div>
+			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="1020">

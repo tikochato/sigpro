@@ -11,6 +11,8 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.Subproducto;
+import pojo.SubproductoUsuario;
+import pojo.SubproductoUsuarioId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 import utilities.Utils;
@@ -49,7 +51,7 @@ public class SubproductoDAO {
 		List<Subproducto> ret = new ArrayList<Subproducto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<Subproducto> criteria = session.createQuery("FROM Subproducto p where p.id in (SELECT u.id.productoid from SubproductoUsuario u where u.id.usuario=:usuario )", Subproducto.class);
+			Query<Subproducto> criteria = session.createQuery("FROM Subproducto p where p.id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )", Subproducto.class);
 			criteria.setParameter("usuario", usuario);
 			ret =   (List<Subproducto>)criteria.getResultList();
 		} catch (Throwable e) {
@@ -82,6 +84,9 @@ public class SubproductoDAO {
 		try {
 			session.beginTransaction();
 			session.saveOrUpdate(subproducto);
+			SubproductoUsuario su = new SubproductoUsuario(new SubproductoUsuarioId(subproducto.getId(),subproducto.getUsuarioCreo())
+					, subproducto, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
+			session.saveOrUpdate(su);
 			session.getTransaction().commit();
 			ret = true;
 		} catch (Throwable e) {
