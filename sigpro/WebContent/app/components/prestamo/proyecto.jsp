@@ -20,16 +20,22 @@
     </script>
 
 	<script type="text/ng-template" id="buscarPorProyecto.jsp">
-    		<%@ include file="/app/components/proyecto/buscarPorProyecto.jsp"%>
+    		<%@ include file="/app/components/prestamo/buscarPorProyecto.jsp"%>
+  	 </script>
+  	 <script type="text/ng-template" id="cargarArchivo.jsp">
+    		<%@ include file="/app/components/prestamo/cargarArchivo.jsp"%>
   	 </script>
 	<shiro:lacksPermission name="24010">
 		<p ng-init="controller.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
-	<h3>Proyectos</h3>
+	<h3>Préstamos</h3>
 	<br />
 	<div class="row" align="center" ng-hide="controller.esColapsado">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
+			<shiro:hasPermission name="24040">
+				<label class="btn btn-primary" ng-click="controller.cargarArchivo()">Desde archivo</label>
+			</shiro:hasPermission>
 			<shiro:hasPermission name="24040">
 				<label class="btn btn-primary" ng-click="controller.nuevo()">Nuevo</label>
 			</shiro:hasPermission>
@@ -65,7 +71,7 @@
 				  </div>
 			</div>
 			<br/>
-			<div class="total-rows">Total de {{  controller.totalProyectos + (controller.totalProyectos == 1 ? " Proyecto" : " Proyectos" ) }}</div>
+			<div class="total-rows">Total de {{  controller.totalProyectos + (controller.totalProyectos == 1 ? " Préstamo" : " Préstamos" ) }}</div>
 				<ul uib-pagination total-items="controller.totalProyectos"
 						ng-model="controller.paginaActual"
 						max-size="controller.numeroMaximoPaginas"
@@ -81,19 +87,22 @@
 
 		</shiro:hasPermission>
 
-
 	</div>
 	<div class="row main-form" ng-show="controller.esColapsado">
-		<h4 ng-hide="!controller.esNuevo">Nuevo Proyecto</h4>
-		<h4 ng-hide="controller.esNuevo">Edición de proyecto</h4>
+		<h4 ng-hide="!controller.esNuevo">Nuevo Préstamo</h4>
+		<h4 ng-hide="controller.esNuevo">Edición de Préstamo</h4>
 		<div class="operation_buttons" align="left" ng-hide="controller.esNuevo">
 			<div class="btn-group">
 				<label class="btn btn-default" ng-click="controller.irAComponentes(controller.proyecto.id)">Componentes</label>
 				<label class="btn btn-default" ng-click="controller.irAHitos(controller.proyecto.id)" >Hitos</label>
 				<label class="btn btn-default" ng-click="controller.irADesembolsos(controller.proyecto.id)">Desembolsos</label>
 				<label class="btn btn-default" ng-click="controller.irARiesgos(controller.proyecto.id)">Riesgos</label>
-				<label class="btn btn-default" ng-click="controller.irAGantt(controller.proyecto.id)">Gantt</label>
 				<label class="btn btn-default" ng-click="controller.irAActividades(controller.proyecto.id)">Actividades</label>
+				<label class="btn btn-default" ng-click="controller.irAMapa(controller.proyecto.id)">Mapa</label>
+				<label class="btn btn-default" ng-click="controller.irAGantt(controller.proyecto.id)">Gantt</label>
+				<label class="btn btn-default" ng-click="controller.irAKanban(controller.proyecto.id)">Kanban</label>
+				<label class="btn btn-default" ng-click="controller.irAAgenda(controller.proyecto.id)">Agenda</label>
+				<label class="btn btn-default" ng-click="controller.irAMatrizRiesgos(controller.proyecto.id)">Matriz de Riesgos</label>
 			</div>
 		</div>
 
@@ -150,9 +159,9 @@
 					</div>
 				</div>
 				<div class="form-group" >
-					<label for="campo3">* Tipo Proyecto</label>
+					<label for="campo3">* Tipo Préstamo</label>
 		          	<div class="input-group">
-		            	<input type="text" class="form-control" id="iproyt" name="iproyt" placeholder="Nombre Tipo Proyecto" ng-model="controller.proyectotiponombre" ng-readonly="true" ng-required="true"/>
+		            	<input type="text" class="form-control" id="iproyt" name="iproyt" placeholder="Nombre Tipo Préstamo" ng-model="controller.proyectotiponombre" ng-readonly="true" ng-required="true"/>
 		            	<span class="input-group-addon" ng-click="controller.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 		          	</div>
 				</div>

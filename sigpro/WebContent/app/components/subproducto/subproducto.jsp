@@ -18,7 +18,7 @@
         </div>
     </script>
     
-	<script type="text/ng-template" id="buscarPorProducto.jsp">
+	<script type="text/ng-template" id="buscarPorSubproducto.jsp">
 	    <%@ include file="/app/components/subproducto/buscarPorSubproducto.jsp"%>
 	</script>
 	<shiro:lacksPermission name="40010">
@@ -89,6 +89,7 @@
 		<div class="col-sm-12 operation_buttons" align="left" ng-hide="subproducto.esNuevo">
 			<div class="btn-group">
 				<label class="btn btn-default" ng-click="subproducto.irAActividades()">Actividades</label>
+				<label class="btn btn-default" ng-click="subproducto.irARiesgos()">Riesgos</label>
 			</div>
 		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
