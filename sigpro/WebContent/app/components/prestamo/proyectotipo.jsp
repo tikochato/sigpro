@@ -6,12 +6,12 @@
 	class="maincontainer all_page" id="title">
 
 	<script type="text/ng-template" id="buscarpropiedad.jsp">
-    	<%@ include file="/app/components/proyecto/buscarpropiedad.jsp"%>
+    	<%@ include file="/app/components/prestamo/buscarpropiedad.jsp"%>
   	</script>
   	<shiro:lacksPermission name="36010">
 		<p ng-init="proyectotipoc.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
-	<h3>Tipo de Proyecto</h3>
+	<h3>Tipo de Préstamo</h3>
 	<br />
 
 
@@ -67,8 +67,8 @@
 	</div>
 
 	<div class="row main-form" ng-if="proyectotipoc.mostraringreso">
-		<h4 ng-hide="!proyectotipoc.esnuevo">Nuevo tipo de proyecto</h4>
-		<h4 ng-hide="proyectotipoc.esnuevo">Edición tipo de proyecto</h4>
+		<h4 ng-hide="!proyectotipoc.esnuevo">Nuevo tipo de préstamo</h4>
+		<h4 ng-hide="proyectotipoc.esnuevo">Edición tipo de préstamo</h4>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="36020">

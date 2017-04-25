@@ -1,7 +1,9 @@
 package pojo;
-// Generated Mar 7, 2017 2:35:37 PM by Hibernate Tools 5.2.1.Final
+// Generated Mar 28, 2017 5:39:07 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +12,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,7 +27,7 @@ public class Colaborador implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5907359703480754058L;
+	private static final long serialVersionUID = 1168768998826852634L;
 	private Integer id;
 	private UnidadEjecutora unidadEjecutora;
 	private Usuario usuario;
@@ -38,6 +41,7 @@ public class Colaborador implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
+	private Set<Riesgo> riesgos = new HashSet<Riesgo>(0);
 
 	public Colaborador() {
 	}
@@ -56,7 +60,7 @@ public class Colaborador implements java.io.Serializable {
 
 	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String snombre,
 			String papellido, String sapellido, Long cui, int estado, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion) {
+			Date fechaCreacion, Date fechaActualizacion, Set<Riesgo> riesgos) {
 		this.unidadEjecutora = unidadEjecutora;
 		this.usuario = usuario;
 		this.pnombre = pnombre;
@@ -69,6 +73,7 @@ public class Colaborador implements java.io.Serializable {
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
+		this.riesgos = riesgos;
 	}
 
 	@Id
@@ -193,6 +198,15 @@ public class Colaborador implements java.io.Serializable {
 
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborador")
+	public Set<Riesgo> getRiesgos() {
+		return this.riesgos;
+	}
+
+	public void setRiesgos(Set<Riesgo> riesgos) {
+		this.riesgos = riesgos;
 	}
 
 }

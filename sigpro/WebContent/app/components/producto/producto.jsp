@@ -88,6 +88,7 @@
 			<div class="btn-group">
 				<label class="btn btn-default" ng-click="producto.irASubproductos()">Subproductos</label>
 				<label class="btn btn-default" ng-click="producto.irAActividades()">Actividades</label>
+				<label class="btn btn-default" ng-click="producto.irARiesgos()">Riesgos</label>
 			</div>
 		</div>
 		<div class="col-sm-12 operation_buttons" align="right">

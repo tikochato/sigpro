@@ -21,7 +21,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/cooperante/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'cooperanteController\'" class="all_page"></div>'
             })
-            .when('/proyecto/:reiniciar_vista?',{
+            .when('/prestamo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
             })
             .when('/entidad/:reiniciar_vista?',{
@@ -51,7 +51,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/subproducto/:producto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloSubproducto\'" class="all_page"></div>'
             })
-            .when('/proyectotipo/:reiniciar_vista?',{
+            .when('/prestamotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectotipoController\'" class="all_page"></div>'
             })
             .when('/desembolsotipo/:reiniciar_vista?',{
@@ -102,7 +102,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/riesgotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgotipoController\'" class="all_page"></div>'
             })
-            .when('/riesgo/:reiniciar_vista?',{
+            .when('/riesgo/:objeto_id?/:objeto_tipo?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgoController\'" class="all_page"></div>'
             })
             .when('/hito/:proyecto_id?/:reiniciar_vista?',{
@@ -117,7 +117,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/formulariotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'formulariotipoController\'" class="all_page"></div>'
             })
-            .when('/proyectopropiedad/:reiniciar_vista?',{
+            .when('/prestamopropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectopropiedadController\'" class="all_page"></div>'
             })
             .when('/usuarioinfo/',{
@@ -150,8 +150,20 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/programa/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'programaController\'" class="all_page"></div>'
             })
+            .when('/mapa/:proyecto_id?/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'mapaController\'" class="all_page"></div>'
+            })
             .when("/:redireccion?",{
             	controller:"MainController"
+            })
+            .when('/matrizriesgo/:proyectoId?',{
+            	template: '<div load-on-demand="\'matrizriesgoController\'" class="all_page"></div>'
+            })
+            .when('/agenda/:proyectoId?',{
+            	template: '<div load-on-demand="\'agendaController\'" class="all_page"></div>'
+            })
+            .when('/porcentajeactividades/:proyectoId?',{
+            	template: '<div load-on-demand="\'porcentajeactividadesController\'" class="all_page"></div>'
             })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -186,8 +198,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'proyectoController',
-	    	   script: '/app/components/proyecto/proyecto.controller.js',
-	    	   template: '/app/components/proyecto/proyecto.jsp'
+	    	   script: '/app/components/prestamo/proyecto.controller.js',
+	    	   template: '/app/components/prestamo/proyecto.jsp'
 	       }, {
 	    	   name: 'moduloEntidad',
 	    	   script: '/app/components/entidades/entidades.controller.js',
@@ -227,8 +239,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'proyectotipoController',
-	    	   script: '/app/components/proyecto/proyectotipo.controller.js',
-	    	   template: '/app/components/proyecto/proyectotipo.jsp'
+	    	   script: '/app/components/prestamo/proyectotipo.controller.js',
+	    	   template: '/app/components/prestamo/proyectotipo.jsp'
 	       },
 	       {
 	    	   name: 'desembolsotipoController',
@@ -326,8 +338,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'proyectopropiedadController',
-	    	   script: '/app/components/proyectopropiedad/proyectopropiedad.controller.js',
-	    	   template: '/app/components/proyectopropiedad/proyectopropiedad.jsp'
+	    	   script: '/app/components/prestamopropiedad/proyectopropiedad.controller.js',
+	    	   template: '/app/components/prestamopropiedad/proyectopropiedad.jsp'
 	       },
 	       {
 	    	   name: 'usuarioInfoController',
@@ -379,6 +391,26 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   script: '/app/components/programa/programa.controller.js',
 	    	   template: '/app/components/programa/programa.jsp'
 	       },
+	       {
+	    	   name: 'mapaController',
+	    	   script: '/app/components/mapas/mapa.controller.js',
+	    	   template: '/app/components/mapas/mapa.jsp'
+	       },
+	       {
+	    	   name: 'porcentajeactividadesController',
+	    	   script: '/app/components/reportes/porcentajeactividades/porcentajeactividades.controller.js',
+	    	   template: '/app/components/reportes/porcentajeactividades/porcentajeactividades.jsp'
+	       },
+	       {
+	    	   name: 'matrizriesgoController',
+	    	   script: '/app/components/reportes/matrizriesgo/matrizriesgo.controller.js',
+	    	   template: '/app/components/reportes/matrizriesgo/matrizriesgo.jsp'
+	       },
+	       {
+	    	   name: 'agendaController',
+	    	   script: '/app/components/reportes/agenda/agenda.controller.js',
+	    	   template: '/app/components/reportes/agenda/agenda.jsp'
+	       }
 
 	   ];
 	   $loadOnDemandProvider.config(modules);

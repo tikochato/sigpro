@@ -3,8 +3,8 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="riesgoController as riesgoc" class="maincontainer all_page" id="title">
-	    <script type="text/ng-template" id="buscarRiesgoTipo.jsp">
-    		<%@ include file="/app/components/riesgo/buscarRiesgoTipo.jsp"%>
+	    <script type="text/ng-template" id="buscarPorRiesgo.jsp">
+    		<%@ include file="/app/components/riesgo/buscarPorRiesgo.jsp"%>
   	    </script>
   	    <shiro:lacksPermission name="30010">
 			<p ng-init="riesgoc.redireccionSinPermisos()"></p>
@@ -89,6 +89,73 @@
 				          	</div>
 						</div>
 						
+						<div class="form-group">
+							<label >Impacto proyectado</label>
+    						<input type="text" class="form-control" placeholder="Impacto proyectado" ng-model="riesgoc.riesgo.impactoProyectado">
+						</div>
+						
+						<div class="form-group"  >
+							<label >Impacto</label>
+							<input type="number"  ng-model="riesgoc.riesgo.impacto" class="form-control" placeholder="Impacto">
+						</div>
+						
+						<div class="form-group"  >
+							<label >Puntuación de impacto</label>
+							<input type="number"  ng-model="riesgoc.riesgo.puntuacionImpacto" class="form-control" placeholder="Impacto"
+							ng-min="1" ng-max="10">
+						</div>
+						
+						<div class="form-group"  >
+							<label >Probabilidad</label>
+							<select class="form-control" ng-model="riesgoc.probabilidad"
+								ng-options="probabilidad as probabilidad.nombre for probabilidad in riesgoc.probabilidades track by probabilidad.valor">
+								<option value="">Seleccione una opción</option>
+							</select>
+						</div>
+						
+						<div class="form-group">
+							<label>Gatillos / sintomas</label>
+    						<input type="text" class="form-control" placeholder="Gatillos / sintomas" ng-model="riesgoc.riesgo.gatillosSintomas">
+						</div>
+						
+						<div class="form-group">
+							<label>Respuesta</label>
+    						<input type="text" class="form-control" placeholder="Respuesta" ng-model="riesgoc.riesgo.respuesta">
+						</div>
+						
+						<div class="form-group">
+							<label for="campo3"> Responsable:</label>
+				          	<div class="input-group">
+				            	<input type="text" class="form-control"  placeholder="Nombre del responsable" ng-model="riesgoc.colaboradorNombre" ng-readonly="true" />
+				            	<span class="input-group-addon" ng-click="riesgoc.buscarColaborador()"><i class="glyphicon glyphicon-search"></i></span>
+				          	</div>
+						</div>
+						
+						<div class="form-group">
+							<label>Riesgos secundarios</label>
+    						<input type="text" class="form-control" placeholder="Riesgos secundarios" ng-model="riesgoc.riesgo.riesgosSecundarios">
+						</div>
+						
+						<div class="form-group">
+							<label>Ejecutado</label>
+							<br/>
+    						<input type="checkbox"  ng-model="riesgoc.ejecutado">    						
+						</div>
+						
+						<div class="form-group">
+									<label>* Fecha de ejecución</label>
+		    						<p class="input-group">
+									<input type="text" class="form-control" uib-datepicker-popup="{{riesgoc.formatofecha}}" ng-model="riesgoc.riesgo.fechaEjecucion" is-open="riesgoc.fe_abierto"
+														datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Ejecucion"   />
+														<span class="input-group-btn">
+														<button type="button" class="btn btn-default"
+															ng-click="riesgoc.abrirPopupFecha(1000)">
+															<i class="glyphicon glyphicon-calendar"></i>
+														</button>
+													</span>
+									</p>
+						</div>
+						
 						<div class="form-group" ng-repeat="campo in riesgoc.camposdinamicos">
 							<label for="campo.id">{{ campo.label }}</label>
 							<div ng-switch="campo.tipo">
@@ -113,6 +180,8 @@
 								</select>
 							</div>
 						</div>
+						
+						
 						
 						<div class="form-group">
 							<label for="descripcion">Descripción</label>

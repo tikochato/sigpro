@@ -6,7 +6,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	var mi = this;
 	i18nService.setCurrentLang('es');
 
-	$window.document.title = $utilidades.sistema_nombre+' - Proyectos';
+	$window.document.title = $utilidades.sistema_nombre+' - Préstamos';
 
 	var filaSeleccionada = 0;
 		
@@ -27,7 +27,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.saluda = function(){
 		console.log("hola");
 	}
-	
+
 	mi.proyecto = null;
 	mi.esNuevo = false;
 	mi.campos = {};
@@ -76,12 +76,12 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	    useExternalFiltering: true,
 	    useExternalSorting: true,
 	    rowTemplate: '<div context-menu="grid.appScope.controller.menuOptions" right-click="grid.appScope.controller.contextMenu($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
-	    columnDefs : [
+		columnDefs : [
 			{ name: 'id', width: 60, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'nombre\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>'
 			},
-			{ name : 'proyectotipo',    displayName : 'Tipo proyecto' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
+			{ name : 'proyectotipo',    displayName : 'Tipo préstamo' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
 			{ name : 'unidadejecutora',    displayName : 'Unidad Ejecutora' ,cellClass: 'grid-align-left', enableFiltering: false , enableSorting: false },
 			{ name : 'cooperante',   displayName : 'Cooperante' ,cellClass: 'grid-align-left',  enableFiltering: false , enableSorting: false },
 			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',
@@ -183,11 +183,11 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				function(response) {
 					if (response.data.success) {
 						mi.proyecto.id = response.data.id;
-						$utilidades.mensaje('success','Proyecto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+						$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.obtenerTotalProyectos();
 						mi.esNuevo = false;
 					}else
-						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Proyecto');
+						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
 			});
 
 		}else
@@ -199,7 +199,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 			var confirm = $mdDialog.confirm()
 	        .title('Confirmación de borrado')
-	        .textContent('¿Desea borrar el Proyecto "'+mi.proyecto.nombre+'"?')
+	        .textContent('¿Desea borrar el Préstamo "'+mi.proyecto.nombre+'"?')
 	        .ariaLabel('Confirmación de borrado')
 	        .targetEvent(ev)
 	        .ok('Borrar')
@@ -212,19 +212,19 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					t:moment().unix()
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success','Proyecto borrado con éxito');
+						$utilidades.mensaje('success','Préstamo borrado con éxito');
 						mi.proyecto = null;
 						mi.obtenerTotalProyectos();
 					}
 					else
-						$utilidades.mensaje('danger','Error al borrar el Proyecto');
+						$utilidades.mensaje('danger','Error al borrar el Préstamo');
 				});
 			}, function() {
 
 		    });
 		}
 		else
-			$utilidades.mensaje('warning','Debe seleccionar el Proyecto que desea borrar');
+			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea borrar');
 	};
 
 	mi.nuevo = function (){
@@ -284,7 +284,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 		}
 		else
-			$utilidades.mensaje('warning','Debe seleccionar el Proyecto que desea editar');
+			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea editar');
 	}
 
 	mi.irATabla = function() {
@@ -305,10 +305,10 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	}
 
 	mi.reiniciarVista=function(){
-		if($location.path()=='/proyecto/rv')
+		if($location.path()=='/prestamo/rv')
 			$route.reload();
 		else
-			$location.path('/proyecto/rv');
+			$location.path('/prestamo/rv');
 	}
 
 	mi.abrirPopupFecha = function(index) {
@@ -347,7 +347,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.irARiesgos=function(proyectoid){
 		if(mi.proyecto!=null){
-			$location.path('/riesgo/' );
+			$location.path('/riesgo/' + proyectoid + '/1' );
 		}
 	};
 
@@ -365,6 +365,28 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.irAGantt=function(proyectoid){
 		if(mi.proyecto!=null){
 			$location.path('/gantt/'+ proyectoid );
+		}
+	};
+	mi.irAMapa=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/mapa/'+ proyectoid );
+		}
+	};
+	mi.irAKanban=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/porcentajeactividades/'+ proyectoid );
+		}
+	};
+
+	mi.irAAgenda=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/agenda/'+ proyectoid );
+		}
+	};
+	
+	mi.irAMatrizRiesgos=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/matrizriesgo/'+ proyectoid );
 		}
 	};
 
@@ -514,6 +536,41 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		});
 	};
 
+	mi.llamarModalArchivo = function() {
+		var resultado = $q.defer();
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'cargarArchivo.jsp',
+			controller : 'cargararchivoController',
+			controllerAs : 'cargararchivoc',
+			backdrop : 'static',
+			size : 'md',
+		});
+
+		modalInstance.result.then(function(respuesta) {
+			resultado.resolve(respuesta);
+		});
+		return resultado.promise;
+	};
+	
+	mi.cargarArchivo = function() {
+		var resultado = mi.llamarModalArchivo();
+
+		resultado.then(function(resultado) {
+			mi.mostrarcargando=false;
+			if (resultado.data.success){
+				mi.obtenerTotalProyectos();
+				$utilidades.mensaje('success','Proyecto creado con éxito');
+			}else{
+				$utilidades.mensaje('danger','Error al crear el Proyecto');
+			}
+			
+		});
+	};
+	
+	
 
 	mi.open = function (posicionlat, posicionlong) {
 		$scope.geoposicionlat = posicionlat;
@@ -543,9 +600,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	    }, function() {
 		});
 	  };
-	  
-	  
-	  
 } ]);
 
 app.controller('buscarPorProyecto', [ '$uibModalInstance',
@@ -687,3 +741,58 @@ app.directive('rightClick', function($parse) {
         });
     };
 });
+
+app.controller('cargararchivoController', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log','$q', cargararchivoController ]);
+
+function cargararchivoController($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log,$q) {
+
+	var mi = this;
+	mi.mostrar = true;
+	mi.nombreArchivo="";
+	mi.mostrarcargando=false;
+	
+	$scope.cargarArchivo = function(event){
+		var resultado = $q.defer();
+	     mi.archivos = event.files[0];      
+	     mi.nombreArchivo = mi.archivos.name;
+	     resultado.resolve(event.files[0]);
+	     document.getElementById("nombreArchivo").value = mi.nombreArchivo;
+	     return resultado.promise;
+	};
+
+	mi.ok = function() {
+		if (mi.nombreArchivo != '') {
+			mi.cargar();
+		} else {
+			$utilidades.mensaje('warning', 'Debe seleccionar un archivo');
+		}
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+	
+	mi.cargar=function(){
+		if (mi.archivos!=null && mi.arhivos != ''){
+			mi.mostrarcargando=true;
+			var formatData = new FormData();
+			formatData.append("file",mi.archivos);  
+			formatData.append("accion",'importar');
+			$http.post('/SGantt',formatData, {
+					headers: {'Content-Type': undefined},
+					transformRequest: angular.identity
+				 } ).then(
+			
+				function(response) {
+					mi.mostrarcargando=false;
+					$uibModalInstance.close(response);
+				}
+			);
+		}else{
+			$utilidades.mensaje('danger','Debe seleccionar un archivo');
+		}
+	};
+}

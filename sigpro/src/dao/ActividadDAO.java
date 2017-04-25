@@ -185,7 +185,9 @@ public class ActividadDAO {
 			Query<Actividad> criteria = session.createQuery(query,Actividad.class);
 			criteria.setParameter("objetoId", objetoId);
 			criteria.setParameter("objetoTipo", objetoTipo);
-			criteria.setParameter("usuario", usuario);
+			if (usuario!=null){
+				criteria.setParameter("usuario", usuario);
+			}
 			criteria.setFirstResult(((pagina-1)*(numeroActividads)));
 			criteria.setMaxResults(numeroActividads);
 			ret = criteria.getResultList();

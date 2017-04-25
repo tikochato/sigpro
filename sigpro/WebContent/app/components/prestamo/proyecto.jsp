@@ -20,20 +20,26 @@
     </script>
 
 	<script type="text/ng-template" id="buscarPorProyecto.jsp">
-    		<%@ include file="/app/components/proyecto/buscarPorProyecto.jsp"%>
+    		<%@ include file="/app/components/prestamo/buscarPorProyecto.jsp"%>
+  	 </script>
+  	 <script type="text/ng-template" id="cargarArchivo.jsp">
+    		<%@ include file="/app/components/prestamo/cargarArchivo.jsp"%>
   	 </script>
 	<shiro:lacksPermission name="24010">
 		<p ng-init="controller.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
 	
 	<div class="panel panel-default">
-	  <div class="panel-heading"><h3>Proyectos</h3></div>
+	  <div class="panel-heading"><h3>Préstamos</h3></div>
 	</div>
 	
 	<div class="row" align="center" ng-hide="controller.esColapsado">
 		<br>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
+			<shiro:hasPermission name="24040">
+				<label class="btn btn-primary" ng-click="controller.cargarArchivo()">Desde archivo</label>
+			</shiro:hasPermission>
 			<shiro:hasPermission name="24040">
 				<label class="btn btn-primary" ng-click="controller.nuevo()" title="Nuevo">
 				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
@@ -48,11 +54,11 @@
 			</shiro:hasPermission>
 			</div>
 			<div class="btn-group" role="group" aria-label="">
-				<shiro:hasPermission name="24010">
-					<a class="btn btn-default" href ng-click="controller.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
-				</shiro:hasPermission>
-			</div>
-		</div>
+					<shiro:hasPermission name="24010">
+						<a class="btn btn-default" href ng-click="controller.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
+					</shiro:hasPermission>
+					</div>
+				</div>
 		<shiro:hasPermission name="24010">
 		<div class="col-sm-12" align="center">
 			<br/>
@@ -68,7 +74,7 @@
 				  </div>
 			</div>
 			<br/>
-			<div class="total-rows">Total de {{  controller.totalProyectos + (controller.totalProyectos == 1 ? " Proyecto" : " Proyectos" ) }}</div>
+			<div class="total-rows">Total de {{  controller.totalProyectos + (controller.totalProyectos == 1 ? " Préstamo" : " Préstamos" ) }}</div>
 				<ul uib-pagination total-items="controller.totalProyectos"
 						ng-model="controller.paginaActual"
 						max-size="controller.numeroMaximoPaginas"
@@ -88,9 +94,9 @@
 	</div>
 	<div class="row second-main-form" ng-show="controller.esColapsado">
 		<div class="page-header">
-			<h1 ng-hide="!controller.esNuevo"><small>Nuevo Proyecto</small></h1>
-			<h1 ng-hide="controller.esNuevo"><small>Edición de proyecto</small></h1>
-		</div>
+			<h1 ng-hide="!controller.esNuevo"><small>Nuevo Préstamo</small></h1>
+			<h1 ng-hide="controller.esNuevo"><small>Edición de Préstamo</small></h1>
+			</div>
 		<div class="operation_buttons">
 			<div class="btn-group" ng-hide="controller.esNuevo">
 				<label class="btn btn-default" ng-click="controller.irAComponentes(controller.proyecto.id)" title="Componentes">
@@ -105,7 +111,13 @@
 				<span class="glyphicon glyphicon glyphicon-indent-left"></span> Gantt</label>
 				<label class="btn btn-default" ng-click="controller.irAActividades(controller.proyecto.id)" title="Actividades">
 				<span class="glyphicon glyphicon-th-list"></span> Actividades</label>
-			</div>
+				<label class="btn btn-default" ng-click="controller.irAMapa(controller.proyecto.id)">Mapa</label>
+				<label class="btn btn-default" ng-click="controller.irAGantt(controller.proyecto.id)">Gantt</label>
+				<label class="btn btn-default" ng-click="controller.irAKanban(controller.proyecto.id)">Kanban</label>
+				<label class="btn btn-default" ng-click="controller.irAAgenda(controller.proyecto.id)">Agenda</label>
+				<label class="btn btn-default" ng-click="controller.irAMatrizRiesgos(controller.proyecto.id)">Matriz de Riesgos</label>
+			
+		</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">
 					<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid" title="Guardar">
@@ -161,9 +173,9 @@
 					</div>
 				</div>
 				<div class="form-group" >
-					<label for="campo3">* Tipo Proyecto</label>
+					<label for="campo3">* Tipo Préstamo</label>
 		          	<div class="input-group">
-		            	<input type="text" class="form-control" id="iproyt" name="iproyt" placeholder="Nombre Tipo Proyecto" ng-model="controller.proyectotiponombre" ng-readonly="true" ng-required="true"/>
+		            	<input type="text" class="form-control" id="iproyt" name="iproyt" placeholder="Nombre Tipo Préstamo" ng-model="controller.proyectotiponombre" ng-readonly="true" ng-required="true"/>
 		            	<span class="input-group-addon" ng-click="controller.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 		          	</div>
 				</div>
@@ -270,4 +282,5 @@
 			</div>
 		</div>
 	</div>
+
 </div>

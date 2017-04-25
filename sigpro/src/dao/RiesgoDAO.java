@@ -10,6 +10,8 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojo.ObjetoRiesgo;
+import pojo.ObjetoRiesgoId;
 import pojo.Riesgo;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -57,12 +59,17 @@ public class RiesgoDAO {
 		return ret;
 	}
 	
-	public static boolean guardarRiesgo(Riesgo riesgo){
+	public static boolean guardarRiesgo(Riesgo riesgo,Integer objetoId, Integer objetoTipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
 			session.saveOrUpdate(riesgo);
+			//objeto
+			ObjetoRiesgoId objetoRiesgoId = new ObjetoRiesgoId(riesgo.getId(), objetoId, objetoTipo);
+			ObjetoRiesgo objetoRiesgo = new ObjetoRiesgo(objetoRiesgoId, riesgo, riesgo.getUsuarioCreo(), 
+					riesgo.getUsuarioActualizo(), riesgo.getFechaCreacion(), riesgo.getFechaActualizacion());
+			session.saveOrUpdate(objetoRiesgo);
 			session.getTransaction().commit();
 			ret = true;
 		}
@@ -241,5 +248,66 @@ public class RiesgoDAO {
 			session.close();
 		}
 		return ret;
+	}
+	
+	public static List<Riesgo> getMatrizRiesgo (int proyectoId){
+		List<Riesgo> ret = new ArrayList<Riesgo>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select r.* from riesgo r join objeto_riesgo obr on obr.riesgoid = r.id",
+				"where r.estado = 1 and obr.objeto_id = :idP and obr.objeto_tipo = 1 UNION",
+				"select r.* from riesgo r join objeto_riesgo obr on obr.riesgoid = r.id where r.estado = 1 and obr.objeto_tipo = 2 and obr.objeto_id in (",
+				"select c.id from proyecto p join componente c on c.proyectoid = p.id where c.estado  = 1 and p.id = :idP ) UNION",
+				"select r.* from riesgo r join objeto_riesgo obr on obr.riesgoid = r.id where r.estado = 1 and obr.objeto_tipo = 3 and obr.objeto_id in (",
+				"select pr.id from proyecto p join componente c on c.proyectoid = p.id join producto pr ON pr.componenteid = c.id where c.estado  = 1 and pr.estado =1 and pr.estado = 1 and p.id = :idP) UNION",
+				"select r.* from riesgo r join objeto_riesgo obr on obr.riesgoid = r.id where r.estado = 1 and obr.objeto_tipo = 4 and obr.objeto_id in  (",
+				"select spr.id from proyecto p join componente c on c.proyectoid = p.id join producto pr ON pr.componenteid = c.id join subproducto spr ON spr.productoid = pr.id where c.estado  = 1 and pr.estado = 1 and spr.estado = 1 and p.id = :idP ) UNION",					
+				"select r.* from riesgo r join objeto_riesgo obr on obr.riesgoid = r.id where r.estado = 1 and obr.objeto_tipo = 5 and obr.objeto_id in   (",
+				"select a.id from actividad a where a.estado = 1 and a.objeto_id = :idP and a.objeto_tipo = 1) UNION",
+				"select r.* from riesgo r join objeto_riesgo obr on obr.riesgoid = r.id where r.estado = 1 and obr.objeto_tipo = 5 and obr.objeto_id in (",
+				"select a.id from actividad a where a.estado = 1 and a.objeto_id = :idP and a.objeto_tipo = 1 UNION",
+				"select a.id from actividad a where a.estado = 1 and a.objeto_tipo = 2 and a.objeto_id in (",
+				"select c.id from proyecto p join componente c on c.proyectoid = p.id where c.estado  = 1 and p.id = :idP ) UNION",
+				"select a.id from actividad a where a.estado = 1 and a.objeto_tipo = 3 and a.objeto_id in (",
+				"select pr.id from proyecto p join componente c on c.proyectoid = p.id join producto pr ON pr.componenteid = c.id where c.estado  = 1 and pr.estado =1 and pr.estado = 1 and p.id = :idP )UNION",
+				"select a.id from actividad a where a.estado = 1 and a.objeto_tipo = 4 and a.objeto_id in (",
+				"select spr.id from proyecto p join componente c on c.proyectoid = p.id join producto pr ON pr.componenteid = c.id join subproducto spr ON spr.productoid = pr.id where c.estado  = 1 and pr.estado = 1 and spr.estado = 1 and pr.estado =1 and pr.estado = 1 and p.id = :idP )) ");
+			Query<Riesgo> criteria = session.createNativeQuery(query,Riesgo.class);
+			criteria.setParameter("idP", proyectoId);
+			
+			
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("10", RiesgoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static ObjetoRiesgo getObjetoRiesgo (int idRiesgo){
+		ObjetoRiesgo ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String .join(" ", "select o.* ",
+							"from riesgo r",
+							"join objeto_riesgo o on o.riesgoid = r.id",
+							"where r.estado = 1",
+							"and r.id = :objid",
+							"order by o.fecha_creacion desc limit 1 ");
+			Query<ObjetoRiesgo> criteria = session.createNativeQuery(query,ObjetoRiesgo.class);
+			criteria.setParameter("objid", idRiesgo);
+			
+			ret = criteria.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("11", RiesgoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;	
 	}
 }
