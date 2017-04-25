@@ -42,7 +42,6 @@ import utilities.Utils;
 public class SProducto extends HttpServlet {
 	
 	private static final long serialVersionUID = 1457438583225714402L;
-	String usuario ="";
 	
 	static class stproducto {
 		Integer id;
@@ -102,7 +101,7 @@ public class SProducto extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		Map<String, String> parametro = Utils.getParams(request);
 		HttpSession sesionweb = request.getSession();
-		usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
+		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		String accion = parametro.get("accion");
 		String response_text="";
 
