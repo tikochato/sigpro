@@ -14,7 +14,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
         ['<span class="glyphicon glyphicon-pencil"> Editar', function ($itemScope, $event, modelValue, text, $li) {
       	  mi.editar();
         }],
-        ['<span class="glyphicon glyphicon-trash"> Borrar', function ($itemScope, $li) {
+        null,
+        ['<span class="glyphicon glyphicon-trash text-danger"><font style="color: black;"> Borrar</font>', function ($itemScope, $li) {
       	  mi.borrar();
         }]
     ];
@@ -24,10 +25,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
         mi.gridApi.selection.selectRow(mi.gridOpciones.data[filaId]);
     };
     
-	mi.saluda = function(){
-		console.log("hola");
-	}
-
 	mi.proyecto = null;
 	mi.esNuevo = false;
 	mi.campos = {};

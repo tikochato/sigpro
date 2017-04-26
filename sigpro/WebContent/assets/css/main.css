@@ -134,6 +134,7 @@ nav.navbar{
 	bottom: 0px;
 	width: 100%;
 	display: flex;
+	border-top: 1px solid #ddd;
 }
 
 .context-menu{
