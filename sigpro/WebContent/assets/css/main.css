@@ -134,6 +134,7 @@ nav.navbar{
 	bottom: 0px;
 	width: 100%;
 	display: flex;
+	border-top: 1px solid #ddd;
 }
 
 .context-menu{
@@ -175,6 +176,11 @@ nav.navbar{
 
 .main-form{
 	width: 80%;
+	margin: auto;
+}
+
+.second-main-form{
+	width: 90%;
 	margin: auto;
 }
 

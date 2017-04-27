@@ -20,41 +20,51 @@
     </script>
 
 	<script type="text/ng-template" id="buscarPorProyecto.jsp">
-    	<%@ include file="/app/components/prestamo/buscarPorProyecto.jsp"%>
-  	</script>
+    		<%@ include file="/app/components/prestamo/buscarPorProyecto.jsp"%>
+  	 </script>
+  	 <script type="text/ng-template" id="cargarArchivo.jsp">
+    		<%@ include file="/app/components/prestamo/cargarArchivo.jsp"%>
+  	 </script>
 	<shiro:lacksPermission name="24010">
 		<p ng-init="controller.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
+	
+	<div class="panel panel-default">
+	  <div class="panel-heading">
 	<h3>Préstamos</h3>
-	<br />
+	  </div>
+	</div>
+	
 	<div class="row" align="center" ng-hide="controller.esColapsado">
+		<br>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 			<shiro:hasPermission name="24040">
-				<label class="btn btn-primary" ng-click="controller.cargarArchivo()">Desde archivo</label>
+				<label class="btn btn-primary" ng-click="controller.nuevo()" title="Nuevo">
+				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24040">
-				<label class="btn btn-primary" ng-click="controller.nuevo()">Nuevo</label>
+				<label class="btn btn-primary" ng-click="controller.cargarArchivo()" uib-tooltip="Cargar desde archivo">   
+				<span class="glyphicon glyphicon glyphicon-file"></span> Desde archivo</label>
 			</shiro:hasPermission>
-			<shiro:hasPermission name="24010">
-				<label class="btn btn-primary" ng-click="controller.editar()">Editar</label>
+			<shiro:hasPermission name="24040">
+				<label class="btn btn-primary" ng-click="controller.editar()" title="Editar">
+				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			</shiro:hasPermission>
-			<shiro:hasPermission name="24030">
-				<label class="btn btn-primary" ng-click="controller.borrar()">Borrar</label>
+			<shiro:hasPermission name="24040">
+				<label class="btn btn-danger" ng-click="controller.borrar()" title="Borrar">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</shiro:hasPermission>
 			</div>
-		</div>
-		<shiro:hasPermission name="24010">
-		<div class="col-sm-12" align="center">
-			<div style="height: 35px;">
-				<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
+			<div class="btn-group" role="group" aria-label="">
 					<shiro:hasPermission name="24010">
 						<a class="btn btn-default" href ng-click="controller.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
 					</shiro:hasPermission>
 
 					</div>
 				</div>
-			</div>
+		<shiro:hasPermission name="24010">
+		<div class="col-sm-12" align="center">
 			<br/>
 			<div id="grid1" ui-grid="controller.gridOpciones" ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination
 				ui-grid-pagination>
@@ -85,141 +95,198 @@
 		</shiro:hasPermission>
 
 	</div>
-	<div class="row main-form" ng-show="controller.esColapsado">
-		<h4 ng-hide="!controller.esNuevo">Nuevo Préstamo</h4>
-		<h4 ng-hide="controller.esNuevo">Edición de Préstamo</h4>
-		<div class="operation_buttons" align="left" ng-hide="controller.esNuevo">
-			<div class="btn-group">
-				<label class="btn btn-default" ng-click="controller.irAComponentes(controller.proyecto.id)">Componentes</label>
-				<label class="btn btn-default" ng-click="controller.irAHitos(controller.proyecto.id)" >Hitos</label>
-				<label class="btn btn-default" ng-click="controller.irADesembolsos(controller.proyecto.id)">Desembolsos</label>
-				<label class="btn btn-default" ng-click="controller.irARiesgos(controller.proyecto.id)">Riesgos</label>
-				<label class="btn btn-default" ng-click="controller.irAActividades(controller.proyecto.id)">Actividades</label>
-				<label class="btn btn-default" ng-click="controller.irAMapa(controller.proyecto.id)">Mapa</label>
-				<label class="btn btn-default" ng-click="controller.irAGantt(controller.proyecto.id)">Gantt</label>
-				<label class="btn btn-default" ng-click="controller.irAKanban(controller.proyecto.id)">Kanban</label>
-				<label class="btn btn-default" ng-click="controller.irAAgenda(controller.proyecto.id)">Agenda</label>
-				<label class="btn btn-default" ng-click="controller.irAMatrizRiesgos(controller.proyecto.id)">Matriz de Riesgos</label>
+	<div class="row second-main-form" ng-show="controller.esColapsado">
+		<div class="page-header">
+			<h1 ng-hide="!controller.esNuevo"><small>Nuevo Préstamo</small></h1>
+			<h1 ng-hide="controller.esNuevo"><small>Edición de Préstamo</small></h1>
 			</div>
+		<div class="operation_buttons">
+			<div class="btn-group" ng-hide="controller.esNuevo">
+				<label class="btn btn-default" ng-click="controller.irAComponentes(controller.proyecto.id)" title="Componentes">
+				<span class="glyphicon glyphicon-th"></span></label>
+				<label class="btn btn-default" ng-click="controller.irAHitos(controller.proyecto.id)" title="Hitos">
+				<span class="glyphicon glyphicon-screenshot"></span></label>
+				<label class="btn btn-default" ng-click="controller.irADesembolsos(controller.proyecto.id)" title="Desembolsos">
+				<span class="glyphicon glyphicon-usd"></span></label>
+				<label class="btn btn-default" ng-click="controller.irARiesgos(controller.proyecto.id)" title="Riesgos">
+				<span class="glyphicon glyphicon-warning-sign"></span></label>
+				<label class="btn btn-default" ng-click="controller.irAActividades(controller.proyecto.id)" title="Actividades">
+				<span class="glyphicon glyphicon-th-list"></span></label>
+				<label class="btn btn-default" ng-click="controller.irAMapa(controller.proyecto.id)" title="Mapa">
+				<span class="glyphicon glyphicon-globe"></span></label>
+				<label class="btn btn-default" ng-click="controller.irAGantt(controller.proyecto.id)" title="Gantt">
+				<span class="glyphicon glyphicon-indent-left"></span></label>
+				<label class="btn btn-default" ng-click="controller.irAKanban(controller.proyecto.id)" title="Kanban">
+				<span class="glyphicon glyphicon-blackboard"></span></label>
+				<label class="btn btn-default" ng-click="controller.irAAgenda(controller.proyecto.id)" title="Agenda">
+				<span class="glyphicon glyphicon-calendar"></span></label>
+				<label class="btn btn-default" ng-click="controller.irAMatrizRiesgos(controller.proyecto.id)" title="Matriz de Riesgos">
+				<span class="glyphicon glyphicon-list-alt"></span></label>
+			
 		</div>
-
-		<div class="col-sm-12 operation_buttons" align="right">
-			<div class="btn-group">
+			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">
-					<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid">Guardar</label>
+					<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid" title="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="controller.irATabla()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="controller.irATabla()" title="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
+		<br>
 		<div class="col-sm-12">
 			<form name="form">
 				<div class="form-group">
-					<label for="id">ID</label>
-  					<p class="form-control-static">{{ controller.proyecto.id }}</p>
+					<md-input-container flex class="md-required md-block">
+						<label for="id">ID {{ controller.proyecto.id }}</label>
+						<input type="text" disabled >
+					</md-input-container>
 				</div>
 				<div class="form-group">
-					<label for="inombre">* Nombre</label>
-					<input type="text" name="inombre" id="inombre" ng-model="controller.proyecto.nombre"
-						class="form-control" placeholder="Nombre" ng-required="true" >
+					<md-input-container flex class="md-required md-block">
+						<label for="inombre">Nombre</label>
+						<input type="text" name="inombre" id="inombre" ng-model="controller.proyecto.nombre" ng-required="true" >
+					</md-input-container>
 				</div>
 
 				<div class="form-group"  >
+					<md-input-container flex class="md-block">
 					<label for="isnip">SNIP</label>
-					<input type="number" name="isnip" id="isnip"  ng-model="controller.proyecto.snip"
-						class="form-control" placeholder="SNIP">
+						<input type="number" name="isnip" id="isnip"  ng-model="controller.proyecto.snip">
+					</md-input-container>
 				</div>
 				
 				<div class="form-group row" >
 					<div class="form-group col-sm-2" >
+						<md-input-container flex>
 					       <label for="iprog">Programa</label>
-					       <input type="number" class="form-control" placeholder="Programa" ng-model="controller.proyecto.programa" ng-maxlength="4" style="text-align: center"/>
+							<input type="number" ng-model="controller.proyecto.programa" ng-maxlength="4" style="text-align: center"/>
+						</md-input-container>
 					</div>
 					<div class="form-group col-sm-2" >
-					  <label for="isubprog">Subprograma</label>
-					  <input type="number" class="form-control" placeholder="Subprograma" ng-model="controller.proyecto.subprograma" ng-maxlength="4" style="text-align: center"/>
+						<md-input-container flex>
+							<label for="isubprog">Subprograma</label>
+							<input type="number" ng-model="controller.proyecto.subprograma" ng-maxlength="4" style="text-align: center"/>
+						</md-input-container>
 					</div>
 					<div class="form-group col-sm-2" >
-					  <label for="iproy_">Proyecto</label>
-					  <input type="number" class="form-control" placeholder="Proyecto" ng-model="controller.proyecto.proyecto" ng-maxlength="4" style="text-align: center"/>
+						<md-input-container flex>
+							<label for="iproy_">Proyecto</label>
+							<input type="number" ng-model="controller.proyecto.proyecto" ng-maxlength="4" style="text-align: center"/>
+						</md-input-container>
 					</div>
 					<div class="form-group col-sm-2" >
-					  <label for="iobra">Actividad</label>
-					  <input type="number" class="form-control" placeholder="Actividad" ng-model="controller.proyecto.actividad" ng-maxlength="4" style="text-align: center"/>
+						<md-input-container flex>
+							<label for="iobra">Actividad</label>
+							<input type="number" ng-model="controller.proyecto.actividad" ng-maxlength="4" style="text-align: center"/>
+						</md-input-container>
 					</div>
 					<div class="form-group col-sm-2" >
-					  <label for="iobra">Obra</label>
-					  <input type="number" class="form-control" placeholder="Obra" ng-model="controller.proyecto.obra" ng-maxlength="4" style="text-align: center"/>
+						<md-input-container flex>
+							<label for="iobra">Obra</label>
+							<input type="number" ng-model="controller.proyecto.obra" ng-maxlength="4" style="text-align: center"/>
+						</md-input-container>
 					</div>
 					<div class="form-group col-sm-2" >
-					  <label for="campo5">Fuente</label>
-					  <input type="number" class="form-control" placeholder="Fuente" ng-model="controller.proyecto.fuente" ng-maxlength="4" style="text-align: center"/>
+						<md-input-container flex>
+							<label for="campo5">Fuente</label>
+							<input type="number" ng-model="controller.proyecto.fuente" ng-maxlength="4" style="text-align: center"/>
+						</md-input-container>
 					</div>
 				</div>
 				<div class="form-group" >
-					<label for="campo3">* Tipo Préstamo</label>
-		          	<div class="input-group">
-		            	<input type="text" class="form-control" id="iproyt" name="iproyt" placeholder="Nombre Tipo Préstamo" ng-model="controller.proyectotiponombre" ng-readonly="true" ng-required="true"/>
-		            	<span class="input-group-addon" ng-click="controller.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>
-		          	</div>
+					<md-input-container flex class="md-required md-block">
+						<label for="campo3">Tipo Préstamo</label>
+			            	<input type="text" id="iproyt" name="iproyt" ng-model="controller.proyectotiponombre" ng-readonly="true" ng-required="true" ng-click="controller.buscarProyectoTipo()"/>
+			            	<md-icon style="display:inline-block;" ng-click="controller.buscarProyectoTipo()"><span><i class="glyphicon glyphicon-search"></i></span></md-icon>
+			        </md-input-container>
 				</div>
 
 				<div class="form-group" ng-repeat="campo in controller.camposdinamicos">
-					<label for="campo.id">{{ campo.label }}</label>
-					<div ng-switch="campo.tipo">
-						<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
-						<input ng-switch-when="entero" type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}"  />
-						<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
-						<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
-						<p ng-switch-when="fecha" class="input-group">
-							<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-												datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"/>
-												<span class="input-group-btn">
-													<button type="button" class="btn btn-default"
-														ng-click="controller.abrirPopupFecha($index)">
-														<i class="glyphicon glyphicon-calendar"></i>
-													</button>
-												</span>
-						</p>
-						<select ng-switch-when="select" id="{{ 'campo_'+campo.id }}" class="form-control" ng-model="campo.valor">
-											<option value="">Seleccione una opción</option>
-											<option ng-repeat="number in campo.opciones"
-												value="{{number.valor}}">{{number.label}}</option>
-						</select>
-					</div>
-				</div>
+						<div ng-switch="campo.tipo">
+							<div ng-switch-when="texto">
+								<md-input-container flex class="md-block">
+							<label for="campo.id">{{ campo.label }}</label>
+									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+								</md-input-container>
+							</div>
+							<div ng-switch-when="entero">
+								<md-input-container flex class="md-block">
+									<label for="campo.id">{{ campo.label }}</label>
+									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" />
+								</md-input-container>
+							</div>
+							<div ng-switch-when="decimal">
+								<md-input-container flex class="md-block">
+									<label for="campo.id">{{ campo.label }}</label>
+									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+								</md-input-container>
+							</div>
+							<div ng-switch-when="booleano">
+								<md-input-container flex class="md-block">
+									<md-checkbox id="{{ 'campo_'+campo.id }}" ng-model="campo.valor"> {{ campo.label }} </md-checkbox>
+								</md-input-container>
+							</div>
+							<div ng-switch-when="fecha">
+								<md-input-container flex class="md-block">
+									<label for="campo.id">{{ campo.label }}</label>
+									<input type="text" id="{{ 'campo_'+campo.id }}" uib-datepicker-popup="{{controller.formatofecha}}" 
+											ng-model="campo.valor" is-open="campo.isOpen" datepicker-options="controller.fechaOptions" 
+											close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-readonly="true" ng-click="controller.abrirPopupFecha($index)" />
+					            	<md-icon style="display:inline-block;" ng-click="controller.abrirPopupFecha($index)">
+					            		<span><i class="glyphicon glyphicon-calendar"></i></span>
+					            	</md-icon>
+				            	</md-input-container>
+							</div>
+							<div ng-switch-when="select">
+								<md-input-container flex class="md-block">
+									<label for="campo.id">{{ campo.label }}</label>
+									<select nid="{{ 'campo_'+campo.id }}" ng-model="campo.valor">
+													<option value="">Seleccione una opción</option>
+													<option ng-repeat="number in campo.opciones"
+														value="{{number.valor}}">{{number.label}}</option>
+								</select>
+								</md-input-container>
+							</div>
+							</div>
+						</div>
 
 				<div class="form-group">
-					<label for="campo3">* Unidad Ejecutora</label>
-		          	<div class="input-group">
-		            	<input type="text" class="form-control" id="iunie" name="iunie" placeholder="Nombre Unidad Ejecutora" ng-model="controller.unidadejecutoranombre" ng-readonly="true" ng-required="true"/>
-		            	<span class="input-group-addon" ng-click="controller.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
-		          	</div>
+					<md-input-container flex class="md-required md-block">
+						<label for="campo3">Unidad Ejecutora</label>
+			            	<input type="text" id="iunie" name="iunie" ng-model="controller.unidadejecutoranombre" ng-readonly="true" 
+			            		ng-required="true" ng-click="controller.buscarUnidadEjecutora()"/>
+			            	<md-icon style="display:inline-block;" ng-click="controller.buscarUnidadEjecutora()">
+			            		<span><i class="glyphicon glyphicon-search"></i></span>
+			            	</md-icon>
+			        </md-input-container>
 				</div>
 
 				<div class="form-group" >
-					<label for="campo3">* Cooperante</label>
-		          	<div class="input-group">
+					<md-input-container flex class="md-required md-block">
+						<label for="campo3">Cooperante</label>
 		            	<input type="hidden" class="form-control" ng-model="controller.cooperanteid" />
-		            	<input type="text" class="form-control" id="icoope" name="icoope" placeholder="Nombre Cooperante" ng-model="controller.cooperantenombre" ng-readonly="true" ng-required="true"/>
-		            	<span class="input-group-addon" ng-click="controller.buscarCooperante()"><i class="glyphicon glyphicon-search"></i></span>
-		          	</div>
+			            	<input type="text" id="icoope" name="icoope" ng-model="controller.cooperantenombre" ng-readonly="true" ng-required="true" ng-click="controller.buscarCooperante()"/>
+			            	<md-icon style="display:inline-block;" ng-click="controller.buscarCooperante()"><span><i class="glyphicon glyphicon-search"></i></span></md-icon>
+			        </md-input-container>
 				</div>
 				
 				<div class="form-group">
+					<md-input-container class="md-block">
 							<label >Coordenadas</label>
-				          	<div class="input-group">
-				            	<input type="text" class="form-control" placeholder="Latitud, Longitud" ng-model="controller.coordenadas" ng-readonly="true" />
-				            	<span class="input-group-addon" ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
-				          	</div>
+			            	<input type="text" placeholder="Latitud, Longitud"  ng-model="controller.coordenadas" ng-readonly="true" ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "/>
+			            	<md-icon style="display:inline-block;" ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "><span><i class="glyphicon glyphicon-map-marker"></i></span></md-icon>
+			        </md-input-container>
 				</div>
 
 				<div class="form-group">
+					<md-input-container class="md-block">
 					<label for="campo2">Descripción</label>
-					<input type="text" ng-model="controller.proyecto.descripcion"
-						class="form-control" id="campo2" placeholder="Descripción">
+						<input type="text" name="campo2" id="campo2" ng-model="controller.proyecto.descripcion" >
+					</md-input-container>
 				</div>
 				<br/>
-				
+
 				<div class="panel panel-default" ng-hide="controller.esNuevoDocumento">
 					<div class="panel-heading" style="text-align: center;">Archivos adjuntos</div>
 					<div class="panel-body">
@@ -311,9 +378,11 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="24020">
-					<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid">Guardar</label>
+					<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid" title="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="controller.irATabla()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="controller.irATabla()" title="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 	</div>

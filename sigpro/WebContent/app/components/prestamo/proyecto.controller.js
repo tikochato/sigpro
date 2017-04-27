@@ -1,4 +1,4 @@
-var app = angular.module('proyectoController', [ 'ngTouch','smart-table' ]);
+var app = angular.module('proyectoController', [ 'ngTouch','smart-table',  'ui.bootstrap.contextMenu']);
 
 app.controller('proyectoController',['$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$filter',
 	function($scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$filter) {
@@ -8,6 +8,23 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	$window.document.title = $utilidades.sistema_nombre+' - Préstamos';
 
+	var filaSeleccionada = 0;
+		
+	mi.menuOptions = [
+        ['<span class="glyphicon glyphicon-pencil"> Editar', function ($itemScope, $event, modelValue, text, $li) {
+      	  mi.editar();
+        }],
+        null,
+        ['<span class="glyphicon glyphicon-trash text-danger"><font style="color: black;"> Borrar</font>', function ($itemScope, $li) {
+      	  mi.borrar();
+        }]
+    ];
+	
+	mi.contextMenu = function (event) {
+        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+        mi.gridApi.selection.selectRow(mi.gridOpciones.data[filaId]);
+    };
+    
 	mi.rowCollection = [];
 	mi.proyecto = null;
 	mi.esNuevo = false;
@@ -44,7 +61,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			minDate : new Date(1990, 1, 1),
 			startingDay : 1
 	};
-	
+
 	mi.gridOpciones = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -56,6 +73,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	    paginationPageSize: $utilidades.elementosPorPagina,
 	    useExternalFiltering: true,
 	    useExternalSorting: true,
+	    rowTemplate: '<div context-menu="grid.appScope.controller.menuOptions" right-click="grid.appScope.controller.contextMenu($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 		columnDefs : [
 			{ name: 'id', width: 60, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left',
@@ -169,7 +187,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					}else
 						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
 			});
-			
+
 			mi.esNuevoDocumento = false;
 		}else
 			$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
@@ -237,7 +255,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.esNuevo = false;
 			mi.coordenadas = (mi.proyecto.latitud !=null ?  mi.proyecto.latitud : '') +
 			(mi.proyecto.latitud!=null ? ', ' : '') + (mi.proyecto.longitud!=null ? mi.proyecto.longitud : '');
-			
+
 			var parametros = {
 					accion: 'getProyectoPropiedadPorTipo',
 					idProyecto: mi.proyecto!=''?mi.proyecto.id:0,
@@ -263,13 +281,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					}
 				}
 			});
-			
+
 			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea editar');
 	}
-	
+
 	mi.adjuntarDocumentos = function(){
 		$documentoAdjunto.getModalDocumento($scope, 1, mi.proyecto.id)
 		.result.then(function(data) {
@@ -384,11 +402,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			$location.path('/hito/'+ proyectoid );
 		}
 	};
+
 	mi.irAActividades=function(proyectoid){
 		if(mi.proyecto!=null){
 			$location.path('/actividad/'+ proyectoid +'/1' );
 		}
 	};
+
 	mi.irAGantt=function(proyectoid){
 		if(mi.proyecto!=null){
 			$location.path('/gantt/'+ proyectoid );
@@ -756,3 +776,70 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 		  $uibModalInstance.close($scope.posicion);
 	  };
 }]);
+
+app.directive('rightClick', function($parse) {
+    return function(scope, element, attrs) {
+        var fn = $parse(attrs.rightClick);
+        element.bind('contextmenu', function(event) {
+            scope.$apply(function() {
+                event.preventDefault();
+                fn(scope, {$event:event});
+            });
+        });
+    };
+});
+
+app.controller('cargararchivoController', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log','$q', cargararchivoController ]);
+
+function cargararchivoController($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log,$q) {
+
+	var mi = this;
+	mi.mostrar = true;
+	mi.nombreArchivo="";
+	mi.mostrarcargando=false;
+	
+	$scope.cargarArchivo = function(event){
+		var resultado = $q.defer();
+	     mi.archivos = event.files[0];      
+	     mi.nombreArchivo = mi.archivos.name;
+	     resultado.resolve(event.files[0]);
+	     document.getElementById("nombreArchivo").value = mi.nombreArchivo;
+	     return resultado.promise;
+	};
+
+	mi.ok = function() {
+		if (mi.nombreArchivo != '') {
+			mi.cargar();
+		} else {
+			$utilidades.mensaje('warning', 'Debe seleccionar un archivo');
+		}
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+	
+	mi.cargar=function(){
+		if (mi.archivos!=null && mi.arhivos != ''){
+			mi.mostrarcargando=true;
+			var formatData = new FormData();
+			formatData.append("file",mi.archivos);  
+			formatData.append("accion",'importar');
+			$http.post('/SGantt',formatData, {
+					headers: {'Content-Type': undefined},
+					transformRequest: angular.identity
+				 } ).then(
+			
+				function(response) {
+					mi.mostrarcargando=false;
+					$uibModalInstance.close(response);
+				}
+			);
+		}else{
+			$utilidades.mensaje('danger','Debe seleccionar un archivo');
+		}
+	};
+}
