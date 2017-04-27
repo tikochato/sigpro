@@ -1,15 +1,17 @@
-var app = angular.module('proyectoController', [ 'ngTouch' ]);
+var app = angular.module('proyectoController', [ 'ngTouch','smart-table' ]);
 
-app.controller('proyectoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
+app.controller('proyectoController',['$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$filter',
+	function($scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$filter) {
 
 	var mi = this;
 	i18nService.setCurrentLang('es');
 
 	$window.document.title = $utilidades.sistema_nombre+' - Préstamos';
 
+	mi.rowCollection = [];
 	mi.proyecto = null;
 	mi.esNuevo = false;
+	mi.esNuevoDocumento = true;
 	mi.campos = {};
 	mi.esColapsado = false;
 	mi.mostrarcargando=true;
@@ -34,7 +36,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.filtros = [];
 	mi.orden = null;
 
-
 	mi.coordenadas = "";
 
 	mi.fechaOptions = {
@@ -43,7 +44,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			minDate : new Date(1990, 1, 1),
 			startingDay : 1
 	};
-
+	
 	mi.gridOpciones = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -168,7 +169,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					}else
 						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
 			});
-
+			
+			mi.esNuevoDocumento = false;
 		}else
 			$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
 	 }
@@ -207,6 +209,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	};
 
 	mi.nuevo = function (){
+		mi.esNuevoDocumento = true;
 		mi.poryectotipoid = "";
 		mi.proyectotiponombre="";
 		mi.unidadejecutoraid="";
@@ -223,6 +226,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.editar = function() {
 		if(mi.proyecto!=null && mi.proyecto.id!=null){
+			mi.esNuevoDocumento = false;
 			mi.poryectotipoid = mi.proyecto.proyectotipoid;
 			mi.proyectotiponombre=mi.proyecto.proyectotipo;
 			mi.unidadejecutoraid=mi.proyecto.unidadejecutoraid;
@@ -233,8 +237,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.esNuevo = false;
 			mi.coordenadas = (mi.proyecto.latitud !=null ?  mi.proyecto.latitud : '') +
 			(mi.proyecto.latitud!=null ? ', ' : '') + (mi.proyecto.longitud!=null ? mi.proyecto.longitud : '');
-
-
+			
 			var parametros = {
 					accion: 'getProyectoPropiedadPorTipo',
 					idProyecto: mi.proyecto!=''?mi.proyecto.id:0,
@@ -260,11 +263,57 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					}
 				}
 			});
-
+			
+			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea editar');
 	}
+	
+	mi.adjuntarDocumentos = function(){
+		$documentoAdjunto.getModalDocumento($scope, 1, mi.proyecto.id)
+		.result.then(function(data) {
+			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
+		}, function(){
+			
+		});
+	}
+
+	mi.getDocumentosAdjuntos = function(objetoId, tipoObjetoId){
+		mi.rowCollection = [];
+		var formatData = new FormData();
+		formatData.append("accion","getDocumentos");
+		formatData.append("idObjeto", objetoId);
+		formatData.append("idTipoObjeto", tipoObjetoId);
+		$http.post('/SDocumentosAdjuntos', formatData, {
+			headers: {'Content-Type': undefined},
+			transformRequest: angular.identity,
+		}).then(function(response) {
+			if (response.data.success) {
+				 mi.rowCollection = response.data.documentos;
+		         mi.displayedCollection = [].concat(mi.rowCollection);
+			}
+		});
+	}
+	
+	mi.descargarDocumento= function(row){
+		var url = "/SDocumentosAdjuntos?accion=getDescarga&id="+row.id;
+		window.location.href = url;
+	}
+	
+	mi.eliminarDocumento= function(row){
+		$http.post('/SDocumentosAdjuntos?accion=eliminarDocumento&id='+row.id)
+		.then(function successCAllback(response){
+			if (response.data.success){
+				var indice = mi.rowCollection.indexOf(row);
+				if (indice !== -1) {
+			       mi.rowCollection.splice(indice, 1);		       
+			    }
+				mi.rowCollection = [];
+				mi.getDocumentosAdjuntos(1, mi.proyecto.id);
+			}
+		});
+	};
 
 	mi.irATabla = function() {
 		mi.esColapsado=false;
@@ -707,59 +756,3 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 		  $uibModalInstance.close($scope.posicion);
 	  };
 }]);
-
-
-app.controller('cargararchivoController', [ '$uibModalInstance',
-	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log','$q', cargararchivoController ]);
-
-function cargararchivoController($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log,$q) {
-
-	var mi = this;
-	mi.mostrar = true;
-	mi.nombreArchivo="";
-	mi.mostrarcargando=false;
-	
-	$scope.cargarArchivo = function(event){
-		var resultado = $q.defer();
-	     mi.archivos = event.files[0];      
-	     mi.nombreArchivo = mi.archivos.name;
-	     resultado.resolve(event.files[0]);
-	     document.getElementById("nombreArchivo").value = mi.nombreArchivo;
-	     return resultado.promise;
-	};
-
-	mi.ok = function() {
-		if (mi.nombreArchivo != '') {
-			mi.cargar();
-		} else {
-			$utilidades.mensaje('warning', 'Debe seleccionar un archivo');
-		}
-	};
-
-	mi.cancel = function() {
-		$uibModalInstance.dismiss('cancel');
-	};
-	
-	mi.cargar=function(){
-		if (mi.archivos!=null && mi.arhivos != ''){
-			mi.mostrarcargando=true;
-			var formatData = new FormData();
-			formatData.append("file",mi.archivos);  
-			formatData.append("accion",'importar');
-			$http.post('/SGantt',formatData, {
-					headers: {'Content-Type': undefined},
-					transformRequest: angular.identity
-				 } ).then(
-			
-				function(response) {
-					mi.mostrarcargando=false;
-					$uibModalInstance.close(response);
-				}
-			);
-		}else{
-			$utilidades.mensaje('danger','Debe seleccionar un archivo');
-		}
-	};
-}

@@ -1,6 +1,6 @@
 var app = angular.module('sipro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
-                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','ngAria','ngMaterial','ngMessages']);
+                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','documentoAdjunto','ngAria','ngMaterial','ngMessages']);
 
 app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($routeProvider, $locationProvider,FlashProvider) {
 	   $locationProvider.hashPrefix('!');
@@ -151,7 +151,6 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             	template: '<div load-on-demand="\'programaController\'" class="all_page"></div>'
             })
             .when('/mapa/:proyecto_id?/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'mapaController\'" class="all_page"></div>'
             })
             .when("/:redireccion?",{
             	controller:"MainController"
@@ -410,7 +409,7 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'agendaController',
 	    	   script: '/app/components/reportes/agenda/agenda.controller.js',
 	    	   template: '/app/components/reportes/agenda/agenda.jsp'
-	       }
+	       },
 
 	   ];
 	   $loadOnDemandProvider.config(modules);

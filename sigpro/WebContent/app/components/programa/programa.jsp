@@ -175,6 +175,59 @@
 				</table>
 				</div>
 				<br/>
+				<div class="panel panel-default" ng-hide="programac.esNuevoDocumento">
+					<div class="panel-heading" style="text-align: center;">Archivos adjuntos</div>
+					<div class="panel-body">
+						<div style="width: 95%; float: left">
+						<table st-table="programac.displayedCollection" st-safe-src="programac.rowCollection" class="table table-striped">
+							<thead>
+								<tr>
+									<th style="display: none;">Id</th>
+									<th>Nombre</th>
+									<th>Extensión</th>
+									<th>Descripción</th>
+									<th>Descarga</th>
+									<th>Eliminar</th>
+								</tr>
+								<tr>
+									<th colspan="5"><input st-search="" class="form-control" placeholder="busqueda global ..." type="text"/></th>
+								</tr>
+							</thead>
+							<tbody>
+							<tr ng-repeat="row in programac.displayedCollection">
+								<td style="display: none;">{{row.id}}</td>
+								<td>{{row.nombre}}</td>
+								<td>{{row.extension}}</td>
+								<td>{{row.descripcion}}</td>
+								<td align="center">
+									<button type="button"
+										ng-click="programac.descargarDocumento(row)"
+										uib-tooltip="Descargar documento" tooltip-placement="bottom"
+										class="btn btn-default">
+										<i class="glyphicon glyphicon-download-alt"> </i>
+									</button>
+								</td>
+								<td align="center">
+									<button type="button"
+										ng-click="programac.eliminarDocumento(row)"
+										uib-tooltip="Eliminar documento" tooltip-placement="bottom"
+										class="btn btn-default">
+										<i class="glyphicon glyphicon-minus-sign"> </i>
+									</button>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+        				</div>
+    					<div style="width: 5%; float: right" align="right">
+	        				<label class="btn btn-default" ng-model="programac.adjuntarDocumento" 
+	        					uib-tooltip="Adjuntar documento" tooltip-placement="bottom" ng-click="programac.adjuntarDocumentos();">
+								<i class="glyphicon glyphicon glyphicon-plus"> </i>
+							</label>
+        				</div>
+					</div>
+				</div>
+				<br/>
 				<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">

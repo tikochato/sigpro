@@ -20,11 +20,8 @@
     </script>
 
 	<script type="text/ng-template" id="buscarPorProyecto.jsp">
-    		<%@ include file="/app/components/prestamo/buscarPorProyecto.jsp"%>
-  	 </script>
-  	 <script type="text/ng-template" id="cargarArchivo.jsp">
-    		<%@ include file="/app/components/prestamo/cargarArchivo.jsp"%>
-  	 </script>
+    	<%@ include file="/app/components/prestamo/buscarPorProyecto.jsp"%>
+  	</script>
 	<shiro:lacksPermission name="24010">
 		<p ng-init="controller.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
@@ -167,29 +164,29 @@
 				</div>
 
 				<div class="form-group" ng-repeat="campo in controller.camposdinamicos">
-							<label for="campo.id">{{ campo.label }}</label>
-							<div ng-switch="campo.tipo">
-								<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
-								<input ng-switch-when="entero" type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}"  />
-								<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
-								<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
-								<p ng-switch-when="fecha" class="input-group">
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"/>
-														<span class="input-group-btn">
-															<button type="button" class="btn btn-default"
-																ng-click="controller.abrirPopupFecha($index)">
-																<i class="glyphicon glyphicon-calendar"></i>
-															</button>
-														</span>
-								</p>
-								<select ng-switch-when="select" id="{{ 'campo_'+campo.id }}" class="form-control" ng-model="campo.valor">
-													<option value="">Seleccione una opción</option>
-													<option ng-repeat="number in campo.opciones"
-														value="{{number.valor}}">{{number.label}}</option>
-								</select>
-							</div>
-						</div>
+					<label for="campo.id">{{ campo.label }}</label>
+					<div ng-switch="campo.tipo">
+						<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
+						<input ng-switch-when="entero" type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}"  />
+						<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
+						<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+						<p ng-switch-when="fecha" class="input-group">
+							<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+												datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"/>
+												<span class="input-group-btn">
+													<button type="button" class="btn btn-default"
+														ng-click="controller.abrirPopupFecha($index)">
+														<i class="glyphicon glyphicon-calendar"></i>
+													</button>
+												</span>
+						</p>
+						<select ng-switch-when="select" id="{{ 'campo_'+campo.id }}" class="form-control" ng-model="campo.valor">
+											<option value="">Seleccione una opción</option>
+											<option ng-repeat="number in campo.opciones"
+												value="{{number.valor}}">{{number.label}}</option>
+						</select>
+					</div>
+				</div>
 
 				<div class="form-group">
 					<label for="campo3">* Unidad Ejecutora</label>
@@ -220,6 +217,60 @@
 					<label for="campo2">Descripción</label>
 					<input type="text" ng-model="controller.proyecto.descripcion"
 						class="form-control" id="campo2" placeholder="Descripción">
+				</div>
+				<br/>
+				
+				<div class="panel panel-default" ng-hide="controller.esNuevoDocumento">
+					<div class="panel-heading" style="text-align: center;">Archivos adjuntos</div>
+					<div class="panel-body">
+						<div style="width: 95%; float: left">
+						<table st-table="controller.displayedCollection" st-safe-src="controller.rowCollection" class="table table-striped">
+							<thead>
+								<tr>
+									<th style="display: none;">Id</th>
+									<th>Nombre</th>
+									<th>Extensión</th>
+									<th>Descripción</th>
+									<th>Descarga</th>
+									<th>Eliminar</th>
+								</tr>
+								<tr>
+									<th colspan="5"><input st-search="" class="form-control" placeholder="busqueda global ..." type="text"/></th>
+								</tr>
+							</thead>
+							<tbody>
+							<tr ng-repeat="row in controller.displayedCollection">
+								<td style="display: none;">{{row.id}}</td>
+								<td>{{row.nombre}}</td>
+								<td>{{row.extension}}</td>
+								<td>{{row.descripcion}}</td>
+								<td align="center">
+									<button type="button"
+										ng-click="controller.descargarDocumento(row)"
+										uib-tooltip="Descargar documento" tooltip-placement="bottom"
+										class="btn btn-default">
+										<i class="glyphicon glyphicon-download-alt"> </i>
+									</button>
+								</td>
+								<td align="center">
+									<button type="button"
+										ng-click="controller.eliminarDocumento(row)"
+										uib-tooltip="Eliminar documento" tooltip-placement="bottom"
+										class="btn btn-default">
+										<i class="glyphicon glyphicon-minus-sign"> </i>
+									</button>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+        				</div>
+    					<div style="width: 5%; float: right" align="right">
+	        				<label class="btn btn-default" ng-model="controller.adjuntarDocumento" 
+	        					uib-tooltip="Adjuntar documento" tooltip-placement="bottom" ng-click="controller.adjuntarDocumentos();">
+								<i class="glyphicon glyphicon glyphicon-plus"> </i>
+							</label>
+        				</div>
+					</div>
 				</div>
 				<br/>
 				<div class="panel panel-default">
