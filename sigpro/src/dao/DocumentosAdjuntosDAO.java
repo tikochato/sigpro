@@ -56,6 +56,7 @@ public class DocumentosAdjuntosDAO implements java.io.Serializable {
 	public static List<Documento> getDocumentoById(Integer idDocumento){
 		List<Documento> ret = new ArrayList<Documento>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
+		session.clear();
 		try{
 			Query<Documento> criteria = session.createQuery("FROM Documento d where d.id=:id", Documento.class);
 			criteria.setParameter("id", idDocumento);			

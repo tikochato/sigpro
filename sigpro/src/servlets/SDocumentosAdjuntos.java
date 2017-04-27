@@ -11,7 +11,6 @@ import java.util.zip.GZIPOutputStream;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -162,8 +161,6 @@ public class SDocumentosAdjuntos extends HttpServlet {
 								dato.nombre = documento.getNombre();
 								dato.extension = documento.getExtension();
 								dato.descripcion = documento.getDescripcion();
-								//dato.idObjeto = documento.getIdObjeto();
-								//dato.idTipoObjto = documento.getIdTipoObjeto();
 								datos_.add(dato);
 							}
 							

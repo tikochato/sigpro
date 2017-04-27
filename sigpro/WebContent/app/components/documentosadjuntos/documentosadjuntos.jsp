@@ -15,21 +15,21 @@
 	    <div class="row col-sm-12">
 	    	<h5 ng-show="doctos.isCollapsed">Agregar Documento</h5>
 	    </div>
-	    <form method="post" enctype="multipart/form-data;charset=UTF-8">
+	    <form method="post" enctype="multipart/form-data;charset=UTF-8" name="dForm">
 	    <div class="row col-sm-12" contenteditable="true">
 				<div class="form-group" align="left">
 					<label for="nombre">Descripción</label>
-  					<input type="text" class="form-control" placeholder="Descripción" ng-model="doctos.descripcion" ng-required="true"/>  					
+  					<input type="text" class="form-control" placeholder="Descripción" ng-model="doctos.descripcion" required/>  					
 				</div>
 				<div class="form-group" align="left">
-					<input type="file" id="pickfile" name="pickfile" onchange="angular.element(this).scope().cargarDocumento(event)" 
-						file-upload></input>
+					<input type="file" id="pickfile" name="pickfile" onchange="angular.element(this).scope().cargarDocumento(event)" file-upload></input>
 				</div>
 				<div class="form-group" align="left">
 					<div class="btn-group" role="group" aria-label="" align="left">
 						<button type="button" 
 							class="btn btn-default" 
 							ng-required="doctos.descripcion"
+							ng-disabled="dForm.$invalid"
 							ng-click="doctos.agregarDocumento()">
 							<i class="glyphicon glyphicon-plus-sign"> </i>
 						</button>
