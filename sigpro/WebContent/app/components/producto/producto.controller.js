@@ -142,7 +142,6 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				      mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
 					  mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
 					  mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
-				      
 					  mi.obtenerTotalProductos();
 				  });
 		    	  
@@ -201,12 +200,13 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 
 	mi.borrar = function(ev) {
 		if (mi.producto!=null && mi.producto.id!=null) {
-			var confirm = $mdDialog.confirm().title('Confirmación de borrado')
-					.textContent(
-							'¿Desea borrar "' + mi.producto.nombre
-									+ '"?')
-					.ariaLabel('Confirmación de borrado').targetEvent(ev).ok(
-							'Borrar').cancel('Cancelar');
+			var confirm = $mdDialog.confirm()
+			.title('Confirmación de borrado')
+			.textContent('¿Desea borrar "' + mi.producto.nombre + '"?')
+			.ariaLabel('Confirmación de borrado')
+			.targetEvent(ev)
+			.ok('Borrar')
+			.cancel('Cancelar');
 
 			$mdDialog.show(confirm).then(mi.borrarConfirmado,
 					mi.borrarNoConfirmado);
@@ -225,12 +225,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		$http.post('/SProducto', datos).success(
 				function(response) {
 					if (response.success) {
-						$utilidades.mensaje('success',
-								'Tipo de Producto borrado con éxito');
-						mi.cargarTabla(1);
-					} else
+						$utilidades.mensaje('success','Tipo de Producto borrado con éxito');
+						mi.obtenerTotalProductos();			
+					} else{
 						$utilidades.mensaje('danger',
 								'Error al borrar el Tipo de Producto');
+					}
 				});
 	};
 
@@ -274,8 +274,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.esNuevo = false;
 							mi.producto.id = response.data.id;
-							mi.cargarTabla(mi.paginaActual);
-							
+							mi.obtenerTotalProductos();
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
 						}
@@ -371,6 +370,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.irAActividades=function(){
 		if(mi.producto.id!=null){
 			$location.path('/actividad/'+ mi.producto.id +'/3' );
+		}
+	};
+	
+	mi.irARiesgos=function(){
+		if(mi.producto.id!=null){
+			$location.path('/riesgo/'+ mi.producto.id +'/3' );
 		}
 	};
 

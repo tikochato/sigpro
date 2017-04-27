@@ -1,6 +1,8 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
@@ -13,13 +15,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.GsonBuilder;
+
 import dao.ProdTipoPropiedadDAO;
 import dao.ProductoTipoDAO;
+import pojo.ProductoTipo;
 import utilities.Utils;
 
+/**
+ * Servlet implementation class SProductoTipo
+ */
 @WebServlet("/SProductoTipo")
 public class SProductoTipo extends HttpServlet {
 	private static final long serialVersionUID = -6537014370076177564L;
+	class stproductotipo {
+		Integer id;
+		String nombre;
+		String descripcion;
+		String usuarioCreo;
+		String usuairoActulizo;
+		String fechaCreacion;
+		String fechaActualizacion;
+		int estado;
+	}
 
 	public SProductoTipo() {
 		super();
@@ -41,107 +59,119 @@ public class SProductoTipo extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		request.setCharacterEncoding("UTF-8");
 		Map<String, String> parametro = Utils.getParams(request);
 		HttpSession sesionweb = request.getSession();
 		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
+		String accion = parametro.get("accion");
+		String response_text="";
+		
+		if (accion.equals("cargar")) {
+			int pagina = Utils.String2Int(parametro.get("pagina"), 1);
+			int registros = Utils.String2Int(parametro.get("registros"), 20);
+			String filtro_nombre = parametro.get("filtro_nombre");
+			String filtro_usuario_creo = parametro.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = parametro.get("filtro_fecha_creacion");
+			String columna_ordenada = parametro.get("columna_ordenada");
+			String orden_direccion = parametro.get("orden_direccion");
+			
+			
+			List<ProductoTipo> productotipos = ProductoTipoDAO.getPagina(pagina, registros,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);
+			List<stproductotipo> listaProductoTipo = new ArrayList<stproductotipo>();
 
-		if (parametro.get("accion").compareTo("cargar") == 0) {
-			listar(parametro, response);
-		} else if (parametro.get("accion").compareTo("crear") == 0) {
-			crear(parametro, response,usuario);
-		} else if (parametro.get("accion").compareTo("actualizar") == 0) {
-			actualizar(parametro, response,usuario);
-		} else if (parametro.get("accion").compareTo("borrar") == 0) {
-			eliminar(parametro, response);
-		} else if (parametro.get("accion").compareTo("totalElementos") == 0) {
-			total(parametro,response);
-		} else if (parametro.get("accion").compareTo("tipoPropiedades") == 0) {
-			listarPropiedades(parametro, response);
+			for (ProductoTipo productotipo : productotipos) {
+				stproductotipo temp = new stproductotipo();
+				temp.id = productotipo.getId();
+				temp.nombre = productotipo.getNombre();
+				temp.descripcion = productotipo.getDescripcion();
+				temp.usuarioCreo = productotipo.getUsuarioCreo();
+				temp.usuairoActulizo = productotipo.getUsuarioActualizo();
+				temp.fechaCreacion = Utils.formatDateHour(productotipo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(productotipo.getFechaActualizacion());
+				temp.estado = productotipo.getEstado();
+
+				listaProductoTipo.add(temp);
+			}
+
+				response_text=new GsonBuilder().serializeNulls().create().toJson(listaProductoTipo);
+		        response_text = String.join("", "\"productoTipos\":",response_text);
+		        response_text = String.join("", "{\"success\":true,", response_text,"}");	
+			
+			
+		} else if (accion.equals("crear")) {
+			String nombre = parametro.get("nombre");
+			String descripcion = parametro.get("descripcion");
+			String propiedades = parametro.get("propiedades");
+			Integer creado = ProductoTipoDAO.guardar(-1, nombre, descripcion, propiedades, usuario);
+			response_text = String.join("","{ \"success\": ",(creado!=null ? "true" : "false"),", "
+					+ "\"id\": " + creado +" }");
+			
+		} else if (accion.equals("actualizar")) {
+			int codigo = Utils.String2Int(parametro.get("codigo"), -1);
+			String nombre = parametro.get("nombre");
+			String descripcion = parametro.get("descripcion");
+			String propiedades = parametro.get("propiedades");
+			boolean actualizado = ProductoTipoDAO.actualizar(codigo, nombre, descripcion, propiedades, usuario);
+			response_text = String.join("","{ \"success\": ",(actualizado ? "true" : "false") + " }");
+
+		} else if (accion.equals("borrar")) {
+			int codigo = Utils.String2Int(parametro.get("codigo"), -1);
+			String usuarioElimina = parametro.get("usuario");
+			boolean eliminado = ProductoTipoDAO.eliminar(codigo, usuarioElimina);
+			if (eliminado) {
+				int pagina = Utils.String2Int(parametro.get("pagina"), 1);
+				int registros = Utils.String2Int(parametro.get("registros"), 20);
+				String filtro_nombre = parametro.get("filtro_nombre");
+				String filtro_usuario_creo = parametro.get("filtro_usuario_creo");
+				String filtro_fecha_creacion = parametro.get("filtro_fecha_creacion");
+				String columna_ordenada = parametro.get("columna_ordenada");
+				String orden_direccion = parametro.get("orden_direccion");
+				
+				List<ProductoTipo> productotipos = ProductoTipoDAO.getPagina(pagina, registros,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);
+				List<stproductotipo> listaProductoTipo = new ArrayList<stproductotipo>();
+
+				for (ProductoTipo productotipo : productotipos) {
+					stproductotipo temp = new stproductotipo();
+					temp.id = productotipo.getId();
+					temp.nombre = productotipo.getNombre();
+					temp.descripcion = productotipo.getDescripcion();
+					temp.usuarioCreo = productotipo.getUsuarioCreo();
+					temp.usuairoActulizo = productotipo.getUsuarioActualizo();
+					temp.fechaCreacion = Utils.formatDateHour(productotipo.getFechaCreacion());
+					temp.fechaActualizacion = Utils.formatDateHour(productotipo.getFechaActualizacion());
+					temp.estado = productotipo.getEstado();
+
+					listaProductoTipo.add(temp);
+				}
+
+					response_text=new GsonBuilder().serializeNulls().create().toJson(listaProductoTipo);
+			        response_text = String.join("", "\"productoTipos\":",response_text);
+			        response_text = String.join("", "{\"success\":true,", response_text,"}");	
+				
+			}
+		} else if (accion.equals("totalElementos")) {
+			String filtro_nombre = parametro.get("filtro_nombre");
+			String filtro_usuario_creo = parametro.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = parametro.get("filtro_fecha_creacion");
+			response_text = String.join("","{ \"success\":true, \"total\":",ProductoTipoDAO.getTotal(filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion).toString()," }");
+
+		} else if (accion.equals("tipoPropiedades")) {
+			Integer codigoTipo = Utils.String2Int(parametro.get("codigoTipo"), 0);
+			response_text = ProdTipoPropiedadDAO.getJson(codigoTipo);
+			if (Utils.isNullOrEmpty(response_text)) {
+				response_text = "{\"success\":false}";
+			} else {
+				response_text = String.join("","{ \"success\":true," , response_text , " }");
+			}
 		}
-	}
-
-	private void listar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
-		int pagina = Utils.String2Int(parametro.get("pagina"), 1);
-		int registros = Utils.String2Int(parametro.get("registros"), 20);
-		String filtro_nombre = parametro.get("filtro_nombre");
-		String filtro_usuario_creo = parametro.get("filtro_usuario_creo");
-		String filtro_fecha_creacion = parametro.get("filtro_fecha_creacion");
-		String columna_ordenada = parametro.get("columna_ordenada");
-		String orden_direccion = parametro.get("orden_direccion");
-
-		String resultadoJson = "";
-
-		resultadoJson = ProductoTipoDAO.getJson(pagina, registros,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);;
-
-		if (Utils.isNullOrEmpty(resultadoJson)) {
-			resultadoJson = "{\"success\":false}";
-		} else {
-			resultadoJson = "{\"success\":true," + resultadoJson + "}";
-		}
-
-		Utils.writeJSon(response, resultadoJson);
-	}
-
-	private void crear(Map<String, String> parametro, HttpServletResponse response, String usuario) throws IOException {
-		String nombre = parametro.get("nombre");
-		String descripcion = parametro.get("descripcion");
-		String propiedades = parametro.get("propiedades");
-		Integer creado = ProductoTipoDAO.guardar(-1, nombre, descripcion, propiedades, usuario);
-
-		String resultadoJson = String.join("","{ \"success\": ",(creado!=null ? "true" : "false"),", "
-				+ "\"id\": " + creado +" }");
-		 
-
-		Utils.writeJSon(response, resultadoJson);
-	}
-
-	private void actualizar(Map<String, String> parametro, HttpServletResponse response,String usuario) throws IOException {
-		int codigo = Utils.String2Int(parametro.get("codigo"), -1);
-		String nombre = parametro.get("nombre");
-		String descripcion = parametro.get("descripcion");
-		String propiedades = parametro.get("propiedades");
-
-		boolean actualizado = ProductoTipoDAO.actualizar(codigo, nombre, descripcion, propiedades, usuario);
-		String resultadoJson = String.join("","{ \"success\": ",(actualizado ? "true" : "false") + "}");
-		Utils.writeJSon(response, resultadoJson);
-	}
-
-	private void eliminar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
-		int codigo = Utils.String2Int(parametro.get("codigo"), -1);
-		String usuario = parametro.get("usuario");
-
-		boolean eliminado = ProductoTipoDAO.eliminar(codigo, usuario);
-		if (eliminado) {
-			listar(parametro, response);
-		}
-	}
-
-	private void total(Map<String, String> parametro,HttpServletResponse response) throws IOException {
-		String filtro_nombre = parametro.get("filtro_nombre");
-		String filtro_usuario_creo = parametro.get("filtro_usuario_creo");
-		String filtro_fecha_creacion = parametro.get("filtro_fecha_creacion");
-		Long total = ProductoTipoDAO.getTotal(filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion);
-
-		String resultadoJson = "{\"success\":true, \"total\":" + total + "}";
-
-		Utils.writeJSon(response, resultadoJson);
-	}
-
-	private void listarPropiedades(Map<String, String> parametro, HttpServletResponse response) throws IOException {
-		Integer codigoTipo = Utils.String2Int(parametro.get("codigoTipo"), 0);
-
-		String resultadoJson = "";
-
-		resultadoJson = ProdTipoPropiedadDAO.getJson(codigoTipo);
-
-		if (Utils.isNullOrEmpty(resultadoJson)) {
-			resultadoJson = "{\"success\":false}";
-		} else {
-			resultadoJson = "{\"success\":true," + resultadoJson + "}";
-		}
-
-		Utils.writeJSon(response, resultadoJson);
+		response.setHeader("Content-Encoding", "gzip");
+		response.setCharacterEncoding("UTF-8");
+		
+        OutputStream output = response.getOutputStream();
+		GZIPOutputStream gz = new GZIPOutputStream(output);
+        gz.write(response_text.getBytes("UTF-8"));
+        gz.close();
+        output.close();
 	}
 
 }

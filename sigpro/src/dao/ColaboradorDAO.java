@@ -33,6 +33,7 @@ public class ColaboradorDAO {
 		String usuarioActualizo;
 		String fechaCreacion;
 		String fechaActualizacion;
+		String nombreCompleto;
 	}
 
 	public static Colaborador getColaborador(Integer codigo) {
@@ -64,7 +65,7 @@ public class ColaboradorDAO {
 		if (pojo == null) {
 
 			pojo = new Colaborador(UnidadEjecutoraDAO.getUnidadEjecutora(codigoUnidadEjecutora),UsuarioDAO.getUsuario(usuario),
-					primerNombre, segundoNombre, primerApellido, segundoApellido, cui, 1, usuario_creacion, null, fecha_creacion, null);
+					primerNombre, segundoNombre, primerApellido, segundoApellido, cui, 1, usuario_creacion, null, fecha_creacion, null,null);
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try {
 				session.beginTransaction();
@@ -197,6 +198,10 @@ public class ColaboradorDAO {
 			estructuraPojo.usuarioActualizo = pojo.getUsuarioActualizo();
 			estructuraPojo.fechaCreacion = Utils.formatDateHour(pojo.getFechaCreacion());
 			estructuraPojo.fechaActualizacion = Utils.formatDateHour(pojo.getFechaActualizacion());
+			estructuraPojo.nombreCompleto = String.join(" ", estructuraPojo.primerNombre,
+					estructuraPojo.segundoNombre!=null ? estructuraPojo.segundoNombre : "" ,
+					estructuraPojo.primerApellido !=null ? estructuraPojo.primerApellido : "" ,
+					estructuraPojo.segundoApellido !=null ? estructuraPojo.segundoApellido : "");
 
 			listaEstructuraPojos.add(estructuraPojo);
 		}

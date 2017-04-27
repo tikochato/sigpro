@@ -111,49 +111,55 @@ public class CProject {
 	}
 	
 	
-	public void imporatarArchivo(ProjectFile projectFile, String usuario){
+	public Proyecto imporatarArchivo(ProjectFile projectFile, String usuario){
 		indetnacion = 0;
 		itemsProject = "";
 		items = new HashMap<>();
+		Proyecto proyecto = null;
 		for (Task task : projectFile.getChildTasks())
 		{
 			if (task.getChildTasks()!=null && task.getChildTasks().size()>0){
 				for (Task task1 : task.getChildTasks()){ //Proyectos
-					System.out.println(task1.getName());
-					Proyecto proyecto = crearProyecto(task1, usuario);
-					cargarItem(task1,proyecto.getId(),1);
+					
 					if (task1.getChildTasks()!=null && task1.getChildTasks().size()>0){
+						System.out.println(task1.getName());
+						proyecto = crearProyecto(task1, usuario);
+						cargarItem(task1,proyecto.getId(),1);
 						for (Task task2 : task1.getChildTasks()){ //componentes
-							System.out.println("\t" + task2.getName());
-							Componente componente = crearComponente(task2, proyecto, usuario);
-							cargarItem(task1,componente.getId(),2);
 							if (task2.getChildTasks()!=null && task2.getChildTasks().size()>0){
+								System.out.println("\t" + task2.getName());
+								Componente componente = crearComponente(task2, proyecto, usuario);
+								cargarItem(task2,componente.getId(),2);
 								for (Task task3 : task2.getChildTasks()){ //producto
-									System.out.println("\t\t" + task3.getName());
-									Producto producto = crearProducto(task3, componente, usuario);
-									cargarItem(task1,producto.getId(),3);
 									if (task3.getChildTasks()!=null && task3.getChildTasks().size()>0){
+										System.out.println("\t\t" + task3.getName());
+										Producto producto = crearProducto(task3, componente, usuario);
+										cargarItem(task3,producto.getId(),3);
 										for (Task task4 : task3.getChildTasks()){ //subproductos
-											System.out.println("\t\t\t" + task4.getName());
-											Subproducto subproducto = crearSubproducto(task4, producto, usuario);
-											cargarItem(task1,subproducto.getId(),4);
 											if (task4.getChildTasks()!=null && task4.getChildTasks().size()>0){
+												System.out.println("\t\t\t" + task4.getName());
+												Subproducto subproducto = crearSubproducto(task4, producto, usuario);
+												cargarItem(task4,subproducto.getId(),4);
 												for (Task task5 : task4.getChildTasks()){ //actividades
 													System.out.println("\t\t\t\t" + task5.getName());
 													Actividad actividad = crearActividad(task5, usuario, subproducto.getId(),4);
-													cargarItem(task1,actividad.getId(),5);
+													cargarItem(task5,actividad.getId(),5);
 												}
 											}else{
-												crearActividad(task4, usuario, producto.getId(),3);
+												Actividad actividad = crearActividad(task4, usuario, producto.getId(),3);
+												cargarItem(task4,actividad.getId(),5);
 											}
 										}
 									}else{
-										crearActividad(task3, usuario, componente.getId(),2);
+										Actividad actividad = crearActividad(task3, usuario, componente.getId(),2);
+										cargarItem(task3,actividad.getId(),5);
 									}
 								}
 								
 							}else{
-								crearActividad(task2, usuario, proyecto.getId(),1);
+								Actividad actividad = crearActividad(task2, usuario, proyecto.getId(),1);
+								cargarItem(task2,actividad.getId(),5);
+								
 							}
 						}
 					}else{
@@ -162,6 +168,7 @@ public class CProject {
 				}	
 			}
 		}
+		return proyecto;
 	}
 	
 	public Proyecto crearProyecto(Task task,String usuario){
@@ -211,7 +218,10 @@ public class CProject {
 		SubproductoTipo subproductoTipo = new SubproductoTipo();
 		subproductoTipo.setId(SUBPRODUCTO_TIPO__ID_DEFECTO);
 		
-		Subproducto subproducto = new Subproducto(producto, subproductoTipo, null,task.getName(), null, usuario, null, new Date(), null, 1, 
+		UnidadEjecutora unidadEjecutroa = new UnidadEjecutora();
+		unidadEjecutroa.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
+		
+		Subproducto subproducto = new Subproducto(producto, subproductoTipo, unidadEjecutroa,task.getName(), null, usuario, null, new Date(), null, 1, 
 				null, null, null, null, null, null, null, null, null,null,null);
 		
 		return SubproductoDAO.guardarSubproducto(subproducto) ? subproducto : null;
@@ -229,10 +239,13 @@ public class CProject {
 		}
 		
 		
+		
 		Actividad actividad = new Actividad(actividadTipo, task.getName(), null, task.getStart(), task.getFinish()
 				,0,usuario, null, new Date(), 
 				null, 1, null, null, null, null, 
-				null, null, null , objetoId, objetoTipo, 5, task.getDuration().getUnits().getName()
+				null, null, null , objetoId, objetoTipo, 
+				(( Double ) task.getDuration().getDuration()).intValue()
+				, task.getDuration().getUnits().getName()
 				 
 				 ,itemPredecesor!=null ? itemPredecesor.objetoId : null
 						 , itemPredecesor != null ? itemPredecesor.objetoTipo : null, null, null,null,null);
@@ -361,13 +374,21 @@ public class CProject {
 					Task task3 = task2.addTask();
 					task3.setName(producto.getNombre());
 					
-					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), 3, 
-							null,null, null, null, null, usuario);
-					for (Actividad actividad : actividades){
+					List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
+							null, null, null, null, null, usuario);
+					
+					for (Subproducto subproducto : subproductos){
 						Task task4 = task3.addTask();
-						task4.setName(actividad.getNombre());
-						task4.setStart(actividad.getFechaInicio());
-						task4.setFinish(actividad.getFechaFin()); 
+						task4.setName(subproducto.getNombre());
+						
+						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), 4, 
+								null,null, null, null, null, usuario);
+						for (Actividad actividad : actividades){
+							Task task5 = task4.addTask();
+							task5.setName(actividad.getNombre());
+							task5.setStart(actividad.getFechaInicio());
+							task5.setFinish(actividad.getFechaFin()); 
+						} 
 					}
 				}
 			}

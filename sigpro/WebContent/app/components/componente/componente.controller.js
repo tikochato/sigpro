@@ -299,6 +299,12 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			}
 		};
 		
+		mi.irARiesgos=function(componenteid){
+			if(mi.componente!=null){
+				$location.path('/riesgo/'+ componenteid +'/2' );
+			}
+		};
+		
 
 		mi.filtrar = function(evt,tipo){
 			if(evt.keyCode==13){

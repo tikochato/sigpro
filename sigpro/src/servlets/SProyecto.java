@@ -380,7 +380,7 @@ public class SProyecto extends HttpServlet {
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 			response_text = String.join("","{ \"success\": ",(proyecto!=null && proyecto.getId()!=null ? "true" : "false"),", "
-					+ "\"id\": " + (proyecto!=null ? proyecto.getId():"") +", "
+					+ "\"id\": " + (proyecto!=null ? proyecto.getId():"0") +", "
 					+ "\"nombre\": \"" + (proyecto!=null ? proyecto.getNombre():"") +"\" }");
 
 		}else if(accion.equals("obtenerProyectosPorPrograma")){

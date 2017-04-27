@@ -6,7 +6,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	var mi = this;
 	i18nService.setCurrentLang('es');
 
-	$window.document.title = $utilidades.sistema_nombre+' - Proyectos';
+	$window.document.title = $utilidades.sistema_nombre+' - Préstamos';
 
 	mi.rowCollection = [];
 	mi.proyecto = null;
@@ -61,7 +61,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'nombre\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>'
 			},
-			{ name : 'proyectotipo',    displayName : 'Tipo proyecto' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
+			{ name : 'proyectotipo',    displayName : 'Tipo préstamo' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
 			{ name : 'unidadejecutora',    displayName : 'Unidad Ejecutora' ,cellClass: 'grid-align-left', enableFiltering: false , enableSorting: false },
 			{ name : 'cooperante',   displayName : 'Cooperante' ,cellClass: 'grid-align-left',  enableFiltering: false , enableSorting: false },
 			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',
@@ -163,11 +163,11 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				function(response) {
 					if (response.data.success) {
 						mi.proyecto.id = response.data.id;
-						$utilidades.mensaje('success','Proyecto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+						$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.obtenerTotalProyectos();
 						mi.esNuevo = false;
 					}else
-						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Proyecto');
+						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
 			});
 			
 			mi.esNuevoDocumento = false;
@@ -180,7 +180,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 			var confirm = $mdDialog.confirm()
 	        .title('Confirmación de borrado')
-	        .textContent('¿Desea borrar el Proyecto "'+mi.proyecto.nombre+'"?')
+	        .textContent('¿Desea borrar el Préstamo "'+mi.proyecto.nombre+'"?')
 	        .ariaLabel('Confirmación de borrado')
 	        .targetEvent(ev)
 	        .ok('Borrar')
@@ -193,19 +193,19 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					t:moment().unix()
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success','Proyecto borrado con éxito');
+						$utilidades.mensaje('success','Préstamo borrado con éxito');
 						mi.proyecto = null;
 						mi.obtenerTotalProyectos();
 					}
 					else
-						$utilidades.mensaje('danger','Error al borrar el Proyecto');
+						$utilidades.mensaje('danger','Error al borrar el Préstamo');
 				});
 			}, function() {
 
 		    });
 		}
 		else
-			$utilidades.mensaje('warning','Debe seleccionar el Proyecto que desea borrar');
+			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea borrar');
 	};
 
 	mi.nuevo = function (){
@@ -267,7 +267,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
 		}
 		else
-			$utilidades.mensaje('warning','Debe seleccionar el Proyecto que desea editar');
+			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea editar');
 	}
 	
 	mi.adjuntarDocumentos = function(){
@@ -333,10 +333,10 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	}
 
 	mi.reiniciarVista=function(){
-		if($location.path()=='/proyecto/rv')
+		if($location.path()=='/prestamo/rv')
 			$route.reload();
 		else
-			$location.path('/proyecto/rv');
+			$location.path('/prestamo/rv');
 	}
 
 	mi.abrirPopupFecha = function(index) {
@@ -375,7 +375,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.irARiesgos=function(proyectoid){
 		if(mi.proyecto!=null){
-			$location.path('/riesgo/' );
+			$location.path('/riesgo/' + proyectoid + '/1' );
 		}
 	};
 
@@ -389,10 +389,31 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			$location.path('/actividad/'+ proyectoid +'/1' );
 		}
 	};
-
 	mi.irAGantt=function(proyectoid){
 		if(mi.proyecto!=null){
 			$location.path('/gantt/'+ proyectoid );
+		}
+	};
+	mi.irAMapa=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/mapa/'+ proyectoid );
+		}
+	};
+	mi.irAKanban=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/porcentajeactividades/'+ proyectoid );
+		}
+	};
+
+	mi.irAAgenda=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/agenda/'+ proyectoid );
+		}
+	};
+	
+	mi.irAMatrizRiesgos=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/matrizriesgo/'+ proyectoid );
 		}
 	};
 
@@ -541,7 +562,42 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 		});
 	};
+	
+	mi.llamarModalArchivo = function() {
+		var resultado = $q.defer();
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'cargarArchivo.jsp',
+			controller : 'cargararchivoController',
+			controllerAs : 'cargararchivoc',
+			backdrop : 'static',
+			size : 'md',
+		});
 
+		modalInstance.result.then(function(respuesta) {
+			resultado.resolve(respuesta);
+		});
+		return resultado.promise;
+	};
+	
+	mi.cargarArchivo = function() {
+		var resultado = mi.llamarModalArchivo();
+
+		resultado.then(function(resultado) {
+			mi.mostrarcargando=false;
+			if (resultado.data.success){
+				mi.obtenerTotalProyectos();
+				$utilidades.mensaje('success','Proyecto creado con éxito');
+			}else{
+				$utilidades.mensaje('danger','Error al crear el Proyecto');
+			}
+			
+		});
+	};
+	
+	
 
 	mi.open = function (posicionlat, posicionlong) {
 		$scope.geoposicionlat = posicionlat;
