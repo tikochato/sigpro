@@ -31,7 +31,7 @@
 	
 	<div class="panel panel-default">
 	  <div class="panel-heading">
-	  	<h3>Préstamos</h3>
+	<h3>Préstamos</h3>
 	  </div>
 	</div>
 	
@@ -60,6 +60,7 @@
 					<shiro:hasPermission name="24010">
 						<a class="btn btn-default" href ng-click="controller.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
 					</shiro:hasPermission>
+
 					</div>
 				</div>
 		<shiro:hasPermission name="24010">
@@ -93,13 +94,12 @@
 
 		</shiro:hasPermission>
 
-
 	</div>
 	<div class="row second-main-form" ng-show="controller.esColapsado">
 		<div class="page-header">
 			<h1 ng-hide="!controller.esNuevo"><small>Nuevo Préstamo</small></h1>
 			<h1 ng-hide="controller.esNuevo"><small>Edición de Préstamo</small></h1>
-		</div>
+			</div>
 		<div class="operation_buttons">
 			<div class="btn-group" ng-hide="controller.esNuevo">
 				<label class="btn btn-default" ng-click="controller.irAComponentes(controller.proyecto.id)" title="Componentes">
@@ -142,15 +142,16 @@
 						<input type="text" disabled >
 					</md-input-container>
 				</div>
-				<div class="form-group" >
+				<div class="form-group">
 					<md-input-container flex class="md-required md-block">
 						<label for="inombre">Nombre</label>
 						<input type="text" name="inombre" id="inombre" ng-model="controller.proyecto.nombre" ng-required="true" >
 					</md-input-container>
 				</div>
-				<div class="form-group" >
+
+				<div class="form-group"  >
 					<md-input-container flex class="md-block">
-						<label for="isnip">SNIP</label>
+					<label for="isnip">SNIP</label>
 						<input type="number" name="isnip" id="isnip"  ng-model="controller.proyecto.snip">
 					</md-input-container>
 				</div>
@@ -158,37 +159,37 @@
 				<div class="form-group row" >
 					<div class="form-group col-sm-2" >
 						<md-input-container flex>
-							<label for="iprog">Programa</label>
+					       <label for="iprog">Programa</label>
 							<input type="number" ng-model="controller.proyecto.programa" ng-maxlength="4" style="text-align: center"/>
 						</md-input-container>
 					</div>
 					<div class="form-group col-sm-2" >
 						<md-input-container flex>
-							<label for="iprog">Subprograma</label>
+							<label for="isubprog">Subprograma</label>
 							<input type="number" ng-model="controller.proyecto.subprograma" ng-maxlength="4" style="text-align: center"/>
 						</md-input-container>
 					</div>
 					<div class="form-group col-sm-2" >
 						<md-input-container flex>
-							<label for="iprog">Proyecto</label>
+							<label for="iproy_">Proyecto</label>
 							<input type="number" ng-model="controller.proyecto.proyecto" ng-maxlength="4" style="text-align: center"/>
 						</md-input-container>
 					</div>
 					<div class="form-group col-sm-2" >
 						<md-input-container flex>
-							<label for="iprog">Actividad</label>
+							<label for="iobra">Actividad</label>
 							<input type="number" ng-model="controller.proyecto.actividad" ng-maxlength="4" style="text-align: center"/>
 						</md-input-container>
 					</div>
 					<div class="form-group col-sm-2" >
 						<md-input-container flex>
-							<label for="iprog">Obra</label>
+							<label for="iobra">Obra</label>
 							<input type="number" ng-model="controller.proyecto.obra" ng-maxlength="4" style="text-align: center"/>
 						</md-input-container>
 					</div>
 					<div class="form-group col-sm-2" >
 						<md-input-container flex>
-							<label for="iprog">Fuente</label>
+							<label for="campo5">Fuente</label>
 							<input type="number" ng-model="controller.proyecto.fuente" ng-maxlength="4" style="text-align: center"/>
 						</md-input-container>
 					</div>
@@ -205,7 +206,7 @@
 						<div ng-switch="campo.tipo">
 							<div ng-switch-when="texto">
 								<md-input-container flex class="md-block">
-									<label for="campo.id">{{ campo.label }}</label>
+							<label for="campo.id">{{ campo.label }}</label>
 									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
 								</md-input-container>
 							</div>
@@ -241,14 +242,14 @@
 								<md-input-container flex class="md-block">
 									<label for="campo.id">{{ campo.label }}</label>
 									<select nid="{{ 'campo_'+campo.id }}" ng-model="campo.valor">
-												<option value="">Seleccione una opción</option>
-												<option ng-repeat="number in campo.opciones"
-													value="{{number.valor}}">{{number.label}}</option>
-									</select>
+													<option value="">Seleccione una opción</option>
+													<option ng-repeat="number in campo.opciones"
+														value="{{number.valor}}">{{number.label}}</option>
+								</select>
 								</md-input-container>
 							</div>
+							</div>
 						</div>
-				</div>
 
 				<div class="form-group">
 					<md-input-container flex class="md-required md-block">
@@ -264,7 +265,7 @@
 				<div class="form-group" >
 					<md-input-container flex class="md-required md-block">
 						<label for="campo3">Cooperante</label>
-							<input type="hidden" class="form-control" ng-model="controller.cooperanteid" />
+		            	<input type="hidden" class="form-control" ng-model="controller.cooperanteid" />
 			            	<input type="text" id="icoope" name="icoope" ng-model="controller.cooperantenombre" ng-readonly="true" ng-required="true" ng-click="controller.buscarCooperante()"/>
 			            	<md-icon style="display:inline-block;" ng-click="controller.buscarCooperante()"><span><i class="glyphicon glyphicon-search"></i></span></md-icon>
 			        </md-input-container>
@@ -272,7 +273,7 @@
 				
 				<div class="form-group">
 					<md-input-container class="md-block">
-						<label>Coordenadas</label>
+							<label >Coordenadas</label>
 			            	<input type="text" placeholder="Latitud, Longitud"  ng-model="controller.coordenadas" ng-readonly="true" ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "/>
 			            	<md-icon style="display:inline-block;" ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "><span><i class="glyphicon glyphicon-map-marker"></i></span></md-icon>
 			        </md-input-container>
@@ -280,10 +281,63 @@
 
 				<div class="form-group">
 					<md-input-container class="md-block">
-						<label for="campo2">Descripción</label>
+					<label for="campo2">Descripción</label>
 						<input type="text" name="campo2" id="campo2" ng-model="controller.proyecto.descripcion" >
 					</md-input-container>
 				</div>
+				<br/>
+
+				<div class="panel panel-default" ng-hide="controller.esNuevoDocumento">
+					<div class="panel-heading" style="text-align: center;">Archivos adjuntos</div>
+					<div class="panel-body">
+						<div style="width: 95%; float: left">
+						<table st-table="controller.displayedCollection" st-safe-src="controller.rowCollection" class="table table-striped">
+							<thead>
+								<tr>
+									<th style="display: none;">Id</th>
+									<th>Nombre</th>
+									<th>Extensión</th>
+									<th>Descripción</th>
+									<th>Descarga</th>
+									<th>Eliminar</th>
+								</tr>
+								<tr>
+									<th colspan="5"><input st-search="" class="form-control" placeholder="busqueda global ..." type="text"/></th>
+								</tr>
+							</thead>
+							<tbody>
+							<tr ng-repeat="row in controller.displayedCollection">
+								<td style="display: none;">{{row.id}}</td>
+								<td>{{row.nombre}}</td>
+								<td>{{row.extension}}</td>
+								<td>{{row.descripcion}}</td>
+								<td align="center">
+									<button type="button"
+										ng-click="controller.descargarDocumento(row)"
+										uib-tooltip="Descargar documento" tooltip-placement="bottom"
+										class="btn btn-default">
+										<i class="glyphicon glyphicon-download-alt"> </i>
+									</button>
+								</td>
+								<td align="center">
+									<button type="button"
+										ng-click="controller.eliminarDocumento(row)"
+										uib-tooltip="Eliminar documento" tooltip-placement="bottom"
+										class="btn btn-default">
+										<i class="glyphicon glyphicon-minus-sign"> </i>
+									</button>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+        				</div>
+    					<div style="width: 5%; float: right" align="right">
+	        				<label class="btn btn-default" ng-model="controller.adjuntarDocumento" 
+	        					uib-tooltip="Adjuntar documento" tooltip-placement="bottom" ng-click="controller.adjuntarDocumentos();">
+								<i class="glyphicon glyphicon glyphicon-plus"> </i>
+							</label>
+        				</div>
+					</div>
 				<br/>
 				<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>

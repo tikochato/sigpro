@@ -1,7 +1,7 @@
-var app = angular.module('proyectoController', [ 'ngTouch', 'ui.bootstrap.contextMenu']);
+var app = angular.module('proyectoController', [ 'ngTouch','smart-table',  'ui.bootstrap.contextMenu']);
 
-app.controller('proyectoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
+app.controller('proyectoController',['$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$filter',
+	function($scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$filter) {
 
 	var mi = this;
 	i18nService.setCurrentLang('es');
@@ -25,8 +25,10 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
         mi.gridApi.selection.selectRow(mi.gridOpciones.data[filaId]);
     };
     
+	mi.rowCollection = [];
 	mi.proyecto = null;
 	mi.esNuevo = false;
+	mi.esNuevoDocumento = true;
 	mi.campos = {};
 	mi.esColapsado = false;
 	mi.mostrarcargando=true;
@@ -50,7 +52,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.ordenDireccion = null;
 	mi.filtros = [];
 	mi.orden = null;
-
 
 	mi.coordenadas = "";
 
@@ -187,6 +188,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
 			});
 
+			mi.esNuevoDocumento = false;
 		}else
 			$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
 	 }
@@ -225,6 +227,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	};
 
 	mi.nuevo = function (){
+		mi.esNuevoDocumento = true;
 		mi.poryectotipoid = "";
 		mi.proyectotiponombre="";
 		mi.unidadejecutoraid="";
@@ -241,6 +244,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.editar = function() {
 		if(mi.proyecto!=null && mi.proyecto.id!=null){
+			mi.esNuevoDocumento = false;
 			mi.poryectotipoid = mi.proyecto.proyectotipoid;
 			mi.proyectotiponombre=mi.proyecto.proyectotipo;
 			mi.unidadejecutoraid=mi.proyecto.unidadejecutoraid;
@@ -251,7 +255,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.esNuevo = false;
 			mi.coordenadas = (mi.proyecto.latitud !=null ?  mi.proyecto.latitud : '') +
 			(mi.proyecto.latitud!=null ? ', ' : '') + (mi.proyecto.longitud!=null ? mi.proyecto.longitud : '');
-
 
 			var parametros = {
 					accion: 'getProyectoPropiedadPorTipo',
@@ -279,10 +282,56 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				}
 			});
 
+			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea editar');
 	}
+
+	mi.adjuntarDocumentos = function(){
+		$documentoAdjunto.getModalDocumento($scope, 1, mi.proyecto.id)
+		.result.then(function(data) {
+			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
+		}, function(){
+			
+		});
+	}
+
+	mi.getDocumentosAdjuntos = function(objetoId, tipoObjetoId){
+		mi.rowCollection = [];
+		var formatData = new FormData();
+		formatData.append("accion","getDocumentos");
+		formatData.append("idObjeto", objetoId);
+		formatData.append("idTipoObjeto", tipoObjetoId);
+		$http.post('/SDocumentosAdjuntos', formatData, {
+			headers: {'Content-Type': undefined},
+			transformRequest: angular.identity,
+		}).then(function(response) {
+			if (response.data.success) {
+				 mi.rowCollection = response.data.documentos;
+		         mi.displayedCollection = [].concat(mi.rowCollection);
+			}
+		});
+	}
+	
+	mi.descargarDocumento= function(row){
+		var url = "/SDocumentosAdjuntos?accion=getDescarga&id="+row.id;
+		window.location.href = url;
+	}
+	
+	mi.eliminarDocumento= function(row){
+		$http.post('/SDocumentosAdjuntos?accion=eliminarDocumento&id='+row.id)
+		.then(function successCAllback(response){
+			if (response.data.success){
+				var indice = mi.rowCollection.indexOf(row);
+				if (indice !== -1) {
+			       mi.rowCollection.splice(indice, 1);		       
+			    }
+				mi.rowCollection = [];
+				mi.getDocumentosAdjuntos(1, mi.proyecto.id);
+			}
+		});
+	};
 
 	mi.irATabla = function() {
 		mi.esColapsado=false;
@@ -353,6 +402,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			$location.path('/hito/'+ proyectoid );
 		}
 	};
+
 	mi.irAActividades=function(proyectoid){
 		if(mi.proyecto!=null){
 			$location.path('/actividad/'+ proyectoid +'/1' );
@@ -532,7 +582,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 		});
 	};
-
+	
 	mi.llamarModalArchivo = function() {
 		var resultado = $q.defer();
 		var modalInstance = $uibModal.open({
