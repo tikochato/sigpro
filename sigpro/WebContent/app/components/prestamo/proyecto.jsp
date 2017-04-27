@@ -338,6 +338,7 @@
 							</label>
         				</div>
 					</div>
+				</div>
 				<br/>
 				<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
