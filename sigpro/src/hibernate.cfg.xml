@@ -34,6 +34,7 @@
         <mapping class="pojo.DatoTipo" />
         <mapping class="pojo.Desembolso" />
         <mapping class="pojo.DesembolsoTipo" />
+        <mapping class="pojo.Documento" />
         <mapping class="pojo.Entidad" />
         <mapping class="pojo.EstadoTabla" />
         <mapping class="pojo.Formulario" />

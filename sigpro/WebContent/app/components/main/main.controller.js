@@ -1,6 +1,6 @@
 var app = angular.module('sipro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
-                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','ngAria','ngMaterial','ngMessages']);
+                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','documentoAdjunto','ngAria','ngMaterial','ngMessages']);
 
 app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($routeProvider, $locationProvider,FlashProvider) {
 	   $locationProvider.hashPrefix('!');
@@ -149,6 +149,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             })
             .when('/programa/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'programaController\'" class="all_page"></div>'
+            })
+            .when('/documentosadjuntos/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'documentosadjuntosController\'" class="all_page"></div>'
             })
             .when("/:redireccion?",{
             	controller:"MainController"
@@ -379,6 +382,12 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   script: '/app/components/programa/programa.controller.js',
 	    	   template: '/app/components/programa/programa.jsp'
 	       },
+	       {
+	    	   name: 'documentosadjuntosController',
+	    	   script: '/app/components/documentosadjuntos/documentosadjuntos.controller.js',
+	    	   template: '/app/components/documentosadjuntos/documentosadjuntos.jsp'
+	       },
+	       
 
 	   ];
 	   $loadOnDemandProvider.config(modules);

@@ -1,15 +1,17 @@
-var app = angular.module('programaController', [ 'ngTouch' ]);
+var app = angular.module('programaController', [ 'ngTouch','smart-table' ]);
 
-app.controller('programaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
+app.controller('programaController',['$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
+	function($scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
 
 	var mi = this;
 	i18nService.setCurrentLang('es');
 	
 	$window.document.title = $utilidades.sistema_nombre+' - Programas';
 	
+	mi.rowCollection = [];
 	mi.programa = null;
 	mi.esNuevo = false;
+	mi.esNuevoDocumento = true;
 	mi.campos = {};
 	mi.esColapsado = false;
 	mi.mostrarcargando=true;
@@ -40,7 +42,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			minDate : new Date(1990, 1, 1),
 			startingDay : 1
 	};
-
+	
 	mi.gridOpciones = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -164,6 +166,8 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 					}else
 						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crearo' : 'guardar')+' el Programa');
 			});
+			
+			mi.esNuevoDocumento = false;
 
 		}else
 			$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
@@ -205,6 +209,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	};
 
 	mi.nuevo = function (){
+		mi.esNuevoDocumento = true;
 		mi.programatipoid = "";
 		mi.programatiponombre="";
 		mi.esColapsado = true;
@@ -217,6 +222,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 
 	mi.editar = function() {
 		if(mi.programa!=null && mi.programa.id!=null){
+			mi.esNuevoDocumento = false;
 			mi.programatipoid = mi.programa.programatipoid;
 			mi.programatiponombre=mi.programa.programatipo;
 			mi.esColapsado = true;
@@ -258,11 +264,58 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				mi.proyectos = response.data.proyectos;
 				
 			});
+			
+			mi.getDocumentosAdjuntos(6, mi.programa.id);
 
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el Programa que desea editar');
 	}
+	
+	mi.adjuntarDocumentos = function(){
+		$documentoAdjunto.getModalDocumento($scope, 6, mi.programa.id)
+		.result.then(function(data) {
+			mi.getDocumentosAdjuntos(6, mi.programa.id);
+		}, function(){
+			
+		});
+	}
+	
+	mi.getDocumentosAdjuntos = function(objetoId, tipoObjetoId){
+		mi.rowCollection = [];
+		var formatData = new FormData();
+		formatData.append("accion","getDocumentos");
+		formatData.append("idObjeto", objetoId);
+		formatData.append("idTipoObjeto", tipoObjetoId);
+		$http.post('/SDocumentosAdjuntos', formatData, {
+			headers: {'Content-Type': undefined},
+			transformRequest: angular.identity,
+		}).then(function(response) {
+			if (response.data.success) {
+				 mi.rowCollection = response.data.documentos;
+		         mi.displayedCollection = [].concat(mi.rowCollection);
+			}
+		});
+	}
+	
+	mi.descargarDocumento= function(row){
+		var url = "/SDocumentosAdjuntos?accion=getDescarga&id="+row.id;
+		window.location.href = url;
+	}
+	
+	mi.eliminarDocumento= function(row){
+		$http.post('/SDocumentosAdjuntos?accion=eliminarDocumento&id='+row.id)
+		.then(function successCAllback(response){
+			if (response.data.success){
+				var indice = mi.rowCollection.indexOf(row);
+				if (indice !== -1) {
+			       mi.rowCollection.splice(indice, 1);		       
+			    }
+				mi.rowCollection = [];
+				mi.getDocumentosAdjuntos(6, mi.proyecto.id);
+			}
+		});
+	};
 
 	mi.irATabla = function() {
 		mi.esColapsado=false;
