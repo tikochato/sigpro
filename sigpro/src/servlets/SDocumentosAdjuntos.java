@@ -28,20 +28,12 @@ import com.google.gson.GsonBuilder;
 import dao.DocumentosAdjuntosDAO;
 import pojo.Documento;
 
-/**
- * Servlet implementation class SDocumentosAdjuntos
- */
 @WebServlet("/SDocumentosAdjuntos")
-@MultipartConfig(location="C:/Users/pedro/OneDrive/Documents/Archivos_Servidor")
 public class SDocumentosAdjuntos extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public SDocumentosAdjuntos() {
         super();
-        // TODO Auto-generated constructor stub
     }
     
     class datos {
@@ -53,17 +45,10 @@ public class SDocumentosAdjuntos extends HttpServlet {
     	int idObjeto;
     };
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doPost(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	response.setCharacterEncoding("UTF-8");
     	
@@ -101,12 +86,12 @@ public class SDocumentosAdjuntos extends HttpServlet {
 					if(accion.equals("agregarDocumento")){
 						try {						
 							if(esNuevo){
-								String directorioTemporal = "\\Archivos\\Temporales\\";
+								String directorioTemporal = "/Archivos/Temporales/";
 								if (objetoId != 0){
-									directorioTemporal = directorioTemporal + objetoId+ "\\";
+									directorioTemporal = directorioTemporal + objetoId+ "/";
 								}
 								if (tipoObjetoId != 0){
-									directorioTemporal = directorioTemporal + tipoObjetoId + "\\";
+									directorioTemporal = directorioTemporal + tipoObjetoId + "/";
 								}
 															
 								ArrayList<FileItem> fileItems=new ArrayList<FileItem>();
@@ -128,11 +113,11 @@ public class SDocumentosAdjuntos extends HttpServlet {
 											directorio.mkdirs();
 										}
 																				
-										if(nombreDocumento.lastIndexOf("\\") >= 0 ){
+										if(nombreDocumento.lastIndexOf("/") >= 0 ){
 											documento = new File( directorio + 
-								            nombreDocumento.substring(nombreDocumento.lastIndexOf("\\"))) ;
+								            nombreDocumento.substring(nombreDocumento.lastIndexOf("/"))) ;
 								        }else{
-								        	documento = new File( directorio + "\\" + nombreDocumento) ;
+								        	documento = new File( directorio + "/" + nombreDocumento) ;
 								        }
 										
 										if(!documento.exists()){
@@ -210,10 +195,10 @@ public class SDocumentosAdjuntos extends HttpServlet {
 					BufferedInputStream fileIn = new BufferedInputStream(null);
 					try{
 						List<Documento> documento = DocumentosAdjuntosDAO.getDocumentoById(idDocumento);
-						String directorioTemporal = "\\Archivos\\Temporales";
+						String directorioTemporal = "/Archivos/Temporales";
 						
 						for (Documento doc : documento){
-							String filePath = directorioTemporal+"\\"+doc.getIdObjeto()+"\\"+doc.getIdTipoObjeto()+"\\"+doc.getNombre();
+							String filePath = directorioTemporal+"/"+doc.getIdObjeto()+"/"+doc.getIdTipoObjeto()+"/"+doc.getNombre();
 							
 							File file = new File(filePath);
 
@@ -251,10 +236,10 @@ public class SDocumentosAdjuntos extends HttpServlet {
 				}else if(accion.equals("eliminarDocumento")){
 					List<Documento> documento = DocumentosAdjuntosDAO.eliminarDocumentoAdjunto(idDocumento);
 					if (documento.size() > 0){
-						String directorioTemporal = "\\Archivos\\Temporales";
+						String directorioTemporal = "/Archivos/Temporales";
 						
 						for (Documento doc : documento){
-							File file = new File(directorioTemporal+"\\"+doc.getIdObjeto()+"\\"+doc.getIdTipoObjeto()+"\\"+doc.getNombre());
+							File file = new File(directorioTemporal+"/"+doc.getIdObjeto()+"/"+doc.getIdTipoObjeto()+"/"+doc.getNombre());
 							if (file.exists()){
 								file.delete();
 								
