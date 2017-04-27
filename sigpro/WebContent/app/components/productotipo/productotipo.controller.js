@@ -238,7 +238,7 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 					if (response.success) {
 						$utilidades.mensaje('success',
 								'Tipo de Producto borrado con éxito');
-						mi.cargarTabla(1);
+						mi.obtenerTotalProductoTipo();
 					} else
 						$utilidades.mensaje('danger',
 								'Error al borrar el Tipo de Producto');
@@ -268,7 +268,7 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 							mi.codigo = response.data.id;
 							mi.esNuevo=false;
 							$utilidades.mensaje('success',
-									'El tipo de prodcuto se creo con éxito.');
+									'El tipo de producto se creo con éxito.');
 							mi.obtenerTotalProductoTipo();
 						} else {
 							$utilidades.mensaje('danger',
@@ -333,12 +333,13 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 	};
 
 	
-	mi.obtenerTotalProductoTipo=function(){
+	mi.obtenerTotalProductoTipo = function(){
 		$http.post('/SProductoTipo', { accion: 'totalElementos',objetoid:$routeParams.objeto_id, tipo: mi.objetotipo,
 			filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
 				function(response) {
 					mi.totalElementos = response.total;
+					mi.paginaActual = 1;
 					mi.cargarTabla(1);
 		});
 	};
