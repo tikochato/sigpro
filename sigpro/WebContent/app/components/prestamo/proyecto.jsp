@@ -137,17 +137,19 @@
 		<div class="col-sm-12">
 			<form name="form">
 				<div class="form-group">
-					<md-input-container flex class="md-block">
-						<label for="id">ID</label>
-						<input type="text" value="{{ controller.proyecto.id }}" disabled>
+					<md-input-container flex class="md-required md-block">
+						<label for="id">ID {{ controller.proyecto.id }}</label>
+						<input type="text" disabled >
 					</md-input-container>
 				</div>
-				<div layout-gt-sm="row">
-					<md-input-container flex class="md-required" style="padding-right: 2%">
+				<div class="form-group" >
+					<md-input-container flex class="md-required md-block">
 						<label for="inombre">Nombre</label>
 						<input type="text" name="inombre" id="inombre" ng-model="controller.proyecto.nombre" ng-required="true" >
 					</md-input-container>
-					<md-input-container flex style="padding-right: 2%">
+				</div>
+				<div class="form-group" >
+					<md-input-container flex class="md-block">
 						<label for="isnip">SNIP</label>
 						<input type="number" name="isnip" id="isnip"  ng-model="controller.proyecto.snip">
 					</md-input-container>
