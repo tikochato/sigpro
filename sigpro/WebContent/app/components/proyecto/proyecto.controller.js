@@ -292,17 +292,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			if (response.data.success) {
 				 mi.rowCollection = response.data.documentos;
 		         mi.displayedCollection = [].concat(mi.rowCollection);
-				/*var documentos = response.data.documentos;
-				for (var i = 0; i < documentos.length; i++){
-					mi.rowCollection.push(
-						{
-							'id' : documentos[i].id,
-							'extension' : documentos[i].extension,
-							'nombre' : documentos[i].nombre,
-							'descripcion' : documentos[i].descripcion,
-						}
-					)
-				}*/
 			}
 		});
 	}
