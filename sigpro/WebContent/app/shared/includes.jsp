@@ -8,7 +8,7 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/timeline/angular-timeline-animations.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/timeline/angular-timeline-bootstrap.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/timeline/angular-timeline.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/angular-material.min.css" />
+<!-- <link rel="stylesheet" type="text/css" href="/assets/css/angular-material.min.css" /> -->
 <link rel="stylesheet" type="text/css" href="/assets/css/main.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.adds.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/kanban.css" />

@@ -5,6 +5,55 @@
 <div ng-controller="proyectoController as controller"
 	class="maincontainer all_page" id="title">
 	
+	<style>
+		input:focus ~ .floating-label,
+		input:not([value=""]) ~ .floating-label{
+		  top: 0px;
+		  bottom: 10px;
+		  font-size: 11px;
+		  opacity: 1;
+		  border: none;
+		  outline-width: 0;
+		}
+		
+		input:focus ~ .floating-label{
+		  color: rgb(63, 81, 181);
+		}
+		
+		input:focus{
+			outline-width: 0;
+		}
+		
+    	.inputText:focus {
+        	border-bottom: 2px solid rgb(63, 81, 181);
+     	}
+      
+		.inputText {
+		  font-size: 14px;
+		  width: 100%;
+		  height: 35px;
+		  border: none;
+		  border-bottom: 1px solid rgba(51, 51, 51, 0.7);
+		  background: transparent;
+		}
+		
+				
+		.form-group {
+		  position: relative;
+		  padding: 5px;    
+		  margin-bottom: 15px;
+		}
+		
+		.floating-label {
+		  position: absolute;
+		  pointer-events: none;
+		  top: 18px;
+		  transition: 0.2s ease all;
+		  border: none;
+      		color: rgba(51, 51, 51, 0.7);;
+		}	
+	</style> 
+	
 	<script type="text/ng-template" id="map.html">
         <div class="modal-header">
             <h3 class="modal-title">Mapa de Ubicación</h3>
@@ -134,16 +183,15 @@
 					<label for="id">ID</label>
   					<p class="form-control-static">{{ controller.proyecto.id }}</p>
 				</div>
-				<div class="form-group">
-					<label for="inombre">* Nombre</label>
-					<input type="text" name="inombre" id="inombre" ng-model="controller.proyecto.nombre"
-						class="form-control" placeholder="Nombre" ng-required="true" >
-				</div>
+				
+				<div class="form-group">      
+			      <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="controller.proyecto.nombre" value="{{controller.proyecto.nombre}}" onblur="this.setAttribute('value', this.value);" ng-required="true" >
+			      <span class="floating-label">* Nombre</span>
+			    </div>
 
-				<div class="form-group"  >
-					<label for="isnip">SNIP</label>
-					<input type="number" name="isnip" id="isnip"  ng-model="controller.proyecto.snip"
-						class="form-control" placeholder="SNIP">
+				<div class="form-group">   
+					<input type="number" class="inputText" name="isnip" id="isnip"  ng-model="controller.proyecto.snip" value="{{controller.proyecto.snip}}" onblur="this.setAttribute('value', this.value);">
+				      <span class="floating-label">SNIP</span>
 				</div>
 				
 				<div class="form-group row" >
