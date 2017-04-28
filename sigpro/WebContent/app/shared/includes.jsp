@@ -8,7 +8,7 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/timeline/angular-timeline-animations.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/timeline/angular-timeline-bootstrap.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/timeline/angular-timeline.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/angular-material.min.css" />
+<!-- <link rel="stylesheet" type="text/css" href="/assets/css/angular-material.min.css" /> -->
 <link rel="stylesheet" type="text/css" href="/assets/css/main.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.adds.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/kanban.css" />
@@ -43,6 +43,8 @@
 <script type="text/javascript" src="/assets/libs/angular-flash.min.js"></script>
 <script type="text/javascript" src="/assets/libs/angular-material.min.js"></script>
 <script type="text/javascript" src="/assets/libs/utilidades.js"></script>
+<script type="text/javascript" src="/assets/libs/documentoAdjunto.js"></script>
+<script type="text/javascript" src="/app/components/documentosadjuntos/documentosadjuntos.controller.js"></script>
 <script type="text/javascript" src="/assets/libs/ganttchart/DlhSoft.Data.HTML.Controls.js"></script>
 <script type="text/javascript" src="/assets/libs/ganttchart/DlhSoft.ProjectData.GanttChart.HTML.Controls.js"></script>
 <script type="text/javascript" src="/assets/libs/ganttchart/DlhSoft.ProjectData.GanttChart.HTML.Controls.Extras.js"></script>

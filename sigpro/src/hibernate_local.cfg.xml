@@ -36,6 +36,7 @@
         <mapping class="pojo.Desembolso" />
         <mapping class="pojo.DesembolsoTipo" />
         <mapping class="pojo.EjecucionEstado" />
+        <mapping class="pojo.Documento" />
         <mapping class="pojo.Entidad" />
         <mapping class="pojo.EstadoTabla" />
         <mapping class="pojo.Formulario" />

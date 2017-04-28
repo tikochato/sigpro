@@ -45,11 +45,6 @@ public class ProductoDAOTest {
 	}
 	
 	@Test
-	public void getJsonTest(){
-		assertEquals(ProductoDAO.getJson(1, 1,1,"", "", "","", "","").getClass(),String.class);
-	}
-	
-	@Test
 	public void guardarTest(){
 		//assertEquals(ProductoDAO.guardar("unit_test", "unit_test", 0, 0, 0, "unit_test", "[]", "admin"),false);
 	}
