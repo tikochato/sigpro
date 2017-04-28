@@ -219,3 +219,86 @@ nav.navbar{
   left: 0;
   bottom: 0;
 }
+
+input:focus ~ .floating-label,
+input:not([value=""]) ~ .floating-label{
+  top: -2px;
+  bottom: 10px;
+  font-size: 11px;
+  opacity: 1;
+  border: none;
+  outline-width: 0;
+}
+
+input:focus ~ .floating-label{
+  color: rgb(63, 81, 181);
+}
+
+input:focus{
+	outline-width: 0;
+}
+
+select ~ .floating-label{
+  top: -2px;
+  bottom: 10px;
+  font-size: 11px;
+  opacity: 1;
+  border: none;
+  outline-width: 0;
+}
+
+select:focus ~ .floating-label{
+  color: rgb(63, 81, 181);
+}
+
+select:focus{
+	outline-width: 0;
+}
+
+input[type='checkbox']:not([value=""]) ~ .floating-label {
+	left: 5px;
+	top: -5px;
+}
+
+.inputText:focus {
+   	border-bottom: 2px solid rgb(63, 81, 181);
+}
+    
+.inputText {
+  font-size: 14px;
+  width: 100%;
+  height: 35px;
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,0.12);
+  background: transparent;
+}
+
+		
+.form-group {
+  position: relative;
+  padding: 5px;    
+  margin-bottom: 15px;
+}
+
+.form-group-row {
+  position: relative;
+  padding: 5px;    
+  margin-bottom: 15px;
+  margin-left: 0px;
+}
+
+.floating-label {
+  position: absolute;
+  pointer-events: none;
+  top: 18px;
+  transition: 0.2s ease all;
+  border: none;
+  color: rgba(0,0,0,0.38);
+  font-weight: bold;
+}	
+
+.label-icon{
+	right: 5px;
+    top: 12px;
+    position: absolute;
+}
