@@ -21,6 +21,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 	mi.totalProgramas = 0;
+	mi.mostrarPrestamo = true;
 
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion = null;
@@ -29,6 +30,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	mi.orden = null;
 	
 	mi.proyectos =[];
+	mi.prestamo = [];
 	mi.proyecto =null;
 	mi.mostrarcargandoProyecto=true;
 	mi.mostrarProyecto = false;
@@ -152,6 +154,68 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				esnuevo: mi.esNuevo,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				idsproyectos:idsproyectos,
+				// prestamo
+				fechaCorte : moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY'),
+				codigoPresupuestario: mi.prestamo.codigoPresupuestario,
+				numeroPrestamo: mi.prestamo.numeroPrestamo,
+				destino : mi.prestamo.destino,
+				sectorEconomico: mi.prestamo.sectorEconomico,
+				unidadEjecutora: mi.prestamo.unidadejecutora,
+				fechaFimra: moment(mi.prestamo.fechaFirma).format('DD/MM/YYYY'),
+				tipoAutorizacionId : mi.prestamo.autorizacionTipoId,
+				numeroAutorizacion: mi.prestamo.numeroAutorizacion,
+				fechaAutorizacion: moment(mi.prestamo.fechaAutorizacion).format('DD/MM/YYYY'),
+				aniosPlazo: mi.prestamo.aniosPlazo,
+				aniosGracia: mi.prestamo.aniosGracia,
+				fechaFinEjecucion: moment(mi.prestamo.fechaFinEjecucion).format('DD/MM/YYYY'),
+				periodoEjecucion: mi.prestamo.periodoEjecucion,
+				tipoInteresId: mi.prestamo.interesTipoId,
+				porcentajeInteres: mi.prestamo.porcentajeInteres,
+				porcentajeComisionCompra: mi.prestamo.porcentajeComisionCompra,
+				tipoMonedaId: mi.prestamo.nombreTipoMonedaId,
+				montoContratado: mi.prestamo.montoContratado,
+				amortizado: mi.prestamo.amortizado,
+				porAmortizar: mi.prestamo.porAmortizar,
+				principalAnio: mi.prestamo.principalAnio,
+				interesesAnio : mi.prestamo.interesesAnio,
+				comisionCompromisoAnio: mi.prestamo.comisionCompromisoAnio,
+				otrosGastos: mi.prestamo.otrosGastos,
+				principalAcumulado: mi.prestamo.principalAcumulado,
+				interesesAcumulados: mi.prestamo.interesesAcumulados,
+				comisionCompromisoAcumulado: mi.prestamo.comisionCompromisoAcumulado,
+				otrosCargosAcumulados: mi.prestamo.otrosCargosAcumulados,
+				presupuestoAsignadoFuncionamiento: mi.prestamo.presupuestoAsignadoFuncionamiento,
+				presupuestoAsignadoInversion: mi.prestamo.presupuestoAsignadoInversion,
+				presupuestoModificadoFuncionamiento: mi.prestamo.presupuestoModificadoFuncionamiento,
+				presupuestoModificadoInversion: mi.prestamo.presupuestoModificadoInversion,
+				presupuestoVigenteFuncionamiento: mi.prestamo.presupuestoVigenteFuncionamiento,
+				presupuestoVigenteInversion: mi.prestamo.presupuestoVigenteInversion,
+				presupuestoDevengadoFunconamiento:mi.prestamo.presupuestoDevengadoFuncionamiento,
+				presupuestoDevengadoInversion:mi.prestamo.presupuestoDevengadoInversion,
+				presupuestoPagadoFuncionamiento: mi.prestamo.presupuestoPagadoFuncionamiento,
+				presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoInversion,
+				saldoCuentas: mi.prestamo.saldoCuentas,
+				desembolsoReal: mi.prestamo.desembolsoReal,
+				ejecucionEstadoId: mi.prestamo.ejecucionEstadoId,
+				proyetoPrograma: mi.prestamo.proyectoPrograma,
+				fechaDecreto: moment(mi.prestamo.fechaDecreto).format('DD/MM/YYYY'),
+				fechaSuscripcion: moment(mi.prestamo.fechaSuscripcion).format('DD/MM/YYYY'),
+				fechaElegibilidad: moment(mi.prestamo.fechaElegibilidadUe).format('DD/MM/YYYY'),
+				fechaCierreOriginal:  moment(mi.prestamo.fechaCierreOrigianlUe).format('DD/MM/YYYY'),
+				fechaCierreActual: moment(mi.prestamo.fechaCierreActualUe).format('DD/MM/YYYY'),
+				mesesProrroga: mi.prestamo.mesesProrrogaUe,
+				plazoEjecucionUe: mi.prestamo.plazoEjecucionUe,
+				montoAisignadoUe: mi.prestamo.montoAsignadoUe,
+				desembolsoAFechaUe: mi.prestamo.desembolsoAFechaUe,
+				montoPorDesembolsarUe: mi.prestamo.montoPorDesembolsarUe,
+				
+				
+				
+				
+				
+				
+				
+				
 				t:moment().unix()
 			};
 			$http.post('/SPrograma',param_data).then(
@@ -196,8 +260,6 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				 }, function() {
 					    
 				    });
-			
-			
 			});
 		}
 		else
@@ -249,6 +311,17 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			});
 			
 			parametros = {
+					accion: 'getPrestamo',
+					objetoId: mi.programa.id,
+				    objetoTipo : 6,
+				    t:moment().unix()
+			}
+			
+			$http.post('/SPrestamo', parametros).then(function(response){
+				mi.prestamo = response.data.prestamo;
+			});
+			
+			parametros = {
 					accion: 'obtenerProyectosPorPrograma',
 					idPrograma: mi.programa!=''? mi.programa.id:0,
 				    t:moment().unix()
@@ -289,7 +362,23 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	}
 
 	mi.abrirPopupFecha = function(index) {
-		mi.camposdinamicos[index].isOpen = true;
+		if(index<1000){
+			mi.camposdinamicos[index].isOpen = true;
+		}
+		else{
+			switch(index){
+				case 1003: mi.fc_abierto = true; break;
+				case 1004: mi.ff_abierto = true; break;
+				case 1005: mi.fa_abierto = true; break;
+				case 1006: mi.ffe_abierto = true; break;
+				case 1007: mi.fd_abierto = true; break;
+				case 1008: mi.fs_abierto = true; break;
+				case 1009: mi.fe_abierto = true; break;
+				case 1010: mi.fco_abierto = true; break;
+				case 1011: mi.fca_abierto = true; break;
+			}
+		}
+
 	};
 
 	mi.filtrar = function(evt){
@@ -432,6 +521,99 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			mi.proyectos.push(itemSeleccionado);
 		});
 	};
+	
+	mi.buscarUnidadEjecutora = function() {
+		
+		var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
+			accion : 'totalElementos'	
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'cargar',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'unidadEjecutora','nombreUnidadEjecutora');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.prestamo.unidadejecutoranombre = itemSeleccionado.nombreUnidadEjecutora;
+			mi.prestamo.unidadejecutora = itemSeleccionado.unidadEjecutora;
+		});
+	};
+	
+	mi.buscarAutorizacionTipo = function() {
+		
+		var resultado = mi.llamarModalBusqueda('/SAutorizacionTipo', {
+			accion : 'numeroAutorizacionTipo'	
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getAutorizacionTipoPagin',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'id','nombre');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.prestamo.nombreAutorizacionTipo = itemSeleccionado.nombre;
+			mi.prestamo.autorizacionTipoId = itemSeleccionado.id;
+		});
+	};
+	
+	mi.buscarInteresTipo = function() {
+		
+		var resultado = mi.llamarModalBusqueda('/SInteresTipo', {
+			accion : 'numeroInteresTipo'	
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getAutorizacionTipoPagin',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'id','nombre');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.prestamo.nombreTipoInteres = itemSeleccionado.nombre;
+			mi.prestamo.interesTipoId = itemSeleccionado.id;
+		});
+	};
+	
+	
+	
+	mi.buscarTipoMoneda = function() {
+		
+		var resultado = mi.llamarModalBusqueda('/SPrograma', {
+			accion : 'numeroTipoMonedas'	
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getTipoMnedaPagina',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'id','nombre');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.prestamo.nombreTipoMoneda = itemSeleccionado.nombre;
+			mi.prestamo.nombreTipoMonedaId = itemSeleccionado.id;
+		});
+	};
+	
+	mi.buscarEstadoEjecucion = function() {
+		
+		var resultado = mi.llamarModalBusqueda('/SPrograma', {
+			accion : 'numeroEjecucionEstado'	
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getEjecucionEstadoPagina',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'id','nombre');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.prestamo.ejecucionEstadoNombre = itemSeleccionado.nombre;
+			mi.prestamo.ejecucionEstadoId = itemSeleccionado.id;
+		});
+	};
+	
 
 	
 } ]);

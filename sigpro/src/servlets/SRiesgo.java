@@ -298,10 +298,8 @@ public class SRiesgo extends HttpServlet {
 					if(esnuevo){
 						
 						riesgo = new Riesgo(colaborador, riesgoTipo, nombre, descripcion, usuario, null, new Date(), null, 1,
-								impactoProyectado, impacto, puntuacionImpacto, probabilidad, gatillosOSintomas, respuesta, 
-								riesgosSecundarios, ejecutado, fechaEjecucion, null, null);
-						
-						
+								impactoProyectado, impacto, puntuacionImpacto, probabilidad, gatillosOSintomas, respuesta, riesgosSecundarios, 
+								ejecutado, fechaEjecucion, impactoProyectado, riesgosSecundarios, null, null);
 						
 					}
 					else{

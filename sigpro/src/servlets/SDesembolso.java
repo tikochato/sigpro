@@ -180,8 +180,8 @@ public class SDesembolso extends HttpServlet {
 				
 				Desembolso desembolso;
 				if(esnuevo){
-					desembolso = new Desembolso(desembolsoTipo, proyecto, fecha, 1, monto, tipoCambio,
-							usuario, new DateTime().toDate(),0);
+					desembolso = new Desembolso(desembolsoTipo, proyecto, null, fecha, 1, monto, tipoCambio, null, 
+							usuario, null, new Date(), null);
 				}
 				else{
 					

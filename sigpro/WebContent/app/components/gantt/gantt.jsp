@@ -12,7 +12,7 @@
 		    <form>
 		    	
 				<div class="btn-group">
-					<label class="btn btn-primary" ng-click="ganttc.exportar()"><span class="glyphicon glyphicon glyphicon-import" aria-hidden="true"></span></label>
+					
 					<label class="btn btn-primary" ng-click="ganttc.exportar()"><span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
 					<label class="btn btn-primary" ng-click="ganttc.zoomAcercar()"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></label>
 					<label class="btn btn-primary" ng-click="ganttc.zoomAlejar()"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span></label>
