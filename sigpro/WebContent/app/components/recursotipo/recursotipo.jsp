@@ -19,13 +19,16 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="28040">
-					<label class="btn btn-primary" ng-click="recursotipoc.nuevo()">Nuevo</label>
+					<label class="btn btn-primary" ng-click="recursotipoc.nuevo()" uib-tooltip="Nuevo tipo recurso">
+					<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="28010">
-					<label class="btn btn-primary" ng-click="recursotipoc.editar()">Editar</label>
+					<label class="btn btn-primary" ng-click="recursotipoc.editar()" uib-tooltip="Editar tipo recurso">
+					<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="28030">
-					<label class="btn btn-primary" ng-click="recursotipoc.borrar()">Borrar</label>
+					<label class="btn btn-primary" ng-click="recursotipoc.borrar()" uib-tooltip="Borrar tipo recurso">
+					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</shiro:hasPermission>				
 			</div>
 		</div>
@@ -36,8 +39,7 @@
 					<div class="btn-group" role="group" aria-label="">
 						<a class="btn btn-default" href
 							ng-click="recursotipoc.reiniciarVista()" role="button"
-							uib-tooltip="Reiniciar la vista de la tabla"
-							tooltip-placement="left"><span
+							uib-tooltip="Reiniciar la vista de la tabla"><span
 							class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
 					</div>
 				</div>
@@ -68,30 +70,32 @@
 	</div>
 
 	<div class="row main-form" ng-if="recursotipoc.mostraringreso">
-		<h4 ng-hide="!recursotipoc.esnuevo">Nuevo Tipo de Recurso</h4>
-		<h4 ng-hide="recursotipoc.esnuevo">Edición de Tipo de Recurso</h4>
+		<h2 ng-hide="!recursotipoc.esnuevo">Nuevo Tipo de Recurso</h2>
+		<h2 ng-hide="recursotipoc.esnuevo">Edición de Tipo de Recurso</h2>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="28020">
-					<label class="btn btn-success" ng-click="form.$valid ? recursotipoc.guardar() : '' " ng-disabled="form.$invalid">Guardar</label>
+					<label class="btn btn-success" ng-click="form.$valid ? recursotipoc.guardar() : '' " ng-disabled="form.$invalid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="recursotipoc.irATabla()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="recursotipoc.irATabla()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 		<div class="col-sm-12">
 			<form name ="form">
 				<div class="form-group" ng-show="!recursotipoc.esnuevo">
-					<label for="id">ID</label> 
-					<p class="form-control-static" > {{recursotipoc.recursotipo.id }}</p>
+					<label for="id" class="floating-label">ID {{recursotipoc.recursotipo.id }}</label>
+					<br/><br/> 
 				</div>
 
 				<div class="form-group">
-					<label for="nombre">* Nombre</label> 
-					<input type="text" class="form-control"  placeholder="Nombre"ng-model="recursotipoc.recursotipo.nombre" ng-required="true">
+					<input type="text" class="inputText" ng-model="recursotipoc.recursotipo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
+					<label class="floating-label">* Nombre</label> 
 				</div>
 				<div class="form-group">
-					<label for="descripcion">Descripción</label> 
-					<input type="text"class="form-control"  placeholder="Descripción"ng-model="recursotipoc.recursotipo.descripcion" >
+					<input type="text" class="inputText" ng-model="recursotipoc.recursotipo.descripcion" onblur="this.setAttribute('value', this.value);">
+					<label class="floating-label">Descripción</label> 
 				</div>
 				<br/>
 				<div class="panel panel-default">
@@ -181,9 +185,11 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="28020">
-					<label class="btn btn-success" ng-click="form.$valid ? recursotipoc.guardar() : '' " ng-disabled="form.$invalid">Guardar</label>
+					<label class="btn btn-success" ng-click="form.$valid ? recursotipoc.guardar() : '' " ng-disabled="form.$invalid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="recursotipoc.irATabla()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="recursotipoc.irATabla()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 	</div>

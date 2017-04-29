@@ -44,7 +44,6 @@
 <script type="text/javascript" src="/assets/libs/angular-material.min.js"></script>
 <script type="text/javascript" src="/assets/libs/utilidades.js"></script>
 <script type="text/javascript" src="/assets/libs/documentoAdjunto.js"></script>
-<script type="text/javascript" src="/app/components/documentosadjuntos/documentosadjuntos.controller.js"></script>
 <script type="text/javascript" src="/assets/libs/ganttchart/DlhSoft.Data.HTML.Controls.js"></script>
 <script type="text/javascript" src="/assets/libs/ganttchart/DlhSoft.ProjectData.GanttChart.HTML.Controls.js"></script>
 <script type="text/javascript" src="/assets/libs/ganttchart/DlhSoft.ProjectData.GanttChart.HTML.Controls.Extras.js"></script>
