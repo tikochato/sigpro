@@ -134,7 +134,6 @@ nav.navbar{
 	bottom: 0px;
 	width: 100%;
 	display: flex;
-	border-top: 1px solid #ddd;
 }
 
 .context-menu{
@@ -278,7 +277,7 @@ input[type='checkbox']:not([value=""]) ~ .floating-label {
 .form-group {
   position: relative;
   padding: 5px;    
-  margin-bottom: 7px;
+  margin-bottom: 3px;
 }
 
 .form-group-row {
@@ -302,4 +301,13 @@ input[type='checkbox']:not([value=""]) ~ .floating-label {
 	right: 5px;
     top: 12px;
     position: absolute;
+}
+
+.label-form{
+	 font-size: 11px;
+	 opacity: 1;
+	 pointer-events: none;
+	 color: rgba(0,0,0,0.38) !important;
+	 font-weight: bold;
+	 text-align: center;
 }

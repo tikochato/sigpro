@@ -38,7 +38,7 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 			<shiro:hasPermission name="24040">
-				<label class="btn btn-primary" ng-click="controller.nuevo()" title="Nuevo">
+				<label class="btn btn-primary" ng-click="controller.nuevo()" uib-tooltip="Nuevo">
 				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24040">
@@ -46,18 +46,18 @@
 				<span class="glyphicon glyphicon glyphicon-file"></span> Desde archivo</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24010">
-				<label class="btn btn-primary" ng-click="controller.editar()" title="Editar">
+				<label class="btn btn-primary" ng-click="controller.editar()" uib-tooltip="Editar">
 				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24030">
-				<label class="btn btn-danger" ng-click="controller.borrar()" title="Borrar">
+				<label class="btn btn-danger" ng-click="controller.borrar()" uib-tooltip="Borrar">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</shiro:hasPermission>
 			</div>
 		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group" role="group" aria-label="">
-					<shiro:hasPermission name="24010">
+					<shiro:hasPermission name="21010">
 						<a class="btn btn-default" href ng-click="controller.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
 					</shiro:hasPermission>
 					</div>
@@ -255,18 +255,18 @@
 				<br/>
 				
 				<div class="panel panel-default" ng-hide="controller.esNuevoDocumento">
-					<div class="panel-heading" style="text-align: center;">Archivos adjuntos</div>
+					<div class="panel-heading label-form" style="text-align: center;">Archivos adjuntos</div>
 					<div class="panel-body">
 						<div style="width: 95%; float: left">
 						<table st-table="controller.displayedCollection" st-safe-src="controller.rowCollection" class="table table-striped">
 							<thead>
 								<tr>
 									<th style="display: none;">Id</th>
-									<th>Nombre</th>
-									<th>Extensión</th>
-									<th>Descripción</th>
-									<th>Descarga</th>
-									<th>Eliminar</th>
+									<th class="label-form">Nombre</th>
+									<th class="label-form">Extensión</th>
+									<th class="label-form">Descripción</th>
+									<th class="label-form">Descarga</th>
+									<th class="label-form">Eliminar</th>
 								</tr>
 								<tr>
 									<th colspan="5"><input st-search="" class="form-control" placeholder="busqueda global ..." type="text"/></th>
@@ -308,33 +308,33 @@
 				</div>
 					
 				<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label>
-				  					<p class="form-control-static">{{ controller.proyecto.usuarioCreo }}</pl>
+									<label for="usuarioCreo" class="label-form">Usuario que creo</label>
+				  					<p class="">{{ controller.proyecto.usuarioCreo }}</pl>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label for="fechaCreacion">Fecha de creación</label>
-				  					<p class="form-control-static">{{ controller.proyecto.fechaCreacion }}</p>
+									<label for="fechaCreacion" class="label-form">Fecha de creación</label>
+				  					<p class="">{{ controller.proyecto.fechaCreacion }}</p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label>
-				  					<p class="form-control-static">{{ controller.proyecto.usuarioactualizo }}</p>
+									<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label>
+				  					<p class="">{{ controller.proyecto.usuarioactualizo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label>
-				  					<p class="form-control-static">{{ controller.proyecto.fechaactualizacion }}</p>
+									<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label>
+				  					<p class="">{{ controller.proyecto.fechaactualizacion }}</p>
 								</div>
 							</div>
 						</div>
@@ -354,3 +354,4 @@
 		</div>
 	</div>
 
+</div>
