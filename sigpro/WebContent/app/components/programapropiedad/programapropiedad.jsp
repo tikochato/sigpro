@@ -6,16 +6,26 @@
 		<shiro:lacksPermission name="38010">
 			<p ng-init="programapropiedadc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Propiedades de Programa</h3><br/>
-		<div class="row" align="center" ng-hide="programapropiedadc.mostraringreso">
+		
+		<div class="panel panel-default">
+	  		<div class="panel-heading"><h3>Propiedades de Programa</h3></div>
+		</div>
+		
+		<div align="center" ng-hide="programapropiedadc.mostraringreso">
+			<br>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="38040">
-			       		<label class="btn btn-primary" ng-click="programapropiedadc.nuevo()">Nuevo</label>
+			       		<label class="btn btn-primary" ng-click="programapropiedadc.nuevo()" uib-tooltip="Nuevo">
+				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			       </shiro:hasPermission>
-			       <shiro:hasPermission name="38010"><label class="btn btn-primary" ng-click="programapropiedadc.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="38010">
+			       	<label class="btn btn-primary" ng-click="programapropiedadc.editar()" uib-tooltip="Editar">
+				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
+			       	</shiro:hasPermission>
 			       <shiro:hasPermission name="38030">
-			       		<label class="btn btn-primary" ng-click="programapropiedadc.borrar()">Borrar</label>
+			       		<label class="btn btn-danger" ng-click="programapropiedadc.borrar()" uib-tooltip="Borrar">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			       </shiro:hasPermission>
     			</div>
     		</div>
@@ -58,70 +68,74 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row main-form" ng-show="programapropiedadc.mostraringreso">
-			<h4 ng-hide="!programapropiedadc.esnuevo">Nueva Propiedad</h4>
-			<h4 ng-hide="programapropiedadc.esnuevo">Edición de Propiedad</h4>
+		<div class="row second-main-form" ng-show="programapropiedadc.mostraringreso">
+			<div class="page-header">
+				<h2 ng-hide="!programapropiedadc.esnuevo"><small>Nueva Propiedad</small></h2>
+				<h2 ng-hide="programapropiedadc.esnuevo"><small>Edición de Propiedad</small></h2>
+			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="38020">
-			        	<label class="btn btn-success" ng-click="form.$valid ? programapropiedadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+			        	<label class="btn btn-success" ng-click="form.$valid ? programapropiedadc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 					</shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="programapropiedadc.irATabla()">Ir a Tabla</label>
+			        <label class="btn btn-primary" ng-click="programapropiedadc.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
     			</div>
     		</div>
 
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group">
-							<label for="id">ID</label>
-    						<p class="form-control-static">{{ programapropiedadc.programapropiedad.id }}</p>
+							<label for="id" class="floating-label">ID {{ programapropiedadc.programapropiedad.id }}</label>
+    						<br/><br/>
 						</div>
 						<div class="form-group">
-							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control"  placeholder="Nombre" ng-model="programapropiedadc.programapropiedad.nombre" ng-required="true">
+    						<input type="text" class="inputText" ng-model="programapropiedadc.programapropiedad.nombre"  value="{{programapropiedadc.programapropiedad.nombre}}" onblur="this.setAttribute('value', this.value);" ng-required="true">
+							<label for="nombre" class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
-							<label for="nombre">* Tipo dato</label>
-							<select class="form-control" ng-model="programapropiedadc.programapropiedad.datotipoid"
+							<select class="inputText" ng-model="programapropiedadc.programapropiedad.datotipoid"
 								ng-options="tipo as tipo.nombre for tipo in programapropiedadc.tipodatos track by tipo.id"
 								ng-readonly="true"
 								ng-disabled="!programapropiedadc.esnuevo" ng-required="true">
 								<option value="">Seleccione una opción</option>
 							</select>
+							<label for="nombre" class="floating-label">* Tipo dato</label>
 						</div>
 						<div class="form-group">
-							<label for="descripcion">Descripción</label>
-    						<input type="text" class="form-control" placeholder="Descripción" ng-model="programapropiedadc.programapropiedad.descripcion">
+							<input type="text" class="inputText" ng-model="programapropiedadc.programapropiedad.descripcion" value="{{programapropiedadc.programapropiedad.descripcion}}" onblur="this.setAttribute('value', this.value);" >
+							<label for="descripcion" class="floating-label">Descripción</label>
 						</div>
 						<br/>
 						<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static"> {{ programapropiedadc.programapropiedad.usuarioCreo }}</p>
+									<label for="usuarioCreo" class="label-form">Usuario que creo</label> 
+									<p class=""> {{ programapropiedadc.programapropiedad.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
-									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" > {{ programapropiedadc.programapropiedad.fechaCreacion }} </p>
+									<label for="fechaCreacion" class="label-form">Fecha de creación</label>
+									<p class="" > {{ programapropiedadc.programapropiedad.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" >{{ programapropiedadc.programapropiedad.usuarioActualizo }} </p>
+									<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label> 
+									<p class="" >{{ programapropiedadc.programapropiedad.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" >{{ programapropiedadc.programapropiedad.fechaActualizacion }} </p>
+									<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label> 
+									<p class="" >{{ programapropiedadc.programapropiedad.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>
@@ -129,14 +143,16 @@
 				</div>
 				</form>
 			</div>
-			<div align="center">Los campos marcados con * son obligatorios</div>
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
 				        <shiro:hasPermission name="38020">
-				        	<label class="btn btn-success" ng-click="form.$valid ? programapropiedadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				        	<label class="btn btn-success" ng-click="form.$valid ? programapropiedadc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 						</shiro:hasPermission>
-				        <label class="btn btn-primary" ng-click="programapropiedadc.irATabla()">Ir a Tabla</label>
+				        <label class="btn btn-primary" ng-click="programapropiedadc.irATabla()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 	    			</div>
 	    		</div>
     		</div>
