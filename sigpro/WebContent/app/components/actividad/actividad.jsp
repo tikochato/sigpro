@@ -33,20 +33,28 @@
 
 			<p ng-init="actividadc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Actividades</h3><br/>
-		<h4>{{ actividadc.objetoTipoNombre }} {{ actividadc.objetoNombre }}</h4><br/>
+		<div class="panel panel-default">
+		    <div class="panel-heading"><h3>Actividades</h3></div>
+		</div>
+		<h2><small>{{ actividadc.objetoTipoNombre }} {{ actividadc.objetoNombre }}</small></h2><br/>
 		<div class="row" align="center" ng-hide="actividadc.mostraringreso">
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-			       <shiro:hasPermission name="1040">
-			       		<label class="btn btn-primary" ng-click="actividadc.nuevo()">Nueva</label>
-			       </shiro:hasPermission>
-			       <shiro:hasPermission name="1010"><label class="btn btn-primary" ng-click="actividadc.editar()">Editar</label></shiro:hasPermission>
-			       <shiro:hasPermission name="1030">
-			       		<label class="btn btn-primary" ng-click="actividadc.borrar()">Borrar</label>
-			       </shiro:hasPermission>
-    			</div>
-    		</div>
+			
+    		<div class="col-sm-12 operation_buttons" align="right">
+			  <div class="btn-group">
+			  <shiro:hasPermission name="1040">
+			    <label class="btn btn-primary" ng-click="actividadc.nuevo()" uib-tooltip="Nueva">
+			    <span class="glyphicon glyphicon-plus"></span> Nueva</label>
+			  </shiro:hasPermission>
+			  <shiro:hasPermission name="1010">
+			    <label class="btn btn-primary" ng-click="actividadc.editar()" uib-tooltip="Editar">
+			    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
+			  </shiro:hasPermission>
+			  <shiro:hasPermission name="1030">
+			    <label class="btn btn-danger" ng-click="actividadc.borrar()" uib-tooltip="Borrar">
+			    <span class="glyphicon glyphicon-trash"></span> Borrar</label>
+			  </shiro:hasPermission>
+			  </div>
+			</div>
     		<shiro:hasPermission name="1010">
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
