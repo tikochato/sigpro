@@ -9,16 +9,25 @@
   	    <shiro:lacksPermission name="26010">
   	   		<p ng-init="recursoc.redireccionSinPermisos()"></p>
   	    </shiro:lacksPermission>
-		<h3>Recursos</h3><br/>
-		<div class="row" align="center" ng-hide="recursoc.mostraringreso">
+		
+	<div class="panel panel-default">
+	  <div class="panel-heading"><h3>Recursos</h3></div>
+	</div>
+	
+		<div align="center" ng-hide="recursoc.mostraringreso">
+		<br>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="26040">
-			       		<label class="btn btn-primary" ng-click="recursoc.nuevo()">Nuevo</label>
+			       		<label class="btn btn-primary" ng-click="recursoc.nuevo()" uib-tooltip="Nuevo">
+				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			       </shiro:hasPermission>
-			       <shiro:hasPermission name="26010"><label class="btn btn-primary" ng-click="recursoc.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="26010"><label class="btn btn-primary" ng-click="recursoc.editar()" uib-tooltip="Editar">
+				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
+				</shiro:hasPermission>
 			       <shiro:hasPermission name="26030">
-			       		<label class="btn btn-primary" ng-click="recursoc.borrar()">Borrar</label>
+			       		<label class="btn btn-danger" ng-click="recursoc.borrar()" uib-tooltip="Borrar">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			       </shiro:hasPermission>
     			</div>
     		</div>
@@ -59,102 +68,121 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row main-form" ng-show="recursoc.mostraringreso">
-			<h4 ng-hide="!recursoc.esnuevo">Nuevo recurso</h4>
-			<h4 ng-hide="recursoc.esnuevo">Edición de recurso</h4>
+		<div class="row second-main-form" ng-show="recursoc.mostraringreso">
+			<div class="page-header">
+				<h2 ng-hide="!recursoc.esnuevo"><small>Nuevo recurso</small></h2>
+				<h2 ng-hide="recursoc.esnuevo"><small>Edición de recurso</small></h2>
+			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="26020">
-			        	<label class="btn btn-success" ng-click="form.$valid ? recursoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+			        	<label class="btn btn-success" ng-click="form.$valid ? recursoc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 					</shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="recursoc.irATabla()">Ir a Tabla</label>
+			        <label class="btn btn-primary" ng-click="recursoc.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
     			</div>
     		</div>
-
+		<br>
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group">
-							<label for="id">ID</label>
-    						<p class="form-control-static">{{ recursoc.recurso.id }}</p>
+							<label for="id" class="floating-label">ID {{ recursoc.recurso.id }}</label>
+    						<br/><br/>
 						</div>
 						<div class="form-group">
-							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="recursoc.recurso.nombre" ng-required="true">
+    						<input type="text" class="inputText" id="nombre" ng-model="recursoc.recurso.nombre"  value="{{recursoc.recurso.nombre}}" onblur="this.setAttribute('value', this.value);" ng-required="true">
+							<label for="nombre" class="floating-label">* Nombre</label>
 						</div>
 
 						<div class="form-group">
-							<label for="campo3">* Tipo Recurso</label>
-				          	<div class="input-group">
-				            	<input type="text" class="form-control" id="irectipo" name="irectipo" placeholder="Tipo de Recurso" ng-model="recursoc.recurso.recursotiponombre" ng-readonly="true" ng-required="true"/>
-				            	<span class="input-group-addon" ng-click="recursoc.buscarRecursoTipo()"><i class="glyphicon glyphicon-search"></i></span>
-				          	</div>
+				            	<input type="text" class="inputText" id="irectipo" name="irectipo" ng-model="recursoc.recurso.recursotiponombre" value="{{recursoc.recurso.recursotiponombre}}" 
+		            		ng-click="recursoc.buscarRecursoTipo()" onblur="this.setAttribute('value', this.value);"  ng-readonly="true" ng-required="true"/>
+				            	<span class="label-icon" ng-click="recursoc.buscarRecursoTipo()"><i class="glyphicon glyphicon-search"></i></span>
+							<label for="campo3" class="floating-label">* Tipo Recurso</label>
 						</div>
 						<div class="form-group">
-							<label for="campo3">* Unidad de Medida</label>
-				          	<div class="input-group">
-				            	<input type="text" class="form-control" id="iumedidad" name="iumedidad" placeholder="Unidad de Medida" ng-model="recursoc.recurso.medidanombre" ng-readonly="true" ng-required="true"/>
-				            	<span class="input-group-addon" ng-click="recursoc.buscarUnidadMedida()"><i class="glyphicon glyphicon-search"></i></span>
-				          	</div>
+				            	<input type="text" class="inputText" id="iumedidad" name="iumedidad" ng-model="recursoc.recurso.medidanombre" value="{{recursoc.recurso.medidanombre}}" 
+		            		ng-click="recursoc.buscarUnidadMedida()" onblur="this.setAttribute('value', this.value);"  ng-readonly="true" ng-required="true"/>
+				            	<span class="label-icon" ng-click="recursoc.buscarUnidadMedida()"><i class="glyphicon glyphicon-search"></i></span>
+							<label for="campo3" class="floating-label">* Unidad de Medida</label>
 						</div>
 
 						<div class="form-group" ng-repeat="campo in recursoc.camposdinamicos">
-							<label for="campo.id">{{ campo.label }}</label>
 							<div ng-switch="campo.tipo">
-								<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
-								<input ng-switch-when="entero" type="text" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" />
-								<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
-								<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
-								<p ng-switch-when="fecha" class="input-group">
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{recursoc.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="mi.fechaOptions" close-text="Cerrar" /><span
-														class="input-group-btn">
-														<button type="button" class="btn btn-default"
-															ng-click="recursoc.abrirPopupFecha($index)">
+								<div ng-switch-when="texto" class="form-group" >
+									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
+										value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>	
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="entero" class="form-group" >
+									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
+									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="decimal" class="form-group" >
+									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
+									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="booleano" class="form-group" >
+									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="fecha" class="form-group" >
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+														datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="controller.abrirPopupFecha($index)"
+														value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+														<span class="label-icon" ng-click="controller.abrirPopupFecha($index)">
 															<i class="glyphicon glyphicon-calendar"></i>
-														</button>
-													</span>
-								</p>
-								<select ng-switch-when="select" id="{{ 'field_'+field.id }}" class="form-control" ng-model="x.value">
+														</span>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="select" class="form-group" >
+									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
 													<option value="">Seleccione una opción</option>
-													<option ng-repeat="number in field.options"
-														value="{{number.value}}">{{number.label}}</option>
+													<option ng-repeat="number in campo.opciones"
+														value="{{number.valor}}">{{number.label}}</option>
 								</select>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="recursoc.recurso.descripcion">
+    						<input type="text" class="inputText" id="descripcion" ng-model="recursoc.recurso.descripcion"
+    						value="{{recursoc.recurso.descripcion}}" onblur="this.setAttribute('value', this.value);">
+							<label for="descripcion" class="floating-label">Descripción</label>
 						</div>
 						<br/>
 						<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static"> {{ recursoc.recurso.usuarioCreo }}</p>
+									<label for="usuarioCreo" class="label-form">Usuario que creo</label> 
+									<p class=""> {{ recursoc.recurso.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
-									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ recursoc.recurso.fechaCreacion }} </p>
+									<label for="fechaCreacion" class="label-form">Fecha de creación</label>
+									<p class="" id="fechaCreacion"> {{ recursoc.recurso.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ recursoc.recurso.usuarioActualizo }} </p>
+									<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label> 
+									<p class="" id="usuarioCreo">{{ recursoc.recurso.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ recursoc.recurso.fechaActualizacion }} </p>
+									<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label> 
+									<p class="" id="usuarioCreo">{{ recursoc.recurso.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>
@@ -162,14 +190,16 @@
 				</div>
 				</form>
 			</div>
-			<div align="center">Los campos marcados con * son obligatorios</div>
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
 				        <shiro:hasPermission name="26020">
-				        	<label class="btn btn-success" ng-click="form.$valid ? recursoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				        	<label class="btn btn-success" ng-click="form.$valid ? recursoc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 						</shiro:hasPermission>
-				        <label class="btn btn-primary" ng-click="recursoc.irATabla()">Ir a Tabla</label>
+				        <label class="btn btn-primary" ng-click="recursoc.irATabla()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 	    			</div>
 	    		</div>
     		</div>
