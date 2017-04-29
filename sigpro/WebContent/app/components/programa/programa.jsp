@@ -12,19 +12,25 @@
 		<p ng-init="programac.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
 
-	<h3>Programas</h3>
-	<br />
+	<div class="panel panel-default">
+	  <div class="panel-heading"><h3>Programas</h3></div>
+	</div>
+	
 	<div class="row" align="center" ng-hide="programac.esColapsado">
+	<br />
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 			<shiro:hasPermission name="37040">
-				<label class="btn btn-primary" ng-click="programac.nuevo()">Nuevo</label>
+				<label class="btn btn-primary" ng-click="programac.nuevo()" uib-tooltip="Nuevo">
+				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="37010">
-				<label class="btn btn-primary" ng-click="programac.editar()">Editar</label>
+				<label class="btn btn-primary" ng-click="programac.editar()" uib-tooltip="Editar">
+				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="37030">
-				<label class="btn btn-primary" ng-click="programac.borrar()">Borrar</label>
+				<label class="btn btn-danger" ng-click="programac.borrar()" uib-tooltip="Borrar">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</shiro:hasPermission>
 			</div>
 		</div>
@@ -69,70 +75,90 @@
 
 
 	</div>
-	<div class="row main-form" ng-show="programac.esColapsado">
-		<h4 ng-hide="!programac.esNuevo">Nuevo Programa</h4>
-		<h4 ng-hide="programac.esNuevo">Edición de programa</h4>
+	<div class="row second-main-form" ng-show="programac.esColapsado">
+		<div class="page-header">
+			<h2 ng-hide="!programac.esNuevo"><small>Nuevo Programa</small></h2>
+			<h2 ng-hide="programac.esNuevo"><small>Edición de programa</small></h2>
+			</div>
 		
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="37020">
-					<label class="btn btn-success" ng-click="form.$valid ? programac.guardar(form.$valid) : ''" ng-disabled="!form.$valid">Guardar</label>
+					<label class="btn btn-success" ng-click="form.$valid ? programac.guardar(form.$valid) : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="programac.irATabla()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="programac.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
+		<br>
 		<div class="col-sm-12">
 			<form name="form">
 				<div class="form-group">
-					<label for="id">ID</label>
-  					<p class="form-control-static">{{ programac.programa.id }}</p>
+					<label for="id" class="floating-label">ID {{ programac.programa.id }}</label>
+  					<br/><br/>
 				</div>
 				<div class="form-group">
-					<label >* Nombre</label>
-					<input type="text"  ng-model="programac.programa.nombre"
-						class="form-control" placeholder="Nombre" ng-required="true" >
+					<input type="text"  class="inputText" ng-model="programac.programa.nombre" value="{{programac.programa.nombre}}" onblur="this.setAttribute('value', this.value);" ng-required="true" >
+					<label  class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group" >
-					<label >* Tipo Programa</label>
-		          	<div class="input-group">
-		            	<input type="text" class="form-control" placeholder="Nombre Tipo Programa" ng-model="programac.programatiponombre" ng-readonly="true" ng-required="true"/>
-		            	<span class="input-group-addon" ng-click="programac.buscarProgramaTipo()"><i class="glyphicon glyphicon-search"></i></span>
-		          	</div>
+		            	<input type="text" class="inputText" ng-model="programac.programatiponombre" value="{{programac.programatiponombre}}" 
+		            		ng-click="programac.buscarProgramaTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+		            	<span class="label-icon" ng-click="programac.buscarProgramaTipo()"><i class="glyphicon glyphicon-search"></i></span>
+		          	<label  class="floating-label">* Tipo Programa</label>
 				</div>
 
-				<div class="form-group" ng-repeat="campo in programac.camposdinamicos">
-					<label for="campo.id">{{ campo.label }}</label>
+				<div ng-repeat="campo in programac.camposdinamicos">
 					<div ng-switch="campo.tipo">
-						<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
-						<input ng-switch-when="entero" type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}"  />
-						<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
-						<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
-						<p ng-switch-when="fecha" class="input-group">
-							<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-												datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"/>
-												<span class="input-group-btn">
-													<button type="button" class="btn btn-default"
-														ng-click="programac.abrirPopupFecha($index)">
-														<i class="glyphicon glyphicon-calendar"></i>
-													</button>
-												</span>
-						</p>
-						<select ng-switch-when="select" id="{{ 'campo_'+campo.id }}" class="form-control" ng-model="campo.valor">
-											<option value="">Seleccione una opción</option>
-											<option ng-repeat="number in campo.opciones"
-												value="{{number.valor}}">{{number.label}}</option>
-						</select>
-					</div>
+								<div ng-switch-when="texto" class="form-group" >
+									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
+										value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>	
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="entero" class="form-group" >
+									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
+									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="decimal" class="form-group" >
+									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
+									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="booleano" class="form-group" >
+									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="fecha" class="form-group" >
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+														datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="controller.abrirPopupFecha($index)"
+														value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+														<span class="label-icon" ng-click="controller.abrirPopupFecha($index)">
+															<i class="glyphicon glyphicon-calendar"></i>
+														</span>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="select" class="form-group" >
+									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
+													<option value="">Seleccione una opción</option>
+													<option ng-repeat="number in campo.opciones"
+														value="{{number.valor}}">{{number.label}}</option>
+								</select>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+							</div>
 				</div>
 				
 				<div class="form-group">
-					<label for="campo2">Descripción</label>
 					<input type="text" ng-model="programac.programa.descripcion"
-						class="form-control" id="campo2" placeholder="Descripción">
+						class="inputText" id="campo2" 
+						value="{{programac.programa.descripcion}}" onblur="this.setAttribute('value', this.value);">
+					<label for="campo2" class="floating-label">Descripción</label>
 				</div>
 				<br />
 				<div align="center">
-					<h5>Proyectos </h5>
+					<h5 class="label-form">Proyectos </h5>
 					<div style="height: 35px; width: 75%">
 						<div style="text-align: right;">
 							<div class="btn-group" role="group" aria-label="">
@@ -150,10 +176,10 @@
 					class="table table-striped  table-bordered">
 					<thead >
 						<tr>
-							<th>ID</th>
-							<th>Nombre</th>
-							<th>Descripicon</th>
-							<th style="width: 30px;">Quitar</th>
+							<th class="label-form">ID</th>
+							<th class="label-form">Nombre</th>
+							<th class="label-form">Descripicon</th>
+							<th  class="label-form" style="width: 30px;">Quitar</th>
 
 						</tr>
 					</thead>
@@ -176,18 +202,18 @@
 				</div>
 				<br/>
 				<div class="panel panel-default" ng-hide="programac.esNuevoDocumento">
-					<div class="panel-heading" style="text-align: center;">Archivos adjuntos</div>
+					<div class="panel-heading label-form" style="text-align: center;">Archivos adjuntos</div>
 					<div class="panel-body">
 						<div style="width: 95%; float: left">
 						<table st-table="programac.displayedCollection" st-safe-src="programac.rowCollection" class="table table-striped">
 							<thead>
 								<tr>
 									<th style="display: none;">Id</th>
-									<th>Nombre</th>
-									<th>Extensión</th>
-									<th>Descripción</th>
-									<th>Descarga</th>
-									<th>Eliminar</th>
+									<th class="label-form">Nombre</th>
+									<th class="label-form">Extensión</th>
+									<th class="label-form">Descripción</th>
+									<th class="label-form">Descarga</th>
+									<th class="label-form">Eliminar</th>
 								</tr>
 								<tr>
 									<th colspan="5"><input st-search="" class="form-control" placeholder="busqueda global ..." type="text"/></th>
@@ -229,33 +255,33 @@
 				</div>
 				<br/>
 				<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label >Usuario que creo</label>
-				  					<p class="form-control-static">{{ programac.programa.usuarioCreo }}</pl>
+									<label  class="label-form">Usuario que creo</label>
+				  					<p class="">{{ programac.programa.usuarioCreo }}</pl>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label >Fecha de creación</label>
-				  					<p class="form-control-static">{{ programac.programa.fechaCreacion }}</p>
+									<label  class="label-form">Fecha de creación</label>
+				  					<p class="">{{ programac.programa.fechaCreacion }}</p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label >Usuario que actualizo</label>
-				  					<p class="form-control-static">{{ programac.programa.usuarioactualizo }}</p>
+									<label  class="label-form">Usuario que actualizo</label>
+				  					<p class="">{{ programac.programa.usuarioactualizo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label >Fecha de actualizacion</label>
-				  					<p class="form-control-static">{{ programac.programa.fechaactualizacion }}</p>
+									<label  class="label-form">Fecha de actualizacion</label>
+				  					<p class="">{{ programac.programa.fechaactualizacion }}</p>
 								</div>
 							</div>
 						</div>
@@ -266,9 +292,11 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="37020">
-					<label class="btn btn-success" ng-click="form.$valid ? programac.guardar(form.$valid) : ''" ng-disabled="!form.$valid">Guardar</label>
+					<label class="btn btn-success" ng-click="form.$valid ? programac.guardar(form.$valid) : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="programac.irATabla()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="programac.irATabla()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 	</div>

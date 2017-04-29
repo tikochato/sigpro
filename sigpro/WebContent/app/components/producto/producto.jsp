@@ -38,15 +38,15 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="21040">
-					<label class="btn btn-primary" ng-click="producto.nuevo()" title="Nuevo">
+					<label class="btn btn-primary" ng-click="producto.nuevo()" uib-tooltip="Nuevo">
 				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="21010">
-					<label class="btn btn-primary" ng-click="producto.editar()" title="Editar">
+					<label class="btn btn-primary" ng-click="producto.editar()" uib-tooltip="Editar">
 				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="21030">
-					<label class="btn btn-danger" ng-click="producto.borrar()" title="Borrar">
+					<label class="btn btn-danger" ng-click="producto.borrar()" uib-tooltip="Borrar">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</shiro:hasPermission>
 			</div>
@@ -113,126 +113,143 @@
 		<div>
 		<div class="col-sm-12">
 			<form name="form" class="css-form">
-				
 					<div class="form-group">
-						<label>Id</label> 
-						<p class="form-control-static" id="campo0" name="campo0" >{{producto.producto.id}}</p>
+						<label id="campo0" name="campo0" class="floating-label">ID {{ producto.producto.id }}</label>
+						<br/><br/>
 					</div>
-				
-				
+								
 					<div class="form-group">
-						<label>* Nombre</label> 
-						<input type="text" class="form-control" placeholder="Nombre del producto" ng-model="producto.producto.nombre" ng-required="true" />
+						<input type="text" class="inputText" ng-model="producto.producto.nombre" value="{{producto.producto.nombre}}" onblur="this.setAttribute('value', this.value);" ng-required="true" />
+						<label class="floating-label">* Nombre</label> 
 					</div>
 					
 					<div class="form-group"  >
-						<label for="isnip">SNIP</label>
-						<input type="number"   ng-model="producto.producto.snip" class="form-control" placeholder="SNIP" >
+						<input type="number"  class="inputText" ng-model="producto.producto.snip" value="{{producto.producto.snip}}" onblur="this.setAttribute('value', this.value);">
+						<label for="isnip" class="floating-label">SNIP</label>
 					</div>
 				
-					<div class="form-group row" >
+					<div class="form-group-row row" >
 						<div class="form-group col-sm-2" >
-						       <label for="iprog">Programa</label>
-						       <input type="number" class="form-control" placeholder="Programa" ng-model="producto.producto.programa"  ng-maxlength="4" style="text-align: center" />
+						       <input type="number" class="inputText" ng-model="producto.producto.programa" value="{{producto.producto.programa}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
+						       <label for="iprog" class="floating-label">Programa</label>
 						</div>
 						<div class="form-group col-sm-2" >
-						  <label for="isubprog">Subprograma</label>
-						  <input type="number" class="form-control" placeholder="Sub-programa" ng-model="producto.producto.subprograma" ng-maxlength="4" style="text-align: center" />
+						  <input type="number" class="inputText" ng-model="producto.producto.subprograma" value="{{producto.producto.subprograma}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
+						  <label for="isubprog" class="floating-label">Subprograma</label>
 						</div>
 						<div class="form-group col-sm-2" >
-						  <label for="iproy_">Proyecto</label>
-						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="producto.producto.proyecto_"  ng-maxlength="4" style="text-align: center" />
+						  <input type="number" class="inputText" ng-model="producto.producto.proyecto_" value="{{producto.producto.proyecto_}}" onblur="this.setAttribute('value', this.value);"  ng-maxlength="4" style="text-align: center" />
+						  <label for="iproy_" class="floating-label">Proyecto</label>
 						</div>
 						<div class="form-group col-sm-2" >
-						  <label for="iproy_">Actividad</label>
-						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="producto.producto.actividad" ng-maxlength="4" style="text-align: center"  />
+						  <input type="number" class="inputText" ng-model="producto.producto.actividad" value="{{producto.producto.actividad}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"  />
+						  <label for="iproy_" class="floating-label">Actividad</label>
 						</div>
 						<div class="form-group col-sm-2" >
-						  <label for="iobra">Obra</label>
-						  <input type="number" class="form-control" placeholder="Obra" ng-model="producto.producto.obra" ng-maxlength="4" style="text-align: center"/>
+						  <input type="number" class="inputText" ng-model="producto.producto.obra" value="{{producto.producto.obra}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+						  <label for="iobra" class="floating-label">Obra</label>
 						</div>
 						<div class="form-group col-sm-2" >
-						  <label for="campo5">Fuente</label>
-						  <input type="number" class="form-control" placeholder="Fuente" ng-model="producto.producto.fuente" ng-maxlength="4" style="text-align: center"/>
+						  <input type="number" class="inputText" ng-model="producto.producto.fuente" value="{{producto.producto.fuente}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+						  <label for="campo5" class="floating-label">Fuente</label>
 						</div>
 					</div>
 					
 					<div class="form-group" >
-			          <label for="campo3">* Tipo</label>
-			          <div class="input-group"> 
-			            <input type="text" class="form-control" placeholder="Tipo de producto" ng-model="producto.tipoNombre" ng-readonly="true" ng-required="true"/>
-			            <span class="input-group-addon" ng-click="producto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
-			          </div>
+			          <input type="text" class="inputText" ng-model="producto.tipoNombre" value="{{producto.tipoNombre}}" 
+			          	ng-click="producto.buscarTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+			           <span class="label-icon" ng-click="producto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
+			          <label for="campo3" class="floating-label">* Tipo</label>
 			        </div>
 			        
 			        <div class="form-group">
-			          <label for="campo5">Unidad Ejecutora</label>
-			          <div class="input-group"> 
-			            <input type="text" class="form-control" placeholder="Unidad Ejecutora" ng-model="producto.unidadEjecutoraNombre" ng-readonly="true" ng-required="true"/>
-			            <span class="input-group-addon" ng-click="producto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
-			          </div>
+			            <input type="text" class="inputText" ng-model="producto.unidadEjecutoraNombre" value="{{producto.unidadEjecutoraNombre}}" 
+			            	ng-click="producto.buscarUnidadEjecutora()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+			            <span class="label-icon" ng-click="producto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
+			          <label for="campo5" class="floating-label">Unidad Ejecutora</label>
 			        </div>
 			        
 			        <div class="form-group">
-						<label >Coordenadas</label>
-			          	<div class="input-group">
-			            	<input type="text" class="form-control" placeholder="Latitud, Longitud" ng-model="producto.coordenadas" ng-readonly="true" />
-			            	<span class="input-group-addon" ng-click="producto.open(producto.producto.latitud, producto.producto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
-			          	</div>
+			          	<input type="text" class="inputText" ng-model="producto.coordenadas" value="{{producto.coordenadas}}" 
+			          		onblur="this.setAttribute('value', this.value);" ng-readonly="true" />
+			            <span class="label-icon" ng-click="producto.open(producto.producto.latitud, producto.producto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
+			          	<label  class="floating-label">Coordenadas</label>
 					</div>
 						
 					<div class="form-group" >
-						<label for="campo2"> Descripción</label> 
-						<input type="text" class="form-control" placeholder="Descripcion del producto" ng-model="producto.producto.descripcion" />
+						<input type="text" class="inputText" ng-model="producto.producto.descripcion" value="{{producto.producto.descripcion}}" onblur="this.setAttribute('value', this.value);"/>
+						<label for="campo2" class="floating-label"> Descripción</label> 
 					</div>
 			        
 			        <div class="form-group" ng-repeat="campo in producto.camposdinamicos">
-						<label for="campo.id">{{ campo.label }}</label>
 						<div ng-switch="campo.tipo">
-							<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{ campo.label }}" />
-							<input ng-switch-when="entero" type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" placeholder="{{ campo.label }}"/>
-							<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control"placeholder="{{ campo.label }}" />
-							<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" placeholder="{{ campo.label }}"/>
-							<p ng-switch-when="fecha" class="input-group">
-								<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{producto.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-										datepicker-options="producto.fechaOptions" close-text="Cerrar" placeholder="{{ campo.label }}"/>
-								<span class="input-group-btn">
-									<button type="button" class="btn btn-default" ng-click="producto.abrirPopupFecha($index)">
-										<i class="glyphicon glyphicon-calendar"></i>
-									</button>
-								</span>
-							</p>
-						</div>
+								<div ng-switch-when="texto" class="form-group" >
+									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
+										value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>	
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="entero" class="form-group" >
+									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
+									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="decimal" class="form-group" >
+									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
+									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="booleano" class="form-group" >
+									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="fecha" class="form-group" >
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+														datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="controller.abrirPopupFecha($index)"
+														value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+														<span class="label-icon" ng-click="controller.abrirPopupFecha($index)">
+															<i class="glyphicon glyphicon-calendar"></i>
+														</span>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="select" class="form-group" >
+									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
+													<option value="">Seleccione una opción</option>
+													<option ng-repeat="number in campo.opciones"
+														value="{{number.valor}}">{{number.label}}</option>
+								</select>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+							</div>
 					</div>
 					
 				<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label>
-				  					<p class="form-control-static">{{ producto.producto.usuarioCreo }}</pl>
+									<label for="usuarioCreo" class="label-form">Usuario que creo</label>
+				  					<p class="">{{ producto.producto.usuarioCreo }}</pl>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label for="fechaCreacion">Fecha de creación</label>
-				  					<p class="form-control-static">{{ producto.producto.fechaCreacion }}</p>
+									<label for="fechaCreacion" class="label-form">Fecha de creación</label>
+				  					<p class="">{{ producto.producto.fechaCreacion }}</p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label>
-				  					<p class="form-control-static">{{ producto.producto.usuarioactualizo }}</p>
+									<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label>
+				  					<p class="">{{ producto.producto.usuarioactualizo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label>
-				  					<p class="form-control-static">{{ producto.producto.fechaactualizacion }}</p>
+									<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label>
+				  					<p class="">{{ producto.producto.fechaactualizacion }}</p>
 								</div>
 							</div>
 						</div>
@@ -242,14 +259,16 @@
 			</div>
 		</div>
 		<br />
-		<div class="col-sm-12" align="center">Los campos marcados con * son obligatorios</div>
+		<div class="col-sm-12 label-form" align="center">Los campos marcados con * son obligatorios</div>
 		<br />
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="21020">
-					<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
+					<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid" ui-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="producto.cancelar()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="producto.cancelar()" ui-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 	</div>
