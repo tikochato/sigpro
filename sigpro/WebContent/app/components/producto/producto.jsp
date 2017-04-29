@@ -3,6 +3,7 @@
 <%@ page import="org.apache.shiro.SecurityUtils"%>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <div ng-controller="controlProducto as producto" class="maincontainer all_page">
+	
 	<script type="text/ng-template" id="map.html">
         <div class="modal-header">
             <h3 class="modal-title">Mapa de Ubicación</h3>
@@ -16,6 +17,7 @@
             <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
         </div>
     </script>
+    
 	<script type="text/ng-template" id="buscarPorProducto.jsp">
 	    <%@ include file="/app/components/producto/buscarPorProducto.jsp"%>
 	</script>
@@ -23,22 +25,29 @@
 		<p ng-init="producto.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
 
-	<h3>{{ producto.esForma ? (producto.esNuevo ? "Nuevo Producto" : "Editar Producto") : "Producto" }}</h3>
-	<h4>{{ producto.componenteNombre }}</h4><br/>
-
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>{{ producto.esForma ? (producto.esNuevo ? "Nuevo Producto" : "Editar Producto") : "Producto" }}</h3>
+			<h4>{{ producto.componenteNombre }}</h4>
+		</div>
+	</div>
+	
 	<br />
   
 	<div align="center" ng-hide="producto.esForma">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="21040">
-					<label class="btn btn-primary" ng-click="producto.nuevo()">Nuevo</label>
+					<label class="btn btn-primary" ng-click="producto.nuevo()" title="Nuevo">
+				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="21010">
-					<label class="btn btn-primary" ng-click="producto.editar()">Editar</label>
+					<label class="btn btn-primary" ng-click="producto.editar()" title="Editar">
+				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="21030">
-					<label class="btn btn-primary" ng-click="producto.borrar()">Borrar</label>
+					<label class="btn btn-danger" ng-click="producto.borrar()" title="Borrar">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</shiro:hasPermission>
 			</div>
 		</div>
@@ -81,22 +90,24 @@
 
 	</div>
 
-	<div ng-show="producto.esForma" class="row main-form">
-		<h4 ng-hide="!producto.esNuevo">Nueva Producto</h4>
-		<h4 ng-hide="producto.esNuevo">Edición de Producto</h4>
-		<div class="col-sm-12 operation_buttons" align="left" ng-hide="producto.esNuevo">
-			<div class="btn-group">
-				<label class="btn btn-default" ng-click="producto.irASubproductos()">Subproductos</label>
-				<label class="btn btn-default" ng-click="producto.irAActividades()">Actividades</label>
-				<label class="btn btn-default" ng-click="producto.irARiesgos()">Riesgos</label>
-			</div>
+	<div ng-show="producto.esForma" class="row second-main-form">
+		<div class="page-header">
+			<h2 ng-hide="!producto.esNuevo"><small>Nuevo Producto</small></h2>
+			<h2 ng-hide="producto.esNuevo"><small>Edición de Producto</small></h2>
 		</div>
-		<div class="col-sm-12 operation_buttons" align="right">
-			<div class="btn-group">
+		<div class="operation_buttons" >
+			<div class="btn-group" ng-hide="producto.esNuevo">
+				<label class="btn btn-default" ng-click="producto.irASubproductos()" uib-tooltip="Subproductos">Subproductos</label>
+				<label class="btn btn-default" ng-click="producto.irAActividades()" uib-tooltip="Actividades">Actividades</label>
+				<label class="btn btn-default" ng-click="producto.irARiesgos()" uib-tooltip="Riesgos">Riesgos</label>
+			</div>
+			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="21020">
-					<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
+					<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="producto.cancelar()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="producto.cancelar()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 		<div>
