@@ -7,8 +7,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	i18nService.setCurrentLang('es');
 
 	$window.document.title = $utilidades.sistema_nombre+' - Préstamos';
-
-	var filaSeleccionada = 0;
 		
 	mi.menuOptions = [
         ['<span class="glyphicon glyphicon-pencil"> Editar', function ($itemScope, $event, modelValue, text, $li) {
