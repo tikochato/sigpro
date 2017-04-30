@@ -13,13 +13,16 @@
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
       	<shiro:hasPermission name="41040">
-        	<label class="btn btn-primary" ng-click="subproductoPropiedad.nuevo()">Nueva</label> 
+        	<label class="btn btn-primary" ng-click="subproductoPropiedad.nuevo()" uib-tooltip="Nueva">
+			<span class="glyphicon glyphicon-plus"></span> Nuevo</label> 
       	</shiro:hasPermission>
       	<shiro:hasPermission name="41010">
-        	<label class="btn btn-primary" ng-click="subproductoPropiedad.editar()">Editar</label>
+        	<label class="btn btn-primary" ng-click="subproductoPropiedad.editar()" uib-tooltip="Nueva">
+			<span class="glyphicon glyphicon-pencil"></span> Editar</label>
       	</shiro:hasPermission>
       	<shiro:hasPermission name="41030">
-        	<label class="btn btn-primary" ng-click="subproductoPropiedad.borrar()">Borrar</label>
+        	<label class="btn btn-primary" ng-click="subproductoPropiedad.borrar()" uib-tooltip="Borrar">
+			<span class="glyphicon glyphicon-trash"></span> Borrar</label>
       	</shiro:hasPermission>
       </div>
     </div>
@@ -62,83 +65,78 @@
   </div>
 
   <div class="row main-form" ng-show="subproductoPropiedad.esForma">
-	  <h4 ng-hide="!subproductoPropiedad.esNuevo">Nueva propiedad de subproducto</h4>
-	  <h4 ng-hide="subproductoPropiedad.esNuevo">Edición de propiedad de subproducto</h4>
+	  <h2 ng-hide="!subproductoPropiedad.esNuevo">Nueva propiedad de subproducto</h2>
+	  <h2 ng-hide="subproductoPropiedad.esNuevo">Edición de propiedad de subproducto</h2>
 
     <div class="col-sm-12 operation_buttons" align="right">
 
       <div class="btn-group">
       	<shiro:hasPermission name="41020">
-        	<label class="btn btn-success" ng-click="form.$valid ? subproductoPropiedad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
+        	<label class="btn btn-success" ng-click="form.$valid ? subproductoPropiedad.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+			<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
       	</shiro:hasPermission>
-        <label class="btn btn-primary" ng-click="subproductoPropiedad.cancelar()">Ir a Tabla</label>
+        <label class="btn btn-primary" ng-click="subproductoPropiedad.cancelar()" uib-tooltip="Ir a Tabla">
+		<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
       </div>
     </div>
     
-    <div>
-	    <form name="form" class="css-form" novalidate>
-	
-	      <div class="row col-sm-12">
-		      <div class="form-group ">
-		        <label>Id</label>
-		        <p class="form-control-static">{{ subproductoPropiedad.codigo }}</p>
-		      </div>
+    <div class="col-sm-12">
+	    <form name="form">
+	      <div class="form-group">
+		        <label for="id" class="floating-label">ID {{ subproductoPropiedad.codigo }}</label>
+		        <br/><br/>
 	      </div>
 
-	      <div class="row">
-		      <div class="form-group">
-		        <label for="campo1">* Nombre</label> 
-		        <input type="text" class="form-control" placeholder="Nombre" ng-model="subproductoPropiedad.nombre" ng-required="true" />
-		      </div>
+	      <div class="form-group">
+	        <input type="text" class="inputText" ng-model="subproductoPropiedad.nombre" ng-required="true"  value="{{subproductoPropiedad.nombre}}" onblur="this.setAttribute('value', this.value);"/>
+	        <label class="floating-label">* Nombre</label>
+	      </div>
 
-		      <div class="form-group">
-		        <label for="campo2">* Tipo</label>     			
-    			<select class="form-control" ng-model="subproductoPropiedad.datoTipoSeleccionado" ng-options="tipo as tipo.nombre for tipo in subproductoPropiedad.datoTipos track by tipo.id" ng-required="true"
-    			ng-readonly="true" ng-disabled="!subproductoPropiedad.esNuevo" ng-required="true">
-					<option disabled selected value> -- Seleccione Tipo -- </option>
-				</select>
-    		 </div>
-		
-		      <div class="form-group">
-		        <label for="campo3">Descripción</label> 
-		        <input type="text" class="form-control" placeholder="Descripción" ng-model="subproductoPropiedad.descripcion"/>
-		      </div>
-		      <div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
-					<div class="panel-body">
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static"> {{ subproductoPropiedad.entidadSeleccionada.usuarioCreo }}</p>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="form-group" >
-									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ subproductoPropiedad.entidadSeleccionada.fechaCreacion }} </p>
-								</div>
+	      <div class="form-group">   			
+   			<select class="inputText" ng-model="subproductoPropiedad.datoTipoSeleccionado" ng-options="tipo as tipo.nombre for tipo in subproductoPropiedad.datoTipos track by tipo.id" ng-required="true"
+   			ng-readonly="true" ng-disabled="!subproductoPropiedad.esNuevo" ng-required="true">
+				<option disabled selected value> -- Seleccione Tipo -- </option>
+			</select>
+			<label for="campo2" class="floating-label">* Tipo</label>
+   		 </div>
+	
+	      <div class="form-group">
+	        <input type="text" class="inputText" ng-model="subproductoPropiedad.descripcion" value="{{subproductoPropiedad.descripcion}}" onblur="this.setAttribute('value', this.value);"/>
+	        <label class="floating-label">Descripción</label>
+	      </div>
+	      <div class="panel panel-default">
+				<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group" style="text-align: right">
+								<label for="usuarioCreo">Usuario que creo</label> 
+								<p class="form-control-static"> {{ subproductoPropiedad.entidadSeleccionada.usuarioCreo }}</p>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ subproductoPropiedad.entidadSeleccionada.usuarioActualizo }} </p>
-								</div>	
+						<div class="col-sm-6">
+							<div class="form-group" >
+								<label for="fechaCreacion">Fecha de creación</label>
+								<p class="form-control-static" id="fechaCreacion"> {{ subproductoPropiedad.entidadSeleccionada.fechaCreacion }} </p>
 							</div>
-							<div class="col-sm-6">		
-								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ subproductoPropiedad.entidadSeleccionada.fechaActualizacion }} </p>
-								</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group" style="text-align: right">
+								<label for="usuarioActualizo">Usuario que actualizo</label> 
+								<p class="form-control-static" id="usuarioCreo">{{ subproductoPropiedad.entidadSeleccionada.usuarioActualizo }} </p>
+							</div>	
+						</div>
+						<div class="col-sm-6">		
+							<div class="form-group">
+								<label for="fechaActualizacion">Fecha de actualizacion</label> 
+								<p class="form-control-static" id="usuarioCreo">{{ subproductoPropiedad.entidadSeleccionada.fechaActualizacion }} </p>
 							</div>
 						</div>
 					</div>
 				</div>
-		      
-	      </div>
-	      
+			</div>
 	    </form>
     </div>
   
@@ -147,9 +145,11 @@
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
       <shiro:hasPermission name="41020">
-        	<label class="btn btn-success" ng-click="form.$valid ? subproductoPropiedad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
+        	<label class="btn btn-success" ng-click="form.$valid ? subproductoPropiedad.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+			<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
       	</shiro:hasPermission>
-        <label class="btn btn-primary" ng-click="subproductoPropiedad.cancelar()">Ir a Tabla</label>
+        <label class="btn btn-primary" ng-click="subproductoPropiedad.cancelar()" uib-tooltip="Ir a Tabla">
+		<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
       </div>
     </div>
   </div>
