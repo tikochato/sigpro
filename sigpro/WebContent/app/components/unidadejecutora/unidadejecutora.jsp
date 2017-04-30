@@ -17,10 +17,12 @@
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
       	<shiro:hasPermission name="33040">
-        <label class="btn btn-primary" ng-click="unidad.nuevo()">Nueva</label>
+	        <label class="btn btn-primary" ng-click="unidad.nuevo()" uib-tooltip="Nuevo">
+	        <span class="glyphicon glyphicon-plus"></span> Nuevo</label>
       	</shiro:hasPermission> 
       	<shiro:hasPermission name="33010">
-        <label class="btn btn-primary" ng-click="unidad.editar()">Editar</label>
+	        <label class="btn btn-primary" ng-click="unidad.editar()"  uib-tooltip="Editar">
+			<span class="glyphicon glyphicon-pencil"></span> Editar</label>
       	</shiro:hasPermission>
       </div>
     </div>
@@ -54,32 +56,38 @@
 
       <div class="btn-group">
       	<shiro:hasPermission name="33020">
-        	<label class="btn btn-success" ng-click="form.$valid ? unidad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+        	<label class="btn btn-success" ng-click="form.$valid ? unidad.guardar() : ''" ng-disabled="!form.$valid"  uib-tooltip="Guardar">
+			<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
       	</shiro:hasPermission> 
-        <label class="btn btn-primary" ng-click="unidad.cancelar()">Ir a Tabla</label>
+        <label class="btn btn-primary" ng-click="unidad.cancelar()" uib-tooltip="Ir a Tabla">
+		<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
       </div>
     </div>
 
-    <div>
+   <div class="col-sm-12">
 
       <form name="form">
-
-		    <div class="form-group">
-	          <label>* Unidad Ejecutora:</label> 
-	          <input type="number" class="form-control" id="campo1" name="campo1" placeholder="Unidad Ejecutora" ng-model="unidad.codigo" ng-readonly="!unidad.esNuevo" ng-required="true" />
-	        </div>
+	        
+	        
+	        
+	        <div class="form-group"  >
+				<input type="number" class="inputText" name="campo1" id="campo1"  ng-model="unidad.codigo" 
+					ng-required="true" ng-readonly="!unidad.esNuevo"
+					value="{{unidad.codigo}}" onblur="this.setAttribute('value', this.value);">
+			     <label class="floating-label">* Unidad Ejecutora</label>
+			</div>
         
 		    <div class="form-group">
-	          <label for="campo2">* Nombre Unidad Ejecutora:</label> 
-	          <input type="text" class="form-control" placeholder="Nombre Unidad Ejecutora" ng-model="unidad.nombre" ng-required="true" />
+	          <input type="text" class="inputText" ng-model="unidad.nombre" ng-required="true" 
+	          		value="{{unidad.nombre}}" onblur="this.setAttribute('value', this.value);"/>
+	          <label class="floating-label">* Nombre Unidad Ejecutora</label>
 	        </div>
 		
 		    <div class="form-group" ng-required="true">
-	          <label>* Entidad:</label>
-	          <div class="input-group">
-	            <input type="text" class="form-control" id="campo3" name="campo3" placeholder="Nombre Entidad" ng-model="unidad.nombreEntidad" ng-readonly="true" ng-required="true"/>
-	            <span class="input-group-addon" ng-click="unidad.buscarEntidad()"><i class="glyphicon glyphicon-search"></i></span>
-	          </div>
+	            <input type="text" class="inputText" id="campo3" name="campo3" ng-model="unidad.nombreEntidad" 
+	            ng-readonly="true" ng-required="true" ng-click="unidad.buscarEntidad()"/>
+	            <span class="label-icon" ng-click="unidad.buscarEntidad()"><i class="glyphicon glyphicon-search"></i></span>
+	            <label class="floating-label">* Entidad</label>
 	        </div>
 	        <br/>
 	        <div class="panel panel-default">
@@ -123,9 +131,11 @@
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
         <shiro:hasPermission name="33020">
-        	<label class="btn btn-success" ng-click="form.$valid ? unidad.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+        	<label class="btn btn-success" ng-click="form.$valid ? unidad.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+			<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
       	</shiro:hasPermission>
-        <label class="btn btn-primary" ng-click="unidad.cancelar()">Ir a Tabla</label>
+        <label class="btn btn-primary" ng-click="unidad.cancelar()" uib-tooltip="Ir a Tabla">
+		<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
       </div>
     </div>
   </div>

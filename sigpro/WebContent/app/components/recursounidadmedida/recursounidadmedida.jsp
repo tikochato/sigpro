@@ -11,14 +11,16 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="29040">
-			       		<label class="btn btn-primary" ng-click="recursounidadc.nueva()">Nueva</label>
+			       		<label class="btn btn-primary" ng-click="recursounidadc.nueva()" uib-tooltip="Nuevo">
+			       		<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="29010"><label class="btn btn-primary" ng-click="recursounidadc.editar()">Editar</label></shiro:hasPermission>
-			       <shiro:hasPermission name="29030">
-			       		<label class="btn btn-primary" ng-click="recursounidadc.borrar()">Borrar</label>
+			       <shiro:hasPermission name="29010"><label class="btn btn-primary" ng-click="recursounidadc.editar()" uib-tooltip="Editar">
+						<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			       </shiro:hasPermission>
-			        
-			        
+			       <shiro:hasPermission name="29030">
+			       		<label class="btn btn-primary" ng-click="recursounidadc.borrar()"  uib-tooltip="Borrar">
+						<span class="glyphicon glyphicon-trash"></span> Borrar</label>
+			       </shiro:hasPermission>
     			</div>				
     		</div>
     		<shiro:hasPermission name="29010">
@@ -59,34 +61,36 @@
     		
 		</div>
 		<div class="row main-form" ng-show="recursounidadc.mostraringreso">
-			<h4 ng-hide="!recursounidadc.esnueva">Nueva Unidad de Medidad</h4>
-			<h4 ng-hide="recursounidadc.esnueva">Edición de Unidad de Medida</h4>
+			<h2 ng-hide="!recursounidadc.esnueva">Nueva Unidad de Medidad</h2>
+			<h2 ng-hide="recursounidadc.esnueva">Edición de Unidad de Medida</h2>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="29020">
-			        	<label class="btn btn-success" ng-click="form.$valid ? recursounidadc.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
+			        	<label class="btn btn-success" ng-click="form.$valid ? recursounidadc.guardar() : ''" ng-disabled="form.$invalid">
+						<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 					</shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="recursounidadc.irATabla()">Ir a Tabla</label>
+			        <label class="btn btn-primary" ng-click="recursounidadc.irATabla()">
+					<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
     			</div>
     		</div>
 			
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group" ng-show="!recursounidadc.esnueva">
-							<label for="id">ID</label>
-    						<p class="form-control-static">{{ recursounidadc.medida.id }} </p>
+							<label for="id" class="floating-label">ID {{ recursounidadc.medida.id }}</label>
+    						<br/><br/>
 						</div>
 						<div class="form-group">
-							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="recursounidadc.medida.nombre" ng-required=true>
+    						<input type="text" class="inputText" id="nombre" ng-model="recursounidadc.medida.nombre" value="{{recursounidadc.medida.nombre}}"onblur="this.setAttribute('value', this.value);"  ng-required="true">
+    						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
-							<label for="simbolo">Símbolo</label>
-    						<input type="text" class="form-control" id="simbolo" placeholder="Símbolo" ng-model="recursounidadc.medida.simbolo">
+    						<input type="text" class="inputText" id="simbolo" onblur="this.setAttribute('value', this.value);" ng-model="recursounidadc.medida.simbolo" value="{{recursounidadc.medida.simbolo}}">
+    						<label class="floating-label">Símbolo</label>
 						</div>
 						<div class="form-group">
-							<label for="descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="recursounidadc.medida.descripcion">
+    						<input type="text" class="inputText" id="descripcion" onblur="this.setAttribute('value', this.value);" ng-model="recursounidadc.medida.descripcion" value="{{recursounidadc.medida.descripcion}}">
+    						<label class="floating-label">Descripción</label>
 						</div>
 						<br/>
 						<div class="panel panel-default">

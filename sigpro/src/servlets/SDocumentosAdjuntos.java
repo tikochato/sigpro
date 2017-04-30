@@ -11,7 +11,6 @@ import java.util.zip.GZIPOutputStream;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -83,6 +82,7 @@ public class SDocumentosAdjuntos extends HttpServlet {
 				
 				if(accion!=null){
 					Documento documentoAdjunto;
+					Integer result = 0;
 					if(accion.equals("agregarDocumento")){
 						try {						
 							if(esNuevo){
@@ -121,7 +121,7 @@ public class SDocumentosAdjuntos extends HttpServlet {
 								        }
 										
 										if(!documento.exists()){
-											Integer result = DocumentosAdjuntosDAO.guardarDocumentoAdjunto(documentoAdjunto);
+											result = DocumentosAdjuntosDAO.guardarDocumentoAdjunto(documentoAdjunto);
 											if (result > 0){
 												parametro.write(documento);
 												response_text = "{ \"success\": true, \"existe_archivo\": false, \"id\": \""+ result + "\",\"nombre\": \"" + nombreDocumento + "\",\"extension_archivo\": \"" + tipoContenido + "\" } ";
@@ -145,6 +145,8 @@ public class SDocumentosAdjuntos extends HttpServlet {
 					        gz.close();
 					        output.close();
 						} catch (Throwable e){
+							if (result > 0)
+								DocumentosAdjuntosDAO.eliminarDocumentoAdjunto(result);
 							response_text = "{ \"success\": false }";
 						}
 					}else if(accion.equals("getDocumentos")){
@@ -162,8 +164,6 @@ public class SDocumentosAdjuntos extends HttpServlet {
 								dato.nombre = documento.getNombre();
 								dato.extension = documento.getExtension();
 								dato.descripcion = documento.getDescripcion();
-								//dato.idObjeto = documento.getIdObjeto();
-								//dato.idTipoObjto = documento.getIdTipoObjeto();
 								datos_.add(dato);
 							}
 							
@@ -217,8 +217,7 @@ public class SDocumentosAdjuntos extends HttpServlet {
 							  response.addHeader("Content-Length", Long.toString(file.length()));
 							}
 							
-							
-							response.setHeader("Expires:", "0"); // eliminates browser caching
+							response.setHeader("Expires:", "0");
 							
 							byte [] buffer = new byte[8192];
 							for (int length = 0; (length = fileIn.read(buffer)) > 0;){

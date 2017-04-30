@@ -34,13 +34,16 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="40040">
-					<label class="btn btn-primary" ng-click="subproducto.nuevo()">Nuevo</label>
+					<label class="btn btn-primary" ng-click="subproducto.nuevo()" uib-tooltip="Nuevo">
+					<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="40010">
-					<label class="btn btn-primary" ng-click="subproducto.editar()">Editar</label>
+					<label class="btn btn-primary" ng-click="subproducto.editar()" uib-tooltip="Editar">
+					<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="40030">
-					<label class="btn btn-primary" ng-click="subproducto.borrar()">Borrar</label>
+					<label class="btn btn-primary" ng-click="subproducto.borrar()" uib-tooltip="Borrar">
+					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</shiro:hasPermission>
 			</div>
 		</div>
@@ -84,8 +87,8 @@
 	</div>
 
 	<div ng-show="subproducto.esForma" class="row main-form">
-		<h4 ng-hide="!subproducto.esNuevo">Nueva Subproducto</h4>
-		<h4 ng-hide="subproducto.esNuevo">Edición de Subproducto</h4>
+		<h2 ng-hide="!subproducto.esNuevo">Nuevo Subproducto</h2>
+		<h2 ng-hide="subproducto.esNuevo">Edición de Subproducto</h2>
 		<div class="col-sm-12 operation_buttons" align="left" ng-hide="subproducto.esNuevo">
 			<div class="btn-group">
 				<label class="btn btn-default" ng-click="subproducto.irAActividades()">Actividades</label>
@@ -95,9 +98,11 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="40020">
-					<label class="btn btn-success" ng-click="form.$valid ? subproducto.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
+					<label class="btn btn-success" ng-click="form.$valid ? subproducto.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="subproducto.cancelar()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="subproducto.cancelar()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 		<div>
@@ -105,75 +110,84 @@
 			<form name="form" class="css-form">
 				
 					<div class="form-group">
-						<label>Id</label> 
-						<p class="form-control-static" id="campo0" name="campo0" >{{subproducto.subproducto.id}}</p>
+						<label for="id" class="floating-label">ID {{subproducto.subproducto.id}}</label>
+						<br/><br/> 
 					</div>
 				
 				
 					<div class="form-group">
-						<label>* Nombre</label> 
-						<input type="text" class="form-control" placeholder="Nombre del subproducto" ng-model="subproducto.subproducto.nombre" ng-required="true" />
+						<input type="text" class="inputText" ng-model="subproducto.subproducto.nombre" ng-required="true" 
+						value="{{subproducto.subproducto.nombre}}" onblur="this.setAttribute('value', this.value);"/>
+						<label class="floating-label">* Nombre</label>
 					</div>
 					
 					<div class="form-group"  >
-						<label for="isnip">SNIP</label>
-						<input type="number"   ng-model="subproducto.subproducto.snip" class="form-control" placeholder="SNIP" >
+						<input type="number" ng-model="subproducto.subproducto.snip" class="inputText"
+							value="{{subproducto.subproducto.snip}}" onblur="this.setAttribute('value', this.value);">
+						<label class="floating-label">SNIP</label>
 					</div>
 				
 					<div class="form-group row" >
 						<div class="form-group col-sm-2" >
-						       <label for="iprog">Programa</label>
-						       <input type="number" class="form-control" placeholder="Programa" ng-model="subproducto.subproducto.programa"  ng-maxlength="4" style="text-align: center" />
+					       <input type="number" class="inputText" ng-model="subproducto.subproducto.programa"  ng-maxlength="4" style="text-align: center" 
+					       		value="{{subproducto.subproducto.programa}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+					       <label for="iprog" class="floating-label">Programa</label>
 						</div>
 						<div class="form-group col-sm-2" >
-						  <label for="isubprog">Subprograma</label>
-						  <input type="number" class="form-control" placeholder="Sub-programa" ng-model="subproducto.subproducto.subprograma" ng-maxlength="4" style="text-align: center" />
+						  <input type="number" class="inputText" ng-model="subproducto.subproducto.subprograma" 
+						  		value="{{subproducto.subproducto.subprograma}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
+						  <label for="isubprog" class="floating-label">Subprograma</label>
 						</div>
 						<div class="form-group col-sm-2" >
-						  <label for="iproy_">Proyecto</label>
-						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="subproducto.subproducto.proyecto_"  ng-maxlength="4" style="text-align: center" />
+						  <input type="number" class="inputText" ng-model="subproducto.subproducto.proyecto_"  ng-maxlength="4" style="text-align: center" 
+						  		value="{{subproducto.subproducto.proyecto_}}" onblur="this.setAttribute('value', this.value);"/>
+						  <label for="iproy_" class="floating-label">Proyecto</label>
 						</div>
 						<div class="form-group col-sm-2" >
-						  <label for="iproy_">Actividad</label>
-						  <input type="number" class="form-control" placeholder="Proyecto" ng-model="subproducto.subproducto.actividad" ng-maxlength="4" style="text-align: center"  />
+						  <input type="number" class="inputText" ng-model="subproducto.subproducto.actividad" ng-maxlength="4" style="text-align: center" 
+						  		value="{{subproducto.subproducto.actividad}}" onblur="this.setAttribute('value', this.value);"/>
+						  <label for="iobra" class="floating-label">Actividad</label>
 						</div>
 						<div class="form-group col-sm-2" >
-						  <label for="iobra">Obra</label>
-						  <input type="number" class="form-control" placeholder="Obra" ng-model="subproducto.subproducto.obra" ng-maxlength="4" style="text-align: center"/>
+						  <input type="number" class="inputText" ng-model="subproducto.subproducto.obra" ng-maxlength="4" style="text-align: center" 
+						  		value="{{subproducto.subproducto.obra}}" onblur="this.setAttribute('value', this.value);"/>
+						  <label for="iobra" class="floating-label">Obra</label>
 						</div>
 						<div class="form-group col-sm-2" >
-						  <label for="campo5">Fuente</label>
-						  <input type="number" class="form-control" placeholder="Fuente" ng-model="subproducto.subproducto.fuente" ng-maxlength="4" style="text-align: center"/>
+						  <input type="number" class="inputText" ng-model="subproducto.subproducto.fuente" ng-maxlength="4" style="text-align: center" 
+						  		 value="{{subproducto.subproducto.fuente}}" onblur="this.setAttribute('value', this.value);"/>
+						  <label for="campo5" class="floating-label">Fuente</label>
 						</div>
 					</div>
 					
 					<div class="form-group">
-							<label >Coordenadas</label>
-				          	<div class="input-group">
-				            	<input type="text" class="form-control" placeholder="Latitud, Longitud" ng-model="subproducto.coordenadas" ng-readonly="true" />
-				            	<span class="input-group-addon" ng-click="subproducto.open(subproducto.subproducto.latitud, subproducto.subproducto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
-				          	</div>
+				            	<input type="text" class="inputText" ng-model="subproducto.coordenadas" ng-readonly="true" 
+				            		value="{{subproducto.coordenadas}}" onblur="this.setAttribute('value', this.value);"
+				            		ng-click="subproducto.open(subproducto.subproducto.latitud, subproducto.subproducto.longitud); "/>
+				            	<span class="label-icon" ng-click="subproducto.open(subproducto.subproducto.latitud, subproducto.subproducto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
+				            	<label class="floating-label">Coordenadas</label>
 					</div>
 
 					<div class="form-group" >
-						<label for="campo2"> Descripción</label> 
-						<input type="text" class="form-control" placeholder="Descripcion del subproducto" ng-model="subproducto.subproducto.descripcion" />
+						<input type="text" class="inputText" ng-model="subproducto.subproducto.descripcion" 
+							value="{{subproducto.subproducto.descripcion}}" onblur="this.setAttribute('value', this.value);"/>
+						<label for="campo2" class="floating-label">Descripción</label>
 					</div>
 					
 					<div class="form-group" >
-			          <label for="campo3">* Tipo</label>
-			          <div class="input-group"> 
-			            <input type="text" class="form-control" placeholder="Tipo de subproducto" ng-model="subproducto.tipoNombre" ng-readonly="true" ng-required="true"/>
-			            <span class="input-group-addon" ng-click="subproducto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
-			          </div>
+			            <input type="text" class="inputText" ng-model="subproducto.tipoNombre" ng-readonly="true" ng-required="true" 
+			            	value="{{subproducto.tipoNombre}}" onblur="this.setAttribute('value', this.value);" 
+			            	ng-click="subproducto.buscarTipo()"/>
+			            <span class="label-icon" ng-click="subproducto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
+			            <label class="floating-label">* Tipo</label>
 			        </div>
 			        
 			        <div class="form-group">
-			          <label for="campo5">Unidad Ejecutora</label>
-			          <div class="input-group"> 
-			            <input type="text" class="form-control" placeholder="Unidad Ejecutora" ng-model="subproducto.unidadEjecutoraNombre" ng-readonly="true" ng-required="true"/>
-			            <span class="input-group-addon" ng-click="subproducto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
-			          </div>
+			            <input type="text" class="inputText" ng-model="subproducto.unidadEjecutoraNombre" ng-readonly="true" ng-required="true" 
+			            	value="{{subproducto.unidadEjecutoraNombre}}" onblur="this.setAttribute('value', this.value);" 
+			            	ng-click="subproducto.buscarUnidadEjecutora()"/>
+			            <span class="label-icon" ng-click="subproducto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
+			          <label class="floating-label">Unidad Ejecutora</label>
 			        </div>
 			        
 			        <div class="form-group" ng-repeat="campo in subproducto.camposdinamicos">
@@ -237,9 +251,11 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="40020">
-					<label class="btn btn-success" ng-click="form.$valid ? subproducto.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
+					<label class="btn btn-success" ng-click="form.$valid ? subproducto.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="subproducto.cancelar()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="subproducto.cancelar()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 	</div>

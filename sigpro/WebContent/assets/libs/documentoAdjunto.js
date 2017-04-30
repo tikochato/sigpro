@@ -117,7 +117,7 @@ function ModalDialogController($uibModalInstance, $scope, $http, $interval, i18n
 						}
 			});
 		}else{
-			//mensaje de asignación de archivo
+			$utilidades.mensaje('danger','Debe seleccionar un archivo');
 		}
 	};
 	

@@ -2,15 +2,17 @@
 <div class="modal-body" id="modal-body">
   	<div>
     	<div class="form-group">
-			<label for="nombre">Contraseña</label>
-    		<input type="password" class="form-control col-md-8" id="usuario" placeholder="ingrese contraseña" ng-model="modalPassword.password.password1">
+    		<input type="password" class="inputText" id="usuario" ng-model="modalPassword.password.password1" value="{{modalPassword.password.password1}}" 
+    			onblur="this.setAttribute('value', this.value);">
+    		<label class="floating-label">Contraseña</label>
 		</div>		
     </div>
     <br>
     <div>
     	<div class="form-group">
-			<label for="nombre">Confirmación de contraseña</label>
-    		<input type="password" class=" form-control col-md-8" id="usuario" placeholder="ingrese contraseña de nuevo" ng-model="modalPassword.password.password2">
+    		<input type="password" class="inputText" id="usuario" ng-model="modalPassword.password.password2" value="{{modalPassword.password.password2}}" 
+    			onblur="this.setAttribute('value', this.value);">
+    		<label class="floating-label">Confirmación de contraseña</label>
 		</div>
     </div>
     <br>
