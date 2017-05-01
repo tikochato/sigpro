@@ -92,10 +92,13 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row main-form" ng-show="actividadc.mostraringreso">
-			<h4 ng-hide="!actividadc.esnuevo">Nueva actividad</h4>
-			<h4 ng-hide="actividadc.esnuevo">Edición de actividad</h4>
-			<div class="col-sm-12 operation_buttons" align="left">
+		<div class="row second-main-form" ng-show="actividadc.mostraringreso">
+			<div class="page-header">
+			    <h2 ng-hide="!actividadc.esnuevo"><small>Nueva actividad</small></h2>
+				<h2 ng-hide="actividadc.esnuevo"><small>Edición de actividad</small></h2>
+			</div>
+			
+			<div class="col-sm-12 operation_buttons" align="left" ng-hide="actividadc.esnuevo">
 				<div class="btn-group">
 					<label class="btn btn-default" ng-click="actividadc.irARiesgos(actividadc.actividad.id)">Riesgos</label>
 				</div>
@@ -112,36 +115,64 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group">
-							<label for="id">ID</label>
-    						<p class="form-control-static">{{ actividadc.actividad.id }}</p>
+							<label for="id" class="floating-label">ID {{actividadc.actividad.id }}</label>
+							<br/><br/>
 						</div>
 						<div class="form-group">
-							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" name="nombre" placeholder="Nombre" ng-model="actividadc.actividad.nombre" ng-required="true">
+    						<div class="form-group">
+							   <input type="text" name="inombre"  class="inputText" id="inombre" 
+							     ng-model="actividadc.actividad.nombre" value="{{actividadc.actividad.nombre}}"   
+							     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+							   <label class="floating-label">* Nombre</label>
+							</div>
 						</div>
-
-						<div class="form-group">
+						<!--<div class="form-group">
 							<label for="campo3">* Tipo de Actividad</label>
 				          	<div class="input-group">
 				            	<input type="text" class="form-control" placeholder="Tipo de Actividad" ng-model="actividadc.actividad.actividadtiponombre" ng-readonly="true" ng-required="true"/>
 				            	<span class="input-group-addon" ng-click="actividadc.buscarActividadTipo()"><i class="glyphicon glyphicon-search"></i></span>
 				          	</div>
+						</div>  -->
+						
+						<div class="form-group" >
+						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="actividadc.actividad.actividadtiponombre" value="{{actividadc.actividad.actividadtiponombre}}" 
+								            		ng-click="actividadc.buscarActividadTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+							<span class="label-icon" ng-click="actividadc.buscarActividadTipo()"><i class="glyphicon glyphicon-search"></i></span>
+							<label for="campo3" class="floating-label">* Tipo de Actividad</label>
 						</div>
-
-						<div class="form-group">
+						<!--  <div class="form-group">
 							<label for="campo3">Coordenadas</label>
 				          	<div class="input-group">
 				            	<input type="text" class="form-control" placeholder="Latitud, Longitud" ng-model="actividadc.coordenadas" ng-readonly="true" />
 				            	<span class="input-group-addon" ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
 				          	</div>
+						</div>-->
+						
+						<div class="form-group" >
+						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="actividadc.coordenadas" value="{{actividadc.coordenadas}}" 
+								            		ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+							<span class="label-icon" ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
+							<label for="campo3" class="floating-label">Coordenadas</label>
 						</div>
-
+						<!-- 
 						<div class="form-group">
 							<label for="descripcion">Descripción</label>
     						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="actividadc.actividad.descripcion">
 						</div>
+						 -->
+						
+						<div class="form-group">
+						   <input type="text" name="inombre"  class="inputText" id="idescripcion" 
+						     ng-model="actividadc.actividad.descripcion" value="{{actividadc.actividad.descripcion}}"   
+						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+						   <label class="floating-label">Descripción</label>
+						</div>
+						
+						
 						<div class="row">
+							
 							<div class="col-sm-6">
+								<!--
 								<div class="form-group">
 									<label>* Fecha de Inicio</label>
 		    						<p class="input-group">
@@ -155,7 +186,16 @@
 													</span>
 									</p>
 								</div>
+								  -->
+								
+								<div class="form-group col-sm-6" >
+								    <input type="text" class="inputText" id="ifechainicio" name="ifechainicio" ng-model="actividadc.actividad.fechaInicio" value="{{actividadc.actividad.fechaInicio}}"  is-open="actividadc.fi_abierto" datepicker-options="actividadc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+										            		ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+									<span class="label-icon" ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
+									<label for="campo3" class="floating-label">* Fecha de Inicio</label>
+								</div>
 							</div>
+							
 							<div class="col-sm-6">
 								<div class="form-group">
 									<label>* Fecha de Fin</label>
