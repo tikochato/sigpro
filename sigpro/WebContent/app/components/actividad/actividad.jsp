@@ -36,7 +36,7 @@
 		<div class="panel panel-default">
 		    <div class="panel-heading"><h3>Actividades</h3></div>
 		</div>
-		<h2><small>{{ actividadc.objetoTipoNombre }} {{ actividadc.objetoNombre }}</small></h2><br/>
+		<h3><small>{{ actividadc.objetoTipoNombre }} {{ actividadc.objetoNombre }}</small></h3>
 		<div class="row" align="center" ng-hide="actividadc.mostraringreso">
 			
     		<div class="col-sm-12 operation_buttons" align="right">
