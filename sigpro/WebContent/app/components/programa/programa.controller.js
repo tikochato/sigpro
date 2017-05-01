@@ -160,19 +160,19 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				numeroPrestamo: mi.prestamo.numeroPrestamo,
 				destino : mi.prestamo.destino,
 				sectorEconomico: mi.prestamo.sectorEconomico,
-				unidadEjecutora: mi.prestamo.unidadejecutora,
+				unidadEjecutora: mi.prestamo.unidadEjecutora,
 				fechaFimra: moment(mi.prestamo.fechaFirma).format('DD/MM/YYYY'),
-				tipoAutorizacionId : mi.prestamo.autorizacionTipoId,
+				tipoAutorizacionId : mi.prestamo.tipoAutorizacionId,
 				numeroAutorizacion: mi.prestamo.numeroAutorizacion,
 				fechaAutorizacion: moment(mi.prestamo.fechaAutorizacion).format('DD/MM/YYYY'),
 				aniosPlazo: mi.prestamo.aniosPlazo,
 				aniosGracia: mi.prestamo.aniosGracia,
 				fechaFinEjecucion: moment(mi.prestamo.fechaFinEjecucion).format('DD/MM/YYYY'),
 				periodoEjecucion: mi.prestamo.periodoEjecucion,
-				tipoInteresId: mi.prestamo.interesTipoId,
+				tipoInteresId: mi.prestamo.tipoInteresId,
 				porcentajeInteres: mi.prestamo.porcentajeInteres,
 				porcentajeComisionCompra: mi.prestamo.porcentajeComisionCompra,
-				tipoMonedaId: mi.prestamo.nombreTipoMonedaId,
+				tipoMonedaId: mi.prestamo.tipoMonedaId,
 				montoContratado: mi.prestamo.montoContratado,
 				amortizado: mi.prestamo.amortizado,
 				porAmortizar: mi.prestamo.porAmortizar,
@@ -186,14 +186,14 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				otrosCargosAcumulados: mi.prestamo.otrosCargosAcumulados,
 				presupuestoAsignadoFuncionamiento: mi.prestamo.presupuestoAsignadoFuncionamiento,
 				presupuestoAsignadoInversion: mi.prestamo.presupuestoAsignadoInversion,
-				presupuestoModificadoFuncionamiento: mi.prestamo.presupuestoModificadoFuncionamiento,
-				presupuestoModificadoInversion: mi.prestamo.presupuestoModificadoInversion,
-				presupuestoVigenteFuncionamiento: mi.prestamo.presupuestoVigenteFuncionamiento,
-				presupuestoVigenteInversion: mi.prestamo.presupuestoVigenteInversion,
-				presupuestoDevengadoFunconamiento:mi.prestamo.presupuestoDevengadoFuncionamiento,
-				presupuestoDevengadoInversion:mi.prestamo.presupuestoDevengadoInversion,
-				presupuestoPagadoFuncionamiento: mi.prestamo.presupuestoPagadoFuncionamiento,
-				presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoInversion,
+				presupuestoModificadoFuncionamiento: mi.prestamo.presupuestoModificadoFun,
+				presupuestoModificadoInversion: mi.prestamo.presupuestoModificadoIn,
+				presupuestoVigenteFuncionamiento: mi.prestamo.presupuestoVigenteFun,
+				presupuestoVigenteInversion: mi.prestamo.presupuestoVigenteInv,
+				presupuestoDevengadoFunconamiento:mi.prestamo.presupuestoDevengadoFun,
+				presupuestoDevengadoInversion:mi.prestamo.presupuestoDevengadoInv,
+				presupuestoPagadoFuncionamiento: mi.prestamo.presupuestoPagadoFun,
+				presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoIn,
 				saldoCuentas: mi.prestamo.saldoCuentas,
 				desembolsoReal: mi.prestamo.desembolsoReal,
 				ejecucionEstadoId: mi.prestamo.ejecucionEstadoId,
@@ -283,6 +283,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			mi.programatiponombre=mi.programa.programatipo;
 			mi.esColapsado = true;
 			mi.esNuevo = false;
+			mi.prestamo = {};
 
 			var parametros = {
 					accion: 'getProgramaPropiedadPorTipo',
@@ -319,6 +320,16 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			
 			$http.post('/SPrestamo', parametros).then(function(response){
 				mi.prestamo = response.data.prestamo;
+				mi.prestamo.fechaCorte = mi.prestamo.fechaCorte != '' ?  moment(mi.prestamo.fechaCorte,'DD/MM/YYYY').toDate() : null;
+				mi.prestamo.fechaFirma = mi.prestamo.fechaFirma != '' ? moment (mi.prestamo.fechaFirma,'DD/MM/YYYY').toDate() : null;
+				mi.prestamo.fechaAutorizacion = mi.prestamo.fechaAutorizacion != '' ? moment(mi.prestamo.fechaAutorizacion,'DD/MM/YYYY').toDate() : null;
+				mi.prestamo.fechaFinEjecucion = mi.prestamo.fechaFinEjecucion != '' ? moment (mi.prestamo.fechaFinEjecucion,'DD/MM/YYYY').toDate() : null;
+				mi.prestamo.fechaDecreto = mi.prestamo.fechaDecreto != '' ? moment (mi.prestamo.fechaDecreto,'DD/MM/YYYY').toDate() : null;
+				mi.prestamo.fechaSuscripcion = mi.prestamo.fechaSuscripcion != '' ? moment(mi.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate() : null;
+				mi.prestamo.fechaElegibilidadUe = mi.prestamo.fechaElegibilidadUe != '' ? moment(mi.prestamo.fechaElegibilidadUe,'DD/MM/YYYY').toDate() : null;
+				mi.prestamo.fechaCierreOrigianlUe = mi.prestamo.fechaCierreOrigianlUe != '' ? moment (mi.prestamo.fechaCierreOrigianlUe,'DD/MM/YYYY').toDate() : null; 
+				mi.prestamo.fechaCierreActualUe = mi.prestamo.fechaCierreActualUe != '' ? moment (mi.prestamo.fechaCierreActualUe,'DD/MM/YYYY').toDate() : null;
+				
 			});
 			
 			parametros = {
@@ -535,8 +546,8 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 		},'unidadEjecutora','nombreUnidadEjecutora');
 
 		resultado.then(function(itemSeleccionado) {
-			mi.prestamo.unidadejecutoranombre = itemSeleccionado.nombreUnidadEjecutora;
-			mi.prestamo.unidadejecutora = itemSeleccionado.unidadEjecutora;
+			mi.prestamo.unidadEjecutoraNombre = itemSeleccionado.nombreUnidadEjecutora;
+			mi.prestamo.unidadEjecutora = itemSeleccionado.unidadEjecutora;
 		});
 	};
 	
@@ -553,8 +564,8 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 		},'id','nombre');
 
 		resultado.then(function(itemSeleccionado) {
-			mi.prestamo.nombreAutorizacionTipo = itemSeleccionado.nombre;
-			mi.prestamo.autorizacionTipoId = itemSeleccionado.id;
+			mi.prestamo.tipoAutorizacionNombre = itemSeleccionado.nombre;
+			mi.prestamo.tipoAutorizacionId = itemSeleccionado.id;
 		});
 	};
 	
@@ -571,8 +582,8 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 		},'id','nombre');
 
 		resultado.then(function(itemSeleccionado) {
-			mi.prestamo.nombreTipoInteres = itemSeleccionado.nombre;
-			mi.prestamo.interesTipoId = itemSeleccionado.id;
+			mi.prestamo.tipoInteresNombre = itemSeleccionado.nombre;
+			mi.prestamo.tipoInteresId = itemSeleccionado.id;
 		});
 	};
 	
@@ -591,8 +602,8 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 		},'id','nombre');
 
 		resultado.then(function(itemSeleccionado) {
-			mi.prestamo.nombreTipoMoneda = itemSeleccionado.nombre;
-			mi.prestamo.nombreTipoMonedaId = itemSeleccionado.id;
+			mi.prestamo.tipoMonedaNombre = itemSeleccionado.nombre;
+			mi.prestamo.tipoMonedaId = itemSeleccionado.id;
 		});
 	};
 	

@@ -20,7 +20,7 @@ public class PrestamoDAO {
 					+ " and op.id.objetoTipo = :objTipo "
 					+ " and p.estado = 1 ", Prestamo.class);
 			criteria.setParameter("objId", objetoId);
-			criteria.setParameter("objetoTipo", objetoTipo);
+			criteria.setParameter("objTipo", objetoTipo);
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
