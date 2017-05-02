@@ -19,13 +19,16 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="32040">
-					<label class="btn btn-primary" ng-click="riesgotipoc.nuevo()">Nuevo</label>
+					<label class="btn btn-primary" ng-click="riesgotipoc.nuevo()" uib-tooltip="Nuevo">
+					<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="32010">
-					<label class="btn btn-primary" ng-click="riesgotipoc.editar()">Editar</label>
+					<label class="btn btn-primary" ng-click="riesgotipoc.editar()" uib-tooltip="Editar">
+					<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="32030">
-					<label class="btn btn-primary" ng-click="riesgotipoc.borrar()">Borrar</label>
+					<label class="btn btn-primary" ng-click="riesgotipoc.borrar()" uib-tooltip="Borrar">
+					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</shiro:hasPermission>
 			</div>
 		</div>
@@ -67,30 +70,35 @@
 	</div>
 
 	<div class="row main-form" ng-if="riesgotipoc.mostraringreso">
-		<h4 ng-hide="!riesgotipoc.esnuevo">Nuevo Tipo Riesgo</h4>
-		<h4 ng-hide="riesgotipoc.esnuevo">Edición de Tipo Riesgo</h4>
+		<h2 ng-hide="!riesgotipoc.esnuevo">Nuevo Tipo Riesgo</h2>
+		<h2 ng-hide="riesgotipoc.esnuevo">Edición de Tipo Riesgo</h2>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="32020">
-					<label class="btn btn-success" ng-click="form.$valid ? riesgotipoc.guardar() : ''"  ng-disabled="!form.$valid">Guardar</label>
+					<label class="btn btn-success" ng-click="form.$valid ? riesgotipoc.guardar() : ''"  ng-disabled="!form.$valid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="riesgotipoc.irATabla()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="riesgotipoc.irATabla()"  uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 		<div class="col-sm-12">
 			<form name="form">
 				<div class="form-group">
-					<label for="id">ID</label> 
-					<p class="form-control-static">{{riesgotipoc.riesgotipo.id }}</p>
+					<label for="id">ID {{riesgotipoc.riesgotipo.id }}</label> 
+					<br/><br/>
 				</div>
 
 				<div class="form-group">
-					<label for="nombre">* Nombre</label> 
-					<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="riesgotipoc.riesgotipo.nombre" ng-required="true">
+					<input type="text" class="inputText" id="nombre" ng-model="riesgotipoc.riesgotipo.nombre" ng-required="true" 
+						value="{{riesgotipoc.riesgotipo.nombre}}" onblur="this.setAttribute('value', this.value);">
+					<label class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group">
-					<label for="descripcion">Descripción</label> 
-					<input type="text"class="form-control" id="descripcion" placeholder="Descripción"ng-model="riesgotipoc.riesgotipo.descripcion">
+					<input type="text"class="inputText" id="descripcion" placeholder="Descripción"
+						ng-model="riesgotipoc.riesgotipo.descripcion" value="{{riesgotipoc.riesgotipo.descripcion}}"
+						onblur="this.setAttribute('value', this.value);">
+					<label class="floating-label">Descripción</label>
 				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
@@ -178,9 +186,11 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="32020">
-					<label class="btn btn-success" ng-click="form.$valid ? riesgotipoc.guardar() : ''"  ng-disabled="!form.$valid">Guardar</label>
+					<label class="btn btn-success" ng-click="form.$valid ? riesgotipoc.guardar() : ''"  ng-disabled="!form.$valid"  uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="riesgotipoc.irATabla()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="riesgotipoc.irATabla()"  uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 	</div>

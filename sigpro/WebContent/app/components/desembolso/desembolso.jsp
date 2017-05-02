@@ -9,22 +9,30 @@
   		<shiro:lacksPermission name="9010">
 			<p ng-init="desembolsoc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Desembolso</h3><br/>
-		<h4>{{ desembolsoc.proyectonombre }}</h4><br/>
+		<div class="panel panel-default">
+		    <div class="panel-heading"><h3>Desembolso</h3></div>
+		</div>
+		<h3><small>{{ desembolsoc.proyectonombre }}</small></h3>
 		
 		<div class="row" align="center" ng-if="!desembolsoc.mostraringreso">
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-			       <shiro:hasPermission name="9040">
-			       		<label class="btn btn-primary" ng-click="desembolsoc.nuevo()">Nuevo</label>
-			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="9010"><label class="btn btn-primary" ng-click="desembolsoc.editar()">Editar</label></shiro:hasPermission>
-			       <shiro:hasPermission name="9030">
-			       		<label class="btn btn-primary" ng-click="desembolsoc.borrar()">Borrar</label>
-			       </shiro:hasPermission>
-			       			        
-    			</div>				
-    		</div>
+			
+    		<div class="col-sm-12 operation_buttons" align="right">
+			  <div class="btn-group">
+			  <shiro:hasPermission name="9040">
+			    <label class="btn btn-primary" ng-click="desembolsoc.nuevo()" uib-tooltip="Nuevo">
+			    <span class="glyphicon glyphicon-plus"></span> Nuevo</label>
+			  </shiro:hasPermission>
+			  <shiro:hasPermission name="9010">
+			    <label class="btn btn-primary" ng-click="desembolsoc.editar()" uib-tooltip="Editar">
+			    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
+			  </shiro:hasPermission>
+			  <shiro:hasPermission name="9030">
+			    <label class="btn btn-danger" ng-click="desembolsoc.borrar()" uib-tooltip="Borrar">
+			    <span class="glyphicon glyphicon-trash"></span> Borrar</label>
+			  </shiro:hasPermission>
+			  </div>
+			</div>
+    		
     		<shiro:hasPermission name="9010">
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
@@ -60,53 +68,60 @@
     		</shiro:hasPermission>
     		
 		</div>
-		<div class="row main-form" ng-show="desembolsoc.mostraringreso">
-			<h4 ng-hide="!desembolsoc.esnuevo">Nuevo Desembolso</h4>
-			<h4 ng-hide="desembolsoc.esnuevo">Edición de Desembolso</h4>
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-					<shiro:hasPermission name="9020">
-			        	<label class="btn btn-success" ng-click="form.$valid ? desembolsoc.guardar(): ''" ng-disabled="!form.$valid">Guardar</label>
-			        </shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="desembolsoc.irATabla()">Ir a Tabla</label>
-    			</div>
-    		</div>
+		<div class="row second-main-form" ng-show="desembolsoc.mostraringreso">
+			<div class="page-header">
+			    <h2 ng-hide="!desembolsoc.esnuevo"><small>Nuevo Desembolso</small></h2>
+			    <h2 ng-hide="desembolsoc.esnuevo"><small>Edición de Desembolso</small></h2>
+			</div>
+    		<div class="operation_buttons" align="right">
+			  <div class="btn-group">
+			    <shiro:hasPermission name="9020">
+			      <label class="btn btn-success" ng-click="form.$valid ? desembolsoc.guardar(): ''" ng-disabled="!form.$valid" title="Guardar">
+			      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+			    </shiro:hasPermission>
+			    <label class="btn btn-primary" ng-click="desembolsoc.irATabla()" title="Ir a Tabla">
+			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+			  </div>
+			</div>
 			
 			<div class="col-sm-12">
 				<form name="form" id="form">
-					<div class="form-group" ng-show="!desembolsoc.esnuevo">
-						<label for="id">ID</label>
-   						<p class="form-control-static" id="id"> {{ desembolsoc.desembolso.id }}</p>
+					<div class="form-group">
+					  <label for="id" class="floating-label">ID {{ desembolsoc.desembolso.id }}</label>
+					  <br/><br/>
 					</div>
 					
-					<div class="form_group">
-						<label for="id">* Fecha</label>
-						<p class="input-group">
-				          <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="desembolsoc.fecha" is-open="desembolsoc.popup.abierto" 
-				          	datepicker-options="desembolsoc.opcionesFecha"  close-text="Close" alt-input-formats="altInputFormats" ng-required="true" />
-				          <span class="input-group-btn">
-				            <button type="button" class="btn btn-default" ng-click="desembolsoc.mostrarCalendar()"><i class="glyphicon glyphicon-calendar"></i></button>
-				          </span>
-				        </p>
+					<div class="form-group" >
+								  <input type="text"  class="inputText" uib-datepicker-popup="dd/MM/yyyy" ng-model="desembolsoc.fecha" is-open="desembolsoc.popup.abierto"
+								            datepicker-options="desembolsoc.opcionesFecha" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true"  ng-click="desembolsoc.mostrarCalendar()"
+								            value="{{desembolsoc.fecha}}" onblur="this.setAttribute('value', this.value);"/>
+								            <span class="label-icon" ng-click="desembolsoc.mostrarCalendar()">
+								              <i class="glyphicon glyphicon-calendar"></i>
+								            </span>
+								  <label for="campo.id" class="floating-label">*Fecha</label>
 					</div>
 					
 					<div class="form-group">
-						<label for="monto">* Monto</label>
-   						<input type="number" class="form-control" id="monto" placeholder="Monto" ng-model="desembolsoc.desembolso.monto" ng-required="true">
+					   <input type="number" name="imonto"  class="inputText" id="imonto" 
+					     ng-model="desembolsoc.desembolso.monto" value="{{desembolsoc.desembolso.monto}}"   
+					     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+					   <label class="floating-label">* Monto</label>
 					</div>
 					
 					<div class="form-group">
-						<label for="tipocambio">* Tipo Cambio</label>
-   						<input type="number" class="form-control" id="tipocambio" placeholder="Tipo Cambio" ng-model="desembolsoc.desembolso.tipocambio" ng-required="true">
+					   <input type="number" name="itipocambio"  class="inputText" id="itipocambio" 
+					     ng-model="desembolsoc.desembolso.tipocambio" value="{{desembolsoc.desembolso.tipocambio}}"   
+					     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+					   <label class="floating-label">* Tipo Cambio</label>
 					</div>
 					
-					<div class="form-group " >
-			          <label for="campo3">* Tipo Desembolso</label>
-			          <div class="input-group">
-			            <input type="text" class="form-control" placeholder="Tipo desembolso" ng-model="desembolsoc.desembolso.desembolsotipo" ng-readonly="true" ng-required="true"/>
-			            <span class="input-group-addon" ng-click="desembolsoc.buscarTipoDesembolso()"><i class="glyphicon glyphicon-search"></i></span>
-			          </div>
-			        </div>
+			        
+			        <div class="form-group" >
+						    <input type="text" class="inputText" id="idesembolsotipo" name="idesembolsotipo" ng-model="desembolsoc.desembolso.desembolsotipo" value="{{desembolsoc.desembolso.desembolsotipo}}" 
+							ng-click="desembolsoc.buscarTipoDesembolso()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+							<span class="label-icon" ng-click="desembolsoc.buscarTipoDesembolso()"><i class="glyphicon glyphicon-search"></i></span>
+							<label for="campo3" class="floating-label">* Tipo Desembolso</label>
+						</div>
 			        <br/>
 					<div class="panel panel-default">
 					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
@@ -144,15 +159,15 @@
 				</form>
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="col-sm-12 operation_buttons" align="right">
-					<div class="btn-group">
-						<shiro:hasPermission name="9020">
-				        	<label class="btn btn-success" ng-click="form.$valid ? desembolsoc.guardar(): ''" ng-disabled="!form.$valid">Guardar</label>
-				        </shiro:hasPermission>
-				        <label class="btn btn-primary" ng-click="desembolsoc.irATabla()">Ir a Tabla</label>
-	    			</div>
-	    		</div>
-    		</div>
+    		<div class="col-sm-12 operation_buttons" align="right">
+			  <div class="btn-group">
+			    <shiro:hasPermission name="9020">
+			      <label class="btn btn-success" ng-click="form.$valid ? desembolsoc.guardar(): ''" ng-disabled="!form.$valid" title="Guardar">
+			      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+			    </shiro:hasPermission>
+			    <label class="btn btn-primary" ng-click="desembolsoc.irATabla()" title="Ir a Tabla">
+			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+			  </div>
+			</div>
 		</div>
 	</div>

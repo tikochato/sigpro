@@ -1,5 +1,5 @@
 package pojo;
-// Generated Mar 28, 2017 5:39:07 PM by Hibernate Tools 5.2.1.Final
+// Generated Apr 28, 2017 8:41:23 AM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Riesgo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2242977164015973054L;
+	private static final long serialVersionUID = 6032226407158544288L;
 	private Integer id;
 	private Colaborador colaborador;
 	private RiesgoTipo riesgoTipo;
@@ -47,6 +47,8 @@ public class Riesgo implements java.io.Serializable {
 	private String riesgosSecundarios;
 	private Integer ejecutado;
 	private Date fechaEjecucion;
+	private String imapctoProyectado;
+	private String riesgosSegundarios;
 	private Set<ObjetoRiesgo> objetoRiesgos = new HashSet<ObjetoRiesgo>(0);
 	private Set<RiesgoPropiedadValor> riesgoPropiedadValors = new HashSet<RiesgoPropiedadValor>(0);
 
@@ -64,7 +66,8 @@ public class Riesgo implements java.io.Serializable {
 	public Riesgo(Colaborador colaborador, RiesgoTipo riesgoTipo, String nombre, String descripcion, String usuarioCreo,
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, String impactoProyectado,
 			Integer impacto, Integer puntuacionImpacto, Integer probabilidad, String gatillosSintomas, String respuesta,
-			String riesgosSecundarios, Integer ejecutado, Date fechaEjecucion, Set<ObjetoRiesgo> objetoRiesgos,
+			String riesgosSecundarios, Integer ejecutado, Date fechaEjecucion, String imapctoProyectado,
+			String riesgosSegundarios, Set<ObjetoRiesgo> objetoRiesgos,
 			Set<RiesgoPropiedadValor> riesgoPropiedadValors) {
 		this.colaborador = colaborador;
 		this.riesgoTipo = riesgoTipo;
@@ -84,6 +87,8 @@ public class Riesgo implements java.io.Serializable {
 		this.riesgosSecundarios = riesgosSecundarios;
 		this.ejecutado = ejecutado;
 		this.fechaEjecucion = fechaEjecucion;
+		this.imapctoProyectado = imapctoProyectado;
+		this.riesgosSegundarios = riesgosSegundarios;
 		this.objetoRiesgos = objetoRiesgos;
 		this.riesgoPropiedadValors = riesgoPropiedadValors;
 	}
@@ -265,6 +270,24 @@ public class Riesgo implements java.io.Serializable {
 
 	public void setFechaEjecucion(Date fechaEjecucion) {
 		this.fechaEjecucion = fechaEjecucion;
+	}
+
+	@Column(name = "imapcto_proyectado", length = 1000)
+	public String getImapctoProyectado() {
+		return this.imapctoProyectado;
+	}
+
+	public void setImapctoProyectado(String imapctoProyectado) {
+		this.imapctoProyectado = imapctoProyectado;
+	}
+
+	@Column(name = "riesgos_segundarios", length = 1000)
+	public String getRiesgosSegundarios() {
+		return this.riesgosSegundarios;
+	}
+
+	public void setRiesgosSegundarios(String riesgosSegundarios) {
+		this.riesgosSegundarios = riesgosSegundarios;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "riesgo")

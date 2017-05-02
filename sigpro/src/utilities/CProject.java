@@ -81,7 +81,7 @@ public class CProject {
 			 project = reader.read(nombre);
 			
 		}catch (Exception e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	
@@ -352,9 +352,10 @@ public class CProject {
 	
 	
 	
-	public void exportarProject(int idProyecto,String usuario) throws Exception
+	public String exportarProject(int idProyecto,String usuario) throws Exception
 	{
 		Proyecto proyecto = ProyectoDAO.getProyectoPorId(idProyecto, usuario);
+		String path="";
 		
 		if (proyecto !=null){
 			project = new ProjectFile();
@@ -383,19 +384,43 @@ public class CProject {
 						
 						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), 4, 
 								null,null, null, null, null, usuario);
+						
 						for (Actividad actividad : actividades){
 							Task task5 = task4.addTask();
 							task5.setName(actividad.getNombre());
 							task5.setStart(actividad.getFechaInicio());
 							task5.setFinish(actividad.getFechaFin()); 
 						} 
+						
 					}
+					
+					
+					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), 3, 
+							null,null, null, null, null, usuario);
+					
+					for (Actividad actividad : actividades){
+						Task task4 = task3.addTask();
+						task4.setName(actividad.getNombre());
+						task4.setStart(actividad.getFechaInicio());
+						task4.setFinish(actividad.getFechaFin()); 
+					} 
+				}
+				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), 2, 
+						null,null, null, null, null, usuario);
+				
+				for (Actividad actividad : actividades){
+					Task task3 = task2.addTask();
+					task3.setName(actividad.getNombre());
+					task3.setStart(actividad.getFechaInicio());
+					task3.setFinish(actividad.getFechaFin()); 
 				}
 			}
 			
 			ProjectWriter writer = new MPXWriter();
-			writer.write(project, proyecto.getNombre()  + ".mpx");
+			path = "/archivos/temporales/Programa.mpx";
+			writer.write(project,path);
 		}
+		return path;
 	}	
 	
 	public void construirTarea(Task task ,String nombre, int duracion,String unidades ,

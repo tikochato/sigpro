@@ -13,7 +13,8 @@
 
 			<div class="operation_buttons" align="left">
 					<div class="btn-group">
-						<label class="btn btn-primary" ng-click="matrizriesgoc.exportarExcel()"><span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Exportar</span></label>
+						<label class="btn btn-primary" ng-click="matrizriesgoc.exportarExcel()" uib-tooltip="Exportar">
+						<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Exportar</span></label>
 					</div>
 			</div>
 			<div class="col-sm-12 ">

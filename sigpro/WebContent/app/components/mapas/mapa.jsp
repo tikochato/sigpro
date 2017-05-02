@@ -2,34 +2,6 @@
 	pageEncoding="UTF-8"%>
 	<style type="text/css">
 	
-		.botonTodo{
-				border-bottom-color: #2e6da4;
-	    		border-bottom-width: 3px;
-		}
-		.botonProyectos{
-			border-bottom-color: #ff831f;
-    		border-bottom-width: 3px;
-		}
-		
-		.botonComponentes{
-			border-bottom-color: #9ed728;
-    		border-bottom-width: 3px;
-		}
-		
-		.botonProductos{
-			border-bottom-color: #f1498e;
-    		border-bottom-width: 3px;
-		}
-		
-		.botonSubproductos{
-			border-bottom-color: #f9f63b;
-    		border-bottom-width: 3px;
-		}
-		
-		.botonActividades{
-			border-bottom-color: #63d0ef;
-    		border-bottom-width: 3px;
-		}
 		
 		
 		
@@ -104,8 +76,12 @@
             	<button class="btn btn-primary" type="button" ng-click="infoc.ok()">Aceptar</button>
         	</div>
     </script>
+    
+    <div class="panel panel-default">
+	  <div class="panel-heading"><h3>Mapa {{ titulo }}</h3></div>
+	</div>
 	    
-	    <h3>Mapa {{ titulo }}</h3>
+	    
 	    
 	    
 	    <div class="operation_buttons" align="right">

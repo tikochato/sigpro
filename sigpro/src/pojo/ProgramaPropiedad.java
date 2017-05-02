@@ -1,5 +1,5 @@
 package pojo;
-// Generated Mar 7, 2017 2:35:37 PM by Hibernate Tools 5.2.1.Final
+// Generated Apr 28, 2017 8:41:23 AM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class ProgramaPropiedad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6816218451117713274L;
+	private static final long serialVersionUID = -3508983824441116655L;
 	private Integer id;
 	private DatoTipo datoTipo;
 	private String nombre;
@@ -36,19 +36,23 @@ public class ProgramaPropiedad implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private Integer estado;
+	private int estado;
 	private Set<ProgtipoPropiedad> progtipoPropiedads = new HashSet<ProgtipoPropiedad>(0);
 	private Set<ProgramaPropiedadValor> programaPropiedadValors = new HashSet<ProgramaPropiedadValor>(0);
 
 	public ProgramaPropiedad() {
 	}
 
-	public ProgramaPropiedad(DatoTipo datoTipo) {
+	public ProgramaPropiedad(DatoTipo datoTipo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
 		this.datoTipo = datoTipo;
+		this.nombre = nombre;
+		this.usuarioCreo = usuarioCreo;
+		this.fechaCreacion = fechaCreacion;
+		this.estado = estado;
 	}
 
 	public ProgramaPropiedad(DatoTipo datoTipo, String nombre, String descripcion, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
 			Set<ProgtipoPropiedad> progtipoPropiedads, Set<ProgramaPropiedadValor> programaPropiedadValors) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
@@ -84,7 +88,7 @@ public class ProgramaPropiedad implements java.io.Serializable {
 		this.datoTipo = datoTipo;
 	}
 
-	@Column(name = "nombre", length = 1000)
+	@Column(name = "nombre", nullable = false, length = 1000)
 	public String getNombre() {
 		return this.nombre;
 	}
@@ -102,7 +106,7 @@ public class ProgramaPropiedad implements java.io.Serializable {
 		this.descripcion = descripcion;
 	}
 
-	@Column(name = "usuario_creo", length = 30)
+	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
 	}
@@ -121,7 +125,7 @@ public class ProgramaPropiedad implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_creacion", length = 19)
+	@Column(name = "fecha_creacion", nullable = false, length = 19)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}
@@ -140,12 +144,12 @@ public class ProgramaPropiedad implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Column(name = "estado")
-	public Integer getEstado() {
+	@Column(name = "estado", nullable = false)
+	public int getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(Integer estado) {
+	public void setEstado(int estado) {
 		this.estado = estado;
 	}
 

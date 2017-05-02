@@ -6,8 +6,12 @@
 	<shiro:lacksPermission name="10010">
 			<p ng-init="entidad.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-
-  <h3>{{ entidad.esForma ? (entidad.esNuevo ? "Nueva Entidad" : "Editar Entidad") : "Entidades" }}</h3>
+		
+	<div class="panel panel-default">
+	<div class="panel-heading">
+  		<h3>{{ entidad.esForma ? (entidad.esNuevo ? "Nueva Entidad" : "Editar Entidad") : "Entidades" }}</h3>
+  		</div>
+  	</div>
 
   <br />
 
@@ -15,10 +19,10 @@
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
       	<shiro:hasPermission name="1040">
-      		<label class="btn btn-primary" ng-click="entidad.nueva()">Nueva</label>
+      		<label class="btn btn-primary" ng-click="entidad.nueva()"><span class="glyphicon glyphicon-plus" uib-tooltip="Nuevo"></span>Nueva</label>
       	</shiro:hasPermission>
       	<shiro:hasPermission name="1010">
-        	<label class="btn btn-primary" ng-click="entidad.editar()">Editar</label>
+        	<label class="btn btn-primary" ng-click="entidad.editar()"><span class="glyphicon glyphicon-pencil" uib-tooltip="Editar"></span>Editar</label>
       	</shiro:hasPermission>
       </div>
     </div>
@@ -59,7 +63,7 @@
 
   </div>
 
-  <div class="row main-form" ng-show="entidad.esForma">
+  <div class="row second-main-form" ng-show="entidad.esForma">
 
     <div class="col-sm-12 operation_buttons" align="right">
 
@@ -78,21 +82,29 @@
 
 			<div class="row">
 		        <div class="form-group col-sm-12">
-		          <label>* Entidad</label>
-		          <input type="number" class="form-control" placeholder="Código Entidad" ng-model="entidad.entidad.entidad" ng-readonly="!entidad.esNuevo" ng-required="true" />
+		          <input type="number" class="inputText"  ng-model="entidad.entidad.entidad" 
+		          ng-readonly="!entidad.esNuevo" ng-required="true" 
+		          value="{{entidad.entidad.entidad}}"   
+     				onblur="this.setAttribute('value', this.value);"/>
+		          <label class="floating-label">* Entidad</label>
 		        </div>
 		    </div>
 
 			<div class="row">
 				<div class="form-group col-sm-12" >
-				  <label for="campo2">* Nombre Entidad</label>
-				  <input type="text" class="form-control" id="campo2" name="campo2" placeholder="Nombre Entidad" ng-model="entidad.entidad.nombre" ng-readonly="!entidad.esNuevo" ng-required="true" />
+				  <input type="text" class="inputText"   ng-model="entidad.entidad.nombre" 
+				  ng-readonly="!entidad.esNuevo" ng-required="true" 
+				  value="{{entidad.entidad.nombre}}"   
+     				onblur="this.setAttribute('value', this.value);"/>
+				  <label class="floating-label">* Nombre Entidad</label>
 				</div>
 			</div>
 			<div class="row">
 		        <div class="form-group col-sm-12">
-		          <label for="campo3">Abreviatura</label>
-		          <input type="text" class="form-control" placeholder="Abreviatura" ng-model="entidad.entidad.abreviatura">
+		          <input type="text" class="inputText" ng-model="entidad.entidad.abreviatura"
+		          value="{{entidad.entidad.abreviatura}}"   
+     				onblur="this.setAttribute('value', this.value);">
+		          <label class="floating-label">Abreviatura</label>
 		        </div>
 			</div>
       </form>

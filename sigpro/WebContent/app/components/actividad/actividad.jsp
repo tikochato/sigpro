@@ -33,20 +33,28 @@
 
 			<p ng-init="actividadc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Actividades</h3><br/>
-		<h4>{{ actividadc.objetoTipoNombre }} {{ actividadc.objetoNombre }}</h4><br/>
+		<div class="panel panel-default">
+		    <div class="panel-heading"><h3>Actividades</h3></div>
+		</div>
+		<h3><small>{{ actividadc.objetoTipoNombre }} {{ actividadc.objetoNombre }}</small></h3>
 		<div class="row" align="center" ng-hide="actividadc.mostraringreso">
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-			       <shiro:hasPermission name="1040">
-			       		<label class="btn btn-primary" ng-click="actividadc.nuevo()">Nueva</label>
-			       </shiro:hasPermission>
-			       <shiro:hasPermission name="1010"><label class="btn btn-primary" ng-click="actividadc.editar()">Editar</label></shiro:hasPermission>
-			       <shiro:hasPermission name="1030">
-			       		<label class="btn btn-primary" ng-click="actividadc.borrar()">Borrar</label>
-			       </shiro:hasPermission>
-    			</div>
-    		</div>
+			
+    		<div class="col-sm-12 operation_buttons" align="right">
+			  <div class="btn-group">
+			  <shiro:hasPermission name="1040">
+			    <label class="btn btn-primary" ng-click="actividadc.nuevo()" uib-tooltip="Nueva">
+			    <span class="glyphicon glyphicon-plus"></span> Nueva</label>
+			  </shiro:hasPermission>
+			  <shiro:hasPermission name="1010">
+			    <label class="btn btn-primary" ng-click="actividadc.editar()" uib-tooltip="Editar">
+			    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
+			  </shiro:hasPermission>
+			  <shiro:hasPermission name="1030">
+			    <label class="btn btn-danger" ng-click="actividadc.borrar()" uib-tooltip="Borrar">
+			    <span class="glyphicon glyphicon-trash"></span> Borrar</label>
+			  </shiro:hasPermission>
+			  </div>
+			</div>
     		<shiro:hasPermission name="1010">
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
@@ -84,114 +92,123 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row main-form" ng-show="actividadc.mostraringreso">
-			<h4 ng-hide="!actividadc.esnuevo">Nueva actividad</h4>
-			<h4 ng-hide="actividadc.esnuevo">Edición de actividad</h4>
-			<div class="col-sm-12 operation_buttons" align="left">
-				<div class="btn-group">
-					<label class="btn btn-default" ng-click="actividadc.irARiesgos(actividadc.actividad.id)">Riesgos</label>
+		<div class="row second-main-form" ng-show="actividadc.mostraringreso">
+			<div class="page-header">
+			    <h2 ng-hide="!actividadc.esnuevo"><small>Nueva actividad</small></h2>
+				<h2 ng-hide="actividadc.esnuevo"><small>Edición de actividad</small></h2>
+			</div>
+			
+			<div class="operation_buttons">
+				<div class="btn-group" ng-hide="actividadc.esnuevo">
+					<label class="btn btn-default" ng-click="actividadc.irARiesgos(actividadc.actividad.id)" uib-tooltip="Riesgos" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-warning-sign"></span></label>
+				</div>
+				<div class="btn-group" style="float: right;">
+					<shiro:hasPermission name="24020">
+						<label class="btn btn-success" ng-click="form.$valid ? actividadc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
+						<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+					</shiro:hasPermission>
+					<label class="btn btn-primary" ng-click="actividadc.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 				</div>
 			</div>
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-					<shiro:hasPermission name="1020">
-			        	<label class="btn btn-success" ng-click="form.$valid ? actividadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
-					</shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="actividadc.irATabla()">Ir a Tabla</label>
-    			</div>
-    		</div>
-
+			
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group">
-							<label for="id">ID</label>
-    						<p class="form-control-static">{{ actividadc.actividad.id }}</p>
+							<label for="id" class="floating-label">ID {{actividadc.actividad.id }}</label>
+							<br/><br/>
 						</div>
 						<div class="form-group">
-							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" name="nombre" placeholder="Nombre" ng-model="actividadc.actividad.nombre" ng-required="true">
+    						<div class="form-group">
+							   <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="actividadc.actividad.nombre" value="{{actividadc.actividad.nombre}}"  onblur="this.setAttribute('value', this.value);" ng-required="true" >
+							   <label class="floating-label">* Nombre</label>
+							</div>
 						</div>
-
+						
+						<div class="form-group" >
+						    <input type="text" class="inputText" id="iactividadtipo" name="iactividadtipo" ng-model="actividadc.actividad.actividadtiponombre" value="{{actividadc.actividad.actividadtiponombre}}" 
+							ng-click="actividadc.buscarActividadTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+							<span class="label-icon" ng-click="actividadc.buscarActividadTipo()"><i class="glyphicon glyphicon-search"></i></span>
+							<label for="campo3" class="floating-label">* Tipo de Actividad</label>
+						</div>
+						
+						
+						<div class="form-group" >
+						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="actividadc.coordenadas" value="{{actividadc.coordenadas}}" 
+								            		ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+							<span class="label-icon" ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
+							<label for="campo3" class="floating-label">Coordenadas</label>
+						</div>
+						
+						
 						<div class="form-group">
-							<label for="campo3">* Tipo de Actividad</label>
-				          	<div class="input-group">
-				            	<input type="text" class="form-control" placeholder="Tipo de Actividad" ng-model="actividadc.actividad.actividadtiponombre" ng-readonly="true" ng-required="true"/>
-				            	<span class="input-group-addon" ng-click="actividadc.buscarActividadTipo()"><i class="glyphicon glyphicon-search"></i></span>
-				          	</div>
+						   <input type="text" name="inombre"  class="inputText" id="idescripcion" 
+						     ng-model="actividadc.actividad.descripcion" value="{{actividadc.actividad.descripcion}}"   
+						     onblur="this.setAttribute('value', this.value);" >
+						   <label class="floating-label">Descripción</label>
 						</div>
-
-						<div class="form-group">
-							<label for="campo3">Coordenadas</label>
-				          	<div class="input-group">
-				            	<input type="text" class="form-control" placeholder="Latitud, Longitud" ng-model="actividadc.coordenadas" ng-readonly="true" />
-				            	<span class="input-group-addon" ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
-				          	</div>
-						</div>
-
-						<div class="form-group">
-							<label for="descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="actividadc.actividad.descripcion">
-						</div>
+						
+						
 						<div class="row">
+							
 							<div class="col-sm-6">
-								<div class="form-group">
-									<label>* Fecha de Inicio</label>
-		    						<p class="input-group">
-									<input type="text" class="form-control" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaInicio" is-open="actividadc.fi_abierto"
-														datepicker-options="actividadc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Inicio" ng-change="actividadc.actualizarfechafin()" ng-required="true" />
-														<span class="input-group-btn">
-														<button type="button" class="btn btn-default"
-															ng-click="actividadc.abrirPopupFecha(1000)">
-															<i class="glyphicon glyphicon-calendar"></i>
-														</button>
-													</span>
-									</p>
+								
+								<div class="form-group" >
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaInicio" is-open="actividadc.fi_abierto"
+								            datepicker-options="actividadc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin()" ng-required="true"  ng-click="actividadc.abrirPopupFecha(1000)"
+								            value="{{actividadc.actividad.fechaInicio}}" onblur="this.setAttribute('value', this.value);"/>
+								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1000)">
+								              <i class="glyphicon glyphicon-calendar"></i>
+								            </span>
+								  <label for="campo.id" class="floating-label">*Fecha de Inicio</label>
 								</div>
 							</div>
+							
 							<div class="col-sm-6">
-								<div class="form-group">
-									<label>* Fecha de Fin</label>
-		    						<p class="input-group">
-									<input type="text" class="form-control" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaFin" is-open="actividadc.ff_abierto"
-														datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Fin" ng-required="true" /><span
-														class="input-group-btn">
-														<button type="button" class="btn btn-default"
-															ng-click="actividadc.abrirPopupFecha(1001)">
-															<i class="glyphicon glyphicon-calendar"></i>
-														</button>
-													</span>
-									</p>
+							
+								<div class="form-group" >
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaFin" is-open="actividadc.ff_abierto"
+								            datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin()" ng-required="true"  ng-click="actividadc.abrirPopupFecha(1000)"
+								            value="{{actividadc.actividad.fechaFin}}" onblur="this.setAttribute('value', this.value);"/>
+								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1001)">
+								              <i class="glyphicon glyphicon-calendar"></i>
+								            </span>
+								  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
 								</div>
 							</div>
 						</div>
+											
 						<div class="form-group">
-							<label for="descripcion">Avance %</label>
-    						<input type="number" class="form-control" placeholder="% de Avance" ng-model="actividadc.actividad.porcentajeavance" ng-required="true" min="0" max="100">
+						   <input type="number" name="iavance"  class="inputText" id="inombre" 
+						     ng-model="actividadc.actividad.porcentajeavance" value="{{actividadc.actividad.porcentajeavance}}"   
+						     onblur="this.setAttribute('value', this.value);"  min="0" max="100" >
+						   <label class="floating-label">Avance %</label>
 						</div>
-						<div class="form-group row" >
+						<div class="form-group-row row" >
 							<div class="form-group col-sm-2" >
-							       <label for="iprog">Programa</label>
-							       <input type="number" class="form-control" placeholder="Programa" ng-model="actividadc.actividad.programa" ng-maxlength="4" min="0" style="text-align: center"/>
+							       <input type="number" class="inputText" ng-model="actividadc.actividad.programa" value="{{actividadc.actividad.programa}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
+							       <label for="iprog" class="floating-label">Programa</label>
 							</div>
 							<div class="form-group col-sm-2" >
-							  <label for="isubprog">Subprograma</label>
-							  <input type="number" class="form-control" placeholder="Subprograma" ng-model="actividadc.actividad.subprograma" ng-maxlength="4" min="0" style="text-align: center"/>
+							  <input type="number" class="inputText" ng-model="actividadc.actividad.subprograma" value="{{actividadc.actividad.subprograma}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <label for="isubprog" class="floating-label">Subprograma</label>
 							</div>
 							<div class="form-group col-sm-2" >
-							  <label for="iproy_">Proyecto</label>
-							  <input type="number" class="form-control" placeholder="Proyecto" ng-model="actividadc.actividad.proyecto" ng-maxlength="4" min="0" style="text-align: center"/>
+							  <input type="number" class="inputText" ng-model="actividadc.actividad.proyecto" value="{{actividadc.actividad.proyecto}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <label for="iproy_" class="floating-label">Préstamo</label>
 							</div>
 							<div class="form-group col-sm-2" >
-							  <label for="iobra">Actividad</label>
-							  <input type="number" class="form-control" placeholder="Actividad" ng-model="actividadc.actividad.actividad" ng-maxlength="4" min="0" style="text-align: center"/>
+							  <input type="number" class="inputText" ng-model="actividadc.actividad.actividad" value="{{actividadc.actividad.actividad}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <label for="iobra" class="floating-label">Actividad</label>
 							</div>
 							<div class="form-group col-sm-2" >
-							  <label for="iobra">Obra</label>
-							  <input type="number" class="form-control" placeholder="Obra" ng-model="actividadc.actividad.obra" ng-maxlength="4" min="0" style="text-align: center"/>
+							  <input type="number" class="inputText" ng-model="actividadc.actividad.obra" value="{{actividadc.actividad.obra}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <label for="iobra" class="floating-label">Obra</label>
 							</div>
-							<div class="form-group col-sm-2" >
-							  <label for="campo5">Fuente</label>
-							  <input type="number" class="form-control" placeholder="Fuente" ng-model="actividadc.actividad.fuente" ng-maxlength="4" min="0" style="text-align: center"/>
+							 <div class="form-group col-sm-2">
+							  <input type="number" class="inputText" ng-model="actividadc.actividad.fuente" value="{{actividadc.actividad.fuente}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <label for="fuente" class="floating-label">Fuente</label>
 							</div>
 						</div>
 						<div class="form-group" ng-repeat="campo in actividadc.camposdinamicos">
@@ -256,15 +273,17 @@
 				</form>
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="col-sm-12 operation_buttons" align="right">
-					<div class="btn-group">
-						<shiro:hasPermission name="1020">
-							<label class="btn btn-success" ng-click="form.$valid ? actividadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
-						</shiro:hasPermission>
-				        <label class="btn btn-primary" ng-click="actividadc.irATabla()">Ir a Tabla</label>
-	    			</div>
-	    		</div>
-    		</div>
+			
+			
+		<div class="col-sm-12 operation_buttons" align="right">
+			<div class="btn-group">
+				<shiro:hasPermission name="24020">
+					<label class="btn btn-success" ng-click="form.$valid ? actividadc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+				</shiro:hasPermission>
+				<label class="btn btn-primary" ng-click="actividadc.irATabla()" title="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+			</div>
 		</div>
 	</div>
+</div>

@@ -3,6 +3,9 @@ package servlets;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
+
+import java.io.FileInputStream;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +20,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.shiro.codec.Base64;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -159,6 +164,15 @@ public class SGantt extends HttpServlet {
 					,estructruaPredecesores!=null && estructruaPredecesores.length()>0 ? "," : ""
 					,estructruaPredecesores,"}");
 
+			response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
+
+
+	        OutputStream output = response.getOutputStream();
+			GZIPOutputStream gz = new GZIPOutputStream(output);
+	        gz.write(items.getBytes("UTF-8"));
+	        gz.close();
+	        output.close();
 
 		}else if(accion.equals("importar")){
 
@@ -203,12 +217,64 @@ public class SGantt extends HttpServlet {
 					items = "{ \"success\": false }";
 				}
 				
+				response.setHeader("Content-Encoding", "gzip");
+				response.setCharacterEncoding("UTF-8");
+
+
+		        OutputStream output = response.getOutputStream();
+				GZIPOutputStream gz = new GZIPOutputStream(output);
+		        gz.write(items.getBytes("UTF-8"));
+		        gz.close();
+		        output.close();
+				
 
 		}
 		else if(accion.equals("exportar")){
 			try{
 				CProject project = new CProject("");
-				project.exportarProject(proyectoId, usuario);
+				String path = project.exportarProject(proyectoId, usuario);
+				
+				File file=new File(path);
+				if(file.exists()){
+			        FileInputStream is = null;
+			        try {
+			        	is = new FileInputStream(file);
+			        }
+			        catch (Exception e) {
+			        	
+			        }
+			        //
+			        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+			        
+			        int readByte = 0;
+			        byte[] buffer = new byte[2024];
+
+	                while(true)
+	                {
+	                    readByte = is.read(buffer);
+	                    if(readByte == -1)
+	                    {
+	                        break;
+	                    }
+	                    outByteStream.write(buffer);
+	                }
+	                
+	                file.delete();
+	                
+	                is.close();
+	                outByteStream.flush();
+	                outByteStream.close();
+	                
+			        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+					response.setContentType("application/ms-excel");
+					response.setContentLength(outArray.length);
+					response.setHeader("Expires:", "0"); 
+					response.setHeader("Content-Disposition", "attachment; Agenda_.xls");
+					OutputStream outStream = response.getOutputStream();
+					outStream.write(outArray);
+					outStream.flush();
+				}
+				
 			}catch(Exception e){
 				e.printStackTrace();
 			}
@@ -219,15 +285,7 @@ public class SGantt extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		response.setHeader("Content-Encoding", "gzip");
-		response.setCharacterEncoding("UTF-8");
-
-
-        OutputStream output = response.getOutputStream();
-		GZIPOutputStream gz = new GZIPOutputStream(output);
-        gz.write(items.getBytes("UTF-8"));
-        gz.close();
-        output.close();
+		
 
 	}
 

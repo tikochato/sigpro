@@ -18,13 +18,16 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="42040">
-					<label class="btn btn-primary" ng-click="subproductoTipo.nuevo()">Nuevo</label>
+					<label class="btn btn-primary" ng-click="subproductoTipo.nuevo()" uib-tooltip="Nuevo">
+					<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="42010">
-					<label class="btn btn-primary" ng-click="subproductoTipo.editar()">Editar</label>
+					<label class="btn btn-primary" ng-click="subproductoTipo.editar()" uib-tooltip="Editar">
+					<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="42030">
-					<label class="btn btn-primary" ng-click="subproductoTipo.borrar()">Borrar</label>
+					<label class="btn btn-primary" ng-click="subproductoTipo.borrar()" uib-tooltip="Borrar">
+					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</shiro:hasPermission>
 			</div>
 		</div>
@@ -68,16 +71,18 @@
 	</div>
 
 	<div class="row main-form" ng-show="subproductoTipo.esForma">
-		<h4 ng-hide="!subproductoTipo.esNuevo">Nuevo tipo de subproducto</h4>
-	  	<h4 ng-hide="subproductoTipo.esNuevo">Edición de tipo de subproducto</h4>
+		<h2 ng-hide="!subproductoTipo.esNuevo">Nuevo tipo de subproducto</h2>
+	  	<h2 ng-hide="subproductoTipo.esNuevo">Edición de tipo de subproducto</h2>
 
 		<div class="col-sm-12 operation_buttons" align="right">
 
 			<div class="btn-group">
 				<shiro:hasPermission name="42020">
-					<label class="btn btn-success" ng-click="form.$valid ? subproductoTipo.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
+					<label class="btn btn-success" ng-click="form.$valid ? subproductoTipo.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="subproductoTipo.cancelar()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="subproductoTipo.cancelar()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 
 		</div>
@@ -87,18 +92,18 @@
 
 				<div class="form-group">
 					<div class="form-group">
-						<label for="campo0">Id</label>
-						<p class="form-control-static">{{subproductoTipo.codigo}} </p>
+						<label for="id" class="floating-label">ID {{subproductoTipo.codigo}}</label>
+						<br/><br/>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label>* Nombre</label> 
-					<input type="text" class="form-control" placeholder="Nombre de tipo" ng-model="subproductoTipo.nombre" ng-required="true" />
+					<input type="text" class="inputText" ng-model="subproductoTipo.nombre" ng-required="true" value="{{subproductoTipo.nombre}}" onblur="this.setAttribute('value', this.value);"/>
+					<label for="nombre" class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group">
-					<label>Descripción</label> 
-					<input type="text" class="form-control" placeholder="Descripcion de tipo" ng-model="subproductoTipo.descripcion"/>
+					<input type="text" class="inputText" ng-model="subproductoTipo.descripcion"  value="{{subproductoTipo.descripcion}}" onblur="this.setAttribute('value', this.value);"/>
+					<label for="nombre" class="floating-label">Descripción</label>
 				</div>
 				
 				<br />
@@ -194,9 +199,11 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="42020">
-					<label class="btn btn-success" ng-click="form.$valid ? subproductoTipo.guardar() : ''" ng-disabled="!form.$valid">Guardar</label> 
+					<label class="btn btn-success" ng-click="form.$valid ? subproductoTipo.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="subproductoTipo.cancelar()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="subproductoTipo.cancelar()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 	</div>

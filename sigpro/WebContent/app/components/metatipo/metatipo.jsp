@@ -6,16 +6,24 @@
 		<shiro:lacksPermission name="18010">
 			<p ng-init="metatipoc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Tipos de Metas</h3><br/>
+		<div class="panel panel-default">
+		  <div class="panel-heading"><h3>Tipos de Metas</h3></div>
+		</div>
+		
 		<div class="row" align="center" ng-hide="metatipoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="18040">
-			       		<label class="btn btn-primary" ng-click="metatipoc.nueva()">Nuevo</label>
+			       		<label class="btn btn-primary" ng-click="metatipoc.nueva()" title="Nuevo">
+						<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="18010"><label class="btn btn-primary" ng-click="metatipoc.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="18010">
+			       		<label class="btn btn-primary" ng-click="metatipoc.editar()" title="Editar">
+						<span class="glyphicon glyphicon-pencil"></span> Editar</label>
+			       	</shiro:hasPermission>
 			       <shiro:hasPermission name="18030">
-			       		<label class="btn btn-primary" ng-click="metatipoc.borrar()">Borrar</label>
+			       		<label class="btn btn-danger" ng-click="metatipoc.borrar()" title="Borrar">
+						<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			       </shiro:hasPermission>
 			        
 			        
@@ -56,9 +64,12 @@
     		</shiro:hasPermission>
     		
 		</div>
-		<div class="row main-form" ng-show="metatipoc.mostraringreso">
-			<h4 ng-hide="!metatipoc.esnueva">Nuevo Tipo Meta</h4>
-			<h4 ng-hide="metatipoc.esnueva">Edición de Tipo Meta</h4>
+		<div class="row second-main-form" ng-show="metatipoc.mostraringreso">
+			<div class="page-header">
+				<h2 ng-hide="!metatipoc.esnueva"><small>Nuevo Tipo Meta</small></h2>
+				<h2 ng-hide="metatipoc.esnueva"><small>Edición de Tipo Meta</small></h2>
+			</div>
+
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="18020">
@@ -71,16 +82,19 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group" ng-show="!metatipoc.esnueva">
-							<label for="id">ID</label>
-    						<p class="form-control-static"  id="id"> {{ metatipoc.tipo.id }}</p>
+							<label for="id" class="floating-label">ID {{ metatipoc.tipo.id}}</label>
+							<br/><br/>
 						</div>
 						<div class="form-group">
-							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="metatipoc.tipo.nombre" ng-required="true">
+    						<input type="text" class="inputText"  ng-model="metatipoc.tipo.nombre" ng-required="true"
+    						value="{{metatipoc.tipo.nombre}}" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
-							<label for="descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="metatipoc.tipo.descripcion" ng-required="true">
+							
+    						<input type="text" class="inputText"  ng-model="metatipoc.tipo.descripcion" ng-required="true"
+    						value="{{metatipoc.tipo.nombre}}" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">Descripción</label>
 						</div>
 						<br/>
 						<div class="panel panel-default">
