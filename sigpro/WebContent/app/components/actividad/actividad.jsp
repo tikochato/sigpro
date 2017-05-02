@@ -169,7 +169,7 @@
 							
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaFin" is-open="actividadc.ff_abierto"
-								            datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin()" ng-required="true"  ng-click="actividadc.abrirPopupFecha(1000)"
+								            datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin()" ng-required="true"  ng-click="actividadc.abrirPopupFecha(1001)"
 								            value="{{actividadc.actividad.fechaFin}}" onblur="this.setAttribute('value', this.value);"/>
 								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1001)">
 								              <i class="glyphicon glyphicon-calendar"></i>
