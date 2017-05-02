@@ -12,26 +12,28 @@
   <shiro:lacksPermission name="4010">
 	<p ng-init="colaborador.redireccionSinPermisos()"></p>
   </shiro:lacksPermission>
-  
+  <div class="panel panel-default">
+		    <div class="panel-heading"><h3>Colaboradores</h3></div>
+  </div>
 
-  <h3>{{ colaborador.esForma ? (colaborador.esNuevo ? "Nuevo Colaborador" : "Editar Colaborador") : "Colaborador" }}</h3>
 
-  <br />
-
-  <div align="center" ng-hide="colaborador.esForma">
+  <div class="row" align="center" ng-hide="colaborador.esForma">	
     <div class="col-sm-12 operation_buttons" align="right">
-      <div class="btn-group">
-      	<shiro:hasPermission name="4040">
-        	<label class="btn btn-primary" ng-click="colaborador.nuevo()">Nuevo</label> 
-      	</shiro:hasPermission>
-      	<shiro:hasPermission name="4010">
-        	<label class="btn btn-primary" ng-click="colaborador.editar()">Editar</label>
-      	</shiro:hasPermission>
-      	<shiro:hasPermission name="4030">
-      			<label class="btn btn-primary" ng-click="colaborador.borrar()">Borrar</label>
-      	</shiro:hasPermission>
-      </div>
-    </div>
+	  <div class="btn-group">
+	  <shiro:hasPermission name="4040">
+	    <label class="btn btn-primary" ng-click="colaborador.nuevo()" uib-tooltip="Nuevo">
+	    <span class="glyphicon glyphicon-plus"></span> Nuevo</label>
+	  </shiro:hasPermission>
+	  <shiro:hasPermission name="4010">
+	    <label class="btn btn-primary" ng-click="colaborador.editar()" uib-tooltip="Editar">
+	    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
+	  </shiro:hasPermission>
+	  <shiro:hasPermission name="4030">
+	    <label class="btn btn-danger" ng-click="colaborador.borrar()" uib-tooltip="Borrar">
+	    <span class="glyphicon glyphicon-trash"></span> Borrar</label>
+	  </shiro:hasPermission>
+	  </div>
+	</div>
     <shiro:hasPermission name="4010">
      <div class="col-sm-12" align="center">
       <div style="height: 35px;">
@@ -68,68 +70,68 @@
    
   </div>
 
-  <div class="main-form" ng-show="colaborador.esForma">
+  <div class="second-main-form row" ng-show="colaborador.esForma">
 
-    <div class="operation_buttons" align="right">
-
-      <div class="btn-group">
-      	<shiro:hasPermission name="4020">
-      	<label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : ''" ng-disabled="!form.$valid || !colaborador.usuarioValido">Guardar</label>
-      	</shiro:hasPermission>         
-        <label class="btn btn-primary" ng-click="colaborador.cancelar()">Ir a Tabla</label>
-      </div>
-
-    </div>
+    <div class="page-header">
+		<h2 ng-hide="!colaborador.esNuevo"><small>Nuevo Colaborador</small></h2>
+		<h2 ng-hide="colaborador.esNuevo"><small>Edición de Colaborador</small></h2>
+	</div>
     
-    <div>
+    <div class="operation_buttons" align="right">
+	  <div class="btn-group">
+	    <shiro:hasPermission name="4020">
+	      <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : ''" ng-disabled="!form.$valid || !colaborador.usuarioValido" title="Guardar">
+	      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+	    </shiro:hasPermission>
+	    <label class="btn btn-primary" ng-click="colaborador.cancelar()" title="Ir a Tabla">
+	    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+	  </div>
+	</div>
 	    <form name="form" class="css-form">
-	      
-		      <div class="form-group" >
-		        <label>* Primer Nombre</label> 
-		        <input type="text" class="form-control" placeholder="Primer Nombre" ng-model="colaborador.colaborador.primerNombre" ng-required="true" />
-		      </div>
+		     	<div class="form-group">
+				   <input type="text" name="nombre"  class="inputText" id="nombre" 
+				     ng-model="colaborador.colaborador.primerNombre" value="{{colaborador.colaborador.primerNombre}}"   
+				     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+				   <label class="floating-label">* Primer Nombre</label>
+				</div>
 		
-		      <div class="form-group">
-		        <label>Segundo Nombre</label> 
-		        <input type="text" class="form-control" placeholder="Segundo Nombre" ng-model="colaborador.colaborador.segundoNombre" />
-		      </div>
-		
-		      <div class="form-group" >
-		        <label>* Primer Apellido</label> 
-		        <input type="text" class="form-control" placeholder="Primer Apellido" ng-model="colaborador.colaborador.primerApellido" ng-required="true" />
-		      </div>
-		
-		      <div class="form-group" >
-		        <label>Segundo Apellido</label> 
-		        <input type="text" class="form-control" placeholder="Segundo Apellido" ng-model="colaborador.colaborador.segundoApellido" />
-		      </div>
-	      
-	
-	      
-		      <div class="form-group" >
-		        <label>* CUI</label> 
-		        <input type="number" class="form-control"  placeholder="CUI" ng-model="colaborador.colaborador.cui" ng-maxlength="13" ng-required="true" />
-		      </div>
-	      
-	      
-	      
-		      <div class="form-group" >
-				  <label>* Nombre Unidad Ejecutora</label> 
-				  <div class="input-group">
-				    <input type="text" class="form-control" placeholder="Nombre Unidad Ejecutora" ng-model="colaborador.colaborador.nombreUnidadEjecutora" ng-disabled="true"  ng-required="true"/>
-				    <span class="input-group-addon" ng-click="colaborador.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
-				  </div>
-			  </div>
-	      
-	
-	      
-		      <div class="form-group" >
-		        <label for="campo6">* Usuario</label> 
-		        <div class="input-group">
-		          <input type="text" class="form-control" placeholder="Usuario" ng-model="colaborador.colaborador.usuario"  ng-disabled="true" ng-required="true"/>
-		          <span class="input-group-addon" ng-click="colaborador.buscarUsuario()" uib-tooltip="Validar Usuario" ><i class="glyphicon glyphicon-search"></i></span>
-		        </div>
-		      </div>
+		      
+		      	<div class="form-group">
+				   <input type="text" name="segundonombre"  class="inputText" id="segundonombre"	 
+				     ng-model="colaborador.colaborador.segundoNombre" value="{{colaborador.colaborador.segundoNombre}}"   
+				     onblur="this.setAttribute('value', this.value);" ng-required="false" >
+				   <label class="floating-label">Segundo Nombre</label>
+				</div>
+		      	<div class="form-group">
+				   <input type="text" name="primerapellido"  class="inputText" id="primerApellido" 
+				     ng-model="colaborador.colaborador.primerApellido" value="{{colaborador.colaborador.primerApellido}}"   
+				     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+				   <label class="floating-label">* Primer Apellido</label>
+				</div>
+		      	<div class="form-group">
+				   <input type="text" name="inombre"  class="inputText" id="inombre" 
+				     ng-model="colaborador.colaborador.segundoApellido" value="{{colaborador.colaborador.segundoApellido}}"   
+				     onblur="this.setAttribute('value', this.value);" ng-required="false" >
+				   <label class="floating-label">Segundo Apellido</label>
+				</div>
+		      	<div class="form-group">
+				   <input type="number" name="CUI"  class="inputText" id="CUI" 
+				     ng-model="colaborador.colaborador.cui" value="colaborador.colaborador.cui"  ng-maxlength="13"
+				     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+				   <label class="floating-label">* CUI</label>
+				</div>
+			  	<div class="form-group" >
+				    <input type="text" class="inputText" id="unidadEjecutora" name="unidadEjecutora" ng-model="colaborador.colaborador.nombreUnidadEjecutora" value="{{colaborador.colaborador.nombreUnidadEjecutora}}" 
+						            		ng-click="colaborador.buscarUnidadEjecutora()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+					<span class="label-icon" ng-click="colaborador.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
+					<label for="campo3" class="floating-label">* Nombre Unidad Ejecutora</label>
+				</div>
+		      	<div class="form-group" >
+				    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="colaborador.colaborador.usuario" value="{{colaborador.colaborador.usuario}}" 
+						            		ng-click="colaborador.buscarUsuario()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+					<span class="label-icon" ng-click="colaborador.buscarUsuario()"><i class="glyphicon glyphicon-search"></i></span>
+					<label for="campo3" class="floating-label">* Usuario</label>
+				</div>
 	     
 	      <br/>
 		  <div class="panel panel-default">
@@ -166,17 +168,19 @@
 			 </div>
 			</div>
 	    </form>
-    </div>
+    
   
     <div class="col-sm-12" align="center">Los campos marcados con * son obligatorios</div>
 
-    <div class="col-sm-12 operation_buttons" align="right">
-      <div class="btn-group">
-      	<shiro:hasPermission name="4020">
-        <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : '' " ng-disabled="form.$invalid || !colaborador.usuarioValido">Guardar</label>
-      	</shiro:hasPermission> 
-        <label class="btn btn-primary" ng-click="colaborador.cancelar()">Ir a Tabla</label>
-      </div>
-    </div>
+   <div class="operation_buttons" align="right">
+	  <div class="btn-group">
+	    <shiro:hasPermission name="4020">
+	      <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : ''" ng-disabled="!form.$valid || !colaborador.usuarioValido" title="Guardar">
+	      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+	    </shiro:hasPermission>
+	    <label class="btn btn-primary" ng-click="colaborador.cancelar()" title="Ir a Tabla">
+	    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+	  </div>
+	</div>
   </div>
 </div>
