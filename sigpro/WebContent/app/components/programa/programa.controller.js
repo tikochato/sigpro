@@ -21,7 +21,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 	mi.totalProgramas = 0;
-	mi.mostrarPrestamo = false;
+	mi.mostrarPrestamo = true;
 
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion = null;
