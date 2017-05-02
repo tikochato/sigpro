@@ -208,14 +208,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				montoAisignadoUe: mi.prestamo.montoAsignadoUe,
 				desembolsoAFechaUe: mi.prestamo.desembolsoAFechaUe,
 				montoPorDesembolsarUe: mi.prestamo.montoPorDesembolsarUe,
-				
-				
-				
-				
-				
-				
-				
-				
+				objetoTipo:6,
 				t:moment().unix()
 			};
 			$http.post('/SPrograma',param_data).then(
@@ -271,6 +264,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 		mi.programatiponombre="";
 		mi.esColapsado = true;
 		mi.programa = {};
+		mi.prestamo = {};
 		mi.esNuevo = true;
 		mi.camposdinamicos = {};
 		mi.proyectos =[];
@@ -319,16 +313,18 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			}
 			
 			$http.post('/SPrestamo', parametros).then(function(response){
-				mi.prestamo = response.data.prestamo;
-				mi.prestamo.fechaCorte = mi.prestamo.fechaCorte != '' ?  moment(mi.prestamo.fechaCorte,'DD/MM/YYYY').toDate() : null;
-				mi.prestamo.fechaFirma = mi.prestamo.fechaFirma != '' ? moment (mi.prestamo.fechaFirma,'DD/MM/YYYY').toDate() : null;
-				mi.prestamo.fechaAutorizacion = mi.prestamo.fechaAutorizacion != '' ? moment(mi.prestamo.fechaAutorizacion,'DD/MM/YYYY').toDate() : null;
-				mi.prestamo.fechaFinEjecucion = mi.prestamo.fechaFinEjecucion != '' ? moment (mi.prestamo.fechaFinEjecucion,'DD/MM/YYYY').toDate() : null;
-				mi.prestamo.fechaDecreto = mi.prestamo.fechaDecreto != '' ? moment (mi.prestamo.fechaDecreto,'DD/MM/YYYY').toDate() : null;
-				mi.prestamo.fechaSuscripcion = mi.prestamo.fechaSuscripcion != '' ? moment(mi.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate() : null;
-				mi.prestamo.fechaElegibilidadUe = mi.prestamo.fechaElegibilidadUe != '' ? moment(mi.prestamo.fechaElegibilidadUe,'DD/MM/YYYY').toDate() : null;
-				mi.prestamo.fechaCierreOrigianlUe = mi.prestamo.fechaCierreOrigianlUe != '' ? moment (mi.prestamo.fechaCierreOrigianlUe,'DD/MM/YYYY').toDate() : null; 
-				mi.prestamo.fechaCierreActualUe = mi.prestamo.fechaCierreActualUe != '' ? moment (mi.prestamo.fechaCierreActualUe,'DD/MM/YYYY').toDate() : null;
+				if (response.data.prestamo!=null){
+					mi.prestamo = response.data.prestamo;
+					mi.prestamo.fechaCorte = mi.prestamo.fechaCorte != '' ?  moment(mi.prestamo.fechaCorte,'DD/MM/YYYY').toDate() : null;
+					mi.prestamo.fechaFirma = mi.prestamo.fechaFirma != '' ? moment (mi.prestamo.fechaFirma,'DD/MM/YYYY').toDate() : null;
+					mi.prestamo.fechaAutorizacion = mi.prestamo.fechaAutorizacion != '' ? moment(mi.prestamo.fechaAutorizacion,'DD/MM/YYYY').toDate() : null;
+					mi.prestamo.fechaFinEjecucion = mi.prestamo.fechaFinEjecucion != '' ? moment (mi.prestamo.fechaFinEjecucion,'DD/MM/YYYY').toDate() : null;
+					mi.prestamo.fechaDecreto = mi.prestamo.fechaDecreto != '' ? moment (mi.prestamo.fechaDecreto,'DD/MM/YYYY').toDate() : null;
+					mi.prestamo.fechaSuscripcion = mi.prestamo.fechaSuscripcion != '' ? moment(mi.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate() : null;
+					mi.prestamo.fechaElegibilidadUe = mi.prestamo.fechaElegibilidadUe != '' ? moment(mi.prestamo.fechaElegibilidadUe,'DD/MM/YYYY').toDate() : null;
+					mi.prestamo.fechaCierreOrigianlUe = mi.prestamo.fechaCierreOrigianlUe != '' ? moment (mi.prestamo.fechaCierreOrigianlUe,'DD/MM/YYYY').toDate() : null; 
+					mi.prestamo.fechaCierreActualUe = mi.prestamo.fechaCierreActualUe != '' ? moment (mi.prestamo.fechaCierreActualUe,'DD/MM/YYYY').toDate() : null;
+				}
 				
 			});
 			

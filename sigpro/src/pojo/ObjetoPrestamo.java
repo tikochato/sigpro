@@ -28,7 +28,7 @@ public class ObjetoPrestamo implements java.io.Serializable {
 	private ObjetoPrestamoId id;
 	private Prestamo prestamo;
 	private String usuarioCreo;
-	private Integer usuarioActualizoVarchar;
+	private Integer usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Integer estado;
@@ -41,12 +41,12 @@ public class ObjetoPrestamo implements java.io.Serializable {
 		this.prestamo = prestamo;
 	}
 
-	public ObjetoPrestamo(ObjetoPrestamoId id, Prestamo prestamo, String usuarioCreo, Integer usuarioActualizoVarchar,
+	public ObjetoPrestamo(ObjetoPrestamoId id, Prestamo prestamo, String usuarioCreo, Integer usuarioActualizo,
 			Date fechaCreacion, Date fechaActualizacion, Integer estado) {
 		this.id = id;
 		this.prestamo = prestamo;
 		this.usuarioCreo = usuarioCreo;
-		this.usuarioActualizoVarchar = usuarioActualizoVarchar;
+		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
@@ -85,13 +85,13 @@ public class ObjetoPrestamo implements java.io.Serializable {
 		this.usuarioCreo = usuarioCreo;
 	}
 
-	@Column(name = "usuario_actualizo varchar")
-	public Integer getUsuarioActualizoVarchar() {
-		return this.usuarioActualizoVarchar;
+	@Column(name = "usuario_actualizo")
+	public Integer getUsuarioActualizo() {
+		return this.usuarioActualizo;
 	}
 
-	public void setUsuarioActualizoVarchar(Integer usuarioActualizoVarchar) {
-		this.usuarioActualizoVarchar = usuarioActualizoVarchar;
+	public void setUsuarioActualizo(Integer usuarioActualizo) {
+		this.usuarioActualizo = usuarioActualizo;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
