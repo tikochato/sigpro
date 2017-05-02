@@ -1,4 +1,4 @@
-var app = angular.module('desembolsotipoController', []);
+var app = angular.module('desembolsotipoController', ['ui.bootstrap.contextMenu']);
 
 app.controller('desembolsotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
@@ -16,13 +16,27 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
 			mi.filtros=[];
+			mi.menuOptions = [
+		        ['<span class="glyphicon glyphicon-pencil"> Editar', function ($itemScope, $event, modelValue, text, $li) {
+		      	  mi.editar();
+		        }],
+		        null,
+		        ['<span class="glyphicon glyphicon-trash text-danger"><font style="color: black;"> Borrar</font>', function ($itemScope, $li) {
+		      	  mi.borrar();
+		        }]
+		    ];
 			
+			mi.contextMenu = function (event) {
+		        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+		        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
+		    };
 			mi.gridOptions = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
 				multiSelect: false,
 				modifierKeysToMultiSelect: false,
 				noUnselect: true,
+				rowTemplate: '<div context-menu="grid.appScope.desembolsotipoc.menuOptions" right-click="grid.appScope.desembolsotipoc.contextMenu($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 				enableFiltering: true,
 				enablePaginationControls: false,
 			    paginationPageSize: $utilidades.elementosPorPagina,

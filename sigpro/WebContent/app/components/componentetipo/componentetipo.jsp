@@ -11,24 +11,28 @@
   	<shiro:lacksPermission name="7010">
 		<p ng-init="componentetipoc.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
-	<h3>Tipo de Componente</h3>
-	<br />
+		<div class="panel panel-default">
+		    <div class="panel-heading"><h3>Tipo de Componente</h3></div>
+		</div>
 
 
 	<div class="row" align="center" ng-if="!componentetipoc.mostraringreso">
+		
 		<div class="col-sm-12 operation_buttons" align="right">
-			<div class="btn-group">
-				<shiro:hasPermission name="7040">
-					<label class="btn btn-primary" ng-click="componentetipoc.nuevo()">Nuevo</label>
-				</shiro:hasPermission>
-				<shiro:hasPermission name="7010">
-					<label class="btn btn-primary" ng-click="componentetipoc.editar()">Editar</label>
-				</shiro:hasPermission>
-				<shiro:hasPermission name="7030">
-					<label class="btn btn-primary" ng-click="componentetipoc.borrar()">Borrar</label>
-				</shiro:hasPermission>
-				
-			</div>
+		  <div class="btn-group">
+		  <shiro:hasPermission name="7040">
+		    <label class="btn btn-primary" ng-click="componentetipoc.nuevo()" uib-tooltip="Nuevo">
+		    <span class="glyphicon glyphicon-plus"></span> Nuevo</label>
+		  </shiro:hasPermission>
+		  <shiro:hasPermission name="7010">
+		    <label class="btn btn-primary" ng-click="componentetipoc.editar()" uib-tooltip="Editar">
+		    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
+		  </shiro:hasPermission>
+		  <shiro:hasPermission name="7030">
+		    <label class="btn btn-danger" ng-click="componentetipoc.borrar()" uib-tooltip="Borrar">
+		    <span class="glyphicon glyphicon-trash"></span> Borrar</label>
+		  </shiro:hasPermission>
+		  </div>
 		</div>
 		<shiro:hasPermission name="7010">
 			<div class="col-sm-12" align="center">
@@ -68,31 +72,41 @@
 	
 	</div>
 
-	<div class="row main-form" ng-if="componentetipoc.mostraringreso">
-		<h4 ng-hide="!componentetipoc.esnuevo">Nuevo Tipo Componente</h4>
-		<h4 ng-hide="componentetipoc.esnuevo">Edición de Tipo Componente</h4>
-		<div class="col-sm-12 operation_buttons" align="right">
-			<div class="btn-group">
-				<shiro:hasPermission name="7020">
-					<label class="btn btn-success" ng-click="form.$valid ? componentetipoc.guardar():''" ng-disabled="!form.$valid">Guardar</label>
-				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="componentetipoc.irATabla()">Ir a Tabla</label>
-			</div>
+	<div class="row second-main-form" ng-if="componentetipoc.mostraringreso">
+		<div class="page-header">
+		    <h2 ng-hide="!componentetipoc.esnuevo"><small>Nuevo Tipo Componente</small></h2>
+		    <h2 ng-hide="componentetipoc.esnuevo"><small>Edición de Tipo Componente</small></h2>
+		</div>
+		
+		<div class="operation_buttons" align="right">
+		  <div class="btn-group">
+		    <shiro:hasPermission name="7020">
+		      <label class="btn btn-success" ng-click="form.$valid ? componentetipoc.guardar():''" ng-disabled="!form.$valid" title="Guardar">
+		      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+		    </shiro:hasPermission>
+		    <label class="btn btn-primary" ng-click="componentetipoc.irATabla()" title="Ir a Tabla">
+		    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+		  </div>
 		</div>
 		<div class="col-sm-12">
 			<form name="form" id="form">
-				<div class="form-group" ng-show="!componentetipoc.esnuevo">
-					<label for="id">ID</label> 
-					<p class="form-control-static" id="id"> {{componentetipoc.componentetipo.id }}</p>
+				<div class="form-group">
+				  <label for="id" class="floating-label">ID {{componentetipoc.componentetipo.id }}</label>
+				  <br/><br/>
 				</div>
 
 				<div class="form-group">
-					<label for="nombre">* Nombre</label> 
-					<input type="text" class="form-control" id="nombre" placeholder="Nombre"ng-model="componentetipoc.componentetipo.nombre" ng-required="true">
+				   <input type="text" name="inombre"  class="inputText" id="inombre" 
+				     ng-model="componentetipoc.componentetipo.nombre" value="{{componentetipoc.componentetipo.nombre}}"   
+				     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+				   <label class="floating-label">* Nombre</label>
 				</div>
+				
 				<div class="form-group">
-					<label for="descripcion">Descripción</label> 
-					<input type="text"class="form-control" id="descripcion" placeholder="Descripción"ng-model="componentetipoc.componentetipo.descripcion">
+				   <input type="text" name="idescrip"  class="inputText" id="idescrip" 
+				     ng-model="componentetipoc.componentetipo.descripcion" value="{{componentetipoc.componentetipo.descripcion}}"   
+				     onblur="this.setAttribute('value', this.value);" ng-required="false" >
+				   <label class="floating-label">Descripción</label>
 				</div>
 				<br/>
 				<div class="panel panel-default">
@@ -178,13 +192,16 @@
 		</div>
 		<br />
 		<div align="center">Los campos marcados con * son obligatorios</div>
+		
 		<div class="col-sm-12 operation_buttons" align="right">
-			<div class="btn-group">
-				<shiro:hasPermission name="7020">
-					<label class="btn btn-success" ng-click="form.$valid ? componentetipoc.guardar():''" ng-disabled="!form.$valid">Guardar</label>
-				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="componentetipoc.irATabla()">Ir a Tabla</label>
-			</div>
+		  <div class="btn-group">
+		    <shiro:hasPermission name="7020">
+		      <label class="btn btn-success" ng-click="form.$valid ? componentetipoc.guardar():''" ng-disabled="!form.$valid" title="Guardar">
+		      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+		    </shiro:hasPermission>
+		    <label class="btn btn-primary" ng-click="componentetipoc.irATabla()" title="Ir a Tabla">
+		    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+		  </div>
 		</div>
 	</div>
 </div>
