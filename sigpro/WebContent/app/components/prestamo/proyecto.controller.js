@@ -23,6 +23,12 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
         mi.gridApi.selection.selectRow(mi.gridOpciones.data[filaId]);
     };
     
+    mi.editarElemento = function (event) {
+        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+        mi.gridApi.selection.selectRow(mi.gridOpciones.data[filaId]);
+        mi.editar();
+    };
+    
 	mi.rowCollection = [];
 	mi.proyecto = null;
 	mi.esNuevo = false;
@@ -71,7 +77,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	    paginationPageSize: $utilidades.elementosPorPagina,
 	    useExternalFiltering: true,
 	    useExternalSorting: true,
-	    rowTemplate: '<div context-menu="grid.appScope.controller.menuOptions" right-click="grid.appScope.controller.contextMenu($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
+	    rowTemplate: '<div ng-dblclick="grid.appScope.controller.editarElemento($event)" context-menu="grid.appScope.controller.menuOptions" right-click="grid.appScope.controller.contextMenu($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 		columnDefs : [
 			{ name: 'id', width: 60, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left',
