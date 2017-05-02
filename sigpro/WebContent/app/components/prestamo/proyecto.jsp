@@ -146,12 +146,12 @@
 			      <label class="floating-label">* Nombre</label>
 				</div>
 
-				<div class="form-group"  >
+				<div class="form-group"  ng-hide="true" >
 					<input type="number" class="inputText" name="isnip" id="isnip"  ng-model="controller.proyecto.snip" value="{{controller.proyecto.snip}}" onblur="this.setAttribute('value', this.value);">
 				      <label class="floating-label">SNIP</label>
 				</div>
 				
-				<div class="form-group-row row" >
+				<div class="form-group-row row" ng-hide="true" >
 					<div class="form-group col-sm-2" >
 					       <input type="number" class="inputText" ng-model="controller.proyecto.programa" value="{{controller.proyecto.programa}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
 					       <label for="iprog" class="floating-label">Programa</label>
