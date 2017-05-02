@@ -29,22 +29,28 @@
   	    <shiro:lacksPermission name="5010">
 			<p ng-init="componentec.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Componentes</h3><br/>
-		<h4>{{ componentec.proyectoNombre }}</h4><br/>
-		<div class="row" align="center" ng-hide="componentec.mostraringreso">
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-			       <shiro:hasPermission name="5040">
-			       		<label class="btn btn-primary" ng-click="componentec.nuevo()">Nuevo</label>
-			       </shiro:hasPermission>
-			       <shiro:hasPermission name="5010"><label class="btn btn-primary" ng-click="componentec.editar()">Editar</label></shiro:hasPermission>
-			       <shiro:hasPermission name="5030">
-			       		<label class="btn btn-primary" ng-click="componentec.borrar()">Borrar</label>
-			       </shiro:hasPermission>
-
-
-    			</div>
-    		</div>
+		<div class="panel panel-default">
+		    <div class="panel-heading"><h3>Componentes</h3></div>
+		</div>
+		<h3><small>{{ componentec.proyectoNombre }}</small></h3>
+		<div  align="center" ng-hide="componentec.mostraringreso">
+			
+    		<div class="operation_buttons" align="right">
+			  <div class="btn-group">
+			  <shiro:hasPermission name="5040">
+			    <label class="btn btn-primary" ng-click="componentec.nuevo()" uib-tooltip="Nuevo">
+			    <span class="glyphicon glyphicon-plus"></span> Nuevo</label>
+			  </shiro:hasPermission>
+			  <shiro:hasPermission name="5010">
+			    <label class="btn btn-primary" ng-click="componentec.editar()" uib-tooltip="Editar">
+			    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
+			  </shiro:hasPermission>
+			  <shiro:hasPermission name="5030">
+			    <label class="btn btn-danger" ng-click="componentec.borrar()" uib-tooltip="Borrar">
+			    <span class="glyphicon glyphicon-trash"></span> Borrar</label>
+			  </shiro:hasPermission>
+			  </div>
+			</div>
     		<shiro:hasPermission name="5010">
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
@@ -82,120 +88,143 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row main-form" ng-show="componentec.mostraringreso">
-			<h4 ng-hide="!componentec.esnuevo">Nuevo componente</h4>
-			<h4 ng-hide="componentec.esnuevo">Edición de componente</h4>
-			<div class="col-sm-12 operation_buttons" align="left">
-			<div class="btn-group" ng-hide="componentec.esnuevo">
-				<label class="btn btn-default" ng-click="componentec.irAProductos(componentec.componente.id)">Productos</label>
-				<label class="btn btn-default" ng-click="componentec.irAActividades(componentec.componente.id)">Actividades</label>
-				<label class="btn btn-default" ng-click="componentec.irARiesgos(componentec.componente.id)">Riesgos</label>
+		<div class="row second-main-form" ng-show="componentec.mostraringreso">
+			<h4 ng-hide="!componentec.esnuevo"><small>Nuevo componente</small></h4>
+			<h4 ng-hide="componentec.esnuevo"><small>Edición de componente</small></h4>
+			
+    		<div class="operation_buttons">
+    		  <div class="btn-group" ng-hide="componentec.esnuevo">
+				<label class="btn btn-default" ng-click="componentec.irAProductos(componentec.componente.id)" uib-tooltip="Componentes" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-th"></span></label>
+				<label class="btn btn-default" ng-click="componentec.irARiesgos(componentec.componente.id)" uib-tooltip="Riesgos" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-warning-sign"></span></label>
+				<label class="btn btn-default" ng-click="componentec.irAActividades(componentec.componente.id)" uib-tooltip="Actividades" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-th-list"></span></label>
+			
+		      </div>
+			  <div class="btn-group" style="float: right;">
+			    <shiro:hasPermission name="5020">
+			      <label class="btn btn-success" ng-click="form.$valid ? componentec.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+			      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+			    </shiro:hasPermission>
+			    <label class="btn btn-primary" ng-click="componentec.irATabla()" title="Ir a Tabla">
+			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+			  </div>
 			</div>
-		</div>
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-					<shiro:hasPermission name="5020">						
-			        	<label class="btn btn-success" ng-click="form.$valid ? componentec.guardar() : ''" ng-disabled="!form.$valid" >Guardar</label>
-					</shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="componentec.irATabla()">Ir a Tabla</label>
-    			</div>
-    		</div>
 
 			<div class="col-sm-12">
 				<form name="form" id="form">
-						<div class="form-group" ng-show="!componentec.esnuevo">
-							<label for="id">ID</label>
-    						<p class="form-control-static" id="id">{{ componentec.componente.id }}</p>
-						</div>
 						<div class="form-group">
-							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="componentec.componente.nombre" ng-required="true">
+						  <label for="id" class="floating-label">ID {{ componentec.componente.id }}</label>
+						  <br/><br/>
 						</div>
 						
 						<div class="form-group">
-							<label >SNIP</label> 
-							<input type="number" ng-model="componentec.componente.snip" class="form-control" id="n_snip" placeholder="SNIP">
-						</div>
-						<div class="form-grup row" >
-							<div class="form-group col-sm-2"  >
-							       <label>Programa</label> 
-							       <input type="number" class="form-control"  placeholder="Programa" ng-model="componentec.componente.programa"  ng-maxlength="4" style="text-align: center"/>
-							</div>
-							<div class="form-group col-sm-2"  >
-							  <label >Subprograma</label> 
-							  <input type="number" class="form-control"  placeholder="Subprograma" ng-model="componentec.componente.subprograma" ng-maxlength="4" style="text-align: center"/>
-							</div>
-							<div class="form-group col-sm-2"  >
-							  <label >Proyecto</label> 
-							  <input type="number" class="form-control"  placeholder="Proyecto" ng-model="componentec.componente.proyecto_" ng-maxlength="4" style="text-align: center"/>
-							</div>
-							<div class="form-group col-sm-2" >
-							  <label>Actividad</label> 
-							  <input type="number" class="form-control" placeholder="Actividad" ng-model="componentec.componente.actividad" ng-maxlength="4" style="text-align: center"/>
-							</div>					
-							<div class="form-group col-sm-2" >
-							  <label>Obra</label> 
-							  <input type="number" class="form-control" placeholder="Obra" ng-model="componentec.componente.obra" ng-maxlength="4" style="text-align: center"/>
-							</div>
-							<div class="form-group col-sm-2" >
-							  <label for="campo5">Fuente</label> 
-							  <input type="number" class="form-control" placeholder="Fuente" ng-model="componentec.componente.fuente" ng-maxlength="4" style="text-align: center"/>
-							</div>
+						   <input type="text" name="nombre"  class="inputText" id="nombre" 
+						     ng-model="componentec.componente.nombre" value="{{componentec.componente.nombre}}"   
+						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+						   <label class="floating-label">* Nombre</label>
 						</div>
 						
 						<div class="form-group">
-							<label>* Unidad Ejecturoa</label>
-				          	<div class="input-group">
-				            	<input type="text" class="form-control" id="iunejec" name="iunejec" placeholder="Nombre Unidad Ejecutora" ng-model="componentec.unidadejecutoranombre" ng-readonly="true" ng-required="true"/>
-				            	<span class="input-group-addon" ng-click="componentec.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
-				          	</div>
+						   <input type="number" name="snip"  class="inputText" id="snip" 
+						     ng-model="componentec.componente.snip" value="{{componentec.componente.snip}}"   
+						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
+						   <label class="floating-label">SNIP</label>
 						</div>
-
+							
+						<div class="form-group-row row" >
+							<div class="form-group col-sm-2" >
+							       <input type="number" class="inputText" ng-model="componentec.componente.programa" value="{{componentec.componente.programa}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
+							       <label for="iprog" class="floating-label">Programa</label>
+							</div>
+							<div class="form-group col-sm-2" >
+							  <input type="number" class="inputText" ng-model="componentec.componente.subprograma" value="{{componentec.componente.subprograma}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <label for="isubprog" class="floating-label">Subprograma</label>
+							</div>
+							<div class="form-group col-sm-2" >
+							  <input type="number" class="inputText" ng-model="componentec.componente.proyecto_" value="{{componentec.componente.proyecto}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <label for="iproy_" class="floating-label">Préstamo</label>
+							</div>
+							<div class="form-group col-sm-2" >
+							  <input type="number" class="inputText" ng-model="componentec.componente.actividad" value="{{componentec.componente.actividad}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <label for="iobra" class="floating-label">Actividad</label>
+							</div>
+							<div class="form-group col-sm-2" >
+							  <input type="number" class="inputText" ng-model="componentec.componente.obra" value="{{componentec.componente.obra}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <label for="iobra" class="floating-label">Obra</label>
+							</div>
+							 <div class="form-group col-sm-2">
+							  <input type="number" class="inputText" ng-model="componentec.componente.fuente" value="{{componentec.componente.fuente}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <label for="fuente" class="floating-label">Fuente</label>
+							</div>
+						</div>
 						<div class="form-group">
-							<label>* Tipo Componente</label>
-				          	<div class="input-group">
-				            	<input type="text" class="form-control" id="icomptipo" name="icomptipo" placeholder="Nombre Tipo Componente" ng-model="componentec.componentetiponombre" ng-readonly="true" ng-required="true"/>
-				            	<span class="input-group-addon" ng-click="componentec.buscarComponenteTipo()"><i class="glyphicon glyphicon-search"></i></span>
-				          	</div>
+				            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="componentec.unidadejecutoranombre" ng-readonly="true" ng-required="true" 
+				            	ng-click="componentec.buscarUnidadEjecutora()" value="{{componentec.unidadejecutoranombre}}" onblur="this.setAttribute('value', this.value);"/>
+				            <span class="label-icon" ng-click="componentec.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
+				          	<label for="campo3" class="floating-label">* Unidad Ejecutora</label>
 						</div>
-
-						<div class="form-group" ng-repeat="campo in componentec.camposdinamicos">
-							<label for="campo.id">{{ campo.label }}</label>
+						<div class="form-group">
+				            <input type="text" class="inputText" id="icomptipo" name="icomptipo" ng-model="componentec.componentetiponombre" ng-readonly="true" ng-required="true" 
+				            	ng-click="componentec.buscarComponenteTipo()" value="{{componentec.componentetiponombre}}" onblur="this.setAttribute('value', this.value);"/>
+				            <span class="label-icon" ng-click="componentec.buscarComponenteTipo()"><i class="glyphicon glyphicon-search"></i></span>
+				          	<label for="campo3" class="floating-label">* Tipo Componente</label>
+						</div>
+						<div ng-repeat="campo in componentec.camposdinamicos">
 							<div ng-switch="campo.tipo">
-								<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
-								<input ng-switch-when="entero" type="text" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
-								<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
-								<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
-								<p ng-switch-when="fecha" class="input-group">
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{componentec.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="mi.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Limpiar" />
-													<span class="input-group-btn">
-														<button type="button" class="btn btn-default"
-															ng-click="componentec.abrirPopupFecha($index)">
+								<div ng-switch-when="texto" class="form-group" >
+									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
+										value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>	
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="entero" class="form-group" >
+									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
+									value="{{ccampo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="decimal" class="form-group" >
+									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
+									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="booleano" class="form-group" >
+									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="fecha" class="form-group" >
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+														datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="controller.abrirPopupFecha($index)"
+														value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+														<span class="label-icon" ng-click="controller.abrirPopupFecha($index)">
 															<i class="glyphicon glyphicon-calendar"></i>
-														</button>
-													</span>
-								</p>
-								<select ng-switch-when="select" id="{{ 'field_'+campo.id }}" class="form-control" ng-model="x.value">
+														</span>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="select" class="form-group" >
+									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
 													<option value="">Seleccione una opción</option>
 													<option ng-repeat="number in campo.opciones"
 														value="{{number.valor}}">{{number.label}}</option>
 								</select>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
 							</div>
 						</div>
 						
-						<div class="form-group">
-							<label for="campo3">Coordenadas</label>
-				          	<div class="input-group">
-				            	<input type="text" class="form-control" placeholder="Latitud, Longitud" ng-model="componentec.coordenadas" ng-readonly="true" />
-				            	<span class="input-group-addon" ng-click="componentec.open(componentec.componente.latitud, componentec.componente.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
-				          	</div>
+						
+						<div class="form-group" >
+						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="componentec.coordenadas" value="{{componentec.coordenadas}}" 
+								            		ng-click="componentec.open(componentec.componente.latitud, componentec.componente.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="false"/>
+							<span class="label-icon" ng-click="componentec.open(componentec.componente.latitud, componentec.componente.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
+							<label for="campo3" class="floating-label">Coordenadas</label>
 						</div>
 						
-						
 						<div class="form-group">
-							<label for="descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="componentec.componente.descripcion">
+						   <input type="text" name="idescrip"  class="inputText" id="idescrip" 
+						     ng-model="componentec.componente.descripcion" value="{{componentec.componente.descripcion}}"   
+						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
+						   <label class="floating-label">Descripción</label>
 						</div>
 						<div class="panel panel-default">
 							<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
@@ -236,10 +265,12 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-						<shiro:hasPermission name="5020">
-							<label class="btn btn-success" ng-click="form.$valid ? componentec.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
-						</shiro:hasPermission>
-				        <label class="btn btn-primary" ng-click="componentec.irATabla()">Ir a Tabla</label>
+						 <shiro:hasPermission name="5020">
+						      <label class="btn btn-success" ng-click="form.$valid ? componentec.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+						      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+						    </shiro:hasPermission>
+						    <label class="btn btn-primary" ng-click="componentec.irATabla()" title="Ir a Tabla">
+						    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 	    			</div>
 	    		</div>
     		</div>
