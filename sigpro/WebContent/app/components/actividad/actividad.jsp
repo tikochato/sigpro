@@ -136,7 +136,7 @@
 						
 						<div class="form-group" >
 						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="actividadc.coordenadas" value="{{actividadc.coordenadas}}" 
-								            		ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+								            		ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="false"/>
 							<span class="label-icon" ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
 							<label for="campo3" class="floating-label">Coordenadas</label>
 						</div>
@@ -211,28 +211,44 @@
 							  <label for="fuente" class="floating-label">Fuente</label>
 							</div>
 						</div>
-						<div class="form-group" ng-repeat="campo in actividadc.camposdinamicos">
-							<label for="campo.id">{{ campo.label }}</label>
+						<div ng-repeat="campo in actividadc.camposdinamicos">
 							<div ng-switch="campo.tipo">
-								<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
-								<input ng-switch-when="entero" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
-								<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" placeholder="{{campo.label}}" />
-								<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
-								<p ng-switch-when="fecha" class="input-group">
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="mi.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" /><span
-														class="input-group-btn">
-														<button type="button" class="btn btn-default"
-															ng-click="actividadc.abrirPopupFecha($index)">
+								<div ng-switch-when="texto" class="form-group" >
+									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
+										value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>	
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="entero" class="form-group" >
+									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
+									value="{{ccampo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="decimal" class="form-group" >
+									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
+									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="booleano" class="form-group" >
+									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="fecha" class="form-group" >
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+														datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="controller.abrirPopupFecha($index)"
+														value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+														<span class="label-icon" ng-click="controller.abrirPopupFecha($index)">
 															<i class="glyphicon glyphicon-calendar"></i>
-														</button>
-													</span>
-								</p>
-								<select ng-switch-when="select" id="{{ 'campo_'+campo.id }}" class="form-control" ng-model="campo.valor">
+														</span>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="select" class="form-group" >
+									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
 													<option value="">Seleccione una opción</option>
 													<option ng-repeat="number in campo.opciones"
 														value="{{number.valor}}">{{number.label}}</option>
 								</select>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
 							</div>
 						</div>
 				<br/>
