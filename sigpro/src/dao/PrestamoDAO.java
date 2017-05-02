@@ -41,10 +41,11 @@ public class PrestamoDAO {
 			
 			objetoPrestamo.setEstado(1);
 			objetoPrestamo.setPrestamo(prestamo);
-			objetoPrestamo.getId().setObjetoId(1);
+			objetoPrestamo.getId().setPrestamoid(prestamo.getId());
 			objetoPrestamo.setFechaCreacion(prestamo.getFechaCreacion());
 			objetoPrestamo.setUsuarioCreo(prestamo.getUsuarioCreo());
-			//session.saveOrUpdate(objetoPrestamo);
+			
+			session.saveOrUpdate(objetoPrestamo);
 			session.getTransaction().commit();
 			ret = true;
 		}

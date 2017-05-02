@@ -119,6 +119,7 @@ public class SPrestamo extends HttpServlet {
 			
 			
 			Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(objetoId, objetoTipo);
+			if (prestamo !=null){
 			stprestamo temp =  new stprestamo();
 			temp.fechaCorte = Utils.formatDate(prestamo.getFechaCorte());
 			temp.codigoPresupuestario = prestamo.getCodigoPresupuestario();
@@ -178,12 +179,17 @@ public class SPrestamo extends HttpServlet {
 			temp.montoAsignadoUe = prestamo.getMontoAsignadoUe();
 			temp.desembolsoAFechaUe = prestamo.getDesembolsoAFechaUe();
 			temp.montoPorDesembolsarUe = prestamo.getMontoPorDesembolsarUe();
+				response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
+		        response_text = String.join("", "\"prestamo\":",response_text);
+		        response_text = String.join("", "{\"success\":true,", response_text,"}");
+			}else{
+		        response_text = String.join("", "\"prestamo\":null");
+		        response_text = String.join("", "{\"success\":true,", response_text,"}");
+			}
 			
 		
 
-			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
-	        response_text = String.join("", "\"prestamo\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+			
 			
 		}
 		

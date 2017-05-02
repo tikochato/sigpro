@@ -227,8 +227,7 @@ public class SPrograma extends HttpServlet {
 				BigDecimal desembolsoAFechaUe = Utils.String2BigDecimal(map.get("desembolsoAFechaUe"), null);
 				BigDecimal montoPorDesembolsarUe = Utils.String2BigDecimal(map.get("montoPorDesembolsarUe"), null);
 				
-				int objetoId = Utils.String2Int(map.get("objetoId"));
-				int objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+				int objetoTipo = Utils.String2Int(map.get("objetoTipo"),6);
 				
 				AutorizacionTipo autorizacionTipo = new AutorizacionTipo();
 				autorizacionTipo.setId(tipoAutorizacionId);
@@ -255,29 +254,7 @@ public class SPrograma extends HttpServlet {
 				if(esnuevo){
 					programa = new Programa(programaTipo,nombre, descripcion, usuario, null, new Date(), null, 1,  null,null);
 					
-					Prestamo prestamo = new Prestamo(autorizacionTipo, ejecucionEstado, interesTipo, tipoMoneda, unidadEjecutora_,
-							fechaCorte, codigoPresupuestario, numeroPrestamo, destino, sectorEconomico, fechaFirma, 
-							numeroAutorizacion, fechaAutorizacion, aniosPlazo, aniosGracia, fechaFinEjecucion, peridoEjecucion,
-							porcentajeInteres, porcentajeComisionCompra, montoContratado, amortizado, porAmortizar,
-							principalAnio, interesesAnio, comisionCompromisoAnio, otrosGastos, principalAcumulado, 
-							interesesAcumulados, comisionCompromisoAcumulado, otrosCargosAcumulados,
-							presupuestoAsignadoFuncionamiento, prespupuestoAsignadoInversion, 
-							presupuestoModificadoFun, presupuestoModificadoInv, presupuestoVigenteFun, 
-							presupuestoVigenteInv, prespupuestoDevengadoFun, presupuestoDevengadoInv, 
-							presupuestoPagadoFun, presupuestoPagadoInv, saldoCuentas, desembolsadoReal, 
-							usuario, null, new Date(), null, 1, proyectoPrograma, 
-							fechaDecreto, fechaSuscripcion, fechaElegibilidadUe, fechaCierreOrigianlUe, fechaCierreActualUe, 
-							mesesProrrogaUe, plazoEjecucionUe, montoAsignadoUe, desembolsoAFechaUe, montoPorDesembolsarUe, null) ;
 					
-					ObjetoPrestamoId objetoPrestamoId = new ObjetoPrestamoId(1, objetoId, objetoTipo);
-					ObjetoPrestamo objetoPrestamo = new ObjetoPrestamo(objetoPrestamoId, prestamo);
-					Set <ObjetoPrestamo> objetoPrestamos = new HashSet<>();
-					objetoPrestamos.add(objetoPrestamo);
-					
-					PrestamoDAO.guardarPrestamo(prestamo, objetoPrestamo);
-							
-				
-
 				}else{
 					programa = ProgramaDAO.getProgramaPorId(id);
 					programa.setNombre(nombre);
@@ -310,6 +287,32 @@ public class SPrograma extends HttpServlet {
 				
 				
 				if (result){
+					// prestamo
+					
+					Prestamo prestamo = new Prestamo(autorizacionTipo, ejecucionEstado, interesTipo, tipoMoneda, unidadEjecutora_,
+							fechaCorte, codigoPresupuestario, numeroPrestamo, destino, sectorEconomico, fechaFirma, 
+							numeroAutorizacion, fechaAutorizacion, aniosPlazo, aniosGracia, fechaFinEjecucion, peridoEjecucion,
+							porcentajeInteres, porcentajeComisionCompra, montoContratado, amortizado, porAmortizar,
+							principalAnio, interesesAnio, comisionCompromisoAnio, otrosGastos, principalAcumulado, 
+							interesesAcumulados, comisionCompromisoAcumulado, otrosCargosAcumulados,
+							presupuestoAsignadoFuncionamiento, prespupuestoAsignadoInversion, 
+							presupuestoModificadoFun, presupuestoModificadoInv, presupuestoVigenteFun, 
+							presupuestoVigenteInv, prespupuestoDevengadoFun, presupuestoDevengadoInv, 
+							presupuestoPagadoFun, presupuestoPagadoInv, saldoCuentas, desembolsadoReal, 
+							usuario, null, new Date(), null, 1, proyectoPrograma, 
+							fechaDecreto, fechaSuscripcion, fechaElegibilidadUe, fechaCierreOrigianlUe, fechaCierreActualUe, 
+							mesesProrrogaUe, plazoEjecucionUe, montoAsignadoUe, desembolsoAFechaUe, montoPorDesembolsarUe, null) ;
+					
+					ObjetoPrestamoId objetoPrestamoId = new ObjetoPrestamoId(0, programa.getId(), objetoTipo);
+					ObjetoPrestamo objetoPrestamo = new ObjetoPrestamo(objetoPrestamoId, prestamo);
+					Set <ObjetoPrestamo> objetoPrestamos = new HashSet<>();
+					objetoPrestamos.add(objetoPrestamo);
+					
+					PrestamoDAO.guardarPrestamo(prestamo, objetoPrestamo);
+					
+					
+					
+					
 					String[] idsProyectos =  map.get("idsproyectos") != null && map.get("idsproyectos").trim().length()>0 ? map.get("idsproyectos").toString().trim().split(",") : null;
 					if (idsProyectos !=null && idsProyectos.length>0){
 						for (String idProyecto : idsProyectos){
@@ -373,6 +376,7 @@ public class SPrograma extends HttpServlet {
 
 			}
 			catch (Throwable e){
+				e.printStackTrace();
 				response_text = "{ \"success\": false }";
 			}
 
