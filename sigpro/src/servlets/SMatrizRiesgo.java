@@ -96,14 +96,14 @@ public class SMatrizRiesgo extends HttpServlet {
 				temp.nombre = riesgo.getNombre();
 				temp.tipoId = riesgo.getRiesgoTipo().getId();
 				temp.tipoNombre = riesgo.getRiesgoTipo().getNombre();
-				temp.impactoProyectado = riesgo.getImpactoProyectado();
+				temp.impactoProyectado = riesgo.getImapctoProyectado();
 				temp.impacto = riesgo.getImpacto();
 				temp.puntuacionImpacto = riesgo.getPuntuacionImpacto();
 				temp.probabilidad = riesgo.getProbabilidad();
 				temp.gatillosSintomas = riesgo.getGatillosSintomas();
 				temp.respuesta = riesgo.getRespuesta();
 				temp.colaboradorNombre = riesgo.getColaborador()!=null ? riesgo.getColaborador().getPnombre() : "";
-				temp.riesgosSecundarios = riesgo.getRiesgosSecundarios();
+				temp.riesgosSecundarios = riesgo.getRiesgosSegundarios();
 				temp.ejecutado = riesgo.getEjecutado();
 				temp.fechaEjecucion = Utils.formatDate(riesgo.getFechaEjecucion());
 				if (riesgo.getColaborador()!=null ){
@@ -207,8 +207,8 @@ public class SMatrizRiesgo extends HttpServlet {
 						break;
 				}
 				datos.put(fila+"", new Object [] {riesgo.getId(),riesgo.getNombre(),objetoTipoNombre,riesgo.getRiesgoTipo().getNombre(),
-						riesgo.getImpactoProyectado(),riesgo.getImpacto(),riesgo.getPuntuacionImpacto(),riesgo.getProbabilidad(),
-						punteoPrioridad, riesgo.getGatillosSintomas(),riesgo.getRespuesta(),responsable,riesgo.getRiesgosSecundarios(),
+						riesgo.getImapctoProyectado(),riesgo.getImpacto(),riesgo.getPuntuacionImpacto(),riesgo.getProbabilidad(),
+						punteoPrioridad, riesgo.getGatillosSintomas(),riesgo.getRespuesta(),responsable,riesgo.getRiesgosSegundarios(),
 						riesgo.getEjecutado(),riesgo.getFechaEjecucion()});
 				fila++;
 				
