@@ -6,16 +6,22 @@
 		<shiro:lacksPermission name="13010">
 			<p ng-init="formularioitemtipoc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Tipo Item de Formulario</h3><br/>
+		<div class="panel panel-default">
+		  <div class="panel-heading"><h3>Tipo Item de Formulario</h3></div>
+		</div>
 		<div class="row" align="center" ng-if="!formularioitemtipoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="13040">
-			       		<label class="btn btn-primary" ng-click="formularioitemtipoc.nuevo()">Nuevo</label>
+			       		<label class="btn btn-primary" ng-click="formularioitemtipoc.nuevo()">
+			       		<span class="glyphicon glyphicon-plus"> </span> Nuevo</label>
+			       		
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="13010"><label class="btn btn-primary" ng-click="formularioitemtipoc.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="13010"><label class="btn btn-primary" ng-click="formularioitemtipoc.editar()">
+			       <span class="glyphicon glyphicon-pencil"></span> Editar</label></shiro:hasPermission>
 			       <shiro:hasPermission name="13030">
-			       		<label class="btn btn-primary" ng-click="formularioitemtipoc.borrar()">Borrar</label>
+			       		<label class="btn btn-danger" ng-click="formularioitemtipoc.borrar()">
+			       		<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			       </shiro:hasPermission>
 			        			        
     			</div>				
@@ -56,8 +62,10 @@
     		
 		</div>
 		<div class="row main-form" ng-show="formularioitemtipoc.mostraringreso">
-			<h4 ng-hide="!formularioitemtipoc.esnuevo">Nuevo Tipo de Item de Formulario</h4>
-			<h4 ng-hide="formularioitemtipoc.esnuevo">Edición de Tipo de Item de Formulario</h4>
+			<div class="page-header">
+				<h2 ng-hide="!formularioitemtipoc.esnuevo"><small>Nuevo Tipo de Item de Formulario</small></h2>
+				<h2 ng-hide="formularioitemtipoc.esnuevo"><small>Edición de Tipo de Item de Formulario</small></h2>
+			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="13020">
@@ -70,21 +78,23 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group">
-							<label for="id">ID</label>
-    						<p class="form-control-static" >{{ formularioitemtipoc.formularioitemtipo.id }}</p>
+    						<label for="id" class="floating-label">ID {{ formularioitemtipoc.formularioitemtipo.id }}</label>
+					<br/><br/>
 						</div>
 						<div class="form-group">
-							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="formularioitemtipoc.formularioitemtipo.nombre">
+    						<input type="text"  class="inputText"  ng-model="formularioitemtipoc.formularioitemtipo.nombre"
+    						value="{{formularioitemtipoc.formularioitemtipo.nombre}}" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
-							<label for="nombre">* Tipo dato</label>
+							
 							<select class="form-control" ng-model="formularioitemtipoc.formularioitemtipo.datotipo"
 								ng-options="tipo as tipo.nombre for tipo in formularioitemtipoc.tipodatos track by tipo.id"
 								ng-readonly="true" 
 								ng-disabled="!formularioitemtipoc.esnuevo" >
 								<option value="">Seleccione una opción</option>
 							</select>
+							<label class="floating-label">* Tipo dato</label>
 						</div>
 						<div class="form-group">
 							<label for="descripcion">Descripción</label>
