@@ -6,21 +6,28 @@
 		 <shiro:lacksPermission name="2010">
 			<p ng-init="actividadpropiedadc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Propiedades de Actividad</h3><br/>
+		<div class="panel panel-default">
+		    <div class="panel-heading"><h3>Propiedades de Actividad</h3></div>
+		</div>
+		<br/>
 		<div class="row" align="center" ng-hide="actividadpropiedadc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-			       <shiro:hasPermission name="2040">
-			       		<label class="btn btn-primary" ng-click="actividadpropiedadc.nuevo()">Nueva</label>
-			       </shiro:hasPermission>
-			       <shiro:hasPermission name="2010"><label class="btn btn-primary" ng-click="actividadpropiedadc.editar()">Editar</label></shiro:hasPermission>
-			       <shiro:hasPermission name="2030">
-			       		<label class="btn btn-primary" ng-click="actividadpropiedadc.borrar()">Borrar</label>
-			       </shiro:hasPermission>
-
-
-    			</div>
-    		</div>
+			  <div class="btn-group">
+			  <shiro:hasPermission name="2040">
+			    <label class="btn btn-primary" ng-click="actividadpropiedadc.nuevo()" uib-tooltip="Nueva">
+			    <span class="glyphicon glyphicon-plus"></span> Nueva</label>
+			  </shiro:hasPermission>
+			  <shiro:hasPermission name="2010">
+			    <label class="btn btn-primary" ng-click="actividadpropiedadc.editar()" uib-tooltip="Editar">
+			    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
+			  </shiro:hasPermission>
+			  <shiro:hasPermission name="2030">
+			    <label class="btn btn-danger" ng-click="actividadpropiedadc.borrar()" uib-tooltip="Borrar">
+			    <span class="glyphicon glyphicon-trash"></span> Borrar</label>
+			  </shiro:hasPermission>
+			  </div>
+			</div>
+			
     		<shiro:hasPermission name="2010">
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
@@ -58,40 +65,49 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row main-form" ng-show="actividadpropiedadc.mostraringreso">
-			<h4 ng-hide="!actividadpropiedadc.esnuevo">Nueva Propiedad</h4>
-			<h4 ng-hide="actividadpropiedadc.esnuevo">Edición de Propiedad</h4>
-			<div class="col-sm-12 operation_buttons" align="right">
+		<div class="row second-main-form" ng-show="actividadpropiedadc.mostraringreso">
+			<div class="page-header">
+				<h2 ng-hide="!actividadpropiedadc.esnuevo"><small>Nueva Propiedad</small></h2>
+				<h2 ng-hide="actividadpropiedadc.esnuevo"><small>Edición de Propiedad</small></h2>
+			</div>
+			
+    		<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="2020">
-			        	<label class="btn btn-success" ng-click="form.$valid ? actividadpropiedadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
-			        </shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="actividadpropiedadc.irATabla()">Ir a Tabla</label>
-    			</div>
-    		</div>
-
+						<label class="btn btn-success" ng-click="form.$valid ? actividadpropiedadc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+						<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+					</shiro:hasPermission>
+					<label class="btn btn-primary" ng-click="actividadpropiedadc.irATabla()" title="Ir a Tabla">
+					<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+				</div>
+			</div>
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group">
-							<label for="id">ID</label>
-    						<p class="form-control-static">{{ actividadpropiedadc.actividadpropiedad.id }}</p>
+							<label for="id" class="floating-label">ID {{ actividadpropiedadc.actividadpropiedad.id }}</label>
+							<br/><br/>
 						</div>
 						<div class="form-group">
-							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="actividadpropiedadc.actividadpropiedad.nombre" ng-required="true">
+						   <input type="text" name="inombre"  class="inputText" id="nombre" 
+						     ng-model="actividadpropiedadc.actividadpropiedad.nombre" value="{{actividadpropiedadc.actividadpropiedad.nombre}}"   
+						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+						   <label class="floating-label">* Nombre</label>
 						</div>
-						<div class="form-group">
-							<label for="nombre">* Tipo dato</label>
-							<select class="form-control" ng-model="actividadpropiedadc.actividadpropiedad.datotipoid"
+						
+						 <div class="form-group">
+							<select class="inputText" ng-model="actividadpropiedadc.actividadpropiedad.datotipoid"
 								ng-options="tipo as tipo.nombre for tipo in actividadpropiedadc.tipodatos track by tipo.id"
 								ng-readonly="true"
 								ng-disabled="!actividadpropiedadc.esnuevo" ng-required="true">
 								<option value="">Seleccione una opción</option>
 							</select>
+						    <label for="nombre" class="floating-label">* Tipo dato</label>
 						</div>
 						<div class="form-group">
-							<label for="descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="actividadpropiedadc.actividadpropiedad.descripcion">
+						   <input type="text" name="descripcion"  class="inputText" id="descripcion" 
+						     ng-model="actividadpropiedadc.actividadpropiedad.descripcion" value="{{actividadpropiedadc.actividadpropiedad.descripcion}}"   
+						     onblur="this.setAttribute('value', this.value);"  >
+						   <label class="floating-label">Descripción</label>
 						</div>
 						<br/>
 						<div class="panel panel-default">
@@ -131,14 +147,14 @@
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>
 			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="col-sm-12 operation_buttons" align="right">
-					<div class="btn-group">
-						<shiro:hasPermission name="2020">
-							<label class="btn btn-success" ng-click="form.$valid ? actividadpropiedadc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
-						</shiro:hasPermission>
-				        <label class="btn btn-primary" ng-click="actividadpropiedadc.irATabla()">Ir a Tabla</label>
-	    			</div>
-	    		</div>
-    		</div>
+				<div class="btn-group">
+					<shiro:hasPermission name="2020">
+						<label class="btn btn-success" ng-click="form.$valid ? actividadpropiedadc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+						<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+					</shiro:hasPermission>
+					<label class="btn btn-primary" ng-click="actividadpropiedadc.irATabla()" title="Ir a Tabla">
+					<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+				</div>
+			</div>
 		</div>
 	</div>

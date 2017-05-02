@@ -11,23 +11,28 @@
   	 <shiro:lacksPermission name="3010">
 			<p ng-init="actividadtipoc.redireccionSinPermisos()"></p>
 	 </shiro:lacksPermission>
-	<h3>Tipo de Actividad</h3>
-	<br />
+	<div class="panel panel-default">
+		<div class="panel-heading"><h3>Tipo de Actividad</h3></div>
+	</div>
+		
 
 
 	<div class="row" align="center" ng-if="!actividadtipoc.mostraringreso">
 		<div class="col-sm-12 operation_buttons" align="right">
-			<div class="btn-group">
-				<shiro:hasPermission name="3040">
-					<label class="btn btn-primary" ng-click="actividadtipoc.nuevo()">Nuevo</label>
-				</shiro:hasPermission>
-				<shiro:hasPermission name="3010">
-					<label class="btn btn-primary" ng-click="actividadtipoc.editar()">Editar</label>
-				</shiro:hasPermission>
-				<shiro:hasPermission name="3030">
-					<label class="btn btn-primary" ng-click="actividadtipoc.borrar()">Borrar</label>
-				</shiro:hasPermission>
-			</div>
+		  <div class="btn-group">
+		  <shiro:hasPermission name="3040">
+		    <label class="btn btn-primary" ng-click="actividadtipoc.nuevo()" uib-tooltip="Nueva">
+		    <span class="glyphicon glyphicon-plus"></span> Nueva</label>
+		  </shiro:hasPermission>
+		  <shiro:hasPermission name="3010">
+		    <label class="btn btn-primary" ng-click="actividadtipoc.editar()" uib-tooltip="Editar">
+		    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
+		  </shiro:hasPermission>
+		  <shiro:hasPermission name="3030">
+		    <label class="btn btn-danger" ng-click="actividadtipoc.borrar()" uib-tooltip="Borrar">
+		    <span class="glyphicon glyphicon-trash"></span> Borrar</label>
+		  </shiro:hasPermission>
+		  </div>
 		</div>
 		<shiro:hasPermission name="3010">
 		<div class="col-sm-12" align="center">
@@ -67,31 +72,38 @@
 		
 	</div>
 
-	<div class="row main-form" ng-if="actividadtipoc.mostraringreso">
-		<h4 ng-hide="!actividadtipoc.esnuevo">Nuevo Tipo Componente</h4>
-		<h4 ng-hide="actividadtipoc.esnuevo">Edición de Tipo Componente</h4>
+	<div class="row second-main-form" ng-if="actividadtipoc.mostraringreso">
+		<div class="page-header">
+		    <h2 ng-hide="!actividadtipoc.esnuevo"><small>Nuevo Tipo de Actividad</small></h2>
+		    <h2 ng-hide="actividadtipoc.esnuevo"><small>Edición de Tipo Actividad</small></h2>
+		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
-			<div class="btn-group">
-				<shiro:hasPermission name="3020">
-					<label class="btn btn-success" ng-click="form.$valid ? actividadtipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
-				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="actividadtipoc.irATabla()">Ir a Tabla</label>
-			</div>
+		  <div class="btn-group">
+		    <shiro:hasPermission name="3020">
+		      <label class="btn btn-success" ng-click="form.$valid ? actividadtipoc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+		      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+		    </shiro:hasPermission>
+		    <label class="btn btn-primary" ng-click="actividadtipoc.irATabla()" title="Ir a Tabla">
+		    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+		  </div>
 		</div>
 		<div class="col-sm-12">
 			<form name="form">
 				<div class="form-group">
-					<label >ID</label> 
-					<p class="form-control-static">{{actividadtipoc.actividadtipo.id }}</p>
-				</div>
-
-				<div class="form-group">
-					<label for="nombre">* Nombre</label> 
-					<input type="text" class="form-control" id="nombre" placeholder="Nombre"ng-model="actividadtipoc.actividadtipo.nombre" ng-required="true">
+					<label for="id" class="floating-label">ID {{actividadtipoc.actividadtipo.id }}</label>
+					<br/><br/>
 				</div>
 				<div class="form-group">
-					<label for="descripcion">Descripción</label> 
-					<input type="text"class="form-control" id="descripcion" placeholder="Descripción"ng-model="actividadtipoc.actividadtipo.descripcion">
+				   <input type="text" name="nombre"  class="inputText" id="nombre" 
+				     ng-model="actividadtipoc.actividadtipo.nombre" value="{{actividadtipoc.actividadtipo.nombre}}"   
+				     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+				   <label class="floating-label">* Nombre</label>
+				</div>
+				<div class="form-group">
+				   <input type="text" name="descripcion"  class="inputText" id="descripcion" 
+				     ng-model="actividadtipoc.actividadtipo.descripcion" value="{{actividadtipoc.actividadtipo.descripcion}}"   
+				     onblur="this.setAttribute('value', this.value);"  >
+				   <label class="floating-label">Descripción</label>
 				</div>
 				<br/>
 				<div class="panel panel-default">
@@ -178,12 +190,14 @@
 		<br />
 		<div align="center">Los campos marcados con * son obligatorios</div>
 		<div class="col-sm-12 operation_buttons" align="right">
-			<div class="btn-group">
-				<shiro:hasPermission name="3020">
-					<label class="btn btn-success" ng-click="form.$valid ? actividadtipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
-				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="actividadtipoc.irATabla()">Ir a Tabla</label>
-			</div>
+		  <div class="btn-group">
+		    <shiro:hasPermission name="3020">
+		      <label class="btn btn-success" ng-click="form.$valid ? actividadtipoc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+		      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+		    </shiro:hasPermission>
+		    <label class="btn btn-primary" ng-click="actividadtipoc.irATabla()" title="Ir a Tabla">
+		    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+		  </div>
 		</div>
 	</div>
 </div>

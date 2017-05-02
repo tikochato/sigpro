@@ -1,7 +1,7 @@
 /**
  * 
  */
-var moduloColaborador = angular.module('moduloColaborador', [ 'ngTouch' ]);
+var moduloColaborador = angular.module('moduloColaborador', [ 'ngTouch' ,'ui.bootstrap.contextMenu']);
 
 moduloColaborador.controller('controlColaborador', [ '$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',
@@ -65,6 +65,20 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 	}
 	mi.colaborador = null;
 	mi.seleccionada = false;
+	mi.menuOptions = [
+        ['<span class="glyphicon glyphicon-pencil"> Editar', function ($itemScope, $event, modelValue, text, $li) {
+      	  mi.editar();
+        }],
+        null,
+        ['<span class="glyphicon glyphicon-trash text-danger"><font style="color: black;"> Borrar</font>', function ($itemScope, $li) {
+      	  mi.borrar();
+        }]
+    ];
+	
+	mi.contextMenu = function (event) {
+        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+        mi.gridApi.selection.selectRow(mi.opcionesGrid.data[filaId]);
+    };
 
 	mi.opcionesGrid = {
 		data : mi.data,
@@ -111,6 +125,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 		paginationPageSize : $utilidades.elementosPorPagina,
 		useExternalFiltering: true,
 	    useExternalSorting: true,
+	    rowTemplate: '<div context-menu="grid.appScope.colaborador.menuOptions" right-click="grid.appScope.colaborador.contextMenu($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 		onRegisterApi : function(gridApi) {
 			mi.gridApi = gridApi;
 
