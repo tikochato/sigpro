@@ -107,33 +107,33 @@
 				</div>
 				<br/>
 				<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label>Usuario que creo</label> 
-									<p class="form-control-static">{{ actividadtipoc.actividadtipo.usuarioCreo }}</p>
+									<label  class="label-form" >Usuario que creo</label> 
+									<p>{{ actividadtipoc.actividadtipo.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label>Fecha de creación</label> 
-									<p class="form-control-static">{{ actividadtipoc.actividadtipo.fechaCreacion }}</p>
+									<label class="label-form">Fecha de creación</label> 
+									<p>{{ actividadtipoc.actividadtipo.fechaCreacion }}</p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label>Usuario que actualizo</label> 
-									<p class="form-control-static">{{ actividadtipoc.actividadtipo.usuarioActualizo }}</p>
+									<label class="label-form">Usuario que actualizo</label> 
+									<p>{{ actividadtipoc.actividadtipo.usuarioActualizo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label>Fecha de actualizacion</label> 
-									<p class="form-control-static">{{ actividadtipoc.actividadtipo.fechaActualizacion }}</p>
+									<label class="label-form">Fecha de actualizacion</label> 
+									<p>{{ actividadtipoc.actividadtipo.fechaActualizacion }}</p>
 								</div>
 							</div>
 						</div>

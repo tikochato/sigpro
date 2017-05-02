@@ -113,29 +113,29 @@
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-sm-6">
-										<div class="form-group" style="text-align: right">
-											<label for="usuarioCreo">Usuario que creo</label>
-				    						<p class="form-control-static">{{ componentepropiedadc.componentepropiedad.usuarioCreo }}</p>
+										<div class="form-group label-form" style="text-align: right">
+											<label for="usuarioCreo" class="label-form" >Usuario que creo</label>
+				    						<p>{{ componentepropiedadc.componentepropiedad.usuarioCreo }}</p>
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label for="fechaCreacion">Fecha de creación</label>
-				    						<p class="form-control-static">{{ componentepropiedadc.componentepropiedad.fechaCreacion }}</p>
+											<label class="label-form" for="fechaCreacion">Fecha de creación</label>
+				    						<p>{{ componentepropiedadc.componentepropiedad.fechaCreacion }}</p>
 										</div>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group" style="text-align: right">
-											<label for="usuarioActualizo">Usuario que actualizo</label>
-				    						<p class="form-control-static">{{ componentepropiedadc.componentepropiedad.usuarioActualizo }}</p>
+											<label class="label-form"  for="usuarioActualizo">Usuario que actualizo</label>
+				    						<p>{{ componentepropiedadc.componentepropiedad.usuarioActualizo }}</p>
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label for="fechaActualizacion">Fecha de actualizacion</label>
-				    						<p class="form-control-static">{{ componentepropiedadc.componentepropiedad.fechaActualizacion }}</p>
+											<label for="fechaActualizacion" class="label-form" >Fecha de actualizacion</label>
+				    						<p>{{ componentepropiedadc.componentepropiedad.fechaActualizacion }}</p>
 										</div>
 									</div>
 								</div>
