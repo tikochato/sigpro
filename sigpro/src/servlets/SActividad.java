@@ -220,12 +220,16 @@ public class SActividad extends HttpServlet {
 					}.getType();
 
 					List<stdatadinamico> datos = (map.get("datadinamica")!=null && map.get("datadinamica").compareTo("{}")!=0) ?  gson.fromJson(map.get("datadinamica"), type) : new ArrayList<stdatadinamico>();
-
+					
 					Actividad actividad;
 					if(esnuevo){
+						
+						duracion = (int) ((fechaFin.getTime()-fechaInicio.getTime())/86400000);
+						duracionDimension = "D";
+						
 						actividad = new Actividad(actividadTipo, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra, fuente,
-								objetoId, objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,
+								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,
 								null,null);
 					}
 					else{
@@ -292,6 +296,7 @@ public class SActividad extends HttpServlet {
 					response_text = "{ \"success\": false }";
 			}
 			catch (Throwable e){
+				e.printStackTrace();
 				response_text = "{ \"success\": false }";
 			}
 		}
