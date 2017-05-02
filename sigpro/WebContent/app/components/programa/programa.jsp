@@ -295,374 +295,383 @@
 					<!--       Préstamo    -->
 					
 						<div class="form-group">
-							<label>Fecha de Corte</label>
-    						<p class="input-group">
-							<input type="text" class="form-control" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaCorte" is-open="programac.fc_abierto"
-												datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Corte"   />
-												<span class="input-group-btn">
-												<button type="button" class="btn btn-default"
-													ng-click="programac.abrirPopupFecha(1003)">
-													<i class="glyphicon glyphicon-calendar"></i>
-												</button>
-											</span>
-							</p>
+							<input type="text" class="inputText"  uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaCorte" is-open="programac.fc_abierto"
+												datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"    
+												value="{{programac.prestamo.fechaCorte}}" onblur="this.setAttribute('value', this.value);"/>
+							<span class="label-icon" ng-click="programac.abrirPopupFecha(1003)">
+								<i class="glyphicon glyphicon-calendar"></i>
+							</span>
+							<label class="floating-label">Fecha de Corte</label>
 						</div>
 						<div class="form-group">
-						    <label >Código presupuestario</label>
-							<input class="form-control" type="number"  ng-model="programac.prestamo.codigoPresupuestario"  >
+							<input  type="number" class="inputText"    ng-model="programac.prestamo.codigoPresupuestario"  
+							value="{{programac.prestamo.codigoPresupuestario}}" onblur="this.setAttribute('value', this.value);">
+							<label class="floating-label" >Código presupuestario</label>
 						</div>
 						
 						<div class="form-group">
-							<label >Número de prestamo</label>
-						   	<input class="form-control" type="text"  ng-model="programac.prestamo.numeroPrestamo"  >
+						   	<input type="text" class="inputText"  ng-model="programac.prestamo.numeroPrestamo"  
+						   	value="{{programac.prestamo.numeroPrestamo}}" onblur="this.setAttribute('value', this.value);">
+						   	<label class="floating-label" >Número de prestamo</label>
 						</div>
 						
 						<div class="form-group">
-							<label >Destino</label>
-						   	<input class="form-control" type="text"  ng-model="programac.prestamo.destino" >
+						   	<input type="text" class="inputText"  ng-model="programac.prestamo.destino" 
+						   	value="{{programac.prestamo.destino}}" onblur="this.setAttribute('value', this.value);">
+						   	<label class="floating-label" >Destino</label>
 						</div>
 						
 						<div class="form-group">
-							<label >Sector Económico</label>
-						   	<input class="form-control" type="text"  ng-model="programac.prestamo.sectorEconomico" >
+						   	<input type="text" class="inputText"  ng-model="programac.prestamo.sectorEconomico" 
+						   	value="{{programac.prestamo.sectorEconomico}}" onblur="this.setAttribute('value', this.value);">
+						   	<label class="floating-label" >Sector Económico</label>
 						</div>
 						
 						<div class="form-group">
-							<label for="campo3">* Unidad Ejecutora</label>
-				          	<div class="input-group">
-				            	<input type="text" class="form-control"  placeholder="Nombre Unidad Ejecutora" 
-				            	ng-model="programac.prestamo.unidadEjecutoraNombre" ng-readonly="true" ng-required="true"/>
-				            	<span class="input-group-addon" ng-click="programac.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
-				          	</div>
+			            	<input type="text" class="inputText"   
+			            	ng-model="programac.prestamo.unidadEjecutoraNombre" ng-readonly="true" ng-required="true"
+			            	ng-click="programac.buscarUnidadEjecutora()"
+			            	onblur="this.setAttribute('value', this.value);" value="{{programac.prestamo.unidadEjecutoraNombre}}" />			            	
+			            	<span class="label-icon" ng-click="programac.buscarUnidadEjecutora()">
+			            		<i class="glyphicon glyphicon-search"></i>
+			            	</span>
+			            	<label class="floating-label">* Unidad Ejecutora</label>
+				          	
 						</div>
 						
 						<div class="form-group">
-							<label>Fecha de Firma</label>
-    						<p class="input-group">
-							<input type="text" class="form-control" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaFirma" is-open="programac.ff_abierto"
-												datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Corte"  />
-												<span class="input-group-btn">
-												<button type="button" class="btn btn-default"
-													ng-click="programac.abrirPopupFecha(1004)">
-													<i class="glyphicon glyphicon-calendar"></i>
-												</button>
-											</span>
-							</p>
+							<input type="text" class="inputText"  uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaFirma" is-open="programac.ff_abierto"
+								datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"   
+								value="{{programac.prestamo.fechaCorte}}" onblur="this.setAttribute('value', this.value);"/>
+							<span class="label-icon" ng-click="programac.abrirPopupFecha(1004)">
+								<i class="glyphicon glyphicon-calendar"></i>
+							</span>
+							<label class="floating-label">Fecha de Firma</label>
+							
 						</div>
 						
 						<div class="form-group">
-							<label for="campo3">Tipo Autorización</label>
-				          	<div class="input-group">
-				            	<input type="text" class="form-control"  placeholder="Nombre Tipo Autorización" 
-				            	ng-model="programac.prestamo.tipoAutorizacionNombre" ng-readonly="true" ng-required="true"/>
-				            	<span class="input-group-addon" ng-click="programac.buscarAutorizacionTipo()"><i class="glyphicon glyphicon-search"></i></span>
-				          	</div>
+			            	<input type="text" class="inputText"    
+			            	ng-model="programac.prestamo.tipoAutorizacionNombre" ng-readonly="true" ng-required="true"
+			            	ng-click="programac.buscarAutorizacionTipo()"
+			            	onblur="this.setAttribute('value', this.value);" value="{{programac.prestamo.tipoAutorizacionNombre}}"			            	/>
+			            	<span class="label-icon" ng-click="programac.buscarAutorizacionTipo()"><i class="glyphicon glyphicon-search"></i></span>				          	
+				          	<label class="floating-label">Tipo Autorización</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Número Autorización</label>
-						   	<input class="form-control" type="text"  ng-model="programac.prestamo.numeroAutorizacion" >
+						   	<input  type="text" class="inputText"   ng-model="programac.prestamo.numeroAutorizacion" 
+						   	onblur="this.setAttribute('value', this.value);" value="{{programac.prestamo.numeroAutorizacion}}">
+						   	<label class="floating-label">Número Autorización</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Fecha de Autorización</label>
-    						<p class="input-group">
-							<input type="text" class="form-control" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaAutorizacion" is-open="programac.fa_abierto"
-												datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Autorización"  />
-												<span class="input-group-btn">
-												<button type="button" class="btn btn-default"
-													ng-click="programac.abrirPopupFecha(1005)">
-													<i class="glyphicon glyphicon-calendar"></i>
-												</button>
-											</span>
-							</p>
+							<input type="text" class="inputText"  uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaAutorizacion" is-open="programac.fa_abierto"
+								datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"   
+								value="{{programac.prestamo.fechaAutorizacion}}" onblur="this.setAttribute('value', this.value);"/>
+							<span class="label-icon" ng-click="programac.abrirPopupFecha(1005)">
+									<i class="glyphicon glyphicon-calendar"></i>
+							</span>
+							<label class="floating-label">Fecha de Autorización</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Años Plazo</label>
-						   	<input class="form-control" type="number"  ng-model="programac.prestamo.aniosPlazo" max="100" min="0" >
+						   	<input  type="number" class="inputText" ng-model="programac.prestamo.aniosPlazo" max="100" min="0" 
+						   	value="{{programac.prestamo.aniosPlazo}}" onblur="this.setAttribute('value', this.value);">
+						   	<label class="floating-label">Años Plazo</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Años de Gracia</label>
-						   	<input class="form-control" type="number"  ng-model="programac.prestamo.aniosGracia" max="100" min="0" >
+						   	<input type="number" class="inputText" ng-model="programac.prestamo.aniosGracia" max="100" min="0" 
+						   		value="{{programac.prestamo.aniosGracia}}" onblur="this.setAttribute('value', this.value);">
+						   	<label  class="floating-label">Años de Gracia</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Fecha Fin de Ejecución</label>
-    						<p class="input-group">
-							<input type="text" class="form-control" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaFinEjecucion" is-open="programac.ffe_abierto"
-												datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha Fin de Ejecución"  />
-												<span class="input-group-btn">
-												<button type="button" class="btn btn-default"
-													ng-click="programac.abrirPopupFecha(1006)">
-													<i class="glyphicon glyphicon-calendar"></i>
-												</button>
-											</span>
-							</p>
+							<input type="text" class="inputText"  uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaFinEjecucion" is-open="programac.ffe_abierto"
+								datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
+								value="{{programac.prestamo.fechaFinEjecucion}}" onblur="this.setAttribute('value', this.value);"  
+								/>
+							<span class="label-icon" ng-click="programac.abrirPopupFecha(1006)">
+								<i class="glyphicon glyphicon-calendar"></i>
+							</span>
+							<label class="floating-label">Fecha Fin de Ejecución</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Período de Ejecución</label>
-						   	<input class="form-control" type="number"  ng-model="programac.prestamo.periodoEjecucion" max="100" min="0" >
+						   	<input  class="inputText" type="number"  ng-model="programac.prestamo.periodoEjecucion" max="100" min="0" 
+						   	value="{{programac.prestamo.periodoEjecucion}}" onblur="this.setAttribute('value', this.value);">
+						   	<label class="floating-label">Período de Ejecución</label>
 						</div>
 						
 						<div class="form-group">
-							<label for="campo3">Tipo de Inerés</label>
-				          	<div class="input-group">
-				            	<input type="text" class="form-control"  placeholder="Tipo de interés" 
-				            	ng-model="programac.prestamo.tipoInteresNombre" ng-readonly="true" ng-required="true"/>
-				            	<span class="input-group-addon" ng-click="programac.buscarInteresTipo()"><i class="glyphicon glyphicon-search"></i></span>
-				          	</div>
+			            	<input type="text" class="inputText" ng-model="programac.prestamo.tipoInteresNombre" ng-readonly="true" ng-required="true"
+			            	ng-click="programac.buscarInteresTipo()"
+			            	onblur="this.setAttribute('value', this.value);" value="{{programac.prestamo.tipoInteresNombre}}"/>
+			            	<span class="label-icon" ng-click="programac.buscarInteresTipo()">
+			            		<i class="glyphicon glyphicon-search"></i>
+			            	</span>
+				          	<label class="floating-label">Tipo de Inerés</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Porcentaje de Interés</label>
-						   	<input type="number"  ng-model="programac.prestamo.porcentajeInteres" class="form-control" placeholder="Porcentaje de interés" />
+						   	<input type="number" class="inputText"  ng-model="programac.prestamo.porcentajeInteres"  
+						   	onblur="this.setAttribute('value', this.value);" value="{{programac.prestamo.porcentajeInteres}}"/>
+						   	<label class="floating-label">Porcentaje de Interés</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Porcentaje Comisión Compra</label>
-						   	<input type="number"  ng-model="programac.prestamo.porcentajeComisionCompra" class="form-control" placeholder="Porcentaje de Comisión Compra" />
+						   	<input type="number" class="inputText"  ng-model="programac.prestamo.porcentajeComisionCompra"  
+						   	onblur="this.setAttribute('value', this.value);" value="{{programac.prestamo.porcentajeComisionCompra}}"/>
+						   	<label class="floating-label">Porcentaje Comisión Compra</label>
 						</div>
 						
 						<div class="form-group">
-							<label for="campo3">Tipo de Moneda</label>
-				          	<div class="input-group">
-				            	<input type="text" class="form-control"  placeholder="Tipo de Moneda" 
-				            	ng-model="programac.prestamo.tipoMonedaNombre" ng-readonly="true" ng-required="true"/>
-				            	<span class="input-group-addon" ng-click="programac.buscarTipoMoneda()"><i class="glyphicon glyphicon-search"></i></span>
-				          	</div>
+			            	<input type="text" class="inputText"  
+			            	ng-model="programac.prestamo.tipoMonedaNombre" ng-readonly="true" ng-required="true"
+			            	ng-click="programac.buscarTipoMoneda()"
+			            	onblur="this.setAttribute('value', this.value);" value="{{programac.prestamo.tipoMonedaNombre}}"/>
+			            	<span class="label-icon" ng-click="programac.buscarTipoMoneda()">
+			            		<i class="glyphicon glyphicon-search"></i>
+			            	</span>
+				          	<label class="floating-label">Tipo de Moneda</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Monto Contratado</label>
-						   	<input type="number"  ng-model="programac.prestamo.montoContratado" class="form-control" placeholder="Porcentaje de Comisión Compra" />
+						   	<input type="number" class="inputText"  ng-model="programac.prestamo.montoContratado" 
+						   	value="{{programac.prestamo.montoContratado}}" onblur="this.setAttribute('value', this.value);">
+						   	<label class="floating-label" >Monto Contratado</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Amortizado</label>
-						   	<input type="number"  ng-model="programac.prestamo.amortizado" class="form-control" placeholder="Amortizado" />
+						   	<input type="number" class="inputText" ng-model="programac.prestamo.amortizado"  
+						   	value="{{programac.prestamo.amortizado}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Amortizado</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Por Amortizar</label>
-						   	<input type="number"  ng-model="programac.prestamo.porAmortizar" class="form-control" placeholder="Por Amortizado" />
+						   	<input type="number" class="inputText" ng-model="programac.prestamo.porAmortizar" 
+						   	value="{{programac.prestamo.porAmortizar}}" onblur="this.setAttribute('value', this.value);" />
+						   	<label class="floating-label">Por Amortizar</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Principal del Año</label>
-						   	<input type="number"  ng-model="programac.prestamo.principalAnio" class="form-control" placeholder="Principal del Año" />
+						   	<input type="number" class="inputText"  ng-model="programac.prestamo.principalAnio" 
+						   	value="{{programac.prestamo.principalAnio}}" onblur="this.setAttribute('value', this.value);" />
+						   	<label class="floating-label">Principal del Año</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Intereses del Año</label>
-						   	<input type="number"  ng-model="programac.prestamo.interesesAnio" class="form-control" placeholder="Interes del Año" />
+						   	<input type="number" class="inputText" ng-model="programac.prestamo.interesesAnio"  
+						   	value="{{programac.prestamo.interesesAnio}}" onblur="this.setAttribute('value', this.value);" />
+						   	<label class="floating-label">Intereses del Año</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Comisión Compromiso del Año</label>
-						   	<input type="number"  ng-model="programac.prestamo.comisionCompromisoAnio" class="form-control" placeholder="Intereses del Año" />
+						   	<input type="number" class="inputText" ng-model="programac.prestamo.comisionCompromisoAnio"  
+						   	value="{{programac.prestamo.comisionCompromisoAnio}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Comisión Compromiso del Año</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Otros Gastos</label>
-						   	<input type="number"  ng-model="programac.prestamo.otrosGastos" class="form-control" placeholder="Otros Gastos" />
+						   	<input type="number" class="inputText" ng-model="programac.prestamo.otrosGastos"  
+						   	value="{{programac.prestamo.otrosGastos}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Otros Gastos</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Principal Acumulado</label>
-						   	<input type="number"  ng-model="programac.prestamo.principalAcumulado" class="form-control" placeholder="Principal Acumulado" />
+						   	<input type="number" class="inputText" ng-model="programac.prestamo.principalAcumulado"  
+						   	value="{{programac.prestamo.principalAcumulado}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label  class="floating-label">Principal Acumulado</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Intereses Acumulados</label>
-						   	<input type="number"  ng-model="programac.prestamo.interesesAcumulados" class="form-control" placeholder="Intereses Acumulados" />
+						   	<input type="number"  class="inputText"  ng-model="programac.prestamo.interesesAcumulados" 
+						   	value="{{programac.prestamo.interesesAcumulados}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Intereses Acumulados</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Comisión Compromiso Acumulado</label>
-						   	<input type="number"  ng-model="programac.prestamo.comisionCompromisoAcumulado" class="form-control" placeholder="Intereses Acumulados" />
+						   	<input type="number"  class="inputText"  ng-model="programac.prestamo.comisionCompromisoAcumulado"  
+						   	value="{{programac.prestamo.comisionCompromisoAcumulado}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Comisión Compromiso Acumulado</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Otros Cargos Acumulados</label>
-						   	<input type="number"  ng-model="programac.prestamo.otrosCargosAcumulados" class="form-control" placeholder="Intereses Acumulados" />
+						   	<input type="number"  class="inputText"  ng-model="programac.prestamo.otrosCargosAcumulados"  
+						   	value="{{programac.prestamo.otrosCargosAcumulados}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label" >Otros Cargos Acumulados</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Presupuesto Asignado Funcionamiento</label>
-						   	<input type="number"  ng-model="programac.prestamo.presupuestoAsignadoFuncionamiento" class="form-control" placeholder="Presupuesto Asignado Funcionamiento" />
+						   	<input type="number"  class="inputText"  ng-model="programac.prestamo.presupuestoAsignadoFuncionamiento" 
+							value="{{programac.prestamo.presupuestoAsignadoFuncionamiento}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Presupuesto Asignado Funcionamiento</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Presupuesto Asignado Inversion</label>
-						   	<input type="number"  ng-model="programac.prestamo.presupuestoAsignadoInversion" class="form-control" placeholder="Presupuesto Asignado Inversión" />
+						   	<input type="number"   class="inputText" ng-model="programac.prestamo.presupuestoAsignadoInversion"  
+						   	value="{{programac.prestamo.presupuestoAsignadoInversion}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Presupuesto Asignado Inversion</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Presupuesto Modificado Funcionamiento</label>
-						   	<input type="number"  ng-model="programac.prestamo.presupuestoModificadoFun" class="form-control" placeholder="Presupuesto Modificado Funcionamiento" />
+						   	<input type="number" class="inputText"  ng-model="programac.prestamo.presupuestoModificadoFun"  
+						   	value="{{programac.prestamo.presupuestoModificadoFun}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Presupuesto Modificado Funcionamiento</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Presupuesto Modificado Inversión</label>
-						   	<input type="number"  ng-model="programac.prestamo.presupuestoModificadoInv" class="form-control" placeholder="Presupuesto Modificado Inversión" />
+						   	<input type="number" class="inputText"  ng-model="programac.prestamo.presupuestoModificadoInv" 
+						   	value="{{programac.prestamo.presupuestoModificadoInv}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Presupuesto Modificado Inversión</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Presupuesto Vigente Funcionamiento</label>
-						   	<input type="number"  ng-model="programac.prestamo.presupuestoVigenteFun" class="form-control" placeholder="Presupuesto VigenteFuncionamiento" />
+						   	<input type="number" class="inputText" ng-model="programac.prestamo.presupuestoVigenteFun" 
+						   	value="{{programac.prestamo.presupuestoVigenteFun}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label  class="floating-label">Presupuesto Vigente Funcionamiento</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Presupuesto Vigente Inversión</label>
-						   	<input type="number"  ng-model="programac.prestamo.presupuestoVigenteInv" class="form-control" placeholder="Presupuesto Vignete Inversión" />
+						   	<input type="number" class="inputText"  ng-model="programac.prestamo.presupuestoVigenteInv" 
+						   	value="{{programac.prestamo.presupuestoVigenteInv}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Presupuesto Vigente Inversión</label>
 						</div>
 						
 						
 						<div class="form-group">
-							<label>Presupuesto Devengado Funcionamiento</label>
-						   	<input type="number"  ng-model="programac.prestamo.presupuestoDevengadoFun" class="form-control" placeholder="Presupuesto Devengado Funcionamiento" />
+						   	<input type="number" class="inputText" ng-model="programac.prestamo.presupuestoDevengadoFun" 
+						   	value="{{programac.prestamo.presupuestoDevengadoFun}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Presupuesto Devengado Funcionamiento</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Presupuesto Devengado Inversión</label>
-						   	<input type="number"  ng-model="programac.prestamo.presupuestoDevengadoInv" class="form-control" placeholder="Presupuesto Devengado Inversion" />
+						   	<input type="number"  class="inputText" ng-model="programac.prestamo.presupuestoDevengadoInv"  
+						   	value="{{programac.prestamo.presupuestoDevengadoInv}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Presupuesto Devengado Inversión</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Presupuesto Pagado Funcionamiento </label>
-						   	<input type="number"  ng-model="programac.prestamo.presupuestoPagadoFun" class="form-control" placeholder="Presupuesto Pagado Funcionamiento" />
+						   	<input type="number" class="inputText" ng-model="programac.prestamo.presupuestoPagadoFun" 
+						   	value="{{programac.prestamo.presupuestoPagadoFun}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label  class="floating-label">Presupuesto Pagado Funcionamiento </label>
 						</div>
 						
 						<div class="form-group">
-							<label>Presupuesto Pagado Inversión </label>
-						   	<input type="number"  ng-model="programac.prestamo.presupuestoPagadoInv" class="form-control" placeholder="Presupuesto Pagado Inversión" />
+						   	<input type="number" class="inputText"  ng-model="programac.prestamo.presupuestoPagadoInv"  
+						   		value="{{programac.prestamo.presupuestoPagadoInv}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Presupuesto Pagado Inversión </label>
 						</div>
 						
 						<div class="form-group">
-							<label>Saldo de Cuentas </label>
-						   	<input type="number"  ng-model="programac.prestamo.saldoCuentas" class="form-control" placeholder="Saldo de Cuentas" />
+						   	<input type="number" class="inputText" ng-model="programac.prestamo.saldoCuentas"
+						   	value="{{programac.prestamo.saldoCuentas}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Saldo de Cuentas </label>
 						</div>
 						
 						<div class="form-group">
-							<label>Desembolso Real GTQ</label>
-						   	<input type="number"  ng-model="programac.prestamo.desembolsoReal" class="form-control" placeholder="Desembolso Real" />
+						   	<input type="number" class="inputText" ng-model="programac.prestamo.desembolsoReal"
+						   	value="{{programac.prestamo.desembolsoReal}}" onblur="this.setAttribute('value', this.value);"/>  
+						   	<label class="floating-label">Desembolso Real GTQ</label>
 						</div>
 						
 						
-						
 						<div class="form-group">
-							<label for="campo3">Estado de Ejecución</label>
-				          	<div class="input-group">
-				            	<input type="text" class="form-control"  placeholder="Estado de Ejecución" 
-				            	ng-model="programac.prestamo.ejecucionEstadoNombre" ng-readonly="true" ng-required="true"/>
-				            	<span class="input-group-addon" ng-click="programac.buscarEstadoEjecucion()"><i class="glyphicon glyphicon-search"></i></span>
-				          	</div>
+			            	<input type="text" class="inputText"  
+			            	ng-click="programac.buscarEstadoEjecucion()"
+			            	ng-model="programac.prestamo.ejecucionEstadoNombre" ng-readonly="true" ng-required="true"
+			            	onblur="this.setAttribute('value', this.value);" value="{{programac.prestamo.ejecucionEstadoNombre}}" />
+			            	<span class="label-icon" ng-click="programac.buscarEstadoEjecucion()"><i class="glyphicon glyphicon-search"></i></span>
+				          	<label class="floating-label">Estado de Ejecución</label>
 						</div>
 						
 						<div class="form-group">
-							<label >Proyecto/Programa</label>
-						   	<input class="form-control" type="text"  ng-model="programac.prestamo.proyectoPrograma" >
+						   	<input type="text" class="inputText"   ng-model="programac.prestamo.proyectoPrograma"
+						   	onblur="this.setAttribute('value', this.value);" value="{{programac.prestamo.proyectoPrograma}}"  >
+						   	<label class="floating-label">Proyecto/Programa</label>
+						</div>
+						
+						<div class="form-group">    						
+							<input type="text" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaDecreto" is-open="programac.fd_abierto"
+								datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"   
+								value="{{programac.prestamo.fechaDecreto}}" onblur="this.setAttribute('value', this.value);"/>
+							<span class="label-icon" ng-click="programac.abrirPopupFecha(1007)">	
+								<i class="glyphicon glyphicon-calendar"></i>
+							</span>
+							<label class="floating-label">Fecha Decreto</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Fecha Decreto</label>
-    						<p class="input-group">
-								<input type="text" class="form-control" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaDecreto" is-open="programac.fd_abierto"
-									datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha Fin de Decreto"  />
-									<span class="input-group-btn">
-									<button type="button" class="btn btn-default"
-										ng-click="programac.abrirPopupFecha(1007)">
+							<input type="text" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaSuscripcion" is-open="programac.fs_abierto"
+								datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+								value="{{programac.prestamo.fechaSuscripcion}}" onblur="this.setAttribute('value', this.value);"/>
+								<span class="label-icon" ng-click="programac.abrirPopupFecha(1008)">
+									<i class="glyphicon glyphicon-calendar"></i>
+							</span>
+							<label class="floating-label">Fecha de Suscripción</label>
+						</div>
+						
+						<div class="form-group">
+							<input type="text" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaElegibilidadUe" is-open="programac.fe_abierto"
+								datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"   
+								value="{{programac.prestamo.fechaElegibilidadUe}}" onblur="this.setAttribute('value', this.value);"/>
+							<span class="label-icon" ng-click="programac.abrirPopupFecha(1009)">
+									<i class="glyphicon glyphicon-calendar"></i>
+							</span>
+							<label class="floating-label">Fecha de Elegibilidad</label>
+						</div>
+						
+						<div class="form-group">
+								<input type="text" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaCierreOrigianlUe" is-open="programac.fco_abierto"
+									datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"   
+									value="{{programac.prestamo.fechaCierreOrigianlUe}}" onblur="this.setAttribute('value', this.value);"/>
+								<span class="label-icon" ng-click="programac.abrirPopupFecha(1010)">
 										<i class="glyphicon glyphicon-calendar"></i>
-									</button>
 								</span>
-							</p>
+							<label class="floating-label">Fecha de Cierre Original</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Fecha de Suscripción</label>
-    						<p class="input-group">
-								<input type="text" class="form-control" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaSuscripcion" is-open="programac.fs_abierto"
-									datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Suscripción"  />
-									<span class="input-group-btn">
-									<button type="button" class="btn btn-default"
-										ng-click="programac.abrirPopupFecha(1008)">
+								<input type="text" class="inputText"   uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaCierreActualUe" is-open="programac.fca_abierto"
+									datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+									value="{{programac.prestamo.fechaCierreActualUe}}" onblur="this.setAttribute('value', this.value);"/>
+								<span class="label-icon" ng-click="programac.abrirPopupFecha(1011)">
 										<i class="glyphicon glyphicon-calendar"></i>
-									</button>
 								</span>
-							</p>
-						</div>
-						
-						<div class="form-group">
-							<label>Fecha de Elegibilidad</label>
-    						<p class="input-group">
-								<input type="text" class="form-control" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaElegibilidadUe" is-open="programac.fe_abierto"
-									datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Suscripción"  />
-									<span class="input-group-btn">
-									<button type="button" class="btn btn-default"
-										ng-click="programac.abrirPopupFecha(1009)">
-										<i class="glyphicon glyphicon-calendar"></i>
-									</button>
-								</span>
-							</p>
-						</div>
-						
-						<div class="form-group">
-							<label>Fecha de Cierre Original</label>
-    						<p class="input-group">
-								<input type="text" class="form-control" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaCierreOrigianlUe" is-open="programac.fco_abierto"
-									datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Suscripción"  />
-									<span class="input-group-btn">
-									<button type="button" class="btn btn-default"
-										ng-click="programac.abrirPopupFecha(1010)">
-										<i class="glyphicon glyphicon-calendar"></i>
-									</button>
-								</span>
-							</p>
-						</div>
-						
-						<div class="form-group">
-							<label>Fecha de Cierre Actual</label>
-    						<p class="input-group">
-								<input type="text" class="form-control" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaCierreActualUe" is-open="programac.fca_abierto"
-									datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" placeholder="Fecha de Suscripción"  />
-									<span class="input-group-btn">
-									<button type="button" class="btn btn-default"
-										ng-click="programac.abrirPopupFecha(1011)">
-										<i class="glyphicon glyphicon-calendar"></i>
-									</button>
-								</span>
-							</p>
+							<label  class="floating-label">Fecha de Cierre Actual</label>
 						</div>
 						
 						
 						<div class="form-group">
-							<label>Meses de Prórroga</label>
-						   	<input type="number"  ng-model="programac.prestamo.mesesProrrogaUe" class="form-control" placeholder="Meses de Prorroga" />
+						   	<input type="number" class="inputText"  ng-model="programac.prestamo.mesesProrrogaUe" 
+							value="{{programac.prestamo.mesesProrrogaUe}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Meses de Prórroga</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Plazo de Ejecución</label>
-						   	<input type="number"  ng-model="programac.prestamo.plazoEjecucionUe" class="form-control" placeholder="Plazo de Ejecución" />
+						   	<input type="number" class="inputText"   ng-model="programac.prestamo.plazoEjecucionUe" 
+						   	value="{{programac.prestamo.plazoEjecucionUe}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Plazo de Ejecución</label>
+						</div>
+						
+						<div class="form-group">							
+						   	<input type="number" class="inputText" ng-model="programac.prestamo.montoAsignadoUe"  
+						   	value="{{programac.prestamo.montoAsignadoUe}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Monto Asignado</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Monto Asignado</label>
-						   	<input type="number"  ng-model="programac.prestamo.montoAsignadoUe" class="form-control" placeholder="Monto Asignado " />
+						   	<input type="number" class="inputText" ng-model="programac.prestamo.desembolsoAFechaUe"
+						   	value="{{programac.prestamo.desembolsoAFechaUe}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Desembolso a la Fecha</label>
 						</div>
 						
 						<div class="form-group">
-							<label>Desembolso a la Fecha</label>
-						   	<input type="number"  ng-model="programac.prestamo.desembolsoAFechaUe" class="form-control" placeholder="Desembolso a la Fecha" />
+						   	<input type="number" class="inputText" ng-model="programac.prestamo.montoPorDesembolsarUe"
+						   	value="{{programac.prestamo.montoPorDesembolsarUe}}" onblur="this.setAttribute('value', this.value);"/>
+						   	<label class="floating-label">Monto por Desembolsar</label>
 						</div>
-						
-						<div class="form-group">
-							<label>Monto por Desembolsar</label>
-						   	<input type="number"  ng-model="programac.prestamo.montoPorDesembolsarUe" class="form-control" placeholder="Monto por Desembolsar" />
-						</div>
-						
 					</uib-tab>
 				</uib-tabset>
 						

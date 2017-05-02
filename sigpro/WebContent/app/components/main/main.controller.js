@@ -151,6 +151,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             	template: '<div load-on-demand="\'programaController\'" class="all_page"></div>'
             })
             .when('/mapa/:proyecto_id?/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'mapaController\'" class="all_page"></div>'
             })
             .when("/:redireccion?",{
             	controller:"MainController"
