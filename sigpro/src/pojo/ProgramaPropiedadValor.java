@@ -1,5 +1,5 @@
 package pojo;
-// Generated Mar 7, 2017 2:35:37 PM by Hibernate Tools 5.2.1.Final
+// Generated Apr 28, 2017 8:41:23 AM by Hibernate Tools 5.2.1.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class ProgramaPropiedadValor implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3303484817508763026L;
+	private static final long serialVersionUID = 3859880240688878678L;
 	private ProgramaPropiedadValorId id;
 	private Programa programa;
 	private ProgramaPropiedad programaPropiedad;
@@ -125,7 +125,8 @@ public class ProgramaPropiedadValor implements java.io.Serializable {
 		this.valorDecimal = valorDecimal;
 	}
 
-	@Column(name = "valor_tiempo")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "valor_tiempo", length = 19)
 	public Date getValorTiempo() {
 		return this.valorTiempo;
 	}

@@ -6,17 +6,28 @@
 		<shiro:lacksPermission name="17010">
 			<p ng-init="metac.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Metas de {{ metac.nombreTipoPcp }}</h3><br/>
-		<h4>{{ metac.nombrePcp }}</h4><br/>
+		<div class="panel panel-default">
+		  <div class="panel-heading"><h3>Metas de {{ metac.nombreTipoPcp }}</h3></div>
+		</div>
+		<div class="page-header">
+		    <h2 ><small>{{metac.nombrePcp}}</small></h2>
+		</div>
+				
+		
 		<div class="row" align="center" ng-hide="metac.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="17040">
-			       		<label class="btn btn-primary" ng-click="metac.nueva()">Nueva</label>
+			       		<label class="btn btn-primary" ng-click="metac.nueva()" title="Nuevo">
+						<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="17010"><label class="btn btn-primary" ng-click="metac.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="17010">
+			       		<label class="btn btn-primary" ng-click="metac.editar()" title="Editar">
+						<span class="glyphicon glyphicon-pencil"></span> Editar</label>
+			       </shiro:hasPermission>
 			       <shiro:hasPermission name="17030">
-			       		<label class="btn btn-primary" ng-click="metac.borrar()">Borrar</label>
+			       		<label class="btn btn-danger" ng-click="metac.borrar()" title="Borrar">
+						<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			       </shiro:hasPermission>
 			        
 			        
@@ -58,8 +69,12 @@
     		
 		</div>
 		<div class="row main-form" ng-show="metac.mostraringreso">
-			<h4 ng-hide="!metac.esnueva">Nueva meta</h4>
-			<h4 ng-hide="metac.esnueva">Edición de meta</h4>
+			<div class="page-header">
+			    <h2 ng-hide="!metac.esnueva"><small>Nueva meta</small></h2>
+			    <h2 ng-hide="metac.esnueva"><small>Edición de meta</small></h2>
+			</div>
+		
+			
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="17020">
@@ -72,38 +87,38 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group">
-							<label for="id">ID</label>
-    						<p class="form-control-static">{{ metac.meta.id }}</p>
+							<label for="id" class="floating-label">ID {{ metac.meta.id  }}</label>
+							<br/><br/>
 						</div>
 						<div class="form-group">
-							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="metac.meta.nombre" ng-required="true">
+    						<input type="text" class="inputText"  ng-model="metac.meta.nombre" ng-required="true"
+    						value="{{metac.meta.nombre}}" onblur="this.setAttribute('value', this.value);">
+    						<label  class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
-							<label for="descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="metac.meta.descripcion">
+    						<input type="text" class="inputText"  ng-model="metac.meta.descripcion"
+    						value="{{metac.meta.descripcion}}" onblur="this.setAttribute('value', this.value);">
+    						<label  class="floating-label">Descripción</label>
 						</div>
 						<div class="form-group">
-							<label for="campo1">* Tipo Meta</label>
-							<select  class="form-control" ng-model="metac.meta.tipoMetaId" ng-required="true">
+							<select  class="inputText" ng-model="metac.meta.tipoMetaId" ng-required="true">
 								<option value="">Seleccione una opción</option>
 								<option ng-repeat="opcion in metac.metatipos"
 									ng-selected="option.selected = metac.meta.tipoMetaId"
 									value="{{opcion.id}}">{{opcion.nombre}}
 								</option>
-								
 							</select>
+							<label class="floating-label">* Tipo Meta</label>
 						</div>
 						<div class="form-group">
-							<label for="campo1">* Unidad de Medida</label>
-							<select  class="form-control" ng-model="metac.meta.unidadMedidaId" ng-required="true">
+							<select  class="inputText" ng-model="metac.meta.unidadMedidaId" ng-required="true">
 								<option value="">Seleccione una opción</option>
 								<option ng-repeat="opcion in metac.metaunidades"
 									ng-selected="option.selected = metac.meta.unidadMedidaId"
 									value="{{opcion.id}}">{{opcion.nombre}}
 								</option>
-								
 							</select>
+							<label class="floating-label">* Unidad de Medida</label>
 						</div>
 					<br/>
 					

@@ -1,17 +1,15 @@
-var app = angular.module('programaController', [ 'ngTouch','smart-table' ]);
+var app = angular.module('programaController', [ 'ngTouch' ]);
 
-app.controller('programaController',['$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
-	function($scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
+app.controller('programaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
 
 	var mi = this;
 	i18nService.setCurrentLang('es');
 	
 	$window.document.title = $utilidades.sistema_nombre+' - Programas';
 	
-	mi.rowCollection = [];
 	mi.programa = null;
 	mi.esNuevo = false;
-	mi.esNuevoDocumento = true;
 	mi.campos = {};
 	mi.esColapsado = false;
 	mi.mostrarcargando=true;
@@ -23,6 +21,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 	mi.totalProgramas = 0;
+	mi.mostrarPrestamo = false;
 
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion = null;
@@ -31,6 +30,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	mi.orden = null;
 	
 	mi.proyectos =[];
+	mi.prestamo = [];
 	mi.proyecto =null;
 	mi.mostrarcargandoProyecto=true;
 	mi.mostrarProyecto = false;
@@ -42,7 +42,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			minDate : new Date(1990, 1, 1),
 			startingDay : 1
 	};
-	
+
 	mi.gridOpciones = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -154,6 +154,68 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				esnuevo: mi.esNuevo,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				idsproyectos:idsproyectos,
+				// prestamo
+				fechaCorte : moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY'),
+				codigoPresupuestario: mi.prestamo.codigoPresupuestario,
+				numeroPrestamo: mi.prestamo.numeroPrestamo,
+				destino : mi.prestamo.destino,
+				sectorEconomico: mi.prestamo.sectorEconomico,
+				unidadEjecutora: mi.prestamo.unidadEjecutora,
+				fechaFimra: moment(mi.prestamo.fechaFirma).format('DD/MM/YYYY'),
+				tipoAutorizacionId : mi.prestamo.tipoAutorizacionId,
+				numeroAutorizacion: mi.prestamo.numeroAutorizacion,
+				fechaAutorizacion: moment(mi.prestamo.fechaAutorizacion).format('DD/MM/YYYY'),
+				aniosPlazo: mi.prestamo.aniosPlazo,
+				aniosGracia: mi.prestamo.aniosGracia,
+				fechaFinEjecucion: moment(mi.prestamo.fechaFinEjecucion).format('DD/MM/YYYY'),
+				periodoEjecucion: mi.prestamo.periodoEjecucion,
+				tipoInteresId: mi.prestamo.tipoInteresId,
+				porcentajeInteres: mi.prestamo.porcentajeInteres,
+				porcentajeComisionCompra: mi.prestamo.porcentajeComisionCompra,
+				tipoMonedaId: mi.prestamo.tipoMonedaId,
+				montoContratado: mi.prestamo.montoContratado,
+				amortizado: mi.prestamo.amortizado,
+				porAmortizar: mi.prestamo.porAmortizar,
+				principalAnio: mi.prestamo.principalAnio,
+				interesesAnio : mi.prestamo.interesesAnio,
+				comisionCompromisoAnio: mi.prestamo.comisionCompromisoAnio,
+				otrosGastos: mi.prestamo.otrosGastos,
+				principalAcumulado: mi.prestamo.principalAcumulado,
+				interesesAcumulados: mi.prestamo.interesesAcumulados,
+				comisionCompromisoAcumulado: mi.prestamo.comisionCompromisoAcumulado,
+				otrosCargosAcumulados: mi.prestamo.otrosCargosAcumulados,
+				presupuestoAsignadoFuncionamiento: mi.prestamo.presupuestoAsignadoFuncionamiento,
+				presupuestoAsignadoInversion: mi.prestamo.presupuestoAsignadoInversion,
+				presupuestoModificadoFuncionamiento: mi.prestamo.presupuestoModificadoFun,
+				presupuestoModificadoInversion: mi.prestamo.presupuestoModificadoIn,
+				presupuestoVigenteFuncionamiento: mi.prestamo.presupuestoVigenteFun,
+				presupuestoVigenteInversion: mi.prestamo.presupuestoVigenteInv,
+				presupuestoDevengadoFunconamiento:mi.prestamo.presupuestoDevengadoFun,
+				presupuestoDevengadoInversion:mi.prestamo.presupuestoDevengadoInv,
+				presupuestoPagadoFuncionamiento: mi.prestamo.presupuestoPagadoFun,
+				presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoIn,
+				saldoCuentas: mi.prestamo.saldoCuentas,
+				desembolsoReal: mi.prestamo.desembolsoReal,
+				ejecucionEstadoId: mi.prestamo.ejecucionEstadoId,
+				proyetoPrograma: mi.prestamo.proyectoPrograma,
+				fechaDecreto: moment(mi.prestamo.fechaDecreto).format('DD/MM/YYYY'),
+				fechaSuscripcion: moment(mi.prestamo.fechaSuscripcion).format('DD/MM/YYYY'),
+				fechaElegibilidad: moment(mi.prestamo.fechaElegibilidadUe).format('DD/MM/YYYY'),
+				fechaCierreOriginal:  moment(mi.prestamo.fechaCierreOrigianlUe).format('DD/MM/YYYY'),
+				fechaCierreActual: moment(mi.prestamo.fechaCierreActualUe).format('DD/MM/YYYY'),
+				mesesProrroga: mi.prestamo.mesesProrrogaUe,
+				plazoEjecucionUe: mi.prestamo.plazoEjecucionUe,
+				montoAisignadoUe: mi.prestamo.montoAsignadoUe,
+				desembolsoAFechaUe: mi.prestamo.desembolsoAFechaUe,
+				montoPorDesembolsarUe: mi.prestamo.montoPorDesembolsarUe,
+				
+				
+				
+				
+				
+				
+				
+				
 				t:moment().unix()
 			};
 			$http.post('/SPrograma',param_data).then(
@@ -166,8 +228,6 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 					}else
 						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crearo' : 'guardar')+' el Programa');
 			});
-			
-			mi.esNuevoDocumento = false;
 
 		}else
 			$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
@@ -200,8 +260,6 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				 }, function() {
 					    
 				    });
-			
-			
 			});
 		}
 		else
@@ -209,7 +267,6 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	};
 
 	mi.nuevo = function (){
-		mi.esNuevoDocumento = true;
 		mi.programatipoid = "";
 		mi.programatiponombre="";
 		mi.esColapsado = true;
@@ -222,11 +279,11 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 
 	mi.editar = function() {
 		if(mi.programa!=null && mi.programa.id!=null){
-			mi.esNuevoDocumento = false;
 			mi.programatipoid = mi.programa.programatipoid;
 			mi.programatiponombre=mi.programa.programatipo;
 			mi.esColapsado = true;
 			mi.esNuevo = false;
+			mi.prestamo = {};
 
 			var parametros = {
 					accion: 'getProgramaPropiedadPorTipo',
@@ -255,6 +312,27 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			});
 			
 			parametros = {
+					accion: 'getPrestamo',
+					objetoId: mi.programa.id,
+				    objetoTipo : 6,
+				    t:moment().unix()
+			}
+			
+			$http.post('/SPrestamo', parametros).then(function(response){
+				mi.prestamo = response.data.prestamo;
+				mi.prestamo.fechaCorte = mi.prestamo.fechaCorte != '' ?  moment(mi.prestamo.fechaCorte,'DD/MM/YYYY').toDate() : null;
+				mi.prestamo.fechaFirma = mi.prestamo.fechaFirma != '' ? moment (mi.prestamo.fechaFirma,'DD/MM/YYYY').toDate() : null;
+				mi.prestamo.fechaAutorizacion = mi.prestamo.fechaAutorizacion != '' ? moment(mi.prestamo.fechaAutorizacion,'DD/MM/YYYY').toDate() : null;
+				mi.prestamo.fechaFinEjecucion = mi.prestamo.fechaFinEjecucion != '' ? moment (mi.prestamo.fechaFinEjecucion,'DD/MM/YYYY').toDate() : null;
+				mi.prestamo.fechaDecreto = mi.prestamo.fechaDecreto != '' ? moment (mi.prestamo.fechaDecreto,'DD/MM/YYYY').toDate() : null;
+				mi.prestamo.fechaSuscripcion = mi.prestamo.fechaSuscripcion != '' ? moment(mi.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate() : null;
+				mi.prestamo.fechaElegibilidadUe = mi.prestamo.fechaElegibilidadUe != '' ? moment(mi.prestamo.fechaElegibilidadUe,'DD/MM/YYYY').toDate() : null;
+				mi.prestamo.fechaCierreOrigianlUe = mi.prestamo.fechaCierreOrigianlUe != '' ? moment (mi.prestamo.fechaCierreOrigianlUe,'DD/MM/YYYY').toDate() : null; 
+				mi.prestamo.fechaCierreActualUe = mi.prestamo.fechaCierreActualUe != '' ? moment (mi.prestamo.fechaCierreActualUe,'DD/MM/YYYY').toDate() : null;
+				
+			});
+			
+			parametros = {
 					accion: 'obtenerProyectosPorPrograma',
 					idPrograma: mi.programa!=''? mi.programa.id:0,
 				    t:moment().unix()
@@ -264,58 +342,11 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				mi.proyectos = response.data.proyectos;
 				
 			});
-			
-			mi.getDocumentosAdjuntos(6, mi.programa.id);
 
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el Programa que desea editar');
 	}
-	
-	mi.adjuntarDocumentos = function(){
-		$documentoAdjunto.getModalDocumento($scope, 6, mi.programa.id)
-		.result.then(function(data) {
-			mi.getDocumentosAdjuntos(6, mi.programa.id);
-		}, function(){
-			
-		});
-	}
-	
-	mi.getDocumentosAdjuntos = function(objetoId, tipoObjetoId){
-		mi.rowCollection = [];
-		var formatData = new FormData();
-		formatData.append("accion","getDocumentos");
-		formatData.append("idObjeto", objetoId);
-		formatData.append("idTipoObjeto", tipoObjetoId);
-		$http.post('/SDocumentosAdjuntos', formatData, {
-			headers: {'Content-Type': undefined},
-			transformRequest: angular.identity,
-		}).then(function(response) {
-			if (response.data.success) {
-				 mi.rowCollection = response.data.documentos;
-		         mi.displayedCollection = [].concat(mi.rowCollection);
-			}
-		});
-	}
-	
-	mi.descargarDocumento= function(row){
-		var url = "/SDocumentosAdjuntos?accion=getDescarga&id="+row.id;
-		window.location.href = url;
-	}
-	
-	mi.eliminarDocumento= function(row){
-		$http.post('/SDocumentosAdjuntos?accion=eliminarDocumento&id='+row.id)
-		.then(function successCAllback(response){
-			if (response.data.success){
-				var indice = mi.rowCollection.indexOf(row);
-				if (indice !== -1) {
-			       mi.rowCollection.splice(indice, 1);		       
-			    }
-				mi.rowCollection = [];
-				mi.getDocumentosAdjuntos(6, mi.proyecto.id);
-			}
-		});
-	};
 
 	mi.irATabla = function() {
 		mi.esColapsado=false;
@@ -342,7 +373,23 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	}
 
 	mi.abrirPopupFecha = function(index) {
-		mi.camposdinamicos[index].isOpen = true;
+		if(index<1000){
+			mi.camposdinamicos[index].isOpen = true;
+		}
+		else{
+			switch(index){
+				case 1003: mi.fc_abierto = true; break;
+				case 1004: mi.ff_abierto = true; break;
+				case 1005: mi.fa_abierto = true; break;
+				case 1006: mi.ffe_abierto = true; break;
+				case 1007: mi.fd_abierto = true; break;
+				case 1008: mi.fs_abierto = true; break;
+				case 1009: mi.fe_abierto = true; break;
+				case 1010: mi.fco_abierto = true; break;
+				case 1011: mi.fca_abierto = true; break;
+			}
+		}
+
 	};
 
 	mi.filtrar = function(evt){
@@ -485,6 +532,99 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			mi.proyectos.push(itemSeleccionado);
 		});
 	};
+	
+	mi.buscarUnidadEjecutora = function() {
+		
+		var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
+			accion : 'totalElementos'	
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'cargar',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'unidadEjecutora','nombreUnidadEjecutora');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.prestamo.unidadEjecutoraNombre = itemSeleccionado.nombreUnidadEjecutora;
+			mi.prestamo.unidadEjecutora = itemSeleccionado.unidadEjecutora;
+		});
+	};
+	
+	mi.buscarAutorizacionTipo = function() {
+		
+		var resultado = mi.llamarModalBusqueda('/SAutorizacionTipo', {
+			accion : 'numeroAutorizacionTipo'	
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getAutorizacionTipoPagin',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'id','nombre');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.prestamo.tipoAutorizacionNombre = itemSeleccionado.nombre;
+			mi.prestamo.tipoAutorizacionId = itemSeleccionado.id;
+		});
+	};
+	
+	mi.buscarInteresTipo = function() {
+		
+		var resultado = mi.llamarModalBusqueda('/SInteresTipo', {
+			accion : 'numeroInteresTipo'	
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getAutorizacionTipoPagin',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'id','nombre');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.prestamo.tipoInteresNombre = itemSeleccionado.nombre;
+			mi.prestamo.tipoInteresId = itemSeleccionado.id;
+		});
+	};
+	
+	
+	
+	mi.buscarTipoMoneda = function() {
+		
+		var resultado = mi.llamarModalBusqueda('/SPrograma', {
+			accion : 'numeroTipoMonedas'	
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getTipoMnedaPagina',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'id','nombre');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.prestamo.tipoMonedaNombre = itemSeleccionado.nombre;
+			mi.prestamo.tipoMonedaId = itemSeleccionado.id;
+		});
+	};
+	
+	mi.buscarEstadoEjecucion = function() {
+		
+		var resultado = mi.llamarModalBusqueda('/SPrograma', {
+			accion : 'numeroEjecucionEstado'	
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getEjecucionEstadoPagina',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'id','nombre');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.prestamo.ejecucionEstadoNombre = itemSeleccionado.nombre;
+			mi.prestamo.ejecucionEstadoId = itemSeleccionado.id;
+		});
+	};
+	
 
 	
 } ]);

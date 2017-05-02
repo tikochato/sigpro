@@ -232,17 +232,20 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.exportar=function(){
 			var formatData = new FormData();
 			 
-			formatData.append("accion",'exportar');
-			formatData.append("t",moment().unix());
-			formatData.append("proyecto_id",$routeParams.proyectoId);
 			
-			$http.post('/SGantt', formatData, {
-				headers: {'Content-Type': undefined},
-				transformRequest: angular.identity
-			 }).then(
-				function(response) {
-					
-				}
+			
+			$http.post('/SDownload', { accion: 'exportar', proyectoid:$routeParams.proyectoId,t:moment().unix()
+			  }).then(
+					 function successCallback(response) {
+							var anchor = angular.element('<a/>');
+						    anchor.attr({
+						         href: 'data:application/ms-project;base64,' + response.data,
+						         target: '_blank',
+						         download: 'Programa.mpx'
+						     })[0].click();
+						  }.bind(this), function errorCallback(response){
+						 		
+						 	}
 			);
 		};
 		

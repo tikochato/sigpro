@@ -6,16 +6,25 @@
 		<shiro:lacksPermission name="19010">
 			<p ng-init="metaunidadc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Unidades de Medida de Metas</h3><br/>
+		<div class="panel panel-default">
+		  <div class="panel-heading"><h3>Unidades de Medida de Metas</h3></div>
+		</div>
 		<div class="row" align="center" ng-hide="metaunidadc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="19040">
-			       		<label class="btn btn-primary" ng-click="metaunidadc.nueva()">Nueva</label>
+			       		<label class="btn btn-primary" ng-click="metaunidadc.nueva()">
+							<span class="glyphicon glyphicon-plus"></span> Nuevo
+						</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="19010"><label class="btn btn-primary" ng-click="metaunidadc.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="19010">
+			       		<label class="btn btn-primary" ng-click="metaunidadc.editar()">
+			       		<span class="glyphicon glyphicon-pencil"></span> Editar
+			       		</label>
+			       	</shiro:hasPermission>
 			       <shiro:hasPermission name="19030">
-			       		<label class="btn btn-primary" ng-click="metaunidadc.borrar()">Borrar</label>
+			       		<label class="btn btn-danger" ng-click="metaunidadc.borrar()">
+			       		<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			       </shiro:hasPermission>
 			        
 			        
@@ -58,9 +67,12 @@
     		</shiro:hasPermission>
     		
 		</div>
-		<div class="row main-form" ng-show="metaunidadc.mostraringreso">
-			<h4 ng-hide="!metaunidadc.esnueva">Nueva Unidad de Medidad</h4>
-			<h4 ng-hide="metaunidadc.esnueva">Edición de Unidad de Medida</h4>
+		<div class="row second-main-form" ng-show="metaunidadc.mostraringreso">
+			<div class="page-header">
+				<h2 ng-hide="!metaunidadc.esnueva"><small>Nueva Unidad de Medidad</small></h2>
+				<h2 ng-hide="metaunidadc.esnueva"><small>Edición de Unidad de Medida</small></h2>
+			</div>
+			
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="19020">
@@ -73,20 +85,23 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group" ng-show="!metaunidadc.esnueva">
-							<label for="id">ID</label>
-    						<p class="form-control-static"  id="id">{{ metaunidadc.medida.id }} </p>
+    						<label for="id" class="floating-label">ID {{ metaunidadc.medida.id }}</label>
+							<br/><br/>
 						</div>
 						<div class="form-group">
-							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="metaunidadc.medida.nombre" ng-required="true">
+    						<input type="text" class="inputText" ng-model="metaunidadc.medida.nombre" ng-required="true"
+    						value="{{metaunidadc.medida.nombre}}" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
-							<label for="descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="metaunidadc.medida.descripcion">
+    						<input type="text" class="inputText"  ng-model="metaunidadc.medida.descripcion"
+    						value="{{metaunidadc.medida.descripcion}}" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">Descripción</label>
 						</div>
 						<div class="form-group">
-							<label for="simbolo">Símbolo</label>
-    						<input type="text" class="form-control" id="simbolo" placeholder="Símbolo" ng-model="metaunidadc.medida.simbolo">
+    						<input type="text" class="inputText" ng-model="metaunidadc.medida.simbolo"
+    						value="{{metaunidadc.medida.simbolo}}" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">Símbolo</label>
 						</div>
 						<br/>
 						<div class="panel panel-default">

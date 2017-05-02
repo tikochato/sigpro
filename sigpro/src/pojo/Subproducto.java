@@ -1,5 +1,5 @@
 package pojo;
-// Generated Mar 7, 2017 2:35:37 PM by Hibernate Tools 5.2.1.Final
+// Generated Apr 28, 2017 8:41:23 AM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Subproducto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5098017483058729252L;
+	private static final long serialVersionUID = -987060806472524097L;
 	private Integer id;
 	private Producto producto;
 	private SubproductoTipo subproductoTipo;

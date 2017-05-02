@@ -1,5 +1,5 @@
 package pojo;
-// Generated Mar 7, 2017 2:35:37 PM by Hibernate Tools 5.2.1.Final
+// Generated Apr 28, 2017 8:41:23 AM by Hibernate Tools 5.2.1.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,13 +24,14 @@ public class UnidadEjecutora implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2083675088596249015L;
+	private static final long serialVersionUID = -8956254344413330777L;
 	private Integer unidadEjecutora;
 	private Entidad entidad;
 	private String nombre;
 	private Set<Componente> componentes = new HashSet<Componente>(0);
 	private Set<Colaborador> colaboradors = new HashSet<Colaborador>(0);
 	private Set<Subproducto> subproductos = new HashSet<Subproducto>(0);
+	private Set<Prestamo> prestamos = new HashSet<Prestamo>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<Proyecto> proyectos = new HashSet<Proyecto>(0);
 
@@ -43,12 +44,13 @@ public class UnidadEjecutora implements java.io.Serializable {
 	}
 
 	public UnidadEjecutora(Entidad entidad, String nombre, Set<Componente> componentes, Set<Colaborador> colaboradors,
-			Set<Subproducto> subproductos, Set<Producto> productos, Set<Proyecto> proyectos) {
+			Set<Subproducto> subproductos, Set<Prestamo> prestamos, Set<Producto> productos, Set<Proyecto> proyectos) {
 		this.entidad = entidad;
 		this.nombre = nombre;
 		this.componentes = componentes;
 		this.colaboradors = colaboradors;
 		this.subproductos = subproductos;
+		this.prestamos = prestamos;
 		this.productos = productos;
 		this.proyectos = proyectos;
 	}
@@ -109,6 +111,15 @@ public class UnidadEjecutora implements java.io.Serializable {
 
 	public void setSubproductos(Set<Subproducto> subproductos) {
 		this.subproductos = subproductos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unidadEjecutora")
+	public Set<Prestamo> getPrestamos() {
+		return this.prestamos;
+	}
+
+	public void setPrestamos(Set<Prestamo> prestamos) {
+		this.prestamos = prestamos;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unidadEjecutora")

@@ -6,16 +6,24 @@
 		<shiro:lacksPermission name="16010">
 			<p ng-init="hitotipoc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Tipo Hito</h3><br/>
+		<div class="panel panel-default">
+		  <div class="panel-heading"><h3>Tipo de Hito</h3></div>
+		</div>
 		<div class="row" align="center" ng-hide="hitotipoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="16040">
-			       		<label class="btn btn-primary" ng-click="hitotipoc.nuevo()">Nuevo</label>
+			       		<label class="btn btn-primary" ng-click="hitotipoc.nuevo()">
+			       			<span class="glyphicon glyphicon-plus"></span>Nuevo
+			       		</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="16010"><label class="btn btn-primary" ng-click="hitotipoc.editar()">Editar</label></shiro:hasPermission>
+			       <shiro:hasPermission name="16010"><label class="btn btn-primary" ng-click="hitotipoc.editar()">
+			       		<span class="glyphicon glyphicon-pencil"></span> Editar</label>
+			       	</shiro:hasPermission>
 			       <shiro:hasPermission name="16030">
-			       		<label class="btn btn-primary" ng-click="hitotipoc.borrar()">Borrar</label>
+			       		<label class="btn btn-danger" ng-click="hitotipoc.borrar()">
+			       			<span class="glyphicon glyphicon-trash"></span>Borrar
+			       		</label>
 			       </shiro:hasPermission>
     			</div>				
     		</div>
@@ -56,9 +64,13 @@
     		</shiro:hasPermission>
     		
 		</div>
-		<div class="row main-form" ng-show="hitotipoc.mostraringreso">
-			<h4 ng-hide="!hitotipoc.esnuevo">Nuevo Tipo Hito</h4>
-			<h4 ng-hide="hitotipoc.esnuevo">Edición de Tipo Hito</h4>
+		<div  class="row second-main-form" ng-show="hitotipoc.mostraringreso">
+		
+			<div class="page-header">
+				<h2 ng-hide="!hitotipoc.esnuevo"><small>Nuevo Tipo Hito</small></h2>
+				<h2 ng-hide="hitotipoc.esnuevo"><small>Edición de Tipo Hito</small></h2>
+			</div>
+			
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="16020">
@@ -71,23 +83,25 @@
 			<div class="col-sm-12">
 				<form name="form">
 					<div class="form-group" ng-show="!hitotipoc.esnuevo">
-						<label for="id">ID</label>			
-   						<p class="form-control-static">{{ hitotipoc.hitotipo.id }}</p>		
+						<label for="id" class="floating-label">ID {{ hitotipoc.hitotipo.id }}</label>
+						<br/><br/>
 					</div>
 					<div class="form-group">
-						<label for="nombre">* Nombre</label>
-   						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="hitotipoc.hitotipo.nombre" ng-required="true">
+   						<input type="text" class="inputText" ng-model="hitotipoc.hitotipo.nombre" ng-required="true"
+   						value="{{hitotipoc.hitotipo.nombre}}" onblur="this.setAttribute('value', this.value);">
+   						<label class="floating-label">* Nombre</label>
 					</div>
 					<div class="form-group">
-				        <label for="campo2">* Tipo:</label>     			
-		    			<select class="form-control" ng-model="hitotipoc.datoTipoSeleccionado" ng-options="tipo as tipo.nombre for tipo in hitotipoc.datoTipos track by tipo.id" ng-required="true"
+		    			<select class="inputText" ng-model="hitotipoc.datoTipoSeleccionado" ng-options="tipo as tipo.nombre for tipo in hitotipoc.datoTipos track by tipo.id" ng-required="true"
 		    			ng-readonly="true" ng-disabled="!hitotipoc.esnuevo" ng-required="true" >
 							<option disabled selected value> -- Seleccione Tipo -- </option>
 						</select>
+						<label class="floating-label">* Tipo:</label>
 		    		 </div>
 					<div class="form-group">
-						<label for="descripcion">Descripción</label>
-   						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="hitotipoc.hitotipo.descripcion">
+   						<input type="text" class="inputText" ng-model="hitotipoc.hitotipo.descripcion"
+   						value="{{hitotipoc.hitotipo.descripcion}}" onblur="this.setAttribute('value', this.value);">
+   						<label class="floating-label">Descripción</label>
 					</div>
 					
 					<br/>
