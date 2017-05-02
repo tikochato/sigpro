@@ -111,33 +111,33 @@
 						</div>
 						<br/>
 						<div class="panel panel-default">
-							<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+							<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group" style="text-align: right">
-											<label for="usuarioCreo">Usuario que creo</label>
-				    						<p class="form-control-static">{{ actividadpropiedadc.actividadpropiedad.usuarioCreo }}</p>
+											<label  class="label-form"  for="usuarioCreo">Usuario que creo</label>
+				    						<p>{{ actividadpropiedadc.actividadpropiedad.usuarioCreo }}</p>
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label for="fechaCreacion">Fecha de creación</label>
-				    						<p class="form-control-static">{{ actividadpropiedadc.actividadpropiedad.fechaCreacion }}</p>
+											<label class="label-form"  for="fechaCreacion">Fecha de creación</label>
+				    						<p>{{ actividadpropiedadc.actividadpropiedad.fechaCreacion }}</p>
 										</div>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group" style="text-align: right">
-											<label for="usuarioActualizo">Usuario que actualizo</label>
-				    						<p class="form-control-static">{{ actividadpropiedadc.actividadpropiedad.usuarioActualizo }}</p>
+											<label  class="label-form"  for="usuarioActualizo">Usuario que actualizo</label>
+				    						<p>{{ actividadpropiedadc.actividadpropiedad.usuarioActualizo }}</p>
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label for="fechaActualizacion">Fecha de actualizacion</label>
-				    						<p class="form-control-static">{{ actividadpropiedadc.actividadpropiedad.fechaActualizacion }}</p>
+											<label  class="label-form"  for="fechaActualizacion">Fecha de actualizacion</label>
+				    						<p>{{ actividadpropiedadc.actividadpropiedad.fechaActualizacion }}</p>
 										</div>
 									</div>
 								</div>
