@@ -6,21 +6,27 @@
 		<shiro:lacksPermission name="8010">
 			<p ng-init="cooperantec.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Cooperantes</h3><br/>
+		<div class="panel panel-default">
+		    <div class="panel-heading"><h3>Cooperantes</h3></div>
+		</div>
 		<div class="row" align="center" ng-hide="cooperantec.mostraringreso">
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-			       <shiro:hasPermission name="8040">
-			       		<label class="btn btn-primary" ng-click="cooperantec.nuevo()">Nuevo</label>
-			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="8010"><label class="btn btn-primary" ng-click="cooperantec.editar()">Editar</label></shiro:hasPermission>
-			       <shiro:hasPermission name="8030">
-			       		<label class="btn btn-primary" ng-click="cooperantec.borrar()">Borrar</label>
-			       </shiro:hasPermission>
-			        
-			        
-    			</div>				
-    		</div>
+			
+    		<div class="col-sm-12 operation_buttons" align="right">
+			  <div class="btn-group">
+			  <shiro:hasPermission name="8040">
+			    <label class="btn btn-primary" ng-click="cooperantec.nuevo()" uib-tooltip="Nuevo">
+			    <span class="glyphicon glyphicon-plus"></span> Nuevo</label>
+			  </shiro:hasPermission>
+			  <shiro:hasPermission name="8010">
+			    <label class="btn btn-primary" ng-click="cooperantec.editar()" uib-tooltip="Editar">
+			    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
+			  </shiro:hasPermission>
+			  <shiro:hasPermission name="8030">
+			    <label class="btn btn-danger" ng-click="cooperantec.borrar()" uib-tooltip="Borrar">
+			    <span class="glyphicon glyphicon-trash"></span> Borrar</label>
+			  </shiro:hasPermission>
+			  </div>
+			</div>
     		<shiro:hasPermission name="8010">
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
@@ -56,35 +62,45 @@
     		</shiro:hasPermission>
     		
 		</div>
-		<div class="row main-form" ng-show="cooperantec.mostraringreso">
-			<h4 ng-hide="!cooperantec.esnuevo">Nuevo cooperante</h4>
-			<h4 ng-hide="cooperantec.esnuevo">Edición de cooperante</h4>
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-					<shiro:hasPermission name="8020">
-			        	<label class="btn btn-success" ng-click="form.$valid ? cooperantec.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
-			        </shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="cooperantec.irATabla()">Ir a Tabla</label>
-    			</div>
-    		</div>
+		<div class="row second-main-form" ng-show="cooperantec.mostraringreso">
+			<div class="page-header">
+			    <h2 ng-hide="!cooperantec.esnuevo"><small>Nuevo cooperante</small></h2>
+			    <h2 ng-hide="cooperantec.esnuevo"><small>Edición de cooperante</small></h2>
+			</div>
+    		<div class="operation_buttons" align="right">
+			  <div class="btn-group">
+			    <shiro:hasPermission name="8020">
+			      <label class="btn btn-success" ng-click="form.$valid ? cooperantec.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+			      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+			    </shiro:hasPermission>
+			    <label class="btn btn-primary" ng-click="cooperantec.irATabla()" title="Ir a Tabla">
+			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+			  </div>
+			</div>
 			
 			<div class="col-sm-12">
 				<form name="form">
-						<div class="form-group" ng-show="!cooperantec.esnuevo">
-							<label for="id">ID</label>
-    						<p class="form-control-static" id="id" >{{ cooperantec.cooperante.id }} </p>
+						<div class="form-group">
+						  <label for="id" class="floating-label">ID {{ cooperantec.cooperante.id }}</label>
+						  <br/><br/>
 						</div>
 						<div class="form-group">
-							<label for="codigo">* Código</label>
-    						<input type="text" class="form-control" id="codigo" placeholder="Código" ng-model="cooperantec.cooperante.codigo" ng-required="true">
+						   <input type="text" name="codigo"  class="inputText" id="codigo" 
+						     ng-model="cooperantec.cooperante.codigo" value="{{cooperantec.cooperante.codigo}}"   
+						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+						   <label class="floating-label">* Código</label>
 						</div>
 						<div class="form-group">
-							<label for="nombre">* Nombre</label>
-    						<input type="text" class="form-control" id="nombre" placeholder="Nombre" ng-model="cooperantec.cooperante.nombre" ng-required="true">
+						   <input type="text" name="nombre"  class="inputText" id="nombre" 
+						     ng-model="cooperantec.cooperante.nombre" value="{{cooperantec.cooperante.nombre}}"   
+						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+						   <label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
-							<label for="descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="cooperantec.cooperante.descripcion">
+						   <input type="text" name="descripcion"  class="inputText" id="descripcion" 
+						     ng-model="cooperantec.cooperante.descripcion" value="{{cooperantec.cooperante.descripcion}}"   
+						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
+						   <label class="floating-label">Descripción</label>
 						</div>
 						<br/>
 						<div class="panel panel-default">
@@ -123,15 +139,15 @@
 				</form>
 			</div>
 			<div align="center">Los campos marcados con * son obligatorios</div>
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="col-sm-12 operation_buttons" align="right">
-					<div class="btn-group">
-						<shiro:hasPermission name="8020">
-							<label class="btn btn-success" ng-click="form.$valid ? cooperantec.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
-						</shiro:hasPermission>
-				        <label class="btn btn-primary" ng-click="cooperantec.irATabla()">Ir a Tabla</label>
-	    			</div>
-	    		</div>
-    		</div>
+    		<div class=" col-sm-12 operation_buttons" align="right">
+			  <div class="btn-group">
+			    <shiro:hasPermission name="8020">
+			      <label class="btn btn-success" ng-click="form.$valid ? cooperantec.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+			      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
+			    </shiro:hasPermission>
+			    <label class="btn btn-primary" ng-click="cooperantec.irATabla()" title="Ir a Tabla">
+			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+			  </div>
+			</div>
 		</div>
 	</div>
