@@ -42,6 +42,22 @@ nav.navbar{
    transition: all 0.4s ease-in-out;
 }
 
+.nav-show-menu{
+	position:absolute;
+   	top:0;
+   	right:0;
+   	background-color: #1f3b6a;
+   	padding-left: 5px;
+}
+
+.nav-show-menu>a{
+   	color: #9d9d9d;
+}
+
+div.nav-show-menu:hover > a{
+   	color: #ffffff;
+}
+
 .maincontainer{
 	margin: 15px;
 	padding-top: 15px;

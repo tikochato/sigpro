@@ -448,6 +448,10 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 		$scope.hidebar = true;
 		document.getElementById("title").scrollIntoView()
 	}
+	
+	$scope.showBarFromMenu=function(){
+		$scope.hidebar = false;
+	}
 
 	$scope.device = deviceDetector;
 
