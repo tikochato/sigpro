@@ -6,13 +6,12 @@
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="porcentajeactividadesController as porcentajeactividadesc" class="maincontainer all_page" id="title">
 	    
-	    <h3>Cartelera de Actividades</h3>
-	    <br/>
-	    <div class="row" align="center" >
-		    
+		<div class="panel panel-default">
+		  <div class="panel-heading"><h3>Cartelera de Actividades</h3></div>
 		</div>
-		 
+			 
 		<div class="row" align="center" >
+		<br>
 			<div class="kanban-chart" >
 	        	<div ds:kanban-board items="itemsKanban"  states="states" ng-if="mostrarKanban"
 	                     on-adding-new-item="initializeNewItem(item)" on-editing-item="deleteItem(item)"

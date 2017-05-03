@@ -7,11 +7,18 @@
   	    <shiro:lacksPermission name="30010">
 			<p ng-init="riesgoc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Matriz de Riesgos</h3><br/>
-		<h4>{{ riesgoc.proyectoNombre }}</h4><br/>
+		
+		<div class="panel panel-default">
+	  		<div class="panel-heading"><h3>Matriz de Riesgos</h3></div>
+		</div>
+		<div class="subtitulo">
+			{{ matrizriesgoc.proyectoNombre }}
+		</div>
+			
+		
 		<div class="row" align="center" >
-
-			<div class="operation_buttons" align="left">
+			<br>
+			<div class="operation_buttons" align="right">
 					<div class="btn-group">
 						<label class="btn btn-primary" ng-click="matrizriesgoc.exportarExcel()" uib-tooltip="Exportar">
 						<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Exportar</span></label>
@@ -21,25 +28,25 @@
 				<table st-table="matrizriesgoc.riesgos" st-safe-src="matrizriesgoc.lista" class="table table-condensed table-hover" >
 					<thead>
 						<tr>
-							<th>Riesgo</th>
-							<th>Nivel</th>
-							<th st-sort="nombre">Descripción</th>
-							<th>Categoría</th>
-							<th>Impacto proyectado</th>
-							<th>Impacto</th>
-							<th>Puntuación de impacto</th>
-							<th>Probabilidad</th>
-							<th>Punteo de prioridad</th>
-							<th>Gatillos / Sintomas</th>
-							<th>Respuesta</th>
-							<th>Responsable</th>
-							<th>Riesgos secundarios</th>
-							<th>¿Ha sido ejecutado?</th>
-							<th>Fecha de Ejecución</th>
+							<th class="label-form">Riesgo</th>
+							<th class="label-form">Nivel</th>
+							<th st-sort="nombre" class="label-form">Descripción</th>
+							<th class="label-form">Categoría</th>
+							<th class="label-form">Impacto proyectado</th>
+							<th class="label-form">Impacto</th>
+							<th class="label-form">Puntuación de impacto</th>
+							<th class="label-form">Probabilidad</th>
+							<th class="label-form">Punteo de prioridad</th>
+							<th class="label-form">Gatillos / Sintomas</th>
+							<th class="label-form">Respuesta</th>
+							<th class="label-form">Responsable</th>
+							<th class="label-form">Riesgos secundarios</th>
+							<th class="label-form">¿Ha sido ejecutado?</th>
+							<th class="label-form">Fecha de Ejecución</th>
 
 						</tr>
 						<tr>
-							<th colspan="7"><input st-search="" class="form-control" placeholder="Buscar" type="text"/></th>
+							<th colspan="15"><input st-search="" class="form-control" placeholder="Buscar" type="text"/></th>
 						</tr>
 					</thead>
 					<tbody>

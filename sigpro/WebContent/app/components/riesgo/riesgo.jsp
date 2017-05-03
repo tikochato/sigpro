@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-	<div ng-controller="riesgoController as riesgoc" class="maincontainer all_page" id="title">
+	<div ng-controller="riesgoController as riesgoc" class="maincontainer all_page" id="title" data-ng-init="riesgoc.cargarObjetoNombre()">
 	    <script type="text/ng-template" id="buscarPorRiesgo.jsp">
     		<%@ include file="/app/components/riesgo/buscarPorRiesgo.jsp"%>
   	    </script>
@@ -10,9 +10,10 @@
 			<p ng-init="riesgoc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
 		<div class="panel panel-default">
-	   		<div class="panel-heading"><h3>Riesgos</h3><br/></div>
+	   		<div class="panel-heading"><h3>Riesgos</h3></div>
 		</div>
-		<h4>{{ riesgoc.proyectoNombre }}</h4><br/>
+		<div class="subtitulo">{{ riesgoc.objetoNombre }}</div>
+		
 		<div class="row" align="center" ng-if="!riesgoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
@@ -66,8 +67,10 @@
     		</shiro:hasPermission>
 		</div>
 		<div class="row second-main-form" ng-if="riesgoc.mostraringreso">
-			<h2 ng-hide="!riesgoc.esnuevo"><small>Nuevo riesgo</small></h2>
-			<h2 ng-hide="riesgoc.esnuevo"><small>Edición de riesgo</small></h2>
+			<div class="page-header">
+				<h2 ng-hide="!riesgoc.esnuevo"><small>Nuevo riesgo</small></h2>
+				<h2 ng-hide="riesgoc.esnuevo"><small>Edición de riesgo</small></h2>
+			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="30020">
@@ -241,7 +244,7 @@
 				</div>
 				</form>
 			</div>
-			<div align="center">Los campos marcados con * son obligatorios</div>
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">

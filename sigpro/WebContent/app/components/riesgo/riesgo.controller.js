@@ -27,8 +27,10 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.colaboradorNombre="";
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
+		mi.proyectoid = "";
 		mi.objetoid = $routeParams.objeto_id;
 		mi.objetotipo = $routeParams.objeto_tipo;
+		mi.objetoNombre = "";
 		
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;
@@ -42,6 +44,35 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				minDate : new Date(1900, 1, 1),
 				startingDay : 1
 		};
+		
+		mi.cargarObjetoNombre = function(){
+			if(mi.objetotipo == 1){ //Proyecto
+				$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: mi.objetoid }).success(
+						function(response) {
+							mi.objetoNombre = response.nombre;
+				});
+			}else if(mi.objetotipo == 2){ //Componente
+				$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: mi.objetoid }).success(
+						function(response) {
+							mi.objetoNombre = response.nombre;
+				});
+			}else if(mi.objetotipo == 3){ //Producto
+				$http.post('/SProducto', { accion: 'obtenerProductoPorId', id: mi.objetoid }).success(
+						function(response) {
+							mi.objetoNombre = response.nombre;
+				});
+			}else if(mi.objetotipo == 4){ //Subproducto
+				$http.post('/SSubproducto', { accion: 'obtenerSubproductoPorId', id: mi.objetoid }).success(
+						function(response) {
+							mi.objetoNombre = response.nombre;
+				});
+			}else if(mi.objetotipo == 5){ //Actividad
+				$http.post('/SActividad', { accion: 'obtenerActividadPorId', id: mi.objetoid }).success(
+						function(response) {
+							mi.objetoNombre = response.nombre;
+				});
+			}
+		}
 		
 		mi.gridOptions = {
 				enableRowSelection : true,

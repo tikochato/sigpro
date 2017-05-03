@@ -79,6 +79,8 @@ public class SSubproducto extends HttpServlet {
 			listarSubproductos(parametro, response);
 		} else if (parametro.get("accion").compareTo("listarComponentes") == 0) {
 			listarComponentes(parametro, response);
+		} else if (parametro.get("accion").compareTo("obtenerSubproductoPorId") == 0) {
+			obtenerSubproductoPorId(parametro, response);
 		}
 	}
 
@@ -315,4 +317,18 @@ public class SSubproducto extends HttpServlet {
 
 		Utils.writeJSon(response, resultadoJson);
 	}
+	
+	private void obtenerSubproductoPorId(Map<String, String> parametro, HttpServletResponse response) throws IOException {
+		Integer id = parametro.get("id")!=null ? Integer.parseInt(parametro.get("id")) : 0;
+		Subproducto subproducto = SubproductoDAO.getSubproductoPorId(id,usuario);
+		String resultadoJson = "";
+		
+		resultadoJson = String.join("","{ \"success\": ",(subproducto!=null && subproducto.getId()!=null ? "true" : "false"),", "
+			+ "\"id\": " + (subproducto!=null ? subproducto.getId():"0") +", "
+			+ "\"nombre\": \"" + (subproducto!=null ? subproducto.getNombre():"Indefinido") +"\" }");
+		
+		Utils.writeJSon(response, resultadoJson);
+		
+	}
+
 }

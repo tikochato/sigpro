@@ -116,7 +116,7 @@
 				<span class="glyphicon glyphicon-globe"></span></label>
 				<label class="btn btn-default" ng-click="controller.irAGantt(controller.proyecto.id)" uib-tooltip="Gantt" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-indent-left"></span></label>
-				<label class="btn btn-default" ng-click="controller.irAKanban(controller.proyecto.id)" uib-tooltip="Kanban" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="controller.irAKanban(controller.proyecto.id)" uib-tooltip="Cartelera de Actividades" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-blackboard"></span></label>
 				<label class="btn btn-default" ng-click="controller.irAAgenda(controller.proyecto.id)" uib-tooltip="Agenda" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-calendar"></span></label>
