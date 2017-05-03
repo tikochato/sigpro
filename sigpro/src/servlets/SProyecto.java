@@ -338,7 +338,7 @@ public class SProyecto extends HttpServlet {
 						, "\"id\": " , proyecto.getId().toString() , ","
 						, "\"usuarioCreo\": \"" , proyecto.getUsuarioCreo(),"\","
 						, "\"fechaCreacion\":\" " , Utils.formatDate(proyecto.getFechaCreacion()),"\","
-						, "\"usuarioactualizo\": \"" , proyecto.getUsuarioActualizo(),"\","
+						, "\"usuarioactualizo\": \"" , proyecto.getUsuarioActualizo() != null ? proyecto.getUsuarioActualizo() : "","\","
 						, "\"fechaactualizacion\": \"" , Utils.formatDate(proyecto.getFechaActualizacion()),"\""
 						," }");
 			}else
