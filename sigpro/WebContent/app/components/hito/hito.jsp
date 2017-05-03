@@ -118,6 +118,7 @@
 						</div>
 						<div class="form-group"> 
 			            	<input type="text" class="inputText"  ng-model="hitoc.hitotipoNombre" ng-readonly="true" ng-required="true"
+			            	ng-click="hitoc.buscarHitoTipo()"
 			            	value="{{hitoc.hitotipoNombre}}" onblur="this.setAttribute('value', this.value);"/>
 			            	<span  class="label-icon"  ng-click="hitoc.buscarHitoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 			            	<label class="floating-label" >* Tipo hito</label>

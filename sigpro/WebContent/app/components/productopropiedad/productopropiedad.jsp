@@ -7,7 +7,7 @@
 	</shiro:lacksPermission>
   
   <div class="panel panel-default">
-	  <div class="panel-heading"><h3>{{ productoPropiedad.esForma ? (productoPropiedad.esNuevo ? "Nueva Propiedad de Producto" : "Editar Propiedad de Producto") : "Propiedad de Producto" }}</h3></div>
+	  <div class="panel-heading"><h3>Propiedad de Producto</h3></div>
 	</div>
 
   <br />

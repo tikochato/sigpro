@@ -20,17 +20,6 @@ import utilities.CLogger;
 import utilities.Utils;
 
 public class ProductoPropiedadDAO {
-	static class EstructuraPojo {
-		Integer id;
-		String nombre;
-		String descripcion;
-		Integer idTipo;
-		String tipo;
-		String usuarioCreo;
-		String usuarioActualizo;
-		String fechaCreacion;
-		String fechaActualizacion;
-	}
 	
 	class stdatadinamico {
 		String id;
@@ -175,35 +164,7 @@ public class ProductoPropiedadDAO {
 		}
 		return ret;
 	}
-
-	public static String getJson(int pagina, int registros ,String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion,
-			String columna_ordenada, String orden_direccion) {
-		String jsonEntidades = "";
-
-		List<ProductoPropiedad> pojos = getPagina(pagina, registros, filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);
-
-		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
-
-		for (ProductoPropiedad pojo : pojos) {
-			EstructuraPojo estructuraPojo = new EstructuraPojo();
-			estructuraPojo.id = pojo.getId();
-			estructuraPojo.nombre = pojo.getNombre();
-			estructuraPojo.descripcion = pojo.getDescripcion();
-			estructuraPojo.idTipo = pojo.getDatoTipo().getId();
-			estructuraPojo.tipo = pojo.getDatoTipo().getNombre();
-			estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();
-			estructuraPojo.usuarioActualizo = pojo.getUsuarioActualizo();
-			estructuraPojo.fechaCreacion = Utils.formatDateHour(pojo.getFechaCreacion());
-			estructuraPojo.fechaActualizacion =Utils.formatDateHour(pojo.getFechaActualizacion());
-
-			listaEstructuraPojos.add(estructuraPojo);
-		}
-
-		jsonEntidades = Utils.getJSonString("productoPropiedades", listaEstructuraPojos);
-
-		return jsonEntidades;
-	}
-
+	
 	public static Long getTotal(String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion) {
 		Long ret = 0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();

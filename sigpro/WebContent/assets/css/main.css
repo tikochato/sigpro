@@ -173,11 +173,6 @@ nav.navbar{
 	padding: 10px;
 }
 
-.main-form{
-	width: 80%;
-	margin: auto;
-}
-
 .second-main-form{
 	width: 90%;
 	margin: auto;
@@ -310,4 +305,21 @@ input[type='checkbox']:not([value=""]) ~ .floating-label {
 	 color: rgba(0,0,0,0.38) !important;
 	 font-weight: bold;
 	 text-align: center;
+}
+
+h3 {
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+h2 {
+    font-size: 25px;
+}
+
+.page-header {
+    margin: 10px 0 10px;
+}
+
+.panel {
+    margin-bottom: 10px;
 }

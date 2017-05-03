@@ -257,7 +257,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				actividad: mi.subproducto.actividad,
 				obra: mi.subproducto.obra,
 				fuente: mi.subproducto.fuente,
-				producto : $routeParams.producto_id,
+				producto : ($routeParams.producto_id == undefined ? 0 : $routeParams.producto_id),
 				subproductoPadre : mi.subproductoPadre,
 				tiposubproductoid : mi.tipo,
 				unidadEjecutora : mi.unidadEjecutora,
@@ -275,6 +275,10 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 							$utilidades.mensaje('success','Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.esNuevo = false;
 							mi.subproducto.id = response.data.id;
+							mi.subproducto.usuarioCreo = response.data.usuarioCreo;
+							mi.subproducto.fechaCreacion = response.data.fechaCreacion;
+							mi.subproducto.usuarioActualizo = response.data.usuarioactualizo;
+							mi.subproducto.fechaActualizacion = response.data.fechaactualizacion;
 							mi.cargarTabla(mi.paginaActual);
 							
 						} else {

@@ -192,7 +192,12 @@ public class SRecursoPropiedad extends HttpServlet {
 				}
 				result = RecursoPropiedadDAO.guardarRecursoPropiedad(componentePropiedad);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + componentePropiedad.getId() +" }");
+						, "\"id\": " , componentePropiedad.getId().toString() , ","
+						, "\"usuarioCreo\": \"" , componentePropiedad.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(componentePropiedad.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , componentePropiedad.getUsuarioActualizo() != null ? componentePropiedad.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(componentePropiedad.getFechaActualizacion()),"\""
+						," }");
 			}
 			else
 				response_text = "{ \"success\": false }";

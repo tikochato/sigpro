@@ -122,7 +122,7 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 					mi.camposdinamicos[campos].valor = moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY');
 				}
 			}
-			if(mi.recurso!=null && mi.recurso.id!=null){
+			if(mi.recurso!=null){
 				$http.post('/SRecurso', {
 					accion: 'guardarRecurso',
 					esnuevo: mi.esnuevo,
@@ -135,6 +135,11 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 				}).success(function(response){
 					if(response.success){
 						mi.recurso.id = response.id;
+						mi.recurso.usuarioCreo = response.usuarioCreo;
+						mi.recurso.fechaCreacion = response.fechaCreacion;
+						mi.recurso.usuarioActualizo = response.usuarioactualizo;
+						mi.recurso.fechaActualizacion = response.fechaactualizacion;
+						
 						$utilidades.mensaje('success','Recurso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.obtenerTotalRecursos();
 						mi.esnuevo = false;
@@ -215,10 +220,17 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 		}
 
 		mi.reiniciarVista=function(){
+			/*
 			if($location.path()==('/recurso/'+ mi.objetoTipo + '/' + mi.objetoId +'/rv'))
 				$route.reload();
 			else
 				$location.path('/recurso/'+ mi.objetoTipo + '/' + mi.objetoId + '/rv');
+			 */
+			if($location.path()==('/recurso/rv'))
+				$route.reload();
+			else
+				$location.path('/recurso/rv');
+			
 		}
 
 		mi.abrirPopupFecha = function(index) {

@@ -88,7 +88,7 @@
 						</div>
 						<div class="form-group">
 							
-							<select class="form-control" ng-model="formularioitemtipoc.formularioitemtipo.datotipo"
+							<select class="inputText" ng-model="formularioitemtipoc.formularioitemtipo.datotipo"
 								ng-options="tipo as tipo.nombre for tipo in formularioitemtipoc.tipodatos track by tipo.id"
 								ng-readonly="true" 
 								ng-disabled="!formularioitemtipoc.esnuevo" >
@@ -97,37 +97,38 @@
 							<label class="floating-label">* Tipo dato</label>
 						</div>
 						<div class="form-group">
-							<label for="descripcion">Descripción</label>
-    						<input type="text" class="form-control" id="descripcion" placeholder="Descripción" ng-model="formularioitemtipoc.formularioitemtipo.descripcion">
+    						<input type="text" class="inputText" ng-model="formularioitemtipoc.formularioitemtipo.descripcion" 
+    						value="{{formularioitemtipoc.formularioitemtipo.descripcion}}" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">Descripción</label>
 						</div>
-						<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel panel-default">
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static" id="usuarioCreo"> {{ formularioitemtipoc.formularioitemtipo.usuarioCreo }}</p>
+									<label for="usuarioCreo" class="label-form">Usuario que creo</label> 
+									<p > {{ formularioitemtipoc.formularioitemtipo.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
-									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ formularioitemtipoc.formularioitemtipo.fechaCreacion }} </p>
+									<label for="fechaCreacion" class="label-form">Fecha de creación</label>
+									<p > {{ formularioitemtipoc.formularioitemtipo.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ formularioitemtipoc.formularioitemtipo.usuarioActualizo }} </p>
+									<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label> 
+									<p >{{ formularioitemtipoc.formularioitemtipo.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ formularioitemtipoc.formularioitemtipo.fechaActualizacion }} </p>
+									<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label> 
+									<p >{{ formularioitemtipoc.formularioitemtipo.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>

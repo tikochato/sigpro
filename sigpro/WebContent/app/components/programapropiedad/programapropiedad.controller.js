@@ -116,6 +116,10 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 					if(response.success){
 						$utilidades.mensaje('success','Propiedad de Programa '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.programapropiedad.id = response.id;
+						mi.programapropiedad.usuarioCreo = response.usuarioCreo;
+						mi.programapropiedad.fechaCreacion = response.fechaCreacion;
+						mi.programapropiedad.usuarioActualizo = response.usuarioactualizo;
+						mi.programapropiedad.fechaActualizacion = response.fechaactualizacion;
 						mi.esnuevo = false;
 						mi.obtenerTotalProgramaPropiedades();
 					}

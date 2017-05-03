@@ -185,8 +185,8 @@ public class SRiesgo extends HttpServlet {
 				striesgo temp =new striesgo();
 				temp.descripcion = riesgo.getDescripcion();
 				temp.estado = riesgo.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(riesgo.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(riesgo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(riesgo.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(riesgo.getFechaCreacion());
 				temp.id = riesgo.getId();
 				temp.nombre = riesgo.getNombre();
 				temp.usuarioActualizo = riesgo.getUsuarioActualizo();
@@ -369,7 +369,12 @@ public class SRiesgo extends HttpServlet {
 					
 					
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-							+ "\"id\": " + riesgo.getId() +" }");
+							+ "\"id\": " + riesgo.getId().toString(), ","
+							, "\"usuarioCreo\": \"" , riesgo.getUsuarioCreo(),"\","
+							, "\"fechaCreacion\":\" " , Utils.formatDateHour(riesgo.getFechaCreacion()),"\","
+							, "\"usuarioactualizo\": \"" , riesgo.getUsuarioActualizo() != null ? riesgo.getUsuarioActualizo() : "","\","
+							, "\"fechaactualizacion\": \"" , Utils.formatDateHour(riesgo.getFechaActualizacion()),"\""
+							," }");
 				}
 				else{
 					response_text = "{ \"success\": false }";

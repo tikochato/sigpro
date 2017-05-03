@@ -123,33 +123,33 @@
 					<br/>
 					
 						<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label> 
+									<label class="label-form">Usuario que creo</label> 
 									<p class="form-control-static"> {{ metac.meta.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
-									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ metac.meta.fechaCreacion }} </p>
+									<label class="label-form">Fecha de creación</label>
+									<p > {{ metac.meta.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ metac.meta.usuarioActualizo }} </p>
+									<label class="label-form">Usuario que actualizo</label> 
+									<p >{{ metac.meta.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ metac.meta.fechaActualizacion }} </p>
+									<label class="label-form">Fecha de actualizacion</label> 
+									<p>{{ metac.meta.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>

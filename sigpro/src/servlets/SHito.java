@@ -268,8 +268,15 @@ public class SHito extends HttpServlet {
 				}
 				
 				
+				
+				
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + hito.getId() +" }");
+						+ "\"id\": " + hito.getId() , ","
+						, "\"usuarioCreo\": \"" , hito.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(hito.getFechaCreacion()),"\","
+						, "\"usuarioActualizo\": \"" , hito.getUsuarioActualizo() != null ? hito.getUsuarioActualizo() : "","\","
+						, "\"fechaActualizacion\": \"" , Utils.formatDateHour(hito.getFechaActualizacion()),"\""
+						," }");
 				}catch(Throwable e){
 					response_text = "{ \"success\": false }";
 					CLogger.write("1", SHito.class, e);

@@ -233,6 +233,11 @@ public class ColaboradorDAO {
 				estructuraPojo.usuarioActualizo = pojo.getUsuarioActualizo();
 				estructuraPojo.fechaCreacion = Utils.formatDateHour(pojo.getFechaCreacion());
 				estructuraPojo.fechaActualizacion = Utils.formatDateHour(pojo.getFechaActualizacion());
+				estructuraPojo.nombreCompleto = String.join(" ", estructuraPojo.primerNombre,
+						estructuraPojo.segundoNombre!=null ? estructuraPojo.segundoNombre : "" ,
+						estructuraPojo.primerApellido !=null ? estructuraPojo.primerApellido : "" ,
+						estructuraPojo.segundoApellido !=null ? estructuraPojo.segundoApellido : "");
+				
 				listaEstructuraPojos.add(estructuraPojo);
 			}
 			

@@ -6,7 +6,7 @@
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="porcentajeactividadesController as porcentajeactividadesc" class="maincontainer all_page" id="title">
 	    
-	    <h3>Porcentaje Completado de Actividades</h3>
+	    <h3>Cartelera de Actividades</h3>
 	    <br/>
 	    <div class="row" align="center" >
 		    

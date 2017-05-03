@@ -337,9 +337,9 @@ public class SProyecto extends HttpServlet {
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 						, "\"id\": " , proyecto.getId().toString() , ","
 						, "\"usuarioCreo\": \"" , proyecto.getUsuarioCreo(),"\","
-						, "\"fechaCreacion\":\" " , Utils.formatDate(proyecto.getFechaCreacion()),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(proyecto.getFechaCreacion()),"\","
 						, "\"usuarioactualizo\": \"" , proyecto.getUsuarioActualizo() != null ? proyecto.getUsuarioActualizo() : "","\","
-						, "\"fechaactualizacion\": \"" , Utils.formatDate(proyecto.getFechaActualizacion()),"\""
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(proyecto.getFechaActualizacion()),"\""
 						," }");
 			}else
 				response_text = "{ \"success\": false }";
