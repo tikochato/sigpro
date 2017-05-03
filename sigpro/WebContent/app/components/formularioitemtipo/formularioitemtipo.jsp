@@ -61,7 +61,7 @@
     		</shiro:hasPermission>
     		
 		</div>
-		<div class="row main-form" ng-show="formularioitemtipoc.mostraringreso">
+		<div class="row second-main-form" ng-show="formularioitemtipoc.mostraringreso">
 			<div class="page-header">
 				<h2 ng-hide="!formularioitemtipoc.esnuevo"><small>Nuevo Tipo de Item de Formulario</small></h2>
 				<h2 ng-hide="formularioitemtipoc.esnuevo"><small>Edición de Tipo de Item de Formulario</small></h2>

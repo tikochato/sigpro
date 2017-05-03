@@ -11,7 +11,7 @@
     <h3>Documentos Adjuntos</h3>
     <br />
     
-    <div class="row main-form" align="center" style="width: 75%">
+    <div class="row second-main-form" align="center" style="width: 75%">
 	    <div class="row col-sm-12">
 	    	<h5 ng-show="doctos.isCollapsed">Agregar Documento</h5>
 	    </div>

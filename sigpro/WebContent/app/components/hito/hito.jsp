@@ -13,8 +13,8 @@
 		<div class="panel panel-default">
 			<div class="panel-heading"><h3>Hitos</h3></div>
 		</div>
-		<div class="page-header">
-			<h2><small>{{ hitoc.proyectoNombre }}</small></h2><br/>
+		<div class="subtitulo">
+			{{ hitoc.proyectoNombre }}
 		</div>
 		
 		<div class="row" align="center" ng-hide="hitoc.mostraringreso">
@@ -72,10 +72,10 @@
     		</shiro:hasPermission>
     		
 		</div>
-		<div class="row main-form" ng-show="hitoc.mostraringreso">
+		<div class="row second-main-form" ng-show="hitoc.mostraringreso">
 			<div class="page-header">
-				<h4 ng-hide="!hitoc.esnuevo"><small>Nuevo hito</small></h4>
-				<h4 ng-hide="hitoc.esnuevo"><small>Edición de hito</small></h4>
+				<h2 ng-hide="!hitoc.esnuevo"><small>Nuevo hito</small></h2>
+				<h2 ng-hide="hitoc.esnuevo"><small>Edición de hito</small></h2>
 			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
@@ -102,6 +102,7 @@
 							<input type="text" class="inputText" uib-datepicker-popup="{{hitoc.formatofecha}}" ng-model="hitoc.fecha" 
 	    						is-open="hitoc.popupfecha.abierto" datepicker-options="hitoc.fechaOptions"  close-text="Cerrar" 
 	    						alt-input-formats="altInputFormats" current-text="Hoy" clear-text="Borrar" ng-required="true"
+	    						ng-click="hitoc.abirpopup()"
 	    						value="{{hitoc.fecha}}" onblur="this.setAttribute('value', this.value);"/>
 	    						
 	    						<span class="label-icon" ng-click="hitoc.abirpopup()">
@@ -188,7 +189,7 @@
 				</div>
 				</form>
 			</div>
-			<div align="center">Los campos marcados con * son obligatorios</div>
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">

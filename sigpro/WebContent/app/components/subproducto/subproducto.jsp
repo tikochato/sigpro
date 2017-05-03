@@ -88,7 +88,7 @@
 
 	</div>
 
-	<div ng-show="subproducto.esForma" class="row main-form">
+	<div ng-show="subproducto.esForma" class="row second-main-form">
 		<h2 ng-hide="!subproducto.esNuevo"><small>Nuevo Subproducto</small></h2>
 		<h2 ng-hide="subproducto.esNuevo"><small>Edición de Subproducto</small></h2>
 		<div class="col-sm-12 operation_buttons" >

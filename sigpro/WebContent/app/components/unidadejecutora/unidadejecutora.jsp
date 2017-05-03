@@ -56,7 +56,7 @@
    
   </div>
 
-  <div class="row main-form" ng-show="unidad.esForma">
+  <div class="row second-main-form" ng-show="unidad.esForma">
 
 	<div class="page-header">
 		<h2 ng-hide="!unidad.esNuevo"><small>Nueva unidad ejecutora</small></h2>

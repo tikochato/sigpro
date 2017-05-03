@@ -62,7 +62,7 @@
     		</shiro:hasPermission>
     		
 		</div>
-		<div class="row main-form" ng-show="recursounidadc.mostraringreso">
+		<div class="row second-main-form" ng-show="recursounidadc.mostraringreso">
 			<h2 ng-hide="!recursounidadc.esnueva"><small>Nueva Unidad de Medidad</small></h2>
 			<h2 ng-hide="recursounidadc.esnueva"><small>Edición de Unidad de Medida</small></h2>
 			<div class="col-sm-12 operation_buttons" align="right">

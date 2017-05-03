@@ -70,7 +70,7 @@
 
 	</div>
 
-	<div class="row main-form" ng-show="subproductoTipo.esForma">
+	<div class="row second-main-form" ng-show="subproductoTipo.esForma">
 		<h2 ng-hide="!subproductoTipo.esNuevo">Nuevo tipo de subproducto</h2>
 	  	<h2 ng-hide="subproductoTipo.esNuevo">Edición de tipo de subproducto</h2>
 

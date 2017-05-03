@@ -71,7 +71,7 @@
 
 	</div>
 
-	<div class="row main-form" ng-if="recursotipoc.mostraringreso">
+	<div class="row second-main-form" ng-if="recursotipoc.mostraringreso">
 	<div class="page-header">
 		<h2 ng-hide="!recursotipoc.esnuevo"><small>Nuevo Tipo de Recurso</small></h2>
 		<h2 ng-hide="recursotipoc.esnuevo"><small>Edición de Tipo de Recurso</small></h2>

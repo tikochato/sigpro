@@ -71,7 +71,7 @@
 		</shiro:hasPermission>
 	</div>
 
-	<div class="row main-form" ng-if="riesgotipoc.mostraringreso">
+	<div class="row second-main-form" ng-if="riesgotipoc.mostraringreso">
 		<h2 ng-hide="!riesgotipoc.esnuevo"><small>Nuevo Tipo Riesgo</small></h2>
 		<h2 ng-hide="riesgotipoc.esnuevo"><small>Edición de Tipo Riesgo</small></h2>
 		<div class="col-sm-12 operation_buttons" align="right">

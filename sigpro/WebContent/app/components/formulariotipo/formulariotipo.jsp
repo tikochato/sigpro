@@ -64,7 +64,7 @@
 		
 	</div>
 
-	<div class="row main-form" ng-show="formulariotipoc.mostraringreso">
+	<div class="row second-main-form" ng-show="formulariotipoc.mostraringreso">
 		<h4 ng-hide="!formulariotipoc.esnuevo">Nuevo Tipo Riesgo</h4>
 		<h4 ng-hide="formulariotipoc.esnuevo">Edición de Tipo Riesgo</h4>
 		<div class="col-sm-12 operation_buttons" align="right">

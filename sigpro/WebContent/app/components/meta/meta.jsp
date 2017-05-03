@@ -68,7 +68,7 @@
     		</shiro:hasPermission>
     		
 		</div>
-		<div class="row main-form" ng-show="metac.mostraringreso">
+		<div class="row second-main-form" ng-show="metac.mostraringreso">
 			<div class="page-header">
 			    <h2 ng-hide="!metac.esnueva"><small>Nueva meta</small></h2>
 			    <h2 ng-hide="metac.esnueva"><small>Edición de meta</small></h2>

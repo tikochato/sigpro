@@ -62,7 +62,7 @@
 		
 	</div>
 
-	<div class="row main-form" ng-show="formularioc.mostraringreso">
+	<div class="row second-main-form" ng-show="formularioc.mostraringreso">
 		<h4 ng-hide="!formularioc.esnuevo">Nuevo Formulario</h4>
 		<h4 ng-hide="formularioc.esnuevo">Edición de Formulario</h4>
 		<div class="col-sm-12 operation_buttons" align="right">

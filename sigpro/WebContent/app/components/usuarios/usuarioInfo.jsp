@@ -10,7 +10,7 @@
 	<shiro:authenticated>
 	<h3><%= session.getAttribute("usuario") %></h3><br/>
 		
-		<div class="row main-form">
+		<div class="row second-main-form">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<label class="btn btn-primary" ng-click="usuarioc.editar()" ng-hide="!usuarioc.esoculto">Editar</label>

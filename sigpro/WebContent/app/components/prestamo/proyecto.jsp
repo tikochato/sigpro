@@ -241,7 +241,8 @@
 				
 				<div class="form-group">
 		            	<input type="text" class="inputText" ng-model="controller.coordenadas" ng-readonly="true" 
-		            		value="{{controller.coordenadas}}" onblur="this.setAttribute('value', this.value);"/>
+		            		value="{{controller.coordenadas}}" onblur="this.setAttribute('value', this.value);"
+		            		ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "/>
 		            	<span class="label-icon" ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
 			          	<label class="floating-label">Coordenadas</label>
 				</div>

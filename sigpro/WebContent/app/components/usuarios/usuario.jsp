@@ -68,7 +68,7 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row main-form" ng-show="usuarioc.isCollapsed">
+		<div class="row second-main-form" ng-show="usuarioc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="34020">

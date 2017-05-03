@@ -66,7 +66,7 @@
 		</shiro:hasPermission>	
 	</div>
 
-	<div class="row main-form" ng-if="proyectotipoc.mostraringreso">
+	<div class="row second-main-form" ng-if="proyectotipoc.mostraringreso">
 		<h4 ng-hide="!proyectotipoc.esnuevo">Nuevo tipo de préstamo</h4>
 		<h4 ng-hide="proyectotipoc.esnuevo">Edición tipo de préstamo</h4>
 		<div class="col-sm-12 operation_buttons" align="right">

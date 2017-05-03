@@ -62,7 +62,7 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row main-form" ng-show="riesgopropiedadc.mostraringreso">
+		<div class="row second-main-form" ng-show="riesgopropiedadc.mostraringreso">
 			<h2 ng-hide="!riesgopropiedadc.esnuevo">Nueva Propiedad</h2>
 			<h2 ng-hide="riesgopropiedadc.esnuevo">Edición de Propiedad</h2>
 			<div class="col-sm-12 operation_buttons" align="right">

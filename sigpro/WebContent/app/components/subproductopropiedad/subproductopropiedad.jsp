@@ -64,7 +64,7 @@
    
   </div>
 
-  <div class="row main-form" ng-show="subproductoPropiedad.esForma">
+  <div class="row second-main-form" ng-show="subproductoPropiedad.esForma">
 	  <h2 ng-hide="!subproductoPropiedad.esNuevo">Nueva propiedad de subproducto</h2>
 	  <h2 ng-hide="subproductoPropiedad.esNuevo">Edición de propiedad de subproducto</h2>
 
