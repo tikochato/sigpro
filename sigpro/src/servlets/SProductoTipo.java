@@ -103,8 +103,16 @@ public class SProductoTipo extends HttpServlet {
 			String descripcion = parametro.get("descripcion");
 			String propiedades = parametro.get("propiedades");
 			Integer creado = ProductoTipoDAO.guardar(-1, nombre, descripcion, propiedades, usuario);
+			
+			ProductoTipo producto = ProductoTipoDAO.getProductoTipo(creado); 
+			
 			response_text = String.join("","{ \"success\": ",(creado!=null ? "true" : "false"),", "
-					+ "\"id\": " + creado +" }");
+				, "\"id\": " , creado.toString() , ","
+				, "\"usuarioCreo\": \"" , producto.getUsuarioCreo(),"\","
+				, "\"fechaCreacion\":\" " , Utils.formatDateHour(producto.getFechaCreacion()),"\","
+				, "\"usuarioactualizo\": \"" , producto.getUsuarioActualizo() != null ? producto.getUsuarioActualizo() : "","\","
+				, "\"fechaactualizacion\": \"" , Utils.formatDateHour(producto.getFechaActualizacion()),"\""
+				," }");
 			
 		} else if (accion.equals("actualizar")) {
 			int codigo = Utils.String2Int(parametro.get("codigo"), -1);
@@ -112,7 +120,16 @@ public class SProductoTipo extends HttpServlet {
 			String descripcion = parametro.get("descripcion");
 			String propiedades = parametro.get("propiedades");
 			boolean actualizado = ProductoTipoDAO.actualizar(codigo, nombre, descripcion, propiedades, usuario);
-			response_text = String.join("","{ \"success\": ",(actualizado ? "true" : "false") + " }");
+			
+			ProductoTipo producto = ProductoTipoDAO.getProductoTipo(codigo); 
+						
+			response_text = String.join("","{ \"success\": ",(actualizado ? "true" : "false"),", "
+				, "\"id\": " , producto.getId().toString() , ","
+				, "\"usuarioCreo\": \"" , producto.getUsuarioCreo(),"\","
+				, "\"fechaCreacion\":\" " , Utils.formatDateHour(producto.getFechaCreacion()),"\","
+				, "\"usuarioactualizo\": \"" , producto.getUsuarioActualizo() != null ? producto.getUsuarioActualizo() : "","\","
+				, "\"fechaactualizacion\": \"" , Utils.formatDateHour(producto.getFechaActualizacion()),"\""
+				," }");
 
 		} else if (accion.equals("borrar")) {
 			int codigo = Utils.String2Int(parametro.get("codigo"), -1);

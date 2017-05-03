@@ -115,6 +115,10 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 					if(response.success){
 						$utilidades.mensaje('success','Propiedad de Préstamo '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.proyectopropiedad.id = response.id;
+						mi.proyectopropiedad.usuarioCreo = response.usuarioCreo;
+						mi.proyectopropiedad.fechaCreacion = response.fechaCreacion;
+						mi.proyectopropiedad.usuarioActualizo = response.usuarioactualizo;
+						mi.proyectopropiedad.fechaActualizacion = response.fechaactualizacion;
 						mi.esnuevo = false;
 						mi.obtenerTotalProyectoPropiedades();
 					}

@@ -27,9 +27,10 @@
 
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h3>{{ producto.esForma ? (producto.esNuevo ? "Nuevo Producto" : "Editar Producto") : "Producto" }}</h3>
+			<h3>Producto</h3>
 		</div>
 	</div>
+	<h2><small>{{ producto.componenteNombre }}</small></h2>
 	
 	<br />
   

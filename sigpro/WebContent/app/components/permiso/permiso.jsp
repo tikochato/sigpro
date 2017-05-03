@@ -73,7 +73,11 @@
 
 		</div>
 		<shiro:hasPermission name="20010">
-		<div class="row  main-form" ng-show="permisosc.isCollapsed">
+		<div class="row  second-main-form" ng-show="permisosc.isCollapsed">
+		<div class="page-header">
+			<h2 ng-hide="!permisosc.esNuevo"><small>Nuevo Permiso</small></h2>
+			<h2 ng-hide="permisosc.esNuevo"><small>Edición de Permiso</small></h2>
+			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="20020">

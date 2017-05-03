@@ -221,7 +221,12 @@ public class SProyectoPropiedad extends HttpServlet {
 				}
 				result = ProyectoPropiedadDAO.guardarProyectoPropiedad(proyectoPropiedad);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + proyectoPropiedad.getId() +" }");
+						+ "\"id\": " + proyectoPropiedad.getId(), ","
+						, "\"usuarioCreo\": \"" , proyectoPropiedad.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(proyectoPropiedad.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , proyectoPropiedad.getUsuarioActualizo() != null ? proyectoPropiedad.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(proyectoPropiedad.getFechaActualizacion()),"\""
+						," }");
 			}
 			else
 				response_text = "{ \"success\": false }";

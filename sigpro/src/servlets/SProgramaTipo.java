@@ -152,7 +152,7 @@ public class SProgramaTipo extends HttpServlet {
 				String[] idsPropiedades =  map.get("propiedades") != null && map.get("propiedades").length()>0 ? map.get("propiedades").toString().split(",") : null;
 				if (idsPropiedades !=null && idsPropiedades.length>0){
 					for (String idPropiedad : idsPropiedades){
-						ProgtipoPropiedadId progtipoPropiedadId = new ProgtipoPropiedadId(programaTipo.getId(), Integer.parseInt(idPropiedad));
+						ProgtipoPropiedadId progtipoPropiedadId = new ProgtipoPropiedadId(Integer.parseInt(idPropiedad), programaTipo.getId());
 						ProgramaPropiedad programaPropiedad = new ProgramaPropiedad();
 						programaPropiedad.setId(Integer.parseInt(idPropiedad));
 						

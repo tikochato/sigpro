@@ -291,6 +291,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.esNuevo = false;
 							mi.producto.id = response.data.id;
+							mi.producto.usuarioCreo = response.data.usuarioCreo;
+							mi.producto.fechaCreacion = response.data.fechaCreacion;
+							mi.producto.usuarioactualizo = response.data.usuarioactualizo;
+							mi.producto.fechaactualizacion = response.data.fechaactualizacion;
 							mi.obtenerTotalProductos();
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');

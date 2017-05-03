@@ -232,7 +232,12 @@ public class SProgramaPropiedad extends HttpServlet {
 				}
 				result = ProgramaPropiedadDAO.guardarProgramaPropiedad(programaPropiedad);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + programaPropiedad.getId() +" }");
+						, "\"id\": " , programaPropiedad.getId().toString() , ","
+						, "\"usuarioCreo\": \"" , programaPropiedad.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(programaPropiedad.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , programaPropiedad.getUsuarioActualizo() != null ? programaPropiedad.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(programaPropiedad.getFechaActualizacion()),"\""
+						," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
