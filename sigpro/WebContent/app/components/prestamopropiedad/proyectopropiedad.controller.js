@@ -194,10 +194,10 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 		}
 		
 		mi.reiniciarVista=function(){
-			if($location.path()=='/proyectopropiedad/rv')
+			if($location.path()=='/prestamopropiedad/rv')
 				$route.reload();
 			else
-				$location.path('/proyectopropiedad/rv');
+				$location.path('/prestamopropiedad/rv');
 		}
 		
 		mi.obtenerTotalProyectoPropiedades = function() { 
