@@ -168,6 +168,10 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 		mi.codigo = "";
 		mi.nombre = "";
 		mi.descripcion = "";
+		mi.entidadSeleccionada.usuarioCreo = "";
+		mi.entidadSeleccionada.fechaCreacion = "";
+		mi.entidadSeleccionada.usuarioActualizo = "";
+		mi.entidadSeleccionada.fechaActualizacion = "";
 		
 		mi.datoTipoSeleccionado = null;
 	}
@@ -272,11 +276,16 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 							mi.esNuevo = false;
 							mi.obtenerTotalProductoPropiedades();
 							mi.codigo = response.data.id;
+							mi.entidadSeleccionada.usuarioCreo = response.data.usuarioCreo;
+							mi.entidadSeleccionada.fechaCreacion = response.data.fechaCreacion;
+							mi.entidadSeleccionada.usuarioActualizo = response.data.usuarioactualizo;
+							mi.entidadSeleccionada.fechaActualizacion = response.data.fechaactualizacion;
+							
 							$utilidades.mensaje('success',
 									'Propiedad de Producto guardado con exito.');
 						} else {
 							$utilidades.mensaje('danger',
-									'Propiedad de Producto ya existe...!!!');
+									'Propiedad de Producto ya existe');
 						}
 
 					});
@@ -296,6 +305,11 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 						if (response.data.success) {
 							mi.data = response.data.productoPropiedades;
 							mi.opcionesGrid.data = mi.data;
+							mi.entidadSeleccionada.usuarioCreo = response.data.usuarioCreo;
+							mi.entidadSeleccionada.fechaCreacion = response.data.fechaCreacion;
+							mi.entidadSeleccionada.usuarioActualizo = response.data.usuarioactualizo;
+							mi.entidadSeleccionada.fechaActualizacion = response.data.fechaactualizacion;
+							
 							mi.esNuevo = false;
 							mi.obtenerTotalProductoPropiedades();
 
@@ -303,7 +317,7 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 									'Propiedad de Producto actualizado con exito.');
 						} else {
 							$utilidades.mensaje('danger',
-									'Error al actualizar datos...!!!');
+									'Error al actualizar datos');
 						}
 					});
 
