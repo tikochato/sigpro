@@ -185,7 +185,7 @@ public class Riesgo implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@Column(name = "impacto_proyectado", length = 1000)
+	@Column(name = "imapcto_proyectado", length = 1000)
 	public String getImapctoProyectado() {
 		return this.imapctoProyectado;
 	}
@@ -239,7 +239,7 @@ public class Riesgo implements java.io.Serializable {
 		this.respuesta = respuesta;
 	}
 
-	@Column(name = "riesgos_secundarios", length = 1000)
+	@Column(name = "riesgos_segundarios", length = 1000)
 	public String getRiesgosSegundarios() {
 		return this.riesgosSegundarios;
 	}
