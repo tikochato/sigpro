@@ -335,7 +335,12 @@ public class SProyecto extends HttpServlet {
 				}
 				
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + proyecto.getId() +" }");
+						, "\"id\": " , proyecto.getId().toString() , ","
+						, "\"usuarioCreo\": \"" , proyecto.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDate(proyecto.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , proyecto.getUsuarioActualizo(),"\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDate(proyecto.getFechaActualizacion()),"\""
+						," }");
 			}else
 				response_text = "{ \"success\": false }";
 
