@@ -9,7 +9,9 @@
 	<shiro:lacksPermission name="33010">
 		<p ng-init="unidad.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
-  <h3>{{ unidad.esForma ? (unidad.esNuevo ? "Nueva Unidad Ejecutora" : "Editar Unidad Ejecutora") : "Unidad Ejecutora" }}</h3>
+  <div class="panel panel-default">
+	  <div class="panel-heading"><h3>Unidad Ejecutora</h3></div>
+	</div>
 
   <br />
 
@@ -24,6 +26,10 @@
 	        <label class="btn btn-primary" ng-click="unidad.editar()"  uib-tooltip="Editar">
 			<span class="glyphicon glyphicon-pencil"></span> Editar</label>
       	</shiro:hasPermission>
+      	<shiro:hasPermission name="33010">
+				<label class="btn btn-danger" ng-click="controller.borrar()" title="Borrar">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
+			</shiro:hasPermission>
       </div>
     </div>
     <shiro:hasPermission name="33010">
@@ -52,8 +58,11 @@
 
   <div class="row main-form" ng-show="unidad.esForma">
 
+	<div class="page-header">
+		<h2 ng-hide="!unidad.esNuevo"><small>Nueva unidad ejecutora</small></h2>
+		<h2 ng-hide="unidad.esNuevo"><small>Edición de unidad ejecutora</small></h2>
+	</div>
     <div class="col-sm-12 operation_buttons" align="right">
-
       <div class="btn-group">
       	<shiro:hasPermission name="33020">
         	<label class="btn btn-success" ng-click="form.$valid ? unidad.guardar() : ''" ng-disabled="!form.$valid"  uib-tooltip="Guardar">
@@ -91,33 +100,33 @@
 	        </div>
 	        <br/>
 	        <div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static"> {{ unidad.unidad.usuarioCreo }}</p>
+									<label for="usuarioCreo" class="label-form">Usuario que creo</label> 
+									<p> {{ unidad.unidad.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
-									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ unidad.unidad.fechaCreacion }} </p>
+									<label  class="label-form" for="fechaCreacion">Fecha de creación</label>
+									<p id="fechaCreacion"> {{ unidad.unidad.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ unidad.unidad.usuarioActualizo }} </p>
+									<label  class="label-form" for="usuarioActualizo">Usuario que actualizo</label> 
+									<p id="usuarioCreo">{{ unidad.unidad.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ unidad.unidad.fechaActualizacion }} </p>
+									<label  class="label-form" for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p id="usuarioCreo">{{ unidad.unidad.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>
