@@ -195,7 +195,12 @@ public class SActividadPropiedad extends HttpServlet {
 				}
 				result = ActividadPropiedadDAO.guardarActividadPropiedad(actividadPropiedad);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + actividadPropiedad.getId() +" }");
+						+ "\"id\": " + actividadPropiedad.getId() ,","
+						, "\"usuarioCreo\": \"" , actividadPropiedad.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(actividadPropiedad.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , actividadPropiedad.getUsuarioActualizo() != null ? actividadPropiedad.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(actividadPropiedad.getFechaActualizacion()),"\""+
+						" }");
 			}
 			else
 				response_text = "{ \"success\": false }";

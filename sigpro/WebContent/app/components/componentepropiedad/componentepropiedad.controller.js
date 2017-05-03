@@ -137,6 +137,10 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 						if(response.success){
 							$utilidades.mensaje('success','Propiedad Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.componentepropiedad.id = response.id;
+							mi.componentepropiedad.usuarioCreo=response.usuarioCreo;
+							mi.componentepropiedad.fechaCreacion=response.fechaCreacion;
+							mi.componentepropiedad.usuarioActualizo=response.usuarioactualizo;
+							mi.componentepropiedad.fechaActualizacion=response.fechaactualizacion;
 							mi.esnuevo = false;
 							mi.cargarTabla();
 						}

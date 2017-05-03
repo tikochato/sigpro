@@ -160,8 +160,10 @@ public class SColaborador extends HttpServlet {
 
 					listaColaborador.add(temp);
 				}
+				stcolaborador stColaborador = listaColaborador.get(listaColaborador.size()-1);
+				String output_colaborador= new GsonBuilder().serializeNulls().create().toJson(stColaborador);
 				response_text=new GsonBuilder().serializeNulls().create().toJson(listaColaborador);
-		        response_text = String.join("", "\"colaboradores\":",response_text);
+		        response_text = String.join("", "\"colaboradores\":",response_text ,",\"colaborador\":",output_colaborador);
 		        response_text = String.join("", "{\"success\":true,", response_text,"}");	
 			}
 			
@@ -215,8 +217,10 @@ public class SColaborador extends HttpServlet {
 
 					listaColaborador.add(temp);
 				}
+				stcolaborador stColaborador = listaColaborador.get(listaColaborador.size()-1);
+				String output_colaborador= new GsonBuilder().serializeNulls().create().toJson(stColaborador);
 				response_text=new GsonBuilder().serializeNulls().create().toJson(listaColaborador);
-		        response_text = String.join("", "\"colaboradores\":",response_text);
+				response_text = String.join("", "\"colaboradores\":",response_text ,",\"colaborador\":",output_colaborador);
 		        response_text = String.join("", "{\"success\":true,", response_text,"}");	
 			
 			}
