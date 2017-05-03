@@ -207,7 +207,7 @@
 						<div class="form-group">
 						   <input type="number" name="iavance"  class="inputText" id="inombre" 
 						     ng-model="actividadc.actividad.porcentajeavance" value="{{actividadc.actividad.porcentajeavance}}"   
-						     onblur="this.setAttribute('value', this.value);"  min="0" max="100" >
+						     onblur="this.setAttribute('value', this.value);"  min="0" max="100" ng-required="true" >
 						   <label class="floating-label">Avance %</label>
 						</div>
 						
@@ -220,7 +220,7 @@
 								</div>
 								<div ng-switch-when="entero" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
-									value="{{ccampo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="decimal" class="form-group" >
@@ -233,10 +233,10 @@
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="fecha" class="form-group" >
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="controller.abrirPopupFecha($index)"
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{actividadcr.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+														datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="actividadc.abrirPopupFecha($index)"
 														value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
-														<span class="label-icon" ng-click="controller.abrirPopupFecha($index)">
+														<span class="label-icon" ng-click="actividadc.abrirPopupFecha($index)">
 															<i class="glyphicon glyphicon-calendar"></i>
 														</span>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
@@ -288,16 +288,15 @@
 
 				</form>
 			</div>
-			<div align="center">Los campos marcados con * son obligatorios</div>
-			
 			
 		<div class="col-sm-12 operation_buttons" align="right">
+			<div align="center">Los campos marcados con * son obligatorios</div>
 			<div class="btn-group">
 				<shiro:hasPermission name="24020">
-					<label class="btn btn-success" ng-click="form.$valid ? actividadc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+					<label class="btn btn-success" ng-click="form.$valid ? actividadc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar" uib-tooltip="Guardar">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="actividadc.irATabla()" title="Ir a Tabla">
+				<label class="btn btn-primary" ng-click="actividadc.irATabla()" title="Ir a Tabla" uib-tooltip="Ir a Tabla">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
