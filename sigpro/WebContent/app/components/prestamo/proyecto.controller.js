@@ -179,6 +179,10 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				function(response) {
 					if (response.data.success) {
 						mi.proyecto.id = response.data.id;
+						mi.proyecto.usuarioCreo = response.data.usuarioCreo;
+						mi.proyecto.fechaCreacion = response.data.fechaCreacion;
+						mi.proyecto.usuarioactualizo = response.data.usuarioactualizo;
+						mi.proyecto.fechaactualizacion = response.data.fechaactualizacion;
 						$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.obtenerTotalProyectos();
 						mi.esNuevo = false;
