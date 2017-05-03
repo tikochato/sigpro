@@ -141,15 +141,21 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 						id: mi.meta.id,
 						nombre: mi.meta.nombre,
 						descripcion: mi.meta.descripcion,
-						tipometaid:  mi.meta.tipometaid,
-						unidadmetaid: mi.meta.unidadmetaid,
+						tipometaid:  mi.meta.tipoMetaId,
+						unidadmetaid: mi.meta.unidadMedidaId,
 						proyecto: ($routeParams.tipo==1) ? $routeParams.id : null,
 						componente: ($routeParams.tipo==2) ? $routeParams.id : null,
 						producto: ($routeParams.tipo==3) ? $routeParams.id : null
 					}).success(function(response){
 						if(response.success){
+							mi.meta.id = response.id;
+							mi.meta.usuarioCreo = response.usuarioCreo;
+							mi.meta.fechaCreacion = response.fechaCreacion;
+							mi.meta.usuarioActualizo = response.usuarioactualizo;
+							mi.meta.fechaActualizacion = response.fechaactualizacion;
 							$utilidades.mensaje('success','Meta '+(mi.esnueva ? 'creada' : 'guardada')+' con éxito');
 							mi.obtenerTotalMetas();
+							mi.esnueva = false;
 						}
 						else
 							$utilidades.mensaje('danger','Error al '+(mi.esnueva ? 'crear' : 'guardar')+' la Meta');

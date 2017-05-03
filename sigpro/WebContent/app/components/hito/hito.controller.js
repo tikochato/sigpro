@@ -149,6 +149,10 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 						$utilidades.mensaje('success','Hito '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 						mi.hito.id = response.id;
+						mi.hito.usuarioCreo = response.usuarioCreo;
+						mi.hito.fechaCreacion = response.fechaCreacion;
+						mi.hito.usuarioActualizo = response.usuarioActualizo;
+						mi.hito.fechaActualizacion = response.fechaActualizacion;
 						mi.obtenerTotalHitos();
 					}
 					else

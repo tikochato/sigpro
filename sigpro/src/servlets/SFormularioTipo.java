@@ -124,12 +124,18 @@ public class SFormularioTipo extends HttpServlet {
 					formularioTipo.setDescripcion(descripcion);
 					formularioTipo.setUsuarioActualizo(usuario);
 					formularioTipo.setFechaActualizacion(new DateTime().toDate());
-					
 				}
+				
+				
 				
 				result = FormularioTipoDAO.guardarFormularioTipo(formularioTipo);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + formularioTipo.getId() +" }");
+						+ "\"id\": " + formularioTipo.getId(), ","
+						, "\"usuarioCreo\": \"" , formularioTipo.getUsarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(formularioTipo.getFechaCreacion()),"\","
+						, "\"usuarioActualizo\": \"" , formularioTipo.getUsuarioActualizo() != null ? formularioTipo.getUsuarioActualizo() : "","\","
+						, "\"fechaActualizacion\": \"" , Utils.formatDateHour(formularioTipo.getFechaActualizacion()),"\""
+						," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
