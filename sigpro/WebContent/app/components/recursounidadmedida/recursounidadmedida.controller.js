@@ -134,6 +134,12 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','medida '+(mi.esnueva ? 'creada' : 'guardada')+' con éxito');
+							mi.esnueva = false;
+							mi.medida.id = response.id;
+							mi.medida.usuarioCreo = response.usuarioCreo;
+							mi.medida.fechaCreacion = response.fechaCreacion;
+							mi.medida.usuarioActualizo = response.usuarioactualizo;
+							mi.medida.fechaActualizacion = response.fechaactualizacion;
 							mi.obtenerTotalUnidadesMedida();
 						}
 						else

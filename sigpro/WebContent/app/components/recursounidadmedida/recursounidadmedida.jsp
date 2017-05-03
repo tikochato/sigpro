@@ -68,10 +68,10 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="29020">
-			        	<label class="btn btn-success" ng-click="form.$valid ? recursounidadc.guardar() : ''" ng-disabled="form.$invalid">
+			        	<label class="btn btn-success" ng-click="form.$valid ? recursounidadc.guardar() : ''" ng-disabled="form.$invalid" uib-tooltip="Guardar">
 						<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 					</shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="recursounidadc.irATabla()">
+			        <label class="btn btn-primary" ng-click="recursounidadc.irATabla()" uib-tooltip="Ir a Tabla">
 					<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
     			</div>
     		</div>
@@ -135,9 +135,11 @@
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
 				        <shiro:hasPermission name="29020">
-				        	<label class="btn btn-success" ng-click="form.$valid ? recursounidadc.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
+				        	<label class="btn btn-success" ng-click="form.$valid ? recursounidadc.guardar() : ''" ng-disabled="form.$invalid" uib-tooltip="Guardar">
+							<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 						</shiro:hasPermission>
-				        <label class="btn btn-primary" ng-click="recursounidadc.irATabla()">Ir a Tabla</label>
+				        <label class="btn btn-primary" ng-click="recursounidadc.irATabla()" uib-tooltip="Ir a Tabla">
+						<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 	    			</div>
 	    		</div>
     		</div>

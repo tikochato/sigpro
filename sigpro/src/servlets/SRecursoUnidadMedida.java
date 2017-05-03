@@ -148,7 +148,13 @@ public class SRecursoUnidadMedida extends HttpServlet {
 					RecursoUnidadMedida.setFechaActualizacion(new DateTime().toDate());
 				}
 				result = RecursoUnidadMedidaDAO.guardarRecursoUnidadMedida(RecursoUnidadMedida);
-				response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
+				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
+						+ "\"id\": " + RecursoUnidadMedida.getId().toString(), ","
+						, "\"usuarioCreo\": \"" , RecursoUnidadMedida.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(RecursoUnidadMedida.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , RecursoUnidadMedida.getUsuarioActualizo() != null ? RecursoUnidadMedida.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(RecursoUnidadMedida.getFechaActualizacion()),"\""
+						," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
