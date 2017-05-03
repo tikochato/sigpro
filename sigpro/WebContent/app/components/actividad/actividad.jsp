@@ -220,7 +220,7 @@
 								</div>
 								<div ng-switch-when="entero" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
-									value="{{ccampo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="decimal" class="form-group" >
@@ -233,10 +233,10 @@
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="fecha" class="form-group" >
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="controller.abrirPopupFecha($index)"
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+														datepicker-options="actividadc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="actividadc.abrirPopupFecha($index)"
 														value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
-														<span class="label-icon" ng-click="controller.abrirPopupFecha($index)">
+														<span class="label-icon" ng-click="actividadc.abrirPopupFecha($index)">
 															<i class="glyphicon glyphicon-calendar"></i>
 														</span>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>

@@ -169,7 +169,7 @@
 								</div>
 								<div ng-switch-when="entero" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
-									value="{{ccampo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="decimal" class="form-group" >
