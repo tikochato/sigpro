@@ -90,19 +90,19 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	    useExternalSorting: true,
 	    data : mi.data,
 		columnDefs : [ 
-			{displayName : 'Id',  width: 100, name : 'id',cellClass : 'grid-align-right',type : 'number',width : 150 }, 
+			{displayName : 'Id',  width: 60, name : 'id',cellClass : 'grid-align-right',type : 'number',enableFiltering: false, enableSorting: false }, 
 			{ displayName : 'Nombre',name : 'nombre',cellClass : 'grid-align-left',
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.subproducto.filtrar($event,1)" ></input></div>'
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-keypress="grid.appScope.subproducto.filtrar($event,1)" ></input></div>'
 			}, 
 			{ displayName : 'Descripción', name : 'descripcion', cellClass : 'grid-align-left' },
 			{ displayName : 'Tipo', name : 'subproductoTipo', cellClass : 'grid-align-left', enableFiltering: false, enableSorting: false},  
 			{ displayName : 'Producto', name : 'producto', cellClass : 'grid-align-left', visible : false },
 			{ displayName : 'Subproducto', name : 'subproducto', cellClass : 'grid-align-left', visible : false },
 			{ name: 'usuarioCreo', displayName: 'Usuario Creación',
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.subproducto.filtrar($event,2)" ></input></div>'
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-keypress="grid.appScope.subproducto.filtrar($event,2)" ></input></div>'
 			},
 		    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.subproducto.filtrar($event,3)"  ></input></div>'
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-keypress="grid.appScope.subproducto.filtrar($event,3)"  ></input></div>'
 		    }
 		],
 		

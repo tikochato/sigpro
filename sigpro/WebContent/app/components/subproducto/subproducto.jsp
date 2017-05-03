@@ -91,16 +91,14 @@
 	<div ng-show="subproducto.esForma" class="row main-form">
 		<h2 ng-hide="!subproducto.esNuevo"><small>Nuevo Subproducto</small></h2>
 		<h2 ng-hide="subproducto.esNuevo"><small>Edición de Subproducto</small></h2>
-		<div class="col-sm-12 operation_buttons" align="left" ng-hide="subproducto.esNuevo">
-			<div class="btn-group">
+		<div class="col-sm-12 operation_buttons" >
+			<div class="btn-group" ng-hide="subproducto.esNuevo" >
 				<label class="btn btn-default" ng-click="subproducto.irAActividades()" uib-tooltip="Actividades" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-th-list"></span></label>
 				<label class="btn btn-default" ng-click="subproducto.irARiesgos()" uib-tooltip="Riesgos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-warning-sign"></span></label>
 			</div>
-		</div>
-		<div class="col-sm-12 operation_buttons" align="right">
-			<div class="btn-group">
+			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="40020">
 					<label class="btn btn-success" ng-click="form.$valid ? subproducto.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
