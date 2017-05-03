@@ -142,7 +142,13 @@ public class SMetaTipo extends HttpServlet {
 					MetaTipo.setFechaActualizacion(new DateTime().toDate());
 				}
 				result = MetaTipoDAO.guardarMetaTipo(MetaTipo);
-				response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
+				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
+						, "\"id\": " , MetaTipo.getId().toString() , ","
+						, "\"usuarioCreo\": \"" , MetaTipo.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(MetaTipo.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , MetaTipo.getUsuarioActualizo() != null ? MetaTipo.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDate(MetaTipo.getFechaActualizacion()),"\""
+						," }");
 			}
 			else
 				response_text = "{ \"success\": false }";

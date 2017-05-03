@@ -155,15 +155,17 @@ public class SMeta extends HttpServlet {
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0 || esnuevo){
 				String nombre = map.get("nombre");
-				Integer idMetaTipo = map.get("tipometaid")!=null ? Integer.parseInt(map.get("tipometaid")) : 0;
+				Integer idMetaTipo = map.get("tipometaid")!=null ? Integer.parseInt(map.get("tipometaid")) : 1;
 				MetaTipo metaTipo = MetaTipoDAO.getMetaTipoPorId(idMetaTipo);
 				Integer idUnidadMedida = map.get("unidadmetaid")!=null ? Integer.parseInt(map.get("unidadmetaid")) : 0;
 				MetaUnidadMedida metaUnidadMedida = MetaUnidadMedidaDAO.getMetaUnidadMedidaPorId(idUnidadMedida);
 				String descripcion = map.get("descripcion");
 				Integer datoTipoId = Utils.getParameterInteger(map, "datotipo");
+				datoTipoId=1;
 				DatoTipo datoTipo = DatoTipoDAO.getDatoTipo(datoTipoId);
 				Integer objetoId = Utils.getParameterInteger(map, "objetoId");
 				Integer objetoTipo = Utils.getParameterInteger(map, "objetoTipo");
+				
 				Meta Meta;
 				if(esnuevo){
 					Meta = new Meta(datoTipo, metaTipo, metaUnidadMedida, nombre, descripcion,
@@ -177,7 +179,13 @@ public class SMeta extends HttpServlet {
 					Meta.setFechaActualizacion(new DateTime().toDate());
 				}
 				result = MetaDAO.guardarMeta(Meta);
-				response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
+				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
+						, "\"id\": " , Meta.getId().toString() , ","
+						, "\"usuarioCreo\": \"" , Meta.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDate(Meta.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , Meta.getUsuarioActualizo() != null ? Meta.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDate(Meta.getFechaActualizacion()),"\""
+						," }");
 			}
 			else
 				response_text = "{ \"success\": false }";

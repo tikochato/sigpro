@@ -7,19 +7,24 @@
 	<shiro:lacksPermission name="14010">
 		<p ng-init="formulariotipoc.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
-	<h3>Tipo de Formulario</h3>
+	<div class="panel panel-default">
+	  <div class="panel-heading"><h3>Tipo de Formulario</h3></div>
+	</div>
 	<br />
 	<div class="row" align="center" ng-if="!formulariotipoc.mostraringreso">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="14040">
-					<label class="btn btn-primary" ng-click="formulariotipoc.nuevo()">Nuevo</label>
+					<label class="btn btn-primary" ng-click="formulariotipoc.nuevo()">
+					<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="14010">
-					<label class="btn btn-primary" ng-click="formulariotipoc.editar()">Editar</label>
+					<label class="btn btn-primary" ng-click="formulariotipoc.editar()">
+					<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="14030">
-					<label class="btn btn-primary" ng-click="formulariotipoc.borrar()">Borrar</label>
+					<label class="btn btn-danger" ng-click="formulariotipoc.borrar()">
+					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</shiro:hasPermission>
 			</div>
 		</div>
@@ -73,46 +78,48 @@
 		<div class="col-sm-12">
 			<form name="form">
 				<div class="form-group">
-					<label for="id">ID</label> 
-					<p class="form-control-static">{{formulariotipoc.formulariotipo.id }}</p>
+					<label for="id" class="floating-label">ID {{ formulariotipoc.formulariotipo.id  }}</label>
+					<br/><br/>
 				</div>
 
-				<div class="form-group">
-					<label for="nombre">* Nombre</label> 
-					<input type="text" class="form-control" id="nombre" placeholder="Nombre"ng-model="formulariotipoc.formulariotipo.nombre" ng-required="true">
+				<div class="form-group">					 
+					<input type="text"  class="inputText" ng-model="formulariotipoc.formulariotipo.nombre" ng-required="true"
+					value="{{formulariotipoc.formulariotipo.nombre}}" onblur="this.setAttribute('value', this.value);">
+					<label class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group">
-					<label for="descripcion">Descripción</label> 
-					<input type="text"class="form-control" id="descripcion" placeholder="Descripción"ng-model="formulariotipoc.formulariotipo.descripcion">
+					<input type="text"class="inputText"  ng-model="formulariotipoc.formulariotipo.descripcion"
+					value="{{formulariotipoc.formulariotipo.descripcion}}" onblur="this.setAttribute('value', this.value);">
+					<label class="floating-label">Descripción</label> 
 				</div>
 				<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static"> {{ formulariotipoc.formulariotipo.usuarioCreo }}</p>
+									<label for="usuarioCreo" class="label-form">Usuario que creo</label> 
+									<p> {{ formulariotipoc.formulariotipo.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
-									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ formulariotipoc.formulariotipo.fechaCreacion }} </p>
+									<label  class="label-form">Fecha de creación</label>
+									<p> {{ formulariotipoc.formulariotipo.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ formulariotipoc.formulariotipo.usuarioActualizo }} </p>
+									<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label> 
+									<p >{{ formulariotipoc.formulariotipo.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ formulariotipoc.formulariotipo.fechaActualizacion }} </p>
+									<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label> 
+									<p>{{ formulariotipoc.formulariotipo.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>

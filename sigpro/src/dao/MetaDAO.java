@@ -64,8 +64,7 @@ public class MetaDAO {
 			session.beginTransaction();
 			session.saveOrUpdate(Meta);
 			session.getTransaction().commit();
-			session.beginTransaction();
-			session.getTransaction().commit();
+			
 			ret = true;
 		}
 		catch(Throwable e){
@@ -102,6 +101,7 @@ public class MetaDAO {
 		try{
 			session.beginTransaction();
 			session.delete(Meta);
+			
 			session.getTransaction().commit();
 			ret = true;
 		}

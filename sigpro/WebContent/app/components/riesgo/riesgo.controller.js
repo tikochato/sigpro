@@ -161,10 +161,14 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
 					if(response.success){
+						mi.esnuevo = false;
 						mi.riesgo.id = response.id;
 						$utilidades.mensaje('success','Riesgo '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+						mi.riesgo.usuarioCreo = response.usuarioCreo;
+						mi.riesgo.fechaCreacion = response.fechaCreacion;
+						mi.riesgo.usuarioActualizo = response.usuarioactualizo;
+						mi.riesgo.fechaActualizacion = response.fechaactualizacion;
 						mi.cargarTabla();
-						mi.esnuevo = false;
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Riesgo');

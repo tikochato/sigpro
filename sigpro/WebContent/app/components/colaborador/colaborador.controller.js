@@ -246,6 +246,10 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 					function(response) {
 						if (response.data.success) {
 							mi.data = response.data.colaboradores;
+							mi.colaborador.usuarioCreo =response.data.colaborador.usuarioCreo;
+							mi.colaborador.fechaCreacion= response.data.colaborador.fechaCreacion;
+							mi.colaborador.usuarioActualizo=response.data.colaborador.usuarioActualizo;
+							mi.colaborador.fechaActualizacion=response.data.colaborador.fechaActualizacion;
 							mi.opcionesGrid.data = mi.data;
 
 							$utilidades.mensaje('success',
@@ -275,7 +279,10 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 						if (response.data.success) {
 							mi.data = response.data.colaboradores;
 							mi.opcionesGrid.data = mi.data;
-							mi.esForma = false;
+							mi.colaborador.usuarioCreo =response.data.colaborador.usuarioCreo;
+							mi.colaborador.fechaCreacion= response.data.colaborador.fechaCreacion;
+							mi.colaborador.usuarioActualizo=response.data.colaborador.usuarioActualizo;
+							mi.colaborador.fechaActualizacion=response.data.colaborador.fechaActualizacion;
 
 							$utilidades.mensaje('success',
 									'Colaborador actualizado con exito.');

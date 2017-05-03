@@ -118,6 +118,12 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 						simbolo: mi.medida.simbolo
 					}).success(function(response){
 						if(response.success){
+							mi.medida.id = response.id;
+							mi.medida.usuarioCreo = response.usuarioCreo;
+							mi.medida.fechaCreacion = response.fechaCreacion;
+							mi.medida.usuarioActualizo = response.usuarioactualizo;
+							mi.medida.fechaActualizacion = response.fechaactualizacion;
+							mi.esnueva = false;
 							$utilidades.mensaje('success','Medida '+(mi.esnueva ? 'creada' : 'guardada')+' con éxito');
 							mi.obtenerTotalMetaUnidades();
 						}

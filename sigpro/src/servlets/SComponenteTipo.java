@@ -184,7 +184,12 @@ public class SComponenteTipo extends HttpServlet {
 				
 				result = ComponenteTipoDAO.guardarComponenteTipo(componenteTipo);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + componenteTipo.getId() +" }");
+						+ "\"id\": " + componenteTipo.getId() , ","
+						, "\"usuarioCreo\": \"" , componenteTipo.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(componenteTipo.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , componenteTipo.getUsuarioActualizo() != null ? componenteTipo.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(componenteTipo.getFechaActualizacion()),"\""+
+						" }");
 			}
 			else
 				response_text = "{ \"success\": false }";

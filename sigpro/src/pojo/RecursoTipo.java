@@ -40,8 +40,9 @@ public class RecursoTipo implements java.io.Serializable {
 	public RecursoTipo() {
 	}
 
-	public RecursoTipo(String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+	public RecursoTipo(String nombre, String descripcion, String usuarioCreo, Date fechaCreacion, int estado) {
 		this.nombre = nombre;
+		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;

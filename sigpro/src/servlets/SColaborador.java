@@ -41,6 +41,7 @@ public class SColaborador extends HttpServlet {
 		String usuarioActualizo;
 		String fechaCreacion;
 		String fechaActualizacion;
+		String nombreCompleto;
 	}
 
 	public SColaborador() {
@@ -104,7 +105,11 @@ public class SColaborador extends HttpServlet {
 				temp.usuarioActualizo = colaborador.getUsuarioActualizo();
 				temp.fechaCreacion = Utils.formatDateHour(colaborador.getFechaCreacion());
 				temp.fechaActualizacion = Utils.formatDateHour(colaborador.getFechaActualizacion());
-
+				temp.nombreCompleto = String.join(" ", temp.primerNombre,
+						temp.segundoNombre!=null ? temp.segundoNombre : "" ,
+						temp.primerApellido !=null ? temp.primerApellido : "" ,
+						temp.segundoApellido !=null ? temp.segundoApellido : "");
+				
 				listaColaborador.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(listaColaborador);
@@ -157,11 +162,17 @@ public class SColaborador extends HttpServlet {
 					temp.usuarioActualizo = colaborador.getUsuarioActualizo();
 					temp.fechaCreacion = Utils.formatDateHour(colaborador.getFechaCreacion());
 					temp.fechaActualizacion = Utils.formatDateHour(colaborador.getFechaActualizacion());
-
+					temp.nombreCompleto = String.join(" ", temp.primerNombre,
+							temp.segundoNombre!=null ? temp.segundoNombre : "" ,
+							temp.primerApellido !=null ? temp.primerApellido : "" ,
+							temp.segundoApellido !=null ? temp.segundoApellido : "");
+			
 					listaColaborador.add(temp);
 				}
+				stcolaborador stColaborador = listaColaborador.get(listaColaborador.size()-1);
+				String output_colaborador= new GsonBuilder().serializeNulls().create().toJson(stColaborador);
 				response_text=new GsonBuilder().serializeNulls().create().toJson(listaColaborador);
-		        response_text = String.join("", "\"colaboradores\":",response_text);
+		        response_text = String.join("", "\"colaboradores\":",response_text ,",\"colaborador\":",output_colaborador);
 		        response_text = String.join("", "{\"success\":true,", response_text,"}");	
 			}
 			
@@ -212,11 +223,17 @@ public class SColaborador extends HttpServlet {
 					temp.usuarioActualizo = colaborador.getUsuarioActualizo();
 					temp.fechaCreacion = Utils.formatDateHour(colaborador.getFechaCreacion());
 					temp.fechaActualizacion = Utils.formatDateHour(colaborador.getFechaActualizacion());
-
+					temp.nombreCompleto = String.join(" ", temp.primerNombre,
+							temp.segundoNombre!=null ? temp.segundoNombre : "" ,
+							temp.primerApellido !=null ? temp.primerApellido : "" ,
+							temp.segundoApellido !=null ? temp.segundoApellido : "");
+			
 					listaColaborador.add(temp);
 				}
+				stcolaborador stColaborador = listaColaborador.get(listaColaborador.size()-1);
+				String output_colaborador= new GsonBuilder().serializeNulls().create().toJson(stColaborador);
 				response_text=new GsonBuilder().serializeNulls().create().toJson(listaColaborador);
-		        response_text = String.join("", "\"colaboradores\":",response_text);
+				response_text = String.join("", "\"colaboradores\":",response_text ,",\"colaborador\":",output_colaborador);
 		        response_text = String.join("", "{\"success\":true,", response_text,"}");	
 			
 			}

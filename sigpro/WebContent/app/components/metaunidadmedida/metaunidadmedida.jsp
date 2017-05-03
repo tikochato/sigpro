@@ -105,33 +105,33 @@
 						</div>
 						<br/>
 						<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static"> {{ metaunidadc.medida.usuarioCreo }}</p>
+									<label class="label-form">Usuario que creo</label> 
+									<p > {{ metaunidadc.medida.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
-									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ metaunidadc.medida.fechaCreacion }} </p>
+									<label class="label-form">Fecha de creación</label>
+									<p > {{ metaunidadc.medida.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ metaunidadc.medida.usuarioActualizo }} </p>
+									<label class="label-form">Usuario que actualizo</label> 
+									<p >{{ metaunidadc.medida.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ metaunidadc.medida.fechaActualizacion }} </p>
+									<label class="label-form">Fecha de actualizacion</label> 
+									<p c>{{ metaunidadc.medida.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>

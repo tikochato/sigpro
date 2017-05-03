@@ -115,6 +115,12 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 						descripcion: mi.tipo.descripcion
 					}).success(function(response){
 						if(response.success){
+							mi.tipo.id = response.id;
+							mi.tipo.usuarioCreo = response.usuarioCreo;
+							mi.tipo.fechaCreacion = response.fechaCreacion;
+							mi.tipo.usuarioActualizo = response.usuarioactualizo;
+							mi.tipo.fechaActualizacion = response.fechaactualizacion;
+							mi.esnueva = false;
 							$utilidades.mensaje('success','Tipo meta  '+(mi.esnueva ? 'creado' : 'guardado')+' con éxito');
 							mi.obtenerTotalMetaTipos();
 						}
