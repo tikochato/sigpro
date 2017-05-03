@@ -9,9 +9,7 @@
   	    <shiro:lacksPermission name="30010">
 			<p ng-init="riesgoc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<div class="panel panel-default">
-	   		<div class="panel-heading"><h3>Riesgos</h3><br/></div>
-		</div>
+		<h3>Riesgos</h3><br/>
 		<h4>{{ riesgoc.proyectoNombre }}</h4><br/>
 		<div class="row" align="center" ng-if="!riesgoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
@@ -66,8 +64,8 @@
     		</shiro:hasPermission>
 		</div>
 		<div class="row main-form" ng-if="riesgoc.mostraringreso">
-			<h2 ng-hide="!riesgoc.esnuevo"><small>Nuevo riesgo</small></h2>
-			<h2 ng-hide="riesgoc.esnuevo"><small>Edición de riesgo</small></h2>
+			<h2 ng-hide="!riesgoc.esnuevo">Nuevo riesgo</h2>
+			<h2 ng-hide="riesgoc.esnuevo">Edición de riesgo</h2>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="30020">
@@ -162,44 +160,30 @@
 						
 						<div class="form-group" ng-repeat="campo in riesgoc.camposdinamicos">
 							<div ng-switch="campo.tipo">
-								<div ng-switch-when="texto" class="form-group" >
-									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
-										value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>	
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-								<div ng-switch-when="entero" class="form-group" >
-									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
-									value="{{ccampo.valor}}" onblur="this.setAttribute('value', this.value);"/>
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-								<div ng-switch-when="decimal" class="form-group" >
-									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
-									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-								<div ng-switch-when="booleano" class="form-group" >
-									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-								<div ng-switch-when="fecha" class="form-group" >
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="riesgoc.abrirPopupFecha($index)"
-														value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
-														<span class="label-icon" ng-click="riesgoc.abrirPopupFecha($index)">
+								<input ng-switch-when="texto" type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
+								<input ng-switch-when="entero" type="text" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="form-control" />
+								<input ng-switch-when="decimal" type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="form-control" />
+								<input ng-switch-when="booleano" type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+								<p ng-switch-when="fecha" class="input-group">
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="form-control" uib-datepicker-popup="{{riesgoc.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+														datepicker-options="mi.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" /><span
+														class="input-group-btn">
+														<button type="button" class="btn btn-default"
+															ng-click="riesgoc.abrirPopupFecha($index)">
 															<i class="glyphicon glyphicon-calendar"></i>
-														</span>
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-								<div ng-switch-when="select" class="form-group" >
-									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
+														</button>
+													</span>
+								</p>
+								<select ng-switch-when="select" id="{{ 'field_'+field.id }}" class="form-control" ng-model="x.value">
 													<option value="">Seleccione una opción</option>
-													<option ng-repeat="number in campo.opciones"
-														value="{{number.valor}}">{{number.label}}</option>
+													<option ng-repeat="number in field.options"
+														value="{{number.value}}">{{number.label}}</option>
 								</select>
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
+								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 							</div>
 						</div>
+						
+						
 						
 						<div class="form-group">
     						<input type="text" class="inputText" id="descripcion" ng-model="riesgoc.riesgo.descripcion"
@@ -207,33 +191,33 @@
     						<label for="iprog" class="floating-label">Descripción</label>
 						</div>
 						<div class="panel panel-default">
-					<div class="panel-heading  label-form" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo"  class="label-form">Usuario que creo</label> 
-									<p> {{ riesgoc.riesgo.usuarioCreo }}</p>
+									<label for="usuarioCreo">Usuario que creo</label> 
+									<p class="form-control-static"> {{ riesgoc.riesgo.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
-									<label  class="label-form" for="fechaCreacion">Fecha de creación</label>
-									<p id="fechaCreacion"> {{ riesgoc.riesgo.fechaCreacion }} </p>
+									<label for="fechaCreacion">Fecha de creación</label>
+									<p class="form-control-static" id="fechaCreacion"> {{ riesgoc.riesgo.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label  class="label-form" for="usuarioActualizo">Usuario que actualizo</label> 
-									<p id="usuarioCreo">{{ riesgoc.riesgo.usuarioActualizo }} </p>
+									<label for="usuarioActualizo">Usuario que actualizo</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ riesgoc.riesgo.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
-									<label  class="label-form" for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p id="usuarioCreo">{{ riesgoc.riesgo.fechaActualizacion }} </p>
+									<label for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p class="form-control-static" id="usuarioCreo">{{ riesgoc.riesgo.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>
