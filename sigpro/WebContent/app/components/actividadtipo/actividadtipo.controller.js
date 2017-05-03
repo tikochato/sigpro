@@ -147,9 +147,13 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 					propiedades: idspropiedad.length > 0 ? idspropiedad : null
 				}).success(function(response){
 					if(response.success){
+						mi.actividadtipo.id = response.id;
+						mi.actividadtipo.usuarioCreo =response.usuarioCreo;
+						mi.actividadtipo.fechaCreacion=response.fechaCreacion;
+						mi.actividadtipo.usuarioActualizo=response.usuarioactualizo;
+						mi.actividadtipo.fechaActualizacion=response.fechaactualizacion;
 						$utilidades.mensaje('success','Tipo de Actividad '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
-						mi.actividadtipo.id = response.id;
 						mi.cargarTabla();
 					}
 					else

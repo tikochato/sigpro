@@ -171,7 +171,12 @@ public class SActividadTipo extends HttpServlet {
 				
 				result = ActividadTipoDAO.guardarActividadTipo(actividadTipo);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + actividadTipo.getId() +" }");
+						+ "\"id\": " + actividadTipo.getId(), ","
+						, "\"usuarioCreo\": \"" , actividadTipo.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(actividadTipo.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , actividadTipo.getUsuarioActualizo() != null ? actividadTipo.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(actividadTipo.getFechaActualizacion()),"\""
+						+" }");
 			}
 			else
 				response_text = "{ \"success\": false }";
