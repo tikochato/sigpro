@@ -138,6 +138,11 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 						$utilidades.mensaje('success','Tipo de Programa'+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 						mi.programatipo.id = response.id;
+						mi.programatipo.usuarioCreo = response.usuarioCreo;
+						mi.programatipo.fechaCreacion = response.fechaCreacion;
+						mi.programatipo.usuarioActualizo = response.usuarioactualizo;
+						mi.programatipo.fechaActualizacion = response.fechaactualizacion;
+						
 						mi.obtenerTotalProgramatipos();
 
 					}
