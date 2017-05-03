@@ -155,6 +155,11 @@ app.controller(
 									mi.cargarTabla(mi.paginaActual);
 									$utilidades.mensaje('success','Permiso actualizado exitosamente');
 								}
+								mi.permisoSelected.usuarioCreo = data.usuarioCreo;
+								mi.permisoSelected.fechaCreacion = data.fechaCreacion;
+								mi.permisoSelected.usuarioActualizo = data.usuarioactualizo;
+								mi.permisoSelected.fechaActualizacion = data.fechaactualizacion;
+								
 							}else{
 								$utilidades.mensaje('danger','No se pudieron aplicar los cambios');
 							}

@@ -164,7 +164,10 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 		mi.codigo = "";
 		mi.nombre = "";
 		mi.descripcion = "";
-
+		mi.entidadSeleccionada.usuarioCreo = "";
+		mi.entidadSeleccionada.fechaCreacion = "";
+		mi.entidadSeleccionada.usuairoActulizo = "";
+		mi.entidadSeleccionada.fechaActualizacion = "";
 		mi.propiedadesTipo = [];
 
 	}
@@ -266,6 +269,11 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 							mi.data = response.data.productoTipos;
 							mi.opcionesGrid.data = mi.data;
 							mi.codigo = response.data.id;
+							mi.entidadSeleccionada.usuarioCreo = response.data.usuarioCreo;
+							mi.entidadSeleccionada.fechaCreacion = response.data.fechaCreacion;
+							mi.entidadSeleccionada.usuairoActulizo = response.data.usuarioactualizo;
+							mi.entidadSeleccionada.fechaActualizacion = response.data.fechaactualizacion;
+							
 							mi.esNuevo=false;
 							$utilidades.mensaje('success',
 									'El tipo de producto se creo con éxito.');
@@ -291,6 +299,11 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 						if (response.data.success) {
 							mi.data = response.data.productoTipos;
 							mi.opcionesGrid.data = mi.data;
+							mi.entidadSeleccionada.usuarioCreo = response.data.usuarioCreo;
+							mi.entidadSeleccionada.fechaCreacion = response.data.fechaCreacion;
+							mi.entidadSeleccionada.usuairoActulizo = response.data.usuarioactualizo;
+							mi.entidadSeleccionada.fechaActualizacion = response.data.fechaactualizacion;
+							
 							mi.esNuevo=false;
 							$utilidades.mensaje('success',
 									'El tipo de producto se guardo con éxito');

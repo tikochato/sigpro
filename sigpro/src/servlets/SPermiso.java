@@ -87,7 +87,14 @@ public class SPermiso extends HttpServlet {
 					permiso.setUsuarioCreo(sesionweb.getAttribute("usuario").toString());
 					permiso.setFechaCreacion(new DateTime().toDate());
 					permiso.setEstado(1);
-					response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false"),", \"data\":",permiso.getId().toString(),"  }");
+					response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false"),", "
+							, "\"data\":",permiso.getId().toString() , ","
+							, "\"id\": " , permiso.getId().toString() , ","
+							, "\"usuarioCreo\": \"" , permiso.getUsuarioCreo(),"\","
+							, "\"fechaCreacion\":\" " , Utils.formatDateHour(permiso.getFechaCreacion()),"\","
+							, "\"usuarioactualizo\": \"" , permiso.getUsuarioActualizo() != null ? permiso.getUsuarioActualizo() : "","\","
+							, "\"fechaactualizacion\": \"" , Utils.formatDateHour(permiso.getFechaActualizacion()),"\""
+							," }");
 				}else{
 					if(nombrePermiso!=null && descripcionPermiso!=null && idPermiso !=null ){
 						HttpSession sesionweb = request.getSession();
@@ -96,7 +103,14 @@ public class SPermiso extends HttpServlet {
 						permiso.setNombre(nombrePermiso);
 						permiso.setUsuarioActualizo(sesionweb.getAttribute("usuario").toString());
 						permiso.setFechaActualizacion(new DateTime().toDate());
-						response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false"),", \"data\":",permiso.getId().toString()," }");
+						response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false"),", "
+							, "\"data\":",permiso.getId().toString(), ","
+							, "\"id\": " , permiso.getId().toString() , ","
+							, "\"usuarioCreo\": \"" , permiso.getUsuarioCreo(),"\","
+							, "\"fechaCreacion\":\" " , Utils.formatDateHour(permiso.getFechaCreacion()),"\","
+							, "\"usuarioactualizo\": \"" , permiso.getUsuarioActualizo() != null ? permiso.getUsuarioActualizo() : "","\","
+							, "\"fechaactualizacion\": \"" , Utils.formatDateHour(permiso.getFechaActualizacion()),"\""
+							," }");
 					}else{
 						response_text = String.join("", "{\"success\":false, \"error\":\"parametro vacio\" }");
 					}
@@ -124,9 +138,9 @@ public class SPermiso extends HttpServlet {
 					tmp.nombre = permiso.getNombre();
 					tmp.descripcion= permiso.getDescripcion();
 					tmp.usuarioCreo=permiso.getUsuarioCreo();
-					tmp.fechaCreacion= Utils.formatDate(permiso.getFechaCreacion());
+					tmp.fechaCreacion= Utils.formatDateHour(permiso.getFechaCreacion());
 					tmp.usuarioActualizo=permiso.getUsuarioActualizo();
-					tmp.fechaActualizacion=Utils.formatDate( permiso.getFechaActualizacion());
+					tmp.fechaActualizacion=Utils.formatDateHour( permiso.getFechaActualizacion());
 					tmp.estado = permiso.getEstado();
 					stpermisos.add(tmp);
 				}
@@ -150,9 +164,9 @@ public class SPermiso extends HttpServlet {
 					tmp.nombre = permiso.getNombre();
 					tmp.descripcion= permiso.getDescripcion();
 					tmp.usuarioCreo=permiso.getUsuarioCreo();
-					tmp.fechaCreacion=Utils.formatDate(permiso.getFechaCreacion());
+					tmp.fechaCreacion=Utils.formatDateHour(permiso.getFechaCreacion());
 					tmp.usuarioActualizo=permiso.getUsuarioActualizo();
-					tmp.fechaActualizacion= Utils.formatDate(permiso.getFechaActualizacion());
+					tmp.fechaActualizacion= Utils.formatDateHour(permiso.getFechaActualizacion());
 					tmp.estado = permiso.getEstado();
 					stpermisos.add(tmp);
 				}

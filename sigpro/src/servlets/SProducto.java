@@ -267,7 +267,12 @@ public class SProducto extends HttpServlet {
 				}
 				
 				response_text = String.join("","{ \"success\": ",(ret ? "true" : "false"),", "
-						+ "\"id\": " + producto.getId() +" }");
+						, "\"id\": " , producto.getId().toString() , ","
+						, "\"usuarioCreo\": \"" , producto.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(producto.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , producto.getUsuarioActualizo() != null ? producto.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(producto.getFechaActualizacion()),"\""
+						," }");
 				}
 				catch (Throwable e){
 					response_text = "{ \"success\": false }";
