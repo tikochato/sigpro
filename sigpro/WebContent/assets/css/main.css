@@ -311,3 +311,16 @@ input[type='checkbox']:not([value=""]) ~ .floating-label {
 	 font-weight: bold;
 	 text-align: center;
 }
+
+h3 {
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+.page-header {
+    margin: 10px 0 10px;
+}
+
+.panel {
+    margin-bottom: 10px;
+}
