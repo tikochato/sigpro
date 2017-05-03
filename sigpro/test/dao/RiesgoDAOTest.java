@@ -19,7 +19,7 @@ public class RiesgoDAOTest {
 	
 	@Test
 	public void guardarRiesgoTest(){
-		assertEquals(RiesgoDAO.guardarRiesgo(new Riesgo()),false);
+		assertEquals(RiesgoDAO.guardarRiesgo(new Riesgo(),0,0),false);
 	}
 	
 	@Test

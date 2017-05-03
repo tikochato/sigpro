@@ -148,8 +148,13 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 					}).success(function(response){
 						if(response.success){
 							mi.desembolsotipo.id = response.id;
+							mi.desembolsotipo.usuarioCreo=response.usuarioCreo;
+							mi.desembolsotipo.fechaCreacion=response.fechaCreacion;
+							mi.desembolsotipo.usuarioActualizo=response.usuarioactualizo;
+							mi.desembolsotipo.fechaActualizacion=response.fechaactualizacion;
 							$utilidades.mensaje('success','Tipo Demsembolso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.esnuevo = false;
+							
 							mi.cargarTabla();
 						}
 						else

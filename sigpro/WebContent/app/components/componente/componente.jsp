@@ -89,13 +89,13 @@
 
 		</div>
 		<div class="row second-main-form" ng-show="componentec.mostraringreso">
-			<h4 ng-hide="!componentec.esnuevo"><small>Nuevo componente</small></h4>
-			<h4 ng-hide="componentec.esnuevo"><small>Edición de componente</small></h4>
+			<h2 ng-hide="!componentec.esnuevo"><small>Nuevo componente</small></h2>
+			<h2 ng-hide="componentec.esnuevo"><small>Edición de componente</small></h2>
 			
     		<div class="operation_buttons">
     		  <div class="btn-group" ng-hide="componentec.esnuevo">
 				<label class="btn btn-default" ng-click="componentec.irAProductos(componentec.componente.id)" uib-tooltip="Productos" tooltip-placement="bottom">
-				<span class="glyphicon glyphicon-th"></span></label>
+				<span class="glyphicon glyphicon-certificate"></span></label>
 				<label class="btn btn-default" ng-click="componentec.irARiesgos(componentec.componente.id)" uib-tooltip="Riesgos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-warning-sign"></span></label>
 				<label class="btn btn-default" ng-click="componentec.irAActividades(componentec.componente.id)" uib-tooltip="Actividades" tooltip-placement="bottom">

@@ -149,6 +149,10 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 						if(response.success){
 							$utilidades.mensaje('success','Desembolso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.desembolso.id = response.id;
+							mi.desembolso.usuarioCreo=response.usuarioCreo;
+							mi.desembolso.fechaCreacion=response.fechaCreacion;
+							mi.desembolso.usuarioActualizo=response.usuarioactualizo;
+							mi.desembolso.fechaActualizacion=response.fechaactualizacion;
 							mi.esnuevo = false;
 							mi.obtenerTotalDesembolsos();
 						}
