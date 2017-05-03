@@ -153,33 +153,33 @@
 						</div>
 					<br/>
 					<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group" style="text-align: right">
-										<label for="usuarioCreo">Usuario que creo</label> 
-										<p class="form-control-static"> {{ hitoc.hito.usuarioCreo }}</p>
+										<label for="usuarioCreo" class="label-form">Usuario que creo</label> 
+										<p> {{ hitoc.hito.usuarioCreo }}</p>
 									</div>
 								</div>
 								<div class="col-sm-6">
 									<div class="form-group" >
-										<label for="fechaCreacion">Fecha de creación</label>
-										<p class="form-control-static" id="fechaCreacion"> {{ hitoc.hito.fechaCreacion }} </p>
+										<label for="fechaCreacion" class="label-form">Fecha de creación</label>
+										<p  id="fechaCreacion"> {{ hitoc.hito.fechaCreacion }} </p>
 									</div>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group" style="text-align: right">
-										<label for="usuarioActualizo">Usuario que actualizo</label> 
-										<p class="form-control-static" id="usuarioCreo">{{ hitoc.hito.usuarioActualizo }} </p>
+										<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label> 
+										<p  id="usuarioCreo">{{ hitoc.hito.usuarioActualizo }} </p>
 									</div>	
 								</div>
 								<div class="col-sm-6">		
 									<div class="form-group">
-										<label for="fechaActualizacion">Fecha de actualizacion</label> 
-										<p class="form-control-static" id="usuarioCreo">{{ hitoc.hito.fechaActualizacion }} </p>
+										<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label> 
+										<p id="usuarioCreo">{{ hitoc.hito.fechaActualizacion }} </p>
 									</div>
 								</div>
 							</div>
