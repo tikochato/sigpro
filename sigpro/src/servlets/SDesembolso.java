@@ -196,7 +196,12 @@ public class SDesembolso extends HttpServlet {
 				}
 				result = DesembolsoDAO.guardarDesembolso(desembolso);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + desembolso.getId() +" }");
+						+ "\"id\": " + desembolso.getId() , ","
+						, "\"usuarioCreo\": \"" , desembolso.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(desembolso.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , desembolso.getUsuarioActualizo() != null ? desembolso.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(desembolso.getFechaActualizacion()),"\""+
+						" }");
 			}
 			else
 				response_text = "{ \"success\": false }";
