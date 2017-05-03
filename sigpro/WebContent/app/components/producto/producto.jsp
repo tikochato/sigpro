@@ -174,7 +174,7 @@
 			        
 			        <div class="form-group">
 			          	<input type="text" class="inputText" ng-model="producto.coordenadas" value="{{producto.coordenadas}}" 
-			          		onblur="this.setAttribute('value', this.value);" ng-readonly="true" />
+			          		onblur="this.setAttribute('value', this.value);"ng-click="producto.open(producto.producto.latitud, producto.producto.longitud); " ng-readonly="true" />
 			            <span class="label-icon" ng-click="producto.open(producto.producto.latitud, producto.producto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
 			          	<label  class="floating-label">Coordenadas</label>
 					</div>
@@ -267,10 +267,10 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="21020">
-					<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid" ui-tooltip="Guardar">
+					<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="producto.cancelar()" ui-tooltip="Ir a Tabla">
+				<label class="btn btn-primary" ng-click="producto.cancelar()" uib-tooltip="Ir a Tabla">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
