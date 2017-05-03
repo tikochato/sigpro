@@ -98,33 +98,33 @@
 						</div>
 						<br/>
 						<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static"> {{ metatipoc.tipo.usuarioCreo }}</p>
+									<label class="label-form">Usuario que creo</label> 
+									<p> {{ metatipoc.tipo.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
-									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ metatipoc.tipo.fechaCreacion }} </p>
+									<label class="label-form">Fecha de creación</label>
+									<p> {{ metatipoc.tipo.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ metatipoc.tipo.usuarioActualizo }} </p>
+									<label class="label-form">Usuario que actualizo</label> 
+									<p >{{ metatipoc.tipo.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ metatipoc.tipo.fechaActualizacion }} </p>
+									<label class="label-form">Fecha de actualizacion</label> 
+									<p >{{ metatipoc.tipo.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>
