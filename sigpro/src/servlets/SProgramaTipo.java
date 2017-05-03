@@ -171,7 +171,12 @@ public class SProgramaTipo extends HttpServlet {
 				
 				result = ProgramaTipoDAO.guardarProgramaTipo(programaTipo);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + programaTipo.getId() +" }");
+						, "\"id\": " , programaTipo.getId().toString() , ","
+						, "\"usuarioCreo\": \"" , programaTipo.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(programaTipo.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , programaTipo.getUsuarioActualizo() != null ? programaTipo.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(programaTipo.getFechaActualizacion()),"\""
+						," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
