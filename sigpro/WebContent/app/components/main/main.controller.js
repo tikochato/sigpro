@@ -111,9 +111,6 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/recursotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'recursotipoController\'" class="all_page"></div>'
             })
-            .when('/recursounidadmedida/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'recursounidadmedidaController\'" class="all_page"></div>'
-            })
             .when('/formulariotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'formulariotipoController\'" class="all_page"></div>'
             })
@@ -325,11 +322,6 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'recursotipoController',
 	    	   script: '/app/components/recursotipo/recursotipo.controller.js',
 	    	   template: '/app/components/recursotipo/recursotipo.jsp'
-	       },
-	       {
-	    	   name: 'recursounidadmedidaController',
-	    	   script: '/app/components/recursounidadmedida/recursounidadmedida.controller.js',
-	    	   template: '/app/components/recursounidadmedida/recursounidadmedida.jsp'
 	       },
 	       {
 	    	   name: 'formulariotipoController',

@@ -137,6 +137,10 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 						if(response.success){
 							$utilidades.mensaje('success','Propiedad de Actividad '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
 							mi.actividadpropiedad.id = response.id;
+							mi.actividadpropiedad.usuarioCreo=response.usuarioCreo;
+							mi.actividadpropiedad.fechaCreacion=response.fechaCreacion;
+							mi.actividadpropiedad.usuarioActualizo=response.usuarioactualizo;
+							mi.actividadpropiedad.fechaActualizacion=response.fechaactualizacion;
 							mi.esnuevo = false;
 							mi.cargarTabla();
 						}

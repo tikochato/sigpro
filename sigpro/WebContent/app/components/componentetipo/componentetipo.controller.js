@@ -144,6 +144,10 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 						$utilidades.mensaje('success','Tipo Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 						mi.componentetipo.id = response.id;
+						mi.componentetipo.usuarioCreo=response.usuarioCreo;
+						mi.componentetipo.fechaCreacion=response.fechaCreacion;
+						mi.componentetipo.usuarioActualizo=response.usuarioactualizo;
+						mi.componentetipo.fechaActualizacion=response.fechaactualizacion;
 						mi.cargarTabla();
 					}
 					else

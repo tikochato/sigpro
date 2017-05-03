@@ -133,7 +133,7 @@ public class SRecursoTipo extends HttpServlet {
 				RecursoTipo recursoTipo;
 				
 				if(esnuevo){
-					recursoTipo = new RecursoTipo(nombre, usuario, new DateTime().toDate(), 1);
+					recursoTipo = new RecursoTipo(nombre, usuario, descripcion,new DateTime().toDate(), 1);
 				}
 				else{
 					recursoTipo = RecursoTipoDAO.getRecursoTipoPorId(id);
@@ -173,7 +173,12 @@ public class SRecursoTipo extends HttpServlet {
 				
 				result = RecursoTipoDAO.guardarRecursoTipo(recursoTipo);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + recursoTipo.getId() +" }");
+						+ "\"id\": " + recursoTipo.getId().toString() , ","
+						, "\"usuarioCreo\": \"" , recursoTipo.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(recursoTipo.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , recursoTipo.getUsuarioActualizacion() != null ? recursoTipo.getUsuarioActualizacion() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(recursoTipo.getFechaActualizacion()),"\""
+						," }");
 			}
 			else
 				response_text = "{ \"success\": false }";

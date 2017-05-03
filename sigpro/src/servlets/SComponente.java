@@ -284,7 +284,12 @@ public class SComponente extends HttpServlet {
 						}
 					}
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-							+ "\"id\": " + componente.getId() +" }");
+							+ "\"id\": " + componente.getId() , ","
+							, "\"usuarioCreo\": \"" , componente.getUsuarioCreo(),"\","
+							, "\"fechaCreacion\":\" " , Utils.formatDateHour(componente.getFechaCreacion()),"\","
+							, "\"usuarioactualizo\": \"" , componente.getUsuarioActualizo() != null ? componente.getUsuarioActualizo() : "","\","
+							, "\"fechaactualizacion\": \"" , Utils.formatDateHour(componente.getFechaActualizacion()),"\""+
+							" }");
 				}
 				else
 					response_text = "{ \"success\": false }";

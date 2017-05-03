@@ -125,7 +125,32 @@
 							   <label class="floating-label">* Nombre</label>
 							</div>
 						</div>
-						
+						<div class="form-group-row row" >
+							<div class="form-group col-sm-2" >
+							       <input type="number" class="inputText" ng-model="actividadc.actividad.programa" value="{{actividadc.actividad.programa}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
+							       <label for="iprog" class="floating-label">Programa</label>
+							</div>
+							<div class="form-group col-sm-2" >
+							  <input type="number" class="inputText" ng-model="actividadc.actividad.subprograma" value="{{actividadc.actividad.subprograma}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <label for="isubprog" class="floating-label">Subprograma</label>
+							</div>
+							<div class="form-group col-sm-2" >
+							  <input type="number" class="inputText" ng-model="actividadc.actividad.proyecto" value="{{actividadc.actividad.proyecto}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <label for="iproy_" class="floating-label">Préstamo</label>
+							</div>
+							<div class="form-group col-sm-2" >
+							  <input type="number" class="inputText" ng-model="actividadc.actividad.actividad" value="{{actividadc.actividad.actividad}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <label for="iobra" class="floating-label">Actividad</label>
+							</div>
+							<div class="form-group col-sm-2" >
+							  <input type="number" class="inputText" ng-model="actividadc.actividad.obra" value="{{actividadc.actividad.obra}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <label for="iobra" class="floating-label">Obra</label>
+							</div>
+							 <div class="form-group col-sm-2">
+							  <input type="number" class="inputText" ng-model="actividadc.actividad.fuente" value="{{actividadc.actividad.fuente}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <label for="fuente" class="floating-label">Fuente</label>
+							</div>
+						</div>
 						<div class="form-group" >
 						    <input type="text" class="inputText" id="iactividadtipo" name="iactividadtipo" ng-model="actividadc.actividad.actividadtiponombre" value="{{actividadc.actividad.actividadtiponombre}}" 
 							ng-click="actividadc.buscarActividadTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
@@ -185,32 +210,7 @@
 						     onblur="this.setAttribute('value', this.value);"  min="0" max="100" >
 						   <label class="floating-label">Avance %</label>
 						</div>
-						<div class="form-group-row row" >
-							<div class="form-group col-sm-2" >
-							       <input type="number" class="inputText" ng-model="actividadc.actividad.programa" value="{{actividadc.actividad.programa}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
-							       <label for="iprog" class="floating-label">Programa</label>
-							</div>
-							<div class="form-group col-sm-2" >
-							  <input type="number" class="inputText" ng-model="actividadc.actividad.subprograma" value="{{actividadc.actividad.subprograma}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-							  <label for="isubprog" class="floating-label">Subprograma</label>
-							</div>
-							<div class="form-group col-sm-2" >
-							  <input type="number" class="inputText" ng-model="actividadc.actividad.proyecto" value="{{actividadc.actividad.proyecto}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-							  <label for="iproy_" class="floating-label">Préstamo</label>
-							</div>
-							<div class="form-group col-sm-2" >
-							  <input type="number" class="inputText" ng-model="actividadc.actividad.actividad" value="{{actividadc.actividad.actividad}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-							  <label for="iobra" class="floating-label">Actividad</label>
-							</div>
-							<div class="form-group col-sm-2" >
-							  <input type="number" class="inputText" ng-model="actividadc.actividad.obra" value="{{actividadc.actividad.obra}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-							  <label for="iobra" class="floating-label">Obra</label>
-							</div>
-							 <div class="form-group col-sm-2">
-							  <input type="number" class="inputText" ng-model="actividadc.actividad.fuente" value="{{actividadc.actividad.fuente}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-							  <label for="fuente" class="floating-label">Fuente</label>
-							</div>
-						</div>
+						
 						<div ng-repeat="campo in actividadc.camposdinamicos">
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >

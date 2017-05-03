@@ -94,7 +94,7 @@
 			
     		<div class="operation_buttons">
     		  <div class="btn-group" ng-hide="componentec.esnuevo">
-				<label class="btn btn-default" ng-click="componentec.irAProductos(componentec.componente.id)" uib-tooltip="Componentes" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="componentec.irAProductos(componentec.componente.id)" uib-tooltip="Productos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-th"></span></label>
 				<label class="btn btn-default" ng-click="componentec.irARiesgos(componentec.componente.id)" uib-tooltip="Riesgos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-warning-sign"></span></label>
@@ -126,13 +126,6 @@
 						   <label class="floating-label">* Nombre</label>
 						</div>
 						
-						<div class="form-group">
-						   <input type="number" name="snip"  class="inputText" id="snip" 
-						     ng-model="componentec.componente.snip" value="{{componentec.componente.snip}}"   
-						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
-						   <label class="floating-label">SNIP</label>
-						</div>
-							
 						<div class="form-group-row row" >
 							<div class="form-group col-sm-2" >
 							       <input type="number" class="inputText" ng-model="componentec.componente.programa" value="{{componentec.componente.programa}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
@@ -159,6 +152,15 @@
 							  <label for="fuente" class="floating-label">Fuente</label>
 							</div>
 						</div>
+						
+						<div class="form-group">
+						   <input type="number" name="snip"  class="inputText" id="snip" 
+						     ng-model="componentec.componente.snip" value="{{componentec.componente.snip}}"   
+						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
+						   <label class="floating-label">SNIP</label>
+						</div>
+							
+						
 						<div class="form-group">
 				            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="componentec.unidadejecutoranombre" ng-readonly="true" ng-required="true" 
 				            	ng-click="componentec.buscarUnidadEjecutora()" value="{{componentec.unidadejecutoranombre}}" onblur="this.setAttribute('value', this.value);"/>
@@ -261,9 +263,10 @@
 						</div>
 				</form>
 			</div>
-			<div align="center">Los campos marcados con * son obligatorios</div>
+			
 			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="col-sm-12 operation_buttons" align="right">
+			<div align="center">Los campos marcados con * son obligatorios</div>
+				<div class="col-sm-12">
 					<div class="btn-group">
 						 <shiro:hasPermission name="5020">
 						      <label class="btn btn-success" ng-click="form.$valid ? componentec.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">

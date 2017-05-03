@@ -186,6 +186,10 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				}).success(function(response){
 					if(response.success){
 						mi.actividad.id = response.id;
+						mi.actividad.usuarioCreo=response.usuarioCreo;
+						mi.actividad.fechaCreacion=response.fechaCreacion;
+						mi.actividad.usuarioActualizo=response.usuarioactualizo;
+						mi.actividad.fechaActualizacion=response.fechaactualizacion;
 						$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardado')+' con éxito');
 						mi.obtenerTotalActividades();
 						mi.esnuevo = false;
