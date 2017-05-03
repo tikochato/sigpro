@@ -128,6 +128,11 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 						if(response.success){
 							$utilidades.mensaje('success','Propiedad Recurso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.recursopropiedad.id = response.id;
+							mi.recursopropiedad.usuarioCreo = response.usuarioCreo;
+							mi.recursopropiedad.fechaCreacion = response.fechaCreacion;
+							mi.recursopropiedad.usuarioActualizo = response.usuarioactualizo;
+							mi.recursopropiedad.fechaActualizacion = response.fechaactualizacion;
+							
 							mi.esnuevo = false;
 							mi.obtenerTotalRecursoPropiedades();
 						}

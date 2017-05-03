@@ -188,7 +188,12 @@ public class SRecurso extends HttpServlet {
 					result = RecursoDAO.guardarRecurso(recurso);
 
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-							+ "\"id\": " + recurso.getId() +" }");
+							, "\"id\": " , recurso.getId().toString() , ","
+							, "\"usuarioCreo\": \"" , recurso.getUsuarioCreo(),"\","
+							, "\"fechaCreacion\":\" " , Utils.formatDateHour(recurso.getFechaCreacion()),"\","
+							, "\"usuarioactualizo\": \"" , recurso.getUsuarioActualizo() != null ? recurso.getUsuarioActualizo() : "","\","
+							, "\"fechaactualizacion\": \"" , Utils.formatDateHour(recurso.getFechaActualizacion()),"\""
+							," }");
 				}
 				else
 					response_text = "{ \"success\": false }";

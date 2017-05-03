@@ -101,6 +101,7 @@ public class MetaDAO {
 		try{
 			session.beginTransaction();
 			session.delete(Meta);
+			
 			session.getTransaction().commit();
 			ret = true;
 		}

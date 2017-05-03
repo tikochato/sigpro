@@ -339,7 +339,7 @@ public class SProyecto extends HttpServlet {
 						, "\"usuarioCreo\": \"" , proyecto.getUsuarioCreo(),"\","
 						, "\"fechaCreacion\":\" " , Utils.formatDateHour(proyecto.getFechaCreacion()),"\","
 						, "\"usuarioactualizo\": \"" , proyecto.getUsuarioActualizo() != null ? proyecto.getUsuarioActualizo() : "","\","
-						, "\"fechaactualizacion\": \"" , Utils.formatDate(proyecto.getFechaActualizacion()),"\""
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(proyecto.getFechaActualizacion()),"\""
 						," }");
 			}else
 				response_text = "{ \"success\": false }";

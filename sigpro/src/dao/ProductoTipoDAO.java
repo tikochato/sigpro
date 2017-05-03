@@ -14,7 +14,6 @@ import org.hibernate.query.Query;
 import pojo.ProductoTipo;
 import utilities.CHibernateSession;
 import utilities.CLogger;
-import utilities.Utils;
 
 public class ProductoTipoDAO {
 	

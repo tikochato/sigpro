@@ -30,6 +30,8 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				case "1": mi.nombreTipoPcp = "Proyecto"; break;
 				case "2": mi.nombreTipoPcp = "Componente"; break;
 				case "3": mi.nombreTipoPcp = "Producto"; break;
+				case "4": mi.nombreTipoPcp = "Subproducto"; break;
+				
 			}
 			
 			$http.post('/SMeta', { accion: 'getPcp', id: $routeParams.id, tipo: $routeParams.tipo }).success(
@@ -143,9 +145,9 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 						descripcion: mi.meta.descripcion,
 						tipometaid:  mi.meta.tipoMetaId,
 						unidadmetaid: mi.meta.unidadMedidaId,
-						proyecto: ($routeParams.tipo==1) ? $routeParams.id : null,
-						componente: ($routeParams.tipo==2) ? $routeParams.id : null,
-						producto: ($routeParams.tipo==3) ? $routeParams.id : null
+						objetoTipo:  $routeParams.tipo,
+						objetoId:$routeParams.id
+						
 					}).success(function(response){
 						if(response.success){
 							mi.meta.id = response.id;

@@ -52,15 +52,11 @@ public class SMetaUnidadMedida extends HttpServlet {
         super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();
@@ -145,7 +141,13 @@ public class SMetaUnidadMedida extends HttpServlet {
 					MetaUnidadMedida.setFechaActualizacion(new DateTime().toDate());
 				}
 				result = MetaUnidadMedidaDAO.guardarMetaUnidadMedida(MetaUnidadMedida);
-				response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
+				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
+						, "\"id\": " , MetaUnidadMedida.getId().toString() , ","
+						, "\"usuarioCreo\": \"" , MetaUnidadMedida.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(MetaUnidadMedida.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , MetaUnidadMedida.getUsuarioActualizo() != null ? MetaUnidadMedida.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDate(MetaUnidadMedida.getFechaActualizacion()),"\""
+						," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
