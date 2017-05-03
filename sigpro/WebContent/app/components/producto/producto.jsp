@@ -97,9 +97,12 @@
 		</div>
 		<div class="operation_buttons" >
 			<div class="btn-group" ng-hide="producto.esNuevo">
-				<label class="btn btn-default" ng-click="producto.irASubproductos()" uib-tooltip="Subproductos">Subproductos</label>
-				<label class="btn btn-default" ng-click="producto.irAActividades()" uib-tooltip="Actividades">Actividades</label>
-				<label class="btn btn-default" ng-click="producto.irARiesgos()" uib-tooltip="Riesgos">Riesgos</label>
+				<label class="btn btn-default" ng-click="producto.irASubproductos()" uib-tooltip="Subproductos" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-link"></span></label>
+				<label class="btn btn-default" ng-click="producto.irAActividades()" uib-tooltip="Actividades" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-th-list"></span></label>
+				<label class="btn btn-default" ng-click="producto.irARiesgos()" uib-tooltip="Riesgos" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-warning-sign"></span></label>
 			</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="21020">
