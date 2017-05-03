@@ -135,6 +135,10 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 						$utilidades.mensaje('success','Tipo Riesgo '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 						mi.riesgotipo.id = response.id;
+						mi.riesgotipo.usuarioCreo = response.usuarioCreo;
+						mi.riesgotipo.fechaCreacion = response.fechaCreacion;
+						mi.riesgotipo.usuarioActualizo = response.usuarioactualizo;
+						mi.riesgotipo.fechaActualizacion = response.fechaactualizacion;
 						mi.cargarTabla();
 					}
 					else

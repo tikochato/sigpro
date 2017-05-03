@@ -25,8 +25,10 @@
 		<p ng-init="subproducto.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
 
-	<h3>{{ subproducto.esForma ? (subproducto.esNuevo ? "Nuevo Subproducto" : "Editar Subproducto") : "Subproducto" }}</h3>
-	<h4>{{ subproducto.componenteNombre }}</h4><br/>
+	<div class="panel panel-default">
+	   	<div class="panel-heading"><h3>Subproducto</h3></div>
+	</div>
+	
 
 	<br />
   
@@ -42,7 +44,7 @@
 					<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="40030">
-					<label class="btn btn-primary" ng-click="subproducto.borrar()" uib-tooltip="Borrar">
+					<label class="btn btn-danger" ng-click="subproducto.borrar()" uib-tooltip="Borrar">
 					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</shiro:hasPermission>
 			</div>
@@ -87,12 +89,14 @@
 	</div>
 
 	<div ng-show="subproducto.esForma" class="row main-form">
-		<h2 ng-hide="!subproducto.esNuevo">Nuevo Subproducto</h2>
-		<h2 ng-hide="subproducto.esNuevo">Edición de Subproducto</h2>
+		<h2 ng-hide="!subproducto.esNuevo"><small>Nuevo Subproducto</small></h2>
+		<h2 ng-hide="subproducto.esNuevo"><small>Edición de Subproducto</small></h2>
 		<div class="col-sm-12 operation_buttons" align="left" ng-hide="subproducto.esNuevo">
 			<div class="btn-group">
-				<label class="btn btn-default" ng-click="subproducto.irAActividades()">Actividades</label>
-				<label class="btn btn-default" ng-click="subproducto.irARiesgos()">Riesgos</label>
+				<label class="btn btn-default" ng-click="subproducto.irAActividades()" uib-tooltip="Actividades" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-th-list"></span></label>
+				<label class="btn btn-default" ng-click="subproducto.irARiesgos()" uib-tooltip="Riesgos" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-warning-sign"></span></label>
 			</div>
 		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
@@ -210,33 +214,33 @@
 					</div>
 					
 				<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label>
-				  					<p class="form-control-static">{{ subproducto.subproducto.usuarioCreo }}</pl>
+									<label for="usuarioCreo" class="label-form">Usuario que creo</label>
+				  					<p>{{ subproducto.subproducto.usuarioCreo }}</pl>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label for="fechaCreacion">Fecha de creación</label>
-				  					<p class="form-control-static">{{ subproducto.subproducto.fechaCreacion }}</p>
+									<label for="fechaCreacion" class="label-form">Fecha de creación</label>
+				  					<p>{{ subproducto.subproducto.fechaCreacion }}</p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label>
-				  					<p class="form-control-static">{{ subproducto.subproducto.usuarioactualizo }}</p>
+									<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label>
+				  					<p>{{ subproducto.subproducto.usuarioActualizo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label>
-				  					<p class="form-control-static">{{ subproducto.subproducto.fechaactualizacion }}</p>
+									<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label>
+				  					<p>{{ subproducto.subproducto.fechaActualizacion }}</p>
 								</div>
 							</div>
 						</div>

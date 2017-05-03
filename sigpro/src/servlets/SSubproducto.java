@@ -209,7 +209,12 @@ public class SSubproducto extends HttpServlet {
 			}
 			
 			resultadoJson = String.join("","{ \"success\": ",(ret ? "true" : "false"),", "
-					+ "\"id\": " + subproducto.getId() +" }");
+					+ "\"id\": " + subproducto.getId().toString(), ","
+					, "\"usuarioCreo\": \"" , subproducto.getUsuarioCreo(),"\","
+					, "\"fechaCreacion\":\" " , Utils.formatDateHour(subproducto.getFechaCreacion()),"\","
+					, "\"usuarioactualizo\": \"" , subproducto.getUsuarioActualizo() != null ? subproducto.getUsuarioActualizo() : "","\","
+					, "\"fechaactualizacion\": \"" , Utils.formatDateHour(subproducto.getFechaActualizacion()),"\""
+					," }");
 			}
 			catch (Throwable e){
 				resultadoJson = "{ \"success\": false }";

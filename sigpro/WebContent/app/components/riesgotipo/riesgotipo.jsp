@@ -11,7 +11,9 @@
   	<shiro:lacksPermission name="32010">
 		<p ng-init="riesgotipoc.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
-	<h3>Tipo de Riesgo</h3>
+	<div class="panel panel-default">
+	  <div class="panel-heading"><h3>Tipo de Riesgo</h3></div>
+	</div>
 	<br />
 
 
@@ -27,7 +29,7 @@
 					<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="32030">
-					<label class="btn btn-primary" ng-click="riesgotipoc.borrar()" uib-tooltip="Borrar">
+					<label class="btn btn-danger" ng-click="riesgotipoc.borrar()" uib-tooltip="Borrar">
 					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</shiro:hasPermission>
 			</div>
@@ -70,8 +72,8 @@
 	</div>
 
 	<div class="row main-form" ng-if="riesgotipoc.mostraringreso">
-		<h2 ng-hide="!riesgotipoc.esnuevo">Nuevo Tipo Riesgo</h2>
-		<h2 ng-hide="riesgotipoc.esnuevo">Edición de Tipo Riesgo</h2>
+		<h2 ng-hide="!riesgotipoc.esnuevo"><small>Nuevo Tipo Riesgo</small></h2>
+		<h2 ng-hide="riesgotipoc.esnuevo"><small>Edición de Tipo Riesgo</small></h2>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="32020">
@@ -95,39 +97,38 @@
 					<label class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group">
-					<input type="text"class="inputText" id="descripcion" placeholder="Descripción"
-						ng-model="riesgotipoc.riesgotipo.descripcion" value="{{riesgotipoc.riesgotipo.descripcion}}"
+					<input type="text"class="inputText" id="descripcion" ng-model="riesgotipoc.riesgotipo.descripcion" value="{{riesgotipoc.riesgotipo.descripcion}}"
 						onblur="this.setAttribute('value', this.value);">
 					<label class="floating-label">Descripción</label>
 				</div>
 				<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static"> {{ riesgotipoc.riesgotipo.usuarioCreo }}</p>
+									<label for="usuarioCreo" class="label-form">Usuario que creo</label> 
+									<p> {{ riesgotipoc.riesgotipo.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
-									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ riesgotipoc.riesgotipo.fechaCreacion }} </p>
+									<label for="fechaCreacion" class="label-form">Fecha de creación</label>
+									<p id="fechaCreacion"> {{ riesgotipoc.riesgotipo.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ riesgotipoc.riesgotipo.usuarioActualizo }} </p>
+									<label class="label-form" for="usuarioActualizo">Usuario que actualizo</label> 
+									<p id="usuarioCreo">{{ riesgotipoc.riesgotipo.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ riesgotipoc.riesgotipo.fechaActualizacion }} </p>
+									<label class="label-form" for="fechaActualizacion">Fecha de actualizacion</label> 
+									<p id="usuarioCreo">{{ riesgotipoc.riesgotipo.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>

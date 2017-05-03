@@ -41,6 +41,7 @@ public class SColaborador extends HttpServlet {
 		String usuarioActualizo;
 		String fechaCreacion;
 		String fechaActualizacion;
+		String nombreCompleto;
 	}
 
 	public SColaborador() {
@@ -104,7 +105,11 @@ public class SColaborador extends HttpServlet {
 				temp.usuarioActualizo = colaborador.getUsuarioActualizo();
 				temp.fechaCreacion = Utils.formatDateHour(colaborador.getFechaCreacion());
 				temp.fechaActualizacion = Utils.formatDateHour(colaborador.getFechaActualizacion());
-
+				temp.nombreCompleto = String.join(" ", temp.primerNombre,
+						temp.segundoNombre!=null ? temp.segundoNombre : "" ,
+						temp.primerApellido !=null ? temp.primerApellido : "" ,
+						temp.segundoApellido !=null ? temp.segundoApellido : "");
+				
 				listaColaborador.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(listaColaborador);
@@ -157,7 +162,11 @@ public class SColaborador extends HttpServlet {
 					temp.usuarioActualizo = colaborador.getUsuarioActualizo();
 					temp.fechaCreacion = Utils.formatDateHour(colaborador.getFechaCreacion());
 					temp.fechaActualizacion = Utils.formatDateHour(colaborador.getFechaActualizacion());
-
+					temp.nombreCompleto = String.join(" ", temp.primerNombre,
+							temp.segundoNombre!=null ? temp.segundoNombre : "" ,
+							temp.primerApellido !=null ? temp.primerApellido : "" ,
+							temp.segundoApellido !=null ? temp.segundoApellido : "");
+			
 					listaColaborador.add(temp);
 				}
 				stcolaborador stColaborador = listaColaborador.get(listaColaborador.size()-1);
@@ -214,7 +223,11 @@ public class SColaborador extends HttpServlet {
 					temp.usuarioActualizo = colaborador.getUsuarioActualizo();
 					temp.fechaCreacion = Utils.formatDateHour(colaborador.getFechaCreacion());
 					temp.fechaActualizacion = Utils.formatDateHour(colaborador.getFechaActualizacion());
-
+					temp.nombreCompleto = String.join(" ", temp.primerNombre,
+							temp.segundoNombre!=null ? temp.segundoNombre : "" ,
+							temp.primerApellido !=null ? temp.primerApellido : "" ,
+							temp.segundoApellido !=null ? temp.segundoApellido : "");
+			
 					listaColaborador.add(temp);
 				}
 				stcolaborador stColaborador = listaColaborador.get(listaColaborador.size()-1);
