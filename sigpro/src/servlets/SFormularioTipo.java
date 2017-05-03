@@ -127,9 +127,16 @@ public class SFormularioTipo extends HttpServlet {
 					
 				}
 				
+				
+				
 				result = FormularioTipoDAO.guardarFormularioTipo(formularioTipo);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + formularioTipo.getId() +" }");
+						+ "\"id\": " + formularioTipo.getId(), ","
+						, "\"usuarioCreo\": \"" , formularioTipo.getUsarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(formularioTipo.getFechaCreacion()),"\","
+						, "\"usuarioActualizo\": \"" , formularioTipo.getUsuarioActualizo() != null ? formularioTipo.getUsuarioActualizo() : "","\","
+						, "\"fechaActualizacion\": \"" , Utils.formatDateHour(formularioTipo.getFechaActualizacion()),"\""
+						," }");
 			}
 			else
 				response_text = "{ \"success\": false }";

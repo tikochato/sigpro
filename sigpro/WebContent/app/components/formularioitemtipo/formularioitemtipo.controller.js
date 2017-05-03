@@ -148,6 +148,10 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 					}).success(function(response){
 						if(response.success){
 							mi.formularioitemtipo.id = response.id;
+							mi.formularioitemtipo.usuarioCreo = response.usuarioCreo;
+							mi.formularioitemtipo.fechaCreacion = response.fechaCreacion;
+							mi.formularioitemtipo.usuarioActualizo = response.usuarioActualizacion;
+							mi.formularioitemtipo.fechaActualizacion = response.fechaActualizacion;
 							$utilidades.mensaje('success','Tipo de Itme de Formulario '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.esnuevo = false;
 							mi.cargarTabla();

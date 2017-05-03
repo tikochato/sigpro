@@ -113,8 +113,8 @@ public class SFormularioItemTipo extends HttpServlet {
 				temp.descripcion = formularioItemTipo.getDescripcion();
 				temp.usuarioCreo = formularioItemTipo.getUsuarioCreo();
 				temp.usuarioActualizacion = formularioItemTipo.getUsuarioActualizacion()+"";
-				temp.fechaCreacion = Utils.formatDate(formularioItemTipo.getFechaCreacion());
-				temp.fechaActualizacion = Utils.formatDate(formularioItemTipo.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(formularioItemTipo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(formularioItemTipo.getFechaActualizacion());
 				temp.estado = formularioItemTipo.getEstado();
 				temp.datotipoid = formularioItemTipo.getDatoTipo().getId();
 				temp.datotiponombre = formularioItemTipo.getDatoTipo().getNombre();
@@ -156,7 +156,12 @@ public class SFormularioItemTipo extends HttpServlet {
 				}
 				result = FormularioItemTipoDAO.guardarFormularioItemTipo(formularioItemTipo);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + formularioItemTipo.getId() +" }");
+						+ "\"id\": " + formularioItemTipo.getId().toString(), ","
+						, "\"usuarioCreo\": \"" , formularioItemTipo.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(formularioItemTipo.getFechaCreacion()),"\","
+						, "\"usuarioActualizacion\": \"" , formularioItemTipo.getUsuarioActualizacion() != null ? formularioItemTipo.getUsuarioActualizacion() : "","\","
+						, "\"fechaActualizacion\": \"" ,  Utils.formatDateHour(formularioItemTipo.getFechaActualizacion()),"\""
+						," }");
 			}
 			else
 				response_text = "{ \"success\": false }";

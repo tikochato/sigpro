@@ -82,6 +82,10 @@ app.controller('formulariotipoController',['$scope','$http','$interval','i18nSer
 						$utilidades.mensaje('success','Tipo Formulario '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 						mi.formulariotipo.id = response.id;
+						mi.formulariotipo.usuarioCreo = response.usuarioCreo;
+						mi.formulariotipo.fechaCreacion = response.fechaCreacion;
+						mi.formulariotipo.usuarioActualizo = response.usuarioActualizo;
+						mi.formulariotipo.fechaActualizacion = response.fechaActualizacion;
 						mi.cargarTabla();
 					}
 					else
