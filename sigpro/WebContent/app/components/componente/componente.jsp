@@ -94,7 +94,7 @@
 			
     		<div class="operation_buttons">
     		  <div class="btn-group" ng-hide="componentec.esnuevo">
-				<label class="btn btn-default" ng-click="componentec.irAProductos(componentec.componente.id)" uib-tooltip="Componentes" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="componentec.irAProductos(componentec.componente.id)" uib-tooltip="Productos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-th"></span></label>
 				<label class="btn btn-default" ng-click="componentec.irARiesgos(componentec.componente.id)" uib-tooltip="Riesgos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-warning-sign"></span></label>
@@ -261,9 +261,10 @@
 						</div>
 				</form>
 			</div>
-			<div align="center">Los campos marcados con * son obligatorios</div>
+			
 			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="col-sm-12 operation_buttons" align="right">
+			<div align="center">Los campos marcados con * son obligatorios</div>
+				<div class="col-sm-12">
 					<div class="btn-group">
 						 <shiro:hasPermission name="5020">
 						      <label class="btn btn-success" ng-click="form.$valid ? componentec.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">

@@ -173,6 +173,10 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				}).success(function(response){
 					if(response.success){
 						mi.componente.id = response.id;
+						mi.componente.usuarioCreo=response.usuarioCreo;
+						mi.componente.fechaCreacion=response.fechaCreacion;
+						mi.componente.usuarioActualizo=response.usuarioactualizo;
+						mi.componente.fechaActualizacion=response.fechaactualizacion;
 						$utilidades.mensaje('success','Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.cargarTabla();
 						mi.esnuevo = false;
