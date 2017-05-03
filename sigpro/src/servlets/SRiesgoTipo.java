@@ -181,7 +181,12 @@ public class SRiesgoTipo extends HttpServlet {
 				
 				result = RiesgoTipoDAO.guardarRiesgoTipo(riesgoTipo);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + riesgoTipo.getId() +" }");
+						+ "\"id\": " + riesgoTipo.getId().toString(), ","
+						, "\"usuarioCreo\": \"" , riesgoTipo.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(riesgoTipo.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , riesgoTipo.getUsuarioActualizo() != null ? riesgoTipo.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(riesgoTipo.getFechaActualizacion()),"\""
+						," }");
 			}
 			else
 				response_text = "{ \"success\": false }";

@@ -150,6 +150,10 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 						$utilidades.mensaje('success','Tipo de Recurso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 						mi.recursotipo.id = response.id;
+						mi.recursotipo.usuarioCreo = response.usuarioCreo;
+						mi.recursotipo.fechaCreacion = response.fechaCreacion;
+						mi.recursotipo.usuarioActualizo = response.usuarioactualizo;
+						mi.recursotipo.fechaActualizacion = response.fechaactualizacion;
 						mi.obtenerTotalRecursoTipos();
 					}
 					else
