@@ -42,8 +42,8 @@
 				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24040">
-				<label class="btn btn-primary" ng-click="controller.cargarArchivo()" uib-tooltip="Cargar desde archivo">   
-				<span class="glyphicon glyphicon glyphicon-file"></span> Desde archivo</label>
+				<label class="btn btn-primary" ng-click="controller.cargarArchivo()" uib-tooltip="Cargar desde project">   
+				<span class="glyphicon glyphicon glyphicon-file"></span>Project</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24010">
 				<label class="btn btn-primary" ng-click="controller.editar()" title="Editar">
