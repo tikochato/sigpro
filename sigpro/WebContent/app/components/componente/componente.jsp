@@ -126,13 +126,6 @@
 						   <label class="floating-label">* Nombre</label>
 						</div>
 						
-						<div class="form-group">
-						   <input type="number" name="snip"  class="inputText" id="snip" 
-						     ng-model="componentec.componente.snip" value="{{componentec.componente.snip}}"   
-						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
-						   <label class="floating-label">SNIP</label>
-						</div>
-							
 						<div class="form-group-row row" >
 							<div class="form-group col-sm-2" >
 							       <input type="number" class="inputText" ng-model="componentec.componente.programa" value="{{componentec.componente.programa}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
@@ -159,6 +152,15 @@
 							  <label for="fuente" class="floating-label">Fuente</label>
 							</div>
 						</div>
+						
+						<div class="form-group">
+						   <input type="number" name="snip"  class="inputText" id="snip" 
+						     ng-model="componentec.componente.snip" value="{{componentec.componente.snip}}"   
+						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
+						   <label class="floating-label">SNIP</label>
+						</div>
+							
+						
 						<div class="form-group">
 				            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="componentec.unidadejecutoranombre" ng-readonly="true" ng-required="true" 
 				            	ng-click="componentec.buscarUnidadEjecutora()" value="{{componentec.unidadejecutoranombre}}" onblur="this.setAttribute('value', this.value);"/>
