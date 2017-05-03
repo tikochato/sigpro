@@ -30,6 +30,7 @@ import dao.DesembolsoDAO;
 import pojo.Desembolso;
 import pojo.DesembolsoTipo;
 import pojo.Proyecto;
+import pojo.TipoMoneda;
 import utilities.Utils;
 
 /**
@@ -182,6 +183,9 @@ public class SDesembolso extends HttpServlet {
 				if(esnuevo){
 					desembolso = new Desembolso(desembolsoTipo, proyecto, null, fecha, 1, monto, tipoCambio, null, 
 							usuario, null, new Date(), null);
+					TipoMoneda tipo_moneda = new TipoMoneda();
+					tipo_moneda.setId(1);
+					desembolso.setTipoMoneda(tipo_moneda);
 				}
 				else{
 					
