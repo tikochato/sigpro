@@ -124,7 +124,6 @@ public class SFormularioTipo extends HttpServlet {
 					formularioTipo.setDescripcion(descripcion);
 					formularioTipo.setUsuarioActualizo(usuario);
 					formularioTipo.setFechaActualizacion(new DateTime().toDate());
-					
 				}
 				
 				
