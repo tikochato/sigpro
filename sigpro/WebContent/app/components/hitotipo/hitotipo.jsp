@@ -106,33 +106,33 @@
 					
 					<br/>
 				<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label>
-				  					<p class="form-control-static">{{ hitotipoc.hitotipo.usuarioCreo }}</pl>
+									<label for="usuarioCreo" class="label-form">Usuario que creo</label>
+				  					<p>{{ hitotipoc.hitotipo.usuarioCreo }}</pl>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label for="fechaCreacion">Fecha de creación</label>
-				  					<p class="form-control-static">{{ hitotipoc.hitotipo.fechaCreacion }}</p>
+									<label for="fechaCreacion"  class="label-form">Fecha de creación</label>
+				  					<p>{{ hitotipoc.hitotipo.fechaCreacion }}</p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label>
-				  					<p class="form-control-static">{{ hitotipoc.hitotipo.usuarioActualizo }}</p>
+									<label for="usuarioActualizo"  class="label-form">Usuario que actualizo</label>
+				  					<p>{{ hitotipoc.hitotipo.usuarioActualizo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label>
-				  					<p class="form-control-static">{{ hitotipoc.hitotipo.fechaActualizacion }}</p>
+									<label for="fechaActualizacion"  class="label-form">Fecha de actualizacion</label>
+				  					<p>{{ hitotipoc.hitotipo.fechaActualizacion }}</p>
 								</div>
 							</div>
 						</div>
