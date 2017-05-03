@@ -66,7 +66,7 @@ public class SubproductoDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Subproducto ret = null;
 		try {
-			Query<Subproducto> criteria = session.createQuery("FROM Suproducto where id=:id AND id in (SELECT u.id.productoid from SubproductoUsuario u where u.id.usuario=:usuario )", Subproducto.class);
+			Query<Subproducto> criteria = session.createQuery("FROM Subproducto where id=:id AND id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )", Subproducto.class);
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
 			 ret = (Subproducto) criteria.getSingleResult();;

@@ -135,6 +135,12 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 						descripcion: mi.cooperante.descripcion
 					}).success(function(response){
 						if(response.success){
+							mi.cooperante.id=response.id;
+							mi.cooperante.usuarioCreo=response.usuarioCreo;
+							mi.cooperante.fechaCreacion=response.fechaCreacion;
+							mi.cooperante.usuarioActualizo=response.usuarioactualizo;
+							mi.cooperante.fechaActualizacion=response.fechaactualizacion;
+							mi.esnuevo ? mi.esnuevo=!mi.esnuevo: mi.esnuevo=false;
 							$utilidades.mensaje('success','Cooperante '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.cargarTabla();
 						}

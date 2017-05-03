@@ -21,10 +21,12 @@ import dao.ActividadDAO;
 import dao.ComponenteDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
+import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.Componente;
 import pojo.Producto;
 import pojo.Proyecto;
+import pojo.Subproducto;
 import utilities.Utils;
 
 /**
@@ -95,7 +97,12 @@ public class SObjeto extends HttpServlet {
 						Producto producto = ProductoDAO.getProductoPorId(objetoId,usuario);
 						nombre = (producto!=null) ? producto.getNombre() : "";
 						break;
-					case 4: //Actividad
+					case 4: //Subproducto
+						tiponombre = "Subproducto";
+						Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId,usuario);
+						nombre = (subproducto!=null) ? subproducto.getNombre() : "";
+						break;
+					case 5: //Actividad
 						tiponombre = "Actividad";
 						Actividad actividad = ActividadDAO.getActividadPorId(objetoId,usuario);
 						nombre = (actividad!=null) ? actividad.getNombre() : "";

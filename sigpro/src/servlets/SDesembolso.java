@@ -30,6 +30,7 @@ import dao.DesembolsoDAO;
 import pojo.Desembolso;
 import pojo.DesembolsoTipo;
 import pojo.Proyecto;
+import pojo.TipoMoneda;
 import utilities.Utils;
 
 /**
@@ -182,6 +183,9 @@ public class SDesembolso extends HttpServlet {
 				if(esnuevo){
 					desembolso = new Desembolso(desembolsoTipo, proyecto, null, fecha, 1, monto, tipoCambio, null, 
 							usuario, null, new Date(), null);
+					TipoMoneda tipo_moneda = new TipoMoneda();
+					tipo_moneda.setId(1);
+					desembolso.setTipoMoneda(tipo_moneda);
 				}
 				else{
 					
@@ -196,7 +200,12 @@ public class SDesembolso extends HttpServlet {
 				}
 				result = DesembolsoDAO.guardarDesembolso(desembolso);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + desembolso.getId() +" }");
+						+ "\"id\": " + desembolso.getId() , ","
+						, "\"usuarioCreo\": \"" , desembolso.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(desembolso.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , desembolso.getUsuarioActualizo() != null ? desembolso.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(desembolso.getFechaActualizacion()),"\""+
+						" }");
 			}
 			else
 				response_text = "{ \"success\": false }";

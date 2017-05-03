@@ -150,7 +150,13 @@ public class SCooperante extends HttpServlet {
 					cooperante.setFechaActualizacion(new DateTime().toDate());
 				}
 				result = CooperanteDAO.guardarCooperante(cooperante);
-				response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
+				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
+						+ "\"id\": " + cooperante.getId() , ","
+						, "\"usuarioCreo\": \"" , cooperante.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(cooperante.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , cooperante.getUsuarioActualizo() != null ? cooperante.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(cooperante.getFechaActualizacion()),"\""+
+						" }");
 			}
 			else
 				response_text = "{ \"success\": false }";
