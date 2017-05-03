@@ -290,7 +290,12 @@ public class SActividad extends HttpServlet {
 						}
 					}
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-							+ "\"id\": " + actividad.getId() +" }");
+							+ "\"id\": " + actividad.getId() ,","
+							, "\"usuarioCreo\": \"" , actividad.getUsuarioCreo(),"\","
+							, "\"fechaCreacion\":\" " , Utils.formatDateHour(actividad.getFechaCreacion()),"\","
+							, "\"usuarioactualizo\": \"" , actividad.getUsuarioActualizo() != null ? actividad.getUsuarioActualizo() : "","\","
+							, "\"fechaactualizacion\": \"" , Utils.formatDateHour(actividad.getFechaActualizacion()),"\""+
+							" }");
 				}
 				else
 					response_text = "{ \"success\": false }";
