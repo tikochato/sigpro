@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dao.EntidadDAO;
 import dao.UnidadEjecutoraDAO;
+import pojo.UnidadEjecutora;
 import utilities.Utils;
 
 @WebServlet("/SUnidadEjecutora")
@@ -42,22 +44,22 @@ public class SUnidadEjecutora extends HttpServlet {
     }
 
     private void listar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
-	int pagina = Utils.String2Int(parametro.get("pagina"), 1);
-	int registros = Utils.String2Int(parametro.get("registros"), 20);
-
-	String resultadoJson = "";
-
-	resultadoJson = UnidadEjecutoraDAO.getJson(pagina, registros);
-
-	if (Utils.isNullOrEmpty(resultadoJson)) {
-	    resultadoJson = "{\"success\":false}";
-	} else {
-	    resultadoJson = "{\"success\":true,"
-	                    + resultadoJson
-	                    + "}";
-	}
-
-	Utils.writeJSon(response, resultadoJson);
+		int pagina = Utils.String2Int(parametro.get("pagina"), 1);
+		int registros = Utils.String2Int(parametro.get("registros"), 20);
+	
+		String resultadoJson = "";
+	
+		resultadoJson = UnidadEjecutoraDAO.getJson(pagina, registros);
+	
+		if (Utils.isNullOrEmpty(resultadoJson)) {
+		    resultadoJson = "{\"success\":false}";
+		} else {
+		    resultadoJson = "{\"success\":true,"
+		                    + resultadoJson
+		                    + "}";
+		}
+	
+		Utils.writeJSon(response, resultadoJson);
     }
 
     private void crear(Map<String, String> parametro, HttpServletResponse response) throws IOException {
@@ -65,8 +67,13 @@ public class SUnidadEjecutora extends HttpServlet {
 		String nombre = parametro.get("nombre");
 		int codigoEntidad = Utils.String2Int(parametro.get("entidad"));
 	
-		boolean creado = UnidadEjecutoraDAO.guardar(codigo, nombre, codigoEntidad);
-	
+		//boolean creado = UnidadEjecutoraDAO.guardar(codigo, nombre, codigoEntidad);
+		UnidadEjecutora pojo = UnidadEjecutoraDAO.getUnidadEjecutora(codigo);
+		pojo.setUnidadEjecutora(codigo);
+		pojo.setNombre(nombre);
+		pojo.setEntidad(EntidadDAO.getEntidad(codigoEntidad));
+		
+		boolean creado = UnidadEjecutoraDAO.guardarUnidadEjecutora(pojo);
 		if (creado) {
 		    listar(parametro, response);
 		}
