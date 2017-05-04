@@ -30,6 +30,9 @@
 		<div class="panel panel-default">
 			<div class="panel-heading"><h3>Agenda</h3></div>
 		</div>
+		<div class="subtitulo">
+			{{ agendac.objetoTipoNombre }} {{ agendac.proyectoNombre }}
+		</div>
 		
 		<div class="row" align="center" >
 		

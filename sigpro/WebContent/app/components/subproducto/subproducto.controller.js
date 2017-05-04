@@ -20,6 +20,9 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	mi.seleccionada = false;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
+	mi.productoid = "";
+	mi.productoNombre = "";
+	mi.objetoTipoNombre = "";
 
 	mi.propiedadesValor = [];
 	mi.camposdinamicos = {};
@@ -36,6 +39,13 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 			function(response) {
 				mi.subproductoid = response.id;
 				mi.subproductoNombre = response.nombre;
+	});
+	
+	$http.post('/SProducto', { accion: 'obtenerProductoPorId', id: $routeParams.producto_id }).success(
+			function(response) {
+				mi.productoid = response.id;
+				mi.productoNombre = response.nombre;
+				mi.objetoTipoNombre = "Producto";
 	});
 	
 	mi.formatofecha = 'dd/MM/yyyy';

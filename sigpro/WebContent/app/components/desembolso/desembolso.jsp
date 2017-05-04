@@ -14,7 +14,7 @@
 			<div class="panel-heading"><h3>Desembolso</h3></div>
 		</div>
 		<div class="subtitulo">
-			{{ desembolsoc.proyectonombre }}
+			{{ desembolsoc.objetoTipoNombre }} {{ desembolsoc.proyectonombre }}
 		</div>
 		
 		<div class="row" align="center" ng-if="!desembolsoc.mostraringreso">

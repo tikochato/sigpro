@@ -9,6 +9,9 @@
 		<div class="panel panel-default">
 		  <div class="panel-heading"><h3>Cartelera de Actividades</h3></div>
 		</div>
+		<div class="subtitulo">
+			{{ porcentajeactividadesc.objetoTipoNombre }} {{ porcentajeactividadesc.proyectoNombre }}
+		</div>
 			 
 		<div class="row" align="center" >
 		<br>

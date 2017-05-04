@@ -8,6 +8,9 @@
 	    <div class="panel panel-default">
 	    	<div class="panel-heading"><h3>Gantt</h3></div>
 	    </div>
+		<div class="subtitulo">
+			{{ ganttc.objetoTipoNombre }} {{ ganttc.proyectoNombre }}
+		</div>
 	    <div class="row" align="center" >
 		    <div class="operation_buttons" align="right">
 		    <form>

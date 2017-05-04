@@ -82,7 +82,7 @@
 	</div>
 	    
 		<div class="subtitulo">
-			{{ proyectoNombre }}
+			{{ objetoTipoNombre }} {{ proyectoNombre }}
 		</div>
 	    								
 	    <div class="operation_buttons" align="right">

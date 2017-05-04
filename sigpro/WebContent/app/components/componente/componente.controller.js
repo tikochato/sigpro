@@ -14,6 +14,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		mi.totalComponentes = 0;
 		mi.proyectoid = $routeParams.proyecto_id;
 		mi.proyectoNombre="";
+		mi.objetoTipoNombre = ""
 		mi.paginaActual = 1;
 		mi.datotipoid = "";
 		mi.datotiponombre = "";
@@ -36,6 +37,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				function(response) {
 					mi.proyectoid = response.id;
 					mi.proyectoNombre = response.nombre;
+					mi.objetoTipoNombre = "Proyecto";
 		});
 
 		mi.fechaOptions = {

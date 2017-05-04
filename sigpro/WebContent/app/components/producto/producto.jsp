@@ -30,9 +30,10 @@
 			<h3>Producto</h3>
 		</div>
 	</div>
-	<h2><small>{{ producto.componenteNombre }}</small></h2>
+		<div class="subtitulo">
+			{{ producto.objetoTipoNombre }} {{ producto.componenteNombre }}
+		</div>
 	
-	<br />
   
 	<div align="center" ng-hide="producto.esForma">
 		<div class="col-sm-12 operation_buttons" align="right">
@@ -122,65 +123,65 @@
 					</div>
 								
 					<div class="form-group">
-						<input type="text" class="inputText" ng-model="producto.producto.nombre" value="{{producto.producto.nombre}}" onblur="this.setAttribute('value', this.value);" ng-required="true" />
+						<input type="text" class="inputText" ng-model="producto.producto.nombre" ng-value="producto.producto.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" />
 						<label class="floating-label">* Nombre</label> 
 					</div>
 					
 					<div class="form-group"  >
-						<input type="number"  class="inputText" ng-model="producto.producto.snip" value="{{producto.producto.snip}}" onblur="this.setAttribute('value', this.value);">
+						<input type="number"  class="inputText" ng-model="producto.producto.snip" ng-value="producto.producto.snip" onblur="this.setAttribute('value', this.value);">
 						<label for="isnip" class="floating-label">SNIP</label>
 					</div>
 				
 					<div class="form-group-row row" >
 						<div class="form-group col-sm-2" >
-						       <input type="number" class="inputText" ng-model="producto.producto.programa" value="{{producto.producto.programa}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
+						       <input type="number" class="inputText" ng-model="producto.producto.programa" ng-value="producto.producto.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
 						       <label for="iprog" class="floating-label">Programa</label>
 						</div>
 						<div class="form-group col-sm-2" >
-						  <input type="number" class="inputText" ng-model="producto.producto.subprograma" value="{{producto.producto.subprograma}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
+						  <input type="number" class="inputText" ng-model="producto.producto.subprograma" ng-value="producto.producto.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
 						  <label for="isubprog" class="floating-label">Subprograma</label>
 						</div>
 						<div class="form-group col-sm-2" >
-						  <input type="number" class="inputText" ng-model="producto.producto.proyecto_" value="{{producto.producto.proyecto_}}" onblur="this.setAttribute('value', this.value);"  ng-maxlength="4" style="text-align: center" />
+						  <input type="number" class="inputText" ng-model="producto.producto.proyecto_" ng-value="producto.producto.proyecto_" onblur="this.setAttribute('value', this.value);"  ng-maxlength="4" style="text-align: center" />
 						  <label for="iproy_" class="floating-label">Proyecto</label>
 						</div>
 						<div class="form-group col-sm-2" >
-						  <input type="number" class="inputText" ng-model="producto.producto.actividad" value="{{producto.producto.actividad}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"  />
+						  <input type="number" class="inputText" ng-model="producto.producto.actividad" ng-value="producto.producto.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"  />
 						  <label for="iproy_" class="floating-label">Actividad</label>
 						</div>
 						<div class="form-group col-sm-2" >
-						  <input type="number" class="inputText" ng-model="producto.producto.obra" value="{{producto.producto.obra}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+						  <input type="number" class="inputText" ng-model="producto.producto.obra" ng-value="producto.producto.obra" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
 						  <label for="iobra" class="floating-label">Obra</label>
 						</div>
 						<div class="form-group col-sm-2" >
-						  <input type="number" class="inputText" ng-model="producto.producto.fuente" value="{{producto.producto.fuente}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+						  <input type="number" class="inputText" ng-model="producto.producto.fuente" ng-value="producto.producto.fuente" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
 						  <label for="campo5" class="floating-label">Fuente</label>
 						</div>
 					</div>
 					
 					<div class="form-group" >
-			          <input type="text" class="inputText" ng-model="producto.tipoNombre" value="{{producto.tipoNombre}}" 
+			          <input type="text" class="inputText" ng-model="producto.tipoNombre" ng-value="producto.tipoNombre" 
 			          	ng-click="producto.buscarTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
 			           <span class="label-icon" ng-click="producto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
 			          <label for="campo3" class="floating-label">* Tipo</label>
 			        </div>
 			        
 			        <div class="form-group">
-			            <input type="text" class="inputText" ng-model="producto.unidadEjecutoraNombre" value="{{producto.unidadEjecutoraNombre}}" 
+			            <input type="text" class="inputText" ng-model="producto.unidadEjecutoraNombre" ng-value="producto.unidadEjecutoraNombre" 
 			            	ng-click="producto.buscarUnidadEjecutora()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
 			            <span class="label-icon" ng-click="producto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
 			          <label for="campo5" class="floating-label">* Unidad Ejecutora</label>
 			        </div>
 			        
 			        <div class="form-group">
-			          	<input type="text" class="inputText" ng-model="producto.coordenadas" value="{{producto.coordenadas}}" 
+			          	<input type="text" class="inputText" ng-model="producto.coordenadas" ng-value="producto.coordenadas" 
 			          		onblur="this.setAttribute('value', this.value);"ng-click="producto.open(producto.producto.latitud, producto.producto.longitud); " ng-readonly="true" />
 			            <span class="label-icon" ng-click="producto.open(producto.producto.latitud, producto.producto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
 			          	<label  class="floating-label">Coordenadas</label>
 					</div>
 						
 					<div class="form-group" >
-						<input type="text" class="inputText" ng-model="producto.producto.descripcion" value="{{producto.producto.descripcion}}" onblur="this.setAttribute('value', this.value);"/>
+						<input type="text" class="inputText" ng-model="producto.producto.descripcion" ng-value="producto.producto.descripcion" onblur="this.setAttribute('value', this.value);"/>
 						<label for="campo2" class="floating-label"> Descripción</label> 
 					</div>
 			        
@@ -188,17 +189,17 @@
 						<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >
 									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
-										value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>	
+										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="entero" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
-									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="decimal" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
-									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="booleano" class="form-group" >
@@ -208,7 +209,7 @@
 								<div ng-switch-when="fecha" class="form-group" >
 									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
 														datepicker-options="producto.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="producto.abrirPopupFecha($index)"
-														value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 														<span class="label-icon" ng-click="producto.abrirPopupFecha($index)">
 															<i class="glyphicon glyphicon-calendar"></i>
 														</span>
@@ -218,7 +219,7 @@
 									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
 													<option value="">Seleccione una opción</option>
 													<option ng-repeat="number in campo.opciones"
-														value="{{number.valor}}">{{number.label}}</option>
+														ng-value="number.valor">{{number.label}}</option>
 								</select>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
@@ -261,10 +262,9 @@
 			</form>
 			</div>
 		</div>
-		<br />
-		<div class="label-form" align="center">Los campos marcados con * son obligatorios</div>
-		<br />
 		<div class="col-sm-12 operation_buttons" align="right">
+		
+		<div class="label-form" align="center">Los campos marcados con * son obligatorios</div>
 			<div class="btn-group">
 				<shiro:hasPermission name="21020">
 					<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid" ng-disabled="!form.$valid" uib-tooltip="Guardar">

@@ -46,11 +46,13 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.orden = null;
 	mi.esNuevo = false;
 	mi.coordenadas = "";
+	mi.objetoTipoNombre = "";
 	
 	$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id }).success(
 			function(response) {
 				mi.componenteid = response.id;
 				mi.componenteNombre = response.nombre;
+				mi.objetoTipoNombre = "Componente";
 	});
 	
 	mi.formatofecha = 'dd/MM/yyyy';

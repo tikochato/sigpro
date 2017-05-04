@@ -34,7 +34,7 @@
 			<div class="panel-heading"><h3>Componentes</h3></div>
 		</div>
 		<div class="subtitulo">
-			{{ componentec.proyectoNombre }}
+			{{ componentec.objetoTipoNombre }} {{ componentec.proyectoNombre }}
 		</div>
 		
 		<div  align="center" ng-hide="componentec.mostraringreso">

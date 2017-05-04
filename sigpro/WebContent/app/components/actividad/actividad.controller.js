@@ -15,7 +15,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.objetoid = $routeParams.objeto_id;
 		mi.objetotipo = $routeParams.objeto_tipo;
 		mi.objetoNombre="";
-		mi.objetTipoNombre = "";
+		mi.objetoTipoNombre = "";
 		mi.paginaActual = 1;
 		mi.datotipoid = "";
 		mi.datotiponombre = "";

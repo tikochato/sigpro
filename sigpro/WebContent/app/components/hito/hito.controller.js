@@ -17,6 +17,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 		mi.paginaActual = 1;
 		mi.proyectoid = $routeParams.proyecto_id;
 		mi.proyectoNombre="";
+		mi.objetoTipoNombre="";
 		mi.formatofecha = 'dd/MM/yyyy';
 		mi.hitodatotipoid = "";
 		mi.hitoresultado="";
@@ -34,6 +35,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 				function(response) {
 					mi.proyectoid = response.id;
 					mi.proyectoNombre = response.nombre;
+					mi.objetoTipoNombre = "Proyecto";
 		});
 
 		mi.gridOptions = {

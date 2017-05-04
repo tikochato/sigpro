@@ -12,7 +12,9 @@
 		<div class="panel panel-default">
 	   		<div class="panel-heading"><h3>Riesgos</h3></div>
 		</div>
-		<div class="subtitulo">{{ riesgoc.objetoNombre }}</div>
+		<div class="subtitulo">
+		{{ riesgoc.objetoTipoNombre }} {{ riesgoc.objetoNombre }}
+		</div>
 		
 		<div class="row" align="center" ng-if="!riesgoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">

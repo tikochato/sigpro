@@ -7,6 +7,7 @@ app.controller('matrizriesgoController',['$scope','$http','$interval','i18nServi
 	var mi=this;
 	mi.proyectoid = "";
 	mi.proyectoNombre = ""; 
+	mi.objetoTipoNombre = "";
 		
 	$window.document.title = $utilidades.sistema_nombre+' - Matriz Riesgos';
 	i18nService.setCurrentLang('es');
@@ -15,6 +16,7 @@ app.controller('matrizriesgoController',['$scope','$http','$interval','i18nServi
 		function(response) {
 			mi.proyectoid = response.id;
 			mi.proyectoNombre = response.nombre;
+			mi.objetoTipoNombre = "Proyecto";
 	});
 	
 	 $http.post('/SMatrizRiesgo', { accion: 'getMatrizRiesgos', proyectoid:$routeParams.proyectoId, t: (new Date()).getTime()})

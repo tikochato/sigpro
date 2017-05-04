@@ -14,7 +14,7 @@
 			<div class="panel-heading"><h3>Hitos</h3></div>
 		</div>
 		<div class="subtitulo">
-			{{ hitoc.proyectoNombre }}
+			{{ hitoc.objetoTipoNombre }} {{ hitoc.proyectoNombre }}
 		</div>
 		
 		<div class="row" align="center" ng-hide="hitoc.mostraringreso">

@@ -28,9 +28,10 @@
 	<div class="panel panel-default">
 	   	<div class="panel-heading"><h3>Subproducto</h3></div>
 	</div>
+		<div class="subtitulo">
+			{{ subproducto.objetoTipoNombre }} {{ subproducto.productoNombre }}
+		</div>
 	
-
-	<br />
   
 	<div align="center" ng-hide="subproducto.esForma">
 		<div class="col-sm-12 operation_buttons" align="right">
@@ -89,8 +90,10 @@
 	</div>
 
 	<div ng-show="subproducto.esForma" class="row second-main-form">
-		<h2 ng-hide="!subproducto.esNuevo"><small>Nuevo Subproducto</small></h2>
-		<h2 ng-hide="subproducto.esNuevo"><small>Edición de Subproducto</small></h2>
+		<div class="page-header">
+			<h2 ng-hide="!subproducto.esNuevo"><small>Nuevo Subproducto</small></h2>
+			<h2 ng-hide="subproducto.esNuevo"><small>Edición de Subproducto</small></h2>
+		</div>
 		<div class="col-sm-12 operation_buttons" >
 			<div class="btn-group" ng-hide="subproducto.esNuevo" >
 				<label class="btn btn-default" ng-click="subproducto.irAActividades()" uib-tooltip="Actividades" tooltip-placement="bottom">
@@ -129,7 +132,7 @@
 						<label class="floating-label">SNIP</label>
 					</div>
 				
-					<div class="form-group row" >
+					<div class="form-group-row row" >
 						<div class="form-group col-sm-2" >
 					       <input type="number" class="inputText" ng-model="subproducto.subproducto.programa"  ng-maxlength="4" style="text-align: center" 
 					       		value="{{subproducto.subproducto.programa}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
@@ -189,7 +192,7 @@
 			            	value="{{subproducto.unidadEjecutoraNombre}}" onblur="this.setAttribute('value', this.value);" 
 			            	ng-click="subproducto.buscarUnidadEjecutora()"/>
 			            <span class="label-icon" ng-click="subproducto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
-			          <label class="floating-label">Unidad Ejecutora</label>
+			          <label class="floating-label">* Unidad Ejecutora</label>
 			        </div>
 			        
 			        <div class="form-group" ng-repeat="campo in subproducto.camposdinamicos">
@@ -247,10 +250,8 @@
 			</form>
 			</div>
 		</div>
-		<br />
-		<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
-		<br />
 		<div class="col-sm-12 operation_buttons" align="right">
+		<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 			<div class="btn-group">
 				<shiro:hasPermission name="40020">
 					<label class="btn btn-success" ng-click="form.$valid ? subproducto.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">

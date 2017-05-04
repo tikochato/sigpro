@@ -38,7 +38,7 @@
 			<div class="panel-heading"><h3>Actividades</h3></div>
 		</div>
 		<div class="subtitulo">
-			{{ actividadc.objetoNombre }}
+			{{ actividadc.objetoTipoNombre }} {{ actividadc.objetoNombre }}
 		</div>
 		
 		<div class="row" align="center" ng-hide="actividadc.mostraringreso">

@@ -12,7 +12,7 @@
 	  		<div class="panel-heading"><h3>Matriz de Riesgos</h3></div>
 		</div>
 		<div class="subtitulo">
-			{{ matrizriesgoc.proyectoNombre }}
+			{{ matrizriesgoc.objetoTipoNombre }} {{ matrizriesgoc.proyectoNombre }}
 		</div>
 			
 		

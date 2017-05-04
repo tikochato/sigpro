@@ -17,6 +17,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
 			mi.desembolsotipoid;
 			mi.desembolsonombre;
+			mi.objetoTipoNombre=""
 			mi.proyectoid = $routeParams.proyecto_id;
 			mi.fecha = new Date();
 			
@@ -216,6 +217,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			$http.post('/SProyecto', { accion: 'obtenerProyectoPorId',id: $routeParams.proyecto_id }).success(
 					function(response) {
 						mi.proyectonombre = response.nombre;
+						mi.objetoTipoNombre = "Proyecto";
 			});
 			
 			mi.mostrarCalendar = function() {

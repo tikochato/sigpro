@@ -31,6 +31,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.objetoid = $routeParams.objeto_id;
 		mi.objetotipo = $routeParams.objeto_tipo;
 		mi.objetoNombre = "";
+		mi.objetoTipoNombre="";
 		
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;
@@ -45,34 +46,12 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				startingDay : 1
 		};
 		
-		mi.cargarObjetoNombre = function(){
-			if(mi.objetotipo == 1){ //Proyecto
-				$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: mi.objetoid }).success(
-						function(response) {
-							mi.objetoNombre = response.nombre;
-				});
-			}else if(mi.objetotipo == 2){ //Componente
-				$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: mi.objetoid }).success(
-						function(response) {
-							mi.objetoNombre = response.nombre;
-				});
-			}else if(mi.objetotipo == 3){ //Producto
-				$http.post('/SProducto', { accion: 'obtenerProductoPorId', id: mi.objetoid }).success(
-						function(response) {
-							mi.objetoNombre = response.nombre;
-				});
-			}else if(mi.objetotipo == 4){ //Subproducto
-				$http.post('/SSubproducto', { accion: 'obtenerSubproductoPorId', id: mi.objetoid }).success(
-						function(response) {
-							mi.objetoNombre = response.nombre;
-				});
-			}else if(mi.objetotipo == 5){ //Actividad
-				$http.post('/SActividad', { accion: 'obtenerActividadPorId', id: mi.objetoid }).success(
-						function(response) {
-							mi.objetoNombre = response.nombre;
-				});
-			}
-		}
+		$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo }).success(
+				function(response) {
+					mi.objetoid = response.id;
+					mi.objetoNombre = response.nombre;
+					mi.objetoTipoNombre = response.tiponombre;
+		});
 		
 		mi.gridOptions = {
 				enableRowSelection : true,
