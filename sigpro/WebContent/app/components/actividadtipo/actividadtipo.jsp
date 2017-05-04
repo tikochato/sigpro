@@ -11,6 +11,7 @@
   	 <shiro:lacksPermission name="3010">
 			<p ng-init="actividadtipoc.redireccionSinPermisos()"></p>
 	 </shiro:lacksPermission>
+	 
 	<div class="panel panel-default">
 		<div class="panel-heading"><h3>Tipo de Actividad</h3></div>
 	</div>
@@ -188,7 +189,7 @@
 			</form>
 		</div>
 		<br />
-		<div align="center">Los campos marcados con * son obligatorios</div>
+		<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 		  <div class="btn-group">
 		    <shiro:hasPermission name="3020">

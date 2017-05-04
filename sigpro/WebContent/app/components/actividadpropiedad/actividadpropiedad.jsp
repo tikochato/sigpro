@@ -6,10 +6,11 @@
 		 <shiro:lacksPermission name="2010">
 			<p ng-init="actividadpropiedadc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
+		
 		<div class="panel panel-default">
 		    <div class="panel-heading"><h3>Propiedades de Actividad</h3></div>
 		</div>
-		<br/>
+		
 		<div class="row" align="center" ng-hide="actividadpropiedadc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 			  <div class="btn-group">

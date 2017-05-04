@@ -12,6 +12,7 @@
   <shiro:lacksPermission name="4010">
 	<p ng-init="colaborador.redireccionSinPermisos()"></p>
   </shiro:lacksPermission>
+  
   <div class="panel panel-default">
 		    <div class="panel-heading"><h3>Colaboradores</h3></div>
   </div>
@@ -170,7 +171,7 @@
 	    </form>
     
   
-    <div class="col-sm-12" align="center">Los campos marcados con * son obligatorios</div>
+    <div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 
    <div class="operation_buttons" align="right">
 	  <div class="btn-group">

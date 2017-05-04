@@ -29,10 +29,14 @@
   	    <shiro:lacksPermission name="5010">
 			<p ng-init="componentec.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
+		
 		<div class="panel panel-default">
-		    <div class="panel-heading"><h3>Componentes</h3></div>
+			<div class="panel-heading"><h3>Componentes</h3></div>
 		</div>
-		<h3><small>{{ componentec.proyectoNombre }}</small></h3>
+		<div class="subtitulo">
+			{{ componentec.proyectoNombre }}
+		</div>
+		
 		<div  align="center" ng-hide="componentec.mostraringreso">
 			
     		<div class="operation_buttons" align="right">
@@ -89,8 +93,10 @@
 
 		</div>
 		<div class="row second-main-form" ng-show="componentec.mostraringreso">
-			<h2 ng-hide="!componentec.esnuevo"><small>Nuevo componente</small></h2>
-			<h2 ng-hide="componentec.esnuevo"><small>Edición de componente</small></h2>
+			<div class="page-header">
+				<h2 ng-hide="!componentec.esnuevo"><small>Nuevo componente</small></h2>
+				<h2 ng-hide="componentec.esnuevo"><small>Edición de componente</small></h2>
+			</div>
 			
     		<div class="operation_buttons">
     		  <div class="btn-group" ng-hide="componentec.esnuevo">
@@ -265,7 +271,7 @@
 			</div>
 			
 			<div class="col-sm-12 operation_buttons" align="right">
-			<div align="center">Los campos marcados con * son obligatorios</div>
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 				<div class="col-sm-12">
 					<div class="btn-group">
 						 <shiro:hasPermission name="5020">

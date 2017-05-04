@@ -135,7 +135,7 @@
 	  </form>
 
     </div>
-    <div align="center">Los campos marcados con * son obligatorios</div>
+    <div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">

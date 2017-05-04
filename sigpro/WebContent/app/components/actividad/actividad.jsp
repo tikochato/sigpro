@@ -33,10 +33,14 @@
 
 			<p ng-init="actividadc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
+		
 		<div class="panel panel-default">
-		    <div class="panel-heading"><h3>Actividades</h3></div>
+			<div class="panel-heading"><h3>Actividades</h3></div>
 		</div>
-		<h3><small>{{ actividadc.objetoTipoNombre }} {{ actividadc.objetoNombre }}</small></h3>
+		<div class="subtitulo">
+			{{ actividadc.objetoNombre }}
+		</div>
+		
 		<div class="row" align="center" ng-hide="actividadc.mostraringreso">
 			
     		<div class="col-sm-12 operation_buttons" align="right">
@@ -288,10 +292,11 @@
 
 				</form>
 			</div>
-			<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
+			
 			
 			
 		<div class="col-sm-12 operation_buttons" align="right">
+		<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 			<div class="btn-group">
 				<shiro:hasPermission name="24020">
 					<label class="btn btn-success" ng-click="form.$valid ? actividadc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar" uib-tooltip="Guardar">

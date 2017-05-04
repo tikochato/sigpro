@@ -192,7 +192,7 @@
 			</form>
 		</div>
 		
-		<div class="col-sm-12 label-form" align="center">Los campos marcados con * son obligatorios</div>
+		<div class="label-form" align="center">Los campos marcados con * son obligatorios</div>
 		<br />
 		
 		<div class="col-sm-12 operation_buttons" align="right">
