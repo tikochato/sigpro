@@ -81,7 +81,7 @@
     <div class="operation_buttons" align="right">
 	  <div class="btn-group">
 	    <shiro:hasPermission name="4020">
-	      <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : ''" ng-disabled="!form.$valid || !colaborador.usuarioValido" title="Guardar">
+	      <label class="btn btn-success" ng-click="form.$valid ? colaborador.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
 	      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 	    </shiro:hasPermission>
 	    <label class="btn btn-primary" ng-click="colaborador.cancelar()" title="Ir a Tabla">
@@ -129,9 +129,9 @@
 				</div>
 		      	<div class="form-group" >
 				    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="colaborador.colaborador.usuario" value="{{colaborador.colaborador.usuario}}" 
-						            		ng-click="colaborador.buscarUsuario()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+						            		ng-click="colaborador.buscarUsuario()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="false"/>
 					<span class="label-icon" ng-click="colaborador.buscarUsuario()"><i class="glyphicon glyphicon-search"></i></span>
-					<label for="campo3" class="floating-label">* Usuario</label>
+					<label for="campo3" class="floating-label">Usuario</label>
 				</div>
 	     
 	      <br/>
@@ -176,7 +176,7 @@
    <div class="operation_buttons" align="right">
 	  <div class="btn-group">
 	    <shiro:hasPermission name="4020">
-	      <label class="btn btn-success" ng-click="form.$valid && colaborador.usuarioValido ? colaborador.guardar() : ''" ng-disabled="!form.$valid || !colaborador.usuarioValido" title="Guardar">
+	      <label class="btn btn-success" ng-click="form.$valid ? colaborador.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
 	      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 	    </shiro:hasPermission>
 	    <label class="btn btn-primary" ng-click="colaborador.cancelar()" title="Ir a Tabla">
