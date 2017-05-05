@@ -9,11 +9,10 @@
 	<shiro:lacksPermission name="33010">
 		<p ng-init="unidad.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
+	
   <div class="panel panel-default">
 	  <div class="panel-heading"><h3>Unidad Ejecutora</h3></div>
 	</div>
-
-  <br />
 
   <div class="row" align="center" ng-hide="unidad.esForma">
     <div class="col-sm-12 operation_buttons" align="right">
@@ -41,6 +40,7 @@
 			</div>
 		</div>
 	  </div>
+	  <br>
       <div id="grid1" ui-grid="unidad.opcionesGrid" ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination>
         <div class="grid_loading" ng-hide="!unidad.mostrarCargando">
           <div class="msg">
@@ -77,24 +77,23 @@
 
       <form name="form">
 	        
-	        
-	        
 	        <div class="form-group"  >
 				<input type="number" class="inputText" name="campo1" id="campo1"  ng-model="unidad.codigo" 
 					ng-required="true" ng-readonly="!unidad.esNuevo"
-					value="{{unidad.codigo}}" onblur="this.setAttribute('value', this.value);">
+					ng-value="unidad.codigo" onblur="this.setAttribute('value', this.value);">
 			     <label class="floating-label">* Unidad Ejecutora</label>
 			</div>
         
 		    <div class="form-group">
 	          <input type="text" class="inputText" ng-model="unidad.nombre" ng-required="true" 
-	          		value="{{unidad.nombre}}" onblur="this.setAttribute('value', this.value);"/>
+	          		ng-value="unidad.nombre" onblur="this.setAttribute('value', this.value);"/>
 	          <label class="floating-label">* Nombre Unidad Ejecutora</label>
 	        </div>
 		
 		    <div class="form-group" ng-required="true">
 	            <input type="text" class="inputText" id="campo3" name="campo3" ng-model="unidad.nombreEntidad" 
-	            ng-readonly="true" ng-required="true" ng-click="unidad.buscarEntidad()"/>
+	            ng-readonly="true" ng-required="true" ng-click="unidad.buscarEntidad()"
+	            ng-value="unidad.nombreEntidad" onblur="this.setAttribute('value', this.value);" />
 	            <span class="label-icon" ng-click="unidad.buscarEntidad()"><i class="glyphicon glyphicon-search"></i></span>
 	            <label class="floating-label">* Entidad</label>
 	        </div>

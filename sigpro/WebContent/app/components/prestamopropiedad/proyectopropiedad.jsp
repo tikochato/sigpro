@@ -89,7 +89,7 @@
 							<br/><br/>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" id="nombre" ng-model="proyectopropiedadc.proyectopropiedad.nombre" value="{{proyectopropiedadc.proyectopropiedad.nombre}}" onblur="this.setAttribute('value', this.value);" ng-required="true">
+    						<input type="text" class="inputText" id="nombre" ng-model="proyectopropiedadc.proyectopropiedad.nombre" ng-value="proyectopropiedadc.proyectopropiedad.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
 							<label for="nombre" class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
@@ -102,7 +102,7 @@
 								<label for="nombre" class="floating-label">* Tipo dato</label>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" id="descripcion" ng-model="proyectopropiedadc.proyectopropiedad.descripcion"  value="{{proyectopropiedadc.proyectopropiedad.descripcion}}" onblur="this.setAttribute('value', this.value);" >
+    						<input type="text" class="inputText" id="descripcion" ng-model="proyectopropiedadc.proyectopropiedad.descripcion"  ng-value="proyectopropiedadc.proyectopropiedad.descripcion" onblur="this.setAttribute('value', this.value);" >
 							<label for="descripcion" class="floating-label">Descripción</label>
 						</div>
 						<br/>

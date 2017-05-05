@@ -14,8 +14,6 @@
 	<div class="panel panel-default">
 	  <div class="panel-heading"><h3>Tipo de Riesgo</h3></div>
 	</div>
-	<br />
-
 
 	<div class="row" align="center" ng-if="!riesgotipoc.mostraringreso">
 		<div class="col-sm-12 operation_buttons" align="right">
@@ -72,8 +70,10 @@
 	</div>
 
 	<div class="row second-main-form" ng-if="riesgotipoc.mostraringreso">
-		<h2 ng-hide="!riesgotipoc.esnuevo"><small>Nuevo Tipo Riesgo</small></h2>
-		<h2 ng-hide="riesgotipoc.esnuevo"><small>Edición de Tipo Riesgo</small></h2>
+		<div class="page-header">
+			<h2 ng-hide="!riesgotipoc.esnuevo"><small>Nuevo Tipo Riesgo</small></h2>
+			<h2 ng-hide="riesgotipoc.esnuevo"><small>Edición de Tipo Riesgo</small></h2>
+		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="32020">
@@ -87,20 +87,68 @@
 		<div class="col-sm-12">
 			<form name="form">
 				<div class="form-group">
-					<label for="id">ID {{riesgotipoc.riesgotipo.id }}</label> 
+					<label for="id"  class="floating-label">ID {{riesgotipoc.riesgotipo.id }}</label> 
 					<br/><br/>
 				</div>
 
 				<div class="form-group">
 					<input type="text" class="inputText" id="nombre" ng-model="riesgotipoc.riesgotipo.nombre" ng-required="true" 
-						value="{{riesgotipoc.riesgotipo.nombre}}" onblur="this.setAttribute('value', this.value);">
+						ng-value="riesgotipoc.riesgotipo.nombre" onblur="this.setAttribute('value', this.value);">
 					<label class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group">
-					<input type="text"class="inputText" id="descripcion" ng-model="riesgotipoc.riesgotipo.descripcion" value="{{riesgotipoc.riesgotipo.descripcion}}"
+					<input type="text"class="inputText" id="descripcion" ng-model="riesgotipoc.riesgotipo.descripcion" ng-value="riesgotipoc.riesgotipo.descripcion"
 						onblur="this.setAttribute('value', this.value);">
 					<label class="floating-label">Descripción</label>
 				</div>
+				
+				<br />
+				<h5 class="label-form" align="center">Propiedades</h5>
+				<div align="center">
+					<div style="height: 35px; width: 75%">
+						<div style="text-align: right;">
+							<div class="btn-group" role="group" aria-label="">
+								<a class="btn btn-default" href
+									ng-click="riesgotipoc.buscarPropiedad()" role="button"
+									uib-tooltip="Asignar nueva propiedad" tooltip-placement="left">
+									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<table style="width: 75%;"
+					st-table="riesgotipoc.riesgopropiedades"
+					class="table table-striped  table-bordered">
+					<thead >
+						<tr>
+							<th class="label-form">ID</th>
+							<th class="label-form">Nombre</th>
+							<th class="label-form">Descripicon</th>
+							<th class="label-form">Tipo Dato</th>
+							<th style="width: 30px;" class="label-form">Quitar</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr st-select-row="row"
+							ng-repeat="row in riesgotipoc.riesgopropiedades">
+							<td>{{row.id}}</td>
+							<td>{{row.nombre}}</td>
+							<td>{{row.descripcion}}</td>
+							<td>{{row.datotiponombre}}</td>
+							<td>
+								<button type="button"
+									ng-click="riesgotipoc.eliminarPropiedad2(row)"
+									class="btn btn-sm btn-danger">
+									<i class="glyphicon glyphicon-minus-sign"> </i>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</div>
+				
 				<div class="panel panel-default">
 					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
@@ -134,52 +182,7 @@
 						</div>
 					</div>
 				</div>
-				<h5>Propiedades</h5>
-				<br />
-				<div align="center">
-					<div style="height: 35px; width: 75%">
-						<div style="text-align: right;">
-							<div class="btn-group" role="group" aria-label="">
-								<a class="btn btn-default" href
-									ng-click="riesgotipoc.buscarPropiedad()" role="button"
-									uib-tooltip="Asignar nueva propiedad" tooltip-placement="left">
-									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-								</a>
-							</div>
-						</div>
-					</div>
-					<br/>
-					<table style="width: 75%;"
-					st-table="riesgotipoc.riesgopropiedades"
-					class="table table-striped  table-bordered">
-					<thead >
-						<tr>
-							<th>ID</th>
-							<th>Nombre</th>
-							<th>Descripicon</th>
-							<th>Tipo Dato</th>
-							<th style="width: 30px;">Quitar</th>
-
-						</tr>
-					</thead>
-					<tbody>
-						<tr st-select-row="row"
-							ng-repeat="row in riesgotipoc.riesgopropiedades">
-							<td>{{row.id}}</td>
-							<td>{{row.nombre}}</td>
-							<td>{{row.descripcion}}</td>
-							<td>{{row.datotiponombre}}</td>
-							<td>
-								<button type="button"
-									ng-click="riesgotipoc.eliminarPropiedad2(row)"
-									class="btn btn-sm btn-danger">
-									<i class="glyphicon glyphicon-minus-sign"> </i>
-								</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				</div>
+				
 			</form>
 		</div>
 		<br />

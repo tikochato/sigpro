@@ -38,6 +38,12 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 					mi.objetoTipoNombre = "Proyecto";
 		});
 
+		mi.editarElemento = function (event) {
+	        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+	        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
+	        mi.editar();
+	    };
+	    
 		mi.gridOptions = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
@@ -47,7 +53,8 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 				enableFiltering: true,
 				enablePaginationControls: false,
 			    paginationPageSize: $utilidades.elementosPorPagina,
-				columnDefs : [
+			    rowTemplate: '<div ng-dblclick="grid.appScope.hitoc.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
+			    columnDefs : [
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
 						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.hitoc.filtrar($event,1)" ></input></div>'				    

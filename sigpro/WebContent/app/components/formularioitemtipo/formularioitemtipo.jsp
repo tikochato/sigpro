@@ -9,6 +9,7 @@
 		<div class="panel panel-default">
 		  <div class="panel-heading"><h3>Tipo Item de Formulario</h3></div>
 		</div>
+		
 		<div class="row" align="center" ng-if="!formularioitemtipoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
@@ -69,9 +70,11 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="13020">
-			        	<label class="btn btn-success" ng-click="form.$valid ? formularioitemtipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+			        	<label class="btn btn-success" ng-click="form.$valid ? formularioitemtipoc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 			        </shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="formularioitemtipoc.irATabla()">Ir a Tabla</label>
+			        <label class="btn btn-primary" ng-click="formularioitemtipoc.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
     			</div>
     		</div>
 			
@@ -83,7 +86,7 @@
 						</div>
 						<div class="form-group">
     						<input type="text"  class="inputText"  ng-model="formularioitemtipoc.formularioitemtipo.nombre"
-    						value="{{formularioitemtipoc.formularioitemtipo.nombre}}" onblur="this.setAttribute('value', this.value);">
+    						ng-value="formularioitemtipoc.formularioitemtipo.nombre" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
@@ -98,7 +101,7 @@
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText" ng-model="formularioitemtipoc.formularioitemtipo.descripcion" 
-    						value="{{formularioitemtipoc.formularioitemtipo.descripcion}}" onblur="this.setAttribute('value', this.value);">
+    						ng-value="formularioitemtipoc.formularioitemtipo.descripcion" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">Descripción</label>
 						</div>
 					<div class="panel panel-default">
@@ -141,9 +144,11 @@
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
 						<shiro:hasPermission name="13020">
-				        	<label class="btn btn-success"  ng-click="form.$valid ? formularioitemtipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				        	<label class="btn btn-success"  ng-click="form.$valid ? formularioitemtipoc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				        </shiro:hasPermission>
-				        <label class="btn btn-primary" ng-click="formularioitemtipoc.irATabla()">Ir a Tabla</label>
+				        <label class="btn btn-primary" ng-click="formularioitemtipoc.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 	    			</div>
 	    		</div>
     		</div>

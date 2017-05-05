@@ -80,9 +80,11 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="15020">
-			        	<label class="btn btn-success" ng-click="form.$valid ? hitoc.guardar(): ''" ng-disabled="!form.$valid">Guardar</label>
+			        	<label class="btn btn-success" ng-click="form.$valid ? hitoc.guardar(): ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 					</shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="hitoc.irATabla()">Ir a Tabla</label>
+			        <label class="btn btn-primary" ng-click="hitoc.irATabla()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
     			</div>
     		</div>
 			
@@ -94,7 +96,7 @@
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText"  ng-model="hitoc.hito.nombre" ng-required="true"
-    						 value="{{hitoc.hito.nombre}}" onblur="this.setAttribute('value', this.value);">
+    						 ng-value="hitoc.hito.nombre" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
@@ -103,7 +105,7 @@
 	    						is-open="hitoc.popupfecha.abierto" datepicker-options="hitoc.fechaOptions"  close-text="Cerrar" 
 	    						alt-input-formats="altInputFormats" current-text="Hoy" clear-text="Borrar" ng-required="true"
 	    						ng-click="hitoc.abirpopup()"
-	    						value="{{hitoc.fecha}}" onblur="this.setAttribute('value', this.value);"/>
+	    						ng-value="hitoc.fecha" onblur="this.setAttribute('value', this.value);"/>
 	    						
 	    						<span class="label-icon" ng-click="hitoc.abirpopup()">
 						        	<i class="glyphicon glyphicon-calendar"></i>
@@ -114,13 +116,13 @@
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText" ng-model="hitoc.hito.descripcion" 
-    						value="{{hitoc.hito.descripcion}}" onblur="this.setAttribute('value', this.value);">
+    						ng-value="hitoc.hito.descripcion" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">Descripción</label>
 						</div>
 						<div class="form-group"> 
 			            	<input type="text" class="inputText"  ng-model="hitoc.hitotipoNombre" ng-readonly="true" ng-required="true"
 			            	ng-click="hitoc.buscarHitoTipo()"
-			            	value="{{hitoc.hitotipoNombre}}" onblur="this.setAttribute('value', this.value);"/>
+			            	ng-value="hitoc.hitotipoNombre" onblur="this.setAttribute('value', this.value);"/>
 			            	<span  class="label-icon"  ng-click="hitoc.buscarHitoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 			            	<label class="floating-label" >* Tipo hito</label>
 			          	
@@ -129,16 +131,16 @@
 							
 							<div ng-switch="hitoc.hitodatotipoid">
 								<input ng-switch-when="1" type="text"  ng-model="hitoc.hitoresultado" class="inputText" 
-										value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>	
+										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
 								<input ng-switch-when="2" type="text"  numbers-Only ng-model="hitoc.hitoresultado" class="inputText" 
-										value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>	
+										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
 								<input ng-switch-when="3" type="number"  ng-model="hitoc.hitoresultado" class="inputText" 
-										value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 								<input type="checkbox"  ng-model="hitoc.hitoresultado"/>
 								<p ng-switch-when="5" class="input-group">
 									<input type="text"  class="form-control" uib-datepicker-popup="{{hitoc.formatofecha}}" ng-model="hitoc.hitoresultado" is-open="hitoc.popupfecharesultado.abierto"
 											datepicker-options="hitoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
-											value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+											ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 									<span class="label-icon" ng-click="hitoc.abirpopupreultado()">
 										<i class="glyphicon glyphicon-calendar"></i>
 									</span>
@@ -150,7 +152,7 @@
 						
 						<div class="form-group" ng-if="hitoc.hitotipoid>0">
     						<input type="text" class="inputText" ng-model="hitoc.hitoresultadocomentario"
-    						value="{{hitoc.hitoresultadocomentario}}" onblur="this.setAttribute('value', this.value);">
+    						ng-value="hitoc.hitoresultadocomentario" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">Comentario</label>
 						</div>
 					<br/>
@@ -194,9 +196,11 @@
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
 						<shiro:hasPermission name="15020">
-				        	<label class="btn btn-success" ng-click="form.$valid ? hitoc.guardar(): ''" ng-disabled="!form.$valid">Guardar</label>
+				        	<label class="btn btn-success" ng-click="form.$valid ? hitoc.guardar(): ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				        </shiro:hasPermission>
-				        <label class="btn btn-primary" ng-click="hitoc.irATabla()">Ir a Tabla</label>
+				        <label class="btn btn-primary" ng-click="hitoc.irATabla()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 	    			</div>
 	    		</div>
     		</div>

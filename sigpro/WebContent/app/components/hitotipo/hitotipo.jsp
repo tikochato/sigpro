@@ -9,19 +9,20 @@
 		<div class="panel panel-default">
 		  <div class="panel-heading"><h3>Tipo de Hito</h3></div>
 		</div>
+		
 		<div class="row" align="center" ng-hide="hitotipoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="16040">
-			       		<label class="btn btn-primary" ng-click="hitotipoc.nuevo()">
+			       		<label class="btn btn-primary" ng-click="hitotipoc.nuevo()" uib-tooltip="Nuevo">
 			       			<span class="glyphicon glyphicon-plus"></span>Nuevo
 			       		</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="16010"><label class="btn btn-primary" ng-click="hitotipoc.editar()">
+			       <shiro:hasPermission name="16010"><label class="btn btn-primary" ng-click="hitotipoc.editar()" uib-tooltip="Editar">
 			       		<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			       	</shiro:hasPermission>
 			       <shiro:hasPermission name="16030">
-			       		<label class="btn btn-danger" ng-click="hitotipoc.borrar()">
+			       		<label class="btn btn-danger" ng-click="hitotipoc.borrar()" uib-tooltip="Borrar">
 			       			<span class="glyphicon glyphicon-trash"></span>Borrar
 			       		</label>
 			       </shiro:hasPermission>
@@ -74,9 +75,11 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="16020">
-			        	<label class="btn btn-success"  ng-click="form.$valid ? hitotipoc.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
+			        	<label class="btn btn-success"  ng-click="form.$valid ? hitotipoc.guardar() : ''" ng-disabled="form.$invalid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 					</shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="hitotipoc.irATabla()">Ir a Tabla</label>
+			        <label class="btn btn-primary" ng-click="hitotipoc.irATabla()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
     			</div>
     		</div>
 			
@@ -88,7 +91,7 @@
 					</div>
 					<div class="form-group">
    						<input type="text" class="inputText" ng-model="hitotipoc.hitotipo.nombre" ng-required="true"
-   						value="{{hitotipoc.hitotipo.nombre}}" onblur="this.setAttribute('value', this.value);">
+   						ng-value="hitotipoc.hitotipo.nombre" onblur="this.setAttribute('value', this.value);">
    						<label class="floating-label">* Nombre</label>
 					</div>
 					<div class="form-group">
@@ -100,7 +103,7 @@
 		    		 </div>
 					<div class="form-group">
    						<input type="text" class="inputText" ng-model="hitotipoc.hitotipo.descripcion"
-   						value="{{hitotipoc.hitotipo.descripcion}}" onblur="this.setAttribute('value', this.value);">
+   						ng-value="hitotipoc.hitotipo.descripcion" onblur="this.setAttribute('value', this.value);">
    						<label class="floating-label">Descripción</label>
 					</div>
 					
@@ -147,9 +150,11 @@
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
 						<shiro:hasPermission name="16020">
-				        	<label class="btn btn-success" ng-click="form.$valid ? hitotipoc.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
+				        	<label class="btn btn-success" ng-click="form.$valid ? hitotipoc.guardar() : ''" ng-disabled="form.$invalid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				        </shiro:hasPermission>
-				        <label class="btn btn-primary" ng-click="hitotipoc.irATabla()">Ir a Tabla</label>
+				        <label class="btn btn-primary" ng-click="hitotipoc.irATabla()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 	    			</div>
 	    		</div>
     		</div>

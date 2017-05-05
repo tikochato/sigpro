@@ -87,19 +87,19 @@
 						</div>
 						<div class="form-group">
 						   <input type="text" name="codigo"  class="inputText" id="codigo" 
-						     ng-model="cooperantec.cooperante.codigo" value="{{cooperantec.cooperante.codigo}}"   
+						     ng-model="cooperantec.cooperante.codigo" ng-value="cooperantec.cooperante.codigo"   
 						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 						   <label class="floating-label">* Código</label>
 						</div>
 						<div class="form-group">
 						   <input type="text" name="nombre"  class="inputText" id="nombre" 
-						     ng-model="cooperantec.cooperante.nombre" value="{{cooperantec.cooperante.nombre}}"   
+						     ng-model="cooperantec.cooperante.nombre" ng-value="cooperantec.cooperante.nombre"   
 						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 						   <label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
 						   <input type="text" name="descripcion"  class="inputText" id="descripcion" 
-						     ng-model="cooperantec.cooperante.descripcion" value="{{cooperantec.cooperante.descripcion}}"   
+						     ng-model="cooperantec.cooperante.descripcion" ng-value="cooperantec.cooperante.descripcion"   
 						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
 						   <label class="floating-label">Descripción</label>
 						</div>

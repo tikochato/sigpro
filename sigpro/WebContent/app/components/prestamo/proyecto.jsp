@@ -38,7 +38,7 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 			<shiro:hasPermission name="24040">
-				<label class="btn btn-primary" ng-click="controller.nuevo()" title="Nuevo">
+				<label class="btn btn-primary" ng-click="controller.nuevo()" uib-tooltip="Nuevo">
 				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24040">
@@ -46,11 +46,11 @@
 				<span class="glyphicon glyphicon glyphicon-file"></span>Project</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24010">
-				<label class="btn btn-primary" ng-click="controller.editar()" title="Editar">
+				<label class="btn btn-primary" ng-click="controller.editar()" uib-tooltip="Editar">
 				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24030">
-				<label class="btn btn-danger" ng-click="controller.borrar()" title="Borrar">
+				<label class="btn btn-danger" ng-click="controller.borrar()" uib-tooltip="Borrar">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</shiro:hasPermission>
 			</div>
@@ -126,7 +126,8 @@
 		</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">
-					<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid" 
+					uib-tooltip="Guardar" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
 				<label class="btn btn-primary" ng-click="controller.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">

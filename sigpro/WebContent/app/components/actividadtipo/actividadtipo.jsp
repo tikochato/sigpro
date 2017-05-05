@@ -96,13 +96,13 @@
 				</div>
 				<div class="form-group">
 				   <input type="text" name="nombre"  class="inputText" id="nombre" 
-				     ng-model="actividadtipoc.actividadtipo.nombre" value="{{actividadtipoc.actividadtipo.nombre}}"   
+				     ng-model="actividadtipoc.actividadtipo.nombre" ng-value="actividadtipoc.actividadtipo.nombre"   
 				     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 				   <label class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group">
 				   <input type="text" name="descripcion"  class="inputText" id="descripcion" 
-				     ng-model="actividadtipoc.actividadtipo.descripcion" value="{{actividadtipoc.actividadtipo.descripcion}}"   
+				     ng-model="actividadtipoc.actividadtipo.descripcion" ng-value="actividadtipoc.actividadtipo.descripcion"   
 				     onblur="this.setAttribute('value', this.value);"  >
 				   <label class="floating-label">Descripción</label>
 				</div>

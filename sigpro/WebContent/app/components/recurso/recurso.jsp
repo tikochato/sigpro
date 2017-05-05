@@ -91,18 +91,18 @@
     						<br/><br/>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" id="nombre" ng-model="recursoc.recurso.nombre"  value="{{recursoc.recurso.nombre}}" onblur="this.setAttribute('value', this.value);" ng-required="true">
+    						<input type="text" class="inputText" id="nombre" ng-model="recursoc.recurso.nombre"  ng-value="recursoc.recurso.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
 							<label for="nombre" class="floating-label">* Nombre</label>
 						</div>
 
 						<div class="form-group">
-				            	<input type="text" class="inputText" id="irectipo" name="irectipo" ng-model="recursoc.recurso.recursotiponombre" value="{{recursoc.recurso.recursotiponombre}}" 
+				            	<input type="text" class="inputText" id="irectipo" name="irectipo" ng-model="recursoc.recurso.recursotiponombre" ng-value="recursoc.recurso.recursotiponombre" 
 		            		ng-click="recursoc.buscarRecursoTipo()" onblur="this.setAttribute('value', this.value);"  ng-readonly="true" ng-required="true"/>
 				            	<span class="label-icon" ng-click="recursoc.buscarRecursoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 							<label for="campo3" class="floating-label">* Tipo Recurso</label>
 						</div>
 						<div class="form-group">
-				            	<input type="text" class="inputText" id="iumedidad" name="iumedidad" ng-model="recursoc.recurso.medidanombre" value="{{recursoc.recurso.medidanombre}}" 
+				            	<input type="text" class="inputText" id="iumedidad" name="iumedidad" ng-model="recursoc.recurso.medidanombre" ng-value="recursoc.recurso.medidanombre" 
 		            		ng-click="recursoc.buscarUnidadMedida()" onblur="this.setAttribute('value', this.value);"  ng-readonly="true" ng-required="true"/>
 				            	<span class="label-icon" ng-click="recursoc.buscarUnidadMedida()"><i class="glyphicon glyphicon-search"></i></span>
 							<label for="campo3" class="floating-label">* Unidad de Medida</label>
@@ -112,17 +112,17 @@
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >
 									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
-										value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>	
+										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="entero" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
-									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="decimal" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
-									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="booleano" class="form-group" >
@@ -132,7 +132,7 @@
 								<div ng-switch-when="fecha" class="form-group" >
 									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{recursoc.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
 														datepicker-options="recursoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="recursoc.abrirPopupFecha($index)"
-														value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 														<span class="label-icon" ng-click="recursoc.abrirPopupFecha($index)">
 															<i class="glyphicon glyphicon-calendar"></i>
 														</span>
@@ -142,7 +142,7 @@
 									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
 													<option value="">Seleccione una opción</option>
 													<option ng-repeat="number in campo.opciones"
-														value="{{number.valor}}">{{number.label}}</option>
+														ng-value="number.valor">{{number.label}}</option>
 								</select>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
@@ -151,7 +151,7 @@
 						
 						<div class="form-group">
     						<input type="text" class="inputText" id="descripcion" ng-model="recursoc.recurso.descripcion"
-    						value="{{recursoc.recurso.descripcion}}" onblur="this.setAttribute('value', this.value);">
+    						ng-value="recursoc.recurso.descripcion" onblur="this.setAttribute('value', this.value);">
 							<label for="descripcion" class="floating-label">Descripción</label>
 						</div>
 						<br/>
