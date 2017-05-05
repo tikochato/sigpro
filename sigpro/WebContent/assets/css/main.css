@@ -136,10 +136,6 @@ nav.navbar{
 	display: flex;
 }
 
-.context-menu{
-
-}
-
 .context-menu .dropdown-menu {
 	min-width: 100px;
 }
@@ -216,13 +212,25 @@ nav.navbar{
 }
 
 input:focus ~ .floating-label,
-input:not([value=""]) ~ .floating-label{
+input:not([value='']) ~ .floating-label,
+input:focus:not([value]) ~ .floating-label{
   top: -2px;
   bottom: 10px;
   font-size: 11px;
   opacity: 1;
   border: none;
   outline-width: 0;
+}
+
+input:not([value]) ~ .floating-label{
+  font-size: 14px;
+  position: absolute;
+  pointer-events: none;
+  top: 18px;
+  transition: 0.2s ease all;
+  border: none;
+  color: rgba(0,0,0,0.38);
+  font-weight: bold;
 }
 
 input:focus ~ .floating-label{
@@ -250,9 +258,15 @@ select:focus{
 	outline-width: 0;
 }
 
-input[type='checkbox']:not([value=""]) ~ .floating-label {
+input[type='checkbox'] ~ .floating-label {
 	left: 5px;
-	top: -5px;
+	top: -5px !important;
+	top: -2px;
+	bottom: 10px;
+	font-size: 11px;
+	opacity: 1;
+	border: none;
+	outline-width: 0;
 }
 
 .inputText:focus {

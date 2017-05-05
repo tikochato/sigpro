@@ -32,6 +32,12 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 				minDate : new Date(1950, 1, 1),
 				startingDay : 1
 		};
+		
+		mi.editarElemento = function (event) {
+	        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+	        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
+	        mi.editar();
+	    };
 
 		mi.gridOptions = {
 				enableRowSelection : true,
@@ -44,6 +50,7 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 			    paginationPageSize: $utilidades.elementosPorPagina,
 			    useExternalFiltering: true,
 			    useExternalSorting: true,
+			    rowTemplate: '<div ng-dblclick="grid.appScope.recursoc.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 				columnDefs : [
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',

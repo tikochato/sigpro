@@ -91,29 +91,29 @@
     						<br/><br/>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" id="nombre" ng-model="riesgoc.riesgo.nombre" value="{{riesgoc.riesgo.nombre}}" onblur="this.setAttribute('value', this.value);" ng-required="true">
+    						<input type="text" class="inputText" id="nombre" ng-model="riesgoc.riesgo.nombre" ng-value="riesgoc.riesgo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
     						<label class="floating-label">* Nombre</label>
 						</div>
 						
 						<div class="form-group">
-				            	<input type="text" class="inputText" id="irietipo" name="irietipo" ng-model="riesgoc.riesgoTipoNombre" value="{{riesgoc.riesgoTipoNombre}}"
+				            	<input type="text" class="inputText" id="irietipo" name="irietipo" ng-model="riesgoc.riesgoTipoNombre" ng-value="riesgoc.riesgoTipoNombre"
 				            	onblur="this.setAttribute('value', this.value);" ng-click="riesgoc.buscarRiesgoTipo()" ng-readonly="true" ng-required="true"/>
 				            	<span class="label-icon" ng-click="riesgoc.buscarRiesgoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 								<label for="campo3" class="floating-label">* Tipo Riesgo</label>
 						</div>
 						
 						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.impactoProyectado" value="{{riesgoc.riesgo.impactoProyectado}}" onblur="this.setAttribute('value', this.value);">
+    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.impactoProyectado" ng-value="riesgoc.riesgo.impactoProyectado" onblur="this.setAttribute('value', this.value);">
     						<label for="campo5" class="floating-label">Impacto proyectado</label>
 						</div>
 						
 						<div class="form-group">
-							<input type="number" class="inputText" ng-model="riesgoc.riesgo.impacto"  value="{{riesgoc.riesgo.impacto}}" onblur="this.setAttribute('value', this.value);">
+							<input type="number" class="inputText" ng-model="riesgoc.riesgo.impacto"  ng-value="riesgoc.riesgo.impacto" onblur="this.setAttribute('value', this.value);">
 							<label for="campo5" class="floating-label">Impacto</label>
 						</div>
 						
 						<div class="form-group">
-							<input type="number"  class="inputText" ng-model="riesgoc.riesgo.puntuacionImpacto" value="{{riesgoc.riesgo.puntuacionImpacto}}" onblur="this.setAttribute('value', this.value);"
+							<input type="number"  class="inputText" ng-model="riesgoc.riesgo.puntuacionImpacto" ng-value="riesgoc.riesgo.puntuacionImpacto" onblur="this.setAttribute('value', this.value);"
 							ng-min="1" ng-max="10">
 							<label for="campo5" class="floating-label">Puntuación de impacto</label>
 						</div>
@@ -127,25 +127,25 @@
 						</div>
 						
 						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.gatillosSintomas" value="{{riesgoc.riesgo.gatillosSintomas}}" onblur="this.setAttribute('value', this.value);">
+    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.gatillosSintomas" ng-value="riesgoc.riesgo.gatillosSintomas" onblur="this.setAttribute('value', this.value);">
     						<label for="descripcion" class="floating-label">Gatillos / sintomas</label>
 						</div>
 						
 						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.respuesta" value="{{riesgoc.riesgo.respuesta}}" onblur="this.setAttribute('value', this.value);">
+    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.respuesta" ng-value="riesgoc.riesgo.respuesta" onblur="this.setAttribute('value', this.value);">
     						<label for="descripcion" class="floating-label">Respuesta</label>
 						</div>
 						
 						<div class="form-group">
 			            	<input type="text" class="inputText" ng-model="riesgoc.colaboradorNombre" 
-			            	ng-click="riesgoc.buscarColaborador()" value="{{riesgoc.colaboradorNombre}}" 
+			            	ng-click="riesgoc.buscarColaborador()" ng-value="riesgoc.colaboradorNombre" 
 			            	onblur="this.setAttribute('value', this.value);" ng-readonly="true" />
 			            	<span class="label-icon" ng-click="riesgoc.buscarColaborador()"><i class="glyphicon glyphicon-search"></i></span>
 			            	<label for="campo3" class="floating-label">Responsable</label>
 						</div>
 						
 						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.riesgosSecundarios" value="{{riesgoc.riesgo.riesgosSecundarios}}" onblur="this.setAttribute('value', this.value);">
+    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.riesgosSecundarios" ng-value="riesgoc.riesgo.riesgosSecundarios" onblur="this.setAttribute('value', this.value);">
     						<label for="descripcion" class="floating-label">Riesgos secundarios</label>
 						</div>
 						
@@ -157,7 +157,7 @@
 						<div class="form-group">
 							<input type="text" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" ng-model="riesgoc.riesgo.fechaEjecucion" is-open="riesgoc.fe_abierto"
 									datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
-									value="{{riesgoc.riesgo.fechaEjecucion}}" onblur="this.setAttribute('value', this.value);"   
+									ng-value="riesgoc.riesgo.fechaEjecucion" onblur="this.setAttribute('value', this.value);"   
 									ng-click="riesgoc.abrirPopupFecha(1000)"/>
 								<span class="label-icon" ng-click="riesgoc.abrirPopupFecha(1000)">
 										<i class="glyphicon glyphicon-calendar"></i>
@@ -169,17 +169,17 @@
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >
 									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
-										value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>	
+										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="entero" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
-									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="decimal" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
-									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="booleano" class="form-group" >
@@ -189,7 +189,7 @@
 								<div ng-switch-when="fecha" class="form-group" >
 									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
 														datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="riesgoc.abrirPopupFecha($index)"
-														value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 														<span class="label-icon" ng-click="riesgoc.abrirPopupFecha($index)">
 															<i class="glyphicon glyphicon-calendar"></i>
 														</span>
@@ -199,7 +199,7 @@
 									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
 													<option value="">Seleccione una opción</option>
 													<option ng-repeat="number in campo.opciones"
-														value="{{number.valor}}">{{number.label}}</option>
+														ng-value="number.valor">{{number.label}}</option>
 								</select>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
@@ -208,7 +208,7 @@
 						
 						<div class="form-group">
     						<input type="text" class="inputText" id="descripcion" ng-model="riesgoc.riesgo.descripcion"
-    						value="{{riesgoc.riesgo.descripcion}}" onblur="this.setAttribute('value', this.value);">
+    						ng-value="riesgoc.riesgo.descripcion" onblur="this.setAttribute('value', this.value);">
     						<label for="iprog" class="floating-label">Descripción</label>
 						</div>
 						<div class="panel panel-default">

@@ -91,7 +91,7 @@
 	    <form name="form" class="css-form">
 		     	<div class="form-group">
 				   <input type="text" name="nombre"  class="inputText" id="nombre" 
-				     ng-model="colaborador.colaborador.primerNombre" value="{{colaborador.colaborador.primerNombre}}"   
+				     ng-model="colaborador.colaborador.primerNombre" ng-value="colaborador.colaborador.primerNombre"   
 				     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 				   <label class="floating-label">* Primer Nombre</label>
 				</div>
@@ -99,36 +99,36 @@
 		      
 		      	<div class="form-group">
 				   <input type="text" name="segundonombre"  class="inputText" id="segundonombre"	 
-				     ng-model="colaborador.colaborador.segundoNombre" value="{{colaborador.colaborador.segundoNombre}}"   
+				     ng-model="colaborador.colaborador.segundoNombre" ng-value="colaborador.colaborador.segundoNombre"   
 				     onblur="this.setAttribute('value', this.value);" ng-required="false" >
 				   <label class="floating-label">Segundo Nombre</label>
 				</div>
 		      	<div class="form-group">
 				   <input type="text" name="primerapellido"  class="inputText" id="primerApellido" 
-				     ng-model="colaborador.colaborador.primerApellido" value="{{colaborador.colaborador.primerApellido}}"   
+				     ng-model="colaborador.colaborador.primerApellido" ng-value="colaborador.colaborador.primerApellido"   
 				     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 				   <label class="floating-label">* Primer Apellido</label>
 				</div>
 		      	<div class="form-group">
 				   <input type="text" name="inombre"  class="inputText" id="inombre" 
-				     ng-model="colaborador.colaborador.segundoApellido" value="{{colaborador.colaborador.segundoApellido}}"   
+				     ng-model="colaborador.colaborador.segundoApellido" ng-value="colaborador.colaborador.segundoApellido"   
 				     onblur="this.setAttribute('value', this.value);" ng-required="false" >
 				   <label class="floating-label">Segundo Apellido</label>
 				</div>
 		      	<div class="form-group">
 				   <input type="number" name="CUI"  class="inputText" id="CUI" 
-				     ng-model="colaborador.colaborador.cui" value="colaborador.colaborador.cui"  ng-maxlength="13"
+				     ng-model="colaborador.colaborador.cui" ng-value="colaborador.colaborador.cui"  ng-maxlength="13"
 				     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 				   <label class="floating-label">* CUI</label>
 				</div>
 			  	<div class="form-group" >
-				    <input type="text" class="inputText" id="unidadEjecutora" name="unidadEjecutora" ng-model="colaborador.colaborador.nombreUnidadEjecutora" value="{{colaborador.colaborador.nombreUnidadEjecutora}}" 
+				    <input type="text" class="inputText" id="unidadEjecutora" name="unidadEjecutora" ng-model="colaborador.colaborador.nombreUnidadEjecutora" ng-value="colaborador.colaborador.nombreUnidadEjecutora" 
 						            		ng-click="colaborador.buscarUnidadEjecutora()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
 					<span class="label-icon" ng-click="colaborador.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
 					<label for="campo3" class="floating-label">* Nombre Unidad Ejecutora</label>
 				</div>
 		      	<div class="form-group" >
-				    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="colaborador.colaborador.usuario" value="{{colaborador.colaborador.usuario}}" 
+				    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="colaborador.colaborador.usuario" ng-value="colaborador.colaborador.usuario" 
 						            		ng-click="colaborador.buscarUsuario()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="false"/>
 					<span class="label-icon" ng-click="colaborador.buscarUsuario()"><i class="glyphicon glyphicon-search"></i></span>
 					<label for="campo3" class="floating-label">Usuario</label>
@@ -170,10 +170,8 @@
 			</div>
 	    </form>
     
-  
-    <div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
-
    <div class="operation_buttons" align="right">
+    <div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 	  <div class="btn-group">
 	    <shiro:hasPermission name="4020">
 	      <label class="btn btn-success" ng-click="form.$valid ? colaborador.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">

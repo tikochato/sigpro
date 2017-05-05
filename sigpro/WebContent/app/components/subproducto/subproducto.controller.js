@@ -87,6 +87,12 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 		});
 	};
 
+	mi.editarElemento = function (event) {
+        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+        mi.gridApi.selection.selectRow(mi.opcionesGrid.data[filaId]);
+        mi.editar();
+    };
+    
 	mi.opcionesGrid = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -99,6 +105,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	    useExternalFiltering: true,
 	    useExternalSorting: true,
 	    data : mi.data,
+	    rowTemplate: '<div ng-dblclick="grid.appScope.subproducto.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 		columnDefs : [ 
 			{displayName : 'Id',  width: 60, name : 'id',cellClass : 'grid-align-right',type : 'number',enableFiltering: false, enableSorting: false }, 
 			{ displayName : 'Nombre',name : 'nombre',cellClass : 'grid-align-left',

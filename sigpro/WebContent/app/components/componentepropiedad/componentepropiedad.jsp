@@ -89,7 +89,7 @@
 						</div>
 						<div class="form-group">
 						   <input type="text" name="inombre"  class="inputText" id="nombre" 
-						     ng-model="componentepropiedadc.componentepropiedad.nombre" value="{{componentepropiedadc.componentepropiedad.nombre}}"   
+						     ng-model="componentepropiedadc.componentepropiedad.nombre" ng-value="componentepropiedadc.componentepropiedad.nombre"   
 						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 						   <label class="floating-label">* Nombre</label>
 						</div>
@@ -104,7 +104,7 @@
 						</div>
 						<div class="form-group">
 						   <input type="text" name="descripcion"  class="inputText" id="descripcion" 
-						     ng-model="componentepropiedadc.componentepropiedad.descripcion" value="{{componentepropiedadc.componentepropiedad.descripcion}}"   
+						     ng-model="componentepropiedadc.componentepropiedad.descripcion" ng-value="componentepropiedadc.componentepropiedad.descripcion"   
 						     onblur="this.setAttribute('value', this.value);"  >
 						   <label class="floating-label">Descripción</label>
 						</div>

@@ -7,7 +7,7 @@
 			<p ng-init="recursounidadc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
 		<div class="panel panel-default">
-	  		<div class="panel-heading"><h3>Unidades de Medida de Recursos</h3><br/></div>
+	  		<div class="panel-heading"><h3>Unidades de Medida de Recursos</h3></div>
 		</div>
 		<div class="row" align="center" ng-hide="recursounidadc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
@@ -63,8 +63,10 @@
     		
 		</div>
 		<div class="row second-main-form" ng-show="recursounidadc.mostraringreso">
-			<h2 ng-hide="!recursounidadc.esnueva"><small>Nueva Unidad de Medidad</small></h2>
-			<h2 ng-hide="recursounidadc.esnueva"><small>Edición de Unidad de Medida</small></h2>
+			<div class="page-header">
+				<h2 ng-hide="!recursounidadc.esnueva"><small>Nueva Unidad de Medidad</small></h2>
+				<h2 ng-hide="recursounidadc.esnueva"><small>Edición de Unidad de Medida</small></h2>
+			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="29020">
@@ -83,15 +85,15 @@
     						<br/><br/>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" id="nombre" ng-model="recursounidadc.medida.nombre" value="{{recursounidadc.medida.nombre}}"onblur="this.setAttribute('value', this.value);"  ng-required="true">
+    						<input type="text" class="inputText" id="nombre" ng-model="recursounidadc.medida.nombre" ng-value="recursounidadc.medida.nombre" onblur="this.setAttribute('value', this.value);"  ng-required="true">
     						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" id="simbolo" onblur="this.setAttribute('value', this.value);" ng-model="recursounidadc.medida.simbolo" value="{{recursounidadc.medida.simbolo}}">
+    						<input type="text" class="inputText" id="simbolo" onblur="this.setAttribute('value', this.value);" ng-model="recursounidadc.medida.simbolo" ng-value="recursounidadc.medida.simbolo">
     						<label class="floating-label">Símbolo</label>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" id="descripcion" onblur="this.setAttribute('value', this.value);" ng-model="recursounidadc.medida.descripcion" value="{{recursounidadc.medida.descripcion}}">
+    						<input type="text" class="inputText" id="descripcion" onblur="this.setAttribute('value', this.value);" ng-model="recursounidadc.medida.descripcion" ng-value="recursounidadc.medida.descripcion">
     						<label class="floating-label">Descripción</label>
 						</div>
 						<br/>

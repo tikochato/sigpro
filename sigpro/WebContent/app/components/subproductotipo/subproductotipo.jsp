@@ -10,9 +10,10 @@
 	<shiro:lacksPermission name="42010">
 		<p ng-init="subproductoTipo.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
-	<h3>Tipo de Subproducto</h3>
-
-	<br />
+	
+	<div class="panel panel-default">
+			<div class="panel-heading"><h3>Tipo de Subproducto</h3></div>
+		</div>
 
 	<div align="center" ng-hide="subproductoTipo.esForma">
 		<div class="col-sm-12 operation_buttons" align="right">
@@ -26,7 +27,7 @@
 					<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="42030">
-					<label class="btn btn-primary" ng-click="subproductoTipo.borrar()" uib-tooltip="Borrar">
+					<label class="btn btn-danger" ng-click="subproductoTipo.borrar()" uib-tooltip="Borrar">
 					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</shiro:hasPermission>
 			</div>
@@ -71,8 +72,10 @@
 	</div>
 
 	<div class="row second-main-form" ng-show="subproductoTipo.esForma">
-		<h2 ng-hide="!subproductoTipo.esNuevo">Nuevo tipo de subproducto</h2>
-	  	<h2 ng-hide="subproductoTipo.esNuevo">Edición de tipo de subproducto</h2>
+		<div class="page-header">
+			<h2 ng-hide="!subproductoTipo.esNuevo"><small>Nuevo tipo de subproducto</small></h2>
+	  		<h2 ng-hide="subproductoTipo.esNuevo"><small>Edición de tipo de subproducto</small></h2>
+		</div>
 
 		<div class="col-sm-12 operation_buttons" align="right">
 
@@ -98,17 +101,17 @@
 				</div>
 
 				<div class="form-group">
-					<input type="text" class="inputText" ng-model="subproductoTipo.nombre" ng-required="true" value="{{subproductoTipo.nombre}}" onblur="this.setAttribute('value', this.value);"/>
+					<input type="text" class="inputText" ng-model="subproductoTipo.nombre" ng-required="true" ng-value="subproductoTipo.nombre" onblur="this.setAttribute('value', this.value);"/>
 					<label for="nombre" class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group">
-					<input type="text" class="inputText" ng-model="subproductoTipo.descripcion"  value="{{subproductoTipo.descripcion}}" onblur="this.setAttribute('value', this.value);"/>
+					<input type="text" class="inputText" ng-model="subproductoTipo.descripcion"  ng-value="subproductoTipo.descripcion" onblur="this.setAttribute('value', this.value);"/>
 					<label for="nombre" class="floating-label">Descripción</label>
 				</div>
 				
 				<br />
 	
-				<h5>Propiedades</h5>
+				<h5 class="label-form" align="center">Propiedades</h5>
 				<div align="center">
 					
 				<div style="height: 35px; width: 75%">
@@ -126,11 +129,11 @@
 				<table style="width: 75%;" st-table="subproductoTipo.propiedadesTipo" class="table table-striped  table-bordered">
 					<thead >
 						<tr>
-							<th>ID</th>
-							<th>Nombre</th>
-							<th>Descripicon</th>
-							<th>Tipo Dato</th>
-							<th style="width: 30px;">Quitar</th>
+							<th class="label-form">ID</th>
+							<th class="label-form">Nombre</th>
+							<th class="label-form">Descripicon</th>
+							<th class="label-form">Tipo Dato</th>
+							<th style="width: 30px;" class="label-form">Quitar</th>
 
 						</tr>
 					</thead>
@@ -158,33 +161,33 @@
 			</div>
 			<br/>
 			<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static"> {{ subproductoTipo.entidadSeleccionada.usuarioCreo }}</p>
+									<label for="usuarioCreo" class="label-form">Usuario que creo</label> 
+									<p class=""> {{ subproductoTipo.entidadSeleccionada.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
-									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ subproductoTipo.entidadSeleccionada.fechaCreacion }} </p>
+									<label for="fechaCreacion" class="label-form">Fecha de creación</label>
+									<p class="" id="fechaCreacion"> {{ subproductoTipo.entidadSeleccionada.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ subproductoTipo.entidadSeleccionada.usuairoActulizo }} </p>
+									<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label> 
+									<p class="" id="usuarioCreo">{{ subproductoTipo.entidadSeleccionada.usuairoActulizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ subproductoTipo.entidadSeleccionada.fechaActualizacion }} </p>
+									<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label> 
+									<p class="" id="usuarioCreo">{{ subproductoTipo.entidadSeleccionada.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>
@@ -193,10 +196,9 @@
 
 			</form>
 		</div>
-		<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
-		<br />
 		
 		<div class="col-sm-12 operation_buttons" align="right">
+		<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 			<div class="btn-group">
 				<shiro:hasPermission name="42020">
 					<label class="btn btn-success" ng-click="form.$valid ? subproductoTipo.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">

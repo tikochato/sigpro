@@ -27,6 +27,13 @@ app.controller(
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 	mi.permisoSelected={id:"",nombre:"", descripcion:""};
 	mi.filtros=[];
+	
+	mi.editarElemento = function (event) {
+        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
+        mi.editarPermiso();
+    };
+	
 	mi.gridOptions = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -36,6 +43,7 @@ app.controller(
 		useExternalFiltering: true,
 		useExternalSorting: true,
 		data : [],
+		rowTemplate: '<div ng-dblclick="grid.appScope.permisosc.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 		columnDefs : [ {
 			name : 'ID',
 			field : 'id',

@@ -12,22 +12,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	var mi = this;  
 	i18nService.setCurrentLang('es');
 	$window.document.title = $utilidades.sistema_nombre+' - Producto';
-	
-	mi.menuOptions = [
-        ['<span class="glyphicon glyphicon-pencil"> Editar', function ($itemScope, $event, modelValue, text, $li) {
-      	  mi.editar();
-        }],
-        null,
-        ['<span class="glyphicon glyphicon-trash text-danger"><font style="color: black;"> Borrar</font>', function ($itemScope, $li) {
-      	  mi.borrar();
-        }]
-    ];
-	
-	mi.contextMenu = function (event) {
-        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
-        mi.gridApi.selection.selectRow(mi.opcionesGrid.data[filaId]);
-    };
-    
+	    
 	mi.componenteid = $routeParams.componente_id;
 	mi.esForma = false;
 	mi.totalElementos = 0;
@@ -93,6 +78,13 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		});
 	};
 
+
+	mi.editarElemento = function (event) {
+        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+        mi.gridApi.selection.selectRow(mi.opcionesGrid.data[filaId]);
+        mi.editar();
+    };
+    
 	mi.opcionesGrid = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -105,8 +97,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	    useExternalFiltering: true,
 	    useExternalSorting: true,
 	    data : mi.data,
-	    rowTemplate: '<div context-menu="grid.appScope.producto.menuOptions" right-click="grid.appScope.producto.contextMenu($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
-		columnDefs : [ 
+	    rowTemplate: '<div ng-dblclick="grid.appScope.producto.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
+	    columnDefs : [ 
 			{displayName : 'Id',  width: 100, name : 'id',cellClass : 'grid-align-right',type : 'number',width : 150 }, 
 			{ displayName : 'Nombre',name : 'nombre',cellClass : 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"  style="width: 90%;" ng-keypress="grid.appScope.producto.filtrar($event,1)" ></input></div>'

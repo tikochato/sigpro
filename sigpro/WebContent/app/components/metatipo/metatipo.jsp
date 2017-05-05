@@ -14,15 +14,15 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="18040">
-			       		<label class="btn btn-primary" ng-click="metatipoc.nueva()" title="Nuevo">
-						<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
+			       		<label class="btn btn-primary" ng-click="metatipoc.nueva()" uib-tooltip="Nuevo">
+				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			       </shiro:hasPermission> 
 			       <shiro:hasPermission name="18010">
-			       		<label class="btn btn-primary" ng-click="metatipoc.editar()" title="Editar">
+			       		<label class="btn btn-primary" ng-click="metatipoc.editar()" uib-tooltip="Editar">
 						<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			       	</shiro:hasPermission>
 			       <shiro:hasPermission name="18030">
-			       		<label class="btn btn-danger" ng-click="metatipoc.borrar()" title="Borrar">
+			       		<label class="btn btn-danger" ng-click="metatipoc.borrar()" uib-tooltip="Borrar">
 						<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			       </shiro:hasPermission>
 			        
@@ -73,9 +73,12 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="18020">
-			        	<label class="btn btn-success"ng-click="form.$valid ? metatipoc.guardar(): ''" ng-disabled="form.$invalid">Guardar</label>
+			        	<label class="btn btn-success"ng-click="form.$valid ? metatipoc.guardar(): ''" ng-disabled="form.$invalid"
+						uib-tooltip="Guardar" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 					</shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="metatipoc.irATabla()">Ir a Tabla</label>
+			        <label class="btn btn-primary" ng-click="metatipoc.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
     			</div>
     		</div>
 			
@@ -87,13 +90,13 @@
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText"  ng-model="metatipoc.tipo.nombre" ng-required="true"
-    						value="{{metatipoc.tipo.nombre}}" onblur="this.setAttribute('value', this.value);">
+    						ng-value="metatipoc.tipo.nombre" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
 							
     						<input type="text" class="inputText"  ng-model="metatipoc.tipo.descripcion" ng-required="true"
-    						value="{{metatipoc.tipo.nombre}}" onblur="this.setAttribute('value', this.value);">
+    						ng-value="metatipoc.tipo.descripcion" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">Descripción</label>
 						</div>
 						<br/>
@@ -137,9 +140,11 @@
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
 						<shiro:hasPermission name="18020">
-				        	<label class="btn btn-success" ng-click="form.$valid ? metatipoc.guardar(): ''" ng-disabled="form.$invalid">Guardar</label>
+				        	<label class="btn btn-success" ng-click="form.$valid ? metatipoc.guardar(): ''" ng-disabled="form.$invalid" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 						</shiro:hasPermission>
-				        <label class="btn btn-primary" ng-click="metatipoc.irATabla()" >Ir a Tabla</label>
+				        <label class="btn btn-primary" ng-click="metatipoc.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 	    			</div>
 	    		</div>
     		</div>

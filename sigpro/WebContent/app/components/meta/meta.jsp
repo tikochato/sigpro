@@ -6,14 +6,14 @@
 		<shiro:lacksPermission name="17010">
 			<p ng-init="metac.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
+		
 		<div class="panel panel-default">
-		  <div class="panel-heading"><h3>Metas de {{ metac.nombreTipoPcp }}</h3></div>
+			<div class="panel-heading"><h3>Metas de {{ metac.nombreTipoPcp }}</h3></div>
 		</div>
-		<div class="page-header">
-		    <h2 ><small>{{metac.nombrePcp}}</small></h2>
+		<div class="subtitulo">
+			{{metac.nombrePcp}}
 		</div>
 				
-		
 		<div class="row" align="center" ng-hide="metac.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
@@ -78,9 +78,11 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="17020">
-			        	<label class="btn btn-success" ng-click="form.$valid ? metac.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+			        	<label class="btn btn-success" ng-click="form.$valid ? metac.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 			        </shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="metac.irATabla()">Ir a Tabla</label>
+			        <label class="btn btn-primary" ng-click="metac.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
     			</div>
     		</div>
 			
@@ -92,12 +94,12 @@
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText"  ng-model="metac.meta.nombre" ng-required="true"
-    						value="{{metac.meta.nombre}}" onblur="this.setAttribute('value', this.value);">
+    						ng-value="metac.meta.nombre" onblur="this.setAttribute('value', this.value);">
     						<label  class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText"  ng-model="metac.meta.descripcion"
-    						value="{{metac.meta.descripcion}}" onblur="this.setAttribute('value', this.value);">
+    						ng-value="metac.meta.descripcion" onblur="this.setAttribute('value', this.value);">
     						<label  class="floating-label">Descripción</label>
 						</div>
 						<div class="form-group">
@@ -105,7 +107,7 @@
 								<option value="">Seleccione una opción</option>
 								<option ng-repeat="opcion in metac.metatipos"
 									ng-selected="option.selected = metac.meta.tipoMetaId"
-									value="{{opcion.id}}">{{opcion.nombre}}
+									ng-value="opcion.id">{{opcion.nombre}}
 								</option>
 							</select>
 							<label class="floating-label">* Tipo Meta</label>
@@ -115,7 +117,7 @@
 								<option value="">Seleccione una opción</option>
 								<option ng-repeat="opcion in metac.metaunidades"
 									ng-selected="option.selected = metac.meta.unidadMedidaId"
-									value="{{opcion.id}}">{{opcion.nombre}}
+									ng-value="opcion.id">{{opcion.nombre}}
 								</option>
 							</select>
 							<label class="floating-label">* Unidad de Medida</label>
@@ -129,7 +131,7 @@
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
 									<label class="label-form">Usuario que creo</label> 
-									<p class="form-control-static"> {{ metac.meta.usuarioCreo }}</p>
+									<p class=""> {{ metac.meta.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
@@ -162,9 +164,11 @@
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
 						<shiro:hasPermission name="17020">
-				        	<label class="btn btn-success" ng-click="form.$valid ? metac.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+				        	<label class="btn btn-success" ng-click="form.$valid ? metac.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				        </shiro:hasPermission>
-				        <label class="btn btn-primary" ng-click="metac.irATabla()">Ir a Tabla</label>
+				        <label class="btn btn-primary" ng-click="metac.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 	    			</div>
 	    		</div>
     		</div>

@@ -125,38 +125,38 @@
 						</div>
 						<div class="form-group">
     						<div class="form-group">
-							   <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="actividadc.actividad.nombre" value="{{actividadc.actividad.nombre}}"  onblur="this.setAttribute('value', this.value);" ng-required="true" >
+							   <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="actividadc.actividad.nombre" ng-value="actividadc.actividad.nombre"  onblur="this.setAttribute('value', this.value);" ng-required="true" >
 							   <label class="floating-label">* Nombre</label>
 							</div>
 						</div>
 						<div class="form-group-row row" >
 							<div class="form-group col-sm-2" >
-							       <input type="number" class="inputText" ng-model="actividadc.actividad.programa" value="{{actividadc.actividad.programa}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
+							       <input type="number" class="inputText" ng-model="actividadc.actividad.programa" ng-value="actividadc.actividad.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
 							       <label for="iprog" class="floating-label">Programa</label>
 							</div>
 							<div class="form-group col-sm-2" >
-							  <input type="number" class="inputText" ng-model="actividadc.actividad.subprograma" value="{{actividadc.actividad.subprograma}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <input type="number" class="inputText" ng-model="actividadc.actividad.subprograma" ng-value="actividadc.actividad.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
 							  <label for="isubprog" class="floating-label">Subprograma</label>
 							</div>
 							<div class="form-group col-sm-2" >
-							  <input type="number" class="inputText" ng-model="actividadc.actividad.proyecto" value="{{actividadc.actividad.proyecto}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <input type="number" class="inputText" ng-model="actividadc.actividad.proyecto" ng-value="actividadc.actividad.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
 							  <label for="iproy_" class="floating-label">Préstamo</label>
 							</div>
 							<div class="form-group col-sm-2" >
-							  <input type="number" class="inputText" ng-model="actividadc.actividad.actividad" value="{{actividadc.actividad.actividad}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <input type="number" class="inputText" ng-model="actividadc.actividad.actividad" ng-value="actividadc.actividad.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
 							  <label for="iobra" class="floating-label">Actividad</label>
 							</div>
 							<div class="form-group col-sm-2" >
-							  <input type="number" class="inputText" ng-model="actividadc.actividad.obra" value="{{actividadc.actividad.obra}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <input type="number" class="inputText" ng-model="actividadc.actividad.obra" ng-value="actividadc.actividad.obra" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
 							  <label for="iobra" class="floating-label">Obra</label>
 							</div>
 							 <div class="form-group col-sm-2">
-							  <input type="number" class="inputText" ng-model="actividadc.actividad.fuente" value="{{actividadc.actividad.fuente}}" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+							  <input type="number" class="inputText" ng-model="actividadc.actividad.fuente" ng-value="actividadc.actividad.fuente" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
 							  <label for="fuente" class="floating-label">Fuente</label>
 							</div>
 						</div>
 						<div class="form-group" >
-						    <input type="text" class="inputText" id="iactividadtipo" name="iactividadtipo" ng-model="actividadc.actividad.actividadtiponombre" value="{{actividadc.actividad.actividadtiponombre}}" 
+						    <input type="text" class="inputText" id="iactividadtipo" name="iactividadtipo" ng-model="actividadc.actividad.actividadtiponombre" ng-value="actividadc.actividad.actividadtiponombre" 
 							ng-click="actividadc.buscarActividadTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
 							<span class="label-icon" ng-click="actividadc.buscarActividadTipo()"><i class="glyphicon glyphicon-search"></i></span>
 							<label for="campo3" class="floating-label">* Tipo de Actividad</label>
@@ -164,7 +164,7 @@
 						
 						
 						<div class="form-group" >
-						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="actividadc.coordenadas" value="{{actividadc.coordenadas}}" 
+						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="actividadc.coordenadas" ng-value="actividadc.coordenadas" 
 								            		ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="false"/>
 							<span class="label-icon" ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
 							<label for="campo3" class="floating-label">Coordenadas</label>
@@ -173,7 +173,7 @@
 						
 						<div class="form-group">
 						   <input type="text" name="inombre"  class="inputText" id="idescripcion" 
-						     ng-model="actividadc.actividad.descripcion" value="{{actividadc.actividad.descripcion}}"   
+						     ng-model="actividadc.actividad.descripcion" ng-value="actividadc.actividad.descripcion"   
 						     onblur="this.setAttribute('value', this.value);" >
 						   <label class="floating-label">Descripción</label>
 						</div>
@@ -185,8 +185,8 @@
 								
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaInicio" is-open="actividadc.fi_abierto"
-								            datepicker-options="actividadc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin()" ng-required="true" ng-readonly="true" ng-click="actividadc.abrirPopupFecha(1000)"
-								            value="{{actividadc.actividad.fechaInicio}}" onblur="this.setAttribute('value', this.value);"/>
+								            datepicker-options="actividadc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin()" ng-required="true"  ng-click="actividadc.abrirPopupFecha(1000)"
+								            ng-value="actividadc.actividad.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
 								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1000)">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
@@ -198,8 +198,8 @@
 							
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaFin" is-open="actividadc.ff_abierto"
-								            datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin()" ng-required="true" ng-readonly="true" ng-click="actividadc.abrirPopupFecha(1001)"
-								            value="{{actividadc.actividad.fechaFin}}" onblur="this.setAttribute('value', this.value);"/>
+								            datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin()" ng-required="true"  ng-click="actividadc.abrirPopupFecha(1001)"
+								            ng-value="actividadc.actividad.fechaFin" onblur="this.setAttribute('value', this.value);"/>
 								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1001)">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
@@ -210,7 +210,7 @@
 											
 						<div class="form-group">
 						   <input type="number" name="iavance"  class="inputText" id="inombre" 
-						     ng-model="actividadc.actividad.porcentajeavance" value="{{actividadc.actividad.porcentajeavance}}"   
+						     ng-model="actividadc.actividad.porcentajeavance" ng-value="actividadc.actividad.porcentajeavance"   
 						     onblur="this.setAttribute('value', this.value);"  min="0" max="100" ng-required="true" >
 						   <label class="floating-label">* Avance %</label>
 						</div>
@@ -219,17 +219,17 @@
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >
 									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
-										value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>	
+										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="entero" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
-									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="decimal" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
-									value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="booleano" class="form-group" >
@@ -239,7 +239,7 @@
 								<div ng-switch-when="fecha" class="form-group" >
 									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
 														datepicker-options="actividadc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="actividadc.abrirPopupFecha($index)"
-														value="{{campo.valor}}" onblur="this.setAttribute('value', this.value);"/>
+														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 														<span class="label-icon" ng-click="actividadc.abrirPopupFecha($index)">
 															<i class="glyphicon glyphicon-calendar"></i>
 														</span>
@@ -249,7 +249,7 @@
 									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
 													<option value="">Seleccione una opción</option>
 													<option ng-repeat="number in campo.opciones"
-														value="{{number.valor}}">{{number.label}}</option>
+														ng-value="number.valor">{{number.label}}</option>
 								</select>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>

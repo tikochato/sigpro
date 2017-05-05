@@ -90,7 +90,7 @@
     						<br/><br/>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="recursopropiedadc.recursopropiedad.nombre" value="{{recursopropiedadc.recursopropiedad.nombre}}" onblur="this.setAttribute('value', this.value);" ng-required="true">
+    						<input type="text" class="inputText" ng-model="recursopropiedadc.recursopropiedad.nombre" ng-value="recursopropiedadc.recursopropiedad.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
 							<label for="nombre" class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
@@ -103,7 +103,7 @@
 							<label for="nombre" class="floating-label">* Tipo dato</label>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="recursopropiedadc.recursopropiedad.descripcion" value="{{recursopropiedadc.recursopropiedad.descripcion}}" onblur="this.setAttribute('value', this.value);">
+    						<input type="text" class="inputText" ng-model="recursopropiedadc.recursopropiedad.descripcion" ng-value="recursopropiedadc.recursopropiedad.descripcion" onblur="this.setAttribute('value', this.value);">
 							<label for="descripcion" class="floating-label">Descripción</label>
 						</div>
 						<br/>

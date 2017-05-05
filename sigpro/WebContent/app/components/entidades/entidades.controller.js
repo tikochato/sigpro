@@ -67,9 +67,17 @@ function controlEntidad($scope, $routeParams, $route, $window, $location,
 	}
 	mi.entidad = -1;
 	mi.seleccionada = false;
+	
+
+	mi.editarElemento = function (event) {
+        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+        mi.gridApi.selection.selectRow(mi.entidades_gridOptions.data[filaId]);
+        mi.editar();
+    };
 
 	mi.entidades_gridOptions = {
 		data : mi.data,
+		rowTemplate: '<div ng-dblclick="grid.appScope.entidad.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 		columnDefs : [ {
 			name : 'Entidad',
 			field : 'entidad',

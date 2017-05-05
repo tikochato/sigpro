@@ -6,24 +6,26 @@
 		<shiro:lacksPermission name="19010">
 			<p ng-init="metaunidadc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
+		
 		<div class="panel panel-default">
 		  <div class="panel-heading"><h3>Unidades de Medida de Metas</h3></div>
 		</div>
+		
 		<div class="row" align="center" ng-hide="metaunidadc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="19040">
-			       		<label class="btn btn-primary" ng-click="metaunidadc.nueva()">
+			       		<label class="btn btn-primary" ng-click="metaunidadc.nueva()"  uib-tooltip="Nuevo">
 							<span class="glyphicon glyphicon-plus"></span> Nuevo
 						</label>
 			       </shiro:hasPermission> 
 			       <shiro:hasPermission name="19010">
-			       		<label class="btn btn-primary" ng-click="metaunidadc.editar()">
+			       		<label class="btn btn-primary" ng-click="metaunidadc.editar()"  uib-tooltip="Editar">
 			       		<span class="glyphicon glyphicon-pencil"></span> Editar
 			       		</label>
 			       	</shiro:hasPermission>
 			       <shiro:hasPermission name="19030">
-			       		<label class="btn btn-danger" ng-click="metaunidadc.borrar()">
+			       		<label class="btn btn-danger" ng-click="metaunidadc.borrar()"  uib-tooltip="Borrar">
 			       		<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			       </shiro:hasPermission>
 			        
@@ -76,9 +78,11 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="19020">
-			        	<label class="btn btn-success"  ng-click="form.$valid ? metaunidadc.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
+			        	<label class="btn btn-success"  ng-click="form.$valid ? metaunidadc.guardar() : ''" ng-disabled="form.$invalid" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 			        </shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="metaunidadc.irATabla()">Ir a Tabla</label>
+			        <label class="btn btn-primary" ng-click="metaunidadc.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
     			</div>
     		</div>
 			
@@ -90,17 +94,17 @@
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText" ng-model="metaunidadc.medida.nombre" ng-required="true"
-    						value="{{metaunidadc.medida.nombre}}" onblur="this.setAttribute('value', this.value);">
+    						ng-value="metaunidadc.medida.nombre" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText"  ng-model="metaunidadc.medida.descripcion"
-    						value="{{metaunidadc.medida.descripcion}}" onblur="this.setAttribute('value', this.value);">
+    						ng-value="metaunidadc.medida.descripcion" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">Descripción</label>
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText" ng-model="metaunidadc.medida.simbolo"
-    						value="{{metaunidadc.medida.simbolo}}" onblur="this.setAttribute('value', this.value);">
+    						ng-value="metaunidadc.medida.simbolo" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">Símbolo</label>
 						</div>
 						<br/>
@@ -144,9 +148,11 @@
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
 						<shiro:hasPermission name="19020">
-				        	<label class="btn btn-success" ng-click="form.$valid ? metaunidadc.guardar() : ''" ng-disabled="form.$invalid">Guardar</label>
+				        	<label class="btn btn-success" ng-click="form.$valid ? metaunidadc.guardar() : ''" ng-disabled="form.$invalid" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 						</shiro:hasPermission>
-				        <label class="btn btn-primary" ng-click="metaunidadc.irATabla()">Ir a Tabla</label>
+				        <label class="btn btn-primary" ng-click="metaunidadc.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 	    			</div>
 	    		</div>
     		</div>

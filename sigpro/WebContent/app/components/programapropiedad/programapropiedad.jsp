@@ -12,7 +12,6 @@
 		</div>
 		
 		<div align="center" ng-hide="programapropiedadc.mostraringreso">
-			<br>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="38040">
@@ -91,7 +90,7 @@
     						<br/><br/>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="programapropiedadc.programapropiedad.nombre"  value="{{programapropiedadc.programapropiedad.nombre}}" onblur="this.setAttribute('value', this.value);" ng-required="true">
+    						<input type="text" class="inputText" ng-model="programapropiedadc.programapropiedad.nombre"  ng-value="programapropiedadc.programapropiedad.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
 							<label for="nombre" class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
@@ -104,7 +103,7 @@
 							<label for="nombre" class="floating-label">* Tipo dato</label>
 						</div>
 						<div class="form-group">
-							<input type="text" class="inputText" ng-model="programapropiedadc.programapropiedad.descripcion" value="{{programapropiedadc.programapropiedad.descripcion}}" onblur="this.setAttribute('value', this.value);" >
+							<input type="text" class="inputText" ng-model="programapropiedadc.programapropiedad.descripcion" ng-value="programapropiedadc.programapropiedad.descripcion" onblur="this.setAttribute('value', this.value);" >
 							<label for="descripcion" class="floating-label">Descripción</label>
 						</div>
 						<br/>
