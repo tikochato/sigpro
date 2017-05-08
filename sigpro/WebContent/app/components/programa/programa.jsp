@@ -739,18 +739,7 @@
 									<label class="floating-label">Fecha de Suscripción</label>
 								</div>
 							</div>
-						</div>
-						
-						<div class="form-group">
-							<input type="text" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaSuscripcion" is-open="programac.fs_abierto"
-								datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
-								value="{{programac.prestamo.fechaSuscripcion}}" onblur="this.setAttribute('value', this.value);"/>
-								<span class="label-icon" ng-click="programac.abrirPopupFecha(1008)">
-									<i class="glyphicon glyphicon-calendar"></i>
-							</span>
-							<label class="floating-label">Fecha de Suscripción</label>
-						</div>
-						
+						</div>						
 						
 						<div class="row">
 							<div class="col-sm-3">

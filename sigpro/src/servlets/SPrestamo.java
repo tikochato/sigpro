@@ -35,7 +35,7 @@ public class SPrestamo extends HttpServlet {
 		int unidadEjecutora; 
 		String unidadEjecutoraNombre;
 		String fechaFirma;
-		int tipoAutorizacionId;
+		Integer tipoAutorizacionId;
 		String tipoAutorizacionNombre;
 		String numeroAutorizacion;
 		String fechaAutorizacion;
@@ -43,7 +43,7 @@ public class SPrestamo extends HttpServlet {
 		int aniosGracia;
 		String fechaFinEjecucion;
 		int periodoEjecucion;
-		int tipoInteresId;
+		Integer tipoInteresId;
 		String tipoInteresNombre;
 		BigDecimal porcentajeInteres; 
 		BigDecimal porcentajeComisionCompra;
@@ -85,7 +85,17 @@ public class SPrestamo extends HttpServlet {
 		BigDecimal montoAsignadoUe;
 		BigDecimal desembolsoAFechaUe;
 		BigDecimal montoPorDesembolsarUe;
-		
+		String fechaVigencia;
+		BigDecimal montoContratadoUsd;
+		BigDecimal montoContratadoQtz;
+		BigDecimal desembolsoAFechaUsd;
+		BigDecimal montoPorDesembolsarUsd;
+		BigDecimal montoAsignadoUeUsd;
+		BigDecimal montoAsignadoUeQtz;
+		BigDecimal desembolsoAFechaUeUsd;
+		BigDecimal montoPorDesembolsarUeUsd;
+		int cooperanteid;
+		String cooperantenombre;
 	}
        
     
@@ -117,86 +127,103 @@ public class SPrestamo extends HttpServlet {
 			int objetoId = Utils.String2Int(map.get("objetoId"));
 			int objetoTipo = Utils.String2Int(map.get("objetoTipo"));
 			
-			
-			Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(objetoId, objetoTipo);
-			if (prestamo !=null){
-			stprestamo temp =  new stprestamo();
-			temp.fechaCorte = Utils.formatDate(prestamo.getFechaCorte());
-			temp.codigoPresupuestario = prestamo.getCodigoPresupuestario();
-			temp.numeroPrestamo = prestamo.getNumeroPrestamo(); 
-			temp.destino = prestamo.getDestino();
-			temp.sectorEconomico = prestamo.getSectorEconomico();
-			temp.unidadEjecutora = prestamo.getUnidadEjecutora().getUnidadEjecutora();
-			temp.unidadEjecutoraNombre = prestamo.getUnidadEjecutora().getNombre();
-			temp.fechaFirma = Utils.formatDate(prestamo.getFechaFirma());
-			temp.tipoAutorizacionId = prestamo.getAutorizacionTipo().getId();
-			temp.tipoAutorizacionNombre = prestamo.getAutorizacionTipo().getNombre();
-			temp.numeroAutorizacion = prestamo.getNumeroAutorizacion();
-			temp.fechaAutorizacion = Utils.formatDate(prestamo.getFechaAutorizacion());
-			temp.aniosPlazo = prestamo.getAniosPlazo();
-			temp.aniosGracia = prestamo.getAniosGracia();
-			temp.fechaFinEjecucion = Utils.formatDate(prestamo.getFechaFinEjecucion());
-			temp.periodoEjecucion = prestamo.getPeridoEjecucion();
-			temp.tipoInteresId = prestamo.getInteresTipo().getId();
-			temp.tipoInteresNombre = prestamo.getInteresTipo().getNombre();
-			temp.porcentajeInteres = prestamo.getPorcentajeInteres(); 
-			temp.porcentajeComisionCompra = prestamo.getPorcentajeComisionCompra();
-			temp.tipoMonedaId = prestamo.getTipoMoneda().getId();
-			temp.tipoMonedaNombre = prestamo.getTipoMoneda().getNombre();
-			temp.montoContratado = prestamo.getMontoContratado();
-			temp.amortizado = prestamo.getAmortizado();
-			temp.porAmortizar = prestamo.getPorAmortizar();
-			temp.principalAnio = prestamo.getPrincipalAnio();
-			temp.interesesAnio = prestamo.getInteresesAnio();
-			temp.comisionCompromisoAnio = prestamo.getComisionCompromisoAnio();
-			temp.otrosGastos = prestamo.getOtrosGastos();
-			temp.principalAcumulado = prestamo.getPrincipalAcumulado();
-			temp.interesesAcumulados = prestamo.getInteresesAcumulados();
-			temp.comisionCompromisoAcumulado = prestamo.getComisionCompromisoAcumulado();
-			temp.otrosCargosAcumulados = prestamo.getOtrosCargosAcumulados();
-			temp.presupuestoAsignadoFuncionamiento = prestamo.getPresupuestoAsignadoFuncionamiento();
-			temp.presupuestoAsignadoInversion = prestamo.getPrespupuestoAsignadoInversion();
-			temp.presupuestoModificadoFun = prestamo.getPresupuestoModificadoFuncionamiento();
-			temp.presupuestoModificadoInv = prestamo.getPresupuestoModificadoInversion();
-			temp.presupuestoVigenteFun = prestamo.getPresupuestoVigenteFuncionamiento();
-			temp.presupuestoVigenteInv = prestamo.getPresupuestoVigenteInversion();
-			temp.presupuestoDevengadoFun = prestamo.getPrespupuestoDevengadoFuncionamiento();
-			temp.presupuestoDevengadoInv = prestamo.getPresupuestoDevengadoInversion();
-			temp.presupuestoPagadoFun = prestamo.getPresupuestoPagadoFuncionamiento();
-			temp.presupuestoPagadoInv = prestamo.getPresupuestoPagadoInversion();
-			temp.saldoCuentas = prestamo.getSaldoCuentas();
-			temp.desembolsoReal = prestamo.getSaldoCuentas();
-			temp.ejecucionEstadoId = prestamo.getEjecucionEstado().getId();
-			temp.ejecucionEstadoNombre = prestamo.getEjecucionEstado().getNombre();
-			temp.proyectoPrograma = prestamo.getProyectoPrograma();
-			temp.fechaDecreto = Utils.formatDate(prestamo.getFechaDecreto());
-			temp.fechaSuscripcion = Utils.formatDate(prestamo.getFechaSuscripcion());
-			temp.fechaElegibilidadUe = Utils.formatDate(prestamo.getFechaElegibilidadUe());
-			temp.fechaCierreOrigianlUe = Utils.formatDate(prestamo.getFechaCierreOrigianlUe());
-			temp.fechaCierreActualUe = Utils.formatDate(prestamo.getFechaCierreActualUe());
-			temp.mesesProrrogaUe = prestamo.getMesesProrrogaUe();
-			temp.plazoEjecucionUe = prestamo.getPlazoEjecucionUe();  
-			temp.montoAsignadoUe = prestamo.getMontoAsignadoUe();
-			temp.desembolsoAFechaUe = prestamo.getDesembolsoAFechaUe();
-			temp.montoPorDesembolsarUe = prestamo.getMontoPorDesembolsarUe();
-				response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
-		        response_text = String.join("", "\"prestamo\":",response_text);
-		        response_text = String.join("", "{\"success\":true,", response_text,"}");
-			}else{
-		        response_text = String.join("", "\"prestamo\":null");
-		        response_text = String.join("", "{\"success\":true,", response_text,"}");
-			}
-			
-		
+			try{
+				Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(objetoId, objetoTipo);
+				if (prestamo !=null){
+				stprestamo temp =  new stprestamo();
+				temp.fechaCorte = Utils.formatDate(prestamo.getFechaCorte());
+				temp.codigoPresupuestario = prestamo.getCodigoPresupuestario();
+				temp.numeroPrestamo = prestamo.getNumeroPrestamo(); 
+				temp.destino = prestamo.getDestino();
+				temp.sectorEconomico = prestamo.getSectorEconomico();
+				temp.unidadEjecutora = prestamo.getUnidadEjecutora().getUnidadEjecutora();
+				temp.unidadEjecutoraNombre = prestamo.getUnidadEjecutora().getNombre();
+				temp.fechaFirma = Utils.formatDate(prestamo.getFechaFirma());
+				
 
-			
-			
+				
+				temp.tipoAutorizacionId = (prestamo.getAutorizacionTipo() == null ? null : prestamo.getAutorizacionTipo().getId());
+				temp.tipoAutorizacionNombre = (prestamo.getAutorizacionTipo() == null ? null : prestamo.getAutorizacionTipo().getNombre());
+				temp.numeroAutorizacion = (prestamo.getNumeroAutorizacion() == null ? null: prestamo.getNumeroAutorizacion());
+				temp.fechaAutorizacion = Utils.formatDate(prestamo.getFechaAutorizacion());
+				temp.aniosPlazo = prestamo.getAniosPlazo();
+				temp.aniosGracia = prestamo.getAniosGracia();
+				temp.fechaFinEjecucion = Utils.formatDate(prestamo.getFechaFinEjecucion());
+				temp.periodoEjecucion = prestamo.getPeridoEjecucion();
+				temp.tipoInteresId = (prestamo.getInteresTipo() == null ? null : prestamo.getInteresTipo().getId());
+				temp.tipoInteresNombre = (prestamo.getInteresTipo() == null ? null : prestamo.getInteresTipo().getNombre());
+				temp.porcentajeInteres = prestamo.getPorcentajeInteres(); 
+				temp.porcentajeComisionCompra = prestamo.getPorcentajeComisionCompra();
+				temp.tipoMonedaId = prestamo.getTipoMoneda().getId();
+				temp.tipoMonedaNombre = prestamo.getTipoMoneda().getNombre();
+				temp.montoContratado = prestamo.getMontoContratado();
+				temp.amortizado = prestamo.getAmortizado();
+				temp.porAmortizar = prestamo.getPorAmortizar();
+				temp.principalAnio = prestamo.getPrincipalAnio();
+				temp.interesesAnio = prestamo.getInteresesAnio();
+				temp.comisionCompromisoAnio = prestamo.getComisionCompromisoAnio();
+				temp.otrosGastos = prestamo.getOtrosGastos();
+				temp.principalAcumulado = prestamo.getPrincipalAcumulado();
+				temp.interesesAcumulados = prestamo.getInteresesAcumulados();
+				temp.comisionCompromisoAcumulado = prestamo.getComisionCompromisoAcumulado();
+				temp.otrosCargosAcumulados = prestamo.getOtrosCargosAcumulados();
+				temp.presupuestoAsignadoFuncionamiento = prestamo.getPresupuestoAsignadoFuncionamiento();
+				temp.presupuestoAsignadoInversion = prestamo.getPrespupuestoAsignadoInversion();
+				temp.presupuestoModificadoFun = prestamo.getPresupuestoModificadoFuncionamiento();
+				temp.presupuestoModificadoInv = prestamo.getPresupuestoModificadoInversion();
+				temp.presupuestoVigenteFun = prestamo.getPresupuestoVigenteFuncionamiento();
+				temp.presupuestoVigenteInv = prestamo.getPresupuestoVigenteInversion();
+				temp.presupuestoDevengadoFun = prestamo.getPrespupuestoDevengadoFuncionamiento();
+				temp.presupuestoDevengadoInv = prestamo.getPresupuestoDevengadoInversion();
+				temp.presupuestoPagadoFun = prestamo.getPresupuestoPagadoFuncionamiento();
+				temp.presupuestoPagadoInv = prestamo.getPresupuestoPagadoInversion();
+				temp.saldoCuentas = prestamo.getSaldoCuentas();
+				temp.desembolsoReal = prestamo.getSaldoCuentas();
+				temp.ejecucionEstadoId = prestamo.getEjecucionEstado().getId();
+				temp.ejecucionEstadoNombre = prestamo.getEjecucionEstado().getNombre();
+				temp.proyectoPrograma = prestamo.getProyectoPrograma();
+				temp.fechaDecreto = Utils.formatDate(prestamo.getFechaDecreto());
+				temp.fechaSuscripcion = Utils.formatDate(prestamo.getFechaSuscripcion());
+				temp.fechaElegibilidadUe = Utils.formatDate(prestamo.getFechaElegibilidadUe());
+				temp.fechaCierreOrigianlUe = Utils.formatDate(prestamo.getFechaCierreOrigianlUe());
+				temp.fechaCierreActualUe = Utils.formatDate(prestamo.getFechaCierreActualUe());
+				temp.mesesProrrogaUe = prestamo.getMesesProrrogaUe();
+				temp.montoAsignadoUe = prestamo.getMontoAsignadoUe();
+				temp.desembolsoAFechaUe = prestamo.getDesembolsoAFechaUe();
+				temp.montoPorDesembolsarUe = prestamo.getMontoPorDesembolsarUe();
+				temp.fechaVigencia = Utils.formatDate(prestamo.getFechaVigencia());
+				temp.montoContratadoUsd = prestamo.getMontoContratadoUsd();
+				temp.montoContratadoQtz = prestamo.getMontoContratadoQtz();
+				temp.desembolsoAFechaUsd = prestamo.getDesembolsoAFechaUsd();
+				temp.montoPorDesembolsarUsd = prestamo.getMontoPorDesembolsarUsd();
+				temp.montoAsignadoUeUsd = prestamo.getMontoAsignadoUeUsd();
+				temp.montoAsignadoUeQtz = prestamo.getMontoAsignadoUeQtz();
+				temp.desembolsoAFechaUeUsd = prestamo.getDesembolsoAFechaUeUsd();
+				temp.montoPorDesembolsarUeUsd = prestamo.getMontoPorDesembolsarUeUsd();
+				temp.cooperanteid = prestamo.getCooperante().getId();
+				temp.cooperantenombre = prestamo.getCooperante().getNombre();
+				
+				temp.unidadEjecutora = prestamo.getUnidadEjecutora().getUnidadEjecutora();
+				temp.unidadEjecutoraNombre = prestamo.getUnidadEjecutora().getNombre();
+				
+					response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
+			        response_text = String.join("", "\"prestamo\":",response_text);
+			        response_text = String.join("", "{\"success\":true,", response_text,"}");
+				}else{
+			        response_text = String.join("", "\"prestamo\":null");
+			        response_text = String.join("", "{\"success\":true,", response_text,"}");
+				}
+			}
+			catch(Throwable e){
+				e.printStackTrace();
+				
+				response_text = String.join("", "\"prestamo\":null");
+		        response_text = String.join("", "{\"success\":false,", response_text,"}");
+			}	
 		}
 		
-
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
-
 
         OutputStream output = response.getOutputStream();
 		GZIPOutputStream gz = new GZIPOutputStream(output);
