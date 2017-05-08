@@ -42,6 +42,41 @@ nav.navbar{
    transition: all 0.4s ease-in-out;
 }
 
+.alineado {
+  margin: auto;
+  position: absolute;
+  /*left: 0; */
+  right: 0;
+}
+
+.fa-12x {
+    font-size: 1.2em;
+    color: #9d9d9d;
+}
+
+.fa-12x:hover {
+    color: #ffffff;
+}
+
+.triangle-down {
+
+  position: fixed;
+    width: 0;
+    height: 0;
+    border-left: 24px solid transparent;
+    border-right: 24px solid transparent;
+    border-top: 23px solid #1f3b6a;
+}
+
+.triangle-down p{  
+  text-align:center;
+  color:white;
+  margin-top: -23px;
+  margin-left: -9px;
+  transition: color .2s;
+  &:hover{color: rgba(0, 0, 0, .4)}
+}
+
 .maincontainer{
 	margin: 15px;
 	padding-top: 15px;

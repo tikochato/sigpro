@@ -77,5 +77,10 @@
 		            <li><a><span class="glyphicon glyphicon-chevron-up" aria-hidden="true" ng-click="hideBarFromMenu()"></span> </a></li>
 		        </ul>
 	        </div>
+	        <div ng-hide ="!hidebar" class='triangle-down alineado' ng-click="showBarFromMenu()">
+		    	<p>
+		        	<i class='fa fa-chevron-down fa-12x isDown' id='toggle'></i>
+		    	</p>
+			</div>
 	    </div>
 	</nav>
