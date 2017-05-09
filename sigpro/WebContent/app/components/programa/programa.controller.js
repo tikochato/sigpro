@@ -194,13 +194,13 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				presupuestoAsignadoFuncionamiento: mi.prestamo.presupuestoAsignadoFuncionamiento,
 				presupuestoAsignadoInversion: mi.prestamo.presupuestoAsignadoInversion,
 				presupuestoModificadoFuncionamiento: mi.prestamo.presupuestoModificadoFun,
-				presupuestoModificadoInversion: mi.prestamo.presupuestoModificadoIn,
+				presupuestoModificadoInversion: mi.prestamo.presupuestoModificadoInv,
 				presupuestoVigenteFuncionamiento: mi.prestamo.presupuestoVigenteFun,
 				presupuestoVigenteInversion: mi.prestamo.presupuestoVigenteInv,
 				presupuestoDevengadoFunconamiento:mi.prestamo.presupuestoDevengadoFun,
 				presupuestoDevengadoInversion:mi.prestamo.presupuestoDevengadoInv,
 				presupuestoPagadoFuncionamiento: mi.prestamo.presupuestoPagadoFun,
-				presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoIn,
+				presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoInv,
 				saldoCuentas: mi.prestamo.saldoCuentas,
 				desembolsoReal: mi.prestamo.desembolsoReal,
 				ejecucionEstadoId: mi.prestamo.ejecucionEstadoId,
@@ -596,7 +596,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	
 	mi.buscarTipoMoneda = function() {
 		
-		var resultado = mi.llamarModalBusqueda('/SPrograma', {
+		var resultado = mi.llamarModalBusqueda('/STipoMoneda', {
 			accion : 'numeroTipoMonedas'	
 		}, function(pagina, elementosPorPagina) {
 			return {
@@ -614,7 +614,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	
 	mi.buscarEstadoEjecucion = function() {
 		
-		var resultado = mi.llamarModalBusqueda('/SPrograma', {
+		var resultado = mi.llamarModalBusqueda('/SEjecucionEstado', {
 			accion : 'numeroEjecucionEstado'	
 		}, function(pagina, elementosPorPagina) {
 			return {
