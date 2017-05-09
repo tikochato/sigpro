@@ -27,14 +27,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.EjecucionEstadoDAO;
 import dao.PrestamoDAO;
 import dao.ProgramaDAO;
 import dao.ProgramaPropiedadDAO;
 import dao.ProgramaPropiedadValorDAO;
 import dao.ProgramaProyectoDAO;
-import dao.TipoMonedaDAO;
 import pojo.AutorizacionTipo;
+import pojo.Cooperante;
 import pojo.EjecucionEstado;
 import pojo.InteresTipo;
 import pojo.ObjetoPrestamo;
@@ -221,11 +220,22 @@ public class SPrograma extends HttpServlet {
 				Date fechaElegibilidadUe = Utils.dateFromString(map.get("fechaElegibilidad"));
 				Date fechaCierreOrigianlUe = Utils.dateFromString(map.get("fechaCierreOriginal"));
 				Date fechaCierreActualUe = Utils.dateFromString(map.get("fechaCierreActual"));
-				int mesesProrrogaUe = Utils.String2Int("mesesProrroga");
-				int plazoEjecucionUe = Utils.String2Int("plazoEjecucionUe");  
+				int mesesProrrogaUe = Utils.String2Int(map.get("mesesProrroga"));
 				BigDecimal montoAsignadoUe = Utils.String2BigDecimal(map.get("montoAisignadoUe"), null);
 				BigDecimal desembolsoAFechaUe = Utils.String2BigDecimal(map.get("desembolsoAFechaUe"), null);
 				BigDecimal montoPorDesembolsarUe = Utils.String2BigDecimal(map.get("montoPorDesembolsarUe"), null);
+				Date fechaVigencia = Utils.dateFromString(map.get("fechaVigencia"));
+				BigDecimal montoContratadoUsd = Utils.String2BigDecimal(map.get("montoContratadoUsd"), null);
+				BigDecimal montoContratadoQtz = Utils.String2BigDecimal(map.get("montoContratadoQtz"), null);
+				BigDecimal desembolsoAFechaUsd = Utils.String2BigDecimal(map.get("desembolsoAFechaUsd"), null);
+				BigDecimal montoPorDesembolsarUsd = Utils.String2BigDecimal(map.get("montoPorDesembolsarUsd"), null);
+				BigDecimal montoAsignadoUeUsd = Utils.String2BigDecimal(map.get("montoAsignadoUeUsd"), null);
+				BigDecimal montoAsignadoUeQtz = Utils.String2BigDecimal(map.get("montoAsignadoUeQtz"), null);
+				BigDecimal desembolsoAFechaUeUsd = Utils.String2BigDecimal(map.get("desembolsoAFechaUeUsd"), null);
+				BigDecimal montoPorDesembolsarUeUsd = Utils.String2BigDecimal(map.get("montoPorDesembolsarUeUsd"), null);
+				
+				Cooperante cooperanteUe = new Cooperante();
+				cooperanteUe.setId(map.get("cooperanteUeId")!=null ? Integer.parseInt(map.get("cooperanteUeId")): null);
 				
 				int objetoTipo = Utils.String2Int(map.get("objetoTipo"),6);
 				
@@ -261,7 +271,6 @@ public class SPrograma extends HttpServlet {
 					programa.setDescripcion(descripcion);
 					programa.setUsuarioActualizo(usuario);
 					programa.setFechaActualizacion(new DateTime().toDate());
-					
 
 				   List<ProgramaPropiedadValor> valores_temp = ProgramaPropiedadValorDAO.getProgramaPropiedadadesValoresPorPrograma(programa.getId());
 
@@ -282,36 +291,108 @@ public class SPrograma extends HttpServlet {
 						}
 					}
 					
+					
+					
 				}
 				result = ProgramaDAO.guardarPrograma(programa);
 				
 				
 				if (result){
 					// prestamo
-					
-					Prestamo prestamo = new Prestamo(autorizacionTipo, ejecucionEstado, interesTipo, tipoMoneda, unidadEjecutora_,
-							fechaCorte, codigoPresupuestario, numeroPrestamo, destino, sectorEconomico, fechaFirma, 
-							numeroAutorizacion, fechaAutorizacion, aniosPlazo, aniosGracia, fechaFinEjecucion, peridoEjecucion,
-							porcentajeInteres, porcentajeComisionCompra, montoContratado, amortizado, porAmortizar,
-							principalAnio, interesesAnio, comisionCompromisoAnio, otrosGastos, principalAcumulado, 
-							interesesAcumulados, comisionCompromisoAcumulado, otrosCargosAcumulados,
-							presupuestoAsignadoFuncionamiento, prespupuestoAsignadoInversion, 
-							presupuestoModificadoFun, presupuestoModificadoInv, presupuestoVigenteFun, 
-							presupuestoVigenteInv, prespupuestoDevengadoFun, presupuestoDevengadoInv, 
-							presupuestoPagadoFun, presupuestoPagadoInv, saldoCuentas, desembolsadoReal, 
-							usuario, null, new Date(), null, 1, proyectoPrograma, 
-							fechaDecreto, fechaSuscripcion, fechaElegibilidadUe, fechaCierreOrigianlUe, fechaCierreActualUe, 
-							mesesProrrogaUe, plazoEjecucionUe, montoAsignadoUe, desembolsoAFechaUe, montoPorDesembolsarUe, null) ;
-					
-					ObjetoPrestamoId objetoPrestamoId = new ObjetoPrestamoId(0, programa.getId(), objetoTipo);
-					ObjetoPrestamo objetoPrestamo = new ObjetoPrestamo(objetoPrestamoId, prestamo);
-					Set <ObjetoPrestamo> objetoPrestamos = new HashSet<>();
-					objetoPrestamos.add(objetoPrestamo);
-					
-					PrestamoDAO.guardarPrestamo(prestamo, objetoPrestamo);
-					
-					
-					
+					Prestamo prestamo = null;
+					ObjetoPrestamo objetoPrestamo = null;
+					if (esnuevo){
+						prestamo = new Prestamo(autorizacionTipo, ejecucionEstado, interesTipo, tipoMoneda, unidadEjecutora_,
+								fechaCorte, codigoPresupuestario, numeroPrestamo, destino, sectorEconomico, fechaFirma, 
+								numeroAutorizacion, fechaAutorizacion, aniosPlazo, aniosGracia, fechaFinEjecucion, peridoEjecucion,
+								porcentajeInteres, porcentajeComisionCompra, montoContratado, amortizado, porAmortizar,
+								principalAnio, interesesAnio, comisionCompromisoAnio, otrosGastos, principalAcumulado, 
+								interesesAcumulados, comisionCompromisoAcumulado, otrosCargosAcumulados,
+								presupuestoAsignadoFuncionamiento, prespupuestoAsignadoInversion, 
+								presupuestoModificadoFun, presupuestoModificadoInv, presupuestoVigenteFun, 
+								presupuestoVigenteInv, prespupuestoDevengadoFun, presupuestoDevengadoInv, 
+								presupuestoPagadoFun, presupuestoPagadoInv, saldoCuentas, desembolsadoReal, 
+								usuario, null, new Date(), null, 1, proyectoPrograma, 
+								fechaDecreto, fechaSuscripcion, fechaElegibilidadUe, fechaCierreOrigianlUe, fechaCierreActualUe, 
+								mesesProrrogaUe, montoAsignadoUe, desembolsoAFechaUe, montoPorDesembolsarUe, null, 
+								fechaVigencia, montoContratadoUsd, montoContratadoQtz, desembolsoAFechaUsd, montoPorDesembolsarUsd, 
+								montoAsignadoUeUsd, montoAsignadoUeQtz, desembolsoAFechaUeUsd,
+								montoPorDesembolsarUeUsd, cooperanteUe);
+						
+						ObjetoPrestamoId objetoPrestamoId = new ObjetoPrestamoId(0, programa.getId(), objetoTipo);
+						objetoPrestamo = new ObjetoPrestamo(objetoPrestamoId, prestamo);
+						Set <ObjetoPrestamo> objetoPrestamos = new HashSet<>();
+						objetoPrestamos.add(objetoPrestamo);
+						PrestamoDAO.guardarPrestamo(prestamo, objetoPrestamo);
+					}else{
+						prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(programa.getId(), objetoTipo);
+						prestamo.setAmortizado(amortizado);
+						prestamo.setAniosGracia(aniosGracia);
+						prestamo.setAniosPlazo(aniosPlazo);
+						prestamo.setAutorizacionTipo(autorizacionTipo);
+						prestamo.setCodigoPresupuestario(codigoPresupuestario);
+						prestamo.setComisionCompromisoAcumulado(comisionCompromisoAcumulado);
+						prestamo.setComisionCompromisoAnio(comisionCompromisoAnio);
+						prestamo.setDesembolsadoReal(desembolsadoReal);
+						prestamo.setDesembolsoAFechaUe(desembolsoAFechaUe);
+						prestamo.setDestino(destino);
+						prestamo.setEjecucionEstado(ejecucionEstado);
+						prestamo.setEstado(1);
+						prestamo.setFechaActualizacion(new DateTime().toDate());
+						prestamo.setFechaAutorizacion(fechaAutorizacion);
+						prestamo.setFechaCierreActualUe(fechaCierreActualUe);
+						prestamo.setFechaCierreOrigianlUe(fechaCierreOrigianlUe);
+						prestamo.setFechaCorte(fechaCorte);
+						prestamo.setFechaDecreto(fechaDecreto);
+						prestamo.setFechaElegibilidadUe(fechaElegibilidadUe);
+						prestamo.setFechaFinEjecucion(fechaFinEjecucion);
+						prestamo.setFechaFirma(fechaFirma);
+						prestamo.setFechaSuscripcion(fechaSuscripcion);
+						prestamo.setInteresesAcumulados(interesesAcumulados);
+						prestamo.setInteresesAnio(interesesAnio);
+						prestamo.setInteresTipo(interesTipo);
+						prestamo.setMesesProrrogaUe(mesesProrrogaUe);
+						prestamo.setMontoAsignadoUe(montoAsignadoUe);
+						prestamo.setMontoContratado(montoContratado);
+						prestamo.setMontoPorDesembolsarUe(montoPorDesembolsarUe);
+						prestamo.setNumeroAutorizacion(numeroAutorizacion);
+						prestamo.setNumeroPrestamo(numeroPrestamo);
+						prestamo.setOtrosCargosAcumulados(otrosCargosAcumulados);
+						prestamo.setOtrosGastos(otrosGastos);
+						prestamo.setPeridoEjecucion(peridoEjecucion);
+						prestamo.setPorAmortizar(porAmortizar);
+						prestamo.setPorcentajeComisionCompra(porcentajeComisionCompra);
+						prestamo.setPorcentajeInteres(porcentajeInteres);
+						prestamo.setPrespupuestoAsignadoInversion(prespupuestoAsignadoInversion);
+						prestamo.setPrespupuestoDevengadoFuncionamiento(prespupuestoDevengadoFun);
+						prestamo.setPresupuestoAsignadoFuncionamiento(presupuestoAsignadoFuncionamiento);
+						prestamo.setPresupuestoDevengadoInversion(presupuestoDevengadoInv);
+						prestamo.setPresupuestoModificadoFuncionamiento(presupuestoModificadoFun);
+						prestamo.setPresupuestoModificadoInversion(presupuestoModificadoInv);
+						prestamo.setPresupuestoPagadoFuncionamiento(presupuestoPagadoFun);
+						prestamo.setPresupuestoPagadoInversion(presupuestoPagadoInv);
+						prestamo.setPresupuestoVigenteFuncionamiento(presupuestoVigenteFun);
+						prestamo.setPresupuestoVigenteInversion(presupuestoVigenteInv);
+						prestamo.setPrincipalAcumulado(principalAcumulado);
+						prestamo.setPrincipalAnio(principalAnio);
+						prestamo.setProyectoPrograma(proyectoPrograma);
+						prestamo.setSaldoCuentas(saldoCuentas);
+						prestamo.setSectorEconomico(sectorEconomico);
+						prestamo.setTipoMoneda(tipoMoneda);
+						prestamo.setUnidadEjecutora(unidadEjecutora_);
+						prestamo.setUsuarioActualizo(usuario);
+						prestamo.setFechaVigencia(fechaVigencia);
+						prestamo.setMontoContratadoUsd(montoContratadoUsd);
+						prestamo.setMontoContratadoQtz(montoContratadoQtz);
+						prestamo.setDesembolsoAFechaUsd(desembolsoAFechaUsd);
+						prestamo.setMontoPorDesembolsarUsd(montoPorDesembolsarUsd);
+						prestamo.setMontoAsignadoUeUsd(montoAsignadoUeUsd);
+						prestamo.setMontoAsignadoUeQtz(montoAsignadoUeQtz);
+						prestamo.setDesembolsoAFechaUeUsd(desembolsoAFechaUeUsd);
+						prestamo.setMontoPorDesembolsarUeUsd(montoPorDesembolsarUeUsd);
+						prestamo.setCooperante(cooperanteUe);
+						PrestamoDAO.guardarPrestamo(prestamo, PrestamoDAO.getObjetoPrestamo(prestamo.getId()));	
+					}
 					
 					String[] idsProyectos =  map.get("idsproyectos") != null && map.get("idsproyectos").trim().length()>0 ? map.get("idsproyectos").toString().trim().split(",") : null;
 					if (idsProyectos !=null && idsProyectos.length>0){
@@ -412,44 +493,7 @@ public class SPrograma extends HttpServlet {
 					+ "\"id\": " + (programa!=null ? programa.getId():"") +", "
 					+ "\"nombre\": \"" + (programa!=null ? programa.getNombre():"") +"\" }");
 
-		}else if(accion.equals("getTipoMnedaPagina")){
-			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-
-			List<TipoMoneda> tipoMonedas = TipoMonedaDAO.getAutorizacionTiposPagina(pagina, 0);
-			
-			List<stprograma> sttipomoneda=new ArrayList<stprograma>();
-			for(TipoMoneda tipoMoneda:tipoMonedas){
-				stprograma temp =new stprograma();
-				temp.id = tipoMoneda.getId();
-				temp.nombre = tipoMoneda.getNombre();
-				sttipomoneda.add(temp);
-			}
-			
-			response_text=new GsonBuilder().serializeNulls().create().toJson(sttipomoneda);
-	        response_text = String.join("", "\"tipoMonedas\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text,"}");
-		
-		}else if(accion.equals("getEjecucionEstadoPagina")){
-			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-
-			List<EjecucionEstado> ejecucionEstados = EjecucionEstadoDAO.getEjecucionEstadosPagina(pagina, 0);
-			
-			List<stprograma> sttipomoneda=new ArrayList<stprograma>();
-			for(EjecucionEstado tipoMoneda:ejecucionEstados){
-				stprograma temp =new stprograma();
-				temp.id = tipoMoneda.getId();
-				temp.nombre = tipoMoneda.getNombre();
-				sttipomoneda.add(temp);
-			}
-			
-			response_text=new GsonBuilder().serializeNulls().create().toJson(sttipomoneda);
-	        response_text = String.join("", "\"ejecucionEstados\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text,"}");
-		
-		}
-		
-		
-		else
+		}else
 		{
 			response_text = "{ \"success\": false }";
 		}
