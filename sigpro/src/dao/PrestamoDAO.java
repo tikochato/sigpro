@@ -24,6 +24,28 @@ public class PrestamoDAO {
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
+			e.printStackTrace();
+			CLogger.write("1", PrestamoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static ObjetoPrestamo getObjetoPrestamo(int idPrestamo){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		ObjetoPrestamo ret = null;
+		try{
+			Query<ObjetoPrestamo> criteria = session.createQuery("SELECT op FROM Prestamo p "
+					+ "INNER JOIN p.objetoPrestamos op "
+					+ " where op.id.prestamoid= :idPrestamo "
+					+ " and op.estado= 1", ObjetoPrestamo.class);
+			criteria.setParameter("idPrestamo", idPrestamo);
+			ret = criteria.getSingleResult();
+		}
+		catch(Throwable e){
+			e.printStackTrace();
 			CLogger.write("1", PrestamoDAO.class, e);
 		}
 		finally{
@@ -50,6 +72,7 @@ public class PrestamoDAO {
 			ret = true;
 		}
 		catch(Throwable e){
+			e.printStackTrace();
 			CLogger.write("2", PrestamoDAO.class, e);
 		}
 		finally{

@@ -18,7 +18,7 @@ function controlUnidadEjecutora($scope, $routeParams, $route, $window,
 	$window.document.title = $utilidades.sistema_nombre+' - Unidad Ejecutora';
 
 	mi.esForma = false;
-
+	mi.esNuevo = false;
 	mi.totalElementos = 0;
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
@@ -214,6 +214,7 @@ function controlUnidadEjecutora($scope, $routeParams, $route, $window,
 							mi.data = response.data.unidadesEjecutoras;
 							mi.opcionesGrid.data = mi.data;
 							mi.esForma = false;
+							
 
 							$utilidades.mensaje('success',
 									'Entidad guardada con exito.');

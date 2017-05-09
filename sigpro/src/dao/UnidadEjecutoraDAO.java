@@ -10,6 +10,7 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojo.SubproductoUsuario;
 import pojo.UnidadEjecutora;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -46,6 +47,25 @@ public class UnidadEjecutoraDAO {
 		return ret;
 	}
 
+	
+	public static boolean guardarUnidadEjecutora(UnidadEjecutora unidadejecutora){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			session.saveOrUpdate(unidadejecutora);
+			session.getTransaction().commit();
+			ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("1", SubproductoUsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	public static boolean guardar(int codigo, String nombre, int codigoEntidad) {
 
 		UnidadEjecutora pojo = getUnidadEjecutora(codigo);

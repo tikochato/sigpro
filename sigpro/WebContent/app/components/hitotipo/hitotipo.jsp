@@ -94,7 +94,7 @@
 					<div class="form-group">
 		    			<select class="inputText" ng-model="hitotipoc.datoTipoSeleccionado" ng-options="tipo as tipo.nombre for tipo in hitotipoc.datoTipos track by tipo.id" ng-required="true"
 		    			ng-readonly="true" ng-disabled="!hitotipoc.esnuevo" ng-required="true" >
-							<option disabled selected value> -- Seleccione Tipo -- </option>
+							<option disabled selected value> * Tipo de Hito </option>
 						</select>
 						<label class="floating-label">* Tipo:</label>
 		    		 </div>
