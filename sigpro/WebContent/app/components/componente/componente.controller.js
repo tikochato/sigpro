@@ -1,4 +1,4 @@
-var app = angular.module('componenteController', ['ui.bootstrap.contextMenu']);
+var app = angular.module('componenteController', []);
 
 app.controller('componenteController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {

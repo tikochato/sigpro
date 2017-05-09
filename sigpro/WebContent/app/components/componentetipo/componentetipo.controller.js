@@ -1,4 +1,4 @@
-var app = angular.module('componentetipoController', [ 'ngTouch','ui.bootstrap.contextMenu']);
+var app = angular.module('componentetipoController', [ 'ngTouch']);
 
 app.controller('componentetipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal) {

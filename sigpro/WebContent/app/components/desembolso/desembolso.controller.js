@@ -1,4 +1,4 @@
-var app = angular.module('desembolsoController', ['ui.bootstrap.contextMenu']);
+var app = angular.module('desembolsoController', []);
 
 app.controller('desembolsoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal',
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal) {

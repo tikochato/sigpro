@@ -1,7 +1,7 @@
 /**
  * 
  */
-var moduloColaborador = angular.module('moduloColaborador', [ 'ngTouch' ,'ui.bootstrap.contextMenu']);
+var moduloColaborador = angular.module('moduloColaborador', [ 'ngTouch']);
 
 moduloColaborador.controller('controlColaborador', [ '$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',

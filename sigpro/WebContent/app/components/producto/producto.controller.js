@@ -1,5 +1,5 @@
 var moduloProducto = angular.module('moduloProducto', [ 'ngTouch',
-		'smart-table', 'ui.bootstrap.contextMenu']);
+		'smart-table']);
 
 moduloProducto.controller('controlProducto', [ '$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',
