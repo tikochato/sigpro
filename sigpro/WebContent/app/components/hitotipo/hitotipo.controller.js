@@ -28,6 +28,12 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 			mi.datoTipos = response.datoTipos;
 		});
 		
+		mi.editarElemento = function (event) {
+	        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+	        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
+	        mi.editar();
+	    };
+	    
 		mi.gridOptions = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
@@ -39,6 +45,7 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 			    paginationPageSize: $utilidades.elementosPorPagina,
 			    useExternalFiltering: true,
 			    useExternalSorting: true,
+			    rowTemplate: '<div ng-dblclick="grid.appScope.hitotipoc.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 				columnDefs : [ 
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 					{ name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
@@ -121,6 +128,10 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 						$utilidades.mensaje('success','Tipo Hito '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 						mi.hitotipo.id = response.id;
+						mi.hitotipo.usuarioCreo = response.usuarioCreo;
+						mi.hitotipo.fechaCreacion = response.fechaCreacion;
+						mi.hitotipo.usuarioActualizo = response.usuarioactualizo;
+						mi.hitotipo.fechaActualizacion = response.fechaactualizacion;
 						mi.cargarTabla();
 					}
 					else
@@ -209,6 +220,8 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
 				mi.obtenerTotalHitoTipos();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.hitotipo = null;
 			}
 		};
 

@@ -6,7 +6,11 @@
 		<shiro:lacksPermission name="31010">
 			<p ng-init="riesgopropiedadc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Propiedad Riesgo</h3><br/>
+		
+		<div class="panel panel-default">
+			<div class="panel-heading"><h3>Propiedad Riesgo</h3></div>
+		</div>
+		
 		<div class="row" align="center" ng-hide="riesgopropiedadc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
@@ -18,7 +22,7 @@
 					<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 					</shiro:hasPermission>
 			       <shiro:hasPermission name="31030">
-			       		<label class="btn btn-primary" ng-click="riesgopropiedadc.borrar()" uib-tooltip="Borrar">
+			       		<label class="btn btn-danger" ng-click="riesgopropiedadc.borrar()" uib-tooltip="Borrar">
 					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			       </shiro:hasPermission>
     			</div>
@@ -62,9 +66,11 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row main-form" ng-show="riesgopropiedadc.mostraringreso">
-			<h2 ng-hide="!riesgopropiedadc.esnuevo">Nueva Propiedad</h2>
-			<h2 ng-hide="riesgopropiedadc.esnuevo">Edición de Propiedad</h2>
+		<div class="row second-main-form" ng-show="riesgopropiedadc.mostraringreso">
+			<div class="page-header">
+				<h2 ng-hide="!riesgopropiedadc.esnuevo"><small>Nueva Propiedad</small></h2>
+				<h2 ng-hide="riesgopropiedadc.esnuevo"><small>Edición de Propiedad</small></h2>
+			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="31020">
@@ -84,7 +90,7 @@
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText" id="nombre" ng-model="riesgopropiedadc.riesgopropiedad.nombre" 
-    							value="{{riesgopropiedadc.riesgopropiedad.nombre}}" onblur="this.setAttribute('value', this.value);"ng-required="true">
+    							ng-value="riesgopropiedadc.riesgopropiedad.nombre" onblur="this.setAttribute('value', this.value);"ng-required="true">
     						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
@@ -98,37 +104,37 @@
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText" id="descripcion" ng-model="riesgopropiedadc.riesgopropiedad.descripcion"
-    							value="{{riesgopropiedadc.riesgopropiedad.descripcion}}" onblur="this.setAttribute('value', this.value);">
+    							ng-value="riesgopropiedadc.riesgopropiedad.descripcion" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">Descripción</label>
 						</div>
 						<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static"> {{ riesgopropiedadc.riesgopropiedad.usuarioCreo }}</p>
+									<label for="usuarioCreo" class="label-form">Usuario que creo</label> 
+									<p class=""> {{ riesgopropiedadc.riesgopropiedad.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
-									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ riesgopropiedadc.riesgopropiedad.fechaCreacion }} </p>
+									<label for="fechaCreacion" class="label-form">Fecha de creación</label>
+									<p class="" id="fechaCreacion"> {{ riesgopropiedadc.riesgopropiedad.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ riesgopropiedadc.riesgopropiedad.usuarioActualizo }} </p>
+									<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label> 
+									<p class="" id="usuarioCreo">{{ riesgopropiedadc.riesgopropiedad.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ riesgopropiedadc.riesgopropiedad.fechaActualizacion }} </p>
+									<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label> 
+									<p class="" id="usuarioCreo">{{ riesgopropiedadc.riesgopropiedad.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>
@@ -136,7 +142,7 @@
 				</div>
 				</form>
 			</div>
-			<div align="center">Los campos marcados con * son obligatorios</div>
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">

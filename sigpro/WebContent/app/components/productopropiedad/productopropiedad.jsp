@@ -10,7 +10,6 @@
 	  <div class="panel-heading"><h3>Propiedad de Producto</h3></div>
 	</div>
 
-  <br />
 
   <div align="center" ng-hide="productoPropiedad.esForma">
 		<br>
@@ -95,7 +94,7 @@
 		      </div>
 
 		      <div class="form-group">
-		        <input type="text" class="inputText" ng-model="productoPropiedad.nombre"  value="{{productoPropiedad.nombre}}" onblur="this.setAttribute('value', this.value);" ng-required="true" />
+		        <input type="text" class="inputText" ng-model="productoPropiedad.nombre"  ng-value="productoPropiedad.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" />
 		        <label for="campo1" class="floating-label">* Nombre</label> 
 		      </div>
 
@@ -108,7 +107,7 @@
     		 </div>
 		
 		      <div class="form-group">
-		        <input type="text" class="inputText" ng-model="productoPropiedad.descripcion" value="{{productoPropiedad.descripcion}}" onblur="this.setAttribute('value', this.value);"/>
+		        <input type="text" class="inputText" ng-model="productoPropiedad.descripcion" ng-value="productoPropiedad.descripcion" onblur="this.setAttribute('value', this.value);"/>
 		        <label for="campo3" class="floating-label">Descripción</label> 
 		      </div>
 		      <div class="panel panel-default">
@@ -149,7 +148,7 @@
 	    </form>
     </div>
   
-    <div class="col-sm-12 label-form" align="center">Los campos marcados con * son obligatorios</div>
+    <div class="label-form" align="center">Los campos marcados con * son obligatorios</div>
 
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">

@@ -6,6 +6,7 @@
 		<shiro:lacksPermission name="6010">
 			<p ng-init="componentepropiedadc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
+		
 		<div class="panel panel-default">
 		    <div class="panel-heading"><h3>Propiedad de Componentes</h3></div>
 		</div>
@@ -88,7 +89,7 @@
 						</div>
 						<div class="form-group">
 						   <input type="text" name="inombre"  class="inputText" id="nombre" 
-						     ng-model="componentepropiedadc.componentepropiedad.nombre" value="{{componentepropiedadc.componentepropiedad.nombre}}"   
+						     ng-model="componentepropiedadc.componentepropiedad.nombre" ng-value="componentepropiedadc.componentepropiedad.nombre"   
 						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 						   <label class="floating-label">* Nombre</label>
 						</div>
@@ -103,7 +104,7 @@
 						</div>
 						<div class="form-group">
 						   <input type="text" name="descripcion"  class="inputText" id="descripcion" 
-						     ng-model="componentepropiedadc.componentepropiedad.descripcion" value="{{componentepropiedadc.componentepropiedad.descripcion}}"   
+						     ng-model="componentepropiedadc.componentepropiedad.descripcion" ng-value="componentepropiedadc.componentepropiedad.descripcion"   
 						     onblur="this.setAttribute('value', this.value);"  >
 						   <label class="floating-label">Descripción</label>
 						</div>
@@ -143,7 +144,7 @@
 						</div>
 				</form>
 			</div>
-			<div align="center">Los campos marcados con * son obligatorios</div>
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
     		<div class="col-sm-12 operation_buttons" align="right">
 			  <div class="btn-group">
 			    <shiro:hasPermission name="6020">

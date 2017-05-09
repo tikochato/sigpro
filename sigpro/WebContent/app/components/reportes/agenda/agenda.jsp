@@ -26,10 +26,17 @@
   	    <shiro:lacksPermission name="30010">
 			<p ng-init="riesgoc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Agenda</h3><br/>
+		
+		<div class="panel panel-default">
+			<div class="panel-heading"><h3>Agenda</h3></div>
+		</div>
+		<div class="subtitulo">
+			{{ agendac.objetoTipoNombre }} {{ agendac.proyectoNombre }}
+		</div>
+		
 		<div class="row" align="center" >
 		
-			<div class="operation_buttons" align="left">
+			<div class="operation_buttons" align="right">
 					<div class="btn-group">
 						<label class="btn btn-primary"  ng-click="agendac.exportarExcel()" uib-tooltip="Exportar">
 						<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Exportar</span></label>
@@ -39,10 +46,10 @@
 				<table st-table="agendac.agenda" st-safe-src="agendac.lista" class="table table-condensed table-hover">
 					<thead>
 						<tr>
-							<th>Actividad</th>
-							<th>Fecba Inicio</th>
-							<th >Fecha Fin</th>
-							<th>Estado</th>
+							<th class="label-form">Actividad</th>
+							<th class="label-form">Fecha Inicio</th>
+							<th class="label-form">Fecha Fin</th>
+							<th class="label-form">Estado</th>
 						</tr>
 					</thead>
 					<tbody>

@@ -17,6 +17,8 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 	$scope.mostrarSubproductos = true;
 	$scope.mostrarActividades = true;
 	$scope.proyectoid = $routeParams.proyecto_id;
+	$scope.proyectoNombre = "";
+	$scope.objetoTipoNombre="";
 	$scope.titulo=$routeParams.proyecto_id != null ? "" : "de Préstamos" ;
 	$scope.accionServlet = $scope.proyectoid!=null ? 'getMarcasPorProyecto' : 'getMarcasProyecto';
 	$scope.mostrarControles = $scope.proyectoid!=null;
@@ -45,6 +47,13 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 	$http.post('/SMapa', { accion: $scope.accionServlet, proyectoId:$routeParams.proyecto_id}).success(
 			function(response) {
 				$scope.marcas = response.marcas;
+	});
+	
+	$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id }).success(
+			function(response) {
+				$scope.proyectoid = response.id;
+				$scope.proyectoNombre = response.nombre;
+				$scope.objetoTipoNombre="Proyecto";
 	});
 	
 	 $scope.mostrar = function (objetoId) {

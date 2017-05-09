@@ -71,6 +71,12 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 	mi.entidadSeleccionada = -1;
 	mi.seleccionada = false;
 
+	mi.editarElemento = function (event) {
+        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+        mi.gridApi.selection.selectRow(mi.opcionesGrid.data[filaId]);
+        mi.editar();
+    };
+    
 	mi.opcionesGrid = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -83,6 +89,7 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 		useExternalFiltering: true,
 	    useExternalSorting: true,
 		data : mi.data,
+		rowTemplate: '<div ng-dblclick="grid.appScope.subproductoPropiedad.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 		columnDefs : [
 			{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 		    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
@@ -324,6 +331,8 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 	mi.filtrar = function(evt){
 		if(evt.keyCode==13){
 			mi.obtenerTotalSubproductoPropiedades();
+			mi.gridApi.selection.clearSelectedRows();
+			mi.seleccionada = null;
 		}
 	};
 

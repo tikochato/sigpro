@@ -165,7 +165,12 @@ public class SHitoTipo extends HttpServlet {
 				}
 				result = HitoTipoDAO.guardarHitoTipo(hitotipo);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + hitotipo.getId() +" }");
+						, "\"id\": " , hitotipo.getId().toString() , ","
+						, "\"usuarioCreo\": \"" , hitotipo.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(hitotipo.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , hitotipo.getUsuarioActualizacion() != null ? hitotipo.getUsuarioActualizacion() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(hitotipo.getFechaActualizacion()),"\""
+						," }");
 			}
 			else
 				response_text = "{ \"success\": false }";

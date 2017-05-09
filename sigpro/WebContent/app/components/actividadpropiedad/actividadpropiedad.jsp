@@ -6,10 +6,11 @@
 		 <shiro:lacksPermission name="2010">
 			<p ng-init="actividadpropiedadc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
+		
 		<div class="panel panel-default">
 		    <div class="panel-heading"><h3>Propiedades de Actividad</h3></div>
 		</div>
-		<br/>
+		
 		<div class="row" align="center" ng-hide="actividadpropiedadc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 			  <div class="btn-group">
@@ -89,7 +90,7 @@
 						</div>
 						<div class="form-group">
 						   <input type="text" name="inombre"  class="inputText" id="nombre" 
-						     ng-model="actividadpropiedadc.actividadpropiedad.nombre" value="{{actividadpropiedadc.actividadpropiedad.nombre}}"   
+						     ng-model="actividadpropiedadc.actividadpropiedad.nombre" ng-value="actividadpropiedadc.actividadpropiedad.nombre"   
 						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 						   <label class="floating-label">* Nombre</label>
 						</div>
@@ -105,7 +106,7 @@
 						</div>
 						<div class="form-group">
 						   <input type="text" name="descripcion"  class="inputText" id="descripcion" 
-						     ng-model="actividadpropiedadc.actividadpropiedad.descripcion" value="{{actividadpropiedadc.actividadpropiedad.descripcion}}"   
+						     ng-model="actividadpropiedadc.actividadpropiedad.descripcion" ng-value="actividadpropiedadc.actividadpropiedad.descripcion"   
 						     onblur="this.setAttribute('value', this.value);"  >
 						   <label class="floating-label">Descripción</label>
 						</div>
@@ -145,7 +146,7 @@
 						</div>
 				</form>
 			</div>
-			<div align="center">Los campos marcados con * son obligatorios</div>
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="2020">

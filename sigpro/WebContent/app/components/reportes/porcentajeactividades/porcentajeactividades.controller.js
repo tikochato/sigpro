@@ -10,6 +10,9 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q) {
 
 		var mi=this;
+		mi.proyectoid = "";
+		mi.proyectoNombre = "";
+		mi.objetoTipoNombre = "";
 		  
 		var KanbanBoard = DlhSoft.Controls.KanbanBoard;
 		
@@ -17,6 +20,13 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 		$scope.states = {};
 		$scope.itemsKanban = null; 
 		$scope.mostrarKanban = false;
+		
+		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyectoId }).success(
+				function(response) {
+					mi.proyectoid = response.id;
+					mi.proyectoNombre = response.nombre;
+					mi.objetoTipoNombre = "Proyecto";
+		});
 		
 		$http.post('/SPorcentajeActividades', {accion : "getKanban", proyecto_id:$routeParams.proyectoId }).success(
 				function(response) {

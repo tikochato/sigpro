@@ -17,6 +17,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
 			mi.desembolsotipoid;
 			mi.desembolsonombre;
+			mi.objetoTipoNombre=""
 			mi.proyectoid = $routeParams.proyecto_id;
 			mi.fecha = new Date();
 			
@@ -24,21 +25,12 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.ordenDireccion = null;
 			mi.filtros = [];
 			mi.orden = null;
-			mi.menuOptions = [
-		        ['<span class="glyphicon glyphicon-pencil"> Editar', function ($itemScope, $event, modelValue, text, $li) {
-		      	  mi.editar();
-		        }],
-		        null,
-		        ['<span class="glyphicon glyphicon-trash text-danger"><font style="color: black;"> Borrar</font>', function ($itemScope, $li) {
-		      	  mi.borrar();
-		        }]
-		    ];
 			
-			mi.contextMenu = function (event) {
+			mi.editarElemento = function (event) {
 		        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
 		        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
+		        mi.editar();
 		    };
-
 			
 			mi.gridOptions = {
 				enableRowSelection : true,
@@ -51,8 +43,8 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			    paginationPageSize: $utilidades.elementosPorPagina,
 			    useExternalFiltering: true,
 			    useExternalSorting: true,
-			    rowTemplate: '<div context-menu="grid.appScope.desembolsoc.menuOptions" right-click="grid.appScope.desembolsoc.contextMenu($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
-				columnDefs : [ 
+			    rowTemplate: '<div ng-dblclick="grid.appScope.desembolsoc.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
+			    columnDefs : [ 
 					{ name: 'id', width: 65, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 					{ name: 'fecha',  displayName: 'Fecha', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
 						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.desembolsoc.filtros[\'fecha\']"  ng-keypress="grid.appScope.desembolsoc.filtrar($event)" ></input></div>'
@@ -216,6 +208,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			$http.post('/SProyecto', { accion: 'obtenerProyectoPorId',id: $routeParams.proyecto_id }).success(
 					function(response) {
 						mi.proyectonombre = response.nombre;
+						mi.objetoTipoNombre = "Proyecto";
 			});
 			
 			mi.mostrarCalendar = function() {
@@ -230,6 +223,8 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
 					mi.obtenerTotalDesembolsos();
+					mi.gridApi.selection.clearSelectedRows();
+					mi.desembolso.id = null;
 				}
 			};
 
