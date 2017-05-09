@@ -438,7 +438,9 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 
 	$scope.hideBarFromMenu=function(){
 		$scope.hidebar = true;
-		document.getElementById("title").scrollIntoView()
+		if (document.getElementById("title")){
+			document.getElementById("title").scrollIntoView();
+		}
 	}
 	
 
