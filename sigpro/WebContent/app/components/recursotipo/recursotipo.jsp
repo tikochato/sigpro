@@ -71,7 +71,7 @@
 
 	</div>
 
-	<div class="row main-form" ng-if="recursotipoc.mostraringreso">
+	<div class="row second-main-form" ng-if="recursotipoc.mostraringreso">
 	<div class="page-header">
 		<h2 ng-hide="!recursotipoc.esnuevo"><small>Nuevo Tipo de Recurso</small></h2>
 		<h2 ng-hide="recursotipoc.esnuevo"><small>Edición de Tipo de Recurso</small></h2>
@@ -94,14 +94,62 @@
 				</div>
 
 				<div class="form-group">
-					<input type="text" class="inputText" value="{{recursotipoc.recursotipo.nombre}}" ng-model="recursotipoc.recursotipo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
+					<input type="text" class="inputText" ng-value="recursotipoc.recursotipo.nombre" ng-model="recursotipoc.recursotipo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
 					<label class="floating-label">* Nombre</label> 
 				</div>
 				<div class="form-group">
-					<input type="text" class="inputText" value="{{recursotipoc.recursotipo.descripcion}}" ng-model="recursotipoc.recursotipo.descripcion" onblur="this.setAttribute('value', this.value);">
+					<input type="text" class="inputText" ng-value="recursotipoc.recursotipo.descripcion" ng-model="recursotipoc.recursotipo.descripcion" onblur="this.setAttribute('value', this.value);">
 					<label class="floating-label">Descripción</label> 
 				</div>
 				<br/>
+				
+				<div align="center">
+				<h5 class="label-form">Propiedades</h5>
+					<div style="height: 35px; width: 75%">
+						<div style="text-align: right;">
+							<div class="btn-group" role="group" aria-label="">
+								<a class="btn btn-default" href
+									ng-click="recursotipoc.buscarPropiedad()" role="button"
+									uib-tooltip="Asignar nueva propiedad" tooltip-placement="left">
+									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<table style="width: 75%;"
+					st-table="recursotipoc.recursopropiedades"
+					class="table table-striped  table-bordered">
+					<thead >
+						<tr>
+							<th class="label-form">ID</th>
+							<th class="label-form">Nombre</th>
+							<th class="label-form">Descripicon</th>
+							<th class="label-form">Tipo Dato</th>
+							<th style="width: 30px;" class="label-form">Quitar</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr st-select-row="row"
+							ng-repeat="row in recursotipoc.recursopropiedades">
+							<td>{{row.id}}</td>
+							<td>{{row.nombre}}</td>
+							<td>{{row.descripcion}}</td>
+							<td>{{row.datotiponombre}}</td>
+							<td>
+								<button type="button"
+									ng-click="recursotipoc.eliminarPropiedad2(row)"
+									class="btn btn-sm btn-danger">
+									<i class="glyphicon glyphicon-minus-sign"> </i>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</div>
+				<br/>
+				
 				<div class="panel panel-default">
 					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
@@ -136,56 +184,10 @@
 					</div>
 				</div>
 
-				<br />
-				<div align="center">
-				<h5>Propiedades</h5>
-					<div style="height: 35px; width: 75%">
-						<div style="text-align: right;">
-							<div class="btn-group" role="group" aria-label="">
-								<a class="btn btn-default" href
-									ng-click="recursotipoc.buscarPropiedad()" role="button"
-									uib-tooltip="Asignar nueva propiedad" tooltip-placement="left">
-									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-								</a>
-							</div>
-						</div>
-					</div>
-					<br/>
-					<table style="width: 75%;"
-					st-table="recursotipoc.recursopropiedades"
-					class="table table-striped  table-bordered">
-					<thead >
-						<tr>
-							<th>ID</th>
-							<th>Nombre</th>
-							<th>Descripicon</th>
-							<th>Tipo Dato</th>
-							<th style="width: 30px;">Quitar</th>
-
-						</tr>
-					</thead>
-					<tbody>
-						<tr st-select-row="row"
-							ng-repeat="row in recursotipoc.recursopropiedades">
-							<td>{{row.id}}</td>
-							<td>{{row.nombre}}</td>
-							<td>{{row.descripcion}}</td>
-							<td>{{row.datotiponombre}}</td>
-							<td>
-								<button type="button"
-									ng-click="recursotipoc.eliminarPropiedad2(row)"
-									class="btn btn-sm btn-danger">
-									<i class="glyphicon glyphicon-minus-sign"> </i>
-								</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				</div>
 			</form>
 		</div>
 		<br />
-		<div align="center">Los campos marcados con * son obligatorios</div>
+		<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="28020">

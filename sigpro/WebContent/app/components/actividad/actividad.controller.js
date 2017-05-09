@@ -15,7 +15,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.objetoid = $routeParams.objeto_id;
 		mi.objetotipo = $routeParams.objeto_tipo;
 		mi.objetoNombre="";
-		mi.objetTipoNombre = "";
+		mi.objetoTipoNombre = "";
 		mi.paginaActual = 1;
 		mi.datotipoid = "";
 		mi.datotiponombre = "";
@@ -37,6 +37,13 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					mi.objetoNombre = response.nombre;
 					mi.objetoTipoNombre = response.tiponombre;
 		});
+		
+		mi.editarElemento = function (event) {
+	        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+	        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
+	        mi.editar();
+	    };
+
 
 		mi.fechaOptions = {
 				formatYear : 'yy',
@@ -51,20 +58,6 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				minDate : new Date(1990, 1, 1),
 				startingDay : 1
 		};
-		mi.menuOptions = [
-	        ['<span class="glyphicon glyphicon-pencil"> Editar', function ($itemScope, $event, modelValue, text, $li) {
-	      	  mi.editar();
-	        }],
-	        null,
-	        ['<span class="glyphicon glyphicon-trash text-danger"><font style="color: black;"> Borrar</font>', function ($itemScope, $li) {
-	      	  mi.borrar();
-	        }]
-	    ];
-		
-		mi.contextMenu = function (event) {
-	        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
-	        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
-	    };
 
 		mi.gridOptions = {
 				enableRowSelection : true,
@@ -77,8 +70,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			    paginationPageSize: $utilidades.elementosPorPagina,
 			    useExternalFiltering: true,
 			    useExternalSorting: true,
-			    rowTemplate: '<div context-menu="grid.appScope.actividadc.menuOptions" right-click="grid.appScope.actividadc.contextMenu($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
-				columnDefs : [
+			    rowTemplate: '<div ng-dblclick="grid.appScope.actividadc.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
+			    columnDefs : [
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
 						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.actividadc.filtros[\'nombre\']" ng-keypress="grid.appScope.actividadc.filtrar($event)"></input></div>'
@@ -342,6 +335,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
 				mi.obtenerTotalActividades();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.actividad.id = null;
 			}
 		};
 

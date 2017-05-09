@@ -444,6 +444,14 @@ public class SProducto extends HttpServlet {
 				response_text = "{\"success\":true," + response_text + "}";
 			}
 
+		}else if(accion.equals("obtenerProductoPorId")){
+			Integer id = parametro.get("id")!=null ? Integer.parseInt(parametro.get("id")) : 0;
+			Producto producto = ProductoDAO.getProductoPorId(id,usuario);
+
+			response_text = String.join("","{ \"success\": ",(producto!=null && producto.getId()!=null ? "true" : "false"),", "
+				+ "\"id\": " + (producto!=null ? producto.getId():"0") +", "
+				+ "\"nombre\": \"" + (producto!=null ? producto.getNombre():"Indefinido") +"\" }");
+
 		}
 		
 		response.setHeader("Content-Encoding", "gzip");

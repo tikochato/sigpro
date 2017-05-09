@@ -81,11 +81,11 @@ function ModalDialogController($uibModalInstance, $scope, $http, $interval, i18n
 	}
 	
 	mi.agregarDocumento=function(){
-		if ($scope.documentos!=null && mi.descripcion != null && mi.descripcion!=""){
+		if ($scope.documentos!=null){
 			var formatData = new FormData();
 			formatData.append("file",$scope.documentos);
 			formatData.append("accion",'agregarDocumento');
-			formatData.append("descripcion", mi.descripcion);
+			formatData.append("descripcion", mi.descripcion | "");
 			formatData.append("idObjeto", tipoObjeto);
 			formatData.append("idTipoObjeto", elementoId);
 			formatData.append("esNuevo",true);
@@ -95,13 +95,19 @@ function ModalDialogController($uibModalInstance, $scope, $http, $interval, i18n
 			}).then(
 					function(response) {
 						if (response.data.success) {
-							var nombredoc = mi.descripcion.replace(new RegExp(" ", 'g'),"_") + '.' + tipoObjeto;
+							var nombredoc = "";
+							if(mi.descripcion){ 
+								nombredoc = mi.descripcion.replace(new RegExp(" ", 'g'),"_") + '.' + tipoObjeto; 
+							}else{
+								nombredoc = "" + '.' + tipoObjeto;
+							}
+									
 							mi.tdocumentos.push(
 								{
 									'id' : response.data.id,
 									'extension' : response.data.extension_archivo,
 									'nombre' : response.data.nombre,
-									'descripcion' : mi.descripcion,
+									'descripcion' : mi.descripcion | "",
 								}
 							)
 							mi.extension = null;
@@ -128,7 +134,7 @@ function ModalDialogController($uibModalInstance, $scope, $http, $interval, i18n
 	
 	$scope.cargarDocumento=function(event){
 		$scope.documentos = event.target.files[0];      
-		$scope.nombreDocumento = $scope.documentos.name;
+		$scope.nombreDocumento = $scope.documentos.name | null;
 	}	
 	
 	mi.ok = function() {

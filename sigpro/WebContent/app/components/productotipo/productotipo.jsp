@@ -13,7 +13,7 @@
 	<div class="panel panel-default">
 	  <div class="panel-heading"><h3>Tipo de Producto</h3></div>
 	</div>
-	<br />
+
 	<div align="center" ng-hide="productoTipo.esForma">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
@@ -97,12 +97,12 @@
 
 				
 				<div class="form-group">
-					<input type="text" class="inputText" ng-model="productoTipo.nombre"  value="{{productoTipo.nombre}}" onblur="this.setAttribute('value', this.value);" ng-required="true" />
+					<input type="text" class="inputText" ng-model="productoTipo.nombre"  ng-value="productoTipo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" />
 					<label class="floating-label">* Nombre</label> 
 				</div>
 
 				<div class="form-group">
-					<input type="text" class="inputText" ng-model="productoTipo.descripcion"  value="{{productoTipo.descripcion}}" onblur="this.setAttribute('value', this.value);"  />
+					<input type="text" class="inputText" ng-model="productoTipo.descripcion"  ng-value="productoTipo.descripcion" onblur="this.setAttribute('value', this.value);"  />
 					<label class="floating-label">Descripción</label> 
 				</div>
 				<br/>
@@ -192,10 +192,9 @@
 			</form>
 		</div>
 		
-		<div class="col-sm-12 label-form" align="center">Los campos marcados con * son obligatorios</div>
-		<br />
 		
 		<div class="col-sm-12 operation_buttons" align="right">
+		<div class="label-form" align="center">Los campos marcados con * son obligatorios</div>
 			<div class="btn-group">
 				<shiro:hasPermission name="23020">
 					<label class="btn btn-success" ng-click="form.$valid ? productoTipo.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">

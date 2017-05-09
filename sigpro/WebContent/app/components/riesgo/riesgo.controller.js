@@ -27,8 +27,11 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.colaboradorNombre="";
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
+		mi.proyectoid = "";
 		mi.objetoid = $routeParams.objeto_id;
 		mi.objetotipo = $routeParams.objeto_tipo;
+		mi.objetoNombre = "";
+		mi.objetoTipoNombre="";
 		
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;
@@ -43,6 +46,19 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				startingDay : 1
 		};
 		
+		$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo }).success(
+				function(response) {
+					mi.objetoid = response.id;
+					mi.objetoNombre = response.nombre;
+					mi.objetoTipoNombre = response.tiponombre;
+		});
+		
+		mi.editarElemento = function (event) {
+	        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+	        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
+	        mi.editar();
+	    };
+	    
 		mi.gridOptions = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
@@ -52,6 +68,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				enableFiltering: true,
 				enablePaginationControls: false,
 			    paginationPageSize: $utilidades.elementosPorPagina,
+			    rowTemplate: '<div ng-dblclick="grid.appScope.riesgoc.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 				columnDefs : [ 
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' ,
@@ -318,6 +335,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
 				mi.obtenerTotalRiesgos();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.riesgo.id = null;
 			}
 		};
 

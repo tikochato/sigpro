@@ -10,19 +10,25 @@
   	<shiro:lacksPermission name="12010">
 		<p ng-init="formularioc.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
-	<h3>Formularios</h3>
-	<br />
+	
+	<div class="panel panel-default">
+	  <div class="panel-heading"><h3>Formularios</h3></div>
+	</div>
+
 	<div class="row" align="center" ng-if="!formularioc.mostraringreso">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="12040">
-					<label class="btn btn-primary" ng-click="formularioc.nuevo()">Nuevo</label>
+					<label class="btn btn-primary" ng-click="formularioc.nuevo()" uib-tooltip="Nuevo">
+				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="12010">
-				<label class="btn btn-primary" ng-click="formularioc.editar()">Editar</label>
+				<label class="btn btn-primary" ng-click="formularioc.editar()" uib-tooltip="Editar">
+				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="12030">
-					<label class="btn btn-primary" ng-click="formularioc.borrar()">Borrar</label>
+					<label class="btn btn-primary" ng-click="formularioc.borrar()" uib-tooltip="Borrar">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</shiro:hasPermission>
 			</div>
 		</div>
@@ -62,71 +68,78 @@
 		
 	</div>
 
-	<div class="row main-form" ng-show="formularioc.mostraringreso">
-		<h4 ng-hide="!formularioc.esnuevo">Nuevo Formulario</h4>
-		<h4 ng-hide="formularioc.esnuevo">Edición de Formulario</h4>
+	<div class="row second-main-form" ng-show="formularioc.mostraringreso">
+		<div class="page-header">
+			<h2 ng-hide="!formularioc.esnuevo">Nuevo Formulario</h2>
+			<h2 ng-hide="formularioc.esnuevo">Edición de Formulario</h2>
+		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="12020">
-					<label class="btn btn-success" ng-click="form.$valid ? formularioc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+					<label class="btn btn-success" ng-click="form.$valid ? formularioc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="formularioc.irATabla()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="formularioc.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 		<div class="col-sm-12">
 			<form name="form">
 				<div class="form-group">
-					<label for="id">ID</label> 
-					<p class="form-control-static">{{ formularioc.formulario.id }}</p>
+					<label for="id" class="floating-label">ID {{ formularioc.formulario.id }}</label>
+					<br/><br/>
 				</div>
 				<div class="form-group">
-					<label for="nombre">* Código</label> <input type="text"
-						class="form-control" id="nombre" placeholder="Código"
-						ng-model="formularioc.formulario.codigo">
-				</div>
-				
-				<div class="form-group">
-					<label for="campo3">* Tipo Formulario</label>
-		          	<div class="input-group">
-		            	<input type="hidden" class="form-control" ng-model="formularioc.formulariotipoid" /> 
-		            	<input type="text" class="form-control" id="iproyt" name="iproyt" placeholder="Nombre Tipo Formulario" ng-model="formularioc.formulariotiponombre" ng-readonly="true" required/>
-		            	<span class="input-group-addon" ng-click="formularioc.buscarFormularioTipo()"><i class="glyphicon glyphicon-search"></i></span>
-		          	</div>
+					<input type="text"
+						 class="inputText" id="nombre" 
+						ng-model="formularioc.formulario.codigo"
+						ng-value="formularioc.formulario.codigo" onblur="this.setAttribute('value', this.value);" >
+					<label for="nombre" class="floating-label">* Código</label> 
 				</div>
 				
 				<div class="form-group">
-					<label for="descripcion">Descripción</label> <input type="text"
-						class="form-control" id="descripcion" placeholder="Descripción"
-						ng-model="formularioc.formulario.descripcion">
+		            	<input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="formularioc.formulariotiponombre" 
+		            	ng-click="formularioc.buscarFormularioTipo()" ng-readonly="true"
+		            	ng-value="formularioc.formulariotiponombre" onblur="this.setAttribute('value', this.value);" required/>
+		            	<span class="label-icon" ng-click="formularioc.buscarFormularioTipo()"><i class="glyphicon glyphicon-search"></i></span>
+						<label for="campo3" class="floating-label">* Tipo Formulario</label>
+				</div>
+				
+				<div class="form-group">
+					<input type="text"
+						class="inputText" id="descripcion" 
+						ng-model="formularioc.formulario.descripcion"
+						ng-value="formularioc.formulario.descripcion" onblur="this.setAttribute('value', this.value);">
+					<label for="descripcion" class="floating-label">Descripción</label> 
 				</div>
 				<div class="panel panel-default">
-					<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo">Usuario que creo</label> 
-									<p class="form-control-static" id="usuarioCreo"> {{ formularioc.formulario.usuarioCreo }}</p>
+									<label for="usuarioCreo" class="label-form">Usuario que creo</label> 
+									<p class="" id="usuarioCreo"> {{ formularioc.formulario.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
-									<label for="fechaCreacion">Fecha de creación</label>
-									<p class="form-control-static" id="fechaCreacion"> {{ formularioc.formulario.fechaCreacion }} </p>
+									<label for="fechaCreacion" class="label-form">Fecha de creación</label>
+									<p class="" id="fechaCreacion"> {{ formularioc.formulario.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo">Usuario que actualizo</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ formularioc.formulario.usuarioActualizo }} </p>
+									<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label> 
+									<p class="" id="usuarioCreo">{{ formularioc.formulario.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
-									<label for="fechaActualizacion">Fecha de actualizacion</label> 
-									<p class="form-control-static" id="usuarioCreo">{{ formularioc.formulario.fechaActualizacion }} </p>
+									<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label> 
+									<p class="" id="usuarioCreo">{{ formularioc.formulario.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>
@@ -183,13 +196,15 @@
 			</form>
 		</div>
 		<br />
-		<div align="center">Los campos marcados con * son obligatorios</div>
+		<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="12020">
-					<label class="btn btn-success" ng-click="form.$valid ? formularioc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+					<label class="btn btn-success" ng-click="form.$valid ? formularioc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="formularioc.irATabla()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="formularioc.irATabla()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 	</div>

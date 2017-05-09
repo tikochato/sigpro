@@ -10,10 +10,19 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q) {
 
 		var mi=this;
+		mi.proyectoid = "";
+		mi.proyectoNombre = "";
+		mi.objetoTipoNombre = "";
 		var date = new Date(), year = date.getFullYear(), month = date.getMonth();
 
 		$window.document.title = $utilidades.sistema_nombre+' - Gantt';
 		
+		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyectoId }).success(
+				function(response) {
+					mi.proyectoid = response.id;
+					mi.proyectoNombre = response.nombre;
+					mi.objetoTipoNombre = "Proyecto";
+		});
 		
 		mi.zoom = 2.5;
 		var date = new Date(), year = date.getFullYear(), month = date.getMonth();

@@ -78,12 +78,13 @@
     </script>
     
     <div class="panel panel-default">
-	  <div class="panel-heading"><h3>Mapa {{ titulo }}</h3></div>
+	  <div class="panel-heading"><h3>Mapa</h3></div>
 	</div>
 	    
-	    
-	    
-	    
+		<div class="subtitulo">
+			{{ objetoTipoNombre }} {{ proyectoNombre }}
+		</div>
+	    								
 	    <div class="operation_buttons" align="right">
 	    	 <div class="checkbox" ng-hide="!mostrarControles">
 			    <label>

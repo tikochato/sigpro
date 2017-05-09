@@ -11,6 +11,7 @@
   	 <shiro:lacksPermission name="3010">
 			<p ng-init="actividadtipoc.redireccionSinPermisos()"></p>
 	 </shiro:lacksPermission>
+	 
 	<div class="panel panel-default">
 		<div class="panel-heading"><h3>Tipo de Actividad</h3></div>
 	</div>
@@ -95,13 +96,13 @@
 				</div>
 				<div class="form-group">
 				   <input type="text" name="nombre"  class="inputText" id="nombre" 
-				     ng-model="actividadtipoc.actividadtipo.nombre" value="{{actividadtipoc.actividadtipo.nombre}}"   
+				     ng-model="actividadtipoc.actividadtipo.nombre" ng-value="actividadtipoc.actividadtipo.nombre"   
 				     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 				   <label class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group">
 				   <input type="text" name="descripcion"  class="inputText" id="descripcion" 
-				     ng-model="actividadtipoc.actividadtipo.descripcion" value="{{actividadtipoc.actividadtipo.descripcion}}"   
+				     ng-model="actividadtipoc.actividadtipo.descripcion" ng-value="actividadtipoc.actividadtipo.descripcion"   
 				     onblur="this.setAttribute('value', this.value);"  >
 				   <label class="floating-label">Descripción</label>
 				</div>
@@ -188,7 +189,7 @@
 			</form>
 		</div>
 		<br />
-		<div align="center">Los campos marcados con * son obligatorios</div>
+		<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 		  <div class="btn-group">
 		    <shiro:hasPermission name="3020">

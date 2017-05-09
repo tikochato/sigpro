@@ -6,9 +6,11 @@
 		<shiro:lacksPermission name="35010">
 			<p ng-init="desembolsotipoc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>	
+		
 		<div class="panel panel-default">
 		    <div class="panel-heading"><h3>Tipo Desembolso</h3></div>
 		</div>
+		
 		<div class="row" align="center" ng-if="!desembolsotipoc.mostraringreso">
     		<div class="col-sm-12 operation_buttons" align="right">
 			  <div class="btn-group">
@@ -87,13 +89,13 @@
 						
 						<div class="form-group">
 						   <input type="text" name="nombre"  class="inputText" id="nombre" 
-						     ng-model="desembolsotipoc.desembolsotipo.nombre" value="{{desembolsotipoc.desembolsotipo.nombre}}"   
+						     ng-model="desembolsotipoc.desembolsotipo.nombre" ng-value="desembolsotipoc.desembolsotipo.nombre"   
 						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 						   <label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
 						   <input type="text" name="descripcion"  class="inputText" id="descripcion" 
-						     ng-model="desembolsotipoc.desembolsotipo.descripcion" value="{{desembolsotipoc.desembolsotipo.descripcion}}"   
+						     ng-model="desembolsotipoc.desembolsotipo.descripcion" ng-value="desembolsotipoc.desembolsotipo.descripcion"   
 						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
 						   <label class="floating-label">Descripción</label>
 						</div>
@@ -134,7 +136,7 @@
 				<br />
 			</form>
 			</div>
-			<div align="center">Los campos marcados con * son obligatorios</div>
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
     		<div class="col-sm-12 operation_buttons" align="right">
 			  <div class="btn-group">
 			    <shiro:hasPermission name="35020">

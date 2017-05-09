@@ -20,6 +20,9 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	mi.seleccionada = false;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
+	mi.productoid = "";
+	mi.productoNombre = "";
+	mi.objetoTipoNombre = "";
 
 	mi.propiedadesValor = [];
 	mi.camposdinamicos = {};
@@ -36,6 +39,13 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 			function(response) {
 				mi.subproductoid = response.id;
 				mi.subproductoNombre = response.nombre;
+	});
+	
+	$http.post('/SProducto', { accion: 'obtenerProductoPorId', id: $routeParams.producto_id }).success(
+			function(response) {
+				mi.productoid = response.id;
+				mi.productoNombre = response.nombre;
+				mi.objetoTipoNombre = "Producto";
 	});
 	
 	mi.formatofecha = 'dd/MM/yyyy';
@@ -77,6 +87,12 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 		});
 	};
 
+	mi.editarElemento = function (event) {
+        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+        mi.gridApi.selection.selectRow(mi.opcionesGrid.data[filaId]);
+        mi.editar();
+    };
+    
 	mi.opcionesGrid = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -89,6 +105,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	    useExternalFiltering: true,
 	    useExternalSorting: true,
 	    data : mi.data,
+	    rowTemplate: '<div ng-dblclick="grid.appScope.subproducto.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 		columnDefs : [ 
 			{displayName : 'Id',  width: 60, name : 'id',cellClass : 'grid-align-right',type : 'number',enableFiltering: false, enableSorting: false }, 
 			{ displayName : 'Nombre',name : 'nombre',cellClass : 'grid-align-left',
@@ -352,6 +369,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
 			}
 			mi.obtenerTotalSubproductos();
+			mi.gridApi.selection.clearSelectedRows();
+			mi.subproducto.id = null;
 		}
 	};
 

@@ -95,12 +95,12 @@
 				</div>
 
 				<div class="form-group">
-					<input type="text" class="inputText" id="nombre" ng-model="programatipoc.programatipo.nombre" value="{{programatipoc.programatipo.nombre}}" onblur="this.setAttribute('value', this.value);" ng-required="true">
+					<input type="text" class="inputText" id="nombre" ng-model="programatipoc.programatipo.nombre" ng-value="programatipoc.programatipo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
 						<label for="nombre" class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group">
 					<input type="text" class="inputText" id="descripcion" 
-						ng-model="programatipoc.programatipo.descripcion"  value="{{programatipoc.programatipo.descripcion}}" onblur="this.setAttribute('value', this.value);" >
+						ng-model="programatipoc.programatipo.descripcion"  ng-value="programatipoc.programatipo.descripcion" onblur="this.setAttribute('value', this.value);" >
 					<label for="descripcion" class="floating-label">Descripción</label> 
 				</div>
 				<br />

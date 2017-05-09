@@ -5,23 +5,24 @@
 	<shiro:lacksPermission name="41010">
 		<p ng-init="subproductoPropiedad.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
-  <h3>{{ subproductoPropiedad.esForma ? (subproductoPropiedad.esNuevo ? "Nueva Propiedad de Subproducto" : "Editar Propiedad de Subproducto") : "Propiedad de Subproducto" }}</h3>
-
-  <br />
+	
+	<div class="panel panel-default">
+			<div class="panel-heading"><h3>Propiedad de Subproducto</h3></div>
+		</div>
 
   <div align="center" ng-hide="subproductoPropiedad.esForma">
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
       	<shiro:hasPermission name="41040">
-        	<label class="btn btn-primary" ng-click="subproductoPropiedad.nuevo()" uib-tooltip="Nueva">
+        	<label class="btn btn-primary" ng-click="subproductoPropiedad.nuevo()" uib-tooltip="Nuevo">
 			<span class="glyphicon glyphicon-plus"></span> Nuevo</label> 
       	</shiro:hasPermission>
       	<shiro:hasPermission name="41010">
-        	<label class="btn btn-primary" ng-click="subproductoPropiedad.editar()" uib-tooltip="Nueva">
+        	<label class="btn btn-primary" ng-click="subproductoPropiedad.editar()" uib-tooltip="Editar">
 			<span class="glyphicon glyphicon-pencil"></span> Editar</label>
       	</shiro:hasPermission>
       	<shiro:hasPermission name="41030">
-        	<label class="btn btn-primary" ng-click="subproductoPropiedad.borrar()" uib-tooltip="Borrar">
+        	<label class="btn btn-danger" ng-click="subproductoPropiedad.borrar()" uib-tooltip="Borrar">
 			<span class="glyphicon glyphicon-trash"></span> Borrar</label>
       	</shiro:hasPermission>
       </div>
@@ -64,10 +65,12 @@
    
   </div>
 
-  <div class="row main-form" ng-show="subproductoPropiedad.esForma">
-	  <h2 ng-hide="!subproductoPropiedad.esNuevo">Nueva propiedad de subproducto</h2>
-	  <h2 ng-hide="subproductoPropiedad.esNuevo">Edición de propiedad de subproducto</h2>
-
+  <div class="row second-main-form" ng-show="subproductoPropiedad.esForma">
+	<div class="page-header">
+		<h2 ng-hide="!subproductoPropiedad.esNuevo"><small>Nueva propiedad de subproducto</small></h2>
+	  	<h2 ng-hide="subproductoPropiedad.esNuevo"><small>Edición de propiedad de subproducto</small></h2>
+	</div>
+	
     <div class="col-sm-12 operation_buttons" align="right">
 
       <div class="btn-group">
@@ -88,7 +91,7 @@
 	      </div>
 
 	      <div class="form-group">
-	        <input type="text" class="inputText" ng-model="subproductoPropiedad.nombre" ng-required="true"  value="{{subproductoPropiedad.nombre}}" onblur="this.setAttribute('value', this.value);"/>
+	        <input type="text" class="inputText" ng-model="subproductoPropiedad.nombre" ng-required="true"  ng-value="subproductoPropiedad.nombre" onblur="this.setAttribute('value', this.value);"/>
 	        <label class="floating-label">* Nombre</label>
 	      </div>
 
@@ -101,37 +104,37 @@
    		 </div>
 	
 	      <div class="form-group">
-	        <input type="text" class="inputText" ng-model="subproductoPropiedad.descripcion" value="{{subproductoPropiedad.descripcion}}" onblur="this.setAttribute('value', this.value);"/>
+	        <input type="text" class="inputText" ng-model="subproductoPropiedad.descripcion" ng-value="subproductoPropiedad.descripcion" onblur="this.setAttribute('value', this.value);"/>
 	        <label class="floating-label">Descripción</label>
 	      </div>
 	      <div class="panel panel-default">
-				<div class="panel-heading" style="text-align: center;">Datos de auditoría</div>
+				<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group" style="text-align: right">
-								<label for="usuarioCreo">Usuario que creo</label> 
-								<p class="form-control-static"> {{ subproductoPropiedad.entidadSeleccionada.usuarioCreo }}</p>
+								<label for="usuarioCreo" class="label-form">Usuario que creo</label> 
+								<p class=""> {{ subproductoPropiedad.entidadSeleccionada.usuarioCreo }}</p>
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group" >
-								<label for="fechaCreacion">Fecha de creación</label>
-								<p class="form-control-static" id="fechaCreacion"> {{ subproductoPropiedad.entidadSeleccionada.fechaCreacion }} </p>
+								<label for="fechaCreacion" class="label-form">Fecha de creación</label>
+								<p class="" id="fechaCreacion"> {{ subproductoPropiedad.entidadSeleccionada.fechaCreacion }} </p>
 							</div>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group" style="text-align: right">
-								<label for="usuarioActualizo">Usuario que actualizo</label> 
-								<p class="form-control-static" id="usuarioCreo">{{ subproductoPropiedad.entidadSeleccionada.usuarioActualizo }} </p>
+								<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label> 
+								<p class="" id="usuarioCreo">{{ subproductoPropiedad.entidadSeleccionada.usuarioActualizo }} </p>
 							</div>	
 						</div>
 						<div class="col-sm-6">		
 							<div class="form-group">
-								<label for="fechaActualizacion">Fecha de actualizacion</label> 
-								<p class="form-control-static" id="usuarioCreo">{{ subproductoPropiedad.entidadSeleccionada.fechaActualizacion }} </p>
+								<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label> 
+								<p class="" id="usuarioCreo">{{ subproductoPropiedad.entidadSeleccionada.fechaActualizacion }} </p>
 							</div>
 						</div>
 					</div>
@@ -140,7 +143,7 @@
 	    </form>
     </div>
   
-    <div class="col-sm-12" align="center">Los campos marcados con * son obligatorios</div>
+    <div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">

@@ -5,11 +5,20 @@ app.controller('matrizriesgoController',['$scope','$http','$interval','i18nServi
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 
 	var mi=this;
-
+	mi.proyectoid = "";
+	mi.proyectoNombre = ""; 
+	mi.objetoTipoNombre = "";
+		
 	$window.document.title = $utilidades.sistema_nombre+' - Matriz Riesgos';
 	i18nService.setCurrentLang('es');
 
-
+	$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyectoId }).success(
+		function(response) {
+			mi.proyectoid = response.id;
+			mi.proyectoNombre = response.nombre;
+			mi.objetoTipoNombre = "Proyecto";
+	});
+	
 	 $http.post('/SMatrizRiesgo', { accion: 'getMatrizRiesgos', proyectoid:$routeParams.proyectoId, t: (new Date()).getTime()})
 	 .then(function(response){
 		 mi.lista = response.data.matrizriesgos;
