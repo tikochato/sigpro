@@ -131,24 +131,21 @@ public class SPrestamo extends HttpServlet {
 				Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(objetoId, objetoTipo);
 				if (prestamo !=null){
 				stprestamo temp =  new stprestamo();
-				temp.fechaCorte = Utils.formatDate(prestamo.getFechaCorte());
+				temp.fechaCorte = prestamo.getFechaCorte() == null ? null : Utils.formatDate(prestamo.getFechaCorte());
 				temp.codigoPresupuestario = prestamo.getCodigoPresupuestario();
 				temp.numeroPrestamo = prestamo.getNumeroPrestamo(); 
 				temp.destino = prestamo.getDestino();
 				temp.sectorEconomico = prestamo.getSectorEconomico();
 				temp.unidadEjecutora = prestamo.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadEjecutoraNombre = prestamo.getUnidadEjecutora().getNombre();
-				temp.fechaFirma = Utils.formatDate(prestamo.getFechaFirma());
-				
-
-				
+				temp.fechaFirma = (prestamo.getFechaFirma() == null ? null : Utils.formatDate(prestamo.getFechaFirma()));
 				temp.tipoAutorizacionId = (prestamo.getAutorizacionTipo() == null ? null : prestamo.getAutorizacionTipo().getId());
 				temp.tipoAutorizacionNombre = (prestamo.getAutorizacionTipo() == null ? null : prestamo.getAutorizacionTipo().getNombre());
 				temp.numeroAutorizacion = (prestamo.getNumeroAutorizacion() == null ? null: prestamo.getNumeroAutorizacion());
-				temp.fechaAutorizacion = Utils.formatDate(prestamo.getFechaAutorizacion());
+				temp.fechaAutorizacion = prestamo.getFechaAutorizacion() == null ? null : Utils.formatDate(prestamo.getFechaAutorizacion());
 				temp.aniosPlazo = (prestamo.getAniosPlazo() == null ? null : prestamo.getAniosPlazo()); 
 				temp.aniosGracia = (prestamo.getAniosGracia() == null ? null : prestamo.getAniosGracia());  
-				temp.fechaFinEjecucion = Utils.formatDate(prestamo.getFechaFinEjecucion());
+				temp.fechaFinEjecucion = prestamo.getFechaFinEjecucion() == null ? null : Utils.formatDate(prestamo.getFechaFinEjecucion());
 				temp.periodoEjecucion = (prestamo.getPeridoEjecucion() == null ? null :prestamo.getPeridoEjecucion()); 
 				temp.tipoInteresId = (prestamo.getInteresTipo() == null ? null : prestamo.getInteresTipo().getId());
 				temp.tipoInteresNombre = (prestamo.getInteresTipo() == null ? null : prestamo.getInteresTipo().getNombre());
@@ -179,8 +176,8 @@ public class SPrestamo extends HttpServlet {
 				temp.presupuestoPagadoInv = prestamo.getPresupuestoPagadoInversion();
 				temp.saldoCuentas = prestamo.getSaldoCuentas();
 				temp.desembolsoReal = prestamo.getSaldoCuentas();
-				temp.ejecucionEstadoId = (prestamo.getEjecucionEstado().getId() == null ? null :prestamo.getEjecucionEstado().getId()); 
-				temp.ejecucionEstadoNombre = prestamo.getEjecucionEstado().getNombre();
+				temp.ejecucionEstadoId = (prestamo.getEjecucionEstado() == null ? null :prestamo.getEjecucionEstado().getId()); 
+				temp.ejecucionEstadoNombre = (prestamo.getEjecucionEstado() == null ? null : prestamo.getEjecucionEstado().getNombre());
 				temp.proyectoPrograma = prestamo.getProyectoPrograma();
 				temp.fechaDecreto = Utils.formatDate(prestamo.getFechaDecreto());
 				temp.fechaSuscripcion = Utils.formatDate(prestamo.getFechaSuscripcion());
@@ -214,9 +211,7 @@ public class SPrestamo extends HttpServlet {
 			        response_text = String.join("", "{\"success\":true,", response_text,"}");
 				}
 			}
-			catch(Throwable e){
-				e.printStackTrace();
-				
+			catch(Throwable e){				
 				response_text = String.join("", "\"prestamo\":null");
 		        response_text = String.join("", "{\"success\":false,", response_text,"}");
 			}	

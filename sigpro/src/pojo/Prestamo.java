@@ -254,7 +254,7 @@ public class Prestamo implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ejecucion_estadoid", nullable = false)
+	@JoinColumn(name = "ejecucion_estadoid")
 	public EjecucionEstado getEjecucionEstado() {
 		return this.ejecucionEstado;
 	}
