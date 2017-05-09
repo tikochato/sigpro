@@ -310,16 +310,16 @@ public class SProyecto extends HttpServlet {
 				
 				// prestamo campos adicionales
 				
-				Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
+				Date fechaCorte = map.get("fechaCorte") == null ? null : Utils.dateFromString(map.get("fechaCorte"));
 				String destino = map.get("destino");
 				String sectorEconomico = map.get("sectorEconomico");
-				Date fechaFirma = Utils.dateFromString(map.get("fechaFimra"));
+				Date fechaFirma = map.get("fechaFimra") == null ? null : Utils.dateFromString(map.get("fechaFimra"));
 				Integer tipoAutorizacionId = Utils.String2Int(map.get("tipoAutorizacionId"),null);
 				String numeroAutorizacion = map.get("numeroAutorizacion");
-				Date fechaAutorizacion = Utils.dateFromString(map.get("fechaAutorizacion"));
+				Date fechaAutorizacion = map.get("fechaAutorizacion") == null ? null : Utils.dateFromString(map.get("fechaAutorizacion"));
 				Integer aniosPlazo = Utils.String2Int(map.get("aniosPlazo"), null);
 				Integer aniosGracia = Utils.String2Int(map.get("aniosGracia"), null);
-				Date fechaFinEjecucion = Utils.dateFromString(map.get("fechaFinEjecucion"));
+				Date fechaFinEjecucion = map.get("fechaFinEjecucion") == null ? null : Utils.dateFromString(map.get("fechaFinEjecucion"));
 				Integer peridoEjecucion = Utils.String2Int(map.get("periodoEjecucion"), null);
 				Integer tipoInteresId = Utils.String2Int(map.get("tipoInteresId"), null);
 				BigDecimal porcentajeInteres = Utils.String2BigDecimal(map.get("porcentajeInteres"), null); 
