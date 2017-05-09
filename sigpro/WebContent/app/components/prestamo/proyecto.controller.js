@@ -237,7 +237,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				longitud: mi.proyecto.longitud,
 				latitud : mi.proyecto.latitud,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
-				// prestamo campos requeridos
+
 				codigoPresupuestario: mi.prestamo.codigoPresupuestario,
 				numeroPrestamo: mi.prestamo.numeroPrestamo,
 				proyetoPrograma: mi.prestamo.proyectoPrograma,
@@ -263,7 +263,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				montoAsignadoUeQtz: mi.prestamo.montoAsignadoUeQtz,
 				desembolsoAFechaUeUsd: mi.prestamo.desembolsoAFechaUeUsd,
 				montoPorDesembolsarUeUsd: mi.prestamo.montoPorDesembolsarUeUsd,
-				// prestamo campos adicionales
+				
 				destino : mi.prestamo.destino,
 				sectorEconomico: mi.prestamo.sectorEconomico,
 				fechaFimra: mi.prestamo.fechaFirma != undefined ? moment(mi.prestamo.fechaFirma).format('DD/MM/YYYY') : undefined,
@@ -313,7 +313,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 						mi.proyecto.fechaactualizacion = response.data.fechaactualizacion;
 						$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.obtenerTotalProyectos();
-						//mi.esNuevo = false;
+						mi.esNuevo = false;
 					}else
 						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
 			});

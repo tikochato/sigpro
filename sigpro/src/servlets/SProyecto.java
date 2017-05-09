@@ -552,7 +552,6 @@ public class SProyecto extends HttpServlet {
 
 			}
 			catch (Throwable e){
-				e.printStackTrace();
 				response_text = "{ \"success\": false }";
 			}
 

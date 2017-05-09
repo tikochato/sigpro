@@ -211,9 +211,7 @@ public class SPrestamo extends HttpServlet {
 			        response_text = String.join("", "{\"success\":true,", response_text,"}");
 				}
 			}
-			catch(Throwable e){
-				e.printStackTrace();
-				
+			catch(Throwable e){				
 				response_text = String.join("", "\"prestamo\":null");
 		        response_text = String.join("", "{\"success\":false,", response_text,"}");
 			}	
