@@ -224,6 +224,8 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
 				mi.obtenerTotalProyectoPropiedades();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.proyectopropiedad.id = null;
 			}
 		}
 		

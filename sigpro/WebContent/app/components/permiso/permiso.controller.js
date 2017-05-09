@@ -251,6 +251,8 @@ app.controller(
 					function(response) {
 						mi.elementosPorPagina = response.totalPermisos;
 						mi.cargarTabla(mi.paginaActual);
+						mi.gridApi.selection.clearSelectedRows();
+						mi.permisoSelected.id = null;
 			});
 		}
 	};

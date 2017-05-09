@@ -326,6 +326,8 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 	mi.filtrar = function(evt,tipo){
 		if(evt.keyCode==13){
 			mi.cargarData(mi.paginaActual);
+			mi.gridApi.selection.clearSelectedRows();
+			mi.colaborador.id = null;
 		}
 	}
 	

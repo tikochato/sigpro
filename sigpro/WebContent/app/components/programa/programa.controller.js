@@ -398,6 +398,8 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	mi.filtrar = function(evt){
 		if(evt.keyCode==13){
 			mi.obtenerTotalProgramas();
+			mi.gridApi.selection.clearSelectedRows();
+			mi.programa.id = null;
 		}
 	};
 

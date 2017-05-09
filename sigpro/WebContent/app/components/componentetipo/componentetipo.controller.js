@@ -229,6 +229,8 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
 				mi.obtenerTotalComponenteTipos();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.componentetipo.id = null;
 			}
 		}
 

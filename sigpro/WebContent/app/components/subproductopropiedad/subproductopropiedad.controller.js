@@ -331,6 +331,8 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 	mi.filtrar = function(evt){
 		if(evt.keyCode==13){
 			mi.obtenerTotalSubproductoPropiedades();
+			mi.gridApi.selection.clearSelectedRows();
+			mi.seleccionada = null;
 		}
 	};
 

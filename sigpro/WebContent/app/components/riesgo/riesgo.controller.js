@@ -335,6 +335,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
 				mi.obtenerTotalRiesgos();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.riesgo.id = null;
 			}
 		};
 

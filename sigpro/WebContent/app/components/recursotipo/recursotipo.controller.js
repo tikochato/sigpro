@@ -232,6 +232,8 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
 				mi.obtenerTotalRecursoTipos();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.recursotipo.id = null;
 			}
 		}
 		

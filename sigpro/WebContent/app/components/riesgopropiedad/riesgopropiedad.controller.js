@@ -214,6 +214,8 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
 				mi.obtenerTotalRiesgoPropiedades();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.riesgopropiedad = null;
 			}
 		};
 		

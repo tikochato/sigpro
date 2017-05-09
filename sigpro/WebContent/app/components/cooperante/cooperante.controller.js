@@ -216,6 +216,8 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
 					mi.cargarTabla(mi.paginaActual);
+					mi.gridApi.selection.clearSelectedRows();
+					mi.cooperante.id = null;
 				}
 			}
 			

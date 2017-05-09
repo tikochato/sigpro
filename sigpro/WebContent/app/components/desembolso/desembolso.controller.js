@@ -223,6 +223,8 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
 					mi.obtenerTotalDesembolsos();
+					mi.gridApi.selection.clearSelectedRows();
+					mi.desembolso.id = null;
 				}
 			};
 

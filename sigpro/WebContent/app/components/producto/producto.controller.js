@@ -362,6 +362,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
 			}
 			mi.obtenerTotalProductos();
+			mi.gridApi.selection.clearSelectedRows();
+			mi.producto.id = null;
 		}
 	};
 

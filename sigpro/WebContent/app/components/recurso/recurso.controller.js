@@ -247,6 +247,8 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
 				mi.obtenerTotalRecursos();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.recurso.id = null;
 			}
 		}
 

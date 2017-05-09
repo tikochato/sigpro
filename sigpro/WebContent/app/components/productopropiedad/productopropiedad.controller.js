@@ -345,6 +345,8 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 	mi.filtrar = function(evt){
 		if(evt.keyCode==13){
 			mi.obtenerTotalProductoPropiedades();
+			mi.gridApi.selection.clearSelectedRows();
+			mi.seleccionada = null;
 		}
 	};
 

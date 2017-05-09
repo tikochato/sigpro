@@ -58,20 +58,6 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				minDate : new Date(1990, 1, 1),
 				startingDay : 1
 		};
-		mi.menuOptions = [
-	        ['<span class="glyphicon glyphicon-pencil"> Editar', function ($itemScope, $event, modelValue, text, $li) {
-	      	  mi.editar();
-	        }],
-	        null,
-	        ['<span class="glyphicon glyphicon-trash text-danger"><font style="color: black;"> Borrar</font>', function ($itemScope, $li) {
-	      	  mi.borrar();
-	        }]
-	    ];
-		
-		mi.contextMenu = function (event) {
-	        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
-	        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
-	    };
 
 		mi.gridOptions = {
 				enableRowSelection : true,
@@ -349,6 +335,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
 				mi.obtenerTotalActividades();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.actividad.id = null;
 			}
 		};
 

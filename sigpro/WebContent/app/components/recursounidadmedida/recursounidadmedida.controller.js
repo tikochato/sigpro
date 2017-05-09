@@ -225,6 +225,8 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
 					mi.obtenerTotalUnidadesMedida();
+					mi.gridApi.selection.clearSelectedRows();
+					mi.medida.id = null;
 				}
 			}
 }]);

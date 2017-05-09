@@ -477,6 +477,8 @@ app.controller(
 					function(response) {
 						mi.elementosPorPagina = response.totalUsuarios;
 						mi.cargarTabla(mi.paginaActual);
+						mi.gridApi.selection.clearSelectedRows();
+						mi.usuariosSelected.usuario = "";
 			});
 		}
 	};

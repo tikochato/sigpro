@@ -223,6 +223,8 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
 					mi.obtenerTotalRecursoPropiedades();
+					mi.gridApi.selection.clearSelectedRows();
+					mi.recursopropiedad.id = null;
 				}
 			}
 			mi.obtenerTotalRecursoPropiedades=function(){

@@ -225,6 +225,8 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
 				mi.obtenerTotalProgramaPropiedades();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.programapropiedad.id = null;
 			}
 		}
 		

@@ -369,6 +369,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
 			}
 			mi.obtenerTotalSubproductos();
+			mi.gridApi.selection.clearSelectedRows();
+			mi.subproducto.id = null;
 		}
 	};
 

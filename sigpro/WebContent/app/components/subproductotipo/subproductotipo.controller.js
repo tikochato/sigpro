@@ -341,6 +341,8 @@ function controlSubproductoTipo($scope, $routeParams, $route, $window, $location
 	mi.filtrar = function(evt){
 		if(evt.keyCode==13){
 			mi.obtenerTotalSubproductoTipo();
+			mi.gridApi.selection.clearSelectedRows();
+			mi.seleccionada = null;
 		}
 	};
 

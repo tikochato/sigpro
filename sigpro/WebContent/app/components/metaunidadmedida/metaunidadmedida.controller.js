@@ -215,6 +215,8 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
 					mi.obtenerTotalMetaUnidades();
+					mi.gridApi.selection.clearSelectedRows();
+					mi.medida.id = null;
 				}
 			}
 			

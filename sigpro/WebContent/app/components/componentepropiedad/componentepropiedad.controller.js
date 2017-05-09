@@ -222,6 +222,8 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
 					mi.obtenerTotalComponentePropiedades();
+					mi.gridApi.selection.clearSelectedRows();
+					mi.componentepropiedad.id = null;
 				}
 			}
 

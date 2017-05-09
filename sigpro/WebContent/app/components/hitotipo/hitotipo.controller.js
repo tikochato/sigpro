@@ -220,6 +220,8 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
 				mi.obtenerTotalHitoTipos();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.hitotipo = null;
 			}
 		};
 

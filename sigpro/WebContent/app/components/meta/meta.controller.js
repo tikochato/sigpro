@@ -246,6 +246,8 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
 					mi.obtenerTotalMetas();
+					mi.gridApi.selection.clearSelectedRows();
+					mi.meta.id = null;
 				}
 			}
 			

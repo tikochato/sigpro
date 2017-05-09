@@ -40,12 +40,6 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					mi.objetoTipoNombre = "Proyecto";
 		});
 		
-		mi.editarElemento = function (event) {
-	        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
-	        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
-	        mi.editar();
-	    };
-
 		mi.fechaOptions = {
 				formatYear : 'yy',
 				maxDate : new Date(2050, 12, 31),
@@ -329,6 +323,8 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		mi.filtrar = function(evt,tipo){
 			if(evt.keyCode==13){
 				mi.obtenerTotalComponentes();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.componente = null;
 			}
 		}
 

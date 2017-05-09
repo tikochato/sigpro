@@ -231,6 +231,8 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 		mi.filtrar = function(evt,tipo){
 			if(evt.keyCode==13){
 				mi.obtenerTotalActividadPropiedades();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.actividadtipo.id = null;
 			}
 		}
 		

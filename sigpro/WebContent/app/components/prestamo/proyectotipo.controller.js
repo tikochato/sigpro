@@ -229,6 +229,8 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
 				mi.obtenerTotalProyectotipos();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.proyectotipo.id = null;
 			}
 		}
 		

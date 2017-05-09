@@ -258,6 +258,8 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 					case 3: mi.filtros['fechaCreacion'] = evt.currentTarget.value; break;
 				}
 				mi.obtenerTotalHitos();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.hito.id = null;
 			}
 		}
 

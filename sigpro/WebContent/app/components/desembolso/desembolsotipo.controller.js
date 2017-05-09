@@ -208,6 +208,8 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
 					mi.obtenerTotalDesembolsoTipos();
+					mi.gridApi.selection.clearSelectedRows();
+					mi.desembolsotipo.id = null;
 				}
 			};
 			

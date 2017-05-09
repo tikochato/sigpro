@@ -222,6 +222,8 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 
 					}
 					mi.cargarTabla(mi.paginaActual);
+					mi.gridApi.selection.clearSelectedRows();
+					mi.formularioitemtipo = null;
 				}
 			}
 

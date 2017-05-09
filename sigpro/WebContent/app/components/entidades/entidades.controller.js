@@ -259,6 +259,8 @@ function controlEntidad($scope, $routeParams, $route, $window, $location,
 	mi.filtrar = function(evt){
 		if(evt.keyCode==13){
 			mi.obtenerTotalEntidades();
+			mi.gridApi.selection.clearSelectedRows();
+			mi.entidad = null;
 		}
 	};
 

@@ -235,6 +235,8 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 		mi.filtrar = function(evt){
 			if(evt.keyCode==13){
 				mi.obtenerTotalProgramatipos();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.programatipo.id = null;
 			}
 		}
 		
