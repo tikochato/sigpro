@@ -362,7 +362,7 @@
 									</div>
 								</div>
 								
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 									<input type="text" class="inputText"   ng-model="controller.prestamo.proyectoPrograma" ng-required="true"
 									onblur="this.setAttribute('value', this.value);" value="{{controller.prestamo.proyectoPrograma}}"  >

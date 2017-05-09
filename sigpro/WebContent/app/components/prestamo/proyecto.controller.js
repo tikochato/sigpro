@@ -237,7 +237,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				longitud: mi.proyecto.longitud,
 				latitud : mi.proyecto.latitud,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
-				// prestamo campos requeridos
+
 				codigoPresupuestario: mi.prestamo.codigoPresupuestario,
 				numeroPrestamo: mi.prestamo.numeroPrestamo,
 				proyetoPrograma: mi.prestamo.proyectoPrograma,
@@ -263,16 +263,16 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				montoAsignadoUeQtz: mi.prestamo.montoAsignadoUeQtz,
 				desembolsoAFechaUeUsd: mi.prestamo.desembolsoAFechaUeUsd,
 				montoPorDesembolsarUeUsd: mi.prestamo.montoPorDesembolsarUeUsd,
-				// prestamo campos adicionales
+				
 				destino : mi.prestamo.destino,
 				sectorEconomico: mi.prestamo.sectorEconomico,
-				fechaFimra: mi.prestamo.fechaFirma != "" ? moment(mi.prestamo.fechaFirma).format('DD/MM/YYYY') : undefined,
+				fechaFimra: mi.prestamo.fechaFirma != undefined ? moment(mi.prestamo.fechaFirma).format('DD/MM/YYYY') : undefined,
 				tipoAutorizacionId : mi.prestamo.tipoAutorizacionId,
 				numeroAutorizacion: mi.prestamo.numeroAutorizacion,
-				fechaAutorizacion: mi.prestamo.fechaAutorizacion != "" ? moment(mi.prestamo.fechaAutorizacion).format('DD/MM/YYYY') : undefined,
-				aniosPlazo: mi.prestamo.aniosPlazo != "" ? mi.prestamo.aniosPlazo : undefined,
+				fechaAutorizacion: mi.prestamo.fechaAutorizacion != undefined ? moment(mi.prestamo.fechaAutorizacion).format('DD/MM/YYYY') : undefined,
+				aniosPlazo: mi.prestamo.aniosPlazo != undefined ? mi.prestamo.aniosPlazo : undefined,
 				aniosGracia: mi.prestamo.aniosGracia,
-				fechaFinEjecucion: mi.prestamo.fechaFinEjecucion != "" ? moment(mi.prestamo.fechaFinEjecucion).format('DD/MM/YYYY') : undefined,
+				fechaFinEjecucion: mi.prestamo.fechaFinEjecucion != undefined ? moment(mi.prestamo.fechaFinEjecucion).format('DD/MM/YYYY') : undefined,
 				periodoEjecucion: mi.prestamo.periodoEjecucion != "" ? mi.prestamo.periodoEjecucion : undefined,
 				tipoInteresId: mi.prestamo.tipoInteresId,
 				porcentajeInteres: mi.prestamo.porcentajeInteres,
@@ -299,8 +299,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoInv,
 				saldoCuentas: mi.prestamo.saldoCuentas,
 				desembolsoReal: mi.prestamo.desembolsoReal,
-				ejecucionEstadoId: mi.prestamo.ejecucionEstadoId != "" ? mi.prestamo.ejecucionEstadoId : undefined,
-				fechaCorte : mi.prestamo.fechaCorte != "" ? moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY') : undefined,
+				ejecucionEstadoId: mi.prestamo.ejecucionEstadoId != undefined ? mi.prestamo.ejecucionEstadoId : undefined,
+				fechaCorte : mi.prestamo.fechaCorte != undefined ? moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY') : undefined,
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(
@@ -313,7 +313,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 						mi.proyecto.fechaactualizacion = response.data.fechaactualizacion;
 						$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.obtenerTotalProyectos();
-						//mi.esNuevo = false;
+						mi.esNuevo = false;
 					}else
 						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
 			});
