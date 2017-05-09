@@ -43,6 +43,12 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			startingDay : 1
 	};
 
+	mi.editarElemento = function (event) {
+        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+        mi.gridApi.selection.selectRow(mi.gridOpciones.data[filaId]);
+        mi.editar();
+    };
+	
 	mi.gridOpciones = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -54,6 +60,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	    paginationPageSize: $utilidades.elementosPorPagina,
 	    useExternalFiltering: true,
 	    useExternalSorting: true,
+	    rowTemplate: '<div ng-dblclick="grid.appScope.programac.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 		columnDefs : [
 			{ name: 'id', width: 60, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left',
@@ -187,13 +194,13 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				presupuestoAsignadoFuncionamiento: mi.prestamo.presupuestoAsignadoFuncionamiento,
 				presupuestoAsignadoInversion: mi.prestamo.presupuestoAsignadoInversion,
 				presupuestoModificadoFuncionamiento: mi.prestamo.presupuestoModificadoFun,
-				presupuestoModificadoInversion: mi.prestamo.presupuestoModificadoIn,
+				presupuestoModificadoInversion: mi.prestamo.presupuestoModificadoInv,
 				presupuestoVigenteFuncionamiento: mi.prestamo.presupuestoVigenteFun,
 				presupuestoVigenteInversion: mi.prestamo.presupuestoVigenteInv,
 				presupuestoDevengadoFunconamiento:mi.prestamo.presupuestoDevengadoFun,
 				presupuestoDevengadoInversion:mi.prestamo.presupuestoDevengadoInv,
 				presupuestoPagadoFuncionamiento: mi.prestamo.presupuestoPagadoFun,
-				presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoIn,
+				presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoInv,
 				saldoCuentas: mi.prestamo.saldoCuentas,
 				desembolsoReal: mi.prestamo.desembolsoReal,
 				ejecucionEstadoId: mi.prestamo.ejecucionEstadoId,
@@ -391,6 +398,8 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	mi.filtrar = function(evt){
 		if(evt.keyCode==13){
 			mi.obtenerTotalProgramas();
+			mi.gridApi.selection.clearSelectedRows();
+			mi.programa.id = null;
 		}
 	};
 
@@ -587,7 +596,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	
 	mi.buscarTipoMoneda = function() {
 		
-		var resultado = mi.llamarModalBusqueda('/SPrograma', {
+		var resultado = mi.llamarModalBusqueda('/STipoMoneda', {
 			accion : 'numeroTipoMonedas'	
 		}, function(pagina, elementosPorPagina) {
 			return {
@@ -605,7 +614,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	
 	mi.buscarEstadoEjecucion = function() {
 		
-		var resultado = mi.llamarModalBusqueda('/SPrograma', {
+		var resultado = mi.llamarModalBusqueda('/SEjecucionEstado', {
 			accion : 'numeroEjecucionEstado'	
 		}, function(pagina, elementosPorPagina) {
 			return {

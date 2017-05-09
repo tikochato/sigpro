@@ -19,21 +19,12 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.columnaOrdenada=null;
 			mi.ordenDireccion = null;
 			mi.filtros = [];
-			mi.menuOptions = [
-		        ['<span class="glyphicon glyphicon-pencil"> Editar', function ($itemScope, $event, modelValue, text, $li) {
-		      	  mi.editar();
-		        }],
-		        null,
-		        ['<span class="glyphicon glyphicon-trash text-danger"><font style="color: black;"> Borrar</font>', function ($itemScope, $li) {
-		      	  mi.borrar();
-		        }]
-		    ];
 			
-			mi.contextMenu = function (event) {
+			mi.editarElemento = function (event) {
 		        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
 		        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
+		        mi.editar();
 		    };
-
 			
 			mi.gridOptions = {
 					enableRowSelection : true,
@@ -46,8 +37,8 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 				    paginationPageSize: $utilidades.elementosPorPagina,
 				    useExternalFiltering: true,
 				    useExternalSorting: true,
-				    rowTemplate: '<div context-menu="grid.appScope.cooperantec.menuOptions" right-click="grid.appScope.cooperantec.contextMenu($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
-					columnDefs : [ 
+				    rowTemplate: '<div ng-dblclick="grid.appScope.cooperantec.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
+				    columnDefs : [ 
 						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 						{ name: 'codigo', width: 150, displayName: 'Código', 
 							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-model="grid.appScope.cooperantec.filtros[\'codigo\']" ng-keypress="grid.appScope.cooperantec.filtrar($event)"></input></div>'
@@ -225,6 +216,8 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
 					mi.cargarTabla(mi.paginaActual);
+					mi.gridApi.selection.clearSelectedRows();
+					mi.cooperante.id = null;
 				}
 			}
 			

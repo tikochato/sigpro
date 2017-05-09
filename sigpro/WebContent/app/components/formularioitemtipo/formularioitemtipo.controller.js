@@ -22,6 +22,11 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 			mi.filtros = [];
 			mi.orden = null;
 
+			mi.editarElemento = function (event) {
+		        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+		        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
+		        mi.editar();
+		    };
 
 			mi.gridOptions = {
 				enableRowSelection : true,
@@ -34,7 +39,8 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 			    paginationPageSize: $utilidades.elementosPorPagina,
 			    useExternalFiltering: true,
 			    useExternalSorting: true,
-				columnDefs : [
+			    rowTemplate: '<div ng-dblclick="grid.appScope.formularioitemtipoc.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
+			    columnDefs : [
 					{ name: 'id', width: 60, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
 						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" ng-keypress="grid.appScope.formularioitemtipoc.filtrar($event,1)"></input></div>'
@@ -216,6 +222,8 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 
 					}
 					mi.cargarTabla(mi.paginaActual);
+					mi.gridApi.selection.clearSelectedRows();
+					mi.formularioitemtipo = null;
 				}
 			}
 

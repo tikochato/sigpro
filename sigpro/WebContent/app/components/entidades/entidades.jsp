@@ -84,7 +84,7 @@
 		        <div class="form-group col-sm-12">
 		          <input type="number" class="inputText"  ng-model="entidad.entidad.entidad" 
 		          ng-readonly="!entidad.esNuevo" ng-required="true" 
-		          value="{{entidad.entidad.entidad}}"   
+		          ng-value="entidad.entidad.entidad"   
      				onblur="this.setAttribute('value', this.value);"/>
 		          <label class="floating-label">* Entidad</label>
 		        </div>
@@ -94,7 +94,7 @@
 				<div class="form-group col-sm-12" >
 				  <input type="text" class="inputText"   ng-model="entidad.entidad.nombre" 
 				  ng-readonly="!entidad.esNuevo" ng-required="true" 
-				  value="{{entidad.entidad.nombre}}"   
+				  ng-value="entidad.entidad.nombre"   
      				onblur="this.setAttribute('value', this.value);"/>
 				  <label class="floating-label">* Nombre Entidad</label>
 				</div>
@@ -102,7 +102,7 @@
 			<div class="row">
 		        <div class="form-group col-sm-12">
 		          <input type="text" class="inputText" ng-model="entidad.entidad.abreviatura"
-		          value="{{entidad.entidad.abreviatura}}"   
+		          ng-value="entidad.entidad.abreviatura"   
      				onblur="this.setAttribute('value', this.value);">
 		          <label class="floating-label">Abreviatura</label>
 		        </div>
@@ -110,7 +110,7 @@
       </form>
 
     </div>
-    <div align="center">Los campos marcados con * son obligatorios</div>
+    <div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">

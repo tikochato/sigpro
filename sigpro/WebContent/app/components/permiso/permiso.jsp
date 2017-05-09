@@ -97,16 +97,16 @@
 							</div>
 							
 							<div class="form-group" ng-show="permisosc.esNuevo">
-	    						<input type="number" class="inputText" id="id" ng-model="permisosc.permisoSelected.id"  value="{{permisosc.permisoSelected.id}}" onblur="this.setAttribute('value', this.value);" ng-required="permisosc.esNuevo" >
+	    						<input type="number" class="inputText" id="id" ng-model="permisosc.permisoSelected.id"  ng-value="permisosc.permisoSelected.id" onblur="this.setAttribute('value', this.value);" ng-required="permisosc.esNuevo" >
 								<label for="id1" class="floating-label">* ID</label>
 							</div>
 							
 							<div class="form-group">
-	    						<input type="text" class="inputText" id="nombre" ng-model="permisosc.permisoSelected.nombre"  value="{{permisosc.permisoSelected.nombre}}" onblur="this.setAttribute('value', this.value);" ng-required="true">
+	    						<input type="text" class="inputText" id="nombre" ng-model="permisosc.permisoSelected.nombre"  ng-value="permisosc.permisoSelected.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
 								<label for="nombre" class="floating-label">* Nombre</label>
 							</div>
 							<div class="form-group">
-								<input type="text" class="inputText" id="descripcion" ng-model="permisosc.permisoSelected.descripcion" value="{{permisosc.permisoSelected.descripcion}}" onblur="this.setAttribute('value', this.value);" ng-required="true">
+								<input type="text" class="inputText" id="descripcion" ng-model="permisosc.permisoSelected.descripcion" ng-value="permisosc.permisoSelected.descripcion" onblur="this.setAttribute('value', this.value);" ng-required="true">
 								<label for="Descripcion" class="floating-label">* Descripción</label>
 							</div>
 							<div class="panel panel-default">

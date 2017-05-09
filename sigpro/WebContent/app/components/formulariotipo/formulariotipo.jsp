@@ -10,21 +10,21 @@
 	<div class="panel panel-default">
 	  <div class="panel-heading"><h3>Tipo de Formulario</h3></div>
 	</div>
-	<br />
+
 	<div class="row" align="center" ng-if="!formulariotipoc.mostraringreso">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="14040">
-					<label class="btn btn-primary" ng-click="formulariotipoc.nuevo()">
-					<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
+					<label class="btn btn-primary" ng-click="formulariotipoc.nuevo()" uib-tooltip="Nuevo">
+				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="14010">
-					<label class="btn btn-primary" ng-click="formulariotipoc.editar()">
-					<span class="glyphicon glyphicon-pencil"></span> Editar</label>
+					<label class="btn btn-primary" ng-click="formulariotipoc.editar()" uib-tooltip="Editar">
+				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="14030">
-					<label class="btn btn-danger" ng-click="formulariotipoc.borrar()">
-					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
+					<label class="btn btn-danger" ng-click="formulariotipoc.borrar()" uib-tooltip="Borrar">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</shiro:hasPermission>
 			</div>
 		</div>
@@ -64,15 +64,19 @@
 		
 	</div>
 
-	<div class="row main-form" ng-show="formulariotipoc.mostraringreso">
-		<h4 ng-hide="!formulariotipoc.esnuevo">Nuevo Tipo Riesgo</h4>
-		<h4 ng-hide="formulariotipoc.esnuevo">Edición de Tipo Riesgo</h4>
+	<div class="row second-main-form" ng-show="formulariotipoc.mostraringreso">
+		<div class="page-header">
+			<h2 ng-hide="!formulariotipoc.esnuevo">Nuevo Tipo Riesgo</h2>
+			<h2 ng-hide="formulariotipoc.esnuevo">Edición de Tipo Riesgo</h2>
+		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="14020">
-					<label class="btn btn-success" ng-click="form.$valid ? formulariotipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+					<label class="btn btn-success" ng-click="form.$valid ? formulariotipoc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="formulariotipoc.irATabla()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="formulariotipoc.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 		<div class="col-sm-12">
@@ -84,12 +88,12 @@
 
 				<div class="form-group">					 
 					<input type="text"  class="inputText" ng-model="formulariotipoc.formulariotipo.nombre" ng-required="true"
-					value="{{formulariotipoc.formulariotipo.nombre}}" onblur="this.setAttribute('value', this.value);">
+					ng-value="formulariotipoc.formulariotipo.nombre" onblur="this.setAttribute('value', this.value);">
 					<label class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group">
 					<input type="text"class="inputText"  ng-model="formulariotipoc.formulariotipo.descripcion"
-					value="{{formulariotipoc.formulariotipo.descripcion}}" onblur="this.setAttribute('value', this.value);">
+					ng-value="formulariotipoc.formulariotipo.descripcion" onblur="this.setAttribute('value', this.value);">
 					<label class="floating-label">Descripción</label> 
 				</div>
 				<div class="panel panel-default">
@@ -129,13 +133,15 @@
 			</form>
 		</div>
 		<br />
-		<div align="center">Los campos marcados con * son obligatorios</div>
+		<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="14020">
-					<label class="btn btn-success" ng-click="form.$valid ? formulariotipoc.guardar() : ''" ng-disabled="!form.$valid">Guardar</label>
+					<label class="btn btn-success" ng-click="form.$valid ? formulariotipoc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="formulariotipoc.irATabla()">Ir a Tabla</label>
+				<label class="btn btn-primary" ng-click="formulariotipoc.irATabla()" uib-tooltip="Ir a Tabla">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
 	</div>

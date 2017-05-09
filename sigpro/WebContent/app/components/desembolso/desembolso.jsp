@@ -9,10 +9,13 @@
   		<shiro:lacksPermission name="9010">
 			<p ng-init="desembolsoc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
+		
 		<div class="panel panel-default">
-		    <div class="panel-heading"><h3>Desembolso</h3></div>
+			<div class="panel-heading"><h3>Desembolso</h3></div>
 		</div>
-		<h3><small>{{ desembolsoc.proyectonombre }}</small></h3>
+		<div class="subtitulo">
+			{{ desembolsoc.objetoTipoNombre }} {{ desembolsoc.proyectonombre }}
+		</div>
 		
 		<div class="row" align="center" ng-if="!desembolsoc.mostraringreso">
 			
@@ -94,7 +97,7 @@
 					<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="dd/MM/yyyy" ng-model="desembolsoc.fecha" is-open="desembolsoc.popup.abierto"
 								            datepicker-options="desembolsoc.opcionesFecha" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true"  ng-click="desembolsoc.mostrarCalendar()"
-								            value="{{desembolsoc.fecha}}" onblur="this.setAttribute('value', this.value);"/>
+								            ng-value="desembolsoc.fecha" onblur="this.setAttribute('value', this.value);"/>
 								            <span class="label-icon" ng-click="desembolsoc.mostrarCalendar()">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
@@ -103,21 +106,21 @@
 					
 					<div class="form-group">
 					   <input type="number" name="imonto"  class="inputText" id="imonto" 
-					     ng-model="desembolsoc.desembolso.monto" value="{{desembolsoc.desembolso.monto}}"   
+					     ng-model="desembolsoc.desembolso.monto" ng-value="desembolsoc.desembolso.monto"   
 					     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 					   <label class="floating-label">* Monto</label>
 					</div>
 					
 					<div class="form-group">
 					   <input type="number" name="itipocambio"  class="inputText" id="itipocambio" 
-					     ng-model="desembolsoc.desembolso.tipocambio" value="{{desembolsoc.desembolso.tipocambio}}"   
+					     ng-model="desembolsoc.desembolso.tipocambio" ng-value="desembolsoc.desembolso.tipocambio"   
 					     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 					   <label class="floating-label">* Tipo Cambio</label>
 					</div>
 					
 			        
 			        <div class="form-group" >
-						    <input type="text" class="inputText" id="idesembolsotipo" name="idesembolsotipo" ng-model="desembolsoc.desembolso.desembolsotipo" value="{{desembolsoc.desembolso.desembolsotipo}}" 
+						    <input type="text" class="inputText" id="idesembolsotipo" name="idesembolsotipo" ng-model="desembolsoc.desembolso.desembolsotipo" ng-value="desembolsoc.desembolso.desembolsotipo" 
 							ng-click="desembolsoc.buscarTipoDesembolso()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
 							<span class="label-icon" ng-click="desembolsoc.buscarTipoDesembolso()"><i class="glyphicon glyphicon-search"></i></span>
 							<label for="campo3" class="floating-label">* Tipo Desembolso</label>
@@ -158,7 +161,7 @@
 				</div>
 				</form>
 			</div>
-			<div align="center">Los campos marcados con * son obligatorios</div>
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
     		<div class="col-sm-12 operation_buttons" align="right">
 			  <div class="btn-group">
 			    <shiro:hasPermission name="9020">

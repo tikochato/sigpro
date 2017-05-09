@@ -29,19 +29,11 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 		mi.ordenDireccion = null;
 		
 		mi.filtros = [];
-		mi.menuOptions = [
-	        ['<span class="glyphicon glyphicon-pencil"> Editar', function ($itemScope, $event, modelValue, text, $li) {
-	      	  mi.editar();
-	        }],
-	        null,
-	        ['<span class="glyphicon glyphicon-trash text-danger"><font style="color: black;"> Borrar</font>', function ($itemScope, $li) {
-	      	  mi.borrar();
-	        }]
-	    ];
 		
-		mi.contextMenu = function (event) {
+		mi.editarElemento = function (event) {
 	        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
 	        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
+	        mi.editar();
 	    };
 		
 		mi.gridOptions = {
@@ -54,7 +46,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 				enablePaginationControls: false,
 			    paginationPageSize: $utilidades.elementosPorPagina,
 			    useExternalFiltering: true,
-			    rowTemplate: '<div context-menu="grid.appScope.actividadtipoc.menuOptions" right-click="grid.appScope.actividadtipoc.contextMenu($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
+			    rowTemplate: '<div ng-dblclick="grid.appScope.actividadtipoc.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 			    useExternalSorting: true,
 				columnDefs : [ 
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
@@ -239,6 +231,8 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 		mi.filtrar = function(evt,tipo){
 			if(evt.keyCode==13){
 				mi.obtenerTotalActividadPropiedades();
+				mi.gridApi.selection.clearSelectedRows();
+				mi.actividadtipo.id = null;
 			}
 		}
 		

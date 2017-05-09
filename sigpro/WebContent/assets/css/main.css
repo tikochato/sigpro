@@ -42,6 +42,41 @@ nav.navbar{
    transition: all 0.4s ease-in-out;
 }
 
+.alineado {
+  margin: auto;
+  position: absolute;
+  /*left: 0; */
+  right: 0;
+}
+
+.fa-12x {
+    font-size: 1.2em;
+    color: #9d9d9d;
+}
+
+.fa-12x:hover {
+    color: #ffffff;
+}
+
+.triangle-down {
+
+  position: fixed;
+    width: 0;
+    height: 0;
+    border-left: 24px solid transparent;
+    border-right: 24px solid transparent;
+    border-top: 23px solid #1f3b6a;
+}
+
+.triangle-down p{  
+  text-align:center;
+  color:white;
+  margin-top: -23px;
+  margin-left: -9px;
+  transition: color .2s;
+  &:hover{color: rgba(0, 0, 0, .4)}
+}
+
 .maincontainer{
 	margin: 15px;
 	padding-top: 15px;
@@ -136,10 +171,6 @@ nav.navbar{
 	display: flex;
 }
 
-.context-menu{
-
-}
-
 .context-menu .dropdown-menu {
 	min-width: 100px;
 }
@@ -216,13 +247,25 @@ nav.navbar{
 }
 
 input:focus ~ .floating-label,
-input:not([value=""]) ~ .floating-label{
+input:not([value='']) ~ .floating-label,
+input:focus:not([value]) ~ .floating-label{
   top: -2px;
   bottom: 10px;
   font-size: 11px;
   opacity: 1;
   border: none;
   outline-width: 0;
+}
+
+input:not([value]) ~ .floating-label{
+  font-size: 14px;
+  position: absolute;
+  pointer-events: none;
+  top: 18px;
+  transition: 0.2s ease all;
+  border: none;
+  color: rgba(0,0,0,0.38);
+  font-weight: bold;
 }
 
 input:focus ~ .floating-label{
@@ -250,9 +293,15 @@ select:focus{
 	outline-width: 0;
 }
 
-input[type='checkbox']:not([value=""]) ~ .floating-label {
+input[type='checkbox'] ~ .floating-label {
 	left: 5px;
-	top: -5px;
+	top: -5px !important;
+	top: -2px;
+	bottom: 10px;
+	font-size: 11px;
+	opacity: 1;
+	border: none;
+	outline-width: 0;
 }
 
 .inputText:focus {
@@ -304,7 +353,6 @@ input[type='checkbox']:not([value=""]) ~ .floating-label {
 	 pointer-events: none;
 	 color: rgba(0,0,0,0.38) !important;
 	 font-weight: bold;
-	 text-align: center;
 }
 
 h3 {
@@ -314,6 +362,16 @@ h3 {
 
 h2 {
     font-size: 25px;
+}
+
+.subtitulo{
+	margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1;
+    color: #777;
+    padding-left: 10px;
 }
 
 .page-header {

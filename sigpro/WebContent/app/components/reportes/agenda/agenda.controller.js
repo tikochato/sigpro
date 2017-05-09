@@ -5,10 +5,19 @@ app.controller('agendaController',['$scope','$http','$interval','i18nService','U
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 	
 	var mi=this;
+	mi.proyectoid = "";
+	mi.proyectoNombre = "";
+	mi.objetoTipoNombre = "";
 	
 	$window.document.title = $utilidades.sistema_nombre+' - Agenda de Actividades';
 	i18nService.setCurrentLang('es');
 	 
+	$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyectoId }).success(
+			function(response) {
+				mi.proyectoid = response.id;
+				mi.proyectoNombre = response.nombre;
+				mi.objetoTipoNombre = "Proyecto";
+	});
 	 
 	 $http.post('/SAgenda', { accion: 'getAgenda', proyectoid:$routeParams.proyectoId, t: (new Date()).getTime()})
 	 .then(function(response){

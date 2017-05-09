@@ -42,6 +42,13 @@ app.controller(
 	var passwordLocal="";
 	mi.tieneColaborador=false;
 	mi.filtros=[];
+	
+	mi.editarElemento = function (event) {
+        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
+        mi.editarUsuario();
+    };
+	
 	mi.gridOptions = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -51,6 +58,7 @@ app.controller(
 		data : [],
 		useExternalFiltering: true,
 		useExternalSorting: true,
+		rowTemplate: '<div ng-dblclick="grid.appScope.usuarioc.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 		columnDefs : [ {
 			name : 'Usuario',
 			cellClass : 'grid-align-left',
@@ -469,6 +477,8 @@ app.controller(
 					function(response) {
 						mi.elementosPorPagina = response.totalUsuarios;
 						mi.cargarTabla(mi.paginaActual);
+						mi.gridApi.selection.clearSelectedRows();
+						mi.usuariosSelected.usuario = "";
 			});
 		}
 	};

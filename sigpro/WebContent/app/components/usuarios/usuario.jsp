@@ -15,7 +15,11 @@
 		<shiro:lacksPermission name="34010">
 			<p ng-init="usuarioc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<h3>Usuarios</h3><br/>
+		
+		<div class="panel panel-default">
+			<div class="panel-heading"><h3>Usuarios</h3></div>
+		</div>
+
 		<div class="row" align="center" ng-hide="usuarioc.isCollapsed">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
@@ -28,7 +32,7 @@
 						<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 					</shiro:hasPermission>
 					<shiro:hasPermission name="34030">
-						<label class="btn btn-primary" ng-click="usuarioc.eliminarUsuario()" uib-tooltip="Borrar">
+						<label class="btn btn-danger" ng-click="usuarioc.eliminarUsuario()" uib-tooltip="Borrar">
 						<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 					</shiro:hasPermission>
     			</div>
@@ -68,7 +72,12 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row main-form" ng-show="usuarioc.isCollapsed">
+		<div class="row second-main-form" ng-show="usuarioc.isCollapsed">
+			<div class="page-header">
+				<h2 ng-hide="!usuarioc.esNuevo"><small>Nuevo Usuario</small></h2>
+				<h2 ng-hide="usuarioc.esNuevo"><small>Edición de Usuario</small></h2>
+			</div>
+			
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="34020">
@@ -85,59 +94,48 @@
 
 						<div class="form-group" ng-show="!usuarioc.esNuevo && !usuarioc.mostrarCambioPassword">
     						<input type="text" class="inputText" id="usuario" ng-model="usuarioc.usuariosSelected.usuario" 
-    							value="{{usuarioc.usuariosSelected.usuario}}" onblur="this.setAttribute('value', this.value);" readonly>
-    						<label class="floating-label">Usuario</label>
+    							ng-value="usuarioc.usuariosSelected.usuario" onblur="this.setAttribute('value', this.value);" readonly>
+    						<label class="floating-label">* Usuario</label>
 						</div>
 						<div class="form-group" ng-show="!usuarioc.mostrarCambioPassword">
     						<input type="text" class="inputText" id="correo" ng-model="usuarioc.usuariosSelected.email" ng-required="true"
-    							value="{{usuarioc.usuariosSelected.email}}" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">Correo electrónico</label>
+    							ng-value="usuarioc.usuariosSelected.email" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">* Correo electrónico</label>
 						</div>
 						<div class="form-group" ng-show="!usuarioc.esNuevo">
     						<input type="password" class="inputText" id="password1" ng-model="usuarioc.usuariosSelected.password" ng-required="true"
-    							value="{{usuarioc.usuariosSelected.password}}" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">Contraseña</label>
+    							ng-value="usuarioc.usuariosSelected.password" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">* Contraseña</label>
 						</div>
 
 				</form>
 				<form name="form1">
 					<div class="form-group" ng-show="usuarioc.esNuevo">
     						<input type="text" class="inputText" id="usuario" ng-model="usuarioc.usuariosSelected.usuario" ng-required="true"
-    							value="{{usuarioc.usuariosSelected.usuario}}" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">Usuario</label>
+    							ng-value="usuarioc.usuariosSelected.usuario" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">* Usuario</label>
 					</div>
 					<div class="form-group" ng-show="usuarioc.esNuevo">
     						<input type="password" class="inputText" id="password1" ng-model="usuarioc.claves.password1" ng-required="true"
-    							value="{{usuarioc.claves.password1}}" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">Contraseña</label>
+    							ng-value="usuarioc.claves.password1" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">* Contraseña</label>
 						</div>
 						<div class="form-group" ng-show="usuarioc.esNuevo">
     						<input type="password" class="inputText" id="password2" ng-model="usuarioc.claves.password2" ng-required="true"
-    							value="{{usuarioc.claves.password1}}" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">Vuelva a ingresar la contraseña</label>
+    							ng-value="usuarioc.claves.password1" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">* Vuelva a ingresar la contraseña</label>
 						</div>
 						<div class="form-group" >
 					          <input type="text" class="inputText" ng-model="usuarioc.usuariosSelected.colaborador"  ng-disabled="true" 
-					          		value="{{usuarioc.usuariosSelected.colaborador}}" onblur="this.setAttribute('value', this.value);">
-					          <span class="label-icon"  ng-click="usuarioc.tieneColaborador ? '' : usuarioc.buscarColaborador()" uib-tooltip="buscar colaborador"><i class="glyphicon glyphicon-search"></i></span>
-					          <label class="floating-label">Colaborador</label>
+					          		ng-value="usuarioc.usuariosSelected.colaborador" onblur="this.setAttribute('value', this.value);"
+					          		ng-click="usuarioc.tieneColaborador ? '' : usuarioc.buscarColaborador()" >
+					          <span class="label-icon" ng-click="usuarioc.tieneColaborador ? '' : usuarioc.buscarColaborador()" uib-tooltip="buscar colaborador"><i class="glyphicon glyphicon-search"></i></span>
+					          <label class="floating-label" >Colaborador</label>
 					      </div>
 						<br>
 				</form>
 			</div>
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-			        					<shiro:hasPermission name="34020">
-						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid ? usuarioc.guardarUsuario() : '' ) :  (form.$valid ? usuarioc.guardarUsuario() : '' )" 
-							ng-disabled="usuarioc.esNuevo ? form1.$invalid : form.$invalid" uib-tooltip="Guardar">
-						<span class="glyphicon glyphicon-floppy-saved"></span>Guardar</label>
-					</shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()"  uib-tooltip="Ir a Tabla">
-					<span class="glyphicon glyphicon-list-alt"></span>Ir a Tabla</label>
-    		</div>
-    	</div>
-		</div>
-		<div class="row">
+			<div class="row">
 			<div class="col-sm-12">
 			
 		<div align="center" ng-show="usuarioc.isCollapsed">
@@ -184,6 +182,19 @@
 		</div>
 		
 		</div>
+			<div class="col-sm-12 operation_buttons" align="right">
+				<div class="btn-group">
+			        					<shiro:hasPermission name="34020">
+						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid ? usuarioc.guardarUsuario() : '' ) :  (form.$valid ? usuarioc.guardarUsuario() : '' )" 
+							ng-disabled="usuarioc.esNuevo ? form1.$invalid : form.$invalid" uib-tooltip="Guardar">
+						<span class="glyphicon glyphicon-floppy-saved"></span>Guardar</label>
+					</shiro:hasPermission>
+			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()"  uib-tooltip="Ir a Tabla">
+					<span class="glyphicon glyphicon-list-alt"></span>Ir a Tabla</label>
+    		</div>
+    	</div>
+		</div>
+		
 
 
 	</div>
