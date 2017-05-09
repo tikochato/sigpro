@@ -154,6 +154,14 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				});
 	};
 	
+	mi.getPorcentajes = function(){
+		mi.setPorcentaje(1);
+		mi.setPorcentaje(2);
+		mi.setPorcentaje(3);
+		mi.setPorcentaje(4);
+		mi.setPorcentaje(5);
+	}
+	
 	mi.setPorcentaje = function(tipo){
 		var n = 0;
 		if (tipo==1)
@@ -258,14 +266,14 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				// prestamo campos adicionales
 				destino : mi.prestamo.destino,
 				sectorEconomico: mi.prestamo.sectorEconomico,
-				fechaFimra: moment(mi.prestamo.fechaFirma).format('DD/MM/YYYY'),
+				fechaFimra: mi.prestamo.fechaFirma != "" ? moment(mi.prestamo.fechaFirma).format('DD/MM/YYYY') : undefined,
 				tipoAutorizacionId : mi.prestamo.tipoAutorizacionId,
 				numeroAutorizacion: mi.prestamo.numeroAutorizacion,
-				fechaAutorizacion: moment(mi.prestamo.fechaAutorizacion).format('DD/MM/YYYY'),
-				aniosPlazo: mi.prestamo.aniosPlazo,
+				fechaAutorizacion: mi.prestamo.fechaAutorizacion != "" ? moment(mi.prestamo.fechaAutorizacion).format('DD/MM/YYYY') : undefined,
+				aniosPlazo: mi.prestamo.aniosPlazo != "" ? mi.prestamo.aniosPlazo : undefined,
 				aniosGracia: mi.prestamo.aniosGracia,
-				fechaFinEjecucion: moment(mi.prestamo.fechaFinEjecucion).format('DD/MM/YYYY'),
-				periodoEjecucion: mi.prestamo.periodoEjecucion,
+				fechaFinEjecucion: mi.prestamo.fechaFinEjecucion != "" ? moment(mi.prestamo.fechaFinEjecucion).format('DD/MM/YYYY') : undefined,
+				periodoEjecucion: mi.prestamo.periodoEjecucion != "" ? mi.prestamo.periodoEjecucion : undefined,
 				tipoInteresId: mi.prestamo.tipoInteresId,
 				porcentajeInteres: mi.prestamo.porcentajeInteres,
 				porcentajeComisionCompra: mi.prestamo.porcentajeComisionCompra,
@@ -291,8 +299,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoInv,
 				saldoCuentas: mi.prestamo.saldoCuentas,
 				desembolsoReal: mi.prestamo.desembolsoReal,
-				ejecucionEstadoId: mi.prestamo.ejecucionEstadoId,
-				fechaCorte : moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY'),
+				ejecucionEstadoId: mi.prestamo.ejecucionEstadoId != "" ? mi.prestamo.ejecucionEstadoId : undefined,
+				fechaCorte : mi.prestamo.fechaCorte != "" ? moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY') : undefined,
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(
@@ -363,6 +371,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		mi.coordenadas = "";
 		mi.gridApi.selection.clearSelectedRows();
 		mi.prestamo = [];
+		$scope.active = 0;
 	};
 
 	mi.editar = function() {
@@ -441,11 +450,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			});
 
 			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
-			mi.setPorcentaje(1);
-			mi.setPorcentaje(2);
-			mi.setPorcentaje(3);
-			mi.setPorcentaje(4);
-			mi.setPorcentaje(5);
+			$scope.active = 0;
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea editar');

@@ -47,9 +47,6 @@ import pojo.TipoMoneda;
 import pojo.UnidadEjecutora;
 import utilities.Utils;
 
-/**
- * Servlet implementation class SProyecto
- */
 @WebServlet("/SProyecto")
 public class SProyecto extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -274,27 +271,59 @@ public class SProyecto extends HttpServlet {
 				Cooperante cooperante = new Cooperante();
 				cooperante.setId(map.get("cooperanteid")!=null ? Integer.parseInt(map.get("cooperanteid")): null);
 				
-				//prestamo
-				
-				Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
+				// prestamo campos requeridos
 				int codigoPresupuestario = Utils.String2Int(map.get("codigoPresupuestario"));
 				String numeroPrestamo =  map.get("numeroPrestamo"); 
+				String  proyectoPrograma = map.get("proyetoPrograma");
+				
+				int unidadEjecutoraPrestamo = Utils.String2Int(map.get("unidadEjecutora"), 0);
+				UnidadEjecutora unidadEjecutora_ = new UnidadEjecutora();
+				unidadEjecutora_.setUnidadEjecutora(unidadEjecutoraPrestamo);
+				
+				Cooperante cooperanteUe = new Cooperante();
+				cooperanteUe.setId(map.get("cooperanteUeId")!=null ? Integer.parseInt(map.get("cooperanteUeId")): null);
+				
+				Date fechaDecreto = Utils.dateFromString(map.get("fechaDecreto"));
+				Date fechaSuscripcion = Utils.dateFromString(map.get("fechaSuscripcion"));
+				Date fechaVigencia = Utils.dateFromString(map.get("fechaVigencia"));
+				
+				int tipoMonedaId = Utils.String2Int(map.get("tipoMonedaId"));
+				TipoMoneda tipoMoneda = new TipoMoneda();
+				tipoMoneda.setId(tipoMonedaId);
+				
+				BigDecimal montoContratado = Utils.String2BigDecimal(map.get("montoContratado"), null);
+				BigDecimal montoContratadoUsd = Utils.String2BigDecimal(map.get("montoContratadoUsd"), null);
+				BigDecimal montoContratadoQtz = Utils.String2BigDecimal(map.get("montoContratadoQtz"), null);
+				BigDecimal desembolsoAFechaUsd = Utils.String2BigDecimal(map.get("desembolsoAFechaUsd"), null);
+				BigDecimal montoPorDesembolsarUsd = Utils.String2BigDecimal(map.get("montoPorDesembolsarUsd"), null);
+				Date fechaElegibilidadUe = Utils.dateFromString(map.get("fechaElegibilidad"));
+				Date fechaCierreOrigianlUe = Utils.dateFromString(map.get("fechaCierreOriginal"));
+				Date fechaCierreActualUe = Utils.dateFromString(map.get("fechaCierreActual"));
+				int mesesProrrogaUe = Utils.String2Int(map.get("mesesProrroga"), null);
+				BigDecimal montoAsignadoUe = Utils.String2BigDecimal(map.get("montoAisignadoUe"), null);
+				BigDecimal desembolsoAFechaUe = Utils.String2BigDecimal(map.get("desembolsoAFechaUe"), null);
+				BigDecimal montoPorDesembolsarUe = Utils.String2BigDecimal(map.get("montoPorDesembolsarUe"), null);
+				BigDecimal montoAsignadoUeUsd = Utils.String2BigDecimal(map.get("montoAsignadoUeUsd"), null);
+				BigDecimal montoAsignadoUeQtz = Utils.String2BigDecimal(map.get("montoAsignadoUeQtz"), null);
+				BigDecimal desembolsoAFechaUeUsd = Utils.String2BigDecimal(map.get("desembolsoAFechaUeUsd"), null);
+				BigDecimal montoPorDesembolsarUeUsd = Utils.String2BigDecimal(map.get("montoPorDesembolsarUeUsd"), null);
+				
+				// prestamo campos adicionales
+				
+				Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
 				String destino = map.get("destino");
 				String sectorEconomico = map.get("sectorEconomico");
-				int unidadEjecutoraPrestamo = Utils.String2Int(map.get("unidadEjecutora"), 0); 
 				Date fechaFirma = Utils.dateFromString(map.get("fechaFimra"));
 				Integer tipoAutorizacionId = Utils.String2Int(map.get("tipoAutorizacionId"),null);
 				String numeroAutorizacion = map.get("numeroAutorizacion");
 				Date fechaAutorizacion = Utils.dateFromString(map.get("fechaAutorizacion"));
-				int aniosPlazo = Utils.String2Int(map.get("aniosPlazo"));
-				int aniosGracia = Utils.String2Int(map.get("aniosGracia"));
+				Integer aniosPlazo = Utils.String2Int(map.get("aniosPlazo"), null);
+				Integer aniosGracia = Utils.String2Int(map.get("aniosGracia"), null);
 				Date fechaFinEjecucion = Utils.dateFromString(map.get("fechaFinEjecucion"));
-				int peridoEjecucion = Utils.String2Int(map.get("periodoEjecucion"));
+				Integer peridoEjecucion = Utils.String2Int(map.get("periodoEjecucion"), null);
 				Integer tipoInteresId = Utils.String2Int(map.get("tipoInteresId"), null);
 				BigDecimal porcentajeInteres = Utils.String2BigDecimal(map.get("porcentajeInteres"), null); 
 				BigDecimal porcentajeComisionCompra = Utils.String2BigDecimal(map.get("porcentajeComisionCompra"), null);
-				int tipoMonedaId = Utils.String2Int(map.get("tipoMonedaId"));
-				BigDecimal montoContratado = Utils.String2BigDecimal(map.get("montoContratado"), null);
 				BigDecimal amortizado = Utils.String2BigDecimal(map.get("amortizado"), null);
 				BigDecimal porAmortizar = Utils.String2BigDecimal(map.get("porAmortizar"), null);
 				BigDecimal principalAnio = Utils.String2BigDecimal(map.get("principalAnio"), null);
@@ -317,53 +346,27 @@ public class SProyecto extends HttpServlet {
 				BigDecimal presupuestoPagadoInv = Utils.String2BigDecimal(map.get("presupuestoPagadoInversion"), null);
 				BigDecimal saldoCuentas = Utils.String2BigDecimal(map.get("saldoCuentas"), null);
 				BigDecimal desembolsadoReal = Utils.String2BigDecimal(map.get("desembolsoReal"), null);
-				int ejecucionEstadoId = Utils.String2Int("ejecucionEstadoId",1); //
-				String  proyectoPrograma = map.get("proyetoPrograma");
-				Date fechaDecreto = Utils.dateFromString(map.get("fechaDecreto"));
-				Date fechaSuscripcion = Utils.dateFromString(map.get("fechaSuscripcion"));
-				Date fechaElegibilidadUe = Utils.dateFromString(map.get("fechaElegibilidad"));
-				Date fechaCierreOrigianlUe = Utils.dateFromString(map.get("fechaCierreOriginal"));
-				Date fechaCierreActualUe = Utils.dateFromString(map.get("fechaCierreActual"));
-				int mesesProrrogaUe = Utils.String2Int(map.get("mesesProrroga"), null);
-				BigDecimal montoAsignadoUe = Utils.String2BigDecimal(map.get("montoAisignadoUe"), null);
-				BigDecimal desembolsoAFechaUe = Utils.String2BigDecimal(map.get("desembolsoAFechaUe"), null);
-				BigDecimal montoPorDesembolsarUe = Utils.String2BigDecimal(map.get("montoPorDesembolsarUe"), null);
-				Date fechaVigencia = Utils.dateFromString(map.get("fechaVigencia"));
-				BigDecimal montoContratadoUsd = Utils.String2BigDecimal(map.get("montoContratadoUsd"), null);
-				BigDecimal montoContratadoQtz = Utils.String2BigDecimal(map.get("montoContratadoQtz"), null);
-				BigDecimal desembolsoAFechaUsd = Utils.String2BigDecimal(map.get("desembolsoAFechaUsd"), null);
-				BigDecimal montoPorDesembolsarUsd = Utils.String2BigDecimal(map.get("montoPorDesembolsarUsd"), null);
-				BigDecimal montoAsignadoUeUsd = Utils.String2BigDecimal(map.get("montoAsignadoUeUsd"), null);
-				BigDecimal montoAsignadoUeQtz = Utils.String2BigDecimal(map.get("montoAsignadoUeQtz"), null);
-				BigDecimal desembolsoAFechaUeUsd = Utils.String2BigDecimal(map.get("desembolsoAFechaUeUsd"), null);
-				BigDecimal montoPorDesembolsarUeUsd = Utils.String2BigDecimal(map.get("montoPorDesembolsarUeUsd"), null);
-				
-				Cooperante cooperanteUe = new Cooperante();
-				cooperanteUe.setId(map.get("cooperanteUeId")!=null ? Integer.parseInt(map.get("cooperanteUeId")): null);
 				
 				int objetoTipo = Utils.String2Int(map.get("objetoTipo"),1);
-				
 				AutorizacionTipo autorizacionTipo = null;
+				
 				if (tipoAutorizacionId != null){
 					autorizacionTipo = new AutorizacionTipo();
 					autorizacionTipo.setId(tipoAutorizacionId);
 				}
 				
-				EjecucionEstado ejecucionEstado = new EjecucionEstado();
-				ejecucionEstado.setId(ejecucionEstadoId);
+				Integer ejecucionEstadoId = Utils.String2Int(map.get("ejecucionEstadoId"), null);
+				EjecucionEstado ejecucionEstado = null;
+				if (ejecucionEstadoId != null){
+					ejecucionEstado = new EjecucionEstado();
+					ejecucionEstado.setId(ejecucionEstadoId);
+				}
 				
 				InteresTipo interesTipo = null;
 				if (tipoInteresId != null){
 					interesTipo = new InteresTipo();
 					interesTipo.setId(tipoInteresId);
 				}
-				
-				TipoMoneda tipoMoneda = new TipoMoneda();
-				tipoMoneda.setId(tipoMonedaId);
-				
-				UnidadEjecutora unidadEjecutora_ = new UnidadEjecutora();
-				unidadEjecutora_.setUnidadEjecutora(unidadEjecutoraPrestamo);
-				
 				//Fin prestamo
 				
 				type = new TypeToken<List<stdatadinamico>>() {

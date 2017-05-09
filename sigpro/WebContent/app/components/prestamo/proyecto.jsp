@@ -133,7 +133,7 @@
 		<div class="col-sm-12">
 			<form name="form">
 			<uib-tabset active="active">
-				<uib-tab index="0" active="true" heading="Datos generales">
+				<uib-tab index="0" heading="Datos generales">
 					<div class="form-group">
 						<label for="id" class="floating-label">ID {{ controller.proyecto.id }}</label>
 						<br/><br/>
@@ -342,7 +342,7 @@
 						</div>
 					</div>
 				</uib-tab>
-				<uib-tab index="1" heading="Datos del préstamo">
+				<uib-tab ng-click="controller.getPorcentajes();" index="1" heading="Datos del préstamo">
 					<div class="panel panel-default">
 						<div class="panel-heading label-form" style="text-align: center;">Información General del Préstamo</div>
 						<div class="panel-body">

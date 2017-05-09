@@ -39,10 +39,10 @@ public class SPrestamo extends HttpServlet {
 		String tipoAutorizacionNombre;
 		String numeroAutorizacion;
 		String fechaAutorizacion;
-		int aniosPlazo;
-		int aniosGracia;
+		Integer aniosPlazo;
+		Integer aniosGracia;
 		String fechaFinEjecucion;
-		int periodoEjecucion;
+		Integer periodoEjecucion;
 		Integer tipoInteresId;
 		String tipoInteresNombre;
 		BigDecimal porcentajeInteres; 
@@ -72,7 +72,7 @@ public class SPrestamo extends HttpServlet {
 		BigDecimal presupuestoPagadoInv;
 		BigDecimal saldoCuentas;
 		BigDecimal desembolsoReal;
-		int ejecucionEstadoId;
+		Integer ejecucionEstadoId;
 		String ejecucionEstadoNombre;
 		String  proyectoPrograma;
 		String fechaDecreto;
@@ -146,10 +146,10 @@ public class SPrestamo extends HttpServlet {
 				temp.tipoAutorizacionNombre = (prestamo.getAutorizacionTipo() == null ? null : prestamo.getAutorizacionTipo().getNombre());
 				temp.numeroAutorizacion = (prestamo.getNumeroAutorizacion() == null ? null: prestamo.getNumeroAutorizacion());
 				temp.fechaAutorizacion = Utils.formatDate(prestamo.getFechaAutorizacion());
-				temp.aniosPlazo = prestamo.getAniosPlazo();
-				temp.aniosGracia = prestamo.getAniosGracia();
+				temp.aniosPlazo = (prestamo.getAniosPlazo() == null ? null : prestamo.getAniosPlazo()); 
+				temp.aniosGracia = (prestamo.getAniosGracia() == null ? null : prestamo.getAniosGracia());  
 				temp.fechaFinEjecucion = Utils.formatDate(prestamo.getFechaFinEjecucion());
-				temp.periodoEjecucion = prestamo.getPeridoEjecucion();
+				temp.periodoEjecucion = (prestamo.getPeridoEjecucion() == null ? null :prestamo.getPeridoEjecucion()); 
 				temp.tipoInteresId = (prestamo.getInteresTipo() == null ? null : prestamo.getInteresTipo().getId());
 				temp.tipoInteresNombre = (prestamo.getInteresTipo() == null ? null : prestamo.getInteresTipo().getNombre());
 				temp.porcentajeInteres = prestamo.getPorcentajeInteres(); 
@@ -179,7 +179,7 @@ public class SPrestamo extends HttpServlet {
 				temp.presupuestoPagadoInv = prestamo.getPresupuestoPagadoInversion();
 				temp.saldoCuentas = prestamo.getSaldoCuentas();
 				temp.desembolsoReal = prestamo.getSaldoCuentas();
-				temp.ejecucionEstadoId = prestamo.getEjecucionEstado().getId();
+				temp.ejecucionEstadoId = (prestamo.getEjecucionEstado().getId() == null ? null :prestamo.getEjecucionEstado().getId()); 
 				temp.ejecucionEstadoNombre = prestamo.getEjecucionEstado().getNombre();
 				temp.proyectoPrograma = prestamo.getProyectoPrograma();
 				temp.fechaDecreto = Utils.formatDate(prestamo.getFechaDecreto());
