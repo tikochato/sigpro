@@ -1,7 +1,7 @@
 var app = angular.module('hitotipoController', []);
 
-app.controller('hitotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
+app.controller('hitotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 		var mi=this;
 		
 		$window.document.title = $utilidades.sistema_nombre+' - Tipo Hito';
@@ -144,29 +144,29 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 	
 		mi.borrar = function(ev) {
 			if(mi.hitotipo!=null){
-				var confirm = $mdDialog.confirm()
-			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar el Tipo Hito "'+mi.hitotipo.nombre+'"?')
-			          .ariaLabel('Confirmación de borrado')
-			          .targetEvent(ev)
-			          .ok('Borrar')
-			          .cancel('Cancelar');
-	
-			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SHitoTipo', {
-						accion: 'borrarHitoTipo',
-						id: mi.hitotipo.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Tipo Hito borrado con éxito');
-							mi.cargarTabla();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar el Tipo Hito');
-					});
-			    }, function() {
-			    
-			    });
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el Tipo Hito "'+mi.hitotipo.nombre+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						$http.post('/SHitoTipo', {
+							accion: 'borrarHitoTipo',
+							id: mi.hitotipo.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Tipo Hito borrado con éxito');
+								mi.hitotipo = null;
+								mi.cargarTabla();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar el Tipo Hito');
+						});
+					}
+				}, function(){
+					
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo Hito que desea borrar');

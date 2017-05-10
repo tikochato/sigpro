@@ -6,11 +6,11 @@ var moduloSubproductoPropiedad = angular.module('moduloSubproductoPropiedad', [ 
 moduloSubproductoPropiedad.controller('controlSubproductoPropiedad', [ '$scope',
 		'$routeParams', '$route', '$window', '$location', '$mdDialog',
 		'$uibModal', '$http', '$interval', 'i18nService', 'Utilidades',
-		'$timeout', '$log', controlSubproductoPropiedad ]);
+		'$timeout', '$log',  'dialogoConfirmacion', controlSubproductoPropiedad ]);
 
 function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
-		$timeout, $log) {
+		$timeout, $log, $dialogoConfirmacion) {
 	i18nService.setCurrentLang('es');
 	var mi = this;
 
@@ -215,41 +215,36 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 
 	mi.borrar = function(ev) {
 		if (mi.seleccionada) {
-			var confirm = $mdDialog.confirm().title('Confirmación de borrado')
-					.textContent(
-							'¿Desea borrar "' + mi.entidadSeleccionada.nombre
-									+ '"?')
-					.ariaLabel('Confirmación de borrado').targetEvent(ev).ok(
-							'Borrar').cancel('Cancelar');
-
-			$mdDialog.show(confirm).then(mi.borrarConfirmado,
-					mi.borrarNoConfirmado);
-
+			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+					, "Confirmación de Borrado"
+					, '¿Desea borrar "' + mi.entidadSeleccionada.nombre + '"?'
+					, "Borrar"
+					, "Cancelar")
+			.result.then(function(data) {
+				if(data){
+					var datos = {
+							accion : 'borrar',
+							codigo : mi.entidadSeleccionada.id
+						};
+						$http.post('/SSubproductoPropiedad', datos).success(
+								function(response) {
+									if (response.success) {
+										$utilidades.mensaje('success',
+												'Propiedad de subproducto borrado con éxito');
+										mi.seleccionada = null;
+										mi.cargarTabla(1);
+									} else
+										$utilidades.mensaje('danger',
+												'Error al borrar la propiedad de subproducto');
+								});
+				}
+			}, function(){
+				
+			});
 		} else {
 			$utilidades.mensaje('warning',
 					'Debe seleccionar la prpiead de subproducto que desee borrar');
 		}
-	};
-
-	mi.borrarConfirmado = function() {
-		var datos = {
-			accion : 'borrar',
-			codigo : mi.entidadSeleccionada.id
-		};
-		$http.post('/SSubproductoPropiedad', datos).success(
-				function(response) {
-					if (response.success) {
-						$utilidades.mensaje('success',
-								'Propiedad de subproducto borrado con éxito');
-						mi.cargarTabla(1);
-					} else
-						$utilidades.mensaje('danger',
-								'Error al borrar la propiedad de subproducto');
-				});
-	};
-
-	mi.borrarNoConfirmado = function() {
-
 	};
 
 	mi.guardar = function() {
