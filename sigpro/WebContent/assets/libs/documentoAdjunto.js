@@ -85,7 +85,7 @@ function ModalDialogController($uibModalInstance, $scope, $http, $interval, i18n
 			var formatData = new FormData();
 			formatData.append("file",$scope.documentos);
 			formatData.append("accion",'agregarDocumento');
-			formatData.append("descripcion", mi.descripcion | "");
+			formatData.append("descripcion", mi.descripcion | " ");
 			formatData.append("idObjeto", tipoObjeto);
 			formatData.append("idTipoObjeto", elementoId);
 			formatData.append("esNuevo",true);
@@ -113,7 +113,7 @@ function ModalDialogController($uibModalInstance, $scope, $http, $interval, i18n
 							mi.extension = null;
 							mi.nombre='';
 							mi.descripcion='';
-							document.getElementById("pickfile").value = "";
+							//document.getElementById("pickfile").value = "";
 							$utilidades.mensaje('success','Agregado exitosamente');
 						}else{
 							if(response.data.existe_archivo)
@@ -125,6 +125,8 @@ function ModalDialogController($uibModalInstance, $scope, $http, $interval, i18n
 		}else{
 			$utilidades.mensaje('danger','Debe seleccionar un archivo');
 		}
+		
+		$uibModalInstance.close(true);
 	};
 	
 	String.prototype.replaceAll = function(search, replacement) {

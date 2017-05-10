@@ -303,10 +303,11 @@
 						</table>
         				</div>
     					<div style="width: 5%; float: right" align="right">
-	        				<label class="btn btn-default" ng-model="controller.adjuntarDocumento" 
-	        					uib-tooltip="Adjuntar documento" tooltip-placement="bottom" ng-click="controller.adjuntarDocumentos();">
-								<i class="glyphicon glyphicon glyphicon-plus"> </i>
-							</label>
+    						<div class="btn-group">
+								<label class="btn btn-default" ng-model="controller.adjuntarDocumento"
+									ng-click="controller.adjuntarDocumentos();" uib-tooltip="Adjuntar documento" tooltip-placement="bottom">
+								<span class="glyphicon glyphicon-plus"></span></label>
+							</div>
         				</div>
 					</div>
 				</div>
