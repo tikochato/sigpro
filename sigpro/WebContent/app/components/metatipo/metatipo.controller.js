@@ -1,7 +1,7 @@
 var app = angular.module('metatipoController', []);
 
-app.controller('metatipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
-		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
+app.controller('metatipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
+		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 			var mi=this;
 			
 			$window.document.title = $utilidades.sistema_nombre+' - Tipos de Meta';
@@ -141,29 +141,29 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 
 			mi.borrar = function(ev) {
 				if(mi.tipo!=null && mi.tipo.id!=null){
-					var confirm = $mdDialog.confirm()
-				          .title('Confirmación de borrado')
-				          .textContent('¿Desea borrar el tipo de meta "'+mi.tipo.nombre+'"?')
-				          .ariaLabel('Confirmación de borrado')
-				          .targetEvent(ev)
-				          .ok('Borrar')
-				          .cancel('Cancelar');
-	
-				    $mdDialog.show(confirm).then(function() {
-				    	$http.post('/SMetaTipo', {
-							accion: 'borrarMetaTipo',
-							id: mi.tipo.id
-						}).success(function(response){
-							if(response.success){
-								$utilidades.mensaje('success','Tipo de meta borrado con éxito');
-								mi.cargarTabla();
-							}
-							else
-								$utilidades.mensaje('danger','Error al borrar el tipo de meta');
-						});
-				    }, function() {
-				    
-				    });
+					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+							, "Confirmación de Borrado"
+							, '¿Desea borrar el tipo de meta "'+mi.tipo.nombre+'"?'
+							, "Borrar"
+							, "Cancelar")
+					.result.then(function(data) {
+						if(data){
+							$http.post('/SMetaTipo', {
+								accion: 'borrarMetaTipo',
+								id: mi.tipo.id
+							}).success(function(response){
+								if(response.success){
+									$utilidades.mensaje('success','Tipo de meta borrado con éxito');
+									mi.tipo = null;
+									mi.cargarTabla();
+								}
+								else
+									$utilidades.mensaje('danger','Error al borrar el tipo de meta');
+							});
+						}
+					}, function(){
+						
+					});	
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar el tipo de meta que desea borrar');
@@ -213,7 +213,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 				if(evt.keyCode==13){
 					mi.cargarTabla(mi.paginaActual);
 					mi.gridApi.selection.clearSelectedRows();
-					mi.tipo.id = null;
+					mi.tipo = null;
 				}
 			}
 			

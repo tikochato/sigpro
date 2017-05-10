@@ -1,7 +1,7 @@
 var app = angular.module('programapropiedadController', []);
 
-app.controller('programapropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
+app.controller('programapropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 		var mi=this;
 		
 		$window.document.title = $utilidades.sistema_nombre+' - Propiedad Programa';
@@ -140,29 +140,29 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 	
 		mi.borrar = function(ev) {
 			if(mi.programapropiedad!=null && mi.programapropiedad.id!=null){
-				var confirm = $mdDialog.confirm()
-			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar la Propiedad de Programa "'+mi.programapropiedad.nombre+'"?')
-			          .ariaLabel('Confirmación de borrado')
-			          .targetEvent(ev)
-			          .ok('Borrar')
-			          .cancel('Cancelar');
-	
-			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SProgramaPropiedad', {
-						accion: 'borrarProgramaPropiedad',
-						id: mi.programapropiedad.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Propiedad de Programa borrado con éxito');
-							mi.obtenerTotalProgramaPropiedades();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar la Propiedad de Programa');
-					});
-			    }, function() {
-			    
-			    });
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar la Propiedad de Programa "'+mi.programapropiedad.nombre+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						$http.post('/SProgramaPropiedad', {
+							accion: 'borrarProgramaPropiedad',
+							id: mi.programapropiedad.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Propiedad de Programa borrado con éxito');
+								mi.programapropiedad = null;
+								mi.obtenerTotalProgramaPropiedades();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar la Propiedad de Programa');
+						});
+					}
+				}, function(){
+					
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar la Propiedad de Programa que desea borrar');
@@ -226,7 +226,7 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 			if(evt.keyCode==13){
 				mi.obtenerTotalProgramaPropiedades();
 				mi.gridApi.selection.clearSelectedRows();
-				mi.programapropiedad.id = null;
+				mi.programapropiedad = null;
 			}
 		}
 		

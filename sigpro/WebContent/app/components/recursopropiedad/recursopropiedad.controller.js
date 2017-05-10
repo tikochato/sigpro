@@ -1,7 +1,7 @@
 var app = angular.module('recursopropiedadController', []);
 
-app.controller('recursopropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
-		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
+app.controller('recursopropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
+		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 			var mi=this;
 			
 			$window.document.title = $utilidades.sistema_nombre+' - Recurso Propiedad';
@@ -153,29 +153,29 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 
 			mi.borrar = function(ev) {
 				if(mi.recursopropiedad!=null && mi.recursopropiedad.id!=null){
-					var confirm = $mdDialog.confirm()
-				          .title('Confirmación de borrado')
-				          .textContent('¿Desea borrar la Prppiedad Recurso "'+mi.recursopropiedad.nombre+'"?')
-				          .ariaLabel('Confirmación de borrado')
-				          .targetEvent(ev)
-				          .ok('Borrar')
-				          .cancel('Cancelar');
-	
-				    $mdDialog.show(confirm).then(function() {
-				    	$http.post('/SRecursoPropiedad', {
-							accion: 'borrarRecursoPropiedad',
-							id: mi.recursopropiedad.id
-						}).success(function(response){
-							if(response.success){
-								$utilidades.mensaje('success','Propiedad Recurso borrado con éxito');
-								mi.cargarTabla();
-							}
-							else
-								$utilidades.mensaje('danger','Error al borrar la Propiedad Recurso');
-						});
-				    }, function() {
-				    
-				    });
+					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+							, "Confirmación de Borrado"
+							, '¿Desea borrar la Prppiedad Recurso "'+mi.recursopropiedad.nombre+'"?'
+							, "Borrar"
+							, "Cancelar")
+					.result.then(function(data) {
+						if(data){
+							$http.post('/SRecursoPropiedad', {
+								accion: 'borrarRecursoPropiedad',
+								id: mi.recursopropiedad.id
+							}).success(function(response){
+								if(response.success){
+									$utilidades.mensaje('success','Propiedad Recurso borrado con éxito');
+									mi.recursopropiedad = null;
+									mi.cargarTabla();
+								}
+								else
+									$utilidades.mensaje('danger','Error al borrar la Propiedad Recurso');
+							});
+						}
+					}, function(){
+						
+					});
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar la Propiedad Recurso que desea borrar');
@@ -224,7 +224,7 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 				if(evt.keyCode==13){
 					mi.obtenerTotalRecursoPropiedades();
 					mi.gridApi.selection.clearSelectedRows();
-					mi.recursopropiedad.id = null;
+					mi.recursopropiedad = null;
 				}
 			}
 			mi.obtenerTotalRecursoPropiedades=function(){

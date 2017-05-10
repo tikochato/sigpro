@@ -1,7 +1,7 @@
 var app = angular.module('metaController', []);
 
-app.controller('metaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
-		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
+app.controller('metaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
+		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 			var mi=this;
 			
 			$window.document.title = $utilidades.sistema_nombre+' - Metas';
@@ -176,29 +176,29 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 
 			mi.borrar = function(ev) {
 				if(mi.meta!=null){
-					var confirm = $mdDialog.confirm()
-				          .title('Confirmación de borrado')
-				          .textContent('¿Desea borrar la Meta "'+mi.meta.nombre+'"?')
-				          .ariaLabel('Confirmación de borrado')
-				          .targetEvent(ev)
-				          .ok('Borrar')
-				          .cancel('Cancelar');
-	
-				    $mdDialog.show(confirm).then(function() {
-				    	$http.post('/SMeta', {
-							accion: 'borrarMeta',
-							id: mi.meta.id
-						}).success(function(response){
-							if(response.success){
-								$utilidades.mensaje('success','Meta borrada con éxito');
-								mi.obtenerTotalMetas();
-							}
-							else
-								$utilidades.mensaje('danger','Error al borrar la Meta');
-						});
-				    }, function() {
-				    
-				    });
+					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+							, "Confirmación de Borrado"
+							, '¿Desea borrar la Meta "'+mi.meta.nombre+'"?'
+							, "Borrar"
+							, "Cancelar")
+					.result.then(function(data) {
+						if(data){
+							$http.post('/SMeta', {
+								accion: 'borrarMeta',
+								id: mi.meta.id
+							}).success(function(response){
+								if(response.success){
+									$utilidades.mensaje('success','Meta borrada con éxito');
+									mi.meta = null;
+									mi.obtenerTotalMetas();
+								}
+								else
+									$utilidades.mensaje('danger','Error al borrar la Meta');
+							});
+						}
+					}, function(){
+						
+					});
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar la Meta que desea borrar');
@@ -247,7 +247,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				if(evt.keyCode==13){
 					mi.obtenerTotalMetas();
 					mi.gridApi.selection.clearSelectedRows();
-					mi.meta.id = null;
+					mi.meta = null;
 				}
 			}
 			

@@ -1,7 +1,7 @@
-var app = angular.module('componenteController', ['ui.bootstrap.contextMenu']);
+var app = angular.module('componenteController', []);
 
-app.controller('componenteController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
+app.controller('componenteController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
 		var mi=this;
 
 		$window.document.title = $utilidades.sistema_nombre+' - Componentes';
@@ -186,30 +186,29 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 
 		mi.borrar = function(ev) {
 			if(mi.componente!=null && mi.componente.id!=null){
-				var confirm = $mdDialog.confirm()
-			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar el Componente "'+mi.componente.nombre+'"?')
-			          .ariaLabel('Confirmación de borrado')
-			          .targetEvent(ev)
-			          .ok('Borrar')
-			          .cancel('Cancelar');
-
-			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SComponente', {
-						accion: 'borrarComponente',
-						id: mi.componente.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Cooperante borrado con éxito');
-							mi.componente = null;
-							mi.cargarTabla();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar el Cooperante');
-					});
-			    }, function() {
-
-			    });
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el Componente "'+mi.componente.nombre+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						$http.post('/SComponente', {
+							accion: 'borrarComponente',
+							id: mi.componente.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Cooperante borrado con éxito');
+								mi.componente = null;
+								mi.cargarTabla();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar el Cooperante');
+						});
+					}
+				}, function(){
+					
+				});	
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Componente que desea borrar');

@@ -1,7 +1,7 @@
 var app = angular.module('proyectoController', [ 'ngTouch','smart-table',  'ui.bootstrap.contextMenu']);
 
-app.controller('proyectoController',['$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$filter',
-	function($scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$filter) {
+app.controller('proyectoController',['$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$filter', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$filter, $dialogoConfirmacion) {
 
 	var mi = this;
 	i18nService.setCurrentLang('es');
@@ -316,32 +316,30 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.borrar = function(ev) {
 		if(mi.proyecto !=null && mi.proyecto.id!=null){
-
-			var confirm = $mdDialog.confirm()
-	        .title('Confirmación de borrado')
-	        .textContent('¿Desea borrar el Préstamo "'+mi.proyecto.nombre+'"?')
-	        .ariaLabel('Confirmación de borrado')
-	        .targetEvent(ev)
-	        .ok('Borrar')
-	        .cancel('Cancelar');
-
-			$mdDialog.show(confirm).then(function() {
-				$http.post('/SProyecto', {
-					accion: 'borrarProyecto',
-					id: mi.proyecto.id,
-					t:moment().unix()
-				}).success(function(response){
-					if(response.success){
-						$utilidades.mensaje('success','Préstamo borrado con éxito');
-						mi.proyecto = null;
-						mi.obtenerTotalProyectos();
-					}
-					else
-						$utilidades.mensaje('danger','Error al borrar el Préstamo');
-				});
-			}, function() {
-
-		    });
+			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+					, "Confirmación de Borrado"
+					, '¿Desea borrar el Préstamo "'+mi.proyecto.nombre+'"?'
+					, "Borrar"
+					, "Cancelar")
+			.result.then(function(data) {
+				if(data){
+					$http.post('/SProyecto', {
+						accion: 'borrarProyecto',
+						id: mi.proyecto.id,
+						t:moment().unix()
+					}).success(function(response){
+						if(response.success){
+							$utilidades.mensaje('success','Préstamo borrado con éxito');
+							mi.proyecto = null;
+							mi.obtenerTotalProyectos();
+						}
+						else
+							$utilidades.mensaje('danger','Error al borrar el Préstamo');
+					});
+				}
+			}, function(){
+				
+			});
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea borrar');
@@ -520,7 +518,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		if(evt.keyCode==13){
 			mi.obtenerTotalProyectos();
 			mi.gridApi.selection.clearSelectedRows();
-			mi.proyecto.id = null;
+			mi.proyecto = null;
 		}
 	};
 
@@ -772,9 +770,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.mostrarcargando=false;
 			if (resultado.data.success){
 				mi.obtenerTotalProyectos();
-				$utilidades.mensaje('success','Proyecto creado con éxito');
+				$utilidades.mensaje('success','Préstamo creado con éxito');
 			}else{
-				$utilidades.mensaje('danger','Error al crear el Proyecto');
+				$utilidades.mensaje('danger','Error al crear el Préstamo');
 			}
 			
 		});
