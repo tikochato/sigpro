@@ -27,8 +27,9 @@ public class Cooperante implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = -8025378261290656091L;
 	private Integer id;
-	private String codigo;
+	private int codigo;
 	private String nombre;
+	private String siglas;
 	private String descripcion;
 	private String usuarioCreo;
 	private String usuarioActualizo;
@@ -40,7 +41,7 @@ public class Cooperante implements java.io.Serializable {
 	public Cooperante() {
 	}
 
-	public Cooperante(String codigo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+	public Cooperante(int codigo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
@@ -48,7 +49,7 @@ public class Cooperante implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public Cooperante(String codigo, String nombre, String descripcion, String usuarioCreo, String usuarioActualizo,
+	public Cooperante(int codigo, String nombre, String siglas, String descripcion, String usuarioCreo, String usuarioActualizo,
 			Date fechaCreacion, Date fechaActualizacion, int estado, Set<Proyecto> proyectos) {
 		this.codigo = codigo;
 		this.nombre = nombre;
@@ -59,6 +60,7 @@ public class Cooperante implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
 		this.proyectos = proyectos;
+		this.siglas = siglas;
 	}
 
 	@Id
@@ -73,13 +75,22 @@ public class Cooperante implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "codigo", nullable = false, length = 30)
-	public String getCodigo() {
+	@Column(name = "codigo", nullable = false)
+	public int getCodigo() {
 		return this.codigo;
 	}
 
-	public void setCodigo(String codigo) {
+	public void setCodigo(int codigo) {
 		this.codigo = codigo;
+	}
+	
+	@Column(name = "siglas", nullable = false)
+	public String getSiglas() {
+		return this.siglas;
+	}
+
+	public void setSiglas(String siglas) {
+		this.siglas = siglas;
 	}
 
 	@Column(name = "nombre", nullable = false, length = 1000)
