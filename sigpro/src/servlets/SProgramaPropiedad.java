@@ -166,6 +166,7 @@ public class SProgramaPropiedad extends HttpServlet {
 		else if(accion.equals("getProgramaPropiedadPorTipo")){
 			int idPrograma = map.get("idPrograma")!=null  ? Integer.parseInt(map.get("idPrograma")) : 0;
 			int idProgramaTipo = map.get("idProgramaTipo")!=null  ? Integer.parseInt(map.get("idProgramaTipo")) : 0;
+			
 			List<ProgramaPropiedad> programaPropiedades = ProgramaPropiedadDAO.getProgramaPropiedadesPorTipoPrograma(idProgramaTipo);
 			
 			List<HashMap<String,Object>> campos = new ArrayList<>();
