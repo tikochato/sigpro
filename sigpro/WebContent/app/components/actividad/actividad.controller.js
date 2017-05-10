@@ -307,6 +307,12 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				$location.path('/riesgo/' + actividadid + '/5' );
 			}
 		};
+		
+		mi.irAActividades=function(actividadid){
+			if(mi.actividad!=null){
+				$location.path('/actividad/'+ actividadid +'/5' );
+			}
+		};
 
 		mi.abrirPopupFecha = function(index) {
 			if(index<1000){
