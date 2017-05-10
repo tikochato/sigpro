@@ -35,7 +35,7 @@ public class SCooperante extends HttpServlet {
        
 	class stcooperante{
 		Integer id;
-		String codigo;
+		Integer codigo;
 		String nombre;
 		String descripcion;
 		String usuarioCreo;
@@ -133,12 +133,13 @@ public class SCooperante extends HttpServlet {
 			boolean esnuevo = map.get("esnuevo").equals("true");
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0 || esnuevo){
-				String codigo = map.get("codigo");
+				Integer codigo = Utils.String2Int(map.get("codigo"));
 				String nombre = map.get("nombre");
+				String siglas = map.get("siglas");
 				String descripcion = map.get("descripcion");
 				Cooperante cooperante;
 				if(esnuevo){
-					cooperante = new Cooperante(codigo, nombre, descripcion, 
+					cooperante = new Cooperante(codigo, nombre,siglas, descripcion, 
 							sesionweb.getAttribute("usuario").toString(), null, new DateTime().toDate(), null, 1, null);
 				}
 				else{

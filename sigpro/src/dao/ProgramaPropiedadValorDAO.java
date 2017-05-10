@@ -24,7 +24,7 @@ public class ProgramaPropiedadValorDAO {
 			CriteriaQuery<ProgramaPropiedadValor> criteria = builder.createQuery(ProgramaPropiedadValor.class);
 			Root<ProgramaPropiedadValor> root = criteria.from(ProgramaPropiedadValor.class);
 			criteria.select(root);
-			criteria.where(builder.equal(root.get("id"), new ProgramaPropiedadValorId(idPrograma, idPropiedad)),builder.equal(root.get("estado"), 1));
+			criteria.where(builder.equal(root.get("id"), new ProgramaPropiedadValorId(idPropiedad,idPrograma)),builder.equal(root.get("estado"), 1));
 			ret = session.createQuery(criteria).getSingleResult();
 		} catch (Throwable e) {
 			CLogger.write("1", ProgramaPropiedadValorDAO.class, e);
@@ -44,6 +44,7 @@ public class ProgramaPropiedadValorDAO {
 			ret = true;
 		}
 		catch(Throwable e){
+			e.printStackTrace();
 			CLogger.write("2", ProgramaPropiedadValorDAO.class, e);
 		}
 		finally{

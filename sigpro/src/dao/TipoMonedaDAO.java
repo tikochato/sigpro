@@ -48,5 +48,23 @@ public class TipoMonedaDAO {
 		}
 		return ret;
 	}
+	
+	public static TipoMoneda getTipoMonedaPorSimbolo(String simbolo){
+		TipoMoneda ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT a FROM TipoMoneda a where a.simbolo = :simb ";
+			Query<TipoMoneda> criteria = session.createQuery(query,TipoMoneda.class);
+			criteria.setParameter("simb", simbolo);
+			ret = criteria.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("3", TipoMonedaDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 
 }

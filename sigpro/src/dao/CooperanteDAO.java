@@ -172,4 +172,23 @@ public class CooperanteDAO {
 		return ret;
 	}
 	
+	public static Cooperante getCooperantePorCodigo(int codigo){
+		Cooperante ret=null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT c FROM Cooperante c WHERE c.estado=1 and c.codigo= :codigo";
+			
+			Query<Cooperante> conteo = session.createQuery(query,Cooperante.class);
+			conteo.setParameter("codigo", codigo);
+			ret = conteo.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("7", CooperanteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 }
