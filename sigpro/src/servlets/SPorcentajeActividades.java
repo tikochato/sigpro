@@ -115,7 +115,58 @@ public class SPorcentajeActividades extends HttpServlet {
 			}
 			
 			items = String.join("","{\"items\" : [", items,"]}");
+		}else if(accion.equals("getKanbanComponente")){
+			items = "";
+			Integer componenteId = Utils.String2Int(map.get("componente_id"),0);
+			List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componenteId,
+					null, null, null, null, null, usuario);
+			for (Producto producto : productos){
+				List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
+						null, null, null, null, null, usuario);
+				for (Subproducto subproducto : subproductos){
+					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
+							null, null, null, null, null, usuario);
+					for (Actividad actividad : actividades ){
+						items = String.join(items.length()>0 ? "," : "", items,
+								construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
+					}
+				}
+				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
+						null, null, null, null, null, usuario);
+				for (Actividad actividad : actividades ){
+					items = String.join(items.length()>0 ? "," : "", items,
+							construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
+				}
 
+			}
+			
+			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componenteId, OBJETO_ID_COMPONENTE,
+					null, null, null, null, null, usuario);
+			for (Actividad actividad : actividades ){
+				items = String.join(items.length()>0 ? "," : "", items,
+						construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(),actividad.getFechaFin()));
+			}
+			
+			items = String.join("","{\"items\" : [", items,"]}");
+		}else if(accion.equals("getKanbanProducto")){
+			Integer productoId = Utils.String2Int(map.get("producto_id"),0);
+			List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, productoId,
+					null, null, null, null, null, usuario);
+			for (Subproducto subproducto : subproductos){
+				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
+						null, null, null, null, null, usuario);
+				for (Actividad actividad : actividades ){
+					items = String.join(items.length()>0 ? "," : "", items,
+							construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
+				}
+			}
+			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, productoId, OBJETO_ID_PRODUCTO,
+					null, null, null, null, null, usuario);
+			for (Actividad actividad : actividades ){
+				items = String.join(items.length()>0 ? "," : "", items,
+						construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
+			}
+			items = String.join("","{\"items\" : [", items,"]}");
 		}
 
 		response.setHeader("Content-Encoding", "gzip");
