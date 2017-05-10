@@ -365,8 +365,15 @@
 										<label class="floating-label" >* Número de prestamo</label>
 									</div>
 								</div>
+								<div class="col-sm-3" >
+								<label class="btn btn-default" ng-click="controller.cargaSigade()" uib-tooltip="Cargar datos de SIGADE" tooltip-placement="bottom">
+								<span class="glyphicon glyphicon-search"></span></label>
+								</div>
 								
-								<div class="col-sm-6">
+								
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
 									<div class="form-group">
 									<input type="text" class="inputText"   ng-model="controller.prestamo.proyectoPrograma" ng-required="true"
 									onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.proyectoPrograma"  >
