@@ -1,7 +1,7 @@
 var app = angular.module('desembolsotipoController', []);
 
-app.controller('desembolsotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
-		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
+app.controller('desembolsotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion',
+		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 			var mi=this;
 			
 			$window.document.title = $utilidades.sistema_nombre+' - Tipo Desembolso';
@@ -169,29 +169,29 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 			
 			mi.borrar = function(ev) {
 				if(mi.desembolsotipo!=null && mi.desembolsotipo.id!=null){
-					var confirm = $mdDialog.confirm()
-				          .title('Confirmación de borrado')
-				          .textContent('¿Desea borrar el Tipo Desembolso "'+mi.desembolsotipo.nombre+'"?')
-				          .ariaLabel('Confirmación de borrado')
-				          .targetEvent(ev)
-				          .ok('Borrar')
-				          .cancel('Cancelar');
-	
-				    $mdDialog.show(confirm).then(function() {
-				    	$http.post('/SDesembolsoTipo', {
-							accion: 'borrarDesembolsoTipo',
-							id: mi.desembolsotipo.id
-						}).success(function(response){
-							if(response.success){
-								$utilidades.mensaje('success','Tipo Desembolos fue borrado con éxito');
-								mi.cargarTabla();
-							}
-							else
-								$utilidades.mensaje('danger','Error al borrar el Tipo Desembolso');
-						});
-				    }, function() {
-				    
-				    });
+					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+							, "Confirmación de Borrado"
+							, '¿Desea borrar el Tipo Desembolso "'+mi.desembolsotipo.nombre+'"?'
+							, "Borrar"
+							, "Cancelar")
+					.result.then(function(data) {
+						if(data){
+							$http.post('/SDesembolsoTipo', {
+								accion: 'borrarDesembolsoTipo',
+								id: mi.desembolsotipo.id
+							}).success(function(response){
+								if(response.success){
+									$utilidades.mensaje('success','Tipo Desembolos fue borrado con éxito');
+									mi.desembolsotipo = null;
+									mi.cargarTabla();
+								}
+								else
+									$utilidades.mensaje('danger','Error al borrar el Tipo Desembolso');
+							});
+						}
+					}, function(){
+						
+					});	
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar el Tipo Desembolso que desea borrar');
@@ -209,7 +209,7 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 				if(evt.keyCode==13){
 					mi.obtenerTotalDesembolsoTipos();
 					mi.gridApi.selection.clearSelectedRows();
-					mi.desembolsotipo.id = null;
+					mi.desembolsotipo = null;
 				}
 			};
 			

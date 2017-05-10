@@ -1,7 +1,7 @@
 var app = angular.module('riesgopropiedadController', []);
 
-app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
+app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 		var mi=this;
 
 		$window.document.title = $utilidades.sistema_nombre+' - Propiedad Riesgo';
@@ -138,29 +138,29 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 
 		mi.borrar = function(ev) {
 			if(mi.riesgopropiedad!=null && mi.riesgopropiedad.id!=null){
-				var confirm = $mdDialog.confirm()
-			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar la Propiedad Riesgo "'+mi.riesgopropiedad.nombre+'"?')
-			          .ariaLabel('Confirmación de borrado')
-			          .targetEvent(ev)
-			          .ok('Borrar')
-			          .cancel('Cancelar');
-
-			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SRiesgoPropiedad', {
-						accion: 'borrarRiesgoPropiedad',
-						id: mi.riesgopropiedad.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Propiedad Riesgo borrado con éxito');
-							mi.cargarTabla();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar la Propiedad Riesgo');
-					});
-			    }, function() {
-
-			    });
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar la Propiedad Riesgo "'+mi.riesgopropiedad.nombre+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						$http.post('/SRiesgoPropiedad', {
+							accion: 'borrarRiesgoPropiedad',
+							id: mi.riesgopropiedad.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Propiedad Riesgo borrado con éxito');
+								mi.riesgopropiedad = null;
+								mi.cargarTabla();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar la Propiedad Riesgo');
+						});
+					}
+				}, function(){
+					
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar la Propiedad Riesgo que desea borrar');

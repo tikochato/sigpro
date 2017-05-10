@@ -1,7 +1,7 @@
 var app = angular.module('componentetipoController', [ 'ngTouch']);
 
-app.controller('componentetipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal) {
+app.controller('componentetipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal, $dialogoConfirmacion) {
 		var mi=this;
 		
 		$window.document.title = $utilidades.sistema_nombre+' - Tipo Componente';
@@ -163,30 +163,29 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 		
 		mi.borrar = function(ev) {
 			if(mi.componentetipo!=null && mi.componentetipo.id!=null){
-				var confirm = $mdDialog.confirm()
-			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar el tipo de componente "'+mi.componentetipo.nombre+'"?')
-			          .ariaLabel('Confirmación de borrado')
-			          .targetEvent(ev)
-			          .ok('Borrar')
-			          .cancel('Cancelar');
-
-			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SComponenteTipo', {
-						accion: 'borrarComponenteTipo',
-						id: mi.componentetipo.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Tipo Componente borrado con éxito');
-							mi.componentetipo = null;
-							mi.cargarTabla();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar el Tipo Componente');
-					});
-			    }, function() {
-			    
-			    });
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el tipo de componente "'+mi.componentetipo.nombre+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						$http.post('/SComponenteTipo', {
+							accion: 'borrarComponenteTipo',
+							id: mi.componentetipo.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Tipo Componente borrado con éxito');
+								mi.componentetipo = null;
+								mi.cargarTabla();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar el Tipo Componente');
+						});
+					}
+				}, function(){
+					
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo Componente que desea borrar');
@@ -230,7 +229,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 			if(evt.keyCode==13){
 				mi.obtenerTotalComponenteTipos();
 				mi.gridApi.selection.clearSelectedRows();
-				mi.componentetipo.id = null;
+				mi.componentetipo = null;
 			}
 		}
 

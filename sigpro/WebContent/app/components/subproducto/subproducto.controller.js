@@ -3,12 +3,12 @@ var moduloSubproducto = angular.module('moduloSubproducto', [ 'ngTouch',
 
 moduloSubproducto.controller('controlSubproducto', [ '$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',
-		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q',
+		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'dialogoConfirmacion', 
 		controlSubproducto ]);
 
 function controlSubproducto($scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
-		$timeout, $log, $q) {
+		$timeout, $log, $q, $dialogoConfirmacion) {
 	var mi = this;  
 	i18nService.setCurrentLang('es');
 	$window.document.title = $utilidades.sistema_nombre+' - Subroducto';
@@ -219,41 +219,36 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 
 	mi.borrar = function(ev) {
 		if (mi.subproducto!=null && mi.subproducto.id!=null) {
-			var confirm = $mdDialog.confirm().title('Confirmación de borrado')
-					.textContent(
-							'¿Desea borrar "' + mi.subproducto.nombre
-									+ '"?')
-					.ariaLabel('Confirmación de borrado').targetEvent(ev).ok(
-							'Borrar').cancel('Cancelar');
-
-			$mdDialog.show(confirm).then(mi.borrarConfirmado,
-					mi.borrarNoConfirmado);
-
+			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+					, "Confirmación de Borrado"
+					, '¿Desea borrar "' + mi.subproducto.nombre + '"?'
+					, "Borrar"
+					, "Cancelar")
+			.result.then(function(data) {
+				if(data){
+					var datos = {
+							accion : 'borrar',
+							codigo : mi.subproducto.id
+						};
+						$http.post('/SSubproducto', datos).success(
+								function(response) {
+									if (response.success) {
+										$utilidades.mensaje('success',
+												'Subroducto borrado con éxito');
+										mi.subproducto = null;
+										mi.cargarTabla(1);
+									} else
+										$utilidades.mensaje('danger',
+												'Error al borrar el Subproducto');
+								});
+				}
+			}, function(){
+				
+			});
 		} else {
 			$utilidades.mensaje('warning',
 					'Debe seleccionar un Subproducto que desee borrar');
 		}
-	};
-
-	mi.borrarConfirmado = function() {
-		var datos = {
-			accion : 'borrar',
-			codigo : mi.subproducto.id
-		};
-		$http.post('/SSubproducto', datos).success(
-				function(response) {
-					if (response.success) {
-						$utilidades.mensaje('success',
-								'Subroducto borrado con éxito');
-						mi.cargarTabla(1);
-					} else
-						$utilidades.mensaje('danger',
-								'Error al borrar el Subproducto');
-				});
-	};
-
-	mi.borrarNoConfirmado = function() {
-
 	};
 
 	mi.guardar = function() {
@@ -370,7 +365,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 			}
 			mi.obtenerTotalSubproductos();
 			mi.gridApi.selection.clearSelectedRows();
-			mi.subproducto.id = null;
+			mi.subproducto = null;
 		}
 	};
 

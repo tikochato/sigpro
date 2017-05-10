@@ -1,7 +1,7 @@
 var app = angular.module('formularioitemtipoController', []);
 
-app.controller('formularioitemtipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
-		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
+app.controller('formularioitemtipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
+		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 			var mi=this;
 
 			$window.document.title = $utilidades.sistema_nombre+' - Tipo de Item de Formulario';
@@ -185,29 +185,29 @@ app.controller('formularioitemtipoController',['$scope','$http','$interval','i18
 
 			mi.borrar = function(ev) {
 				if(mi.formularioitemtipo!=null){
-					var confirm = $mdDialog.confirm()
-				          .title('Confirmación de borrado')
-				          .textContent('¿Desea borrar el Tipo Item de fomrulario "'+mi.formularioitemtipo.nombre+'"?')
-				          .ariaLabel('Confirmación de borrado')
-				          .targetEvent(ev)
-				          .ok('Borrar')
-				          .cancel('Cancelar');
-
-				    $mdDialog.show(confirm).then(function() {
-				    	$http.post('/SFormularioItemTipo', {
-							accion: 'borrarFormularioItemTipo',
-							id: mi.formularioitemtipo.id
-						}).success(function(response){
-							if(response.success){
-								$utilidades.mensaje('success','Tipo de Item de Formulario fue borrado con éxito');
-								mi.cargarTabla();
-							}
-							else
-								$utilidades.mensaje('danger','Error al borrar el Tipo De Item de Formulario');
-						});
-				    }, function() {
-
-				    });
+					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+							, "Confirmación de Borrado"
+							, '¿Desea borrar el Tipo Item de fomrulario "'+mi.formularioitemtipo.nombre+'"?'
+							, "Borrar"
+							, "Cancelar")
+					.result.then(function(data) {
+						if(data){
+							$http.post('/SFormularioItemTipo', {
+								accion: 'borrarFormularioItemTipo',
+								id: mi.formularioitemtipo.id
+							}).success(function(response){
+								if(response.success){
+									$utilidades.mensaje('success','Tipo de Item de Formulario fue borrado con éxito');
+									mi.formularioitemtipo = null;
+									mi.cargarTabla();
+								}
+								else
+									$utilidades.mensaje('danger','Error al borrar el Tipo De Item de Formulario');
+							});
+						}
+					}, function(){
+						
+					});
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar el Tipo De Item de Formulario que desea borrar');

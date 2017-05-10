@@ -1,7 +1,7 @@
 var app = angular.module('riesgotipoController', [ 'ngTouch']);
 
-app.controller('riesgotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal) {
+app.controller('riesgotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal, $dialogoConfirmacion) {
 		var mi=this;
 		
 		$window.document.title = $utilidades.sistema_nombre+' - Tipo Riesgo';
@@ -166,30 +166,29 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 		
 		mi.borrar = function(ev) {
 			if(mi.riesgotipo!=null){
-				var confirm = $mdDialog.confirm()
-			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar el tipo de riesgo "'+mi.riesgotipo.nombre+'"?')
-			          .ariaLabel('Confirmación de borrado')
-			          .targetEvent(ev)
-			          .ok('Borrar')
-			          .cancel('Cancelar');
-
-			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SRiesgoTipo', {
-						accion: 'borrarRiesgoTipo',
-						id: mi.riesgotipo.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Tipo Riesgo borrado con éxito');
-							mi.riesgotipo = null;
-							mi.cargarTabla();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar el Tipo Riesgo');
-					});
-			    }, function() {
-			    
-			    });
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el tipo de riesgo "'+mi.riesgotipo.nombre+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						$http.post('/SRiesgoTipo', {
+							accion: 'borrarRiesgoTipo',
+							id: mi.riesgotipo.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Tipo Riesgo borrado con éxito');
+								mi.riesgotipo = null;
+								mi.cargarTabla();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar el Tipo Riesgo');
+						});
+					}
+				}, function(){
+					
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo Riesgo que desea borrar');

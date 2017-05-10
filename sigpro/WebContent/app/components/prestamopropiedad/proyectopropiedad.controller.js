@@ -1,7 +1,7 @@
 var app = angular.module('proyectopropiedadController', []);
 
-app.controller('proyectopropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
+app.controller('proyectopropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 		var mi=this;
 		
 		$window.document.title = $utilidades.sistema_nombre+' - Propiedad Préstamo';
@@ -139,29 +139,29 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 	
 		mi.borrar = function(ev) {
 			if(mi.proyectopropiedad!=null && mi.proyectopropiedad.id!=null){
-				var confirm = $mdDialog.confirm()
-			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar la Propiedad Préstamo "'+mi.proyectopropiedad.nombre+'"?')
-			          .ariaLabel('Confirmación de borrado')
-			          .targetEvent(ev)
-			          .ok('Borrar')
-			          .cancel('Cancelar');
-	
-			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SProyectoPropiedad', {
-						accion: 'borrarProyectoPropiedad',
-						id: mi.proyectopropiedad.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Propiedad de Préstamo borrado con éxito');
-							mi.obtenerTotalProyectoPropiedades();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar la Propiedad de Préstamo');
-					});
-			    }, function() {
-			    
-			    });
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar la Propiedad Préstamo "'+mi.proyectopropiedad.nombre+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						$http.post('/SProyectoPropiedad', {
+							accion: 'borrarProyectoPropiedad',
+							id: mi.proyectopropiedad.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Propiedad de Préstamo borrado con éxito');
+								mi.proyectopropiedad = null;
+								mi.obtenerTotalProyectoPropiedades();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar la Propiedad de Préstamo');
+						});
+					}
+				}, function(){
+					
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar la Propiedad Préstamo que desea borrar');
@@ -225,7 +225,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 			if(evt.keyCode==13){
 				mi.obtenerTotalProyectoPropiedades();
 				mi.gridApi.selection.clearSelectedRows();
-				mi.proyectopropiedad.id = null;
+				mi.proyectopropiedad = null;
 			}
 		}
 		

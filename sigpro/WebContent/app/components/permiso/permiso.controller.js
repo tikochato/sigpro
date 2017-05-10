@@ -15,7 +15,8 @@ app.controller(
   '$window',
   '$location',
   '$route',
-  function($scope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route) {
+  'dialogoConfirmacion', 
+  function($scope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route, $dialogoConfirmacion) {
 	var mi=this;
 	$window.document.title = $utilidades.sistema_nombre+' - Permisos';
 	i18nService.setCurrentLang('es');
@@ -143,7 +144,7 @@ app.controller(
 		mi.permisoSelected = {id:"",nombre:"", descripcion:""};
 	};					
 	mi.guardarPermiso=function(){		
-		if(mi.permisoSelected.nombre!=="" && mi.permisoSelected.descripcion!==""){
+		if(mi.permisoSelected.id !== "" && mi.permisoSelected.nombre!=="" && mi.permisoSelected.descripcion!==""){
 			$http.post('/SPermiso',
 					{
 						accion: 'guardarPermiso',
@@ -181,29 +182,29 @@ app.controller(
 	mi.borrarPermiso=function(ev){
 		mi.isCollapsed = false;
 		if(mi.permisoSelected.id!==""){
-			var confirm = $mdDialog.confirm()
-	          .title('Confirmación de borrado')
-	          .textContent('¿Desea borrar el permiso "'+mi.permisoSelected.nombre+'"?')
-	          .ariaLabel('Confirmación de borrado')
-	          .targetEvent(ev)
-	          .ok('Borrar')
-	          .cancel('Cancelar');
-			$mdDialog.show(confirm).then(function() {
-		    	$http.post('/SPermiso', {
-					accion: 'eliminarPermiso',
-					id: mi.permisoSelected.id
-				}).success(function(response){
-					if(response.success){
-						$utilidades.mensaje('success','Permiso borrado con éxito');
-						mi.cargarTabla(mi.paginaActual);
-						mi.permisoSelected={id:"",nombre:"", descripcion:""};
-					}
-					else
-						$utilidades.mensaje('danger','Error al borrar el Permiso');
-				});
-		    }, function() {
-		    
-		    });
+			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+					, "Confirmación de Borrado"
+					, '¿Desea borrar el permiso "'+mi.permisoSelected.nombre+'"?'
+					, "Borrar"
+					, "Cancelar")
+			.result.then(function(data) {
+				if(data){
+					$http.post('/SPermiso', {
+						accion: 'eliminarPermiso',
+						id: mi.permisoSelected.id
+					}).success(function(response){
+						if(response.success){
+							$utilidades.mensaje('success','Permiso borrado con éxito');
+							mi.cargarTabla(mi.paginaActual);
+							mi.permisoSelected={id:"",nombre:"", descripcion:""};
+						}
+						else
+							$utilidades.mensaje('danger','Error al borrar el Permiso');
+					});
+				}
+			}, function(){
+				
+			});	
 		}else{
 		    $utilidades.mensaje('danger','Seleccione un permiso');
 		}
@@ -252,7 +253,7 @@ app.controller(
 						mi.elementosPorPagina = response.totalPermisos;
 						mi.cargarTabla(mi.paginaActual);
 						mi.gridApi.selection.clearSelectedRows();
-						mi.permisoSelected.id = null;
+						mi.permisoSelected.id = "";
 			});
 		}
 	};

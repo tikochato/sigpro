@@ -5,12 +5,12 @@ var moduloEntidad = angular.module('moduloEntidad', [ 'ngTouch' ]);
 
 moduloEntidad.controller('controlEntidad', [ '$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',
-		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log',
+		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', 'dialogoConfirmacion', 
 		controlEntidad ]);
 
 function controlEntidad($scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
-		$timeout, $log) {
+		$timeout, $log, $dialogoConfirmacion) {
 	i18nService.setCurrentLang('es');
 	var mi = this;
 	
