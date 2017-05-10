@@ -127,6 +127,12 @@ public class SGantt extends HttpServlet {
 
 									items_actividad = String.join(items_actividad.trim().length()>0 ? "," : "",items_actividad,
 											construirItem(actividad.getId(),actividad.getId(),OBJETO_ID_ACTIVIDAD,actividad.getNombre(), 4, true, actividad.getFechaInicio(), actividad.getFechaFin(),false));
+									
+									String items_actividad_recursiva = obtenerItemsActividades(actividad.getId(),5,5,predecesores);
+									
+									items_actividad = String.join(items_actividad_recursiva !=null && items_actividad_recursiva.trim().length()>0 ? "," : "", items_actividad,items_actividad_recursiva!=null && items_actividad_recursiva.length() > 0 ?
+											items_actividad_recursiva : "");
+									
 								}
 							}
 							items_subproducto = String.join(items_subproducto.trim().length()>0 ? ",":"", items_subproducto,
@@ -311,10 +317,38 @@ public class SGantt extends HttpServlet {
 
 		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, objetoId, objetoTipo
 				, null, null, null, null, null, null);
-
-
 		if (!actividades.isEmpty()){
 			for (Actividad actividad : actividades){
+				
+				String retRec = obtenerItemsActividadesRecursivas(actividad.getId(), OBJETO_ID_ACTIVIDAD, nivelObjeto + 1, predecesores);
+				
+				List<Integer> idPredecesores = new ArrayList<>();
+				if (actividad.getPredObjetoId()!=null && retRec!=null && retRec.trim().length() > 0){
+					idPredecesores.add(actividad.getPredObjetoId());
+					predecesores.put(actividad.getId(), idPredecesores);
+				}
+				ret = String.join(ret.trim().length()>0 ? "," : "",ret,
+						construirItem(actividad.getId(),actividad.getId(),OBJETO_ID_ACTIVIDAD,actividad.getNombre(), 
+								nivelObjeto, true, actividad.getFechaInicio(), actividad.getFechaFin(),false));
+				
+				
+				
+				if (retRec!=null && retRec.length()>0){
+					ret = String.join(",", ret,retRec);
+				}
+			}
+		}
+		return ret;
+	}
+	
+	private String obtenerItemsActividadesRecursivas(int objetoId,int objetoTipo,int nivelObjeto,HashMap<Integer,List<Integer>> predecesores){
+		String ret = "";
+
+		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, objetoId, objetoTipo
+				, null, null, null, null, null, null);
+		if (!actividades.isEmpty()){
+			for (Actividad actividad : actividades){
+				
 				List<Integer> idPredecesores = new ArrayList<>();
 				if (actividad.getPredObjetoId()!=null){
 					idPredecesores.add(actividad.getPredObjetoId());
@@ -322,6 +356,12 @@ public class SGantt extends HttpServlet {
 				}
 				ret = String.join(ret.trim().length()>0 ? "," : "",ret,
 						construirItem(actividad.getId(),actividad.getId(),OBJETO_ID_ACTIVIDAD,actividad.getNombre(), nivelObjeto, true, actividad.getFechaInicio(), actividad.getFechaFin(),false));
+				
+				String retRec = obtenerItemsActividadesRecursivas(actividad.getId(), OBJETO_ID_ACTIVIDAD, nivelObjeto + 1, predecesores);
+				
+				if (retRec!=null && retRec.length()>0){
+					ret = String.join(",", ret,retRec);
+				}
 			}
 		}
 		return ret;
