@@ -24,7 +24,6 @@ public class PrestamoDAO {
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
-			e.printStackTrace();
 			CLogger.write("1", PrestamoDAO.class, e);
 		}
 		finally{
