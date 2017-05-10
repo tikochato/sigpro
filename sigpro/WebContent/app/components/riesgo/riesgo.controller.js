@@ -1,7 +1,7 @@
 var app = angular.module('riesgoController', []);
 
-app.controller('riesgoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
+app.controller('riesgoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
 		var mi=this;
 		
 		$window.document.title = $utilidades.sistema_nombre+' - Riesgos';
@@ -197,30 +197,29 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 
 		mi.borrar = function(ev) {
 			if(mi.riesgo!=null && mi.riesgo.id!=null){
-				var confirm = $mdDialog.confirm()
-			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar el Riesgo "'+mi.riesgo.nombre+'"?')
-			          .ariaLabel('Confirmación de borrado')
-			          .targetEvent(ev)
-			          .ok('Borrar')
-			          .cancel('Cancelar');
-
-			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SRiesgo', {
-						accion: 'borrarRiesgo',
-						id: mi.riesgo.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Riesgo borrado con éxito');
-							mi.riesgo = null;
-							mi.cargarTabla();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar el Riesgo');
-					});
-			    }, function() {
-			    
-			    });
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el Riesgo "'+mi.riesgo.nombre+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						$http.post('/SRiesgo', {
+							accion: 'borrarRiesgo',
+							id: mi.riesgo.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Riesgo borrado con éxito');
+								mi.riesgo = null;
+								mi.cargarTabla();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar el Riesgo');
+						});
+					}
+				}, function(){
+					
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Riesgo que desea borrar');
@@ -336,7 +335,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			if(evt.keyCode==13){
 				mi.obtenerTotalRiesgos();
 				mi.gridApi.selection.clearSelectedRows();
-				mi.riesgo.id = null;
+				mi.riesgo = null;
 			}
 		};
 

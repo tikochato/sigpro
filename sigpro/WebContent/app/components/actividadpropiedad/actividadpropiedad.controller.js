@@ -1,7 +1,7 @@
-var app = angular.module('actividadpropiedadController', ['ui.bootstrap.contextMenu']);
+var app = angular.module('actividadpropiedadController', []);
 
-app.controller('actividadpropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
-		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
+app.controller('actividadpropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
+		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 			var mi=this;
 			
 			$window.document.title = $utilidades.sistema_nombre+' - Propiedades de Actividad';
@@ -148,6 +148,31 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 
 			mi.borrar = function(ev) {
 				if(mi.actividadpropiedad!=null && mi.actividadpropiedad.id!=null){
+					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+							, "Confirmación de Borrado"
+							, '¿Desea borrar la Prppiedad de Actividad "'+mi.actividadpropiedad.nombre+'"?'
+							, "Borrar"
+							, "Cancelar")
+					.result.then(function(data) {
+						if(data){
+							$http.post('/SActividadPropiedad', {
+								accion: 'borrarActividadPropiedad',
+								id: mi.actividadpropiedad.id
+							}).success(function(response){
+								if(response.success){
+									$utilidades.mensaje('success','Propiedad de Actividad borrado con éxito');
+									mi.actividadpropiedad = null;
+									mi.cargarTabla();
+								}
+								else
+									$utilidades.mensaje('danger','Error al borrar la Propiedad de Actividad');
+							});
+						}
+					}, function(){
+						
+					});	
+					
+					
 					var confirm = $mdDialog.confirm()
 				          .title('Confirmación de borrado')
 				          .textContent('¿Desea borrar la Prppiedad de Actividad "'+mi.actividadpropiedad.nombre+'"?')
@@ -227,7 +252,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 				if(evt.keyCode==13){
 					mi.obtenerTotalActividadPropiedades();
 					mi.gridApi.selection.clearSelectedRows();
-					mi.actividadpropiedad.id = null;
+					mi.actividadpropiedad = null;
 				}
 			}
 			

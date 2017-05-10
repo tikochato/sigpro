@@ -4,11 +4,11 @@ var moduloProductoTipo = angular.module('moduloProductoTipo', [ 'ngTouch',
 moduloProductoTipo.controller('controlProductoTipo', [ '$scope',
 		'$routeParams', '$route', '$window', '$location', '$mdDialog',
 		'$uibModal', '$http', '$interval', 'i18nService', 'Utilidades',
-		'$timeout', '$log', controlProductoTipo ]);
+		'$timeout', '$log',  'dialogoConfirmacion', controlProductoTipo ]);
 
 function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
-		$timeout, $log) {
+		$timeout, $log, $dialogoConfirmacion) {
 	i18nService.setCurrentLang('es');
 	var mi = this;
 
@@ -222,41 +222,36 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 
 	mi.borrar = function(ev) {
 		if (mi.seleccionada) {
-			var confirm = $mdDialog.confirm().title('Confirmación de borrado')
-					.textContent(
-							'¿Desea borrar "' + mi.entidadSeleccionada.nombre
-									+ '"?')
-					.ariaLabel('Confirmación de borrado').targetEvent(ev).ok(
-							'Borrar').cancel('Cancelar');
-
-			$mdDialog.show(confirm).then(mi.borrarConfirmado,
-					mi.borrarNoConfirmado);
-
+			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+					, "Confirmación de Borrado"
+					, '¿Desea borrar "' + mi.entidadSeleccionada.nombre + '"?'
+					, "Borrar"
+					, "Cancelar")
+			.result.then(function(data) {
+				if(data){
+					var datos = {
+							accion : 'borrar',
+							codigo : mi.entidadSeleccionada.id
+						};
+						$http.post('/SProductoTipo', datos).success(
+								function(response) {
+									if (response.success) {
+										$utilidades.mensaje('success',
+												'Tipo de Producto borrado con éxito');
+										mi.seleccionada = null;
+										mi.obtenerTotalProductoTipo();
+									} else
+										$utilidades.mensaje('danger',
+												'Error al borrar el Tipo de Producto');
+								});
+				}
+			}, function(){
+				
+			});
 		} else {
 			$utilidades.mensaje('warning',
 					'Debe seleccionar un TIPO DE PRODUCTO que desee borrar');
 		}
-	};
-
-	mi.borrarConfirmado = function() {
-		var datos = {
-			accion : 'borrar',
-			codigo : mi.entidadSeleccionada.id
-		};
-		$http.post('/SProductoTipo', datos).success(
-				function(response) {
-					if (response.success) {
-						$utilidades.mensaje('success',
-								'Tipo de Producto borrado con éxito');
-						mi.obtenerTotalProductoTipo();
-					} else
-						$utilidades.mensaje('danger',
-								'Error al borrar el Tipo de Producto');
-				});
-	};
-
-	mi.borrarNoConfirmado = function() {
-
 	};
 
 	mi.guardar = function() {

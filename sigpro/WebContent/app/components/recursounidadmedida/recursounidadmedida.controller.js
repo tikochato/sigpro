@@ -1,7 +1,7 @@
 var app = angular.module('recursounidadmedidaController', []);
 
-app.controller('recursounidadmedidaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
-		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
+app.controller('recursounidadmedidaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
+		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 			var mi=this;
 			
 			$window.document.title = $utilidades.sistema_nombre+' - Unidades de Medida de Recursos';
@@ -143,29 +143,29 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 
 			mi.borrar = function(ev) {
 				if(mi.medida!=null && mi.medida.id!=null){
-					var confirm = $mdDialog.confirm()
-				          .title('Confirmación de borrado')
-				          .textContent('¿Desea borrar la unidad de medida "'+mi.medida.nombre+'"?')
-				          .ariaLabel('Confirmación de borrado')
-				          .targetEvent(ev)
-				          .ok('Borrar')
-				          .cancel('Cancelar');
-	
-				    $mdDialog.show(confirm).then(function() {
-				    	$http.post('/SRecursoUnidadMedida', {
-							accion: 'borrarRecursoUnidadMedida',
-							id: mi.medida.id
-						}).success(function(response){
-							if(response.success){
-								$utilidades.mensaje('success','Unidad de medida borrada con éxito');
-								mi.obtenerTotalUnidadesMedida();
-							}
-							else
-								$utilidades.mensaje('danger','Error al borrar la unidad de medida');
-						});
-				    }, function() {
-				    
-				    });
+					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+							, "Confirmación de Borrado"
+							, '¿Desea borrar la unidad de medida "'+mi.medida.nombre+'"?'
+							, "Borrar"
+							, "Cancelar")
+					.result.then(function(data) {
+						if(data){
+							$http.post('/SRecursoUnidadMedida', {
+								accion: 'borrarRecursoUnidadMedida',
+								id: mi.medida.id
+							}).success(function(response){
+								if(response.success){
+									$utilidades.mensaje('success','Unidad de medida borrada con éxito');
+									mi.medida = null;
+									mi.obtenerTotalUnidadesMedida();
+								}
+								else
+									$utilidades.mensaje('danger','Error al borrar la unidad de medida');
+							});
+						}
+					}, function(){
+						
+					});
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar la unidad de medida que desea borrar');
@@ -226,7 +226,7 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 				if(evt.keyCode==13){
 					mi.obtenerTotalUnidadesMedida();
 					mi.gridApi.selection.clearSelectedRows();
-					mi.medida.id = null;
+					mi.medida = null;
 				}
 			}
 }]);
