@@ -1,7 +1,7 @@
 var app = angular.module('recursotipoController', [ 'ngTouch']);
 
-app.controller('recursotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal) {
+app.controller('recursotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal, $dialogoConfirmacion) {
 		var mi=this;
 		
 		$window.document.title = $utilidades.sistema_nombre+' - Tipo Recurso';
@@ -167,30 +167,29 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 		
 		mi.borrar = function(ev) {
 			if(mi.recursotipo!=null && mi.recursotipo.id!=null){
-				var confirm = $mdDialog.confirm()
-			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar el tipo de recurso "'+mi.recursotipo.nombre+'"?')
-			          .ariaLabel('Confirmación de borrado')
-			          .targetEvent(ev)
-			          .ok('Borrar')
-			          .cancel('Cancelar');
-
-			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SRecursoTipo', {
-						accion: 'borrarRecursoTipo',
-						id: mi.recursotipo.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Tipo de Recurso borrado con éxito');
-							mi.recursotipo = null;
-							mi.obtenerTotalRecursoTipos();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar el Tipo de Recurso');
-					});
-			    }, function() {
-			    
-			    });
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el tipo de recurso "'+mi.recursotipo.nombre+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						$http.post('/SRecursoTipo', {
+							accion: 'borrarRecursoTipo',
+							id: mi.recursotipo.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Tipo de Recurso borrado con éxito');
+								mi.recursotipo = null;
+								mi.obtenerTotalRecursoTipos();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar el Tipo de Recurso');
+						});
+					}
+				}, function(){
+					
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Recurso que desea borrar');
@@ -233,7 +232,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 			if(evt.keyCode==13){
 				mi.obtenerTotalRecursoTipos();
 				mi.gridApi.selection.clearSelectedRows();
-				mi.recursotipo.id = null;
+				mi.recursotipo = null;
 			}
 		}
 		

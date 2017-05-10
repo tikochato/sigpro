@@ -1,7 +1,7 @@
 var app = angular.module('programatipoController', [ 'ngTouch']);
 
-app.controller('programatipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal) {
+app.controller('programatipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal, $dialogoConfirmacion) {
 		var mi=this;
 
 		$window.document.title = $utilidades.sistema_nombre+' - Tipo Programa';
@@ -173,29 +173,29 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 
 		mi.borrar = function(ev) {
 			if(mi.programatipo!=null && mi.programatipo.id!=null){
-				var confirm = $mdDialog.confirm()
-			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar el tipo de programa "'+mi.programatipo.nombre+'"?')
-			          .ariaLabel('Confirmación de borrado')
-			          .targetEvent(ev)
-			          .ok('Borrar')
-			          .cancel('Cancelar');
-
-			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SProgramaTipo', {
-						accion: 'borrarProgramaTipo',
-						id: mi.programatipo.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Tipo de Programa borrado con éxito');
-							mi.obtenerTotalProgramatipos();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar el Tipo de Programa');
-					});
-			    }, function() {
-
-			    });
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el tipo de programa "'+mi.programatipo.nombre+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						$http.post('/SProgramaTipo', {
+							accion: 'borrarProgramaTipo',
+							id: mi.programatipo.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Tipo de Programa borrado con éxito');
+								mi.programatipo = null;
+								mi.obtenerTotalProgramatipos();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar el Tipo de Programa');
+						});
+					}
+				}, function(){
+					
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Programa que desea borrar');
@@ -236,7 +236,7 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 			if(evt.keyCode==13){
 				mi.obtenerTotalProgramatipos();
 				mi.gridApi.selection.clearSelectedRows();
-				mi.programatipo.id = null;
+				mi.programatipo = null;
 			}
 		}
 		

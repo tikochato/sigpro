@@ -17,7 +17,8 @@ app.controller(
   '$route',
   '$q',
   '$uibModal',
-  function($scope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route,$q,$uibModal) {
+  'dialogoConfirmacion', 
+  function($scope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route,$q,$uibModal, $dialogoConfirmacion) {
 	var mi=this;
 	$window.document.title =$utilidades.sistema_nombre+' - Usuario';
 	mi.colaboradorSeleccionado =false;
@@ -299,36 +300,36 @@ app.controller(
   };
 
 
-
 	mi.eliminarUsuario=function(ev){
 		if(mi.usuariosSelected.usuario!==""){
-			var confirm = $mdDialog.confirm()
-	          .title('Confirmación de borrado')
-	          .textContent('¿Desea borrar al usuario "'+mi.usuariosSelected.usuario+'"?')
-	          .ariaLabel('Confirmación de borrado')
-	          .targetEvent(ev)
-	          .ok('Borrar')
-	          .cancel('Cancelar');
-			$mdDialog.show(confirm).then(function() {
-		    	$http.post('/SUsuario', {
-					accion: 'eliminarUsuario',
-					usuario: mi.usuariosSelected.usuario
-				}).success(function(response){
-					if(response.success){
-						$utilidades.mensaje('success','Usuario elimiado con éxito');
-						mi.cargarTabla(mi.paginaActual);
-						mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
-					}
-					else
-						$utilidades.mensaje('danger','Error al eliminar el usuario');
-				});
-		    }, function() {
-
-		    });
+			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+					, "Confirmación de Borrado"
+					, '¿Desea borrar al usuario "'+mi.usuariosSelected.usuario+'"?'
+					, "Borrar"
+					, "Cancelar")
+			.result.then(function(data) {
+				if(data){
+					$http.post('/SUsuario', {
+						accion: 'eliminarUsuario',
+						usuario: mi.usuariosSelected.usuario
+					}).success(function(response){
+						if(response.success){
+							$utilidades.mensaje('success','Usuario elimiado con éxito');
+							mi.cargarTabla(mi.paginaActual);
+							mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
+						}
+						else
+							$utilidades.mensaje('danger','Error al eliminar el usuario');
+					});
+				}
+			}, function(){
+				
+			});
 		}else{
 		    $utilidades.mensaje('danger','Seleccione un usuario');
 		}
 	};
+	
 	function validarEmail(email) {
 	    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	    return re.test(email);

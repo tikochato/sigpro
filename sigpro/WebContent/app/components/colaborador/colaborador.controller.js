@@ -1,16 +1,16 @@
 /**
  * 
  */
-var moduloColaborador = angular.module('moduloColaborador', [ 'ngTouch' ,'ui.bootstrap.contextMenu']);
+var moduloColaborador = angular.module('moduloColaborador', [ 'ngTouch']);
 
 moduloColaborador.controller('controlColaborador', [ '$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',
-		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log',
+		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', 'dialogoConfirmacion', 
 		controlColaborador ]);
 
 function controlColaborador($scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
-		$timeout, $log) {
+		$timeout, $log, $dialogoConfirmacion) {
 	i18nService.setCurrentLang('es');
 	var mi = this;
 
@@ -289,30 +289,29 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 	
 	mi.borrar = function(ev) {
 		if(mi.colaborador!=null && mi.colaborador.id!=null){
-			var confirm = $mdDialog.confirm()
-		          .title('Confirmación de borrado')
-		          .textContent('¿Desea borrar al colaborador "'+mi.colaborador.primerNombre+' '+mi.colaborador.segundoNombre+' '+mi.colaborador.primerApellido+' '+mi.colaborador.segundoApellido+'"?')
-		          .ariaLabel('Confirmación de borrado')
-		          .targetEvent(ev)
-		          .ok('Borrar')
-		          .cancel('Cancelar');
-
-		    $mdDialog.show(confirm).then(function() {
-		    	$http.post('/SColaborador', {
-					accion: 'borrar',
-					id: mi.colaborador.id
-				}).success(function(response){
-					if(response.success){
-						$utilidades.mensaje('success','Colaborador borrado con éxito');
-						mi.colaborador = null;
-						mi.obtenerTotalColaboradores();
-					}
-					else
-						$utilidades.mensaje('danger','Error al borrar al Colaborador');
-				});
-		    }, function() {
-		    
-		    });
+			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+					, "Confirmación de Borrado"
+					, '¿Desea borrar al colaborador "'+mi.colaborador.primerNombre+' '+mi.colaborador.segundoNombre+' '+mi.colaborador.primerApellido+' '+mi.colaborador.segundoApellido+'"?'
+					, "Borrar"
+					, "Cancelar")
+			.result.then(function(data) {
+				if(data){
+					$http.post('/SColaborador', {
+						accion: 'borrar',
+						id: mi.colaborador.id
+					}).success(function(response){
+						if(response.success){
+							$utilidades.mensaje('success','Colaborador borrado con éxito');
+							mi.colaborador = null;
+							mi.obtenerTotalColaboradores();
+						}
+						else
+							$utilidades.mensaje('danger','Error al borrar al Colaborador');
+					});
+				}
+			}, function(){
+				
+			});	
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar al Colaborador que desea borrar');
@@ -327,7 +326,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 		if(evt.keyCode==13){
 			mi.cargarData(mi.paginaActual);
 			mi.gridApi.selection.clearSelectedRows();
-			mi.colaborador.id = null;
+			mi.colaborador = null;
 		}
 	}
 	

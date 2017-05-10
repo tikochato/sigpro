@@ -1,7 +1,7 @@
-var app = angular.module('desembolsoController', ['ui.bootstrap.contextMenu']);
+var app = angular.module('desembolsoController', []);
 
-app.controller('desembolsoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal',
-		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal) {
+app.controller('desembolsoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', 'dialogoConfirmacion',
+		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal, $dialogoConfirmacion) {
 			var mi=this;
 			
 			$window.document.title = $utilidades.sistema_nombre+' - Desembolso';
@@ -167,29 +167,29 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			
 			mi.borrar = function(ev) {
 				if(mi.desembolso!=null && mi.desembolso.id!=null){
-					var confirm = $mdDialog.confirm()
-				          .title('Confirmación de borrado')
-				          .textContent('¿Desea borrar el Desembolso ?')
-				          .ariaLabel('Confirmación de borrado')
-				          .targetEvent(ev)
-				          .ok('Borrar')
-				          .cancel('Cancelar');
-	
-				    $mdDialog.show(confirm).then(function() {
-				    	$http.post('/SDesembolso', {
-							accion: 'borrarDesembolso',
-							id: mi.desembolso.id
-						}).success(function(response){
-							if(response.success){
-								$utilidades.mensaje('success','Desembolso borrado con éxito');
-								mi.cargarTabla();
-							}
-							else
-								$utilidades.mensaje('danger','Error al borrar el Desembolso');
-						});
-				    }, function() {
-				    
-				    });
+					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+							, "Confirmación de Borrado"
+							, '¿Desea borrar el Desembolso?'
+							, "Borrar"
+							, "Cancelar")
+					.result.then(function(data) {
+						if(data){
+							$http.post('/SDesembolso', {
+								accion: 'borrarDesembolso',
+								id: mi.desembolso.id
+							}).success(function(response){
+								if(response.success){
+									$utilidades.mensaje('success','Desembolso borrado con éxito');
+									mi.desembolso = null;
+									mi.cargarTabla();
+								}
+								else
+									$utilidades.mensaje('danger','Error al borrar el Desembolso');
+							});
+						}
+					}, function(){
+						
+					});
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar el Desembolso que desea borrar');
@@ -224,7 +224,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 				if(evt.keyCode==13){
 					mi.obtenerTotalDesembolsos();
 					mi.gridApi.selection.clearSelectedRows();
-					mi.desembolso.id = null;
+					mi.desembolso = null;
 				}
 			};
 
