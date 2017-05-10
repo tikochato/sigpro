@@ -3,12 +3,12 @@ var moduloProducto = angular.module('moduloProducto', [ 'ngTouch',
 
 moduloProducto.controller('controlProducto', [ '$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',
-		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q',
+		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'dialogoConfirmacion', 
 		controlProducto ]);
 
 function controlProducto($scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
-		$timeout, $log, $q) {
+		$timeout, $log, $q, $dialogoConfirmacion) {
 	var mi = this;  
 	i18nService.setCurrentLang('es');
 	$window.document.title = $utilidades.sistema_nombre+' - Producto';
@@ -211,42 +211,36 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 
 	mi.borrar = function(ev) {
 		if (mi.producto!=null && mi.producto.id!=null) {
-			var confirm = $mdDialog.confirm()
-			.title('Confirmación de borrado')
-			.textContent('¿Desea borrar "' + mi.producto.nombre + '"?')
-			.ariaLabel('Confirmación de borrado')
-			.targetEvent(ev)
-			.ok('Borrar')
-			.cancel('Cancelar');
-
-			$mdDialog.show(confirm).then(mi.borrarConfirmado,
-					mi.borrarNoConfirmado);
-
+			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+					, "Confirmación de Borrado"
+					, '¿Desea borrar "' + mi.producto.nombre + '"?'
+					, "Borrar"
+					, "Cancelar")
+			.result.then(function(data) {
+				if(data){
+					var datos = {
+							accion : 'borrar',
+							codigo : mi.producto.id
+						};
+						$http.post('/SProducto', datos).success(
+								function(response) {
+									if (response.success) {
+										$utilidades.mensaje('success','Tipo de Producto borrado con éxito');
+										mi.producto = null;
+										mi.obtenerTotalProductos();			
+									} else{
+										$utilidades.mensaje('danger',
+												'Error al borrar el Tipo de Producto');
+									}
+								});
+				}
+			}, function(){
+				
+			});
 		} else {
 			$utilidades.mensaje('warning',
 					'Debe seleccionar un PRODUCTO que desee borrar');
 		}
-	};
-
-	mi.borrarConfirmado = function() {
-		var datos = {
-			accion : 'borrar',
-			codigo : mi.producto.id
-		};
-		$http.post('/SProducto', datos).success(
-				function(response) {
-					if (response.success) {
-						$utilidades.mensaje('success','Tipo de Producto borrado con éxito');
-						mi.obtenerTotalProductos();			
-					} else{
-						$utilidades.mensaje('danger',
-								'Error al borrar el Tipo de Producto');
-					}
-				});
-	};
-
-	mi.borrarNoConfirmado = function() {
-
 	};
 
 	mi.guardar = function() {
@@ -363,7 +357,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			}
 			mi.obtenerTotalProductos();
 			mi.gridApi.selection.clearSelectedRows();
-			mi.producto.id = null;
+			mi.producto = null;
 		}
 	};
 

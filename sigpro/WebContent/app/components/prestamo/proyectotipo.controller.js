@@ -1,7 +1,7 @@
 var app = angular.module('proyectotipoController', [ 'ngTouch']);
 
-app.controller('proyectotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal) {
+app.controller('proyectotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal, $dialogoConfirmacion) {
 		var mi=this;
 
 		$window.document.title = $utilidades.sistema_nombre+' - Tipo Préstamo';
@@ -167,29 +167,29 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 
 		mi.borrar = function(ev) {
 			if(mi.proyectotipo!=null && mi.proyectotipo.id!=null){
-				var confirm = $mdDialog.confirm()
-			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar el tipo de préstamo "'+mi.proyectotipo.nombre+'"?')
-			          .ariaLabel('Confirmación de borrado')
-			          .targetEvent(ev)
-			          .ok('Borrar')
-			          .cancel('Cancelar');
-
-			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SProyectoTipo', {
-						accion: 'borrarProyectoTipo',
-						id: mi.proyectotipo.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Tipo de Préstamo borrado con éxito');
-							mi.obtenerTotalProyectotipos();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar el Tipo Préstamo');
-					});
-			    }, function() {
-
-			    });
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el tipo de préstamo "'+mi.proyectotipo.nombre+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						$http.post('/SProyectoTipo', {
+							accion: 'borrarProyectoTipo',
+							id: mi.proyectotipo.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Tipo de Préstamo borrado con éxito');
+								mi.proyectotipo = null;
+								mi.obtenerTotalProyectotipos();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar el Tipo Préstamo');
+						});
+					}
+				}, function(){
+					
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Préstamo que desea borrar');
@@ -230,7 +230,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 			if(evt.keyCode==13){
 				mi.obtenerTotalProyectotipos();
 				mi.gridApi.selection.clearSelectedRows();
-				mi.proyectotipo.id = null;
+				mi.proyectotipo = null;
 			}
 		}
 		

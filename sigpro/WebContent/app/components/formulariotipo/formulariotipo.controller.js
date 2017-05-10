@@ -1,7 +1,7 @@
 var app = angular.module('formulariotipoController', [ 'ngTouch']);
 
-app.controller('formulariotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal) {
+app.controller('formulariotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal, $dialogoConfirmacion) {
 		var mi=this;
 		
 		$window.document.title = $utilidades.sistema_nombre+' - Tipo Formulario';
@@ -114,30 +114,29 @@ app.controller('formulariotipoController',['$scope','$http','$interval','i18nSer
 		
 		mi.borrar = function(ev) {
 			if(mi.formulariotipo!=null){
-				var confirm = $mdDialog.confirm()
-			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar el tipo de formulario "'+mi.formulariotipo.nombre+'"?')
-			          .ariaLabel('Confirmación de borrado')
-			          .targetEvent(ev)
-			          .ok('Borrar')
-			          .cancel('Cancelar');
-
-			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SFormularioTipo', {
-						accion: 'borrarFormularioTipo',
-						id: mi.formulariotipo.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Tipo Formulario borrado con éxito');
-							mi.formulariotipo = null;
-							mi.cargarTabla();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar el Tipo Formulario');
-					});
-			    }, function() {
-			    
-			    });
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el tipo de formulario "'+mi.formulariotipo.nombre+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						$http.post('/SFormularioTipo', {
+							accion: 'borrarFormularioTipo',
+							id: mi.formulariotipo.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Tipo Formulario borrado con éxito');
+								mi.formulariotipo = null;
+								mi.cargarTabla();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar el Tipo Formulario');
+						});
+					}
+				}, function(){
+					
+				});	
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo Formulario que desea borrar');

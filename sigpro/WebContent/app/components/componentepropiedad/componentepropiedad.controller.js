@@ -1,7 +1,7 @@
 var app = angular.module('componentepropiedadController', []);
 
-app.controller('componentepropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog',
-		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog) {
+app.controller('componentepropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
+		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 			var mi=this;
 			
 			$window.document.title = $utilidades.sistema_nombre+' - Componente Propiedad';
@@ -147,29 +147,29 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 
 			mi.borrar = function(ev) {
 				if(mi.componentepropiedad!=null && mi.componentepropiedad.id!=null){
-					var confirm = $mdDialog.confirm()
-				          .title('Confirmación de borrado')
-				          .textContent('¿Desea borrar la Prppiedad Componente "'+mi.componentepropiedad.nombre+'"?')
-				          .ariaLabel('Confirmación de borrado')
-				          .targetEvent(ev)
-				          .ok('Borrar')
-				          .cancel('Cancelar');
-	
-				    $mdDialog.show(confirm).then(function() {
-				    	$http.post('/SComponentePropiedad', {
-							accion: 'borrarComponentePropiedad',
-							id: mi.componentepropiedad.id
-						}).success(function(response){
-							if(response.success){
-								$utilidades.mensaje('success','Propiedad Componente borrado con éxito');
-								mi.cargarTabla();
-							}
-							else
-								$utilidades.mensaje('danger','Error al borrar la Propiedad Componente');
-						});
-				    }, function() {
-				    
-				    });
+					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+							, "Confirmación de Borrado"
+							, '¿Desea borrar la Prppiedad Componente "'+mi.componentepropiedad.nombre+'"?'
+							, "Borrar"
+							, "Cancelar")
+					.result.then(function(data) {
+						if(data){
+							$http.post('/SComponentePropiedad', {
+								accion: 'borrarComponentePropiedad',
+								id: mi.componentepropiedad.id
+							}).success(function(response){
+								if(response.success){
+									$utilidades.mensaje('success','Propiedad Componente borrado con éxito');
+									mi.componentepropiedad = null;
+									mi.cargarTabla();
+								}
+								else
+									$utilidades.mensaje('danger','Error al borrar la Propiedad Componente');
+							});
+						}
+					}, function(){
+						
+					});		
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar la Propiedad Componente que desea borrar');
@@ -223,7 +223,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 				if(evt.keyCode==13){
 					mi.obtenerTotalComponentePropiedades();
 					mi.gridApi.selection.clearSelectedRows();
-					mi.componentepropiedad.id = null;
+					mi.componentepropiedad = null;
 				}
 			}
 

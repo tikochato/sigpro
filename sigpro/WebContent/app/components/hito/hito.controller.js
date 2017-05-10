@@ -1,7 +1,7 @@
 var app = angular.module('hitoController', []);
 
-app.controller('hitoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
+app.controller('hitoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
 		var mi=this;
 
 		$window.document.title = $utilidades.sistema_nombre+' - Hitos';
@@ -174,29 +174,29 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 
 		mi.borrar = function(ev) {
 			if(mi.hito!=null && mi.hito.id){
-				var confirm = $mdDialog.confirm()
-			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar el Hito "'+mi.hito.nombre+'"?')
-			          .ariaLabel('Confirmación de borrado')
-			          .targetEvent(ev)
-			          .ok('Borrar')
-			          .cancel('Cancelar');
-
-			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SHito', {
-						accion: 'borrarHito',
-						id: mi.hito.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Hito borrado con éxito');
-							mi.obtenerTotalHitos();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar el Hito');
-					});
-			    }, function() {
-
-			    });
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el Hito "'+mi.hito.nombre+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						$http.post('/SHito', {
+							accion: 'borrarHito',
+							id: mi.hito.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Hito borrado con éxito');
+								mi.hito = null;
+								mi.obtenerTotalHitos();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar el Hito');
+						});
+					}
+				}, function(){
+					
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Hito que desea borrar');
@@ -259,7 +259,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 				}
 				mi.obtenerTotalHitos();
 				mi.gridApi.selection.clearSelectedRows();
-				mi.hito.id = null;
+				mi.hito = null;
 			}
 		}
 

@@ -1,7 +1,7 @@
 var app = angular.module('actividadController', []);
 
-app.controller('actividadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$sce','uiGmapGoogleMapApi',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$sce,uiGmapGoogleMapApi) {
+app.controller('actividadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$sce','uiGmapGoogleMapApi', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$sce,uiGmapGoogleMapApi, $dialogoConfirmacion) {
 		var mi=this;
 
 		$window.document.title = $utilidades.sistema_nombre+' - Actividades';
@@ -198,30 +198,29 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 
 		mi.borrar = function(ev) {
 			if(mi.actividad!=null && mi.actividad.id!=null){
-				var confirm = $mdDialog.confirm()
-			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar la Actividad "'+mi.actividad.nombre+'"?')
-			          .ariaLabel('Confirmación de borrado')
-			          .targetEvent(ev)
-			          .ok('Borrar')
-			          .cancel('Cancelar');
-
-			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SActividad', {
-						accion: 'borrarActividad',
-						id: mi.actividad.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Actividad borrada con éxito');
-							mi.actividad = null;
-							mi.obtenerTotalActividades();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar la Actividad');
-					});
-			    }, function() {
-
-			    });
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar la Actividad "'+mi.actividad.nombre+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						$http.post('/SActividad', {
+							accion: 'borrarActividad',
+							id: mi.actividad.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Actividad borrada con éxito');
+								mi.actividad = null;
+								mi.obtenerTotalActividades();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar la Actividad');
+						});
+					}
+				}, function(){
+					
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar la Actividad que desea borrar');
@@ -336,7 +335,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			if(evt.keyCode==13){
 				mi.obtenerTotalActividades();
 				mi.gridApi.selection.clearSelectedRows();
-				mi.actividad.id = null;
+				mi.actividad = null;
 			}
 		};
 

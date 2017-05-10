@@ -1,7 +1,7 @@
 var app = angular.module('programaController', [ 'ngTouch' ]);
 
-app.controller('programaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q) {
+app.controller('programaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
 
 	var mi = this;
 	i18nService.setCurrentLang('es');
@@ -235,31 +235,29 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 
 	mi.borrar = function(ev) {
 		if(mi.programa !=null && mi.programa.id!=null){
-			var confirm = $mdDialog.confirm()
-	          .title('Confirmación de borrado')
-	          .textContent('¿Desea borrar el programa "'+mi.programa.nombre+'"?')
-	          .ariaLabel('Confirmación de borrado')
-	          .targetEvent(ev)
-	          .ok('Borrar')
-	          .cancel('Cancelar');
-			
-			$mdDialog.show(confirm).then(function() {
-				$http.post('/SPrograma', {
-					accion: 'borrarPrograma',
-					id: mi.programa.id,
-					t:moment().unix()
-				}).success(function(response){
-					if(response.success){
-						$utilidades.mensaje('success','Programa borrado con éxito');
-						mi.programa = null;
-						mi.obtenerTotalProgramas();
-					}
-					else
-						$utilidades.mensaje('danger','Error al borrar el Programa');
+			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+					, "Confirmación de Borrado"
+					, '¿Desea borrar el programa "'+mi.programa.nombre+'"?'
+					, "Borrar"
+					, "Cancelar")
+			.result.then(function(data) {
+				if(data){
+					$http.post('/SPrograma', {
+						accion: 'borrarPrograma',
+						id: mi.programa.id,
+						t:moment().unix()
+					}).success(function(response){
+						if(response.success){
+							$utilidades.mensaje('success','Programa borrado con éxito');
+							mi.programa = null;
+							mi.obtenerTotalProgramas();
+						}
+						else
+							$utilidades.mensaje('danger','Error al borrar el Programa');
+					});
+				}
+			}, function(){
 				
-				 }, function() {
-					    
-				    });
 			});
 		}
 		else
@@ -399,7 +397,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 		if(evt.keyCode==13){
 			mi.obtenerTotalProgramas();
 			mi.gridApi.selection.clearSelectedRows();
-			mi.programa.id = null;
+			mi.programa = null;
 		}
 	};
 

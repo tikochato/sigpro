@@ -1,7 +1,7 @@
 var app = angular.module('recursoController', []);
 
-app.controller('recursoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal) {
+app.controller('recursoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal, $dialogoConfirmacion) {
 		var mi=this;
 
 		$window.document.title = $utilidades.sistema_nombre+' - Recursos';
@@ -161,30 +161,29 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 
 		mi.borrar = function(ev) {
 			if(mi.recurso!=null && mi.recurso.id!=null){
-				var confirm = $mdDialog.confirm()
-			          .title('Confirmación de borrado')
-			          .textContent('¿Desea borrar el Recurso "'+mi.recurso.nombre+'"?')
-			          .ariaLabel('Confirmación de borrado')
-			          .targetEvent(ev)
-			          .ok('Borrar')
-			          .cancel('Cancelar');
-
-			    $mdDialog.show(confirm).then(function() {
-			    	$http.post('/SRecurso', {
-						accion: 'borrarRecurso',
-						id: mi.recurso.id
-					}).success(function(response){
-						if(response.success){
-							$utilidades.mensaje('success','Recurso borrado con éxito');
-							mi.recurso = {};
-							mi.obtenerTotalRecursos();
-						}
-						else
-							$utilidades.mensaje('danger','Error al borrar el Recurso');
-					});
-			    }, function() {
-
-			    });
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el Recurso "'+mi.recurso.nombre+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						$http.post('/SRecurso', {
+							accion: 'borrarRecurso',
+							id: mi.recurso.id
+						}).success(function(response){
+							if(response.success){
+								$utilidades.mensaje('success','Recurso borrado con éxito');
+								mi.recurso = null;
+								mi.obtenerTotalRecursos();
+							}
+							else
+								$utilidades.mensaje('danger','Error al borrar el Recurso');
+						});
+					}
+				}, function(){
+					
+				});
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Recurso que desea borrar');
@@ -248,7 +247,7 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 			if(evt.keyCode==13){
 				mi.obtenerTotalRecursos();
 				mi.gridApi.selection.clearSelectedRows();
-				mi.recurso.id = null;
+				mi.recurso = null;
 			}
 		}
 
