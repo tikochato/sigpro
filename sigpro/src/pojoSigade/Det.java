@@ -15,6 +15,10 @@ import javax.persistence.Table;
 @Table(name = "det", catalog = "sigade")
 public class Det implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4191860875248955008L;
 	private DetId id;
 
 	public Det() {

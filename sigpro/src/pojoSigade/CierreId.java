@@ -12,6 +12,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class CierreId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7319495437693518965L;
 	private Integer ejercicioFiscal;
 	private Integer mesDesembolso;
 	private Date fechaCorte;
@@ -120,6 +124,7 @@ public class CierreId implements java.io.Serializable {
 		this.desembolsosGtq = desembolsosGtq;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -157,6 +162,7 @@ public class CierreId implements java.io.Serializable {
 								&& this.getDesembolsosGtq().equals(castOther.getDesembolsosGtq())));
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 

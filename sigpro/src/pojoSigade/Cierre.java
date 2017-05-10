@@ -15,6 +15,10 @@ import javax.persistence.Table;
 @Table(name = "cierre", catalog = "sigade")
 public class Cierre implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4689077242755281779L;
 	private CierreId id;
 
 	public Cierre() {

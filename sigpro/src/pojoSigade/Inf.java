@@ -15,6 +15,10 @@ import javax.persistence.Table;
 @Table(name = "inf", catalog = "sigade")
 public class Inf implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4640380796636408676L;
 	private InfId id;
 
 	public Inf() {

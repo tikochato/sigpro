@@ -11,6 +11,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class DetId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5653502577843825272L;
 	private Integer ejercicioFiscal;
 	private String mesDesembolso;
 	private String codigoPrespuestario;
@@ -141,6 +145,7 @@ public class DetId implements java.io.Serializable {
 		this.desembolsosMesGtq = desembolsosMesGtq;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -183,6 +188,7 @@ public class DetId implements java.io.Serializable {
 								&& this.getDesembolsosMesGtq().equals(castOther.getDesembolsosMesGtq())));
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 

@@ -12,6 +12,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class InfId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6235971049590930102L;
 	private Date fechaCorte;
 	private String noPrestamo;
 	private String codigoPresupuestario;
@@ -255,6 +259,7 @@ public class InfId implements java.io.Serializable {
 		this.estadoPrestamo = estadoPrestamo;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -327,6 +332,7 @@ public class InfId implements java.io.Serializable {
 								&& this.getEstadoPrestamo().equals(castOther.getEstadoPrestamo())));
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 

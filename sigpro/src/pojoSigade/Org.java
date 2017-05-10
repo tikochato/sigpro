@@ -13,6 +13,10 @@ import javax.persistence.Table;
 @Table(name = "org", catalog = "sigade")
 public class Org implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3811762137908505117L;
 	private int codigo;
 	private String nombreOrganismoFinan;
 	private String siglasOrganismoFinan;
