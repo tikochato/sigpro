@@ -1,8 +1,6 @@
 var app = angular.module('porcentajeactividadesController', ['DlhSoft.Kanban.Angular.Components']);
 
 var GanttChartView = DlhSoft.Controls.GanttChartView;
-//Query string syntax: ?theme
-//Supported themes: Default, Generic-bright, Generic-blue, DlhSoft-gray, Purple-green, Steel-blue, Dark-black, Cyan-green, Blue-navy, Orange-brown, Teal-green, Purple-beige, Gray-blue, Aero.
 var queryString = window.location.search;
 var theme = queryString ? queryString.substr(1) : null;
 
@@ -13,56 +11,98 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 		mi.proyectoid = "";
 		mi.proyectoNombre = "";
 		mi.objetoTipoNombre = "";
-		mi.tColeccionObjetos = [];
+		mi.componentes = [];
+		mi.productos = [];
 		
 		var KanbanBoard = DlhSoft.Controls.KanbanBoard;
 		
 		mi.tObjetos = [
-			{value: 0,text: "Seleccione una Opción"},
 			{value: 1,text: "Todo"},
 			{value: 2,text: 'Componente'},
-			{value: 3,text: 'Producto'},
-			{value: 4,text: 'Sub producto'},
-			{value: 5,text: 'Actividad'}
+			{value: 3,text: 'Producto'}
+		];
+		
+		mi.productos = [
+			{value: 0,text: "Seleccione una Opción"}
 		];
 		
 		mi.tObjeto = mi.tObjetos[0];
+		mi.producto = mi.productos[0];
 		
-		mi.tColeccionObjeto = mi.tColeccionObjetos[0];
-		
-		mi.buscarTipoObjeto = function(value){
-			switch(value){
-			case 1:
-				break;
-			case 2:
-				
-				break;
-			case 3:
-				break;
-			case 4:
-				break;
-			case 5:
-				break;
+		mi.displayObjeto = function(objetoSeleccionado){
+			if(objetoSeleccionado === 0){
+				mi.componenteHide = false;
+				mi.productoHide = false;
+			}else if(objetoSeleccionado === 1){
+				mi.componenteHide = false;
+				mi.productoHide = false;
+				mi.resetKanban();
+			}else if(objetoSeleccionado === 2){
+				mi.componenteHide = true;
+				mi.productoHide = false;
+				mi.resetKanban();
+				mi.getComponentes();
+			}else if (objetoSeleccionado === 3){
+				mi.componenteHide = true;
+				mi.productoHide = true;
+				mi.resetKanban();
+				mi.getComponentes();
 			}
 		}
 		
-		mi.buscarActividades = function(value){
-			switch(value){
+		mi.getComponentes = function(){
+			$http.post('/SComponente',{accion: 'getComponentesPaginaPorProyecto', proyectoid: $routeParams.proyectoId}).success(
+					function(response) {
+						mi.componentes = [];
+						mi.componentes.push({'value' : 0, 'text' : 'Seleccione una opción'});
+						if (response.success){
+							for (var i = 0; i < response.componentes.length; i++){
+								mi.componentes.push({'value': response.componentes[i].id, 'text': response.componentes[i].nombre});
+							}
+							
+							mi.componente = mi.componentes[0];
+						}
+					});
+		}
+		
+		mi.getProductos = function(componenteId){
+			mi.productos = [];
+			mi.productos.push({'value' : 0, 'text' : 'Seleccione una opción'});
+			mi.producto = mi.productos[0];
+			mi.resetKanban();
+			
+			if (mi.tObjeto.value == 3 && componenteId != 0){
+				$http.post('/SProducto', {accion: 'listarProductos', componenteid:componenteId}).success(
+						function(response){
+							
+							if (response.success){
+								for (var i = 0; i < response.productos.length; i++){
+									mi.productos.push({'value': response.productos[i].id, 'text': response.productos[i].nombre});
+								}
+								
+								mi.producto = mi.productos[0];
+							}
+						});
+			}
+		}
+		
+		mi.refrescar = function(){
+			mi.resetKanban();
+			switch(mi.tObjeto.value){
 			case 1:
+				mi.getActividades();
 				break;
 			case 2:
+				mi.getActividades();
 				break;
 			case 3:
+				mi.getActividades();
 				break;
 			case 4:
 				break;
 			case 5:
 				break;
 			}
-		};
-		
-		mi.refrescar = function(){
-			i.resetKanban();
 		};
 		
 		mi.resetKanban = function(){
@@ -74,76 +114,58 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 		$scope.states = {};
 		$scope.itemsKanban = null; 
 		$scope.mostrarKanban = false;
-
-		mi.obtenerPrestamos = function(){
-			$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyectoId }).success(
-					function(response) {
-						mi.proyectoid = response.id;
-						mi.proyectoNombre = response.nombre;
-						mi.objetoTipoNombre = "Proyecto";
-				});
-				
-				$http.post('/SPorcentajeActividades', {accion : "getActividades", tipoObjeto: 2, proyecto_id:$routeParams.proyectoId }).success(
-					function(response) {
-						var estadoNuevo = { name: 'Nuevo', areNewItemButtonsHidden: true }, 
-						estadoEnProgreso = { name: 'En progreso', areNewItemButtonsHidden: true }, 
-						estadoTerminado = { name: 'Terminado', isCollapsedByDefaultForGroups: true, areNewItemButtonsHidden: true };
-						estadoRetrasado = { name: 'Retrasado', isCollapsedByDefaultForGroups: true, areNewItemButtonsHidden: true };
-						
-						var colores = ["#ffe033","#9fc6ee","#008000","#ff0000"];
-						
-						var estados  = [estadoNuevo, estadoEnProgreso, estadoTerminado,estadoRetrasado];
-						var items  = response.items;
-						
-						for (item in items) {
-						    items[item].state = estados[items[item].estadoId];
-						    items[item].color = colores[items[item].estadoId];
-						    items[item].isReadOnly = true;  
-						}
-						
-						$scope.states  = estados;
-						$scope.itemsKanban = items;
-						$scope.mostrarKanban = true;
-							
-				});	
-		};
 		
-		/*
-		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyectoId }).success(
-			function(response) {
-				mi.proyectoid = response.id;
-				mi.proyectoNombre = response.nombre;
-				mi.objetoTipoNombre = "Proyecto";
-		});
-		
-		$http.post('/SPorcentajeActividades', {accion : "getKanban", proyecto_id:$routeParams.proyectoId }).success(
-			function(response) {
-				var estadoNuevo = { name: 'Nuevo', areNewItemButtonsHidden: true }, 
-				estadoEnProgreso = { name: 'En progreso', areNewItemButtonsHidden: true }, 
-				estadoTerminado = { name: 'Terminado', isCollapsedByDefaultForGroups: true, areNewItemButtonsHidden: true };
-				estadoRetrasado = { name: 'Retrasado', isCollapsedByDefaultForGroups: true, areNewItemButtonsHidden: true };
-				
-				var colores = ["#ffe033","#9fc6ee","#008000","#ff0000"];
-				
-				var estados  = [estadoNuevo, estadoEnProgreso, estadoTerminado,estadoRetrasado];
-				var items  = response.items;
-				
-				for (item in items) {
-				    items[item].state = estados[items[item].estadoId];
-				    items[item].color = colores[items[item].estadoId];
-				    items[item].isReadOnly = true;  
+		mi.getActividades = function(){
+			var param_data = {};
+			var ejecutar = false;
+			if(mi.tObjeto.value == 1){
+				param_data = {
+					accion : "getKanban", 
+					proyecto_id:$routeParams.proyectoId
 				}
-				
-				$scope.states  = estados;
-				$scope.itemsKanban = items;
-				$scope.mostrarKanban = true;
-					
-		});	
-		*/
+				ejecutar = true;
+			}if(mi.tObjeto.value == 2 && mi.componente.value != 0){
+				param_data = {
+					accion : "getKanbanComponente", 
+					componente_id : mi.componente.value
+				}
+				ejecutar = true;
+			} else if(mi.tObjeto.value == 3 && mi.componente.value != 0 && mi.producto.value != 0){
+				param_data = {
+					accion : "getKanbanProducto", 
+					producto_id : mi.producto.value
+				}
+				ejecutar = true;
+			}
+			
+			if(ejecutar){
+				$http.post('/SPorcentajeActividades', param_data).success(
+						function(response) {
+							var estadoNuevo = { name: 'Nuevo', areNewItemButtonsHidden: true }, 
+							estadoEnProgreso = { name: 'En progreso', areNewItemButtonsHidden: true }, 
+							estadoTerminado = { name: 'Terminado', isCollapsedByDefaultForGroups: true, areNewItemButtonsHidden: true };
+							estadoRetrasado = { name: 'Retrasado', isCollapsedByDefaultForGroups: true, areNewItemButtonsHidden: true };
+							
+							var colores = ["#ffe033","#9fc6ee","#008000","#ff0000"];
+							
+							var estados  = [estadoNuevo, estadoEnProgreso, estadoTerminado,estadoRetrasado];
+							var items  = response.items;
+							
+							for (item in items) {
+							    items[item].state = estados[items[item].estadoId];
+							    items[item].color = colores[items[item].estadoId];
+							    items[item].isReadOnly = true;  
+							}
+							
+							$scope.states  = estados;
+							$scope.itemsKanban = items;
+							$scope.mostrarKanban = true;
+								
+					});	
+			}
+		}
 	}
 ]);
-
-
 
 app.directive('customOnChange', function() {
   return {

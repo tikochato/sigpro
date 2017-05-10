@@ -115,113 +115,58 @@ public class SPorcentajeActividades extends HttpServlet {
 			}
 			
 			items = String.join("","{\"items\" : [", items,"]}");
-
-		}else if (accion.equals("getActividades")){
-			Integer tipo = Utils.String2Int(map.get("tipoObjeto"),0);
-			Integer proyectoId = Utils.String2Int(map.get("proyecto_id"),0);
+		}else if(accion.equals("getKanbanComponente")){
+			items = "";
 			Integer componenteId = Utils.String2Int(map.get("componente_id"),0);
-			switch (tipo) {
-				case 1:				
-					break;
-				case 2:
-					List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
+			List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componenteId,
+					null, null, null, null, null, usuario);
+			for (Producto producto : productos){
+				List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
+						null, null, null, null, null, usuario);
+				for (Subproducto subproducto : subproductos){
+					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
 							null, null, null, null, null, usuario);
-					
-					for (Componente componente : componentes){
-						List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
-								null, null, null, null, null, usuario);
-						for (Producto producto : productos){
-							List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
-									null, null, null, null, null, usuario);
-							for (Subproducto subproducto : subproductos){
-								List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
-										null, null, null, null, null, usuario);
-								for (Actividad actividad : actividades ){
-									items = String.join(items.length()>0 ? "," : "", items,
-											construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
-								}
-							}
-							List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
-									null, null, null, null, null, usuario);
-							for (Actividad actividad : actividades ){
-								items = String.join(items.length()>0 ? "," : "", items,
-										construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
-							}
+					for (Actividad actividad : actividades ){
+						items = String.join(items.length()>0 ? "," : "", items,
+								construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
+					}
+				}
+				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
+						null, null, null, null, null, usuario);
+				for (Actividad actividad : actividades ){
+					items = String.join(items.length()>0 ? "," : "", items,
+							construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
+				}
 
-						}
-						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), OBJETO_ID_COMPONENTE,
-								null, null, null, null, null, usuario);
-						for (Actividad actividad : actividades ){
-							items = String.join(items.length()>0 ? "," : "", items,
-									construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(),actividad.getFechaFin()));
-						}
-					}
-					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, proyectoId, OBJETO_ID_PROYECTO,
-							null, null, null, null, null, usuario);
-					for (Actividad actividad : actividades ){
-						items = String.join(items.length()>0 ? "," : "", items,
-								construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(),actividad.getFechaFin()));
-					}
-					
-					items = String.join("","{\"items\" : [", items,"]}");
-					break;
-				case 3:
-					List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componenteId, 
-							null, null, null, null, null, usuario);
-					for (Producto producto : productos){
-						List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
-								null, null, null, null, null, usuario);
-						for (Subproducto subproducto : subproductos){
-							actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
-									null, null, null, null, null, usuario);
-							for (Actividad actividad : actividades ){
-								items = String.join(items.length()>0 ? "," : "", items,
-										construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
-							}
-						}
-						actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
-								null, null, null, null, null, usuario);
-						for (Actividad actividad : actividades ){
-							items = String.join(items.length()>0 ? "," : "", items,
-									construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
-						}
-					}
-					
-					actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componenteId, OBJETO_ID_COMPONENTE,
-							null, null, null, null, null, usuario);
-					for (Actividad actividad : actividades ){
-						items = String.join(items.length()>0 ? "," : "", items,
-								construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(),actividad.getFechaFin()));
-					}
-					break;
-				case 4:
-					break;
-				case 5:
-					break;
 			}
-		}else if (accion.equals("getTipoObjeto")){
-			Integer tipoObjeto = Utils.String2Int(map.get("tipoObjeto"),0);
-			Integer proyectoId = Utils.String2Int(map.get("proyecto_id"),0);
-			Integer componenteId = Utils.String2Int(map.get("componente_id"),0);
+			
+			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componenteId, OBJETO_ID_COMPONENTE,
+					null, null, null, null, null, usuario);
+			for (Actividad actividad : actividades ){
+				items = String.join(items.length()>0 ? "," : "", items,
+						construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(),actividad.getFechaFin()));
+			}
+			
+			items = String.join("","{\"items\" : [", items,"]}");
+		}else if(accion.equals("getKanbanProducto")){
 			Integer productoId = Utils.String2Int(map.get("producto_id"),0);
-			switch (tipoObjeto) {
-			case 1:
-				break;
-			case 2:
-				List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
+			List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, productoId,
+					null, null, null, null, null, usuario);
+			for (Subproducto subproducto : subproductos){
+				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
 						null, null, null, null, null, usuario);
-				break;
-			case 3:
-				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componenteId, 
-						null, null, null, null, null, usuario);
-				break;
-			case 4:
-				List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, productoId,
-						null, null, null, null, null, usuario);
-				break;
-			case 5: 
-				break;
+				for (Actividad actividad : actividades ){
+					items = String.join(items.length()>0 ? "," : "", items,
+							construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
+				}
 			}
+			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, productoId, OBJETO_ID_PRODUCTO,
+					null, null, null, null, null, usuario);
+			for (Actividad actividad : actividades ){
+				items = String.join(items.length()>0 ? "," : "", items,
+						construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
+			}
+			items = String.join("","{\"items\" : [", items,"]}");
 		}
 
 		response.setHeader("Content-Encoding", "gzip");
