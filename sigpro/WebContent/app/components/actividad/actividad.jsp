@@ -104,6 +104,8 @@
 			
 			<div class="operation_buttons">
 				<div class="btn-group" ng-hide="actividadc.esnuevo">
+				<label class="btn btn-default" ng-click="actividadc.irAActividades(actividadc.actividad.id)" uib-tooltip="Actividad" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-th-list"></span></label>
 					<label class="btn btn-default" ng-click="actividadc.irARiesgos(actividadc.actividad.id)" uib-tooltip="Riesgos" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-warning-sign"></span></label>
 				</div>

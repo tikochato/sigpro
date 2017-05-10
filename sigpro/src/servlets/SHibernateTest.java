@@ -33,11 +33,11 @@ public class SHibernateTest extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		DateTime date = new DateTime();
 		int id = 0;
-		Cooperante cooperante = new Cooperante("A1", "Prueba", "admin", date.toDate(), 1);
+		Cooperante cooperante = new Cooperante(1000, "Prueba", "admin", date.toDate(), 1);
 		if(CooperanteDAO.guardarCooperante(cooperante)){
 			response.getWriter().write("Cooperante creado con éxito, nuevo id: "+cooperante.getId()+", código: A1\r\n");
 			id = cooperante.getId();
-			cooperante.setCodigo("B1");
+			cooperante.setSiglas("B1");
 			if(CooperanteDAO.guardarCooperante(cooperante)){
 				Cooperante guardado = CooperanteDAO.getCooperantePorId(cooperante.getId());
 				response.getWriter().write("Cooperante guardado con éxito, id: "+guardado.getId()+", código: "+guardado.getCodigo()+ "\r\n");

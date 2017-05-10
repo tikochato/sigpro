@@ -255,7 +255,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				montoAsignadoUeQtz: mi.prestamo.montoAsignadoUeQtz,
 				desembolsoAFechaUeUsd: mi.prestamo.desembolsoAFechaUeUsd,
 				montoPorDesembolsarUeUsd: mi.prestamo.montoPorDesembolsarUeUsd,
-				
 				destino : mi.prestamo.destino,
 				sectorEconomico: mi.prestamo.sectorEconomico,
 				fechaFimra: mi.prestamo.fechaFirma != undefined ? moment(mi.prestamo.fechaFirma).format('DD/MM/YYYY') : undefined,
@@ -416,16 +415,16 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			$http.post('/SPrestamo', parametros).then(function(response){
 				if (response.data.prestamo!=null){
 					mi.prestamo = response.data.prestamo;
-					mi.prestamo.fechaCorte = mi.prestamo.fechaCorte != '' ?  moment(mi.prestamo.fechaCorte,'DD/MM/YYYY').toDate() : null;
-					mi.prestamo.fechaFirma = mi.prestamo.fechaFirma != '' ? moment (mi.prestamo.fechaFirma,'DD/MM/YYYY').toDate() : null;
-					mi.prestamo.fechaAutorizacion = mi.prestamo.fechaAutorizacion != '' ? moment(mi.prestamo.fechaAutorizacion,'DD/MM/YYYY').toDate() : null;
-					mi.prestamo.fechaFinEjecucion = mi.prestamo.fechaFinEjecucion != '' ? moment (mi.prestamo.fechaFinEjecucion,'DD/MM/YYYY').toDate() : null;
-					mi.prestamo.fechaDecreto = mi.prestamo.fechaDecreto != '' ? moment (mi.prestamo.fechaDecreto,'DD/MM/YYYY').toDate() : null;
-					mi.prestamo.fechaSuscripcion = mi.prestamo.fechaSuscripcion != '' ? moment(mi.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate() : null;
-					mi.prestamo.fechaElegibilidadUe = mi.prestamo.fechaElegibilidadUe != '' ? moment(mi.prestamo.fechaElegibilidadUe,'DD/MM/YYYY').toDate() : null;
-					mi.prestamo.fechaCierreOrigianlUe = mi.prestamo.fechaCierreOrigianlUe != '' ? moment (mi.prestamo.fechaCierreOrigianlUe,'DD/MM/YYYY').toDate() : null; 
-					mi.prestamo.fechaCierreActualUe = mi.prestamo.fechaCierreActualUe != '' ? moment (mi.prestamo.fechaCierreActualUe,'DD/MM/YYYY').toDate() : null;
-					mi.prestamo.fechaVigencia = mi.prestamo.fechaVigencia != '' ? moment(mi.prestamo.fechaVigencia,'DD/MM/YYYY').toDate() : null;
+					mi.prestamo.fechaCorte = mi.prestamo.fechaCorte != undefined ?  moment(mi.prestamo.fechaCorte,'DD/MM/YYYY').toDate() : undefined;
+					mi.prestamo.fechaFirma = mi.prestamo.fechaFirma != undefined ? moment (mi.prestamo.fechaFirma,'DD/MM/YYYY').toDate() : undefined;
+					mi.prestamo.fechaAutorizacion = mi.prestamo.fechaAutorizacion != undefined ? moment(mi.prestamo.fechaAutorizacion,'DD/MM/YYYY').toDate() : undefined;
+					mi.prestamo.fechaFinEjecucion = mi.prestamo.fechaFinEjecucion != undefined ? moment (mi.prestamo.fechaFinEjecucion,'DD/MM/YYYY').toDate() : undefined;
+					mi.prestamo.fechaDecreto = mi.prestamo.fechaDecreto != undefined ? moment (mi.prestamo.fechaDecreto,'DD/MM/YYYY').toDate() : undefined;
+					mi.prestamo.fechaSuscripcion = mi.prestamo.fechaSuscripcion != undefined ? moment(mi.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate() : undefined;
+					mi.prestamo.fechaElegibilidadUe = mi.prestamo.fechaElegibilidadUe != undefined ? moment(mi.prestamo.fechaElegibilidadUe,'DD/MM/YYYY').toDate() : undefined;
+					mi.prestamo.fechaCierreOrigianlUe = mi.prestamo.fechaCierreOrigianlUe != undefined ? moment (mi.prestamo.fechaCierreOrigianlUe,'DD/MM/YYYY').toDate() : undefined; 
+					mi.prestamo.fechaCierreActualUe = mi.prestamo.fechaCierreActualUe != undefined ? moment (mi.prestamo.fechaCierreActualUe,'DD/MM/YYYY').toDate() : undefined;
+					mi.prestamo.fechaVigencia = mi.prestamo.fechaVigencia != undefined ? moment(mi.prestamo.fechaVigencia,'DD/MM/YYYY').toDate() : undefined;
 				}
 				
 			});
@@ -919,6 +918,40 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	    }, function() {
 		});
 	  };
+	  
+	  mi.cargaSigade = function(){
+			var parametros = {
+					accion: 'getdatos',
+					noPrestamo: mi.prestamo.numeroPrestamo,
+				    t:moment().unix()
+			}
+			$http.post('/SDataSigade', parametros).then(function(response){
+				mi.prestamo={};
+				if (response.data.success){
+					mi.prestamo.codigoPresupuestario = Number(response.data.prestamo.codigoPresupuestario);
+					mi.prestamo.numeroPrestamo = response.data.prestamo.numeroPrestamo;
+					mi.prestamo.proyectoPrograma = response.data.prestamo.proyectoPrograma;
+					mi.prestamo.cooperantenombre = response.data.prestamo.cooperantenombre;
+					mi.prestamo.fechaDecreto = moment(response.data.prestamo.fechaDecreto,'DD/MM/YYYY').toDate()
+					mi.prestamo.fechaSuscripcion = moment(response.data.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate();
+					mi.prestamo.fechaVigencia = moment(response.data.prestamo.fechaVigencia,'DD/MM/YYYY').toDate();
+					mi.prestamo.tipoMonedaNombre = response.data.prestamo.tipoMonedaNombre;
+					mi.prestamo.tipoMonedaId= response.data.prestamo.tipoMonedaId;
+					mi.prestamo.montoContratado = response.data.prestamo.montoContratado;
+					mi.prestamo.montoContratadoUsd = response.data.prestamo.montoContratadoUsd;
+					mi.prestamo.montoContratadoQtz = response.data.prestamo.montoContratadoQtz;
+					mi.prestamo.desembolsoAFechaUsd = response.data.prestamo.desembolsoAFechaUsd;
+					mi.prestamo.montoPorDesembolsarUsd =  response.data.prestamo.montoPorDesembolsarUsd;
+					mi.getPorcentajes();
+				}else{
+					$utilidades.mensaje('warning', 'No se encontraron datos con los parámetros ingresados');
+				}
+				
+			});
+			
+		}
+	  
+	  
 } ]);
 
 app.controller('buscarPorProyecto', [ '$uibModalInstance',

@@ -16,7 +16,7 @@
 		    <form>
 		    	
 				<div class="btn-group">
-					<label class="btn btn-primary" ng-click="ganttc.exportar()"><span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"
+					<label class="btn btn-default" ng-click="ganttc.exportar()"><span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"
 						uib-tooltip="Exportar"> Exportar</span></label>
 					<label class="btn btn-default" ng-click="ganttc.zoomAcercar()"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"
 						uib-tooltip="Acercar vista"></span></label>
