@@ -268,7 +268,6 @@
 									<th style="display: none;">Id</th>
 									<th class="label-form">Nombre</th>
 									<th class="label-form">Extensión</th>
-									<th class="label-form">Descripción</th>
 									<th class="label-form">Descarga</th>
 									<th class="label-form">Eliminar</th>
 								</tr>
@@ -281,7 +280,6 @@
 								<td style="display: none;">{{row.id}}</td>
 								<td>{{row.nombre}}</td>
 								<td>{{row.extension}}</td>
-								<td>{{row.descripcion}}</td>
 								<td align="center">
 									<button type="button"
 										ng-click="controller.descargarDocumento(row)"

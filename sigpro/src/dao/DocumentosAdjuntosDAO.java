@@ -38,7 +38,7 @@ public class DocumentosAdjuntosDAO implements java.io.Serializable {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		session.clear();
 		try{
-			Query<Documento> criteria = session.createQuery("FROM Documento d where d.idObjeto=:idObjeto and d.idTipoObjeto=:idTipoObjeto", Documento.class);
+			Query<Documento> criteria = session.createQuery("FROM Documento d where d.estado=1 and d.idObjeto=:idObjeto and d.idTipoObjeto=:idTipoObjeto", Documento.class);
 			criteria.setParameter("idObjeto", idObjeto);
 			criteria.setParameter("idTipoObjeto", idTipoObjeto);
 			ret =   criteria.getResultList();

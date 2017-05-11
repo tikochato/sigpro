@@ -22,10 +22,6 @@
 				<div class="form-group" align="left">
 					<input type="file" id="pickfile" name="pickfile" onchange="angular.element(this).scope().cargarDocumento(event)" file-upload required></input>
 				</div>
-				<div class="form-group" align="left">
-  					<input type="text" class="inputText" ng-model="doctos.descripcion" ng-value="doctos.descripcion" onblur="this.setAttribute('value', this.value);"/>  
-					<label for="nombre" class="floating-label">Descripción</label>					
-				</div>
 				<br>
 				<div class="form-group" align="right">
 					<div class="btn-group" role="group" aria-label="" align="left" uib-tooltip="Cargar archivo">
