@@ -86,7 +86,7 @@
 						  <br/><br/>
 						</div>
 						<div class="form-group">
-						   <input type="text" name="codigo"  class="inputText" id="codigo" 
+						   <input type="number" name="codigo"  class="inputText" id="codigo" 
 						     ng-model="cooperantec.cooperante.codigo" ng-value="cooperantec.cooperante.codigo"   
 						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 						   <label class="floating-label">* Código</label>
@@ -96,6 +96,12 @@
 						     ng-model="cooperantec.cooperante.nombre" ng-value="cooperantec.cooperante.nombre"   
 						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 						   <label class="floating-label">* Nombre</label>
+						</div>
+						<div class="form-group">
+						   <input type="text" name="siglas"  class="inputText" id="siglas" 
+						     ng-model="cooperantec.cooperante.siglas" ng-value="cooperantec.cooperante.siglas"   
+						     onblur="this.setAttribute('value', this.value);">
+						   <label class="floating-label">Siglas</label>
 						</div>
 						<div class="form-group">
 						   <input type="text" name="descripcion"  class="inputText" id="descripcion" 
