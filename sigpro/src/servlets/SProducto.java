@@ -36,6 +36,7 @@ import pojo.ProductoTipo;
 import pojo.ProductoUsuario;
 import pojo.ProductoUsuarioId;
 import pojo.UnidadEjecutora;
+import servlets.SComponente.stcomponente;
 import utilities.Utils;
 
 @WebServlet("/SProducto")
@@ -423,15 +424,53 @@ public class SProducto extends HttpServlet {
 			String columna_ordenada = parametro.get("columna_ordenada");
 			String orden_direccion = parametro.get("orden_direccion");
 
-			response_text = Utils.getJSonString("productos", ProductoDAO.getProductosPagina(pagina, registros,componenteid,usuario,
-					filtro_nombre,filtro_usuario_creo
-					,filtro_fecha_creacion,columna_ordenada,orden_direccion));
+			List<Producto> productos = ProductoDAO.getProductosPagina(pagina, registros,componenteid,
+					filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion,usuario);
+			List<stproducto> stproductos=new ArrayList<stproducto>();
+			
+			for(Producto producto:productos){
+				stproducto temp = new stproducto();
+				temp.id = producto.getId();
+				temp.nombre = producto.getNombre();
+				temp.descripcion = producto.getDescripcion();
+				temp.programa = producto.getPrograma();
+				temp.subprograma = producto.getSubprograma();
+				temp.proyecto_ = producto.getProyecto();
+				temp.obra = producto.getObra();
+				temp.actividad = producto.getActividad();
+				temp.fuente = producto.getFuente();
+				temp.snip = producto.getSnip();
+				temp.estado = producto.getEstado();
+				temp.usuarioCreo = producto.getUsuarioCreo();
+				temp.usuarioactualizo = producto.getUsuarioActualizo();
+				temp.fechaCreacion = Utils.formatDateHour(producto.getFechaCreacion());
+				temp.fechaactualizacion = Utils.formatDateHour(producto.getFechaActualizacion());
+				temp.latitud = producto.getLatitud();
+				temp.longitud = producto.getLongitud();
+				
 
-			if (Utils.isNullOrEmpty(response_text)) {
-				response_text = "{\"success\":false}";
-			} else {
-				response_text = "{\"success\":true," + response_text + "}";
+				if (producto.getComponente() != null) {
+					temp.idComponente = producto.getComponente().getId();
+					temp.componente = producto.getComponente().getNombre();
+				}
+
+				if (producto.getProductoTipo() != null) {
+					temp.idProductoTipo = producto.getProductoTipo().getId();
+					temp.productoTipo = producto.getProductoTipo().getNombre();
+				}
+				
+				if (producto.getUnidadEjecutora() != null){
+					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
+					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
+				}
+
+				stproductos.add(temp);
 			}
+			
+			response_text = new GsonBuilder().serializeNulls().create().toJson(stproductos);
+			response_text = String.join("", "\"productos\":",response_text);
+			response_text = String.join("", "{\"success\":true,", response_text,"}");
+			
 		} else if (accion.equals("listarComponentes")) {
 			int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 			int registros = Utils.String2Int(parametro.get("registros"), 20);

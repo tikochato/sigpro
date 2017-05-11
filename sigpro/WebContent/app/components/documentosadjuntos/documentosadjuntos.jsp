@@ -18,7 +18,7 @@
 	    	<h5 ng-show="doctos.isCollapsed">Agregar Documento</h5>
 	    </div>
 	    <form method="post" enctype="multipart/form-data;charset=UTF-8" name="dForm">
-	    <div class="row col-sm-12">
+		    <div class="row col-sm-12">
 				<div class="form-group" align="left">
 					<input type="file" id="pickfile" name="pickfile" onchange="angular.element(this).scope().cargarDocumento(event)" file-upload required></input>
 				</div>
@@ -38,14 +38,7 @@
 						</button>
 					</div>
 				</div>
-    	</div>
+	    	</div>
     	</form>
     </div>
-</div>
-<div class="modal-footer">
-	<div class="col-sm-12 operation_buttons" align="right">
-		<div class="btn-group">
-			<button class="btn btn-default" type="button" ng-click="doctos.ok()">Cerrar</button>
-		</div>
-	</div>
 </div>
