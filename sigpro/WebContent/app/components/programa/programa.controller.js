@@ -1,7 +1,7 @@
 var app = angular.module('programaController', [ 'ngTouch' ]);
 
-app.controller('programaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
+app.controller('programaController',['$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
 
 	var mi = this;
 	i18nService.setCurrentLang('es');
@@ -55,6 +55,56 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
         mi.gridApi.selection.selectRow(mi.gridOpciones.data[filaId]);
         mi.editar();
     };
+    
+    
+    mi.adjuntarDocumentos = function(){
+		$documentoAdjunto.getModalDocumento($scope, 6, mi.programa.id)
+		.result.then(function(data) {
+			if (data != ""){
+				mi.rowCollection = [];
+				mi.rowCollection = data;
+		        mi.displayedCollection = [].concat(mi.rowCollection);
+			}
+		}, function(){
+			
+		});
+	}
+
+	mi.getDocumentosAdjuntos = function(objetoId, tipoObjetoId){
+		mi.rowCollection = [];
+		var formatData = new FormData();
+		formatData.append("accion","getDocumentos");
+		formatData.append("idObjeto", objetoId);
+		formatData.append("idTipoObjeto", tipoObjetoId);
+		$http.post('/SDocumentosAdjuntos', formatData, {
+			headers: {'Content-Type': undefined},
+			transformRequest: angular.identity,
+		}).then(function(response) {
+			if (response.data.success) {
+				 mi.rowCollection = response.data.documentos;
+		         mi.displayedCollection = [].concat(mi.rowCollection);
+			}
+		});
+	}
+	
+	mi.descargarDocumento= function(row){
+		var url = "/SDocumentosAdjuntos?accion=getDescarga&id="+row.id;
+		window.location.href = url;
+	}
+	
+	mi.eliminarDocumento= function(row){
+		$http.post('/SDocumentosAdjuntos?accion=eliminarDocumento&id='+row.id)
+		.then(function successCAllback(response){
+			if (response.data.success){
+				var indice = mi.rowCollection.indexOf(row);
+				if (indice !== -1) {
+			       mi.rowCollection.splice(indice, 6);		       
+			    }
+				mi.rowCollection = [];
+				mi.getDocumentosAdjuntos(6, mi.programa.id);
+			}
+		});
+	};
 	
 	mi.gridOpciones = {
 		enableRowSelection : true,
@@ -426,6 +476,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				
 			});
 			$scope.active = 0;
+			mi.getDocumentosAdjuntos(6, mi.programa.id);
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el Programa que desea editar');

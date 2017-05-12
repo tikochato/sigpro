@@ -41,6 +41,7 @@ public class SPorcentajeActividades extends HttpServlet {
 	private static int OBJETO_ID_COMPONENTE = 2;
 	private static int OBJETO_ID_PRODUCTO = 3;
 	private static int OBJETO_ID_SUBPRODUCTO = 4;
+	private static int OBJETO_ID_SUBACTIVIDAD = 5;
 	
        
     
@@ -84,34 +85,30 @@ public class SPorcentajeActividades extends HttpServlet {
 				for (Producto producto : productos){
 					List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
 							null, null, null, null, null, usuario);
-					for (Subproducto subproducto : subproductos){
+					for (Subproducto subproducto : subproductos){						
 						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
 								null, null, null, null, null, usuario);
 						for (Actividad actividad : actividades ){
-							items = String.join(items.length()>0 ? "," : "", items,
-									construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
+							items = ObtenerActividades(actividad,usuario, items);
 						}
 					}
 					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
 							null, null, null, null, null, usuario);
-					for (Actividad actividad : actividades ){
-						items = String.join(items.length()>0 ? "," : "", items,
-								construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
+					for (Actividad actividad : actividades ){						
+						items = ObtenerActividades(actividad,usuario, items);
 					}
 
 				}
 				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), OBJETO_ID_COMPONENTE,
 						null, null, null, null, null, usuario);
 				for (Actividad actividad : actividades ){
-					items = String.join(items.length()>0 ? "," : "", items,
-							construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(),actividad.getFechaFin()));
+					items = ObtenerActividades(actividad,usuario, items);
 				}
 			}
 			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, proyectoId, OBJETO_ID_PROYECTO,
 					null, null, null, null, null, usuario);
-			for (Actividad actividad : actividades ){
-				items = String.join(items.length()>0 ? "," : "", items,
-						construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(),actividad.getFechaFin()));
+			for (Actividad actividad : actividades ){				
+				items = ObtenerActividades(actividad,usuario, items);
 			}
 			
 			items = String.join("","{\"items\" : [", items,"]}");
@@ -127,15 +124,13 @@ public class SPorcentajeActividades extends HttpServlet {
 					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
 							null, null, null, null, null, usuario);
 					for (Actividad actividad : actividades ){
-						items = String.join(items.length()>0 ? "," : "", items,
-								construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
+						items = ObtenerActividades(actividad,usuario, items);
 					}
 				}
 				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
 						null, null, null, null, null, usuario);
 				for (Actividad actividad : actividades ){
-					items = String.join(items.length()>0 ? "," : "", items,
-							construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
+					items = ObtenerActividades(actividad,usuario, items);
 				}
 
 			}
@@ -143,8 +138,7 @@ public class SPorcentajeActividades extends HttpServlet {
 			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componenteId, OBJETO_ID_COMPONENTE,
 					null, null, null, null, null, usuario);
 			for (Actividad actividad : actividades ){
-				items = String.join(items.length()>0 ? "," : "", items,
-						construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(),actividad.getFechaFin()));
+				items = ObtenerActividades(actividad,usuario, items);
 			}
 			
 			items = String.join("","{\"items\" : [", items,"]}");
@@ -156,15 +150,13 @@ public class SPorcentajeActividades extends HttpServlet {
 				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
 						null, null, null, null, null, usuario);
 				for (Actividad actividad : actividades ){
-					items = String.join(items.length()>0 ? "," : "", items,
-							construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
+					items = ObtenerActividades(actividad,usuario, items);
 				}
 			}
 			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, productoId, OBJETO_ID_PRODUCTO,
 					null, null, null, null, null, usuario);
 			for (Actividad actividad : actividades ){
-				items = String.join(items.length()>0 ? "," : "", items,
-						construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
+				items = ObtenerActividades(actividad,usuario, items);
 			}
 			items = String.join("","{\"items\" : [", items,"]}");
 		}
@@ -178,6 +170,18 @@ public class SPorcentajeActividades extends HttpServlet {
         gz.write(items.getBytes("UTF-8"));
         gz.close();
         output.close();
+	}
+	
+	private String ObtenerActividades(Actividad actividad, String usuario, String items){
+		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, actividad.getId(), OBJETO_ID_SUBACTIVIDAD, 
+				null, null,null, null, null, usuario);
+		
+		for(Actividad subActividad : actividades){
+			items = ObtenerActividades(subActividad, usuario, items);
+		}
+		
+		return String.join(items.length()>0 ? "," : "", items,
+					construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
 	}
 
 	private String construirItemKanban(String nombre, Integer porcentaje,Date fechaFin){

@@ -13,6 +13,7 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 		mi.objetoTipoNombre = "";
 		mi.componentes = [];
 		mi.productos = [];
+		mi.mostrarcargando=false;
 		
 		var KanbanBoard = DlhSoft.Controls.KanbanBoard;
 		
@@ -30,6 +31,7 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 		mi.producto = mi.productos[0];
 		
 		mi.displayObjeto = function(objetoSeleccionado){
+			mi.mostrarcargando=false;
 			if(objetoSeleccionado === 0){
 				mi.componenteHide = false;
 				mi.productoHide = false;
@@ -116,6 +118,7 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 		$scope.mostrarKanban = false;
 		
 		mi.getActividades = function(){
+			mi.mostrarcargando=true;
 			var param_data = {};
 			var ejecutar = false;
 			if(mi.tObjeto.value == 1){
@@ -160,8 +163,8 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 							$scope.states  = estados;
 							$scope.itemsKanban = items;
 							$scope.mostrarKanban = true;
-								
 					});	
+				mi.mostrarcargando=false;
 			}
 		}
 	}

@@ -448,7 +448,11 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.adjuntarDocumentos = function(){
 		$documentoAdjunto.getModalDocumento($scope, 1, mi.proyecto.id)
 		.result.then(function(data) {
-			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
+			if (data != ""){
+				mi.rowCollection = [];
+				mi.rowCollection = data;
+		        mi.displayedCollection = [].concat(mi.rowCollection);
+			}
 		}, function(){
 			
 		});
