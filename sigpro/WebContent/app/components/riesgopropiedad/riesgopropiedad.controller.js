@@ -98,7 +98,7 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SRiesgoPropiedad', { accion: 'getRiesgoPropiedadPagina', pagina: pagina, numeroriesgopropiedades: $utilidades.elementosPorPagina,
+			$http.post('/SRiesgoPropiedad', { accion: 'getRiesgoPropiedadPagina', pagina: pagina, numeroriesgopropiedad: $utilidades.elementosPorPagina,
 				filtro_nombre: mi.filtros['nombre'], 
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
 				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion

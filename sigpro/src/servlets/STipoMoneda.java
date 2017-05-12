@@ -64,8 +64,8 @@ public class STipoMoneda extends HttpServlet {
 
 			if (accion.equals("getTipoMnedaPagina")) {
 				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-
-				List<TipoMoneda> tipoMonedas = TipoMonedaDAO.getAutorizacionTiposPagina(pagina, 0);
+				int numeroTipoMoneda = map.get("numerotipomoneda")!=null  ? Integer.parseInt(map.get("numerotipomoneda")) : 0;
+				List<TipoMoneda> tipoMonedas = TipoMonedaDAO.getAutorizacionTiposPagina(pagina, numeroTipoMoneda);
 				
 				List<stprograma> sttipomoneda=new ArrayList<stprograma>();
 				for(TipoMoneda tipoMoneda:tipoMonedas){

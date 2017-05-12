@@ -119,8 +119,8 @@ public class SComponente extends HttpServlet {
 		String response_text="";
 		if(accion.equals("getComponentesPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numeroCooperantes = map.get("numerocomponentes")!=null  ? Integer.parseInt(map.get("numerocomponentes")) : 0;
-			List<Componente> componentes = ComponenteDAO.getComponentesPagina(pagina, numeroCooperantes,usuario);
+			int numeroComponentes = map.get("numerocomponentes")!=null  ? Integer.parseInt(map.get("numerocomponentes")) : 0;
+			List<Componente> componentes = ComponenteDAO.getComponentesPagina(pagina, numeroComponentes,usuario);
 			List<stcomponente> stcomponentes=new ArrayList<stcomponente>();
 			for(Componente componente:componentes){
 				stcomponente temp =new stcomponente();

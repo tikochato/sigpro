@@ -36,7 +36,6 @@ import pojo.ProductoTipo;
 import pojo.ProductoUsuario;
 import pojo.ProductoUsuarioId;
 import pojo.UnidadEjecutora;
-import servlets.SComponente.stcomponente;
 import utilities.Utils;
 
 @WebServlet("/SProducto")

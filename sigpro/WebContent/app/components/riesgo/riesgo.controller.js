@@ -403,7 +403,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			return {
 				accion : 'getRiesgotiposPagina',
 				pagina : pagina,
-				registros : elementosPorPagina
+				numeroriesgostipo : elementosPorPagina
 			};
 		},'id','nombre');
 		

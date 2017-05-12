@@ -71,7 +71,7 @@ app.controller('formularioController',['$scope','$http','$interval','i18nService
 
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SFormulario', { accion: 'getFormularioPagina', pagina: pagina, numeroformularioss: $utilidades.elementosPorPagina }).success(
+			$http.post('/SFormulario', { accion: 'getFormularioPagina', pagina: pagina, numeroformularios: $utilidades.elementosPorPagina }).success(
 					function(response) {
 						mi.formularios = response.formularios;
 						mi.gridOptions.data = mi.formularios;
@@ -321,7 +321,7 @@ app.controller('formularioController',['$scope','$http','$interval','i18nService
 				return {
 					accion : 'getFormulariotiposPagina',
 					pagina : pagina,
-					registros : elementosPorPagina
+					numeroformulariostipo : elementosPorPagina
 				};
 			},'id','nombre');
 
@@ -338,7 +338,7 @@ app.controller('formularioController',['$scope','$http','$interval','i18nService
 				return {
 					accion : 'getFormularioItemtiposPagina',
 					pagina : pagina,
-					registros : elementosPorPagina
+					numeroformularioitemtipos : elementosPorPagina
 				};
 			},'id','nombre');
 

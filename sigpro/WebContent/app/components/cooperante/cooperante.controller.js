@@ -103,7 +103,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
 				$http.post('/SCooperante', { accion: 'getCooperantesPagina', pagina: pagina, numerocooperantes: $utilidades.elementosPorPagina,
-					filtro_nombre: mi.filtros['nombre'],  filtro_codigo: mi.filtros['codigo'], filtro_siglas: mi.filtros['siglas'],
+					filtro_nombre: mi.filtros['nombre'],  filtro_codigo: mi.filtros['codigo'], 
 					filtro_usuario_creo: mi.filtros['usuarioCcreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
 					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion}).success(
 						function(response) {
