@@ -108,7 +108,7 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 			
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SRecursoPropiedad', { accion: 'getRecursoPropiedadPagina', pagina: pagina, numerorecursopropiedades: $utilidades.elementosPorPagina,
+				$http.post('/SRecursoPropiedad', { accion: 'getRecursoPropiedadPagina', pagina: pagina, numerorecursopropiedad: $utilidades.elementosPorPagina,
 					filtro_nombre: mi.filtros['nombre'], 
 					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
 					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion

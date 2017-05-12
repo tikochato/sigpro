@@ -669,7 +669,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			return {
 				accion : 'getProyectoTipoPagina',
 				pagina : pagina,
-				registros : elementosPorPagina
+				numeroproyectotipo : elementosPorPagina
 			};
 		},'id','nombre');
 
@@ -731,7 +731,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			return {
 				accion : 'getCooperantesPagina',
 				pagina : pagina,
-				registros : elementosPorPagina
+				numerocooperantes : elementosPorPagina
 			};
 		},'id','nombre');
 
@@ -828,7 +828,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			return {
 				accion : 'getAutorizacionTipoPagin',
 				pagina : pagina,
-				registros : elementosPorPagina
+				numeroautorizaciontipo : elementosPorPagina
 			};
 		},'id','nombre');
 
@@ -846,7 +846,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			return {
 				accion : 'getAutorizacionTipoPagin',
 				pagina : pagina,
-				registros : elementosPorPagina
+				numerointerestipo : elementosPorPagina
 			};
 		},'id','nombre');
 
@@ -864,7 +864,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			return {
 				accion : 'getTipoMnedaPagina',
 				pagina : pagina,
-				registros : elementosPorPagina
+				numerotipomoneda : elementosPorPagina
 			};
 		},'id','nombre');
 
@@ -882,7 +882,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			return {
 				accion : 'getEjecucionEstadoPagina',
 				pagina : pagina,
-				registros : elementosPorPagina
+				numeroejecucionestado : elementosPorPagina
 			};
 		},'id','nombre');
 

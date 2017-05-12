@@ -119,13 +119,13 @@ public class SActividad extends HttpServlet {
 		String response_text="";
 		if(accion.equals("getActividadsPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numeroCooperantes = map.get("numeroactividads")!=null  ? Integer.parseInt(map.get("numeroactividads")) : 0;
+			int numeroActividades = map.get("numeroactividades")!=null  ? Integer.parseInt(map.get("numeroactividades")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
-			List<Actividad> actividads = ActividadDAO.getActividadsPagina(pagina, numeroCooperantes, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,
+			List<Actividad> actividads = ActividadDAO.getActividadsPagina(pagina, numeroActividades, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,
 					columna_ordenada, orden_direccion,usuario);
 			List<stactividad> stactividads=new ArrayList<stactividad>();
 			for(Actividad actividad:actividads){
@@ -335,7 +335,7 @@ public class SActividad extends HttpServlet {
 
 			int objetoId = map.get("objetoid")!=null  ? Integer.parseInt(map.get("objetoid")) : 0;
 			int objetoTipo = map.get("tipo")!=null  ? Integer.parseInt(map.get("tipo")) : 0;
-			int numeroActividads = map.get("numeroactividads")!=null  ? Integer.parseInt(map.get("numeroactividads")) : 0;
+			int numeroActividads = map.get("numeroactividades")!=null  ? Integer.parseInt(map.get("numeroactividades")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");

@@ -87,13 +87,13 @@ public class SProgramaPropiedad extends HttpServlet {
 		
 		if(accion.equals("getProgramaPropiedadPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int idProgramaPropiedad = map.get("idProgramaTipo")!=null  ? Integer.parseInt(map.get("idProgramaTipo")) : 0;
+			int numeroProgramaPropiedad = map.get("numeroprogramapropiedad")!=null  ? Integer.parseInt(map.get("numeroprogramapropiedad")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
-			List<ProgramaPropiedad> programaPropiedades = ProgramaPropiedadDAO.getProgramaPropiedadesPagina(pagina, idProgramaPropiedad,
+			List<ProgramaPropiedad> programaPropiedades = ProgramaPropiedadDAO.getProgramaPropiedadesPagina(pagina, numeroProgramaPropiedad,
 					 filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			List<stprogramapropiedad> stprogramapropiedad=new ArrayList<stprogramapropiedad>();
 			
