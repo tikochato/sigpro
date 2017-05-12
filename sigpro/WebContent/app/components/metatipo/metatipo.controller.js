@@ -210,6 +210,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 			}
 			
 			mi.filtrar = function(evt){
+				mi.obtenerTotalMetaTipos();
 				if(evt.keyCode==13){
 					mi.cargarTabla(mi.paginaActual);
 					mi.gridApi.selection.clearSelectedRows();
@@ -221,8 +222,8 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 				$http.post('/SMetaTipo', { accion: 'numeroMetaTipos', filtro_nombre: mi.filtros['nombre'], 
 					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
 						function(response) {
-							mi.totaltipos = response.totaltipos;
-							mi.cargarTabla(1);
+							mi.totaltipos = response.totalMetaTipos;
+							mi.cargarTabla(mi.paginaActual);
 						});
 				
 				}
