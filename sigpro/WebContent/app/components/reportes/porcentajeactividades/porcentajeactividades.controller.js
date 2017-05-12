@@ -118,7 +118,6 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 		$scope.mostrarKanban = false;
 		
 		mi.getActividades = function(){
-			mi.mostrarcargando=true;
 			var param_data = {};
 			var ejecutar = false;
 			if(mi.tObjeto.value == 1){
@@ -142,6 +141,7 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 			}
 			
 			if(ejecutar){
+				mi.mostrarcargando=true;
 				$http.post('/SPorcentajeActividades', param_data).success(
 						function(response) {
 							var estadoNuevo = { name: 'Nuevo', areNewItemButtonsHidden: true }, 
@@ -163,10 +163,11 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 							$scope.states  = estados;
 							$scope.itemsKanban = items;
 							$scope.mostrarKanban = true;
+							mi.mostrarcargando=false;
 					});	
-				mi.mostrarcargando=false;
 			}
 		}
+		mi.mostrarcargando=false;
 	}
 ]);
 
