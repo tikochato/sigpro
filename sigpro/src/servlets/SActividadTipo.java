@@ -87,7 +87,7 @@ public class SActividadTipo extends HttpServlet {
 		String response_text="";
 		if(accion.equals("getActividadtiposPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numeroCooperantesTipo = map.get("numeroactividadstipo")!=null  ? Integer.parseInt(map.get("numeroactividadstipo")) : 0;
+			int numeroCooperantesTipo = map.get("numeroactividadtipos")!=null  ? Integer.parseInt(map.get("numeroactividadtipos")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
