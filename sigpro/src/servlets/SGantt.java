@@ -209,16 +209,14 @@ public class SGantt extends HttpServlet {
 
 				CProject project = new CProject(directorioTemporal + "/temp_"+ time.toString());
 
-				Proyecto proyecto = project.imporatarArchivo(project.getProject(),usuario);
+				boolean creado = project.imporatarArchivo(project.getProject(),usuario);
 				
 				if (file.exists())
 				{
 					file.delete();
 				}
-				if (proyecto!=null){
-				
-					items = String.join("", "\"proyectoid\":",proyecto.getId().toString());
-				    items = String.join("", "{\"success\":true,",items,"}");
+				if (creado){
+				    items = "{ \"success\": true }";
 				}else{
 					items = "{ \"success\": false }";
 				}
@@ -290,9 +288,6 @@ public class SGantt extends HttpServlet {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-
-		
-
 	}
 
 	private String construirItem(Integer idItem,Integer objetoId, Integer objetoTipo, String content,Integer identation,
@@ -323,14 +318,13 @@ public class SGantt extends HttpServlet {
 				String retRec = obtenerItemsActividadesRecursivas(actividad.getId(), OBJETO_ID_ACTIVIDAD, nivelObjeto + 1, predecesores);
 				
 				List<Integer> idPredecesores = new ArrayList<>();
-				if (actividad.getPredObjetoId()!=null && retRec!=null && retRec.trim().length() > 0){
+				if (actividad.getPredObjetoId()!=null && retRec!=null && retRec.isEmpty()){
 					idPredecesores.add(actividad.getPredObjetoId());
 					predecesores.put(actividad.getId(), idPredecesores);
 				}
 				ret = String.join(ret.trim().length()>0 ? "," : "",ret,
 						construirItem(actividad.getId(),actividad.getId(),OBJETO_ID_ACTIVIDAD,actividad.getNombre(), 
 								nivelObjeto, true, actividad.getFechaInicio(), actividad.getFechaFin(),false));
-				
 				
 				
 				if (retRec!=null && retRec.length()>0){
