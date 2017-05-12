@@ -21,13 +21,13 @@ app.factory('documentoAdjunto',['$mdDialog','$uibModal', '$http',
 					},
 					elementoId: function(){
 						return tipoObjetoId;
-					}
+					},
 			    }
 
 			});
 		},
 		
-		getDocumentosAdjuntos: function( objetoId, tipoObjetoId){
+		getDocumentosAdjuntos: function(objetoId, tipoObjetoId){
 			var formatData = new FormData();
 			formatData.append("accion","getDocumentos");
 			formatData.append("idObjeto", objetoId);
@@ -70,7 +70,6 @@ function ModalDialogController($uibModalInstance, $scope, $http, $interval, i18n
 							'id' : documentos[i].id,
 							'extension' : documentos[i].extension,
 							'nombre' : documentos[i].nombre,
-							'descripcion' : documentos[i].descripcion,
 						}
 					)
 				}	
@@ -85,7 +84,6 @@ function ModalDialogController($uibModalInstance, $scope, $http, $interval, i18n
 			var formatData = new FormData();
 			formatData.append("file",$scope.documentos);
 			formatData.append("accion",'agregarDocumento');
-			formatData.append("descripcion", mi.descripcion | " ");
 			formatData.append("idObjeto", tipoObjeto);
 			formatData.append("idTipoObjeto", elementoId);
 			formatData.append("esNuevo",true);
@@ -95,38 +93,20 @@ function ModalDialogController($uibModalInstance, $scope, $http, $interval, i18n
 			}).then(
 					function(response) {
 						if (response.data.success) {
-							var nombredoc = "";
-							if(mi.descripcion){ 
-								nombredoc = mi.descripcion.replace(new RegExp(" ", 'g'),"_") + '.' + tipoObjeto; 
-							}else{
-								nombredoc = "" + '.' + tipoObjeto;
-							}
-									
-							mi.tdocumentos.push(
-								{
-									'id' : response.data.id,
-									'extension' : response.data.extension_archivo,
-									'nombre' : response.data.nombre,
-									'descripcion' : mi.descripcion | "",
-								}
-							)
-							mi.extension = null;
-							mi.nombre='';
-							mi.descripcion='';
-							//document.getElementById("pickfile").value = "";
 							$utilidades.mensaje('success','Agregado exitosamente');
+							$uibModalInstance.close(response.data.documentos);
 						}else{
 							if(response.data.existe_archivo)
 								$utilidades.mensaje('danger','El archivo que desea subir ya existe');
-							else
+							else{
 								$utilidades.mensaje('danger','Error al guardar el documento adjunto');
+							}
+							$uibModalInstance.close("");
 						}
 			});
 		}else{
 			$utilidades.mensaje('danger','Debe seleccionar un archivo');
 		}
-		
-		$uibModalInstance.close(true);
 	};
 	
 	String.prototype.replaceAll = function(search, replacement) {

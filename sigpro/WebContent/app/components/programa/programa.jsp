@@ -213,7 +213,6 @@
 											<th style="display: none;">Id</th>
 											<th class="label-form">Nombre</th>
 											<th class="label-form">Extensión</th>
-											<th class="label-form">Descripción</th>
 											<th class="label-form">Descarga</th>
 											<th class="label-form">Eliminar</th>
 										</tr>
@@ -226,7 +225,6 @@
 										<td style="display: none;">{{row.id}}</td>
 										<td>{{row.nombre}}</td>
 										<td>{{row.extension}}</td>
-										<td>{{row.descripcion}}</td>
 										<td align="center">
 											<button type="button"
 												ng-click="programac.descargarDocumento(row)"
@@ -248,10 +246,11 @@
 								</table>
 		        				</div>
 		    					<div style="width: 5%; float: right" align="right">
-			        				<label class="btn btn-default" ng-model="programac.adjuntarDocumento" 
-			        					uib-tooltip="Adjuntar documento" tooltip-placement="bottom" ng-click="programac.adjuntarDocumentos();">
-										<i class="glyphicon glyphicon glyphicon-plus"> </i>
-									</label>
+		    						<div class="btn-group">
+										<label class="btn btn-default" ng-model="programac.adjuntarDocumento"
+											ng-click="programac.adjuntarDocumentos();" uib-tooltip="Adjuntar documento" tooltip-placement="bottom">
+										<span class="glyphicon glyphicon-plus"></span></label>
+									</div>
 		        				</div>
 							</div>
 						</div>

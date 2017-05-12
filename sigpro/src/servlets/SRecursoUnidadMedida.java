@@ -78,13 +78,13 @@ public class SRecursoUnidadMedida extends HttpServlet {
 		String response_text="";
 		if(accion.equals("getRecursoUnidadMedidasPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numenumeroRecursoUnidadMedidas = map.get("numerorecursounidadmedidas")!=null  ? Integer.parseInt(map.get("numerorecursounidadmedidas")) : 0;
+			int numeroRecursoUnidadMedidas = map.get("numerorecursounidadmedidas")!=null  ? Integer.parseInt(map.get("numerorecursounidadmedidas")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
-			List<RecursoUnidadMedida> RecursoUnidadMedidas = RecursoUnidadMedidaDAO.getRecursoUnidadMedidasPagina(pagina, numenumeroRecursoUnidadMedidas,
+			List<RecursoUnidadMedida> RecursoUnidadMedidas = RecursoUnidadMedidaDAO.getRecursoUnidadMedidasPagina(pagina, numeroRecursoUnidadMedidas,
 					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			
 			List<stunidadrecurso> stunidad = new ArrayList<stunidadrecurso>();

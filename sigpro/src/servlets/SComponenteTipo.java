@@ -97,13 +97,13 @@ public class SComponenteTipo extends HttpServlet {
 		String response_text="";
 		if(accion.equals("getComponentetiposPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numeroCooperantesTipo = map.get("numerocomponentetipos")!=null  ? Integer.parseInt(map.get("numerocomponentetipos")) : 0;
+			int numeroComponenteTipo = map.get("numerocomponentetipos")!=null  ? Integer.parseInt(map.get("numerocomponentetipos")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
-			List<ComponenteTipo> componentetipos = ComponenteTipoDAO.getComponenteTiposPagina(pagina, numeroCooperantesTipo
+			List<ComponenteTipo> componentetipos = ComponenteTipoDAO.getComponenteTiposPagina(pagina, numeroComponenteTipo
 					,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);
 			List<stcomponentetipo> stcomponentetipos=new ArrayList<stcomponentetipo>();
 			for(ComponenteTipo componentetipo:componentetipos){

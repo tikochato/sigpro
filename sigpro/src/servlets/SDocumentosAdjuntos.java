@@ -15,11 +15,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-
+import org.joda.time.DateTime;
 
 import com.google.gson.GsonBuilder;
 
@@ -38,7 +39,6 @@ public class SDocumentosAdjuntos extends HttpServlet {
     class datos {
     	int id;
     	String nombre;
-    	String descripcion;
     	String extension;
     	int idTipoObjto;
     	int idObjeto;
@@ -52,12 +52,13 @@ public class SDocumentosAdjuntos extends HttpServlet {
     	response.setCharacterEncoding("UTF-8");
     	
 		String accion = "";
-		String descripcion = "";
 		String response_text = "";
 		Boolean esNuevo = false;	
 		Integer objetoId = 0;
 		Integer tipoObjetoId = 0;
 		Integer idDocumento = 0;
+		HttpSession sesionweb = request.getSession();
+		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		try {
 			if (request.getContentType() != null && request.getContentType().toLowerCase().indexOf("multipart/form-data") > -1 ) {
 				List<FileItem> parametros = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
@@ -66,8 +67,6 @@ public class SDocumentosAdjuntos extends HttpServlet {
 					if (parametro.isFormField()){
 						if (parametro.getFieldName().compareTo("accion")==0 && parametro.getString().length()>0){
 							accion = parametro.getString();
-						}else if (parametro.getFieldName().compareTo("descripcion")==0 && parametro.getString().length()>0){
-							descripcion = parametro.getString();
 						}else if (parametro.getFieldName().compareTo("esNuevo")==0 && parametro.getString().length()>0){
 							esNuevo = Boolean.parseBoolean(parametro.getString());
 						}else if (parametro.getFieldName().compareTo("idObjeto")==0 && parametro.getString().length()>0){
@@ -104,7 +103,7 @@ public class SDocumentosAdjuntos extends HttpServlet {
 										String nombreDocumento = parametro.getName();
 										
 										String tipoContenido = parametro.getName().substring(parametro.getName().indexOf('.') + 1);
-										documentoAdjunto = new Documento(nombreDocumento,descripcion, tipoContenido, tipoObjetoId,objetoId);
+										documentoAdjunto = new Documento(nombreDocumento, tipoContenido, tipoObjetoId,objetoId,usuario,new DateTime().toDate(),1);
 											
 										fileItems.add(parametro);
 										File directorio = new File(directorioTemporal);
@@ -124,7 +123,27 @@ public class SDocumentosAdjuntos extends HttpServlet {
 											result = DocumentosAdjuntosDAO.guardarDocumentoAdjunto(documentoAdjunto);
 											if (result > 0){
 												parametro.write(documento);
-												response_text = "{ \"success\": true, \"existe_archivo\": false, \"id\": \""+ result + "\",\"nombre\": \"" + nombreDocumento + "\",\"extension_archivo\": \"" + tipoContenido + "\" } ";
+												//response_text = "{ \"success\": true, \"existe_archivo\": false } ";
+												
+												List<Documento> documentos = DocumentosAdjuntosDAO.getDocumentos(objetoId,tipoObjetoId);
+												
+												if (documentos.size() > 0){
+													List <datos> datos_ = new ArrayList<datos>();
+													
+													for (Documento doc : documentos){
+														datos dato = new datos();
+														dato.id = doc.getId();
+														dato.nombre = doc.getNombre();
+														dato.extension = doc.getExtension();
+														datos_.add(dato);
+													}
+													
+													response_text = new GsonBuilder().serializeNulls().create().toJson(datos_);
+													response_text = String.join("", "\"documentos\":", response_text);
+													response_text = String.join("", "{\"success\":true, \"existe_archivo\": false , ", response_text, "}");
+												}else{
+													response_text = String.join("", "{\"success\":false}");
+												}
 											}else
 												response_text = "{ \"success\": false, \"existe_archivo\": false } ";
 										}
@@ -153,24 +172,23 @@ public class SDocumentosAdjuntos extends HttpServlet {
 						try{
 							List<Documento> documentos = DocumentosAdjuntosDAO.getDocumentos(objetoId,tipoObjetoId);
 							
-							response.setHeader("Content-Encoding", "gzip");
-							response.setCharacterEncoding("UTF-8");
-							
-							List <datos> datos_ = new ArrayList<datos>();
-							
-							for (Documento documento : documentos){
-								datos dato = new datos();
-								dato.id = documento.getId();
-								dato.nombre = documento.getNombre();
-								dato.extension = documento.getExtension();
-								dato.descripcion = documento.getDescripcion();
-								datos_.add(dato);
+							if (documentos.size() > 0){
+								List <datos> datos_ = new ArrayList<datos>();
+								
+								for (Documento documento : documentos){
+									datos dato = new datos();
+									dato.id = documento.getId();
+									dato.nombre = documento.getNombre();
+									dato.extension = documento.getExtension();
+									datos_.add(dato);
+								}
+								
+								response_text = new GsonBuilder().serializeNulls().create().toJson(datos_);
+								response_text = String.join("", "\"documentos\":", response_text);
+								response_text = String.join("", "{\"success\":true,", response_text, "}");
+							}else{
+								response_text = String.join("", "{\"success\":false}");
 							}
-							
-							
-							response_text = new GsonBuilder().serializeNulls().create().toJson(datos_);
-							response_text = String.join("", "\"documentos\":", response_text);
-							response_text = String.join("", "{\"success\":true,", response_text, "}");
 							
 							
 							response.setHeader("Content-Encoding", "gzip");
@@ -233,44 +251,22 @@ public class SDocumentosAdjuntos extends HttpServlet {
 							fileIn.close();
 					}
 				}else if(accion.equals("eliminarDocumento")){
-					List<Documento> documento = DocumentosAdjuntosDAO.eliminarDocumentoAdjunto(idDocumento);
-					if (documento.size() > 0){
-						String directorioTemporal = "/Archivos/Temporales";
+					List<Documento> documentos = DocumentosAdjuntosDAO.getDocumentoById(idDocumento);
+					for (Documento doc : documentos){
+						doc.setEstado(0);
+						DocumentosAdjuntosDAO.guardarDocumentoAdjunto(doc);
 						
-						for (Documento doc : documento){
-							File file = new File(directorioTemporal+"/"+doc.getIdObjeto()+"/"+doc.getIdTipoObjeto()+"/"+doc.getNombre());
-							if (file.exists()){
-								file.delete();
-								
-								response_text = "{\"success\":true}";
+						response_text = "{\"success\":true}";
 
-								response.setHeader("Content-Encoding", "gzip");
-								response.setCharacterEncoding("UTF-8");
-								
-								OutputStream output = response.getOutputStream();
-								GZIPOutputStream gz = new GZIPOutputStream(output);
-						        gz.write(response_text.getBytes("UTF-8"));
-						        gz.close();
-						        output.close();
-							}
-							else{
-								
-								DocumentosAdjuntosDAO.guardarDocumentoAdjunto(documento.get(0));
-								response_text = String.join("", "{\"success\":false,", response_text, "}");
-
-								response.setHeader("Content-Encoding", "gzip");
-								response.setCharacterEncoding("UTF-8");
-								
-								OutputStream output = response.getOutputStream();
-								GZIPOutputStream gz = new GZIPOutputStream(output);
-						        gz.write(response_text.getBytes("UTF-8"));
-						        gz.close();
-						        output.close();
-							}
-						}
+						response.setHeader("Content-Encoding", "gzip");
+						response.setCharacterEncoding("UTF-8");
 						
-						
-					}
+						OutputStream output = response.getOutputStream();
+						GZIPOutputStream gz = new GZIPOutputStream(output);
+				        gz.write(response_text.getBytes("UTF-8"));
+				        gz.close();
+				        output.close();
+					}						
 				}
 			}
 		}catch(Exception e){

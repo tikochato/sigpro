@@ -63,7 +63,7 @@ app.controller('formulariotipoController',['$scope','$http','$interval','i18nSer
 		
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SFormularioTipo', { accion: 'getFormulariotiposPagina', pagina: pagina, numeroformulariotipos: $utilidades.elementosPorPagina }).success(
+			$http.post('/SFormularioTipo', { accion: 'getFormulariotiposPagina', pagina: pagina, numeroformulariostipo: $utilidades.elementosPorPagina }).success(
 					function(response) {
 						mi.formulariotipos = response.formulariotipos;
 						mi.gridOptions.data = mi.formulariotipos;

@@ -96,7 +96,7 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 		
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SProgramaPropiedad', { accion: 'getProgramaPropiedadPagina', pagina: pagina, numeroprogramapropiedades: $utilidades.elementosPorPagina,
+			$http.post('/SProgramaPropiedad', { accion: 'getProgramaPropiedadPagina', pagina: pagina, numeroprogramapropiedad: $utilidades.elementosPorPagina,
 			filtro_nombre: mi.filtros['nombre'], 
 			filtro_usuario_creo: mi.filtros['usuario_creo'],
 		    filtro_fecha_creacion: mi.filtros['fecha_creacion'],

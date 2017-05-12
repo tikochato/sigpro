@@ -103,7 +103,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 		
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SRecursoTipo', { accion: 'getRecursotiposPagina', pagina: pagina, numerorecursotipos: $utilidades.elementosPorPagina, 
+			$http.post('/SRecursoTipo', { accion: 'getRecursotiposPagina', pagina: pagina, numerorecursostipo: $utilidades.elementosPorPagina, 
 				filtro_nombre: mi.filtros['nombre'], 
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
 				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
@@ -421,7 +421,7 @@ function modalBuscarRecursoPropiedad($uibModalInstance, $scope, $http, $interval
     	    accion : 'getRecursoPropiedadesTotalDisponibles',
     	    pagina : pagina,
     	    idspropiedades: idspropiedad,
-    	    registros : mi.elementosPorPagina
+    	    numerorecursopropiedad : mi.elementosPorPagina
     	};
 
     	mi.mostrarCargando = true;
