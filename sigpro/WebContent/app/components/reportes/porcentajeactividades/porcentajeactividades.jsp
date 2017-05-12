@@ -9,6 +9,15 @@
 		<div class="panel panel-default">
 		  <div class="panel-heading"><h3>Cartelera de Actividades</h3></div>
 		</div>
+		<div class="grid_loading" ng-hide="!porcentajeactividadesc.mostrarcargando">
+		  	<div class="msg">
+		      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
+				  <br /><br />
+				  <b>Cargando, por favor espere...</b>
+			  </span>
+			</div>
+		</div>
+		
 		<div class="subtitulo">
 			{{ porcentajeactividadesc.objetoTipoNombre }} {{ porcentajeactividadesc.proyectoNombre }}
 		</div>
