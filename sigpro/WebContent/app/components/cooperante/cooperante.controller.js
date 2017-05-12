@@ -102,7 +102,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 				mi.mostrarcargando=true;
 				$http.post('/SCooperante', { accion: 'getCooperantesPagina', pagina: pagina, numerocooperantes: $utilidades.elementosPorPagina,
 					filtro_nombre: mi.filtros['nombre'],  filtro_codigo: mi.filtros['codigo'],
-					filtro_usuario_creo: mi.filtros['usuarioCcreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
+					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
 					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion}).success(
 						function(response) {
 							mi.cooperantes = response.cooperantes;
@@ -215,6 +215,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			
 			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
+					mi.obtenerTotalCooperantes();
 					mi.cargarTabla(mi.paginaActual);
 					mi.gridApi.selection.clearSelectedRows();
 					mi.cooperante = null;
@@ -224,7 +225,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.obtenerTotalCooperantes=function(){
 				$http.post('/SCooperante', { accion: 'numeroCooperantes',
 					filtro_nombre: mi.filtros['nombre'], filtro_codigo: mi.filtros['codigo'],
-					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']
+					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']
 				}).success(
 				
 						function(response) {
