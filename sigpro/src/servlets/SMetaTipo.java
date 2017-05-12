@@ -80,13 +80,13 @@ public class SMetaTipo extends HttpServlet {
 		String response_text="";
 		if(accion.equals("getMetaTiposPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numenumeroMetaTipos = map.get("numerometatipo")!=null  ? Integer.parseInt(map.get("numerometatipo")) : 0;
+			int numeroMetaTipos = map.get("numerometatipo")!=null  ? Integer.parseInt(map.get("numerometatipo")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
-			List<MetaTipo> MetaTipos = MetaTipoDAO.getMetaTiposPagina(pagina, numenumeroMetaTipos,filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
+			List<MetaTipo> MetaTipos = MetaTipoDAO.getMetaTiposPagina(pagina, numeroMetaTipos,filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			List<sttipometa> sttipo = new ArrayList<sttipometa>();
 			for(MetaTipo metatipo:MetaTipos){
 				sttipometa temp = new sttipometa();

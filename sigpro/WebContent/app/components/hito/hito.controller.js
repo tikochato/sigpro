@@ -339,7 +339,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 			return {
 				accion : 'getHitoTiposPagina',
 				pagina : pagina,
-				numeroHitoTipos : elementosPorPagina
+				numerohitotipos : elementosPorPagina
 			};
 		});
 

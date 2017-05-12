@@ -95,7 +95,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 		
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SProyectoPropiedad', { accion: 'getProyectoPropiedadPagina', pagina: pagina, numeroriesgopropiedades: $utilidades.elementosPorPagina,
+			$http.post('/SProyectoPropiedad', { accion: 'getProyectoPropiedadPagina', pagina: pagina, numeroproyectopropiedad: $utilidades.elementosPorPagina,
 			filtro_nombre: mi.filtros['nombre'], 
 			filtro_usuario_creo: mi.filtros['usuario_creo'],
 		    filtro_fecha_creacion: mi.filtros['fecha_creacion'],

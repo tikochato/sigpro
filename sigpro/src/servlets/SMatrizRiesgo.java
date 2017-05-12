@@ -213,7 +213,7 @@ public class SMatrizRiesgo extends HttpServlet {
 				fila++;
 				
 			}
-			String path = excel.ExportarExcel(datos, "Matriz de Reisgos",usuario);
+			String path = excel.ExportarExcel(datos, "Matriz de Riesgos",usuario);
 			File file=new File(path);
 			if(file.exists()){
 		        FileInputStream is = null;

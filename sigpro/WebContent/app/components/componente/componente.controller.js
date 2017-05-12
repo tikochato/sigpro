@@ -382,7 +382,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				return {
 					accion : 'getComponentetiposPagina',
 					pagina : pagina,
-					registros : elementosPorPagina
+					numerocomponentetipos : elementosPorPagina
 				};
 			},'id','nombre');
 
