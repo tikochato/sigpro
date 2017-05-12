@@ -37,6 +37,7 @@ public class SCooperante extends HttpServlet {
 		Integer id;
 		Integer codigo;
 		String nombre;
+		String siglas;
 		String descripcion;
 		String usuarioCreo;
 		String usuarioActualizo;
@@ -97,6 +98,7 @@ public class SCooperante extends HttpServlet {
 				temp.fechaCreacion = Utils.formatDateHour(cooperante.getFechaCreacion());
 				temp.id = cooperante.getId();
 				temp.nombre = cooperante.getNombre();
+				temp.siglas = cooperante.getSiglas();
 				temp.usuarioActualizo = cooperante.getUsuarioActualizo();
 				temp.usuarioCreo = cooperante.getUsuarioCreo();
 				stcooperantes.add(temp);
@@ -146,6 +148,7 @@ public class SCooperante extends HttpServlet {
 					cooperante = CooperanteDAO.getCooperantePorId(id);
 					cooperante.setCodigo(codigo);
 					cooperante.setNombre(nombre);
+					cooperante.setSiglas(siglas);
 					cooperante.setDescripcion(descripcion);
 					cooperante.setUsuarioActualizo(sesionweb.getAttribute("usuario").toString());
 					cooperante.setFechaActualizacion(new DateTime().toDate());

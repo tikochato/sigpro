@@ -64,8 +64,8 @@ public class SEjecucionEstado extends HttpServlet {
 			
 			if (accion.equals("getEjecucionEstadoPagina")) {
 				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-
-				List<EjecucionEstado> ejecucionEstados = EjecucionEstadoDAO.getEjecucionEstadosPagina(pagina, 0);
+				int numeroEjecucionEstado = map.get("numeroejecucionestado")!=null  ? Integer.parseInt(map.get("numeroejecucionestado")) : 0;
+				List<EjecucionEstado> ejecucionEstados = EjecucionEstadoDAO.getEjecucionEstadosPagina(pagina, numeroEjecucionEstado);
 				
 				List<stprograma> sttipomoneda=new ArrayList<stprograma>();
 				for(EjecucionEstado tipoMoneda:ejecucionEstados){

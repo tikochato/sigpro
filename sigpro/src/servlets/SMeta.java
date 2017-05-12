@@ -111,7 +111,7 @@ public class SMeta extends HttpServlet {
 		String response_text="";
 		if(accion.equals("getMetasPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numenumeroMetas = map.get("numeroMeta")!=null  ? Integer.parseInt(map.get("numeroMeta")) : 0;
+			int numeroMetas = map.get("numerometas")!=null  ? Integer.parseInt(map.get("numerometas")) : 0;
 			Integer id =  map.get("id")!=null  ? Integer.parseInt(map.get("id")) : 0;
 			Integer tipo =  map.get("tipo")!=null  ? Integer.parseInt(map.get("tipo")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
@@ -119,7 +119,7 @@ public class SMeta extends HttpServlet {
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
-			List<Meta> Metas = MetaDAO.getMetasPagina(pagina, numenumeroMetas, id, tipo,filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
+			List<Meta> Metas = MetaDAO.getMetasPagina(pagina, numeroMetas, id, tipo,filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			List<stmeta> tmetas = new ArrayList<stmeta>();
 			for(Meta meta : Metas){
 				stmeta temp = new stmeta();

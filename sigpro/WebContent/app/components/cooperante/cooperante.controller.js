@@ -46,6 +46,8 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 					    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
 							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-model="grid.appScope.cooperantec.filtros[\'nombre\']" ng-keypress="grid.appScope.cooperantec.filtrar($event)"></input></div>'
 					    },
+					    { name: 'siglas', width: 100, displayName: 'Siglas',cellClass: 'grid-align-left', enableFiltering: false
+					    },
 					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 					    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
 					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-model="grid.appScope.cooperantec.filtros[\'usuarioCreo\']" ng-keypress="grid.appScope.cooperantec.filtrar($event)"></input></div>'
@@ -101,7 +103,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
 				$http.post('/SCooperante', { accion: 'getCooperantesPagina', pagina: pagina, numerocooperantes: $utilidades.elementosPorPagina,
-					filtro_nombre: mi.filtros['nombre'],  filtro_codigo: mi.filtros['codigo'],
+					filtro_nombre: mi.filtros['nombre'],  filtro_codigo: mi.filtros['codigo'], 
 					filtro_usuario_creo: mi.filtros['usuarioCcreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
 					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion}).success(
 						function(response) {
@@ -122,6 +124,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 						esnuevo: mi.esnuevo,
 						id: mi.cooperante.id,
 						codigo: mi.cooperante.codigo,
+						siglas: mi.cooperante.siglas,
 						nombre: mi.cooperante.nombre,
 						descripcion: mi.cooperante.descripcion
 					}).success(function(response){
@@ -223,7 +226,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			
 			mi.obtenerTotalCooperantes=function(){
 				$http.post('/SCooperante', { accion: 'numeroCooperantes',
-					filtro_nombre: mi.filtros['nombre'], filtro_codigo: mi.filtros['codigo'],
+					filtro_nombre: mi.filtros['nombre'], filtro_codigo: mi.filtros['codigo'], 
 					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']
 				}).success(
 				

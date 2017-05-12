@@ -421,7 +421,7 @@ function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval, i18nS
     	    accion : 'getProyectoPropiedadesTotalDisponibles',
     	    pagina : pagina,
     	    idspropiedades: idspropiedad,
-    	    registros : mi.elementosPorPagina
+    	    numeroproyectopropiedad : mi.elementosPorPagina
     	};
 
     	mi.mostrarCargando = true;

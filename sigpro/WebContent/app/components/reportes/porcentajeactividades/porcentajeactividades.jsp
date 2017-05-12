@@ -53,7 +53,7 @@
 		<div class="row" align="center" >
 		<br>
 			<div class="kanban-chart" style="max-height: 400px">
-	        	<div ds:kanban-board items="itemsKanban"  states="states" ng-if="mostrarKanban"
+				<div ds:kanban-board items="itemsKanban"  states="states" ng-if="mostrarKanban"
 	                     on-adding-new-item="initializeNewItem(item)" on-editing-item="deleteItem(item)"
 	                     edit-item-button-text="'?'" edit-item-button-tool-tip="'Delete item'"
 	                     on-item-state-changed="onItemStateChanged(item, state)" >

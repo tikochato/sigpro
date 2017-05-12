@@ -63,8 +63,8 @@ public class SAutorizacionTipo extends HttpServlet {
 			response_text = String.join("","{ \"success\": true, \"totalactividades\":",AutorizacionTipoDAO.getTotalAuotirzacionTipo().toString()," }");
 		}else if(accion.equals("getAutorizacionTipoPagin")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-
-			List<AutorizacionTipo> autorizacionTipos = AutorizacionTipoDAO.getAutorizacionTiposPagina(pagina, 0);
+			int numeroAutorizacionTipo = map.get("numeroautorizaciontipo")!=null  ? Integer.parseInt(map.get("numeroautorizaciontipo")) : 0;
+			List<AutorizacionTipo> autorizacionTipos = AutorizacionTipoDAO.getAutorizacionTiposPagina(pagina, numeroAutorizacionTipo);
 			
 			List<stautorizacionTipo> stautorizaciontipos=new ArrayList<stautorizacionTipo>();
 			for(AutorizacionTipo autorizacionTipo:autorizacionTipos){

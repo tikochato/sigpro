@@ -103,7 +103,7 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 		
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SRiesgoTipo', { accion: 'getRiesgotiposPagina', pagina: pagina, numeroriesgotipos: $utilidades.elementosPorPagina,
+			$http.post('/SRiesgoTipo', { accion: 'getRiesgotiposPagina', pagina: pagina, numeroriesgostipo: $utilidades.elementosPorPagina,
 				objetoid: $routeParams.objeto_id, tipo: mi.objetotipo, filtro_nombre: mi.filtros['nombre'], 
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
 				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
@@ -418,7 +418,7 @@ function modalBuscarRiesgoPropiedad($uibModalInstance, $scope, $http, $interval,
     	    accion : 'getRiesgoPropiedadesTotalDisponibles',
     	    pagina : pagina,
     	    idspropiedades: idspropiedad,
-    	    registros : mi.elementosPorPagina
+    	    numerocomponentepropiedad : mi.elementosPorPagina
     	};
 
     	mi.mostrarCargando = true;

@@ -105,7 +105,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 			}
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SActividadPropiedad', { accion: 'getActividadPropiedadPagina', pagina: pagina, numeroactividadpropiedades: $utilidades.elementosPorPagina,
+				$http.post('/SActividadPropiedad', { accion: 'getActividadPropiedadPagina', pagina: pagina, numeroactividadpropiedad: $utilidades.elementosPorPagina,
 					filtro_nombre: mi.filtros['nombre'], 
 					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
 					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
