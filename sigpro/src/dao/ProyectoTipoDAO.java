@@ -65,10 +65,12 @@ public class ProyectoTipoDAO {
 			session.beginTransaction();
 			session.saveOrUpdate(proyectotipo);
 			session.flush();
-
-			for (PtipoPropiedad propiedad : proyectotipo.getPtipoPropiedads()){
-				session.saveOrUpdate(propiedad);
+			if(!proyectotipo.getPtipoPropiedads().isEmpty()){
+				for (PtipoPropiedad propiedad : proyectotipo.getPtipoPropiedads()){
+					session.saveOrUpdate(propiedad);
+				}
 			}
+			
 			session.flush();
 
 			session.getTransaction().commit();
