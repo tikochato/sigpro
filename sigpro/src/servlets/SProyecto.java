@@ -261,6 +261,7 @@ public class SProyecto extends HttpServlet {
 				Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
 				String longitud = map.get("longitud");
 				String latitud = map.get("latitud");
+				String objetivo = map.get("objetivo");
 
 				ProyectoTipo proyectoTipo = new ProyectoTipo();
 				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): null);
@@ -377,7 +378,7 @@ public class SProyecto extends HttpServlet {
 				if(esnuevo){
 					proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion
 							, usuario, null, new DateTime().toDate(), null, 1, snip
-							,programa , subPrograma, proyecto_,actividad, obra, fuente,latitud,longitud
+							,programa , subPrograma, proyecto_,actividad, obra, fuente,latitud,longitud,objetivo
 							, null, null, null, null,null,null);
 
 				}else{
@@ -445,22 +446,24 @@ public class SProyecto extends HttpServlet {
 					ObjetoPrestamo objetoPrestamo = null;
 					
 					if (esnuevo){
-						prestamo = new Prestamo(autorizacionTipo, ejecucionEstado, interesTipo, tipoMoneda, unidadEjecutora_,
-								fechaCorte, codigoPresupuestario, numeroPrestamo, destino, sectorEconomico, fechaFirma, 
-								numeroAutorizacion, fechaAutorizacion, aniosPlazo, aniosGracia, fechaFinEjecucion, peridoEjecucion,
-								porcentajeInteres, porcentajeComisionCompra, montoContratado, amortizado, porAmortizar,
-								principalAnio, interesesAnio, comisionCompromisoAnio, otrosGastos, principalAcumulado, 
-								interesesAcumulados, comisionCompromisoAcumulado, otrosCargosAcumulados,
-								presupuestoAsignadoFuncionamiento, prespupuestoAsignadoInversion, 
-								presupuestoModificadoFun, presupuestoModificadoInv, presupuestoVigenteFun, 
-								presupuestoVigenteInv, prespupuestoDevengadoFun, presupuestoDevengadoInv, 
+						
+						// revisar esta variable plazoEjecucionUe que deberia ir en el penultimo null
+						
+						prestamo = new Prestamo(autorizacionTipo, cooperanteUe, ejecucionEstado, interesTipo, tipoMoneda, 
+								unidadEjecutora_, fechaCorte, codigoPresupuestario, numeroPrestamo, destino, sectorEconomico, 
+								fechaFirma, numeroAutorizacion, fechaAutorizacion, aniosPlazo, aniosGracia,
+								fechaFinEjecucion, peridoEjecucion, porcentajeInteres, porcentajeComisionCompra, 
+								montoContratado, amortizado, porAmortizar, principalAnio, interesesAnio, comisionCompromisoAnio, 
+								otrosGastos, principalAcumulado, interesesAcumulados, comisionCompromisoAcumulado, 
+								otrosCargosAcumulados, presupuestoAsignadoFuncionamiento, prespupuestoAsignadoInversion,
+								presupuestoModificadoFun, presupuestoModificadoInv, presupuestoVigenteFun,
+								presupuestoVigenteInv, prespupuestoDevengadoFun, presupuestoDevengadoInv,
 								presupuestoPagadoFun, presupuestoPagadoInv, saldoCuentas, desembolsadoReal, 
-								usuario, null, new Date(), null, 1, proyectoPrograma, 
-								fechaDecreto, fechaSuscripcion, fechaElegibilidadUe, fechaCierreOrigianlUe, fechaCierreActualUe, 
-								mesesProrrogaUe, montoAsignadoUe, desembolsoAFechaUe, montoPorDesembolsarUe, null,
-								fechaVigencia, montoContratadoUsd, montoContratadoQtz, desembolsoAFechaUsd, montoPorDesembolsarUsd, 
-								montoAsignadoUeUsd,montoAsignadoUeQtz, desembolsoAFechaUeUsd,
-								montoPorDesembolsarUeUsd,cooperanteUe);
+								usuario, null, new Date(), null, 1, proyectoPrograma, fechaDecreto, 
+								fechaSuscripcion, fechaElegibilidadUe, fechaCierreOrigianlUe, fechaCierreActualUe, mesesProrrogaUe,
+								null, montoAsignadoUe, desembolsoAFechaUe, montoPorDesembolsarUe, fechaVigencia, 
+								montoContratadoUsd, montoContratadoQtz, desembolsoAFechaUsd, montoPorDesembolsarUsd, montoAsignadoUeUsd, 
+								montoAsignadoUeQtz, desembolsoAFechaUeUsd, montoPorDesembolsarUeUsd, null);
 						
 						ObjetoPrestamoId objetoPrestamoId = new ObjetoPrestamoId(0, proyecto.getId(), objetoTipo);
 						objetoPrestamo = new ObjetoPrestamo(objetoPrestamoId, prestamo);
