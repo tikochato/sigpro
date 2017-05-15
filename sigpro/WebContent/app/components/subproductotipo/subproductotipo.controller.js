@@ -263,7 +263,6 @@ function controlSubproductoTipo($scope, $routeParams, $route, $window, $location
 				accion : 'crear',
 				nombre : mi.nombre,
 				descripcion : mi.descripcion,
-				usuario : 'temporal',
 				propiedades : JSON.stringify(mi.propiedadesTipo)
 			};
 
