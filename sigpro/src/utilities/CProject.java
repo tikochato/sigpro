@@ -126,7 +126,7 @@ public class CProject {
 		UnidadEjecutora unidadEjecturoa = new UnidadEjecutora();
 		unidadEjecturoa.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
 		Proyecto proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecturoa
-				, task.getName(), null, usuario, null, new Date(), null, 1
+				, task.getName(), null, null, usuario, null, new Date(), null, 1
 				, null, null, null, null, null, null, null, null, null, null, null, null, null,null,null);
 		ProyectoDAO.guardarProyecto(proyecto);
 		

@@ -33,6 +33,7 @@ public class Proyecto implements java.io.Serializable {
 	private ProyectoTipo proyectoTipo;
 	private UnidadEjecutora unidadEjecutora;
 	private String nombre;
+	private String objetivo;
 	private String descripcion;
 	private String usuarioCreo;
 	private String usuarioActualizo;
@@ -70,7 +71,7 @@ public class Proyecto implements java.io.Serializable {
 	}
 
 	public Proyecto(Cooperante cooperante, ProyectoTipo proyectoTipo, UnidadEjecutora unidadEjecutora, String nombre,
-			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			String objetivo, String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
 			Integer actividad, Integer obra, Integer fuente, String latitud, String longitud,
 			Set<Desembolso> desembolsos, Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos,
@@ -80,6 +81,7 @@ public class Proyecto implements java.io.Serializable {
 		this.proyectoTipo = proyectoTipo;
 		this.unidadEjecutora = unidadEjecutora;
 		this.nombre = nombre;
+		this.objetivo = objetivo;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
@@ -152,6 +154,15 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	@Column(name = "objetivo", length = 4000)
+	public String getObjetivo() {
+		return this.objetivo;
+	}
+
+	public void setObjetivo(String objetivo) {
+		this.objetivo = objetivo;
 	}
 
 	@Column(name = "descripcion", length = 4000)
