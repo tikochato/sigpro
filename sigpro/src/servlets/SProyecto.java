@@ -54,6 +54,7 @@ public class SProyecto extends HttpServlet {
 	class datos {
 		int id;
 		String nombre;
+		String objetivo;
 		String descripcion;
 		Long snip;
 		int proyectotipoid;
@@ -131,6 +132,7 @@ public class SProyecto extends HttpServlet {
 				datos dato = new datos();
 				dato.id = proyecto.getId();
 				dato.nombre = proyecto.getNombre();
+				dato.objetivo = proyecto.getObjetivo();
 				dato.descripcion = proyecto.getDescripcion();
 				dato.snip = proyecto.getSnip();
 				dato.proyectotipo = proyecto.getProyectoTipo().getNombre();
@@ -175,6 +177,7 @@ public class SProyecto extends HttpServlet {
 				datos dato = new datos();
 				dato.id = proyecto.getId();
 				dato.nombre = proyecto.getNombre();
+				dato.objetivo = proyecto.getObjetivo();
 				dato.descripcion = proyecto.getDescripcion();
 				dato.snip = proyecto.getSnip();
 				dato.proyectotipo = proyecto.getProyectoTipo().getNombre();
@@ -216,6 +219,7 @@ public class SProyecto extends HttpServlet {
 				datos dato = new datos();
 				dato.id = proyecto.getId();
 				dato.nombre = proyecto.getNombre();
+				dato.objetivo = proyecto.getObjetivo();
 				dato.descripcion = proyecto.getDescripcion();
 				dato.snip = proyecto.getSnip();
 				dato.proyectotipo = proyecto.getProyectoTipo().getNombre();
@@ -251,6 +255,7 @@ public class SProyecto extends HttpServlet {
 			if (id>0 || esnuevo){
 				String nombre = map.get("nombre");
 				Long snip = map.get("snip")!=null ? Long.parseLong(map.get("snip")) : null;
+				String objetivo = map.get("objetivo");
 				String descripcion = map.get("descripcion");
 
 				Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
@@ -377,12 +382,13 @@ public class SProyecto extends HttpServlet {
 				if(esnuevo){
 					proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion
 							, usuario, null, new DateTime().toDate(), null, 1, snip
-							,programa , subPrograma, proyecto_,actividad, obra, fuente,latitud,longitud
+							,programa , subPrograma, proyecto_,actividad, obra, fuente,latitud,longitud,objetivo
 							, null, null, null, null,null,null);
 
 				}else{
 					proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 					proyecto.setNombre(nombre);
+					proyecto.setObjetivo(objetivo);
 					proyecto.setDescripcion(descripcion);
 					proyecto.setSnip(snip);
 					proyecto.setProyectoTipo(proyectoTipo);
@@ -445,22 +451,24 @@ public class SProyecto extends HttpServlet {
 					ObjetoPrestamo objetoPrestamo = null;
 					
 					if (esnuevo){
-						prestamo = new Prestamo(autorizacionTipo, ejecucionEstado, interesTipo, tipoMoneda, unidadEjecutora_,
-								fechaCorte, codigoPresupuestario, numeroPrestamo, destino, sectorEconomico, fechaFirma, 
-								numeroAutorizacion, fechaAutorizacion, aniosPlazo, aniosGracia, fechaFinEjecucion, peridoEjecucion,
-								porcentajeInteres, porcentajeComisionCompra, montoContratado, amortizado, porAmortizar,
-								principalAnio, interesesAnio, comisionCompromisoAnio, otrosGastos, principalAcumulado, 
-								interesesAcumulados, comisionCompromisoAcumulado, otrosCargosAcumulados,
-								presupuestoAsignadoFuncionamiento, prespupuestoAsignadoInversion, 
-								presupuestoModificadoFun, presupuestoModificadoInv, presupuestoVigenteFun, 
-								presupuestoVigenteInv, prespupuestoDevengadoFun, presupuestoDevengadoInv, 
+						
+						// revisar esta variable plazoEjecucionUe que deberia ir en el penultimo null
+						
+						prestamo = new Prestamo(autorizacionTipo, cooperanteUe, ejecucionEstado, interesTipo, tipoMoneda, 
+								unidadEjecutora_, fechaCorte, codigoPresupuestario, numeroPrestamo, destino, sectorEconomico, 
+								fechaFirma, numeroAutorizacion, fechaAutorizacion, aniosPlazo, aniosGracia,
+								fechaFinEjecucion, peridoEjecucion, porcentajeInteres, porcentajeComisionCompra, 
+								montoContratado, amortizado, porAmortizar, principalAnio, interesesAnio, comisionCompromisoAnio, 
+								otrosGastos, principalAcumulado, interesesAcumulados, comisionCompromisoAcumulado, 
+								otrosCargosAcumulados, presupuestoAsignadoFuncionamiento, prespupuestoAsignadoInversion,
+								presupuestoModificadoFun, presupuestoModificadoInv, presupuestoVigenteFun,
+								presupuestoVigenteInv, prespupuestoDevengadoFun, presupuestoDevengadoInv,
 								presupuestoPagadoFun, presupuestoPagadoInv, saldoCuentas, desembolsadoReal, 
-								usuario, null, new Date(), null, 1, proyectoPrograma, 
-								fechaDecreto, fechaSuscripcion, fechaElegibilidadUe, fechaCierreOrigianlUe, fechaCierreActualUe, 
-								mesesProrrogaUe, montoAsignadoUe, desembolsoAFechaUe, montoPorDesembolsarUe, null,
-								fechaVigencia, montoContratadoUsd, montoContratadoQtz, desembolsoAFechaUsd, montoPorDesembolsarUsd, 
-								montoAsignadoUeUsd,montoAsignadoUeQtz, desembolsoAFechaUeUsd,
-								montoPorDesembolsarUeUsd,cooperanteUe);
+								usuario, null, new Date(), null, 1, proyectoPrograma, fechaDecreto, 
+								fechaSuscripcion, fechaElegibilidadUe, fechaCierreOrigianlUe, fechaCierreActualUe, mesesProrrogaUe,
+								null, montoAsignadoUe, desembolsoAFechaUe, montoPorDesembolsarUe, fechaVigencia, 
+								montoContratadoUsd, montoContratadoQtz, desembolsoAFechaUsd, montoPorDesembolsarUsd, montoAsignadoUeUsd, 
+								montoAsignadoUeQtz, desembolsoAFechaUeUsd, montoPorDesembolsarUeUsd, null);
 						
 						ObjetoPrestamoId objetoPrestamoId = new ObjetoPrestamoId(0, proyecto.getId(), objetoTipo);
 						objetoPrestamo = new ObjetoPrestamo(objetoPrestamoId, prestamo);
@@ -602,6 +610,7 @@ public class SProyecto extends HttpServlet {
 				datos dato = new datos();
 				dato.id = proyecto.getId();
 				dato.nombre = proyecto.getNombre();
+				dato.objetivo = proyecto.getObjetivo();
 				dato.descripcion = proyecto.getDescripcion();
 				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
 				dato.usuarioCreo = proyecto.getUsuarioCreo();

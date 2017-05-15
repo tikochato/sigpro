@@ -1,5 +1,5 @@
 package pojo;
-// Generated May 2, 2017 5:32:45 PM by Hibernate Tools 5.2.1.Final
+// Generated May 15, 2017 4:04:46 PM by Hibernate Tools 5.2.1.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,9 +28,10 @@ public class Prestamo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3543509539577229092L;
+	private static final long serialVersionUID = -1280978758787657599L;
 	private Integer id;
 	private AutorizacionTipo autorizacionTipo;
+	private Cooperante cooperante;
 	private EjecucionEstado ejecucionEstado;
 	private InteresTipo interesTipo;
 	private TipoMoneda tipoMoneda;
@@ -83,11 +84,11 @@ public class Prestamo implements java.io.Serializable {
 	private Date fechaElegibilidadUe;
 	private Date fechaCierreOrigianlUe;
 	private Date fechaCierreActualUe;
-	private Integer mesesProrrogaUe;
+	private int mesesProrrogaUe;
+	private Integer plazoEjecucionUe;
 	private BigDecimal montoAsignadoUe;
 	private BigDecimal desembolsoAFechaUe;
 	private BigDecimal montoPorDesembolsarUe;
-	private Set<ObjetoPrestamo> objetoPrestamos = new HashSet<ObjetoPrestamo>(0);
 	private Date fechaVigencia;
 	private BigDecimal montoContratadoUsd;
 	private BigDecimal montoContratadoQtz;
@@ -97,37 +98,34 @@ public class Prestamo implements java.io.Serializable {
 	private BigDecimal montoAsignadoUeQtz;
 	private BigDecimal desembolsoAFechaUeUsd;
 	private BigDecimal montoPorDesembolsarUeUsd;
-	private Cooperante cooperante;
-	
+	private Set<ObjetoPrestamo> objetoPrestamos = new HashSet<ObjetoPrestamo>(0);
+
 	public Prestamo() {
 	}
 
-	public Prestamo(AutorizacionTipo autorizacionTipo, EjecucionEstado ejecucionEstado, InteresTipo interesTipo,
-			TipoMoneda tipoMoneda, UnidadEjecutora unidadEjecutora, Date fechaCorte, int codigoPresupuestario,
-			String numeroPrestamo, String destino, String numeroAutorizacion, Date fechaAutorizacion,
-			BigDecimal porcentajeInteres, BigDecimal porcentajeComisionCompra, BigDecimal montoContratado,
-			BigDecimal saldoCuentas, String usuarioCreo, Date fechaCreacion, int estado, Date fechaVigencia,
-			BigDecimal montoContratadoUsd, BigDecimal montoContratadoQtz, BigDecimal desembolsoAFechaUsd,
-			BigDecimal montoPorDesembolsarUsd, BigDecimal montoAsignadoUeUsd, BigDecimal montoAsignadoUeQtz, 
-			BigDecimal desembolsoAFechaUeUsd, BigDecimal montoPorDesembolsarUeUsd, Cooperante cooperante) {
-		this.autorizacionTipo = autorizacionTipo;
-		this.ejecucionEstado = ejecucionEstado;
-		this.interesTipo = interesTipo;
+	public Prestamo(Cooperante cooperante, TipoMoneda tipoMoneda, UnidadEjecutora unidadEjecutora,
+			int codigoPresupuestario, String numeroPrestamo, BigDecimal montoContratado, String usuarioCreo, int estado,
+			String proyectoPrograma, Date fechaDecreto, Date fechaSuscripcion, Date fechaElegibilidadUe,
+			Date fechaCierreOrigianlUe, Date fechaCierreActualUe, int mesesProrrogaUe, BigDecimal montoAsignadoUe,
+			Date fechaVigencia, BigDecimal montoContratadoUsd, BigDecimal montoContratadoQtz,
+			BigDecimal desembolsoAFechaUsd, BigDecimal montoPorDesembolsarUsd, BigDecimal montoAsignadoUeUsd,
+			BigDecimal montoAsignadoUeQtz, BigDecimal desembolsoAFechaUeUsd, BigDecimal montoPorDesembolsarUeUsd) {
+		this.cooperante = cooperante;
 		this.tipoMoneda = tipoMoneda;
 		this.unidadEjecutora = unidadEjecutora;
-		this.fechaCorte = fechaCorte;
 		this.codigoPresupuestario = codigoPresupuestario;
 		this.numeroPrestamo = numeroPrestamo;
-		this.destino = destino;
-		this.numeroAutorizacion = numeroAutorizacion;
-		this.fechaAutorizacion = fechaAutorizacion;
-		this.porcentajeInteres = porcentajeInteres;
-		this.porcentajeComisionCompra = porcentajeComisionCompra;
 		this.montoContratado = montoContratado;
-		this.saldoCuentas = saldoCuentas;
 		this.usuarioCreo = usuarioCreo;
-		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
+		this.proyectoPrograma = proyectoPrograma;
+		this.fechaDecreto = fechaDecreto;
+		this.fechaSuscripcion = fechaSuscripcion;
+		this.fechaElegibilidadUe = fechaElegibilidadUe;
+		this.fechaCierreOrigianlUe = fechaCierreOrigianlUe;
+		this.fechaCierreActualUe = fechaCierreActualUe;
+		this.mesesProrrogaUe = mesesProrrogaUe;
+		this.montoAsignadoUe = montoAsignadoUe;
 		this.fechaVigencia = fechaVigencia;
 		this.montoContratadoUsd = montoContratadoUsd;
 		this.montoContratadoQtz = montoContratadoQtz;
@@ -137,31 +135,32 @@ public class Prestamo implements java.io.Serializable {
 		this.montoAsignadoUeQtz = montoAsignadoUeQtz;
 		this.desembolsoAFechaUeUsd = desembolsoAFechaUeUsd;
 		this.montoPorDesembolsarUeUsd = montoPorDesembolsarUeUsd;
-		this.cooperante = cooperante;
 	}
 
-	public Prestamo(AutorizacionTipo autorizacionTipo, EjecucionEstado ejecucionEstado, InteresTipo interesTipo,
-			TipoMoneda tipoMoneda, UnidadEjecutora unidadEjecutora, Date fechaCorte, int codigoPresupuestario,
-			String numeroPrestamo, String destino, String sectorEconomico, Date fechaFirma, String numeroAutorizacion,
-			Date fechaAutorizacion, Integer aniosPlazo, Integer aniosGracia, Date fechaFinEjecucion,
-			Integer peridoEjecucion, BigDecimal porcentajeInteres, BigDecimal porcentajeComisionCompra,
-			BigDecimal montoContratado, BigDecimal amortizado, BigDecimal porAmortizar, BigDecimal principalAnio,
-			BigDecimal interesesAnio, BigDecimal comisionCompromisoAnio, BigDecimal otrosGastos,
-			BigDecimal principalAcumulado, BigDecimal interesesAcumulados, BigDecimal comisionCompromisoAcumulado,
-			BigDecimal otrosCargosAcumulados, BigDecimal presupuestoAsignadoFuncionamiento,
-			BigDecimal prespupuestoAsignadoInversion, BigDecimal presupuestoModificadoFuncionamiento,
-			BigDecimal presupuestoModificadoInversion, BigDecimal presupuestoVigenteFuncionamiento,
-			BigDecimal presupuestoVigenteInversion, BigDecimal prespupuestoDevengadoFuncionamiento,
-			BigDecimal presupuestoDevengadoInversion, BigDecimal presupuestoPagadoFuncionamiento,
-			BigDecimal presupuestoPagadoInversion, BigDecimal saldoCuentas, BigDecimal desembolsadoReal,
-			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			String proyectoPrograma, Date fechaDecreto, Date fechaSuscripcion, Date fechaElegibilidadUe,
-			Date fechaCierreOrigianlUe, Date fechaCierreActualUe, Integer mesesProrrogaUe,BigDecimal montoAsignadoUe, 
-			BigDecimal desembolsoAFechaUe, BigDecimal montoPorDesembolsarUe, Set<ObjetoPrestamo> objetoPrestamos, 
-			Date fechaVigencia, BigDecimal montoContratadoUsd, BigDecimal montoContratadoQtz, BigDecimal desembolsoAFechaUsd, 
-			BigDecimal montoPorDesembolsarUsd, BigDecimal montoAsignadoUeUsd, BigDecimal montoAsignadoUeQtz, 
-			BigDecimal desembolsoAFechaUeUsd, BigDecimal montoPorDesembolsarUeUsd, Cooperante cooperante) {
+	public Prestamo(AutorizacionTipo autorizacionTipo, Cooperante cooperante, EjecucionEstado ejecucionEstado,
+			InteresTipo interesTipo, TipoMoneda tipoMoneda, UnidadEjecutora unidadEjecutora, Date fechaCorte,
+			int codigoPresupuestario, String numeroPrestamo, String destino, String sectorEconomico, Date fechaFirma,
+			String numeroAutorizacion, Date fechaAutorizacion, Integer aniosPlazo, Integer aniosGracia,
+			Date fechaFinEjecucion, Integer peridoEjecucion, BigDecimal porcentajeInteres,
+			BigDecimal porcentajeComisionCompra, BigDecimal montoContratado, BigDecimal amortizado,
+			BigDecimal porAmortizar, BigDecimal principalAnio, BigDecimal interesesAnio,
+			BigDecimal comisionCompromisoAnio, BigDecimal otrosGastos, BigDecimal principalAcumulado,
+			BigDecimal interesesAcumulados, BigDecimal comisionCompromisoAcumulado, BigDecimal otrosCargosAcumulados,
+			BigDecimal presupuestoAsignadoFuncionamiento, BigDecimal prespupuestoAsignadoInversion,
+			BigDecimal presupuestoModificadoFuncionamiento, BigDecimal presupuestoModificadoInversion,
+			BigDecimal presupuestoVigenteFuncionamiento, BigDecimal presupuestoVigenteInversion,
+			BigDecimal prespupuestoDevengadoFuncionamiento, BigDecimal presupuestoDevengadoInversion,
+			BigDecimal presupuestoPagadoFuncionamiento, BigDecimal presupuestoPagadoInversion, BigDecimal saldoCuentas,
+			BigDecimal desembolsadoReal, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Date fechaActualizacion, int estado, String proyectoPrograma, Date fechaDecreto, Date fechaSuscripcion,
+			Date fechaElegibilidadUe, Date fechaCierreOrigianlUe, Date fechaCierreActualUe, int mesesProrrogaUe,
+			Integer plazoEjecucionUe, BigDecimal montoAsignadoUe, BigDecimal desembolsoAFechaUe,
+			BigDecimal montoPorDesembolsarUe, Date fechaVigencia, BigDecimal montoContratadoUsd,
+			BigDecimal montoContratadoQtz, BigDecimal desembolsoAFechaUsd, BigDecimal montoPorDesembolsarUsd,
+			BigDecimal montoAsignadoUeUsd, BigDecimal montoAsignadoUeQtz, BigDecimal desembolsoAFechaUeUsd,
+			BigDecimal montoPorDesembolsarUeUsd, Set<ObjetoPrestamo> objetoPrestamos) {
 		this.autorizacionTipo = autorizacionTipo;
+		this.cooperante = cooperante;
 		this.ejecucionEstado = ejecucionEstado;
 		this.interesTipo = interesTipo;
 		this.tipoMoneda = tipoMoneda;
@@ -215,10 +214,10 @@ public class Prestamo implements java.io.Serializable {
 		this.fechaCierreOrigianlUe = fechaCierreOrigianlUe;
 		this.fechaCierreActualUe = fechaCierreActualUe;
 		this.mesesProrrogaUe = mesesProrrogaUe;
+		this.plazoEjecucionUe = plazoEjecucionUe;
 		this.montoAsignadoUe = montoAsignadoUe;
 		this.desembolsoAFechaUe = desembolsoAFechaUe;
 		this.montoPorDesembolsarUe = montoPorDesembolsarUe;
-		this.objetoPrestamos = objetoPrestamos;
 		this.fechaVigencia = fechaVigencia;
 		this.montoContratadoUsd = montoContratadoUsd;
 		this.montoContratadoQtz = montoContratadoQtz;
@@ -228,7 +227,7 @@ public class Prestamo implements java.io.Serializable {
 		this.montoAsignadoUeQtz = montoAsignadoUeQtz;
 		this.desembolsoAFechaUeUsd = desembolsoAFechaUeUsd;
 		this.montoPorDesembolsarUeUsd = montoPorDesembolsarUeUsd;
-		this.cooperante = cooperante;
+		this.objetoPrestamos = objetoPrestamos;
 	}
 
 	@Id
@@ -251,6 +250,16 @@ public class Prestamo implements java.io.Serializable {
 
 	public void setAutorizacionTipo(AutorizacionTipo autorizacionTipo) {
 		this.autorizacionTipo = autorizacionTipo;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cooperanteid", nullable = false)
+	public Cooperante getCooperante() {
+		return this.cooperante;
+	}
+
+	public void setCooperante(Cooperante cooperante) {
+		this.cooperante = cooperante;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -376,16 +385,6 @@ public class Prestamo implements java.io.Serializable {
 	public void setAniosPlazo(Integer aniosPlazo) {
 		this.aniosPlazo = aniosPlazo;
 	}
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cooperanteid", nullable = false)
-	public Cooperante getCooperante() {
-		return this.cooperante;
-	}
-
-	public void setCooperante(Cooperante cooperante) {
-		this.cooperante = cooperante;
-	}
 
 	@Column(name = "anios_gracia")
 	public Integer getAniosGracia() {
@@ -441,25 +440,7 @@ public class Prestamo implements java.io.Serializable {
 	public void setMontoContratado(BigDecimal montoContratado) {
 		this.montoContratado = montoContratado;
 	}
-	
-	@Column(name = "monto_contratado_usd", nullable = false, precision = 15)
-	public BigDecimal getMontoContratadoUsd() {
-		return this.montoContratadoUsd;
-	}
 
-	public void setMontoContratadoUsd(BigDecimal montoContratadoUsd) {
-		this.montoContratadoUsd = montoContratadoUsd;
-	}
-	
-	@Column(name = "monto_contratado_qtz", nullable = false, precision = 15)
-	public BigDecimal getMontoContratadoQtz() {
-		return this.montoContratadoQtz;
-	}
-
-	public void setMontoContratadoQtz(BigDecimal montoContratadoQtz) {
-		this.montoContratadoQtz = montoContratadoQtz;
-	}
-	
 	@Column(name = "amortizado", precision = 15)
 	public BigDecimal getAmortizado() {
 		return this.amortizado;
@@ -677,7 +658,7 @@ public class Prestamo implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_creacion", nullable = false, length = 19)
+	@Column(name = "fecha_creacion", length = 19)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}
@@ -763,24 +744,23 @@ public class Prestamo implements java.io.Serializable {
 	public void setFechaCierreActualUe(Date fechaCierreActualUe) {
 		this.fechaCierreActualUe = fechaCierreActualUe;
 	}
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_vigencia", nullable = false, length = 19)
-	public Date getFechaVigencia() {
-		return this.fechaVigencia;
-	}
-
-	public void setFechaVigencia(Date fechaVigencia) {
-		this.fechaVigencia = fechaVigencia;
-	}
 
 	@Column(name = "meses_prorroga_ue", nullable = false)
-	public Integer getMesesProrrogaUe() {
+	public int getMesesProrrogaUe() {
 		return this.mesesProrrogaUe;
 	}
 
-	public void setMesesProrrogaUe(Integer mesesProrrogaUe) {
+	public void setMesesProrrogaUe(int mesesProrrogaUe) {
 		this.mesesProrrogaUe = mesesProrrogaUe;
+	}
+
+	@Column(name = "plazo_ejecucion_ue")
+	public Integer getPlazoEjecucionUe() {
+		return this.plazoEjecucionUe;
+	}
+
+	public void setPlazoEjecucionUe(Integer plazoEjecucionUe) {
+		this.plazoEjecucionUe = plazoEjecucionUe;
 	}
 
 	@Column(name = "monto_asignado_ue", nullable = false, precision = 15)
@@ -791,24 +771,6 @@ public class Prestamo implements java.io.Serializable {
 	public void setMontoAsignadoUe(BigDecimal montoAsignadoUe) {
 		this.montoAsignadoUe = montoAsignadoUe;
 	}
-	
-	@Column(name = "monto_asignado_ue_usd", nullable = false, precision = 15)
-	public BigDecimal getMontoAsignadoUeUsd() {
-		return this.montoAsignadoUeUsd;
-	}
-
-	public void setMontoAsignadoUeUsd(BigDecimal montoAsignadoUeUsd) {
-		this.montoAsignadoUeUsd = montoAsignadoUeUsd;
-	}
-	
-	@Column(name = "monto_asignado_ue_qtz", nullable = false, precision = 15)
-	public BigDecimal getMontoAsignadoUeQtz() {
-		return this.montoAsignadoUeQtz;
-	}
-
-	public void setMontoAsignadoUeQtz(BigDecimal montoAsignadoUeQtz) {
-		this.montoAsignadoUeQtz = montoAsignadoUeQtz;
-	}
 
 	@Column(name = "desembolso_a_fecha_ue", precision = 15)
 	public BigDecimal getDesembolsoAFechaUe() {
@@ -817,24 +779,6 @@ public class Prestamo implements java.io.Serializable {
 
 	public void setDesembolsoAFechaUe(BigDecimal desembolsoAFechaUe) {
 		this.desembolsoAFechaUe = desembolsoAFechaUe;
-	}
-	
-	@Column(name = "desembolso_a_fecha_ue_usd", nullable = false, precision = 15)
-	public BigDecimal getDesembolsoAFechaUeUsd() {
-		return this.desembolsoAFechaUeUsd;
-	}
-
-	public void setDesembolsoAFechaUeUsd(BigDecimal desembolsoAFechaUeUsd) {
-		this.desembolsoAFechaUeUsd = desembolsoAFechaUeUsd;
-	}
-	
-	@Column(name = "desembolso_a_fecha_usd", nullable = false, precision = 15)
-	public BigDecimal getDesembolsoAFechaUsd() {
-		return this.desembolsoAFechaUsd;
-	}
-
-	public void setDesembolsoAFechaUsd(BigDecimal desembolsoAFechaUsd) {
-		this.desembolsoAFechaUsd = desembolsoAFechaUsd;
 	}
 
 	@Column(name = "monto_por_desembolsar_ue", precision = 15)
@@ -845,7 +789,44 @@ public class Prestamo implements java.io.Serializable {
 	public void setMontoPorDesembolsarUe(BigDecimal montoPorDesembolsarUe) {
 		this.montoPorDesembolsarUe = montoPorDesembolsarUe;
 	}
-	
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_vigencia", nullable = false, length = 19)
+	public Date getFechaVigencia() {
+		return this.fechaVigencia;
+	}
+
+	public void setFechaVigencia(Date fechaVigencia) {
+		this.fechaVigencia = fechaVigencia;
+	}
+
+	@Column(name = "monto_contratado_usd", nullable = false, precision = 15)
+	public BigDecimal getMontoContratadoUsd() {
+		return this.montoContratadoUsd;
+	}
+
+	public void setMontoContratadoUsd(BigDecimal montoContratadoUsd) {
+		this.montoContratadoUsd = montoContratadoUsd;
+	}
+
+	@Column(name = "monto_contratado_qtz", nullable = false, precision = 15)
+	public BigDecimal getMontoContratadoQtz() {
+		return this.montoContratadoQtz;
+	}
+
+	public void setMontoContratadoQtz(BigDecimal montoContratadoQtz) {
+		this.montoContratadoQtz = montoContratadoQtz;
+	}
+
+	@Column(name = "desembolso_a_fecha_usd", nullable = false, precision = 15)
+	public BigDecimal getDesembolsoAFechaUsd() {
+		return this.desembolsoAFechaUsd;
+	}
+
+	public void setDesembolsoAFechaUsd(BigDecimal desembolsoAFechaUsd) {
+		this.desembolsoAFechaUsd = desembolsoAFechaUsd;
+	}
+
 	@Column(name = "monto_por_desembolsar_usd", nullable = false, precision = 15)
 	public BigDecimal getMontoPorDesembolsarUsd() {
 		return this.montoPorDesembolsarUsd;
@@ -854,8 +835,35 @@ public class Prestamo implements java.io.Serializable {
 	public void setMontoPorDesembolsarUsd(BigDecimal montoPorDesembolsarUsd) {
 		this.montoPorDesembolsarUsd = montoPorDesembolsarUsd;
 	}
-		
-	@Column(name = "monto_por_desembolsar_ue_usd", precision = 15)
+
+	@Column(name = "monto_asignado_ue_usd", nullable = false, precision = 15)
+	public BigDecimal getMontoAsignadoUeUsd() {
+		return this.montoAsignadoUeUsd;
+	}
+
+	public void setMontoAsignadoUeUsd(BigDecimal montoAsignadoUeUsd) {
+		this.montoAsignadoUeUsd = montoAsignadoUeUsd;
+	}
+
+	@Column(name = "monto_asignado_ue_qtz", nullable = false, precision = 15)
+	public BigDecimal getMontoAsignadoUeQtz() {
+		return this.montoAsignadoUeQtz;
+	}
+
+	public void setMontoAsignadoUeQtz(BigDecimal montoAsignadoUeQtz) {
+		this.montoAsignadoUeQtz = montoAsignadoUeQtz;
+	}
+
+	@Column(name = "desembolso_a_fecha_ue_usd", nullable = false, precision = 15)
+	public BigDecimal getDesembolsoAFechaUeUsd() {
+		return this.desembolsoAFechaUeUsd;
+	}
+
+	public void setDesembolsoAFechaUeUsd(BigDecimal desembolsoAFechaUeUsd) {
+		this.desembolsoAFechaUeUsd = desembolsoAFechaUeUsd;
+	}
+
+	@Column(name = "monto_por_desembolsar_ue_usd", nullable = false, precision = 15)
 	public BigDecimal getMontoPorDesembolsarUeUsd() {
 		return this.montoPorDesembolsarUeUsd;
 	}
@@ -863,7 +871,7 @@ public class Prestamo implements java.io.Serializable {
 	public void setMontoPorDesembolsarUeUsd(BigDecimal montoPorDesembolsarUeUsd) {
 		this.montoPorDesembolsarUeUsd = montoPorDesembolsarUeUsd;
 	}
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "prestamo")
 	public Set<ObjetoPrestamo> getObjetoPrestamos() {
 		return this.objetoPrestamos;
