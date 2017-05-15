@@ -256,13 +256,6 @@
 						ng-value="controller.proyecto.objetivo" onblur="this.setAttribute('value', this.value);">
 					<label for="objetivo" class="floating-label">Objetivo</label>
 				</div>
-
-				<div class="form-group">
-					<input type="text" ng-model="controller.proyecto.descripcion"
-						class="inputText" id="campo2" 
-						ng-value="controller.proyecto.descripcion" onblur="this.setAttribute('value', this.value);">
-					<label for="campo2" class="floating-label">Descripción</label>
-				</div>
 				<br/>
 				
 				<div class="panel panel-default" ng-hide="controller.esNuevoDocumento">
@@ -1002,6 +995,14 @@
 		            	<span class="label-icon" ng-click="controller.buscarEstadoEjecucion()"><i class="glyphicon glyphicon-search"></i></span>
 			          	<label class="floating-label">Estado de Ejecución</label>
 					</div>
+					
+					<div class="form-group">
+						<input type="text" ng-model="controller.proyecto.descripcion"
+							class="inputText" id="campo2" 
+							ng-value="controller.proyecto.descripcion" onblur="this.setAttribute('value', this.value);">
+						<label for="campo2" class="floating-label">Descripción</label>
+					</div>
+				
 				</uib-tab>
 			</uib-tabset>
 			</form>
