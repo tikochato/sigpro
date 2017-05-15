@@ -229,7 +229,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			};
 
 			mi.obtenerTotalDesembolsos = function(){
-				$http.post('/SDesembolso', { accion: 'numeroDesembolsosPorProyecto', proyectoid:$routeParams.proyecto_id,
+				$http.post('/SDesembolso', { accion: 'numeroDesembolsosPorProyecto', proyectoid:mi.proyectoid,
 					filtro_fecha: mi.filtros['fecha'],
 					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
 						function(response) {
@@ -252,10 +252,10 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			}
 			
 			mi.reiniciarVista=function(){
-				if($location.path()=='/desembolso/rv')
+				if($location.path()=='/desembolso/'+mi.proyectoid+'/rv')
 					$route.reload();
 				else
-					$location.path('/desembolso/rv');
+					$location.path('/desembolso/'+mi.proyectoid+'/rv');
 			}
 			
 			mi.buscarTipoDesembolso = function(titulo, mensaje) {
