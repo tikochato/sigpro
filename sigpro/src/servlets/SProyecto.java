@@ -54,6 +54,7 @@ public class SProyecto extends HttpServlet {
 	class datos {
 		int id;
 		String nombre;
+		String objetivo;
 		String descripcion;
 		Long snip;
 		int proyectotipoid;
@@ -131,6 +132,7 @@ public class SProyecto extends HttpServlet {
 				datos dato = new datos();
 				dato.id = proyecto.getId();
 				dato.nombre = proyecto.getNombre();
+				dato.objetivo = proyecto.getObjetivo();
 				dato.descripcion = proyecto.getDescripcion();
 				dato.snip = proyecto.getSnip();
 				dato.proyectotipo = proyecto.getProyectoTipo().getNombre();
@@ -175,6 +177,7 @@ public class SProyecto extends HttpServlet {
 				datos dato = new datos();
 				dato.id = proyecto.getId();
 				dato.nombre = proyecto.getNombre();
+				dato.objetivo = proyecto.getObjetivo();
 				dato.descripcion = proyecto.getDescripcion();
 				dato.snip = proyecto.getSnip();
 				dato.proyectotipo = proyecto.getProyectoTipo().getNombre();
@@ -216,6 +219,7 @@ public class SProyecto extends HttpServlet {
 				datos dato = new datos();
 				dato.id = proyecto.getId();
 				dato.nombre = proyecto.getNombre();
+				dato.objetivo = proyecto.getObjetivo();
 				dato.descripcion = proyecto.getDescripcion();
 				dato.snip = proyecto.getSnip();
 				dato.proyectotipo = proyecto.getProyectoTipo().getNombre();
@@ -251,6 +255,7 @@ public class SProyecto extends HttpServlet {
 			if (id>0 || esnuevo){
 				String nombre = map.get("nombre");
 				Long snip = map.get("snip")!=null ? Long.parseLong(map.get("snip")) : null;
+				String objetivo = map.get("objetivo");
 				String descripcion = map.get("descripcion");
 
 				Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
@@ -261,7 +266,6 @@ public class SProyecto extends HttpServlet {
 				Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
 				String longitud = map.get("longitud");
 				String latitud = map.get("latitud");
-				String objetivo = map.get("objetivo");
 
 				ProyectoTipo proyectoTipo = new ProyectoTipo();
 				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): null);
@@ -384,6 +388,7 @@ public class SProyecto extends HttpServlet {
 				}else{
 					proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 					proyecto.setNombre(nombre);
+					proyecto.setObjetivo(objetivo);
 					proyecto.setDescripcion(descripcion);
 					proyecto.setSnip(snip);
 					proyecto.setProyectoTipo(proyectoTipo);
@@ -605,6 +610,7 @@ public class SProyecto extends HttpServlet {
 				datos dato = new datos();
 				dato.id = proyecto.getId();
 				dato.nombre = proyecto.getNombre();
+				dato.objetivo = proyecto.getObjetivo();
 				dato.descripcion = proyecto.getDescripcion();
 				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
 				dato.usuarioCreo = proyecto.getUsuarioCreo();

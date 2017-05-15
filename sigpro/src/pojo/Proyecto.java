@@ -156,6 +156,7 @@ public class Proyecto implements java.io.Serializable {
 		this.nombre = nombre;
 	}
 
+	
 	@Column(name = "descripcion", length = 4000)
 	public String getDescripcion() {
 		return this.descripcion;
