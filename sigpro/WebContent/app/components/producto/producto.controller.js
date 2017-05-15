@@ -99,11 +99,11 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	    data : mi.data,
 	    rowTemplate: '<div ng-dblclick="grid.appScope.producto.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 	    columnDefs : [ 
-			{displayName : 'Id',  width: 100, name : 'id',cellClass : 'grid-align-right',type : 'number',width : 150 }, 
+			{displayName : 'Id',  width: 100, name : 'id',cellClass : 'grid-align-right',type : 'number',width : 150 , enableFiltering: false}, 
 			{ displayName : 'Nombre',name : 'nombre',cellClass : 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"  style="width: 90%;" ng-keypress="grid.appScope.producto.filtrar($event,1)" ></input></div>'
 			}, 
-			{ displayName : 'Descripción', name : 'descripcion', cellClass : 'grid-align-left' },
+			{ displayName : 'Descripción', name : 'descripcion', cellClass : 'grid-align-left', enableFiltering: false },
 			{ displayName : 'Tipo', name : 'productoTipo', cellClass : 'grid-align-left', enableFiltering: false, enableSorting: false},  
 			{ displayName : 'Componente', name : 'componente', cellClass : 'grid-align-left', visible : false },
 			{ displayName : 'Producto', name : 'producto', cellClass : 'grid-align-left', visible : false },
