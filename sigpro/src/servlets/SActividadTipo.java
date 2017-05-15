@@ -50,8 +50,8 @@ public class SActividadTipo extends HttpServlet {
 		String fechaActualizacion;
 		int estado;
 	}
-	
-       
+
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -87,13 +87,13 @@ public class SActividadTipo extends HttpServlet {
 		String response_text="";
 		if(accion.equals("getActividadtiposPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numeroCooperantesTipo = map.get("numeroactividadtipos")!=null  ? Integer.parseInt(map.get("numeroactividadtipos")) : 0;
+			int numeroActividadesTipo = map.get("numeroactividadstipo")!=null  ? Integer.parseInt(map.get("numeroactividadstipo")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
-			List<ActividadTipo> actividadtipos = ActividadTipoDAO.getActividadTiposPagina(pagina, numeroCooperantesTipo,
+			List<ActividadTipo> actividadtipos = ActividadTipoDAO.getActividadTiposPagina(pagina, numeroActividadesTipo,
 					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			List<stactividadtipo> stactividadtipos=new ArrayList<stactividadtipo>();
 			for(ActividadTipo actividadtipo:actividadtipos){
@@ -108,12 +108,12 @@ public class SActividadTipo extends HttpServlet {
 				temp.usuarioCreo = actividadtipo.getUsuarioCreo();
 				stactividadtipos.add(temp);
 			}
-			
+
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stactividadtipos);
 	        response_text = String.join("", "\"actividadtipos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
-		
+
 		else if(accion.equals("numeroActividadTipos")){
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
@@ -125,11 +125,11 @@ public class SActividadTipo extends HttpServlet {
 			boolean esnuevo = map.get("esnuevo").equals("true");
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0 || esnuevo){
-				
+
 				String nombre = map.get("nombre");
 				String descripcion = map.get("descripcion");
 				ActividadTipo actividadTipo;
-				
+
 				if(esnuevo){
 					actividadTipo = new ActividadTipo(nombre, null,usuario, null, new DateTime().toDate(), null, 1,null, null);
 				}
@@ -147,20 +147,20 @@ public class SActividadTipo extends HttpServlet {
 						}
 					}
 				}
-				
+
 				result = ActividadTipoDAO.guardarActividadTipo(actividadTipo);
-				
+
 				String[] idsPropiedades =  map.get("propiedades") != null ? map.get("propiedades").toString().split(",") : null;
 				if (idsPropiedades !=null && idsPropiedades.length>0){
 					for (String idPropiedad : idsPropiedades){
 						AtipoPropiedadId atipoPropiedadId = new AtipoPropiedadId(actividadTipo.getId(), Integer.parseInt(idPropiedad));
 						ActividadPropiedad actividadPropiedad = new ActividadPropiedad();
 						actividadPropiedad.setId(Integer.parseInt(idPropiedad));
-						
+
 						AtipoPropiedad atipoPropiedad = new AtipoPropiedad(
-								atipoPropiedadId, actividadPropiedad, 
+								atipoPropiedadId, actividadPropiedad,
 								actividadTipo, usuario, null,new DateTime().toDate(),null);
-						
+
 						atipoPropiedad.setActividadTipo(actividadTipo);
 						if (actividadTipo.getAtipoPropiedads() == null){
 							actividadTipo.setAtipoPropiedads(new HashSet<AtipoPropiedad>(0));
@@ -168,7 +168,7 @@ public class SActividadTipo extends HttpServlet {
 						actividadTipo.getAtipoPropiedads().add(atipoPropiedad);
 					}
 				}
-				
+
 				result = ActividadTipoDAO.guardarActividadTipo(actividadTipo);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 						+ "\"id\": " + actividadTipo.getId(), ","
@@ -191,17 +191,17 @@ public class SActividadTipo extends HttpServlet {
 				response_text = "{ \"success\": false }";
 		}else
 			response_text = "{ \"success\": false }";
-		
+
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
-		
-        
+
+
         OutputStream output = response.getOutputStream();
 		GZIPOutputStream gz = new GZIPOutputStream(output);
         gz.write(response_text.getBytes("UTF-8"));
         gz.close();
         output.close();
 	}
-	
+
 
 }

@@ -96,7 +96,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 			
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SMetaTipo', { accion: 'getMetaTiposPagina', pagina: pagina, numerometaunidadtipos: $utilidades.elementosPorPagina,
+				$http.post('/SMetaTipo', { accion: 'getMetaTiposPagina', pagina: pagina, numerometatipo: $utilidades.elementosPorPagina,
 					filtro_nombre: mi.filtros['nombre'], 
 					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
 					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion 

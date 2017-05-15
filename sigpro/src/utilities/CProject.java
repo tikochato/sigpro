@@ -1,12 +1,10 @@
 package utilities;
 
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+
 
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
@@ -32,7 +30,6 @@ import pojo.ProyectoTipo;
 import pojo.Subproducto;
 import pojo.SubproductoTipo;
 import pojo.UnidadEjecutora;
-
 
 
 public class CProject {
@@ -65,15 +62,19 @@ public class CProject {
 	static int SUBPRODUCTO_TIPO__ID_DEFECTO = 1;
 	static int ACTIVIDAD_ID_DEFECTO = 7;
 	
+	private static int OBJETO_ID_PROYECTO = 1;
+	private static int OBJETO_ID_COMPONENTE = 2;
+	private static int OBJETO_ID_PRODUCTO = 3;
+	private static int OBJETO_ID_SUBPRODUCTO = 4;
+	private static int OBJETO_ID_ACTIVIDAD= 5;
+
+	
 	ProjectReader reader;
 	ProjectFile project;
 	Integer indetnacion;
 	String itemsProject;
 	
-	
 	HashMap<Integer,stitem> items;
-	
-	
 	
 	public CProject (String nombre){
 		try{
@@ -81,7 +82,6 @@ public class CProject {
 			 project = reader.read(nombre);
 			
 		}catch (Exception e){
-			//e.printStackTrace();
 		}
 	}
 	
@@ -111,64 +111,11 @@ public class CProject {
 	}
 	
 	
-	public Proyecto imporatarArchivo(ProjectFile projectFile, String usuario){
+	public boolean imporatarArchivo(ProjectFile projectFile, String usuario){
 		indetnacion = 0;
 		itemsProject = "";
 		items = new HashMap<>();
-		Proyecto proyecto = null;
-		for (Task task : projectFile.getChildTasks())
-		{
-			if (task.getChildTasks()!=null && task.getChildTasks().size()>0){
-				for (Task task1 : task.getChildTasks()){ //Proyectos
-					
-					if (task1.getChildTasks()!=null && task1.getChildTasks().size()>0){
-						System.out.println(task1.getName());
-						proyecto = crearProyecto(task1, usuario);
-						cargarItem(task1,proyecto.getId(),1);
-						for (Task task2 : task1.getChildTasks()){ //componentes
-							if (task2.getChildTasks()!=null && task2.getChildTasks().size()>0){
-								System.out.println("\t" + task2.getName());
-								Componente componente = crearComponente(task2, proyecto, usuario);
-								cargarItem(task2,componente.getId(),2);
-								for (Task task3 : task2.getChildTasks()){ //producto
-									if (task3.getChildTasks()!=null && task3.getChildTasks().size()>0){
-										System.out.println("\t\t" + task3.getName());
-										Producto producto = crearProducto(task3, componente, usuario);
-										cargarItem(task3,producto.getId(),3);
-										for (Task task4 : task3.getChildTasks()){ //subproductos
-											if (task4.getChildTasks()!=null && task4.getChildTasks().size()>0){
-												System.out.println("\t\t\t" + task4.getName());
-												Subproducto subproducto = crearSubproducto(task4, producto, usuario);
-												cargarItem(task4,subproducto.getId(),4);
-												for (Task task5 : task4.getChildTasks()){ //actividades
-													System.out.println("\t\t\t\t" + task5.getName());
-													Actividad actividad = crearActividad(task5, usuario, subproducto.getId(),4);
-													cargarItem(task5,actividad.getId(),5);
-												}
-											}else{
-												Actividad actividad = crearActividad(task4, usuario, producto.getId(),3);
-												cargarItem(task4,actividad.getId(),5);
-											}
-										}
-									}else{
-										Actividad actividad = crearActividad(task3, usuario, componente.getId(),2);
-										cargarItem(task3,actividad.getId(),5);
-									}
-								}
-								
-							}else{
-								Actividad actividad = crearActividad(task2, usuario, proyecto.getId(),1);
-								cargarItem(task2,actividad.getId(),5);
-								
-							}
-						}
-					}else{
-						//crear primera actividad
-					}
-				}	
-			}
-		}
-		return proyecto;
+		return getTask(projectFile,usuario);
 	}
 	
 	public Proyecto crearProyecto(Task task,String usuario){
@@ -228,6 +175,7 @@ public class CProject {
 	}
 	
 	public Actividad crearActividad(Task task,String usuario, Integer objetoId, Integer objetoTipo){
+		
 		ActividadTipo actividadTipo = new ActividadTipo();
 		actividadTipo.setId(ACTIVIDAD_ID_DEFECTO);
 		
@@ -237,8 +185,6 @@ public class CProject {
 		if (predecesores!=null && predecesores.length > 0){
 			 itemPredecesor =  items.get(predecesores[0]);	
 		}
-		
-		
 		
 		Actividad actividad = new Actividad(actividadTipo, task.getName(), null, task.getStart(), task.getFinish()
 				,0,usuario, null, new Date(), 
@@ -251,6 +197,9 @@ public class CProject {
 						 , itemPredecesor != null ? itemPredecesor.objetoTipo : null, null, null,null,null);
 		return ActividadDAO.guardarActividad(actividad) ? actividad : null;
 	}
+	
+	
+	
 	
 	public void cargarItem(Task task,int objetoId, int objetoTipo){
 		stitem item_ = new stitem();
@@ -271,57 +220,92 @@ public class CProject {
 	
 	
 
-	public  String getTask(ProjectFile projectFile){
+	public  boolean getTask(ProjectFile projectFile,String usuario){
 		
-		indetnacion = 0;
+		indetnacion = -1;
 		itemsProject = "";
 		items = new HashMap<>();
+		boolean ret = false;
 		for (Task task : projectFile.getChildTasks())
-		   {
-		      //itemsProject = String.join(",", construirItem(task.getName(),null,true,task.getStart(),task.getFinish(),false));
-		      listaJerarquica(task);
-		   }
-		
-		Iterator<Map.Entry<Integer, stitem>> entries = items.entrySet().iterator();
-		while (entries.hasNext()) {
-		    Map.Entry<Integer, stitem> item = entries.next();
-		    System.out.println("id=" + item.getValue().id + " Contenido="+ item.getValue().contenido 
-		    		+ " indentacion=" +item.getValue().indentacion + " fechaInicial=" + Utils.formatDate(item.getValue().fechaInicial)
-		    		+ " duracion=" + item.getValue().duracion + " predecesores=" + (item.getValue().idPredecesores!=null ? Arrays.toString(item.getValue().idPredecesores) : ""));
-		    itemsProject =String.join(itemsProject.trim().length()>0 ?",":"",itemsProject,construirItem(item.getValue().contenido, item.getValue().indentacion, item.getValue().expandido
-		    		, item.getValue().fechaInicial, item.getValue().fechaFinal, item.getValue().esHito) );
-		    
+		{
+		      listaJerarquica(task,usuario,null);
 		}
-		
-		return itemsProject;
-		
+		ret = true;
+		return ret;
 	}
 	
 	
 	
-	private void listaJerarquica(Task task)
+	private boolean listaJerarquica(Task task,String usuario,Object objeto)
 	{
 		indetnacion ++;
-		//itemsProject = String.join(itemsProject.trim().length()>0 ?"," : "",itemsProject,  construirItem(task.getName(),indetnacion,true,task.getStart(),task.getFinish(),task.getMilestone()));
-		stitem item_ = new stitem();
-		item_.id = task.getUniqueID();
-		item_.contenido = task.getName();
-		item_.indentacion = indetnacion;
-		item_.expandido = true;
-		item_.fechaInicial = task.getStart();
-		item_.fechaFinal = task.getFinish();
-		item_.esHito = task.getMilestone();
-		item_.idPredecesores = getListaPredecesores(task.getPredecessors());
-		item_.duracion = (int) task.getDuration().getDuration();
-		item_.unidades = task.getDuration().getUnits().getName();
-		items.put(task.getUniqueID(), item_);
+		Object objeto_temp = null;
+		if (indetnacion>0){
+			stitem item_ = new stitem();
+			item_.id = task.getUniqueID();
+			item_.contenido = task.getName();
+			item_.indentacion = indetnacion;
+			item_.expandido = true;
+			item_.fechaInicial = task.getStart();
+			item_.fechaFinal = task.getFinish();
+			item_.esHito = task.getMilestone();
+			item_.idPredecesores = getListaPredecesores(task.getPredecessors());
+			item_.duracion = (int) task.getDuration().getDuration();
+			item_.unidades = task.getDuration().getUnits().getName();
+			
+			System.out.println(item_.contenido);
+			items.put(task.getUniqueID(), item_);
+			
+			boolean tieneHijos = task.getChildTasks()!=null && task.getChildTasks().size()>0;
+			
+			if (indetnacion == 1){
+				if(tieneHijos){
+					objeto_temp =  crearProyecto(task, usuario);
+					cargarItem(task,((Proyecto) objeto_temp).getId(), OBJETO_ID_PROYECTO);
+				}
+			}else if (indetnacion == 2){
+				if (tieneHijos){
+					objeto_temp =  crearComponente(task, (Proyecto) objeto, usuario);
+					cargarItem(task,((Componente) objeto_temp).getId(), OBJETO_ID_COMPONENTE);
+				}
+				else{
+					objeto_temp = crearActividad(task, usuario,((Componente) objeto).getId(),OBJETO_ID_PROYECTO );
+					cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
+				}
+			}else if (indetnacion == 3){
+				if (tieneHijos){
+					objeto_temp = crearProducto(task, (Componente) objeto, usuario);
+					cargarItem(task,((Producto) objeto_temp).getId(), OBJETO_ID_PRODUCTO);
+				}
+				else {
+					objeto_temp = crearActividad(task, usuario,((Componente) objeto).getId(),OBJETO_ID_COMPONENTE );
+					cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
+				}
+			}else if (indetnacion == 4){
+				if (tieneHijos){
+					objeto_temp = crearSubproducto(task, (Producto) objeto, usuario);
+					cargarItem(task,((Subproducto) objeto_temp).getId(), OBJETO_ID_SUBPRODUCTO);
+				}
+				else{ 
+					objeto_temp = crearActividad(task, usuario,((Producto) objeto).getId(),OBJETO_ID_PRODUCTO );
+					cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
+				}
+			}else if (indetnacion == 5){
+					objeto_temp = crearActividad(task, usuario,((Subproducto) objeto).getId(),OBJETO_ID_SUBPRODUCTO );
+					cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
+			}else if (indetnacion > 5){
+				objeto_temp = crearActividad(task, usuario,((Actividad) objeto).getId(),OBJETO_ID_ACTIVIDAD );
+				cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
+			}
+		}
 		
 		
 		for (Task child : task.getChildTasks())
 		{
-	      listaJerarquica(child);
+	      listaJerarquica(child,usuario,objeto_temp);
 		}
 		indetnacion --;
+		return true;
 	}
 	
 	private Integer [] getListaPredecesores(List<Relation> predecesores){
@@ -335,20 +319,6 @@ public class CProject {
 		}
 		return null;
 	}
-	
-	private String construirItem(String content,Integer identation,Boolean isExpanded,Date start,Date finish
-			,boolean isMilestone){
-		return String.join("", "{\"content\" :\"",content,"\",",
-				identation!=null ? "\"indentation\" :" : "", identation!=null ? identation.toString() :"",identation!=null ? "," : "", 
-				isExpanded!=null ? "\"isExpanded\" :\"":"" ,isExpanded!=null ? (isExpanded ? "true" : "false"):"",isExpanded!=null ?"\",":"",
-				start !=null ? "\"start\" :\"" : "", start!=null ? Utils.formatDateHour24(start) :"", start!=null ? "\"" : "",
-			    start!=null && finish!=null ? "," : "",
-				finish!=null ? "\"finish\" :\"" : "",finish!=null ? Utils.formatDateHour24(finish) : "",finish!=null ?"\"":"",
-				",\"isMilestone\":",isMilestone? "\"true\"" : "\"false\"",
-				"}"
-			);
-	}
-	
 	
 	
 	
@@ -390,10 +360,8 @@ public class CProject {
 							task5.setName(actividad.getNombre());
 							task5.setStart(actividad.getFechaInicio());
 							task5.setFinish(actividad.getFechaFin()); 
-						} 
-						
+						}	
 					}
-					
 					
 					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), 3, 
 							null,null, null, null, null, usuario);
@@ -422,20 +390,6 @@ public class CProject {
 		}
 		return path;
 	}	
-	
-	public void construirTarea(Task task ,String nombre, int duracion,String unidades ,
-			Date fechaInicio, Date fechaFinal , boolean esHito,Integer [] idPredecesores){
-
-		task.setName(nombre);
-		task.setDurationText(duracion+"d");
-		task.setStart(fechaInicio);
-		task.setFinish(fechaFinal);
-
-	}
-	
-	 
-	
-	
 	
 
 }

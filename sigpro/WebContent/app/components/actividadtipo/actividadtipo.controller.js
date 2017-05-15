@@ -107,7 +107,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 		
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SActividadTipo', { accion: 'getActividadtiposPagina', pagina: pagina, numeroactividadtipos: $utilidades.elementosPorPagina,
+			$http.post('/SActividadTipo', { accion: 'getActividadtiposPagina', pagina: pagina, numeroactividadstipo: $utilidades.elementosPorPagina,
 				filtro_nombre: mi.filtros['nombre'], 
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
 				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion

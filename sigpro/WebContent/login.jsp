@@ -23,7 +23,7 @@
 		        <input ng-model="login.password" ng-change="showerror=false" type="password" 
 		        	id="inputPassword" class="form-control" placeholder="Contraseña" required>
 		        <br />
-		        <div class="alert alert-danger text-center" role="alert" ng-show="showerror">Usario y/o Contraseña incorrectos</div>
+		        <div class="alert alert-danger text-center" role="alert" ng-show="showerror">Usuario y/o Contraseña incorrectos</div>
 		        <button class="btn btn-lg btn-primary btn-block" ng-click="login.login()">Ingresar</button>
 		      </div>
 			</div>

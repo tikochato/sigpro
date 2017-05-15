@@ -9,6 +9,15 @@
 		<div class="panel panel-default">
 		  <div class="panel-heading"><h3>Cartelera de Actividades</h3></div>
 		</div>
+		<div class="grid_loading" ng-hide="!porcentajeactividadesc.mostrarcargando">
+		  	<div class="msg">
+		      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
+				  <br /><br />
+				  <b>Cargando, por favor espere...</b>
+			  </span>
+			</div>
+		</div>
+		
 		<div class="subtitulo">
 			{{ porcentajeactividadesc.objetoTipoNombre }} {{ porcentajeactividadesc.proyectoNombre }}
 		</div>
@@ -43,7 +52,7 @@
 		</div> 
 		<div class="row" align="center" >
 		<br>
-			<div class="kanban-chart" >
+			<div class="kanban-chart" style="max-height: 400px;" >
 	        	<div ds:kanban-board items="itemsKanban"  states="states" ng-if="mostrarKanban"
 	                     on-adding-new-item="initializeNewItem(item)" on-editing-item="deleteItem(item)"
 	                     edit-item-button-text="'?'" edit-item-button-tool-tip="'Delete item'"

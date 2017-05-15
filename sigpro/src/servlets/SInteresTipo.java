@@ -65,8 +65,8 @@ public class SInteresTipo extends HttpServlet {
 			response_text = String.join("","{ \"success\": true, \"totalIntereses\":",InteresTipoDAO.getTotalInteresTipos().toString()," }");
 		}else if(accion.equals("getAutorizacionTipoPagin")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-
-			List<InteresTipo> autorizacionTipos = InteresTipoDAO.getInteresTiposPagina(pagina, 0);
+			int numeroInteresTipo = map.get("numerointerestipo")!=null  ? Integer.parseInt(map.get("numerointerestipo")) : 0;
+			List<InteresTipo> autorizacionTipos = InteresTipoDAO.getInteresTiposPagina(pagina, numeroInteresTipo);
 			
 			List<stinteresTipo> stautorizaciontipos=new ArrayList<stinteresTipo>();
 			for(InteresTipo autorizacionTipo:autorizacionTipos){
