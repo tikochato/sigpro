@@ -133,7 +133,7 @@ public class SRecursoTipo extends HttpServlet {
 				RecursoTipo recursoTipo;
 				
 				if(esnuevo){
-					recursoTipo = new RecursoTipo(nombre, usuario, descripcion,new DateTime().toDate(), 1);
+					recursoTipo = new RecursoTipo(nombre, descripcion, usuario,new DateTime().toDate(), 1);
 				}
 				else{
 					recursoTipo = RecursoTipoDAO.getRecursoTipoPorId(id);
