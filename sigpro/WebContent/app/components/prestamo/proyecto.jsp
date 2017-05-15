@@ -249,12 +249,12 @@
 		            	<span class="label-icon" ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
 			          	<label class="floating-label">Coordenadas</label>
 				</div>
-
+				
 				<div class="form-group">
-					<input type="text" ng-model="controller.proyecto.descripcion"
-						class="inputText" id="campo2" 
-						ng-value="controller.proyecto.descripcion" onblur="this.setAttribute('value', this.value);">
-					<label for="campo2" class="floating-label">Descripción</label>
+					<input type="text" ng-model="controller.proyecto.objetivo"
+						class="inputText" id="objetivo" 
+						ng-value="controller.proyecto.objetivo" onblur="this.setAttribute('value', this.value);">
+					<label for="objetivo" class="floating-label">Objetivo</label>
 				</div>
 				<br/>
 				
@@ -480,7 +480,7 @@
 							
 							<div class="row">
 								<div class="col-sm-3">
-									<div class="-form-group">
+									<div class="form-group">
 										<input type="number" class="inputText" ng-model="controller.prestamo.desembolsoAFechaUsd" ng-required="true"
 										ng-value="controller.prestamo.desembolsoAFechaUsd" onblur="this.setAttribute('value', this.value);" ng-change="controller.setPorcentaje(1);"/>
 										<label class="floating-label">* Desembolso a la Fecha $</label>
@@ -488,7 +488,7 @@
 								</div>
 								
 								<div class="col-sm-3">
-									<div class="-form-group">
+									<div class="form-group">
 										<input type="number" class="inputText" ng-model="controller.prestamo.desembolsoAFechaUsdP" ng-disabled="true"
 										ng-value="controller.prestamo.desembolsoAFechaUsdP" onblur="this.setAttribute('value', this.value);" />
 										<label class="floating-label">Desembolso a la Fecha %</label>
@@ -504,7 +504,7 @@
 								</div>
 								
 								<div class="col-sm-3">
-									<div class="-form-group">
+									<div class="form-group">
 										<input type="number" class="inputText" ng-model="controller.prestamo.montoPorDesembolsarUsdP" ng-disabled="true"
 										ng-value="controller.prestamo.montoPorDesembolsarUsdP" onblur="this.setAttribute('value', this.value);"/>
 										<label class="floating-label">Monto por Desembolsar %</label>
@@ -607,7 +607,7 @@
 								</div>
 								
 								<div class="col-sm-3">
-									<div class="-form-group">
+									<div class="form-group">
 										<input type="number" class="inputText" ng-model="controller.prestamo.desembolsoAFechaUeUsdP" ng-disabled="true"
 										ng-value="controller.prestamo.desembolsoAFechaUeUsdP" onblur="this.setAttribute('value', this.value);"/>
 										<label class="floating-label">Desembolsos a la fecha %</label>
@@ -995,6 +995,14 @@
 		            	<span class="label-icon" ng-click="controller.buscarEstadoEjecucion()"><i class="glyphicon glyphicon-search"></i></span>
 			          	<label class="floating-label">Estado de Ejecución</label>
 					</div>
+					
+					<div class="form-group">
+						<input type="text" ng-model="controller.proyecto.descripcion"
+							class="inputText" id="campo2" 
+							ng-value="controller.proyecto.descripcion" onblur="this.setAttribute('value', this.value);">
+						<label for="campo2" class="floating-label">Descripción</label>
+					</div>
+				
 				</uib-tab>
 			</uib-tabset>
 			</form>

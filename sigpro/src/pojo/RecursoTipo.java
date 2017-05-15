@@ -1,5 +1,5 @@
 package pojo;
-// Generated May 2, 2017 5:32:45 PM by Hibernate Tools 5.2.1.Final
+// Generated May 15, 2017 4:04:46 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -40,9 +40,8 @@ public class RecursoTipo implements java.io.Serializable {
 	public RecursoTipo() {
 	}
 
-	public RecursoTipo(String nombre, String descripcion, String usuarioCreo, Date fechaCreacion, int estado) {
+	public RecursoTipo(String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
 		this.nombre = nombre;
-		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;

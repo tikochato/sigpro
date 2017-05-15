@@ -1,5 +1,5 @@
 package pojo;
-// Generated May 2, 2017 5:32:45 PM by Hibernate Tools 5.2.1.Final
+// Generated May 15, 2017 4:04:46 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,11 +25,11 @@ public class Cooperante implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8025378261290656091L;
+	private static final long serialVersionUID = -4963512447232962463L;
 	private Integer id;
 	private int codigo;
-	private String nombre;
 	private String siglas;
+	private String nombre;
 	private String descripcion;
 	private String usuarioCreo;
 	private String usuarioActualizo;
@@ -37,6 +37,7 @@ public class Cooperante implements java.io.Serializable {
 	private Date fechaActualizacion;
 	private int estado;
 	private Set<Proyecto> proyectos = new HashSet<Proyecto>(0);
+	private Set<Prestamo> prestamos = new HashSet<Prestamo>(0);
 
 	public Cooperante() {
 	}
@@ -49,9 +50,11 @@ public class Cooperante implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public Cooperante(int codigo, String nombre, String siglas, String descripcion, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, int estado, Set<Proyecto> proyectos) {
+	public Cooperante(int codigo, String siglas, String nombre, String descripcion, String usuarioCreo,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Set<Proyecto> proyectos,
+			Set<Prestamo> prestamos) {
 		this.codigo = codigo;
+		this.siglas = siglas;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
@@ -60,7 +63,7 @@ public class Cooperante implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
 		this.proyectos = proyectos;
-		this.siglas = siglas;
+		this.prestamos = prestamos;
 	}
 
 	@Id
@@ -83,8 +86,8 @@ public class Cooperante implements java.io.Serializable {
 	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
-	
-	@Column(name = "siglas", nullable = false)
+
+	@Column(name = "siglas", length = 45)
 	public String getSiglas() {
 		return this.siglas;
 	}
@@ -165,6 +168,15 @@ public class Cooperante implements java.io.Serializable {
 
 	public void setProyectos(Set<Proyecto> proyectos) {
 		this.proyectos = proyectos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cooperante")
+	public Set<Prestamo> getPrestamos() {
+		return this.prestamos;
+	}
+
+	public void setPrestamos(Set<Prestamo> prestamos) {
+		this.prestamos = prestamos;
 	}
 
 }
