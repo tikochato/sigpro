@@ -227,13 +227,8 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 
 			mi.obtenerTotalCooperantes=function(){
 				$http.post('/SCooperante', { accion: 'numeroCooperantes',
-<<<<<<< HEAD
-					filtro_nombre: mi.filtros['nombre'], filtro_codigo: mi.filtros['codigo'],
-					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']
-=======
 					filtro_nombre: mi.filtros['nombre'], filtro_codigo: mi.filtros['codigo'],
 					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']
->>>>>>> master
 				}).success(
 
 						function(response) {
