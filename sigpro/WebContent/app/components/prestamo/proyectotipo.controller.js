@@ -220,10 +220,10 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 		}
 
 		mi.reiniciarVista=function(){
-			if($location.path()=='/proyectotipo/rv')
+			if($location.path()=='/prestamotipo/rv')
 				$route.reload();
 			else
-				$location.path('/proyectotipo/rv');
+				$location.path('/prestamotipo/rv');
 		}
 
 		mi.filtrar = function(evt){
