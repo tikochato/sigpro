@@ -210,11 +210,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			}
 		}
 		if(mi.proyecto!=null && mi.proyecto.nombre!=null){
+			console.log("objetivo: "+mi.proyecto.objetivo);
 			var param_data = {
 				accion : 'guardar',
 				id: mi.proyecto.id,
 				nombre: mi.proyecto.nombre,
 				snip: mi.proyecto.snip,
+				objetivo: mi.proyecto.objetivo,
 				descripcion:mi.proyecto.descripcion,
 				proyectotipoid: mi.poryectotipoid,
 				unidadejecutoraid: mi.unidadejecutoraid,
