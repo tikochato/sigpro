@@ -103,7 +103,8 @@ public class SDocumentosAdjuntos extends HttpServlet {
 										String nombreDocumento = parametro.getName();
 										
 										String tipoContenido = parametro.getName().substring(parametro.getName().indexOf('.') + 1);
-										documentoAdjunto = new Documento(nombreDocumento, tipoContenido, tipoObjetoId,objetoId,usuario,new DateTime().toDate(),1);
+										documentoAdjunto = new Documento(nombreDocumento, tipoContenido, tipoObjetoId, objetoId, usuario, null, 
+												new DateTime().toDate(), null, 1);
 											
 										fileItems.add(parametro);
 										File directorio = new File(directorioTemporal);

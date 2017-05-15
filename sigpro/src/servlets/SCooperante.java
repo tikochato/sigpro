@@ -141,8 +141,10 @@ public class SCooperante extends HttpServlet {
 				String descripcion = map.get("descripcion");
 				Cooperante cooperante;
 				if(esnuevo){
-					cooperante = new Cooperante(codigo, nombre,siglas, descripcion, 
-							sesionweb.getAttribute("usuario").toString(), null, new DateTime().toDate(), null, 1, null);
+					
+					
+					cooperante = new Cooperante(codigo, siglas, nombre, descripcion, 
+							sesionweb.getAttribute("usuario").toString(), null, new DateTime().toDate(), null, 1, null,null);
 				}
 				else{
 					cooperante = CooperanteDAO.getCooperantePorId(id);
