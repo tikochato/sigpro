@@ -19,26 +19,25 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.TipoMonedaDAO;
-import pojo.TipoMoneda;
+import dao.ResponsableTipoDAO;
+import pojo.ResponsableTipo;
 
-@WebServlet("/STipoMoneda")
-public class STipoMoneda extends HttpServlet {
+@WebServlet("/SResponsableTipo")
+public class SResponsableTipo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    
-	class stTipoMoneda {
-		int id;
-		String nombre;
-		String descripcion;
-		int programatipoid;
-		String programatipo;
-		String fechaCreacion;
-		String usuarioCreo;
-		String fechaactualizacion;
-		String usuarioactualizo;
-	};
+       
+    class stResponsableTipo{
+    	int id;
+    	String nombre;
+    	String descripcion;
+    	String usuarioCreo;
+    	String usuarioActualizo;
+    	String fechaCreacion;
+    	String fechaActualizacion;
+    	int estado;
+    }
 	
-    public STipoMoneda() {
+	public SResponsableTipo() {
         super();
     }
 
@@ -60,27 +59,28 @@ public class STipoMoneda extends HttpServlet {
 			}
 			Map<String, String> map = gson.fromJson(sb.toString(), type);
 			String accion = map.get("accion")!=null ? map.get("accion") : "";
-
-			if (accion.equals("getTipoMonedaPagina")) {
+			
+			if (accion.equals("getResponsableTipoPagina")) {
 				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-				int numeroTipoMoneda = map.get("numerotipomoneda")!=null  ? Integer.parseInt(map.get("numerotipomoneda")) : 0;
-				List<TipoMoneda> tipoMonedas = TipoMonedaDAO.getAutorizacionTiposPagina(pagina, numeroTipoMoneda);
+				int numeroResponsableTipo = map.get("numeroResponsableTipo")!=null  ? Integer.parseInt(map.get("numeroResponsableTipo")) : 0;
+				List<ResponsableTipo> responsabletipo = ResponsableTipoDAO.getResponsableTiposPagina(pagina, numeroResponsableTipo);
 				
-				List<stTipoMoneda> sttipomoneda=new ArrayList<stTipoMoneda>();
-				for(TipoMoneda tipoMoneda:tipoMonedas){
-					stTipoMoneda temp =new stTipoMoneda();
-					temp.id = tipoMoneda.getId();
-					temp.nombre = tipoMoneda.getNombre();
-					sttipomoneda.add(temp);
+				List<stResponsableTipo> stresponsabletipo=new ArrayList<stResponsableTipo>();
+				for(ResponsableTipo responsableTipo:responsabletipo){
+					stResponsableTipo temp =new stResponsableTipo();
+					temp.id = responsableTipo.getId();
+					temp.nombre = responsableTipo.getNombre();
+					stresponsabletipo.add(temp);
 				}
 				
-				response_text=new GsonBuilder().serializeNulls().create().toJson(sttipomoneda);
-		        response_text = String.join("", "\"tipoMonedas\":",response_text);
+				response_text=new GsonBuilder().serializeNulls().create().toJson(stresponsabletipo);
+		        response_text = String.join("", "\"responsableTipo\":",response_text);
 		        response_text = String.join("", "{\"success\":true,", response_text,"}");
-			} else if (accion.equals("numeroTipoMonedas")){
-				response_text = String.join("","{ \"success\": true, \"totalactividadtipos\":",TipoMonedaDAO.getTotalAuotirzacionTipo().toString()," }");
+			}else if (accion.equals("numeroResponsableTipo")){
+				response_text = String.join("","{ \"success\": true, \"totalactividadtipos\":",ResponsableTipoDAO.getTotalResponsableTipo().toString()," }");
 			}
-		}catch (Exception e) {
+		}
+		catch(Exception e) {
 			response_text = String.join("","{ \"success\": false }");
 		}
 		response.setHeader("Content-Encoding", "gzip");
@@ -92,5 +92,4 @@ public class STipoMoneda extends HttpServlet {
         gz.close();
         output.close();
 	}
-
 }

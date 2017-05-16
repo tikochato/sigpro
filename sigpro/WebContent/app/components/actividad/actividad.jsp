@@ -163,7 +163,12 @@
 							<span class="label-icon" ng-click="actividadc.buscarActividadTipo()"><i class="glyphicon glyphicon-search"></i></span>
 							<label for="campo3" class="floating-label">* Tipo de Actividad</label>
 						</div>
-						
+						<div class="form-group" >
+						    <input type="text" class="inputText" id="iactividadResponsable" name="iactividadResponsable" ng-model="actividadc.actividad.actividadResponsable" ng-value="actividadc.actividad.actividadResponsable" 
+							ng-click="actividadc.buscarActividadResponsable()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+							<span class="label-icon" ng-click="actividadc.buscarActividadResponsable()"><i class="glyphicon glyphicon-search"></i></span>
+							<label for="campo3" class="floating-label">* Responsable</label>
+						</div>
 						
 						<div class="form-group" >
 						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="actividadc.coordenadas" ng-value="actividadc.coordenadas" 
