@@ -926,6 +926,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			var parametros = {
 					accion: 'getdatos',
 					noPrestamo: mi.prestamo.numeroPrestamo,
+					codigoPresupuestario:mi.prestamo.codigoPresupuestario,
 				    t:moment().unix()
 			}
 			$http.post('/SDataSigade', parametros).then(function(response){
