@@ -57,6 +57,10 @@
 					</div>
 				  </div>
 				</div>
+				<br>
+				<div class="total-rows">
+				  Total de {{  hitoc.totalHitos + (hitoc.totalHitos == 1 ? " hito" : " hitos" ) }}
+				</div>
 				<ul uib-pagination total-items="hitoc.totalHitos" 
 						ng-model="hitoc.paginaActual" 
 						max-size="hitoc.numeroMaximoPaginas" 

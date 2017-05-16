@@ -9,9 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.EntidadDAO;
 import dao.UnidadEjecutoraDAO;
-import pojo.UnidadEjecutora;
 import utilities.Utils;
 
 @WebServlet("/SUnidadEjecutora")
@@ -63,20 +61,20 @@ public class SUnidadEjecutora extends HttpServlet {
     }
 
     private void crear(Map<String, String> parametro, HttpServletResponse response) throws IOException {
-		int codigo = Utils.String2Int(parametro.get("codigo"));
-		String nombre = parametro.get("nombre");
-		int codigoEntidad = Utils.String2Int(parametro.get("entidad"));
-	
-		//boolean creado = UnidadEjecutoraDAO.guardar(codigo, nombre, codigoEntidad);
-		UnidadEjecutora pojo = UnidadEjecutoraDAO.getUnidadEjecutora(codigo);
-		pojo.setUnidadEjecutora(codigo);
-		pojo.setNombre(nombre);
-		pojo.setEntidad(EntidadDAO.getEntidad(codigoEntidad));
+    	try{
+    		int codigo = Utils.String2Int(parametro.get("codigo"));
+    		String nombre = parametro.get("nombre");
+    		int codigoEntidad = Utils.String2Int(parametro.get("entidad"));
+    	   		
+    		boolean creado = UnidadEjecutoraDAO.guardar(codigo, nombre, codigoEntidad);
+    		if (creado) {
+    		    listar(parametro, response);
+    		}
+    		
+    	}catch(Throwable e){
+    		e.printStackTrace();
+    	}
 		
-		boolean creado = UnidadEjecutoraDAO.guardarUnidadEjecutora(pojo);
-		if (creado) {
-		    listar(parametro, response);
-		}
     }
 
     private void actualizar(Map<String, String> parametro, HttpServletResponse response) throws IOException {

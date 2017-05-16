@@ -1,9 +1,9 @@
 var app = angular.module('cooperanteController', []);
 
-app.controller('cooperanteController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', '$uibModal', 'dialogoConfirmacion', 
+app.controller('cooperanteController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', '$uibModal', 'dialogoConfirmacion',
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$dialogoConfirmacion) {
 			var mi=this;
-			
+
 			$window.document.title = $utilidades.sistema_nombre+' - Cooperantes';
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
@@ -15,17 +15,17 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.paginaActual = 1;
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
-			
+
 			mi.columnaOrdenada=null;
 			mi.ordenDireccion = null;
 			mi.filtros = [];
-			
+
 			mi.editarElemento = function (event) {
 		        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
 		        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
 		        mi.editar();
 		    };
-			
+
 			mi.gridOptions = {
 					enableRowSelection : true,
 					enableRowHeaderSelection : false,
@@ -38,9 +38,9 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 				    useExternalFiltering: true,
 				    useExternalSorting: true,
 				    rowTemplate: '<div ng-dblclick="grid.appScope.cooperantec.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
-				    columnDefs : [ 
+				    columnDefs : [
 						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-						{ name: 'codigo', width: 150, displayName: 'Código', 
+						{ name: 'codigo', width: 150, displayName: 'Código',
 							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-model="grid.appScope.cooperantec.filtros[\'codigo\']" ng-keypress="grid.appScope.cooperantec.filtrar($event)"></input></div>'
 						},
 					    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
@@ -49,7 +49,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 					    { name: 'siglas', width: 100, displayName: 'Siglas',cellClass: 'grid-align-left', enableFiltering: false
 					    },
 					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-					    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
+					    { name: 'usuarioCreo', displayName: 'Usuario Creación',
 					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-model="grid.appScope.cooperantec.filtros[\'usuarioCreo\']" ng-keypress="grid.appScope.cooperantec.filtrar($event)"></input></div>'
 					    },
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
@@ -61,7 +61,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 						gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 							mi.cooperante = row.entity;
 						});
-						
+
 						gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
 							if(sortColumns.length==1){
 								grid.appScope.cooperantec.columnaOrdenada=sortColumns[0].field;
@@ -79,9 +79,9 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 									grid.appScope.cooperantec.ordenDireccion=null;
 								}
 							}
-								
+
 						} );
-						
+
 						if($routeParams.reiniciar_vista=='rv'){
 							mi.guardarEstado();
 							 mi.obtenerTotalCooperantes();
@@ -99,11 +99,11 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 					    }
 					}
 				};
-			
+
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
 				$http.post('/SCooperante', { accion: 'getCooperantesPagina', pagina: pagina, numerocooperantes: $utilidades.elementosPorPagina,
-					filtro_nombre: mi.filtros['nombre'],  filtro_codigo: mi.filtros['codigo'], 
+					filtro_nombre: mi.filtros['nombre'],  filtro_codigo: mi.filtros['codigo'],
 					filtro_usuario_creo: mi.filtros['usuarioCcreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
 					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion}).success(
 						function(response) {
@@ -112,11 +112,11 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 							mi.mostrarcargando = false;
 						});
 			}
-			
+
 			mi.redireccionSinPermisos=function(){
-				$window.location.href = '/main.jsp#!/forbidden';		
+				$window.location.href = '/main.jsp#!/forbidden';
 			}
-			
+
 			mi.guardar=function(){
 				if(mi.cooperante!=null && mi.cooperante.nombre!=null){
 					$http.post('/SCooperante', {
@@ -169,8 +169,8 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 							});
 						}
 					}, function(){
-						
-					});					
+
+					});
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar el Cooperante que desea borrar');
@@ -196,44 +196,45 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 				mi.mostraringreso=false;
 				mi.esnuevo=false;
 			}
-			
+
 			mi.guardarEstado=function(){
 				var estado = mi.gridApi.saveState.save();
-				var tabla_data = { action: 'guardaEstado', grid:'cooperantes', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
+				var tabla_data = { action: 'guardaEstado', grid:'cooperantes', estado: JSON.stringify(estado), t: (new Date()).getTime() };
 				$http.post('/SEstadoTabla', tabla_data).then(function(response){
-					
+
 				});
 			}
-			
+
 			mi.cambioPagina=function(){
 				mi.cargarTabla(mi.paginaActual);
 			}
-			
+
 			mi.reiniciarVista=function(){
 				if($location.path()=='/cooperante/rv')
 					$route.reload();
 				else
 					$location.path('/cooperante/rv');
 			}
-			
+
 			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
+					mi.obtenerTotalCooperantes();
 					mi.cargarTabla(mi.paginaActual);
 					mi.gridApi.selection.clearSelectedRows();
 					mi.cooperante = null;
 				}
 			}
-			
+
 			mi.obtenerTotalCooperantes=function(){
 				$http.post('/SCooperante', { accion: 'numeroCooperantes',
-					filtro_nombre: mi.filtros['nombre'], filtro_codigo: mi.filtros['codigo'], 
+					filtro_nombre: mi.filtros['nombre'], filtro_codigo: mi.filtros['codigo'],
 					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']
 				}).success(
-				
+
 						function(response) {
 							mi.totalCooperantes = response.totalcooperantes;
 							mi.cargarTabla(1);
 						});
 			}
-			
+
 			} ]);

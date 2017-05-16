@@ -49,6 +49,10 @@
 					</div>
 				  </div>
 				</div>
+				<br>
+				<div class="total-rows">
+				  Total de {{  metatipoc.totaltipos + (metatipoc.totaltipos == 1 ? " Tipo de Meta" : " Tipos de Meta" ) }}
+				</div>
 				<ul uib-pagination total-items="metatipoc.totalCooperantes" 
 						ng-model="metatipoc.paginaActual" 
 						max-size="metatipoc.numeroMaximoPaginas" 

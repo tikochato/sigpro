@@ -221,9 +221,9 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 			}
 			
 			mi.obtenerTotalMetaUnidades = function(){
-				$http.post('/SMetaUnidadMedida', { accion: 'numeroMetaUnidadMedidas' }).success(
+				$http.post('/SMetaUnidadMedida', { accion: 'numeroMetaUnidadMedidas', filtro_nombre:mi.filtros["nombre"] , filtro_usuario_creo:mi.filtros["usuario_creo"] , filtro_fecha_creacion:mi.filtros["fecha_creacion"]}).success(
 						function(response) {
-							mi.totalmedidas = response.totalmedidas;
+							mi.totalmedidas = response.totalMetaUnidadMedidas;
 							mi.cargarTabla(1);
 						});
 				

@@ -11,9 +11,10 @@
         <property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
         <property name="hibernate.enable_lazy_load_no_trans">true</property>
         <property name="hibernate.validator.apply_to_ddl">false</property>
-        <mapping class="pojoSigade.Cierre" />
-        <mapping class="pojoSigade.Det" />
-        <mapping class="pojoSigade.Inf" />
-        <mapping class="pojoSigade.Org" />
+        <mapping class="pojoSigade.DtmAvanceFisfinanCierreDti" />
+        <mapping class="pojoSigade.DtmAvanceFisfinanDetDti" />
+        <mapping class="pojoSigade.DtmAvanceFisfinanDti" />
+        <mapping class="pojoSigade.DtmAvanceFisfinanOrgDti" />
+        <mapping class="pojoSigade.DtmTiposCambioDtiId" />
     </session-factory>
 </hibernate-configuration>
