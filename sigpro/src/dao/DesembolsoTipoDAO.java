@@ -21,7 +21,7 @@ public class DesembolsoTipoDAO {
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = "SELECT count(d.id) FROM DesembolsoTipo WHERE d.estado=1";
+			String query = "SELECT count(d.id) FROM DesembolsoTipo d WHERE d.estado=1";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query = String.join("",query, " AND d.nombre LIKE '%",filtro_nombre,"%'");
 			Query<Long> conteo = session.createQuery(query,Long.class);

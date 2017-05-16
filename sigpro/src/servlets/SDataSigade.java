@@ -27,7 +27,7 @@ import dao.DataSigadeDAO;
 import dao.TipoMonedaDAO;
 import pojo.Cooperante;
 import pojo.TipoMoneda;
-import pojoSigade.Inf;
+import pojoSigade.DtmAvanceFisfinanDti;
 import utilities.Utils;
 
 @WebServlet("/SDataSigade")
@@ -132,7 +132,7 @@ public class SDataSigade extends HttpServlet {
 		if (accion.equals("getdatos")) {
 			String noPrestamo = map.get("noPrestamo");
 			String codigoPresupuestario = map.get("codigoPresupuestario");
-			Inf inf = DataSigadeDAO.getavanceFisFinan(noPrestamo, codigoPresupuestario);
+			DtmAvanceFisfinanDti inf = DataSigadeDAO.getavanceFisFinanDMS1(noPrestamo, codigoPresupuestario);
 			
 			stprestamo temp = new stprestamo();
 			if (inf !=null){
@@ -164,8 +164,6 @@ public class SDataSigade extends HttpServlet {
 				
 		        response_text =  "{\"success\":false}";
 			}
-			
-			
 		}
 		
 		response.setHeader("Content-Encoding", "gzip");

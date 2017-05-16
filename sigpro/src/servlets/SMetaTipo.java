@@ -147,7 +147,7 @@ public class SMetaTipo extends HttpServlet {
 						, "\"usuarioCreo\": \"" , MetaTipo.getUsuarioCreo(),"\","
 						, "\"fechaCreacion\":\" " , Utils.formatDateHour(MetaTipo.getFechaCreacion()),"\","
 						, "\"usuarioactualizo\": \"" , MetaTipo.getUsuarioActualizo() != null ? MetaTipo.getUsuarioActualizo() : "","\","
-						, "\"fechaactualizacion\": \"" , Utils.formatDate(MetaTipo.getFechaActualizacion()),"\""
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(MetaTipo.getFechaActualizacion()),"\""
 						," }");
 			}
 			else

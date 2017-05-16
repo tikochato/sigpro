@@ -57,6 +57,10 @@
 					</div>
 				  </div>
 				</div>
+				<br>
+				<div class="total-rows">
+				  Total de {{  permisosc.totalPermisos + (permisosc.totalPermisos == 1 ? " Permiso" : " Permisos" ) }}
+				</div>
 				<ul uib-pagination total-items="permisosc.totalPermisos"
 						ng-model="permisosc.paginaActual"
 						max-size="permisosc.numeroMaximoPaginas"

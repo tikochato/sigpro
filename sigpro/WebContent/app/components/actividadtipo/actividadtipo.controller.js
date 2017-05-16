@@ -236,7 +236,12 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 		}
 		
 		mi.obtenerTotalActividadPropiedades=function(){
-			$http.post('/SActividadTipo', { accion: 'numeroActividadTipos' }).success(
+			$http.post('/SActividadTipo', {
+				accion: 'numeroActividadTipos',
+				filtro_nombre: mi.filtros['nombre'], 
+				filtro_usuario_creo: mi.filtros['usuario_creo'], 
+				filtro_fecha_creacion: mi.filtros['fecha_creacion']
+				}).success(
 				function(response) {
 					mi.totalActividadtipos = response.totalactividadtipos;
 					mi.cargarTabla(1);

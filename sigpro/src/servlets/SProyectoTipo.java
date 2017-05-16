@@ -129,7 +129,7 @@ public class SProyectoTipo extends HttpServlet {
 					proyectoTipo.setUsuarioActualizo(usuario);
 					proyectoTipo.setFechaActualizacion(new DateTime().toDate());
 					Set<PtipoPropiedad> propiedades_temp = proyectoTipo.getPtipoPropiedads();
-					proyectoTipo.setPtipoPropiedads(null);
+					proyectoTipo.setPtipoPropiedads(new HashSet<PtipoPropiedad>(0));
 					if (propiedades_temp!=null){
 						for (PtipoPropiedad ptipoPropiedad : propiedades_temp){
 							PtipoPropiedadDAO.eliminarTotalPtipoPropiedad(ptipoPropiedad);
@@ -137,7 +137,7 @@ public class SProyectoTipo extends HttpServlet {
 					}
 				}
 				
-				result = ProyectoTipoDAO.guardarProyectoTipo(proyectoTipo);
+				//result = ProyectoTipoDAO.guardarProyectoTipo(proyectoTipo);
 				
 				String[] idsPropiedades =  map.get("propiedades") != null && map.get("propiedades").length()>0 ? map.get("propiedades").toString().split(",") : null;
 				if (idsPropiedades !=null && idsPropiedades.length>0){

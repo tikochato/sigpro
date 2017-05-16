@@ -52,6 +52,10 @@
           </div>
         </div>
       </div>
+      <br>
+      <div class="total-rows">
+		  Total de {{  colaborador.totalElementos + (colaborador.totalElementos == 1 ? " Colaborador" : " Colaboradores" ) }}
+	   </div>
       <ul uib-pagination 
       	total-items="colaborador.totalElementos" 
       	ng-model="colaborador.paginaActual" 
