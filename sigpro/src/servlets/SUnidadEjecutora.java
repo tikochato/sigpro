@@ -9,9 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.EntidadDAO;
 import dao.UnidadEjecutoraDAO;
-import pojo.UnidadEjecutora;
 import utilities.Utils;
 
 @WebServlet("/SUnidadEjecutora")
