@@ -83,6 +83,8 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 			    		{ scaleType: 'Days', headerTextFormat: 'Day', headerStyle: 'padding: 7px 5px; border-right: solid 1px White; border-bottom: solid 1px White; color: gray', isSeparatorVisible: false, separatorStyle: 'stroke: #c8bfe7; stroke-width: 0.25px' }]
 			    
 		};
+		
+		settings.assignableResources = ['Resource 1', 'Resource 2', 'Resource 3', 'Material 1', 'Material 2'];
 		// Default Columns
 		var columns = DlhSoft.Controls.GanttChartView.getDefaultColumns(items, settings);
 		
@@ -115,7 +117,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		    }
 		});
 		
-		columns.splice(8,1);
+		columns.splice(9,1);
 		
 		columns[1].header = 'Nombre';
 		columns[1].width = 300;
@@ -124,6 +126,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		columns[6].header = 'Hito';
 		columns[6].isReadOnly = true;
 		columns[7].header = 'Completada';
+		columns[8].header = 'Responsable';
 		
 		for(var i=0; i<columns.length;i++)
 			columns[i].headerClass = 'gantt-chart-header-column';

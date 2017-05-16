@@ -7,17 +7,18 @@ import java.util.ArrayList;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import pojoSigade.Cierre;
-import pojoSigade.Inf;
+import pojoSigade.DtmAvanceFisfinanDti;
 import utilities.CHibernateSessionSIGADE;
 import utilities.CLogger;
 
 public class DataSigadeDAO {
-	public static List<Cierre> getCierre(){
-		List<Cierre> ret = new ArrayList<Cierre>();
+	
+	
+	public static List<DtmAvanceFisfinanDti> getInf(){
+		List<DtmAvanceFisfinanDti> ret = new ArrayList<DtmAvanceFisfinanDti>();
 		Session session = CHibernateSessionSIGADE.getSessionFactory().openSession();
 		try{
-			Query<Cierre> criteria = session.createQuery("FROM Cierre p ", Cierre.class);
+			Query<DtmAvanceFisfinanDti> criteria = session.createQuery("FROM dtm_avance_fisfinan_dti p ", DtmAvanceFisfinanDti.class);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
@@ -29,12 +30,17 @@ public class DataSigadeDAO {
 		return ret;
 	}
 	
-	public static List<Inf> getInf(){
-		List<Inf> ret = new ArrayList<Inf>();
+	public static DtmAvanceFisfinanDti getInfPorId(String noPrestamo,String codigoPresupuestario){
+		DtmAvanceFisfinanDti ret = null;
 		Session session = CHibernateSessionSIGADE.getSessionFactory().openSession();
 		try{
-			Query<Inf> criteria = session.createQuery("FROM Inf p ", Inf.class);
-			ret = criteria.getResultList();
+			String query =String.join("", "SELECT i FROM dtm_avance_fisfinan_dti i ",
+					"where i.id.codigoPresupuestario = :codPre ",
+					"and i.id.noPrestamo = noPre ");
+			Query<DtmAvanceFisfinanDti> criteria = session.createQuery(query, DtmAvanceFisfinanDti.class);
+			criteria.setParameter("codPre", codigoPresupuestario);
+			criteria.setParameter("noPre", noPrestamo);
+			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
 			CLogger.write("2", DataSigadeDAO.class, e);
@@ -45,36 +51,17 @@ public class DataSigadeDAO {
 		return ret;
 	}
 	
-	public static Inf getInfPorId(String noPrestamo,String codigoPresupuestario){
-		Inf ret = null;
+	public static DtmAvanceFisfinanDti getavanceFisFinanDMS1(String noPrestamo,String codigoPresupuestario){
+		DtmAvanceFisfinanDti ret = null;
 		Session session = CHibernateSessionSIGADE.getSessionFactory().openSession();
+		
 		try{
-			String query =String.join("", "SELECT i FROM Inf i ",
-					"where i.id.codigoPresupuestario = :codPre ",
-					"and i.id.noPrestamo = noPre ");
-			Query<Inf> criteria = session.createQuery(query, Inf.class);
-			criteria.setParameter("codPre", codigoPresupuestario);
-			criteria.setParameter("noPre", noPrestamo);
-			ret = criteria.getSingleResult();
-		}
-		catch(Throwable e){
-			CLogger.write("3", DataSigadeDAO.class, e);
-		}
-		finally{
-			session.close();
-		}
-		return ret;
-	}
-	
-	public static Inf getavanceFisFinan(String noPrestamo,String codigoPresupuestario){
-		Inf ret = null;
-		Session session = CHibernateSessionSIGADE.getSessionFactory().openSession();
-		try{
-			String query =String.join(" ", "select * from dtm_avance_fisfinan_dti@bd_datamart fis",
-							"where fis.NO_PRESTAMO = ?1");
-			Query<Inf> criteria = session.createNativeQuery(query,Inf.class);
-			//criteria.setParameter("codPre", codigoPresupuestario);
+			String query =String.join(" ", "select * from dtm_avance_fisfinan_dti fis",
+					"where fis.NO_PRESTAMO = ?1",
+					"and fis.CODIGO_PRESUPUESTARIO = ?2");
+			Query<DtmAvanceFisfinanDti> criteria = session.createNativeQuery(query,DtmAvanceFisfinanDti.class);
 			criteria.setParameter("1", noPrestamo);
+			criteria.setParameter("2", codigoPresupuestario);
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
