@@ -133,6 +133,7 @@ public class SRecursoTipo extends HttpServlet {
 				RecursoTipo recursoTipo;
 				
 				if(esnuevo){
+
 					recursoTipo = new RecursoTipo(nombre, descripcion, usuario, null, new DateTime().toDate(),
 							null, 1, null, null);
 				}

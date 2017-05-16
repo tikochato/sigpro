@@ -52,7 +52,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 				    	,filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.proyectotipoc.filtros[\'nombre\']" ng-keypress="grid.appScope.proyectotipoc.filtrar($event)" style="width:175px;"></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-				    { name: 'usarioCreo', displayName: 'Usuario Creación' 
+				    { name: 'usuarioCreo', displayName: 'Usuario Creación' 
 				    	,filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.proyectotipoc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.proyectotipoc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
@@ -220,10 +220,10 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 		}
 
 		mi.reiniciarVista=function(){
-			if($location.path()=='/proyectotipo/rv')
+			if($location.path()=='/prestamotipo/rv')
 				$route.reload();
 			else
-				$location.path('/proyectotipo/rv');
+				$location.path('/prestamotipo/rv');
 		}
 
 		mi.filtrar = function(evt){

@@ -56,6 +56,10 @@
 					</div>
 				  </div>
 				</div>
+				<br>
+				<div class="total-rows">
+				  Total de {{  desembolsoc.totalDesembolsos + (desembolsoc.totalDesembolsos == 1 ? " Desembolsos" : " Desembolso" ) }}
+				</div>
 				<ul uib-pagination total-items="desembolsoc.totalDesembolsos" 
 						ng-model="desembolsoc.paginaActual" 
 						max-size="desembolsoc.numeroMaximoPaginas" 

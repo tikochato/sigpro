@@ -48,6 +48,10 @@
 					</div>
 				  </div>
 				</div>
+				<br>
+				<div class="total-rows">
+				  Total de {{  cooperantec.totalCooperantes + (cooperantec.totalCooperantes == 1 ? " Cooperante" : " Cooperante" ) }}
+				</div>
 				<ul uib-pagination total-items="cooperantec.totalCooperantes" 
 						ng-model="cooperantec.paginaActual" 
 						max-size="cooperantec.numeroMaximoPaginas" 

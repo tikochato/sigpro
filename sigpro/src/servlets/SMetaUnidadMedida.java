@@ -146,7 +146,7 @@ public class SMetaUnidadMedida extends HttpServlet {
 						, "\"usuarioCreo\": \"" , MetaUnidadMedida.getUsuarioCreo(),"\","
 						, "\"fechaCreacion\":\" " , Utils.formatDateHour(MetaUnidadMedida.getFechaCreacion()),"\","
 						, "\"usuarioactualizo\": \"" , MetaUnidadMedida.getUsuarioActualizo() != null ? MetaUnidadMedida.getUsuarioActualizo() : "","\","
-						, "\"fechaactualizacion\": \"" , Utils.formatDate(MetaUnidadMedida.getFechaActualizacion()),"\""
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(MetaUnidadMedida.getFechaActualizacion()),"\""
 						," }");
 			}
 			else

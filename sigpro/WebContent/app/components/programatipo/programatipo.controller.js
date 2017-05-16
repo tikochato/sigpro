@@ -54,10 +54,10 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 				    { name: 'usuarioCreo', displayName: 'Usuario Creación' 
-				    	,filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.programatipoc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.programatipoc.filtrar($event)"></input></div>'
+				    	,filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.programatipoc.filtros[\'usuarioCreo\']" ng-keypress="grid.appScope.programatipoc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.programatipoc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.programatipoc.filtrar($event)" ></input></div>'
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.programatipoc.filtros[\'fechaCreacion\']" ng-keypress="grid.appScope.programatipoc.filtrar($event)" ></input></div>'
 				    }
 				],
 				onRegisterApi: function(gridApi) {
@@ -107,8 +107,8 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 			mi.mostrarcargando=true;
 			$http.post('/SProgramaTipo', { accion: 'getProgramaTipoPagina', pagina: pagina, numeroprogramatipo: $utilidades.elementosPorPagina
 				,filtro_nombre: mi.filtros['nombre'] 
-				,filtro_usuario_creo: mi.filtros['usuario_creo']
-			    ,filtro_fecha_creacion: mi.filtros['fecha_creacion']
+				,filtro_usuario_creo: mi.filtros['usuarioCreo']
+			    ,filtro_fecha_creacion: mi.filtros['fechaCreacion']
 			    ,columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
 			    }).success(
 			

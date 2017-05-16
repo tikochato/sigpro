@@ -28,7 +28,7 @@ app.controller(
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 	mi.permisoSelected={id:"",nombre:"", descripcion:""};
 	mi.filtros=[];
-	
+	mi.totalPermisos=0;
 	mi.editarElemento = function (event) {
         var filaId = angular.element(event.toElement).scope().rowRenderIndex;
         mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
@@ -241,16 +241,16 @@ app.controller(
 	
 	$http.post('/SPermiso', { accion: 'getTotalPermisos' }).success(
 			function(response) {
-				mi.elementosPorPagina = response.totalPermisos;
+				mi.totalPermisos=response.totalPermisos;
 				mi.cargarTabla(mi.paginaActual);
 	});
 	
 	mi.filtrar = function(evt){
 		if(evt.keyCode==13){
-			$http.post('/SUsuario', { accion: 'getTotalPermisos',	filtro_id: mi.filtros['id'],filtro_nombre: mi.filtros['nombre'],
+			$http.post('/SPermiso', { accion: 'getTotalPermisos',	filtro_id: mi.filtros['id'],filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).success(
 					function(response) {
-						mi.elementosPorPagina = response.totalPermisos;
+						mi.totalPermisos = response.totalPermisos;
 						mi.cargarTabla(mi.paginaActual);
 						mi.gridApi.selection.clearSelectedRows();
 						mi.permisoSelected.id = "";

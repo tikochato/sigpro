@@ -268,7 +268,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 				filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
 					function(response) {
-						mi.totalProyectos = response.data.totalhitos;
+						mi.totalHitos = response.data.totalhitos;
 						mi.paginaActual = 1;
 						mi.cargarTabla(mi.paginaActual);
 			});

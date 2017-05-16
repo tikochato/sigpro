@@ -324,7 +324,8 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 	
 	mi.filtrar = function(evt,tipo){
 		if(evt.keyCode==13){
-			mi.cargarData(mi.paginaActual);
+			mi.obtenerTotalColaboradores();
+			//mi.cargarData(mi.paginaActual);
 			mi.gridApi.selection.clearSelectedRows();
 			mi.colaborador = null;
 		}
@@ -332,10 +333,16 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 	
 	mi.obtenerTotalColaboradores=function(){
 		$http.post('/SColaborador', {
-			accion : 'totalElementos'
+			accion : 'totalElementos',
+			filtro_pnombre: mi.filtros['pnombre'],
+			filtro_snombre: mi.filtros['snombre'],
+			filtro_papellido: mi.filtros['papellido'],
+			filtro_sapellido: mi.filtros['sapellido'],
+			filtro_cui: mi.filtros['cui'],
+			filtro_unidad_ejecutora: mi.filtros['unidad_ejecutora']
 		}).success(function(response) {
 			mi.totalElementos = response.total;
-			mi.cargarData(1);
+			mi.cargarData(mi.paginaActual);
 		});
 	}
 

@@ -295,10 +295,10 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		}
 
 		mi.reiniciarVista=function(){
-			if($location.path()==('/actividad/'+ mi.objetoid + '/' + mi.objetotipo + '/rv'))
+			if($location.path()==('/actividad/'+ $routeParams.objeto_id + '/' + mi.objetotipo + '/rv'))
 				$route.reload();
 			else
-				$location.path('/actividad/'+ mi.objetoid + '/' + mi.objetotipo + '/rv');
+				$location.path('/actividad/'+ $routeParams.objeto_id + '/' + mi.objetotipo + '/rv');
 		}
 		
 		mi.irARiesgos=function(actividadid){

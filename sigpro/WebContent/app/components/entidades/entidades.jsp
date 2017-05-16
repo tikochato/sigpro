@@ -44,6 +44,10 @@
 	          </div>
 	        </div>
 	      </div>
+	      <br>
+	      <div class="total-rows">
+			  Total de {{  entidad.totalEntidades + (entidad.totalEntidades == 1 ? " Entidades" : " Entidades" ) }}
+			</div>
 	      <ul uib-pagination
 	        total-items="entidad.totalEntidades"
 	        ng-model="entidad.paginaActual"
