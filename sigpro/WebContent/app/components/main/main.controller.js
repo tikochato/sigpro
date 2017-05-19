@@ -162,6 +162,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/porcentajeactividades/:proyectoId?',{
             	template: '<div load-on-demand="\'porcentajeactividadesController\'" class="all_page"></div>'
             })
+            .when('/cargatrabajo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'cargatrabajoController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -402,6 +405,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'agendaController',
 	    	   script: '/app/components/reportes/agenda/agenda.controller.js',
 	    	   template: '/app/components/reportes/agenda/agenda.jsp'
+	       },{
+	    	   name: 'cargatrabajoController',
+	    	   script: '/app/components/reportes/cargatrabajo/cargatrabajo.controller.js',
+	    	   template: '/app/components/reportes/cargatrabajo/cargatrabajo.jsp'
 	       },
 
 	   ];

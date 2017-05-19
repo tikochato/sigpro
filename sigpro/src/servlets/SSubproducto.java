@@ -1,6 +1,8 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.lang.reflect.Type;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ComponenteDAO;
@@ -46,6 +49,31 @@ public class SSubproducto extends HttpServlet {
 		String label;
 		String valor;
 		String valor_f;
+	}
+	
+	class stsubproducto {
+		Integer id;
+		Producto producto;
+		Integer subProductoTipoId;
+		String subProductoTipo;
+		Integer unidadEjecutora;
+		String nombreUnidadEjecutora;
+		String nombre;
+		String descripcion;
+		String usuarioCreo;
+		String usuarioActualizo;
+		Date fechaCreacion;
+		Date fechaActualizacion;
+		int estado;
+		Long snip;
+		Integer programa;
+		Integer subprograma;
+		Integer proyecto;
+		Integer actividad;
+		Integer obra;
+		Integer fuente;
+		String latitud;
+		String longitud;
 	}
 
 	public SSubproducto() {
@@ -287,10 +315,54 @@ public class SSubproducto extends HttpServlet {
 
 
 		String resultadoJson = "";
-
-		resultadoJson = Utils.getJSonString("subproductos", SubproductoDAO.getSubproductosPagina(pagina, registros,componenteid,usuario,
+		
+		resultadoJson = Utils.getJSonString("subproductos", SubproductoDAO.getSubproductosPagina(pagina, registros,componenteid,
 				filtro_nombre,filtro_usuario_creo
-				,filtro_fecha_creacion,columna_ordenada,orden_direccion));
+				,filtro_fecha_creacion,columna_ordenada,orden_direccion,usuario));
+		
+		/*
+		List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(pagina, registros,componenteid,
+				filtro_nombre,filtro_usuario_creo
+				,filtro_fecha_creacion,columna_ordenada,orden_direccion,usuario);
+		
+		List<stsubproducto> listaSubProducto = new ArrayList<stsubproducto>();
+		
+		for (Subproducto subproducto : subproductos){
+			stsubproducto temp = new stsubproducto();
+			temp.id = subproducto.getId();
+			temp.producto = subproducto.getProducto();
+			temp.nombre = subproducto.getNombre();
+			temp.descripcion = subproducto.getDescripcion();
+			temp.usuarioCreo = subproducto.getUsuarioCreo();
+			temp.usuarioActualizo = subproducto.getUsuarioActualizo();
+			temp.fechaCreacion = subproducto.getFechaCreacion();
+			temp.fechaActualizacion = subproducto.getFechaActualizacion();
+			temp.estado = subproducto.getEstado();
+			temp.snip = subproducto.getSnip();
+			temp.programa = subproducto.getPrograma();
+			temp.subprograma = subproducto.getSubprograma();
+			temp.proyecto = subproducto.getProyecto();
+			temp.actividad = subproducto.getActividad();
+			temp.obra = subproducto.getObra();
+			temp.fuente = subproducto.getFuente();
+			temp.latitud = subproducto.getLatitud();
+			temp.longitud = subproducto.getLongitud();
+			
+			if (subproducto.getSubproductoTipo() != null){
+				temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
+				temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
+			}
+			
+			if (subproducto.getUnidadEjecutora() != null){
+				temp.unidadEjecutora = subproducto.getUnidadEjecutora().getUnidadEjecutora();
+				temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
+			}
+			
+			listaSubProducto.add(temp);
+		}
+		
+		resultadoJson=new GsonBuilder().serializeNulls().create().toJson(listaSubProducto);
+		resultadoJson =  "\"subproductos\":" + resultadoJson;*/
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";
@@ -306,7 +378,7 @@ public class SSubproducto extends HttpServlet {
 		int registros = Utils.String2Int(parametro.get("registros"), 20);
 
 		String resultadoJson = "";
-
+		
 		resultadoJson = Utils.getJSonString("subproductos", ComponenteDAO.getComponentesPagina(pagina, registros,usuario));
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
