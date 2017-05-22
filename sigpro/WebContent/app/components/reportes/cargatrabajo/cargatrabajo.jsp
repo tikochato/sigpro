@@ -94,8 +94,8 @@
 							<tr>
 								<td style="display: none;">{{controller.idTotal}}</td>
 								<td style="font-weight: bold">{{controller.responsableTotal}}</td>
-								<td style="text-align: center; font-weight: bold"">{{controller.actividadesAtrasadasTotal}}</td>
-								<td style="text-align: center; font-weight: bold"">{{controller.actividadesProcesoTotal}}</td>
+								<td style="text-align: center; font-weight: bold">{{controller.actividadesAtrasadasTotal}}</td>
+								<td style="text-align: center; font-weight: bold">{{controller.actividadesProcesoTotal}}</td>
 							</tr>
 							</tbody>
 						</table>

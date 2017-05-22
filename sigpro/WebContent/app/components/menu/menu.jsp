@@ -42,12 +42,19 @@
 	                        <shiro:hasPermission name="23010"><li role="menuitem"><a href="#!/subproductotipo">Tipo de Subproducto</a></li></shiro:hasPermission>
 	                        <shiro:hasPermission name="19010"><li role="menuitem"><a href="#!/metaunidadmedida">Unidad de Medida para Metas</a></li></shiro:hasPermission>
 	                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/recursounidadmedida">Unidad de Medida para Recurso</a></li></shiro:hasPermission>
-	                        <shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/cargatrabajo">Reporte Carga de Trabajo</a></li></shiro:hasPermission>
+	                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/responsabletipo/rv">Tipo de Responsable</a></li></shiro:hasPermission>
+	                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/responsablerol/rv">Resonsable rol</a></li></shiro:hasPermission>
                          </ul>
                     </li>
                     <li uib-dropdown>
+                    	<a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Reportes <b class="caret"></b></a>
+                    	<ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/cargatrabajo/rp">Carga de Trabajo</a></li></shiro:hasPermission>
+                    	</ul>
+                    </li>
+                    <li uib-dropdown>
                          <a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Propiedades <b class="caret"></b></a>
-                         <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                        <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
                          	<shiro:hasPermission name="25010"><li role="menuitem"><a href="#!/programapropiedad">Programa</a></li></shiro:hasPermission>
                          	<shiro:hasPermission name="2010"><li role="menuitem"><a href="#!/actividadpropiedad">Actividad</a></li></shiro:hasPermission>	                      
 	                        <shiro:hasPermission name="6010"> <li role="menuitem"><a href="#!/componentepropiedad">Componente</a></li></shiro:hasPermission>	                       

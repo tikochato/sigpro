@@ -106,11 +106,17 @@ public class SObjetoResponsableRol extends HttpServlet {
 				}
 				else{
 					oResponsableRol = ObjetoResponsableDAO.getResponsableRolPorId(objetoId, objetoTipo);
-					oResponsableRol.setResponsableRol(responsable);
-					oResponsableRol.setObjetoId(objetoId);
-					oResponsableRol.setObjetoTipo(objetoTipo);
-					oResponsableRol.setUsuarioActualizo(usuario);
-					oResponsableRol.setFechaActualizacion(new DateTime().toDate());
+					
+					if (oResponsableRol != null){
+						oResponsableRol.setResponsableRol(responsable);
+						oResponsableRol.setObjetoId(objetoId);
+						oResponsableRol.setObjetoTipo(objetoTipo);
+						oResponsableRol.setUsuarioActualizo(usuario);
+						oResponsableRol.setFechaActualizacion(new DateTime().toDate());
+					}else {
+						oResponsableRol = new ObjetoResponsableRol(responsable,objetoId, objetoTipo, 
+								usuario,new DateTime().toDate(), 1);
+					}
 				}
 				
 				result = ObjetoResponsableDAO.guardarResponsableRol(oResponsableRol);

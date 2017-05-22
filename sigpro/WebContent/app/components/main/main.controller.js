@@ -165,6 +165,12 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/cargatrabajo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'cargatrabajoController\'" class="all_page"></div>'
             })
+            .when('/responsabletipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'responsabletipoController\'" class="all_page"></div>'
+            })
+            .when('/responsablerol/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'responsablerolController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -409,6 +415,14 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'cargatrabajoController',
 	    	   script: '/app/components/reportes/cargatrabajo/cargatrabajo.controller.js',
 	    	   template: '/app/components/reportes/cargatrabajo/cargatrabajo.jsp'
+	       },{
+	    	   name: 'responsabletipoController',
+	    	   script: '/app/components/responsabletipo/responsabletipo.controller.js',
+	    	   template: '/app/components/responsabletipo/responsabletipo.jsp'
+	       },{
+	    	   name: 'responsablerolController',
+	    	   script: '/app/components/responsablerol/responsablerol.controller.js',
+	    	   template: '/app/components/responsablerol/responsablerol.jsp'
 	       },
 
 	   ];

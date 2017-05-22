@@ -62,7 +62,6 @@ public class ObjetoResponsableDAO {
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
-			e.printStackTrace();
 			CLogger.write("3", ObjetoResponsableRol.class, e);
 		}
 		finally{

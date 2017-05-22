@@ -1,13 +1,26 @@
-var app = angular.module('cargatrabajoController', ['smart-table']);
+var app = angular.module('cargatrabajoController', ['ngTouch','smart-table']);
 app.controller('cargatrabajoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 	var mi = this;
+	console.log("Checkpoint");
+	i18nService.setCurrentLang('es');
 	
     mi.idTotal = 0;
     mi.responsableTotal = "Total";
     mi.actividadesAtrasadasTotal = 0;
     mi.actividadesProcesoTotal = 0;
 
+    mi.redireccionSinPermisos=function(){
+		$window.location.href = '/main.jsp#!/forbidden';		
+	}
+    
+    mi.reiniciarVista=function(){
+		if($location.path()=='/cargatrabajo/rv')
+			$route.reload();
+		else
+			$location.path('/cargatrabajo/rv');
+	}
+    
 	mi.tObjetos = [
 		{value: 0,text: "Seleccione una Opción"},
 		{value: 1,text: 'Préstamo'},
