@@ -290,8 +290,10 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				}).success(function(response){
 					if (response.success)
 					{
-						mi.actividad.actividadResponsable = response.responsableRol[0].nombre;
-						mi.actividad.responsableRolId = response.responsableRol[0].id;
+						if(response.responsableRol.length > 0){
+							mi.actividad.actividadResponsable = response.responsableRol[0].nombre;
+							mi.actividad.responsableRolId = response.responsableRol[0].id;
+						}
 					}
 				});
 			}
