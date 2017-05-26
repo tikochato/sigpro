@@ -35,7 +35,7 @@ public class MetaDAOTest {
 	
 	@Test
 	public void getMetasPaginaTest(){
-		assertNotNull(MetaDAO.getMetasPagina(1, 1, 1, 1,"", "", "", "", ""));
+		assertNotNull(MetaDAO.getMetasPagina(1, 1, 1, 1,"", 1, "", "", "", ""));
 	}
 	
 	@Test

@@ -27,17 +27,25 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import dao.ComponenteDAO;
+import dao.MetaDAO;
+import dao.MetaValorDAO;
 import dao.PrestamoDAO;
+import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import dao.ProyectoPropiedadDAO;
 import dao.ProyectoPropiedadValorDAO;
 import pojo.AutorizacionTipo;
+import pojo.Componente;
 import pojo.Cooperante;
 import pojo.EjecucionEstado;
 import pojo.InteresTipo;
+import pojo.Meta;
+import pojo.MetaValor;
 import pojo.ObjetoPrestamo;
 import pojo.ObjetoPrestamoId;
 import pojo.Prestamo;
+import pojo.Producto;
 import pojo.Proyecto;
 import pojo.ProyectoPropedadValor;
 import pojo.ProyectoPropedadValorId;
@@ -85,6 +93,44 @@ public class SProyecto extends HttpServlet {
 		String valor_f;
 	}
 
+	private static final int OBJETO_ID_PROYECTO = 1;
+	private static final int OBJETO_ID_COMPONENTE = 2;
+	private static final int OBJETO_ID_PRODUCTO = 3;
+	//private static final int OBJETO_ID_SUBPRODUCTO = 4;
+	//private static final int OBJETO_ID_ACTIVIDAD= 5;
+	
+	private static final int META_ID_REAL = 1;
+	private static final int META_ID_PLANIFICADA = 2;
+	private static final int META_ID_ANUALREAL = 3;
+	private static final int META_ID_ANUALPLANIFICADA = 4;
+	private static final int META_ID_LINEABASE= 5;
+	private static final int META_ID_FINAL= 6;
+	
+	private static final int DATOTIPO_TEXTO = 1;
+	private static final int DATOTIPO_ENTERO = 2;
+	private static final int DATOTIPO_DECIMAL = 3;
+	private static final int DATOTIPO_BOOLEANO = 4;
+	private static final int DATOTIPO_FECHA = 5;
+	
+	class stproyectometa {
+		Integer id;
+		Integer objetoTipo;
+		String objetoTipoNombre;
+		String nombre;
+		Integer objetoPadre;
+		String unidadDeMedida;
+		Integer datoTipoId;
+		String metaPlanificada;
+		String metaReal;
+		String metaRealId;
+		String metaRealFecha;
+		String metaAnualPlanificada;
+		String metaAnualReal;
+		String metaAnualRealId;
+		String metaAnualRealFecha;
+		String lineaBase;
+		String metaFinal;
+	}
 
     public SProyecto() {
         super();
@@ -620,6 +666,24 @@ public class SProyecto extends HttpServlet {
 	        response_text = String.join("", "\"proyectos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 
+		}else if(accion.equals("getProyectoMetas")){
+			Integer proyectoId = map.get("proyectoid")!=null ? Integer.parseInt(map.get("proyectoid")) : 0;
+			
+			List<stproyectometa> lstproyectometas = obtenerListadoProyectoMetas(proyectoId, usuario);
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(lstproyectometas);
+	        response_text = String.join("", "\"proyectometas\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+	        
+	        response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
+
+	        OutputStream output = response.getOutputStream();
+			GZIPOutputStream gz = new GZIPOutputStream(output);
+	        gz.write(response_text.getBytes("UTF-8"));
+	        gz.close();
+	        output.close();
+
 		}
 		else{
 			response_text = "{ \"success\": false }";
@@ -635,4 +699,222 @@ public class SProyecto extends HttpServlet {
         output.close();
 	}
 
+	
+	private List<stproyectometa> obtenerListadoProyectoMetas(int proyectoId, String usuario){
+		Proyecto proyecto = ProyectoDAO.getProyectoPorId(proyectoId, usuario);
+		List<stproyectometa> lstproyectometas = new ArrayList<>();
+		if (proyecto!=null){
+			stproyectometa proyectometa = new stproyectometa();
+			proyectometa.id = proyecto.getId();
+			proyectometa.objetoTipo = OBJETO_ID_PROYECTO;
+			proyectometa.objetoTipoNombre = "Prestamo";
+			proyectometa.nombre = proyecto.getNombre();
+			proyectometa.objetoPadre = 0;
+			proyectometa.unidadDeMedida = "";
+			proyectometa.metaPlanificada = "";
+			proyectometa.metaReal = "";
+			proyectometa.metaAnualPlanificada = "";
+			proyectometa.metaAnualReal = "";
+			proyectometa.lineaBase = "";
+			proyectometa.metaFinal = "";
+			lstproyectometas.add(proyectometa);
+		}
+		List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
+				null, null, null, null, null, usuario);
+		for (Componente componente : componentes){
+			stproyectometa proyectometa = new stproyectometa();
+			proyectometa.id = componente.getId();
+			proyectometa.objetoTipo = OBJETO_ID_COMPONENTE;
+			proyectometa.objetoTipoNombre = "Componente";
+			proyectometa.nombre = componente.getNombre();
+			proyectometa.objetoPadre = proyectoId;
+			proyectometa.unidadDeMedida = "";
+			proyectometa.metaPlanificada = "";
+			proyectometa.metaReal = "";
+			proyectometa.metaRealId = "";
+			proyectometa.metaRealFecha = "";
+			proyectometa.metaAnualPlanificada = "";
+			proyectometa.metaAnualReal = "";
+			proyectometa.metaAnualRealFecha = "";
+			proyectometa.metaAnualRealId = "";
+			proyectometa.lineaBase = "";
+			proyectometa.metaFinal = "";
+			lstproyectometas.add(proyectometa);
+			
+			List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
+					null, null, null, null, null, usuario);
+			for (Producto producto : productos){
+				proyectometa = new stproyectometa();
+				proyectometa.id = producto.getId();
+				proyectometa.objetoTipo = OBJETO_ID_PRODUCTO;
+				proyectometa.objetoTipoNombre = "Producto";
+				proyectometa.nombre = producto.getNombre();
+				proyectometa.objetoPadre = componente.getId();
+				
+				//Obteniendo meta real
+				List<Meta> metas = MetaDAO.getMetasPagina(-1, -1, producto.getId(), OBJETO_ID_PRODUCTO, null, META_ID_REAL, null, null, null, null);
+				if (metas!= null && !metas.isEmpty()){
+					Meta Meta = metas.get(0);
+					proyectometa.unidadDeMedida = Meta.getMetaUnidadMedida().getNombre();
+					MetaValor metavalor = MetaValorDAO.getMetaValorPorMetaid(Meta.getId());
+					proyectometa.metaRealId = Meta.getId().toString();
+					proyectometa.metaRealFecha = Utils.formatDateHour(metavalor.getId().getFecha());
+					proyectometa.datoTipoId = Meta.getDatoTipo().getId();
+					switch(metas.get(0).getDatoTipo().getId()){
+						case DATOTIPO_TEXTO: 
+							proyectometa.metaReal = metavalor.getValorString();
+							break;
+						case DATOTIPO_ENTERO: 
+							proyectometa.metaReal = metavalor.getValorEntero().toString();
+							break;
+						case DATOTIPO_DECIMAL: 
+							proyectometa.metaReal = metavalor.getValorDecimal().toString();
+							break;
+						case DATOTIPO_BOOLEANO: 
+
+							break;
+						case DATOTIPO_FECHA: 
+							proyectometa.metaReal = Utils.formatDateHour(metavalor.getValorTiempo());
+							break;
+
+					}
+				}
+				
+				//Obteniendo meta planificada
+				metas = MetaDAO.getMetasPagina(-1, -1, producto.getId(), OBJETO_ID_PRODUCTO, null, META_ID_PLANIFICADA, null, null, null, null);
+				if (metas!= null && !metas.isEmpty()){
+					Meta Meta = metas.get(0);
+					proyectometa.unidadDeMedida = Meta.getMetaUnidadMedida().getNombre();
+					MetaValor metavalor = MetaValorDAO.getMetaValorPorMetaid(Meta.getId());
+					switch(metas.get(0).getDatoTipo().getId()){
+						case DATOTIPO_TEXTO: 
+							proyectometa.metaPlanificada = metavalor.getValorString();
+							break;
+						case DATOTIPO_ENTERO: 
+							proyectometa.metaPlanificada = metavalor.getValorEntero().toString();
+							break;
+						case DATOTIPO_DECIMAL: 
+							proyectometa.metaPlanificada = metavalor.getValorDecimal().toString();
+							break;
+						case DATOTIPO_BOOLEANO: 
+
+							break;
+						case DATOTIPO_FECHA: 
+							proyectometa.metaPlanificada = Utils.formatDateHour(metavalor.getValorTiempo());
+							break;
+
+					}
+				}
+				
+				//Obteniendo meta anual real
+				metas = MetaDAO.getMetasPagina(-1, -1, producto.getId(), OBJETO_ID_PRODUCTO, null, META_ID_ANUALREAL, null, null, null, null);
+				if (metas!= null && !metas.isEmpty()){
+					Meta Meta = metas.get(0);
+					proyectometa.unidadDeMedida = Meta.getMetaUnidadMedida().getNombre();
+					MetaValor metavalor = MetaValorDAO.getMetaValorPorMetaid(Meta.getId());
+					proyectometa.metaAnualRealId = Meta.getId().toString();
+					proyectometa.metaAnualRealFecha = Utils.formatDateHour(metavalor.getId().getFecha());
+					switch(metas.get(0).getDatoTipo().getId()){
+						case DATOTIPO_TEXTO: 
+							proyectometa.metaAnualReal = metavalor.getValorString();
+							break;
+						case DATOTIPO_ENTERO: 
+							proyectometa.metaAnualReal = metavalor.getValorEntero().toString();
+							break;
+						case DATOTIPO_DECIMAL: 
+							proyectometa.metaAnualReal = metavalor.getValorDecimal().toString();
+							break;
+						case DATOTIPO_BOOLEANO: 
+
+							break;
+						case DATOTIPO_FECHA: 
+							proyectometa.metaAnualReal = Utils.formatDateHour(metavalor.getValorTiempo());
+							break;
+
+					}
+				}
+				
+				//Obteniendo meta anual planificada
+				metas = MetaDAO.getMetasPagina(-1, -1, producto.getId(), OBJETO_ID_PRODUCTO, null, META_ID_ANUALPLANIFICADA, null, null, null, null);
+				if (metas!= null && !metas.isEmpty()){
+					Meta Meta = metas.get(0);
+					proyectometa.unidadDeMedida = Meta.getMetaUnidadMedida().getNombre();
+					MetaValor metavalor = MetaValorDAO.getMetaValorPorMetaid(Meta.getId());
+					switch(metas.get(0).getDatoTipo().getId()){
+						case DATOTIPO_TEXTO: 
+							proyectometa.metaAnualPlanificada = metavalor.getValorString();
+							break;
+						case DATOTIPO_ENTERO: 
+							proyectometa.metaAnualPlanificada = metavalor.getValorEntero().toString();
+							break;
+						case DATOTIPO_DECIMAL: 
+							proyectometa.metaAnualPlanificada = metavalor.getValorDecimal().toString();
+							break;
+						case DATOTIPO_BOOLEANO: 
+
+							break;
+						case DATOTIPO_FECHA: 
+							proyectometa.metaAnualPlanificada = Utils.formatDateHour(metavalor.getValorTiempo());
+							break;
+
+					}
+				}
+				
+				//Obteniendo linea base
+				metas = MetaDAO.getMetasPagina(-1, -1, producto.getId(), OBJETO_ID_PRODUCTO, null, META_ID_LINEABASE, null, null, null, null);
+				if (metas!= null && !metas.isEmpty()){
+					Meta Meta = metas.get(0);
+					proyectometa.unidadDeMedida = Meta.getMetaUnidadMedida().getNombre();
+					MetaValor metavalor = MetaValorDAO.getMetaValorPorMetaid(Meta.getId());
+					switch(metas.get(0).getDatoTipo().getId()){
+						case DATOTIPO_TEXTO: 
+							proyectometa.lineaBase = metavalor.getValorString();
+							break;
+						case DATOTIPO_ENTERO: 
+							proyectometa.lineaBase = metavalor.getValorEntero().toString();
+							break;
+						case DATOTIPO_DECIMAL: 
+							proyectometa.lineaBase = metavalor.getValorDecimal().toString();
+							break;
+						case DATOTIPO_BOOLEANO: 
+
+							break;
+						case DATOTIPO_FECHA: 
+							proyectometa.lineaBase = Utils.formatDateHour(metavalor.getValorTiempo());
+							break;
+
+					}
+				}
+				
+				//Obteniendo meta final
+				metas = MetaDAO.getMetasPagina(-1, -1, producto.getId(), OBJETO_ID_PRODUCTO, null, META_ID_FINAL, null, null, null, null);
+				if (metas!= null && !metas.isEmpty()){
+					Meta Meta = metas.get(0);
+					proyectometa.unidadDeMedida = Meta.getMetaUnidadMedida().getNombre();
+					MetaValor metavalor = MetaValorDAO.getMetaValorPorMetaid(Meta.getId());
+					switch(metas.get(0).getDatoTipo().getId()){
+						case DATOTIPO_TEXTO: 
+							proyectometa.metaFinal = metavalor.getValorString();
+							break;
+						case DATOTIPO_ENTERO: 
+							proyectometa.metaFinal = metavalor.getValorEntero().toString();
+							break;
+						case DATOTIPO_DECIMAL: 
+							proyectometa.metaFinal = metavalor.getValorDecimal().toString();
+							break;
+						case DATOTIPO_BOOLEANO: 
+
+							break;
+						case DATOTIPO_FECHA: 
+							proyectometa.metaFinal = Utils.formatDateHour(metavalor.getValorTiempo());
+							break;
+
+					}
+				}
+				
+				lstproyectometas.add(proyectometa);				
+			}
+		}
+		return lstproyectometas;
+	}
 }
