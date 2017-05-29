@@ -305,7 +305,7 @@ var DlhSoft;
                         element = element[0];
                         if (!parentElement)
                             parentElement = element;
-                        element.draggable = true;
+                        element.draggable = false;
                         function onDragStart(event) {
                             event.dataTransfer.effectAllowed = 'move';
                             event.dataTransfer.setData('text', (scope.dragType ? scope.dragType + ':' : '') + scope.dragIndex);

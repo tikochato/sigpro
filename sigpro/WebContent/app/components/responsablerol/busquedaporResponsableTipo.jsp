@@ -24,6 +24,7 @@
 		        <label class="btn btn-success" ng-click="modalBuscar.ok()"> &nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;</label>
 				<label class="btn btn-primary" ng-click="modalBuscar.cancel()">Cancelar</label>
 	    	</div>
+	      
 	    </div>
   </div>
 </div>
