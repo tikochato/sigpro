@@ -14,6 +14,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.proyectoNombre = "";
 		mi.objetoTipoNombre = "";
 		var date = new Date(), year = date.getFullYear(), month = date.getMonth();
+		
 
 		$window.document.title = $utilidades.sistema_nombre+' - Gantt';
 		
@@ -84,7 +85,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 			    
 		};
 		
-		settings.assignableResources = ['Resource 1', 'Resource 2', 'Resource 3', 'Material 1', 'Material 2'];
+		
 		// Default Columns
 		var columns = DlhSoft.Controls.GanttChartView.getDefaultColumns(items, settings);
 		
@@ -127,17 +128,45 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		columns[6].isReadOnly = true;
 		columns[7].header = 'Completada';
 		columns[8].header = 'Responsable';
+		columns[8].isReadOnly = true;
+		
+		
 		
 		for(var i=0; i<columns.length;i++)
 			columns[i].headerClass = 'gantt-chart-header-column';
 		
 		settings.columns = columns;
 		
+		
+		
 		settings.itemPropertyChangeHandler = function (item, propertyName, isDirect, isFinal) {
-		    if (isDirect && isFinal){
-		    	if(propertyName=='start' || propertyName=='finish' || propertyName=='content' || propertyName=='completedFinish'){
+			
+		    if (isDirect && isFinal && false){
+		    	
+		    	if(propertyName=='start' || propertyName=='finish' || propertyName=='content' 
+		    		|| propertyName=='completedFinish' ) {
+		    		
 		    		console.log(item.content + '.' + propertyName + ' changed.');
-		    		console.log(item);
+		    		console.log (item);
+		    		
+		    		var parametros = {
+		    				accion: 'modificarData',
+		    				objetoId: item.objetoId,
+		    				objetoTipo:item.objetoTipo,
+		    				nombre: item.content,
+		    				inicio: moment(item.start).format('DD/MM/YYYY'),
+		    				fin: moment(item.finish).format('DD/MM/YYYY'),
+		    				completada: item.completedFinish != '' ? true : false
+					}
+		    	
+					$http.post('/SGantt',parametros).success(
+						function(response) {
+							if (response.success){
+								$utilidades.mensaje('success','Item modificado con éxito');
+							}else{
+								$utilidades.mensaje('danger','Error al guardar item');
+							}
+					});
 		    	}
 		    }
 		}
@@ -188,7 +217,6 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 							}
 						}
 					}
-					
 		});	
 		
 		mi.zoomAcercar = function(){
@@ -243,8 +271,6 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		
 		mi.exportar=function(){
 			var formatData = new FormData();
-			 
-			
 			
 			$http.post('/SDownload', { accion: 'exportar', proyectoid:$routeParams.proyectoId,t:moment().unix()
 			  }).then(
@@ -267,9 +293,225 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		         mi.nombreArchivo = mi.archivos.name;
 		       
 		  };
-	   
+		  
+		  settings.itemDoubleClickHandler = function (isOnChart, item){
+			console.log (isOnChart);
+			console.log (item);
+			switch (item.objetoTipo){
+				case '1':
+					mi.editarPrestamo(item.objetoId,item.index);
+					break;
+				case '2':
+					mi.editarComponente(item.objetoId,item.index);
+					break;
+				case '3':
+					mi.editarProducto(item.objetoId,item.index);
+					break;
+				case '4':
+					mi.editarSubproducto(item.objetoId,item.index);
+					break;
+				case '5':
+					mi.editarActividad(item.objetoId,item.index);
+					break;
+			}
+		  }
+		  
+		  mi.editarPrestamo = function(idprestamo,index) {
+				var modalInstance = $uibModal.open({
+					animation : 'true',
+					ariaLabelledBy : 'modal-title',
+					ariaDescribedBy : 'modal-body',
+					templateUrl : 'editarPrestamo.jsp',
+					controller : 'modalEditarPrestamo',
+					controllerAs : 'prestamoc',
+					backdrop : 'static',
+					size : 'md',
+					resolve : {
+						idprestamo: function() {
+							return idprestamo;
+						},
+						index: function(){
+							return index;
+						}
+					}
+				});
+
+				modalInstance.result.then(function(resultado) {
+					if (resultado != undefined){
+						$scope.items[index].content = resultado.nombre;
+						$utilidades.mensaje('success','Item modificado con éxito');
+					}else{
+						$utilidades.mensaje('danger', 'Error al guardar el item de prestamo');
+					}
+
+				}, function() {
+				});
+		};
 		
-	}
+		
+		mi.editarComponente = function(idcomponente,index) {
+			var modalInstance = $uibModal.open({
+				animation : 'true',
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				templateUrl : 'editarComponente.jsp',
+				controller : 'modalEditarComponente',
+				controllerAs : 'componentec',
+				backdrop : 'static',
+				size : 'md',
+				resolve : {
+					idcomponente: function() {
+						return idcomponente;
+					},
+					index: function(){
+						return index;
+					}
+				}
+			});
+
+			modalInstance.result.then(function(resultado) {
+				if (resultado != undefined){
+					$scope.items[index].content = resultado.nombre;
+					$utilidades.mensaje('success','Item modificado con éxito');
+				}else{
+					$utilidades.mensaje('danger', 'Error al guardar el item de componente');
+				}
+
+			}, function() {
+			});
+		};
+		
+		mi.editarProducto = function(idproducto,index) {
+			var modalInstance = $uibModal.open({
+				animation : 'true',
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				templateUrl : 'editarProducto.jsp',
+				controller : 'modalEditarProducto',
+				controllerAs : 'productoc',
+				backdrop : 'static',
+				size : 'md',
+				resolve : {
+					idproducto: function() {
+						return idproducto;
+					},
+					index: function(){
+						return index;
+					}
+				}
+			});
+
+			modalInstance.result.then(function(resultado) {
+				if (resultado != undefined){
+					$scope.items[index].content = resultado.nombre;
+					$utilidades.mensaje('success','Item modificado con éxito');
+				}else{
+					$utilidades.mensaje('danger', 'Error al guardar el item de producto');
+				}
+
+			}, function() {
+			});
+		};
+		
+		mi.editarSubproducto = function(idsubproducto,index) {
+			var modalInstance = $uibModal.open({
+				animation : 'true',
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				templateUrl : 'editarSubproducto.jsp',
+				controller : 'modalEditarSubproducto',
+				controllerAs : 'subproductoc',
+				backdrop : 'static',
+				size : 'md',
+				resolve : {
+					idsubproducto: function() {
+						return idsubproducto;
+					},
+					index: function(){
+						return index;
+					}
+				}
+			});
+
+			modalInstance.result.then(function(resultado) {
+				if (resultado != undefined){
+					$scope.items[index].content = resultado.nombre;
+					$utilidades.mensaje('success','Item modificado con éxito');
+				}else{
+					$utilidades.mensaje('danger', 'Error al guardar el item de subproducto');
+				}
+
+			}, function() {
+			});
+		};
+		  
+		mi.editarActividad = function(idactividad,index) {
+
+				var modalInstance = $uibModal.open({
+					animation : 'true',
+					ariaLabelledBy : 'modal-title',
+					ariaDescribedBy : 'modal-body',
+					templateUrl : 'editarActividad.jsp',
+					controller : 'modalEditarActividad',
+					controllerAs : 'actividadc',
+					backdrop : 'static',
+					size : 'md',
+					resolve : {
+						index : function() {
+							return index;
+						},
+						idactividad: function() {
+							return idactividad;
+						}
+					}
+				});
+
+				modalInstance.result.then(function(resultado) {
+					if (resultado != undefined){
+						$scope.items[index].content = resultado.nombre;
+						$scope.items[index].start = moment(resultado.fechaInicio,'DD/MM/YYYY hh:mm:ss').toDate();
+						$scope.items[index].finish = mi.sumarDias($scope.items[index].start,resultado.duracion); 
+						$scope.items[index].duration = Number(resultado.duracion);
+						mi.reconfigurarFechas($scope.items[index],(index +1),Number($scope.items[index].duracion), moment($scope.items[index].start).format('DD/MM/YYYY'));
+						$utilidades.mensaje('success','Item modificado con éxito');
+					}else{
+						$utilidades.mensaje('danger', 'Error al guardar el item de actividad');
+					}
+				}, function() {
+				});
+		};
+		
+		mi.sumarDias = function(fecha, dias){
+			var cnt = 0;
+		    var tmpDate = moment(fecha);
+		    while (cnt < dias) {
+		        tmpDate = tmpDate.add(1,'days');
+		        if (tmpDate.weekday() != moment().day("Sunday").weekday() && tmpDate.weekday() != moment().day("Saturday").weekday()) {
+		            cnt = cnt + 1;
+		        }
+		    }
+		    tmpDate = moment(tmpDate,'DD/MM/YYYY').toDate();
+		    return tmpDate;
+		}
+		
+		mi.reconfigurarFechas = function(objeto,index,duracion,fechaInicial){
+			
+			for(var i=index; i< $scope.items.length; i++){
+				if ($scope.items[i].predecessors != null || $scope.items[i].predecessors != undefined){
+					var temp = $scope.items[i].predecessors[0].item;
+					console.log(temp);
+					if ($scope.items[i].predecessors[0].item.id === objeto.id){
+						$scope.items[i].start =  (mi.sumarDias (fechaInicial,duracion));
+						duracion = duracion + Number( $scope.items[i].predecessors[0].item.duracion);
+						$scope.items[i].finish = (mi.sumarDias (fechaInicial,duracion));
+						mi.reconfigurarFechas($scope.items[i],(i +1),duracion,fechaInicial);
+					}
+				}		
+			}
+		}
+		  
+	}// fin function controller
+
 ]);
 
 
@@ -283,5 +525,809 @@ app.directive('customOnChange', function() {
     }
   };
 });
+
+app.controller('modalEditarPrestamo', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log', '$uibModal', '$q', 'idprestamo', modalEditarPrestamo ]);
+
+function modalEditarPrestamo($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idprestamo) {
+
+	var mi = this;
+	mi.proyecto = {};
+	
+	$http.post('/SProyecto',{ accion: 'getProyectoPorId', id:idprestamo,t:moment().unix()
+	  }).then(
+
+	function(response) {
+		mi.proyecto = response.data.proyecto;
+		
+		mi.poryectotipoid = mi.proyecto.proyectotipoid;
+		mi.proyectotiponombre=mi.proyecto.proyectotipo;
+		mi.unidadejecutoraid=mi.proyecto.unidadejecutoraid;
+		mi.unidadejecutoranombre=mi.proyecto.unidadejecutora;
+		mi.cooperanteid=mi.proyecto.cooperanteid;
+		mi.cooperantenombre=mi.proyecto.cooperante;
+	});
+	
+	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
+		var resultado = $q.defer();
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'buscarPorProyecto.jsp',
+			controller : 'buscarPorProyecto',
+			controllerAs : 'modalBuscar',
+			backdrop : 'static',
+			size : 'md',
+			resolve : {
+				$servlet : function() {
+					return servlet;
+				},
+				$accionServlet : function() {
+					return accionServlet;
+				},
+				$datosCarga : function() {
+					return datosCarga;
+				},
+				$columnaId : function() {
+					return columnaId;
+				},
+				$columnaNombre : function() {
+					return columnaNombre;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(itemSeleccionado) {
+			resultado.resolve(itemSeleccionado);
+		});
+		return resultado.promise;
+};
+	
+	mi.buscarProyectoTipo = function() {
+		var resultado = mi.llamarModalBusqueda('/SProyectoTipo', {
+			accion : 'numeroProyectoTipos'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getProyectoTipoPagina',
+				pagina : pagina,
+				numeroproyectotipo : elementosPorPagina
+			};
+		},'id','nombre');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.poryectotipoid= itemSeleccionado.id;
+			mi.proyectotiponombre = itemSeleccionado.nombre;			
+		});
+	};
+	
+	mi.buscarUnidadEjecutora = function() {
+		var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
+			accion : 'totalElementos'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'cargar',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'unidadEjecutora','nombreUnidadEjecutora');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.unidadejecutoraid= itemSeleccionado.unidadEjecutora;
+			mi.unidadejecutoranombre = itemSeleccionado.nombreUnidadEjecutora;
+		});
+	};
+
+	mi.buscarCooperante = function(prestamo) {
+		var resultado = mi.llamarModalBusqueda('/SCooperante', {
+			accion : 'numeroCooperantes', t:moment().unix()
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getCooperantesPagina',
+				pagina : pagina,
+				numerocooperantes : elementosPorPagina
+			};
+		},'id','nombre');
+
+		resultado.then(function(itemSeleccionado) {
+			if (prestamo){
+				mi.prestamo.cooperanteid= itemSeleccionado.id;
+				mi.prestamo.cooperantenombre = itemSeleccionado.nombre;
+			}
+			else{
+				mi.cooperanteid= itemSeleccionado.id;
+				mi.cooperantenombre = itemSeleccionado.nombre;
+			}
+		});
+		
+		mi.buscarCooperante = function(prestamo) {
+			var resultado = mi.llamarModalBusqueda('/SCooperante', {
+				accion : 'numeroCooperantes', t:moment().unix()
+			}, function(pagina, elementosPorPagina) {
+				return {
+					accion : 'getCooperantesPagina',
+					pagina : pagina,
+					numerocooperantes : elementosPorPagina
+				};
+			},'id','nombre');
+
+			resultado.then(function(itemSeleccionado) {
+				if (prestamo){
+					mi.prestamo.cooperanteid= itemSeleccionado.id;
+					mi.prestamo.cooperantenombre = itemSeleccionado.nombre;
+				}
+				else{
+					mi.cooperanteid= itemSeleccionado.id;
+					mi.cooperantenombre = itemSeleccionado.nombre;
+				}
+			});
+		};
+	};
+	
+	mi.ok = function() {
+		var param_data = {
+				accion : 'guardarModal',
+				id: mi.proyecto.id,
+				nombre: mi.proyecto.nombre,
+				proyectotipoid: mi.poryectotipoid,
+				unidadejecutoraid: mi.unidadejecutoraid,
+				cooperanteid: mi.cooperanteid,
+				esnuevo: false,
+				t:moment().unix()
+			};
+			$http.post('/SProyecto',param_data).then(
+				function(response) {
+					if (response.data.success) {
+						$uibModalInstance.close(response.data.proyecto);
+					}else
+						$uibModalInstance.close(undefined);
+			});
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+}
+
+
+app.controller('modalEditarComponente', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log', '$uibModal', '$q', 'idcomponente', modalEditarComponente ]);
+
+function modalEditarComponente($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idcomponente) {
+
+	var mi = this;
+	mi.componente = {};
+	
+	$http.post('/SComponente',{ accion: 'getComponentePorId', id:idcomponente,t:moment().unix()
+	  }).then(
+
+	function(response) {
+		if (response.data.componente!=null){
+			mi.componente = response.data.componente;
+			mi.unidadejecutoraid= mi.componente.unidadejecutoraid;
+			mi.unidadejecutoranombre= mi.componente.unidadejecutoranombre;
+			mi.componentetipoid=mi.componente.componentetipoid;
+			mi.componentetiponombre=mi.componente.componentetiponombre;
+		}
+	});
+	
+	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
+		var resultado = $q.defer();
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'buscarPorProyecto.jsp',
+			controller : 'buscarPorProyecto',
+			controllerAs : 'modalBuscar',
+			backdrop : 'static',
+			size : 'md',
+			resolve : {
+				$servlet : function() {
+					return servlet;
+				},
+				$accionServlet : function() {
+					return accionServlet;
+				},
+				$datosCarga : function() {
+					return datosCarga;
+				},
+				$columnaId : function() {
+					return columnaId;
+				},
+				$columnaNombre : function() {
+					return columnaNombre;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(itemSeleccionado) {
+			resultado.resolve(itemSeleccionado);
+		});
+		return resultado.promise;
+	};
+
+
+	mi.buscarComponenteTipo = function() {
+		var resultado = mi.llamarModalBusqueda('/SComponenteTipo', {
+			accion : 'numeroComponenteTipos'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getComponentetiposPagina',
+				pagina : pagina,
+				numerocomponentetipos : elementosPorPagina
+			};
+		},'id','nombre');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.componentetipoid = itemSeleccionado.id;
+			mi.componentetiponombre = itemSeleccionado.nombre;
+		});
+	};
+
+	mi.buscarUnidadEjecutora = function() {
+		var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
+			accion : 'totalElementos'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'cargar',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'unidadEjecutora','nombreUnidadEjecutora');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.unidadejecutoraid = itemSeleccionado.unidadEjecutora;
+			mi.unidadejecutoranombre = itemSeleccionado.nombreUnidadEjecutora;
+		});
+	};
+	
+	mi.ok = function() {
+		var param_data = {
+				accion : 'guardarModal',
+				componentetipoid : mi.componentetipoid,
+				id: mi.componente.id,
+				nombre: mi.componente.nombre,
+				unidadejecutoraid:mi.unidadejecutoraid,
+				esnuevo: false,
+				t:moment().unix()
+			};
+			$http.post('/SComponente',param_data).then(
+				function(response) {
+					if (response.data.success) {
+						$uibModalInstance.close(response.data.componente);
+					}else
+						$uibModalInstance.close(undefined);
+			});
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+}
+
+
+app.controller('modalEditarProducto', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log', '$uibModal', '$q', 'idproducto', modalEditarProducto ]);
+
+function modalEditarProducto($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idproducto) {
+
+	var mi = this;
+	mi.componente = {};
+	
+	$http.post('/SProducto',{ accion: 'getProductoPorId', id:idproducto,t:moment().unix()
+	  }).then(
+
+	function(response) {
+		if (response.data.producto!=null){
+			mi.producto = response.data.producto;
+			mi.productoPadreNombre = mi.producto.producto;
+			mi.unidadEjecutora = mi.producto.unidadEjectuora;
+			mi.unidadEjecutoraNombre = mi.producto.nombreUnidadEjecutora;
+			mi.tipo = mi.producto.idProductoTipo;
+			mi.tipoNombre = mi.producto.productoTipo;
+		}
+	});
+	
+	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
+		var resultado = $q.defer();
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'buscarPorProyecto.jsp',
+			controller : 'buscarPorProyecto',
+			controllerAs : 'modalBuscar',
+			backdrop : 'static',
+			size : 'md',
+			resolve : {
+				$servlet : function() {
+					return servlet;
+				},
+				$accionServlet : function() {
+					return accionServlet;
+				},
+				$datosCarga : function() {
+					return datosCarga;
+				},
+				$columnaId : function() {
+					return columnaId;
+				},
+				$columnaNombre : function() {
+					return columnaNombre;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(itemSeleccionado) {
+			resultado.resolve(itemSeleccionado);
+		});
+		return resultado.promise;
+	};
+
+	mi.buscarTipo = function() {
+		var resultado = mi.llamarModalBusqueda('/SProductoTipo', {
+			accion : 'totalElementos'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'cargar',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'id','nombre');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.tipo = itemSeleccionado.id;
+			mi.tipoNombre = itemSeleccionado.nombre;
+		});
+
+	};
+	
+	mi.buscarUnidadEjecutora = function() {
+		var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
+			accion : 'totalElementos'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'cargar',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'unidadEjecutora','nombreUnidadEjecutora');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.unidadEjecutora = itemSeleccionado.unidadEjecutora;
+			mi.unidadEjecutoraNombre = itemSeleccionado.nombreUnidadEjecutora;
+		});
+	};
+	
+	mi.ok = function() {
+		var param_data = {
+				accion : 'guardarModal',
+				id: mi.producto.id,
+				nombre : mi.producto.nombre,
+				tipoproductoid : mi.tipo,
+				unidadEjecutora : mi.unidadEjecutora,
+				t:moment().unix()
+			};
+			$http.post('/SProducto',param_data).then(
+				function(response) {
+					if (response.data.success) {
+						$uibModalInstance.close(response.data.producto);
+					}else
+						$uibModalInstance.close(undefined);
+			});
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+}
+
+
+app.controller('modalEditarSubproducto', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log', '$uibModal', '$q', 'idsubproducto', modalEditarSubproducto ]);
+
+function modalEditarSubproducto($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idsubproducto) {
+
+	var mi = this;
+	mi.componente = {};
+	
+	$http.post('/SSubproducto',{ accion: 'getSubproductoPorId', id:idsubproducto,t:moment().unix()
+	  }).then(
+
+	function(response) {
+		if (response.data.subproducto!=null){
+			mi.subproducto = response.data.subproducto;
+			mi.tipo = mi.subproducto.idSubproductoTipo;
+			mi.tipoNombre = mi.subproducto.subproductoTipo;
+			
+			mi.unidadEjecutora = mi.subproducto.unidadEjectuora;
+			mi.unidadEjecutoraNombre = mi.subproducto.nombreUnidadEjecutora;
+		}
+	});
+	
+	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
+		var resultado = $q.defer();
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'buscarPorProyecto.jsp',
+			controller : 'buscarPorProyecto',
+			controllerAs : 'modalBuscar',
+			backdrop : 'static',
+			size : 'md',
+			resolve : {
+				$servlet : function() {
+					return servlet;
+				},
+				$accionServlet : function() {
+					return accionServlet;
+				},
+				$datosCarga : function() {
+					return datosCarga;
+				},
+				$columnaId : function() {
+					return columnaId;
+				},
+				$columnaNombre : function() {
+					return columnaNombre;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(itemSeleccionado) {
+			resultado.resolve(itemSeleccionado);
+		});
+		return resultado.promise;
+	};
+
+	mi.buscarTipo = function() {
+		var resultado = mi.llamarModalBusqueda('/SSubproductoTipo', {
+			accion : 'totalElementos'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'cargar',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'id','nombre');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.tipo = itemSeleccionado.id;
+			mi.tipoNombre = itemSeleccionado.nombre;
+			
+			var parametros = { 
+				accion: 'getSubproductoPropiedadPorTipo', 
+				idsubproducto: mi.subproducto.id,
+				idsubproductotipo: itemSeleccionado.id
+			}
+			$http.post('/SSubproductoPropiedad', parametros).then(function(response){
+				mi.camposdinamicos = response.data.subproductopropiedades;
+				for (campos in mi.camposdinamicos) {
+					switch (mi.camposdinamicos[campos].tipo){
+						case "fecha":
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+							break;
+						case "entero":
+							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+							break;
+						case "decimal":
+							mi.camposdinamicos[campos].valor = Number(mi.camposdinamicos[campos].valor);
+							break;
+					}
+				}
+				
+			});
+		});
+
+	};
+	
+	mi.buscarUnidadEjecutora = function() {
+		var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
+			accion : 'totalElementos'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'cargar',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'unidadEjecutora','nombreUnidadEjecutora');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.unidadEjecutora = itemSeleccionado.unidadEjecutora;
+			mi.unidadEjecutoraNombre = itemSeleccionado.nombreUnidadEjecutora;
+		});
+	};
+	
+	mi.ok = function() {
+		var param_data = {
+				accion : 'guardarModal',
+				id: mi.subproducto.id,
+				nombre : mi.subproducto.nombre,
+				tiposubproductoid : mi.tipo,
+				unidadEjecutora : mi.unidadEjecutora,
+				t:moment().unix()
+			};
+			$http.post('/SSubproducto',param_data).then(
+				function(response) {
+					if (response.data.success) {
+						$uibModalInstance.close(response.data.subproducto);
+					}else
+						$uibModalInstance.close(undefined);
+			});
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+}
+
+
+app.controller('modalEditarActividad', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log',   '$uibModal', '$q' ,'idactividad',modalEditarActividad ]);
+
+function modalEditarActividad($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q,idactividad) {
+
+	var mi = this;
+	mi.actividad = {};
+	mi.primeraActividad=false;
+	
+	mi.dimensiones = [{id:1,nombre:'Dias',sigla:'d'}];
+	
+	mi.formatofecha = 'dd/MM/yyyy';
+	
+	mi.fechaOptions = {
+			formatYear : 'yy',
+			maxDate : new Date(2050, 12, 31),
+			minDate : new Date(1990, 1, 1),
+			startingDay : 1
+	};
+
+	mi.ff_opciones = {
+			formatYear : 'yy',
+			maxDate : new Date(2050, 12, 31),
+			minDate : new Date(1990, 1, 1),
+			startingDay : 1
+	};
+	
+	mi.abrirPopupFecha = function(index) {
+		if(index > 0 && index<1000){
+			mi.camposdinamicos[index].isOpen = true;
+		}
+		else{
+			switch(index){
+				case 1000: mi.fi_abierto = true; break;
+			}
+		}
+	};
+	
+	$http.post('/SActividad',{ accion: 'getActividadPorId', id:idactividad,t:moment().unix()
+	  }).then(
+
+		function(response) {
+			mi.actividad = response.data.actividad;
+			mi.actividad.fechaInicio = moment(mi.actividad.fechaInicio,'DD/MM/YYYY').toDate();
+			mi.actividad.fechaFin = moment(mi.actividad.fechaFin,'DD/MM/YYYY').toDate();
+			mi.ff_opciones.minDate = mi.actividad.fechaInicio;
+			mi.duracionDimension = {
+					"id": mi.actividad.duracionDimension === 'd' ? 1 : 0,
+					"nombre": mi.actividad.duracionDimension,
+					"sigla": 'd'
+			};
+			mi.primeraActividad = mi.actividad.prececesorId == undefined 
+				|| mi.actividad.prececesorId == null ? true : false;
+	});
+	
+	mi.cambioDuracion = function(){
+		mi.actividad.fechaFin = mi.sumarDias(mi.actividad.fechaInicio,mi.actividad.duracion);
+	}
+	
+	mi.sumarDias = function(fecha, dias){
+		var cnt = 0;
+	    var tmpDate = moment(fecha);
+	    while (cnt < dias) {
+	        tmpDate = tmpDate.add(1,'days');
+	        if (tmpDate.weekday() != moment().day("Sunday").weekday() && tmpDate.weekday() != moment().day("Saturday").weekday()) {
+	            cnt = cnt + 1;
+	        }
+	    }
+	    tmpDate = moment(tmpDate,'DD/MM/YYYY').toDate();
+	    return tmpDate;
+	}
+	
+	
+	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
+		var resultado = $q.defer();
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'buscarPorProyecto.jsp',
+			controller : 'buscarPorProyecto',
+			controllerAs : 'modalBuscar',
+			backdrop : 'static',
+			size : 'md',
+			resolve : {
+				$servlet : function() {
+					return servlet;
+				},
+				$accionServlet : function() {
+					return accionServlet;
+				},
+				$datosCarga : function() {
+					return datosCarga;
+				},
+				$columnaId : function() {
+					return columnaId;
+				},
+				$columnaNombre : function() {
+					return columnaNombre;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(itemSeleccionado) {
+			resultado.resolve(itemSeleccionado);
+		});
+		return resultado.promise;
+	};
+
+	mi.buscarTipo = function() {
+		var resultado = mi.llamarModalBusqueda('/SActividadTipo', {
+			accion : 'numeroActividadTipos'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getActividadtiposPagina',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'id','nombre');
+
+		resultado.then(function(itemSeleccionado) {
+			mi.actividad.actividadtipoid = itemSeleccionado.id;
+			mi.actividad.actividadtiponombre = itemSeleccionado.nombre;
+		});
+
+	};
+	
+	
+	
+	mi.ok = function() {
+		var param_data = {
+				accion : 'guardarModal',
+				actividadtipoid : mi.actividad.actividadtipoid,
+				id: mi.actividad.id,
+				nombre: mi.actividad.nombre,
+				descripcion: mi.actividad.descripcion,
+				fechainicio: moment(mi.actividad.fechaInicio).format('DD/MM/YYYY'),
+				fechafin: moment(mi.actividad.fechaFin).format('DD/MM/YYYY'),
+				porcentajeavance: mi.actividad.porcentajeavance,
+				duracion:mi.actividad.duracion,
+				duracionDimension:mi.duracionDimension.sigla,
+				t:moment().unix()
+			};
+			$http.post('/SActividad',param_data).then(
+				function(response) {
+					if (response.data.success) {
+						$uibModalInstance.close(response.data.actividad);
+					}else
+						$uibModalInstance.close(undefined);
+			});
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+
+
+}
+
+app.controller('buscarPorProyecto', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log', '$servlet', '$accionServlet', '$datosCarga',
+	'$columnaId','$columnaNombre',buscarPorProyecto ]);
+
+function buscarPorProyecto($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $servlet,$accionServlet,$datosCarga,$columnaId,$columnaNombre) {
+
+	var mi = this;
+
+	mi.totalElementos = 0;
+	mi.paginaActual = 1;
+	mi.numeroMaximoPaginas = 5;
+	mi.elementosPorPagina = 9;
+
+	mi.mostrarCargando = false;
+	mi.data = [];
+
+	mi.itemSeleccionado = null;
+	mi.seleccionado = false;
+
+	$http.post($servlet, $accionServlet).success(function(response) {
+		for ( var key in response) {
+			mi.totalElementos = response[key];
+		}
+		mi.cargarData(1);
+	});
+
+	mi.opcionesGrid = {
+		data : mi.data,
+		columnDefs : [ {
+			displayName : 'ID',
+			name : $columnaId,
+			cellClass : 'grid-align-right',
+			type : 'number',
+			width : 70
+		}, {
+			displayName : 'Nombre',
+			name : $columnaNombre,
+			cellClass : 'grid-align-left'
+		} ],
+		enableRowSelection : true,
+		enableRowHeaderSelection : false,
+		multiSelect : false,
+		modifierKeysToMultiSelect : false,
+		noUnselect : false,
+		enableFiltering : true,
+		enablePaginationControls : false,
+		paginationPageSize : 5,
+		onRegisterApi : function(gridApi) {
+			mi.gridApi = gridApi;
+			mi.gridApi.selection.on.rowSelectionChanged($scope,
+					mi.seleccionarTipoRiesgo);
+		}
+	}
+
+	mi.seleccionarTipoRiesgo = function(row) {
+		mi.itemSeleccionado = row.entity;
+		mi.seleccionado = row.isSelected;
+	};
+
+	mi.cargarData = function(pagina) {
+		mi.mostrarCargando = true;
+		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina)).then(
+				function(response) {
+					if (response.data.success) {
+
+						for ( var key in response.data) {
+							if (key != 'success')
+								mi.data = response.data[key];
+						}
+						mi.opcionesGrid.data = mi.data;
+
+						mi.mostrarCargando = false;
+					}
+				});
+	};
+
+	mi.cambioPagina = function() {
+		mi.cargarData(mi.paginaActual);
+	}
+
+	mi.ok = function() {
+		if (mi.seleccionado) {
+			$uibModalInstance.close(mi.itemSeleccionado);
+		} else {
+			$utilidades.mensaje('warning', 'Debe seleccionar una fila');
+		}
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+}
+
+
 
 

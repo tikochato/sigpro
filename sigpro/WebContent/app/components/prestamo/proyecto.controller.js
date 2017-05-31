@@ -1120,7 +1120,9 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 	};
 
 	mi.ok = function() {
+		
 		if (mi.nombreArchivo != '') {
+			mi.mostrarcargando=true;
 			mi.cargar();
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar un archivo');

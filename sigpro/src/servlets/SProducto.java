@@ -490,7 +490,85 @@ public class SProducto extends HttpServlet {
 				+ "\"id\": " + (producto!=null ? producto.getId():"0") +", "
 				+ "\"nombre\": \"" + (producto!=null ? producto.getNombre():"Indefinido") +"\" }");
 
-		}
+		}else if(accion.equals("getProductoPorId")){
+			Integer id = parametro.get("id")!=null ? Integer.parseInt(parametro.get("id")) : 0;
+			Producto producto = ProductoDAO.getProductoPorId(id,usuario);
+			stproducto temp = new stproducto();
+			if (producto !=null) {
+				temp.id = producto.getId();
+				temp.nombre = producto.getNombre();
+				if (producto.getComponente() != null) {
+					temp.idComponente = producto.getComponente().getId();
+					temp.componente = producto.getComponente().getNombre();
+				}
+
+				if (producto.getProductoTipo() != null) {
+					temp.idProductoTipo = producto.getProductoTipo().getId();
+					temp.productoTipo = producto.getProductoTipo().getNombre();
+				}
+				
+				if (producto.getUnidadEjecutora() != null){
+					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
+					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
+				}
+			}
+
+			response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
+			response_text = String.join("", "\"producto\":",response_text);
+			response_text = String.join("", "{\"success\":true,", response_text,"}");
+
+		} else if (accion.equals("guardarModal")) {
+			
+			int id = Utils.String2Int(parametro.get("id"));
+			Producto producto;
+			boolean ret = false;
+			
+			String nombre = parametro.get("nombre");
+			Integer tipoproductoId = Utils.String2Int(parametro.get("tipoproductoid")); 
+			Integer unidadEjecutoraId = Utils.String2Int(parametro.get("unidadEjecutora"));
+			
+			ProductoTipo productoTipo = new ProductoTipo();
+			productoTipo.setId(tipoproductoId);
+			UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
+			unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);	
+			
+			producto = ProductoDAO.getProductoPorId(id);
+			
+			producto.setProductoTipo(productoTipo);
+			producto.setUnidadEjecutora(unidadEjecutora);
+			producto.setNombre(nombre);
+			producto.setUsuarioActualizo(usuario);
+			producto.setFechaActualizacion(new DateTime().toDate());
+			
+			ret = ProductoDAO.guardarProducto(producto);
+			
+			stproducto temp = new stproducto();
+			if (ret) {
+				temp.id = producto.getId();
+				temp.nombre = producto.getNombre();
+				if (producto.getComponente() != null) {
+					temp.idComponente = producto.getComponente().getId();
+					temp.componente = producto.getComponente().getNombre();
+				}
+
+				if (producto.getProductoTipo() != null) {
+					temp.idProductoTipo = producto.getProductoTipo().getId();
+					temp.productoTipo = producto.getProductoTipo().getNombre();
+				}
+				
+				if (producto.getUnidadEjecutora() != null){
+					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
+					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
+				}
+			}
+
+			response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
+			response_text = String.join("", "\"producto\":",response_text);
+			response_text = String.join("", "{\"success\":true,", response_text,"}");
+				
+				
+		}else 
+			response_text = "{ \"success\": false }";
 		
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");

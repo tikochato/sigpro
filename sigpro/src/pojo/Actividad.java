@@ -136,7 +136,7 @@ public class Actividad implements java.io.Serializable {
 		this.actividadTipo = actividadTipo;
 	}
 
-	@Column(name = "nombre", nullable = false, length = 200)
+	@Column(name = "nombre", nullable = false, length = 1000)
 	public String getNombre() {
 		return this.nombre;
 	}

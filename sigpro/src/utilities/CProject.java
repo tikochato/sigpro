@@ -222,7 +222,7 @@ public class CProject {
 
 	public  boolean getTask(ProjectFile projectFile,String usuario){
 		
-		indetnacion = -1;
+		indetnacion = 0;
 		itemsProject = "";
 		items = new HashMap<>();
 		boolean ret = false;
@@ -233,8 +233,6 @@ public class CProject {
 		ret = true;
 		return ret;
 	}
-	
-	
 	
 	private boolean listaJerarquica(Task task,String usuario,Object objeto)
 	{
@@ -253,7 +251,7 @@ public class CProject {
 			item_.duracion = (int) task.getDuration().getDuration();
 			item_.unidades = task.getDuration().getUnits().getName();
 			
-			System.out.println(item_.contenido);
+			System.out.println(task.getID() + " - " + item_.contenido);
 			items.put(task.getUniqueID(), item_);
 			
 			boolean tieneHijos = task.getChildTasks()!=null && task.getChildTasks().size()>0;
@@ -269,7 +267,7 @@ public class CProject {
 					cargarItem(task,((Componente) objeto_temp).getId(), OBJETO_ID_COMPONENTE);
 				}
 				else{
-					objeto_temp = crearActividad(task, usuario,((Componente) objeto).getId(),OBJETO_ID_PROYECTO );
+					objeto_temp = crearActividad(task, usuario,((Proyecto) objeto).getId(),OBJETO_ID_PROYECTO );
 					cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
 				}
 			}else if (indetnacion == 3){

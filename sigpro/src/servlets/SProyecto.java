@@ -563,6 +563,54 @@ public class SProyecto extends HttpServlet {
 				response_text = "{ \"success\": false }";
 			}
 
+		}else
+		
+		if (accion.equals("guardarModal")){
+			try{
+				int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+				Proyecto proyecto;
+				
+				String nombre = map.get("nombre");
+				
+				ProyectoTipo proyectoTipo = new ProyectoTipo();
+				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): null);
+	
+				UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
+				unidadEjecutora.setUnidadEjecutora(map.get("unidadejecutoraid")!=null ? Integer.parseInt(map.get("unidadejecutoraid")): null);
+	
+				Cooperante cooperante = new Cooperante();
+				cooperante.setId(map.get("cooperanteid")!=null ? Integer.parseInt(map.get("cooperanteid")): null);
+			
+				
+				proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
+				proyecto.setNombre(nombre);
+				proyecto.setProyectoTipo(proyectoTipo);
+				proyecto.setUnidadEjecutora(unidadEjecutora);
+				proyecto.setCooperante(cooperante);
+				proyecto.setUsuarioActualizo(usuario);
+				proyecto.setFechaActualizacion(new DateTime().toDate());
+			 
+				ProyectoDAO.guardarProyecto(proyecto);
+				
+				datos temp = new datos();
+				temp.id = proyecto.getId();
+				temp.nombre = proyecto.getNombre();
+				temp.proyectotipoid = proyecto.getProyectoTipo().getId();
+				temp.proyectotipo = proyecto.getProyectoTipo().getNombre();
+				temp.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
+				temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getUnidadEjecutora();
+				temp.cooperante = proyecto.getCooperante().getNombre();
+				temp.cooperanteid = proyecto.getCooperante().getId();	
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
+	        response_text = String.join("", "\"proyecto\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+
+			
+			}
+			catch (Throwable e){
+				response_text = "{ \"success\": false }";
+			}
 		}
 		else if(accion.equals("borrarProyecto")){
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
@@ -619,6 +667,27 @@ public class SProyecto extends HttpServlet {
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
 	        response_text = String.join("", "\"proyectos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+
+		}
+		else if(accion.equals("getProyectoPorId")){
+			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
+			
+			datos temp = new datos();
+			if (proyecto!=null){
+				temp.id = proyecto.getId();
+				temp.nombre = proyecto.getNombre();
+				temp.proyectotipoid = proyecto.getProyectoTipo().getId();
+				temp.proyectotipo = proyecto.getProyectoTipo().getNombre();
+				temp.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
+				temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getUnidadEjecutora();
+				temp.cooperante = proyecto.getCooperante().getNombre();
+				temp.cooperanteid = proyecto.getCooperante().getId();	
+			}
+			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
+	        response_text = String.join("", "\"proyecto\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+
 
 		}
 		else{

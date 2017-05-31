@@ -56,7 +56,7 @@
         <mapping class="pojo.ObjetoFormulario" />
         <mapping class="pojo.ObjetoPrestamo" />
         <mapping class="pojo.ObjetoRecurso" />
-        <mapping class="pojo.Objeto_responsable_rol" />
+        <mapping class="pojo.ObjetoResponsableRol" />
         <mapping class="pojo.ObjetoRiesgo" />
         <mapping class="pojo.ObjetoRiesgoId" />
         <mapping class="pojo.Permiso" />
@@ -82,8 +82,8 @@
         <mapping class="pojo.RecursoPropiedad" />
         <mapping class="pojo.RecursoTipo" />
         <mapping class="pojo.RecursoUnidadMedida" />
-        <mapping class="pojo.Responsable_rol" />
-        <mapping class="pojo.Responsable_tipo" />
+        <mapping class="pojo.ResponsableRol" />
+        <mapping class="pojo.ResponsableTipo" />
         <mapping class="pojo.Riesgo" />
         <mapping class="pojo.RiesgoPropiedad" />
         <mapping class="pojo.RiesgoPropiedadValor" />
