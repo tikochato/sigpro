@@ -3,39 +3,26 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
 import org.hibernate.Session;
-
-
-
 import org.hibernate.query.Query;
 
 import pojo.Proyecto;
-
-import pojo.ResponsableRol;
+import pojo.ResponsableTipo;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
-public class ResponsableRolDAO {
-
+public class ResponsableTipoDAO {
 	
-	public static List<ResponsableRol> getResponsableTiposPagina(int pagina, int numeroResponsableRol){
-		List<ResponsableRol> ret = new ArrayList<ResponsableRol>();
+	public static ResponsableTipo ResponsableTipo(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
+		ResponsableTipo ret = null;
 		try{
-			String query = "SELECT a FROM ResponsableRol a ";
-			Query<ResponsableRol> criteria = session.createQuery(query,ResponsableRol.class);
-			
-			criteria.setFirstResult(((pagina-1)*(numeroResponsableRol)));
-			criteria.setMaxResults(numeroResponsableRol);
-			ret = criteria.getResultList();
+			Query<ResponsableTipo> criteria = session.createQuery("FROM ResponsableTipo where id=:id)", ResponsableTipo.class);
+			criteria.setParameter("id", id);
+			 ret = criteria.getSingleResult();;
 		}
 		catch(Throwable e){
-			CLogger.write("1", ResponsableRol.class, e);
+			CLogger.write("1", ResponsableTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -43,18 +30,37 @@ public class ResponsableRolDAO {
 		return ret;
 	}
 	
-	public static Long getTotalResponsableRol(){
+	public static List<ResponsableTipo> getResponsableTiposPagina(int pagina, int numeroResponsableTipo){
+		List<ResponsableTipo> ret = new ArrayList<ResponsableTipo>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT a FROM ResponsableTipo a ";
+			Query<ResponsableTipo> criteria = session.createQuery(query,ResponsableTipo.class);
+			
+			criteria.setFirstResult(((pagina-1)*(numeroResponsableTipo)));
+			criteria.setMaxResults(numeroResponsableTipo);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("2", ResponsableTipoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Long getTotalResponsableTipo(){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = "SELECT count(t.id) FROM ResponsableRol t ";
+			String query = "SELECT count(t.id) FROM ResponsableTipo t ";
 			
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
-			e.printStackTrace();
-			CLogger.write("2", ResponsableRol.class, e);
+			CLogger.write("3", ResponsableTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -62,12 +68,12 @@ public class ResponsableRolDAO {
 		return ret;
 	}
 	
-	public static Long getTotalResponsablesRoles(String filtro_nombre, String filtro_descripcion, String filtro_usuario_creo,
+	public static Long getTotalResponsablesTipos(String filtro_nombre, String filtro_descripcion, String filtro_usuario_creo,
 			String filtro_fecha_creacion){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = "SELECT count(p.id) FROM ResponsableRol p WHERE p.estado=1 ";
+			String query = "SELECT count(p.id) FROM ResponsableTipo p WHERE p.estado=1 ";
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " p.nombre LIKE '%",filtro_nombre,"%' ");
@@ -82,7 +88,7 @@ public class ResponsableRolDAO {
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
-			CLogger.write("4", ResponsableRol.class, e);
+			CLogger.write("4", ResponsableTipo.class, e);
 		}
 		finally{
 			session.close();
@@ -90,13 +96,13 @@ public class ResponsableRolDAO {
 		return ret;
 	}
 	
-	public static List<ResponsableRol> getResponsableRolPagina(int pagina, int numeroresponsabletipo,
+	public static List<ResponsableTipo> getResponsableTipoPagina(int pagina, int numeroresponsabletipo,
 			String filtro_nombre, String filtro_descripcion,String filtro_usuario_creo,
 			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion){
-		List<ResponsableRol> ret = new ArrayList<ResponsableRol>();
+		List<ResponsableTipo> ret = new ArrayList<ResponsableTipo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = "SELECT p FROM ResponsableRol p WHERE p.estado = 1";
+			String query = "SELECT p FROM ResponsableTipo p WHERE p.estado = 1";
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " p.nombre LIKE '%",filtro_nombre,"%' ");
@@ -109,7 +115,7 @@ public class ResponsableRolDAO {
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			
 			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
-			Query<ResponsableRol> criteria = session.createQuery(query,ResponsableRol.class);
+			Query<ResponsableTipo> criteria = session.createQuery(query,ResponsableTipo.class);
 			criteria.setFirstResult(((pagina-1)*(numeroresponsabletipo)));
 			criteria.setMaxResults(numeroresponsabletipo);
 			ret = criteria.getResultList();
@@ -123,35 +129,17 @@ public class ResponsableRolDAO {
 		return ret;
 	}
 	
-	public static ResponsableRol ResponsableRol(int id){
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		ResponsableRol ret = null;
-		try{
-			Query<ResponsableRol> criteria = session.createQuery("FROM ResponsableRol where id=:id)", ResponsableRol.class);
-			criteria.setParameter("id", id);
-			 ret = criteria.getSingleResult();;
-		}
-		catch(Throwable e){
-			CLogger.write("1", ResponsableRolDAO.class, e);
-		}
-		finally{
-			session.close();
-		}
-		return ret;
-	}
-
-	
-	public static boolean guardarResponsableRol(ResponsableRol responsableRol){
+	public static boolean guardarResponsableTipo(ResponsableTipo responsableTipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			session.saveOrUpdate(responsableRol);
+			session.saveOrUpdate(responsableTipo);
 			session.getTransaction().commit();
 			ret = true;
 		}
 		catch(Throwable e){
-			CLogger.write("6", ResponsableRolDAO.class, e);
+			CLogger.write("6", ResponsableTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -159,42 +147,18 @@ public class ResponsableRolDAO {
 		return ret;
 	}
 	
-	public static boolean eliminarResponsableRol(ResponsableRol responsablerol){
+	public static boolean eliminarResponsableTipo(ResponsableTipo responsabletipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			responsablerol.setEstado(0);
+			responsabletipo.setEstado(0);
 			session.beginTransaction();
-			session.update(responsablerol);
+			session.update(responsabletipo);
 			session.getTransaction().commit();
 			ret = true;
 		}
 		catch(Throwable e){
 			CLogger.write("7", ResponsableTipoDAO.class, e);
-		}
-		finally{
-			session.close();
-		}
-		return ret;
-	}
-	
-	public static List<ResponsableRol> getResponsableRol(Integer responsableTipo){
-		List<ResponsableRol> ret = new ArrayList<ResponsableRol>();
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		try{
-			CriteriaBuilder builder = session.getCriteriaBuilder();
-
-			CriteriaQuery<ResponsableRol> criteria = builder.createQuery(ResponsableRol.class);
-			Root<ResponsableRol> root = criteria.from(ResponsableRol.class);
-			criteria.select( root ).where(builder.equal(root.get("estado"),1));
-			if (responsableTipo!=null)
-				criteria.select( root ).where(builder.equal(root.get("responsableTipo"),responsableTipo));
-			
-			ret = session.createQuery( criteria ).getResultList();
-
-		}
-		catch(Throwable e){
-			CLogger.write("8", ResponsableRol.class, e);
 		}
 		finally{
 			session.close();

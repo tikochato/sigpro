@@ -35,9 +35,6 @@ import pojo.ActividadPropiedadValorId;
 import pojo.ActividadTipo;
 import utilities.Utils;
 
-/**
- * Servlet implementation class SActividad
- */
 @WebServlet("/SActividad")
 public class SActividad extends HttpServlet {
 	private static final long serialVersionUID = 1L;

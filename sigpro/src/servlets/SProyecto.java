@@ -162,7 +162,47 @@ public class SProyecto extends HttpServlet {
 
 
  
-		}else if(accion.equals("getProyectoPagina")){
+		} else if (accion.equals("getProyectosPorUnidadEjecutora")){
+			Integer unidadEjecutoraId = Utils.String2Int(map.get("unidadEjecutoraId"), 0);
+			List<Proyecto> proyectos = ProyectoDAO.getProyectosPorUnidadEjecutora(usuario, unidadEjecutoraId);
+
+			response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
+
+			List <datos> datos_ = new ArrayList<datos>();
+			for (Proyecto proyecto : proyectos){
+				datos dato = new datos();
+				dato.id = proyecto.getId();
+				dato.nombre = proyecto.getNombre();
+				dato.objetivo = proyecto.getObjetivo();
+				dato.descripcion = proyecto.getDescripcion();
+				dato.snip = proyecto.getSnip();
+				dato.proyectotipo = proyecto.getProyectoTipo().getNombre();
+				dato.proyectotipoid = proyecto.getProyectoTipo().getId();
+				dato.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
+				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getUnidadEjecutora();
+				dato.cooperante = proyecto.getCooperante().getNombre();
+				dato.cooperanteid = proyecto.getCooperante().getId();
+				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
+				dato.usuarioCreo = proyecto.getUsuarioCreo();
+				dato.fechaactualizacion = Utils.formatDateHour( proyecto.getFechaActualizacion());
+				dato.usuarioactualizo = proyecto.getUsuarioActualizo();
+				dato.programa = proyecto.getPrograma();
+				dato.subprograma = proyecto.getSubprograma();
+				dato.proyecto = proyecto.getProyecto();
+				dato.obra = proyecto.getObra();
+				dato.actividad = proyecto.getActividad();
+				dato.fuente = proyecto.getFuente();
+				dato.longitud = proyecto.getLongitud();
+				dato.latitud = proyecto.getLatitud();
+				datos_.add(dato);
+			}
+
+			response_text = new GsonBuilder().serializeNulls().create().toJson(datos_);
+			response_text = String.join("", "\"entidades\":", response_text);
+			response_text = String.join("", "{\"success\":true,", response_text, "}");
+
+		} else if(accion.equals("getProyectoPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroProyecto = map.get("numeroproyecto")!=null  ? Integer.parseInt(map.get("numeroproyecto")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");

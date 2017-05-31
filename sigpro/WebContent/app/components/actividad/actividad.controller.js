@@ -1,7 +1,7 @@
 var app = angular.module('actividadController', []);
 
-app.controller('actividadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$sce','uiGmapGoogleMapApi', 'dialogoConfirmacion', 
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$sce,uiGmapGoogleMapApi, $dialogoConfirmacion) {
+app.controller('actividadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$sce','uiGmapGoogleMapApi', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$sce,uiGmapGoogleMapApi, $dialogoConfirmacion) {
 		var mi=this;
 
 		$window.document.title = $utilidades.sistema_nombre+' - Actividades';
@@ -179,14 +179,22 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
 					if(response.success){
-						mi.actividad.id = response.id;
-						mi.actividad.usuarioCreo=response.usuarioCreo;
-						mi.actividad.fechaCreacion=response.fechaCreacion;
-						mi.actividad.usuarioActualizo=response.usuarioactualizo;
-						mi.actividad.fechaActualizacion=response.fechaactualizacion;
-						$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardado')+' con éxito');
-						mi.obtenerTotalActividades();
-						mi.esnuevo = false;
+						$http.post('/SObjetoResponsableRol', {
+							accion: 'setResponsableRol',
+							responsableRolId: mi.actividad.responsableRolId,
+							objetoId : response.id,
+							objetoTipo : 5,
+							esNuevo: mi.esnuevo
+						}).success(function(response2){
+							mi.actividad.id = response.id;
+							mi.actividad.usuarioCreo=response.usuarioCreo;
+							mi.actividad.fechaCreacion=response.fechaCreacion;
+							mi.actividad.usuarioActualizo=response.usuarioactualizo;
+							mi.actividad.fechaActualizacion=response.fechaactualizacion;
+							$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardado')+' con éxito');
+							mi.obtenerTotalActividades();
+							mi.esnuevo = false;	
+						});						
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' la Actividad');
@@ -240,6 +248,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 
 		mi.editar = function() {
 			if(mi.actividad!=null && mi.actividad.id!=null){
+				mi.actividadResponsable = "";
 				mi.mostraringreso = true;
 				mi.actividadtipoid = mi.actividad.actividadtipoid;
 				mi.esnuevo = false;
@@ -270,6 +279,21 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 								break;
 						}
 
+					}
+				});
+				
+				$http.post('/SObjetoResponsableRol', {
+					accion: 'getResponsableRol',
+					objetoId: mi.actividad.id,
+					objetoTipo: 5,
+					esNuevo : mi.esnuevo
+				}).success(function(response){
+					if (response.success)
+					{
+						if(response.responsableRol.length > 0){
+							mi.actividad.actividadResponsable = response.responsableRol[0].nombre;
+							mi.actividad.responsableRolId = response.responsableRol[0].id;
+						}
 					}
 				});
 			}
@@ -355,6 +379,61 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 						mi.cargarTabla(1);
 			});
 		};
+		
+		mi.buscarActividadResponsable = function(titulo, mensaje){
+			var resultado = mi.llamarModalBusqueda('/SResponsableRol', {
+				accion : 'numeroResponsableRol'	
+			}, function(pagina, elementosPorPagina) {
+				return {
+					accion : 'getResponsableRol',
+					pagina : pagina,
+					numeroresponsablerol : elementosPorPagina
+				};
+			},'id','nombre');
+
+			resultado.then(function(itemSeleccionado) {
+				mi.actividad.actividadResponsable = itemSeleccionado.nombre;
+				mi.actividad.responsableRolId = itemSeleccionado.id;
+			});
+		}
+		
+		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
+			var resultado = $q.defer();
+			var modalInstance = $uibModal.open({
+				animation : 'true',
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				templateUrl : 'buscarActividadTipo.jsp',
+				controller : 'modalBuscar',
+				controllerAs : 'modalBuscar',
+				backdrop : 'static',
+				size : 'md',
+				resolve : {
+					$servlet : function() {
+						return servlet;
+					},
+					$accionServlet : function() {
+						return accionServlet;
+					},
+					$datosCarga : function() {
+						return datosCarga;
+					},
+					$columnaId : function() {
+						return columnaId;
+					},
+					$columnaNombre : function() {
+						return columnaNombre;
+					}
+					
+				}
+			});
+
+			modalInstance.result.then(function(itemSeleccionado) {
+				resultado.resolve(itemSeleccionado);
+			});
+			return resultado.promise;
+		};
+		
 
 		mi.buscarActividadTipo = function(titulo, mensaje) {
 
@@ -573,3 +652,99 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 		  $uibModalInstance.close($scope.posicion);
 	  };
 }]);
+
+
+app.controller('modalBuscar', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log', '$servlet', '$accionServlet', '$datosCarga',
+	'$columnaId','$columnaNombre',modalBuscar ]);
+
+function modalBuscar($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $servlet,$accionServlet,$datosCarga,$columnaId,$columnaNombre) {
+
+	var mi = this;
+
+	mi.totalElementos = 0;
+	mi.paginaActual = 1;
+	mi.numeroMaximoPaginas = 5;
+	mi.elementosPorPagina = 9;
+
+	mi.mostrarCargando = false;
+	mi.data = [];
+
+	mi.itemSeleccionado = null;
+	mi.seleccionado = false;
+
+	$http.post($servlet, $accionServlet).success(function(response) {
+		for ( var key in response) {
+			mi.totalElementos = response[key];
+		}
+		mi.cargarData(1);
+	});
+
+	mi.opcionesGrid = {
+		data : mi.data,
+		columnDefs : [ {
+			displayName : 'ID',
+			name : $columnaId,
+			cellClass : 'grid-align-right',
+			type : 'number',
+			width : 70
+		}, {
+			displayName : 'Nombre',
+			name : $columnaNombre,
+			cellClass : 'grid-align-left'
+		} ],
+		enableRowSelection : true,
+		enableRowHeaderSelection : false,
+		multiSelect : false,
+		modifierKeysToMultiSelect : false,
+		noUnselect : false,
+		enableFiltering : true,
+		enablePaginationControls : false,
+		paginationPageSize : 5,
+		onRegisterApi : function(gridApi) {
+			mi.gridApi = gridApi;
+			mi.gridApi.selection.on.rowSelectionChanged($scope,
+					mi.seleccionarTipoRiesgo);
+		}
+	}
+
+	mi.seleccionarTipoRiesgo = function(row) {
+		mi.itemSeleccionado = row.entity;
+		mi.seleccionado = row.isSelected;
+	};
+
+	mi.cargarData = function(pagina) {
+		mi.mostrarCargando = true;
+		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina)).then(
+				function(response) {
+					if (response.data.success) {
+
+						for ( var key in response.data) {
+							if (key != 'success')
+								mi.data = response.data[key];
+						}
+						mi.opcionesGrid.data = mi.data;
+
+						mi.mostrarCargando = false;
+					}
+				});
+	};
+
+	mi.cambioPagina = function() {
+		mi.cargarData(mi.paginaActual);
+	}
+
+	mi.ok = function() {
+		if (mi.seleccionado) {
+			$uibModalInstance.close(mi.itemSeleccionado);
+		} else {
+			$utilidades.mensaje('warning', 'Debe seleccionar una fila');
+		}
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+}

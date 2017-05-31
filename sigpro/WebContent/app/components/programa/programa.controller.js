@@ -13,6 +13,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	mi.campos = {};
 	mi.esColapsado = false;
 	mi.mostrarcargando=true;
+	mi.esNuevoDocumento = true;
 	mi.paginaActual = 1;
 	mi.programatipoid = "";
 	mi.programatiponombre="";
@@ -357,7 +358,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 					}else
 						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crearo' : 'guardar')+' el Programa');
 			});
-
+			mi.esNuevoDocumento = false;
 		}else
 			$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
 	 }
@@ -773,7 +774,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			accion : 'numeroTipoMonedas'	
 		}, function(pagina, elementosPorPagina) {
 			return {
-				accion : 'getTipoMnedaPagina',
+				accion : 'getTipoMonedaPagina',
 				pagina : pagina,
 				numerotipomoneda : elementosPorPagina
 			};

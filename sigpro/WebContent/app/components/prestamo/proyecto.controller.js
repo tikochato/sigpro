@@ -863,7 +863,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			accion : 'numeroTipoMonedas'	
 		}, function(pagina, elementosPorPagina) {
 			return {
-				accion : 'getTipoMnedaPagina',
+				accion : 'getTipoMonedaPagina',
 				pagina : pagina,
 				numerotipomoneda : elementosPorPagina
 			};

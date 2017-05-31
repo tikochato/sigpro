@@ -21,7 +21,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 		List<Proyecto> ret = new ArrayList<Proyecto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Proyecto> criteria = session.createQuery("FROM Proyecto p where p.id in (SELECT u.id.proyectoid from ProyectoUsuario u where u.id.usuario=:usuario )", Proyecto.class);
+			Query<Proyecto> criteria = session.createQuery("FROM Proyecto p where p.id in (SELECT u.id.proyectoid from ProyectoUsuario u where u.id.usuario=:usuario ) and p.estado=1", Proyecto.class);
 			criteria.setParameter("usuario", usuario);
 			ret =   criteria.getResultList();
 		}
@@ -34,7 +34,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 
 		return ret;
 	}
-
+	
 	public static boolean guardarProyecto(Proyecto proyecto){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -239,5 +239,26 @@ public class ProyectoDAO implements java.io.Serializable  {
 		return ret;
 	}
 
+	public static List<Proyecto> getProyectosPorUnidadEjecutora(String usuario, int unidadEjecutoraId){
+		List<Proyecto> ret = new ArrayList<Proyecto>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Proyecto> criteria = session.createQuery("select p from Proyecto p "
+					+ "inner join p.unidadEjecutora pp "
+					+ "where p.id in (SELECT u.id.proyectoid from ProyectoUsuario u where u.id.usuario=:usuario ) "
+					+ "and p.estado=1 and pp.unidadEjecutora=:unidadEjecutora", Proyecto.class);
+			criteria.setParameter("usuario", usuario);
+			criteria.setParameter("unidadEjecutora", unidadEjecutoraId);
+			ret =   criteria.getResultList();
+		}
+		catch(Throwable e){
+			e.printStackTrace();
+			CLogger.write("10", Proyecto.class, e);
+		}
+		finally{
+			session.close();
+		}
 
+		return ret;
+	}
 }

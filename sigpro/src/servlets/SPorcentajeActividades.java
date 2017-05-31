@@ -181,7 +181,7 @@ public class SPorcentajeActividades extends HttpServlet {
 		}
 		
 		return String.join(items.length()>0 ? "," : "", items,
-					construirItemKanban(actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
+					construirItemKanban("(" + actividad.getId() + ") "+ actividad.getNombre(), actividad.getPorcentajeAvance(), actividad.getFechaFin()));
 	}
 
 	private String construirItemKanban(String nombre, Integer porcentaje,Date fechaFin){

@@ -26,7 +26,7 @@ import pojo.TipoMoneda;
 public class STipoMoneda extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
-	class stprograma {
+	class stTipoMoneda {
 		int id;
 		String nombre;
 		String descripcion;
@@ -58,18 +58,17 @@ public class STipoMoneda extends HttpServlet {
 			while ((str = br.readLine()) != null) {
 				sb.append(str);
 			}
-			;
 			Map<String, String> map = gson.fromJson(sb.toString(), type);
 			String accion = map.get("accion")!=null ? map.get("accion") : "";
 
-			if (accion.equals("getTipoMnedaPagina")) {
+			if (accion.equals("getTipoMonedaPagina")) {
 				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 				int numeroTipoMoneda = map.get("numerotipomoneda")!=null  ? Integer.parseInt(map.get("numerotipomoneda")) : 0;
 				List<TipoMoneda> tipoMonedas = TipoMonedaDAO.getAutorizacionTiposPagina(pagina, numeroTipoMoneda);
 				
-				List<stprograma> sttipomoneda=new ArrayList<stprograma>();
+				List<stTipoMoneda> sttipomoneda=new ArrayList<stTipoMoneda>();
 				for(TipoMoneda tipoMoneda:tipoMonedas){
-					stprograma temp =new stprograma();
+					stTipoMoneda temp =new stTipoMoneda();
 					temp.id = tipoMoneda.getId();
 					temp.nombre = tipoMoneda.getNombre();
 					sttipomoneda.add(temp);
