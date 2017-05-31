@@ -472,7 +472,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 						$scope.items[index].start = moment(resultado.fechaInicio,'DD/MM/YYYY hh:mm:ss').toDate();
 						$scope.items[index].finish = mi.sumarDias($scope.items[index].start,resultado.duracion); 
 						$scope.items[index].duration = Number(resultado.duracion);
-						mi.reconfigurarFechas($scope.items[index],(index +1),Number($scope.items[index].duracion), moment($scope.items[index].start).format('DD/MM/YYYY'));
+						mi.reconfigurarFechas($scope.items[index],(index +1),Number($scope.items[index].duracion), $scope.items[index].start);
 						$utilidades.mensaje('success','Item modificado con éxito');
 					}else{
 						$utilidades.mensaje('danger', 'Error al guardar el item de actividad');
@@ -502,7 +502,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 					console.log(temp);
 					if ($scope.items[i].predecessors[0].item.id === objeto.id){
 						$scope.items[i].start =  (mi.sumarDias (fechaInicial,duracion));
-						duracion = duracion + Number( $scope.items[i].predecessors[0].item.duracion);
+						duracion = duracion + Number( $scope.items[i].duracion);
 						$scope.items[i].finish = (mi.sumarDias (fechaInicial,duracion));
 						mi.reconfigurarFechas($scope.items[i],(i +1),duracion,fechaInicial);
 					}
