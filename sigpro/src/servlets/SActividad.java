@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,7 +61,7 @@ public class SActividad extends HttpServlet {
 		Integer fuente;
 		String longitud;
 		String latitud;
-	
+		BigDecimal costo;
 		int estado;
 	}
 
@@ -146,6 +147,7 @@ public class SActividad extends HttpServlet {
 				temp.fuente = actividad.getFuente();
 				temp.longitud = actividad.getLongitud();
 				temp.latitud = actividad.getLatitud();
+				temp.costo = actividad.getCosto();
 				stactividads.add(temp);
 			}
 
@@ -177,6 +179,7 @@ public class SActividad extends HttpServlet {
 				temp.fuente = actividad.getFuente();
 				temp.longitud = actividad.getLongitud();
 				temp.latitud = actividad.getLatitud();
+				temp.costo = actividad.getCosto();
 				stactividads.add(temp);
 			}
 
@@ -208,6 +211,7 @@ public class SActividad extends HttpServlet {
 					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
 					String duracionDimension = map.get("duracionDimension");
 					String longitud = map.get("longitud");
+					BigDecimal costo = Utils.String2BigDecimal(map.get("costo"), null);
 					String latitud = map.get("latitud");
 
 					ActividadTipo actividadTipo= new ActividadTipo();
@@ -226,7 +230,7 @@ public class SActividad extends HttpServlet {
 						
 						actividad = new Actividad(actividadTipo, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra, fuente,
-								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,
+								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,
 								null,null);
 					}
 					else{
@@ -247,6 +251,7 @@ public class SActividad extends HttpServlet {
 						actividad.setActividadTipo(actividadTipo);
 						actividad.setLatitud(latitud);
 						actividad.setLongitud(longitud);
+						actividad.setCosto(costo);
 					}
 					result = ActividadDAO.guardarActividad(actividad);
 
@@ -364,6 +369,7 @@ public class SActividad extends HttpServlet {
 				temp.fuente = actividad.getFuente();
 				temp.longitud = actividad.getLongitud();
 				temp.latitud = actividad.getLatitud();
+				temp.costo = actividad.getCosto();
 				stactividads.add(temp);
 			}
 

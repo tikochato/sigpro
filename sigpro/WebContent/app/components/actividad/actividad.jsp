@@ -222,6 +222,11 @@
 						   <label class="floating-label">* Avance %</label>
 						</div>
 						
+						<div class="form-group" >
+					       <input type="number" class="inputText" ng-model="actividadc.actividad.costo" ng-value="actividadc.actividad.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
+					       <label for="iprog" class="floating-label">Costo</label>
+						</div>
+						
 						<div ng-repeat="campo in actividadc.camposdinamicos">
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >

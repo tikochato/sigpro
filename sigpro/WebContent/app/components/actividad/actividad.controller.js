@@ -175,6 +175,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					obra: mi.actividad.obra,
 					longitud: mi.actividad.longitud,
 					latitud : mi.actividad.latitud,
+					costo: mi.actividad.costo,
 					fuente: mi.actividad.fuente,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){

@@ -38,6 +38,7 @@
         <mapping class="pojo.EjecucionEstado" />
         <mapping class="pojo.Documento" />
         <mapping class="pojo.Entidad" />
+        <mapping class="pojo.EstadoInforme" />
         <mapping class="pojo.EstadoTabla" />
         <mapping class="pojo.Formulario" />
         <mapping class="pojo.FormularioItem" />
@@ -48,6 +49,7 @@
         <mapping class="pojo.Hito" />
         <mapping class="pojo.HitoResultado" />
         <mapping class="pojo.HitoTipo" />
+        <mapping class="pojo.InformePresupuesto" />
         <mapping class="pojo.InteresTipo" />
         <mapping class="pojo.Meta" />
         <mapping class="pojo.MetaTipo" />
