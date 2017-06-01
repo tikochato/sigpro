@@ -1,12 +1,16 @@
 package servlets;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -18,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.shiro.codec.Base64;
 import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
@@ -37,6 +42,7 @@ import pojo.InformePresupuesto;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
+import utilities.CExcel;
 import utilities.Utils;
 
 @WebServlet("/SReporte")
@@ -156,7 +162,7 @@ public class SReporte extends HttpServlet {
 			Date anio = Utils.dateFromString(map.get("anio"));
 			List<InformePresupuesto> informePresupuesto = ReporteDAO.existeInformeBase(idPrestamo, tipoInforme, map.get("anio"));
 			
-			if (informePresupuesto.size() == 0){
+			if (informePresupuesto.size() == 0 && tipoInforme != 2){
 				List<stdataEjecutado> prestamo = obtenerProyecto(idPrestamo,usuario);
 				
 				for(stdataEjecutado p : prestamo){
@@ -170,7 +176,7 @@ public class SReporte extends HttpServlet {
 					temp.setEstadoInforme(estadoInforme);
 					temp.setObjetoTipo(p.objetoTipo);
 					temp.setPosicionArbol(p.posicionArbol);
-					temp.setIdObjetoTipo(p.idObjetoTipo);
+					temp.setObjetoTipoId(p.idObjetoTipo);
 					temp.setObjetoNombre(p.nombre);
 					temp.setIdPredecesor(p.idPredecesor);
 					temp.setObjetoTipoPredecesor(p.objetoTipoPredecesor);
@@ -204,7 +210,7 @@ public class SReporte extends HttpServlet {
 					dataEjecutado.estadoInforme = tipoInforme;
 					dataEjecutado.objetoTipo = informe.getObjetoTipo();
 					dataEjecutado.posicionArbol = informe.getPosicionArbol();
-					dataEjecutado.idObjetoTipo = informe.getIdObjetoTipo();
+					dataEjecutado.idObjetoTipo = informe.getObjetoTipoId();
 					dataEjecutado.nombre = informe.getObjetoNombre();
 					dataEjecutado.idPredecesor = informe.getIdPredecesor();
 					dataEjecutado.objetoTipoPredecesor = informe.getObjetoTipoPredecesor();
@@ -224,43 +230,58 @@ public class SReporte extends HttpServlet {
 					dataEjecutado.estado = informe.getEstado();
 					resultPrestamo.add(dataEjecutado);
 				}
-
+				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(resultPrestamo);
 		        response_text = String.join("", "\"prestamo\":",response_text);
 		        response_text = String.join("", "{\"success\":true,", response_text, "}");
-				
 			}else{
-				List<stInformePresupuesto> resultPrestamo = new ArrayList<stInformePresupuesto>();
-				for (InformePresupuesto informe : informePresupuesto ){
-					stInformePresupuesto dataEjecutado = new stInformePresupuesto();
-					dataEjecutado.id = informe.getId();
-					dataEjecutado.idPrestamo = idPrestamo;
-					dataEjecutado.estadoInforme = tipoInforme;
-					dataEjecutado.objetoTipo = informe.getObjetoTipo();
-					dataEjecutado.posicionArbol = informe.getPosicionArbol();
-					dataEjecutado.idObjetoTipo = informe.getIdObjetoTipo();
-					dataEjecutado.nombre = informe.getObjetoNombre();
-					dataEjecutado.idPredecesor = informe.getIdPredecesor();
-					dataEjecutado.objetoTipoPredecesor = informe.getObjetoTipoPredecesor();
-					dataEjecutado.Mes1 = informe.getMes1();
-					dataEjecutado.Mes2 = informe.getMes2();
-					dataEjecutado.Mes3 = informe.getMes3();
-					dataEjecutado.Mes4 = informe.getMes4();
-					dataEjecutado.Mes5 = informe.getMes5();
-					dataEjecutado.Mes6 = informe.getMes6();
-					dataEjecutado.Mes7 = informe.getMes7();
-					dataEjecutado.Mes8 = informe.getMes8();
-					dataEjecutado.Mes9 = informe.getMes9();
-					dataEjecutado.Mes10 = informe.getMes10();
-					dataEjecutado.Mes11 = informe.getMes11();
-					dataEjecutado.Mes12 = informe.getMes12();
-					dataEjecutado.Total = informe.getTotal();
-					dataEjecutado.estado = informe.getEstado();
-					resultPrestamo.add(dataEjecutado);
+				if(informePresupuesto.size() == 0 && tipoInforme == 2){
+					response_text = String.join("", "\"prestamo\":[{\"tipoInforme\":2}]");
+					response_text = String.join("", "{\"success\":false,", response_text, "}");
+				}else if(informePresupuesto.size() > 0 && (tipoInforme == 2 || tipoInforme == 1)){
+					List<stInformePresupuesto> resultPrestamo = new ArrayList<stInformePresupuesto>();
+					for (InformePresupuesto informe : informePresupuesto ){
+						stInformePresupuesto dataEjecutado = new stInformePresupuesto();
+						dataEjecutado.id = informe.getId();
+						dataEjecutado.idPrestamo = idPrestamo;
+						dataEjecutado.estadoInforme = tipoInforme;
+						dataEjecutado.objetoTipo = informe.getObjetoTipo();
+						dataEjecutado.posicionArbol = informe.getPosicionArbol();
+						dataEjecutado.idObjetoTipo = informe.getObjetoTipoId();
+						dataEjecutado.nombre = informe.getObjetoNombre();
+						dataEjecutado.idPredecesor = informe.getIdPredecesor();
+						dataEjecutado.objetoTipoPredecesor = informe.getObjetoTipoPredecesor();
+						dataEjecutado.Mes1 = informe.getMes1();
+						dataEjecutado.Mes2 = informe.getMes2();
+						dataEjecutado.Mes3 = informe.getMes3();
+						dataEjecutado.Mes4 = informe.getMes4();
+						dataEjecutado.Mes5 = informe.getMes5();
+						dataEjecutado.Mes6 = informe.getMes6();
+						dataEjecutado.Mes7 = informe.getMes7();
+						dataEjecutado.Mes8 = informe.getMes8();
+						dataEjecutado.Mes9 = informe.getMes9();
+						dataEjecutado.Mes10 = informe.getMes10();
+						dataEjecutado.Mes11 = informe.getMes11();
+						dataEjecutado.Mes12 = informe.getMes12();
+						dataEjecutado.Total = informe.getTotal();
+						dataEjecutado.estado = informe.getEstado();
+						resultPrestamo.add(dataEjecutado);
+					}
+					
+					
+					informePresupuesto = ReporteDAO.existeInformeBase(idPrestamo, 2, map.get("anio"));
+					
+					if(informePresupuesto.size() > 0){
+						response_text=new GsonBuilder().serializeNulls().create().toJson(resultPrestamo);
+				        response_text = String.join("", "\"prestamo\":",response_text);
+				        response_text = String.join("", "\"existeCopia\":true,", response_text);
+				        response_text = String.join("", "{\"success\":true,", response_text, "}");
+					}else{
+						response_text=new GsonBuilder().serializeNulls().create().toJson(resultPrestamo);
+				        response_text = String.join("", "\"prestamo\":",response_text);
+						response_text = String.join("", "{\"success\":true,", response_text, "}");
+					}
 				}
-				response_text=new GsonBuilder().serializeNulls().create().toJson(resultPrestamo);
-		        response_text = String.join("", "\"prestamo\":",response_text);
-				response_text = String.join("", "{\"success\":true,", response_text, "}");
 			}
 		}else if(accion.equals("guardarInformePrestamo")){
 			int id = Utils.String2Int(map.get("id"));
@@ -286,7 +307,7 @@ public class SReporte extends HttpServlet {
 				temp.setId(r.getId());
 				temp.setAnio(r.getAnio());
 				temp.setEstadoInforme(r.getEstadoInforme());
-				temp.setIdObjetoTipo(r.getIdObjetoTipo());
+				temp.setObjetoTipoId(r.getObjetoTipoId());
 				temp.setObjetoTipo(r.getObjetoTipo());
 				temp.setPosicionArbol(r.getPosicionArbol());
 				temp.setObjetoNombre(r.getObjetoNombre());
@@ -312,10 +333,8 @@ public class SReporte extends HttpServlet {
 				temp.setFechaCreacion(r.getFechaCreacion());
 				temp.setFechaActualizacion(new DateTime().toDate());
 				
-				if (ReporteDAO.agregarRowInformePresupuesto(temp))
-					response_text = String.join("", "{\"success\":true}");
-				else
-					response_text = String.join("", "{\"success\":false}");
+				ReporteDAO.agregarRowInformePresupuesto(temp);
+				response_text = "{\"success\":true}";
 			}
 		}else if(accion.equals("congelarInforme")){
 			int id = Utils.String2Int(map.get("id"));
@@ -328,7 +347,7 @@ public class SReporte extends HttpServlet {
 				temp.setId(r.getId());
 				temp.setAnio(r.getAnio());
 				temp.setEstadoInforme(r.getEstadoInforme());
-				temp.setIdObjetoTipo(r.getIdObjetoTipo());
+				temp.setObjetoTipoId(r.getObjetoTipoId());
 				temp.setObjetoTipo(r.getObjetoTipo());
 				temp.setPosicionArbol(r.getPosicionArbol());
 				temp.setObjetoNombre(r.getObjetoNombre());
@@ -358,6 +377,155 @@ public class SReporte extends HttpServlet {
 					response_text = String.join("", "{\"success\":true}");
 				else
 					response_text = String.join("", "{\"success\":false}");
+			}
+		}else if(accion.equals("copiarInformePrestamo")){
+			int id = Utils.String2Int(map.get("id"));
+			List<InformePresupuesto> row = ReporteDAO.getrowInformebyId(id);
+			
+			for(InformePresupuesto r : row){
+				if(r.getEstado() == 2){
+					List<InformePresupuesto> informePresupuesto = ReporteDAO.existeInformeBase(idPrestamo, 1, map.get("anio"));
+					for (InformePresupuesto informe : informePresupuesto){
+						InformePresupuesto temp = new InformePresupuesto();
+						temp.setIdPrestamo(informe.getIdPrestamo());
+						
+						EstadoInforme tipoPresupuesto = new EstadoInforme();
+						tipoPresupuesto.setId(2);
+						temp.setEstadoInforme(tipoPresupuesto);
+						temp.setObjetoTipoId(informe.getObjetoTipoId());
+						temp.setObjetoTipo(informe.getObjetoTipo());
+						temp.setPosicionArbol(informe.getPosicionArbol());
+						temp.setObjetoNombre(informe.getObjetoNombre());
+						temp.setIdPredecesor(informe.getIdPredecesor());
+						temp.setObjetoTipoPredecesor(informe.getObjetoTipoPredecesor());
+						temp.setMes1(informe.getMes1());
+						temp.setMes2(informe.getMes2());
+						temp.setMes3(informe.getMes3());
+						temp.setMes4(informe.getMes4());
+						temp.setMes5(informe.getMes5());
+						temp.setMes6(informe.getMes6());
+						temp.setMes7(informe.getMes7());
+						temp.setMes8(informe.getMes8());
+						temp.setMes9(informe.getMes9());
+						temp.setMes10(informe.getMes10());
+						temp.setMes11(informe.getMes11());
+						temp.setMes12(informe.getMes12());
+						temp.setTotal(informe.getTotal());
+						temp.setAnio(informe.getAnio());
+						temp.setUsuarioCreo(usuario);
+						temp.setFechaCreacion(new DateTime().toDate());
+						temp.setEstado(1);
+						ReporteDAO.agregarRowInformePresupuesto(temp);
+					}
+					
+					informePresupuesto = ReporteDAO.existeInformeBase(idPrestamo, 2, map.get("anio"));
+					List<stInformePresupuesto> resultPrestamo = new ArrayList<stInformePresupuesto>();
+					for (InformePresupuesto informe : informePresupuesto ){
+						stInformePresupuesto dataEjecutado = new stInformePresupuesto();
+						dataEjecutado.id = informe.getId();
+						dataEjecutado.idPrestamo = idPrestamo;
+						dataEjecutado.estadoInforme = 2;
+						dataEjecutado.objetoTipo = informe.getObjetoTipo();
+						dataEjecutado.posicionArbol = informe.getPosicionArbol();
+						dataEjecutado.idObjetoTipo = informe.getObjetoTipoId();
+						dataEjecutado.nombre = informe.getObjetoNombre();
+						dataEjecutado.idPredecesor = informe.getIdPredecesor();
+						dataEjecutado.objetoTipoPredecesor = informe.getObjetoTipoPredecesor();
+						dataEjecutado.Mes1 = informe.getMes1();
+						dataEjecutado.Mes2 = informe.getMes2();
+						dataEjecutado.Mes3 = informe.getMes3();
+						dataEjecutado.Mes4 = informe.getMes4();
+						dataEjecutado.Mes5 = informe.getMes5();
+						dataEjecutado.Mes6 = informe.getMes6();
+						dataEjecutado.Mes7 = informe.getMes7();
+						dataEjecutado.Mes8 = informe.getMes8();
+						dataEjecutado.Mes9 = informe.getMes9();
+						dataEjecutado.Mes10 = informe.getMes10();
+						dataEjecutado.Mes11 = informe.getMes11();
+						dataEjecutado.Mes12 = informe.getMes12();
+						dataEjecutado.Total = informe.getTotal();
+						dataEjecutado.estado = informe.getEstado();
+						resultPrestamo.add(dataEjecutado);
+					}
+
+					response_text=new GsonBuilder().serializeNulls().create().toJson(resultPrestamo);
+			        response_text = String.join("", "\"prestamo\":",response_text);
+			        response_text = String.join("", "{\"success\":true,", response_text, "}");
+				}else
+				{
+					response_text = String.join("", "{\"success\":false}");		
+				}
+			}
+		}else if(accion.equals("exportarExcel")){
+			CExcel excel = new CExcel("Informe",false);
+			Integer estadoInforme = Utils.String2Int(map.get("estadoInforme"));
+			List<InformePresupuesto> informePresupuesto = ReporteDAO.existeInformeBase(idPrestamo, estadoInforme, map.get("anio"));
+			
+			if(informePresupuesto.size() > 0){
+				Map<String,Object[]> datos = new HashMap<>();
+				datos.put("0", new Object[] {"Nombre", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre", "Total"});
+				
+				int fila = 1;
+				Object[] filaTotal = new Object []{};
+				
+				for(InformePresupuesto informe : informePresupuesto){
+					if(fila==1)
+						filaTotal = new Object [] {"Total General", informe.getMes1().doubleValue(), informe.getMes2().doubleValue(), 
+								informe.getMes3().doubleValue(), informe.getMes4().doubleValue(), informe.getMes5().doubleValue(), 
+								informe.getMes6().doubleValue(), informe.getMes7().doubleValue(), informe.getMes8().doubleValue(), 
+								informe.getMes9().doubleValue(),informe.getMes10().doubleValue(),informe.getMes11().doubleValue(), 
+								informe.getMes12().doubleValue(),informe.getTotal().doubleValue()};
+					datos.put(fila+"", new Object [] {informe.getObjetoNombre(), informe.getMes1().doubleValue(), informe.getMes2().doubleValue(), 
+							informe.getMes3().doubleValue(), informe.getMes4().doubleValue(), informe.getMes5().doubleValue(), 
+							informe.getMes6().doubleValue(), informe.getMes7().doubleValue(), informe.getMes8().doubleValue(), 
+							informe.getMes9().doubleValue(),informe.getMes10().doubleValue(),informe.getMes11().doubleValue(), 
+							informe.getMes12().doubleValue(),informe.getTotal().doubleValue()});
+					fila++;
+				}
+				datos.put(fila+"",filaTotal);
+				
+				String path = excel.ExportarExcel(datos, "Informe Ejecución Anual", usuario);
+	
+				File file=new File(path);
+				if(file.exists()){
+			        FileInputStream is = null;
+			        try {
+			        	is = new FileInputStream(file);
+			        }
+			        catch (Exception e) {
+			        	
+			        }
+			        //
+			        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+			        
+			        int readByte = 0;
+			        byte[] buffer = new byte[2024];
+	
+	                while(true)
+	                {
+	                    readByte = is.read(buffer);
+	                    if(readByte == -1)
+	                    {
+	                        break;
+	                    }
+	                    outByteStream.write(buffer);
+	                }
+	                
+	                file.delete();
+	                
+	                is.close();
+	                outByteStream.flush();
+	                outByteStream.close();
+	                
+			        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+					response.setContentType("application/ms-excel");
+					response.setContentLength(outArray.length);
+					response.setHeader("Expires:", "0"); 
+					response.setHeader("Content-Disposition", "attachment; Informe_.xls");
+					OutputStream outStream = response.getOutputStream();
+					outStream.write(outArray);
+					outStream.flush();
+				}
 			}
 		}
 		

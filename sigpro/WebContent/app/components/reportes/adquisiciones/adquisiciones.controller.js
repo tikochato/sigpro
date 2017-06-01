@@ -7,6 +7,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.mostrarCongelar = false;
 		mi.mostrarCopiar = false;
 		mi.modificarTabla = true;
+		mi.mostrarDescargar = false;
+		mi.totalP = 0;
 		
 		mi.redireccionSinPermisos=function(){
 			$window.location.href = '/main.jsp#!/forbidden';		
@@ -75,7 +77,17 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 						}).success(function(response){
 							if (response.success){
 								mi.crearArbol(response.prestamo);
+								mi.totalPrestamo();
+								if(response.existeCopia){
+									mi.mostrarCongelar = false;
+									mi.mostrarCopiar = false;
+								}
+							}else{
+								if (response.prestamo[0].tipoInforme == 2){
+									$utilidades.mensaje('warning','No existe informe para modificar');
+								}
 							}
+							mi.mostrarDescargar = true;
 						})
 					}else
 						$utilidades.mensaje('warning','Debe seleccionar tipo de informe a generar');
@@ -107,6 +119,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 							}
 							else
 								$utilidades.mensaje('danger','Error al congelar el informe');
+							
+							mi.mostrarDescargar = true;
 						});
 					}
 				}, function(){
@@ -115,6 +129,62 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			
 			}else
 				$utilidades.mensaje('warning','Debe de cargar un informe de préstamo para poder congelarlo');
+		}
+		
+		mi.copiar = function(){
+			if(mi.gridOptions.data.length > 0){
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Copiado"
+						, '¿Desea copiar el informe "'+mi.prestamo.text+'"?'
+						, "Copiar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){						
+						$http.post('/SReporte', {
+							accion: 'copiarInformePrestamo',
+							id: mi.gridOptions.data[0].id,
+							anio: moment(mi.fechaInicio).format('DD/MM/YYYY'),
+							idPrestamo: mi.prestamo.value,
+							t:moment().unix()
+						}).success(function(response){
+							if(response.success){
+								mi.modificarTabla = true;
+								mi.mostrarCopiar = false;
+								mi.mostrarCongelar = false;
+								mi.crearArbol(response.prestamo);
+								mi.totalPrestamo();
+								$utilidades.mensaje('success','Informe copiado');
+							}
+							else
+								$utilidades.mensaje('danger','Congelar el informe primero para poder copiarlo');
+						});
+					}
+				}, function(){
+					
+				});
+			}else
+				$utilidades.mensaje('warning','Debe de cargar un informe de préstamo para poder copiarlo');
+		}
+		
+		mi.descargar = function(){
+			$http.post('/SReporte',{
+				accion: 'exportarExcel',
+				idPrestamo: mi.prestamo.value,
+				anio: moment(mi.fechaInicio).format('DD/MM/YYYY'),
+				estadoInforme: mi.gridOptions.data[0].estadoInforme,
+				t:moment().unix()
+			}).then(
+					  function successCallback(response) {
+							var anchor = angular.element('<a/>');
+						    anchor.attr({
+						         href: 'data:application/ms-excel;base64,' + response.data,
+						         target: '_blank',
+						         download: 'Informe.xls'
+						     })[0].click();
+						  }.bind(this), function errorCallback(response){
+						 		
+						 	}
+						 );
 		}
 		
 		mi.crearArbol = function(datos){
@@ -136,9 +206,15 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 					mi.mostrarCopiar = true;
 				}
 				
+				if(mi.gridOptions.data[0].estadoInforme == 2){
+					mi.mostrarCongelar = false;
+					mi.mostrarCopiar = false;
+					mi.modificarTabla = true;
+				}
+				
 				$timeout(function(){
 				     mi.gridApi.treeBase.expandAllRows();
-				     mi.totalP = 0;
+				     mi.totalPrestamo();
 			   })
 			}
 		}
@@ -150,52 +226,52 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.gridOptions = {
 				showColumnFooter: true,
 				enableCellEdit: true,
-				rowEditWaitInterval: 1,
+				rowEditWaitInterval: -1,
 				expandAllRows : true,
 				enableExpandableRowHeader: false,
 				showTreeRowHeader: false,
 				showTreeExpandNoChildren : false,
 			    columnDefs: [
-			        { name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: '', 
+			        { name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: '',
 			        	cellTemplate: "<div class=\"ui-grid-cell-contents\" title=\"TOOLTIP\"><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.controller.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>"
 			        },
-			        { name: 'Mes1', width: 100, displayName: 'Enero', type: 'number', 
+			        { name: 'Mes1', width: 100, displayName: 'Enero', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2', 
 			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes1}}</div>'
 			        },
-			        { name: 'Mes2', width: 100, displayName: 'Febrero', type: 'number',
+			        { name: 'Mes2', width: 100, displayName: 'Febrero', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes2}}</div>'
 			        },
-			        { name: 'Mes3',  width: 100, displayName: 'Marzo', type: 'number',
+			        { name: 'Mes3',  width: 100, displayName: 'Marzo', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes3}}</div>'
 			        },
-			        { name: 'Mes4',  width: 100, displayName: 'Abril', type: 'number',
+			        { name: 'Mes4',  width: 100, displayName: 'Abril', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes4}}</div>'
 			        },
-			        { name: 'Mes5',  width: 100, displayName: 'Mayo', type: 'number',
+			        { name: 'Mes5',  width: 100, displayName: 'Mayo', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes5}}</div>'
 			        },
-			        { name: 'Mes6',  width: 100, displayName: 'Junio', type: 'number',
+			        { name: 'Mes6',  width: 100, displayName: 'Junio', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes6}}</div>'
 			        },
-			        { name: 'Mes7',  width: 100, displayName: 'Julio', type: 'number',
+			        { name: 'Mes7',  width: 100, displayName: 'Julio', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes7}}</div>'
 			        },
-			        { name: 'Mes8',  width: 100, displayName: 'Agosto', type: 'number',
+			        { name: 'Mes8',  width: 100, displayName: 'Agosto', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes8}}</div>'
 			        },
-			        { name: 'Mes9',  width: 100, displayName: 'Septiembre', type: 'number',
+			        { name: 'Mes9',  width: 100, displayName: 'Septiembre', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes9}}</div>'
 			        },
-			        { name: 'Mes10',  width: 100, displayName: 'Octubre', type: 'number',
+			        { name: 'Mes10',  width: 100, displayName: 'Octubre', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes10}}</div>'
 			        },
-			        { name: 'Mes11',  width: 100, displayName: 'Noviembre', type: 'number',
+			        { name: 'Mes11',  width: 100, displayName: 'Noviembre', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes11}}</div>'
 			        },
-			        { name: 'Mes12',  width: 100, displayName: 'Diciembre', type: 'number',
+			        { name: 'Mes12',  width: 100, displayName: 'Diciembre', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes12}}</div>'
 			        },
-			        { name: 'Total',  enableCellEdit: false, width: 150, displayName: 'Total general', type: 'number',
+			        { name: 'Total',  enableCellEdit: false, width: 150, displayName: 'Total general', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.totalP}}</div>'
 			        }
 			    ],
@@ -206,21 +282,17 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			    	  if(mi.modificarTabla == true){
 				    	  if (newValue != oldValue){
 				    		  if (mi.getSumaHijos(rowEntity, colDef) == true){
-				    			  mi.calcular(rowEntity, colDef, newValue);
 				    			  rowEntity.Total = rowEntity.Mes1 + rowEntity.Mes2 + rowEntity.Mes3 + rowEntity.Mes4 + rowEntity.Mes5 + rowEntity.Mes6 + rowEntity.Mes7 + rowEntity.Mes8 + rowEntity.Mes9 + rowEntity.Mes10 + rowEntity.Mes11 + rowEntity.Mes12 ;
-				    			  var deferred = $q.defer();
-				    			  mi.gridApi.rowEdit.setSavePromise(rowEntity, deferred.resolve());
+				    			  mi.calcular(rowEntity, colDef, newValue);				    			  
 				    		  }else{
 				    			  mi.setValor(rowEntity,colDef,oldValue);
-				    			  var deferred = $q.defer();
-				    			  mi.gridApi.rowEdit.setSavePromise(rowEntity, deferred.resolve());
 				    		  }
 				    	  }
 			    	  }else{
 			    		  mi.setValor(rowEntity,colDef,oldValue);
-		    			  var deferred = $q.defer();
-		    			  mi.gridApi.rowEdit.setSavePromise(rowEntity, deferred.resolve());
 			    	  }
+		    	    
+			    	  gridApi.rowEdit.flushDirtyRows(mi.gridApi.grid);
 			      });
 			      
 			     mi.gridApi.rowEdit.on.saveRow($scope, mi.saveRow);
@@ -229,7 +301,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		
 		mi.saveRow = function(rowEntity){
             var promise = mi.guardarRowInforme(rowEntity);
-            mi.gridApi.rowEdit.setSavePromise(rowEntity, promise);
+            mi.gridApi.rowEdit.setSavePromise(rowEntity, promise);            
+            return true;
 		}
 		
 		mi.getSumaHijos = function(rowEntity, colDef){
@@ -247,8 +320,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
       
         mi.guardarRowInforme = function(rowEntity){
             var defered = $q.defer();
-            var promise = defered.promise;
-                   
              $http.post('/SReporte', {
                     accion: 'guardarInformePrestamo',
 					tipoInforme: mi.informe.value,
@@ -271,13 +342,12 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
                     mes12: rowEntity.Mes12,
                     total: rowEntity.Total
                 }).success(function(response){
-                    if(response.success){
-                        defered.resolve();
-                    }
-                    else
-                        defered.reject()
+                        defered.resolve(true);
+                        
+                }).error(function(response){
+                	defered.reject(false);
                 });
-             return promise;
+             return defered.promise;
          }
         
 		
@@ -316,15 +386,14 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		};
 		
 		mi.totalPrestamo = function(){
-			mi.totalP = mi.gridOptions.data[0].Mes1 + mi.gridOptions.data[0].Mes2 + mi.gridOptions.data[0].Mes3 + 
-				mi.gridOptions.data[0].Mes4 + mi.gridOptions.data[0].Mes5 + mi.gridOptions.data[0].Mes6 + 
-				mi.gridOptions.data[0].Mes7 + mi.gridOptions.data[0].Mes8 + mi.gridOptions.data[0].Mes9 + 
-				mi.gridOptions.data[0].Mes10 + mi.gridOptions.data[0].Mes11 + mi.gridOptions.data[0].Mes12;
+			mi.totalP = mi.gridOptions.data[0].Total;
 		}
 		
 		mi.calcular = function(rowEntidad, colDef, valor){
-			mi.calcularPadre(rowEntidad, colDef, valor);
-			mi.totalPrestamo();
+			if (mi.saveRow(rowEntidad)){
+				mi.calcularPadre(rowEntidad, colDef, valor);
+				mi.totalPrestamo();
+			}
 		}
 		
 		mi.calcularPadre = function(rowEntidad, colDef){

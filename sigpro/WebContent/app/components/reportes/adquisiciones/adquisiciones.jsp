@@ -50,6 +50,10 @@
 					<label class="btn btn-default" ng-click="controller.copiar()" uib-tooltip="Copiar" ng-hide="!controller.mostrarCopiar"
 						tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-duplicate"></span></label>
+					
+					<label class="btn btn-default" ng-click="controller.descargar()" uib-tooltip="Descargar excel" ng-hide="!controller.mostrarDescargar"
+						tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-download-alt"></span></label>
 				</div>
 			</div>
     	</div>

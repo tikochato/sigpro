@@ -78,15 +78,16 @@ public class ReporteDAO {
 			session.beginTransaction();
 			session.saveOrUpdate(informe);
 			session.getTransaction().commit();
-			return true;
 		}
 		catch(Throwable e){
+			e.printStackTrace();
 			CLogger.write("4", ReporteDAO.class, e);
 			return false;
 		}
 		finally{
 			session.close();
 		}
+		return true;
 	}
 	
 	public static List<InformePresupuesto> getrowInformebyId(int idrow){
