@@ -1,5 +1,5 @@
 package pojo;
-// Generated May 15, 2017 4:04:46 PM by Hibernate Tools 5.2.1.Final
+// Generated Jun 2, 2017 12:28:44 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,10 +19,6 @@ import javax.persistence.Table;
 @Table(name = "tipo_moneda", catalog = "sipro")
 public class TipoMoneda implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4460403244972771061L;
 	private Integer id;
 	private String nombre;
 	private String simbolo;

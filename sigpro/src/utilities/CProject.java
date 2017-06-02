@@ -194,7 +194,7 @@ public class CProject {
 				, task.getDuration().getUnits().getName()
 				 
 				 ,itemPredecesor!=null ? itemPredecesor.objetoId : null
-						 , itemPredecesor != null ? itemPredecesor.objetoTipo : null, null, null,null,null);
+						 , itemPredecesor != null ? itemPredecesor.objetoTipo : null, null, null,null,null,null);
 		return ActividadDAO.guardarActividad(actividad) ? actividad : null;
 	}
 	

@@ -1,5 +1,5 @@
 package pojo;
-// Generated May 15, 2017 4:04:46 PM by Hibernate Tools 5.2.1.Final
+// Generated Jun 2, 2017 12:28:44 PM by Hibernate Tools 5.2.1.Final
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -10,10 +10,6 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ProductoUsuarioId implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2391639895218102545L;
 	private int productoid;
 	private String usuario;
 
@@ -43,7 +39,6 @@ public class ProductoUsuarioId implements java.io.Serializable {
 		this.usuario = usuario;
 	}
 
-	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -58,7 +53,6 @@ public class ProductoUsuarioId implements java.io.Serializable {
 						&& castOther.getUsuario() != null && this.getUsuario().equals(castOther.getUsuario())));
 	}
 
-	@Override
 	public int hashCode() {
 		int result = 17;
 
