@@ -169,6 +169,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.descargar = function(){
 			$http.post('/SReporte',{
 				accion: 'exportarExcel',
+				reporte: 'adquisiciones',
 				idPrestamo: mi.prestamo.value,
 				anio: moment(mi.fechaInicio).format('DD/MM/YYYY'),
 				estadoInforme: mi.gridOptions.data[0].estadoInforme,
@@ -291,8 +292,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			    	  }else{
 			    		  mi.setValor(rowEntity,colDef,oldValue);
 			    	  }
-		    	    
-			    	  gridApi.rowEdit.flushDirtyRows(mi.gridApi.grid);
 			      });
 			      
 			     mi.gridApi.rowEdit.on.saveRow($scope, mi.saveRow);

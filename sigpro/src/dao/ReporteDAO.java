@@ -63,7 +63,6 @@ public class ReporteDAO {
 			result = criteria.getResultList();
 		}
 		catch(Throwable e){
-			e.printStackTrace();
 			CLogger.write("3", ReporteDAO.class, e);
 		}
 		finally{
@@ -80,7 +79,6 @@ public class ReporteDAO {
 			session.getTransaction().commit();
 		}
 		catch(Throwable e){
-			e.printStackTrace();
 			CLogger.write("4", ReporteDAO.class, e);
 			return false;
 		}

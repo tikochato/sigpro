@@ -43,6 +43,7 @@ import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.CExcel;
+import utilities.CLogger;
 import utilities.Utils;
 
 @WebServlet("/SReporte")
@@ -457,74 +458,57 @@ public class SReporte extends HttpServlet {
 				}
 			}
 		}else if(accion.equals("exportarExcel")){
-			CExcel excel = new CExcel("Informe",false);
-			Integer estadoInforme = Utils.String2Int(map.get("estadoInforme"));
-			List<InformePresupuesto> informePresupuesto = ReporteDAO.existeInformeBase(idPrestamo, estadoInforme, map.get("anio"));
+			String reporte = map.get("reporte");
+			String nombreInforme = "";
+
+			Map<String,Object[]> datos = new HashMap<>();
 			
-			if(informePresupuesto.size() > 0){
-				Map<String,Object[]> datos = new HashMap<>();
-				datos.put("0", new Object[] {"Nombre", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre", "Total"});
+			if(reporte.equals("adquisiciones")){
+				nombreInforme = "Informe Ejecución Anual";
+				Integer estadoInforme = Utils.String2Int(map.get("estadoInforme"));
+				List<InformePresupuesto> informePresupuesto = ReporteDAO.existeInformeBase(idPrestamo, estadoInforme, map.get("anio"));
 				
-				int fila = 1;
-				Object[] filaTotal = new Object []{};
-				
-				for(InformePresupuesto informe : informePresupuesto){
-					if(fila==1)
-						filaTotal = new Object [] {"Total General", informe.getMes1().doubleValue(), informe.getMes2().doubleValue(), 
+				if(informePresupuesto.size() > 0){
+					
+					datos.put("0", new Object[] {"Nombre", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre", "Total"});
+					
+					int fila = 1;
+					Object[] filaTotal = new Object []{};
+					
+					for(InformePresupuesto informe : informePresupuesto){
+						if(fila==1)
+							filaTotal = new Object [] {"Total General", informe.getMes1().doubleValue(), informe.getMes2().doubleValue(), 
+									informe.getMes3().doubleValue(), informe.getMes4().doubleValue(), informe.getMes5().doubleValue(), 
+									informe.getMes6().doubleValue(), informe.getMes7().doubleValue(), informe.getMes8().doubleValue(), 
+									informe.getMes9().doubleValue(),informe.getMes10().doubleValue(),informe.getMes11().doubleValue(), 
+									informe.getMes12().doubleValue(),informe.getTotal().doubleValue()};
+						datos.put(fila+"", new Object [] {informe.getObjetoNombre(), informe.getMes1().doubleValue(), informe.getMes2().doubleValue(), 
 								informe.getMes3().doubleValue(), informe.getMes4().doubleValue(), informe.getMes5().doubleValue(), 
 								informe.getMes6().doubleValue(), informe.getMes7().doubleValue(), informe.getMes8().doubleValue(), 
 								informe.getMes9().doubleValue(),informe.getMes10().doubleValue(),informe.getMes11().doubleValue(), 
-								informe.getMes12().doubleValue(),informe.getTotal().doubleValue()};
-					datos.put(fila+"", new Object [] {informe.getObjetoNombre(), informe.getMes1().doubleValue(), informe.getMes2().doubleValue(), 
-							informe.getMes3().doubleValue(), informe.getMes4().doubleValue(), informe.getMes5().doubleValue(), 
-							informe.getMes6().doubleValue(), informe.getMes7().doubleValue(), informe.getMes8().doubleValue(), 
-							informe.getMes9().doubleValue(),informe.getMes10().doubleValue(),informe.getMes11().doubleValue(), 
-							informe.getMes12().doubleValue(),informe.getTotal().doubleValue()});
-					fila++;
+								informe.getMes12().doubleValue(),informe.getTotal().doubleValue()});
+						fila++;
+					}
+					datos.put(fila+"",filaTotal);
+					
+					exportarExcel(datos,nombreInforme,usuario,response);
 				}
-				datos.put(fila+"",filaTotal);
+			}else if (reporte.equals("cargaTrabajo")){
+				nombreInforme = "Informe de recursos (Carga de Trabajo)";
+				Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"),0);
+				Integer idComponente = Utils.String2Int(map.get("idComponente"),0);
+				Integer idProducto = Utils.String2Int(map.get("idProducto"),0);
+				Integer idSubProducto = Utils.String2Int(map.get("idSubProducto"),0);
+				String mes = map.get("mes");
 				
-				String path = excel.ExportarExcel(datos, "Informe Ejecución Anual", usuario);
-	
-				File file=new File(path);
-				if(file.exists()){
-			        FileInputStream is = null;
-			        try {
-			        	is = new FileInputStream(file);
-			        }
-			        catch (Exception e) {
-			        	
-			        }
-			        //
-			        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
-			        
-			        int readByte = 0;
-			        byte[] buffer = new byte[2024];
-	
-	                while(true)
-	                {
-	                    readByte = is.read(buffer);
-	                    if(readByte == -1)
-	                    {
-	                        break;
-	                    }
-	                    outByteStream.write(buffer);
-	                }
-	                
-	                file.delete();
-	                
-	                is.close();
-	                outByteStream.flush();
-	                outByteStream.close();
-	                
-			        byte [] outArray = Base64.encode(outByteStream.toByteArray());
-					response.setContentType("application/ms-excel");
-					response.setContentLength(outArray.length);
-					response.setHeader("Expires:", "0"); 
-					response.setHeader("Content-Disposition", "attachment; Informe_.xls");
-					OutputStream outStream = response.getOutputStream();
-					outStream.write(outArray);
-					outStream.flush();
+				List<?> actividades_proceso = ReporteDAO.getCargaTrabajo(0,objetoTipo, idPrestamo, idComponente, idProducto, idSubProducto);
+				List<?> actividades_atrasadas = ReporteDAO.getCargaTrabajo(1,objetoTipo, idPrestamo, idComponente, idProducto, idSubProducto);
+				
+				datos.put("0", new Object[] {"Responsable", "Actividades Atrasadas", "Actividades a Cumplir " + mes});
+				Object[] temp = new Object []{};
+				
+				for (int i=0; i< actividades_proceso.size(); i++){
+					
 				}
 			}
 		}
@@ -537,6 +521,56 @@ public class SReporte extends HttpServlet {
         gz.write(response_text.getBytes("UTF-8"));
         gz.close();
         output.close();
+	}
+	
+	private void exportarExcel(Map<String,Object[]> datos, String nombreInforme, String usuario, HttpServletResponse response){
+		try{
+			CExcel excel = new CExcel("Reporte",false);
+			String path = excel.ExportarExcel(datos, nombreInforme, usuario);
+			File file=new File(path);
+			if(file.exists()){
+				FileInputStream is = null;
+		        try {
+		        	is = new FileInputStream(file);
+		        }
+		        catch (Exception e) {
+		        	
+		        }
+		        //
+		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		        
+		        int readByte = 0;
+		        byte[] buffer = new byte[2024];
+
+	            while(true)
+	            {
+	                readByte = is.read(buffer);
+	                if(readByte == -1)
+	                {
+	                    break;
+	                }
+	                outByteStream.write(buffer);
+	            }
+	            
+	            file.delete();
+	            
+	            is.close();
+	            outByteStream.flush();
+	            outByteStream.close();
+	            
+		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+				response.setContentType("application/ms-excel");
+				response.setContentLength(outArray.length);
+				response.setHeader("Expires:", "0"); 
+				response.setHeader("Content-Disposition", "attachment; Informe_.xls");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+			}
+		}
+		catch(Throwable e){
+			CLogger.write("2", SReporte.class, e);
+		}
 	}
 	
 	private void setValoresMensuales(stdataEjecutado dataEjecutado){
