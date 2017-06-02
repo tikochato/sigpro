@@ -22,6 +22,10 @@ import javax.persistence.TemporalType;
 @Table(name = "meta_valor", catalog = "sipro")
 public class MetaValor implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2512877587478296376L;
 	private MetaValorId id;
 	private Meta meta;
 	private String usuario;

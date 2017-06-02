@@ -11,6 +11,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class UsuarioLogId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6423161861790498513L;
 	private String usuario;
 	private Date fecha;
 
@@ -40,6 +44,7 @@ public class UsuarioLogId implements java.io.Serializable {
 		this.fecha = fecha;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -55,6 +60,7 @@ public class UsuarioLogId implements java.io.Serializable {
 						&& castOther.getFecha() != null && this.getFecha().equals(castOther.getFecha())));
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 

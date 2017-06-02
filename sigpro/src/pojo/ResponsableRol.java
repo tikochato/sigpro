@@ -24,6 +24,10 @@ import javax.persistence.TemporalType;
 @Table(name = "responsable_rol", catalog = "sipro")
 public class ResponsableRol implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7990358289125072769L;
 	private Integer id;
 	private ResponsableTipo responsableTipo;
 	private String nombre;

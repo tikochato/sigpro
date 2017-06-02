@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ObjetoRiesgoId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 160266522550641048L;
 	private int riesgoid;
 	private int objetoId;
 	private int objetoTipo;
@@ -50,6 +54,7 @@ public class ObjetoRiesgoId implements java.io.Serializable {
 		this.objetoTipo = objetoTipo;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -63,6 +68,7 @@ public class ObjetoRiesgoId implements java.io.Serializable {
 				&& (this.getObjetoTipo() == castOther.getObjetoTipo());
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 

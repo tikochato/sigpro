@@ -11,6 +11,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class MetaValorId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1825884921579293518L;
 	private int metaid;
 	private Date fecha;
 
@@ -40,6 +44,7 @@ public class MetaValorId implements java.io.Serializable {
 		this.fecha = fecha;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -54,6 +59,7 @@ public class MetaValorId implements java.io.Serializable {
 						&& castOther.getFecha() != null && this.getFecha().equals(castOther.getFecha())));
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 

@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class SubprodtipoPropiedadId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5874448577393979832L;
 	private int subproductoTipoid;
 	private int subproductoPropiedadid;
 
@@ -39,6 +43,7 @@ public class SubprodtipoPropiedadId implements java.io.Serializable {
 		this.subproductoPropiedadid = subproductoPropiedadid;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -52,6 +57,7 @@ public class SubprodtipoPropiedadId implements java.io.Serializable {
 				&& (this.getSubproductoPropiedadid() == castOther.getSubproductoPropiedadid());
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 
