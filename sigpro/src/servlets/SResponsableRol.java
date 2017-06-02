@@ -33,7 +33,7 @@ public class SResponsableRol extends HttpServlet {
     
 	class stResposableRol {
 		int id;
-		int responsableTipo;
+		int responsableTipoId;
 		String responsableTipoNombre;
 		String nombre;
 		String descripcion;
@@ -110,7 +110,7 @@ public class SResponsableRol extends HttpServlet {
 				for (ResponsableRol responsableRol : responsableRoles){
 					stResposableRol dato = new stResposableRol();
 					dato.id = responsableRol.getId();
-					dato.responsableTipo = responsableRol.getResponsableTipo().getId();
+					dato.responsableTipoId = responsableRol.getResponsableTipo().getId();
 					dato.responsableTipoNombre = responsableRol.getResponsableTipo().getNombre();
 					dato.nombre = responsableRol.getNombre();
 					dato.descripcion = responsableRol.getDescripcion();

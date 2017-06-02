@@ -8,6 +8,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     mi.responsableTotal = "Total";
     mi.actividadesAtrasadasTotal = 0;
     mi.actividadesProcesoTotal = 0;
+    mi.exportar = false;
 
     mi.redireccionSinPermisos=function(){
 		$window.location.href = '/main.jsp#!/forbidden';		
@@ -245,7 +246,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 				idSubProducto : mi.subProducto.value
 			}).success(function(response){
 				if(response.success){
-					var cargaTrabajo = [], obj_c_processed = [];
+					mi.cargaTrabajo = [], obj_c_processed = [];
 					
 					for (var i in response.actividadesAtrasadas) {
 					    var obj = {id: response.actividadesAtrasadas[i][0], responsable: response.actividadesAtrasadas[i][1], actividadesAtrasadas: response.actividadesAtrasadas[i][2]};
@@ -258,34 +259,61 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 					    }
 
 					    obj.actividadesProceso = obj.actividadesProceso || 0;
-					    cargaTrabajo.push(obj);
+					    mi.cargaTrabajo.push(obj);
 					}
 					
 					for (var j in response.actividadesProceso){
 					    if (typeof obj_c_processed[response.actividadesProceso[j][0]] == 'undefined') {
-					    	cargaTrabajo.push({id: response.actividadesProceso[j][0], responsable: response.actividadesProceso[j][1], actividadesAtrasadas: 0, actividadesProceso: response.actividadesProceso[j][2]});
+					    	mi.cargaTrabajo.push({id: response.actividadesProceso[j][0], responsable: response.actividadesProceso[j][1], actividadesAtrasadas: 0, actividadesProceso: response.actividadesProceso[j][2]});
 					    }
 					}
 					
 					mi.rowCollection = [];
-					mi.rowCollection = cargaTrabajo;
+					mi.rowCollection = mi.cargaTrabajo;
 			        mi.displayedCollection = [].concat(mi.rowCollection);
 			        
 			        var totalAtrasadas = 0;
 			        var totalProceso = 0;
 			        
-			        for (var i=0; i<cargaTrabajo.length; i++){
-			        	totalAtrasadas += Number(cargaTrabajo[i].actividadesAtrasadas);
-			        	totalProceso += Number(cargaTrabajo[i].actividadesProceso);
+			        for (var i=0; i<mi.cargaTrabajo.length; i++){
+			        	totalAtrasadas += Number(mi.cargaTrabajo[i].actividadesAtrasadas);
+			        	totalProceso += Number(mi.cargaTrabajo[i].actividadesProceso);
 			        }
 			        
 			        mi.idTotal = 0;
 			        mi.responsableTotal = "Total";
 			        mi.actividadesAtrasadasTotal = totalAtrasadas;
 			        mi.actividadesProcesoTotal = totalProceso;
+			        
+			        mi.exportar = true;
 				}
 			});
 		}
+	}
+	
+	mi.exportarExcel = function(){
+		$http.post('/SReporte',{
+			accion: 'exportarExcel',
+			reporte: 'cargaTrabajo',
+			objetoTipo: mi.tObjeto.value,
+			idPrestamo : mi.prestamo.value,
+			idComponente : mi.componente.value,
+			idProducto : mi.producto.value,
+			idSubProducto : mi.subProducto.value,
+			mes: mi.mesActual,
+			t:moment().unix()
+		}).then(
+				  function successCallback(response) {
+						var anchor = angular.element('<a/>');
+					    anchor.attr({
+					         href: 'data:application/ms-excel;base64,' + response.data,
+					         target: '_blank',
+					         download: 'Informe.xls'
+					     })[0].click();
+					  }.bind(this), function errorCallback(response){
+					 		
+					 	}
+					 );
 	}
 	
 	mi.reset();
