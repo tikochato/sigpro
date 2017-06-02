@@ -487,10 +487,10 @@ public class SProyecto extends HttpServlet {
 					}
 					
 					//prestamo
-					Prestamo prestamo = null;
+					Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(proyecto.getId(), objetoTipo);
 					ObjetoPrestamo objetoPrestamo = null;
 					
-					if (esnuevo){
+					if (prestamo==null){
 						
 						// revisar esta variable plazoEjecucionUe que deberia ir en el penultimo null
 						
@@ -516,7 +516,7 @@ public class SProyecto extends HttpServlet {
 						objetoPrestamos.add(objetoPrestamo);
 						PrestamoDAO.guardarPrestamo(prestamo, objetoPrestamo);
 					}else{
-						prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(proyecto.getId(), objetoTipo);
+						
 						prestamo.setAmortizado(amortizado);
 						prestamo.setAniosGracia(aniosGracia);
 						prestamo.setAniosPlazo(aniosPlazo);

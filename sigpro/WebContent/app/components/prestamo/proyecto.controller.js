@@ -366,6 +366,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.editar = function() {
 		if(mi.proyecto!=null && mi.proyecto.id!=null){
+			mi.prestamo = [];
 			mi.esNuevoDocumento = false;
 			mi.poryectotipoid = mi.proyecto.proyectotipoid;
 			mi.proyectotiponombre=mi.proyecto.proyectotipo;
