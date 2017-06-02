@@ -23,6 +23,9 @@
 						<label class="btn btn-default" ng-click="controller.refrescar();" uib-tooltip="Generar" 
 							tooltip-placement="bottom">
 						<span class="glyphicon glyphicon-equalizer"></span></label>
+						<label class="btn btn-default" ng-click="controller.exportarExcel();" uib-tooltip="Exportar a Excel" ng-hide="!controller.exportar"
+							tooltip-placement="bottom">
+						<span class="glyphicon glyphicon-download-alt"></span></label>
 					</div>
 				</div>  
 			    <div class="row">
