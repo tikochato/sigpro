@@ -1,5 +1,5 @@
 package pojo;
-// Generated 30/05/2017 12:52:02 PM by Hibernate Tools 5.2.3.Final
+// Generated Jun 2, 2017 12:28:44 PM by Hibernate Tools 5.2.1.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,13 +25,13 @@ public class InformePresupuesto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5611729189521328739L;
+	private static final long serialVersionUID = 8059106346886531225L;
 	private Integer id;
 	private EstadoInforme estadoInforme;
 	private int idPrestamo;
-	private int idObjetoTipo;
-	private int posicionArbol;
+	private int objetoTipoId;
 	private int objetoTipo;
+	private Integer posicionArbol;
 	private String objetoNombre;
 	private int idPredecesor;
 	private int objetoTipoPredecesor;
@@ -58,24 +58,24 @@ public class InformePresupuesto implements java.io.Serializable {
 	public InformePresupuesto() {
 	}
 
-	public InformePresupuesto(EstadoInforme estadoInforme, int idObjetoTipo, int idPrestamo, int objetoTipo, String objetoNombre,
-			int idPredecesor) {
-		this.estadoInforme = estadoInforme;
-		this.idObjetoTipo = idObjetoTipo;
+	public InformePresupuesto(int idPrestamo, int objetoTipoId, int objetoTipo, int idPredecesor,
+			int objetoTipoPredecesor) {
 		this.idPrestamo = idPrestamo;
+		this.objetoTipoId = objetoTipoId;
 		this.objetoTipo = objetoTipo;
-		this.objetoNombre = objetoNombre;
 		this.idPredecesor = idPredecesor;
+		this.objetoTipoPredecesor = objetoTipoPredecesor;
 	}
 
-	public InformePresupuesto(EstadoInforme estadoInforme, int idObjetoTipo, int idPrestamo, int objetoTipo, int posicionArbol, String objetoNombre,
-			int idPredecesor, int objetoTipoPredecesor, BigDecimal mes1, BigDecimal mes2, BigDecimal mes3, BigDecimal mes4, BigDecimal mes5,
-			BigDecimal mes6, BigDecimal mes7, BigDecimal mes8, BigDecimal mes9, BigDecimal mes10, BigDecimal mes11,
-			BigDecimal mes12, BigDecimal total, Date anio, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, Integer estado) {
+	public InformePresupuesto(EstadoInforme estadoInforme, int idPrestamo, int objetoTipoId, int objetoTipo,
+			Integer posicionArbol, String objetoNombre, int idPredecesor, int objetoTipoPredecesor, BigDecimal mes1,
+			BigDecimal mes2, BigDecimal mes3, BigDecimal mes4, BigDecimal mes5, BigDecimal mes6, BigDecimal mes7,
+			BigDecimal mes8, BigDecimal mes9, BigDecimal mes10, BigDecimal mes11, BigDecimal mes12, BigDecimal total,
+			Date anio, String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion,
+			Integer estado) {
 		this.estadoInforme = estadoInforme;
-		this.idObjetoTipo = idObjetoTipo;
 		this.idPrestamo = idPrestamo;
+		this.objetoTipoId = objetoTipoId;
 		this.objetoTipo = objetoTipo;
 		this.posicionArbol = posicionArbol;
 		this.objetoNombre = objetoNombre;
@@ -132,16 +132,16 @@ public class InformePresupuesto implements java.io.Serializable {
 	public void setIdPrestamo(int idPrestamo) {
 		this.idPrestamo = idPrestamo;
 	}
-	
+
 	@Column(name = "objeto_tipo_id", nullable = false)
-	public int getIdObjetoTipo() {
-		return this.idObjetoTipo;
+	public int getObjetoTipoId() {
+		return this.objetoTipoId;
 	}
 
-	public void setIdObjetoTipo(int idObjetoTipo) {
-		this.idObjetoTipo = idObjetoTipo;
+	public void setObjetoTipoId(int objetoTipoId) {
+		this.objetoTipoId = objetoTipoId;
 	}
-	
+
 	@Column(name = "objeto_tipo", nullable = false)
 	public int getObjetoTipo() {
 		return this.objetoTipo;
@@ -150,13 +150,13 @@ public class InformePresupuesto implements java.io.Serializable {
 	public void setObjetoTipo(int objetoTipo) {
 		this.objetoTipo = objetoTipo;
 	}
-	
-	@Column(name = "posicion_arbol", nullable = false)
-	public int getPosicionArbol() {
+
+	@Column(name = "posicion_arbol")
+	public Integer getPosicionArbol() {
 		return this.posicionArbol;
 	}
 
-	public void setPosicionArbol(int posicionArbol) {
+	public void setPosicionArbol(Integer posicionArbol) {
 		this.posicionArbol = posicionArbol;
 	}
 
@@ -177,7 +177,7 @@ public class InformePresupuesto implements java.io.Serializable {
 	public void setIdPredecesor(int idPredecesor) {
 		this.idPredecesor = idPredecesor;
 	}
-	
+
 	@Column(name = "objeto_tipo_predecesor", nullable = false)
 	public int getObjetoTipoPredecesor() {
 		return this.objetoTipoPredecesor;
@@ -294,7 +294,7 @@ public class InformePresupuesto implements java.io.Serializable {
 	public void setMes12(BigDecimal mes12) {
 		this.mes12 = mes12;
 	}
-	
+
 	@Column(name = "total", precision = 11)
 	public BigDecimal getTotal() {
 		return this.total;

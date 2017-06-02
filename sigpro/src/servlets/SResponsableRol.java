@@ -24,12 +24,15 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ResponsableRolDAO;
 import pojo.ResponsableRol;
+
 import pojo.ResponsableTipo;
 import utilities.Utils;
+
 
 @WebServlet("/SResponsableRol")
 public class SResponsableRol extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
     
 	class stResposableRol {
 		int id;
@@ -42,15 +45,23 @@ public class SResponsableRol extends HttpServlet {
 		String fechaCreacion;
 		String fechaActualizacion;
 		int estado;
-	};
+	}
+       
+    
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+		response.getWriter().append("{ \"success\": false }").append(request.getContextPath());
+	}
+
+	
+	
 	
     public SResponsableRol() {
         super();
     }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
+	
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String response_text = "";
@@ -178,7 +189,26 @@ public class SResponsableRol extends HttpServlet {
 				}
 				else
 					response_text = "{ \"success\": false }";
+			} else if(accion.equals("getResponsableRoles")){
+				List<ResponsableRol> responsableRoles = ResponsableRolDAO.getResponsableRol(1);
+				List<stResposableRol> stResponsableRoles = new ArrayList<>();
+				for (ResponsableRol responsableRol : responsableRoles){
+					stResposableRol temp = new stResposableRol();
+					temp.id = responsableRol.getId();
+					temp.nombre = responsableRol.getNombre();
+					temp.descripcion = responsableRol.getDescripcion();
+					temp.responsableTipoId = responsableRol.getResponsableTipo().getId();
+					temp.responsableTipoNombre = responsableRol.getResponsableTipo().getNombre();
+					
+					stResponsableRoles.add(temp);
+				}
+				
+				response_text=new GsonBuilder().serializeNulls().create().toJson(stResponsableRoles);
+		        response_text = String.join("", "\"responsableroles\":",response_text);
+		        response_text = String.join("", "{\"success\":true,", response_text,"}");
+
 			}
+				
 		}
 		catch (Exception ex){
 			response_text = String.join("","{ \"success\": false }");
@@ -192,6 +222,7 @@ public class SResponsableRol extends HttpServlet {
         gz.write(response_text.getBytes("UTF-8"));
         gz.close();
         output.close();
+
 	}
 
 }

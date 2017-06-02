@@ -464,7 +464,7 @@ public class SReporte extends HttpServlet {
 			Map<String,Object[]> datos = new HashMap<>();
 			
 			if(reporte.equals("adquisiciones")){
-				nombreInforme = "Informe Ejecución Anual";
+				nombreInforme = "Informe Ejecuciï¿½n Anual";
 				Integer estadoInforme = Utils.String2Int(map.get("estadoInforme"));
 				List<InformePresupuesto> informePresupuesto = ReporteDAO.existeInformeBase(idPrestamo, estadoInforme, map.get("anio"));
 				
@@ -502,10 +502,10 @@ public class SReporte extends HttpServlet {
 				String mes = map.get("mes");
 				
 				List<?> actividades_proceso = ReporteDAO.getCargaTrabajo(0,objetoTipo, idPrestamo, idComponente, idProducto, idSubProducto);
-				List<?> actividades_atrasadas = ReporteDAO.getCargaTrabajo(1,objetoTipo, idPrestamo, idComponente, idProducto, idSubProducto);
+				//List<?> actividades_atrasadas = ReporteDAO.getCargaTrabajo(1,objetoTipo, idPrestamo, idComponente, idProducto, idSubProducto);
 				
 				datos.put("0", new Object[] {"Responsable", "Actividades Atrasadas", "Actividades a Cumplir " + mes});
-				Object[] temp = new Object []{};
+				//Object[] temp = new Object []{};
 				
 				for (int i=0; i< actividades_proceso.size(); i++){
 					

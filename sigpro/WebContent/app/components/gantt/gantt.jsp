@@ -5,9 +5,39 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="ganttController as ganttc" class="maincontainer all_page" id="title">
+		<script type="text/ng-template" id="editarPrestamo.jsp">
+    		<%@ include file="/app/components/gantt/editarPrestamo.jsp"%>
+  		</script>
+  		<script type="text/ng-template" id="editarComponente.jsp">
+    		<%@ include file="/app/components/gantt/editarComponente.jsp"%>
+  		</script>
+  		<script type="text/ng-template" id="editarProducto.jsp">
+    		<%@ include file="/app/components/gantt/editarProducto.jsp"%>
+  		</script>
+  		<script type="text/ng-template" id="editarSubproducto.jsp">
+    		<%@ include file="/app/components/gantt/editarSubproducto.jsp"%>
+  		</script>
+		<script type="text/ng-template" id="editarActividad.jsp">
+    		<%@ include file="/app/components/gantt/editarActividad.jsp"%>
+			
+  		</script>
+  		
+  		<script type="text/ng-template" id="buscarPorProyecto.jsp">
+    		<%@ include file="/app/components/prestamo/buscarPorProyecto.jsp"%>
+  	 	</script>
+  		
 	    <div class="panel panel-default">
 	    	<div class="panel-heading"><h3>Gantt</h3></div>
 	    </div>
+	    <div class="grid_loading" ng-hide="!ganttc.mostrarcargando">
+		  	<div class="msg">
+		      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
+				  <br /><br />
+				  <b>Cargando, por favor espere...</b>
+			  </span>
+			</div>
+		</div>
+		
 		<div class="subtitulo">
 			{{ ganttc.objetoTipoNombre }} {{ ganttc.proyectoNombre }}
 		</div>
@@ -30,7 +60,8 @@
 		 <div class="row" align="center" >
 		 
 		    <div class="gantt-chart">
-				<div ds:gantt-chart id="ganttChartView" items="items" settings="settings" auto-refresh="{{ true }}" style="min-height: 400px"></div>
+				<div ds:gantt-chart id="ganttChartView" items="items" 
+				settings="settings" auto-refresh="{{ true }}" style="min-height: 400px"></div>
 	    	</div>
 			<br/>
 		</div>

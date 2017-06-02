@@ -95,6 +95,15 @@ public class Utils {
 
 		return jsonText;
 	}
+	
+	public static String getJSonString(String nombre, Object objeto) {
+
+		String jsonText = new GsonBuilder().serializeNulls().create().toJson(objeto);
+
+		jsonText = String.join("", "\"" + nombre + "\":", jsonText);
+
+		return jsonText;
+	}
 
 	public static Integer String2Int(String value) {
 

@@ -61,7 +61,12 @@ public class SActividad extends HttpServlet {
 		Integer fuente;
 		String longitud;
 		String latitud;
+		Integer prececesorId;
+		Integer predecesorTipo;
+		Integer duracion;
+		String duracionDimension;
 		BigDecimal costo;
+
 		int estado;
 	}
 
@@ -148,6 +153,7 @@ public class SActividad extends HttpServlet {
 				temp.longitud = actividad.getLongitud();
 				temp.latitud = actividad.getLatitud();
 				temp.costo = actividad.getCosto();
+							
 				stactividads.add(temp);
 			}
 
@@ -385,6 +391,82 @@ public class SActividad extends HttpServlet {
 				+ "\"id\": " + (actividad!=null ? actividad.getId():"0") +", "
 				+ "\"nombre\": \"" + (actividad!=null ? actividad.getNombre():"Indefinido") +"\" }");
 
+		}
+		else if (accion.equals("getActividadPorId")){
+			Integer id = Utils.String2Int(map.get("id"));
+			Actividad actividad = ActividadDAO.getActividadPorId(id,usuario);
+			stactividad temp = new stactividad();
+			temp.descripcion = actividad.getDescripcion();
+			temp.estado = actividad.getEstado();
+			temp.fechaActualizacion = Utils.formatDateHour(actividad.getFechaActualizacion());
+			temp.fechaCreacion = Utils.formatDateHour(actividad.getFechaCreacion());
+			temp.fechaInicio = Utils.formatDate(actividad.getFechaInicio());
+			temp.fechaFin = Utils.formatDate(actividad.getFechaFin());
+			temp.id = actividad.getId();
+			temp.nombre = actividad.getNombre();
+			temp.usuarioActualizo = actividad.getUsuarioActualizo();
+			temp.usuarioCreo = actividad.getUsuarioCreo();
+			temp.actividadtipoid = actividad.getActividadTipo().getId();
+			temp.actividadtiponombre = actividad.getActividadTipo().getNombre();
+			temp.porcentajeavance = actividad.getPorcentajeAvance();
+			temp.programa = actividad.getPrograma();
+			temp.subprograma = actividad.getSubprograma();
+			temp.proyecto = actividad.getProyecto();
+			temp.actividad = actividad.getActividad();
+			temp.obra = actividad.getObra();
+			temp.fuente = actividad.getFuente();
+			temp.longitud = actividad.getLongitud();
+			temp.latitud = actividad.getLatitud();
+			temp.prececesorId = actividad.getPredObjetoId();
+			temp.predecesorTipo = actividad.getPredObjetoTipo();
+			temp.duracion = actividad.getDuracion();
+			temp.duracionDimension = actividad.getDuracionDimension();
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
+	        response_text = String.join("", "\"actividad\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+			
+		}else if(accion.equals("guardarModal")){
+			boolean result = false;
+			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			
+			String nombre = map.get("nombre");
+			String descripcion = map.get("descripcion");
+			Date fechaInicio = Utils.dateFromString(map.get("fechainicio"));
+			Date fechaFin = Utils.dateFromString(map.get("fechafin"));
+			Integer porcentajeAvance = Utils.getParameterInteger(map, "porcentajeavance");
+			Integer duracion = Utils.String2Int(map.get("duracion"), null);
+			String duracionDimension = map.get("duracionDimension");
+			int actividadtipoid =Utils.getParameterInteger(map, "actividadtipoid");
+			ActividadTipo actividadTipo= new ActividadTipo();
+			actividadTipo.setId(actividadtipoid);
+
+			Actividad actividad = ActividadDAO.getActividadPorId(id,usuario);
+			actividad.setNombre(nombre);
+			actividad.setDescripcion(descripcion);
+			actividad.setUsuarioActualizo(usuario);
+			actividad.setFechaActualizacion(new DateTime().toDate());
+			actividad.setFechaInicio(fechaInicio);
+			actividad.setFechaFin(fechaFin);
+			actividad.setPorcentajeAvance(porcentajeAvance);
+			actividad.setActividadTipo(actividadTipo);
+			actividad.setDuracion(duracion);
+			actividad.setDuracionDimension(duracionDimension);
+			result = ActividadDAO.guardarActividad(actividad);
+			if (result){
+				stactividad temp = new stactividad();
+				temp.id = actividad.getId();
+				temp.nombre = actividad.getNombre();
+				temp.duracion = actividad.getDuracion();
+				temp.duracionDimension = actividad.getDuracionDimension();
+				temp.fechaInicio = (actividad.getPredObjetoId() == null ? Utils.formatDate(actividad.getFechaInicio()) : "");
+				response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
+		        response_text = String.join("", "\"actividad\":",response_text);
+		        response_text = String.join("", "{\"success\":true,", response_text,"}");
+						
+			}else{
+				response_text = "{ \"success\": false }";
+			}
 		}
 		else{
 			response_text = "{ \"success\": false }";

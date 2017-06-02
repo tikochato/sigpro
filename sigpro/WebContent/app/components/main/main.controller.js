@@ -174,6 +174,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/responsablerol/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'responsablerolController\'" class="all_page"></div>'
             })
+            .when('/planejecucion/:proyectoId?',{
+            	template: '<div load-on-demand="\'planejecucionController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -431,6 +434,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   script: '/app/components/responsablerol/responsablerol.controller.js',
 	    	   template: '/app/components/responsablerol/responsablerol.jsp'
 	       },
+	       {
+	    	   name: 'planejecucionController',
+	    	   script: '/app/components/reportes/planejecucion/planejecucion.controller.js',
+	    	   template: '/app/components/reportes/planejecucion/planejecucion.jsp'
+	       }
 
 	   ];
 	   $loadOnDemandProvider.config(modules);

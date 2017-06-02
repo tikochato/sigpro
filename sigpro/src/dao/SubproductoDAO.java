@@ -302,4 +302,16 @@ public class SubproductoDAO {
 		}
 		return ret;
 	}
+	
+	public String getSubproductoJson(int id){
+		
+		Subproducto pojo = getSubproductoPorId(id);
+		EstructuraPojo estructuraPojo = new EstructuraPojo();
+		estructuraPojo.id = pojo.getId();
+		estructuraPojo.nombre = pojo.getNombre();
+		
+		String subproducto =   Utils.getJSonString("subproducto", estructuraPojo);
+		return subproducto;
+		
+	}
 }
