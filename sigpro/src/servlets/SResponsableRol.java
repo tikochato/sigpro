@@ -38,7 +38,6 @@ public class SResponsableRol extends HttpServlet {
 		int id;
 		int responsableTipoId;
 		String responsableTipoNombre;
-		int responsableTipoId;
 		String nombre;
 		String descripcion;
 		String usuarioCreo;
