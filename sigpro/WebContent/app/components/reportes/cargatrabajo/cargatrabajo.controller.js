@@ -2,7 +2,6 @@ var app = angular.module('cargatrabajoController', ['ngTouch','smart-table']);
 app.controller('cargatrabajoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 	var mi = this;
-	console.log("Checkpoint");
 	i18nService.setCurrentLang('es');
 	
     mi.idTotal = 0;
