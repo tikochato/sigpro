@@ -880,6 +880,11 @@ public class SProyecto extends HttpServlet {
 				proyectometa.metaFinalId = 0;
 				proyectometa.metaFinal = "";
 				
+				Date fechaMaxActividad = null;
+				if (fechaMaxActividad != null){
+					proyectometa.metaFecha = Utils.formatDateHour(fechaMaxActividad);
+				}
+				
 				//Obteniendo meta real
 				List<Meta> metas = MetaDAO.getMetasPagina(-1, -1, producto.getId(), OBJETO_ID_PRODUCTO, null, META_ID_REAL, null, null, null, null);
 				if (metas!= null && !metas.isEmpty()){
@@ -888,7 +893,6 @@ public class SProyecto extends HttpServlet {
 					proyectometa.datoTipoId = Meta.getDatoTipo().getId();
 					MetaValor metavalor = MetaValorDAO.getMetaValorPorMetaid(Meta.getId());
 					proyectometa.metaRealId = Meta.getId();
-					proyectometa.metaFecha = Utils.formatDateHour(metavalor.getId().getFecha());
 					switch(metas.get(0).getDatoTipo().getId()){
 						case DATOTIPO_TEXTO: 
 							if (null != metavalor.getValorString()){
