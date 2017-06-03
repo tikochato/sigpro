@@ -366,6 +366,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.editar = function() {
 		if(mi.proyecto!=null && mi.proyecto.id!=null){
+			mi.prestamo = [];
 			mi.esNuevoDocumento = false;
 			mi.poryectotipoid = mi.proyecto.proyectotipoid;
 			mi.proyectotiponombre=mi.proyecto.proyectotipo;
@@ -869,7 +870,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			accion : 'numeroTipoMonedas'	
 		}, function(pagina, elementosPorPagina) {
 			return {
-				accion : 'getTipoMnedaPagina',
+				accion : 'getTipoMonedaPagina',
 				pagina : pagina,
 				numerotipomoneda : elementosPorPagina
 			};
@@ -1126,7 +1127,9 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 	};
 
 	mi.ok = function() {
+		
 		if (mi.nombreArchivo != '') {
+			mi.mostrarcargando=true;
 			mi.cargar();
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar un archivo');

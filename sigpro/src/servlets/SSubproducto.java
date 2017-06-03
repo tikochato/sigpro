@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.lang.reflect.Type;
@@ -40,6 +41,7 @@ public class SSubproducto extends HttpServlet {
 	
 	private static final long serialVersionUID = 1457438583225714402L;
 	String usuario ="";
+	
 	class stdatadinamico {
 		String id;
 		String tipo;
@@ -47,6 +49,33 @@ public class SSubproducto extends HttpServlet {
 		String valor;
 		String valor_f;
 	}
+	
+	static class stsubproducto {
+		Integer id;
+		Producto producto;
+		Integer subProductoTipoId;
+		String subProductoTipo;
+		Integer unidadEjecutora;
+		String nombreUnidadEjecutora;
+		String nombre;
+		String descripcion;
+		String usuarioCreo;
+		String usuarioActualizo;
+		Date fechaCreacion;
+		Date fechaActualizacion;
+		int estado;
+		Long snip;
+		Integer programa;
+		Integer subprograma;
+		Integer proyecto;
+		Integer actividad;
+		Integer obra;
+		Integer fuente;
+		String latitud;
+		String longitud;
+	}
+	
+	
 
 	public SSubproducto() {
 		super();
@@ -67,7 +96,6 @@ public class SSubproducto extends HttpServlet {
 		if (parametro.get("accion").compareTo("cargar") == 0) {
 			listar(parametro, response);
 		} else if (parametro.get("accion").compareTo("guardar") == 0) {
-			
 			guardar(parametro, response,request);
 		} else if (parametro.get("accion").compareTo("borrar") == 0) {
 			eliminar(parametro, response);
@@ -81,6 +109,10 @@ public class SSubproducto extends HttpServlet {
 			listarComponentes(parametro, response);
 		} else if (parametro.get("accion").compareTo("obtenerSubproductoPorId") == 0) {
 			obtenerSubproductoPorId(parametro, response);
+		}else if (parametro.get("accion").compareTo("getSubproductoPorId") == 0) {
+			getSubproductoPorId(parametro, response);
+		}else if (parametro.get("accion").compareTo("guardarModal") == 0){
+			guardarModal(parametro, response,request);
 		}
 	}
 
@@ -287,10 +319,54 @@ public class SSubproducto extends HttpServlet {
 
 
 		String resultadoJson = "";
-
-		resultadoJson = Utils.getJSonString("subproductos", SubproductoDAO.getSubproductosPagina(pagina, registros,componenteid,usuario,
+		
+		resultadoJson = Utils.getJSonString("subproductos", SubproductoDAO.getSubproductosPagina(pagina, registros,componenteid,
 				filtro_nombre,filtro_usuario_creo
-				,filtro_fecha_creacion,columna_ordenada,orden_direccion));
+				,filtro_fecha_creacion,columna_ordenada,orden_direccion,usuario));
+		
+		/*
+		List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(pagina, registros,componenteid,
+				filtro_nombre,filtro_usuario_creo
+				,filtro_fecha_creacion,columna_ordenada,orden_direccion,usuario);
+		
+		List<stsubproducto> listaSubProducto = new ArrayList<stsubproducto>();
+		
+		for (Subproducto subproducto : subproductos){
+			stsubproducto temp = new stsubproducto();
+			temp.id = subproducto.getId();
+			temp.producto = subproducto.getProducto();
+			temp.nombre = subproducto.getNombre();
+			temp.descripcion = subproducto.getDescripcion();
+			temp.usuarioCreo = subproducto.getUsuarioCreo();
+			temp.usuarioActualizo = subproducto.getUsuarioActualizo();
+			temp.fechaCreacion = subproducto.getFechaCreacion();
+			temp.fechaActualizacion = subproducto.getFechaActualizacion();
+			temp.estado = subproducto.getEstado();
+			temp.snip = subproducto.getSnip();
+			temp.programa = subproducto.getPrograma();
+			temp.subprograma = subproducto.getSubprograma();
+			temp.proyecto = subproducto.getProyecto();
+			temp.actividad = subproducto.getActividad();
+			temp.obra = subproducto.getObra();
+			temp.fuente = subproducto.getFuente();
+			temp.latitud = subproducto.getLatitud();
+			temp.longitud = subproducto.getLongitud();
+			
+			if (subproducto.getSubproductoTipo() != null){
+				temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
+				temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
+			}
+			
+			if (subproducto.getUnidadEjecutora() != null){
+				temp.unidadEjecutora = subproducto.getUnidadEjecutora().getUnidadEjecutora();
+				temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
+			}
+			
+			listaSubProducto.add(temp);
+		}
+		
+		resultadoJson=new GsonBuilder().serializeNulls().create().toJson(listaSubProducto);
+		resultadoJson =  "\"subproductos\":" + resultadoJson;*/
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";
@@ -306,7 +382,7 @@ public class SSubproducto extends HttpServlet {
 		int registros = Utils.String2Int(parametro.get("registros"), 20);
 
 		String resultadoJson = "";
-
+		
 		resultadoJson = Utils.getJSonString("subproductos", ComponenteDAO.getComponentesPagina(pagina, registros,usuario));
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
@@ -326,9 +402,66 @@ public class SSubproducto extends HttpServlet {
 		resultadoJson = String.join("","{ \"success\": ",(subproducto!=null && subproducto.getId()!=null ? "true" : "false"),", "
 			+ "\"id\": " + (subproducto!=null ? subproducto.getId():"0") +", "
 			+ "\"nombre\": \"" + (subproducto!=null ? subproducto.getNombre():"Indefinido") +"\" }");
-		
-		Utils.writeJSon(response, resultadoJson);
-		
+		Utils.writeJSon(response, resultadoJson);	
 	}
-
+	
+	private void getSubproductoPorId(Map<String, String> parametro, HttpServletResponse response) throws IOException {
+		Integer id = parametro.get("id")!=null ? Integer.parseInt(parametro.get("id")) : 0;
+		Subproducto subproducto = SubproductoDAO.getSubproductoPorId(id,usuario);
+		
+		stsubproducto temp = new stsubproducto();
+		temp.id = subproducto.getId();
+		temp.nombre = subproducto.getNombre();
+		temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
+		temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
+		temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
+		temp.unidadEjecutora = subproducto.getUnidadEjecutora().getUnidadEjecutora();
+		String resultadoJson = Utils.getJSonString("subproducto", temp);
+		resultadoJson = "{\"success\":true," + resultadoJson + "}";
+		Utils.writeJSon(response, resultadoJson);	
+	}
+	
+	private void guardarModal(Map<String, String> map, HttpServletResponse response, HttpServletRequest request) throws IOException {
+		String resultadoJson="";
+		int id = Utils.String2Int(map.get("id"));
+		Subproducto subproducto;
+		boolean ret = false;
+		
+		try{
+			String nombre = map.get("nombre");
+			Integer tiposubproductoId = Utils.String2Int(map.get("tiposubproductoid")); 
+			Integer unidadEjecutoraId = Utils.String2Int(map.get("unidadEjecutora"));
+			
+			SubproductoTipo subproductoTipo = new SubproductoTipo();
+			subproductoTipo.setId(tiposubproductoId);
+			UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
+			unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
+			
+			
+			subproducto = SubproductoDAO.getSubproductoPorId(id);
+			if (subproducto!=null){	
+				subproducto.setSubproductoTipo(subproductoTipo);
+				subproducto.setUnidadEjecutora(unidadEjecutora);
+				subproducto.setNombre(nombre);
+			}
+			
+			ret = SubproductoDAO.guardarSubproducto(subproducto);
+			stsubproducto temp = new stsubproducto();
+			if (ret){
+				temp.id = subproducto.getId();
+				temp.nombre = subproducto.getNombre();
+				temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
+				temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
+				temp.unidadEjecutora = subproducto.getUnidadEjecutora().getUnidadEjecutora();
+				temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
+			}
+			resultadoJson = Utils.getJSonString("subproducto", temp);
+			resultadoJson = "{\"success\":true," + resultadoJson + "}";
+			
+			}
+			catch (Throwable e){
+				resultadoJson = "{ \"success\": false }";
+			}
+		Utils.writeJSon(response, resultadoJson);
+	}
 }

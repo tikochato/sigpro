@@ -298,6 +298,49 @@ public class SComponente extends HttpServlet {
 				response_text = "{ \"success\": false }";
 			}
 		}
+		else if(accion.equals("guardarModal")){
+			try{
+				boolean result = false;
+				
+				int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+				String nombre = map.get("nombre");	
+				int componentetipoid = map.get("componentetipoid")!=null ? Integer.parseInt(map.get("componentetipoid")) : 0;	
+				int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;	
+				ComponenteTipo componenteTipo= new ComponenteTipo();
+				componenteTipo.setId(componentetipoid);
+				UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
+				unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
+
+				Componente componente;
+				componente = ComponenteDAO.getComponentePorId(id,usuario);
+				componente.setNombre(nombre);
+				componente.setComponenteTipo(componenteTipo);
+				componente.setUnidadEjecutora(unidadEjecutora);
+				componente.setUsuarioActualizo(usuario);
+				componente.setFechaActualizacion(new DateTime().toDate());
+					
+				result = ComponenteDAO.guardarComponente(componente);
+				
+				stcomponente temp = new stcomponente();
+				if (result){
+					temp.id = componente.getId();
+					temp.nombre = componente.getNombre();
+					temp.componentetipoid = componente.getComponenteTipo().getId();
+					temp.componentetiponombre = componente.getComponenteTipo().getNombre();
+					temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+					response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
+			        response_text = String.join("", "\"componente\":",response_text);
+			        response_text = String.join("", "{\"success\":true,", response_text,"}");
+				}else{
+					response_text = "{ \"success\": false }";
+				}
+				
+			}
+			catch (Throwable e){
+				response_text = "{ \"success\": false }";
+			}
+		}
 		else if(accion.equals("borrarComponente")){
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
@@ -369,7 +412,22 @@ public class SComponente extends HttpServlet {
 				+ "\"id\": " + (componente!=null ? componente.getId():"0") +", "
 				+ "\"nombre\": \"" + (componente!=null ? componente.getNombre():"Indefinido") +"\" }");
 
+		}else if(accion.equals("getComponentePorId")){
+			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			Componente componente = ComponenteDAO.getComponentePorId(id,usuario);
+			stcomponente temp = new stcomponente();
+			if (componente!=null){
+				temp.id = componente.getId();
+				temp.nombre = componente.getNombre();
+				temp.componentetipoid = componente.getComponenteTipo().getId();
+				temp.componentetiponombre = componente.getComponenteTipo().getNombre();
+				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
+				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+			}
 
+			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
+	        response_text = String.join("", "\"componente\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 
 		}
 		else{
