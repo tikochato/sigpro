@@ -214,6 +214,46 @@ public class SProyecto extends HttpServlet {
 
 
  
+		} else if (accion.equals("getProyectosPorUnidadEjecutora")){
+			Integer unidadEjecutoraId = Utils.String2Int(map.get("unidadEjecutoraId"), 0);
+			List<Proyecto> proyectos = ProyectoDAO.getProyectosPorUnidadEjecutora(usuario, unidadEjecutoraId);
+
+			response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
+
+			List <datos> datos_ = new ArrayList<datos>();
+			for (Proyecto proyecto : proyectos){
+				datos dato = new datos();
+				dato.id = proyecto.getId();
+				dato.nombre = proyecto.getNombre();
+				dato.objetivo = proyecto.getObjetivo();
+				dato.descripcion = proyecto.getDescripcion();
+				dato.snip = proyecto.getSnip();
+				dato.proyectotipo = proyecto.getProyectoTipo().getNombre();
+				dato.proyectotipoid = proyecto.getProyectoTipo().getId();
+				dato.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
+				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getUnidadEjecutora();
+				dato.cooperante = proyecto.getCooperante().getNombre();
+				dato.cooperanteid = proyecto.getCooperante().getId();
+				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
+				dato.usuarioCreo = proyecto.getUsuarioCreo();
+				dato.fechaactualizacion = Utils.formatDateHour( proyecto.getFechaActualizacion());
+				dato.usuarioactualizo = proyecto.getUsuarioActualizo();
+				dato.programa = proyecto.getPrograma();
+				dato.subprograma = proyecto.getSubprograma();
+				dato.proyecto = proyecto.getProyecto();
+				dato.obra = proyecto.getObra();
+				dato.actividad = proyecto.getActividad();
+				dato.fuente = proyecto.getFuente();
+				dato.longitud = proyecto.getLongitud();
+				dato.latitud = proyecto.getLatitud();
+				datos_.add(dato);
+			}
+
+			response_text = new GsonBuilder().serializeNulls().create().toJson(datos_);
+			response_text = String.join("", "\"entidades\":", response_text);
+			response_text = String.join("", "{\"success\":true,", response_text, "}");
+ 
 		}else if(accion.equals("getProyectoPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroProyecto = map.get("numeroproyecto")!=null  ? Integer.parseInt(map.get("numeroproyecto")) : 0;
@@ -499,10 +539,10 @@ public class SProyecto extends HttpServlet {
 					}
 					
 					//prestamo
-					Prestamo prestamo = null;
+					Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(proyecto.getId(), objetoTipo);
 					ObjetoPrestamo objetoPrestamo = null;
 					
-					if (esnuevo){
+					if (prestamo==null){
 						
 						// revisar esta variable plazoEjecucionUe que deberia ir en el penultimo null
 						
@@ -528,7 +568,7 @@ public class SProyecto extends HttpServlet {
 						objetoPrestamos.add(objetoPrestamo);
 						PrestamoDAO.guardarPrestamo(prestamo, objetoPrestamo);
 					}else{
-						prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(proyecto.getId(), objetoTipo);
+						
 						prestamo.setAmortizado(amortizado);
 						prestamo.setAniosGracia(aniosGracia);
 						prestamo.setAniosPlazo(aniosPlazo);
@@ -615,6 +655,54 @@ public class SProyecto extends HttpServlet {
 				response_text = "{ \"success\": false }";
 			}
 
+		}else
+		
+		if (accion.equals("guardarModal")){
+			try{
+				int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+				Proyecto proyecto;
+				
+				String nombre = map.get("nombre");
+				
+				ProyectoTipo proyectoTipo = new ProyectoTipo();
+				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): null);
+	
+				UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
+				unidadEjecutora.setUnidadEjecutora(map.get("unidadejecutoraid")!=null ? Integer.parseInt(map.get("unidadejecutoraid")): null);
+	
+				Cooperante cooperante = new Cooperante();
+				cooperante.setId(map.get("cooperanteid")!=null ? Integer.parseInt(map.get("cooperanteid")): null);
+			
+				
+				proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
+				proyecto.setNombre(nombre);
+				proyecto.setProyectoTipo(proyectoTipo);
+				proyecto.setUnidadEjecutora(unidadEjecutora);
+				proyecto.setCooperante(cooperante);
+				proyecto.setUsuarioActualizo(usuario);
+				proyecto.setFechaActualizacion(new DateTime().toDate());
+			 
+				ProyectoDAO.guardarProyecto(proyecto);
+				
+				datos temp = new datos();
+				temp.id = proyecto.getId();
+				temp.nombre = proyecto.getNombre();
+				temp.proyectotipoid = proyecto.getProyectoTipo().getId();
+				temp.proyectotipo = proyecto.getProyectoTipo().getNombre();
+				temp.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
+				temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getUnidadEjecutora();
+				temp.cooperante = proyecto.getCooperante().getNombre();
+				temp.cooperanteid = proyecto.getCooperante().getId();	
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
+	        response_text = String.join("", "\"proyecto\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+
+			
+			}
+			catch (Throwable e){
+				response_text = "{ \"success\": false }";
+			}
 		}
 		else if(accion.equals("borrarProyecto")){
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
@@ -689,6 +777,26 @@ public class SProyecto extends HttpServlet {
 	        gz.write(response_text.getBytes("UTF-8"));
 	        gz.close();
 	        output.close();
+		
+		}
+		else if(accion.equals("getProyectoPorId")){
+			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
+			
+			datos temp = new datos();
+			if (proyecto!=null){
+				temp.id = proyecto.getId();
+				temp.nombre = proyecto.getNombre();
+				temp.proyectotipoid = proyecto.getProyectoTipo().getId();
+				temp.proyectotipo = proyecto.getProyectoTipo().getNombre();
+				temp.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
+				temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getUnidadEjecutora();
+				temp.cooperante = proyecto.getCooperante().getNombre();
+				temp.cooperanteid = proyecto.getCooperante().getId();	
+			}
+			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
+	        response_text = String.join("", "\"proyecto\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 
 		}else if(accion.equals("guardarProyectoMeta")){
 			stproyectometa proyectometa = new stproyectometa();
@@ -746,7 +854,7 @@ public class SProyecto extends HttpServlet {
 					case 4: sangria = "\t\t\t"; break;
 					case 5: sangria = "\t\t\t\t"; break;
 					default: sangria = "";
-				}
+		}
 				datos.put(fila+"", new Object [] { sangria + proyectometa.nombre 
 						,proyectometa.unidadDeMedidaId
 						,proyectometa.metaReal
@@ -896,21 +1004,21 @@ public class SProyecto extends HttpServlet {
 					switch(metas.get(0).getDatoTipo().getId()){
 						case DATOTIPO_TEXTO: 
 							if (null != metavalor.getValorString()){
-								proyectometa.metaReal = metavalor.getValorString();
+							proyectometa.metaReal = metavalor.getValorString();
 							}else{
 								proyectometa.metaReal = "";
 							}
 							break;
 						case DATOTIPO_ENTERO: 
 							if (null != metavalor.getValorEntero()){
-								proyectometa.metaReal = metavalor.getValorEntero().toString();
+							proyectometa.metaReal = metavalor.getValorEntero().toString();
 							}else{
 								proyectometa.metaReal = "";
 							}
 							break;
 						case DATOTIPO_DECIMAL: 
 							if (null != metavalor.getValorDecimal()){
-								proyectometa.metaReal = metavalor.getValorDecimal().toString();
+							proyectometa.metaReal = metavalor.getValorDecimal().toString();
 							}else{
 								proyectometa.metaReal = "";
 							}
@@ -920,10 +1028,10 @@ public class SProyecto extends HttpServlet {
 							break;
 						case DATOTIPO_FECHA: 
 							if (null != metavalor.getValorTiempo()){
-								proyectometa.metaReal = Utils.formatDateHour(metavalor.getValorTiempo());
+							proyectometa.metaReal = Utils.formatDateHour(metavalor.getValorTiempo());
 							}else{
 								proyectometa.metaReal = "";
-							}
+					}
 							break;
 
 					}
@@ -940,21 +1048,21 @@ public class SProyecto extends HttpServlet {
 					switch(metas.get(0).getDatoTipo().getId()){
 						case DATOTIPO_TEXTO: 
 							if (null != metavalor.getValorString()){
-								proyectometa.metaAnualPlanificada = metavalor.getValorString();
+							proyectometa.metaAnualPlanificada = metavalor.getValorString();
 							}else{
 								proyectometa.metaAnualPlanificada = "";
 							}
 							break;
 						case DATOTIPO_ENTERO: 
 							if (null != metavalor.getValorEntero()){
-								proyectometa.metaAnualPlanificada = metavalor.getValorEntero().toString();
+							proyectometa.metaAnualPlanificada = metavalor.getValorEntero().toString();
 							}else{
 								proyectometa.metaAnualPlanificada = "";
 							}
 							break;
 						case DATOTIPO_DECIMAL: 
 							if (null != metavalor.getValorDecimal()){
-								proyectometa.metaAnualPlanificada = metavalor.getValorDecimal().toString();
+							proyectometa.metaAnualPlanificada = metavalor.getValorDecimal().toString();
 							}else{
 								proyectometa.metaAnualPlanificada = "";
 							}
@@ -964,7 +1072,7 @@ public class SProyecto extends HttpServlet {
 							break;
 						case DATOTIPO_FECHA: 
 							if (null != metavalor.getValorTiempo()){
-								proyectometa.metaAnualPlanificada = Utils.formatDateHour(metavalor.getValorTiempo());
+							proyectometa.metaAnualPlanificada = Utils.formatDateHour(metavalor.getValorTiempo());
 							}else{
 								proyectometa.metaAnualPlanificada = "";
 							}
@@ -984,21 +1092,21 @@ public class SProyecto extends HttpServlet {
 					switch(metas.get(0).getDatoTipo().getId()){
 						case DATOTIPO_TEXTO: 
 							if (null != metavalor.getValorString()){
-								proyectometa.lineaBase = metavalor.getValorString();
+							proyectometa.lineaBase = metavalor.getValorString();
 							}else{
 								proyectometa.lineaBase = "";
 							}
 							break;
 						case DATOTIPO_ENTERO: 
 							if (null != metavalor.getValorEntero()){
-								proyectometa.lineaBase = metavalor.getValorEntero().toString();
+							proyectometa.lineaBase = metavalor.getValorEntero().toString();
 							}else{
 								proyectometa.lineaBase = "";
 							}
 							break;
 						case DATOTIPO_DECIMAL: 
 							if (null != metavalor.getValorDecimal()){
-								proyectometa.lineaBase = metavalor.getValorDecimal().toString();
+							proyectometa.lineaBase = metavalor.getValorDecimal().toString();
 							}else{
 								proyectometa.lineaBase = "";
 							}
@@ -1008,7 +1116,7 @@ public class SProyecto extends HttpServlet {
 							break;
 						case DATOTIPO_FECHA: 
 							if (null != metavalor.getValorTiempo()){
-								proyectometa.lineaBase = Utils.formatDateHour(metavalor.getValorTiempo());
+							proyectometa.lineaBase = Utils.formatDateHour(metavalor.getValorTiempo());
 							}else{
 								proyectometa.lineaBase = "";
 							}
@@ -1028,21 +1136,21 @@ public class SProyecto extends HttpServlet {
 					switch(metas.get(0).getDatoTipo().getId()){
 						case DATOTIPO_TEXTO: 
 							if (null != metavalor.getValorString()){
-								proyectometa.metaFinal = metavalor.getValorString();
+							proyectometa.metaFinal = metavalor.getValorString();
 							}else{
 								proyectometa.metaFinal = "";
 							}
 							break;
 						case DATOTIPO_ENTERO: 
 							if (null != metavalor.getValorEntero()){
-								proyectometa.metaFinal = metavalor.getValorEntero().toString();
+							proyectometa.metaFinal = metavalor.getValorEntero().toString();
 							}else{
 								proyectometa.metaFinal = "";
 							}
 							break;
 						case DATOTIPO_DECIMAL: 
 							if (null != metavalor.getValorDecimal()){
-								proyectometa.metaFinal = metavalor.getValorDecimal().toString();
+							proyectometa.metaFinal = metavalor.getValorDecimal().toString();
 							}else{
 								proyectometa.metaFinal = "";
 							}
@@ -1052,7 +1160,7 @@ public class SProyecto extends HttpServlet {
 							break;
 						case DATOTIPO_FECHA: 
 							if (null != metavalor.getValorTiempo()){
-								proyectometa.metaFinal = Utils.formatDateHour(metavalor.getValorTiempo());
+							proyectometa.metaFinal = Utils.formatDateHour(metavalor.getValorTiempo());
 							}else{
 								proyectometa.metaFinal = "";
 							}

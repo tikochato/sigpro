@@ -94,8 +94,13 @@ public class SPrestamo extends HttpServlet {
 		BigDecimal montoAsignadoUeQtz;
 		BigDecimal desembolsoAFechaUeUsd;
 		BigDecimal montoPorDesembolsarUeUsd;
+		String nombreEntidadEjecutora;
 		int cooperanteid;
 		String cooperantenombre;
+		String usuarioCreo;
+		String usuarioActualizo;
+		String fechaCreacion;
+		String fechaActualizacion;
 	}
        
     
@@ -202,6 +207,12 @@ public class SPrestamo extends HttpServlet {
 				
 				temp.unidadEjecutora = prestamo.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadEjecutoraNombre = prestamo.getUnidadEjecutora().getNombre();
+				
+				temp.usuarioCreo = prestamo.getUsuarioCreo();
+				temp.usuarioActualizo = prestamo.getUsuarioActualizo();
+				temp.fechaCreacion = Utils.formatDate(prestamo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDate(prestamo.getFechaActualizacion());
+				temp.nombreEntidadEjecutora = prestamo.getUnidadEjecutora().getEntidad().getNombre();
 				
 					response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 			        response_text = String.join("", "\"prestamo\":",response_text);

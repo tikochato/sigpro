@@ -30,15 +30,17 @@ public class SUnidadEjecutora extends HttpServlet {
 
 	Map<String, String> parametro = Utils.getParams(request);
 
-	if (parametro.get("accion").compareTo("cargar") == 0) {
-	    listar(parametro, response);
-	} else if (parametro.get("accion").compareTo("crear") == 0) {
-	    crear(parametro, response);
-	} else if (parametro.get("accion").compareTo("actualizar") == 0) {
-	    actualizar(parametro, response);
-	} else if (parametro.get("accion").compareTo("totalElementos") == 0) {
-	    total(response);
-	}
+		if (parametro.get("accion").compareTo("cargar") == 0) {
+		    listar(parametro, response);
+		} else if (parametro.get("accion").compareTo("crear") == 0) {
+		    crear(parametro, response);
+		} else if (parametro.get("accion").compareTo("actualizar") == 0) {
+		    actualizar(parametro, response);
+		} else if (parametro.get("accion").compareTo("totalElementos") == 0) {
+		    total(response);
+		} else if (parametro.get("accion").compareTo("cargarPorEntidad") == 0){
+			listarPorEntidad(parametro, response);
+		}
     }
 
     private void listar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
@@ -48,6 +50,25 @@ public class SUnidadEjecutora extends HttpServlet {
 		String resultadoJson = "";
 	
 		resultadoJson = UnidadEjecutoraDAO.getJson(pagina, registros);
+	
+		if (Utils.isNullOrEmpty(resultadoJson)) {
+		    resultadoJson = "{\"success\":false}";
+		} else {
+		    resultadoJson = "{\"success\":true,"
+		                    + resultadoJson
+		                    + "}";
+		}
+	
+		Utils.writeJSon(response, resultadoJson);
+    }
+    
+    private void listarPorEntidad(Map<String, String> parametro, HttpServletResponse response) throws IOException {
+		int pagina = Utils.String2Int(parametro.get("pagina"), 1);
+		int registros = Utils.String2Int(parametro.get("registros"), 20);
+		int entidadId = Utils.String2Int(parametro.get("entidadId"), 0);
+		String resultadoJson = "";
+	
+		resultadoJson = UnidadEjecutoraDAO.getJsonPorEntidad(pagina, registros, entidadId);
 	
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 		    resultadoJson = "{\"success\":false}";

@@ -131,7 +131,6 @@ public class SAgenda extends HttpServlet {
 			
 			String path = excel.ExportarExcel(datos, "Agenda de Actividades", usuario);
 
-			
 			File file=new File(path);
 			if(file.exists()){
 		        FileInputStream is = null;
@@ -171,13 +170,8 @@ public class SAgenda extends HttpServlet {
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
-	            
 			}
-			
 		}
-		
-		
-		
 	}
 	
 	private List<stagenda> obtenerListado(int proyectoId, String usuario){
@@ -205,7 +199,6 @@ public class SAgenda extends HttpServlet {
 			agenda.fechaFin = "";
 			lstagenda.add(agenda);
 			
-			
 			List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
 					null, null, null, null, null, usuario);
 			for (Producto producto : productos){
@@ -231,70 +224,51 @@ public class SAgenda extends HttpServlet {
 					agenda.fechaInicio = "";
 					agenda.fechaFin = "";
 					
-					
 					lstagenda.add(agenda);
 					for (Actividad actividad : actividades ){
-						agenda = new stagenda();
-						agenda.objetoTipo = OBJETO_ID_ACTIVIDAD;
-						agenda.objetoTipoNombre = "Actividad";
-						agenda.id = actividad.getId();
-						agenda.nombre =  actividad.getNombre();
-						agenda.fechaInicio = Utils.formatDate(actividad.getFechaInicio());
-						agenda.fechaFin = Utils.formatDate(actividad.getFechaFin());
-						agenda.estado = actividad.getPorcentajeAvance() == 0 ? "Nuevo" :
-							(actividad.getPorcentajeAvance() > 0 && actividad.getPorcentajeAvance() <100 ? 
-									"Proceso" : "Finalizado") ;
-						
-						lstagenda.add(agenda);
+						lstagenda = ObtenerActividades(actividad,usuario,lstagenda, OBJETO_ID_ACTIVIDAD);
 					}
 				}
 				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
 						null, null, null, null, null, usuario);
 				for (Actividad actividad : actividades ){
-					agenda = new stagenda();
-					agenda.objetoTipo = OBJETO_ID_ACTIVIDAD;
-					agenda.objetoTipoNombre = "Actividad";
-					agenda.id = actividad.getId();
-					agenda.nombre =   actividad.getNombre();
-					agenda.fechaInicio = Utils.formatDate(actividad.getFechaInicio());
-					agenda.fechaFin = Utils.formatDate(actividad.getFechaFin());
-					agenda.estado = actividad.getPorcentajeAvance() == 0 ? "Nuevo" :
-						(actividad.getPorcentajeAvance() > 0 && actividad.getPorcentajeAvance() <100 ? 
-								"Proceso" : "Finalizado") ;
-					lstagenda.add(agenda);
+					lstagenda = ObtenerActividades(actividad,usuario,lstagenda,OBJETO_ID_ACTIVIDAD);
 				}
-
 			}
 			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), OBJETO_ID_COMPONENTE,
 					null, null, null, null, null, usuario);
 			for (Actividad actividad : actividades ){
-				agenda = new stagenda();
-				agenda.objetoTipo = OBJETO_ID_ACTIVIDAD;
-				agenda.objetoTipoNombre = "Actividad";
-				agenda.id = actividad.getId();
-				agenda.nombre =   actividad.getNombre();
-				agenda.fechaInicio = Utils.formatDate(actividad.getFechaInicio());
-				agenda.fechaFin = Utils.formatDate(actividad.getFechaFin());
-				agenda.estado = actividad.getPorcentajeAvance() == 0 ? "Nuevo" :
-					(actividad.getPorcentajeAvance() > 0 && actividad.getPorcentajeAvance() <100 ? 
-							"Proceso" : "Finalizado") ;
-				lstagenda.add(agenda);
+				lstagenda = ObtenerActividades(actividad,usuario,lstagenda,OBJETO_ID_ACTIVIDAD);
 			}
 		}
 		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, proyectoId, OBJETO_ID_PROYECTO,
 				null, null, null, null, null, usuario);
 		for (Actividad actividad : actividades ){
-			stagenda agenda = new stagenda();
-			agenda.objetoTipo = OBJETO_ID_ACTIVIDAD;
-			agenda.objetoTipoNombre = "Actividad";
-			agenda.id = actividad.getId();
-			agenda.nombre =   actividad.getNombre();
-			agenda.fechaInicio = Utils.formatDate(actividad.getFechaInicio());
-			agenda.fechaFin = Utils.formatDate(actividad.getFechaFin());
-			agenda.estado = actividad.getPorcentajeAvance() == 0 ? "Nuevo" :
-							(actividad.getPorcentajeAvance() > 0 && actividad.getPorcentajeAvance() <100 ? 
-									"Proceso" : "Finalizado") ;
-			lstagenda.add(agenda);
+			lstagenda = ObtenerActividades(actividad,usuario,lstagenda,OBJETO_ID_ACTIVIDAD);
+		}
+		
+		return lstagenda;
+	}
+	
+	private List<stagenda> ObtenerActividades(Actividad actividad, String usuario, List<stagenda> lstagenda, int tipo_Objeto){
+		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, actividad.getId(), OBJETO_ID_ACTIVIDAD, 
+				null, null,null, null, null, usuario);
+		
+		stagenda agenda = new stagenda();
+		agenda = new stagenda();
+		agenda.objetoTipo = tipo_Objeto;
+		agenda.objetoTipoNombre = "Actividad";
+		agenda.id = actividad.getId();
+		agenda.nombre =   actividad.getNombre();
+		agenda.fechaInicio = Utils.formatDate(actividad.getFechaInicio());
+		agenda.fechaFin = Utils.formatDate(actividad.getFechaFin());
+		agenda.estado = actividad.getPorcentajeAvance() == 0 ? "Nuevo" :
+						(actividad.getPorcentajeAvance() > 0 && actividad.getPorcentajeAvance() <100 ? 
+								"Proceso" : "Finalizado") ;
+		lstagenda.add(agenda);
+		
+		for(Actividad subActividad : actividades){
+			lstagenda = ObtenerActividades(subActividad, usuario, lstagenda, tipo_Objeto + 1);
 		}
 		
 		return lstagenda;

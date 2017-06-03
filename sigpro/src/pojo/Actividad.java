@@ -1,6 +1,7 @@
 package pojo;
-// Generated May 15, 2017 4:04:46 PM by Hibernate Tools 5.2.1.Final
+// Generated Jun 2, 2017 12:28:44 PM by Hibernate Tools 5.2.1.Final
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,7 +28,7 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1662239078560448076L;
+	private static final long serialVersionUID = -1704487350357334819L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
 	private String nombre;
@@ -55,6 +56,7 @@ public class Actividad implements java.io.Serializable {
 	private Integer predObjetoTipo;
 	private String latitud;
 	private String longitud;
+	private BigDecimal costo;
 	private Set<ActividadPropiedadValor> actividadPropiedadValors = new HashSet<ActividadPropiedadValor>(0);
 	private Set<ActividadUsuario> actividadUsuarios = new HashSet<ActividadUsuario>(0);
 
@@ -83,7 +85,8 @@ public class Actividad implements java.io.Serializable {
 			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
 			Integer actividad, Integer obra, Integer fuente, int objetoId, int objetoTipo, int duracion,
 			String duracionDimension, Integer predObjetoId, Integer predObjetoTipo, String latitud, String longitud,
-			Set<ActividadPropiedadValor> actividadPropiedadValors, Set<ActividadUsuario> actividadUsuarios) {
+			BigDecimal costo, Set<ActividadPropiedadValor> actividadPropiedadValors,
+			Set<ActividadUsuario> actividadUsuarios) {
 		this.actividadTipo = actividadTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -110,6 +113,7 @@ public class Actividad implements java.io.Serializable {
 		this.predObjetoTipo = predObjetoTipo;
 		this.latitud = latitud;
 		this.longitud = longitud;
+		this.costo = costo;
 		this.actividadPropiedadValors = actividadPropiedadValors;
 		this.actividadUsuarios = actividadUsuarios;
 	}
@@ -136,7 +140,7 @@ public class Actividad implements java.io.Serializable {
 		this.actividadTipo = actividadTipo;
 	}
 
-	@Column(name = "nombre", nullable = false, length = 200)
+	@Column(name = "nombre", nullable = false, length = 1000)
 	public String getNombre() {
 		return this.nombre;
 	}
@@ -363,6 +367,15 @@ public class Actividad implements java.io.Serializable {
 
 	public void setLongitud(String longitud) {
 		this.longitud = longitud;
+	}
+
+	@Column(name = "costo", precision = 10, scale = 0)
+	public BigDecimal getCosto() {
+		return this.costo;
+	}
+
+	public void setCosto(BigDecimal costo) {
+		this.costo = costo;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actividad")

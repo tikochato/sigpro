@@ -163,7 +163,12 @@
 							<span class="label-icon" ng-click="actividadc.buscarActividadTipo()"><i class="glyphicon glyphicon-search"></i></span>
 							<label for="campo3" class="floating-label">* Tipo de Actividad</label>
 						</div>
-						
+						<div class="form-group" >
+						    <input type="text" class="inputText" id="iactividadResponsable" name="iactividadResponsable" ng-model="actividadc.actividad.actividadResponsable" ng-value="actividadc.actividad.actividadResponsable" 
+							ng-click="actividadc.buscarActividadResponsable()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+							<span class="label-icon" ng-click="actividadc.buscarActividadResponsable()"><i class="glyphicon glyphicon-search"></i></span>
+							<label for="campo3" class="floating-label">* Responsable</label>
+						</div>
 						
 						<div class="form-group" >
 						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="actividadc.coordenadas" ng-value="actividadc.coordenadas" 
@@ -215,6 +220,11 @@
 						     ng-model="actividadc.actividad.porcentajeavance" ng-value="actividadc.actividad.porcentajeavance"   
 						     onblur="this.setAttribute('value', this.value);"  min="0" max="100" ng-required="true" >
 						   <label class="floating-label">* Avance %</label>
+						</div>
+						
+						<div class="form-group" >
+					       <input type="number" class="inputText" ng-model="actividadc.actividad.costo" ng-value="actividadc.actividad.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
+					       <label for="iprog" class="floating-label">Costo</label>
 						</div>
 						
 						<div ng-repeat="campo in actividadc.camposdinamicos">

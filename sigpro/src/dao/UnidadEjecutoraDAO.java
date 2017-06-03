@@ -139,11 +139,54 @@ public class UnidadEjecutoraDAO {
 		}
 		return ret;
 	}
+	
+	public static List<UnidadEjecutora> getPaginaPorEntidad(int pagina, int registros, int entidadId) {
+		List<UnidadEjecutora> ret = new ArrayList<UnidadEjecutora>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try {
+			Query<UnidadEjecutora> criteria = session.createQuery("SELECT e FROM UnidadEjecutora e "
+					+"inner join e.entidad en where en.entidad=:entidadId",
+					UnidadEjecutora.class);
+			criteria.setParameter("entidadId", entidadId);
+			criteria.setFirstResult(((pagina - 1) * (registros)));
+			criteria.setMaxResults(registros);
+			ret = criteria.getResultList();
+		} catch (Throwable e) {
+			CLogger.write("5", UnidadEjecutoraDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
+	}
 
 	public static String getJson(int pagina, int registros) {
 		String jsonEntidades = "";
 
 		List<UnidadEjecutora> pojos = getPagina(pagina, registros);
+
+		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
+
+		for (UnidadEjecutora pojo : pojos) {
+			EstructuraPojo estructuraPojo = new EstructuraPojo();
+
+			estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora();
+			estructuraPojo.nombreUnidadEjecutora = pojo.getNombre();
+			estructuraPojo.entidad = pojo.getEntidad().getEntidad();
+			estructuraPojo.nombreEntidad = pojo.getEntidad().getNombre();
+			
+
+			listaEstructuraPojos.add(estructuraPojo);
+		}
+
+		jsonEntidades = Utils.getJSonString("unidadesEjecutoras", listaEstructuraPojos);
+
+		return jsonEntidades;
+	}
+	
+	public static String getJsonPorEntidad(int pagina, int registros, int entidadId) {
+		String jsonEntidades = "";
+
+		List<UnidadEjecutora> pojos = getPaginaPorEntidad(pagina, registros, entidadId);
 
 		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
 

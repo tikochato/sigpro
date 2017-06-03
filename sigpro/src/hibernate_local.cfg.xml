@@ -38,6 +38,7 @@
         <mapping class="pojo.EjecucionEstado" />
         <mapping class="pojo.Documento" />
         <mapping class="pojo.Entidad" />
+        <mapping class="pojo.EstadoInforme" />
         <mapping class="pojo.EstadoTabla" />
         <mapping class="pojo.Formulario" />
         <mapping class="pojo.FormularioItem" />
@@ -48,6 +49,7 @@
         <mapping class="pojo.Hito" />
         <mapping class="pojo.HitoResultado" />
         <mapping class="pojo.HitoTipo" />
+        <mapping class="pojo.InformePresupuesto" />
         <mapping class="pojo.InteresTipo" />
         <mapping class="pojo.Meta" />
         <mapping class="pojo.MetaTipo" />
@@ -56,7 +58,7 @@
         <mapping class="pojo.ObjetoFormulario" />
         <mapping class="pojo.ObjetoPrestamo" />
         <mapping class="pojo.ObjetoRecurso" />
-        <mapping class="pojo.Objeto_responsable_rol" />
+        <mapping class="pojo.ObjetoResponsableRol" />
         <mapping class="pojo.ObjetoRiesgo" />
         <mapping class="pojo.ObjetoRiesgoId" />
         <mapping class="pojo.Permiso" />
@@ -82,8 +84,8 @@
         <mapping class="pojo.RecursoPropiedad" />
         <mapping class="pojo.RecursoTipo" />
         <mapping class="pojo.RecursoUnidadMedida" />
-        <mapping class="pojo.Responsable_rol" />
-        <mapping class="pojo.Responsable_tipo" />
+        <mapping class="pojo.ResponsableRol" />
+        <mapping class="pojo.ResponsableTipo" />
         <mapping class="pojo.Riesgo" />
         <mapping class="pojo.RiesgoPropiedad" />
         <mapping class="pojo.RiesgoPropiedadValor" />
