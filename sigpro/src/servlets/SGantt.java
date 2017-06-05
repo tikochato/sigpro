@@ -362,6 +362,7 @@ public class SGantt extends HttpServlet {
 				",\"isMilestone\":",isMilestone? "\"true\"" : "\"false\"",
 				"}"
 			);
+		System.out.println(idItem);
 		return cadena.replaceAll(",,", ",");
 	}
 

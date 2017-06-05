@@ -9,6 +9,8 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 	mi.proyectoNombre = "";
 	mi.objetoTipoNombre = "";
 	mi.formatofecha = 'yyyy';
+	mi.mostrar = false;
+	mi.tabla = {};
 	
 	mi.fechaOptions = {
 			datepickerMode:"year",
@@ -17,27 +19,64 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 	
 	$window.document.title = $utilidades.sistema_nombre+' - Plan de Ejecución';
 	i18nService.setCurrentLang('es');
-	 
-	$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyectoId }).success(
-			function(response) {
-				mi.proyectoid = response.id;
-				mi.proyectoNombre = response.nombre;
-				mi.objetoTipoNombre = "Proyecto";
-	});
-	 
-	$http.post('/SPrestamo', { accion: 'getPrestamo', objetoId:$routeParams.proyectoId,
-		objetoTipo:1,
-		t: (new Date()).getTime()})
 	
-	 .then(function(response){
-		 mi.prestamo = response.data.prestamo;
-		 mi.setPorcentaje(1);
-		 mi.setPorcentaje(2);
-		 mi.setPorcentaje(3);
-		 mi.setPorcentaje(4);
-		 mi.setPorcentaje(5);
-	});	
-	 
+	
+	mi.prestamos = [
+		{'value' : 0, 'text' : 'Seleccionar una opción'},
+	];
+	mi.prestamo = mi.prestamos[0];
+	
+	 mi.etiquetas =["Ejecución Fiscal", "Plazo de Ejecución", "Ejecución Financiera"];
+
+	  mi.dataRadar = [
+		    [65, 59, 90],
+		    [28, 48, 40],
+		    [110, 110, 110]
+		  ];
+	  
+	  mi.radarColors = ['#b1cad7','#FDB45C','#fafafa']
+	
+	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
+			function(response) {
+				mi.prestamos = [];
+				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione una opción'});
+				if (response.success){
+					for (var i = 0; i < response.entidades.length; i++){
+						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
+					}
+					mi.prestamo = mi.prestamos[0];
+				}
+	});
+	
+	mi.generarReporte = function (){
+		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: mi.prestamo.value }).success(
+				function(response) {
+					mi.proyectoid = response.id;
+					mi.proyectoNombre = response.nombre;
+					mi.objetoTipoNombre = "Proyecto";
+					
+					$http.post('/SPrestamo', { accion: 'getPrestamo', objetoId:mi.prestamo.value,
+						objetoTipo:1,
+						t: (new Date()).getTime()})
+					
+					 .then(function(response){
+						 mi.prestamo = response.data.prestamo;
+						 //mi.tabla.push({'etiqueta1',})
+						 mi.setPorcentaje(1);
+						 mi.setPorcentaje(2);
+						 mi.setPorcentaje(3);
+						 mi.setPorcentaje(4);
+						 mi.setPorcentaje(5);
+						 mi.mostrar = true;
+					});	
+					
+		});
+		
+		
+	}
+	
+	
+	
 	 mi.exportarExcel = function(){
 			$http.post('/SAgenda', { accion: 'exportarExcel', proyectoid:$routeParams.proyectoId,t:moment().unix()
 				  } ).then(
@@ -53,7 +92,6 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 							 	}
 							 );
 		};
-		
 		
 	
 	mi.setPorcentaje = function(tipo){
@@ -92,6 +130,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 					if (isNaN(n))
 						n = 0.00;
 					mi.prestamo.plazoEjecucionUe = Number(n.toFixed(2));	
+					mi.dataRadar[0][1] = mi.prestamo.plazoEjecucionUe.toFixed(0);
 				}	
 			}
 	};
@@ -103,6 +142,8 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 	
 
 	};
+	
+
 	
 	
 }]);

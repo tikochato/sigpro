@@ -18,6 +18,13 @@
 		<div class="row" align="center" >
 			<div class="col-sm-12 ">
 			<div class="row">
+				<div class="form-group col-sm-5">
+					<select  class="inputText" ng-model="planc.prestamo"
+						ng-options="a.text for a in planc.prestamos"></select>
+					<label for="prestamo" class="floating-label">Préstamos</label>
+				</div>
+				
+				
 				<div class="col-sm-5">
 					<div class="form-group" >
 					  <input type="text"  class="inputText" uib-datepicker-popup="{{planc.formatofecha}}" ng-model="planc.ejercicioFiscal" is-open="planc.ef_abierto"
@@ -31,12 +38,20 @@
 					</div>
 				</div>
 				
+				<div class="form-group col-sm-1" >
+					<label class="btn btn-default" ng-click="planc.generarReporte()" uib-tooltip="Generar" 
+						tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-new-window"></span></label>
+				</div>
+				
+				
+				
 			</div>
 				
 			
 			
 			
-				<div class="panel panel-default">
+				<div class="panel panel-default" ng-hide="!planc.mostrar">
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">
@@ -157,12 +172,13 @@
 								</div>
 							</div>
 						</div>
-						
-						
-						
-						
 					</div>
 				</div>
+				
+				<canvas id="radar" class="chart chart-radar" ng-hide="!planc.mostrar"
+				  chart-data="planc.dataRadar" chart-options="planc.options" chart-labels="planc.etiquetas"
+				  chart-colors = "planc.radarColors">
+				</canvas> 
 					
 			</div>
 		  
