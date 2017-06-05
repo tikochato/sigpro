@@ -58,12 +58,12 @@
 			</div>
     	</div>
     	<br>
-    	<div style="max-height: 60%; width: 100%;">
+    	<div style="max-height: 70%; width: 100%;">
 	    	<div>
 				<div><h4><b>Ejecución Financiera Anual</b></h4></div>
 			</div>
 			<br>
-			<div id="grid1" ui-grid="controller.gridOptions" 
+			<div id="grid1" ui-grid="controller.gridOptions" style="width: 100%; height: 100%"
 				ui-grid-grouping 
 				ui-grid-edit 
 				ui-grid-row-edit 
