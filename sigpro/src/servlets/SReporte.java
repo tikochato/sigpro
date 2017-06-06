@@ -54,31 +54,6 @@ public class SReporte extends HttpServlet {
 	private static int OBJETO_ID_PRODUCTO = 3;
 	private static int OBJETO_ID_SUBPRODUCTO = 4;
 	private static int OBJETO_ID_ACTIVIDAD= 5;
-    
-	class stdataEjecutado {
-		Integer idObjetoTipo;
-		Integer id_tabla;
-		Integer objetoTipo;
-		Integer posicionArbol;
-		String objetoTipoNombre;
-		String nombre;
-		Integer idPredecesor;
-		Integer objetoTipoPredecesor;
-		String hijo;
-		BigDecimal Mes1;
-		BigDecimal Mes2;
-		BigDecimal Mes3;
-		BigDecimal Mes4;
-		BigDecimal Mes5;
-		BigDecimal Mes6;
-		BigDecimal Mes7;
-		BigDecimal Mes8;
-		BigDecimal Mes9;
-		BigDecimal Mes10;
-		BigDecimal Mes11;
-		BigDecimal Mes12;
-		BigDecimal Total;
-	}
 	
 	class stInformePresupuesto{
 		int id;
@@ -88,6 +63,7 @@ public class SReporte extends HttpServlet {
 		int objetoTipo;
 		int posicionArbol;
 		String nombre;
+		String objetoTipoNombre;
 		int idPredecesor;
 		int objetoTipoPredecesor;
 		String hijo;
@@ -153,7 +129,7 @@ public class SReporte extends HttpServlet {
 			response_text = JsonProceso + "," + JsonAtrasadas;
 			response_text = String.join("", "{\"success\":true,", response_text, "}");
 		}else if(accion.equals("getAdquisicionesPrestamo")){
-			List<stdataEjecutado> prestamo = obtenerProyecto(idPrestamo,usuario);
+			List<stInformePresupuesto> prestamo = obtenerProyecto(idPrestamo,usuario);
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(prestamo);
 	        response_text = String.join("", "\"prestamo\":",response_text);
@@ -164,9 +140,9 @@ public class SReporte extends HttpServlet {
 			List<InformePresupuesto> informePresupuesto = ReporteDAO.existeInformeBase(idPrestamo, tipoInforme, map.get("anio"));
 			
 			if (informePresupuesto.size() == 0 && tipoInforme != 2){
-				List<stdataEjecutado> prestamo = obtenerProyecto(idPrestamo,usuario);
+				List<stInformePresupuesto> prestamo = obtenerProyecto(idPrestamo,usuario);
 				
-				for(stdataEjecutado p : prestamo){
+				for(stInformePresupuesto p : prestamo){
 					InformePresupuesto temp = new InformePresupuesto();
 					
 					temp.setIdPrestamo(idPrestamo);
@@ -464,7 +440,7 @@ public class SReporte extends HttpServlet {
 			Map<String,Object[]> datos = new HashMap<>();
 			
 			if(reporte.equals("adquisiciones")){
-				nombreInforme = "Informe Ejecuciï¿½n Anual";
+				nombreInforme = "Informe Ejecución Anual";
 				Integer estadoInforme = Utils.String2Int(map.get("estadoInforme"));
 				List<InformePresupuesto> informePresupuesto = ReporteDAO.existeInformeBase(idPrestamo, estadoInforme, map.get("anio"));
 				
@@ -502,13 +478,13 @@ public class SReporte extends HttpServlet {
 				String mes = map.get("mes");
 				
 				List<?> actividades_proceso = ReporteDAO.getCargaTrabajo(0,objetoTipo, idPrestamo, idComponente, idProducto, idSubProducto);
-				//List<?> actividades_atrasadas = ReporteDAO.getCargaTrabajo(1,objetoTipo, idPrestamo, idComponente, idProducto, idSubProducto);
+				List<?> actividades_atrasadas = ReporteDAO.getCargaTrabajo(1,objetoTipo, idPrestamo, idComponente, idProducto, idSubProducto);
 				
 				datos.put("0", new Object[] {"Responsable", "Actividades Atrasadas", "Actividades a Cumplir " + mes});
-				//Object[] temp = new Object []{};
+				Object[] temp = new Object []{};
 				
 				for (int i=0; i< actividades_proceso.size(); i++){
-					
+
 				}
 			}
 		}
@@ -573,7 +549,7 @@ public class SReporte extends HttpServlet {
 		}
 	}
 	
-	private void setValoresMensuales(stdataEjecutado dataEjecutado){
+	private void setValoresMensuales(stInformePresupuesto dataEjecutado){
 		dataEjecutado.Mes1 = new BigDecimal(0);
 		dataEjecutado.Mes2 = new BigDecimal(0);
 		dataEjecutado.Mes3 = new BigDecimal(0);
@@ -589,11 +565,11 @@ public class SReporte extends HttpServlet {
 		dataEjecutado.Total = new BigDecimal(0);
 	}
 	
-	private List<stdataEjecutado> obtenerProyecto(int proyectoId, String usuario){
+	private List<stInformePresupuesto> obtenerProyecto(int proyectoId, String usuario){
 		Proyecto proyecto = ProyectoDAO.getProyectoPorId(proyectoId, usuario);
-		List<stdataEjecutado> lstdataEjecutado = new ArrayList<>();
+		List<stInformePresupuesto> lstdataEjecutado = new ArrayList<>();
 		if (proyecto!=null){
-			stdataEjecutado dataEjecutado = new stdataEjecutado();
+			stInformePresupuesto dataEjecutado = new stInformePresupuesto();
 			dataEjecutado.objetoTipo = OBJETO_ID_PROYECTO;
 			dataEjecutado.posicionArbol = 1;
 			dataEjecutado.objetoTipoNombre = "Prestamo";
@@ -607,7 +583,7 @@ public class SReporte extends HttpServlet {
 			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
 					null, null, null, null, null, usuario);
 			for (Componente componente : componentes){
-				dataEjecutado = new stdataEjecutado();
+				dataEjecutado = new stInformePresupuesto();
 				dataEjecutado.objetoTipo = OBJETO_ID_COMPONENTE;
 				dataEjecutado.posicionArbol = 2;
 				dataEjecutado.objetoTipoNombre = "Componente";
@@ -621,7 +597,7 @@ public class SReporte extends HttpServlet {
 				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
 						null, null, null, null, null, usuario);
 				for (Producto producto : productos){
-					dataEjecutado = new stdataEjecutado();
+					dataEjecutado = new stInformePresupuesto();
 					dataEjecutado.objetoTipo = OBJETO_ID_PRODUCTO;
 					dataEjecutado.posicionArbol = 3;
 					dataEjecutado.objetoTipoNombre = "Producto";
@@ -635,7 +611,7 @@ public class SReporte extends HttpServlet {
 					List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
 							null, null, null, null, null, usuario);
 					for (Subproducto subproducto : subproductos){
-						dataEjecutado = new stdataEjecutado();
+						dataEjecutado = new stInformePresupuesto();
 						dataEjecutado.objetoTipo = OBJETO_ID_SUBPRODUCTO;
 						dataEjecutado.posicionArbol = 4;
 						dataEjecutado.objetoTipoNombre = "Subroducto";
@@ -674,14 +650,14 @@ public class SReporte extends HttpServlet {
 		return lstdataEjecutado;
 	}
 	
-	private List<stdataEjecutado> ObtenerActividades(Actividad actividad, String usuario, List<stdataEjecutado> lstdataEjecutado, int posicionArbol, 
+	private List<stInformePresupuesto> ObtenerActividades(Actividad actividad, String usuario, List<stInformePresupuesto> lstdataEjecutado, int posicionArbol, 
 			int idPredecesor, int objetoTipoPredecesor){
 		
 		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, actividad.getId(), OBJETO_ID_ACTIVIDAD, 
 				null, null,null, null, null, usuario);
 		
-		stdataEjecutado dataEjecutado = new stdataEjecutado();
-		dataEjecutado = new stdataEjecutado();
+		stInformePresupuesto dataEjecutado = new stInformePresupuesto();
+		dataEjecutado = new stInformePresupuesto();
 		dataEjecutado.objetoTipo = OBJETO_ID_ACTIVIDAD;
 		dataEjecutado.posicionArbol = posicionArbol;
 		dataEjecutado.objetoTipoNombre = "Actividad";

@@ -3,6 +3,7 @@ var app = angular.module('adquisicionesController',['ngAnimate', 'ngTouch', 'ui.
 app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion',
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion){
 		var mi = this;
+		$scope.gridOptions = {};
 		i18nService.setCurrentLang('es');
 		mi.mostrarCongelar = false;
 		mi.mostrarCopiar = false;
@@ -227,53 +228,57 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.gridOptions = {
 				showColumnFooter: true,
 				enableCellEdit: true,
+				enableCellEditOnFocus: true,
 				rowEditWaitInterval: -1,
 				expandAllRows : true,
 				enableExpandableRowHeader: false,
 				showTreeRowHeader: false,
 				showTreeExpandNoChildren : false,
+				enableColumnMenus: false,
+				enableSorting: false,
 			    columnDefs: [
 			        { name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: '',
-			        	cellTemplate: "<div class=\"ui-grid-cell-contents\" title=\"TOOLTIP\"><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.controller.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>"
+			        	cellTemplate: "<div class=\"ui-grid-cell-contents\" title=\"TOOLTIP\"><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.controller.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+			        	cellClass:'black'
 			        },
 			        { name: 'Mes1', width: 100, displayName: 'Enero', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2', 
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes1}}</div>'
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes1 | number:2}}</div>'
 			        },
 			        { name: 'Mes2', width: 100, displayName: 'Febrero', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes2}}</div>'
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes2 | number:2}}</div>'
 			        },
 			        { name: 'Mes3',  width: 100, displayName: 'Marzo', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes3}}</div>'
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes3 | number:2}}</div>'
 			        },
 			        { name: 'Mes4',  width: 100, displayName: 'Abril', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes4}}</div>'
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes4 | number:2}}</div>'
 			        },
 			        { name: 'Mes5',  width: 100, displayName: 'Mayo', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes5}}</div>'
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes5 | number:2}}</div>'
 			        },
 			        { name: 'Mes6',  width: 100, displayName: 'Junio', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes6}}</div>'
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes6 | number:2}}</div>'
 			        },
 			        { name: 'Mes7',  width: 100, displayName: 'Julio', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes7}}</div>'
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes7 | number:2}}</div>'
 			        },
 			        { name: 'Mes8',  width: 100, displayName: 'Agosto', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes8}}</div>'
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes8 | number:2}}</div>'
 			        },
 			        { name: 'Mes9',  width: 100, displayName: 'Septiembre', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes9}}</div>'
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes9 | number:2}}</div>'
 			        },
 			        { name: 'Mes10',  width: 100, displayName: 'Octubre', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes10}}</div>'
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes10 | number:2}}</div>'
 			        },
 			        { name: 'Mes11',  width: 100, displayName: 'Noviembre', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes11}}</div>'
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes11 | number:2}}</div>'
 			        },
 			        { name: 'Mes12',  width: 100, displayName: 'Diciembre', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes12}}</div>'
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes12 | number:2}}</div>'
 			        },
 			        { name: 'Total',  enableCellEdit: false, width: 150, displayName: 'Total general', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.totalP}}</div>'
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.totalP | number:2}}</div>'
 			        }
 			    ],
 			    onRegisterApi: function( gridApi ) {
@@ -292,6 +297,10 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			    	  }else{
 			    		  mi.setValor(rowEntity,colDef,oldValue);
 			    	  }
+			    	  
+			            var gridRows = mi.gridApi.rowEdit.getDirtyRows();
+			            var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
+			            mi.gridApi.rowEdit.setRowsClean( dataRows );
 			      });
 			      
 			     mi.gridApi.rowEdit.on.saveRow($scope, mi.saveRow);
@@ -299,8 +308,10 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		};
 		
 		mi.saveRow = function(rowEntity){
-            var promise = mi.guardarRowInforme(rowEntity);
-            mi.gridApi.rowEdit.setSavePromise(rowEntity, promise);            
+            mi.guardarRowInforme(rowEntity);
+            var promise = $q.defer();
+            mi.gridApi.rowEdit.setSavePromise(rowEntity, promise.resolve());
+            
             return true;
 		}
 		
