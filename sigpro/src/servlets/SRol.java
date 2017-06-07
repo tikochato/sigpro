@@ -86,15 +86,17 @@ public class SRol extends HttpServlet {
 				int rolid= Integer.parseInt(map.get("id"));
 				List<RolPermiso> rolpermisos= RolDAO.getPermisosPorRol(rolid);
 				List<stpermiso> stpermisos= new ArrayList <stpermiso>();
+				List <Integer> stpermisosId= new ArrayList <Integer>();
 				for(RolPermiso rolpermiso:rolpermisos){
 					stpermiso stPermiso = new stpermiso();
-					stPermiso.id = rolpermiso.getId().getPermisoid();
 					stPermiso.nombre=rolpermiso.getPermiso().getNombre();
 					stPermiso.descripcion=rolpermiso.getPermiso().getDescripcion();
 					stpermisos.add(stPermiso);
+					stpermisosId.add(rolpermiso.getId().getPermisoid());
 				}
 				String respuesta = new GsonBuilder().serializeNulls().create().toJson(stpermisos);
-				response_text = String.join("", "\"permisos\": ",respuesta);
+				String ids =  new GsonBuilder().serializeNulls().create().toJson(stpermisosId);
+				response_text = String.join("", "\"permisos\": ",respuesta, ",", "\"ids\": ",ids);
 				response_text = String.join("", "{\"success\":true,", response_text,"}");
 				
 			}
