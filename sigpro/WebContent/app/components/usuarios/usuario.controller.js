@@ -145,6 +145,7 @@ app.controller(
 		mi.mostrarCambioPassword = false;
 		mi.tieneColaborador=false;
 		mi.edicionPermisos=false;
+		mi.cargandoPermisos=false; 
 	}
 
 
@@ -165,16 +166,15 @@ app.controller(
 				if(validarEmail(mi.usuariosSelected.email)){
 					if(mi.claves.password1===mi.claves.password2){
 						mi.usuariosSelected.password= mi.claves.password1;
-						var dataSend={
-								accion: 'guardarUsuario',
-								usuario:mi.usuariosSelected.usuario,
-								email:mi.usuariosSelected.email,
-								password:mi.usuariosSelected.password,
-								permisos:mi.nuevosPermisos,
-								esnuevo:true
-							};
-						console.log(dataSend);
-						$http.post('/SUsuario',dataSend
+						$http.post('/SUsuario',
+								{
+									accion: 'guardarUsuario',
+									usuario:mi.usuariosSelected.usuario,
+									email:mi.usuariosSelected.email,
+									password:mi.usuariosSelected.password,
+									permisos:JSON.stringify(mi.nuevosPermisos)	,
+									esnuevo:true
+								}
 								).success(
 									function(data) {
 										if(data.success){
@@ -405,21 +405,18 @@ app.controller(
 
 		modalInstance.result.then(function(resultadoSeleccion) {
 			if(resultadoSeleccion.tipo===1){
-				if(resultadoSeleccion.tipo==1){
 					mi.cargandoPermisos=true;
 					$http.post('/SRol',{accion:'getPermisosPorRol',id:resultadoSeleccion.rol.id}).success(
 							function(response){
-								console.log(response);
 								mi.permisosAsignados=response.permisos;
-								mi.nuevosPermisos=response.permisos;
+								mi.nuevosPermisos=response.ids;
 								mi.cargandoPermisos=false;
 							}
 					);
-				}
+			
 			}else{
-				console.log(resultadoSeleccion);
 				mi.permisosAsignados.push(resultadoSeleccion);
-				mi.nuevosPermisos.push(resultadoSeleccion);
+				mi.nuevosPermisos.push(resultadoSeleccion.id);
 			}
 			
 		}, function() {
@@ -514,16 +511,6 @@ app.controller(
 				mi.totalUsuarios = response.totalUsuarios;
 				mi.cargarTabla(mi.paginaActual);
 	});
-	/*$http.post('/SRol',{accion:'getRoles'}).success(
-			function(response){
-				console.log(response);
-			}
-	);*/
-	/*$http.post('/SRol',{accion:'getPermisosPorRol',id:1}).success(
-			function(response){
-				console.log(response);
-			}
-	);*/
 } ]);
 
 app.controller('modalBuscarPermiso', [
