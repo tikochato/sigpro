@@ -9,7 +9,7 @@ var app = angular.module('sipro', [
 app.controller('loginController', [
 	'$scope','$http','Utilidades','$window',function($scope,$http,$utilidades,$window){
 		
-		$window.document.title = $utilidades.sistema_nombre + ' - Actividades';
+		$window.document.title = $utilidades.sistema_nombre + ' - Login';
 		var mi = this;
 		mi.sistema_nombre =  $utilidades.sistema_nombre;
 		mi.username = "";

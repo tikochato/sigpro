@@ -24,6 +24,7 @@ app.controller(
 	mi.colaboradorSeleccionado =false;
 	i18nService.setCurrentLang('es');
 	mi.mostrarcargando=true;
+	mi.cargandoPermisos=false;
 	mi.entityselected = null;
 	mi.esNuevo = false;
 	mi.paginaActual = 1;
@@ -42,8 +43,8 @@ app.controller(
 	mi.mostrarCambioPassword = false;
 	var passwordLocal="";
 	mi.tieneColaborador=false;
+	mi.edicionPermisos=false;
 	mi.filtros=[];
-	
 	mi.editarElemento = function (event) {
         var filaId = angular.element(event.toElement).scope().rowRenderIndex;
         mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
@@ -143,6 +144,9 @@ app.controller(
 		mi.cambioPassword= false;
 		mi.mostrarCambioPassword = false;
 		mi.tieneColaborador=false;
+		mi.edicionPermisos=false;
+		mi.cargandoPermisos=false; 
+		mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
 	}
 
 
@@ -157,6 +161,7 @@ app.controller(
 	};
 
 	mi.guardarUsuario=function(){
+		console.log(mi.nuevosPermisos);
 		if(mi.esNuevo){
 			if(mi.claves.password1!=="" && mi.claves.password2!=="" && mi.usuariosSelected.usuario!=="" && mi.usuariosSelected.email!==""){
 				if(validarEmail(mi.usuariosSelected.email)){
@@ -168,14 +173,16 @@ app.controller(
 									usuario:mi.usuariosSelected.usuario,
 									email:mi.usuariosSelected.email,
 									password:mi.usuariosSelected.password,
-									permisos:JSON.stringify(mi.nuevosPermisos),
+									permisos:JSON.stringify(mi.nuevosPermisos)	,
 									esnuevo:true
-								}).success(
+								}
+								).success(
 									function(data) {
 										if(data.success){
 											mi.paginaActual=1;
 											$utilidades.mensaje('success','Usuario creado exitosamente!');
 											mi.cargarTabla(mi.paginaActual);
+											mi.nuevosPermisos=[];
 										}
 							});
 					}else{
@@ -206,6 +213,8 @@ app.controller(
 										function(data) {
 											if(data.success){
 												mi.cargarTabla(mi.paginaActual);
+												mi.nuevosPermisos=[];
+												mi.permisosEliminados=[];
 												if(mi.usuariosSelected.password!==passwordLocal){
 													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
 															function(response) {
@@ -216,7 +225,7 @@ app.controller(
 																}
 													});
 												}
-												mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
+												 $utilidades.mensaje('success', 'Actualización de permisos exitosa');
 
 											}
 								});
@@ -256,7 +265,8 @@ app.controller(
 														}).success(
 															function(data) {
 																if(data.success){
-
+																	mi.nuevosPermisos=[];
+																	mi.permisosEliminados=[];
 																	if(mi.usuariosSelected.password!==passwordLocal){
 																		$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
 																				function(response) {
@@ -265,7 +275,6 @@ app.controller(
 																						$utilidades.mensaje('success','información actualizada exitosamente.');
 																						mi.isCollapsed = false;
 																						mi.cargarTabla(mi.paginaActual);
-																						mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
 																					}else{
 																						$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
 																					}
@@ -334,7 +343,9 @@ app.controller(
 	    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	    return re.test(email);
 	}
-
+	mi.mostrarPermisos=function(){
+		mi.edicionPermisos=true;
+	};
 	mi.editarUsuario=function(){
 		if(mi.usuariosSelected.usuario!==""){
 			mi.isCollapsed = true;
@@ -343,11 +354,14 @@ app.controller(
 			if(mi.usuariosSelected.colaborador!=null){
 				mi.tieneColaborador=true;
 			}
+			mi.cargandoPermisos= true;
+			mi.permisosAsignados=[];
 			$http.post('/SUsuario', {
 	    		accion:'obtenerPermisos',
 	    		usuario: mi.usuariosSelected.usuario
 	    	}).then(function(response) {
 	    	    mi.permisosAsignados =response.data.permisos;
+	    	   mi.cargandoPermisos=false;
 	    	});
 		}else{
 			$utilidades.mensaje('danger','Seleccione un usuario');
@@ -376,7 +390,8 @@ app.controller(
 	}
 
 
-	mi.buscarPermiso = function(titulo, mensaje) {
+	mi.buscarPermiso = function(tipo) {
+		
 		var modalInstance = $uibModal.open({
 		    animation : 'true',
 		    ariaLabelledBy : 'modal-title',
@@ -388,16 +403,29 @@ app.controller(
 		    size : 'md',
 		    resolve : {
 		    	infoPermisos: function(){
-		    		var parametros={nuevo:mi.esNuevo, usuario:mi.usuariosSelected.usuario};
+		    		var parametros={nuevo:mi.esNuevo, usuario:mi.usuariosSelected.usuario, tipo:tipo};
 		    		return  parametros;
 		    	}
 		    }
 
 		});
 
-		modalInstance.result.then(function(permisoSeleccionado) {
-			mi.permisosAsignados.push(permisoSeleccionado);
-			mi.nuevosPermisos.push(permisoSeleccionado.id);
+		modalInstance.result.then(function(resultadoSeleccion) {
+			if(resultadoSeleccion.tipo===1){
+					mi.cargandoPermisos=true;
+					$http.post('/SRol',{accion:'getPermisosPorRol',id:resultadoSeleccion.rol.id}).success(
+							function(response){
+								mi.permisosAsignados=response.permisos;
+								mi.nuevosPermisos=response.ids;
+								mi.cargandoPermisos=false;
+							}
+					);
+			
+			}else{
+				mi.permisosAsignados.push(resultadoSeleccion);
+				mi.nuevosPermisos.push(resultadoSeleccion.id);
+			}
+			
 		}, function() {
 		});
 	}
@@ -502,15 +530,29 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 	var mi = this;
 	if(infoPermisos.nuevo){
 		mi.mostrarCargando = true;
-    	$http.post('/SPermiso', {
-    		accion:'getPermisos'
-    	}).then(function(response) {
-    	    if (response.data.success) {
-    	    	mi.data = response.data.permisos;
-    	    	mi.opcionesGrid.data = mi.data;
-    			mi.mostrarCargando = false;
-    	    }
-    	});
+		if(infoPermisos.tipo===1){
+			$http.post('/SRol', {
+	    		accion:'getRoles'
+	    	}).then(function(response) {
+	    	    if (response.data.success) {
+	    	    	mi.data = response.data.roles;
+	    	    	mi.opcionesGrid.data = mi.data;
+	    			mi.mostrarCargando = false;
+	    	    }
+	    	});
+			
+		}else{
+			$http.post('/SPermiso', {
+	    		accion:'getPermisos'
+	    	}).then(function(response) {
+	    	    if (response.data.success) {
+	    	    	mi.data = response.data.permisos;
+	    	    	mi.opcionesGrid.data = mi.data;
+	    			mi.mostrarCargando = false;
+	    	    }
+	    	});
+		}
+    	
 	}else{
 		 $http.post('/SUsuario', {
 		    	accion : 'getPermisosDisponibles',
@@ -582,7 +624,12 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 
      mi.ok = function() {
     	if (mi.seleccionado) {
-    	    $uibModalInstance.close(mi.itemSeleccionado);
+    		if(infoPermisos.tipo===1){
+    			 $uibModalInstance.close({tipo:1, rol:mi.itemSeleccionado});
+    		}else{
+    			 $uibModalInstance.close(mi.itemSeleccionado);
+    		}
+    	   
     	} else {
     	    $utilidades.mensaje('warning', 'Debe seleccionar un permiso');
     	}

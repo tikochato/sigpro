@@ -81,8 +81,8 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="34020">
-						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid ? usuarioc.guardarUsuario() : '' ) :  (form.$valid ? usuarioc.guardarUsuario() : '' )" 
-							ng-disabled="usuarioc.esNuevo ? form1.$invalid : form.$invalid" uib-tooltip="Guardar">
+						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid && !usuarioc.cargandoPermisos ? usuarioc.guardarUsuario() : '' ) :  (form.$valid  ? usuarioc.guardarUsuario() : '' )" 
+							ng-disabled="usuarioc.esNuevo ? form1.$invalid || usuarioc.cargandoPermisos : form.$invalid  || usuarioc.cargandoPermisos" uib-tooltip="Guardar">
 						<span class="glyphicon glyphicon-floppy-saved"></span>Guardar</label>
 					</shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()"  uib-tooltip="Ir a Tabla">
@@ -122,7 +122,7 @@
 						</div>
 						<div class="form-group" ng-show="usuarioc.esNuevo">
     						<input type="password" class="inputText" id="password2" ng-model="usuarioc.claves.password2" ng-required="true"
-    							ng-value="usuarioc.claves.password1" onblur="this.setAttribute('value', this.value);">
+    							ng-value="usuarioc.claves.password2" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">* Vuelva a ingresar la contraseña</label>
 						</div>
 						<div class="form-group" >
@@ -134,31 +134,49 @@
 					      </div>
 						<br>
 				</form>
+				
 			</div>
+			
+			
 			<div class="row">
 			<div class="col-sm-12">
 			
 		<div align="center" ng-show="usuarioc.isCollapsed">
-				<h5 ng-show="usuarioc.isCollapsed">Permisos</h5>
-				<div style="height: 35px; width: 75%">
-					<div style="text-align: right;">
-						<div class="btn-group" role="group" aria-label="">
-							<a class="btn btn-default" href
-								ng-click="usuarioc.buscarPermiso()" role="button"
-								uib-tooltip="Asignar nuevo permiso" tooltip-placement="left">
-								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-							</a>
-						</div>
+				<h3 ng-show="usuarioc.isCollapsed">Permisos</h3>
+				<div class="col-sm-12 operation_buttons" align="right" style="margin-left: -1%;" ng-if="usuarioc.esNuevo">
+					<div class="btn-group">
+						<label class="btn btn-default" ng-click="!usuarioc.cargandoPermisos? usuarioc.buscarPermiso(1) : ''"
+												ng-disabled="" 
+											uib-tooltip="Seleccionar Rol" ng-disabled="usuarioc.cargandoPermisos" >
+							<span class="glyphicon glyphicon-zoom-in"></span>
+							Seleccionar Rol
+						</label>
+						<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(0)"
+												ng-disabled="" 
+											uib-tooltip="Agregar permiso" ng-disabled="usuarioc.cargandoPermisos">
+							<span class="glyphicon glyphicon-plus"></span>
+							Agregar permiso.
+						</label>
 					</div>
 				</div>
+				<div class="col-sm-12 operation_buttons" align="right" style="margin-left: -1%;" ng-if="!usuarioc.esNuevo">
+					<div class="btn-group">
+						<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(0)"
+												ng-disabled="" 
+											uib-tooltip="Agregar permiso" ng-disabled="usuarioc.cargandoPermisos">
+							<span class="glyphicon glyphicon-plus"></span>
+							Agregar permiso.
+						</label>
+					</div>
+				</div>			
 				<br>
-				<table style="width: 75%; overflow-y: scroll;height: 175px;display: block;"
+				<table style="width: 95%; overflow-y: scroll;height: 175px;display: block;"
 				st-table="usuarioc.permisosAsignados"
 				class="table table-striped  table-bordered table-hover table-propiedades">
 				<thead >
 					<tr>
 						<th style="width: 5%;">Nombre</th>
-						<th>Descripicon</th>
+						<th>Descripción</th>
 						<th style="width: 30px;">Quitar</th>
 
 					</tr>
@@ -178,15 +196,25 @@
 					</tr>
 				</tbody>
 			</table>
+			
+			<div class="grid_loading" ng-if="usuarioc.cargandoPermisos">
+				<div class="msg">
+					<span><i class="fa fa-spinner fa-spin fa-4x"></i>
+						<br><br>
+						<b>Cargando, por favor espere...</b>
+					</span>
+				</div>
+			</div> 
+			
 		</div>
 		</div>
 		
 		</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        					<shiro:hasPermission name="34020">
-						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid ? usuarioc.guardarUsuario() : '' ) :  (form.$valid ? usuarioc.guardarUsuario() : '' )" 
-							ng-disabled="usuarioc.esNuevo ? form1.$invalid : form.$invalid" uib-tooltip="Guardar">
+			        <shiro:hasPermission name="34020">
+						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid && !usuarioc.cargandoPermisos ? usuarioc.guardarUsuario() : '' ) :  (form.$valid && !usuarioc.cargandoPermisos  ? usuarioc.guardarUsuario() : '' )" 
+							ng-disabled="usuarioc.esNuevo ? form1.$invalid || usuarioc.cargandoPermisos : form.$invalid  || usuarioc.cargandoPermisos" uib-tooltip="Guardar">
 						<span class="glyphicon glyphicon-floppy-saved"></span>Guardar</label>
 					</shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()"  uib-tooltip="Ir a Tabla">

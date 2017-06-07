@@ -15,6 +15,14 @@
           ng-change="modalBuscar.cambioPagina()"
         ></ul>
       </div>
+      <div class="grid_loading" ng-if="modalBuscar.mostrarCargando">
+				<div class="msg">
+					<span><i class="fa fa-spinner fa-spin fa-4x"></i>
+						<br><br>
+						<b>Cargando, por favor espere...</b>
+					</span>
+				</div>
+			</div> 
     </div>
     </div>
     <br/>
