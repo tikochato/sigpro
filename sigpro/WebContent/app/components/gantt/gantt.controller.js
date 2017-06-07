@@ -1,4 +1,4 @@
-var app = angular.module('ganttController', ['DlhSoft.ProjectData.GanttChart.Directives','DlhSoft.Kanban.Angular.Components']);
+var app = angular.module('ganttController', ['DlhSoft.ProjectData.GanttChart.Directives','DlhSoft.Kanban.Angular.Components','ui.grid.edit', 'ui.grid.rowEdit']);
 
 var GanttChartView = DlhSoft.Controls.GanttChartView;
 //Query string syntax: ?theme
@@ -509,6 +509,34 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 				}		
 			}
 		}
+		
+		mi.pesoProducto = function(idProyecto) {
+
+			var modalInstance = $uibModal.open({
+				animation : 'true',
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				templateUrl : 'pesoProducto.jsp',
+				controller : 'modalPesoProducto',
+				controllerAs : 'pesoc',
+				backdrop : 'static',
+				size : 'md',
+				resolve : {
+					idProyecto : function() {
+						return idProyecto;
+					}
+				}
+			});
+
+			modalInstance.result.then(function(resultado) {
+				if (resultado != undefined){
+					$utilidades.mensaje('success','Los pesos de los productos se cargaron con éxito');
+				}else{
+					$utilidades.mensaje('danger', 'Error al guardar los pesos');
+				}
+			}, function() {
+			});
+	};
 		  
 	}// fin function controller
 
@@ -1326,6 +1354,106 @@ function buscarPorProyecto($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
+}
+
+app.controller('modalPesoProducto', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log',   '$uibModal', '$q' ,'idProyecto' ,'uiGridConstants', 'uiGridGroupingConstants',modalPesoProducto ]);
+
+function modalPesoProducto($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q,idProyecto,uiGridConstants, uiGridGroupingConstants) {
+
+	var mi = this;
+	mi.productos = {};
+	mi.modificarTabla = false;
+	mi.mostrarcargando = true;
+	mi.pesoTotal = 0;
+	mi.gridOptions = {
+		showColumnFooter: true,
+		enableCellEdit: true,
+		enableCellEditOnFocus: true,
+		rowEditWaitInterval: -1,
+		expandAllRows : true,
+		enableExpandableRowHeader: false,
+		showTreeRowHeader: false,
+		showTreeExpandNoChildren : false,
+		enableColumnMenus: false,
+		enableSorting: false,
+	    columnDefs: [
+	        { name: 'nombre', pinnedLeft:true, enableCellEdit: false, displayName: 'Productos',
+	        	
+	        },
+	        { name: 'peso', width: 70, displayName: 'Peso', type: 'number' 
+	        	,aggregationType: uiGridConstants.aggregationTypes.sum
+	        }
+	    ],
+	    onRegisterApi: function( gridApi ) {
+	      mi.gridApi = gridApi;
+	      
+	       
+	      
+	      mi.gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
+	    	  if(mi.modificarTabla){
+	    		  mi.pesoTotal = mi.pesoTotal - oldValue + newValue;
+	    	  }else{
+	    		  //mi.setValor(rowEntity,colDef,oldValue);
+	    	  }
+	    	  
+	    	 
+	    	  
+	         var gridRows = mi.gridApi.rowEdit.getDirtyRows();
+	         var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
+	         mi.gridApi.rowEdit.setRowsClean( dataRows );
+	      });
+	     mi.gridApi.rowEdit.on.saveRow($scope, mi.saveRow);
+	  }
+	};
+	
+	
+	
+	$http.post('/SProducto',{ accion: 'getProductoPorProyecto', idProyecto:idProyecto , t:moment().unix()
+	  }).then(
+
+		function(response) {
+			var data = response.data.productos;
+			mi.pesoTotal = 0;
+			for (i in data){
+				data[i].peso = data[i].peso === undefined  || data[i].peso === '' ? 0 : Number(data[i].peso);
+				mi.pesoTotal = + Number(data[i].peso);
+			}
+			mi.modificarTabla = mi.pesoTotal === 0;
+			
+				
+			mi.gridOptions.data = data;
+			mi.mostrarcargando = false;
+	});
+	
+	
+	mi.ok = function() {
+		var p_pesos= "";
+		for (i in mi.gridOptions.data){
+			p_pesos = p_pesos + (p_pesos.length > 0 ? "~" : "") + mi.gridOptions.data[i].id
+				+ "," + mi.gridOptions.data[i].peso;
+		}
+		var param_data = {
+				accion : 'guardarPesoProducto',
+				productos :  p_pesos,
+				t:moment().unix()
+			};
+			$http.post('/SProducto',param_data).then(
+				function(response) {
+					if (response.data.success) {
+						$uibModalInstance.close(response);
+					}else
+						$uibModalInstance.close(undefined);
+			});
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+
+
 }
 
 
