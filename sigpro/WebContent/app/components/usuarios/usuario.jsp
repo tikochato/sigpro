@@ -134,58 +134,43 @@
 					      </div>
 						<br>
 				</form>
-				<!-- 
-				<div class="grid_loading" >
-					<div class="msg">
-						<span><i class="fa fa-spinner fa-spin fa-4x"></i>
-							<br><br>
-							<b>Cargando, por favor espere...</b>
-						</span>
-					</div>
-				</div>
-				 -->
 				
 			</div>
-			<div class="form-group" ng-if="usuarioc.esNuevo">
-				<div class="col-sm-12 operation_buttons" align="left">
-					<div class="btn-group">
-							<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(1)"
-								ng-disabled="" 
-							uib-tooltip="Seleccionar Rol">
-								<span class="glyphicon glyphicon-zoom-in"></span>
-								Seleccionar Rol
-							</label>
-				        <label class="btn btn-default" ng-click="usuarioc.mostrarPermisos()"  uib-tooltip="ver permisos">
-						<span class="glyphicon glyphicon-eye-open"></span>Ver permisos</label>
-	    			</div>
-	    		</div>
-			</div>
-			<div class="form-group" ng-if="!usuarioc.esNuevo">
-				<div class="col-sm-3">
-					<label class="btn btn-default" ng-click="usuarioc.mostrarPermisos()"  uib-tooltip="ver permisos">
-							<span class="glyphicon glyphicon-eye-open"></span>
-							Ver permisos
-					</label>
-				</div>
-			</div>
+			
+			
 			<div class="row">
 			<div class="col-sm-12">
 			
-		<div align="center" ng-show="usuarioc.isCollapsed && usuarioc.edicionPermisos">
-				<h5 ng-show="usuarioc.isCollapsed">Permisos</h5>
-				<div style="height: 35px; width: 75%">
-					<div style="text-align: right;">
-						<div class="btn-group" role="group" aria-label="">
-							<a class="btn btn-default" href
-								ng-click="usuarioc.buscarPermiso()" role="button"
-								uib-tooltip="Asignar nuevo permiso" tooltip-placement="left">
-								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-							</a>
-						</div>
+		<div align="center" ng-show="usuarioc.isCollapsed">
+				<h3 ng-show="usuarioc.isCollapsed">Permisos</h3>
+				<div class="col-sm-12 operation_buttons" align="right" style="margin-left: -1%;" ng-if="usuarioc.esNuevo">
+					<div class="btn-group">
+						<label class="btn btn-default" ng-click="!usuarioc.cargandoPermisos? usuarioc.buscarPermiso(1) : ''"
+												ng-disabled="" 
+											uib-tooltip="Seleccionar Rol" ng-disabled="usuarioc.cargandoPermisos" >
+							<span class="glyphicon glyphicon-zoom-in"></span>
+							Seleccionar Rol
+						</label>
+						<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(0)"
+												ng-disabled="" 
+											uib-tooltip="Agregar permiso" ng-disabled="usuarioc.cargandoPermisos">
+							<span class="glyphicon glyphicon-plus"></span>
+							Agregar permiso.
+						</label>
 					</div>
 				</div>
+				<div class="col-sm-12 operation_buttons" align="right" style="margin-left: -1%;" ng-if="!usuarioc.esNuevo">
+					<div class="btn-group">
+						<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(0)"
+												ng-disabled="" 
+											uib-tooltip="Agregar permiso" ng-disabled="usuarioc.cargandoPermisos">
+							<span class="glyphicon glyphicon-plus"></span>
+							Agregar permiso.
+						</label>
+					</div>
+				</div>			
 				<br>
-				<table style="width: 75%; overflow-y: scroll;height: 175px;display: block;"
+				<table style="width: 95%; overflow-y: scroll;height: 175px;display: block;"
 				st-table="usuarioc.permisosAsignados"
 				class="table table-striped  table-bordered table-hover table-propiedades">
 				<thead >

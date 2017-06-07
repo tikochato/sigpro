@@ -146,6 +146,7 @@ app.controller(
 		mi.tieneColaborador=false;
 		mi.edicionPermisos=false;
 		mi.cargandoPermisos=false; 
+		mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
 	}
 
 
@@ -181,6 +182,7 @@ app.controller(
 											mi.paginaActual=1;
 											$utilidades.mensaje('success','Usuario creado exitosamente!');
 											mi.cargarTabla(mi.paginaActual);
+											mi.nuevosPermisos=[];
 										}
 							});
 					}else{
@@ -211,6 +213,8 @@ app.controller(
 										function(data) {
 											if(data.success){
 												mi.cargarTabla(mi.paginaActual);
+												mi.nuevosPermisos=[];
+												mi.permisosEliminados=[];
 												if(mi.usuariosSelected.password!==passwordLocal){
 													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
 															function(response) {
@@ -221,7 +225,7 @@ app.controller(
 																}
 													});
 												}
-												mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
+												 $utilidades.mensaje('success', 'Actualización de permisos exitosa');
 
 											}
 								});
@@ -261,7 +265,8 @@ app.controller(
 														}).success(
 															function(data) {
 																if(data.success){
-
+																	mi.nuevosPermisos=[];
+																	mi.permisosEliminados=[];
 																	if(mi.usuariosSelected.password!==passwordLocal){
 																		$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
 																				function(response) {
@@ -270,7 +275,6 @@ app.controller(
 																						$utilidades.mensaje('success','información actualizada exitosamente.');
 																						mi.isCollapsed = false;
 																						mi.cargarTabla(mi.paginaActual);
-																						mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
 																					}else{
 																						$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
 																					}
@@ -350,11 +354,14 @@ app.controller(
 			if(mi.usuariosSelected.colaborador!=null){
 				mi.tieneColaborador=true;
 			}
+			mi.cargandoPermisos= true;
+			mi.permisosAsignados=[];
 			$http.post('/SUsuario', {
 	    		accion:'obtenerPermisos',
 	    		usuario: mi.usuariosSelected.usuario
 	    	}).then(function(response) {
 	    	    mi.permisosAsignados =response.data.permisos;
+	    	   mi.cargandoPermisos=false;
 	    	});
 		}else{
 			$utilidades.mensaje('danger','Seleccione un usuario');
