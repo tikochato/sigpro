@@ -122,7 +122,7 @@
 						</div>
 						<div class="form-group" ng-show="usuarioc.esNuevo">
     						<input type="password" class="inputText" id="password2" ng-model="usuarioc.claves.password2" ng-required="true"
-    							ng-value="usuarioc.claves.password1" onblur="this.setAttribute('value', this.value);">
+    							ng-value="usuarioc.claves.password2" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">* Vuelva a ingresar la contraseña</label>
 						</div>
 						<div class="form-group" >
@@ -134,11 +134,44 @@
 					      </div>
 						<br>
 				</form>
+				<!-- 
+				<div class="grid_loading" >
+					<div class="msg">
+						<span><i class="fa fa-spinner fa-spin fa-4x"></i>
+							<br><br>
+							<b>Cargando, por favor espere...</b>
+						</span>
+					</div>
+				</div>
+				 -->
+				
+			</div>
+			<div class="form-group" ng-if="usuarioc.esNuevo">
+				<div class="col-sm-12 operation_buttons" align="left">
+					<div class="btn-group">
+							<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(1)"
+								ng-disabled="" 
+							uib-tooltip="Seleccionar Rol">
+								<span class="glyphicon glyphicon-zoom-in"></span>
+								Seleccionar Rol
+							</label>
+				        <label class="btn btn-default" ng-click="usuarioc.mostrarPermisos()"  uib-tooltip="ver permisos">
+						<span class="glyphicon glyphicon-eye-open"></span>Ver permisos</label>
+	    			</div>
+	    		</div>
+			</div>
+			<div class="form-group" ng-if="!usuarioc.esNuevo">
+				<div class="col-sm-3">
+					<label class="btn btn-default" ng-click="usuarioc.mostrarPermisos()"  uib-tooltip="ver permisos">
+							<span class="glyphicon glyphicon-eye-open"></span>
+							Ver permisos
+					</label>
+				</div>
 			</div>
 			<div class="row">
 			<div class="col-sm-12">
 			
-		<div align="center" ng-show="usuarioc.isCollapsed">
+		<div align="center" ng-show="usuarioc.isCollapsed && usuarioc.edicionPermisos">
 				<h5 ng-show="usuarioc.isCollapsed">Permisos</h5>
 				<div style="height: 35px; width: 75%">
 					<div style="text-align: right;">
@@ -158,7 +191,7 @@
 				<thead >
 					<tr>
 						<th style="width: 5%;">Nombre</th>
-						<th>Descripicon</th>
+						<th>Descripción</th>
 						<th style="width: 30px;">Quitar</th>
 
 					</tr>
@@ -178,6 +211,16 @@
 					</tr>
 				</tbody>
 			</table>
+			
+			<div class="grid_loading" ng-if="usuarioc.cargandoPermisos">
+				<div class="msg">
+					<span><i class="fa fa-spinner fa-spin fa-4x"></i>
+						<br><br>
+						<b>Cargando, por favor espere...</b>
+					</span>
+				</div>
+			</div> 
+			
 		</div>
 		</div>
 		

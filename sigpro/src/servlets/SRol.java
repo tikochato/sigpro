@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.RolDAO;
 import pojo.Rol;
+import pojo.RolPermiso;
 
 /**
  * Servlet implementation class SRol
@@ -32,7 +33,11 @@ public class SRol extends HttpServlet {
 		String nombre;
 		String descripcion;
 	}
-       
+	class stpermiso{
+		Integer id;
+		String nombre;
+		String descripcion;
+	}
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -77,6 +82,21 @@ public class SRol extends HttpServlet {
 				String respuesta = new GsonBuilder().serializeNulls().create().toJson(stroles);
 				response_text = String.join("", "\"roles\": ",respuesta);
 				response_text = String.join("", "{\"success\":true,", response_text,"}");
+			}else if(accion.compareTo("getPermisosPorRol")==0){
+				int rolid= Integer.parseInt(map.get("id"));
+				List<RolPermiso> rolpermisos= RolDAO.getPermisosPorRol(rolid);
+				List<stpermiso> stpermisos= new ArrayList <stpermiso>();
+				for(RolPermiso rolpermiso:rolpermisos){
+					stpermiso stPermiso = new stpermiso();
+					stPermiso.id = rolpermiso.getId().getPermisoid();
+					stPermiso.nombre=rolpermiso.getPermiso().getNombre();
+					stPermiso.descripcion=rolpermiso.getPermiso().getDescripcion();
+					stpermisos.add(stPermiso);
+				}
+				String respuesta = new GsonBuilder().serializeNulls().create().toJson(stpermisos);
+				response_text = String.join("", "\"permisos\": ",respuesta);
+				response_text = String.join("", "{\"success\":true,", response_text,"}");
+				
 			}
 		}
 		gz.write(response_text.getBytes("UTF-8"));
