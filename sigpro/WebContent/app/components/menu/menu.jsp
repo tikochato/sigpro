@@ -50,7 +50,7 @@
 		                        </ul>
                     		</li>
                     		<li class="dropdown-submenu">
-                    			<a><span class="glyphicon" aria-hidden="true"></span> Propiedades</b></a>
+                    			<a><span class="glyphicon" aria-hidden="true"></span> Propiedades</a>
 		                        <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
 		                         	<shiro:hasPermission name="25010"><li role="menuitem"><a href="#!/programapropiedad">Programa</a></li></shiro:hasPermission>
 		                         	<shiro:hasPermission name="2010"><li role="menuitem"><a href="#!/actividadpropiedad">Actividad</a></li></shiro:hasPermission>	                      

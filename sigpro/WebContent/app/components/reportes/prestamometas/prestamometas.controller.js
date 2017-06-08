@@ -28,18 +28,17 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				mi.objetoTipoNombre = "Proyecto";
 	});
 	
-
 	$http.post('/SMeta', { accion: 'getMetasUnidadesMedida' }).success(
 			function(response) {
 				mi.unidadesMedida = response.MetasUnidades;
-				mi.opcionesGrid.columnDefs[2].editDropdownOptionsArray = mi.unidadesMedida;
+				mi.opcionesGrid.columnDefs[3].editDropdownOptionsArray = mi.unidadesMedida;
 	});
 	
 
 	$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
 			function(response) {
 				mi.datoTipos = response.datoTipos;
-				mi.opcionesGrid.columnDefs[3].editDropdownOptionsArray = mi.datoTipos;
+				mi.opcionesGrid.columnDefs[4].editDropdownOptionsArray = mi.datoTipos;
 	});
 	
 	$scope.nombreUnidadMedida = function(id){
@@ -74,7 +73,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	
 		mi.mostrarCargando = true;
 		
-		$http.post('/SProyecto', datos).then(function(response) {
+		$http.post('/SPrestamoMetas', datos).then(function(response) {
 			if (response.data.success) {
 				mi.data = response.data.proyectometas;
 				 for (x in mi.data){
@@ -101,20 +100,22 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		useExternalSorting: true,
 		showTreeRowHeader: false,
 		showTreeExpandNoChildren: false,
+        enableCellSelection:true,
 		rowEditWaitInterval: 5000,
 	    data : mi.data,
 	    columnDefs : [ 
-			{ displayName : 'Producto', name : 'nombre', width: 400, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false, 
+			{ displayName : 'Producto', name : 'nombre', width: 300, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false, 
 				cellTemplate: "<div class=\"ui-grid-cell-contents\" ng-class=\"{'ui-grid-tree-padre': row.treeLevel < 2}\"><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.pmetasc.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>"
 			},
-			{ displayName : 'Fecha Fin', name : 'metaFecha', width: 200, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false},  
+			{ displayName : 'Fecha Inicio', name : 'metaFechaInicio', width: 100, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false},
+			{ displayName : 'Fecha Fin', name : 'metaFechaFin', width: 100, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false},  
 			{ displayName : 'Unidad de Medida', tipoMetaId: META_ID_UNIDADMEDIDA, name : 'unidadDeMedidaId', width: 200, cellClass : 'grid-align-left', 
 				enableCellEdit: true, enableFiltering: false, editableCellTemplate: 'ui-grid/dropdownEditor',
 				editDropdownValueLabel: 'nombre', editDropdownOptionsArray: [],
 				cellEditableCondition: function( $scope ) { return ($scope.row.entity.objetoTipo >= 3); },
 				cellTemplate: '<div class="ui-grid-cell-contents">{{grid.appScope.nombreUnidadMedida(row.entity.unidadDeMedidaId)}}</div>'
 			},  
-			{ displayName : 'Tipo de Dato', tipoMetaId: META_ID_TIPODATO, name : 'datoTipoId', width: 200, cellClass : 'grid-align-left', 
+			{ displayName : 'Tipo de Dato', tipoMetaId: META_ID_TIPODATO, name : 'datoTipoId', width: 100, cellClass : 'grid-align-left', 
 				enableCellEdit: true, enableFiltering: false, editableCellTemplate: 'ui-grid/dropdownEditor',
 				editDropdownValueLabel: 'nombre', editDropdownOptionsArray: [],
 				cellEditableCondition: function( $scope ) { return ($scope.row.entity.objetoTipo >= 3); },
@@ -206,7 +207,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
     	if (rowEntity.datoTipoId != "" && rowEntity.unidadDeMedidaId != ""
     		&& rowEntity.datoTipoId != null && rowEntity.unidadDeMedidaId != null){
 	        
-			$http.post('/SProyecto', {
+			$http.post('/SPrestamoMetas', {
 				accion: 'guardarProyectoMeta',
 				id: rowEntity.id,
 				objetoTipo: rowEntity.objetoTipo,
@@ -243,7 +244,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	 }
 	  
 	 mi.exportarExcel = function(){
-			$http.post('/SProyecto', { accion: 'exportarExcel', proyectoid:$routeParams.proyectoId,t:moment().unix()
+			$http.post('/SPrestamoMetas', { accion: 'exportarExcel', proyectoid:$routeParams.proyectoId,t:moment().unix()
 				  } ).then(
 						  function successCallback(response) {
 								var anchor = angular.element('<a/>');
