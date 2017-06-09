@@ -3,13 +3,17 @@ var app = angular.module('adquisicionesController',['ngAnimate', 'ngTouch', 'ui.
 app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion',
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion){
 		var mi = this;
-		$scope.gridOptions = {};
+		mi.gridOptions = {};
 		i18nService.setCurrentLang('es');
+		mi.mostrarGuardar = false;
 		mi.mostrarCongelar = false;
 		mi.mostrarCopiar = false;
 		mi.modificarTabla = true;
 		mi.mostrarDescargar = false;
 		mi.totalP = 0;
+		mi.autoGuardado = false;
+		mi.totales = [];
+		mi.columnaNames = [];
 		
 		mi.redireccionSinPermisos=function(){
 			$window.location.href = '/main.jsp#!/forbidden';		
@@ -20,9 +24,9 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				$route.reload();
 			else
 				$location.path('/adquisiciones/rv');
-		}		
-		
-		mi.formatofecha = 'yyyy';
+		}
+	    
+		mi.formatofecha = 'dd/MM/yyyy';
 		
 		mi.prestamos = [
 			{'value' : 0, 'text' : 'Seleccionar una opción'},
@@ -32,8 +36,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		
 		mi.informes = [
 			{'value' : 0, 'text' : 'Seleccionar una opción'},
-			{'value' : 1, 'text' : 'Ejecucion Financiera Base'},
-			{'value' : 2, 'text' : 'Ejecucion Financiera Modificada'},
 		];
 		
 		mi.informe = mi.informes[0];
@@ -41,139 +43,188 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.abrirPopupFecha = function(index) {
 			switch(index){
 				case 1000: mi.fi_abierto = true; break;
+				case 1001: mi.ff_abierto = true; break;
 			}
 		};
 		
 		mi.fechaOptions = {
-				formatYear: 'yyyy',
-			    startingDay: 1,
-			    minMode: 'year'
+				formatYear : 'yy',
+				maxDate : new Date(2050, 12, 31),
+				minDate : new Date(1990, 1, 1),
+				startingDay : 1
 		};
 		
 		mi.getPrestamos = function(){
 			$http.post('/SProyecto',{accion: 'getProyectos'}).success(
-					function(response) {
-						mi.prestamos = [];
-						mi.prestamos.push({'value' : 0, 'text' : 'Seleccione una opción'});
-						if (response.success){
-							for (var i = 0; i < response.entidades.length; i++){
-								mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
-							}
-							mi.prestamo = mi.prestamos[0];
+				function(response) {
+					mi.prestamos = [];
+					mi.prestamos.push({'value' : 0, 'text' : 'Seleccione una opción'});
+					if (response.success){
+						for (var i = 0; i < response.entidades.length; i++){
+							mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
 						}
-					});
+						mi.prestamo = mi.prestamos[0];
+					}
+				});
+		}
+		
+		mi.obtenetMesNombre = function(mes, anio){
+			switch(mes){
+			case 1:
+				return "Enero-(" + anio + ")";
+			case 2:
+				return "Febrero-(" + anio + ")";
+			case 3:
+				return "Marzo-(" + anio + ")";
+			case 4:
+				return "Abril-(" + anio + ")";
+			case 5:
+				return "Mayo-(" + anio + ")";
+			case 6:
+				return "Junio-(" + anio + ")";
+			case 7:
+				return "Julio-(" + anio + ")";
+			case 8:
+				return "Agosto-(" + anio + ")";
+			case 9:
+				return "Septiembre-(" + anio + ")";
+			case 10:
+				return "Octubre-(" + anio + ")";
+			case 11:
+				return "Noviembre-(" + anio + ")";
+			case 12:
+				return "Diciembre-(" + anio + ")";
+			}
+		}
+		
+		mi.generarTabla = function(){
+			mi.columnas = [];
+			var i = 0;
+			var j = 0;
+			var mesName = "";
+			mi.columnas.push({ name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: '',
+	        	cellTemplate: "<div class=\"ui-grid-cell-contents\" ng-class=\"{'ui-grid-tree-padre': row.objetoTipo < 5}\"><div class=\"ui-grid-cell-contents\" title=\"TOOLTIP\"><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.controller.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+	        	footerCellTemplate: '<div class="ui-grid-cell-contents">Total</div>',
+	        });
+			
+			mi.columnaNames.push("nombre");
+			
+			var fInicial = moment(mi.fechaInicio).format('DD/MM/YYYY').split('/');
+			var fFinal = moment(mi.fechaFin).format('DD/MM/YYYY').split('/');
+			var inicio = (Number(fInicial[1]) <= 12 ? Number(fInicial[1]) : 1);
+			for(j = Number(fInicial[2]); j <= Number(fFinal[2]); j++){
+				var fin = j==Number(fFinal[2]) ? Number(fFinal[1]):12;
+				for(i = inicio; i <= fin; i++){
+					mesName = mi.obtenerMes(i,j);
+					mesDisplayName = mi.obtenetMesNombre(i,j);
+					
+					mi.totales[mesName] = 0;
+					mi.columnaNames.push(mesName);
+					mi.columnas.push({ name: mesName, enableCellEdit: false, width: 100, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2', 
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.getTotal(this) | number:2}}</div>',
+			        	categoryDisplayName: j
+			        });
+				}
+				inicio = 1;
+			}
+			
+			mi.columnas.push({ name: 'Total', enableCellEdit: false, width: 150, displayName: 'Total general', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
+	        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.totalP | number:2}}</div>'
+	        });
+			
+			mi.columnas.push({ name: 'acumulacionCostos', width: 150, displayName: 'Acumulación de Costos', editType: 'dropdown', editableCellTemplate: 'ui-grid/dropdownEditor',
+	        	editDropdownOptionsArray: mi.ddlOpciones, editDropdownValueLabel: 'value', cellFilter: 'mapAcumulacionCosto', editDropdownOptionsArray: mi.ddlOpciones
+	        });
+			
+			mi.columnaNames.push("Total");
+			mi.gridOptions.columnDefs = mi.columnas;
+		}
+		
+		mi.getTotal = function(columna){
+			return mi.totales[columna.col.name];
 		}
 		
 		mi.generar = function(){
 			if(mi.prestamo.value > 0)
 			{
-				if(mi.fechaInicio != null)
+				if(mi.fechaInicio != null && mi.fechaFin != null)
 				{
-					if(mi.informe.value > 0){
-						$http.post('/SReporte',{
-							accion: 'generarInforme',
-							idPrestamo: mi.prestamo.value,
-							tipoInforme: mi.informe.value,
-							anio: moment(mi.fechaInicio).format('DD/MM/YYYY')
-						}).success(function(response){
-							if (response.success){
-								mi.crearArbol(response.prestamo);
-								mi.totalPrestamo();
-								if(response.existeCopia){
-									mi.mostrarCongelar = false;
-									mi.mostrarCopiar = false;
-								}
-							}else{
-								if (response.prestamo[0].tipoInforme == 2){
-									$utilidades.mensaje('warning','No existe informe para modificar');
-								}
+					mi.generarTabla();
+					
+					$http.post('/SInformePresupuesto',{
+						accion: 'generarInforme',
+						idPrestamo: mi.prestamo.value,
+						tipoInforme: mi.informe.value,
+						anio: moment(mi.fechaInicio).format('DD/MM/YYYY')
+					}).success(function(response){
+						if (response.success){
+							mi.crearArbol(response.prestamo);
+
+							for (var i = 0; i < mi.gridOptions.data.length; i++){
+								var dato = mi.gridOptions.data[i];
+						    	if (dato.objetoTipo == 5){
+						    		var rowEntity = mi.obtenerEntidad(dato.idObjetoTipo, dato.objetoTipo);
+						    		if (rowEntity.acumulacionCostos == 1){
+						    			mi.setInicio(rowEntity);
+						    		}else if (rowEntity.acumulacionCostos == 2){
+						    			mi.setProrrateo(rowEntity);
+						    		}else if (rowEntity.acumulacionCostos == 3){
+						    			mi.setFin(rowEntity);
+						    		}else if(rowEntity.acumulacionCostos == 0){
+						    			mi.setFin(rowEntity);
+						    		}
+						    	}
+						    }
+							
+							mi.calcularTotales();
+
+							mi.totalPrestamo();
+						}else{
+							if (response.prestamo[0].tipoInforme == 2){
+								$utilidades.mensaje('warning','No existe informe para modificar');
 							}
-							mi.mostrarDescargar = true;
-						})
-					}else
-						$utilidades.mensaje('warning','Debe seleccionar tipo de informe a generar');
+						}
+						mi.mostrarDescargar = true;
+					})
 				}else
 					$utilidades.mensaje('warning','Debe seleccionar un año');
 			}else
 				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
 		}
 		
-		mi.congelar = function(ev){
-			if(mi.gridOptions.data.length > 0){			
-				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
-						, "Confirmación de Congelado"
-						, '¿Desea congelar el informe "'+mi.prestamo.text+'"?'
-						, "Congelar"
-						, "Cancelar")
-				.result.then(function(data) {
-					if(data){						
-						$http.post('/SReporte', {
-							accion: 'congelarInforme',
-							id: mi.gridOptions.data[0].id,
-							t:moment().unix()
-						}).success(function(response){
-							if(response.success){
-								mi.mostrarCongelar = false;
-								mi.modificarTabla = false;
-								mi.mostrarCopiar = true;
-								$utilidades.mensaje('success','Informe congelado');
-							}
-							else
-								$utilidades.mensaje('danger','Error al congelar el informe');
-							
-							mi.mostrarDescargar = true;
-						});
-					}
-				}, function(){
-					
-				});
-			
-			}else
-				$utilidades.mensaje('warning','Debe de cargar un informe de préstamo para poder congelarlo');
-		}
-		
-		mi.copiar = function(){
-			if(mi.gridOptions.data.length > 0){
-				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
-						, "Confirmación de Copiado"
-						, '¿Desea copiar el informe "'+mi.prestamo.text+'"?'
-						, "Copiar"
-						, "Cancelar")
-				.result.then(function(data) {
-					if(data){						
-						$http.post('/SReporte', {
-							accion: 'copiarInformePrestamo',
-							id: mi.gridOptions.data[0].id,
-							anio: moment(mi.fechaInicio).format('DD/MM/YYYY'),
-							idPrestamo: mi.prestamo.value,
-							t:moment().unix()
-						}).success(function(response){
-							if(response.success){
-								mi.modificarTabla = true;
-								mi.mostrarCopiar = false;
-								mi.mostrarCongelar = false;
-								mi.crearArbol(response.prestamo);
-								mi.totalPrestamo();
-								$utilidades.mensaje('success','Informe copiado');
-							}
-							else
-								$utilidades.mensaje('danger','Congelar el informe primero para poder copiarlo');
-						});
-					}
-				}, function(){
-					
-				});
-			}else
-				$utilidades.mensaje('warning','Debe de cargar un informe de préstamo para poder copiarlo');
-		}
-		
 		mi.descargar = function(){
-			$http.post('/SReporte',{
+			var viewData = { 
+				    reporte : [] 
+				}
+
+			var obj = {};
+			for(x in mi.gridOptions.data){
+				for (y in mi.columnaNames){
+					obj[mi.columnaNames[y]] = mi.gridOptions.data[x][mi.columnaNames[y]];
+				}
+				
+				viewData.reporte.push(obj);
+				obj = {};
+			}
+			
+			for(y in mi.columnaNames){
+				if(y == 0)
+					obj[mi.columnaNames[y]] = "Total";
+				else if (y == mi.columnaNames.length-1)
+					obj[mi.columnaNames[y]] = mi.totalP;
+				else
+					obj[mi.columnaNames[y]] = mi.totales[mi.columnaNames[y]];
+			}
+			
+			viewData.reporte.push(obj);
+			
+			$http.post('/SInformePresupuesto',{
 				accion: 'exportarExcel',
-				reporte: 'adquisiciones',
+				data: JSON.stringify(viewData.reporte),
 				idPrestamo: mi.prestamo.value,
 				anio: moment(mi.fechaInicio).format('DD/MM/YYYY'),
-				estadoInforme: mi.gridOptions.data[0].estadoInforme,
+				tipoInforme: mi.informe.value,
+				columnas: mi.columnaNames.toString(),
 				t:moment().unix()
 			}).then(
 					  function successCallback(response) {
@@ -194,25 +245,23 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				var data = datos;
 				data = mi.gethijos(data);
 				for(x in data){
+					data[x].Total = 0;
 					data[x].$$treeLevel = Number(data[x].posicionArbol) - 1;
+					if(data[x].objetoTipo == 5 && data[x].acumulacionCostos == 0)
+						data[x].acumulacionCostos = 3;
 				}
+				
+				for(x in mi.gridOptions.columnDefs){
+					if((x > 0) && (x < mi.gridOptions.columnDefs.length -2)){
+						var colNombre = mi.gridOptions.columnDefs[x].name;
+						for(x in data){
+							data[x][colNombre] = 0;
+							data[x]["total" + colNombre] = 0;
+						}
+					}
+				}
+				
 				mi.gridOptions.data = data;
-				
-				if(mi.gridOptions.data[0].estado == 1){
-					mi.mostrarCongelar = true;
-					mi.mostrarCopiar = false;
-					mi.modificarTabla = true;
-				}else if (mi.gridOptions.data[0].estado == 2){
-					mi.mostrarCongelar = false;
-					mi.modificarTabla = false;
-					mi.mostrarCopiar = true;
-				}
-				
-				if(mi.gridOptions.data[0].estadoInforme == 2){
-					mi.mostrarCongelar = false;
-					mi.mostrarCopiar = false;
-					mi.modificarTabla = true;
-				}
 				
 				$timeout(function(){
 				     mi.gridApi.treeBase.expandAllRows();
@@ -221,14 +270,22 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			}
 		}
 		
+		mi.ddlOpciones = [{ id: 1, value: 'Comienzo' },
+            { id: 2, value: 'Prorrateo' },
+            { id: 3, value: 'Fin' }];
+		
 		mi.rowTemplate = function(){
 			return '<div style="background-color: blue">{{grid.scope.controller.gridOptions.data}}</div>';
 		}
 
 		mi.gridOptions = {
 				showColumnFooter: true,
-				enableCellEdit: true,
-				enableCellEditOnFocus: true,
+	            cellEditableCondition:function($scope){
+	            	  if($scope.row.entity.objetoTipo == 5 && $scope.row.entity.hijo == null)
+	            		  return true;
+	            	  else
+	            		  return false;
+	            },
 				rowEditWaitInterval: -1,
 				expandAllRows : true,
 				enableExpandableRowHeader: false,
@@ -236,82 +293,91 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				showTreeExpandNoChildren : false,
 				enableColumnMenus: false,
 				enableSorting: false,
-			    columnDefs: [
-			        { name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: '',
-			        	cellTemplate: "<div class=\"ui-grid-cell-contents\" title=\"TOOLTIP\"><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.controller.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>",
-			        	cellClass:'black'
-			        },
-			        { name: 'Mes1', width: 100, displayName: 'Enero', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2', 
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes1 | number:2}}</div>'
-			        },
-			        { name: 'Mes2', width: 100, displayName: 'Febrero', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes2 | number:2}}</div>'
-			        },
-			        { name: 'Mes3',  width: 100, displayName: 'Marzo', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes3 | number:2}}</div>'
-			        },
-			        { name: 'Mes4',  width: 100, displayName: 'Abril', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes4 | number:2}}</div>'
-			        },
-			        { name: 'Mes5',  width: 100, displayName: 'Mayo', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes5 | number:2}}</div>'
-			        },
-			        { name: 'Mes6',  width: 100, displayName: 'Junio', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes6 | number:2}}</div>'
-			        },
-			        { name: 'Mes7',  width: 100, displayName: 'Julio', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes7 | number:2}}</div>'
-			        },
-			        { name: 'Mes8',  width: 100, displayName: 'Agosto', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes8 | number:2}}</div>'
-			        },
-			        { name: 'Mes9',  width: 100, displayName: 'Septiembre', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes9 | number:2}}</div>'
-			        },
-			        { name: 'Mes10',  width: 100, displayName: 'Octubre', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes10 | number:2}}</div>'
-			        },
-			        { name: 'Mes11',  width: 100, displayName: 'Noviembre', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes11 | number:2}}</div>'
-			        },
-			        { name: 'Mes12',  width: 100, displayName: 'Diciembre', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.gridOptions.data[0].Mes12 | number:2}}</div>'
-			        },
-			        { name: 'Total',  enableCellEdit: false, width: 150, displayName: 'Total general', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.totalP | number:2}}</div>'
-			        }
-			    ],
-			    onRegisterApi: function( gridApi ) {
+				enableCellEdit: true,
+				enableCellEditOnFocus: true,
+			    columnDefs: mi.columnas,
+			    onRegisterApi: function(gridApi ) {
 			      mi.gridApi = gridApi;
 			      
 			      mi.gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
-			    	  if(mi.modificarTabla == true){
-				    	  if (newValue != oldValue){
-				    		  if (mi.getSumaHijos(rowEntity, colDef) == true){
-				    			  rowEntity.Total = rowEntity.Mes1 + rowEntity.Mes2 + rowEntity.Mes3 + rowEntity.Mes4 + rowEntity.Mes5 + rowEntity.Mes6 + rowEntity.Mes7 + rowEntity.Mes8 + rowEntity.Mes9 + rowEntity.Mes10 + rowEntity.Mes11 + rowEntity.Mes12 ;
-				    			  mi.calcular(rowEntity, colDef, newValue);				    			  
-				    		  }else{
-				    			  mi.setValor(rowEntity,colDef,oldValue);
-				    		  }
-				    	  }
-			    	  }else{
-			    		  mi.setValor(rowEntity,colDef,oldValue);
+			    	  if(rowEntity.acumulacionCostos == 1){
+			    		  mi.setInicio(rowEntity);
+			    	  }else if (rowEntity.acumulacionCostos == 2){
+			    		  mi.setProrrateo(rowEntity);
+			    	  }else if(rowEntity.acumulacionCostos == 3){
+			    		  mi.setFin(rowEntity);
 			    	  }
-			    	  
-			            var gridRows = mi.gridApi.rowEdit.getDirtyRows();
-			            var dataRows = gridRows.map( function( gridRow ) { return gridRow.entity; });
-			            mi.gridApi.rowEdit.setRowsClean( dataRows );
+			    	  mi.totalPrestamo();
 			      });
-			      
-			     mi.gridApi.rowEdit.on.saveRow($scope, mi.saveRow);
 			  }
 		};
 		
+		mi.setInicio = function(rowEntity){
+			var i = 0;
+		  
+			for(x in mi.gridOptions.columnDefs){
+				if(x > 0 && x < mi.gridOptions.columnDefs.length -2){
+					mi.setValor(rowEntity, mi.gridOptions.columnDefs[x].name, 0);
+				}
+			}
+			
+			var fInicial = rowEntity.fechaInicio.split('/');
+			mi.setValor(rowEntity,mi.obtenerMes(Number(fInicial[1]),Number(fInicial[2])),rowEntity.Costo);
+			mi.calcular(rowEntity);
+		}
+		
+		mi.setProrrateo = function(rowEntity){
+			var fInicial = rowEntity.fechaInicio.split('/');
+			var fFinal = rowEntity.fechaFin.split('/');
+			
+			var i = 0;
+			var j = 0;
+			var contador = 0;
+			  
+			var inicio = (Number(fInicial[1]) <= 12 ? Number(fInicial[1]) : 1);
+			for(j = Number(fInicial[2]); j <= Number(fFinal[2]); j++){
+				var fin = j==Number(fFinal[2]) ? Number(fFinal[1]):12;
+				for(i = inicio; i <= fin; i++){
+					contador++;
+				}
+				inicio = 1;
+			}
+			  
+			var costo = rowEntity.Costo / contador;
+			  
+			for(x in mi.gridOptions.columnDefs){
+				if(x > 0 && x < mi.gridOptions.columnDefs.length -2){
+					mi.setValor(rowEntity, mi.gridOptions.columnDefs[x].name, 0);
+				}
+			}
+			
+			var inicio = (Number(fInicial[1]) <= 12 ? Number(fInicial[1]) : 1);
+			for(j = Number(fInicial[2]); j <= Number(fFinal[2]); j++){
+				var fin = j==Number(fFinal[2]) ? Number(fFinal[1]):12;
+				for(i = inicio; i <= fin; i++){
+					mi.setValor(rowEntity, mi.obtenerMes(i,j), costo);
+				}
+				inicio = 1;
+			}
+			mi.calcular(rowEntity);
+		}
+		
+		mi.setFin = function(rowEntity){
+			var i = 0;
+			
+			for(x in mi.gridOptions.columnDefs){
+				if(x > 0 && x < mi.gridOptions.columnDefs.length -2){
+					mi.setValor(rowEntity, mi.gridOptions.columnDefs[x].name, 0);
+				}
+			}
+			  
+			var fFinal = rowEntity.fechaFin.split('/');
+			mi.setValor(rowEntity,mi.obtenerMes(Number(fFinal[1]),Number(fFinal[2])),rowEntity.Costo);
+			mi.calcular(rowEntity);
+		}
+		
 		mi.saveRow = function(rowEntity){
-            mi.guardarRowInforme(rowEntity);
-            var promise = $q.defer();
-            mi.gridApi.rowEdit.setSavePromise(rowEntity, promise.resolve());
-            
+			mi.guardarRowInforme(rowEntity);
             return true;
 		}
 		
@@ -326,40 +392,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				return false;
 			else
 				return true;
-		}
-      
-        mi.guardarRowInforme = function(rowEntity){
-            var defered = $q.defer();
-             $http.post('/SReporte', {
-                    accion: 'guardarInformePrestamo',
-					tipoInforme: mi.informe.value,
-					anio: moment(mi.fechaInicio).format('DD/MM/YYYY'),
-                    id: rowEntity.id,
-                    idObjetoTipo: rowEntity.idObjetoTipo,
-                    objetoTipo: rowEntity.objetoTipo,
-                    nombre: rowEntity.nombre,
-                    mes1: rowEntity.Mes1,
-                    mes2: rowEntity.Mes2,
-                    mes3: rowEntity.Mes3,
-                    mes4: rowEntity.Mes4,
-                    mes5: rowEntity.Mes5,
-                    mes6: rowEntity.Mes6,
-                    mes7: rowEntity.Mes7,
-                    mes8: rowEntity.Mes8,
-                    mes9: rowEntity.Mes9,
-                    mes10: rowEntity.Mes10,
-                    mes11: rowEntity.Mes11,
-                    mes12: rowEntity.Mes12,
-                    total: rowEntity.Total
-                }).success(function(response){
-                        defered.resolve(true);
-                        
-                }).error(function(response){
-                	defered.reject(false);
-                });
-             return defered.promise;
-         }
-        
+		}        
 		
 		mi.setColorRow = function(grid){
 			if (grid.objetoTipo == 1)
@@ -396,30 +429,52 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		};
 		
 		mi.totalPrestamo = function(){
-			mi.totalP = mi.gridOptions.data[0].Total;
-		}
-		
-		mi.calcular = function(rowEntidad, colDef, valor){
-			if (mi.saveRow(rowEntidad)){
-				mi.calcularPadre(rowEntidad, colDef, valor);
-				mi.totalPrestamo();
+			mi.rowEntity = mi.gridOptions.data[0];
+			mi.totalP = mi.rowEntity.Total;
+			for(x in mi.gridOptions.columnDefs){
+				if (x > 0 && x < mi.gridOptions.columnDefs.length - 2){
+					var columna = mi.gridOptions.columnDefs[x].name;
+					mi.totales[columna] = mi.obtenerValor(mi.rowEntity,columna);
+				}
 			}
 		}
 		
-		mi.calcularPadre = function(rowEntidad, colDef){
+		mi.calcular = function(rowEntidad){
+			mi.calcularPadre(rowEntidad);
+		}
+		
+		mi.calcularTotales = function(){
+			var monto = 0;
+			for(x in mi.gridOptions.data){
+				var rowEntity = mi.obtenerEntidad(mi.gridOptions.data[x].idObjetoTipo, mi.gridOptions.data[x].objetoTipo);
+				for(y in mi.gridOptions.columnDefs){
+					if(y > 0 && y < mi.gridOptions.columnDefs.length -2){
+						monto += mi.obtenerValor(rowEntity, mi.gridOptions.columnDefs[y].name);
+					}
+				}
+				
+				rowEntity.Total = monto;
+				monto = 0;
+			}
+		}
+		
+		mi.calcularPadre = function(rowEntidad){
 			if (rowEntidad.idPredecesor != 0){
 				var padre = mi.obtenerEntidad(rowEntidad.idPredecesor, rowEntidad.objetoTipoPredecesor);
 				var valorFinal = 0;
 				if (padre.hijo != null){
-					for(x in padre.hijo){
-						var hijo = padre.hijo[x].split(',');
-						var valorColumna = mi.obtenerValor(mi.obtenerEntidad(hijo[0], hijo[1]), colDef);
-						valorFinal = valorFinal + valorColumna;
+					for(y in mi.gridOptions.columnDefs){
+						if (y > 0 && y < mi.gridOptions.columnDefs.length -2){
+							for(x in padre.hijo){
+								var hijo = padre.hijo[x].split(',');
+								var valorColumna = mi.obtenerValor(mi.obtenerEntidad(hijo[0], hijo[1]), mi.gridOptions.columnDefs[y].name);
+								valorFinal = valorFinal + valorColumna;
+							}
+							mi.setValor(padre,mi.gridOptions.columnDefs[y].name, valorFinal);
+							valorFinal = 0;
+							mi.calcularPadre(padre);
+						}
 					}
-					mi.setValor(padre,colDef, valorFinal);
-					padre.Total = padre.Mes1 + padre.Mes2 + padre.Mes3 + padre.Mes4 + padre.Mes5 + padre.Mes6 + padre.Mes7 + padre.Mes8 + padre.Mes9 + padre.Mes10 + padre.Mes11 + padre.Mes12 ;
-					mi.saveRow(padre);
-					mi.calcularPadre(padre, colDef);
 				}
 			}
 		}
@@ -432,75 +487,161 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			}
 		}
 		
-		mi.obtenerValor = function(rowEntidad, columna){
-			switch (columna.name){
-			case "Mes1":
-				return rowEntidad.Mes1;
-			case "Mes2":
-				return rowEntidad.Mes2;
-			case "Mes3":
-				return rowEntidad.Mes3;
-			case "Mes4":
-				return rowEntidad.Mes4;
-			case "Mes5":
-				return rowEntidad.Mes5;
-			case "Mes6":
-				return rowEntidad.Mes6;
-			case "Mes7":
-				return rowEntidad.Mes7;
-			case "Mes8":
-				return rowEntidad.Mes8;
-			case "Mes9":
-				return rowEntidad.Mes9;
-			case "Mes10":
-				return rowEntidad.Mes10;
-			case "Mes11":
-				return rowEntidad.Mes11;
-			case "Mes12":
-				return rowEntidad.Mes12;
+		mi.obtenerMesCabecera = function(mes){
+			switch(mes){
+			case 1:
+				return "Mes1-";
+			case 2:
+				return "Mes2-";
+			case 3:
+				return "Mes3-";
+			case 4:
+				return "Mes4-";
+			case 5:
+				return "Mes5-";
+			case 6:
+				return "Mes6-";
+			case 7:
+				return "Mes7-";
+			case 8:
+				return "Mes8-";
+			case 9:
+				return "Mes9-";
+			case 10:
+				return "Mes10-";
+			case 11:
+				return "Mes11-";
+			case 12:
+				return "Mes12-";
 			}
+		}
+		
+		mi.obtenerMes = function(mes, anio){
+			switch(mes){
+			case 1:
+				return "Mes1-" + anio;
+			case 2:
+				return "Mes2-" + anio;
+			case 3:
+				return "Mes3-" + anio;
+			case 4:
+				return "Mes4-" + anio;
+			case 5:
+				return "Mes5-" + anio;
+			case 6:
+				return "Mes6-" + anio;
+			case 7:
+				return "Mes7-" + anio;
+			case 8:
+				return "Mes8-" + anio;
+			case 9:
+				return "Mes9-" + anio;
+			case 10:
+				return "Mes10-" + anio;
+			case 11:
+				return "Mes11-" + anio;
+			case 12:
+				return "Mes12-" + anio;
+			}
+		}
+		
+		mi.obtenerValor = function(rowEntidad, columna){
+			return rowEntidad[columna];
 		}
 		
 		mi.setValor = function(rowEntidad, columna, valor){
-			switch (columna.name){
-			case "Mes1":
-				rowEntidad.Mes1 = valor;
-				break;
-			case "Mes2":
-				rowEntidad.Mes2 = valor;
-				break;
-			case "Mes3":
-				rowEntidad.Mes3 = valor;
-				break;
-			case "Mes4":
-				rowEntidad.Mes4 = valor;
-				break;
-			case "Mes5":
-				rowEntidad.Mes5 = valor;
-				break;
-			case "Mes6":
-				rowEntidad.Mes6 = valor;
-				break;
-			case "Mes7":
-				rowEntidad.Mes7 = valor;
-				break;
-			case "Mes8":
-				rowEntidad.Mes8 = valor;
-				break;
-			case "Mes9":
-				rowEntidad.Mes9 = valor;
-				break;
-			case "Mes10":
-				rowEntidad.Mes10 = valor;
-				break;
-			case "Mes11":
-				rowEntidad.Mes11 = valor;
-				break;
-			case "Mes12":
-				rowEntidad.Mes12 = valor;
-				break;
-			}
+			rowEntidad[columna] = valor;
 		}
 		
 		mi.getPrestamos();
-}]);
+}])
+
+.filter('mapAcumulacionCosto', function() {
+	  var genderHash = {
+	    1: 'Comienzo',
+	    2: 'Prorrateo',
+	    3: 'Fin'
+	  };
+	 
+	  return function(input) {
+	    if (!input){
+	      return '';
+	    } else {
+	      return genderHash[input];
+	    }
+	  };
+	})
+	
+.directive('categoryHeader', function() {
+    function link(scope, element, attrs) {
+
+      // create cols as soon as $gridscope is avavilable
+      // grids in tabs with lazy loading come later, so we need to 
+      // setup a watcher
+      scope.$watch('categoryHeader.$gridScope', function(gridScope, oldVal) {
+          if (!gridScope) {
+              return;
+          }
+          // setup listener for scroll events to sync categories with table
+          var viewPort = scope.categoryHeader.$gridScope.domAccessProvider.grid.$viewport[0];
+          var headerContainer = scope.categoryHeader.$gridScope.domAccessProvider.grid.$headerContainer[0];
+        
+          // watch out, this line usually works, but not always, because under certains conditions
+          // headerContainer.clientHeight is 0
+          // unclear how to fix this. a workaround is to set a constant value that equals your row height 
+          scope.headerRowHeight=  headerContainer.clientHeight;  
+         
+          angular.element(viewPort).bind("scroll", function() {
+            // copy total width to compensate scrollbar width
+            $(element).find(".categoryHeaderScroller")
+              .width($(headerContainer).find(".ngHeaderScroller").width());
+            $(element).find(".ngHeaderContainer")
+              .scrollLeft($(this).scrollLeft());
+        });
+  
+        // setup listener for table changes to update categories                
+        scope.categoryHeader.$gridScope.$on('ngGridEventColumns', function(event, reorderedColumns) {
+          createCategories(event, reorderedColumns);
+        });
+                });          
+      var createCategories = function(event, cols) {
+        scope.categories = [];
+        var lastDisplayName = "";
+        var totalWidth = 0;
+        var left = 0;
+        angular.forEach(cols, function(col, key) {
+          if (!col.visible) {
+            return;
+          }
+          totalWidth += col.width;
+          var displayName = (typeof(col.colDef.categoryDisplayName) === "undefined") ?
+            "\u00A0" : col.colDef.categoryDisplayName;
+          if (displayName !== lastDisplayName) {
+            scope.categories.push({
+              displayName: lastDisplayName,
+              width: totalWidth - col.width,
+              left: left
+            });
+            left += (totalWidth - col.width);
+            totalWidth = col.width;
+            lastDisplayName = displayName;
+          }
+        });
+        if (totalWidth > 0) {
+          scope.categories.push({
+            displayName: lastDisplayName,
+            width: totalWidth,
+            left: left
+          });
+        }
+      };
+    }
+    return {
+      scope: {
+        categoryHeader: '='
+      },
+      restrict: 'EA',
+      templateUrl: 'category_header.html',
+      link: link
+    };
+  });

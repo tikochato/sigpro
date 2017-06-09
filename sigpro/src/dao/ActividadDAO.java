@@ -1,6 +1,8 @@
 package dao;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -11,6 +13,55 @@ import pojo.ActividadUsuario;
 import pojo.ActividadUsuarioId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
+import utilities.Utils;
+
+class duracionFecha{
+	int id;
+	int duracion;
+	Date fecha_inicial;
+	Date fecha_final;
+	String dimension;
+	
+	public void setId(int id){
+		this.id = id;
+	}
+	
+	public int getId(){
+		return this.id;
+	}
+	
+	public void setDuracion(int duracion){
+		this.duracion = duracion;
+	}
+	
+	public int getDuracion(){
+		return this.duracion;
+	}
+	
+	public void setFechaInicial(Date fechaInicial){
+		this.fecha_inicial = fechaInicial;
+	}
+	
+	public Date getFechaInicial(){
+		return this.fecha_inicial;
+	}
+	
+	public void setFechaFin(Date fechaFin){
+		this.fecha_final = fechaFin;
+	}
+	
+	public Date getFechaFin(){
+		return this.fecha_final;
+	}
+	
+	public void setDimension(String dimension){
+		this.dimension = dimension;
+	}
+	
+	public String getDimension(){
+		return this.dimension;
+	}
+}
 
 public class ActividadDAO {
 	public static List<Actividad> getActividads(String usuario){
@@ -231,4 +282,96 @@ public class ActividadDAO {
 		}
 		return ret;
 	}
+	
+	public static String getFechaInicioFin(Actividad actividad, String usuario){
+		List<duracionFecha> objetoActividadFechas = new ArrayList<duracionFecha>();
+		String fecha = "";
+		
+		duracionFecha df = new duracionFecha();
+		df.setId(actividad.getId());
+		df.setDimension(actividad.getDuracionDimension());
+		df.setDuracion(actividad.getDuracion());
+		objetoActividadFechas.add(df);
+		if(actividad.getPredObjetoId() != null){
+			objetoActividadFechas = getPredecesora(getActividadPorId(actividad.getPredObjetoId(), usuario),usuario, objetoActividadFechas);
+			
+			Date fechaFI = null;
+			for(int i = objetoActividadFechas.size()-1; i >= 0; i--){
+				if(fechaFI != null)
+					objetoActividadFechas.get(i).setFechaInicial(getFechaFinal(fechaFI,1,objetoActividadFechas.get(i).getDimension()));
+				Date fechaI = objetoActividadFechas.get(i).fecha_inicial;
+				objetoActividadFechas.get(i).setFechaFin(getFechaFinal(fechaI,objetoActividadFechas.get(i).getDuracion(),objetoActividadFechas.get(i).getDimension()));
+				fechaFI = objetoActividadFechas.get(i).getFechaFin();
+			}
+
+			fecha = Utils.formatDate(objetoActividadFechas.get(0).getFechaInicial()) + ";" + Utils.formatDate(objetoActividadFechas.get(0).getFechaFin()); 
+		}else{
+			fecha = Utils.formatDate(actividad.getFechaInicio()) + ";" + Utils.formatDate(getFechaFinal(actividad.getFechaInicio(),actividad.getDuracion(),actividad.getDuracionDimension())); 
+		}
+		
+		return fecha;
+	}
+	
+	private static List<duracionFecha> getPredecesora(Actividad actividad, String usuario, List<duracionFecha> fechasPredecesoras){
+		duracionFecha df = new duracionFecha();
+		df.setId(actividad.getId());
+		df.setDimension(actividad.getDuracionDimension());
+		df.setDuracion(actividad.getDuracion());
+		fechasPredecesoras.add(df);
+		
+		if(actividad.getPredObjetoId() != null){
+			fechasPredecesoras = getPredecesora(getActividadPorId(actividad.getPredObjetoId(), usuario),usuario, fechasPredecesoras);
+		}else{
+			fechasPredecesoras.get(fechasPredecesoras.size()-1).setFechaInicial(actividad.getFechaInicio());
+		}
+		
+		return fechasPredecesoras;
+	}
+	
+	public static Date getFechaFinal(Date fecha_inicio, Integer duracion, String dimension){
+        Calendar fecha_final = Calendar.getInstance();
+        fecha_final.setTime(fecha_inicio);
+       
+        if (dimension == "d"){ //Restamos un día para validar que la fecha de inicio sea día hábil
+            fecha_final.add(Calendar.DAY_OF_MONTH, -1);
+        }
+        Integer contador=0;
+        while (contador < duracion){
+            switch(dimension){
+                case "d":  //día
+                    fecha_final.add(Calendar.DAY_OF_MONTH, 1);
+                    break;
+                default:
+            }
+            boolean esFechaHabil = esFechaHabil(fecha_final);
+            if (esFechaHabil) {
+                contador++;
+            }
+        }
+        return new Date(fecha_final.getTimeInMillis());
+    }
+   
+    public static boolean esFechaHabil(Calendar fecha) {
+          switch (fecha.get(Calendar.DAY_OF_WEEK)){
+            case Calendar.SUNDAY:
+                return false;
+            case Calendar.SATURDAY:
+                return false;
+            default:
+              if (fecha.get(Calendar.DAY_OF_MONTH) == 1 && fecha.get(Calendar.MONTH) == Calendar.JANUARY) //Año nuevo
+                  return false;
+              if (fecha.get(Calendar.DAY_OF_MONTH) == 1 && fecha.get(Calendar.MONTH) == Calendar.MARCH) //Día del Trabajo
+                  return false;
+              if (fecha.get(Calendar.DAY_OF_MONTH) == 15 && fecha.get(Calendar.MONTH) == Calendar.SEPTEMBER) //Independencia
+                  return false;
+              if (fecha.get(Calendar.DAY_OF_MONTH) == 20 && fecha.get(Calendar.MONTH) == Calendar.OCTOBER) //Revolución
+                  return false;
+              if (fecha.get(Calendar.DAY_OF_MONTH) == 1 && fecha.get(Calendar.MONTH) == Calendar.NOVEMBER) //Todos los Santos
+                  return false;
+              if (fecha.get(Calendar.DAY_OF_MONTH) == 25 && fecha.get(Calendar.MONTH) == Calendar.DECEMBER) //Navidad
+                  return false;
+              break;
+            }
+            return true;
+        }
 }
