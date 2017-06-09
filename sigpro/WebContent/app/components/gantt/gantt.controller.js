@@ -1370,6 +1370,7 @@ function modalPesoProducto($uibModalInstance, $scope, $http, $interval,
 	mi.pesoTotal = 0;
 	mi.gridOptions = {
 		showColumnFooter: true,
+		enableCellSelection:true,
 		enableCellEdit: true,
 		enableCellEditOnFocus: true,
 		rowEditWaitInterval: -1,
@@ -1423,7 +1424,6 @@ function modalPesoProducto($uibModalInstance, $scope, $http, $interval,
 			}
 			mi.modificarTabla = mi.pesoTotal === 0;
 			
-				
 			mi.gridOptions.data = data;
 			mi.mostrarcargando = false;
 	});
