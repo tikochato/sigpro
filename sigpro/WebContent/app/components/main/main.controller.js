@@ -174,7 +174,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/responsablerol/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'responsablerolController\'" class="all_page"></div>'
             })
-            .when('/planejecucion/:proyectoId?',{
+            .when('/planejecucion/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'planejecucionController\'" class="all_page"></div>'
             })
             /*.when('/salir',{

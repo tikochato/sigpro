@@ -48,6 +48,7 @@ public class Producto implements java.io.Serializable {
 	private Integer fuente;
 	private String latitud;
 	private String longitud;
+	private Integer peso;
 	private Set<ProductoUsuario> productoUsuarios = new HashSet<ProductoUsuario>(0);
 	private Set<Subproducto> subproductos = new HashSet<Subproducto>(0);
 	private Set<ProductoPropiedadValor> productoPropiedadValors = new HashSet<ProductoPropiedadValor>(0);
@@ -68,7 +69,7 @@ public class Producto implements java.io.Serializable {
 	public Producto(Componente componente, ProductoTipo productoTipo, UnidadEjecutora unidadEjecutora, String nombre,
 			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, Integer estado, Long snip, Integer programa, Integer subprograma,
-			Integer proyecto, Integer actividad, Integer obra, Integer fuente, String latitud, String longitud,
+			Integer proyecto, Integer actividad, Integer obra, Integer fuente, String latitud, String longitud, Integer peso,
 			Set<ProductoUsuario> productoUsuarios, Set<Subproducto> subproductos,
 			Set<ProductoPropiedadValor> productoPropiedadValors) {
 		this.componente = componente;
@@ -90,6 +91,7 @@ public class Producto implements java.io.Serializable {
 		this.fuente = fuente;
 		this.latitud = latitud;
 		this.longitud = longitud;
+		this.peso = peso;
 		this.productoUsuarios = productoUsuarios;
 		this.subproductos = subproductos;
 		this.productoPropiedadValors = productoPropiedadValors;
@@ -282,6 +284,16 @@ public class Producto implements java.io.Serializable {
 	public void setLongitud(String longitud) {
 		this.longitud = longitud;
 	}
+	
+	@Column(name = "peso")
+	public Integer getPeso() {
+		return this.peso;
+	}
+
+	public void setPeso(Integer peso) {
+		this.peso = peso;
+	}
+
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
 	public Set<ProductoUsuario> getProductoUsuarios() {
