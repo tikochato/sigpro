@@ -248,24 +248,31 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 				if(response.success){
 					mi.cargaTrabajo = [], obj_c_processed = [];
 					
-					for (var i in response.actividadesAtrasadas) {
-					    var obj = {id: response.actividadesAtrasadas[i][0], responsable: response.actividadesAtrasadas[i][1], actividadesAtrasadas: response.actividadesAtrasadas[i][2]};
-
-					    for (var j in response.actividadesProceso) {
-					        if (response.actividadesAtrasadas[i][0] == response.actividadesProceso[j][0]) {
-					            obj.actividadesProceso = response.actividadesProceso[j][2];
-					            obj_c_processed[response.actividadesProceso[j][0]] = true;
-					        }
-					    }
-
-					    obj.actividadesProceso = obj.actividadesProceso || 0;
-					    mi.cargaTrabajo.push(obj);
+					var pos = 0;
+					for(x in response.actividadesAtrasadas){
+						var id = response.actividadesAtrasadas[x].id
+						var responsable = response.actividadesAtrasadas[x].responsable;
+						if(mi.existeResponsable(id) == -1){
+							mi.cargaTrabajo.push({id: id, responsable: responsable, actividadesAtrasadas: 1, actividadesProceso: 0});
+						}else{
+							for(y in mi.cargaTrabajo){
+								if(id == mi.cargaTrabajo[y].id)
+									mi.cargaTrabajo[y].actividadesAtrasadas += 1;
+							}
+						}
 					}
 					
-					for (var j in response.actividadesProceso){
-					    if (typeof obj_c_processed[response.actividadesProceso[j][0]] == 'undefined') {
-					    	mi.cargaTrabajo.push({id: response.actividadesProceso[j][0], responsable: response.actividadesProceso[j][1], actividadesAtrasadas: 0, actividadesProceso: response.actividadesProceso[j][2]});
-					    }
+					for(x in response.actividadesProceso){
+						var id = response.actividadesProceso[x].id
+						var responsable = response.actividadesProceso[x].responsable;
+						if(mi.existeResponsable(response.actividadesProceso[x].id) == -1)
+							mi.cargaTrabajo.push({id: id, responsable: responsable, actividadesAtrasadas: 0, actividadesProceso: 1});
+						else{
+							for(y in mi.cargaTrabajo){
+								if(id == mi.cargaTrabajo[y].id)
+									mi.cargaTrabajo[y].actividadesProceso += 1;
+							}
+						}
 					}
 					
 					mi.rowCollection = [];
@@ -291,15 +298,20 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		}
 	}
 	
+	mi.existeResponsable = function(id){
+		for(x in mi.cargaTrabajo){
+			if (mi.cargaTrabajo[x].id == id)
+				return x;
+		}
+		return -1;
+	}
+	
 	mi.exportarExcel = function(){
 		$http.post('/SReporte',{
 			accion: 'exportarExcel',
-			reporte: 'cargaTrabajo',
-			objetoTipo: mi.tObjeto.value,
-			idPrestamo : mi.prestamo.value,
-			idComponente : mi.componente.value,
-			idProducto : mi.producto.value,
-			idSubProducto : mi.subProducto.value,
+			tipoReporte: 'cargaTrabajo',
+			data: JSON.stringify(mi.cargaTrabajo),
+			totales: "Total,"+mi.actividadesAtrasadasTotal+ ","+mi.actividadesProcesoTotal,
 			mes: mi.mesActual,
 			t:moment().unix()
 		}).then(
@@ -308,7 +320,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 					    anchor.attr({
 					         href: 'data:application/ms-excel;base64,' + response.data,
 					         target: '_blank',
-					         download: 'Informe.xls'
+					         download: 'cargaTrabajo.xls'
 					     })[0].click();
 					  }.bind(this), function errorCallback(response){
 					 		
