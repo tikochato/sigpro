@@ -94,7 +94,7 @@ public class SReporte extends HttpServlet {
 			Integer idSubProducto = Utils.String2Int(map.get("idSubProducto"),0);
 			
 			List<?> actividades = ReporteDAO.getActividadesCargaTrabajo(idProyecto, idComponente, idProducto, idSubProducto);
-			
+			 
 			
 			
 			/*
