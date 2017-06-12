@@ -193,7 +193,7 @@ public class ProductoDAO {
 				ret = true;
 
 			} catch (Throwable e) {
-				CLogger.write("10", ProductoDAO.class, e);
+				CLogger.write("8", ProductoDAO.class, e);
 			} finally {
 				session.close();
 			}
@@ -214,11 +214,41 @@ public class ProductoDAO {
 			ret = session.createQuery( criteria ).getSingleResult();
 		}
 		catch(Throwable e){
-			CLogger.write("2", ProductoDAO.class, e);
+			CLogger.write("9", ProductoDAO.class, e);
 		}
 		finally{
 			session.close();
 		}
 		return ret;
 	}
+	
+	public static List<Producto> getProductosPorProyecto(Integer idProyecto,String usuario) {
+		List<Producto> ret = new ArrayList<Producto>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try {
+			String query = String.join(" ", "select t.*"
+					,"from (",
+					"SELECT pr.* FROM producto pr JOIN componente c ON c.id = pr.componenteid "
+					,"JOIN proyecto p ON p.id = c.proyectoid"
+					,"where p.id = :idProy) as t"
+					,usuario!=null && usuario.length()>0 ? 
+					 "join producto_usuario pu on pu.productoid = t.id where pu.usuario = :usuario ":"",
+					 usuario!=null && usuario.length()>0 ? "and" : "where", "t.estado = 1");
+			
+			
+			Query<Producto> criteria = session.createNativeQuery(query,Producto.class);
+			criteria.setParameter("idProy", idProyecto);
+			if (usuario !=null && usuario.length()>0)
+				criteria.setParameter("usuario", usuario);
+			ret =   criteria.getResultList();
+		} catch (Throwable e) {
+			CLogger.write("10", ProductoDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
+	}
+	
+	
+	
 }

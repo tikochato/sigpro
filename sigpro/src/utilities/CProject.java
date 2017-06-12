@@ -155,7 +155,7 @@ public class CProject {
 		Producto producto = new Producto(componente, productoTipo, unidadEjecutora
 				,task.getName() , null, usuario, null, new Date(), null,1, 
 				 null, null, null, null, null, null, null, 
-				null, null, null,null,null);
+				null, null, null,null,null,null);
 		
 		
 		return ProductoDAO.guardarProducto(producto) ? producto : null;
