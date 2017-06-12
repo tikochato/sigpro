@@ -97,26 +97,23 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 					 }else{
 						 $utilidades.mensaje('warning','No se encontro datos del prestamo');
 					 }
-					 
-					 
 				});		
 		});	
 	}
 	
 	mi.exportarExcel = function(){
 			$http.post('/SAgenda', { accion: 'exportarExcel', proyectoid:$routeParams.proyectoId,t:moment().unix()
-				  } ).then(
-						  function successCallback(response) {
-								var anchor = angular.element('<a/>');
-							    anchor.attr({
-							         href: 'data:application/ms-excel;base64,' + response.data,
-							         target: '_blank',
-							         download: 'Agenda.xls'
-							     })[0].click();
-							  }.bind(this), function errorCallback(response){
-							 		
-							 	}
-							 );
+				  } ).then( function successCallback(response) {
+						var anchor = angular.element('<a/>');
+					    anchor.attr({
+					         href: 'data:application/ms-excel;base64,' + response.data,
+					         target: '_blank',
+					         download: 'Agenda.xls'
+					     })[0].click();
+					  }.bind(this), function errorCallback(response){
+					 		
+					 	}
+					 );
 		};
 		
 	
@@ -166,8 +163,6 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 		switch(index){
 			case 1: mi.ef_abierto = true; break;
 		}
-	
-
 	};
 	
 	mi.obtenerMes= function (mes){
@@ -187,9 +182,6 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 		
 		}
 	}
-	
-
-	
 	
 }]);
 
