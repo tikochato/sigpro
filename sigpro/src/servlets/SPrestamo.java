@@ -40,7 +40,7 @@ public class SPrestamo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	class stprestamo{
 		String fechaCorte;
-		int codigoPresupuestario;
+		Long codigoPresupuestario;
 		String numeroPrestamo; 
 		String destino;
 		String sectorEconomico;
@@ -240,9 +240,10 @@ public class SPrestamo extends HttpServlet {
 				response_text = "{ \"success\": false }";
 			}	
 		}else if (accion.equals("gurdarPrestamo")) {
-			Integer objetoId = Utils.String2Int("objetoId", null);
+			boolean result = false;
+			Integer objetoId = Utils.String2Int(map.get("objetoId"), null);
 			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"),null);
-			int codigoPresupuestario = Utils.String2Int(map.get("codigoPresupuestario"));
+			Long codigoPresupuestario = Utils.String2Long(map.get("codigoPresupuestario"));
 			String numeroPrestamo =  map.get("numeroPrestamo"); 
 			String  proyectoPrograma = map.get("proyetoPrograma");
 			
@@ -362,7 +363,7 @@ public class SPrestamo extends HttpServlet {
 				objetoPrestamo = new ObjetoPrestamo(objetoPrestamoId, prestamo);
 				Set <ObjetoPrestamo> objetoPrestamos = new HashSet<>();
 				objetoPrestamos.add(objetoPrestamo);
-				PrestamoDAO.guardarPrestamo(prestamo, objetoPrestamo);
+				result = PrestamoDAO.guardarPrestamo(prestamo, objetoPrestamo);
 			}else{
 				prestamo.setAmortizado(amortizado);
 				prestamo.setAniosGracia(aniosGracia);
@@ -429,11 +430,11 @@ public class SPrestamo extends HttpServlet {
 				prestamo.setDesembolsoAFechaUeUsd(desembolsoAFechaUeUsd);
 				prestamo.setMontoPorDesembolsarUeUsd(montoPorDesembolsarUeUsd);
 				prestamo.setCooperante(cooperanteUe);
-				PrestamoDAO.guardarPrestamo(prestamo, PrestamoDAO.getObjetoPrestamo(prestamo.getId()));
+				result = PrestamoDAO.guardarPrestamo(prestamo, PrestamoDAO.getObjetoPrestamo(prestamo.getId()));
 			}
-			
+			response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
+		}else
 			response_text = "{ \"success\": false }";
-		}else 
 		
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");

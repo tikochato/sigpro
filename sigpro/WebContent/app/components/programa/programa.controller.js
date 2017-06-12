@@ -825,20 +825,11 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			$http.post('/SDataSigade', parametros).then(function(response){
 				mi.prestamo={};
 				if (response.data.success){
+					mi.prestamo = response.data.prestamo;
 					mi.prestamo.codigoPresupuestario = Number(response.data.prestamo.codigoPresupuestario);
-					mi.prestamo.numeroPrestamo = response.data.prestamo.numeroPrestamo;
-					mi.prestamo.proyectoPrograma = response.data.prestamo.proyectoPrograma;
-					mi.prestamo.cooperantenombre = response.data.prestamo.cooperantenombre;
 					mi.prestamo.fechaDecreto = moment(response.data.prestamo.fechaDecreto,'DD/MM/YYYY').toDate()
 					mi.prestamo.fechaSuscripcion = moment(response.data.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate();
-					mi.prestamo.fechaVigencia = moment(response.data.prestamo.fechaVigencia,'DD/MM/YYYY').toDate();
-					mi.prestamo.tipoMonedaNombre = response.data.prestamo.tipoMonedaNombre;
-					mi.prestamo.tipoMonedaId= response.data.prestamo.tipoMonedaId;
-					mi.prestamo.montoContratado = response.data.prestamo.montoContratado;
-					mi.prestamo.montoContratadoUsd = response.data.prestamo.montoContratadoUsd;
-					mi.prestamo.montoContratadoQtz = response.data.prestamo.montoContratadoQtz;
-					mi.prestamo.desembolsoAFechaUsd = response.data.prestamo.desembolsoAFechaUsd;
-					mi.prestamo.montoPorDesembolsarUsd =  response.data.prestamo.montoPorDesembolsarUsd;
+					mi.prestamo.fechaVigencia = moment(response.data.prestamo.fechaVigencia,'DD/MM/YYYY').toDate();			
 					mi.getPorcentajes();
 				}else{
 					$utilidades.mensaje('warning', 'No se encontraron datos con los parámetros ingresados');
