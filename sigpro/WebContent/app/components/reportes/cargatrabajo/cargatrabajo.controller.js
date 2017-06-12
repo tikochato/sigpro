@@ -246,9 +246,8 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 				idSubProducto : mi.subProducto.value
 			}).success(function(response){
 				if(response.success){
-					mi.cargaTrabajo = [], obj_c_processed = [];
+					mi.cargaTrabajo = [];
 					
-					var pos = 0;
 					for(x in response.actividadesAtrasadas){
 						var id = response.actividadesAtrasadas[x].id
 						var responsable = response.actividadesAtrasadas[x].responsable;
