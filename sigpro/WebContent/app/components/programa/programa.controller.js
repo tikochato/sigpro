@@ -290,6 +290,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 						mi.obtenerTotalProgramas();
 						
 						var param_data = {
+							accion: "gurdarPrestamo",
 							objetoId: mi.programa.id,
 							objetoTipo: 6,
 							codigoPresupuestario: mi.prestamo.codigoPresupuestario,
