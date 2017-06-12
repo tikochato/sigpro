@@ -1,8 +1,6 @@
 package dao;
 
 import java.util.List;
-
-
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
@@ -42,32 +40,136 @@ public class ReporteDAO {
 		try{
 			String string_query = "";
 			if(idProyecto > 0 && idComponente == 0 && idProducto == 0 && idSubProducto ==0){
-				string_query = string_query + "select a.nombre from Proyecto p "
-						+ "inner join Actividad a where a.objetoId=p.id "
-						+ "and p.id=:idProyecto";
+				string_query = "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						+ "inner join Actividad a on a.objetoId=p.id "
+						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
+						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
+						+ "where p.id=:idProyecto and a.objetoTipo=1 and p.estado=1 ";
 				
-				Query<Object> query = session.createQuery(string_query,Object.class);
+				Query query = session.createQuery(string_query);
 				query.setParameter("idProyecto", idProyecto);
 				result = query.getResultList();
+				
+				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						+ "inner join Componente c on p.id=c.proyecto.id "
+						+ "inner join Actividad a on a.objetoId=c.id "
+						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
+						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
+						+ "where p.id=:idProyecto and a.objetoTipo=2 and p.estado=1 and c.estado=1";
+				
+				query = session.createQuery(string_query);
+				query.setParameter("idProyecto", idProyecto);
+				result.addAll(query.getResultList());
+				
+				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						+ "inner join Componente c on p.id=c.proyecto.id "
+						+ "inner join Producto pd on c.id=pd.componente.id "
+						+ "inner join Actividad a on a.objetoId=pd.id "
+						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
+						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
+						+ "where p.id=:idProyecto and a.objetoTipo=3 and p.estado=1 and c.estado=1 and p.estado=1";
+				
+				query = session.createQuery(string_query);
+				query.setParameter("idProyecto", idProyecto);
+				result.addAll(query.getResultList());
+				
+				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						+ "inner join Componente c on p.id=c.proyecto.id "
+						+ "inner join Producto pd on c.id=pd.componente.id "
+						+ "inner join Subproducto sp on pd.id=sp.producto.id "
+						+ "inner join Actividad a on a.objetoId=sp.id "
+						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
+						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
+						+ "where p.id=:idProyecto and a.objetoTipo=4 and p.estado=1 and c.estado=1 and p.estado=1 and sp.estado=1";
+				
+				query = session.createQuery(string_query);
+				query.setParameter("idProyecto", idProyecto);
+				result.addAll(query.getResultList());
 			} else if(idProyecto > 0 && idComponente > 0 && idProducto == 0 && idSubProducto == 0){
+				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						+ "inner join Componente c on p.id=c.proyecto.id "
+						+ "inner join Actividad a on a.objetoId=c.id "
+						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
+						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
+						+ "where p.id=:idProyecto and c.id=:idComponente and a.objetoTipo=2 and p.estado=1 and c.estado=1";
 				
+				Query query = session.createQuery(string_query);
+				query.setParameter("idProyecto", idProyecto);
+				query.setParameter("idComponente", idComponente);
+				result = query.getResultList();
+				
+				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						+ "inner join Componente c on p.id=c.proyecto.id "
+						+ "inner join Producto pd on c.id=pd.componente.id "
+						+ "inner join Actividad a on a.objetoId=pd.id "
+						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
+						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
+						+ "where p.id=:idProyecto and c.id=:idComponente and a.objetoTipo=3 and p.estado=1 and c.estado=1 and p.estado=1";
+				
+				query = session.createQuery(string_query);
+				query.setParameter("idProyecto", idProyecto);
+				query.setParameter("idComponente", idComponente);
+				result.addAll(query.getResultList());
+				
+				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						+ "inner join Componente c on p.id=c.proyecto.id "
+						+ "inner join Producto pd on c.id=pd.componente.id "
+						+ "inner join Subproducto sp on pd.id=sp.producto.id "
+						+ "inner join Actividad a on a.objetoId=sp.id "
+						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
+						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
+						+ "where p.id=:idProyecto and c.id=:idComponente and a.objetoTipo=4 and p.estado=1 and c.estado=1 and p.estado=1 and sp.estado=1";
+				
+				query = session.createQuery(string_query);
+				query.setParameter("idProyecto", idProyecto);
+				query.setParameter("idComponente", idComponente);
+				result.addAll(query.getResultList());
 			} else if(idProyecto > 0 && idComponente > 0 && idProducto > 0 && idSubProducto == 0){
+				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						+ "inner join Componente c on p.id=c.proyecto.id "
+						+ "inner join Producto pd on c.id=pd.componente.id "
+						+ "inner join Actividad a on a.objetoId=pd.id "
+						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
+						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
+						+ "where p.id=:idProyecto and c.id=:idComponente and p.id=:idProducto and a.objetoTipo=3 and p.estado=1 and c.estado=1 and p.estado=1";
 				
+				Query query = session.createQuery(string_query);
+				query.setParameter("idProyecto", idProyecto);
+				query.setParameter("idComponente", idComponente);
+				query.setParameter("idProducto", idProducto);
+				result = query.getResultList();
+				
+				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						+ "inner join Componente c on p.id=c.proyecto.id "
+						+ "inner join Producto pd on c.id=pd.componente.id "
+						+ "inner join Subproducto sp on pd.id=sp.producto.id "
+						+ "inner join Actividad a on a.objetoId=sp.id "
+						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
+						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
+						+ "where p.id=:idProyecto and c.id=:idComponente and p.id=:idProducto and a.objetoTipo=4 and p.estado=1 and c.estado=1 and p.estado=1 and sp.estado=1";
+				
+				query = session.createQuery(string_query);
+				query.setParameter("idProyecto", idProyecto);
+				query.setParameter("idComponente", idComponente);
+				query.setParameter("idProducto", idProducto);
+				result.addAll(query.getResultList());
 			} else if(idProyecto > 0 && idComponente > 0 && idProducto > 0 && idSubProducto > 0){
+				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						+ "inner join Componente c on p.id=c.proyecto.id "
+						+ "inner join Producto pd on c.id=pd.componente.id "
+						+ "inner join Subproducto sp on pd.id=sp.producto.id "
+						+ "inner join Actividad a on a.objetoId=sp.id "
+						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
+						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
+						+ "where p.id=:idProyecto and c.id=:idComponente and p.id=:idProducto and sp.id=:idSubProducto and a.objetoTipo=4 and p.estado=1 and c.estado=1 and p.estado=1 and sp.estado=1";
 				
+				Query query = session.createQuery(string_query);
+				query.setParameter("idProyecto", idProyecto);
+				query.setParameter("idComponente", idComponente);
+				query.setParameter("idProducto", idProducto);
+				query.setParameter("idSubProducto", idSubProducto);
+				result = query.getResultList();
 			}
-			
-			
-			/*
-			if (idComponente > 0)
-				string_query = string_query + "inner join Componente c on p.id=c.proyecto.id inner join ca.actividad ca on c.id=ca.objeto_id ";
-			if(idProducto > 0)
-				string_query = string_query + "inner join Producto pd on c.id=pd.componente.id inner join Actividad a on pd.id=a.objeto_id ";
-			if(idSubProducto > 0)
-				string_query = string_query + "inner join Subproducto sp on pd.id=sp.producto.id inner join Actividad a on sp.id=a.objeto_id ";
-			string_query = string_query + "where p.id=:idProyecto ";*/
-			
-
 		}
 		catch(Throwable e){
 			e.printStackTrace();

@@ -7,14 +7,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
@@ -29,22 +27,11 @@ import org.apache.shiro.codec.Base64;
 import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
-import dao.ComponenteDAO;
-import dao.ProductoDAO;
-import dao.ProyectoDAO;
 import dao.ReporteDAO;
-import dao.SubproductoDAO;
 import pojo.Actividad;
-import pojo.Componente;
-import pojo.EstadoInforme;
-import pojo.InformePresupuesto;
-import pojo.Producto;
-import pojo.Proyecto;
-import pojo.Subproducto;
 import utilities.CExcel;
 import utilities.CLogger;
 import utilities.Utils;
@@ -54,10 +41,11 @@ public class SReporte extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	
-	class duracionFecha{
+	class cargaTrabajo{
 		int id;
-		int duracion;
-		String fecha_inicial;
+		String responsable;
+		int actividadesAtrasadas;
+		int actividadesProceso;
 	}
 	
     public SReporte() {
@@ -84,50 +72,86 @@ public class SReporte extends HttpServlet {
 		Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String accion = map.get("accion")!=null ? map.get("accion") : "";
 		String response_text = "";
-		Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 		
 		if(accion.equals("getCargaTrabajoPrestamo")){
-			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"),0);
 			Integer idProyecto = Utils.String2Int(map.get("idPrestamo"),0);
 			Integer idComponente = Utils.String2Int(map.get("idComponente"),0);
 			Integer idProducto = Utils.String2Int(map.get("idProducto"),0);
 			Integer idSubProducto = Utils.String2Int(map.get("idSubProducto"),0);
 			
-			List<?> actividades = ReporteDAO.getActividadesCargaTrabajo(idProyecto, idComponente, idProducto, idSubProducto);
-			 
+			List<Object> actividades = ReporteDAO.getActividadesCargaTrabajo(idProyecto, idComponente, idProducto, idSubProducto);
+			List<cargaTrabajo> atrasadas = new ArrayList<cargaTrabajo>();
+			List<cargaTrabajo> proceso = new ArrayList<cargaTrabajo>();
 			
+			for(Object obj : actividades){
+				cargaTrabajo temp1 = new cargaTrabajo();
+				cargaTrabajo temp2 = new cargaTrabajo();
+				
+				Object[] row = (Object[]) obj;
+				
+				int idActividad = (Integer)row[0];
+				int porcentajeAvance = (Integer)row[2];
+				
+				if (porcentajeAvance > 0 && porcentajeAvance < 100){
+					Actividad actividad = ActividadDAO.getActividadPorId(idActividad, usuario);
+					String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad,usuario).split(";");
+					
+					try{
+						Date inicio = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
+			                    .parse(fechaInicioFin[0]);
+			            Date fin = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
+			                    .parse(fechaInicioFin[1]);
+			            Date hoy = new DateTime().toDate();
+						
+						if(hoy.after(inicio) && hoy.before(fin)){
+							temp1.id = (Integer)row[3];
+							temp1.responsable = (String)row[4];
+							temp1.actividadesAtrasadas = 0;
+							temp1.actividadesProceso = 1;
+							proceso.add(temp1);
+						} else if(hoy.after(fin)){
+							temp2.id = (Integer)row[3];
+							temp2.responsable = (String)row[4];
+							temp2.actividadesAtrasadas = 1;
+							temp2.actividadesProceso = 0;
+							atrasadas.add(temp2);
+						}
+					}
+					catch (Throwable e) {
+			            e.printStackTrace();
+			        }
+				}
+			}
 			
-			/*
-			List<?> actividades_proceso = ReporteDAO.getCargaTrabajo(0,objetoTipo, idPrestamo, idComponente, idProducto, idSubProducto);
-			List<?> actividades_atrasadas = ReporteDAO.getCargaTrabajo(1,objetoTipo, idPrestamo, idComponente, idProducto, idSubProducto);
+			String JsonProceso = Utils.getJSonString("actividadesProceso", proceso);
+			String JsonAtrasadas = Utils.getJSonString("actividadesAtrasadas", atrasadas);
 			
-			String JsonProceso = Utils.getJSonString("actividadesProceso", actividades_proceso);
-			String JsonAtrasadas = Utils.getJSonString("actividadesAtrasadas", actividades_atrasadas);
-			
-			response_text = JsonProceso + "," + JsonAtrasadas;*/
+			response_text = JsonProceso + "," + JsonAtrasadas;
 			response_text = String.join("", "{\"success\":true,", response_text, "}");
 		}else if(accion.equals("exportarExcel")){
-			String reporte = map.get("reporte");
-			String nombreInforme = "";
+			String tipoReporte = map.get("tipoReporte");
+			String nombreInforme = "Carga de Trabajo";
 			
-			Map<String,Object[]> datos = new HashMap<>();
-			if (reporte.equals("cargaTrabajo")){
+			if (tipoReporte.equals("cargaTrabajo")){
+				String data = map.get("data");
 				nombreInforme = "Informe de recursos (Carga de Trabajo)";
-				Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"),0);
-				Integer idComponente = Utils.String2Int(map.get("idComponente"),0);
-				Integer idProducto = Utils.String2Int(map.get("idProducto"),0);
-				Integer idSubProducto = Utils.String2Int(map.get("idSubProducto"),0);
+				String[] totales = map.get("totales").split(",");
 				String mes = map.get("mes");
 				
-				List<?> actividades_proceso = ReporteDAO.getCargaTrabajo(0,objetoTipo, idPrestamo, idComponente, idProducto, idSubProducto);
-				List<?> actividades_atrasadas = ReporteDAO.getCargaTrabajo(1,objetoTipo, idPrestamo, idComponente, idProducto, idSubProducto);
+				Map<String,Object[]> reporte = new HashMap<>();
+				Type listType = new TypeToken<List<Map<String, String>>>() {}.getType();
+				List<Map<String, String>> datos = gson.fromJson(data, listType);
 				
-				datos.put("0", new Object[] {"Responsable", "Actividades Atrasadas", "Actividades a Cumplir " + mes});
-				Object[] temp = new Object []{};
+				reporte.put("0", new Object[] {"Responsable", "Actividades Atrasadas", "Actividades a Cumplir " + mes});
 				
-				for (int i=0; i< actividades_proceso.size(); i++){
-
+				int fila = 1;
+				for(Map<String, String> d : datos){
+					reporte.put(fila+"", new Object[] {d.get("responsable"), Utils.String2Int(d.get("actividadesAtrasadas")), Utils.String2Int(d.get("actividadesProceso"))});
+					fila++;
 				}
+				
+				reporte.put(fila+"", new Object[] {totales[0],Utils.String2Int(totales[1]),Utils.String2Int(totales[2])});
+				exportarExcel(reporte,nombreInforme,usuario,response);
 			}
 		}
 		
