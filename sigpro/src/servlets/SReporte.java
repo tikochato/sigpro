@@ -80,7 +80,7 @@ public class SReporte extends HttpServlet {
 		while ((str = br.readLine()) != null) {
 			sb.append(str);
 		}
-		;
+		
 		Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String accion = map.get("accion")!=null ? map.get("accion") : "";
 		String response_text = "";
@@ -106,75 +106,12 @@ public class SReporte extends HttpServlet {
 			
 			response_text = JsonProceso + "," + JsonAtrasadas;*/
 			response_text = String.join("", "{\"success\":true,", response_text, "}");
-		}else if(accion.equals("congelarInforme")){
-			int id = Utils.String2Int(map.get("id"));
-			
-			List<InformePresupuesto> row = ReporteDAO.getrowInformebyId(id);
-			
-			for(InformePresupuesto r : row){
-				InformePresupuesto temp = new InformePresupuesto();
-				
-				temp.setId(r.getId());
-				temp.setEstadoInforme(r.getEstadoInforme());
-				temp.setObjetoTipoId(r.getObjetoTipoId());
-				temp.setObjetoTipo(r.getObjetoTipo());
-				temp.setPosicionArbol(r.getPosicionArbol());
-				temp.setObjetoNombre(r.getObjetoNombre());
-				temp.setIdPredecesor(r.getIdPredecesor());
-				temp.setObjetoTipoPredecesor(r.getObjetoTipoPredecesor());
-				temp.setIdPrestamo(r.getIdPrestamo());
-				temp.setCosto(r.getCosto());
-				temp.setEstado(2);
-				temp.setUsuarioCreo(r.getUsuarioCreo());
-				temp.setUsuarioActualizo(usuario);
-				temp.setFechaCreacion(r.getFechaCreacion());
-				temp.setFechaActualizacion(new DateTime().toDate());
-				temp.setFechaInicio(r.getFechaInicio());
-				temp.setFechaFin(r.getFechaFin());
-				temp.setAcumulacionCosto(r.getAcumulacionCosto());
-				
-				if (ReporteDAO.agregarRowInformePresupuesto(temp))
-					response_text = String.join("", "{\"success\":true}");
-				else
-					response_text = String.join("", "{\"success\":false}");
-			}
 		}else if(accion.equals("exportarExcel")){
 			String reporte = map.get("reporte");
 			String nombreInforme = "";
-
-			Map<String,Object[]> datos = new HashMap<>();
 			
-			if(reporte.equals("adquisiciones")){
-				nombreInforme = "Informe Ejecución Anual";
-				Integer tipoInforme = Utils.String2Int(map.get("tipoInforme"));
-				List<InformePresupuesto> informePresupuesto = ReporteDAO.existeInformeBase(idPrestamo, tipoInforme);
-				
-				if(informePresupuesto.size() > 0){
-					
-					datos.put("0", new Object[] {"Nombre", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre", "Total"});
-					
-					int fila = 1;
-					Object[] filaTotal = new Object []{};
-					
-					for(InformePresupuesto informe : informePresupuesto){
-						if(fila==1)
-/*							filaTotal = new Object [] {"Total General", informe.getMes1().doubleValue(), informe.getMes2().doubleValue(), 
-									informe.getMes3().doubleValue(), informe.getMes4().doubleValue(), informe.getMes5().doubleValue(), 
-									informe.getMes6().doubleValue(), informe.getMes7().doubleValue(), informe.getMes8().doubleValue(), 
-									informe.getMes9().doubleValue(),informe.getMes10().doubleValue(),informe.getMes11().doubleValue(), 
-									informe.getMes12().doubleValue(),informe.getTotal().doubleValue()};
-						datos.put(fila+"", new Object [] {informe.getObjetoNombre(), informe.getMes1().doubleValue(), informe.getMes2().doubleValue(), 
-								informe.getMes3().doubleValue(), informe.getMes4().doubleValue(), informe.getMes5().doubleValue(), 
-								informe.getMes6().doubleValue(), informe.getMes7().doubleValue(), informe.getMes8().doubleValue(), 
-								informe.getMes9().doubleValue(),informe.getMes10().doubleValue(),informe.getMes11().doubleValue(), 
-								informe.getMes12().doubleValue(),informe.getTotal().doubleValue()});*/
-						fila++;
-					}
-					datos.put(fila+"",filaTotal);
-					
-					exportarExcel(datos,nombreInforme,usuario,response);
-				}
-			}else if (reporte.equals("cargaTrabajo")){
+			Map<String,Object[]> datos = new HashMap<>();
+			if (reporte.equals("cargaTrabajo")){
 				nombreInforme = "Informe de recursos (Carga de Trabajo)";
 				Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"),0);
 				Integer idComponente = Utils.String2Int(map.get("idComponente"),0);

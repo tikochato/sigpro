@@ -41,18 +41,33 @@ public class ReporteDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String string_query = "";
-			string_query = string_query + "select a.id, a.nombre, a.fecha_inicio, a.fecha_fin, a.pred_objeto_id, a.pred_objeto_tipo, a.duracion, rr.id as responsable_id,rr.nombre as responsable ";
-			string_query = string_query + "from Proyecto p ";
+			if(idProyecto > 0 && idComponente == 0 && idProducto == 0 && idSubProducto ==0){
+				string_query = string_query + "select a.nombre from Proyecto p "
+						+ "inner join Actividad a where a.objetoId=p.id "
+						+ "and p.id=:idProyecto";
+				
+				Query<Object> query = session.createQuery(string_query,Object.class);
+				query.setParameter("idProyecto", idProyecto);
+				result = query.getResultList();
+			} else if(idProyecto > 0 && idComponente > 0 && idProducto == 0 && idSubProducto == 0){
+				
+			} else if(idProyecto > 0 && idComponente > 0 && idProducto > 0 && idSubProducto == 0){
+				
+			} else if(idProyecto > 0 && idComponente > 0 && idProducto > 0 && idSubProducto > 0){
+				
+			}
+			
+			
+			/*
 			if (idComponente > 0)
 				string_query = string_query + "inner join Componente c on p.id=c.proyecto.id inner join ca.actividad ca on c.id=ca.objeto_id ";
 			if(idProducto > 0)
 				string_query = string_query + "inner join Producto pd on c.id=pd.componente.id inner join Actividad a on pd.id=a.objeto_id ";
 			if(idSubProducto > 0)
 				string_query = string_query + "inner join Subproducto sp on pd.id=sp.producto.id inner join Actividad a on sp.id=a.objeto_id ";
-			string_query = string_query + "where p.id=:idProyecto ";
-			Query<Object> query = session.createQuery(string_query,Object.class);
-			query.setParameter("idProyecto", idProyecto);
-			result = query.getResultList();
+			string_query = string_query + "where p.id=:idProyecto ";*/
+			
+
 		}
 		catch(Throwable e){
 			e.printStackTrace();
