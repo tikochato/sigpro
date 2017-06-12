@@ -53,7 +53,7 @@
                     		</shiro:hasPermission>
                     		
                     		<li class="dropdown-submenu">
-                    			<a><span class="glyphicon" aria-hidden="true"></span> Propiedades</b></a>
+                    			<a><span class="glyphicon" aria-hidden="true"></span> Propiedade</a>
 		                        <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
 		                         	<shiro:hasPermission name="25010"><li role="menuitem"><a href="#!/programapropiedad">Programa</a></li></shiro:hasPermission>
 		                         	<shiro:hasPermission name="2010"><li role="menuitem"><a href="#!/actividadpropiedad">Actividad</a></li></shiro:hasPermission>	                      
@@ -71,9 +71,8 @@
                     	<a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Reportes <b class="caret"></b></a>
                     	<ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/cargatrabajo/rp">Carga de Trabajo</a></li></shiro:hasPermission>
-                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/adquisiciones/rp">Adquisiciones</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/informacionPresupuestaria/rp">Información presupuestaria</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/planejecucion/rp">Plan de ejecución</a></li></shiro:hasPermission>
-                    		
                     	</ul>
                     </li>
                     <shiro:hasPermission name="34010">
