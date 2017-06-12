@@ -27,7 +27,6 @@ import org.apache.shiro.codec.Base64;
 import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
@@ -73,7 +72,6 @@ public class SReporte extends HttpServlet {
 		Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String accion = map.get("accion")!=null ? map.get("accion") : "";
 		String response_text = "";
-		Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 		
 		if(accion.equals("getCargaTrabajoPrestamo")){
 			Integer idProyecto = Utils.String2Int(map.get("idPrestamo"),0);
