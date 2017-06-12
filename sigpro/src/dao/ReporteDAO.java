@@ -36,6 +36,35 @@ public class ReporteDAO {
 		return result;
 	}
 	
+	public static List<Object> getActividadesCargaTrabajo(int idProyecto, int idComponente, int idProducto, int idSubProducto){
+		List<Object> result = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String string_query = "";
+			string_query = string_query + "select a.id, a.nombre, a.fecha_inicio, a.fecha_fin, a.pred_objeto_id, a.pred_objeto_tipo, a.duracion, rr.id as responsable_id,rr.nombre as responsable ";
+			string_query = string_query + "from Proyecto p ";
+			if (idComponente > 0)
+				string_query = string_query + "inner join Componente c on p.id=c.proyecto.id inner join ca.actividad ca on c.id=ca.objeto_id ";
+			if(idProducto > 0)
+				string_query = string_query + "inner join Producto pd on c.id=pd.componente.id inner join Actividad a on pd.id=a.objeto_id ";
+			if(idSubProducto > 0)
+				string_query = string_query + "inner join Subproducto sp on pd.id=sp.producto.id inner join Actividad a on sp.id=a.objeto_id ";
+			string_query = string_query + "where p.id=:idProyecto ";
+			Query<Object> query = session.createQuery(string_query,Object.class);
+			query.setParameter("idProyecto", idProyecto);
+			result = query.getResultList();
+		}
+		catch(Throwable e){
+			e.printStackTrace();
+			CLogger.write("1", ReporteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return result;
+	}
+	
 	public static List<Object> getAdquisiciones(int anio, int idPrestamo){
 		List<Object> result = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -52,14 +81,13 @@ public class ReporteDAO {
 		return result;
 	}
 	
-	public static List<InformePresupuesto> existeInformeBase(int idPrestamo, int tipoInforme, String anio){
+	public static List<InformePresupuesto> existeInformeBase(int idPrestamo, int tipoInforme){
 		List<InformePresupuesto> result = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<InformePresupuesto> criteria = session.createQuery("FROM InformePresupuesto ip where ip.idPrestamo=:idPrestamo and ip.estadoInforme.id=:tipoInforme and date_format(ip.anio,'%d/%m/%Y')=:anio", InformePresupuesto.class);
+			Query<InformePresupuesto> criteria = session.createQuery("FROM InformePresupuesto ip where ip.idPrestamo=:idPrestamo and ip.estadoInforme.id=:tipoInforme", InformePresupuesto.class);
 			criteria.setParameter("idPrestamo", idPrestamo);
 			criteria.setParameter("tipoInforme", tipoInforme);
-			criteria.setParameter("anio", anio);
 			result = criteria.getResultList();
 		}
 		catch(Throwable e){
