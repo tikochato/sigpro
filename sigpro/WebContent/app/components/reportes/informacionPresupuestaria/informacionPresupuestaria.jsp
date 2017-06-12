@@ -32,7 +32,7 @@
 			<p ng-init="controller.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
 	<div class="panel panel-default">
-	  <div class="panel-heading"><h3>Plan de Adquisiciones</h3></div>
+	  <div class="panel-heading"><h3>Información presupuestaria</h3></div>
 	</div>
     <br>
     
@@ -43,6 +43,11 @@
 					<select  class="inputText" ng-model="controller.prestamo"
 						ng-options="a.text for a in controller.prestamos"></select>
 					<label for="prestamo" class="floating-label">Préstamos</label>
+				</div>
+				
+				<div class="form-group col-sm-3">					
+					<input type="checkbox" id="Todo" ng-model="controller.informeCompleto" />
+					<label for="controller.completo" class="floating-label">Informe completo</label>
 				</div>
 				
 				<div class="form-group col-sm-3" >
@@ -82,7 +87,7 @@
     	<br>
     	<div style="max-height: 70%; width: 100%;">
 	    	<div>
-				<div><h4><b>Ejecución Financiera Anual</b></h4></div>
+				<div><h4><b>Ejecución Financiera</b></h4></div>
 			</div>
 			<br>
 			<div category-header="controller.gridOptions"></div>

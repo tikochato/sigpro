@@ -57,7 +57,6 @@ public class SInformePresupuesto extends HttpServlet {
 	class stInformePresupuesto{
 		int id;
 		int idPrestamo;
-		int estadoInforme;
 		int objetoTipo;
 		int idObjetoTipo;
 		String nombre;
@@ -105,7 +104,7 @@ public class SInformePresupuesto extends HttpServlet {
 	        response_text = String.join("", "\"prestamo\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}else if(accion.equals("generarInforme")){
-			Integer tipoInforme = Utils.String2Int(map.get("tipoInforme"),0);
+			Boolean informeCompleto = Boolean.valueOf(map.get("informeCompleto"));
 			
 				List<stInformePresupuesto> prestamo = obtenerProyecto(idPrestamo,usuario);
 				
@@ -113,11 +112,10 @@ public class SInformePresupuesto extends HttpServlet {
 				for (stInformePresupuesto p : prestamo ){
 					stInformePresupuesto dataEjecutado = new stInformePresupuesto();
 					
-					if(p.objetoTipo != 5){
+					if(informeCompleto){
 						dataEjecutado = new stInformePresupuesto();
 						dataEjecutado.id = p.id;
 						dataEjecutado.idPrestamo = idPrestamo;
-						dataEjecutado.estadoInforme = tipoInforme;
 						dataEjecutado.objetoTipo = p.objetoTipo;
 						dataEjecutado.posicionArbol = p.posicionArbol;
 						dataEjecutado.idObjetoTipo = p.idObjetoTipo;
@@ -128,12 +126,12 @@ public class SInformePresupuesto extends HttpServlet {
 						dataEjecutado.fechaInicio = p.fechaInicio;
 						dataEjecutado.fechaFin = p.fechaFin;
 						resultPrestamo.add(dataEjecutado);
-					}else{
-						if (p.Costo.compareTo(BigDecimal.ZERO) != 0){
+					}else{ 
+						
+						if(p.objetoTipo != 5){
 							dataEjecutado = new stInformePresupuesto();
 							dataEjecutado.id = p.id;
 							dataEjecutado.idPrestamo = idPrestamo;
-							dataEjecutado.estadoInforme = tipoInforme;
 							dataEjecutado.objetoTipo = p.objetoTipo;
 							dataEjecutado.posicionArbol = p.posicionArbol;
 							dataEjecutado.idObjetoTipo = p.idObjetoTipo;
@@ -143,9 +141,23 @@ public class SInformePresupuesto extends HttpServlet {
 							dataEjecutado.Costo = p.Costo;
 							dataEjecutado.fechaInicio = p.fechaInicio;
 							dataEjecutado.fechaFin = p.fechaFin;
-							resultPrestamo.add(dataEjecutado);				
+							resultPrestamo.add(dataEjecutado);
+						}else if (p.Costo.compareTo(BigDecimal.ZERO) != 0){
+							dataEjecutado = new stInformePresupuesto();
+							dataEjecutado.id = p.id;
+							dataEjecutado.idPrestamo = idPrestamo;
+							dataEjecutado.objetoTipo = p.objetoTipo;
+							dataEjecutado.posicionArbol = p.posicionArbol;
+							dataEjecutado.idObjetoTipo = p.idObjetoTipo;
+							dataEjecutado.nombre = p.nombre;
+							dataEjecutado.idPredecesor = p.idPredecesor;
+							dataEjecutado.objetoTipoPredecesor = p.objetoTipoPredecesor;
+							dataEjecutado.Costo = p.Costo;
+							dataEjecutado.fechaInicio = p.fechaInicio;
+							dataEjecutado.fechaFin = p.fechaFin;
+							resultPrestamo.add(dataEjecutado);
 						}
-					}
+					}	
 				}
 
 				response_text=new GsonBuilder().serializeNulls().create().toJson(resultPrestamo);
@@ -154,12 +166,13 @@ public class SInformePresupuesto extends HttpServlet {
 		}else if(accion.equals("exportarExcel")){
 			String data = map.get("data");
 			String columnas = map.get("columnas");
-			String[] col = columnas.split(",");
+			String cabeceras = map.get("cabeceras");
+			String[] col = cabeceras.split(",");
 			Type listType = new TypeToken<List<Map<String, String>>>() {}.getType();
 			List<Map<String, String>> datos = gson.fromJson(data, listType);
 
 		    
-			String nombreInforme = "Informe Ejecución Anual";
+			String nombreInforme = "Informe Ejecución";
 			Map<String,Object[]> reporte = new HashMap<>();
 			Object[] obj = new Object[col.length];
 			
@@ -168,6 +181,8 @@ public class SInformePresupuesto extends HttpServlet {
 			}
 			
 			reporte.put("0", obj);
+			
+			col = columnas.split(",");
 			
 			obj = new Object[col.length];
 			int fila = 1;

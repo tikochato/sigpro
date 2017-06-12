@@ -1,4 +1,4 @@
-var app = angular.module('adquisicionesController',['ngAnimate', 'ngTouch', 'ui.grid.edit', 'ui.grid.rowEdit']);
+var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'ui.grid.edit', 'ui.grid.rowEdit']);
 
 app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion',
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion){
@@ -14,16 +14,17 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.autoGuardado = false;
 		mi.totales = [];
 		mi.columnaNames = [];
+		mi.informeCompleto = true;
 		
 		mi.redireccionSinPermisos=function(){
 			$window.location.href = '/main.jsp#!/forbidden';		
 		}
 	    
 	    mi.reiniciarVista=function(){
-			if($location.path()=='/adquisiciones/rv')
+			if($location.path()=='/informacionPresupuestaria/rv')
 				$route.reload();
 			else
-				$location.path('/adquisiciones/rv');
+				$location.path('/informacionPresupuestaria/rv');
 		}
 	    
 		mi.formatofecha = 'dd/MM/yyyy';
@@ -33,12 +34,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		];
 		
 		mi.prestamo = mi.prestamos[0];
-		
-		mi.informes = [
-			{'value' : 0, 'text' : 'Seleccionar una opción'},
-		];
-		
-		mi.informe = mi.informes[0];
 		
 		mi.abrirPopupFecha = function(index) {
 			switch(index){
@@ -68,7 +63,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				});
 		}
 		
-		mi.obtenetMesNombre = function(mes, anio){
+		mi.obtenerMesNombre = function(mes, anio){
 			switch(mes){
 			case 1:
 				return "Enero-(" + anio + ")";
@@ -99,15 +94,18 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		
 		mi.generarTabla = function(){
 			mi.columnas = [];
+			mi.columnaNames = [];
+			mi.cabeceras = [];
 			var i = 0;
 			var j = 0;
 			var mesName = "";
 			mi.columnas.push({ name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: '',
-	        	cellTemplate: "<div class=\"ui-grid-cell-contents\" ng-class=\"{'ui-grid-tree-padre': row.objetoTipo < 5}\"><div class=\"ui-grid-cell-contents\" title=\"TOOLTIP\"><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.controller.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+	        	cellTemplate: "<div class=\"ui-grid-cell-contents\" ng-class=\"{'ui-grid-tree-padre': grid.appScope.controller.objetoTipo < 5}\"><div class=\"ui-grid-cell-contents\" title=\"TOOLTIP\"><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.controller.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>",
 	        	footerCellTemplate: '<div class="ui-grid-cell-contents">Total</div>',
 	        });
 			
 			mi.columnaNames.push("nombre");
+			mi.cabeceras.push("nombre");
 			
 			var fInicial = moment(mi.fechaInicio).format('DD/MM/YYYY').split('/');
 			var fFinal = moment(mi.fechaFin).format('DD/MM/YYYY').split('/');
@@ -116,10 +114,11 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				var fin = j==Number(fFinal[2]) ? Number(fFinal[1]):12;
 				for(i = inicio; i <= fin; i++){
 					mesName = mi.obtenerMes(i,j);
-					mesDisplayName = mi.obtenetMesNombre(i,j);
+					mesDisplayName = mi.obtenerMesNombre(i,j);
 					
 					mi.totales[mesName] = 0;
 					mi.columnaNames.push(mesName);
+					mi.cabeceras.push(mesDisplayName);
 					mi.columnas.push({ name: mesName, enableCellEdit: false, width: 100, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2', 
 			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.getTotal(this) | number:2}}</div>',
 			        	categoryDisplayName: j
@@ -137,6 +136,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 	        });
 			
 			mi.columnaNames.push("Total");
+			mi.cabeceras.push("Total");
 			mi.gridOptions.columnDefs = mi.columnas;
 		}
 		
@@ -154,7 +154,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 					$http.post('/SInformePresupuesto',{
 						accion: 'generarInforme',
 						idPrestamo: mi.prestamo.value,
-						tipoInforme: mi.informe.value,
+						informeCompleto: mi.informeCompleto,
 						anio: moment(mi.fechaInicio).format('DD/MM/YYYY')
 					}).success(function(response){
 						if (response.success){
@@ -193,9 +193,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		}
 		
 		mi.descargar = function(){
-			var viewData = { 
-				    reporte : [] 
-				}
+		    var reporte = []; 
 
 			var obj = {};
 			for(x in mi.gridOptions.data){
@@ -203,7 +201,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 					obj[mi.columnaNames[y]] = mi.gridOptions.data[x][mi.columnaNames[y]];
 				}
 				
-				viewData.reporte.push(obj);
+				reporte.push(obj);
 				obj = {};
 			}
 			
@@ -216,28 +214,29 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 					obj[mi.columnaNames[y]] = mi.totales[mi.columnaNames[y]];
 			}
 			
-			viewData.reporte.push(obj);
+			reporte.push(obj);
 			
 			$http.post('/SInformePresupuesto',{
 				accion: 'exportarExcel',
-				data: JSON.stringify(viewData.reporte),
+				data: JSON.stringify(reporte),
 				idPrestamo: mi.prestamo.value,
 				anio: moment(mi.fechaInicio).format('DD/MM/YYYY'),
 				tipoInforme: mi.informe.value,
 				columnas: mi.columnaNames.toString(),
+				cabeceras : mi.cabeceras.toString(),
 				t:moment().unix()
 			}).then(
-					  function successCallback(response) {
-							var anchor = angular.element('<a/>');
-						    anchor.attr({
-						         href: 'data:application/ms-excel;base64,' + response.data,
-						         target: '_blank',
-						         download: 'Informe.xls'
-						     })[0].click();
-						  }.bind(this), function errorCallback(response){
-						 		
-						 	}
-						 );
+			  function successCallback(response) {
+					var anchor = angular.element('<a/>');
+				    anchor.attr({
+				         href: 'data:application/ms-excel;base64,' + response.data,
+				         target: '_blank',
+				         download: 'Informe.xls'
+				     })[0].click();
+				  }.bind(this), function errorCallback(response){
+				 		
+				 	}
+				 );
 		}
 		
 		mi.crearArbol = function(datos){
@@ -274,10 +273,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
             { id: 2, value: 'Prorrateo' },
             { id: 3, value: 'Fin' }];
 		
-		mi.rowTemplate = function(){
-			return '<div style="background-color: blue">{{grid.scope.controller.gridOptions.data}}</div>';
-		}
-
 		mi.gridOptions = {
 				showColumnFooter: true,
 	            cellEditableCondition:function($scope){
@@ -393,11 +388,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			else
 				return true;
 		}        
-		
-		mi.setColorRow = function(grid){
-			if (grid.objetoTipo == 1)
-				return 'blue';
-		}
 		
 		mi.gethijos = function(data){
 			var nuevo = [];

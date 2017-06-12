@@ -165,8 +165,8 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/cargatrabajo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'cargatrabajoController\'" class="all_page"></div>'
             })
-            .when('/adquisiciones/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'adquisicionesController\'" class="all_page"></div>'
+            .when('/informacionPresupuestaria/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'informacionPresupuestariaController\'" class="all_page"></div>'
             })
             .when('/responsabletipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'responsabletipoController\'" class="all_page"></div>'
@@ -422,9 +422,9 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   script: '/app/components/reportes/cargatrabajo/cargatrabajo.controller.js',
 	    	   template: '/app/components/reportes/cargatrabajo/cargatrabajo.jsp'
 	       },{
-	    	   name: 'adquisicionesController',
-	    	   script: '/app/components/reportes/adquisiciones/adquisiciones.controller.js',
-	    	   template: '/app/components/reportes/adquisiciones/adquisiciones.jsp'
+	    	   name: 'informacionPresupuestariaController',
+	    	   script: '/app/components/reportes/informacionPresupuestaria/informacionPresupuestaria.controller.js',
+	    	   template: '/app/components/reportes/informacionPresupuestaria/informacionPresupuestaria.jsp'
 	       },{
 	    	   name: 'responsabletipoController',
 	    	   script: '/app/components/responsabletipo/responsabletipo.controller.js',
