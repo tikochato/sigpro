@@ -127,9 +127,9 @@
 						</div>
 						<div class="form-group" >
 					          <input type="text" class="inputText" ng-model="usuarioc.usuariosSelected.colaborador"  ng-disabled="true" 
-					          		ng-value="usuarioc.usuariosSelected.colaborador" onblur="this.setAttribute('value', this.value);"
-					          		ng-click="usuarioc.tieneColaborador ? '' : usuarioc.buscarColaborador()" >
-					          <span class="label-icon" ng-click="usuarioc.tieneColaborador ? '' : usuarioc.buscarColaborador()" uib-tooltip="buscar colaborador"><i class="glyphicon glyphicon-search"></i></span>
+					          		ng-value="usuarioc.usuariosSelected.colaborador" 
+					          		ng-click="usuarioc.buscarColaborador()" >
+					          <span class="label-icon" ng-click=" usuarioc.buscarColaborador()"><i class="glyphicon glyphicon-search"></i></span>
 					          <label class="floating-label" >Colaborador</label>
 					      </div>
 						<br>
@@ -210,6 +210,7 @@
 		</div>
 		
 		</div>
+			<br>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <shiro:hasPermission name="34020">

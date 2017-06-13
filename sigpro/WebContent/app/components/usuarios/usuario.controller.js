@@ -161,7 +161,6 @@ app.controller(
 	};
 
 	mi.guardarUsuario=function(){
-		console.log(mi.nuevosPermisos);
 		if(mi.esNuevo){
 			if(mi.claves.password1!=="" && mi.claves.password2!=="" && mi.usuariosSelected.usuario!=="" && mi.usuariosSelected.email!==""){
 				if(validarEmail(mi.usuariosSelected.email)){
