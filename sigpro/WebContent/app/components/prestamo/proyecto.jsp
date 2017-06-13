@@ -349,21 +349,21 @@
 						<div class="panel-heading label-form" style="text-align: center;">Información General del Préstamo</div>
 						<div class="panel-body">
 							<div class="row">
-								<div class="col-sm-3">
+								<div class="col-sm-5">
 									<div class="form-group">
 										<input  type="number" class="inputText" ng-model="controller.prestamo.codigoPresupuestario" ng-required="true"
 										ng-value="controller.prestamo.codigoPresupuestario" onblur="this.setAttribute('value', this.value);">
 										<label class="floating-label" >* Código presupuestario</label>
 									</div>
 								</div>
-								<div class="col-sm-3">
+								<div class="col-sm-5">
 									<div class="form-group">
 										<input type="text" class="inputText"  ng-model="controller.prestamo.numeroPrestamo" ng-required="true"
 										ng-value="controller.prestamo.numeroPrestamo" onblur="this.setAttribute('value', this.value);">
 										<label class="floating-label" >* Número de prestamo</label>
 									</div>
 								</div>
-								<div class="col-sm-3" >
+								<div class="col-sm-2" align="right" >
 								<label class="btn btn-default" ng-click="controller.cargaSigade()" uib-tooltip="Cargar datos de SIGADE" tooltip-placement="bottom">
 								<span class="glyphicon glyphicon-search"></span></label>
 								</div>
@@ -381,7 +381,7 @@
 							</div>
 
 							<div class="row">
-								<div class="col-sm-6">
+								<div class="col-sm-12">
 									<div class="form-group">
 										<input type="text" class="inputText"
 										ng-model="controller.prestamo.unidadEjecutoraNombre" ng-readonly="true" ng-required="true"
@@ -393,7 +393,9 @@
 										<label class="floating-label">* Unidad Ejecutora</label>
 									</div>
 								</div>
-								<div class="col-sm-6">
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
 									<div class="form-group" >
 										<input type="text" class="inputText" id="icoope" name="icoope" ng-model="controller.prestamo.cooperantenombre" ng-readonly="true" ng-required="true"
 											ng-click="controller.buscarCooperante(true)" ng-value="controller.prestamo.cooperantenombre" onblur="this.setAttribute('value', this.value);"/>
@@ -404,7 +406,7 @@
 							</div>
 
 							<div class="row">
-								<div class="col-sm-3">
+								<div class="col-sm-4">
 									<div class="form-group">
 										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaDecreto" is-open="controller.fd_abierto"
 											datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
@@ -415,7 +417,7 @@
 										<label class="floating-label">* Fecha Decreto</label>
 									</div>
 								</div>
-								<div class="col-sm-3">
+								<div class="col-sm-4">
 									<div class="form-group">
 										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaSuscripcion" is-open="controller.fs_abierto"
 											datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
@@ -426,7 +428,7 @@
 										<label class="floating-label">* Fecha de Suscripción</label>
 									</div>
 								</div>
-								<div class="col-sm-3">
+								<div class="col-sm-4">
 									<div class="form-group">
 										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaVigencia" is-open="controller.fv_abierto"
 											datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
@@ -440,7 +442,7 @@
 							</div>
 
 							<div class="row">
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="text" class="inputText"
 										ng-model="controller.prestamo.tipoMonedaNombre" ng-readonly="true" ng-required="true"
@@ -453,15 +455,16 @@
 									</div>
 								</div>
 
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText"  ng-model="controller.prestamo.montoContratado" ng-required="true"
 										ng-value="controller.prestamo.montoContratado" onblur="this.setAttribute('value', this.value);" ng-change="controller.setPorcentaje(1);">
 										<label class="floating-label" >* Monto Contratado</label>
 									</div>
 								</div>
-
-								<div class="col-sm-3">
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText"  ng-model="controller.prestamo.montoContratadoUsd" ng-required="true"
 										ng-value="controller.prestamo.montoContratadoUsd" onblur="this.setAttribute('value', this.value);" ng-change="controller.setPorcentaje(2);">
@@ -469,7 +472,7 @@
 									</div>
 								</div>
 
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText"  ng-model="controller.prestamo.montoContratadoQtz" ng-required="true"
 										ng-value="controller.prestamo.montoContratadoQtz" onblur="this.setAttribute('value', this.value);">
@@ -479,7 +482,7 @@
 							</div>
 
 							<div class="row">
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText" ng-model="controller.prestamo.desembolsoAFechaUsd" ng-required="true"
 										ng-value="controller.prestamo.desembolsoAFechaUsd" onblur="this.setAttribute('value', this.value);" ng-change="controller.setPorcentaje(1);"/>
@@ -487,15 +490,16 @@
 									</div>
 								</div>
 
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText" ng-model="controller.prestamo.desembolsoAFechaUsdP" ng-disabled="true"
 										ng-value="controller.prestamo.desembolsoAFechaUsdP" onblur="this.setAttribute('value', this.value);" />
 										<label class="floating-label">Desembolso a la Fecha %</label>
 									</div>
 								</div>
-
-								<div class="col-sm-3">
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText" ng-model="controller.prestamo.montoPorDesembolsarUsd" ng-required="true"
 										ng-value="controller.prestamo.montoPorDesembolsarUsd" onblur="this.setAttribute('value', this.value);" ng-change="controller.setPorcentaje(2);"/>
@@ -503,7 +507,7 @@
 									</div>
 								</div>
 
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText" ng-model="controller.prestamo.montoPorDesembolsarUsdP" ng-disabled="true"
 										ng-value="controller.prestamo.montoPorDesembolsarUsdP" onblur="this.setAttribute('value', this.value);"/>
@@ -514,11 +518,15 @@
 						</div>
 					</div>
 
+					
+				</uib-tab>
+				
+				<uib-tab ng-click="controller.getPorcentajes();" index="2" heading="Datos Entidad Ejecutroa">
 					<div class="panel panel-default">
 						<div class="panel-heading label-form" style="text-align: center;">Información Específica del Préstamo en la Entidad Ejecutora</div>
 						<div class="panel-body">
 							<div class="row">
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaElegibilidadUe" is-open="controller.fe_abierto"
 											datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="controller.setPorcentaje(5);"
@@ -530,7 +538,7 @@
 									</div>
 								</div>
 
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 											<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaCierreOrigianlUe" is-open="controller.fco_abierto"
 												datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="controller.setPorcentaje(5);"
@@ -541,8 +549,9 @@
 										<label class="floating-label">* Fecha de Cierre Original</label>
 									</div>
 								</div>
-
-								<div class="col-sm-3">
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
 									<div class="form-group">
 											<input type="text" class="inputText"   uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaCierreActualUe" is-open="controller.fca_abierto"
 												datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="controller.setPorcentaje(5);"
@@ -554,7 +563,7 @@
 									</div>
 								</div>
 
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText"  ng-model="controller.prestamo.mesesProrrogaUe" ng-required="true"
 										ng-value="controller.prestamo.mesesProrrogaUe" onblur="this.setAttribute('value', this.value);"/>
@@ -564,7 +573,7 @@
 							</div>
 
 							<div class="row">
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText"   ng-model="controller.prestamo.plazoEjecucionUe" ng-disabled="true"
 										ng-value="controller.prestamo.plazoEjecucionUe" onblur="this.setAttribute('value', this.value);"/>
@@ -572,15 +581,17 @@
 									</div>
 								</div>
 
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText" ng-model="controller.prestamo.montoAsignadoUe" ng-required="true"
 										ng-value="controller.prestamo.montoAsignadoUe" onblur="this.setAttribute('value', this.value);" ng-change="controller.setPorcentaje(3);"/>
 										<label class="floating-label">* Monto Asignado</label>
 									</div>
 								</div>
+							</div>
+							<div class="row">
 
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText" ng-model="controller.prestamo.montoAsignadoUeUsd" ng-required="true"
 										ng-value="controller.prestamo.montoAsignadoUeUsd" onblur="this.setAttribute('value', this.value);"/>
@@ -588,7 +599,7 @@
 									</div>
 								</div>
 
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText" ng-model="controller.prestamo.montoAsignadoUeQtz" ng-required="true"
 										ng-value="controller.prestamo.montoAsignadoUeQtz" onblur="this.setAttribute('value', this.value);" ng-change="controller.setPorcentaje(4);"/>
@@ -598,7 +609,7 @@
 							</div>
 
 							<div class="row">
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText" ng-model="controller.prestamo.desembolsoAFechaUeUsd" ng-required="true"
 										ng-value="controller.prestamo.desembolsoAFechaUeUsd" onblur="this.setAttribute('value', this.value);" ng-change="controller.setPorcentaje(3);"/>
@@ -606,15 +617,16 @@
 									</div>
 								</div>
 
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText" ng-model="controller.prestamo.desembolsoAFechaUeUsdP" ng-disabled="true"
 										ng-value="controller.prestamo.desembolsoAFechaUeUsdP" onblur="this.setAttribute('value', this.value);"/>
 										<label class="floating-label">Desembolsos a la fecha %</label>
 									</div>
 								</div>
-
-								<div class="col-sm-3">
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText" ng-model="controller.prestamo.montoPorDesembolsarUeUsd" ng-required="true"
 										ng-value="controller.prestamo.montoPorDesembolsarUeUsd" onblur="this.setAttribute('value', this.value);" ng-change="controller.setPorcentaje(4);"/>
@@ -622,7 +634,7 @@
 									</div>
 								</div>
 
-								<div class="col-sm-3">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="number" class="inputText" ng-model="controller.prestamo.montoPorDesembolsarUeUsdP" ng-disabled="true"
 										ng-value="controller.prestamo.montoPorDesembolsarUeUsdP" onblur="this.setAttribute('value', this.value);"/>
@@ -632,9 +644,10 @@
 							</div>
 						</div>
 					</div>
+				
 				</uib-tab>
 
-				<uib-tab index="2" heading="Datos adicionales" ng-if="controller.mostrarPrestamo">
+				<uib-tab index="3" heading="Datos adicionales" ng-if="controller.mostrarPrestamo">
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">

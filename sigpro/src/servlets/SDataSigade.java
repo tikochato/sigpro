@@ -152,7 +152,7 @@ public class SDataSigade extends HttpServlet {
 			temp.tipoMonedaId = moneda.getId();
 			temp.montoContratado = inf.getId().getMontoContratado();
 			temp.montoContratadoUsd = inf.getId().getMontoContratadoUsd();
-			temp.montoContratadoQtz = inf.getId().getMontoContratadoUsd();
+			temp.montoContratadoQtz = inf.getId().getMontoContratadoGtq();
 			temp.desembolsoAFechaUsd = inf.getId().getDesembolsosUsd();
 			temp.montoPorDesembolsarUsd = inf.getId().getPorDesembolsarUsd();
 			

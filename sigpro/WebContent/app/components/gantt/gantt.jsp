@@ -25,6 +25,10 @@
   		<script type="text/ng-template" id="buscarPorProyecto.jsp">
     		<%@ include file="/app/components/prestamo/buscarPorProyecto.jsp"%>
   	 	</script>
+  	 	
+  	 	<script type="text/ng-template" id="pesoProducto.jsp">
+    		<%@ include file="/app/components/gantt/pesoProducto.jsp"%>
+  	 	</script>
   		
 	    <div class="panel panel-default">
 	    	<div class="panel-heading"><h3>Gantt</h3></div>
@@ -55,6 +59,13 @@
 				</div>
 				
 			</form>
+			</div>
+			
+			<div class="operation_buttons" align="left">
+			<div class="btn-group">
+				<label class="btn btn-default" ng-click="ganttc.pesoProducto(ganttc.proyectoid)"><span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"
+					uib-tooltip="Peso de productos"></span></label>
+			</div>
 			</div>
 		</div>
 		 <div class="row" align="center" >
