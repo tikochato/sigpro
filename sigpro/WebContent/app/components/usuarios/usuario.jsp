@@ -197,7 +197,7 @@
 				</tbody>
 			</table>
 			
-			<div class="grid_loading" ng-if="usuarioc.cargandoPermisos">
+			<div class="grid_loading" ng-if="usuarioc.cargandoPermisos" style="margin-top:80px; width: 96%; margin-left: 1%;">
 				<div class="msg">
 					<span><i class="fa fa-spinner fa-spin fa-4x"></i>
 						<br><br>
