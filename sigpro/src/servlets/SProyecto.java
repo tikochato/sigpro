@@ -4,10 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
@@ -23,17 +27,24 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-
+import dao.PrestamoDAO;
 import dao.ProyectoDAO;
 import dao.ProyectoPropiedadDAO;
 import dao.ProyectoPropiedadValorDAO;
 import pojo.Colaborador;
+import pojo.AutorizacionTipo;
 import pojo.Cooperante;
+import pojo.EjecucionEstado;
+import pojo.InteresTipo;
+import pojo.ObjetoPrestamo;
+import pojo.ObjetoPrestamoId;
+import pojo.Prestamo;
 import pojo.Proyecto;
 import pojo.ProyectoPropedadValor;
 import pojo.ProyectoPropedadValorId;
 import pojo.ProyectoPropiedad;
 import pojo.ProyectoTipo;
+import pojo.TipoMoneda;
 import pojo.UnidadEjecutora;
 import utilities.Utils;
 
@@ -74,7 +85,6 @@ public class SProyecto extends HttpServlet {
 		String valor;
 		String valor_f;
 	}
-
 
     public SProyecto() {
         super();
@@ -191,8 +201,8 @@ public class SProyecto extends HttpServlet {
 			response_text = new GsonBuilder().serializeNulls().create().toJson(datos_);
 			response_text = String.join("", "\"entidades\":", response_text);
 			response_text = String.join("", "{\"success\":true,", response_text, "}");
-
-		} else if(accion.equals("getProyectoPagina")){
+ 
+		}else if(accion.equals("getProyectoPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroProyecto = map.get("numeroproyecto")!=null  ? Integer.parseInt(map.get("numeroproyecto")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
@@ -504,8 +514,7 @@ public class SProyecto extends HttpServlet {
 	        response_text = String.join("", "\"proyectos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 
-		}
-		else if(accion.equals("getProyectoPorId")){
+		}else if(accion.equals("getProyectoPorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 			
@@ -524,9 +533,7 @@ public class SProyecto extends HttpServlet {
 	        response_text = String.join("", "\"proyecto\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 
-
-		}
-		else{
+		}else{
 			response_text = "{ \"success\": false }";
 		}
 
@@ -538,6 +545,5 @@ public class SProyecto extends HttpServlet {
         gz.write(response_text.getBytes("UTF-8"));
         gz.close();
         output.close();
-	}
-
+	}	
 }
