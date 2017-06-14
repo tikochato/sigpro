@@ -337,7 +337,7 @@ public class ActividadDAO {
         }
         Integer contador=0;
         while (contador < duracion){
-            switch(dimension){
+            switch(dimension.toLowerCase()){
                 case "d":  //día
                     fecha_final.add(Calendar.DAY_OF_MONTH, 1);
                     break;

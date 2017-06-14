@@ -15,6 +15,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.totales = [];
 		mi.columnaNames = [];
 		mi.informeCompleto = true;
+		mi.categorias = [];
 		
 		mi.redireccionSinPermisos=function(){
 			$window.location.href = '/main.jsp#!/forbidden';		
@@ -63,32 +64,32 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				});
 		}
 		
-		mi.obtenerMesNombre = function(mes, anio){
+		mi.obtenerMesNombre = function(mes){
 			switch(mes){
 			case 1:
-				return "Enero-(" + anio + ")";
+				return "Enero";
 			case 2:
-				return "Febrero-(" + anio + ")";
+				return "Febrero";
 			case 3:
-				return "Marzo-(" + anio + ")";
+				return "Marzo";
 			case 4:
-				return "Abril-(" + anio + ")";
+				return "Abril";
 			case 5:
-				return "Mayo-(" + anio + ")";
+				return "Mayo";
 			case 6:
-				return "Junio-(" + anio + ")";
+				return "Junio";
 			case 7:
-				return "Julio-(" + anio + ")";
+				return "Julio";
 			case 8:
-				return "Agosto-(" + anio + ")";
+				return "Agosto";
 			case 9:
-				return "Septiembre-(" + anio + ")";
+				return "Septiembre";
 			case 10:
-				return "Octubre-(" + anio + ")";
+				return "Octubre";
 			case 11:
-				return "Noviembre-(" + anio + ")";
+				return "Noviembre";
 			case 12:
-				return "Diciembre-(" + anio + ")";
+				return "Diciembre";
 			}
 		}
 		
@@ -96,6 +97,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			mi.columnas = [];
 			mi.columnaNames = [];
 			mi.cabeceras = [];
+			mi.categorias = [];
 			var i = 0;
 			var j = 0;
 			var mesName = "";
@@ -111,17 +113,18 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			var fFinal = moment(mi.fechaFin).format('DD/MM/YYYY').split('/');
 			var inicio = (Number(fInicial[1]) <= 12 ? Number(fInicial[1]) : 1);
 			for(j = Number(fInicial[2]); j <= Number(fFinal[2]); j++){
+				mi.categorias.push({name: j.toString(), visible: true, showCatName: true});
 				var fin = j==Number(fFinal[2]) ? Number(fFinal[1]):12;
 				for(i = inicio; i <= fin; i++){
 					mesName = mi.obtenerMes(i,j);
-					mesDisplayName = mi.obtenerMesNombre(i,j);
+					mesDisplayName = mi.obtenerMesNombre(i);
 					
 					mi.totales[mesName] = 0;
 					mi.columnaNames.push(mesName);
 					mi.cabeceras.push(mesDisplayName);
 					mi.columnas.push({ name: mesName, enableCellEdit: false, width: 100, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2', 
 			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.getTotal(this) | number:2}}</div>',
-			        	categoryDisplayName: j
+			        	category: j.toString()
 			        });
 				}
 				inicio = 1;
@@ -221,7 +224,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				data: JSON.stringify(reporte),
 				idPrestamo: mi.prestamo.value,
 				anio: moment(mi.fechaInicio).format('DD/MM/YYYY'),
-				tipoInforme: mi.informe.value,
 				columnas: mi.columnaNames.toString(),
 				cabeceras : mi.cabeceras.toString(),
 				t:moment().unix()
@@ -281,6 +283,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 	            	  else
 	            		  return false;
 	            },
+	            headerTemplate: '<div role="rowgroup" class="ui-grid-header"> <div class="ui-grid-top-panel"> <div class="ui-grid-header-viewport"> <div class="ui-grid-header-canvas"> <div align="center" class="ui-grid-header-cell-wrapper" ng-style="colContainer.headerCellWrapperStyle()"> <div role="row" class="ui-grid-header-cell-row"> <div align="center" class="ui-grid-header-cell ui-grid-clearfix ui-grid-category" ng-repeat="cat in grid.appScope.controller.categorias" ng-if="cat.visible && (colContainer.renderedColumns | filter:{ colDef:{category: cat.name} }).length > 0"> <span ng-if="cat.showCatName === true"> {{cat.name}} </span> <br ng-if="cat.showCatName !== true" />  <div class="ui-grid-header-cell ui-grid-clearfix" ng-repeat="col in colContainer.renderedColumns | filter:{ colDef:{category: cat.name} }" ui-grid-header-cell col="col" render-index="$index"> </div> </div><!--!cat.visible && --> <div class="ui-grid-header-cell ui-grid-clearfix" ng-if="col.colDef.category === undefined" ng-repeat="col in colContainer.renderedColumns track by col.uid" ui-grid-header-cell col="col" render-index="$index"> </div> </div> </div> </div> </div> </div> </div>',
+	            category: mi.categorias,
 				rowEditWaitInterval: -1,
 				expandAllRows : true,
 				enableExpandableRowHeader: false,
@@ -561,77 +565,3 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 	    }
 	  };
 	})
-	
-.directive('categoryHeader', function() {
-    function link(scope, element, attrs) {
-
-      // create cols as soon as $gridscope is avavilable
-      // grids in tabs with lazy loading come later, so we need to 
-      // setup a watcher
-      scope.$watch('categoryHeader.$gridScope', function(gridScope, oldVal) {
-          if (!gridScope) {
-              return;
-          }
-          // setup listener for scroll events to sync categories with table
-          var viewPort = scope.categoryHeader.$gridScope.domAccessProvider.grid.$viewport[0];
-          var headerContainer = scope.categoryHeader.$gridScope.domAccessProvider.grid.$headerContainer[0];
-        
-          // watch out, this line usually works, but not always, because under certains conditions
-          // headerContainer.clientHeight is 0
-          // unclear how to fix this. a workaround is to set a constant value that equals your row height 
-          scope.headerRowHeight=  headerContainer.clientHeight;  
-         
-          angular.element(viewPort).bind("scroll", function() {
-            // copy total width to compensate scrollbar width
-            $(element).find(".categoryHeaderScroller")
-              .width($(headerContainer).find(".ngHeaderScroller").width());
-            $(element).find(".ngHeaderContainer")
-              .scrollLeft($(this).scrollLeft());
-        });
-  
-        // setup listener for table changes to update categories                
-        scope.categoryHeader.$gridScope.$on('ngGridEventColumns', function(event, reorderedColumns) {
-          createCategories(event, reorderedColumns);
-        });
-                });          
-      var createCategories = function(event, cols) {
-        scope.categories = [];
-        var lastDisplayName = "";
-        var totalWidth = 0;
-        var left = 0;
-        angular.forEach(cols, function(col, key) {
-          if (!col.visible) {
-            return;
-          }
-          totalWidth += col.width;
-          var displayName = (typeof(col.colDef.categoryDisplayName) === "undefined") ?
-            "\u00A0" : col.colDef.categoryDisplayName;
-          if (displayName !== lastDisplayName) {
-            scope.categories.push({
-              displayName: lastDisplayName,
-              width: totalWidth - col.width,
-              left: left
-            });
-            left += (totalWidth - col.width);
-            totalWidth = col.width;
-            lastDisplayName = displayName;
-          }
-        });
-        if (totalWidth > 0) {
-          scope.categories.push({
-            displayName: lastDisplayName,
-            width: totalWidth,
-            left: left
-          });
-        }
-      };
-    }
-    return {
-      scope: {
-        categoryHeader: '='
-      },
-      restrict: 'EA',
-      templateUrl: 'category_header.html',
-      link: link
-    };
-  });

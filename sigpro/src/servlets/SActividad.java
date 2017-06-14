@@ -234,7 +234,7 @@ public class SActividad extends HttpServlet {
 						duracion = (int) ((fechaFin.getTime()-fechaInicio.getTime())/86400000);
 						duracionDimension = "D";
 						
-						actividad = new Actividad(actividadTipo, nombre, descripcion, fechaInicio, fechaFin,
+						actividad = new Actividad(actividadTipo, null, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra, fuente,
 								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,
 								null,null);

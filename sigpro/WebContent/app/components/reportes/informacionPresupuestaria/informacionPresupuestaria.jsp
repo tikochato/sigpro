@@ -13,20 +13,6 @@
     }
 </style>
 
-<script type="text/ng-template" id="category_header.html">
-<!DOCTYPE html>
-<div  class="ngTopPanel categoryStyle">
-    <div class="ngHeaderContainer" style="height:{{headerRowHeight}}px;">
-        <div class="categoryHeaderScroller" style="height:{{headerRowHeight}}px;position:absolute">  <!-- fixes scrollbar issue -->
-            <div class="ngHeaderCell" ng-repeat="cat in categories"  style="left: {{cat.left}}px; width: {{cat.width}}px">
-                <div class="ngVerticalBar" style="height:100%" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>
-                <div class="ngHeaderText" style="text-align:center">{{cat.displayName}}</div>
-            </div>
-        </div>
-    </div>
-</div>
-</script>
-
 <div ng-controller="adquisicionesController as controller" class="maincontainer all_page" id="title">
 	<shiro:lacksPermission name="24010">
 			<p ng-init="controller.redireccionSinPermisos()"></p>
@@ -37,7 +23,7 @@
     <br>
     
     <div class="container" style="width: 100%">
-    	<div style="height: 30%; width: 100%;">
+    	<div style="height: 100%; width: 100%; height: 20%">
     		<div class="row">
 				<div class="form-group col-sm-3">
 					<select  class="inputText" ng-model="controller.prestamo"
@@ -85,18 +71,15 @@
 			</div>
     	</div>
     	<br>
-    	<div style="max-height: 70%; width: 100%;">
-	    	<div>
+    	<div style="height: 100%; width: 100%">
+	    	<div style="height: 5%; width: 100%">
 				<div><h4><b>Ejecución Financiera</b></h4></div>
 			</div>
-			<br>
-			<div category-header="controller.gridOptions"></div>
-			<div id="grid1" ui-grid="controller.gridOptions" style="width: 100%; height: 100%"
+			<div id="grid1" ui-grid="controller.gridOptions" style="width: 100%; height: 350px"
 				ui-grid-grouping 
 				ui-grid-edit 
 				ui-grid-row-edit 
 				ui-grid-resize-columns 
-				ui-grid-selection
 				ui-grid-cellNav 
 				ui-grid-pinning
 				class="grid">
