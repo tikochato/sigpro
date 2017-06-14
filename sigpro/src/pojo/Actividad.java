@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jun 2, 2017 12:28:44 PM by Hibernate Tools 5.2.1.Final
+// Generated Jun 13, 2017 3:16:39 PM by Hibernate Tools 5.2.1.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -369,7 +369,7 @@ public class Actividad implements java.io.Serializable {
 		this.longitud = longitud;
 	}
 
-	@Column(name = "costo", precision = 10, scale = 0)
+	@Column(name = "costo", precision = 15)
 	public BigDecimal getCosto() {
 		return this.costo;
 	}

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jun 2, 2017 12:28:44 PM by Hibernate Tools 5.2.1.Final
+// Generated Jun 13, 2017 3:16:39 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -23,8 +23,8 @@ public class Permiso implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6116702212479441320L;
-	private Integer id;
+	private static final long serialVersionUID = 4555137193258482159L;
+	private int id;
 	private String nombre;
 	private String descripcion;
 	private String usuarioCreo;
@@ -38,7 +38,8 @@ public class Permiso implements java.io.Serializable {
 	public Permiso() {
 	}
 
-	public Permiso(String nombre, String descripcion, String usuarioCreo, Date fechaCreacion, int estado) {
+	public Permiso(int id, String nombre, String descripcion, String usuarioCreo, Date fechaCreacion, int estado) {
+		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
@@ -46,8 +47,10 @@ public class Permiso implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public Permiso(String nombre, String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, Set<RolPermiso> rolPermisos, Set<UsuarioPermiso> usuarioPermisos) {
+	public Permiso(int id, String nombre, String descripcion, String usuarioCreo, String usuarioActualizo,
+			Date fechaCreacion, Date fechaActualizacion, int estado, Set<RolPermiso> rolPermisos,
+			Set<UsuarioPermiso> usuarioPermisos) {
+		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
@@ -62,11 +65,11 @@ public class Permiso implements java.io.Serializable {
 	@Id
 
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

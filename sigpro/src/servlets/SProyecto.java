@@ -27,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 import dao.ProyectoDAO;
 import dao.ProyectoPropiedadDAO;
 import dao.ProyectoPropiedadValorDAO;
+import pojo.Colaborador;
 import pojo.Cooperante;
 import pojo.Proyecto;
 import pojo.ProyectoPropedadValor;
@@ -295,6 +296,7 @@ public class SProyecto extends HttpServlet {
 				Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
 				String longitud = map.get("longitud");
 				String latitud = map.get("latitud");
+				String enunciadoAlcance = map.get("enunciadoAlcance");
 
 				ProyectoTipo proyectoTipo = new ProyectoTipo();
 				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): null);
@@ -305,17 +307,19 @@ public class SProyecto extends HttpServlet {
 				Cooperante cooperante = new Cooperante();
 				cooperante.setId(map.get("cooperanteid")!=null ? Integer.parseInt(map.get("cooperanteid")): null);
 				
+				Colaborador directorProyecto = new Colaborador();
+				directorProyecto.setId(map.get("directorProyecto")!=null ? Integer.parseInt(map.get("directorProyecto")): null);
+				
+				
 				type = new TypeToken<List<stdatadinamico>>() {
 				}.getType();
 
 				List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
 
 				if(esnuevo){
-					proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion
-							, usuario, null, new DateTime().toDate(), null, 1, snip
-							,programa , subPrograma, proyecto_,actividad, obra, fuente,latitud,longitud,objetivo
-							, null, null, null, null,null,null);
-
+					proyecto = new Proyecto(directorProyecto, cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion,
+							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, obra, fuente,
+							latitud, longitud, objetivo, enunciadoAlcance, null, null, null, null, null, null, null,null);
 				}else{
 					proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 					proyecto.setNombre(nombre);
@@ -335,8 +339,10 @@ public class SProyecto extends HttpServlet {
 					proyecto.setFuente(fuente);
 					proyecto.setLongitud(longitud);
 					proyecto.setLatitud(latitud);
+					proyecto.setColaborador(directorProyecto);
+					proyecto.setEnunciadoAlcance(enunciadoAlcance);
 
-				   List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
+				    List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
 
 					proyecto.setProyectoPropedadValors(null);
 					if (valores_temp!=null){

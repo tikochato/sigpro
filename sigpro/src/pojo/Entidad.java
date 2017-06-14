@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jun 2, 2017 12:28:44 PM by Hibernate Tools 5.2.1.Final
+// Generated Jun 13, 2017 3:16:39 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,11 +22,12 @@ public class Entidad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4606272840099404393L;
+	private static final long serialVersionUID = -5332999264284436595L;
 	private Integer entidad;
 	private String nombre;
 	private String abreviatura;
 	private Set<UnidadEjecutora> unidadEjecutoras = new HashSet<UnidadEjecutora>(0);
+	private Set<ProyectoImpacto> proyectoImpactos = new HashSet<ProyectoImpacto>(0);
 
 	public Entidad() {
 	}
@@ -35,10 +36,12 @@ public class Entidad implements java.io.Serializable {
 		this.nombre = nombre;
 	}
 
-	public Entidad(String nombre, String abreviatura, Set<UnidadEjecutora> unidadEjecutoras) {
+	public Entidad(String nombre, String abreviatura, Set<UnidadEjecutora> unidadEjecutoras,
+			Set<ProyectoImpacto> proyectoImpactos) {
 		this.nombre = nombre;
 		this.abreviatura = abreviatura;
 		this.unidadEjecutoras = unidadEjecutoras;
+		this.proyectoImpactos = proyectoImpactos;
 	}
 
 	@Id
@@ -78,6 +81,15 @@ public class Entidad implements java.io.Serializable {
 
 	public void setUnidadEjecutoras(Set<UnidadEjecutora> unidadEjecutoras) {
 		this.unidadEjecutoras = unidadEjecutoras;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "entidad")
+	public Set<ProyectoImpacto> getProyectoImpactos() {
+		return this.proyectoImpactos;
+	}
+
+	public void setProyectoImpactos(Set<ProyectoImpacto> proyectoImpactos) {
+		this.proyectoImpactos = proyectoImpactos;
 	}
 
 }
