@@ -600,7 +600,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.irAPrestamoMetas=function(proyectoid){
 		if(mi.proyecto!=null){
-			$location.path('/prestamometas/'+ proyectoid );
+			$location.path('/prestamometas_ingreso/'+ proyectoid );
 		}
 	};
 

@@ -89,6 +89,29 @@ public class SPrestamoMetas extends HttpServlet {
 		Integer metaFinalId;
 		String metaFinal;
 	}
+	
+	class stproductometa {
+		Integer id;
+		Integer objetoTipo;
+		String objetoTipoNombre;
+		String nombreMeta;
+		Integer unidadDeMedidaId;
+		Integer datoTipoId;
+		String fechaInicio;
+		String fechaFin;
+		List <stmeta> metasReales = new ArrayList<>();
+		List <stmeta> metasPlanificadas = new ArrayList<>();
+		Integer lineaBaseId;
+		String lineaBase;
+		Integer metaFinalId;
+		String metaFinal;
+	}
+	
+	class stmeta {
+		Integer id;
+		String fecha;
+		String valor;
+	}
 
     public SPrestamoMetas() {
         super();
@@ -131,6 +154,24 @@ public class SPrestamoMetas extends HttpServlet {
 			List<stprestamometa> lstproyectometas = obtenerListadoProyectoMetas(proyectoId, usuario);
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(lstproyectometas);
+	        response_text = String.join("", "\"proyectometas\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+	        
+	        response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
+
+	        OutputStream output = response.getOutputStream();
+			GZIPOutputStream gz = new GZIPOutputStream(output);
+	        gz.write(response_text.getBytes("UTF-8"));
+	        gz.close();
+	        output.close();
+		
+		}else if(accion.equals("getMetasProducto")){
+			Integer proyectoId = map.get("proyectoid")!=null ? Integer.parseInt(map.get("proyectoid")) : 0;
+			
+			List<stproductometa> lstproductometas = obtenerMetasPorProducto(proyectoId, usuario);
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(lstproductometas);
 	        response_text = String.join("", "\"proyectometas\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 	        
@@ -268,6 +309,235 @@ public class SPrestamoMetas extends HttpServlet {
         output.close();
 	}
 
+	
+	private List<stproductometa> obtenerMetasPorProducto(int proyectoId, String usuario){
+		Proyecto proyecto = ProyectoDAO.getProyectoPorId(proyectoId, usuario);
+		List<stproductometa> lstproductometas = new ArrayList<>();
+		if (proyecto!=null){
+			stproductometa proyectometa = new stproductometa();
+			proyectometa.id = proyecto.getId();
+			proyectometa.objetoTipo = OBJETO_ID_PROYECTO;
+			proyectometa.objetoTipoNombre = "Prestamo";
+			proyectometa.nombreMeta = proyecto.getNombre();
+			proyectometa.unidadDeMedidaId = null;
+			proyectometa.datoTipoId = null;
+			proyectometa.fechaInicio = "";
+			proyectometa.fechaFin = "";
+			proyectometa.lineaBase = "";
+			proyectometa.metaFinal = "";
+			lstproductometas.add(proyectometa);
+		}
+		List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
+				null, null, null, null, null, usuario);
+		for (Componente componente : componentes){
+			stproductometa proyectometa = new stproductometa();
+			proyectometa.id = componente.getId();
+			proyectometa.objetoTipo = OBJETO_ID_COMPONENTE;
+			proyectometa.objetoTipoNombre = "Componente";
+			proyectometa.nombreMeta = componente.getNombre();
+			proyectometa.unidadDeMedidaId = null;
+			proyectometa.datoTipoId = null;
+			proyectometa.fechaInicio = "";
+			proyectometa.fechaFin = "";
+			proyectometa.lineaBase = "";
+			proyectometa.metaFinal = "";
+			lstproductometas.add(proyectometa);
+			
+			List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
+					null, null, null, null, null, usuario);
+			for (Producto producto : productos){
+				proyectometa = new stproductometa();
+				proyectometa.id = producto.getId();
+				proyectometa.objetoTipo = OBJETO_ID_PRODUCTO;
+				proyectometa.objetoTipoNombre = "Producto";
+				proyectometa.nombreMeta = producto.getNombre();
+				proyectometa.unidadDeMedidaId = null;
+				proyectometa.datoTipoId = null;
+				proyectometa.fechaInicio = "";
+				proyectometa.fechaFin = "";
+				proyectometa.lineaBase = "";
+				proyectometa.metaFinal = "";
+				
+				stprestamometa prestamometa = new stprestamometa();
+				prestamometa.id = proyectometa.id;
+				prestamometa = getFechaInicioFinProducto(prestamometa);
+				proyectometa.fechaInicio = prestamometa.metaFechaInicio;
+				proyectometa.fechaFin = prestamometa.metaFechaFin;
+				
+				
+				//Obteniendo meta real
+				List<Meta> metas = MetaDAO.getMetasPagina(-1, -1, producto.getId(), OBJETO_ID_PRODUCTO, null, META_ID_REAL, null, null, null, null);
+				if (metas!= null && !metas.isEmpty()){
+					Meta Meta = metas.get(0);
+					proyectometa.unidadDeMedidaId = Meta.getMetaUnidadMedida().getId();
+					proyectometa.datoTipoId = Meta.getDatoTipo().getId();
+					List <MetaValor> metavalores = MetaValorDAO.getValoresMeta(Meta.getId());
+					for (MetaValor metavalor : metavalores){	
+						stmeta meta = new stmeta();
+						meta.id = metavalor.getId().getMetaid();
+						meta.fecha = Utils.formatDate(metavalor.getId().getFecha());
+						meta.valor = "";
+						switch(metas.get(0).getDatoTipo().getId()){
+							case DATOTIPO_TEXTO: 
+								if (null != metavalor.getValorString()){
+									meta.valor = metavalor.getValorString();
+								}
+								break;
+							case DATOTIPO_ENTERO: 
+								if (null != metavalor.getValorEntero()){
+									meta.valor = metavalor.getValorEntero().toString();
+								}
+								break;
+							case DATOTIPO_DECIMAL: 
+								if (null != metavalor.getValorDecimal()){
+									meta.valor = metavalor.getValorDecimal().toString();
+								}
+								break;
+							case DATOTIPO_BOOLEANO: 
+	
+								break;
+							case DATOTIPO_FECHA: 
+								if (null != metavalor.getValorTiempo()){
+									meta.valor = Utils.formatDateHour(metavalor.getValorTiempo());
+								}
+								break;
+						}
+						proyectometa.metasReales.add(meta);
+					}
+				}
+				
+				//Obteniendo meta anual planificada
+				metas = MetaDAO.getMetasPagina(-1, -1, producto.getId(), OBJETO_ID_PRODUCTO, null, META_ID_ANUALPLANIFICADA, null, null, null, null);
+				if (metas!= null && !metas.isEmpty()){
+					Meta Meta = metas.get(0);
+					proyectometa.unidadDeMedidaId = Meta.getMetaUnidadMedida().getId();
+					proyectometa.datoTipoId = Meta.getDatoTipo().getId();
+					List <MetaValor> metavalores = MetaValorDAO.getValoresMeta(Meta.getId());
+					for (MetaValor metavalor : metavalores){	
+						stmeta meta = new stmeta();
+						meta.id = metavalor.getId().getMetaid();
+						meta.fecha = Utils.formatDate(metavalor.getId().getFecha());
+						meta.valor = "";
+						switch(metas.get(0).getDatoTipo().getId()){
+							case DATOTIPO_TEXTO: 
+								if (null != metavalor.getValorString()){
+									meta.valor = metavalor.getValorString();
+								}
+								break;
+							case DATOTIPO_ENTERO: 
+								if (null != metavalor.getValorEntero()){
+									meta.valor = metavalor.getValorEntero().toString();
+								}
+								break;
+							case DATOTIPO_DECIMAL: 
+								if (null != metavalor.getValorDecimal()){
+									meta.valor = metavalor.getValorDecimal().toString();
+								}
+								break;
+							case DATOTIPO_BOOLEANO: 
+	
+								break;
+							case DATOTIPO_FECHA: 
+								if (null != metavalor.getValorTiempo()){
+									meta.valor = Utils.formatDateHour(metavalor.getValorTiempo());
+								}
+								break;
+						}
+						proyectometa.metasPlanificadas.add(meta);
+					}
+				}
+
+				//Obteniendo linea base
+				metas = MetaDAO.getMetasPagina(-1, -1, producto.getId(), OBJETO_ID_PRODUCTO, null, META_ID_LINEABASE, null, null, null, null);
+				if (metas!= null && !metas.isEmpty()){
+					Meta Meta = metas.get(0);
+					proyectometa.unidadDeMedidaId = Meta.getMetaUnidadMedida().getId();
+					proyectometa.datoTipoId = Meta.getDatoTipo().getId();
+					proyectometa.lineaBaseId = Meta.getId();
+					MetaValor metavalor = MetaValorDAO.getMetaValorPorMetaid(Meta.getId());
+					switch(metas.get(0).getDatoTipo().getId()){
+						case DATOTIPO_TEXTO: 
+							if (null != metavalor.getValorString()){
+							proyectometa.lineaBase = metavalor.getValorString();
+							}else{
+								proyectometa.lineaBase = "";
+							}
+							break;
+						case DATOTIPO_ENTERO: 
+							if (null != metavalor.getValorEntero()){
+							proyectometa.lineaBase = metavalor.getValorEntero().toString();
+							}else{
+								proyectometa.lineaBase = "";
+							}
+							break;
+						case DATOTIPO_DECIMAL: 
+							if (null != metavalor.getValorDecimal()){
+							proyectometa.lineaBase = metavalor.getValorDecimal().toString();
+							}else{
+								proyectometa.lineaBase = "";
+							}
+							break;
+						case DATOTIPO_BOOLEANO: 
+
+							break;
+						case DATOTIPO_FECHA: 
+							if (null != metavalor.getValorTiempo()){
+							proyectometa.lineaBase = Utils.formatDateHour(metavalor.getValorTiempo());
+							}else{
+								proyectometa.lineaBase = "";
+							}
+							break;
+					}
+				}
+				
+				//Obteniendo meta final
+				metas = MetaDAO.getMetasPagina(-1, -1, producto.getId(), OBJETO_ID_PRODUCTO, null, META_ID_FINAL, null, null, null, null);
+				if (metas!= null && !metas.isEmpty()){
+					Meta Meta = metas.get(0);
+					proyectometa.unidadDeMedidaId = Meta.getMetaUnidadMedida().getId();
+					proyectometa.datoTipoId = Meta.getDatoTipo().getId();
+					proyectometa.metaFinalId = Meta.getId();
+					MetaValor metavalor = MetaValorDAO.getMetaValorPorMetaid(Meta.getId());
+					switch(metas.get(0).getDatoTipo().getId()){
+						case DATOTIPO_TEXTO: 
+							if (null != metavalor.getValorString()){
+							proyectometa.metaFinal = metavalor.getValorString();
+							}else{
+								proyectometa.metaFinal = "";
+							}
+							break;
+						case DATOTIPO_ENTERO: 
+							if (null != metavalor.getValorEntero()){
+							proyectometa.metaFinal = metavalor.getValorEntero().toString();
+							}else{
+								proyectometa.metaFinal = "";
+							}
+							break;
+						case DATOTIPO_DECIMAL: 
+							if (null != metavalor.getValorDecimal()){
+							proyectometa.metaFinal = metavalor.getValorDecimal().toString();
+							}else{
+								proyectometa.metaFinal = "";
+							}
+							break;
+						case DATOTIPO_BOOLEANO: 
+
+							break;
+						case DATOTIPO_FECHA: 
+							if (null != metavalor.getValorTiempo()){
+							proyectometa.metaFinal = Utils.formatDateHour(metavalor.getValorTiempo());
+							}else{
+								proyectometa.metaFinal = "";
+							}
+							break;
+					}
+				}
+				
+				lstproductometas.add(proyectometa);				
+			}
+		}
+		return lstproductometas;
+	}
 	
 	private List<stprestamometa> obtenerListadoProyectoMetas(int proyectoId, String usuario){
 		Proyecto proyecto = ProyectoDAO.getProyectoPorId(proyectoId, usuario);
@@ -514,7 +784,6 @@ public class SPrestamoMetas extends HttpServlet {
 		}
 		return lstproyectometas;
 	}
-	
 	
 	private stprestamometa guardarProyectoMeta(stprestamometa proyectometa, String usuario){
 		Meta meta;

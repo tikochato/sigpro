@@ -69,6 +69,7 @@
                     	<ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/cargatrabajo/rp">Carga de Trabajo</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/adquisiciones/rp">Adquisiciones</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/prestamometas">Metas de Préstamo</a></li></shiro:hasPermission>
                     	</ul>
                     </li>
                     <li uib-dropdown>
