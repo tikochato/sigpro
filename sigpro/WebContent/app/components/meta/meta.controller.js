@@ -49,6 +49,11 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 						mi.metaunidades = response.MetasUnidades;
 			});
 			
+			$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
+					function(response) {
+						mi.datoTipos = response.datoTipos;
+			});
+			
 			mi.editarElemento = function (event) {
 		        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
 		        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
@@ -143,15 +148,16 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				$window.location.href = '/main.jsp#!/forbidden';		
 			}
 			mi.guardar=function(){
-				if(mi.meta!=null && mi.meta.nombre!='' && mi.meta.tipoMetaId>0 && mi.meta.unidadMedidaId>0 ){
+				if(mi.meta!=null && mi.meta.nombre!='' && mi.meta.tipoMetaId>0 && mi.meta.unidadMedidaId>0 && mi.meta.datoTipoId>0 ){
 					$http.post('/SMeta', {
 						accion: 'guardarMeta',
 						esnueva: mi.esnueva,
 						id: mi.meta.id,
 						nombre: mi.meta.nombre,
 						descripcion: mi.meta.descripcion,
-						tipometaid:  mi.meta.tipoMetaId,
-						unidadmetaid: mi.meta.unidadMedidaId,
+						tipoMetaId:  mi.meta.tipoMetaId,
+						unidadMedidaId: mi.meta.unidadMedidaId,
+						datoTipoId: mi.meta.datoTipoId,
 						objetoTipo:  $routeParams.tipo,
 						objetoId:$routeParams.id
 						
@@ -237,17 +243,23 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			}
 			
 			mi.reiniciarVista=function(){
-				if($location.path()=='/metas/rv')
+				if($location.path()=='/meta/'+ $routeParams.id + '/' + $routeParams.tipo + '/rv')
 					$route.reload();
 				else
-					$location.path('/metas/rv');
+					$location.path('/meta/'+ $routeParams.id + '/' + $routeParams.tipo + '/rv');
 			}
-			
+						
 			mi.filtrar = function(evt){
 				if(evt.keyCode==13){
 					mi.obtenerTotalMetas();
 					mi.gridApi.selection.clearSelectedRows();
 					mi.meta = null;
+				}
+			}
+			
+			mi.irAMetaValores=function(){
+				if(mi.meta.id!=null){
+					$location.path('/metavalor/'+ mi.meta.id +'/'+ mi.meta.datoTipoId );
 				}
 			}
 			
@@ -260,4 +272,5 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				
 				}
 			}
+
 	]);

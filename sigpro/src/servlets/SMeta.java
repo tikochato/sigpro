@@ -63,6 +63,8 @@ public class SMeta extends HttpServlet {
 		String fechaActualizacion;
 		Integer objetoId;
 		Integer objetoTipo;
+		Integer datoTipoId;
+		
 	}
 
 	public class sttipometa{
@@ -119,7 +121,7 @@ public class SMeta extends HttpServlet {
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
-			List<Meta> Metas = MetaDAO.getMetasPagina(pagina, numeroMetas, id, tipo,filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
+			List<Meta> Metas = MetaDAO.getMetasPagina(pagina, numeroMetas, id, tipo,filtro_nombre, -1, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			List<stmeta> tmetas = new ArrayList<stmeta>();
 			for(Meta meta : Metas){
 				stmeta temp = new stmeta();
@@ -135,6 +137,7 @@ public class SMeta extends HttpServlet {
 				temp.tipoMetaNombre = meta.getMetaTipo().getNombre();
 				temp.unidadMedidaId = meta.getMetaUnidadMedida().getId();
 				temp.unidadMedidaNombre = meta.getMetaUnidadMedida().getNombre();
+				temp.datoTipoId = meta.getDatoTipo().getId();
 				temp.usuarioActualizo = meta.getUsuarioActualizo();
 				temp.usuarioCreo = meta.getUsuarioCreo();
 				tmetas.add(temp);
@@ -149,19 +152,26 @@ public class SMeta extends HttpServlet {
 	        response_text = String.join("", "\"Metas\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
+		else if(accion.equals("obtenerMetaPorId")){
+			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			Meta meta= MetaDAO.getMetaPorId(id);
+			response_text = String.join("","{ \"success\": ",(meta!=null && meta.getId()!=null ? "true" : "false"),", "
+					+ "\"id\": " + (meta!=null ? meta.getId():"0") +", "
+					+ "\"nombre\": \"" + (meta!=null ? meta.getNombre():"") +"\" }");
+
+		}
 		else if(accion.equals("guardarMeta")){
 			boolean result = false;
 			boolean esnuevo = map.get("esnueva")!=null ? map.get("esnueva").equals("true") :  false;
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0 || esnuevo){
 				String nombre = map.get("nombre");
-				Integer idMetaTipo = map.get("tipometaid")!=null ? Integer.parseInt(map.get("tipometaid")) : 1;
+				Integer idMetaTipo = map.get("tipoMetaId")!=null ? Integer.parseInt(map.get("tipoMetaId")) : 1;
 				MetaTipo metaTipo = MetaTipoDAO.getMetaTipoPorId(idMetaTipo);
-				Integer idUnidadMedida = map.get("unidadmetaid")!=null ? Integer.parseInt(map.get("unidadmetaid")) : 0;
+				Integer idUnidadMedida = map.get("unidadMedidaId")!=null ? Integer.parseInt(map.get("unidadMedidaId")) : 0;
 				MetaUnidadMedida metaUnidadMedida = MetaUnidadMedidaDAO.getMetaUnidadMedidaPorId(idUnidadMedida);
 				String descripcion = map.get("descripcion");
-				Integer datoTipoId = Utils.getParameterInteger(map, "datotipo");
-				datoTipoId=1;
+				Integer datoTipoId = Utils.getParameterInteger(map, "datoTipoId");
 				DatoTipo datoTipo = DatoTipoDAO.getDatoTipo(datoTipoId);
 				Integer objetoId = Utils.getParameterInteger(map, "objetoId");
 				Integer objetoTipo = Utils.getParameterInteger(map, "objetoTipo");
@@ -174,6 +184,8 @@ public class SMeta extends HttpServlet {
 				else{
 					Meta = MetaDAO.getMetaPorId(id);
 					Meta.setNombre(nombre);
+					Meta.setMetaTipo(metaTipo);
+					Meta.setMetaUnidadMedida(metaUnidadMedida);
 					Meta.setDescripcion(descripcion);
 					Meta.setUsuarioActualizo(usuario);
 					Meta.setFechaActualizacion(new DateTime().toDate());
@@ -182,9 +194,9 @@ public class SMeta extends HttpServlet {
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 						, "\"id\": " , Meta.getId().toString() , ","
 						, "\"usuarioCreo\": \"" , Meta.getUsuarioCreo(),"\","
-						, "\"fechaCreacion\":\" " , Utils.formatDate(Meta.getFechaCreacion()),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(Meta.getFechaCreacion()),"\","
 						, "\"usuarioactualizo\": \"" , Meta.getUsuarioActualizo() != null ? Meta.getUsuarioActualizo() : "","\","
-						, "\"fechaactualizacion\": \"" , Utils.formatDate(Meta.getFechaActualizacion()),"\""
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(Meta.getFechaActualizacion()),"\""
 						," }");
 			}
 			else

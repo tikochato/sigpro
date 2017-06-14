@@ -115,7 +115,7 @@ public class MetaDAO {
 	}
 	
 	public static List<Meta> getMetasPagina(int pagina, int numeroMetas, int id, int tipo,
-			String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion,
+			String filtro_nombre, int filtro_metatipo, String filtro_usuario_creo, String filtro_fecha_creacion,
 			String columna_ordenada, String orden_direccion){
 		List<Meta> ret = new ArrayList<Meta>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -124,6 +124,8 @@ public class MetaDAO {
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " m.nombre LIKE '%",filtro_nombre,"%' ");
+			if(filtro_metatipo>0)
+				query_a = String.join("",query_a, " m.metaTipo = ",String.valueOf(filtro_metatipo)," ");
 			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " m.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
@@ -134,8 +136,10 @@ public class MetaDAO {
 			Query<Meta> criteria = session.createQuery(query,Meta.class);
 			criteria.setParameter("objetoId", id);
 			criteria.setParameter("objetoTipo", tipo);
-			criteria.setFirstResult(((pagina-1)*(numeroMetas)));
-			criteria.setMaxResults(numeroMetas);
+			if (numeroMetas > 0){
+				criteria.setFirstResult(((pagina-1)*(numeroMetas)));
+				criteria.setMaxResults(numeroMetas);
+			}
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
