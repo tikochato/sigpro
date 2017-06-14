@@ -1,28 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<style>
-		pre {    
-		    margin: 0 0 0px;
-		    font-size: medium;
-		    line-height: normal;
-		    color: #333;
-		    word-break: none;
-		    word-wrap: break-word;
-		    background-color: transparent;
-		    border: none;
-		    border-radius: none;
-		    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-		    padding: 0px;
-		    line-height: normal;
-		     
-		}
-		.centrado{
-			text-align: center;
-		}
-		.inputText{
-			height: 21px; 
-		}
-	</style>
+
+<style>
+	.ui-grid-tree-header-row {
+    	font-weight: normal !important;
+	}
+	
+	.ui-grid-tree-padre {
+    	font-weight: bold;
+	}
+	
+	.ui-grid-category {
+  		text-align: center;border-right: 0px;box-shadow: -1px 1px #d4d4d4 
+	}
+</style>
+
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="prestamometasController as pmetasc" class="maincontainer all_page" id="title">
@@ -34,63 +26,88 @@
 		<div class="panel panel-default">
 			<div class="panel-heading"><h3>Metas de Préstamo</h3></div>
 		</div>
-		<div class="subtitulo">
-			{{ pmetasc.proyectoNombre }}
-		</div>
 		
-		<div class="row" align="center" >
-		
-			<div class="operation_buttons" align="right">
-					<div class="btn-group">
-						<label class="btn btn-primary"  ng-click="pmetasc.exportarExcel()" uib-tooltip="Exportar">
-						<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span> Exportar</label>
+		<div class="container" style="width: 100%">
+    	<div style="height: 30%; width: 100%;">
+    		<div class="row">
+				<div class="form-group col-sm-3">
+					<select  class="inputText" ng-model="pmetasc.prestamo"
+						ng-options="a.text for a in pmetasc.prestamos" ng-required="true"></select>
+					<label for="prestamo" class="floating-label">Préstamos</label>
+				</div>
+			</div>
+			
+    		<div class="row">
+				<div class="form-group col-sm-3">
+					<input type="text"  class="inputText" uib-datepicker-popup="{{pmetasc.formatofecha}}" ng-model="pmetasc.fechaInicio" is-open="pmetasc.fi_abierto"
+			            datepicker-options="pmetasc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+			            ng-required="true"  ng-click="pmetasc.abrirPopupFechaInicio(1000)"
+			            ng-value="pmetasc.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
+			            <span class="label-icon" ng-click="pmetasc.abrirPopupFechaInicio(1000)">
+			              <i class="glyphicon glyphicon-calendar"></i>
+			            </span>
+				  	<label for="campo.id" class="floating-label">* Año Inicial</label>
+				</div>
+				<div class="form-group col-sm-3">
+					<input type="text"  class="inputText" uib-datepicker-popup="{{pmetasc.formatofecha}}" ng-model="pmetasc.fechaFin" is-open="pmetasc.ff_abierto"
+			            datepicker-options="pmetasc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
+			            ng-required="true"  ng-click="pmetasc.abrirPopupFechaFin(1000)"
+			            ng-value="pmetasc.fechaFin" onblur="this.setAttribute('value', this.value);"/>
+			            <span class="label-icon" ng-click="pmetasc.abrirPopupFechaFin(1000)">
+			              <i class="glyphicon glyphicon-calendar"></i>
+			            </span>
+				  	<label for="campo.id" class="floating-label">* Año Final</label>
+				</div>
+				<div class="form-group col-sm-3">
+					<select class="inputText" ng-model="pmetasc.agrupacion" ng-required="true">
+										<option value="0" selected="selected">Seleccione una opción</option>
+										<option ng-repeat="ag in pmetasc.agrupaciones"
+											ng-value="ag.value">{{ag.text}}</option>
+					</select>
+					<label class="floating-label">Agrupacion</label>
+				</div>	
+				
+				<div class="form-group col-sm-3" >
+					<label class="btn btn-default" ng-click="pmetasc.generar()" uib-tooltip="Generar Reporte" 
+						tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-new-window"></span></label>
+					
+					<label class="btn btn-default" ng-click="pmetasc.congelar()" uib-tooltip="Congelar" ng-hide="!pmetasc.mostrarCongelar"
+						tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-ban-circle"></span></label>
+					
+					<label class="btn btn-default" ng-click="pmetasc.copiar()" uib-tooltip="Copiar" ng-hide="!pmetasc.mostrarCopiar"
+						tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-duplicate"></span></label>
+					
+					<label class="btn btn-default" ng-click="pmetasc.descargar()" uib-tooltip="Descargar excel" ng-hide="!pmetasc.mostrarDescargar"
+						tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-download-alt"></span></label>
+				</div>
+				
+				<div class="row" align="center" >
+					<div class="operation_buttons" align="right">
+							<div class="btn-group">
+								<label class="btn btn-primary"  ng-click="pmetasc.exportarExcel()" uib-tooltip="Exportar">
+								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span> Exportar</label>
+							</div>
 					</div>
+				</div>
 			</div>
-			<div class="col-sm-12 ">
-				<table st-table="pmetasc.prestamometas" st-safe-src="pmetasc.lista" class="table table-condensed table-hover">
-					<thead> 
-						<tr>
-							<th class="label-form">Producto</th>
-							<th class="label-form">Unidad de Medida</th>
-							<th class="label-form centrado">Meta Planificada</th>
-							<th class="label-form centrado">Meta Real</th>
-							<th class="label-form centrado">Meta Anual Planificada</th>
-							<th class="label-form centrado">Meta Anual Real</th>
-							<th class="label-form centrado">Línea Base</th>
-							<th class="label-form centrado">Meta Final</th>
-						</tr>
-					</thead>
-					<tbody>
-					<tr ng-repeat="row in pmetasc.prestamometas" padre="{{row.objetoPadre}}" ng-click="pmetasc.acordion(row.id, row.objetoTipo)" ng-hide="row.objetoPadre == pmetasc.padreActual && row.objetoTipo > pmetasc.objetoTipo" index="{{$index}}">
-						
-						<td>
-							<pre>{{row.nombre}}</pre>
-						</td>
-						<td>{{row.unidadDeMedida}}</td>
-						<td class="centrado">{{row.metaPlanificada}}</td>
-						<td class="centrado">
-							<div ng-show="!row.editarMetaReal" ng-click="pmetasc.editarMetaReal(row)"  uib-tooltip="{{row.metaRealFecha}}">{{row.metaReal}}</div>
-							<input ng-show="row.editarMetaReal" type="text"  class="inputText centrado" 
-								ng-model="row.metaReal" ng-value="row.metaReal" ng-blur="pmetasc.cancelaEditarMetaReal(row)"
-								ng-keypress="pmetasc.guardarMetaReal($event)">
-						</td>	
-						<td class="centrado">{{row.metaAnualPlanificada}}</td>
-						<td class="centrado">
-							<div ng-show="!row.editarMetaAnualReal" ng-click="pmetasc.editarMetaAnualReal(row)"  uib-tooltip="{{row.metaAnualRealFecha}}">{{row.metaAnualReal}}</div>
-							<input ng-show="row.editarMetaAnualReal" type="text"  class="inputText centrado" 
-								ng-model="row.metaAnualReal" ng-value="row.metaAnualReal" ng-blur="pmetasc.cancelaEditarMetaAnualReal(row)"
-								ng-keypress="pmetasc.guardarMetaAnualReal($event)">
-						</td>
-						<td class="centrado">{{row.lineaBase}}</td>
-						<td class="centrado">{{row.metaFinal}}</td>
-					</tr>
-					</tbody>
-				</table>
-				
-				<br/>
-				
-				
+    	</div>
+    	
+    	<div id="grid" ui-grid="pmetasc.opcionesGrid"
+			ui-grid-resize-columns ui-grid-pinning
+			ui-grid-grouping ui-grid-edit ui-grid-row-edit ui-grid-cellNav >
+			<div class="grid_loading" ng-hide="!pmetasc.mostrarCargando">
+				<div class="msg">
+					<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
+						<br />
+						<br /> <b>Cargando, por favor espere...</b> 
+					</span>
+				</div>
 			</div>
-		  
+		</div>
+    	
 	</div>
 </div>
