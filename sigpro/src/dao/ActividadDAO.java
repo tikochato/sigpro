@@ -304,15 +304,15 @@ public class ActividadDAO {
 			Date fechaFI = null;
 			for(int i = objetoActividadFechas.size()-1; i >= 0; i--){
 				if(fechaFI != null)
-					objetoActividadFechas.get(i).setFechaInicial(getFechaFinal(fechaFI,1,objetoActividadFechas.get(i).getDimension()));
+					objetoActividadFechas.get(i).setFechaInicial(getFechaFinal(fechaFI,1,objetoActividadFechas.get(i).getDimension().charAt(0)));
 				Date fechaI = objetoActividadFechas.get(i).fecha_inicial;
-				objetoActividadFechas.get(i).setFechaFin(getFechaFinal(fechaI,objetoActividadFechas.get(i).getDuracion(),objetoActividadFechas.get(i).getDimension()));
+				objetoActividadFechas.get(i).setFechaFin(getFechaFinal(fechaI,objetoActividadFechas.get(i).getDuracion(),objetoActividadFechas.get(i).getDimension().charAt(0)));
 				fechaFI = objetoActividadFechas.get(i).getFechaFin();
 			}
 
 			fecha = Utils.formatDate(objetoActividadFechas.get(0).getFechaInicial()) + ";" + Utils.formatDate(objetoActividadFechas.get(0).getFechaFin()); 
 		}else{
-			fecha = Utils.formatDate(actividad.getFechaInicio()) + ";" + Utils.formatDate(getFechaFinal(actividad.getFechaInicio(),actividad.getDuracion(),actividad.getDuracionDimension())); 
+			fecha = Utils.formatDate(actividad.getFechaInicio()) + ";" + Utils.formatDate(getFechaFinal(actividad.getFechaInicio(),actividad.getDuracion(),actividad.getDuracionDimension().charAt(0))); 
 		}
 		
 		return fecha;
