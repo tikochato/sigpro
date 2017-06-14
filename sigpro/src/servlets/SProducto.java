@@ -3,6 +3,7 @@ package servlets;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -67,6 +68,7 @@ public class SProducto extends HttpServlet {
 		String usuarioactualizo;
 		String latitud;
 		String longitud;
+		Integer peso;
 		
 	}
 	
@@ -139,6 +141,7 @@ public class SProducto extends HttpServlet {
 				temp.fechaactualizacion = Utils.formatDateHour(producto.getFechaActualizacion());
 				temp.latitud = producto.getLatitud();
 				temp.longitud = producto.getLongitud();
+				temp.peso = producto.getPeso();
 				
 
 				if (producto.getComponente() != null) {
@@ -188,6 +191,7 @@ public class SProducto extends HttpServlet {
 				Integer actividad = Utils.String2Int(parametro.get("actividad"), null);
 				String latitud = parametro.get("latitud");
 				String longitud = parametro.get("longitud");
+				Integer peso = Utils.String2Int(parametro.get("peso"), null);
 				
 				
 				Gson gson = new Gson();
@@ -209,7 +213,7 @@ public class SProducto extends HttpServlet {
 					
 					producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, descripcion, 
 							 usuario, null, new DateTime().toDate(), null, 1
-							, snip, programa, subprograma, proyecto_, actividad, obra, fuente, latitud, longitud,null,null,null);
+							, snip, programa, subprograma, proyecto_, actividad, obra, fuente, latitud, longitud,null,null,null,null);
 					
 				}else{
 					producto = ProductoDAO.getProductoPorId(id);
@@ -229,6 +233,7 @@ public class SProducto extends HttpServlet {
 					producto.setFechaActualizacion(new DateTime().toDate());
 					producto.setLatitud(latitud);
 					producto.setLongitud(longitud);
+					producto.setPeso(peso);
 				}
 				ret = ProductoDAO.guardarProducto(producto);
 				
@@ -318,6 +323,7 @@ public class SProducto extends HttpServlet {
 					temp.fechaactualizacion = Utils.formatDateHour(producto.getFechaActualizacion());
 					temp.latitud = producto.getLatitud();
 					temp.longitud = producto.getLongitud();
+					temp.peso = producto.getPeso();
 					
 
 					if (producto.getComponente() != null) {
@@ -388,6 +394,7 @@ public class SProducto extends HttpServlet {
 				temp.fechaactualizacion = Utils.formatDateHour(producto.getFechaActualizacion());
 				temp.latitud = producto.getLatitud();
 				temp.longitud = producto.getLongitud();
+				temp.peso = producto.getPeso();
 				
 
 				if (producto.getComponente() != null) {
@@ -446,6 +453,7 @@ public class SProducto extends HttpServlet {
 				temp.fechaactualizacion = Utils.formatDateHour(producto.getFechaActualizacion());
 				temp.latitud = producto.getLatitud();
 				temp.longitud = producto.getLongitud();
+				temp.peso = producto.getPeso();
 				
 
 				if (producto.getComponente() != null) {
@@ -567,7 +575,49 @@ public class SProducto extends HttpServlet {
 			response_text = String.join("", "{\"success\":true,", response_text,"}");
 				
 				
-		}else 
+		}else if (accion.equals("getProductoPorProyecto")) {
+			Integer idProyecto = Utils.String2Int(parametro.get("idProyecto"));
+			List<Producto> productos = ProductoDAO.getProductosPorProyecto(idProyecto, usuario);
+			
+			List<stproducto> stproductos=new ArrayList<stproducto>();
+			
+			for(Producto producto:productos){
+				stproducto temp = new stproducto();
+				temp.id = producto.getId();
+				temp.nombre = producto.getNombre();
+				temp.descripcion = producto.getDescripcion();
+				temp.estado = producto.getEstado();
+				temp.usuarioCreo = producto.getUsuarioCreo();
+				temp.usuarioactualizo = producto.getUsuarioActualizo();
+				temp.fechaCreacion = Utils.formatDateHour(producto.getFechaCreacion());
+				temp.fechaactualizacion = Utils.formatDateHour(producto.getFechaActualizacion());
+				temp.peso = producto.getPeso();
+				stproductos.add(temp);
+			}
+			
+			response_text = new GsonBuilder().serializeNulls().create().toJson(stproductos);
+			response_text = String.join("", "\"productos\":",response_text);
+			response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}else if (accion.equals("guardarPesoProducto")) {
+			String param_productos = parametro.get("productos");
+			String[] split = param_productos.split("~");
+			boolean ret = true;
+			for (int i = 0; i<split.length;i++){
+				String[] temp = split[i].split(",");
+				if (temp.length == 2){
+					Producto producto = ProductoDAO.getProductoPorId(Utils.String2Int(temp[0],0));
+					if (producto!=null){
+						producto.setPeso(Utils.String2Int(temp[1]));
+						producto.setUsuarioActualizo(usuario);
+						producto.setFechaActualizacion(new Date());
+						ret = ProductoDAO.guardarProducto(producto);
+					}
+				}
+			}
+			response_text = String.join("", "{ \"success\": ",(ret ? "true":"false")," }");
+			
+		}
+		else 
 			response_text = "{ \"success\": false }";
 		
 		response.setHeader("Content-Encoding", "gzip");

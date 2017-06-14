@@ -23,12 +23,16 @@
 	                <li uib-dropdown>
 	                	<shiro:hasPermission name="8010"><a href="#!/cooperante"><span class="glyphicon" aria-hidden="true"></span> Cooperante</a></shiro:hasPermission>	                    
 	                </li>
+	                <li>
+                    	<shiro:hasPermission name="24010"><a href="#!/programa"><span class="glyphicon" aria-hidden="true"></span> Programas</a></shiro:hasPermission>                       
+                    </li>
                     <li>
                     	<shiro:hasPermission name="24010"><a   href="#!/prestamo"><span class="glyphicon" aria-hidden="true"></span> Préstamos</a></shiro:hasPermission>                       
                     </li>
                     <li uib-dropdown>
                     	<a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Configuraciones <b class="caret"></b></a>
                     	<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="split-button">
+                    		<shiro:hasPermission name="3010">
                     		<li class="dropdown-submenu">
                     			<a><span class="glyphicon" aria-hidden="true"></span> Catálogos</a>
 		                        <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
@@ -49,8 +53,10 @@
 			                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/responsablerol/rv">Resonsable rol</a></li></shiro:hasPermission>
 		                        </ul>
                     		</li>
+                    		</shiro:hasPermission>
+                    		
                     		<li class="dropdown-submenu">
-                    			<a><span class="glyphicon" aria-hidden="true"></span> Propiedades</b></a>
+                    			<a><span class="glyphicon" aria-hidden="true"></span> Propiedade</a>
 		                        <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
 		                         	<shiro:hasPermission name="25010"><li role="menuitem"><a href="#!/programapropiedad">Programa</a></li></shiro:hasPermission>
 		                         	<shiro:hasPermission name="2010"><li role="menuitem"><a href="#!/actividadpropiedad">Actividad</a></li></shiro:hasPermission>	                      
@@ -68,10 +74,12 @@
                     	<a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Reportes <b class="caret"></b></a>
                     	<ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/cargatrabajo/rp">Carga de Trabajo</a></li></shiro:hasPermission>
-                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/adquisiciones/rp">Adquisiciones</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/informacionPresupuestaria/rp">Información presupuestaria</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/planejecucion/rp">Plan de ejecución</a></li></shiro:hasPermission>
                     	</ul>
                     </li>
-                    <li uib-dropdown>
+                    <shiro:hasPermission name="34010">
+                    	 <li uib-dropdown>
                          <a href="" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Usuarios <b class="caret"></b></a>
                          <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
                          	<shiro:hasPermission name="34010"><li role="menuitem"><a href="#!/usuarios">Usuarios</a></li></shiro:hasPermission>                         	
@@ -79,6 +87,8 @@
                          	<shiro:hasPermission name="4010"><li role="menuitem"><a href="#!/colaborador">Colaboradores</a></li></shiro:hasPermission>                       	
                          </ul>
                     </li>
+                    </shiro:hasPermission>
+                   
                     <li uib-dropdown>
 	                	<shiro:hasPermission name="24010"><a   href="#!/mapa"><span class="glyphicon" aria-hidden="true"></span> Mapa</a></shiro:hasPermission>	                    
 	                </li>

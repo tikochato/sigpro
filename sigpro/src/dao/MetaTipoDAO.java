@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.MetaTipo;
+import pojo.MetaValor;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -156,6 +157,34 @@ public class MetaTipoDAO {
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("7", MetaTipoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static MetaValor getMetaValorPorIdObjetoTipoMeta(Integer objetoId, Integer objetoTipo, Integer metaTipoId){
+		MetaValor ret=null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select mv.* from producto p"
+										,"join meta m on m.objeto_id = p.id"
+										,"join meta_valor mv ON mv.metaid = m.id"
+										,"where m.objeto_tipo = :objTipo"
+										,"and m.meta_tipoid = :metaTipo"
+										,"and p.id = :objId");
+			
+			
+			Query<MetaValor> metavalor = session.createNativeQuery(query,MetaValor.class);
+			metavalor.setParameter("objTipo", objetoTipo);
+			metavalor.setParameter("metaTipo", metaTipoId);
+			metavalor.setParameter("objId", objetoId);
+			
+			ret = metavalor.getSingleResult();
 		}
 		catch(Throwable e){
 			CLogger.write("7", MetaTipoDAO.class, e);

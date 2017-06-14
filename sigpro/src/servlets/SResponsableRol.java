@@ -154,7 +154,7 @@ public class SResponsableRol extends HttpServlet {
 						}
 						
 						if(esnuevo){
-							responsableRol = new ResponsableRol(responsableTipo, nombre, descripcion, usuario, new DateTime().toDate(), 1);
+							responsableRol = new ResponsableRol(responsableTipo, nombre, descripcion, usuario, null, new DateTime().toDate(), null, 1, null);
 						}else{
 							responsableRol = ResponsableRolDAO.ResponsableRol(id);
 							responsableRol.setNombre(nombre);

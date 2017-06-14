@@ -1,9 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	
+	<style>
+	.label-form1{
+		 font-size: 13px;
+		 opacity: 1;
+		 pointer-events: none;
+		 color: rgba(0,0,0,0.38) !important;
+		 font-weight: bold;
+	}
+	 table.borderless td,table.borderless th{
+     border: none !important;
+	}
+</style>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="planejecucionController as planc" class="maincontainer all_page" id="title">
+	
+	
   	    <shiro:lacksPermission name="30010">
 			<p ng-init="planc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
@@ -17,152 +30,218 @@
 		
 		<div class="row" align="center" >
 			<div class="col-sm-12 ">
-			<div class="row">
-				<div class="col-sm-5">
-					<div class="form-group" >
-					  <input type="text"  class="inputText" uib-datepicker-popup="{{planc.formatofecha}}" ng-model="planc.ejercicioFiscal" is-open="planc.ef_abierto"
-					            datepicker-options="planc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true"  ng-click="planc.abrirPopupFecha(1)"
-					             date-disabled="disabled(date, mode)"
-					            ng-value="planc.ejercicioFiscal" onblur="this.setAttribute('value', this.value);"/>
-					            <span class="label-icon" ng-click="planc.abrirPopupFecha(1)">
-					              <i class="glyphicon glyphicon-calendar"></i>
-					            </span>
-					  <label  class="floating-label">Ejercicio fiscal</label>
+			
+			<form name="form">
+				<div class="row">
+					<div class="form-group col-sm-5">
+						<select  class="inputText" ng-model="planc.prestamoSeleccionado"
+							ng-options="a.text for a in planc.prestamos"
+							ng-readonly="true"
+							ng-required="true">
+							<option value="">Seleccione una opción</option>
+							</select>
+						<label for="prestamo" class="floating-label">Préstamos</label>
+					</div>
+					
+					
+					<div class="col-sm-5" ng-if="false">
+						<div class="form-group" >
+						  <input type="text"  class="inputText" uib-datepicker-popup="{{planc.formatofecha}}" ng-model="planc.ejercicioFiscal" is-open="planc.ef_abierto"
+						            datepicker-options="planc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true"  ng-click="planc.abrirPopupFecha(1)"
+						             date-disabled="disabled(date, mode)"
+						            ng-value="planc.ejercicioFiscal" onblur="this.setAttribute('value', this.value);"/>
+						            <span class="label-icon" ng-click="planc.abrirPopupFecha(1)">
+						              <i class="glyphicon glyphicon-calendar"></i>
+						            </span>
+						  <label  class="floating-label">Ejercicio fiscal</label>
+						</div>
+					</div>
+					
+					<div class="form-group col-sm-1" >
+						<label class="btn btn-default" ng-click="form.$valid ? planc.generarReporte() : ''" uib-tooltip="Generar" 
+							tooltip-placement="bottom"
+							 ng-disabled="!form.$valid"
+							>
+						<span class="glyphicon glyphicon-new-window"></span></label>
 					</div>
 				</div>
+			</form>
 				
-			</div>
-				
 			
-			
-			
-				<div class="panel panel-default">
+				<div class="panel panel-default" ng-hide="!planc.mostrar">
 					<div class="panel-body">
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label class="label-form" for="usuarioCreo">Número de Prestamo</label>
-				  					<p>{{ planc.prestamo.numeroPrestamo }}</pl>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="form-group">
-									<label  class="label-form"  for="fechaCreacion">Fecha Ultima Actualización</label>
-				  					<p>{{ planc.prestamo.fechaActualizacion }}</p>
-								</div>
-							</div>
-						</div>
+					<div class = "table-responsive">
+						<table class="table table-condensed borderless"
+						 style="width: 50%" align="left">
+							<tr>
+	   							<td style="width: 40%" >
+	   								<label class="label-form1" >Mes Reportado</label>	
+	   							</td>
+	   							<td >
+	   								<p>{{ planc.mesReportado }}</pl>
+	   							</td>
+	   						</tr>
+	   						<tr>
+	   							<td>
+	   								<label class="label-form1" >Año Fiscal</label>
+	   							</td>
+	   							<td>
+	   								<p>{{ planc.anioFiscal }}</pl>
+	   							</td>
+	   						</tr>
+	   						<tr>
+	   							<td>
+	   								<label class="label-form1" >Proyecto/Programa</label>
+	   							</td>
+	   							<td>
+	   								<p>{{ planc.prestamo.proyectoPrograma }}</pl>
+	   							</td>
+	   						</tr>
+	   						<tr>
+	   							<td>
+	   								<label class="label-form1" >Organismo Ejecutor</label>
+	   							</td>
+	   							<td>
+	   								<p>{{ planc.prestamo.nombreEntidadEjecutora }}</pl>
+	   							</td>
+	   						</tr>
+	   						
+						</table>
+					</div>
 						
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label  class="label-form" for="usuarioActualizo">Código Presupuestario</label>
-				  					<p>{{ planc.prestamo.codigoPresupuestario }}</p>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="form-group">
-									<label for="fechaActualizacion"  class="label-form" >Fecha del decreto</label>
-				  					<p>{{ planc.prestamo.fechadecreto }}</p>
-								</div>
-							</div>
-						</div>
-						
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label  class="label-form" for="usuarioActualizo">Organismo Financiero</label>
+					
+					<table class="table table-hover table-condensed table-responsive table-striped table-bordered table-sm">
+						<tbody>
+      						<tr>
+      							<td>
+      								<label class="label-form1" >Número de Prestamo</label>
+      							</td>
+      							<td>
+      								<p>{{ planc.prestamo.numeroPrestamo }}</pl>
+      							</td>
+      							<td>
+      								<label  class="label-form1"  >Fecha Ultima Actualización</label>
+      							</td>
+      							<td>
+      								<p>{{ planc.prestamo.fechaActualizacion }}</p>
+      							</td>
+      						</tr>
+      						
+      						<tr>
+      							<td>
+      								<label  class="label-form1" >Código Presupuestario</label>
+				  					
+      							</td>
+      							<td>
+      								<p>{{ planc.prestamo.codigoPresupuestario }}</p>
+      							</td>
+      							<td>
+      								<label  class="label-form1" >Fecha del decreto</label>
+      							</td>
+      							<td>
+				  					<p>{{ planc.prestamo.fechaDecreto }}</p>
+      							</td>
+      						</tr>
+      						
+      						<tr>
+      							<td>
+      								<label  class="label-form1" >Organismo Financiero</label>
+      							</td>
+      							<td>
 				  					<p>{{ planc.prestamo.cooperantenombre }}</p>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="form-group">
-									<label for="fechaActualizacion"  class="label-form" >Fecha del suscripción</label>
+      							</td>
+      							<td>
+      								<label for="fechaActualizacion"  class="label-form1" >Fecha del suscripción</label>
+      							</td>
+      							<td>
 				  					<p>{{ planc.prestamo.fechaSuscripcion }}</p>
-								</div>
-							</div>
-						</div>
-						
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label  class="label-form" for="usuarioActualizo">Entidad Ejecutora</label>
+      							</td>
+      						</tr>
+      						<tr>
+      							<td>
+      								<label  class="label-form1" >Entidad Ejecutora</label>
+      							</td>
+      							<td>
 				  					<p>{{ planc.prestamo.nombreEntidadEjecutora }}</p>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="form-group">
-									<label for="fechaActualizacion"  class="label-form" >Fecha de vigencia</label>
+      							</td>
+      							<td>
+      								<label for="fechaActualizacion"  class="label-form1" >Fecha de vigencia</label>
+      							</td>
+      							<td>
 				  					<p>{{ planc.prestamo.fechaVigencia }}</p>
-								</div>
-							</div>
-						</div>
-						
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label  class="label-form" for="usuarioActualizo">Unidad Ejecutora</label>
+      							</td>
+      						</tr>
+      						<tr>
+      							<td>
+      								<label  class="label-form1" >Unidad Ejecutora</label>
+      							</td>
+      							<td>
 				  					<p>{{ planc.prestamo.unidadEjecutoraNombre }}</p>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="form-group">
-									<label for="fechaActualizacion"  class="label-form" >Fecha de elegibilidad</label>
+      							</td>
+      							<td>
+      								<label for="fechaActualizacion"  class="label-form1" >Fecha de elegibilidad</label>
+      							</td>
+      							<td>
 				  					<p>{{ planc.prestamo.fechaElegibilidadUe }}</p>
-								</div>
-							</div>
-						</div>
-						
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label  class="label-form" for="usuarioActualizo">Moneda de prestamo</label>
+      							</td>
+      						</tr>
+      						
+      						<tr>
+      							<td>
+      								<label  class="label-form1" >Moneda de prestamo</label>
+      							</td>
+      							<td>
 				  					<p>{{ planc.prestamo.tipoMonedaNombre }}</p>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="form-group">
-									<label for="fechaActualizacion"  class="label-form" >Fecha de cierre</label>
-				  					<p>{{ planc.prestamo.fechaCierre }}</p>
-								</div>
-							</div>
-						</div>
-						
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label  class="label-form" for="usuarioActualizo">Monto Aprobado</label>
+      							</td>
+      							<td>
+      								<label for="fechaActualizacion"  class="label-form1" >Fecha de cierre</label>
+      							</td>
+      							<td>
+				  					<p>{{ planc.prestamo.fechaCierreActualUe }}</p>
+      							</td>
+      						</tr>
+      						<tr>
+      							<td>
+      								<label  class="label-form1" >Monto Aprobado</label>
+      							</td>
+      							<td>
 				  					<p>{{ planc.prestamo.montoContratado }}</p>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="form-group">
-									<label for="fechaActualizacion"  class="label-form" >Meses de prorroga</label>
+      							</td>
+      							<td>
+      								<label for="fechaActualizacion"  class="label-form1" >Meses de prorroga</label>
+      							</td>
+      							<td>
 				  					<p>{{ planc.prestamo.mesesProrrogaUe }}</p>
-								</div>
-							</div>
-						</div>
-						
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label  class="label-form" for="usuarioActualizo">Monto aprobado Q</label>
+      							</td>
+      						</tr>
+      						<tr>
+      							<td>
+      								<label  class="label-form1" >Monto aprobado Q</label>
+      							</td>
+      							<td>
 				  					<p>{{ planc.prestamo.montoContratadoQtz}}</p>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="form-group">
-									<label for="fechaActualizacion"  class="label-form" >Plazo ejecución</label>
+      							</td>
+      							<td>
+      								<label for="fechaActualizacion"  class="label-form1" >Plazo ejecución</label>
+      							</td>
+      							<td>
 				  					<p>{{ planc.prestamo.plazoEjecucionUe }}</p>
-								</div>
-							</div>
-						</div>
-						
-						
-						
-						
+      							</td>
+      						</tr>
+      					</tbody>
+					</table>
 					</div>
 				</div>
+				
+				<br/> 
+				<div style="width: 75%">
+					<canvas id="radar" class="chart chart-radar" ng-hide="!planc.mostrar"
+				  chart-data="planc.dataRadar" chart-options="planc.radarOptions" chart-labels="planc.etiquetas"
+				  chart-legend="true" chart-series="planc.series"
+				  chart-colors = "planc.radarColors">
+				</canvas>
+				</div>
+				 
 					
 			</div>
 		  

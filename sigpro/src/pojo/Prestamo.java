@@ -37,7 +37,7 @@ public class Prestamo implements java.io.Serializable {
 	private TipoMoneda tipoMoneda;
 	private UnidadEjecutora unidadEjecutora;
 	private Date fechaCorte;
-	private int codigoPresupuestario;
+	private Long codigoPresupuestario;
 	private String numeroPrestamo;
 	private String destino;
 	private String sectorEconomico;
@@ -104,7 +104,7 @@ public class Prestamo implements java.io.Serializable {
 	}
 
 	public Prestamo(Cooperante cooperante, TipoMoneda tipoMoneda, UnidadEjecutora unidadEjecutora,
-			int codigoPresupuestario, String numeroPrestamo, BigDecimal montoContratado, String usuarioCreo, int estado,
+			Long codigoPresupuestario, String numeroPrestamo, BigDecimal montoContratado, String usuarioCreo, int estado,
 			String proyectoPrograma, Date fechaDecreto, Date fechaSuscripcion, Date fechaElegibilidadUe,
 			Date fechaCierreOrigianlUe, Date fechaCierreActualUe, int mesesProrrogaUe, BigDecimal montoAsignadoUe,
 			Date fechaVigencia, BigDecimal montoContratadoUsd, BigDecimal montoContratadoQtz,
@@ -139,7 +139,7 @@ public class Prestamo implements java.io.Serializable {
 
 	public Prestamo(AutorizacionTipo autorizacionTipo, Cooperante cooperante, EjecucionEstado ejecucionEstado,
 			InteresTipo interesTipo, TipoMoneda tipoMoneda, UnidadEjecutora unidadEjecutora, Date fechaCorte,
-			int codigoPresupuestario, String numeroPrestamo, String destino, String sectorEconomico, Date fechaFirma,
+			Long codigoPresupuestario, String numeroPrestamo, String destino, String sectorEconomico, Date fechaFirma,
 			String numeroAutorizacion, Date fechaAutorizacion, Integer aniosPlazo, Integer aniosGracia,
 			Date fechaFinEjecucion, Integer peridoEjecucion, BigDecimal porcentajeInteres,
 			BigDecimal porcentajeComisionCompra, BigDecimal montoContratado, BigDecimal amortizado,
@@ -313,11 +313,11 @@ public class Prestamo implements java.io.Serializable {
 	}
 
 	@Column(name = "codigo_presupuestario", nullable = false)
-	public int getCodigoPresupuestario() {
+	public Long getCodigoPresupuestario() {
 		return this.codigoPresupuestario;
 	}
 
-	public void setCodigoPresupuestario(int codigoPresupuestario) {
+	public void setCodigoPresupuestario(Long codigoPresupuestario) {
 		this.codigoPresupuestario = codigoPresupuestario;
 	}
 
