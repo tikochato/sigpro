@@ -104,6 +104,8 @@
 				<span class="glyphicon glyphicon-th-list"></span></label>
 				<label class="btn btn-default" ng-click="producto.irARiesgos()" uib-tooltip="Riesgos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-warning-sign"></span></label>
+				<label class="btn btn-default" ng-click="producto.irAMetas()" uib-tooltip="Metas" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-scale"></span></label>
 			</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="21020">

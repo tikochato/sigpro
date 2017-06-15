@@ -122,6 +122,8 @@
 				<span class="glyphicon glyphicon-calendar"></span></label>
 				<label class="btn btn-default" ng-click="controller.irAMatrizRiesgos(controller.proyecto.id)" uib-tooltip="Matriz de Riesgos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-list-alt"></span></label>
+				<label class="btn btn-default" ng-click="controller.irAPrestamoMetas(controller.proyecto.id)" uib-tooltip="Metas de Préstamo" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-tasks"></span></label>
 
 		</div>
 			<div class="btn-group" style="float: right;">

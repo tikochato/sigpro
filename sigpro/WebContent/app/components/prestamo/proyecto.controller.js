@@ -611,6 +611,12 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		}
 	};
 
+	mi.irAPrestamoMetas=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/prestamometas_ingreso/'+ proyectoid );
+		}
+	};
+
 	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
 		var resultado = $q.defer();
 		var modalInstance = $uibModal.open({

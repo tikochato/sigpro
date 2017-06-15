@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dao.DatoTipoDAO;
+import pojo.DatoTipo;
 import utilities.Utils;
 
 @WebServlet("/SDatoTipo")
@@ -34,6 +35,9 @@ public class SDatoTipo extends HttpServlet {
 			listar(response);
 		} else if (parametro.get("accion").compareTo("cargarCombo") == 0) {
 			listarCombo(response);
+		} else if (parametro.get("accion").compareTo("getDatoTipoPorId") == 0) {
+			Integer id = parametro.get("id")!=null ? Integer.parseInt(parametro.get("id")) : 0;
+			getDatoTipoPorId(response, id);
 		}
 
 	}
@@ -63,6 +67,17 @@ public class SDatoTipo extends HttpServlet {
 			resultadoJson = "{\"success\":true," + resultadoJson + "}";
 		}
 
+		Utils.writeJSon(response, resultadoJson);
+	}
+	
+	private void getDatoTipoPorId(HttpServletResponse response, int id) throws IOException {
+		String resultadoJson = "";
+
+		DatoTipo datotipo= DatoTipoDAO.getDatoTipo(id);
+		resultadoJson = String.join("","{ \"success\": ",(datotipo!=null && datotipo.getId()!=null ? "true" : "false"),", "
+				+ "\"id\": " + (datotipo!=null ? datotipo.getId():"0") +", "
+				+ "\"nombre\": \"" + (datotipo!=null ? datotipo.getNombre():"") +"\" }");
+		
 		Utils.writeJSon(response, resultadoJson);
 	}
 }
