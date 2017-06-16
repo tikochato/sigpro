@@ -26,7 +26,7 @@
     <div class="row">
 	    <div class="col-sm-12 operation_buttons" align="right">
 		    <div class="btn-group">
-		        <label class="btn btn-success" ng-click="modalc.ok()"> &nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;</label>
+		        <label class="btn btn-success" ng-click=" formImpacto.$valid ? modalc.ok() : ''" ng-disabled="!formImpacto.$valid"> &nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;</label>
 				<label class="btn btn-primary" ng-click="modalc.cancel()">Cancelar</label>
 	    	</div>
 	    </div>

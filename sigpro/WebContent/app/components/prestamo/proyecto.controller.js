@@ -212,6 +212,17 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
 			}
 		}
+
+		var listaImpactos = "";
+		for (impacto in mi.impactos){
+			listaImpactos = listaImpactos + (listaImpactos.length>0 ? "~" : "")+
+			mi.impactos[impacto].entidadId + "," + mi.impactos[impacto].impacto; 
+		}
+		var miembros = "";
+		for (m in mi.miembros){
+			miembros = miembros + (miembros.length > 0 ? "," : "") + mi.miembros[m].id; 
+		}
+		
 		if(mi.proyecto!=null && mi.proyecto.nombre!=null){
 			var param_data = {
 				accion : 'guardar',
@@ -232,7 +243,11 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				esnuevo: mi.esNuevo,
 				longitud: mi.proyecto.longitud,
 				latitud : mi.proyecto.latitud,
+				directorProyecto: mi.directorProyectoId,
+				impactos : listaImpactos,
+				miembros: miembros,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
+				
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(
@@ -390,6 +405,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.unidadejecutoranombre=mi.proyecto.unidadejecutora;
 			mi.cooperanteid=mi.proyecto.cooperanteid;
 			mi.cooperantenombre=mi.proyecto.cooperante;
+			mi.directorProyectoNombre = mi.proyecto.directorProyectoNmbre;
+			mi.directorProyectoId = mi.proyecto.directorProyectoId;
 			mi.esColapsado = true;
 			mi.esNuevo = false;
 			mi.coordenadas = (mi.proyecto.latitud !=null ?  mi.proyecto.latitud : '') +
@@ -456,6 +473,28 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				mi.proyectos = response.data.proyectos;
 				
 			});
+			
+			parametros = {
+					accion: 'getMiembrosPorProyect',
+					proyectoId: mi.proyecto!=''? mi.proyecto.id:0,
+				    t:moment().unix()
+			}
+			$http.post('/SProyectoMiembro', parametros).then(function(response){
+				mi.miembros  = response.data.miembros;
+				
+			});
+			
+			parametros = {
+					accion: 'getImpactosPorProyect',
+					proyectoId: mi.proyecto!=''? mi.proyecto.id:0,
+				    t:moment().unix()
+			}
+			$http.post('/SProyectoImpacto', parametros).then(function(response){
+				mi.impactos  = response.data.impactos;
+				
+			});
+			
+			
 
 			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
 			$scope.active = 0;
@@ -1048,6 +1087,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				}
 			});
 		};
+		
+		mi.quitarMiembro = function(row){
+			var index = mi.miembros.indexOf(row);
+	        if (index !== -1) {
+	            mi.miembros.splice(index, 1);
+	        }
+		}
 	  
 	  
 } ]);

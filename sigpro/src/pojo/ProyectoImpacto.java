@@ -28,6 +28,7 @@ public class ProyectoImpacto implements java.io.Serializable {
 	private Integer id;
 	private Entidad entidad;
 	private Proyecto proyecto;
+	String impacto;
 	private int estado;
 	private String usuarioCreo;
 	private String usuarioActualizo;
@@ -45,10 +46,11 @@ public class ProyectoImpacto implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public ProyectoImpacto(Entidad entidad, Proyecto proyecto, int estado, String usuarioCreo, String usuarioActualizo,
+	public ProyectoImpacto(Entidad entidad, Proyecto proyecto, String impacto , int estado, String usuarioCreo, String usuarioActualizo,
 			Date fechaCreacion, Date fechaActualizacion) {
 		this.entidad = entidad;
 		this.proyecto = proyecto;
+		this.impacto = impacto;
 		this.estado = estado;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
@@ -86,6 +88,15 @@ public class ProyectoImpacto implements java.io.Serializable {
 
 	public void setProyecto(Proyecto proyecto) {
 		this.proyecto = proyecto;
+	}
+	
+	@Column(name = "impacto", length = 1000)
+	public String getImpacto() {
+		return this.impacto;
+	}
+
+	public void setImpacto(String impacto) {
+		this.impacto = impacto;
 	}
 
 	@Column(name = "estado", nullable = false)

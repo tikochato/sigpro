@@ -1115,7 +1115,7 @@
 									<td>{{row.nombre}}</td>
 									<td>
 										<button type="button"
-											ng-click="controller.quitarImpacto(row)"
+											ng-click="controller.quitarMiembro(row)"
 											class="btn btn-sm btn-danger">
 											<i class="glyphicon glyphicon-minus-sign"> </i>
 										</button>
