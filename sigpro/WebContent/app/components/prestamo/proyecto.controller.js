@@ -1094,8 +1094,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	            mi.miembros.splice(index, 1);
 	        }
 		}
-	  
-	  
 } ]);
 
 app.controller('buscarPorProyecto', [ '$uibModalInstance',
@@ -1295,9 +1293,6 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 	};
 }
 
-
-
-
 app.controller('modalAgregarImpacto', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
 	'$timeout', '$log',   '$uibModal', '$q' ,modalAgregarImpacto ]);
@@ -1358,7 +1353,6 @@ function modalAgregarImpacto($uibModalInstance, $scope, $http, $interval,
 			mi.impacto.entidadNombre = itemSeleccionado.nombre;
 			mi.impacto.entidadId = itemSeleccionado.entidad;
 		});
-
 	};
 	
 	mi.ok = function() {
