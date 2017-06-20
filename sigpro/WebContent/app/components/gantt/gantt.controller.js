@@ -146,9 +146,6 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		    	if(propertyName=='start' || propertyName=='finish' || propertyName=='content' 
 		    		|| propertyName=='completedFinish' ) {
 		    		
-		    		console.log(item.content + '.' + propertyName + ' changed.');
-		    		console.log (item);
-		    		
 		    		var parametros = {
 		    				accion: 'modificarData',
 		    				objetoId: item.objetoId,
@@ -295,8 +292,6 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		  };
 		  
 		  settings.itemDoubleClickHandler = function (isOnChart, item){
-			console.log (isOnChart);
-			console.log (item);
 			switch (item.objetoTipo){
 				case '1':
 					mi.editarPrestamo(item.objetoId,item.index);
@@ -499,7 +494,6 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 			for(var i=index; i< $scope.items.length; i++){
 				if ($scope.items[i].predecessors != null || $scope.items[i].predecessors != undefined){
 					var temp = $scope.items[i].predecessors[0].item;
-					console.log(temp);
 					if ($scope.items[i].predecessors[0].item.id === objeto.id){
 						$scope.items[i].start =  (mi.sumarDias (fechaInicial,duracion));
 						duracion = duracion + Number( $scope.items[i].duracion);
@@ -1164,7 +1158,7 @@ function modalEditarActividad($uibModalInstance, $scope, $http, $interval,
 	mi.sumarDias = function(fecha, dias){
 		var cnt = 0;
 	    var tmpDate = moment(fecha);
-	    while (cnt < dias) {
+	    while (cnt < (dias -1 )) {
 	        tmpDate = tmpDate.add(1,'days');
 	        if (tmpDate.weekday() != moment().day("Sunday").weekday() && tmpDate.weekday() != moment().day("Saturday").weekday()) {
 	            cnt = cnt + 1;
