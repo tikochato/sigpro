@@ -108,6 +108,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
              .when('/usuarios/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'usuarioController\'" class="all_page"></div>'
             })
+             .when('/gestionUsuarios/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'gestionUsuariosController\'" class="all_page"></div>'
+            })
             .when('/riesgotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgotipoController\'" class="all_page"></div>'
             })
@@ -345,7 +348,13 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'riesgotipoController',
 	    	   script: '/app/components/riesgotipo/riesgotipo.controller.js',
 	    	   template: '/app/components/riesgotipo/riesgotipo.jsp'
-	       }, {
+	       }, 
+	       {
+	    	   name: 'gestionUsuariosController',
+	    	   script: '/app/components/usuarios/gestionUsuario.js',
+	    	   template: '/app/components/usuarios/gestionUsuario.jsp'
+	       },
+	       {
 	    	   name: 'riesgoController',
 	    	   script: '/app/components/riesgo/riesgo.controller.js',
 	    	   template: '/app/components/riesgo/riesgo.jsp'

@@ -11,7 +11,7 @@
 <script type="text/ng-template" id="buscarColaborador.jsp">
    	<%@ include file="/app/components/usuarios/buscarColaborador.jsp"%>
 </script>
-	<div ng-controller="usuarioController as usuarioc" class="maincontainer all_page" id="title">
+	<div ng-controller="gestionUsuariosController as usuarioc" class="maincontainer all_page" id="title">
 		<shiro:lacksPermission name="34010">
 			<p ng-init="usuarioc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
@@ -21,6 +21,8 @@
 		</div>
 
 		<div class="row" align="center" ng-hide="usuarioc.isCollapsed">
+		<br>
+		
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="34040">
@@ -37,7 +39,29 @@
 					</shiro:hasPermission>
     			</div>
     		</div>
-    		<shiro:hasPermission name="34010">
+    		<div class="col-sm-12" align="center">
+    			<uib-tabset active="active">
+				    <uib-tab index="0" heading="Usuarios">Tabla de usuarios</uib-tab>				   
+				    <uib-tab index="3" heading="Colaboradores">
+				    	<!-- 
+				    	 <uib-tab-heading>
+				        <i class="glyphicon glyphicon-bell"></i> Alert!
+				      </uib-tab-heading>
+				    	 -->
+				     
+				    	tabla de colaboradores
+				    </uib-tab>
+				  </uib-tabset>
+    			<div style="height: 35px;">
+					<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
+						<a class="btn btn-default" href ng-click="usuarioc.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
+					</div>
+					</div>
+				</div>
+			</div>
+    		    
+    		<!-- 
+		<shiro:hasPermission name="34010">
     			<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
 					<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
@@ -70,8 +94,11 @@
 				></ul>
 			</div>
     		</shiro:hasPermission>
+		 -->
 
 		</div>
+		
+		<!--  -->
 		<div class="row second-main-form" ng-show="usuarioc.isCollapsed">
 			<div class="page-header">
 				<h2 ng-hide="!usuarioc.esNuevo"><small>Nuevo Usuario</small></h2>
@@ -91,7 +118,18 @@
     		</div>
 			<div class="col-sm-12">
 				<form name="form">
-
+						<div class="form-group" ng-show="usuarioc.esNuevo">							
+							 <select name="singleSelect" id="singleSelect" ng-change="usuarioc.changeUsuario(usuarioc.tipoUsuario)" ng-model="usuarioc.tipoUsuario"style="padding-bottom: 5px;position: absolute;margin-left: 115px;font-size: 1.1em;padding-top: 4px;">
+							      <option value="">-- Seleccione el tipo de usuario --</option>
+							      <option value="1">Colaborador de unidad ejecutora</option> <!-- interpolation -->
+							      <option value="2">Analista de DCP</option>
+							      <option value="3">Administrador</option>
+							      <option value="4">Cooperante</option>
+							      <option value="5">Planificador</option>
+							    </select>
+							 <label class="floating-label" style="font-weight:bold; font-size: 14px;margin-top: 10px;">Tipo de Usuario:</label>
+						</div>
+						<br>
 						<div class="form-group" ng-show="!usuarioc.esNuevo && !usuarioc.mostrarCambioPassword">
     						<input type="text" class="inputText" id="usuario" ng-model="usuarioc.usuariosSelected.usuario" 
     							ng-value="usuarioc.usuariosSelected.usuario" onblur="this.setAttribute('value', this.value);" readonly>
@@ -142,7 +180,8 @@
 			<div class="col-sm-12">
 			
 		<div align="center" ng-show="usuarioc.isCollapsed">
-				<h3 ng-show="usuarioc.isCollapsed">Permisos</h3>
+		
+				<h3 ng-if="usuarioc.cambio=='false'">Permisos</h3>
 				<div class="col-sm-12 operation_buttons" align="right" style="margin-left: -1%;" ng-if="usuarioc.esNuevo">
 					<div class="btn-group">
 						<label class="btn btn-default" ng-click="!usuarioc.cargandoPermisos? usuarioc.buscarPermiso(1) : ''"
