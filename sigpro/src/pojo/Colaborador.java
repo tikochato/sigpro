@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jun 2, 2017 12:28:44 PM by Hibernate Tools 5.2.1.Final
+// Generated Jun 13, 2017 3:16:39 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Colaborador implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7577745945687885102L;
+	private static final long serialVersionUID = 731000410984001745L;
 	private Integer id;
 	private UnidadEjecutora unidadEjecutora;
 	private Usuario usuario;
@@ -35,18 +35,20 @@ public class Colaborador implements java.io.Serializable {
 	private String snombre;
 	private String papellido;
 	private String sapellido;
-	private Long cui;
+	private long cui;
 	private int estado;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
+	private Set<Proyecto> proyectos = new HashSet<Proyecto>(0);
+	private Set<ProyectoMiembro> proyectoMiembros = new HashSet<ProyectoMiembro>(0);
 	private Set<Riesgo> riesgos = new HashSet<Riesgo>(0);
 
 	public Colaborador() {
 	}
 
-	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String papellido, Long cui,
+	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String papellido, long cui,
 			int estado, String usuarioCreo, Date fechaCreacion) {
 		this.unidadEjecutora = unidadEjecutora;
 		this.usuario = usuario;
@@ -59,8 +61,9 @@ public class Colaborador implements java.io.Serializable {
 	}
 
 	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String snombre,
-			String papellido, String sapellido, Long cui, int estado, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, Set<Riesgo> riesgos) {
+			String papellido, String sapellido, long cui, int estado, String usuarioCreo, String usuarioActualizo,
+			Date fechaCreacion, Date fechaActualizacion, Set<Proyecto> proyectos, Set<ProyectoMiembro> proyectoMiembros,
+			Set<Riesgo> riesgos) {
 		this.unidadEjecutora = unidadEjecutora;
 		this.usuario = usuario;
 		this.pnombre = pnombre;
@@ -73,6 +76,8 @@ public class Colaborador implements java.io.Serializable {
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
+		this.proyectos = proyectos;
+		this.proyectoMiembros = proyectoMiembros;
 		this.riesgos = riesgos;
 	}
 
@@ -145,11 +150,11 @@ public class Colaborador implements java.io.Serializable {
 	}
 
 	@Column(name = "cui", nullable = false)
-	public Long getCui() {
+	public long getCui() {
 		return this.cui;
 	}
 
-	public void setCui(Long cui) {
+	public void setCui(long cui) {
 		this.cui = cui;
 	}
 
@@ -198,6 +203,24 @@ public class Colaborador implements java.io.Serializable {
 
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborador")
+	public Set<Proyecto> getProyectos() {
+		return this.proyectos;
+	}
+
+	public void setProyectos(Set<Proyecto> proyectos) {
+		this.proyectos = proyectos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborador")
+	public Set<ProyectoMiembro> getProyectoMiembros() {
+		return this.proyectoMiembros;
+	}
+
+	public void setProyectoMiembros(Set<ProyectoMiembro> proyectoMiembros) {
+		this.proyectoMiembros = proyectoMiembros;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborador")

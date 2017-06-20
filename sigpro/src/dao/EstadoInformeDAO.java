@@ -6,7 +6,6 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.EstadoInforme;
-import pojo.Proyecto;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 import utilities.Utils;

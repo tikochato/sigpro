@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jun 2, 2017 12:28:44 PM by Hibernate Tools 5.2.1.Final
+// Generated Jun 13, 2017 3:16:39 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class ResponsableRol implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7990358289125072769L;
+	private static final long serialVersionUID = 1740296468655881612L;
 	private Integer id;
 	private ResponsableTipo responsableTipo;
 	private String nombre;
@@ -42,11 +42,10 @@ public class ResponsableRol implements java.io.Serializable {
 	public ResponsableRol() {
 	}
 
-	public ResponsableRol(ResponsableTipo responsableTipo, String nombre, String descripcion, String usuarioCreo,
-			Date fechaCreacion, int estado) {
+	public ResponsableRol(ResponsableTipo responsableTipo, String nombre, String usuarioCreo, Date fechaCreacion,
+			int estado) {
 		this.responsableTipo = responsableTipo;
 		this.nombre = nombre;
-		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
@@ -97,7 +96,7 @@ public class ResponsableRol implements java.io.Serializable {
 		this.nombre = nombre;
 	}
 
-	@Column(name = "descripcion", nullable = false, length = 1000)
+	@Column(name = "descripcion", length = 1000)
 	public String getDescripcion() {
 		return this.descripcion;
 	}

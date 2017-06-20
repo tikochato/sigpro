@@ -31,7 +31,6 @@ public class ProyectoDAO implements java.io.Serializable  {
 		finally{
 			session.close();
 		}
-
 		return ret;
 	}
 	

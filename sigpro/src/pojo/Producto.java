@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jun 2, 2017 12:28:44 PM by Hibernate Tools 5.2.1.Final
+// Generated Jun 13, 2017 3:16:39 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6153653775269635972L;
+	private static final long serialVersionUID = -4532298417388682491L;
 	private Integer id;
 	private Componente componente;
 	private ProductoTipo productoTipo;
@@ -68,8 +68,8 @@ public class Producto implements java.io.Serializable {
 
 	public Producto(Componente componente, ProductoTipo productoTipo, UnidadEjecutora unidadEjecutora, String nombre,
 			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, Integer estado, Long snip, Integer programa, Integer subprograma,
-			Integer proyecto, Integer actividad, Integer obra, Integer fuente, String latitud, String longitud, Integer peso,
+			Date fechaActualizacion, Integer estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
+			Integer actividad, Integer obra, Integer fuente, String latitud, String longitud, Integer peso,
 			Set<ProductoUsuario> productoUsuarios, Set<Subproducto> subproductos,
 			Set<ProductoPropiedadValor> productoPropiedadValors) {
 		this.componente = componente;
@@ -284,7 +284,7 @@ public class Producto implements java.io.Serializable {
 	public void setLongitud(String longitud) {
 		this.longitud = longitud;
 	}
-	
+
 	@Column(name = "peso")
 	public Integer getPeso() {
 		return this.peso;
@@ -293,7 +293,6 @@ public class Producto implements java.io.Serializable {
 	public void setPeso(Integer peso) {
 		this.peso = peso;
 	}
-
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
 	public Set<ProductoUsuario> getProductoUsuarios() {

@@ -45,6 +45,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.prestamo.plazoEjecucionUe = "";
 	
 	mi.coordenadas = "";
+	
+	mi.impactos =[];
+	mi.miembros = [];
 
 	mi.fechaOptions = {
 			formatYear : 'yy',
@@ -209,6 +212,17 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
 			}
 		}
+
+		var listaImpactos = "";
+		for (impacto in mi.impactos){
+			listaImpactos = listaImpactos + (listaImpactos.length>0 ? "~" : "")+
+			mi.impactos[impacto].entidadId + "," + mi.impactos[impacto].impacto; 
+		}
+		var miembros = "";
+		for (m in mi.miembros){
+			miembros = miembros + (miembros.length > 0 ? "," : "") + mi.miembros[m].id; 
+		}
+		
 		if(mi.proyecto!=null && mi.proyecto.nombre!=null){
 			var param_data = {
 				accion : 'guardar',
@@ -229,7 +243,11 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				esnuevo: mi.esNuevo,
 				longitud: mi.proyecto.longitud,
 				latitud : mi.proyecto.latitud,
+				directorProyecto: mi.directorProyectoId,
+				impactos : listaImpactos,
+				miembros: miembros,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
+				
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(
@@ -387,11 +405,14 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.unidadejecutoranombre=mi.proyecto.unidadejecutora;
 			mi.cooperanteid=mi.proyecto.cooperanteid;
 			mi.cooperantenombre=mi.proyecto.cooperante;
+			mi.directorProyectoNombre = mi.proyecto.directorProyectoNmbre;
+			mi.directorProyectoId = mi.proyecto.directorProyectoId;
 			mi.esColapsado = true;
 			mi.esNuevo = false;
 			mi.coordenadas = (mi.proyecto.latitud !=null ?  mi.proyecto.latitud : '') +
 			(mi.proyecto.latitud!=null ? ', ' : '') + (mi.proyecto.longitud!=null ? mi.proyecto.longitud : '');
-
+			mi.impactos =[];
+			mi.miembros = [];
 			var parametros = {
 					accion: 'getProyectoPropiedadPorTipo',
 					idProyecto: mi.proyecto!=''?mi.proyecto.id:0,
@@ -452,6 +473,28 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				mi.proyectos = response.data.proyectos;
 				
 			});
+			
+			parametros = {
+					accion: 'getMiembrosPorProyect',
+					proyectoId: mi.proyecto!=''? mi.proyecto.id:0,
+				    t:moment().unix()
+			}
+			$http.post('/SProyectoMiembro', parametros).then(function(response){
+				mi.miembros  = response.data.miembros;
+				
+			});
+			
+			parametros = {
+					accion: 'getImpactosPorProyect',
+					proyectoId: mi.proyecto!=''? mi.proyecto.id:0,
+				    t:moment().unix()
+			}
+			$http.post('/SProyectoImpacto', parametros).then(function(response){
+				mi.impactos  = response.data.impactos;
+				
+			});
+			
+			
 
 			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
 			$scope.active = 0;
@@ -769,6 +812,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		});
 	};
 	
+	
+	
 	mi.llamarModalArchivo = function() {
 		var resultado = $q.defer();
 		var modalInstance = $uibModal.open({
@@ -964,9 +1009,91 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				
 			});
 			
+		};
+		
+		mi.buscarDirecotorProyecto = function() {
+			var resultado = mi.llamarModalBusqueda('/SColaborador', {
+				accion : 'totalElementos', t:moment().unix()
+			}, function(pagina, elementosPorPagina) {
+				return {
+					accion : 'cargar',
+					pagina : pagina,
+					numerocooperantes : elementosPorPagina
+				};
+			},'id','nombreCompleto');
+
+			resultado.then(function(itemSeleccionado) {
+				mi.directorProyectoNombre = itemSeleccionado.primerNombre +
+						(itemSeleccionado.segundoNombre!=null ? ' ' + itemSeleccionado.segundoNombre : '') +
+						' ' + itemSeleccionado.primerApellido +
+						(itemSeleccionado.segundoApellido!=null ? ' ' + itemSeleccionado.segundoApellido + ' ' : '');
+				mi.directorProyectoId = itemSeleccionado.id;
+			});
+		};
+		
+		mi.agregarImpacto = function() {
+
+			var modalInstance = $uibModal.open({
+				animation : 'true',
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				templateUrl : 'agregarImpacto.jsp',
+				controller : 'modalAgregarImpacto',
+				controllerAs : 'modalc',
+				backdrop : 'static',
+				size : 'md',
+				
+			});
+
+			modalInstance.result.then(function(resultado) {
+				if (resultado != undefined){
+					mi.impactos.push(resultado);
+				}else{
+					$utilidades.mensaje('danger', 'Error al agregar impacto');
+				}
+			}, function() {
+			});
+		};
+		
+		mi.quitarImpacto = function(row){
+			var index = mi.impactos.indexOf(row);
+	        if (index !== -1) {
+	            mi.impactos.splice(index, 1);
+	        }
 		}
-	  
-	  
+		
+		mi.agregarMiembro = function() {
+			var resultado = mi.llamarModalBusqueda('/SColaborador', {
+				accion : 'totalElementos', t:moment().unix()
+			}, function(pagina, elementosPorPagina) {
+				return {
+					accion : 'cargar',
+					pagina : pagina,
+					numerocooperantes : elementosPorPagina
+				};
+			},'id','nombreCompleto');
+
+			resultado.then(function(itemSeleccionado) {
+				if (itemSeleccionado != undefined ){
+					var miembro = {id:itemSeleccionado.id,
+							nombre: itemSeleccionado.primerNombre +
+							(itemSeleccionado.segundoNombre!=null ? ' ' + itemSeleccionado.segundoNombre : '') +
+							' ' + itemSeleccionado.primerApellido +
+							(itemSeleccionado.segundoApellido!=null ? ' ' + itemSeleccionado.segundoApellido + ' ' : '')
+					}
+					mi.miembros.push(miembro);
+				}else{
+					$utilidades.mensaje('danger', 'Error al agregar miembro');
+				}
+			});
+		};
+		
+		mi.quitarMiembro = function(row){
+			var index = mi.miembros.indexOf(row);
+	        if (index !== -1) {
+	            mi.miembros.splice(index, 1);
+	        }
+		}
 } ]);
 
 app.controller('buscarPorProyecto', [ '$uibModalInstance',
@@ -1120,6 +1247,7 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 	mi.mostrar = true;
 	mi.nombreArchivo="";
 	mi.mostrarcargando=false;
+	mi.multiproyecto = false;
 	
 	$scope.cargarArchivo = function(event){
 		var resultado = $q.defer();
@@ -1150,6 +1278,7 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 			var formatData = new FormData();
 			formatData.append("file",mi.archivos);  
 			formatData.append("accion",'importar');
+			formatData.append("multiproyecto",mi.multiproyecto ? 1 : 0);
 			$http.post('/SGantt',formatData, {
 					headers: {'Content-Type': undefined},
 					transformRequest: angular.identity
@@ -1165,3 +1294,76 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 		}
 	};
 }
+
+app.controller('modalAgregarImpacto', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log',   '$uibModal', '$q' ,modalAgregarImpacto ]);
+
+function modalAgregarImpacto($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q) {
+
+	var mi = this;
+	mi.impacto = {};
+	
+	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
+		var resultado = $q.defer();
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'buscarPorProyecto.jsp',
+			controller : 'buscarPorProyecto',
+			controllerAs : 'modalBuscar',
+			backdrop : 'static',
+			size : 'md',
+			resolve : {
+				$servlet : function() {
+					return servlet;
+				},
+				$accionServlet : function() {
+					return accionServlet;
+				},
+				$datosCarga : function() {
+					return datosCarga;
+				},
+				$columnaId : function() {
+					return columnaId;
+				},
+				$columnaNombre : function() {
+					return columnaNombre;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(itemSeleccionado) {
+			resultado.resolve(itemSeleccionado);
+		});
+		return resultado.promise;
+	};
+
+	mi.buscarEntidad = function() {
+		var resultado = mi.llamarModalBusqueda('/SEntidad', {
+			accion : 'totalEntidades'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'cargar',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'entidad','nombre');
+		resultado.then(function(itemSeleccionado) {
+			mi.impacto.entidadNombre = itemSeleccionado.nombre;
+			mi.impacto.entidadId = itemSeleccionado.entidad;
+		});
+	};
+	
+	mi.ok = function() {
+		$uibModalInstance.close(mi.impacto);
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+}
+
+
