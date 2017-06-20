@@ -82,6 +82,32 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 		}
 	}
 	
+	mi.exportarExcel = function(){
+		var reporte = [];
+		
+		for(x in mi.gridOptions.data){
+			var row = mi.gridOptions.data[x];
+			reporte.push({nombre: row.nombre, metodo: row.metodo, planificadoDocs: row.planificadoDocs, realDocs: row.realDocs, planificadoLanzamiento: row.planificadoLanzamiento, realLanzamiento: row.realLanzamiento, planificadoRecepcionEval: row.planificadoRecepcionEval, realRecepcionEval: row.realRecepcionEval, planificadoAdjudica: row.planificadoAdjudica, realAdjudica: row.realAdjudica, planificadoFirma: row.planificadoFirma, realFirma: row.realFirma});
+		}
+		
+		$http.post('/SPlanAdquisiciones',{
+			accion: 'exportarExcel',
+			data: JSON.stringify(reporte),
+			t:moment().unix()
+		}).then(
+				  function successCallback(response) {
+						var anchor = angular.element('<a/>');
+					    anchor.attr({
+					         href: 'data:application/ms-excel;base64,' + response.data,
+					         target: '_blank',
+					         download: 'planAdquisiciones.xls'
+					     })[0].click();
+					  }.bind(this), function errorCallback(response){
+					 		
+					 	}
+					 );
+	}
+	
 	mi.toggleRow = function(row, evt) {
 		uiGridTreeBaseService.toggleRowTreeState(mi.gridApi.grid, row, evt);
 	};
@@ -102,10 +128,6 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
     	$timeout(function(){
 		     mi.gridApi.treeBase.expandAllRows();
 	   })
-	}
-	
-	mi.exportarExcel = function(){
-		
 	}
 	
 	mi.getPrestamos();

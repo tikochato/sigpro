@@ -31,7 +31,7 @@
 					<label for="prestamo" class="floating-label">Préstamos</label>
 				</div>
 				
-				<div class="form-group col-sm-3">					
+				<div class="form-group col-sm-3" style="display: none;">					
 					<input type="checkbox" id="Todo" ng-model="controller.informeCompleto" />
 					<label for="controller.completo" class="floating-label">Informe completo</label>
 				</div>
@@ -40,10 +40,6 @@
 					<label class="btn btn-default" ng-click="controller.generar()" uib-tooltip="Generar informe" 
 						tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-new-window"></span></label>
-					
-					<label class="btn btn-default" ng-click="controller.descargar()" uib-tooltip="Descargar excel" ng-hide="!controller.mostrarDescargar"
-						tooltip-placement="bottom">
-					<span class="glyphicon glyphicon-download-alt"></span></label>
 				</div>
 			</div>
 			<div class="row">				
@@ -68,13 +64,21 @@
 			            </span>
 				  	<label for="campo.id" class="floating-label">*Año Final</label>
 				</div>
+				
+				<div class="operation_buttons" align="right">
+					<div class="btn-group">
+						<label class="btn btn-primary"  ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrarDescargar">
+						<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Exportar</span></label>
+					</div>
+				</div>
 			</div>
     	</div>
     	<br>
-    	<div style="height: 100%; width: 100%">
+    	<div style="height: 100%; width: 100%; z-index: 0">
 	    	<div style="height: 5%; width: 100%">
-				<div><h4><b>Ejecución Financiera</b></h4></div>
+				<div><h4><b>Ejecución Presupuestaria</b></h4></div>
 			</div>
+			
 			<div id="grid1" ui-grid="controller.gridOptions" style="width: 100%; height: 350px"
 				ui-grid-grouping 
 				ui-grid-edit 
@@ -83,6 +87,14 @@
 				ui-grid-cellNav 
 				ui-grid-pinning
 				class="grid">
+				<div class="grid_loading" ng-hide="!controller.mostrarcargando" style="position: absolute; z-index: 1">
+	  				<div class="msg">
+	      				<span><i class="fa fa-spinner fa-spin fa-4x"></i>
+			  				<br /><br />
+			  				<b>Cargando, por favor espere...</b>
+		  				</span>
+					</div>
+				</div>
 			</div>
     	</div>
     </div>

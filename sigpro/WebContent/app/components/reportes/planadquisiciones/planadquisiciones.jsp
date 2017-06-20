@@ -36,12 +36,12 @@
 							tooltip-placement="bottom">
 						<span class="glyphicon glyphicon-new-window"></span></label>
 					</div>
-							    	<div class="operation_buttons" align="right">
-					<div class="btn-group">
-						<label class="btn btn-primary"  ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.exportar">
-						<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Exportar</span></label>
+					<div class="operation_buttons" align="right">
+						<div class="btn-group">
+							<label class="btn btn-primary"  ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.exportar">
+							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Exportar</span></label>
+						</div>
 					</div>
-				</div>
 				</div>
 	    	</div>
 	    	<div style="height: 100%; width: 100%">

@@ -65,6 +65,7 @@ public class SInformePresupuesto extends HttpServlet {
 		int idPredecesor;
 		String hijo;
 		BigDecimal Costo;
+		BigDecimal CostoReal;
 		String fechaInicio;
 		String fechaFin;
 		int acumulacionCostos;
@@ -105,57 +106,90 @@ public class SInformePresupuesto extends HttpServlet {
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}else if(accion.equals("generarInforme")){
 			Boolean informeCompleto = Boolean.valueOf(map.get("informeCompleto"));
-			
+			String[] columnaNames = map.get("columnaNames").split(",");
 				List<stInformePresupuesto> prestamo = obtenerProyecto(idPrestamo,usuario);
 				
-				List<stInformePresupuesto> resultPrestamo = new ArrayList<stInformePresupuesto>();
+				List<Map<String, Object>> resultPrestamo = new ArrayList<Map<String, Object>>();
 				for (stInformePresupuesto p : prestamo ){
-					stInformePresupuesto dataEjecutado = new stInformePresupuesto();
+					Map<String, Object> data = new HashMap<String, Object>();
 					
 					if(informeCompleto){
-						dataEjecutado = new stInformePresupuesto();
-						dataEjecutado.id = p.id;
-						dataEjecutado.idPrestamo = idPrestamo;
-						dataEjecutado.objetoTipo = p.objetoTipo;
-						dataEjecutado.posicionArbol = p.posicionArbol;
-						dataEjecutado.idObjetoTipo = p.idObjetoTipo;
-						dataEjecutado.nombre = p.nombre;
-						dataEjecutado.idPredecesor = p.idPredecesor;
-						dataEjecutado.objetoTipoPredecesor = p.objetoTipoPredecesor;
-						dataEjecutado.Costo = p.Costo;
-						dataEjecutado.fechaInicio = p.fechaInicio;
-						dataEjecutado.fechaFin = p.fechaFin;
-						resultPrestamo.add(dataEjecutado);
+						data.put("id", p.id);
+						data.put("idPrestamo", idPrestamo);
+						data.put("objetoTipo", p.objetoTipo);
+						data.put("posicionArbol", p.posicionArbol);
+						data.put("$$treeLevel", p.posicionArbol -1);
+						data.put("idObjetoTipo", p.idObjetoTipo);
+						data.put("nombre", p.nombre);
+						data.put("idPredecesor", p.idPredecesor);
+						data.put("objetoTipoPredecesor", p.objetoTipoPredecesor);
+						data.put("Costo", p.Costo);
+						data.put("CostoReal", p.CostoReal);
+						data.put("fechaInicio", p.fechaInicio);
+						data.put("fechaFin", p.fechaFin);
+						data.put("hijo", null);
+						data.put("acumulacionCostos", p.objetoTipo == 5 ? 3 : 0);
+						data.put("columnas", null);
+						data.put("Total", 0);
+						
+						for (String columna: columnaNames){
+							data.put(columna, 0);
+							data.put("total" + columna, 0);
+						}
+						
+						resultPrestamo.add(data);
 					}else{ 
 						
 						if(p.objetoTipo != 5){
-							dataEjecutado = new stInformePresupuesto();
-							dataEjecutado.id = p.id;
-							dataEjecutado.idPrestamo = idPrestamo;
-							dataEjecutado.objetoTipo = p.objetoTipo;
-							dataEjecutado.posicionArbol = p.posicionArbol;
-							dataEjecutado.idObjetoTipo = p.idObjetoTipo;
-							dataEjecutado.nombre = p.nombre;
-							dataEjecutado.idPredecesor = p.idPredecesor;
-							dataEjecutado.objetoTipoPredecesor = p.objetoTipoPredecesor;
-							dataEjecutado.Costo = p.Costo;
-							dataEjecutado.fechaInicio = p.fechaInicio;
-							dataEjecutado.fechaFin = p.fechaFin;
-							resultPrestamo.add(dataEjecutado);
-						}else if (p.Costo.compareTo(BigDecimal.ZERO) != 0){
-							dataEjecutado = new stInformePresupuesto();
-							dataEjecutado.id = p.id;
-							dataEjecutado.idPrestamo = idPrestamo;
-							dataEjecutado.objetoTipo = p.objetoTipo;
-							dataEjecutado.posicionArbol = p.posicionArbol;
-							dataEjecutado.idObjetoTipo = p.idObjetoTipo;
-							dataEjecutado.nombre = p.nombre;
-							dataEjecutado.idPredecesor = p.idPredecesor;
-							dataEjecutado.objetoTipoPredecesor = p.objetoTipoPredecesor;
-							dataEjecutado.Costo = p.Costo;
-							dataEjecutado.fechaInicio = p.fechaInicio;
-							dataEjecutado.fechaFin = p.fechaFin;
-							resultPrestamo.add(dataEjecutado);
+							data.put("id", p.id);
+							data.put("idPrestamo", idPrestamo);
+							data.put("objetoTipo", p.objetoTipo);
+							data.put("posicionArbol", p.posicionArbol);
+							data.put("$$treeLevel", p.posicionArbol -1);
+							data.put("idObjetoTipo", p.idObjetoTipo);
+							data.put("nombre", p.nombre);
+							data.put("idPredecesor", p.idPredecesor);
+							data.put("objetoTipoPredecesor", p.objetoTipoPredecesor);
+							data.put("Costo", p.Costo);
+							data.put("CostoReal", p.CostoReal);
+							data.put("fechaInicio", p.fechaInicio);
+							data.put("fechaFin", p.fechaFin);
+							data.put("hijo", null);
+							data.put("acumulacionCostos", 0);
+							data.put("columnas", null);
+							data.put("Total", 0);
+							
+							for (String columna: columnaNames){
+								data.put(columna, 0);
+								data.put("total" + columna, 0);
+							}
+							
+							resultPrestamo.add(data);
+						}else if (p.Costo.compareTo(BigDecimal.ZERO) != 0 || p.CostoReal.compareTo(BigDecimal.ZERO) != 0){
+							data.put("id", p.id);
+							data.put("idPrestamo", idPrestamo);
+							data.put("objetoTipo", p.objetoTipo);
+							data.put("posicionArbol", p.posicionArbol);
+							data.put("$$treeLevel", p.posicionArbol -1);
+							data.put("idObjetoTipo", p.idObjetoTipo);
+							data.put("nombre", p.nombre);
+							data.put("idPredecesor", p.idPredecesor);
+							data.put("objetoTipoPredecesor", p.objetoTipoPredecesor);
+							data.put("Costo", p.Costo);
+							data.put("CostoReal", p.CostoReal);
+							data.put("fechaInicio", p.fechaInicio);
+							data.put("fechaFin", p.fechaFin);
+							data.put("hijo", null);
+							data.put("acumulacionCostos", 3);
+							data.put("columnas", null);
+							data.put("Total", 0);
+							
+							for (String columna: columnaNames){
+								data.put(columna, 0);
+								data.put("total" + columna, 0);
+							}
+							
+							resultPrestamo.add(data);
 						}
 					}	
 				}
@@ -209,7 +243,7 @@ public class SInformePresupuesto extends HttpServlet {
         gz.write(response_text.getBytes("UTF-8"));
         gz.close();
         output.close();
-	}
+	}	
 	
 	private void exportarExcel(Map<String,Object[]> datos, String nombreInforme, String usuario, HttpServletResponse response){
 		try{
@@ -351,7 +385,8 @@ public class SInformePresupuesto extends HttpServlet {
 		dataEjecutado.nombre =   actividad.getNombre();
 		dataEjecutado.idPredecesor = idPredecesor;
 		dataEjecutado.objetoTipoPredecesor = objetoTipoPredecesor;
-		dataEjecutado.Costo = actividad.getCosto();
+		dataEjecutado.Costo = actividad.getCosto() == null ? new BigDecimal(0) : actividad.getCosto();
+		dataEjecutado.CostoReal = actividad.getCostoReal() == null ? new BigDecimal(0) : actividad.getCostoReal();
 		lstdataEjecutado.add(dataEjecutado);
 		String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad, usuario).split(";");
 		dataEjecutado.fechaInicio = fechaInicioFin[0];
