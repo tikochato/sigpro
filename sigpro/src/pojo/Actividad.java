@@ -57,6 +57,7 @@ public class Actividad implements java.io.Serializable {
 	private String latitud;
 	private String longitud;
 	private BigDecimal costo;
+	private BigDecimal costoReal;
 	private Set<ActividadPropiedadValor> actividadPropiedadValors = new HashSet<ActividadPropiedadValor>(0);
 	private Set<ActividadUsuario> actividadUsuarios = new HashSet<ActividadUsuario>(0);
 
@@ -85,7 +86,7 @@ public class Actividad implements java.io.Serializable {
 			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
 			Integer actividad, Integer obra, Integer fuente, int objetoId, int objetoTipo, int duracion,
 			String duracionDimension, Integer predObjetoId, Integer predObjetoTipo, String latitud, String longitud,
-			BigDecimal costo, Set<ActividadPropiedadValor> actividadPropiedadValors,
+			BigDecimal costo, BigDecimal costoReal,  Set<ActividadPropiedadValor> actividadPropiedadValors,
 			Set<ActividadUsuario> actividadUsuarios) {
 		this.actividadTipo = actividadTipo;
 		this.nombre = nombre;
@@ -114,6 +115,7 @@ public class Actividad implements java.io.Serializable {
 		this.latitud = latitud;
 		this.longitud = longitud;
 		this.costo = costo;
+		this.costoReal = costoReal;
 		this.actividadPropiedadValors = actividadPropiedadValors;
 		this.actividadUsuarios = actividadUsuarios;
 	}
@@ -377,6 +379,15 @@ public class Actividad implements java.io.Serializable {
 	public void setCosto(BigDecimal costo) {
 		this.costo = costo;
 	}
+	
+	@Column(name = "costo_real", precision = 15)
+	public BigDecimal getCostoReal() {
+		return this.costoReal;
+	}
+
+	public void setCostoReal(BigDecimal costoReal) {
+		this.costoReal = costoReal;
+	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actividad")
 	public Set<ActividadPropiedadValor> getActividadPropiedadValors() {
@@ -395,5 +406,4 @@ public class Actividad implements java.io.Serializable {
 	public void setActividadUsuarios(Set<ActividadUsuario> actividadUsuarios) {
 		this.actividadUsuarios = actividadUsuarios;
 	}
-
 }

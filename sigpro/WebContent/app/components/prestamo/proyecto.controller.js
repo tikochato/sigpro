@@ -1247,6 +1247,7 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 	mi.mostrar = true;
 	mi.nombreArchivo="";
 	mi.mostrarcargando=false;
+	mi.multiproyecto = false;
 	
 	$scope.cargarArchivo = function(event){
 		var resultado = $q.defer();
@@ -1277,6 +1278,7 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 			var formatData = new FormData();
 			formatData.append("file",mi.archivos);  
 			formatData.append("accion",'importar');
+			formatData.append("multiproyecto",mi.multiproyecto ? 1 : 0);
 			$http.post('/SGantt',formatData, {
 					headers: {'Content-Type': undefined},
 					transformRequest: angular.identity

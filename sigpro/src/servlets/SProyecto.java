@@ -150,7 +150,7 @@ public class SProyecto extends HttpServlet {
 				dato.fuente = proyecto.getFuente();
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
-				dato.directorProyectoId = proyecto.getColaborador().getId();
+				dato.directorProyectoId = proyecto.getColaborador() != null ? proyecto.getColaborador().getId() : 0;
 				dato.directorProyectoId = proyecto.getColaborador()!= null ? proyecto.getColaborador().getId() : null;
 				dato.directorProyectoNmbre = proyecto.getColaborador()!= null ? (proyecto.getColaborador().getPnombre()
 										+ " " + proyecto.getColaborador().getSnombre() 
