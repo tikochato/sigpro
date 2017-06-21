@@ -81,6 +81,7 @@
 				</div>
 				
 				<div id="grid1" ui-grid="controller.gridOptions" style="width: 100%; height: 350px"
+					ui-grid-grouping 
 					ui-grid-edit 
 					ui-grid-row-edit 
 					ui-grid-resize-columns 
