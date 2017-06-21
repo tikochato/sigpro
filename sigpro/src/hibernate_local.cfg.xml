@@ -75,6 +75,8 @@
         <mapping class="pojo.ProgramaTipo" />
         <mapping class="pojo.ProgtipoPropiedad" />
         <mapping class="pojo.Proyecto" />
+        <mapping class="pojo.ProyectoMiembro" />
+        <mapping class="pojo.ProyectoImpacto" />
         <mapping class="pojo.ProyectoPropedadValor" />
         <mapping class="pojo.ProyectoPropiedad" />
         <mapping class="pojo.ProyectoTipo" />

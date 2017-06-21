@@ -4,14 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
@@ -27,23 +24,22 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.PrestamoDAO;
 import dao.ProyectoDAO;
+import dao.ProyectoImpactoDAO;
+import dao.ProyectoMiembroDAO;
 import dao.ProyectoPropiedadDAO;
 import dao.ProyectoPropiedadValorDAO;
-import pojo.AutorizacionTipo;
+import pojo.Colaborador;
 import pojo.Cooperante;
-import pojo.EjecucionEstado;
-import pojo.InteresTipo;
-import pojo.ObjetoPrestamo;
-import pojo.ObjetoPrestamoId;
-import pojo.Prestamo;
+import pojo.Entidad;
 import pojo.Proyecto;
+import pojo.ProyectoImpacto;
+import pojo.ProyectoMiembro;
+import pojo.ProyectoMiembroId;
 import pojo.ProyectoPropedadValor;
 import pojo.ProyectoPropedadValorId;
 import pojo.ProyectoPropiedad;
 import pojo.ProyectoTipo;
-import pojo.TipoMoneda;
 import pojo.UnidadEjecutora;
 import utilities.Utils;
 
@@ -75,6 +71,8 @@ public class SProyecto extends HttpServlet {
 		Integer fuente;
 		String longitud;
 		String latitud;
+		Integer directorProyectoId;
+		String directorProyectoNmbre;
 	};
 
 	class stdatadinamico {
@@ -84,7 +82,6 @@ public class SProyecto extends HttpServlet {
 		String valor;
 		String valor_f;
 	}
-
 
     public SProyecto() {
         super();
@@ -153,6 +150,12 @@ public class SProyecto extends HttpServlet {
 				dato.fuente = proyecto.getFuente();
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
+				dato.directorProyectoId = proyecto.getColaborador() != null ? proyecto.getColaborador().getId() : 0;
+				dato.directorProyectoId = proyecto.getColaborador()!= null ? proyecto.getColaborador().getId() : null;
+				dato.directorProyectoNmbre = proyecto.getColaborador()!= null ? (proyecto.getColaborador().getPnombre()
+										+ " " + proyecto.getColaborador().getSnombre() 
+										+ " " + proyecto.getColaborador().getPapellido()
+										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				datos_.add(dato);
 			}
 
@@ -195,14 +198,19 @@ public class SProyecto extends HttpServlet {
 				dato.fuente = proyecto.getFuente();
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
+				dato.directorProyectoId = proyecto.getColaborador()!= null ? proyecto.getColaborador().getId() : null;
+				dato.directorProyectoNmbre = proyecto.getColaborador()!= null ? (proyecto.getColaborador().getPnombre()
+										+ " " + proyecto.getColaborador().getSnombre() 
+										+ " " + proyecto.getColaborador().getPapellido()
+										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				datos_.add(dato);
 			}
 
 			response_text = new GsonBuilder().serializeNulls().create().toJson(datos_);
 			response_text = String.join("", "\"entidades\":", response_text);
 			response_text = String.join("", "{\"success\":true,", response_text, "}");
-
-		} else if(accion.equals("getProyectoPagina")){
+ 
+		}else if(accion.equals("getProyectoPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroProyecto = map.get("numeroproyecto")!=null  ? Integer.parseInt(map.get("numeroproyecto")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
@@ -238,6 +246,11 @@ public class SProyecto extends HttpServlet {
 				dato.fuente = proyecto.getFuente();
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
+				dato.directorProyectoId = proyecto.getColaborador()!= null ? proyecto.getColaborador().getId() : null;
+				dato.directorProyectoNmbre = proyecto.getColaborador()!= null ? (proyecto.getColaborador().getPnombre()
+										+ " " + proyecto.getColaborador().getSnombre() 
+										+ " " + proyecto.getColaborador().getPapellido()
+										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -280,6 +293,11 @@ public class SProyecto extends HttpServlet {
 				dato.fuente = proyecto.getFuente();
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
+				dato.directorProyectoId = proyecto.getColaborador()!= null ? proyecto.getColaborador().getId() : null;
+				dato.directorProyectoNmbre = proyecto.getColaborador()!= null ? (proyecto.getColaborador().getPnombre()
+										+ " " + proyecto.getColaborador().getSnombre() 
+										+ " " + proyecto.getColaborador().getPapellido()
+										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -306,6 +324,7 @@ public class SProyecto extends HttpServlet {
 				Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
 				String longitud = map.get("longitud");
 				String latitud = map.get("latitud");
+				String enunciadoAlcance = map.get("enunciadoAlcance");
 
 				ProyectoTipo proyectoTipo = new ProyectoTipo();
 				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): null);
@@ -316,103 +335,9 @@ public class SProyecto extends HttpServlet {
 				Cooperante cooperante = new Cooperante();
 				cooperante.setId(map.get("cooperanteid")!=null ? Integer.parseInt(map.get("cooperanteid")): null);
 				
-				// prestamo campos requeridos
-				int codigoPresupuestario = Utils.String2Int(map.get("codigoPresupuestario"));
-				String numeroPrestamo =  map.get("numeroPrestamo"); 
-				String  proyectoPrograma = map.get("proyetoPrograma");
+				Colaborador directorProyecto = new Colaborador();
+				directorProyecto.setId(map.get("directorProyecto")!=null ? Integer.parseInt(map.get("directorProyecto")): null);
 				
-				int unidadEjecutoraPrestamo = Utils.String2Int(map.get("unidadEjecutora"), 0);
-				UnidadEjecutora unidadEjecutora_ = new UnidadEjecutora();
-				unidadEjecutora_.setUnidadEjecutora(unidadEjecutoraPrestamo);
-				
-				Cooperante cooperanteUe = new Cooperante();
-				cooperanteUe.setId(map.get("cooperanteUeId")!=null ? Integer.parseInt(map.get("cooperanteUeId")): null);
-				
-				Date fechaDecreto = Utils.dateFromString(map.get("fechaDecreto"));
-				Date fechaSuscripcion = Utils.dateFromString(map.get("fechaSuscripcion"));
-				Date fechaVigencia = Utils.dateFromString(map.get("fechaVigencia"));
-				
-				int tipoMonedaId = Utils.String2Int(map.get("tipoMonedaId"));
-				TipoMoneda tipoMoneda = new TipoMoneda();
-				tipoMoneda.setId(tipoMonedaId);
-				
-				BigDecimal montoContratado = Utils.String2BigDecimal(map.get("montoContratado"), null);
-				BigDecimal montoContratadoUsd = Utils.String2BigDecimal(map.get("montoContratadoUsd"), null);
-				BigDecimal montoContratadoQtz = Utils.String2BigDecimal(map.get("montoContratadoQtz"), null);
-				BigDecimal desembolsoAFechaUsd = Utils.String2BigDecimal(map.get("desembolsoAFechaUsd"), null);
-				BigDecimal montoPorDesembolsarUsd = Utils.String2BigDecimal(map.get("montoPorDesembolsarUsd"), null);
-				Date fechaElegibilidadUe = Utils.dateFromString(map.get("fechaElegibilidad"));
-				Date fechaCierreOrigianlUe = Utils.dateFromString(map.get("fechaCierreOriginal"));
-				Date fechaCierreActualUe = Utils.dateFromString(map.get("fechaCierreActual"));
-				int mesesProrrogaUe = Utils.String2Int(map.get("mesesProrroga"), null);
-				BigDecimal montoAsignadoUe = Utils.String2BigDecimal(map.get("montoAisignadoUe"), null);
-				BigDecimal desembolsoAFechaUe = Utils.String2BigDecimal(map.get("desembolsoAFechaUe"), null);
-				BigDecimal montoPorDesembolsarUe = Utils.String2BigDecimal(map.get("montoPorDesembolsarUe"), null);
-				BigDecimal montoAsignadoUeUsd = Utils.String2BigDecimal(map.get("montoAsignadoUeUsd"), null);
-				BigDecimal montoAsignadoUeQtz = Utils.String2BigDecimal(map.get("montoAsignadoUeQtz"), null);
-				BigDecimal desembolsoAFechaUeUsd = Utils.String2BigDecimal(map.get("desembolsoAFechaUeUsd"), null);
-				BigDecimal montoPorDesembolsarUeUsd = Utils.String2BigDecimal(map.get("montoPorDesembolsarUeUsd"), null);
-				
-				// prestamo campos adicionales
-				
-				Date fechaCorte = map.get("fechaCorte") == null ? null : Utils.dateFromString(map.get("fechaCorte"));
-				String destino = map.get("destino");
-				String sectorEconomico = map.get("sectorEconomico");
-				Date fechaFirma = map.get("fechaFimra") == null ? null : Utils.dateFromString(map.get("fechaFimra"));
-				Integer tipoAutorizacionId = Utils.String2Int(map.get("tipoAutorizacionId"),null);
-				String numeroAutorizacion = map.get("numeroAutorizacion");
-				Date fechaAutorizacion = map.get("fechaAutorizacion") == null ? null : Utils.dateFromString(map.get("fechaAutorizacion"));
-				Integer aniosPlazo = Utils.String2Int(map.get("aniosPlazo"), null);
-				Integer aniosGracia = Utils.String2Int(map.get("aniosGracia"), null);
-				Date fechaFinEjecucion = map.get("fechaFinEjecucion") == null ? null : Utils.dateFromString(map.get("fechaFinEjecucion"));
-				Integer peridoEjecucion = Utils.String2Int(map.get("periodoEjecucion"), null);
-				Integer tipoInteresId = Utils.String2Int(map.get("tipoInteresId"), null);
-				BigDecimal porcentajeInteres = Utils.String2BigDecimal(map.get("porcentajeInteres"), null); 
-				BigDecimal porcentajeComisionCompra = Utils.String2BigDecimal(map.get("porcentajeComisionCompra"), null);
-				BigDecimal amortizado = Utils.String2BigDecimal(map.get("amortizado"), null);
-				BigDecimal porAmortizar = Utils.String2BigDecimal(map.get("porAmortizar"), null);
-				BigDecimal principalAnio = Utils.String2BigDecimal(map.get("principalAnio"), null);
-				BigDecimal interesesAnio = Utils.String2BigDecimal(map.get("interesesAnio"), null);
-				BigDecimal comisionCompromisoAnio= Utils.String2BigDecimal(map.get("comisionCompromisoAnio"), null);
-				BigDecimal otrosGastos = Utils.String2BigDecimal(map.get("otrosGastos"), null);
-				BigDecimal principalAcumulado = Utils.String2BigDecimal(map.get("principalAcumulado"), null);
-				BigDecimal interesesAcumulados = Utils.String2BigDecimal(map.get("interesesAcumulados"), null);
-				BigDecimal comisionCompromisoAcumulado = Utils.String2BigDecimal(map.get("comisionCompromisoAcumulado"), null);
-				BigDecimal otrosCargosAcumulados = Utils.String2BigDecimal(map.get("otrosCargosAcumulados"), null);
-				BigDecimal presupuestoAsignadoFuncionamiento = Utils.String2BigDecimal(map.get("presupuestoAsignadoFuncionamiento"), null);
-				BigDecimal prespupuestoAsignadoInversion = Utils.String2BigDecimal(map.get("presupuestoAsignadoInversion"), null);
-				BigDecimal presupuestoModificadoFun = Utils.String2BigDecimal(map.get("presupuestoModificadoFuncionamiento"), null);
-				BigDecimal presupuestoModificadoInv = Utils.String2BigDecimal(map.get("presupuestoModificadoInversion"), null);
-				BigDecimal presupuestoVigenteFun = Utils.String2BigDecimal(map.get("presupuestoVigenteFuncionamiento"), null);
-				BigDecimal presupuestoVigenteInv = Utils.String2BigDecimal(map.get("presupuestoVigenteInversion"), null);
-				BigDecimal prespupuestoDevengadoFun = Utils.String2BigDecimal(map.get("presupuestoDevengadoFunconamiento"), null);
-				BigDecimal presupuestoDevengadoInv = Utils.String2BigDecimal(map.get("presupuestoDevengadoInversion"), null);
-				BigDecimal presupuestoPagadoFun = Utils.String2BigDecimal(map.get("presupuestoPagadoFuncionamiento"), null);
-				BigDecimal presupuestoPagadoInv = Utils.String2BigDecimal(map.get("presupuestoPagadoInversion"), null);
-				BigDecimal saldoCuentas = Utils.String2BigDecimal(map.get("saldoCuentas"), null);
-				BigDecimal desembolsadoReal = Utils.String2BigDecimal(map.get("desembolsoReal"), null);
-				
-				int objetoTipo = Utils.String2Int(map.get("objetoTipo"),1);
-				AutorizacionTipo autorizacionTipo = null;
-				
-				if (tipoAutorizacionId != null){
-					autorizacionTipo = new AutorizacionTipo();
-					autorizacionTipo.setId(tipoAutorizacionId);
-				}
-				
-				Integer ejecucionEstadoId = Utils.String2Int(map.get("ejecucionEstadoId"), null);
-				EjecucionEstado ejecucionEstado = null;
-				if (ejecucionEstadoId != null){
-					ejecucionEstado = new EjecucionEstado();
-					ejecucionEstado.setId(ejecucionEstadoId);
-				}
-				
-				InteresTipo interesTipo = null;
-				if (tipoInteresId != null){
-					interesTipo = new InteresTipo();
-					interesTipo.setId(tipoInteresId);
-				}
-				//Fin prestamo
 				
 				type = new TypeToken<List<stdatadinamico>>() {
 				}.getType();
@@ -420,11 +345,9 @@ public class SProyecto extends HttpServlet {
 				List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
 
 				if(esnuevo){
-					proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion
-							, usuario, null, new DateTime().toDate(), null, 1, snip
-							,programa , subPrograma, proyecto_,actividad, obra, fuente,latitud,longitud,objetivo
-							, null, null, null, null,null,null);
-
+					proyecto = new Proyecto(directorProyecto, cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion,
+							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, obra, fuente,
+							latitud, longitud, objetivo, enunciadoAlcance, null, null, null, null, null, null, null,null);
 				}else{
 					proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 					proyecto.setNombre(nombre);
@@ -444,9 +367,10 @@ public class SProyecto extends HttpServlet {
 					proyecto.setFuente(fuente);
 					proyecto.setLongitud(longitud);
 					proyecto.setLatitud(latitud);
+					proyecto.setColaborador(directorProyecto);
+					proyecto.setEnunciadoAlcance(enunciadoAlcance);
 
-				   List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
-
+				    List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
 					proyecto.setProyectoPropedadValors(null);
 					if (valores_temp!=null){
 						for (ProyectoPropedadValor valor : valores_temp){
@@ -454,6 +378,20 @@ public class SProyecto extends HttpServlet {
 							valor.setUsuarioActualizo("admin");
 							ProyectoPropiedadValorDAO.eliminarProyectoPropiedadValor(valor);
 						}
+					}
+					
+					List<ProyectoImpacto> impactos_temp = ProyectoImpactoDAO.getProyectoImpactoPorProyecto(proyecto.getId());
+					proyecto.setProyectoImpactos(null);
+					if (impactos_temp!=null){
+						for(ProyectoImpacto pi:impactos_temp)
+							ProyectoImpactoDAO.eliminarTotalProyectoImpacto(pi);
+					}
+					
+					List<ProyectoMiembro> miembros_temp = ProyectoMiembroDAO.getProyectoMiembroPorProyecto(proyecto.getId());
+					proyecto.setProyectoMiembros(null);
+					if (miembros_temp!=null){
+						for(ProyectoMiembro pm:miembros_temp)
+							ProyectoMiembroDAO.eliminarProyectoMiembro(pm);
 					}
 				}
 				result = ProyectoDAO.guardarProyecto(proyecto);
@@ -485,107 +423,32 @@ public class SProyecto extends HttpServlet {
 							result = (result && ProyectoPropiedadValorDAO.guardarProyectoPropiedadValor(valor));
 						}
 					}
-					
-					//prestamo
-					Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(proyecto.getId(), objetoTipo);
-					ObjetoPrestamo objetoPrestamo = null;
-					
-					if (prestamo==null){
-						
-						// revisar esta variable plazoEjecucionUe que deberia ir en el penultimo null
-						
-						prestamo = new Prestamo(autorizacionTipo, cooperanteUe, ejecucionEstado, interesTipo, tipoMoneda, 
-								unidadEjecutora_, fechaCorte, codigoPresupuestario, numeroPrestamo, destino, sectorEconomico, 
-								fechaFirma, numeroAutorizacion, fechaAutorizacion, aniosPlazo, aniosGracia,
-								fechaFinEjecucion, peridoEjecucion, porcentajeInteres, porcentajeComisionCompra, 
-								montoContratado, amortizado, porAmortizar, principalAnio, interesesAnio, comisionCompromisoAnio, 
-								otrosGastos, principalAcumulado, interesesAcumulados, comisionCompromisoAcumulado, 
-								otrosCargosAcumulados, presupuestoAsignadoFuncionamiento, prespupuestoAsignadoInversion,
-								presupuestoModificadoFun, presupuestoModificadoInv, presupuestoVigenteFun,
-								presupuestoVigenteInv, prespupuestoDevengadoFun, presupuestoDevengadoInv,
-								presupuestoPagadoFun, presupuestoPagadoInv, saldoCuentas, desembolsadoReal, 
-								usuario, null, new Date(), null, 1, proyectoPrograma, fechaDecreto, 
-								fechaSuscripcion, fechaElegibilidadUe, fechaCierreOrigianlUe, fechaCierreActualUe, mesesProrrogaUe,
-								null, montoAsignadoUe, desembolsoAFechaUe, montoPorDesembolsarUe, fechaVigencia, 
-								montoContratadoUsd, montoContratadoQtz, desembolsoAFechaUsd, montoPorDesembolsarUsd, montoAsignadoUeUsd, 
-								montoAsignadoUeQtz, desembolsoAFechaUeUsd, montoPorDesembolsarUeUsd, null);
-						
-						ObjetoPrestamoId objetoPrestamoId = new ObjetoPrestamoId(0, proyecto.getId(), objetoTipo);
-						objetoPrestamo = new ObjetoPrestamo(objetoPrestamoId, prestamo);
-						Set <ObjetoPrestamo> objetoPrestamos = new HashSet<>();
-						objetoPrestamos.add(objetoPrestamo);
-						PrestamoDAO.guardarPrestamo(prestamo, objetoPrestamo);
-					}else{
-						
-						prestamo.setAmortizado(amortizado);
-						prestamo.setAniosGracia(aniosGracia);
-						prestamo.setAniosPlazo(aniosPlazo);
-						prestamo.setAutorizacionTipo(autorizacionTipo);
-						prestamo.setCodigoPresupuestario(codigoPresupuestario);
-						prestamo.setComisionCompromisoAcumulado(comisionCompromisoAcumulado);
-						prestamo.setComisionCompromisoAnio(comisionCompromisoAnio);
-						prestamo.setDesembolsadoReal(desembolsadoReal);
-						prestamo.setDesembolsoAFechaUe(desembolsoAFechaUe);
-						prestamo.setDestino(destino);
-						prestamo.setEjecucionEstado(ejecucionEstado);
-						prestamo.setEstado(1);
-						prestamo.setFechaActualizacion(new DateTime().toDate());
-						prestamo.setFechaAutorizacion(fechaAutorizacion);
-						prestamo.setFechaCierreActualUe(fechaCierreActualUe);
-						prestamo.setFechaCierreOrigianlUe(fechaCierreOrigianlUe);
-						prestamo.setFechaCorte(fechaCorte);
-						prestamo.setFechaDecreto(fechaDecreto);
-						prestamo.setFechaElegibilidadUe(fechaElegibilidadUe);
-						prestamo.setFechaFinEjecucion(fechaFinEjecucion);
-						prestamo.setFechaFirma(fechaFirma);
-						prestamo.setFechaSuscripcion(fechaSuscripcion);
-						prestamo.setInteresesAcumulados(interesesAcumulados);
-						prestamo.setInteresesAnio(interesesAnio);
-						prestamo.setInteresTipo(interesTipo);
-						prestamo.setMesesProrrogaUe(mesesProrrogaUe);
-						prestamo.setMontoAsignadoUe(montoAsignadoUe);
-						prestamo.setMontoContratado(montoContratado);
-						prestamo.setMontoPorDesembolsarUe(montoPorDesembolsarUe);
-						prestamo.setNumeroAutorizacion(numeroAutorizacion);
-						prestamo.setNumeroPrestamo(numeroPrestamo);
-						prestamo.setOtrosCargosAcumulados(otrosCargosAcumulados);
-						prestamo.setOtrosGastos(otrosGastos);
-						prestamo.setPeridoEjecucion(peridoEjecucion);
-						prestamo.setPorAmortizar(porAmortizar);
-						prestamo.setPorcentajeComisionCompra(porcentajeComisionCompra);
-						prestamo.setPorcentajeInteres(porcentajeInteres);
-						prestamo.setPrespupuestoAsignadoInversion(prespupuestoAsignadoInversion);
-						prestamo.setPrespupuestoDevengadoFuncionamiento(prespupuestoDevengadoFun);
-						prestamo.setPresupuestoAsignadoFuncionamiento(presupuestoAsignadoFuncionamiento);
-						prestamo.setPresupuestoDevengadoInversion(presupuestoDevengadoInv);
-						prestamo.setPresupuestoModificadoFuncionamiento(presupuestoModificadoFun);
-						prestamo.setPresupuestoModificadoInversion(presupuestoModificadoInv);
-						prestamo.setPresupuestoPagadoFuncionamiento(presupuestoPagadoFun);
-						prestamo.setPresupuestoPagadoInversion(presupuestoPagadoInv);
-						prestamo.setPresupuestoVigenteFuncionamiento(presupuestoVigenteFun);
-						prestamo.setPresupuestoVigenteInversion(presupuestoVigenteInv);
-						prestamo.setPrincipalAcumulado(principalAcumulado);
-						prestamo.setPrincipalAnio(principalAnio);
-						prestamo.setProyectoPrograma(proyectoPrograma);
-						prestamo.setSaldoCuentas(saldoCuentas);
-						prestamo.setSectorEconomico(sectorEconomico);
-						prestamo.setTipoMoneda(tipoMoneda);
-						prestamo.setUnidadEjecutora(unidadEjecutora_);
-						prestamo.setUsuarioActualizo(usuario);
-						prestamo.setFechaVigencia(fechaVigencia);
-						prestamo.setMontoContratadoUsd(montoContratadoUsd);
-						prestamo.setMontoContratadoQtz(montoContratadoQtz);
-						prestamo.setDesembolsoAFechaUsd(desembolsoAFechaUsd);
-						prestamo.setMontoPorDesembolsarUsd(montoPorDesembolsarUsd);
-						prestamo.setMontoAsignadoUeUsd(montoAsignadoUeUsd);
-						prestamo.setMontoAsignadoUeQtz(montoAsignadoUeQtz);
-						prestamo.setDesembolsoAFechaUeUsd(desembolsoAFechaUeUsd);
-						prestamo.setMontoPorDesembolsarUeUsd(montoPorDesembolsarUeUsd);
-						prestamo.setCooperante(cooperanteUe);
-						PrestamoDAO.guardarPrestamo(prestamo, PrestamoDAO.getObjetoPrestamo(prestamo.getId()));
+				}
+				if (result){
+					String[] impactos =  map.get("impactos") != null && map.get("impactos").length()>0 ? map.get("impactos").toString().split("~") : null;
+					if (impactos !=null && impactos.length>0){
+						for (String impacto : impactos){
+							String [] temp = impacto.trim().split(",");
+							Entidad entidad = new Entidad();
+							entidad.setEntidad(Integer.parseInt(temp[0]));
+							ProyectoImpacto proyImpacto = new ProyectoImpacto(entidad, proyecto, temp[1] , 1,  usuario, null, new Date(),null);
+							result = ProyectoImpactoDAO.guardarProyectoImpacto(proyImpacto);
+						}
 					}
-					
-					//fin prestamo
+				}
+				if (result){
+					String[] miembroIds =  map.get("miembros") != null && map.get("miembros").length()>0 ? map.get("miembros").toString().split(",") : null;
+					if (miembroIds != null && miembroIds.length > 0 ){
+						for (String miembroId : miembroIds){
+							Colaborador colaborador = new Colaborador();
+							colaborador.setId(Utils.String2Int(miembroId));
+							ProyectoMiembroId pmId = new ProyectoMiembroId(proyecto.getId(), colaborador.getId());
+							ProyectoMiembro proyMiembro = new ProyectoMiembro(pmId, colaborador, proyecto, 1, new Date(), null, usuario, null);
+							result = ProyectoMiembroDAO.guardarProyectoMiembro(proyMiembro);
+							
+						}
+						
+					}
 				}
 				
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
@@ -600,6 +463,7 @@ public class SProyecto extends HttpServlet {
 
 			}
 			catch (Throwable e){
+				e.printStackTrace();
 				response_text = "{ \"success\": false }";
 			}
 
@@ -708,8 +572,7 @@ public class SProyecto extends HttpServlet {
 	        response_text = String.join("", "\"proyectos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 
-		}
-		else if(accion.equals("getProyectoPorId")){
+		}else if(accion.equals("getProyectoPorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 			
@@ -728,9 +591,7 @@ public class SProyecto extends HttpServlet {
 	        response_text = String.join("", "\"proyecto\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 
-
-		}
-		else{
+		}else{
 			response_text = "{ \"success\": false }";
 		}
 
@@ -742,6 +603,5 @@ public class SProyecto extends HttpServlet {
         gz.write(response_text.getBytes("UTF-8"));
         gz.close();
         output.close();
-	}
-
+	}	
 }

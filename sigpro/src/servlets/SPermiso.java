@@ -88,8 +88,8 @@ public class SPermiso extends HttpServlet {
 					permiso.setFechaCreacion(new DateTime().toDate());
 					permiso.setEstado(1);
 					response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false"),", "
-							, "\"data\":",permiso.getId().toString() , ","
-							, "\"id\": " , permiso.getId().toString() , ","
+							, "\"data\":",permiso.getId() + "", ","
+							, "\"id\": " , permiso.getId()+ "" , ","
 							, "\"usuarioCreo\": \"" , permiso.getUsuarioCreo(),"\","
 							, "\"fechaCreacion\":\" " , Utils.formatDateHour(permiso.getFechaCreacion()),"\","
 							, "\"usuarioactualizo\": \"" , permiso.getUsuarioActualizo() != null ? permiso.getUsuarioActualizo() : "","\","
@@ -104,8 +104,8 @@ public class SPermiso extends HttpServlet {
 						permiso.setUsuarioActualizo(sesionweb.getAttribute("usuario").toString());
 						permiso.setFechaActualizacion(new DateTime().toDate());
 						response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false"),", "
-							, "\"data\":",permiso.getId().toString(), ","
-							, "\"id\": " , permiso.getId().toString() , ","
+							, "\"data\":",permiso.getId() + "", ","
+							, "\"id\": " , permiso.getId() + "" , ","
 							, "\"usuarioCreo\": \"" , permiso.getUsuarioCreo(),"\","
 							, "\"fechaCreacion\":\" " , Utils.formatDateHour(permiso.getFechaCreacion()),"\","
 							, "\"usuarioactualizo\": \"" , permiso.getUsuarioActualizo() != null ? permiso.getUsuarioActualizo() : "","\","

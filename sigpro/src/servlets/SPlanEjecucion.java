@@ -65,8 +65,6 @@ public class SPlanEjecucion extends HttpServlet {
 				ejecucionFisica = ejecucionFisica +  ((((double)mvReal.getValorEntero() / mvFinal.getValorEntero()) * 100) ) * ((double) producto.getPeso() / 100);
 				
 			}
-			
-		
 			response_text = String.join("", "{ \"success\": true ,",
 					"\"ejecucionFisica\": \"" , ejecucionFisica + "" , "\",",
 					"\"fecha\": \"" , sdf.format(fecha_actual), "\"",

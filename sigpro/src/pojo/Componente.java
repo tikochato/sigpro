@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jun 2, 2017 12:28:44 PM by Hibernate Tools 5.2.1.Final
+// Generated Jun 13, 2017 3:16:39 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -68,8 +68,8 @@ public class Componente implements java.io.Serializable {
 
 	public Componente(ComponenteTipo componenteTipo, Proyecto proyecto, UnidadEjecutora unidadEjecutora, String nombre,
 			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma,
-			Integer proyecto_1, Integer actividad, Integer obra, Integer fuente, String latitud, String longitud,
+			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto_1,
+			Integer actividad, Integer obra, Integer fuente, String latitud, String longitud,
 			Set<ComponenteUsuario> componenteUsuarios, Set<Producto> productos,
 			Set<ComponentePropiedadValor> componentePropiedadValors) {
 		this.componenteTipo = componenteTipo;

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jun 2, 2017 12:28:44 PM by Hibernate Tools 5.2.1.Final
+// Generated Jun 13, 2017 3:16:39 PM by Hibernate Tools 5.2.1.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class Prestamo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1280978758787657599L;
+	private static final long serialVersionUID = -1421743170076446836L;
 	private Integer id;
 	private AutorizacionTipo autorizacionTipo;
 	private Cooperante cooperante;
@@ -37,7 +37,7 @@ public class Prestamo implements java.io.Serializable {
 	private TipoMoneda tipoMoneda;
 	private UnidadEjecutora unidadEjecutora;
 	private Date fechaCorte;
-	private int codigoPresupuestario;
+	private long codigoPresupuestario;
 	private String numeroPrestamo;
 	private String destino;
 	private String sectorEconomico;
@@ -104,8 +104,8 @@ public class Prestamo implements java.io.Serializable {
 	}
 
 	public Prestamo(Cooperante cooperante, TipoMoneda tipoMoneda, UnidadEjecutora unidadEjecutora,
-			int codigoPresupuestario, String numeroPrestamo, BigDecimal montoContratado, String usuarioCreo, int estado,
-			String proyectoPrograma, Date fechaDecreto, Date fechaSuscripcion, Date fechaElegibilidadUe,
+			long codigoPresupuestario, String numeroPrestamo, BigDecimal montoContratado, String usuarioCreo,
+			int estado, String proyectoPrograma, Date fechaDecreto, Date fechaSuscripcion, Date fechaElegibilidadUe,
 			Date fechaCierreOrigianlUe, Date fechaCierreActualUe, int mesesProrrogaUe, BigDecimal montoAsignadoUe,
 			Date fechaVigencia, BigDecimal montoContratadoUsd, BigDecimal montoContratadoQtz,
 			BigDecimal desembolsoAFechaUsd, BigDecimal montoPorDesembolsarUsd, BigDecimal montoAsignadoUeUsd,
@@ -139,7 +139,7 @@ public class Prestamo implements java.io.Serializable {
 
 	public Prestamo(AutorizacionTipo autorizacionTipo, Cooperante cooperante, EjecucionEstado ejecucionEstado,
 			InteresTipo interesTipo, TipoMoneda tipoMoneda, UnidadEjecutora unidadEjecutora, Date fechaCorte,
-			int codigoPresupuestario, String numeroPrestamo, String destino, String sectorEconomico, Date fechaFirma,
+			long codigoPresupuestario, String numeroPrestamo, String destino, String sectorEconomico, Date fechaFirma,
 			String numeroAutorizacion, Date fechaAutorizacion, Integer aniosPlazo, Integer aniosGracia,
 			Date fechaFinEjecucion, Integer peridoEjecucion, BigDecimal porcentajeInteres,
 			BigDecimal porcentajeComisionCompra, BigDecimal montoContratado, BigDecimal amortizado,
@@ -313,11 +313,11 @@ public class Prestamo implements java.io.Serializable {
 	}
 
 	@Column(name = "codigo_presupuestario", nullable = false)
-	public int getCodigoPresupuestario() {
+	public long getCodigoPresupuestario() {
 		return this.codigoPresupuestario;
 	}
 
-	public void setCodigoPresupuestario(int codigoPresupuestario) {
+	public void setCodigoPresupuestario(long codigoPresupuestario) {
 		this.codigoPresupuestario = codigoPresupuestario;
 	}
 

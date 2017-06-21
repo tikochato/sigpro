@@ -389,6 +389,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			$location.path('/riesgo/'+ mi.producto.id +'/3' );
 		}
 	};
+	
+	mi.irAMetas=function(){
+		if(mi.producto.id!=null){
+			$location.path('/meta/'+ mi.producto.id +'/3' );
+		}
+	};
 
 	mi.llamarModalBusqueda = function(servlet, datosTotal, datosCarga, columnaId,columnaNombre) {
 		var resultado = $q.defer();

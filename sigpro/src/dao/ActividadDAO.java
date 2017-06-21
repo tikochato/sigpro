@@ -85,9 +85,15 @@ public class ActividadDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Actividad ret = null;
 		try{
-			Query<Actividad> criteria = session.createQuery("FROM Actividad where id=:id AND id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )", Actividad.class);
+			String query = "FROM Actividad where id=:id";
+			if (usuario != null){
+				query += " AND id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )";
+			}
+			Query<Actividad> criteria = session.createQuery(query, Actividad.class);
 			criteria.setParameter("id", id);
+			if(usuario != null){
 			criteria.setParameter("usuario", usuario);
+			}
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
@@ -282,7 +288,7 @@ public class ActividadDAO {
 		}
 		return ret;
 	}
-	
+
 	public static String getFechaInicioFin(Actividad actividad, String usuario){
 		List<duracionFecha> objetoActividadFechas = new ArrayList<duracionFecha>();
 		String fecha = "";
@@ -298,15 +304,15 @@ public class ActividadDAO {
 			Date fechaFI = null;
 			for(int i = objetoActividadFechas.size()-1; i >= 0; i--){
 				if(fechaFI != null)
-					objetoActividadFechas.get(i).setFechaInicial(getFechaFinal(fechaFI,1,objetoActividadFechas.get(i).getDimension()));
+					objetoActividadFechas.get(i).setFechaInicial(getFechaFinal(fechaFI,1,objetoActividadFechas.get(i).getDimension().charAt(0)));
 				Date fechaI = objetoActividadFechas.get(i).fecha_inicial;
-				objetoActividadFechas.get(i).setFechaFin(getFechaFinal(fechaI,objetoActividadFechas.get(i).getDuracion(),objetoActividadFechas.get(i).getDimension()));
+				objetoActividadFechas.get(i).setFechaFin(getFechaFinal(fechaI,objetoActividadFechas.get(i).getDuracion(),objetoActividadFechas.get(i).getDimension().charAt(0)));
 				fechaFI = objetoActividadFechas.get(i).getFechaFin();
 			}
 
 			fecha = Utils.formatDate(objetoActividadFechas.get(0).getFechaInicial()) + ";" + Utils.formatDate(objetoActividadFechas.get(0).getFechaFin()); 
 		}else{
-			fecha = Utils.formatDate(actividad.getFechaInicio()) + ";" + Utils.formatDate(getFechaFinal(actividad.getFechaInicio(),actividad.getDuracion(),actividad.getDuracionDimension())); 
+			fecha = Utils.formatDate(actividad.getFechaInicio()) + ";" + Utils.formatDate(getFechaFinal(actividad.getFechaInicio(),actividad.getDuracion(),actividad.getDuracionDimension().charAt(0))); 
 		}
 		
 		return fecha;
@@ -328,50 +334,94 @@ public class ActividadDAO {
 		return fechasPredecesoras;
 	}
 	
-	public static Date getFechaFinal(Date fecha_inicio, Integer duracion, String dimension){
-        Calendar fecha_final = Calendar.getInstance();
-        fecha_final.setTime(fecha_inicio);
-       
-        if (dimension == "d"){ //Restamos un dÌa para validar que la fecha de inicio sea dÌa h·bil
-            fecha_final.add(Calendar.DAY_OF_MONTH, -1);
-        }
-        Integer contador=0;
-        while (contador < duracion){
-            switch(dimension.toLowerCase()){
-                case "d":  //dÌa
-                    fecha_final.add(Calendar.DAY_OF_MONTH, 1);
-                    break;
-                default:
-            }
-            boolean esFechaHabil = esFechaHabil(fecha_final);
-            if (esFechaHabil) {
+	public static List<Actividad> getActividadsSubactividadsPorObjeto(int objetoId, int objetoTipo){
+		List<Actividad> ret = new ArrayList<Actividad>();
+		List<Actividad> subactividades = new ArrayList<Actividad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT a FROM Actividad a WHERE a.estado = 1 AND a.objetoId = :objetoId AND a.objetoTipo = :objetoTipo ";
+			Query<Actividad> criteria = session.createQuery(query,Actividad.class);
+			criteria.setParameter("objetoId", objetoId);
+			criteria.setParameter("objetoTipo", objetoTipo);
+			ret = criteria.getResultList();
+			for(Actividad actividad : ret){
+				subactividades.addAll(getActividadsSubactividadsPorObjeto(actividad.getId(), 5));
+			}
+			ret.addAll(subactividades);			
+		}
+		catch(Throwable e){
+			CLogger.write("10", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Actividad getFechasActividad(Actividad actividad){
+		int predecesor = (actividad.getPredObjetoId()!= null)?actividad.getPredObjetoId():0; 
+		if( predecesor > 0){
+			Actividad actividad_pred = getActividadPorId(predecesor, null);
+			actividad_pred = getFechasActividad(actividad_pred);
+			Calendar fecha_final_pred = Calendar.getInstance();
+			fecha_final_pred.setTime(actividad_pred.getFechaFin());
+			fecha_final_pred.add(Calendar.DAY_OF_MONTH, 1);
+			actividad.setFechaInicio(fecha_final_pred.getTime());
+		}
+		
+		Date fechaInicio = actividad.getFechaInicio();
+		if (fechaInicio != null && actividad.getDuracionDimension() != null && !actividad.getDuracionDimension().isEmpty()){
+			Date fechaFinal = getFechaFinal(fechaInicio, actividad.getDuracion(), actividad.getDuracionDimension().charAt(0));
+			actividad.setFechaFin(fechaFinal);
+		}
+
+		return actividad;
+	}
+	
+	public static Date getFechaFinal(Date fecha_inicio, int duracion, char dimension){
+		Calendar fecha_final = Calendar.getInstance();
+		fecha_final.setTime(fecha_inicio);
+		
+		if (Character.toUpperCase(dimension) == 'D'){ //Restamos un d√≠a para validar que la fecha de inicio sea d√≠a h√°bil
+			fecha_final.add(Calendar.DAY_OF_MONTH, -1);
+		}
+		Integer contador=0;
+		while (contador < duracion){
+			switch(Character.toUpperCase(dimension)){
+				case 'D':  //d√≠a
+					fecha_final.add(Calendar.DAY_OF_MONTH, 1);
+					break;
+				default: 
+			}
+			boolean esFechaHabil = esFechaHabil(fecha_final); 
+			if (esFechaHabil) {
                 contador++;
             }
-        }
-        return new Date(fecha_final.getTimeInMillis());
-    }
-   
-    public static boolean esFechaHabil(Calendar fecha) {
-          switch (fecha.get(Calendar.DAY_OF_WEEK)){
-            case Calendar.SUNDAY:
-                return false;
-            case Calendar.SATURDAY:
-                return false;
-            default:
-              if (fecha.get(Calendar.DAY_OF_MONTH) == 1 && fecha.get(Calendar.MONTH) == Calendar.JANUARY) //AÒo nuevo
-                  return false;
-              if (fecha.get(Calendar.DAY_OF_MONTH) == 1 && fecha.get(Calendar.MONTH) == Calendar.MARCH) //DÌa del Trabajo
-                  return false;
-              if (fecha.get(Calendar.DAY_OF_MONTH) == 15 && fecha.get(Calendar.MONTH) == Calendar.SEPTEMBER) //Independencia
-                  return false;
-              if (fecha.get(Calendar.DAY_OF_MONTH) == 20 && fecha.get(Calendar.MONTH) == Calendar.OCTOBER) //RevoluciÛn
-                  return false;
-              if (fecha.get(Calendar.DAY_OF_MONTH) == 1 && fecha.get(Calendar.MONTH) == Calendar.NOVEMBER) //Todos los Santos
-                  return false;
-              if (fecha.get(Calendar.DAY_OF_MONTH) == 25 && fecha.get(Calendar.MONTH) == Calendar.DECEMBER) //Navidad
-                  return false;
-              break;
-            }
-            return true;
-        }
+		}
+		return new Date(fecha_final.getTimeInMillis());
+	}
+	
+	public static boolean esFechaHabil(Calendar fecha) {
+	      switch (fecha.get(Calendar.DAY_OF_WEEK)){
+	        case Calendar.SUNDAY:
+	        	return false; 
+	        case Calendar.SATURDAY:
+	        	return false; 
+	        default:
+	          if (fecha.get(Calendar.DAY_OF_MONTH) == 1 && fecha.get(Calendar.MONTH) == Calendar.JANUARY) //A√±o nuevo
+	        	  return false;
+	          if (fecha.get(Calendar.DAY_OF_MONTH) == 1 && fecha.get(Calendar.MONTH) == Calendar.MARCH) //D√≠a del Trabajo
+	        	  return false;
+	          if (fecha.get(Calendar.DAY_OF_MONTH) == 15 && fecha.get(Calendar.MONTH) == Calendar.SEPTEMBER) //Independencia
+	        	  return false;
+	          if (fecha.get(Calendar.DAY_OF_MONTH) == 20 && fecha.get(Calendar.MONTH) == Calendar.OCTOBER) //Revoluci√≥n
+	        	  return false;
+	          if (fecha.get(Calendar.DAY_OF_MONTH) == 1 && fecha.get(Calendar.MONTH) == Calendar.NOVEMBER) //Todos los Santos
+	        	  return false;
+	          if (fecha.get(Calendar.DAY_OF_MONTH) == 25 && fecha.get(Calendar.MONTH) == Calendar.DECEMBER) //Navidad
+	        	  return false;
+	          break;
+	        }
+	        return true;
+	}
 }

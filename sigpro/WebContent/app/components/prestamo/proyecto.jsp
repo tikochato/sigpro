@@ -25,6 +25,9 @@
   	 <script type="text/ng-template" id="cargarArchivo.jsp">
     		<%@ include file="/app/components/prestamo/cargarArchivo.jsp"%>
   	 </script>
+  	 <script type="text/ng-template" id="agregarImpacto.jsp">
+    		<%@ include file="/app/components/prestamo/agregarImpacto.jsp"%>
+  	 </script>
 	<shiro:lacksPermission name="24010">
 		<p ng-init="controller.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
@@ -122,6 +125,8 @@
 				<span class="glyphicon glyphicon-calendar"></span></label>
 				<label class="btn btn-default" ng-click="controller.irAMatrizRiesgos(controller.proyecto.id)" uib-tooltip="Matriz de Riesgos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-list-alt"></span></label>
+				<label class="btn btn-default" ng-click="controller.irAPrestamoMetas(controller.proyecto.id)" uib-tooltip="Metas de Préstamo" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-tasks"></span></label>
 
 		</div>
 			<div class="btn-group" style="float: right;">
@@ -248,13 +253,6 @@
 		            		ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "/>
 		            	<span class="label-icon" ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
 			          	<label class="floating-label">Coordenadas</label>
-				</div>
-
-				<div class="form-group">
-					<input type="text" ng-model="controller.proyecto.objetivo"
-						class="inputText" id="objetivo"
-						ng-value="controller.proyecto.objetivo" onblur="this.setAttribute('value', this.value);">
-					<label for="objetivo" class="floating-label">Objetivo</label>
 				</div>
 				<br/>
 
@@ -1017,6 +1015,116 @@
 					</div>
 
 				</uib-tab>
+
+				<uib-tab index= "4" heading="Acta de constitución" ng-if="controller.mostrarPrestamo">
+					
+					<div class="form-group">
+						<label for="id" class="floating-label">Nombre del Proyecto {{ controller.proyecto.nombre }}</label>
+						<br/><br/>
+					</div>
+					
+					<div class="form-group">
+			            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.directorProyectoNombre" ng-readonly="true" ng-required="true"
+			            	ng-click="controller.buscarDirecotorProyecto()" ng-value="controller.directorProyectoNombre" onblur="this.setAttribute('value', this.value);"/>
+			            <span class="label-icon" ng-click="controller.buscarDirecotorProyecto()"><i class="glyphicon glyphicon-search"></i></span>
+			          	<label for="campo3" class="floating-label">* Director del Proyecto</label>
+					</div>
+					
+					<div class="form-group">
+						<input type="text" ng-model="controller.proyecto.objetivo"
+							class="inputText" id="objetivo"
+							ng-value="controller.proyecto.objetivo" onblur="this.setAttribute('value', this.value);">
+						<label for="objetivo" class="floating-label">Visión general del proyecto</label>
+					</div>
+					
+					<div align="center">
+						<h5 class="label-form">Impacto en gobierno </h5>
+						<div style="height: 35px; width: 90%">
+							<div style="text-align: right;">
+								<div class="btn-group" role="group" aria-label="">
+									<a class="btn btn-default" href
+										ng-click="controller.agregarImpacto()" role="button"
+										uib-tooltip="Asignar un nuevo proyecto" tooltip-placement="left">
+										<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+									</a>
+								</div>
+							</div>
+						</div>
+					
+					
+						<br/>
+						<table style="width: 90%;"
+						st-table="controller.impactos"
+						class="table table-striped  table-bordered">
+							<thead >
+								<tr>
+									<th class="label-form">ID</th>
+									<th class="label-form">Organización</th>
+									<th class="label-form">Impacto y participación de la organización</th>
+									<th  class="label-form" style="width: 30px;">Quitar</th>
+		
+								</tr>
+							</thead>
+							<tbody>
+								<tr st-select-row="row"
+									ng-repeat="row in controller.impactos">
+									<td>{{row.entidadId}}</td>
+									<td>{{row.entidadNombre}}</td>
+									<td>{{row.impacto}}</td>
+									<td>
+										<button type="button"
+											ng-click="controller.quitarImpacto(row)"
+											class="btn btn-sm btn-danger">
+											<i class="glyphicon glyphicon-minus-sign"> </i>
+										</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<br/><br/>
+					<div align="center">
+						<h5 class="label-form">Otros miembros </h5>
+						<div style="height: 35px; width: 90%">
+							<div style="text-align: right;">
+								<div class="btn-group" role="group" aria-label="">
+									<a class="btn btn-default" href
+										ng-click="controller.agregarMiembro()" role="button"
+										uib-tooltip="Asignar un nuevo proyecto" tooltip-placement="left">
+										<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+									</a>
+								</div>
+							</div>
+						</div>
+					
+					
+						<br/>
+						<table style="width: 90%;"
+						st-table="controller.miembros"
+						class="table table-striped  table-bordered">
+							<thead >
+								<tr>
+									<th class="label-form">Nombre</th>
+									<th  class="label-form" style="width: 30px;">Quitar</th>
+		
+								</tr>
+							</thead>
+							<tbody>
+								<tr st-select-row="row"
+									ng-repeat="row in controller.miembros">
+									<td>{{row.nombre}}</td>
+									<td>
+										<button type="button"
+											ng-click="controller.quitarMiembro(row)"
+											class="btn btn-sm btn-danger">
+											<i class="glyphicon glyphicon-minus-sign"> </i>
+										</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</uib-tab>			
 			</uib-tabset>
 			</form>
 		</div>

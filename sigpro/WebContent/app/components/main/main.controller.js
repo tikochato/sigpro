@@ -24,6 +24,12 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/prestamo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
             })
+            .when('/prestamometas_ingreso/:proyectoId?/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'prestamometasingresoController\'" class="all_page"></div>'
+            })
+            .when('/prestamometas/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'prestamometasController\'" class="all_page"></div>'
+            })
             .when('/entidad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloEntidad\'" class="all_page"></div>'
             })
@@ -65,6 +71,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             })
             .when('/meta/:id/:tipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'metaController\'" class="all_page"></div>'
+            })
+            .when('/metavalor/:metaid/:datotipoid/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'metavalorController\'" class="all_page"></div>'
             })
             .when('/test',{
             	template: '<div load-on-demand="\'testController\'" class="all_page"></div>'
@@ -219,6 +228,14 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   script: '/app/components/prestamo/proyecto.controller.js',
 	    	   template: '/app/components/prestamo/proyecto.jsp'
 	       }, {
+	    	   name: 'prestamometasingresoController',
+	    	   script: '/app/components/reportes/prestamometas/prestamometas_ingreso.controller.js',
+	    	   template: '/app/components/reportes/prestamometas/prestamometas_ingreso.jsp'
+	       }, {
+	    	   name: 'prestamometasController',
+	    	   script: '/app/components/reportes/prestamometas/prestamometas.controller.js',
+	    	   template: '/app/components/reportes/prestamometas/prestamometas.jsp'
+	       }, {
 	    	   name: 'moduloEntidad',
 	    	   script: '/app/components/entidades/entidades.controller.js',
 	    	   template: '/app/components/entidades/entidades.jsp'
@@ -277,6 +294,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'metaController',
 	    	   script: '/app/components/meta/meta.controller.js',
 	    	   template: '/app/components/meta/meta.jsp'
+	       },{
+	    	   name: 'metavalorController',
+	    	   script: '/app/components/metavalor/metavalor.controller.js',
+	    	   template: '/app/components/metavalor/metavalor.jsp'
 	       },{
 	    	   name: 'testController',
 	    	   script: '/app/components/test/test.controller.js',

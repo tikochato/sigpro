@@ -45,6 +45,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.prestamo.plazoEjecucionUe = "";
 	
 	mi.coordenadas = "";
+	
+	mi.impactos =[];
+	mi.miembros = [];
 
 	mi.fechaOptions = {
 			formatYear : 'yy',
@@ -209,6 +212,17 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
 			}
 		}
+
+		var listaImpactos = "";
+		for (impacto in mi.impactos){
+			listaImpactos = listaImpactos + (listaImpactos.length>0 ? "~" : "")+
+			mi.impactos[impacto].entidadId + "," + mi.impactos[impacto].impacto; 
+		}
+		var miembros = "";
+		for (m in mi.miembros){
+			miembros = miembros + (miembros.length > 0 ? "," : "") + mi.miembros[m].id; 
+		}
+		
 		if(mi.proyecto!=null && mi.proyecto.nombre!=null){
 			var param_data = {
 				accion : 'guardar',
@@ -229,70 +243,11 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				esnuevo: mi.esNuevo,
 				longitud: mi.proyecto.longitud,
 				latitud : mi.proyecto.latitud,
+				directorProyecto: mi.directorProyectoId,
+				impactos : listaImpactos,
+				miembros: miembros,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
-
-				codigoPresupuestario: mi.prestamo.codigoPresupuestario,
-				numeroPrestamo: mi.prestamo.numeroPrestamo,
-				proyetoPrograma: mi.prestamo.proyectoPrograma,
-				unidadEjecutora: mi.prestamo.unidadEjecutora,
-				cooperanteUeId: mi.prestamo.cooperanteid,
-				fechaDecreto: moment(mi.prestamo.fechaDecreto).format('DD/MM/YYYY'),
-				fechaSuscripcion: moment(mi.prestamo.fechaSuscripcion).format('DD/MM/YYYY'),
-				fechaVigencia: moment(mi.prestamo.fechaVigencia).format('DD/MM/YYYY'),
-				tipoMonedaId: mi.prestamo.tipoMonedaId,
-				montoContratado: mi.prestamo.montoContratado,
-				montoContratadoUsd: mi.prestamo.montoContratadoUsd,
-				montoContratadoQtz: mi.prestamo.montoContratadoQtz,
-				desembolsoAFechaUsd: mi.prestamo.desembolsoAFechaUsd,
-				montoPorDesembolsarUsd: mi.prestamo.montoPorDesembolsarUsd,
-				fechaElegibilidad: moment(mi.prestamo.fechaElegibilidadUe).format('DD/MM/YYYY'),
-				fechaCierreOriginal:  moment(mi.prestamo.fechaCierreOrigianlUe).format('DD/MM/YYYY'),
-				fechaCierreActual: moment(mi.prestamo.fechaCierreActualUe).format('DD/MM/YYYY'),
-				mesesProrroga: mi.prestamo.mesesProrrogaUe,
-				montoAisignadoUe: mi.prestamo.montoAsignadoUe,
-				desembolsoAFechaUe: mi.prestamo.desembolsoAFechaUe,
-				montoPorDesembolsarUe: mi.prestamo.montoPorDesembolsarUe,
-				montoAsignadoUeUsd: mi.prestamo.montoAsignadoUeUsd,
-				montoAsignadoUeQtz: mi.prestamo.montoAsignadoUeQtz,
-				desembolsoAFechaUeUsd: mi.prestamo.desembolsoAFechaUeUsd,
-				montoPorDesembolsarUeUsd: mi.prestamo.montoPorDesembolsarUeUsd,
-				destino : mi.prestamo.destino,
-				sectorEconomico: mi.prestamo.sectorEconomico,
-				fechaFimra: mi.prestamo.fechaFirma != undefined ? moment(mi.prestamo.fechaFirma).format('DD/MM/YYYY') : undefined,
-				tipoAutorizacionId : mi.prestamo.tipoAutorizacionId,
-				numeroAutorizacion: mi.prestamo.numeroAutorizacion,
-				fechaAutorizacion: mi.prestamo.fechaAutorizacion != undefined ? moment(mi.prestamo.fechaAutorizacion).format('DD/MM/YYYY') : undefined,
-				aniosPlazo: mi.prestamo.aniosPlazo != undefined ? mi.prestamo.aniosPlazo : undefined,
-				aniosGracia: mi.prestamo.aniosGracia,
-				fechaFinEjecucion: mi.prestamo.fechaFinEjecucion != undefined ? moment(mi.prestamo.fechaFinEjecucion).format('DD/MM/YYYY') : undefined,
-				periodoEjecucion: mi.prestamo.periodoEjecucion != "" ? mi.prestamo.periodoEjecucion : undefined,
-				tipoInteresId: mi.prestamo.tipoInteresId,
-				porcentajeInteres: mi.prestamo.porcentajeInteres,
-				porcentajeComisionCompra: mi.prestamo.porcentajeComisionCompra,
-				amortizado: mi.prestamo.amortizado,
-				porAmortizar: mi.prestamo.porAmortizar,
-				principalAnio: mi.prestamo.principalAnio,
-				interesesAnio : mi.prestamo.interesesAnio,
-				comisionCompromisoAnio: mi.prestamo.comisionCompromisoAnio,
-				otrosGastos: mi.prestamo.otrosGastos,
-				principalAcumulado: mi.prestamo.principalAcumulado,
-				interesesAcumulados: mi.prestamo.interesesAcumulados,
-				comisionCompromisoAcumulado: mi.prestamo.comisionCompromisoAcumulado,
-				otrosCargosAcumulados: mi.prestamo.otrosCargosAcumulados,
-				presupuestoAsignadoFuncionamiento: mi.prestamo.presupuestoAsignadoFuncionamiento,
-				presupuestoAsignadoInversion: mi.prestamo.presupuestoAsignadoInversion,
-				presupuestoModificadoFuncionamiento: mi.prestamo.presupuestoModificadoFun,
-				presupuestoModificadoInversion: mi.prestamo.presupuestoModificadoInv,
-				presupuestoVigenteFuncionamiento: mi.prestamo.presupuestoVigenteFun,
-				presupuestoVigenteInversion: mi.prestamo.presupuestoVigenteInv,
-				presupuestoDevengadoFunconamiento:mi.prestamo.presupuestoDevengadoFun,
-				presupuestoDevengadoInversion:mi.prestamo.presupuestoDevengadoInv,
-				presupuestoPagadoFuncionamiento: mi.prestamo.presupuestoPagadoFun,
-				presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoInv,
-				saldoCuentas: mi.prestamo.saldoCuentas,
-				desembolsoReal: mi.prestamo.desembolsoReal,
-				ejecucionEstadoId: mi.prestamo.ejecucionEstadoId != undefined ? mi.prestamo.ejecucionEstadoId : undefined,
-				fechaCorte : mi.prestamo.fechaCorte != undefined ? moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY') : undefined,
+				
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(
@@ -303,9 +258,85 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 						mi.proyecto.fechaCreacion = response.data.fechaCreacion;
 						mi.proyecto.usuarioactualizo = response.data.usuarioactualizo;
 						mi.proyecto.fechaactualizacion = response.data.fechaactualizacion;
-						$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.obtenerTotalProyectos();
-						mi.esNuevo = false;
+						var param_data = {
+								accion: "gurdarPrestamo",
+								objetoId: mi.proyecto.id,
+								objetoTipo: 1,
+								codigoPresupuestario: mi.prestamo.codigoPresupuestario,
+								numeroPrestamo: mi.prestamo.numeroPrestamo,
+								proyetoPrograma: mi.prestamo.proyectoPrograma,
+								unidadEjecutora: mi.prestamo.unidadEjecutora,
+								cooperanteUeId: mi.prestamo.cooperanteid,
+								fechaDecreto: moment(mi.prestamo.fechaDecreto).format('DD/MM/YYYY'),
+								fechaSuscripcion: moment(mi.prestamo.fechaSuscripcion).format('DD/MM/YYYY'),
+								fechaVigencia: moment(mi.prestamo.fechaVigencia).format('DD/MM/YYYY'),
+								tipoMonedaId: mi.prestamo.tipoMonedaId,
+								montoContratado: mi.prestamo.montoContratado,
+								montoContratadoUsd: mi.prestamo.montoContratadoUsd,
+								montoContratadoQtz: mi.prestamo.montoContratadoQtz,
+								desembolsoAFechaUsd: mi.prestamo.desembolsoAFechaUsd,
+								montoPorDesembolsarUsd: mi.prestamo.montoPorDesembolsarUsd,
+								fechaElegibilidad: moment(mi.prestamo.fechaElegibilidadUe).format('DD/MM/YYYY'),
+								fechaCierreOriginal:  moment(mi.prestamo.fechaCierreOrigianlUe).format('DD/MM/YYYY'),
+								fechaCierreActual: moment(mi.prestamo.fechaCierreActualUe).format('DD/MM/YYYY'),
+								mesesProrroga: mi.prestamo.mesesProrrogaUe,
+								montoAisignadoUe: mi.prestamo.montoAsignadoUe,
+								desembolsoAFechaUe: mi.prestamo.desembolsoAFechaUe,
+								montoPorDesembolsarUe: mi.prestamo.montoPorDesembolsarUe,
+								montoAsignadoUeUsd: mi.prestamo.montoAsignadoUeUsd,
+								montoAsignadoUeQtz: mi.prestamo.montoAsignadoUeQtz,
+								desembolsoAFechaUeUsd: mi.prestamo.desembolsoAFechaUeUsd,
+								montoPorDesembolsarUeUsd: mi.prestamo.montoPorDesembolsarUeUsd,
+								destino : mi.prestamo.destino,
+								sectorEconomico: mi.prestamo.sectorEconomico,
+								fechaFimra: mi.prestamo.fechaFirma != undefined ? moment(mi.prestamo.fechaFirma).format('DD/MM/YYYY') : undefined,
+								tipoAutorizacionId : mi.prestamo.tipoAutorizacionId,
+								numeroAutorizacion: mi.prestamo.numeroAutorizacion,
+								fechaAutorizacion: mi.prestamo.fechaAutorizacion != undefined ? moment(mi.prestamo.fechaAutorizacion).format('DD/MM/YYYY') : undefined,
+								aniosPlazo: mi.prestamo.aniosPlazo != undefined ? mi.prestamo.aniosPlazo : undefined,
+								aniosGracia: mi.prestamo.aniosGracia,
+								fechaFinEjecucion: mi.prestamo.fechaFinEjecucion != undefined ? moment(mi.prestamo.fechaFinEjecucion).format('DD/MM/YYYY') : undefined,
+								periodoEjecucion: mi.prestamo.periodoEjecucion != "" ? mi.prestamo.periodoEjecucion : undefined,
+								tipoInteresId: mi.prestamo.tipoInteresId,
+								porcentajeInteres: mi.prestamo.porcentajeInteres,
+								porcentajeComisionCompra: mi.prestamo.porcentajeComisionCompra,
+								amortizado: mi.prestamo.amortizado,
+								porAmortizar: mi.prestamo.porAmortizar,
+								principalAnio: mi.prestamo.principalAnio,
+								interesesAnio : mi.prestamo.interesesAnio,
+								comisionCompromisoAnio: mi.prestamo.comisionCompromisoAnio,
+								otrosGastos: mi.prestamo.otrosGastos,
+								principalAcumulado: mi.prestamo.principalAcumulado,
+								interesesAcumulados: mi.prestamo.interesesAcumulados,
+								comisionCompromisoAcumulado: mi.prestamo.comisionCompromisoAcumulado,
+								otrosCargosAcumulados: mi.prestamo.otrosCargosAcumulados,
+								presupuestoAsignadoFuncionamiento: mi.prestamo.presupuestoAsignadoFuncionamiento,
+								presupuestoAsignadoInversion: mi.prestamo.presupuestoAsignadoInversion,
+								presupuestoModificadoFuncionamiento: mi.prestamo.presupuestoModificadoFun,
+								presupuestoModificadoInversion: mi.prestamo.presupuestoModificadoInv,
+								presupuestoVigenteFuncionamiento: mi.prestamo.presupuestoVigenteFun,
+								presupuestoVigenteInversion: mi.prestamo.presupuestoVigenteInv,
+								presupuestoDevengadoFunconamiento:mi.prestamo.presupuestoDevengadoFun,
+								presupuestoDevengadoInversion:mi.prestamo.presupuestoDevengadoInv,
+								presupuestoPagadoFuncionamiento: mi.prestamo.presupuestoPagadoFun,
+								presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoInv,
+								saldoCuentas: mi.prestamo.saldoCuentas,
+								desembolsoReal: mi.prestamo.desembolsoReal,
+								ejecucionEstadoId: mi.prestamo.ejecucionEstadoId != undefined ? mi.prestamo.ejecucionEstadoId : undefined,
+								fechaCorte : mi.prestamo.fechaCorte != undefined ? moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY') : undefined,
+								t:moment().unix()
+							};
+							
+							$http.post('/SPrestamo',param_data).then(
+									function(response) {
+										if (response.data.success) {
+											$utilidades.mensaje('success','Programa '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+											mi.esNuevo = false;
+										}else
+											$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Programa');
+							});
+						
 					}else
 						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
 			});
@@ -374,11 +405,14 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.unidadejecutoranombre=mi.proyecto.unidadejecutora;
 			mi.cooperanteid=mi.proyecto.cooperanteid;
 			mi.cooperantenombre=mi.proyecto.cooperante;
+			mi.directorProyectoNombre = mi.proyecto.directorProyectoNmbre;
+			mi.directorProyectoId = mi.proyecto.directorProyectoId;
 			mi.esColapsado = true;
 			mi.esNuevo = false;
 			mi.coordenadas = (mi.proyecto.latitud !=null ?  mi.proyecto.latitud : '') +
 			(mi.proyecto.latitud!=null ? ', ' : '') + (mi.proyecto.longitud!=null ? mi.proyecto.longitud : '');
-
+			mi.impactos =[];
+			mi.miembros = [];
 			var parametros = {
 					accion: 'getProyectoPropiedadPorTipo',
 					idProyecto: mi.proyecto!=''?mi.proyecto.id:0,
@@ -439,6 +473,28 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				mi.proyectos = response.data.proyectos;
 				
 			});
+			
+			parametros = {
+					accion: 'getMiembrosPorProyect',
+					proyectoId: mi.proyecto!=''? mi.proyecto.id:0,
+				    t:moment().unix()
+			}
+			$http.post('/SProyectoMiembro', parametros).then(function(response){
+				mi.miembros  = response.data.miembros;
+				
+			});
+			
+			parametros = {
+					accion: 'getImpactosPorProyect',
+					proyectoId: mi.proyecto!=''? mi.proyecto.id:0,
+				    t:moment().unix()
+			}
+			$http.post('/SProyectoImpacto', parametros).then(function(response){
+				mi.impactos  = response.data.impactos;
+				
+			});
+			
+			
 
 			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
 			$scope.active = 0;
@@ -598,6 +654,12 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		}
 	};
 
+	mi.irAPrestamoMetas=function(proyectoid){
+		if(mi.proyecto!=null){
+			$location.path('/prestamometas_ingreso/'+ proyectoid );
+		}
+	};
+
 	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
 		var resultado = $q.defer();
 		var modalInstance = $uibModal.open({
@@ -749,6 +811,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 		});
 	};
+	
+	
 	
 	mi.llamarModalArchivo = function() {
 		var resultado = $q.defer();
@@ -933,20 +997,11 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			$http.post('/SDataSigade', parametros).then(function(response){
 				mi.prestamo={};
 				if (response.data.success){
+					mi.prestamo = response.data.prestamo;
 					mi.prestamo.codigoPresupuestario = Number(response.data.prestamo.codigoPresupuestario);
-					mi.prestamo.numeroPrestamo = response.data.prestamo.numeroPrestamo;
-					mi.prestamo.proyectoPrograma = response.data.prestamo.proyectoPrograma;
-					mi.prestamo.cooperantenombre = response.data.prestamo.cooperantenombre;
 					mi.prestamo.fechaDecreto = moment(response.data.prestamo.fechaDecreto,'DD/MM/YYYY').toDate()
 					mi.prestamo.fechaSuscripcion = moment(response.data.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate();
 					mi.prestamo.fechaVigencia = moment(response.data.prestamo.fechaVigencia,'DD/MM/YYYY').toDate();
-					mi.prestamo.tipoMonedaNombre = response.data.prestamo.tipoMonedaNombre;
-					mi.prestamo.tipoMonedaId= response.data.prestamo.tipoMonedaId;
-					mi.prestamo.montoContratado = response.data.prestamo.montoContratado;
-					mi.prestamo.montoContratadoUsd = response.data.prestamo.montoContratadoUsd;
-					mi.prestamo.montoContratadoQtz = response.data.prestamo.montoContratadoQtz;
-					mi.prestamo.desembolsoAFechaUsd = response.data.prestamo.desembolsoAFechaUsd;
-					mi.prestamo.montoPorDesembolsarUsd =  response.data.prestamo.montoPorDesembolsarUsd;
 					mi.getPorcentajes();
 				}else{
 					$utilidades.mensaje('warning', 'No se encontraron datos con los parámetros ingresados');
@@ -954,9 +1009,91 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				
 			});
 			
+		};
+		
+		mi.buscarDirecotorProyecto = function() {
+			var resultado = mi.llamarModalBusqueda('/SColaborador', {
+				accion : 'totalElementos', t:moment().unix()
+			}, function(pagina, elementosPorPagina) {
+				return {
+					accion : 'cargar',
+					pagina : pagina,
+					numerocooperantes : elementosPorPagina
+				};
+			},'id','nombreCompleto');
+
+			resultado.then(function(itemSeleccionado) {
+				mi.directorProyectoNombre = itemSeleccionado.primerNombre +
+						(itemSeleccionado.segundoNombre!=null ? ' ' + itemSeleccionado.segundoNombre : '') +
+						' ' + itemSeleccionado.primerApellido +
+						(itemSeleccionado.segundoApellido!=null ? ' ' + itemSeleccionado.segundoApellido + ' ' : '');
+				mi.directorProyectoId = itemSeleccionado.id;
+			});
+		};
+		
+		mi.agregarImpacto = function() {
+
+			var modalInstance = $uibModal.open({
+				animation : 'true',
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				templateUrl : 'agregarImpacto.jsp',
+				controller : 'modalAgregarImpacto',
+				controllerAs : 'modalc',
+				backdrop : 'static',
+				size : 'md',
+				
+			});
+
+			modalInstance.result.then(function(resultado) {
+				if (resultado != undefined){
+					mi.impactos.push(resultado);
+				}else{
+					$utilidades.mensaje('danger', 'Error al agregar impacto');
+				}
+			}, function() {
+			});
+		};
+		
+		mi.quitarImpacto = function(row){
+			var index = mi.impactos.indexOf(row);
+	        if (index !== -1) {
+	            mi.impactos.splice(index, 1);
+	        }
 		}
-	  
-	  
+		
+		mi.agregarMiembro = function() {
+			var resultado = mi.llamarModalBusqueda('/SColaborador', {
+				accion : 'totalElementos', t:moment().unix()
+			}, function(pagina, elementosPorPagina) {
+				return {
+					accion : 'cargar',
+					pagina : pagina,
+					numerocooperantes : elementosPorPagina
+				};
+			},'id','nombreCompleto');
+
+			resultado.then(function(itemSeleccionado) {
+				if (itemSeleccionado != undefined ){
+					var miembro = {id:itemSeleccionado.id,
+							nombre: itemSeleccionado.primerNombre +
+							(itemSeleccionado.segundoNombre!=null ? ' ' + itemSeleccionado.segundoNombre : '') +
+							' ' + itemSeleccionado.primerApellido +
+							(itemSeleccionado.segundoApellido!=null ? ' ' + itemSeleccionado.segundoApellido + ' ' : '')
+					}
+					mi.miembros.push(miembro);
+				}else{
+					$utilidades.mensaje('danger', 'Error al agregar miembro');
+				}
+			});
+		};
+		
+		mi.quitarMiembro = function(row){
+			var index = mi.miembros.indexOf(row);
+	        if (index !== -1) {
+	            mi.miembros.splice(index, 1);
+	        }
+		}
 } ]);
 
 app.controller('buscarPorProyecto', [ '$uibModalInstance',
@@ -1110,6 +1247,7 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 	mi.mostrar = true;
 	mi.nombreArchivo="";
 	mi.mostrarcargando=false;
+	mi.multiproyecto = false;
 	
 	$scope.cargarArchivo = function(event){
 		var resultado = $q.defer();
@@ -1140,6 +1278,7 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 			var formatData = new FormData();
 			formatData.append("file",mi.archivos);  
 			formatData.append("accion",'importar');
+			formatData.append("multiproyecto",mi.multiproyecto ? 1 : 0);
 			$http.post('/SGantt',formatData, {
 					headers: {'Content-Type': undefined},
 					transformRequest: angular.identity
@@ -1155,3 +1294,76 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 		}
 	};
 }
+
+app.controller('modalAgregarImpacto', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log',   '$uibModal', '$q' ,modalAgregarImpacto ]);
+
+function modalAgregarImpacto($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q) {
+
+	var mi = this;
+	mi.impacto = {};
+	
+	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
+		var resultado = $q.defer();
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'buscarPorProyecto.jsp',
+			controller : 'buscarPorProyecto',
+			controllerAs : 'modalBuscar',
+			backdrop : 'static',
+			size : 'md',
+			resolve : {
+				$servlet : function() {
+					return servlet;
+				},
+				$accionServlet : function() {
+					return accionServlet;
+				},
+				$datosCarga : function() {
+					return datosCarga;
+				},
+				$columnaId : function() {
+					return columnaId;
+				},
+				$columnaNombre : function() {
+					return columnaNombre;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(itemSeleccionado) {
+			resultado.resolve(itemSeleccionado);
+		});
+		return resultado.promise;
+	};
+
+	mi.buscarEntidad = function() {
+		var resultado = mi.llamarModalBusqueda('/SEntidad', {
+			accion : 'totalEntidades'
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'cargar',
+				pagina : pagina,
+				registros : elementosPorPagina
+			};
+		},'entidad','nombre');
+		resultado.then(function(itemSeleccionado) {
+			mi.impacto.entidadNombre = itemSeleccionado.nombre;
+			mi.impacto.entidadId = itemSeleccionado.entidad;
+		});
+	};
+	
+	mi.ok = function() {
+		$uibModalInstance.close(mi.impacto);
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+}
+
+
