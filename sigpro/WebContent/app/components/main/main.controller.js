@@ -162,6 +162,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/porcentajeactividades/:proyectoId?',{
             	template: '<div load-on-demand="\'porcentajeactividadesController\'" class="all_page"></div>'
             })
+            .when('/avanceactividades/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'avanceActividadesController\'" class="all_page"></div>'
+            })
             .when('/cargatrabajo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'cargatrabajoController\'" class="all_page"></div>'
             })
@@ -420,6 +423,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'agendaController',
 	    	   script: '/app/components/reportes/agenda/agenda.controller.js',
 	    	   template: '/app/components/reportes/agenda/agenda.jsp'
+	       },{
+	    	   name: 'avanceActividadesController',
+	    	   script: '/app/components/reportes/avanceactividades/avanceActividades.controller.js',
+	    	   template: '/app/components/reportes/avanceactividades/avanceActividades.jsp'
 	       },{
 	    	   name: 'cargatrabajoController',
 	    	   script: '/app/components/reportes/cargatrabajo/cargatrabajo.controller.js',

@@ -186,7 +186,7 @@ public class CProject {
 			 itemPredecesor =  items.get(predecesores[0]);	
 		}
 		
-		Actividad actividad = new Actividad(actividadTipo, task.getName(), null, task.getStart(), task.getFinish()
+		Actividad actividad = new Actividad(actividadTipo, null, task.getName(), null, task.getStart(), task.getFinish()
 				,0,usuario, null, new Date(), 
 				null, 1, null, null, null, null, 
 				null, null, null , objetoId, objetoTipo, 
