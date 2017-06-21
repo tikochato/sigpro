@@ -63,7 +63,6 @@ public class SPlanEjecucion extends HttpServlet {
 				MetaValor mvReal = MetaTipoDAO.getMetaValorPorIdObjetoTipoMeta(producto.getId(), 3, 1);
 				MetaValor mvFinal = MetaTipoDAO.getMetaValorPorIdObjetoTipoMeta(producto.getId(), 3, 4);
 				ejecucionFisica = ejecucionFisica +  ((((double)mvReal.getValorEntero() / mvFinal.getValorEntero()) * 100) ) * ((double) producto.getPeso() / 100);
-				
 			}
 			response_text = String.join("", "{ \"success\": true ,",
 					"\"ejecucionFisica\": \"" , ejecucionFisica + "" , "\",",
