@@ -13,6 +13,10 @@
 	.ui-grid-category {
   		text-align: center;border-right: 0px;box-shadow: -1px 1px #d4d4d4 
 	}
+	
+	.lightblue {
+		background-color: #c2edf9 !important;
+	}
 </style>
 
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
@@ -59,10 +63,8 @@
 				  	<label for="campo.id" class="floating-label">* Año Final</label>
 				</div>
 				<div class="form-group col-sm-3">
-					<select class="inputText" ng-model="pmetasc.agrupacion" ng-required="true">
-										<option value="0" selected="selected">Seleccione una opción</option>
-										<option ng-repeat="ag in pmetasc.agrupaciones"
-											ng-value="ag.value">{{ag.text}}</option>
+					<select class="inputText" ng-model="pmetasc.agrupacion" 
+						ng-options="a.text for a in pmetasc.agrupaciones" ng-required="true">
 					</select>
 					<label class="floating-label">Agrupacion</label>
 				</div>	
