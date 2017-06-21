@@ -399,18 +399,4 @@ public class SInformePresupuesto extends HttpServlet {
 		
 		return lstdataEjecutado;
 	}
-	
-	public static Timestamp convertStringToTimestamp(String str_date) {
-	    try {
-	      DateFormat formatter;
-	      formatter = new SimpleDateFormat("dd/MM/yyyy");
-	       // you can change format of date
-	      Date date = formatter.parse(str_date);
-	      java.sql.Timestamp timeStampDate = new Timestamp(date.getTime());
-
-	      return timeStampDate;
-	    } catch (Throwable e) {
-	      return null;
-	    }
-	  }
 }

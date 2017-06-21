@@ -67,4 +67,11 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 				mi.gridApi3 = gridApi;
 			}
 		}
+		
+		mi.generar = function(){
+			$http.post('/SAvanceActividades', {
+				accion: 'getAvance',
+				idPrestamo: mi.prestamo.value
+			});
+		}
 }]);
