@@ -36,12 +36,6 @@
 						<input type="checkbox" id="Todo" ng-model="controller.informeCompleto" />
 						<label for="controller.completo" class="floating-label">Informe completo</label>
 					</div>
-					
-					<div class="form-group col-sm-3" >
-						<label class="btn btn-default" ng-click="controller.generar()" uib-tooltip="Generar informe" 
-							tooltip-placement="bottom">
-						<span class="glyphicon glyphicon-new-window"></span></label>
-					</div>
 				</div>
 				<div class="row">				
 					<div class="form-group col-sm-3">
@@ -66,24 +60,30 @@
 					  	<label for="campo.id" class="floating-label">*Año Final</label>
 					</div>
 					
-					<div class="operation_buttons" align="right">
-						<div class="btn-group">
-							<label class="btn btn-primary"  ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrarDescargar">
-							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Exportar</span></label>
-						</div>
+					<div class="form-group col-sm-3" >
+						<label class="btn btn-default" ng-click="controller.generar()" uib-tooltip="Generar informe" 
+							tooltip-placement="bottom">
+						<span class="glyphicon glyphicon-new-window"></span></label>
 					</div>
 				</div>
 	    	</div>
 	    	<br>
 	    	<div style="height: 100%; width: 100%; z-index: 0">
 		    	<div style="height: 5%; width: 100%">
-					<div><h4><b>Ejecución Presupuestaria</b></h4></div>
+					<div style="float: left;"><h4><b>Ejecución Presupuestaria</b></h4></div>
+					<div style="float: right;" class="operation_buttons" align="right">
+						<div class="btn-group">
+							<label class="btn btn-primary"  ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrarDescargar">
+							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Exportar</span></label>
+						</div>
+					</div>
 				</div>
-				
-				<div id="grid1" ui-grid="controller.gridOptions" style="width: 100%; height: 350px"
+				<br>
+				<br>
+				<div id="grid1" ui-grid="controller.gridOptions" style="width: 100%; height: 600px"
 					ui-grid-grouping 
 					ui-grid-edit 
-					ui-grid-row-edit 
+					 
 					ui-grid-resize-columns 
 					ui-grid-cellNav 
 					ui-grid-pinning

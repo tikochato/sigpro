@@ -164,8 +164,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 	        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.totalP | number:2}}</div>', enableColumnMenu: false, pinnedRight:true
 	        });
 			
-			mi.columnas.push({ name: 'acumulacionCostos', width: 150, displayName: 'Acumulación de Costos', editType: 'dropdown', editableCellTemplate: 'ui-grid/dropdownEditor', pinnedRight:true,
-	        	editDropdownOptionsArray: mi.ddlOpciones, editDropdownValueLabel: 'value', cellFilter: 'mapAcumulacionCosto', editDropdownOptionsArray: mi.ddlOpciones, enableColumnMenu: false
+			mi.columnas.push({ name: 'acumulacionCostos', enableCellEdit: true, enableCellEditOnFocus: true, width: 150, displayName: 'Acumulación de Costos', editType: 'dropdown', editableCellTemplate: 'ui-grid/dropdownEditor',
+	        	editDropdownOptionsArray: mi.ddlOpciones, editDropdownValueLabel: 'value', cellFilter: 'mapAcumulacionCosto', editDropdownOptionsArray: mi.ddlOpciones, enableColumnMenu: false, pinnedRight:true
 	        });
 			
 			mi.columnaNames.push("Total");
@@ -273,10 +273,11 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 					}).success(function(response){
 						if (response.success){
 							mi.crearArbol(response.prestamo);
-
-							for (var i = 0; i < mi.gridOptions.data.length; i++){
-								var dato = mi.gridOptions.data[i];
-						    	if (dato.objetoTipo == 5){
+							mi.data = response.prestamo;
+							//for (var i = 0; i < mi.gridOptions.data.length; i++){
+							for (var i = 0; i < mi.data.length; i++){
+								var dato = mi.data[i];
+						    	if (dato.objetoTipo == 5 && dato.hijo.length == 0){
 						    		var rowEntity = mi.obtenerEntidad(dato.idObjetoTipo, dato.objetoTipo);
 						    		if (rowEntity.acumulacionCostos == 1){
 						    			mi.setInicio(rowEntity);
@@ -353,7 +354,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.crearArbol = function(datos){
 			if (datos.length > 0){
 				var data = datos;
-				data = mi.gethijos(data);
+				//data = mi.gethijos(data);
 				
 				mi.gridOptions.data = data;
 				
@@ -371,7 +372,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.gridOptions = {
 				showColumnFooter: true,
 	            cellEditableCondition:function($scope){
-	            	  if($scope.row.entity.objetoTipo == 5 && $scope.row.entity.hijo == null)
+	            	  if($scope.row.entity.objetoTipo == 5 && $scope.row.entity.hijo.length == 0)
 	            		  return true;
 	            	  else
 	            		  return false;
@@ -384,8 +385,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				showTreeRowHeader: false,
 				showTreeExpandNoChildren : false,
 				enableSorting: false,
-				enableCellEdit: true,
-				enableCellEditOnFocus: true,
 			    columnDefs: mi.columnas,
 			    onRegisterApi: function(gridApi ) {
 			      mi.gridApi = gridApi;
@@ -403,19 +402,21 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			  }
 		};
 		
-		mi.setInicio = function(rowEntity){
+		mi.setInicio = function(rowEntity){			
 			var i = 0;
-		  
+			
 			for(x in mi.gridOptions.columnDefs){
 				if(x > 0 && x < mi.gridOptions.columnDefs.length -2){
 					mi.setValor(rowEntity, mi.gridOptions.columnDefs[x].name, 0);
 				}
 			}
-			
+			  
 			var fInicial = rowEntity.fechaInicio.split('/');
-			mi.setValor(rowEntity,mi.obtenerMes(Number(fInicial[1]),Number(fInicial[2]))+"-P",rowEntity.Costo);
-			mi.setValor(rowEntity,mi.obtenerMes(Number(fInicial[1]),Number(fInicial[2]))+"-R",rowEntity.CostoReal);
-			mi.calcular(rowEntity);
+			var mesP = mi.obtenerMes(Number(fInicial[1]),Number(fInicial[2]))+"-P";
+			var mesR = mi.obtenerMes(Number(fInicial[1]),Number(fInicial[2]))+"-R";
+			mi.setValor(rowEntity,mesP,rowEntity.Costo);
+			mi.setValor(rowEntity,mesR,rowEntity.CostoReal);
+			mi.calcular2(rowEntity,mesP,mesR);
 			
 			mi.calcularTotales();
 			mi.totalPrestamo();
@@ -459,18 +460,25 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 					}
 				}
 				
+				var mesP = "";
+				var mesR = "";
+				
 				var inicio = (Number(FI[1]) <= 12 ? Number(FI[1]) : 1);
 				for(j = Number(FF[2]); j <= Number(FF[2]); j++){
 					var fin = j==Number(FF[2]) ? Number(FF[1]):12;
 					for(i = inicio; i <= fin; i++){
-						mi.setValor(rowEntity, mi.obtenerMes(i,j)+"-P", rowEntity.Costo * diasPorcentual[contador]);
-						mi.setValor(rowEntity, mi.obtenerMes(i,j)+"-R", rowEntity.CostoReal * diasPorcentual[contador]);
+						mesP = mi.obtenerMes(i,j)+"-P";
+						mesR = mi.obtenerMes(i,j)+"-R";
+						
+						mi.setValor(rowEntity, mesP, rowEntity.Costo * diasPorcentual[contador]);
+						mi.setValor(rowEntity, mesR, rowEntity.CostoReal * diasPorcentual[contador]);
+						mi.calcular2(rowEntity, mesP, mesR);
 						contador++;
 					}
 					inicio = 1;
 				}
 				
-				mi.calcular(rowEntity);
+				//mi.calcular(rowEntity);
 				
 				mi.calcularTotales();
 				mi.totalPrestamo();
@@ -487,9 +495,12 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			}
 			  
 			var fFinal = rowEntity.fechaFin.split('/');
-			mi.setValor(rowEntity,mi.obtenerMes(Number(fFinal[1]),Number(fFinal[2]))+"-P",rowEntity.Costo);
-			mi.setValor(rowEntity,mi.obtenerMes(Number(fFinal[1]),Number(fFinal[2]))+"-R",rowEntity.CostoReal);
-			mi.calcular(rowEntity);
+			var mesP = mi.obtenerMes(Number(fFinal[1]),Number(fFinal[2]))+"-P";
+			var mesR = mi.obtenerMes(Number(fFinal[1]),Number(fFinal[2]))+"-R";
+			mi.setValor(rowEntity,mesP,rowEntity.Costo);
+			mi.setValor(rowEntity,mesR,rowEntity.CostoReal);
+			//mi.calcular(rowEntity);
+			mi.calcular2(rowEntity,mesP,mesR);
 			
 			mi.calcularTotales();
 			mi.totalPrestamo();
@@ -568,10 +579,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			}
 		}
 		
-		mi.calcular = function(rowEntidad){
-			mi.calcularPadre(rowEntidad);
-		}
-		
 		mi.calcularTotales = function(){
 			var monto = 0;
 			for(x in mi.gridOptions.data){
@@ -589,6 +596,36 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			}
 		}
 		
+		mi.calcular2 = function(rowEntidad,mesP,mesR){
+			var padre = mi.obtenerEntidad(rowEntidad.idPredecesor, rowEntidad.objetoTipoPredecesor);
+			var valorActualPadreMesP = mi.obtenerValor(padre, mesP);
+			var valorActualActividadP = mi.obtenerValor(rowEntidad, mesP);
+			var valorActualPadreMesR = mi.obtenerValor(padre, mesR);
+			var valorActualActividadR = mi.obtenerValor(rowEntidad, mesR);
+			
+			mi.setValor(padre,mesP, valorActualPadreMesP + valorActualActividadP);
+			mi.setValor(padre,mesR, valorActualPadreMesR + valorActualActividadR);
+			if (padre.idPredecesor > 0)
+				mi.calcular2(padre,mesP,mesR);
+			
+			/*for(y in mi.gridOptions.columnDefs){
+				if (y > 0 && y < mi.gridOptions.columnDefs.length -2){
+					var valorActualPadre = mi.obtenerValor(padre, mi.gridOptions.columnDefs[y].name);
+					var valorActualActividad = mi.obtenerValor(rowEntidad, mi.gridOptions.columnDefs[y].name);
+					mi.setValor(padre,mi.gridOptions.columnDefs[y].name, valorActualPadre + valorActualActividad);
+					if (padre.idPredecesor > 0)
+						mi.calcular2(padre);
+				}
+			}*/
+		}
+		
+		
+		
+		
+		mi.calcular = function(rowEntidad){
+			mi.calcularPadre(rowEntidad);
+		}
+		
 		mi.calcularPadre = function(rowEntidad){
 			if (rowEntidad.idPredecesor != 0){
 				var padre = mi.obtenerEntidad(rowEntidad.idPredecesor, rowEntidad.objetoTipoPredecesor);
@@ -597,9 +634,12 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 					for(y in mi.gridOptions.columnDefs){
 						if (y > 0 && y < mi.gridOptions.columnDefs.length -2){
 							for(x in padre.hijo){
-								var hijo = padre.hijo[x].split(',');
-								var valorColumna = mi.obtenerValor(mi.obtenerEntidad(hijo[0], hijo[1]), mi.gridOptions.columnDefs[y].name);
-								valorFinal = valorFinal + valorColumna;
+								if(padre.hijo[x] != null){
+									var hijo = padre.hijo[x].split(',');
+									var entity = mi.obtenerEntidad(hijo[0], hijo[1]);
+									var valorColumna = mi.obtenerValor(entity, mi.gridOptions.columnDefs[y].name);
+									valorFinal = valorFinal + valorColumna;
+								}
 							}
 							mi.setValor(padre,mi.gridOptions.columnDefs[y].name, valorFinal);
 							valorFinal = 0;
@@ -611,9 +651,9 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		}
 		
 		mi.obtenerEntidad = function(id, objetoTipo){
-			for (x in mi.gridOptions.data){
-				if (id == mi.gridOptions.data[x].idObjetoTipo && objetoTipo == mi.gridOptions.data[x].objetoTipo){
-					return mi.gridOptions.data[x];
+			for (x in mi.data){
+				if (id == mi.data[x].idObjetoTipo && objetoTipo == mi.data[x].objetoTipo){
+					return mi.data[x];
 				}
 			}
 		}
