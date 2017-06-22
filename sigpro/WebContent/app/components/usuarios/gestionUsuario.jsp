@@ -26,242 +26,74 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="34040">
-						<label class="btn btn-primary" ng-click="usuarioc.nuevoUsuario()" uib-tooltip="Nuevo">
+						<label class="btn btn-primary" ng-click="" uib-tooltip="Nuevo">
 						<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 					</shiro:hasPermission>
 					<shiro:hasPermission name="34010">
-						<label class="btn btn-primary" ng-click="usuarioc.editarUsuario()" uib-tooltip="Editar">
+						<label class="btn btn-primary" ng-click="" uib-tooltip="Editar">
 						<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 					</shiro:hasPermission>
 					<shiro:hasPermission name="34030">
-						<label class="btn btn-danger" ng-click="usuarioc.eliminarUsuario()" uib-tooltip="Borrar">
+						<label class="btn btn-danger" ng-click="" uib-tooltip="Borrar">
 						<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 					</shiro:hasPermission>
     			</div>
     		</div>
     		<div class="col-sm-12" align="center">
     			<uib-tabset active="active">
-				    <uib-tab index="0" heading="Usuarios">Tabla de usuarios</uib-tab>				   
-				    <uib-tab index="3" heading="Colaboradores">
-				    	<!-- 
-				    	 <uib-tab-heading>
-				        <i class="glyphicon glyphicon-bell"></i> Alert!
-				      </uib-tab-heading>
-				    	 -->
-				     
-				    	tabla de colaboradores
+				    <uib-tab index="0" heading="Usuarios" select="usuarioc.changeActive(1)">
+					    <br>
+					    <div style="height: 35px;">
+							<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
+								<a class="btn btn-default" href ng-click="usuarioc.reiniciarVista(1)" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
+							</div>
+							</div>
+						</div>
+						<br>
+						<div id="grid1" ui-grid="usuarioc.gridOptions" ui-grid-save-state
+								ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination class="usuarioc.myGrid">
+								<div class="grid_loading" ng-hide="!usuarioc.mostrarcargando">
+						  	<div class="msg">
+						      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
+								  <br /><br />
+								  <b>Cargando, por favor espere...</b>
+							  </span>
+							</div>
+						  </div>
+						</div>
+						<ul uib-pagination total-items="usuarioc.totalUsuarios"
+								ng-model="usuarioc.paginaActualUsuarios"
+								max-size="usuarioc.numeroMaximoPaginas"
+								items-per-page="usuarioc.elementosPorPagina"
+								first-text="Primero"
+								last-text="Último"
+								next-text="Siguiente"
+								previous-text="Anterior"
+								class="pagination-sm" boundary-links="true" force-ellipses="true"
+								ng-change="usuarioc.cambiarPagina(1)"
+						>
+						</ul>
+	    						
+				    </uib-tab>				   
+				    <uib-tab index="1" heading="Colaboradores" select="usuarioc.changeActive(2)" >
+				    <br>
+				     <div style="height: 35px;">
+						<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
+							<a class="btn btn-default" href ng-click="usuarioc.reiniciarVista(2)" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
+						</div>
+						</div>
+					</div>
+					<br> 
 				    </uib-tab>
 				  </uib-tabset>
-    			<div style="height: 35px;">
-					<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
-						<a class="btn btn-default" href ng-click="usuarioc.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
-					</div>
-					</div>
-				</div>
+    			
 			</div>
-    		    
-    		<!-- 
-		<shiro:hasPermission name="34010">
-    			<div class="col-sm-12" align="center">
-    			<div style="height: 35px;">
-					<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
-						<a class="btn btn-default" href ng-click="usuarioc.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
-					</div>
-					</div>
-				</div>
-				<br/>
-				<div id="grid1" ui-grid="usuarioc.gridOptions" ui-grid-save-state
-						ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination class="usuarioc.myGrid">
-						<div class="grid_loading" ng-hide="!usuarioc.mostrarcargando">
-				  	<div class="msg">
-				      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
-						  <br /><br />
-						  <b>Cargando, por favor espere...</b>
-					  </span>
-					</div>
-				  </div>
-				</div>
-				<ul uib-pagination total-items="usuarioc.totalUsuarios"
-						ng-model="usuarioc.paginaActual"
-						max-size="usuarioc.numeroMaximoPaginas"
-						items-per-page="usuarioc.elementosPorPagina"
-						first-text="Primero"
-						last-text="Último"
-						next-text="Siguiente"
-						previous-text="Anterior"
-						class="pagination-sm" boundary-links="true" force-ellipses="true"
-						ng-change="usuarioc.cambiarPagina()"
-				></ul>
-			</div>
-    		</shiro:hasPermission>
-		 -->
+    		
 
 		</div>
 		
-		<!--  -->
-		<div class="row second-main-form" ng-show="usuarioc.isCollapsed">
-			<div class="page-header">
-				<h2 ng-hide="!usuarioc.esNuevo"><small>Nuevo Usuario</small></h2>
-				<h2 ng-hide="usuarioc.esNuevo"><small>Edición de Usuario</small></h2>
-			</div>
-			
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-					<shiro:hasPermission name="34020">
-						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid && !usuarioc.cargandoPermisos ? usuarioc.guardarUsuario() : '' ) :  (form.$valid  ? usuarioc.guardarUsuario() : '' )" 
-							ng-disabled="usuarioc.esNuevo ? form1.$invalid || usuarioc.cargandoPermisos : form.$invalid  || usuarioc.cargandoPermisos" uib-tooltip="Guardar">
-						<span class="glyphicon glyphicon-floppy-saved"></span>Guardar</label>
-					</shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()"  uib-tooltip="Ir a Tabla">
-					<span class="glyphicon glyphicon-list-alt"></span>Ir a Tabla</label>
-    			</div>
-    		</div>
-			<div class="col-sm-12">
-				<form name="form">
-						<div class="form-group" ng-show="usuarioc.esNuevo">							
-							 <select name="singleSelect" id="singleSelect" ng-change="usuarioc.changeUsuario(usuarioc.tipoUsuario)" ng-model="usuarioc.tipoUsuario"style="padding-bottom: 5px;position: absolute;margin-left: 115px;font-size: 1.1em;padding-top: 4px;">
-							      <option value="">-- Seleccione el tipo de usuario --</option>
-							      <option value="1">Colaborador de unidad ejecutora</option> <!-- interpolation -->
-							      <option value="2">Analista de DCP</option>
-							      <option value="3">Administrador</option>
-							      <option value="4">Cooperante</option>
-							      <option value="5">Planificador</option>
-							    </select>
-							 <label class="floating-label" style="font-weight:bold; font-size: 14px;margin-top: 10px;">Tipo de Usuario:</label>
-						</div>
-						<br>
-						<div class="form-group" ng-show="!usuarioc.esNuevo && !usuarioc.mostrarCambioPassword">
-    						<input type="text" class="inputText" id="usuario" ng-model="usuarioc.usuariosSelected.usuario" 
-    							ng-value="usuarioc.usuariosSelected.usuario" onblur="this.setAttribute('value', this.value);" readonly>
-    						<label class="floating-label">* Usuario</label>
-						</div>
-						<div class="form-group" ng-show="!usuarioc.mostrarCambioPassword">
-    						<input type="text" class="inputText" id="correo" ng-model="usuarioc.usuariosSelected.email" ng-required="true"
-    							ng-value="usuarioc.usuariosSelected.email" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">* Correo electrónico</label>
-						</div>
-						<div class="form-group" ng-show="!usuarioc.esNuevo">
-    						<input type="password" class="inputText" id="password1" ng-model="usuarioc.usuariosSelected.password" ng-required="true"
-    							ng-value="usuarioc.usuariosSelected.password" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">* Contraseña</label>
-						</div>
+		<!-- inicio de edición -->
 
-				</form>
-				<form name="form1">
-					<div class="form-group" ng-show="usuarioc.esNuevo">
-    						<input type="text" class="inputText" id="usuario" ng-model="usuarioc.usuariosSelected.usuario" ng-required="true"
-    							ng-value="usuarioc.usuariosSelected.usuario" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">* Usuario</label>
-					</div>
-					<div class="form-group" ng-show="usuarioc.esNuevo">
-    						<input type="password" class="inputText" id="password1" ng-model="usuarioc.claves.password1" ng-required="true"
-    							ng-value="usuarioc.claves.password1" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">* Contraseña</label>
-						</div>
-						<div class="form-group" ng-show="usuarioc.esNuevo">
-    						<input type="password" class="inputText" id="password2" ng-model="usuarioc.claves.password2" ng-required="true"
-    							ng-value="usuarioc.claves.password2" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">* Vuelva a ingresar la contraseña</label>
-						</div>
-						<div class="form-group" >
-					          <input type="text" class="inputText" ng-model="usuarioc.usuariosSelected.colaborador"  ng-disabled="true" 
-					          		ng-value="usuarioc.usuariosSelected.colaborador" 
-					          		ng-click="usuarioc.buscarColaborador()" >
-					          <span class="label-icon" ng-click=" usuarioc.buscarColaborador()"><i class="glyphicon glyphicon-search"></i></span>
-					          <label class="floating-label" >Colaborador</label>
-					      </div>
-						<br>
-				</form>
-				
-			</div>
-			
-			
-			<div class="row">
-			<div class="col-sm-12">
-			
-		<div align="center" ng-show="usuarioc.isCollapsed">
-		
-				<h3 ng-if="usuarioc.cambio=='false'">Permisos</h3>
-				<div class="col-sm-12 operation_buttons" align="right" style="margin-left: -1%;" ng-if="usuarioc.esNuevo">
-					<div class="btn-group">
-						<label class="btn btn-default" ng-click="!usuarioc.cargandoPermisos? usuarioc.buscarPermiso(1) : ''"
-												ng-disabled="" 
-											uib-tooltip="Seleccionar Rol" ng-disabled="usuarioc.cargandoPermisos" >
-							<span class="glyphicon glyphicon-zoom-in"></span>
-							Seleccionar Rol
-						</label>
-						<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(0)"
-												ng-disabled="" 
-											uib-tooltip="Agregar permiso" ng-disabled="usuarioc.cargandoPermisos">
-							<span class="glyphicon glyphicon-plus"></span>
-							Agregar permiso.
-						</label>
-					</div>
-				</div>
-				<div class="col-sm-12 operation_buttons" align="right" style="margin-left: -1%;" ng-if="!usuarioc.esNuevo">
-					<div class="btn-group">
-						<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(0)"
-												ng-disabled="" 
-											uib-tooltip="Agregar permiso" ng-disabled="usuarioc.cargandoPermisos">
-							<span class="glyphicon glyphicon-plus"></span>
-							Agregar permiso.
-						</label>
-					</div>
-				</div>			
-				<br>
-				<table style="width: 95%; overflow-y: scroll;height: 175px;display: block;"
-				st-table="usuarioc.permisosAsignados"
-				class="table table-striped  table-bordered table-hover table-propiedades">
-				<thead >
-					<tr>
-						<th style="width: 5%;">Nombre</th>
-						<th>Descripción</th>
-						<th style="width: 30px;">Quitar</th>
-
-					</tr>
-				</thead>
-				<tbody>
-					<tr st-select-row="row"
-						ng-repeat="row in usuarioc.permisosAsignados">
-						<td>{{row.nombre}}</td>
-						<td>{{row.descripcion}}</td>
-						<td>
-							<button type="button"
-								ng-click="usuarioc.eliminarPermiso(row)"
-								class="btn btn-sm btn-danger">
-								<i class="glyphicon glyphicon-minus-sign"> </i>
-							</button>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			
-			<div class="grid_loading" ng-if="usuarioc.cargandoPermisos" style="margin-top:80px; width: 96%; margin-left: 1%;">
-				<div class="msg">
-					<span><i class="fa fa-spinner fa-spin fa-4x"></i>
-						<br><br>
-						<b>Cargando, por favor espere...</b>
-					</span>
-				</div>
-			</div> 
-			
-		</div>
-		</div>
-		
-		</div>
-			<br>
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-			        <shiro:hasPermission name="34020">
-						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid && !usuarioc.cargandoPermisos ? usuarioc.guardarUsuario() : '' ) :  (form.$valid && !usuarioc.cargandoPermisos  ? usuarioc.guardarUsuario() : '' )" 
-							ng-disabled="usuarioc.esNuevo ? form1.$invalid || usuarioc.cargandoPermisos : form.$invalid  || usuarioc.cargandoPermisos" uib-tooltip="Guardar">
-						<span class="glyphicon glyphicon-floppy-saved"></span>Guardar</label>
-					</shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()"  uib-tooltip="Ir a Tabla">
-					<span class="glyphicon glyphicon-list-alt"></span>Ir a Tabla</label>
-    		</div>
-    	</div>
-		</div>
 		
 
 
