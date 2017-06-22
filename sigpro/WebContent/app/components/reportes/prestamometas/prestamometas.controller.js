@@ -199,8 +199,8 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			{ displayName : 'Producto', name : 'nombreMeta', category: " ", pinnedLeft:true, width: 300, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false, enableColumnMenu: false, 
 				cellTemplate: "<div class=\"ui-grid-cell-contents\" ng-class=\"{'ui-grid-tree-padre': row.treeLevel < 2}\" ><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.pmetasc.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>"
 			},
-			{ displayName : 'Fecha Inicio', name : 'fechaInicio', category: " ", width: 100, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false, enableColumnMenu: false},
-			{ displayName : 'Fecha Fin', name : 'fechaFin', category: " ", width: 100, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false, enableColumnMenu: false},  
+			{ displayName : 'Fecha Inicio', name : 'fechaInicio', category: " ", width: 90, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false, enableColumnMenu: false},
+			{ displayName : 'Fecha Fin', name : 'fechaFin', category: " ", width: 90, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false, enableColumnMenu: false},  
 			{ displayName : 'Unidad de Medida', category: " ", name : 'unidadDeMedidaId', width: 100, 
 				enableCellEdit: true, enableFiltering: false, editableCellTemplate: 'ui-grid/dropdownEditor',
 				editDropdownValueLabel: 'nombre', editDropdownOptionsArray: [], enableColumnMenu: false,
@@ -215,11 +215,31 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			for (anioInicio = mi.fechaInicio.getFullYear(); anioInicio<=(anioFin); anioInicio++){
 				for (mes = 0; mes < 12; mes++){
 					columnDefs.push({ displayName: 'Planificada', category: nombreMes[mes]+"-"+anioInicio, 
-						name: mes+'P'+anioInicio, idMeta: 'metaPlanificadaId', width: 100, 
+						name: mes+'P'+anioInicio, idMeta: 'metaPlanificadaId', width: 90, 
 						tipoMeta: META_ID_PLANIFICADA, anio: anioInicio, mes: mes, type: 'number',
 						enableCellEdit: true, enableFiltering : false, enableColumnMenu: false,
-						cellEditableCondition: function( $scope) { 
-							return ($scope.row.entity.objetoTipo >= 3 
+						cellEditableCondition: function($scope) {
+							var fechaInicio = $scope.row.entity.fechaInicio.split("/");
+							var fechaFin = $scope.row.entity.fechaFin.split("/");
+							var mesInicio = parseInt(fechaInicio[1]) - 1;
+							var mesFin = parseInt(fechaFin[1]) - 1;
+							var anioInicio = parseInt(fechaInicio[2]);
+							var anioFin = parseInt(fechaFin[2]);
+							var fechaEnIntervalo = false;
+							if (anioInicio == anioFin){
+								if (this.anio == anioInicio && this.mes >= mesInicio && this.mes <= mesFin){
+									fechaEnIntervalo = true;
+								}
+							}else{
+								if(this.anio > anioInicio && this.anio < anioFin){
+									fechaEnIntervalo = true; 
+								}else if(this.anio == anioInicio && this.mes >= mesInicio){
+									fechaEnIntervalo = true;
+								}else if(this.anio == anioFin && this.mes <= mesFin){
+									fechaEnIntervalo = true;
+								}
+							}
+							return ($scope.row.entity.objetoTipo >= 3 && fechaEnIntervalo 
 									&& $scope.row.entity.unidadDeMedidaId != null && $scope.row.entity.unidadDeMedidaId != ""
 									); 
 							},
@@ -228,11 +248,33 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 					        }
 					});
 					columnDefs.push({ displayName: 'Real', category: nombreMes[mes]+"-"+anioInicio, 
-						name: mes+'R'+anioInicio, idMeta: 'metaRealId', width: 100,  
+						name: mes+'R'+anioInicio, idMeta: 'metaRealId', width: 90,  
 						tipoMeta: META_ID_REAL, anio: anioInicio, mes: mes, 
 						enableCellEdit: true, enableFiltering : false, enableColumnMenu: false,
 						cellEditableCondition: function( $scope ) { 
-							return ($scope.row.entity.objetoTipo >= 3 && $scope.row.entity.unidadDeMedidaId != null && $scope.row.entity.unidadDeMedidaId != ""); 
+							var fechaInicio = $scope.row.entity.fechaInicio.split("/");
+							var fechaFin = $scope.row.entity.fechaFin.split("/");
+							var mesInicio = parseInt(fechaInicio[1]) - 1;
+							var mesFin = parseInt(fechaFin[1]) - 1;
+							var anioInicio = parseInt(fechaInicio[2]);
+							var anioFin = parseInt(fechaFin[2]);
+							var fechaEnIntervalo = false;
+							if (anioInicio == anioFin){
+								if (this.anio == anioInicio && this.mes >= mesInicio && this.mes <= mesFin){
+									fechaEnIntervalo = true;
+								}
+							}else{
+								if(this.anio > anioInicio && this.anio < anioFin){
+									fechaEnIntervalo = true; 
+								}else if(this.anio == anioInicio && this.mes >= mesInicio){
+									fechaEnIntervalo = true;
+								}else if(this.anio == anioFin && this.mes <= mesFin){
+									fechaEnIntervalo = true;
+								}
+							}
+							return ($scope.row.entity.objetoTipo >= 3 && fechaEnIntervalo 
+									&& $scope.row.entity.unidadDeMedidaId != null && $scope.row.entity.unidadDeMedidaId != ""
+									);  
 							},
 						cellClass: function (grid, row, col, rowIndex, colIndex) {
 					        return grid.appScope.pmetasc.estiloEditable(grid, row, col,rowIndex, colIndex);
@@ -246,12 +288,12 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				for (contador = 1; contador < 4; contador++){
 					var mes = (contador*4)-1;
 					columnDefs.push({ displayName: 'Planificada', category: "Cuatrimestre-"+contador+"-"+anioInicio, 
-						name: mes+'P'+anioInicio, idMeta: 'metaPlanificadaId', width: 100, cellClass : 'grid-align-center', 
+						name: mes+'P'+anioInicio, idMeta: 'metaPlanificadaId', width: 90, cellClass : 'grid-align-center', 
 						tipoMeta: META_ID_PLANIFICADA, anio: anioInicio, mes: mes, type: 'number',
 						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
 					});
 					columnDefs.push({ displayName: 'Real', category: "Cuatrimestre-"+contador+"-"+anioInicio, 
-						name: mes+'R'+anioInicio, idMeta: 'metaRealId', width: 100, cellClass : 'grid-align-center',
+						name: mes+'R'+anioInicio, idMeta: 'metaRealId', width: 90, cellClass : 'grid-align-center',
 						tipoMeta: META_ID_REAL, anio: anioInicio, mes: mes, type: 'number',
 						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
 					});
@@ -263,12 +305,12 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				for (contador = 1; contador < 3; contador++){
 					var mes = (contador*6)-1;
 					columnDefs.push({ displayName: 'Planificada', category: "Semestre-"+contador+"-"+anioInicio, 
-						name: mes+'P'+anioInicio, idMeta: 'metaPlanificadaId', width: 100, cellClass : 'grid-align-center', 
+						name: mes+'P'+anioInicio, idMeta: 'metaPlanificadaId', width: 90, cellClass : 'grid-align-center', 
 						tipoMeta: META_ID_PLANIFICADA, anio: anioInicio, mes: mes, type: 'number',
 						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
 					});
 					columnDefs.push({ displayName: 'Real', category: "Semestre-"+contador+"-"+anioInicio, 
-						name: mes+'R'+anioInicio, idMeta: 'metaRealId', width: 100, cellClass : 'grid-align-center',
+						name: mes+'R'+anioInicio, idMeta: 'metaRealId', width: 90, cellClass : 'grid-align-center',
 						tipoMeta: META_ID_REAL, anio: anioInicio, mes: mes, type: 'number',
 						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
 					});
@@ -278,27 +320,27 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		}else if (mi.agrupacion.value == AGRUPACION_ANUAL){ 
 			for (anioInicio = mi.fechaInicio.getFullYear(); anioInicio<=(anioFin); anioInicio++){
 					columnDefs.push({ displayName: 'Planificada', category: anioInicio, 
-						name: '11P'+anioInicio, idMeta: 'metaPlanificadaId', width: 100, cellClass : 'grid-align-center', 
+						name: '11P'+anioInicio, idMeta: 'metaPlanificadaId', width: 90, cellClass : 'grid-align-center', 
 						tipoMeta: META_ID_PLANIFICADA, anio: anioInicio, mes: 11, type: 'number',
 						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
 					});
 					columnDefs.push({ displayName: 'Real', category: anioInicio, 
-						name: '11R'+anioInicio, idMeta: 'metaRealId', width: 100, cellClass : 'grid-align-center', 
+						name: '11R'+anioInicio, idMeta: 'metaRealId', width: 90, cellClass : 'grid-align-center', 
 						tipoMeta: META_ID_REAL, anio: anioInicio, mes: 11, type: 'number',
 						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
 					});
 					mi.opcionesGrid.category.push({name: anioInicio, visible: true});
 			}
 		}
-		columnDefs.push({ displayName: 'Total Planificado', name: 'getTotalMeta("P")', width: 100, cellClass : 'grid-align-center', 
+		columnDefs.push({ displayName: 'Total Planificado', name: 'getTotalMeta("P")', width: 90, cellClass : 'grid-align-center', 
 			tipoMeta: META_ID_LINEABASE, idMeta: 'lineaBaseId', anio: anioFin, mes: 11, type: 'number',
 			enableCellEdit: false, enableFiltering : false, enableColumnMenu: false, pinnedRight:true
 		});
-		columnDefs.push({ displayName: 'Total Real', name: 'getTotalMeta("R")', width: 100, cellClass : 'grid-align-center', 
+		columnDefs.push({ displayName: 'Total Real', name: 'getTotalMeta("R")', width: 90, cellClass : 'grid-align-center', 
 			tipoMeta: META_ID_FINAL, idMeta: 'metaFinalId', anio: anioFin, mes: 11, type: 'number',
 			enableCellEdit: false, enableFiltering : false, enableColumnMenu: false, pinnedRight:true
 		});
-		columnDefs.push({ displayName: 'Meta Final', name: 'metaFinal', width: 100,  
+		columnDefs.push({ displayName: 'Meta Final', name: 'metaFinal', width: 90,  
 			tipoMeta: META_ID_FINAL, idMeta: 'metaFinalId', anio: anioFin, mes: 11, type: 'number',
 			enableCellEdit: true, enableFiltering : false, enableColumnMenu: false, pinnedRight:true,
 			cellEditableCondition: function( $scope ) { 
