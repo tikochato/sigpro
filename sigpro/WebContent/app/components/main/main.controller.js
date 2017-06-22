@@ -24,9 +24,6 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/prestamo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
             })
-            .when('/prestamometas_ingreso/:proyectoId?/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'prestamometasingresoController\'" class="all_page"></div>'
-            })
             .when('/prestamometas/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'prestamometasController\'" class="all_page"></div>'
             })
@@ -224,10 +221,6 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'proyectoController',
 	    	   script: '/app/components/prestamo/proyecto.controller.js',
 	    	   template: '/app/components/prestamo/proyecto.jsp'
-	       }, {
-	    	   name: 'prestamometasingresoController',
-	    	   script: '/app/components/reportes/prestamometas/prestamometas_ingreso.controller.js',
-	    	   template: '/app/components/reportes/prestamometas/prestamometas_ingreso.jsp'
 	       }, {
 	    	   name: 'prestamometasController',
 	    	   script: '/app/components/reportes/prestamometas/prestamometas.controller.js',

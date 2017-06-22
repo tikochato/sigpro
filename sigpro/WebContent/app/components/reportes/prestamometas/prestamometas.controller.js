@@ -6,11 +6,14 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	
 	var mi=this;
 	var metaSeleccionada = null;
+		
+	var AGRUPACION_MES= 1;
+	var AGRUPACION_CUATRIMESTRE= 2;
+	var AGRUPACION_SEMESTRE= 3;
+	var AGRUPACION_ANUAL= 4;
 	
-	var META_ID_UNIDADMEDIDA = -1;
-	var META_ID_TIPODATO = 0;
 	var META_ID_REAL = 1;
-	var META_ID_ANUALPLANIFICADA = 2;
+	var META_ID_PLANIFICADA = 2;
 	var META_ID_LINEABASE= 3;
 	var META_ID_FINAL= 4;
 	
@@ -27,11 +30,6 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	$http.post('/SMeta', { accion: 'getMetasUnidadesMedida' }).success(
 			function(response) {
 				mi.unidadesMedida = response.MetasUnidades;
-	});
-
-	$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
-			function(response) {
-				mi.datoTipos = response.datoTipos;
 	});
 	
 	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
@@ -56,24 +54,16 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		}
 		return "";
 	}
-	
-	$scope.nombreDatoTipo = function(id){
-		if (id != null && id > 0){
-			for (i=0; i<mi.datoTipos.length; i++){
-				if(mi.datoTipos[i].id == id){
-					return mi.datoTipos[i].nombre;
-				}
-			}
-		}
-		return "";
-	}
 
 	mi.agrupaciones = [
-		{'value' : 1, 'text' : 'Mes'},
-		//m{'value' : 2, 'text' : 'Trimestre'},
-		{'value' : 3, 'text' : 'Cuatrimestre'},
-		{'value' : 4, 'text' : 'Anual'},
-	];
+		{'value' : 0, 'text' : 'Seleccione una opción'},
+		{'value' : AGRUPACION_MES, 'text' : 'Mes'},
+		{'value' : AGRUPACION_CUATRIMESTRE, 'text' : 'Cuatrimestre'},
+		{'value' : AGRUPACION_SEMESTRE, 'text' : 'Semestre'},
+		{'value' : AGRUPACION_ANUAL, 'text' : 'Anual'},
+	];	
+
+	mi.agrupacion = mi.agrupaciones[0];
 
 	mi.formatofecha = 'yyyy';
 	
@@ -110,6 +100,19 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 						 mi.data[x].$$treeLevel = mi.data[x].objetoTipo -1;
 						 if (mi.data[x].objetoTipo>= 3){
 							 mi.data[x] = parsearMetas(mi.data[x]);
+							 mi.data[x].getTotalMeta = function(tipoMeta){
+								 var anioFin = mi.fechaFin.getFullYear();
+								 var totalMeta = parseFloat(0);
+								 for (anioInicio = mi.fechaInicio.getFullYear(); anioInicio<=(anioFin); anioInicio++){
+									for (mes = 0; mes < 12; mes++){
+										totalMeta += this[mes+tipoMeta+anioInicio] ? parseFloat(this[mes+tipoMeta+anioInicio]) : 0;
+									}
+								 }
+								 return totalMeta;
+							  };
+						 }
+						 if(mi.data[x].metaFinal){
+							 mi.data[x].metaFinal = parseFloat(mi.data[x].metaFinal);
 						 }
 					 }
 					mi.opcionesGrid.data = mi.data;
@@ -128,19 +131,59 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			var meta = producto.metasPlanificadas[i];
 			var fecha = meta.fecha.split("/");
 			var mes = parseInt(fecha[1]) - 1;
+			if (mi.agrupacion.value == AGRUPACION_CUATRIMESTRE){
+				if(mes<=3){
+					mes = 3;
+				}else if(mes <=7){
+					mes = 7;
+				}else{
+					mes = 11;
+				}
+			}else if (mi.agrupacion.value == AGRUPACION_SEMESTRE){
+				if(mes<=5){
+					mes = 5;
+				}else{
+					mes = 11;
+				}
+			}else if (mi.agrupacion.value == AGRUPACION_ANUAL){
+				mes = 11;
+			}
+			
 			var anio = parseInt(fecha[2]);
 			var nombreCelda = mes+'P'+anio;
-			producto[nombreCelda] = meta.valor;
-			producto[mes+'R'+anio+'Id'] = meta.fecha;
+			var valAnterior = producto[nombreCelda] ? producto[nombreCelda] : 0;
+			producto[nombreCelda] = (valAnterior + parseFloat(meta.valor));
+			var nombreCeldaId = 'metaPlanificadaId';
+			producto[nombreCeldaId] = meta.id;
 		}
 		for(var i = 0; i < producto.metasReales.length; i++){
 			var meta = producto.metasReales[i];
 			var fecha = meta.fecha.split("/");
 			var mes = parseInt(fecha[1]) - 1;
+			if (mi.agrupacion.value == AGRUPACION_CUATRIMESTRE){
+				if(mes<=3){
+					mes = 3;
+				}else if(mes <=7){
+					mes = 7;
+				}else{
+					mes = 11;
+				}
+			}else if (mi.agrupacion.value == AGRUPACION_SEMESTRE){
+				if(mes<=5){
+					mes = 5;
+				}else{
+					mes = 11;
+				}
+			}else if (mi.agrupacion.value == AGRUPACION_ANUAL){
+				mes = 11;
+			}
+			
 			var anio = parseInt(fecha[2]);
 			var nombreCelda = mes+'R'+anio;
-			producto[nombreCelda] = meta.valor;
-			producto[mes+'R'+anio+'Id'] = meta.fecha;
+			var valAnterior = producto[nombreCelda] ? producto[nombreCelda] : 0;
+			producto[nombreCelda] = (valAnterior + parseFloat(meta.valor));
+			var nombreCeldaId = 'metaRealId';
+			producto[nombreCeldaId] = meta.id;
 		}
 		return producto;
 	}
@@ -153,54 +196,120 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		var anioFin = mi.fechaFin.getFullYear();
 		columnDefs = [ 
 			{ displayName : 'Producto', name : 'nombreMeta', category: " ", pinnedLeft:true, width: 300, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false, enableColumnMenu: false, 
-				cellTemplate: "<div class=\"ui-grid-cell-contents\" ng-class=\"{'ui-grid-tree-padre': row.treeLevel < 2}\"><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.pmetasc.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>"
+				cellTemplate: "<div class=\"ui-grid-cell-contents\" ng-class=\"{'ui-grid-tree-padre': row.treeLevel < 2}\" ><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.pmetasc.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>"
 			},
 			{ displayName : 'Fecha Inicio', name : 'fechaInicio', category: " ", width: 100, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false, enableColumnMenu: false},
 			{ displayName : 'Fecha Fin', name : 'fechaFin', category: " ", width: 100, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false, enableColumnMenu: false},  
-			{ displayName : 'Unidad de Medida', category: " ", tipoMetaId: META_ID_UNIDADMEDIDA, name : 'unidadDeMedidaId', width: 100, cellClass : 'grid-align-left', 
+			{ displayName : 'Unidad de Medida', category: " ", name : 'unidadDeMedidaId', width: 100, 
 				enableCellEdit: true, enableFiltering: false, editableCellTemplate: 'ui-grid/dropdownEditor',
 				editDropdownValueLabel: 'nombre', editDropdownOptionsArray: [], enableColumnMenu: false,
 				cellEditableCondition: function( $scope ) { return ($scope.row.entity.objetoTipo >= 3); },
-				cellTemplate: '<div class="ui-grid-cell-contents">{{grid.appScope.nombreUnidadMedida(row.entity.unidadDeMedidaId)}}</div>'
-			},  
-			{ displayName : 'Tipo de Dato', category: " ", tipoMetaId: META_ID_TIPODATO, name : 'datoTipoId', width: 100, cellClass : 'grid-align-left', 
-				enableCellEdit: true, enableFiltering: false, enableColumnMenu: false, editableCellTemplate: 'ui-grid/dropdownEditor',
-				editDropdownValueLabel: 'nombre', editDropdownOptionsArray: [],
-				cellEditableCondition: function( $scope ) { return ($scope.row.entity.objetoTipo >= 3); },
-				cellTemplate: '<div class="ui-grid-cell-contents">{{grid.appScope.nombreDatoTipo(row.entity.datoTipoId)}}</div>'
+				cellTemplate: '<div class="ui-grid-cell-contents">{{grid.appScope.nombreUnidadMedida(row.entity.unidadDeMedidaId)}}</div>',
+				cellClass: function (grid, row, col, rowIndex, colIndex) {
+			          return grid.appScope.pmetasc.estiloEditable(grid, row, col,rowIndex, colIndex);
+			        }
 			}];
 		
-		if (mi.agrupacion == 1){
+		if (mi.agrupacion.value == AGRUPACION_MES){ 
 			for (anioInicio = mi.fechaInicio.getFullYear(); anioInicio<=(anioFin); anioInicio++){
 				for (mes = 0; mes < 12; mes++){
-					columnDefs.push({ displayName: 'Planificada', category: nombreMes[mes]+"-"+anioInicio, name: mes+'P'+anioInicio, width: 100, cellClass : 'grid-align-center', 
-						tipoMeta: 'P', anio: anioInicio, mes: mes, idMeta: function( $scope ) { return ($scope.row.entity[mes+'P'+anioInicio+'Id']); },  
+					columnDefs.push({ displayName: 'Planificada', category: nombreMes[mes]+"-"+anioInicio, 
+						name: mes+'P'+anioInicio, idMeta: 'metaPlanificadaId', width: 100, 
+						tipoMeta: META_ID_PLANIFICADA, anio: anioInicio, mes: mes, type: 'number',
 						enableCellEdit: true, enableFiltering : false, enableColumnMenu: false,
-						cellEditableCondition: function( $scope ) { return ($scope.row.entity.objetoTipo >= 3); }
+						cellEditableCondition: function( $scope) { 
+							return ($scope.row.entity.objetoTipo >= 3 
+									&& $scope.row.entity.unidadDeMedidaId != null && $scope.row.entity.unidadDeMedidaId != ""
+									); 
+							},
+						cellClass: function (grid, row, col, rowIndex, colIndex) {
+					        return grid.appScope.pmetasc.estiloEditable(grid, row, col,rowIndex, colIndex);
+					        }
 					});
-					columnDefs.push({ displayName: 'Real', category: nombreMes[mes]+"-"+anioInicio, name: mes+'R'+anioInicio, idMeta: function( $scope ) { return ($scope.row.entity[mes+'R'+anioInicio+'Id']); },  width: 100, cellClass : 'grid-align-center', 
-						tipoMeta: 'R', anio: anioInicio, mes: mes, idMeta: function( $scope ) { return ($scope.row.entity[mes+'R'+anioInicio+'Id']); },  
+					columnDefs.push({ displayName: 'Real', category: nombreMes[mes]+"-"+anioInicio, 
+						name: mes+'R'+anioInicio, idMeta: 'metaRealId', width: 100,  
+						tipoMeta: META_ID_REAL, anio: anioInicio, mes: mes, 
 						enableCellEdit: true, enableFiltering : false, enableColumnMenu: false,
-						cellEditableCondition: function( $scope ) { return ($scope.row.entity.objetoTipo >= 3); }
+						cellEditableCondition: function( $scope ) { 
+							return ($scope.row.entity.objetoTipo >= 3 && $scope.row.entity.unidadDeMedidaId != null && $scope.row.entity.unidadDeMedidaId != ""); 
+							},
+						cellClass: function (grid, row, col, rowIndex, colIndex) {
+					        return grid.appScope.pmetasc.estiloEditable(grid, row, col,rowIndex, colIndex);
+					        }
 					});
 					mi.opcionesGrid.category.push({name: nombreMes[mes]+"-"+anioInicio, visible: true});
 				}
 			}
+		}else if (mi.agrupacion.value == AGRUPACION_CUATRIMESTRE){
+			for (anioInicio = mi.fechaInicio.getFullYear(); anioInicio<=(anioFin); anioInicio++){
+				for (contador = 1; contador < 4; contador++){
+					var mes = (contador*4)-1;
+					columnDefs.push({ displayName: 'Planificada', category: "Cuatrimestre-"+contador+"-"+anioInicio, 
+						name: mes+'P'+anioInicio, idMeta: 'metaPlanificadaId', width: 100, cellClass : 'grid-align-center', 
+						tipoMeta: META_ID_PLANIFICADA, anio: anioInicio, mes: mes, type: 'number',
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
+					});
+					columnDefs.push({ displayName: 'Real', category: "Cuatrimestre-"+contador+"-"+anioInicio, 
+						name: mes+'R'+anioInicio, idMeta: 'metaRealId', width: 100, cellClass : 'grid-align-center',
+						tipoMeta: META_ID_REAL, anio: anioInicio, mes: mes, type: 'number',
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
+					});
+					mi.opcionesGrid.category.push({name: "Cuatrimestre-"+contador+"-"+anioInicio, visible: true});
+				}
+			}
+		}else if (mi.agrupacion.value == AGRUPACION_SEMESTRE){ 
+			for (anioInicio = mi.fechaInicio.getFullYear(); anioInicio<=(anioFin); anioInicio++){
+				for (contador = 1; contador < 3; contador++){
+					var mes = (contador*6)-1;
+					columnDefs.push({ displayName: 'Planificada', category: "Semestre-"+contador+"-"+anioInicio, 
+						name: mes+'P'+anioInicio, idMeta: 'metaPlanificadaId', width: 100, cellClass : 'grid-align-center', 
+						tipoMeta: META_ID_PLANIFICADA, anio: anioInicio, mes: mes, type: 'number',
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
+					});
+					columnDefs.push({ displayName: 'Real', category: "Semestre-"+contador+"-"+anioInicio, 
+						name: mes+'R'+anioInicio, idMeta: 'metaRealId', width: 100, cellClass : 'grid-align-center',
+						tipoMeta: META_ID_REAL, anio: anioInicio, mes: mes, type: 'number',
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
+					});
+					mi.opcionesGrid.category.push({name: "Semestre-"+contador+"-"+anioInicio, visible: true});
+				}
+			}
+		}else if (mi.agrupacion.value == AGRUPACION_ANUAL){ 
+			for (anioInicio = mi.fechaInicio.getFullYear(); anioInicio<=(anioFin); anioInicio++){
+					columnDefs.push({ displayName: 'Planificada', category: anioInicio, 
+						name: '11P'+anioInicio, idMeta: 'metaPlanificadaId', width: 100, cellClass : 'grid-align-center', 
+						tipoMeta: META_ID_PLANIFICADA, anio: anioInicio, mes: 11, type: 'number',
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
+					});
+					columnDefs.push({ displayName: 'Real', category: anioInicio, 
+						name: '11R'+anioInicio, idMeta: 'metaRealId', width: 100, cellClass : 'grid-align-center', 
+						tipoMeta: META_ID_REAL, anio: anioInicio, mes: 11, type: 'number',
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
+					});
+					mi.opcionesGrid.category.push({name: anioInicio, visible: true});
+			}
 		}
-		columnDefs.push({ displayName: 'Linea Base', name: 'lineaBase', width: 100, cellClass : 'grid-align-center', 
-			tipoMeta: 'L',idMeta: function( $scope ) { return ($scope.row.entity[mes+'P'+anioInicio+'Id']); },  
-			enableCellEdit: true, enableFiltering : false, enableColumnMenu: false,
-			cellEditableCondition: function( $scope ) { return ($scope.row.entity.objetoTipo >= 3); }
+		columnDefs.push({ displayName: 'Total Planificado', name: 'getTotalMeta("P")', width: 100, cellClass : 'grid-align-center', 
+			tipoMeta: META_ID_LINEABASE, idMeta: 'lineaBaseId', anio: anioFin, mes: 11, type: 'number',
+			enableCellEdit: false, enableFiltering : false, enableColumnMenu: false, pinnedRight:true
 		});
-		columnDefs.push({ displayName: 'Meta Final', name: 'metaFinal', width: 100, cellClass : 'grid-align-center', 
-			tipoMeta: 'F', idMeta: function( $scope ) { return ($scope.row.entity[mes+'P'+anioInicio+'Id']); },  
-			enableCellEdit: true, enableFiltering : false, enableColumnMenu: false,
-			cellEditableCondition: function( $scope ) { return ($scope.row.entity.objetoTipo >= 3); }
+		columnDefs.push({ displayName: 'Total Real', name: 'getTotalMeta("R")', width: 100, cellClass : 'grid-align-center', 
+			tipoMeta: META_ID_FINAL, idMeta: 'metaFinalId', anio: anioFin, mes: 11, type: 'number',
+			enableCellEdit: false, enableFiltering : false, enableColumnMenu: false, pinnedRight:true
+		});
+		columnDefs.push({ displayName: 'Meta Final', name: 'metaFinal', width: 100,  
+			tipoMeta: META_ID_FINAL, idMeta: 'metaFinalId', anio: anioFin, mes: 11, type: 'number',
+			enableCellEdit: true, enableFiltering : false, enableColumnMenu: false, pinnedRight:true,
+			cellEditableCondition: function( $scope ) { 
+				return ($scope.row.entity.objetoTipo >= 3 && $scope.row.entity.unidadDeMedidaId != null && $scope.row.entity.unidadDeMedidaId != ""); 
+				},
+			cellClass: function (grid, row, col, rowIndex, colIndex) {
+		        return grid.appScope.pmetasc.estiloEditable(grid, row, col,rowIndex, colIndex);
+		        }
 		});
 		
 		mi.opcionesGrid.columnDefs = columnDefs;
 		mi.opcionesGrid.columnDefs[3].editDropdownOptionsArray = mi.unidadesMedida;
-		mi.opcionesGrid.columnDefs[4].editDropdownOptionsArray = mi.datoTipos;
 	}
 	 	 
 	 mi.opcionesGrid = {
@@ -212,59 +321,56 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		showTreeRowHeader: false,
 		showTreeExpandNoChildren: false,
         enableCellSelection:true,
-		rowEditWaitInterval: 5000,
+		rowEditWaitInterval: 1,
 		headerTemplate: '<div role="rowgroup" class="ui-grid-header"> <div class="ui-grid-top-panel"> <div class="ui-grid-header-viewport"> <div class="ui-grid-header-canvas"> <div class="ui-grid-header-cell-wrapper" ng-style="colContainer.headerCellWrapperStyle()"> <div role="row" class="ui-grid-header-cell-row"> <div class="ui-grid-header-cell ui-grid-clearfix ui-grid-category" ng-repeat="cat in grid.options.category" ng-if="cat.visible &&  (colContainer.renderedColumns | filter:{ colDef:{category: cat.name} }).length > 0"> {{cat.name}} <div class="ui-grid-header-cell ui-grid-clearfix" ng-repeat="col in colContainer.renderedColumns | filter:{ colDef:{category: cat.name} }" ui-grid-header-cell col="col" render-index="$index"> </div> </div><!--!cat.visible && --> <div class="ui-grid-header-cell ui-grid-clearfix" ng-if="col.colDef.category === undefined" ng-repeat="col in colContainer.renderedColumns track by col.uid" ui-grid-header-cell col="col" render-index="$index"> </div></div></div></div></div></div></div>',
 	    columnDefs : [ ],
 		category: [{name: " ", visible: true}],
 		
 		onRegisterApi : function(gridApi) {
 			mi.gridApi = gridApi;
-
-			/*
-			gridApi.selection.on.rowSelectionChanged($scope,function(row) {
-				mi.meta = row.entity;
-			});
-			*/
-			
-			gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
-				if(sortColumns.length==1){
-					grid.appScope.pmetasc.columnaOrdenada=sortColumns[0].field;
-					grid.appScope.pmetasc.ordenDireccion = sortColumns[0].sort.direction;
-					
-					for(var i = 0; i<sortColumns.length-1; i++)
-						sortColumns[i].unsort();
-					grid.appScope.pmetasc.cargarTabla();
-				}
-				else if(sortColumns.length>1){
-					sortColumns[0].unsort();
-				}
-				else{
-					if(grid.appScope.pmetasc.columnaOrdenada!=null){
-						grid.appScope.pmetasc.columnaOrdenada=null;
-						grid.appScope.pmetasc.ordenDireccion=null;
-					}
-				}
-			} );
 			
 			gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
 				if (newValue != oldValue){
-					console.log(rowEntity);
-					console.log(colDef);
-					console.log(colDef.idMeta);
+					if(colDef.idMeta != null){
+				    	if (rowEntity.unidadDeMedidaId != null && rowEntity.unidadDeMedidaId != ""){
+				    		if (newValue>=0){
+								var fecha = '01/'+(colDef.mes+1)+'/'+colDef.anio;
+								
+								var meta = {
+										id: rowEntity[colDef.idMeta],
+										fecha: fecha,
+										valor: newValue, 
+										tipoMetaId: colDef.tipoMeta,
+										unidadMedidaId: rowEntity.unidadDeMedidaId,
+										objetoId: rowEntity.id, 
+										tipoObjetoId: rowEntity.objetoTipo
+								}
+								mi.guardarMeta(meta, rowEntity, colDef.idMeta);
+				    		}else{
+					    		$utilidades.mensaje('danger','No se permiten números negativos');
+					    	}
+				    	}else{
+				    		$utilidades.mensaje('danger','Debe seleccionar una Unidad de Medida');
+				    	}
+					}
 				}
 			});
 		    
 			gridApi.rowEdit.on.saveRow($scope, function( rowEntity ) {
-		    	    var promise = mi.guardarMeta(rowEntity);
-		            mi.gridApi.rowEdit.setSavePromise(rowEntity, promise);
-		    	  });
+				var promise = $q.defer();
+			    mi.gridApi.rowEdit.setSavePromise( rowEntity, promise.promise );
+			    $interval( function() {
+			        promise.resolve();
+			    }, 1, 1);
+	    	  });
 		}
 	}
 	 
 	 mi.generar = function(){
+		 mi.opcionesGrid.category= [{name: " ", visible: true}];
 			if(mi.prestamo.value > 0){
 				if (mi.fechaInicio <= mi.fechaFin){
-					if(mi.agrupacion > 0){
+					if(mi.agrupacion.value > 0){
 						mi.setDefinicionColumnas();
 						mi.cargarTabla();
 					}else{
@@ -278,50 +384,35 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			}
 		}
 		
-	mi.guardarMeta = function(rowEntity){
-		var defered = $q.defer();
-        var promise = defered.promise;
-        
-    	if (rowEntity.datoTipoId != "" && rowEntity.unidadDeMedidaId != ""
-    		&& rowEntity.datoTipoId != null && rowEntity.unidadDeMedidaId != null){
-	        
-			$http.post('/SPrestamoMetas', {
-				accion: 'guardarProyectoMeta',
-				id: rowEntity.id,
-				objetoTipo: rowEntity.objetoTipo,
-				unidadDeMedidaId: rowEntity.unidadDeMedidaId,
-				datoTipoId: rowEntity.datoTipoId,
-				metaFecha: rowEntity.metaFecha,
-				metaRealId: rowEntity.metaRealId,
-				metaReal: rowEntity.metaReal,
-				metaAnualPlanificadaId: rowEntity.metaAnualPlanificadaId,
-				metaAnualPlanificada: rowEntity.metaAnualPlanificada,
-				lineaBaseId: rowEntity.lineaBaseId,
-				lineaBase: rowEntity.lineaBase,
-				metaFinalId: rowEntity.metaFinalId,
-				metaFinal: rowEntity.metaFinal
-			}).success(function(response){
-					if(response.success){
-						rowEntity.metaRealId = response.proyectometa.metaRealId;
-						rowEntity.metaAnualPlanificadaId = response.proyectometa.metaAnualPlanificadaId;
-						rowEntity.lineaBaseId = response.proyectometa.lineaBaseId;
-						rowEntity.metaFinalId = response.proyectometa.metaFinalId;
-						$utilidades.mensaje('success','Valor guardado con éxito');
-						defered.resolve();
-					}
-					else{
-						$utilidades.mensaje('danger','Error al guardar el valor');
-	                	defered.reject()
-					}
-				});
-    	}else{
-    		$utilidades.mensaje('danger','Debe seleccionar una Unidad de Medida y un Tipo de Dato');
-        	defered.reject()
-    	}
-		 return promise;
+	mi.guardarMeta = function(meta, rowEntity, col){
+		$http.post('/SPrestamoMetas', {
+			accion: 'guardarProyectoMeta',
+			id: meta.id,
+			fecha: meta.fecha,
+			valor: meta.valor,
+			tipoMetaId: meta.tipoMetaId,
+			unidadMedidaId: meta.unidadMedidaId, 
+			objetoId: meta.objetoId,
+			objetoTipoId: meta.tipoObjetoId
+		}).success(function(response){
+			if(response.success){
+				$utilidades.mensaje('success','Valor guardado con éxito');
+				rowEntity[col] = response.metavalor.id;
+			}
+			else{
+				$utilidades.mensaje('danger','Error al guardar el valor');
+			}
+		});
 	 }
-	
-	  
+
+	mi.estiloEditable = function (grid, row, col, rowIndex, colIndex) {	    
+		var fila = { row: row };
+	    if(col.colDef.cellEditableCondition(fila)){
+	    	return 'grid-align-center lightblue';
+	    }
+	    return 'grid-align-center';
+	}
+  
 	 mi.exportarExcel = function(){
 			$http.post('/SPrestamoMetas', { accion: 'exportarExcel', proyectoid:$routeParams.proyectoId,t:moment().unix()
 				  } ).then(
