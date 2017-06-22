@@ -108,11 +108,12 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 										totalMeta += this[mes+tipoMeta+anioInicio] ? parseFloat(this[mes+tipoMeta+anioInicio]) : 0;
 									}
 								 }
+								 totalMeta = Math.round(totalMeta*100)/100;
 								 return totalMeta;
 							  };
 						 }
 						 if(mi.data[x].metaFinal){
-							 mi.data[x].metaFinal = parseFloat(mi.data[x].metaFinal);
+							 mi.data[x].metaFinal = Math.round((parseFloat(mi.data[x].metaFinal))*100)/100;
 						 }
 					 }
 					mi.opcionesGrid.data = mi.data;
@@ -152,7 +153,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			var anio = parseInt(fecha[2]);
 			var nombreCelda = mes+'P'+anio;
 			var valAnterior = producto[nombreCelda] ? producto[nombreCelda] : 0;
-			producto[nombreCelda] = (valAnterior + parseFloat(meta.valor));
+			producto[nombreCelda] = Math.round((valAnterior + parseFloat(meta.valor))*100)/100;
 			var nombreCeldaId = 'metaPlanificadaId';
 			producto[nombreCeldaId] = meta.id;
 		}
@@ -181,7 +182,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			var anio = parseInt(fecha[2]);
 			var nombreCelda = mes+'R'+anio;
 			var valAnterior = producto[nombreCelda] ? producto[nombreCelda] : 0;
-			producto[nombreCelda] = (valAnterior + parseFloat(meta.valor));
+			producto[nombreCelda] = Math.round((valAnterior + parseFloat(meta.valor))*100)/100;
 			var nombreCeldaId = 'metaRealId';
 			producto[nombreCeldaId] = meta.id;
 		}
