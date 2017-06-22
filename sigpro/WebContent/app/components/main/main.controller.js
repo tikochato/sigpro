@@ -186,6 +186,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/planejecucion/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'planejecucionController\'" class="all_page"></div>'
             })
+            .when('/desembolsos/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'desembolsosController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -459,6 +462,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'planejecucionController',
 	    	   script: '/app/components/reportes/planejecucion/planejecucion.controller.js',
 	    	   template: '/app/components/reportes/planejecucion/planejecucion.jsp'
+	       },
+	       {
+	    	   name: 'desembolsosController',
+	    	   script: '/app/components/reportes/desembolsos/desembolsos.controller.js',
+	    	   template: '/app/components/reportes/desembolsos/desembolsos.jsp'
 	       }
 
 	   ];

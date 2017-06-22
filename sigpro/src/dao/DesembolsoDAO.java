@@ -207,6 +207,28 @@ public class DesembolsoDAO {
 		return ret;
 	}
 	
+	public static Long getDesembolsosPorEjercicio(Integer ejercicioFiscal){
+		Long ret=0L;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Map<String,Object>> desembolsos = session.createQuery(String.join(" ", "select month(fecha),SUM(monto)"
+					,"from desembolso"
+					,"where proyectoid = 13"
+					,"and estado  = 1"
+					,"and year (fecha) = :ejeFiscal"
+					,"GROUP BY month(fecha)"));
+			desembolsos.setParameter("ejeFiscal", ejercicioFiscal);
+			ret = desembolsos.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("8", DesembolsoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	
 	
 
