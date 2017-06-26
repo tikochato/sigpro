@@ -24,9 +24,6 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/prestamo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
             })
-            .when('/prestamometas_ingreso/:proyectoId?/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'prestamometasingresoController\'" class="all_page"></div>'
-            })
             .when('/prestamometas/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'prestamometasController\'" class="all_page"></div>'
             })
@@ -192,6 +189,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/planejecucion/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'planejecucionController\'" class="all_page"></div>'
             })
+            .when('/desembolsos/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'desembolsosController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -227,10 +227,6 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'proyectoController',
 	    	   script: '/app/components/prestamo/proyecto.controller.js',
 	    	   template: '/app/components/prestamo/proyecto.jsp'
-	       }, {
-	    	   name: 'prestamometasingresoController',
-	    	   script: '/app/components/reportes/prestamometas/prestamometas_ingreso.controller.js',
-	    	   template: '/app/components/reportes/prestamometas/prestamometas_ingreso.jsp'
 	       }, {
 	    	   name: 'prestamometasController',
 	    	   script: '/app/components/reportes/prestamometas/prestamometas.controller.js',
@@ -472,6 +468,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'planejecucionController',
 	    	   script: '/app/components/reportes/planejecucion/planejecucion.controller.js',
 	    	   template: '/app/components/reportes/planejecucion/planejecucion.jsp'
+	       },
+	       {
+	    	   name: 'desembolsosController',
+	    	   script: '/app/components/reportes/desembolsos/desembolsos.controller.js',
+	    	   template: '/app/components/reportes/desembolsos/desembolsos.jsp'
 	       }
 
 	   ];
