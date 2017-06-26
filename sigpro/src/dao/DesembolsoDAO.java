@@ -207,18 +207,19 @@ public class DesembolsoDAO {
 		return ret;
 	}
 	
-	public static Long getDesembolsosPorEjercicio(Integer ejercicioFiscal){
-		Long ret=0L;
+	public static List<Object> getDesembolsosPorEjercicio(Integer ejercicioFiscal,Integer idProyecto){
+		List<Object> ret= null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Map<String,Object>> desembolsos = session.createQuery(String.join(" ", "select month(fecha),SUM(monto)"
+			String query = String.join(" ", "select year (fecha),month(fecha),SUM(monto)"
 					,"from desembolso"
-					,"where proyectoid = 13"
+					,"where proyectoid = :idProy"
 					,"and estado  = 1"
-					,"and year (fecha) = :ejeFiscal"
-					,"GROUP BY month(fecha)"));
-			desembolsos.setParameter("ejeFiscal", ejercicioFiscal);
-			ret = desembolsos.getSingleResult();
+					,"GROUP BY year (fecha),month(fecha)",
+					"order by year(fecha),month (fecha) asc");
+			Query  desembolsos = session.createNativeQuery(query);
+			desembolsos.setParameter("idProy", idProyecto);
+			ret = desembolsos.getResultList();
 		}
 		catch(Throwable e){
 			CLogger.write("8", DesembolsoDAO.class, e);

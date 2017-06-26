@@ -12,7 +12,13 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	mi.tabla = {};
 	mi.anioFiscal = "";
 	mi.mesReportado = "";
-	mi.prestamo = {};
+	
+	mi.desembolsos= [];
+	mi.lista = [];
+	mi.anios = [];
+	mi.anio = "";
+	mi.columnas=[];
+	
 	
 	mi.fechaOptions = {
 			datepickerMode:"year",
@@ -22,6 +28,35 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	$window.document.title = $utilidades.sistema_nombre+' - Desembolsos';
 	i18nService.setCurrentLang('es');
 	
+	mi.etiqutas = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio","Agosto","Septiembre",
+		"Octubre","Noviembre","Diciembre"];
+	mi.series = ['Planificado', 'Real'];
+	mi.radarColors = ['#b1cad7','#FDB45C']
+	mi.datasetOverride = [{ yAxisID: 'y-axis-1' }
+	];
+	
+	mi.options = {
+			
+			legend: {
+				display: true,
+				position: 'right'
+			},
+			    scales: {
+			      yAxes: [
+			        {
+			          id: 'y-axis-1',
+			          type: 'linear',
+			          display: true,
+			          position: 'left',
+			          ticks: {
+	                        callback: function (value) {
+	                            return numeral(value).format('$ 0,0')
+	                        }
+	                    }
+			        }
+			      ]
+			    }
+			  };
 	
 	
 	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
@@ -35,21 +70,98 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	});
 	
 	mi.inicializarDatos = function (){
+		mi.proyectoid = "";
+		mi.proyectoNombre = "";
+		mi.objetoTipoNombre = "";
+		mi.mostrar = false;
+		mi.tabla = {};
+		mi.anioFiscal = "";
+		mi.mesReportado = "";
 		
+		mi.desembolsos= [];
+		mi.lista = [];
+		mi.anios = [];
+		mi.anio = "";
+		mi.columnas=[];
 	}
 	
 	mi.generarReporte = function (){
 		mi.inicializarDatos();
-		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: mi.prestamoSeleccionado.value }).success(
+		$http.post('/SDesembolsos', { accion: 'getDesembolsos'
+			, proyectoId: mi.prestamoSeleccionado.value,ejercicioFiscal:2013,proyectoId:mi.prestamoSeleccionado.value }).success(
+	
 			function(response) {
-			
-				
+				if (response.success){
+					mi.lista = response.lista;
+					var anios_temp = [];
+					for (x in mi.lista){
+						anios_temp.push(mi.lista[x].anio);
+					}
+					anios_temp= anios_temp.sort();
+					
+					for (x in anios_temp){
+						var item = [];
+						item.id = anios_temp[x];
+						item.nombre = anios_temp[x];
+						mi.anios.push(item);
+					}
+					
+					mi.anioSeleccionado = mi.anios!=null && mi.anios != undefined && mi.anios.length > 0 ?  mi.anios[0].id : undefined;
+					mi.mostrar = true;
+					mi.asignarSerie();
+			}else{
+				$utilidades.mensaje('warning','No se encontraron datos para el préstamo');
+			}
 				
 		});	
 	}
 	
+	mi.asignarSerie = function(){
+		if (mi.mostrar && mi.desembolsos!=null){
+			mi.anio = [];
+			mi.anio.id = mi.anioSeleccionado;
+			mi.anio.nombre = mi.anioSeleccionado;
+			mi.tabla=[];
+			for (x in mi.lista){
+				if (mi.lista[x].anio === mi.anio.id){
+					mi.desembolsos = mi.lista[x].desembolsos;
+					break;
+				}
+			}
+			
+			var totalReal=0;
+			var totalPlanificado=0;
+			var totalVariacion=0;
+			var variaciones = [];
+			var desembolsoPlanificado = mi.desembolsos[0].slice();
+			var desembolsoReal = mi.desembolsos[1].slice();
+			for (x = 0;x<12;x++){
+				totalPlanificado = totalPlanificado+ desembolsoPlanificado[x];
+				totalReal = totalReal + desembolsoReal[x];
+				var variacion = desembolsoPlanificado[x] - desembolsoReal[x];
+				variaciones.push (variacion)
+				totalVariacion = totalVariacion + variacion;
+			}
+			
+			desembolsoPlanificado.push("Planificado");
+			desembolsoPlanificado.push(totalPlanificado);
+			desembolsoReal.push("Real");
+			desembolsoReal.push(totalReal);
+			variaciones.push("Variacion");
+			
+			variaciones.push(totalVariacion);
+			
+			mi.tabla.push(desembolsoPlanificado);
+			mi.tabla.push(desembolsoReal);
+			mi.tabla.push(variaciones);
+			
+			mi.columnas=[];
+			mi.columnas.push ("Mes");
+			mi.columnas.push(...mi.etiqutas);
+			mi.columnas.push("Total");
+		}	
+	}
 	
-		
 	
 	
 	mi.abrirPopupFecha = function(index) {
@@ -76,4 +188,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 		}
 	}
 	
+	 mi.formato1 = function (value) {
+         return numeral(value).format('0,0.00')
+	 }
 }]);

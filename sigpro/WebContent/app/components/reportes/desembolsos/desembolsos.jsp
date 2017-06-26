@@ -43,7 +43,7 @@
 						<label for="prestamo" class="floating-label">Préstamos</label>
 					</div>
 					
-					<div class="col-sm-5" >
+					<div class="col-sm-5" ng-if="false">
 						<div class="form-group" >
 						  <input type="text"  class="inputText" uib-datepicker-popup="{{desembolsosc.formatofecha}}" ng-model="desembolsosc.ejercicioFiscal" is-open="desembolsosc.ef_abierto"
 						            datepicker-options="desembolsosc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true"  ng-click="desembolsosc.abrirPopupFecha(1)"
@@ -55,7 +55,6 @@
 						  <label  class="floating-label">Ejercicio fiscal</label>
 						</div>
 					</div>
-					
 					<div class="form-group col-sm-1" >
 						<label class="btn btn-default" ng-click="form.$valid ? desembolsosc.generarReporte() : ''" uib-tooltip="Generar" 
 							tooltip-placement="bottom"
@@ -65,22 +64,56 @@
 					</div>
 				</div>
 			</form>
-				
+			<br/> 
 			
-			<div class="panel panel-default" ng-hide="!desembolsosc.mostrar">
-				<div class="panel-body">
-				
+			<div class="row" ng-hide="!desembolsosc.mostrar" >
+				<div class="form-group col-sm-2">
+						<select class="inputText" ng-model="desembolsosc.anioSeleccionado"
+							ng-options="a.id as a.nombre for a in desembolsosc.anios "
+							ng-readonly="true"
+							ng-change = "desembolsosc.asignarSerie()"
+							>
+						</select>
+					    <label for="nombre" class="floating-label">* Año</label>
 				</div>
 			</div>
-			
-			<br/> 
-			<div style="width: 75%">
-				<canvas id="radar" class="chart chart-radar" ng-hide="!desembolsosc.mostrar"
-			  chart-data="desembolsosc.dataRadar" chart-options="desembolsosc.radarOptions" chart-labels="desembolsosc.etiquetas"
-			  chart-legend="true" chart-series="desembolsosc.series"
-			  chart-colors = "desembolsosc.radarColors">
-			</canvas>
+			<br/>
+			<div style="width: 70%">
+				<canvas id="line" class="chart chart-line" chart-data="desembolsosc.desembolsos" ng-hide="!desembolsosc.mostrar"
+				chart-labels="desembolsosc.etiqutas" chart-series="desembolsosc.series" chart-options="desembolsosc.options"
+				chart-dataset-override="desembolsosc.datasetOverride" 
+				 chart-colors = "desembolsosc.radarColors" chart-legend="true">
+				</canvas>
 			</div>
+			<br/><br/>
+			<table st-table="desembolsosc.desembolsos" class="table table-striped table-hover table-condensed"
+				ng-hide="!desembolsosc.mostrar">
+				<thead>
+				<tr >
+					<th ng-repeat="n in desembolsosc.columnas track by $index">
+					{{n}}
+					</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="row in desembolsosc.tabla" style="text-align: right;">
+					<td class="info" style="font-weight: bold;">{{row[12]}}</td>
+					<td>{{ desembolsosc.formato1(row[0]) }}</td>
+					<td>{{ desembolsosc.formato1(row[1]) }}</td>
+					<td>{{ desembolsosc.formato1(row[2]) }}</td>
+					<td>{{ desembolsosc.formato1(row[3]) }}</td>
+					<td>{{ desembolsosc.formato1(row[4]) }}</td>
+					<td>{{ desembolsosc.formato1(row[5]) }}</td>
+					<td>{{ desembolsosc.formato1(row[6]) }}</td>
+					<td>{{ desembolsosc.formato1(row[7]) }}</td>
+					<td>{{ desembolsosc.formato1(row[8]) }}</td>
+					<td>{{ desembolsosc.formato1(row[9]) }}</td>
+					<td>{{ desembolsosc.formato1(row[10]) }}</td>
+					<td>{{ desembolsosc.formato1(row[11]) }}</td>
+					<td class="info">{{ desembolsosc.formato1(row[13]) }}</td>
+				</tr>
+				</tbody>
+			</table>
 			 
 				
 		</div>
