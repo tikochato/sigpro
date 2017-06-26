@@ -4,6 +4,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion){
 		var mi = this;
 		mi.gridOptions = {};
+		mi.mostrarcargando=false;
 		i18nService.setCurrentLang('es');
 		mi.mostrarGuardar = false;
 		mi.mostrarCongelar = false;
@@ -14,7 +15,10 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.autoGuardado = false;
 		mi.totales = [];
 		mi.columnaNames = [];
-		mi.informeCompleto = true;
+		mi.informeCompleto = false;
+		mi.categorias = [];
+		mi.menuItems = [];
+		mi.columnasDinamicas =[];
 		
 		mi.redireccionSinPermisos=function(){
 			$window.location.href = '/main.jsp#!/forbidden';		
@@ -63,32 +67,32 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				});
 		}
 		
-		mi.obtenerMesNombre = function(mes, anio){
+		mi.obtenerMesNombre = function(mes){
 			switch(mes){
 			case 1:
-				return "Enero-(" + anio + ")";
+				return "Enero";
 			case 2:
-				return "Febrero-(" + anio + ")";
+				return "Febrero";
 			case 3:
-				return "Marzo-(" + anio + ")";
+				return "Marzo";
 			case 4:
-				return "Abril-(" + anio + ")";
+				return "Abril";
 			case 5:
-				return "Mayo-(" + anio + ")";
+				return "Mayo";
 			case 6:
-				return "Junio-(" + anio + ")";
+				return "Junio";
 			case 7:
-				return "Julio-(" + anio + ")";
+				return "Julio";
 			case 8:
-				return "Agosto-(" + anio + ")";
+				return "Agosto";
 			case 9:
-				return "Septiembre-(" + anio + ")";
+				return "Septiembre";
 			case 10:
-				return "Octubre-(" + anio + ")";
+				return "Octubre";
 			case 11:
-				return "Noviembre-(" + anio + ")";
+				return "Noviembre";
 			case 12:
-				return "Diciembre-(" + anio + ")";
+				return "Diciembre";
 			}
 		}
 		
@@ -96,10 +100,16 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			mi.columnas = [];
 			mi.columnaNames = [];
 			mi.cabeceras = [];
+			mi.categorias = [];
+			
+			var fecha = new Date();
+			var m = fecha.getMonth() +1;
+			var y = fecha.getFullYear();
+			
 			var i = 0;
 			var j = 0;
 			var mesName = "";
-			mi.columnas.push({ name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: '',
+			mi.columnas.push({ name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: '', enableColumnMenu: false,
 	        	cellTemplate: "<div class=\"ui-grid-cell-contents\" ng-class=\"{'ui-grid-tree-padre': grid.appScope.controller.objetoTipo < 5}\"><div class=\"ui-grid-cell-contents\" title=\"TOOLTIP\"><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.controller.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>",
 	        	footerCellTemplate: '<div class="ui-grid-cell-contents">Total</div>',
 	        });
@@ -111,37 +121,139 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			var fFinal = moment(mi.fechaFin).format('DD/MM/YYYY').split('/');
 			var inicio = (Number(fInicial[1]) <= 12 ? Number(fInicial[1]) : 1);
 			for(j = Number(fInicial[2]); j <= Number(fFinal[2]); j++){
+				mi.categorias.push({name: j.toString(), visible: true, showCatName: true});
 				var fin = j==Number(fFinal[2]) ? Number(fFinal[1]):12;
 				for(i = inicio; i <= fin; i++){
 					mesName = mi.obtenerMes(i,j);
-					mesDisplayName = mi.obtenerMesNombre(i,j);
+					
+					mesDisplayName = mi.obtenerMesNombre(i);
 					
 					mi.totales[mesName] = 0;
-					mi.columnaNames.push(mesName);
-					mi.cabeceras.push(mesDisplayName);
-					mi.columnas.push({ name: mesName, enableCellEdit: false, width: 100, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2', 
-			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.getTotal(this) | number:2}}</div>',
-			        	categoryDisplayName: j
+					mi.columnaNames.push(mesName+"-P");
+					mi.columnasDinamicas.push(mesName+"-P");
+					mi.cabeceras.push(mesDisplayName + "(P)");
+					mi.columnas.push({ name: mesName+"-P", enableCellEdit: false, width: 120, displayName: mesDisplayName + "(P)", type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2', 
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.getTotal(this) | number:2}}</div>', enableHiding: false, enableGrouping: false, enablePinning: false,
+			        	menuItems: [
+			        		{
+			        			title: 'Mostrar/Ocultar',
+			        			action: mi.mostrarOcultarColumna
+			        		}
+			        	],
+			        	category: j.toString()
+			        });
+					
+					mi.columnaNames.push(mesName+"-R");
+					mi.columnasDinamicas.push(mesName+"-R");
+					mi.cabeceras.push(mesDisplayName + "(R)");
+					mi.columnas.push({ name: mesName+"-R", enableCellEdit: false, width: 120, displayName: mesDisplayName + "(R)", type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2', 
+			        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.getTotal(this) | number:2}}</div>', enableHiding: false, enableGrouping: false, enablePinning: false,
+			        	menuItems: [
+			        		{
+			        			title: 'Mostrar/Ocultar',
+			        			action: mi.mostrarOcultarColumna
+			        		}
+			        	],
+			        	category: j.toString()
 			        });
 				}
 				inicio = 1;
 			}
 			
 			mi.columnas.push({ name: 'Total', enableCellEdit: false, width: 150, displayName: 'Total general', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
-	        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.totalP | number:2}}</div>'
+	        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.totalP | number:2}}</div>', enableColumnMenu: false, pinnedRight:true
 	        });
 			
-			mi.columnas.push({ name: 'acumulacionCostos', width: 150, displayName: 'Acumulación de Costos', editType: 'dropdown', editableCellTemplate: 'ui-grid/dropdownEditor',
-	        	editDropdownOptionsArray: mi.ddlOpciones, editDropdownValueLabel: 'value', cellFilter: 'mapAcumulacionCosto', editDropdownOptionsArray: mi.ddlOpciones
+			mi.columnas.push({ name: 'acumulacionCostos', enableCellEdit: true, enableCellEditOnFocus: true, width: 150, displayName: 'Acumulación de Costos', editType: 'dropdown', editableCellTemplate: 'ui-grid/dropdownEditor',
+	        	editDropdownOptionsArray: mi.ddlOpciones, editDropdownValueLabel: 'value', cellFilter: 'mapAcumulacionCosto', editDropdownOptionsArray: mi.ddlOpciones, enableColumnMenu: false, pinnedRight:true
 	        });
 			
 			mi.columnaNames.push("Total");
 			mi.cabeceras.push("Total");
 			mi.gridOptions.columnDefs = mi.columnas;
+			
+			mi.ocultarColumnas();
+		}
+		
+		mi.ocultarColumnas = function(){
+			var currentTime = new Date();
+			var month = currentTime.getMonth() + 1;
+			var year = currentTime.getFullYear();
+			
+			for(x in mi.gridOptions.columnDefs){
+				if (x > 0 && x < mi.gridOptions.columnDefs.length -2){
+					if(Number(mi.gridOptions.columnDefs[x].category) < year){
+						if(mi.gridOptions.columnDefs[x].name.includes("-P")){
+							mi.gridOptions.columnDefs[x].visible = false;
+							mi.gridOptions.columnDefs[x].ocultar = true;
+						}else{
+							mi.gridOptions.columnDefs[x].visible = true;
+							mi.gridOptions.columnDefs[x].ocultar = false;
+						}
+					}else{
+						var numMesColumna = mi.gridOptions.columnDefs[x].name.split('-')[0].replace('Mes','');
+						if(numMesColumna < month){
+							if(mi.gridOptions.columnDefs[x].name.includes("-P")){
+								mi.gridOptions.columnDefs[x].visible = false;
+								mi.gridOptions.columnDefs[x].ocultar = true;
+							}else{
+								mi.gridOptions.columnDefs[x].visible = true;
+								mi.gridOptions.columnDefs[x].ocultar = false;
+							}
+						}else{
+							if(mi.gridOptions.columnDefs[x].name.includes("-R")){
+								mi.gridOptions.columnDefs[x].visible = false;
+								mi.gridOptions.columnDefs[x].ocultar = true;
+							}else{
+								mi.gridOptions.columnDefs[x].visible = true;
+								mi.gridOptions.columnDefs[x].ocultar = false;
+							}
+						}
+					}
+				}
+			}
+			
+			mi.gridApi.core.notifyDataChange( uiGridConstants.dataChange.COLUMN);
 		}
 		
 		mi.getTotal = function(columna){
 			return mi.totales[columna.col.name];
+		}
+		
+		mi.mostrarOcultarColumna = function(col){
+			var columna = this.context.col.name;
+			var columna2 = "";
+			var bandera = true;
+			
+			if (columna.includes("-P")){
+				columna2 = columna.replace('-P','-R');
+			}else if (columna.includes("-R")){
+				columna2 = columna.replace('-R','-P');
+			}
+				
+			for(x in mi.gridOptions.columnDefs){
+				if(mi.gridOptions.columnDefs[x].name == columna){
+					if(mi.gridOptions.columnDefs[x].ocultar){
+						mi.gridOptions.columnDefs[x].visible = false;
+						mi.gridApi.core.notifyDataChange( uiGridConstants.dataChange.COLUMN);
+						bandera = false;
+						break;
+					}else
+						break;
+				}
+			}
+			
+			if (bandera){
+				for(x in mi.gridOptions.columnDefs){
+					if(mi.gridOptions.columnDefs[x].name == columna2){
+						mi.gridOptions.columnDefs[x].visible = true;
+						mi.gridApi.core.notifyDataChange( uiGridConstants.dataChange.COLUMN);
+					}
+				}
+			}
+			
+			mi.calcularTotales();
+			mi.totalPrestamo();
 		}
 		
 		mi.generar = function(){
@@ -149,20 +261,23 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			{
 				if(mi.fechaInicio != null && mi.fechaFin != null)
 				{
+					mi.mostrarcargando=true;
 					mi.generarTabla();
 					
 					$http.post('/SInformePresupuesto',{
 						accion: 'generarInforme',
 						idPrestamo: mi.prestamo.value,
 						informeCompleto: mi.informeCompleto,
+						columnaNames: mi.columnasDinamicas.toString(),
 						anio: moment(mi.fechaInicio).format('DD/MM/YYYY')
 					}).success(function(response){
 						if (response.success){
 							mi.crearArbol(response.prestamo);
-
-							for (var i = 0; i < mi.gridOptions.data.length; i++){
-								var dato = mi.gridOptions.data[i];
-						    	if (dato.objetoTipo == 5){
+							mi.data = response.prestamo;
+							//for (var i = 0; i < mi.gridOptions.data.length; i++){
+							for (var i = 0; i < mi.data.length; i++){
+								var dato = mi.data[i];
+						    	if (dato.objetoTipo == 5 && dato.hijo.length == 0){
 						    		var rowEntity = mi.obtenerEntidad(dato.idObjetoTipo, dato.objetoTipo);
 						    		if (rowEntity.acumulacionCostos == 1){
 						    			mi.setInicio(rowEntity);
@@ -176,9 +291,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 						    	}
 						    }
 							
-							mi.calcularTotales();
-
-							mi.totalPrestamo();
+							mi.mostrarcargando=false;
 						}else{
 							if (response.prestamo[0].tipoInforme == 2){
 								$utilidades.mensaje('warning','No existe informe para modificar');
@@ -192,7 +305,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
 		}
 		
-		mi.descargar = function(){
+		mi.exportarExcel = function(){
 		    var reporte = []; 
 
 			var obj = {};
@@ -221,7 +334,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				data: JSON.stringify(reporte),
 				idPrestamo: mi.prestamo.value,
 				anio: moment(mi.fechaInicio).format('DD/MM/YYYY'),
-				tipoInforme: mi.informe.value,
 				columnas: mi.columnaNames.toString(),
 				cabeceras : mi.cabeceras.toString(),
 				t:moment().unix()
@@ -242,23 +354,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.crearArbol = function(datos){
 			if (datos.length > 0){
 				var data = datos;
-				data = mi.gethijos(data);
-				for(x in data){
-					data[x].Total = 0;
-					data[x].$$treeLevel = Number(data[x].posicionArbol) - 1;
-					if(data[x].objetoTipo == 5 && data[x].acumulacionCostos == 0)
-						data[x].acumulacionCostos = 3;
-				}
-				
-				for(x in mi.gridOptions.columnDefs){
-					if((x > 0) && (x < mi.gridOptions.columnDefs.length -2)){
-						var colNombre = mi.gridOptions.columnDefs[x].name;
-						for(x in data){
-							data[x][colNombre] = 0;
-							data[x]["total" + colNombre] = 0;
-						}
-					}
-				}
+				//data = mi.gethijos(data);
 				
 				mi.gridOptions.data = data;
 				
@@ -276,20 +372,19 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.gridOptions = {
 				showColumnFooter: true,
 	            cellEditableCondition:function($scope){
-	            	  if($scope.row.entity.objetoTipo == 5 && $scope.row.entity.hijo == null)
+	            	  if($scope.row.entity.objetoTipo == 5 && $scope.row.entity.hijo.length == 0)
 	            		  return true;
 	            	  else
 	            		  return false;
 	            },
+	            headerTemplate: '<div role="rowgroup" class="ui-grid-header"> <div class="ui-grid-top-panel"> <div class="ui-grid-header-viewport"> <div class="ui-grid-header-canvas"> <div align="center" class="ui-grid-header-cell-wrapper" ng-style="colContainer.headerCellWrapperStyle()"> <div role="row" class="ui-grid-header-cell-row"><div align="center" class="ui-grid-header-cell ui-grid-clearfix ui-grid-category" ng-repeat="cat in grid.appScope.controller.categorias" ng-if="cat.visible && (colContainer.renderedColumns | filter:{ colDef:{category: cat.name} }).length > 0"> <span ng-if="cat.showCatName === true"> {{cat.name}} </span> <br ng-if="cat.showCatName !== true" />  <div class="ui-grid-header-cell ui-grid-clearfix" ng-repeat="col in colContainer.renderedColumns | filter:{ colDef:{category: cat.name} }" ui-grid-header-cell col="col" render-index="$index"> </div> </div><!--!cat.visible && --> <div class="ui-grid-header-cell ui-grid-clearfix" ng-if="col.colDef.category === undefined" ng-repeat="col in colContainer.renderedColumns track by col.uid" ui-grid-header-cell col="col" render-index="$index"> </div> </div> </div> </div> </div> </div> </div>',
+	            category: mi.categorias,
 				rowEditWaitInterval: -1,
 				expandAllRows : true,
 				enableExpandableRowHeader: false,
 				showTreeRowHeader: false,
 				showTreeExpandNoChildren : false,
-				enableColumnMenus: false,
 				enableSorting: false,
-				enableCellEdit: true,
-				enableCellEditOnFocus: true,
 			    columnDefs: mi.columnas,
 			    onRegisterApi: function(gridApi ) {
 			      mi.gridApi = gridApi;
@@ -307,54 +402,87 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			  }
 		};
 		
-		mi.setInicio = function(rowEntity){
+		mi.setInicio = function(rowEntity){			
 			var i = 0;
-		  
+			
 			for(x in mi.gridOptions.columnDefs){
 				if(x > 0 && x < mi.gridOptions.columnDefs.length -2){
 					mi.setValor(rowEntity, mi.gridOptions.columnDefs[x].name, 0);
 				}
 			}
-			
+			  
 			var fInicial = rowEntity.fechaInicio.split('/');
-			mi.setValor(rowEntity,mi.obtenerMes(Number(fInicial[1]),Number(fInicial[2])),rowEntity.Costo);
-			mi.calcular(rowEntity);
+			var mesP = mi.obtenerMes(Number(fInicial[1]),Number(fInicial[2]))+"-P";
+			var mesR = mi.obtenerMes(Number(fInicial[1]),Number(fInicial[2]))+"-R";
+			mi.setValor(rowEntity,mesP,rowEntity.Costo);
+			mi.setValor(rowEntity,mesR,rowEntity.CostoReal);
+			mi.calcular2(rowEntity,mesP,mesR);
+			
+			mi.calcularTotales();
+			mi.totalPrestamo();
 		}
 		
-		mi.setProrrateo = function(rowEntity){
-			var fInicial = rowEntity.fechaInicio.split('/');
-			var fFinal = rowEntity.fechaFin.split('/');
-			
-			var i = 0;
-			var j = 0;
+		mi.setProrrateo = function(rowEntity){			
+			var FI = rowEntity.fechaInicio.split('/');
+			var FF = rowEntity.fechaFin.split('/');
+			var diasPorcentual = [];
 			var contador = 0;
-			  
-			var inicio = (Number(fInicial[1]) <= 12 ? Number(fInicial[1]) : 1);
-			for(j = Number(fInicial[2]); j <= Number(fFinal[2]); j++){
-				var fin = j==Number(fFinal[2]) ? Number(fFinal[1]):12;
-				for(i = inicio; i <= fin; i++){
-					contador++;
+			if(FI[1] != FF[1]){
+				var fInicial = moment(rowEntity.fechaInicio,'DD/MM/YYYY');
+				var fFinal = moment(rowEntity.fechaFin,'DD/MM/YYYY');
+				var d = 0;
+				var diasTotales = fFinal.diff(fInicial,'d');
+
+				var inicio = (Number(FI[1]) <= 12 ? Number(FI[1]) : 1);
+				for(j = Number(FF[2]); j <= Number(FF[2]); j++){
+					var fin = j==Number(FF[2]) ? Number(FF[1]):12;
+					for(i = inicio; i <= fin; i++){
+						if (diasPorcentual.length == 0){
+							diasPorcentual.push(mi.getDiasDelMes(FI[1],FI[2]) - FI[0]);
+						}else{
+							d = mi.getDiasDelMes(i,j);
+							diasPorcentual.push(d);
+						}
+					}
+					inicio = 1;
 				}
-				inicio = 1;
-			}
-			  
-			var costo = rowEntity.Costo / contador;
-			  
-			for(x in mi.gridOptions.columnDefs){
-				if(x > 0 && x < mi.gridOptions.columnDefs.length -2){
-					mi.setValor(rowEntity, mi.gridOptions.columnDefs[x].name, 0);
+				
+				diasPorcentual[diasPorcentual.length-1] = FF[0];
+				
+				for(i = 0; i<diasPorcentual.length;i++){
+					diasPorcentual[i] = diasPorcentual[i]/diasTotales;
 				}
-			}
-			
-			var inicio = (Number(fInicial[1]) <= 12 ? Number(fInicial[1]) : 1);
-			for(j = Number(fInicial[2]); j <= Number(fFinal[2]); j++){
-				var fin = j==Number(fFinal[2]) ? Number(fFinal[1]):12;
-				for(i = inicio; i <= fin; i++){
-					mi.setValor(rowEntity, mi.obtenerMes(i,j), costo);
+				
+				for(x in mi.gridOptions.columnDefs){
+					if(x > 0 && x < mi.gridOptions.columnDefs.length -2){
+						mi.setValor(rowEntity, mi.gridOptions.columnDefs[x].name+"-P", 0);
+						mi.setValor(rowEntity, mi.gridOptions.columnDefs[x].name+"-R", 0);
+					}
 				}
-				inicio = 1;
-			}
-			mi.calcular(rowEntity);
+				
+				var mesP = "";
+				var mesR = "";
+				
+				var inicio = (Number(FI[1]) <= 12 ? Number(FI[1]) : 1);
+				for(j = Number(FF[2]); j <= Number(FF[2]); j++){
+					var fin = j==Number(FF[2]) ? Number(FF[1]):12;
+					for(i = inicio; i <= fin; i++){
+						mesP = mi.obtenerMes(i,j)+"-P";
+						mesR = mi.obtenerMes(i,j)+"-R";
+						
+						mi.setValor(rowEntity, mesP, rowEntity.Costo * diasPorcentual[contador]);
+						mi.setValor(rowEntity, mesR, rowEntity.CostoReal * diasPorcentual[contador]);
+						mi.calcular2(rowEntity, mesP, mesR);
+						contador++;
+					}
+					inicio = 1;
+				}
+				
+				//mi.calcular(rowEntity);
+				
+				mi.calcularTotales();
+				mi.totalPrestamo();
+			}			
 		}
 		
 		mi.setFin = function(rowEntity){
@@ -367,8 +495,30 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			}
 			  
 			var fFinal = rowEntity.fechaFin.split('/');
-			mi.setValor(rowEntity,mi.obtenerMes(Number(fFinal[1]),Number(fFinal[2])),rowEntity.Costo);
-			mi.calcular(rowEntity);
+			var mesP = mi.obtenerMes(Number(fFinal[1]),Number(fFinal[2]))+"-P";
+			var mesR = mi.obtenerMes(Number(fFinal[1]),Number(fFinal[2]))+"-R";
+			mi.setValor(rowEntity,mesP,rowEntity.Costo);
+			mi.setValor(rowEntity,mesR,rowEntity.CostoReal);
+			//mi.calcular(rowEntity);
+			mi.calcular2(rowEntity,mesP,mesR);
+			
+			mi.calcularTotales();
+			mi.totalPrestamo();
+		}
+		
+		mi.getDiasDelMes = function(mes,ano)
+		{
+			if( (mes == 1) || (mes == 3) || (mes == 5) || (mes == 7) || (mes == 8) || (mes == 10) || (mes == 12) ) 
+		        return 31;
+		    else if( (mes == 4) || (mes == 6) || (mes == 9) || (mes == 11) ) 
+		        return 30;
+		    else if( mes == 2 )
+		    {
+		        if( (ano % 4 == 0) && (ano % 100 != 0) || (ano % 400 == 0) )
+		            return 29;
+		        else
+		            return 28;
+		    }   
 		}
 		
 		mi.saveRow = function(rowEntity){
@@ -429,23 +579,51 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			}
 		}
 		
-		mi.calcular = function(rowEntidad){
-			mi.calcularPadre(rowEntidad);
-		}
-		
 		mi.calcularTotales = function(){
 			var monto = 0;
 			for(x in mi.gridOptions.data){
 				var rowEntity = mi.obtenerEntidad(mi.gridOptions.data[x].idObjetoTipo, mi.gridOptions.data[x].objetoTipo);
 				for(y in mi.gridOptions.columnDefs){
 					if(y > 0 && y < mi.gridOptions.columnDefs.length -2){
-						monto += mi.obtenerValor(rowEntity, mi.gridOptions.columnDefs[y].name);
+						if(mi.gridOptions.columnDefs[y].visible==true){
+							monto += mi.obtenerValor(rowEntity, mi.gridOptions.columnDefs[y].name);
+						}
 					}
 				}
 				
 				rowEntity.Total = monto;
 				monto = 0;
 			}
+		}
+		
+		mi.calcular2 = function(rowEntidad,mesP,mesR){
+			var padre = mi.obtenerEntidad(rowEntidad.idPredecesor, rowEntidad.objetoTipoPredecesor);
+			var valorActualPadreMesP = mi.obtenerValor(padre, mesP);
+			var valorActualActividadP = mi.obtenerValor(rowEntidad, mesP);
+			var valorActualPadreMesR = mi.obtenerValor(padre, mesR);
+			var valorActualActividadR = mi.obtenerValor(rowEntidad, mesR);
+			
+			mi.setValor(padre,mesP, valorActualPadreMesP + valorActualActividadP);
+			mi.setValor(padre,mesR, valorActualPadreMesR + valorActualActividadR);
+			if (padre.idPredecesor > 0)
+				mi.calcular2(padre,mesP,mesR);
+			
+			/*for(y in mi.gridOptions.columnDefs){
+				if (y > 0 && y < mi.gridOptions.columnDefs.length -2){
+					var valorActualPadre = mi.obtenerValor(padre, mi.gridOptions.columnDefs[y].name);
+					var valorActualActividad = mi.obtenerValor(rowEntidad, mi.gridOptions.columnDefs[y].name);
+					mi.setValor(padre,mi.gridOptions.columnDefs[y].name, valorActualPadre + valorActualActividad);
+					if (padre.idPredecesor > 0)
+						mi.calcular2(padre);
+				}
+			}*/
+		}
+		
+		
+		
+		
+		mi.calcular = function(rowEntidad){
+			mi.calcularPadre(rowEntidad);
 		}
 		
 		mi.calcularPadre = function(rowEntidad){
@@ -456,9 +634,12 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 					for(y in mi.gridOptions.columnDefs){
 						if (y > 0 && y < mi.gridOptions.columnDefs.length -2){
 							for(x in padre.hijo){
-								var hijo = padre.hijo[x].split(',');
-								var valorColumna = mi.obtenerValor(mi.obtenerEntidad(hijo[0], hijo[1]), mi.gridOptions.columnDefs[y].name);
-								valorFinal = valorFinal + valorColumna;
+								if(padre.hijo[x] != null){
+									var hijo = padre.hijo[x].split(',');
+									var entity = mi.obtenerEntidad(hijo[0], hijo[1]);
+									var valorColumna = mi.obtenerValor(entity, mi.gridOptions.columnDefs[y].name);
+									valorFinal = valorFinal + valorColumna;
+								}
 							}
 							mi.setValor(padre,mi.gridOptions.columnDefs[y].name, valorFinal);
 							valorFinal = 0;
@@ -470,9 +651,9 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		}
 		
 		mi.obtenerEntidad = function(id, objetoTipo){
-			for (x in mi.gridOptions.data){
-				if (id == mi.gridOptions.data[x].idObjetoTipo && objetoTipo == mi.gridOptions.data[x].objetoTipo){
-					return mi.gridOptions.data[x];
+			for (x in mi.data){
+				if (id == mi.data[x].idObjetoTipo && objetoTipo == mi.data[x].objetoTipo){
+					return mi.data[x];
 				}
 			}
 		}
@@ -561,77 +742,3 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 	    }
 	  };
 	})
-	
-.directive('categoryHeader', function() {
-    function link(scope, element, attrs) {
-
-      // create cols as soon as $gridscope is avavilable
-      // grids in tabs with lazy loading come later, so we need to 
-      // setup a watcher
-      scope.$watch('categoryHeader.$gridScope', function(gridScope, oldVal) {
-          if (!gridScope) {
-              return;
-          }
-          // setup listener for scroll events to sync categories with table
-          var viewPort = scope.categoryHeader.$gridScope.domAccessProvider.grid.$viewport[0];
-          var headerContainer = scope.categoryHeader.$gridScope.domAccessProvider.grid.$headerContainer[0];
-        
-          // watch out, this line usually works, but not always, because under certains conditions
-          // headerContainer.clientHeight is 0
-          // unclear how to fix this. a workaround is to set a constant value that equals your row height 
-          scope.headerRowHeight=  headerContainer.clientHeight;  
-         
-          angular.element(viewPort).bind("scroll", function() {
-            // copy total width to compensate scrollbar width
-            $(element).find(".categoryHeaderScroller")
-              .width($(headerContainer).find(".ngHeaderScroller").width());
-            $(element).find(".ngHeaderContainer")
-              .scrollLeft($(this).scrollLeft());
-        });
-  
-        // setup listener for table changes to update categories                
-        scope.categoryHeader.$gridScope.$on('ngGridEventColumns', function(event, reorderedColumns) {
-          createCategories(event, reorderedColumns);
-        });
-                });          
-      var createCategories = function(event, cols) {
-        scope.categories = [];
-        var lastDisplayName = "";
-        var totalWidth = 0;
-        var left = 0;
-        angular.forEach(cols, function(col, key) {
-          if (!col.visible) {
-            return;
-          }
-          totalWidth += col.width;
-          var displayName = (typeof(col.colDef.categoryDisplayName) === "undefined") ?
-            "\u00A0" : col.colDef.categoryDisplayName;
-          if (displayName !== lastDisplayName) {
-            scope.categories.push({
-              displayName: lastDisplayName,
-              width: totalWidth - col.width,
-              left: left
-            });
-            left += (totalWidth - col.width);
-            totalWidth = col.width;
-            lastDisplayName = displayName;
-          }
-        });
-        if (totalWidth > 0) {
-          scope.categories.push({
-            displayName: lastDisplayName,
-            width: totalWidth,
-            left: left
-          });
-        }
-      };
-    }
-    return {
-      scope: {
-        categoryHeader: '='
-      },
-      restrict: 'EA',
-      templateUrl: 'category_header.html',
-      link: link
-    };
-  });
