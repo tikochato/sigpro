@@ -1,12 +1,13 @@
 package dao;
 
 import java.util.List;
-
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojoSigade.DtmAvanceFisfinanDetDti;
 import pojoSigade.DtmAvanceFisfinanDti;
 import utilities.CHibernateSessionSIGADE;
 import utilities.CLogger;
@@ -66,6 +67,29 @@ public class DataSigadeDAO {
 		}
 		catch(Throwable e){
 			CLogger.write("3", DataSigadeDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<Object> getAVANCE_FISFINAN_DET_DTI(String codigoPresupeustario){
+		List<Object> ret = null;
+		Session session = CHibernateSessionSIGADE.getSessionFactory().openSession();
+		
+		try{
+			String query =String.join(" ", "select ejercicio_fiscal,mes_desembolso,sum(desembolsos_mes_gtq) ",
+					"from DTM_AVANCE_FISFINAN_DET_DTI",
+					"where codigo_presupuestario = ?2",
+					"group by ejercicio_fiscal,mes_desembolso",
+					"order by ejercicio_fiscal,mes_desembolso asc");
+			Query criteria = session.createNativeQuery(query);
+			criteria.setParameter("2", codigoPresupeustario);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("4", DataSigadeDAO.class, e);
 		}
 		finally{
 			session.close();

@@ -272,7 +272,7 @@ public class CProject {
 	{
 		indetnacion ++;
 		Object objeto_temp = null;
-		if (task.getID()>= 0 && 	indetnacion >  0 ){ 
+		if (task.getID()>= 0 && 	indetnacion >=  0 ){ 
 			stitem item_ = new stitem();
 			item_.id = task.getUniqueID();
 			item_.contenido = task.getName();
