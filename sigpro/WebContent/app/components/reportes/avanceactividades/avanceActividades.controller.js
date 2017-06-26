@@ -2,7 +2,7 @@ var app = angular.module('avanceActividadesController',['ngAnimate', 'ngTouch'])
 
 app.filter('calculatePercentage', function () {
 	  return function (input, resultField, row) {
-		  if(row.nombre != 'Cantidad'){
+		  if(row.tipo == 2){
 			  return Math.floor(input) + "%";
 		  }else
 			  return Math.floor(input);

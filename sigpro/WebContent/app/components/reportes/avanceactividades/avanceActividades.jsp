@@ -53,7 +53,7 @@
 		    		<div style="height: 5%; width: 100%">
 						<div><h4><b>Actividades</b></h4></div>
 					</div>
-					<div id="grid1" ui-grid="controller.gridOptions1" style="width: 85%; height: 175px"
+					<div id="grid1" ui-grid="controller.gridOptions1" style="width: 85%; height: 150px"
 						ui-grid-edit 
 						ui-grid-row-edit 
 						ui-grid-resize-columns 
@@ -72,7 +72,7 @@
 					<div style="height: 5%; width: 100%">
 						<div><h4><b>Hitos</b></h4></div>
 					</div>
-					<div id="grid2" ui-grid="controller.gridOptions2" style="width: 85%; height: 175px"
+					<div id="grid2" ui-grid="controller.gridOptions2" style="width: 85%; height: 300px"
 						ui-grid-edit 
 						ui-grid-row-edit 
 						ui-grid-resize-columns 

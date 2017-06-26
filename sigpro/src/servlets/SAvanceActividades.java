@@ -62,6 +62,7 @@ public class SAvanceActividades extends HttpServlet {
 		String proceso;
 		String completadas;
 		String retrasadas;
+		int tipo;
 	}
 	
     public SAvanceActividades() {
@@ -140,6 +141,7 @@ public class SAvanceActividades extends HttpServlet {
 					temp.proceso = new Double(totalEnProceso).toString();
 					temp.completadas = new Double(totalCompletadas).toString();
 					temp.retrasadas = new Double(totalRetrasadas).toString();
+					temp.tipo = 1;
 					
 					listaResult.add(temp);
 
@@ -170,6 +172,7 @@ public class SAvanceActividades extends HttpServlet {
 					temp.proceso = df2.format(totalEnProceso);
 					temp.completadas = df2.format(totalCompletadas);
 					temp.retrasadas = df2.format(totalRetrasadas);
+					temp.tipo = 2;
 					
 					listaResult.add(temp);
 					
@@ -226,6 +229,7 @@ public class SAvanceActividades extends HttpServlet {
 					temp.sinIniciar = new Double(totalSinIniciar).toString();
 					temp.completadas = new Double(totalRetrasadas).toString();
 					temp.retrasadas = new Double(totalCompletadas).toString();
+					temp.tipo = 1;
 					
 					listaResult.add(temp);
 					
@@ -238,6 +242,7 @@ public class SAvanceActividades extends HttpServlet {
 					temp.sinIniciar = df2.format(totalSinIniciar);
 					temp.completadas = df2.format(totalCompletadas);
 					temp.retrasadas = df2.format(totalRetrasadas);
+					temp.tipo = 2;
 					
 					listaResult.add(temp);
 					
@@ -318,6 +323,7 @@ public class SAvanceActividades extends HttpServlet {
 							temp.proceso = df2.format(totalEnProceso);
 							temp.completadas = df2.format(totalCompletadas);
 							temp.retrasadas = df2.format(totalRetrasadas);
+							temp.tipo = 2;
 							
 							listaResult.add(temp);
 						}
@@ -408,8 +414,6 @@ public class SAvanceActividades extends HttpServlet {
 				result = ObtenerActividades(actividad,usuario, result);
 			}
 			
-			//items = String.join("","{\"items\" : [", items,"]}");
-			
 			return result;
 		}
 		catch(Throwable e){
@@ -421,6 +425,7 @@ public class SAvanceActividades extends HttpServlet {
 	private List<stActividad> ObtenerActividades(Actividad actividad, String usuario, List<stActividad> items){
 		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, actividad.getId(), OBJETO_ID_SUBACTIVIDAD, 
 				null, null,null, null, null, usuario);
+		
 		stActividad temp = new stActividad();
 		temp.id = actividad.getId();
 		temp.porcentajeAvance = actividad.getPorcentajeAvance();
