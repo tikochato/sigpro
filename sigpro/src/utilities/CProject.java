@@ -219,15 +219,14 @@ public class CProject {
 			 itemPredecesor =  items.get(predecesores[0]);	
 		}
 		
-		Actividad actividad = new Actividad(actividadTipo, null, task.getName(), null, task.getStart(), task.getFinish()
-				,0,usuario, null, new Date(), 
-				null, 1, null, null, null, null, 
-				null, null, null , objetoId, objetoTipo, 
+		Actividad actividad = new Actividad(actividadTipo, task.getName(), null, task.getStart(), task.getFinish()
+				, 0, usuario, null, new Date(), 
+				null, 1, null, null, null,null, null, null, null, objetoId, objetoTipo, 
 				(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName() 
 				,itemPredecesor!=null ? itemPredecesor.objetoId : null
-				, itemPredecesor != null ? itemPredecesor.objetoTipo : null, null, null,
-				new BigDecimal(task.getCost().toString()),new BigDecimal(task.getActualCost().toString()),null,null);
+				, itemPredecesor != null ? itemPredecesor.objetoTipo : null
+				, null, null, new BigDecimal(task.getCost().toString()),new BigDecimal(task.getActualCost().toString()),null,null);
 		
 		return ActividadDAO.guardarActividad(actividad) ? actividad : null;
 	}
