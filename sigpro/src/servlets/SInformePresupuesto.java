@@ -8,11 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,8 +59,9 @@ public class SInformePresupuesto extends HttpServlet {
 		int posicionArbol;
 		int objetoTipoPredecesor;
 		int idPredecesor;
-		String hijo;
+		String[] hijo;
 		BigDecimal Costo;
+		BigDecimal CostoReal;
 		String fechaInicio;
 		String fechaFin;
 		int acumulacionCostos;
@@ -105,57 +102,90 @@ public class SInformePresupuesto extends HttpServlet {
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}else if(accion.equals("generarInforme")){
 			Boolean informeCompleto = Boolean.valueOf(map.get("informeCompleto"));
-			
+			String[] columnaNames = map.get("columnaNames").split(",");
 				List<stInformePresupuesto> prestamo = obtenerProyecto(idPrestamo,usuario);
 				
-				List<stInformePresupuesto> resultPrestamo = new ArrayList<stInformePresupuesto>();
+				List<Map<String, Object>> resultPrestamo = new ArrayList<Map<String, Object>>();
 				for (stInformePresupuesto p : prestamo ){
-					stInformePresupuesto dataEjecutado = new stInformePresupuesto();
+					Map<String, Object> data = new HashMap<String, Object>();
 					
 					if(informeCompleto){
-						dataEjecutado = new stInformePresupuesto();
-						dataEjecutado.id = p.id;
-						dataEjecutado.idPrestamo = idPrestamo;
-						dataEjecutado.objetoTipo = p.objetoTipo;
-						dataEjecutado.posicionArbol = p.posicionArbol;
-						dataEjecutado.idObjetoTipo = p.idObjetoTipo;
-						dataEjecutado.nombre = p.nombre;
-						dataEjecutado.idPredecesor = p.idPredecesor;
-						dataEjecutado.objetoTipoPredecesor = p.objetoTipoPredecesor;
-						dataEjecutado.Costo = p.Costo;
-						dataEjecutado.fechaInicio = p.fechaInicio;
-						dataEjecutado.fechaFin = p.fechaFin;
-						resultPrestamo.add(dataEjecutado);
+						data.put("id", p.id);
+						data.put("idPrestamo", idPrestamo);
+						data.put("objetoTipo", p.objetoTipo);
+						data.put("posicionArbol", p.posicionArbol);
+						data.put("$$treeLevel", p.posicionArbol -1);
+						data.put("idObjetoTipo", p.idObjetoTipo);
+						data.put("nombre", p.nombre);
+						data.put("idPredecesor", p.idPredecesor);
+						data.put("objetoTipoPredecesor", p.objetoTipoPredecesor);
+						data.put("Costo", p.Costo);
+						data.put("CostoReal", p.CostoReal);
+						data.put("fechaInicio", p.fechaInicio);
+						data.put("fechaFin", p.fechaFin);
+						data.put("hijo", p.hijo);
+						data.put("acumulacionCostos", p.objetoTipo == 5 && p.hijo.length == 0 ? 3 : 0);
+						data.put("columnas", null);
+						data.put("Total", 0);
+						
+						for (String columna: columnaNames){
+							data.put(columna, 0);
+							data.put("total" + columna, 0);
+						}
+						
+						resultPrestamo.add(data);
 					}else{ 
 						
 						if(p.objetoTipo != 5){
-							dataEjecutado = new stInformePresupuesto();
-							dataEjecutado.id = p.id;
-							dataEjecutado.idPrestamo = idPrestamo;
-							dataEjecutado.objetoTipo = p.objetoTipo;
-							dataEjecutado.posicionArbol = p.posicionArbol;
-							dataEjecutado.idObjetoTipo = p.idObjetoTipo;
-							dataEjecutado.nombre = p.nombre;
-							dataEjecutado.idPredecesor = p.idPredecesor;
-							dataEjecutado.objetoTipoPredecesor = p.objetoTipoPredecesor;
-							dataEjecutado.Costo = p.Costo;
-							dataEjecutado.fechaInicio = p.fechaInicio;
-							dataEjecutado.fechaFin = p.fechaFin;
-							resultPrestamo.add(dataEjecutado);
-						}else if (p.Costo.compareTo(BigDecimal.ZERO) != 0){
-							dataEjecutado = new stInformePresupuesto();
-							dataEjecutado.id = p.id;
-							dataEjecutado.idPrestamo = idPrestamo;
-							dataEjecutado.objetoTipo = p.objetoTipo;
-							dataEjecutado.posicionArbol = p.posicionArbol;
-							dataEjecutado.idObjetoTipo = p.idObjetoTipo;
-							dataEjecutado.nombre = p.nombre;
-							dataEjecutado.idPredecesor = p.idPredecesor;
-							dataEjecutado.objetoTipoPredecesor = p.objetoTipoPredecesor;
-							dataEjecutado.Costo = p.Costo;
-							dataEjecutado.fechaInicio = p.fechaInicio;
-							dataEjecutado.fechaFin = p.fechaFin;
-							resultPrestamo.add(dataEjecutado);
+							data.put("id", p.id);
+							data.put("idPrestamo", idPrestamo);
+							data.put("objetoTipo", p.objetoTipo);
+							data.put("posicionArbol", p.posicionArbol);
+							data.put("$$treeLevel", p.posicionArbol -1);
+							data.put("idObjetoTipo", p.idObjetoTipo);
+							data.put("nombre", p.nombre);
+							data.put("idPredecesor", p.idPredecesor);
+							data.put("objetoTipoPredecesor", p.objetoTipoPredecesor);
+							data.put("Costo", p.Costo);
+							data.put("CostoReal", p.CostoReal);
+							data.put("fechaInicio", p.fechaInicio);
+							data.put("fechaFin", p.fechaFin);
+							data.put("hijo", p.hijo);
+							data.put("acumulacionCostos", 0);
+							data.put("columnas", null);
+							data.put("Total", 0);
+							
+							for (String columna: columnaNames){
+								data.put(columna, 0);
+								data.put("total" + columna, 0);
+							}
+							
+							resultPrestamo.add(data);
+						}else if (p.Costo.compareTo(BigDecimal.ZERO) != 0 || p.CostoReal.compareTo(BigDecimal.ZERO) != 0){
+							data.put("id", p.id);
+							data.put("idPrestamo", idPrestamo);
+							data.put("objetoTipo", p.objetoTipo);
+							data.put("posicionArbol", p.posicionArbol);
+							data.put("$$treeLevel", p.posicionArbol -1);
+							data.put("idObjetoTipo", p.idObjetoTipo);
+							data.put("nombre", p.nombre);
+							data.put("idPredecesor", p.idPredecesor);
+							data.put("objetoTipoPredecesor", p.objetoTipoPredecesor);
+							data.put("Costo", p.Costo);
+							data.put("CostoReal", p.CostoReal);
+							data.put("fechaInicio", p.fechaInicio);
+							data.put("fechaFin", p.fechaFin);
+							data.put("hijo", p.hijo);
+							data.put("acumulacionCostos", p.objetoTipo == 5 && p.hijo.length == 0 ? 3 : 0);
+							data.put("columnas", null);
+							data.put("Total", 0);
+							
+							for (String columna: columnaNames){
+								data.put(columna, 0);
+								data.put("total" + columna, 0);
+							}
+							
+							resultPrestamo.add(data);
 						}
 					}	
 				}
@@ -209,7 +239,7 @@ public class SInformePresupuesto extends HttpServlet {
         gz.write(response_text.getBytes("UTF-8"));
         gz.close();
         output.close();
-	}
+	}	
 	
 	private void exportarExcel(Map<String,Object[]> datos, String nombreInforme, String usuario, HttpServletResponse response){
 		try{
@@ -261,6 +291,8 @@ public class SInformePresupuesto extends HttpServlet {
 	}
 
 	private List<stInformePresupuesto> obtenerProyecto(int proyectoId, String usuario){
+		String[] hijos = null;
+		int contadorHijos =0;
 		Proyecto proyecto = ProyectoDAO.getProyectoPorId(proyectoId, usuario);
 		List<stInformePresupuesto> lstdataEjecutado = new ArrayList<>();
 		if (proyecto!=null){
@@ -271,10 +303,19 @@ public class SInformePresupuesto extends HttpServlet {
 			dataEjecutado.nombre = proyecto.getNombre();
 			dataEjecutado.idPredecesor = 0;
 			dataEjecutado.objetoTipoPredecesor = 0;
-			lstdataEjecutado.add(dataEjecutado);
+			
 
 			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
 					null, null, null, null, null, usuario);
+			
+			hijos = new String[componentes.size()];
+			for (Componente componente : componentes){
+				hijos[contadorHijos] = componente.getId().toString() + ",2";
+				contadorHijos++;
+			}
+			dataEjecutado.hijo = hijos;
+			lstdataEjecutado.add(dataEjecutado);
+						
 			for (Componente componente : componentes){
 				dataEjecutado = new stInformePresupuesto();
 				dataEjecutado.objetoTipo = OBJETO_ID_COMPONENTE;
@@ -283,10 +324,19 @@ public class SInformePresupuesto extends HttpServlet {
 				dataEjecutado.nombre = componente.getNombre();
 				dataEjecutado.idPredecesor = proyecto.getId();
 				dataEjecutado.objetoTipoPredecesor = 1;
-				lstdataEjecutado.add(dataEjecutado);
 				
 				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
 						null, null, null, null, null, usuario);
+				
+				hijos = new String[productos.size()];
+				contadorHijos = 0;
+				for (Producto producto : productos){
+					hijos[contadorHijos] = producto.getId().toString() + ",3";
+					contadorHijos++;
+				}
+				dataEjecutado.hijo = hijos;
+				lstdataEjecutado.add(dataEjecutado);
+				
 				for (Producto producto : productos){
 					dataEjecutado = new stInformePresupuesto();
 					dataEjecutado.objetoTipo = OBJETO_ID_PRODUCTO;
@@ -295,10 +345,20 @@ public class SInformePresupuesto extends HttpServlet {
 					dataEjecutado.idObjetoTipo = producto.getId();
 					dataEjecutado.idPredecesor = componente.getId();
 					dataEjecutado.objetoTipoPredecesor = 2;
-					lstdataEjecutado.add(dataEjecutado);
 					
 					List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
 							null, null, null, null, null, usuario);
+					
+					hijos = new String[subproductos.size()];
+					contadorHijos = 0;
+					for (Subproducto subproducto : subproductos){
+						hijos[contadorHijos] = subproducto.getId().toString() + ",4";
+						contadorHijos++;
+					}
+					dataEjecutado.hijo = hijos;
+					lstdataEjecutado.add(dataEjecutado);
+					
+					
 					for (Subproducto subproducto : subproductos){
 						dataEjecutado = new stInformePresupuesto();
 						dataEjecutado.objetoTipo = OBJETO_ID_SUBPRODUCTO;
@@ -307,10 +367,22 @@ public class SInformePresupuesto extends HttpServlet {
 						dataEjecutado.nombre =   subproducto.getNombre();
 						dataEjecutado.idPredecesor = producto.getId();
 						dataEjecutado.objetoTipoPredecesor = 3;
-						lstdataEjecutado.add(dataEjecutado);
 						
 						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
 								null, null, null, null, null, usuario);
+						
+						
+						hijos = new String[actividades.size()];
+						contadorHijos = 0;
+						for (Actividad actividad : actividades){
+							if(actividad.getCosto().compareTo(BigDecimal.ZERO) != 0 && actividad.getCostoReal().compareTo(BigDecimal.ZERO) != 0){
+								hijos[contadorHijos] = actividad.getId().toString() + ",5";
+								contadorHijos++;
+							}
+						}
+						dataEjecutado.hijo = hijos;
+						lstdataEjecutado.add(dataEjecutado);
+						
 						for (Actividad actividad : actividades ){
 							lstdataEjecutado = ObtenerActividades(actividad,usuario,lstdataEjecutado, OBJETO_ID_ACTIVIDAD,subproducto.getId(), OBJETO_ID_SUBPRODUCTO);
 						}
@@ -343,39 +415,35 @@ public class SInformePresupuesto extends HttpServlet {
 		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, actividad.getId(), OBJETO_ID_ACTIVIDAD, 
 				null, null,null, null, null, usuario);
 		
-		stInformePresupuesto dataEjecutado = new stInformePresupuesto();
-		dataEjecutado = new stInformePresupuesto();
-		dataEjecutado.objetoTipo = OBJETO_ID_ACTIVIDAD;
-		dataEjecutado.posicionArbol = posicionArbol;
-		dataEjecutado.idObjetoTipo = actividad.getId();
-		dataEjecutado.nombre =   actividad.getNombre();
-		dataEjecutado.idPredecesor = idPredecesor;
-		dataEjecutado.objetoTipoPredecesor = objetoTipoPredecesor;
-		dataEjecutado.Costo = actividad.getCosto();
-		lstdataEjecutado.add(dataEjecutado);
-		String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad, usuario).split(";");
-		dataEjecutado.fechaInicio = fechaInicioFin[0];
-		dataEjecutado.fechaFin = fechaInicioFin[1];
-		
-		
-		for(Actividad subActividad : actividades){
-			lstdataEjecutado = ObtenerActividades(subActividad, usuario, lstdataEjecutado, posicionArbol + 1, actividad.getId(), OBJETO_ID_ACTIVIDAD);
+		if (actividad.getCosto().compareTo(BigDecimal.ZERO) != 0 && actividad.getCostoReal().compareTo(BigDecimal.ZERO) != 0){
+			stInformePresupuesto dataEjecutado = new stInformePresupuesto();
+			dataEjecutado = new stInformePresupuesto();
+			dataEjecutado.objetoTipo = OBJETO_ID_ACTIVIDAD;
+			dataEjecutado.posicionArbol = posicionArbol;
+			dataEjecutado.idObjetoTipo = actividad.getId();
+			dataEjecutado.nombre =   actividad.getNombre();
+			dataEjecutado.idPredecesor = idPredecesor;
+			dataEjecutado.objetoTipoPredecesor = objetoTipoPredecesor;
+			dataEjecutado.Costo = actividad.getCosto() == null ? new BigDecimal(0) : actividad.getCosto();
+			dataEjecutado.CostoReal = actividad.getCostoReal() == null ? new BigDecimal(0) : actividad.getCostoReal();
+			
+			String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad, usuario).split(";");
+			dataEjecutado.fechaInicio = fechaInicioFin[0];
+			dataEjecutado.fechaFin = fechaInicioFin[1];			
+			
+			String[] hijos = new String[actividades.size()];
+			int contadorHijos = 0;
+			for(Actividad subActividad : actividades){
+					hijos[contadorHijos] = subActividad.getId().toString() + ",5";
+					contadorHijos++;
+			}
+			dataEjecutado.hijo = hijos;
+			lstdataEjecutado.add(dataEjecutado);
+
+			for(Actividad subActividad : actividades){
+				lstdataEjecutado = ObtenerActividades(subActividad, usuario, lstdataEjecutado, posicionArbol + 1, actividad.getId(), OBJETO_ID_ACTIVIDAD);
+			}
 		}
-		
 		return lstdataEjecutado;
 	}
-	
-	public static Timestamp convertStringToTimestamp(String str_date) {
-	    try {
-	      DateFormat formatter;
-	      formatter = new SimpleDateFormat("dd/MM/yyyy");
-	       // you can change format of date
-	      Date date = formatter.parse(str_date);
-	      java.sql.Timestamp timeStampDate = new Timestamp(date.getTime());
-
-	      return timeStampDate;
-	    } catch (Throwable e) {
-	      return null;
-	    }
-	  }
 }

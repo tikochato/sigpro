@@ -168,6 +168,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/porcentajeactividades/:proyectoId?',{
             	template: '<div load-on-demand="\'porcentajeactividadesController\'" class="all_page"></div>'
             })
+            .when('/avanceactividades/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'avanceActividadesController\'" class="all_page"></div>'
+            })
             .when('/cargatrabajo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'cargatrabajoController\'" class="all_page"></div>'
             })
@@ -179,6 +182,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             })
             .when('/responsablerol/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'responsablerolController\'" class="all_page"></div>'
+            })
+            .when('/planadquisiciones/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'planAdquisicionesController\'" class="all_page"></div>'
             })
             .when('/planejecucion/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'planejecucionController\'" class="all_page"></div>'
@@ -435,6 +441,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   script: '/app/components/reportes/agenda/agenda.controller.js',
 	    	   template: '/app/components/reportes/agenda/agenda.jsp'
 	       },{
+	    	   name: 'avanceActividadesController',
+	    	   script: '/app/components/reportes/avanceactividades/avanceActividades.controller.js',
+	    	   template: '/app/components/reportes/avanceactividades/avanceActividades.jsp'
+	       },{
 	    	   name: 'cargatrabajoController',
 	    	   script: '/app/components/reportes/cargatrabajo/cargatrabajo.controller.js',
 	    	   template: '/app/components/reportes/cargatrabajo/cargatrabajo.jsp'
@@ -450,8 +460,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'responsablerolController',
 	    	   script: '/app/components/responsablerol/responsablerol.controller.js',
 	    	   template: '/app/components/responsablerol/responsablerol.jsp'
-	       },
-	       {
+	       },{
+	    	   name: 'planAdquisicionesController',
+	    	   script: '/app/components/reportes/planadquisiciones/planadquisiciones.controller.js',
+	    	   template: '/app/components/reportes/planadquisiciones/planadquisiciones.jsp'
+	       },{
 	    	   name: 'planejecucionController',
 	    	   script: '/app/components/reportes/planejecucion/planejecucion.controller.js',
 	    	   template: '/app/components/reportes/planejecucion/planejecucion.jsp'

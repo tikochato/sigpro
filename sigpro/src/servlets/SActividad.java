@@ -154,7 +154,8 @@ public class SActividad extends HttpServlet {
 				temp.longitud = actividad.getLongitud();
 				temp.latitud = actividad.getLatitud();
 				temp.costo = actividad.getCosto();
-				temp.costoReal = actividad.getCostoReal();			
+				temp.costoReal = actividad.getCostoReal();
+
 				stactividads.add(temp);
 			}
 
@@ -239,7 +240,7 @@ public class SActividad extends HttpServlet {
 						
 						actividad = new Actividad(actividadTipo, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra, fuente,
-								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,costoReal ,
+								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,costoReal,
 								null,null);
 					}
 					else{
