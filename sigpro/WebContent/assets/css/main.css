@@ -432,3 +432,18 @@ h2 {
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
 }
+
+/*input para cantidades de dinero*/
+.money-label-hidden{display:none;}
+.money-label {
+	padding:0; 
+	position: absolute; 
+	background:#fff;
+	left: 5px;
+	top: 15px;  
+	width:100%;
+	margin-top: -2px; 
+	font-weight: normal; 
+	cursor:text; 
+	height: 50%;
+}

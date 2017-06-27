@@ -86,6 +86,7 @@ public class SGantt extends HttpServlet {
 		Date inicio = null;
 		Date fin = null;
 		boolean completada = false;
+		boolean multiproyecto = false;
 		
 		Map<String, String> map = null;
 		
@@ -104,6 +105,8 @@ public class SGantt extends HttpServlet {
 							accion = parametro.getString();
 						}else if (parametro.getFieldName().compareTo("proyecto_id")==0 && parametro.getString().length()>0){
 							proyectoId = Integer.parseInt(parametro.getString());
+						}else if (parametro.getFieldName().compareTo("multiproyecto")==0 && parametro.getString().length()>0){
+							multiproyecto = parametro.getString().equals("1");
 						}
 						
 					}
@@ -245,7 +248,7 @@ public class SGantt extends HttpServlet {
 
 				CProject project = new CProject(directorioTemporal + "/temp_"+ time.toString());
 
-				boolean creado = project.imporatarArchivo(project.getProject(),usuario);
+				boolean creado = project.imporatarArchivo(project.getProject(),usuario,multiproyecto);
 				
 				if (file.exists())
 				{

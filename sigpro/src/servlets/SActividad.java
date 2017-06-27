@@ -66,6 +66,7 @@ public class SActividad extends HttpServlet {
 		Integer duracion;
 		String duracionDimension;
 		BigDecimal costo;
+		BigDecimal costoReal;
 
 		int estado;
 	}
@@ -153,7 +154,8 @@ public class SActividad extends HttpServlet {
 				temp.longitud = actividad.getLongitud();
 				temp.latitud = actividad.getLatitud();
 				temp.costo = actividad.getCosto();
-							
+				temp.costoReal = actividad.getCostoReal();
+
 				stactividads.add(temp);
 			}
 
@@ -186,6 +188,7 @@ public class SActividad extends HttpServlet {
 				temp.longitud = actividad.getLongitud();
 				temp.latitud = actividad.getLatitud();
 				temp.costo = actividad.getCosto();
+				temp.costoReal = actividad.getCostoReal();
 				stactividads.add(temp);
 			}
 
@@ -218,6 +221,7 @@ public class SActividad extends HttpServlet {
 					String duracionDimension = map.get("duracionDimension");
 					String longitud = map.get("longitud");
 					BigDecimal costo = Utils.String2BigDecimal(map.get("costo"), null);
+					BigDecimal costoReal = Utils.String2BigDecimal(map.get("costoReal"), null);
 					String latitud = map.get("latitud");
 
 					ActividadTipo actividadTipo= new ActividadTipo();
@@ -236,7 +240,7 @@ public class SActividad extends HttpServlet {
 						
 						actividad = new Actividad(actividadTipo, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra, fuente,
-								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,
+								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,costoReal,
 								null,null);
 					}
 					else{
@@ -258,6 +262,7 @@ public class SActividad extends HttpServlet {
 						actividad.setLatitud(latitud);
 						actividad.setLongitud(longitud);
 						actividad.setCosto(costo);
+						actividad.setCostoReal(costoReal);
 					}
 					result = ActividadDAO.guardarActividad(actividad);
 
@@ -376,6 +381,7 @@ public class SActividad extends HttpServlet {
 				temp.longitud = actividad.getLongitud();
 				temp.latitud = actividad.getLatitud();
 				temp.costo = actividad.getCosto();
+				temp.costoReal = actividad.getCostoReal();
 				stactividads.add(temp);
 			}
 
@@ -421,6 +427,8 @@ public class SActividad extends HttpServlet {
 			temp.predecesorTipo = actividad.getPredObjetoTipo();
 			temp.duracion = actividad.getDuracion();
 			temp.duracionDimension = actividad.getDuracionDimension();
+			temp.costo = actividad.getCosto();
+			temp.costoReal = actividad.getCostoReal();
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"actividad\":",response_text);
@@ -438,6 +446,7 @@ public class SActividad extends HttpServlet {
 			Integer duracion = Utils.String2Int(map.get("duracion"), null);
 			String duracionDimension = map.get("duracionDimension");
 			int actividadtipoid =Utils.getParameterInteger(map, "actividadtipoid");
+			
 			ActividadTipo actividadTipo= new ActividadTipo();
 			actividadTipo.setId(actividadtipoid);
 

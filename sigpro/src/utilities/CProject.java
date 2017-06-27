@@ -1,14 +1,17 @@
 package utilities;
 
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
 import dao.ProductoDAO;
+import dao.ProgramaDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
 import net.sf.mpxj.ProjectFile;
@@ -25,6 +28,10 @@ import pojo.ComponenteTipo;
 import pojo.Cooperante;
 import pojo.Producto;
 import pojo.ProductoTipo;
+import pojo.Programa;
+import pojo.ProgramaProyecto;
+import pojo.ProgramaProyectoId;
+import pojo.ProgramaTipo;
 import pojo.Proyecto;
 import pojo.ProyectoTipo;
 import pojo.Subproducto;
@@ -54,6 +61,7 @@ public class CProject {
 	}
 	
 	
+	static int PROGRAMA_TIPO_ID_DEFECTO = 1;
 	static int COOPERANTE_ID_DEFECTO = 1;
 	static int PROYECTO_TIPO_ID_DEFECTO = 3;
 	static int UNIDAD_EJECUTORA_ID_DEFECTO = 1;
@@ -73,6 +81,7 @@ public class CProject {
 	ProjectFile project;
 	Integer indetnacion;
 	String itemsProject;
+	boolean multiproyecto;
 	
 	HashMap<Integer,stitem> items;
 	
@@ -111,11 +120,38 @@ public class CProject {
 	}
 	
 	
-	public boolean imporatarArchivo(ProjectFile projectFile, String usuario){
+	public boolean imporatarArchivo(ProjectFile projectFile, String usuario,boolean multiproyecto){
 		indetnacion = 0;
 		itemsProject = "";
 		items = new HashMap<>();
+		this.multiproyecto = multiproyecto; 
 		return getTask(projectFile,usuario);
+	}
+	
+	public Programa crearPrograma(Task task,String usuario){
+		
+		ProgramaTipo programaTipo = new ProgramaTipo();
+		programaTipo.setId(PROGRAMA_TIPO_ID_DEFECTO);
+		
+		Programa programa = new Programa(programaTipo, task.getName(), null, usuario, null, new Date(), null, 1, null, null);
+		
+		return ProgramaDAO.guardarPrograma(programa) ? programa : null;
+	}
+	
+	public boolean crearProgramaProyecto (Proyecto proyecto, Programa programa,String usuario){
+		ProgramaProyecto programaProyecto = new ProgramaProyecto();
+		programaProyecto.setId( new ProgramaProyectoId(programa.getId(), proyecto.getId()));
+		programaProyecto.setEstado(1);
+		programaProyecto.setFechaCreacion(new Date());
+		programaProyecto.setPrograma(programa);
+		programaProyecto.setProyecto(proyecto);
+		programaProyecto.setUsuarioCreo(usuario);
+		
+		if (programa.getProgramaProyectos() == null){
+			programa.setProgramaProyectos(new HashSet<ProgramaProyecto>(0));
+		}
+		programa.getProgramaProyectos().add(programaProyecto);
+		return ProgramaDAO.guardarPrograma(programa);
 	}
 	
 	public Proyecto crearProyecto(Task task,String usuario){
@@ -125,10 +161,9 @@ public class CProject {
 		proyectoTipo.setId(PROYECTO_TIPO_ID_DEFECTO);
 		UnidadEjecutora unidadEjecturoa = new UnidadEjecutora();
 		unidadEjecturoa.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
-		Proyecto proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecturoa
+		Proyecto proyecto = new Proyecto(null,cooperante, proyectoTipo, unidadEjecturoa
 				, task.getName(), null, usuario, null, new Date(), null, 1
-				, null, null, null, null, null, null, null,null, null, null, null, null, null, null,null,null);
-		ProyectoDAO.guardarProyecto(proyecto);
+				, null, null, null, null, null, null, null,null, null, null, null, null, null, null,null,null,null,null,null);
 		
 		return ProyectoDAO.guardarProyecto(proyecto) ? proyecto : null;
 	}
@@ -138,7 +173,6 @@ public class CProject {
 		componenteTipo.setId(COMPONENTE_TIPO_ID_DEFECTO);
 		UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
 		unidadEjecutora.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
-		
 		
 		Componente componente = new Componente(componenteTipo, proyecto, unidadEjecutora, task.getName(), null, usuario, null, new Date(), null, 1
 				, null, null, null, null, null, null, null, null, null, null,null,null);
@@ -156,7 +190,6 @@ public class CProject {
 				,task.getName() , null, usuario, null, new Date(), null,1, 
 				 null, null, null, null, null, null, null, 
 				null, null, null,null,null,null);
-		
 		
 		return ProductoDAO.guardarProducto(producto) ? producto : null;
 	}
@@ -187,19 +220,16 @@ public class CProject {
 		}
 		
 		Actividad actividad = new Actividad(actividadTipo, task.getName(), null, task.getStart(), task.getFinish()
-				,0,usuario, null, new Date(), 
-				null, 1, null, null, null, null, 
-				null, null, null , objetoId, objetoTipo, 
+				, 0, usuario, null, new Date(), 
+				null, 1, null, null, null,null, null, null, null, objetoId, objetoTipo, 
 				(( Double ) task.getDuration().getDuration()).intValue()
-				, task.getDuration().getUnits().getName()
-				 
-				 ,itemPredecesor!=null ? itemPredecesor.objetoId : null
-						 , itemPredecesor != null ? itemPredecesor.objetoTipo : null, null, null,null,null,null);
+				, task.getDuration().getUnits().getName() 
+				,itemPredecesor!=null ? itemPredecesor.objetoId : null
+				, itemPredecesor != null ? itemPredecesor.objetoTipo : null
+				, null, null, new BigDecimal(task.getCost().toString()),new BigDecimal(task.getActualCost().toString()),null,null);
+		
 		return ActividadDAO.guardarActividad(actividad) ? actividad : null;
 	}
-	
-	
-	
 	
 	public void cargarItem(Task task,int objetoId, int objetoTipo){
 		stitem item_ = new stitem();
@@ -218,19 +248,22 @@ public class CProject {
 		items.put(task.getUniqueID(), item_);
 	}
 	
-	
 
 	public  boolean getTask(ProjectFile projectFile,String usuario){
 		
-		indetnacion = 0;
+		
 		itemsProject = "";
 		items = new HashMap<>();
 		boolean ret = false;
+		indetnacion = multiproyecto ? -1 : 0;
+		
 		for (Task task : projectFile.getChildTasks())
 		{
 		      listaJerarquica(task,usuario,null);
 		}
 		ret = true;
+		
+		
 		return ret;
 	}
 	
@@ -238,7 +271,7 @@ public class CProject {
 	{
 		indetnacion ++;
 		Object objeto_temp = null;
-		if (indetnacion>0){
+		if (task.getID()>= 0 && 	indetnacion >=  0 ){ 
 			stitem item_ = new stitem();
 			item_.id = task.getUniqueID();
 			item_.contenido = task.getName();
@@ -256,9 +289,15 @@ public class CProject {
 			
 			boolean tieneHijos = task.getChildTasks()!=null && task.getChildTasks().size()>0;
 			
-			if (indetnacion == 1){
+			if (indetnacion == 0 && multiproyecto){
+				objeto_temp = crearPrograma(task, usuario);
+				
+			}else if (indetnacion == 1){
 				if(tieneHijos){
 					objeto_temp =  crearProyecto(task, usuario);
+					if (objeto != null){
+						crearProgramaProyecto((Proyecto)objeto_temp,(Programa)objeto, usuario);
+					}
 					cargarItem(task,((Proyecto) objeto_temp).getId(), OBJETO_ID_PROYECTO);
 				}
 			}else if (indetnacion == 2){
@@ -295,8 +334,11 @@ public class CProject {
 				objeto_temp = crearActividad(task, usuario,((Actividad) objeto).getId(),OBJETO_ID_ACTIVIDAD );
 				cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
 			}
+			
 		}
-		
+		/*if (task.getID()==0){
+			indetnacion --;
+		}*/
 		
 		for (Task child : task.getChildTasks())
 		{

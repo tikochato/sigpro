@@ -28,6 +28,11 @@
 	            	<label class="glyphicon glyphicon-search" for="file" ></label>
 	            	</span>
 	          	</div>
+	          	<br/>
+	          	<div class="form-group">
+						<input type="checkbox"  ng-model="cargararchivoc.multiproyecto" />
+						<label  class="floating-label">Multiproyecto</label>
+				</div>
 		</div>
     </div>
     

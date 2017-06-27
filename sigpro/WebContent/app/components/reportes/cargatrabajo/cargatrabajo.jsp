@@ -22,10 +22,7 @@
 					<div class="form-group col-sm-2" >
 						<label class="btn btn-default" ng-click="controller.refrescar();" uib-tooltip="Generar" 
 							tooltip-placement="bottom">
-						<span class="glyphicon glyphicon-equalizer"></span></label>
-						<label class="btn btn-default" ng-click="controller.exportarExcel();" uib-tooltip="Exportar a Excel" ng-hide="!controller.exportar"
-							tooltip-placement="bottom">
-						<span class="glyphicon glyphicon-download-alt"></span></label>
+						<span class="glyphicon glyphicon-new-window"></span></label>
 					</div>
 				</div>  
 			    <div class="row">
@@ -78,6 +75,12 @@
 	    	
 	    	</div>
 	    	<div style="height: 100%; width: 50%; float: right;">
+		    	<div class="operation_buttons" align="right">
+					<div class="btn-group">
+						<label class="btn btn-primary"  ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.exportar">
+						<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Exportar</span></label>
+					</div>
+				</div>
 	    		<table st-table="controller.displayedCollection" st-safe-src="controller.rowCollection" class="table table-striped">
 							<thead>
 								<tr>

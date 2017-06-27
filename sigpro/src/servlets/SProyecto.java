@@ -4,14 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
@@ -27,23 +24,22 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.PrestamoDAO;
 import dao.ProyectoDAO;
+import dao.ProyectoImpactoDAO;
+import dao.ProyectoMiembroDAO;
 import dao.ProyectoPropiedadDAO;
 import dao.ProyectoPropiedadValorDAO;
-import pojo.AutorizacionTipo;
+import pojo.Colaborador;
 import pojo.Cooperante;
-import pojo.EjecucionEstado;
-import pojo.InteresTipo;
-import pojo.ObjetoPrestamo;
-import pojo.ObjetoPrestamoId;
-import pojo.Prestamo;
+import pojo.Entidad;
 import pojo.Proyecto;
+import pojo.ProyectoImpacto;
+import pojo.ProyectoMiembro;
+import pojo.ProyectoMiembroId;
 import pojo.ProyectoPropedadValor;
 import pojo.ProyectoPropedadValorId;
 import pojo.ProyectoPropiedad;
 import pojo.ProyectoTipo;
-import pojo.TipoMoneda;
 import pojo.UnidadEjecutora;
 import utilities.Utils;
 
@@ -75,6 +71,8 @@ public class SProyecto extends HttpServlet {
 		Integer fuente;
 		String longitud;
 		String latitud;
+		Integer directorProyectoId;
+		String directorProyectoNmbre;
 	};
 
 	class stdatadinamico {
@@ -152,6 +150,12 @@ public class SProyecto extends HttpServlet {
 				dato.fuente = proyecto.getFuente();
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
+				dato.directorProyectoId = proyecto.getColaborador() != null ? proyecto.getColaborador().getId() : 0;
+				dato.directorProyectoId = proyecto.getColaborador()!= null ? proyecto.getColaborador().getId() : null;
+				dato.directorProyectoNmbre = proyecto.getColaborador()!= null ? (proyecto.getColaborador().getPnombre()
+										+ " " + proyecto.getColaborador().getSnombre() 
+										+ " " + proyecto.getColaborador().getPapellido()
+										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				datos_.add(dato);
 			}
 
@@ -194,6 +198,11 @@ public class SProyecto extends HttpServlet {
 				dato.fuente = proyecto.getFuente();
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
+				dato.directorProyectoId = proyecto.getColaborador()!= null ? proyecto.getColaborador().getId() : null;
+				dato.directorProyectoNmbre = proyecto.getColaborador()!= null ? (proyecto.getColaborador().getPnombre()
+										+ " " + proyecto.getColaborador().getSnombre() 
+										+ " " + proyecto.getColaborador().getPapellido()
+										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				datos_.add(dato);
 			}
 
@@ -237,6 +246,11 @@ public class SProyecto extends HttpServlet {
 				dato.fuente = proyecto.getFuente();
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
+				dato.directorProyectoId = proyecto.getColaborador()!= null ? proyecto.getColaborador().getId() : null;
+				dato.directorProyectoNmbre = proyecto.getColaborador()!= null ? (proyecto.getColaborador().getPnombre()
+										+ " " + proyecto.getColaborador().getSnombre() 
+										+ " " + proyecto.getColaborador().getPapellido()
+										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -279,6 +293,11 @@ public class SProyecto extends HttpServlet {
 				dato.fuente = proyecto.getFuente();
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
+				dato.directorProyectoId = proyecto.getColaborador()!= null ? proyecto.getColaborador().getId() : null;
+				dato.directorProyectoNmbre = proyecto.getColaborador()!= null ? (proyecto.getColaborador().getPnombre()
+										+ " " + proyecto.getColaborador().getSnombre() 
+										+ " " + proyecto.getColaborador().getPapellido()
+										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -305,6 +324,7 @@ public class SProyecto extends HttpServlet {
 				Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
 				String longitud = map.get("longitud");
 				String latitud = map.get("latitud");
+				String enunciadoAlcance = map.get("enunciadoAlcance");
 
 				ProyectoTipo proyectoTipo = new ProyectoTipo();
 				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): null);
@@ -315,17 +335,19 @@ public class SProyecto extends HttpServlet {
 				Cooperante cooperante = new Cooperante();
 				cooperante.setId(map.get("cooperanteid")!=null ? Integer.parseInt(map.get("cooperanteid")): null);
 				
+				Colaborador directorProyecto = new Colaborador();
+				directorProyecto.setId(map.get("directorProyecto")!=null ? Integer.parseInt(map.get("directorProyecto")): null);
+				
+				
 				type = new TypeToken<List<stdatadinamico>>() {
 				}.getType();
 
 				List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
 
 				if(esnuevo){
-					proyecto = new Proyecto(cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion
-							, usuario, null, new DateTime().toDate(), null, 1, snip
-							,programa , subPrograma, proyecto_,actividad, obra, fuente,latitud,longitud,objetivo
-							, null, null, null, null,null,null);
-
+					proyecto = new Proyecto(directorProyecto, cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion,
+							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, obra, fuente,
+							latitud, longitud, objetivo, enunciadoAlcance, null, null, null, null, null, null, null,null);
 				}else{
 					proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 					proyecto.setNombre(nombre);
@@ -345,9 +367,10 @@ public class SProyecto extends HttpServlet {
 					proyecto.setFuente(fuente);
 					proyecto.setLongitud(longitud);
 					proyecto.setLatitud(latitud);
+					proyecto.setColaborador(directorProyecto);
+					proyecto.setEnunciadoAlcance(enunciadoAlcance);
 
-				   List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
-
+				    List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
 					proyecto.setProyectoPropedadValors(null);
 					if (valores_temp!=null){
 						for (ProyectoPropedadValor valor : valores_temp){
@@ -355,6 +378,20 @@ public class SProyecto extends HttpServlet {
 							valor.setUsuarioActualizo("admin");
 							ProyectoPropiedadValorDAO.eliminarProyectoPropiedadValor(valor);
 						}
+					}
+					
+					List<ProyectoImpacto> impactos_temp = ProyectoImpactoDAO.getProyectoImpactoPorProyecto(proyecto.getId());
+					proyecto.setProyectoImpactos(null);
+					if (impactos_temp!=null){
+						for(ProyectoImpacto pi:impactos_temp)
+							ProyectoImpactoDAO.eliminarTotalProyectoImpacto(pi);
+					}
+					
+					List<ProyectoMiembro> miembros_temp = ProyectoMiembroDAO.getProyectoMiembroPorProyecto(proyecto.getId());
+					proyecto.setProyectoMiembros(null);
+					if (miembros_temp!=null){
+						for(ProyectoMiembro pm:miembros_temp)
+							ProyectoMiembroDAO.eliminarProyectoMiembro(pm);
 					}
 				}
 				result = ProyectoDAO.guardarProyecto(proyecto);
@@ -387,6 +424,32 @@ public class SProyecto extends HttpServlet {
 						}
 					}
 				}
+				if (result){
+					String[] impactos =  map.get("impactos") != null && map.get("impactos").length()>0 ? map.get("impactos").toString().split("~") : null;
+					if (impactos !=null && impactos.length>0){
+						for (String impacto : impactos){
+							String [] temp = impacto.trim().split(",");
+							Entidad entidad = new Entidad();
+							entidad.setEntidad(Integer.parseInt(temp[0]));
+							ProyectoImpacto proyImpacto = new ProyectoImpacto(entidad, proyecto, temp[1] , 1,  usuario, null, new Date(),null);
+							result = ProyectoImpactoDAO.guardarProyectoImpacto(proyImpacto);
+						}
+					}
+				}
+				if (result){
+					String[] miembroIds =  map.get("miembros") != null && map.get("miembros").length()>0 ? map.get("miembros").toString().split(",") : null;
+					if (miembroIds != null && miembroIds.length > 0 ){
+						for (String miembroId : miembroIds){
+							Colaborador colaborador = new Colaborador();
+							colaborador.setId(Utils.String2Int(miembroId));
+							ProyectoMiembroId pmId = new ProyectoMiembroId(proyecto.getId(), colaborador.getId());
+							ProyectoMiembro proyMiembro = new ProyectoMiembro(pmId, colaborador, proyecto, 1, new Date(), null, usuario, null);
+							result = ProyectoMiembroDAO.guardarProyectoMiembro(proyMiembro);
+							
+						}
+						
+					}
+				}
 				
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 						, "\"id\": " , proyecto.getId().toString() , ","
@@ -400,6 +463,7 @@ public class SProyecto extends HttpServlet {
 
 			}
 			catch (Throwable e){
+				e.printStackTrace();
 				response_text = "{ \"success\": false }";
 			}
 

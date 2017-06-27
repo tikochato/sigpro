@@ -65,7 +65,8 @@ public class ColaboradorDAO {
 		if (pojo == null) {
 
 			pojo = new Colaborador(UnidadEjecutoraDAO.getUnidadEjecutora(codigoUnidadEjecutora),UsuarioDAO.getUsuario(usuario),
-					primerNombre, segundoNombre, primerApellido, segundoApellido, cui, 1, usuario_creacion, null, fecha_creacion, null,null);
+					primerNombre, segundoNombre, primerApellido, segundoApellido, cui, 1, usuario_creacion, null, fecha_creacion, null,
+					null, null, null);
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try {
 				session.beginTransaction();

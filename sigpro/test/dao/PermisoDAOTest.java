@@ -11,7 +11,7 @@ public class PermisoDAOTest {
     private static Permiso permisoPrueba;
 	@Before
 	public void before(){
-		 permisoPrueba  = new Permiso("test","unit_test", "admin", new DateTime().toDate(),1);
+		 permisoPrueba  = new Permiso(1,"test","unit_test", "admin", new DateTime().toDate(),1);
 	}
 	@Test 
 	public void getPermisosTest(){
@@ -46,7 +46,7 @@ public class PermisoDAOTest {
 	
 	@Test
 	public void eliminarPermisoTest(){
-		Permiso permisoTmp = new Permiso("","", "", new DateTime().toDate(),1);
+		Permiso permisoTmp = new Permiso(1,"","", "", new DateTime().toDate(),1);
 		PermisoDAO.guardarPermiso(permisoTmp);
 		assertEquals(PermisoDAO.eliminarPermiso(permisoTmp),false);
 	}

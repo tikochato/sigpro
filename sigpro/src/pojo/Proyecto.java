@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jun 2, 2017 12:28:44 PM by Hibernate Tools 5.2.1.Final
+// Generated Jun 13, 2017 3:16:39 PM by Hibernate Tools 5.2.1.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,8 +27,9 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 409454774875276811L;
+	private static final long serialVersionUID = 5940674650176848624L;
 	private Integer id;
+	private Colaborador colaborador;
 	private Cooperante cooperante;
 	private ProyectoTipo proyectoTipo;
 	private UnidadEjecutora unidadEjecutora;
@@ -49,9 +50,12 @@ public class Proyecto implements java.io.Serializable {
 	private String latitud;
 	private String longitud;
 	private String objetivo;
+	private String enunciadoAlcance;
 	private Set<Desembolso> desembolsos = new HashSet<Desembolso>(0);
 	private Set<Hito> hitos = new HashSet<Hito>(0);
 	private Set<ProgramaProyecto> programaProyectos = new HashSet<ProgramaProyecto>(0);
+	private Set<ProyectoMiembro> proyectoMiembros = new HashSet<ProyectoMiembro>(0);
+	private Set<ProyectoImpacto> proyectoImpactos = new HashSet<ProyectoImpacto>(0);
 	private Set<ProyectoPropedadValor> proyectoPropedadValors = new HashSet<ProyectoPropedadValor>(0);
 	private Set<ProyectoUsuario> proyectoUsuarios = new HashSet<ProyectoUsuario>(0);
 	private Set<Componente> componentes = new HashSet<Componente>(0);
@@ -70,13 +74,15 @@ public class Proyecto implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public Proyecto(Cooperante cooperante, ProyectoTipo proyectoTipo, UnidadEjecutora unidadEjecutora, String nombre,
-			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
-			Integer actividad, Integer obra, Integer fuente, String latitud, String longitud, String objetivo,
-			Set<Desembolso> desembolsos, Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos,
-			Set<ProyectoPropedadValor> proyectoPropedadValors, Set<ProyectoUsuario> proyectoUsuarios,
-			Set<Componente> componentes) {
+	public Proyecto(Colaborador colaborador, Cooperante cooperante, ProyectoTipo proyectoTipo,
+			UnidadEjecutora unidadEjecutora, String nombre, String descripcion, String usuarioCreo,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Long snip,
+			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, Integer fuente,
+			String latitud, String longitud, String objetivo, String enunciadoAlcance, Set<Desembolso> desembolsos,
+			Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos, Set<ProyectoMiembro> proyectoMiembros,
+			Set<ProyectoImpacto> proyectoImpactos, Set<ProyectoPropedadValor> proyectoPropedadValors,
+			Set<ProyectoUsuario> proyectoUsuarios, Set<Componente> componentes) {
+		this.colaborador = colaborador;
 		this.cooperante = cooperante;
 		this.proyectoTipo = proyectoTipo;
 		this.unidadEjecutora = unidadEjecutora;
@@ -97,9 +103,12 @@ public class Proyecto implements java.io.Serializable {
 		this.latitud = latitud;
 		this.longitud = longitud;
 		this.objetivo = objetivo;
+		this.enunciadoAlcance = enunciadoAlcance;
 		this.desembolsos = desembolsos;
 		this.hitos = hitos;
 		this.programaProyectos = programaProyectos;
+		this.proyectoMiembros = proyectoMiembros;
+		this.proyectoImpactos = proyectoImpactos;
 		this.proyectoPropedadValors = proyectoPropedadValors;
 		this.proyectoUsuarios = proyectoUsuarios;
 		this.componentes = componentes;
@@ -115,6 +124,16 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "director_proyecto")
+	public Colaborador getColaborador() {
+		return this.colaborador;
+	}
+
+	public void setColaborador(Colaborador colaborador) {
+		this.colaborador = colaborador;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -302,6 +321,15 @@ public class Proyecto implements java.io.Serializable {
 		this.objetivo = objetivo;
 	}
 
+	@Column(name = "enunciado_alcance", length = 4000)
+	public String getEnunciadoAlcance() {
+		return this.enunciadoAlcance;
+	}
+
+	public void setEnunciadoAlcance(String enunciadoAlcance) {
+		this.enunciadoAlcance = enunciadoAlcance;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
 	public Set<Desembolso> getDesembolsos() {
 		return this.desembolsos;
@@ -327,6 +355,24 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setProgramaProyectos(Set<ProgramaProyecto> programaProyectos) {
 		this.programaProyectos = programaProyectos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
+	public Set<ProyectoMiembro> getProyectoMiembros() {
+		return this.proyectoMiembros;
+	}
+
+	public void setProyectoMiembros(Set<ProyectoMiembro> proyectoMiembros) {
+		this.proyectoMiembros = proyectoMiembros;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
+	public Set<ProyectoImpacto> getProyectoImpactos() {
+		return this.proyectoImpactos;
+	}
+
+	public void setProyectoImpactos(Set<ProyectoImpacto> proyectoImpactos) {
+		this.proyectoImpactos = proyectoImpactos;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
