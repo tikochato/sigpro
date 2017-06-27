@@ -265,6 +265,60 @@ public class CExcel {
 	CellStyle estilo_3; // pie
 	int rownum;
 	
+	
+public String ExportarExcel2(Map<String,Object[]> datos,String titulo, String usuario, String[] encabezadosCombinados, int inicio){
+		
+		sheet_ = workbook_.createSheet(titulo);
+		String path="";
+		
+		int contador = inicio;
+		
+		Row row = sheet_.createRow(6);
+		
+		for(String tamano : encabezadosCombinados){
+			String[] valor = tamano.split(",");
+			crearCelda2(valor[0], workbook_ , row,contador,1);
+			conbinarCeldas(6,6, contador,contador + (Utils.String2Int(valor[1])-1));
+			contador += Utils.String2Int(valor[1]);
+			sheet_.autoSizeColumn(contador);
+			sheet_.autoSizeColumn(contador+1);
+		}
+		
+		rownum = 7;
+		int columnas=0;
+		
+		for (int i = 0 ;i< datos.size(); i++ ) {
+			row = sheet_.createRow(rownum++);
+			Object [] objArr = datos.get(i+"");
+			int cellnum = 0;
+			for (Object obj : objArr) {
+				crearCelda(obj, workbook_, row, cellnum++, rownum==8?1:0);
+			}
+			columnas = objArr.length > columnas? objArr.length : columnas;
+		}
+		setEncabezado(titulo,columnas);
+		piePagina(usuario);
+		sheet_.autoSizeColumn(0);
+		sheet_.autoSizeColumn(1);
+		sheet_.autoSizeColumn(2);
+		sheet_.autoSizeColumn(3);
+
+		try {
+			path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".xls");
+			FileOutputStream out = 
+					new FileOutputStream(new File(path));
+			workbook_.write(out);
+			out.close();
+			
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return path;
+	}
+	
 	public String ExportarExcel(Map<String,Object[]> datos,String titulo, String usuario){
 		
 		sheet_ = workbook_.createSheet(titulo);
@@ -305,6 +359,20 @@ public class CExcel {
 		return path;
 	}
 	
+	
+private Cell crearCelda2(Object value, HSSFWorkbook workbook_,Row row,int cellnum,int estilo){
+		
+		Cell cell = row.createCell(cellnum);
+		if(value instanceof String)
+			cell.setCellValue((String)value);
+		else if (value instanceof Integer ) 
+			cell.setCellValue((Integer) value);
+		
+		if (estilo>0)
+			cell.setCellStyle(obtenerEstilo( estilo));
+
+		return cell;
+	}
 	
 	private Cell crearCelda(Object obj, HSSFWorkbook workbook_,Row row,int cellnum,int estilo){
 		

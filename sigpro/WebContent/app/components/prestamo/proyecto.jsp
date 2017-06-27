@@ -452,9 +452,18 @@
 								</div>
 								
 								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="number" class="inputText"  ng-model="controller.prestamo.montoContratado" ng-required="true"
-										ng-value="controller.prestamo.montoContratado" onblur="this.setAttribute('value', this.value);" ng-change="controller.setPorcentaje(1);">
+									<div class="form-group money-input">
+										<input type="number" 
+										 class="inputText"  
+										 ng-model="controller.prestamo.montoContratado" 
+										 ng-required="true"
+										 ng-value="controller.prestamo.montoContratado"
+										 onblur="this.setAttribute('value', this.value);" 
+										 ng-change="controller.setPorcentaje(1);" 
+										 ng-blur="controller.ocultarLabel('label_class_1')" 
+										 id="label_class_1"
+										 >
+										<label class="money-label" ng-class="controller.label_class_1" ng-click="controller.ocultarLabel('label_class_1')">{{controller.prestamo.montoContratado | number}}</label>
 										<label class="floating-label" >* Monto Contratado</label>
 									</div>
 								</div>
@@ -462,16 +471,34 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" class="inputText"  ng-model="controller.prestamo.montoContratadoUsd" ng-required="true"
-										ng-value="controller.prestamo.montoContratadoUsd" onblur="this.setAttribute('value', this.value);" ng-change="controller.setPorcentaje(2);">
+										<input type="number" 
+										 class="inputText"  
+										 ng-model="controller.prestamo.montoContratadoUsd" 
+										 ng-required="true"
+										 ng-value="controller.prestamo.montoContratadoUsd" 
+										 onblur="this.setAttribute('value', this.value);" 
+										 ng-change="controller.setPorcentaje(2);"
+										 ng-blur="controller.ocultarLabel('label_class_2')" 
+										 id="label_class_2"
+										 ng-click="controller.ocultarLabel('label_class_2')"
+										 >
+										 <label class="money-label" ng-class="controller.label_class_2" ng-click="controller.ocultarLabel('label_class_2')">{{controller.prestamo.montoContratadoUsd | number}}</label>
 										<label class="floating-label" >* Monto Contratado $</label>
 									</div>
 								</div>
 								
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" class="inputText"  ng-model="controller.prestamo.montoContratadoQtz" ng-required="true"
-										ng-value="controller.prestamo.montoContratadoQtz" onblur="this.setAttribute('value', this.value);">
+										<input type="number" 
+										class="inputText" 
+										ng-model="controller.prestamo.montoContratadoQtz" 
+										ng-required="true"
+										ng-value="controller.prestamo.montoContratadoQtz" 
+										onblur="this.setAttribute('value', this.value);"
+										ng-blur="controller.ocultarLabel('label_class_3')" 
+										id="label_class_3"
+										>
+										<label class="money-label" ng-class="controller.label_class_3" ng-click="controller.ocultarLabel('label_class_3')">{{controller.prestamo.montoContratadoQtz | number}}</label>
 										<label class="floating-label" >* Monto Contratado Q</label>
 									</div>
 								</div>
@@ -480,8 +507,20 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" class="inputText" ng-model="controller.prestamo.desembolsoAFechaUsd" ng-required="true"
-										ng-value="controller.prestamo.desembolsoAFechaUsd" onblur="this.setAttribute('value', this.value);" ng-change="controller.setPorcentaje(1);"/>
+										<input type="number" 
+										class="inputText" 
+										ng-model="controller.prestamo.desembolsoAFechaUsd" 
+										ng-required="true"
+										ng-value="controller.prestamo.desembolsoAFechaUsd" 
+										onblur="this.setAttribute('value', this.value);" 
+										ng-change="controller.setPorcentaje(1);"
+										ng-blur="controller.ocultarLabel('label_class_4')" 
+										id="label_class_4"
+										>
+										<label class="money-label" 
+										ng-class="controller.label_class_4" 
+										ng-click="controller.ocultarLabel('label_class_4')" 
+										>{{ controller.prestamo.desembolsoAFechaUsd | number}}</label>
 										<label class="floating-label">* Desembolso a la Fecha $</label>
 									</div>
 								</div>
@@ -497,8 +536,21 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" class="inputText" ng-model="controller.prestamo.montoPorDesembolsarUsd" ng-required="true"
-										ng-value="controller.prestamo.montoPorDesembolsarUsd" onblur="this.setAttribute('value', this.value);" ng-change="controller.setPorcentaje(2);"/>
+										<input type="number" 
+										class="inputText" 
+										ng-model="controller.prestamo.montoPorDesembolsarUsd" 
+										ng-required="true"
+										ng-value="controller.prestamo.montoPorDesembolsarUsd" 
+										onblur="this.setAttribute('value', this.value);" 
+										ng-change="controller.setPorcentaje(2);"
+										ng-disabled="true"
+										ng-blur="controller.ocultarLabel('label_class_5')" 
+										id="label_class_5"
+										/>
+										<label class="money-label" 
+										ng-class="controller.label_class_5" 
+										ng-click="controller.ocultarLabel('label_class_5')" 
+										>{{ controller.prestamo.montoPorDesembolsarUsd | number}}</label>
 										<label class="floating-label">* Monto por Desembolsar $</label>
 									</div>
 								</div>
@@ -517,7 +569,7 @@
 					
 				</uib-tab>
 				
-				<uib-tab ng-click="controller.getPorcentajes();" index="2" heading="Datos Entidad Ejecutroa">
+				<uib-tab ng-click="controller.getPorcentajes();" index="2" heading="Datos Entidad Ejecutora">
 					<div class="panel panel-default">
 						<div class="panel-heading label-form" style="text-align: center;">Información Específica del Préstamo en la Entidad Ejecutora</div>
 						<div class="panel-body">

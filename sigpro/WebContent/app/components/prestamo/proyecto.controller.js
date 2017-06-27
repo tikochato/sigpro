@@ -164,6 +164,10 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			if(mi.prestamo.desembolsoAFechaUsd != undefined && mi.prestamo.montoContratado != undefined){
 				n = (mi.prestamo.desembolsoAFechaUsd / mi.prestamo.montoContratado) * 100;
 				mi.prestamo.desembolsoAFechaUsdP = Number(n.toFixed(2));
+				mi.prestamo.montoPorDesembolsarUsd= ((1 - (mi.prestamo.desembolsoAFechaUsdP/100) ) *  mi.prestamo.montoContratado);
+				mi.prestamo.montoPorDesembolsarUsd= Number(mi.prestamo.montoPorDesembolsarUsd.toFixed(2));
+				mi.prestamo.montoPorDesembolsarUsdP= 100- mi.prestamo.desembolsoAFechaUsdP;
+				
 			}
 		}else if (tipo==2){
 			if(mi.prestamo.montoContratadoUsd != undefined && mi.prestamo.montoPorDesembolsarUsd != undefined){
@@ -564,7 +568,18 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 		});
 	}
-
+	
+	mi.ocultarLabel=function(input){
+		if(mi[input]=="money-label-hidden"){
+			mi[input]="money-label";
+			
+		}else{
+			mi[input]="money-label-hidden";
+			var data_input = $window.document.getElementById(input);
+		    data_input.focus();
+		}
+		
+	};
 	mi.cambioPagina=function(){
 		mi.cargarTabla(mi.paginaActual);
 	}
