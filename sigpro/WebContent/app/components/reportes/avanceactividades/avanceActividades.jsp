@@ -69,10 +69,11 @@
 							</div>
 						</div>
 					</div>
+					<br>
 					<div style="height: 5%; width: 100%">
 						<div><h4><b>Hitos</b></h4></div>
 					</div>
-					<div id="grid2" ui-grid="controller.gridOptions2" style="width: 85%; height: 300px"
+					<div id="grid2" ui-grid="controller.gridOptions2" style="width: 85%; height: 150px"
 						ui-grid-edit 
 						ui-grid-row-edit 
 						ui-grid-resize-columns 
@@ -88,6 +89,7 @@
 							</div>
 						</div>
 					</div>
+					<br>
 					<div style="height: 5%; width: 100%">
 						<div><h4><b>Productos</b></h4></div>
 					</div>

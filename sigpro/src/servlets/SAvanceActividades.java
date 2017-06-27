@@ -29,12 +29,14 @@ import dao.ComponenteDAO;
 import dao.HitoDAO;
 import dao.HitoResultadoDAO;
 import dao.ProductoDAO;
+import dao.ProyectoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.Componente;
 import pojo.Hito;
 import pojo.HitoResultado;
 import pojo.Producto;
+import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.CLogger;
 import utilities.Utils;
@@ -54,6 +56,13 @@ public class SAvanceActividades extends HttpServlet {
 		int porcentajeAvance;
 		String fechaInicio;
 		String fechaFin;
+	}
+	
+	class stCantidad{
+		double sinIniciar;
+		double proceso;
+		double completadas;
+		double retrasadas;
 	}
 	
 	class stAvance{
@@ -100,12 +109,20 @@ public class SAvanceActividades extends HttpServlet {
 			Date fin = new Date();
 			Date Corte = new Date();
 			List<stAvance> listaResult = new ArrayList<stAvance>();
+			List<stCantidad> listaResultCantidad = new ArrayList<stCantidad>();
+			String cantidades = "";
 			stAvance temp = new stAvance();
+			stCantidad tCantidad = new stCantidad();
+			Proyecto proyecto = null;
+			
 			DecimalFormat df2 = new DecimalFormat("###.##");
 			
 			try{
 				List<stActividad> actividades = getActividadesProyecto(idPrestamo, usuario);
 				if (actividades != null){
+					
+					proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
+					
 					totalActividades = actividades.size();
 				
 					for (stActividad actividad : actividades){
@@ -136,14 +153,12 @@ public class SAvanceActividades extends HttpServlet {
 						}
 					}
 					
-					temp.nombre = "Cantidad";
-					temp.sinIniciar = new Double(totalSinIniciar).toString();
-					temp.proceso = new Double(totalEnProceso).toString();
-					temp.completadas = new Double(totalCompletadas).toString();
-					temp.retrasadas = new Double(totalRetrasadas).toString();
-					temp.tipo = 1;
+					tCantidad.sinIniciar = totalSinIniciar;
+					tCantidad.proceso = totalEnProceso;
+					tCantidad.completadas = totalCompletadas;
+					tCantidad.retrasadas = totalRetrasadas;
 					
-					listaResult.add(temp);
+					listaResultCantidad.add(tCantidad);
 
 					totalSinIniciar = (totalSinIniciar/totalActividades)*100;
 					totalEnProceso = (totalEnProceso/totalActividades)*100;
@@ -167,7 +182,7 @@ public class SAvanceActividades extends HttpServlet {
 					}
 					
 					temp = new stAvance();
-					temp.nombre = "Porcentaje";
+					temp.nombre = proyecto.getNombre();
 					temp.sinIniciar = df2.format(totalSinIniciar);
 					temp.proceso = df2.format(totalEnProceso);
 					temp.completadas = df2.format(totalCompletadas);
@@ -178,7 +193,9 @@ public class SAvanceActividades extends HttpServlet {
 					
 					response_text = new GsonBuilder().serializeNulls().create().toJson(listaResult);
 					response_text = String.join("", ",\"actividades\":",response_text);
-					response_text = String.join("", ",\"totalActividades\":" + totalActividades,response_text);
+					cantidades = new GsonBuilder().serializeNulls().create().toJson(listaResultCantidad);
+					response_text += String.join("", ",\"cantidadesActividades\":",cantidades);
+					response_text += String.join("", ",\"totalActividades\":" + totalActividades,response_text);
 				}
 				
 				List<Hito> hitos = HitoDAO.getHitosPaginaPorProyecto(0, 0, idPrestamo, null, null, null, null, null);
@@ -187,6 +204,9 @@ public class SAvanceActividades extends HttpServlet {
 				totalCompletadas = 0;
 				
 				if(hitos != null && hitos.size() > 0){
+					
+					proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
+					
 					listaResult = new ArrayList<stAvance>();
 					double  totalHitos = hitos.size();
 					
@@ -224,21 +244,21 @@ public class SAvanceActividades extends HttpServlet {
 						}
 					}
 					
-					temp = new stAvance();
-					temp.nombre = "Cantidad";
-					temp.sinIniciar = new Double(totalSinIniciar).toString();
-					temp.completadas = new Double(totalRetrasadas).toString();
-					temp.retrasadas = new Double(totalCompletadas).toString();
-					temp.tipo = 1;
+					listaResultCantidad = new ArrayList<stCantidad>();
+					tCantidad = new stCantidad();
 					
-					listaResult.add(temp);
+					tCantidad.sinIniciar = totalSinIniciar;
+					tCantidad.retrasadas = totalRetrasadas;
+					tCantidad.completadas = totalCompletadas;
+					
+					listaResultCantidad.add(tCantidad);
 					
 					totalSinIniciar = (totalSinIniciar/totalHitos)*100;
 					totalCompletadas = (totalCompletadas/totalHitos)*100;
 					totalRetrasadas = (totalRetrasadas/totalHitos)*100;
 					
 					temp = new stAvance();
-					temp.nombre = "Porcentaje";
+					temp.nombre = proyecto.getNombre();
 					temp.sinIniciar = df2.format(totalSinIniciar);
 					temp.completadas = df2.format(totalCompletadas);
 					temp.retrasadas = df2.format(totalRetrasadas);
@@ -246,6 +266,8 @@ public class SAvanceActividades extends HttpServlet {
 					
 					listaResult.add(temp);
 					
+					cantidades = new GsonBuilder().serializeNulls().create().toJson(listaResultCantidad);
+					response_text += String.join("", ",\"cantidadHitos\":",cantidades);
 					String response_hitos = new GsonBuilder().serializeNulls().create().toJson(listaResult);
 					response_text += String.join("", ",\"hitos\":",response_hitos);
 					response_text = String.join("", ",\"totalHitos\":" + totalHitos,response_text);
@@ -264,7 +286,7 @@ public class SAvanceActividades extends HttpServlet {
 						
 						actividades = getActividadesProducto(producto, usuario);
 						
-						if(actividades != null){
+						if(actividades != null && actividades.size() != 0){
 							totalActividades = actividades.size();
 							
 							for (stActividad actividad : actividades){
@@ -294,7 +316,6 @@ public class SAvanceActividades extends HttpServlet {
 									totalCompletadas++;
 								}
 							}
-							
 							
 							totalSinIniciar = (totalSinIniciar/totalActividades)*100;
 							totalEnProceso = (totalEnProceso/totalActividades)*100;
@@ -326,7 +347,8 @@ public class SAvanceActividades extends HttpServlet {
 							temp.tipo = 2;
 							
 							listaResult.add(temp);
-						}
+						}else
+							totalProductos = 0;
 					}
 					
 					String response_productos = new GsonBuilder().serializeNulls().create().toJson(listaResult);

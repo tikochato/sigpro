@@ -13,7 +13,18 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants){
 		var mi = this;
 		mi.mostrarcargando = false;
+		
 		mi.totalActividades = 0;
+		mi.totalActividadesCompletadas = 0;
+		mi.totalActividadesSinIniciar = 0;
+		mi.totalActividadesProceso = 0;
+		mi.totalActividadesRetrasadas = 0;
+		
+		mi.totalHitos = 0;
+		mi.totalHitosCompletados = 0;
+		mi.totalHitosSinIniciar = 0;
+		mi.totalHitosRetrasados = 0;
+		
 		mi.totalProductos = 0;
 		mi.totalHitos = 0;
 		
@@ -43,56 +54,33 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 			enableSorting: false,
 			showColumnFooter: true,
 			columnDefs: [
-				{ name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: 'Actividades', enableColumnMenu: false, 
+				{ name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: 'Actividades del proyecto', enableColumnMenu: false, 
 					footerCellTemplate: '<div class="ui-grid-cell-contents">Total de Actividades: {{grid.appScope.controller.totalActividades}}</div>',
-				},
-				{ name: 'sinIniciar', width: 200, displayName: 'Sin Iniciar', enableColumnMenu: false,         
-					cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-						if (Number(grid.getCellValue(row,col)) >= 0 && Number(grid.getCellValue(row,col)) <= 40 && row.entity.nombre == "Porcentaje") {
-							return 'red';
-			            } else if (Number(grid.getCellValue(row,col)) >= 41 && Number(grid.getCellValue(row,col)) <= 60 && row.entity.nombre == "Porcentaje"){
-			            	return  'yellow';
-			            } else if(Number(grid.getCellValue(row,col)) >= 61 && Number(grid.getCellValue(row,col)) <= 100 && row.entity.nombre == "Porcentaje"){
-			            	return 'green';
-			            }
-			        },
-			        cellFilter: 'calculatePercentage:"actualScore":row.entity'
-				},
-				{ name: 'proceso', width: 200, displayName: 'En proceso', enableColumnMenu: false, 
-					cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-						if (Number(grid.getCellValue(row,col)) >= 0 && Number(grid.getCellValue(row,col)) <= 40 && row.entity.nombre == "Porcentaje") {
-							return 'red';
-			            } else if (Number(grid.getCellValue(row,col)) >= 41 && Number(grid.getCellValue(row,col)) <= 60 && row.entity.nombre == "Porcentaje"){
-			            	return  'yellow';
-			            } else if(Number(grid.getCellValue(row,col)) >= 61 && Number(grid.getCellValue(row,col)) <= 100 && row.entity.nombre == "Porcentaje"){
-			            	return 'green';
-			            }
-			        },
-			        cellFilter: 'calculatePercentage:"actualScore":row.entity'
 				},
 				{ name: 'completadas', width: 200, displayName: 'Completadas', enableColumnMenu: false, 
 					cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-						if (Number(grid.getCellValue(row,col)) >= 0 && Number(grid.getCellValue(row,col)) <= 40 && row.entity.nombre == "Porcentaje") {
+						if (Number(grid.getCellValue(row,col)) >= 0 && Number(grid.getCellValue(row,col)) <= 40 && row.entity.tipo == 2) {
 							return 'red';
-			            } else if (Number(grid.getCellValue(row,col)) >= 41 && Number(grid.getCellValue(row,col)) <= 60 && row.entity.nombre == "Porcentaje"){
+			            } else if (Number(grid.getCellValue(row,col)) >= 41 && Number(grid.getCellValue(row,col)) <= 60 && row.entity.tipo == 2){
 			            	return  'yellow';
-			            } else if(Number(grid.getCellValue(row,col)) >= 61 && Number(grid.getCellValue(row,col)) <= 100 && row.entity.nombre == "Porcentaje"){
+			            } else if(Number(grid.getCellValue(row,col)) >= 61 && Number(grid.getCellValue(row,col)) <= 100 && row.entity.tipo == 2){
 			            	return 'green';
 			            }
 			        },
-			        cellFilter: 'calculatePercentage:"actualScore":row.entity'
+			        cellFilter: 'calculatePercentage:"actualScore":row.entity', 
+					footerCellTemplate: '<div class="ui-grid-cell-contents">Total completadas: {{grid.appScope.controller.totalActividadesCompletadas}}</div>'
 				},
-				{ name: 'retrasadas', width: 200, displayName: 'Retrasadas', enableColumnMenu: false, 
-					cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-						if (Number(grid.getCellValue(row,col)) >= 0 && Number(grid.getCellValue(row,col)) <= 40 && row.entity.nombre == "Porcentaje") {
-							return 'red';
-			            } else if (Number(grid.getCellValue(row,col)) >= 41 && Number(grid.getCellValue(row,col)) <= 60 && row.entity.nombre == "Porcentaje"){
-			            	return  'yellow';
-			            } else if(Number(grid.getCellValue(row,col)) >= 61 && Number(grid.getCellValue(row,col)) <= 100 && row.entity.nombre == "Porcentaje"){
-			            	return 'green';
-			            }
-			        },
-			        cellFilter: 'calculatePercentage:"actualScore":row.entity'
+				{ name: 'sinIniciar', width: 200, displayName: 'Sin Iniciar', enableColumnMenu: false,
+			        cellFilter: 'calculatePercentage:"actualScore":row.entity', 
+					footerCellTemplate: '<div class="ui-grid-cell-contents">Total sin iniciar: {{grid.appScope.controller.totalActividadesSinIniciar}}</div>'
+				},
+				{ name: 'proceso', width: 200, displayName: 'En proceso', enableColumnMenu: false,
+			        cellFilter: 'calculatePercentage:"actualScore":row.entity', 
+					footerCellTemplate: '<div class="ui-grid-cell-contents">Total en proceso: {{grid.appScope.controller.totalActividadesProceso}}</div>'
+				},
+				{ name: 'retrasadas', width: 200, displayName: 'Retrasadas', enableColumnMenu: false,
+			        cellFilter: 'calculatePercentage:"actualScore":row.entity', 
+					footerCellTemplate: '<div class="ui-grid-cell-contents">Total retrasadas: {{grid.appScope.controller.totalActividadesRetrasadas}}</div>'
 				}
 			],
 			onRegisterApi: function(gridApi) {
@@ -104,44 +92,29 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 			enableSorting: false,
 			showColumnFooter: true,
 			columnDefs: [
-				{ name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: 'Productos', enableColumnMenu: false, 
+				{ name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: 'Hitos del proyecto', enableColumnMenu: false, 
 					footerCellTemplate: '<div class="ui-grid-cell-contents">Total de Hitos: {{grid.appScope.controller.totalHitos}}</div>',
-				},
-				{ name: 'sinIniciar', width: 200, displayName: 'Hitos sin Iniciar', enableColumnMenu: false, type: 'number',          
-					cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-						if (Number(grid.getCellValue(row,col)) >= 0 && Number(grid.getCellValue(row,col)) <= 40 && row.entity.nombre != "Cantidad") {
-							return 'red';
-			            } else if (Number(grid.getCellValue(row,col)) >= 41 && Number(grid.getCellValue(row,col)) <= 60 && row.entity.nombre != "Cantidad"){
-			            	return  'yellow';
-			            } else if(Number(grid.getCellValue(row,col)) >= 61 && Number(grid.getCellValue(row,col)) <= 100 && row.entity.nombre != "Cantidad"){
-			            	return 'green';
-			            }
-			        },
-			        cellFilter: 'calculatePercentage:"actualScore":row.entity'
 				},
 				{ name: 'completadas', width: 200, displayName: 'Hitos completados', enableColumnMenu: false, type: 'number', 
 					cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-						if (Number(grid.getCellValue(row,col)) >= 0 && Number(grid.getCellValue(row,col)) <= 40 && row.entity.nombre != "Cantidad") {
+						if (Number(grid.getCellValue(row,col)) >= 0 && Number(grid.getCellValue(row,col)) <= 40 && row.entity.tipo == 2) {
 							return 'red';
-			            } else if (Number(grid.getCellValue(row,col)) >= 41 && Number(grid.getCellValue(row,col)) <= 60 && row.entity.nombre != "Cantidad"){
+			            } else if (Number(grid.getCellValue(row,col)) >= 41 && Number(grid.getCellValue(row,col)) <= 60 && row.entity.tipo == 2){
 			            	return  'yellow';
-			            } else if(Number(grid.getCellValue(row,col)) >= 61 && Number(grid.getCellValue(row,col)) <= 100 && row.entity.nombre != "Cantidad"){
+			            } else if(Number(grid.getCellValue(row,col)) >= 61 && Number(grid.getCellValue(row,col)) <= 100 && row.entity.tipo == 2){
 			            	return 'green';
 			            }
 			        },
-			        cellFilter: 'calculatePercentage:"actualScore":row.entity'
+			        cellFilter: 'calculatePercentage:"actualScore":row.entity', 
+					footerCellTemplate: '<div class="ui-grid-cell-contents">Total completadas: {{grid.appScope.controller.totalHitosCompletados}}</div>'
 				},
-				{ name: 'retrasadas', width: 200, displayName: 'Hitos retrasados', enableColumnMenu: false, type: 'number', 
-					cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-						if (Number(grid.getCellValue(row,col)) >= 0 && Number(grid.getCellValue(row,col)) <= 40 && row.entity.nombre != "Cantidad") {
-							return 'red';
-			            } else if (Number(grid.getCellValue(row,col)) >= 41 && Number(grid.getCellValue(row,col)) <= 60 && row.entity.nombre != "Cantidad"){
-			            	return  'yellow';
-			            } else if(Number(grid.getCellValue(row,col)) >= 61 && Number(grid.getCellValue(row,col)) <= 100 && row.entity.nombre != "Cantidad"){
-			            	return 'green';
-			            }
-			        },
-			        cellFilter: 'calculatePercentage:"actualScore":row.entity'
+				{ name: 'sinIniciar', width: 200, displayName: 'Hitos sin Iniciar', enableColumnMenu: false, type: 'number',
+			        cellFilter: 'calculatePercentage:"actualScore":row.entity', 
+					footerCellTemplate: '<div class="ui-grid-cell-contents">Total sin iniciar: {{grid.appScope.controller.totalHitosSinIniciar}}</div>'
+				},
+				{ name: 'retrasadas', width: 200, displayName: 'Hitos retrasados', enableColumnMenu: false, type: 'number',
+			        cellFilter: 'calculatePercentage:"actualScore":row.entity', 
+					footerCellTemplate: '<div class="ui-grid-cell-contents">Total retrasadas: {{grid.appScope.controller.totalHitosRetrasados}}</div>'
 				}
 			],
 			onRegisterApi: function(gridApi) {
@@ -156,30 +129,6 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 				{ name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: 'Productos', enableColumnMenu: false, 
 					footerCellTemplate: '<div class="ui-grid-cell-contents">Total de Productos: {{grid.appScope.controller.totalProductos}}</div>',
 				},
-				{ name: 'sinIniciar', width: 200, displayName: 'Actividades sin Iniciar', enableColumnMenu: false, type: 'number',          
-					cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-						if (Number(grid.getCellValue(row,col)) >= 0 && Number(grid.getCellValue(row,col)) <= 40) {
-							return 'red';
-			            } else if (Number(grid.getCellValue(row,col)) >= 41 && Number(grid.getCellValue(row,col)) <= 60){
-			            	return  'yellow';
-			            } else if(Number(grid.getCellValue(row,col)) >= 61 && Number(grid.getCellValue(row,col)) <= 100){
-			            	return 'green';
-			            }
-			        },
-			        cellFilter: 'calculatePercentage:"actualScore":row.entity'
-				},
-				{ name: 'proceso', width: 200, displayName: 'Actividades en proceso', enableColumnMenu: false, type: 'number', 
-					cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-						if (Number(grid.getCellValue(row,col)) >= 0 && Number(grid.getCellValue(row,col)) <= 40) {
-							return 'red';
-			            } else if (Number(grid.getCellValue(row,col)) >= 41 && Number(grid.getCellValue(row,col)) <= 60){
-			            	return  'yellow';
-			            } else if(Number(grid.getCellValue(row,col)) >= 61 && Number(grid.getCellValue(row,col)) <= 100){
-			            	return 'green';
-			            }
-			        },
-			        cellFilter: 'calculatePercentage:"actualScore":row.entity'
-				},
 				{ name: 'completadas', width: 200, displayName: 'Actividades completadas', enableColumnMenu: false, type: 'number', 
 					cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
 						if (Number(grid.getCellValue(row,col)) >= 0 && Number(grid.getCellValue(row,col)) <= 40) {
@@ -192,16 +141,13 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 			        },
 			        cellFilter: 'calculatePercentage:"actualScore":row.entity'
 				},
+				{ name: 'sinIniciar', width: 200, displayName: 'Actividades sin Iniciar', enableColumnMenu: false, type: 'number',
+			        cellFilter: 'calculatePercentage:"actualScore":row.entity'
+				},
+				{ name: 'proceso', width: 200, displayName: 'Actividades en proceso', enableColumnMenu: false, type: 'number',
+			        cellFilter: 'calculatePercentage:"actualScore":row.entity'
+				},
 				{ name: 'retrasadas', width: 200, displayName: 'Actividades retrasadas', enableColumnMenu: false, type: 'number', 
-					cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-						if (Number(grid.getCellValue(row,col)) >= 0 && Number(grid.getCellValue(row,col)) <= 40) {
-							return 'red';
-			            } else if (Number(grid.getCellValue(row,col)) >= 41 && Number(grid.getCellValue(row,col)) <= 60){
-			            	return  'yellow';
-			            } else if(Number(grid.getCellValue(row,col)) >= 61 && Number(grid.getCellValue(row,col)) <= 100){
-			            	return 'green';
-			            }
-			        },
 			        cellFilter: 'calculatePercentage:"actualScore":row.entity'
 				}
 			],
@@ -229,12 +175,42 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 						fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
 					}).success(function(response){
 						if (response.success){
+							mi.totalActividades = 0;
+							mi.totalActividadesCompletadas = 0;
+							mi.totalActividadesSinIniciar = 0;
+							mi.totalActividadesProceso = 0;
+							mi.totalActividadesRetrasadas = 0;
+							
+							mi.totalHitos = 0;
+							mi.totalHitosCompletados = 0;
+							mi.totalHitosSinIniciar = 0;
+							mi.totalHitosRetrasados = 0;
+							
+							mi.totalProductos = 0;
+							mi.totalHitos = 0;
+							
 							mi.gridOptions1.data = response.actividades;
 							mi.totalActividades = response.totalActividades;
+							
+							if(response.cantidadesActividades != undefined){
+								mi.totalActividadesCompletadas = response.cantidadesActividades[0].completadas;
+								mi.totalActividadesSinIniciar = response.cantidadesActividades[0].sinIniciar;
+								mi.totalActividadesProceso = response.cantidadesActividades[0].proceso;
+								mi.totalActividadesRetrasadas = response.cantidadesActividades[0].retrasadas;
+							}
+
 							mi.gridOptions2.data = response.hitos;
 							mi.totalHitos = response.totalHitos;
+							
+							if(response.cantidadHitos != undefined){
+								mi.totalHitosCompletados = response.cantidadHitos[0].completadas;
+								mi.totalHitosSinIniciar = response.cantidadHitos[0].sinIniciar;
+								mi.totalHitosRetrasados = response.cantidadHitos[0].retrasadas
+							}
+
 							mi.gridOptions3.data = response.productos;
 							mi.totalProductos = response.totalProductos;
+							
 							mi.mostrarcargando = false;
 						}else
 							mi.mostrarcargando = false;

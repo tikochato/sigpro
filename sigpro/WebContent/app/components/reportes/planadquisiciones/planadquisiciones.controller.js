@@ -60,7 +60,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 		        },
 				{ name: 'metodo', enableCellEdit: false,width: 150, displayName: 'Método'},
 				{ name: 'planificadoDocs', enableCellEdit: false, width: 150, displayName: 'Planificado', category: 'PreparacionDocumentos', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
-				{ name: 'realDocs', enableCellEdit: true, enableCellEditOnFocus: true, width: 150, displayName: 'Real', category: 'PreparacionDocumentos', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
+				{ name: 'realDocs', enableCellEdit: true, enableCellEditOnFocus: true, width: 150, displayName: 'Real', category: 'PreparacionDocumentos', type: 'date', cellFilter: 'date:"dd/MM/yyyy"'},
 				{ name: 'planificadoLanzamiento', enableCellEdit: false, width: 150, displayName: 'Planificado', category: 'LanzamientoEvento', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
 				{ name: 'realLanzamiento', enableCellEdit: true, enableCellEditOnFocus: true, width: 150, displayName: 'Real', category: 'LanzamientoEvento', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
 				{ name: 'planificadoRecepcionEval', enableCellEdit: false, width: 150, displayName: 'Planificado', category: 'RecepcionEvaluacionOfertas', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
@@ -73,7 +73,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			onRegisterApi: function(gridApi) {
 			      mi.gridApi = gridApi;
 			      
-			      mi.gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
+			      mi.gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){				      
 			    	  mi.saveRow(rowEntity);
 			      });
 			      
@@ -85,15 +85,15 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 		$http.post('/SPlanAdquisiciones', {
             accion: 'guardarPlan',
             id: rowEntity.idObjetoTipo,
-            planificadoDocs: moment(rowEntity.planificadoDocs).format('MM/DD/YYYY') == null ? null : moment(rowEntity.planificadoDocs).format('MM/DD/YYYY'),
-            realDocs: moment(rowEntity.realDocs).format('MM/DD/YYYY') == null ? null : moment(rowEntity.realDocs).format('MM/DD/YYYY'),
-            planificadoLanzamiento: moment(rowEntity.planificadoLanzamiento).format('MM/DD/YYYY') == null ? null : moment(rowEntity.planificadoLanzamiento).format('MM/DD/YYYY'),
-            realLanzamiento: moment(rowEntity.realLanzamiento).format('MM/DD/YYYY') == null ? null : moment(rowEntity.realLanzamiento).format('MM/DD/YYYY'),
-            planificadoRecepcionEval: moment(rowEntity.planificadoRecepcionEval).format('MM/DD/YYYY') == null ? null : moment(rowEntity.planificadoRecepcionEval).format('MM/DD/YYYY'),
-            realRecepcionEval: moment(rowEntity.realRecepcionEval).format('MM/DD/YYYY') == null ? null : moment(rowEntity.realRecepcionEval).format('MM/DD/YYYY'),
-    		planificadoAdjudica: moment(rowEntity.planificadoAdjudica).format('MM/DD/YYYY') == null ? null : moment(rowEntity.planificadoAdjudica).format('MM/DD/YYYY'),
-            realAdjudica: moment(rowEntity.realAdjudica).format('MM/DD/YYYY') == null ? null : moment(rowEntity.realAdjudica).format('MM/DD/YYYY'),
-    		planificadoFirma: moment(rowEntity.planificadoFirma).format('MM/DD/YYYY') == null ? null : moment(rowEntity.planificadoFirma).format('MM/DD/YYYY'),
+            planificadoDocs: moment(rowEntity.planificadoDocs).format('DD/MM/YYYY') == null ? null : moment(rowEntity.planificadoDocs).format('DD/MM/YYYY'),
+            realDocs: moment(rowEntity.realDocs).format('DD/MM/YYYY') == null ? null : moment(rowEntity.realDocs).format('DD/MM/YYYY'),
+            planificadoLanzamiento: moment(rowEntity.planificadoLanzamiento).format('DD/MM/YYYY') == null ? null : moment(rowEntity.planificadoLanzamiento).format('DD/MM/YYYY'),
+            realLanzamiento: moment(rowEntity.realLanzamiento).format('DD/MM/YYYY') == null ? null : moment(rowEntity.realLanzamiento).format('DD/MM/YYYY'),
+            planificadoRecepcionEval: moment(rowEntity.planificadoRecepcionEval).format('DD/MM/YYYY') == null ? null : moment(rowEntity.planificadoRecepcionEval).format('DD/MM/YYYY'),
+            realRecepcionEval: moment(rowEntity.realRecepcionEval).format('DD/MM/YYYY') == null ? null : moment(rowEntity.realRecepcionEval).format('DD/MM/YYYY'),
+    		planificadoAdjudica: moment(rowEntity.planificadoAdjudica).format('DD/MM/YYYY') == null ? null : moment(rowEntity.planificadoAdjudica).format('DD/MM/YYYY'),
+            realAdjudica: moment(rowEntity.realAdjudica).format('DD/MM/YYYY') == null ? null : moment(rowEntity.realAdjudica).format('DD/MM/YYYY'),
+    		planificadoFirma: moment(rowEntity.planificadoFirma).format('DD/MM/YYYY') == null ? null : moment(rowEntity.planificadoFirma).format('DD/MM/YYYY'),
             realFirma: moment(rowEntity.realFirma).format('DD/MM/YYYY') == null ? null : moment(rowEntity.realFirma).format('DD/MM/YYYY')
         }).success(function(response){
         	
@@ -156,7 +156,18 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				data[x].$$treeLevel = Number(data[x].posicionArbol) - 1;
 				if(data[x].objetoTipo == 5)
 					data[x].metodo = 0;
-			}
+				
+				data[x].planificadoDocs = (data[x].planificadoDocs!='') ? moment(data[x].planificadoDocs,'DD/MM/YYYY').toDate() : null;
+				data[x].realDocs = (data[x].realDocs!='') ? moment(data[x].realDocs,'DD/MM/YYYY').toDate() : null;
+				data[x].planificadoLanzamiento = (data[x].planificadoLanzamiento!='') ? moment(data[x].planificadoLanzamiento,'DD/MM/YYYY').toDate() : null;
+				data[x].realLanzamiento = (data[x].realLanzamiento!='') ? moment(data[x].realLanzamiento,'DD/MM/YYYY').toDate() : null;
+				data[x].planificadoRecepcionEval = (data[x].planificadoRecepcionEval!='') ? moment(data[x].planificadoRecepcionEval,'DD/MM/YYYY').toDate() : null;
+				data[x].realRecepcionEval = (data[x].realRecepcionEval!='') ? moment(data[x].realRecepcionEval,'DD/MM/YYYY').toDate() : null;
+				data[x].planificadoAdjudica = (data[x].planificadoAdjudica!='') ? moment(data[x].planificadoAdjudica,'DD/MM/YYYY').toDate() : null;
+				data[x].realAdjudica = (data[x].realAdjudica!='') ? moment(data[x].realAdjudica,'DD/MM/YYYY').toDate() : null;
+				data[x].planificadoFirma = (data[x].planificadoFirma!='') ? moment(data[x].planificadoFirma,'DD/MM/YYYY').toDate() : null;
+				data[x].realFirma = (data[x].realFirma!='') ? moment(data[x].realFirma,'DD/MM/YYYY').toDate() : null;
+			}	
 		}
 		
 		mi.gridOptions.data = data;

@@ -56,14 +56,6 @@ public class SPlanAdquisiciones extends HttpServlet {
 	private static int OBJETO_ID_ACTIVIDAD= 5;
 	private static Integer idTipoActividad;
 	
-	class stdatadinamico {
-		String id;
-		String tipo;
-		String label;
-		String valor;
-		String valor_f;
-	}
-	
 	class stInformePresupuesto{
 		int id;
 		int idPrestamo;
