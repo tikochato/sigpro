@@ -227,6 +227,11 @@
 					       <label for="iprog" class="floating-label">Costo</label>
 						</div>
 						
+						<div class="form-group" >
+					       <input type="number" class="inputText" ng-model="actividadc.actividad.costoReal" ng-value="actividadc.actividad.costoReal" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
+					       <label for="iprog" class="floating-label">Costo Real</label>
+						</div>
+						
 						<div ng-repeat="campo in actividadc.camposdinamicos">
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >

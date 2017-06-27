@@ -298,7 +298,7 @@ public class ActividadDAO {
 		df.setDimension(actividad.getDuracionDimension());
 		df.setDuracion(actividad.getDuracion());
 		objetoActividadFechas.add(df);
-		if(actividad.getPredObjetoId() != null){
+		if(actividad.getPredObjetoId() != null && actividad.getPredObjetoId() != actividad.getId()){
 			objetoActividadFechas = getPredecesora(getActividadPorId(actividad.getPredObjetoId(), usuario),usuario, objetoActividadFechas);
 			
 			Date fechaFI = null;
@@ -325,7 +325,7 @@ public class ActividadDAO {
 		df.setDuracion(actividad.getDuracion());
 		fechasPredecesoras.add(df);
 		
-		if(actividad.getPredObjetoId() != null){
+		if(actividad.getPredObjetoId() != null && actividad.getPredObjetoId() != actividad.getId()){
 			fechasPredecesoras = getPredecesora(getActividadPorId(actividad.getPredObjetoId(), usuario),usuario, fechasPredecesoras);
 		}else{
 			fechasPredecesoras.get(fechasPredecesoras.size()-1).setFechaInicial(actividad.getFechaInicio());
