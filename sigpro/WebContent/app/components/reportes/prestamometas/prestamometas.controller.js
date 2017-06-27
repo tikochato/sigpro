@@ -457,19 +457,31 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	}
   
 	 mi.exportarExcel = function(){
-			$http.post('/SPrestamoMetas', { accion: 'exportarExcel', proyectoid:$routeParams.proyectoId,t:moment().unix()
-				  } ).then(
-						  function successCallback(response) {
-								var anchor = angular.element('<a/>');
-							    anchor.attr({
-							         href: 'data:application/ms-excel;base64,' + response.data,
-							         target: '_blank',
-							         download: 'MetasPrestamo.xls'
-							     })[0].click();
-							  }.bind(this), function errorCallback(response){
-							 		
-							 	}
-							 );
+		 var columnas = [];
+		 mi.opcionesGrid.columnDefs.forEach(function(columna) {
+			 columnas.push({'displayName': columna.displayName.toString(), "category": columna.category ? columna.category.toString() : ""});
+		 });
+		 $http.post('/SPrestamoMetas', { 
+			 accion: 'exportarExcel', 
+			 proyectoid: mi.prestamo.value,
+			 fechaInicio: mi.fechaInicio.getFullYear(),
+			 fechaFin: mi.fechaFin.getFullYear(),
+			 agrupacion: mi.agrupacion.value,
+			 filas: JSON.stringify(mi.opcionesGrid.data),
+			 columnas: JSON.stringify(columnas),
+			 t:moment().unix()
+		  } ).then(
+				  function successCallback(response) {
+					  var anchor = angular.element('<a/>');
+					  anchor.attr({
+				         href: 'data:application/ms-excel;base64,' + response.data,
+				         target: '_blank',
+				         download: 'MetasPrestamo.xls'
+					  })[0].click();
+				  }.bind(this), function errorCallback(response){
+					 		
+			 	}
+		  	);
 		};
 	
 	
