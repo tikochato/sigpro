@@ -29,7 +29,7 @@
                     <li>
                     	<shiro:hasPermission name="24010"><a   href="#!/prestamo"><span class="glyphicon" aria-hidden="true"></span> Préstamos</a></shiro:hasPermission>                       
                     </li>
-                    <shiro:hasPermission name="36010">
+                    <shiro:hasPermission name="34010">
 	                    <li uib-dropdown>
 	                    	<a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Configuraciones <b class="caret"></b></a>
 	                    	<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="split-button">
