@@ -27,6 +27,7 @@ import org.apache.shiro.codec.Base64;
 import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
@@ -46,6 +47,15 @@ public class SReporte extends HttpServlet {
 		String responsable;
 		int actividadesAtrasadas;
 		int actividadesProceso;
+	}
+	
+	class stActividades{
+		int id;
+		String nombre;
+		String fechaInicio;
+		String fechaFin;
+		int porcentaje;
+		String estado;
 	}
 	
     public SReporte() {
@@ -128,6 +138,57 @@ public class SReporte extends HttpServlet {
 			
 			response_text = JsonProceso + "," + JsonAtrasadas;
 			response_text = String.join("", "{\"success\":true,", response_text, "}");
+		}else if(accion.equals("getActividades")){
+			int responsableId = Utils.String2Int(map.get("responsableId"));
+			Integer idProyecto = Utils.String2Int(map.get("idPrestamo"),0);
+			Integer idComponente = Utils.String2Int(map.get("idComponente"),0);
+			Integer idProducto = Utils.String2Int(map.get("idProducto"),0);
+			Integer idSubProducto = Utils.String2Int(map.get("idSubProducto"),0);
+			
+			//List<Actividad> actividades = ReporteDAO.getActividadesResponsable(responsableId, usuario);
+			List<stActividades> lstActividades = new ArrayList<stActividades>();
+			List<Object> actividades = ReporteDAO.getActividadesCargaTrabajo(idProyecto, idComponente, idProducto, idSubProducto);
+			
+			for(Object obj : actividades){
+				Object[] row = (Object[]) obj;
+				
+				if((Integer)row[3] == responsableId){
+					int idActividad = (Integer)row[0];
+					int porcentajeAvance = (Integer)row[2];
+					
+					Actividad actividad = ActividadDAO.getActividadPorId(idActividad, usuario);
+					String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad, usuario).split(";");
+					stActividades temp = new stActividades();
+					
+					try{
+						Date inicio = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
+			                    .parse(fechaInicioFin[0]);
+			            Date fin = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
+			                    .parse(fechaInicioFin[1]);
+			            Date hoy = new DateTime().toDate();
+						
+						if(hoy.after(inicio) && hoy.before(fin)){
+							temp.estado = "En Proceso";
+						} else if(hoy.after(fin)){
+							temp.estado = "Atrasado";
+						}
+					}
+					catch (Throwable e) {
+			            e.printStackTrace();
+			        }
+					
+					temp.id = actividad.getId();
+					temp.nombre = actividad.getNombre();
+					temp.fechaInicio = fechaInicioFin[0];
+					temp.fechaFin = fechaInicioFin[1];
+					temp.porcentaje = actividad.getPorcentajeAvance();
+					lstActividades.add(temp);
+				}
+			}
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(lstActividades);
+	        response_text = String.join("", "\"actividades\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}else if(accion.equals("exportarExcel")){
 			String tipoReporte = map.get("tipoReporte");
 			String nombreInforme = "Carga de Trabajo";
