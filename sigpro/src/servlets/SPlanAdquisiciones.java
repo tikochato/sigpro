@@ -344,7 +344,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 			for(ActividadPropiedad propiedad : actividadpropiedades){
 				HashMap <String,Object> campo = new HashMap<String, Object>();
 				ActividadPropiedadValor valor = ActividadPropiedadValorDAO.getValorPorActividadYPropiedad(propiedad.getId(),actividad.getId());
-				campo.put("valor", valor.getValorTiempo());
+				campo.put("valor", valor == null ? "" : valor.getValorTiempo());
 				campos.add(campo);
 			}
 			
@@ -360,7 +360,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 				Date valor = null;
 				for(int i = 0; i < campos.size(); i++){
 					HashMap <String,Object> campo = campos.get(i);
-					valor = (Date)campo.get("valor");
+					valor = campo.get("valor") == "" ? null : (Date)campo.get("valor");
 					if (i == 0){
 						dataEjecutado.planificadoDocs = Utils.formatDate(valor);
 					}else if (i == 1){
