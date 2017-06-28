@@ -1,9 +1,12 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
+
+import pojo.Actividad;
 import pojo.InformePresupuesto;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -179,6 +182,32 @@ public class ReporteDAO {
 			session.close();
 		}
 		
+		return result;
+	}
+	
+	public static List<Actividad> getActividadesResponsable(int responsableId, String usuario){
+		List<Actividad> result = new ArrayList<Actividad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		
+		try{
+			List<Object> actividadesIds = null;
+			String string_query = "";
+			string_query = "select orr.objetoId from ObjetoResponsableRol orr where orr.responsableRol.id=:responsableId";
+			Query query = session.createQuery(string_query);
+			query.setParameter("responsableId", responsableId);
+			actividadesIds = query.getResultList();
+			
+			for(Object id : actividadesIds){
+				Actividad actividad = ActividadDAO.getActividadPorId((Integer)id, usuario);
+				result.add(actividad);
+			}
+		}
+		catch(Throwable e){
+			CLogger.write("2", ReporteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
 		return result;
 	}
 	

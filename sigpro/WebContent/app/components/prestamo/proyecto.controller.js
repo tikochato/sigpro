@@ -173,11 +173,15 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			if(mi.prestamo.montoContratadoUsd != undefined && mi.prestamo.montoPorDesembolsarUsd != undefined){
 				n = (mi.prestamo.montoPorDesembolsarUsd / mi.prestamo.montoContratadoUsd) * 100;
 				mi.prestamo.montoPorDesembolsarUsdP = Number(n.toFixed(2));
+				
 			}
 		}else if (tipo==3){
 			if(mi.prestamo.desembolsoAFechaUeUsd != undefined && mi.prestamo.montoAsignadoUe != undefined){
 				n = (mi.prestamo.desembolsoAFechaUeUsd / mi.prestamo.montoAsignadoUe) * 100;
 				mi.prestamo.desembolsoAFechaUeUsdP = Number(n.toFixed(2));
+				mi.prestamo.montoPorDesembolsarUeUsd = ((1 - (mi.prestamo.desembolsoAFechaUeUsdP/100) ) *  mi.prestamo.montoAsignadoUe);
+				mi.prestamo.montoPorDesembolsarUeUsdP= 100- Number(mi.prestamo.desembolsoAFechaUeUsdP.toFixed(2));
+				mi.prestamo.montoPorDesembolsarUeUsdP = Number(mi.prestamo.montoPorDesembolsarUeUsdP.toFixed(2))
 			}
 		}else if(tipo==4){
 			if(mi.prestamo.montoAsignadoUeUsd != undefined && mi.prestamo.montoPorDesembolsarUeUsd != undefined){

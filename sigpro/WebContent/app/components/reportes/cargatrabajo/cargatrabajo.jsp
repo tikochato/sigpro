@@ -20,7 +20,7 @@
 						<label for="tObjeto" class="floating-label">Tipo Objeto</label>
 					</div>
 					<div class="form-group col-sm-2" >
-						<label class="btn btn-default" ng-click="controller.refrescar();" uib-tooltip="Generar" 
+						<label class="btn btn-default" ng-click="controller.generar();" uib-tooltip="Generar" 
 							tooltip-placement="bottom">
 						<span class="glyphicon glyphicon-new-window"></span></label>
 					</div>
@@ -81,30 +81,53 @@
 						<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Exportar</span></label>
 					</div>
 				</div>
-	    		<table st-table="controller.displayedCollection" st-safe-src="controller.rowCollection" class="table table-striped">
-							<thead>
-								<tr>
-									<th style="display: none;">Id</th>
-									<th class="label-form" style="width: 50%">Responsable</th>
-									<th class="label-form" style="width: 25%; text-align: center;">Actividades atrasadas</th>
-									<th class="label-form" style="width: 25%; text-align: center;">Actividades a cumplir {{controller.mesActual}}</th>
-								</tr>
-							</thead>
-							<tbody>
-							<tr ng-repeat="row in controller.displayedCollection">
-								<td style="display: none;">{{row.id}}</td>
-								<td>{{row.responsable}}</td>
-								<td style="text-align: center">{{row.actividadesAtrasadas}}</td>
-								<td style="text-align: center">{{row.actividadesProceso}}</td>
-							</tr>
-							<tr>
-								<td style="display: none;">{{controller.idTotal}}</td>
-								<td style="font-weight: bold">{{controller.responsableTotal}}</td>
-								<td style="text-align: center; font-weight: bold">{{controller.actividadesAtrasadasTotal}}</td>
-								<td style="text-align: center; font-weight: bold">{{controller.actividadesProcesoTotal}}</td>
-							</tr>
-							</tbody>
-						</table>
+    			<table st-table="controller.displayedCollection" st-safe-src="controller.rowCollection" class="table table-striped">
+					<thead>
+						<tr>
+							<th style="display: none;">Id</th>
+							<th class="label-form" style="width: 50%">Responsable</th>
+							<th class="label-form" style="width: 25%; text-align: center;">Actividades atrasadas</th>
+							<th class="label-form" style="width: 25%; text-align: center;">Actividades a cumplir {{controller.mesActual}}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="row in controller.displayedCollection" ng-click="controller.getActividades(row)">
+							<td style="display: none;">{{row.id}}</td>
+							<td>{{row.responsable}}</td>
+							<td style="text-align: center">{{row.actividadesAtrasadas}}</td>
+							<td style="text-align: center">{{row.actividadesProceso}}</td>
+						</tr>
+						<tr>
+							<td style="display: none;">{{controller.idTotal}}</td>
+							<td style="font-weight: bold">{{controller.responsableTotal}}</td>
+							<td style="text-align: center; font-weight: bold">{{controller.actividadesAtrasadasTotal}}</td>
+							<td style="text-align: center; font-weight: bold">{{controller.actividadesProcesoTotal}}</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<table st-table="controller.displayedCollectionActividades" st-safe-src="controller.rowCollectionActividades" class="table table-striped">
+					<thead>
+						<tr>
+							<th style="display: none;">Id</th>
+							<th class="label-form" style="width: 50%">Actividad</th>
+							<th class="label-form" style="width: 25%; text-align: center;">Fecha Inicio</th>
+							<th class="label-form" style="width: 25%; text-align: center;">Fecha Fin</th>
+							<th class="label-form" style="width: 25%; text-align: center;">Porcentaje Avance</th>
+							<th class="label-form" style="width: 25%; text-align: center;">Estado</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="row in controller.displayedCollectionActividades">
+							<td style="display: none;">{{row.id}}</td>
+							<td>{{row.nombre}}</td>
+							<td style="text-align: center">{{row.fechaInicio}}</td>
+							<td style="text-align: center">{{row.fechaFin}}</td>
+							<td style="text-align: center">{{row.porcentaje}}%</td>
+							<td style="text-align: center">{{row.estado}}</td>
+						</tr>
+					</tbody>
+				</table>
 	    	</div>
 	    </div>
 </div>
