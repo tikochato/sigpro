@@ -234,7 +234,24 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		}
 	}
 	
-	mi.refrescar = function(){
+	mi.getActividades = function(row){
+		$http.post('/SReporte',{
+			accion: 'getActividades',
+			responsableId: row.id,
+			idPrestamo : mi.prestamo.value,
+			idComponente : mi.componente.value,
+			idProducto : mi.producto.value,
+			idSubProducto : mi.subProducto.value
+		}).success(function(response){
+			if(response.success){
+				mi.rowCollectionActividades = [];
+				mi.rowCollectionActividades = response.actividades;
+		        mi.displayedCollectionActividades = [].concat(mi.rowCollectionActividades);
+			}
+		})
+	}
+	
+	mi.generar = function(){
 		if (mi.tObjeto.value == 1 || mi.prestamo.value != 0){
 			$http.post('/SReporte', 
 			{
