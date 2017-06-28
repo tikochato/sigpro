@@ -120,7 +120,7 @@ app.controller('gestionUsuariosController', [
 			],
 
 		};
-		mi.cargarTabla=function(pagina){
+		function cargarTablaUsuarios(pagina){
 			$http.post('/SUsuario',
 					{ accion : 'getUsuarios',  pagina: pagina, numeroUsuarios: mi.elementosPorPagina,filtro_usuario: mi.filtros['usuario'],filtro_email: mi.filtros['email'],
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(function(data) {
@@ -552,6 +552,7 @@ app.controller('gestionUsuariosController', [
 		mi.cargarTabla=function(tab){
 			if(tab==1){
 				//carga la tabla de usuarios
+				cargarTablaUsuarios(mi.paginaActual);
 			}else{
 				//carga la tabla de colaboradores
 			}
@@ -598,7 +599,7 @@ app.controller('gestionUsuariosController', [
 		}
 		
 		mi.cargarTotalElementos(1);
-		
+		mi.cargarTabla(1);
 		
 		
 		
