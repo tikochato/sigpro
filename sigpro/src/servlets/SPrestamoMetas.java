@@ -77,6 +77,8 @@ public class SPrestamoMetas extends HttpServlet {
 	private static final int META_ID_FINAL= 4;
 	
 	private static final int AGRUPACION_MES= 1;
+	private static final int AGRUPACION_BIMESTRE= 3;
+	private static final int AGRUPACION_TRIMESTRE= 3;
 	private static final int AGRUPACION_CUATRIMESTRE= 2;
 	private static final int AGRUPACION_SEMESTRE= 3;
 	private static final int AGRUPACION_ANUAL= 4;
@@ -485,9 +487,41 @@ public class SPrestamoMetas extends HttpServlet {
 							i++;
 						}
 					}
+				}else if (agrupacion == AGRUPACION_BIMESTRE){ 
+					for (int anioInicioC = anioInicio; anioInicioC<=(anioFin); anioInicioC++){
+						for (int contador = 1; contador <= 8; contador++){
+							int mes = (contador*2)-1;
+							if(fila.get(mes+"P"+anioInicioC)!=null && !fila.get(mes+"P"+anioInicioC).isJsonNull()){
+								filasObject[i] = fila.get(mes+"P"+anioInicioC).getAsString();
+								totalPlanificado+=fila.get(mes+"P"+anioInicioC).getAsDouble();
+							}
+							i++;
+							if(fila.get(mes+"R"+anioInicioC)!=null && !fila.get(mes+"R"+anioInicioC).isJsonNull()){
+								filasObject[i] = fila.get(mes+"R"+anioInicioC).getAsString();
+								totalReal+=fila.get(mes+"R"+anioInicioC).getAsDouble();
+							}
+							i++;
+						}
+					}
+				}else if (agrupacion == AGRUPACION_TRIMESTRE){ 
+					for (int anioInicioC = anioInicio; anioInicioC<=(anioFin); anioInicioC++){
+						for (int contador = 1; contador <= 4; contador++){
+							int mes = (contador*3)-1;
+							if(fila.get(mes+"P"+anioInicioC)!=null && !fila.get(mes+"P"+anioInicioC).isJsonNull()){
+								filasObject[i] = fila.get(mes+"P"+anioInicioC).getAsString();
+								totalPlanificado+=fila.get(mes+"P"+anioInicioC).getAsDouble();
+							}
+							i++;
+							if(fila.get(mes+"R"+anioInicioC)!=null && !fila.get(mes+"R"+anioInicioC).isJsonNull()){
+								filasObject[i] = fila.get(mes+"R"+anioInicioC).getAsString();
+								totalReal+=fila.get(mes+"R"+anioInicioC).getAsDouble();
+							}
+							i++;
+						}
+					}
 				}else if (agrupacion == AGRUPACION_CUATRIMESTRE){ 
 					for (int anioInicioC = anioInicio; anioInicioC<=(anioFin); anioInicioC++){
-						for (int contador = 1; contador < 4; contador++){
+						for (int contador = 1; contador <= 3; contador++){
 							int mes = (contador*4)-1;
 							if(fila.get(mes+"P"+anioInicioC)!=null && !fila.get(mes+"P"+anioInicioC).isJsonNull()){
 								filasObject[i] = fila.get(mes+"P"+anioInicioC).getAsString();
@@ -503,7 +537,7 @@ public class SPrestamoMetas extends HttpServlet {
 					}
 				}else if (agrupacion == AGRUPACION_SEMESTRE){ 
 					for (int anioInicioC = anioInicio; anioInicioC<=(anioFin); anioInicioC++){
-						for (int contador = 1; contador < 3; contador++){
+						for (int contador = 1; contador <= 2; contador++){
 							int mes = (contador*6)-1;
 							if(fila.get(mes+"P"+anioInicioC)!=null && !fila.get(mes+"P"+anioInicioC).isJsonNull()){
 								filasObject[i] = fila.get(mes+"P"+anioInicioC).getAsString();
