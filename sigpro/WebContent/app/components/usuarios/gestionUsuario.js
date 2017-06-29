@@ -36,6 +36,7 @@ app.controller('gestionUsuariosController', [
 			
 			mi.cambio=input;
 		}*/
+		mi.activo=1;
 		/* usado para cambiar y seleccionar el contexto al cual se va activar */
 		mi.colaboradoresCargados=false;
 		mi.changeActive=function(input){
@@ -70,10 +71,13 @@ app.controller('gestionUsuariosController', [
 		mi.tieneColaborador=false;
 		mi.edicionPermisos=false;
 		mi.filtros=[];
-		mi.editarElemento = function (event) {
-	        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
-	        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
-	        mi.editarUsuario();
+		/*mi.editarElemento = function (event) {
+	       
+	    };*/
+	    function editarElementoUsuario(event){
+	    	 var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+		        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
+		        mi.editarUsuario();
 	    };
 		
 		mi.gridOptions = {
@@ -85,7 +89,7 @@ app.controller('gestionUsuariosController', [
 			data : [],
 			useExternalFiltering: true,
 			useExternalSorting: true,
-			rowTemplate: '<div ng-dblclick="grid.appScope.usuarioc.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
+			rowTemplate: '<div ng-dblclick="grid.appScope.usuarioc.editarItem(1,$event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 			columnDefs : [ {
 				name : 'Usuario',
 				cellClass : 'grid-align-left',
@@ -401,8 +405,11 @@ app.controller('gestionUsuariosController', [
 				$location.path('/usuarios/rv');
 		};
 
-		mi.cambiarPagina=function(){
+		/*mi.cambiarPagina=function(){
 			mi.cargarTabla(mi.paginaActual);
+		};*/
+		function cambiarPaginaUsuarios(){
+			
 		};
 
 		mi.guardarEstado=function(){
@@ -529,6 +536,7 @@ app.controller('gestionUsuariosController', [
 					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).success(
 						function(response) {
 							mi.elementosPorPagina = response.totalUsuarios;
+							mi.totalUsuarios =response.totalUsuarios;	
 							mi.cargarTabla(mi.paginaActual);
 							mi.gridApi.selection.clearSelectedRows();
 							mi.usuariosSelected.usuario = "";
@@ -558,11 +566,23 @@ app.controller('gestionUsuariosController', [
 			}
 		};
 		
-		mi.editarItem=function(tab){
+		mi.editarItem=function(tab,event){
 			if(tab==1){
 				//edita un usuario
+				if(event){
+					//qq editarElementoUsuario(event);
+				}else{
+					//cuando se presiona el boton de editar
+					//qq mi.editarUsuario();
+				}
+				
 			}else{
 				//edita un colaborador
+				if(event){
+					//edita colaborador con doble click
+				}else{
+					//edita con el boton el colaborador seleccionado
+				}
 			}
 		};
 		mi.borrarItem=function(tab){
@@ -584,6 +604,7 @@ app.controller('gestionUsuariosController', [
 		mi.cambiarPagina=function(tab){
 			if(tab==1){
 				//cambiar Pagina
+				cargarTablaUsuarios(mi.paginaActual);
 			}else{
 				//reiniciar tabla de colaborador
 			}
@@ -593,13 +614,20 @@ app.controller('gestionUsuariosController', [
 		mi.cargarTotalElementos=function(tab){
 			if(tab==1){
 				//carga el número total de usuarios
+
+				$http.post('/SUsuario', { accion: 'getTotalUsuarios', 	filtro_nombre: mi.filtros['nombre'],
+					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],filtro_email:mi.filtros["email"]  }).success(
+						function(response) {
+							mi.totalUsuarios = response.totalUsuarios;
+							mi.cargarTabla(1);
+				});
 			}else{
 				//carga el número total de colaboradores
 			}
 		}
 		
 		mi.cargarTotalElementos(1);
-		mi.cargarTabla(1);
+		//mi.cargarTabla(1);
 		
 		
 		

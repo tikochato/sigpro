@@ -30,11 +30,11 @@
 						<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 					</shiro:hasPermission>
 					<shiro:hasPermission name="34010">
-						<label class="btn btn-primary" ng-click="" uib-tooltip="Editar">
+						<label class="btn btn-primary" ng-click="usuarioc.editarItem(usuarioc.activo)" uib-tooltip="Editar">
 						<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 					</shiro:hasPermission>
 					<shiro:hasPermission name="34030">
-						<label class="btn btn-danger" ng-click="" uib-tooltip="Borrar">
+						<label class="btn btn-danger" ng-click="usuarioc.borrarItem(usuarioc.activo)" uib-tooltip="Borrar">
 						<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 					</shiro:hasPermission>
     			</div>
@@ -43,12 +43,15 @@
     			<uib-tabset active="active">
 				    <uib-tab index="0" heading="Usuarios" select="usuarioc.changeActive(1)">
 					    <br>
-					    <div style="height: 35px;">
+					    <!-- 
+					     <div style="height: 35px;">
 							<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
 								<a class="btn btn-default" href ng-click="usuarioc.reiniciarVista(1)" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
 							</div>
 							</div>
 						</div>
+					     -->
+					   
 						<br>
 						<div id="grid1" ui-grid="usuarioc.gridOptions" ui-grid-save-state
 								ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination class="usuarioc.myGrid">
@@ -61,6 +64,10 @@
 							</div>
 						  </div>
 						</div>
+						<br>
+						<div class="total-rows">
+						  Total de {{  usuarioc.totalUsuarios + (usuarioc.totalUsuarios == 1 ? " Usuario" : " Usuarios" ) }}
+					   </div>
 						<ul uib-pagination total-items="usuarioc.totalUsuarios"
 								ng-model="usuarioc.paginaActualUsuarios"
 								max-size="usuarioc.numeroMaximoPaginas"
@@ -77,12 +84,15 @@
 				    </uib-tab>				   
 				    <uib-tab index="1" heading="Colaboradores" select="usuarioc.changeActive(2)" >
 				    <br>
+				    <!-- 
 				     <div style="height: 35px;">
 						<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
 							<a class="btn btn-default" href ng-click="usuarioc.reiniciarVista(2)" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
 						</div>
 						</div>
 					</div>
+				     -->
+				    
 					<br> 
 				    </uib-tab>
 				  </uib-tabset>
