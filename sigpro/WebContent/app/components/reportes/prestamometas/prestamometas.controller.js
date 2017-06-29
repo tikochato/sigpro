@@ -544,7 +544,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	mi.estiloEditable = function (grid, row, col, rowIndex, colIndex) {	    
 		var fila = { row: row };
 	    if(col.colDef.cellEditableCondition(fila)){
-	    	return 'grid-align-center lightblue';
+	    	return 'grid-align-center editable';
 	    }else if(col.colDef.tipoMeta == META_ID_PLANIFICADA){
 	    	return 'grid-align-center planificado';
 	    }else if(col.colDef.tipoMeta == META_ID_REAL){

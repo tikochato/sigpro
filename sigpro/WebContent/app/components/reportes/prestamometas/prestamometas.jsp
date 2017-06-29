@@ -13,11 +13,7 @@
 	.ui-grid-category {
   		text-align: center;border-right: 0px;box-shadow: -1px 1px #d4d4d4 
 	}
-	
-	.lightblue {
-		background-color: #c2edf9 !important;
-	}
-	
+		
 	.divGrid {
 		resize: vertical;
 		overflow: scroll;

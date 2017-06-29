@@ -450,9 +450,13 @@ h2 {
 
 /*para columnas de Planficado y Real en tablas*/
 .real { 
-	background-color: #ffe4c4 !important 
+	background-color: #ffd7c4 !important 
 }
 
 .planificado { 
-	
+	/*background-color: #A9D0F5 !important*/ 
 }
+
+.editable {
+		background-color: #c2edf9 !important;
+	}
