@@ -63,8 +63,6 @@ public class SPlanEjecucion extends HttpServlet {
 				BigDecimal mvReal = MetaTipoDAO.getMetaValorPorIdObjetoTipoMeta(producto.getId(), 3, 1);
 				BigDecimal mvFinal = MetaTipoDAO.getMetaValorPorIdObjetoTipoMeta(producto.getId(), 3, 4);
 				if (mvReal!=null && mvFinal!=null){
-					
-				
 					//ejecucionFisica = ejecucionFisica +  mvReal.divide(mvFinal, 2, BigDecimal.ROUND_HALF_UP)  * ((double) producto.getPeso() / 100);
 					ejecucionFisica = ejecucionFisica.add(mvReal.divide(mvFinal, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal((double) producto.getPeso() / 100)));
 				}

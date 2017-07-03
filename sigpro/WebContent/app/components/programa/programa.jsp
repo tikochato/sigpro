@@ -81,8 +81,12 @@
 			<h2 ng-hide="programac.esNuevo"><small>Edición de programa</small></h2>
 			</div>
 		
-		<div class="col-sm-12 operation_buttons" align="right">
-			<div class="btn-group">
+		<div class="operation_buttons" >
+			<div class="btn-group" ng-hide="programac.esNuevo">
+				<label class="btn btn-default" ng-click="programac.irAGantt(programac.programa.id)" uib-tooltip="Gantt" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-indent-left"></span></label>
+			</div>
+			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="37020">
 					<label class="btn btn-success" ng-click="form.$valid ? programac.guardar(form.$valid) : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>

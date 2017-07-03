@@ -889,6 +889,12 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				
 			}
 		};
+		
+		mi.irAGantt=function(programaid){
+			if(mi.programa!=null){
+				$location.path('/gantt/'+ programaid + '/0' );
+			}
+		};
 	
 
 	

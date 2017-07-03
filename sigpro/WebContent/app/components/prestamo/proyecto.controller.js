@@ -647,7 +647,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.irAGantt=function(proyectoid){
 		if(mi.proyecto!=null){
-			$location.path('/gantt/'+ proyectoid );
+			$location.path('/gantt/'+ proyectoid + '/1' );
 		}
 	};
 	mi.irAMapa=function(proyectoid){

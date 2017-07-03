@@ -14,15 +14,17 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.proyectoNombre = "";
 		mi.objetoTipoNombre = "";
 		var date = new Date(), year = date.getFullYear(), month = date.getMonth();
-		
 
 		$window.document.title = $utilidades.sistema_nombre+' - Gantt';
 		
-		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyectoId }).success(
+		var servlet_ = $routeParams.objeto_tipo == 1 ? '/SProyecto' : 'SPrograma';
+		var accion_ = $routeParams.objeto_tipo == 1 ? 'obtenerProyectoPorId' : 'obtenerProgramaPorId'
+		
+		$http.post(servlet_, { accion: accion_, id: $routeParams.objeto_id }).success(
 				function(response) {
 					mi.proyectoid = response.id;
 					mi.proyectoNombre = response.nombre;
-					mi.objetoTipoNombre = "Proyecto";
+					mi.objetoTipoNombre = $routeParams.objeto_tipo == 1 ? "Proyecto" : "Programa";
 		});
 		
 		mi.zoom = 2.5;
@@ -118,7 +120,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		    }
 		});
 		
-		columns.splice(9,1);
+		columns.splice(9,0);
 		
 		columns[1].header = 'Nombre';
 		columns[1].width = 300;
@@ -129,7 +131,6 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		columns[7].header = 'Completada';
 		columns[8].header = 'Responsable';
 		columns[8].isReadOnly = true;
-		
 		
 		
 		for(var i=0; i<columns.length;i++)
@@ -173,15 +174,16 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.ganttChartView;
 		var formatData = new FormData();
 		 
-		formatData.append("accion",'getProyecto');
-		formatData.append("proyecto_id",$routeParams.proyectoId);
+		formatData.append("accion",$routeParams.objeto_tipo == 1 ? 'getProyecto' : 'getPrograma');
+		formatData.append($routeParams.objeto_tipo == 1 ? "proyecto_id" : "programa_id",$routeParams.objeto_id);
 		
 		$http.post('/SGantt', formatData, {
 			headers: {'Content-Type': undefined},
 			transformRequest: angular.identity
 		 }).success(
 				function(response) {
-					var items = response.items;
+					
+					var items =  response.items;
 					$scope.settings.displayedTime = moment(items[0].start,'DD/MM/YYYY hh:mm:ss').toDate();
 					
 					for(var i=0; i< items.length; i++){
@@ -269,7 +271,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.exportar=function(){
 			var formatData = new FormData();
 			
-			$http.post('/SDownload', { accion: 'exportar', proyectoid:$routeParams.proyectoId,t:moment().unix()
+			$http.post('/SDownload', { accion: 'exportar', proyectoid:$routeParams.objeto_id,t:moment().unix()
 			  }).then(
 					 function successCallback(response) {
 							var anchor = angular.element('<a/>');
