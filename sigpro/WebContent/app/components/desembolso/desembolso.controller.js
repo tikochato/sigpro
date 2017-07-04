@@ -51,7 +51,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 					},
 					{ name: 'monto', width: 100, displayName: 'Monto', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 					{ name: 'desembolsotipo', width: 200, displayName: 'Tipo Desembolso',cellClass: 'grid-align-left',enableFiltering: false, enableSorting: false },
-					{ name: 'tipocambio', width: 100, displayName: 'Tipo Cambio', cellClass: 'grid-align-right', type: 'number', enableFiltering: false, enableSorting: false },
+					{ name: 'tipomonedasimbolo', width: 100, displayName: 'Moneda', cellClass: 'grid-align-right', type: 'number', enableFiltering: false, enableSorting: false },
 				    { name: 'usuarioCreo', displayName: 'Usuario Creación',
 						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.desembolsoc.filtros[\'usuarioCreo\']"  ng-keypress="grid.appScope.desembolsoc.filtrar($event)" ></input></div>'
 				    },
@@ -136,7 +136,8 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 						monto: mi.desembolso.monto,
 						tipocambio : mi.desembolso.tipocambio,
 						proyectoid : $routeParams.proyecto_id,
-						desembolsotipoid : mi.desembolso.desembolsotipoid
+						desembolsotipoid : mi.desembolso.desembolsotipoid,
+						tipo_moneda:mi.desembolso.tipomonedaid
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Desembolso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
@@ -286,6 +287,33 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 				}, function() {
 				});
 			};
+			mi.buscarTipoMoneda = function(titulo, mensaje) {
+				var instanciaModal = $uibModal.open({
+					animation : 'true',
+					ariaLabelledBy : 'modal-title',
+					ariaDescribedBy : 'modal-body',
+					templateUrl : 'buscarTipoMoneda.jsp',
+					controller : 'modalBuscarTipoMoneda',
+					controllerAs : 'modalBuscar',
+					backdrop : 'static',
+					size : 'md',
+					resolve : {
+						titulo : function() {
+							return titulo;
+						},
+						mensaje : function() {
+							return mensaje;
+						}
+					}
+				});
+
+				instanciaModal.result.then(function(selectedItem) {
+					mi.desembolso.tipomonedaid=selectedItem.id;
+					mi.desembolso.tipomonedanombre=selectedItem.nombre;
+				}, function() {
+				});
+			};
+
 
 			
 } ]);
@@ -368,6 +396,86 @@ function modalBuscarDesembolsoTipo($uibModalInstance, $scope, $http, $interval,
 			$uibModalInstance.close(mi.itemSeleccionado);
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar una ENTIDAD');
+		}
+	};
+	
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+
+}
+
+
+app.controller('modalBuscarTipoMoneda', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log', 'titulo', 'mensaje', modalBuscarTipoMoneda ]);
+
+function modalBuscarTipoMoneda($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, titulo, mensaje) {
+
+	var mi = this;
+	
+	mi.totalElementos = 0;
+	mi.paginaActual = 1;
+	mi.numeroMaximoPaginas = 5;
+	mi.elementosPorPagina = 9;
+	
+	mi.mostrarCargando = false;
+	mi.data = [];
+	
+	mi.itemSeleccionado = null;
+	mi.seleccionado = false;
+	
+	mi.mostrarCargando = true;
+	$http.post('/STipoMoneda', {accion : 'getTipoMonedas'}).then(function(response) {
+		if (response.data.success) {
+			mi.data = response.data.tipoMonedas;
+			mi.opcionesGrid.data = mi.data;
+			mi.mostrarCargando = false;
+		}
+	});
+	mi.opcionesGrid = {
+		data : mi.data,
+		columnDefs : [ {
+			displayName : 'ID', width: 100, name : 'id', cellClass : 'grid-align-right',
+		}, {
+			displayName : 'Tipo Moneda',
+			name : 'nombre',
+			cellClass : 'grid-align-left'
+		} , {
+			displayName : 'Símbolo',
+			name : 'simbolo',
+			cellClass : 'grid-align-left'
+		}],
+		enableRowSelection : true,
+		enableRowHeaderSelection : false,
+		multiSelect : false,
+		modifierKeysToMultiSelect : false,
+		noUnselect : false,
+		enableFiltering : true,
+		enablePaginationControls : false,
+		paginationPageSize : 5,
+		onRegisterApi : function(gridApi) {
+			mi.gridApi = gridApi;
+			mi.gridApi.selection.on.rowSelectionChanged($scope,
+					mi.seleccionarDesembolsoTipo);
+		}
+	}
+	
+	mi.seleccionarDesembolsoTipo = function(row) {
+		mi.itemSeleccionado = row.entity;
+		mi.seleccionado = row.isSelected;
+	};
+	
+	mi.cambioPagina = function() {
+		mi.cargarData(mi.paginaActual);
+	}
+	
+	mi.ok = function() {
+		if (mi.seleccionado) {
+			$uibModalInstance.close(mi.itemSeleccionado);
+		} else {
+			$utilidades.mensaje('warning', 'Debe seleccionar un Tipo de Moneda');
 		}
 	};
 	
