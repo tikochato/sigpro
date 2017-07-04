@@ -49,6 +49,23 @@ public class TipoMonedaDAO {
 		return ret;
 	}
 	
+	public static List<TipoMoneda> getTiposMoneda(){
+		List <TipoMoneda> ret = new ArrayList<TipoMoneda>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT a FROM TipoMoneda a ";
+			Query<TipoMoneda> criteria = session.createQuery(query,TipoMoneda.class);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("2", TipoMonedaDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	public static TipoMoneda getTipoMonedaPorSimbolo(String simbolo){
 		TipoMoneda ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
