@@ -48,8 +48,9 @@ public class SDesembolso extends HttpServlet {
 		Integer proyectoid;
 		String proyecto;
 		Integer desembolsotipoid;
-		Integer tipoMoneda;
-		String tipoMonedaNombre;
+		Integer tipomonedaid;
+		String tipomonedanombre;
+		String tipomonedasimbolo;
 		String desembolsotipo;
 		String usuarioCreo;
 		String usuarioActualizo;
@@ -117,8 +118,9 @@ public class SDesembolso extends HttpServlet {
 				temp.desembolsotipoid = desembolso.getDesembolsoTipo().getId();
 				temp.desembolsotipo = desembolso.getDesembolsoTipo().getNombre();
 				temp.proyecto = desembolso.getProyecto().getNombre();
-				temp.tipoMoneda=desembolso.getTipoMoneda().getId();
-				temp.tipoMonedaNombre=desembolso.getTipoMoneda().getNombre();
+				temp.tipomonedaid=desembolso.getTipoMoneda().getId();
+				temp.tipomonedanombre=desembolso.getTipoMoneda().getNombre();
+				temp.tipomonedasimbolo=desembolso.getTipoMoneda().getSimbolo();
 				temp.proyectoid = desembolso.getProyecto().getId();
 				temp.fechaActualizacion = Utils.formatDateHour(desembolso.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDateHour(desembolso.getFechaCreacion());
@@ -145,8 +147,9 @@ public class SDesembolso extends HttpServlet {
 				temp.desembolsotipo = desembolso.getDesembolsoTipo().getNombre();
 				temp.proyecto = desembolso.getProyecto().getNombre();
 				temp.proyectoid = desembolso.getProyecto().getId();
-				temp.tipoMoneda=desembolso.getTipoMoneda().getId();
-				temp.tipoMonedaNombre=desembolso.getTipoMoneda().getNombre();
+				temp.tipomonedaid=desembolso.getTipoMoneda().getId();
+				temp.tipomonedanombre=desembolso.getTipoMoneda().getNombre();
+				temp.tipomonedasimbolo=desembolso.getTipoMoneda().getSimbolo();
 				temp.fechaActualizacion = Utils.formatDateHour(desembolso.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDateHour(desembolso.getFechaCreacion());
 				temp.usuarioActualizo = desembolso.getUsuarioActualizo();
@@ -174,7 +177,10 @@ public class SDesembolso extends HttpServlet {
 				}
 				BigDecimal monto = map.get("monto")!=null && map.get("monto").length()>0 ?
 						new BigDecimal(map.get("monto")) : null;
-				BigDecimal tipoCambio = new BigDecimal(map.get("tipocambio"));
+				
+				BigDecimal tipoCambio = new BigDecimal(0);
+				if(map.get("tipocambio")!=null)
+					tipoCambio = new BigDecimal(map.get("tipocambio"));
 				
 				
 				Proyecto proyecto = new Proyecto();
@@ -190,8 +196,6 @@ public class SDesembolso extends HttpServlet {
 				if(esnuevo){
 					desembolso = new Desembolso(desembolsoTipo, proyecto, null, fecha, 1, monto, tipoCambio, null, 
 							usuario, null, new Date(), null);
-					//TipoMoneda tipo_moneda = new TipoMoneda();
-					//tipo_moneda.setId(1);
 					desembolso.setTipoMoneda(tipomoneda);
 				}
 				else{
@@ -263,8 +267,9 @@ public class SDesembolso extends HttpServlet {
 				temp.desembolsotipoid = desembolso.getDesembolsoTipo().getId();
 				temp.desembolsotipo = desembolso.getDesembolsoTipo().getNombre();
 				temp.proyecto = desembolso.getProyecto().getNombre();
-				temp.tipoMoneda=desembolso.getTipoMoneda().getId();
-				temp.tipoMonedaNombre=desembolso.getTipoMoneda().getNombre();
+				temp.tipomonedaid=desembolso.getTipoMoneda().getId();
+				temp.tipomonedanombre=desembolso.getTipoMoneda().getNombre();
+				temp.tipomonedasimbolo=desembolso.getTipoMoneda().getSimbolo();
 				temp.proyectoid = desembolso.getProyecto().getId();
 				temp.fechaActualizacion = Utils.formatDateHour(desembolso.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDateHour(desembolso.getFechaCreacion());
