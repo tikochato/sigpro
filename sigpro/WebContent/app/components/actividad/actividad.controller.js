@@ -175,8 +175,9 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					obra: mi.actividad.obra,
 					longitud: mi.actividad.longitud,
 					latitud : mi.actividad.latitud,
-					costo: mi.actividad.costo,
-					costoReal: mi.actividad.costoReal,
+					costo: mi.actividad.costo == null ? 0 : mi.actividad.costo,
+					costoReal: mi.actividad.costoReal == null ? 0 : mi.actividad.costoReal,
+					acumulacionCosto: mi.actividad.acumulacionCostoId == null ? 0 : mi.actividad.acumulacionCostoId,
 					fuente: mi.actividad.fuente,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
@@ -396,6 +397,23 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			resultado.then(function(itemSeleccionado) {
 				mi.actividad.actividadResponsable = itemSeleccionado.nombre;
 				mi.actividad.responsableRolId = itemSeleccionado.id;
+			});
+		}
+		
+		mi.buscarAcumulacionCosto = function(){
+			var resultado = mi.llamarModalBusqueda('/SAcumulacionCosto', {
+				accion : 'numeroAcumulacionCosto' 
+			}, function(pagina, elementosPorPagina){
+				return{
+					accion: 'getAcumulacionCosto',
+					pagina: pagina,
+					numeroacumulacioncosto : elementosPorPagina
+				}
+			}, 'id','nombre');
+			
+			resultado.then(function(itemSeleccionado){
+				mi.actividad.acumulacionCostoNombre = itemSeleccionado.nombre;
+				mi.actividad.acumulacionCostoId = itemSeleccionado.id;
 			});
 		}
 		
