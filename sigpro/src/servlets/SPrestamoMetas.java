@@ -382,7 +382,7 @@ public class SPrestamoMetas extends HttpServlet {
 		Date fechaFin = null;
 		List <Actividad> actividades = getActividadesProducto(productometa.id);
 		for(Actividad actividad : actividades){
-			actividad = ActividadDAO.getFechasActividad(actividad);
+			//actividad = ActividadDAO.getFechasActividad(actividad);
 			if (fechaInicio == null || fechaInicio.after(actividad.getFechaInicio())){
 				fechaInicio = actividad.getFechaInicio();
 			}
