@@ -27,6 +27,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.DesembolsoDAO;
+import dao.TipoMonedaDAO;
 import pojo.Desembolso;
 import pojo.DesembolsoTipo;
 import pojo.Proyecto;
@@ -47,6 +48,8 @@ public class SDesembolso extends HttpServlet {
 		Integer proyectoid;
 		String proyecto;
 		Integer desembolsotipoid;
+		Integer tipoMoneda;
+		String tipoMonedaNombre;
 		String desembolsotipo;
 		String usuarioCreo;
 		String usuarioActualizo;
@@ -114,6 +117,8 @@ public class SDesembolso extends HttpServlet {
 				temp.desembolsotipoid = desembolso.getDesembolsoTipo().getId();
 				temp.desembolsotipo = desembolso.getDesembolsoTipo().getNombre();
 				temp.proyecto = desembolso.getProyecto().getNombre();
+				temp.tipoMoneda=desembolso.getTipoMoneda().getId();
+				temp.tipoMonedaNombre=desembolso.getTipoMoneda().getNombre();
 				temp.proyectoid = desembolso.getProyecto().getId();
 				temp.fechaActualizacion = Utils.formatDateHour(desembolso.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDateHour(desembolso.getFechaCreacion());
@@ -140,6 +145,8 @@ public class SDesembolso extends HttpServlet {
 				temp.desembolsotipo = desembolso.getDesembolsoTipo().getNombre();
 				temp.proyecto = desembolso.getProyecto().getNombre();
 				temp.proyectoid = desembolso.getProyecto().getId();
+				temp.tipoMoneda=desembolso.getTipoMoneda().getId();
+				temp.tipoMonedaNombre=desembolso.getTipoMoneda().getNombre();
 				temp.fechaActualizacion = Utils.formatDateHour(desembolso.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDateHour(desembolso.getFechaCreacion());
 				temp.usuarioActualizo = desembolso.getUsuarioActualizo();
@@ -178,14 +185,14 @@ public class SDesembolso extends HttpServlet {
 				desembolsoTipo.setId(map.get("desembolsotipoid")!=null && map.get("desembolsotipoid").length()>0 ? 
 						Integer.parseInt(map.get("desembolsotipoid")): null);
 				
-				
+				TipoMoneda tipomoneda= TipoMonedaDAO.getTipoMonedaPorId(Integer.parseInt(map.get("tipo_moneda")));
 				Desembolso desembolso;
 				if(esnuevo){
 					desembolso = new Desembolso(desembolsoTipo, proyecto, null, fecha, 1, monto, tipoCambio, null, 
 							usuario, null, new Date(), null);
-					TipoMoneda tipo_moneda = new TipoMoneda();
-					tipo_moneda.setId(1);
-					desembolso.setTipoMoneda(tipo_moneda);
+					//TipoMoneda tipo_moneda = new TipoMoneda();
+					//tipo_moneda.setId(1);
+					desembolso.setTipoMoneda(tipomoneda);
 				}
 				else{
 					
@@ -196,6 +203,7 @@ public class SDesembolso extends HttpServlet {
 					desembolso.setDesembolsoTipo(desembolsoTipo);
 					desembolso.setFechaActualizacion(new DateTime().toDate());
 					desembolso.setUsuarioActualizo(usuario);
+					desembolso.setTipoMoneda(tipomoneda);
 					
 				}
 				result = DesembolsoDAO.guardarDesembolso(desembolso);
@@ -255,6 +263,8 @@ public class SDesembolso extends HttpServlet {
 				temp.desembolsotipoid = desembolso.getDesembolsoTipo().getId();
 				temp.desembolsotipo = desembolso.getDesembolsoTipo().getNombre();
 				temp.proyecto = desembolso.getProyecto().getNombre();
+				temp.tipoMoneda=desembolso.getTipoMoneda().getId();
+				temp.tipoMonedaNombre=desembolso.getTipoMoneda().getNombre();
 				temp.proyectoid = desembolso.getProyecto().getId();
 				temp.fechaActualizacion = Utils.formatDateHour(desembolso.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDateHour(desembolso.getFechaCreacion());
