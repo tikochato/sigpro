@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jun 13, 2017 3:16:39 PM by Hibernate Tools 5.2.1.Final
+// Generated 4/07/2017 09:16:40 AM by Hibernate Tools 5.2.0.CR1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Colaborador implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 731000410984001745L;
+	private static final long serialVersionUID = -3846156985157468691L;
 	private Integer id;
 	private UnidadEjecutora unidadEjecutora;
 	private Usuario usuario;
@@ -35,7 +35,7 @@ public class Colaborador implements java.io.Serializable {
 	private String snombre;
 	private String papellido;
 	private String sapellido;
-	private long cui;
+	private Long cui;
 	private int estado;
 	private String usuarioCreo;
 	private String usuarioActualizo;
@@ -48,7 +48,7 @@ public class Colaborador implements java.io.Serializable {
 	public Colaborador() {
 	}
 
-	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String papellido, long cui,
+	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String papellido, Long cui,
 			int estado, String usuarioCreo, Date fechaCreacion) {
 		this.unidadEjecutora = unidadEjecutora;
 		this.usuario = usuario;
@@ -61,7 +61,7 @@ public class Colaborador implements java.io.Serializable {
 	}
 
 	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String snombre,
-			String papellido, String sapellido, long cui, int estado, String usuarioCreo, String usuarioActualizo,
+			String papellido, String sapellido, Long cui, int estado, String usuarioCreo, String usuarioActualizo,
 			Date fechaCreacion, Date fechaActualizacion, Set<Proyecto> proyectos, Set<ProyectoMiembro> proyectoMiembros,
 			Set<Riesgo> riesgos) {
 		this.unidadEjecutora = unidadEjecutora;
