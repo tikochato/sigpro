@@ -447,3 +447,16 @@ h2 {
 	cursor:text; 
 	height: 50%;
 }
+
+/*para columnas de Planficado y Real en tablas*/
+.real { 
+	background-color: #ffd7c4 !important 
+}
+
+.planificado { 
+	/*background-color: #A9D0F5 !important*/ 
+}
+
+.editable {
+		background-color: #c2edf9 !important;
+	}

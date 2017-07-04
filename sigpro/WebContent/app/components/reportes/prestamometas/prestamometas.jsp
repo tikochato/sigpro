@@ -13,9 +13,12 @@
 	.ui-grid-category {
   		text-align: center;border-right: 0px;box-shadow: -1px 1px #d4d4d4 
 	}
-	
-	.lightblue {
-		background-color: #c2edf9 !important;
+		
+	.divGrid {
+		resize: vertical;
+		overflow: scroll;
+		margin: 5px;
+		height: 360px;
 	}
 </style>
 
@@ -82,25 +85,17 @@
 						tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-duplicate"></span></label>
 					
-					<label class="btn btn-default" ng-click="pmetasc.descargar()" uib-tooltip="Descargar excel" ng-hide="!pmetasc.mostrarDescargar"
+					<label class="btn btn-primary" ng-click="pmetasc.exportarExcel()" uib-tooltip="Descargar excel" ng-hide="!pmetasc.mostrarDescargar"
 						tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-download-alt"></span></label>
 				</div>
-				
-				<div class="row" align="center" >
-					<div class="operation_buttons" align="right">
-							<div class="btn-group">
-								<label class="btn btn-primary"  ng-click="pmetasc.exportarExcel()" uib-tooltip="Exportar">
-								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span> Exportar</label>
-							</div>
-					</div>
-				</div>
 			</div>
     	</div>
-    	
-    	<div id="grid" ui-grid="pmetasc.opcionesGrid"
-			ui-grid-resize-columns ui-grid-pinning
-			ui-grid-grouping ui-grid-edit ui-grid-row-edit ui-grid-cellNav >
+		<br>
+		
+    	<div id="grid" ui-grid="pmetasc.opcionesGrid" ng-hide="!pmetasc.mostrarDescargar" class="divGrid"
+			ui-grid-resize-columns ui-grid-pinning ui-grid-auto-resize
+			ui-grid-grouping ui-grid-edit ui-grid-cellNav >
 			<div class="grid_loading" ng-hide="!pmetasc.mostrarCargando">
 				<div class="msg">
 					<span><i class="fa fa-spinner fa-spin fa-4x"></i> 

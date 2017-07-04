@@ -1,4 +1,4 @@
-var app = angular.module('prestamometasController', [ 'ui.grid.edit', 'ui.grid.rowEdit', 'ui.grid.pinning']);
+var app = angular.module('prestamometasController', [ 'ui.grid.edit', 'ui.grid.rowEdit', 'ui.grid.pinning', 'ui.grid.autoResize']);
 
 
 app.controller('prestamometasController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridTreeBaseService','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
@@ -8,9 +8,11 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	var metaSeleccionada = null;
 		
 	var AGRUPACION_MES= 1;
-	var AGRUPACION_CUATRIMESTRE= 2;
-	var AGRUPACION_SEMESTRE= 3;
-	var AGRUPACION_ANUAL= 4;
+	var AGRUPACION_BIMESTRE= 2;
+	var AGRUPACION_TRIMESTRE= 3;
+	var AGRUPACION_CUATRIMESTRE= 4;
+	var AGRUPACION_SEMESTRE= 5;
+	var AGRUPACION_ANUAL= 6;
 	
 	var META_ID_REAL = 1;
 	var META_ID_PLANIFICADA = 2;
@@ -21,6 +23,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	mi.ordenDireccion = null;
 
 	mi.mostrarCargando = false;
+	mi.mostrarDescargar = false;
 	mi.prestamos = [];
 	mi.data = [];	
 	
@@ -58,6 +61,8 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	mi.agrupaciones = [
 		{'value' : 0, 'text' : 'Seleccione una opción'},
 		{'value' : AGRUPACION_MES, 'text' : 'Mes'},
+		{'value' : AGRUPACION_BIMESTRE, 'text' : 'Bimestre'},
+		{'value' : AGRUPACION_TRIMESTRE, 'text' : 'Trimestre'},
 		{'value' : AGRUPACION_CUATRIMESTRE, 'text' : 'Cuatrimestre'},
 		{'value' : AGRUPACION_SEMESTRE, 'text' : 'Semestre'},
 		{'value' : AGRUPACION_ANUAL, 'text' : 'Anual'},
@@ -92,6 +97,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			};
 		
 			mi.mostrarCargando = true;
+			mi.mostrarDescargar = true;
 			
 			$http.post('/SPrestamoMetas', datos).then(function(response) {
 				if (response.data.success) {
@@ -132,7 +138,31 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			var meta = producto.metasPlanificadas[i];
 			var fecha = meta.fecha.split("/");
 			var mes = parseInt(fecha[1]) - 1;
-			if (mi.agrupacion.value == AGRUPACION_CUATRIMESTRE){
+			if (mi.agrupacion.value == AGRUPACION_BIMESTRE){
+				if(mes<=1){
+					mes = 1;
+				}else if(mes <=3){
+					mes = 3;
+				}else if(mes <=5){
+					mes = 5;
+				}else if(mes <=7){
+					mes = 7;
+				}else if(mes <=9){
+					mes = 9;
+				}else{
+					mes = 11;
+				}
+			}else if (mi.agrupacion.value == AGRUPACION_TRIMESTRE){
+				if(mes<=2){
+					mes = 2;
+				}else if(mes<=5){
+					mes = 5;
+				}else if(mes<=8){
+					mes = 8;
+				}else{
+					mes = 11;
+				}
+			}else if (mi.agrupacion.value == AGRUPACION_CUATRIMESTRE){
 				if(mes<=3){
 					mes = 3;
 				}else if(mes <=7){
@@ -161,7 +191,31 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			var meta = producto.metasReales[i];
 			var fecha = meta.fecha.split("/");
 			var mes = parseInt(fecha[1]) - 1;
-			if (mi.agrupacion.value == AGRUPACION_CUATRIMESTRE){
+			if (mi.agrupacion.value == AGRUPACION_BIMESTRE){
+				if(mes<=1){
+					mes = 1;
+				}else if(mes <=3){
+					mes = 3;
+				}else if(mes <=5){
+					mes = 5;
+				}else if(mes <=7){
+					mes = 7;
+				}else if(mes <=9){
+					mes = 9;
+				}else{
+					mes = 11;
+				}
+			}else if (mi.agrupacion.value == AGRUPACION_TRIMESTRE){
+				if(mes<=2){
+					mes = 2;
+				}else if(mes<=5){
+					mes = 5;
+				}else if(mes<=8){
+					mes = 8;
+				}else{
+					mes = 11;
+				}
+			}else if (mi.agrupacion.value == AGRUPACION_CUATRIMESTRE){
 				if(mes<=3){
 					mes = 3;
 				}else if(mes <=7){
@@ -283,36 +337,78 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 					mi.opcionesGrid.category.push({name: nombreMes[mes]+"-"+anioInicio, visible: true});
 				}
 			}
+		}else if (mi.agrupacion.value == AGRUPACION_BIMESTRE){
+			for (anioInicio = mi.fechaInicio.getFullYear(); anioInicio<=(anioFin); anioInicio++){
+				for (contador = 1; contador <= 6; contador++){
+					var mes = (contador*2)-1;
+					columnDefs.push({ displayName: 'Planificada', category: "Bimestre-"+contador+"-"+anioInicio, 
+						name: mes+'P'+anioInicio, idMeta: 'metaPlanificadaId', width: 90, cellClass : 'grid-align-center', 
+						tipoMeta: META_ID_PLANIFICADA, anio: anioInicio, mes: mes, type: 'number',
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false,
+						cellClass: 'planificado'
+					});
+					columnDefs.push({ displayName: 'Real', category: "Bimestre-"+contador+"-"+anioInicio, 
+						name: mes+'R'+anioInicio, idMeta: 'metaRealId', width: 90, cellClass : 'grid-align-center',
+						tipoMeta: META_ID_REAL, anio: anioInicio, mes: mes, type: 'number',
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false,
+						cellClass: 'real'
+					});
+					mi.opcionesGrid.category.push({name: "Bimestre-"+contador+"-"+anioInicio, visible: true});
+				}
+			}
+		}else if (mi.agrupacion.value == AGRUPACION_TRIMESTRE){
+			for (anioInicio = mi.fechaInicio.getFullYear(); anioInicio<=(anioFin); anioInicio++){
+				for (contador = 1; contador <= 4; contador++){
+					var mes = (contador*3)-1;
+					columnDefs.push({ displayName: 'Planificada', category: "Trimestre-"+contador+"-"+anioInicio, 
+						name: mes+'P'+anioInicio, idMeta: 'metaPlanificadaId', width: 90, cellClass : 'grid-align-center', 
+						tipoMeta: META_ID_PLANIFICADA, anio: anioInicio, mes: mes, type: 'number',
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false,
+						cellClass: 'planificado'
+					});
+					columnDefs.push({ displayName: 'Real', category: "Trimestre-"+contador+"-"+anioInicio, 
+						name: mes+'R'+anioInicio, idMeta: 'metaRealId', width: 90, cellClass : 'grid-align-center',
+						tipoMeta: META_ID_REAL, anio: anioInicio, mes: mes, type: 'number',
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false,
+						cellClass: 'real'
+					});
+					mi.opcionesGrid.category.push({name: "Trimestre-"+contador+"-"+anioInicio, visible: true});
+				}
+			}
 		}else if (mi.agrupacion.value == AGRUPACION_CUATRIMESTRE){
 			for (anioInicio = mi.fechaInicio.getFullYear(); anioInicio<=(anioFin); anioInicio++){
-				for (contador = 1; contador < 4; contador++){
+				for (contador = 1; contador <= 3; contador++){
 					var mes = (contador*4)-1;
 					columnDefs.push({ displayName: 'Planificada', category: "Cuatrimestre-"+contador+"-"+anioInicio, 
 						name: mes+'P'+anioInicio, idMeta: 'metaPlanificadaId', width: 90, cellClass : 'grid-align-center', 
 						tipoMeta: META_ID_PLANIFICADA, anio: anioInicio, mes: mes, type: 'number',
-						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false,
+						cellClass: 'planificado'
 					});
 					columnDefs.push({ displayName: 'Real', category: "Cuatrimestre-"+contador+"-"+anioInicio, 
 						name: mes+'R'+anioInicio, idMeta: 'metaRealId', width: 90, cellClass : 'grid-align-center',
 						tipoMeta: META_ID_REAL, anio: anioInicio, mes: mes, type: 'number',
-						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false,
+						cellClass: 'real'
 					});
 					mi.opcionesGrid.category.push({name: "Cuatrimestre-"+contador+"-"+anioInicio, visible: true});
 				}
 			}
 		}else if (mi.agrupacion.value == AGRUPACION_SEMESTRE){ 
 			for (anioInicio = mi.fechaInicio.getFullYear(); anioInicio<=(anioFin); anioInicio++){
-				for (contador = 1; contador < 3; contador++){
+				for (contador = 1; contador <= 2; contador++){
 					var mes = (contador*6)-1;
 					columnDefs.push({ displayName: 'Planificada', category: "Semestre-"+contador+"-"+anioInicio, 
 						name: mes+'P'+anioInicio, idMeta: 'metaPlanificadaId', width: 90, cellClass : 'grid-align-center', 
 						tipoMeta: META_ID_PLANIFICADA, anio: anioInicio, mes: mes, type: 'number',
-						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false,
+						cellClass: 'planificado'
 					});
 					columnDefs.push({ displayName: 'Real', category: "Semestre-"+contador+"-"+anioInicio, 
 						name: mes+'R'+anioInicio, idMeta: 'metaRealId', width: 90, cellClass : 'grid-align-center',
 						tipoMeta: META_ID_REAL, anio: anioInicio, mes: mes, type: 'number',
-						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false,
+						cellClass: 'real'
 					});
 					mi.opcionesGrid.category.push({name: "Semestre-"+contador+"-"+anioInicio, visible: true});
 				}
@@ -322,23 +418,27 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 					columnDefs.push({ displayName: 'Planificada', category: anioInicio, 
 						name: '11P'+anioInicio, idMeta: 'metaPlanificadaId', width: 90, cellClass : 'grid-align-center', 
 						tipoMeta: META_ID_PLANIFICADA, anio: anioInicio, mes: 11, type: 'number',
-						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false,
+						cellClass: 'planificado'
 					});
 					columnDefs.push({ displayName: 'Real', category: anioInicio, 
 						name: '11R'+anioInicio, idMeta: 'metaRealId', width: 90, cellClass : 'grid-align-center', 
 						tipoMeta: META_ID_REAL, anio: anioInicio, mes: 11, type: 'number',
-						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false
+						enableCellEdit: false, enableFiltering : false, enableColumnMenu: false,
+						cellClass: 'real'
 					});
 					mi.opcionesGrid.category.push({name: anioInicio, visible: true});
 			}
 		}
 		columnDefs.push({ displayName: 'Total Planificado', name: 'getTotalMeta("P")', width: 90, cellClass : 'grid-align-center', 
 			tipoMeta: META_ID_LINEABASE, idMeta: 'lineaBaseId', anio: anioFin, mes: 11, type: 'number',
-			enableCellEdit: false, enableFiltering : false, enableColumnMenu: false, pinnedRight:true
+			enableCellEdit: false, enableFiltering : false, enableColumnMenu: false, pinnedRight:true,
+			cellClass: 'planificado'
 		});
 		columnDefs.push({ displayName: 'Total Real', name: 'getTotalMeta("R")', width: 90, cellClass : 'grid-align-center', 
 			tipoMeta: META_ID_FINAL, idMeta: 'metaFinalId', anio: anioFin, mes: 11, type: 'number',
-			enableCellEdit: false, enableFiltering : false, enableColumnMenu: false, pinnedRight:true
+			enableCellEdit: false, enableFiltering : false, enableColumnMenu: false, pinnedRight:true,
+			cellClass: 'real'
 		});
 		columnDefs.push({ displayName: 'Meta Final', name: 'metaFinal', width: 90,  
 			tipoMeta: META_ID_FINAL, idMeta: 'metaFinalId', anio: anioFin, mes: 11, type: 'number',
@@ -399,13 +499,6 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				}
 			});
 		    
-			gridApi.rowEdit.on.saveRow($scope, function( rowEntity ) {
-				var promise = $q.defer();
-			    mi.gridApi.rowEdit.setSavePromise( rowEntity, promise.promise );
-			    $interval( function() {
-			        promise.resolve();
-			    }, 1, 1);
-	    	  });
 		}
 	}
 	 
@@ -451,7 +544,11 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	mi.estiloEditable = function (grid, row, col, rowIndex, colIndex) {	    
 		var fila = { row: row };
 	    if(col.colDef.cellEditableCondition(fila)){
-	    	return 'grid-align-center lightblue';
+	    	return 'grid-align-center editable';
+	    }else if(col.colDef.tipoMeta == META_ID_PLANIFICADA){
+	    	return 'grid-align-center planificado';
+	    }else if(col.colDef.tipoMeta == META_ID_REAL){
+	    	return 'grid-align-center real';
 	    }
 	    return 'grid-align-center';
 	}
