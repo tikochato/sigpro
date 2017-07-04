@@ -66,5 +66,22 @@ public class TipoMonedaDAO {
 		}
 		return ret;
 	}
+	public static TipoMoneda getTipoMonedaPorId(int id){
+		TipoMoneda  ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT a FROM TipoMoneda a where a.id = :id ";
+			Query<TipoMoneda> criteria = session.createQuery(query,TipoMoneda.class);
+			criteria.setParameter("id", id);
+			ret = criteria.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("3", TipoMonedaDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 
 }
