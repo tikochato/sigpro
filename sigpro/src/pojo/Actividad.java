@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jun 13, 2017 3:16:39 PM by Hibernate Tools 5.2.1.Final
+// Generated 4/07/2017 09:16:40 AM by Hibernate Tools 5.2.0.CR1
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1704487350357334819L;
+	private static final long serialVersionUID = -8838359716280667546L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
 	private String nombre;
@@ -86,7 +86,7 @@ public class Actividad implements java.io.Serializable {
 			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
 			Integer actividad, Integer obra, Integer fuente, int objetoId, int objetoTipo, int duracion,
 			String duracionDimension, Integer predObjetoId, Integer predObjetoTipo, String latitud, String longitud,
-			BigDecimal costo, BigDecimal costoReal,  Set<ActividadPropiedadValor> actividadPropiedadValors,
+			BigDecimal costo, BigDecimal costoReal, Set<ActividadPropiedadValor> actividadPropiedadValors,
 			Set<ActividadUsuario> actividadUsuarios) {
 		this.actividadTipo = actividadTipo;
 		this.nombre = nombre;
@@ -379,7 +379,7 @@ public class Actividad implements java.io.Serializable {
 	public void setCosto(BigDecimal costo) {
 		this.costo = costo;
 	}
-	
+
 	@Column(name = "costo_real", precision = 15)
 	public BigDecimal getCostoReal() {
 		return this.costoReal;
@@ -406,4 +406,5 @@ public class Actividad implements java.io.Serializable {
 	public void setActividadUsuarios(Set<ActividadUsuario> actividadUsuarios) {
 		this.actividadUsuarios = actividadUsuarios;
 	}
+
 }

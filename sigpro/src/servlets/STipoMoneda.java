@@ -29,13 +29,7 @@ public class STipoMoneda extends HttpServlet {
 	class stTipoMoneda {
 		int id;
 		String nombre;
-		String descripcion;
-		int programatipoid;
-		String programatipo;
-		String fechaCreacion;
-		String usuarioCreo;
-		String fechaactualizacion;
-		String usuarioactualizo;
+		String simbolo;
 	};
 	
     public STipoMoneda() {
@@ -71,6 +65,7 @@ public class STipoMoneda extends HttpServlet {
 					stTipoMoneda temp =new stTipoMoneda();
 					temp.id = tipoMoneda.getId();
 					temp.nombre = tipoMoneda.getNombre();
+					temp.simbolo= tipoMoneda.getSimbolo();
 					sttipomoneda.add(temp);
 				}
 				
@@ -79,6 +74,21 @@ public class STipoMoneda extends HttpServlet {
 		        response_text = String.join("", "{\"success\":true,", response_text,"}");
 			} else if (accion.equals("numeroTipoMonedas")){
 				response_text = String.join("","{ \"success\": true, \"totalactividadtipos\":",TipoMonedaDAO.getTotalAuotirzacionTipo().toString()," }");
+			}else if(accion.equals("getTipoMonedas")){
+				List<TipoMoneda> tipoMonedas = TipoMonedaDAO.getTiposMoneda();
+				List<stTipoMoneda> sttipomoneda=new ArrayList<stTipoMoneda>();
+				for(TipoMoneda tipoMoneda:tipoMonedas){
+					stTipoMoneda temp =new stTipoMoneda();
+					temp.id = tipoMoneda.getId();
+					temp.nombre = tipoMoneda.getNombre();
+					temp.simbolo= tipoMoneda.getSimbolo();
+					sttipomoneda.add(temp);
+				}
+				
+				response_text=new GsonBuilder().serializeNulls().create().toJson(sttipomoneda);
+		        response_text = String.join("", "\"tipoMonedas\":",response_text);
+		        response_text = String.join("", "{\"success\":true,", response_text,"}");
+				
 			}
 		}catch (Exception e) {
 			response_text = String.join("","{ \"success\": false }");

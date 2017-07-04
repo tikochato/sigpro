@@ -6,6 +6,9 @@
 	<script type="text/ng-template" id="buscarDesembolsoTipo.jsp">
     	<%@ include file="/app/components/desembolso/buscarDesembolsoTipo.jsp"%>
   	</script>
+  	<script type="text/ng-template" id="buscarTipoMoneda.jsp">
+    	<%@ include file="/app/components/desembolso/buscarTipoMoneda.jsp"%>
+  	</script>
   		<shiro:lacksPermission name="9010">
 			<p ng-init="desembolsoc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
@@ -114,14 +117,13 @@
 					     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 					   <label class="floating-label">* Monto</label>
 					</div>
-					
-					<div class="form-group">
-					   <input type="number" name="itipocambio"  class="inputText" id="itipocambio" 
-					     ng-model="desembolsoc.desembolso.tipocambio" ng-value="desembolsoc.desembolso.tipocambio"   
-					     onblur="this.setAttribute('value', this.value);" ng-required="true" >
-					   <label class="floating-label">* Tipo Cambio</label>
-					</div>
-					
+					<div class="form-group" >
+						    <input type="text" class="inputText" id="itipomonedanombre" name="itipomonedanombre" ng-model="desembolsoc.desembolso.tipomonedanombre" ng-value="desembolsoc.desembolso.tipomonedanombre" 
+							ng-click="desembolsoc.buscarTipoMoneda()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+							<span class="label-icon" ng-click="desembolsoc.buscarTipoMoneda()"><i class="glyphicon glyphicon-search"></i></span>
+							<label for="campo3" class="floating-label">* Tipo de Moneda</label>
+						</div>
+			        <br/>
 			        
 			        <div class="form-group" >
 						    <input type="text" class="inputText" id="idesembolsotipo" name="idesembolsotipo" ng-model="desembolsoc.desembolso.desembolsotipo" ng-value="desembolsoc.desembolso.desembolsotipo" 
