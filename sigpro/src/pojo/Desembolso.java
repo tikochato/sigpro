@@ -1,5 +1,5 @@
 package pojo;
-// Generated 4/07/2017 09:16:40 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jul 7, 2017 9:40:24 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class Desembolso implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7120187317143094523L;
+	private static final long serialVersionUID = -8868709413727648104L;
 	private Integer id;
 	private DesembolsoTipo desembolsoTipo;
 	private Proyecto proyecto;
@@ -44,13 +44,14 @@ public class Desembolso implements java.io.Serializable {
 	}
 
 	public Desembolso(DesembolsoTipo desembolsoTipo, Proyecto proyecto, TipoMoneda tipoMoneda, Date fecha, int estado,
-			BigDecimal monto, String usuarioCreo, Date fechaCreacion) {
+			BigDecimal monto, BigDecimal tipoCambio, String usuarioCreo, Date fechaCreacion) {
 		this.desembolsoTipo = desembolsoTipo;
 		this.proyecto = proyecto;
 		this.tipoMoneda = tipoMoneda;
 		this.fecha = fecha;
 		this.estado = estado;
 		this.monto = monto;
+		this.tipoCambio = tipoCambio;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 	}
@@ -142,7 +143,7 @@ public class Desembolso implements java.io.Serializable {
 		this.monto = monto;
 	}
 
-	@Column(name = "tipo_cambio", precision = 15, scale = 4)
+	@Column(name = "tipo_cambio", nullable = false, precision = 15, scale = 4)
 	public BigDecimal getTipoCambio() {
 		return this.tipoCambio;
 	}

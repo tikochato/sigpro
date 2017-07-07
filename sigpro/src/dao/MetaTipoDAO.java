@@ -1,5 +1,6 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,6 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.MetaTipo;
-import pojo.MetaValor;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -167,24 +167,25 @@ public class MetaTipoDAO {
 		return ret;
 	}
 	
-	public static MetaValor getMetaValorPorIdObjetoTipoMeta(Integer objetoId, Integer objetoTipo, Integer metaTipoId){
-		MetaValor ret=null;
+	public static BigDecimal getMetaValorPorIdObjetoTipoMeta(Integer objetoId, Integer objetoTipo, Integer metaTipoId){
+		BigDecimal ret=null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = String.join(" ", "select mv.* from producto p"
-										,"join meta m on m.objeto_id = p.id"
-										,"join meta_valor mv ON mv.metaid = m.id"
-										,"where m.objeto_tipo = :objTipo"
-										,"and m.meta_tipoid = :metaTipo"
-										,"and p.id = :objId");
+			String query = String.join(" ", "select  sum(mv.valor_decimal)", 
+											"from producto p",
+											"join meta m on m.objeto_id = p.id",
+											"join meta_valor mv ON mv.metaid = m.id",
+											"where p.id = ?1",
+											"and m.objeto_tipo = ?2",
+											"and m.meta_tipoid = ?3");
 			
 			
-			Query<MetaValor> metavalor = session.createNativeQuery(query,MetaValor.class);
-			metavalor.setParameter("objTipo", objetoTipo);
-			metavalor.setParameter("metaTipo", metaTipoId);
-			metavalor.setParameter("objId", objetoId);
+			Query<?> metavalor = session.createNativeQuery(query);
+			metavalor.setParameter("2", objetoTipo);
+			metavalor.setParameter("3", metaTipoId);
+			metavalor.setParameter("1", objetoId);
 			
-			ret = metavalor.getSingleResult();
+			ret = (BigDecimal) metavalor.getSingleResult();
 		}
 		catch(Throwable e){
 			CLogger.write("7", MetaTipoDAO.class, e);

@@ -14,15 +14,17 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.proyectoNombre = "";
 		mi.objetoTipoNombre = "";
 		var date = new Date(), year = date.getFullYear(), month = date.getMonth();
-		
 
 		$window.document.title = $utilidades.sistema_nombre+' - Gantt';
 		
-		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyectoId }).success(
+		var servlet_ = $routeParams.objeto_tipo == 1 ? '/SProyecto' : 'SPrograma';
+		var accion_ = $routeParams.objeto_tipo == 1 ? 'obtenerProyectoPorId' : 'obtenerProgramaPorId'
+		
+		$http.post(servlet_, { accion: accion_, id: $routeParams.objeto_id }).success(
 				function(response) {
 					mi.proyectoid = response.id;
 					mi.proyectoNombre = response.nombre;
-					mi.objetoTipoNombre = "Proyecto";
+					mi.objetoTipoNombre = $routeParams.objeto_tipo == 1 ? "Proyecto" : "Programa";
 		});
 		
 		mi.zoom = 2.5;
@@ -118,7 +120,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		    }
 		});
 		
-		columns.splice(9,1);
+		columns.splice(9,0);
 		
 		columns[1].header = 'Nombre';
 		columns[1].width = 300;
@@ -129,6 +131,17 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		columns[7].header = 'Completada';
 		columns[8].header = 'Responsable';
 		columns[8].isReadOnly = true;
+		columns.splice(9, 0, { header: 'Duración (d)', width: 80, cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(64, 8) });
+		columns.splice(10 , 0, { header: 'Prdecesor', width: 70, cellTemplate: DlhSoft.Controls.GanttChartView.getPredecessorsColumnTemplate(84) });
+		columns.push({ header: 'Costo Planificado (Q)', width: 110, cellTemplate: DlhSoft.Controls.GanttChartView.getCostColumnTemplate(84) });
+		columns.push({ header: 'Meta Planificada', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaPlanificada; }, function (value) { item.metaPlanificada = value; }); } });
+		columns.push({ header: 'Meta Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaReal; }, function (value) { item.metaReal = value; }); } });
+		columns.push({ header: 'Inicio Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.inicioReal; }, function (value) { item.inicioReal = value; }); } });
+		columns.push({ header: 'Fin Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.finReal; }, function (value) { item.finReal = value; }); } });		
+		columns.push({ header: 'Presupuesto Aprobado', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.presupuestoAprobado; }, function (value) { item.presupuestoAprobado = value; }); } });
+		columns.push({ header: 'Presupuesto Devengado', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.presupuestoDevengado; }, function (value) { item.presupuestoDevengado = value; }); } });
+		columns.push({ header: 'Avance Financiero', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.avanceFinanciero; }, function (value) { item.avanceFinanciero = value; }); } });
+		columns.push({ header: 'Inversión nueva S/N', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.inversionNueva; }, function (value) { item.presupuestoAprobado = inversionNueva; }); } });
 		
 		
 		
@@ -136,8 +149,6 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 			columns[i].headerClass = 'gantt-chart-header-column';
 		
 		settings.columns = columns;
-		
-		
 		
 		settings.itemPropertyChangeHandler = function (item, propertyName, isDirect, isFinal) {
 			
@@ -173,15 +184,16 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.ganttChartView;
 		var formatData = new FormData();
 		 
-		formatData.append("accion",'getProyecto');
-		formatData.append("proyecto_id",$routeParams.proyectoId);
+		formatData.append("accion",$routeParams.objeto_tipo == 1 ? 'getProyecto' : 'getPrograma');
+		formatData.append($routeParams.objeto_tipo == 1 ? "proyecto_id" : "programa_id",$routeParams.objeto_id);
 		
 		$http.post('/SGantt', formatData, {
 			headers: {'Content-Type': undefined},
 			transformRequest: angular.identity
 		 }).success(
 				function(response) {
-					var items = response.items;
+					
+					var items =  response.items;
 					$scope.settings.displayedTime = moment(items[0].start,'DD/MM/YYYY hh:mm:ss').toDate();
 					
 					for(var i=0; i< items.length; i++){
@@ -191,6 +203,9 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 							items[i].finish = moment(items[i].finish,'DD/MM/YYYY hh:mm:ss').toDate();
 						if(items[i].identation)
 							items[i].indentation = Number(items[i].indentation);
+						if (items[i].Cost)
+							items[i].Cost = Number(items[i].Cost);
+						
 						items[i].expandend = items[i].expanded=='true' ? true : false;
 						items[i].isMilestone = items[i].isMilestone=='true' ? true : false;
 					}
@@ -269,7 +284,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.exportar=function(){
 			var formatData = new FormData();
 			
-			$http.post('/SDownload', { accion: 'exportar', proyectoid:$routeParams.proyectoId,t:moment().unix()
+			$http.post('/SDownload', { accion: 'exportar', proyectoid:$routeParams.objeto_id,t:moment().unix()
 			  }).then(
 					 function successCallback(response) {
 							var anchor = angular.element('<a/>');
@@ -291,6 +306,15 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		       
 		  };
 		  
+		  /*settings.itemPropertyChangeHandler = function (item, propertyName, isDirect, isFinal) {
+			    if (isDirect && isFinal){
+			    	if(propertyName=='start' || propertyName=='finish' || propertyName=='content' || propertyName=='completedFinish'){
+			    		console.log(item.content + '.' + propertyName + ' changed.');
+			    		console.log(item);
+			    	}
+			    }
+		}*/
+			
 		  settings.itemDoubleClickHandler = function (isOnChart, item){
 			switch (item.objetoTipo){
 				case '1':

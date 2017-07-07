@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,6 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.MetaTipoDAO;
 import dao.ProductoDAO;
-import pojo.MetaValor;
 import pojo.Producto;
 import utilities.Utils;
 
@@ -58,11 +58,16 @@ public class SPlanEjecucion extends HttpServlet {
 			Date fecha_actual = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY");
 			List<Producto> productos = ProductoDAO.getProductosPorProyecto(proyectoId, null);
-			double ejecucionFisica = 0d;
+			BigDecimal ejecucionFisica = new BigDecimal("0");
 			for(Producto producto : productos){
-				MetaValor mvReal = MetaTipoDAO.getMetaValorPorIdObjetoTipoMeta(producto.getId(), 3, 1);
-				MetaValor mvFinal = MetaTipoDAO.getMetaValorPorIdObjetoTipoMeta(producto.getId(), 3, 4);
-				ejecucionFisica = ejecucionFisica +  ((((double)mvReal.getValorEntero() / mvFinal.getValorEntero()) * 100) ) * ((double) producto.getPeso() / 100);
+				BigDecimal mvReal = MetaTipoDAO.getMetaValorPorIdObjetoTipoMeta(producto.getId(), 3, 1);
+				BigDecimal mvFinal = MetaTipoDAO.getMetaValorPorIdObjetoTipoMeta(producto.getId(), 3, 4);
+				if (mvReal!=null && mvFinal!=null){
+					//ejecucionFisica = ejecucionFisica +  mvReal.divide(mvFinal, 2, BigDecimal.ROUND_HALF_UP)  * ((double) producto.getPeso() / 100);
+					ejecucionFisica = ejecucionFisica.add(mvReal.divide(mvFinal, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal((double) producto.getPeso() / 100)));
+				}
+				else
+					ejecucionFisica = new BigDecimal("0");
 			}
 			response_text = String.join("", "{ \"success\": true ,",
 					"\"ejecucionFisica\": \"" , ejecucionFisica + "" , "\",",
