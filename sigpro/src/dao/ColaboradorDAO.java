@@ -227,7 +227,8 @@ public class ColaboradorDAO {
 				estructuraPojo.primerApellido = pojo.getPapellido();
 				estructuraPojo.segundoApellido = pojo.getSapellido();
 				estructuraPojo.cui = pojo.getCui();
-				estructuraPojo.usuario = pojo.getUsuario().getUsuario();
+				if(pojo.getUsuario()!=null)
+					estructuraPojo.usuario = pojo.getUsuario().getUsuario();
 				estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora().getUnidadEjecutora();
 				estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
 				estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();
