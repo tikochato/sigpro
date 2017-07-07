@@ -131,14 +131,24 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		columns[7].header = 'Completada';
 		columns[8].header = 'Responsable';
 		columns[8].isReadOnly = true;
+		columns.splice(9, 0, { header: 'Duración (d)', width: 80, cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(64, 8) });
+		columns.splice(10 , 0, { header: 'Prdecesor', width: 70, cellTemplate: DlhSoft.Controls.GanttChartView.getPredecessorsColumnTemplate(84) });
+		columns.push({ header: 'Costo Planificado (Q)', width: 110, cellTemplate: DlhSoft.Controls.GanttChartView.getCostColumnTemplate(84) });
+		columns.push({ header: 'Meta Planificada', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaPlanificada; }, function (value) { item.metaPlanificada = value; }); } });
+		columns.push({ header: 'Meta Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaReal; }, function (value) { item.metaReal = value; }); } });
+		columns.push({ header: 'Inicio Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.inicioReal; }, function (value) { item.inicioReal = value; }); } });
+		columns.push({ header: 'Fin Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.finReal; }, function (value) { item.finReal = value; }); } });		
+		columns.push({ header: 'Presupuesto Aprobado', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.presupuestoAprobado; }, function (value) { item.presupuestoAprobado = value; }); } });
+		columns.push({ header: 'Presupuesto Devengado', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.presupuestoDevengado; }, function (value) { item.presupuestoDevengado = value; }); } });
+		columns.push({ header: 'Avance Financiero', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.avanceFinanciero; }, function (value) { item.avanceFinanciero = value; }); } });
+		columns.push({ header: 'Inversión nueva S/N', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.inversionNueva; }, function (value) { item.presupuestoAprobado = inversionNueva; }); } });
+		
 		
 		
 		for(var i=0; i<columns.length;i++)
 			columns[i].headerClass = 'gantt-chart-header-column';
 		
 		settings.columns = columns;
-		
-		
 		
 		settings.itemPropertyChangeHandler = function (item, propertyName, isDirect, isFinal) {
 			
@@ -193,6 +203,9 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 							items[i].finish = moment(items[i].finish,'DD/MM/YYYY hh:mm:ss').toDate();
 						if(items[i].identation)
 							items[i].indentation = Number(items[i].indentation);
+						if (items[i].Cost)
+							items[i].Cost = Number(items[i].Cost);
+						
 						items[i].expandend = items[i].expanded=='true' ? true : false;
 						items[i].isMilestone = items[i].isMilestone=='true' ? true : false;
 					}
@@ -293,6 +306,15 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		       
 		  };
 		  
+		  /*settings.itemPropertyChangeHandler = function (item, propertyName, isDirect, isFinal) {
+			    if (isDirect && isFinal){
+			    	if(propertyName=='start' || propertyName=='finish' || propertyName=='content' || propertyName=='completedFinish'){
+			    		console.log(item.content + '.' + propertyName + ' changed.');
+			    		console.log(item);
+			    	}
+			    }
+		}*/
+			
 		  settings.itemDoubleClickHandler = function (isOnChart, item){
 			switch (item.objetoTipo){
 				case '1':

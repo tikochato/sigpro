@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import java.util.zip.GZIPOutputStream;
 import java.io.BufferedReader;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.Map;
 
 
@@ -38,6 +39,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
 import dao.HitoDAO;
+import dao.MetaValorDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
@@ -301,20 +303,31 @@ public class SGantt extends HttpServlet {
 	}
 
 	private String construirItem(Integer idItem,Integer objetoId, Integer objetoTipo, String content,Integer identation,
-			Boolean isExpanded,Date start,Date finish ,boolean isMilestone,Integer duracion){
-
+			Boolean isExpanded,Date start,Date finish ,boolean isMilestone,Integer duracion,BigDecimal costo, 
+			BigDecimal metaPlanificada, BigDecimal metaReal){
+		
+		String f_inicio = Utils.formatDate(start);
+		String f_fin = Utils.formatDate(finish);
+		
 		content = content.replace("\"", "");
 		String cadena = String.join("", "{\"id\" :",idItem!=null ? idItem.toString() : "0",","
 				,"\"content\" :\"",content,"\","
 				,"\"objetoId\" :\"",objetoId.toString(),"\"," ,"\"objetoTipo\" :\"",objetoTipo.toString(),"\",",
 				identation!=null ? "\"indentation\" :" : "", identation!=null ? identation.toString() :"",identation!=null ? "," : "",
 				isExpanded!=null ? "\"isExpanded\" :\"":"" ,isExpanded!=null ? (isExpanded ? "true" : "false"):"",isExpanded!=null ?"\",":"",
-				start !=null ? "\"start\" :\"" : "", start!=null ? Utils.formatDateHour24(start) :"", start!=null ? "\"" : "",
+				start !=null ? "\"start\" :\"" : "", start!=null ? f_inicio + " 00:00:00"  :"", start!=null ? "\"" : "",
 			    start!=null && finish!=null ? "," : "",
-				finish!=null ? "\"finish\" :\"" : "",finish!=null ? Utils.formatDateHour24(finish) : "",finish!=null ?"\"":"",
+				finish!=null ? "\"finish\" :\"" : "",finish!=null ? f_fin + " 23:59:59" : "",finish!=null ?"\"":"",
 				finish!=null ? "," : "",
 				duracion!=null ? "\"duracion\" :\"" : "",duracion!=null ? duracion.toString() : "",duracion!=null ?"\"":"",
 				",\"isMilestone\":",isMilestone? "\"true\"" : "\"false\"",
+				
+			    costo!=null ? ",\"executionCost\" :" : "",costo!=null ? costo.toString() : "",costo!=null ?"":"",
+			    metaPlanificada!=null ? ",\"metaPlanificada\" :" : "",metaPlanificada!=null ? 
+			    		metaPlanificada.floatValue() + "" : "",metaPlanificada!=null ?"":"",
+				metaReal!=null ? ",\"metaReal\" :" : "",metaReal!=null ? 
+						metaReal.floatValue() + "" : "",metaReal!=null ?"":"",
+			    		
 				"}"
 			);
 		System.out.println(idItem);
@@ -336,9 +349,11 @@ public class SGantt extends HttpServlet {
 					idPredecesores.add(actividad.getPredObjetoId());
 					predecesores.put(actividad.getId(), idPredecesores);
 				}
+			
 				ret = String.join(ret.trim().length()>0 ? "," : "",ret,
 						construirItem(actividad.getId(),actividad.getId(),OBJETO_ID_ACTIVIDAD,actividad.getNombre(), 
-								nivelObjeto, true, actividad.getFechaInicio(), actividad.getFechaFin(),false,actividad.getDuracion()));
+								nivelObjeto, true, actividad.getFechaInicio(), actividad.getFechaFin(),
+								false,actividad.getDuracion(),actividad.getCosto(),null,null));
 				
 				
 				if (retRec!=null && retRec.length()>0){
@@ -349,7 +364,7 @@ public class SGantt extends HttpServlet {
 		return ret;
 	}
 	
-	private String obtenerItemsActividadesRecursivas(int objetoId,int objetoTipo,int nivelObjeto,HashMap<Integer,List<Integer>> predecesores){
+	private String obtenerItemsActividadesRecursivas(int objetoId,int objetoTipo,Integer nivelObjeto,HashMap<Integer,List<Integer>> predecesores){
 		String ret = "";
 
 		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, objetoId, objetoTipo
@@ -363,7 +378,9 @@ public class SGantt extends HttpServlet {
 					predecesores.put(actividad.getId(), idPredecesores);
 				}
 				ret = String.join(ret.trim().length()>0 ? "," : "",ret,
-						construirItem(actividad.getId(),actividad.getId(),OBJETO_ID_ACTIVIDAD,actividad.getNombre(), nivelObjeto, true, actividad.getFechaInicio(), actividad.getFechaFin(),false,actividad.getDuracion()));
+						construirItem(actividad.getId(),actividad.getId(),OBJETO_ID_ACTIVIDAD,actividad.getNombre(), 
+								nivelObjeto, true, actividad.getFechaInicio(), actividad.getFechaFin(),false,
+								actividad.getDuracion(),actividad.getCosto(),null,null));
 				
 				String retRec = obtenerItemsActividadesRecursivas(actividad.getId(), OBJETO_ID_ACTIVIDAD, nivelObjeto + 1, predecesores);
 				
@@ -486,7 +503,9 @@ public class SGantt extends HttpServlet {
 								}
 
 								items_actividad = String.join(items_actividad.trim().length()>0 ? "," : "",items_actividad,
-										construirItem(actividad.getId(),actividad.getId(),OBJETO_ID_ACTIVIDAD,actividad.getNombre(), 4, true, actividad.getFechaInicio(), actividad.getFechaFin(),false,actividad.getDuracion()));
+										construirItem(actividad.getId(),actividad.getId(),OBJETO_ID_ACTIVIDAD,actividad.getNombre(), 4, 
+												true, actividad.getFechaInicio(), actividad.getFechaFin(),
+												false,actividad.getDuracion(),actividad.getCosto(),null,null));
 								
 								String items_actividad_recursiva = obtenerItemsActividades(actividad.getId(),5,5,predecesores);
 								
@@ -496,11 +515,16 @@ public class SGantt extends HttpServlet {
 							}
 						}
 						items_subproducto = String.join(items_subproducto.trim().length()>0 ? ",":"", items_subproducto,
-								construirItem(null,subproducto.getId(),OBJETO_ID_SUBPRODUCTO, subproducto.getNombre(),3, true, fechaPrimeraActividad, null,false,null));
+								construirItem(null,subproducto.getId(),OBJETO_ID_SUBPRODUCTO, subproducto.getNombre(),3, true, 
+										fechaPrimeraActividad, null,false,null,null,null,null));
 						items_subproducto = items_actividad.trim().length() > 0 ? String.join(",", items_subproducto,items_actividad) : items_subproducto;
 					}
+					BigDecimal metaPlanificada = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(2, producto.getId(), OBJETO_ID_PRODUCTO);
+					BigDecimal metaReal = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(1, producto.getId(), OBJETO_ID_PRODUCTO);
+					
 					items_producto = String.join(items_producto.trim().length()>0 ? "," : "",items_producto,
-							construirItem(null,producto.getId(),OBJETO_ID_PRODUCTO, producto.getNombre(),2, true, fechaPrimeraActividad, null,false,null));
+							construirItem(null,producto.getId(),OBJETO_ID_PRODUCTO, producto.getNombre(),2, true, fechaPrimeraActividad,
+									null,false,null,null,metaPlanificada,metaReal));
 					items_producto = items_subproducto.trim().length() > 0 ? String.join(",",items_producto, items_subproducto) : items_producto;
 
 					items_actividad = obtenerItemsActividades(producto.getId(),3,3,predecesores);
@@ -508,7 +532,8 @@ public class SGantt extends HttpServlet {
 
 				}
 				items_componente = String.join(items_componente.trim().length()>0 ? "," : "",items_componente,
-						construirItem(null,componente.getId(),OBJETO_ID_COMPONENTE,componente.getNombre(),1, true, fechaPrimeraActividad, null,false,null));
+						construirItem(null,componente.getId(),OBJETO_ID_COMPONENTE,componente.getNombre(),1, true, fechaPrimeraActividad, 
+								null,false,null,null,null,null));
 				items_componente = items_producto.trim().length() > 0 ? String.join(",", items_componente,items_producto) : items_componente;
 
 				items_actividad = obtenerItemsActividades(componente.getId(),2,2,predecesores);
@@ -516,12 +541,14 @@ public class SGantt extends HttpServlet {
 			}
 
 
-			items = String.join(",",construirItem(null,proyecto.getId(),OBJETO_ID_PROYECTO,proyecto.getNombre(),null, true, fechaPrimeraActividad, null,false,null),items_componente);
+			items = String.join(",",construirItem(null,proyecto.getId(),OBJETO_ID_PROYECTO,proyecto.getNombre()
+					,null, true, fechaPrimeraActividad, null,false,null,null,null,null),items_componente);
 			List<Hito> hitos = HitoDAO.getHitosPaginaPorProyecto(0, 0, proyectoId, null, null, null, null, null);
 
 			for (Hito hito:hitos){
 				items = String.join(",",items,
-						construirItem(null,hito.getId(),OBJETO_ID_HITO, hito.getNombre(), 1, null, hito.getFecha(), null,true,null));
+						construirItem(null,hito.getId(),OBJETO_ID_HITO, hito.getNombre(), 1, null, hito.getFecha(),
+								null,true,null,null,null,null));
 			}
 		}
 		//String estructruaPredecesores = getEstructuraPredecesores(predecesores);
