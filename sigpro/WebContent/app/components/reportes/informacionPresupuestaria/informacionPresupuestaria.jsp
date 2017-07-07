@@ -4,13 +4,12 @@
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 
 <style>
-    .ui-grid-tree-header-row {
-        font-weight: normal !important;
-    }
-   
-    .ui-grid-tree-padre {
-        font-weight: bold;
-    }
+	.actividad { font-weight: normal !important; }
+	.padre {font-weight: bold;}
+    .real { background-color: #ffae1a !important }
+    .realTotal { background-color: #e69500 !important }
+    .planificado { background-color: #A9D0F5 !important }
+    .planificadoTotal { background-color: #7bb7f0 !important }
 </style>
 
 <div ng-controller="adquisicionesController as controller" class="maincontainer all_page" id="title">
@@ -60,16 +59,20 @@
 					  	<label for="campo.id" class="floating-label">*Año Final</label>
 					</div>
 					
+					<div class="form-group col-sm-3">
+						<select  class="inputText" ng-model="controller.agrupacion"
+							ng-options="a.text for a in controller.agrupaciones"></select>
+						<label for="agrupacion" class="floating-label">Agrupación</label>
+					</div>
+					
 					<div class="form-group col-sm-3" >
 						<label class="btn btn-default" ng-click="controller.generar()" uib-tooltip="Generar informe" 
 							tooltip-placement="bottom">
 						<span class="glyphicon glyphicon-new-window"></span></label>
 					</div>
 				</div>
-	    	</div>
-	    	<br>
-	    	<div style="height: 100%; width: 100%; z-index: 0">
-		    	<div style="height: 5%; width: 100%">
+				
+				<div style="height: 5%; width: 100%">
 					<div style="float: left;"><h4><b>Ejecución Presupuestaria</b></h4></div>
 					<div style="float: right;" class="operation_buttons" align="right">
 						<div class="btn-group">
@@ -78,12 +81,22 @@
 						</div>
 					</div>
 				</div>
-				<br>
-				<br>
+	    	</div>
+	    	<br>
+	    	<br>
+	    	<br>
+	    	<div style="height: 100%; width: 100%; z-index: 0">
+				<uib-tabset active="active">
+		    		<uib-tab index="0" heading="Planificado" ng-click="controller.mostrarPlanificado();">
+		    		</uib-tab>
+		    		<uib-tab index="1" heading="Real" ng-click="controller.mostrarReal();">
+		    		</uib-tab>
+		    		<uib-tab index="2" heading="Combinado" ng-click="controller.mostrarCombinado();">
+		    		</uib-tab>
+	    		</uib-tabset>
 				<div id="grid1" ui-grid="controller.gridOptions" style="width: 100%; height: 600px"
 					ui-grid-grouping 
 					ui-grid-edit 
-					 
 					ui-grid-resize-columns 
 					ui-grid-cellNav 
 					ui-grid-pinning
