@@ -14,25 +14,29 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import dao.AcumulacionCostoDAO;
+import pojo.AcumulacionCosto;
 
-import dao.TipoMonedaDAO;
-import pojo.TipoMoneda;
-
-@WebServlet("/STipoMoneda")
-public class STipoMoneda extends HttpServlet {
+@WebServlet("/SAcumulacionCosto")
+public class SAcumulacionCosto extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    
-	class stTipoMoneda {
+	
+	class stAcumulacionCosto{
 		int id;
 		String nombre;
-		String simbolo;
-	};
-	
-    public STipoMoneda() {
+		String usuarioCreo;
+		String usuarioActualizo;
+		String fechaCreacion;
+		String fechaActualizacion;
+		int estado;
+	}
+       
+    public SAcumulacionCosto() {
         super();
     }
 
@@ -49,50 +53,38 @@ public class STipoMoneda extends HttpServlet {
 			StringBuilder sb = new StringBuilder();
 			BufferedReader br = request.getReader();
 			String str;
+			HttpSession sesionweb = request.getSession();
+			String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
+			
 			while ((str = br.readLine()) != null) {
 				sb.append(str);
 			}
 			Map<String, String> map = gson.fromJson(sb.toString(), type);
 			String accion = map.get("accion")!=null ? map.get("accion") : "";
-
-			if (accion.equals("getTipoMonedaPagina")) {
+			
+			if(accion.equals("getAcumulacionCosto")){
 				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-				int numeroTipoMoneda = map.get("numerotipomoneda")!=null  ? Integer.parseInt(map.get("numerotipomoneda")) : 0;
-				List<TipoMoneda> tipoMonedas = TipoMonedaDAO.getAutorizacionTiposPagina(pagina, numeroTipoMoneda);
+				int numeroAcumulacionCosto = map.get("numeroresponsablerol")!=null  ? Integer.parseInt(map.get("numeroacumulacioncosto")) : 0;
+				List<AcumulacionCosto> acumulacionCostos = AcumulacionCostoDAO.getAcumulacionCostoPagina(pagina, numeroAcumulacionCosto);
 				
-				List<stTipoMoneda> sttipomoneda=new ArrayList<stTipoMoneda>();
-				for(TipoMoneda tipoMoneda:tipoMonedas){
-					stTipoMoneda temp =new stTipoMoneda();
-					temp.id = tipoMoneda.getId();
-					temp.nombre = tipoMoneda.getNombre();
-					temp.simbolo= tipoMoneda.getSimbolo();
-					sttipomoneda.add(temp);
+				List<stAcumulacionCosto> stacumulacioncosto=new ArrayList<stAcumulacionCosto>();
+				for(AcumulacionCosto acumulacionCosto:acumulacionCostos){
+					stAcumulacionCosto temp =new stAcumulacionCosto();
+					temp.id = acumulacionCosto.getId();
+					temp.nombre = acumulacionCosto.getNombre();
+					stacumulacioncosto.add(temp);
 				}
 				
-				response_text=new GsonBuilder().serializeNulls().create().toJson(sttipomoneda);
-		        response_text = String.join("", "\"tipoMonedas\":",response_text);
+				response_text=new GsonBuilder().serializeNulls().create().toJson(stacumulacioncosto);
+		        response_text = String.join("", "\"resposablerol\":",response_text);
 		        response_text = String.join("", "{\"success\":true,", response_text,"}");
-			} else if (accion.equals("numeroTipoMonedas")){
-				response_text = String.join("","{ \"success\": true, \"totalactividadtipos\":",TipoMonedaDAO.getTotalAuotirzacionTipo().toString()," }");
-			}else if(accion.equals("getTipoMonedas")){
-				List<TipoMoneda> tipoMonedas = TipoMonedaDAO.getTiposMoneda();
-				List<stTipoMoneda> sttipomoneda=new ArrayList<stTipoMoneda>();
-				for(TipoMoneda tipoMoneda:tipoMonedas){
-					stTipoMoneda temp =new stTipoMoneda();
-					temp.id = tipoMoneda.getId();
-					temp.nombre = tipoMoneda.getNombre();
-					temp.simbolo= tipoMoneda.getSimbolo();
-					sttipomoneda.add(temp);
-				}
-				
-				response_text=new GsonBuilder().serializeNulls().create().toJson(sttipomoneda);
-		        response_text = String.join("", "\"tipoMonedas\":",response_text);
-		        response_text = String.join("", "{\"success\":true,", response_text,"}");
-				
+			}else if(accion.equals("numeroAcumulacionCosto")){
+				response_text = String.join("","{ \"success\": true, \"totalresponsablerol\":",AcumulacionCostoDAO.getTotalAcumulacionCosto().toString()," }");
 			}
-		}catch (Exception e) {
+		}catch (Exception ex){
 			response_text = String.join("","{ \"success\": false }");
 		}
+		
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
 		

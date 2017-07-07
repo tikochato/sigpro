@@ -58,7 +58,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				minDate : new Date(1990, 1, 1),
 				startingDay : 1
 		};
-		
+
 		mi.ffr_opciones = {
 				formatYear : 'yy',
 				maxDate : new Date(2050, 12, 31),
@@ -193,8 +193,9 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					obra: mi.actividad.obra,
 					longitud: mi.actividad.longitud,
 					latitud : mi.actividad.latitud,
-					costo: mi.actividad.costo,
-					costoReal: mi.actividad.costoReal,
+					costo: mi.actividad.costo == null ? 0 : mi.actividad.costo,
+					costoReal: mi.actividad.costoReal == null ? 0 : mi.actividad.costoReal,
+					acumulacionCosto: mi.actividad.acumulacionCostoId == null ? 0 : mi.actividad.acumulacionCostoId,
 					fechainicioreal: moment(mi.actividad.fechaInicioReal).format('DD/MM/YYYY'),
 					fechafinreal: moment(mi.actividad.fechaFinReal).format('DD/MM/YYYY'),
 					presupuestoModificado: mi.actividad.presupuestoModificado,
@@ -435,6 +436,23 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			resultado.then(function(itemSeleccionado) {
 				mi.actividad.actividadResponsable = itemSeleccionado.nombre;
 				mi.actividad.responsableRolId = itemSeleccionado.id;
+			});
+		}
+		
+		mi.buscarAcumulacionCosto = function(){
+			var resultado = mi.llamarModalBusqueda('/SAcumulacionCosto', {
+				accion : 'numeroAcumulacionCosto' 
+			}, function(pagina, elementosPorPagina){
+				return{
+					accion: 'getAcumulacionCosto',
+					pagina: pagina,
+					numeroacumulacioncosto : elementosPorPagina
+				}
+			}, 'id','nombre');
+			
+			resultado.then(function(itemSeleccionado){
+				mi.actividad.acumulacionCostoNombre = itemSeleccionado.nombre;
+				mi.actividad.acumulacionCostoId = itemSeleccionado.id;
 			});
 		}
 		

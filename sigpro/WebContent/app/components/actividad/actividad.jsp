@@ -197,7 +197,7 @@
 								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1000)">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
-								  <label for="campo.id" class="floating-label">* Fecha de Inicio</label>
+								  <label for="campo.id" class="floating-label">*Fecha de Inicio</label>
 								</div>
 							</div>
 							
@@ -232,6 +232,13 @@
 					       <label for="iprog" class="floating-label">Costo Real</label>
 						</div>
 						
+						<div class="form-group" >
+						    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="actividadc.actividad.acumulacionCostoNombre" ng-value="actividadc.actividad.acumulacionCosto" 
+							ng-click="actividadc.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+							<span class="label-icon" ng-click="actividadc.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
+							<label for="campo3" class="floating-label">* Acumulación Costo</label>
+						</div>
+
 						<div class="row">							
 							<div class="col-sm-6">
 								

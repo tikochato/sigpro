@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jun 13, 2017 3:16:39 PM by Hibernate Tools 5.2.1.Final
+// Generated Jul 7, 2017 9:40:24 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Colaborador implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 731000410984001745L;
+	private static final long serialVersionUID = -8064150425003431251L;
 	private Integer id;
 	private UnidadEjecutora unidadEjecutora;
 	private Usuario usuario;
@@ -35,7 +35,7 @@ public class Colaborador implements java.io.Serializable {
 	private String snombre;
 	private String papellido;
 	private String sapellido;
-	private long cui;
+	private Long cui;
 	private int estado;
 	private String usuarioCreo;
 	private String usuarioActualizo;
@@ -48,7 +48,7 @@ public class Colaborador implements java.io.Serializable {
 	public Colaborador() {
 	}
 
-	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String papellido, long cui,
+	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String papellido, Long cui,
 			int estado, String usuarioCreo, Date fechaCreacion) {
 		this.unidadEjecutora = unidadEjecutora;
 		this.usuario = usuario;
@@ -61,7 +61,7 @@ public class Colaborador implements java.io.Serializable {
 	}
 
 	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String snombre,
-			String papellido, String sapellido, long cui, int estado, String usuarioCreo, String usuarioActualizo,
+			String papellido, String sapellido, Long cui, int estado, String usuarioCreo, String usuarioActualizo,
 			Date fechaCreacion, Date fechaActualizacion, Set<Proyecto> proyectos, Set<ProyectoMiembro> proyectoMiembros,
 			Set<Riesgo> riesgos) {
 		this.unidadEjecutora = unidadEjecutora;
@@ -150,11 +150,11 @@ public class Colaborador implements java.io.Serializable {
 	}
 
 	@Column(name = "cui", nullable = false)
-	public long getCui() {
+	public Long getCui() {
 		return this.cui;
 	}
 
-	public void setCui(long cui) {
+	public void setCui(Long cui) {
 		this.cui = cui;
 	}
 

@@ -14,6 +14,7 @@
         <mapping class="pojo.Actividad" />
         <mapping class="pojo.ActividadUsuario" />
         <mapping class="pojo.ActividadUsuarioId" />
+        <mapping class="pojo.AcumulacionCosto" />
         <mapping class="pojo.ComponenteUsuario" />
         <mapping class="pojo.ComponenteUsuarioId" />
         <mapping class="pojo.ProyectoUsuario" />
@@ -30,6 +31,7 @@
         <mapping class="pojo.ComponentePropiedad" />
         <mapping class="pojo.ComponentePropiedadValor" />
         <mapping class="pojo.ComponenteTipo" />
+        <mapping class="pojo.Configuraciones" />
         <mapping class="pojo.Cooperante" />
         <mapping class="pojo.CtipoPropiedad" />
         <mapping class="pojo.DatoTipo" />

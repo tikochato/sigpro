@@ -28,9 +28,10 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1704487350357334819L;
+	private static final long serialVersionUID = -6378681945139907778L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
+	private AcumulacionCosto acumulacionCosto;
 	private String nombre;
 	private String descripcion;
 	private Date fechaInicio;
@@ -67,7 +68,7 @@ public class Actividad implements java.io.Serializable {
 	private BigDecimal presupuestoVigente;
 	private BigDecimal presupuestoDevengado;
 	private Integer avanceFinanciero;
-	
+
 	public Actividad() {
 	}
 
@@ -88,7 +89,7 @@ public class Actividad implements java.io.Serializable {
 		this.duracionDimension = duracionDimension;
 	}
 
-	public Actividad(ActividadTipo actividadTipo, String nombre, String descripcion, Date fechaInicio, Date fechaFin,
+	public Actividad(ActividadTipo actividadTipo, AcumulacionCosto acumulacionCosto, String nombre, String descripcion, Date fechaInicio, Date fechaFin,
 			int porcentajeAvance, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
 			Integer actividad, Integer obra, Integer fuente, int objetoId, int objetoTipo, int duracion,
@@ -98,6 +99,7 @@ public class Actividad implements java.io.Serializable {
 			BigDecimal presupuestoModificado, BigDecimal presupuestoPagado, BigDecimal presupuestoVigente, 
 			BigDecimal presupuestoDevengado, Integer avanceFinanciero) {
 		this.actividadTipo = actividadTipo;
+		this.acumulacionCosto = acumulacionCosto;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.fechaInicio = fechaInicio;
@@ -156,6 +158,16 @@ public class Actividad implements java.io.Serializable {
 
 	public void setActividadTipo(ActividadTipo actividadTipo) {
 		this.actividadTipo = actividadTipo;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "acumulacion_costo")
+	public AcumulacionCosto getAcumulacionCosto() {
+		return this.acumulacionCosto;
+	}
+
+	public void setAcumulacionCosto(AcumulacionCosto acumulacionCosto) {
+		this.acumulacionCosto = acumulacionCosto;
 	}
 
 	@Column(name = "nombre", nullable = false, length = 1000)
