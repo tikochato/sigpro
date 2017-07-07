@@ -131,10 +131,9 @@
 					<span class="label-icon" ng-click="colaborador.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
 					<label for="campo3" class="floating-label">* Nombre Unidad Ejecutora</label>
 				</div>
-		      	<div class="form-group" >
+		      	<div class="form-group" ng-hide="colaborador.esNuevo">
 				    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="colaborador.colaborador.usuario" ng-value="colaborador.colaborador.usuario" 
-						            		ng-click="colaborador.buscarUsuario()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="false"/>
-					<span class="label-icon" ng-click="colaborador.buscarUsuario()"><i class="glyphicon glyphicon-search"></i></span>
+						            		 onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="false"/>
 					<label for="campo3" class="floating-label">Usuario</label>
 				</div>
 	     
