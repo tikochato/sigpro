@@ -101,25 +101,14 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		    }
 		});
 		
-
-		columns.splice(1, 0, {
-		    header: 'EDT', 
-		    width: 75,
-		    isReadOnly: true,
-		    cellStyle: 'text-align: left;',
-		    cellTemplate: function (item) {
-		    	return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document,  function(){ return item.edt })
-		    }
-		});
-		
-		columns.splice(3, 0, {
+		columns.splice(2, 0, {
 		    header: 'Estado', width: 120,
 		    cellTemplate: function (item) {
 		        return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return mi.getStatus(item); });
 		    }
 		});
 		
-		columns.splice(3, 0, {
+		columns.splice(2, 0, {
 		    header: '', width: 30,
 		    cellTemplate: function (item) {
 		        var rectangle = document.createElement('div');
@@ -129,18 +118,18 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		    }
 		});
 		
+		columns.splice(9,1);
 		
-		columns.splice(10,1);
+		columns[1].header = 'Nombre';
+		columns[1].width = 300;
+		columns[4].header = 'Inicio';
+		columns[5].header = 'Fin';
+		columns[6].header = 'Hito';
+		columns[6].isReadOnly = true;
+		columns[7].header = 'Completada';
+		columns[8].header = 'Responsable';
+		columns[8].isReadOnly = true;
 		
-		columns[2].header = 'Nombre';
-		columns[2].width = 300;
-		columns[5].header = 'Inicio';
-		columns[6].header = 'Fin';
-		columns[7].header = 'Hito';
-		columns[7].isReadOnly = true;
-		columns[8].header = 'Completada';
-		columns[9].header = 'Responsable';
-		columns[9].isReadOnly = true;
 		
 		
 		for(var i=0; i<columns.length;i++)
