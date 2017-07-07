@@ -1,12 +1,16 @@
 package pojo;
-// Generated 26/06/2017 05:00:48 PM by Hibernate Tools 5.2.3.Final
+// Generated Jul 7, 2017 9:40:24 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -21,7 +25,7 @@ public class AcumulacionCosto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8230593276780245866L;
+	private static final long serialVersionUID = 7230140977342034382L;
 	private Integer id;
 	private String nombre;
 	private String usuarioCreo;
@@ -29,6 +33,7 @@ public class AcumulacionCosto implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
+	private Set<Actividad> actividads = new HashSet<Actividad>(0);
 
 	public AcumulacionCosto() {
 	}
@@ -41,13 +46,14 @@ public class AcumulacionCosto implements java.io.Serializable {
 	}
 
 	public AcumulacionCosto(String nombre, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado) {
+			Date fechaActualizacion, int estado, Set<Actividad> actividads) {
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
+		this.actividads = actividads;
 	}
 
 	@Id
@@ -116,6 +122,15 @@ public class AcumulacionCosto implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "acumulacionCosto")
+	public Set<Actividad> getActividads() {
+		return this.actividads;
+	}
+
+	public void setActividads(Set<Actividad> actividads) {
+		this.actividads = actividads;
 	}
 
 }
