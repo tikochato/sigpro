@@ -100,7 +100,8 @@ public class ColaboradorDAO {
 			pojo.setFechaActualizacion(new Date());
 
 			pojo.setUnidadEjecutora(UnidadEjecutoraDAO.getUnidadEjecutora(codigoUnidadEjecutora));
-			pojo.setUsuario(UsuarioDAO.getUsuario(usuario));
+			if(usuario!=null)
+				pojo.setUsuario(UsuarioDAO.getUsuario(usuario));
 
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try {
