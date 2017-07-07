@@ -49,6 +49,23 @@ public class TipoMonedaDAO {
 		return ret;
 	}
 	
+	public static List<TipoMoneda> getTiposMoneda(){
+		List <TipoMoneda> ret = new ArrayList<TipoMoneda>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT a FROM TipoMoneda a ";
+			Query<TipoMoneda> criteria = session.createQuery(query,TipoMoneda.class);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("2", TipoMonedaDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	public static TipoMoneda getTipoMonedaPorSimbolo(String simbolo){
 		TipoMoneda ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -56,6 +73,23 @@ public class TipoMonedaDAO {
 			String query = "SELECT a FROM TipoMoneda a where a.simbolo = :simb ";
 			Query<TipoMoneda> criteria = session.createQuery(query,TipoMoneda.class);
 			criteria.setParameter("simb", simbolo);
+			ret = criteria.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("3", TipoMonedaDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	public static TipoMoneda getTipoMonedaPorId(int id){
+		TipoMoneda  ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT a FROM TipoMoneda a where a.id = :id ";
+			Query<TipoMoneda> criteria = session.createQuery(query,TipoMoneda.class);
+			criteria.setParameter("id", id);
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
