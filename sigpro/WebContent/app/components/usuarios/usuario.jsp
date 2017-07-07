@@ -125,13 +125,36 @@
     							ng-value="usuarioc.claves.password2" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">* Vuelva a ingresar la contraseña</label>
 						</div>
-						<div class="form-group" >
-					          <input type="text" class="inputText" ng-model="usuarioc.usuariosSelected.colaborador"  ng-disabled="true" 
-					          		ng-value="usuarioc.usuariosSelected.colaborador" 
-					          		ng-click="usuarioc.buscarColaborador()" >
-					          <span class="label-icon" ng-click=" usuarioc.buscarColaborador()"><i class="glyphicon glyphicon-search"></i></span>
-					          <label class="floating-label" >Colaborador</label>
-					      </div>
+						<div class="form-group-row row"  ng-show="usuarioc.esNuevo">
+							<div class="form-group col-sm-4" >
+						          <input type="text" class="inputText" ng-model="usuarioc.tipoUsuario.nombre"  ng-disabled="true" 
+						          		ng-value="usuarioc.tipoUsuario.nombre" 
+						          		ng-click="!usuarioc.cargandoPermisos? usuarioc.buscarPermiso(1) : ''" >
+						          <span class="label-icon" ng-click="!usuarioc.cargandoPermisos? usuarioc.buscarPermiso(1) : ''"><i class="glyphicon glyphicon-search"></i></span>
+						          <label class="floating-label" >Tipo de Usuario</label>
+						    </div>
+							<div class="form-group col-sm-4" ng-show="usuarioc.tipoUsuario.id==4">
+						          <input type="text" class="inputText" ng-model="usuarioc.usuariosSelected.colaborador"  ng-disabled="true" 
+						          		ng-value="usuarioc.usuariosSelected.colaborador" 
+						          		ng-click="usuarioc.buscarColaborador()" >
+						          <span class="label-icon" ng-click=" usuarioc.buscarColaborador()"><i class="glyphicon glyphicon-search"></i></span>
+						          <label class="floating-label" >Colaborador</label>
+						    </div>
+						    <div class="form-group col-sm-4" ng-show="usuarioc.tipoUsuario.id==4">
+						          <input type="text" class="inputText" ng-model="usuarioc.nombreUnidadEjecutora"  ng-disabled="true" 
+						          		ng-value="usuarioc.nombreUnidadEjecutora" 
+						          		 >
+						          <label class="floating-label" >UnidadEjecutora</label>
+						    </div>
+						    <div class="form-group col-sm-8" ng-show="usuarioc.tipoUsuario.id==6">
+						          <input type="text" class="inputText" ng-model="usuarioc.nombreCooperante"  ng-disabled="true" 
+						          		ng-value="usuarioc.nombreCooperante"  >
+						          <span class="label-icon" ng-click=" usuarioc.buscarPermiso(3)"><i class="glyphicon glyphicon-search"></i></span>
+						          <label class="floating-label" >Cooperante</label>
+						    </div>
+						</div>
+						
+					      
 						<br>
 				</form>
 				
@@ -145,12 +168,6 @@
 				<h3 ng-show="usuarioc.isCollapsed">Permisos</h3>
 				<div class="col-sm-12 operation_buttons" align="right" style="margin-left: -1%;" ng-if="usuarioc.esNuevo">
 					<div class="btn-group">
-						<label class="btn btn-default" ng-click="!usuarioc.cargandoPermisos? usuarioc.buscarPermiso(1) : ''"
-												ng-disabled="" 
-											uib-tooltip="Seleccionar Rol" ng-disabled="usuarioc.cargandoPermisos" >
-							<span class="glyphicon glyphicon-zoom-in"></span>
-							Seleccionar Rol
-						</label>
 						<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(0)"
 												ng-disabled="" 
 											uib-tooltip="Agregar permiso" ng-disabled="usuarioc.cargandoPermisos">

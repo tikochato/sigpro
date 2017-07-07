@@ -45,6 +45,9 @@ app.controller(
 	mi.tieneColaborador=false;
 	mi.edicionPermisos=false;
 	mi.filtros=[];
+	mi.tipoUsuario={id:"",nombre:"",grupo:""};
+	mi.nombreUnidadEjecutora="";
+	mi.nombreCooperante="";
 	mi.editarElemento = function (event) {
         var filaId = angular.element(event.toElement).scope().rowRenderIndex;
         mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
@@ -140,6 +143,11 @@ app.controller(
 	}
 
 	mi.cancelar = function() {
+		mi.colaboradorSeleccionado=false;
+		mi.nombreUnidadEjecutora="";
+		mi.nombreCooperante="";
+		mi.tipoUsuario={id:"",nombre:"",grupo:""};
+		mi.nombreUnidadEjecutora="";
 		mi.isCollapsed = false;
 		mi.cambioPassword= false;
 		mi.mostrarCambioPassword = false;
@@ -301,7 +309,7 @@ app.controller(
 				$utilidades.mensaje('danger','Los campos no deben de quedar vacios.');
 			}
 		}
-    if(mi.colaboradorSeleccionado){
+    if(mi.colaboradorSeleccionado && mi.tipoUsuario.id==4){
       mi.asignarColaborador();
     }
 
@@ -411,7 +419,12 @@ app.controller(
 
 		modalInstance.result.then(function(resultadoSeleccion) {
 			if(resultadoSeleccion.tipo===1){
-					mi.cargandoPermisos=true;
+					//mi.cargandoPermisos=true;
+					console.log(resultadoSeleccion);
+			
+					mi.tipoUsuario.id=resultadoSeleccion.rol.id;
+					mi.tipoUsuario.nombre=resultadoSeleccion.rol.nombre;
+					console.log(mi.tipoUsuario);
 					$http.post('/SRol',{accion:'getPermisosPorRol',id:resultadoSeleccion.rol.id}).success(
 							function(response){
 								mi.permisosAsignados=response.permisos;
@@ -420,7 +433,13 @@ app.controller(
 							}
 					);
 			
-			}else{
+			}else if(resultadoSeleccion.tipo===3){
+				console.log(resultadoSeleccion);
+				mi.tipoUsuario.grupo=resultadoSeleccion.cooperante.id;
+				mi.nombreCooperante=resultadoSeleccion.cooperante.nombre;
+				console.log(mi.tipoUsuario);
+			}
+			else{
 				mi.permisosAsignados.push(resultadoSeleccion);
 				mi.nuevosPermisos.push(resultadoSeleccion.id);
 			}
@@ -460,8 +479,12 @@ app.controller(
 		});
 
 		modalInstance.result.then(function(data) {
+			mi.usuariosSelected.colaborador=data.primerNombre+ " "+data.primerApellido;
+			mi.nombreUnidadEjecutora=data.nombreUnidadEjecutora;
 			 mi.colaboradorSeleccionado=true;
 			mi.colaborador=data;
+			mi.tipoUsuario.grupo=data.unidadEjecutora;
+			console.log(mi.tipoUsuario);
 			mi.mensajeActualizado.mensaje=data.primerApellido+ ", "+data.primerNombre;
 		}, function() {
 		});
@@ -471,14 +494,15 @@ app.controller(
 		if(mi.colaboradorSeleccionado){
 			var datos = {
 					accion : 'actualizar',
-					codigo : mi.colaborador.id,
+					id : mi.colaborador.id,
 					primerNombre :  mi.colaborador.primerNombre,
 					segundoNombre :  mi.colaborador.segundoNombre,
 					primerApellido :  mi.colaborador.primerApellido,
 					segundoApellido :  mi.colaborador.segundoApellido,
 					cui :  mi.colaborador.cui,
 					unidadEjecutora :  mi.colaborador.unidadEjecutora,
-					usuario : mi.usuariosSelected.usuario
+					usuario : mi.usuariosSelected.usuario,
+					seleccion:mi.tipoUsuario.grupo
 				};
 
 				$http.post('/SColaborador', datos).then(
@@ -540,6 +564,20 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 	    	    }
 	    	});
 			
+		}else if(infoPermisos.tipo===3){
+			var data_={
+					accion : 'getCooperantesPagina', 
+					t:moment().unix()
+			};
+			$http.post('/SCooperante', data_).then(function(response) {
+	    	    if (response.data.success) {
+	    	    	console.log(response);
+	    	    	mi.data=response.data.cooperantes;
+	    	    	mi.opcionesGrid.data = mi.data;
+	    	    	mi.mostrarCargando = false;
+	    	    }
+	    	});
+			
 		}else{
 			$http.post('/SPermiso', {
 	    		accion:'getPermisos'
@@ -572,13 +610,32 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
+	var especificacion=[];
+	if(infoPermisos.tipo===3){
+		especificaciones=[
+			{
+				displayName : 'ID',
+				name : 'id',
+				cellClass : 'grid-align-right',
+				enableFiltering: true,
+				type : 'text', width : 150
 
+			},
+			{
+				displayName : 'nombre',
+				name : 'nombre',
+				cellClass : 'grid-align-right',
+				enableFiltering: true
 
-
-    mi.opcionesGrid = {
-		data : mi.data,
-		enableFiltering: true,
-		columnDefs : [
+			},
+			{
+				displayName : 'Siglas',
+				name : 'siglas',
+				cellClass : 'grid-align-left'
+			}
+		]
+	}else{
+		especificaciones=[
 			{
 				displayName : 'ID',
 				name : 'id',
@@ -599,7 +656,14 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 				name : 'descripcion',
 				cellClass : 'grid-align-left'
 			}
-		],
+		];
+	}
+	
+
+    mi.opcionesGrid = {
+		data : mi.data,
+		enableFiltering: true,
+		columnDefs : especificaciones,
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
 		multiSelect : false,
@@ -625,6 +689,8 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
     	if (mi.seleccionado) {
     		if(infoPermisos.tipo===1){
     			 $uibModalInstance.close({tipo:1, rol:mi.itemSeleccionado});
+    		}else if(infoPermisos.tipo===3){
+    			 $uibModalInstance.close({tipo:3, cooperante:mi.itemSeleccionado});
     		}else{
     			 $uibModalInstance.close(mi.itemSeleccionado);
     		}
@@ -673,12 +739,7 @@ function modalBuscarColaborador($uibModalInstance, $scope, $http, $interval, i18
 				type : 'text'
 
 			},
-			{
-				displayName : 'Segundo nombre',
-				name : 'segundoNombre',
-				cellClass : 'grid-align-left'
-			}
-			,
+			
 			{
 				displayName : 'Primer apellido',
 				name : 'primerApellido',
@@ -686,11 +747,6 @@ function modalBuscarColaborador($uibModalInstance, $scope, $http, $interval, i18
 			}
 			,
 			{
-				displayName : 'Segundo apellido',
-				name : 'segundoApellido',
-				cellClass : 'grid-align-left'
-			}
-			, {
 				displayName : 'CUI',
 				name : 'cui',
 				cellClass : 'grid-align-right',
@@ -726,7 +782,7 @@ function modalBuscarColaborador($uibModalInstance, $scope, $http, $interval, i18
 		$http.post('/SUsuario', datos).then(function(response) {
 			if (response.data.success) {
 
-				mi.data = response.data.unidadesEjecutoras;
+				mi.data = response.data.colaboradores;
 				mi.opcionesGrid.data = mi.data;
 
 				mi.mostrarCargando = false;
