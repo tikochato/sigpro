@@ -85,6 +85,7 @@ public class SPrestamoMetas extends HttpServlet {
 		
 	class stproductometa {
 		Integer id;
+		String edt;
 		Integer objetoTipo;
 		String objetoTipoNombre;
 		String nombreMeta;
@@ -226,6 +227,7 @@ public class SPrestamoMetas extends HttpServlet {
 		if (proyecto!=null){
 			stproductometa proyectometa = new stproductometa();
 			proyectometa.id = proyecto.getId();
+			proyectometa.edt = "1.";
 			proyectometa.objetoTipo = OBJETO_ID_PROYECTO;
 			proyectometa.objetoTipoNombre = "Prestamo";
 			proyectometa.nombreMeta = proyecto.getNombre();
@@ -239,9 +241,11 @@ public class SPrestamoMetas extends HttpServlet {
 		}
 		List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
 				null, null, null, null, null, usuario);
+		int edtComponente = 1;
 		for (Componente componente : componentes){
 			stproductometa proyectometa = new stproductometa();
 			proyectometa.id = componente.getId();
+			proyectometa.edt = "1."+edtComponente;
 			proyectometa.objetoTipo = OBJETO_ID_COMPONENTE;
 			proyectometa.objetoTipoNombre = "Componente";
 			proyectometa.nombreMeta = componente.getNombre();
@@ -255,9 +259,11 @@ public class SPrestamoMetas extends HttpServlet {
 			
 			List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
 					null, null, null, null, null, usuario);
+			int edtProducto = 1;
 			for (Producto producto : productos){
 				proyectometa = new stproductometa();
 				proyectometa.id = producto.getId();
+				proyectometa.edt = "1."+edtComponente+"."+edtProducto;
 				proyectometa.objetoTipo = OBJETO_ID_PRODUCTO;
 				proyectometa.objetoTipoNombre = "Producto";
 				proyectometa.nombreMeta = producto.getNombre();
@@ -337,8 +343,10 @@ public class SPrestamoMetas extends HttpServlet {
 					}
 				}
 				
-				lstproductometas.add(proyectometa);				
+				lstproductometas.add(proyectometa);	
+				edtProducto++;
 			}
+			edtComponente++;
 		}
 		return lstproductometas;
 	}
@@ -463,11 +471,12 @@ public class SPrestamoMetas extends HttpServlet {
 				unidadDeMedidaNombre = MetaUnidadMedidaDAO.getMetaUnidadMedidaPorId(unidadDeMedidaId).getNombre();
 			}
 			
-			filasObject[0] = sangria + fila.get("nombreMeta").getAsString();
-			filasObject[1] = fila.get("fechaInicio").getAsString();
-			filasObject[2] = fila.get("fechaFin").getAsString();
-			filasObject[3] = unidadDeMedidaNombre;
-			i=4;
+			filasObject[0] = fila.get("edt").getAsString();
+			filasObject[1] = sangria + fila.get("nombreMeta").getAsString();
+			filasObject[2] = fila.get("fechaInicio").getAsString();
+			filasObject[3] = fila.get("fechaFin").getAsString();
+			filasObject[4] = unidadDeMedidaNombre;
+			i=5;
 			Double totalPlanificado = new Double(0);
 			Double totalReal = new Double(0);
 			int objetoTipo = fila.get("objetoTipo").getAsInt();

@@ -58,6 +58,13 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				minDate : new Date(1990, 1, 1),
 				startingDay : 1
 		};
+		
+		mi.ffr_opciones = {
+				formatYear : 'yy',
+				maxDate : new Date(2050, 12, 31),
+				minDate : new Date(1990, 1, 1),
+				startingDay : 1
+		};
 
 		mi.gridOptions = {
 				enableRowSelection : true,
@@ -90,7 +97,18 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 						mi.actividad = row.entity;
 						mi.actividad.fechaInicio = moment(mi.actividad.fechaInicio,'DD/MM/YYYY').toDate();
 						mi.actividad.fechaFin = moment(mi.actividad.fechaFin,'DD/MM/YYYY').toDate();
+						if (mi.actividad.fechaInicioReal){
+						mi.actividad.fechaInicioReal = moment(mi.actividad.fechaInicioReal,'DD/MM/YYYY').toDate();
+						}else{
+							mi.actividad.fechaInicioReal = '';
+						}
+						if (mi.actividad.fechaFinReal){
+							mi.actividad.fechaFinReal = moment(mi.actividad.fechaFinReal,'DD/MM/YYYY').toDate();
+						}else{
+							mi.actividad.fechaFinReal = '';
+						}
 						mi.ff_opciones.minDate = mi.actividad.fechaInicio;
+						mi.ffr_opciones.minDate = mi.actividad.fechaInicioReal;
 					});
 
 					gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
@@ -177,6 +195,14 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					latitud : mi.actividad.latitud,
 					costo: mi.actividad.costo,
 					costoReal: mi.actividad.costoReal,
+					fechainicioreal: moment(mi.actividad.fechaInicioReal).format('DD/MM/YYYY'),
+					fechafinreal: moment(mi.actividad.fechaFinReal).format('DD/MM/YYYY'),
+					presupuestoModificado: mi.actividad.presupuestoModificado,
+					presupuestoPagado: mi.actividad.presupuestoPagado,
+					presupuestoVigente: mi.actividad.presupuestoVigente,
+					presupuestoDevengado: mi.actividad.presupuestoDevengado,
+					avanceFinanciero: mi.actividad.avanceFinanciero,
+					
 					fuente: mi.actividad.fuente,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
@@ -347,6 +373,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				switch(index){
 					case 1000: mi.fi_abierto = true; break;
 					case 1001: mi.ff_abierto =  true; break;
+					case 1002: mi.fir_abierto =  true; break;
+					case 1003: mi.ffr_abierto =  true; break;
 				}
 			}
 
@@ -359,6 +387,17 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					mi.ff_opciones.minDate = m.toDate();
 					if(mi.actividad.fechaFin!=null && mi.actividad.fechaFin<mi.actividad.fechaInicio)
 						mi.actividad.fechaFin = mi.actividad.fechaInicio;
+				}
+			}
+		}
+		
+		mi.actualizarfechafinreal =  function(){
+			if(mi.actividad.fechaInicioReal!=''){
+				var m = moment(mi.actividad.fechaInicioReal);
+				if(m.isValid()){
+					mi.ffr_opciones.minDate = m.toDate();
+					if(mi.actividad.fechaFinReal!=null && mi.actividad.fechaFinReal<mi.actividad.fechaInicioReal)
+						mi.actividad.fechaFinReal = mi.actividad.fechaInicioReal;
 				}
 			}
 		}

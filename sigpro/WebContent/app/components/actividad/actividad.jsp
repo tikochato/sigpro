@@ -197,7 +197,7 @@
 								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1000)">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
-								  <label for="campo.id" class="floating-label">*Fecha de Inicio</label>
+								  <label for="campo.id" class="floating-label">* Fecha de Inicio</label>
 								</div>
 							</div>
 							
@@ -230,6 +230,60 @@
 						<div class="form-group" >
 					       <input type="number" class="inputText" ng-model="actividadc.actividad.costoReal" ng-value="actividadc.actividad.costoReal" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
 					       <label for="iprog" class="floating-label">Costo Real</label>
+						</div>
+						
+						<div class="row">							
+							<div class="col-sm-6">
+								
+								<div class="form-group" >
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaInicioReal" is-open="actividadc.fir_abierto"
+								            datepicker-options="actividadc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafinreal()" ng-click="actividadc.abrirPopupFecha(1002)"
+								            ng-value="actividadc.actividad.fechaInicioReal" onblur="this.setAttribute('value', this.value);"/>
+								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1002)">
+								              <i class="glyphicon glyphicon-calendar"></i>
+								            </span>
+								  <label for="campo.id" class="floating-label">Fecha de Inicio Real</label>
+								</div>
+							</div>
+							
+							<div class="col-sm-6">
+							
+								<div class="form-group" >
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaFinReal" is-open="actividadc.ffr_abierto"
+								            datepicker-options="actividadc.ffr_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafinreal()" ng-required="true"  ng-click="actividadc.abrirPopupFecha(1003)"
+								            ng-value="actividadc.actividad.fechaFinReal" onblur="this.setAttribute('value', this.value);"/>
+								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1003)">
+								              <i class="glyphicon glyphicon-calendar"></i>
+								            </span>
+								  <label for="campo.id" class="floating-label">Fecha de Fin Real</label>
+								</div>
+							</div>
+						</div>
+						
+						
+						<div class="form-group" >
+					       <input type="number" step="0.10" class="inputText" ng-model="actividadc.actividad.presupuestoModificado" ng-value="actividadc.actividad.presupuestoModificado" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
+					       <label for="iprog" class="floating-label">Presupuesto Modificado</label>
+						</div>						
+						
+						<div class="form-group" >
+					       <input type="number" step="0.10" class="inputText" ng-model="actividadc.actividad.presupuestoPagado" ng-value="actividadc.actividad.presupuestoPagado" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
+					       <label for="iprog" class="floating-label">Presupuesto Pagado</label>
+						</div>
+						
+						<div class="form-group" >
+					       <input type="number" step="0.10" class="inputText" ng-model="actividadc.actividad.presupuestoVigente" ng-value="actividadc.actividad.presupuestoVigente" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
+					       <label for="iprog" class="floating-label">Presupuesto Vigente</label>
+						</div>
+						
+						<div class="form-group" >
+					       <input type="number" step="0.10" class="inputText" ng-model="actividadc.actividad.presupuestoDevengado" ng-value="actividadc.actividad.presupuestoDevengado" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
+					       <label for="iprog" class="floating-label">Presupuesto Devengado</label>
+						</div>
+						
+						<div class="form-group" >
+					       <input type="number" class="inputText" ng-model="actividadc.actividad.avanceFinanciero" ng-value="actividadc.actividad.avanceFinanciero" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
+					       <label for="iprog" class="floating-label">Avance Financiero</label>
 						</div>
 						
 						<div ng-repeat="campo in actividadc.camposdinamicos">

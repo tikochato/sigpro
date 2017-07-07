@@ -250,6 +250,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	mi.setDefinicionColumnas = function(){
 		var anioFin = mi.fechaFin.getFullYear();
 		columnDefs = [ 
+			{ displayName : 'EDT', name : 'edt', category: " ", pinnedLeft:true, width: 75, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false, enableColumnMenu: false},
 			{ displayName : 'Producto', name : 'nombreMeta', category: " ", pinnedLeft:true, width: 300, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false, enableColumnMenu: false, 
 				cellTemplate: "<div class=\"ui-grid-cell-contents\" ng-class=\"{'ui-grid-tree-padre': row.treeLevel < 2}\" ><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.pmetasc.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>"
 			},
@@ -452,7 +453,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		});
 		
 		mi.opcionesGrid.columnDefs = columnDefs;
-		mi.opcionesGrid.columnDefs[3].editDropdownOptionsArray = mi.unidadesMedida;
+		mi.opcionesGrid.columnDefs[4].editDropdownOptionsArray = mi.unidadesMedida;
 	}
 	 	 
 	 mi.opcionesGrid = {
@@ -553,6 +554,10 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	    return 'grid-align-center';
 	}
   
+	mi.toggleRow = function(row, evt) {
+		uiGridTreeBaseService.toggleRowTreeState(mi.gridApi.grid, row, evt);
+	};
+	
 	 mi.exportarExcel = function(){
 		 var columnas = [];
 		 mi.opcionesGrid.columnDefs.forEach(function(columna) {

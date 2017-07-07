@@ -46,6 +46,7 @@
 				<table st-table="agendac.agenda" st-safe-src="agendac.lista" class="table table-condensed table-hover">
 					<thead>
 						<tr>
+							<th class="label-form">EDT</th>
 							<th class="label-form">Actividad</th>
 							<th class="label-form">Fecha Inicio</th>
 							<th class="label-form">Fecha Fin</th>
@@ -55,6 +56,7 @@
 					<tbody>
 					<tr ng-repeat="row in agendac.agenda">
 						
+						<td>{{row.edt}}</td>
 						<td>
 							<pre>{{row.nombre}}</pre>
 						</td>
@@ -72,3 +74,4 @@
 		  
 	</div>
 </div>
+	

@@ -61,6 +61,8 @@ public class SGantt extends HttpServlet {
 	private static int OBJETO_ID_SUBPRODUCTO = 4;
 	private static int OBJETO_ID_ACTIVIDAD= 5;
 
+	private int edtActividad = 1;
+	private String strEdtActividad ="";
 
     public SGantt() {
         super();
@@ -133,25 +135,33 @@ public class SGantt extends HttpServlet {
 			String items_subproducto="";
 			String items_producto="";
 			String items_componente="";
+			String strEdt = "1";
 			predecesores = new HashMap<>();
 			if (proyecto !=null){
 				Date fechaPrimeraActividad = null;
 				List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyecto.getId(),
 						null, null, null, null, null, usuario);
 				items_componente="";
+				int edtComponente = 1;
 				for (Componente componente :componentes){
 					List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
 							null, null, null, null, null, usuario);
 					items_producto="";
+					int edtProducto = 1;
 					for (Producto producto : productos){
 						List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(), null, null, null, null, null, usuario);
 
 						items_subproducto="";
+						int edtSubproducto = 1;
 						for (Subproducto subproducto : subproductos){
 
 							List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), 4,
 									null,null, null, null, null, usuario);
 							items_actividad="";
+							
+							edtActividad = 1; 
+							strEdt = "1."+edtComponente+"."+edtProducto+"."+edtSubproducto;
+							strEdtActividad = strEdt;
 							if (!actividades.isEmpty()){
 
 								for (Actividad actividad : actividades){
@@ -165,42 +175,51 @@ public class SGantt extends HttpServlet {
 									}
 
 									items_actividad = String.join(items_actividad.trim().length()>0 ? "," : "",items_actividad,
-											construirItem(actividad.getId(),actividad.getId(),OBJETO_ID_ACTIVIDAD,actividad.getNombre(), 4, true, actividad.getFechaInicio(), actividad.getFechaFin(),false,actividad.getDuracion()));
+											construirItem(actividad.getId(),strEdt+"."+edtActividad,actividad.getId(),OBJETO_ID_ACTIVIDAD,actividad.getNombre(), 4, true, actividad.getFechaInicio(), actividad.getFechaFin(),false,actividad.getDuracion()));
 									
 									String items_actividad_recursiva = obtenerItemsActividades(actividad.getId(),5,5,predecesores);
 									
 									items_actividad = String.join(items_actividad_recursiva !=null && items_actividad_recursiva.trim().length()>0 ? "," : "", items_actividad,items_actividad_recursiva!=null && items_actividad_recursiva.length() > 0 ?
 											items_actividad_recursiva : "");
-									
+									edtActividad++;
 								}
 							}
 							items_subproducto = String.join(items_subproducto.trim().length()>0 ? ",":"", items_subproducto,
-									construirItem(null,subproducto.getId(),OBJETO_ID_SUBPRODUCTO, subproducto.getNombre(),3, true, fechaPrimeraActividad, null,false,null));
+									construirItem(null,strEdt,subproducto.getId(),OBJETO_ID_SUBPRODUCTO, subproducto.getNombre(),3, true, fechaPrimeraActividad, null,false,null));
 							items_subproducto = items_actividad.trim().length() > 0 ? String.join(",", items_subproducto,items_actividad) : items_subproducto;
+							edtSubproducto++;
 						}
+						strEdt = "1."+edtComponente+"."+edtProducto;
 						items_producto = String.join(items_producto.trim().length()>0 ? "," : "",items_producto,
-								construirItem(null,producto.getId(),OBJETO_ID_PRODUCTO, producto.getNombre(),2, true, fechaPrimeraActividad, null,false,null));
+								construirItem(null,strEdt,producto.getId(),OBJETO_ID_PRODUCTO, producto.getNombre(),2, true, fechaPrimeraActividad, null,false,null));
 						items_producto = items_subproducto.trim().length() > 0 ? String.join(",",items_producto, items_subproducto) : items_producto;
-
+						
+						edtActividad = edtSubproducto;
+						strEdtActividad = strEdt;
 						items_actividad = obtenerItemsActividades(producto.getId(),3,3,predecesores);
 						items_producto = (items_actividad.length()>0 ? String.join(",", items_producto,items_actividad):items_producto);
+						edtProducto++;
 
 					}
+					strEdt = "1."+edtComponente;
 					items_componente = String.join(items_componente.trim().length()>0 ? "," : "",items_componente,
-							construirItem(null,componente.getId(),OBJETO_ID_COMPONENTE,componente.getNombre(),1, true, fechaPrimeraActividad, null,false,null));
+							construirItem(null,strEdt,componente.getId(),OBJETO_ID_COMPONENTE,componente.getNombre(),1, true, fechaPrimeraActividad, null,false,null));
 					items_componente = items_producto.trim().length() > 0 ? String.join(",", items_componente,items_producto) : items_componente;
 
+					edtActividad = edtProducto;
+					strEdtActividad = strEdt;
 					items_actividad = obtenerItemsActividades(componente.getId(),2,2,predecesores);
 					items_componente = (items_actividad.length()>0 ? String.join(",", items_componente,items_actividad):items_componente);
+					edtComponente++;
 				}
 
 
-				items = String.join(",",construirItem(null,proyecto.getId(),OBJETO_ID_PROYECTO,proyecto.getNombre(),null, true, fechaPrimeraActividad, null,false,null),items_componente);
+				items = String.join(",",construirItem(null,"1",proyecto.getId(),OBJETO_ID_PROYECTO,proyecto.getNombre(),null, true, fechaPrimeraActividad, null,false,null),items_componente);
 				List<Hito> hitos = HitoDAO.getHitosPaginaPorProyecto(0, 0, proyectoId, null, null, null, null, null);
 
 				for (Hito hito:hitos){
 					items = String.join(",",items,
-							construirItem(null,hito.getId(),OBJETO_ID_HITO, hito.getNombre(), 1, null, hito.getFecha(), null,true,null));
+							construirItem(null,"",hito.getId(),OBJETO_ID_HITO, hito.getNombre(), 1, null, hito.getFecha(), null,true,null));
 				}
 			}
 			String estructruaPredecesores = getEstructuraPredecesores(predecesores);
@@ -349,10 +368,11 @@ public class SGantt extends HttpServlet {
 		}
 	}
 
-	private String construirItem(Integer idItem,Integer objetoId, Integer objetoTipo, String content,Integer identation,
+	private String construirItem(Integer idItem,String edt, Integer objetoId, Integer objetoTipo, String content,Integer identation,
 			Boolean isExpanded,Date start,Date finish ,boolean isMilestone,Integer duracion){
 
 		String cadena = String.join("", "{\"id\" :",idItem!=null ? idItem.toString() : "0",","
+				,"\"edt\" :\"",edt,"\","
 				,"\"content\" :\"",content,"\","
 				,"\"objetoId\" :\"",objetoId.toString(),"\"," ,"\"objetoTipo\" :\"",objetoTipo.toString(),"\",",
 				identation!=null ? "\"indentation\" :" : "", identation!=null ? identation.toString() :"",identation!=null ? "," : "",
@@ -385,13 +405,14 @@ public class SGantt extends HttpServlet {
 					predecesores.put(actividad.getId(), idPredecesores);
 				}
 				ret = String.join(ret.trim().length()>0 ? "," : "",ret,
-						construirItem(actividad.getId(),actividad.getId(),OBJETO_ID_ACTIVIDAD,actividad.getNombre(), 
+						construirItem(actividad.getId(),strEdtActividad+"."+edtActividad,actividad.getId(),OBJETO_ID_ACTIVIDAD,actividad.getNombre(), 
 								nivelObjeto, true, actividad.getFechaInicio(), actividad.getFechaFin(),false,actividad.getDuracion()));
 				
 				
 				if (retRec!=null && retRec.length()>0){
 					ret = String.join(",", ret,retRec);
 				}
+				edtActividad++;
 			}
 		}
 		return ret;
@@ -411,13 +432,14 @@ public class SGantt extends HttpServlet {
 					predecesores.put(actividad.getId(), idPredecesores);
 				}
 				ret = String.join(ret.trim().length()>0 ? "," : "",ret,
-						construirItem(actividad.getId(),actividad.getId(),OBJETO_ID_ACTIVIDAD,actividad.getNombre(), nivelObjeto, true, actividad.getFechaInicio(), actividad.getFechaFin(),false,actividad.getDuracion()));
+						construirItem(actividad.getId(),strEdtActividad+"."+edtActividad,actividad.getId(),OBJETO_ID_ACTIVIDAD,actividad.getNombre(), nivelObjeto, true, actividad.getFechaInicio(), actividad.getFechaFin(),false,actividad.getDuracion()));
 				
 				String retRec = obtenerItemsActividadesRecursivas(actividad.getId(), OBJETO_ID_ACTIVIDAD, nivelObjeto + 1, predecesores);
 				
 				if (retRec!=null && retRec.length()>0){
 					ret = String.join(",", ret,retRec);
 				}
+				edtActividad++;
 			}
 		}
 		return ret;

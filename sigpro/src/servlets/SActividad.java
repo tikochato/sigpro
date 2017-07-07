@@ -67,6 +67,13 @@ public class SActividad extends HttpServlet {
 		String duracionDimension;
 		BigDecimal costo;
 		BigDecimal costoReal;
+		String fechaInicioReal;
+		String fechaFinReal;
+		BigDecimal presupuestoModificado;
+		BigDecimal presupuestoPagado;
+		BigDecimal presupuestoVigente;
+		BigDecimal presupuestoDevengado;
+		Integer avanceFinanciero;
 
 		int estado;
 	}
@@ -155,7 +162,14 @@ public class SActividad extends HttpServlet {
 				temp.latitud = actividad.getLatitud();
 				temp.costo = actividad.getCosto();
 				temp.costoReal = actividad.getCostoReal();
-
+				temp.fechaInicioReal= Utils.formatDate(actividad.getFechaInicioReal());
+				temp.fechaFinReal= Utils.formatDate(actividad.getFechaFinReal());
+				temp.presupuestoModificado= actividad.getPresupuestoModificado();
+				temp.presupuestoPagado= actividad.getPresupuestoPagado();
+				temp.presupuestoVigente= actividad.getPresupuestoVigente();
+				temp.presupuestoDevengado= actividad.getPresupuestoDevengado();
+				temp.avanceFinanciero= actividad.getAvanceFinanciero();
+				
 				stactividads.add(temp);
 			}
 
@@ -170,8 +184,8 @@ public class SActividad extends HttpServlet {
 				stactividad temp =new stactividad();
 				temp.descripcion = actividad.getDescripcion();
 				temp.estado = actividad.getEstado();
-				temp.fechaActualizacion = Utils.formatDate(actividad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDate(actividad.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(actividad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(actividad.getFechaCreacion());
 				temp.id = actividad.getId();
 				temp.nombre = actividad.getNombre();
 				temp.usuarioActualizo = actividad.getUsuarioActualizo();
@@ -189,6 +203,13 @@ public class SActividad extends HttpServlet {
 				temp.latitud = actividad.getLatitud();
 				temp.costo = actividad.getCosto();
 				temp.costoReal = actividad.getCostoReal();
+				temp.fechaInicioReal= Utils.formatDate(actividad.getFechaInicioReal());
+				temp.fechaFinReal= Utils.formatDate(actividad.getFechaFinReal());
+				temp.presupuestoModificado= actividad.getPresupuestoModificado();
+				temp.presupuestoPagado= actividad.getPresupuestoPagado();
+				temp.presupuestoVigente= actividad.getPresupuestoVigente();
+				temp.presupuestoDevengado= actividad.getPresupuestoDevengado();
+				temp.avanceFinanciero= actividad.getAvanceFinanciero();
 				stactividads.add(temp);
 			}
 
@@ -223,6 +244,13 @@ public class SActividad extends HttpServlet {
 					BigDecimal costo = Utils.String2BigDecimal(map.get("costo"), null);
 					BigDecimal costoReal = Utils.String2BigDecimal(map.get("costoReal"), null);
 					String latitud = map.get("latitud");
+					Date fechaInicioReal = map.get("fechainicioreal")!=null ? Utils.dateFromString(map.get("fechainicioreal")) : null;
+					Date fechaFinReal = map.get("fechafinreal")!=null ? Utils.dateFromString(map.get("fechafinreal")) : null;
+					BigDecimal presupuestoModificado = Utils.String2BigDecimal(map.get("presupuestoModificado"), null);
+					BigDecimal presupuestoPagado = Utils.String2BigDecimal(map.get("presupuestoPagado"), null);
+					BigDecimal presupuestoVigente = Utils.String2BigDecimal(map.get("presupuestoVigente"), null);
+					BigDecimal presupuestoDevengado = Utils.String2BigDecimal(map.get("presupuestoDevengado"), null);
+					Integer avanceFinanciero = Utils.String2Int(map.get("avanceFinanciero"), 0);
 
 					ActividadTipo actividadTipo= new ActividadTipo();
 					actividadTipo.setId(actividadtipoid);
@@ -241,7 +269,7 @@ public class SActividad extends HttpServlet {
 						actividad = new Actividad(actividadTipo, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra, fuente,
 								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,costoReal,
-								null,null);
+								null,null,fechaInicioReal, fechaFinReal, presupuestoModificado, presupuestoPagado, presupuestoVigente, presupuestoDevengado, avanceFinanciero);
 					}
 					else{
 						actividad = ActividadDAO.getActividadPorId(id,usuario);
@@ -263,6 +291,13 @@ public class SActividad extends HttpServlet {
 						actividad.setLongitud(longitud);
 						actividad.setCosto(costo);
 						actividad.setCostoReal(costoReal);
+						actividad.setFechaInicioReal(fechaInicioReal);;
+						actividad.setFechaFinReal(fechaFinReal);
+						actividad.setPresupuestoModificado(presupuestoModificado);
+						actividad.setPresupuestoPagado(presupuestoPagado);
+						actividad.setPresupuestoVigente(presupuestoVigente);
+						actividad.setPresupuestoDevengado(presupuestoDevengado);
+						actividad.setAvanceFinanciero(avanceFinanciero);
 					}
 					result = ActividadDAO.guardarActividad(actividad);
 
@@ -382,6 +417,13 @@ public class SActividad extends HttpServlet {
 				temp.latitud = actividad.getLatitud();
 				temp.costo = actividad.getCosto();
 				temp.costoReal = actividad.getCostoReal();
+				temp.fechaInicioReal= Utils.formatDate(actividad.getFechaInicioReal());
+				temp.fechaFinReal= Utils.formatDate(actividad.getFechaFinReal());
+				temp.presupuestoModificado= actividad.getPresupuestoModificado();
+				temp.presupuestoPagado= actividad.getPresupuestoPagado();
+				temp.presupuestoVigente= actividad.getPresupuestoVigente();
+				temp.presupuestoDevengado= actividad.getPresupuestoDevengado();
+				temp.avanceFinanciero= actividad.getAvanceFinanciero();
 				stactividads.add(temp);
 			}
 
@@ -429,6 +471,13 @@ public class SActividad extends HttpServlet {
 			temp.duracionDimension = actividad.getDuracionDimension();
 			temp.costo = actividad.getCosto();
 			temp.costoReal = actividad.getCostoReal();
+			temp.fechaInicioReal= Utils.formatDate(actividad.getFechaInicioReal());
+			temp.fechaFinReal= Utils.formatDate(actividad.getFechaFinReal());
+			temp.presupuestoModificado= actividad.getPresupuestoModificado();
+			temp.presupuestoPagado= actividad.getPresupuestoPagado();
+			temp.presupuestoVigente= actividad.getPresupuestoVigente();
+			temp.presupuestoDevengado= actividad.getPresupuestoDevengado();
+			temp.avanceFinanciero= actividad.getAvanceFinanciero();
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"actividad\":",response_text);

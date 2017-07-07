@@ -60,7 +60,14 @@ public class Actividad implements java.io.Serializable {
 	private BigDecimal costoReal;
 	private Set<ActividadPropiedadValor> actividadPropiedadValors = new HashSet<ActividadPropiedadValor>(0);
 	private Set<ActividadUsuario> actividadUsuarios = new HashSet<ActividadUsuario>(0);
-
+	private Date fechaInicioReal;
+	private Date fechaFinReal;
+	private BigDecimal presupuestoModificado;
+	private BigDecimal presupuestoPagado;
+	private BigDecimal presupuestoVigente;
+	private BigDecimal presupuestoDevengado;
+	private Integer avanceFinanciero;
+	
 	public Actividad() {
 	}
 
@@ -87,7 +94,9 @@ public class Actividad implements java.io.Serializable {
 			Integer actividad, Integer obra, Integer fuente, int objetoId, int objetoTipo, int duracion,
 			String duracionDimension, Integer predObjetoId, Integer predObjetoTipo, String latitud, String longitud,
 			BigDecimal costo, BigDecimal costoReal,  Set<ActividadPropiedadValor> actividadPropiedadValors,
-			Set<ActividadUsuario> actividadUsuarios) {
+			Set<ActividadUsuario> actividadUsuarios, Date fechaInicioReal, Date fechaFinReal, 
+			BigDecimal presupuestoModificado, BigDecimal presupuestoPagado, BigDecimal presupuestoVigente, 
+			BigDecimal presupuestoDevengado, Integer avanceFinanciero) {
 		this.actividadTipo = actividadTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -118,6 +127,13 @@ public class Actividad implements java.io.Serializable {
 		this.costoReal = costoReal;
 		this.actividadPropiedadValors = actividadPropiedadValors;
 		this.actividadUsuarios = actividadUsuarios;
+		this.fechaInicioReal = fechaInicioReal;
+		this.fechaFinReal = fechaFinReal;
+		this.presupuestoModificado = presupuestoModificado;
+		this.presupuestoPagado = presupuestoPagado;
+		this.presupuestoVigente = presupuestoVigente;
+		this.presupuestoDevengado = presupuestoDevengado;
+		this.avanceFinanciero =avanceFinanciero; 
 	}
 
 	@Id
@@ -405,5 +421,70 @@ public class Actividad implements java.io.Serializable {
 
 	public void setActividadUsuarios(Set<ActividadUsuario> actividadUsuarios) {
 		this.actividadUsuarios = actividadUsuarios;
+	}	
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_inicio_real", nullable = false, length = 19)
+	public Date getFechaInicioReal() {
+		return this.fechaInicioReal;
+	}
+
+	public void setFechaInicioReal(Date fechaInicioReal) {
+		this.fechaInicioReal = fechaInicioReal;
+	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_fin_real", nullable = false, length = 19)
+	public Date getFechaFinReal() {
+		return this.fechaFinReal;
+	}
+
+	public void setFechaFinReal(Date fechaFinReal) {
+		this.fechaFinReal = fechaFinReal;
+	}
+
+	@Column(name = "presupuesto_modificado", precision = 15)
+	public BigDecimal getPresupuestoModificado() {
+		return this.presupuestoModificado;
+	}
+
+	public void setPresupuestoModificado(BigDecimal presupuestoModificado) {
+		this.presupuestoModificado = presupuestoModificado;
+	}
+
+	@Column(name = "presupuesto_pagado", precision = 15)
+	public BigDecimal getPresupuestoPagado() {
+		return this.presupuestoPagado;
+	}
+
+	public void setPresupuestoPagado(BigDecimal presupuestoPagado) {
+		this.presupuestoPagado = presupuestoPagado;
+	}
+
+	@Column(name = "presupuesto_vigente", precision = 15)
+	public BigDecimal getPresupuestoVigente() {
+		return this.presupuestoVigente;
+	}
+
+	public void setPresupuestoVigente(BigDecimal presupuestoVigente) {
+		this.presupuestoVigente = presupuestoVigente;
+	}
+
+	@Column(name = "presupuesto_devengado", precision = 15)
+	public BigDecimal getPresupuestoDevengado() {
+		return this.presupuestoDevengado;
+	}
+
+	public void setPresupuestoDevengado(BigDecimal presupuestoDevengado) {
+		this.presupuestoDevengado = presupuestoDevengado;
+	}
+
+	@Column(name = "avance_financiero")
+	public Integer getAvanceFinanciero() {
+		return this.avanceFinanciero;
+	}
+
+	public void setAvanceFinanciero(Integer avanceFinanciero) {
+		this.avanceFinanciero = avanceFinanciero;
 	}
 }
