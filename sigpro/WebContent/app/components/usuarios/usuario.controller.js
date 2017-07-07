@@ -190,6 +190,7 @@ app.controller(
 											$utilidades.mensaje('success','Usuario creado exitosamente!');
 											mi.cargarTabla(mi.paginaActual);
 											mi.nuevosPermisos=[];
+											mi.esNuevo=false;
 										}
 							});
 					}else{
