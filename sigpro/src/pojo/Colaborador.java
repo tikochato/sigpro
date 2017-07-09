@@ -1,5 +1,5 @@
 package pojo;
-// Generated 4/07/2017 09:16:40 AM by Hibernate Tools 5.2.0.CR1
+// Generated Jul 7, 2017 9:40:24 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Colaborador implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3846156985157468691L;
+	private static final long serialVersionUID = -8064150425003431251L;
 	private Integer id;
 	private UnidadEjecutora unidadEjecutora;
 	private Usuario usuario;
@@ -150,11 +150,11 @@ public class Colaborador implements java.io.Serializable {
 	}
 
 	@Column(name = "cui", nullable = false)
-	public long getCui() {
+	public Long getCui() {
 		return this.cui;
 	}
 
-	public void setCui(long cui) {
+	public void setCui(Long cui) {
 		this.cui = cui;
 	}
 

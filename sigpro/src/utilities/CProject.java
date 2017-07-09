@@ -16,6 +16,7 @@ import dao.ProyectoDAO;
 import dao.SubproductoDAO;
 import net.sf.mpxj.ProjectFile;
 import net.sf.mpxj.Relation;
+import net.sf.mpxj.ResourceAssignment;
 import net.sf.mpxj.Task;
 import net.sf.mpxj.mpp.MPPReader;
 import net.sf.mpxj.mpx.MPXWriter;
@@ -219,8 +220,15 @@ public class CProject {
 			 itemPredecesor =  items.get(predecesores[0]);	
 		}
 		
-		Actividad actividad = new Actividad(actividadTipo, task.getName(), null, task.getStart(), task.getFinish()
-				, 0, usuario, null, new Date(), 
+		List<ResourceAssignment> recursos = task.getResourceAssignments();
+		if (recursos!=null && recursos.size()>0){
+			recursos.get(0).getResource().getName();
+		}
+		
+		
+		
+		Actividad actividad = new Actividad(actividadTipo,null, task.getName(), null, task.getStart(), task.getFinish()
+				, task.getPercentageComplete() != null ? (Integer) task.getPercentageComplete(): 0, usuario, null, new Date(), 
 				null, 1, null, null, null,null, null, null, null, objetoId, objetoTipo, 
 				(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName() 

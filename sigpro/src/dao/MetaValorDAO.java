@@ -1,5 +1,6 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,6 +151,34 @@ public class MetaValorDAO {
 		}
 		catch(Throwable e){
 			CLogger.write("7", MetaValorDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static BigDecimal getMetaValorPorMetaTipoObjetoObjetoTipo(Integer metaTipo, 
+			Integer objetoId, Integer objetoTipo){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		BigDecimal ret = null;
+		try{			
+			
+			String query = String.join(" ", "select sum(mv.valorDecimal) from Meta m",
+							"inner join m.metaValors mv",
+							"where m.estado = 1",
+							"and m.metaTipo.id = ?1",
+							"and m.objetoId = ?2",
+							"and m.objetoTipo = ?3");
+			Query<?> criteria = session.createQuery(query);
+			criteria.setParameter("1", metaTipo);
+			criteria.setParameter("2", objetoId);
+			criteria.setParameter("3", objetoTipo);
+			criteria.setMaxResults(1);
+			ret = (BigDecimal) criteria.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("8", MetaValorDAO.class, e);
 		}
 		finally{
 			session.close();

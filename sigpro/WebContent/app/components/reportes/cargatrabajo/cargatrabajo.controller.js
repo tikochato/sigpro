@@ -9,6 +9,8 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     mi.actividadesAtrasadasTotal = 0;
     mi.actividadesProcesoTotal = 0;
     mi.exportar = false;
+    mi.grafica = true;
+    mi.idPrestamo = 0;
 
     mi.redireccionSinPermisos=function(){
 		$window.location.href = '/main.jsp#!/forbidden';		
@@ -238,21 +240,43 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		$http.post('/SReporte',{
 			accion: 'getActividades',
 			responsableId: row.id,
-			idPrestamo : mi.prestamo.value,
+			idPrestamo : mi.idPrestamo,
 			idComponente : mi.componente.value,
 			idProducto : mi.producto.value,
 			idSubProducto : mi.subProducto.value
 		}).success(function(response){
 			if(response.success){
+		        mi.grafica = false;
 				mi.rowCollectionActividades = [];
 				mi.rowCollectionActividades = response.actividades;
 		        mi.displayedCollectionActividades = [].concat(mi.rowCollectionActividades);
+		        
+		        mi.labels = [];
+		        mi.data = [];
+		        mi.series = [];
+		        
+		        mi.labels.push(row.responsable);
+		        for(x in response.actividades){
+		        	mi.series.push(response.actividades[x].nombre);
+		        	mi.data.push([response.actividades[x].porcentaje]);
+		        }
 			}
 		})
 	}
 	
+	$scope.toggle = function () {
+	      mi.type = mi.type === 'polarArea' ?
+	        'pie' : 'polarArea';
+	};
+	
+	mi.charOptions= {
+		legend: { display: true, position: 'top' }
+	}
+	
 	mi.generar = function(){
 		if (mi.tObjeto.value == 1 || mi.prestamo.value != 0){
+			mi.grafica = true;
+			mi.idPrestamo = mi.prestamo.value;
 			$http.post('/SReporte', 
 			{
 				accion: 'getCargaTrabajoPrestamo', 
@@ -309,6 +333,10 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			        mi.actividadesProcesoTotal = totalProceso;
 			        
 			        mi.exportar = true;
+			        mi.rowCollectionActividades = [];
+			        mi.labels = [];
+			        mi.data = [];
+			        mi.series = [];
 				}
 			});
 		}
