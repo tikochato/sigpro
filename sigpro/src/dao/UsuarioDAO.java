@@ -19,6 +19,7 @@ import pojo.UsuarioPermiso;
 import pojo.UsuarioPermisoId;
 import pojo.Colaborador;
 import pojo.Permiso;
+import pojo.Proyecto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -366,6 +367,23 @@ public class UsuarioDAO {
 		try{
 			Query <Usuario> criteria = session.createQuery("FROM Usuario where estado =:estado", Usuario.class);
 			criteria.setParameter("estado",1);
+			ret =criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("7", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	//función para los préstamos para las unidadas ejecutoras
+	public static List <Proyecto> getPrestamosPorUnidadEjecutora(int unidadEjecutora){
+		List <Proyecto> ret = new ArrayList<Proyecto> ();
+		
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query <Proyecto> criteria = session.createQuery("FROM Proyecto where unidadEjecutora.unidadEjecutora =:unidadEjecutora", Proyecto.class);
+			criteria.setParameter("unidadEjecutora",unidadEjecutora);
 			ret =criteria.getResultList();
 		}catch(Throwable e){
 			CLogger.write("7", UsuarioDAO.class, e);
