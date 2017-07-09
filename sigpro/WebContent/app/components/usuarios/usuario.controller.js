@@ -479,9 +479,12 @@ app.controller(
 		});
 
 		modalInstance.result.then(function(data) {
+			if(mi.tipoUsuario.id==4){
+				cargarPrestamosPorUnidadEjecutora(data.unidadEjecutora);
+			}
 			mi.usuariosSelected.colaborador=data.primerNombre+ " "+data.primerApellido;
 			mi.nombreUnidadEjecutora=data.nombreUnidadEjecutora;
-			 mi.colaboradorSeleccionado=true;
+			mi.colaboradorSeleccionado=true;
 			mi.colaborador=data;
 			mi.tipoUsuario.grupo=data.unidadEjecutora;
 			console.log(mi.tipoUsuario);
@@ -489,7 +492,21 @@ app.controller(
 		}, function() {
 		});
 	};
-
+	function cargarPrestamosPorUnidadEjecutora(unidadEjecutora){
+		var datos = {
+				accion : 'getPrestamosPorUnidadEjecutora',
+				unidadEjecutora : unidadEjecutora
+			};
+		$http.post('/SUsuario', datos).then(
+				function(response) {
+					if (response.data.success) {
+						console.log(response.data.prestamos);
+					} else {
+						$utilidades.mensaje('danger',
+								'Error al actualizar datos...!!!');
+					}
+				});
+	};
 	mi.asignarColaborador= function(){
 		if(mi.colaboradorSeleccionado){
 			var datos = {
