@@ -25,6 +25,7 @@ import pojo.Colaborador;
 import pojo.Permiso;
 import pojo.Usuario;
 import pojo.UsuarioPermiso;
+import pojo.Proyecto;
 import utilities.Utils;
 
 /**
@@ -67,6 +68,10 @@ public class SUsuario extends HttpServlet {
 		Integer id;
 		String nombre;
 		String descripcion;
+	}
+	class stproyecto{
+		Integer id;
+		String nombre;		
 	}
        
     /**
@@ -359,6 +364,21 @@ public class SUsuario extends HttpServlet {
 				String respuesta = new GsonBuilder().serializeNulls().create().toJson(stusuarios);
 				response_text = String.join("", "\"usuarios\": ",respuesta);
 				response_text = String.join("", "{\"success\":true,", response_text,"}");
+			}else if(accion.compareTo("getPrestamosPorUnidadEjecutora")==0){
+				String unidadEjecutora = map.get("unidadEjecutora");
+				if(unidadEjecutora!=null){
+					List <Proyecto> proyectos = UsuarioDAO.getPrestamosPorUnidadEjecutora(Integer.parseInt(unidadEjecutora));
+					List <stproyecto>stproyectos = new  ArrayList<stproyecto>();
+					for(Proyecto proyecto : proyectos){
+						stproyecto tmpProyecto = new stproyecto();
+						tmpProyecto.id = proyecto.getId();
+						tmpProyecto.nombre= proyecto.getNombre();
+						stproyectos.add(tmpProyecto);
+					}
+					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stproyectos);
+					response_text = String.join("", "\"prestamos\": ",respuesta);
+					response_text = String.join("", "{\"success\":true,", response_text,"}");
+				}
 			}
 		}else{
 			response_text = String.join("","{ \"success\": false, \"error\":\"No se enviaron los parametros deseados\" }");
