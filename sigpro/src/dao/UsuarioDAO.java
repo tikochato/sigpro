@@ -6,6 +6,7 @@ import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.joda.time.DateTime;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -171,6 +172,32 @@ public class UsuarioDAO {
 		
 		return ret;
 	}
+	public static boolean asignarPrestamos(String usuario, List <Integer> prestamos, String usuario_creo){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			for(int i =0; i<prestamos.size();i++){
+				Query query = session.createSQLQuery(
+						"CALL asignar_proyecto(:proyecto , :usuario, :usuario_creo)")
+						.setParameter("proyecto", prestamos.get(i))
+						.setParameter("usuario", usuario.toString())
+						.setParameter("usuario_creo", usuario_creo.toString());
+				query.executeUpdate();
+				
+			}			
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("2", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
 	
 	public static boolean desactivarPermisosUsuario(String usuario, List <Integer> permisos, String usuarioTexto){
 		boolean ret = false;
@@ -376,7 +403,6 @@ public class UsuarioDAO {
 		return ret;
 	}
 	
-	//función para los préstamos para las unidadas ejecutoras
 	public static List <Proyecto> getPrestamosPorUnidadEjecutora(int unidadEjecutora){
 		List <Proyecto> ret = new ArrayList<Proyecto> ();
 		
@@ -384,6 +410,43 @@ public class UsuarioDAO {
 		try{
 			Query <Proyecto> criteria = session.createQuery("FROM Proyecto where unidadEjecutora.unidadEjecutora =:unidadEjecutora", Proyecto.class);
 			criteria.setParameter("unidadEjecutora",unidadEjecutora);
+			ret =criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("7", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List <Proyecto> getPrestamosPorCooperante(int cooperante){
+		List <Proyecto> ret = new ArrayList<Proyecto> ();
+		
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query <Proyecto> criteria = session.createQuery("FROM Proyecto where cooperante.codigo =:cooperante", Proyecto.class);
+			criteria.setParameter("cooperante",cooperante);
+			ret =criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("7", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	public static List <Proyecto> getPrestamosPorElemento(int elemento, int id_elemento){
+		String busqueda="";
+		if(elemento==4){
+			busqueda="FROM Proyecto where unidadEjecutora.unidadEjecutora =:id and estado=1 ";
+		}else if(elemento==6){
+			busqueda= "FROM Proyecto where cooperante.id =:id and estado=1";
+		}
+		List <Proyecto> ret = new ArrayList<Proyecto> ();
+		
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query <Proyecto> criteria = session.createQuery(busqueda, Proyecto.class);
+			criteria.setParameter("id",id_elemento);
 			ret =criteria.getResultList();
 		}catch(Throwable e){
 			CLogger.write("7", UsuarioDAO.class, e);
