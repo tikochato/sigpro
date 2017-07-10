@@ -153,7 +153,8 @@
 						          <label class="floating-label" >Cooperante</label>
 						    </div>
 						    <!--  tabla de los proyectos asignados -->
-						    <div class="col-sm-12 operation_buttons" align="right"  ng-if="usuarioc.esNuevo">
+						    <!-- 
+						     <div class="col-sm-12 operation_buttons" align="right"  ng-if="usuarioc.esNuevo">
 								<div class="btn-group">
 									<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(4)"
 															ng-disabled="" 
@@ -163,6 +164,7 @@
 									</label>
 								</div>
 							</div>
+						     -->
 							<table style="width: 100%; overflow-y: scroll;height: 175px;display: block;"
 							st-table="usuarioc.prestamosAsignados"
 							class="table table-striped  table-bordered table-hover table-propiedades">
@@ -179,7 +181,7 @@
 										<td>{{row.nombre}}</td>
 										<td>
 											<button type="button"
-												ng-click="usuarioc.eliminarPrestamo(row)"
+												ng-click="usuarioc.eliminarPrestamo($index)"
 												class="btn btn-sm btn-danger">
 												<i class="glyphicon glyphicon-minus-sign"> </i>
 											</button>
@@ -187,6 +189,10 @@
 									</tr>
 								</tbody>
 							</table>
+							<label>
+						      <input type="checkbox" ng-model="usuarioc.verAreaPermisos" ng-true-value="'true'" ng-false-value="'false'">
+						      Ver permisos
+						    </label>
 						</div>
 						
 					      
@@ -199,7 +205,7 @@
 			<div class="row">
 			<div class="col-sm-12">
 			
-		<div align="center" ng-show="usuarioc.isCollapsed">
+		<div align="center" ng-show="usuarioc.isCollapsed && usuarioc.verAreaPermisos == 'true'">
 				<h3 ng-show="usuarioc.isCollapsed">Permisos</h3>
 				<div class="col-sm-12 operation_buttons" align="right" style="margin-left: -1%;" ng-if="usuarioc.esNuevo">
 					<div class="btn-group">

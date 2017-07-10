@@ -39,6 +39,7 @@ app.controller(
 	mi.permisosEliminados=[];
 	var usuarioMail ="";
 	mi.permisosAsignados=[];
+	mi.verAreaPermisos=false;
 	mi.colaborador={};
 	mi.mensajeActualizado={mensaje:"buscar colaborador"};
 	mi.cambioPassword= false;
@@ -146,6 +147,7 @@ app.controller(
 
 	mi.cancelar = function() {
 		mi.colaboradorSeleccionado=false;
+		mi.verAreaPermisos=false;
 		mi.nombreUnidadEjecutora="";
 		mi.nombreCooperante="";
 		mi.tipoUsuario={id:"",nombre:"",grupo:""};
@@ -156,10 +158,14 @@ app.controller(
 		mi.tieneColaborador=false;
 		mi.edicionPermisos=false;
 		mi.cargandoPermisos=false; 
+		mi.prestamosAsignados=[];
+		mi.prestamosNuevos=[];
 		mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
 	}
 
-
+	mi.verPermisos=function(){
+		mi.verAreaPermisos=!mi.verAreaPermisos;
+	}
 	mi.nuevoUsuario=function(){
 		mi.claves.password1="";
 		mi.claves.password2="";
@@ -169,7 +175,13 @@ app.controller(
 		mi.entityselected = null;
 		mi.esNuevo = true;
 	};
-
+	function getIdsPrestamos(prestamos){
+		var ids=[]
+		for(var i =0; i<prestamos.length;i++){
+			ids.push(prestamos[i].id);
+		}
+		return ids;
+	};
 	mi.guardarUsuario=function(){
 		if(mi.esNuevo){
 			if(mi.claves.password1!=="" && mi.claves.password2!=="" && mi.usuariosSelected.usuario!=="" && mi.usuariosSelected.email!==""){
@@ -182,7 +194,8 @@ app.controller(
 									usuario:mi.usuariosSelected.usuario,
 									email:mi.usuariosSelected.email,
 									password:mi.usuariosSelected.password,
-									permisos:JSON.stringify(mi.nuevosPermisos)	,
+									permisos:JSON.stringify(mi.nuevosPermisos),
+									prestamos:JSON.stringify(getIdsPrestamos(mi.prestamosAsignados)),
 									esnuevo:true
 								}
 								).success(
@@ -401,7 +414,9 @@ app.controller(
 
 
 	mi.buscarPermiso = function(tipo) {
-		
+		if(tipo===1 && mi.esNuevo){
+			mi.prestamosAsignados=[];
+		}
 		var modalInstance = $uibModal.open({
 		    animation : 'true',
 		    ariaLabelledBy : 'modal-title',
@@ -438,6 +453,10 @@ app.controller(
 					);
 			
 			}else if(resultadoSeleccion.tipo===3){
+				if(mi.esNuevo){
+					mi.prestamosAsignados=[];
+				}
+				cargarPrestamosPorElemento(6,resultadoSeleccion.cooperante.id);
 				mi.tipoUsuario.grupo=resultadoSeleccion.cooperante.id;
 				mi.nombreCooperante=resultadoSeleccion.cooperante.nombre;
 			}
@@ -481,8 +500,8 @@ app.controller(
 		});
 
 		modalInstance.result.then(function(data) {
-			if(mi.tipoUsuario.id==4){
-				cargarPrestamosPorUnidadEjecutora(data.unidadEjecutora);
+			if(mi.tipoUsuario.id==4){				
+				cargarPrestamosPorElemento(mi.tipoUsuario.id, data.unidadEjecutora);
 			}
 			mi.usuariosSelected.colaborador=data.primerNombre+ " "+data.primerApellido;
 			mi.nombreUnidadEjecutora=data.nombreUnidadEjecutora;
@@ -493,21 +512,36 @@ app.controller(
 		}, function() {
 		});
 	};
-	function cargarPrestamosPorUnidadEjecutora(unidadEjecutora){
-		var datos = {
-				accion : 'getPrestamosPorUnidadEjecutora',
-				unidadEjecutora : unidadEjecutora
-			};
-		$http.post('/SUsuario', datos).then(
-				function(response) {
-					if (response.data.success) {
-						console.log(response.data.prestamos);
-					} else {
-						$utilidades.mensaje('danger',
-								'Error al actualizar datos...!!!');
-					}
-				});
+	function cargarPrestamosPorElemento(tipo, id){
+		if(mi.esNuevo){
+			var datos = {
+					accion : 'getPrestamosPorElemento',
+					id : id,
+					tipo:tipo
+				};
+			$http.post('/SUsuario', datos).then(
+					function(response) {
+						if (response.data.success) {
+							if(mi.esNuevo){
+								mi.prestamosAsignados= response.data.prestamos;
+							}
+						} else {
+							$utilidades.mensaje('danger',
+									'Error al actualizar datos...!!!');
+						}
+					});
+		}
+		
 	};
+	mi.eliminarPrestamo=function(index){
+		if(mi.esNuevo){
+			if(index > -1){
+				mi.prestamosAsignados.splice(index,1);
+			}
+		}
+		
+	};
+	
 	mi.asignarColaborador= function(){
 		if(mi.colaboradorSeleccionado){
 			var datos = {
