@@ -152,6 +152,41 @@
 						          <span class="label-icon" ng-click=" usuarioc.buscarPermiso(3)"><i class="glyphicon glyphicon-search"></i></span>
 						          <label class="floating-label" >Cooperante</label>
 						    </div>
+						    <!--  tabla de los proyectos asignados -->
+						    <div class="col-sm-12 operation_buttons" align="right"  ng-if="usuarioc.esNuevo">
+								<div class="btn-group">
+									<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(4)"
+															ng-disabled="" 
+														uib-tooltip="Asignar Préstamo" ng-disabled="usuarioc.cargandoPrestamos">
+										<span class="glyphicon glyphicon-plus"></span>
+										Agregar préstamo.
+									</label>
+								</div>
+							</div>
+							<table style="width: 100%; overflow-y: scroll;height: 175px;display: block;"
+							st-table="usuarioc.prestamosAsignados"
+							class="table table-striped  table-bordered table-hover table-propiedades">
+								<thead>
+									<tr>
+										<th style="width: 30px;">Nombre</th>
+										<th style="width: 5%;">Quitar</th>
+				
+									</tr>
+								</thead>
+								<tbody>
+									<tr st-select-row="row"
+										ng-repeat="row in usuarioc.prestamosAsignados">
+										<td>{{row.nombre}}</td>
+										<td>
+											<button type="button"
+												ng-click="usuarioc.eliminarPrestamo(row)"
+												class="btn btn-sm btn-danger">
+												<i class="glyphicon glyphicon-minus-sign"> </i>
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
 						
 					      
@@ -190,29 +225,29 @@
 				<table style="width: 95%; overflow-y: scroll;height: 175px;display: block;"
 				st-table="usuarioc.permisosAsignados"
 				class="table table-striped  table-bordered table-hover table-propiedades">
-				<thead >
-					<tr>
-						<th style="width: 5%;">Nombre</th>
-						<th>Descripción</th>
-						<th style="width: 30px;">Quitar</th>
-
-					</tr>
-				</thead>
-				<tbody>
-					<tr st-select-row="row"
-						ng-repeat="row in usuarioc.permisosAsignados">
-						<td>{{row.nombre}}</td>
-						<td>{{row.descripcion}}</td>
-						<td>
-							<button type="button"
-								ng-click="usuarioc.eliminarPermiso(row)"
-								class="btn btn-sm btn-danger">
-								<i class="glyphicon glyphicon-minus-sign"> </i>
-							</button>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+					<thead >
+						<tr>
+							<th style="width: 5%;">Nombre</th>
+							<th>Descripción</th>
+							<th style="width: 30px;">Quitar</th>
+	
+						</tr>
+					</thead>
+					<tbody>
+						<tr st-select-row="row"
+							ng-repeat="row in usuarioc.permisosAsignados">
+							<td>{{row.nombre}}</td>
+							<td>{{row.descripcion}}</td>
+							<td>
+								<button type="button"
+									ng-click="usuarioc.eliminarPermiso(row)"
+									class="btn btn-sm btn-danger">
+									<i class="glyphicon glyphicon-minus-sign"> </i>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			
 			<div class="grid_loading" ng-if="usuarioc.cargandoPermisos" style="margin-top:80px; width: 96%; margin-left: 1%;">
 				<div class="msg">

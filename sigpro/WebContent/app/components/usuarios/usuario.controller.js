@@ -34,6 +34,8 @@ app.controller(
 	mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
 	mi.claves={password1:"", password2:""};
 	mi.nuevosPermisos=[];
+	mi.nuevosPrestamos=[];
+	mi.prestamosAsignados=[];
 	mi.permisosEliminados=[];
 	var usuarioMail ="";
 	mi.permisosAsignados=[];
