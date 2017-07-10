@@ -81,8 +81,8 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="34020">
-						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid && !usuarioc.cargandoPermisos ? usuarioc.guardarUsuario() : '' ) :  (form.$valid  ? usuarioc.guardarUsuario() : '' )" 
-							ng-disabled="usuarioc.esNuevo ? form1.$invalid || usuarioc.cargandoPermisos : form.$invalid  || usuarioc.cargandoPermisos" uib-tooltip="Guardar">
+						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid && !usuarioc.cargandoPermisos &&  usuarioc.tipoUsuario.grupo!= '' ? usuarioc.guardarUsuario() : '' ) :  (form.$valid  ? usuarioc.guardarUsuario() : '' )" 
+							ng-disabled="usuarioc.esNuevo ? form1.$invalid || usuarioc.cargandoPermisos || usuarioc.tipoUsuario.grupo== '' : form.$invalid  || usuarioc.cargandoPermisos" uib-tooltip="Guardar">
 						<span class="glyphicon glyphicon-floppy-saved"></span>Guardar</label>
 					</shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()"  uib-tooltip="Ir a Tabla">

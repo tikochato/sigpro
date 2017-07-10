@@ -192,6 +192,7 @@ app.controller(
 											$utilidades.mensaje('success','Usuario creado exitosamente!');
 											mi.cargarTabla(mi.paginaActual);
 											mi.nuevosPermisos=[];
+											mi.esNuevo=false;
 										}
 							});
 					}else{
@@ -311,7 +312,7 @@ app.controller(
 				$utilidades.mensaje('danger','Los campos no deben de quedar vacios.');
 			}
 		}
-    if(mi.colaboradorSeleccionado && mi.tipoUsuario.id==4){
+    if(mi.colaboradorSeleccionado && mi.tipoUsuario.id==4 &&validarEmail(mi.usuariosSelected.email) ){
       mi.asignarColaborador();
     }
 
@@ -421,12 +422,13 @@ app.controller(
 
 		modalInstance.result.then(function(resultadoSeleccion) {
 			if(resultadoSeleccion.tipo===1){
-					//mi.cargandoPermisos=true;
-					console.log(resultadoSeleccion);
+					mi.cargandoPermisos=true;
 			
 					mi.tipoUsuario.id=resultadoSeleccion.rol.id;
 					mi.tipoUsuario.nombre=resultadoSeleccion.rol.nombre;
-					console.log(mi.tipoUsuario);
+					if(resultadoSeleccion.rol.id!==6 && resultadoSeleccion.rol.id!==4){
+						mi.tipoUsuario.grupo=resultadoSeleccion.id;
+					}
 					$http.post('/SRol',{accion:'getPermisosPorRol',id:resultadoSeleccion.rol.id}).success(
 							function(response){
 								mi.permisosAsignados=response.permisos;
@@ -436,10 +438,8 @@ app.controller(
 					);
 			
 			}else if(resultadoSeleccion.tipo===3){
-				console.log(resultadoSeleccion);
 				mi.tipoUsuario.grupo=resultadoSeleccion.cooperante.id;
 				mi.nombreCooperante=resultadoSeleccion.cooperante.nombre;
-				console.log(mi.tipoUsuario);
 			}
 			else{
 				mi.permisosAsignados.push(resultadoSeleccion);
@@ -489,7 +489,6 @@ app.controller(
 			mi.colaboradorSeleccionado=true;
 			mi.colaborador=data;
 			mi.tipoUsuario.grupo=data.unidadEjecutora;
-			console.log(mi.tipoUsuario);
 			mi.mensajeActualizado.mensaje=data.primerApellido+ ", "+data.primerNombre;
 		}, function() {
 		});
@@ -590,7 +589,6 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 			};
 			$http.post('/SCooperante', data_).then(function(response) {
 	    	    if (response.data.success) {
-	    	    	console.log(response);
 	    	    	mi.data=response.data.cooperantes;
 	    	    	mi.opcionesGrid.data = mi.data;
 	    	    	mi.mostrarCargando = false;

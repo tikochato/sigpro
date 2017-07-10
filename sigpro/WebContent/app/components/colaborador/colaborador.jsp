@@ -127,8 +127,8 @@
 				</div>
 			  	<div class="form-group" >
 				    <input type="text" class="inputText" id="unidadEjecutora" name="unidadEjecutora" ng-model="colaborador.colaborador.nombreUnidadEjecutora" ng-value="colaborador.colaborador.nombreUnidadEjecutora" 
-						            		ng-click="colaborador.buscarUnidadEjecutora()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
-					<span class="label-icon" ng-click="colaborador.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
+						            		ng-click="colaborador.esNuevo? colaborador.buscarUnidadEjecutora(): ''" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+					<span class="label-icon" ng-click="colaborador.esNuevo? colaborador.buscarUnidadEjecutora(): ''"><i class="glyphicon glyphicon-search"></i></span>
 					<label for="campo3" class="floating-label">* Nombre Unidad Ejecutora</label>
 				</div>
 		      	<div class="form-group" ng-hide="colaborador.esNuevo">
