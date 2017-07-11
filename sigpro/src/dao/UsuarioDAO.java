@@ -19,9 +19,13 @@ import pojo.UsuarioLogId;
 import pojo.UsuarioPermiso;
 import pojo.UsuarioPermisoId;
 import pojo.Colaborador;
+import pojo.Cooperante;
 import pojo.Permiso;
 import pojo.Proyecto;
 import pojo.ProyectoUsuario;
+import pojo.RolUsuarioProyecto;
+import pojo.RolUsuarioProyectoId;
+import pojo.UnidadEjecutora;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,6 +182,7 @@ public class UsuarioDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
+			
 			for(int i =0; i<prestamos.size();i++){
 				Query query = session.createSQLQuery(
 						"CALL asignar_proyecto(:proyecto , :usuario, :usuario_creo)")
@@ -198,6 +203,33 @@ public class UsuarioDAO {
 		
 		return ret;
 	}
+	
+	public static boolean asignarPrestamoRol(String usuario, List <Integer> prestamos, int rol){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			for(int i =0; i<prestamos.size();i++){
+				RolUsuarioProyectoId rolUsuarioProyectoId = new RolUsuarioProyectoId(rol,prestamos.get(i).intValue(),usuario);
+				RolUsuarioProyecto rolUsuario = new RolUsuarioProyecto(rolUsuarioProyectoId);
+				session.saveOrUpdate(rolUsuario);
+				if( i % 20 == 0 ){
+					session.flush();
+		            session.clear();
+		        }	
+			}		
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("2", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
 	public static boolean desasignarPrestamo(String usuario, List <Integer> prestamos){
 		boolean ret =false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -292,6 +324,78 @@ public class UsuarioDAO {
 		
 		return ret;
 	}
+	public static UnidadEjecutora  getUnidadEjecutora(String usuario){
+		UnidadEjecutora ret = new UnidadEjecutora();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		List <UnidadEjecutora> unidades = new ArrayList <UnidadEjecutora> ();
+		String consulta ="Select u FROM UnidadEjecutora u, RolUsuarioProyecto r, Proyecto p where p.id =r.id.proyecto and p.unidadEjecutora.id = u.id and r.id.usuario =:usuario ";
+		try{
+			session.beginTransaction();
+			Query<UnidadEjecutora> criteria = session.createQuery(consulta, UnidadEjecutora.class);
+			criteria.setParameter("usuario", usuario);
+			unidades = criteria.getResultList();
+			if(unidades.size()>0){
+				ret = unidades.get(0);
+			}
+			
+		}
+		catch(Throwable e){
+			CLogger.write("5", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}				
+		return ret;
+	}
+	
+	public static Cooperante getCooperantePorUsuario(String usuario){
+		Cooperante ret = new Cooperante();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		List <Cooperante> unidades = new ArrayList <Cooperante> ();
+		String consulta ="Select u FROM Cooperante u, RolUsuarioProyecto r, Proyecto p where p.id =r.id.proyecto and p.cooperante.id = u.id and r.id.usuario =:usuario ";
+		try{
+			session.beginTransaction();
+			Query<Cooperante> criteria = session.createQuery(consulta, Cooperante.class);
+			criteria.setParameter("usuario", usuario);
+			unidades = criteria.getResultList();
+			if(unidades.size()>0){
+				ret = unidades.get(0);
+			}
+			
+		}
+		catch(Throwable e){
+			CLogger.write("5", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static int getRolPorUsuario(String usuario){
+		int ret = 0;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		List <Integer> unidades = new ArrayList <Integer> ();
+		String consulta ="Select r.id.rol FROM  RolUsuarioProyecto r where r.id.usuario =:usuario ";
+		try{
+			session.beginTransaction();
+			Query<Integer> criteria = session.createQuery(consulta, Integer.class);
+			criteria.setParameter("usuario", usuario);
+			unidades = criteria.getResultList();
+			if(unidades.size()>0){
+				ret = unidades.get(0);
+			}
+		}
+		catch(Throwable e){
+			CLogger.write("5", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	
 	public static boolean editarUsuario(Usuario usuario, String usuarioActualizo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();

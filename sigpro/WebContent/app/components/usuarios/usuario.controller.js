@@ -51,6 +51,7 @@ app.controller(
 	mi.tipoUsuario={id:"",nombre:"",grupo:""};
 	mi.nombreUnidadEjecutora="";
 	mi.nombreCooperante="";
+	mi.rolUsuario=0;
 	mi.editarElemento = function (event) {
         var filaId = angular.element(event.toElement).scope().rowRenderIndex;
         mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
@@ -159,6 +160,7 @@ app.controller(
 		mi.edicionPermisos=false;
 		mi.cargandoPermisos=false; 
 		mi.prestamosAsignados=[];
+		mi.rolUsuario=0;
 		mi.prestamosNuevos=[];
 		mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
 	}
@@ -196,6 +198,7 @@ app.controller(
 									password:mi.usuariosSelected.password,
 									permisos:JSON.stringify(mi.nuevosPermisos),
 									prestamos:JSON.stringify(getIdsPrestamos(mi.prestamosAsignados)),
+									rol: mi.tipoUsuario.id,
 									esnuevo:true
 								}
 								).success(
@@ -436,9 +439,9 @@ app.controller(
 		});
 
 		modalInstance.result.then(function(resultadoSeleccion) {
+			
 			if(resultadoSeleccion.tipo===1){
 					mi.cargandoPermisos=true;
-			
 					mi.tipoUsuario.id=resultadoSeleccion.rol.id;
 					mi.tipoUsuario.nombre=resultadoSeleccion.rol.nombre;
 					if(resultadoSeleccion.rol.id==2 ||resultadoSeleccion.rol.id==3){

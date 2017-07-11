@@ -96,6 +96,8 @@
         <mapping class="pojo.RiesgoTipo" />
         <mapping class="pojo.Rol" />
         <mapping class="pojo.RolPermiso" />
+        <mapping class="pojo.RolUsuarioProyecto" />
+        <mapping class="pojo.RolUsuarioProyectoId" />
         <mapping class="pojo.RtipoPropiedad" />
         <mapping class="pojo.SubprodtipoPropiedad" />
         <mapping class="pojo.SubprodtipoPropiedadId" />

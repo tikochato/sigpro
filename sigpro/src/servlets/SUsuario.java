@@ -28,6 +28,7 @@ import pojo.Usuario;
 import pojo.UsuarioPermiso;
 import pojo.Proyecto;
 import pojo.ProyectoUsuario;
+import pojo.UnidadEjecutora;
 import utilities.Utils;
 
 /**
@@ -197,10 +198,13 @@ public class SUsuario extends HttpServlet {
 							stproyectos.add(proyecto_usuario);
 						}
 					}
+					Integer rol = UsuarioDAO.getRolPorUsuario(usuario);
+					Integer unidadEjecutora = UsuarioDAO.getUnidadEjecutora(usuario).getUnidadEjecutora();
+					Integer cooperante = UsuarioDAO.getCooperantePorUsuario(usuario).getId();
 					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stpermisos);
 					String proyectos_usuarios= new GsonBuilder().serializeNulls().create().toJson(stproyectos);
 					response_text  = String.join("", "\"permisos\":",respuesta);
-					response_text = String.join("", "{\"success\":true,", response_text ,",\"proyectos\": "+proyectos_usuarios+"}");
+					response_text = String.join("", "{\"success\":true,", response_text ,",\"proyectos\": "+proyectos_usuarios+",\"unidadEjecuora\": "+unidadEjecutora.toString()+"," +",\"rol\": "+rol.toString()+",\"unidadEjecuora\": "+unidadEjecutora.toString()+"," +",\"cooperante\": "+cooperante.toString()+"}");
 				}
 			}else if(accion.compareTo("getUsuarios")==0){
 				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
@@ -302,8 +306,9 @@ public class SUsuario extends HttpServlet {
 						String nuevomail = map.get("email").toLowerCase();
 						String permisosAsignados = map.get("permisos");
 						String prestamosAsignados=map.get("prestamos");
+						String rol =map.get("rol");
 						HttpSession sesionweb = request.getSession();
-						if(nuevousuario!=null && nuevopassword!=null && nuevomail != null && permisosAsignados!=null){
+						if(nuevousuario!=null && nuevopassword!=null && nuevomail != null && permisosAsignados!=null && rol!=null){
 							if(!UsuarioDAO.existeUsuario(nuevousuario)){
 								if(nuevousuario.compareTo("")!=0 && nuevopassword.compareTo("")!=0 && nuevomail.compareTo("")!=0){
 									String usuarioCreo =sesionweb.getAttribute("usuario").toString();
@@ -314,6 +319,7 @@ public class SUsuario extends HttpServlet {
 											Type tipo = new TypeToken<List<Integer>>() {}.getType();
 											List<Integer> prestamos = entradaJson.fromJson(prestamosAsignados, tipo);
 											UsuarioDAO.asignarPrestamos(usuario, prestamos,usuarioCreo);
+											UsuarioDAO.asignarPrestamoRol(usuario, prestamos, Integer.parseInt(rol));
 										}
 										if(permisosAsignados.compareTo("[]")!=0){
 											Gson entradaJson = new Gson();
