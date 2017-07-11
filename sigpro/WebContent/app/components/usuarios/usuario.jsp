@@ -107,6 +107,10 @@
     							ng-value="usuarioc.usuariosSelected.password" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">* Contraseña</label>
 						</div>
+						<label ng-show="!usuarioc.esNuevo">
+							<input type="checkbox" ng-model="usuarioc.verAreaPermisos" ng-true-value="'true'" ng-false-value="'false'">
+						    	Ver permisos
+						</label>
 
 				</form>
 				<form name="form1">

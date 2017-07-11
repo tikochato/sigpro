@@ -21,6 +21,7 @@ import pojo.UsuarioPermisoId;
 import pojo.Colaborador;
 import pojo.Permiso;
 import pojo.Proyecto;
+import pojo.ProyectoUsuario;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -315,6 +316,22 @@ public class UsuarioDAO {
 		try{
 			session.beginTransaction();
 			Query<UsuarioPermiso> criteria = session.createQuery("FROM UsuarioPermiso where usuariousuario=:usuario and estado = 1", UsuarioPermiso.class);
+			criteria.setParameter("usuario", usuario);
+			ret = criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("6", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List <ProyectoUsuario> getPrestamosAsignadosPorUsuario(String usuario){
+		List <ProyectoUsuario> ret = new ArrayList <ProyectoUsuario> ();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			Query<ProyectoUsuario> criteria = session.createQuery("FROM ProyectoUsuario where id.usuario=:usuario", ProyectoUsuario.class);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getResultList();
 		}catch(Throwable e){

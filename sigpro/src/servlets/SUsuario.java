@@ -20,12 +20,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ColaboradorDAO;
+import dao.ProyectoDAO;
 import dao.UsuarioDAO;
 import pojo.Colaborador;
 import pojo.Permiso;
 import pojo.Usuario;
 import pojo.UsuarioPermiso;
 import pojo.Proyecto;
+import pojo.ProyectoUsuario;
 import utilities.Utils;
 
 /**
@@ -72,6 +74,11 @@ public class SUsuario extends HttpServlet {
 	class stproyecto{
 		Integer id;
 		String nombre;		
+	}
+	class stproyecto_usuario{
+		Integer id;
+		String nombre;
+		String usuario;
 	}
        
     /**
@@ -178,9 +185,22 @@ public class SUsuario extends HttpServlet {
 							stpermisos.add(usuariopermiso);
 						}
 					}
+					List <ProyectoUsuario>proyectos = new ArrayList <ProyectoUsuario>();
+					List <stproyecto_usuario>stproyectos = new ArrayList <stproyecto_usuario>();
+					proyectos = UsuarioDAO.getPrestamosAsignadosPorUsuario(usuario);
+					if(proyectos !=null && proyectos.size()>0){
+						for(ProyectoUsuario proyectoUsuario : proyectos){
+							stproyecto_usuario proyecto_usuario= new stproyecto_usuario();
+							proyecto_usuario.id=proyectoUsuario.getId().getProyectoid();
+							proyecto_usuario.nombre=ProyectoDAO.getProyecto(proyecto_usuario.id).getNombre();
+							proyecto_usuario.usuario=proyectoUsuario.getId().getUsuario();
+							stproyectos.add(proyecto_usuario);
+						}
+					}
 					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stpermisos);
+					String proyectos_usuarios= new GsonBuilder().serializeNulls().create().toJson(stproyectos);
 					response_text  = String.join("", "\"permisos\":",respuesta);
-					response_text = String.join("", "{\"success\":true,", response_text ,"}");
+					response_text = String.join("", "{\"success\":true,", response_text ,",\"proyectos\": "+proyectos_usuarios+"}");
 				}
 			}else if(accion.compareTo("getUsuarios")==0){
 				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
