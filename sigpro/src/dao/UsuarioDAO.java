@@ -197,6 +197,29 @@ public class UsuarioDAO {
 		
 		return ret;
 	}
+	public static boolean desasignarPrestamo(String usuario, List <Integer> prestamos){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			for(int i =0; i<prestamos.size();i++){
+				Query query = session.createSQLQuery(
+						"CALL desasignar_proyecto(:proyecto , :usuario)")
+						.setParameter("proyecto", prestamos.get(i))
+						.setParameter("usuario", usuario.toString());
+				query.executeUpdate();
+			}			
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("2", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
 	
 	
 	public static boolean desactivarPermisosUsuario(String usuario, List <Integer> permisos, String usuarioTexto){
@@ -402,38 +425,7 @@ public class UsuarioDAO {
 		}
 		return ret;
 	}
-	
-	public static List <Proyecto> getPrestamosPorUnidadEjecutora(int unidadEjecutora){
-		List <Proyecto> ret = new ArrayList<Proyecto> ();
 		
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		try{
-			Query <Proyecto> criteria = session.createQuery("FROM Proyecto where unidadEjecutora.unidadEjecutora =:unidadEjecutora", Proyecto.class);
-			criteria.setParameter("unidadEjecutora",unidadEjecutora);
-			ret =criteria.getResultList();
-		}catch(Throwable e){
-			CLogger.write("7", UsuarioDAO.class, e);
-		}finally{
-			session.close();
-		}
-		return ret;
-	}
-	
-	public static List <Proyecto> getPrestamosPorCooperante(int cooperante){
-		List <Proyecto> ret = new ArrayList<Proyecto> ();
-		
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		try{
-			Query <Proyecto> criteria = session.createQuery("FROM Proyecto where cooperante.codigo =:cooperante", Proyecto.class);
-			criteria.setParameter("cooperante",cooperante);
-			ret =criteria.getResultList();
-		}catch(Throwable e){
-			CLogger.write("7", UsuarioDAO.class, e);
-		}finally{
-			session.close();
-		}
-		return ret;
-	}
 	public static List <Proyecto> getPrestamosPorElemento(int elemento, int id_elemento){
 		String busqueda="";
 		if(elemento==4){
@@ -455,4 +447,6 @@ public class UsuarioDAO {
 		}
 		return ret;
 	}
+	
+	
 }
