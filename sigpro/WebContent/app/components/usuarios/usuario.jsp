@@ -133,14 +133,14 @@
 						          <span class="label-icon" ng-click="!usuarioc.cargandoPermisos? usuarioc.buscarPermiso(1) : ''"><i class="glyphicon glyphicon-search"></i></span>
 						          <label class="floating-label" >Tipo de Usuario</label>
 						    </div>
-							<div class="form-group col-sm-4" ng-show="usuarioc.tipoUsuario.id==4">
+							<div class="form-group col-sm-4" ng-show="usuarioc.tipoUsuario.id==4 || usuarioc.tipoUsuario.id==5">
 						          <input type="text" class="inputText" ng-model="usuarioc.usuariosSelected.colaborador"  ng-disabled="true" 
 						          		ng-value="usuarioc.usuariosSelected.colaborador" 
 						          		ng-click="usuarioc.buscarColaborador()" >
 						          <span class="label-icon" ng-click=" usuarioc.buscarColaborador()"><i class="glyphicon glyphicon-search"></i></span>
 						          <label class="floating-label" >Colaborador</label>
 						    </div>
-						    <div class="form-group col-sm-4" ng-show="usuarioc.tipoUsuario.id==4">
+						    <div class="form-group col-sm-4" ng-show="usuarioc.tipoUsuario.id==4 || usuarioc.tipoUsuario.id==5">
 						          <input type="text" class="inputText" ng-model="usuarioc.nombreUnidadEjecutora"  ng-disabled="true" 
 						          		ng-value="usuarioc.nombreUnidadEjecutora" 
 						          		 >
@@ -153,24 +153,12 @@
 						          <label class="floating-label" >Cooperante</label>
 						    </div>
 						    <!--  tabla de los proyectos asignados -->
-						    <!-- 
-						     <div class="col-sm-12 operation_buttons" align="right"  ng-if="usuarioc.esNuevo">
-								<div class="btn-group">
-									<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(4)"
-															ng-disabled="" 
-														uib-tooltip="Asignar Préstamo" ng-disabled="usuarioc.cargandoPrestamos">
-										<span class="glyphicon glyphicon-plus"></span>
-										Agregar préstamo.
-									</label>
-								</div>
-							</div>
-						     -->
 							<table style="width: 100%; overflow-y: scroll;height: 175px;display: block;"
 							st-table="usuarioc.prestamosAsignados"
 							class="table table-striped  table-bordered table-hover table-propiedades">
 								<thead>
 									<tr>
-										<th style="width: 30px;">Nombre</th>
+										<th style="width: 100%;">Nombre</th>
 										<th style="width: 5%;">Quitar</th>
 				
 									</tr>

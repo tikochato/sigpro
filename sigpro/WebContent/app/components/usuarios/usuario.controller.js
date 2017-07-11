@@ -441,6 +441,12 @@ app.controller(
 			
 					mi.tipoUsuario.id=resultadoSeleccion.rol.id;
 					mi.tipoUsuario.nombre=resultadoSeleccion.rol.nombre;
+					if(resultadoSeleccion.rol.id==2 ||resultadoSeleccion.rol.id==3){
+						if(mi.esNuevo){
+							mi.prestamosAsignados=[];
+						}
+						cargarPrestamosPorElemento(2,0);
+					}
 					if(resultadoSeleccion.rol.id!==6 && resultadoSeleccion.rol.id!==4){
 						mi.tipoUsuario.grupo=resultadoSeleccion.id;
 					}
@@ -500,7 +506,7 @@ app.controller(
 		});
 
 		modalInstance.result.then(function(data) {
-			if(mi.tipoUsuario.id==4){				
+			if(mi.tipoUsuario.id==4 || mi.tipoUsuario.id==5 ){				
 				cargarPrestamosPorElemento(mi.tipoUsuario.id, data.unidadEjecutora);
 			}
 			mi.usuariosSelected.colaborador=data.primerNombre+ " "+data.primerApellido;

@@ -426,19 +426,24 @@ public class UsuarioDAO {
 		return ret;
 	}
 		
-	public static List <Proyecto> getPrestamosPorElemento(int elemento, int id_elemento){
+	public static List <Proyecto> getPrestamosPorElemento(int elemento, int id_elemento,String usuario){
 		String busqueda="";
-		if(elemento==4){
-			busqueda="FROM Proyecto where unidadEjecutora.unidadEjecutora =:id and estado=1 ";
+		if(elemento==4 || elemento==5){
+			busqueda="Select p FROM Proyecto p, ProyectoUsuario u where p.unidadEjecutora.unidadEjecutora =:id and p.estado=1 and p.id =u.id.proyectoid and u.id.usuario=:usuario";
 		}else if(elemento==6){
-			busqueda= "FROM Proyecto where cooperante.id =:id and estado=1";
+			busqueda= "Select p FROM Proyecto p, ProyectoUsuario u where p.cooperante.id =:id and p.estado=1 and p.id =u.id.proyectoid and u.id.usuario=:usuario";
+		}else{
+			busqueda= "Select p FROM Proyecto p where  p.estado=1";
 		}
 		List <Proyecto> ret = new ArrayList<Proyecto> ();
 		
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			Query <Proyecto> criteria = session.createQuery(busqueda, Proyecto.class);
-			criteria.setParameter("id",id_elemento);
+			if(elemento>=4){
+				criteria.setParameter("id",id_elemento);
+				criteria.setParameter("usuario",usuario);
+			}
 			ret =criteria.getResultList();
 		}catch(Throwable e){
 			CLogger.write("7", UsuarioDAO.class, e);
