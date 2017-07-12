@@ -107,6 +107,42 @@
     							ng-value="usuarioc.usuariosSelected.password" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">* Contraseña</label>
 						</div>
+						<br>
+						<h3 ng-show="!usuarioc.esNuevo">Préstamos Asignados</h3>
+						<div class="col-sm-12 operation_buttons" align="right" style="margin-left: -1%;" ng-if="!usuarioc.esNuevo">
+							<div class="btn-group">
+								<label class="btn btn-default" ng-click="usuarioc.buscarPrestamosNuevos()"
+														ng-disabled="" 
+													uib-tooltip="Agregar permiso" ng-disabled="usuarioc.cargandoPermisos">
+									<span class="glyphicon glyphicon-plus"></span>
+									Agregar préstamo.
+								</label>
+							</div>
+						</div>
+						<table style="width: 100%; overflow-y: scroll;height: 175px;display: block;"
+							st-table="usuarioc.prestamosAsignados"  ng-show="!usuarioc.esNuevo"
+							class="table table-striped  table-bordered table-hover table-propiedades">
+								<thead>
+									<tr>
+										<th style="width: 100%;">Nombre</th>
+										<th style="width: 5%;">Quitar</th>
+				
+									</tr>
+								</thead>
+								<tbody>
+									<tr st-select-row="row"
+										ng-repeat="row in usuarioc.prestamosAsignados">
+										<td>{{row.nombre}}</td>
+										<td>
+											<button type="button"
+												ng-click="usuarioc.eliminarPrestamo($index,row)"
+												class="btn btn-sm btn-danger">
+												<i class="glyphicon glyphicon-minus-sign"> </i>
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
 						<label ng-show="!usuarioc.esNuevo">
 							<input type="checkbox" ng-model="usuarioc.verAreaPermisos" ng-true-value="'true'" ng-false-value="'false'">
 						    	Ver permisos

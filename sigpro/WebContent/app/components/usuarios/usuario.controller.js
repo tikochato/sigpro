@@ -27,6 +27,10 @@ app.controller(
 	mi.cargandoPermisos=false;
 	mi.entityselected = null;
 	mi.esNuevo = false;
+	mi.unidadEjecutoraUsuario="";
+	mi.cooperanteUsuario="";
+	mi.rolUsuario="";
+	mi.cargandoPermisos=false;
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
@@ -35,6 +39,8 @@ app.controller(
 	mi.claves={password1:"", password2:""};
 	mi.nuevosPermisos=[];
 	mi.nuevosPrestamos=[];
+	mi.prestamosEliminados=[];
+	mi.prestamosNuevos=[];
 	mi.prestamosAsignados=[];
 	mi.permisosEliminados=[];
 	var usuarioMail ="";
@@ -160,7 +166,11 @@ app.controller(
 		mi.edicionPermisos=false;
 		mi.cargandoPermisos=false; 
 		mi.prestamosAsignados=[];
-		mi.rolUsuario=0;
+		mi.unidadEjecutoraUsuario="";
+		mi.cooperanteUsuario="";
+		mi.rolUsuario="";
+		mi.prestamosNuevos=[];
+		mi.prestamosEliminados=[];
 		mi.prestamosNuevos=[];
 		mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
 	}
@@ -263,6 +273,8 @@ app.controller(
 									accion: 'guardarUsuario',
 									usuario:mi.usuariosSelected.usuario,
 									email:mi.usuariosSelected.email,
+									prestamosNuevos:JSON.stringify(mi.prestamosNuevos),
+									prestamosEliminados: JSON.stringify(mi.prestamosEliminados),
 									esnuevo:false
 								}).success(
 									function(data) {
@@ -382,11 +394,18 @@ app.controller(
 			}
 			mi.cargandoPermisos= true;
 			mi.permisosAsignados=[];
+			mi.prestamosAsignados=[];
+			mi.prestamosEliminados=[];
+			mi.prestamosNuevos=[];
 			$http.post('/SUsuario', {
 	    		accion:'obtenerPermisos',
 	    		usuario: mi.usuariosSelected.usuario
 	    	}).then(function(response) {
 	    	    mi.permisosAsignados =response.data.permisos;
+	    	    mi.prestamosAsignados = response.data.proyectos;
+	    	    mi.rolUsuario=response.data.rol;
+	    	    mi.unidadEjecutoraUsuario=response.data.unidadEjecutora;
+	    	    mi.cooperanteUsuario=response.data.cooperante;
 	    	   mi.cargandoPermisos=false;
 	    	});
 		}else{
@@ -414,7 +433,40 @@ app.controller(
 
 		});
 	}
+	
+	//**323/s
+	mi.buscarPrestamosNuevos=function(){
+		var modalInstance = $uibModal.open({
+		    animation : 'true',
+		    ariaLabelledBy : 'modal-title',
+		    ariaDescribedBy : 'modal-body',
+		    templateUrl : 'buscarPermiso.jsp',
+		    controller : 'modalBuscarPrestamos',
+		    controllerAs : 'modalBuscar',
+		    backdrop : 'static',
+		    size : 'md',
+		    resolve : {
+		    	infoUsuario: function(){
+		    		var parametros={ usuario:mi.usuariosSelected.usuario, rol:mi.rolUsuario,unidadEjecutora:mi.unidadEjecutoraUsuario,cooperante:mi.cooperanteUsuario};
+		    		return  parametros;
+		    	}
+		    }
 
+		});
+
+		modalInstance.result.then(function(data) {
+			console.log(data);
+			console.log(mi.prestamosAsignados);
+			try{
+				mi.prestamosAsignados.push({id:data.id, nombre:data.nombre});
+				mi.prestamosNuevos.push(data.id);
+				
+			}catch(err){
+				$utilidades.mensaje('warning', 'Ya está agregado el préstamo.');
+			}
+		}, function() {
+		});
+	};
 
 	mi.buscarPermiso = function(tipo) {
 		if(tipo===1 && mi.esNuevo){
@@ -542,13 +594,15 @@ app.controller(
 		}
 		
 	};
-	mi.eliminarPrestamo=function(index){
+	mi.eliminarPrestamo=function(index,row){
 		if(mi.esNuevo){
 			if(index > -1){
 				mi.prestamosAsignados.splice(index,1);
 			}
+		}else{
+			mi.prestamosEliminados=[row.id];
+			mi.prestamosAsignados.splice(index,1);
 		}
-		
 	};
 	
 	mi.asignarColaborador= function(){
@@ -775,7 +829,6 @@ app.controller('modalBuscarColaborador', [
 ]);
 function modalBuscarColaborador($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log, infoUsuario) {
 	var mi = this;
-
 	mi.totalElementos = 0;
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = 5;
@@ -848,6 +901,101 @@ function modalBuscarColaborador($uibModalInstance, $scope, $http, $interval, i18
 				mi.mostrarCargando = false;
 			}
 		});
+    mi.seleccionarPermiso = function(row) {
+    	mi.itemSeleccionado = row.entity;
+    	mi.seleccionado = row.isSelected;
+    };
+
+
+     mi.ok = function() {
+    	if (mi.seleccionado) {
+    	    $uibModalInstance.close(mi.itemSeleccionado);
+    	} else {
+    	    $utilidades.mensaje('warning', 'Debe seleccionar un colaborador');
+    	}
+     };
+
+
+     mi.cancel = function() {
+    	$uibModalInstance.dismiss('cancel');
+     };
+}
+
+
+
+
+app.controller('modalBuscarPrestamos', [
+	'$uibModalInstance', '$scope', '$http', '$interval', 'i18nService',
+	'Utilidades', '$timeout', '$log','infoUsuario',modalBuscarPrestamos
+]);
+function modalBuscarPrestamos($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log, infoUsuario) {
+	var mi = this;
+	mi.totalElementos = 0;
+	mi.paginaActual = 1;
+	mi.numeroMaximoPaginas = 5;
+	mi.elementosPorPagina = 9;
+
+	mi.mostrarCargando = false;
+	mi.data = [];
+
+	mi.itemSeleccionado = null;
+	mi.seleccionado = false;
+
+	console.log(infoUsuario);
+
+    mi.opcionesGrid = {
+		data : mi.data,
+		columnDefs : [
+			{
+				displayName : 'ID',
+				name : 'id',
+				cellClass : 'grid-align-right',
+				enableFiltering: true,
+				type : 'text', width : 150
+
+			},
+			{
+				displayName : 'nombre',
+				name : 'nombre',
+				cellClass : 'grid-align-right',
+				enableFiltering: true
+
+			}
+		],
+		enableRowSelection : true,
+		enableRowHeaderSelection : false,
+		multiSelect : false,
+		modifierKeysToMultiSelect : false,
+		noUnselect : false,
+		enableFiltering : true,
+		enablePaginationControls : false,
+		paginationPageSize : 5,
+		onRegisterApi : function(gridApi) {
+		    mi.gridApi = gridApi;
+		    mi.gridApi.selection.on.rowSelectionChanged($scope,
+			    mi.seleccionarPermiso);
+		}
+    }
+    var datos={
+    		accion : 'getPrestamosPorElemento',
+			tipo :infoUsuario.rol,
+			id : 0
+    }
+    if (infoUsuario.rol==4 || infoUsuario.rol==5){
+    	datos.id=infoUsuario.unidadEjecutora;
+    }else if(infoUsuario.rol==6){
+    	datos.id=infoUsuario.cooperante;
+    }
+    mi.mostrarCargando = true;
+	$http.post('/SUsuario', datos).then(function(response) {
+		if (response.data.success) {
+
+			mi.data = response.data.prestamos;
+			mi.opcionesGrid.data = mi.data;
+
+			mi.mostrarCargando = false;
+		}
+	});
     mi.seleccionarPermiso = function(row) {
     	mi.itemSeleccionado = row.entity;
     	mi.seleccionado = row.isSelected;

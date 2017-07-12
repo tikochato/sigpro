@@ -204,7 +204,7 @@ public class SUsuario extends HttpServlet {
 					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stpermisos);
 					String proyectos_usuarios= new GsonBuilder().serializeNulls().create().toJson(stproyectos);
 					response_text  = String.join("", "\"permisos\":",respuesta);
-					response_text = String.join("", "{\"success\":true,", response_text ,",\"proyectos\": "+proyectos_usuarios+",\"unidadEjecuora\": "+unidadEjecutora.toString()+"," +",\"rol\": "+rol.toString()+",\"unidadEjecuora\": "+unidadEjecutora.toString()+"," +",\"cooperante\": "+cooperante.toString()+"}");
+					response_text = String.join("", "{\"success\":true,", response_text ,",\"proyectos\": "+proyectos_usuarios+"," +"\"rol\": "+rol+",\"unidadEjecutora\": "+unidadEjecutora+"," +"\"cooperante\": "+cooperante+"}");
 				}
 			}else if(accion.compareTo("getUsuarios")==0){
 				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
