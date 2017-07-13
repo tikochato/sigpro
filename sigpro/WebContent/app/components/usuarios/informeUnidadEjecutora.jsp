@@ -85,7 +85,7 @@
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
-									<label class="label-form" for="usuarioActualizo">Unidad Ejecutora</label>
+									<label class="label-form" for="usuarioActualizo">Colaborador Unidad Ejecutora</label>
 					 						<p>{{ controller.roles.unidadEjecutora }}</p>
 								</div>
 							</div>
