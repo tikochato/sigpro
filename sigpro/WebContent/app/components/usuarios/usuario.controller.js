@@ -642,7 +642,7 @@ app.controller(
 			$http.post('/SUsuario', { accion: 'getTotalUsuarios',	filtro_usuario: mi.filtros['usuario'],filtro_email: mi.filtros['email'],
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).success(
 					function(response) {
-						mi.elementosPorPagina = response.totalUsuarios;
+						mi.totalUsuarios  = response.totalUsuarios;
 						mi.cargarTabla(mi.paginaActual);
 						mi.gridApi.selection.clearSelectedRows();
 						mi.usuariosSelected.usuario = "";

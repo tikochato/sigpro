@@ -57,6 +57,9 @@
 					</div>
 				  </div>
 				</div>
+				<div class="total-rows">
+						  Total de {{  usuarioc.totalUsuarios + (usuarioc.totalUsuarios == 1 ? " Usuario" : " Usuarios" ) }}
+					   </div>
 				<ul uib-pagination total-items="usuarioc.totalUsuarios"
 						ng-model="usuarioc.paginaActual"
 						max-size="usuarioc.numeroMaximoPaginas"
