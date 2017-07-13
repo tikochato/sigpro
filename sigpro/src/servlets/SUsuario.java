@@ -12,8 +12,11 @@ import java.io.BufferedReader;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -431,7 +434,15 @@ public class SUsuario extends HttpServlet {
 						tmp.nombre=tmpRol.getNombre();
 						Usuario us_tmp= new Usuario();
 						us_tmp=UsuarioDAO.getUsuario(rolusuario.getId().getUsuario());
-						tmp.usuario=rolusuario.getId().getUsuario()+" - "+us_tmp.getEmail();
+						String nombre_col = "";
+						if(us_tmp.getColaboradors()!=null){
+							Set <Colaborador> colaboradores= new HashSet <Colaborador>();
+							colaboradores = us_tmp.getColaboradors();							
+							for (Colaborador col :colaboradores){
+								nombre_col = col.getPnombre()+ " "+ col.getPapellido();
+							}
+						}
+						tmp.usuario=nombre_col+" "+rolusuario.getId().getUsuario()+" - "+us_tmp.getEmail();
 						usuarios.add(tmp);
 					}
 					String respuesta = new GsonBuilder().serializeNulls().create().toJson(usuarios);
