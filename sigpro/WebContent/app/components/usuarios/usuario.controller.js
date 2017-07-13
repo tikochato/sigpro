@@ -434,7 +434,6 @@ app.controller(
 		});
 	}
 	
-	//**323/s
 	mi.buscarPrestamosNuevos=function(){
 		var modalInstance = $uibModal.open({
 		    animation : 'true',
@@ -455,8 +454,6 @@ app.controller(
 		});
 
 		modalInstance.result.then(function(data) {
-			console.log(data);
-			console.log(mi.prestamosAsignados);
 			try{
 				mi.prestamosAsignados.push({id:data.id, nombre:data.nombre});
 				mi.prestamosNuevos.push(data.id);
@@ -941,7 +938,6 @@ function modalBuscarPrestamos($uibModalInstance, $scope, $http, $interval, i18nS
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
 
-	console.log(infoUsuario);
 
     mi.opcionesGrid = {
 		data : mi.data,
