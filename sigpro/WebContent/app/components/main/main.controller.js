@@ -105,8 +105,8 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
              .when('/usuarios/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'usuarioController\'" class="all_page"></div>'
             })
-             .when('/gestionUsuarios/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'gestionUsuariosController\'" class="all_page"></div>'
+             .when('/informeUnidadEjecutora/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'informeUnidadController\'" class="all_page"></div>'
             })
             .when('/riesgotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgotipoController\'" class="all_page"></div>'
@@ -195,6 +195,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/desembolsos/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'desembolsosController\'" class="all_page"></div>'
             })
+             /*.when('/gestionUsuarios/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'gestionUsuariosController\'" class="all_page"></div>'
+            })*/
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -482,6 +485,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'desembolsosController',
 	    	   script: '/app/components/reportes/desembolsos/desembolsos.controller.js',
 	    	   template: '/app/components/reportes/desembolsos/desembolsos.jsp'
+	       },
+	       {
+	    	   name: 'informeUnidadController',
+	    	   script: '/app/components/usuarios/informeUnidadEjecutora.js',
+	    	   template: '/app/components/usuarios/informeUnidadEjecutora.jsp'
 	       }
 
 	   ];
