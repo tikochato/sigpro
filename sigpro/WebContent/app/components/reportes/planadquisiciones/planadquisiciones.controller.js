@@ -1,8 +1,8 @@
 var app = angular.module('planAdquisicionesController', ['ngTouch','ngAnimate','ui.grid.edit', 'ui.grid.rowEdit']);
-app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion',
-	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion) {
+app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
+	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal) {
 	var mi = this;
-	
+
 	i18nService.setCurrentLang('es');
 	
 	mi.anio = new Date().getFullYear();
@@ -28,6 +28,27 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			});
 	}
 	
+	mi.ddlOpciones = [];
+	mi.getUnidadMedida = function(){
+		$http.post('/SUnidadMedida', {accion: 'getUnidadMedida'}).success(
+			function(response){
+				mi.ddlOpciones.push({id: 0, value: 'Seleccionar'});
+				if(response.success){
+					for(x in response.unidadMedida){
+						mi.ddlOpciones.push({id: response.unidadMedida[x].id, value: response.unidadMedida[x].nombre});
+					}	
+				}
+		});
+	}
+
+	mi.nombreUnidadMedida = function(id){
+		for (i=0; i<mi.ddlOpciones.length; i++){
+			if(mi.ddlOpciones[i].id == id){
+				return mi.ddlOpciones[i].value;
+			}
+		}
+	}
+	
 	mi.categorias = [
 		{name: 'PreparacionDocumentos', displayName: 'Preparación de documentos',visible: true, showCatName: true},
 		{name: 'LanzamientoEvento', displayName: 'Lanzamiento de evento', visible: true, showCatName: true},
@@ -39,11 +60,11 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	mi.gridOptions = {
 			expandAllRows : true,
 			cellEditableCondition:function($scope){
-          	  if($scope.row.entity.tipo == 1)
-          		  return true;
-          	  else
-          		  return false;
-			},
+           	  if($scope.row.entity.bloquear == true)
+           		  return false;
+           	  else
+           		  return true;
+           },
 			rowEditWaitInterval: -1,
 			enableExpandableRowHeader: false,
 			showTreeRowHeader: false,
@@ -56,63 +77,363 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			category: mi.categorias,
 			columnDefs: [
 				{ name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: 'Componente',
-		        	cellTemplate: "<div class=\"ui-grid-cell-contents\" ng-class=\"{'ui-grid-tree-padre': row.treeLevel < 2}\"><div class=\"ui-grid-cell-contents\" title=\"TOOLTIP\"><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.controller.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>",
+		        	cellTemplate: "<div class=\"ui-grid-cell-contents\" ng-class=\"{'ui-grid-tree-padre': row.treeLevel < 2}\"><div class=\"ui-grid-cell-contents\" title=\"TOOLTIP\"><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.controller.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>"
 		        },
-				{ name: 'metodo', enableCellEdit: false,width: 150, displayName: 'Método'},
-				{ name: 'planificadoDocs', enableCellEdit: false, width: 150, displayName: 'Planificado', category: 'PreparacionDocumentos', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
-				{ name: 'realDocs', enableCellEdit: true, enableCellEditOnFocus: true, width: 150, displayName: 'Real', category: 'PreparacionDocumentos', type: 'date', cellFilter: 'date:"dd/MM/yyyy"'},
-				{ name: 'planificadoLanzamiento', enableCellEdit: false, width: 150, displayName: 'Planificado', category: 'LanzamientoEvento', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
-				{ name: 'realLanzamiento', enableCellEdit: true, enableCellEditOnFocus: true, width: 150, displayName: 'Real', category: 'LanzamientoEvento', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
-				{ name: 'planificadoRecepcionEval', enableCellEdit: false, width: 150, displayName: 'Planificado', category: 'RecepcionEvaluacionOfertas', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
-				{ name: 'realRecepcionEval', enableCellEdit: true, enableCellEditOnFocus: true, width: 150, displayName: 'Real', category: 'RecepcionEvaluacionOfertas', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
-				{ name: 'planificadoAdjudica', enableCellEdit: false, width: 150, displayName: 'Planificado', category: 'Adjudicacion', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
-				{ name: 'realAdjudica', enableCellEdit: true, enableCellEditOnFocus: true, width: 150, displayName: 'Real', category: 'Adjudicacion', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
-				{ name: 'planificadoFirma', enableCellEdit: false, width: 150, displayName: 'Planificado', category: 'FirmaContrato', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
-				{ name: 'realFirma', enableCellEdit: true, enableCellEditOnFocus: true, width: 150, displayName: 'Real', category: 'FirmaContrato', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''}
+				{ name: 'metodo', enableCellEdit: false,width: 75, displayName: 'Método'},
+				{ name: 'unidadMedida', width: 100, displayName: 'Unidad de Medida', editType: 'dropdown', editableCellTemplate: 'ui-grid/dropdownEditor',
+					editDropdownOptionsArray: mi.ddlOpciones,
+					editDropdownValueLabel: 'value',
+					cellTemplate: '<div class="ui-grid-cell-contents">{{grid.appScope.controller.nombreUnidadMedida(row.entity.unidadMedida)}}</div>'
+		        },
+				{ name: 'cantidad', enableCellEdit: true,width: 75, displayName: 'Cantidad', type: 'number'},
+				{ name: 'costo', enableCellEdit: true,width: 75, displayName: 'Costo', type: 'number', cellFilter:'number:2'},
+				{ name: 'total', enableCellEdit: true, enableCellEdit: false, width: 125, displayName: 'Total', type: 'number', cellFilter:'number:2'},
+				{ name: 'planificadoDocs', enableCellEdit: true, width: 100, displayName: 'Planificado', category: 'PreparacionDocumentos', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
+				{ name: 'realDocs', enableCellEdit: true, enableCellEditOnFocus: true, width: 100, displayName: 'Real', category: 'PreparacionDocumentos', type: 'date', cellFilter: 'date:"dd/MM/yyyy"',
+		        	cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		                return "real";
+		            }},
+				{ name: 'planificadoLanzamiento', enableCellEdit: true, width: 100, displayName: 'Planificado', category: 'LanzamientoEvento', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
+				{ name: 'realLanzamiento', enableCellEdit: true, enableCellEditOnFocus: true, width: 100, displayName: 'Real', category: 'LanzamientoEvento', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+		        	cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		                return "real";
+		            }},
+				{ name: 'planificadoRecepcionEval', enableCellEdit: true, width: 115, displayName: 'Planificado', category: 'RecepcionEvaluacionOfertas', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
+				{ name: 'realRecepcionEval', enableCellEdit: true, enableCellEditOnFocus: true, width: 115, displayName: 'Real', category: 'RecepcionEvaluacionOfertas', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+		        	cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		                return "real";
+		            }},
+				{ name: 'planificadoAdjudica', enableCellEdit: true, width: 100, displayName: 'Planificado', category: 'Adjudicacion', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
+				{ name: 'realAdjudica', enableCellEdit: true, enableCellEditOnFocus: true, width: 100, displayName: 'Real', category: 'Adjudicacion', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+		        	cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		                return "real";
+		            }},
+				{ name: 'planificadoFirma', enableCellEdit: true, width: 100, displayName: 'Planificado', category: 'FirmaContrato', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\''},
+				{ name: 'realFirma', enableCellEdit: true, enableCellEditOnFocus: true, width: 100, displayName: 'Real', category: 'FirmaContrato', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+		        	cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
+		                return "real";
+		            }},
+				{ name: 'pagos', enableCellEdit: false, width: 50, displayName: '', pinnedRight:true,
+					cellTemplate: '<div class="ui-grid-cell-contents ng-binding ng-scope"><button style="width: 40px; height: 25px" class="btn btn-default" ng-click="grid.appScope.controller.agregarPago(row)" ng-hide="row.entity.planAdquisicionId == 0 || row.entity.ocultarLimpiar"><span class="glyphicon glyphicon-usd" uib-tooltip="Pagos" tooltip-placement="right"></span></button></div>'
+				},
+				{ name: 'limpiar', enableCellEdit: false, width: 50, displayName: '', pinnedRight:true,
+					cellTemplate: '<div class="ui-grid-cell-contents ng-binding ng-scope"><button style="width: 40px; height: 25px" class="btn btn-default" ng-click="grid.appScope.controller.limpiar(row)" ng-hide="row.entity.ocultarLimpiar"><span class="glyphicon glyphicon-erase" uib-tooltip="Limpiar" tooltip-placement="left"></span></button></div>'
+				},
+				{ name: 'nada', enableCellEdit: false, width: 20, displayName: '', pinnedRight:true}
 			],
 			onRegisterApi: function(gridApi) {
 			      mi.gridApi = gridApi;
 			      
-			      mi.gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){				      
-			    	  mi.saveRow(rowEntity);
+			      mi.gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
+			    	  if(newValue != oldValue){
+			    		  rowEntity['ocultarLimpiar'] = false;
+			    		  rowEntity['modificado'] = true;
+			    		  mi.habilitarPadre(rowEntity['idPredecesor'], rowEntity['objetoTipoPredecesor']);
+			    		  
+			    		  var index = mi.guardarObjetos.includes(rowEntity['idObjetoTipo']+","+rowEntity['objetoTipo']);
+			    		  
+			    		  if(!index)
+			    			  mi.guardarObjetos.push(rowEntity['idObjetoTipo']+","+rowEntity['objetoTipo']);
+			    		  
+			    		  if(rowEntity['planAdquisicionId'] > 0){
+			    			  index = mi.borrarObjetos.indexOf(rowEntity['planAdquisicionId']);
+			    			  mi.borrarObjetos.splice(index, 1);
+			    			  rowEntity['ocultarLimpiar'] = false;
+			    		  }
+			    	  }
+			    	  
+			    	  if(colDef.name == 'cantidad' || colDef.name == 'precio'){
+			    		  if(newValue < 0){
+			    			  $utilidades.mensaje('danger','No se permiten números negativos');
+			    			  rowEntity[colDef.name] = oldValue;
+			    			  return;
+			    		  }
+			    	  }
+			    	  
+			    	  rowEntity['total'] = rowEntity['costo'] * rowEntity['cantidad'];
+			    	  mi.calcularPadre(rowEntity['idPredecesor'], rowEntity['objetoTipoPredecesor']);
+			    	  
+			    	  if(Number(rowEntity['total']) > 0){
+			    		  mi.habilitarHijo(rowEntity['hijo'], true);
+			    	  }
+			    	  
+			    	  if(colDef.name == 'planificadoLanzamiento'){
+			    		  if (moment(newValue).format('DD/MM/YYYY') < moment(rowEntity['planificadoDocs']).format('DD/MM/YYYY')){
+			    			  rowEntity[colDef.name] = "";
+			    			  $utilidades.mensaje('danger', 'Lanzamiento de eventos planificado no debe ser menor que Preparación de documentos planificado');
+			    		  }
+			    	  } else if(colDef.name == 'planificadoRecepcionEval'){
+			    		  if (moment(newValue).format('DD/MM/YYYY') < moment(rowEntity['planificadoLanzamiento']).format('DD/MM/YYYY')){
+			    			  rowEntity[colDef.name] = "";
+			    			  $utilidades.mensaje('danger', 'Recepción y evaluación de ofertas planificado no debe ser menor que Lanzamiento de vento planificado');
+			    		  }
+			    	  } else if(colDef.name == 'planificadoAdjudica'){
+			    		  if (moment(newValue).format('DD/MM/YYYY') < moment(rowEntity['planificadoRecepcionEval']).format('DD/MM/YYYY')){
+			    			  rowEntity[colDef.name] = "";
+			    			  $utilidades.mensaje('danger', 'Adjudicación planificado no debe ser menor que Recepción y evaluación  de ofertas planificado');
+			    		  }
+			    	  } else if(colDef.name == 'planificadoFirma'){
+			    		  if (moment(newValue).format('DD/MM/YYYY') < moment(rowEntity['planificadoAdjudica']).format('DD/MM/YYYY')){
+			    			  rowEntity[colDef.name] = "";
+			    			  $utilidades.mensaje('danger', 'Firma de contrato planificado no debe ser menor que Adjudicación planificado');
+			    		  }
+			    	  }
+			    	  
+			    	  if(colDef.name == 'realLanzamiento'){
+			    		  if (moment(newValue).format('DD/MM/YYYY') < moment(rowEntity['realDocs']).format('DD/MM/YYYY')){
+			    			  rowEntity[colDef.name] = "";
+			    			  $utilidades.mensaje('danger', 'Lanzamiento de eventos real no debe ser menor que Preparación de documentos real');
+			    		  }
+			    	  } else if(colDef.name == 'realRecepcionEval'){
+			    		  if (moment(newValue).format('DD/MM/YYYY') < moment(rowEntity['realLanzamiento']).format('DD/MM/YYYY')){
+			    			  rowEntity[colDef.name] = "";
+			    			  $utilidades.mensaje('danger', 'Recepción y evaluación de ofertas real no debe ser menor que Lanzamiento de vento real');
+			    		  }
+			    	  } else if(colDef.name == 'realAdjudica'){
+			    		  if (moment(newValue).format('DD/MM/YYYY') < moment(rowEntity['realRecepcionEval']).format('DD/MM/YYYY')){
+			    			  rowEntity[colDef.name] = "";
+			    			  $utilidades.mensaje('danger', 'Adjudicación real no debe ser menor que Recepción y evaluación  de ofertas real');
+			    		  }
+			    	  } else if(colDef.name == 'realFirma'){
+			    		  if (moment(newValue).format('DD/MM/YYYY') < moment(rowEntity['realAdjudica']).format('DD/MM/YYYY')){
+			    			  rowEntity[colDef.name] = "";
+			    			  $utilidades.mensaje('danger', 'Firma de contrato real no debe ser menor que Adjudicación real');
+			    		  }
+			    	  }
 			      });
 			      
-			      mi.gridApi.rowEdit.on.saveRow($scope, mi.saveRow);
+			      //mi.gridApi.rowEdit.on.saveRow($scope, mi.saveRow);
 			}
 	};
 	
-	mi.saveRow = function(rowEntity){
-		$http.post('/SPlanAdquisiciones', {
-            accion: 'guardarPlan',
-            id: rowEntity.idObjetoTipo,
-            planificadoDocs: moment(rowEntity.planificadoDocs).format('DD/MM/YYYY') == null ? null : moment(rowEntity.planificadoDocs).format('DD/MM/YYYY'),
-            realDocs: moment(rowEntity.realDocs).format('DD/MM/YYYY') == null ? null : moment(rowEntity.realDocs).format('DD/MM/YYYY'),
-            planificadoLanzamiento: moment(rowEntity.planificadoLanzamiento).format('DD/MM/YYYY') == null ? null : moment(rowEntity.planificadoLanzamiento).format('DD/MM/YYYY'),
-            realLanzamiento: moment(rowEntity.realLanzamiento).format('DD/MM/YYYY') == null ? null : moment(rowEntity.realLanzamiento).format('DD/MM/YYYY'),
-            planificadoRecepcionEval: moment(rowEntity.planificadoRecepcionEval).format('DD/MM/YYYY') == null ? null : moment(rowEntity.planificadoRecepcionEval).format('DD/MM/YYYY'),
-            realRecepcionEval: moment(rowEntity.realRecepcionEval).format('DD/MM/YYYY') == null ? null : moment(rowEntity.realRecepcionEval).format('DD/MM/YYYY'),
-    		planificadoAdjudica: moment(rowEntity.planificadoAdjudica).format('DD/MM/YYYY') == null ? null : moment(rowEntity.planificadoAdjudica).format('DD/MM/YYYY'),
-            realAdjudica: moment(rowEntity.realAdjudica).format('DD/MM/YYYY') == null ? null : moment(rowEntity.realAdjudica).format('DD/MM/YYYY'),
-    		planificadoFirma: moment(rowEntity.planificadoFirma).format('DD/MM/YYYY') == null ? null : moment(rowEntity.planificadoFirma).format('DD/MM/YYYY'),
-            realFirma: moment(rowEntity.realFirma).format('DD/MM/YYYY') == null ? null : moment(rowEntity.realFirma).format('DD/MM/YYYY')
-        }).success(function(response){
-        	
-                
-        }).error(function(response){
-        	
-        });
+	mi.habilitarPadre = function(idPredecesor, objetoTipoPredecesor){
+		var padre = mi.obtenerEntidad(idPredecesor, objetoTipoPredecesor);
+		if (padre != undefined){
+			var contador = 0;
+			for(i in padre.hijo){
+				var hijo = padre.hijo[i].split(',');
+				var entidadHijo = mi.obtenerEntidad(hijo[0],hijo[1]);
+				if(entidadHijo.bloquear == true || entidadHijo.modificado == true){
+					padre.bloquear = true;
+					mi.habilitarPadre(padre.idPredecesor, padre.objetoTipoPredecesor);
+					break;
+				}
+				contador++;
+			}
+			
+			if(contador == padre.hijo.length){
+				padre.bloquear = false;
+				if(padre.idPredecesor > 0){
+					mi.habilitarPadre(padre.idPredecesor, padre.objetoTipoPredecesor);
+				}
+			}
+		}
+	}
+	
+	mi.habilitarHijo = function(hijos, bloqueo){
+		for(i in hijos){
+			var hijo = hijos[i].split(',');
+			var entidadHijo = mi.obtenerEntidad(hijo[0],hijo[1]);
+			entidadHijo.bloquear = bloqueo;
+			mi.habilitarHijo(entidadHijo.hijo, bloqueo);
+		}
+	}
+	
+	mi.limpiar = function(rowEntity){
+		mi.habilitarHijo(rowEntity.entity.hijo, false);
+		if(rowEntity.entity.planAdquisicionId != 0){
+			mi.borrarObjetos.push(rowEntity.entity.planAdquisicionId);
+		}
+		
+		var index = mi.guardarObjetos.indexOf(rowEntity.entity['idObjetoTipo']+","+rowEntity.entity['objetoTipo']);
+		mi.guardarObjetos.splice(index, 1);
+		
+		rowEntity.entity.contieneInfoPlan = false;
+		rowEntity.entity.ocultarPagos = true;
+		rowEntity.entity.ocultarLimpiar = true;
+		rowEntity.entity['modificado'] = false;
+		rowEntity.entity['metodo'] = 0;
+		rowEntity.entity['unidadMedida'] = 0;
+		rowEntity.entity['cantidad'] = 0;
+		rowEntity.entity['costo'] = 0;
+		rowEntity.entity['total'] = 0;
+		rowEntity.entity['planificadoDocs'] = '';
+		rowEntity.entity['realDocs'] = '';
+		rowEntity.entity['planificadoLanzamiento'] = '';
+		rowEntity.entity['realLanzamiento'] = '';
+		rowEntity.entity['planificadoRecepcionEval'] = '';
+		rowEntity.entity['realRecepcionEval'] = '';
+		rowEntity.entity['planificadoAdjudica'] = '';
+		rowEntity.entity['realAdjudica'] = '';
+		rowEntity.entity['planificadoFirma'] = '';
+		rowEntity.entity['realFirma'] = '';
+		
+		var padre = rowEntity.entity.idPredecesor;
+		var tipoPadre = rowEntity.entity.objetoTipoPredecesor;
+		mi.calcularPadre(padre, tipoPadre);
+		mi.habilitarPadre(padre, tipoPadre);
+		
+		if(rowEntity.entity['idObjetoTipo'] == mi.idPrestamo){
+			var entidad = mi.obtenerEntidad(mi.idPrestamo,1);
+			$http.post('/SPlanAdquisiciones',{
+				accion: 'borrarPlan',
+				idPlanAdquisiciones: entidad.planAdquisicionId,
+			}).success(function(response){
+				
+			});
+		}
+	}
+	
+	mi.borrarHijos = function(hijos){
+		for(p in hijos){
+			var hijo = hijos[p].split(',');
+			var entidadHijo = mi.obtenerEntidad(hijo[0],hijo[1]);
+			
+			$http.post('/SPlanAdquisiciones',{
+				accion: 'borrarPlan',
+				idPlanAdquisiciones: entidadHijo.planAdquisicionId,
+			}).success(function(response){
+				
+			});
+			
+			if(entidadHijo.hijo.length > 0){
+				mi.borrarHijos(entidadHijo.hijo);
+			}
+		}
+	}
+	
+	mi.guardarPlan = function(){
+		var sinError = true;
+		
+		var h = 0;
+		for(h in mi.borrarObjetos){
+			$http.post('/SPlanAdquisiciones',{
+				accion: 'borrarPlan',
+				idPlanAdquisiciones: mi.borrarObjetos[h],
+			}).success(function(response){
+				
+			});
+		}
+		
+		var p = 0;
+		for(p in mi.guardarObjetos){
+			var objeto = mi.guardarObjetos[p];
+			objeto = objeto.split(',');
+			var entidad = mi.obtenerEntidad(objeto[0],objeto[1]);
+			$http.post('/SPlanAdquisiciones', {
+	            accion: 'guardarPlan',
+	            idObjetoTipo: entidad.idObjetoTipo,
+	            objetoTipo: entidad.objetoTipo,
+	            idPlanAdquisicion: entidad.planAdquisicionId,
+	            esnuevo: entidad.planAdquisicionId == 0 ? true : false,
+	            unidadMedida: entidad.unidadMedida,
+	            cantidad: entidad.cantidad,
+	            costo: entidad.costo,
+	            total: entidad.total,
+	            planificadoDocs: moment(entidad.planificadoDocs).format('DD/MM/YYYY') == null ? null : moment(entidad.planificadoDocs).format('DD/MM/YYYY'),
+	            realDocs: moment(entidad.realDocs).format('DD/MM/YYYY') == null ? null : moment(entidad.realDocs).format('DD/MM/YYYY'),
+	            planificadoLanzamiento: moment(entidad.planificadoLanzamiento).format('DD/MM/YYYY') == null ? null : moment(entidad.planificadoLanzamiento).format('DD/MM/YYYY'),
+	            realLanzamiento: moment(entidad.realLanzamiento).format('DD/MM/YYYY') == null ? null : moment(entidad.realLanzamiento).format('DD/MM/YYYY'),
+	            planificadoRecepcionEval: moment(entidad.planificadoRecepcionEval).format('DD/MM/YYYY') == null ? null : moment(entidad.planificadoRecepcionEval).format('DD/MM/YYYY'),
+	            realRecepcionEval: moment(entidad.realRecepcionEval).format('DD/MM/YYYY') == null ? null : moment(entidad.realRecepcionEval).format('DD/MM/YYYY'),
+	    		planificadoAdjudica: moment(entidad.planificadoAdjudica).format('DD/MM/YYYY') == null ? null : moment(entidad.planificadoAdjudica).format('DD/MM/YYYY'),
+	            realAdjudica: moment(entidad.realAdjudica).format('DD/MM/YYYY') == null ? null : moment(entidad.realAdjudica).format('DD/MM/YYYY'),
+	    		planificadoFirma: moment(entidad.planificadoFirma).format('DD/MM/YYYY') == null ? null : moment(entidad.planificadoFirma).format('DD/MM/YYYY'),
+	            realFirma: moment(entidad.realFirma).format('DD/MM/YYYY') == null ? null : moment(entidad.realFirma).format('DD/MM/YYYY')
+	        }).success(function(response){
+	        	var entity = mi.obtenerEntidad(response.idObjetoTipo,response.objetoTipo);
+	        	entity['planAdquisicionId'] = response.planAdquisicionId;
+	        }).error(function(response){
+	        	$utilidades.mensaje('danger','Error al guardar el plan para ' + entidad.nombre);
+	        	sinError = false;
+	        });
+		}
+		
+		/*
+		for(h in mi.gridOptions.data){
+			var entidad = mi.gridOptions.data[h];
+			
+			if(entidad.modificado == true){
+				var hijos = entidad.hijo;
+				if(hijos.length > 0){
+					mi.borrarHijos(hijos);
+				}
+				
+				$http.post('/SPlanAdquisiciones', {
+		            accion: 'guardarPlan',
+		            idObjetoTipo: entidad.idObjetoTipo,
+		            objetoTipo: entidad.objetoTipo,
+		            idPlanAdquisicion: entidad.planAdquisicionId,
+		            esnuevo: entidad.planAdquisicionId == 0 ? true : false,
+		            unidadMedida: entidad.unidadMedida,
+		            cantidad: entidad.cantidad,
+		            costo: entidad.costo,
+		            total: entidad.total,
+		            planificadoDocs: moment(entidad.planificadoDocs).format('DD/MM/YYYY') == null ? null : moment(entidad.planificadoDocs).format('DD/MM/YYYY'),
+		            realDocs: moment(entidad.realDocs).format('DD/MM/YYYY') == null ? null : moment(entidad.realDocs).format('DD/MM/YYYY'),
+		            planificadoLanzamiento: moment(entidad.planificadoLanzamiento).format('DD/MM/YYYY') == null ? null : moment(entidad.planificadoLanzamiento).format('DD/MM/YYYY'),
+		            realLanzamiento: moment(entidad.realLanzamiento).format('DD/MM/YYYY') == null ? null : moment(entidad.realLanzamiento).format('DD/MM/YYYY'),
+		            planificadoRecepcionEval: moment(entidad.planificadoRecepcionEval).format('DD/MM/YYYY') == null ? null : moment(entidad.planificadoRecepcionEval).format('DD/MM/YYYY'),
+		            realRecepcionEval: moment(entidad.realRecepcionEval).format('DD/MM/YYYY') == null ? null : moment(entidad.realRecepcionEval).format('DD/MM/YYYY'),
+		    		planificadoAdjudica: moment(entidad.planificadoAdjudica).format('DD/MM/YYYY') == null ? null : moment(entidad.planificadoAdjudica).format('DD/MM/YYYY'),
+		            realAdjudica: moment(entidad.realAdjudica).format('DD/MM/YYYY') == null ? null : moment(entidad.realAdjudica).format('DD/MM/YYYY'),
+		    		planificadoFirma: moment(entidad.planificadoFirma).format('DD/MM/YYYY') == null ? null : moment(entidad.planificadoFirma).format('DD/MM/YYYY'),
+		            realFirma: moment(entidad.realFirma).format('DD/MM/YYYY') == null ? null : moment(entidad.realFirma).format('DD/MM/YYYY')
+		        }).success(function(response){
+		        	entidad['planAdquisicionId'] = response.data.planAdquisicionId;
+		        }).error(function(response){
+		        	$utilidades.mensaje('danger','Error al guardar el plan para ' + entidad.nombre);
+		        	sinError = false;
+		        });
+			}
+		}*/
+		
+		if(sinError){
+			$utilidades.mensaje('success','Plan de adquisiciones guardado exitosamente');
+			//mi.generar();
+		}
+	}
+	
+	mi.calcularPadre = function(idPredecesor, objetoTipoPredecesor){
+		var padre = mi.obtenerEntidad(idPredecesor, objetoTipoPredecesor);
+		if(padre != undefined){
+			var hijo = padre.hijo;
+			var total = 0;
+			for(y in hijo){
+				var h = mi.obtenerEntidad(hijo[y].split(',')[0],hijo[y].split(',')[1]);
+				total += h.total;
+			}
+			padre.total = total;
+			if(padre.idPredecesor > 0 && padre.idPredecesor){
+				if(padre.idPredecesor != 0){
+					mi.calcularPadre(padre.idPredecesor, padre.objetoTipoPredecesor);
+				}
+			}
+		}
+	}
+	
+	mi.obtenerEntidad = function(id, objetoTipo){
+		for (x in mi.data){
+			if (id == mi.data[x].idObjetoTipo && objetoTipo == mi.data[x].objetoTipo){
+				return mi.data[x];
+			}
+		}
 	}
 	
 	mi.generar = function(){
 		if(mi.prestamo.value > 0){
+			mi.idPrestamo = mi.prestamo.value;
 			$http.post('/SPlanAdquisiciones',{
 				accion: 'generarPlan',
-				idPrestamo: mi.prestamo.value,
+				idPrestamo: mi.idPrestamo,
 				informeCompleto: mi.informeCompleto,
 			}).success(function(response){
 				if(response.success){
 					mi.crearArbol(response.componentes);
 					mi.exportar = true;
+					mi.guardar = true;
+					mi.borrarObjetos = [];
+					mi.guardarObjetos = [];
 				}
 			});
 		}
@@ -150,32 +471,172 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	
 	mi.crearArbol = function(datos){
 		if (datos.length > 0){
-			var data = datos;
-			
-			for(x in data){
-				data[x].$$treeLevel = Number(data[x].posicionArbol) - 1;
-				if(data[x].objetoTipo == 5)
-					data[x].metodo = 0;
+			mi.data = datos;
+			for(x in mi.data){
 				
-				data[x].planificadoDocs = (data[x].planificadoDocs!='') ? moment(data[x].planificadoDocs,'DD/MM/YYYY').toDate() : null;
-				data[x].realDocs = (data[x].realDocs!='') ? moment(data[x].realDocs,'DD/MM/YYYY').toDate() : null;
-				data[x].planificadoLanzamiento = (data[x].planificadoLanzamiento!='') ? moment(data[x].planificadoLanzamiento,'DD/MM/YYYY').toDate() : null;
-				data[x].realLanzamiento = (data[x].realLanzamiento!='') ? moment(data[x].realLanzamiento,'DD/MM/YYYY').toDate() : null;
-				data[x].planificadoRecepcionEval = (data[x].planificadoRecepcionEval!='') ? moment(data[x].planificadoRecepcionEval,'DD/MM/YYYY').toDate() : null;
-				data[x].realRecepcionEval = (data[x].realRecepcionEval!='') ? moment(data[x].realRecepcionEval,'DD/MM/YYYY').toDate() : null;
-				data[x].planificadoAdjudica = (data[x].planificadoAdjudica!='') ? moment(data[x].planificadoAdjudica,'DD/MM/YYYY').toDate() : null;
-				data[x].realAdjudica = (data[x].realAdjudica!='') ? moment(data[x].realAdjudica,'DD/MM/YYYY').toDate() : null;
-				data[x].planificadoFirma = (data[x].planificadoFirma!='') ? moment(data[x].planificadoFirma,'DD/MM/YYYY').toDate() : null;
-				data[x].realFirma = (data[x].realFirma!='') ? moment(data[x].realFirma,'DD/MM/YYYY').toDate() : null;
-			}	
+				if(mi.data[x].modificado == true){
+					var i = x;
+					var idPredecesor = mi.data[x].idPredecesor;
+					var objetoPredecesor = mi.data[x].objetoTipoPredecesor;
+					mi.calcularPadre(idPredecesor, objetoPredecesor);
+					x = i;
+				}
+				
+				mi.data[x].planificadoDocs = mi.data[x].planificadoDocs != '' ? moment(mi.data[x].planificadoDocs,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].realDocs = mi.data[x].realDocs != '' ? moment(mi.data[x].realDocs,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].planificadoLanzamiento = mi.data[x].planificadoLanzamiento != '' ? moment(mi.data[x].planificadoLanzamiento,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].realLanzamiento = mi.data[x].realLanzamiento != '' ? moment(mi.data[x].realLanzamiento,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].planificadoRecepcionEval = mi.data[x].planificadoRecepcionEval != '' ? moment(mi.data[x].planificadoRecepcionEval,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].realLanzamiento = mi.data[x].realLanzamiento != '' ? moment(mi.data[x].realLanzamiento,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].planificadoAdjudica = mi.data[x].planificadoAdjudica != '' ? moment(mi.data[x].planificadoAdjudica,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].realAdjudica = mi.data[x].realAdjudica != '' ? moment(mi.data[x].realAdjudica,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].planificadoFirma = mi.data[x].planificadoFirma != '' ? moment(mi.data[x].planificadoFirma,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].realFirma = mi.data[x].realFirma != '' ? moment(mi.data[x].realFirma,'DD/MM/YYYY').toDate() : "";
+				
+				mi.habilitarPadre(idPredecesor, objetoPredecesor);
+			}
 		}
 		
-		mi.gridOptions.data = data;
+		mi.gridOptions.data = mi.data;
 		
     	$timeout(function(){
-		     mi.gridApi.treeBase.expandAllRows();
+    		mi.gridApi.treeBase.expandAllRows();
 	   })
 	}
 	
+	mi.agregarPago = function(row) {
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'pago.jsp',
+			controller : 'modalPago',
+			controllerAs : 'controller',
+			backdrop : 'static',
+			size : 'lg',
+			resolve : {
+				idPlanAdquisiciones: function() {
+					return row.entity.planAdquisicionId;
+				},
+		
+				nombre: function(){
+					return row.entity.nombre;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(resultado) {
+			$utilidades.mensaje('success','Pagos agregados con éxito');
+		}, function() {
+		});
+	};
+	
 	mi.getPrestamos();
+	mi.getUnidadMedida();
 }]);
+
+app.controller('modalPago', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log',   '$uibModal', '$q' ,'idPlanAdquisiciones','nombre',modalPago ]);
+
+function modalPago($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q,idPlanAdquisiciones, nombre) {
+
+	var mi = this;
+	mi.planAdquisicionesPagos = [];
+	mi.id = idPlanAdquisiciones;
+	mi.nombre = nombre;
+	mi.formatofecha = 'MMMM';
+	
+	mi.mostrarcargando = false;
+	
+	mi.fechaOptions = {
+			formatYear : 'MMM',
+		    startingDay: 1,
+		    minMode: 'month'
+	};
+
+	mi.ff_opciones = {
+			formatYear : 'MMM',
+		    startingDay: 1,
+		    minMode: 'month'
+	};
+	
+	mi.abrirPopupFecha = function(index) {
+		if(index > 0 && index<1000){
+			mi.camposdinamicos[index].isOpen = true;
+		}
+		else{
+			switch(index){
+				case 1000: mi.fi_abierto = true; break;
+			}
+		}
+	};
+	
+	mi.cargarPagos = function(){
+		mi.mostrarcargando = true;
+		$http.post('/SPago',{ accion: 'getPagos', idPlanAdquisiciones:idPlanAdquisiciones,t:moment().unix()}).then(
+				function(response) {
+					if (response.data.success){
+						for(x in response.data.pagos){
+							response.data.pagos[x].pago = parseFloat(response.data.pagos[x].pago).toFixed(2);
+							response.data.pagos[x].fecha = moment(moment(response.data.pagos[x].fechaReal,'DD/MM/YYYY').toDate()).format('MMMM');
+						}
+						mi.planAdquisicionesPagos = response.data.pagos;
+						mi.mostrarcargando = false;
+					}
+			});	
+	}
+	
+	
+	mi.agregarPago = function(){
+		mi.planAdquisicionesPagos.push({id:0,fecha: moment(mi.fechaPago).format('MMMM'), fechaReal: moment(mi.fechaPago).format('DD/MM/YYYY'), pago: parseFloat(mi.montoPago).toFixed(2), descripcion: mi.descripcion});
+		
+		mi.fechaPago = null;
+		mi.montoPago = null;
+		mi.descripcion = null;
+	}
+	
+	mi.ok = function() {
+		var param_data = {
+				accion : 'guardarPagos',
+				idPlanAdquisiciones: idPlanAdquisiciones,
+				pagos: JSON.stringify(mi.planAdquisicionesPagos),
+				t:moment().unix()
+			};
+			$http.post('/SPago',param_data).then(
+				function(response) {
+					if (response.data.success) {
+						mi.planAdquisicionesPagos = response.data.pagos;
+						$uibModalInstance.close(true);
+					}else
+						$uibModalInstance.close(false);
+			});
+	};
+	
+	mi.eliminarPago = function(row){
+		var index = mi.planAdquisicionesPagos.indexOf(row);
+        if (index !== -1) {
+        	if(row.id != 0){
+	        	var param_data = {
+	    			accion: 'eliminarPago',
+	    			idPago: row.id,
+	    			t:moment().unix()
+	        	};
+	        	$http.post('/SPago',param_data).then(function(response){
+	        		if(response.data.success){
+	        			mi.planAdquisicionesPagos.splice(index, 1);
+	        		}
+	        	});
+        	}else{
+        		mi.planAdquisicionesPagos.splice(index, 1);
+        	}
+        }
+	}
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+	
+	mi.cargarPagos();
+}

@@ -12,9 +12,14 @@
 	    .ui-grid-tree-padre {
 	        font-weight: bold;
 	    }
+	    
+	    .real { background-color: #f7e681 !important }
 	</style>
 	
 	<div ng-controller="planAdquisicionesController as controller" class="maincontainer all_page" id="title">
+		<script type="text/ng-template" id="pago.jsp">
+    		<%@ include file="/app/components/reportes/planadquisiciones/pago.jsp"%>
+  		</script>
 		<shiro:lacksPermission name="24010">
 			<p ng-init="controller.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
@@ -38,14 +43,18 @@
 					</div>
 					<div class="operation_buttons" align="right">
 						<div class="btn-group">
-							<label class="btn btn-primary"  ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.exportar">
-							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Exportar</span></label>
+							<label class="btn btn-default"  ng-click="controller.guardarPlan();" uib-tooltip="Guardar" ng-hide="!controller.guardar">
+							<span class="glyphicon glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></label>
+						</div>
+						<div class="btn-group">
+							<label class="btn btn-default"  ng-click="controller.exportarExcel();" uib-tooltip="Exportar" ng-hide="!controller.exportar">
+							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
 						</div>
 					</div>
 				</div>
 	    	</div>
 	    	<div style="height: 100%; width: 100%">
-		    	<div id="grid1" ui-grid="controller.gridOptions" style="width: 100%; height: 400px"
+		    	<div id="grid1" ui-grid="controller.gridOptions" style="width: 100%; height: 450px"
 					ui-grid-grouping 
 					ui-grid-edit 
 					ui-grid-row-edit 
@@ -53,6 +62,15 @@
 					ui-grid-cellNav 
 					ui-grid-pinning
 					class="grid">
+					
+					<div class="grid_loading" ng-hide="!controller.mostrarcargando" style="position: absolute; z-index: 1">
+		  				<div class="msg">
+		      				<span><i class="fa fa-spinner fa-spin fa-4x"></i>
+				  				<br /><br />
+				  				<b>Cargando, por favor espere...</b>
+			  				</span>
+						</div>
+					</div>
 				</div>	
 	    	</div>
 	    </div>

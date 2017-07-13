@@ -23,7 +23,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		var AGRUPACION_SEMESTRE= 5;
 		var AGRUPACION_ANUAL= 6;
 		
-		var MES_NAME = ['Mes1','Mes2','Mes3','Mes4','Mes5','Mes6','Mes7','Mes8','Mes9','Mes10','Mes11','Mes12'];
+		var MES_NAME = ['mes1','mes2','mes3','mes4','mes5','mes6','mes7','mes8','mes9','mes10','mes11','mes12'];
 		var MES_DISPLAY_NAME = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 		var BIMESTRE_NAME = ['Bimestre1', 'Bimestre2', 'Bimestre3', 'Bimestre4', 'Bimestre5', 'Bimestre6'];
 		var BIMESTRE_DISPLAY_NAME = ['Bimestre 1', 'Bimestre 2','Bimestre 3','Bimestre 4','Bimestre 5','Bimestre 6'];
@@ -132,11 +132,15 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 						
 						mesDisplayName = MES_DISPLAY_NAME[i-1];
 						
-						mi.totales[mesName + "-" + j + "-P"] = 0;
-						mi.columnaNames.push(mesName + "-" + j + "-P");
-						mi.columnasDinamicas.push(mesName+ "-" + j + "-P");
+						//mi.totales[mesName + "-" + j + "-P"] = 0;
+						//mi.columnaNames.push(mesName + "-" + j + "-P");
+						//mi.columnasDinamicas.push(mesName+ "-" + j + "-P");
+						mi.totales[mesName + "p" + "-" + j] = 0;
+						mi.columnaNames.push(mesName + "p" + "-" + j);
+						mi.columnasDinamicas.push(mesName+ "p" + "-" + j);
 						mi.cabeceras.push(mesDisplayName);
-						mi.columnas.push({ name: mesName + "-" + j + "-P", enableCellEdit: false, width: 120, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2', 
+						//mi.columnas.push({ name: mesName + "-" + j + "-P", enableCellEdit: false, width: 120, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2', 
+						mi.columnas.push({ name: mesName + "p" + "-" + j, enableCellEdit: false, width: 120, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 				        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.getTotal(this) | number:2}}</div>', enableHiding: false, enableGrouping: false, enablePinning: false,
 				        	menuItems: [
 				        		{
@@ -144,17 +148,18 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				        			action: mi.mostrarOcultarColumna
 				        		}
 				        	],
-				        	category: j.toString(),
-				        	cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-				                return "planificado";
-				            }
+				        	category: j.toString()
 				        });
 						
-						mi.totales[mesName + "-" + j + "-R"] = 0;
-						mi.columnaNames.push(mesName + "-" + j + "-R");
-						mi.columnasDinamicas.push(mesName + "-" + j + "-R");
+						//mi.totales[mesName + "-" + j + "-R"] = 0;
+						//mi.columnaNames.push(mesName + "-" + j + "-R");
+						//mi.columnasDinamicas.push(mesName + "-" + j + "-R");
+						mi.totales[mesName + "r" + "-" + j] = 0;
+						mi.columnaNames.push(mesName + "r" + "-" + j);
+						mi.columnasDinamicas.push(mesName + "r" + "-" + j);
 						mi.cabeceras.push(mesDisplayName);
-						mi.columnas.push({ name: mesName + "-" + j + "-R", enableCellEdit: false, width: 120, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2', 
+						//mi.columnas.push({ name: mesName + "-" + j + "-R", enableCellEdit: false, width: 120, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2', 
+						mi.columnas.push({ name: mesName + "r" + "-" + j, enableCellEdit: false, width: 120, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 				        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.getTotal(this) | number:2}}</div>', enableHiding: false, enableGrouping: false, enablePinning: false,
 				        	menuItems: [
 				        		{
@@ -415,7 +420,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				}
 			}
 			
-			mi.columnas.push({ name: 'Total-P', enableCellEdit: false, width: 150, displayName: 'Total general', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
+			mi.columnas.push({ name: 'Totalp', enableCellEdit: false, width: 150, displayName: 'Total general', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 	        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.totalP | number:2}}</div>', pinnedRight:true, enableHiding: false, enableGrouping: false, enablePinning: false,
 	        	menuItems: [
 	        		{
@@ -428,7 +433,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 	            }
 	        });
 			
-			mi.columnas.push({ name: 'Total-R', enableCellEdit: false, width: 150, displayName: 'Total general', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
+			mi.columnas.push({ name: 'Totalr', enableCellEdit: false, width: 150, displayName: 'Total general', type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 	        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.totalR | number:2}}</div>', pinnedRight:true, enableHiding: false, enableGrouping: false, enablePinning: false,
 	        	menuItems: [
 	        		{
@@ -441,10 +446,10 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 	            }
 	        });
 			
-			mi.columnaNames.push("Total-P");
-			mi.cabeceras.push("Total-P");
-			mi.columnaNames.push("Total-R");
-			mi.cabeceras.push("Total-R");
+			mi.columnaNames.push("Totalp");
+			mi.cabeceras.push("Totalp");
+			mi.columnaNames.push("Totalr");
+			mi.cabeceras.push("Totalr");
 			mi.gridOptions.columnDefs = mi.columnas;
 			
 			mi.mostrarPlanificado();
@@ -456,12 +461,14 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			var year = currentTime.getFullYear();
 			
 			for(x in mi.gridOptions.columnDefs){
-				if(mi.gridOptions.columnDefs[x].name.includes("-P")){
-					mi.gridOptions.columnDefs[x].visible = false;
-					mi.gridOptions.columnDefs[x].ocultar = true;
-				}else{
-					mi.gridOptions.columnDefs[x].visible = true;
-					mi.gridOptions.columnDefs[x].ocultar = false;
+				if(x > 0){
+					if(mi.gridOptions.columnDefs[x].name.includes("p")){
+						mi.gridOptions.columnDefs[x].visible = false;
+						mi.gridOptions.columnDefs[x].ocultar = true;
+					}else{
+						mi.gridOptions.columnDefs[x].visible = true;
+						mi.gridOptions.columnDefs[x].ocultar = false;
+					}
 				}
 			}
 			
@@ -474,12 +481,14 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			var year = currentTime.getFullYear();
 			
 			for(x in mi.gridOptions.columnDefs){
-				if(mi.gridOptions.columnDefs[x].name.includes("-R")){
-					mi.gridOptions.columnDefs[x].visible = false;
-					mi.gridOptions.columnDefs[x].ocultar = true;
-				}else{
-					mi.gridOptions.columnDefs[x].visible = true;
-					mi.gridOptions.columnDefs[x].ocultar = false;
+				if(x > 0){
+					if(mi.gridOptions.columnDefs[x].name.includes("r")){
+						mi.gridOptions.columnDefs[x].visible = false;
+						mi.gridOptions.columnDefs[x].ocultar = true;
+					}else{
+						mi.gridOptions.columnDefs[x].visible = true;
+						mi.gridOptions.columnDefs[x].ocultar = false;
+					}
 				}
 			}
 			
@@ -504,10 +513,10 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			var columna2 = "";
 			var bandera = true;
 			
-			if (columna.includes("-P")){
-				columna2 = columna.replace('-P','-R');
-			}else if (columna.includes("-R")){
-				columna2 = columna.replace('-R','-P');
+			if (columna.includes("p")){
+				columna2 = columna.replace('p','r');
+			}else if (columna.includes("r")){
+				columna2 = columna.replace('r','p');
 			}
 				
 			for(x in mi.gridOptions.columnDefs){
@@ -552,7 +561,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 								informeCompleto: mi.informeCompleto,
 								columnaNames: mi.columnasDinamicas.toString(),
 								agrupacion: mi.agrupacion.value,
-								anio: moment(mi.fechaInicio).format('DD/MM/YYYY')
+								anoInicial: moment(mi.fechaInicio).format('YYYY'),
+								anoFinal: moment(mi.fechaFin).format('YYYY')
 							}).success(function(response){
 								if (response.success){
 									mi.crearArbol(response.prestamo);
@@ -697,15 +707,15 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				var rowEntity = mi.obtenerEntidad(mi.gridOptions.data[x].idObjetoTipo, mi.gridOptions.data[x].objetoTipo);
 				
 				for(y in mi.columnasDinamicas){
-					if(mi.columnasDinamicas[y].includes("-P")==true){
+					if(mi.columnasDinamicas[y].includes("p")==true){
 						montoPlanificado += mi.obtenerValor(rowEntity, mi.columnasDinamicas[y]);
-					}else if(mi.columnasDinamicas[y].includes("-R")==true){
+					}else if(mi.columnasDinamicas[y].includes("r")==true){
 						montoReal+= mi.obtenerValor(rowEntity, mi.columnasDinamicas[y]);
 					}
 				}
 				
-				rowEntity["Total-P"] = montoPlanificado;
-				rowEntity["Total-R"] = montoReal;
+				rowEntity["Totalp"] = montoPlanificado;
+				rowEntity["Totalr"] = montoReal;
 				montoPlanificado = 0;
 				montoReal = 0;
 			}
