@@ -19,11 +19,16 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	var META_ID_LINEABASE= 3;
 	var META_ID_FINAL= 4;
 	
+	var ESTADO_ACTIVO = 1;
+	var ESTADO_CONGELADO = 2;
+	
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion = null;
 
 	mi.mostrarCargando = false;
 	mi.mostrarDescargar = false;
+	mi.mostrarCongelar = false;
+	mi.reporteCongelado = false;
 	mi.prestamos = [];
 	mi.data = [];	
 	
@@ -60,7 +65,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 
 	mi.agrupaciones = [
 		{'value' : 0, 'text' : 'Seleccione una opción'},
-		{'value' : AGRUPACION_MES, 'text' : 'Mes'},
+		{'value' : AGRUPACION_MES, 'text' : 'Mensual'},
 		{'value' : AGRUPACION_BIMESTRE, 'text' : 'Bimestre'},
 		{'value' : AGRUPACION_TRIMESTRE, 'text' : 'Trimestre'},
 		{'value' : AGRUPACION_CUATRIMESTRE, 'text' : 'Cuatrimestre'},
@@ -98,6 +103,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		
 			mi.mostrarCargando = true;
 			mi.mostrarDescargar = true;
+			mi.mostrarCongelar = true;
 			
 			$http.post('/SPrestamoMetas', datos).then(function(response) {
 				if (response.data.success) {
@@ -120,6 +126,9 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 						 }
 						 if(mi.data[x].metaFinal){
 							 mi.data[x].metaFinal = Math.round((parseFloat(mi.data[x].metaFinal))*100)/100;
+						 }
+						 if(mi.data[x].estado != null && mi.data[x].estado == ESTADO_CONGELADO){
+							 mi.reporteCongelado = true;
 						 }
 					 }
 					mi.opcionesGrid.data = mi.data;
@@ -259,7 +268,12 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			{ displayName : 'Unidad de Medida', category: " ", name : 'unidadDeMedidaId', width: 100, 
 				enableCellEdit: true, enableFiltering: false, editableCellTemplate: 'ui-grid/dropdownEditor',
 				editDropdownValueLabel: 'nombre', editDropdownOptionsArray: [], enableColumnMenu: false,
-				cellEditableCondition: function( $scope ) { return ($scope.row.entity.objetoTipo >= 3); },
+				cellEditableCondition: function( $scope ) { 
+					if(mi.reporteCongelado){
+						return false;
+					}
+					return ($scope.row.entity.objetoTipo >= 3); 
+					},
 				cellTemplate: '<div class="ui-grid-cell-contents">{{grid.appScope.nombreUnidadMedida(row.entity.unidadDeMedidaId)}}</div>',
 				cellClass: function (grid, row, col, rowIndex, colIndex) {
 			          return grid.appScope.pmetasc.estiloEditable(grid, row, col,rowIndex, colIndex);
@@ -274,6 +288,9 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 						tipoMeta: META_ID_PLANIFICADA, anio: anioInicio, mes: mes, type: 'number',
 						enableCellEdit: true, enableFiltering : false, enableColumnMenu: false,
 						cellEditableCondition: function($scope) {
+							if(mi.reporteCongelado){
+								return false;
+							}
 							var fechaInicio = $scope.row.entity.fechaInicio.split("/");
 							var fechaFin = $scope.row.entity.fechaFin.split("/");
 							var mesInicio = parseInt(fechaInicio[1]) - 1;
@@ -314,6 +331,12 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 							var anioInicio = parseInt(fechaInicio[2]);
 							var anioFin = parseInt(fechaFin[2]);
 							var fechaEnIntervalo = false;
+							var fechaActual = new Date();
+						    var anioActual = fechaActual.getFullYear();
+						    var mesActual = fechaActual.getMonth();
+							if(mi.reporteCongelado && !(this.mes == mesActual && this.anio == anioActual)){
+								return false;
+							}
 							if (anioInicio == anioFin){
 								if (this.anio == anioInicio && this.mes >= mesInicio && this.mes <= mesFin){
 									fechaEnIntervalo = true;
@@ -431,20 +454,23 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 					mi.opcionesGrid.category.push({name: anioInicio, visible: true});
 			}
 		}
-		columnDefs.push({ displayName: 'Total Planificado', name: 'getTotalMeta("P")', width: 90, cellClass : 'grid-align-center', 
+		columnDefs.push({ displayName: 'Total Planificado', name: 'getTotalMeta("P")', width: 90,  
 			tipoMeta: META_ID_LINEABASE, idMeta: 'lineaBaseId', anio: anioFin, mes: 11, type: 'number',
 			enableCellEdit: false, enableFiltering : false, enableColumnMenu: false, pinnedRight:true,
-			cellClass: 'planificado'
+			cellClass: 'planificado grid-align-center'
 		});
-		columnDefs.push({ displayName: 'Total Real', name: 'getTotalMeta("R")', width: 90, cellClass : 'grid-align-center', 
+		columnDefs.push({ displayName: 'Total Real', name: 'getTotalMeta("R")', width: 90,  
 			tipoMeta: META_ID_FINAL, idMeta: 'metaFinalId', anio: anioFin, mes: 11, type: 'number',
 			enableCellEdit: false, enableFiltering : false, enableColumnMenu: false, pinnedRight:true,
-			cellClass: 'real'
+			cellClass: 'real grid-align-center'
 		});
 		columnDefs.push({ displayName: 'Meta Final', name: 'metaFinal', width: 90,  
 			tipoMeta: META_ID_FINAL, idMeta: 'metaFinalId', anio: anioFin, mes: 11, type: 'number',
 			enableCellEdit: true, enableFiltering : false, enableColumnMenu: false, pinnedRight:true,
 			cellEditableCondition: function( $scope ) { 
+				if(mi.reporteCongelado){
+					return false;
+				}
 				return ($scope.row.entity.objetoTipo >= 3 && $scope.row.entity.unidadDeMedidaId != null && $scope.row.entity.unidadDeMedidaId != ""); 
 				},
 			cellClass: function (grid, row, col, rowIndex, colIndex) {
@@ -508,6 +534,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			if(mi.prestamo.value > 0){
 				if (mi.fechaInicio <= mi.fechaFin){
 					if(mi.agrupacion.value > 0){
+						mi.reporteCongelado = false;
 						mi.setDefinicionColumnas();
 						mi.cargarTabla();
 					}else{
@@ -520,6 +547,23 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
 			}
 		}
+	 
+	mi.congelar = function(){
+		 var datos = {
+			accion : 'congelarPrestamoMeta',
+			proyectoid: mi.prestamo.value
+		};
+		 $http.post('/SPrestamoMetas', datos).success(function(response){
+				if(response.success){
+					$utilidades.mensaje('success','Reporte congelado exitosamente');
+					mi.reporteCongelado = true;
+					mi.generar();
+				}
+				else{
+					$utilidades.mensaje('danger','Error al congelar el Reporte');
+				}
+			});
+	}
 		
 	mi.guardarMeta = function(meta, rowEntity, col){
 		$http.post('/SPrestamoMetas', {

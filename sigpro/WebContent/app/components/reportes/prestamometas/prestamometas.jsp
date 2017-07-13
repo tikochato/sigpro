@@ -77,7 +77,8 @@
 						tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-new-window"></span></label>
 					
-					<label class="btn btn-default" ng-click="pmetasc.congelar()" uib-tooltip="Congelar" ng-hide="!pmetasc.mostrarCongelar"
+					<label class="btn btn-default" ng-click="pmetasc.congelar()" uib-tooltip="Congelar" 
+						ng-hide="!pmetasc.mostrarCongelar" ng-disabled="pmetasc.reporteCongelado"
 						tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-ban-circle"></span></label>
 					
@@ -85,7 +86,7 @@
 						tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-duplicate"></span></label>
 					
-					<label class="btn btn-primary" ng-click="pmetasc.exportarExcel()" uib-tooltip="Descargar excel" ng-hide="!pmetasc.mostrarDescargar"
+					<label class="btn btn-default" ng-click="pmetasc.exportarExcel()" uib-tooltip="Descargar excel" ng-hide="!pmetasc.mostrarDescargar"
 						tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-download-alt"></span></label>
 				</div>

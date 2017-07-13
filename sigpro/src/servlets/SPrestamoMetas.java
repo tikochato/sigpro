@@ -82,7 +82,10 @@ public class SPrestamoMetas extends HttpServlet {
 	private static final int AGRUPACION_CUATRIMESTRE= 2;
 	private static final int AGRUPACION_SEMESTRE= 3;
 	private static final int AGRUPACION_ANUAL= 4;
-		
+	
+	private static final int ESTADO_ACTIVO= 1;
+	private static final int ESTADO_CONGELADO= 2;
+	
 	class stproductometa {
 		Integer id;
 		String edt;
@@ -99,6 +102,7 @@ public class SPrestamoMetas extends HttpServlet {
 		String lineaBase;
 		Integer metaFinalId;
 		String metaFinal;
+		Integer estado;
 	}
 	
 	class stmeta {
@@ -177,6 +181,24 @@ public class SPrestamoMetas extends HttpServlet {
 			metavalor = guardarProductoMetaValor(metavalor, usuario);
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(metavalor);
+	        response_text = String.join("", "\"metavalor\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+	        
+	        response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
+
+	        OutputStream output = response.getOutputStream();
+			GZIPOutputStream gz = new GZIPOutputStream(output);
+	        gz.write(response_text.getBytes("UTF-8"));
+	        gz.close();
+	        output.close();
+		}else if(accion.equals("congelarPrestamoMeta")){
+			Integer proyectoId = map.get("proyectoid")!=null ? Integer.parseInt(map.get("proyectoid")) : 0;
+			Boolean exito = false;
+			
+			exito = congelarPrestamoMeta(proyectoId, usuario);
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(exito);
 	        response_text = String.join("", "\"metavalor\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 	        
@@ -273,6 +295,7 @@ public class SPrestamoMetas extends HttpServlet {
 				proyectometa.fechaFin = "";
 				proyectometa.lineaBase = "";
 				proyectometa.metaFinal = "";
+				proyectometa.estado = ESTADO_ACTIVO;
 				
 				proyectometa = getFechaInicioFinProducto(proyectometa);
 				
@@ -288,6 +311,7 @@ public class SPrestamoMetas extends HttpServlet {
 						stmeta meta = new stmeta();
 						meta.id = metavalor.getId().getMetaid();
 						meta.fecha = Utils.formatDate(metavalor.getId().getFecha());
+						proyectometa.estado = metavalor.getEstado();
 						meta.valor = "";
 						if (null != metavalor.getValorDecimal()){
 							meta.valor = metavalor.getValorDecimal().toString();
@@ -307,6 +331,7 @@ public class SPrestamoMetas extends HttpServlet {
 						stmeta meta = new stmeta();
 						meta.id = metavalor.getId().getMetaid();
 						meta.fecha = Utils.formatDate(metavalor.getId().getFecha());
+						proyectometa.estado = metavalor.getEstado();
 						meta.valor = "";
 						if (null != metavalor.getValorDecimal()){
 							meta.valor = metavalor.getValorDecimal().toString();
@@ -323,6 +348,7 @@ public class SPrestamoMetas extends HttpServlet {
 					proyectometa.datoTipoId = Meta.getDatoTipo().getId();
 					proyectometa.lineaBaseId = Meta.getId();
 					MetaValor metavalor = MetaValorDAO.getMetaValorPorMetaid(Meta.getId());
+					proyectometa.estado = metavalor.getEstado();
 					proyectometa.lineaBase = "";
 					if (null != metavalor.getValorDecimal()){
 						proyectometa.lineaBase = metavalor.getValorDecimal().toString();
@@ -337,6 +363,7 @@ public class SPrestamoMetas extends HttpServlet {
 					proyectometa.datoTipoId = Meta.getDatoTipo().getId();
 					proyectometa.metaFinalId = Meta.getId();
 					MetaValor metavalor = MetaValorDAO.getMetaValorPorMetaid(Meta.getId());
+					proyectometa.estado = metavalor.getEstado();
 					proyectometa.metaFinal = "";
 					if (null != metavalor.getValorDecimal()){
 						proyectometa.metaFinal = metavalor.getValorDecimal().toString();
@@ -377,7 +404,7 @@ public class SPrestamoMetas extends HttpServlet {
 		if (MetaValor != null){
 			MetaValor.setValorDecimal(Utils.String2BigDecimal(metavalor.valor, new BigDecimal(0)));
 		}else{
-			MetaValor = new MetaValor(MetaValorId, meta, usuario, null, null, Utils.String2BigDecimal(metavalor.valor, new BigDecimal(0)), null);
+			MetaValor = new MetaValor(MetaValorId, meta, usuario, null, null, Utils.String2BigDecimal(metavalor.valor, new BigDecimal(0)), null, 1, new Date());
 		}
 		MetaValorDAO.guardarMetaValor(MetaValor);
 		metavalor.id = meta.getId();
@@ -412,6 +439,33 @@ public class SPrestamoMetas extends HttpServlet {
 			actividades.addAll(ActividadDAO.getActividadsSubactividadsPorObjeto(subproducto.getId(), 4));
 		}
 		return actividades;
+	}
+	
+	private Boolean congelarPrestamoMeta(int proyectoId, String usuario){
+		Boolean exito = false;
+		
+		List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
+				null, null, null, null, null, usuario);
+		
+		for (Componente componente : componentes){
+						
+			List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
+					null, null, null, null, null, usuario);
+			
+			for (Producto producto : productos){
+				
+				List<Meta> metas = MetaDAO.getMetasPagina(-1, -1, producto.getId(), OBJETO_ID_PRODUCTO, null, -1, null, null, null, null);
+				
+				for (Meta meta : metas){
+					List <MetaValor> metavalores = MetaValorDAO.getValoresMeta(meta.getId(), ESTADO_ACTIVO);
+					for (MetaValor metavalor : metavalores){	
+						metavalor.setEstado(ESTADO_CONGELADO);
+						MetaValorDAO.guardarMetaValor(metavalor);
+					}
+				}
+			}
+		}
+		return exito;
 	}
 	
 	private byte[] exportarExcel(int proyectoId, int anioInicio, int anioFin, int agrupacion, String filas, String columnas, String usuario) throws IOException{
