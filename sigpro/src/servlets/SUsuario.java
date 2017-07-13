@@ -21,6 +21,7 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ColaboradorDAO;
 import dao.ProyectoDAO;
+import dao.RolDAO;
 import dao.UsuarioDAO;
 import pojo.Colaborador;
 import pojo.Permiso;
@@ -28,6 +29,8 @@ import pojo.Usuario;
 import pojo.UsuarioPermiso;
 import pojo.Proyecto;
 import pojo.ProyectoUsuario;
+import pojo.Rol;
+import pojo.RolUsuarioProyecto;
 import pojo.UnidadEjecutora;
 import utilities.Utils;
 
@@ -413,6 +416,24 @@ public class SUsuario extends HttpServlet {
 					}
 					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stproyectos);
 					response_text = String.join("", "\"prestamos\": ",respuesta);
+					response_text = String.join("", "{\"success\":true,", response_text,"}");
+				}
+			}else if(accion.compareTo("getUsuarioPorPrestamo")==0){
+				String proyecto = map.get("proyecto");
+				if(proyecto!=null){
+					List <RolUsuarioProyecto> rolUsuarios = UsuarioDAO.getUsuariosPorPrestamo(Integer.parseInt(proyecto));
+					List <stproyecto_usuario>usuarios = new  ArrayList<stproyecto_usuario>();
+					for(RolUsuarioProyecto rolusuario : rolUsuarios){
+						stproyecto_usuario tmp = new stproyecto_usuario();
+						tmp.id=rolusuario.getId().getRol();
+						Rol tmpRol = new Rol();
+						tmpRol =RolDAO.getRol(rolusuario.getId().getRol());
+						tmp.nombre=tmpRol.getNombre();
+						tmp.usuario=rolusuario.getId().getUsuario();
+						usuarios.add(tmp);
+					}
+					String respuesta = new GsonBuilder().serializeNulls().create().toJson(usuarios);
+					response_text = String.join("", "\"usuarios\": ",respuesta);
 					response_text = String.join("", "{\"success\":true,", response_text,"}");
 				}
 			}

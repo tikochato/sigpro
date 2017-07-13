@@ -575,4 +575,21 @@ public class UsuarioDAO {
 	}
 	
 	
+	public static List <RolUsuarioProyecto> getUsuariosPorPrestamo(int proyecto){
+		List <RolUsuarioProyecto> ret = new ArrayList<RolUsuarioProyecto> ();
+		
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query <RolUsuarioProyecto> criteria = session.createQuery("FROM RolUsuarioProyecto where id.proyecto=:proyecto", RolUsuarioProyecto.class);
+			criteria.setParameter("proyecto",proyecto);
+			ret =criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("7", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	
 }
