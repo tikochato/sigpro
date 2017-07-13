@@ -6,10 +6,8 @@
 <style>
 	.actividad { font-weight: normal !important; }
 	.padre {font-weight: bold;}
-    .real { background-color: #ffae1a !important }
-    .realTotal { background-color: #e69500 !important }
-    .planificado { background-color: #A9D0F5 !important }
-    .planificadoTotal { background-color: #7bb7f0 !important }
+    .real { background-color: #f7e681 !important }
+    .realTotal { background-color: #f7e681 !important }
 </style>
 
 <div ng-controller="adquisicionesController as controller" class="maincontainer all_page" id="title">

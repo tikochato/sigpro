@@ -7,10 +7,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -30,19 +32,18 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
-import dao.ActividadPropiedadDAO;
-import dao.ActividadPropiedadValorDAO;
 import dao.ComponenteDAO;
-import dao.ConfiguracionesDAO;
+import dao.PagoDAO;
+import dao.PlanAdquisicionesDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import pojo.Actividad;
-import pojo.ActividadPropiedad;
-import pojo.ActividadPropiedadValor;
-import pojo.ActividadPropiedadValorId;
 import pojo.Componente;
+import pojo.Pago;
+import pojo.PlanAdquisiciones;
 import pojo.Producto;
 import pojo.Proyecto;
+import pojo.UnidadMedida;
 import utilities.CExcel;
 import utilities.CLogger;
 import utilities.Utils;
@@ -50,38 +51,12 @@ import utilities.Utils;
 @WebServlet("/SPlanAdquisiciones")
 public class SPlanAdquisiciones extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static int OBJETO_ID_PROYECTO = 1;
 	private static int OBJETO_ID_COMPONENTE = 2;
 	private static int OBJETO_ID_PRODUCTO = 3;
 	private static int OBJETO_ID_SUBPRODUCTO = 4;
 	private static int OBJETO_ID_ACTIVIDAD= 5;
-	private static Integer idTipoActividad;
-	
-	class stInformePresupuesto{
-		int id;
-		int idPrestamo;
-		int objetoTipo;
-		int idObjetoTipo;
-		String nombre;
-		int posicionArbol;
-		int objetoTipoPredecesor;
-		int idPredecesor;
-		String hijo;
-		String fechaInicio;
-		String fechaFin;
-		int acumulacionCostos;
-		String columnas;
-		String planificadoDocs;
-		String realDocs;
-		String planificadoLanzamiento;
-		String realLanzamiento;
-		String planificadoRecepcionEval;
-		String realRecepcionEval;
-		String planificadoAdjudica;
-		String realAdjudica;
-		String planificadoFirma;
-		String realFirma;
-		int tipo;
-	}
+	private List<String> objetoPlan = null;
        
     public SPlanAdquisiciones() {
         super();
@@ -108,47 +83,50 @@ public class SPlanAdquisiciones extends HttpServlet {
 		String response_text = "";
 		
 		Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-		idTipoActividad = Utils.String2Int(ConfiguracionesDAO.getValorConfiguracionByNombre("IdTipoActividadPlanAdquisiciones"));
 		
 		if (accion.equals("generarPlan")){
-			List<stInformePresupuesto> componentes = obtenerComponentes(idPrestamo,usuario);
+			objetoPlan = new ArrayList<String>();
+			LinkedHashMap<String, Map<String, Object>> componentes = obtenerComponentes(idPrestamo,usuario);
 			
-			List<stInformePresupuesto> resultPrestamo = new ArrayList<stInformePresupuesto>();
-			for (stInformePresupuesto p : componentes ){
-				stInformePresupuesto dataEjecutado = new stInformePresupuesto();
+			for(String op : objetoPlan){
+				Map<String, Object> rowEntity = componentes.get(op);
+				Integer idObjeto = (Integer)rowEntity.get("idObjetoTipo");
+				Integer objetoTipo = (Integer)rowEntity.get("objetoTipo");
 				
-				dataEjecutado = new stInformePresupuesto();
-				dataEjecutado.id = p.id;
-				dataEjecutado.idPrestamo = idPrestamo;
-				dataEjecutado.objetoTipo = p.objetoTipo;
-				dataEjecutado.posicionArbol = p.posicionArbol;
-				dataEjecutado.idObjetoTipo = p.idObjetoTipo;
-				dataEjecutado.nombre = p.nombre;
-				dataEjecutado.idPredecesor = p.idPredecesor;
-				dataEjecutado.objetoTipoPredecesor = p.objetoTipoPredecesor;
-				dataEjecutado.fechaInicio = p.fechaInicio;
-				dataEjecutado.fechaFin = p.fechaFin;
-				dataEjecutado.planificadoDocs = p.planificadoDocs == null ? "" : p.planificadoDocs;
-				dataEjecutado.realDocs = p.realDocs == null ? "" : p.realDocs;
-				dataEjecutado.planificadoLanzamiento = p.planificadoLanzamiento == null ? "" : p.planificadoLanzamiento;
-				dataEjecutado.realLanzamiento = p.realLanzamiento == null ? "" : p.realLanzamiento;
-				dataEjecutado.planificadoRecepcionEval = p.planificadoRecepcionEval == null ? "" : p.planificadoRecepcionEval;
-				dataEjecutado.realRecepcionEval = p.realRecepcionEval == null ? "" : p.realRecepcionEval;
-				dataEjecutado.planificadoAdjudica = p.planificadoAdjudica == null ? "" : p.planificadoAdjudica;
-				dataEjecutado.realAdjudica = p.realAdjudica == null ? "" : p.realAdjudica;
-				dataEjecutado.planificadoFirma = p.planificadoFirma == null ? "" : p.planificadoFirma;
-				dataEjecutado.realFirma = p.realFirma == null ? "" : p.realFirma;
-				dataEjecutado.tipo = p.tipo;
-				resultPrestamo.add(dataEjecutado);	
+				Integer idPadre = (Integer)rowEntity.get("idPredecesor");
+				Integer tipoPadre = (Integer)rowEntity.get("objetoTipoPredecesor");
+				
+				Map<String, Object> padre = componentes.get(idPadre+","+tipoPadre);
+				List<String> hijo = (List<String>)padre.get("hijo");
+				hijo.add(idObjeto+","+objetoTipo);
+				padre.put("hijo",hijo);
 			}
 			
-			response_text=new GsonBuilder().serializeNulls().create().toJson(resultPrestamo);
+			List<Map<String, Object>> resultado = new ArrayList<Map<String, Object>>(componentes.values());
+			
+			for(Map<String, Object> prestamo : resultado){
+				Integer posicion = (Integer)prestamo.get("posicionArbol");
+				prestamo.put("$$treeLevel", posicion -1);
+			}
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(resultado);
 	        response_text = String.join("", "\"componentes\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text, "}");
 		}else if(accion.equals("guardarPlan")){
 			try{
+				Integer idObjetoTipo = Utils.String2Int(map.get("idObjetoTipo"),0);
+				Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"),0);
+				Integer planAdquisicionId = Utils.String2Int(map.get("idPlanAdquisicion"), 0);
 				
-				Integer id = Utils.String2Int(map.get("id"));
+				PlanAdquisiciones plan;
+				
+				Integer unidadMedida = Utils.String2Int(map.get("unidadMedida"));
+				UnidadMedida unidad = new UnidadMedida(); 
+				unidad.setId(unidadMedida);
+				
+				Integer cantidad = Utils.String2Int(map.get("cantidad"));
+				BigDecimal costo = new BigDecimal(map.get("costo"));
+				BigDecimal total = new BigDecimal(map.get("total"));
 				Date planificadoDocs = Utils.dateFromString(map.get("planificadoDocs"));
 				Date realDocs = Utils.dateFromString(map.get("realDocs"));
 				Date planificadoLanzamiento = Utils.dateFromString(map.get("planificadoLanzamiento"));
@@ -159,45 +137,67 @@ public class SPlanAdquisiciones extends HttpServlet {
 				Date realAdjudica = Utils.dateFromString(map.get("realAdjudica"));
 				Date planificadoFirma =  Utils.dateFromString(map.get("planificadoFirma"));
 				Date realFirma = Utils.dateFromString(map.get("realFirma"));
-				
-				int contador = 0;
-				Actividad actividad = ActividadDAO.getActividadPorId(id, usuario);
-				List<ActividadPropiedad> actividadpropiedades = ActividadPropiedadDAO.getActividadPropiedadesPorTipoActividad(actividad.getActividadTipo().getId());
-				for(ActividadPropiedad actividadPropiedad : actividadpropiedades){
-					ActividadPropiedadValorId idValor = new ActividadPropiedadValorId(actividad.getId(),actividadPropiedad.getId());
-					ActividadPropiedadValor valor = new ActividadPropiedadValor(idValor, actividad, actividadPropiedad,null, null, null, null,
-							usuario, null, new DateTime().toDate(), null, 1);
+				boolean esnuevo = map.get("esnuevo").equals("true");	
+
+				if(planAdquisicionId > 0 || esnuevo){
+					plan = PlanAdquisicionesDAO.getPlanAdquisicionById(planAdquisicionId);
+					if(plan == null)
+						plan = new PlanAdquisiciones();
 					
-					if(contador == 0){
-						valor.setValorTiempo(planificadoDocs);
-					}else if(contador == 1){
-						valor.setValorTiempo(realDocs);
-					}else if(contador == 2){
-						valor.setValorTiempo(planificadoLanzamiento);
-					}else if(contador == 3){
-						valor.setValorTiempo(realLanzamiento);
-					}else if(contador == 4){
-						valor.setValorTiempo(planificadoRecepcionEval);
-					}else if(contador == 5){
-						valor.setValorTiempo(realRecepcionEval);
-					}else if(contador == 6){
-						valor.setValorTiempo(planificadoAdjudica);
-					}else if(contador == 7){
-						valor.setValorTiempo(realAdjudica);
-					}else if(contador == 8){
-						valor.setValorTiempo(planificadoFirma);
-					}else if(contador == 9){
-						valor.setValorTiempo(realFirma);
-					}
-					
-					contador++;
-					ActividadPropiedadValorDAO.guardarActividadPropiedadValor(valor);
+					plan.setUnidadMedida(unidad);
+					plan.setCantidad(cantidad);
+					plan.setPrecioUnitario(costo);
+					plan.setTotal(total);
+					plan.setPreparacionDocPlanificado(planificadoDocs);
+					plan.setPreparacionDocReal(realDocs);
+					plan.setLanzamientoEventoPlanificado(planificadoLanzamiento);
+					plan.setLanzamientoEventoReal(realLanzamiento);
+					plan.setRecepcionOfertasPlanificado(planificadoRecepcionEval);
+					plan.setRecepcionOfertasReal(realRecepcionEval);
+					plan.setAdjudicacionPlanificado(planificadoAdjudica);
+					plan.setAdjudicacionReal(realAdjudica);
+					plan.setFirmaContratoPlanificado(planificadoFirma);
+					plan.setFirmaContratoReal(realFirma);
+					plan.setObjetoId(idObjetoTipo);
+					plan.setObjetoTipo(objetoTipo);
+					plan.setUsuarioCreo(usuario);
+					plan.setFechaCreacion(new DateTime().toDate());
+					plan.setEstado(1);
+				}else{
+					plan = new PlanAdquisiciones(unidad, 0, cantidad, costo, total, planificadoDocs, realDocs, planificadoLanzamiento, 
+							realLanzamiento, planificadoRecepcionEval, realRecepcionEval, planificadoAdjudica, realAdjudica, 
+							planificadoFirma, realFirma, idObjetoTipo, objetoTipo, usuario, null, new DateTime().toDate(), null, 1, null);
+							
 				}
+				
+				planAdquisicionId = PlanAdquisicionesDAO.guardarPlanAdquisicion(plan);
+				
+				response_text = String.join("", "\"planAdquisicionId\":"+ Integer.toString(planAdquisicionId)+",\"objetoTipo\":"+ Integer.toString(objetoTipo)+",\"idObjetoTipo\":"+ Integer.toString(idObjetoTipo));
+//				response_text = String.join("", ",\"objetoTipo\":"+ Integer.toString(objetoTipo));
+//				response_text = String.join("", ",\"idObjetoTipo\":"+ Integer.toString(idObjetoTipo));
+		        response_text = String.join("", "{\"success\":true,", response_text, "}");
 			}
 			catch (Throwable e) {
 				e.printStackTrace();
 			}
+		}else if(accion.equals("borrarPlan")){
+			Integer idPlan = Utils.String2Int(map.get("idPlanAdquisiciones"));
+			PlanAdquisiciones plan = PlanAdquisicionesDAO.getPlanAdquisicionById(idPlan);
 			
+			
+			List<Pago> pagos = PagoDAO.getPagosByIdPlan(idPlan);
+			
+			for(Pago pago : pagos){
+				PagoDAO.eliminarPago(pago);
+			}
+			
+			boolean borrado = PlanAdquisicionesDAO.borrarPlan(plan);
+			
+			if(borrado){
+				response_text = String.join("", "{\"success\":true}");
+			}else{
+				response_text = String.join("", "{\"success\":false}");
+			}
 		}else if(accion.equals("exportarExcel")){
 			String data = map.get("data");
 			String nombreInforme = "Plan de adquisiciones AÑO FISCAL " + Year.now().getValue();
@@ -284,128 +284,245 @@ public class SPlanAdquisiciones extends HttpServlet {
 		}
 	}
 	
-	private List<stInformePresupuesto> obtenerComponentes(int proyectoId, String usuario){
+	private Map<String, Object> getEstructura(){
+		Map<String, Object> estructura = new HashMap<String, Object>();
+		estructura.put("id", 0);
+		estructura.put("ocultarPagos", true);
+		estructura.put("modificado", false);
+		estructura.put("ocultarLimpiar", true);
+		estructura.put("contieneInfoPlan", false);
+		estructura.put("planAdquisicionId",0);
+		estructura.put("idPrestamo", 0);
+		estructura.put("objetoTipo", 0);
+		estructura.put("idObjetoTipo",0);
+		estructura.put("estado",0);
+		estructura.put("nombre", "");
+		estructura.put("posicionArbol", 0);
+		estructura.put("objetoTipoPredecesor",0);
+		estructura.put("idPredecesor",0);
+		estructura.put("unidadMedida",0);
+		estructura.put("cantidad",0);
+		estructura.put("costo", new BigDecimal(0));
+		estructura.put("total", new BigDecimal(0));
+		estructura.put("hijo",new ArrayList<Integer>());
+		estructura.put("fechaInicio","");
+		estructura.put("fechaFin","");
+		estructura.put("metodo",0);
+		estructura.put("columnas","");
+		estructura.put("planificadoDocs","");
+		estructura.put("realDocs","");
+		estructura.put("planificadoLanzamiento","");
+		estructura.put("realLanzamiento","");
+		estructura.put("planificadoRecepcionEval","");
+		estructura.put("realRecepcionEval","");
+		estructura.put("planificadoAdjudica","");
+		estructura.put("realAdjudica","");
+		estructura.put("planificadoFirma","");
+		estructura.put("realFirma","");
+		
+		return estructura;
+	}
+	
+	private LinkedHashMap<String, Map<String, Object>> obtenerComponentes(int proyectoId, String usuario){
+		LinkedHashMap<String, Map<String, Object>> resultado =  new LinkedHashMap<>();
+		List<Map<String, Object>> resultPrestamo = new ArrayList<Map<String, Object>>();
+		
 		Proyecto proyecto = ProyectoDAO.getProyectoPorId(proyectoId, usuario);
-		List<stInformePresupuesto> lstdataEjecutado = new ArrayList<>();
 		if (proyecto!=null){
-			stInformePresupuesto dataEjecutado = new stInformePresupuesto();
+			Map<String, Object> estructura = getEstructura();
+			estructura.put("objetoTipo",OBJETO_ID_PROYECTO);
+			estructura.put("idObjetoTipo",proyecto.getId());
+			estructura.put("posicionArbol",1);
+			estructura.put("nombre",proyecto.getNombre());
+			
+			List<PlanAdquisiciones> p = new ArrayList<PlanAdquisiciones>();
+			p = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(OBJETO_ID_PROYECTO, proyectoId);
+			PlanAdquisiciones plan = null;
+			
+			for(PlanAdquisiciones pl : p){
+				plan = pl;
+			}
+			
+			estructura.put("ocultarPagos", plan != null ? false : true);
+			estructura.put("modificado", plan != null ? true : false);
+			estructura.put("ocultarLimpiar", plan != null ? false : true);
+			estructura.put("planAdquisicionId", plan != null ? plan.getId() : 0);
+			estructura.put("contieneInfoPlan", plan != null ? true : false);
+			estructura.put("cantidad", plan != null ? plan.getCantidad() : 0);
+			estructura.put("unidadMedida", plan != null ? plan.getUnidadMedida().getId() : 0);
+			estructura.put("costo", plan != null ? plan.getPrecioUnitario() : new BigDecimal(0));
+			estructura.put("total", plan != null ? plan.getTotal() : new BigDecimal(0));
+			estructura.put("planificadoDocs", plan != null ? Utils.formatDate(plan.getPreparacionDocPlanificado()) : "");
+			estructura.put("realDocs", plan != null ? Utils.formatDate(plan.getPreparacionDocReal()) : "");
+			estructura.put("planificadoLanzamiento", plan != null ? Utils.formatDate(plan.getLanzamientoEventoPlanificado()) : "");
+			estructura.put("realDocs", plan != null ? Utils.formatDate(plan.getLanzamientoEventoReal()) : "");
+			estructura.put("planificadoRecepcionEval", plan != null ? Utils.formatDate(plan.getRecepcionOfertasPlanificado()) : "");
+			estructura.put("realRecepcionEval", plan != null ? Utils.formatDate(plan.getRecepcionOfertasReal()) : "");
+			estructura.put("planificadoAdjudica", plan != null ? Utils.formatDate(plan.getAdjudicacionPlanificado()) : "");
+			estructura.put("realAdjudica", plan != null ? Utils.formatDate(plan.getAdjudicacionReal()) : "");
+			estructura.put("planificadoFirma", plan != null ? Utils.formatDate(plan.getFirmaContratoPlanificado()) : "");
+			estructura.put("realFirma", plan != null ? Utils.formatDate(plan.getFirmaContratoReal()) : "");
+			
+			resultPrestamo.add(estructura);
+			resultado.put(proyecto.getId()+","+OBJETO_ID_PROYECTO,estructura);
 			
 			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
 					null, null, null, null, null, usuario);
+
 			for (Componente componente : componentes){
-				dataEjecutado = new stInformePresupuesto();
-				dataEjecutado.objetoTipo = OBJETO_ID_COMPONENTE;
-				dataEjecutado.posicionArbol = 2;
-				dataEjecutado.idObjetoTipo = componente.getId();
-				dataEjecutado.nombre = componente.getNombre();
-				dataEjecutado.idPredecesor = proyecto.getId();
-				dataEjecutado.objetoTipoPredecesor = 1;
-				lstdataEjecutado.add(dataEjecutado);
+				estructura = getEstructura();
+				estructura.put("objetoTipo", OBJETO_ID_COMPONENTE);
+				estructura.put("posicionArbol", 2);
+				estructura.put("idObjetoTipo", componente.getId());
+				estructura.put("nombre", componente.getNombre());
+				estructura.put("idPredecesor", proyecto.getId());
+				estructura.put("objetoTipoPredecesor", 1);
+				
+				p = new ArrayList<PlanAdquisiciones>();
+				p = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(OBJETO_ID_COMPONENTE, componente.getId());
+				plan = null;
+				for(PlanAdquisiciones pl : p){
+					plan = pl;
+				}
+				
+				objetoPlan.add(componente.getId()+","+OBJETO_ID_COMPONENTE);
+
+				estructura.put("ocultarPagos", plan != null ? false : true);
+				estructura.put("modificado", plan != null ? true : false);
+				estructura.put("ocultarLimpiar", plan != null ? false : true);
+				estructura.put("planAdquisicionId", plan != null ? plan.getId() : 0);
+				estructura.put("contieneInfoPlan", plan != null ? true : false);
+				estructura.put("cantidad", plan != null ? plan.getCantidad() : 0);
+				estructura.put("unidadMedida", plan != null ? plan.getUnidadMedida().getId() : 0);
+				estructura.put("costo", plan != null ? plan.getPrecioUnitario() : new BigDecimal(0));
+				estructura.put("total", plan != null ? plan.getTotal() : new BigDecimal(0));
+				estructura.put("planificadoDocs", plan != null ? Utils.formatDate(plan.getPreparacionDocPlanificado()) : "");
+				estructura.put("realDocs", plan != null ? Utils.formatDate(plan.getPreparacionDocReal()) : "");
+				estructura.put("planificadoLanzamiento", plan != null ? Utils.formatDate(plan.getLanzamientoEventoPlanificado()) : "");
+				estructura.put("realDocs", plan != null ? Utils.formatDate(plan.getLanzamientoEventoReal()) : "");
+				estructura.put("planificadoRecepcionEval", plan != null ? Utils.formatDate(plan.getRecepcionOfertasPlanificado()) : "");
+				estructura.put("realRecepcionEval", plan != null ? Utils.formatDate(plan.getRecepcionOfertasReal()) : "");
+				estructura.put("planificadoAdjudica", plan != null ? Utils.formatDate(plan.getAdjudicacionPlanificado()) : "");
+				estructura.put("realAdjudica", plan != null ? Utils.formatDate(plan.getAdjudicacionReal()) : "");
+				estructura.put("planificadoFirma", plan != null ? Utils.formatDate(plan.getFirmaContratoPlanificado()) : "");
+				estructura.put("realFirma", plan != null ? Utils.formatDate(plan.getFirmaContratoReal()) : "");
+				
+				resultPrestamo.add(estructura);
+				resultado.put(componente.getId()+","+OBJETO_ID_COMPONENTE,estructura);
 				
 				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
 						null, null, null, null, null, usuario);
+
 				for (Producto producto : productos){
-					dataEjecutado = new stInformePresupuesto();
-					dataEjecutado.objetoTipo = OBJETO_ID_PRODUCTO;
-					dataEjecutado.posicionArbol = 3;
-					dataEjecutado.nombre = producto.getNombre();
-					dataEjecutado.idObjetoTipo = producto.getId();
-					dataEjecutado.idPredecesor = componente.getId();
-					dataEjecutado.objetoTipoPredecesor = 2;
-					lstdataEjecutado.add(dataEjecutado);
+					estructura = getEstructura();
+					
+					estructura.put("objetoTipo", OBJETO_ID_PRODUCTO);
+					estructura.put("posicionArbol", 3);
+					estructura.put("idObjetoTipo", producto.getId());
+					estructura.put("nombre", producto.getNombre());
+					estructura.put("idPredecesor", componente.getId());
+					estructura.put("objetoTipoPredecesor", 2);
+					
+					p = new ArrayList<PlanAdquisiciones>();
+					p = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(OBJETO_ID_PRODUCTO, producto.getId());
+					plan = null;
+					for(PlanAdquisiciones pl : p){
+						plan = pl;
+					}
+					
+					objetoPlan.add(producto.getId()+","+OBJETO_ID_PRODUCTO);
+					
+					estructura.put("ocultarPagos", plan != null ? false : true);
+					estructura.put("modificado", plan != null ? true : false);
+					estructura.put("ocultarLimpiar", plan != null ? false : true);
+					estructura.put("planAdquisicionId", plan != null ? plan.getId() : 0);
+					estructura.put("contieneInfoPlan", plan != null ? true : false);
+					estructura.put("cantidad", plan != null ? plan.getCantidad() : 0);
+					estructura.put("unidadMedida", plan != null ? plan.getUnidadMedida().getId() : 0);
+					estructura.put("costo", plan != null ? plan.getPrecioUnitario() : new BigDecimal(0));
+					estructura.put("total", plan != null ? plan.getTotal() : new BigDecimal(0));
+					estructura.put("planificadoDocs", plan != null ? Utils.formatDate(plan.getPreparacionDocPlanificado()) : "");
+					estructura.put("realDocs", plan != null ? Utils.formatDate(plan.getPreparacionDocReal()) : "");
+					estructura.put("planificadoLanzamiento", plan != null ? Utils.formatDate(plan.getLanzamientoEventoPlanificado()) : "");
+					estructura.put("realDocs", plan != null ? Utils.formatDate(plan.getLanzamientoEventoReal()) : "");
+					estructura.put("planificadoRecepcionEval", plan != null ? Utils.formatDate(plan.getRecepcionOfertasPlanificado()) : "");
+					estructura.put("realRecepcionEval", plan != null ? Utils.formatDate(plan.getRecepcionOfertasReal()) : "");
+					estructura.put("planificadoAdjudica", plan != null ? Utils.formatDate(plan.getAdjudicacionPlanificado()) : "");
+					estructura.put("realAdjudica", plan != null ? Utils.formatDate(plan.getAdjudicacionReal()) : "");
+					estructura.put("planificadoFirma", plan != null ? Utils.formatDate(plan.getFirmaContratoPlanificado()) : "");
+					estructura.put("realFirma", plan != null ? Utils.formatDate(plan.getFirmaContratoReal()) : "");
+					
+					resultPrestamo.add(estructura);
+					resultado.put(producto.getId()+","+OBJETO_ID_PRODUCTO,estructura);
 					
 					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
 							null, null, null, null, null, usuario);
+
 					for (Actividad actividad : actividades ){
-						lstdataEjecutado = ObtenerActividades(actividad,usuario,lstdataEjecutado,OBJETO_ID_SUBPRODUCTO,producto.getId(), OBJETO_ID_PRODUCTO);
+						resultado = ObtenerActividades(actividad,usuario,OBJETO_ID_SUBPRODUCTO,producto.getId(), OBJETO_ID_PRODUCTO,resultado);
 					}
 				}
 				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), OBJETO_ID_COMPONENTE,
 						null, null, null, null, null, usuario);
 				for (Actividad actividad : actividades ){
-					lstdataEjecutado = ObtenerActividades(actividad,usuario,lstdataEjecutado,OBJETO_ID_PRODUCTO, componente.getId(),OBJETO_ID_COMPONENTE);
+					resultado = ObtenerActividades(actividad,usuario,OBJETO_ID_PRODUCTO, componente.getId(),OBJETO_ID_COMPONENTE,resultado);
 				}
 			}
 		}
 		
-		return lstdataEjecutado;
+		return resultado;
 	}
 	
-	private List<stInformePresupuesto> ObtenerActividades(Actividad actividad, String usuario, List<stInformePresupuesto> lstdataEjecutado, int posicionArbol, 
-			int idPredecesor, int objetoTipoPredecesor){
+	private LinkedHashMap<String, Map<String, Object>> ObtenerActividades(Actividad actividad, String usuario, int posicionArbol, 
+			int idPredecesor, int objetoTipoPredecesor, LinkedHashMap<String, Map<String, Object>> resultado){
 		
 		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, actividad.getId(), OBJETO_ID_ACTIVIDAD, 
 				null, null,null, null, null, usuario);
 		
-		if(actividad.getActividadTipo().getId() == idTipoActividad){
-			List<ActividadPropiedad> actividadpropiedades = ActividadPropiedadDAO.getActividadPropiedadesPorTipoActividad(actividad.getActividadTipo().getId());
-			
-			List<HashMap<String,Object>> campos = new ArrayList<>();
-			for(ActividadPropiedad propiedad : actividadpropiedades){
-				HashMap <String,Object> campo = new HashMap<String, Object>();
-				ActividadPropiedadValor valor = ActividadPropiedadValorDAO.getValorPorActividadYPropiedad(propiedad.getId(),actividad.getId());
-				campo.put("valor", valor == null ? "" : valor.getValorTiempo());
-				campos.add(campo);
-			}
-			
-			stInformePresupuesto dataEjecutado = new stInformePresupuesto();
-			dataEjecutado = new stInformePresupuesto();
-			dataEjecutado.objetoTipo = OBJETO_ID_ACTIVIDAD;
-			dataEjecutado.posicionArbol = posicionArbol;
-			dataEjecutado.idObjetoTipo = actividad.getId();
-			dataEjecutado.nombre =   actividad.getNombre();
-			dataEjecutado.idPredecesor = idPredecesor;
-			dataEjecutado.objetoTipoPredecesor = objetoTipoPredecesor;
-			if (campos.size() > 0){
-				Date valor = null;
-				for(int i = 0; i < campos.size(); i++){
-					HashMap <String,Object> campo = campos.get(i);
-					valor = campo.get("valor") == "" ? null : (Date)campo.get("valor");
-					if (i == 0){
-						dataEjecutado.planificadoDocs = Utils.formatDate(valor);
-					}else if (i == 1){
-						dataEjecutado.realDocs = Utils.formatDate(valor);
-					}else if (i == 2){
-						dataEjecutado.planificadoLanzamiento = Utils.formatDate(valor);
-					}else if (i == 3){
-						dataEjecutado.realLanzamiento = Utils.formatDate(valor);
-					}else if (i == 4){
-						dataEjecutado.planificadoRecepcionEval = Utils.formatDate(valor);
-					}else if (i == 5){
-						dataEjecutado.realRecepcionEval = Utils.formatDate(valor);
-					}else if (i == 6){
-						dataEjecutado.planificadoAdjudica = Utils.formatDate(valor);
-					}else if (i == 7){
-						dataEjecutado.realAdjudica = Utils.formatDate(valor);
-					}else if (i == 8){
-						dataEjecutado.planificadoFirma = Utils.formatDate(valor);
-					}else if (i == 9){
-						dataEjecutado.realFirma = Utils.formatDate(valor);
-					}
-					
-				}
+		Integer actividadId = actividad.getId();
+		Map<String, Object> estructura = getEstructura();
+		estructura.put("objetoTipo", OBJETO_ID_ACTIVIDAD);
+		estructura.put("posicionArbol", posicionArbol);
+		estructura.put("idObjetoTipo", actividad.getId());
+		estructura.put("nombre", actividad.getNombre());
+		estructura.put("idPredecesor", idPredecesor);
+		estructura.put("objetoTipoPredecesor", objetoTipoPredecesor);
 
-				dataEjecutado.tipo = 1;
-			}else{
-				dataEjecutado.planificadoDocs = "";
-				dataEjecutado.realDocs = "";
-				dataEjecutado.planificadoLanzamiento = "";
-				dataEjecutado.realLanzamiento = "";
-				dataEjecutado.planificadoRecepcionEval = "";
-				dataEjecutado.realRecepcionEval = "";
-				dataEjecutado.planificadoAdjudica = "";
-				dataEjecutado.realAdjudica = "";
-				dataEjecutado.planificadoFirma = "";
-				dataEjecutado.realFirma = "";
-				dataEjecutado.tipo = 1;
-			}
-			lstdataEjecutado.add(dataEjecutado);
+		List<PlanAdquisiciones> p = new ArrayList<PlanAdquisiciones>();
+		p = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(OBJETO_ID_ACTIVIDAD, actividad.getId());
+		PlanAdquisiciones plan = null;
+		for(PlanAdquisiciones pl : p){
+			plan = pl;
+		}
+
+		objetoPlan.add(actividadId+","+OBJETO_ID_ACTIVIDAD);
+		
+		estructura.put("ocultarPagos", plan != null ? false : true);
+		estructura.put("modificado", plan != null ? true : false);
+		estructura.put("ocultarLimpiar", plan != null ? false : true);
+		estructura.put("planAdquisicionId", plan != null ? plan.getId() : 0);
+		estructura.put("contieneInfoPlan", plan != null ? true : false);
+		estructura.put("cantidad", plan != null ? plan.getCantidad() : 0);
+		estructura.put("unidadMedida", plan != null ? plan.getUnidadMedida().getId() : 0);
+		estructura.put("costo", plan != null ? plan.getPrecioUnitario() : new BigDecimal(0));
+		estructura.put("total", plan != null ? plan.getTotal() : new BigDecimal(0));
+		estructura.put("planificadoDocs", plan != null ? Utils.formatDate(plan.getPreparacionDocPlanificado()) : "");
+		estructura.put("realDocs", plan != null ? Utils.formatDate(plan.getPreparacionDocReal()) : "");
+		estructura.put("planificadoLanzamiento", plan != null ? Utils.formatDate(plan.getLanzamientoEventoPlanificado()) : "");
+		estructura.put("realDocs", plan != null ? Utils.formatDate(plan.getLanzamientoEventoReal()) : "");
+		estructura.put("planificadoRecepcionEval", plan != null ? Utils.formatDate(plan.getRecepcionOfertasPlanificado()) : "");
+		estructura.put("realRecepcionEval", plan != null ? Utils.formatDate(plan.getRecepcionOfertasReal()) : "");
+		estructura.put("planificadoAdjudica", plan != null ? Utils.formatDate(plan.getAdjudicacionPlanificado()) : "");
+		estructura.put("realAdjudica", plan != null ? Utils.formatDate(plan.getAdjudicacionReal()) : "");
+		estructura.put("planificadoFirma", plan != null ? Utils.formatDate(plan.getFirmaContratoPlanificado()) : "");
+		estructura.put("realFirma", plan != null ? Utils.formatDate(plan.getFirmaContratoReal()) : "");
+		
+		resultado.put(actividadId+","+OBJETO_ID_ACTIVIDAD,estructura);
 			
-			for(Actividad subActividad : actividades){
-				lstdataEjecutado = ObtenerActividades(subActividad, usuario, lstdataEjecutado, posicionArbol + 1, actividad.getId(), OBJETO_ID_ACTIVIDAD);
-			}
+		for(Actividad subActividad : actividades){
+			resultado = ObtenerActividades(subActividad, usuario, posicionArbol + 1, actividad.getId(), OBJETO_ID_ACTIVIDAD,resultado);
 		}
 		
-		return lstdataEjecutado;
+		return resultado;
 	}
 }

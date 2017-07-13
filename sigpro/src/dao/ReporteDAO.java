@@ -278,4 +278,53 @@ public class ReporteDAO {
 		}
 		return result;
 	}
+	
+	public static List<Object> getPresupuestoProyecto(Integer fuente, Integer organismo, Integer correlativo, Integer ejercicio){
+		List<Object> result = new ArrayList<Object>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query query = session.createNativeQuery("select mes1r, mes2r, mes3r, mes4r, mes5r, mes6r, mes7r, mes8r, mes9r, mes10r, mes11r, mes12r from mv_ep_prestamo where fuente=:fuente and organismo=:organismo and correlativo=:correlativo and ejercicio=:ejercicio")
+					.setParameter("fuente", fuente)
+					.setParameter("organismo", organismo)
+					.setParameter("correlativo", correlativo)
+					.setParameter("ejercicio", ejercicio);
+					result = query.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("5", ReporteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return result;
+	}
+	
+	public static List<Object> getPresupuestoPorObjeto(Integer fuente, Integer organismo, Integer correlativo, Integer ejercicio, Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra){
+		List<Object> result = new ArrayList<Object>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			if(programa != null && programa >= 0){
+				Query query = session.createNativeQuery("select mes1r, mes2r, mes3r, mes4r, mes5r, mes6r, mes7r, mes8r, mes9r, mes10r, mes11r, mes12r from mv_ep_estructura where fuente=:fuente and organismo=:organismo and correlativo=:correlativo and ejercicio=:ejercicio and programa=:programa and subprograma=:subprograma and proyecto=:proyecto and actividad=:actividad and obra=:obra")
+						.setParameter("fuente", fuente)
+						.setParameter("organismo", organismo)
+						.setParameter("correlativo", correlativo)
+						.setParameter("ejercicio", ejercicio)
+						.setParameter("programa", programa)
+						.setParameter("subprograma", subprograma)
+						.setParameter("proyecto", proyecto)
+						.setParameter("actividad", actividad)
+						.setParameter("obra", obra);
+						result = query.getResultList();
+			}
+		}
+		catch(Throwable e){
+			CLogger.write("6", ReporteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return result;
+	}
 }
