@@ -39,7 +39,7 @@ public class UsuarioDAO {
 		Usuario ret = null;
 		try{
 			session.beginTransaction();
-			ret = session.get(Usuario.class,usuario);
+			ret = session.get(Usuario.class,usuario.toLowerCase());
 		}
 		catch(Throwable e){
 			CLogger.write("1", UsuarioDAO.class, e);

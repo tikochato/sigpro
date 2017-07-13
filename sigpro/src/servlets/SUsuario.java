@@ -429,7 +429,9 @@ public class SUsuario extends HttpServlet {
 						Rol tmpRol = new Rol();
 						tmpRol =RolDAO.getRol(rolusuario.getId().getRol());
 						tmp.nombre=tmpRol.getNombre();
-						tmp.usuario=rolusuario.getId().getUsuario();
+						Usuario us_tmp= new Usuario();
+						us_tmp=UsuarioDAO.getUsuario(rolusuario.getId().getUsuario());
+						tmp.usuario=rolusuario.getId().getUsuario()+" - "+us_tmp.getEmail();
 						usuarios.add(tmp);
 					}
 					String respuesta = new GsonBuilder().serializeNulls().create().toJson(usuarios);
