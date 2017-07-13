@@ -32,11 +32,14 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
+import dao.PrestamoDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
+import dao.ReporteDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.Componente;
+import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
@@ -58,7 +61,7 @@ public class SInformePresupuesto extends HttpServlet {
 	private static int AGRUPACION_CUATRIMESTRE= 4;
 	private static int AGRUPACION_SEMESTRE= 5;
 	private static int AGRUPACION_ANUAL= 6;
-	private static String[] MES_NAME = {"Mes1","Mes2","Mes3","Mes4","Mes5","Mes6","Mes7","Mes8","Mes9","Mes10","Mes11","Mes12"};
+	private static String[] MES_NAME = {"mes1","mes2","mes3","mes4","mes5","mes6","mes7","mes8","mes9","mes10","mes11","mes12"};
 	private static String[] BIMESTRE_NAME = {"Bimestre1", "Bimestre2", "Bimestre3", "Bimestre4", "Bimestre5", "Bimestre6"};
 	private static String[] TRIMESTRE_NAME = {"Trimestre1", "Trimestre2","Trimestre3","Trimestre4"};
 	private static String[] CUATRIMESTRE_NAME = {"Cuatrimestre1","Cuatrimestre2","Cuatrimestre3"};
@@ -66,25 +69,6 @@ public class SInformePresupuesto extends HttpServlet {
 	
 	String[] columnaNames = null;
 	List<Integer> actividadesCosto = null;
-	
-	class stInformePresupuesto{
-		int id;
-		int idPrestamo;
-		int objetoTipo;
-		int idObjetoTipo;
-		String nombre;
-		int posicionArbol;
-		int objetoTipoPredecesor;
-		int idPredecesor;
-		String[] hijo;
-		BigDecimal Costo;
-		BigDecimal CostoReal;
-		String fechaInicio;
-		String fechaFin;
-		int acumulacionCostos;
-		String columnas;
-	}
-
        
     public SInformePresupuesto() {
         super();
@@ -110,11 +94,13 @@ public class SInformePresupuesto extends HttpServlet {
 		String accion = map.get("accion")!=null ? map.get("accion") : "";
 		String response_text = "";
 		Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
+		Integer anoInicial = Utils.String2Int(map.get("anoInicial"));
+		Integer anoFinal = Utils.String2Int(map.get("anoFinal"));
 		
 		columnaNames = map.get("columnaNames").split(",");
 		
 		if(accion.equals("getAdquisicionesPrestamo")){
-			Map<String, Map<String, Object>> prestamo = obtenerProyecto(idPrestamo,usuario);
+			Map<String, Map<String, Object>> prestamo = obtenerProyecto(idPrestamo,usuario, anoInicial, anoFinal);
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(prestamo);
 	        response_text = String.join("", "\"prestamo\":",response_text);
@@ -122,10 +108,10 @@ public class SInformePresupuesto extends HttpServlet {
 		}else if(accion.equals("generarInforme")){
 			actividadesCosto = new ArrayList<Integer>();
 			Integer acumulacionCosto = 3;
-			Map<String, Map<String, Object>> resultPrestamo = obtenerProyecto(idPrestamo,usuario);
+			Map<String, Map<String, Object>> resultPrestamo = obtenerProyecto(idPrestamo,usuario, anoInicial, anoFinal);
 			Integer agrupacion = Utils.String2Int(map.get("agrupacion"));
 			
-			for(Integer actividadId : actividadesCosto){
+			/*for(Integer actividadId : actividadesCosto){
 				Map<String, Object> rowEntity = resultPrestamo.get(actividadId+","+5);
 				
 				if((Integer)rowEntity.get("objetoTipo") == 5 && rowEntity.get("hijos") != ""){
@@ -156,7 +142,7 @@ public class SInformePresupuesto extends HttpServlet {
 						rowEntity = calcular(rowEntity, agrupacion, resultPrestamo, fechaInicioSplit, fechaFinSplit, rowEntity.get("Costo"), rowEntity.get("CostoReal"), acumulacionCosto);
 					}
 				}
-			}
+			}*/
 			
 			List<Map<String, Object>> resultado = new ArrayList<Map<String, Object>>(resultPrestamo.values());
 			
@@ -790,7 +776,7 @@ public class SInformePresupuesto extends HttpServlet {
 		return estructura;
 	}
 
-	private LinkedHashMap<String, Map<String, Object>> obtenerProyecto(int proyectoId, String usuario){
+	private LinkedHashMap<String, Map<String, Object>> obtenerProyecto(int proyectoId, String usuario, Integer ejercicioInicio, Integer ejercicioFin){
 		LinkedHashMap<String, Map<String, Object>> resultado =  new LinkedHashMap<>();
 		List<Map<String, Object>> resultPrestamo = new ArrayList<Map<String, Object>>();
 		String[] hijos = null;
@@ -798,13 +784,40 @@ public class SInformePresupuesto extends HttpServlet {
 		Proyecto proyecto = ProyectoDAO.getProyectoPorId(proyectoId, usuario);
 		
 		if (proyecto!=null){
+			Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(proyectoId, 1);
+			Long codigoPresupuestario = prestamo.getCodigoPresupuestario();
+			
+			Integer fuente = Utils.String2Int(Long.toString(codigoPresupuestario).substring(0,2));
+			Integer organismo = Utils.String2Int(Long.toString(codigoPresupuestario).substring(2,6));
+			Integer correlativo = Utils.String2Int(Long.toString(codigoPresupuestario).substring(6,10));
 			Map<String, Object> estructura = getEstructura();
+			
 			estructura.put("objetoTipo", OBJETO_ID_PROYECTO);
 			estructura.put("posicionArbol", 1);
 			estructura.put("idObjetoTipo", proyecto.getId());
 			estructura.put("nombre", proyecto.getNombre());
 			estructura.put("idPredecesor", 0);
 			estructura.put("objetoTipoPredecesor", 0);
+			
+			for(int i = ejercicioInicio; i <= ejercicioFin; i++){
+				List<Object> objetoPrestamo = ReporteDAO.getPresupuestoProyecto(fuente, organismo, correlativo, i);
+				
+				for(Object obj : objetoPrestamo){
+					Object[] ob = (Object[])obj;
+					estructura.put("mes1r"+"-"+i, ob[0]);
+					estructura.put("mes2r"+"-"+i, ob[1]);
+					estructura.put("mes3r"+"-"+i, ob[2]);
+					estructura.put("mes4r"+"-"+i, ob[3]);
+					estructura.put("mes5r"+"-"+i, ob[4]);
+					estructura.put("mes6r"+"-"+i, ob[5]);
+					estructura.put("mes7r"+"-"+i, ob[6]);
+					estructura.put("mes8r"+"-"+i, ob[7]);
+					estructura.put("mes9r"+"-"+i, ob[8]);
+					estructura.put("mes10r"+"-"+i, ob[9]);
+					estructura.put("mes11r"+"-"+i, ob[10]);
+					estructura.put("mes12r"+"-"+i, ob[11]);
+				}
+			}
 
 			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
 					null, null, null, null, null, usuario);
@@ -826,6 +839,28 @@ public class SInformePresupuesto extends HttpServlet {
 				estructura.put("nombre", componente.getNombre());
 				estructura.put("idPredecesor", proyecto.getId());
 				estructura.put("objetoTipoPredecesor", 1);
+				List<Object> objeto = new ArrayList<Object>();
+				
+				for(int i = ejercicioInicio; i <= ejercicioFin; i++){
+					objeto = ReporteDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, i, componente.getPrograma(), componente.getSubprograma(), componente.getProyecto_1(), componente.getActividad(), componente.getObra());
+					
+					for(Object obj : objeto){
+						Object[] ob = (Object[])obj;
+						estructura.put("mes1r"+"-"+i, ob[0]);
+						estructura.put("mes2r"+"-"+i, ob[1]);
+						estructura.put("mes3r"+"-"+i, ob[2]);
+						estructura.put("mes4r"+"-"+i, ob[3]);
+						estructura.put("mes5r"+"-"+i, ob[4]);
+						estructura.put("mes6r"+"-"+i, ob[5]);
+						estructura.put("mes7r"+"-"+i, ob[6]);
+						estructura.put("mes8r"+"-"+i, ob[7]);
+						estructura.put("mes9r"+"-"+i, ob[8]);
+						estructura.put("mes10r"+"-"+i, ob[9]);
+						estructura.put("mes11r"+"-"+i, ob[10]);
+						estructura.put("mes12r"+"-"+i, ob[11]);
+					}
+				}
+				
 				
 				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
 						null, null, null, null, null, usuario);
@@ -848,6 +883,28 @@ public class SInformePresupuesto extends HttpServlet {
 					estructura.put("nombre", producto.getNombre());
 					estructura.put("idPredecesor", componente.getId());
 					estructura.put("objetoTipoPredecesor", 2);
+							
+					for(int i = ejercicioInicio; i <= ejercicioFin; i++){
+						objeto = ReporteDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, i, producto.getPrograma(), producto.getSubprograma(), producto.getProyecto(), producto.getActividad(), producto.getObra());
+						
+						for(Object obj : objeto){
+							Object[] ob = (Object[])obj;
+							estructura.put("mes1r"+"-"+i, ob[0]);
+							estructura.put("mes2r"+"-"+i, ob[1]);
+							estructura.put("mes3r"+"-"+i, ob[2]);
+							estructura.put("mes4r"+"-"+i, ob[3]);
+							estructura.put("mes5r"+"-"+i, ob[4]);
+							estructura.put("mes6r"+"-"+i, ob[5]);
+							estructura.put("mes7r"+"-"+i, ob[6]);
+							estructura.put("mes8r"+"-"+i, ob[7]);
+							estructura.put("mes9r"+"-"+i, ob[8]);
+							estructura.put("mes10r"+"-"+i, ob[9]);
+							estructura.put("mes11r"+"-"+i, ob[10]);
+							estructura.put("mes12r"+"-"+i, ob[11]);
+						}
+					}
+
+
 					
 					List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
 							null, null, null, null, null, usuario);
@@ -871,6 +928,26 @@ public class SInformePresupuesto extends HttpServlet {
 						estructura.put("idPredecesor", producto.getId());
 						estructura.put("objetoTipoPredecesor", 3);
 						
+						for(int i = ejercicioInicio; i <= ejercicioFin; i++){
+							objeto = ReporteDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, i, subproducto.getPrograma(), subproducto.getSubprograma(), subproducto.getProyecto(), subproducto.getActividad(), subproducto.getObra());
+							
+							for(Object obj : objeto){
+								Object[] ob = (Object[])obj;
+								estructura.put("mes1r"+"-"+i, ob[0]);
+								estructura.put("mes2r"+"-"+i, ob[1]);
+								estructura.put("mes3r"+"-"+i, ob[2]);
+								estructura.put("mes4r"+"-"+i, ob[3]);
+								estructura.put("mes5r"+"-"+i, ob[4]);
+								estructura.put("mes6r"+"-"+i, ob[5]);
+								estructura.put("mes7r"+"-"+i, ob[6]);
+								estructura.put("mes8r"+"-"+i, ob[7]);
+								estructura.put("mes9r"+"-"+i, ob[8]);
+								estructura.put("mes10r"+"-"+i, ob[9]);
+								estructura.put("mes11r"+"-"+i, ob[10]);
+								estructura.put("mes12r"+"-"+i, ob[11]);
+							}
+						}
+						
 						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
 								null, null, null, null, null, usuario);
 						
@@ -888,25 +965,25 @@ public class SInformePresupuesto extends HttpServlet {
 						resultado.put(subproducto.getId()+","+OBJETO_ID_SUBPRODUCTO,estructura);
 						
 						for (Actividad actividad : actividades ){
-							resultado = ObtenerActividades(actividad,usuario,resultPrestamo, OBJETO_ID_ACTIVIDAD,subproducto.getId(), OBJETO_ID_SUBPRODUCTO,resultado);
+							resultado = ObtenerActividades(actividad,usuario,resultPrestamo, OBJETO_ID_ACTIVIDAD,subproducto.getId(), OBJETO_ID_SUBPRODUCTO,resultado, ejercicioInicio, ejercicioFin, proyectoId);
 						}
 					}
 					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
 							null, null, null, null, null, usuario);
 					for (Actividad actividad : actividades ){
-						resultado = ObtenerActividades(actividad,usuario,resultPrestamo,OBJETO_ID_SUBPRODUCTO,producto.getId(), OBJETO_ID_PRODUCTO,resultado);
+						resultado = ObtenerActividades(actividad,usuario,resultPrestamo,OBJETO_ID_SUBPRODUCTO,producto.getId(), OBJETO_ID_PRODUCTO,resultado, ejercicioInicio,ejercicioFin, proyectoId);
 					}
 				}
 				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), OBJETO_ID_COMPONENTE,
 						null, null, null, null, null, usuario);
 				for (Actividad actividad : actividades ){
-					resultado = ObtenerActividades(actividad,usuario,resultPrestamo,OBJETO_ID_PRODUCTO, componente.getId(),OBJETO_ID_COMPONENTE, resultado);
+					resultado = ObtenerActividades(actividad,usuario,resultPrestamo,OBJETO_ID_PRODUCTO, componente.getId(),OBJETO_ID_COMPONENTE, resultado, ejercicioInicio, ejercicioFin,proyectoId);
 				}
 			}
 			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, proyectoId, OBJETO_ID_PROYECTO,
 					null, null, null, null, null, usuario);
 			for (Actividad actividad : actividades ){
-				resultado = ObtenerActividades(actividad,usuario,resultPrestamo,OBJETO_ID_COMPONENTE, proyecto.getId(), OBJETO_ID_PROYECTO, resultado);
+				resultado = ObtenerActividades(actividad,usuario,resultPrestamo,OBJETO_ID_COMPONENTE, proyecto.getId(), OBJETO_ID_PROYECTO, resultado, ejercicioInicio,ejercicioFin,proyectoId);
 			}
 		}
 		
@@ -914,7 +991,7 @@ public class SInformePresupuesto extends HttpServlet {
 	}
 	
 	private LinkedHashMap<String, Map<String, Object>> ObtenerActividades(Actividad actividad, String usuario, List<Map<String, Object>> lstdataEjecutado, int posicionArbol, 
-			int idPredecesor, int objetoTipoPredecesor, LinkedHashMap<String, Map<String, Object>> resultado){
+			int idPredecesor, int objetoTipoPredecesor, LinkedHashMap<String, Map<String, Object>> resultado, Integer ejercicioInicio, Integer ejercicioFin, Integer idPrestamo){
 		
 		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, actividad.getId(), OBJETO_ID_ACTIVIDAD, 
 				null, null,null, null, null, usuario);
@@ -930,6 +1007,33 @@ public class SInformePresupuesto extends HttpServlet {
 			estructura.put("objetoTipoPredecesor", objetoTipoPredecesor);
 			estructura.put("Costo", actividad.getCosto() == null ? new BigDecimal(0) : actividad.getCosto());
 			estructura.put("CostoReal", actividad.getCostoReal() == null ? new BigDecimal(0) : actividad.getCostoReal());
+			
+			Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(idPrestamo, 1);
+			Long codigoPresupuestario = prestamo.getCodigoPresupuestario();
+			
+			Integer fuente = Utils.String2Int(Long.toString(codigoPresupuestario).substring(0,2));
+			Integer organismo = Utils.String2Int(Long.toString(codigoPresupuestario).substring(2,6));
+			Integer correlativo = Utils.String2Int(Long.toString(codigoPresupuestario).substring(6,10));
+			
+			for(int i = ejercicioInicio; i <= ejercicioFin; i++){
+				List<Object> objeto = ReporteDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, i, actividad.getPrograma(), actividad.getSubprograma(), actividad.getProyecto(), actividad.getActividad(), actividad.getObra());
+				
+				for(Object obj : objeto){
+					Object[] ob = (Object[])obj;
+					estructura.put("mes1r"+"-"+i, ob[0]);
+					estructura.put("mes2r"+"-"+i, ob[1]);
+					estructura.put("mes3r"+"-"+i, ob[2]);
+					estructura.put("mes4r"+"-"+i, ob[3]);
+					estructura.put("mes5r"+"-"+i, ob[4]);
+					estructura.put("mes6r"+"-"+i, ob[5]);
+					estructura.put("mes7r"+"-"+i, ob[6]);
+					estructura.put("mes8r"+"-"+i, ob[7]);
+					estructura.put("mes9r"+"-"+i, ob[8]);
+					estructura.put("mes10r"+"-"+i, ob[9]);
+					estructura.put("mes11r"+"-"+i, ob[10]);
+					estructura.put("mes12r"+"-"+i, ob[11]);
+				}
+			}
 			
 			String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad, usuario).split(";");
 
@@ -950,7 +1054,7 @@ public class SInformePresupuesto extends HttpServlet {
 			actividadesCosto.add(actividadId);
 
 			for(Actividad subActividad : actividades){
-				resultado = ObtenerActividades(subActividad, usuario, lstdataEjecutado, posicionArbol + 1, actividadId, OBJETO_ID_ACTIVIDAD, resultado);
+				resultado = ObtenerActividades(subActividad, usuario, lstdataEjecutado, posicionArbol + 1, actividadId, OBJETO_ID_ACTIVIDAD, resultado, ejercicioInicio,ejercicioFin,idPrestamo);
 			}
 		}
 		return resultado;
