@@ -110,7 +110,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 	        	cellTemplate: "<div class=\"ui-grid-cell-contents\" ng-class=\"{'ui-grid-tree-padre': row.hijo.length != 0}\"><div class=\"ui-grid-cell-contents\" title=\"TOOLTIP\"><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.controller.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>",
 	        	footerCellTemplate: '<div class="ui-grid-cell-contents">Total</div>',
 	        	cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
-	        		if(row.entity.hijo.length == 0)
+	        		if(row.entity.hijos.length == 0)
 	        			return "actividad";
 	        		else
 	        			return "padre";
@@ -132,15 +132,11 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 						
 						mesDisplayName = MES_DISPLAY_NAME[i-1];
 						
-						//mi.totales[mesName + "-" + j + "-P"] = 0;
-						//mi.columnaNames.push(mesName + "-" + j + "-P");
-						//mi.columnasDinamicas.push(mesName+ "-" + j + "-P");
-						mi.totales[mesName + "p" + "-" + j] = 0;
-						mi.columnaNames.push(mesName + "p" + "-" + j);
-						mi.columnasDinamicas.push(mesName+ "p" + "-" + j);
+						mi.totales[mesName + "p"] = 0;
+						mi.columnaNames.push(mesName + "p");
+						mi.columnasDinamicas.push(mesName+ "p");
 						mi.cabeceras.push(mesDisplayName);
-						//mi.columnas.push({ name: mesName + "-" + j + "-P", enableCellEdit: false, width: 120, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2', 
-						mi.columnas.push({ name: mesName + "p" + "-" + j, enableCellEdit: false, width: 120, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
+						mi.columnas.push({ name: mesName + "p", enableCellEdit: false, width: 120, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 				        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.getTotal(this) | number:2}}</div>', enableHiding: false, enableGrouping: false, enablePinning: false,
 				        	menuItems: [
 				        		{
@@ -151,15 +147,11 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				        	category: j.toString()
 				        });
 						
-						//mi.totales[mesName + "-" + j + "-R"] = 0;
-						//mi.columnaNames.push(mesName + "-" + j + "-R");
-						//mi.columnasDinamicas.push(mesName + "-" + j + "-R");
-						mi.totales[mesName + "r" + "-" + j] = 0;
-						mi.columnaNames.push(mesName + "r" + "-" + j);
-						mi.columnasDinamicas.push(mesName + "r" + "-" + j);
+						mi.totales[mesName + "r"] = 0;
+						mi.columnaNames.push(mesName + "r");
+						mi.columnasDinamicas.push(mesName + "r");
 						mi.cabeceras.push(mesDisplayName);
-						//mi.columnas.push({ name: mesName + "-" + j + "-R", enableCellEdit: false, width: 120, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2', 
-						mi.columnas.push({ name: mesName + "r" + "-" + j, enableCellEdit: false, width: 120, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
+						mi.columnas.push({ name: mesName + "r", enableCellEdit: false, width: 120, displayName: mesDisplayName, type: 'number', cellFilter:'number:2', footerCellFilter : 'number : 2',
 				        	footerCellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.controller.getTotal(this) | number:2}}</div>', enableHiding: false, enableGrouping: false, enablePinning: false,
 				        	menuItems: [
 				        		{
@@ -650,7 +642,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.gridOptions = {
 				showColumnFooter: true,
 	            cellEditableCondition:function($scope){
-	            	  if($scope.row.entity.objetoTipo == 5 && $scope.row.entity.hijo.length == 0)
+	            	  if($scope.row.entity.objetoTipo == 5 && $scope.row.entity.hijos.length == 0)
 	            		  return true;
 	            	  else
 	            		  return false;
@@ -679,20 +671,20 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			mi.totalR = 0;
 			var columna = "";
 			for(x in mi.columnasDinamicas){
-				if(mi.columnasDinamicas[x].includes("-P")==true){
+				if(mi.columnasDinamicas[x].includes("p")==true){
 					columna = mi.columnasDinamicas[x];
 					mi.totalP += mi.obtenerValor(mi.rowEntity,columna);
-				}else if(mi.columnasDinamicas[x].includes("-R")==true){
+				}else if(mi.columnasDinamicas[x].includes("r")==true){
 					columna = mi.columnasDinamicas[x];
 					mi.totalR += mi.obtenerValor(mi.rowEntity,columna);
 				}
 			}
 			
 			for(x in mi.columnasDinamicas){
-				if(mi.columnasDinamicas[x].includes("-P")==true){
+				if(mi.columnasDinamicas[x].includes("p")==true){
 					columna = mi.columnasDinamicas[x];
 					mi.totales[columna] = mi.rowEntity[columna];
-				}else if(mi.columnasDinamicas[x].includes("-R")==true){
+				}else if(mi.columnasDinamicas[x].includes("r")==true){
 					columna = mi.columnasDinamicas[x];
 					mi.totales[columna] = mi.rowEntity[columna];
 				}

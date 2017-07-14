@@ -63,6 +63,8 @@
         <mapping class="pojo.ObjetoResponsableRol" />
         <mapping class="pojo.ObjetoRiesgo" />
         <mapping class="pojo.ObjetoRiesgoId" />
+        <mapping class="pojo.Pago" />
+        <mapping class="pojo.PlanAdquisiciones" />
         <mapping class="pojo.Permiso" />
         <mapping class="pojo.Prestamo" />
         <mapping class="pojo.ProdtipoPropiedad" />
@@ -108,6 +110,7 @@
         <mapping class="pojo.SubproductoUsuarioId" />
         <mapping class="pojo.TipoMoneda" />
         <mapping class="pojo.UnidadEjecutora" />
+        <mapping class="pojo.UnidadMedida" />
         <mapping class="pojo.Usuario" />
         <mapping class="pojo.UsuarioLog" />
         <mapping class="pojo.UsuarioPermiso" />
