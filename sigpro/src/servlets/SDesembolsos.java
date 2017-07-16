@@ -65,7 +65,7 @@ public class SDesembolsos extends HttpServlet {
 			
 			if (prestamo!=null){
 			
-				List<Object> objDesembolso =DesembolsoDAO.getDesembolsosPorEjercicio(ejercicioFiscal,proyectoId);
+				List<?> objDesembolso =DesembolsoDAO.getDesembolsosPorEjercicio(ejercicioFiscal,proyectoId);
 				Set<Integer> anios = new HashSet<Integer>();
 				
 				Map<Integer,Map<Integer,BigDecimal>> desembolsosPlanificado = new HashMap<>();
@@ -77,7 +77,7 @@ public class SDesembolsos extends HttpServlet {
 					desembolsosPlanificado.get((Integer)((Object[]) obj)[0]).put((Integer)((Object[]) obj)[1], (BigDecimal)((Object[]) obj)[2]);
 				}
 				
-				List<Object> dtmAvance = DataSigadeDAO.getAVANCE_FISFINAN_DET_DTI( prestamo.getCodigoPresupuestario()+"" );
+				List<?> dtmAvance = DataSigadeDAO.getAVANCE_FISFINAN_DET_DTI( prestamo.getCodigoPresupuestario()+"" );
 				
 				Map<BigDecimal,Map<Integer,BigDecimal>> desembolsosReal = new HashMap<>();
 				for(Object obj : dtmAvance){

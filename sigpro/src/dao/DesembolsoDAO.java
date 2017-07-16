@@ -207,8 +207,8 @@ public class DesembolsoDAO {
 		return ret;
 	}
 	
-	public static List<Object> getDesembolsosPorEjercicio(Integer ejercicioFiscal,Integer idProyecto){
-		List<Object> ret= null;
+	public static List<?> getDesembolsosPorEjercicio(Integer ejercicioFiscal,Integer idProyecto){
+		List<?> ret= null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = String.join(" ", "select year (fecha),month(fecha),SUM(monto)"
@@ -217,7 +217,7 @@ public class DesembolsoDAO {
 					,"and estado  = 1"
 					,"GROUP BY year (fecha),month(fecha)",
 					"order by year(fecha),month (fecha) asc");
-			Query  desembolsos = session.createNativeQuery(query);
+			Query<?>  desembolsos = session.createNativeQuery(query);
 			desembolsos.setParameter("idProy", idProyecto);
 			ret = desembolsos.getResultList();
 		}

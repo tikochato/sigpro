@@ -89,7 +89,7 @@ public class SReporte extends HttpServlet {
 			Integer idProducto = Utils.String2Int(map.get("idProducto"),0);
 			Integer idSubProducto = Utils.String2Int(map.get("idSubProducto"),0);
 			
-			List<Object> actividades = ReporteDAO.getActividadesCargaTrabajo(idProyecto, idComponente, idProducto, idSubProducto);
+			List<?> actividades = ReporteDAO.getActividadesCargaTrabajo(idProyecto, idComponente, idProducto, idSubProducto);
 			List<cargaTrabajo> atrasadas = new ArrayList<cargaTrabajo>();
 			List<cargaTrabajo> proceso = new ArrayList<cargaTrabajo>();
 			
@@ -147,14 +147,13 @@ public class SReporte extends HttpServlet {
 			
 			//List<Actividad> actividades = ReporteDAO.getActividadesResponsable(responsableId, usuario);
 			List<stActividades> lstActividades = new ArrayList<stActividades>();
-			List<Object> actividades = ReporteDAO.getActividadesCargaTrabajo(idProyecto, idComponente, idProducto, idSubProducto);
+			List<?> actividades = ReporteDAO.getActividadesCargaTrabajo(idProyecto, idComponente, idProducto, idSubProducto);
 			
 			for(Object obj : actividades){
 				Object[] row = (Object[]) obj;
 				
 				if((Integer)row[3] == responsableId){
 					int idActividad = (Integer)row[0];
-					int porcentajeAvance = (Integer)row[2];
 					
 					Actividad actividad = ActividadDAO.getActividadPorId(idActividad, usuario);
 					String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad, usuario).split(";");
