@@ -370,7 +370,6 @@ input[type='checkbox'] ~ .floating-label {
 
 .floating-label {
   position: absolute;
-  pointer-events: none;
   top: 18px;
   transition: 0.2s ease all;
   border: none;
@@ -387,7 +386,6 @@ input[type='checkbox'] ~ .floating-label {
 .label-form{
 	 font-size: 11px;
 	 opacity: 1;
-	 pointer-events: none;
 	 color: rgba(0,0,0,0.38) !important;
 	 font-weight: bold;
 }

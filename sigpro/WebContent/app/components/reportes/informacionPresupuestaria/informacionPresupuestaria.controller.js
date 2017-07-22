@@ -1,4 +1,4 @@
-var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'ui.grid.edit', 'ui.grid.rowEdit']);
+var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'ui.grid.edit', 'ui.grid.rowEdit', 'smart-table']);
 
 app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion',
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion){
@@ -10,8 +10,9 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.mostrarDescargar = false;
 		mi.mostrarCargando = false;
 		mi.SiguienteActivo = true;
-		mi.AtrasActivo = false;
+		mi.AnteriorActivo = false;
 		mi.agrupacionActual = 1;
+		mi.grupoMostrado= {"planificado":true,"real":true};
 		
 		var AGRUPACION_MES= 1;
 		var AGRUPACION_BIMESTRE = 2;
@@ -38,14 +39,16 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
         var familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'];
 
         $scope.rowCollection = [];
-
+        $scope.datosTabla = [];
+        
         function createRandomItem() {
             var
                 firstName = Math.floor(Math.random() * 100),
                 lastName = Math.floor(Math.random() * 100),
                 age = Math.floor(Math.random() * 100),
                 email = Math.floor(Math.random() * 100),
-                balance = Math.floor(Math.random() * 100);
+                balance = Math.floor(Math.random() * 100),
+            	nombre = nameList[Math.floor(Math.random() * 4)];
 
             return {
                 1: lastName,
@@ -83,7 +86,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
                 33: lastName,
                 34: age,
                 35: email,
-                36: email
+                36: email,
+                nombre: nombre
             };
         }
         
@@ -147,14 +151,14 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				}
 		});
 				
-		mi.atras = function(){
+		mi.anterior = function(){
 			var elemento = document.getElementById("divTablaDatos");
 			if(elemento.scrollLeft > 0){
 				elemento.scrollLeft -= mi.tamanoCabecera;
 				document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCabecera;
 				mi.SiguienteActivo = true;
 				if(elemento.scrollLeft <= 0){
-					mi.AtrasActivo = false;
+					mi.AnteriorActivo = false;
 				}
 			}
 		}
@@ -164,7 +168,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			if(elemento.scrollLeft < ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
 				elemento.scrollLeft += mi.tamanoCabecera;
 				document.getElementById("divCabecerasDatos").scrollLeft += mi.tamanoCabecera;
-				mi.AtrasActivo = true;
+				mi.AnteriorActivo = true;
 				if(elemento.scrollLeft >= ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
 					mi.SiguienteActivo = false;
 				}
@@ -204,7 +208,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 							case 5: mi.totalCabeceras = 2; break;
 							case 6: mi.totalCabeceras = 1; break;
 							}
-							mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth) - 215;
+							mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth) - 200;
 							mi.totalAnios = Number(mi.fechaFin) - Number(mi.fechaInicio) + 1;
 							mi.totalCabecerasAMostrar = $utilidades.getCantidadCabecerasReporte(mi.tamanoPantalla, mi.totalAnios, agrupacion, 90);
 							mi.tamanoCelda = $utilidades.getTamanioColumnaReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabecerasAMostrar);
@@ -269,9 +273,11 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 							
 							mi.mostrarDescargar = true;
 							mi.movimiento = true;
+							$scope.rowCollection = [];
 							for(var i=0;i<50;i++){
 								$scope.rowCollection.push(createRandomItem());
 						    }
+							$scope.datosTabla = [].concat($scope.rowCollection);
 							/////****************************
 							
 						}
