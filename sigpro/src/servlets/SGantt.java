@@ -515,7 +515,7 @@ public class SGantt extends HttpServlet {
 							}
 						}
 						items_subproducto = String.join(items_subproducto.trim().length()>0 ? ",":"", items_subproducto,
-								construirItem(null,subproducto.getId(),OBJETO_ID_SUBPRODUCTO, subproducto.getNombre(),3, true, 
+								construirItem(subproducto.getId(),subproducto.getId(),OBJETO_ID_SUBPRODUCTO, subproducto.getNombre(),3, true, 
 										fechaPrimeraActividad, null,false,null,null,null,null));
 						items_subproducto = items_actividad.trim().length() > 0 ? String.join(",", items_subproducto,items_actividad) : items_subproducto;
 					}
@@ -523,7 +523,7 @@ public class SGantt extends HttpServlet {
 					BigDecimal metaReal = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(1, producto.getId(), OBJETO_ID_PRODUCTO);
 					
 					items_producto = String.join(items_producto.trim().length()>0 ? "," : "",items_producto,
-							construirItem(null,producto.getId(),OBJETO_ID_PRODUCTO, producto.getNombre(),2, true, fechaPrimeraActividad,
+							construirItem(producto.getId(),producto.getId(),OBJETO_ID_PRODUCTO, producto.getNombre(),2, true, fechaPrimeraActividad,
 									null,false,null,null,metaPlanificada,metaReal));
 					items_producto = items_subproducto.trim().length() > 0 ? String.join(",",items_producto, items_subproducto) : items_producto;
 
@@ -532,7 +532,7 @@ public class SGantt extends HttpServlet {
 
 				}
 				items_componente = String.join(items_componente.trim().length()>0 ? "," : "",items_componente,
-						construirItem(null,componente.getId(),OBJETO_ID_COMPONENTE,componente.getNombre(),1, true, fechaPrimeraActividad, 
+						construirItem(componente.getId(),componente.getId(),OBJETO_ID_COMPONENTE,componente.getNombre(),1, true, fechaPrimeraActividad, 
 								null,false,null,null,null,null));
 				items_componente = items_producto.trim().length() > 0 ? String.join(",", items_componente,items_producto) : items_componente;
 
@@ -541,7 +541,7 @@ public class SGantt extends HttpServlet {
 			}
 
 
-			items = String.join(",",construirItem(null,proyecto.getId(),OBJETO_ID_PROYECTO,proyecto.getNombre()
+			items = String.join(",",construirItem(proyecto.getId(),proyecto.getId(),OBJETO_ID_PROYECTO,proyecto.getNombre()
 					,null, true, fechaPrimeraActividad, null,false,null,null,null,null),items_componente);
 			List<Hito> hitos = HitoDAO.getHitosPaginaPorProyecto(0, 0, proyectoId, null, null, null, null, null);
 

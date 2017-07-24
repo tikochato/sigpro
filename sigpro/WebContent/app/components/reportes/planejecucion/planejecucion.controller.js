@@ -26,7 +26,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 	mi.radarOptions = {
 			legend: {
 				display: true,
-				position: 'right'
+				position: 'bottom'
 			}
 	};
 	
@@ -39,7 +39,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 		    [30, 32, 35]  //real
 		  ];
 	  
-	mi.radarColors = ['#b1cad7','#FDB45C']
+	mi.radarColors = ['#0f21cf','#199f0b']
 	
 	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
 			function(response) {
@@ -182,6 +182,12 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 		
 		}
 	}
+	
+	mi.formatoMoneda = function (value) {
+		 if (!isNaN(value))
+			 return numeral(value).format('0,0.00')
+		 else return value;
+	 }
 	
 }]);
 
