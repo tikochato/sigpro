@@ -11,7 +11,10 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.mostrarCargando = false;
 		mi.SiguienteActivo = true;
 		mi.AnteriorActivo = false;
-		mi.agrupacionActual = 1;
+		mi.enMillones = true;
+		mi.agrupacionActual = 1
+		mi.tamanioMinimoColumna = 135;
+		mi.tamanioMinimoColumnaMillones = 80;
 		mi.grupoMostrado= {"planificado":true,"real":true};
 		
 		var AGRUPACION_MES= 1;
@@ -35,20 +38,19 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			$scope.divActivo = id;
 	    }
 		
-		var nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'];
-        var familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'];
-
+		var nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa', 'Dupont', 'Germain', 'Delcourt', 'Erick', 'Menez'];
+        
         $scope.rowCollection = [];
         $scope.datosTabla = [];
         
         function createRandomItem() {
             var
-                firstName = Math.floor(Math.random() * 100),
-                lastName = Math.floor(Math.random() * 100),
-                age = Math.floor(Math.random() * 100),
-                email = Math.floor(Math.random() * 100),
-                balance = Math.floor(Math.random() * 100),
-            	nombre = nameList[Math.floor(Math.random() * 4)];
+                firstName = Math.floor(Math.random() * 1000000000),
+                lastName = Math.floor(Math.random() * 1000000000),
+                age = Math.floor(Math.random() * 1000000000),
+                email = Math.floor(Math.random() * 1000000000),
+                balance = Math.floor(Math.random() * 1000000000),
+            	nombre = nameList[Math.floor(Math.random() * 9)];
 
             return {
                 1: lastName,
@@ -153,24 +155,36 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				
 		mi.anterior = function(){
 			var elemento = document.getElementById("divTablaDatos");
-			if(elemento.scrollLeft > 0){
-				elemento.scrollLeft -= mi.tamanoCabecera;
-				document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCabecera;
+			if(mi.totalCabecerasAMostrar == 0){
+				elemento.scrollLeft -= mi.tamanoCelda;
+				document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCelda;
 				mi.SiguienteActivo = true;
-				if(elemento.scrollLeft <= 0){
-					mi.AnteriorActivo = false;
+			}else{
+				if(elemento.scrollLeft > 0){
+					elemento.scrollLeft -= mi.tamanoCabecera;
+					document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCabecera;
+					mi.SiguienteActivo = true;
+					if(elemento.scrollLeft <= 0){
+						mi.AnteriorActivo = false;
+					}
 				}
 			}
 		}
 		
 		mi.siguiente = function(){
 			var elemento = document.getElementById("divTablaDatos");
-			if(elemento.scrollLeft < ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
-				elemento.scrollLeft += mi.tamanoCabecera;
-				document.getElementById("divCabecerasDatos").scrollLeft += mi.tamanoCabecera;
+			if(mi.totalCabecerasAMostrar == 0){
+				elemento.scrollLeft += mi.tamanoCelda;
+				document.getElementById("divCabecerasDatos").scrollLeft += mi.tamanoCelda;
 				mi.AnteriorActivo = true;
-				if(elemento.scrollLeft >= ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
-					mi.SiguienteActivo = false;
+			}else{
+				if(elemento.scrollLeft < ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
+					elemento.scrollLeft += mi.tamanoCabecera;
+					document.getElementById("divCabecerasDatos").scrollLeft += mi.tamanoCabecera;
+					mi.AnteriorActivo = true;
+					if(elemento.scrollLeft >= ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
+						mi.SiguienteActivo = false;
+					}
 				}
 			}
 		}
@@ -190,6 +204,42 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			}
 		}
 		
+		mi.verificaSeleccionTipo = function(tipo){
+			mi.mostrarCargando = true;
+			if(!mi.grupoMostrado.planificado && !mi.grupoMostrado.real){
+				if(tipo==1){
+					mi.grupoMostrado.real = true;
+				}else{
+					mi.grupoMostrado.planificado = true;
+				}
+			}
+			mi.calcularTamaniosCeldas();
+			mi.mostrarCargando = false;
+		}
+				
+		mi.calcularTamaniosCeldas = function(){
+			var tamanioMinimo = mi.tamanioMinimoColumna;
+			if(mi.enMillones){
+				tamanioMinimo = mi.tamanioMinimoColumnaMillones;
+			}
+			if(mi.grupoMostrado.planificado && mi.grupoMostrado.real){
+				tamanioMinimo = tamanioMinimo * 2;
+			}
+			mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth) - 200;
+			mi.totalAnios = Number(mi.fechaFin) - Number(mi.fechaInicio) + 1;
+			mi.totalCabecerasAMostrar = $utilidades.getCantidadCabecerasReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabeceras, tamanioMinimo);
+			if(mi.totalCabecerasAMostrar == 0){
+				mi.tamanoCelda = tamanioMinimo;
+				mi.tamanoTotal = mi.tamanoPantalla - (mi.tamanoCelda * (mi.totalAnios + 1));
+			}else{
+				mi.tamanoCelda = $utilidades.getTamanioColumnaReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabecerasAMostrar);
+				mi.tamanoTotal = mi.totalCabecerasAMostrar * mi.totalAnios * mi.tamanoCelda;
+			}
+			mi.estiloCelda = "width:"+ mi.tamanoCelda + "px;min-width:"+ mi.tamanoCelda + "px; max-width:"+ mi.tamanoCelda + "px;";
+			mi.tamanoCabecera = mi.totalAnios * mi.tamanoCelda;
+			mi.estiloCabecera = "width:"+ mi.tamanoCabecera + "px;min-width:" + mi.tamanoCabecera +"px; max-width:"+ mi.tamanoCabecera + "px; text-align: center;";
+		}
+		
 		mi.generar = function(agrupacion){
 			if(mi.prestamo.value > 0)
 			{
@@ -199,7 +249,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 						if(agrupacion != 0){
 							//**mi.mostrarCargando = true;
 							mi.agrupacionActual = agrupacion;
-							mi.totalCabeceras = 0;
+							mi.totalCabeceras = 1;
 							switch (agrupacion) {
 							case 1: mi.totalCabeceras = 12; break;
 							case 2: mi.totalCabeceras = 6; break;
@@ -208,14 +258,9 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 							case 5: mi.totalCabeceras = 2; break;
 							case 6: mi.totalCabeceras = 1; break;
 							}
-							mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth) - 200;
-							mi.totalAnios = Number(mi.fechaFin) - Number(mi.fechaInicio) + 1;
-							mi.totalCabecerasAMostrar = $utilidades.getCantidadCabecerasReporte(mi.tamanoPantalla, mi.totalAnios, agrupacion, 90);
-							mi.tamanoCelda = $utilidades.getTamanioColumnaReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabecerasAMostrar);
-							mi.estiloCelda = "width:"+ mi.tamanoCelda + "px;min-width:"+ mi.tamanoCelda + "px; max-width:"+ mi.tamanoCelda + "px;";
-							mi.tamanoTotal = mi.totalCabecerasAMostrar * mi.totalAnios * mi.tamanoCelda;
-							mi.tamanoCabecera = mi.totalAnios * mi.tamanoCelda;
-							mi.estiloCabecera = "width:"+ mi.tamanoCabecera + "px;min-width:" + mi.tamanoCabecera +"px; max-width:"+ mi.tamanoCabecera + "px; text-align: center;";
+							
+							mi.calcularTamaniosCeldas();
+							
 							mi.anios = [];
 							for(var i = mi.fechaInicio; i <= mi.fechaFin; i++){
 								mi.anios.push({ano: i});
@@ -290,7 +335,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		}
 }]);
 
-app.directive('scrollespejo', [function() {
+app.directive('scrollespejo', ['$window', function($window) {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -309,6 +354,13 @@ app.directive('scrollespejo', [function() {
       	          }
       	        }
             });
+            angular.element($window).bind('resize', function(){ 
+                scope.controller.calcularTamaniosCeldas();
+                scope.$digest();
+              });
+            scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
         }
     };
-}]);
+}])
+
+;
