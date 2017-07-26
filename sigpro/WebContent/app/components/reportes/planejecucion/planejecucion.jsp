@@ -30,8 +30,7 @@
 			<div class="col-sm-12 ">
 			
 			<form name="form">
-				<div class="row">
-					<div class="form-group col-sm-12">
+				<div class="form-group" >
 						<select  class="inputText" ng-model="planc.prestamoSeleccionado" 
 							ng-options="a.text for a in planc.prestamos"
 							ng-readonly="true"
@@ -40,30 +39,15 @@
 							<option value="">Seleccione una opción</option>
 							</select>
 						<label for="prestamo" class="floating-label">Préstamos</label>
-					</div>
-					
-					
-					<div class="col-sm-5" ng-if="false">
-						<div class="form-group" >
-						  <input type="text"  class="inputText" uib-datepicker-popup="{{planc.formatofecha}}" ng-model="planc.ejercicioFiscal" is-open="planc.ef_abierto"
-						            datepicker-options="planc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true"  ng-click="planc.abrirPopupFecha(1)"
-						             date-disabled="disabled(date, mode)"
-						            ng-value="planc.ejercicioFiscal" onblur="this.setAttribute('value', this.value);"/>
-						            <span class="label-icon" ng-click="planc.abrirPopupFecha(1)">
-						              <i class="glyphicon glyphicon-calendar"></i>
-						            </span>
-						  <label  class="floating-label">Ejercicio fiscal</label>
-						</div>
-					</div>
 				</div>
 			</form>
 				
 			
 				<div class="panel panel-default" ng-hide="!planc.mostrar">
+					
 					<div class="panel-body">
 					<div class = "table-responsive">
-						<table class="table table-condensed borderless"
-						 style="width: 50%" align="left">
+						<table class="table table-condensed borderless" >
 							<tr>
 	   							<td style="width: 40%" >
 	   								<label class="label-form1" >Mes Reportado</label>	

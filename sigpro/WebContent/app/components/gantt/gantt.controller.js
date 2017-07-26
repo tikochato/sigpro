@@ -13,6 +13,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.proyectoid = "";
 		mi.proyectoNombre = "";
 		mi.objetoTipoNombre = "";
+		mi.mostrarcargando = true;
 		var date = new Date(), year = date.getFullYear(), month = date.getMonth();
 
 		$window.document.title = $utilidades.sistema_nombre+' - Gantt';
@@ -61,21 +62,38 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		    }
 		};
 		
-		mi.getOjbetoTipo = function (objetoTipo) {
-		    switch (objetoTipo) {
+		mi.getOjbetoTipo = function (item) {
+		    switch (item.objetoTipo) {
 		        case '1':
-		            return 'P';
+		            return 'glyphicon glyphicon-record';
 		        case '2':
-		            return 'C';
+		            return 'glyphicon glyphicon-th';
 		        case '3':
-		            return 'Pr';
+		            return 'glyphicon glyphicon-certificate';
 		        case '4':
-		            return 'S';
+		            return 'glyphicon glyphicon-link';
 		        case '5':
-		            return 'A';
+		            return 'glyphicon glyphicon-th-list';
 		    }
 		};
 		
+		
+		mi.getOjbetoTipoNombre = function (item) {
+		    switch (item.objetoTipo) {
+		        case '1':
+		            return 'Proyecto';
+		        case '2':
+		            return 'Componente';
+		        case '3':
+		            return 'Producto';
+		        case '4':
+		            return 'Subproducto';
+		        case '5':
+		            return 'Actividad';
+		    }
+		};
+		
+
 		
 		
 		var settings = { 
@@ -107,9 +125,6 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		
 		
 		//
-		
-		
-		
 		// Default Columns
 		var columns = DlhSoft.Controls.GanttChartView.getDefaultColumns(items, settings);
 		
@@ -140,12 +155,16 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		
 		
 		columns.splice(2, 0, {
-		    header: 'Tipo', width: 30,
+		    header: 'Tipo', width: 40,
 		    cellTemplate: function (item) {
-		        return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return mi.getOjbetoTipo(item.objetoTipo); });
+		        var rectangle = document.createElement('div');
+		        rectangle.setAttribute('class', mi.getOjbetoTipo(item));
+		        rectangle.setAttribute('data-toggle', 'tooltip');
+		        rectangle.setAttribute('title', mi.getOjbetoTipoNombre(item));
+		        
+		        return rectangle;
 		    }
 		});
-		
 		
 		
 		columns.splice(4, 0, {
@@ -165,8 +184,9 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		    }
 		});
 		
-		columns.splice(9,0);
 		
+		
+		columns.splice(9,0);
 		columns[3].header = 'Nombre';
 		columns[3].width = 300;
 		
@@ -185,13 +205,6 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		columns.push({ header: 'Costo Planificado (Q)', width: 110, cellTemplate: DlhSoft.Controls.GanttChartView.getCostColumnTemplate(84) });
 		columns.push({ header: 'Meta Planificada', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaPlanificada; }, function (value) { item.metaPlanificada = value; }); } });
 		columns.push({ header: 'Meta Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaReal; }, function (value) { item.metaReal = value; }); } });
-		columns.push({ header: 'Inicio Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.inicioReal; }, function (value) { item.inicioReal = value; }); } });
-		columns.push({ header: 'Fin Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.finReal; }, function (value) { item.finReal = value; }); } });		
-		columns.push({ header: 'Presupuesto Aprobado', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.presupuestoAprobado; }, function (value) { item.presupuestoAprobado = value; }); } });
-		columns.push({ header: 'Presupuesto Devengado', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.presupuestoDevengado; }, function (value) { item.presupuestoDevengado = value; }); } });
-		columns.push({ header: 'Avance Financiero', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.avanceFinanciero; }, function (value) { item.avanceFinanciero = value; }); } });
-		columns.push({ header: 'Inversión nueva S/N', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.inversionNueva; }, function (value) { item.presupuestoAprobado = inversionNueva; }); } });
-		
 		
 		
 		for(var i=0; i<columns.length;i++)
@@ -278,6 +291,8 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 							}
 						}
 					}
+					
+					mi.mostrarcargando = false;
 		});	
 		
 		mi.zoomAcercar = function(){
