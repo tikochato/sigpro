@@ -32,7 +32,40 @@ app.provider('Utilidades', function() {
 					return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/
 							.test(correo);
 				}
+				
+				dataFactory.getCantidadCabecerasReporte = function(areaReporte, totalAnios, totalCabeceras, tamanioMinimoColumna){
+					while (totalCabeceras>0){
+						var columnasAMostrar = (totalCabeceras * totalAnios) + totalAnios + 1;
+						var tamanioColumna = (areaReporte / columnasAMostrar);
+						if (tamanioColumna > tamanioMinimoColumna){
+							return totalCabeceras;
+						}else{
+							totalCabeceras--;
+						}
+					}
+					return totalCabeceras;
+				}
+				
+				dataFactory.getTamanioColumnaReporte = function(areaReporte, totalAnios, cabecerasAMostrar){
+					var columnasAMostrar = (cabecerasAMostrar * totalAnios) + totalAnios + 1;
+					var tamanioPropuesto = (areaReporte / columnasAMostrar);
+                    return Math.floor(tamanioPropuesto);
+				}
 
 				return dataFactory;
 			} ];
-});
+})
+
+app.filter('formatoMillones', function() {
+    return function(numero, millones) {
+    	if(numero){
+	        if(millones){
+	        	var res = ((numero/1000000).toFixed(2));
+	        	return ('Q '+res.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+	        }
+	        return ('Q '+ (numero.toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    	}
+    };
+})
+
+;

@@ -154,10 +154,11 @@ public class SPrestamoMetas extends HttpServlet {
 			Integer proyectoId = map.get("proyectoid")!=null ? Integer.parseInt(map.get("proyectoid")) : 0;
 			
 			List<stproductometa> lstproductometas = obtenerMetasPorProducto(proyectoId, usuario);
-			
+						
 			response_text=new GsonBuilder().serializeNulls().create().toJson(lstproductometas);
 	        response_text = String.join("", "\"proyectometas\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+	        
 	        
 	        response.setHeader("Content-Encoding", "gzip");
 			response.setCharacterEncoding("UTF-8");
@@ -177,7 +178,7 @@ public class SPrestamoMetas extends HttpServlet {
 			metavalor.unidadMedidaId = map.get("unidadMedidaId")!=null ? Integer.parseInt(map.get("unidadMedidaId")) : 0; 
 			metavalor.objetoId = map.get("objetoId")!=null ? Integer.parseInt(map.get("objetoId")) : 0;
 			metavalor.objetoTipoId = map.get("objetoTipoId")!=null ? Integer.parseInt(map.get("objetoTipoId")) : 0;
-			
+						
 			metavalor = guardarProductoMetaValor(metavalor, usuario);
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(metavalor);
@@ -467,6 +468,8 @@ public class SPrestamoMetas extends HttpServlet {
 		}
 		return exito;
 	}
+	
+	
 	
 	private byte[] exportarExcel(int proyectoId, int anioInicio, int anioFin, int agrupacion, String filas, String columnas, String usuario) throws IOException{
 		byte [] outArray = null;
