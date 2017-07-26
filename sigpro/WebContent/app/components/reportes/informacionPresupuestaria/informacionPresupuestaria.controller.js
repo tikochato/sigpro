@@ -4,8 +4,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion){
 		var mi = this;
 		i18nService.setCurrentLang('es');
-		mi.fechaInicio = 2014;
-		mi.fechaFin = 2016;
+		mi.fechaInicio = "";
+		mi.fechaFin = "";
 		mi.movimiento = false;
 		mi.mostrarDescargar = false;
 		mi.mostrarCargando = false;
@@ -13,9 +13,11 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.AnteriorActivo = false;
 		mi.enMillones = true;
 		mi.agrupacionActual = 1
-		mi.tamanioMinimoColumna = 135;
-		mi.tamanioMinimoColumnaMillones = 80;
+		mi.limiteAnios = 5;
+		mi.tamanioMinimoColumna = 125;
+		mi.tamanioMinimoColumnaMillones = 75;
 		mi.grupoMostrado= {"planificado":true,"real":true};
+		mi.estiloAlineacion="text-align: center;";
 		
 		var AGRUPACION_MES= 1;
 		var AGRUPACION_BIMESTRE = 2;
@@ -31,7 +33,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		var SEMESTRE_DISPLAY_NAME = ['Semestre 1','Semestre 2'];
 		var ANUAL_DISPLAY_NAME = ['Anual'];
 		
-		//**************************************************
+		//**TODO: quitar generación dinamica de informacion
+		//////////////////////**************************************************
 		
 		$scope.divActivo = "";
 		mi.activarScroll = function(id){
@@ -95,7 +98,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
         
         $scope.columns=['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36'];
                 
-        //**************************************************
+        //**************************************************////////////////////
 		
 		mi.agrupaciones = [
 			{'value' : 0, 'text' : 'Seleccione una opción'},
@@ -189,13 +192,20 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			}
 		}
 		
-		mi.validar = function(){
+		mi.validar = function(noElemento){
 			if(mi.prestamo.value > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
 						mi.fechaFin != null && mi.fechaFin.toString().length == 4)
 				{
 					if (mi.fechaFin >= mi.fechaInicio){
+						if(noElemento && noElemento == 2 && (mi.fechaFin - mi.fechaInicio)>mi.limiteAnios){ //fechaInicio
+							mi.fechaInicio = mi.fechaFin - mi.limiteAnios;
+							$utilidades.mensaje('warning','La diferencia de años no puede ser mayor a '+mi.limiteAnios);
+						}else if(noElemento && noElemento == 3 && (mi.fechaFin - mi.fechaInicio)>mi.limiteAnios){ //fechaFin
+							mi.fechaFin = mi.fechaInicio + mi.limiteAnios;
+							$utilidades.mensaje('warning','La diferencia de años no puede ser mayor a '+mi.limiteAnios);
+						}
 						mi.generar(mi.agrupacionActual);
 					}else{
 						$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
@@ -206,6 +216,11 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		
 		mi.verificaSeleccionTipo = function(tipo){
 			mi.mostrarCargando = true;
+			if(mi.grupoMostrado.planificado && mi.grupoMostrado.real){
+				mi.estiloAlineacion="text-align: center;";
+			}else{
+				mi.estiloAlineacion="text-align: right; padding-right:15px;";
+			}
 			if(!mi.grupoMostrado.planificado && !mi.grupoMostrado.real){
 				if(tipo==1){
 					mi.grupoMostrado.real = true;
@@ -231,6 +246,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			if(mi.totalCabecerasAMostrar == 0){
 				mi.tamanoCelda = tamanioMinimo;
 				mi.tamanoTotal = mi.tamanoPantalla - (mi.tamanoCelda * (mi.totalAnios + 1));
+				if(mi.tamanoTotal<0){mi.tamanoTotal=0;}
 			}else{
 				mi.tamanoCelda = $utilidades.getTamanioColumnaReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabecerasAMostrar);
 				mi.tamanoTotal = mi.totalCabecerasAMostrar * mi.totalAnios * mi.tamanoCelda;
@@ -247,7 +263,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				{
 					if (mi.fechaFin >= mi.fechaInicio){
 						if(agrupacion != 0){
-							//**mi.mostrarCargando = true;
+							//**TODO: mostrar Cargando
+							//mi.mostrarCargando = true;
 							mi.agrupacionActual = agrupacion;
 							mi.totalCabeceras = 1;
 							switch (agrupacion) {
@@ -313,8 +330,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 							}
 							
 							
-														
-							/////****************************
+							//**TODO: quitar generación dinamica de informacion							
+							//////////////////****************************
 							
 							mi.mostrarDescargar = true;
 							mi.movimiento = true;
@@ -323,8 +340,14 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 								$scope.rowCollection.push(createRandomItem());
 						    }
 							$scope.datosTabla = [].concat($scope.rowCollection);
-							/////****************************
+							//****************************/////////////////////
 							
+							var elemento = document.getElementById("divTablaDatos");
+							if(elemento.scrollLeft >= ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
+								mi.SiguienteActivo = false;
+							}else{
+								mi.SiguienteActivo = true;
+							}
 						}
 					}else
 						$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');

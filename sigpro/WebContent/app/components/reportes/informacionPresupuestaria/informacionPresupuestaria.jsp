@@ -36,6 +36,11 @@
 		    overflow-y: scroll;
 		    overflow-x: hidden;
 		    display: inline-block;
+		    font-size: 13px;
+		}
+				
+		.bordeIzquierda{
+		    border-left: 3px double #ccc!important;
 		}
 		
 		.cuerpoTablaDatos {
@@ -43,6 +48,7 @@
 		    overflow-x: hidden;
 		    display: inline-block;
 		    text-align: center;
+		    font-size: 13px;
 		}
 		
 		.tablaDatos {
@@ -50,6 +56,22 @@
 		    flex-direction: column;
 		    align-items: stretch;
 		    height: 375px; 
+		}
+		
+		.colorPlanificado{
+			color: #303f9e;
+		}
+		
+		.colorReal{
+			color: #257129;
+		}
+		
+		.colorPlanificadoFondo{
+			background-color: #303f9e;
+		}
+		
+		.colorRealFondo{
+			background-color: #257129;
 		}
 		
 		.theadDatos {
@@ -65,6 +87,25 @@
 		    opacity: 1;
 		    color: rgba(0,0,0,0.38) !important;
 		    font-weight: bold;
+		}
+		
+		.leyendaTexto {
+		    text-align: right;
+		}
+		
+		.leyendaTexto li {
+		    display: inline-block;
+		    position: relative;
+		    padding: 1px 8px 1px 15px;
+		    font-size: smaller;
+		}
+		
+		.leyendaTexto li span {
+		    position: absolute;
+		    left: 0;
+		    width: 12px;
+		    height: 12px;
+		    border-radius: 4px;
 		}
 		
 	</style>
@@ -86,50 +127,51 @@
 					<div class="form-group col-sm-3">
 						<select  class="inputText" ng-model="controller.prestamo"
 							ng-options="a.text for a in controller.prestamos"
-							ng-change="controller.validar()"></select>
+							ng-change="controller.validar(1)"></select>
 						<label for="prestamo" class="floating-label">Préstamos</label>
 					</div>
 					
 					<div class="form-group col-sm-1">
 						<input type="number"  class="inputText" ng-model="controller.fechaInicio" maxlength="4" 
 						ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
-						ng-change="controller.validar()"/>
+						ng-change="controller.validar(2)"/>
 					  	<label for="campo.id" class="floating-label">*Año Inicial</label>
 					</div>
 					
 					<div class="form-group col-sm-1">
 						<input type="number"  class="inputText" ng-model="controller.fechaFin" maxlength="4" 
 						ng-value="controller.fechaFin" onblur="this.setAttribute('value', this.value);"
-						ng-change="controller.validar()"/>
+						ng-change="controller.validar(3)"/>
 					  	<label for="campo.id" class="floating-label">*Año Final</label>
 					</div>
 					<div class="col-sm-7" align="right" ng-hide="!controller.mostrarDescargar">
 						<div class="form-group col-sm-1">
 						</div>
 						<div class="col-sm-11">
-						    <div class="form-group col-sm-1">
-								<input type="checkbox" ng-model="controller.enMillones" class="ng-pristine ng-untouched ng-valid ng-not-empty"
-								ng-change="controller.calcularTamaniosCeldas()">
-						  		<label class="floating-label">Millones</label>
+							<div class="btn-group">
+								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="true" ng-click="controller.calcularTamaniosCeldas()" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
+								<span>MQ</span></label>
+								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="false" ng-click="controller.calcularTamaniosCeldas()" uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false">
+								<span>Q</span></label>
 							</div>
-							<div class=" btn-group " style="">
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="1" ng-click="controller.generar(1)" uib-tooltip="Mensual" role="button" tabindex="0" aria-invalid="false">
+							<div class="btn-group" style="padding-left: 20px;">
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="1" ng-click="controller.generar(1)" uib-tooltip="Mensual" role="button" tabindex="1" aria-invalid="false">
 								<span>M</span></label>
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="2" ng-click="controller.generar(2)" uib-tooltip="Bimestre" role="button" tabindex="1" aria-invalid="false">
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="2" ng-click="controller.generar(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
 								<span>B</span></label>
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="3" ng-click="controller.generar(3)" uib-tooltip="Trimestre" role="button" tabindex="2" aria-invalid="false">
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="3" ng-click="controller.generar(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
 								<span>T</span></label>
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="4" ng-click="controller.generar(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="3" aria-invalid="false">
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="4" ng-click="controller.generar(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
 								<span>C</span></label>
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="5" ng-click="controller.generar(5)" uib-tooltip="Semestre" role="button" tabindex="4" aria-invalid="false">
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="5" ng-click="controller.generar(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
 								<span>S</span></label>
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="6" ng-click="controller.generar(6)" uib-tooltip="Anual" role="button" tabindex="5" aria-invalid="false">
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="6" ng-click="controller.generar(6)" uib-tooltip="Anual" role="button" tabindex="6" aria-invalid="false">
 								<span>A</span></label>
 							</div>
-							<div class=" btn-group" style="padding-left: 20px;">
-								<label class="btn btn-default" ng-model="controller.grupoMostrado.planificado"  uib-btn-checkbox ng-change="controller.verificaSeleccionTipo(1)" uib-tooltip="Planificado" role="button" tabindex="6" aria-invalid="false">
+							<div class="btn-group" style="padding-left: 20px;">
+								<label class="btn btn-default" ng-model="controller.grupoMostrado.planificado"  uib-btn-checkbox ng-click="controller.verificaSeleccionTipo(1)" uib-tooltip="Planificado" role="button" tabindex="7" aria-invalid="false">
 								<span>P</span></label>
-								<label class="btn btn-default" ng-model="controller.grupoMostrado.real"  uib-btn-checkbox ng-change="controller.verificaSeleccionTipo(2)" uib-tooltip="Real" role="button" tabindex="7" aria-invalid="false">
+								<label class="btn btn-default" ng-model="controller.grupoMostrado.real"  uib-btn-checkbox ng-click="controller.verificaSeleccionTipo(2)" uib-tooltip="Real" role="button" tabindex="8" aria-invalid="false">
 								<span>R</span></label>
 	    					</div>
 							<div class="btn-group" style="padding-left: 20px;">
@@ -177,58 +219,63 @@
 				         				<th colspan={{controller.colspan}} style="{{controller.estiloCabecera}}" ng-repeat="m in controller.objetoMostrar" class="label-form">{{m.nombreMes}}</th>
 				          			</tr>
 				          			<tr>
-				          				<th ng-repeat="a in controller.aniosfinales" style="{{controller.estiloCelda}} text-align: right; padding-right:15px;" class="label-form">{{a.ano}}</th>
+				          				<th ng-repeat="a in controller.aniosfinales" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}" class="label-form">{{a.ano}}</th>
 							        </tr>
 								</thead>
 								<tbody class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo>
 							      	<tr ng-repeat="row in rowCollection">
-							      		<td ng-repeat="col in columns" style="{{controller.estiloCelda}} padding-right:15px;">
-							      			<span ng-show="controller.grupoMostrado.planificado" style="color: #303f9e;">{{row[col] | formatoMillones : controller.enMillones}}</span>
+							      		<td ng-repeat="col in columns" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
+							      			<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{row[col] | formatoMillones : controller.enMillones}}</span>
 							      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real" > | </span>
-							      			<span ng-show="controller.grupoMostrado.real" style="color: #009588;">{{row[col] | formatoMillones : controller.enMillones}}</span>
+							      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{row.enero[col] | formatoMillones : controller.enMillones}}</span>
 							      		</td>
 							      	</tr>
 								</tbody>
 							</table>
 						</div>
-						</div>
-			    		<div class="divTabla">
-			    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos">
-								<thead class="theadDatos">
-									<tr>
-				          				<th colspan={{controller.colspan}} style="{{controller.estiloCelda}} text-align: center;" class="label-form">Total Anual</th>
-				          				<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Total</th>
-				          			</tr>
-				          			<tr>
-				          				<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} text-align: right;" class="label-form">{{a.ano}}</th>
-							        </tr>
-								</thead>
-								<tbody class="cuerpoTablaNombres" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')" scrollespejo>
-									<tr ng-repeat="row in rowCollection">
-										<td ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} text-align: center;">
-											<span ng-show="controller.grupoMostrado.planificado" style="color: #303f9e;">{{row[1] | formatoMillones : controller.enMillones}}</span>
-							      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real" > | </span>
-							      			<span ng-show="controller.grupoMostrado.real" style="color: #009588;">{{row[1] | formatoMillones : controller.enMillones}}</span>
-										</td>
-							      		<td style="{{controller.estiloCelda}} text-align: center;">
-							      			<span ng-show="controller.grupoMostrado.planificado" style="color: #303f9e;">{{row[4] | formatoMillones : controller.enMillones}}</span>
-							      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real" > | </span>
-							      			<span ng-show="controller.grupoMostrado.real" style="color: #009588;">{{row[4] | formatoMillones : controller.enMillones}}</span>
-							      		</td>
-							      	</tr>
-								</tbody>
-							</table>
-			    		</div>
+					</div>
+		    		<div class="divTabla">
+		    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos">
+							<thead class="theadDatos">
+								<tr>
+			          				<th nowrap colspan={{controller.colspan}} style="{{controller.estiloCelda}} text-align: center;" class="label-form">Total Anual</th>
+			          				<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Total</th>
+			          			</tr>
+			          			<tr>
+			          				<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.ano}}</th>
+						        </tr>
+							</thead>
+							<tbody class="cuerpoTablaNombres bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')" scrollespejo>
+								<tr ng-repeat="row in rowCollection">
+									<td ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
+										<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{row[1] | formatoMillones : controller.enMillones}}</span>
+						      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real" > | </span>
+						      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{row[1] | formatoMillones : controller.enMillones}}</span>
+									</td>
+						      		<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
+						      			<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{row[4] | formatoMillones : controller.enMillones}}</span>
+						      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real" > | </span>
+						      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{row[4] | formatoMillones : controller.enMillones}}</span>
+						      		</td>
+						      	</tr>
+							</tbody>
+						</table>
+		    		</div>
 				</div>
 	    	</div>
 	    	<div style="text-align: center;">
-	    	<br>
-					<label class="btn btn-default" ng-click="controller.anterior()" uib-tooltip="Anterior" ng-hide="!controller.movimiento" 
-							tooltip-placement="bottom" ng-disabled="!controller.AnteriorActivo">
-					<span class="glyphicon glyphicon-chevron-left"></span></label>
-					<label class="btn btn-default" ng-click="controller.siguiente()" uib-tooltip="Siguiente" ng-hide="!controller.movimiento"
-							tooltip-placement="bottom" ng-disabled="!controller.SiguienteActivo">
-					<span class="glyphicon glyphicon-chevron-right"></span></label>
+	    		<br>
+	    		<ol class="leyendaTexto"  ng-hide="!controller.mostrarDescargar">
+					<li ng-show="controller.grupoMostrado.planificado"><span class="colorPlanificadoFondo"></span>Planificado</li>
+			        <li ng-show="controller.grupoMostrado.real"><span class="colorRealFondo"></span>Real</li>
+				</ol>
+				<br>
+				<label class="btn btn-default" ng-click="controller.anterior()" uib-tooltip="Anterior" ng-hide="!controller.movimiento" 
+						tooltip-placement="bottom" ng-disabled="!controller.AnteriorActivo">
+				<span class="glyphicon glyphicon-chevron-left"></span></label>
+				<label class="btn btn-default" ng-click="controller.siguiente()" uib-tooltip="Siguiente" ng-hide="!controller.movimiento"
+						tooltip-placement="bottom" ng-disabled="!controller.SiguienteActivo">
+				<span class="glyphicon glyphicon-chevron-right"></span></label>
 	    	</div>
     	</div>
     </div>
