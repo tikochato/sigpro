@@ -27,7 +27,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 					mi.objetoTipoNombre = $routeParams.objeto_tipo == 1 ? "Proyecto" : "Programa";
 		});
 		
-		mi.zoom = 2.5;
+		mi.zoom = 2.0;
 		var date = new Date(), year = date.getFullYear(), month = date.getMonth();
 		var items=[];
 		
@@ -125,14 +125,17 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		columns[1].header = 'Nombre';
 		columns[1].width = 300;
 		columns[4].header = 'Inicio';
+		columns[4].width = 85;
 		columns[5].header = 'Fin';
+		columns[5].width = 85;
 		columns[6].header = 'Hito';
+		columns[6].width = 60;
 		columns[6].isReadOnly = true;
 		columns[7].header = 'Completada';
 		columns[8].header = 'Responsable';
 		columns[8].isReadOnly = true;
 		columns.splice(9, 0, { header: 'Duración (d)', width: 80, cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(64, 8) });
-		columns.splice(10 , 0, { header: 'Prdecesor', width: 70, cellTemplate: DlhSoft.Controls.GanttChartView.getPredecessorsColumnTemplate(84) });
+		columns.splice(10 , 0, { header: 'Predecesor', width: 70, cellTemplate: DlhSoft.Controls.GanttChartView.getPredecessorsColumnTemplate(84) });
 		columns.push({ header: 'Costo Planificado (Q)', width: 110, cellTemplate: DlhSoft.Controls.GanttChartView.getCostColumnTemplate(84) });
 		columns.push({ header: 'Meta Planificada', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaPlanificada; }, function (value) { item.metaPlanificada = value; }); } });
 		columns.push({ header: 'Meta Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaReal; }, function (value) { item.metaReal = value; }); } });

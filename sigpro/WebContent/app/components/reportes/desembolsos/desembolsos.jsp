@@ -9,8 +9,16 @@
 		 font-weight: bold;
 	}
 	 table.borderless td,table.borderless th{
-     border: none !important;
+     	border: none !important;
 	}
+	.planificado {
+		background-color: #d9edf7 !important;
+	}
+	
+	.real {
+		background-color: #ffd7c4 !important;
+	}
+	
 </style>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
@@ -67,6 +75,15 @@
 			<br/> 
 			
 			<div class="row" ng-hide="!desembolsosc.mostrar" >
+			<div class="form-group col-sm-2">
+						<select class="inputText" ng-model="desembolsosc.agrupacion"
+							ng-options="a.id as a.nombre for a in desembolsosc.agrupaciones "
+							ng-readonly="true"
+							ng-change = "desembolsosc.asignarSerie()"
+							>
+						</select>
+					    <label for="nombre" class="floating-label">* Agrupación</label>
+				</div>
 				<div class="form-group col-sm-2">
 						<select class="inputText" ng-model="desembolsosc.anioSeleccionado"
 							ng-options="a.id as a.nombre for a in desembolsosc.anios "
@@ -90,27 +107,16 @@
 				ng-hide="!desembolsosc.mostrar">
 				<thead>
 				<tr >
-					<th ng-repeat="n in desembolsosc.columnas track by $index">
+					<th ng-repeat="n in desembolsosc.columnas track by $index" style="text-align: center">
 					{{n}}
 					</th>
 				</tr>
 				</thead>
 				<tbody>
-				<tr ng-repeat="row in desembolsosc.tabla" style="text-align: right;">
-					<td class="info" style="font-weight: bold;">{{row[12]}}</td>
-					<td>{{ desembolsosc.formato1(row[0]) }}</td>
-					<td>{{ desembolsosc.formato1(row[1]) }}</td>
-					<td>{{ desembolsosc.formato1(row[2]) }}</td>
-					<td>{{ desembolsosc.formato1(row[3]) }}</td>
-					<td>{{ desembolsosc.formato1(row[4]) }}</td>
-					<td>{{ desembolsosc.formato1(row[5]) }}</td>
-					<td>{{ desembolsosc.formato1(row[6]) }}</td>
-					<td>{{ desembolsosc.formato1(row[7]) }}</td>
-					<td>{{ desembolsosc.formato1(row[8]) }}</td>
-					<td>{{ desembolsosc.formato1(row[9]) }}</td>
-					<td>{{ desembolsosc.formato1(row[10]) }}</td>
-					<td>{{ desembolsosc.formato1(row[11]) }}</td>
-					<td class="info">{{ desembolsosc.formato1(row[13]) }}</td>
+				<tr class = "{{desembolsosc.clase($index)}}" ng-repeat="row in desembolsosc.tabla track by $index" style="text-align: right;">
+					<td ng-repeat = "col in row track by $index"
+					 	 style="font-weight: bold;">{{desembolsosc.formato1(col)}}
+					 </td>
 				</tr>
 				</tbody>
 			</table>

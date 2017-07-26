@@ -1,5 +1,5 @@
 package pojo;
-// Generated 10/07/2017 08:10:09 AM by Hibernate Tools 5.2.3.Final
+// Generated Jul 13, 2017 10:05:07 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -22,6 +22,10 @@ import javax.persistence.TemporalType;
 @Table(name = "pago", catalog = "sipro")
 public class Pago implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1394846409938022297L;
 	private Integer id;
 	private PlanAdquisiciones planAdquisiciones;
 	private Date fechaPago;
@@ -36,15 +40,17 @@ public class Pago implements java.io.Serializable {
 	public Pago() {
 	}
 
-	public Pago(PlanAdquisiciones planAdquisiciones, Date fechaPago, String usuarioCreo, Date fechaCreacion) {
+	public Pago(PlanAdquisiciones planAdquisiciones, Date fechaPago, String descripcion, String usuarioCreo,
+			Date fechaCreacion) {
 		this.planAdquisiciones = planAdquisiciones;
 		this.fechaPago = fechaPago;
+		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public Pago(PlanAdquisiciones planAdquisiciones, Date fechaPago, BigDecimal pago, String descripcion,String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado) {
+	public Pago(PlanAdquisiciones planAdquisiciones, Date fechaPago, BigDecimal pago, String descripcion,
+			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado) {
 		this.planAdquisiciones = planAdquisiciones;
 		this.fechaPago = fechaPago;
 		this.pago = pago;
@@ -96,8 +102,8 @@ public class Pago implements java.io.Serializable {
 	public void setPago(BigDecimal pago) {
 		this.pago = pago;
 	}
-	
-	@Column(name = "descripcion")
+
+	@Column(name = "descripcion", nullable = false, length = 100)
 	public String getDescripcion() {
 		return this.descripcion;
 	}

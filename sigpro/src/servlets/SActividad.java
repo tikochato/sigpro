@@ -167,13 +167,6 @@ public class SActividad extends HttpServlet {
 				temp.costoReal = actividad.getCostoReal();
 				temp.acumulacionCostoId = actividad.getAcumulacionCosto().getId();
 				temp.acumulacionCostoNombre = actividad.getAcumulacionCosto().getNombre();
-				temp.fechaInicioReal= Utils.formatDate(actividad.getFechaInicioReal());
-				temp.fechaFinReal= Utils.formatDate(actividad.getFechaFinReal());
-				temp.presupuestoModificado= actividad.getPresupuestoModificado();
-				temp.presupuestoPagado= actividad.getPresupuestoPagado();
-				temp.presupuestoVigente= actividad.getPresupuestoVigente();
-				temp.presupuestoDevengado= actividad.getPresupuestoDevengado();
-				temp.avanceFinanciero= actividad.getAvanceFinanciero();
 
 				stactividads.add(temp);
 			}
@@ -210,13 +203,6 @@ public class SActividad extends HttpServlet {
 				temp.costoReal = actividad.getCostoReal();
 				temp.acumulacionCostoId = actividad.getAcumulacionCosto().getId();
 				temp.acumulacionCostoNombre = actividad.getAcumulacionCosto().getNombre();
-				temp.fechaInicioReal= Utils.formatDate(actividad.getFechaInicioReal());
-				temp.fechaFinReal= Utils.formatDate(actividad.getFechaFinReal());
-				temp.presupuestoModificado= actividad.getPresupuestoModificado();
-				temp.presupuestoPagado= actividad.getPresupuestoPagado();
-				temp.presupuestoVigente= actividad.getPresupuestoVigente();
-				temp.presupuestoDevengado= actividad.getPresupuestoDevengado();
-				temp.avanceFinanciero= actividad.getAvanceFinanciero();
 				stactividads.add(temp);
 			}
 
@@ -252,14 +238,7 @@ public class SActividad extends HttpServlet {
 					BigDecimal costoReal = Utils.String2BigDecimal(map.get("costoReal"), null);
 					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
 					String latitud = map.get("latitud");
-					Date fechaInicioReal = map.get("fechainicioreal")!=null ? Utils.dateFromString(map.get("fechainicioreal")) : null;
-					Date fechaFinReal = map.get("fechafinreal")!=null ? Utils.dateFromString(map.get("fechafinreal")) : null;
-					BigDecimal presupuestoModificado = Utils.String2BigDecimal(map.get("presupuestoModificado"), null);
-					BigDecimal presupuestoPagado = Utils.String2BigDecimal(map.get("presupuestoPagado"), null);
-					BigDecimal presupuestoVigente = Utils.String2BigDecimal(map.get("presupuestoVigente"), null);
-					BigDecimal presupuestoDevengado = Utils.String2BigDecimal(map.get("presupuestoDevengado"), null);
-					Integer avanceFinanciero = Utils.String2Int(map.get("avanceFinanciero"), 0);
-
+					
 					ActividadTipo actividadTipo= new ActividadTipo();
 					actividadTipo.setId(actividadtipoid);
 					
@@ -280,7 +259,7 @@ public class SActividad extends HttpServlet {
 						actividad = new Actividad(actividadTipo, acumulacionCosto, null, nombre, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra, fuente,
 								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,costoReal,
-								null,null,fechaInicioReal, fechaFinReal, presupuestoModificado, presupuestoPagado, presupuestoVigente, presupuestoDevengado, avanceFinanciero);
+								null,null);
 					}
 					else{
 						actividad = ActividadDAO.getActividadPorId(id,usuario);
@@ -303,13 +282,6 @@ public class SActividad extends HttpServlet {
 						actividad.setCosto(costo);
 						actividad.setCostoReal(costoReal);
 						actividad.setAcumulacionCosto(acumulacionCosto);
-						actividad.setFechaInicioReal(fechaInicioReal);;
-						actividad.setFechaFinReal(fechaFinReal);
-						actividad.setPresupuestoModificado(presupuestoModificado);
-						actividad.setPresupuestoPagado(presupuestoPagado);
-						actividad.setPresupuestoVigente(presupuestoVigente);
-						actividad.setPresupuestoDevengado(presupuestoDevengado);
-						actividad.setAvanceFinanciero(avanceFinanciero);
 					}
 					result = ActividadDAO.guardarActividad(actividad);
 
@@ -431,13 +403,6 @@ public class SActividad extends HttpServlet {
 				temp.costoReal = actividad.getCostoReal();
 				temp.acumulacionCostoId = actividad.getAcumulacionCosto() == null ? 0 : actividad.getAcumulacionCosto().getId();
 				temp.acumulacionCostoNombre = actividad.getAcumulacionCosto() == null ? "" : actividad.getAcumulacionCosto().getNombre();
-				temp.fechaInicioReal= Utils.formatDate(actividad.getFechaInicioReal());
-				temp.fechaFinReal= Utils.formatDate(actividad.getFechaFinReal());
-				temp.presupuestoModificado= actividad.getPresupuestoModificado();
-				temp.presupuestoPagado= actividad.getPresupuestoPagado();
-				temp.presupuestoVigente= actividad.getPresupuestoVigente();
-				temp.presupuestoDevengado= actividad.getPresupuestoDevengado();
-				temp.avanceFinanciero= actividad.getAvanceFinanciero();
 				stactividads.add(temp);
 			}
 
@@ -487,13 +452,6 @@ public class SActividad extends HttpServlet {
 			temp.costoReal = actividad.getCostoReal();
 			temp.acumulacionCostoId = actividad.getAcumulacionCosto().getId();
 			temp.acumulacionCostoNombre = actividad.getAcumulacionCosto().getNombre();
-			temp.fechaInicioReal= Utils.formatDate(actividad.getFechaInicioReal());
-			temp.fechaFinReal= Utils.formatDate(actividad.getFechaFinReal());
-			temp.presupuestoModificado= actividad.getPresupuestoModificado();
-			temp.presupuestoPagado= actividad.getPresupuestoPagado();
-			temp.presupuestoVigente= actividad.getPresupuestoVigente();
-			temp.presupuestoDevengado= actividad.getPresupuestoDevengado();
-			temp.avanceFinanciero= actividad.getAvanceFinanciero();
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"actividad\":",response_text);

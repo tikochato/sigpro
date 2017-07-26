@@ -142,7 +142,7 @@
 							</div>
 							<div class="form-group col-sm-2" >
 							  <input type="number" class="inputText" ng-model="actividadc.actividad.proyecto" ng-value="actividadc.actividad.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-							  <label for="iproy_" class="floating-label">Préstamo</label>
+							  <label for="iproy_" class="floating-label">Proyecto</label>
 							</div>
 							<div class="form-group col-sm-2" >
 							  <input type="number" class="inputText" ng-model="actividadc.actividad.actividad" ng-value="actividadc.actividad.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>

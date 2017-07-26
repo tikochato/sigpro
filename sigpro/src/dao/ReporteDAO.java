@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
-import org.joda.time.DateTime;
 
 import pojo.Actividad;
 import pojo.InformePresupuesto;
@@ -12,161 +11,108 @@ import utilities.CHibernateSession;
 import utilities.CLogger;
 
 public class ReporteDAO {
-	public static List<Object> getCargaTrabajo(int atrasados, int objetoTipo, int idPrestamo, int idComponente, int idProducto, int idSubProducto){
-		List<Object> result = null;
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		try{
-			
-			Query query = session.createSQLQuery("CALL carga_trabajo(:atrasados, :objetoTipo, :idPrestamo, :idComponente, :idProducto, :idSubproducto, :fecha)")
-			.setParameter("atrasados", atrasados)
-			.setParameter("objetoTipo", objetoTipo)
-			.setParameter("idPrestamo", idPrestamo)
-			.setParameter("idComponente", idComponente)
-			.setParameter("idProducto", idProducto)
-			.setParameter("idSubproducto", idSubProducto)
-			.setParameter("fecha", new DateTime().toDate());
-			result = query.getResultList();
-		}
-		catch(Throwable e){
-			CLogger.write("1", ReporteDAO.class, e);
-		}
-		finally{
-			session.close();
-		}
-		
-		return result;
-	}
 	
-	public static List<Object> getActividadesCargaTrabajo(int idProyecto, int idComponente, int idProducto, int idSubProducto){
-		List<Object> result = null;
+	public static List<?> getActividadesCargaTrabajo(int idProyecto, int idComponente, int idProducto, int idSubProducto){
+		List<?> result = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String string_query = "";
 			if(idProyecto > 0 && idComponente == 0 && idProducto == 0 && idSubProducto ==0){
-				string_query = "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
-						+ "inner join Actividad a on a.objetoId=p.id "
-						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
-						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
-						+ "where p.id=:idProyecto and a.objetoTipo=1 and p.estado=1 ";
-				
-				Query query = session.createQuery(string_query);
+				string_query = String.join(" ", "select a.id, a.nombre as nombreActividad, a.porcentaje_avance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						, "inner join Actividad a on a.objeto_id=p.id "
+						, "inner join objeto_responsable_rol orr on orr.objeto_id = a.id and orr.objeto_tipo=5 "
+						, "inner join responsable_rol rr on orr.id=rr.id "
+						, "where p.id=:idProyecto and a.objeto_tipo=1 and p.estado=1 "
+						, "union "
+						, "select a.id, a.nombre as nombreActividad, a.porcentaje_avance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						, "inner join Componente c on p.id=c.proyectoid "
+						, "inner join Actividad a on a.objeto_id=c.id "
+						, "inner join objeto_responsable_rol orr on orr.objeto_id = a.id and orr.objeto_tipo=5 "
+						, "inner join responsable_rol rr on orr.id=rr.id "
+						, "where p.id=:idProyecto and a.objeto_tipo=2 and p.estado=1 and c.estado=1"
+						, "union "
+						, "select a.id, a.nombre as nombreActividad, a.porcentaje_avance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						, "inner join Componente c on p.id=c.proyectoid "
+						, "inner join Producto pd on c.id=pd.componenteid "
+						, "inner join Actividad a on a.objeto_id=pd.id "
+						, "inner join objeto_responsable_rol orr on orr.objeto_id = a.id and orr.objeto_tipo=5 "
+						, "inner join responsable_rol rr on orr.responsable_rolid=rr.id "
+						, "where p.id=:idProyecto and a.objeto_tipo=3 and p.estado=1 and c.estado=1 and p.estado=1"
+						, "union "
+						, "select a.id, a.nombre as nombreActividad, a.porcentaje_avance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						, "inner join Componente c on p.id=c.proyectoid "
+						, "inner join Producto pd on c.id=pd.componenteid "
+						, "inner join Subproducto sp on pd.id=sp.productoid "
+						, "inner join Actividad a on a.objeto_id=sp.id "
+						, "inner join objeto_responsable_rol orr on orr.objeto_id = a.id and orr.objeto_tipo=5 "
+						, "inner join responsable_rol rr on orr.responsable_rolid=rr.id "
+						, "where p.id=:idProyecto and a.objeto_tipo=4 and p.estado=1 and c.estado=1 and p.estado=1 and sp.estado=1");
+				Query<?> query = session.createNativeQuery(string_query);
 				query.setParameter("idProyecto", idProyecto);
-				result = query.getResultList();
-				
-				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
-						+ "inner join Componente c on p.id=c.proyecto.id "
-						+ "inner join Actividad a on a.objetoId=c.id "
-						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
-						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
-						+ "where p.id=:idProyecto and a.objetoTipo=2 and p.estado=1 and c.estado=1";
-				
-				query = session.createQuery(string_query);
-				query.setParameter("idProyecto", idProyecto);
-				result.addAll(query.getResultList());
-				
-				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
-						+ "inner join Componente c on p.id=c.proyecto.id "
-						+ "inner join Producto pd on c.id=pd.componente.id "
-						+ "inner join Actividad a on a.objetoId=pd.id "
-						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
-						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
-						+ "where p.id=:idProyecto and a.objetoTipo=3 and p.estado=1 and c.estado=1 and p.estado=1";
-				
-				query = session.createQuery(string_query);
-				query.setParameter("idProyecto", idProyecto);
-				result.addAll(query.getResultList());
-				
-				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
-						+ "inner join Componente c on p.id=c.proyecto.id "
-						+ "inner join Producto pd on c.id=pd.componente.id "
-						+ "inner join Subproducto sp on pd.id=sp.producto.id "
-						+ "inner join Actividad a on a.objetoId=sp.id "
-						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
-						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
-						+ "where p.id=:idProyecto and a.objetoTipo=4 and p.estado=1 and c.estado=1 and p.estado=1 and sp.estado=1";
-				
-				query = session.createQuery(string_query);
-				query.setParameter("idProyecto", idProyecto);
-				result.addAll(query.getResultList());
+				result = query.getResultList();				
 			} else if(idProyecto > 0 && idComponente > 0 && idProducto == 0 && idSubProducto == 0){
-				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
-						+ "inner join Componente c on p.id=c.proyecto.id "
-						+ "inner join Actividad a on a.objetoId=c.id "
-						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
-						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
-						+ "where p.id=:idProyecto and c.id=:idComponente and a.objetoTipo=2 and p.estado=1 and c.estado=1";
+				string_query =  String.join(" ", "select a.id, a.nombre as nombreActividad, a.porcentaje_Avance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						, "inner join Componente c on p.id=c.proyectoid "
+						, "inner join Actividad a on a.objeto_id=c.id "
+						, "inner join objeto_responsable_rol orr on orr.objeto_id = a.id and orr.objeto_tipo=5 "
+						, "inner join responsable_rol rr on orr.responsable_rolid=rr.id "
+						, "where p.id=:idProyecto and c.id=:idComponente and a.objeto_tipo=2 and p.estado=1 and c.estado=1"
+						, "union"
+						, "select a.id, a.nombre as nombreActividad, a.porcentaje_avance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						, "inner join Componente c on p.id=c.proyectoid "
+						, "inner join Producto pd on c.id=pd.componenteid "
+						, "inner join Actividad a on a.objeto_id=pd.id "
+						, "inner join objeto_Responsable_Rol orr on orr.objeto_Id = a.id and orr.objeto_Tipo=5 "
+						, "inner join Responsable_Rol rr on orr.responsable_Rolid=rr.id "
+						, "where p.id=:idProyecto and c.id=:idComponente and a.objeto_Tipo=3 and p.estado=1 and c.estado=1 and p.estado=1"
+						, "union"
+						, "select a.id, a.nombre as nombreActividad, a.porcentaje_Avance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						, "inner join Componente c on p.id=c.proyectoid "
+						, "inner join Producto pd on c.id=pd.componenteid "
+						, "inner join Subproducto sp on pd.id=sp.productoid "
+						, "inner join Actividad a on a.objeto_Id=sp.id "
+						, "inner join Objeto_Responsable_Rol orr on orr.objeto_Id = a.id and orr.objeto_Tipo=5 "
+						, "inner join Responsable_Rol rr on orr.responsable_Rolid=rr.id "
+						, "where p.id=:idProyecto and c.id=:idComponente and a.objeto_Tipo=4 and p.estado=1 and c.estado=1 and p.estado=1 and sp.estado=1");
 				
-				Query query = session.createQuery(string_query);
+				Query<?> query = session.createNativeQuery(string_query);
 				query.setParameter("idProyecto", idProyecto);
 				query.setParameter("idComponente", idComponente);
 				result = query.getResultList();
-				
-				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
-						+ "inner join Componente c on p.id=c.proyecto.id "
-						+ "inner join Producto pd on c.id=pd.componente.id "
-						+ "inner join Actividad a on a.objetoId=pd.id "
-						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
-						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
-						+ "where p.id=:idProyecto and c.id=:idComponente and a.objetoTipo=3 and p.estado=1 and c.estado=1 and p.estado=1";
-				
-				query = session.createQuery(string_query);
-				query.setParameter("idProyecto", idProyecto);
-				query.setParameter("idComponente", idComponente);
-				result.addAll(query.getResultList());
-				
-				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
-						+ "inner join Componente c on p.id=c.proyecto.id "
-						+ "inner join Producto pd on c.id=pd.componente.id "
-						+ "inner join Subproducto sp on pd.id=sp.producto.id "
-						+ "inner join Actividad a on a.objetoId=sp.id "
-						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
-						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
-						+ "where p.id=:idProyecto and c.id=:idComponente and a.objetoTipo=4 and p.estado=1 and c.estado=1 and p.estado=1 and sp.estado=1";
-				
-				query = session.createQuery(string_query);
-				query.setParameter("idProyecto", idProyecto);
-				query.setParameter("idComponente", idComponente);
-				result.addAll(query.getResultList());
 			} else if(idProyecto > 0 && idComponente > 0 && idProducto > 0 && idSubProducto == 0){
-				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
-						+ "inner join Componente c on p.id=c.proyecto.id "
-						+ "inner join Producto pd on c.id=pd.componente.id "
-						+ "inner join Actividad a on a.objetoId=pd.id "
-						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
-						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
-						+ "where p.id=:idProyecto and c.id=:idComponente and p.id=:idProducto and a.objetoTipo=3 and p.estado=1 and c.estado=1 and p.estado=1";
+				string_query =  String.join(" ", "select a.id, a.nombre as nombreActividad, a.porcentaje_Avance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						, "inner join Componente c on p.id=c.proyectoid "
+						, "inner join Producto pd on c.id=pd.componenteid "
+						, "inner join Actividad a on a.objeto_Id=pd.id "
+						, "inner join Objeto_Responsable_Rol orr on orr.objeto_Id = a.id and orr.objeto_Tipo=5 "
+						, "inner join Responsable_Rol rr on orr.responsable_Rolid=rr.id "
+						, "where p.id=:idProyecto and c.id=:idComponente and p.id=:idProducto and a.objeto_Tipo=3 and p.estado=1 and c.estado=1 and p.estado=1"
+						, "union"
+						, "select a.id, a.nombre as nombreActividad, a.porcentaje_Avance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						, "inner join Componente c on p.id=c.proyectoid "
+						, "inner join Producto pd on c.id=pd.componenteid "
+						, "inner join Subproducto sp on pd.id=sp.productoid "
+						, "inner join Actividad a on a.objeto_Id=sp.id "
+						, "inner join Objeto_Responsable_Rol orr on orr.objeto_Id = a.id and orr.objeto_Tipo=5 "
+						, "inner join Responsable_Rol rr on orr.responsable_Rolid=rr.id "
+						, "where p.id=:idProyecto and c.id=:idComponente and p.id=:idProducto and a.objeto_Tipo=4 and p.estado=1 and c.estado=1 and p.estado=1 and sp.estado=1");
 				
-				Query query = session.createQuery(string_query);
+				Query<?> query = session.createNativeQuery(string_query);
 				query.setParameter("idProyecto", idProyecto);
 				query.setParameter("idComponente", idComponente);
 				query.setParameter("idProducto", idProducto);
 				result = query.getResultList();
-				
-				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
-						+ "inner join Componente c on p.id=c.proyecto.id "
-						+ "inner join Producto pd on c.id=pd.componente.id "
-						+ "inner join Subproducto sp on pd.id=sp.producto.id "
-						+ "inner join Actividad a on a.objetoId=sp.id "
-						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
-						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
-						+ "where p.id=:idProyecto and c.id=:idComponente and p.id=:idProducto and a.objetoTipo=4 and p.estado=1 and c.estado=1 and p.estado=1 and sp.estado=1";
-				
-				query = session.createQuery(string_query);
-				query.setParameter("idProyecto", idProyecto);
-				query.setParameter("idComponente", idComponente);
-				query.setParameter("idProducto", idProducto);
-				result.addAll(query.getResultList());
 			} else if(idProyecto > 0 && idComponente > 0 && idProducto > 0 && idSubProducto > 0){
-				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentajeAvance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
-						+ "inner join Componente c on p.id=c.proyecto.id "
-						+ "inner join Producto pd on c.id=pd.componente.id "
-						+ "inner join Subproducto sp on pd.id=sp.producto.id "
-						+ "inner join Actividad a on a.objetoId=sp.id "
-						+ "inner join ObjetoResponsableRol orr on orr.objetoId = a.id and orr.objetoTipo=5 "
-						+ "inner join ResponsableRol rr on orr.responsableRol.id=rr.id "
-						+ "where p.id=:idProyecto and c.id=:idComponente and p.id=:idProducto and sp.id=:idSubProducto and a.objetoTipo=4 and p.estado=1 and c.estado=1 and p.estado=1 and sp.estado=1";
+				string_query =  "select a.id, a.nombre as nombreActividad, a.porcentaje_Avance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
+						+ "inner join Componente c on p.id=c.proyectoid "
+						+ "inner join Producto pd on c.id=pd.componenteid "
+						+ "inner join Subproducto sp on pd.id=sp.productoid "
+						+ "inner join Actividad a on a.objeto_Id=sp.id "
+						+ "inner join Objeto_Responsable_Rol orr on orr.objeto_Id = a.id and orr.objeto_Tipo=5 "
+						+ "inner join Responsable_Rol rr on orr.responsable_Rolid=rr.id "
+						+ "where p.id=:idProyecto and c.id=:idComponente and p.id=:idProducto and sp.id=:idSubProducto and a.objeto_Tipo=4 and p.estado=1 and c.estado=1 and p.estado=1 and sp.estado=1";
 				
-				Query query = session.createQuery(string_query);
+				Query<?> query = session.createNativeQuery(string_query);
 				query.setParameter("idProyecto", idProyecto);
 				query.setParameter("idComponente", idComponente);
 				query.setParameter("idProducto", idProducto);
@@ -190,10 +136,10 @@ public class ReporteDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
-			List<Object> actividadesIds = null;
+			List<?> actividadesIds = null;
 			String string_query = "";
 			string_query = "select orr.objetoId from ObjetoResponsableRol orr where orr.responsableRol.id=:responsableId";
-			Query query = session.createQuery(string_query);
+			Query<Actividad> query = session.createQuery(string_query, Actividad.class);
 			query.setParameter("responsableId", responsableId);
 			actividadesIds = query.getResultList();
 			
@@ -279,11 +225,11 @@ public class ReporteDAO {
 		return result;
 	}
 	
-	public static List<Object> getPresupuestoProyecto(Integer fuente, Integer organismo, Integer correlativo, Integer ejercicio){
-		List<Object> result = new ArrayList<Object>();
+	public static List<?> getPresupuestoProyecto(Integer fuente, Integer organismo, Integer correlativo, Integer ejercicio){
+		List<?> result = new ArrayList<Object>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query query = session.createNativeQuery("select mes1r, mes2r, mes3r, mes4r, mes5r, mes6r, mes7r, mes8r, mes9r, mes10r, mes11r, mes12r from mv_ep_prestamo where fuente=:fuente and organismo=:organismo and correlativo=:correlativo and ejercicio=:ejercicio")
+			Query<?> query = session.createNativeQuery("select mes1r, mes2r, mes3r, mes4r, mes5r, mes6r, mes7r, mes8r, mes9r, mes10r, mes11r, mes12r from mv_ep_prestamo where fuente=:fuente and organismo=:organismo and correlativo=:correlativo and ejercicio=:ejercicio")
 					.setParameter("fuente", fuente)
 					.setParameter("organismo", organismo)
 					.setParameter("correlativo", correlativo)
@@ -300,12 +246,12 @@ public class ReporteDAO {
 		return result;
 	}
 	
-	public static List<Object> getPresupuestoPorObjeto(Integer fuente, Integer organismo, Integer correlativo, Integer ejercicio, Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra){
-		List<Object> result = new ArrayList<Object>();
+	public static List<?> getPresupuestoPorObjeto(Integer fuente, Integer organismo, Integer correlativo, Integer ejercicio, Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra){
+		List<?> result = new ArrayList<Object>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			if(programa != null && programa >= 0){
-				Query query = session.createNativeQuery("select mes1r, mes2r, mes3r, mes4r, mes5r, mes6r, mes7r, mes8r, mes9r, mes10r, mes11r, mes12r from mv_ep_estructura where fuente=:fuente and organismo=:organismo and correlativo=:correlativo and ejercicio=:ejercicio and programa=:programa and subprograma=:subprograma and proyecto=:proyecto and actividad=:actividad and obra=:obra")
+				Query<?> query = session.createNativeQuery("select mes1r, mes2r, mes3r, mes4r, mes5r, mes6r, mes7r, mes8r, mes9r, mes10r, mes11r, mes12r from mv_ep_estructura where fuente=:fuente and organismo=:organismo and correlativo=:correlativo and ejercicio=:ejercicio and programa=:programa and subprograma=:subprograma and proyecto=:proyecto and actividad=:actividad and obra=:obra")
 						.setParameter("fuente", fuente)
 						.setParameter("organismo", organismo)
 						.setParameter("correlativo", correlativo)

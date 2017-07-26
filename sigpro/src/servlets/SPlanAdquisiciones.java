@@ -97,7 +97,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 				Integer tipoPadre = (Integer)rowEntity.get("objetoTipoPredecesor");
 				
 				Map<String, Object> padre = componentes.get(idPadre+","+tipoPadre);
-				List<String> hijo = (List<String>)padre.get("hijo");
+				List<String> hijo =  (List<String>) padre.get("hijo");
 				hijo.add(idObjeto+","+objetoTipo);
 				padre.put("hijo",hijo);
 			}
@@ -200,20 +200,20 @@ public class SPlanAdquisiciones extends HttpServlet {
 			}
 		}else if(accion.equals("exportarExcel")){
 			String data = map.get("data");
-			String nombreInforme = "Plan de adquisiciones AÑO FISCAL " + Year.now().getValue();
+			String nombreInforme = "Plan de adquisiciones Aï¿½O FISCAL " + Year.now().getValue();
 			
 			Map<String,Object[]> reporte = new HashMap<>();
 			Type listType = new TypeToken<List<Map<String, String>>>() {}.getType();
 			List<Map<String, String>> datos = gson.fromJson(data, listType);
 			
 			String[] encabezadosCombinados = new String[5];
-			encabezadosCombinados[0] = "Preparación de Documentos,2";
+			encabezadosCombinados[0] = "Preparaciï¿½n de Documentos,2";
 			encabezadosCombinados[1] = "Lanzamiento de evento,2";
-			encabezadosCombinados[2] = "Recepción y evaluación de ofertas,2";
-			encabezadosCombinados[3] = "Adjudicación,2";
+			encabezadosCombinados[2] = "Recepciï¿½n y evaluaciï¿½n de ofertas,2";
+			encabezadosCombinados[3] = "Adjudicaciï¿½n,2";
 			encabezadosCombinados[4] = "Firma de contrato,2";
 			
-			reporte.put("0", new Object[] {"Componente", "Método", "Planificado", "Real", "Planificado", "Real", "Planificado", "Real", "Planificado", "Real", "Planificado", "Real"});
+			reporte.put("0", new Object[] {"Componente", "Mï¿½todo", "Planificado", "Real", "Planificado", "Real", "Planificado", "Real", "Planificado", "Real", "Planificado", "Real"});
 			
 			int fila = 1;
 			
@@ -338,9 +338,10 @@ public class SPlanAdquisiciones extends HttpServlet {
 			List<PlanAdquisiciones> p = new ArrayList<PlanAdquisiciones>();
 			p = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(OBJETO_ID_PROYECTO, proyectoId);
 			PlanAdquisiciones plan = null;
-			
+			if (p!=null){
 			for(PlanAdquisiciones pl : p){
 				plan = pl;
+			}
 			}
 			
 			estructura.put("ocultarPagos", plan != null ? false : true);
@@ -381,8 +382,10 @@ public class SPlanAdquisiciones extends HttpServlet {
 				p = new ArrayList<PlanAdquisiciones>();
 				p = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(OBJETO_ID_COMPONENTE, componente.getId());
 				plan = null;
+				if (p!=null){
 				for(PlanAdquisiciones pl : p){
 					plan = pl;
+				}
 				}
 				
 				objetoPlan.add(componente.getId()+","+OBJETO_ID_COMPONENTE);
@@ -426,8 +429,10 @@ public class SPlanAdquisiciones extends HttpServlet {
 					p = new ArrayList<PlanAdquisiciones>();
 					p = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(OBJETO_ID_PRODUCTO, producto.getId());
 					plan = null;
+					if (p!=null){
 					for(PlanAdquisiciones pl : p){
 						plan = pl;
+					}
 					}
 					
 					objetoPlan.add(producto.getId()+","+OBJETO_ID_PRODUCTO);
@@ -491,8 +496,10 @@ public class SPlanAdquisiciones extends HttpServlet {
 		List<PlanAdquisiciones> p = new ArrayList<PlanAdquisiciones>();
 		p = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(OBJETO_ID_ACTIVIDAD, actividad.getId());
 		PlanAdquisiciones plan = null;
+		if (p!=null){
 		for(PlanAdquisiciones pl : p){
 			plan = pl;
+		}
 		}
 
 		objetoPlan.add(actividadId+","+OBJETO_ID_ACTIVIDAD);
