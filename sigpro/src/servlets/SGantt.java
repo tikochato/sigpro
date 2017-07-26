@@ -133,12 +133,12 @@ public class SGantt extends HttpServlet {
 		if(accion.equals("getProyecto")){
 			predecesores = new HashMap<>();
 			items = getProyecto(proyectoId, usuario, predecesores);
-
+			
 			String estructruaPredecesores = getEstructuraPredecesores(predecesores);
 			items = String.join("","{\"items\" : [", items,"]"
 					,estructruaPredecesores!=null && estructruaPredecesores.length()>0 ? "," : ""
 					,estructruaPredecesores,"}");
-
+			
 			response.setHeader("Content-Encoding", "gzip");
 			response.setCharacterEncoding("UTF-8");
 
@@ -148,30 +148,30 @@ public class SGantt extends HttpServlet {
 	        gz.write(items.getBytes("UTF-8"));
 	        gz.close();
 	        output.close();
-									
+
 		}else if(accion.equals("getPrograma")){
 			predecesores = new HashMap<>();
 			response.setHeader("Content-Encoding", "gzip");
 			response.setCharacterEncoding("UTF-8");
 			items = "";
-									
+			
 			List<Proyecto> proyectos = ProyectoDAO.getProyectosPorPrograma(programaId);
 			for (Proyecto proyecto : proyectos){
 				items = String.join(items.length()> 0 ? "," : "", items, getProyecto(proyecto.getId(),usuario,predecesores));
-								}
-
+			}
+			
 			String estructruaPredecesores = getEstructuraPredecesores(predecesores);
-
+			
 			items = String.join("","{\"items\" : [", items,"]"
 					,estructruaPredecesores!=null && estructruaPredecesores.length()>0 ? "," : ""
 					,estructruaPredecesores,"}");
-
+			
 	        OutputStream output = response.getOutputStream();
 			GZIPOutputStream gz = new GZIPOutputStream(output);
 	        gz.write(items.getBytes("UTF-8"));
 	        gz.close();
 	        output.close();
-
+			
 		}else if(accion.equals("importar")){
 
 				String directorioTemporal = "/archivos/temporales";
@@ -305,7 +305,7 @@ public class SGantt extends HttpServlet {
 	private String construirItem(Integer idItem,Integer objetoId, Integer objetoTipo, String content,Integer identation,
 			Boolean isExpanded,Date start,Date finish ,boolean isMilestone,Integer duracion,BigDecimal costo, 
 			BigDecimal metaPlanificada, BigDecimal metaReal){
-
+		
 		String f_inicio = Utils.formatDate(start);
 		String f_fin = Utils.formatDate(finish);
 		
