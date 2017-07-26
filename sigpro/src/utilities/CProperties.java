@@ -18,6 +18,13 @@ public class CProperties {
 	private static String oracle_password="";
 	private static String oracle_schema=null;
 	
+	private static String maria_host="";
+	private static Integer maria_port=null;
+	private static String maria_user="";
+	private static String maria_password="";
+	private static String maria_schema=null;
+	
+	
 	static{
 		InputStream input;
 		properties = new Properties();
@@ -38,6 +45,13 @@ public class CProperties {
 			oracle_schema = properties.getProperty("oracle_schema");
 			oracle_user = properties.getProperty("oracle_user");
 			oracle_password = properties.getProperty("oracle_password");
+			
+			maria_host = properties.getProperty("maria_host");
+			maria_port = properties.getProperty("maria_port") != null ? 
+					Integer.parseInt(properties.getProperty("maria_port")) : null;
+			maria_schema = properties.getProperty("maria_schema");
+			maria_user = properties.getProperty("maria_user");
+			maria_password = properties.getProperty("maria_password");
 			
 			
 		}
@@ -143,5 +157,53 @@ public class CProperties {
 	
 	public void setmemsql_schema_des(String memsql_schema_des){
 		CProperties.memsql_schema_des = memsql_schema_des;
+	}
+
+	public static String getMemsql_host() {
+		return memsql_host;
+	}
+
+	public static void setMemsql_host(String memsql_host) {
+		CProperties.memsql_host = memsql_host;
+	}
+
+	public static String getMaria_host() {
+		return maria_host;
+	}
+
+	public static void setMaria_host(String maria_host) {
+		CProperties.maria_host = maria_host;
+	}
+
+	public static Integer getMaria_port() {
+		return maria_port;
+	}
+
+	public static void setMaria_port(Integer maria_port) {
+		CProperties.maria_port = maria_port;
+	}
+
+	public static String getMaria_user() {
+		return maria_user;
+	}
+
+	public static void setMaria_user(String maria_user) {
+		CProperties.maria_user = maria_user;
+	}
+
+	public static String getMaria_password() {
+		return maria_password;
+	}
+
+	public static void setMaria_password(String maria_password) {
+		CProperties.maria_password = maria_password;
+	}
+
+	public static String getMaria_schema() {
+		return maria_schema;
+	}
+
+	public static void setMaria_schema(String maria_schema) {
+		CProperties.maria_schema = maria_schema;
 	}
 }
