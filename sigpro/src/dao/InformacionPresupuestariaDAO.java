@@ -15,11 +15,11 @@ public class InformacionPresupuestariaDAO {
         try {
             if( !conn.isClosed() ){
                 try{
-                    String str_Query = String.join(" ","select prestamo, componente, min(fecha_inicio) fecha from estructura_arbol",
+                    String str_Query = String.join(" ","select componente, min(fecha_inicio) fecha from estructura_arbol",
                             "where prestamo = ? ",
                             "and componente is not null",
-                            "group by prestamo, componente",
-                            "order by 3;");
+                            "group by componente",
+                            "order by 2;");
                     
                     PreparedStatement pstm  = conn.prepareStatement(str_Query);
                     pstm.setInt(1, idPrestamo);
@@ -49,13 +49,13 @@ public class InformacionPresupuestariaDAO {
         try {
             if( !conn.isClosed()){
                 try{
-                    String str_Query = String.join(" ","select prestamo,componente, producto, min(fecha_inicio) fecha ",
+                    String str_Query = String.join(" ","select producto, min(fecha_inicio) fecha ",
                             "from estructura_arbol",
                             "where prestamo = ? ",
                             "and componente = ? ",
                             "and producto is not null",
-                            "group by prestamo, componente, producto",
-                            "order by 4");
+                            "group by producto",
+                            "order by 2");
                     
                     PreparedStatement pstm  = conn.prepareStatement(str_Query);
                     pstm.setInt(1, idPrestamo);
@@ -87,13 +87,13 @@ public class InformacionPresupuestariaDAO {
         try {
             if( !conn.isClosed() ){
                 try{
-                    String str_Query = String.join(" ","select prestamo,componente, producto, subproducto, min(fecha_inicio) fecha from estructura_arbol",
+                    String str_Query = String.join(" ","select subproducto, min(fecha_inicio) fecha from estructura_arbol",
                             "where prestamo = ? ",
                             "and componente = ? ",
                             "and producto = ? ",
                             "and subproducto is not null",
-                            "group by prestamo, componente, producto, subproducto",
-                            "order by 5;");
+                            "group by subproducto",
+                            "order by 2;");
                     PreparedStatement pstm  = conn.prepareStatement(str_Query);
                     pstm.setInt(1, idPrestamo);
                     pstm.setInt(2, idComponente);
@@ -265,6 +265,8 @@ public class InformacionPresupuestariaDAO {
                             "from estructura_arbol",
                             "where prestamo = ? ",
                             "and componente is null",
+                            "and producto is null",
+                            "and subproducto is null",
                             "and actividad is not null",
                             "group by prestamo, actividad",
                             "order by 4, treelevel");
