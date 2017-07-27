@@ -33,14 +33,216 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		var SEMESTRE_DISPLAY_NAME = ['Semestre 1','Semestre 2'];
 		var ANUAL_DISPLAY_NAME = ['Anual'];
 		
-		//**TODO: quitar generación dinamica de informacion
-		//////////////////////**************************************************
-		
 		$scope.divActivo = "";
 		mi.activarScroll = function(id){
 			$scope.divActivo = id;
 	    }
 		
+
+		//**TODO: quitar generación dinamica de informacion
+		//////////////////////**************************************************
+		
+		mi.data = {
+			    "success": true,
+			    "prestamo": [{
+			        "nombre": "ConstrucciÃ³n de Escuela",
+			        "objeto_id": 13,
+			        "objeto_tipo": 1,
+			        "nivel": 1,
+			        "anios": null
+			    }, {
+			        "nombre": "PreparaciÃ³n topogrÃ¡fica",
+			        "objeto_id": 26,
+			        "objeto_tipo": 2,
+			        "nivel": 2,
+			        "anios": [{
+			            "enero": null,
+			            "febrero": null,
+			            "marzo": null,
+			            "abril": null,
+			            "mayo": null,
+			            "junio": null,
+			            "julio": null,
+			            "agosto": null,
+			            "septiembre": null,
+			            "octubre": null,
+			            "noviembre": null,
+			            "diciembre": 290521.88,
+			            "anio": 2014
+			        }, {
+			            "enero": null,
+			            "febrero": null,
+			            "marzo": null,
+			            "abril": null,
+			            "mayo": null,
+			            "junio": null,
+			            "julio": null,
+			            "agosto": null,
+			            "septiembre": null,
+			            "octubre": 11923708.90,
+			            "noviembre": null,
+			            "diciembre": null,
+			            "anio": 2015
+			        }, {
+			            "enero": null,
+			            "febrero": null,
+			            "marzo": null,
+			            "abril": null,
+			            "mayo": null,
+			            "junio": null,
+			            "julio": null,
+			            "agosto": null,
+			            "septiembre": null,
+			            "octubre": 11923708.90,
+			            "noviembre": null,
+			            "diciembre": null,
+			            "anio": 2016
+			        }]
+			    }, {
+			        "nombre": "Terreno en condiciones optimas",
+			        "objeto_id": 32,
+			        "objeto_tipo": 3,
+			        "nivel": 3,
+			        "anios": [{
+			            "enero": null,
+			            "febrero": null,
+			            "marzo": null,
+			            "abril": null,
+			            "mayo": null,
+			            "junio": null,
+			            "julio": null,
+			            "agosto": null,
+			            "septiembre": null,
+			            "octubre": 11923708.90,
+			            "noviembre": null,
+			            "diciembre": null,
+			            "anio": 2014
+			        }, null, null]
+			    }, {
+			        "nombre": "Mediciones",
+			        "objeto_id": 16,
+			        "objeto_tipo": 4,
+			        "nivel": 4,
+			        "anios": [{
+			            "enero": null,
+			            "febrero": null,
+			            "marzo": null,
+			            "abril": null,
+			            "mayo": null,
+			            "junio": null,
+			            "julio": 10157446.00,
+			            "agosto": null,
+			            "septiembre": null,
+			            "octubre": null,
+			            "noviembre": null,
+			            "diciembre": null,
+			            "anio": 2014
+			        }, null, null]
+			    }, {
+			        "nombre": "MediciÃ³n Ã¡rea total",
+			        "objeto_id": 62,
+			        "objeto_tipo": 5,
+			        "nivel": 5,
+			        "anios": null
+			    }, {
+			        "nombre": "MediciÃ³n de Ã¡rea de construcciÃ³n",
+			        "objeto_id": 63,
+			        "objeto_tipo": 5,
+			        "nivel": 5,
+			        "anios": null
+			    }, {
+			        "nombre": "Construir planos",
+			        "objeto_id": 64,
+			        "objeto_tipo": 5,
+			        "nivel": 5,
+			        "anios": null
+			    }, {
+			        "nombre": "Emparejamiento",
+			        "objeto_id": 17,
+			        "objeto_tipo": 4,
+			        "nivel": 4,
+			        "anios": null
+			    }, {
+			        "nombre": "Nivelar terreno",
+			        "objeto_id": 65,
+			        "objeto_tipo": 5,
+			        "nivel": 5,
+			        "anios": null
+			    }, {
+			        "nombre": "Compra",
+			        "objeto_id": 17063,
+			        "objeto_tipo": 5,
+			        "nivel": 3,
+			        "anios": null
+			    }, {
+			        "nombre": "Instalaciones elÃ©ctricas",
+			        "objeto_id": 28,
+			        "objeto_tipo": 2,
+			        "nivel": 2,
+			        "anios": null
+			    }, {
+			        "nombre": "InstalaciÃ³n toma de corriente",
+			        "objeto_id": 70,
+			        "objeto_tipo": 5,
+			        "nivel": 3,
+			        "anios": null
+			    }, {
+			        "nombre": "implementaciÃ³n red principal",
+			        "objeto_id": 68,
+			        "objeto_tipo": 5,
+			        "nivel": 3,
+			        "anios": null
+			    }, {
+			        "nombre": "Pruea",
+			        "objeto_id": 17065,
+			        "objeto_tipo": 5,
+			        "nivel": 4,
+			        "anios": null
+			    }, {
+			        "nombre": "sub nivel prueba",
+			        "objeto_id": 17066,
+			        "objeto_tipo": 5,
+			        "nivel": 5,
+			        "anios": null
+			    }, {
+			        "nombre": "InstalaciÃ³n toma de corriente",
+			        "objeto_id": 69,
+			        "objeto_tipo": 5,
+			        "nivel": 3,
+			        "anios": null
+			    }, {
+			        "nombre": "ConstrucciÃ³n estructura inicial",
+			        "objeto_id": 27,
+			        "objeto_tipo": 2,
+			        "nivel": 2,
+			        "anios": null
+			    }, {
+			        "nombre": "Preparar Cimientos",
+			        "objeto_id": 33,
+			        "objeto_tipo": 3,
+			        "nivel": 3,
+			        "anios": null
+			    }, {
+			        "nombre": "Abrir zanjas",
+			        "objeto_id": 66,
+			        "objeto_tipo": 5,
+			        "nivel": 4,
+			        "anios": null
+			    }, {
+			        "nombre": "FundiciÃ³n cimientos principales",
+			        "objeto_id": 67,
+			        "objeto_tipo": 5,
+			        "nivel": 4,
+			        "anios": null
+			    }, {
+			        "nombre": "Actividad de proyecto",
+			        "objeto_id": 17067,
+			        "objeto_tipo": 5,
+			        "nivel": 2,
+			        "anios": null
+			    }]
+			};
+				
 		var nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa', 'Dupont', 'Germain', 'Delcourt', 'Erick', 'Menez'];
         
         $scope.rowCollection = [];
@@ -280,7 +482,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 							
 							mi.anios = [];
 							for(var i = mi.fechaInicio; i <= mi.fechaFin; i++){
-								mi.anios.push({ano: i});
+								mi.anios.push({anio: i});
 							}
 							mi.colspan = mi.anios.length;
 							mi.aniosfinales = [];
@@ -320,13 +522,13 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 							mi.aniosfinales = [];
 							for(var i = 0; i < mi.columnas.length; i++){
 								for(var j = 0; j < mi.anios.length; j++){
-									mi.aniosfinales.push({ano: mi.anios[j].ano});
+									mi.aniosfinales.push({anio: mi.anios[j].anio});
 								}
 							}
 							
 							mi.aniosTotal = [];
 							for(var j = 0; j < mi.anios.length; j++){
-								mi.aniosTotal.push({ano: mi.anios[j].ano});
+								mi.aniosTotal.push({anio: mi.anios[j].anio});
 							}
 							
 							
@@ -335,6 +537,20 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 							
 							mi.mostrarDescargar = true;
 							mi.movimiento = true;
+							
+							for (producto in mi.data.prestamo){
+								if(producto.anios){
+									for(anio in producto.anios){
+										producto[anio.anio]= anio; 
+									}
+								}
+							}
+							
+							console.log(mi.columnas);
+							console.log(mi.aniosTotal);
+							console.log(mi.data.prestamo);
+							console.log(JSON.stringify(mi.data.prestamo));
+							
 							$scope.rowCollection = [];
 							for(var i=0;i<50;i++){
 								$scope.rowCollection.push(createRandomItem());

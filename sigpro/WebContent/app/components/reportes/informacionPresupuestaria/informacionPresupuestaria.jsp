@@ -203,8 +203,8 @@
 				         			</tr>
 								</thead>
 								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo>
-									<tr ng-repeat="row in rowCollection">
-							      		<td style="min-width:200px;">{{row.nombre}}</td>
+									<tr ng-repeat="producto in controller.data.prestamo">
+							      		<td nowrap style="min-width:200px;">{{producto.nombre}}</td>
 							      	</tr>
 								</tbody>
 							</table>
@@ -219,15 +219,15 @@
 				         				<th colspan={{controller.colspan}} style="{{controller.estiloCabecera}}" ng-repeat="m in controller.objetoMostrar" class="label-form">{{m.nombreMes}}</th>
 				          			</tr>
 				          			<tr>
-				          				<th ng-repeat="a in controller.aniosfinales" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}" class="label-form">{{a.ano}}</th>
+				          				<th ng-repeat="a in controller.aniosfinales" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}" class="label-form">{{a.anio}}</th>
 							        </tr>
 								</thead>
 								<tbody class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo>
-							      	<tr ng-repeat="row in rowCollection">
+							      	<tr ng-repeat="producto in controller.data.prestamo">
 							      		<td ng-repeat="col in columns" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
 							      			<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{row[col] | formatoMillones : controller.enMillones}}</span>
 							      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real" > | </span>
-							      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{row.enero[col] | formatoMillones : controller.enMillones}}</span>
+							      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{row[col] | formatoMillones : controller.enMillones}}</span>
 							      		</td>
 							      	</tr>
 								</tbody>
@@ -242,7 +242,7 @@
 			          				<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Total</th>
 			          			</tr>
 			          			<tr>
-			          				<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.ano}}</th>
+			          				<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
 						        </tr>
 							</thead>
 							<tbody class="cuerpoTablaNombres bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')" scrollespejo>
