@@ -55,7 +55,49 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			        "objeto_id": 13,
 			        "objeto_tipo": 1,
 			        "nivel": 1,
-			        "anios": null
+			        "anios": [{
+			            "enero": null,
+			            "febrero": null,
+			            "marzo": null,
+			            "abril": null,
+			            "mayo": null,
+			            "junio": null,
+			            "julio": null,
+			            "agosto": null,
+			            "septiembre": null,
+			            "octubre": null,
+			            "noviembre": null,
+			            "diciembre": null,
+			            "anio": 2014
+			        }, {
+			            "enero": null,
+			            "febrero": null,
+			            "marzo": null,
+			            "abril": null,
+			            "mayo": null,
+			            "junio": null,
+			            "julio": null,
+			            "agosto": null,
+			            "septiembre": null,
+			            "octubre": null,
+			            "noviembre": null,
+			            "diciembre": null,
+			            "anio": 2015
+			        }, {
+			            "enero": null,
+			            "febrero": null,
+			            "marzo": null,
+			            "abril": null,
+			            "mayo": null,
+			            "junio": null,
+			            "julio": null,
+			            "agosto": null,
+			            "septiembre": null,
+			            "octubre": null,
+			            "noviembre": null,
+			            "diciembre": null,
+			            "anio": 2016
+			        }]
 			    }, {
 			        "nombre": "PreparaciÃ³n topogrÃ¡fica",
 			        "objeto_id": 26,
@@ -119,11 +161,39 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			            "julio": null,
 			            "agosto": null,
 			            "septiembre": null,
-			            "octubre": 11923708.90,
+			            "octubre": 3234335.34,
 			            "noviembre": null,
 			            "diciembre": null,
 			            "anio": 2014
-			        }, null, null]
+			        }, {
+			            "enero": null,
+			            "febrero": null,
+			            "marzo": null,
+			            "abril": null,
+			            "mayo": null,
+			            "junio": null,
+			            "julio": null,
+			            "agosto": null,
+			            "septiembre": null,
+			            "octubre": null,
+			            "noviembre": null,
+			            "diciembre": null,
+			            "anio": 2015
+			        }, {
+			            "enero": null,
+			            "febrero": null,
+			            "marzo": null,
+			            "abril": null,
+			            "mayo": null,
+			            "junio": null,
+			            "julio": null,
+			            "agosto": null,
+			            "septiembre": null,
+			            "octubre": null,
+			            "noviembre": null,
+			            "diciembre": null,
+			            "anio": 2016
+			        }]
 			    }, {
 			        "nombre": "Mediciones",
 			        "objeto_id": 16,
@@ -528,7 +598,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 							mi.aniosfinales = [];
 							for(var i = 0; i < mi.columnas.length; i++){
 								for(var j = 0; j < mi.anios.length; j++){
-									mi.aniosfinales.push({anio: mi.anios[j].anio});
+									mi.aniosfinales.push({anio: mi.anios[j].anio, nombre: mi.columnas[i].nombreMes.toLowerCase()});
 								}
 							}
 							
@@ -540,20 +610,25 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 							
 							//**TODO: quitar generación dinamica de informacion							
 							//////////////////****************************
-							
+														
 							mi.mostrarDescargar = true;
 							mi.movimiento = true;
 							
-							for (producto in mi.data.prestamo){
+							for (x in mi.data.prestamo){
+								var producto = mi.data.prestamo[x];
 								if(producto.anios){
-									for(anio in producto.anios){
-										producto[anio.anio]= anio; 
+									for(a in producto.anios){
+										var anio = producto.anios[a];
+										if (anio){
+											var nombre = anio.anio;
+											producto[nombre]= anio;
+										}
 									}
 								}
 							}
 							
 							console.log(mi.columnas);
-							console.log(mi.aniosTotal);
+							console.log(mi.aniosfinales);
 							console.log(mi.data.prestamo);
 							console.log(JSON.stringify(mi.data.prestamo));
 							

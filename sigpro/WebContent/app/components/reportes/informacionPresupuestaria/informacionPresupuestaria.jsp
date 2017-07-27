@@ -224,8 +224,8 @@
 								</thead>
 								<tbody class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo>
 							      	<tr ng-repeat="producto in controller.data.prestamo">
-							      		<td ng-repeat="col in columns" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
-							      			<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{row[col] | formatoMillones : controller.enMillones}}</span>
+							      		<td ng-repeat="col in mi.aniosfinales" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
+							      			<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{producto.col[anio] | formatoMillones : controller.enMillones}}</span>
 							      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real" > | </span>
 							      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{row[col] | formatoMillones : controller.enMillones}}</span>
 							      		</td>
