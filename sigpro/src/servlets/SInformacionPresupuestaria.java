@@ -59,20 +59,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		Integer objeto_id;
 		Integer objeto_tipo;
 		Integer nivel;
-		/*stpresupuesto[] enero;
-		stpresupuesto[] febrero;
-		stpresupuesto[] marzo;
-		stpresupuesto[] abril;
-		stpresupuesto[] mayo;
-		stpresupuesto[] junio;
-		stpresupuesto[] julio;
-		stpresupuesto[] agosto;
-		stpresupuesto[] septiembre;
-		stpresupuesto[] octubre;
-		stpresupuesto[] noviembre;
-		stpresupuesto[] diciembre;
-		stpresupuesto[] totalAnual;
-		stpresupuesto[] total; */
+		stanio[] anios; 
 	}
 	
 	class stprestamobimestre{
@@ -89,52 +76,26 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		stpresupuesto[] totalAnual;
 		stpresupuesto[] total;
 	}
-	
-	class stprestamotrimestre{
-		String nombre;
-		Integer objeto_id;
-		Integer objeto_tipo;
-		Integer nivel;
-		stpresupuesto[] trimestre1;
-		stpresupuesto[] trimestre2;
-		stpresupuesto[] trimestre3;
-		stpresupuesto[] trimestre4;
-		stpresupuesto[] totalAnual;
-		stpresupuesto[] total;
+	class stanio{
+		
+		BigDecimal enero;
+		BigDecimal febrero;
+		BigDecimal marzo;
+		BigDecimal abril;
+		BigDecimal mayo;
+		BigDecimal junio;
+		BigDecimal julio;
+		BigDecimal agosto;
+		BigDecimal septiembre;
+		BigDecimal octubre;
+		BigDecimal noviembre;
+		BigDecimal diciembre;
+		BigDecimal anio;
+		
 	}
 	
-	class stprestamocuatrimestre{
-		String nombre;
-		Integer objeto_id;
-		Integer objeto_tipo;
-		Integer nivel;
-		stpresupuesto[] cuatrimestre1;
-		stpresupuesto[] cuatrimestre2;
-		stpresupuesto[] cuatrimestre3;
-		stpresupuesto[] totalAnual;
-		stpresupuesto[] total;
-	}
 	
-	class stprestamosemestre{
-		String nombre;
-		Integer objeto_id;
-		Integer objeto_tipo;
-		Integer nivel;
-		stpresupuesto[] semestre1;
-		stpresupuesto[] semestre2;
-		stpresupuesto[] totalAnual;
-		stpresupuesto[] total;
-	}
 	
-	class stprestamoanual{
-		String nombre;
-		Integer objeto_id;
-		Integer objeto_tipo;
-		Integer nivel;
-		stpresupuesto[] ano;
-		stpresupuesto[] totalAnual;
-		stpresupuesto[] total;
-	}
 	
 	String[] columnaNames = null;
 	List<Integer> actividadesCosto = null;
@@ -168,11 +129,24 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		
 		
 		if(accion.equals("generarInforme")){
-			Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);			
+			Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
+				
+			Prestamo objPrestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(idPrestamo, 1);
+			String codigoPresupuestario = "";
+			Integer fuente = 0;
+			Integer organismo = 0;
+			Integer correlativo = 0;
+			if(objPrestamo != null){
+				codigoPresupuestario = Long.toString(objPrestamo.getCodigoPresupuestario());
+				fuente = Utils.String2Int(codigoPresupuestario.substring(0,2));
+				organismo = Utils.String2Int(codigoPresupuestario.substring(2,6));
+				correlativo = Utils.String2Int(codigoPresupuestario.substring(6,10));
+			}
+			
 			if(proyecto != null){
 				List<stprestamo> lstPrestamo = new ArrayList<>();
 				stprestamo tempPrestamo = null;
-				
+			
 				tempPrestamo = inicializarEstructura(anoInicial, anoFinal);
 				if(CMariaDB.connect()){
 						Connection conn = CMariaDB.getConnection();
@@ -183,9 +157,12 @@ public class SInformacionPresupuestaria extends HttpServlet {
 						tempPrestamo.objeto_tipo = 1;
 						tempPrestamo.nivel = 1;
 						
+						ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoProyecto
+								(fuente, organismo, correlativo,anoInicial,anoFinal, conn);
+						
+						tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo);
+						
 						lstPrestamo.add(tempPrestamo);
-						
-						
 						
 						for(Integer componente:componentes){
 							tempPrestamo = inicializarEstructura(anoInicial, anoFinal);
@@ -195,9 +172,13 @@ public class SInformacionPresupuestaria extends HttpServlet {
 							tempPrestamo.objeto_tipo = 2;
 							tempPrestamo.nivel = 2;
 							
-							lstPrestamo.add(tempPrestamo);
+							 presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, 
+									anoInicial, anoFinal, objComponente.getPrograma(), objComponente.getSubprograma(), objComponente.getProyecto_1(), 
+									objComponente.getActividad(), objComponente.getObra(), conn);
 							
+							tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo);
 							
+							lstPrestamo.add(tempPrestamo);							
 							ArrayList<Integer> productos = InformacionPresupuestariaDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
 							for(Integer producto: productos){
 								tempPrestamo = inicializarEstructura(anoInicial, anoFinal);
@@ -207,6 +188,13 @@ public class SInformacionPresupuestaria extends HttpServlet {
 								tempPrestamo.objeto_tipo = 3;
 								tempPrestamo.nivel = 3;
 								
+								
+								
+								presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, 
+										anoInicial, anoFinal, objProducto.getPrograma(), objProducto.getSubprograma(), objProducto.getProyecto(), 
+										objProducto.getActividad(), objProducto.getObra(), conn);
+								
+								tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo);
 								lstPrestamo.add(tempPrestamo);
 								
 							
@@ -219,6 +207,11 @@ public class SInformacionPresupuestaria extends HttpServlet {
 									tempPrestamo.objeto_tipo = 4;
 									tempPrestamo.nivel = 4;
 									
+									presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, 
+											anoInicial, anoFinal, objSubProducto.getPrograma(), objSubProducto.getSubprograma(), objSubProducto.getProyecto(), 
+											objSubProducto.getActividad(), objSubProducto.getObra(), conn);
+									
+									tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo);
 									lstPrestamo.add(tempPrestamo);
 									
 							
@@ -232,7 +225,14 @@ public class SInformacionPresupuestaria extends HttpServlet {
 										tempPrestamo.objeto_tipo = 5;
 										tempPrestamo.nivel = 5 + actividad.get(1);
 										
+										presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, 
+												anoInicial, anoFinal, objActividad.getPrograma(), objActividad.getSubprograma(), objActividad.getProyecto(), 
+												objActividad.getActividad(), objActividad.getObra(), conn);
+										
+										tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo);
 										lstPrestamo.add(tempPrestamo);
+										
+										
 									
 									}
 								}
@@ -246,6 +246,13 @@ public class SInformacionPresupuestaria extends HttpServlet {
 									tempPrestamo.objeto_id = objActividad.getId();
 									tempPrestamo.objeto_tipo = 5;
 									tempPrestamo.nivel = 4 + actividad.get(1);
+									
+									presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, 
+											anoInicial, anoFinal, objActividad.getPrograma(), objActividad.getSubprograma(), objActividad.getProyecto(), 
+											objActividad.getActividad(), objActividad.getObra(), conn);
+									
+									tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo);
+									
 									lstPrestamo.add(tempPrestamo);
 									
 								}  
@@ -259,6 +266,12 @@ public class SInformacionPresupuestaria extends HttpServlet {
 								tempPrestamo.objeto_id = objActividad.getId();
 								tempPrestamo.objeto_tipo = 5;
 								tempPrestamo.nivel = 3 + actividad.get(1);
+								
+								presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, 
+										anoInicial, anoFinal, objActividad.getPrograma(), objActividad.getSubprograma(), objActividad.getProyecto(), 
+										objActividad.getActividad(), objActividad.getObra(), conn);
+								
+								tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo);
 								lstPrestamo.add(tempPrestamo);
 								
 							} 
@@ -275,6 +288,13 @@ public class SInformacionPresupuestaria extends HttpServlet {
 							tempPrestamo.objeto_id = objActividad.getId();
 							tempPrestamo.objeto_tipo = 5;
 							tempPrestamo.nivel = 2 + actividad.get(1);
+							
+							 presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, 
+									anoInicial, anoFinal, objActividad.getPrograma(), objActividad.getSubprograma(), objActividad.getProyecto(), 
+									objActividad.getActividad(), objActividad.getObra(), conn);
+							
+							tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo);
+							
 							
 							lstPrestamo.add(tempPrestamo);
 						
@@ -338,63 +358,74 @@ public class SInformacionPresupuestaria extends HttpServlet {
         output.close();
 	}
 	
+	private stprestamo getPresupuesto (ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo,
+			int anoInicial, int anoFinal, stprestamo prestamo){
+		
+		stanio[] anios = inicializarStanio(anoInicial, anoFinal);
+		if(presupuestoPrestamo.size() > 0){
+			
+			
+			for(ArrayList<BigDecimal> objprestamopresupuesto : presupuestoPrestamo){
+				
+				stanio aniotemp = new stanio(); 
+				aniotemp.enero = objprestamopresupuesto.get(0);
+				aniotemp.febrero = objprestamopresupuesto.get(1);
+				aniotemp.marzo = objprestamopresupuesto.get(2);
+				aniotemp.abril = objprestamopresupuesto.get(3);
+				aniotemp.mayo = objprestamopresupuesto.get(4);
+				aniotemp.junio = objprestamopresupuesto.get(5);
+				aniotemp.julio = objprestamopresupuesto.get(6);
+				aniotemp.agosto = objprestamopresupuesto.get(7);
+				aniotemp.septiembre = objprestamopresupuesto.get(8);
+				aniotemp.octubre = objprestamopresupuesto.get(9);
+				aniotemp.noviembre = objprestamopresupuesto.get(10);
+				aniotemp.diciembre = objprestamopresupuesto.get(11);
+				int pos = anoFinal- objprestamopresupuesto.get(12).intValue();
+				aniotemp.anio = new BigDecimal(anoInicial + pos);
+				anios[pos] = aniotemp;
+			}
+		}
+			prestamo.anios = anios;
+			return prestamo;
+	}
+	
 	private stprestamo inicializarEstructura(Integer anoInicio, Integer anoFinal){
-		stprestamo temp = new stprestamo();
-		/*temp.enero = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.febrero = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.marzo = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.abril = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.mayo = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.junio = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.julio = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.agosto = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.septiembre = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.octubre = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.noviembre = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.diciembre = new stpresupuesto[anoFinal-anoInicio+1];*/
-		return temp;
+			stprestamo temp = new stprestamo();
+			return temp;
 	}
 	
-	private stprestamobimestre inicializarEstructuraBimestre(Integer anoInicio, Integer anoFinal){
-		stprestamobimestre temp = new stprestamobimestre();
-		temp.bimestre1 = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.bimestre2 = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.bimestre3 = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.bimestre4 = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.bimestre5 = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.bimestre6 = new stpresupuesto[anoFinal-anoInicio+1];
-		return temp;
+	private stanio[] inicializarStanio (int anioInicial, int anioFinal){
+		
+		
+		int longitudArrelgo = anioFinal - anioInicial+1;
+		
+		stanio[] anios = new stanio[longitudArrelgo];
+		
+		for (int i = 0;i <longitudArrelgo; i++){
+			stanio temp = new stanio();
+			temp.enero = null;
+			temp.febrero = null;
+			temp.marzo = null;
+			temp.abril=null;
+			temp.mayo = null;
+			temp.junio = null;
+			temp.julio = null;
+			temp.agosto = null;
+			temp.septiembre = null;
+			temp.octubre = null;
+			temp.noviembre = null;
+			temp.diciembre = null;
+			
+			temp.anio = new BigDecimal(anioInicial + i);
+			anios[i] = temp;
+		}
+		return anios;
+		
+		
+		
 	}
 	
-	private stprestamotrimestre inicializarEstructuraTrimestre(Integer anoInicio, Integer anoFinal){
-		stprestamotrimestre temp = new stprestamotrimestre();
-		temp.trimestre1 = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.trimestre2 = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.trimestre3 = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.trimestre4 = new stpresupuesto[anoFinal-anoInicio+1];
-		return temp;
-	}
 	
-	private stprestamocuatrimestre inicializarEstructuraCuatrimestre(Integer anoInicio, Integer anoFinal){
-		stprestamocuatrimestre temp = new stprestamocuatrimestre();
-		temp.cuatrimestre1 = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.cuatrimestre2 = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.cuatrimestre3 = new stpresupuesto[anoFinal-anoInicio+1];
-		return temp;
-	}
-	
-	private stprestamosemestre inicializarEstructuraSemestre(Integer anoInicio, Integer anoFinal){
-		stprestamosemestre temp = new stprestamosemestre();
-		temp.semestre1 = new stpresupuesto[anoFinal-anoInicio+1];
-		temp.semestre2 = new stpresupuesto[anoFinal-anoInicio+1];
-		return temp;
-	}
-	
-	private stprestamoanual inicializarEstructuraAnio(Integer anoInicio, Integer anoFinal){
-		stprestamoanual temp = new stprestamoanual();
-		temp.ano = new stpresupuesto[anoFinal-anoInicio+1];
-		return temp;
-	}
 	
 	private void exportarExcel(Map<String,Object[]> datos, String nombreInforme, String usuario, HttpServletResponse response){
 		try{
