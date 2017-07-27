@@ -24,55 +24,30 @@
 		<div class="panel panel-default">
 			<div class="panel-heading"><h3>Plan de Ejecución</h3></div>
 		</div>
-		<div class="subtitulo">
-			{{ planc.objetoTipoNombre }} {{ planc.proyectoNombre }}
-		</div>
+		
 		
 		<div class="row" align="center" >
 			<div class="col-sm-12 ">
 			
 			<form name="form">
-				<div class="row">
-					<div class="form-group col-sm-5">
-						<select  class="inputText" ng-model="planc.prestamoSeleccionado"
+				<div class="form-group" >
+						<select  class="inputText" ng-model="planc.prestamoSeleccionado" 
 							ng-options="a.text for a in planc.prestamos"
 							ng-readonly="true"
-							ng-required="true">
+							ng-required="true"
+							ng-change = "planc.generarReporte()">
 							<option value="">Seleccione una opción</option>
 							</select>
 						<label for="prestamo" class="floating-label">Préstamos</label>
-					</div>
-					
-					
-					<div class="col-sm-5" ng-if="false">
-						<div class="form-group" >
-						  <input type="text"  class="inputText" uib-datepicker-popup="{{planc.formatofecha}}" ng-model="planc.ejercicioFiscal" is-open="planc.ef_abierto"
-						            datepicker-options="planc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true"  ng-click="planc.abrirPopupFecha(1)"
-						             date-disabled="disabled(date, mode)"
-						            ng-value="planc.ejercicioFiscal" onblur="this.setAttribute('value', this.value);"/>
-						            <span class="label-icon" ng-click="planc.abrirPopupFecha(1)">
-						              <i class="glyphicon glyphicon-calendar"></i>
-						            </span>
-						  <label  class="floating-label">Ejercicio fiscal</label>
-						</div>
-					</div>
-					
-					<div class="form-group col-sm-1" >
-						<label class="btn btn-default" ng-click="form.$valid ? planc.generarReporte() : ''" uib-tooltip="Generar" 
-							tooltip-placement="bottom"
-							 ng-disabled="!form.$valid"
-							>
-						<span class="glyphicon glyphicon-new-window"></span></label>
-					</div>
 				</div>
 			</form>
 				
 			
 				<div class="panel panel-default" ng-hide="!planc.mostrar">
+					
 					<div class="panel-body">
 					<div class = "table-responsive">
-						<table class="table table-condensed borderless"
-						 style="width: 50%" align="left">
+						<table class="table table-condensed borderless" >
 							<tr>
 	   							<td style="width: 40%" >
 	   								<label class="label-form1" >Mes Reportado</label>	
@@ -205,7 +180,7 @@
       								<label  class="label-form1" >Monto Aprobado</label>
       							</td>
       							<td>
-				  					<p>{{ planc.prestamo.montoContratado }}</p>
+				  					<p>{{ planc.prestamo.montoContratado | number:2 }}</p>
       							</td>
       							<td>
       								<label for="fechaActualizacion"  class="label-form1" >Meses de prorroga</label>
@@ -219,7 +194,7 @@
       								<label  class="label-form1" >Monto aprobado Q</label>
       							</td>
       							<td>
-				  					<p>{{ planc.prestamo.montoContratadoQtz}}</p>
+				  					<p>{{ planc.prestamo.montoContratadoQtz |  number:2}}</p>
       							</td>
       							<td>
       								<label for="fechaActualizacion"  class="label-form1" >Plazo ejecución</label>
@@ -237,12 +212,10 @@
 				<div style="width: 75%">
 					<canvas id="radar" class="chart chart-radar" ng-hide="!planc.mostrar"
 				  chart-data="planc.dataRadar" chart-options="planc.radarOptions" chart-labels="planc.etiquetas"
-				  chart-legend="true" chart-series="planc.series"
+				  chart-legend="false" chart-series="planc.series"
 				  chart-colors = "planc.radarColors">
 				</canvas>
 				</div>
-				 
-					
 			</div>
 		  
 	</div>

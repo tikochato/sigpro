@@ -13,6 +13,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.proyectoid = "";
 		mi.proyectoNombre = "";
 		mi.objetoTipoNombre = "";
+		mi.mostrarcargando = true;
 		var date = new Date(), year = date.getFullYear(), month = date.getMonth();
 
 		$window.document.title = $utilidades.sistema_nombre+' - Gantt';
@@ -27,7 +28,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 					mi.objetoTipoNombre = $routeParams.objeto_tipo == 1 ? "Proyecto" : "Programa";
 		});
 		
-		mi.zoom = 2.5;
+		mi.zoom = 2.0;
 		var date = new Date(), year = date.getFullYear(), month = date.getMonth();
 		var items=[];
 		
@@ -44,7 +45,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		    if (item.completedFinish > item.start)
 		        return 'En progreso';
 		    return 'To do';
-		}
+		};
 		
 		mi.getStatusColor = function (status) {
 		    switch (status) {
@@ -59,7 +60,42 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		        default:
 		            return 'Transparent';
 		    }
-		}
+		};
+		
+		mi.getOjbetoTipo = function (item) {
+		    switch (item.objetoTipo) {
+		        case '1':
+		            return 'glyphicon glyphicon-record';
+		        case '2':
+		            return 'glyphicon glyphicon-th';
+		        case '3':
+		            return 'glyphicon glyphicon-certificate';
+		        case '4':
+		            return 'glyphicon glyphicon-link';
+		        case '5':
+		            return 'glyphicon glyphicon-th-list';
+		    }
+		};
+		
+		
+		mi.getOjbetoTipoNombre = function (item) {
+		    switch (item.objetoTipo) {
+		        case '1':
+		            return 'Proyecto';
+		        case '2':
+		            return 'Componente';
+		        case '3':
+		            return 'Producto';
+		        case '4':
+		            return 'Subproducto';
+		        case '5':
+		            return 'Actividad';
+		    }
+		};
+		
+
+		
+		
 		var settings = { 
 				areTaskDependencyConstraintsEnabled: true,
 				currentTime: new Date(),
@@ -88,10 +124,24 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		};
 		
 		
+		//
 		// Default Columns
 		var columns = DlhSoft.Controls.GanttChartView.getDefaultColumns(items, settings);
 		
+		
 		columns.splice(0, 0, {
+		    header: 'Id', 
+		    width: 50,
+		    isReadOnly: true,
+		    cellStyle: 'text-align: right;',
+		    cellTemplate: function (item) {
+		    	//return DlhSoft.Controls.GanttChartView.numberInputColumnTemplateBase(document, 50, function(){ return item.index+1 }, function(value){ item.index=value+1 })
+		    	return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document,  function(){ return item.id })
+		        //return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return mi.getStatus(item); });
+		    }
+		});
+		
+		columns.splice(1, 0, {
 		    header: 'Orden', 
 		    width: 50,
 		    isReadOnly: true,
@@ -103,14 +153,28 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		    }
 		});
 		
+		
 		columns.splice(2, 0, {
+		    header: 'Tipo', width: 40,
+		    cellTemplate: function (item) {
+		        var rectangle = document.createElement('div');
+		        rectangle.setAttribute('class', mi.getOjbetoTipo(item));
+		        rectangle.setAttribute('data-toggle', 'tooltip');
+		        rectangle.setAttribute('title', mi.getOjbetoTipoNombre(item));
+		        
+		        return rectangle;
+		    }
+		});
+		
+		
+		columns.splice(4, 0, {
 		    header: 'Estado', width: 120,
 		    cellTemplate: function (item) {
 		        return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return mi.getStatus(item); });
 		    }
 		});
 		
-		columns.splice(2, 0, {
+		columns.splice(4, 0, {
 		    header: '', width: 30,
 		    cellTemplate: function (item) {
 		        var rectangle = document.createElement('div');
@@ -120,29 +184,27 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		    }
 		});
 		
-		columns.splice(9,0);
 		
-		columns[1].header = 'Nombre';
-		columns[1].width = 300;
-		columns[4].header = 'Inicio';
-		columns[5].header = 'Fin';
-		columns[6].header = 'Hito';
-		columns[6].isReadOnly = true;
-		columns[7].header = 'Completada';
-		columns[8].header = 'Responsable';
-		columns[8].isReadOnly = true;
-		columns.splice(9, 0, { header: 'Duración (d)', width: 80, cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(64, 8) });
-		columns.splice(10 , 0, { header: 'Prdecesor', width: 70, cellTemplate: DlhSoft.Controls.GanttChartView.getPredecessorsColumnTemplate(84) });
+		
+		columns.splice(9,0);
+		columns[3].header = 'Nombre';
+		columns[3].width = 300;
+		
+		columns[5].header = 'Inicio';
+		columns[5].width = 85;
+		columns[6].header = 'Fin';
+		columns[6].width = 85;
+		columns[7].header = 'Hito';
+		columns[7].width = 60;
+		columns[7].isReadOnly = true;
+		columns[8].header = 'Completada';
+		columns[9].header = 'Responsable';
+		columns[9].isReadOnly = true;
+		columns.splice(10, 0, { header: 'Duración (d)', width: 80, cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(64, 8) });
+		columns.splice(11 , 0, { header: 'Predecesor', width: 70, cellTemplate: DlhSoft.Controls.GanttChartView.getPredecessorsColumnTemplate(84) });
 		columns.push({ header: 'Costo Planificado (Q)', width: 110, cellTemplate: DlhSoft.Controls.GanttChartView.getCostColumnTemplate(84) });
 		columns.push({ header: 'Meta Planificada', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaPlanificada; }, function (value) { item.metaPlanificada = value; }); } });
 		columns.push({ header: 'Meta Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaReal; }, function (value) { item.metaReal = value; }); } });
-		columns.push({ header: 'Inicio Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.inicioReal; }, function (value) { item.inicioReal = value; }); } });
-		columns.push({ header: 'Fin Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.finReal; }, function (value) { item.finReal = value; }); } });		
-		columns.push({ header: 'Presupuesto Aprobado', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.presupuestoAprobado; }, function (value) { item.presupuestoAprobado = value; }); } });
-		columns.push({ header: 'Presupuesto Devengado', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.presupuestoDevengado; }, function (value) { item.presupuestoDevengado = value; }); } });
-		columns.push({ header: 'Avance Financiero', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.avanceFinanciero; }, function (value) { item.avanceFinanciero = value; }); } });
-		columns.push({ header: 'Inversión nueva S/N', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.inversionNueva; }, function (value) { item.presupuestoAprobado = inversionNueva; }); } });
-		
 		
 		
 		for(var i=0; i<columns.length;i++)
@@ -229,6 +291,8 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 							}
 						}
 					}
+					
+					mi.mostrarcargando = false;
 		});	
 		
 		mi.zoomAcercar = function(){

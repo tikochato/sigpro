@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jul 7, 2017 9:40:24 AM by Hibernate Tools 5.2.3.Final
+// Generated Jul 13, 2017 10:05:07 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Colaborador implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8064150425003431251L;
+	private static final long serialVersionUID = -2880189522324971469L;
 	private Integer id;
 	private UnidadEjecutora unidadEjecutora;
 	private Usuario usuario;
@@ -48,10 +48,9 @@ public class Colaborador implements java.io.Serializable {
 	public Colaborador() {
 	}
 
-	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String papellido, Long cui,
-			int estado, String usuarioCreo, Date fechaCreacion) {
+	public Colaborador(UnidadEjecutora unidadEjecutora, String pnombre, String papellido, Long cui, int estado,
+			String usuarioCreo, Date fechaCreacion) {
 		this.unidadEjecutora = unidadEjecutora;
-		this.usuario = usuario;
 		this.pnombre = pnombre;
 		this.papellido = papellido;
 		this.cui = cui;
@@ -104,7 +103,7 @@ public class Colaborador implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "usuariousuario", nullable = false)
+	@JoinColumn(name = "usuariousuario")
 	public Usuario getUsuario() {
 		return this.usuario;
 	}

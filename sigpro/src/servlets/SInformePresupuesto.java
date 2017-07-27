@@ -8,11 +8,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -32,11 +30,18 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
+import dao.PagoDAO;
+import dao.PlanAdquisicionesDAO;
+import dao.PrestamoDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
+import dao.ReporteDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.Componente;
+import pojo.Pago;
+import pojo.PlanAdquisiciones;
+import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
@@ -47,44 +52,53 @@ import utilities.Utils;
 @WebServlet("/SInformePresupuesto")
 public class SInformePresupuesto extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	class stprestamo{
+		Integer id;
+		Integer idPrestamo;
+		Integer objetoTipo;
+		Integer posicionArbol;
+		Integer $$treeLevel;
+		Integer idObjetoTipo;
+		Integer idPredecesor;
+		Integer objetoTipoPredecesor;
+		BigDecimal Costo;
+		Integer acumulacionCostos;		
+		String nombre;
+		String fechaInicio;
+		String fechaFin;
+		String[] hijos;
+		BigDecimal mes1r;
+		BigDecimal mes1p;
+		BigDecimal mes2r;
+		BigDecimal mes2p;
+		BigDecimal mes3r;
+		BigDecimal mes3p;
+		BigDecimal mes4r;
+		BigDecimal mes4p;
+		BigDecimal mes5r;
+		BigDecimal mes5p;
+		BigDecimal mes6r;
+		BigDecimal mes6p;
+		BigDecimal mes7r;
+		BigDecimal mes7p;
+		BigDecimal mes8r;
+		BigDecimal mes8p;
+		BigDecimal mes9r;
+		BigDecimal mes9p;
+		BigDecimal mes10r;
+		BigDecimal mes10p;
+		BigDecimal mes11r;
+		BigDecimal mes11p;
+		BigDecimal mes12r;
+		BigDecimal mes12p;
+	}
+	
 	private static int OBJETO_ID_PROYECTO = 1;
 	private static int OBJETO_ID_COMPONENTE = 2;
 	private static int OBJETO_ID_PRODUCTO = 3;
 	private static int OBJETO_ID_SUBPRODUCTO = 4;
 	private static int OBJETO_ID_ACTIVIDAD= 5;
-	private static int AGRUPACION_MES= 1;
-	private static int AGRUPACION_BIMESTRE = 2;
-	private static int AGRUPACION_TRIMESTRE = 3;
-	private static int AGRUPACION_CUATRIMESTRE= 4;
-	private static int AGRUPACION_SEMESTRE= 5;
-	private static int AGRUPACION_ANUAL= 6;
-	private static String[] MES_NAME = {"Mes1","Mes2","Mes3","Mes4","Mes5","Mes6","Mes7","Mes8","Mes9","Mes10","Mes11","Mes12"};
-	private static String[] BIMESTRE_NAME = {"Bimestre1", "Bimestre2", "Bimestre3", "Bimestre4", "Bimestre5", "Bimestre6"};
-	private static String[] TRIMESTRE_NAME = {"Trimestre1", "Trimestre2","Trimestre3","Trimestre4"};
-	private static String[] CUATRIMESTRE_NAME = {"Cuatrimestre1","Cuatrimestre2","Cuatrimestre3"};
-	private static String[] SEMESTRE_NAME = {"Semestre1","Semestre2"}; 	
-	
-	String[] columnaNames = null;
-	List<Integer> actividadesCosto = null;
-	
-	class stInformePresupuesto{
-		int id;
-		int idPrestamo;
-		int objetoTipo;
-		int idObjetoTipo;
-		String nombre;
-		int posicionArbol;
-		int objetoTipoPredecesor;
-		int idPredecesor;
-		String[] hijo;
-		BigDecimal Costo;
-		BigDecimal CostoReal;
-		String fechaInicio;
-		String fechaFin;
-		int acumulacionCostos;
-		String columnas;
-	}
-
        
     public SInformePresupuesto() {
         super();
@@ -110,62 +124,18 @@ public class SInformePresupuesto extends HttpServlet {
 		String accion = map.get("accion")!=null ? map.get("accion") : "";
 		String response_text = "";
 		Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
+		Integer anoInicial = Utils.String2Int(map.get("anoInicial"));
+		Integer anoFinal = Utils.String2Int(map.get("anoFinal"));
 		
-		columnaNames = map.get("columnaNames").split(",");
-		
-		if(accion.equals("getAdquisicionesPrestamo")){
-			Map<String, Map<String, Object>> prestamo = obtenerProyecto(idPrestamo,usuario);
+		if(accion.equals("generarInforme")){
+			List<stprestamo> resultPrestamo = obtenerProyecto(idPrestamo,usuario, anoInicial, anoFinal);
 			
-			response_text=new GsonBuilder().serializeNulls().create().toJson(prestamo);
-	        response_text = String.join("", "\"prestamo\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text,"}");
-		}else if(accion.equals("generarInforme")){
-			actividadesCosto = new ArrayList<Integer>();
-			Integer acumulacionCosto = 3;
-			Map<String, Map<String, Object>> resultPrestamo = obtenerProyecto(idPrestamo,usuario);
-			Integer agrupacion = Utils.String2Int(map.get("agrupacion"));
-			
-			for(Integer actividadId : actividadesCosto){
-				Map<String, Object> rowEntity = resultPrestamo.get(actividadId+","+5);
-				
-				if((Integer)rowEntity.get("objetoTipo") == 5 && rowEntity.get("hijos") != ""){
-					String[] fechaInicioSplit = null;
-					String[] fechaFinSplit = null;
-					String fechaInicio = (String)rowEntity.get("fechaInicio");
-					String fechaFin = (String)rowEntity.get("fechaFin");
-					
-					if(rowEntity.get("acumulacionCostos") != null){
-						acumulacionCosto = (Integer)rowEntity.get("acumulacionCostos");
-						if((Integer)rowEntity.get("acumulacionCostos") == 1){
-							fechaInicioSplit = fechaInicio.split("/");
-						}else if((Integer)rowEntity.get("acumulacionCostos") == 2){
-							fechaInicioSplit = fechaInicio.split("/");
-							fechaFinSplit = fechaFin.split("/");
-							
-							if(validaProrrateo(fechaInicioSplit,fechaFinSplit, agrupacion) == true)
-								acumulacionCosto = 3;
-						}else if((Integer)rowEntity.get("acumulacionCostos") == 3){
-							fechaFinSplit = fechaFin.split("/");
-						}
-					}else
-						fechaFinSplit = fechaFin.split("/");
-					
-					if(acumulacionCosto == 2){
-						rowEntity = Prorrateo(rowEntity, agrupacion, resultPrestamo, fechaInicioSplit, fechaFinSplit, rowEntity.get("Costo"), rowEntity.get("CostoReal"), acumulacionCosto);
-					}else{
-						rowEntity = calcular(rowEntity, agrupacion, resultPrestamo, fechaInicioSplit, fechaFinSplit, rowEntity.get("Costo"), rowEntity.get("CostoReal"), acumulacionCosto);
-					}
-				}
+			for(stprestamo prestamo : resultPrestamo){
+				Integer posicion = prestamo.posicionArbol;
+				prestamo.$$treeLevel = posicion -1;
 			}
 			
-			List<Map<String, Object>> resultado = new ArrayList<Map<String, Object>>(resultPrestamo.values());
-			
-			for(Map<String, Object> prestamo : resultado){
-				Integer posicion = (Integer)prestamo.get("posicionArbol");
-				prestamo.put("$$treeLevel", posicion -1);
-			}
-			
-			response_text=new GsonBuilder().serializeNulls().create().toJson(resultado);
+			response_text=new GsonBuilder().serializeNulls().create().toJson(resultPrestamo);
 	        response_text = String.join("", "\"prestamo\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text, "}");
 		}else if(accion.equals("exportarExcel")){
@@ -176,7 +146,7 @@ public class SInformePresupuesto extends HttpServlet {
 			Type listType = new TypeToken<List<Map<String, String>>>() {}.getType();
 			List<Map<String, String>> datos = gson.fromJson(data, listType);
 
-			String nombreInforme = "Informe Ejecución";
+			String nombreInforme = "Informe EjecuciÃ³n";
 			Map<String,Object[]> reporte = new HashMap<>();
 			Object[] obj = new Object[col.length];
 			
@@ -213,505 +183,6 @@ public class SInformePresupuesto extends HttpServlet {
         gz.write(response_text.getBytes("UTF-8"));
         gz.close();
         output.close();
-	}	
-	
-	private boolean validaProrrateo(String[] fechaInicioSplit, String[] fechaFinSplit, int agrupacion){
-		boolean pertenecen = true;
-		if(Utils.String2Int(fechaInicioSplit[2]) == Utils.String2Int(fechaFinSplit[2]))
-			return pertenecen;
-		else{
-			if(agrupacion == AGRUPACION_MES){
-				if(Utils.String2Int(fechaInicioSplit[1]) != Utils.String2Int(fechaFinSplit[1]))
-					pertenecen = false;					
-			}else if(agrupacion == AGRUPACION_BIMESTRE){
-				if(Utils.String2Int(fechaInicioSplit[1]) >= 1 && Utils.String2Int(fechaInicioSplit[1]) <= 2){
-					if(Utils.String2Int(fechaFinSplit[1]) >= 1 && Utils.String2Int(fechaFinSplit[1]) <= 2)
-						pertenecen = true;
-					else
-						pertenecen = false;
-				}else if(Utils.String2Int(fechaInicioSplit[1]) >= 3 && Utils.String2Int(fechaInicioSplit[1]) <= 4){
-					if(Utils.String2Int(fechaFinSplit[1]) >= 3 && Utils.String2Int(fechaFinSplit[1]) <= 4)
-						pertenecen = true;
-					else
-						pertenecen = false;	
-				}else if(Utils.String2Int(fechaInicioSplit[1]) >= 5 && Utils.String2Int(fechaInicioSplit[1]) <= 6){
-					if(Utils.String2Int(fechaFinSplit[1]) >= 5 && Utils.String2Int(fechaFinSplit[1]) <= 6)
-						pertenecen = true;
-					else
-						pertenecen = false;	
-				}else if(Utils.String2Int(fechaInicioSplit[1]) >= 7 && Utils.String2Int(fechaInicioSplit[1]) <= 8){
-					if(Utils.String2Int(fechaFinSplit[1]) >= 7 && Utils.String2Int(fechaFinSplit[1]) <= 8)
-						pertenecen = true;
-					else
-						pertenecen = false;	
-				}else if(Utils.String2Int(fechaInicioSplit[1]) >= 9 && Utils.String2Int(fechaInicioSplit[1]) <= 10){
-					if(Utils.String2Int(fechaFinSplit[1]) >= 9 && Utils.String2Int(fechaFinSplit[1]) <= 10)
-						pertenecen = true;
-					else
-						pertenecen = false;	
-				}else if(Utils.String2Int(fechaInicioSplit[1]) >= 11 && Utils.String2Int(fechaInicioSplit[1]) <= 12){
-					if(Utils.String2Int(fechaFinSplit[1]) >= 11 && Utils.String2Int(fechaFinSplit[1]) <= 12)
-						pertenecen = true;
-					else
-						pertenecen = false;	
-				}	
-			}else if(agrupacion == AGRUPACION_TRIMESTRE){
-				if(Utils.String2Int(fechaInicioSplit[1]) >= 1 && Utils.String2Int(fechaInicioSplit[1]) <= 3){
-					if(Utils.String2Int(fechaFinSplit[1]) >= 1 && Utils.String2Int(fechaFinSplit[1]) <= 3)
-						pertenecen = true;
-					else
-						pertenecen = false;
-				}else if(Utils.String2Int(fechaInicioSplit[1]) >= 4 && Utils.String2Int(fechaInicioSplit[1]) <= 6){
-					if(Utils.String2Int(fechaFinSplit[1]) >= 4 && Utils.String2Int(fechaFinSplit[1]) <= 6)
-						pertenecen = true;
-					else
-						pertenecen = false;
-				}else if(Utils.String2Int(fechaInicioSplit[1]) >= 7 && Utils.String2Int(fechaInicioSplit[1]) <= 9){
-					if(Utils.String2Int(fechaFinSplit[1]) >= 7 && Utils.String2Int(fechaFinSplit[1]) <= 9)
-						pertenecen = true;
-					else
-						pertenecen = false;
-				}else if(Utils.String2Int(fechaInicioSplit[1]) >= 10 && Utils.String2Int(fechaInicioSplit[1]) <= 12){
-					if(Utils.String2Int(fechaFinSplit[1]) >= 10 && Utils.String2Int(fechaFinSplit[1]) <= 12)
-						pertenecen = true;
-					else
-						pertenecen = false;
-				}
-			}else if(agrupacion == AGRUPACION_CUATRIMESTRE){
-				if(Utils.String2Int(fechaInicioSplit[1]) >= 1 && Utils.String2Int(fechaInicioSplit[1]) <= 4){
-					if(Utils.String2Int(fechaFinSplit[1]) >= 1 && Utils.String2Int(fechaFinSplit[1]) <= 4)
-						pertenecen = true;
-					else
-						pertenecen = false;
-				}else if(Utils.String2Int(fechaInicioSplit[1]) >= 5 && Utils.String2Int(fechaInicioSplit[1]) <= 8){
-					if(Utils.String2Int(fechaFinSplit[1]) >= 5 && Utils.String2Int(fechaFinSplit[1]) <= 8)
-						pertenecen = true;
-					else
-						pertenecen = false;
-				}else if(Utils.String2Int(fechaInicioSplit[1]) >= 9 && Utils.String2Int(fechaInicioSplit[1]) <= 12){
-					if(Utils.String2Int(fechaFinSplit[1]) >= 9 && Utils.String2Int(fechaFinSplit[1]) <= 12)
-						pertenecen = true;
-					else
-						pertenecen = false;
-				}
-			}else if(agrupacion == AGRUPACION_SEMESTRE){
-				if(Utils.String2Int(fechaInicioSplit[1]) >= 1 && Utils.String2Int(fechaInicioSplit[1]) <= 6){
-					if(Utils.String2Int(fechaFinSplit[1]) >= 1 && Utils.String2Int(fechaFinSplit[1]) <= 6)
-						pertenecen = true;
-					else
-						pertenecen = false;
-				}else if(Utils.String2Int(fechaInicioSplit[1]) >= 7 && Utils.String2Int(fechaInicioSplit[1]) <= 12){
-					if(Utils.String2Int(fechaFinSplit[1]) >= 7 && Utils.String2Int(fechaFinSplit[1]) <= 12)
-						pertenecen = true;
-					else
-						pertenecen = false;
-				}
-			}
-		}
-		return pertenecen;
-	}
-	
-	private Map<String, Object> Prorrateo(Map<String, Object> entity, Integer agrupacion, Map<String, Map<String, Object>> resultadoPrestamo, 
-			String[] fechaInicioSplit, String[] fechaFinSplit, Object costo, Object costoReal, int acumulacionCosto){
-		
-		String mesP = "";
-		String mesR = "";
-		List<Double> diasPorcentual = new ArrayList<Double>();
-		
-		if(fechaInicioSplit[1] != fechaFinSplit[1]){
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			try {
-				Date fechaInicial = formatter.parse((String)entity.get("fechaInicio"));
-				Date fechaFin = formatter.parse((String)entity.get("fechaFin"));
-				
-				long diferenciaEn_ms = fechaFin.getTime() - fechaInicial.getTime();
-				long diasTotales = diferenciaEn_ms / (1000 * 60 * 60 * 24);
-			    int d = 0;
-			    int contador = 0;
-				int inicio = Utils.String2Int(fechaInicioSplit[1]) <= 12 ? Utils.String2Int(fechaInicioSplit[1]) : 1;
-				for(int j = Utils.String2Int(fechaFinSplit[2]); j <= Utils.String2Int(fechaFinSplit[2]); j++){
-					int fin = j == Utils.String2Int(fechaFinSplit[2]) ? Utils.String2Int(fechaFinSplit[1]) : 12;
-					
-					for(int i = inicio; i <= fin; i++){
-						if (diasPorcentual.size() == 0){
-							int dias = getDiasDelMes(Utils.String2Int(fechaInicioSplit[1]),Utils.String2Int(fechaInicioSplit[2])) - Utils.String2Int(fechaInicioSplit[0]);
-							diasPorcentual.add((double)dias);
-						}else{
-							d = getDiasDelMes(i,j);
-							diasPorcentual.add((double)d);
-						}
-					}
-					inicio = 1;
-				}
-				
-				diasPorcentual.set(diasPorcentual.size() - 1, (double)Utils.String2Int(fechaFinSplit[0]));
-				
-				for(int i = 0; i<diasPorcentual.size();i++){
-					double diaPorcentual = diasPorcentual.get(i);
-					double dias = diaPorcentual / Utils.String2Int(Long.toString(diasTotales));
-					diasPorcentual.set(i, dias);
-				}
-				
-				inicio = (Utils.String2Int(fechaInicioSplit[1]) <= 12 ? Utils.String2Int(fechaInicioSplit[1]) : 1);
-				for(int j = Utils.String2Int(fechaFinSplit[2]); j <= Utils.String2Int(fechaFinSplit[2]); j++){
-					int fin = j == Utils.String2Int(fechaFinSplit[2]) ? Utils.String2Int(fechaFinSplit[1]) : 12;
-					for(int i = inicio; i <= fin; i++){
-						
-						if(agrupacion == AGRUPACION_MES){			
-							mesP = MES_NAME[i - 1] + "-" + j + "-P";
-							mesR = MES_NAME[i - 1] + "-" + j + "-R";
-						}else if(agrupacion == AGRUPACION_BIMESTRE){
-							if(i >=1 && i <=2){
-								mesP = BIMESTRE_NAME[0] + "-" + j + "-P";
-								mesR = BIMESTRE_NAME[0] + "-" + j + "-R";
-							}else if (i >=3 && i <=4){
-								mesP = BIMESTRE_NAME[1] + "-" + j + "-P";
-								mesR = BIMESTRE_NAME[1] + "-" + j + "-R";
-							}else if (i >=5 && i <=6){
-								mesP = BIMESTRE_NAME[2] + "-" + j + "-P";
-								mesR = BIMESTRE_NAME[2] + "-" + j + "-R";
-							}else if (i >=7 && i <=8){
-								mesP = BIMESTRE_NAME[3] + "-" + j + "-P";
-								mesR = BIMESTRE_NAME[3] + "-" + j + "-R";
-							}else if (i >=9 && i <=10){
-								mesP = BIMESTRE_NAME[4] + "-" + j + "-P";
-								mesR = BIMESTRE_NAME[4] + "-" + j + "-R";
-							}else if (i >=11 && i <=12){
-								mesP = BIMESTRE_NAME[5] + "-" + j + "-P";
-								mesR = BIMESTRE_NAME[5] + "-" + j + "-R";
-							}
-						}else if(agrupacion == AGRUPACION_TRIMESTRE){
-							if(i >=1 && i <=3){
-								mesP = TRIMESTRE_NAME[0] + "-" + j + "-P";
-								mesR = TRIMESTRE_NAME[0] + "-" + j + "-R";
-							}else if (i >=4 && i <=6){
-								mesP = TRIMESTRE_NAME[1] + "-" + j + "-P";
-								mesR = TRIMESTRE_NAME[1] + "-" + j + "-R";
-							}else if (i >=7 && i <=9){
-								mesP = TRIMESTRE_NAME[2] + "-" + j + "-P";
-								mesR = TRIMESTRE_NAME[2] + "-" + j + "-R";
-							}else if (i >=10 && i <=12){
-								mesP = TRIMESTRE_NAME[3] + "-" + j + "-P";
-								mesR = TRIMESTRE_NAME[3] + "-" + j + "-R";
-							}
-						}else if(agrupacion == AGRUPACION_CUATRIMESTRE){
-							if(i >=1 && i <=4){
-								mesP = CUATRIMESTRE_NAME[0] + "-" + j + "-P";
-								mesR = CUATRIMESTRE_NAME[0] + "-" + j + "-R";
-							}else if (i >=5 && i <=8){
-								mesP = CUATRIMESTRE_NAME[1] + "-" + j + "-P";
-								mesR = CUATRIMESTRE_NAME[1] + "-" + j + "-R";
-							}else if (i >=9 && i <=12){
-								mesP = CUATRIMESTRE_NAME[2] + "-" + j + "-P";
-								mesR = CUATRIMESTRE_NAME[2] + "-" + j + "-R";
-							}
-						}else if(agrupacion == AGRUPACION_SEMESTRE){
-							if(i >=1 && i <=6){
-								mesP = SEMESTRE_NAME[0] + "-" + j + "-P";
-								mesR = SEMESTRE_NAME[0] + "-" + j + "-R";
-							}else if (i >=7 && i <=12){
-								mesP = SEMESTRE_NAME[1] + "-" + j + "-P";
-								mesR = SEMESTRE_NAME[1] + "-" + j + "-R";
-							}
-						}else if(agrupacion == AGRUPACION_ANUAL){
-							mesP = "Anio-"+j+"-P";
-							mesR = "Anio-"+j+"-R";
-						}
-						
-						BigDecimal costoActual = null;
-						if( entity.get(mesP) instanceof Integer ) {
-							Integer ca = (Integer)entity.get(mesP); 
-							costoActual = new BigDecimal(ca);
-						} else if( entity.get(mesP) instanceof BigDecimal ){
-							costoActual = (BigDecimal)entity.get(mesP);
-						} else if(entity.get(mesP) == null){
-							costoActual = new BigDecimal(0);
-						}
-						
-						BigDecimal costoRealActual = null;
-						
-						if( entity.get(mesR) instanceof Integer ) {
-							Integer ca = (Integer)entity.get(mesR); 
-							costoRealActual = new BigDecimal(ca);
-						} else if( entity.get(mesR) instanceof BigDecimal ){
-							costoRealActual = (BigDecimal)entity.get(mesR);
-						} else if(entity.get(mesR) == null){
-							costoRealActual = new BigDecimal(0);
-						}
-						
-						BigDecimal Costo = (BigDecimal)costo;
-						BigDecimal CostoReal = (BigDecimal)costoReal;
-						Costo = costoActual.add(Costo.multiply(new BigDecimal(diasPorcentual.get(contador))));
-						CostoReal = costoRealActual.add(CostoReal.multiply(new BigDecimal(diasPorcentual.get(contador))));
-						entity.put(mesP, Costo);
-						entity.put(mesR, CostoReal);
-						
-						Integer padre = (Integer)entity.get("idPredecesor");
-						Integer tipoPadre = (Integer)entity.get("objetoTipoPredecesor");
-						
-						calcularPadreProrrateo(padre+","+tipoPadre, mesP, mesR, Costo, CostoReal, resultadoPrestamo);
-						contador++;
-					}
-				}
-				
-			}catch(Throwable e){
-				CLogger.write("2", SInformePresupuesto.class, e);
-			}
-		}
-		
-		return entity;
-	}
-	
-	private void calcularPadreProrrateo(String padreEntidadId, String mesP, String mesR, BigDecimal Costo, BigDecimal CostoReal, Map<String, Map<String, Object>> resultadoPrestamo){
-		Map<String, Object> entityPadre = resultadoPrestamo.get(padreEntidadId);
-		
-		BigDecimal costoActual = null;
-		if( entityPadre.get(mesP) instanceof Integer ) {
-			Integer ca = (Integer)entityPadre.get(mesP); 
-			costoActual = new BigDecimal(ca);
-		} else if( entityPadre.get(mesP) instanceof BigDecimal ){
-			costoActual = (BigDecimal)entityPadre.get(mesP);
-		} else if(entityPadre.get(mesP) == null){
-			costoActual = new BigDecimal(0);
-		}
-		
-		BigDecimal costoRealActual = null;
-		
-		if( entityPadre.get(mesR) instanceof Integer ) {
-			Integer ca = (Integer)entityPadre.get(mesR); 
-			costoRealActual = new BigDecimal(ca);
-		} else if( entityPadre.get(mesR) instanceof BigDecimal ){
-			costoRealActual = (BigDecimal)entityPadre.get(mesR);
-		} else if(entityPadre.get(mesR) == null){
-			costoRealActual = new BigDecimal(0);
-		}
-		
-		entityPadre.put(mesP, costoActual.add(Costo));
-		entityPadre.put(mesR, costoRealActual.add(CostoReal));
-		
-		Integer padre = (Integer)entityPadre.get("idPredecesor");
-		Integer tipoPadre = (Integer)entityPadre.get("objetoTipoPredecesor");
-		
-		if(padre > 0)
-		{
-			calcularPadreProrrateo(padre+","+tipoPadre, mesP, mesR, Costo, CostoReal, resultadoPrestamo);	
-		}
-	}
-	
-	private Map<String, Object> calcular(Map<String, Object> entity, Integer agrupacion, Map<String, Map<String, Object>> resultadoPrestamo, 
-			String[] fechaInicioSplit, String[] fechaFinSplit, Object costo, Object costoReal, int acumulacionCosto){
-		
-		String mesP = "";
-		String mesR = "";
-		
-		if(acumulacionCosto == 1){
-			if(agrupacion == AGRUPACION_MES){			
-				mesP = MES_NAME[Utils.String2Int(fechaInicioSplit[1]) - 1] + "-" + fechaInicioSplit[2] + "-P";
-				mesR = MES_NAME[Utils.String2Int(fechaInicioSplit[1]) - 1] + "-" + fechaInicioSplit[2] + "-R";
-			}else if(agrupacion == AGRUPACION_BIMESTRE){
-				if(Utils.String2Int(fechaInicioSplit[1]) >=1 && Utils.String2Int(fechaInicioSplit[1]) <=2){
-					mesP = BIMESTRE_NAME[0] + "-" + fechaInicioSplit[2] + "-P";
-					mesR = BIMESTRE_NAME[0] + "-" + fechaInicioSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaInicioSplit[1]) >=3 && Utils.String2Int(fechaInicioSplit[1]) <=4){
-					mesP = BIMESTRE_NAME[1] + "-" + fechaInicioSplit[2] + "-P";
-					mesR = BIMESTRE_NAME[1] + "-" + fechaInicioSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaInicioSplit[1]) >=5 && Utils.String2Int(fechaInicioSplit[1]) <=6){
-					mesP = BIMESTRE_NAME[2] + "-" + fechaInicioSplit[2] + "-P";
-					mesR = BIMESTRE_NAME[2] + "-" + fechaInicioSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaInicioSplit[1]) >=7 && Utils.String2Int(fechaInicioSplit[1]) <=8){
-					mesP = BIMESTRE_NAME[3] + "-" + fechaInicioSplit[2] + "-P";
-					mesR = BIMESTRE_NAME[3] + "-" + fechaInicioSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaInicioSplit[1]) >=9 && Utils.String2Int(fechaInicioSplit[1]) <=10){
-					mesP = BIMESTRE_NAME[4] + "-" + fechaInicioSplit[2] + "-P";
-					mesR = BIMESTRE_NAME[4] + "-" + fechaInicioSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaInicioSplit[1]) >=11 && Utils.String2Int(fechaInicioSplit[1]) <=12){
-					mesP = BIMESTRE_NAME[5] + "-" + fechaInicioSplit[2] + "-P";
-					mesR = BIMESTRE_NAME[5] + "-" + fechaInicioSplit[2] + "-R";
-				}
-			}else if(agrupacion == AGRUPACION_TRIMESTRE){
-				if(Utils.String2Int(fechaInicioSplit[1]) >=1 && Utils.String2Int(fechaInicioSplit[1]) <=3){
-					mesP = TRIMESTRE_NAME[0] + "-" + fechaInicioSplit[2] + "-P";
-					mesR = TRIMESTRE_NAME[0] + "-" + fechaInicioSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaInicioSplit[1]) >=4 && Utils.String2Int(fechaInicioSplit[1]) <=6){
-					mesP = TRIMESTRE_NAME[1] + "-" + fechaInicioSplit[2] + "-P";
-					mesR = TRIMESTRE_NAME[1] + "-" + fechaInicioSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaInicioSplit[1]) >=7 && Utils.String2Int(fechaInicioSplit[1]) <=9){
-					mesP = TRIMESTRE_NAME[2] + "-" + fechaInicioSplit[2] + "-P";
-					mesR = TRIMESTRE_NAME[2] + "-" + fechaInicioSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaInicioSplit[1]) >=10 && Utils.String2Int(fechaInicioSplit[1]) <=12){
-					mesP = TRIMESTRE_NAME[3] + "-" + fechaInicioSplit[2] + "-P";
-					mesR = TRIMESTRE_NAME[3] + "-" + fechaInicioSplit[2] + "-R";
-				}
-			}else if(agrupacion == AGRUPACION_CUATRIMESTRE){
-				if(Utils.String2Int(fechaInicioSplit[1]) >=1 && Utils.String2Int(fechaInicioSplit[1]) <=4){
-					mesP = CUATRIMESTRE_NAME[0] + "-" + fechaInicioSplit[2] + "-P";
-					mesR = CUATRIMESTRE_NAME[0] + "-" + fechaInicioSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaFinSplit[1]) >=5 && Utils.String2Int(fechaFinSplit[1]) <=8){
-					mesP = CUATRIMESTRE_NAME[1] + "-" + fechaInicioSplit[2] + "-P";
-					mesR = CUATRIMESTRE_NAME[1] + "-" + fechaInicioSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaInicioSplit[1]) >=9 && Utils.String2Int(fechaInicioSplit[1]) <=12){
-					mesP = CUATRIMESTRE_NAME[2] + "-" + fechaInicioSplit[2] + "-P";
-					mesR = CUATRIMESTRE_NAME[2] + "-" + fechaInicioSplit[2] + "-R";
-				}
-			}else if(agrupacion == AGRUPACION_SEMESTRE){
-				if(Utils.String2Int(fechaInicioSplit[1]) >=1 && Utils.String2Int(fechaInicioSplit[1]) <=6){
-					mesP = SEMESTRE_NAME[0] + "-" + fechaInicioSplit[2] + "-P";
-					mesR = SEMESTRE_NAME[0] + "-" + fechaInicioSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaInicioSplit[1]) >=7 && Utils.String2Int(fechaInicioSplit[1]) <=12){
-					mesP = SEMESTRE_NAME[1] + "-" + fechaInicioSplit[2] + "-P";
-					mesR = SEMESTRE_NAME[1] + "-" + fechaInicioSplit[2] + "-R";
-				}
-			}else if(agrupacion == AGRUPACION_ANUAL){
-				mesP = "Anio-"+fechaInicioSplit[2]+"-P";
-				mesR = "Anio-"+fechaInicioSplit[2]+"-R";
-			}
-			
-			BigDecimal costoActual = null;
-			if( entity.get(mesP) instanceof Integer ) {
-				Integer ca = (Integer)entity.get(mesP); 
-				costoActual = new BigDecimal(ca);
-			} else if( entity.get(mesP) instanceof BigDecimal ){
-				costoActual = (BigDecimal)entity.get(mesP);
-			} else if(entity.get(mesP) == null){
-				costoActual = new BigDecimal(0);
-			}
-			
-			BigDecimal costoRealActual = null;
-			
-			if( entity.get(mesR) instanceof Integer ) {
-				Integer ca = (Integer)entity.get(mesR); 
-				costoRealActual = new BigDecimal(ca);
-			} else if( entity.get(mesR) instanceof BigDecimal ){
-				costoRealActual = (BigDecimal)entity.get(mesR);
-			} else if(entity.get(mesR) == null){
-				costoRealActual = new BigDecimal(0);
-			}		
-			
-			entity.put(mesP, costoActual.add((BigDecimal)costo));
-			entity.put(mesR, costoRealActual.add((BigDecimal)costoReal));
-			
-			Integer padre = (Integer)entity.get("idPredecesor");
-			Integer tipoPadre = (Integer)entity.get("objetoTipoPredecesor");
-			if(padre > 0)
-			{
-				entity = resultadoPrestamo.get(padre+","+tipoPadre);
-				calcular(entity, agrupacion, resultadoPrestamo, fechaInicioSplit, fechaFinSplit,costo, costoReal, acumulacionCosto);
-			}
-		}else if(acumulacionCosto == 2){
-			
-		}else if(acumulacionCosto == 3){
-			if(agrupacion == AGRUPACION_MES){			
-				mesP = MES_NAME[Utils.String2Int(fechaFinSplit[1]) - 1] + "-" + fechaFinSplit[2] + "-P";
-				mesR = MES_NAME[Utils.String2Int(fechaFinSplit[1]) - 1] + "-" + fechaFinSplit[2] + "-R";
-			}else if(agrupacion == AGRUPACION_BIMESTRE){
-				if(Utils.String2Int(fechaFinSplit[1]) >=1 && Utils.String2Int(fechaFinSplit[1]) <=2){
-					mesP = BIMESTRE_NAME[0] + "-" + fechaFinSplit[2] + "-P";
-					mesR = BIMESTRE_NAME[0] + "-" + fechaFinSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaFinSplit[1]) >=3 && Utils.String2Int(fechaFinSplit[1]) <=4){
-					mesP = BIMESTRE_NAME[1] + "-" + fechaFinSplit[2] + "-P";
-					mesR = BIMESTRE_NAME[1] + "-" + fechaFinSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaFinSplit[1]) >=5 && Utils.String2Int(fechaFinSplit[1]) <=6){
-					mesP = BIMESTRE_NAME[2] + "-" + fechaFinSplit[2] + "-P";
-					mesR = BIMESTRE_NAME[2] + "-" + fechaFinSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaFinSplit[1]) >=7 && Utils.String2Int(fechaFinSplit[1]) <=8){
-					mesP = BIMESTRE_NAME[3] + "-" + fechaFinSplit[2] + "-P";
-					mesR = BIMESTRE_NAME[3] + "-" + fechaFinSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaFinSplit[1]) >=9 && Utils.String2Int(fechaFinSplit[1]) <=10){
-					mesP = BIMESTRE_NAME[4] + "-" + fechaFinSplit[2] + "-P";
-					mesR = BIMESTRE_NAME[4] + "-" + fechaFinSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaFinSplit[1]) >=11 && Utils.String2Int(fechaFinSplit[1]) <=12){
-					mesP = BIMESTRE_NAME[5] + "-" + fechaFinSplit[2] + "-P";
-					mesR = BIMESTRE_NAME[5] + "-" + fechaFinSplit[2] + "-R";
-				}
-			}else if(agrupacion == AGRUPACION_TRIMESTRE){
-				if(Utils.String2Int(fechaFinSplit[1]) >=1 && Utils.String2Int(fechaFinSplit[1]) <=3){
-					mesP = TRIMESTRE_NAME[0] + "-" + fechaFinSplit[2] + "-P";
-					mesR = TRIMESTRE_NAME[0] + "-" + fechaFinSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaFinSplit[1]) >=4 && Utils.String2Int(fechaFinSplit[1]) <=6){
-					mesP = TRIMESTRE_NAME[1] + "-" + fechaFinSplit[2] + "-P";
-					mesR = TRIMESTRE_NAME[1] + "-" + fechaFinSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaFinSplit[1]) >=7 && Utils.String2Int(fechaFinSplit[1]) <=9){
-					mesP = TRIMESTRE_NAME[2] + "-" + fechaFinSplit[2] + "-P";
-					mesR = TRIMESTRE_NAME[2] + "-" + fechaFinSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaFinSplit[1]) >=10 && Utils.String2Int(fechaFinSplit[1]) <=12){
-					mesP = TRIMESTRE_NAME[3] + "-" + fechaFinSplit[2] + "-P";
-					mesR = TRIMESTRE_NAME[3] + "-" + fechaFinSplit[2] + "-R";
-				}
-			}else if(agrupacion == AGRUPACION_CUATRIMESTRE){
-				if(Utils.String2Int(fechaFinSplit[1]) >=1 && Utils.String2Int(fechaFinSplit[1]) <=4){
-					mesP = CUATRIMESTRE_NAME[0] + "-" + fechaFinSplit[2] + "-P";
-					mesR = CUATRIMESTRE_NAME[0] + "-" + fechaFinSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaFinSplit[1]) >=5 && Utils.String2Int(fechaFinSplit[1]) <=8){
-					mesP = CUATRIMESTRE_NAME[1] + "-" + fechaFinSplit[2] + "-P";
-					mesR = CUATRIMESTRE_NAME[1] + "-" + fechaFinSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaFinSplit[1]) >=9 && Utils.String2Int(fechaFinSplit[1]) <=12){
-					mesP = CUATRIMESTRE_NAME[2] + "-" + fechaFinSplit[2] + "-P";
-					mesR = CUATRIMESTRE_NAME[2] + "-" + fechaFinSplit[2] + "-R";
-				}
-			}else if(agrupacion == AGRUPACION_SEMESTRE){
-				if(Utils.String2Int(fechaFinSplit[1]) >=1 && Utils.String2Int(fechaFinSplit[1]) <=6){
-					mesP = SEMESTRE_NAME[0] + "-" + fechaFinSplit[2] + "-P";
-					mesR = SEMESTRE_NAME[0] + "-" + fechaFinSplit[2] + "-R";
-				}else if (Utils.String2Int(fechaFinSplit[1]) >=7 && Utils.String2Int(fechaFinSplit[1]) <=12){
-					mesP = SEMESTRE_NAME[1] + "-" + fechaFinSplit[2] + "-P";
-					mesR = SEMESTRE_NAME[1] + "-" + fechaFinSplit[2] + "-R";
-				}
-			}else if(agrupacion == AGRUPACION_ANUAL){
-				mesP = "Anio-"+fechaFinSplit[2]+"-P";
-				mesR = "Anio-"+fechaFinSplit[2]+"-R";
-			}
-			
-			BigDecimal costoActual = null;
-			if( entity.get(mesP) instanceof Integer ) {
-				Integer ca = (Integer)entity.get(mesP); 
-				costoActual = new BigDecimal(ca);
-			} else if( entity.get(mesP) instanceof BigDecimal ){
-				costoActual = (BigDecimal)entity.get(mesP);
-			} else if(entity.get(mesP) == null){
-				costoActual = new BigDecimal(0);
-			}
-			
-			BigDecimal costoRealActual = null;
-			
-			if( entity.get(mesR) instanceof Integer ) {
-				Integer ca = (Integer)entity.get(mesR); 
-				costoRealActual = new BigDecimal(ca);
-			} else if( entity.get(mesR) instanceof BigDecimal ){
-				costoRealActual = (BigDecimal)entity.get(mesR);
-			} else if(entity.get(mesR) == null){
-				costoRealActual = new BigDecimal(0);
-			}		
-			
-			entity.put(mesP, costoActual.add((BigDecimal)costo));
-			entity.put(mesR, costoRealActual.add((BigDecimal)costoReal));
-			
-			Integer padre = (Integer)entity.get("idPredecesor");
-			Integer tipoPadre = (Integer)entity.get("objetoTipoPredecesor");
-			if(padre > 0)
-			{
-				entity = resultadoPrestamo.get(padre+","+tipoPadre);
-				calcular(entity, agrupacion, resultadoPrestamo, fechaInicioSplit, fechaFinSplit,costo, costoReal, acumulacionCosto);
-			}
-		}
-		
-		return entity;
-	}
-	
-	private int getDiasDelMes(int mes, int ano)
-	{
-		if( (mes == 1) || (mes == 3) || (mes == 5) || (mes == 7) || (mes == 8) || (mes == 10) || (mes == 12) ) 
-	        return 31;
-	    else if( (mes == 4) || (mes == 6) || (mes == 9) || (mes == 11) ) 
-	        return 30;
-	    else if( mes == 2 )
-	    {
-	        if( (ano % 4 == 0) && (ano % 100 != 0) || (ano % 400 == 0) )
-	            return 29;
-	        else
-	            return 28;
-	    }  
-		
-		return 0;
 	}
 	
 	private void exportarExcel(Map<String,Object[]> datos, String nombreInforme, String usuario, HttpServletResponse response){
@@ -763,48 +234,138 @@ public class SInformePresupuesto extends HttpServlet {
 		}
 	}
 	
-	private Map<String, Object> getEstructura(){
-		Map<String, Object> estructura = new HashMap<String, Object>();
-		estructura.put("id", 0);
-		estructura.put("idPrestamo", 0);
-		estructura.put("objetoTipo", 0);
-		estructura.put("posicionArbol", 0);
-		estructura.put("$$treeLevel", 0);
-		estructura.put("idObjetoTipo", 0);
-		estructura.put("nombre", "");
-		estructura.put("idPredecesor", 0);
-		estructura.put("objetoTipoPredecesor", 0);
-		estructura.put("Costo", 0);
-		estructura.put("CostoReal", 0);
-		estructura.put("fechaInicio", "");
-		estructura.put("fechaFin", "");
-		estructura.put("hijo", "");
-		estructura.put("acumulacionCostos", 0);
-		estructura.put("columnas", "");
-		estructura.put("Total", 0);
+	private List<stprestamo> obtenerProyecto(int proyectoId, String usuario, Integer ejercicioInicio, Integer ejercicioFin){
+		List<stprestamo> lstPrestamo = new ArrayList<stprestamo>();
+		stprestamo estructura = new stprestamo();
 		
-		for (String columna: columnaNames){
-			estructura.put(columna, 0);
-			estructura.put("total" + columna, 0);
-		}
-		return estructura;
-	}
-
-	private LinkedHashMap<String, Map<String, Object>> obtenerProyecto(int proyectoId, String usuario){
-		LinkedHashMap<String, Map<String, Object>> resultado =  new LinkedHashMap<>();
-		List<Map<String, Object>> resultPrestamo = new ArrayList<Map<String, Object>>();
 		String[] hijos = null;
 		int contadorHijos =0;
 		Proyecto proyecto = ProyectoDAO.getProyectoPorId(proyectoId, usuario);
 		
 		if (proyecto!=null){
-			Map<String, Object> estructura = getEstructura();
-			estructura.put("objetoTipo", OBJETO_ID_PROYECTO);
-			estructura.put("posicionArbol", 1);
-			estructura.put("idObjetoTipo", proyecto.getId());
-			estructura.put("nombre", proyecto.getNombre());
-			estructura.put("idPredecesor", 0);
-			estructura.put("objetoTipoPredecesor", 0);
+			Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(proyectoId, 1);
+			
+			Integer fuente = 0;
+			Integer organismo = 0;
+			Integer correlativo = 0;
+			
+			if (prestamo != null){
+				Long codigoPresupuestario = prestamo.getCodigoPresupuestario();
+				
+				if(codigoPresupuestario > 0){
+					fuente = Utils.String2Int(Long.toString(codigoPresupuestario).substring(0,2));
+					organismo = Utils.String2Int(Long.toString(codigoPresupuestario).substring(2,6));
+					correlativo = Utils.String2Int(Long.toString(codigoPresupuestario).substring(6,10));
+				}
+			}
+
+			estructura.objetoTipo = OBJETO_ID_PROYECTO;
+			estructura.posicionArbol = 1;
+			estructura.idObjetoTipo = proyecto.getId();
+			estructura.nombre = proyecto.getNombre();
+			estructura.idPredecesor = 0;
+			estructura.objetoTipoPredecesor = 0;
+			
+			for(int i = ejercicioInicio; i <= ejercicioFin; i++){
+				List<?> objetoPrestamo = ReporteDAO.getPresupuestoProyecto(fuente, organismo, correlativo, i);
+				
+				if(objetoPrestamo.size() > 0){
+					for(Object obj : objetoPrestamo){
+						Object[] ob = (Object[])obj;
+						estructura.mes1r = (BigDecimal)ob[0] == null ? new BigDecimal(0) : (BigDecimal)ob[0];
+						estructura.mes2r = (BigDecimal)ob[1] == null ? new BigDecimal(0) : (BigDecimal)ob[1];
+						estructura.mes3r = (BigDecimal)ob[2] == null ? new BigDecimal(0) : (BigDecimal)ob[2];
+						estructura.mes4r = (BigDecimal)ob[3] == null ? new BigDecimal(0) : (BigDecimal)ob[3];
+						estructura.mes5r = (BigDecimal)ob[4] == null ? new BigDecimal(0) : (BigDecimal)ob[4];
+						estructura.mes6r = (BigDecimal)ob[5] == null ? new BigDecimal(0) : (BigDecimal)ob[5];
+						estructura.mes7r = (BigDecimal)ob[6] == null ? new BigDecimal(0) : (BigDecimal)ob[6];
+						estructura.mes8r = (BigDecimal)ob[7] == null ? new BigDecimal(0) : (BigDecimal)ob[7];
+						estructura.mes9r = (BigDecimal)ob[8] == null ? new BigDecimal(0) : (BigDecimal)ob[8];
+						estructura.mes10r = (BigDecimal)ob[9] == null ? new BigDecimal(0) : (BigDecimal)ob[9];
+						estructura.mes11r = (BigDecimal)ob[10] == null ? new BigDecimal(0) : (BigDecimal)ob[10];
+						estructura.mes12r = (BigDecimal)ob[11] == null ? new BigDecimal(0) : (BigDecimal)ob[11];
+					}
+					
+					estructura.mes1p = new BigDecimal(0);
+					estructura.mes2p = new BigDecimal(0);
+					estructura.mes3p = new BigDecimal(0);
+					estructura.mes4p = new BigDecimal(0);
+					estructura.mes5p = new BigDecimal(0);
+					estructura.mes6p = new BigDecimal(0);
+					estructura.mes7p = new BigDecimal(0);
+					estructura.mes8p = new BigDecimal(0);
+					estructura.mes9p = new BigDecimal(0);
+					estructura.mes10p = new BigDecimal(0);
+					estructura.mes11p = new BigDecimal(0);
+					estructura.mes12p = new BigDecimal(0);
+					
+					List<PlanAdquisiciones> listaPlan = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(1, proyecto.getId());
+					
+					if(listaPlan != null){
+						List<Pago> pagos = new ArrayList<Pago>();
+						for(PlanAdquisiciones plan : listaPlan){
+							pagos = PagoDAO.getPagosByIdPlan(plan.getId());
+							
+							for(Pago pago : pagos){
+								Date fechaPago = pago.getFechaPago();
+								Integer mes = Utils.String2Int(Utils.formatDate(fechaPago).split("/")[1]);
+								
+								switch (mes){
+								case 1:
+									estructura.mes1p = estructura.mes1p.add(pago.getPago());
+									break;
+								case 2:
+									estructura.mes2p = estructura.mes2p.add(pago.getPago());
+									break;
+								case 3:
+									estructura.mes3p = estructura.mes3p.add(pago.getPago());
+									break;
+								case 4:
+									estructura.mes4p = estructura.mes4p.add(pago.getPago());
+									break;
+								case 5: 
+									estructura.mes5p = estructura.mes5p.add(pago.getPago());
+									break;
+								case 6:
+									estructura.mes6p = estructura.mes6p.add(pago.getPago());
+									break;
+								case 7:
+									estructura.mes7p = estructura.mes7p.add(pago.getPago());
+									break;
+								case 8:
+									estructura.mes8p = estructura.mes8p.add(pago.getPago());
+									break;
+								case 9:
+									estructura.mes9p = estructura.mes9p.add(pago.getPago());
+									break;
+								case 10:
+									estructura.mes10p = estructura.mes10p.add(pago.getPago());
+									break;
+								case 11:
+									estructura.mes11p = estructura.mes11p.add(pago.getPago());
+									break;
+								case 12:
+									estructura.mes12p = estructura.mes1p.add(pago.getPago());
+									break;
+								}
+							}
+						}
+					}
+				}else{
+					estructura.mes1r = new BigDecimal(0);
+					estructura.mes2r = new BigDecimal(0);
+					estructura.mes3r = new BigDecimal(0);
+					estructura.mes4r = new BigDecimal(0);
+					estructura.mes5r = new BigDecimal(0);
+					estructura.mes6r = new BigDecimal(0);
+					estructura.mes7r = new BigDecimal(0);
+					estructura.mes8r = new BigDecimal(0);
+					estructura.mes9r = new BigDecimal(0);
+					estructura.mes10r = new BigDecimal(0);
+					estructura.mes11r = new BigDecimal(0);
+					estructura.mes12r = new BigDecimal(0);
+				}
+			}
 
 			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
 					null, null, null, null, null, usuario);
@@ -814,18 +375,134 @@ public class SInformePresupuesto extends HttpServlet {
 				hijos[contadorHijos] = componente.getId().toString() + ",2";
 				contadorHijos++;
 			}
-			estructura.put("hijo",hijos);
-			resultPrestamo.add(estructura);
-			resultado.put(proyecto.getId()+","+OBJETO_ID_PROYECTO,estructura);
+			estructura.hijos = hijos;
+			lstPrestamo.add(estructura);
 						
 			for (Componente componente : componentes){
-				estructura = getEstructura();
-				estructura.put("objetoTipo", OBJETO_ID_COMPONENTE);
-				estructura.put("posicionArbol", 2);
-				estructura.put("idObjetoTipo", componente.getId());
-				estructura.put("nombre", componente.getNombre());
-				estructura.put("idPredecesor", proyecto.getId());
-				estructura.put("objetoTipoPredecesor", 1);
+				estructura = new stprestamo();
+				estructura.objetoTipo = OBJETO_ID_COMPONENTE;
+				estructura.posicionArbol = 2;
+				estructura.idObjetoTipo = componente.getId();
+				estructura.nombre = componente.getNombre();
+				estructura.idPredecesor = proyecto.getId();
+				estructura.objetoTipoPredecesor = 1;
+				
+				List<?> objeto = new ArrayList<Object>();
+				
+				for(int i = ejercicioInicio; i <= ejercicioFin; i++){
+					objeto = ReporteDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, i, componente.getPrograma(), componente.getSubprograma(), componente.getProyecto_1(), componente.getActividad(), componente.getObra());
+					
+					if(objeto.size() > 0){
+						for(Object obj : objeto){
+							Object[] ob = (Object[])obj;
+							estructura.mes1r = (BigDecimal)ob[0] == null ? new BigDecimal(0) : (BigDecimal)ob[0];
+							estructura.mes2r = (BigDecimal)ob[1] == null ? new BigDecimal(0) : (BigDecimal)ob[1];
+							estructura.mes3r = (BigDecimal)ob[2] == null ? new BigDecimal(0) : (BigDecimal)ob[2];
+							estructura.mes4r = (BigDecimal)ob[3] == null ? new BigDecimal(0) : (BigDecimal)ob[3];
+							estructura.mes5r = (BigDecimal)ob[4] == null ? new BigDecimal(0) : (BigDecimal)ob[4];
+							estructura.mes6r = (BigDecimal)ob[5] == null ? new BigDecimal(0) : (BigDecimal)ob[5];
+							estructura.mes7r = (BigDecimal)ob[6] == null ? new BigDecimal(0) : (BigDecimal)ob[6];
+							estructura.mes8r = (BigDecimal)ob[7] == null ? new BigDecimal(0) : (BigDecimal)ob[7];
+							estructura.mes9r = (BigDecimal)ob[8] == null ? new BigDecimal(0) : (BigDecimal)ob[8];
+							estructura.mes10r = (BigDecimal)ob[9] == null ? new BigDecimal(0) : (BigDecimal)ob[9];
+							estructura.mes11r = (BigDecimal)ob[10] == null ? new BigDecimal(0) : (BigDecimal)ob[10];
+							estructura.mes12r = (BigDecimal)ob[11] == null ? new BigDecimal(0) : (BigDecimal)ob[11];
+						}
+						
+						estructura.mes1p = new BigDecimal(0);
+						estructura.mes2p = new BigDecimal(0);
+						estructura.mes3p = new BigDecimal(0);
+						estructura.mes4p = new BigDecimal(0);
+						estructura.mes5p = new BigDecimal(0);
+						estructura.mes6p = new BigDecimal(0);
+						estructura.mes7p = new BigDecimal(0);
+						estructura.mes8p = new BigDecimal(0);
+						estructura.mes9p = new BigDecimal(0);
+						estructura.mes10p = new BigDecimal(0);
+						estructura.mes11p = new BigDecimal(0);
+						estructura.mes12p = new BigDecimal(0);
+						
+						List<PlanAdquisiciones> listaPlan = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(2, componente.getId());
+						
+						if(listaPlan != null && listaPlan.size() > 0){
+							List<Pago> pagos = new ArrayList<Pago>();
+							for(PlanAdquisiciones plan : listaPlan){
+								pagos = PagoDAO.getPagosByIdPlan(plan.getId());
+								
+								for(Pago pago : pagos){
+									Date fechaPago = pago.getFechaPago();
+									Integer mes = Utils.String2Int(Utils.formatDate(fechaPago).split("/")[1]);
+									
+									switch (mes){
+									case 1:
+										estructura.mes1p = estructura.mes1p.add(pago.getPago());
+										break;
+									case 2:
+										estructura.mes2p = estructura.mes2p.add(pago.getPago());
+										break;
+									case 3:
+										estructura.mes3p = estructura.mes3p.add(pago.getPago());
+										break;
+									case 4:
+										estructura.mes4p = estructura.mes4p.add(pago.getPago());
+										break;
+									case 5: 
+										estructura.mes5p = estructura.mes5p.add(pago.getPago());
+										break;
+									case 6:
+										estructura.mes6p = estructura.mes6p.add(pago.getPago());
+										break;
+									case 7:
+										estructura.mes7p = estructura.mes7p.add(pago.getPago());
+										break;
+									case 8:
+										estructura.mes8p = estructura.mes8p.add(pago.getPago());
+										break;
+									case 9:
+										estructura.mes9p = estructura.mes9p.add(pago.getPago());
+										break;
+									case 10:
+										estructura.mes10p = estructura.mes10p.add(pago.getPago());
+										break;
+									case 11:
+										estructura.mes11p = estructura.mes11p.add(pago.getPago());
+										break;
+									case 12:
+										estructura.mes12p = estructura.mes12p.add(pago.getPago());
+										break;
+									}
+								}
+							}
+						}
+					}else{
+						estructura.mes1r = new BigDecimal(0);
+						estructura.mes2r = new BigDecimal(0);
+						estructura.mes3r = new BigDecimal(0);
+						estructura.mes4r = new BigDecimal(0);
+						estructura.mes5r = new BigDecimal(0);
+						estructura.mes6r = new BigDecimal(0);
+						estructura.mes7r = new BigDecimal(0);
+						estructura.mes8r = new BigDecimal(0);
+						estructura.mes9r = new BigDecimal(0);
+						estructura.mes10r = new BigDecimal(0);
+						estructura.mes11r = new BigDecimal(0);
+						estructura.mes12r = new BigDecimal(0);
+						
+						estructura.mes1p = new BigDecimal(0);
+						estructura.mes2p = new BigDecimal(0);
+						estructura.mes3p = new BigDecimal(0);
+						estructura.mes4p = new BigDecimal(0);
+						estructura.mes5p = new BigDecimal(0);
+						estructura.mes6p = new BigDecimal(0);
+						estructura.mes7p = new BigDecimal(0);
+						estructura.mes8p = new BigDecimal(0);
+						estructura.mes9p = new BigDecimal(0);
+						estructura.mes10p = new BigDecimal(0);
+						estructura.mes11p = new BigDecimal(0);
+						estructura.mes12p = new BigDecimal(0);
+					}
+					
+				}
 				
 				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
 						null, null, null, null, null, usuario);
@@ -836,19 +513,132 @@ public class SInformePresupuesto extends HttpServlet {
 					hijos[contadorHijos] = producto.getId().toString() + ",3";
 					contadorHijos++;
 				}
-				estructura.put("hijo",hijos);
-				resultPrestamo.add(estructura);
-				resultado.put(componente.getId()+","+OBJETO_ID_COMPONENTE,estructura);
+				estructura.hijos = hijos;
+				lstPrestamo.add(estructura);
 				
 				for (Producto producto : productos){
-					estructura = getEstructura();
-					estructura.put("objetoTipo", OBJETO_ID_PRODUCTO);
-					estructura.put("posicionArbol", 3);
-					estructura.put("idObjetoTipo", producto.getId());
-					estructura.put("nombre", producto.getNombre());
-					estructura.put("idPredecesor", componente.getId());
-					estructura.put("objetoTipoPredecesor", 2);
-					
+					estructura = new stprestamo();
+					estructura.objetoTipo = OBJETO_ID_PRODUCTO;
+					estructura.posicionArbol = 3;
+					estructura.idObjetoTipo = producto.getId();
+					estructura.nombre = producto.getNombre();
+					estructura.idPredecesor = componente.getId();
+					estructura.objetoTipoPredecesor = 2;
+							
+					for(int i = ejercicioInicio; i <= ejercicioFin; i++){
+						objeto = ReporteDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, i, producto.getPrograma(), producto.getSubprograma(), producto.getProyecto(), producto.getActividad(), producto.getObra());
+						
+						if(objeto.size() > 0){
+							for(Object obj : objeto){
+								Object[] ob = (Object[])obj;
+								estructura.mes1r = (BigDecimal)ob[0] == null ? new BigDecimal(0) : (BigDecimal)ob[0];
+								estructura.mes2r = (BigDecimal)ob[1] == null ? new BigDecimal(0) : (BigDecimal)ob[1];
+								estructura.mes3r = (BigDecimal)ob[2] == null ? new BigDecimal(0) : (BigDecimal)ob[2];
+								estructura.mes4r = (BigDecimal)ob[3] == null ? new BigDecimal(0) : (BigDecimal)ob[3];
+								estructura.mes5r = (BigDecimal)ob[4] == null ? new BigDecimal(0) : (BigDecimal)ob[4];
+								estructura.mes6r = (BigDecimal)ob[5] == null ? new BigDecimal(0) : (BigDecimal)ob[5];
+								estructura.mes7r = (BigDecimal)ob[6] == null ? new BigDecimal(0) : (BigDecimal)ob[6];
+								estructura.mes8r = (BigDecimal)ob[7] == null ? new BigDecimal(0) : (BigDecimal)ob[7];
+								estructura.mes9r = (BigDecimal)ob[8] == null ? new BigDecimal(0) : (BigDecimal)ob[8];
+								estructura.mes10r = (BigDecimal)ob[9] == null ? new BigDecimal(0) : (BigDecimal)ob[9];
+								estructura.mes11r = (BigDecimal)ob[10] == null ? new BigDecimal(0) : (BigDecimal)ob[10];
+								estructura.mes12r = (BigDecimal)ob[11] == null ? new BigDecimal(0) : (BigDecimal)ob[11];
+							}
+							
+							estructura.mes1p = new BigDecimal(0);
+							estructura.mes2p = new BigDecimal(0);
+							estructura.mes3p = new BigDecimal(0);
+							estructura.mes4p = new BigDecimal(0);
+							estructura.mes5p = new BigDecimal(0);
+							estructura.mes6p = new BigDecimal(0);
+							estructura.mes7p = new BigDecimal(0);
+							estructura.mes8p = new BigDecimal(0);
+							estructura.mes9p = new BigDecimal(0);
+							estructura.mes10p = new BigDecimal(0);
+							estructura.mes11p = new BigDecimal(0);
+							estructura.mes12p = new BigDecimal(0);
+							
+							List<PlanAdquisiciones> listaPlan = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(3, producto.getId());
+							
+							if(listaPlan != null && listaPlan.size() > 0){
+								List<Pago> pagos = new ArrayList<Pago>();
+								for(PlanAdquisiciones plan : listaPlan){
+									pagos = PagoDAO.getPagosByIdPlan(plan.getId());
+									
+									for(Pago pago : pagos){
+										Date fechaPago = pago.getFechaPago();
+										Integer mes = Utils.String2Int(Utils.formatDate(fechaPago).split("/")[1]);
+										
+										switch (mes){
+										case 1:
+											estructura.mes1p = estructura.mes1p.add(pago.getPago());
+											break;
+										case 2:
+											estructura.mes2p = estructura.mes2p.add(pago.getPago());
+											break;
+										case 3:
+											estructura.mes3p = estructura.mes3p.add(pago.getPago());
+											break;
+										case 4:
+											estructura.mes4p = estructura.mes4p.add(pago.getPago());
+											break;
+										case 5: 
+											estructura.mes5p = estructura.mes5p.add(pago.getPago());
+											break;
+										case 6:
+											estructura.mes6p = estructura.mes6p.add(pago.getPago());
+											break;
+										case 7:
+											estructura.mes7p = estructura.mes7p.add(pago.getPago());
+											break;
+										case 8:
+											estructura.mes8p = estructura.mes8p.add(pago.getPago());
+											break;
+										case 9:
+											estructura.mes9p = estructura.mes9p.add(pago.getPago());
+											break;
+										case 10:
+											estructura.mes10p = estructura.mes10p.add(pago.getPago());
+											break;
+										case 11:
+											estructura.mes11p = estructura.mes11p.add(pago.getPago());
+											break;
+										case 12:
+											estructura.mes12p = estructura.mes12p.add(pago.getPago());
+											break;
+										}
+									}
+								}
+							}
+						}else{
+							estructura.mes1r = new BigDecimal(0);
+							estructura.mes2r = new BigDecimal(0);
+							estructura.mes3r = new BigDecimal(0);
+							estructura.mes4r = new BigDecimal(0);
+							estructura.mes5r = new BigDecimal(0);
+							estructura.mes6r = new BigDecimal(0);
+							estructura.mes7r = new BigDecimal(0);
+							estructura.mes8r = new BigDecimal(0);
+							estructura.mes9r = new BigDecimal(0);
+							estructura.mes10r = new BigDecimal(0);
+							estructura.mes11r = new BigDecimal(0);
+							estructura.mes12r = new BigDecimal(0);
+							
+							estructura.mes1p = new BigDecimal(0);
+							estructura.mes2p = new BigDecimal(0);
+							estructura.mes3p = new BigDecimal(0);
+							estructura.mes4p = new BigDecimal(0);
+							estructura.mes5p = new BigDecimal(0);
+							estructura.mes6p = new BigDecimal(0);
+							estructura.mes7p = new BigDecimal(0);
+							estructura.mes8p = new BigDecimal(0);
+							estructura.mes9p = new BigDecimal(0);
+							estructura.mes10p = new BigDecimal(0);
+							estructura.mes11p = new BigDecimal(0);
+							estructura.mes12p = new BigDecimal(0);
+						}
+					}
+
 					List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
 							null, null, null, null, null, usuario);
 					
@@ -858,18 +648,131 @@ public class SInformePresupuesto extends HttpServlet {
 						hijos[contadorHijos] = subproducto.getId().toString() + ",4";
 						contadorHijos++;
 					}
-					estructura.put("hijo",hijos);
-					resultPrestamo.add(estructura);
-					resultado.put(producto.getId()+","+OBJETO_ID_PRODUCTO,estructura);
+					estructura.hijos = hijos;
+					lstPrestamo.add(estructura);
 					
 					for (Subproducto subproducto : subproductos){
-						estructura = getEstructura();
-						estructura.put("objetoTipo", OBJETO_ID_SUBPRODUCTO);
-						estructura.put("posicionArbol", 4);
-						estructura.put("idObjetoTipo", subproducto.getId());
-						estructura.put("nombre", subproducto.getNombre());
-						estructura.put("idPredecesor", producto.getId());
-						estructura.put("objetoTipoPredecesor", 3);
+						estructura = new stprestamo();
+						estructura.objetoTipo = OBJETO_ID_SUBPRODUCTO;
+						estructura.posicionArbol = 4;
+						estructura.idObjetoTipo = subproducto.getId();
+						estructura.nombre = subproducto.getNombre();
+						estructura.idPredecesor = producto.getId();
+						estructura.objetoTipoPredecesor = 3;
+						
+						for(int i = ejercicioInicio; i <= ejercicioFin; i++){
+							objeto = ReporteDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, i, subproducto.getPrograma(), subproducto.getSubprograma(), subproducto.getProyecto(), subproducto.getActividad(), subproducto.getObra());
+							
+							if(objeto.size() > 0){
+								for(Object obj : objeto){
+									Object[] ob = (Object[])obj;
+									estructura.mes1r = (BigDecimal)ob[0] == null ? new BigDecimal(0) : (BigDecimal)ob[0];
+									estructura.mes2r = (BigDecimal)ob[1] == null ? new BigDecimal(0) : (BigDecimal)ob[1];
+									estructura.mes3r = (BigDecimal)ob[2] == null ? new BigDecimal(0) : (BigDecimal)ob[2];
+									estructura.mes4r = (BigDecimal)ob[3] == null ? new BigDecimal(0) : (BigDecimal)ob[3];
+									estructura.mes5r = (BigDecimal)ob[4] == null ? new BigDecimal(0) : (BigDecimal)ob[4];
+									estructura.mes6r = (BigDecimal)ob[5] == null ? new BigDecimal(0) : (BigDecimal)ob[5];
+									estructura.mes7r = (BigDecimal)ob[6] == null ? new BigDecimal(0) : (BigDecimal)ob[6];
+									estructura.mes8r = (BigDecimal)ob[7] == null ? new BigDecimal(0) : (BigDecimal)ob[7];
+									estructura.mes9r = (BigDecimal)ob[8] == null ? new BigDecimal(0) : (BigDecimal)ob[8];
+									estructura.mes10r = (BigDecimal)ob[9] == null ? new BigDecimal(0) : (BigDecimal)ob[9];
+									estructura.mes11r = (BigDecimal)ob[10] == null ? new BigDecimal(0) : (BigDecimal)ob[10];
+									estructura.mes12r = (BigDecimal)ob[11] == null ? new BigDecimal(0) : (BigDecimal)ob[11];
+								}
+								
+								estructura.mes1p = new BigDecimal(0);
+								estructura.mes2p = new BigDecimal(0);
+								estructura.mes3p = new BigDecimal(0);
+								estructura.mes4p = new BigDecimal(0);
+								estructura.mes5p = new BigDecimal(0);
+								estructura.mes6p = new BigDecimal(0);
+								estructura.mes7p = new BigDecimal(0);
+								estructura.mes8p = new BigDecimal(0);
+								estructura.mes9p = new BigDecimal(0);
+								estructura.mes10p = new BigDecimal(0);
+								estructura.mes11p = new BigDecimal(0);
+								estructura.mes12p = new BigDecimal(0);
+								
+								List<PlanAdquisiciones> listaPlan = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(4, subproducto.getId());
+								
+								if(listaPlan != null && listaPlan.size() > 0){
+									List<Pago> pagos = new ArrayList<Pago>();
+									for(PlanAdquisiciones plan : listaPlan){
+										pagos = PagoDAO.getPagosByIdPlan(plan.getId());
+										
+										for(Pago pago : pagos){
+											Date fechaPago = pago.getFechaPago();
+											Integer mes = Utils.String2Int(Utils.formatDate(fechaPago).split("/")[1]);
+											
+											switch (mes){
+											case 1:
+												estructura.mes1p = estructura.mes1p.add(pago.getPago());
+												break;
+											case 2:
+												estructura.mes2p = estructura.mes2p.add(pago.getPago());
+												break;
+											case 3:
+												estructura.mes3p = estructura.mes3p.add(pago.getPago());
+												break;
+											case 4:
+												estructura.mes4p = estructura.mes4p.add(pago.getPago());
+												break;
+											case 5: 
+												estructura.mes5p = estructura.mes5p.add(pago.getPago());
+												break;
+											case 6:
+												estructura.mes6p = estructura.mes6p.add(pago.getPago());
+												break;
+											case 7:
+												estructura.mes7p = estructura.mes7p.add(pago.getPago());
+												break;
+											case 8:
+												estructura.mes8p = estructura.mes8p.add(pago.getPago());
+												break;
+											case 9:
+												estructura.mes9p = estructura.mes9p.add(pago.getPago());
+												break;
+											case 10:
+												estructura.mes10p = estructura.mes10p.add(pago.getPago());
+												break;
+											case 11:
+												estructura.mes11p = estructura.mes11p.add(pago.getPago());
+												break;
+											case 12:
+												estructura.mes12p = estructura.mes12p.add(pago.getPago());
+												break;
+											}
+										}
+									}
+								}
+							}else{
+								estructura.mes1r = new BigDecimal(0);
+								estructura.mes2r = new BigDecimal(0);
+								estructura.mes3r = new BigDecimal(0);
+								estructura.mes4r = new BigDecimal(0);
+								estructura.mes5r = new BigDecimal(0);
+								estructura.mes6r = new BigDecimal(0);
+								estructura.mes7r = new BigDecimal(0);
+								estructura.mes8r = new BigDecimal(0);
+								estructura.mes9r = new BigDecimal(0);
+								estructura.mes10r = new BigDecimal(0);
+								estructura.mes11r = new BigDecimal(0);
+								estructura.mes12r = new BigDecimal(0);
+								
+								estructura.mes1p = new BigDecimal(0);
+								estructura.mes2p = new BigDecimal(0);
+								estructura.mes3p = new BigDecimal(0);
+								estructura.mes4p = new BigDecimal(0);
+								estructura.mes5p = new BigDecimal(0);
+								estructura.mes6p = new BigDecimal(0);
+								estructura.mes7p = new BigDecimal(0);
+								estructura.mes8p = new BigDecimal(0);
+								estructura.mes9p = new BigDecimal(0);
+								estructura.mes10p = new BigDecimal(0);
+								estructura.mes11p = new BigDecimal(0);
+								estructura.mes12p = new BigDecimal(0);
+							}
+						}
 						
 						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
 								null, null, null, null, null, usuario);
@@ -883,59 +786,222 @@ public class SInformePresupuesto extends HttpServlet {
 								contadorHijos++;
 							}
 						}
-						estructura.put("hijo",hijos);
-						resultPrestamo.add(estructura);
-						resultado.put(subproducto.getId()+","+OBJETO_ID_SUBPRODUCTO,estructura);
+						estructura.hijos = hijos;
+						lstPrestamo.add(estructura);
 						
 						for (Actividad actividad : actividades ){
-							resultado = ObtenerActividades(actividad,usuario,resultPrestamo, OBJETO_ID_ACTIVIDAD,subproducto.getId(), OBJETO_ID_SUBPRODUCTO,resultado);
+							lstPrestamo = ObtenerActividades(actividad,usuario,lstPrestamo, OBJETO_ID_ACTIVIDAD,subproducto.getId(), OBJETO_ID_SUBPRODUCTO, ejercicioInicio, ejercicioFin, proyectoId);
 						}
 					}
 					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
 							null, null, null, null, null, usuario);
 					for (Actividad actividad : actividades ){
-						resultado = ObtenerActividades(actividad,usuario,resultPrestamo,OBJETO_ID_SUBPRODUCTO,producto.getId(), OBJETO_ID_PRODUCTO,resultado);
+						lstPrestamo = ObtenerActividades(actividad,usuario,lstPrestamo,OBJETO_ID_SUBPRODUCTO,producto.getId(), OBJETO_ID_PRODUCTO, ejercicioInicio,ejercicioFin, proyectoId);
 					}
 				}
 				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), OBJETO_ID_COMPONENTE,
 						null, null, null, null, null, usuario);
 				for (Actividad actividad : actividades ){
-					resultado = ObtenerActividades(actividad,usuario,resultPrestamo,OBJETO_ID_PRODUCTO, componente.getId(),OBJETO_ID_COMPONENTE, resultado);
+					lstPrestamo = ObtenerActividades(actividad,usuario,lstPrestamo,OBJETO_ID_PRODUCTO, componente.getId(),OBJETO_ID_COMPONENTE, ejercicioInicio, ejercicioFin,proyectoId);
 				}
 			}
 			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, proyectoId, OBJETO_ID_PROYECTO,
 					null, null, null, null, null, usuario);
 			for (Actividad actividad : actividades ){
-				resultado = ObtenerActividades(actividad,usuario,resultPrestamo,OBJETO_ID_COMPONENTE, proyecto.getId(), OBJETO_ID_PROYECTO, resultado);
+				lstPrestamo = ObtenerActividades(actividad,usuario,lstPrestamo,OBJETO_ID_COMPONENTE, proyecto.getId(), OBJETO_ID_PROYECTO, ejercicioInicio,ejercicioFin,proyectoId);
 			}
 		}
 		
-		return resultado;
+		return lstPrestamo;
 	}
 	
-	private LinkedHashMap<String, Map<String, Object>> ObtenerActividades(Actividad actividad, String usuario, List<Map<String, Object>> lstdataEjecutado, int posicionArbol, 
-			int idPredecesor, int objetoTipoPredecesor, LinkedHashMap<String, Map<String, Object>> resultado){
+	private List<stprestamo> ObtenerActividades(Actividad actividad, String usuario, List<stprestamo> lstPrestamo, int posicionArbol,
+			int idPredecesor, int objetoTipoPredecesor, Integer ejercicioInicio, Integer ejercicioFin, Integer idPrestamo){
 		
 		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, actividad.getId(), OBJETO_ID_ACTIVIDAD, 
 				null, null,null, null, null, usuario);
 		
-		if (actividad.getCosto().compareTo(BigDecimal.ZERO) != 0 || actividad.getCostoReal().compareTo(BigDecimal.ZERO) != 0){			
+		if ((actividad.getCosto() != null && actividad.getCosto().compareTo(BigDecimal.ZERO) != 0) || (actividad.getCostoReal() != null && actividad.getCostoReal().compareTo(BigDecimal.ZERO) != 0)){			
 			Integer actividadId = actividad.getId();
-			Map<String, Object> estructura = getEstructura();
-			estructura.put("objetoTipo", OBJETO_ID_ACTIVIDAD);
-			estructura.put("posicionArbol", posicionArbol);
-			estructura.put("idObjetoTipo", actividadId);
-			estructura.put("nombre", actividad.getNombre());
-			estructura.put("idPredecesor", idPredecesor);
-			estructura.put("objetoTipoPredecesor", objetoTipoPredecesor);
-			estructura.put("Costo", actividad.getCosto() == null ? new BigDecimal(0) : actividad.getCosto());
-			estructura.put("CostoReal", actividad.getCostoReal() == null ? new BigDecimal(0) : actividad.getCostoReal());
+			stprestamo estructura = new stprestamo();
+			estructura.objetoTipo = OBJETO_ID_ACTIVIDAD;
+			estructura.posicionArbol = posicionArbol;
+			estructura.idObjetoTipo = actividadId;
+			estructura.nombre = actividad.getNombre();
+			estructura.idPredecesor = idPredecesor;
+			estructura.objetoTipoPredecesor = objetoTipoPredecesor;
+			estructura.Costo = actividad.getCosto() == null ? new BigDecimal(0) : actividad.getCosto();
 			
 			String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad, usuario).split(";");
 
-			estructura.put("fechaInicio", fechaInicioFin[0]);
-			estructura.put("fechaFin", fechaInicioFin[1]);
-			estructura.put("acumulacionCostos", actividad.getAcumulacionCosto() == null ? 3 : actividad.getAcumulacionCosto().getId());
+			estructura.fechaInicio = fechaInicioFin[0];
+			estructura.fechaFin = fechaInicioFin[1];
+			estructura.acumulacionCostos = actividad.getAcumulacionCosto() == null ? 3 : actividad.getAcumulacionCosto().getId();
+
+			
+			Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(idPrestamo, 1);
+			Long codigoPresupuestario = prestamo.getCodigoPresupuestario();
+			
+			Integer fuente = Utils.String2Int(Long.toString(codigoPresupuestario).substring(0,2));
+			Integer organismo = Utils.String2Int(Long.toString(codigoPresupuestario).substring(2,6));
+			Integer correlativo = Utils.String2Int(Long.toString(codigoPresupuestario).substring(6,10));
+			
+			for(int i = ejercicioInicio; i <= ejercicioFin; i++){
+				List<?> objeto = ReporteDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, i, actividad.getPrograma(), actividad.getSubprograma(), actividad.getProyecto(), actividad.getActividad(), actividad.getObra());
+				
+				if(objeto.size() > 0){
+					for(Object obj : objeto){
+						Object[] ob = (Object[])obj;
+						estructura.mes1r = (BigDecimal)ob[0] == null ? new BigDecimal(0) : (BigDecimal)ob[0];
+						estructura.mes2r = (BigDecimal)ob[1] == null ? new BigDecimal(0) : (BigDecimal)ob[1];
+						estructura.mes3r = (BigDecimal)ob[2] == null ? new BigDecimal(0) : (BigDecimal)ob[2];
+						estructura.mes4r = (BigDecimal)ob[3] == null ? new BigDecimal(0) : (BigDecimal)ob[3];
+						estructura.mes5r = (BigDecimal)ob[4] == null ? new BigDecimal(0) : (BigDecimal)ob[4];
+						estructura.mes6r = (BigDecimal)ob[5] == null ? new BigDecimal(0) : (BigDecimal)ob[5];
+						estructura.mes7r = (BigDecimal)ob[6] == null ? new BigDecimal(0) : (BigDecimal)ob[6];
+						estructura.mes8r = (BigDecimal)ob[7] == null ? new BigDecimal(0) : (BigDecimal)ob[7];
+						estructura.mes9r = (BigDecimal)ob[8] == null ? new BigDecimal(0) : (BigDecimal)ob[8];
+						estructura.mes10r = (BigDecimal)ob[9] == null ? new BigDecimal(0) : (BigDecimal)ob[9];
+						estructura.mes11r = (BigDecimal)ob[10] == null ? new BigDecimal(0) : (BigDecimal)ob[10];
+						estructura.mes12r = (BigDecimal)ob[11] == null ? new BigDecimal(0) : (BigDecimal)ob[11];
+					}
+					
+					estructura.mes1p = new BigDecimal(0);
+					estructura.mes2p = new BigDecimal(0);
+					estructura.mes3p = new BigDecimal(0);
+					estructura.mes4p = new BigDecimal(0);
+					estructura.mes5p = new BigDecimal(0);
+					estructura.mes6p = new BigDecimal(0);
+					estructura.mes7p = new BigDecimal(0);
+					estructura.mes8p = new BigDecimal(0);
+					estructura.mes9p = new BigDecimal(0);
+					estructura.mes10p = new BigDecimal(0);
+					estructura.mes11p = new BigDecimal(0);
+					estructura.mes12p = new BigDecimal(0);
+					
+					if(estructura.Costo.compareTo(BigDecimal.ZERO) == 0){
+						List<PlanAdquisiciones> listaPlan = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(2, actividad.getId());
+						
+						if(listaPlan != null && listaPlan.size() > 0){
+							List<Pago> pagos = new ArrayList<Pago>();
+							for(PlanAdquisiciones plan : listaPlan){
+								pagos = PagoDAO.getPagosByIdPlan(plan.getId());
+								
+								for(Pago pago : pagos){
+									Date fechaPago = pago.getFechaPago();
+									Integer mes = Utils.String2Int(Utils.formatDate(fechaPago).split("/")[1]);
+									
+									switch (mes){
+									case 1:
+										estructura.mes1p = estructura.mes1p.add(pago.getPago());
+										break;
+									case 2:
+										estructura.mes2p = estructura.mes2p.add(pago.getPago());
+										break;
+									case 3:
+										estructura.mes3p = estructura.mes3p.add(pago.getPago());
+										break;
+									case 4:
+										estructura.mes4p = estructura.mes4p.add(pago.getPago());
+										break;
+									case 5: 
+										estructura.mes5p = estructura.mes5p.add(pago.getPago());
+										break;
+									case 6:
+										estructura.mes6p = estructura.mes6p.add(pago.getPago());
+										break;
+									case 7:
+										estructura.mes7p = estructura.mes7p.add(pago.getPago());
+										break;
+									case 8:
+										estructura.mes8p = estructura.mes8p.add(pago.getPago());
+										break;
+									case 9:
+										estructura.mes9p = estructura.mes9p.add(pago.getPago());
+										break;
+									case 10:
+										estructura.mes10p = estructura.mes10p.add(pago.getPago());
+										break;
+									case 11:
+										estructura.mes11p = estructura.mes11p.add(pago.getPago());
+										break;
+									case 12:
+										estructura.mes12p = estructura.mes12p.add(pago.getPago());
+										break;
+									}
+								}
+							}
+						}
+					}else{
+						Integer mes = Utils.String2Int(estructura.fechaFin.split("/")[1]);
+						
+						switch (mes){
+						case 1:
+							estructura.mes1p = estructura.mes1p.add(estructura.Costo);
+							break;
+						case 2:
+							estructura.mes2p = estructura.mes2p.add(estructura.Costo);
+							break;
+						case 3:
+							estructura.mes3p = estructura.mes3p.add(estructura.Costo);
+							break;
+						case 4:
+							estructura.mes4p = estructura.mes4p.add(estructura.Costo);
+							break;
+						case 5: 
+							estructura.mes5p = estructura.mes5p.add(estructura.Costo);
+							break;
+						case 6:
+							estructura.mes6p = estructura.mes6p.add(estructura.Costo);
+							break;
+						case 7:
+							estructura.mes7p = estructura.mes7p.add(estructura.Costo);
+							break;
+						case 8:
+							estructura.mes8p = estructura.mes8p.add(estructura.Costo);
+							break;
+						case 9:
+							estructura.mes9p = estructura.mes9p.add(estructura.Costo);
+							break;
+						case 10:
+							estructura.mes10p = estructura.mes10p.add(estructura.Costo);
+							break;
+						case 11:
+							estructura.mes11p = estructura.mes11p.add(estructura.Costo);
+							break;
+						case 12:
+							estructura.mes12p = estructura.mes12p.add(estructura.Costo);
+							break;
+						}
+					}
+				}else{
+					estructura.mes1r = new BigDecimal(0);
+					estructura.mes2r = new BigDecimal(0);
+					estructura.mes3r = new BigDecimal(0);
+					estructura.mes4r = new BigDecimal(0);
+					estructura.mes5r = new BigDecimal(0);
+					estructura.mes6r = new BigDecimal(0);
+					estructura.mes7r = new BigDecimal(0);
+					estructura.mes8r = new BigDecimal(0);
+					estructura.mes9r = new BigDecimal(0);
+					estructura.mes10r = new BigDecimal(0);
+					estructura.mes11r = new BigDecimal(0);
+					estructura.mes12r = new BigDecimal(0);
+					
+					estructura.mes1p = new BigDecimal(0);
+					estructura.mes2p = new BigDecimal(0);
+					estructura.mes3p = new BigDecimal(0);
+					estructura.mes4p = new BigDecimal(0);
+					estructura.mes5p = new BigDecimal(0);
+					estructura.mes6p = new BigDecimal(0);
+					estructura.mes7p = new BigDecimal(0);
+					estructura.mes8p = new BigDecimal(0);
+					estructura.mes9p = new BigDecimal(0);
+					estructura.mes10p = new BigDecimal(0);
+					estructura.mes11p = new BigDecimal(0);
+					estructura.mes12p = new BigDecimal(0);
+				}
+			}
 			
 			String[] hijos = new String[actividades.size()];
 			int contadorHijos = 0;
@@ -943,16 +1009,12 @@ public class SInformePresupuesto extends HttpServlet {
 					hijos[contadorHijos] = subActividad.getId().toString() + ",5";
 					contadorHijos++;
 			}
-			
-			estructura.put("hijo",hijos);
-			lstdataEjecutado.add(estructura);
-			resultado.put(actividadId+","+OBJETO_ID_ACTIVIDAD, estructura);
-			actividadesCosto.add(actividadId);
-
+			estructura.hijos = hijos;
+			lstPrestamo.add(estructura);
 			for(Actividad subActividad : actividades){
-				resultado = ObtenerActividades(subActividad, usuario, lstdataEjecutado, posicionArbol + 1, actividadId, OBJETO_ID_ACTIVIDAD, resultado);
+				lstPrestamo = ObtenerActividades(subActividad, usuario, lstPrestamo, posicionArbol + 1, actividadId, OBJETO_ID_ACTIVIDAD, ejercicioInicio,ejercicioFin,idPrestamo);
 			}
 		}
-		return resultado;
+		return lstPrestamo;
 	}
 }

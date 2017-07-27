@@ -53,6 +53,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		mi.gridOptions1 = {
 			enableSorting: false,
 			showColumnFooter: true,
+			enableCellEdit: false,
 			columnDefs: [
 				{ name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: 'Actividades del proyecto', enableColumnMenu: false, 
 					footerCellTemplate: '<div class="ui-grid-cell-contents">Total de Actividades: {{grid.appScope.controller.totalActividades}}</div>',
