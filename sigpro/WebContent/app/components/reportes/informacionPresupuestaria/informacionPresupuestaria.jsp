@@ -2,12 +2,12 @@
 	pageEncoding="UTF-8"%>	
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-	
-	<style>
-		.actividad { font-weight: normal !important; }
-		.padre {font-weight: bold;}
-	    .real { background-color: #f7e681 !important }
-	    .realTotal { background-color: #f7e681 !important }
+
+<style>
+	.actividad { font-weight: normal !important; }
+	.padre {font-weight: bold;}
+    .real { background-color: #f7e681 !important }
+    .realTotal { background-color: #f7e681 !important }
 		
 		.divPadreNombres{
 			float: left; 
@@ -108,21 +108,21 @@
 		    border-radius: 4px;
 		}
 		
-	</style>
+</style>
 
 <div ng-controller="adquisicionesController as controller" class="maincontainer all_page" id="title">
 	
-    <shiro:lacksPermission name="24010">
+	<shiro:lacksPermission name="24010">
 			<p ng-init="controller.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
 	    <div class="col-sm-12">
 	    	<div style="width: 100%; height: 20%">
 	    		<div class="row">
-		    		<div class="panel panel-default">
+	<div class="panel panel-default">
 		  				<div class="panel-heading"><h3>Ejecución presupuestaria</h3></div>
 					</div>
-				</div>
-    			<br>
+	</div>
+    <br>
 	    		<div class="row">
 					<div class="form-group col-sm-3">
 						<select  class="inputText" ng-model="controller.prestamo"
@@ -146,14 +146,14 @@
 					</div>
 					<div class="col-sm-7" align="right" ng-hide="!controller.mostrarDescargar">
 						<div class="form-group col-sm-1">
-						</div>
+					</div>
 						<div class="col-sm-11">
 							<div class="btn-group">
 								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="true" ng-click="controller.calcularTamaniosCeldas()" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
 								<span>MQ</span></label>
 								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="false" ng-click="controller.calcularTamaniosCeldas()" uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false">
 								<span>Q</span></label>
-							</div>
+					</div>
 							<div class="btn-group" style="padding-left: 20px;">
 								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="1" ng-click="controller.generar(1)" uib-tooltip="Mensual" role="button" tabindex="1" aria-invalid="false">
 								<span>M</span></label>
@@ -167,19 +167,19 @@
 								<span>S</span></label>
 								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="6" ng-click="controller.generar(6)" uib-tooltip="Anual" role="button" tabindex="6" aria-invalid="false">
 								<span>A</span></label>
-							</div>
+				</div>
 							<div class="btn-group" style="padding-left: 20px;">
 								<label class="btn btn-default" ng-model="controller.grupoMostrado.planificado"  uib-btn-checkbox ng-click="controller.verificaSeleccionTipo(1)" uib-tooltip="Planificado" role="button" tabindex="7" aria-invalid="false">
 								<span>P</span></label>
 								<label class="btn btn-default" ng-model="controller.grupoMostrado.real"  uib-btn-checkbox ng-click="controller.verificaSeleccionTipo(2)" uib-tooltip="Real" role="button" tabindex="8" aria-invalid="false">
 								<span>R</span></label>
-	    					</div>
+						</div>
 							<div class="btn-group" style="padding-left: 20px;">
 								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrarDescargar">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-							</div>
-						</div>
 					</div>
+				</div>
+	    	</div>
     			<br><br><br><br>
 	    	</div>
 	    	<div style="width: 100%; height: 80%" id="reporte">
@@ -190,7 +190,7 @@
 								<br />
 								<br /> <b>Cargando, por favor espere...</b> 
 							</span>
-						</div>
+					</div>
 					</div>		
 		    	<div class="row" ng-hide="!controller.mostrarDescargar">
 		    				
@@ -208,7 +208,7 @@
 							      	</tr>
 								</tbody>
 							</table>
-		    			</div>
+				</div>
 	    			</div>
 		    		<div class="divPadreDatos" style="max-width: {{controller.tamanoTotal}}px">
 	    				<div class="divTabla">

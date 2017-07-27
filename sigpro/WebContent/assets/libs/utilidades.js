@@ -32,7 +32,7 @@ app.provider('Utilidades', function() {
 					return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/
 							.test(correo);
 				}
-				
+
 				dataFactory.getCantidadCabecerasReporte = function(areaReporte, totalAnios, totalCabeceras, tamanioMinimoColumna){
 					while (totalCabeceras>0){
 						var columnasAMostrar = (totalCabeceras * totalAnios) + totalAnios + 1;

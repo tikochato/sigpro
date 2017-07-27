@@ -1,4 +1,4 @@
-var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'ui.grid.edit', 'ui.grid.rowEdit', 'smart-table']);
+var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'ui.grid.edit', 'ui.grid.rowEdit']);
 
 app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion',
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion){
@@ -26,10 +26,15 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		var AGRUPACION_SEMESTRE= 5;
 		var AGRUPACION_ANUAL= 6;
 		
+		var MES_NAME = ['mes1','mes2','mes3','mes4','mes5','mes6','mes7','mes8','mes9','mes10','mes11','mes12'];
 		var MES_DISPLAY_NAME = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+		var BIMESTRE_NAME = ['Bimestre1', 'Bimestre2', 'Bimestre3', 'Bimestre4', 'Bimestre5', 'Bimestre6'];
 		var BIMESTRE_DISPLAY_NAME = ['Bimestre 1', 'Bimestre 2','Bimestre 3','Bimestre 4','Bimestre 5','Bimestre 6'];
+		var TRIMESTRE_NAME = ['Trimestre1', 'Trimestre2','Trimestre3','Trimestre4'];
 		var TRIMESTRE_DISPLAY_NAME = ['Trimestre 1', 'Trimestre 2', 'Trimestre 3', 'Trimestre 4'];
+		var CUATRIMESTRE_NAME = ['Cuatrimestre1','Cuatrimestre2','Cuatrimestre3'];
 		var CUATRIMESTRE_DISPLAY_NAME = ['Cuatrimestre 1', 'Cuatrimestre 2', 'Cuatrimestre 3'];
+		var SEMESTRE_NAME = ['Semestre1','Semestre2'];
 		var SEMESTRE_DISPLAY_NAME = ['Semestre 1','Semestre 2'];
 		var ANUAL_DISPLAY_NAME = ['Anual'];
 		
@@ -144,18 +149,18 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			    minMode: 'year'
 		};
 		
-		$http.post('/SProyecto',{accion: 'getProyectos'}).success(
-			function(response) {
-				mi.prestamos = [];
-				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione una opción'});
-				if (response.success){
-					for (var i = 0; i < response.entidades.length; i++){
-						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
+			$http.post('/SProyecto',{accion: 'getProyectos'}).success(
+				function(response) {
+					mi.prestamos = [];
+					mi.prestamos.push({'value' : 0, 'text' : 'Seleccione una opción'});
+					if (response.success){
+						for (var i = 0; i < response.entidades.length; i++){
+							mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
+						}
+						mi.prestamo = mi.prestamos[0];
 					}
-					mi.prestamo = mi.prestamos[0];
-				}
-		});
-				
+				});
+		
 		mi.anterior = function(){
 			var elemento = document.getElementById("divTablaDatos");
 			if(mi.totalCabecerasAMostrar == 0){
@@ -169,11 +174,11 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 					mi.SiguienteActivo = true;
 					if(elemento.scrollLeft <= 0){
 						mi.AnteriorActivo = false;
-					}
-				}
-			}
-		}
-		
+	            }
+				        		}
+				        		}
+				            }
+				
 		mi.siguiente = function(){
 			var elemento = document.getElementById("divTablaDatos");
 			if(mi.totalCabecerasAMostrar == 0){
@@ -191,7 +196,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				}
 			}
 		}
-		
+				
 		mi.validar = function(noElemento){
 			if(mi.prestamo.value > 0)
 			{
@@ -205,22 +210,22 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 						}else if(noElemento && noElemento == 3 && (mi.fechaFin - mi.fechaInicio)>mi.limiteAnios){ //fechaFin
 							mi.fechaFin = mi.fechaInicio + mi.limiteAnios;
 							$utilidades.mensaje('warning','La diferencia de años no puede ser mayor a '+mi.limiteAnios);
-						}
+				        		}
 						mi.generar(mi.agrupacionActual);
 					}else{
 						$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
+				            }
 					}
 				}
-			}
-		}
-		
+				        		}
+						
 		mi.verificaSeleccionTipo = function(tipo){
 			mi.mostrarCargando = true;
 			if(mi.grupoMostrado.planificado && mi.grupoMostrado.real){
 				mi.estiloAlineacion="text-align: center;";
 			}else{
 				mi.estiloAlineacion="text-align: right; padding-right:15px;";
-			}
+				        		}
 			if(!mi.grupoMostrado.planificado && !mi.grupoMostrado.real){
 				if(tipo==1){
 					mi.grupoMostrado.real = true;
@@ -236,10 +241,10 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			var tamanioMinimo = mi.tamanioMinimoColumna;
 			if(mi.enMillones){
 				tamanioMinimo = mi.tamanioMinimoColumnaMillones;
-			}
+				        		}
 			if(mi.grupoMostrado.planificado && mi.grupoMostrado.real){
 				tamanioMinimo = tamanioMinimo * 2;
-			}
+				            }
 			mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth) - 200;
 			mi.totalAnios = Number(mi.fechaFin) - Number(mi.fechaInicio) + 1;
 			mi.totalCabecerasAMostrar = $utilidades.getCantidadCabecerasReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabeceras, tamanioMinimo);
@@ -250,12 +255,12 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			}else{
 				mi.tamanoCelda = $utilidades.getTamanioColumnaReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabecerasAMostrar);
 				mi.tamanoTotal = mi.totalCabecerasAMostrar * mi.totalAnios * mi.tamanoCelda;
-			}
+				        		}
 			mi.estiloCelda = "width:"+ mi.tamanoCelda + "px;min-width:"+ mi.tamanoCelda + "px; max-width:"+ mi.tamanoCelda + "px;";
 			mi.tamanoCabecera = mi.totalAnios * mi.tamanoCelda;
 			mi.estiloCabecera = "width:"+ mi.tamanoCabecera + "px;min-width:" + mi.tamanoCabecera +"px; max-width:"+ mi.tamanoCabecera + "px; text-align: center;";
 		}
-		
+				
 		mi.generar = function(agrupacion){
 			if(mi.prestamo.value > 0)
 			{

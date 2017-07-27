@@ -256,7 +256,7 @@ public class SActividad extends HttpServlet {
 						duracion = (int) ((fechaFin.getTime()-fechaInicio.getTime())/86400000);
 						duracionDimension = "D";
 						
-						actividad = new Actividad(actividadTipo, acumulacionCosto, null, nombre, fechaInicio, fechaFin,
+						actividad = new Actividad(actividadTipo, acumulacionCosto, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra, fuente,
 								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,costoReal,
 								null,null);
@@ -450,8 +450,8 @@ public class SActividad extends HttpServlet {
 			temp.duracionDimension = actividad.getDuracionDimension();
 			temp.costo = actividad.getCosto();
 			temp.costoReal = actividad.getCostoReal();
-			temp.acumulacionCostoId = actividad.getAcumulacionCosto().getId();
-			temp.acumulacionCostoNombre = actividad.getAcumulacionCosto().getNombre();
+			temp.acumulacionCostoId = actividad.getAcumulacionCosto()!=null ? actividad.getAcumulacionCosto().getId() : null;
+			temp.acumulacionCostoNombre = actividad.getAcumulacionCosto()!= null ? actividad.getAcumulacionCosto().getNombre(): null;
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"actividad\":",response_text);
