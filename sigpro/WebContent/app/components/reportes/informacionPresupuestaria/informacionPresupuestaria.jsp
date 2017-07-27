@@ -168,7 +168,7 @@
 								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="6" ng-click="controller.generar(6)" uib-tooltip="Anual" role="button" tabindex="6" aria-invalid="false">
 								<span>A</span></label>
 							</div>
-							<div class="btn-group" style="padding-left: 20px;">
+							<div class=" btn-group" style="padding-left: 20px;">
 								<label class="btn btn-default" ng-model="controller.grupoMostrado.planificado"  uib-btn-checkbox ng-click="controller.verificaSeleccionTipo(1)" uib-tooltip="Planificado" role="button" tabindex="7" aria-invalid="false">
 								<span>P</span></label>
 								<label class="btn btn-default" ng-model="controller.grupoMostrado.real"  uib-btn-checkbox ng-click="controller.verificaSeleccionTipo(2)" uib-tooltip="Real" role="button" tabindex="8" aria-invalid="false">
@@ -233,20 +233,20 @@
 								</tbody>
 							</table>
 						</div>
-					</div>
-		    		<div class="divTabla">
+						</div>
+			    		<div class="divTabla">
 		    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos">
 							<thead class="theadDatos">
-								<tr>
+									<tr>
 			          				<th nowrap colspan={{controller.colspan}} style="{{controller.estiloCelda}} text-align: center;" class="label-form">Total Anual</th>
-			          				<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Total</th>
-			          			</tr>
-			          			<tr>
+				          				<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Total</th>
+				          			</tr>
+				          			<tr>
 			          				<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
-						        </tr>
-							</thead>
+							        </tr>
+								</thead>
 							<tbody class="cuerpoTablaNombres bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')" scrollespejo>
-								<tr ng-repeat="row in rowCollection">
+									<tr ng-repeat="row in rowCollection">
 									<td ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
 										<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{row[1] | formatoMillones : controller.enMillones}}</span>
 						      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real" > | </span>
@@ -257,10 +257,10 @@
 						      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real" > | </span>
 						      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{row[4] | formatoMillones : controller.enMillones}}</span>
 						      		</td>
-						      	</tr>
-							</tbody>
-						</table>
-		    		</div>
+							      	</tr>
+								</tbody>
+							</table>
+			    		</div>
 				</div>
 	    	</div>
 	    	<div style="text-align: center;">
@@ -269,13 +269,13 @@
 					<li ng-show="controller.grupoMostrado.planificado"><span class="colorPlanificadoFondo"></span>Planificado</li>
 			        <li ng-show="controller.grupoMostrado.real"><span class="colorRealFondo"></span>Real</li>
 				</ol>
-				<br>
-				<label class="btn btn-default" ng-click="controller.anterior()" uib-tooltip="Anterior" ng-hide="!controller.movimiento" 
-						tooltip-placement="bottom" ng-disabled="!controller.AnteriorActivo">
-				<span class="glyphicon glyphicon-chevron-left"></span></label>
-				<label class="btn btn-default" ng-click="controller.siguiente()" uib-tooltip="Siguiente" ng-hide="!controller.movimiento"
-						tooltip-placement="bottom" ng-disabled="!controller.SiguienteActivo">
-				<span class="glyphicon glyphicon-chevron-right"></span></label>
+	    	<br>
+					<label class="btn btn-default" ng-click="controller.anterior()" uib-tooltip="Anterior" ng-hide="!controller.movimiento" 
+							tooltip-placement="bottom" ng-disabled="!controller.AnteriorActivo">
+					<span class="glyphicon glyphicon-chevron-left"></span></label>
+					<label class="btn btn-default" ng-click="controller.siguiente()" uib-tooltip="Siguiente" ng-hide="!controller.movimiento"
+							tooltip-placement="bottom" ng-disabled="!controller.SiguienteActivo">
+					<span class="glyphicon glyphicon-chevron-right"></span></label>
 	    	</div>
     	</div>
     </div>

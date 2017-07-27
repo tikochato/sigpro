@@ -38,8 +38,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		var SEMESTRE_DISPLAY_NAME = ['Semestre 1','Semestre 2'];
 		var ANUAL_DISPLAY_NAME = ['Anual'];
 		
-		//**TODO: quitar generación dinamica de informacion
-		//////////////////////**************************************************
 		
 		$scope.divActivo = "";
 		mi.activarScroll = function(id){
@@ -252,7 +250,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			};
 				
 		var nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa', 'Dupont', 'Germain', 'Delcourt', 'Erick', 'Menez'];
-        
+
         $scope.rowCollection = [];
         $scope.datosTabla = [];
         
@@ -373,15 +371,15 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCelda;
 				mi.SiguienteActivo = true;
 			}else{
-				if(elemento.scrollLeft > 0){
-					elemento.scrollLeft -= mi.tamanoCabecera;
-					document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCabecera;
-					mi.SiguienteActivo = true;
-					if(elemento.scrollLeft <= 0){
-						mi.AnteriorActivo = false;
-					}
+			if(elemento.scrollLeft > 0){
+				elemento.scrollLeft -= mi.tamanoCabecera;
+				document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCabecera;
+				mi.SiguienteActivo = true;
+				if(elemento.scrollLeft <= 0){
+					mi.AnteriorActivo = false;
 				}
 			}
+		}
 		}
 		
 		mi.siguiente = function(){
@@ -391,15 +389,15 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				document.getElementById("divCabecerasDatos").scrollLeft += mi.tamanoCelda;
 				mi.AnteriorActivo = true;
 			}else{
-				if(elemento.scrollLeft < ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
-					elemento.scrollLeft += mi.tamanoCabecera;
-					document.getElementById("divCabecerasDatos").scrollLeft += mi.tamanoCabecera;
-					mi.AnteriorActivo = true;
-					if(elemento.scrollLeft >= ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
-						mi.SiguienteActivo = false;
-					}
+			if(elemento.scrollLeft < ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
+				elemento.scrollLeft += mi.tamanoCabecera;
+				document.getElementById("divCabecerasDatos").scrollLeft += mi.tamanoCabecera;
+				mi.AnteriorActivo = true;
+				if(elemento.scrollLeft >= ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
+					mi.SiguienteActivo = false;
 				}
 			}
+		}
 		}
 		
 		mi.validar = function(noElemento){
