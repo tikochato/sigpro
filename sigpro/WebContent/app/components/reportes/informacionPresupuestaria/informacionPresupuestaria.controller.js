@@ -534,6 +534,31 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			mi.estiloCabecera = "width:"+ mi.tamanoCabecera + "px;min-width:" + mi.tamanoCabecera +"px; max-width:"+ mi.tamanoCabecera + "px; text-align: center;";
 		}
 		
+		mi.cargarTabla = function() {			
+			var datos = {
+				accion : 'generarInforme',
+				idPrestamo: mi.prestamo.value,
+				anoInicial: mi.fechaInicio,
+				anoFinal: mi.fechaFin
+			};
+		
+			mi.mostrarCargando = true;
+			mi.mostrarDescargar = false;
+			
+			$http.post('/SInformacionPresupuestaria', datos).then(function(response) {
+				if (response.data.success) {
+					mi.data = response.data.prestamo;
+					mi.mostrarCargando = false;
+					mi.mostrarDescargar = true;
+					mi.movimiento = true;
+					
+					$timeout(function(){
+						mi.mostrarCargando = false;
+					})
+				}
+			});
+	}
+		
 		mi.generar = function(agrupacion){
 			if(mi.prestamo.value > 0)
 			{
@@ -541,8 +566,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				{
 					if (mi.fechaFin >= mi.fechaInicio){
 						if(agrupacion != 0){
-							//**TODO: mostrar Cargando
-							//mi.mostrarCargando = true;
 							mi.agrupacionActual = agrupacion;
 							mi.totalCabeceras = 1;
 							switch (agrupacion) {
@@ -607,13 +630,26 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 								mi.aniosTotal.push({anio: mi.anios[j].anio});
 							}
 							
+							mi.columnastotales = [];
+							for(var i = 0; i < mi.columnas.length; i++){
+								for(var j = 0; j < mi.aniosTotal.length; j++){
+									mi.columnastotales.push({anio: j, posicion: i});
+								}
+							}
+							
+							
+							
+							mi.cargarTabla();
 							
 							//**TODO: quitar generación dinamica de informacion							
 							//////////////////****************************
-														
-							mi.mostrarDescargar = true;
-							mi.movimiento = true;
+											
+							console.log(mi.data);
+							console.log(JSON.stringify(mi.data));
 							
+							
+							
+							/*
 							for (x in mi.data.prestamo){
 								var producto = mi.data.prestamo[x];
 								if(producto.anios){
@@ -626,12 +662,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 									}
 								}
 							}
-							
-							console.log(mi.columnas);
-							console.log(mi.aniosfinales);
-							console.log(mi.data.prestamo);
-							console.log(JSON.stringify(mi.data.prestamo));
-							
+							*/
+														
 							$scope.rowCollection = [];
 							for(var i=0;i<50;i++){
 								$scope.rowCollection.push(createRandomItem());
@@ -653,6 +685,13 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			}else
 				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
 		}
+		
+		mi.getPlanificado=function(producto, indice){
+			anio = Math.ceil((indice+1)/mi.columnas);
+			mes = indice - ((anio-1)*12);
+			//return Object.keys(Objetc.keys(producto,anio),mes);
+			return Object.values(producto.anios[anio])[mes];
+		};
 }]);
 
 app.directive('scrollespejo', ['$window', function($window) {

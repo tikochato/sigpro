@@ -203,7 +203,7 @@
 				         			</tr>
 								</thead>
 								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo>
-									<tr ng-repeat="producto in controller.data.prestamo">
+									<tr ng-repeat="producto in controller.data">
 							      		<td nowrap style="min-width:200px;">{{producto.nombre}}</td>
 							      	</tr>
 								</tbody>
@@ -223,12 +223,12 @@
 							        </tr>
 								</thead>
 								<tbody class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo>
-							      	<tr ng-repeat="producto in controller.data.prestamo">
-							      		<td ng-repeat="col in mi.aniosfinales" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
-							      			<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{producto.col[anio] | formatoMillones : controller.enMillones}}</span>
-							      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real" > | </span>
-							      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{row[col] | formatoMillones : controller.enMillones}}</span>
-							      		</td>
+							      	<tr ng-repeat="producto in controller.data.prestamos">
+								      		<td ng-repeat="posicion in controller.columnastotales tracked by $index" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
+								      			<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{ controller.getPlanificado(producto,$index) | formatoMillones : controller.enMillones}}</span>
+								      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real" > | </span>
+								      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{anio | formatoMillones : controller.enMillones}}</span>
+								      		</td>
 							      	</tr>
 								</tbody>
 							</table>
