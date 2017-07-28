@@ -2,6 +2,15 @@
 	pageEncoding="UTF-8"%>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+	<style>
+		.ui-grid-header-cell-wrapper {
+			margin-left: 0px;
+			text-align: center;
+		}
+		.text-center {
+			text-align: center;
+		}
+	</style>
 	<div ng-controller="administracionTransaccionalController as controller" class="maincontainer all_page" id="title">
 		<shiro:lacksPermission name="24010">
 			<p ng-init="controller.redireccionSinPermisos()"></p>
@@ -26,27 +35,30 @@
 	    		<br>
 	    		<div style="width: 100%; height: 85%">
 	    			<div class="row">
-	    				<div class="form-group col-sm-12">
-	    					<table st-table="controller.displayedCollectionObjetos" st-safe-src="controller.rowCollectionObjetos" class="table table-striped">
-								<thead>
-									<tr>
-										<th style="display: none;">Id</th>
-										<th class="label-form" style="width: 30%; text-align: center;">Nombre</th>
-										<th class="label-form" style="width: 30%; text-align: center;">Tipo Objeto</th>
-										<th class="label-form" style="width: 17%; text-align: center;">Usuario creo</th>
-										<th class="label-form" style="width: 17%; text-align: center;">Fecha creación</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr ng-repeat="row in controller.displayedCollectionObjetos">
-										<td style="display: none;">{{row.id}}</td>
-										<td style="text-align: left">{{row.nombre}}</td>
-										<td style="text-align: center">{{row.tipoObjeto}}</td>
-										<td style="text-align: center">{{row.usuario}}</td>
-										<td style="text-align: center">{{row.fecha}}</td>
-									</tr>
-								</tbody>
-							</table>
+	    				<div class="form-group col-sm-12" align="center">
+	    					<div id="maingrid" ui-grid="controller.gridOptions" ng-class="'ui-grid-header-cell-wrapper'"
+									ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination class="grid">
+								<div class="grid_loading" ng-hide="!controller.mostrarcargando">
+								  	<div class="msg">
+								      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
+										  <br /><br />
+										  <b>Cargando, por favor espere...</b>
+									  </span>
+									</div>
+							  	</div>
+							</div>
+							<br>
+							<ul uib-pagination total-items="controller.totalPrestamo"
+								ng-model="controller.paginaActual"
+								max-size="controller.numeroMaximoPaginas"
+								items-per-page="controller.elementosPorPagina"
+								first-text="Primera"
+								last-text="Última"
+								next-text="Siguiente"
+								previous-text="Anterior"
+								class="pagination-sm" boundary-links="true" force-ellipses="true"
+								ng-change="actividadc.cambioPagina()"
+				></ul>
 	    				</div>
 	    			</div>
 	    			<div class="row">
