@@ -41,12 +41,7 @@ public class CMariaDB {
 		}
 		catch(Exception e){
 			try{
-				host = CProperties.getLocal_host();
-				port = CProperties.getLocal_port();
-				user = CProperties.getLocal_user();
-				password = CProperties.getLocal_password();
-				schema = CProperties.getLocal_schema();
-				
+				host = "localhost";
 				Class.forName("org.mariadb.jdbc.Driver").newInstance();
 				connection=DriverManager.getConnection("jdbc:mysql://"+host+":"+port+"/"+schema+"?" +
 	                    "user="+user+"&password="+password);
