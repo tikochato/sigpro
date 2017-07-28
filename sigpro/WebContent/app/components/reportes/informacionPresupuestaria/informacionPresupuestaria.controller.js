@@ -13,6 +13,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.AnteriorActivo = false;
 		mi.enMillones = true;
 		mi.agrupacionActual = 1
+		mi.columnasTotal = 1;
 		mi.limiteAnios = 5;
 		mi.tamanioMinimoColumna = 125;
 		mi.tamanioMinimoColumnaMillones = 75;
@@ -332,40 +333,23 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			anio = indice - (mes*mi.aniosTotal.length);
 			var item = mi.data[itemIndice];
 			var valor = Object.values(item.anios[anio])[mes]; 
-			/*
-			if (totales[1]){
-		    	console.log("vacio");
-		    }else{
-		    	console.log("crear");
-		        totales[1] = new Array(3);
-		        totales[1][1] = "hola";
-		    }
-			/*
-			if(mi.totales[itemIndice]){
-				var total = mi.totales[itemIndice];
-				if (total[anio]){
-					total[anio] += valor;
-				}else{
-					total[anio] = valor;
-				} 
-			}else{
-				//mi.totales[itemIndice] = [anio.toString() : valor ];
+			//calculo de totales
+			if(valor){
+				if (mi.totales[itemIndice]){ //ya existe, sumar
+			    	var total = mi.totales[itemIndice];
+			    	if(total[anio]){
+			    		total[anio] += valor;
+			        	total[mi.aniosTotal.length] += valor;
+			    	}else{
+			    		total[anio] = valor;
+			    		total[mi.aniosTotal.length] = valor;
+			    	}
+			    }else{ //no existe, crear
+			        mi.totales[itemIndice] = new Array(mi.aniosTotal.length+mi.columnasTotal);
+			        mi.totales[itemIndice][anio] = valor;
+			        mi.totales[itemIndice][mi.aniosTotal.length] = valor;
+			    }			
 			}
-			
-			if(mi.totales[indice]){
-			      var total = mi.totales[indice];
-			      if (total[anio]){
-			        total[anio] += valor;
-			      }else{
-			        total[anio] = valor;
-			      } 
-			    }else{
-			      var a= [];
-			      a[anio] = valor;
-			      mi.totales[indice] = a;
-			    }
-			    */
-			
 			return valor;
 		};
 }]);
