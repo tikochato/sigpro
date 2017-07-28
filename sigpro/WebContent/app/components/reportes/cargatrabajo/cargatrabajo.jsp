@@ -78,8 +78,8 @@
 			    	<div style="height: 50%; width: 50%; float: right;">
 				    	<div class="operation_buttons" align="right">
 							<div class="btn-group">
-								<label class="btn btn-primary"  ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.exportar">
-								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Exportar</span></label>
+								<label class="btn btn-default"  ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.exportar">
+								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
 							</div>
 						</div>
 		    			<table st-table="controller.displayedCollection" st-safe-src="controller.rowCollection" class="table table-striped">
