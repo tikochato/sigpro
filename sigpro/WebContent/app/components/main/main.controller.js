@@ -177,6 +177,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/informacionPresupuestaria/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'informacionPresupuestariaController\'" class="all_page"></div>'
             })
+            .when('/administracionTransaccional/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'administracionTransaccionalController\'" class="all_page"></div>'
+            })
             .when('/responsabletipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'responsabletipoController\'" class="all_page"></div>'
             })
@@ -473,6 +476,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'desembolsosController',
 	    	   script: '/app/components/reportes/desembolsos/desembolsos.controller.js',
 	    	   template: '/app/components/reportes/desembolsos/desembolsos.jsp'
+	       },{
+	    	   name: 'administracionTransaccionalController',
+	    	   script: '/app/components/reportes/administraciontransaccional/administracionTransaccional.controller.js',
+	    	   template: '/app/components/reportes/administraciontransaccional/administracionTransaccional.jsp'
 	       }
 
 	   ];
