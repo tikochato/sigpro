@@ -89,6 +89,18 @@
 		    font-weight: bold;
 		}
 		
+		.nombreFormat {    
+		    margin: 0 0 3px;
+		    color: #333;
+		    word-break: none;
+		    word-wrap: break-word;
+		    background-color: transparent;
+		    border: none;
+		    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+		    padding: 0px;
+		    line-height: normal;		     
+		}
+		
 		.leyendaTexto {
 		    text-align: right;
 		}
@@ -106,6 +118,12 @@
 		    width: 12px;
 		    height: 12px;
 		    border-radius: 4px;
+		}
+		
+		.grid_loading {
+		    top: initial;
+		    bottom: initial;
+		    height: 100%;
 		}
 		
 	</style>
@@ -203,8 +221,8 @@
 				         			</tr>
 								</thead>
 								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo>
-									<tr ng-repeat="producto in controller.data">
-							      		<td nowrap style="min-width:200px;">{{producto.nombre}}</td>
+									<tr ng-repeat="item in controller.data">
+							      		<td nowrap style="min-width:200px;"><pre class="nombreFormat">{{item.nombre}}</pre></td>
 							      	</tr>
 								</tbody>
 							</table>
@@ -223,11 +241,11 @@
 							        </tr>
 								</thead>
 								<tbody class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo>
-							      	<tr ng-repeat="producto in controller.data.prestamos">
-								      		<td ng-repeat="posicion in controller.columnastotales tracked by $index" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
-								      			<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{ controller.getPlanificado(producto,$index) | formatoMillones : controller.enMillones}}</span>
+							      	<tr ng-repeat="item in controller.data">
+								      		<td ng-repeat="posicion in controller.columnastotales track by $index" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
+								      			<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{controller.getPlanificado($parent.$index,$index) | formatoMillones : controller.enMillones}}</span>
 								      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real" > | </span>
-								      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{anio | formatoMillones : controller.enMillones}}</span>
+								      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{controller.getPlanificado($parent.$index,$index) | formatoMillones : controller.enMillones}}</span>
 								      		</td>
 							      	</tr>
 								</tbody>

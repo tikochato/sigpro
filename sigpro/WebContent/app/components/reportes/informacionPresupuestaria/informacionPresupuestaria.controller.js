@@ -18,6 +18,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.tamanioMinimoColumnaMillones = 75;
 		mi.grupoMostrado= {"planificado":true,"real":true};
 		mi.estiloAlineacion="text-align: center;";
+		mi.data = [];
+		mi.totales = [];
 		
 		var AGRUPACION_MES= 1;
 		var AGRUPACION_BIMESTRE = 2;
@@ -43,341 +45,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.activarScroll = function(id){
 			$scope.divActivo = id;
 	    }
-		
-
-		//**TODO: quitar generación dinamica de informacion
-		//////////////////////**************************************************
-		
-		mi.data = {
-			    "success": true,
-			    "prestamo": [{
-			        "nombre": "ConstrucciÃ³n de Escuela",
-			        "objeto_id": 13,
-			        "objeto_tipo": 1,
-			        "nivel": 1,
-			        "anios": [{
-			            "enero": null,
-			            "febrero": null,
-			            "marzo": null,
-			            "abril": null,
-			            "mayo": null,
-			            "junio": null,
-			            "julio": null,
-			            "agosto": null,
-			            "septiembre": null,
-			            "octubre": null,
-			            "noviembre": null,
-			            "diciembre": null,
-			            "anio": 2014
-			        }, {
-			            "enero": null,
-			            "febrero": null,
-			            "marzo": null,
-			            "abril": null,
-			            "mayo": null,
-			            "junio": null,
-			            "julio": null,
-			            "agosto": null,
-			            "septiembre": null,
-			            "octubre": null,
-			            "noviembre": null,
-			            "diciembre": null,
-			            "anio": 2015
-			        }, {
-			            "enero": null,
-			            "febrero": null,
-			            "marzo": null,
-			            "abril": null,
-			            "mayo": null,
-			            "junio": null,
-			            "julio": null,
-			            "agosto": null,
-			            "septiembre": null,
-			            "octubre": null,
-			            "noviembre": null,
-			            "diciembre": null,
-			            "anio": 2016
-			        }]
-			    }, {
-			        "nombre": "PreparaciÃ³n topogrÃ¡fica",
-			        "objeto_id": 26,
-			        "objeto_tipo": 2,
-			        "nivel": 2,
-			        "anios": [{
-			            "enero": null,
-			            "febrero": null,
-			            "marzo": null,
-			            "abril": null,
-			            "mayo": null,
-			            "junio": null,
-			            "julio": null,
-			            "agosto": null,
-			            "septiembre": null,
-			            "octubre": null,
-			            "noviembre": null,
-			            "diciembre": 290521.88,
-			            "anio": 2014
-			        }, {
-			            "enero": null,
-			            "febrero": null,
-			            "marzo": null,
-			            "abril": null,
-			            "mayo": null,
-			            "junio": null,
-			            "julio": null,
-			            "agosto": null,
-			            "septiembre": null,
-			            "octubre": 11923708.90,
-			            "noviembre": null,
-			            "diciembre": null,
-			            "anio": 2015
-			        }, {
-			            "enero": null,
-			            "febrero": null,
-			            "marzo": null,
-			            "abril": null,
-			            "mayo": null,
-			            "junio": null,
-			            "julio": null,
-			            "agosto": null,
-			            "septiembre": null,
-			            "octubre": 11923708.90,
-			            "noviembre": null,
-			            "diciembre": null,
-			            "anio": 2016
-			        }]
-			    }, {
-			        "nombre": "Terreno en condiciones optimas",
-			        "objeto_id": 32,
-			        "objeto_tipo": 3,
-			        "nivel": 3,
-			        "anios": [{
-			            "enero": null,
-			            "febrero": null,
-			            "marzo": null,
-			            "abril": null,
-			            "mayo": null,
-			            "junio": null,
-			            "julio": null,
-			            "agosto": null,
-			            "septiembre": null,
-			            "octubre": 3234335.34,
-			            "noviembre": null,
-			            "diciembre": null,
-			            "anio": 2014
-			        }, {
-			            "enero": null,
-			            "febrero": null,
-			            "marzo": null,
-			            "abril": null,
-			            "mayo": null,
-			            "junio": null,
-			            "julio": null,
-			            "agosto": null,
-			            "septiembre": null,
-			            "octubre": null,
-			            "noviembre": null,
-			            "diciembre": null,
-			            "anio": 2015
-			        }, {
-			            "enero": null,
-			            "febrero": null,
-			            "marzo": null,
-			            "abril": null,
-			            "mayo": null,
-			            "junio": null,
-			            "julio": null,
-			            "agosto": null,
-			            "septiembre": null,
-			            "octubre": null,
-			            "noviembre": null,
-			            "diciembre": null,
-			            "anio": 2016
-			        }]
-			    }, {
-			        "nombre": "Mediciones",
-			        "objeto_id": 16,
-			        "objeto_tipo": 4,
-			        "nivel": 4,
-			        "anios": [{
-			            "enero": null,
-			            "febrero": null,
-			            "marzo": null,
-			            "abril": null,
-			            "mayo": null,
-			            "junio": null,
-			            "julio": 10157446.00,
-			            "agosto": null,
-			            "septiembre": null,
-			            "octubre": null,
-			            "noviembre": null,
-			            "diciembre": null,
-			            "anio": 2014
-			        }, null, null]
-			    }, {
-			        "nombre": "MediciÃ³n Ã¡rea total",
-			        "objeto_id": 62,
-			        "objeto_tipo": 5,
-			        "nivel": 5,
-			        "anios": null
-			    }, {
-			        "nombre": "MediciÃ³n de Ã¡rea de construcciÃ³n",
-			        "objeto_id": 63,
-			        "objeto_tipo": 5,
-			        "nivel": 5,
-			        "anios": null
-			    }, {
-			        "nombre": "Construir planos",
-			        "objeto_id": 64,
-			        "objeto_tipo": 5,
-			        "nivel": 5,
-			        "anios": null
-			    }, {
-			        "nombre": "Emparejamiento",
-			        "objeto_id": 17,
-			        "objeto_tipo": 4,
-			        "nivel": 4,
-			        "anios": null
-			    }, {
-			        "nombre": "Nivelar terreno",
-			        "objeto_id": 65,
-			        "objeto_tipo": 5,
-			        "nivel": 5,
-			        "anios": null
-			    }, {
-			        "nombre": "Compra",
-			        "objeto_id": 17063,
-			        "objeto_tipo": 5,
-			        "nivel": 3,
-			        "anios": null
-			    }, {
-			        "nombre": "Instalaciones elÃ©ctricas",
-			        "objeto_id": 28,
-			        "objeto_tipo": 2,
-			        "nivel": 2,
-			        "anios": null
-			    }, {
-			        "nombre": "InstalaciÃ³n toma de corriente",
-			        "objeto_id": 70,
-			        "objeto_tipo": 5,
-			        "nivel": 3,
-			        "anios": null
-			    }, {
-			        "nombre": "implementaciÃ³n red principal",
-			        "objeto_id": 68,
-			        "objeto_tipo": 5,
-			        "nivel": 3,
-			        "anios": null
-			    }, {
-			        "nombre": "Pruea",
-			        "objeto_id": 17065,
-			        "objeto_tipo": 5,
-			        "nivel": 4,
-			        "anios": null
-			    }, {
-			        "nombre": "sub nivel prueba",
-			        "objeto_id": 17066,
-			        "objeto_tipo": 5,
-			        "nivel": 5,
-			        "anios": null
-			    }, {
-			        "nombre": "InstalaciÃ³n toma de corriente",
-			        "objeto_id": 69,
-			        "objeto_tipo": 5,
-			        "nivel": 3,
-			        "anios": null
-			    }, {
-			        "nombre": "ConstrucciÃ³n estructura inicial",
-			        "objeto_id": 27,
-			        "objeto_tipo": 2,
-			        "nivel": 2,
-			        "anios": null
-			    }, {
-			        "nombre": "Preparar Cimientos",
-			        "objeto_id": 33,
-			        "objeto_tipo": 3,
-			        "nivel": 3,
-			        "anios": null
-			    }, {
-			        "nombre": "Abrir zanjas",
-			        "objeto_id": 66,
-			        "objeto_tipo": 5,
-			        "nivel": 4,
-			        "anios": null
-			    }, {
-			        "nombre": "FundiciÃ³n cimientos principales",
-			        "objeto_id": 67,
-			        "objeto_tipo": 5,
-			        "nivel": 4,
-			        "anios": null
-			    }, {
-			        "nombre": "Actividad de proyecto",
-			        "objeto_id": 17067,
-			        "objeto_tipo": 5,
-			        "nivel": 2,
-			        "anios": null
-			    }]
-			};
 				
-		var nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa', 'Dupont', 'Germain', 'Delcourt', 'Erick', 'Menez'];
-
-        $scope.rowCollection = [];
-        $scope.datosTabla = [];
-        
-        function createRandomItem() {
-            var
-                firstName = Math.floor(Math.random() * 1000000000),
-                lastName = Math.floor(Math.random() * 1000000000),
-                age = Math.floor(Math.random() * 1000000000),
-                email = Math.floor(Math.random() * 1000000000),
-                balance = Math.floor(Math.random() * 1000000000),
-            	nombre = nameList[Math.floor(Math.random() * 9)];
-
-            return {
-                1: lastName,
-                2: age,
-                3: email,
-                4: balance,
-                5: lastName,
-                6: age,
-                7: email,
-                8: balance,
-                9: lastName,
-                10: age,
-                11: email,
-                12: balance,
-                13: lastName,
-                14: age,
-                15: email,
-                16: balance,
-                17: lastName,
-                18: age,
-                19: email,
-                20: balance,
-                21: lastName,
-                22: age,
-                23: email,
-                24: balance,
-                25: lastName,
-                26: age,
-                27: email,
-                28: balance,
-                29: lastName,
-                30: age,
-                31: email,
-                32: balance,
-                33: lastName,
-                34: age,
-                35: email,
-                36: email,
-                nombre: nombre
-            };
-        }
-        
-        $scope.columns=['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36'];
-                
-        //**************************************************////////////////////
-		
 		mi.agrupaciones = [
 			{'value' : 0, 'text' : 'Seleccione una opción'},
 			{'value' : AGRUPACION_MES, 'text' : 'Mensual'},
@@ -534,7 +202,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			mi.estiloCabecera = "width:"+ mi.tamanoCabecera + "px;min-width:" + mi.tamanoCabecera +"px; max-width:"+ mi.tamanoCabecera + "px; text-align: center;";
 		}
 		
-		mi.cargarTabla = function() {			
+		mi.cargarTabla = function(agrupacion) {			
 			var datos = {
 				accion : 'generarInforme',
 				idPrestamo: mi.prestamo.value,
@@ -548,6 +216,11 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			$http.post('/SInformacionPresupuestaria', datos).then(function(response) {
 				if (response.data.success) {
 					mi.data = response.data.prestamo;
+					var tab = "\t";
+					 for (x in mi.data){
+						 mi.data[x].nombre = tab.repeat(mi.data[x].objeto_tipo -1) + mi.data[x].nombre; 
+					 }
+					mi.renderizaTabla();
 					mi.mostrarCargando = false;
 					mi.mostrarDescargar = true;
 					mi.movimiento = true;
@@ -566,117 +239,9 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				{
 					if (mi.fechaFin >= mi.fechaInicio){
 						if(agrupacion != 0){
-							mi.agrupacionActual = agrupacion;
-							mi.totalCabeceras = 1;
-							switch (agrupacion) {
-							case 1: mi.totalCabeceras = 12; break;
-							case 2: mi.totalCabeceras = 6; break;
-							case 3: mi.totalCabeceras = 4; break;
-							case 4: mi.totalCabeceras = 3; break;
-							case 5: mi.totalCabeceras = 2; break;
-							case 6: mi.totalCabeceras = 1; break;
-							}
-							
-							mi.calcularTamaniosCeldas();
-							
-							mi.anios = [];
-							for(var i = mi.fechaInicio; i <= mi.fechaFin; i++){
-								mi.anios.push({anio: i});
-							}
-							mi.colspan = mi.anios.length;
-							mi.aniosfinales = [];
-							
-							mi.columnas = [];
-							if(agrupacion == AGRUPACION_MES){
-								for(var i = 0; i < mi.totalCabeceras; i++){
-									mi.columnas.push({nombreMes: MES_DISPLAY_NAME[i]});
-								}
-							}else if(agrupacion == AGRUPACION_BIMESTRE){
-								for(var i = 0; i < mi.totalCabeceras; i++){
-									mi.columnas.push({nombreMes: BIMESTRE_DISPLAY_NAME[i]});
-								}
-							}else if(agrupacion == AGRUPACION_TRIMESTRE){
-								for(var i = 0; i < mi.totalCabeceras; i++){
-									mi.columnas.push({nombreMes: TRIMESTRE_DISPLAY_NAME[i]});
-								}
-							}else if(agrupacion == AGRUPACION_CUATRIMESTRE){
-								for(var i = 0; i < mi.totalCabeceras; i++){
-									mi.columnas.push({nombreMes: CUATRIMESTRE_DISPLAY_NAME[i]});
-								}
-							}else if(agrupacion == AGRUPACION_SEMESTRE){
-								for(var i = 0; i < mi.totalCabeceras; i++){
-									mi.columnas.push({nombreMes: SEMESTRE_DISPLAY_NAME[i]});
-								}
-							}else if(agrupacion == AGRUPACION_ANUAL){
-								for(var i = 0; i < mi.totalCabeceras; i++){
-									mi.columnas.push({nombreMes: ANUAL_DISPLAY_NAME[i]});
-								}
-							}
-							
-							mi.objetoMostrar = [];
-							for(var i =0; i < mi.columnas.length; i++){
-								mi.objetoMostrar.push(mi.columnas[i]);
-							}
-							
-							mi.aniosfinales = [];
-							for(var i = 0; i < mi.columnas.length; i++){
-								for(var j = 0; j < mi.anios.length; j++){
-									mi.aniosfinales.push({anio: mi.anios[j].anio, nombre: mi.columnas[i].nombreMes.toLowerCase()});
-								}
-							}
-							
-							mi.aniosTotal = [];
-							for(var j = 0; j < mi.anios.length; j++){
-								mi.aniosTotal.push({anio: mi.anios[j].anio});
-							}
-							
-							mi.columnastotales = [];
-							for(var i = 0; i < mi.columnas.length; i++){
-								for(var j = 0; j < mi.aniosTotal.length; j++){
-									mi.columnastotales.push({anio: j, posicion: i});
-								}
-							}
-							
-							
-							
 							mi.cargarTabla();
+							mi.agrupacionActual = agrupacion;
 							
-							//**TODO: quitar generación dinamica de informacion							
-							//////////////////****************************
-											
-							console.log(mi.data);
-							console.log(JSON.stringify(mi.data));
-							
-							
-							
-							/*
-							for (x in mi.data.prestamo){
-								var producto = mi.data.prestamo[x];
-								if(producto.anios){
-									for(a in producto.anios){
-										var anio = producto.anios[a];
-										if (anio){
-											var nombre = anio.anio;
-											producto[nombre]= anio;
-										}
-									}
-								}
-							}
-							*/
-														
-							$scope.rowCollection = [];
-							for(var i=0;i<50;i++){
-								$scope.rowCollection.push(createRandomItem());
-						    }
-							$scope.datosTabla = [].concat($scope.rowCollection);
-							//****************************/////////////////////
-							
-							var elemento = document.getElementById("divTablaDatos");
-							if(elemento.scrollLeft >= ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
-								mi.SiguienteActivo = false;
-							}else{
-								mi.SiguienteActivo = true;
-							}
 						}
 					}else
 						$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
@@ -686,11 +251,122 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
 		}
 		
-		mi.getPlanificado=function(producto, indice){
-			anio = Math.ceil((indice+1)/mi.columnas);
-			mes = indice - ((anio-1)*12);
-			//return Object.keys(Objetc.keys(producto,anio),mes);
-			return Object.values(producto.anios[anio])[mes];
+		mi.renderizaTabla = function(){
+			mi.totalCabeceras = 1;
+			switch (mi.agrupacionActual) {
+			case 1: mi.totalCabeceras = 12; break;
+			case 2: mi.totalCabeceras = 6; break;
+			case 3: mi.totalCabeceras = 4; break;
+			case 4: mi.totalCabeceras = 3; break;
+			case 5: mi.totalCabeceras = 2; break;
+			case 6: mi.totalCabeceras = 1; break;
+			}
+			
+			mi.calcularTamaniosCeldas();
+			
+			mi.anios = [];
+			for(var i = mi.fechaInicio; i <= mi.fechaFin; i++){
+				mi.anios.push({anio: i});
+			}
+			mi.colspan = mi.anios.length;
+			mi.aniosfinales = [];
+			
+			mi.columnas = [];
+			if(mi.agrupacionActual == AGRUPACION_MES){
+				for(var i = 0; i < mi.totalCabeceras; i++){
+					mi.columnas.push({nombreMes: MES_DISPLAY_NAME[i]});
+				}
+			}else if(mi.agrupacionActual == AGRUPACION_BIMESTRE){
+				for(var i = 0; i < mi.totalCabeceras; i++){
+					mi.columnas.push({nombreMes: BIMESTRE_DISPLAY_NAME[i]});
+				}
+			}else if(mi.agrupacionActual == AGRUPACION_TRIMESTRE){
+				for(var i = 0; i < mi.totalCabeceras; i++){
+					mi.columnas.push({nombreMes: TRIMESTRE_DISPLAY_NAME[i]});
+				}
+			}else if(mi.agrupacionActual == AGRUPACION_CUATRIMESTRE){
+				for(var i = 0; i < mi.totalCabeceras; i++){
+					mi.columnas.push({nombreMes: CUATRIMESTRE_DISPLAY_NAME[i]});
+				}
+			}else if(mi.agrupacionActual == AGRUPACION_SEMESTRE){
+				for(var i = 0; i < mi.totalCabeceras; i++){
+					mi.columnas.push({nombreMes: SEMESTRE_DISPLAY_NAME[i]});
+				}
+			}else if(mi.agrupacionActual == AGRUPACION_ANUAL){
+				for(var i = 0; i < mi.totalCabeceras; i++){
+					mi.columnas.push({nombreMes: ANUAL_DISPLAY_NAME[i]});
+				}
+			}
+			
+			mi.objetoMostrar = [];
+			for(var i =0; i < mi.columnas.length; i++){
+				mi.objetoMostrar.push(mi.columnas[i]);
+			}
+			
+			mi.aniosfinales = [];
+			for(var i = 0; i < mi.columnas.length; i++){
+				for(var j = 0; j < mi.anios.length; j++){
+					mi.aniosfinales.push({anio: mi.anios[j].anio, nombre: mi.columnas[i].nombreMes.toLowerCase()});
+				}
+			}
+			
+			mi.aniosTotal = [];
+			for(var j = 0; j < mi.anios.length; j++){
+				mi.aniosTotal.push({anio: mi.anios[j].anio});
+			}
+			
+			var tamanio = mi.columnas.length * mi.aniosTotal.length; 
+			mi.columnastotales = new Array(tamanio);
+			mi.totales = new Array(mi.data.length);
+			
+			var elemento = document.getElementById("divTablaDatos");
+			if(elemento.scrollLeft >= ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
+				mi.SiguienteActivo = false;
+			}else{
+				mi.SiguienteActivo = true;
+			}
+		}
+		
+		mi.getPlanificado=function(itemIndice, indice){
+			mes = Math.floor((indice)/mi.aniosTotal.length);
+			anio = indice - (mes*mi.aniosTotal.length);
+			var item = mi.data[itemIndice];
+			var valor = Object.values(item.anios[anio])[mes]; 
+			/*
+			if (totales[1]){
+		    	console.log("vacio");
+		    }else{
+		    	console.log("crear");
+		        totales[1] = new Array(3);
+		        totales[1][1] = "hola";
+		    }
+			/*
+			if(mi.totales[itemIndice]){
+				var total = mi.totales[itemIndice];
+				if (total[anio]){
+					total[anio] += valor;
+				}else{
+					total[anio] = valor;
+				} 
+			}else{
+				//mi.totales[itemIndice] = [anio.toString() : valor ];
+			}
+			
+			if(mi.totales[indice]){
+			      var total = mi.totales[indice];
+			      if (total[anio]){
+			        total[anio] += valor;
+			      }else{
+			        total[anio] = valor;
+			      } 
+			    }else{
+			      var a= [];
+			      a[anio] = valor;
+			      mi.totales[indice] = a;
+			    }
+			    */
+			
+			return valor;
 		};
 }]);
 
