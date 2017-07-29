@@ -49,6 +49,13 @@ public class SAdministracionTransaccional extends HttpServlet {
 		String fecha_modificacion;
 		String estado;
 	}
+	
+	class stusuario{
+		String usuario;
+		Integer creados;
+		Integer actualizados;
+		Integer eliminados;
+	}
        
     public SAdministracionTransaccional() {
         super();
@@ -74,17 +81,24 @@ public class SAdministracionTransaccional extends HttpServlet {
 		Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String accion = map.get("accion");
 		String response_text="";
-		Integer proyectoId = Utils.String2Int(map.get("proyectoId"));
 		if(accion.equals("getComponentes")){
 			//List<sttransaccion> lstransaccion = ObtenerProyecto(proyectoId, usuario);
+			List<stusuario> lstusuarios = new ArrayList<stusuario>();
 			if(CMariaDB.connect()){
 				Connection conn = CMariaDB.getConnection();
 				List<List<String>> usuarios = AdministracionTransaccionalDAO.obtenerUsuarios(conn);
+				for(List<String> user : usuarios){
+					stusuario temp = new stusuario();
+					temp.usuario = user.get(0);
+					temp.creados = Utils.String2Int(user.get(1));
+					temp.actualizados = Utils.String2Int(user.get(2));
+					temp.eliminados = Utils.String2Int(user.get(3));
+					lstusuarios.add(temp);
+				}
 			}
 			
-			
-			response_text=new GsonBuilder().serializeNulls().create().toJson(lstransaccion);
-	        response_text = String.join("", "\"componentes\":",response_text);
+			response_text=new GsonBuilder().serializeNulls().create().toJson(lstusuarios);
+	        response_text = String.join("", "\"usuarios\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		

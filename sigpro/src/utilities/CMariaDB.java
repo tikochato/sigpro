@@ -41,7 +41,7 @@ public class CMariaDB {
 		}
 		catch(Exception e){
 			try{
-				host = CProperties.getLocal_host();
+				/*host = CProperties.getLocal_host();
 				port = CProperties.getLocal_port();
 				user = CProperties.getLocal_user();
 				password = CProperties.getLocal_password();
@@ -52,7 +52,7 @@ public class CMariaDB {
 	                    "user="+user+"&password="+password);
 				if(!connection.isClosed())
 					return true;
-				
+				*/
 				
 			}catch(Exception ee){
 				CLogger.writeFullConsole("Error 1 : CMariaDB.class ", ee);

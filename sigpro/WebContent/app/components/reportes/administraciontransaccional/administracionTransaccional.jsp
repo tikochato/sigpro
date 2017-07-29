@@ -24,13 +24,6 @@
 						</div>
 					</div>
 	    			<br>
-	    			<div class="row">
-			    		<div class="form-group col-sm-6">
-							<select  class="inputText" ng-model="controller.prestamo"
-								ng-options="a.text for a in controller.prestamos" ng-change="controller.generar()"></select>
-							<label for="prestamo" class="floating-label">Préstamos</label>
-						</div>
-	    			</div>
 	    		</div>
 	    		<br>
 	    		<div style="width: 100%; height: 85%">
