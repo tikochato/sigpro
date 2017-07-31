@@ -58,7 +58,7 @@ app.provider('Utilidades', function() {
 
 app.filter('formatoMillones', function() {
     return function(numero, millones) {
-    	if(numero){
+    	if(numero != null){
 	        if(millones){
 	        	var res = ((numero/1000000).toFixed(2));
 	        	return ('Q '+res.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));

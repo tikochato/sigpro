@@ -220,6 +220,24 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 					var tab = "\t";
 					 for (x in mi.data){
 						 mi.data[x].nombre = tab.repeat(mi.data[x].objeto_tipo -1) + mi.data[x].nombre; 
+						 var totalFinal = 0;
+						 var fila = [];
+						 for(a in mi.data[x].anios){
+							 var totalAnual = 0;
+							 var anio = mi.data[x].anios[a];
+							 for (m in anio){
+								 if(m != "anio"){
+									 totalAnual += anio[m];
+								 }
+							 }
+							 totalFinal += totalAnual;
+							 var tot = {"valor": totalAnual};
+							 fila.push(tot);
+						 }
+						 var tot = {"valor": totalFinal};
+						 fila.push(tot);
+						 var tot = {"anio": fila};
+						 mi.totales.push(tot);
 					 }
 					mi.renderizaTabla();
 					mi.mostrarCargando = false;
@@ -261,16 +279,22 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			case 4: mi.totalCabeceras = 3; break;
 			case 5: mi.totalCabeceras = 2; break;
 			case 6: mi.totalCabeceras = 1; break;
-			}
-			
-			mi.calcularTamaniosCeldas();
-			
+			}			
+
 			mi.anios = [];
 			for(var i = mi.fechaInicio; i <= mi.fechaFin; i++){
 				mi.anios.push({anio: i});
 			}
 			mi.colspan = mi.anios.length;
 			mi.aniosfinales = [];
+			
+			mi.aniosTotal = [];
+			for(var j = 0; j < mi.anios.length; j++){
+				mi.aniosTotal.push({anio: mi.anios[j].anio});
+			}
+			
+			mi.calcularTamaniosCeldas();
+			
 			
 			mi.columnas = [];
 			if(mi.agrupacionActual == AGRUPACION_MES){
@@ -311,14 +335,9 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				}
 			}
 			
-			mi.aniosTotal = [];
-			for(var j = 0; j < mi.anios.length; j++){
-				mi.aniosTotal.push({anio: mi.anios[j].anio});
-			}
 			
 			var tamanio = mi.columnas.length * mi.aniosTotal.length; 
 			mi.columnastotales = new Array(tamanio);
-			mi.totales = new Array(mi.data.length);
 			
 			var elemento = document.getElementById("divTablaDatos");
 			if(elemento.scrollLeft >= ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
@@ -332,24 +351,12 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			mes = Math.floor((indice)/mi.aniosTotal.length);
 			anio = indice - (mes*mi.aniosTotal.length);
 			var item = mi.data[itemIndice];
-			var valor = Object.values(item.anios[anio])[mes]; 
-			//calculo de totales
-			if(valor){
-				if (mi.totales[itemIndice]){ //ya existe, sumar
-			    	var total = mi.totales[itemIndice];
-			    	if(total[anio]){
-			    		total[anio] += valor;
-			        	total[mi.aniosTotal.length] += valor;
-			    	}else{
-			    		total[anio] = valor;
-			    		total[mi.aniosTotal.length] = valor;
-			    	}
-			    }else{ //no existe, crear
-			        mi.totales[itemIndice] = new Array(mi.aniosTotal.length+mi.columnasTotal);
-			        mi.totales[itemIndice][anio] = valor;
-			        mi.totales[itemIndice][mi.aniosTotal.length] = valor;
-			    }			
-			}
+			var valor = Object.values(item.anios[anio])[mes];
+			return valor;
+		};
+		
+		mi.getTotal=function(itemIndice, anioIndice){
+			var valor = mi.totales[itemIndice].anio[anioIndice].valor;
 			return valor;
 		};
 }]);
