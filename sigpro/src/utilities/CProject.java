@@ -234,7 +234,8 @@ public class CProject {
 				, task.getDuration().getUnits().getName() 
 				,itemPredecesor!=null ? itemPredecesor.objetoId : null
 				, itemPredecesor != null ? itemPredecesor.objetoTipo : null
-				, null, null, new BigDecimal(task.getCost().toString()),new BigDecimal(task.getActualCost().toString()),null,null);
+				, null, null, new BigDecimal(task.getCost().toString()),new BigDecimal(task.getActualCost().toString()),null,null
+				);
 		
 		return ActividadDAO.guardarActividad(actividad) ? actividad : null;
 	}

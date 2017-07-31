@@ -82,9 +82,13 @@ public class SPrestamoMetas extends HttpServlet {
 	private static final int AGRUPACION_CUATRIMESTRE= 2;
 	private static final int AGRUPACION_SEMESTRE= 3;
 	private static final int AGRUPACION_ANUAL= 4;
-		
+	
+	private static final int ESTADO_ACTIVO= 1;
+	private static final int ESTADO_CONGELADO= 2;
+	
 	class stproductometa {
 		Integer id;
+		String edt;
 		Integer objetoTipo;
 		String objetoTipoNombre;
 		String nombreMeta;
@@ -98,6 +102,7 @@ public class SPrestamoMetas extends HttpServlet {
 		String lineaBase;
 		Integer metaFinalId;
 		String metaFinal;
+		Integer estado;
 	}
 	
 	class stmeta {
@@ -149,10 +154,11 @@ public class SPrestamoMetas extends HttpServlet {
 			Integer proyectoId = map.get("proyectoid")!=null ? Integer.parseInt(map.get("proyectoid")) : 0;
 			
 			List<stproductometa> lstproductometas = obtenerMetasPorProducto(proyectoId, usuario);
-			
+						
 			response_text=new GsonBuilder().serializeNulls().create().toJson(lstproductometas);
 	        response_text = String.join("", "\"proyectometas\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+	        
 	        
 	        response.setHeader("Content-Encoding", "gzip");
 			response.setCharacterEncoding("UTF-8");
@@ -172,10 +178,28 @@ public class SPrestamoMetas extends HttpServlet {
 			metavalor.unidadMedidaId = map.get("unidadMedidaId")!=null ? Integer.parseInt(map.get("unidadMedidaId")) : 0; 
 			metavalor.objetoId = map.get("objetoId")!=null ? Integer.parseInt(map.get("objetoId")) : 0;
 			metavalor.objetoTipoId = map.get("objetoTipoId")!=null ? Integer.parseInt(map.get("objetoTipoId")) : 0;
-			
+						
 			metavalor = guardarProductoMetaValor(metavalor, usuario);
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(metavalor);
+	        response_text = String.join("", "\"metavalor\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+	        
+	        response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
+
+	        OutputStream output = response.getOutputStream();
+			GZIPOutputStream gz = new GZIPOutputStream(output);
+	        gz.write(response_text.getBytes("UTF-8"));
+	        gz.close();
+	        output.close();
+		}else if(accion.equals("congelarPrestamoMeta")){
+			Integer proyectoId = map.get("proyectoid")!=null ? Integer.parseInt(map.get("proyectoid")) : 0;
+			Boolean exito = false;
+			
+			exito = congelarPrestamoMeta(proyectoId, usuario);
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(exito);
 	        response_text = String.join("", "\"metavalor\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 	        
@@ -226,6 +250,7 @@ public class SPrestamoMetas extends HttpServlet {
 		if (proyecto!=null){
 			stproductometa proyectometa = new stproductometa();
 			proyectometa.id = proyecto.getId();
+			proyectometa.edt = "1.";
 			proyectometa.objetoTipo = OBJETO_ID_PROYECTO;
 			proyectometa.objetoTipoNombre = "Prestamo";
 			proyectometa.nombreMeta = proyecto.getNombre();
@@ -239,9 +264,11 @@ public class SPrestamoMetas extends HttpServlet {
 		}
 		List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
 				null, null, null, null, null, usuario);
+		int edtComponente = 1;
 		for (Componente componente : componentes){
 			stproductometa proyectometa = new stproductometa();
 			proyectometa.id = componente.getId();
+			proyectometa.edt = "1."+edtComponente;
 			proyectometa.objetoTipo = OBJETO_ID_COMPONENTE;
 			proyectometa.objetoTipoNombre = "Componente";
 			proyectometa.nombreMeta = componente.getNombre();
@@ -255,9 +282,11 @@ public class SPrestamoMetas extends HttpServlet {
 			
 			List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
 					null, null, null, null, null, usuario);
+			int edtProducto = 1;
 			for (Producto producto : productos){
 				proyectometa = new stproductometa();
 				proyectometa.id = producto.getId();
+				proyectometa.edt = "1."+edtComponente+"."+edtProducto;
 				proyectometa.objetoTipo = OBJETO_ID_PRODUCTO;
 				proyectometa.objetoTipoNombre = "Producto";
 				proyectometa.nombreMeta = producto.getNombre();
@@ -267,6 +296,7 @@ public class SPrestamoMetas extends HttpServlet {
 				proyectometa.fechaFin = "";
 				proyectometa.lineaBase = "";
 				proyectometa.metaFinal = "";
+				proyectometa.estado = ESTADO_ACTIVO;
 				
 				proyectometa = getFechaInicioFinProducto(proyectometa);
 				
@@ -282,6 +312,7 @@ public class SPrestamoMetas extends HttpServlet {
 						stmeta meta = new stmeta();
 						meta.id = metavalor.getId().getMetaid();
 						meta.fecha = Utils.formatDate(metavalor.getId().getFecha());
+						proyectometa.estado = metavalor.getEstado();
 						meta.valor = "";
 						if (null != metavalor.getValorDecimal()){
 							meta.valor = metavalor.getValorDecimal().toString();
@@ -301,6 +332,7 @@ public class SPrestamoMetas extends HttpServlet {
 						stmeta meta = new stmeta();
 						meta.id = metavalor.getId().getMetaid();
 						meta.fecha = Utils.formatDate(metavalor.getId().getFecha());
+						proyectometa.estado = metavalor.getEstado();
 						meta.valor = "";
 						if (null != metavalor.getValorDecimal()){
 							meta.valor = metavalor.getValorDecimal().toString();
@@ -317,6 +349,7 @@ public class SPrestamoMetas extends HttpServlet {
 					proyectometa.datoTipoId = Meta.getDatoTipo().getId();
 					proyectometa.lineaBaseId = Meta.getId();
 					MetaValor metavalor = MetaValorDAO.getMetaValorPorMetaid(Meta.getId());
+					proyectometa.estado = metavalor.getEstado();
 					proyectometa.lineaBase = "";
 					if (null != metavalor.getValorDecimal()){
 						proyectometa.lineaBase = metavalor.getValorDecimal().toString();
@@ -331,14 +364,17 @@ public class SPrestamoMetas extends HttpServlet {
 					proyectometa.datoTipoId = Meta.getDatoTipo().getId();
 					proyectometa.metaFinalId = Meta.getId();
 					MetaValor metavalor = MetaValorDAO.getMetaValorPorMetaid(Meta.getId());
+					proyectometa.estado = metavalor.getEstado();
 					proyectometa.metaFinal = "";
 					if (null != metavalor.getValorDecimal()){
 						proyectometa.metaFinal = metavalor.getValorDecimal().toString();
 					}
 				}
 				
-				lstproductometas.add(proyectometa);				
+				lstproductometas.add(proyectometa);	
+				edtProducto++;
 			}
+			edtComponente++;
 		}
 		return lstproductometas;
 	}
@@ -369,7 +405,7 @@ public class SPrestamoMetas extends HttpServlet {
 		if (MetaValor != null){
 			MetaValor.setValorDecimal(Utils.String2BigDecimal(metavalor.valor, new BigDecimal(0)));
 		}else{
-			MetaValor = new MetaValor(MetaValorId, meta, usuario, null, null, Utils.String2BigDecimal(metavalor.valor, new BigDecimal(0)), null);
+			MetaValor = new MetaValor(MetaValorId, meta, usuario, null, null, Utils.String2BigDecimal(metavalor.valor, new BigDecimal(0)), null, 1, new Date());
 		}
 		MetaValorDAO.guardarMetaValor(MetaValor);
 		metavalor.id = meta.getId();
@@ -405,6 +441,35 @@ public class SPrestamoMetas extends HttpServlet {
 		}
 		return actividades;
 	}
+	
+	private Boolean congelarPrestamoMeta(int proyectoId, String usuario){
+		Boolean exito = false;
+		
+		List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
+				null, null, null, null, null, usuario);
+		
+		for (Componente componente : componentes){
+						
+			List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
+					null, null, null, null, null, usuario);
+			
+			for (Producto producto : productos){
+				
+				List<Meta> metas = MetaDAO.getMetasPagina(-1, -1, producto.getId(), OBJETO_ID_PRODUCTO, null, -1, null, null, null, null);
+				
+				for (Meta meta : metas){
+					List <MetaValor> metavalores = MetaValorDAO.getValoresMeta(meta.getId(), ESTADO_ACTIVO);
+					for (MetaValor metavalor : metavalores){	
+						metavalor.setEstado(ESTADO_CONGELADO);
+						MetaValorDAO.guardarMetaValor(metavalor);
+					}
+				}
+			}
+		}
+		return exito;
+	}
+	
+	
 	
 	private byte[] exportarExcel(int proyectoId, int anioInicio, int anioFin, int agrupacion, String filas, String columnas, String usuario) throws IOException{
 		byte [] outArray = null;
@@ -463,11 +528,12 @@ public class SPrestamoMetas extends HttpServlet {
 				unidadDeMedidaNombre = MetaUnidadMedidaDAO.getMetaUnidadMedidaPorId(unidadDeMedidaId).getNombre();
 			}
 			
-			filasObject[0] = sangria + fila.get("nombreMeta").getAsString();
-			filasObject[1] = fila.get("fechaInicio").getAsString();
-			filasObject[2] = fila.get("fechaFin").getAsString();
-			filasObject[3] = unidadDeMedidaNombre;
-			i=4;
+			filasObject[0] = fila.get("edt").getAsString();
+			filasObject[1] = sangria + fila.get("nombreMeta").getAsString();
+			filasObject[2] = fila.get("fechaInicio").getAsString();
+			filasObject[3] = fila.get("fechaFin").getAsString();
+			filasObject[4] = unidadDeMedidaNombre;
+			i=5;
 			Double totalPlanificado = new Double(0);
 			Double totalReal = new Double(0);
 			int objetoTipo = fila.get("objetoTipo").getAsInt();

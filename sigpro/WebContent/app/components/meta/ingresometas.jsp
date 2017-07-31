@@ -20,19 +20,6 @@
 		margin: 5px;
 		height: 360px;
 	}
-	
-	.tablaReporte {
-	    display: flex;
-	    flex-direction: column;
-	    align-items: stretch;
-	    height: 200px;
-	}	
-	
-	.tbodyReporte {
-	    overflow-y: scroll;
-	    display: inline-block;
-	}
-		
 </style>
 
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
@@ -55,20 +42,23 @@
 						ng-options="a.text for a in pmetasc.prestamos" ng-required="true"></select>
 					<label for="prestamo" class="floating-label">Préstamos</label>
 				</div>
-				<div class="form-group col-sm-1">
+			</div>
+			
+    		<div class="row">
+				<div class="form-group col-sm-2">
 					<input type="text"  class="inputText" uib-datepicker-popup="{{pmetasc.formatofecha}}" ng-model="pmetasc.fechaInicio" is-open="pmetasc.fi_abierto"
 			            datepicker-options="pmetasc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
-			            ng-required="true" 
+			            ng-required="true"  ng-click="pmetasc.abrirPopupFechaInicio(1000)"
 			            ng-value="pmetasc.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
 			            <span class="label-icon" ng-click="pmetasc.abrirPopupFechaInicio(1000)">
 			              <i class="glyphicon glyphicon-calendar"></i>
 			            </span>
 				  	<label for="campo.id" class="floating-label">* Año Inicial</label>
 				</div>
-				<div class="form-group col-sm-1">
+				<div class="form-group col-sm-2">
 					<input type="text"  class="inputText" uib-datepicker-popup="{{pmetasc.formatofecha}}" ng-model="pmetasc.fechaFin" is-open="pmetasc.ff_abierto"
 			            datepicker-options="pmetasc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
-			            ng-required="true"  
+			            ng-required="true"  ng-click="pmetasc.abrirPopupFechaFin(1000)"
 			            ng-value="pmetasc.fechaFin" onblur="this.setAttribute('value', this.value);"/>
 			            <span class="label-icon" ng-click="pmetasc.abrirPopupFechaFin(1000)">
 			              <i class="glyphicon glyphicon-calendar"></i>
@@ -87,23 +77,7 @@
 						tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-new-window"></span></label>
 				</div>
-			</div>
-    	</div>
-		<br>
-			
-		<div id="reporte" align="center">
-		
-			<div class="grid_loading" ng-hide="!pmetasc.mostrarCargando">
-				<div class="msg">
-					<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
-						<br />
-						<br /> <b>Cargando, por favor espere...</b> 
-					</span>
-				</div>
-			</div>
-			
-		
-			<div class="operation_buttons" align="right">
+				<div class="operation_buttons" align="right">
 					<div class="btn-group">		
 						<label class="btn btn-default" ng-click="pmetasc.guardar()" uib-tooltip="Guardar" ng-hide="!pmetasc.mostrarGuardar"
 							tooltip-placement="bottom">
@@ -116,36 +90,23 @@
 							tooltip-placement="bottom">
 						<span class="glyphicon glyphicon-export"></span></label>
 					</div>
+				</div>
 			</div>
-			<div class="col-sm-12">
-				<table st-table="pmetasc.rowCollection" st-safe-src="pmetasc.rowCollection" class="tablaReporte table table-condensed table-hover" ng-hide="!pmetasc.mostrarDescargar">
-					<thead>
-						<tr>
-							<th class="label-form" style="width: 100px;">Producto</th>
-							<th class="label-form" style="width: 100px;">Actividad</th>
-							<th class="label-form" style="width: 100px;">Mes</th>
-							<th class="label-form" style="width: 100px;">Total</th>
-							<th class="label-form" style="width: 100px;">Meta Final</th>
-						</tr>
-					</thead>
-					<tbody class="tbodyReporte">
-					<tr ng-repeat="row in pmetasc.rowCollection">
-						
-						<td style="width: 100px;">{{row.firstName}}</td>
-						<td style="width: 100px;">{{row.lastName}}</td>
-						<td style="width: 100px;">{{row.birthDate}}</td>
-						<td style="width: 100px;">{{row.balance}}</td>
-						<td style="width: 100px;">{{row.email}}</td>
-					</tr>
-					</tbody>
-				</table>
-				
-				<br/>
-				
-				
+    	</div>
+		<br>
+		
+    	<div id="grid" ui-grid="pmetasc.opcionesGrid" ng-hide="!pmetasc.mostrarDescargar" class="divGrid"
+			ui-grid-resize-columns ui-grid-pinning ui-grid-auto-resize
+			ui-grid-grouping ui-grid-edit ui-grid-cellNav >
+			<div class="grid_loading" ng-hide="!pmetasc.mostrarCargando">
+				<div class="msg">
+					<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
+						<br />
+						<br /> <b>Cargando, por favor espere...</b> 
+					</span>
+				</div>
 			</div>
-
 		</div>
-		   	    	
+    	
 	</div>
 </div>
