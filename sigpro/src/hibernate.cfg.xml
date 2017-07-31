@@ -15,6 +15,7 @@
         <mapping class="pojo.ActividadUsuario" />
         <mapping class="pojo.ActividadUsuarioId" />
         <mapping class="pojo.AcumulacionCosto" />
+        <mapping class="pojo.AsignacionRaci" />
         <mapping class="pojo.AutorizacionTipo" />
         <mapping class="pojo.ComponenteUsuario" />
         <mapping class="pojo.ComponenteUsuarioId" />
@@ -53,6 +54,7 @@
         <mapping class="pojo.HitoTipo" />
         <mapping class="pojo.InteresTipo" />
         <mapping class="pojo.InformePresupuesto" />
+        <mapping class="pojo.MatrizRaci" />
         <mapping class="pojo.Meta" />
         <mapping class="pojo.MetaTipo" />
         <mapping class="pojo.MetaUnidadMedida" />

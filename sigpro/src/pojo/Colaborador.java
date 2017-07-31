@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jul 13, 2017 10:05:07 AM by Hibernate Tools 5.2.3.Final
+// Generated Jul 28, 2017 12:40:33 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Colaborador implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2880189522324971469L;
+	private static final long serialVersionUID = -8097051654149960573L;
 	private Integer id;
 	private UnidadEjecutora unidadEjecutora;
 	private Usuario usuario;
@@ -41,6 +41,7 @@ public class Colaborador implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
+	private Set<AsignacionRaci> asignacionRacis = new HashSet<AsignacionRaci>(0);
 	private Set<Proyecto> proyectos = new HashSet<Proyecto>(0);
 	private Set<ProyectoMiembro> proyectoMiembros = new HashSet<ProyectoMiembro>(0);
 	private Set<Riesgo> riesgos = new HashSet<Riesgo>(0);
@@ -61,8 +62,8 @@ public class Colaborador implements java.io.Serializable {
 
 	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String snombre,
 			String papellido, String sapellido, Long cui, int estado, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, Set<Proyecto> proyectos, Set<ProyectoMiembro> proyectoMiembros,
-			Set<Riesgo> riesgos) {
+			Date fechaCreacion, Date fechaActualizacion, Set<AsignacionRaci> asignacionRacis, Set<Proyecto> proyectos,
+			Set<ProyectoMiembro> proyectoMiembros, Set<Riesgo> riesgos) {
 		this.unidadEjecutora = unidadEjecutora;
 		this.usuario = usuario;
 		this.pnombre = pnombre;
@@ -75,6 +76,7 @@ public class Colaborador implements java.io.Serializable {
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
+		this.asignacionRacis = asignacionRacis;
 		this.proyectos = proyectos;
 		this.proyectoMiembros = proyectoMiembros;
 		this.riesgos = riesgos;
@@ -202,6 +204,15 @@ public class Colaborador implements java.io.Serializable {
 
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborador")
+	public Set<AsignacionRaci> getAsignacionRacis() {
+		return this.asignacionRacis;
+	}
+
+	public void setAsignacionRacis(Set<AsignacionRaci> asignacionRacis) {
+		this.asignacionRacis = asignacionRacis;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborador")

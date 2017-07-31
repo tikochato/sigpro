@@ -12,12 +12,15 @@
      	border: none !important;
 	}
 	.planificado {
-		background-color: #d9edf7 !important;
+		
+		color: #303f9e;
 	}
 	
-	.real {
-		background-color: #ffd7c4 !important;
+	.real2 {
+		color: #257129;
 	}
+	
+	
 	
 </style>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
@@ -41,59 +44,64 @@
 			
 			<form name="form">
 				<div class="row">
-					<div class="form-group col-sm-5">
+					<div class="form-group col-sm-3">
 						<select  class="inputText" ng-model="desembolsosc.prestamoSeleccionado"
 							ng-options="a.text for a in desembolsosc.prestamos"
 							ng-readonly="true"
-							ng-required="true">
+							ng-required="true"
+							ng-change="desembolsosc.generarReporte()">
+							
 							<option value="">Seleccione una opción</option>
-							</select>
+						</select>
 						<label for="prestamo" class="floating-label">Préstamos</label>
 					</div>
+					<div class="form-group col-sm-2">
+						<input type="number"  class="inputText" ng-model="desembolsosc.anioSeleccionado" maxlength="4" 
+						ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
+						ng-change="desembolsosc.generarReporte()"/>
+					  	<label for="campo.id" class="floating-label">*Año Inicial</label>
+					</div>
 					
-					<div class="col-sm-5" ng-if="false">
-						<div class="form-group" >
-						  <input type="text"  class="inputText" uib-datepicker-popup="{{desembolsosc.formatofecha}}" ng-model="desembolsosc.ejercicioFiscal" is-open="desembolsosc.ef_abierto"
-						            datepicker-options="desembolsosc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true"  ng-click="desembolsosc.abrirPopupFecha(1)"
-						             date-disabled="disabled(date, mode)"
-						            ng-value="desembolsosc.ejercicioFiscal" onblur="this.setAttribute('value', this.value);"/>
-						            <span class="label-icon" ng-click="desembolsosc.abrirPopupFecha(1)">
-						              <i class="glyphicon glyphicon-calendar"></i>
-						            </span>
-						  <label  class="floating-label">Ejercicio fiscal</label>
+					<div class="col-sm-7" align="right" ng-hide="!desembolsosc.mostrar" >
+						<div class="form-group col-sm-1">
+							</div>
+								<div class="col-sm-11">
+									<div class="btn-group">
+										<label class="btn btn-default" ng-model="desembolsosc.enMillones" uib-btn-radio="true"  uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
+										<span>MQ</span></label>
+										<label class="btn btn-default" ng-model="desembolsosc.enMillones" uib-btn-radio="false"  uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false">
+										<span>Q</span></label>
+							</div>
+									<div class="btn-group" style="padding-left: 20px;">
+										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="1" ng-click="desembolsosc.asignarSerie(1)" uib-tooltip="Mensual" role="button" tabindex="1" aria-invalid="false">
+										<span>M</span></label>
+										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="2" ng-click="desembolsosc.asignarSerie(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
+										<span>B</span></label>
+										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="3" ng-click="desembolsosc.asignarSerie(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
+										<span>T</span></label>
+										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="4" ng-click="desembolsosc.asignarSerie(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
+										<span>C</span></label>
+										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="5" ng-click="desembolsosc.asignarSerie(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
+										<span>S</span></label>
+										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="6" ng-click="desembolsosc.asignarSerie(6)" uib-tooltip="Anual" role="button" tabindex="6" aria-invalid="false">
+										<span>A</span></label>
 						</div>
-					</div>
-					<div class="form-group col-sm-1" >
-						<label class="btn btn-default" ng-click="form.$valid ? desembolsosc.generarReporte() : ''" uib-tooltip="Generar" 
-							tooltip-placement="bottom"
-							 ng-disabled="!form.$valid"
-							>
-						<span class="glyphicon glyphicon-new-window"></span></label>
-					</div>
+									
+									<div class="btn-group" style="padding-left: 20px;">
+										<label class="btn btn-default" ng-click="desembolsosc.exportarExcel()" uib-tooltip="Exportar" ng-hide="!desembolsosc.mostrarDescargar">
+										<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
+							</div>
+						</div>
+			    	</div>
+		    			<br><br><br><br>
+					
+					
+					
 				</div>
 			</form>
 			<br/> 
 			
-			<div class="row" ng-hide="!desembolsosc.mostrar" >
-			<div class="form-group col-sm-2">
-						<select class="inputText" ng-model="desembolsosc.agrupacion"
-							ng-options="a.id as a.nombre for a in desembolsosc.agrupaciones "
-							ng-readonly="true"
-							ng-change = "desembolsosc.asignarSerie()"
-							>
-						</select>
-					    <label for="nombre" class="floating-label">* Agrupación</label>
-				</div>
-				<div class="form-group col-sm-2">
-						<select class="inputText" ng-model="desembolsosc.anioSeleccionado"
-							ng-options="a.id as a.nombre for a in desembolsosc.anios "
-							ng-readonly="true"
-							ng-change = "desembolsosc.asignarSerie()"
-							>
-						</select>
-					    <label for="nombre" class="floating-label">* Año</label>
-				</div>
-			</div>
+			
 			<br/>
 			<div style="width: 70%">
 				<canvas id="line" class="chart chart-line" chart-data="desembolsosc.desembolsos" ng-hide="!desembolsosc.mostrar"
@@ -115,13 +123,11 @@
 				<tbody>
 				<tr class = "{{desembolsosc.clase($index)}}" ng-repeat="row in desembolsosc.tabla track by $index" style="text-align: right;">
 					<td ng-repeat = "col in row track by $index"
-					 	 style="font-weight: bold;">{{desembolsosc.formato1(col)}}
+					 	 style="font-weight: bold;">{{desembolsosc.formato1(col) }}
 					 </td>
 				</tr>
 				</tbody>
 			</table>
-			 
-				
 		</div>
 		  
 	</div>

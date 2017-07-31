@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jul 13, 2017 10:05:07 AM by Hibernate Tools 5.2.3.Final
+// Generated Jul 28, 2017 12:40:33 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class MetaValor implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2512877587478296376L;
+	private static final long serialVersionUID = -2147225582836929043L;
 	private MetaValorId id;
 	private Meta meta;
 	private String usuario;
@@ -33,18 +33,22 @@ public class MetaValor implements java.io.Serializable {
 	private String valorString;
 	private BigDecimal valorDecimal;
 	private Date valorTiempo;
+	private int estado;
+	private Date fechaIngreso;
 
 	public MetaValor() {
 	}
 
-	public MetaValor(MetaValorId id, Meta meta, String usuario) {
+	public MetaValor(MetaValorId id, Meta meta, String usuario, int estado, Date fechaIngreso) {
 		this.id = id;
 		this.meta = meta;
 		this.usuario = usuario;
+		this.estado = estado;
+		this.fechaIngreso = fechaIngreso;
 	}
 
 	public MetaValor(MetaValorId id, Meta meta, String usuario, Integer valorEntero, String valorString,
-			BigDecimal valorDecimal, Date valorTiempo) {
+			BigDecimal valorDecimal, Date valorTiempo, int estado, Date fechaIngreso) {
 		this.id = id;
 		this.meta = meta;
 		this.usuario = usuario;
@@ -52,6 +56,8 @@ public class MetaValor implements java.io.Serializable {
 		this.valorString = valorString;
 		this.valorDecimal = valorDecimal;
 		this.valorTiempo = valorTiempo;
+		this.estado = estado;
+		this.fechaIngreso = fechaIngreso;
 	}
 
 	@EmbeddedId
@@ -120,6 +126,25 @@ public class MetaValor implements java.io.Serializable {
 
 	public void setValorTiempo(Date valorTiempo) {
 		this.valorTiempo = valorTiempo;
+	}
+
+	@Column(name = "estado", nullable = false)
+	public int getEstado() {
+		return this.estado;
+	}
+
+	public void setEstado(int estado) {
+		this.estado = estado;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_ingreso", nullable = false, length = 19)
+	public Date getFechaIngreso() {
+		return this.fechaIngreso;
+	}
+
+	public void setFechaIngreso(Date fechaIngreso) {
+		this.fechaIngreso = fechaIngreso;
 	}
 
 }

@@ -19,7 +19,9 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	mi.anio = "";
 	mi.columnas=[];
 	mi.agrupaciones=[];
-	mi.agrupacion="";
+	mi.agrupacion=1;
+	
+	mi.enMillones = true;
 	
 	
 	mi.fechaOptions = {
@@ -33,7 +35,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	mi.etiqutas = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio","Agosto","Septiembre",
 		"Octubre","Noviembre","Diciembre"];
 	mi.series = ['Planificado', 'Real'];
-	mi.radarColors = ['#b1cad7','#FDB45C']
+	mi.radarColors = ['#303f9e','#257129'];
 	mi.datasetOverride = [{ yAxisID: 'y-axis-1' }
 	];
 	
@@ -44,7 +46,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			
 			legend: {
 				display: true,
-				position: 'right'
+				position: 'bottom'
 			},
 			    scales: {
 			      yAxes: [
@@ -88,44 +90,54 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 		mi.anios = [];
 		mi.anio = "";
 		mi.columnas=[];
+		mi.agrupacion = mi.agruapacion == null || mi.agrupacion == undefined ? 1 : mi.agrupacion;
 	}
 	
 	mi.generarReporte = function (){
-		mi.inicializarDatos();
-		$http.post('/SDesembolsos', { accion: 'getDesembolsos'
-			, proyectoId: mi.prestamoSeleccionado.value,ejercicioFiscal:2013,proyectoId:mi.prestamoSeleccionado.value }).success(
-	
-			function(response) {
-				if (response.success){
-					mi.lista = response.lista;
-					var anios_temp = [];
-					for (x in mi.lista){
-						anios_temp.push(mi.lista[x].anio);
-					}
-					anios_temp= anios_temp.sort();
+		
+		if ( mi.prestamoSeleccionado != null && mi.anioSeleccionado > 0 &&  mi.anioSeleccionado.toString().length == 4 ){
+			mi.inicializarDatos();
+			mi.mostrar=true;
+			$http.post('/SDesembolsos', { accion: 'getDesembolsos'
+				, proyectoId: mi.prestamoSeleccionado.value,ejercicioFiscal:2013,proyectoId:mi.prestamoSeleccionado.value }).success(
+		
+				function(response) {
+					if (response.success){
+						mi.lista = response.lista;
+						var anios_temp = [];
+						for (x in mi.lista){
+							anios_temp.push(mi.lista[x].anio);
+						}
+						anios_temp= anios_temp.sort();
+						
+						for (x in anios_temp){
+							var item = [];
+							item.id = anios_temp[x];
+							item.nombre = anios_temp[x];
+							mi.anios.push(item);
+						}
+						
+						//mi.anioSeleccionado = mi.anios!=null && mi.anios != undefined && mi.anios.length > 0 ?  mi.anios[0].id : undefined;
+						mi.agrupacion = mi.agrupaciones[0].id;
+						mi.mostrar = true;
+						mi.asignarSerie();
+				}else{
+					$utilidades.mensaje('warning','No se encontraron datos para el préstamo');
+					mi.mostrar = false;
+				}
 					
-					for (x in anios_temp){
-						var item = [];
-						item.id = anios_temp[x];
-						item.nombre = anios_temp[x];
-						mi.anios.push(item);
-					}
-					
-					mi.anioSeleccionado = mi.anios!=null && mi.anios != undefined && mi.anios.length > 0 ?  mi.anios[0].id : undefined;
-					mi.agrupacion = mi.agrupaciones[0].id;
-					mi.mostrar = true;
-					mi.asignarSerie();
-			}else{
-				$utilidades.mensaje('warning','No se encontraron datos para el préstamo');
-			}
-				
-		});	
+			});	
+		}else{
+			mi.mostrar = false
+		}
 	}
 	
-	mi.asignarSerie = function(){
+	mi.asignarSerie = function(valor){
+	
 		mi.columnas=[];
 		mi.etiqutas = [];
 		var totalItems=0;
+		mi.agrupacion = valor;
 		switch (mi.agrupacion){
 			case 1:
 				mi.etiqutas = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
@@ -307,7 +319,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	 mi.clase = function (value){
 		 switch (value){
 		 case 0: return "planificado";
-		 case 1: return "real";
+		 case 1: return "real2";
 		 default: return "";
 		 }
 	 }
