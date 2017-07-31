@@ -50,8 +50,11 @@ public class SAgenda extends HttpServlet {
 	private static int OBJETO_ID_PRODUCTO = 3;
 	private static int OBJETO_ID_SUBPRODUCTO = 4;
 	private static int OBJETO_ID_ACTIVIDAD= 5;
+	private String strEdtActividad = "";
+	private int edtActividad = 1;
 	class stagenda {
 		Integer id;
+		String edt;
 		Integer objetoTipo;
 		String objetoTipoNombre;
 		String nombre;;
@@ -112,7 +115,7 @@ public class SAgenda extends HttpServlet {
 			List<stagenda> lstagenda = obtenerListado(proyectoId, usuario);
 			
 			Map<String,Object[]> datos = new HashMap<>();
-			datos.put("0",   new Object[] {"Actividad", "Fecha Inicio","Fecha Fin", "Estado"});
+			datos.put("0",   new Object[] {"EDT","Actividad", "Fecha Inicio","Fecha Fin", "Estado"});
 			int fila = 1;
 			
 			for (stagenda agenda : lstagenda){
@@ -125,7 +128,7 @@ public class SAgenda extends HttpServlet {
 					case 5: sangria = "\t\t\t\t"; break;
 					default: sangria = "";
 				}
-				datos.put(fila+"", new Object [] { sangria + agenda.nombre ,agenda.fechaInicio,agenda.fechaFin,agenda.estado});
+				datos.put(fila+"", new Object [] { agenda.edt, sangria + agenda.nombre ,agenda.fechaInicio,agenda.fechaFin,agenda.estado});
 				fila++;
 			}
 			
@@ -182,6 +185,7 @@ public class SAgenda extends HttpServlet {
 			agenda.objetoTipo = OBJETO_ID_PROYECTO;
 			agenda.objetoTipoNombre = "Actividad";
 			agenda.id = proyecto.getActividad();
+			agenda.edt = "1.";
 			agenda.nombre = proyecto.getNombre();
 			agenda.fechaInicio = "";
 			agenda.fechaFin = "";
@@ -189,11 +193,13 @@ public class SAgenda extends HttpServlet {
 		}
 		List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
 				null, null, null, null, null, usuario);
+		int edtComponente = 1;
 		for (Componente componente : componentes){
 			stagenda agenda = new stagenda();
 			agenda.objetoTipo = OBJETO_ID_COMPONENTE;
 			agenda.objetoTipoNombre = "Componente";
 			agenda.id = componente.getId();
+			agenda.edt = "1."+edtComponente;
 			agenda.nombre = componente.getNombre();
 			agenda.fechaInicio = "";
 			agenda.fechaFin = "";
@@ -201,6 +207,7 @@ public class SAgenda extends HttpServlet {
 			
 			List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
 					null, null, null, null, null, usuario);
+			int edtProducto = 1;
 			for (Producto producto : productos){
 				List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
 						null, null, null, null, null, usuario);
@@ -209,10 +216,12 @@ public class SAgenda extends HttpServlet {
 				agenda.objetoTipoNombre = "Producto";
 				agenda.nombre = producto.getNombre();
 				agenda.id = producto.getId();
+				agenda.edt = "1."+edtComponente+"."+edtProducto;
 				agenda.fechaInicio = "";
 				agenda.fechaFin = "";
 				lstagenda.add(agenda);
 				
+				int edtSubproducto = 1;
 				for (Subproducto subproducto : subproductos){
 					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
 							null, null, null, null, null, usuario);
@@ -220,29 +229,41 @@ public class SAgenda extends HttpServlet {
 					agenda.objetoTipo = OBJETO_ID_SUBPRODUCTO;
 					agenda.objetoTipoNombre = "Subroducto";
 					agenda.id = subproducto.getId();
+					agenda.edt = "1."+edtComponente+"."+edtProducto+"."+edtSubproducto;
 					agenda.nombre =   subproducto.getNombre();
 					agenda.fechaInicio = "";
 					agenda.fechaFin = "";
 					
 					lstagenda.add(agenda);
+					edtActividad = 1;
+					strEdtActividad = agenda.edt;
 					for (Actividad actividad : actividades ){
 						lstagenda = ObtenerActividades(actividad,usuario,lstagenda, OBJETO_ID_ACTIVIDAD);
 					}
+					edtSubproducto++;
 				}
 				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
 						null, null, null, null, null, usuario);
+				edtActividad = edtSubproducto;
+				strEdtActividad = "1."+edtComponente+"."+edtProducto;
 				for (Actividad actividad : actividades ){
 					lstagenda = ObtenerActividades(actividad,usuario,lstagenda,OBJETO_ID_ACTIVIDAD);
 				}
+				edtProducto++;
 			}
 			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), OBJETO_ID_COMPONENTE,
 					null, null, null, null, null, usuario);
+			edtActividad = edtProducto;
+			strEdtActividad = "1."+edtComponente;
 			for (Actividad actividad : actividades ){
 				lstagenda = ObtenerActividades(actividad,usuario,lstagenda,OBJETO_ID_ACTIVIDAD);
 			}
+			edtComponente++;
 		}
 		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, proyectoId, OBJETO_ID_PROYECTO,
 				null, null, null, null, null, usuario);
+		edtActividad = edtComponente;
+		strEdtActividad = "1";
 		for (Actividad actividad : actividades ){
 			lstagenda = ObtenerActividades(actividad,usuario,lstagenda,OBJETO_ID_ACTIVIDAD);
 		}
@@ -259,6 +280,7 @@ public class SAgenda extends HttpServlet {
 		agenda.objetoTipo = tipo_Objeto;
 		agenda.objetoTipoNombre = "Actividad";
 		agenda.id = actividad.getId();
+		agenda.edt = strEdtActividad +"."+edtActividad;
 		agenda.nombre =   actividad.getNombre();
 		agenda.fechaInicio = Utils.formatDate(actividad.getFechaInicio());
 		agenda.fechaFin = Utils.formatDate(actividad.getFechaFin());
@@ -266,6 +288,7 @@ public class SAgenda extends HttpServlet {
 						(actividad.getPorcentajeAvance() > 0 && actividad.getPorcentajeAvance() <100 ? 
 								"Proceso" : "Finalizado") ;
 		lstagenda.add(agenda);
+		edtActividad++;
 		
 		for(Actividad subActividad : actividades){
 			lstagenda = ObtenerActividades(subActividad, usuario, lstagenda, tipo_Objeto + 1);

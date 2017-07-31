@@ -33,7 +33,7 @@ public class MetaValor implements java.io.Serializable {
 	private String valorString;
 	private BigDecimal valorDecimal;
 	private Date valorTiempo;
-	private int estado;
+	private Integer estado;
 	private Date fechaIngreso;
 
 	public MetaValor() {
@@ -48,7 +48,9 @@ public class MetaValor implements java.io.Serializable {
 	}
 
 	public MetaValor(MetaValorId id, Meta meta, String usuario, Integer valorEntero, String valorString,
-			BigDecimal valorDecimal, Date valorTiempo, int estado, Date fechaIngreso) {
+
+			BigDecimal valorDecimal, Date valorTiempo, Integer estado, Date fechaIngreso) {
+
 		this.id = id;
 		this.meta = meta;
 		this.usuario = usuario;
@@ -127,18 +129,18 @@ public class MetaValor implements java.io.Serializable {
 	public void setValorTiempo(Date valorTiempo) {
 		this.valorTiempo = valorTiempo;
 	}
-
-	@Column(name = "estado", nullable = false)
-	public int getEstado() {
+	
+	@Column(name = "estado")
+	public Integer getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(int estado) {
+	public void setEstado(Integer estado) {
 		this.estado = estado;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_ingreso", nullable = false, length = 19)
+	@Column(name = "fecha_ingreso", length = 19)
 	public Date getFechaIngreso() {
 		return this.fechaIngreso;
 	}
@@ -147,4 +149,7 @@ public class MetaValor implements java.io.Serializable {
 		this.fechaIngreso = fechaIngreso;
 	}
 
+	
+
+	
 }
