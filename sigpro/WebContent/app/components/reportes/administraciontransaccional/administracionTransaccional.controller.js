@@ -7,15 +7,24 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		
+		mi.charOptions= {};
+		
 		mi.mostrarcargando = true;
 		$http.post('/SAdministracionTransaccional', {accion: 'getComponentes'}).success(
 			function(response){
 				mi.gridOptions.data = response.usuarios;
 				mi.mostrarcargando = false;
+				
+				mi.series = ['Datos'];
+				mi.datos = [17658,55,34];
+				mi.labels = [];
+				mi.labels= ['Creados', 'Actualizados', 'Eliminados']
+				mi.data = mi.datos;
 			});
 		
 		mi.gridOptions = {
-			enableRowSelection : true,
+			multiSelect : false,
+			noUnselect : true,
 			enableRowHeaderSelection : false,
 			enableColumnMenus: false,
 			enablePaginationControls: true,

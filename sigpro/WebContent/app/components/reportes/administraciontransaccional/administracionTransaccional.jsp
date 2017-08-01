@@ -16,17 +16,19 @@
 			<p ng-init="controller.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
 		<div class="row">
-	    	<div class="col-sm-12">
-	    		<div style="width: 100%; height: 15%">
-	    			<div class="row">
-	    				<div class="panel panel-default">
-		  					<div class="panel-heading"><h3>Adminsitración Transaccional</h3></div>
-						</div>
+	   		<div style="width: 100%; height: 15%">
+	   			<div class="row">
+	   				<div class="panel panel-default">
+	  					<div class="panel-heading"><h3>Adminsitración Transaccional</h3></div>
 					</div>
-	    			<br>
-	    		</div>
-	    		<br>
-	    		<div style="width: 100%; height: 85%">
+				</div>
+	   			<br>
+	   		</div>	
+		</div>
+		<br>
+		<div class="row" align="center" >
+	    	<div class="col-sm-12">
+	    		<div style="width: 100%; height: 85%; text-align: center">
 	    			<div class="row">
 	    				<div class="form-group col-sm-12" align="center">
 	    					<div id="maingrid" ui-grid="controller.gridOptions" ng-class="'ui-grid-header-cell-wrapper'"
@@ -51,16 +53,15 @@
 								previous-text="Anterior"
 								class="pagination-sm" boundary-links="true" force-ellipses="true"
 								ng-change="actividadc.cambioPagina()"
-				></ul>
-	    				</div>
-	    			</div>
-	    			<div class="row">
-	    				<div class="form-group col-sm-6">
-	    					<canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels" chart-series="series" chart-options="options">
-	    					</canvas>
+							></ul>
 	    				</div>
 	    			</div>
 	    		</div>
+   				<div style="width: 75%;">
+   					<canvas id="bar" class="chart chart-bar" chart-data="controller.data" chart-labels="controller.labels" 
+   					chart-options="controller.charOptions" chart-series="controller.series">
+   					</canvas>
+   				</div>
 	    	</div>
 	    </div>
 	</div>

@@ -245,4 +245,4 @@ public class SAdministracionTransaccional extends HttpServlet {
 		return lstransaccion;
 	}
 
-}
+} 
