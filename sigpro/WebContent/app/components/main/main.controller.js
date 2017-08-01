@@ -192,6 +192,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/desembolsos/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'desembolsosController\'" class="all_page"></div>'
             })
+            .when('/matrizraci/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'matrizraciController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -473,6 +476,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'desembolsosController',
 	    	   script: '/app/components/reportes/desembolsos/desembolsos.controller.js',
 	    	   template: '/app/components/reportes/desembolsos/desembolsos.jsp'
+	       },
+	       {
+	    	   name: 'matrizraciController',
+	    	   script: '/app/components/reportes/matrizraci/matrizraci.controller.js',
+	    	   template: '/app/components/reportes/matrizraci/matrizraci.jsp'
 	       }
 
 	   ];
