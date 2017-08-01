@@ -30,7 +30,7 @@
 			<div class="col-sm-12 ">
 			
 			<form name="form">
-				<div class="form-group" >
+				<div class="form-group col-sm-3" >
 						<select  class="inputText" ng-model="planc.prestamoSeleccionado" 
 							ng-options="a.text for a in planc.prestamos"
 							ng-readonly="true"

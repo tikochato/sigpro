@@ -195,6 +195,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/desembolsos/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'desembolsosController\'" class="all_page"></div>'
             })
+            .when('/matrizraci/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'matrizraciController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -480,6 +483,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'administracionTransaccionalController',
 	    	   script: '/app/components/reportes/administraciontransaccional/administracionTransaccional.controller.js',
 	    	   template: '/app/components/reportes/administraciontransaccional/administracionTransaccional.jsp'
+	       },
+	       {
+	    	   name: 'matrizraciController',
+	    	   script: '/app/components/reportes/matrizraci/matrizraci.controller.js',
+	    	   template: '/app/components/reportes/matrizraci/matrizraci.jsp'
 	       }
 
 	   ];
@@ -516,9 +524,6 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 
 	$scope.hideBarFromMenu=function(){
 		$scope.hidebar = true;
-		if (document.getElementById("title")){
-			document.getElementById("title").scrollIntoView();
-		}
 	}
 	
 

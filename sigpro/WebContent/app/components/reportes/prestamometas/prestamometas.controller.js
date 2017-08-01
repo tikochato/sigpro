@@ -19,17 +19,45 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	var META_ID_LINEABASE= 3;
 	var META_ID_FINAL= 4;
 	
+	var ESTADO_ACTIVO = 1;
+	var ESTADO_CONGELADO = 2;
+	
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion = null;
 
 	mi.mostrarCargando = false;
 	mi.mostrarDescargar = false;
+	mi.mostrarCongelar = false;
+	mi.reporteCongelado = false;
+	mi.mostrarGuardar = false;
 	mi.prestamos = [];
-	mi.data = [];	
+	mi.data = [];
+	
+	mi.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
 	
 	$window.document.title = $utilidades.sistema_nombre+' - Metas de Préstamo';
 	i18nService.setCurrentLang('es');
-	
+		
 	$http.post('/SMeta', { accion: 'getMetasUnidadesMedida' }).success(
 			function(response) {
 				mi.unidadesMedida = response.MetasUnidades;
@@ -60,7 +88,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 
 	mi.agrupaciones = [
 		{'value' : 0, 'text' : 'Seleccione una opción'},
-		{'value' : AGRUPACION_MES, 'text' : 'Mes'},
+		{'value' : AGRUPACION_MES, 'text' : 'Mensual'},
 		{'value' : AGRUPACION_BIMESTRE, 'text' : 'Bimestre'},
 		{'value' : AGRUPACION_TRIMESTRE, 'text' : 'Trimestre'},
 		{'value' : AGRUPACION_CUATRIMESTRE, 'text' : 'Cuatrimestre'},
@@ -97,7 +125,9 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			};
 		
 			mi.mostrarCargando = true;
-			mi.mostrarDescargar = true;
+			mi.mostrarDescargar = false;
+			mi.mostrarCongelar = false;
+			mi.mostrarGuardar = false;
 			
 			$http.post('/SPrestamoMetas', datos).then(function(response) {
 				if (response.data.success) {
@@ -121,9 +151,15 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 						 if(mi.data[x].metaFinal){
 							 mi.data[x].metaFinal = Math.round((parseFloat(mi.data[x].metaFinal))*100)/100;
 						 }
+						 if(mi.data[x].estado != null && mi.data[x].estado == ESTADO_CONGELADO){
+							 mi.reporteCongelado = true;
+						 }
 					 }
 					mi.opcionesGrid.data = mi.data;
 					mi.mostrarCargando = false;
+					mi.mostrarDescargar = true;
+					mi.mostrarCongelar = true;
+					mi.mostrarGuardar = true;
 					
 					$timeout(function(){
 	                    mi.gridApi.treeBase.expandAllRows();
@@ -250,6 +286,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	mi.setDefinicionColumnas = function(){
 		var anioFin = mi.fechaFin.getFullYear();
 		columnDefs = [ 
+			{ displayName : 'EDT', name : 'edt', category: " ", pinnedLeft:true, width: 75, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false, enableColumnMenu: false},
 			{ displayName : 'Producto', name : 'nombreMeta', category: " ", pinnedLeft:true, width: 300, cellClass : 'grid-align-left', enableCellEdit: false, enableFiltering: false, enableColumnMenu: false, 
 				cellTemplate: "<div class=\"ui-grid-cell-contents\" ng-class=\"{'ui-grid-tree-padre': row.treeLevel < 2}\" ><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.pmetasc.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>"
 			},
@@ -258,7 +295,12 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			{ displayName : 'Unidad de Medida', category: " ", name : 'unidadDeMedidaId', width: 100, 
 				enableCellEdit: true, enableFiltering: false, editableCellTemplate: 'ui-grid/dropdownEditor',
 				editDropdownValueLabel: 'nombre', editDropdownOptionsArray: [], enableColumnMenu: false,
-				cellEditableCondition: function( $scope ) { return ($scope.row.entity.objetoTipo >= 3); },
+				cellEditableCondition: function( $scope ) { 
+					if(mi.reporteCongelado){
+						return false;
+					}
+					return ($scope.row.entity.objetoTipo >= 3); 
+					},
 				cellTemplate: '<div class="ui-grid-cell-contents">{{grid.appScope.nombreUnidadMedida(row.entity.unidadDeMedidaId)}}</div>',
 				cellClass: function (grid, row, col, rowIndex, colIndex) {
 			          return grid.appScope.pmetasc.estiloEditable(grid, row, col,rowIndex, colIndex);
@@ -273,6 +315,9 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 						tipoMeta: META_ID_PLANIFICADA, anio: anioInicio, mes: mes, type: 'number',
 						enableCellEdit: true, enableFiltering : false, enableColumnMenu: false,
 						cellEditableCondition: function($scope) {
+							if(mi.reporteCongelado){
+								return false;
+							}
 							var fechaInicio = $scope.row.entity.fechaInicio.split("/");
 							var fechaFin = $scope.row.entity.fechaFin.split("/");
 							var mesInicio = parseInt(fechaInicio[1]) - 1;
@@ -313,6 +358,12 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 							var anioInicio = parseInt(fechaInicio[2]);
 							var anioFin = parseInt(fechaFin[2]);
 							var fechaEnIntervalo = false;
+							var fechaActual = new Date();
+						    var anioActual = fechaActual.getFullYear();
+						    var mesActual = fechaActual.getMonth();
+							if(mi.reporteCongelado && !(this.mes == mesActual && this.anio == anioActual)){
+								return false;
+							}
 							if (anioInicio == anioFin){
 								if (this.anio == anioInicio && this.mes >= mesInicio && this.mes <= mesFin){
 									fechaEnIntervalo = true;
@@ -430,20 +481,23 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 					mi.opcionesGrid.category.push({name: anioInicio, visible: true});
 			}
 		}
-		columnDefs.push({ displayName: 'Total Planificado', name: 'getTotalMeta("P")', width: 90, cellClass : 'grid-align-center', 
+		columnDefs.push({ displayName: 'Total Planificado', name: 'getTotalMeta("P")', width: 90,  
 			tipoMeta: META_ID_LINEABASE, idMeta: 'lineaBaseId', anio: anioFin, mes: 11, type: 'number',
 			enableCellEdit: false, enableFiltering : false, enableColumnMenu: false, pinnedRight:true,
-			cellClass: 'planificado'
+			cellClass: 'planificado grid-align-center'
 		});
-		columnDefs.push({ displayName: 'Total Real', name: 'getTotalMeta("R")', width: 90, cellClass : 'grid-align-center', 
+		columnDefs.push({ displayName: 'Total Real', name: 'getTotalMeta("R")', width: 90,  
 			tipoMeta: META_ID_FINAL, idMeta: 'metaFinalId', anio: anioFin, mes: 11, type: 'number',
 			enableCellEdit: false, enableFiltering : false, enableColumnMenu: false, pinnedRight:true,
-			cellClass: 'real'
+			cellClass: 'real grid-align-center'
 		});
 		columnDefs.push({ displayName: 'Meta Final', name: 'metaFinal', width: 90,  
 			tipoMeta: META_ID_FINAL, idMeta: 'metaFinalId', anio: anioFin, mes: 11, type: 'number',
 			enableCellEdit: true, enableFiltering : false, enableColumnMenu: false, pinnedRight:true,
 			cellEditableCondition: function( $scope ) { 
+				if(mi.reporteCongelado){
+					return false;
+				}
 				return ($scope.row.entity.objetoTipo >= 3 && $scope.row.entity.unidadDeMedidaId != null && $scope.row.entity.unidadDeMedidaId != ""); 
 				},
 			cellClass: function (grid, row, col, rowIndex, colIndex) {
@@ -452,7 +506,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		});
 		
 		mi.opcionesGrid.columnDefs = columnDefs;
-		mi.opcionesGrid.columnDefs[3].editDropdownOptionsArray = mi.unidadesMedida;
+		mi.opcionesGrid.columnDefs[4].editDropdownOptionsArray = mi.unidadesMedida;
 	}
 	 	 
 	 mi.opcionesGrid = {
@@ -486,9 +540,11 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 										tipoMetaId: colDef.tipoMeta,
 										unidadMedidaId: rowEntity.unidadDeMedidaId,
 										objetoId: rowEntity.id, 
-										tipoObjetoId: rowEntity.objetoTipo
+										tipoObjetoId: rowEntity.objetoTipo,
+										rowEntity : rowEntity,
+										col: colDef.idMeta
 								}
-								mi.guardarMeta(meta, rowEntity, colDef.idMeta);
+								mi.guardarMeta(meta);
 				    		}else{
 					    		$utilidades.mensaje('danger','No se permiten números negativos');
 					    	}
@@ -507,6 +563,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			if(mi.prestamo.value > 0){
 				if (mi.fechaInicio <= mi.fechaFin){
 					if(mi.agrupacion.value > 0){
+						mi.reporteCongelado = false;
 						mi.setDefinicionColumnas();
 						mi.cargarTabla();
 					}else{
@@ -519,8 +576,25 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
 			}
 		}
+	 
+	mi.congelar = function(){
+		 var datos = {
+			accion : 'congelarPrestamoMeta',
+			proyectoid: mi.prestamo.value
+		};
+		 $http.post('/SPrestamoMetas', datos).success(function(response){
+				if(response.success){
+					$utilidades.mensaje('success','Reporte congelado exitosamente');
+					mi.reporteCongelado = true;
+					mi.generar();
+				}
+				else{
+					$utilidades.mensaje('danger','Error al congelar el Reporte');
+				}
+			});
+	}
 		
-	mi.guardarMeta = function(meta, rowEntity, col){
+	mi.guardarMeta = function(meta){
 		$http.post('/SPrestamoMetas', {
 			accion: 'guardarProyectoMeta',
 			id: meta.id,
@@ -533,7 +607,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		}).success(function(response){
 			if(response.success){
 				$utilidades.mensaje('success','Valor guardado con éxito');
-				rowEntity[col] = response.metavalor.id;
+				meta.rowEntity[meta.col] = response.metavalor.id;
 			}
 			else{
 				$utilidades.mensaje('danger','Error al guardar el valor');
@@ -553,6 +627,10 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	    return 'grid-align-center';
 	}
   
+	mi.toggleRow = function(row, evt) {
+		uiGridTreeBaseService.toggleRowTreeState(mi.gridApi.grid, row, evt);
+	};
+	
 	 mi.exportarExcel = function(){
 		 var columnas = [];
 		 mi.opcionesGrid.columnDefs.forEach(function(columna) {
@@ -583,7 +661,6 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	
 	
 }]);
-
 
 
 		

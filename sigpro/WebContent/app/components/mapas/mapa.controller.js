@@ -5,11 +5,11 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 
 	$scope.geoposicionlat =  14.6290845;
 	$scope.geoposicionlong = -90.5116158;
-	
+
 	$scope.mostrarTodo = true;
 	$scope.mostrarObjetoId = 0;
 	$scope.marcas = {};
-	
+
 	$scope.mostrarTodo=true;
 	$scope.mostrarProyectos=true;
 	$scope.mostrarComponentes=true;
@@ -22,7 +22,7 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 	$scope.titulo=$routeParams.proyecto_id != null ? "" : "de Préstamos" ;
 	$scope.accionServlet = $scope.proyectoid!=null ? 'getMarcasPorProyecto' : 'getMarcasProyecto';
 	$scope.mostrarControles = $scope.proyectoid!=null;
-	
+
 	uiGmapGoogleMapApi.then(function() {
 		$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong },
 		   zoom: 15,
@@ -43,21 +43,21 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 		   refresh: true
 		};
     });
-	
+
 	$http.post('/SMapa', { accion: $scope.accionServlet, proyectoId:$routeParams.proyecto_id}).success(
 			function(response) {
 				$scope.marcas = response.marcas;
 	});
-	
+
 	$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id }).success(
 			function(response) {
 				$scope.proyectoid = response.id;
 				$scope.proyectoNombre = response.nombre;
 				$scope.objetoTipoNombre="Proyecto";
 	});
-	
+
 	 $scope.mostrar = function (objetoId) {
-		 
+
 		 switch (objetoId){
 		 	case 0:
 		 		$scope.mostrarProyectos=$scope.mostrarTodo;
@@ -85,25 +85,25 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 		 	case 5:
 		 		$scope.mostrarTodo = $scope.mostrarProyectos && $scope.mostrarComponentes && $scope.mostrarProductos
 				&& $scope.mostrarSubproductos && $scope.mostrarActividades ? true : false;
-		 		break;		
+		 		break;
 		 }
 	  };
-	  
+
 	  $scope.mostrarInformaicon = function(objetoId , ObjetoTipo){
-		  
+
 	  }
-	  
-	  
-	  
+
+
+
 	  $scope.abrirInformacion = function (objetoId , objetoTipo) {
 		    var modalInstance = $uibModal.open({
-		      
+
 		      ariaLabelledBy: 'Información',
 		      ariaDescribedBy: 'modal-body',
 		      templateUrl: 'modalInfo.html',
 		      controller: 'modalInformacion',
 		      controllerAs: 'infoc',
-		      
+
 		      resolve : {
 		    	    $objetoId : function() {
 						return objetoId;
@@ -112,9 +112,9 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 						return objetoTipo;
 					}
 				}
-		    });	    
+		    });
 	 };
-	
+
 }]);
 
 
@@ -127,7 +127,6 @@ function modalInformacion($uibModalInstance, $scope, $http, $interval,
 
 	var mi = this;
 	mi.objeto={};
-	
 
 	$http.post('/SMapa', {
 		accion : 'getObjeto',
@@ -136,7 +135,7 @@ function modalInformacion($uibModalInstance, $scope, $http, $interval,
 	}).success(function(response) {
 		mi.objeto = response.objeto;
 	});
-	
+
 	 mi.ok = function () {
 		 $uibModalInstance.dismiss('cancel');
 	 };
