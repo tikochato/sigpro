@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jul 13, 2017 10:05:07 AM by Hibernate Tools 5.2.3.Final
+// Generated Jul 28, 2017 12:40:33 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class MetaValor implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2512877587478296376L;
+	private static final long serialVersionUID = -2147225582836929043L;
 	private MetaValorId id;
 	private Meta meta;
 	private String usuario;
@@ -39,14 +39,18 @@ public class MetaValor implements java.io.Serializable {
 	public MetaValor() {
 	}
 
-	public MetaValor(MetaValorId id, Meta meta, String usuario) {
+	public MetaValor(MetaValorId id, Meta meta, String usuario, int estado, Date fechaIngreso) {
 		this.id = id;
 		this.meta = meta;
 		this.usuario = usuario;
+		this.estado = estado;
+		this.fechaIngreso = fechaIngreso;
 	}
 
 	public MetaValor(MetaValorId id, Meta meta, String usuario, Integer valorEntero, String valorString,
+
 			BigDecimal valorDecimal, Date valorTiempo, Integer estado, Date fechaIngreso) {
+
 		this.id = id;
 		this.meta = meta;
 		this.usuario = usuario;
@@ -145,4 +149,7 @@ public class MetaValor implements java.io.Serializable {
 		this.fechaIngreso = fechaIngreso;
 	}
 
+	
+
+	
 }

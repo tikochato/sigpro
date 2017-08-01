@@ -135,6 +135,7 @@ public class SMetaValor extends HttpServlet {
 				MetaValor MetaValor;
 				if(esnuevo){		
 					MetaValorId = new MetaValorId(Meta.getId(), new DateTime().toDate());
+
 					MetaValor = new MetaValor(MetaValorId, Meta, usuario, valorEntero, valorString, valorDecimal, valorTiempo, 1, new Date());
 				}
 				else{

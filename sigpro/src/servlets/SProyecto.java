@@ -347,7 +347,9 @@ public class SProyecto extends HttpServlet {
 				if(esnuevo){
 					proyecto = new Proyecto(directorProyecto, cooperante, null, unidadEjecutora, nombre, descripcion,
 							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, obra, fuente,
-							latitud, longitud, objetivo, enunciadoAlcance, null, null, null, null, null, null, null,null);
+							latitud, longitud, objetivo, enunciadoAlcance, null, null, null, null, null, null, null,null,null);
+					
+					
 				}else{
 					proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 					proyecto.setNombre(nombre);

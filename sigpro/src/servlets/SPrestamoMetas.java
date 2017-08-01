@@ -405,7 +405,9 @@ public class SPrestamoMetas extends HttpServlet {
 		if (MetaValor != null){
 			MetaValor.setValorDecimal(Utils.String2BigDecimal(metavalor.valor, new BigDecimal(0)));
 		}else{
+
 			MetaValor = new MetaValor(MetaValorId, meta, usuario, null, null, Utils.String2BigDecimal(metavalor.valor, new BigDecimal(0)), null, 1, new Date());
+
 		}
 		MetaValorDAO.guardarMetaValor(MetaValor);
 		metavalor.id = meta.getId();
