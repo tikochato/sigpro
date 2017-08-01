@@ -57,7 +57,7 @@ public class SMatrizRACI extends HttpServlet {
 		String nombreI;
 		int idI;
 		int objetoTipo;
-		int nive;
+		int nivel;
 	}
 	
 	class stcolaborador{
@@ -115,6 +115,8 @@ public class SMatrizRACI extends HttpServlet {
 						tempmatriz = new stmatriz();
 						tempmatriz.objetoId = proyecto.getId();
 						tempmatriz.objetoNombre = proyecto.getNombre();
+						tempmatriz.nivel = 1;
+						tempmatriz.objetoTipo = 1;
 						lstMatriz.add(tempmatriz);
 						
 						for(Integer componente:componentes){
@@ -123,6 +125,8 @@ public class SMatrizRACI extends HttpServlet {
 							tempmatriz = new stmatriz();
 							tempmatriz.objetoId = objComponente.getId();
 							tempmatriz.objetoNombre = objComponente.getNombre();
+							tempmatriz.nivel = 2;
+							tempmatriz.objetoTipo = 2;
 							lstMatriz.add(tempmatriz);
 							
 							
@@ -133,6 +137,8 @@ public class SMatrizRACI extends HttpServlet {
 								tempmatriz = new stmatriz();
 								tempmatriz.objetoId = objProducto.getId();
 								tempmatriz.objetoNombre = objProducto.getNombre();
+								tempmatriz.nivel = 3;
+								tempmatriz.objetoTipo = 3;
 								lstMatriz.add(tempmatriz);
 							
 								ArrayList<Integer> subproductos = InformacionPresupuestariaDAO.getEstructuraArbolSubProducto(idPrestamo,objComponente.getId(),objProducto.getId(), conn);
@@ -142,6 +148,8 @@ public class SMatrizRACI extends HttpServlet {
 									tempmatriz = new stmatriz();
 									tempmatriz.objetoId = objSubProducto.getId();
 									tempmatriz.objetoNombre = objSubProducto.getNombre();
+									tempmatriz.nivel = 4;
+									tempmatriz.objetoTipo = 4;
 									lstMatriz.add(tempmatriz);
 							
 									ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolSubProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(),objSubProducto.getId(), conn);
@@ -151,6 +159,8 @@ public class SMatrizRACI extends HttpServlet {
 										tempmatriz = new stmatriz();
 										tempmatriz.objetoId = objActividad.getId();
 										tempmatriz.objetoNombre = objActividad.getNombre();
+										tempmatriz.nivel = 5 + actividad.get(1);
+										tempmatriz.objetoTipo = 5;
 										getAsignacionRACI(tempmatriz);
 										lstMatriz.add(tempmatriz);
 															
@@ -163,6 +173,8 @@ public class SMatrizRACI extends HttpServlet {
 									tempmatriz = new stmatriz();
 									tempmatriz.objetoId = objActividad.getId();
 									tempmatriz.objetoNombre = objActividad.getNombre();
+									tempmatriz.nivel = 5 + actividad.get(1);
+									tempmatriz.objetoTipo = 5;
 									getAsignacionRACI(tempmatriz);
 									lstMatriz.add(tempmatriz);
 								}  
@@ -174,6 +186,8 @@ public class SMatrizRACI extends HttpServlet {
 								tempmatriz = new stmatriz();
 								tempmatriz.objetoId = objActividad.getId();
 								tempmatriz.objetoNombre = objActividad.getNombre();
+								tempmatriz.nivel = 5 + actividad.get(1);
+								tempmatriz.objetoTipo = 5;
 								getAsignacionRACI(tempmatriz);
 								lstMatriz.add(tempmatriz);
 								
@@ -187,6 +201,8 @@ public class SMatrizRACI extends HttpServlet {
 							tempmatriz = new stmatriz();
 							tempmatriz.objetoId = objActividad.getId();
 							tempmatriz.objetoNombre = objActividad.getNombre();
+							tempmatriz.nivel = 5 + actividad.get(1);
+							tempmatriz.objetoTipo = 5;
 							getAsignacionRACI(tempmatriz);
 							lstMatriz.add(tempmatriz);
 						

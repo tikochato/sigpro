@@ -20,7 +20,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	mi.columnas=[];
 	mi.agrupaciones=[];
 	mi.agrupacion=1;
-	
+	  
 	mi.enMillones = true;
 	
 	

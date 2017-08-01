@@ -12,6 +12,7 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 	mi.matrizAsignacion = [];
 	mi.matrizRaci = [];
 	mi.encabezadoMatriz = [];
+	mi.mostrarTabla = false;
 	
 	$window.document.title = $utilidades.sistema_nombre+' - Matriz RACI';
 	i18nService.setCurrentLang('es');
@@ -30,15 +31,28 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 	 
 	 
 	 mi.generarMatriz = function (){
-	
+		 mi.inicializarVariables();
 			$http.post('/SMatrizRACI', { accion: 'getMatriz', idPrestamo: mi.prestamoSeleccionado.value }).success(
 				function(response) {
 					mi.colaboradores = response.colaboradores;
 					mi.matrizAsignacion = response.matriz;
 					mi.construirMatriz();
-					
+					mi.mostrarTabla = true;
 			});	
 	  };
+	  
+	  
+	  mi.inicializarVariables = function(){
+		  mi.proyectoid = "";
+			mi.proyectoNombre = "";
+			mi.objetoTipoNombre = "";
+			mi.colaboradores = [];
+			mi.matrizAsignacion = [];
+			mi.matrizRaci = [];
+			mi.encabezadoMatriz = [];
+			mi.mostrarTabla = false;
+	  }
+	  
 	  
 	  mi.construirMatriz = function(){
 		  
@@ -50,7 +64,11 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 		  
 		  for (x in mi.matrizAsignacion ){
 			  var item = [];
-			  item[0] = {rol: mi.matrizAsignacion[x].objetoNombre,id:-1,objetoId:-1};
+			  var tab = "\t";
+			  mi.matrizAsignacion[x].objetoNombre= tab.repeat(mi.matrizAsignacion[x].nivel -1) + mi.matrizAsignacion[x].objetoNombre;
+			  
+				 
+			  item[0] = {rol: mi.matrizAsignacion[x].objetoNombre,id:-1,objetoId:-1,objetoTipo:mi.matrizAsignacion[x].objetoTipo};
 			  for (y in mi.colaboradores){
 				  if (mi.matrizAsignacion[x].idR == mi.colaboradores[y].id ){
 					  item[Number(y)+1] = {rol:'R',rolId:1,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId};
@@ -91,9 +109,23 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 			  return "classRolC"; break;
 		  case 4:
 			  return "classRolI"; break;
-		  }
-		   
+		  }   
 	  };
+	  
+	  mi.claseIcon = function (item) {
+		    switch (item[0].objetoTipo) {
+		        case 1:
+		            return 'glyphicon glyphicon-record';
+		        case 2:
+		            return 'glyphicon glyphicon-th';
+		        case 3:
+		            return 'glyphicon glyphicon-certificate';
+		        case 4:
+		            return 'glyphicon glyphicon-link';
+		        case 5:
+		            return 'glyphicon glyphicon-th-list';
+		    }
+		};
 	  
 	  
 	  mi.mostrarColaborador = function(valor){
@@ -120,6 +152,10 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 				}
 		    });	    
 	 };
+	 
+	 mi.getNumber = function(num) {
+		    return new Array(num);   
+		}
 		
 }]);
 

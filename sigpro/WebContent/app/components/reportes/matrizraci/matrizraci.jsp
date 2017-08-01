@@ -37,24 +37,129 @@
 			text-align: center;
 			background: #efd9c4;
 			font-weight: bold;
+			border-right: 1px solid #ddd;
 		}
 		
 		.classRolA {
 			text-align: center;
 			background: #daefc4;
 			font-weight: bold;
+			border-right: 2px solid #ddd;
 		}
 		.classRolC {
 			text-align: center;
 			background: #c4daef;
 			font-weight: bold;
+			border-right: 2px solid #ddd;
 		}
 		.classRolI {
 			text-align: center;
 			background: #d9c4ef;
 			font-weight: bold;
+			border-right: 2px solid #ddd;
 		}
+		
+		.leyendaTexto {
+		    text-align: right;
+		}
+		
+		.leyendaTexto li {
+		    display: inline-block;
+		    position: relative;
+		    padding: 1px 8px 1px 15px;
+		    font-size: smaller;
+		}
+		
+		.leyendaTexto li span {
+		    position: absolute;
+		    left: 0;
+		    width: 12px;
+		    height: 12px;
+		    border-radius: 4px;
+		}
+		
+		
+		.colorResponsableFondo{
+			background-color: #efd9c4;
+		}
+		
+		.colorAprobadorFondo{
+			background-color: #daefc4;
+		}
+		.colorConsultadoFondo{
+			background-color: #c4daef;
+		}
+		.colorInformadoFondo{
+			background-color: #d9c4ef;
+		}
+		
+		.nombreFormat {    
+		    margin: 0 0 3px;
+		    color: #333;
+		    word-break: none;
+		    word-wrap: break-word;
+		    background-color: transparent;
+		    border: none;
+		    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+		    padding: 0px;
+		    line-height: normal;		     
+		}
+		
+		
+		/*
+		
+		table {
+  overflow: hidden;
+}
 
+td, th {
+  padding: 10px;
+  position: relative;
+  outline: 0;
+}
+
+body:not(.nohover) tbody tr:hover {
+  background-color: #ffa;
+}
+
+td:hover::after,
+thead th:not(:empty):hover::after,
+td:focus::after,
+thead th:not(:empty):focus::after { 
+  content: '';  
+  height: 10000px;
+  left: 0;
+  position: absolute;  
+  top: -5000px;
+  width: 100%;
+  z-index: -1;
+}
+
+td:hover::after,
+th:hover::after {
+  background-color: #ffa;
+}
+
+td:focus::after,
+th:focus::after {
+  background-color: lightblue;
+}
+*/
+/* Focus stuff for mobile */
+/*
+td:focus::before,
+tbody th:focus::before {
+  background-color: lightblue;
+  content: '';  
+  height: 100%;
+  top: 0;
+  left: -5000px;
+  position: absolute;  
+  width: 10000px;
+  z-index: -1;
+}
+		
+*/
 	</style>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
@@ -164,24 +269,42 @@
 				<table st-table="racic.matrizRaci" class="table table-header-rotated  table-striped table-hover table-condensed" >
 						<thead class="theadDatos">
 						<tr >
-							<th  class="{{racic.claseHeader($index)}}" ng-repeat="n in racic.encabezadoMatriz track by $index" style="text-align: center">
+							<th style="width: 20px;"></th>
+							<th  class="{{racic.claseHeader($index)}}" ng-repeat="n in racic.encabezadoMatriz track by $index"
+							 style="text-align: center; border-right: 2px solid #ddd; ">
 									<div ><span>{{n.nombre}} </span></div>
 							</th>
 						</tr>
 						</thead>
 						<tbody>
 						<tr  ng-repeat="row in racic.matrizRaci track by $index " >
-							<td ng-repeat = "col in row track by $index" class="{{racic.claseBody(col)}}" ng-click="$index > 0 ? racic.mostrarColaborador(col) : ''" >
-							 	 <span >{{col.rol}} </span>
+							<td><div class="{{racic.claseIcon(row)}}"></div> </td>
+							<td ng-repeat = "col in row track by $index" class="{{racic.claseBody(col)}}" 
+							ng-click="$index > 0 ? racic.mostrarColaborador(col) : ''" 
+							style="border-right: 2px solid #ddd;">
+							 	 <pre class="nombreFormat" >{{col.rol}}</pre>
 							 </td>
 						</tr>
 						</tbody>
 				</table>	
 				
-				<br/>
-				
+
 				
 			</div>
+			
+			
+		
+			<div style="text-align: center;" ng-if="racic.mostrarTabla">
+	    		
+	    		<ol class="leyendaTexto"  >
+					<li ><span class="colorResponsableFondo"></span>Responsable</li>
+			        <li ><span class="colorAprobadorFondo"></span>Aprobador</li>
+			        <li ><span class="colorConsultadoFondo"></span>Consultado</li>
+			        <li ><span class="colorInformadoFondo"></span>Informado</li>
+				</ol>
+	    	
+					
+	    	</div>
 		  
 	</div>
 </div>

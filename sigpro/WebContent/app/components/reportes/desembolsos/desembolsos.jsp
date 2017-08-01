@@ -12,7 +12,6 @@
      	border: none !important;
 	}
 	.planificado {
-		
 		color: #303f9e;
 	}
 	
