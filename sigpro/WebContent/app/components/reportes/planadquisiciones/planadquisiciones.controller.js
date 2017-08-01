@@ -2,7 +2,10 @@ var app = angular.module('planAdquisicionesController', ['ngTouch','ngAnimate','
 app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal) {
 	var mi = this;
-
+	mi.mostrarcargando = false;
+	mi.mostrarDescargar = false;
+	mi.mostrarDatos = false;
+	mi.enMillones = false;
 	i18nService.setCurrentLang('es');
 	
 	mi.anio = new Date().getFullYear();
@@ -76,8 +79,8 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			headerTemplate: '<div role="rowgroup" class="ui-grid-header"> <div class="ui-grid-top-panel"> <div class="ui-grid-header-viewport"> <div class="ui-grid-header-canvas"> <div class="ui-grid-header-cell-wrapper" ng-style="colContainer.headerCellWrapperStyle()"> <div role="row" class="ui-grid-header-cell-row"> <div class="ui-grid-header-cell ui-grid-clearfix" ng-if="col.colDef.category === undefined" ng-repeat="col in colContainer.renderedColumns track by col.uid" ui-grid-header-cell col="col" render-index="$index"> </div> <div style="width:100px" align="center" class="ui-grid-header-cell ui-grid-clearfix ui-grid-category" ng-repeat="cat in grid.appScope.controller.categorias" ng-if="cat.visible && (colContainer.renderedColumns | filter:{ colDef:{category: cat.name} }).length > 0"> <span ng-if="cat.showCatName === true"> {{cat.displayName}} </span> <br ng-if="cat.showCatName !== true" /> <div class="ui-grid-header-cell ui-grid-clearfix" ng-repeat="col in colContainer.renderedColumns | filter:{ colDef:{category: cat.name} }" ui-grid-header-cell col="col" render-index="$index"> </div> </div><!--!cat.visible && --> </div> </div> </div> </div> </div> </div> ',
 			category: mi.categorias,
 			columnDefs: [
-				{ name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: 'Componente',
-		        	cellTemplate: "<div class=\"ui-grid-cell-contents\" ng-class=\"{'ui-grid-tree-padre': row.treeLevel < 2}\"><div class=\"ui-grid-cell-contents\" title=\"TOOLTIP\"><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.controller.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>"
+				{ name: 'nombre', pinnedLeft:true, enableCellEdit: false, width: 300, displayName: 'Objeto',
+		        	cellTemplate: "<div class=\"ui-grid-cell-contents\" ng-class=\"{'ui-grid-tree-padre': row.treeNode.children.length > 0}\"><div class=\"ui-grid-cell-contents\" title=\"TOOLTIP\"><div style=\"float:left;\" class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"grid.appScope.controller.toggleRow(row,evt)\"><i ng-class=\"{'ui-grid-icon-down-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-right-dir': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed', 'ui-grid-icon-blank': ( ( !grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) && !( row.treeNode.children && row.treeNode.children.length > 0 ) )}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>{{COL_FIELD CUSTOM_FILTERS}}</div>"
 		        },
 				{ name: 'metodo', enableCellEdit: false,width: 75, displayName: 'Método'},
 				{ name: 'unidadMedida', width: 100, displayName: 'Unidad de Medida', editType: 'dropdown', editableCellTemplate: 'ui-grid/dropdownEditor',
@@ -112,12 +115,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				{ name: 'realFirma', enableCellEdit: true, enableCellEditOnFocus: true, width: 100, displayName: 'Real', category: 'FirmaContrato', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
 		        	cellClass : function(grid, row, col, rowRenderIndex, colRenderIndex) {
 		                return "real";
-		            }},
-				{ name: 'pagos', enableCellEdit: false, width: 50, displayName: '', pinnedRight:true,
-					cellTemplate: '<div class="ui-grid-cell-contents ng-binding ng-scope"><button style="width: 40px; height: 25px" class="btn btn-default" ng-click="grid.appScope.controller.agregarPago(row)" ng-hide="row.entity.planAdquisicionId == 0 || row.entity.ocultarLimpiar"><span class="glyphicon glyphicon-usd" uib-tooltip="Pagos" tooltip-placement="right"></span></button></div>'
-				},
-				{ name: 'limpiar', enableCellEdit: false, width: 50, displayName: '', pinnedRight:true,
-					cellTemplate: '<div class="ui-grid-cell-contents ng-binding ng-scope"><button style="width: 40px; height: 25px" class="btn btn-default" ng-click="grid.appScope.controller.limpiar(row)" ng-hide="row.entity.ocultarLimpiar"><span class="glyphicon glyphicon-erase" uib-tooltip="Limpiar" tooltip-placement="left"></span></button></div>'
+		        	}
 				},
 				{ name: 'nada', enableCellEdit: false, width: 20, displayName: '', pinnedRight:true}
 			],
@@ -309,7 +307,9 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 		for(h in mi.borrarObjetos){
 			$http.post('/SPlanAdquisiciones',{
 				accion: 'borrarPlan',
-				idPlanAdquisiciones: mi.borrarObjetos[h],
+				idObjeto:idObjeto,
+				objetoTipo:objetoTipo,
+				//idPlanAdquisiciones: mi.borrarObjetos[h],
 			}).success(function(response){
 				
 			});
@@ -331,7 +331,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	            costo: entidad.costo,
 	            total: entidad.total,
 	            planificadoDocs: moment(entidad.planificadoDocs).format('DD/MM/YYYY') == null ? null : moment(entidad.planificadoDocs).format('DD/MM/YYYY'),
-	            realDocs: moment(entidad.realDocs).format('DD/MM/YYYY') == null ? null : moment(entidad.realDocs).format('DD/MM/YYYY'),
+        		realDocs: moment(entidad.realDocs).format('DD/MM/YYYY') == null ? null : moment(entidad.realDocs).format('DD/MM/YYYY'),
 	            planificadoLanzamiento: moment(entidad.planificadoLanzamiento).format('DD/MM/YYYY') == null ? null : moment(entidad.planificadoLanzamiento).format('DD/MM/YYYY'),
 	            realLanzamiento: moment(entidad.realLanzamiento).format('DD/MM/YYYY') == null ? null : moment(entidad.realLanzamiento).format('DD/MM/YYYY'),
 	            planificadoRecepcionEval: moment(entidad.planificadoRecepcionEval).format('DD/MM/YYYY') == null ? null : moment(entidad.planificadoRecepcionEval).format('DD/MM/YYYY'),
@@ -422,6 +422,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	
 	mi.generar = function(){
 		if(mi.prestamo.value > 0){
+			mi.mostrarcargando = true;
 			mi.idPrestamo = mi.prestamo.value;
 			$http.post('/SPlanAdquisiciones',{
 				accion: 'generarPlan',
@@ -429,9 +430,13 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				informeCompleto: mi.informeCompleto,
 			}).success(function(response){
 				if(response.success){
-					mi.crearArbol(response.componentes);
+					mi.crearArbol(response.proyecto);
 					mi.exportar = true;
 					mi.guardar = true;
+					mi.planPagos = true;
+					mi.limpiarRow = true;
+					mi.mostrarcargando = false;
+					mi.mostrarDatos = true;
 					mi.borrarObjetos = [];
 					mi.guardarObjetos = [];
 				}
@@ -466,14 +471,28 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	}
 	
 	mi.toggleRow = function(row, evt) {
-		uiGridTreeBaseService.toggleRowTreeState(mi.gridApi.grid, row, evt);
+		//uiGridTreeBaseService.toggleRowTreeState(mi.gridApi.grid, row, evt);
+	};
+	
+	mi.claseIcon = function (item) {
+	    switch (item.objetoTipo) {
+	        case 1:
+	            return 'glyphicon glyphicon-record';
+	        case 2:
+	            return 'glyphicon glyphicon-th';
+	        case 3:
+	            return 'glyphicon glyphicon-certificate';
+	        case 4:
+	            return 'glyphicon glyphicon-link';
+	        case 5:
+	            return 'glyphicon glyphicon-th-list';
+	    }
 	};
 	
 	mi.crearArbol = function(datos){
-		if (datos.length > 0){
+		/*if (datos.length > 0){
 			mi.data = datos;
 			for(x in mi.data){
-				
 				if(mi.data[x].modificado == true){
 					var i = x;
 					var idPredecesor = mi.data[x].idPredecesor;
@@ -482,29 +501,41 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					x = i;
 				}
 				
-				mi.data[x].planificadoDocs = mi.data[x].planificadoDocs != '' ? moment(mi.data[x].planificadoDocs,'DD/MM/YYYY').toDate() : "";
-				mi.data[x].realDocs = mi.data[x].realDocs != '' ? moment(mi.data[x].realDocs,'DD/MM/YYYY').toDate() : "";
-				mi.data[x].planificadoLanzamiento = mi.data[x].planificadoLanzamiento != '' ? moment(mi.data[x].planificadoLanzamiento,'DD/MM/YYYY').toDate() : "";
-				mi.data[x].realLanzamiento = mi.data[x].realLanzamiento != '' ? moment(mi.data[x].realLanzamiento,'DD/MM/YYYY').toDate() : "";
-				mi.data[x].planificadoRecepcionEval = mi.data[x].planificadoRecepcionEval != '' ? moment(mi.data[x].planificadoRecepcionEval,'DD/MM/YYYY').toDate() : "";
-				mi.data[x].realLanzamiento = mi.data[x].realLanzamiento != '' ? moment(mi.data[x].realLanzamiento,'DD/MM/YYYY').toDate() : "";
-				mi.data[x].planificadoAdjudica = mi.data[x].planificadoAdjudica != '' ? moment(mi.data[x].planificadoAdjudica,'DD/MM/YYYY').toDate() : "";
-				mi.data[x].realAdjudica = mi.data[x].realAdjudica != '' ? moment(mi.data[x].realAdjudica,'DD/MM/YYYY').toDate() : "";
-				mi.data[x].planificadoFirma = mi.data[x].planificadoFirma != '' ? moment(mi.data[x].planificadoFirma,'DD/MM/YYYY').toDate() : "";
-				mi.data[x].realFirma = mi.data[x].realFirma != '' ? moment(mi.data[x].realFirma,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].costo = mi.data[x].costo != null ? mi.data[x].costo : 0;
+				mi.data[x].total = mi.data[x].total != null ? mi.data[x].total : 0;
+				mi.data[x].planificadoDocs = mi.data[x].planificadoDocs != null ? moment(mi.data[x].planificadoDocs,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].realDocs = mi.data[x].realDocs != null ? moment(mi.data[x].realDocs,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].planificadoLanzamiento = mi.data[x].planificadoLanzamiento != null ? moment(mi.data[x].planificadoLanzamiento,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].realLanzamiento = mi.data[x].realLanzamiento != null ? moment(mi.data[x].realLanzamiento,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].planificadoRecepcionEval = mi.data[x].planificadoRecepcionEval != null ? moment(mi.data[x].planificadoRecepcionEval,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].realRecepcionEval = mi.data[x].realRecepcionEval != null ? moment(mi.data[x].realRecepcionEval,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].planificadoAdjudica = mi.data[x].planificadoAdjudica != null ? moment(mi.data[x].planificadoAdjudica,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].realAdjudica = mi.data[x].realAdjudica != null ? moment(mi.data[x].realAdjudica,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].planificadoFirma = mi.data[x].planificadoFirma != null ? moment(mi.data[x].planificadoFirma,'DD/MM/YYYY').toDate() : "";
+				mi.data[x].realFirma = mi.data[x].realFirma != null ? moment(mi.data[x].realFirma,'DD/MM/YYYY').toDate() : "";
 				
 				mi.habilitarPadre(idPredecesor, objetoPredecesor);
 			}
+		}*/
+		
+		mi.data = datos;
+		var tab = "\t";
+		for(x in mi.data){
+			mi.data[x].nombre = tab.repeat(mi.data[x].objetoTipo -1) + mi.data[x].nombre;
 		}
 		
-		mi.gridOptions.data = mi.data;
+		mi.rowCollectionPrestamo = [];
+		mi.rowCollectionPrestamo = mi.data;
+		mi.displayedCollectionPrestamo = [].concat(mi.rowCollectionPrestamo);
+		mi.mostrarDescargar = true;
+		//mi.gridOptions.data = mi.data;
 		
-    	$timeout(function(){
+    	/*$timeout(function(){
     		mi.gridApi.treeBase.expandAllRows();
-	   })
+	   })*/
 	}
 	
-	mi.agregarPago = function(row) {
+	mi.setValores = function(row) {
 		var modalInstance = $uibModal.open({
 			animation : 'true',
 			ariaLabelledBy : 'modal-title',
@@ -515,12 +546,14 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			backdrop : 'static',
 			size : 'lg',
 			resolve : {
-				idPlanAdquisiciones: function() {
-					return row.entity.planAdquisicionId;
+				idObjeto: function() {
+					return row.objetoId;
 				},
-		
+				objetoTipo: function(){
+					return row.objetoTipo;
+				},
 				nombre: function(){
-					return row.entity.nombre;
+					return row.nombre;
 				}
 			}
 		});
@@ -537,14 +570,15 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 
 app.controller('modalPago', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log',   '$uibModal', '$q' ,'idPlanAdquisiciones','nombre',modalPago ]);
+	'$timeout', '$log',   '$uibModal', '$q' ,'idObjeto','objetoTipo','nombre',modalPago ]);
 
 function modalPago($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $uibModal, $q,idPlanAdquisiciones, nombre) {
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idObjeto, objetoTipo, nombre) {
 
 	var mi = this;
 	mi.planAdquisicionesPagos = [];
-	mi.id = idPlanAdquisiciones;
+	mi.idObjeto = idObjeto;
+	mi.objetoTipo = objetoTipo;
 	mi.nombre = nombre;
 	mi.formatofecha = 'MMMM';
 	
@@ -575,7 +609,7 @@ function modalPago($uibModalInstance, $scope, $http, $interval,
 	
 	mi.cargarPagos = function(){
 		mi.mostrarcargando = true;
-		$http.post('/SPago',{ accion: 'getPagos', idPlanAdquisiciones:idPlanAdquisiciones,t:moment().unix()}).then(
+		$http.post('/SPago',{ accion: 'getPagos', idObjeto:idObjeto,objetoTipo:objetoTipo,t:moment().unix()}).then(
 				function(response) {
 					if (response.data.success){
 						for(x in response.data.pagos){

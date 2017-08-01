@@ -1,7 +1,5 @@
 package dao;
 
-import java.util.List;
-
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -28,13 +26,13 @@ public class PlanAdquisicionesDetalleDAO {
 		return ret;
 	}
 	
-	public static PlanAdquisiciones getPlanAdquisicionByObjeto(int objetoTipo, int ObjetoId){
-		PlanAdquisiciones ret = null;
+	public static PlanAdquisicionesDetalle getPlanAdquisicionByObjeto(int objetoTipo, int ObjetoId){
+		PlanAdquisicionesDetalle ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
 			String query = "FROM PlanAdquisicionesDetalle where objetoId=:objetoId and objetoTipo=:objetoTipo";
-			Query<PlanAdquisiciones> criteria = session.createQuery(query, PlanAdquisiciones.class);
+			Query<PlanAdquisicionesDetalle> criteria = session.createQuery(query, PlanAdquisicionesDetalle.class);
 			criteria.setParameter("objetoId", ObjetoId);
 			criteria.setParameter("objetoTipo", objetoTipo);
 			ret = criteria.getSingleResult();
