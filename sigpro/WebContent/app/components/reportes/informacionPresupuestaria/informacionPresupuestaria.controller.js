@@ -21,6 +21,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.estiloAlineacion="text-align: center;";
 		mi.data = [];
 		mi.totales = [];
+		mi.scrollPosicion = 0;
 		
 		var AGRUPACION_MES= 1;
 		var AGRUPACION_BIMESTRE = 2;
@@ -47,6 +48,23 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			$scope.divActivo = id;
 	    }
 				
+
+		mi.iconoObjetoTipo = {
+		    1: "glyphicon glyphicon-record",
+		    2: "glyphicon glyphicon-th",
+		    3: "glyphicon glyphicon-certificate",
+		    4: "glyphicon glyphicon-link",
+		    5: "glyphicon glyphicon-th-list",
+		};
+		
+		mi.tooltipObjetoTipo = {
+		    1: "Proyecto",
+		    2: "Componente",
+		    3: "Producto",
+		    4: "Subproducto",
+		    5: "Actividad",
+		};
+		
 		mi.agrupaciones = [
 			{'value' : 0, 'text' : 'Seleccione una opción'},
 			{'value' : AGRUPACION_MES, 'text' : 'Mensual'},
@@ -56,7 +74,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			{'value' : AGRUPACION_SEMESTRE, 'text' : 'Semestre'},
 			{'value' : AGRUPACION_ANUAL, 'text' : 'Anual'},
 		];	
-
+		
 		mi.agrupacion = mi.agrupaciones[0];
 		
 		mi.redireccionSinPermisos=function(){
@@ -110,15 +128,16 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCelda;
 				mi.SiguienteActivo = true;
 			}else{
-			if(elemento.scrollLeft > 0){
-				elemento.scrollLeft -= mi.tamanoCabecera;
-				document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCabecera;
-				mi.SiguienteActivo = true;
-				if(elemento.scrollLeft <= 0){
-					mi.AnteriorActivo = false;
+				if(elemento.scrollLeft > 0){
+					elemento.scrollLeft -= mi.tamanoCabecera;
+					document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCabecera;
+					mi.SiguienteActivo = true;
+					if(elemento.scrollLeft <= 0){
+						mi.AnteriorActivo = false;
+					}
 				}
 			}
-		}
+			mi.scrollPosicion = elemento.scrollLeft;
 		}
 		
 		mi.siguiente = function(){
@@ -128,15 +147,16 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				document.getElementById("divCabecerasDatos").scrollLeft += mi.tamanoCelda;
 				mi.AnteriorActivo = true;
 			}else{
-			if(elemento.scrollLeft < ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
-				elemento.scrollLeft += mi.tamanoCabecera;
-				document.getElementById("divCabecerasDatos").scrollLeft += mi.tamanoCabecera;
-				mi.AnteriorActivo = true;
-				if(elemento.scrollLeft >= ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
-					mi.SiguienteActivo = false;
+				if(elemento.scrollLeft < ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
+					elemento.scrollLeft += mi.tamanoCabecera;
+					document.getElementById("divCabecerasDatos").scrollLeft += mi.tamanoCabecera;
+					mi.AnteriorActivo = true;
+					if(elemento.scrollLeft >= ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
+						mi.SiguienteActivo = false;
+					}
 				}
 			}
-		}
+			mi.scrollPosicion = elemento.scrollLeft;
 		}
 		
 		mi.validar = function(noElemento){
@@ -335,7 +355,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				}
 			}
 			
-			
 			var tamanio = mi.columnas.length * mi.aniosTotal.length; 
 			mi.columnastotales = new Array(tamanio);
 			
@@ -359,6 +378,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			var valor = mi.totales[itemIndice].anio[anioIndice].valor;
 			return valor;
 		};
+		
 }]);
 
 app.directive('scrollespejo', ['$window', function($window) {
@@ -372,6 +392,9 @@ app.directive('scrollespejo', ['$window', function($window) {
       	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
       	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
       	          }else if(elemento.id == 'divTablaDatos'){
+      	        	if(Math.abs(scope.controller.scrollPosicion-element[0].scrollLeft)<scope.controller.tamanoCelda){//bloquear scroll horizontal
+                  		element[0].scrollLeft = scope.controller.scrollPosicion;
+                  	}
       	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
       	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
       	          }else{

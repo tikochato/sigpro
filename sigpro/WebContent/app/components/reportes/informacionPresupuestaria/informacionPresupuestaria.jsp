@@ -106,7 +106,8 @@
 		    border: none;
 		    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 		    padding: 0px;
-		    line-height: normal;		     
+		    line-height: normal;	
+		    overflow: initial;	     
 		}
 		
 		.leyendaTexto {
@@ -230,7 +231,7 @@
 								</thead>
 								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="max-height: 390px; margin-bottom: -15px;">
 									<tr ng-repeat="item in controller.data">
-							      		<td nowrap style="min-width:200px;"><pre class="nombreFormat">{{item.nombre}}</pre></td>
+							      		<td nowrap style="min-width:200px;"><label ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="float: left;"></label><pre class="nombreFormat">{{item.nombre}}</pre></td>
 							      	</tr>
 								</tbody>
 							</table>
@@ -284,19 +285,22 @@
 			    		</div>
 				</div>
 	    	</div>
-	    	<div style="text-align: center;">
-	    		<br>
-	    		<ol class="leyendaTexto"  ng-hide="!controller.mostrarDescargar">
-					<li ng-show="controller.grupoMostrado.planificado"><span class="colorPlanificadoFondo"></span>Planificado</li>
-			        <li ng-show="controller.grupoMostrado.real"><span class="colorRealFondo"></span>Real</li>
-				</ol>
-	    	<br>
-					<label class="btn btn-default" ng-click="controller.anterior()" uib-tooltip="Anterior" ng-hide="!controller.movimiento" 
-							tooltip-placement="bottom" ng-disabled="!controller.AnteriorActivo">
-					<span class="glyphicon glyphicon-chevron-left"></span></label>
-					<label class="btn btn-default" ng-click="controller.siguiente()" uib-tooltip="Siguiente" ng-hide="!controller.movimiento"
-							tooltip-placement="bottom" ng-disabled="!controller.SiguienteActivo">
-					<span class="glyphicon glyphicon-chevron-right"></span></label>
+	    	<div class="row">
+					<div class="col-sm-3"></div>
+					<div class="col-sm-6" style="text-align: center;">
+						<label class="btn btn-default" ng-click="controller.anterior()" uib-tooltip="Anterior" ng-hide="!controller.movimiento" 
+								tooltip-placement="bottom" ng-disabled="!controller.AnteriorActivo">
+						<span class="glyphicon glyphicon-chevron-left"></span></label>
+						<label class="btn btn-default" ng-click="controller.siguiente()" uib-tooltip="Siguiente" ng-hide="!controller.movimiento"
+								tooltip-placement="bottom" ng-disabled="!controller.SiguienteActivo">
+						<span class="glyphicon glyphicon-chevron-right"></span></label>
+					</div>
+					<div class="col-sm-3">
+			    		<ol class="leyendaTexto"  ng-hide="!controller.mostrarDescargar">
+							<li ng-show="controller.grupoMostrado.planificado"><span class="colorPlanificadoFondo"></span>Planificado</li>
+					        <li ng-show="controller.grupoMostrado.real"><span class="colorRealFondo"></span>Real</li>
+						</ol>
+					</div>
 	    	</div>
     	</div>
     </div>
