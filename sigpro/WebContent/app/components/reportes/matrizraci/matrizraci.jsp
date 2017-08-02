@@ -287,13 +287,8 @@ tbody th:focus::before {
 						</tr>
 						</tbody>
 				</table>	
-				
 
-				
 			</div>
-			
-			
-		
 			<div style="text-align: center;" ng-if="racic.mostrarTabla">
 	    		
 	    		<ol class="leyendaTexto"  >

@@ -20,6 +20,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	mi.columnas=[];
 	mi.agrupaciones=[];
 	mi.agrupacion=1;
+	mi.yAxisNombre="";
 	  
 	mi.enMillones = true;
 	
@@ -59,8 +60,20 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	                        callback: function (value) {
 	                            return numeral(value).format('$ 0,0')
 	                        }
-	                    }
+	                   },
+	                   scaleLabel: {
+	                       display: true,
+	                       labelString: 'Monto'
+	                     }
+			        	
 			        }
+			      ],
+			      xAxes: [{
+			    	  scaleLabel: {
+	                       display: true,
+	                       labelString: mi.yAxisNombre
+	                     }
+			      }
 			      ]
 			    }
 			  };
@@ -90,7 +103,8 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 		mi.anios = [];
 		mi.anio = "";
 		mi.columnas=[];
-		mi.agrupacion = mi.agruapacion == null || mi.agrupacion == undefined ? 1 : mi.agrupacion;
+		//mi.agrupacion = mi.agruapacion == null || mi.agrupacion == undefined ? 1 : mi.agrupacion;
+		mi.agrupacion = 1;
 	}
 	
 	mi.generarReporte = function (){
@@ -118,9 +132,10 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 						}
 						
 						//mi.anioSeleccionado = mi.anios!=null && mi.anios != undefined && mi.anios.length > 0 ?  mi.anios[0].id : undefined;
-						mi.agrupacion = mi.agrupaciones[0].id;
+						//mi.agrupacion = mi.agrupaciones[0].id;
 						mi.mostrar = true;
-						mi.asignarSerie();
+						mi.asignarSerie(mi.agrupacion);
+						
 				}else{
 					$utilidades.mensaje('warning','No se encontraron datos para el préstamo');
 					mi.mostrar = false;
@@ -145,23 +160,27 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 				mi.columnas.push ("Mes");
 				mi.columnas.push(...mi.etiqutas);
 				totalItems=12;
+				mi.options.scales.xAxes[0].scaleLabel.labelString="Meses";
 				break;
 			case 2:
 				mi.etiqutas = ["1", "2", "3", "4", "5", "6"];
 				mi.columnas.push ("Bimestre");
 				mi.columnas.push(...mi.etiqutas);
 				totalItems=6;
+				mi.options.scales.xAxes[0].scaleLabel.labelString="Bimestres";
 				break;
 			case 3:
 				mi.etiqutas = ["1", "2", "3", "4"];
 				mi.columnas.push ("Trimestre");
 				mi.columnas.push(...mi.etiqutas);
+				mi.options.scales.xAxes[0].scaleLabel.labelString="Trimestres";
 				totalItems=4;
 				break;
 			case 4:
 				mi.etiqutas = ["1", "2", "3"];
 				mi.columnas.push ("Cuatrimestre");
 				mi.columnas.push(...mi.etiqutas);
+				mi.options.scales.xAxes[0].scaleLabel.labelString="Cuatrimestres";
 				totalItems=3;
 				break;
 			case 5:
@@ -169,6 +188,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 				mi.columnas.push ("Semestre");
 				mi.columnas.push(...mi.etiqutas);
 				totalItems=2;
+				mi.options.scales.xAxes[0].scaleLabel.labelString="Semestres";
 				break;
 			case 6:
 				totalItems=mi.anios.length;
@@ -177,6 +197,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 				}
 				mi.columnas.push ("Año");
 				mi.columnas.push(...mi.etiqutas)
+				mi.options.scales.xAxes[0].scaleLabel.labelString="Años";
 				break;
 		}
 		mi.columnas.push("Total");
@@ -228,7 +249,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			desembolsoReal.push("Real");
 			desembolsoReal.push(...mi.desembolsos[1].slice());
 			
-			variaciones.push("Variacion");
+			variaciones.push("Variación");
 			
 			for (x = 1;x<=totalItems;x++){
 				totalPlanificado = totalPlanificado+ desembolsoPlanificado[x];
@@ -323,4 +344,21 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 		 default: return "";
 		 }
 	 }
+	 
+	 mi.esNumero = function(value){
+		 return !isNaN(value);
+	 }
+	 
+	 mi.NombrexAxis = function(value){
+		 switch (value){
+		 	case 1: mi.yAxisNombre="Mensual"; break;
+		 	case 2: mi.yAxisNombre="Bimestral"; break;
+		 	case 3: mi.yAxisNombre="Semestral"; break;
+		 	case 4: mi.yAxisNombre="Trimestral"; break;
+		 	case 5: mi.yAxisNombre="Cuatrimesral"; break;
+		 	case 1: mi.yAxisNombre="Semestral"; break;
+		 	case 1: mi.yAxisNombre="Anual"; break;
+		 }
+	 }
+	 
 }]);

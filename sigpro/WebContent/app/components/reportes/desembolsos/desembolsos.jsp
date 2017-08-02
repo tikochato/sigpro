@@ -1,24 +1,76 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 	<style>
-	.label-form1{
-		 font-size: 13px;
-		 opacity: 1;
-		 pointer-events: none;
-		 color: rgba(0,0,0,0.38) !important;
-		 font-weight: bold;
-	}
-	 table.borderless td,table.borderless th{
-     	border: none !important;
-	}
+	
+	 
 	.planificado {
 		color: #303f9e;
+		 border-right: 1px solid #ddd; 
+		
 	}
 	
 	.real2 {
 		color: #257129;
+		 border-right: 1px solid #ddd; 
+		 
+	}
+	.label-form {
+		    font-size: 13px;
+		    opacity: 1;
+		    color: rgba(0,0,0,0.38) !important;
+		    font-weight: bold;
+		    border-right: 1px solid #ddd; 
+		}
+	.colorPlanificadoFondo{
+			background-color: #303f9e;
+		}
+		
+	.colorRealFondo{
+		background-color: #257129;
 	}
 	
+	.leyendaTexto {
+		    text-align: right;
+		}
+		
+		.leyendaTexto li {
+		    display: inline-block;
+		    position: relative;
+		    padding: 1px 8px 1px 15px;
+		    font-size: smaller;
+		}
+		
+		.leyendaTexto li span {
+		    position: absolute;
+		    left: 0;
+		    width: 12px;
+		    height: 12px;
+		    border-radius: 4px;
+		}
+		
+		.divTabla{
+			
+			max-height: 1174x;
+			margin-right: -15px;
+			overflow-y:hidden;
+			overflow-x:hidden;
+		}
+		
+		.tablaDatos {
+			display: flex;
+		    flex-direction: column;
+		    align-items: stretch;
+		    height: 375px; 
+		}
+		
+		 .cuerpoTablaNombres {
+		    
+		    overflow-x: scroll;
+		    display: inline-block;
+		    font-size: 13px;
+		    max-width: 100%;
+		    min-width: 100%;
+		}
 	
 	
 </style>
@@ -93,9 +145,6 @@
 						</div>
 			    	</div>
 		    			<br><br><br><br>
-					
-					
-					
 				</div>
 			</form>
 			<br/> 
@@ -110,23 +159,40 @@
 				</canvas>
 			</div>
 			<br/><br/>
-			<table st-table="desembolsosc.desembolsos" class="table table-striped table-hover table-condensed"
+			<div class="divTabla"  >
+			<table st-table="desembolsosc.desembolsos" class="table table-striped table-hover table-condensed table-responsive cuerpoTablaNombres "
 				ng-hide="!desembolsosc.mostrar">
-				<thead>
+				<thead class="theadDatos">
 				<tr >
-					<th ng-repeat="n in desembolsosc.columnas track by $index" style="text-align: center">
+					<th ng-repeat="n in desembolsosc.columnas track by $index" style="text-align: center" class="label-form">
 					{{n}}
 					</th>
 				</tr>
 				</thead>
-				<tbody>
+				<tbody >
 				<tr class = "{{desembolsosc.clase($index)}}" ng-repeat="row in desembolsosc.tabla track by $index" style="text-align: right;">
-					<td ng-repeat = "col in row track by $index"
-					 	 style="font-weight: bold;">{{desembolsosc.formato1(col) }}
+					<td ng-repeat = "col in row track by $index" 
+					 	 nowrap style="font-weight: bold; border-right: 1px solid #ddd; min-width:125px;">
+					 	 <div ng-if=" desembolsosc.esNumero(col)" >
+					 	 	{{col | formatoMillones : desembolsosc.enMillones }}
+					 	 </div>
+					 	 <div ng-if="! desembolsosc.esNumero(col)" >
+					 	 	{{col}}
+					 	 </div>
+					 	 
 					 </td>
 				</tr>
 				</tbody>
 			</table>
+			</div>
+			<br/>
+			<div style="text-align: center;">
+	    		<br>
+	    		<ol class="leyendaTexto"  ng-hide="!desembolsosc.mostrar">
+					<li ><span class="colorPlanificadoFondo"></span>Planificado</li>
+			        <li ><span class="colorRealFondo"></span>Real</li>
+				</ol>
+	    	</div>
 		</div>
 		  
 	</div>
