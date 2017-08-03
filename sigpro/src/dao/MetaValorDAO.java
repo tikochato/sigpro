@@ -198,16 +198,16 @@ public class MetaValorDAO {
 			String query = String.join(" ", "select sum(mv.valorDecimal) from Meta m",
 							"inner join m.metaValors mv",
 							"where m.estado = 1",
-							"and (mv.estado = ?estado OR mv.estado = ?estadoCongelado",
 							"and m.metaTipo.id = ?1",
 							"and m.objetoId = ?2",
-							"and m.objetoTipo = ?3");
+							"and m.objetoTipo = ?3",
+							"and (mv.estado = ?4 OR mv.estado = ?5)");
 			Query<?> criteria = session.createQuery(query);
 			criteria.setParameter("1", metaTipo);
 			criteria.setParameter("2", objetoId);
 			criteria.setParameter("3", objetoTipo);
-			criteria.setParameter("estado", ESTADO_ACTIVO);
-			criteria.setParameter("estadoCongelado", ESTADO_CONGELADO);
+			criteria.setParameter("4", ESTADO_ACTIVO);
+			criteria.setParameter("5", ESTADO_CONGELADO);
 			criteria.setMaxResults(1);
 			ret = (BigDecimal) criteria.getSingleResult();
 		}

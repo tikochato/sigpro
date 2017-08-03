@@ -91,9 +91,9 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 	  
 	  mi.claseHeader = function (value){
 		  	if (value > 0)
-		  		return "rotate";
+		  		return "rotate cabecerath1";
 		  	else 
-		  		return "label-form";
+		  		return "label-form thTarea";
 			 
 			 
 	  };
