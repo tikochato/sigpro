@@ -5,8 +5,17 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	mi.mostrarcargando = false;
 	mi.mostrarDescargar = false;
 	mi.mostrarDatos = false;
-	mi.enMillones = false;
+	mi.enMillones = true;
+	mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth);
+	mi.tamanoTotal = mi.tamanoPantalla - 280; 
+	mi.estiloCelda = "width:80px;min-width:80px; max-width:80px;text-align: center";
+	
 	i18nService.setCurrentLang('es');
+	
+	$scope.divActivo = "";
+	mi.activarScroll = function(id){
+		$scope.divActivo = id;
+    }
 	
 	mi.anio = new Date().getFullYear();
 	
@@ -29,6 +38,10 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					mi.prestamo = mi.prestamos[0];
 				}
 			});
+	}
+	
+	mi.selectedRow = function(row){
+		mi.datoSeleccionado = row;
 	}
 	
 	mi.ddlOpciones = [];
@@ -535,7 +548,8 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	   })*/
 	}
 	
-	mi.setValores = function(row) {
+	mi.setValores = function() {
+		row = mi.datoSeleccionado;
 		var modalInstance = $uibModal.open({
 			animation : 'true',
 			ariaLabelledBy : 'modal-title',
@@ -581,7 +595,7 @@ function modalPago($uibModalInstance, $scope, $http, $interval,
 	mi.objetoTipo = objetoTipo;
 	mi.nombre = nombre;
 	mi.formatofecha = 'MMMM';
-	
+	mi.enMillones = true;
 	mi.mostrarcargando = false;
 	
 	mi.fechaOptions = {
@@ -674,3 +688,26 @@ function modalPago($uibModalInstance, $scope, $http, $interval,
 	
 	mi.cargarPagos();
 }
+
+app.directive('scrollespejo', ['$window', function($window) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            element.bind('scroll', function() {
+                var elemento = element[0];
+                if (elemento.id == scope.divActivo){
+      	          if(elemento.id == 'divTablaNombres'){
+      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
+      	          }else if(elemento.id == 'divTablaDatos'){
+      	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
+      	            document.getElementById("divCabecerasDatos").scrollLeft = elemento.scrollLeft;
+      	          }else{
+      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
+      	          }
+      	        }
+            });
+        }
+    };
+}])
+
+;
