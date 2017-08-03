@@ -345,7 +345,7 @@ public class SProyecto extends HttpServlet {
 				List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
 
 				if(esnuevo){
-					proyecto = new Proyecto(directorProyecto, cooperante, null, unidadEjecutora, nombre, descripcion,
+					proyecto = new Proyecto(directorProyecto, cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion,
 							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, obra, fuente,
 							latitud, longitud, objetivo, enunciadoAlcance, null, null, null, null, null, null, null,null,null);
 					
