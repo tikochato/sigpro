@@ -119,7 +119,7 @@
 	.cabecerath1{
 		margin: 0px auto;
     	width: 96px;
-			
+    	overflow-x: hidden;
 	}
 
 
@@ -279,6 +279,7 @@
 				</div>
 
 			</div>
+			<br>
 			<div style="text-align: center;" ng-if="racic.mostrarTabla">
 	    		
 	    		<ol class="leyendaTexto"  >
@@ -290,6 +291,7 @@
 	    	
 					
 	    	</div>
+	    	<br>
 		  
 	</div>
 </div>
