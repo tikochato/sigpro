@@ -198,7 +198,7 @@ public class MetaValorDAO {
 			String query = String.join(" ", "select sum(mv.valorDecimal) from Meta m",
 							"inner join m.metaValors mv",
 							"where m.estado = 1",
-							"and (mv.estado = ?estado OR mv.estado = ?estadoCongelado",
+							"and (mv.estado = ?estado OR mv.estado = ?estadoCongelado)",
 							"and m.metaTipo.id = ?1",
 							"and m.objetoId = ?2",
 							"and m.objetoTipo = ?3");
