@@ -63,7 +63,7 @@
 			display: flex;
 		    flex-direction: column;
 		    align-items: stretch;
-		    height: 375px; 
+		    max-height: 375px; 
 		}
 		
 		.colorPlanificado{
@@ -98,7 +98,7 @@
 		}
 		
 		.nombreFormat {    
-		    margin: 0 0 3px;
+		    margin: 0 0 2px;
 		    color: #333;
 		    word-break: none;
 		    word-wrap: break-word;
@@ -133,6 +133,10 @@
 		    top: initial;
 		    bottom: initial;
 		    height: 100%;
+		}
+		
+		.btn-default.active{
+			font-weight: bold;
 		}
 		
 	</style>
@@ -231,7 +235,12 @@
 								</thead>
 								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="max-height: 390px; margin-bottom: -15px;">
 									<tr ng-repeat="item in controller.data">
-							      		<td nowrap style="min-width:200px;"><label ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="float: left;"></label><pre class="nombreFormat">{{item.nombre}}</pre></td>
+							      		<td nowrap style="min-width:200px;">
+							      			<p class="nombreFormat">
+							      				<span ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.objeto_tipo-1}}em"></span>
+							      				{{item.nombre}}
+							      			</p>
+							      		</td>
 							      	</tr>
 								</tbody>
 							</table>

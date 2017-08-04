@@ -1,7 +1,7 @@
-var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'ui.grid.edit', 'ui.grid.rowEdit', 'smart-table']);
+var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'smart-table']);
 
-app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion',
-	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion){
+app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Utilidades','i18nService','$timeout', '$q','dialogoConfirmacion',
+	function($scope, $http, $interval, $utilidades,i18nService,$timeout, $q, $dialogoConfirmacion){
 		var mi = this;
 		i18nService.setCurrentLang('es');
 		mi.fechaInicio = "";
@@ -30,15 +30,10 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		var AGRUPACION_SEMESTRE= 5;
 		var AGRUPACION_ANUAL= 6;
 		
-		var MES_NAME = ['mes1','mes2','mes3','mes4','mes5','mes6','mes7','mes8','mes9','mes10','mes11','mes12'];
 		var MES_DISPLAY_NAME = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-		var BIMESTRE_NAME = ['Bimestre1', 'Bimestre2', 'Bimestre3', 'Bimestre4', 'Bimestre5', 'Bimestre6'];
 		var BIMESTRE_DISPLAY_NAME = ['Bimestre 1', 'Bimestre 2','Bimestre 3','Bimestre 4','Bimestre 5','Bimestre 6'];
-		var TRIMESTRE_NAME = ['Trimestre1', 'Trimestre2','Trimestre3','Trimestre4'];
 		var TRIMESTRE_DISPLAY_NAME = ['Trimestre 1', 'Trimestre 2', 'Trimestre 3', 'Trimestre 4'];
-		var CUATRIMESTRE_NAME = ['Cuatrimestre1','Cuatrimestre2','Cuatrimestre3'];
 		var CUATRIMESTRE_DISPLAY_NAME = ['Cuatrimestre 1', 'Cuatrimestre 2', 'Cuatrimestre 3'];
-		var SEMESTRE_NAME = ['Semestre1','Semestre2'];
 		var SEMESTRE_DISPLAY_NAME = ['Semestre 1','Semestre 2'];
 		var ANUAL_DISPLAY_NAME = ['Anual'];
 		
@@ -89,12 +84,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		}
 	    
 		mi.formatofecha = 'yyyy';
-		
-		mi.prestamos = [
-			{'value' : 0, 'text' : 'Seleccionar una opción'},
-		];
-		
-		mi.prestamo = mi.prestamos[0];
 		
 		mi.abrirPopupFecha = function(index) {
 			switch(index){
@@ -237,9 +226,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			$http.post('/SInformacionPresupuestaria', datos).then(function(response) {
 				if (response.data.success) {
 					mi.data = response.data.prestamo;
-					var tab = "\t";
+					mi.totales = [];
 					 for (x in mi.data){
-						 mi.data[x].nombre = tab.repeat(mi.data[x].objeto_tipo -1) + mi.data[x].nombre; 
 						 var totalFinal = 0;
 						 var fila = [];
 						 for(a in mi.data[x].anios){
