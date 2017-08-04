@@ -211,7 +211,7 @@ public class SProducto extends HttpServlet {
 				
 				if (esnuevo){
 					
-					producto = new Producto(componente, null, unidadEjecutora, nombre, descripcion, 
+					producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, descripcion, 
 							 usuario, null, new DateTime().toDate(), null, 1
 							, snip, programa, subprograma, proyecto_, actividad, obra, fuente, latitud, longitud,null,null,null,null);
 					
