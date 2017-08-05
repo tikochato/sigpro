@@ -24,6 +24,9 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	mi.totales = [];
 	mi.scrollPosicion = 0;
 	
+	mi.VALOR_PLANIFICADO= 0;
+	mi.VALOR_REAL= 1;
+	
 	var AGRUPACION_MES= 1;
 	var AGRUPACION_BIMESTRE = 2;
 	var AGRUPACION_TRIMESTRE = 3;
@@ -247,21 +250,21 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			.then(function(response) {
 				if (response.data.success) {
 					mi.data = response.data.prestamo;
-					var tab = "\t";
 					mi.totales = [];
 					 for (x in mi.data){
-						 mi.data[x].nombre = tab.repeat(mi.data[x].objeto_tipo -1) + mi.data[x].nombre; 
-						 var totalFinal = 0;
+						 var totalFinal = {"planificado": 0, "real": 0};
 						 var fila = [];
 						 for(a in mi.data[x].anios){
-							 var totalAnual = 0;
+							 var totalAnual = {"planificado": 0, "real": 0};
 							 var anio = mi.data[x].anios[a];
 							 for (m in anio){
 								 if(m != "anio"){
-									 totalAnual += anio[m];
+									 totalAnual.planificado += anio[m][mi.VALOR_PLANIFICADO];
+									 totalAnual.real += anio[m][mi.VALOR_REAL];
 								 }
 							 }
-							 totalFinal += totalAnual;
+							 totalFinal.planificado += totalAnual.planificado;
+							 totalFinal.real += totalAnual.real;
 							 var tot = {"valor": totalAnual};
 							 fila.push(tot);
 						 }
@@ -377,19 +380,14 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			}
 		}
 		
-		mi.getPlanificado=function(itemIndice, indice){
+		mi.getPlanificado=function(itemIndice, indice, tipoMeta){
 			mes = Math.floor((indice)/mi.aniosTotal.length);
 			anio = indice - (mes*mi.aniosTotal.length);
 			var item = mi.data[itemIndice];
 			var valor = Object.values(item.anios[anio])[mes];
-			return valor;
+			return valor[tipoMeta];
 		};
 		
-		mi.getTotal=function(itemIndice, anioIndice){
-			var valor = mi.totales[itemIndice].anio[anioIndice].valor;
-			return valor;
-		};
-	
 }]);
 
 app.directive('scrollespejo', ['$window', function($window) {
