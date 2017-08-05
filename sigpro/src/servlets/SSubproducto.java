@@ -186,6 +186,7 @@ public class SSubproducto extends HttpServlet {
 				subproducto = new Subproducto(producto, subproductoTipo, unidadEjecutora, nombre, descripcion, 
 						 usuario, null, new DateTime().toDate(), null, 1
 						, snip, programa, subprograma, proyecto_, actividad, obra, fuente, latitud, longitud,null, null);
+				subproducto.setProducto(producto);
 				
 			}else{
 				subproducto = SubproductoDAO.getSubproductoPorId(id);
