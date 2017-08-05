@@ -4,6 +4,9 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="cargatrabajoController as controller" class="maincontainer all_page" id="title">
+		<script type="text/ng-template" id="estructuraproyecto.jsp">
+    		<%@ include file="/app/components/reportes/cargatrabajo/estructuraproyecto.jsp"%>
+  	    </script>
 		<shiro:lacksPermission name="24010">
 			<p ng-init="controller.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
@@ -15,71 +18,27 @@
 	    	<div class="col-sm-12">
 	    		<div class="row" style="height: 300px; width: 100%;">
 				    <div style="height: 50%; width: 50%; float: left">
-			    		<div class="row">
+				    	<div class="row">
 							<div class="form-group col-sm-6" >
-								<select  class="inputText" ng-model="controller.tObjeto"
-									ng-options="a.text for a in controller.tObjetos" ng-change="controller.displayObjeto(controller.tObjeto.value)"></select>
-								<label for="tObjeto" class="floating-label">Tipo Objeto</label>
-							</div>
-							<div class="form-group col-sm-2" >
-								<label class="btn btn-default" ng-click="controller.generar();" uib-tooltip="Generar" 
-									tooltip-placement="bottom">
-								<span class="glyphicon glyphicon-new-window"></span></label>
-							</div>
-						</div>  
-					    <div class="row">
-							<div class="form-group col-sm-6" ng-hide="!controller.entidadHide">
-								<select  class="inputText" ng-model="controller.entidad"
-									ng-options="a.text for a in controller.entidades" 
-									ng-change="controller.getUnidadesEjecutoras(controller.entidad.value);"></select>
-								<label for="tObjeto" class="floating-label">Entidad</label>
-							</div>
-						</div>
-						 <div class="row">
-							<div class="form-group col-sm-6" ng-hide="!controller.unidadEjecutoraHide">
-								<select  class="inputText" ng-model="controller.unidadEjecutora"
-									ng-options="a.text for a in controller.unidadesEjecutoras"
-									ng-change="controller.getPrestamos(controller.unidadEjecutora.value);"></select>
-								<label for="tObjeto" class="floating-label">Uniedad Ejecutora</label>
-							</div>
-						</div>
-						<div class="row">
-							<div class="form-group col-sm-6" ng-hide="!controller.prestamoHide">
 								<select  class="inputText" ng-model="controller.prestamo"
 									ng-options="a.text for a in controller.prestamos" 
-									ng-change="controller.getComponentes(controller.prestamo.value);"></select>
+									ng-change="controller.getEstructura()"></select>
 								<label for="tObjeto" class="floating-label">Préstamos</label>
-							</div>
+						   </div>
+							
+							
 						</div>
-						<div class="row">
-							<div class="form-group col-sm-6" ng-hide="!controller.componenteHide">
-								<select  class="inputText" ng-model="controller.componente"
-									ng-options="a.text for a in controller.componentes" 
-									ng-change="controller.getProductos(controller.componente.value);"></select>
-								<label for="tObjeto" class="floating-label">Componente</label>
-							</div>
-						</div>
-						<div class="row">
-							<div class="form-group col-sm-6" ng-hide="!controller.productoHide">
-								<select  class="inputText" ng-model="controller.producto"
-									ng-options="a.text for a in controller.productos"
-									ng-change="controller.getSubProductos(controller.producto.value);"></select>
-								<label for="tObjeto" class="floating-label">Producto</label>
-							</div>
-						</div>
-						<div class="row">
-							<div class="form-group col-sm-6" ng-hide="!controller.subProductoHide">
-								<select  class="inputText" ng-model="controller.subProducto"
-									ng-options="a.text for a in controller.subProductos" ng-change=""></select>
-								<label for="tObjeto" class="floating-label">Sub Producto</label>
-							</div>
-						</div>
+						
+						
+			    		
 			    	</div>
 			    	<div style="height: 50%; width: 50%; float: right;">
 				    	<div class="operation_buttons" align="right">
 							<div class="btn-group">
 								<label class="btn btn-primary"  ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.exportar">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Exportar</span></label>
+								<label class="btn btn-primary"  ng-click="controller.filtrarEstrucrura()" uib-tooltip="Filtrar" >
+								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true">&nbsp;Filtrar</span></label>
 							</div>
 						</div>
 		    			<table st-table="controller.displayedCollection" st-safe-src="controller.rowCollection" class="table table-striped">

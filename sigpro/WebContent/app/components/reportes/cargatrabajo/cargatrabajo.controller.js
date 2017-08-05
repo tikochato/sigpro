@@ -1,4 +1,4 @@
-var app = angular.module('cargatrabajoController', ['ngTouch','smart-table']);
+var app = angular.module('cargatrabajoController', ['ngTouch','smart-table','ivh.treeview']);
 app.controller('cargatrabajoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 	var mi = this;
@@ -11,6 +11,14 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     mi.exportar = false;
     mi.grafica = true;
     mi.idPrestamo = 0;
+    mi.estructuraProyecto=[];
+    
+    
+    
+    
+    
+
+    
 
     mi.redireccionSinPermisos=function(){
 		$window.location.href = '/main.jsp#!/forbidden';		
@@ -22,6 +30,18 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		else
 			$location.path('/cargatrabajo/rv');
 	}
+    
+    $http.post('/SProyecto',{accion: 'getProyectos'}).success(
+		function(response) {
+			mi.prestamos = []; 
+			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione una opción'});
+			if (response.success){
+				for (var i = 0; i < response.entidades.length; i++){
+					mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
+				}
+				mi.prestamo = mi.prestamos[0];
+			}
+		});
     
 	mi.tObjetos = [
 		{value: 0,text: "Seleccione una Opción"},
@@ -277,7 +297,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		if (mi.tObjeto.value == 1 || mi.prestamo.value != 0){
 			mi.grafica = true;
 			mi.idPrestamo = mi.prestamo.value;
-			$http.post('/SReporte', 
+			$http.post('/SCargaTrabajo', 
 			{
 				accion: 'getCargaTrabajoPrestamo', 
 				objetoTipo: mi.tObjeto.value,
@@ -373,4 +393,80 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	}
 	
 	mi.reset();
+	
+	// ------------
+	mi.getEstructura = function (){
+		mi.generar();
+		
+		
+	}
+	
+	mi.llamarModal = function(idproyecto) {
+		var resultado = $q.defer();
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'estructuraproyecto.jsp',
+			controller : 'modalEstructura',
+			controllerAs : 'estructura',
+			backdrop : 'static',
+			size : 'md',
+			resolve : {
+				$idproyecto : function() {
+					return idproyecto;
+				}				
+			}
+		});
+		
+		modalInstance.result.then(function(itemSeleccionado) {
+			resultado.resolve(itemSeleccionado);
+		});
+		return resultado.promise;
+	};
+	
+	mi.filtrarEstrucrura = function(titulo, mensaje){
+		var resultado = mi.llamarModal(mi.prestamo.value); 
+		
+		resultado.then(function(itemSeleccionado) {
+			mi.actividad.actividadResponsable = itemSeleccionado.nombre;
+			mi.actividad.responsableRolId = itemSeleccionado.id;
+		});
+	}
+	
+	
+	
 }]);
+
+
+
+app.controller('modalEstructura', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log', '$idproyecto',modalEstructura ]);
+
+function modalEstructura($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $idproyecto) {
+
+	var mi = this;
+
+	
+	$http.post('/SCargaTrabajo', {accion: 'getEstructrua', idPrestamo :$idproyecto}).success(
+			function(response){
+				mi.estructuraProyecto = response.estructura;
+				
+	});
+
+
+	mi.ok = function() {
+		if (mi.seleccionado) {
+			$uibModalInstance.close(mi.itemSeleccionado);
+		} else {
+			$utilidades.mensaje('warning', 'Debe seleccionar una fila');
+		}
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+}
+

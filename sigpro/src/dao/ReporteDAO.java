@@ -47,8 +47,8 @@ public class ReporteDAO {
 						, "inner join objeto_responsable_rol orr on orr.objeto_id = a.id and orr.objeto_tipo=5 "
 						, "inner join responsable_rol rr on orr.responsable_rolid=rr.id "
 						, "where p.id=:idProyecto and a.objeto_tipo=4 and p.estado=1 and c.estado=1 and p.estado=1 and sp.estado=1");
-				Query<?> query = session.createNativeQuery(string_query);
-				query.setParameter("idProyecto", idProyecto);
+				Query<?> query = session.createNativeQuery(string_query.toLowerCase());
+				query.setParameter("idproyecto", idProyecto);
 				result = query.getResultList();				
 			} else if(idProyecto > 0 && idComponente > 0 && idProducto == 0 && idSubProducto == 0){
 				string_query =  String.join(" ", "select a.id, a.nombre as nombreActividad, a.porcentaje_Avance, rr.id as idResponsable, rr.nombre as responsable from Proyecto p "
