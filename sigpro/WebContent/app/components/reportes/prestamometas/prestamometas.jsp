@@ -11,9 +11,9 @@
 		
 		.divPadreNombres{
 			float: left; 
-		  	width: 200px; 
-			min-width: 200px; 
-			max-width:200px; 
+		  	width: 400px; 
+			min-width: 400px; 
+			max-width:400px; 
 			overflow:hidden; 
 		}	
 		
@@ -34,10 +34,10 @@
 		
 	    .cuerpoTablaNombres {
 		    overflow-y: scroll;
-		    overflow-x: scroll;
+		    overflow-x: hidden;
 		    display: inline-block;
 		    font-size: 13px;
-		    max-width: 215px;
+		    max-width: 415px;
 		}
 		
 		.cuerpoTablaTotales {
@@ -220,19 +220,27 @@
 		    	<div class="row" ng-hide="!controller.mostrarDescargar">
 		    				
 		    		<div class="divPadreNombres">
-			    		<div class="divTabla" style="max-height: 390px;"> 
+			    		<div class="divTabla" style="max-height: 490px;"> 
 			    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos">
 								<thead class="theadDatos">
 									<tr>
-				          				<th st-sort="nombre" style="height: 71px; text-align: center; vertical-align: top; min-width:200px;" class="label-form">Nombre</th>
+				          				<th rowspan="2" st-sort="nombre" style="text-align: center; vertical-align: top; min-width:300px;" class="label-form">Nombre</th>
+				          				<th style="text-align: center; vertical-align: top; min-width:100px; border-bottom:2px solid #fff;" class="label-form">Unidad</th>
+				         			</tr>
+				         			<tr>
+				          				<th style="text-align: center; vertical-align: top; min-width:100px;" class="label-form">de Medida</th>
 				         			</tr>
 								</thead>
 								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="max-height: 390px; margin-bottom: -15px;">
 									<tr ng-repeat="item in controller.data">
-							      		<td nowrap style="min-width:200px;"><p class="nombreFormat">
+							      		<td nowrap style="min-width:300px; max-width:300px; overflow:hidden;">
+							      			<p class="nombreFormat">
 							      				<span ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.objeto_tipo-1}}em"></span>
-							      				{{item.nombre}}
+							      				<span uib-tooltip="{{item.nombre}}">{{item.nombre}}</span>
 							      			</p>
+							      		</td>
+							      		<td nowrap style="min-width:100px;">
+							      			<p class="nombreFormat">{{controller.nombreUnidadMedida(item.unidadDeMedida)}}</p>
 							      		</td>
 							      	</tr>
 								</tbody>
@@ -267,20 +275,22 @@
 		    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos">
 							<thead class="theadDatos">
 									<tr>
-			          				<th nowrap colspan={{controller.colspan}} style="{{controller.estiloCelda}} text-align: center;" class="label-form">Total Anual</th>
+			          					<th nowrap colspan={{controller.colspan}} style="{{controller.estiloCelda}} text-align: center;" class="label-form">Total Anual</th>
 				          				<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Total</th>
+				          				<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Meta Final</th>
 				          			</tr>
 				          			<tr>
-			          				<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
+			          					<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
 							        </tr>
 								</thead>
 							<tbody class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')" scrollespejo tot="{{mi.totales.length}}">
-									<tr ng-repeat="totales in controller.totales ">
+									<tr ng-repeat="totales in controller.totales track by $index">
 										<td ng-repeat="total in totales.anio" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
 											<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{total.valor.planificado}}</span>
 							      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real" > | </span>
 							      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{total.valor.real}}</span>
 										</td>
+										<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.data[$index].metaFinal}}</span></td>
 							      	</tr>
 								</tbody>
 							</table>
