@@ -1,7 +1,7 @@
-var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'ui.grid.edit', 'ui.grid.rowEdit', 'smart-table']);
+var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'smart-table']);
 
-app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion',
-	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion){
+app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Utilidades','i18nService','$timeout', '$q','dialogoConfirmacion',
+	function($scope, $http, $interval, $utilidades,i18nService,$timeout, $q, $dialogoConfirmacion){
 		var mi = this;
 		i18nService.setCurrentLang('es');
 		mi.fechaInicio = "";
@@ -21,6 +21,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		mi.estiloAlineacion="text-align: center;";
 		mi.data = [];
 		mi.totales = [];
+		mi.scrollPosicion = 0;
 		
 		var AGRUPACION_MES= 1;
 		var AGRUPACION_BIMESTRE = 2;
@@ -29,15 +30,10 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		var AGRUPACION_SEMESTRE= 5;
 		var AGRUPACION_ANUAL= 6;
 		
-		var MES_NAME = ['mes1','mes2','mes3','mes4','mes5','mes6','mes7','mes8','mes9','mes10','mes11','mes12'];
 		var MES_DISPLAY_NAME = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-		var BIMESTRE_NAME = ['Bimestre1', 'Bimestre2', 'Bimestre3', 'Bimestre4', 'Bimestre5', 'Bimestre6'];
 		var BIMESTRE_DISPLAY_NAME = ['Bimestre 1', 'Bimestre 2','Bimestre 3','Bimestre 4','Bimestre 5','Bimestre 6'];
-		var TRIMESTRE_NAME = ['Trimestre1', 'Trimestre2','Trimestre3','Trimestre4'];
 		var TRIMESTRE_DISPLAY_NAME = ['Trimestre 1', 'Trimestre 2', 'Trimestre 3', 'Trimestre 4'];
-		var CUATRIMESTRE_NAME = ['Cuatrimestre1','Cuatrimestre2','Cuatrimestre3'];
 		var CUATRIMESTRE_DISPLAY_NAME = ['Cuatrimestre 1', 'Cuatrimestre 2', 'Cuatrimestre 3'];
-		var SEMESTRE_NAME = ['Semestre1','Semestre2'];
 		var SEMESTRE_DISPLAY_NAME = ['Semestre 1','Semestre 2'];
 		var ANUAL_DISPLAY_NAME = ['Anual'];
 		
@@ -47,6 +43,23 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			$scope.divActivo = id;
 	    }
 				
+
+		mi.iconoObjetoTipo = {
+		    1: "glyphicon glyphicon-record",
+		    2: "glyphicon glyphicon-th",
+		    3: "glyphicon glyphicon-certificate",
+		    4: "glyphicon glyphicon-link",
+		    5: "glyphicon glyphicon-th-list",
+		};
+		
+		mi.tooltipObjetoTipo = {
+		    1: "Proyecto",
+		    2: "Componente",
+		    3: "Producto",
+		    4: "Subproducto",
+		    5: "Actividad",
+		};
+		
 		mi.agrupaciones = [
 			{'value' : 0, 'text' : 'Seleccione una opción'},
 			{'value' : AGRUPACION_MES, 'text' : 'Mensual'},
@@ -56,7 +69,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			{'value' : AGRUPACION_SEMESTRE, 'text' : 'Semestre'},
 			{'value' : AGRUPACION_ANUAL, 'text' : 'Anual'},
 		];	
-
+		
 		mi.agrupacion = mi.agrupaciones[0];
 		
 		mi.redireccionSinPermisos=function(){
@@ -71,12 +84,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 		}
 	    
 		mi.formatofecha = 'yyyy';
-		
-		mi.prestamos = [
-			{'value' : 0, 'text' : 'Seleccionar una opción'},
-		];
-		
-		mi.prestamo = mi.prestamos[0];
 		
 		mi.abrirPopupFecha = function(index) {
 			switch(index){
@@ -110,15 +117,16 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCelda;
 				mi.SiguienteActivo = true;
 			}else{
-			if(elemento.scrollLeft > 0){
-				elemento.scrollLeft -= mi.tamanoCabecera;
-				document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCabecera;
-				mi.SiguienteActivo = true;
-				if(elemento.scrollLeft <= 0){
-					mi.AnteriorActivo = false;
+				if(elemento.scrollLeft > 0){
+					elemento.scrollLeft -= mi.tamanoCabecera;
+					document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCabecera;
+					mi.SiguienteActivo = true;
+					if(elemento.scrollLeft <= 0){
+						mi.AnteriorActivo = false;
+					}
 				}
 			}
-		}
+			mi.scrollPosicion = elemento.scrollLeft;
 		}
 		
 		mi.siguiente = function(){
@@ -128,15 +136,16 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				document.getElementById("divCabecerasDatos").scrollLeft += mi.tamanoCelda;
 				mi.AnteriorActivo = true;
 			}else{
-			if(elemento.scrollLeft < ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
-				elemento.scrollLeft += mi.tamanoCabecera;
-				document.getElementById("divCabecerasDatos").scrollLeft += mi.tamanoCabecera;
-				mi.AnteriorActivo = true;
-				if(elemento.scrollLeft >= ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
-					mi.SiguienteActivo = false;
+				if(elemento.scrollLeft < ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
+					elemento.scrollLeft += mi.tamanoCabecera;
+					document.getElementById("divCabecerasDatos").scrollLeft += mi.tamanoCabecera;
+					mi.AnteriorActivo = true;
+					if(elemento.scrollLeft >= ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
+						mi.SiguienteActivo = false;
+					}
 				}
 			}
-		}
+			mi.scrollPosicion = elemento.scrollLeft;
 		}
 		
 		mi.validar = function(noElemento){
@@ -217,9 +226,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			$http.post('/SInformacionPresupuestaria', datos).then(function(response) {
 				if (response.data.success) {
 					mi.data = response.data.prestamo;
-					var tab = "\t";
+					mi.totales = [];
 					 for (x in mi.data){
-						 mi.data[x].nombre = tab.repeat(mi.data[x].objeto_tipo -1) + mi.data[x].nombre; 
 						 var totalFinal = 0;
 						 var fila = [];
 						 for(a in mi.data[x].anios){
@@ -335,7 +343,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 				}
 			}
 			
-			
 			var tamanio = mi.columnas.length * mi.aniosTotal.length; 
 			mi.columnastotales = new Array(tamanio);
 			
@@ -359,6 +366,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'uiGr
 			var valor = mi.totales[itemIndice].anio[anioIndice].valor;
 			return valor;
 		};
+		
 }]);
 
 app.directive('scrollespejo', ['$window', function($window) {
@@ -372,6 +380,9 @@ app.directive('scrollespejo', ['$window', function($window) {
       	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
       	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
       	          }else if(elemento.id == 'divTablaDatos'){
+      	        	if(Math.abs(scope.controller.scrollPosicion-element[0].scrollLeft)<scope.controller.tamanoCelda){//bloquear scroll horizontal
+                  		element[0].scrollLeft = scope.controller.scrollPosicion;
+                  	}
       	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
       	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
       	          }else{
