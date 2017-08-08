@@ -52,6 +52,7 @@
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/recursounidadmedida">Unidad de Medida para Recurso</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/responsabletipo/rv">Tipo de Responsable</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/responsablerol/rv">Resonsable rol</a></li></shiro:hasPermission>
+				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/categoriaadquisicion/rv">Categoría de Adquisiciones</a></li></shiro:hasPermission>
 			                        </ul>
 	                    		</li>
 	                    		</shiro:hasPermission>
@@ -83,6 +84,7 @@
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/planejecucion/rp">Plan de ejecución</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/prestamometas">Metas de Préstamo</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/desembolsos/rp">Desembolsos</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/administracionTransaccional/rp">Administración transaccional</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/matrizraci/rp">Matriz RACI</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/mapa">Mapa</a></li></shiro:hasPermission>
                     	</ul>

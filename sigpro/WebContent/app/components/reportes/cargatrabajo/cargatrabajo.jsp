@@ -17,8 +17,6 @@
     	width: 96px;
     	overflow-x: hidden;
 	}
-
-
 	.divTabla{
 	    width: 100%;
 	    height: 200px;

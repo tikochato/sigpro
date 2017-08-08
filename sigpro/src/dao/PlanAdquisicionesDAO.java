@@ -45,8 +45,8 @@ public class PlanAdquisicionesDAO {
 		return ret;
 	}
 	
-	public static List<PlanAdquisiciones> getPlanAdquisicionByObjeto(int objetoTipo, int ObjetoId){
-		List<PlanAdquisiciones> ret = null;
+	public static PlanAdquisiciones getPlanAdquisicionByObjeto(int objetoTipo, int ObjetoId){
+		PlanAdquisiciones ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
@@ -54,7 +54,7 @@ public class PlanAdquisicionesDAO {
 			Query<PlanAdquisiciones> criteria = session.createQuery(query, PlanAdquisiciones.class);
 			criteria.setParameter("objetoId", ObjetoId);
 			criteria.setParameter("objetoTipo", objetoTipo);
-			ret = criteria.getResultList();
+			ret = criteria.getSingleResult();
 		}catch(Throwable e){
 			CLogger.write("3", PlanAdquisicionesDAO.class, e);
 		}

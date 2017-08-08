@@ -9,12 +9,13 @@ import utilities.CHibernateSession;
 import utilities.CLogger;
 
 public class PagoDAO {
-	public static List<Pago> getPagosByIdPlan(int idPlan){
+	public static List<Pago> getPagosByObjetoTipo(Integer objetoId, Integer objetoTipo){
 		List<Pago> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Pago> criteria = session.createQuery("FROM Pago p where p.planAdquisiciones.id=:id",Pago.class);
-			criteria.setParameter("id", idPlan);
+			Query<Pago> criteria = session.createQuery("FROM Pago p where p.objetoId=:objetoId and p.objetoTipo=:objetoTipo",Pago.class);
+			criteria.setParameter("objetoId", objetoId);
+			criteria.setParameter("objetoTipo", objetoTipo);
 			ret = criteria.getResultList();
 		}catch(Throwable e){
 			CLogger.write("1", PagoDAO.class, e);
