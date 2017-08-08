@@ -33,9 +33,9 @@ app.provider('Utilidades', function() {
 							.test(correo);
 				}
 
-				dataFactory.getCantidadCabecerasReporte = function(areaReporte, totalAnios, totalCabeceras, tamanioMinimoColumna){
+				dataFactory.getCantidadCabecerasReporte = function(areaReporte, totalAnios, totalCabeceras, tamanioMinimoColumna, columnasTotal){
 					while (totalCabeceras>0){
-						var columnasAMostrar = (totalCabeceras * totalAnios) + totalAnios + 1;
+						var columnasAMostrar = (totalCabeceras * totalAnios) + totalAnios + columnasTotal;
 						var tamanioColumna = (areaReporte / columnasAMostrar);
 						if (tamanioColumna > tamanioMinimoColumna){
 							return totalCabeceras;
@@ -46,8 +46,8 @@ app.provider('Utilidades', function() {
 					return totalCabeceras;
 				}
 				
-				dataFactory.getTamanioColumnaReporte = function(areaReporte, totalAnios, cabecerasAMostrar){
-					var columnasAMostrar = (cabecerasAMostrar * totalAnios) + totalAnios + 1;
+				dataFactory.getTamanioColumnaReporte = function(areaReporte, totalAnios, cabecerasAMostrar, columnasTotal){
+					var columnasAMostrar = (cabecerasAMostrar * totalAnios) + totalAnios + columnasTotal;
 					var tamanioPropuesto = (areaReporte / columnasAMostrar);
                     return Math.floor(tamanioPropuesto);
 				}
