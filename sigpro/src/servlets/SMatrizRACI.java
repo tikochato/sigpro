@@ -117,6 +117,7 @@ public class SMatrizRACI extends HttpServlet {
 						tempmatriz.objetoNombre = proyecto.getNombre();
 						tempmatriz.nivel = 1;
 						tempmatriz.objetoTipo = 1;
+						getAsignacionRACI(tempmatriz);
 						lstMatriz.add(tempmatriz);
 						
 						for(Integer componente:componentes){
@@ -127,6 +128,7 @@ public class SMatrizRACI extends HttpServlet {
 							tempmatriz.objetoNombre = objComponente.getNombre();
 							tempmatriz.nivel = 2;
 							tempmatriz.objetoTipo = 2;
+							getAsignacionRACI(tempmatriz);
 							lstMatriz.add(tempmatriz);
 							
 							
@@ -139,6 +141,7 @@ public class SMatrizRACI extends HttpServlet {
 								tempmatriz.objetoNombre = objProducto.getNombre();
 								tempmatriz.nivel = 3;
 								tempmatriz.objetoTipo = 3;
+								getAsignacionRACI(tempmatriz);
 								lstMatriz.add(tempmatriz);
 							
 								ArrayList<Integer> subproductos = InformacionPresupuestariaDAO.getEstructuraArbolSubProducto(idPrestamo,objComponente.getId(),objProducto.getId(), conn);
@@ -150,6 +153,7 @@ public class SMatrizRACI extends HttpServlet {
 									tempmatriz.objetoNombre = objSubProducto.getNombre();
 									tempmatriz.nivel = 4;
 									tempmatriz.objetoTipo = 4;
+									getAsignacionRACI(tempmatriz);
 									lstMatriz.add(tempmatriz);
 							
 									ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolSubProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(),objSubProducto.getId(), conn);
@@ -232,15 +236,36 @@ public class SMatrizRACI extends HttpServlet {
 				}
 		}
 		else if(accion.equals("getInformacionTarea")){
-			Integer idActividad = Utils.String2Int(map.get("actividadId"),0);
+			Integer objetoId = Utils.String2Int(map.get("objetoId"),0);
+			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"),0);
 			String rol = map.get("rol");
-			
-			AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(idActividad, rol);
 			stinformacion informacion = new stinformacion();
 			
-			asignacion.getActividad();
-			asignacion.getColaborador();
-			informacion.nombreTarea =asignacion.getActividad().getNombre();
+			switch (objetoTipo){
+			case 1:
+				Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId, usuario);
+				informacion.nombreTarea = proyecto.getNombre();
+			break;
+			case 2:
+				Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
+				informacion.nombreTarea = componente.getNombre();
+			break;
+			case 3:
+				Producto producto = ProductoDAO.getProductoPorId(objetoId, usuario);
+				informacion.nombreTarea = producto.getNombre();
+			break;
+			case 4:
+				Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId, usuario);
+				informacion.nombreTarea = subproducto.getNombre();
+			break;
+				case 5:
+					Actividad actividad = ActividadDAO.getActividadPorId(objetoId, usuario);
+					informacion.nombreTarea = actividad.getNombre();
+				break;
+			}
+			
+			AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(objetoId, objetoTipo, rol);
+			
 			if (rol.equalsIgnoreCase("R")){
 				informacion.rol = "Responsable";
 			} else if (rol.equalsIgnoreCase("a")){
@@ -257,8 +282,6 @@ public class SMatrizRACI extends HttpServlet {
 					asignacion.getColaborador().getSapellido() !=null ? asignacion.getColaborador().getSapellido() : "");
 			
 			informacion.estadoColaborador = asignacion.getColaborador().getEstado() ==1 ? "Alta" : "Baja";
-			informacion.fechaInicio = Utils.formatDate(asignacion.getActividad().getFechaInicio());
-			informacion.fechaFin= Utils.formatDate(asignacion.getActividad().getFechaFin());
 			informacion.email = asignacion.getColaborador().getUsuario() !=null ? asignacion.getColaborador().getUsuario().getEmail() : ""; 
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(informacion);
@@ -279,19 +302,20 @@ public class SMatrizRACI extends HttpServlet {
 	}
 	
 	public void getAsignacionRACI(stmatriz item){
-		List<AsignacionRaci> asignaciones = AsignacionRaciDAO.getAsignacionesRaci(item.objetoId);
+		List<AsignacionRaci> asignaciones = AsignacionRaciDAO.getAsignacionesRaci(item.objetoId,item.objetoTipo);
 		if (!asignaciones.isEmpty()){
 			for (AsignacionRaci asignacion: asignaciones){
-				if (asignacion.getId().getRolRaci().equalsIgnoreCase("r")){
+				
+				if (asignacion.getRolRaci().equalsIgnoreCase("r")){
 					item.nombreR = asignacion.getColaborador().getPnombre() + " " + asignacion.getColaborador().getPapellido();
 					item.idR = asignacion.getColaborador().getId();
-				}else if (asignacion.getId().getRolRaci().equalsIgnoreCase("a")){
+				}else if (asignacion.getRolRaci().equalsIgnoreCase("a")){
 					item.nombreA = asignacion.getColaborador().getPnombre() + " " + asignacion.getColaborador().getPapellido();
 					item.idA = asignacion.getColaborador().getId();
-				}else if (asignacion.getId().getRolRaci().equalsIgnoreCase("c")){
+				}else if (asignacion.getRolRaci().equalsIgnoreCase("c")){
 					item.nombreC = asignacion.getColaborador().getPnombre() +  " " + asignacion.getColaborador().getPapellido();
 					item.idC = asignacion.getColaborador().getId();
-				}else if (asignacion.getId().getRolRaci().equalsIgnoreCase("i")){
+				}else if (asignacion.getRolRaci().equalsIgnoreCase("i")){
 					item.nombreI = asignacion.getColaborador().getPnombre() + " " +asignacion.getColaborador().getPapellido();
 					item.idI = asignacion.getColaborador().getId();
 				}

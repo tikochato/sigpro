@@ -259,7 +259,7 @@ public class SActividad extends HttpServlet {
 						actividad = new Actividad(actividadTipo, acumulacionCosto, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra, fuente,
 								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,costoReal,
-								null,null,null);
+								null,null);
 					}
 					else{
 						actividad = ActividadDAO.getActividadPorId(id,usuario);

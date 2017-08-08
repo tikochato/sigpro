@@ -12,6 +12,7 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/main.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.adds.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/kanban.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/ivh-treeview.css" />
 <script type="text/javascript" src="/assets/libs/angular/angular.js"></script>
 <script type="text/javascript" src="/assets/libs/angular/angular-route.min.js"></script>
 <script type="text/javascript" src="/assets/libs/angular/angular-animate.min.js"></script>
@@ -45,6 +46,7 @@
 <script type="text/javascript" src="/assets/libs/utilidades.js"></script>
 <script type="text/javascript" src="/assets/libs/documentoAdjunto.js"></script>
 <script type="text/javascript" src="/assets/libs/dialogoConfirmacion.js"></script>
+<script type="text/javascript" src="/assets/libs/ivh-treeview.js"></script>
 <script type="text/javascript" src="/assets/libs/ganttchart/DlhSoft.Data.HTML.Controls.js"></script>
 <script type="text/javascript" src="/assets/libs/ganttchart/DlhSoft.ProjectData.GanttChart.HTML.Controls.js"></script>
 <script type="text/javascript" src="/assets/libs/ganttchart/DlhSoft.ProjectData.GanttChart.HTML.Controls.Extras.js"></script>

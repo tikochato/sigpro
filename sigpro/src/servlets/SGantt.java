@@ -333,7 +333,7 @@ public class SGantt extends HttpServlet {
 
 				"}"
 			);
-		System.out.println(idItem);
+		
 		return cadena.replaceAll(",,", ",");
 	}
 

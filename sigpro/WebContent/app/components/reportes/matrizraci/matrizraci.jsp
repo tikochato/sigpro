@@ -38,6 +38,7 @@
 			background: #efd9c4;
 			font-weight: bold;
 			border-right: 1px solid #ddd;
+			width: 55px;
 		}
 		
 		.classRolA {
@@ -45,18 +46,21 @@
 			background: #daefc4;
 			font-weight: bold;
 			border-right: 2px solid #ddd;
+			width: 55px;
 		}
 		.classRolC {
 			text-align: center;
 			background: #c4daef;
 			font-weight: bold;
 			border-right: 2px solid #ddd;
+			width: 55px;
 		}
 		.classRolI {
 			text-align: center;
 			background: #d9c4ef;
 			font-weight: bold;
 			border-right: 2px solid #ddd;
+			width: 55px;
 		}
 		
 		.leyendaTexto {
@@ -106,60 +110,46 @@
 		}
 		
 		
-		/*
 		
-		table {
-  overflow: hidden;
-}
-
-td, th {
-  padding: 10px;
-  position: relative;
-  outline: 0;
-}
-
-body:not(.nohover) tbody tr:hover {
-  background-color: #ffa;
-}
-
-td:hover::after,
-thead th:not(:empty):hover::after,
-td:focus::after,
-thead th:not(:empty):focus::after { 
-  content: '';  
-  height: 10000px;
-  left: 0;
-  position: absolute;  
-  top: -5000px;
-  width: 100%;
-  z-index: -1;
-}
-
-td:hover::after,
-th:hover::after {
-  background-color: #ffa;
-}
-
-td:focus::after,
-th:focus::after {
-  background-color: lightblue;
-}
-*/
-/* Focus stuff for mobile */
-/*
-td:focus::before,
-tbody th:focus::before {
-  background-color: lightblue;
-  content: '';  
-  height: 100%;
-  top: 0;
-  left: -5000px;
-  position: absolute;  
-  width: 10000px;
-  z-index: -1;
-}
 		
-*/
+	.cabecera {
+		position: absolute;
+	    margin-top: -141px;
+	    flex-shrink: 0;
+	    overflow-x: hidden;
+	    width: 96%;
+	}
+	
+	.cabecerath1{
+		margin: 0px auto;
+    	width: 96px;
+    	overflow-x: hidden;
+	}
+
+
+
+
+
+
+	.thTarea {
+		margin: 0px auto;
+    	width: 1600px;	
+	}
+	
+	.thIcono{
+		margin: 0 auto;
+    	width: 83px;
+	}
+	
+	.divTabla{
+	    width: 100%;
+	    height: 400px;
+	    overflow-y: auto;
+	    margin-top: 151px;
+	}
+
+
+		
 	</style>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
@@ -210,23 +200,6 @@ tbody th:focus::before {
 						{{ infoc.informacion.email }}
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-sm-6" style="text-align: right">
-						<label for="nombre">Fecha Inicio</label>
-					</div>
-					<div class="col-sm-6">
-						{{ infoc.informacion.fechaInicio }}
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-6" style="text-align: right">
-						<label for="nombre">Fecha Fin</label>
-					</div>
-					<div class="col-sm-6">
-						{{ infoc.informacion.fechaFin }}
-					</div>
-				</div>
-				
 				
 
 				</div>
@@ -266,34 +239,34 @@ tbody th:focus::before {
 				</form>
 				<br/>
 				<br/>
-				<table st-table="racic.matrizRaci" class="table table-header-rotated  table-striped table-hover table-condensed" >
-						<thead class="theadDatos">
-						<tr >
-							<th style="width: 20px;"></th>
-							<th  class="{{racic.claseHeader($index)}}" ng-repeat="n in racic.encabezadoMatriz track by $index"
-							 style="text-align: center; border-right: 2px solid #ddd; ">
-									<div ><span>{{n.nombre}} </span></div>
-							</th>
-						</tr>
-						</thead>
-						<tbody>
-						<tr  ng-repeat="row in racic.matrizRaci track by $index " >
-							<td><div class="{{racic.claseIcon(row)}}"></div> </td>
-							<td ng-repeat = "col in row track by $index" class="{{racic.claseBody(col)}}" 
-							ng-click="$index > 0 ? racic.mostrarColaborador(col) : ''" 
-							style="border-right: 2px solid #ddd;">
-							 	 <pre class="nombreFormat" >{{col.rol}}</pre>
-							 </td>
-						</tr>
-						</tbody>
-				</table>	
+				<div class="divTabla">
+	  			
+					<table st-table="racic.matrizRaci" class="table table-header-rotated  table-striped table-hover table-condensed" >
+							<thead class="cabecera">
+							<tr >
+								<th class="thIcono"></th>
+								<th  class="{{racic.claseHeader($index)}}"   ng-repeat="n in racic.encabezadoMatriz track by $index"
+								 >
+										<div ><span>{{n.nombre}} </span></div>
+								</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr  ng-repeat="row in racic.matrizRaci track by $index " >
+								<td><div class="{{racic.claseIcon(row)}}"></div> </td>
+								<td ng-repeat = "col in row track by $index" class="{{racic.claseBody(col)}}" 
+								ng-click="$index > 0 ? racic.mostrarColaborador(col) : ''" 
+								style="border-right: 2px solid #ddd;">
+								 	 <pre class="nombreFormat" >{{col.rol}}</pre>
+								 </td>
+							</tr>
+							</tbody>
+					</table>	
 				
+				</div>
 
-				
 			</div>
-			
-			
-		
+			<br>
 			<div style="text-align: center;" ng-if="racic.mostrarTabla">
 	    		
 	    		<ol class="leyendaTexto"  >
@@ -305,6 +278,7 @@ tbody th:focus::before {
 	    	
 					
 	    	</div>
+	    	<br>
 		  
 	</div>
 </div>
