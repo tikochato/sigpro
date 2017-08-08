@@ -116,5 +116,7 @@
         <mapping class="pojo.Usuario" />
         <mapping class="pojo.UsuarioLog" />
         <mapping class="pojo.UsuarioPermiso" />
+        <mapping class="pojo.CategoriaAdquisicion" />
+        <mapping class="pojo.PlanAdquisicionesDetalle" />
     </session-factory>
 </hibernate-configuration>

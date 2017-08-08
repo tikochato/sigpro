@@ -1,7 +1,6 @@
 package pojo;
-// Generated Aug 6, 2017 10:04:13 PM by Hibernate Tools 5.2.3.Final
+// Generated Aug 8, 2017 2:58:03 PM by Hibernate Tools 5.2.3.Final
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,8 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -28,23 +25,8 @@ public class PlanAdquisiciones implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5298821529243579501L;
+	private static final long serialVersionUID = -8140896627902742531L;
 	private Integer id;
-	private UnidadMedida unidadMedida;
-	private Integer metodo;
-	private Integer cantidad;
-	private BigDecimal total;
-	private BigDecimal precioUnitario;
-	private Date preparacionDocPlanificado;
-	private Date preparacionDocReal;
-	private Date lanzamientoEventoPlanificado;
-	private Date lanzamientoEventoReal;
-	private Date recepcionOfertasPlanificado;
-	private Date recepcionOfertasReal;
-	private Date adjudicacionPlanificado;
-	private Date adjudicacionReal;
-	private Date firmaContratoPlanificado;
-	private Date firmaContratoReal;
 	private int objetoId;
 	private int objetoTipo;
 	private String usuarioCreo;
@@ -52,14 +34,12 @@ public class PlanAdquisiciones implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private Set<Pago> pagos = new HashSet<Pago>(0);
+	private Set<PlanAdquisicionesDetalle> planAdquisicionesDetalles = new HashSet<PlanAdquisicionesDetalle>(0);
 
 	public PlanAdquisiciones() {
 	}
 
-	public PlanAdquisiciones(BigDecimal total, int objetoId, int objetoTipo, String usuarioCreo, Date fechaCreacion,
-			int estado) {
-		this.total = total;
+	public PlanAdquisiciones(int objetoId, int objetoTipo, String usuarioCreo, Date fechaCreacion, int estado) {
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
 		this.usuarioCreo = usuarioCreo;
@@ -67,27 +47,9 @@ public class PlanAdquisiciones implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public PlanAdquisiciones(UnidadMedida unidadMedida, Integer metodo, Integer cantidad, BigDecimal total,
-			BigDecimal precioUnitario, Date preparacionDocPlanificado, Date preparacionDocReal,
-			Date lanzamientoEventoPlanificado, Date lanzamientoEventoReal, Date recepcionOfertasPlanificado,
-			Date recepcionOfertasReal, Date adjudicacionPlanificado, Date adjudicacionReal,
-			Date firmaContratoPlanificado, Date firmaContratoReal, int objetoId, int objetoTipo, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Set<Pago> pagos) {
-		this.unidadMedida = unidadMedida;
-		this.metodo = metodo;
-		this.cantidad = cantidad;
-		this.total = total;
-		this.precioUnitario = precioUnitario;
-		this.preparacionDocPlanificado = preparacionDocPlanificado;
-		this.preparacionDocReal = preparacionDocReal;
-		this.lanzamientoEventoPlanificado = lanzamientoEventoPlanificado;
-		this.lanzamientoEventoReal = lanzamientoEventoReal;
-		this.recepcionOfertasPlanificado = recepcionOfertasPlanificado;
-		this.recepcionOfertasReal = recepcionOfertasReal;
-		this.adjudicacionPlanificado = adjudicacionPlanificado;
-		this.adjudicacionReal = adjudicacionReal;
-		this.firmaContratoPlanificado = firmaContratoPlanificado;
-		this.firmaContratoReal = firmaContratoReal;
+	public PlanAdquisiciones(int objetoId, int objetoTipo, String usuarioCreo, String usuarioActualizo,
+			Date fechaCreacion, Date fechaActualizacion, int estado,
+			Set<PlanAdquisicionesDetalle> planAdquisicionesDetalles) {
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
 		this.usuarioCreo = usuarioCreo;
@@ -95,7 +57,7 @@ public class PlanAdquisiciones implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.pagos = pagos;
+		this.planAdquisicionesDetalles = planAdquisicionesDetalles;
 	}
 
 	@Id
@@ -108,152 +70,6 @@ public class PlanAdquisiciones implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "unidad_medida_id")
-	public UnidadMedida getUnidadMedida() {
-		return this.unidadMedida;
-	}
-
-	public void setUnidadMedida(UnidadMedida unidadMedida) {
-		this.unidadMedida = unidadMedida;
-	}
-
-	@Column(name = "metodo")
-	public Integer getMetodo() {
-		return this.metodo;
-	}
-
-	public void setMetodo(Integer metodo) {
-		this.metodo = metodo;
-	}
-
-	@Column(name = "cantidad")
-	public Integer getCantidad() {
-		return this.cantidad;
-	}
-
-	public void setCantidad(Integer cantidad) {
-		this.cantidad = cantidad;
-	}
-
-	@Column(name = "total", nullable = false, precision = 15)
-	public BigDecimal getTotal() {
-		return this.total;
-	}
-
-	public void setTotal(BigDecimal total) {
-		this.total = total;
-	}
-
-	@Column(name = "precio_unitario", precision = 15)
-	public BigDecimal getPrecioUnitario() {
-		return this.precioUnitario;
-	}
-
-	public void setPrecioUnitario(BigDecimal precioUnitario) {
-		this.precioUnitario = precioUnitario;
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "preparacion_doc_planificado", length = 19)
-	public Date getPreparacionDocPlanificado() {
-		return this.preparacionDocPlanificado;
-	}
-
-	public void setPreparacionDocPlanificado(Date preparacionDocPlanificado) {
-		this.preparacionDocPlanificado = preparacionDocPlanificado;
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "preparacion_doc_real", length = 19)
-	public Date getPreparacionDocReal() {
-		return this.preparacionDocReal;
-	}
-
-	public void setPreparacionDocReal(Date preparacionDocReal) {
-		this.preparacionDocReal = preparacionDocReal;
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "lanzamiento_evento_planificado", length = 19)
-	public Date getLanzamientoEventoPlanificado() {
-		return this.lanzamientoEventoPlanificado;
-	}
-
-	public void setLanzamientoEventoPlanificado(Date lanzamientoEventoPlanificado) {
-		this.lanzamientoEventoPlanificado = lanzamientoEventoPlanificado;
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "lanzamiento_evento_real", length = 19)
-	public Date getLanzamientoEventoReal() {
-		return this.lanzamientoEventoReal;
-	}
-
-	public void setLanzamientoEventoReal(Date lanzamientoEventoReal) {
-		this.lanzamientoEventoReal = lanzamientoEventoReal;
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "recepcion_ofertas_planificado", length = 19)
-	public Date getRecepcionOfertasPlanificado() {
-		return this.recepcionOfertasPlanificado;
-	}
-
-	public void setRecepcionOfertasPlanificado(Date recepcionOfertasPlanificado) {
-		this.recepcionOfertasPlanificado = recepcionOfertasPlanificado;
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "recepcion_ofertas_real", length = 19)
-	public Date getRecepcionOfertasReal() {
-		return this.recepcionOfertasReal;
-	}
-
-	public void setRecepcionOfertasReal(Date recepcionOfertasReal) {
-		this.recepcionOfertasReal = recepcionOfertasReal;
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "adjudicacion_planificado", length = 19)
-	public Date getAdjudicacionPlanificado() {
-		return this.adjudicacionPlanificado;
-	}
-
-	public void setAdjudicacionPlanificado(Date adjudicacionPlanificado) {
-		this.adjudicacionPlanificado = adjudicacionPlanificado;
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "adjudicacion_real", length = 19)
-	public Date getAdjudicacionReal() {
-		return this.adjudicacionReal;
-	}
-
-	public void setAdjudicacionReal(Date adjudicacionReal) {
-		this.adjudicacionReal = adjudicacionReal;
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "firma_contrato_planificado", length = 19)
-	public Date getFirmaContratoPlanificado() {
-		return this.firmaContratoPlanificado;
-	}
-
-	public void setFirmaContratoPlanificado(Date firmaContratoPlanificado) {
-		this.firmaContratoPlanificado = firmaContratoPlanificado;
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "firma_contrato_real", length = 19)
-	public Date getFirmaContratoReal() {
-		return this.firmaContratoReal;
-	}
-
-	public void setFirmaContratoReal(Date firmaContratoReal) {
-		this.firmaContratoReal = firmaContratoReal;
 	}
 
 	@Column(name = "objeto_id", nullable = false)
@@ -322,12 +138,12 @@ public class PlanAdquisiciones implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "planAdquisiciones")
-	public Set<Pago> getPagos() {
-		return this.pagos;
+	public Set<PlanAdquisicionesDetalle> getPlanAdquisicionesDetalles() {
+		return this.planAdquisicionesDetalles;
 	}
 
-	public void setPagos(Set<Pago> pagos) {
-		this.pagos = pagos;
+	public void setPlanAdquisicionesDetalles(Set<PlanAdquisicionesDetalle> planAdquisicionesDetalles) {
+		this.planAdquisicionesDetalles = planAdquisicionesDetalles;
 	}
 
 }
