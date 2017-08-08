@@ -66,11 +66,10 @@ public class SPlanEjecucion extends HttpServlet {
 					//ejecucionFisica = ejecucionFisica +  mvReal.divide(mvFinal, 2, BigDecimal.ROUND_HALF_UP)  * ((double) producto.getPeso() / 100);
 					ejecucionFisica = ejecucionFisica.add(mvReal.divide(mvFinal, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal((double) producto.getPeso() / 100)));
 				}
-				else
-					ejecucionFisica = new BigDecimal("0");
+				
 			}
 			response_text = String.join("", "{ \"success\": true ,",
-					"\"ejecucionFisica\": \"" , ejecucionFisica + "" , "\",",
+					"\"ejecucionFisica\": \"" , (ejecucionFisica.floatValue() * 100.00) + "" , "\",",
 					"\"fecha\": \"" , sdf.format(fecha_actual), "\"",
 					"}");
 			

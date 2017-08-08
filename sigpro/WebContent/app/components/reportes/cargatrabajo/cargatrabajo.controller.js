@@ -1,24 +1,37 @@
 var app = angular.module('cargatrabajoController', ['ngTouch','smart-table','ivh.treeview']);
+
+
+
+
 app.controller('cargatrabajoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter,ivhTreeviewMgr) {
 	var mi = this;
 	i18nService.setCurrentLang('es');
 	
     mi.idTotal = 0;
     mi.responsableTotal = "Total";
     mi.actividadesAtrasadasTotal = 0;
-    mi.actividadesProcesoTotal = 0;
+	mi.actividadesAlertaTotal = 0;
+	mi.actividadesACumplirTotal = 0; 
+	mi.actividadesCompletadas  = 0;
     mi.exportar = false;
     mi.grafica = true;
     mi.idPrestamo = 0;
     mi.estructuraProyecto=[];
+    mi.objetosSeleccionados=[];
+    mi.datosTabla = [];
+    mi.mostrar = false;
     
     
+    mi.pieColors = ['#febbbc','#eaeab0','#daefc4','#c4dbee'];
     
-    
-    
-
-    
+    	mi.optionsPie = {
+			
+			legend: {
+				display: true,
+				position: 'bottom'
+			}
+			  };
 
     mi.redireccionSinPermisos=function(){
 		$window.location.href = '/main.jsp#!/forbidden';		
@@ -40,6 +53,11 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 					mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
 				}
 				mi.prestamo = mi.prestamos[0];
+				
+				
+				
+				
+				
 			}
 		});
     
@@ -157,6 +175,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	}
 	
 	mi.getEntidades = function(){
+		
 		$http.post('/SEntidad', {accion: 'cargar'}).success(
 				function(response){
 					mi.entidades = [];
@@ -172,117 +191,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		)
 	}
 	
-	mi.getUnidadesEjecutoras = function(entidadId){
-		$http.post('/SUnidadEjecutora', {accion: 'cargarPorEntidad', entidadId : entidadId}).success(
-				function(response){
-					mi.unidadesEjecutoras = [];
-					mi.unidadesEjecutoras.push({'value' : 0, 'text' : 'Seleccione una opción'});
-					if (response.success){
-						for(var i = 0; i< response.unidadesEjecutoras.length; i++){
-							mi.unidadesEjecutoras.push({'value' : response.unidadesEjecutoras[i].unidadEjecutora, 'text' : response.unidadesEjecutoras[i].nombreUnidadEjecutora});
-						}
-						
-						mi.unidadEjecutora = mi.unidadesEjecutoras[0];
-					}
-				});
-	}
 	
-	mi.getPrestamos = function(unidadEjecutoraId){
-		$http.post('/SProyecto',{accion: 'getProyectosPorUnidadEjecutora', unidadEjecutoraId : unidadEjecutoraId}).success(
-				function(response) {
-					mi.prestamos = [];
-					mi.prestamos.push({'value' : 0, 'text' : 'Seleccione una opción'});
-					if (response.success){
-						for (var i = 0; i < response.entidades.length; i++){
-							mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
-						}
-						
-						mi.prestamo = mi.prestamos[0];
-					}
-				});
-	}
-	
-	mi.getComponentes = function(prestamoId){
-		$http.post('/SComponente',{accion: 'getComponentesPaginaPorProyecto', proyectoid: prestamoId}).success(
-				function(response) {
-					mi.componentes = [];
-					mi.componentes.push({'value' : 0, 'text' : 'Seleccione una opción'});
-					if (response.success){
-						for (var i = 0; i < response.componentes.length; i++){
-							mi.componentes.push({'value': response.componentes[i].id, 'text': response.componentes[i].nombre});
-						}
-						
-						mi.componente = mi.componentes[0];
-					}
-				});
-	}
-	
-	mi.getProductos = function(componenteId){
-		mi.productos = [];
-		mi.productos.push({'value' : 0, 'text' : 'Seleccione una opción'});
-		mi.producto = mi.productos[0];
-
-		if ((mi.tObjeto.value == 3 || mi.tObjeto.value == 4) && componenteId != 0){
-			$http.post('/SProducto', {accion: 'listarProductos', componenteid:componenteId}).success(
-					function(response){
-						
-						if (response.success){
-							for (var i = 0; i < response.productos.length; i++){
-								mi.productos.push({'value': response.productos[i].id, 'text': response.productos[i].nombre});
-							}
-							
-							mi.producto = mi.productos[0];
-						}
-					});
-		}
-	}
-	
-	mi.getSubProductos = function(productoId){
-		mi.subProductos = [];
-		mi.subProductos.push({'value' : 0, 'text' : 'Seleccione una opción'});
-		mi.subProducto = mi.subProductos[0];
-		
-		if(mi.tObjeto.value == 4 && productoId != 0){
-			$http.post('/SSubproducto', {accion: 'cargar', componenteid: productoId}).success(
-					function(response){
-						if(response.success){
-							for (var i = 0; i < response.subproductos.length; i++){
-								mi.subProductos.push({'value': response.subproductos[i].id, 'text': response.subproductos[i].nombre});
-							}
-							
-							mi.subProducto = mi.subProductos[0];
-						}
-					});
-		}
-	}
-	
-	mi.getActividades = function(row){
-		$http.post('/SReporte',{
-			accion: 'getActividades',
-			responsableId: row.id,
-			idPrestamo : mi.idPrestamo,
-			idComponente : mi.componente.value,
-			idProducto : mi.producto.value,
-			idSubProducto : mi.subProducto.value
-		}).success(function(response){
-			if(response.success){
-		        mi.grafica = false;
-				mi.rowCollectionActividades = [];
-				mi.rowCollectionActividades = response.actividades;
-		        mi.displayedCollectionActividades = [].concat(mi.rowCollectionActividades);
-		        
-		        mi.labels = [];
-		        mi.data = [];
-		        mi.series = [];
-		        
-		        mi.labels.push(row.responsable);
-		        for(x in response.actividades){
-		        	mi.series.push(response.actividades[x].nombre);
-		        	mi.data.push([response.actividades[x].porcentaje]);
-		        }
-			}
-		})
-	}
 	
 	$scope.toggle = function () {
 	      mi.type = mi.type === 'polarArea' ?
@@ -294,71 +203,95 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	}
 	
 	mi.generar = function(){
+		
 		if (mi.tObjeto.value == 1 || mi.prestamo.value != 0){
 			mi.grafica = true;
 			mi.idPrestamo = mi.prestamo.value;
-			$http.post('/SCargaTrabajo', 
-			{
-				accion: 'getCargaTrabajoPrestamo', 
-				objetoTipo: mi.tObjeto.value,
-				idPrestamo : mi.prestamo.value,
-				idComponente : mi.componente.value,
-				idProducto : mi.producto.value,
-				idSubProducto : mi.subProducto.value
-			}).success(function(response){
-				if(response.success){
-					mi.cargaTrabajo = [];
-					
-					for(x in response.actividadesAtrasadas){
-						var id = response.actividadesAtrasadas[x].id
-						var responsable = response.actividadesAtrasadas[x].responsable;
-						if(mi.existeResponsable(id) == -1){
-							mi.cargaTrabajo.push({id: id, responsable: responsable, actividadesAtrasadas: 1, actividadesProceso: 0});
-						}else{
-							for(y in mi.cargaTrabajo){
-								if(id == mi.cargaTrabajo[y].id)
-									mi.cargaTrabajo[y].actividadesAtrasadas += 1;
-							}
+			mi.mostrar = false;
+			
+			$http.post('/SCargaTrabajo', {accion: 'getEstructrua', idPrestamo :mi.prestamo.value}).success(
+					function(response){
+						var estructura = response.estructura;
+						
+						mi.objetosSeleccionados.push({
+							objetoId: estructura.objetoId,
+							objetoTipo: estructura.objetoTipo
+						})
+						
+						if (estructura.children!=null || estructura.children!= undefined)
+							mi.agregarhijos(estructura.children);
+						
+						var idPrestamos = "";
+						var idComponentes = "";
+						var idProductos = "";
+						var idSubproductos = "";
+						
+						for (x in mi.objetosSeleccionados){
+							switch (mi.objetosSeleccionados[x].objetoTipo){
+								case 1: idPrestamos = idPrestamos + (idPrestamos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+								break;
+								case 2: idComponentes = idComponentes + (idComponentes.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+								break;
+								case 3: idProductos = idProductos + (idProductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+								break;
+								case 4: idSubproductos = idSubproductos + (idSubproductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+								break;
+							} 
 						}
-					}
-					
-					for(x in response.actividadesProceso){
-						var id = response.actividadesProceso[x].id
-						var responsable = response.actividadesProceso[x].responsable;
-						if(mi.existeResponsable(response.actividadesProceso[x].id) == -1)
-							mi.cargaTrabajo.push({id: id, responsable: responsable, actividadesAtrasadas: 0, actividadesProceso: 1});
-						else{
-							for(y in mi.cargaTrabajo){
-								if(id == mi.cargaTrabajo[y].id)
-									mi.cargaTrabajo[y].actividadesProceso += 1;
-							}
-						}
-					}
-					
-					mi.rowCollection = [];
-					mi.rowCollection = mi.cargaTrabajo;
-			        mi.displayedCollection = [].concat(mi.rowCollection);
-			        
-			        var totalAtrasadas = 0;
-			        var totalProceso = 0;
-			        
-			        for (var i=0; i<mi.cargaTrabajo.length; i++){
-			        	totalAtrasadas += Number(mi.cargaTrabajo[i].actividadesAtrasadas);
-			        	totalProceso += Number(mi.cargaTrabajo[i].actividadesProceso);
-			        }
-			        
-			        mi.idTotal = 0;
-			        mi.responsableTotal = "Total";
-			        mi.actividadesAtrasadasTotal = totalAtrasadas;
-			        mi.actividadesProcesoTotal = totalProceso;
-			        
-			        mi.exportar = true;
-			        mi.rowCollectionActividades = [];
-			        mi.labels = [];
-			        mi.data = [];
-			        mi.series = [];
-				}
+						
+						$http.post('/SCargaTrabajo', 
+								{
+									accion: 'getCargaTrabajoPrestamo', 
+									idPrestamos:idPrestamos,
+									idComponentes:idComponentes,
+									idProductos:idProductos,
+									idSubproductos:idSubproductos
+									
+								}).success(function(response){
+									if(response.success){
+										mi.rowCollection = [];
+										mi.rowCollection = response.cargatrabajo;
+								        mi.displayedCollection = [].concat(mi.rowCollection);
+								        mi.actividadesAtrasadasTotal = 0;
+										mi.actividadesAlertaTotal = 0;
+										mi.actividadesACumplirTotal = 0; 
+										mi.actividadesCompletadas  = 0;
+								        for (x in mi.rowCollection){
+								        	mi.actividadesAtrasadasTotal = mi.actividadesAtrasadasTotal + mi.rowCollection[x].actividadesAtrasadas;
+											mi.actividadesAlertaTotal = mi.actividadesAlertaTotal + mi.rowCollection[x].actividadesAlerta;
+											mi.actividadesACumplirTotal = mi.actividadesACumplirTotal +  mi.rowCollection[x].actividadesACumplir; 
+											mi.actividadesCompletadas = mi.actividadesCompletadas + mi.rowCollection[x].actividadesCompletadas;
+								        }
+								        
+								        
+								    	
+								    	 mi.labels = ["Actividades retrasadas", "Actividades en alerta", "Actividades a cumplir","Actividades completadas"];
+								    	 mi.data = [mi.actividadesAtrasadasTotal, mi.actividadesAlertaTotal,
+								    		 mi.actividadesACumplirTotal,mi.actividadesCompletadas];
+								    	 
+								    	 mi.mostrar = true;
+									}
+								});
 			});
+			
+			
+			
+			
+		}
+	};
+	
+	mi.agregarhijos = function (hijos){
+		for (x in hijos){
+			
+			mi.objetosSeleccionados.push(
+					{
+						objetoId: hijos[x].objetoId,
+						objetoTipo: hijos[x].objetoTipo
+					}
+			);
+		
+			if (hijos[x].children!=null || hijos[x].children!= undefined)
+				mi.agregarhijos(hijos[x].children);
 		}
 	}
 	
@@ -427,12 +360,67 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	
 	mi.filtrarEstrucrura = function(titulo, mensaje){
 		var resultado = mi.llamarModal(mi.prestamo.value); 
-		
-		resultado.then(function(itemSeleccionado) {
-			mi.actividad.actividadResponsable = itemSeleccionado.nombre;
-			mi.actividad.responsableRolId = itemSeleccionado.id;
+		mi.mostrar = false;
+		resultado.then(function(itemSeleccionados) {
+			mi.objetosSeleccionados = itemSeleccionados;
+			var idPrestamos = "";
+			var idComponentes = "";
+			var idProductos = "";
+			var idSubproductos = "";
+			
+			for (x in mi.objetosSeleccionados){
+				switch (mi.objetosSeleccionados[x].objetoTipo){
+					case 1: idPrestamos = idPrestamos + (idPrestamos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+					break;
+					case 2: idComponentes = idComponentes + (idComponentes.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+					break;
+					case 3: idProductos = idProductos + (idProductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+					break;
+					case 4: idSubproductos = idSubproductos + (idSubproductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+					break;
+				} 
+			}
+			
+			$http.post('/SCargaTrabajo', 
+					{
+						accion: 'getCargaTrabajoPrestamo', 
+						idPrestamos:idPrestamos,
+						idComponentes:idComponentes,
+						idProductos:idProductos,
+						idSubproductos:idSubproductos
+						
+					}).success(function(response){
+						if(response.success){
+							mi.rowCollection = [];
+							mi.rowCollection = response.cargatrabajo;
+					        mi.displayedCollection = [].concat(mi.rowCollection);
+					        mi.actividadesAtrasadasTotal = 0;
+							mi.actividadesAlertaTotal = 0;
+							mi.actividadesACumplirTotal = 0; 
+							mi.actividadesCompletadas  = 0;
+					        for (x in mi.rowCollection){
+					        	mi.actividadesAtrasadasTotal = mi.actividadesAtrasadasTotal + mi.rowCollection[x].actividadesAtrasadas;
+								mi.actividadesAlertaTotal = mi.actividadesAlertaTotal + mi.rowCollection[x].actividadesAlerta;
+								mi.actividadesACumplirTotal = mi.actividadesACumplirTotal +  mi.rowCollection[x].actividadesACumplir; 
+								mi.actividadesCompletadas = mi.actividadesCompletadas + mi.rowCollection[x].actividadesCompletadas;
+					        }
+					        
+					        
+					    	
+					    	 mi.labels = ["Actividades retrasadas", "Actividades en alerta", "Actividades a cumplir","Actividades completadas"];
+					    	 mi.data = [mi.actividadesAtrasadasTotal, mi.actividadesAlertaTotal,
+					    		 mi.actividadesACumplirTotal,mi.actividadesCompletadas];
+					    	 mi.mostrar = true;
+						}
+					});
+			
+			
 		});
-	}
+	};
+	
+	
+	
+	
 	
 	
 	
@@ -448,7 +436,8 @@ function modalEstructura($uibModalInstance, $scope, $http, $interval,
 	i18nService, $utilidades, $timeout, $log, $idproyecto) {
 
 	var mi = this;
-
+	
+	mi.seleccionados = [];
 	
 	$http.post('/SCargaTrabajo', {accion: 'getEstructrua', idPrestamo :$idproyecto}).success(
 			function(response){
@@ -456,10 +445,27 @@ function modalEstructura($uibModalInstance, $scope, $http, $interval,
 				
 	});
 
+	
 
 	mi.ok = function() {
-		if (mi.seleccionado) {
-			$uibModalInstance.close(mi.itemSeleccionado);
+		mi.seleccionados = [];
+		
+		mi.customOpts = {
+			  useCheckboxes: false,
+			  onToggle: mi.awesomeCallback,
+			  twistieCollapsedTpl: '<span class="glyphicon glyphicon-chevron-right"></span>',
+			  twistieExpandedTpl: '<span class="glyphicon glyphicon-chevron-down"></span>',
+			  
+			};
+		
+		if (mi.estructuraProyecto.selected)
+			mi.seleccionados.push({objetoId: mi.estructuraProyecto.objetoId, objetoTipo: mi.estructuraProyecto.objetoTipo});
+		
+		if (mi.estructuraProyecto.children!=null || mi.estructuraProyecto.children!= undefined)
+			mi.agregarhijos(mi.estructuraProyecto.children);
+		
+		if (mi.seleccionados.length > 0) {
+			$uibModalInstance.close(mi.seleccionados);
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar una fila');
 		}
@@ -468,5 +474,22 @@ function modalEstructura($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
-}
+	
+	mi.agregarhijos = function (hijos){
+		for (x in hijos){
+			if (hijos[x].selected)
+				mi.seleccionados.push(
+						{
+							objetoId: hijos[x].objetoId,
+							objetoTipo: hijos[x].objetoTipo
+						}
+				);
+			
+			if (hijos[x].children!=null || hijos[x].children!= undefined)
+				mi.agregarhijos(hijos[x].children);
+		}
+	}
+};
+
+
 

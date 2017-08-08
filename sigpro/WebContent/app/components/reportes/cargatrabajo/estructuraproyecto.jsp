@@ -7,10 +7,9 @@
 		    ivh-treeview="estructura.estructuraProyecto"
 		    ivh-treeview-default-selected-state="false"
 			 ivh-treeview-default-selected-state="false"
-			    ivh-treeview-expand-to-depth="1"
-			    ivh-treeview-twistie-expanded-tpl="'V'"
-			    ivh-treeview-twistie-collapsed-tpl="'>'"
-			    ivh-treeview-twistie-leaf-tpl="'-'"
+			    ivh-treeview-expand-to-depth="-1"
+			    
+			    
 		    >
 		  </div>
 	</div>

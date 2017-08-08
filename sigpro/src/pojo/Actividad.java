@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jul 28, 2017 12:40:33 AM by Hibernate Tools 5.2.3.Final
+// Generated Aug 6, 2017 10:04:13 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4189154435458214566L;
+	private static final long serialVersionUID = -6378681945139907778L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
 	private AcumulacionCosto acumulacionCosto;
@@ -60,7 +60,6 @@ public class Actividad implements java.io.Serializable {
 	private BigDecimal costo;
 	private BigDecimal costoReal;
 	private Set<ActividadPropiedadValor> actividadPropiedadValors = new HashSet<ActividadPropiedadValor>(0);
-	private Set<AsignacionRaci> asignacionRacis = new HashSet<AsignacionRaci>(0);
 	private Set<ActividadUsuario> actividadUsuarios = new HashSet<ActividadUsuario>(0);
 
 	public Actividad() {
@@ -89,8 +88,7 @@ public class Actividad implements java.io.Serializable {
 			Integer proyecto, Integer actividad, Integer obra, Integer fuente, int objetoId, int objetoTipo,
 			int duracion, String duracionDimension, Integer predObjetoId, Integer predObjetoTipo, String latitud,
 			String longitud, BigDecimal costo, BigDecimal costoReal,
-			Set<ActividadPropiedadValor> actividadPropiedadValors, Set<AsignacionRaci> asignacionRacis,
-			Set<ActividadUsuario> actividadUsuarios) {
+			Set<ActividadPropiedadValor> actividadPropiedadValors, Set<ActividadUsuario> actividadUsuarios) {
 		this.actividadTipo = actividadTipo;
 		this.acumulacionCosto = acumulacionCosto;
 		this.nombre = nombre;
@@ -121,7 +119,6 @@ public class Actividad implements java.io.Serializable {
 		this.costo = costo;
 		this.costoReal = costoReal;
 		this.actividadPropiedadValors = actividadPropiedadValors;
-		this.asignacionRacis = asignacionRacis;
 		this.actividadUsuarios = actividadUsuarios;
 	}
 
@@ -411,15 +408,6 @@ public class Actividad implements java.io.Serializable {
 
 	public void setActividadPropiedadValors(Set<ActividadPropiedadValor> actividadPropiedadValors) {
 		this.actividadPropiedadValors = actividadPropiedadValors;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actividad")
-	public Set<AsignacionRaci> getAsignacionRacis() {
-		return this.asignacionRacis;
-	}
-
-	public void setAsignacionRacis(Set<AsignacionRaci> asignacionRacis) {
-		this.asignacionRacis = asignacionRacis;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actividad")

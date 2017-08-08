@@ -38,6 +38,7 @@
 			background: #efd9c4;
 			font-weight: bold;
 			border-right: 1px solid #ddd;
+			width: 55px;
 		}
 		
 		.classRolA {
@@ -45,18 +46,21 @@
 			background: #daefc4;
 			font-weight: bold;
 			border-right: 2px solid #ddd;
+			width: 55px;
 		}
 		.classRolC {
 			text-align: center;
 			background: #c4daef;
 			font-weight: bold;
 			border-right: 2px solid #ddd;
+			width: 55px;
 		}
 		.classRolI {
 			text-align: center;
 			background: #d9c4ef;
 			font-weight: bold;
 			border-right: 2px solid #ddd;
+			width: 55px;
 		}
 		
 		.leyendaTexto {
@@ -196,23 +200,6 @@
 						{{ infoc.informacion.email }}
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-sm-6" style="text-align: right">
-						<label for="nombre">Fecha Inicio</label>
-					</div>
-					<div class="col-sm-6">
-						{{ infoc.informacion.fechaInicio }}
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-6" style="text-align: right">
-						<label for="nombre">Fecha Fin</label>
-					</div>
-					<div class="col-sm-6">
-						{{ infoc.informacion.fechaFin }}
-					</div>
-				</div>
-				
 				
 
 				</div>
