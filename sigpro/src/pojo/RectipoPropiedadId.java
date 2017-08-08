@@ -1,5 +1,5 @@
 package pojo;
-// Generated Aug 6, 2017 10:04:13 PM by Hibernate Tools 5.2.3.Final
+// Generated Aug 8, 2017 2:58:03 PM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -10,10 +10,6 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class RectipoPropiedadId implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8805294238638564967L;
 	private int recursoPropiedadid;
 	private int recursoTipoid;
 
@@ -43,7 +39,6 @@ public class RectipoPropiedadId implements java.io.Serializable {
 		this.recursoTipoid = recursoTipoid;
 	}
 
-	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -57,7 +52,6 @@ public class RectipoPropiedadId implements java.io.Serializable {
 				&& (this.getRecursoTipoid() == castOther.getRecursoTipoid());
 	}
 
-	@Override
 	public int hashCode() {
 		int result = 17;
 

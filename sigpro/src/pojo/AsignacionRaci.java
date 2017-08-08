@@ -1,10 +1,12 @@
 package pojo;
-// Generated Aug 6, 2017 10:04:13 PM by Hibernate Tools 5.2.3.Final
+// Generated Aug 8, 2017 2:58:03 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,11 +21,7 @@ import javax.persistence.TemporalType;
 @Table(name = "asignacion_raci", catalog = "sipro")
 public class AsignacionRaci implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -346447370948186606L;
-	private int id;
+	private Integer id;
 	private Colaborador colaborador;
 	private MatrizRaci matrizRaci;
 	private String rolRaci;
@@ -38,9 +36,8 @@ public class AsignacionRaci implements java.io.Serializable {
 	public AsignacionRaci() {
 	}
 
-	public AsignacionRaci(int id, Colaborador colaborador, MatrizRaci matrizRaci, String rolRaci, int objetoId,
-			int objetoTipo, int estado, String usuarioCreo, Date fechaCreacion) {
-		this.id = id;
+	public AsignacionRaci(Colaborador colaborador, MatrizRaci matrizRaci, String rolRaci, int objetoId, int objetoTipo,
+			int estado, String usuarioCreo, Date fechaCreacion) {
 		this.colaborador = colaborador;
 		this.matrizRaci = matrizRaci;
 		this.rolRaci = rolRaci;
@@ -51,10 +48,8 @@ public class AsignacionRaci implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public AsignacionRaci(int id, Colaborador colaborador, MatrizRaci matrizRaci, String rolRaci, int objetoId,
-			int objetoTipo, int estado, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion) {
-		this.id = id;
+	public AsignacionRaci(Colaborador colaborador, MatrizRaci matrizRaci, String rolRaci, int objetoId, int objetoTipo,
+			int estado, String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion) {
 		this.colaborador = colaborador;
 		this.matrizRaci = matrizRaci;
 		this.rolRaci = rolRaci;
@@ -68,13 +63,14 @@ public class AsignacionRaci implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 
 	@Column(name = "id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

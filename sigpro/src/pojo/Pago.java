@@ -1,16 +1,13 @@
 package pojo;
-// Generated Aug 6, 2017 10:04:13 PM by Hibernate Tools 5.2.3.Final
+// Generated Aug 8, 2017 2:58:03 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -22,12 +19,9 @@ import javax.persistence.TemporalType;
 @Table(name = "pago", catalog = "sipro")
 public class Pago implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1394846409938022297L;
 	private Integer id;
-	private PlanAdquisiciones planAdquisiciones;
+	private int objetoId;
+	private int objetoTipo;
 	private Date fechaPago;
 	private BigDecimal pago;
 	private String descripcion;
@@ -40,18 +34,20 @@ public class Pago implements java.io.Serializable {
 	public Pago() {
 	}
 
-	public Pago(PlanAdquisiciones planAdquisiciones, Date fechaPago, String descripcion, String usuarioCreo,
+	public Pago(int objetoId, int objetoTipo, Date fechaPago, String descripcion, String usuarioCreo,
 			Date fechaCreacion) {
-		this.planAdquisiciones = planAdquisiciones;
+		this.objetoId = objetoId;
+		this.objetoTipo = objetoTipo;
 		this.fechaPago = fechaPago;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public Pago(PlanAdquisiciones planAdquisiciones, Date fechaPago, BigDecimal pago, String descripcion,
-			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado) {
-		this.planAdquisiciones = planAdquisiciones;
+	public Pago(int objetoId, int objetoTipo, Date fechaPago, BigDecimal pago, String descripcion, String usuarioCreo,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado) {
+		this.objetoId = objetoId;
+		this.objetoTipo = objetoTipo;
 		this.fechaPago = fechaPago;
 		this.pago = pago;
 		this.descripcion = descripcion;
@@ -74,14 +70,22 @@ public class Pago implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "plan_adquisicion_id", nullable = false)
-	public PlanAdquisiciones getPlanAdquisiciones() {
-		return this.planAdquisiciones;
+	@Column(name = "objeto_id", nullable = false)
+	public int getObjetoId() {
+		return this.objetoId;
 	}
 
-	public void setPlanAdquisiciones(PlanAdquisiciones planAdquisiciones) {
-		this.planAdquisiciones = planAdquisiciones;
+	public void setObjetoId(int objetoId) {
+		this.objetoId = objetoId;
+	}
+
+	@Column(name = "objeto_tipo", nullable = false)
+	public int getObjetoTipo() {
+		return this.objetoTipo;
+	}
+
+	public void setObjetoTipo(int objetoTipo) {
+		this.objetoTipo = objetoTipo;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

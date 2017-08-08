@@ -1,16 +1,12 @@
 package pojo;
-// Generated Aug 6, 2017 10:04:13 PM by Hibernate Tools 5.2.3.Final
+// Generated Aug 8, 2017 2:58:03 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -22,10 +18,6 @@ import javax.persistence.TemporalType;
 @Table(name = "unidad_medida", catalog = "sipro")
 public class UnidadMedida implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3204919112600141642L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
@@ -34,7 +26,6 @@ public class UnidadMedida implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private Set<PlanAdquisiciones> planAdquisicioneses = new HashSet<PlanAdquisiciones>(0);
 
 	public UnidadMedida() {
 	}
@@ -47,7 +38,7 @@ public class UnidadMedida implements java.io.Serializable {
 	}
 
 	public UnidadMedida(String nombre, String descripcion, String usuarioCreo, String usuarioActualizacion,
-			Date fechaCreacion, Date fechaActualizacion, int estado, Set<PlanAdquisiciones> planAdquisicioneses) {
+			Date fechaCreacion, Date fechaActualizacion, int estado) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
@@ -55,7 +46,6 @@ public class UnidadMedida implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.planAdquisicioneses = planAdquisicioneses;
 	}
 
 	@Id
@@ -133,15 +123,6 @@ public class UnidadMedida implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unidadMedida")
-	public Set<PlanAdquisiciones> getPlanAdquisicioneses() {
-		return this.planAdquisicioneses;
-	}
-
-	public void setPlanAdquisicioneses(Set<PlanAdquisiciones> planAdquisicioneses) {
-		this.planAdquisicioneses = planAdquisicioneses;
 	}
 
 }
