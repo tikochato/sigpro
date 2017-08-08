@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jul 13, 2017 10:05:07 AM by Hibernate Tools 5.2.3.Final
+// Generated Aug 6, 2017 10:04:13 PM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -34,18 +34,18 @@ public class MvEpPrestamo implements java.io.Serializable {
 			@AttributeOverride(name = "fuente", column = @Column(name = "fuente")),
 			@AttributeOverride(name = "organismo", column = @Column(name = "organismo")),
 			@AttributeOverride(name = "correlativo", column = @Column(name = "correlativo")),
-			@AttributeOverride(name = "mes1r", column = @Column(name = "mes1r", precision = 59)),
-			@AttributeOverride(name = "mes2r", column = @Column(name = "mes2r", precision = 59)),
-			@AttributeOverride(name = "mes3r", column = @Column(name = "mes3r", precision = 59)),
-			@AttributeOverride(name = "mes4r", column = @Column(name = "mes4r", precision = 59)),
-			@AttributeOverride(name = "mes5r", column = @Column(name = "mes5r", precision = 59)),
-			@AttributeOverride(name = "mes6r", column = @Column(name = "mes6r", precision = 59)),
-			@AttributeOverride(name = "mes7r", column = @Column(name = "mes7r", precision = 59)),
-			@AttributeOverride(name = "mes8r", column = @Column(name = "mes8r", precision = 59)),
-			@AttributeOverride(name = "mes9r", column = @Column(name = "mes9r", precision = 59)),
-			@AttributeOverride(name = "mes10r", column = @Column(name = "mes10r", precision = 59)),
-			@AttributeOverride(name = "mes11r", column = @Column(name = "mes11r", precision = 59)),
-			@AttributeOverride(name = "mes12r", column = @Column(name = "mes12r", precision = 59)) })
+			@AttributeOverride(name = "enero", column = @Column(name = "enero", precision = 59)),
+			@AttributeOverride(name = "febrero", column = @Column(name = "febrero", precision = 59)),
+			@AttributeOverride(name = "marzo", column = @Column(name = "marzo", precision = 59)),
+			@AttributeOverride(name = "abril", column = @Column(name = "abril", precision = 59)),
+			@AttributeOverride(name = "mayo", column = @Column(name = "mayo", precision = 59)),
+			@AttributeOverride(name = "junio", column = @Column(name = "junio", precision = 59)),
+			@AttributeOverride(name = "julio", column = @Column(name = "julio", precision = 59)),
+			@AttributeOverride(name = "agosto", column = @Column(name = "agosto", precision = 59)),
+			@AttributeOverride(name = "septiembre", column = @Column(name = "septiembre", precision = 59)),
+			@AttributeOverride(name = "octubre", column = @Column(name = "octubre", precision = 59)),
+			@AttributeOverride(name = "noviembre", column = @Column(name = "noviembre", precision = 59)),
+			@AttributeOverride(name = "diciembre", column = @Column(name = "diciembre", precision = 59)) })
 	public MvEpPrestamoId getId() {
 		return this.id;
 	}

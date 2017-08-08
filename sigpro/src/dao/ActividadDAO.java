@@ -424,4 +424,55 @@ public class ActividadDAO {
 	        }
 	        return true;
 	}
+	
+	
+	public static List<Actividad> getActividadsPorObjetos(String idPrestamos, String idComponentes, String idProductos,
+			String idSubproductos){
+		List<Actividad> ret = new ArrayList<Actividad>();
+		List<Actividad> subactividades = new ArrayList<Actividad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select distinct ac.* ",
+							"from actividad ac , (",
+							    "select p.id, 1 objeto_tipo",
+								"from proyecto p",
+								"where p.id = ",idPrestamos,
+								"union",
+								"select c.id, 2 objeto_tipo",
+								"from proyecto p",
+								"left outer join componente c on c.proyectoid = p.id",
+								"where c.id in (" + idComponentes + ")",
+								"union",
+								"select pr.id,3 objeto_tipo",
+								"from proyecto p",
+								"left outer join componente c on c.proyectoid = p.id",
+								"left outer join producto pr on pr.componenteid = c.id",
+								"where pr.id in ("+ idProductos + ")",
+								"union ",
+								"select s.id,4 objeto_tipo",
+								"from proyecto p",
+								"left outer join componente c on c.proyectoid = p.id",
+								"left outer join producto pr on pr.componenteid = c.id",
+								"left outer join subproducto s on s.productoid = pr.id",
+								"where s.id in (" + idSubproductos + ")",							    
+							    ") t1, asignacion_raci ar",
+							"where ac.objeto_id = t1.id",
+							"and (ac.id = ar.objeto_id and ar.objeto_tipo = 5)",
+							"and ac.objeto_tipo = t1.objeto_tipo",
+							"and ac.estado = 1");
+			Query<Actividad> criteria = session.createNativeQuery(query,Actividad.class);
+			ret = criteria.getResultList();
+			for(Actividad actividad : ret){
+				subactividades.addAll(getActividadsSubactividadsPorObjeto(actividad.getId(), 5));
+			}
+			ret.addAll(subactividades);			
+		}
+		catch(Throwable e){
+			CLogger.write("12", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

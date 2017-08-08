@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jul 13, 2017 10:05:07 AM by Hibernate Tools 5.2.3.Final
+// Generated Aug 6, 2017 10:04:13 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import javax.persistence.Column;
@@ -14,7 +14,7 @@ public class MvEpEstructuraId implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3996749690609711394L;
+	private static final long serialVersionUID = -8803975496713000142L;
 	private Integer ejercicio;
 	private Integer fuente;
 	private Integer organismo;
@@ -24,26 +24,26 @@ public class MvEpEstructuraId implements java.io.Serializable {
 	private Integer proyecto;
 	private Integer actividad;
 	private Integer obra;
-	private BigDecimal mes1r;
-	private BigDecimal mes2r;
-	private BigDecimal mes3r;
-	private BigDecimal mes4r;
-	private BigDecimal mes5r;
-	private BigDecimal mes6r;
-	private BigDecimal mes7r;
-	private BigDecimal mes8r;
-	private BigDecimal mes9r;
-	private BigDecimal mes10r;
-	private BigDecimal mes11r;
-	private BigDecimal mes12r;
+	private BigDecimal enero;
+	private BigDecimal febrero;
+	private BigDecimal marzo;
+	private BigDecimal abril;
+	private BigDecimal mayo;
+	private BigDecimal junio;
+	private BigDecimal julio;
+	private BigDecimal agosto;
+	private BigDecimal septiembre;
+	private BigDecimal octubre;
+	private BigDecimal noviembre;
+	private BigDecimal diciembre;
 
 	public MvEpEstructuraId() {
 	}
 
 	public MvEpEstructuraId(Integer ejercicio, Integer fuente, Integer organismo, Integer correlativo, Integer programa,
-			Integer subprograma, Integer proyecto, Integer actividad, Integer obra, BigDecimal mes1r, BigDecimal mes2r,
-			BigDecimal mes3r, BigDecimal mes4r, BigDecimal mes5r, BigDecimal mes6r, BigDecimal mes7r, BigDecimal mes8r,
-			BigDecimal mes9r, BigDecimal mes10r, BigDecimal mes11r, BigDecimal mes12r) {
+			Integer subprograma, Integer proyecto, Integer actividad, Integer obra, BigDecimal enero,
+			BigDecimal febrero, BigDecimal marzo, BigDecimal abril, BigDecimal mayo, BigDecimal junio, BigDecimal julio,
+			BigDecimal agosto, BigDecimal septiembre, BigDecimal octubre, BigDecimal noviembre, BigDecimal diciembre) {
 		this.ejercicio = ejercicio;
 		this.fuente = fuente;
 		this.organismo = organismo;
@@ -53,18 +53,18 @@ public class MvEpEstructuraId implements java.io.Serializable {
 		this.proyecto = proyecto;
 		this.actividad = actividad;
 		this.obra = obra;
-		this.mes1r = mes1r;
-		this.mes2r = mes2r;
-		this.mes3r = mes3r;
-		this.mes4r = mes4r;
-		this.mes5r = mes5r;
-		this.mes6r = mes6r;
-		this.mes7r = mes7r;
-		this.mes8r = mes8r;
-		this.mes9r = mes9r;
-		this.mes10r = mes10r;
-		this.mes11r = mes11r;
-		this.mes12r = mes12r;
+		this.enero = enero;
+		this.febrero = febrero;
+		this.marzo = marzo;
+		this.abril = abril;
+		this.mayo = mayo;
+		this.junio = junio;
+		this.julio = julio;
+		this.agosto = agosto;
+		this.septiembre = septiembre;
+		this.octubre = octubre;
+		this.noviembre = noviembre;
+		this.diciembre = diciembre;
 	}
 
 	@Column(name = "ejercicio")
@@ -148,112 +148,112 @@ public class MvEpEstructuraId implements java.io.Serializable {
 		this.obra = obra;
 	}
 
-	@Column(name = "mes1r", precision = 59)
-	public BigDecimal getMes1r() {
-		return this.mes1r;
+	@Column(name = "enero", precision = 59)
+	public BigDecimal getEnero() {
+		return this.enero;
 	}
 
-	public void setMes1r(BigDecimal mes1r) {
-		this.mes1r = mes1r;
+	public void setEnero(BigDecimal enero) {
+		this.enero = enero;
 	}
 
-	@Column(name = "mes2r", precision = 59)
-	public BigDecimal getMes2r() {
-		return this.mes2r;
+	@Column(name = "febrero", precision = 59)
+	public BigDecimal getFebrero() {
+		return this.febrero;
 	}
 
-	public void setMes2r(BigDecimal mes2r) {
-		this.mes2r = mes2r;
+	public void setFebrero(BigDecimal febrero) {
+		this.febrero = febrero;
 	}
 
-	@Column(name = "mes3r", precision = 59)
-	public BigDecimal getMes3r() {
-		return this.mes3r;
+	@Column(name = "marzo", precision = 59)
+	public BigDecimal getMarzo() {
+		return this.marzo;
 	}
 
-	public void setMes3r(BigDecimal mes3r) {
-		this.mes3r = mes3r;
+	public void setMarzo(BigDecimal marzo) {
+		this.marzo = marzo;
 	}
 
-	@Column(name = "mes4r", precision = 59)
-	public BigDecimal getMes4r() {
-		return this.mes4r;
+	@Column(name = "abril", precision = 59)
+	public BigDecimal getAbril() {
+		return this.abril;
 	}
 
-	public void setMes4r(BigDecimal mes4r) {
-		this.mes4r = mes4r;
+	public void setAbril(BigDecimal abril) {
+		this.abril = abril;
 	}
 
-	@Column(name = "mes5r", precision = 59)
-	public BigDecimal getMes5r() {
-		return this.mes5r;
+	@Column(name = "mayo", precision = 59)
+	public BigDecimal getMayo() {
+		return this.mayo;
 	}
 
-	public void setMes5r(BigDecimal mes5r) {
-		this.mes5r = mes5r;
+	public void setMayo(BigDecimal mayo) {
+		this.mayo = mayo;
 	}
 
-	@Column(name = "mes6r", precision = 59)
-	public BigDecimal getMes6r() {
-		return this.mes6r;
+	@Column(name = "junio", precision = 59)
+	public BigDecimal getJunio() {
+		return this.junio;
 	}
 
-	public void setMes6r(BigDecimal mes6r) {
-		this.mes6r = mes6r;
+	public void setJunio(BigDecimal junio) {
+		this.junio = junio;
 	}
 
-	@Column(name = "mes7r", precision = 59)
-	public BigDecimal getMes7r() {
-		return this.mes7r;
+	@Column(name = "julio", precision = 59)
+	public BigDecimal getJulio() {
+		return this.julio;
 	}
 
-	public void setMes7r(BigDecimal mes7r) {
-		this.mes7r = mes7r;
+	public void setJulio(BigDecimal julio) {
+		this.julio = julio;
 	}
 
-	@Column(name = "mes8r", precision = 59)
-	public BigDecimal getMes8r() {
-		return this.mes8r;
+	@Column(name = "agosto", precision = 59)
+	public BigDecimal getAgosto() {
+		return this.agosto;
 	}
 
-	public void setMes8r(BigDecimal mes8r) {
-		this.mes8r = mes8r;
+	public void setAgosto(BigDecimal agosto) {
+		this.agosto = agosto;
 	}
 
-	@Column(name = "mes9r", precision = 59)
-	public BigDecimal getMes9r() {
-		return this.mes9r;
+	@Column(name = "septiembre", precision = 59)
+	public BigDecimal getSeptiembre() {
+		return this.septiembre;
 	}
 
-	public void setMes9r(BigDecimal mes9r) {
-		this.mes9r = mes9r;
+	public void setSeptiembre(BigDecimal septiembre) {
+		this.septiembre = septiembre;
 	}
 
-	@Column(name = "mes10r", precision = 59)
-	public BigDecimal getMes10r() {
-		return this.mes10r;
+	@Column(name = "octubre", precision = 59)
+	public BigDecimal getOctubre() {
+		return this.octubre;
 	}
 
-	public void setMes10r(BigDecimal mes10r) {
-		this.mes10r = mes10r;
+	public void setOctubre(BigDecimal octubre) {
+		this.octubre = octubre;
 	}
 
-	@Column(name = "mes11r", precision = 59)
-	public BigDecimal getMes11r() {
-		return this.mes11r;
+	@Column(name = "noviembre", precision = 59)
+	public BigDecimal getNoviembre() {
+		return this.noviembre;
 	}
 
-	public void setMes11r(BigDecimal mes11r) {
-		this.mes11r = mes11r;
+	public void setNoviembre(BigDecimal noviembre) {
+		this.noviembre = noviembre;
 	}
 
-	@Column(name = "mes12r", precision = 59)
-	public BigDecimal getMes12r() {
-		return this.mes12r;
+	@Column(name = "diciembre", precision = 59)
+	public BigDecimal getDiciembre() {
+		return this.diciembre;
 	}
 
-	public void setMes12r(BigDecimal mes12r) {
-		this.mes12r = mes12r;
+	public void setDiciembre(BigDecimal diciembre) {
+		this.diciembre = diciembre;
 	}
 
 	@Override
@@ -286,30 +286,30 @@ public class MvEpEstructuraId implements java.io.Serializable {
 						&& castOther.getActividad() != null && this.getActividad().equals(castOther.getActividad())))
 				&& ((this.getObra() == castOther.getObra()) || (this.getObra() != null && castOther.getObra() != null
 						&& this.getObra().equals(castOther.getObra())))
-				&& ((this.getMes1r() == castOther.getMes1r()) || (this.getMes1r() != null
-						&& castOther.getMes1r() != null && this.getMes1r().equals(castOther.getMes1r())))
-				&& ((this.getMes2r() == castOther.getMes2r()) || (this.getMes2r() != null
-						&& castOther.getMes2r() != null && this.getMes2r().equals(castOther.getMes2r())))
-				&& ((this.getMes3r() == castOther.getMes3r()) || (this.getMes3r() != null
-						&& castOther.getMes3r() != null && this.getMes3r().equals(castOther.getMes3r())))
-				&& ((this.getMes4r() == castOther.getMes4r()) || (this.getMes4r() != null
-						&& castOther.getMes4r() != null && this.getMes4r().equals(castOther.getMes4r())))
-				&& ((this.getMes5r() == castOther.getMes5r()) || (this.getMes5r() != null
-						&& castOther.getMes5r() != null && this.getMes5r().equals(castOther.getMes5r())))
-				&& ((this.getMes6r() == castOther.getMes6r()) || (this.getMes6r() != null
-						&& castOther.getMes6r() != null && this.getMes6r().equals(castOther.getMes6r())))
-				&& ((this.getMes7r() == castOther.getMes7r()) || (this.getMes7r() != null
-						&& castOther.getMes7r() != null && this.getMes7r().equals(castOther.getMes7r())))
-				&& ((this.getMes8r() == castOther.getMes8r()) || (this.getMes8r() != null
-						&& castOther.getMes8r() != null && this.getMes8r().equals(castOther.getMes8r())))
-				&& ((this.getMes9r() == castOther.getMes9r()) || (this.getMes9r() != null
-						&& castOther.getMes9r() != null && this.getMes9r().equals(castOther.getMes9r())))
-				&& ((this.getMes10r() == castOther.getMes10r()) || (this.getMes10r() != null
-						&& castOther.getMes10r() != null && this.getMes10r().equals(castOther.getMes10r())))
-				&& ((this.getMes11r() == castOther.getMes11r()) || (this.getMes11r() != null
-						&& castOther.getMes11r() != null && this.getMes11r().equals(castOther.getMes11r())))
-				&& ((this.getMes12r() == castOther.getMes12r()) || (this.getMes12r() != null
-						&& castOther.getMes12r() != null && this.getMes12r().equals(castOther.getMes12r())));
+				&& ((this.getEnero() == castOther.getEnero()) || (this.getEnero() != null
+						&& castOther.getEnero() != null && this.getEnero().equals(castOther.getEnero())))
+				&& ((this.getFebrero() == castOther.getFebrero()) || (this.getFebrero() != null
+						&& castOther.getFebrero() != null && this.getFebrero().equals(castOther.getFebrero())))
+				&& ((this.getMarzo() == castOther.getMarzo()) || (this.getMarzo() != null
+						&& castOther.getMarzo() != null && this.getMarzo().equals(castOther.getMarzo())))
+				&& ((this.getAbril() == castOther.getAbril()) || (this.getAbril() != null
+						&& castOther.getAbril() != null && this.getAbril().equals(castOther.getAbril())))
+				&& ((this.getMayo() == castOther.getMayo()) || (this.getMayo() != null && castOther.getMayo() != null
+						&& this.getMayo().equals(castOther.getMayo())))
+				&& ((this.getJunio() == castOther.getJunio()) || (this.getJunio() != null
+						&& castOther.getJunio() != null && this.getJunio().equals(castOther.getJunio())))
+				&& ((this.getJulio() == castOther.getJulio()) || (this.getJulio() != null
+						&& castOther.getJulio() != null && this.getJulio().equals(castOther.getJulio())))
+				&& ((this.getAgosto() == castOther.getAgosto()) || (this.getAgosto() != null
+						&& castOther.getAgosto() != null && this.getAgosto().equals(castOther.getAgosto())))
+				&& ((this.getSeptiembre() == castOther.getSeptiembre()) || (this.getSeptiembre() != null
+						&& castOther.getSeptiembre() != null && this.getSeptiembre().equals(castOther.getSeptiembre())))
+				&& ((this.getOctubre() == castOther.getOctubre()) || (this.getOctubre() != null
+						&& castOther.getOctubre() != null && this.getOctubre().equals(castOther.getOctubre())))
+				&& ((this.getNoviembre() == castOther.getNoviembre()) || (this.getNoviembre() != null
+						&& castOther.getNoviembre() != null && this.getNoviembre().equals(castOther.getNoviembre())))
+				&& ((this.getDiciembre() == castOther.getDiciembre()) || (this.getDiciembre() != null
+						&& castOther.getDiciembre() != null && this.getDiciembre().equals(castOther.getDiciembre())));
 	}
 
 	@Override
@@ -325,18 +325,18 @@ public class MvEpEstructuraId implements java.io.Serializable {
 		result = 37 * result + (getProyecto() == null ? 0 : this.getProyecto().hashCode());
 		result = 37 * result + (getActividad() == null ? 0 : this.getActividad().hashCode());
 		result = 37 * result + (getObra() == null ? 0 : this.getObra().hashCode());
-		result = 37 * result + (getMes1r() == null ? 0 : this.getMes1r().hashCode());
-		result = 37 * result + (getMes2r() == null ? 0 : this.getMes2r().hashCode());
-		result = 37 * result + (getMes3r() == null ? 0 : this.getMes3r().hashCode());
-		result = 37 * result + (getMes4r() == null ? 0 : this.getMes4r().hashCode());
-		result = 37 * result + (getMes5r() == null ? 0 : this.getMes5r().hashCode());
-		result = 37 * result + (getMes6r() == null ? 0 : this.getMes6r().hashCode());
-		result = 37 * result + (getMes7r() == null ? 0 : this.getMes7r().hashCode());
-		result = 37 * result + (getMes8r() == null ? 0 : this.getMes8r().hashCode());
-		result = 37 * result + (getMes9r() == null ? 0 : this.getMes9r().hashCode());
-		result = 37 * result + (getMes10r() == null ? 0 : this.getMes10r().hashCode());
-		result = 37 * result + (getMes11r() == null ? 0 : this.getMes11r().hashCode());
-		result = 37 * result + (getMes12r() == null ? 0 : this.getMes12r().hashCode());
+		result = 37 * result + (getEnero() == null ? 0 : this.getEnero().hashCode());
+		result = 37 * result + (getFebrero() == null ? 0 : this.getFebrero().hashCode());
+		result = 37 * result + (getMarzo() == null ? 0 : this.getMarzo().hashCode());
+		result = 37 * result + (getAbril() == null ? 0 : this.getAbril().hashCode());
+		result = 37 * result + (getMayo() == null ? 0 : this.getMayo().hashCode());
+		result = 37 * result + (getJunio() == null ? 0 : this.getJunio().hashCode());
+		result = 37 * result + (getJulio() == null ? 0 : this.getJulio().hashCode());
+		result = 37 * result + (getAgosto() == null ? 0 : this.getAgosto().hashCode());
+		result = 37 * result + (getSeptiembre() == null ? 0 : this.getSeptiembre().hashCode());
+		result = 37 * result + (getOctubre() == null ? 0 : this.getOctubre().hashCode());
+		result = 37 * result + (getNoviembre() == null ? 0 : this.getNoviembre().hashCode());
+		result = 37 * result + (getDiciembre() == null ? 0 : this.getDiciembre().hashCode());
 		return result;
 	}
 

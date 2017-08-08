@@ -71,13 +71,13 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 			  item[0] = {rol: mi.matrizAsignacion[x].objetoNombre,id:-1,objetoId:-1,objetoTipo:mi.matrizAsignacion[x].objetoTipo};
 			  for (y in mi.colaboradores){
 				  if (mi.matrizAsignacion[x].idR == mi.colaboradores[y].id ){
-					  item[Number(y)+1] = {rol:'R',rolId:1,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId};
+					  item[Number(y)+1] = {rol:'R',rolId:1,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId,objetoTipo:mi.matrizAsignacion[x].objetoTipo};
 				  } else if (mi.matrizAsignacion[x].idA == mi.colaboradores[y].id ){
-					  item[Number(y)+1] = {rol:'A',rolId:2,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId};
+					  item[Number(y)+1] = {rol:'A',rolId:2,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId,objetoTipo:mi.matrizAsignacion[x].objetoTipo};
 				  }else if (mi.matrizAsignacion[x].idC == mi.colaboradores[y].id ){
-					  item[Number(y)+1] = {rol:'C',rolId:3,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId};
+					  item[Number(y)+1] = {rol:'C',rolId:3,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId,objetoTipo:mi.matrizAsignacion[x].objetoTipo};
 				  }else if (mi.matrizAsignacion[x].idI == mi.colaboradores[y].id ){
-					  item[Number(y)+1] = {rol:'I',rolId:4,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId};
+					  item[Number(y)+1] = {rol:'I',rolId:4,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId,objetoTipo:mi.matrizAsignacion[x].objetoTipo};
 				  }
 				  else{
 					  item[Number(y)+1] = '';
@@ -91,9 +91,9 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 	  
 	  mi.claseHeader = function (value){
 		  	if (value > 0)
-		  		return "rotate";
+		  		return "rotate cabecerath1";
 		  	else 
-		  		return "label-form";
+		  		return "label-form thTarea";
 			 
 			 
 	  };
@@ -130,10 +130,10 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 	  
 	  mi.mostrarColaborador = function(valor){
 		  if ( valor != "" && valor.objetoId != null)
-			  mi.abrirInformacion(valor.objetoId, valor.rol);
+			  mi.abrirInformacion(valor.objetoId,valor.objetoTipo, valor.rol);
 	  }
 	  
-	  mi.abrirInformacion = function (objetoId , rol) {
+	  mi.abrirInformacion = function (objetoId , objetoTipo, rol) {
 		    var modalInstance = $uibModal.open({
 		      
 		      ariaLabelledBy: 'Información',
@@ -145,6 +145,9 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 		      resolve : {
 		    	    $objetoId : function() {
 						return objetoId;
+					},
+					$objetoTipo : function() {
+						return objetoTipo;
 					},
 					$rol : function() {
 						return rol;
@@ -161,10 +164,10 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 
 app.controller('modalInformacion', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', '$objetoId', '$rol',  modalInformacion ]);
+	'$timeout', '$log', '$objetoId',  '$objetoTipo', '$rol',  modalInformacion ]);
 
 function modalInformacion($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $objetoId, $rol) {
+	i18nService, $utilidades, $timeout, $log, $objetoId, $objetoTipo, $rol) {
 
 	var mi = this;
 	mi.informacion={};
@@ -172,7 +175,8 @@ function modalInformacion($uibModalInstance, $scope, $http, $interval,
 
 	$http.post('/SMatrizRACI', {
 		accion : 'getInformacionTarea',
-		actividadId: $objetoId,
+		objetoId: $objetoId,
+		objetoTipo:$objetoTipo,
 		rol: $rol
 		
 	}).success(function(response) {

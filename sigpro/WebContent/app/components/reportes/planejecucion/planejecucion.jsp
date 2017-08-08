@@ -8,9 +8,15 @@
 		 color: rgba(0,0,0,0.38) !important;
 		 font-weight: bold;
 	}
+	
 	 table.borderless td,table.borderless th{
      border: none !important;
 	}
+	
+	.datos{
+		font-weight: bold;
+	}
+	
 </style>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
@@ -41,19 +47,19 @@
 						<label for="prestamo" class="floating-label">Préstamos</label>
 				</div>
 			</form>
-				
+			<br/> <br/><br/>
 			
 				<div class="panel panel-default" ng-hide="!planc.mostrar">
 					
 					<div class="panel-body">
 					<div class = "table-responsive">
-						<table class="table table-condensed borderless" >
+						<table class="table table-condensed borderless table-sm" >
 							<tr>
-	   							<td style="width: 40%" >
+	   							<td style="width: 35%" >
 	   								<label class="label-form1" >Mes Reportado</label>	
 	   							</td>
 	   							<td >
-	   								<p>{{ planc.mesReportado }}</pl>
+	   								<p class="datos"  >{{ planc.mesReportado }}</pl>
 	   							</td>
 	   						</tr>
 	   						<tr>
@@ -61,7 +67,7 @@
 	   								<label class="label-form1" >Año Fiscal</label>
 	   							</td>
 	   							<td>
-	   								<p>{{ planc.anioFiscal }}</pl>
+	   								<p class="datos">{{ planc.anioFiscal }}</pl>
 	   							</td>
 	   						</tr>
 	   						<tr>
@@ -69,7 +75,7 @@
 	   								<label class="label-form1" >Proyecto/Programa</label>
 	   							</td>
 	   							<td>
-	   								<p>{{ planc.prestamo.proyectoPrograma }}</pl>
+	   								<p class="datos">{{ planc.prestamo.proyectoPrograma }}</pl>
 	   							</td>
 	   						</tr>
 	   						<tr>
@@ -77,15 +83,17 @@
 	   								<label class="label-form1" >Organismo Ejecutor</label>
 	   							</td>
 	   							<td>
-	   								<p>{{ planc.prestamo.nombreEntidadEjecutora }}</pl>
+	   								<p class="datos">{{ planc.prestamo.nombreEntidadEjecutora }}</pl>
 	   							</td>
 	   						</tr>
 	   						
 						</table>
 					</div>
-						
-					
-					<table class="table table-hover table-condensed table-responsive table-striped table-bordered table-sm">
+					</div>
+				</div>
+				
+				<table class="table table-hover table-condensed table-responsive table-striped table-bordered table-sm"
+				ng-hide="!planc.mostrar">
 						<tbody>
       						<tr>
       							<td>
@@ -205,8 +213,6 @@
       						</tr>
       					</tbody>
 					</table>
-					</div>
-				</div>
 				
 				<br/> 
 				<div style="width: 75%">

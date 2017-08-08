@@ -1,13 +1,11 @@
 package pojo;
-// Generated Jul 28, 2017 12:40:33 AM by Hibernate Tools 5.2.3.Final
+// Generated Aug 6, 2017 10:04:13 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -24,12 +22,14 @@ public class AsignacionRaci implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5883341467792708981L;
-	private AsignacionRaciId id;
-	private Actividad actividad;
+	private static final long serialVersionUID = -346447370948186606L;
+	private int id;
 	private Colaborador colaborador;
 	private MatrizRaci matrizRaci;
-	private Integer estado;
+	private String rolRaci;
+	private int objetoId;
+	private int objetoTipo;
+	private int estado;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
@@ -38,19 +38,28 @@ public class AsignacionRaci implements java.io.Serializable {
 	public AsignacionRaci() {
 	}
 
-	public AsignacionRaci(AsignacionRaciId id, Actividad actividad, Colaborador colaborador, MatrizRaci matrizRaci) {
+	public AsignacionRaci(int id, Colaborador colaborador, MatrizRaci matrizRaci, String rolRaci, int objetoId,
+			int objetoTipo, int estado, String usuarioCreo, Date fechaCreacion) {
 		this.id = id;
-		this.actividad = actividad;
 		this.colaborador = colaborador;
 		this.matrizRaci = matrizRaci;
+		this.rolRaci = rolRaci;
+		this.objetoId = objetoId;
+		this.objetoTipo = objetoTipo;
+		this.estado = estado;
+		this.usuarioCreo = usuarioCreo;
+		this.fechaCreacion = fechaCreacion;
 	}
 
-	public AsignacionRaci(AsignacionRaciId id, Actividad actividad, Colaborador colaborador, MatrizRaci matrizRaci,
-			Integer estado, String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion) {
+	public AsignacionRaci(int id, Colaborador colaborador, MatrizRaci matrizRaci, String rolRaci, int objetoId,
+			int objetoTipo, int estado, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Date fechaActualizacion) {
 		this.id = id;
-		this.actividad = actividad;
 		this.colaborador = colaborador;
 		this.matrizRaci = matrizRaci;
+		this.rolRaci = rolRaci;
+		this.objetoId = objetoId;
+		this.objetoTipo = objetoTipo;
 		this.estado = estado;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
@@ -58,33 +67,19 @@ public class AsignacionRaci implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@EmbeddedId
+	@Id
 
-	@AttributeOverrides({
-			@AttributeOverride(name = "matrizRaciid", column = @Column(name = "matriz_raciid", nullable = false)),
-			@AttributeOverride(name = "actividadid", column = @Column(name = "actividadid", nullable = false)),
-			@AttributeOverride(name = "colaboradorid", column = @Column(name = "colaboradorid", nullable = false)),
-			@AttributeOverride(name = "rolRaci", column = @Column(name = "rol_raci", nullable = false, length = 1)) })
-	public AsignacionRaciId getId() {
+	@Column(name = "id", unique = true, nullable = false)
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(AsignacionRaciId id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "actividadid", nullable = false, insertable = false, updatable = false)
-	public Actividad getActividad() {
-		return this.actividad;
-	}
-
-	public void setActividad(Actividad actividad) {
-		this.actividad = actividad;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "colaboradorid", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "colaboradorid", nullable = false)
 	public Colaborador getColaborador() {
 		return this.colaborador;
 	}
@@ -94,7 +89,7 @@ public class AsignacionRaci implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "matriz_raciid", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "matriz_raciid", nullable = false)
 	public MatrizRaci getMatrizRaci() {
 		return this.matrizRaci;
 	}
@@ -103,16 +98,43 @@ public class AsignacionRaci implements java.io.Serializable {
 		this.matrizRaci = matrizRaci;
 	}
 
-	@Column(name = "estado")
-	public Integer getEstado() {
+	@Column(name = "rol_raci", nullable = false, length = 1)
+	public String getRolRaci() {
+		return this.rolRaci;
+	}
+
+	public void setRolRaci(String rolRaci) {
+		this.rolRaci = rolRaci;
+	}
+
+	@Column(name = "objeto_id", nullable = false)
+	public int getObjetoId() {
+		return this.objetoId;
+	}
+
+	public void setObjetoId(int objetoId) {
+		this.objetoId = objetoId;
+	}
+
+	@Column(name = "objeto_tipo", nullable = false)
+	public int getObjetoTipo() {
+		return this.objetoTipo;
+	}
+
+	public void setObjetoTipo(int objetoTipo) {
+		this.objetoTipo = objetoTipo;
+	}
+
+	@Column(name = "estado", nullable = false)
+	public int getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(Integer estado) {
+	public void setEstado(int estado) {
 		this.estado = estado;
 	}
 
-	@Column(name = "usuario_creo", length = 30)
+	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
 	}
@@ -131,7 +153,7 @@ public class AsignacionRaci implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_creacion", length = 19)
+	@Column(name = "fecha_creacion", nullable = false, length = 19)
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}

@@ -1,10 +1,5 @@
 package pojo;
-<<<<<<< HEAD
-// Generated 27/07/2017 10:30:52 AM by Hibernate Tools 5.2.3.Final
-=======
 // Generated Jul 28, 2017 12:40:33 AM by Hibernate Tools 5.2.3.Final
->>>>>>> master
-
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -19,13 +14,10 @@ import javax.persistence.Table;
 @Table(name = "estructura_arbol", catalog = "sipro")
 public class EstructuraArbol implements java.io.Serializable {
 
-<<<<<<< HEAD
-=======
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6105607288540664425L;
->>>>>>> master
 	private EstructuraArbolId id;
 
 	public EstructuraArbol() {
