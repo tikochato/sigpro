@@ -15,6 +15,9 @@
 					<label for="id" class="floating-label">ID {{controller.id}}</label>
 					<br/><br/>
 				</div>
+				<div class="row">
+					
+				</div>
 				<div class = "row">
 					<div class="col-sm-6">
 						<div class="form-group" >
@@ -74,7 +77,7 @@
 								ng-repeat="row in controller.planAdquisicionesPagos">
 								<td style="display: none;">{{row.id}}</td>
 								<td>{{row.fecha}}</td>
-								<td>{{row.pago}}</td>
+								<td>{{row.pago  | formatoMillones : controller.enMillones}}</td>
 								<td>{{row.descripcion}}</td>
 								<td>
 									<button type="button"

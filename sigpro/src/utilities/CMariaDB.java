@@ -48,7 +48,6 @@ public class CMariaDB {
 				if(!connection.isClosed())
 					return true;
 				
-				
 			}catch(Exception ee){
 				CLogger.writeFullConsole("Error 1 : CMariaDB.class ", ee);
 			}

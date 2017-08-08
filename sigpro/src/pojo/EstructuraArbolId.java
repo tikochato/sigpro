@@ -10,7 +10,6 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 public class EstructuraArbolId implements java.io.Serializable {
-
 	/**
 	 * 
 	 */

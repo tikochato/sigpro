@@ -490,6 +490,3 @@ function modalEstructura($uibModalInstance, $scope, $http, $interval,
 		}
 	}
 };
-
-
-

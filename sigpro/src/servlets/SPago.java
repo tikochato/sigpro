@@ -25,7 +25,6 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.PagoDAO;
 import pojo.Pago;
-import pojo.PlanAdquisiciones;
 import utilities.CLogger;
 import utilities.Utils;
 
@@ -65,8 +64,9 @@ public class SPago extends HttpServlet {
 		String accion = map.get("accion")!=null ? map.get("accion") : "";
 		String response_text = "";
 		if(accion.equals("getPagos")){
-			Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"));
-			List<Pago> Pagos = PagoDAO.getPagosByIdPlan(idPlanAdquisiciones);
+			Integer idObjeto = Utils.String2Int(map.get("idObjeto"));
+			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+			List<Pago> Pagos = PagoDAO.getPagosByObjetoTipo(idObjeto, objetoTipo);
 			
 			List<stPago> resultado = new ArrayList<stPago>();
 			for(Pago pago :Pagos){
@@ -83,7 +83,9 @@ public class SPago extends HttpServlet {
 	        response_text = String.join("", "\"pagos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text, "}");
 		}else if(accion.equals("guardarPagos")){
-			Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"));
+			Integer idObjeto = Utils.String2Int(map.get("idObjeto"));
+			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+			
 			String dataPagos = map.get("pagos");
 			
 			Type listType = new TypeToken<List<Map<String, String>>>() {}.getType();
@@ -91,13 +93,11 @@ public class SPago extends HttpServlet {
 			
 			Pago nuevoPago = null;
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			PlanAdquisiciones plan = new PlanAdquisiciones();
-			plan.setId(idPlanAdquisiciones);
 			
 			try{
 				for(Map<String, String> pago : pagos){
 					if(Utils.String2Int(pago.get("id")) == 0){
-						nuevoPago = new Pago(plan, formatter.parse(pago.get("fechaReal")), new BigDecimal(pago.get("pago")), pago.get("descripcion"),usuario, null, new Date(), null, 1);
+						nuevoPago = new Pago(idObjeto, objetoTipo, formatter.parse(pago.get("fechaReal")), new BigDecimal(pago.get("pago")), pago.get("descripcion"), usuario, null, new Date(), null,1);
 						PagoDAO.guardarPago(nuevoPago);
 					}
 				}
@@ -105,7 +105,7 @@ public class SPago extends HttpServlet {
 				CLogger.write("1", SPago.class, e);
 			}
 			
-			List<Pago> Pagos = PagoDAO.getPagosByIdPlan(idPlanAdquisiciones);
+			List<Pago> Pagos = PagoDAO.getPagosByObjetoTipo(idObjeto,objetoTipo);
 			
 			List<stPago> resultado = new ArrayList<stPago>();
 			for(Pago pago :Pagos){

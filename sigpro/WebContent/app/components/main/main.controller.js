@@ -177,6 +177,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/informacionPresupuestaria/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'informacionPresupuestariaController\'" class="all_page"></div>'
             })
+            .when('/administracionTransaccional/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'administracionTransaccionalController\'" class="all_page"></div>'
+            })
             .when('/responsabletipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'responsabletipoController\'" class="all_page"></div>'
             })
@@ -194,6 +197,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             })
             .when('/matrizraci/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'matrizraciController\'" class="all_page"></div>'
+            })
+            .when('/categoriaadquisicion/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'categoriaAdquisicionController\'" class="all_page"></div>'
             })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -476,11 +482,20 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'desembolsosController',
 	    	   script: '/app/components/reportes/desembolsos/desembolsos.controller.js',
 	    	   template: '/app/components/reportes/desembolsos/desembolsos.jsp'
+	       },{
+	    	   name: 'administracionTransaccionalController',
+	    	   script: '/app/components/reportes/administraciontransaccional/administracionTransaccional.controller.js',
+	    	   template: '/app/components/reportes/administraciontransaccional/administracionTransaccional.jsp'
 	       },
 	       {
 	    	   name: 'matrizraciController',
 	    	   script: '/app/components/reportes/matrizraci/matrizraci.controller.js',
 	    	   template: '/app/components/reportes/matrizraci/matrizraci.jsp'
+	       },
+	       {
+	    	   name: 'categoriaAdquisicionController',
+	    	   script: '/app/components/categoriaadquisicion/categoriaAdquisicion.controller.js',
+	    	   template: '/app/components/categoriaadquisicion/categoriaAdquisicion.jsp'
 	       }
 
 	   ];
