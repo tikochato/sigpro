@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class RolPermisoId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3154114422278344320L;
 	private int rolid;
 	private int permisoid;
 
@@ -39,6 +43,7 @@ public class RolPermisoId implements java.io.Serializable {
 		this.permisoid = permisoid;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -51,6 +56,7 @@ public class RolPermisoId implements java.io.Serializable {
 		return (this.getRolid() == castOther.getRolid()) && (this.getPermisoid() == castOther.getPermisoid());
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 

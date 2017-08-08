@@ -21,6 +21,10 @@ import javax.persistence.TemporalType;
 @Table(name = "progtipo_propiedad", catalog = "sipro")
 public class ProgtipoPropiedad implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5369371231783762428L;
 	private ProgtipoPropiedadId id;
 	private ProgramaPropiedad programaPropiedad;
 	private ProgramaTipo programaTipo;

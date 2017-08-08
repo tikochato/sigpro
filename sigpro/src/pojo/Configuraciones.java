@@ -15,6 +15,10 @@ import javax.persistence.Table;
 @Table(name = "configuraciones", catalog = "sipro")
 public class Configuraciones implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -905418675156113812L;
 	private Integer id;
 	private String nombre;
 	private String valor;

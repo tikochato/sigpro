@@ -15,6 +15,10 @@ import javax.persistence.Table;
 @Table(name = "mv_ep_estructura", catalog = "sipro")
 public class MvEpEstructura implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3992423520345251641L;
 	private MvEpEstructuraId id;
 
 	public MvEpEstructura() {

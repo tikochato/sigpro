@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ProgramaProyectoId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6693791864773252071L;
 	private int programaid;
 	private int proyectoid;
 
@@ -39,6 +43,7 @@ public class ProgramaProyectoId implements java.io.Serializable {
 		this.proyectoid = proyectoid;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -52,6 +57,7 @@ public class ProgramaProyectoId implements java.io.Serializable {
 				&& (this.getProyectoid() == castOther.getProyectoid());
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 

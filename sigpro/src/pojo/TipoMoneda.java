@@ -19,6 +19,10 @@ import javax.persistence.Table;
 @Table(name = "tipo_moneda", catalog = "sipro")
 public class TipoMoneda implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4460403244972771061L;
 	private Integer id;
 	private String nombre;
 	private String simbolo;

@@ -15,6 +15,10 @@ import javax.persistence.Table;
 @Table(name = "estructura_arbol", catalog = "sipro")
 public class EstructuraArbol implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6105607288540664425L;
 	private EstructuraArbolId id;
 
 	public EstructuraArbol() {

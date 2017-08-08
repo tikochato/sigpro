@@ -16,6 +16,10 @@ import javax.persistence.Table;
 @Table(name = "mv_ep_metas", catalog = "sipro")
 public class MvEpMetas implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2859974549072564393L;
 	private Integer id;
 	private int ejercicio;
 	private int objetoId;
