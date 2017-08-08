@@ -52,6 +52,7 @@
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/recursounidadmedida">Unidad de Medida para Recurso</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/responsabletipo/rv">Tipo de Responsable</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/responsablerol/rv">Resonsable rol</a></li></shiro:hasPermission>
+				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/categoriaadquisicion/rv">Categoría de Adquisiciones</a></li></shiro:hasPermission>
 			                        </ul>
 	                    		</li>
 	                    		</shiro:hasPermission>

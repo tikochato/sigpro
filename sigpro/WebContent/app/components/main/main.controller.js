@@ -198,6 +198,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/matrizraci/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'matrizraciController\'" class="all_page"></div>'
             })
+            .when('/categoriaadquisicion/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'categoriaAdquisicionController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -488,6 +491,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'matrizraciController',
 	    	   script: '/app/components/reportes/matrizraci/matrizraci.controller.js',
 	    	   template: '/app/components/reportes/matrizraci/matrizraci.jsp'
+	       },
+	       {
+	    	   name: 'categoriaAdquisicionController',
+	    	   script: '/app/components/categoriaadquisicion/categoriaAdquisicion.controller.js',
+	    	   template: '/app/components/categoriaadquisicion/categoriaAdquisicion.jsp'
 	       }
 
 	   ];

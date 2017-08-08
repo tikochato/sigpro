@@ -63,7 +63,7 @@ app.filter('formatoMillones', function() {
 	        	var res = ((numero/1000000).toFixed(2));
 	        	return ('Q '+res.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 	        }
-	        return ('Q '+ (numero.toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+	        return ('Q '+ (Number(numero).toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     	}
     };
 })

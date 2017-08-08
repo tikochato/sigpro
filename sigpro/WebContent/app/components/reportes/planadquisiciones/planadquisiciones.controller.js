@@ -2,6 +2,7 @@ var app = angular.module('planAdquisicionesController', ['ngTouch','ngAnimate','
 app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal) {
 	var mi = this;
+	mi.mostrarTablas = true;
 	mi.mostrarBotones = false;
 	mi.mostrarcargando = false;
 	mi.enMillones = true;
@@ -9,7 +10,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	mi.valoresInicializados = [0,0,0,0,0,"","","","","","","","","",""];
 	mi.ddlOpciones = [];
 	mi.ddlOpcionesTipos = [];
-	mi.ddlOpcionesMetodo = [];
+	mi.ddlcategoriaAdquisiciones = [];
 	i18nService.setCurrentLang('es');
 	
 	mi.calcularTamanosPantalla = function(){
@@ -56,8 +57,19 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			}
 	});
 	
-	mi.ddlOpcionesTipos = [{id: 0, value: "Seleccionar"}];
-	mi.ddlOpcionesMetodo = [{id: 0, value: "Seleccionar"}];
+	mi.ddlOpcionesTiposAdquisicion = [{id: 0, value: "Seleccionar"}];
+	
+	$http.post('/SCategoriaAdquisicion', {accion: 'getCategoriaAdquisicion'}).success(
+		function(response){
+			mi.ddlcategoriaAdquisiciones = [];
+			mi.ddlcategoriaAdquisiciones = [{id: 0, value: "Seleccionar"}];		
+			if(response.success){
+				for(x in response.categoriaAdquisicion){
+					mi.ddlcategoriaAdquisiciones.push({id: response.categoriaAdquisicion[x].id, value: response.categoriaAdquisicion[x].nombre});
+				}
+			}
+		});
+	
 
 	mi.nombreUnidadMedida = function(id){
 		for (i=0; i<mi.ddlOpciones.length; i++){
@@ -84,9 +96,10 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	
 	mi.calcularTotal = function(row){
 		row['total'] = row['costo'] * row['cantidad'];
+		mi.calcularPadre(row.predecesorId, row.objetoPredecesorTipo);
 	}
 	
-	mi.ocultar = function(row, id){
+	mi.ocultar = function(row, id, borrar){
         switch (id){
         case 0:
         	row.c0 = !row.c0;
@@ -107,33 +120,53 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
         	row.c5 = !row.c5;
         	break;
         case 6:
+        	if(borrar)
+        		row.planificadoDocs = null;
         	row.c6 = !row.c6;
         	break;
         case 7:
+        	if(borrar)
+        		row.realDocs = null;
         	row.c7 = !row.c7;
         	break;
         case 8:
+        	if(borrar)
+        		row.planificadoLanzamiento = null;
         	row.c8 = !row.c8;
         	break;
         case 9:
+        	if(borrar)
+        		row.realLanzamiento = null;
         	row.c9 = !row.c9;
         	break;
         case 10:
+        	if(borrar)
+        		row.planificadoRecepcionEval = null;
         	row.c10 = !row.c10;
         	break;
         case 11:
+        	if(borrar)
+        		row.realRecepcionEval = null;
         	row.c11 = !row.c11;
         	break;
         case 12:
+        	if(borrar)
+        		row.planificadoAdjudica = null;
         	row.c12 = !row.c12;
         	break;
         case 13:
+	        if(borrar)
+	        	row.realAdjudica = null;
         	row.c13 = !row.c13;
         	break;
         case 14:
+        	if(borrar)
+        		row.planificadoFirma = null;
         	row.c14 = !row.c14;
         	break;
         case 15:
+        	if(borrar)
+        		row.realFirma = null;
         	row.c15 = !row.c15;
         	break;
         }
@@ -147,13 +180,21 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				if (isNaN(fechaActual)){
 					row.planificadoDocs = "";
 					$utilidades.mensaje('danger', 'Fecha invalida');
+					break;
 				}
+				
+				mi.bloquearPadre(row); 
+				mi.bloquearHijos(row.hijos);
 			}else{
 				var fechaActual = moment(row.realDocs,'DD/MM/YYYY').toDate();
 				if (isNaN(fechaActual)){
 					row.realDocs = "";
 					$utilidades.mensaje('danger', 'Fecha invalida');
+					break;
 				}
+				
+				mi.bloquearPadre(row); 
+				mi.bloquearHijos(row.hijos);
 			}
 			break;
 		case 2:
@@ -164,12 +205,17 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				if (!isNaN(fechaActual)){
 					if(fechaAnterior.getTime() > fechaActual.getTime()){
 						row.planificadoLanzamiento = "";
-						$utilidades.mensaje('warning', 'Fecha de "Lanzamiento de eventos planificado" no debe ser menor que la fecha de "Preparación de documentos planificado"');					
+						$utilidades.mensaje('warning', 'Fecha de "Lanzamiento de eventos planificado" no debe ser menor que la fecha de "Preparación de documentos planificado"');
+						break;
 					}
 				}else{
 					row.planificadoLanzamiento = "";
 					$utilidades.mensaje('danger', 'Fecha invalida');
-				}					
+					break;
+				}
+				
+				mi.bloquearPadre(row); 
+				mi.bloquearHijos(row.hijos);
 			}else{
 				var fechaAnterior = moment(row.realDocs,'DD/MM/YYYY').toDate();
 				var fechaActual = moment(row.realLanzamiento,'DD/MM/YYYY').toDate();
@@ -178,11 +224,16 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					if(fechaAnterior > fechaActual){
 						row.realLanzamiento = "";
 						$utilidades.mensaje('warning', 'Fecha de "Lanzamiento de eventos real" no debe ser menor que la fecha de "Preparación de documentos real"');
+						break;
 					}
 				}else{
 					row.realLanzamiento = "";
 					$utilidades.mensaje('danger', 'Fecha invalida');
-				}					
+					break;
+				}
+				
+				mi.bloquearPadre(row); 
+				mi.bloquearHijos(row.hijos);
 			}
 			break;
 		case 3:
@@ -193,12 +244,17 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				if (!isNaN(fechaActual)){
 					if(fechaAnterior > fechaActual){
 						row.planificadoRecepcionEval = "";
-						$utilidades.mensaje('warning', 'Fecha de "Recepción y evaluación de ofertas planificado" no debe ser menor que la fecha de "Landamiento de eventos planificado"');					
+						$utilidades.mensaje('warning', 'Fecha de "Recepción y evaluación de ofertas planificado" no debe ser menor que la fecha de "Landamiento de eventos planificado"');
+						break;
 					}
 				}else{
 					row.planificadoRecepcionEval = "";
 					$utilidades.mensaje('danger', 'Fecha invalida');
-				}					
+					break;
+				}
+				
+				mi.bloquearPadre(row); 
+				mi.bloquearHijos(row.hijos);
 			}else{
 				var fechaAnterior = moment(row.realLanzamiento,'DD/MM/YYYY').toDate();
 				var fechaActual = moment(row.realRecepcionEval,'DD/MM/YYYY').toDate();
@@ -206,12 +262,17 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				if (!isNaN(fechaActual)){
 					if(fechaAnterior > fechaActual){
 						row.realRecepcionEval = "";
-						$utilidades.mensaje('warning', 'Fecha de "Recepción y evaluación de ofertas real" no debe ser menor que la fecha de "Landamiento de eventos real"');					
+						$utilidades.mensaje('warning', 'Fecha de "Recepción y evaluación de ofertas real" no debe ser menor que la fecha de "Landamiento de eventos real"');
+						break;
 					}
 				}else{
 					row.realRecepcionEval = "";
 					$utilidades.mensaje('danger', 'Fecha invalida');
-				}					
+					break;
+				}
+				
+				mi.bloquearPadre(row); 
+				mi.bloquearHijos(row.hijos);
 			}
 			break;
 		case 4:
@@ -222,12 +283,17 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				if (!isNaN(fechaActual)){
 					if(fechaAnterior > fechaActual){
 						row.planificadoAdjudica = "";
-						$utilidades.mensaje('warning', 'Fecha de "Adjudicación planificado" no debe ser menor que la fecha de "Recepción y evaluación de ofertas planificado"');					
+						$utilidades.mensaje('warning', 'Fecha de "Adjudicación planificado" no debe ser menor que la fecha de "Recepción y evaluación de ofertas planificado"');
+						break;
 					}
 				}else{
 					row.planificadoAdjudica = "";
 					$utilidades.mensaje('danger', 'Fecha invalida');
-				}					
+					break;
+				}
+				
+				mi.bloquearPadre(row); 
+				mi.bloquearHijos(row.hijos);
 			}else{
 				var fechaAnterior = moment(row.realRecepcionEval,'DD/MM/YYYY').toDate();
 				var fechaActual = moment(row.realAdjudica,'DD/MM/YYYY').toDate();
@@ -235,12 +301,17 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				if (!isNaN(fechaActual)){
 					if(fechaAnterior > fechaActual){
 						row.realAdjudica = "";
-						$utilidades.mensaje('warning', 'Fecha de "Adjudicación real" no debe ser menor que la fecha de "Recepción y evaluación de ofertas real"');					
+						$utilidades.mensaje('warning', 'Fecha de "Adjudicación real" no debe ser menor que la fecha de "Recepción y evaluación de ofertas real"');
+						break;
 					}
 				}else{
 					row.realAdjudica = "";
 					$utilidades.mensaje('danger', 'Fecha invalida');
+					break;
 				}
+				
+				mi.bloquearPadre(row); 
+				mi.bloquearHijos(row.hijos);
 			}
 			break;
 		case 5:
@@ -251,12 +322,17 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				if (!isNaN(fechaActual)){
 					if(fechaAnterior > fechaActual){
 						row.planificadoFirma = "";
-						$utilidades.mensaje('warning', 'Fecha de "Firma de contrato planificado" no debe ser menor que la fecha de "Adjudicación planificado"');					
+						$utilidades.mensaje('warning', 'Fecha de "Firma de contrato planificado" no debe ser menor que la fecha de "Adjudicación planificado"');
+						break;
 					}
 				}else{
 					row.planificadoFirma = "";
 					$utilidades.mensaje('danger', 'Fecha invalida');
+					break;
 				}
+				
+				mi.bloquearPadre(row); 
+				mi.bloquearHijos(row.hijos);
 			}else{
 				var fechaAnterior = moment(row.planificadoFirma,'DD/MM/YYYY').toDate();
 				var fechaActual = moment(row.realFirma,'DD/MM/YYYY').toDate();
@@ -264,25 +340,44 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				if (!isNaN(fechaActual)){
 					if(fechaAnterior > fechaActual){
 						row.realFirma = "";
-						$utilidades.mensaje('warning', 'Fecha de "Firma de contrato real" no debe ser menor que la fecha de "Adjudicación real"');					
+						$utilidades.mensaje('warning', 'Fecha de "Firma de contrato real" no debe ser menor que la fecha de "Adjudicación real"');
+						break;
 					}
 				}else{
 					row.realFirma = "";
 					$utilidades.mensaje('danger', 'Fecha invalida');
+					break;
 				}
+				
+				mi.bloquearPadre(row); 
+				mi.bloquearHijos(row.hijos);
 			}
 			break;
 		}
 	}
 	
-	mi.bloquearPadre = function(row){
+	mi.bloquearPadre = function(row, bloqueo){
 		var predecesorId = row.predecesorId;
 		var objetoPredecesorTipo = row.objetoPredecesorTipo;
 		
 		var entidad = mi.obtenerEntidad(predecesorId,objetoPredecesorTipo);
 		if(entidad != undefined){
-			entidad.bloqueado = true;
-			mi.bloquearPadre(entidad);
+			if(entidad.bloqueado != true){
+				entidad.bloqueado = bloqueo;
+				mi.bloquearPadre(entidad, bloqueo);
+			}
+		}
+	}
+	
+	mi.bloquearHijos = function(hijos, bloqueo){
+		if(hijos != null){
+			for(x in hijos){
+				var entidad = mi.obtenerEntidad(hijos[x].split(',')[0],hijos[x].split(',')[1]);
+				if(entidad != undefined){
+					entidad.bloqueado = bloqueo;
+					mi.bloquearHijos(entidad.hijos, bloqueo);
+				}
+			}
 		}
 	}
 	
@@ -301,20 +396,62 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					(entidad.realAdjudica == mi.valoresInicializados[12] || entidad.realAdjudica == null) && (entidad.planificadoFirma == mi.valoresInicializados[13] || entidad.planificadoFirma == null) && 
 					(entidad.realFirma == mi.valoresInicializados[14] || entidad.realFirma == null)){
 				
-				entidadPadre.bloqueado = false;
+				entidadPadre.bloqueado = !entidadPadre.bloqueado;
+				mi.desbloquearPadre(entidadPadre);
 			}
 		}
 	}
 	
 	mi.guardarPlan = function(){
-		for(p in mi.data){
+		var estructuraGuardar = "";
+		
+		for(h in mi.data){
+			var row = mi.data[h];
+			estructuraGuardar += row.objetoId + ",";
+			estructuraGuardar += row.objetoTipo + ",";
+			estructuraGuardar += (row.tipoAdquisicion == null ? "" : row.tipoAdquisicion) + ",";
+			estructuraGuardar += (row.categoriaAdquisicion != 0 ? row.categoriaAdquisicion : null) + ",";
+			estructuraGuardar += row.idPlanAdquisiciones + ",";
+			estructuraGuardar += (row.unidadMedida == null ? "" : row.unidadMedida) + ",";
+			estructuraGuardar += row.cantidad + ",";
+			estructuraGuardar += row.costo + ",";
+			estructuraGuardar += row.total + ",";
+			estructuraGuardar += ((row.planificadoDocs == null || row.planificadoDocs == "") ? null : row.planificadoDocs) + ",";
+			estructuraGuardar += ((row.realDocs == null || row.realDocs == "") ? null : row.realDocs) + ",";
+			estructuraGuardar += ((row.planificadoLanzamiento == null || row.planificadoLanzamiento == "") ? null : row.planificadoLanzamiento) + ",";
+			estructuraGuardar += ((row.realLanzamiento == null || row.realLanzamiento == "") ? null : row.realLanzamiento) + ",";
+			estructuraGuardar += ((row.planificadoRecepcionEval == null || row.planificadoRecepcionEval == "") ? null : row.planificadoRecepcionEval) + ",";
+			estructuraGuardar += ((row.realRecepcionEval == null || row.realRecepcionEval == "") ? null : row.realRecepcionEval) + ",";
+			estructuraGuardar += ((row.planificadoAdjudica == null || row.planificadoAdjudica == "") ? null : row.planificadoAdjudica) + ",";
+			estructuraGuardar += ((row.realAdjudica == null || row.realAdjudica == "") ? null : row.realAdjudica) + ",";
+			estructuraGuardar += ((row.planificadoFirma == null || row.planificadoFirma == "") ? null : row.planificadoFirma) + ",";
+			estructuraGuardar += ((row.realFirma == null || row.realFirma == "") ? null : row.realFirma) + ",";
+			estructuraGuardar += row.bloqueado;
+			estructuraGuardar += "°";
+		}
+		
+		$http.post('/SPlanAdquisiciones', {
+			accion: 'guardarPlan',
+			data : estructuraGuardar,
+			t:moment().unix()
+		}).success(function(response){
+			if(response.success){
+				$utilidades.mensaje('success','Plan de adquisiciones guardado exitosamente');
+			}else{
+				$utilidades.mensaje('danger','No se pudo guardar correctamente el plan de adquisiciones');
+			}
+		})
+		
+		
+		
+		/*for(p in mi.data){
 			var entidad = mi.data[p];
 			$http.post('/SPlanAdquisiciones', {
 	            accion: 'guardarPlan',
 	            objetoId: entidad.objetoId,
 	            objetoTipo: entidad.objetoTipo,
 	            metodo: entidad.metodo,
-	            tipoAdquisicion: entidad.tipoAdquisicion,
+	            categoriaAdquisicion: entidad.categoriaAdquisicion != 0 ? entidad.categoriaAdquisicion : null,
 	            idPlanAdquisiciones: entidad.idPlanAdquisiciones,
 	            unidadMedida: entidad.unidadMedida,
 	            cantidad: entidad.cantidad,
@@ -331,27 +468,36 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	    		planificadoFirma: moment(entidad.planificadoFirma).format('DD/MM/YYYY') == null ? null : moment(entidad.planificadoFirma).format('DD/MM/YYYY'),
 	            realFirma: moment(entidad.realFirma).format('DD/MM/YYYY') == null ? null : moment(entidad.realFirma).format('DD/MM/YYYY')
 	        }).success(function(response){
-	        	
-	        }).error(function(response){
-	        	
-	        });
+	        	if(response.success){
+	        		guardado = true;	
+	        	}else{
+	        		guardado = false;
+	        	}
+	        })
+			
+			if(!guardado)
+				break;
 		}
-		$utilidades.mensaje('success','Plan de adquisiciones guardado exitosamente');
+		
+		if (guardado)
+			$utilidades.mensaje('success','Plan de adquisiciones guardado exitosamente');
+		//else
+			//$utilidades.mensaje('danger','No se pudo guardar correctamente el plan de adquisiciones');*/
 	}
 	
 	mi.calcularPadre = function(idPredecesor, objetoTipoPredecesor){
 		var padre = mi.obtenerEntidad(idPredecesor, objetoTipoPredecesor);
 		if(padre != undefined){
-			var hijo = padre.hijo;
+			var hijos = padre.hijos;
 			var total = 0;
-			for(y in hijo){
-				var h = mi.obtenerEntidad(hijo[y].split(',')[0],hijo[y].split(',')[1]);
+			for(y in hijos){
+				var h = mi.obtenerEntidad(hijos[y].split(',')[0],hijos[y].split(',')[1]);
 				total += h.total;
 			}
 			padre.total = total;
-			if(padre.idPredecesor > 0 && padre.idPredecesor){
-				if(padre.idPredecesor != 0){
-					mi.calcularPadre(padre.idPredecesor, padre.objetoTipoPredecesor);
+			if(padre.predecesorId > 0 && padre.predecesorId){
+				if(padre.predecesorId != 0){
+					mi.calcularPadre(padre.predecesorId, padre.objetoPredecesorTipo);
 				}
 			}
 		}
@@ -368,6 +514,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	mi.generar = function(){
 		if(mi.prestamo.value > 0){
 			mi.mostrarcargando = true;
+			mi.mostrarTablas = false;
 			mi.idPrestamo = mi.prestamo.value;
 			$http.post('/SPlanAdquisiciones',{
 				accion: 'generarPlan',
@@ -384,10 +531,15 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 		}
 	}
 	
+	mi.uncheck = function(event){
+		if (mi.checked == event.target.value)
+	        mi.checked = false
+	}
+	
 	mi.limpiar = function(){
-		mi.datoSeleccionado.metodo = 0;
-		mi.datoSeleccionado.unidadMedida = null;
 		mi.datoSeleccionado.tipoAdquisicion = 0;
+		mi.datoSeleccionado.unidadMedida = null;
+		mi.datoSeleccionado.categoriaAdquisicion = 0;
 		mi.datoSeleccionado.cantidad = 0;
 		mi.datoSeleccionado.costo = 0;
 		mi.datoSeleccionado.total = 0;
@@ -401,6 +553,9 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 		mi.datoSeleccionado.realAdjudica = null;
 		mi.datoSeleccionado.planificadoFirma = null;
 		mi.datoSeleccionado.realFirma = null;
+		
+		mi.desbloquearPadre(mi.datoSeleccionado);
+		mi.bloquearHijos(mi.datoSeleccionado.hijos, false);
 	}
 	
 	mi.exportarExcel = function(){
@@ -408,7 +563,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 		
 		for(x in mi.gridOptions.data){
 			var row = mi.gridOptions.data[x];
-			reporte.push({nombre: row.nombre, metodo: row.metodo, planificadoDocs: row.planificadoDocs, realDocs: row.realDocs, planificadoLanzamiento: row.planificadoLanzamiento, realLanzamiento: row.realLanzamiento, planificadoRecepcionEval: row.planificadoRecepcionEval, realRecepcionEval: row.realRecepcionEval, planificadoAdjudica: row.planificadoAdjudica, realAdjudica: row.realAdjudica, planificadoFirma: row.planificadoFirma, realFirma: row.realFirma});
+			reporte.push({nombre: row.nombre, tipoAdquisicion: row.tipoAdquisicion, planificadoDocs: row.planificadoDocs, realDocs: row.realDocs, planificadoLanzamiento: row.planificadoLanzamiento, realLanzamiento: row.realLanzamiento, planificadoRecepcionEval: row.planificadoRecepcionEval, realRecepcionEval: row.realRecepcionEval, planificadoAdjudica: row.planificadoAdjudica, realAdjudica: row.realAdjudica, planificadoFirma: row.planificadoFirma, realFirma: row.realFirma});
 		}
 		
 		$http.post('/SPlanAdquisiciones',{
@@ -433,7 +588,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 		mi.data = datos;
 		var tab = "\t";
 		for(x in mi.data){
-			mi.data[x].nombre = tab.repeat(mi.data[x].objetoTipo -1) + mi.data[x].nombre;
+			mi.data[x].nombre = tab.repeat(mi.data[x].nivel -1) + mi.data[x].nombre;
 		}
 		
 		mi.rowCollectionPrestamo = [];
@@ -487,7 +642,7 @@ function modalPago($uibModalInstance, $scope, $http, $interval,
 	mi.objetoTipo = objetoTipo;
 	mi.nombre = nombre;
 	mi.formatofecha = 'MMMM';
-	mi.enMillones = true;
+	mi.enMillones = false;
 	mi.mostrarcargando = false;
 	
 	mi.fechaOptions = {
@@ -540,7 +695,8 @@ function modalPago($uibModalInstance, $scope, $http, $interval,
 	mi.ok = function() {
 		var param_data = {
 				accion : 'guardarPagos',
-				idPlanAdquisiciones: idPlanAdquisiciones,
+				idObjeto: idObjeto,
+				objetoTipo: objetoTipo,
 				pagos: JSON.stringify(mi.planAdquisicionesPagos),
 				t:moment().unix()
 			};

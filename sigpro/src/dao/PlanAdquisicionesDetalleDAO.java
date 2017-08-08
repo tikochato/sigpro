@@ -9,14 +9,14 @@ import utilities.CHibernateSession;
 import utilities.CLogger;
 
 public class PlanAdquisicionesDetalleDAO {
-	public static int guardarPlanAdquisicion(PlanAdquisicionesDetalle planAdquisicionDetalle){
-		int ret = 0;
+	public static boolean guardarPlanAdquisicion(PlanAdquisicionesDetalle planAdquisicionDetalle){
+		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
 			session.saveOrUpdate(planAdquisicionDetalle);
 			session.getTransaction().commit();
-			ret = planAdquisicionDetalle.getId();
+			ret = true;
 		}catch(Throwable e){
 			CLogger.write("1", PlanAdquisicionesDetalleDAO.class, e);
 		}

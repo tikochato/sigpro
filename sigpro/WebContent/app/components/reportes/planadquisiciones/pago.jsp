@@ -77,7 +77,7 @@
 								ng-repeat="row in controller.planAdquisicionesPagos">
 								<td style="display: none;">{{row.id}}</td>
 								<td>{{row.fecha}}</td>
-								<td>{{row.pago}}</td>
+								<td>{{row.pago  | formatoMillones : controller.enMillones}}</td>
 								<td>{{row.descripcion}}</td>
 								<td>
 									<button type="button"
