@@ -1,10 +1,8 @@
 package pojo;
-// Generated 27/07/2017 10:30:52 AM by Hibernate Tools 5.2.3.Final
+// Generated Aug 8, 2017 2:58:03 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,7 +11,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,10 +22,15 @@ import javax.persistence.TemporalType;
 @Table(name = "plan_adquisiciones_detalle", catalog = "sipro")
 public class PlanAdquisicionesDetalle implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2822836334728884861L;
 	private Integer id;
+	private CategoriaAdquisicion categoriaAdquisicion;
 	private PlanAdquisiciones planAdquisiciones;
-	private UnidadMedida unidadMedida;
-	private Integer metodo;
+	private Integer tipoAdquisicion;
+	private String unidadMedida;
 	private Integer cantidad;
 	private BigDecimal total;
 	private BigDecimal precioUnitario;
@@ -49,15 +51,14 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private Set<Pago> pagos = new HashSet<Pago>(0);
+	private Integer bloqueado;
 
 	public PlanAdquisicionesDetalle() {
 	}
 
-	public PlanAdquisicionesDetalle(PlanAdquisiciones planAdquisiciones, BigDecimal total, int objetoId, int objetoTipo,
+	public PlanAdquisicionesDetalle(PlanAdquisiciones planAdquisiciones, int objetoId, int objetoTipo,
 			String usuarioCreo, Date fechaCreacion, int estado) {
 		this.planAdquisiciones = planAdquisiciones;
-		this.total = total;
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
 		this.usuarioCreo = usuarioCreo;
@@ -65,16 +66,17 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public PlanAdquisicionesDetalle(PlanAdquisiciones planAdquisiciones, UnidadMedida unidadMedida, Integer metodo,
-			Integer cantidad, BigDecimal total, BigDecimal precioUnitario, Date preparacionDocPlanificado,
-			Date preparacionDocReal, Date lanzamientoEventoPlanificado, Date lanzamientoEventoReal,
-			Date recepcionOfertasPlanificado, Date recepcionOfertasReal, Date adjudicacionPlanificado,
-			Date adjudicacionReal, Date firmaContratoPlanificado, Date firmaContratoReal, int objetoId, int objetoTipo,
-			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Set<Pago> pagos) {
+	public PlanAdquisicionesDetalle(CategoriaAdquisicion categoriaAdquisicion, PlanAdquisiciones planAdquisiciones,
+			Integer tipoAdquisicion, String unidadMedida, Integer cantidad, BigDecimal total, BigDecimal precioUnitario,
+			Date preparacionDocPlanificado, Date preparacionDocReal, Date lanzamientoEventoPlanificado,
+			Date lanzamientoEventoReal, Date recepcionOfertasPlanificado, Date recepcionOfertasReal,
+			Date adjudicacionPlanificado, Date adjudicacionReal, Date firmaContratoPlanificado, Date firmaContratoReal,
+			int objetoId, int objetoTipo, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Date fechaActualizacion, int estado, Integer bloqueado) {
+		this.categoriaAdquisicion = categoriaAdquisicion;
 		this.planAdquisiciones = planAdquisiciones;
+		this.tipoAdquisicion = tipoAdquisicion;
 		this.unidadMedida = unidadMedida;
-		this.metodo = metodo;
 		this.cantidad = cantidad;
 		this.total = total;
 		this.precioUnitario = precioUnitario;
@@ -95,7 +97,7 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.pagos = pagos;
+		this.bloqueado = bloqueado;
 	}
 
 	@Id
@@ -111,6 +113,16 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "categoria_adquisicion")
+	public CategoriaAdquisicion getCategoriaAdquisicion() {
+		return this.categoriaAdquisicion;
+	}
+
+	public void setCategoriaAdquisicion(CategoriaAdquisicion categoriaAdquisicion) {
+		this.categoriaAdquisicion = categoriaAdquisicion;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "plan_adquisicion_id", nullable = false)
 	public PlanAdquisiciones getPlanAdquisiciones() {
 		return this.planAdquisiciones;
@@ -120,23 +132,22 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 		this.planAdquisiciones = planAdquisiciones;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "unidad_medida_id")
-	public UnidadMedida getUnidadMedida() {
+	@Column(name = "tipo_adquisicion")
+	public Integer getTipoAdquisicion() {
+		return this.tipoAdquisicion;
+	}
+
+	public void setTipoAdquisicion(Integer tipoAdquisicion) {
+		this.tipoAdquisicion = tipoAdquisicion;
+	}
+
+	@Column(name = "unidad_medida", length = 30)
+	public String getUnidadMedida() {
 		return this.unidadMedida;
 	}
 
-	public void setUnidadMedida(UnidadMedida unidadMedida) {
+	public void setUnidadMedida(String unidadMedida) {
 		this.unidadMedida = unidadMedida;
-	}
-
-	@Column(name = "metodo")
-	public Integer getMetodo() {
-		return this.metodo;
-	}
-
-	public void setMetodo(Integer metodo) {
-		this.metodo = metodo;
 	}
 
 	@Column(name = "cantidad")
@@ -148,7 +159,7 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 		this.cantidad = cantidad;
 	}
 
-	@Column(name = "total", nullable = false, precision = 15)
+	@Column(name = "total", precision = 15)
 	public BigDecimal getTotal() {
 		return this.total;
 	}
@@ -331,13 +342,13 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "planAdquisicionesDetalle")
-	public Set<Pago> getPagos() {
-		return this.pagos;
+	@Column(name = "bloqueado")
+	public Integer getBloqueado() {
+		return this.bloqueado;
 	}
 
-	public void setPagos(Set<Pago> pagos) {
-		this.pagos = pagos;
+	public void setBloqueado(Integer bloqueado) {
+		this.bloqueado = bloqueado;
 	}
 
 }
