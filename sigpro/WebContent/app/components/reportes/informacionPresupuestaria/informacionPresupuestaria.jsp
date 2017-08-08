@@ -230,7 +230,11 @@
 			    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos">
 								<thead class="theadDatos">
 									<tr>
-				          				<th st-sort="nombre" style="height: 71px; text-align: center; vertical-align: top; min-width:200px;" class="label-form">Nombre</th>
+				          				<th rowspan="2" st-sort="nombre" style="text-align: center; vertical-align: top; min-width:200px;" class="label-form">Nombre</th>
+				          				<th style="border-bottom:2px solid #fff;" class="label-form">.</th>
+				         			</tr>
+				         			<tr>
+				          				<th class="label-form">.</th>
 				         			</tr>
 								</thead>
 								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="max-height: 390px; margin-bottom: -15px;">
@@ -241,6 +245,7 @@
 							      				{{item.nombre}}
 							      			</p>
 							      		</td>
+							      		<td></td>	
 							      	</tr>
 								</tbody>
 							</table>
