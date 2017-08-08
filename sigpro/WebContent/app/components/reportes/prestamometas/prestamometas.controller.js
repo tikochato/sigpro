@@ -14,15 +14,18 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	mi.AnteriorActivo = false;
 	mi.enMillones = true;
 	mi.agrupacionActual = 1
-	mi.columnasTotal = 1;
+	mi.columnasTotal = 2;
 	mi.limiteAnios = 5;
 	mi.tamanioMinimoColumna = 125;
-	mi.tamanioMinimoColumnaMillones = 75;
+	mi.tamanioMinimoColumnaMillones = 60;
 	mi.grupoMostrado= {"planificado":true,"real":true};
 	mi.estiloAlineacion="text-align: center;";
 	mi.data = [];
 	mi.totales = [];
 	mi.scrollPosicion = 0;
+	
+	mi.VALOR_PLANIFICADO= 0;
+	mi.VALOR_REAL= 1;
 	
 	var AGRUPACION_MES= 1;
 	var AGRUPACION_BIMESTRE = 2;
@@ -86,11 +89,6 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	$window.document.title = $utilidades.sistema_nombre+' - Metas de Préstamo';
 	i18nService.setCurrentLang('es');
 		
-	$http.post('/SMeta', { accion: 'getMetasUnidadesMedida' }).success(
-			function(response) {
-				mi.unidadesMedida = response.MetasUnidades;
-	});
-	
 	mi.formatofecha = 'yyyy';
 	
 	mi.abrirPopupFecha = function(index) {
@@ -106,6 +104,11 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	    minMode: 'year'
 	};
 	
+	$http.post('/SMeta', { accion: 'getMetasUnidadesMedida' }).success(
+			function(response) {
+				mi.unidadesMedida = response.MetasUnidades;
+	});
+	
 	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
 			function(response) {
 				mi.prestamos = [];
@@ -118,7 +121,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				}
 			});
 
-		$scope.nombreUnidadMedida = function(id){
+		mi.nombreUnidadMedida = function(id){
 			if (id != null && id > 0){
 				for (i=0; i<mi.unidadesMedida.length; i++){
 					if(mi.unidadesMedida[i].id == id){
@@ -216,15 +219,15 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			if(mi.grupoMostrado.planificado && mi.grupoMostrado.real){
 				tamanioMinimo = tamanioMinimo * 2;
 			}
-			mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth) - 200;
+			mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth) - 400;
 			mi.totalAnios = Number(mi.fechaFin) - Number(mi.fechaInicio) + 1;
-			mi.totalCabecerasAMostrar = $utilidades.getCantidadCabecerasReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabeceras, tamanioMinimo);
+			mi.totalCabecerasAMostrar = $utilidades.getCantidadCabecerasReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabeceras, tamanioMinimo, mi.columnasTotal);
 			if(mi.totalCabecerasAMostrar == 0){
 				mi.tamanoCelda = tamanioMinimo;
-				mi.tamanoTotal = mi.tamanoPantalla - (mi.tamanoCelda * (mi.totalAnios + 1));
+				mi.tamanoTotal = mi.tamanoPantalla - (mi.tamanoCelda * (mi.totalAnios + mi.columnasTotal));
 				if(mi.tamanoTotal<0){mi.tamanoTotal=0;}
 			}else{
-				mi.tamanoCelda = $utilidades.getTamanioColumnaReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabecerasAMostrar);
+				mi.tamanoCelda = $utilidades.getTamanioColumnaReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabecerasAMostrar, mi.columnasTotal);
 				mi.tamanoTotal = mi.totalCabecerasAMostrar * mi.totalAnios * mi.tamanoCelda;
 			}
 			mi.estiloCelda = "width:"+ mi.tamanoCelda + "px;min-width:"+ mi.tamanoCelda + "px; max-width:"+ mi.tamanoCelda + "px;";
@@ -247,21 +250,21 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			.then(function(response) {
 				if (response.data.success) {
 					mi.data = response.data.prestamo;
-					var tab = "\t";
 					mi.totales = [];
 					 for (x in mi.data){
-						 mi.data[x].nombre = tab.repeat(mi.data[x].objeto_tipo -1) + mi.data[x].nombre; 
-						 var totalFinal = 0;
+						 var totalFinal = {"planificado": 0, "real": 0};
 						 var fila = [];
 						 for(a in mi.data[x].anios){
-							 var totalAnual = 0;
+							 var totalAnual = {"planificado": 0, "real": 0};
 							 var anio = mi.data[x].anios[a];
 							 for (m in anio){
 								 if(m != "anio"){
-									 totalAnual += anio[m];
+									 totalAnual.planificado += anio[m][mi.VALOR_PLANIFICADO];
+									 totalAnual.real += anio[m][mi.VALOR_REAL];
 								 }
 							 }
-							 totalFinal += totalAnual;
+							 totalFinal.planificado += totalAnual.planificado;
+							 totalFinal.real += totalAnual.real;
 							 var tot = {"valor": totalAnual};
 							 fila.push(tot);
 						 }
@@ -377,19 +380,14 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			}
 		}
 		
-		mi.getPlanificado=function(itemIndice, indice){
+		mi.getPlanificado=function(itemIndice, indice, tipoMeta){
 			mes = Math.floor((indice)/mi.aniosTotal.length);
 			anio = indice - (mes*mi.aniosTotal.length);
 			var item = mi.data[itemIndice];
 			var valor = Object.values(item.anios[anio])[mes];
-			return valor;
+			return valor[tipoMeta];
 		};
 		
-		mi.getTotal=function(itemIndice, anioIndice){
-			var valor = mi.totales[itemIndice].anio[anioIndice].valor;
-			return valor;
-		};
-	
 }]);
 
 app.directive('scrollespejo', ['$window', function($window) {

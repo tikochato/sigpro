@@ -198,13 +198,13 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			}
 			mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth) - 200;
 			mi.totalAnios = Number(mi.fechaFin) - Number(mi.fechaInicio) + 1;
-			mi.totalCabecerasAMostrar = $utilidades.getCantidadCabecerasReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabeceras, tamanioMinimo);
+			mi.totalCabecerasAMostrar = $utilidades.getCantidadCabecerasReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabeceras, tamanioMinimo, mi.columnasTotal);
 			if(mi.totalCabecerasAMostrar == 0){
 				mi.tamanoCelda = tamanioMinimo;
-				mi.tamanoTotal = mi.tamanoPantalla - (mi.tamanoCelda * (mi.totalAnios + 1));
+				mi.tamanoTotal = mi.tamanoPantalla - (mi.tamanoCelda * (mi.totalAnios +  mi.columnasTotal));
 				if(mi.tamanoTotal<0){mi.tamanoTotal=0;}
 			}else{
-				mi.tamanoCelda = $utilidades.getTamanioColumnaReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabecerasAMostrar);
+				mi.tamanoCelda = $utilidades.getTamanioColumnaReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabecerasAMostrar,  mi.columnasTotal);
 				mi.tamanoTotal = mi.totalCabecerasAMostrar * mi.totalAnios * mi.tamanoCelda;
 			}
 			mi.estiloCelda = "width:"+ mi.tamanoCelda + "px;min-width:"+ mi.tamanoCelda + "px; max-width:"+ mi.tamanoCelda + "px;";

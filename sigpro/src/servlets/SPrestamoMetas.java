@@ -68,59 +68,7 @@ import utilities.Utils;
 @WebServlet("/SPrestamoMetas")
 public class SPrestamoMetas extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-/*
-	private static final int OBJETO_ID_PROYECTO = 1;
-	private static final int OBJETO_ID_COMPONENTE = 2;
-	private static final int OBJETO_ID_PRODUCTO = 3;
-	//private static final int OBJETO_ID_SUBPRODUCTO = 4;
-	//private static final int OBJETO_ID_ACTIVIDAD= 5;
-	
-	private static final int DATOTIPO_DECIMAL = 3;
-	
-	private static final int META_ID_REAL = 1;
-	private static final int META_ID_PLANIFICADA = 2;
-	private static final int META_ID_LINEABASE= 3;
-	private static final int META_ID_FINAL= 4;
-	
-	private static final int AGRUPACION_MES= 1;
-	private static final int AGRUPACION_BIMESTRE= 3;
-	private static final int AGRUPACION_TRIMESTRE= 3;
-	private static final int AGRUPACION_CUATRIMESTRE= 2;
-	private static final int AGRUPACION_SEMESTRE= 3;
-	private static final int AGRUPACION_ANUAL= 4;
-	
-	private static final int ESTADO_ACTIVO= 1;
-	private static final int ESTADO_CONGELADO= 2;
-		
-	class stproductometa {
-		Integer id;
-		String edt;
-		Integer objetoTipo;
-		String objetoTipoNombre;
-		String nombreMeta;
-		Integer unidadDeMedidaId;
-		Integer datoTipoId;
-		String fechaInicio;
-		String fechaFin;
-		List <stmeta> metasReales = new ArrayList<>();
-		List <stmeta> metasPlanificadas = new ArrayList<>();
-		Integer lineaBaseId;
-		String lineaBase;
-		Integer metaFinalId;
-		String metaFinal;
-		Integer estado;
-	}
-	
-	class stmeta {
-		Integer id;
-		String fecha;
-		String valor;
-		Integer tipoMetaId;
-		Integer unidadMedidaId;
-		Integer objetoId;
-		Integer objetoTipoId;
-	}
-	*/
+
 	class stprestamo{
 		String nombre;
 		Integer objeto_id;
@@ -133,18 +81,18 @@ public class SPrestamoMetas extends HttpServlet {
 	}
 	
 	class stanio{
-		BigDecimal enero;
-		BigDecimal febrero;
-		BigDecimal marzo;
-		BigDecimal abril;
-		BigDecimal mayo;
-		BigDecimal junio;
-		BigDecimal julio;
-		BigDecimal agosto;
-		BigDecimal septiembre;
-		BigDecimal octubre;
-		BigDecimal noviembre;
-		BigDecimal diciembre;
+		BigDecimal[] enero;
+		BigDecimal[] febrero;
+		BigDecimal[] marzo;
+		BigDecimal[] abril;
+		BigDecimal[] mayo;
+		BigDecimal[] junio;
+		BigDecimal[] julio;
+		BigDecimal[] agosto;
+		BigDecimal[] septiembre;
+		BigDecimal[] octubre;
+		BigDecimal[] noviembre;
+		BigDecimal[] diciembre;
 		BigDecimal anio;
 	}
 
@@ -338,18 +286,19 @@ public class SPrestamoMetas extends HttpServlet {
 			for(ArrayList<BigDecimal> objprestamopresupuesto : presupuestoPrestamo){
 				
 				stanio aniotemp = new stanio(); 
-				aniotemp.enero = objprestamopresupuesto.get(0);
-				aniotemp.febrero = objprestamopresupuesto.get(2);
-				aniotemp.marzo = objprestamopresupuesto.get(4);
-				aniotemp.abril = objprestamopresupuesto.get(6);
-				aniotemp.mayo = objprestamopresupuesto.get(8);
-				aniotemp.junio = objprestamopresupuesto.get(10);
-				aniotemp.julio = objprestamopresupuesto.get(12);
-				aniotemp.agosto = objprestamopresupuesto.get(14);
-				aniotemp.septiembre = objprestamopresupuesto.get(16);
-				aniotemp.octubre = objprestamopresupuesto.get(18);
-				aniotemp.noviembre = objprestamopresupuesto.get(20);
-				aniotemp.diciembre = objprestamopresupuesto.get(22);
+				aniotemp = inicializarStanio(aniotemp);
+				aniotemp.enero[0] = objprestamopresupuesto.get(0);
+				aniotemp.febrero[0] = objprestamopresupuesto.get(2);
+				aniotemp.marzo[0] = objprestamopresupuesto.get(4);
+				aniotemp.abril[0] = objprestamopresupuesto.get(6);
+				aniotemp.mayo[0] = objprestamopresupuesto.get(8);
+				aniotemp.junio[0] = objprestamopresupuesto.get(10);
+				aniotemp.julio[0] = objprestamopresupuesto.get(12);
+				aniotemp.agosto[0] = objprestamopresupuesto.get(14);
+				aniotemp.septiembre[0] = objprestamopresupuesto.get(16);
+				aniotemp.octubre[0] = objprestamopresupuesto.get(18);
+				aniotemp.noviembre[0] = objprestamopresupuesto.get(20);
+				aniotemp.diciembre[0] = objprestamopresupuesto.get(22);
 				int pos = anoFinal- objprestamopresupuesto.get(24).intValue();
 				aniotemp.anio = new BigDecimal(anoInicial + pos);
 				prestamo.unidadDeMedida = Integer.parseInt(objprestamopresupuesto.get(25).toString());
@@ -370,26 +319,29 @@ public class SPrestamoMetas extends HttpServlet {
 		
 		for (int i = 0;i <longitudArrelgo; i++){
 			stanio temp = new stanio();
-			temp.enero = null;
-			temp.febrero = null;
-			temp.marzo = null;
-			temp.abril=null;
-			temp.mayo = null;
-			temp.junio = null;
-			temp.julio = null;
-			temp.agosto = null;
-			temp.septiembre = null;
-			temp.octubre = null;
-			temp.noviembre = null;
-			temp.diciembre = null;
-			
+			temp = inicializarStanio(temp);
 			temp.anio = new BigDecimal(anioInicial + i);
 			anios[i] = temp;
 		}
-		return anios;
+		return anios;		
+	}
+	
+	private stanio inicializarStanio(stanio anio){
 		
-		
-		
+			anio.enero = new BigDecimal[2];
+			anio.febrero = new BigDecimal[2];
+			anio.marzo = new BigDecimal[2];
+			anio.abril = new BigDecimal[2];
+			anio.mayo = new BigDecimal[2];
+			anio.junio = new BigDecimal[2];
+			anio.julio = new BigDecimal[2];
+			anio.agosto = new BigDecimal[2];
+			anio.septiembre = new BigDecimal[2];
+			anio.octubre = new BigDecimal[2];
+			anio.noviembre = new BigDecimal[2];
+			anio.diciembre = new BigDecimal[2];
+			
+		return anio;		
 	}
 	
 //
