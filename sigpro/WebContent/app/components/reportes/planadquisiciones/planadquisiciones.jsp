@@ -61,8 +61,8 @@
 			display: flex;
 		    flex-direction: column;
 		    align-items: stretch;
-		    min-height: 390px;
-		    max-height: 390px;  
+		    min-height: 380px;
+		    max-height: 380px;  
 		}
 		
 		.colorPlanificadoFondo{
@@ -117,8 +117,8 @@
 		    display: inline-block;
 		    text-align: center;
 		    font-size: 13px;
-		    min-height: 390px;
-		    max-height: 390px; 
+		    min-height: 380px;
+		    max-height: 380px; 
 		}
 		.cuerpoTablaNombres {
 		    overflow-y: scroll;
@@ -126,8 +126,8 @@
 		    display: inline-block;
 		    font-size: 13px;
 		    max-width: 300px;
-		    min-height: 390px;
-		    max-height: 390px; 
+		    min-height: 380px;
+		    max-height: 380px; 
 		}
 	</style>
 	
@@ -190,6 +190,14 @@
 								<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
 									<br />
 									<br /> <b>Cargando, por favor espere...</b> 
+								</span>
+							</div>
+						</div>
+						<div class="grid_loading" ng-hide="!controller.mostrarguardando">
+							<div class="msg">
+								<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
+									<br />
+									<br /> <b>Guardando, por favor espere...</b> 
 								</span>
 							</div>
 						</div>
