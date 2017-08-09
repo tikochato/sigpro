@@ -1,23 +1,14 @@
 package servlets;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
@@ -27,41 +18,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.shiro.codec.Base64;
+
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import dao.ActividadDAO;
 import dao.ComponenteDAO;
-import dao.DatoTipoDAO;
 import dao.PrestamoMetasDAO;
-import dao.MetaDAO;
-import dao.MetaTipoDAO;
-import dao.MetaUnidadMedidaDAO;
-import dao.MetaValorDAO;
-import dao.PrestamoDAO;
+
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
-import dao.SubproductoDAO;
-import pojo.Actividad;
 import pojo.Componente;
-import pojo.DatoTipo;
-import pojo.Meta;
-import pojo.MetaTipo;
-import pojo.MetaUnidadMedida;
-import pojo.MetaValor;
-import pojo.MetaValorId;
-import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Proyecto;
-import pojo.Subproducto;
-import utilities.CExcel;
 import utilities.CMariaDB;
 import utilities.Utils;
 
