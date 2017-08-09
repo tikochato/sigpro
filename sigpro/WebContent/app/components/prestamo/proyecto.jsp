@@ -187,7 +187,7 @@
 		            	<input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="controller.proyectotiponombre" ng-value="controller.proyectotiponombre" 
 		            		ng-click="controller.buscarProyectoTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
 		            	<span class="label-icon" ng-click="controller.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>
-		          	<label for="campo3" class="floating-label">* Tipo Préstamo</label>
+		          	<label for="campo3" class="floating-label">* Caracterización Préstamo</label>
 				</div>
 
 				<div ng-repeat="campo in controller.camposdinamicos">
@@ -235,7 +235,7 @@
 		            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.unidadejecutoranombre" ng-readonly="true" ng-required="true" 
 		            	ng-click="controller.buscarUnidadEjecutora()" ng-value="controller.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
 		            <span class="label-icon" ng-click="controller.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
-		          	<label for="campo3" class="floating-label">* Unidad Ejecutora</label>
+		          	<label for="campo3" class="floating-label">* Organismo Ejecutor</label>
 				</div>
 
 				<div class="form-group" >
@@ -245,7 +245,7 @@
 		          	<label for="campo3" class="floating-label">* Cooperante</label>
 				</div>
 				
-				<div class="form-group">
+				<div class="form-group" ng-if="false">
 		            	<input type="text" class="inputText" ng-model="controller.coordenadas" ng-readonly="true" 
 		            		ng-value="controller.coordenadas" onblur="this.setAttribute('value', this.value);"
 		            		ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "/>
@@ -386,7 +386,7 @@
 										<span class="label-icon" ng-click="controller.buscarUnidadEjecutoraPrestamo()">
 											<i class="glyphicon glyphicon-search"></i>
 										</span>
-										<label class="floating-label">* Unidad Ejecutora</label>
+										<label class="floating-label">* Organismo Ejecutor</label>
 									</div>
 								</div>
 							</div>
