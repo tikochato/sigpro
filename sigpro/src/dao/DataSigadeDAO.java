@@ -50,17 +50,16 @@ public class DataSigadeDAO {
 		return ret;
 	}
 	
-	public static DtmAvanceFisfinanDti getavanceFisFinanDMS1(String noPrestamo,String codigoPresupuestario){
+	public static DtmAvanceFisfinanDti getavanceFisFinanDMS1(String codigoPresupuestario){
 		DtmAvanceFisfinanDti ret = null;
 		Session session = CHibernateSessionSIGADE.getSessionFactory().openSession();
 		
 		try{
-			String query =String.join(" ", "select * from dtm_avance_fisfinan_dti fis",
-					"where fis.NO_PRESTAMO = ?1",
-					"and fis.CODIGO_PRESUPUESTARIO = ?2");
+			String query =String.join(" ", "select * from dtm_avance_fisfinan_dti fis",		
+					"where fis.CODIGO_PRESUPUESTARIO = ?1");
 			Query<DtmAvanceFisfinanDti> criteria = session.createNativeQuery(query,DtmAvanceFisfinanDti.class);
-			criteria.setParameter("1", noPrestamo);
-			criteria.setParameter("2", codigoPresupuestario);
+			
+			criteria.setParameter("1", codigoPresupuestario);
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){

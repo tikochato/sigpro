@@ -187,49 +187,56 @@
 		            	<input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="controller.proyectotiponombre" ng-value="controller.proyectotiponombre" 
 		            		ng-click="controller.buscarProyectoTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
 		            	<span class="label-icon" ng-click="controller.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>
-		          	<label for="campo3" class="floating-label">* Tipo Préstamo</label>
+		          	<label for="campo3" class="floating-label">* Caracterización Préstamo</label>
 				</div>
 
 				<div ng-repeat="campo in controller.camposdinamicos">
-							<div ng-switch="campo.tipo">
-								<div ng-switch-when="texto" class="form-group" >
-									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
-										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-								<div ng-switch-when="entero" class="form-group" >
-									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
-									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-								<div ng-switch-when="decimal" class="form-group" >
-									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
-									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-								<div ng-switch-when="booleano" class="form-group" >
-									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-								<div ng-switch-when="fecha" class="form-group" >
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="controller.abrirPopupFecha($index)"
-														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
-														<span class="label-icon" ng-click="controller.abrirPopupFecha($index)">
-															<i class="glyphicon glyphicon-calendar"></i>
-														</span>
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-								<div ng-switch-when="select" class="form-group" >
-									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
-													<option value="">Seleccione una opción</option>
-													<option ng-repeat="number in campo.opciones"
-														ng-value="number.valor">{{number.label}}</option>
-								</select>
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-							</div>
+					<div ng-switch="campo.tipo">
+						<div ng-switch-when="texto" class="form-group" >
+							<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
+								ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
+							<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 						</div>
+						<div ng-switch-when="entero" class="form-group" >
+							<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
+							ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+							<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+						</div>
+						<div ng-switch-when="decimal" class="form-group" >
+							<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
+							ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+							<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+						</div>
+						<div ng-switch-when="booleano" class="form-group" >
+							<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+							<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+						</div>
+						<div ng-switch-when="fecha" class="form-group" >
+							<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+												datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="controller.abrirPopupFecha($index)"
+												ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+												<span class="label-icon" ng-click="controller.abrirPopupFecha($index)">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</span>
+							<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+						</div>
+						<div ng-switch-when="select" class="form-group" >
+							<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
+											<option value="">Seleccione una opción</option>
+											<option ng-repeat="number in campo.opciones"
+												ng-value="number.valor">{{number.label}}</option>
+						</select>
+							<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+						</div>
+					</div>
+				</div>
+				
+				<div class="form-group" ng-show="controller.unidadejecutoranombre.length>0">
+		            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.entidadnombre" ng-readonly="true" ng-required="true" 
+		            	 ng-value="controller.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
+		            	<label for="campo3" class="floating-label">Organismo Ejecutor</label>
+		          	
+				</div>
 
 				<div class="form-group">
 		            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.unidadejecutoranombre" ng-readonly="true" ng-required="true" 
@@ -242,16 +249,23 @@
 		            	<input type="text" class="inputText" id="icoope" name="icoope" ng-model="controller.cooperantenombre" ng-readonly="true" ng-required="true" 
 		            		ng-click="controller.buscarCooperante()" ng-value="controller.cooperantenombre" onblur="this.setAttribute('value', this.value);"/>
 		            	<span class="label-icon" ng-click="controller.buscarCooperante()"><i class="glyphicon glyphicon-search"></i></span>
-		          	<label for="campo3" class="floating-label">* Cooperante</label>
+		          	<label for="campo3" class="floating-label">* Organismo financiero internacional</label>
 				</div>
 				
-				<div class="form-group">
+				<div class="form-group" ng-if="false">
 		            	<input type="text" class="inputText" ng-model="controller.coordenadas" ng-readonly="true" 
 		            		ng-value="controller.coordenadas" onblur="this.setAttribute('value', this.value);"
 		            		ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "/>
 		            	<span class="label-icon" ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
 			          	<label class="floating-label">Coordenadas</label>
 				</div>
+				
+				<div class="form-group">
+						<input  ng-model="controller.proyecto.objetivo"
+							class="inputText" id="objetivo"
+							ng-value="controller.proyecto.objetivo" onblur="this.setAttribute('value', this.value);">
+						<label for="objetivo" class="floating-label">Objetivo</label>
+					</div>
 				<br/>
 				
 				<div class="panel panel-default" ng-hide="controller.esNuevoDocumento">
@@ -352,6 +366,14 @@
 										<label class="floating-label" >* Código presupuestario</label>
 									</div>
 								</div>
+								<div class="col-sm-2" align="right" >
+								<label class="btn btn-default" ng-click="controller.cargaSigade()" uib-tooltip="Cargar datos de SIGADE" tooltip-placement="bottom">
+								<span class="glyphicon glyphicon-search"></span></label>
+								</div>
+								
+								
+							</div>
+							<div class="row">
 								<div class="col-sm-5">
 									<div class="form-group">
 										<input type="text" class="inputText"  ng-model="controller.prestamo.numeroPrestamo" ng-required="true" 
@@ -359,12 +381,6 @@
 										<label class="floating-label" >* Número de prestamo</label>
 									</div>
 								</div>
-								<div class="col-sm-2" align="right" >
-								<label class="btn btn-default" ng-click="controller.cargaSigade()" uib-tooltip="Cargar datos de SIGADE" tooltip-placement="bottom">
-								<span class="glyphicon glyphicon-search"></span></label>
-								</div>
-								
-								
 							</div>
 							<div class="row">
 								<div class="col-sm-12">
@@ -386,7 +402,7 @@
 										<span class="label-icon" ng-click="controller.buscarUnidadEjecutoraPrestamo()">
 											<i class="glyphicon glyphicon-search"></i>
 										</span>
-										<label class="floating-label">* Unidad Ejecutora</label>
+										<label class="floating-label">* Unidad Ejecutor</label>
 									</div>
 								</div>
 							</div>
@@ -396,7 +412,7 @@
 										<input type="text" class="inputText" id="icoope" name="icoope" ng-model="controller.prestamo.cooperantenombre" ng-readonly="true" ng-required="true" 
 											ng-click="controller.buscarCooperante(true)" ng-value="controller.prestamo.cooperantenombre" onblur="this.setAttribute('value', this.value);"/>
 										<span class="label-icon" ng-click="controller.buscarCooperante(true)"><i class="glyphicon glyphicon-search"></i></span>
-										<label for="campo3" class="floating-label">* Cooperante</label>
+										<label for="campo3" class="floating-label">* Organismo financiero internacional</label>
 									</div>
 								</div>
 							</div>
@@ -1143,7 +1159,7 @@
 				
 				</uib-tab>
 
-				<uib-tab index= "4" heading="Acta de constitución" ng-if="controller.mostrarPrestamo">
+				<uib-tab index= "4" heading="Acta de constitución" ng-if="false">
 					
 					<div class="form-group">
 						<label for="id" class="floating-label">Nombre del Proyecto {{ controller.proyecto.nombre }}</label>
@@ -1157,12 +1173,7 @@
 			          	<label for="campo3" class="floating-label">* Director del Proyecto</label>
 					</div>
 					
-					<div class="form-group">
-						<input type="text" ng-model="controller.proyecto.objetivo"
-							class="inputText" id="objetivo"
-							ng-value="controller.proyecto.objetivo" onblur="this.setAttribute('value', this.value);">
-						<label for="objetivo" class="floating-label">Visión general del proyecto</label>
-					</div>
+					
 					
 					<div align="center">
 						<h5 class="label-form">Impacto en gobierno </h5>

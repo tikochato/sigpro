@@ -57,6 +57,8 @@ public class SProyecto extends HttpServlet {
 		String proyectotipo;
 		String unidadejecutora;
 		int unidadejecutoraid;
+		Integer entidad;
+		String nombreEntidad;
 		String cooperante;
 		int cooperanteid;
 		String fechaCreacion;
@@ -136,6 +138,7 @@ public class SProyecto extends HttpServlet {
 				dato.proyectotipoid = proyecto.getProyectoTipo().getId();
 				dato.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
 				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getUnidadEjecutora();
+				dato.nombreEntidad = proyecto.getUnidadEjecutora().getEntidad().getNombre();
 				dato.cooperante = proyecto.getCooperante().getNombre();
 				dato.cooperanteid = proyecto.getCooperante().getId();
 				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
@@ -184,6 +187,7 @@ public class SProyecto extends HttpServlet {
 				dato.proyectotipoid = proyecto.getProyectoTipo().getId();
 				dato.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
 				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getUnidadEjecutora();
+				dato.nombreEntidad = proyecto.getUnidadEjecutora().getEntidad().getNombre();
 				dato.cooperante = proyecto.getCooperante().getNombre();
 				dato.cooperanteid = proyecto.getCooperante().getId();
 				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
@@ -232,6 +236,7 @@ public class SProyecto extends HttpServlet {
 				dato.proyectotipoid = proyecto.getProyectoTipo().getId();
 				dato.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
 				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getUnidadEjecutora();
+				dato.nombreEntidad = proyecto.getUnidadEjecutora().getEntidad().getNombre();
 				dato.cooperante = proyecto.getCooperante().getNombre();
 				dato.cooperanteid = proyecto.getCooperante().getId();
 				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
@@ -279,6 +284,7 @@ public class SProyecto extends HttpServlet {
 				dato.proyectotipoid = proyecto.getProyectoTipo().getId();
 				dato.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
 				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getUnidadEjecutora();
+				dato.nombreEntidad = proyecto.getUnidadEjecutora().getEntidad().getNombre();
 				dato.cooperante = proyecto.getCooperante().getNombre();
 				dato.cooperanteid = proyecto.getCooperante().getId();
 				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
@@ -335,8 +341,13 @@ public class SProyecto extends HttpServlet {
 				Cooperante cooperante = new Cooperante();
 				cooperante.setId(map.get("cooperanteid")!=null ? Integer.parseInt(map.get("cooperanteid")): null);
 				
-				Colaborador directorProyecto = new Colaborador();
-				directorProyecto.setId(map.get("directorProyecto")!=null ? Integer.parseInt(map.get("directorProyecto")): null);
+				
+				Colaborador directorProyecto = null;
+				Integer colaboradorId = map.get("directorProyecto")!=null ? Integer.parseInt(map.get("directorProyecto")): null;
+				if (colaboradorId!=null){
+					directorProyecto = new Colaborador();
+					directorProyecto.setId(colaboradorId);
+				}
 				
 				
 				type = new TypeToken<List<stdatadinamico>>() {

@@ -130,9 +130,8 @@ public class SDataSigade extends HttpServlet {
 		String response_text = "";
 
 		if (accion.equals("getdatos")) {
-			String noPrestamo = map.get("noPrestamo");
 			String codigoPresupuestario = map.get("codigoPresupuestario");
-			DtmAvanceFisfinanDti inf = DataSigadeDAO.getavanceFisFinanDMS1(noPrestamo, codigoPresupuestario);
+			DtmAvanceFisfinanDti inf = DataSigadeDAO.getavanceFisFinanDMS1(codigoPresupuestario);
 			
 			stprestamo temp = new stprestamo();
 			if (inf !=null){

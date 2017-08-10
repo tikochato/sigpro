@@ -36,7 +36,7 @@
 			<div class="col-sm-12 ">
 			
 			<form name="form">
-				<div class="form-group col-sm-3" >
+				<div class="form-group col-sm-4" >
 						<select  class="inputText" ng-model="planc.prestamoSeleccionado" 
 							ng-options="a.text for a in planc.prestamos"
 							ng-readonly="true"
@@ -96,16 +96,16 @@
 				ng-hide="!planc.mostrar">
 						<tbody>
       						<tr>
-      							<td>
+      							<td style="width: 20%">
       								<label class="label-form1" >Número de Prestamo</label>
       							</td>
-      							<td>
+      							<td style="width: 40%">
       								<p>{{ planc.prestamo.numeroPrestamo }}</pl>
       							</td>
-      							<td>
+      							<td style="width: 20%; ">
       								<label  class="label-form1"  >Fecha Ultima Actualización</label>
-      							</td>
-      							<td>
+      							</td style="width: 20%">
+      							<td style="text-align: right;">
       								<p>{{ planc.prestamo.fechaActualizacion }}</p>
       							</td>
       						</tr>
@@ -121,7 +121,7 @@
       							<td>
       								<label  class="label-form1" >Fecha del decreto</label>
       							</td>
-      							<td>
+      							<td style="text-align: right;">
 				  					<p>{{ planc.prestamo.fechaDecreto }}</p>
       							</td>
       						</tr>
@@ -136,7 +136,7 @@
       							<td>
       								<label for="fechaActualizacion"  class="label-form1" >Fecha del suscripción</label>
       							</td>
-      							<td>
+      							<td style="text-align: right;">
 				  					<p>{{ planc.prestamo.fechaSuscripcion }}</p>
       							</td>
       						</tr>
@@ -150,7 +150,7 @@
       							<td>
       								<label for="fechaActualizacion"  class="label-form1" >Fecha de vigencia</label>
       							</td>
-      							<td>
+      							<td style="text-align: right;">
 				  					<p>{{ planc.prestamo.fechaVigencia }}</p>
       							</td>
       						</tr>
@@ -164,7 +164,7 @@
       							<td>
       								<label for="fechaActualizacion"  class="label-form1" >Fecha de elegibilidad</label>
       							</td>
-      							<td>
+      							<td style="text-align: right;">
 				  					<p>{{ planc.prestamo.fechaElegibilidadUe }}</p>
       							</td>
       						</tr>
@@ -179,7 +179,7 @@
       							<td>
       								<label for="fechaActualizacion"  class="label-form1" >Fecha de cierre</label>
       							</td>
-      							<td>
+      							<td style="text-align: right;">
 				  					<p>{{ planc.prestamo.fechaCierreActualUe }}</p>
       							</td>
       						</tr>
@@ -187,13 +187,13 @@
       							<td>
       								<label  class="label-form1" >Monto Aprobado</label>
       							</td>
-      							<td>
-				  					<p>{{ planc.prestamo.montoContratado | number:2 }}</p>
+      							<td style="text-align: right;">
+				  					<p> $ {{ planc.prestamo.montoContratado | number:2 }}</p>
       							</td>
       							<td>
       								<label for="fechaActualizacion"  class="label-form1" >Meses de prorroga</label>
       							</td>
-      							<td>
+      							<td style="text-align: right;">
 				  					<p>{{ planc.prestamo.mesesProrrogaUe }}</p>
       							</td>
       						</tr>
@@ -201,13 +201,13 @@
       							<td>
       								<label  class="label-form1" >Monto aprobado Q</label>
       							</td>
-      							<td>
-				  					<p>{{ planc.prestamo.montoContratadoQtz |  number:2}}</p>
+      							<td style="text-align: right;">
+				  					<p>{{ planc.prestamo.montoContratadoQtz | formatoMillones : false}}</p>
       							</td>
       							<td>
       								<label for="fechaActualizacion"  class="label-form1" >Plazo ejecución</label>
       							</td>
-      							<td>
+      							<td style="text-align: right;">
 				  					<p>{{ planc.prestamo.plazoEjecucionUe }}</p>
       							</td>
       						</tr>
