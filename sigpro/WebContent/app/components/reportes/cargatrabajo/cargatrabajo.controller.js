@@ -21,9 +21,14 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     mi.objetosSeleccionados=[];
     mi.datosTabla = [];
     mi.mostrar = false;
-    
+    mi.fechaInicio = 2016;
+    mi.fechaFin = 2017;
+    mi.dataCahrtLine = [];
+    mi.etiquetasChartLine = [];
+    mi.actividadesterminadas = [];
     
     mi.pieColors = ['#febbbc','#eaeab0','#daefc4','#c4dbee'];
+    
     
     	mi.optionsPie = {
 			
@@ -32,6 +37,33 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 				position: 'bottom'
 			}
 			  };
+    	
+    	
+    	mi.seriesLine = ['Actividades Terminadas'];
+    	
+    	mi.options = {
+    			    scales: {
+    			      yAxes: [
+    			        {
+    			          id: 'y-axis-1',
+    			          type: 'linear',
+    			          display: true,
+    			          position: 'left',
+    			          labelString: "Actividades Terminadas"
+    			        	 
+    			        }
+    			      ],
+    			      xAxes: [{
+    			    	  scaleLabel: {
+    	                       display: true,
+    	                       labelString: "Mes"
+    	                     }
+    			      }
+    			      ]
+    			    }
+    			  };
+    	  
+    	  mi.datasetOverride = [{ yAxisID: 'y-axis-1' }];
 
     mi.redireccionSinPermisos=function(){
 		$window.location.href = '/main.jsp#!/forbidden';		
@@ -47,7 +79,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     $http.post('/SProyecto',{accion: 'getProyectos'}).success(
 		function(response) {
 			mi.prestamos = []; 
-			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione una opción'});
+			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un préstamo'});
 			if (response.success){
 				for (var i = 0; i < response.entidades.length; i++){
 					mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
@@ -71,26 +103,10 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	
 	mi.tObjeto = mi.tObjetos[0];
 
-	mi.obtenerMes = function(){
-		var d = new Date();
-		var month = new Array();
-		month[0] = "Enero";
-		month[1] = "Febrero";
-		month[2] = "Marzo";
-		month[3] = "Abril";
-		month[4] = "Mayo";
-		month[5] = "Junio";
-		month[6] = "Julio";
-		month[7] = "Agosto";
-		month[8] = "Septiembre";
-		month[9] = "Octubre";
-		month[10] = "Noviembre";
-		month[11] = "Diciembre";
-		return month[d.getMonth()];
-	}
+	
 	
 	mi.mesActual = "";
-	mi.mesActual = mi.obtenerMes();
+
 	
 	mi.reset = function(){
 		mi.entidades = [
@@ -245,7 +261,9 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 									idPrestamos:idPrestamos,
 									idComponentes:idComponentes,
 									idProductos:idProductos,
-									idSubproductos:idSubproductos
+									idSubproductos:idSubproductos,
+									anio_inicio:mi.fechaInicio,
+									anio_fin: mi.fechaFin
 									
 								}).success(function(response){
 									if(response.success){
@@ -270,6 +288,37 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 								    		 mi.actividadesACumplirTotal,mi.actividadesCompletadas];
 								    	 
 								    	 mi.mostrar = true;
+									}
+								});
+						
+						
+						$http.post('/SCargaTrabajo', 
+								{
+									accion: 'getActividadesTerminadas', 
+									idPrestamos:idPrestamos,
+									idComponentes:idComponentes,
+									idProductos:idProductos,
+									idSubproductos:idSubproductos,
+									anio_inicio:mi.fechaInicio,
+									anio_fin: mi.fechaFin
+									
+									
+								}).success(function(response){
+									if(response.success){
+										mi.actividadesterminadas = response.actividadesterminadas;
+										mi.dataCahrtLine = [];
+										mi.etiquetasChartLine=[];
+										for (x in mi.actividadesterminadas ){
+											mi.dataCahrtLine.push(mi.actividadesterminadas[x].total)
+											mi.etiquetasChartLine.push(mi.actividadesterminadas[x].mes + "-" + mi.actividadesterminadas[x].anio);
+										}
+										
+										
+										  
+										  mi.dataCahrtLine = [
+											  mi.dataCahrtLine
+										    
+										  ];
 									}
 								});
 			});
@@ -329,7 +378,22 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	
 	// ------------
 	mi.getEstructura = function (){
-		mi.generar();
+		
+		if(mi.prestamo.value > 0)
+		{
+			if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
+					mi.fechaFin != null && mi.fechaFin.toString().length == 4)
+			{
+				if (mi.fechaFin >= mi.fechaInicio){
+					
+					mi.generar();
+				}else{
+					$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
+				}
+			}
+		}
+		
+		
 		
 		
 	}
@@ -419,10 +483,56 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	};
 	
 	
+	mi.llamarModalEstructuraResponsable = function(idproyecto,idresponsable) {
+		var resultado = $q.defer();
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'estructuraresponsable.jsp',
+			controller : 'modalEstructuraResponsable',
+			controllerAs : 'estructura',
+			backdrop : 'static',
+			size : 'lg',
+			resolve : {
+				$idproyecto : function() {
+					return idproyecto;
+				},
+				$idresponsable : function() {
+					return idresponsable;
+				}	
+			}
+		});
+		
+		modalInstance.result.then(function(itemSeleccionado) {
+			resultado.resolve(itemSeleccionado);
+		});
+		return resultado.promise;
+	};
 	
 	
+	mi.actividadesResponsable = function(valor){
+		console.log(valor);
+		var resultado = mi.llamarModalEstructuraResponsable(mi.prestamo.value,valor.id); 
+	};
 	
 	
+	mi.obtenerMes = function(valor){
+		switch (valor){
+			case 1: return "Enero"; 
+			case 2: return "Febrero"; 
+			case 3: return "Marzo"; 
+			case 4: return "Abril"; 
+			case 5: return "Mayo"; 
+			case 6: return "Junio"; 
+			case 7: return "Julio"; 
+			case 8: return "Agosto"; 
+			case 9: return "Septiembre"; 
+			case 10: return "Octubre"; 
+			case 11: return "Nomviembre"; 
+			case 12: return "Diciembre"; 
+		}
+	}
 	
 }]);
 
@@ -490,3 +600,52 @@ function modalEstructura($uibModalInstance, $scope, $http, $interval,
 		}
 	}
 };
+
+
+app.controller('modalEstructuraResponsable', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log', '$idproyecto','$idresponsable',modalEstructuraResponsable ]);
+
+function modalEstructuraResponsable($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $idproyecto,$idresponsable) {
+
+	var mi = this;
+	
+	
+	
+	$http.post('/SCargaTrabajo', {accion: 'getEstructruaPorResponsable', idPrestamo :$idproyecto,idColaborador:$idresponsable}).success(
+			function(response){
+				mi.estructuraProyecto = response.estructura;
+				
+	});
+
+	
+
+	mi.ok = function() {
+		
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+	
+	mi.claseIcon = function (item) {
+	    switch (item.objetoTipo) {
+	        case 1:
+	            return 'glyphicon glyphicon-record';
+	        case 2:
+	            return 'glyphicon glyphicon-th';
+	        case 3:
+	            return 'glyphicon glyphicon-certificate';
+	        case 4:
+	            return 'glyphicon glyphicon-link';
+	        case 5:
+	            return 'glyphicon glyphicon-th-list';
+	    }
+	};
+	
+	
+	
+	
+};
+

@@ -7,6 +7,9 @@
 }
 
 </style>
+<div class="modal-header">
+            	<h3 class="modal-title" id="modal-title">Actividades</h3>
+        	</div>
 <div class="modal-body" id="modal-body">
   <div class="row">
     <div class="col-sm-12">
@@ -14,13 +17,25 @@
     	<div style="padding: 1px;" >
     		<div class="panel panel-default" >
 				<div class="panel-body">
-					<div
-					    ivh-treeview="estructura.estructuraProyecto"
-					    ivh-treeview-default-selected-state="false"
-						 ivh-treeview-default-selected-state="false"
-						    ivh-treeview-expand-to-depth="-1"
-					    >
-					  </div>
+				<table st-table="estructura.estructuraProyecto" class="table table-striped">
+					<thead>
+					<tr>
+						<th>Nombre</th>
+						<th>Estado</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="row in estructura.estructuraProyecto">
+						<td>
+							<div style="height: 25px;">
+								<p><span ng-class="estructura.claseIcon(row);" style="margin-left: {{row.objetoTipo-1}}em" uib-tooltip="{{controller.tooltipObjetoTipo[row.objetoTipo-1]}}"></span>{{row.nombre}}</p>
+							</div>
+						</td>
+						<td>{{row.nombreEstado}}</td>
+					</tr>
+					</tbody>
+				</table>
+					
 				</div>
 			</div>
     	</div>
