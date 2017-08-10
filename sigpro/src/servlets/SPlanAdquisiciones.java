@@ -33,6 +33,7 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
+import dao.CostoDAO;
 import dao.InformacionPresupuestariaDAO;
 import dao.PlanAdquisicionesDAO;
 import dao.PlanAdquisicionesDetalleDAO;
@@ -43,6 +44,7 @@ import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.CategoriaAdquisicion;
 import pojo.Componente;
+import pojo.Costo;
 import pojo.PlanAdquisiciones;
 import pojo.PlanAdquisicionesDetalle;
 import pojo.Prestamo;
@@ -207,6 +209,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 				}
 				
 				stplanadquisiciones padre = null;
+				
 				int nivel = 0;
 				
 				lstprestamo.add(tempPrestamo);
@@ -354,7 +357,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 							
 							lstprestamo.add(tempPrestamo);
 							
-							//actividades de subproducto
+							//actividades de sub producto
 							ArrayList<ArrayList<Integer>> actividadesSubProducto = InformacionPresupuestariaDAO.getEstructuraArbolSubProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(),objSubProducto.getId(), conn);
 							
 							tempPrestamo.hijos = new ArrayList<String>();
@@ -388,8 +391,6 @@ public class SPlanAdquisiciones extends HttpServlet {
 									padre.hijos.add(actividad.get(0)+",5");	
 									
 									tempPrestamo.predecesorId = padre.objetoId;
-									
-									//tempPrestamo.predecesorId = objActividad.getId();
 									tempPrestamo.objetoPredecesorTipo = 5;
 									
 									nivel = actividad.get(1);
@@ -456,8 +457,6 @@ public class SPlanAdquisiciones extends HttpServlet {
 								padre.hijos.add(actividad.get(0)+",5");	
 								
 								tempPrestamo.predecesorId = padre.objetoId;
-								
-								//tempPrestamo.predecesorId = objActividad.getId();
 								tempPrestamo.objetoPredecesorTipo = 5;
 
 								nivel = actividad.get(1);
@@ -651,7 +650,10 @@ public class SPlanAdquisiciones extends HttpServlet {
 					
 					if(objetoTipo == 5 && !total.equals(BigDecimal.ZERO) ){
 						Actividad actividad = ActividadDAO.getActividadPorId(objetoId, usuario);
+						//Costo costoPlanificado = CostoDAO.getCostoPorObjetoId(actividad.getId(), 5);
 						actividad.setCosto(total);
+						actividad.setUsuarioActualizo(usuario);
+						actividad.setFechaActualizacion(new Date());
 						ActividadDAO.guardarActividad(actividad);
 					}
 					
