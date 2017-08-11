@@ -22,6 +22,8 @@
 					<tr>
 						<th>Nombre</th>
 						<th>Estado</th>
+						<th>Fecha Inicio</th>
+						<th>Fecha Fin</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -32,6 +34,8 @@
 							</div>
 						</td>
 						<td>{{row.nombreEstado}}</td>
+						<td>{{row.fechaInicio}}</td>
+						<td>{{row.fechaFin}}</td>
 					</tr>
 					</tbody>
 				</table>

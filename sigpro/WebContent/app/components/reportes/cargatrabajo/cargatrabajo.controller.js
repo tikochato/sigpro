@@ -27,7 +27,9 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     mi.etiquetasChartLine = [];
     mi.actividadesterminadas = [];
     
-    mi.pieColors = ['#febbbc','#eaeab0','#daefc4','#c4dbee'];
+    mi.pieColors = ['#fd9496','#e2e291','#c7e7a5','#b0cfe8'];
+    
+    mi.lineColors = ['#b0cfe8'];
     
     
     	mi.optionsPie = {

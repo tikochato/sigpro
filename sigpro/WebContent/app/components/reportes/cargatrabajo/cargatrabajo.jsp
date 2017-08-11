@@ -119,6 +119,7 @@
 						chart-labels="controller.etiquetasChartLine"  chart-options="controller.options"
 						chart-dataset-override="controller.datasetOverride"  
 						chart-series="controller.seriesLine"
+						chart-colors = "controller.lineColors"
 						>
 						</canvas>
 		    		</div>	
