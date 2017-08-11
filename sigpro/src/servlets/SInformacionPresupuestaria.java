@@ -748,40 +748,160 @@ public class SInformacionPresupuestaria extends HttpServlet {
 										if(j == objprestamopresupuesto.get(12).intValue()){
 											switch(i-1){
 											case 0:
-												aniotemp.enero.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												if(proyecto != null){
+													aniotemp.enero.planificado = proyecto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(componente != null){
+													aniotemp.enero.planificado = componente.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(producto != null){
+													aniotemp.enero.planificado = producto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(subproducto != null){
+													aniotemp.enero.planificado = subproducto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(actividad != null){
+													aniotemp.enero.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));	
+												}
 												break;
 											case 1:
-												aniotemp.febrero.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												if(proyecto != null){
+													aniotemp.febrero.planificado = proyecto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(componente != null){
+													aniotemp.febrero.planificado = componente.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(producto != null){
+													aniotemp.febrero.planificado = producto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(subproducto != null){
+													aniotemp.febrero.planificado = subproducto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(actividad != null){
+													aniotemp.febrero.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}
 												break;
 											case 2:
-												aniotemp.marzo.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												if(proyecto != null){
+													aniotemp.marzo.planificado = proyecto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(componente != null){
+													aniotemp.marzo.planificado = componente.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(producto != null){
+													aniotemp.marzo.planificado = producto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(subproducto != null){
+													aniotemp.marzo.planificado = subproducto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(actividad != null){
+													aniotemp.marzo.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}
 												break;
 											case 3:
-												aniotemp.abril.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												if(proyecto != null){
+													aniotemp.abril.planificado = proyecto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(componente != null){
+													aniotemp.abril.planificado = componente.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(producto != null){
+													aniotemp.abril.planificado = producto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(subproducto != null){
+													aniotemp.abril.planificado = subproducto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(actividad != null){
+													aniotemp.abril.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}
 												break;
 											case 4:
-												aniotemp.mayo.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												if(proyecto != null){
+													aniotemp.mayo.planificado = proyecto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(componente != null){
+													aniotemp.mayo.planificado = componente.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(producto != null){
+													aniotemp.mayo.planificado = producto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(subproducto != null){
+													aniotemp.mayo.planificado = subproducto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(actividad != null){
+													aniotemp.mayo.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}
 												break;
 											case 5:
-												aniotemp.junio.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												if(proyecto != null){
+													aniotemp.junio.planificado = proyecto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(componente != null){
+													aniotemp.junio.planificado = componente.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(producto != null){
+													aniotemp.junio.planificado = producto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(subproducto != null){
+													aniotemp.junio.planificado = subproducto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(actividad != null){
+													aniotemp.junio.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}
 												break;
 											case 6:
-												aniotemp.julio.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												if(proyecto != null){
+													aniotemp.julio.planificado = proyecto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(componente != null){
+													aniotemp.julio.planificado = componente.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(producto != null){
+													aniotemp.julio.planificado = producto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(subproducto != null){
+													aniotemp.julio.planificado = subproducto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(actividad != null){
+													aniotemp.julio.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}
 												break;
 											case 7:
-												aniotemp.agosto.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												if(proyecto != null){
+													aniotemp.agosto.planificado = proyecto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(componente != null){
+													aniotemp.agosto.planificado = componente.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(producto != null){
+													aniotemp.agosto.planificado = producto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(subproducto != null){
+													aniotemp.agosto.planificado = subproducto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(actividad != null){
+													aniotemp.agosto.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}
 												break;
 											case 8:
-												aniotemp.septiembre.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												if(proyecto != null){
+													aniotemp.septiembre.planificado = proyecto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(componente != null){
+													aniotemp.septiembre.planificado = componente.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(producto != null){
+													aniotemp.septiembre.planificado = producto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(subproducto != null){
+													aniotemp.septiembre.planificado = subproducto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(actividad != null){
+													aniotemp.septiembre.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}
 												break;
 											case 9:
-												aniotemp.octubre.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												if(proyecto != null){
+													aniotemp.octubre.planificado = proyecto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(componente != null){
+													aniotemp.octubre.planificado = componente.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(producto != null){
+													aniotemp.octubre.planificado = producto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(subproducto != null){
+													aniotemp.octubre.planificado = subproducto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(actividad != null){
+													aniotemp.octubre.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}
 												break;
 											case 10:
-												aniotemp.noviembre.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												if(proyecto != null){
+													aniotemp.noviembre.planificado = proyecto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(componente != null){
+													aniotemp.noviembre.planificado = componente.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(producto != null){
+													aniotemp.noviembre.planificado = producto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(subproducto != null){
+													aniotemp.noviembre.planificado = subproducto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(actividad != null){
+													aniotemp.noviembre.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}
 												break;
 											case 11:
-												aniotemp.diciembre.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												if(proyecto != null){
+													aniotemp.diciembre.planificado = proyecto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(componente != null){
+													aniotemp.diciembre.planificado = componente.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(producto != null){
+													aniotemp.diciembre.planificado = producto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(subproducto != null){
+													aniotemp.diciembre.planificado = subproducto.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}else if(actividad != null){
+													aniotemp.diciembre.planificado = actividad.getCosto().multiply(new BigDecimal(diasPorcentual.get(contador)));
+												}
 												break;
 											}
 											
@@ -809,40 +929,160 @@ public class SInformacionPresupuestaria extends HttpServlet {
 						if(ano == objprestamopresupuesto.get(12).intValue()){
 							switch(mes){
 							case 0:
-								aniotemp.enero.planificado = actividad.getCosto();
+								if(proyecto != null){
+									aniotemp.enero.planificado = proyecto.getCosto();
+								}else if(componente != null){
+									aniotemp.enero.planificado = componente.getCosto();
+								}else if(producto != null){
+									aniotemp.enero.planificado = producto.getCosto();
+								}else if(subproducto != null){
+									aniotemp.enero.planificado = subproducto.getCosto();
+								}else if(actividad != null){
+									aniotemp.enero.planificado = actividad.getCosto();
+								}
 								break;
 							case 1:
-								aniotemp.febrero.planificado = actividad.getCosto();
+								if(proyecto != null){
+									aniotemp.febrero.planificado = proyecto.getCosto();
+								}else if(componente != null){
+									aniotemp.febrero.planificado = componente.getCosto();
+								}else if(producto != null){
+									aniotemp.febrero.planificado = producto.getCosto();
+								}else if(subproducto != null){
+									aniotemp.febrero.planificado = subproducto.getCosto();
+								}else if(actividad != null){
+									aniotemp.febrero.planificado = actividad.getCosto();
+								}
 								break;
 							case 2:
-								aniotemp.marzo.planificado = actividad.getCosto();
+								if(proyecto != null){
+									aniotemp.marzo.planificado = proyecto.getCosto();
+								}else if(componente != null){
+									aniotemp.marzo.planificado = componente.getCosto();
+								}else if(producto != null){
+									aniotemp.marzo.planificado = producto.getCosto();
+								}else if(subproducto != null){
+									aniotemp.marzo.planificado = subproducto.getCosto();
+								}else if(actividad != null){
+									aniotemp.marzo.planificado = actividad.getCosto();
+								}
 								break;
 							case 3:
-								aniotemp.abril.planificado = actividad.getCosto();
+								if(proyecto != null){
+									aniotemp.abril.planificado = proyecto.getCosto();
+								}else if(componente != null){
+									aniotemp.abril.planificado = componente.getCosto();
+								}else if(producto != null){
+									aniotemp.abril.planificado = producto.getCosto();
+								}else if(subproducto != null){
+									aniotemp.abril.planificado = subproducto.getCosto();
+								}else if(actividad != null){
+									aniotemp.abril.planificado = actividad.getCosto();
+								}
 								break;
 							case 4:
-								aniotemp.mayo.planificado = actividad.getCosto();
+								if(proyecto != null){
+									aniotemp.mayo.planificado = proyecto.getCosto();
+								}else if(componente != null){
+									aniotemp.mayo.planificado = componente.getCosto();
+								}else if(producto != null){
+									aniotemp.mayo.planificado = producto.getCosto();
+								}else if(subproducto != null){
+									aniotemp.mayo.planificado = subproducto.getCosto();
+								}else if(actividad != null){
+									aniotemp.mayo.planificado = actividad.getCosto();
+								}
 								break;
 							case 5:
-								aniotemp.junio.planificado = actividad.getCosto();
+								if(proyecto != null){
+									aniotemp.junio.planificado = proyecto.getCosto();
+								}else if(componente != null){
+									aniotemp.junio.planificado = componente.getCosto();
+								}else if(producto != null){
+									aniotemp.junio.planificado = producto.getCosto();
+								}else if(subproducto != null){
+									aniotemp.junio.planificado = subproducto.getCosto();
+								}else if(actividad != null){
+									aniotemp.junio.planificado = actividad.getCosto();
+								}
 								break;
 							case 6:
-								aniotemp.julio.planificado = actividad.getCosto();
+								if(proyecto != null){
+									aniotemp.julio.planificado = proyecto.getCosto();
+								}else if(componente != null){
+									aniotemp.julio.planificado = componente.getCosto();
+								}else if(producto != null){
+									aniotemp.julio.planificado = producto.getCosto();
+								}else if(subproducto != null){
+									aniotemp.julio.planificado = subproducto.getCosto();
+								}else if(actividad != null){
+									aniotemp.julio.planificado = actividad.getCosto();
+								}
 								break;
 							case 7:
-								aniotemp.agosto.planificado = actividad.getCosto();
+								if(proyecto != null){
+									aniotemp.agosto.planificado = proyecto.getCosto();
+								}else if(componente != null){
+									aniotemp.agosto.planificado = componente.getCosto();
+								}else if(producto != null){
+									aniotemp.agosto.planificado = producto.getCosto();
+								}else if(subproducto != null){
+									aniotemp.agosto.planificado = subproducto.getCosto();
+								}else if(actividad != null){
+									aniotemp.agosto.planificado = actividad.getCosto();
+								}
 								break;
 							case 8:
-								aniotemp.septiembre.planificado = actividad.getCosto();
+								if(proyecto != null){
+									aniotemp.septiembre.planificado = proyecto.getCosto();
+								}else if(componente != null){
+									aniotemp.septiembre.planificado = componente.getCosto();
+								}else if(producto != null){
+									aniotemp.septiembre.planificado = producto.getCosto();
+								}else if(subproducto != null){
+									aniotemp.septiembre.planificado = subproducto.getCosto();
+								}else if(actividad != null){
+									aniotemp.septiembre.planificado = actividad.getCosto();
+								}
 								break;
 							case 9:
-								aniotemp.octubre.planificado = actividad.getCosto();
+								if(proyecto != null){
+									aniotemp.octubre.planificado = proyecto.getCosto();
+								}else if(componente != null){
+									aniotemp.octubre.planificado = componente.getCosto();
+								}else if(producto != null){
+									aniotemp.octubre.planificado = producto.getCosto();
+								}else if(subproducto != null){
+									aniotemp.octubre.planificado = subproducto.getCosto();
+								}else if(actividad != null){
+									aniotemp.octubre.planificado = actividad.getCosto();
+								}
 								break;
 							case 10:
-								aniotemp.noviembre.planificado = actividad.getCosto();
+								if(proyecto != null){
+									aniotemp.noviembre.planificado = proyecto.getCosto();
+								}else if(componente != null){
+									aniotemp.noviembre.planificado = componente.getCosto();
+								}else if(producto != null){
+									aniotemp.noviembre.planificado = producto.getCosto();
+								}else if(subproducto != null){
+									aniotemp.noviembre.planificado = subproducto.getCosto();
+								}else if(actividad != null){
+									aniotemp.noviembre.planificado = actividad.getCosto();
+								}
 								break;
 							case 11:
-								aniotemp.diciembre.planificado = actividad.getCosto();
+								if(proyecto != null){
+									aniotemp.diciembre.planificado = proyecto.getCosto();
+								}else if(componente != null){
+									aniotemp.diciembre.planificado = componente.getCosto();
+								}else if(producto != null){
+									aniotemp.diciembre.planificado = producto.getCosto();
+								}else if(subproducto != null){
+									aniotemp.diciembre.planificado = subproducto.getCosto();
+								}else if(actividad != null){
+									aniotemp.diciembre.planificado = actividad.getCosto();
+								}
 								break;
 							}
 						}
@@ -860,8 +1100,6 @@ public class SInformacionPresupuestaria extends HttpServlet {
 						acumulacionCosto = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getId() : 3;
 					}else if(subproducto != null){
 						acumulacionCosto = subproducto.getAcumulacionCosto() != null ? subproducto.getAcumulacionCosto().getId() : 3;
-					}else{
-						
 					}
 					
 					Calendar cal = Calendar.getInstance();
