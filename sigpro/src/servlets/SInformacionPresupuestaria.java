@@ -1,5 +1,6 @@
 package servlets;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -155,7 +156,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				if(CMariaDB.connect()){
 						Connection conn = CMariaDB.getConnection();
 						ArrayList<Integer> componentes = InformacionPresupuestariaDAO.getEstructuraArbolComponentes(idPrestamo, conn);
-						
+
 						tempPrestamo.hijos = new ArrayList<String>();
 						for(Integer componente: componentes){
 							tempPrestamo.hijos.add(componente+",2");
@@ -185,7 +186,9 @@ public class SInformacionPresupuestaria extends HttpServlet {
 						ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoProyecto
 								(fuente, organismo, correlativo,anoInicial,anoFinal, conn);
 						
-						tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, null, null);
+						List<Date> fechaInicioFin = InformacionPresupuestariaDAO.getEstructuraArbolPrestamoFecha(idPrestamo, conn);
+						
+						tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, null, proyecto, null, null, null, null, fechaInicioFin);
 						
 						lstPrestamo.add(tempPrestamo);
 						
@@ -199,11 +202,13 @@ public class SInformacionPresupuestaria extends HttpServlet {
 							tempPrestamo.predecesorId = proyecto.getId();
 							tempPrestamo.objetoPredecesorTipo = 1;
 							
-							 presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, 
+							fechaInicioFin = InformacionPresupuestariaDAO.getEstructuraArbolComponentesFecha(idPrestamo, objComponente.getId(), conn);
+							
+							presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, 
 									anoInicial, anoFinal, objComponente.getPrograma(), objComponente.getSubprograma(), objComponente.getProyecto_1(), 
 									objComponente.getActividad(), objComponente.getObra(), conn);
 							
-							tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, null, null);
+							tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, null, null, objComponente, null, null, null, fechaInicioFin);
 							
 							ArrayList<Integer> productos = InformacionPresupuestariaDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
 							
@@ -234,12 +239,14 @@ public class SInformacionPresupuestaria extends HttpServlet {
 								tempPrestamo.nivel = 3;
 								tempPrestamo.predecesorId = objComponente.getId();
 								tempPrestamo.objetoPredecesorTipo = 2;
+								
+								fechaInicioFin = InformacionPresupuestariaDAO.getEstructuraArbolProductoFecha(idPrestamo, objComponente.getId(), objProducto.getId(), conn);
 
 								presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, 
 										anoInicial, anoFinal, objProducto.getPrograma(), objProducto.getSubprograma(), objProducto.getProyecto(), 
 										objProducto.getActividad(), objProducto.getObra(), conn);
 								
-								tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, null, null);
+								tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, null, null, null, objProducto, null, null, fechaInicioFin);
 								//lstPrestamo.add(tempPrestamo);
 								
 							
@@ -273,11 +280,13 @@ public class SInformacionPresupuestaria extends HttpServlet {
 									tempPrestamo.predecesorId = objProducto.getId();
 									tempPrestamo.objetoPredecesorTipo = 3;
 									
+									fechaInicioFin = InformacionPresupuestariaDAO.getEstructuraArbolSubProductoFecha(idPrestamo, objComponente.getId(), objProducto.getId(), objSubProducto.getId(), conn);
+									
 									presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, 
 											anoInicial, anoFinal, objSubProducto.getPrograma(), objSubProducto.getSubprograma(), objSubProducto.getProyecto(), 
 											objSubProducto.getActividad(), objSubProducto.getObra(), conn);
 									
-									tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, null, null);
+									tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, null, null, null, null, objSubProducto, null, fechaInicioFin);
 									lstPrestamo.add(tempPrestamo);
 									
 							
@@ -326,7 +335,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 												anoInicial, anoFinal, objActividad.getPrograma(), objActividad.getSubprograma(), objActividad.getProyecto(), 
 												objActividad.getActividad(), objActividad.getObra(), conn);
 										
-										tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, pagos, objActividad);
+										tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, pagos, null, null, null, null, objActividad, null);
 										lstPrestamo.add(tempPrestamo);
 										
 										
@@ -381,7 +390,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 											anoInicial, anoFinal, objActividad.getPrograma(), objActividad.getSubprograma(), objActividad.getProyecto(), 
 											objActividad.getActividad(), objActividad.getObra(), conn);
 									
-									tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, pagos, objActividad);
+									tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, pagos, null, null, null, null, objActividad, null);
 									
 									lstPrestamo.add(tempPrestamo);
 									
@@ -426,7 +435,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 										anoInicial, anoFinal, objActividad.getPrograma(), objActividad.getSubprograma(), objActividad.getProyecto(), 
 										objActividad.getActividad(), objActividad.getObra(), conn);
 								
-								tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, pagos, objActividad);
+								tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, pagos, null, null, null, null, objActividad, null);
 								lstPrestamo.add(tempPrestamo);
 								
 							} 
@@ -469,7 +478,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 									anoInicial, anoFinal, objActividad.getPrograma(), objActividad.getSubprograma(), objActividad.getProyecto(), 
 									objActividad.getActividad(), objActividad.getObra(), conn);
 							
-							tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, pagos, objActividad);
+							tempPrestamo = getPresupuesto(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo, pagos, null, null, null, null, objActividad, null);
 							
 							lstPrestamo.add(tempPrestamo);
 						
@@ -531,7 +540,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 	}
 	
 	private stprestamo getPresupuesto (ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo,
-			int anoInicial, int anoFinal, stprestamo prestamo, List<Pago> pagos, Actividad actividad){
+			int anoInicial, int anoFinal, stprestamo prestamo, List<Pago> pagos, Proyecto proyecto, Componente componente, Producto producto,
+			Subproducto subproducto, Actividad actividad, List<Date> fechasNoActividades){
 		
 		stanio[] anios = inicializarStanio(anoInicial, anoFinal);
 		if(presupuestoPrestamo.size() > 0){
@@ -600,64 +610,107 @@ public class SInformacionPresupuestaria extends HttpServlet {
 						if(ano == objprestamopresupuesto.get(12).intValue()){
 							switch(mes){
 							case 0:
-								aniotemp.enero.planificado = pago.getPago();
+								aniotemp.enero.planificado.add(pago.getPago());
 								break;
 							case 1:
-								aniotemp.febrero.planificado = pago.getPago();
+								aniotemp.febrero.planificado.add(pago.getPago());
 								break;
 							case 2:
-								aniotemp.marzo.planificado = pago.getPago();
+								aniotemp.marzo.planificado.add(pago.getPago());
 								break;
 							case 3:
-								aniotemp.abril.planificado = pago.getPago();
+								aniotemp.abril.planificado.add(pago.getPago());
 								break;
 							case 4:
-								aniotemp.mayo.planificado = pago.getPago();
+								aniotemp.mayo.planificado.add(pago.getPago());
 								break;
 							case 5:
-								aniotemp.junio.planificado = pago.getPago();
+								aniotemp.junio.planificado.add(pago.getPago());
 								break;
 							case 6:
-								aniotemp.julio.planificado = pago.getPago();
+								aniotemp.julio.planificado.add(pago.getPago());
 								break;
 							case 7:
-								aniotemp.agosto.planificado = pago.getPago();
+								aniotemp.agosto.planificado.add(pago.getPago());
 								break;
 							case 8:
-								aniotemp.septiembre.planificado = pago.getPago();
+								aniotemp.septiembre.planificado.add(pago.getPago());
 								break;
 							case 9:
-								aniotemp.octubre.planificado = pago.getPago();
+								aniotemp.octubre.planificado.add(pago.getPago());
 								break;
 							case 10:
-								aniotemp.noviembre.planificado = pago.getPago();
+								aniotemp.noviembre.planificado.add(pago.getPago());
 								break;
 							case 11:
-								aniotemp.diciembre.planificado = pago.getPago();
+								aniotemp.diciembre.planificado.add(pago.getPago());
 								break;
 							}
 						}
 					}
-				}else if(actividad != null){
-					Integer acumulacionCosto = actividad.getAcumulacionCosto() != null ? actividad.getAcumulacionCosto().getId() : 0;
+				}else{
+					Integer acumulacionCosto = 0;
+					String[] fechaInicioSplit = new String[2];
+					String[] fechaFinSplit = new String[2];
+					Date fechaInicial = new Date();;
+					Date fechaFin = new Date();
+					try{
+						if(proyecto != null){
+							acumulacionCosto = proyecto.getAcumulacionCosto() != null ? proyecto.getAcumulacionCosto().getId() : 3;
+							fechaInicioSplit = Utils.formatDate(fechasNoActividades.get(0)).split("/");
+							fechaFinSplit = Utils.formatDate(fechasNoActividades.get(1)).split("/");
+							fechaInicial = fechasNoActividades.get(0);
+							fechaFin = fechasNoActividades.get(1);
+						}else if(componente != null){
+							acumulacionCosto = componente.getAcumulacionCosto() != null ? componente.getAcumulacionCosto().getId() : 3;
+							fechaInicioSplit = Utils.formatDate(fechasNoActividades.get(0)).split("/");
+							fechaFinSplit = Utils.formatDate(fechasNoActividades.get(1)).split("/");
+							fechaInicial = fechasNoActividades.get(0);
+							fechaFin = fechasNoActividades.get(1);
+						}else if(producto != null){
+							acumulacionCosto = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getId() : 3;
+							fechaInicioSplit = Utils.formatDate(fechasNoActividades.get(0)).split("/");
+							fechaFinSplit = Utils.formatDate(fechasNoActividades.get(1)).split("/");
+							fechaInicial = fechasNoActividades.get(0);
+							fechaFin = fechasNoActividades.get(1);
+						}else if(subproducto != null){
+							acumulacionCosto = subproducto.getAcumulacionCosto() != null ? subproducto.getAcumulacionCosto().getId() : 3;
+							fechaInicioSplit = Utils.formatDate(fechasNoActividades.get(0)).split("/");
+							fechaFinSplit = Utils.formatDate(fechasNoActividades.get(1)).split("/");
+							fechaInicial = fechasNoActividades.get(0);
+							fechaFin = fechasNoActividades.get(1);
+						}else if(actividad != null){
+							acumulacionCosto = actividad.getAcumulacionCosto() != null ? actividad.getAcumulacionCosto().getId() : 3;	
+							fechaInicioSplit = Utils.formatDate(actividad.getFechaInicio()).split("/");
+							fechaFinSplit = Utils.formatDate(actividad.getFechaFin()).split("/");
+							fechaInicial = actividad.getFechaInicio();
+							fechaFin = actividad.getFechaFin();
+						}
+					}
+					catch(Exception e){
+						
+					}
+					
 					Calendar cal = Calendar.getInstance();
 					int mes = 0;
 					int ano = 0;
 					if(acumulacionCosto == 1){
-						cal.setTime(actividad.getFechaInicio());
-						mes = cal.get(Calendar.MONTH);
-						ano = cal.get(Calendar.YEAR);
-					}else if(acumulacionCosto == 2){
-						String[] fechaInicioSplit = Utils.formatDate(actividad.getFechaInicio()).split("/");
-						String[] fechaFinSplit = Utils.formatDate(actividad.getFechaFin()).split("/");
+						if(actividad != null){
+							cal.setTime(actividad.getFechaInicio());
+							mes = cal.get(Calendar.MONTH);
+							ano = cal.get(Calendar.YEAR);
+						}else{
+							cal.setTime(fechaInicial);
+							mes = cal.get(Calendar.MONTH);
+							ano = cal.get(Calendar.YEAR);
+						}
 						
+					}else if(acumulacionCosto == 2){
 						List<Double> diasPorcentual = new ArrayList<Double>();
 						
 						if(fechaInicioSplit[1] != fechaFinSplit[1]){
 							try {
-								Date fechaInicial = actividad.getFechaInicio();
-								Date fechaFin = actividad.getFechaFin();
-								
+
 								long diferenciaEn_ms = fechaFin.getTime() - fechaInicial.getTime();
 								long diasTotales = diferenciaEn_ms / (1000 * 60 * 60 * 24);
 							    int d = 0;
@@ -741,9 +794,15 @@ public class SInformacionPresupuestaria extends HttpServlet {
 							}
 						}						
 					}else if(acumulacionCosto ==3){
-						cal.setTime(actividad.getFechaFin());
-						mes = cal.get(Calendar.MONTH);
-						ano = cal.get(Calendar.YEAR);
+						if(actividad != null){
+							cal.setTime(actividad.getFechaFin());
+							mes = cal.get(Calendar.MONTH);
+							ano = cal.get(Calendar.YEAR);
+						}else{
+							cal.setTime(fechaFin);
+							mes = cal.get(Calendar.MONTH);
+							ano = cal.get(Calendar.YEAR);
+						}
 					}
 					
 					if(acumulacionCosto != 2){
@@ -788,7 +847,32 @@ public class SInformacionPresupuestaria extends HttpServlet {
 							}
 						}
 					}
-				}				
+				}
+				
+				Integer acumulacionCosto = 0;
+				if(actividad == null && fechasNoActividades != null){
+					
+					if(proyecto != null){
+						acumulacionCosto = proyecto.getAcumulacionCosto() != null ? proyecto.getAcumulacionCosto().getId() : 3;
+					}else if(componente != null){
+						acumulacionCosto = componente.getAcumulacionCosto() != null ? componente.getAcumulacionCosto().getId() : 3;
+					}else if(producto != null){
+						acumulacionCosto = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getId() : 3;
+					}else if(subproducto != null){
+						acumulacionCosto = subproducto.getAcumulacionCosto() != null ? subproducto.getAcumulacionCosto().getId() : 3;
+					}else{
+						
+					}
+					
+					Calendar cal = Calendar.getInstance();
+					int mes = 0;
+					int ano = 0;
+				}else if(actividad != null){
+					acumulacionCosto = actividad.getAcumulacionCosto() != null ? actividad.getAcumulacionCosto().getId() : 0;
+					Calendar cal = Calendar.getInstance();
+					int mes = 0;
+					int ano = 0;
+				}			
 				
 				//int pos = anoFinal- objprestamopresupuesto.get(12).intValue();
 				
