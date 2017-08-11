@@ -2,6 +2,7 @@ package dao;
  
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,6 +11,44 @@ import java.util.ArrayList;
 import utilities.CLogger;
  
 public class InformacionPresupuestariaDAO {
+	public static ArrayList<Date> getEstructuraArbolPrestamoFecha(int idPrestamo, Connection conn){
+    	ArrayList<Date> ret = new ArrayList<Date>();
+        try {
+            if( !conn.isClosed() ){
+                try{
+                    String str_Query = String.join(" ","select min(fecha_inicio) fecha_inicio, max(fecha_fin) fecha_fin from estructura_arbol",
+                            "where prestamo = ? ",
+                            "and componente  is not null",
+                            "and producto  is not null",
+                            "and subproducto  is not null",
+                            "group by componente",
+                            "order by 2;");
+                    
+                    PreparedStatement pstm  = conn.prepareStatement(str_Query);
+                    pstm.setInt(1, idPrestamo);
+                    ResultSet rs = pstm.executeQuery();
+                    
+                    while(rs!=null && rs.next()){
+                       ret.add(rs.getDate("fecha_inicio") );
+                       ret.add(rs.getDate("fecha_fin"));
+                    }
+                    
+                    rs.close();
+                    pstm.close();
+                }
+                catch(Throwable e){
+                    e.printStackTrace();
+                    CLogger.write("1", InformacionPresupuestariaDAO.class, e);
+                }
+            }
+        } catch ( SQLException e) {
+            e.printStackTrace();
+        }
+        return ret;
+        
+    }
+	
+	
     public static ArrayList<Integer> getEstructuraArbolComponentes(int idPrestamo, Connection conn){
     	ArrayList<Integer> ret = new ArrayList<Integer>();
         try {
@@ -27,6 +66,42 @@ public class InformacionPresupuestariaDAO {
                     
                     while(rs!=null && rs.next()){
                        ret.add(rs.getInt("componente") );
+                    }
+                    
+                    rs.close();
+                    pstm.close();
+                }
+                catch(Throwable e){
+                    e.printStackTrace();
+                    CLogger.write("1", InformacionPresupuestariaDAO.class, e);
+                }
+            }
+        } catch ( SQLException e) {
+            e.printStackTrace();
+        }
+        return ret;
+        
+    }
+    
+    public static ArrayList<Date> getEstructuraArbolComponentesFecha(int idPrestamo, int idComponente, Connection conn){
+    	ArrayList<Date> ret = new ArrayList<Date>();
+        try {
+            if( !conn.isClosed() ){
+                try{
+                    String str_Query = String.join(" ","select min(fecha_inicio) fecha_inicio, max(fecha_fin) fecha_fin from estructura_arbol",
+                            "where prestamo = ? ",
+                            "and componente = ?",
+                            "group by componente",
+                            "order by 2;");
+                    
+                    PreparedStatement pstm  = conn.prepareStatement(str_Query);
+                    pstm.setInt(1, idPrestamo);
+                    pstm.setInt(2, idComponente);
+                    ResultSet rs = pstm.executeQuery();
+                    
+                    while(rs!=null && rs.next()){
+                       ret.add(rs.getDate("fecha_inicio") );
+                       ret.add(rs.getDate("fecha_fin"));
                     }
                     
                     rs.close();
@@ -82,6 +157,46 @@ public class InformacionPresupuestariaDAO {
         return ret;
     }
     
+    public static ArrayList<Date> getEstructuraArbolProductoFecha(int idPrestamo, int idComponente, int idProducto, Connection conn){
+    	ArrayList<Date> ret = new ArrayList<Date>();
+        try {
+            if( !conn.isClosed()){
+                try{
+                    String str_Query = String.join(" ","select producto, min(fecha_inicio) fecha_inicio, max(fecha_fin) fecha_fin ",
+                            "from estructura_arbol",
+                            "where prestamo = ? ",
+                            "and componente = ? ",
+                            "and producto = ?",
+                            "group by producto",
+                            "order by 2");
+                    
+                    PreparedStatement pstm  = conn.prepareStatement(str_Query);
+                    pstm.setInt(1, idPrestamo);
+                    pstm.setInt(2, idComponente);
+                    pstm.setInt(3, idProducto);
+                    ResultSet rs = pstm.executeQuery();
+                   
+                    
+                    while(rs!=null && rs.next()){
+                        ret.add(rs.getDate("fecha_inicio"));
+                        ret.add(rs.getDate("fecha_fin"));
+                    }
+                    
+                    rs.close();
+                    pstm.close();
+                }
+                catch(Throwable e){
+                    e.printStackTrace();
+                    CLogger.write("2", InformacionPresupuestariaDAO.class, e);
+                }
+                
+            }
+        } catch (SQLException e) {
+            CLogger.write("2", InformacionPresupuestariaDAO.class, e);
+        }
+        return ret;
+    }
+    
     public static ArrayList<Integer> getEstructuraArbolSubProducto(int idPrestamo,int idComponente, int idProducto, Connection conn){
     	ArrayList<Integer> ret = new ArrayList<Integer>();
         try {
@@ -102,6 +217,46 @@ public class InformacionPresupuestariaDAO {
                     
                     while(rs!=null && rs.next()){
                        ret.add(rs.getInt("subproducto"));
+                    }
+                    
+                    rs.close();
+                    pstm.close();
+                }
+                catch(Throwable e){
+                    e.printStackTrace();
+                    CLogger.write("3", InformacionPresupuestariaDAO.class, e);
+                }            
+            }
+        } catch (SQLException e) {
+            CLogger.write("3", InformacionPresupuestariaDAO.class, e);
+        }
+        
+        
+        return ret;
+    }
+    
+    public static ArrayList<Date> getEstructuraArbolSubProductoFecha(int idPrestamo,int idComponente, int idProducto, int idSubProducto, Connection conn){
+    	ArrayList<Date> ret = new ArrayList<Date>();
+        try {
+            if( !conn.isClosed() ){
+                try{
+                    String str_Query = String.join(" ","select min(fecha_inicio) fecha_inicio, max(fecha_fin) fecha_fin from estructura_arbol",
+                            "where prestamo = ? ",
+                            "and componente = ? ",
+                            "and producto = ? ",
+                            "and subproducto = ?",
+                            "group by subproducto",
+                            "order by 2;");
+                    PreparedStatement pstm  = conn.prepareStatement(str_Query);
+                    pstm.setInt(1, idPrestamo);
+                    pstm.setInt(2, idComponente);
+                    pstm.setInt(3, idProducto);
+                    pstm.setInt(4, idSubProducto);
+                    ResultSet rs = pstm.executeQuery();
+                    
+                    while(rs!=null && rs.next()){
+                       ret.add(rs.getDate("fecha_inicio"));
+                       ret.add(rs.getDate("fecha_fin"));
                     }
                     
                     rs.close();

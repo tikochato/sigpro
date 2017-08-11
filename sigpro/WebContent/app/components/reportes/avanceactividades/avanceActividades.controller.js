@@ -1,4 +1,4 @@
-var app = angular.module('avanceActividadesController',['ngAnimate', 'ngTouch']);
+var app = angular.module('avanceActividadesController',['ngAnimate', 'ngTouch','smart-table']);
 
 app.filter('calculatePercentage', function () {
 	  return function (input, resultField, row) {
@@ -12,8 +12,12 @@ app.filter('calculatePercentage', function () {
 app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants',
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants){
 		var mi = this;
-		mi.mostrarcargando = false;
-		
+		mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth);
+		mi.tamanoSemaforo = mi.tamanoPantalla * 0.01;
+		mi.tamanoNombres = (mi.tamanoPantalla - mi.tamanoSemaforo) * 0.35;
+		mi.tamanoColPorcentajes = (mi.tamanoPantalla - mi.tamanoNombres) / 4;
+		mi.mostrarCargando = false;
+		mi.mostrardiv=false;
 		mi.totalActividades = 0;
 		mi.totalActividadesCompletadas = 0;
 		mi.totalActividadesSinIniciar = 0;
@@ -59,12 +63,13 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		mi.generar = function(){
 			if(mi.prestamo.value != 0){
 				if(mi.fechaCorte != null){
+					mi.mostrardiv=true;
 					mi.rowCollectionActividades = [];
 					mi.rowCollectionHitos = [];
-					mi.rowCollectionProductos = [];
+					mi.rowProductos = [];
 					mi.displayedCollectionActividades = [];
 					mi.displayedCollectionHitos = [];
-					mi.displayedCollectionProductos = [];
+					mi.displayedProductos = [];
 					
 					mi.totalActividades = 0;
 					mi.totalActividadesCompletadas = 0;
@@ -79,7 +84,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 					
 					mi.totalProductos = 0;
 					
-					mi.mostrarcargando = true;
+					mi.mostrarCargando = true;
 					$http.post('/SAvanceActividades', {
 						accion: 'getAvance',
 						idPrestamo: mi.prestamo.value,
@@ -113,17 +118,29 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 							}
 
 							if(response.productos != undefined){
-								mi.rowCollectionProductos = response.productos;
-								mi.displayedCollectionProductos = [].concat(mi.rowCollectionProductos);	
+								mi.rowProductos = response.productos;
+								mi.displayedProductos = [].concat(mi.rowProductos);	
 							}
 							
 							mi.totalProductos = response.totalProductos;
 							
-							mi.mostrarcargando = false;
+							mi.mostrarCargando = false;
 						}else
-							mi.mostrarcargando = false;
+							mi.mostrarCargando = false;
 					});
 				}
 			}
+		}
+		
+		mi.obtenerColor = function(row){
+			var style={}
+			if(row.completadas >= 0 && row.completadas <= 40){
+				style.color='red'
+			}else if(row.completadas > 40 && row.completadas <= 60){
+				style.color='yellow'
+			}else if(row.completadas > 60 && row.completadas <= 100){
+				style.color='green'
+			}
+			return style;
 		}
 }]);

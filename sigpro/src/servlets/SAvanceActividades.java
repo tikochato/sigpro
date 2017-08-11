@@ -67,10 +67,10 @@ public class SAvanceActividades extends HttpServlet {
 	
 	class stAvance{
 		String nombre;
-		String sinIniciar;
-		String proceso;
-		String completadas;
-		String retrasadas;
+		double sinIniciar;
+		double proceso;
+		double completadas;
+		double retrasadas;
 		int tipo;
 	}
 	
@@ -183,10 +183,10 @@ public class SAvanceActividades extends HttpServlet {
 					
 					temp = new stAvance();
 					temp.nombre = proyecto.getNombre();
-					temp.sinIniciar = df2.format(totalSinIniciar);
-					temp.proceso = df2.format(totalEnProceso);
-					temp.completadas = df2.format(totalCompletadas);
-					temp.retrasadas = df2.format(totalRetrasadas);
+					temp.sinIniciar = Double.valueOf(df2.format(totalSinIniciar));
+					temp.proceso = Double.valueOf(df2.format(totalEnProceso));
+					temp.completadas = Double.valueOf(df2.format(totalCompletadas));
+					temp.retrasadas = Double.valueOf(df2.format(totalRetrasadas));
 					temp.tipo = 2;
 					
 					listaResult.add(temp);
@@ -259,9 +259,9 @@ public class SAvanceActividades extends HttpServlet {
 					
 					temp = new stAvance();
 					temp.nombre = proyecto.getNombre();
-					temp.sinIniciar = df2.format(totalSinIniciar);
-					temp.completadas = df2.format(totalCompletadas);
-					temp.retrasadas = df2.format(totalRetrasadas);
+					temp.sinIniciar = Double.valueOf(df2.format(totalSinIniciar));
+					temp.completadas = Double.valueOf(df2.format(totalCompletadas));
+					temp.retrasadas = Double.valueOf(df2.format(totalRetrasadas));
 					temp.tipo = 2;
 					
 					listaResult.add(temp);
@@ -340,10 +340,10 @@ public class SAvanceActividades extends HttpServlet {
 							
 							temp = new stAvance();
 							temp.nombre = producto.getNombre();
-							temp.sinIniciar = df2.format(totalSinIniciar);
-							temp.proceso = df2.format(totalEnProceso);
-							temp.completadas = df2.format(totalCompletadas);
-							temp.retrasadas = df2.format(totalRetrasadas);
+							temp.sinIniciar = Double.valueOf(df2.format(totalSinIniciar));
+							temp.proceso = Double.valueOf(df2.format(totalEnProceso));
+							temp.completadas = Double.valueOf(df2.format(totalCompletadas));
+							temp.retrasadas = Double.valueOf(df2.format(totalRetrasadas));
 							temp.tipo = 2;
 							
 							listaResult.add(temp);
