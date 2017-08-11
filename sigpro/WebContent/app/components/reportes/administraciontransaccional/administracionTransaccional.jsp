@@ -19,7 +19,7 @@
 	   		<div style="width: 100%; height: 15%">
 	   			<div class="row">
 	   				<div class="panel panel-default">
-	  					<div class="panel-heading"><h3>Adminsitración Transaccional</h3></div>
+	  					<div class="panel-heading"><h3>Administración Transaccional</h3></div>
 					</div>
 				</div>
 	   			<br>
