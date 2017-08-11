@@ -228,13 +228,8 @@
 						</div>
 						
 						<div class="form-group" >
-					       <input type="number" class="inputText" ng-model="actividadc.actividad.costoReal" ng-value="actividadc.actividad.costoReal" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
-					       <label for="iprog" class="floating-label">Costo Real</label>
-						</div>
-						
-						<div class="form-group" >
 						    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="actividadc.actividad.acumulacionCostoNombre" ng-value="actividadc.actividad.acumulacionCostoNombre" 
-							ng-click="actividadc.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+							ng-click="actividadc.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="actividadc.actividad.costo > 0"/>
 							<span class="label-icon" ng-click="actividadc.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
 							<label for="campo3" class="floating-label">* Acumulación Costo</label>
 						</div>	

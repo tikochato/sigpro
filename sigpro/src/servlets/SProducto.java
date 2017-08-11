@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
@@ -28,6 +29,7 @@ import dao.ProductoDAO;
 import dao.ProductoPropiedadDAO;
 import dao.ProductoPropiedadValorDAO;
 import dao.ProductoUsuarioDAO;
+import pojo.AcumulacionCosto;
 import pojo.Componente;
 import pojo.Producto;
 import pojo.ProductoPropiedad;
@@ -69,7 +71,9 @@ public class SProducto extends HttpServlet {
 		String latitud;
 		String longitud;
 		Integer peso;
-		
+		BigDecimal costo;
+		Integer acumulacionCosto;
+		String acumulacionCostoNombre;
 	}
 	
 	class stdatadinamico {
@@ -142,7 +146,9 @@ public class SProducto extends HttpServlet {
 				temp.latitud = producto.getLatitud();
 				temp.longitud = producto.getLongitud();
 				temp.peso = producto.getPeso();
-				
+				temp.costo = producto.getCosto();
+				temp.acumulacionCosto = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getId() : null;
+				temp.acumulacionCostoNombre = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getNombre() : null;
 
 				if (producto.getComponente() != null) {
 					temp.idComponente = producto.getComponente().getId();
@@ -192,7 +198,14 @@ public class SProducto extends HttpServlet {
 				String latitud = parametro.get("latitud");
 				String longitud = parametro.get("longitud");
 				Integer peso = Utils.String2Int(parametro.get("peso"), null);
+				BigDecimal costo = new BigDecimal(parametro.get("costo"));
+				Integer acumulacionCostoid = Utils.String2Int(parametro.get("acumulacionCosto"), null);
 				
+				AcumulacionCosto acumulacionCosto = null;
+				if(acumulacionCostoid != 0){
+					acumulacionCosto = new AcumulacionCosto();
+					acumulacionCosto.setId(Utils.String2Int(parametro.get("acumulacionCosto")));
+				}
 				
 				Gson gson = new Gson();
 			
@@ -211,9 +224,9 @@ public class SProducto extends HttpServlet {
 				
 				if (esnuevo){
 					
-					producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, descripcion, 
+					producto = new Producto(acumulacionCosto, componente, null, unidadEjecutora, nombre, descripcion, 
 							 usuario, null, new DateTime().toDate(), null, 1
-							, snip, programa, subprograma, proyecto_, actividad, obra, fuente, latitud, longitud,null,null,null,null);
+							, snip, programa, subprograma, proyecto_, actividad, obra, fuente, latitud, longitud,null,costo,null,null,null);
 					
 				}else{
 					producto = ProductoDAO.getProductoPorId(id);
@@ -234,6 +247,8 @@ public class SProducto extends HttpServlet {
 					producto.setLatitud(latitud);
 					producto.setLongitud(longitud);
 					producto.setPeso(peso);
+					producto.setCosto(costo);
+					producto.setAcumulacionCosto(acumulacionCosto);
 				}
 				ret = ProductoDAO.guardarProducto(producto);
 				
@@ -324,7 +339,9 @@ public class SProducto extends HttpServlet {
 					temp.latitud = producto.getLatitud();
 					temp.longitud = producto.getLongitud();
 					temp.peso = producto.getPeso();
-					
+					temp.costo = producto.getCosto();
+					temp.acumulacionCosto = producto.getAcumulacionCosto().getId();
+					temp.acumulacionCostoNombre = producto.getAcumulacionCosto().getNombre();
 
 					if (producto.getComponente() != null) {
 						temp.idComponente = producto.getComponente().getId();
@@ -395,7 +412,9 @@ public class SProducto extends HttpServlet {
 				temp.latitud = producto.getLatitud();
 				temp.longitud = producto.getLongitud();
 				temp.peso = producto.getPeso();
-				
+				temp.costo = producto.getCosto();
+				temp.acumulacionCosto = producto.getAcumulacionCosto().getId();
+				temp.acumulacionCostoNombre = producto.getAcumulacionCosto().getNombre();
 
 				if (producto.getComponente() != null) {
 					temp.idComponente = producto.getComponente().getId();
@@ -454,7 +473,9 @@ public class SProducto extends HttpServlet {
 				temp.latitud = producto.getLatitud();
 				temp.longitud = producto.getLongitud();
 				temp.peso = producto.getPeso();
-				
+				temp.costo = producto.getCosto();
+				temp.acumulacionCosto = producto.getAcumulacionCosto().getId();
+				temp.acumulacionCostoNombre = producto.getAcumulacionCosto().getNombre();
 
 				if (producto.getComponente() != null) {
 					temp.idComponente = producto.getComponente().getId();

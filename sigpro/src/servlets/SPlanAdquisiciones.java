@@ -34,18 +34,18 @@ import com.google.gson.reflect.TypeToken;
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
 import dao.InformacionPresupuestariaDAO;
-import dao.PagoDAO;
 import dao.PlanAdquisicionesDAO;
 import dao.PlanAdquisicionesDetalleDAO;
+import dao.PrestamoDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.CategoriaAdquisicion;
 import pojo.Componente;
-import pojo.Pago;
 import pojo.PlanAdquisiciones;
 import pojo.PlanAdquisicionesDetalle;
+import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
@@ -137,6 +137,10 @@ public class SPlanAdquisiciones extends HttpServlet {
 			Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"), null);
 			Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
 			
+			Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(idPrestamo, 1);
+			String fechaSuscripcion = Utils.formatDate(prestamo.getFechaSuscripcion());
+			String fechaCierre = Utils.formatDate(prestamo.getFechaCierreOrigianlUe());
+			
 			PlanAdquisiciones planAdquisicion = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(1, proyecto.getId());
 			idPlanAdquisiciones = planAdquisicion != null ? planAdquisicion.getId() : null;
 			
@@ -203,6 +207,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 				}
 				
 				stplanadquisiciones padre = null;
+				
 				int nivel = 0;
 				
 				lstprestamo.add(tempPrestamo);
@@ -350,7 +355,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 							
 							lstprestamo.add(tempPrestamo);
 							
-							//actividades de subproducto
+							//actividades de sub producto
 							ArrayList<ArrayList<Integer>> actividadesSubProducto = InformacionPresupuestariaDAO.getEstructuraArbolSubProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(),objSubProducto.getId(), conn);
 							
 							tempPrestamo.hijos = new ArrayList<String>();
@@ -384,8 +389,6 @@ public class SPlanAdquisiciones extends HttpServlet {
 									padre.hijos.add(actividad.get(0)+",5");	
 									
 									tempPrestamo.predecesorId = padre.objetoId;
-									
-									//tempPrestamo.predecesorId = objActividad.getId();
 									tempPrestamo.objetoPredecesorTipo = 5;
 									
 									nivel = actividad.get(1);
@@ -452,8 +455,6 @@ public class SPlanAdquisiciones extends HttpServlet {
 								padre.hijos.add(actividad.get(0)+",5");	
 								
 								tempPrestamo.predecesorId = padre.objetoId;
-								
-								//tempPrestamo.predecesorId = objActividad.getId();
 								tempPrestamo.objetoPredecesorTipo = 5;
 
 								nivel = actividad.get(1);
@@ -605,13 +606,12 @@ public class SPlanAdquisiciones extends HttpServlet {
 				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 		        response_text = String.join("", "\"proyecto\":",response_text);
-		        response_text = String.join("", "{\"success\":true,", response_text, "}");
+		        response_text = String.join("", "{\"success\":true,\"fechaSuscripcion\": \""+ fechaSuscripcion + "\", \"fechaCierre\": \"" + fechaCierre + "\",", response_text, "}");
 			}
 		}else if(accion.equals("guardarPlan")){
 			try{
 				boolean result = false;
 				String data = map.get("data");
-				//Map<String,Object[]> informacion = new HashMap<>();
 				String[] datos = data.split("°");
 				
 				for(String str1: datos){
@@ -641,9 +641,20 @@ public class SPlanAdquisiciones extends HttpServlet {
 					}
 						
 					String unidadMedida = row[5] == null ? "" : row[5]; 
+					
 					Integer cantidad = Utils.String2Int(row[6]);
 					BigDecimal costo = new BigDecimal(row[7]);
 					BigDecimal total = new BigDecimal(row[8]);
+					
+					if(objetoTipo == 5 && !total.equals(BigDecimal.ZERO) ){
+						Actividad actividad = ActividadDAO.getActividadPorId(objetoId, usuario);
+						//Costo costoPlanificado = CostoDAO.getCostoPorObjetoId(actividad.getId(), 5);
+						actividad.setCosto(total);
+						actividad.setUsuarioActualizo(usuario);
+						actividad.setFechaActualizacion(new Date());
+						ActividadDAO.guardarActividad(actividad);
+					}
+					
 					Date planificadoDocs = Utils.dateFromString(row[9]);
 					Date realDocs = Utils.dateFromString(row[10]);
 					Date planificadoLanzamiento = Utils.dateFromString(row[11]);
@@ -688,6 +699,9 @@ public class SPlanAdquisiciones extends HttpServlet {
 					}
 					
 					result = PlanAdquisicionesDetalleDAO.guardarPlanAdquisicion(plan);
+					
+					if(!result)
+						break;
 				}
 				
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"), "}");

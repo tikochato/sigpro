@@ -212,12 +212,84 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			mi.estiloCabecera = "width:"+ mi.tamanoCabecera + "px;min-width:" + mi.tamanoCabecera +"px; max-width:"+ mi.tamanoCabecera + "px; text-align: center;";
 		}
 		
+		mi.obtenerEntidad = function(objetoId, objetoTipo){
+			for (x in mi.data){
+				if (objetoId == mi.data[x].objeto_id && objetoTipo == mi.data[x].objeto_tipo){
+					return mi.data[x];
+				}
+			}
+		}
+		
+		mi.calcularCostos = function (row){
+			if(row.hijos != undefined && row.hijos.length > 0){
+				for(x in row.hijos){
+					var hijo = mi.obtenerEntidad(row.hijos[x].split(',')[0],row.hijos[x].split(',')[1]);
+					var costossanios = [];
+					costosanios = mi.calcularCostosRecursivo(hijo);
+					if(costosanios != undefined && costosanios.length > 0){
+						for(h in row.anios){
+							row.anios[h].enero.planificado += costosanios[h].enero != null ? costosanios[h].enero : null;
+							row.anios[h].febrero.planificado += costosanios[h].febrero != null ? costosanios[h].febrero : 0;
+							row.anios[h].marzo.planificado += costosanios[h].marzo != null ? costosanios[h].marzo : 0;
+							row.anios[h].abril.planificado += costosanios[h].abril != null ? costosanios[h].abril : 0;
+							row.anios[h].mayo.planificado += costosanios[h].mayo != null ? costosanios[h].mayo : 0;
+							row.anios[h].junio.planificado += costosanios[h].junio != null ? costosanios[h].junio : 0;
+							row.anios[h].julio.planificado += costosanios[h].julio != null ? costosanios[h].julio : 0;
+							row.anios[h].agosto.planificado += costosanios[h].agosto != null ? costosanios[h].agosto : 0;
+							row.anios[h].septiembre.planificado += costosanios[h].septiembre != null ? costosanios[h].septiembre : 0;
+							row.anios[h].octubre.planificado += costosanios[h].octubre != null ? costosanios[h].octubre : 0;
+							row.anios[h].noviembre.planificado += costosanios[h].noviembre != null ? costosanios[h].noviembre : 0;
+							row.anios[h].diciembre.planificado += costosanios[h].diciembre != null ? costosanios[h].diciembre : 0;
+						}
+					}
+				}
+			}
+		}
+		
+		mi.calcularCostosRecursivo = function (row){
+			if(row.hijos != undefined && row.hijos.length > 0){
+				for(y in row.hijos){
+					var hijo = mi.obtenerEntidad(row.hijos[y].split(',')[0],row.hijos[y].split(',')[1]);
+					var costosanios = [];
+					costosanios = mi.calcularCostosRecursivo(hijo);
+					if(costosanios != undefined && costosanios.length > 0){
+						for(h in row.anios){
+							row.anios[h].enero.planificado += costosanios[h].enero != null ? costosanios[h].enero : null;
+							row.anios[h].febrero.planificado += costosanios[h].febrero != null ? costosanios[h].febrero : 0;
+							row.anios[h].marzo.planificado += costosanios[h].marzo != null ? costosanios[h].marzo : 0;
+							row.anios[h].abril.planificado += costosanios[h].abril != null ? costosanios[h].abril : 0;
+							row.anios[h].mayo.planificado += costosanios[h].mayo != null ? costosanios[h].mayo : 0;
+							row.anios[h].junio.planificado += costosanios[h].junio != null ? costosanios[h].junio : 0;
+							row.anios[h].julio.planificado += costosanios[h].julio != null ? costosanios[h].julio : 0;
+							row.anios[h].agosto.planificado += costosanios[h].agosto != null ? costosanios[h].agosto : 0;
+							row.anios[h].septiembre.planificado += costosanios[h].septiembre != null ? costosanios[h].septiembre : 0;
+							row.anios[h].octubre.planificado += costosanios[h].octubre != null ? costosanios[h].octubre : 0;
+							row.anios[h].noviembre.planificado += costosanios[h].noviembre != null ? costosanios[h].noviembre : 0;
+							row.anios[h].diciembre.planificado += costosanios[h].diciembre != null ? costosanios[h].diciembre : 0;
+						}
+					}
+				}
+				var costos = [];
+				for(g in row.anios){
+					costos.push({enero : row.anios[g].enero.planificado, febrero : row.anios[g].febrero.planificado, marzo : row.anios[g].marzo.planificado,abril : row.anios[g].abril.planificado,mayo : row.anios[g].mayo.planificado,junio : row.anios[g].junio.planificado,agosto : row.anios[g].agosto.planificado,septiembre : row.anios[g].septiembre.planificado,octubre : row.anios[g].octubre.planificado,noviembre : row.anios[g].noviembre.planificado,diciembre : row.anios[g].diciembre.planificado});
+				}	
+				return costos;
+			}else{
+				var costos = [];
+				for(g in row.anios){
+					costos.push({enero : row.anios[g].enero.planificado, febrero : row.anios[g].febrero.planificado, marzo : row.anios[g].marzo.planificado,abril : row.anios[g].abril.planificado,mayo : row.anios[g].mayo.planificado,junio : row.anios[g].junio.planificado,agosto : row.anios[g].agosto.planificado,septiembre : row.anios[g].septiembre.planificado,octubre : row.anios[g].octubre.planificado,noviembre : row.anios[g].noviembre.planificado,diciembre : row.anios[g].diciembre.planificado});
+				}	
+				return costos;
+			}
+		}
+		
 		mi.cargarTabla = function(agrupacion) {			
 			var datos = {
 				accion : 'generarInforme',
 				idPrestamo: mi.prestamo.value,
 				anoInicial: mi.fechaInicio,
-				anoFinal: mi.fechaFin
+				anoFinal: mi.fechaFin,
+				t: (new Date()).getTime()
 			};
 		
 			mi.mostrarCargando = true;
@@ -227,26 +299,33 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 				if (response.data.success) {
 					mi.data = response.data.prestamo;
 					mi.totales = [];
+					
+					mi.calcularCostos(mi.data[0]);
+
 					 for (x in mi.data){
-						 var totalFinal = 0;
+						 var totalFinalPlanificado = 0;
+						 var totalFinalReal = 0;
 						 var fila = [];
 						 for(a in mi.data[x].anios){
-							 var totalAnual = 0;
+							 var totalAnualPlanificado = 0;
+							 var totalAnualReal = 0;
 							 var anio = mi.data[x].anios[a];
 							 for (m in anio){
 								 if(m != "anio"){
-									 totalAnual += anio[m];
+									 totalAnualPlanificado += isNaN(anio[m].planificado) ? 0 : anio[m].planificado;
+									 totalAnualReal += isNaN(anio[m].real) ? 0 : anio[m].real;
 								 }
 							 }
-							 totalFinal += totalAnual;
-							 var tot = {"valor": totalAnual};
+							 totalFinalPlanificado += totalAnualPlanificado;
+							 totalFinalReal += totalAnualReal;
+							 var tot = {"valor": {"planificado": totalFinalPlanificado, "real": totalFinalReal}};
 							 fila.push(tot);
 						 }
-						 var tot = {"valor": totalFinal};
+						 var tot = {"valor": {"planificado": totalFinalPlanificado, "real": totalFinalReal}};
 						 fila.push(tot);
 						 var tot = {"anio": fila};
 						 mi.totales.push(tot);
-					 }
+					}
 					mi.renderizaTabla();
 					mi.mostrarCargando = false;
 					mi.mostrarDescargar = true;

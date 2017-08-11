@@ -266,9 +266,9 @@
 								<tbody class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo>
 							      	<tr ng-repeat="item in controller.data" style="">
 								      		<td ng-repeat="posicion in controller.columnastotales track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}">
-								      			<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{controller.getPlanificado($parent.$index,$index) | formatoMillones : controller.enMillones}}</span>
+								      			<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{controller.getPlanificado($parent.$index,$index).planificado | formatoMillones : controller.enMillones}}</span>
 								      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real && controller.getPlanificado($parent.$index,$index)" > | </span>
-								      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{controller.getPlanificado($parent.$index,$index) | formatoMillones : controller.enMillones}}</span>
+								      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{controller.getPlanificado($parent.$index,$index).real | formatoMillones : controller.enMillones}}</span>
 								      		</td>
 							      	</tr>
 								</tbody>
@@ -289,9 +289,9 @@
 							<tbody class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')" scrollespejo tot="{{mi.totales.length}}">
 									<tr ng-repeat="totales in controller.totales ">
 										<td ng-repeat="total in totales.anio" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
-											<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{total.valor | formatoMillones : controller.enMillones}}</span>
+											<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{total.valor.planificado | formatoMillones : controller.enMillones}}</span>
 							      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real" > | </span>
-							      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{total.valor | formatoMillones : controller.enMillones}}</span>
+							      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{total.valor.real | formatoMillones : controller.enMillones}}</span>
 										</td>
 							      	</tr>
 								</tbody>
