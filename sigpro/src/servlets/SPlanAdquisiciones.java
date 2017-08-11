@@ -645,10 +645,33 @@ public class SPlanAdquisiciones extends HttpServlet {
 					Integer cantidad = Utils.String2Int(row[6]);
 					BigDecimal costo = new BigDecimal(row[7]);
 					BigDecimal total = new BigDecimal(row[8]);
-					
-					if(objetoTipo == 5 && !total.equals(BigDecimal.ZERO) ){
+
+					if(objetoTipo == 1 && !total.equals(BigDecimal.ZERO)){
+						Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId, usuario);
+						proyecto.setCosto(total);
+						proyecto.setUsuarioActualizo(usuario);
+						proyecto.setFechaActualizacion(new Date());
+						ProyectoDAO.guardarProyecto(proyecto);
+					}else if(objetoTipo == 2 && !total.equals(BigDecimal.ZERO)){
+						Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
+						componente.setCosto(total);
+						componente.setUsuarioActualizo(usuario);
+						componente.setFechaActualizacion(new Date());
+						ComponenteDAO.guardarComponente(componente);
+					}else if(objetoTipo == 3 && !total.equals(BigDecimal.ZERO)){
+						Producto producto = ProductoDAO.getProductoPorId(objetoId,usuario);
+						producto.setCosto(total);
+						producto.setUsuarioActualizo(usuario);
+						producto.setFechaActualizacion(new Date());
+						ProductoDAO.guardarProducto(producto);
+					}else if(objetoTipo == 4 && !total.equals(BigDecimal.ZERO)){
+						Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId, usuario);
+						subproducto.setCosto(total);
+						subproducto.setUsuarioActualizo(usuario);
+						subproducto.setFechaActualizacion(new Date());
+						SubproductoDAO.guardarSubproducto(subproducto);
+					}else if(objetoTipo == 5 && !total.equals(BigDecimal.ZERO) ){
 						Actividad actividad = ActividadDAO.getActividadPorId(objetoId, usuario);
-						//Costo costoPlanificado = CostoDAO.getCostoPorObjetoId(actividad.getId(), 5);
 						actividad.setCosto(total);
 						actividad.setUsuarioActualizo(usuario);
 						actividad.setFechaActualizacion(new Date());

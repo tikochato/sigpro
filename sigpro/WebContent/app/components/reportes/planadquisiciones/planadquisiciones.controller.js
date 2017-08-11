@@ -222,11 +222,17 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				var fechaActual = moment(row.planificadoLanzamiento,'DD/MM/YYYY').toDate();
 				
 				if (!isNaN(fechaActual)){
-					if(fechaAnterior.getTime() > fechaActual.getTime()){
+					if(!isNaN(fechaAnterior)){
+						if(fechaAnterior.getTime() > fechaActual.getTime()){
+							row.planificadoLanzamiento = "";
+							$utilidades.mensaje('warning', 'Fecha de "Lanzamiento de eventos planificado" no debe ser menor que la fecha de "Preparación de documentos planificado"');
+							break;
+						}	
+					}else{
 						row.planificadoLanzamiento = "";
-						$utilidades.mensaje('warning', 'Fecha de "Lanzamiento de eventos planificado" no debe ser menor que la fecha de "Preparación de documentos planificado"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Preparación de documentos planificado"');
 						break;
-					}
+					}					
 				}else{
 					row.planificadoLanzamiento = "";
 					$utilidades.mensaje('danger', 'Fecha invalida');
@@ -250,11 +256,18 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				var fechaActual = moment(row.realLanzamiento,'DD/MM/YYYY').toDate();
 
 				if (!isNaN(fechaActual)){
-					if(fechaAnterior > fechaActual){
+					if(!isNaN(fechaAnterior)){
+						if(fechaAnterior > fechaActual){
+							row.realLanzamiento = "";
+							$utilidades.mensaje('warning', 'Fecha de "Lanzamiento de eventos real" no debe ser menor que la fecha de "Preparación de documentos real"');
+							break;
+						}
+					}else{
 						row.realLanzamiento = "";
-						$utilidades.mensaje('warning', 'Fecha de "Lanzamiento de eventos real" no debe ser menor que la fecha de "Preparación de documentos real"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Preparación de documentos real"');
 						break;
 					}
+					
 				}else{
 					row.realLanzamiento = "";
 					$utilidades.mensaje('danger', 'Fecha invalida');
@@ -281,9 +294,15 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				var fechaActual = moment(row.planificadoRecepcionEval,'DD/MM/YYYY').toDate();
 
 				if (!isNaN(fechaActual)){
-					if(fechaAnterior > fechaActual){
+					if(!isNaN(fechaAnterior)){
+						if(fechaAnterior > fechaActual){
+							row.planificadoRecepcionEval = "";
+							$utilidades.mensaje('warning', 'Fecha de "Recepción y evaluación de ofertas planificado" no debe ser menor que la fecha de "Landamiento de eventos planificado"');
+							break;
+						}
+					}else{
 						row.planificadoRecepcionEval = "";
-						$utilidades.mensaje('warning', 'Fecha de "Recepción y evaluación de ofertas planificado" no debe ser menor que la fecha de "Landamiento de eventos planificado"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Landamiento de eventos planificado"');
 						break;
 					}
 				}else{
@@ -309,9 +328,15 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				var fechaActual = moment(row.realRecepcionEval,'DD/MM/YYYY').toDate();
 
 				if (!isNaN(fechaActual)){
-					if(fechaAnterior > fechaActual){
+					if(!isNaN(fechaAnterior)){
+						if(fechaAnterior > fechaActual){
+							row.realRecepcionEval = "";
+							$utilidades.mensaje('warning', 'Fecha de "Recepción y evaluación de ofertas real" no debe ser menor que la fecha de "Landamiento de eventos real"');
+							break;
+						}
+					}else{
 						row.realRecepcionEval = "";
-						$utilidades.mensaje('warning', 'Fecha de "Recepción y evaluación de ofertas real" no debe ser menor que la fecha de "Landamiento de eventos real"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Landamiento de eventos real"');
 						break;
 					}
 				}else{
@@ -340,9 +365,15 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				var fechaActual = moment(row.planificadoAdjudica,'DD/MM/YYYY').toDate();
 
 				if (!isNaN(fechaActual)){
-					if(fechaAnterior > fechaActual){
+					if(!isNaN(fechaAnterior)){
+						if(fechaAnterior > fechaActual){
+							row.planificadoAdjudica = "";
+							$utilidades.mensaje('warning', 'Fecha de "Adjudicación planificado" no debe ser menor que la fecha de "Recepción y evaluación de ofertas planificado"');
+							break;
+						}	
+					}else{
 						row.planificadoAdjudica = "";
-						$utilidades.mensaje('warning', 'Fecha de "Adjudicación planificado" no debe ser menor que la fecha de "Recepción y evaluación de ofertas planificado"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Recepción y evaluación de ofertas planificado"');
 						break;
 					}
 				}else{
@@ -368,9 +399,15 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				var fechaActual = moment(row.realAdjudica,'DD/MM/YYYY').toDate();
 
 				if (!isNaN(fechaActual)){
-					if(fechaAnterior > fechaActual){
+					if(!isNaN(fechaAnterior)){
+						if(fechaAnterior > fechaActual){
+							row.realAdjudica = "";
+							$utilidades.mensaje('warning', 'Fecha de "Adjudicación real" no debe ser menor que la fecha de "Recepción y evaluación de ofertas real"');
+							break;
+						}	
+					}else{
 						row.realAdjudica = "";
-						$utilidades.mensaje('warning', 'Fecha de "Adjudicación real" no debe ser menor que la fecha de "Recepción y evaluación de ofertas real"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Recepción y evaluación de ofertas real"');
 						break;
 					}
 				}else{
@@ -399,9 +436,15 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				var fechaActual = moment(row.planificadoFirma,'DD/MM/YYYY').toDate();
 
 				if (!isNaN(fechaActual)){
-					if(fechaAnterior > fechaActual){
+					if(!isNaN(fechaAnterior)){
+						if(fechaAnterior > fechaActual){
+							row.planificadoFirma = "";
+							$utilidades.mensaje('warning', 'Fecha de "Firma de contrato planificado" no debe ser menor que la fecha de "Adjudicación planificado"');
+							break;
+						}
+					}else{
 						row.planificadoFirma = "";
-						$utilidades.mensaje('warning', 'Fecha de "Firma de contrato planificado" no debe ser menor que la fecha de "Adjudicación planificado"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Adjudicación planificado"');
 						break;
 					}
 				}else{
@@ -427,9 +470,15 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				var fechaActual = moment(row.realFirma,'DD/MM/YYYY').toDate();
 				
 				if (!isNaN(fechaActual)){
-					if(fechaAnterior > fechaActual){
+					if(!isNaN(fechaAnterior)){
+						if(fechaAnterior > fechaActual){
+							row.realFirma = "";
+							$utilidades.mensaje('warning', 'Fecha de "Firma de contrato real" no debe ser menor que la fecha de "Adjudicación real"');
+							break;
+						}					
+					}else{
 						row.realFirma = "";
-						$utilidades.mensaje('warning', 'Fecha de "Firma de contrato real" no debe ser menor que la fecha de "Adjudicación real"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Adjudicación real"');
 						break;
 					}
 				}else{
@@ -659,32 +708,38 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	
 	mi.agregarPagos = function() {
 		row = mi.datoSeleccionado;
-		var modalInstance = $uibModal.open({
-			animation : 'true',
-			ariaLabelledBy : 'modal-title',
-			ariaDescribedBy : 'modal-body',
-			templateUrl : 'pago.jsp',
-			controller : 'modalPago',
-			controllerAs : 'controller',
-			backdrop : 'static',
-			size : 'lg',
-			resolve : {
-				idObjeto: function() {
-					return row.objetoId;
-				},
-				objetoTipo: function(){
-					return row.objetoTipo;
-				},
-				nombre: function(){
-					return row.nombre;
-				}
-			}
-		});
+		if(row.bloqueado != true){
+			if(!isNaN(moment(row.planificadoAdjudica,'DD/MM/YYYY').toDate())){
+				var modalInstance = $uibModal.open({
+					animation : 'true',
+					ariaLabelledBy : 'modal-title',
+					ariaDescribedBy : 'modal-body',
+					templateUrl : 'pago.jsp',
+					controller : 'modalPago',
+					controllerAs : 'controller',
+					backdrop : 'static',
+					size : 'lg',
+					resolve : {
+						idObjeto: function() {
+							return row.objetoId;
+						},
+						objetoTipo: function(){
+							return row.objetoTipo;
+						},
+						nombre: function(){
+							return row.nombre;
+						}
+					}
+				});
 
-		modalInstance.result.then(function(resultado) {
-			$utilidades.mensaje('success','Pagos agregados con éxito');
-		}, function() {
-		});
+				modalInstance.result.then(function(resultado) {
+					$utilidades.mensaje('success','Pagos agregados con éxito');
+				}, function() {
+				});
+			}else{
+				$utilidades.mensaje('warning', 'Debe de ingresar fecha de \"Adjudicación\"');
+			}
+		}
 	};
 	
 }]);
