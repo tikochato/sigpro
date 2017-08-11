@@ -237,7 +237,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 							row.anios[h].julio.planificado += costosanios[h].julio != null ? costosanios[h].julio : 0;
 							row.anios[h].agosto.planificado += costosanios[h].agosto != null ? costosanios[h].agosto : 0;
 							row.anios[h].septiembre.planificado += costosanios[h].septiembre != null ? costosanios[h].septiembre : 0;
-							row.anios[h].octubre.planificado += costosanios[h].octubre != null ? costosanios[h].planificado : 0;
+							row.anios[h].octubre.planificado += costosanios[h].octubre != null ? costosanios[h].octubre : 0;
 							row.anios[h].noviembre.planificado += costosanios[h].noviembre != null ? costosanios[h].noviembre : 0;
 							row.anios[h].diciembre.planificado += costosanios[h].diciembre != null ? costosanios[h].diciembre : 0;
 						}
@@ -263,7 +263,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 							row.anios[h].julio.planificado += costosanios[h].julio != null ? costosanios[h].julio : 0;
 							row.anios[h].agosto.planificado += costosanios[h].agosto != null ? costosanios[h].agosto : 0;
 							row.anios[h].septiembre.planificado += costosanios[h].septiembre != null ? costosanios[h].septiembre : 0;
-							row.anios[h].octubre.planificado += costosanios[h].octubre != null ? costosanios[h].planificado : 0;
+							row.anios[h].octubre.planificado += costosanios[h].octubre != null ? costosanios[h].octubre : 0;
 							row.anios[h].noviembre.planificado += costosanios[h].noviembre != null ? costosanios[h].noviembre : 0;
 							row.anios[h].diciembre.planificado += costosanios[h].diciembre != null ? costosanios[h].diciembre : 0;
 						}

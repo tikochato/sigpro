@@ -23,6 +23,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.proyectotiponombre="";
 	mi.unidadejecutoraid="";
 	mi.unidadejecutoranombre="";
+	mi.entidadnombre="";
 	mi.cooperanteid="";
 	mi.cooperantenombre="";
 	mi.camposdinamicos = {};
@@ -80,9 +81,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'nombre\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>'
 			},
-			{ name : 'proyectotipo',    displayName : 'Tipo préstamo' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
-			{ name : 'unidadejecutora',    displayName : 'Unidad Ejecutora' ,cellClass: 'grid-align-left', enableFiltering: false , enableSorting: false },
-			{ name : 'cooperante',   displayName : 'Cooperante' ,cellClass: 'grid-align-left',  enableFiltering: false , enableSorting: false },
+			{ name : 'proyectotipo',    displayName : 'Caracterización préstamo' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
+			{ name : 'unidadejecutora',    displayName : 'Unidad ejecutora' ,cellClass: 'grid-align-left', enableFiltering: false , enableSorting: false },
+			{ name : 'cooperante',   displayName : 'Organismo financiero internacional' ,cellClass: 'grid-align-left',  enableFiltering: false , enableSorting: false },
 			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'usuario_creo\']"  ng-keypress="grid.appScope.controller.filtrar($event)" style="width:90px;"></input></div>'
 			},
@@ -411,6 +412,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.proyectotiponombre=mi.proyecto.proyectotipo;
 			mi.unidadejecutoraid=mi.proyecto.unidadejecutoraid;
 			mi.unidadejecutoranombre=mi.proyecto.unidadejecutora;
+			mi.entidadnombre = mi.proyecto.nombreEntidad;
 			mi.cooperanteid=mi.proyecto.cooperanteid;
 			mi.cooperantenombre=mi.proyecto.cooperante;
 			mi.directorProyectoNombre = mi.proyecto.directorProyectoNmbre;
@@ -797,7 +799,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		resultado.then(function(itemSeleccionado) {
 			mi.unidadejecutoraid= itemSeleccionado.unidadEjecutora;
 			mi.unidadejecutoranombre = itemSeleccionado.nombreUnidadEjecutora;
-
+			mi.entidadnombre = itemSeleccionado.nombreEntidad;
 		});
 	};
 
@@ -1003,7 +1005,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	  mi.cargaSigade = function(){
 			var parametros = {
 					accion: 'getdatos',
-					noPrestamo: mi.prestamo.numeroPrestamo,
 					codigoPresupuestario:mi.prestamo.codigoPresupuestario,
 				    t:moment().unix()
 			}
@@ -1015,6 +1016,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					mi.prestamo.fechaDecreto = moment(response.data.prestamo.fechaDecreto,'DD/MM/YYYY').toDate()
 					mi.prestamo.fechaSuscripcion = moment(response.data.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate();
 					mi.prestamo.fechaVigencia = moment(response.data.prestamo.fechaVigencia,'DD/MM/YYYY').toDate();
+					mi.proyecto.nombre = mi.proyecto.nombre == null || mi.proyecto.nombre == undefined || mi.proyecto.nombre == '' ?
+							mi.prestamo.proyectoPrograma : mi.proyecto.nombre;
 					mi.getPorcentajes();
 				}else{
 					$utilidades.mensaje('warning', 'No se encontraron datos con los parámetros ingresados');
