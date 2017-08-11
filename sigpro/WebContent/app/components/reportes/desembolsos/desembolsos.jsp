@@ -65,11 +65,11 @@
 		
 		 .cuerpoTablaNombres {
 		    
-		    overflow-x: scroll;
+		    overflow-x: auto;
 		    display: inline-block;
 		    font-size: 13px;
 		    max-width: 100%;
-		    min-width: 100%;
+		    width: auto;
 		}
 	
 	
@@ -186,13 +186,7 @@
 			</table>
 			</div>
 			<br/>
-			<div style="text-align: center;">
-	    		<br>
-	    		<ol class="leyendaTexto"  ng-hide="!desembolsosc.mostrar">
-					<li ><span class="colorPlanificadoFondo"></span>Planificado</li>
-			        <li ><span class="colorRealFondo"></span>Real</li>
-				</ol>
-	    	</div>
+			
 		</div>
 		  
 	</div>

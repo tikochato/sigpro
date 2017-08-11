@@ -385,7 +385,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 					mi.fechaFin != null && mi.fechaFin.toString().length == 4)
 			{
 				if (mi.fechaFin >= mi.fechaInicio){
-					
+					mi.inicializar();
 					mi.generar();
 				}else{
 					$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
@@ -533,6 +533,26 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			case 12: return "Diciembre"; 
 		}
 	}
+	
+	mi.inicializar = function(){
+		mi.idTotal = 0;
+	    mi.responsableTotal = "Total";
+	    mi.actividadesAtrasadasTotal = 0;
+		mi.actividadesAlertaTotal = 0;
+		mi.actividadesACumplirTotal = 0; 
+		mi.actividadesCompletadas  = 0;
+	    mi.exportar = false;
+	    mi.grafica = true;
+	    mi.idPrestamo = 0;
+	    mi.estructuraProyecto=[];
+	    mi.objetosSeleccionados=[];
+	    mi.datosTabla = [];
+	    mi.mostrar = false;
+	    
+	    mi.dataCahrtLine = [];
+	    mi.etiquetasChartLine = [];
+	    mi.actividadesterminadas = [];
+	};
 	
 }]);
 
