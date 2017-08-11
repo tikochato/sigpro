@@ -267,6 +267,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				unidadEjecutora : mi.unidadEjecutora,
 				longitud: mi.producto.longitud,
 				latitud : mi.producto.latitud,
+				costo: mi.producto.costo == null ? 0 : mi.producto.costo,
+				acumulacionCosto: mi.producto.acumulacionCostoId == null ? 0 : mi.producto.acumulacionCostoId,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				esnuevo : mi.esNuevo
 			};
@@ -395,6 +397,23 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			$location.path('/meta/'+ mi.producto.id +'/3' );
 		}
 	};
+	
+	mi.buscarAcumulacionCosto = function(){
+		var resultado = mi.llamarModalBusqueda('/SAcumulacionCosto', {
+			accion : 'numeroAcumulacionCosto' 
+		}, function(pagina, elementosPorPagina){
+			return{
+				accion: 'getAcumulacionCosto',
+				pagina: pagina,
+				numeroacumulacioncosto : elementosPorPagina
+			}
+		}, 'id','nombre');
+		
+		resultado.then(function(itemSeleccionado){
+			mi.producto.acumulacionCostoNombre = itemSeleccionado.nombre;
+			mi.producto.acumulacionCostoId = itemSeleccionado.id;
+		});
+	}
 
 	mi.llamarModalBusqueda = function(servlet, datosTotal, datosCarga, columnaId,columnaNombre) {
 		var resultado = $q.defer();

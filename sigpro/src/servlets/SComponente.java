@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ import com.google.gson.reflect.TypeToken;
 import dao.ComponenteDAO;
 import dao.ComponentePropiedadDAO;
 import dao.ComponentePropiedadValorDAO;
+import pojo.AcumulacionCosto;
 import pojo.Componente;
 import pojo.ComponentePropiedad;
 import pojo.ComponentePropiedadValor;
@@ -65,6 +67,9 @@ public class SComponente extends HttpServlet {
 		String unidadejecutoranombre;
 		String latitud;
 		String longitud;
+		BigDecimal costo;
+		Integer acumulacionCosto;
+		String acumulacionCostoNombre;
 	}
 
 	class stdatadinamico {
@@ -145,6 +150,9 @@ public class SComponente extends HttpServlet {
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				temp.latitud = componente.getLatitud();
 				temp.longitud = componente.getLongitud();
+				temp.costo = componente.getCosto();
+				temp.acumulacionCosto = componente.getAcumulacionCosto().getId();
+				temp.acumulacionCostoNombre = componente.getAcumulacionCosto().getNombre();
 				stcomponentes.add(temp);
 			}
 
@@ -179,6 +187,9 @@ public class SComponente extends HttpServlet {
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				temp.latitud = componente.getLatitud();
 				temp.longitud = componente.getLongitud();
+				temp.costo = componente.getCosto();
+				temp.acumulacionCosto = componente.getAcumulacionCosto().getId();
+				temp.acumulacionCostoNombre = componente.getAcumulacionCosto().getNombre();
 				stcomponentes.add(temp);
 			}
 
@@ -206,6 +217,15 @@ public class SComponente extends HttpServlet {
 					Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
 					String latitud = map.get("latitud");
 					String longitud = map.get("longitud");
+					BigDecimal costo = new BigDecimal(map.get("costo"));
+					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
+					
+					AcumulacionCosto acumulacionCosto = null;
+					if(acumulacionCostoid != 0){
+						acumulacionCosto = new AcumulacionCosto();
+						acumulacionCosto.setId(Utils.String2Int(map.get("acumulacionCosto")));
+					}
+					
 					ComponenteTipo componenteTipo= new ComponenteTipo();
 					componenteTipo.setId(componentetipoid);
 
@@ -223,9 +243,9 @@ public class SComponente extends HttpServlet {
 
 					Componente componente;
 					if(esnuevo){
-						componente = new Componente(componenteTipo, null, unidadEjecutora, nombre,
+						componente = new Componente(acumulacionCosto,componenteTipo, null, unidadEjecutora, nombre,
 								descripcion, usuario, null, new DateTime().toDate(), null, 1,
-								snip, programa, subPrograma, proyecto_, actividad,obra, fuente, latitud,longitud, null,null,null);
+								snip, programa, subPrograma, proyecto_, actividad,obra, fuente, latitud,longitud, costo, null,null,null);
 					}
 					else{
 						componente = ComponenteDAO.getComponentePorId(id,usuario);
@@ -243,6 +263,8 @@ public class SComponente extends HttpServlet {
 						componente.getFuente();
 						componente.setLatitud(latitud);
 						componente.setLongitud(longitud);
+						componente.setCosto(costo);
+						componente.setAcumulacionCosto(acumulacionCosto);
 					}
 					result = ComponenteDAO.guardarComponente(componente);
 
@@ -397,6 +419,9 @@ public class SComponente extends HttpServlet {
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				temp.latitud = componente.getLatitud();
 				temp.longitud = componente.getLongitud();
+				temp.costo = componente.getCosto();
+				temp.acumulacionCosto = componente.getAcumulacionCosto() != null ? componente.getAcumulacionCosto().getId() : null;
+				temp.acumulacionCostoNombre = componente.getAcumulacionCosto() != null ? componente.getAcumulacionCosto().getNombre() : null;
 				stcomponentes.add(temp);
 			}
 

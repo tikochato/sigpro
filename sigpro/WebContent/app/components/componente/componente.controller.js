@@ -164,6 +164,8 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					unidadejecutoraid:mi.unidadejecutoraid,
 					longitud: mi.componente.longitud,
 					latitud : mi.componente.latitud,
+					costo: mi.componente.costo == null ? 0 : mi.componente.costo,
+					acumulacionCosto: mi.componente.acumulacionCostoId == null ? 0 : mi.componente.acumulacionCostoId,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
 					if(response.success){
@@ -335,6 +337,23 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 						mi.totalComponentes = response.data.totalcomponentes;
 						mi.paginaActual = 1;
 						mi.cargarTabla(mi.paginaActual);
+			});
+		}
+		
+		mi.buscarAcumulacionCosto = function(){
+			var resultado = mi.llamarModalBusqueda('/SAcumulacionCosto', {
+				accion : 'numeroAcumulacionCosto' 
+			}, function(pagina, elementosPorPagina){
+				return{
+					accion: 'getAcumulacionCosto',
+					pagina: pagina,
+					numeroacumulacioncosto : elementosPorPagina
+				}
+			}, 'id','nombre');
+			
+			resultado.then(function(itemSeleccionado){
+				mi.componente.acumulacionCostoNombre = itemSeleccionado.nombre;
+				mi.componente.acumulacionCostoId = itemSeleccionado.id;
 			});
 		}
 

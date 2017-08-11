@@ -176,7 +176,6 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					longitud: mi.actividad.longitud,
 					latitud : mi.actividad.latitud,
 					costo: mi.actividad.costo == null ? 0 : mi.actividad.costo,
-					costoReal: mi.actividad.costoReal == null ? 0 : mi.actividad.costoReal,
 					acumulacionCosto: mi.actividad.acumulacionCostoId == null ? 0 : mi.actividad.acumulacionCostoId,
 					fuente: mi.actividad.fuente,
 					datadinamica : JSON.stringify(mi.camposdinamicos)

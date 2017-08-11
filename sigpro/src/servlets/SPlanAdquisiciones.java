@@ -33,7 +33,6 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
-import dao.CostoDAO;
 import dao.InformacionPresupuestariaDAO;
 import dao.PlanAdquisicionesDAO;
 import dao.PlanAdquisicionesDetalleDAO;
@@ -44,7 +43,6 @@ import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.CategoriaAdquisicion;
 import pojo.Componente;
-import pojo.Costo;
 import pojo.PlanAdquisiciones;
 import pojo.PlanAdquisicionesDetalle;
 import pojo.Prestamo;

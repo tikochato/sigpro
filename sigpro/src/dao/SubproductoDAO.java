@@ -1,5 +1,6 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,9 @@ public class SubproductoDAO {
 		String usuarioactualizo;
 		String latitud;
 		String longitud;
-		
+		BigDecimal costo;
+		Integer acumulacionCosto;
+		String acumulacionCostoNombre;
 	}
 
 	public static List<Subproducto> getSubproductos(String usuario) {
@@ -232,6 +235,9 @@ public class SubproductoDAO {
 			estructuraPojo.fechaactualizacion = Utils.formatDateHour(pojo.getFechaActualizacion());
 			estructuraPojo.latitud = pojo.getLatitud();
 			estructuraPojo.longitud = pojo.getLongitud();
+			estructuraPojo.costo = pojo.getCosto();
+			estructuraPojo.acumulacionCosto = pojo.getAcumulacionCosto() != null ? pojo.getAcumulacionCosto().getId() : null;
+			estructuraPojo.acumulacionCostoNombre = pojo.getAcumulacionCosto() != null ? pojo.getAcumulacionCosto().getNombre() : null;
 			
 			if (pojo.getProducto() != null) {
 				estructuraPojo.idProducto = pojo.getProducto().getId();
