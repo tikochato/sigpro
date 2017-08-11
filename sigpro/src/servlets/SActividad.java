@@ -29,12 +29,23 @@ import com.google.gson.reflect.TypeToken;
 import dao.ActividadDAO;
 import dao.ActividadPropiedadDAO;
 import dao.ActividadPropiedadValorDAO;
+import dao.AsignacionRaciDAO;
+import dao.ComponenteDAO;
+import dao.ProductoDAO;
+import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.ActividadPropiedad;
 import pojo.ActividadPropiedadValor;
 import pojo.ActividadPropiedadValorId;
 import pojo.ActividadTipo;
 import pojo.AcumulacionCosto;
+import pojo.AsignacionRaci;
+import pojo.Colaborador;
+import pojo.Componente;
+import pojo.MatrizRaci;
+import pojo.Producto;
+import pojo.Proyecto;
+import pojo.Subproducto;
 import utilities.Utils;
 
 @WebServlet("/SActividad")
@@ -86,6 +97,13 @@ public class SActividad extends HttpServlet {
 		String label;
 		String valor;
 		String valor_f;
+	}
+	
+	class stasignacionroles {
+		Integer id;
+		String nombre;
+		String rol;
+		String nombrerol;
 	}
 
     /**
@@ -235,6 +253,7 @@ public class SActividad extends HttpServlet {
 					BigDecimal costo = Utils.String2BigDecimal(map.get("costo"), null);
 					String latitud = map.get("latitud");
 					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
+					Integer responsableId = Utils.String2Int(map.get("responsableId"),null);
 					
 					ActividadTipo actividadTipo= new ActividadTipo();
 					actividadTipo.setId(actividadtipoid);
@@ -248,6 +267,8 @@ public class SActividad extends HttpServlet {
 					}.getType();
 
 					List<stdatadinamico> datos = (map.get("datadinamica")!=null && map.get("datadinamica").compareTo("{}")!=0) ?  gson.fromJson(map.get("datadinamica"), type) : new ArrayList<stdatadinamico>();
+					
+					
 					
 					Actividad actividad;
 					if(esnuevo){
@@ -281,7 +302,47 @@ public class SActividad extends HttpServlet {
 						actividad.setAcumulacionCosto(acumulacionCosto);
 					}
 					
-					result = ActividadDAO.guardarActividad(actividad);		
+					result = ActividadDAO.guardarActividad(actividad);
+					
+					
+					if (result ){
+						List<AsignacionRaci> asignaciones_temp = AsignacionRaciDAO.getAsignacionPorTarea(actividad.getId(), 5);
+						
+						if (asignaciones_temp!=null){
+							for (AsignacionRaci asign : asignaciones_temp){
+								AsignacionRaciDAO.eliminarTotalAsignacion(asign);
+							}
+						}
+						
+						
+						Integer proyectoId = ActividadDAO.getProyectoId(actividad.getId());
+						MatrizRaci matrizRaci = AsignacionRaciDAO.getMatrizPorObjeto(proyectoId, 1);
+						
+						String asignaciones_param = map.get("asignacionroles");
+						
+						String[] asignaciones = asignaciones_param.split("||");
+						if (asignaciones.length > 0){
+							for (String temp : asignaciones){
+								AsignacionRaci asigna_temp = new AsignacionRaci();
+								String[] datosaasignacion = temp.split("~");
+								Colaborador colaborador = new Colaborador();
+								colaborador.setId(Integer.parseInt(datosaasignacion[0]));
+								
+								asigna_temp.setColaborador(colaborador);
+								asigna_temp.setEstado(1);
+								asigna_temp.setFechaCreacion(new Date());
+								asigna_temp.setMatrizRaci(matrizRaci);
+								asigna_temp.setObjetoId(actividad.getId());
+								asigna_temp.setObjetoTipo(5);
+								asigna_temp.setRolRaci(datosaasignacion[1]);
+								asigna_temp.setUsuarioCreo(usuario);
+								result = result && AsignacionRaciDAO.guardarAsignacion(asigna_temp);
+							}
+						}
+						
+							
+						
+					}
 
 					Set<ActividadPropiedadValor> valores_temp = actividad.getActividadPropiedadValors();
 					actividad.setActividadPropiedadValors(null);
@@ -510,5 +571,21 @@ public class SActividad extends HttpServlet {
         gz.write(response_text.getBytes("UTF-8"));
         gz.close();
         output.close();
+	}
+	
+	private Proyecto obtenerProyecto(Integer objetoId, Integer objetoTipo,String usuario){
+		if (objetoTipo == 4){
+			Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
+			return subproducto != null ? subproducto.getProducto().getComponente().getProyecto() : null;
+		}
+		else if ( objetoTipo == 3){
+			Producto producto = ProductoDAO.getProductoPorId(objetoId);
+			return producto != null ? producto.getComponente().getProyecto() : null;
+		}
+		else if (objetoTipo == 2){
+			Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
+			return componente!= null ? componente.getProyecto(): null;
+		}
+		return null;
 	}
 }

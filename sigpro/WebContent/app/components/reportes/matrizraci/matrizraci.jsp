@@ -226,7 +226,7 @@
 			
 			<div class="col-sm-12 ">
 				<form name="form">
-					<div class="form-group col-sm-3" >
+					<div class="form-group col-sm-4" >
 							<select  class="inputText" ng-model="racic.prestamoSeleccionado" 
 								ng-options="a.text for a in racic.prestamos"
 								ng-readonly="true"
