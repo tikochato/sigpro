@@ -27,7 +27,9 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     mi.etiquetasChartLine = [];
     mi.actividadesterminadas = [];
     
-    mi.pieColors = ['#febbbc','#eaeab0','#daefc4','#c4dbee'];
+    mi.pieColors = ['#fd9496','#e2e291','#c7e7a5','#b0cfe8'];
+    
+    mi.lineColors = ['#b0cfe8'];
     
     
     	mi.optionsPie = {
@@ -385,7 +387,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 					mi.fechaFin != null && mi.fechaFin.toString().length == 4)
 			{
 				if (mi.fechaFin >= mi.fechaInicio){
-					
+					mi.inicializar();
 					mi.generar();
 				}else{
 					$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
@@ -534,6 +536,26 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		}
 	}
 	
+	mi.inicializar = function(){
+		mi.idTotal = 0;
+	    mi.responsableTotal = "Total";
+	    mi.actividadesAtrasadasTotal = 0;
+		mi.actividadesAlertaTotal = 0;
+		mi.actividadesACumplirTotal = 0; 
+		mi.actividadesCompletadas  = 0;
+	    mi.exportar = false;
+	    mi.grafica = true;
+	    mi.idPrestamo = 0;
+	    mi.estructuraProyecto=[];
+	    mi.objetosSeleccionados=[];
+	    mi.datosTabla = [];
+	    mi.mostrar = false;
+	    
+	    mi.dataCahrtLine = [];
+	    mi.etiquetasChartLine = [];
+	    mi.actividadesterminadas = [];
+	};
+	
 }]);
 
 
@@ -643,6 +665,19 @@ function modalEstructuraResponsable($uibModalInstance, $scope, $http, $interval,
 	            return 'glyphicon glyphicon-th-list';
 	    }
 	};
+	
+	mi.obtenerColor = function(row){
+		
+		 
+		var style={}
+		switch (row.estado){
+			case 1: style.color="#fd9496"; break;
+			case 2: style.color="#e2e291"; break;
+			case 3: style.color="#c7e7a5"; break;
+			case 4: style.color="#b0cfe8"; break;
+		}
+		return style;
+	}
 	
 	
 	

@@ -23,7 +23,7 @@
 		}
 	
 		th.rotate > div {
-		  transform: translate(23px, 0px) rotate(270deg) ;
+		  transform: translate(29px, 0px) rotate(270deg) ;
 		  width: 7px;
 		  
 		}
@@ -226,7 +226,7 @@
 			
 			<div class="col-sm-12 ">
 				<form name="form">
-					<div class="form-group col-sm-3" >
+					<div class="form-group col-sm-4" >
 							<select  class="inputText" ng-model="racic.prestamoSeleccionado" 
 								ng-options="a.text for a in racic.prestamos"
 								ng-readonly="true"
@@ -239,7 +239,7 @@
 				</form>
 				<br/>
 				<br/>
-				<div class="divTabla">
+				<div class="divTabla" ng-if="racic.mostrarTabla">
 	  			
 					<table st-table="racic.matrizRaci" class="table table-header-rotated  table-striped table-hover table-condensed" >
 							<thead class="cabecera">
@@ -247,22 +247,21 @@
 								<th class="thIcono"></th>
 								<th  class="{{racic.claseHeader($index)}}"   ng-repeat="n in racic.encabezadoMatriz track by $index"
 								 >
-										<div ><span>{{n.nombre}} </span></div>
+										<div><span>{{n.nombre}} </span></div>
 								</th>
 							</tr>
 							</thead>
 							<tbody>
 							<tr  ng-repeat="row in racic.matrizRaci track by $index " >
-								<td><div class="{{racic.claseIcon(row)}}"></div> </td>
 								<td ng-repeat = "col in row track by $index" class="{{racic.claseBody(col)}}" 
 								ng-click="$index > 0 ? racic.mostrarColaborador(col) : ''" 
 								style="border-right: 2px solid #ddd;">
-								 	 <pre class="nombreFormat" >{{col.rol}}</pre>
+								 	 <div ng-if="$index == 0" class="{{ $index == 0 ? racic.claseIcon(row) : ''}}" style="margin-left: {{col.objetoTipo-1}}em"></div>
+								 	 <span>{{col.rol}}</span>
 								 </td>
 							</tr>
 							</tbody>
-					</table>	
-				
+					</table>
 				</div>
 
 			</div>
