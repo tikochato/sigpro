@@ -50,7 +50,6 @@
 		
 		.divTabla{
 			float: left;			
-			margin-right: -15px;
 			overflow-y:hidden;
 			overflow-x:hidden;
 			min-height: 448px;
@@ -147,7 +146,7 @@
 		    		</div>
 		    		<br>
 		    		<div class="row">
-		    			<div class="form-group col-sm-3">
+		    			<div class="form-group col-sm-5">
 							<select  class="inputText" ng-model="controller.prestamo"
 								ng-options="a.text for a in controller.prestamos" 
 								ng-change="controller.generar();"></select>
@@ -184,30 +183,29 @@
 		    		</div>
 				</div>
 	    		<div style="width: 100%; height: 80%" id="reporte">	
-	    			<div class="row" ng-show="!controller.mostrarTablas">	    				
-	    				<div class="grid_loading" ng-hide="!controller.mostrarcargando">
-							<div class="msg">
-								<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
-									<br />
-									<br /> <b>Cargando, por favor espere...</b> 
-								</span>
-							</div>
+    				<div class="grid_loading" ng-hide="!controller.mostrarcargando">
+						<div class="msg">
+							<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
+								<br />
+								<br /> <b>Cargando, por favor espere...</b> 
+							</span>
 						</div>
-						<div class="grid_loading" ng-hide="!controller.mostrarguardando">
-							<div class="msg">
-								<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
-									<br />
-									<br /> <b>Guardando, por favor espere...</b> 
-								</span>
-							</div>
+					</div>
+					<div class="grid_loading" ng-hide="!controller.mostrarguardando">
+						<div class="msg">
+							<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
+								<br />
+								<br /> <b>Guardando, por favor espere...</b> 
+							</span>
 						</div>
+					</div>
+	    			<div class="row" ng-show="!controller.mostrarTablas">
 	    				<div class="divPadreNombres">
 	    					<div class="divTabla"> 
 	    						<table st-table="controller.displayedCollectionPrestamo" st-safe-src="controller.rowCollectionPrestamo" class="table table-striped tablaDatos">
 		    						<thead class="theadDatos">
 		    							<tr>
-		    								<th></th>
-				    						<th style="min-width:200px;text-align: left; height:67px;vertical-align: middle;" class="label-form" rowspan="2">Nombre</th>
+				    						<th style="min-width:300px;text-align: left; height:71px;;vertical-align: middle;" class="label-form" rowspan="2">Nombre</th>
 				    					</tr>
 		    						</thead>
 		    						<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="margin-bottom: -15px;">
@@ -219,7 +217,7 @@
 		    								</td>
 				    						<td nowrap ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'">
 				    							<div style="height: 25px;">
-				    								<p><span ng-class="controller.claseIcon(row);" style="margin-left: {{row.objetoTipo-1}}em" uib-tooltip="{{controller.tooltipObjetoTipo[row.objetoTipo-1]}}"></span>{{row.nombre}}</p>
+				    								<div uib-tooltip="{{row.nombre}}"><span ng-class="controller.claseIcon(row);" style="margin-left: {{row.objetoTipo-1}}em" uib-tooltip="{{controller.tooltipObjetoTipo[row.objetoTipo-1]}}"></span>{{row.nombre}}</div>
 				    							</div>
 				    						</td>
 		    							</tr>
