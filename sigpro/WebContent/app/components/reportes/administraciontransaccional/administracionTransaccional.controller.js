@@ -7,6 +7,10 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 
 		mi.charOptions= {
 			scales: {
+				legend: {
+					display: true,
+					position: 'bottom'
+				},
 				yAxes: [
 					{	
 						id: 'y-axis-1',
