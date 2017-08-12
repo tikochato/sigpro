@@ -30,9 +30,6 @@ import dao.ActividadDAO;
 import dao.ActividadPropiedadDAO;
 import dao.ActividadPropiedadValorDAO;
 import dao.AsignacionRaciDAO;
-import dao.ComponenteDAO;
-import dao.ProductoDAO;
-import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.ActividadPropiedad;
 import pojo.ActividadPropiedadValor;
@@ -41,11 +38,7 @@ import pojo.ActividadTipo;
 import pojo.AcumulacionCosto;
 import pojo.AsignacionRaci;
 import pojo.Colaborador;
-import pojo.Componente;
 import pojo.MatrizRaci;
-import pojo.Producto;
-import pojo.Proyecto;
-import pojo.Subproducto;
 import utilities.Utils;
 
 @WebServlet("/SActividad")
@@ -253,7 +246,7 @@ public class SActividad extends HttpServlet {
 					BigDecimal costo = Utils.String2BigDecimal(map.get("costo"), null);
 					String latitud = map.get("latitud");
 					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
-					Integer responsableId = Utils.String2Int(map.get("responsableId"),null);
+					
 					
 					ActividadTipo actividadTipo= new ActividadTipo();
 					actividadTipo.setId(actividadtipoid);
@@ -573,19 +566,5 @@ public class SActividad extends HttpServlet {
         output.close();
 	}
 	
-	private Proyecto obtenerProyecto(Integer objetoId, Integer objetoTipo,String usuario){
-		if (objetoTipo == 4){
-			Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
-			return subproducto != null ? subproducto.getProducto().getComponente().getProyecto() : null;
-		}
-		else if ( objetoTipo == 3){
-			Producto producto = ProductoDAO.getProductoPorId(objetoId);
-			return producto != null ? producto.getComponente().getProyecto() : null;
-		}
-		else if (objetoTipo == 2){
-			Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
-			return componente!= null ? componente.getProyecto(): null;
-		}
-		return null;
-	}
+	
 }

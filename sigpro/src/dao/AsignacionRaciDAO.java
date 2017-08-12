@@ -10,7 +10,6 @@ import org.hibernate.query.Query;
 
 import utilities.CHibernateSession;
 import utilities.CLogger;
-import pojo.ActividadPropiedadValor;
 import pojo.AsignacionRaci;
 import pojo.Colaborador;
 import pojo.MatrizRaci;
