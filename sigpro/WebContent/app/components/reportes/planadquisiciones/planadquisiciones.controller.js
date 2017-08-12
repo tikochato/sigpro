@@ -646,25 +646,27 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	}
 	
 	mi.limpiar = function(){
-		mi.datoSeleccionado.tipoAdquisicion = 0;
-		mi.datoSeleccionado.unidadMedida = null;
-		mi.datoSeleccionado.categoriaAdquisicion = 0;
-		mi.datoSeleccionado.cantidad = 0;
-		mi.datoSeleccionado.costo = 0;
-		mi.datoSeleccionado.total = 0;
-		mi.datoSeleccionado.planificadoDocs = null;
-		mi.datoSeleccionado.realDocs = null;
-		mi.datoSeleccionado.planificadoLanzamiento = null;
-		mi.datoSeleccionado.realLanzamiento = null;
-		mi.datoSeleccionado.planificadoRecepcionEval = null;
-		mi.datoSeleccionado.realRecepcionEval = null;
-		mi.datoSeleccionado.planificadoAdjudica = null;
-		mi.datoSeleccionado.realAdjudica = null;
-		mi.datoSeleccionado.planificadoFirma = null;
-		mi.datoSeleccionado.realFirma = null;
-		
-		mi.desbloquearPadre(mi.datoSeleccionado);
-		mi.bloquearHijos(mi.datoSeleccionado.hijos, false);
+		if (mi.datoSeleccionado != undefined){
+			mi.datoSeleccionado.tipoAdquisicion = 0;
+			mi.datoSeleccionado.unidadMedida = null;
+			mi.datoSeleccionado.categoriaAdquisicion = 0;
+			mi.datoSeleccionado.cantidad = 0;
+			mi.datoSeleccionado.costo = 0;
+			mi.datoSeleccionado.total = 0;
+			mi.datoSeleccionado.planificadoDocs = null;
+			mi.datoSeleccionado.realDocs = null;
+			mi.datoSeleccionado.planificadoLanzamiento = null;
+			mi.datoSeleccionado.realLanzamiento = null;
+			mi.datoSeleccionado.planificadoRecepcionEval = null;
+			mi.datoSeleccionado.realRecepcionEval = null;
+			mi.datoSeleccionado.planificadoAdjudica = null;
+			mi.datoSeleccionado.realAdjudica = null;
+			mi.datoSeleccionado.planificadoFirma = null;
+			mi.datoSeleccionado.realFirma = null;
+			
+			mi.desbloquearPadre(mi.datoSeleccionado);
+			mi.bloquearHijos(mi.datoSeleccionado.hijos, false);	
+		}
 	}
 	
 	mi.exportarExcel = function(){
@@ -708,37 +710,39 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	
 	mi.agregarPagos = function() {
 		row = mi.datoSeleccionado;
-		if(row.bloqueado != true){
-			if(!isNaN(moment(row.planificadoAdjudica,'DD/MM/YYYY').toDate())){
-				var modalInstance = $uibModal.open({
-					animation : 'true',
-					ariaLabelledBy : 'modal-title',
-					ariaDescribedBy : 'modal-body',
-					templateUrl : 'pago.jsp',
-					controller : 'modalPago',
-					controllerAs : 'controller',
-					backdrop : 'static',
-					size : 'lg',
-					resolve : {
-						idObjeto: function() {
-							return row.objetoId;
-						},
-						objetoTipo: function(){
-							return row.objetoTipo;
-						},
-						nombre: function(){
-							return row.nombre;
+		if (row != undefined){
+			if(row.bloqueado != true){
+				if(!isNaN(moment(row.planificadoAdjudica,'DD/MM/YYYY').toDate())){
+					var modalInstance = $uibModal.open({
+						animation : 'true',
+						ariaLabelledBy : 'modal-title',
+						ariaDescribedBy : 'modal-body',
+						templateUrl : 'pago.jsp',
+						controller : 'modalPago',
+						controllerAs : 'controller',
+						backdrop : 'static',
+						size : 'lg',
+						resolve : {
+							idObjeto: function() {
+								return row.objetoId;
+							},
+							objetoTipo: function(){
+								return row.objetoTipo;
+							},
+							nombre: function(){
+								return row.nombre;
+							}
 						}
-					}
-				});
+					});
 
-				modalInstance.result.then(function(resultado) {
-					$utilidades.mensaje('success','Pagos agregados con éxito');
-				}, function() {
-				});
-			}else{
-				$utilidades.mensaje('warning', 'Debe de ingresar fecha de \"Adjudicación\"');
-			}
+					modalInstance.result.then(function(resultado) {
+						$utilidades.mensaje('success','Pagos agregados con éxito');
+					}, function() {
+					});
+				}else{
+					$utilidades.mensaje('warning', 'Debe de ingresar fecha de \"Adjudicación\"');
+				}
+			}	
 		}
 	};
 	
