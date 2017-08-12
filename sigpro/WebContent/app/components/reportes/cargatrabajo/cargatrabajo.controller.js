@@ -666,6 +666,19 @@ function modalEstructuraResponsable($uibModalInstance, $scope, $http, $interval,
 	    }
 	};
 	
+	mi.obtenerColor = function(row){
+		
+		 
+		var style={}
+		switch (row.estado){
+			case 1: style.color="#fd9496"; break;
+			case 2: style.color="#e2e291"; break;
+			case 3: style.color="#c7e7a5"; break;
+			case 4: style.color="#b0cfe8"; break;
+		}
+		return style;
+	}
+	
 	
 	
 	

@@ -89,9 +89,9 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="row in controller.displayedCollection" >
+								<tr ng-repeat="row in controller.displayedCollection" ng-click="controller.actividadesResponsable(row)">
 									<td style="display: none;" >{{row.id}}</td>
-									<td style="width: 40%" ng-click="controller.actividadesResponsable(row)">{{row.responsable}}</td>
+									<td style="width: 40%" >{{row.responsable}}</td>
 									<td style="text-align: center; width: 15%;">{{row.actividadesAtrasadas}}</td>
 									<td style="text-align: center; width: 15%;">{{row.actividadesAlerta}}</td>
 									<td style="text-align: center; width: 15%;">{{row.actividadesACumplir}}</td>
