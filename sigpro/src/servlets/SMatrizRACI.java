@@ -65,6 +65,13 @@ public class SMatrizRACI extends HttpServlet {
 		String nombre;
 	}
 	
+	class stasignacion{
+		int colaboradorId;
+		String colaboradorNombre;
+		String rolId;
+		String rolNombre;
+	}
+	
 	class stinformacion{
 		String nombreTarea;
 		String estadoTarea;
@@ -287,6 +294,23 @@ public class SMatrizRACI extends HttpServlet {
 			response_text=new GsonBuilder().serializeNulls().create().toJson(informacion);
 	        response_text = String.join("", "\"informacion\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text, "}");	
+		}else if  (accion.equals("getAsignacionPorObjeto")){
+			Integer objetoId = Utils.String2Int(map.get("objetoId"),0);
+			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"),0);
+			List<AsignacionRaci> asignaciones  = AsignacionRaciDAO.getAsignacionesRaci(objetoId, objetoTipo);
+			List<stasignacion> asignacionesRet = new ArrayList<>();
+			for (AsignacionRaci asignacion : asignaciones){
+				stasignacion temp = new stasignacion();
+				temp.colaboradorId = asignacion.getColaborador().getId();
+				temp.colaboradorNombre = asignacion.getColaborador().getPnombre() + " "
+						+ asignacion.getColaborador().getPapellido();
+				temp.rolId = asignacion.getRolRaci();
+				asignacionesRet.add(temp);
+			}
+			response_text=new GsonBuilder().serializeNulls().create().toJson(asignacionesRet);
+	        response_text = String.join("", "\"asignaciones\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text, "}");
+			
 		}else
 			response_text = "{ \"success\": false }";
 		

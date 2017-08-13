@@ -159,7 +159,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			}
 			var asignaciones="";
 			for (x in mi.responsables){
-				asignaciones = asignaciones.concat(asignaciones.length > 0 ? "||" : "",mi.responsables[x].id + "~" + mi.responsables[x].rol); 
+				asignaciones = asignaciones.concat(asignaciones.length > 0 ? "|" : "",mi.responsables[x].id + "~" + mi.responsables[x].rol); 
 			}
 			console.log(mi.responsables);
 			console.log(mi.responsables[0].id);
@@ -285,17 +285,24 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					}
 				});
 				
-				$http.post('/SColaborador', {
-					accion: 'obtenerPorId',
-					id: mi.actividad.id,
+				$http.post('/SMatrizRACI', {
+					accion: 'getAsignacionPorObjeto',
+					objetoId: mi.actividad.id,
+					objetoTipo:5
 					
 				}).success(function(response){
+					mi.responsables =[];
 					if (response.success)
 					{
-						
-						mi.actividad.actividadResponsable = response.colaborador.nombreCompleto;
-						mi.actividad.responsableRolId = response.colaborador.id;
-					
+						var asignaciones = response.asignaciones;
+						for (x in response.asignaciones){
+							var responsable = [];
+							responsable.id = asignaciones[x].colaboradorId;
+							responsable.nombre = asignaciones[x].colaboradorNombre;
+							responsable.nombrerol = mi.obtenerNombreRol(asignaciones[x].rolId);
+							responsable.rol = asignaciones[x].rolId;
+							mi.responsables.push(responsable);
+						}
 					}
 				});
 			}
@@ -550,7 +557,19 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 	        if (index !== -1) {
 	            mi.responsables.splice(index, 1);
 	        }
-		}
+	  };
+	  
+	  mi.obtenerNombreRol = function(valor){
+		  
+		  switch (valor){
+		  	case 'r': return "Responsable";
+		  	case 'a': return "Aprobador";
+		  	case 'c': return "Consultado";
+		  	case 'i': return "Informado";
+		  }
+		  return "";
+	  }
+		
 
 } ]);
 
