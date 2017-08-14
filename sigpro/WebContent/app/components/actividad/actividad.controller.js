@@ -161,8 +161,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			for (x in mi.responsables){
 				asignaciones = asignaciones.concat(asignaciones.length > 0 ? "|" : "",mi.responsables[x].id + "~" + mi.responsables[x].rol); 
 			}
-			console.log(mi.responsables);
-			console.log(mi.responsables[0].id);
+			
 			if(mi.actividad!=null && mi.actividad.nombre!=null){
 				$http.post('/SActividad', {
 					accion: 'guardarActividad',
@@ -390,19 +389,25 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		};
 		
 		mi.buscarActividadResponsable = function(titulo, mensaje){
+			var idResponsables = "";
+			var idRoles = [];
+			for (x in mi.responsables){
+				idResponsables = idResponsables + (x > 0 ? "," : "") + mi.responsables[x].id;
+				idRoles.push(mi.responsables[x].rol);
+			}
 			var resultado = mi.llamarModalBusqueda('/SColaborador', {
 				accion : 'totalElementos'	
 			}, function(pagina, elementosPorPagina) {
 				return {
 					accion : 'cargar',
 					pagina : pagina,
-					numeroresponsablerol : elementosPorPagina
+					numeroresponsablerol : elementosPorPagina,
+					idResponsables : idResponsables
+					
 				};
-			},'id','nombreCompleto');
+			},'id','nombreCompleto',idResponsables,idRoles);
 
 			resultado.then(function(itemSeleccionado) {
-				mi.actividad.actividadResponsable = itemSeleccionado.nombreCompleto;
-				mi.actividad.responsableRolId = itemSeleccionado.id;
 				var responsable = [];
 				responsable.id = itemSeleccionado.id;
 				responsable.nombre = itemSeleccionado.nombreCompleto;
@@ -429,7 +434,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			});
 		}
 		
-		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
+		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre,idResponsables, idRoles) {
 			var resultado = $q.defer();
 			var modalInstance = $uibModal.open({
 				animation : 'true',
@@ -455,6 +460,12 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					},
 					$columnaNombre : function() {
 						return columnaNombre;
+					},
+					$idResponsables : function() {
+						return idResponsables;
+					},
+					$idRoles : function() {
+						return idRoles;
 					}
 					
 				}
@@ -708,23 +719,35 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 app.controller('modalBuscar', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
 	'$timeout', '$log', '$servlet', '$accionServlet', '$datosCarga',
-	'$columnaId','$columnaNombre',modalBuscar ]);
+	'$columnaId','$columnaNombre','$idResponsables','$idRoles',modalBuscar ]);
 
 function modalBuscar($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $servlet,$accionServlet,$datosCarga,$columnaId,$columnaNombre) {
+	i18nService, $utilidades, $timeout, $log, $servlet,$accionServlet,$datosCarga,$columnaId,$columnaNombre,
+	$idResponsables,$idRoles) {
 
 	var mi = this;
-	mi.roles=[{id:'r',nombre:"Responsable"},{id:'a',nombre:"Aprobador"},{id:'c',nombre:"Consultado"},{id:'i',nombre:"Informado"}]
+	mi.roles=[{id:'r',nombre:"Responsable"},{id:'a',nombre:"Aprobador"},{id:'c',nombre:"Consultado"},{id:'i',nombre:"Informado"}];
+	
 	mi.totalElementos = 0;
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = 5;
 	mi.elementosPorPagina = 9;
-
 	mi.mostrarCargando = false;
 	mi.data = [];
+	mi.mostrarRoles = $servlet == "/SColaborador";
 
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
+	
+	for (x in $idRoles){
+		for (y in mi.roles){
+			if ($idRoles[x] == mi.roles[y].id){
+				mi.roles.splice(y, 1);
+				break;
+			}
+		}
+	}
+	
 
 	$http.post($servlet, $accionServlet).success(function(response) {
 		for ( var key in response) {
@@ -768,7 +791,7 @@ function modalBuscar($uibModalInstance, $scope, $http, $interval,
 
 	mi.cargarData = function(pagina) {
 		mi.mostrarCargando = true;
-		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina)).then(
+		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina,$idResponsables)).then(
 				function(response) {
 					if (response.data.success) {
 
@@ -788,9 +811,11 @@ function modalBuscar($uibModalInstance, $scope, $http, $interval,
 	}
 
 	mi.ok = function() {
-		if (mi.seleccionado && mi.rolAsignado != null && mi.rolAsignado != undefined ) {
-			mi.itemSeleccionado.rol = mi.rolAsignado.id;
-			mi.itemSeleccionado.nombrerol = mi.rolAsignado.nombre;
+		if (mi.seleccionado && ((mi.rolAsignado != null && mi.rolAsignado != undefined) || !mi.mostrarRoles  )) {
+			if (mi.mostrarRoles){
+				mi.itemSeleccionado.rol = mi.rolAsignado.id;
+				mi.itemSeleccionado.nombrerol = mi.rolAsignado.nombre;
+			}
 			$uibModalInstance.close(mi.itemSeleccionado);
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar una fila');
