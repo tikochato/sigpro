@@ -118,9 +118,11 @@
 							</div>
 								<div class="col-sm-11">
 									<div class="btn-group">
-										<label class="btn btn-default" ng-model="desembolsosc.enMillones" uib-btn-radio="true"  uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
+										<label class="btn btn-default" ng-model="desembolsosc.enMillones" uib-btn-radio="true"  uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false"
+										ng-click="desembolsosc.convertirMillones()">
 										<span>MQ</span></label>
-										<label class="btn btn-default" ng-model="desembolsosc.enMillones" uib-btn-radio="false"  uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false">
+										<label class="btn btn-default" ng-model="desembolsosc.enMillones" uib-btn-radio="false"  uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false"
+										ng-click="desembolsosc.convertirMillones()">
 										<span>Q</span></label>
 							</div>
 									<div class="btn-group" style="padding-left: 20px;">

@@ -7,7 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojoSigade.DtmAvanceFisfinanDti;
-import utilities.CHibernateSessionSIGADE;
+import utilities.CHibernateSession;
 import utilities.CLogger;
 
 public class DataSigadeDAO {
@@ -15,7 +15,7 @@ public class DataSigadeDAO {
 	
 	public static List<DtmAvanceFisfinanDti> getInf(){
 		List<DtmAvanceFisfinanDti> ret = new ArrayList<DtmAvanceFisfinanDti>();
-		Session session = CHibernateSessionSIGADE.getSessionFactory().openSession();
+		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			Query<DtmAvanceFisfinanDti> criteria = session.createQuery("FROM dtm_avance_fisfinan_dti p ", DtmAvanceFisfinanDti.class);
 			ret = criteria.getResultList();
@@ -31,7 +31,7 @@ public class DataSigadeDAO {
 	
 	public static DtmAvanceFisfinanDti getInfPorId(String noPrestamo,String codigoPresupuestario){
 		DtmAvanceFisfinanDti ret = null;
-		Session session = CHibernateSessionSIGADE.getSessionFactory().openSession();
+		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query =String.join("", "SELECT i FROM dtm_avance_fisfinan_dti i ",
 					"where i.id.codigoPresupuestario = :codPre ",
@@ -52,7 +52,7 @@ public class DataSigadeDAO {
 	
 	public static DtmAvanceFisfinanDti getavanceFisFinanDMS1(String codigoPresupuestario){
 		DtmAvanceFisfinanDti ret = null;
-		Session session = CHibernateSessionSIGADE.getSessionFactory().openSession();
+		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
 			String query =String.join(" ", "select * from dtm_avance_fisfinan_dti fis",		
@@ -73,11 +73,11 @@ public class DataSigadeDAO {
 	
 	public static List<?> getAVANCE_FISFINAN_DET_DTI(String codigoPresupeustario){
 		List<?> ret = null;
-		Session session = CHibernateSessionSIGADE.getSessionFactory().openSession();
+		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
 			String query =String.join(" ", "select ejercicio_fiscal,mes_desembolso,sum(desembolsos_mes_gtq) ",
-					"from DTM_AVANCE_FISFINAN_DET_DTI",
+					"from dtm_avance_fisfinan_det_dti",
 					"where codigo_presupuestario = ?2",
 					"group by ejercicio_fiscal,mes_desembolso",
 					"order by ejercicio_fiscal,mes_desembolso asc");

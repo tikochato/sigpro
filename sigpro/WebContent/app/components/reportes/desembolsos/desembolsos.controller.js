@@ -14,6 +14,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	mi.mesReportado = "";
 	
 	mi.desembolsos= [];
+	mi.desembolsosOriginal = [];
 	mi.lista = [];
 	mi.anios = [];
 	mi.anio = "";
@@ -23,6 +24,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	mi.yAxisNombre="";
 	  
 	mi.enMillones = true;
+	mi.enMillonesAux = true; 
 	
 	
 	mi.fechaOptions = {
@@ -43,7 +45,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	mi.agrupaciones = [{id:1,nombre:"Mensual"},{id:2,nombre:"Bimestral"},{id:3,nombre:"Trimsestral"},
 		{id:4,nombre:"Cuatrimestral"},{id:5,nombre:"Semestral"},{id:6,nombre:"Anual"}];
 	
-	mi.options = {
+	mi.optionsMillones = {
 			
 			legend: {
 				display: true,
@@ -57,8 +59,48 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			          display: true,
 			          position: 'left',
 			          ticks: {
-	                        callback: function (value) {
-	                            return numeral(value).format('$ 0,0')
+	                        
+			        	     callback: function (value) {
+			        	    	 if (mi.enMillones)
+			        	    		 value = value / 1000000;
+			        	    	 return numeral(value).format('$ 0,0')
+	                        }
+	                   },
+	                   scaleLabel: {
+	                       display: true,
+	                       labelString: 'Monto'
+	                     }
+			        	
+			        }
+			      ],
+			      xAxes: [{
+			    	  scaleLabel: {
+	                       display: true,
+	                       labelString: mi.yAxisNombre
+	                     }
+			      }
+			      ]
+			    }
+			  };
+	
+	
+mi.options = {
+			
+			legend: {
+				display: true,
+				position: 'bottom'
+			},
+			    scales: {
+			      yAxes: [
+			        {
+			          id: 'y-axis-1',
+			          type: 'linear',
+			          display: true,
+			          position: 'left',
+			          ticks: {
+	                        
+			        	     callback: function (value) {
+			        	    	 return numeral(value).format('$ 0,0')
 	                        }
 	                   },
 	                   scaleLabel: {
@@ -301,6 +343,9 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			mi.desembolsos = [];
 			mi.desembolsos.push(agrupacionFinalPlanificado);
 			mi.desembolsos.push(agrupacionFinalReal);
+			mi.desembolsosOriginal.push(...mi.desembolsos);
+			
+			 
 		
 		} 
 		
@@ -359,6 +404,23 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 		 	case 1: mi.yAxisNombre="Semestral"; break;
 		 	case 1: mi.yAxisNombre="Anual"; break;
 		 }
+	 }
+	 
+	 
+	 mi.convertirMillones = function(){
+		 mi.desembolsos = [];
+		 mi.desembolsos.push(...mi.desembolsosOriginal);
+		 
+			 console.log(mi.desembolsos);
+			 for (x in mi.desembolsos){
+				 
+				 for (y = 0; y<12 ; y++){
+					 if (mi.enMillones){
+						 mi.desembolsos[x][y] = mi.desembolsos[x][y] / 1000000;
+					 } 
+				 }
+			 }
+		  
 	 }
 	 
 }]);

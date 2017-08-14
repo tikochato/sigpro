@@ -21,8 +21,6 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     mi.objetosSeleccionados=[];
     mi.datosTabla = [];
     mi.mostrar = false;
-    mi.fechaInicio = 2016;
-    mi.fechaFin = 2017;
     mi.dataCahrtLine = [];
     mi.etiquetasChartLine = [];
     mi.actividadesterminadas = [];

@@ -12,11 +12,7 @@
 	    width: 96%;
 	}
 	
-	.cabecerath1{
-		margin: 0px auto;
-    	width: 96px;
-    	overflow-x: hidden;
-	}
+	
 	.divTabla{
 	    width: 100%;
 	    height: 200px;
@@ -37,14 +33,14 @@
 		<div class="panel panel-default">
 		  <div class="panel-heading"><h3>Carga de Trabajo</h3></div>
 		</div>
-	    <br>
+	    <br><br>
 	    	<div class="col-sm-12">
 	    		<div class="row" >	    	
 					  <div class="form-group col-sm-4">
 						<select  class="inputText" ng-model="controller.prestamo"
 							ng-options="a.text for a in controller.prestamos" 
 							ng-change="controller.getEstructura()"></select>
-						<label for="tObjeto" class="floating-label">Préstamos</label>
+						
 					  </div>
 					  
 					  <div class="form-group col-sm-1">
