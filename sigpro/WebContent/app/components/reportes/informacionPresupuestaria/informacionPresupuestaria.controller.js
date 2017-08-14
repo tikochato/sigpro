@@ -19,6 +19,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 		mi.tamanioMinimoColumnaMillones = 75;
 		mi.grupoMostrado= {"planificado":true,"real":true};
 		mi.estiloAlineacion="text-align: center;";
+		mi.porcentajeCeldaValor = "width: 45%; float: left;";
+		mi.porcentajeCeldaPipe = "width: 10%; float: left;";
 		mi.data = [];
 		mi.totales = [];
 		mi.scrollPosicion = 0;
@@ -174,8 +176,12 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			mi.mostrarCargando = true;
 			if(mi.grupoMostrado.planificado && mi.grupoMostrado.real){
 				mi.estiloAlineacion="text-align: center;";
+				mi.porcentajeCeldaValor = "width: 45%; float: left;";
+				mi.porcentajeCeldaPipe = "width: 10%; float: left;";
 			}else{
 				mi.estiloAlineacion="text-align: right; padding-right:15px;";
+				mi.porcentajeCeldaValor = "";
+				mi.porcentajeCeldaPipe = "";
 			}
 			if(!mi.grupoMostrado.planificado && !mi.grupoMostrado.real){
 				if(tipo==1){

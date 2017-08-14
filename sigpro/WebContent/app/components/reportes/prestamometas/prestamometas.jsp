@@ -220,7 +220,7 @@
 		    	<div class="row" ng-hide="!controller.mostrarDescargar">
 		    				
 		    		<div class="divPadreNombres">
-			    		<div class="divTabla" style="max-height: 490px;"> 
+			    		<div class="divTabla"> 
 			    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos">
 								<thead class="theadDatos">
 									<tr>
@@ -231,7 +231,7 @@
 				          				<th style="text-align: center; vertical-align: top; min-width:100px;" class="label-form">de Medida</th>
 				         			</tr>
 								</thead>
-								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="max-height: 390px; margin-bottom: -15px;">
+								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="max-height: 390px;">
 									<tr ng-repeat="item in controller.data">
 							      		<td nowrap style="min-width:300px; max-width:300px; overflow:hidden;">
 							      			<p class="nombreFormat">
@@ -240,7 +240,7 @@
 							      			</p>
 							      		</td>
 							      		<td nowrap style="min-width:100px;">
-							      			<p class="nombreFormat">{{controller.nombreUnidadMedida(item.unidadDeMedida)}}</p>
+							      			<p class="nombreFormat" uib-tooltip="{{controller.nombreUnidadMedida(item.unidadDeMedida)}}">{{controller.nombreUnidadMedida(item.unidadDeMedida)}}</p>
 							      		</td>
 							      	</tr>
 								</tbody>
@@ -262,9 +262,15 @@
 								<tbody class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo>
 							      	<tr ng-repeat="item in controller.data" style="">
 								      		<td ng-repeat="posicion in controller.columnastotales track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}">
-								      			<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{controller.getPlanificado($parent.$index,$index, controller.VALOR_PLANIFICADO)}}</span>
-								      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real && controller.getPlanificado($parent.$index,$index, controller.VALOR_PLANIFICADO) && controller.getPlanificado($parent.$index,$index, controller.VALOR_REAL)" > | </span>
-								      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{controller.getPlanificado($parent.$index,$index, controller.VALOR_REAL)}}</span>
+								      			<div style="{{controller.porcentajeCeldaValor}}">
+												<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{controller.getPlanificado($parent.$index,$index, controller.VALOR_PLANIFICADO)}}</span>
+								      			</div>
+								      			<div style="{{controller.porcentajeCeldaPipe}}">
+												<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real && controller.getPlanificado($parent.$index,$index, controller.VALOR_PLANIFICADO) && controller.getPlanificado($parent.$index,$index, controller.VALOR_REAL)" > | </span>
+								      			</div>
+								      			<div style="{{controller.porcentajeCeldaValor}}">
+												<span ng-show="controller.grupoMostrado.real" class="colorReal">{{controller.getPlanificado($parent.$index,$index, controller.VALOR_REAL)}}</span>
+												</div>
 								      		</td>
 							      	</tr>
 								</tbody>
@@ -286,9 +292,15 @@
 							<tbody class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')" scrollespejo tot="{{mi.totales.length}}">
 									<tr ng-repeat="totales in controller.totales track by $index">
 										<td ng-repeat="total in totales.anio" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
+											<div style="{{controller.porcentajeCeldaValor}}">
 											<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{total.valor.planificado}}</span>
-							      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real" > | </span>
+											</div>
+							      			<div style="{{controller.porcentajeCeldaPipe}}">
+							      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real"> | </span>
+							      			</div>
+							      			<div style="{{controller.porcentajeCeldaValor}}">
 							      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{total.valor.real}}</span>
+							      			</div>
 										</td>
 										<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.data[$index].metaFinal}}</span></td>
 							      	</tr>
