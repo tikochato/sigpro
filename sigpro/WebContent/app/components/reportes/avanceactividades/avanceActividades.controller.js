@@ -9,13 +9,9 @@ app.filter('calculatePercentage', function () {
 	  };
 	});
 
-app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants',
-	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants){
+app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$window',
+	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$window){
 		var mi = this;
-		mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth);
-		mi.tamanoSemaforo = mi.tamanoPantalla * 0.01;
-		mi.tamanoNombres = (mi.tamanoPantalla - mi.tamanoSemaforo) * 0.35;
-		mi.tamanoColPorcentajes = (mi.tamanoPantalla - mi.tamanoNombres) / 4;
 		mi.mostrarCargando = false;
 		mi.mostrardiv=false;
 		mi.totalActividades = 0;
@@ -31,6 +27,15 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		
 		mi.totalProductos = 0;
 		mi.totalHitos = 0;
+		
+		mi.calcularTamanosPantalla = function(){
+			mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth);
+			mi.tamanoSemaforo = mi.tamanoPantalla * 0.05;
+			mi.tamanoNombres = (mi.tamanoPantalla - mi.tamanoSemaforo) * 0.35;
+			mi.tamanoColPorcentajes = (mi.tamanoPantalla - mi.tamanoNombres - mi.tamanoSemaforo) / 4;
+		}
+		
+		mi.calcularTamanosPantalla();
 		
 		mi.prestamos = [
 			{'value' : 0, 'text' : 'Seleccionar una opción'},
@@ -63,7 +68,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		mi.generar = function(){
 			if(mi.prestamo.value != 0){
 				if(mi.fechaCorte != null){
-					mi.mostrardiv=true;
+					mi.mostrardiv = false;
 					mi.rowCollectionActividades = [];
 					mi.rowCollectionHitos = [];
 					mi.rowProductos = [];
@@ -125,6 +130,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 							mi.totalProductos = response.totalProductos;
 							
 							mi.mostrarCargando = false;
+							mi.mostrardiv=true;
 						}else
 							mi.mostrarCargando = false;
 					});
@@ -143,4 +149,9 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 			}
 			return style;
 		}
+		
+		angular.element($window).bind('resize', function(){ 
+            mi.calcularTamanosPantalla();
+            $scope.$digest();
+        });
 }]);
