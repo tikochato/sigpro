@@ -84,9 +84,10 @@ public class SColaborador extends HttpServlet {
 			String filtro_unidad_ejecutora = parametro.get("filtro_unidad_ejecutora");
 			String columna_ordenada  = parametro.get("columna_ordenada");
 			String orden_direccion = parametro.get("orden_direccion");
+			String excluir = parametro.get("idResponsables");
 			
 			List<Colaborador> colaboradores = ColaboradorDAO.getPagina(pagina, registros, filtro_pnombre, filtro_snombre, filtro_papellido, filtro_sapellido,
-						filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion);
+						filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion,excluir);
 
 			List<stcolaborador> listaColaborador = new ArrayList<stcolaborador>();
 
@@ -143,7 +144,7 @@ public class SColaborador extends HttpServlet {
 				String orden_direccion = parametro.get("orden_direccion");
 				
 				List<Colaborador> colaboradores = ColaboradorDAO.getPagina(pagina, registros, filtro_pnombre, filtro_snombre, filtro_papellido, filtro_sapellido,
-							filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion);
+							filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion,null);
 
 				List<stcolaborador> listaColaborador = new ArrayList<stcolaborador>();
 
@@ -204,7 +205,7 @@ public class SColaborador extends HttpServlet {
 				String orden_direccion = parametro.get("orden_direccion");
 			
 				List<Colaborador> colaboradores = ColaboradorDAO.getPagina(pagina, registros, filtro_pnombre, filtro_snombre, filtro_papellido, filtro_sapellido,
-							filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion);
+							filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion,null);
 
 				List<stcolaborador> listaColaborador = new ArrayList<stcolaborador>();
 
@@ -305,12 +306,6 @@ public class SColaborador extends HttpServlet {
 				 response_text = String.join("", "{\"success\":false}");
 			}
 			
-			
-			
-			
-				
-		
-				
 			
 		}
 
