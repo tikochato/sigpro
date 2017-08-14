@@ -82,7 +82,7 @@
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/informacionPresupuestaria/rp">Información presupuestaria</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/planadquisiciones/rp">Plan de adquisiciones</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/planejecucion/rp">Plan de ejecución</a></li></shiro:hasPermission>
-                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/prestamometas" ng-if="flase">Metas de Préstamo</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/prestamometas">Metas de Préstamo</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/desembolsos/rp">Desembolsos</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/administracionTransaccional/rp">Administración transaccional</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/matrizraci/rp">Matriz RACI</a></li></shiro:hasPermission>
