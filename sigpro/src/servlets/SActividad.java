@@ -313,7 +313,7 @@ public class SActividad extends HttpServlet {
 						
 						String asignaciones_param = map.get("asignacionroles");
 						
-						String[] asignaciones = asignaciones_param.split("||");
+						String[] asignaciones = asignaciones_param.split("\\|");
 						if (asignaciones.length > 0){
 							for (String temp : asignaciones){
 								AsignacionRaci asigna_temp = new AsignacionRaci();
@@ -332,9 +332,6 @@ public class SActividad extends HttpServlet {
 								result = result && AsignacionRaciDAO.guardarAsignacion(asigna_temp);
 							}
 						}
-						
-							
-						
 					}
 
 					Set<ActividadPropiedadValor> valores_temp = actividad.getActividadPropiedadValors();
