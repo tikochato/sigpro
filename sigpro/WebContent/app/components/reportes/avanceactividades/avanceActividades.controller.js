@@ -98,7 +98,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 						if (response.success){
 							if(response.actividades != undefined){
 								mi.rowCollectionActividades = response.actividades;
-								mi.displayedCollectionActividades = [].concat(mi.rowCollectionActividades);	
+								mi.displayedCollectionActividades = [].concat(mi.rowCollectionActividades);
 							}
 							
 							mi.totalActividades = response.totalActividades;
