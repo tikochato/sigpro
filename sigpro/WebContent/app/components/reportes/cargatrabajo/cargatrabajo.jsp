@@ -9,7 +9,7 @@
 	    margin-top: -47px;
 	    flex-shrink: 0;
 	    overflow-x: hidden;
-	    width: 96%;
+	    width: 99%;
 	}
 	
 	
@@ -18,6 +18,13 @@
 	    height: 200px;
 	    overflow-y: auto;
 	    
+	}
+	
+	.label-form2 {
+    	font-size: 15px;
+    	opacity: 1;
+    	color: rgba(0,0,0,0.38) !important;
+    	font-weight: bold;
 	}
 			</style>
 	<div ng-controller="cargatrabajoController as controller" class="maincontainer all_page" id="title">
@@ -33,7 +40,7 @@
 		<div class="panel panel-default">
 		  <div class="panel-heading"><h3>Carga de Trabajo</h3></div>
 		</div>
-	    <br><br>
+	    <br>
 	    	<div class="col-sm-12">
 	    		<div class="row" >	    	
 					  <div class="form-group col-sm-4">
@@ -77,17 +84,17 @@
 							<thead  class="cabecera">
 								<tr>
 									<th style="display: none;">Id</th>
-									<th class="label-form" style="width: 43%" >Responsable</th>
-									<th class="label-form" style="width: 15%; text-align: center;">Actividades retrasadas</th>
-									<th class="label-form" style="width: 15%; text-align: center;">Actividades en alerta</th>
-									<th class="label-form" style="width: 15%; text-align: center;">Actividades a cumplir</th>
-									<th class="label-form" style="width: 15%; text-align: center;">Actividades completadas</th>
+									<th class="label-form" style="width: 43%" st-sort="row.responsable" >Responsable</th>
+									<th class="label-form" style="width: 15%; text-align: center;" st-sort="row.responsable">Actividades retrasadas</th>
+									<th class="label-form" style="width: 15%; text-align: center;" st-sort="row.actividadesAtrasadas">Actividades en alerta</th>
+									<th class="label-form" style="width: 15%; text-align: center;" st-sort="row.actividadesACumplir">Actividades a cumplir</th>
+									<th class="label-form" style="width: 15%; text-align: center;" st-sort="row.actividadesCompletadas">Actividades completadas</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr ng-repeat="row in controller.displayedCollection" ng-click="controller.actividadesResponsable(row)">
 									<td style="display: none;" >{{row.id}}</td>
-									<td style="width: 40%" >{{row.responsable}}</td>
+									<td style="width: 43%" >{{row.responsable}}</td>
 									<td style="text-align: center; width: 15%;">{{row.actividadesAtrasadas}}</td>
 									<td style="text-align: center; width: 15%;">{{row.actividadesAlerta}}</td>
 									<td style="text-align: center; width: 15%;">{{row.actividadesACumplir}}</td>
@@ -109,9 +116,12 @@
 			    <br>
 		    	<br>
 		    	
-		    	<div class="row">
+		    	<div class="row" ng-if="controller.mostrar">
 		    		<div class="col-sm-6">
-		    			<canvas id="line"  class="chart chart-line" chart-data="controller.dataCahrtLine"
+		    		<div style="text-align: center" >
+		    			<label class="label-form2"> Actividades Terminadas</label>
+		    			</div>
+		    			<canvas id="line"  class="chart chart-line" chart-data="controller.dataChartLine"
 						chart-labels="controller.etiquetasChartLine"  chart-options="controller.options"
 						chart-dataset-override="controller.datasetOverride"  
 						chart-series="controller.seriesLine"
@@ -120,6 +130,10 @@
 						</canvas>
 		    		</div>	
 		    		<div class="col-sm-6">
+		    		<div style="text-align: center" >
+		    			<label class="label-form2"> Estado de Actividades</label>
+		    		</div>
+		    		
 		    			<canvas id="pie" class="chart chart-pie" 
 				  	chart-data="controller.data" chart-labels="controller.labels" chart-options="controller.optionsPie"
 				  	chart-colors = "controller.pieColors" 

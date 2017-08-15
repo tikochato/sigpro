@@ -31,7 +31,7 @@
 			<div class="panel-heading"><h3>Plan de Ejecución</h3></div>
 		</div>
 		
-		
+		<br>
 		<div class="row" align="center" >
 			<div class="col-sm-12 ">
 			
@@ -42,9 +42,8 @@
 							ng-readonly="true"
 							ng-required="true"
 							ng-change = "planc.generarReporte()">
-							<option value="">Seleccione una opción</option>
+							<option value="">Seleccione una préstamo</option>
 							</select>
-						<label for="prestamo" class="floating-label">Préstamos</label>
 				</div>
 			</form>
 			<br/> <br/><br/>
@@ -55,7 +54,7 @@
 					<div class = "table-responsive">
 						<table class="table table-condensed borderless table-sm" >
 							<tr>
-	   							<td style="width: 35%" >
+	   							<td style="width: 50%; text-align: right;" >
 	   								<label class="label-form1" >Mes Reportado</label>	
 	   							</td>
 	   							<td >
@@ -63,7 +62,7 @@
 	   							</td>
 	   						</tr>
 	   						<tr>
-	   							<td>
+	   							<td style="text-align: right;">
 	   								<label class="label-form1" >Año Fiscal</label>
 	   							</td>
 	   							<td>
@@ -71,7 +70,7 @@
 	   							</td>
 	   						</tr>
 	   						<tr>
-	   							<td>
+	   							<td style="text-align: right;">
 	   								<label class="label-form1" >Proyecto/Programa</label>
 	   							</td>
 	   							<td>
@@ -79,7 +78,7 @@
 	   							</td>
 	   						</tr>
 	   						<tr>
-	   							<td>
+	   							<td style="text-align: right;">
 	   								<label class="label-form1" >Organismo Ejecutor</label>
 	   							</td>
 	   							<td>
@@ -92,20 +91,20 @@
 					</div>
 				</div>
 				
-				<table class="table table-hover table-condensed table-responsive table-striped table-bordered table-sm"
+				<table class="table table-hover table-condensed table-responsive table-striped borderless table-sm"
 				ng-hide="!planc.mostrar">
 						<tbody>
       						<tr>
       							<td style="width: 20%">
       								<label class="label-form1" >Número de Prestamo</label>
       							</td>
-      							<td style="width: 40%">
+      							<td style="width: 35%">
       								<p>{{ planc.prestamo.numeroPrestamo }}</pl>
       							</td>
       							<td style="width: 20%; ">
       								<label  class="label-form1"  >Fecha Ultima Actualización</label>
       							</td style="width: 20%">
-      							<td style="text-align: right;">
+      							<td style="text-align: left;">
       								<p>{{ planc.prestamo.fechaActualizacion }}</p>
       							</td>
       						</tr>
@@ -121,7 +120,7 @@
       							<td>
       								<label  class="label-form1" >Fecha del decreto</label>
       							</td>
-      							<td style="text-align: right;">
+      							<td style="text-align: left;">
 				  					<p>{{ planc.prestamo.fechaDecreto }}</p>
       							</td>
       						</tr>
@@ -136,7 +135,7 @@
       							<td>
       								<label for="fechaActualizacion"  class="label-form1" >Fecha del suscripción</label>
       							</td>
-      							<td style="text-align: right;">
+      							<td style="text-align: left;">
 				  					<p>{{ planc.prestamo.fechaSuscripcion }}</p>
       							</td>
       						</tr>
@@ -150,7 +149,7 @@
       							<td>
       								<label for="fechaActualizacion"  class="label-form1" >Fecha de vigencia</label>
       							</td>
-      							<td style="text-align: right;">
+      							<td style="text-align: left;">
 				  					<p>{{ planc.prestamo.fechaVigencia }}</p>
       							</td>
       						</tr>
@@ -164,7 +163,7 @@
       							<td>
       								<label for="fechaActualizacion"  class="label-form1" >Fecha de elegibilidad</label>
       							</td>
-      							<td style="text-align: right;">
+      							<td style="text-align: left;">
 				  					<p>{{ planc.prestamo.fechaElegibilidadUe }}</p>
       							</td>
       						</tr>
@@ -179,7 +178,7 @@
       							<td>
       								<label for="fechaActualizacion"  class="label-form1" >Fecha de cierre</label>
       							</td>
-      							<td style="text-align: right;">
+      							<td style="text-align: left;">
 				  					<p>{{ planc.prestamo.fechaCierreActualUe }}</p>
       							</td>
       						</tr>
@@ -187,13 +186,13 @@
       							<td>
       								<label  class="label-form1" >Monto Aprobado</label>
       							</td>
-      							<td style="text-align: right;">
+      							<td style="text-align: left;">
 				  					<p> $ {{ planc.prestamo.montoContratado | number:2 }}</p>
       							</td>
       							<td>
       								<label for="fechaActualizacion"  class="label-form1" >Meses de prorroga</label>
       							</td>
-      							<td style="text-align: right;">
+      							<td style="text-align: left;">
 				  					<p>{{ planc.prestamo.mesesProrrogaUe }}</p>
       							</td>
       						</tr>
@@ -201,13 +200,13 @@
       							<td>
       								<label  class="label-form1" >Monto aprobado Q</label>
       							</td>
-      							<td style="text-align: right;">
+      							<td style="text-align: left;">
 				  					<p>{{ planc.prestamo.montoContratadoQtz | formatoMillones : false}}</p>
       							</td>
       							<td>
       								<label for="fechaActualizacion"  class="label-form1" >Plazo ejecución</label>
       							</td>
-      							<td style="text-align: right;">
+      							<td style="text-align: left;">
 				  					<p>{{ planc.prestamo.plazoEjecucionUe }}</p>
       							</td>
       						</tr>

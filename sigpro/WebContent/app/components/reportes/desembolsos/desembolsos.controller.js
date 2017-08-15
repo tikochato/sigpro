@@ -15,6 +15,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	
 	mi.desembolsos= [];
 	mi.desembolsosOriginal = [];
+	mi.desembolsosGrafica=[];
 	mi.lista = [];
 	mi.anios = [];
 	mi.anio = "";
@@ -38,7 +39,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	mi.etiqutas = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio","Agosto","Septiembre",
 		"Octubre","Noviembre","Diciembre"];
 	mi.series = ['Planificado', 'Real'];
-	mi.radarColors = ['#303f9e','#257129'];
+	mi.radarColors = ['#88b4df','#8ecf4c'];
 	mi.datasetOverride = [{ yAxisID: 'y-axis-1' }
 	];
 	
@@ -308,6 +309,8 @@ mi.options = {
 			mi.tabla.push(desembolsoPlanificado);
 			mi.tabla.push(desembolsoReal);
 			mi.tabla.push(variaciones);
+			
+			mi.convertirMillones();
 		}	
 	}
 	
@@ -343,8 +346,10 @@ mi.options = {
 			mi.desembolsos = [];
 			mi.desembolsos.push(agrupacionFinalPlanificado);
 			mi.desembolsos.push(agrupacionFinalReal);
+			mi.desembolsosOriginal=[]
 			mi.desembolsosOriginal.push(...mi.desembolsos);
 			
+			 mi.convertirMillones();
 			 
 		
 		} 
@@ -408,16 +413,18 @@ mi.options = {
 	 
 	 
 	 mi.convertirMillones = function(){
-		 mi.desembolsos = [];
-		 mi.desembolsos.push(...mi.desembolsosOriginal);
+		 mi.desembolsosGrafica = [];
+		
+		 mi.desembolsosGrafica = JSON.parse(JSON.stringify(mi.desembolsosOriginal));
 		 
-			 console.log(mi.desembolsos);
+		 
 			 for (x in mi.desembolsos){
 				 
 				 for (y = 0; y<12 ; y++){
 					 if (mi.enMillones){
-						 mi.desembolsos[x][y] = mi.desembolsos[x][y] / 1000000;
-					 } 
+						 mi.desembolsosGrafica[x][y] = mi.desembolsosGrafica[x][y] / 1000000;
+					 }else
+						 break;
 				 }
 			 }
 		  

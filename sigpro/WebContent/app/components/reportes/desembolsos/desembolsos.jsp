@@ -4,13 +4,13 @@
 	
 	 
 	.planificado {
-		color: #303f9e;
+		color: #3647b2;
 		 border-right: 1px solid #ddd; 
 		
 	}
 	
 	.real2 {
-		color: #257129;
+		color: #2b8430;
 		 border-right: 1px solid #ddd; 
 		 
 	}
@@ -86,23 +86,21 @@
 		<div class="panel panel-default">
 			<div class="panel-heading"><h3>Desembolsos</h3></div>
 		</div>
-		<div class="subtitulo">
-			{{ desembolsosc.objetoTipoNombre }} {{ desembolsosc.proyectoNombre }}
-		</div>
 		
+		<br/>
 		<div class="row" align="center" >
 			<div class="col-sm-12 ">
 			
 			<form name="form">
 				<div class="row">
-					<div class="form-group col-sm-3">
+					<div class="form-group col-sm-4">
 						<select  class="inputText" ng-model="desembolsosc.prestamoSeleccionado"
 							ng-options="a.text for a in desembolsosc.prestamos"
 							ng-readonly="true"
 							ng-required="true"
 							ng-change="desembolsosc.generarReporte()">
 							
-							<option value="">Seleccione una opción</option>
+							<option value="">Seleccione una préstamo</option>
 						</select>
 						<label for="prestamo" class="floating-label">Préstamos</label>
 					</div>
@@ -113,7 +111,7 @@
 					  	<label for="campo.id" class="floating-label">*Año Inicial</label>
 					</div>
 					
-					<div class="col-sm-7" align="right" ng-hide="!desembolsosc.mostrar" >
+					<div class="col-sm-6" align="right" ng-hide="!desembolsosc.mostrar" >
 						<div class="form-group col-sm-1">
 							</div>
 								<div class="col-sm-11">
@@ -154,7 +152,7 @@
 			
 			<br/>
 			<div style="width: 70%">
-				<canvas id="line" class="chart chart-line" chart-data="desembolsosc.desembolsos" ng-hide="!desembolsosc.mostrar"
+				<canvas id="line" class="chart chart-line" chart-data="desembolsosc.desembolsosGrafica" ng-hide="!desembolsosc.mostrar"
 				chart-labels="desembolsosc.etiqutas" chart-series="desembolsosc.series" chart-options="desembolsosc.options"
 				chart-dataset-override="desembolsosc.datasetOverride" 
 				 chart-colors = "desembolsosc.radarColors" chart-legend="true">

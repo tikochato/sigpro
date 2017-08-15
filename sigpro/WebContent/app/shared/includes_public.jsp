@@ -37,6 +37,7 @@
 <script type="text/javascript" src="/assets/libs/contextMenu.js"></script>
 <script type="text/javascript" src="/assets/libs/angular-input-masks-standalone.js"></script>
 <script type="text/javascript" src="/assets/libs/ivh-treeview.js"></script>
+<script type="text/javascript" src="/assets/libs/Chart.PieceLabel.js"></script>
 
 <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPq-t4dJ1GV1kdtXoVZfG7PtfEAHrhr00&callback=initMap" type="text/javascript"></script> -->
 <script>

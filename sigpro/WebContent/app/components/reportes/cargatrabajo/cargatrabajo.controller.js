@@ -21,7 +21,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     mi.objetosSeleccionados=[];
     mi.datosTabla = [];
     mi.mostrar = false;
-    mi.dataCahrtLine = [];
+    mi.dataChartLine = [];
     mi.etiquetasChartLine = [];
     mi.actividadesterminadas = [];
     
@@ -31,12 +31,19 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     
     
     	mi.optionsPie = {
-			
+    			
 			legend: {
 				display: true,
-				position: 'bottom'
-			}
+				position: 'right'
+			},
+			pieceLabel: {
+			    render: 'percentage',
+			    fontColor: ['green', 'white', 'red'],
+			    precision: 2
+			  }
 			  };
+    	
+    	
     	
     	
     	mi.seriesLine = ['Actividades Terminadas'];
@@ -47,9 +54,22 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     			        {
     			          id: 'y-axis-1',
     			          type: 'linear',
+    			          
     			          display: true,
     			          position: 'left',
-    			          labelString: "Actividades Terminadas"
+    			          scaleLabel: {
+	   	                       display: true,
+	   	                       labelString: 'Total',
+   	                      },
+   	                   stacked: true,
+   	                ticks: {
+   	                   min: 0,
+   	                   stepSize: 1,
+   	               },
+   	                  gridLines: {
+                          display: false
+                      }
+    			          
     			        	 
     			        }
     			      ],
@@ -57,7 +77,10 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     			    	  scaleLabel: {
     	                       display: true,
     	                       labelString: "Mes"
-    	                     }
+    	                     },
+    	                     gridLines: {
+    	                          display: false
+    	                      }
     			      }
     			      ]
     			    }
@@ -283,7 +306,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 								        
 								        
 								    	
-								    	 mi.labels = ["Actividades retrasadas", "Actividades en alerta", "Actividades a cumplir","Actividades completadas"];
+								    	 mi.labels = ["Retrasadas", "En alerta", "A cumplir","Completadas"];
 								    	 mi.data = [mi.actividadesAtrasadasTotal, mi.actividadesAlertaTotal,
 								    		 mi.actividadesACumplirTotal,mi.actividadesCompletadas];
 								    	 
@@ -306,17 +329,35 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 								}).success(function(response){
 									if(response.success){
 										mi.actividadesterminadas = response.actividadesterminadas;
-										mi.dataCahrtLine = [];
+										mi.dataChartLine = [];
 										mi.etiquetasChartLine=[];
+										
+										var aniotemp=0;
 										for (x in mi.actividadesterminadas ){
-											mi.dataCahrtLine.push(mi.actividadesterminadas[x].total)
-											mi.etiquetasChartLine.push(mi.actividadesterminadas[x].mes + "-" + mi.actividadesterminadas[x].anio);
+											
+											
+											if (x > 0 ){
+												var sigueinteMes = mi.obtenerSiguienteMes(mestemp,aniotemp);
+												while (sigueinteMes.mes < mi.actividadesterminadas[x].mes 
+														|| sigueinteMes.anio < mi.actividadesterminadas[x].anio){
+													mi.dataChartLine.push(0);
+													mi.etiquetasChartLine.push (mi.obtenerMes(sigueinteMes.mes) + 
+															(mi.fechaInicio != mi.fechaFin ? "-" + sigueinteMes.anio : ""));
+													sigueinteMes = mi.obtenerSiguienteMes(sigueinteMes.mes,sigueinteMes.anio);	
+												}
+											}
+											mi.dataChartLine.push(mi.actividadesterminadas[x].total)
+											mi.etiquetasChartLine.push(mi.obtenerMes(mi.actividadesterminadas[x].mes) + 
+													(mi.fechaInicio != mi.fechaFin ? "-" + mi.actividadesterminadas[x].anio : ""));
+											 
+											mestemp = mi.actividadesterminadas[x].mes;
+											aniotemp = mi.actividadesterminadas[x].anio;
 										}
 										
 										
 										  
-										  mi.dataCahrtLine = [
-											  mi.dataCahrtLine
+										  mi.dataChartLine = [
+											  mi.dataChartLine
 										    
 										  ];
 									}
@@ -328,6 +369,19 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			
 		}
 	};
+	
+	mi.obtenerSiguienteMes = function(mes,anio){
+		var siguiente = [];
+		if (mes <12){
+			siguiente.mes = mes+ 1;
+			siguiente.anio=anio;
+		}else{
+			siguiente.mes = 1;
+			siguiente.anio = anio+ 1;
+		}
+		return siguiente;
+	}
+	
 	
 	mi.agregarhijos = function (hijos){
 		for (x in hijos){
@@ -512,25 +566,24 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	
 	
 	mi.actividadesResponsable = function(valor){
-		console.log(valor);
 		var resultado = mi.llamarModalEstructuraResponsable(mi.prestamo.value,valor.id); 
 	};
 	
 	
 	mi.obtenerMes = function(valor){
 		switch (valor){
-			case 1: return "Enero"; 
-			case 2: return "Febrero"; 
-			case 3: return "Marzo"; 
-			case 4: return "Abril"; 
-			case 5: return "Mayo"; 
-			case 6: return "Junio"; 
-			case 7: return "Julio"; 
-			case 8: return "Agosto"; 
-			case 9: return "Septiembre"; 
-			case 10: return "Octubre"; 
-			case 11: return "Nomviembre"; 
-			case 12: return "Diciembre"; 
+			case 1: return "Ene"; 
+			case 2: return "Feb"; 
+			case 3: return "Mar"; 
+			case 4: return "Abr"; 
+			case 5: return "May"; 
+			case 6: return "Jun"; 
+			case 7: return "Jul"; 
+			case 8: return "Ago"; 
+			case 9: return "Sept"; 
+			case 10: return "Octe"; 
+			case 11: return "Nov"; 
+			case 12: return "Dic"; 
 		}
 	}
 	
@@ -549,7 +602,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	    mi.datosTabla = [];
 	    mi.mostrar = false;
 	    
-	    mi.dataCahrtLine = [];
+	    mi.dataChartLine = [];
 	    mi.etiquetasChartLine = [];
 	    mi.actividadesterminadas = [];
 	};
@@ -675,6 +728,13 @@ function modalEstructuraResponsable($uibModalInstance, $scope, $http, $interval,
 			case 4: style.color="#b0cfe8"; break;
 		}
 		return style;
+	}
+	
+
+	mi.seriesLine = function (){
+		
+		
+		
 	}
 	
 	

@@ -574,9 +574,9 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		  
 		  switch (valor){
 		  	case 'r': return "Responsable";
-		  	case 'a': return "Aprobador";
-		  	case 'c': return "Consultado";
-		  	case 'i': return "Informado";
+		  	case 'a': return "Cuentadante";
+		  	case 'c': return "Consutor";
+		  	case 'i': return "Quien informa";
 		  }
 		  return "";
 	  }
@@ -726,7 +726,7 @@ function modalBuscar($uibModalInstance, $scope, $http, $interval,
 	$idResponsables,$idRoles) {
 
 	var mi = this;
-	mi.roles=[{id:'r',nombre:"Responsable"},{id:'a',nombre:"Aprobador"},{id:'c',nombre:"Consultado"},{id:'i',nombre:"Informado"}];
+	mi.roles=[{id:'r',nombre:"Responsable"},{id:'a',nombre:"Cuentadante"},{id:'c',nombre:"Consultor"},{id:'i',nombre:"Quien informa"}];
 	
 	mi.totalElementos = 0;
 	mi.paginaActual = 1;
