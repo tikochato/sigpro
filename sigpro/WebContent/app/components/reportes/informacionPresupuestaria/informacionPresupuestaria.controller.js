@@ -340,6 +340,13 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 					$timeout(function(){
 						mi.mostrarCargando = false;
 					})
+					
+					mi.labels = ["January", "February", "March", "April", "May", "June", "July"];
+					  mi.series = ['Series A', 'Series B'];
+					  mi.dataGrafica = [
+					    [65, 59, 80, 81, 56, 55, 40],
+					    [28, 48, 40, 19, 86, 27, 90]
+					  ];
 				}
 			});
 	}
