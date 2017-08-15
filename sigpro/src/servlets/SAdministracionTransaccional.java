@@ -20,16 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.ActividadDAO;
 import dao.AdministracionTransaccionalDAO;
-import dao.ComponenteDAO;
-import dao.InformacionPresupuestariaDAO;
-import dao.ProductoDAO;
-import dao.SubproductoDAO;
-import pojo.Actividad;
-import pojo.Componente;
-import pojo.Producto;
-import pojo.Subproducto;
 import utilities.CMariaDB;
 import utilities.Utils;
 
@@ -79,7 +70,6 @@ public class SAdministracionTransaccional extends HttpServlet {
 		String accion = map.get("accion");
 		String response_text="";
 		if(accion.equals("getComponentes")){
-			//List<sttransaccion> lstransaccion = ObtenerProyecto(proyectoId, usuario);
 			List<stusuario> lstusuarios = new ArrayList<stusuario>();
 			if(CMariaDB.connect()){
 				Connection conn = CMariaDB.getConnection();
@@ -109,137 +99,4 @@ public class SAdministracionTransaccional extends HttpServlet {
         gz.close();
         output.close();
 	}
-	
-	private List<sttransaccion> ObtenerProyecto(Integer idPrestamo, String usuario){
-		List<sttransaccion> lstransaccion = new ArrayList<sttransaccion>();
-		sttransaccion tempPrestamo = new sttransaccion();
-		if(CMariaDB.connect()){
-			Connection conn = CMariaDB.getConnection();
-			ArrayList<Integer> componentes = InformacionPresupuestariaDAO.getEstructuraArbolComponentes(idPrestamo, conn);
-			
-			for(Integer componente:componentes){
-				Componente objComponente = ComponenteDAO.getComponentePorId(componente, usuario);
-				tempPrestamo.objeto_id = objComponente.getId();
-				tempPrestamo.nombre = objComponente.getNombre();
-				tempPrestamo.objeto_tipo = 2;
-				tempPrestamo.nombre_objeto_tipo = "Componente";
-				tempPrestamo.usuario_creo = objComponente.getUsuarioCreo();
-				tempPrestamo.usuario_actualizo = objComponente.getUsuarioActualizo();
-				tempPrestamo.fecha_creacion = Utils.formatDate(objComponente.getFechaCreacion());
-				tempPrestamo.fecha_modificacion = Utils.formatDate(objComponente.getFechaActualizacion());
-				tempPrestamo.estado = objComponente.getEstado() == 1 ? "Activo" : "Inactivo";
-				
-				lstransaccion.add(tempPrestamo);							
-				ArrayList<Integer> productos = InformacionPresupuestariaDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
-				for(Integer producto: productos){
-					tempPrestamo = new sttransaccion();
-					Producto objProducto = ProductoDAO.getProductoPorId(producto);
-					tempPrestamo.objeto_id = objProducto.getId();
-					tempPrestamo.nombre = objProducto.getNombre();
-					tempPrestamo.objeto_tipo = 3;
-					tempPrestamo.nombre_objeto_tipo = "Producto";
-					tempPrestamo.usuario_creo = objProducto.getUsuarioCreo();
-					tempPrestamo.usuario_actualizo = objProducto.getUsuarioActualizo();
-					tempPrestamo.fecha_creacion = Utils.formatDate(objProducto.getFechaCreacion());
-					tempPrestamo.fecha_modificacion = Utils.formatDate(objProducto.getFechaActualizacion());
-					tempPrestamo.estado = objProducto.getEstado() == 1 ? "Activo" : "Inactivo";
-					
-					lstransaccion.add(tempPrestamo);
-					ArrayList<Integer> subproductos = InformacionPresupuestariaDAO.getEstructuraArbolSubProducto(idPrestamo,objComponente.getId(),objProducto.getId(), conn);
-					for(Integer subproducto: subproductos){
-						tempPrestamo = new sttransaccion();
-						Subproducto objSubProducto = SubproductoDAO.getSubproductoPorId(subproducto);
-						tempPrestamo.objeto_id = objSubProducto.getId();
-						tempPrestamo.nombre = objSubProducto.getNombre();
-						tempPrestamo.objeto_tipo = 4;
-						tempPrestamo.nombre_objeto_tipo = "Sub Producto";
-						tempPrestamo.usuario_creo = objSubProducto.getUsuarioCreo();
-						tempPrestamo.usuario_actualizo = objSubProducto.getUsuarioActualizo();
-						tempPrestamo.fecha_creacion = Utils.formatDate(objSubProducto.getFechaCreacion());
-						tempPrestamo.fecha_modificacion = Utils.formatDate(objSubProducto.getFechaActualizacion());
-						tempPrestamo.estado = objSubProducto.getEstado() == 1 ? "Activo" : "Inactivo";
-						
-						lstransaccion.add(tempPrestamo);
-						//actividades sub producto
-						ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolSubProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(),objSubProducto.getId(), conn);
-						for(ArrayList<Integer> actividad : actividades){
-							tempPrestamo = new sttransaccion();
-							Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
-							tempPrestamo.objeto_id = objActividad.getId();
-							tempPrestamo.nombre = objActividad.getNombre();
-							tempPrestamo.objeto_tipo = 5;
-							tempPrestamo.nombre_objeto_tipo = "Actividad";
-							tempPrestamo.usuario_creo = objActividad.getUsuarioCreo();
-							tempPrestamo.usuario_actualizo = objActividad.getUsuarioActualizo();
-							tempPrestamo.fecha_creacion = Utils.formatDate(objActividad.getFechaCreacion());
-							tempPrestamo.fecha_modificacion = Utils.formatDate(objActividad.getFechaActualizacion());
-							tempPrestamo.estado = objActividad.getEstado() == 1 ? "Activo" : "Inactivo";
-							
-							lstransaccion.add(tempPrestamo);
-						}
-					}
-					
-					//actividades producto
-					ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(), conn);
-					for(ArrayList<Integer> actividad : actividades){
-						tempPrestamo = new sttransaccion();
-						Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
-						tempPrestamo.objeto_id = objActividad.getId();
-						tempPrestamo.nombre = objActividad.getNombre();
-						tempPrestamo.objeto_tipo = 5;
-						tempPrestamo.nombre_objeto_tipo = "Actividad";
-						tempPrestamo.usuario_creo = objActividad.getUsuarioCreo();
-						tempPrestamo.usuario_actualizo = objActividad.getUsuarioActualizo();
-						tempPrestamo.fecha_creacion = Utils.formatDate(objActividad.getFechaCreacion());
-						tempPrestamo.fecha_modificacion = Utils.formatDate(objActividad.getFechaActualizacion());
-						tempPrestamo.estado = objActividad.getEstado() == 1 ? "Activo" : "Inactivo";
-						
-						lstransaccion.add(tempPrestamo);						
-					}  
-				} 
-				//actividades componente
-				ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolComponentesActividades(idPrestamo, objComponente.getId(), conn);							
-				for(ArrayList<Integer> actividad : actividades){
-					tempPrestamo = new sttransaccion();
-					Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
-					tempPrestamo.objeto_id = objActividad.getId();
-					tempPrestamo.nombre = objActividad.getNombre();
-					tempPrestamo.objeto_tipo = 5;
-					tempPrestamo.nombre_objeto_tipo = "Actividad";
-					tempPrestamo.usuario_creo = objActividad.getUsuarioCreo();
-					tempPrestamo.usuario_actualizo = objActividad.getUsuarioActualizo();
-					tempPrestamo.fecha_creacion = Utils.formatDate(objActividad.getFechaCreacion());
-					tempPrestamo.fecha_modificacion = Utils.formatDate(objActividad.getFechaActualizacion());
-					tempPrestamo.estado = objActividad.getEstado() == 1 ? "Activo" : "Inactivo";
-					
-					lstransaccion.add(tempPrestamo);
-				} 
-			}
-			
-			
-			//actividades prestamo
-			ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolPrestamoActividades(idPrestamo, conn);
-			
-			for(ArrayList<Integer> actividad : actividades){
-				tempPrestamo = new sttransaccion();
-				Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
-				tempPrestamo.objeto_id = objActividad.getId();
-				tempPrestamo.nombre = objActividad.getNombre();
-				tempPrestamo.objeto_tipo = 5;
-				tempPrestamo.nombre_objeto_tipo = "Actividad";
-				tempPrestamo.usuario_creo = objActividad.getUsuarioCreo();
-				tempPrestamo.usuario_actualizo = objActividad.getUsuarioActualizo();
-				tempPrestamo.fecha_creacion = Utils.formatDate(objActividad.getFechaCreacion());
-				tempPrestamo.fecha_modificacion = Utils.formatDate(objActividad.getFechaActualizacion());
-				tempPrestamo.estado = objActividad.getEstado() == 1 ? "Activo" : "Inactivo";
-				
-				lstransaccion.add(tempPrestamo);
-			}
-			
-			CMariaDB.close();
-			
-		}
-		return lstransaccion;
-	}
-
 } 
