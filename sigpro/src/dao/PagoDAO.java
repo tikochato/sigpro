@@ -75,7 +75,29 @@ public class PagoDAO {
 			ret = pago.getSingleResult();
 		}
 		catch(Throwable e){
-			CLogger.write("3", PagoDAO.class, e);
+			CLogger.write("4", PagoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
+	public static boolean eliminarPagos(Integer objetoId, Integer objetoTipo){
+		boolean ret = false;
+		List<Pago> Pagos = getPagosByObjetoTipo(objetoId,objetoTipo);
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			for(Pago pago: Pagos){
+				if(eliminarPago(pago))
+					ret = true;
+				else
+					return false;
+			}
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("5", PagoDAO.class, e);
 		}
 		finally{
 			session.close();
