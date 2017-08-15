@@ -146,14 +146,21 @@
 	    height: 100%;
 	    overflow-y: auto;
 	    margin-top: 151px;
+	    overflow-x: hidden;
 	}
+	
+	.contenedor{
+		height: calc(100% - 270px);
+	}
+	
+	
 
 
 		
 	</style>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-	<div ng-controller="matrizraciController as racic" class="maincontainer all_page" id="title">
+	<div ng-controller="matrizraciController as racic" class="maincontainer all_page" id="title" >
 	
 		<script type="text/ng-template" id="modalInfo.html">
         	<div class="modal-header">
@@ -218,11 +225,10 @@
 			<div class="panel-heading"><h3>Matriz RACI</h3></div>
 		</div>
 		
-		
-		<div class="row" align="center" style="height: 70%" >
-		
+	
+		<div align="center"  class="contenedor">
 			
-			<div class="col-sm-12 " >
+			<div class="col-sm-12 " style="height: 100%">
 				<form name="form">
 					<div class="form-group col-sm-4" >
 							<select  class="inputText" ng-model="racic.prestamoSeleccionado" 
@@ -237,8 +243,6 @@
 				</form>
 				<br/>
 				<br/>
-				</div>
-			<div class="col-sm-12 " style="height: 100%">
 				<div class="divTabla" ng-if="racic.mostrarTabla">
 	  			
 					<table st-table="racic.matrizRaci" class="table table-header-rotated  table-striped table-hover table-condensed" >
@@ -274,8 +278,12 @@
 	    	
 					
 	    	</div>
+
 			</div>
+			
+			
 	    	<br>
+	    	</div>
 		  
-	</div>
+	
 </div>
