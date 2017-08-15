@@ -804,13 +804,15 @@ function modalPago($uibModalInstance, $scope, $http, $interval,
 	mi.fechaOptions = {
 			formatYear : 'MMM',
 		    startingDay: 1,
-		    minMode: 'month'
+		    minMode: 'month',
+		    language: 'es'
 	};
 
 	mi.ff_opciones = {
 			formatYear : 'MMM',
 		    startingDay: 1,
-		    minMode: 'month'
+		    minMode: 'month',
+	    	language: 'es'
 	};
 	
 	mi.abrirPopupFecha = function(index) {

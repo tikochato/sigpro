@@ -182,7 +182,7 @@ public class SAvanceActividades extends HttpServlet {
 					}
 					
 					temp = new stAvance();
-					temp.nombre = proyecto.getNombre();
+					temp.nombre = "Estado total de actividades";
 					temp.sinIniciar = Double.valueOf(df2.format(totalSinIniciar));
 					temp.proceso = Double.valueOf(df2.format(totalEnProceso));
 					temp.completadas = Double.valueOf(df2.format(totalCompletadas));
@@ -258,7 +258,7 @@ public class SAvanceActividades extends HttpServlet {
 					totalRetrasadas = (totalRetrasadas/totalHitos)*100;
 					
 					temp = new stAvance();
-					temp.nombre = proyecto.getNombre();
+					temp.nombre = "Estado total de hitos";
 					temp.sinIniciar = Double.valueOf(df2.format(totalSinIniciar));
 					temp.completadas = Double.valueOf(df2.format(totalCompletadas));
 					temp.retrasadas = Double.valueOf(df2.format(totalRetrasadas));
