@@ -180,17 +180,17 @@
 						</div>
 						<div class="col-sm-11">
 							<div class="btn-group">
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="1" ng-click="controller.generar(1)" uib-tooltip="Mensual" role="button" tabindex="1" aria-invalid="false">
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="1" ng-click="controller.cambiarAgrupacion(1)" uib-tooltip="Mensual" role="button" tabindex="1" aria-invalid="false">
 								<span>M</span></label>
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="2" ng-click="controller.generar(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="2" ng-click="controller.cambiarAgrupacion(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
 								<span>B</span></label>
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="3" ng-click="controller.generar(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="3" ng-click="controller.cambiarAgrupacion(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
 								<span>T</span></label>
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="4" ng-click="controller.generar(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="4" ng-click="controller.cambiarAgrupacion(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
 								<span>C</span></label>
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="5" ng-click="controller.generar(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="5" ng-click="controller.cambiarAgrupacion(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
 								<span>S</span></label>
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="6" ng-click="controller.generar(6)" uib-tooltip="Anual" role="button" tabindex="6" aria-invalid="false">
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="6" ng-click="controller.cambiarAgrupacion(6)" uib-tooltip="Anual" role="button" tabindex="6" aria-invalid="false">
 								<span>A</span></label>
 							</div>
 							<div class=" btn-group" style="padding-left: 20px;">
@@ -266,7 +266,7 @@
 												<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{controller.getPlanificado($parent.$index,$index, controller.VALOR_PLANIFICADO)}}</span>
 								      			</div>
 								      			<div style="{{controller.porcentajeCeldaPipe}}">
-												<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real && controller.getPlanificado($parent.$index,$index, controller.VALOR_PLANIFICADO) && controller.getPlanificado($parent.$index,$index, controller.VALOR_REAL)" > | </span>
+												<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real && controller.getPlanificado($parent.$index,$index, controller.VALOR_PLANIFICADO)!=null && controller.getPlanificado($parent.$index,$index, controller.VALOR_REAL)!=null" > | </span>
 								      			</div>
 								      			<div style="{{controller.porcentajeCeldaValor}}">
 												<span ng-show="controller.grupoMostrado.real" class="colorReal">{{controller.getPlanificado($parent.$index,$index, controller.VALOR_REAL)}}</span>
@@ -290,13 +290,13 @@
 							        </tr>
 								</thead>
 							<tbody class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')" scrollespejo tot="{{mi.totales.length}}">
-									<tr ng-repeat="totales in controller.totales track by $index">
+									<tr ng-repeat="totales in controller.totales track by $index" style="min-height:35px; height:35px;">
 										<td ng-repeat="total in totales.anio" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
 											<div style="{{controller.porcentajeCeldaValor}}">
 											<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{total.valor.planificado}}</span>
 											</div>
 							      			<div style="{{controller.porcentajeCeldaPipe}}">
-							      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real"> | </span>
+							      			<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real && total.valor.planificado!=null && total.valor.real!=null"> | </span>
 							      			</div>
 							      			<div style="{{controller.porcentajeCeldaValor}}">
 							      			<span ng-show="controller.grupoMostrado.real" class="colorReal">{{total.valor.real}}</span>
