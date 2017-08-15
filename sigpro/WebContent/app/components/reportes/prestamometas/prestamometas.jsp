@@ -26,7 +26,6 @@
 			
 		.divTabla{
 			float: left;
-			max-height: 375px;
 			margin-right: -15px;
 			overflow-y:hidden;
 			overflow-x:hidden;
@@ -63,7 +62,6 @@
 			display: flex;
 		    flex-direction: column;
 		    align-items: stretch;
-		    max-height: 375px; 
 		}
 		
 		.colorPlanificado{
@@ -146,8 +144,8 @@
 	<shiro:lacksPermission name="30010">
 		<p ng-init="controller.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>		
-	<div class="col-sm-12">
-		<div style="width: 100%; height: 20%">
+	<div class="col-sm-12" style="height: 100%;">
+		<div style="width: 100%; height: 100%">
 	    		<div class="row">
 					<div class="panel panel-default">
 						<div class="panel-heading"><h3>Metas de Préstamo</h3></div>
@@ -207,7 +205,7 @@
 					</div>
     			<br><br><br><br>
 	    	</div>
-	    	<div style="width: 100%; height: 80%" id="reporte">
+	    	<div style="width: 100%; height: 70%" id="reporte">
 	    		
 				<div class="grid_loading" ng-hide="!controller.mostrarCargando">
 						<div class="msg">
@@ -217,11 +215,11 @@
 							</span>
 						</div>
 					</div>		
-		    	<div class="row" ng-hide="!controller.mostrarDescargar">
+		    	<div class="row" ng-hide="!controller.mostrarDescargar" style="height: 100%">
 		    				
-		    		<div class="divPadreNombres">
-			    		<div class="divTabla"> 
-			    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos">
+		    		<div class="divPadreNombres"  style="height: 100%">
+			    		<div class="divTabla"  style="height: 100%"> 
+			    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos"  style="height: 100%">
 								<thead class="theadDatos">
 									<tr>
 				          				<th rowspan="2" st-sort="nombre" style="text-align: center; vertical-align: top; min-width:300px;" class="label-form">Nombre</th>
@@ -231,7 +229,7 @@
 				          				<th style="text-align: center; vertical-align: top; min-width:100px;" class="label-form">de Medida</th>
 				         			</tr>
 								</thead>
-								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="max-height: 390px;">
+								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo>
 									<tr ng-repeat="item in controller.data">
 							      		<td nowrap style="min-width:300px; max-width:300px; overflow:hidden;">
 							      			<p class="nombreFormat">
@@ -247,10 +245,10 @@
 							</table>
 		    			</div>
 	    			</div>
-		    		<div class="divPadreDatos" style="max-width: {{controller.tamanoTotal}}px">
-	    				<div class="divTabla">
+		    		<div class="divPadreDatos" style="max-width: {{controller.tamanoTotal}}px; height: 100%">
+	    				<div class="divTabla"  style="height: 100%">
 			    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos" 
-				    				style="max-width: {{controller.tamanoTotal}}px;">
+				    				style="max-width: {{controller.tamanoTotal}}px; height:100%;" >
 								<thead id="divCabecerasDatos" class="theadDatos">
 									<tr>
 				         				<th colspan={{controller.colspan}} style="{{controller.estiloCabecera}}" ng-repeat="m in controller.objetoMostrar" class="label-form">{{m.nombreMes}}</th>
@@ -277,8 +275,8 @@
 							</table>
 						</div>
 						</div>
-			    		<div class="divTabla">
-		    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos">
+			    		<div class="divTabla"  style="height: 100%">
+		    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos"  style="height: 100%">
 							<thead class="theadDatos">
 									<tr>
 			          					<th nowrap colspan={{controller.colspan}} style="{{controller.estiloCelda}} text-align: center;" class="label-form">Total Anual</th>

@@ -481,6 +481,9 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			anio = indice - (mes*mi.aniosTotal.length);
 			var item = mi.data[itemIndice];
 			var valor = Object.values(item.anios[anio])[mes];
+			if(valor[tipoMeta]==null && mi.data[itemIndice].objeto_tipo==3){
+				return 0;
+			}
 			return valor[tipoMeta];
 		};
 		
