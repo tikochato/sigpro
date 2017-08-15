@@ -137,7 +137,8 @@
 		<shiro:lacksPermission name="24010">
 			<p ng-init="controller.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-	    	<div class="col-sm-12">
+		<div class="row" id="reporte">
+			<div class="col-sm-12">
 	    		<div style="width: 100%; height: 20%">
 		    		<div class="row">
 		    			<div class="panel panel-default">
@@ -145,7 +146,7 @@
 						</div>
 		    		</div>
 		    		<br>
-		    		<div class="row">
+		    		<div class="row" style="width: 100%; height: 15%">
 		    			<div class="form-group col-sm-5">
 							<select  class="inputText" ng-model="controller.prestamo"
 								ng-options="a.text for a in controller.prestamos" 
@@ -182,8 +183,10 @@
 						</div>
 		    		</div>
 				</div>
-	    		<div style="width: 100%; height: 80%" id="reporte">	
-    				<div class="grid_loading" ng-hide="!controller.mostrarcargando">
+			</div>
+			<div class="col-sm-12">
+				<div ng-hide="!controller.mostrarCargando" style="width: 100%; height: 400px;">
+    				<div class="grid_loading" ng-hide="!controller.mostrarCargando">
 						<div class="msg">
 							<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
 								<br />
@@ -191,7 +194,9 @@
 							</span>
 						</div>
 					</div>
-					<div class="grid_loading" ng-hide="!controller.mostrarguardando">
+				</div>
+				<div ng-hide="!controller.mostrarGuardando" style="width: 100%; height: 400px;">
+										<div class="grid_loading" ng-hide="!controller.mostrarGuardando">
 						<div class="msg">
 							<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
 								<br />
@@ -199,7 +204,9 @@
 							</span>
 						</div>
 					</div>
-	    			<div class="row" ng-show="!controller.mostrarTablas">
+					</div>
+	    		<div style="width: 100%; height: 80%">	
+	    			<div class="row" ng-hide="!controller.mostrarTablas" style="max-width: {{controller.tamanoPantalla}}; min-width: {{controller.tamanoPantalla}}">
 	    				<div class="divPadreNombres">
 	    					<div class="divTabla"> 
 	    						<table st-table="controller.displayedCollectionPrestamo" st-safe-src="controller.rowCollectionPrestamo" class="table table-striped tablaDatos">
@@ -258,7 +265,7 @@
 		    						</thead>
 		    						<tbody class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo>
 		    							<tr ng-repeat="row in controller.rowCollectionPrestamo">
-		    								<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="min-width: 130px; max-width: 130px" ng-blur="row.bloqueado == false ? controller.ocultar(row,0) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 0) : ''" ng-click="row.bloqueado == false ? controller.ocultar(row, 0) : ''" next-on-tab>
+		    								<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" ng-blur="row.bloqueado == false ? controller.ocultar(row,0) : ''" style="min-width: 130px; max-width: 130px"  ng-focus="row.bloqueado == false ? controller.ocultar(row, 0) : ''" ng-click="row.bloqueado == false ? '' : ''" next-on-tab>
 		    									<div style="height: 25px;">
 			    									<label ng-show="!row.c0">{{controller.ddlOpcionesTiposAdquisicion[row.tipoAdquisicion].value}}</label>
 								    				<select ng-show="row.c0" ng-blur="controller.ocultar(row,0);" ng-model="row.tipoAdquisicion" ng-change="controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" class="form-control" next-on-tab>
@@ -272,7 +279,7 @@
 								    				<input ng-show="row.c1" ng-blur="controller.ocultar(row,1);" ng-model="row.unidadMedida" ng-change="controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" type="text" style="max-width: 130px; text-align: right" focus-on-show></input>
 								    			</div>
 							    			</td>
-							    			<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" ng-blur="row.bloqueado == false ? controller.ocultar(row,2) : ''" style="min-width: 200px; max-width: 200px" ng-focus="row.bloqueado == false ? controller.ocultar(row, 2) : ''" ng-click="row.bloqueado == false ? '' : ''">
+							    			<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" ng-blur="row.bloqueado == false ? controller.ocultar(row,2) : ''" style="min-width: 200px; max-width: 200px" ng-focus="row.bloqueado == false ? controller.ocultar(row, 2) : ''" ng-click="row.bloqueado == false ? '' : ''" next-on-tab>
 								    			<div style="height: 25px;">
 								    				<label ng-show="!row.c2">{{controller.ddlcategoriaAdquisiciones[row.categoriaAdquisicion].value}}</label>
 								    				<select ng-show="row.c2" ng-blur="row.bloqueado == false ? controller.ocultar(row,2) : ''" ng-model=row.categoriaAdquisicion class="form-control" ng-change="controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" next-on-tab>
@@ -364,12 +371,15 @@
 	    				</div>	    			
 		    		</div>
 	    		</div>
+	    	</div>
+	    	<div class="col-sm-12">
 		   		<div style="text-align: center;">
 		   			<br>
-		    		<ol class="leyendaTexto"  ng-hide="!controller.mostrarDescargar">
+		    		<ol class="leyendaTexto"  ng-hide="!controller.mostrarTablas">
 						<li><span class="colorPlanificadoFondo"></span>Planificado</li>
 				        <li><span class="colorRealFondo"></span>Real</li>
 					</ol>
 				</div>
-	    	</div>
-</div>
+			</div>
+		</div>
+	</div>
