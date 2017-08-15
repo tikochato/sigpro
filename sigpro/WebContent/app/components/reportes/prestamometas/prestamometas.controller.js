@@ -23,6 +23,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	mi.porcentajeCeldaValor = "width: 45%; float: left;";
 	mi.porcentajeCeldaPipe = "width: 10%; float: left;";
 	mi.data = [];
+	mi.dataOriginal = [];
 	mi.totales = [];
 	mi.scrollPosicion = 0;
 	
@@ -37,6 +38,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	var AGRUPACION_ANUAL= 6;
 	
 	var MES_DISPLAY_NAME = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+	var MES_DISPLAY_NAME_MIN = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 	var BIMESTRE_DISPLAY_NAME = ['Bimestre 1', 'Bimestre 2','Bimestre 3','Bimestre 4','Bimestre 5','Bimestre 6'];
 	var TRIMESTRE_DISPLAY_NAME = ['Trimestre 1', 'Trimestre 2', 'Trimestre 3', 'Trimestre 4'];
 	var CUATRIMESTRE_DISPLAY_NAME = ['Cuatrimestre 1', 'Cuatrimestre 2', 'Cuatrimestre 3'];
@@ -197,6 +199,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		
 		mi.verificaSeleccionTipo = function(tipo){
 			mi.mostrarCargando = true;
+			mi.movimiento = false;
 			if(mi.grupoMostrado.planificado && mi.grupoMostrado.real){
 				mi.estiloAlineacion="text-align: center;";
 				mi.porcentajeCeldaValor = "width: 45%; float: left;";
@@ -215,6 +218,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			}
 			mi.calcularTamaniosCeldas();
 			mi.mostrarCargando = false;
+			mi.movimiento = true;
 		}
 				
 		mi.calcularTamaniosCeldas = function(){
@@ -241,7 +245,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			mi.estiloCabecera = "width:"+ mi.tamanoCabecera + "px;min-width:" + mi.tamanoCabecera +"px; max-width:"+ mi.tamanoCabecera + "px; text-align: center;";
 		}
 		
-		mi.cargarTabla = function(agrupacion) {			
+		mi.cargarTabla = function() {			
 			var datos = {
 				accion : 'getMetasProducto',
 				idPrestamo: mi.prestamo.value,
@@ -251,28 +255,41 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		
 			mi.mostrarCargando = true;
 			mi.mostrarDescargar = false;
+			mi.movimiento = false;
 			
 			$http.post('/SPrestamoMetas', datos)
 			.then(function(response) {
 				if (response.data.success) {
+					mi.dataOriginal = response.data.prestamo;
 					mi.data = response.data.prestamo;
 					mi.totales = [];
 					 for (x in mi.data){
-						 var totalFinal = {"planificado": 0, "real": 0};
+						 var totalFinal = {"planificado": null, "real": null};
 						 var fila = [];
-						 for(a in mi.data[x].anios){
-							 var totalAnual = {"planificado": 0, "real": 0};
-							 var anio = mi.data[x].anios[a];
-							 for (m in anio){
-								 if(m != "anio"){
-									 totalAnual.planificado += anio[m][mi.VALOR_PLANIFICADO];
-									 totalAnual.real += anio[m][mi.VALOR_REAL];
+						 if(mi.data[x].objeto_tipo == 3){
+							 totalFinal = {"planificado": 0, "real": 0};
+							 for(a in mi.data[x].anios){
+								 var totalAnual = {"planificado": 0, "real": 0};
+								 var anio = mi.data[x].anios[a];
+								 for (m in anio){
+									 if(m != "anio"){
+										 totalAnual.planificado += anio[m][mi.VALOR_PLANIFICADO];
+										 totalAnual.real += anio[m][mi.VALOR_REAL];
+									 }
+									 
 								 }
+								 totalFinal.planificado += totalAnual.planificado;
+								 totalFinal.real += totalAnual.real;
+								 var tot = {"valor": totalAnual};
+								 fila.push(tot);
+								 mi.data[x].anios[a] = mi.agruparMeses(anio);
 							 }
-							 totalFinal.planificado += totalAnual.planificado;
-							 totalFinal.real += totalAnual.real;
-							 var tot = {"valor": totalAnual};
-							 fila.push(tot);
+						 }else{
+							 for(a in mi.data[x].anios){
+								 var totalAnual = {"planificado": null, "real": null};
+								 var tot = {"valor": totalAnual};
+								 fila.push(tot);
+							 }
 						 }
 						 var tot = {"valor": totalFinal};
 						 fila.push(tot);
@@ -291,6 +308,79 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			});
 	}
 		
+		mi.agruparMeses = function(anio){
+			if(mi.agrupacionActual != AGRUPACION_MES){
+				var anioN = {};
+				if(mi.agrupacionActual == AGRUPACION_BIMESTRE){
+					anioN = {
+							"bimestre1" : [anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_REAL]],
+							"bimestre2" : [anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_REAL]],
+							"bimestre3" : [anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_REAL]],
+							"bimestre4" : [anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_REAL]],
+							"bimestre5" : [anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_REAL]],
+							"bimestre6" : [anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_REAL]],
+					}
+				}else if(mi.agrupacionActual == AGRUPACION_TRIMESTRE){
+					anioN = {
+							"trimestre1" : [anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_REAL]],
+							"trimestre2" : [anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_REAL]],
+							"trimestre3" : [anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_REAL]],
+							"trimestre4" : [anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_REAL]]
+					}
+				}else if(mi.agrupacionActual == AGRUPACION_CUATRIMESTRE){
+					anioN = {
+							"cuatrimestre1" : [anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_PLANIFICADO]
+												,anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_REAL]],
+							"cuatrimestre2" : [anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_PLANIFICADO]
+												,anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_REAL]],
+							"cuatrimestre3" : [anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_PLANIFICADO]
+												,anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_REAL]]
+					}
+				}else if(mi.agrupacionActual == AGRUPACION_SEMESTRE){
+					anioN = {
+							"semestre1" : [anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_PLANIFICADO]
+											,anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_REAL]],
+							"semestre2" : [anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_PLANIFICADO]
+											,anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_REAL]],
+					}
+				}else if(mi.agrupacionActual == AGRUPACION_ANUAL){
+					anioN = {
+							"anual1" : [anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_PLANIFICADO]
+							,anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_REAL]],
+					}
+				}
+				anio = anioN;
+			}
+			return anio;
+		}
+		
+		mi.cambiarAgrupacion = function(agrupacion){
+			if(mi.prestamo.value > 0)
+			{
+				if(mi.fechaInicio != null && mi.fechaFin != null)
+				{
+					if (mi.fechaFin >= mi.fechaInicio){
+						if(agrupacion != 0){
+							mi.data = JSON.parse(JSON.stringify(mi.dataOriginal));
+							mi.agrupacionActual = agrupacion;
+							for (x in mi.data){
+								 if(mi.data[x].objeto_tipo == 3){
+									 for(a in mi.data[x].anios){
+										 var anio = mi.data[x].anios[a];
+										 mi.data[x].anios[a] = mi.agruparMeses(anio);
+									 }
+								 }
+							 }
+							mi.renderizaTabla();
+						}
+					}else
+						$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
+				}else
+					$utilidades.mensaje('warning','Favor de ingresar un año inicial y final válido');
+			}else
+				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
+		}
+		
 		mi.generar = function(agrupacion){
 			if(mi.prestamo.value > 0)
 			{
@@ -298,8 +388,8 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				{
 					if (mi.fechaFin >= mi.fechaInicio){
 						if(agrupacion != 0){
-							mi.cargarTabla();
 							mi.agrupacionActual = agrupacion;
+							mi.cargarTabla();
 							
 						}
 					}else
@@ -391,6 +481,9 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			anio = indice - (mes*mi.aniosTotal.length);
 			var item = mi.data[itemIndice];
 			var valor = Object.values(item.anios[anio])[mes];
+			if(valor[tipoMeta]==null && mi.data[itemIndice].objeto_tipo==3){
+				return 0;
+			}
 			return valor[tipoMeta];
 		};
 		
