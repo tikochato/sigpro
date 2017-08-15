@@ -2,10 +2,9 @@ var app = angular.module('planAdquisicionesController', ['ngTouch','ngAnimate','
 app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal) {
 	var mi = this;
-	mi.mostrarTablas = true;
 	mi.mostrarBotones = false;
-	mi.mostrarcargando = false;
-	mi.mostrarguardando = false;
+	mi.mostrarGuardando = false;
+	mi.mostrarCargando = false;
 	mi.enMillones = false;
 	mi.fechaSuscripcion = "";
 	mi.fechaCierre = "";
@@ -18,7 +17,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	
 	mi.calcularTamanosPantalla = function(){
 		mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth);
-		mi.tamanoTotal = mi.tamanoPantalla - 280; 
+		mi.tamanoTotal = mi.tamanoPantalla - 300; 
 		mi.estiloCelda = "width:80px;min-width:80px; max-width:80px;text-align: center";
 	}
 	
@@ -186,11 +185,11 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					break;
 				}else if(fechaActual < mi.fechaSuscripcion){
 					row.planificadoDocs = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.planificadoDocs = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -200,15 +199,15 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				var fechaActual = moment(row.realDocs,'DD/MM/YYYY').toDate();
 				if (isNaN(fechaActual)){
 					row.realDocs = "";
-					$utilidades.mensaje('danger', 'Fecha invalida');
+					$utilidades.mensaje('danger', 'Fecha invalida.');
 					break;
 				}else if(fechaActual < mi.fechaSuscripcion){
 					row.realDocs = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.realDocs = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -225,27 +224,27 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					if(!isNaN(fechaAnterior)){
 						if(fechaAnterior.getTime() > fechaActual.getTime()){
 							row.planificadoLanzamiento = "";
-							$utilidades.mensaje('warning', 'Fecha de "Lanzamiento de eventos planificado" no debe ser menor que la fecha de "Preparación de documentos planificado"');
+							$utilidades.mensaje('warning', 'Fecha de "Lanzamiento de eventos planificado" no debe ser menor que la fecha de "Preparación de documentos planificado".');
 							break;
 						}	
 					}else{
 						row.planificadoLanzamiento = "";
-						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Preparación de documentos planificado"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Preparación de documentos planificado".');
 						break;
 					}					
 				}else{
 					row.planificadoLanzamiento = "";
-					$utilidades.mensaje('danger', 'Fecha invalida');
+					$utilidades.mensaje('danger', 'Fecha invalida.');
 					break;
 				}
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.planificadoLanzamiento = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.planificadoLanzamiento = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -259,28 +258,28 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					if(!isNaN(fechaAnterior)){
 						if(fechaAnterior > fechaActual){
 							row.realLanzamiento = "";
-							$utilidades.mensaje('warning', 'Fecha de "Lanzamiento de eventos real" no debe ser menor que la fecha de "Preparación de documentos real"');
+							$utilidades.mensaje('warning', 'Fecha de "Lanzamiento de eventos real" no debe ser menor que la fecha de "Preparación de documentos real".');
 							break;
 						}
 					}else{
 						row.realLanzamiento = "";
-						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Preparación de documentos real"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Preparación de documentos real".');
 						break;
 					}
 					
 				}else{
 					row.realLanzamiento = "";
-					$utilidades.mensaje('danger', 'Fecha invalida');
+					$utilidades.mensaje('danger', 'Fecha invalida.');
 					break;
 				}
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.realLanzamiento = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.realLanzamiento = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -297,27 +296,27 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					if(!isNaN(fechaAnterior)){
 						if(fechaAnterior > fechaActual){
 							row.planificadoRecepcionEval = "";
-							$utilidades.mensaje('warning', 'Fecha de "Recepción y evaluación de ofertas planificado" no debe ser menor que la fecha de "Landamiento de eventos planificado"');
+							$utilidades.mensaje('warning', 'Fecha de "Recepción y evaluación de ofertas planificado" no debe ser menor que la fecha de "Landamiento de eventos planificado".');
 							break;
 						}
 					}else{
 						row.planificadoRecepcionEval = "";
-						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Landamiento de eventos planificado"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Landamiento de eventos planificado".');
 						break;
 					}
 				}else{
 					row.planificadoRecepcionEval = "";
-					$utilidades.mensaje('danger', 'Fecha invalida');
+					$utilidades.mensaje('danger', 'Fecha invalida.');
 					break;
 				}
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.planificadoRecepcionEval = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.planificadoRecepcionEval = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -331,27 +330,27 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					if(!isNaN(fechaAnterior)){
 						if(fechaAnterior > fechaActual){
 							row.realRecepcionEval = "";
-							$utilidades.mensaje('warning', 'Fecha de "Recepción y evaluación de ofertas real" no debe ser menor que la fecha de "Landamiento de eventos real"');
+							$utilidades.mensaje('warning', 'Fecha de "Recepción y evaluación de ofertas real" no debe ser menor que la fecha de "Landamiento de eventos real".');
 							break;
 						}
 					}else{
 						row.realRecepcionEval = "";
-						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Landamiento de eventos real"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Landamiento de eventos real".');
 						break;
 					}
 				}else{
 					row.realRecepcionEval = "";
-					$utilidades.mensaje('danger', 'Fecha invalida');
+					$utilidades.mensaje('danger', 'Fecha invalida.');
 					break;
 				}
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.realRecepcionEval = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.realRecepcionEval = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -368,27 +367,27 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					if(!isNaN(fechaAnterior)){
 						if(fechaAnterior > fechaActual){
 							row.planificadoAdjudica = "";
-							$utilidades.mensaje('warning', 'Fecha de "Adjudicación planificado" no debe ser menor que la fecha de "Recepción y evaluación de ofertas planificado"');
+							$utilidades.mensaje('warning', 'Fecha de "Adjudicación planificado" no debe ser menor que la fecha de "Recepción y evaluación de ofertas planificado".');
 							break;
 						}	
 					}else{
 						row.planificadoAdjudica = "";
-						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Recepción y evaluación de ofertas planificado"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Recepción y evaluación de ofertas planificado".');
 						break;
 					}
 				}else{
 					row.planificadoAdjudica = "";
-					$utilidades.mensaje('danger', 'Fecha invalida');
+					$utilidades.mensaje('danger', 'Fecha invalida.');
 					break;
 				}
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.planificadoAdjudica = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.planificadoAdjudica = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -402,27 +401,27 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					if(!isNaN(fechaAnterior)){
 						if(fechaAnterior > fechaActual){
 							row.realAdjudica = "";
-							$utilidades.mensaje('warning', 'Fecha de "Adjudicación real" no debe ser menor que la fecha de "Recepción y evaluación de ofertas real"');
+							$utilidades.mensaje('warning', 'Fecha de "Adjudicación real" no debe ser menor que la fecha de "Recepción y evaluación de ofertas real".');
 							break;
 						}	
 					}else{
 						row.realAdjudica = "";
-						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Recepción y evaluación de ofertas real"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Recepción y evaluación de ofertas real".');
 						break;
 					}
 				}else{
 					row.realAdjudica = "";
-					$utilidades.mensaje('danger', 'Fecha invalida');
+					$utilidades.mensaje('danger', 'Fecha invalida.');
 					break;
 				}
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.realAdjudica = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.realAdjudica = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -439,27 +438,27 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					if(!isNaN(fechaAnterior)){
 						if(fechaAnterior > fechaActual){
 							row.planificadoFirma = "";
-							$utilidades.mensaje('warning', 'Fecha de "Firma de contrato planificado" no debe ser menor que la fecha de "Adjudicación planificado"');
+							$utilidades.mensaje('warning', 'Fecha de "Firma de contrato planificado" no debe ser menor que la fecha de "Adjudicación planificado".');
 							break;
 						}
 					}else{
 						row.planificadoFirma = "";
-						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Adjudicación planificado"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Adjudicación planificado".');
 						break;
 					}
 				}else{
 					row.planificadoFirma = "";
-					$utilidades.mensaje('danger', 'Fecha invalida');
+					$utilidades.mensaje('danger', 'Fecha invalida.');
 					break;
 				}
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.planificadoFirma = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.planificadoFirma = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -473,27 +472,27 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					if(!isNaN(fechaAnterior)){
 						if(fechaAnterior > fechaActual){
 							row.realFirma = "";
-							$utilidades.mensaje('warning', 'Fecha de "Firma de contrato real" no debe ser menor que la fecha de "Adjudicación real"');
+							$utilidades.mensaje('warning', 'Fecha de "Firma de contrato real" no debe ser menor que la fecha de "Adjudicación real".');
 							break;
 						}					
 					}else{
 						row.realFirma = "";
-						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Adjudicación real"');
+						$utilidades.mensaje('warning', 'Favor de ingresar fecha de "Adjudicación real".');
 						break;
 					}
 				}else{
 					row.realFirma = "";
-					$utilidades.mensaje('danger', 'Fecha invalida');
+					$utilidades.mensaje('danger', 'Fecha invalida.');
 					break;
 				}
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.realFirma = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.realFirma = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -509,10 +508,55 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 		var objetoPredecesorTipo = row.objetoPredecesorTipo;
 		
 		var entidad = mi.obtenerEntidad(predecesorId,objetoPredecesorTipo);
-		if(entidad != undefined){
-			if(entidad.bloqueado != true){
+		if(entidad != null){
+			entidad.bloqueado = bloqueo;
+			mi.bloquearPadre(entidad, bloqueo);	
+		}
+	}
+	
+	mi.desbloquearPadre = function(row, bloqueo){
+		var predecesorId = row.predecesorId;
+		var objetoPredecesorTipo = row.objetoPredecesorTipo;
+		
+		var entidad = mi.obtenerEntidad(predecesorId,objetoPredecesorTipo);
+		if(entidad != null){
+			if(entidad.hijos != null && entidad.hijos.length > 0){
+				var hijoBloqueado = true;
+				for(x in entidad.hijos){
+					var entidadHijo = mi.obtenerEntidad(entidad.hijos[x].split(',')[0],entidad.hijos[x].split(',')[1]);
+					if(!entidadHijo.bloqueado){
+						if(!mi.hijosBloqueados(entidadHijo))
+							hijoBloqueado = false;
+						else{
+							hijoBloqueado = true;
+							break;
+						}
+					}else{
+						hijoBloqueado = true;
+						break;
+					}
+				}
+				
+				if(!hijoBloqueado){
+					entidad.bloqueado = bloqueo;
+					mi.desbloquearPadre(entidad, bloqueo);
+				}
+			}else{
 				entidad.bloqueado = bloqueo;
-				mi.bloquearPadre(entidad, bloqueo);
+				mi.desbloquearPadre(entidad, bloqueo);
+			}
+		}
+	}
+	
+	mi.hijosBloqueados = function(entidad){
+		if(entidad.hijos != null && entidad.hijos.length > 0){
+			for(y in entidad.hijos){
+				var entidadHijo = mi.obtenerEntidad(entidad.hijos[y].split(',')[0],entidad.hijos[y].split(',')[1]);
+				var hijoBloqueado = true;
+				if(!entidadHijo.bloqueado){
+					hijoBloqueado = false;
+				}else
+					return true;
 			}
 		}
 	}
@@ -529,30 +573,10 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 		}
 	}
 	
-	mi.desbloquearPadre = function(row){
-		var predecesorId = row.predecesorId;
-		var objetoPredecesorTipo = row.objetoPredecesorTipo;
-		
-		if(predecesorId != 0 && objetoPredecesorTipo != 0){
-			var entidad = mi.obtenerEntidad(row.objetoId,row.objetoTipo);
-			var entidadPadre = mi.obtenerEntidad(predecesorId,objetoPredecesorTipo);
-			if((entidad.metodo == mi.valoresInicializados[0] || entidad.metodo == null) && (entidad.unidadMedida == mi.valoresInicializados[1] || entidad.unidadMedida == null) && (entidad.cantidad == mi.valoresInicializados[2] || entidad.cantidad == null) &&
-					(entidad.costo == mi.valoresInicializados[3] || entidad.costo == null) && (entidad.total == mi.valoresInicializados[4] || entidad.total == null) && (entidad.planificadoDocs == mi.valoresInicializados[5] || entidad.planificadoDocs == null) && 
-					(entidad.realDocs == mi.valoresInicializados[6] || entidad.realDocs == null) && (entidad.planificadoLanzamiento == mi.valoresInicializados[7] || entidad.planificadoLanzamiento == null) && 
-					(entidad.realLanzamiento == mi.valoresInicializados[8] || entidad.realLanzamiento == null) && (entidad.planificadoRecepcionEval == mi.valoresInicializados[9] || entidad.planificadoRecepcionEval == null) && 
-					(entidad.realRecepcionEval == mi.valoresInicializados[10] || entidad.realRecepcionEval == null) && (entidad.planificadoAdjudica == mi.valoresInicializados[11] || entidad.planificadoAdjudica == null) && 
-					(entidad.realAdjudica == mi.valoresInicializados[12] || entidad.realAdjudica == null) && (entidad.planificadoFirma == mi.valoresInicializados[13] || entidad.planificadoFirma == null) && 
-					(entidad.realFirma == mi.valoresInicializados[14] || entidad.realFirma == null)){
-				
-				entidadPadre.bloqueado = !entidadPadre.bloqueado;
-				mi.desbloquearPadre(entidadPadre);
-			}
-		}
-	}
-	
 	mi.guardarPlan = function(){
 		var estructuraGuardar = "";
-		mi.mostrarguardando = true;
+		mi.mostrarTablas = false;
+		mi.mostrarGuardando = true;
 		for(h in mi.data){
 			var row = mi.data[h];
 			estructuraGuardar += row.objetoId + ",";
@@ -588,7 +612,8 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			}else{
 				$utilidades.mensaje('danger','No se pudo guardar correctamente el plan de adquisiciones');
 			}
-			mi.mostrarguardando = false;
+			mi.mostrarGuardando = false;
+			mi.mostrarTablas = true;
 		})
 	}
 	
@@ -620,7 +645,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	
 	mi.generar = function(){
 		if(mi.prestamo.value > 0){
-			mi.mostrarcargando = true;
+			mi.mostrarCargando = true;
 			mi.mostrarTablas = false;
 			mi.idPrestamo = mi.prestamo.value;
 			$http.post('/SPlanAdquisiciones',{
@@ -632,8 +657,9 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					mi.crearArbol(response.proyecto);
 					mi.fechaSuscripcion = moment(response.fechaSuscripcion,'DD/MM/YYYY').toDate();
 					mi.fechaCierre = moment(response.fechaCierre,'DD/MM/YYYY').toDate();
-					mi.mostrarcargando = false;
+					mi.mostrarCargando = false;
 					mi.mostrarBotones = true;
+					mi.mostrarTablas = true;
 					mi.calcularTamanosPantalla();
 				}
 			});
@@ -647,25 +673,35 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	
 	mi.limpiar = function(){
 		if (mi.datoSeleccionado != undefined){
-			mi.datoSeleccionado.tipoAdquisicion = 0;
-			mi.datoSeleccionado.unidadMedida = null;
-			mi.datoSeleccionado.categoriaAdquisicion = 0;
-			mi.datoSeleccionado.cantidad = 0;
-			mi.datoSeleccionado.costo = 0;
-			mi.datoSeleccionado.total = 0;
-			mi.datoSeleccionado.planificadoDocs = null;
-			mi.datoSeleccionado.realDocs = null;
-			mi.datoSeleccionado.planificadoLanzamiento = null;
-			mi.datoSeleccionado.realLanzamiento = null;
-			mi.datoSeleccionado.planificadoRecepcionEval = null;
-			mi.datoSeleccionado.realRecepcionEval = null;
-			mi.datoSeleccionado.planificadoAdjudica = null;
-			mi.datoSeleccionado.realAdjudica = null;
-			mi.datoSeleccionado.planificadoFirma = null;
-			mi.datoSeleccionado.realFirma = null;
-			
-			mi.desbloquearPadre(mi.datoSeleccionado);
-			mi.bloquearHijos(mi.datoSeleccionado.hijos, false);	
+			var param_data = {
+	    			accion: 'eliminarPagos',
+	    			idObjeto: mi.datoSeleccionado.objetoId,
+	    			objetoTipo: mi.datoSeleccionado.objetoTipo,
+	    			t:moment().unix()
+	        	};
+	        	$http.post('/SPago',param_data).then(function(response){
+	        		if(response.data.success){
+	        			mi.datoSeleccionado.tipoAdquisicion = 0;
+	        			mi.datoSeleccionado.unidadMedida = null;
+	        			mi.datoSeleccionado.categoriaAdquisicion = 0;
+	        			mi.datoSeleccionado.cantidad = 0;
+	        			mi.datoSeleccionado.costo = 0;
+	        			mi.datoSeleccionado.total = 0;
+	        			mi.datoSeleccionado.planificadoDocs = null;
+	        			mi.datoSeleccionado.realDocs = null;
+	        			mi.datoSeleccionado.planificadoLanzamiento = null;
+	        			mi.datoSeleccionado.realLanzamiento = null;
+	        			mi.datoSeleccionado.planificadoRecepcionEval = null;
+	        			mi.datoSeleccionado.realRecepcionEval = null;
+	        			mi.datoSeleccionado.planificadoAdjudica = null;
+	        			mi.datoSeleccionado.realAdjudica = null;
+	        			mi.datoSeleccionado.planificadoFirma = null;
+	        			mi.datoSeleccionado.realFirma = null;
+	        			
+	        			mi.bloquearHijos(mi.datoSeleccionado.hijos, false);
+	        			mi.desbloquearPadre(mi.datoSeleccionado, false);
+	        		}
+	        	});
 		}
 	}
 	
@@ -736,14 +772,15 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					});
 
 					modalInstance.result.then(function(resultado) {
-						$utilidades.mensaje('success','Pagos agregados con éxito');
+						$utilidades.mensaje('success','Pagos agregados con éxito.');
 					}, function() {
 					});
 				}else{
-					$utilidades.mensaje('warning', 'Debe de ingresar fecha de \"Adjudicación\"');
+					$utilidades.mensaje('warning', 'Debe de ingresar fecha de \"Adjudicación\".');
 				}
 			}	
-		}
+		}else
+			$utilidades.mensaje('warning', 'Debe de seleccionar algún elemento de la tabla.');
 	};
 	
 }]);

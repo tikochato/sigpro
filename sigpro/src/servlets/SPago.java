@@ -130,6 +130,16 @@ public class SPago extends HttpServlet {
 				response_text = String.join("", "{\"success\":true}");
 			else
 				response_text = String.join("", "{\"success\":false}");
+		}else if(accion.equals("eliminarPagos")){
+			Integer idObjeto = Utils.String2Int(map.get("idObjeto"));
+			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+			
+			boolean eliminado = PagoDAO.eliminarPagos(idObjeto,objetoTipo);
+			
+			if(eliminado)
+				response_text = String.join("", "{\"success\":true}");
+			else
+				response_text = String.join("", "{\"success\":false}");
 		}
 		
 		response.setHeader("Content-Encoding", "gzip");
