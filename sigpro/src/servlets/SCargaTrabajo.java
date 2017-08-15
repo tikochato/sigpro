@@ -69,6 +69,8 @@ public class SCargaTrabajo extends HttpServlet {
 		int estado;
 		String nombreEstado;
 		boolean mostrar;
+		String fechaInicio;
+		String fechaFin;
 	}
 	
     public SCargaTrabajo() {
@@ -234,7 +236,7 @@ public class SCargaTrabajo extends HttpServlet {
 						ArrayList<stestructuracolaborador> estructuracolaborador = new ArrayList<>();
 						
 							stestructuracolaborador stprestamo = construirItemPorColaborador(proyecto.getNombre(), 
-									proyecto.getId(), 1, false);
+									proyecto.getId(), 1, false,null,null);
 							 
 							estructuracolaborador.add(stprestamo);
 							Connection conn = CMariaDB.getConnection();
@@ -245,7 +247,7 @@ public class SCargaTrabajo extends HttpServlet {
 								
 								Componente objComponente = ComponenteDAO.getComponentePorId(componente, usuario);
 								stestructuracolaborador stcomponente = construirItemPorColaborador(objComponente.getNombre(), 
-										objComponente.getId(), 2, false);
+										objComponente.getId(), 2, false,null,null);
 								
 								estructuracolaborador.add(stcomponente);
 								ArrayList<Integer> productos = InformacionPresupuestariaDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
@@ -253,14 +255,14 @@ public class SCargaTrabajo extends HttpServlet {
 								for(Integer producto: productos){
 									Producto objProducto = ProductoDAO.getProductoPorId(producto);
 									stestructuracolaborador stproducto = construirItemPorColaborador(objProducto.getNombre(),
-											objProducto.getId(), 3, false);
+											objProducto.getId(), 3, false,null,null);
 									estructuracolaborador.add(stproducto);
 									ArrayList<Integer> subproductos = InformacionPresupuestariaDAO.getEstructuraArbolSubProducto(idPrestamo,objComponente.getId(),objProducto.getId(), conn);
 									
 									for(Integer subproducto: subproductos){
 										Subproducto objSubProducto = SubproductoDAO.getSubproductoPorId(subproducto);
 										stestructuracolaborador stsubproducto = construirItemPorColaborador(
-												objSubProducto.getNombre(), objSubProducto.getId(), 4, false);
+												objSubProducto.getNombre(), objSubProducto.getId(), 4, false,null,null);
 										estructuracolaborador.add(stsubproducto);
 										ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolSubProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(), objSubProducto.getId(), conn);
 										
@@ -268,13 +270,14 @@ public class SCargaTrabajo extends HttpServlet {
 											Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(actividad.get(0), usuario, idColaborador, "r");
 											if (objActividad!=null){
 												stestructuracolaborador stactividad = construirItemPorColaborador(
-														objActividad.getNombre(), objActividad.getId(), 5, true);
+														objActividad.getNombre(), objActividad.getId(), 5, true,objActividad.getFechaInicio(),objActividad.getFechaFin());
 												estructuracolaborador.add(stactividad);
 												getEstado(stactividad, objActividad);
 												stprestamo.mostrar=true;
 												stcomponente.mostrar=true;
 												stproducto.mostrar = true;
 												stsubproducto.mostrar = true;
+												
 											}
 										}
 										
@@ -287,7 +290,7 @@ public class SCargaTrabajo extends HttpServlet {
 										Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(actividad.get(0), usuario, idColaborador, "r");
 										if (objActividad!=null){
 											stestructuracolaborador stactividad = construirItemPorColaborador(
-													objActividad.getNombre(), objActividad.getId(), 5, true);
+													objActividad.getNombre(), objActividad.getId(), 5, true,objActividad.getFechaInicio(),objActividad.getFechaFin());
 											estructuracolaborador.add(stactividad);
 											getEstado(stactividad, objActividad);
 											stprestamo.mostrar=true;
@@ -304,7 +307,7 @@ public class SCargaTrabajo extends HttpServlet {
 									Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(actividad.get(0), usuario, idColaborador, "r");
 									if (objActividad!=null){
 										stestructuracolaborador stactividad = construirItemPorColaborador(
-												objActividad.getNombre(), objActividad.getId(), 5, true);
+												objActividad.getNombre(), objActividad.getId(), 5, true,objActividad.getFechaInicio(),objActividad.getFechaFin());
 										estructuracolaborador.add(stactividad);
 										getEstado(stactividad, objActividad);
 										stprestamo.mostrar=true;
@@ -396,12 +399,14 @@ public class SCargaTrabajo extends HttpServlet {
     }
 	
 	private stestructuracolaborador construirItemPorColaborador(String nombre, Integer objetoId, Integer objetoTipo,
-			boolean mostrar){
+			boolean mostrar,Date fecha_inicio, Date fecha_fin){
 		stestructuracolaborador temp = new stestructuracolaborador();
 		temp.nombre = nombre;
 		temp.objetoId = objetoId;
 		temp.objetoTipo = objetoTipo;
 		temp.mostrar = mostrar;
+		temp.fechaInicio = Utils.formatDate(fecha_inicio);
+		temp.fechaFin = Utils.formatDate(fecha_fin);
 		return temp;
 		
 				

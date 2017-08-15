@@ -1,6 +1,5 @@
 package servlets;
 import java.sql.Connection;
-import java.text.SimpleDateFormat;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -1102,14 +1101,10 @@ public class SInformacionPresupuestaria extends HttpServlet {
 						acumulacionCosto = subproducto.getAcumulacionCosto() != null ? subproducto.getAcumulacionCosto().getId() : 3;
 					}
 					
-					Calendar cal = Calendar.getInstance();
-					int mes = 0;
-					int ano = 0;
+					
 				}else if(actividad != null){
 					acumulacionCosto = actividad.getAcumulacionCosto() != null ? actividad.getAcumulacionCosto().getId() : 0;
-					Calendar cal = Calendar.getInstance();
-					int mes = 0;
-					int ano = 0;
+					
 				}			
 				
 				//int pos = anoFinal- objprestamopresupuesto.get(12).intValue();

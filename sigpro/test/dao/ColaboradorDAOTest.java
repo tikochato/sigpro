@@ -21,7 +21,7 @@ public class ColaboradorDAOTest {
 	
 	@Test
 	public void getPaginaTest(){
-		assertNotNull(ColaboradorDAO.getPagina(1, 1,"","","","","","","",""));
+		assertNotNull(ColaboradorDAO.getPagina(1, 1,"","","","","","","","",""));
 	}
 	
 	@Test

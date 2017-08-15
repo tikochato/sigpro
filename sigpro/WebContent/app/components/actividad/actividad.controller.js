@@ -25,6 +25,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
+		
+		mi.responsables =[];
 
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;
@@ -155,6 +157,11 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
 				}
 			}
+			var asignaciones="";
+			for (x in mi.responsables){
+				asignaciones = asignaciones.concat(asignaciones.length > 0 ? "|" : "",mi.responsables[x].id + "~" + mi.responsables[x].rol); 
+			}
+			
 			if(mi.actividad!=null && mi.actividad.nombre!=null){
 				$http.post('/SActividad', {
 					accion: 'guardarActividad',
@@ -178,25 +185,18 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					costo: mi.actividad.costo == null ? 0 : mi.actividad.costo,
 					acumulacionCosto: mi.actividad.acumulacionCostoId == null ? 0 : mi.actividad.acumulacionCostoId,
 					fuente: mi.actividad.fuente,
+					asignacionroles: asignaciones,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
 					if(response.success){
-						$http.post('/SObjetoResponsableRol', {
-							accion: 'setResponsableRol',
-							responsableRolId: mi.actividad.responsableRolId,
-							objetoId : response.id,
-							objetoTipo : 5,
-							esNuevo: mi.esnuevo
-						}).success(function(response2){
-							mi.actividad.id = response.id;
-							mi.actividad.usuarioCreo=response.usuarioCreo;
-							mi.actividad.fechaCreacion=response.fechaCreacion;
-							mi.actividad.usuarioActualizo=response.usuarioactualizo;
-							mi.actividad.fechaActualizacion=response.fechaactualizacion;
-							$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardado')+' con éxito');
-							mi.obtenerTotalActividades();
-							mi.esnuevo = false;	
-						});						
+						mi.actividad.id = response.id;
+						mi.actividad.usuarioCreo=response.usuarioCreo;
+						mi.actividad.fechaCreacion=response.fechaCreacion;
+						mi.actividad.usuarioActualizo=response.usuarioactualizo;
+						mi.actividad.fechaActualizacion=response.fechaactualizacion;
+						$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardado')+' con éxito');
+						mi.obtenerTotalActividades();
+						mi.esnuevo = false;					
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' la Actividad');
@@ -284,17 +284,23 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					}
 				});
 				
-				$http.post('/SObjetoResponsableRol', {
-					accion: 'getResponsableRol',
+				$http.post('/SMatrizRACI', {
+					accion: 'getAsignacionPorObjeto',
 					objetoId: mi.actividad.id,
-					objetoTipo: 5,
-					esNuevo : mi.esnuevo
+					objetoTipo:5
+					
 				}).success(function(response){
+					mi.responsables =[];
 					if (response.success)
 					{
-						if(response.responsableRol.length > 0){
-							mi.actividad.actividadResponsable = response.responsableRol[0].nombre;
-							mi.actividad.responsableRolId = response.responsableRol[0].id;
+						var asignaciones = response.asignaciones;
+						for (x in response.asignaciones){
+							var responsable = [];
+							responsable.id = asignaciones[x].colaboradorId;
+							responsable.nombre = asignaciones[x].colaboradorNombre;
+							responsable.nombrerol = mi.obtenerNombreRol(asignaciones[x].rolId);
+							responsable.rol = asignaciones[x].rolId;
+							mi.responsables.push(responsable);
 						}
 					}
 				});
@@ -383,19 +389,31 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		};
 		
 		mi.buscarActividadResponsable = function(titulo, mensaje){
-			var resultado = mi.llamarModalBusqueda('/SResponsableRol', {
-				accion : 'numeroResponsableRol'	
+			var idResponsables = "";
+			var idRoles = [];
+			for (x in mi.responsables){
+				idResponsables = idResponsables + (x > 0 ? "," : "") + mi.responsables[x].id;
+				idRoles.push(mi.responsables[x].rol);
+			}
+			var resultado = mi.llamarModalBusqueda('/SColaborador', {
+				accion : 'totalElementos'	
 			}, function(pagina, elementosPorPagina) {
 				return {
-					accion : 'getResponsableRol',
+					accion : 'cargar',
 					pagina : pagina,
-					numeroresponsablerol : elementosPorPagina
+					numeroresponsablerol : elementosPorPagina,
+					idResponsables : idResponsables
+					
 				};
-			},'id','nombre');
+			},'id','nombreCompleto',idResponsables,idRoles);
 
 			resultado.then(function(itemSeleccionado) {
-				mi.actividad.actividadResponsable = itemSeleccionado.nombre;
-				mi.actividad.responsableRolId = itemSeleccionado.id;
+				var responsable = [];
+				responsable.id = itemSeleccionado.id;
+				responsable.nombre = itemSeleccionado.nombreCompleto;
+				responsable.rol = itemSeleccionado.rol;
+				responsable.nombrerol = itemSeleccionado.nombrerol;
+				mi.responsables.push(responsable);
 			});
 		}
 		
@@ -416,7 +434,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			});
 		}
 		
-		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
+		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre,idResponsables, idRoles) {
 			var resultado = $q.defer();
 			var modalInstance = $uibModal.open({
 				animation : 'true',
@@ -442,6 +460,12 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					},
 					$columnaNombre : function() {
 						return columnaNombre;
+					},
+					$idResponsables : function() {
+						return idResponsables;
+					},
+					$idRoles : function() {
+						return idRoles;
 					}
 					
 				}
@@ -538,6 +562,25 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 	    }, function() {
 		});
 	  };
+	  
+	  mi.eliminarResponsable = function(row){
+			var index = mi.responsables.indexOf(row);
+	        if (index !== -1) {
+	            mi.responsables.splice(index, 1);
+	        }
+	  };
+	  
+	  mi.obtenerNombreRol = function(valor){
+		  
+		  switch (valor){
+		  	case 'r': return "Responsable";
+		  	case 'a': return "Aprobador";
+		  	case 'c': return "Consultado";
+		  	case 'i': return "Informado";
+		  }
+		  return "";
+	  }
+		
 
 } ]);
 
@@ -676,23 +719,35 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 app.controller('modalBuscar', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
 	'$timeout', '$log', '$servlet', '$accionServlet', '$datosCarga',
-	'$columnaId','$columnaNombre',modalBuscar ]);
+	'$columnaId','$columnaNombre','$idResponsables','$idRoles',modalBuscar ]);
 
 function modalBuscar($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $servlet,$accionServlet,$datosCarga,$columnaId,$columnaNombre) {
+	i18nService, $utilidades, $timeout, $log, $servlet,$accionServlet,$datosCarga,$columnaId,$columnaNombre,
+	$idResponsables,$idRoles) {
 
 	var mi = this;
-
+	mi.roles=[{id:'r',nombre:"Responsable"},{id:'a',nombre:"Aprobador"},{id:'c',nombre:"Consultado"},{id:'i',nombre:"Informado"}];
+	
 	mi.totalElementos = 0;
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = 5;
 	mi.elementosPorPagina = 9;
-
 	mi.mostrarCargando = false;
 	mi.data = [];
+	mi.mostrarRoles = $servlet == "/SColaborador";
 
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
+	
+	for (x in $idRoles){
+		for (y in mi.roles){
+			if ($idRoles[x] == mi.roles[y].id){
+				mi.roles.splice(y, 1);
+				break;
+			}
+		}
+	}
+	
 
 	$http.post($servlet, $accionServlet).success(function(response) {
 		for ( var key in response) {
@@ -736,7 +791,7 @@ function modalBuscar($uibModalInstance, $scope, $http, $interval,
 
 	mi.cargarData = function(pagina) {
 		mi.mostrarCargando = true;
-		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina)).then(
+		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina,$idResponsables)).then(
 				function(response) {
 					if (response.data.success) {
 
@@ -756,7 +811,11 @@ function modalBuscar($uibModalInstance, $scope, $http, $interval,
 	}
 
 	mi.ok = function() {
-		if (mi.seleccionado) {
+		if (mi.seleccionado && ((mi.rolAsignado != null && mi.rolAsignado != undefined) || !mi.mostrarRoles  )) {
+			if (mi.mostrarRoles){
+				mi.itemSeleccionado.rol = mi.rolAsignado.id;
+				mi.itemSeleccionado.nombrerol = mi.rolAsignado.nombre;
+			}
 			$uibModalInstance.close(mi.itemSeleccionado);
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar una fila');

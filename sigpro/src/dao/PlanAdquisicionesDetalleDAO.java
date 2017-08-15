@@ -3,7 +3,6 @@ package dao;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import pojo.PlanAdquisiciones;
 import pojo.PlanAdquisicionesDetalle;
 import utilities.CHibernateSession;
 import utilities.CLogger;
