@@ -240,10 +240,10 @@
 								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="max-height: 390px; margin-bottom: -15px;">
 									<tr ng-repeat="item in controller.data">
 							      		<td nowrap style="min-width:200px;">
-							      			<p class="nombreFormat">
+							      			<div uib-tooltip="{{item.nombre}}" class="nombreFormat">
 							      				<span ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.objeto_tipo-1}}em"></span>
 							      				{{item.nombre}}
-							      			</p>
+							      			</div>
 							      		</td>
 							      		<td></td>	
 							      	</tr>
@@ -315,6 +315,15 @@
 					        <li ng-show="controller.grupoMostrado.real"><span class="colorRealFondo"></span>Real</li>
 						</ol>
 					</div>
+	    	</div>
+	    	<div class="row">
+	    		<div class="form-group col-sm-12" align="center">
+					<div style="width: 75%;">
+ 								<canvas id="bar" class="chart chart-bar" chart-data="controller.data" chart-labels="controller.labels" 
+ 									chart-options="controller.charOptions" chart-series="controller.series" chart-legend="false">
+ 								</canvas>
+						</div>
+   				</div>
 	    	</div>
     	</div>
     </div>
