@@ -143,7 +143,7 @@
 	
 	.divTabla{
 	    width: 100%;
-	    height: 400px;
+	    height: 100%;
 	    overflow-y: auto;
 	    margin-top: 151px;
 	}
@@ -217,14 +217,12 @@
 		<div class="panel panel-default">
 			<div class="panel-heading"><h3>Matriz RACI</h3></div>
 		</div>
-		<div class="subtitulo">
-			{{ racic.objetoTipoNombre }} {{ racic.proyectoNombre }}
-		</div>
 		
-		<div class="row" align="center" >
+		
+		<div class="row" align="center" style="height: 70%" >
 		
 			
-			<div class="col-sm-12 ">
+			<div class="col-sm-12 " >
 				<form name="form">
 					<div class="form-group col-sm-4" >
 							<select  class="inputText" ng-model="racic.prestamoSeleccionado" 
@@ -232,13 +230,15 @@
 								ng-readonly="true"
 								ng-required="true"
 								ng-change = "racic.generarMatriz()">
-								<option value="">Seleccione una opción</option>
+								<option value="">Seleccione un préstamo</option>
 								</select>
-							<label for="prestamo" class="floating-label">Préstamos</label>
+		
 					</div>
 				</form>
 				<br/>
 				<br/>
+				</div>
+			<div class="col-sm-12 " style="height: 100%">
 				<div class="divTabla" ng-if="racic.mostrarTabla">
 	  			
 					<table st-table="racic.matrizRaci" class="table table-header-rotated  table-striped table-hover table-condensed" >
@@ -263,20 +263,18 @@
 							</tbody>
 					</table>
 				</div>
-
-			</div>
-			<br>
-			<div style="text-align: center;" ng-if="racic.mostrarTabla">
-	    		
+				<div style="text-align: center; padding: 0 10 0 0 px;" ng-if="racic.mostrarTabla">
+	    		<br>	
 	    		<ol class="leyendaTexto"  >
 					<li ><span class="colorResponsableFondo"></span>Responsable</li>
-			        <li ><span class="colorAprobadorFondo"></span>Aprobador</li>
-			        <li ><span class="colorConsultadoFondo"></span>Consultado</li>
-			        <li ><span class="colorInformadoFondo"></span>Informado</li>
+			        <li ><span class="colorAprobadorFondo"></span>Cuentadante</li>
+			        <li ><span class="colorConsultadoFondo"></span>Consultor</li>
+			        <li ><span class="colorInformadoFondo"></span>Quien informa</li>
 				</ol>
 	    	
 					
 	    	</div>
+			</div>
 	    	<br>
 		  
 	</div>

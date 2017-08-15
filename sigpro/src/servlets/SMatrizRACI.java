@@ -276,11 +276,11 @@ public class SMatrizRACI extends HttpServlet {
 			if (rol.equalsIgnoreCase("R")){
 				informacion.rol = "Responsable";
 			} else if (rol.equalsIgnoreCase("a")){
-				informacion.rol = "Aprobador";
+				informacion.rol = "Cuentadante";
 			}else if (rol.equalsIgnoreCase("c")){
-				informacion.rol = "Consultado";
-			}else if (rol.equalsIgnoreCase("a")){
-				informacion.rol = "Informado";
+				informacion.rol = "Consultor";
+			}else if (rol.equalsIgnoreCase("i")){
+				informacion.rol = "Quien informa";
 			}
 			
 			informacion.nombreColaborador = String.join(" ", asignacion.getColaborador().getPnombre(),

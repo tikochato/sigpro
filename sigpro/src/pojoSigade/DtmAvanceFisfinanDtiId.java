@@ -1,5 +1,5 @@
 package pojoSigade;
-// Generated May 16, 2017 12:50:34 PM by Hibernate Tools 5.2.1.Final
+// Generated Aug 14, 2017 1:05:20 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,12 +15,12 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6020041691331063164L;
+	private static final long serialVersionUID = -4602339426706869964L;
 	private Date fechaCorte;
 	private String noPrestamo;
 	private String codigoPresupuestario;
 	private String nombrePrograma;
-	private int codigoOrganismoFinan;
+	private Integer codigoOrganismoFinan;
 	private String siglasOrganismoFinan;
 	private String nombreOrganismoFinan;
 	private String monedaPrestamo;
@@ -42,24 +42,12 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 	}
 
 	public DtmAvanceFisfinanDtiId(Date fechaCorte, String noPrestamo, String codigoPresupuestario,
-			String nombrePrograma, int codigoOrganismoFinan, String monedaPrestamo, Date fechaSuscripcion,
-			Date fechaVigencia) {
-		this.fechaCorte = fechaCorte;
-		this.noPrestamo = noPrestamo;
-		this.codigoPresupuestario = codigoPresupuestario;
-		this.nombrePrograma = nombrePrograma;
-		this.codigoOrganismoFinan = codigoOrganismoFinan;
-		this.monedaPrestamo = monedaPrestamo;
-		this.fechaSuscripcion = fechaSuscripcion;
-		this.fechaVigencia = fechaVigencia;
-	}
-
-	public DtmAvanceFisfinanDtiId(Date fechaCorte, String noPrestamo, String codigoPresupuestario,
-			String nombrePrograma, int codigoOrganismoFinan, String siglasOrganismoFinan, String nombreOrganismoFinan,
-			String monedaPrestamo, BigDecimal montoContratado, BigDecimal montoContratadoUsd,
-			BigDecimal montoContratadoGtq, BigDecimal desembolsos, BigDecimal desembolsosUsd, BigDecimal desembolsosGtq,
-			Date fechaDecreto, Date fechaSuscripcion, Date fechaVigencia, BigDecimal porDesembolsar,
-			BigDecimal porDesembolsarUsd, BigDecimal porDesembolsarGtq, String estadoPrestamo) {
+			String nombrePrograma, Integer codigoOrganismoFinan, String siglasOrganismoFinan,
+			String nombreOrganismoFinan, String monedaPrestamo, BigDecimal montoContratado,
+			BigDecimal montoContratadoUsd, BigDecimal montoContratadoGtq, BigDecimal desembolsos,
+			BigDecimal desembolsosUsd, BigDecimal desembolsosGtq, Date fechaDecreto, Date fechaSuscripcion,
+			Date fechaVigencia, BigDecimal porDesembolsar, BigDecimal porDesembolsarUsd, BigDecimal porDesembolsarGtq,
+			String estadoPrestamo) {
 		this.fechaCorte = fechaCorte;
 		this.noPrestamo = noPrestamo;
 		this.codigoPresupuestario = codigoPresupuestario;
@@ -83,7 +71,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.estadoPrestamo = estadoPrestamo;
 	}
 
-	@Column(name = "FECHA_CORTE", nullable = false, length = 7)
+	@Column(name = "fecha_corte", length = 19)
 	public Date getFechaCorte() {
 		return this.fechaCorte;
 	}
@@ -92,7 +80,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.fechaCorte = fechaCorte;
 	}
 
-	@Column(name = "NO_PRESTAMO", nullable = false, length = 60)
+	@Column(name = "no_prestamo", length = 45)
 	public String getNoPrestamo() {
 		return this.noPrestamo;
 	}
@@ -101,7 +89,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.noPrestamo = noPrestamo;
 	}
 
-	@Column(name = "CODIGO_PRESUPUESTARIO", nullable = false, length = 15)
+	@Column(name = "codigo_presupuestario", length = 45)
 	public String getCodigoPresupuestario() {
 		return this.codigoPresupuestario;
 	}
@@ -110,7 +98,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.codigoPresupuestario = codigoPresupuestario;
 	}
 
-	@Column(name = "NOMBRE_PROGRAMA", nullable = false, length = 300)
+	@Column(name = "nombre_programa", length = 500)
 	public String getNombrePrograma() {
 		return this.nombrePrograma;
 	}
@@ -119,16 +107,16 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.nombrePrograma = nombrePrograma;
 	}
 
-	@Column(name = "CODIGO_ORGANISMO_FINAN", nullable = false, precision = 6, scale = 0)
-	public int getCodigoOrganismoFinan() {
+	@Column(name = "codigo_organismo_finan")
+	public Integer getCodigoOrganismoFinan() {
 		return this.codigoOrganismoFinan;
 	}
 
-	public void setCodigoOrganismoFinan(int codigoOrganismoFinan) {
+	public void setCodigoOrganismoFinan(Integer codigoOrganismoFinan) {
 		this.codigoOrganismoFinan = codigoOrganismoFinan;
 	}
 
-	@Column(name = "SIGLAS_ORGANISMO_FINAN", length = 20)
+	@Column(name = "siglas_organismo_finan", length = 45)
 	public String getSiglasOrganismoFinan() {
 		return this.siglasOrganismoFinan;
 	}
@@ -137,7 +125,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.siglasOrganismoFinan = siglasOrganismoFinan;
 	}
 
-	@Column(name = "NOMBRE_ORGANISMO_FINAN", length = 60)
+	@Column(name = "nombre_organismo_finan", length = 200)
 	public String getNombreOrganismoFinan() {
 		return this.nombreOrganismoFinan;
 	}
@@ -146,7 +134,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.nombreOrganismoFinan = nombreOrganismoFinan;
 	}
 
-	@Column(name = "MONEDA_PRESTAMO", nullable = false, length = 3)
+	@Column(name = "moneda_prestamo", length = 100)
 	public String getMonedaPrestamo() {
 		return this.monedaPrestamo;
 	}
@@ -155,7 +143,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.monedaPrestamo = monedaPrestamo;
 	}
 
-	@Column(name = "MONTO_CONTRATADO", precision = 22, scale = 0)
+	@Column(name = "monto_contratado", precision = 15)
 	public BigDecimal getMontoContratado() {
 		return this.montoContratado;
 	}
@@ -164,7 +152,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.montoContratado = montoContratado;
 	}
 
-	@Column(name = "MONTO_CONTRATADO_USD", precision = 22, scale = 0)
+	@Column(name = "monto_contratado_usd", precision = 15)
 	public BigDecimal getMontoContratadoUsd() {
 		return this.montoContratadoUsd;
 	}
@@ -173,7 +161,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.montoContratadoUsd = montoContratadoUsd;
 	}
 
-	@Column(name = "MONTO_CONTRATADO_GTQ", precision = 22, scale = 0)
+	@Column(name = "monto_contratado_gtq", precision = 15)
 	public BigDecimal getMontoContratadoGtq() {
 		return this.montoContratadoGtq;
 	}
@@ -182,7 +170,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.montoContratadoGtq = montoContratadoGtq;
 	}
 
-	@Column(name = "DESEMBOLSOS", precision = 22, scale = 0)
+	@Column(name = "desembolsos", precision = 15)
 	public BigDecimal getDesembolsos() {
 		return this.desembolsos;
 	}
@@ -191,7 +179,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.desembolsos = desembolsos;
 	}
 
-	@Column(name = "DESEMBOLSOS_USD", precision = 22, scale = 0)
+	@Column(name = "desembolsos_usd", precision = 15)
 	public BigDecimal getDesembolsosUsd() {
 		return this.desembolsosUsd;
 	}
@@ -200,7 +188,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.desembolsosUsd = desembolsosUsd;
 	}
 
-	@Column(name = "DESEMBOLSOS_GTQ", precision = 22, scale = 0)
+	@Column(name = "desembolsos_gtq", precision = 15)
 	public BigDecimal getDesembolsosGtq() {
 		return this.desembolsosGtq;
 	}
@@ -209,7 +197,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.desembolsosGtq = desembolsosGtq;
 	}
 
-	@Column(name = "FECHA_DECRETO", length = 7)
+	@Column(name = "fecha_decreto", length = 19)
 	public Date getFechaDecreto() {
 		return this.fechaDecreto;
 	}
@@ -218,7 +206,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.fechaDecreto = fechaDecreto;
 	}
 
-	@Column(name = "FECHA_SUSCRIPCION", nullable = false, length = 7)
+	@Column(name = "fecha_suscripcion", length = 19)
 	public Date getFechaSuscripcion() {
 		return this.fechaSuscripcion;
 	}
@@ -227,7 +215,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.fechaSuscripcion = fechaSuscripcion;
 	}
 
-	@Column(name = "FECHA_VIGENCIA", nullable = false, length = 7)
+	@Column(name = "fecha_vigencia", length = 19)
 	public Date getFechaVigencia() {
 		return this.fechaVigencia;
 	}
@@ -236,7 +224,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.fechaVigencia = fechaVigencia;
 	}
 
-	@Column(name = "POR_DESEMBOLSAR", precision = 22, scale = 0)
+	@Column(name = "por_desembolsar", precision = 15)
 	public BigDecimal getPorDesembolsar() {
 		return this.porDesembolsar;
 	}
@@ -245,7 +233,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.porDesembolsar = porDesembolsar;
 	}
 
-	@Column(name = "POR_DESEMBOLSAR_USD", precision = 22, scale = 0)
+	@Column(name = "por_desembolsar_usd", precision = 15)
 	public BigDecimal getPorDesembolsarUsd() {
 		return this.porDesembolsarUsd;
 	}
@@ -254,7 +242,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.porDesembolsarUsd = porDesembolsarUsd;
 	}
 
-	@Column(name = "POR_DESEMBOLSAR_GTQ", precision = 22, scale = 0)
+	@Column(name = "por_desembolsar_gtq", precision = 15)
 	public BigDecimal getPorDesembolsarGtq() {
 		return this.porDesembolsarGtq;
 	}
@@ -263,7 +251,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.porDesembolsarGtq = porDesembolsarGtq;
 	}
 
-	@Column(name = "ESTADO_PRESTAMO", length = 4000)
+	@Column(name = "estado_prestamo", length = 45)
 	public String getEstadoPrestamo() {
 		return this.estadoPrestamo;
 	}
@@ -292,7 +280,9 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 				&& ((this.getNombrePrograma() == castOther.getNombrePrograma())
 						|| (this.getNombrePrograma() != null && castOther.getNombrePrograma() != null
 								&& this.getNombrePrograma().equals(castOther.getNombrePrograma())))
-				&& (this.getCodigoOrganismoFinan() == castOther.getCodigoOrganismoFinan())
+				&& ((this.getCodigoOrganismoFinan() == castOther.getCodigoOrganismoFinan())
+						|| (this.getCodigoOrganismoFinan() != null && castOther.getCodigoOrganismoFinan() != null
+								&& this.getCodigoOrganismoFinan().equals(castOther.getCodigoOrganismoFinan())))
 				&& ((this.getSiglasOrganismoFinan() == castOther.getSiglasOrganismoFinan())
 						|| (this.getSiglasOrganismoFinan() != null && castOther.getSiglasOrganismoFinan() != null
 								&& this.getSiglasOrganismoFinan().equals(castOther.getSiglasOrganismoFinan())))
@@ -351,7 +341,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		result = 37 * result + (getNoPrestamo() == null ? 0 : this.getNoPrestamo().hashCode());
 		result = 37 * result + (getCodigoPresupuestario() == null ? 0 : this.getCodigoPresupuestario().hashCode());
 		result = 37 * result + (getNombrePrograma() == null ? 0 : this.getNombrePrograma().hashCode());
-		result = 37 * result + this.getCodigoOrganismoFinan();
+		result = 37 * result + (getCodigoOrganismoFinan() == null ? 0 : this.getCodigoOrganismoFinan().hashCode());
 		result = 37 * result + (getSiglasOrganismoFinan() == null ? 0 : this.getSiglasOrganismoFinan().hashCode());
 		result = 37 * result + (getNombreOrganismoFinan() == null ? 0 : this.getNombreOrganismoFinan().hashCode());
 		result = 37 * result + (getMonedaPrestamo() == null ? 0 : this.getMonedaPrestamo().hashCode());

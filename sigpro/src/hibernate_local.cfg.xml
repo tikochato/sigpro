@@ -38,8 +38,10 @@
         <mapping class="pojo.DatoTipo" />
         <mapping class="pojo.Desembolso" />
         <mapping class="pojo.DesembolsoTipo" />
-        <mapping class="pojo.EjecucionEstado" />
         <mapping class="pojo.Documento" />
+        <mapping class="pojoSigade.DtmAvanceFisfinanDetDti" />
+        <mapping class="pojoSigade.DtmAvanceFisfinanDti" />
+         <mapping class="pojo.EjecucionEstado" />
         <mapping class="pojo.Entidad" />
         <mapping class="pojo.EstadoInforme" />
         <mapping class="pojo.EstadoTabla" />
