@@ -1,5 +1,5 @@
 package pojoSigade;
-// Generated May 16, 2017 12:50:34 PM by Hibernate Tools 5.2.1.Final
+// Generated Aug 14, 2017 12:01:01 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import javax.persistence.Column;
@@ -14,12 +14,12 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 166199601931621160L;
+	private static final long serialVersionUID = 1297693381439609781L;
 	private BigDecimal ejercicioFiscal;
 	private String mesDesembolso;
 	private String codigoPresupuestario;
-	private int entidadSicoin;
-	private int unidadEjecutoraSicoin;
+	private Integer entidadSicoin;
+	private Integer unidadEjecutoraSicoin;
 	private String monedaDesembolso;
 	private BigDecimal desembolsosMesMoneda;
 	private BigDecimal tcMonUsd;
@@ -30,24 +30,14 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 	public DtmAvanceFisfinanDetDtiId() {
 	}
 
-	public DtmAvanceFisfinanDetDtiId(String mesDesembolso, String codigoPresupuestario, int entidadSicoin,
-			int unidadEjecutoraSicoin, String monedaDesembolso, BigDecimal desembolsosMesMoneda, BigDecimal tcMonUsd,
-			BigDecimal desembolsosMesUsd, BigDecimal tcUsdGtq, BigDecimal desembolsosMesGtq) {
-		this.mesDesembolso = mesDesembolso;
-		this.codigoPresupuestario = codigoPresupuestario;
-		this.entidadSicoin = entidadSicoin;
-		this.unidadEjecutoraSicoin = unidadEjecutoraSicoin;
-		this.monedaDesembolso = monedaDesembolso;
-		this.desembolsosMesMoneda = desembolsosMesMoneda;
-		this.tcMonUsd = tcMonUsd;
-		this.desembolsosMesUsd = desembolsosMesUsd;
-		this.tcUsdGtq = tcUsdGtq;
-		this.desembolsosMesGtq = desembolsosMesGtq;
+	public DtmAvanceFisfinanDetDtiId(BigDecimal ejercicioFiscal) {
+		this.ejercicioFiscal = ejercicioFiscal;
 	}
 
 	public DtmAvanceFisfinanDetDtiId(BigDecimal ejercicioFiscal, String mesDesembolso, String codigoPresupuestario,
-			int entidadSicoin, int unidadEjecutoraSicoin, String monedaDesembolso, BigDecimal desembolsosMesMoneda,
-			BigDecimal tcMonUsd, BigDecimal desembolsosMesUsd, BigDecimal tcUsdGtq, BigDecimal desembolsosMesGtq) {
+			Integer entidadSicoin, Integer unidadEjecutoraSicoin, String monedaDesembolso,
+			BigDecimal desembolsosMesMoneda, BigDecimal tcMonUsd, BigDecimal desembolsosMesUsd, BigDecimal tcUsdGtq,
+			BigDecimal desembolsosMesGtq) {
 		this.ejercicioFiscal = ejercicioFiscal;
 		this.mesDesembolso = mesDesembolso;
 		this.codigoPresupuestario = codigoPresupuestario;
@@ -61,7 +51,7 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 		this.desembolsosMesGtq = desembolsosMesGtq;
 	}
 
-	@Column(name = "EJERCICIO_FISCAL", precision = 22, scale = 0)
+	@Column(name = "ejercicio_fiscal", nullable = false, precision = 15)
 	public BigDecimal getEjercicioFiscal() {
 		return this.ejercicioFiscal;
 	}
@@ -70,7 +60,7 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 		this.ejercicioFiscal = ejercicioFiscal;
 	}
 
-	@Column(name = "MES_DESEMBOLSO", nullable = false, length = 2)
+	@Column(name = "mes_desembolso", length = 45)
 	public String getMesDesembolso() {
 		return this.mesDesembolso;
 	}
@@ -79,7 +69,7 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 		this.mesDesembolso = mesDesembolso;
 	}
 
-	@Column(name = "CODIGO_PRESUPUESTARIO", nullable = false, length = 12)
+	@Column(name = "codigo_presupuestario", length = 45)
 	public String getCodigoPresupuestario() {
 		return this.codigoPresupuestario;
 	}
@@ -88,25 +78,25 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 		this.codigoPresupuestario = codigoPresupuestario;
 	}
 
-	@Column(name = "ENTIDAD_SICOIN", nullable = false, precision = 8, scale = 0)
-	public int getEntidadSicoin() {
+	@Column(name = "entidad_sicoin")
+	public Integer getEntidadSicoin() {
 		return this.entidadSicoin;
 	}
 
-	public void setEntidadSicoin(int entidadSicoin) {
+	public void setEntidadSicoin(Integer entidadSicoin) {
 		this.entidadSicoin = entidadSicoin;
 	}
 
-	@Column(name = "UNIDAD_EJECUTORA_SICOIN", nullable = false, precision = 6, scale = 0)
-	public int getUnidadEjecutoraSicoin() {
+	@Column(name = "unidad_ejecutora_sicoin")
+	public Integer getUnidadEjecutoraSicoin() {
 		return this.unidadEjecutoraSicoin;
 	}
 
-	public void setUnidadEjecutoraSicoin(int unidadEjecutoraSicoin) {
+	public void setUnidadEjecutoraSicoin(Integer unidadEjecutoraSicoin) {
 		this.unidadEjecutoraSicoin = unidadEjecutoraSicoin;
 	}
 
-	@Column(name = "MONEDA_DESEMBOLSO", nullable = false, length = 3)
+	@Column(name = "moneda_desembolso", length = 45)
 	public String getMonedaDesembolso() {
 		return this.monedaDesembolso;
 	}
@@ -115,7 +105,7 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 		this.monedaDesembolso = monedaDesembolso;
 	}
 
-	@Column(name = "DESEMBOLSOS_MES_MONEDA", nullable = false, precision = 15, scale = 3)
+	@Column(name = "desembolsos_mes_moneda", precision = 15)
 	public BigDecimal getDesembolsosMesMoneda() {
 		return this.desembolsosMesMoneda;
 	}
@@ -124,7 +114,7 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 		this.desembolsosMesMoneda = desembolsosMesMoneda;
 	}
 
-	@Column(name = "TC_MON_USD", nullable = false, precision = 27, scale = 20)
+	@Column(name = "tc_mon_usd", precision = 15)
 	public BigDecimal getTcMonUsd() {
 		return this.tcMonUsd;
 	}
@@ -133,7 +123,7 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 		this.tcMonUsd = tcMonUsd;
 	}
 
-	@Column(name = "DESEMBOLSOS_MES_USD", nullable = false, precision = 15, scale = 3)
+	@Column(name = "desembolsos_mes_usd", precision = 15)
 	public BigDecimal getDesembolsosMesUsd() {
 		return this.desembolsosMesUsd;
 	}
@@ -142,7 +132,7 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 		this.desembolsosMesUsd = desembolsosMesUsd;
 	}
 
-	@Column(name = "TC_USD_GTQ", nullable = false, precision = 27, scale = 20)
+	@Column(name = "tc_usd_gtq", precision = 15)
 	public BigDecimal getTcUsdGtq() {
 		return this.tcUsdGtq;
 	}
@@ -151,7 +141,7 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 		this.tcUsdGtq = tcUsdGtq;
 	}
 
-	@Column(name = "DESEMBOLSOS_MES_GTQ", nullable = false, precision = 15, scale = 3)
+	@Column(name = "desembolsos_mes_gtq", precision = 15)
 	public BigDecimal getDesembolsosMesGtq() {
 		return this.desembolsosMesGtq;
 	}
@@ -179,8 +169,12 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 				&& ((this.getCodigoPresupuestario() == castOther.getCodigoPresupuestario())
 						|| (this.getCodigoPresupuestario() != null && castOther.getCodigoPresupuestario() != null
 								&& this.getCodigoPresupuestario().equals(castOther.getCodigoPresupuestario())))
-				&& (this.getEntidadSicoin() == castOther.getEntidadSicoin())
-				&& (this.getUnidadEjecutoraSicoin() == castOther.getUnidadEjecutoraSicoin())
+				&& ((this.getEntidadSicoin() == castOther.getEntidadSicoin())
+						|| (this.getEntidadSicoin() != null && castOther.getEntidadSicoin() != null
+								&& this.getEntidadSicoin().equals(castOther.getEntidadSicoin())))
+				&& ((this.getUnidadEjecutoraSicoin() == castOther.getUnidadEjecutoraSicoin())
+						|| (this.getUnidadEjecutoraSicoin() != null && castOther.getUnidadEjecutoraSicoin() != null
+								&& this.getUnidadEjecutoraSicoin().equals(castOther.getUnidadEjecutoraSicoin())))
 				&& ((this.getMonedaDesembolso() == castOther.getMonedaDesembolso())
 						|| (this.getMonedaDesembolso() != null && castOther.getMonedaDesembolso() != null
 								&& this.getMonedaDesembolso().equals(castOther.getMonedaDesembolso())))
@@ -206,8 +200,8 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 		result = 37 * result + (getEjercicioFiscal() == null ? 0 : this.getEjercicioFiscal().hashCode());
 		result = 37 * result + (getMesDesembolso() == null ? 0 : this.getMesDesembolso().hashCode());
 		result = 37 * result + (getCodigoPresupuestario() == null ? 0 : this.getCodigoPresupuestario().hashCode());
-		result = 37 * result + this.getEntidadSicoin();
-		result = 37 * result + this.getUnidadEjecutoraSicoin();
+		result = 37 * result + (getEntidadSicoin() == null ? 0 : this.getEntidadSicoin().hashCode());
+		result = 37 * result + (getUnidadEjecutoraSicoin() == null ? 0 : this.getUnidadEjecutoraSicoin().hashCode());
 		result = 37 * result + (getMonedaDesembolso() == null ? 0 : this.getMonedaDesembolso().hashCode());
 		result = 37 * result + (getDesembolsosMesMoneda() == null ? 0 : this.getDesembolsosMesMoneda().hashCode());
 		result = 37 * result + (getTcMonUsd() == null ? 0 : this.getTcMonUsd().hashCode());

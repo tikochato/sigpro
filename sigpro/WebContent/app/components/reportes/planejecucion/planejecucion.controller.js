@@ -39,7 +39,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 		    [30, 32, 35]  //real
 		  ];
 	  
-	mi.radarColors = ['#0f21cf','#199f0b']
+	mi.radarColors = ['#88b4df','#8ecf4c']
 	
 	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
 			function(response) {
