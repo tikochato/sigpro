@@ -1,5 +1,5 @@
 package pojo;
-// Generated Aug 10, 2017 5:40:56 PM by Hibernate Tools 5.2.3.Final
+// Generated Aug 14, 2017 12:17:40 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -14,7 +14,7 @@ public class EstructuraArbolId implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6036269857916835613L;
+	private static final long serialVersionUID = -5214447754136064787L;
 	private Integer prestamo;
 	private Integer componente;
 	private Integer producto;
@@ -23,12 +23,13 @@ public class EstructuraArbolId implements java.io.Serializable {
 	private Long treelevel;
 	private String treepath;
 	private Date fechaInicio;
+	private Date fechaFin;
 
 	public EstructuraArbolId() {
 	}
 
 	public EstructuraArbolId(Integer prestamo, Integer componente, Integer producto, Integer subproducto,
-			Integer actividad, Long treelevel, String treepath, Date fechaInicio) {
+			Integer actividad, Long treelevel, String treepath, Date fechaInicio, Date fechaFin) {
 		this.prestamo = prestamo;
 		this.componente = componente;
 		this.producto = producto;
@@ -37,6 +38,7 @@ public class EstructuraArbolId implements java.io.Serializable {
 		this.treelevel = treelevel;
 		this.treepath = treepath;
 		this.fechaInicio = fechaInicio;
+		this.fechaFin = fechaFin;
 	}
 
 	@Column(name = "prestamo")
@@ -111,6 +113,15 @@ public class EstructuraArbolId implements java.io.Serializable {
 		this.fechaInicio = fechaInicio;
 	}
 
+	@Column(name = "fecha_fin", length = 19)
+	public Date getFechaFin() {
+		return this.fechaFin;
+	}
+
+	public void setFechaFin(Date fechaFin) {
+		this.fechaFin = fechaFin;
+	}
+
 	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
@@ -138,7 +149,9 @@ public class EstructuraArbolId implements java.io.Serializable {
 						&& castOther.getTreepath() != null && this.getTreepath().equals(castOther.getTreepath())))
 				&& ((this.getFechaInicio() == castOther.getFechaInicio())
 						|| (this.getFechaInicio() != null && castOther.getFechaInicio() != null
-								&& this.getFechaInicio().equals(castOther.getFechaInicio())));
+								&& this.getFechaInicio().equals(castOther.getFechaInicio())))
+				&& ((this.getFechaFin() == castOther.getFechaFin()) || (this.getFechaFin() != null
+						&& castOther.getFechaFin() != null && this.getFechaFin().equals(castOther.getFechaFin())));
 	}
 
 	@Override
@@ -153,6 +166,7 @@ public class EstructuraArbolId implements java.io.Serializable {
 		result = 37 * result + (getTreelevel() == null ? 0 : this.getTreelevel().hashCode());
 		result = 37 * result + (getTreepath() == null ? 0 : this.getTreepath().hashCode());
 		result = 37 * result + (getFechaInicio() == null ? 0 : this.getFechaInicio().hashCode());
+		result = 37 * result + (getFechaFin() == null ? 0 : this.getFechaFin().hashCode());
 		return result;
 	}
 

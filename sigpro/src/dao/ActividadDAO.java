@@ -519,8 +519,7 @@ public class ActividadDAO {
 							"and year(ac.fecha_fin ) between ?2 and ?3",
 							"and porcentaje_avance = 100",
 							") t2",
-							"group by year(t2.fecha_fin) , month(t2.fecha_fin)",
-							"order by year(t2.fecha_fin) , month(t2.fecha_fin) desc");
+							"group by year(t2.fecha_fin) , month(t2.fecha_fin) asc");
 			Query<?> criteria = session.createNativeQuery(query);
 			if (colaboradorid != null && colaboradorid > 0)
 				criteria.setParameter("1", colaboradorid);
