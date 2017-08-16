@@ -33,6 +33,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 		var AGRUPACION_ANUAL= 6;
 		
 		var MES_DISPLAY_NAME = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+		var MES_DISPLAY_NAME_GRAFICA = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 		var BIMESTRE_DISPLAY_NAME = ['Bimestre 1', 'Bimestre 2','Bimestre 3','Bimestre 4','Bimestre 5','Bimestre 6'];
 		var TRIMESTRE_DISPLAY_NAME = ['Trimestre 1', 'Trimestre 2', 'Trimestre 3', 'Trimestre 4'];
 		var CUATRIMESTRE_DISPLAY_NAME = ['Cuatrimestre 1', 'Cuatrimestre 2', 'Cuatrimestre 3'];
@@ -103,7 +104,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 		$http.post('/SProyecto',{accion: 'getProyectos'}).success(
 			function(response) {
 				mi.prestamos = [];
-				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione una opción'});
+				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un préstamo'});
 				if (response.success){
 					for (var i = 0; i < response.entidades.length; i++){
 						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
@@ -347,7 +348,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 					if(agrupacion == 1){
 						for(var i=mi.fechaInicio; i<=mi.fechaFin; i++){
 							for(var j=0; j<12;j++){
-								agrupaValor.push(MES_DISPLAY_NAME[j] + "-" + i);
+								agrupaValor.push(MES_DISPLAY_NAME_GRAFICA[j] + "-" + i);
 							}
 						}
 						
@@ -493,7 +494,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			});
 	}
 		
-		mi.lineColors = ['#303f9e', '#257129'];
+		mi.lineColors = ['#88b4df','#8ecf4c'];
 		
 		mi.convertirMillones = function(){
 			for(h in mi.dataGrafica){
