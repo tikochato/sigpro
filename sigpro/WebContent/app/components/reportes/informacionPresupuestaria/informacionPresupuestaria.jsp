@@ -228,7 +228,7 @@
 	    		
 	    		<div class="row" ng-hide="!controller.mostrarDescargar">
 		    		<div class="divPadreNombres">
-			    		<div class="divTabla" style="max-height: 390px;"> 
+			    		<div class="divTabla" style="max-height: 375px;"> 
 			    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos">
 								<thead class="theadDatos">
 									<tr>
