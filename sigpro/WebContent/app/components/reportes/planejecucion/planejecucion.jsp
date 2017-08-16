@@ -44,6 +44,7 @@
 							ng-change = "planc.generarReporte()">
 							<option value="">Seleccione una préstamo</option>
 							</select>
+						<label for="prestamo" class="floating-label" style="left: 5px;">Préstamos</label>
 				</div>
 			</form>
 			<br/> <br/><br/>
