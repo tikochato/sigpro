@@ -157,7 +157,6 @@
 						<select  class="inputText" ng-model="controller.prestamo"
 							ng-options="a.text for a in controller.prestamos"
 							ng-change="controller.validar(1)"></select>
-						<label for="prestamo" class="floating-label">Préstamos</label>
 					</div>
 					
 					<div class="form-group col-sm-1">

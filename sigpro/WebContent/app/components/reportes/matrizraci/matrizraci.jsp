@@ -229,7 +229,7 @@
 	
 		<div align="center"  class="contenedor">
 			
-			<div class="col-sm-12 " style="height: 100%">
+			<div class="col-sm-12 " style="height: 90%">
 				<form name="form">
 					<div class="form-group col-sm-4" >
 							<select  class="inputText" ng-model="racic.prestamoSeleccionado" 
