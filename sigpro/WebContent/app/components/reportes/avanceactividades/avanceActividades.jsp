@@ -55,7 +55,6 @@
 		    		<div class="form-group col-sm-5">
 						<select  class="inputText" ng-model="controller.prestamo"
 							ng-options="a.text for a in controller.prestamos" ng-change="controller.generar()"></select>
-						<label for="prestamo" class="floating-label">*Préstamos</label>
 					</div>
 					<div class="form-group col-sm-3">
 						<input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.fechaCorte" is-open="controller.fi_abierto"
