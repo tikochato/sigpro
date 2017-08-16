@@ -40,11 +40,12 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 		};
 		
 		mi.mostrarcargando = true;
+		mi.mostrarTablas = false;
+		mi.monstrarDiv = true;
 		$http.post('/SAdministracionTransaccional', {accion: 'getComponentes'}).success(
 			function(response){
 				mi.rowDatos = response.usuarios;
 				mi.displayedDatos = [].concat(mi.rowDatos);
-				mi.mostrarcargando = false;
 				
 				mi.totalCreados = 0;
 				mi.totalActualizados = 0;
@@ -55,12 +56,14 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 					mi.totalEliminados += mi.rowDatos[x].eliminados;
 				}
 				
-				
 				mi.series = ['Datos'];
 				mi.datos = [mi.totalCreados,mi.totalActualizados,mi.totalEliminados];
 				mi.labels = [];
 				mi.labels= ['Creados', 'Actualizados', 'Eliminados']
 				mi.data = mi.datos;
+				
+				mi.mostrarcargando = false;
+				mi.mostrarTablas = true;
 			});
 		
 		mi.totalesPorUsuario = function(row){

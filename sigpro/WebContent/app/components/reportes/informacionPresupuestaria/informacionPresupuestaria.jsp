@@ -206,7 +206,7 @@
 								<span>R</span></label>
 	    					</div>
 							<div class="btn-group" style="padding-left: 20px;">
-								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrarDescargar">
+								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="true">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
 							</div>
 						</div>
@@ -242,7 +242,7 @@
 								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="max-height: 390px; margin-bottom: -15px;">
 									<tr ng-repeat="item in controller.data">
 							      		<td nowrap style="min-width:200px;">
-							      			<div uib-tooltip="{{item.nombre}}" class="nombreFormat" style="height: 17px">
+							      			<div uib-tooltip="{{item.nombre}}" class="nombreFormat">
 							      				<span ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.objeto_tipo-1}}em"></span>
 							      				{{item.nombre}}
 							      			</div>
@@ -312,7 +312,7 @@
 						</table>
 		    		</div>
 				</div>
-				
+				<br><br>
 				<div class="row" ng-hide="!controller.mostrarDescargar">
 					<div class="col-sm-3"></div>
 					<div class="col-sm-6" style="text-align: center;">

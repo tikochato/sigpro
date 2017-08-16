@@ -499,10 +499,14 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 		mi.convertirMillones = function(){
 			for(h in mi.dataGrafica){
 				for(k in mi.dataGrafica[h]){
-					if(mi.enMillones)
+					if(mi.enMillones){
 						mi.dataGrafica[h][k] = mi.dataGrafica[h][k] / 1000000;
-					else
+						mi.optionsGrafica.scales.yAxes[0].scaleLabel.labelString = "Monto en millones de quetzales";
+					}
+					else{
 						mi.dataGrafica[h][k] = mi.dataGrafica[h][k] * 1000000;
+						mi.optionsGrafica.scales.yAxes[0].scaleLabel.labelString = "Monto en quetzales";
+					}
 				}
 			}
 		}
@@ -522,7 +526,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			          position: 'left',
 			          scaleLabel: {
    	                       display: true,
-   	                       labelString: 'Monto',
+   	                       labelString: 'Monto en millones de quetzales',
 	                      },
 	                   stacked: true,
 	                ticks: {
@@ -540,7 +544,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			      xAxes: [{
 			    	  scaleLabel: {
 	                       display: true,
-	                       labelString: "Agrupación"
+	                       labelString: ""
 	                     },
 	                     gridLines: {
 	                          display: false
