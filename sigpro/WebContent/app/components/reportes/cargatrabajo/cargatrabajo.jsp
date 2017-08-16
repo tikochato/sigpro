@@ -50,7 +50,6 @@
 						<select  class="inputText" ng-model="controller.prestamo"
 							ng-options="a.text for a in controller.prestamos" 
 							ng-change="controller.getEstructura()"></select>
-						<label for="prestamo" class="floating-label">Préstamos</label>
 						
 					  </div>
 					  

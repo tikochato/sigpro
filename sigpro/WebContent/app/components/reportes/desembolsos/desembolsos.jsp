@@ -104,7 +104,6 @@
 							
 							<option value="">Seleccione una préstamo</option>
 						</select>
-						<label for="prestamo" class="floating-label" style="left: 5px;">Préstamos</label>
 					</div>
 					<div class="form-group col-sm-2">
 						<input type="number"  class="inputText" ng-model="desembolsosc.anioSeleccionado" maxlength="4" 
