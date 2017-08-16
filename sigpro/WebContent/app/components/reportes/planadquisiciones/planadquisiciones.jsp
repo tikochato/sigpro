@@ -151,7 +151,8 @@
 		    			<div class="form-group col-sm-5">
 							<select  class="inputText" ng-model="controller.prestamo"
 								ng-options="a.text for a in controller.prestamos" 
-								ng-change="controller.generar();"></select>						
+								ng-change="controller.generar();"></select>		
+						<label for="prestamo" class="floating-label">Préstamos</label>				
 	    				</div>
 						<div class="operation_buttons" align="right">
 							<div class="btn-group">

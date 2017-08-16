@@ -154,4 +154,5 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
             mi.calcularTamanosPantalla();
             $scope.$digest();
         });
+		$scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
 }]);
