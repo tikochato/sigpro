@@ -204,9 +204,9 @@
 					</div>
     			<br><br><br><br>
 	    	</div>
-	    	<div style="width: 100%; height: 70%" id="reporte">
+	    	<div style="width: 100%; height: calc(70% - 32px)" id="reporte">
 	    		
-				<div class="grid_loading" ng-hide="!controller.mostrarCargando">
+				<div class="grid_loading" ng-hide="!controller.mostrarCargando" style="height: calc(80% - 32px)">
 						<div class="msg">
 							<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
 								<br />
@@ -306,6 +306,7 @@
 			    		</div>
 				</div>
 	    	</div>
+	    	<br>
 	    	<div class="row">
 					<div class="col-sm-3"></div>
 					<div class="col-sm-6" style="text-align: center;">
