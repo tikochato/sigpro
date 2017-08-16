@@ -151,8 +151,7 @@
 		    			<div class="form-group col-sm-5">
 							<select  class="inputText" ng-model="controller.prestamo"
 								ng-options="a.text for a in controller.prestamos" 
-								ng-change="controller.generar();"></select>
-							<label for="tObjeto" class="floating-label">Préstamos</label>
+								ng-change="controller.generar();"></select>						
 	    				</div>
 						<div class="operation_buttons" align="right">
 							<div class="btn-group">
@@ -185,6 +184,7 @@
 		    		</div>
 				</div>
 			</div>
+			<br><br><br><br><br><br><br><br>
 			<div class="col-sm-12" style="height: 80%">
 				<div ng-hide="!controller.mostrarCargando" style="width: 100%; height: 100%">
     				<div class="grid_loading" ng-hide="!controller.mostrarCargando">

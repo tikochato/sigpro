@@ -160,7 +160,6 @@
 						<select  class="inputText" ng-model="controller.prestamo"
 							ng-options="a.text for a in controller.prestamos"
 							ng-change="controller.validar(1)"></select>
-						<label for="prestamo" class="floating-label">Préstamos</label>
 					</div>
 					
 					<div align="left" class="form-group col-sm-1">
@@ -333,6 +332,7 @@
 		    	</div>
 		    	<br><br>
 		    	<div class="row" ng-hide="!controller.mostrarDescargar" style="width: 70%">
+		    		<label class="label-form">Total Ejecutado</label>
 		    		<canvas id="line" class="chart chart-line" chart-data="controller.dataGrafica" 
 		    			chart-labels="controller.labels" chart-series="controller.series" 
 		    			chart-colors = "controller.lineColors" chart-legend="true"
