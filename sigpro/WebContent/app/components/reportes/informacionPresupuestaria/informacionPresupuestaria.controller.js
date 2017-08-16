@@ -15,12 +15,12 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 		mi.agrupacionActual = 1
 		mi.columnasTotal = 1;
 		mi.limiteAnios = 5;
-		mi.tamanioMinimoColumna = 125;
-		mi.tamanioMinimoColumnaMillones = 75;
+		mi.tamanioMinimoColumna = 130;
+		mi.tamanioMinimoColumnaMillones = 80;
 		mi.grupoMostrado= {"planificado":true,"real":true};
 		mi.estiloAlineacion="text-align: center;";
-		mi.porcentajeCeldaValor = "width: 45%; float: left;";
-		mi.porcentajeCeldaPipe = "width: 10%; float: left;";
+		mi.porcentajeCeldaValor = "width: 48%; float: left;";
+		mi.porcentajeCeldaPipe = "width: 2%; float: left;";
 		mi.data = [];
 		mi.totales = [];
 		mi.scrollPosicion = 0;
