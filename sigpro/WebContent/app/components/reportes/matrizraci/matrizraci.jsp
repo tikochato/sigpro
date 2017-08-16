@@ -237,8 +237,7 @@
 								ng-required="true"
 								ng-change = "racic.generarMatriz()">
 								<option value="">Seleccione un préstamo</option>
-								</select>								
-						<label for="prestamo" class="floating-label" style="left: 0">Préstamos</label>
+								</select>
 		
 					</div>
 				</form>
