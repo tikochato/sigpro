@@ -146,78 +146,77 @@
     <shiro:lacksPermission name="24010">
 			<p ng-init="controller.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
-	    <div class="row" id="reporte" style="height: 100%">
-	    	<div class="col-sm-12" style="height: 20%">
-	    		<div style="width: 100%;">
-		    		<div class="row">
-			    		<div class="panel panel-default">
-			  				<div class="panel-heading"><h3>Ejecución presupuestaria</h3></div>
+	<div class="row" id="reporte" style="height: 100%" align="center">
+		<div class="col-sm-12">
+			<div class="row" style="height: 20%">
+				<div class="row" align="left">
+		    		<div class="panel panel-default">
+		  				<div class="panel-heading"><h3>Ejecución presupuestaria</h3></div>
+					</div>
+				</div>
+		    	<br>
+	    		<div class="row" style="width: 100%; height: 15%">
+					<div class="form-group col-sm-3" align="left">
+						<select  class="inputText" ng-model="controller.prestamo"
+							ng-options="a.text for a in controller.prestamos"
+							ng-change="controller.validar(1)"></select>
+						<label for="prestamo" class="floating-label">Préstamos</label>
+					</div>
+					
+					<div align="left" class="form-group col-sm-1">
+						<input type="number"  class="inputText" ng-model="controller.fechaInicio" maxlength="4" 
+						ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
+						ng-change="controller.validar(2)"/>
+					  	<label for="campo.id" class="floating-label">*Año Inicial</label>
+					</div>
+					
+					<div align="left" class="form-group col-sm-1">
+						<input type="number"  class="inputText" ng-model="controller.fechaFin" maxlength="4" 
+						ng-value="controller.fechaFin" onblur="this.setAttribute('value', this.value);"
+						ng-change="controller.validar(3)"/>
+					  	<label for="campo.id" class="floating-label">*Año Final</label>
+					</div>
+					<div class="col-sm-7" align="right" ng-hide="!controller.mostrarDescargar">
+						<div class="form-group col-sm-1">
+						</div>
+						<div class="col-sm-11">
+							<div class="btn-group">
+								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="true" ng-click="controller.calcularTamaniosCeldas(); controller.convertirMillones();" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
+								<span>MQ</span></label>
+								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="false" ng-click="controller.calcularTamaniosCeldas(); controller.convertirMillones();" uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false">
+								<span>Q</span></label>
+							</div>
+							<div class="btn-group" style="padding-left: 20px;">
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="1" ng-click="controller.generar(1)" uib-tooltip="Mensual" role="button" tabindex="1" aria-invalid="false">
+								<span>M</span></label>
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="2" ng-click="controller.generar(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
+								<span>B</span></label>
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="3" ng-click="controller.generar(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
+								<span>T</span></label>
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="4" ng-click="controller.generar(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
+								<span>C</span></label>
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="5" ng-click="controller.generar(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
+								<span>S</span></label>
+								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="6" ng-click="controller.generar(6)" uib-tooltip="Anual" role="button" tabindex="6" aria-invalid="false">
+								<span>A</span></label>
+							</div>
+							<div class=" btn-group" style="padding-left: 20px;">
+								<label class="btn btn-default" ng-model="controller.grupoMostrado.planificado"  uib-btn-checkbox ng-click="controller.verificaSeleccionTipo(1)" uib-tooltip="Planificado" role="button" tabindex="7" aria-invalid="false">
+								<span>P</span></label>
+								<label class="btn btn-default" ng-model="controller.grupoMostrado.real"  uib-btn-checkbox ng-click="controller.verificaSeleccionTipo(2)" uib-tooltip="Real" role="button" tabindex="8" aria-invalid="false">
+								<span>R</span></label>
+	    					</div>
+							<div class="btn-group" style="padding-left: 20px;">
+								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrarDescargar">
+								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
+							</div>
 						</div>
 					</div>
-	    			<br>
-		    		<div class="row" style="width: 100%; height: 15%">
-						<div class="form-group col-sm-3">
-							<select  class="inputText" ng-model="controller.prestamo"
-								ng-options="a.text for a in controller.prestamos"
-								ng-change="controller.validar(1)"></select>
-							<label for="prestamo" class="floating-label">Préstamos</label>
-						</div>
-						
-						<div class="form-group col-sm-1">
-							<input type="number"  class="inputText" ng-model="controller.fechaInicio" maxlength="4" 
-							ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
-							ng-change="controller.validar(2)"/>
-						  	<label for="campo.id" class="floating-label">*Año Inicial</label>
-						</div>
-						
-						<div class="form-group col-sm-1">
-							<input type="number"  class="inputText" ng-model="controller.fechaFin" maxlength="4" 
-							ng-value="controller.fechaFin" onblur="this.setAttribute('value', this.value);"
-							ng-change="controller.validar(3)"/>
-						  	<label for="campo.id" class="floating-label">*Año Final</label>
-						</div>
-						<div class="col-sm-7" align="right" ng-hide="!controller.mostrarDescargar">
-							<div class="form-group col-sm-1">
-							</div>
-							<div class="col-sm-11">
-								<div class="btn-group">
-									<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="true" ng-click="controller.calcularTamaniosCeldas()" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
-									<span>MQ</span></label>
-									<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="false" ng-click="controller.calcularTamaniosCeldas()" uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false">
-									<span>Q</span></label>
-								</div>
-								<div class="btn-group" style="padding-left: 20px;">
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="1" ng-click="controller.generar(1)" uib-tooltip="Mensual" role="button" tabindex="1" aria-invalid="false">
-									<span>M</span></label>
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="2" ng-click="controller.generar(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
-									<span>B</span></label>
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="3" ng-click="controller.generar(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
-									<span>T</span></label>
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="4" ng-click="controller.generar(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
-									<span>C</span></label>
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="5" ng-click="controller.generar(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
-									<span>S</span></label>
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="6" ng-click="controller.generar(6)" uib-tooltip="Anual" role="button" tabindex="6" aria-invalid="false">
-									<span>A</span></label>
-								</div>
-								<div class=" btn-group" style="padding-left: 20px;">
-									<label class="btn btn-default" ng-model="controller.grupoMostrado.planificado"  uib-btn-checkbox ng-click="controller.verificaSeleccionTipo(1)" uib-tooltip="Planificado" role="button" tabindex="7" aria-invalid="false">
-									<span>P</span></label>
-									<label class="btn btn-default" ng-model="controller.grupoMostrado.real"  uib-btn-checkbox ng-click="controller.verificaSeleccionTipo(2)" uib-tooltip="Real" role="button" tabindex="8" aria-invalid="false">
-									<span>R</span></label>
-		    					</div>
-								<div class="btn-group" style="padding-left: 20px;">
-									<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrarDescargar">
-									<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-								</div>
-							</div>
-						</div>
-		    		</div>
 	    		</div>
-	    	</div>
-	    	<br><br><br><br><br><br><br><br>
-	    	<div class="col-sm-12" style="height: 80%">
-	    		<div ng-hide="!controller.mostrarCargando" style="width: 100%; height: 100%">
+			</div>
+			<br><br>
+			<div class="row" style="height: 80%">
+				<div ng-hide="!controller.mostrarCargando">
 	    			<div class="grid_loading" ng-hide="!controller.mostrarCargando">
 						<div class="msg">
 							<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
@@ -226,8 +225,9 @@
 							</span>
 						</div>
 					</div>
-	    		</div>		
-		    	<div class="row" ng-hide="!controller.mostrarDescargar">
+	    		</div>
+	    		
+	    		<div class="row" ng-hide="!controller.mostrarDescargar">
 		    		<div class="divPadreNombres">
 			    		<div class="divTabla" style="max-height: 390px;"> 
 			    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos">
@@ -243,7 +243,7 @@
 								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="max-height: 390px; margin-bottom: -15px;">
 									<tr ng-repeat="item in controller.data">
 							      		<td nowrap style="min-width:200px;">
-							      			<div uib-tooltip="{{item.nombre}}" class="nombreFormat">
+							      			<div uib-tooltip="{{item.nombre}}" class="nombreFormat" style="height: 17px">
 							      				<span ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.objeto_tipo-1}}em"></span>
 							      				{{item.nombre}}
 							      			</div>
@@ -313,7 +313,8 @@
 						</table>
 		    		</div>
 				</div>
-		    	<div class="row" ng-hide="!controller.mostrarDescargar">
+				
+				<div class="row" ng-hide="!controller.mostrarDescargar">
 					<div class="col-sm-3"></div>
 					<div class="col-sm-6" style="text-align: center;">
 						<label class="btn btn-default" ng-click="controller.anterior()" uib-tooltip="Anterior" ng-hide="!controller.movimiento" 
@@ -330,11 +331,15 @@
 						</ol>
 					</div>
 		    	</div>
-		    	<div class="row" ng-hide="!controller.mostrarDescargar">
+		    	<br><br>
+		    	<div class="row" ng-hide="!controller.mostrarDescargar" style="width: 70%">
 		    		<canvas id="line" class="chart chart-line" chart-data="controller.dataGrafica" 
-		    			chart-labels="controller.labels" chart-series="controller.series" chart-options="controller.optionsGrafica">
+		    			chart-labels="controller.labels" chart-series="controller.series" 
+		    			chart-colors = "controller.lineColors" chart-legend="true"
+		    			chart-options="controller.optionsGrafica">
 					</canvas>
 		    	</div>
 			</div>
-    	</div>
-    </div>
+		</div>
+	</div>
+</div>
