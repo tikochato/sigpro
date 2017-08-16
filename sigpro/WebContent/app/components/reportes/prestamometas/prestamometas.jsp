@@ -196,7 +196,7 @@
 								<label class="btn btn-default" ng-model="controller.grupoMostrado.real"  uib-btn-checkbox ng-click="controller.verificaSeleccionTipo(2)" uib-tooltip="Real" role="button" tabindex="8" aria-invalid="false">
 								<span>R</span></label>
 	    					</div>
-							<div class="btn-group" style="padding-left: 20px;">
+							<div class="btn-group" style="padding-left: 20px;" ng-hide="true">
 								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrarDescargar">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
 							</div>
