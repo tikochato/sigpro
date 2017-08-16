@@ -52,16 +52,16 @@
 			float: left;			
 			overflow-y:hidden;
 			overflow-x:hidden;
-			min-height: 448px;
-			max-height: 448px;
+			height: 100%;
+			height: 100%;
 		}
 		
 		.tablaDatos {
 			display: flex;
 		    flex-direction: column;
 		    align-items: stretch;
-		    min-height: 380px;
-		    max-height: 380px;  
+		    min-height: 100%;
+		    max-height: 100%;  
 		}
 		
 		.colorPlanificadoFondo{
@@ -75,6 +75,11 @@
 		
 		.leyendaTexto {
 		    text-align: right;
+		}
+		
+		.divTablas{
+			height: calc(100% - 32px);
+			width: 100%;
 		}
 		
 		.leyendaTexto li {
@@ -115,31 +120,27 @@
 		    overflow-x: scroll;
 		    display: inline-block;
 		    text-align: center;
-		    font-size: 13px;
-		    min-height: 380px;
-		    max-height: 380px; 
+		    font-size: 13px; 
 		}
 		.cuerpoTablaNombres {
 		    overflow-y: scroll;
 		    overflow-x: scroll;
 		    display: inline-block;
 		    font-size: 13px;
-		    max-width: 300px;
-		    min-height: 380px;
-		    max-height: 380px; 
+		    max-width: 300px; 
 		}
 	</style>
 	
-	<div ng-controller="planAdquisicionesController as controller" class="maincontainer all_page" id="title">
+	<div ng-controller="planAdquisicionesController as controller" class="maincontainer all_page" id="title" style="height: 100%">
 		<script type="text/ng-template" id="pago.jsp">
     		<%@ include file="/app/components/reportes/planadquisiciones/pago.jsp"%>
   		</script>
 		<shiro:lacksPermission name="24010">
 			<p ng-init="controller.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
-		<div class="row" id="reporte">
-			<div class="col-sm-12">
-	    		<div style="width: 100%; height: 20%">
+		<div class="row" id="reporte" style="height: 100%">
+			<div class="col-sm-12" style=" height: 20%">
+	    		<div style="width: 100%;">
 		    		<div class="row">
 		    			<div class="panel panel-default">
 			  				<div class="panel-heading"><h3>Plan de adquisiciones AÑO FISCAL {{controller.anio}}</h3></div>
@@ -184,8 +185,8 @@
 		    		</div>
 				</div>
 			</div>
-			<div class="col-sm-12">
-				<div ng-hide="!controller.mostrarCargando" style="width: 100%; height: 400px;">
+			<div class="col-sm-12" style="height: 80%">
+				<div ng-hide="!controller.mostrarCargando" style="width: 100%; height: 100%">
     				<div class="grid_loading" ng-hide="!controller.mostrarCargando">
 						<div class="msg">
 							<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
@@ -195,7 +196,7 @@
 						</div>
 					</div>
 				</div>
-				<div ng-hide="!controller.mostrarGuardando" style="width: 100%; height: 400px;">
+				<div ng-hide="!controller.mostrarGuardando" style="width: 100%; height: 100%">
 										<div class="grid_loading" ng-hide="!controller.mostrarGuardando">
 						<div class="msg">
 							<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
@@ -204,10 +205,10 @@
 							</span>
 						</div>
 					</div>
-					</div>
-	    		<div style="width: 100%; height: 80%">	
-	    			<div class="row" ng-hide="!controller.mostrarTablas" style="max-width: {{controller.tamanoPantalla}}; min-width: {{controller.tamanoPantalla}}">
-	    				<div class="divPadreNombres">
+				</div>
+	    		<div class="divTablas" ng-hide="!controller.mostrarTablas">	
+	    			<div class="row" style="height: 100%; max-width: {{controller.tamanoPantalla}}; min-width: {{controller.tamanoPantalla}}">
+	    				<div class="divPadreNombres" style="height: 100%">
 	    					<div class="divTabla"> 
 	    						<table st-table="controller.displayedCollectionPrestamo" st-safe-src="controller.rowCollectionPrestamo" class="table table-striped tablaDatos">
 		    						<thead class="theadDatos">
@@ -215,7 +216,7 @@
 				    						<th style="min-width:300px;text-align: left; height:71px;;vertical-align: middle;" class="label-form" rowspan="2">Nombre</th>
 				    					</tr>
 		    						</thead>
-		    						<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="margin-bottom: -15px;">
+		    						<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo>
 		    							<tr ng-repeat="row in controller.rowCollectionPrestamo">
 		    								<td ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'">
 		    									<div style="height: 25px;">
@@ -232,7 +233,7 @@
 		    					</table>
 	    					</div>
 	    				</div>
-	    				<div class="divPadreDatos" style="min-width: {{controller.tamanoTotal}}px; max-width: {{controller.tamanoTotal}}px;">
+	    				<div class="divPadreDatos" style="height: 100%;min-width: {{controller.tamanoTotal}}px; max-width: {{controller.tamanoTotal}}px;">
 	    					<div class="divTabla">
 		    					<table st-table="controller.displayedCollectionPrestamo" st-safe-src="controller.rowCollectionPrestamo" class="table table-striped tablaDatos"
 		    						style="max-width: {{controller.tamanoTotal}}px;">
@@ -276,7 +277,7 @@
 							    			<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="min-width: 150px; max-width: 150px" ng-focus="row.bloqueado == false ? controller.ocultar(row, 1) : ''" ng-click="row.bloqueado == false ? controller.ocultar(row, 1) : ''">
 								    			<div style="height: 25px;">
 								    				<label ng-show="!row.c1">{{row.unidadMedida}}</label>
-								    				<input ng-show="row.c1" ng-blur="controller.ocultar(row,1);" ng-model="row.unidadMedida" ng-change="controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" type="text" style="max-width: 130px; text-align: right" focus-on-show></input>
+								    				<input ng-show="row.c1" ng-blur="controller.ocultar(row,1);" ng-model="row.unidadMedida" ng-change="controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" type="text" style="max-width: 130px; text-align: left" focus-on-show></input>
 								    			</div>
 							    			</td>
 							    			<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" ng-blur="row.bloqueado == false ? controller.ocultar(row,2) : ''" style="min-width: 200px; max-width: 200px" ng-focus="row.bloqueado == false ? controller.ocultar(row, 2) : ''" ng-click="row.bloqueado == false ? '' : ''" next-on-tab>
@@ -304,61 +305,61 @@
 					    							{{row.total | formatoMillones : controller.enMillones}}
 					    						</div>
 				    						</td>
-				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: center; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 6) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 6) : ''">
+				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 6) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 6) : ''">
 					    						<div style="height: 25px;">
 					    							<label ng-show="!row.c6">{{row.planificadoDocs}}</label>
 					    							<input ng-show="row.c6" ng-change="(row.planificadoDocs.length == 10 ? controller.validarFecha(row,1,1) : ''); controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" ng-blur="row.planificadoDocs.length == 10 ? controller.ocultar(row,6) : controller.ocultar(row,6, true);" ng-model="row.planificadoDocs" type="text" style="min-width: 75px; max-width: 75px;" ui-date-mask="DD/MM/YYYY" focus-on-show></input>
 					    						</div>
 				    						</td>
-				    						<td class="colorReal divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: center; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 7) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 7) : ''">
+				    						<td class="colorReal divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 7) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 7) : ''">
 					    						<div style="height: 25px;">
 					    							<label ng-show="!row.c7">{{row.realDocs}}</label>
 					    							<input ng-show="row.c7" ng-change="(row.realDocs.length == 10 ? controller.validarFecha(row,1,2) : ''); controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" ng-blur="row.realDocs.length == 10 ? controller.ocultar(row,7) : controller.ocultar(row,7, true); " ng-model="row.realDocs" type="text" style="min-width: 75px; max-width: 75px;" focus-on-show></input>
 					    						</div>
 				    						</td>
-				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: center;min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 8) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 8) : ''">
+				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left;min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 8) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 8) : ''">
 					    						<div style="height: 25px;">
 					    							<label ng-show="!row.c8">{{row.planificadoLanzamiento}}</label>
 					    							<input ng-show="row.c8" ng-change="(row.planificadoLanzamiento.length == 10 ? controller.validarFecha(row,2,1) : ''); controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" ng-blur="row.planificadoLanzamiento.length == 10 ? controller.ocultar(row,8) : controller.ocultar(row,8, true);" ng-model="row.planificadoLanzamiento" type="text" style="min-width: 75px; max-width: 75px;" focus-on-show></input>
 					    						</div>
 				    						</td>
-				    						<td class="colorReal divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: center; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 9) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 9) : ''">
+				    						<td class="colorReal divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 9) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 9) : ''">
 					    						<div style="height: 25px;">
 					    							<label ng-show="!row.c9">{{row.realLanzamiento}}</label>
 					    							<input ng-show="row.c9" ng-change="(row.realLanzamiento.length == 10 ? controller.validarFecha(row,2,2) : ''); controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" ng-blur="row.realLanzamiento.length == 10 ? controller.ocultar(row,9) : controller.ocultar(row,9,true);" ng-model="row.realLanzamiento" type="text" style="min-width: 75px; max-width: 75px;" focus-on-show></input>
 					    						</div>
 				    						</td>
-				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: center; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 10) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 10) : ''">
+				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 10) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 10) : ''">
 					    						<div style="height: 25px;">
 					    							<label ng-show="!row.c10">{{row.planificadoRecepcionEval}}</label>
 					    							<input ng-show="row.c10" ng-change="(row.planificadoRecepcionEval.length == 10 ? controller.validarFecha(row,3,1) : ''); controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" ng-blur="row.planificadoRecepcionEval.length == 10 ? controller.ocultar(row,10) : controller.ocultar(row,10, true); " ng-model="row.planificadoRecepcionEval" type="text" style="min-width: 75px; max-width: 75px;" focus-on-show></input>
 					    						</div>
 				    						</td>
-				    						<td class="colorReal divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: center; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 11) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 11) : ''">
+				    						<td class="colorReal divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 11) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 11) : ''">
 					    						<div style="height: 25px;">
 					    							<label ng-show="!row.c11">{{row.realRecepcionEval}}</label>
 					    							<input ng-show="row.c11" ng-change="(row.realRecepcionEval.length == 10 ? controller.validarFecha(row,3,2) : ''); controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" ng-blur="row.realRecepcionEval.length == 10 ? controller.ocultar(row,11) : controller.ocultar(row,11, true); " ng-model="row.realRecepcionEval" type="text" style="min-width: 75px; max-width: 75px;" focus-on-show></input>
 					    						</div>
 				    						</td>
-				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: center; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 12) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 12) : ''">
+				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 12) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 12) : ''">
 					    						<div style="height: 25px;">
 					    							<label ng-show="!row.c12">{{row.planificadoAdjudica}}</label>
 													<input ng-show="row.c12" ng-change="(row.planificadoAdjudica.length == 10 ? controller.validarFecha(row,4,1) : ''); controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" ng-blur="row.planificadoAdjudica.length == 10 ? controller.ocultar(row,12) : controller.ocultar(row,12, true); " ng-model="row.planificadoAdjudica" type="text" style="min-width: 75px; max-width: 75px;" focus-on-show></input>
 												</div>					    							
 				    						</td>
-				    						<td class="colorReal divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: center; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 13) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 13) : ''">
+				    						<td class="colorReal divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 13) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 13) : ''">
 					    						<div style="height: 25px;">
 					    							<label ng-show="!row.c13">{{row.realAdjudica}}</label>
 					    							<input ng-show="row.c13" ng-change="(row.realAdjudica.length == 10 ? controller.validarFecha(row,4,2) : ''); controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" ng-blur="row.realAdjudica.length == 10 ? controller.ocultar(row,13) : controller.ocultar(row,13, true); " ng-model="row.realAdjudica" type="text" style="min-width: 75px; max-width: 75px;" focus-on-show></input>
 					    						</div>
 				    						</td>
-				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: center; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 14) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 14) : ''">
+				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 14) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 14) : ''">
 					    						<div style="height: 25px;">
 					    							<label ng-show="!row.c14">{{row.planificadoFirma}}</label>
 					    							<input ng-show="row.c14" ng-change="(row.planificadoFirma.length == 10 ? controller.validarFecha(row,5,1) : ''); controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" ng-blur="row.planificadoFirma.length == 10 ? controller.ocultar(row,14) : controller.ocultar(row,14, true); " ng-model="row.planificadoFirma" type="text" style="min-width: 75px; max-width: 75px;" focus-on-show></input>
 					    						</div>
 				    						</td>
-				    						<td class="colorReal divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: center; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 15) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 15) : ''">
+				    						<td class="colorReal divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 15) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 15) : ''">
 					    						<div style="height: 25px;">
 					    							<label ng-show="!row.c15">{{row.realFirma}}</label>
 					    							<input ng-show="row.c15" ng-change="(row.realFirma.length == 10 ? controller.validarFecha(row,5,2) : ''); controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" ng-blur="row.realFirma.length == 10 ? controller.ocultar(row,15) : controller.ocultar(row,15,true); " ng-model="row.realFirma" type="text" style="min-width: 75px; max-width: 75px;" focus-on-show></input>
@@ -371,15 +372,13 @@
 	    				</div>	    			
 		    		</div>
 	    		</div>
-	    	</div>
-	    	<div class="col-sm-12">
-		   		<div style="text-align: center;">
+	    		<div style="text-align: center;">
 		   			<br>
 		    		<ol class="leyendaTexto"  ng-hide="!controller.mostrarTablas">
 						<li><span class="colorPlanificadoFondo"></span>Planificado</li>
 				        <li><span class="colorRealFondo"></span>Real</li>
 					</ol>
 				</div>
-			</div>
+	    	</div>
 		</div>
 	</div>
