@@ -155,7 +155,7 @@
 	    				</div>
 						<div class="operation_buttons" align="right">
 							<div class="btn-group">
-								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="true" ng-click="controller.calcularTamaniosCeldas()" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false" ng-hide="!controller.mostrarBotones">
+								<label class="btn btn-default" ng-model="controller.enMillones"  tooltip-placement="center" uib-btn-radio="true" ng-click="controller.calcularTamaniosCeldas()" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false" ng-hide="!controller.mostrarBotones">
 									<span>MQ</span>
 								</label>
 							</div>
@@ -165,8 +165,8 @@
 								</label>
 							</div>
 							<div class="btn-group">
-								<label class="btn btn-default"  ng-click="controller.agregarPagos();" uib-tooltip="Plan de pagos" ng-hide="!controller.mostrarBotones">
-								<span class="glyphicon glyphicon glyphicon-usd" aria-hidden="true"></span></label>
+								<label class="btn btn-default"  ng-click="controller.agregarPagos();" uib-tooltip="Plan de pagos" tooltip-placement="center" ng-hide="!controller.mostrarBotones">
+								<span>P</span></label>
 							</div>
 							<div class="btn-group">
 								<label class="btn btn-default"  ng-click="controller.limpiar(row);" uib-tooltip="Limpiar" ng-hide="!controller.mostrarBotones">
@@ -177,7 +177,7 @@
 								<span class="glyphicon glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></label>
 							</div>
 							<div class="btn-group">
-								<label class="btn btn-default"  ng-click="controller.exportarExcel();" uib-tooltip="Exportar" ng-hide="!controller.mostrarBotones">
+								<label class="btn btn-default"  ng-click="controller.exportarExcel();" uib-tooltip="Exportar" ng-hide="true">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
 							</div>
 						</div>

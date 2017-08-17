@@ -206,7 +206,7 @@
 								<span>R</span></label>
 	    					</div>
 							<div class="btn-group" style="padding-left: 20px;">
-								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrarDescargar">
+								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="true">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
 							</div>
 						</div>
@@ -312,7 +312,7 @@
 						</table>
 		    		</div>
 				</div>
-				
+				<br><br>
 				<div class="row" ng-hide="!controller.mostrarDescargar">
 					<div class="col-sm-3"></div>
 					<div class="col-sm-6" style="text-align: center;">
