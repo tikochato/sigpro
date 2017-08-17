@@ -25,6 +25,7 @@
 		th.rotate > div {
 		  transform: translate(29px, 0px) rotate(270deg) ;
 		  width: 7px;
+		  margin-left:-8px;
 		  
 		}
 		
@@ -113,7 +114,7 @@
 		
 		
 	.cabecera {
-		position: absolute;
+		/*position: absolute;*/
 	    margin-top: -141px;
 	    flex-shrink: 0;
 	    overflow-x: hidden;
@@ -248,14 +249,14 @@
 					<table st-table="racic.matrizRaci" class="table table-header-rotated  table-striped table-hover table-condensed" >
 							<thead class="cabecera">
 							<tr >
-								<th class="thIcono"></th>
+								
 								<th  class="{{racic.claseHeader($index)}}"   ng-repeat="n in racic.encabezadoMatriz track by $index"
 								 >
 										<div><span>{{n.nombre}} </span></div>
 								</th>
 							</tr>
 							</thead>
-							<tbody>
+							<tbody >
 							<tr  ng-repeat="row in racic.matrizRaci track by $index " >
 								<td ng-repeat = "col in row track by $index" class="{{racic.claseBody(col)}}" 
 								ng-click="$index > 0 ? racic.mostrarColaborador(col) : ''" 
