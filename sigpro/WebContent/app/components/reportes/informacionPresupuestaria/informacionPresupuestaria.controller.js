@@ -298,7 +298,9 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 				anoFinal: mi.fechaFin,
 				t: (new Date()).getTime()
 			};
-		
+			
+			mi.anchoPantalla = Math.floor(document.getElementById("reporte").offsetHeight);
+			mi.tamanoCargando = (mi.anchoPantalla * 0.75) - 30;
 			mi.mostrarCargando = true;
 			mi.mostrarDescargar = false;
 			

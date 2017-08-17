@@ -216,7 +216,7 @@
 			<br><br>
 			<div class="row" style="height: 80%">
 				<div ng-hide="!controller.mostrarCargando">
-	    			<div class="grid_loading" ng-hide="!controller.mostrarCargando">
+	    			<div class="grid_loading" ng-hide="!controller.mostrarCargando" style="height: {{controller.tamanoCargando}}px">
 						<div class="msg">
 							<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
 								<br />
@@ -241,7 +241,7 @@
 								</thead>
 								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="max-height: 390px; margin-bottom: -15px;">
 									<tr ng-repeat="item in controller.data">
-							      		<td nowrap style="min-width:200px;">
+							      		<td nowrap style="min-width:200px; min-height: 35px; height: 35px;">
 							      			<div uib-tooltip="{{item.nombre}}" class="nombreFormat">
 							      				<span ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.objeto_tipo-1}}em"></span>
 							      				{{item.nombre}}
@@ -296,7 +296,7 @@
 							</thead>
 							<tbody class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')" scrollespejo tot="{{mi.totales.length}}">
 								<tr ng-repeat="totales in controller.totales ">
-									<td ng-repeat="total in totales.anio" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
+									<td ng-repeat="total in totales.anio" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};  min-height: 35px; height: 35px;">
 										<div style="{{controller.porcentajeCeldaValor}}">
 											<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{total.valor.planificado | formatoMillones : controller.enMillones}}</span>
 						      			</div>
