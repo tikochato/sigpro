@@ -94,7 +94,7 @@ public class MetaValorDAO {
 			CriteriaQuery<MetaValor> criteria = builder.createQuery(MetaValor.class);
 			Root<MetaValor> root = criteria.from(MetaValor.class);
 			criteria.select( root );
-			criteria.where( builder.and(builder.equal( root.get("metaid"), metavalorid.getMetaid()), builder.equal( root.get("fecha"), metavalorid.getFecha()),builder.or(builder.equal(root.get("estado"), ESTADO_ACTIVO), builder.equal(root.get("estado"), ESTADO_CONGELADO))));
+			criteria.where( builder.and(builder.equal( root.get("id"), metavalorid), builder.or(builder.equal(root.get("estado"), ESTADO_ACTIVO), builder.equal(root.get("estado"), ESTADO_CONGELADO))));
 			ret = session.createQuery( criteria ).getSingleResult();
 		}
 		catch(Throwable e){
