@@ -80,7 +80,7 @@ public class SMetaValor extends HttpServlet {
 			for(MetaValor metaValor : MetaValores){
 				stmetavalor temp = new stmetavalor();
 				temp.metaid = metaValor.getId().getMetaid();
-				temp.fecha = Utils.formatDateHour( metaValor.getId().getFecha());
+				temp.fecha = Utils.formatDate( metaValor.getId().getFecha());
 				temp.usuario = metaValor.getUsuario();
 				temp.valorEntero = metaValor.getValorEntero();
 				temp.valorString = metaValor.getValorString();

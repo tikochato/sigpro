@@ -18,6 +18,7 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 			mi.paginaActual = 1;
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
+			mi.formatofecha = 'dd/MM/yyyy';
 			
 			mi.nombreMeta = "";
 			
@@ -42,6 +43,20 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 		        mi.editar();
 		    };
 			
+		    mi.abrirPopupFecha = function(index) {
+				if(index==1000){
+					mi.fc_abierto = true;
+				}
+
+			};
+
+			mi.fechaOptions = {
+					formatYear : 'yy',
+					maxDate : new Date(2050, 12, 31),
+					minDate : new Date(1990, 1, 1),
+					startingDay : 1
+			};
+		
 			mi.gridOptions = {
 					enableRowSelection : true,
 					enableRowHeaderSelection : false,
@@ -66,6 +81,7 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 						mi.gridApi = gridApi;
 						gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 							mi.metavalor = row.entity;
+							mi.metavalor.fecha = moment(mi.metavalor.fecha,'DD/MM/YYYY').toDate();
 						});
 						
 						gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
@@ -144,7 +160,7 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 						accion: 'guardarMetaValor',
 						esnuevo: mi.nuevo,
 						metaid: mi.metavalorId,
-						fecha: mi.metavalor.fecha,
+						fecha: moment(mi.metavalor.fecha).format('DD/MM/YYYY'),
 						valorEntero: mi.metavalor.valorEntero,
 						valorString: mi.metavalor.valorString,
 						valorDecimal: mi.metavalor.valorDecimal,
@@ -165,15 +181,15 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 			};
 
 
-			mi.nuevo = function() {
+			mi.nuevoValor = function() {
 				mi.mostraringreso=true;
 				mi.nuevo = true;
-				mi.meta = {};
+				mi.metavalor = {};
 				mi.gridApi.selection.clearSelectedRows();
 			};
 
 			mi.editar = function() {
-				if(mi.meta!=null && mi.meta.id!=null){
+				if(mi.metavalor!=null && mi.metavalor.metaid!=null){
 					mi.mostraringreso = true;
 					mi.nuevo = false;
 				}
@@ -208,7 +224,7 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 				if(evt.keyCode==13){
 					mi.obtenerTotalMetaValores();
 					mi.gridApi.selection.clearSelectedRows();
-					mi.meta = null;
+					mi.metavalor = null;
 				}
 			}
 			
