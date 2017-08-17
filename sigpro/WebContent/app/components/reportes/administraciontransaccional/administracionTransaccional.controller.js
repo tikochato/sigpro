@@ -1,10 +1,8 @@
 var app = angular.module('administracionTransaccionalController',['ngTouch','smart-table']);
-app.controller('administracionTransaccionalController',['$scope', '$http', '$interval','Utilidades','i18nService',
-	function($scope, $http, $interval, $utilidades,i18nService){
+app.controller('administracionTransaccionalController',['$scope', '$http', '$interval','Utilidades','i18nService','$window',
+	function($scope, $http, $interval, $utilidades,i18nService,$window){
 		var mi = this;
-		mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth);
-		mi.tamanoCelda = mi.tamanoPantalla / 4;
-
+		
 		mi.charOptions= {
 			scales: {
 				legend: {
@@ -75,4 +73,17 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 			mi.datos = [mi.totalCreados,mi.totalActualizados,mi.totalEliminados];
 			mi.data = mi.datos;
 		}
+		
+		mi.calcularTamanosPantalla = function(){
+			mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth);
+			mi.tamanoCelda = mi.tamanoPantalla / 4;
+			mi.anchoPantalla = Math.floor(document.getElementById("reporte").offsetHeight);
+		}
+		
+		angular.element($window).bind('resize', function(){ 
+            mi.calcularTamanosPantalla();
+            $scope.$digest();
+        });
+		
+		mi.calcularTamanosPantalla();
 }]);
