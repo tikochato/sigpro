@@ -2,6 +2,8 @@ var app = angular.module('planAdquisicionesController', ['ngTouch','ngAnimate','
 app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal) {
 	var mi = this;
+	var anioFiscal = new Date();
+	mi.anio = anioFiscal.getFullYear();
 	mi.mostrarBotones = false;
 	mi.mostrarGuardando = false;
 	mi.mostrarCargando = false;
