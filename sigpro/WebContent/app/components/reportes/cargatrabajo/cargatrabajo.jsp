@@ -6,7 +6,7 @@
 	<style type="text/css">
 	.cabecera {
 		position: absolute;
-	    margin-top: -47px;
+	    margin-top: -32px;
 	    flex-shrink: 0;
 	    overflow-x: hidden;
 	    width: 100%;
