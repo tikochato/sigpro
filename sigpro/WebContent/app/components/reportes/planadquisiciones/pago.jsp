@@ -12,7 +12,7 @@
 		<div class="col-sm-12">
 			<form name="form">
 				<div class="form-group">
-					<label for="id" class="floating-label">ID {{controller.id}}</label>
+					<label for="id" class="floating-label">ID {{controller.idObjeto}}</label>
 					<br/><br/>
 				</div>
 				<div class="row">
