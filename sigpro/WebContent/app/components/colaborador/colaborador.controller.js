@@ -450,16 +450,6 @@ function modalBuscarUnidadEjecutora($uibModalInstance, $scope, $http,
 			displayName : 'Nombre Unidad',
 			name : 'nombreUnidadEjecutora',
 			cellClass : 'grid-align-left'
-		}, {
-			displayName : 'Entidad',
-			name : 'entidad',
-			cellClass : 'grid-align-right',
-			type : 'number',
-			width : 150
-		}, {
-			displayName : 'Nombre Entidad',
-			name : 'nombreEntidad',
-			cellClass : 'grid-align-left'
 		} ],
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
