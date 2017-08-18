@@ -20,13 +20,15 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 			  minMode:"year",
 	};
 	
+	mi.radarColors = ['#88b4df','#8ecf4c'];
+	 
 	$window.document.title = $utilidades.sistema_nombre+' - Plan de Ejecución';
 	i18nService.setCurrentLang('es');
 	
 	mi.radarOptions = {
 			legend: {
 				display: true,
-				position: 'right'
+				position: 'bottom'
 			}
 	};
 	
@@ -39,8 +41,8 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 		    [30, 32, 35]  //real
 		  ];
 	  
-	mi.radarColors = ['#b1cad7','#FDB45C']
 	
+	 
 	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
 			function(response) {
 				mi.prestamos = [];
@@ -182,6 +184,12 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 		
 		}
 	}
+	
+	mi.formatoMoneda = function (value) {
+		 if (!isNaN(value))
+			 return numeral(value).format('0,0.00')
+		 else return value;
+	 }
 	
 }]);
 

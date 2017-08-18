@@ -143,7 +143,7 @@
 							</div>
 							<div class="form-group col-sm-2" >
 							  <input type="number" class="inputText" ng-model="componentec.componente.proyecto_" ng-value="componentec.componente.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-							  <label for="iproy_" class="floating-label">Préstamo</label>
+							  <label for="iproy_" class="floating-label">Proyecto</label>
 							</div>
 							<div class="form-group col-sm-2" >
 							  <input type="number" class="inputText" ng-model="componentec.componente.actividad" ng-value="componentec.componente.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
@@ -234,6 +234,19 @@
 						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
 						   <label class="floating-label">Descripción</label>
 						</div>
+						
+						<div class="form-group" >
+					       <input type="number" class="inputText" ng-model="componentec.componente.costo" ng-value="componentec.componente.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
+					       <label for="iprog" class="floating-label">Costo</label>
+						</div>
+						
+						<div class="form-group" >
+						    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="componentec.componente.acumulacionCostoNombre" ng-value="componentec.componente.acumulacionCostoNombre" 
+							ng-click="componentec.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="componentec.componente.costo > 0"/>
+							<span class="label-icon" ng-click="componentec.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
+							<label for="campo3" class="floating-label">* Acumulación Costo</label>
+						</div>
+						
 						<div class="panel panel-default">
 							<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 							<div class="panel-body">

@@ -1,16 +1,92 @@
-var app = angular.module('cargatrabajoController', ['ngTouch','smart-table']);
+var app = angular.module('cargatrabajoController', ['ngTouch','smart-table','ivh.treeview']);
+
+
+
+
 app.controller('cargatrabajoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter,ivhTreeviewMgr) {
 	var mi = this;
 	i18nService.setCurrentLang('es');
 	
     mi.idTotal = 0;
     mi.responsableTotal = "Total";
     mi.actividadesAtrasadasTotal = 0;
-    mi.actividadesProcesoTotal = 0;
+	mi.actividadesAlertaTotal = 0;
+	mi.actividadesACumplirTotal = 0; 
+	mi.actividadesCompletadas  = 0;
     mi.exportar = false;
     mi.grafica = true;
     mi.idPrestamo = 0;
+    mi.estructuraProyecto=[];
+    mi.objetosSeleccionados=[];
+    mi.datosTabla = [];
+    mi.mostrar = false;
+    mi.dataChartLine = [];
+    mi.etiquetasChartLine = [];
+    mi.actividadesterminadas = [];
+    
+    mi.pieColors = ['#fd7b7d','#dddd7d','#bae291','#9cc3e2'];
+    
+    mi.lineColors = ['#9cc3e2'];
+    
+    
+    	mi.optionsPie = {
+    			
+			legend: {
+				display: true,
+				position: 'right'
+			},
+			pieceLabel: {
+			    render: 'percentage',
+			    fontColor: ['green', 'white', 'red'],
+			    precision: 2
+			  }
+			  };
+    	
+    	
+    	
+    	
+    	mi.seriesLine = ['Actividades Terminadas'];
+    	
+    	mi.options = {
+    			    scales: {
+    			      yAxes: [
+    			        {
+    			          id: 'y-axis-1',
+    			          type: 'linear',
+    			          
+    			          display: true,
+    			          position: 'left',
+    			          scaleLabel: {
+	   	                       display: true,
+	   	                       labelString: 'Total',
+   	                      },
+   	                   stacked: true,
+   	                ticks: {
+   	                   min: 0,
+   	                   stepSize: 1,
+   	               },
+   	                  gridLines: {
+                          display: false
+                      }
+    			          
+    			        	 
+    			        }
+    			      ],
+    			      xAxes: [{
+    			    	  scaleLabel: {
+    	                       display: true,
+    	                       labelString: "Mes"
+    	                     },
+    	                     gridLines: {
+    	                          display: false
+    	                      }
+    			      }
+    			      ]
+    			    }
+    			  };
+    	  
+    	  mi.datasetOverride = [{ yAxisID: 'y-axis-1' }];
 
     mi.redireccionSinPermisos=function(){
 		$window.location.href = '/main.jsp#!/forbidden';		
@@ -23,6 +99,23 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			$location.path('/cargatrabajo/rv');
 	}
     
+    $http.post('/SProyecto',{accion: 'getProyectos'}).success(
+		function(response) {
+			mi.prestamos = []; 
+			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un préstamo'});
+			if (response.success){
+				for (var i = 0; i < response.entidades.length; i++){
+					mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
+				}
+				mi.prestamo = mi.prestamos[0];
+				
+				
+				
+				
+				
+			}
+		});
+    
 	mi.tObjetos = [
 		{value: 0,text: "Seleccione una Opción"},
 		{value: 1,text: 'Préstamo'},
@@ -33,26 +126,10 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	
 	mi.tObjeto = mi.tObjetos[0];
 
-	mi.obtenerMes = function(){
-		var d = new Date();
-		var month = new Array();
-		month[0] = "Enero";
-		month[1] = "Febrero";
-		month[2] = "Marzo";
-		month[3] = "Abril";
-		month[4] = "Mayo";
-		month[5] = "Junio";
-		month[6] = "Julio";
-		month[7] = "Agosto";
-		month[8] = "Septiembre";
-		month[9] = "Octubre";
-		month[10] = "Noviembre";
-		month[11] = "Diciembre";
-		return month[d.getMonth()];
-	}
+	
 	
 	mi.mesActual = "";
-	mi.mesActual = mi.obtenerMes();
+
 	
 	mi.reset = function(){
 		mi.entidades = [
@@ -137,6 +214,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	}
 	
 	mi.getEntidades = function(){
+		
 		$http.post('/SEntidad', {accion: 'cargar'}).success(
 				function(response){
 					mi.entidades = [];
@@ -152,117 +230,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		)
 	}
 	
-	mi.getUnidadesEjecutoras = function(entidadId){
-		$http.post('/SUnidadEjecutora', {accion: 'cargarPorEntidad', entidadId : entidadId}).success(
-				function(response){
-					mi.unidadesEjecutoras = [];
-					mi.unidadesEjecutoras.push({'value' : 0, 'text' : 'Seleccione una opción'});
-					if (response.success){
-						for(var i = 0; i< response.unidadesEjecutoras.length; i++){
-							mi.unidadesEjecutoras.push({'value' : response.unidadesEjecutoras[i].unidadEjecutora, 'text' : response.unidadesEjecutoras[i].nombreUnidadEjecutora});
-						}
-						
-						mi.unidadEjecutora = mi.unidadesEjecutoras[0];
-					}
-				});
-	}
 	
-	mi.getPrestamos = function(unidadEjecutoraId){
-		$http.post('/SProyecto',{accion: 'getProyectosPorUnidadEjecutora', unidadEjecutoraId : unidadEjecutoraId}).success(
-				function(response) {
-					mi.prestamos = [];
-					mi.prestamos.push({'value' : 0, 'text' : 'Seleccione una opción'});
-					if (response.success){
-						for (var i = 0; i < response.entidades.length; i++){
-							mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
-						}
-						
-						mi.prestamo = mi.prestamos[0];
-					}
-				});
-	}
-	
-	mi.getComponentes = function(prestamoId){
-		$http.post('/SComponente',{accion: 'getComponentesPaginaPorProyecto', proyectoid: prestamoId}).success(
-				function(response) {
-					mi.componentes = [];
-					mi.componentes.push({'value' : 0, 'text' : 'Seleccione una opción'});
-					if (response.success){
-						for (var i = 0; i < response.componentes.length; i++){
-							mi.componentes.push({'value': response.componentes[i].id, 'text': response.componentes[i].nombre});
-						}
-						
-						mi.componente = mi.componentes[0];
-					}
-				});
-	}
-	
-	mi.getProductos = function(componenteId){
-		mi.productos = [];
-		mi.productos.push({'value' : 0, 'text' : 'Seleccione una opción'});
-		mi.producto = mi.productos[0];
-
-		if ((mi.tObjeto.value == 3 || mi.tObjeto.value == 4) && componenteId != 0){
-			$http.post('/SProducto', {accion: 'listarProductos', componenteid:componenteId}).success(
-					function(response){
-						
-						if (response.success){
-							for (var i = 0; i < response.productos.length; i++){
-								mi.productos.push({'value': response.productos[i].id, 'text': response.productos[i].nombre});
-							}
-							
-							mi.producto = mi.productos[0];
-						}
-					});
-		}
-	}
-	
-	mi.getSubProductos = function(productoId){
-		mi.subProductos = [];
-		mi.subProductos.push({'value' : 0, 'text' : 'Seleccione una opción'});
-		mi.subProducto = mi.subProductos[0];
-		
-		if(mi.tObjeto.value == 4 && productoId != 0){
-			$http.post('/SSubproducto', {accion: 'cargar', componenteid: productoId}).success(
-					function(response){
-						if(response.success){
-							for (var i = 0; i < response.subproductos.length; i++){
-								mi.subProductos.push({'value': response.subproductos[i].id, 'text': response.subproductos[i].nombre});
-							}
-							
-							mi.subProducto = mi.subProductos[0];
-						}
-					});
-		}
-	}
-	
-	mi.getActividades = function(row){
-		$http.post('/SReporte',{
-			accion: 'getActividades',
-			responsableId: row.id,
-			idPrestamo : mi.idPrestamo,
-			idComponente : mi.componente.value,
-			idProducto : mi.producto.value,
-			idSubProducto : mi.subProducto.value
-		}).success(function(response){
-			if(response.success){
-		        mi.grafica = false;
-				mi.rowCollectionActividades = [];
-				mi.rowCollectionActividades = response.actividades;
-		        mi.displayedCollectionActividades = [].concat(mi.rowCollectionActividades);
-		        
-		        mi.labels = [];
-		        mi.data = [];
-		        mi.series = [];
-		        
-		        mi.labels.push(row.responsable);
-		        for(x in response.actividades){
-		        	mi.series.push(response.actividades[x].nombre);
-		        	mi.data.push([response.actividades[x].porcentaje]);
-		        }
-			}
-		})
-	}
 	
 	$scope.toggle = function () {
 	      mi.type = mi.type === 'polarArea' ?
@@ -274,71 +242,159 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	}
 	
 	mi.generar = function(){
+		
 		if (mi.tObjeto.value == 1 || mi.prestamo.value != 0){
 			mi.grafica = true;
 			mi.idPrestamo = mi.prestamo.value;
-			$http.post('/SReporte', 
-			{
-				accion: 'getCargaTrabajoPrestamo', 
-				objetoTipo: mi.tObjeto.value,
-				idPrestamo : mi.prestamo.value,
-				idComponente : mi.componente.value,
-				idProducto : mi.producto.value,
-				idSubProducto : mi.subProducto.value
-			}).success(function(response){
-				if(response.success){
-					mi.cargaTrabajo = [];
-					
-					for(x in response.actividadesAtrasadas){
-						var id = response.actividadesAtrasadas[x].id
-						var responsable = response.actividadesAtrasadas[x].responsable;
-						if(mi.existeResponsable(id) == -1){
-							mi.cargaTrabajo.push({id: id, responsable: responsable, actividadesAtrasadas: 1, actividadesProceso: 0});
-						}else{
-							for(y in mi.cargaTrabajo){
-								if(id == mi.cargaTrabajo[y].id)
-									mi.cargaTrabajo[y].actividadesAtrasadas += 1;
-							}
+			mi.mostrar = false;
+			
+			$http.post('/SCargaTrabajo', {accion: 'getEstructrua', idPrestamo :mi.prestamo.value}).success(
+					function(response){
+						var estructura = response.estructura;
+						
+						mi.objetosSeleccionados.push({
+							objetoId: estructura.objetoId,
+							objetoTipo: estructura.objetoTipo
+						})
+						
+						if (estructura.children!=null || estructura.children!= undefined)
+							mi.agregarhijos(estructura.children);
+						
+						var idPrestamos = "";
+						var idComponentes = "";
+						var idProductos = "";
+						var idSubproductos = "";
+						
+						for (x in mi.objetosSeleccionados){
+							switch (mi.objetosSeleccionados[x].objetoTipo){
+								case 1: idPrestamos = idPrestamos + (idPrestamos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+								break;
+								case 2: idComponentes = idComponentes + (idComponentes.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+								break;
+								case 3: idProductos = idProductos + (idProductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+								break;
+								case 4: idSubproductos = idSubproductos + (idSubproductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+								break;
+							} 
 						}
-					}
-					
-					for(x in response.actividadesProceso){
-						var id = response.actividadesProceso[x].id
-						var responsable = response.actividadesProceso[x].responsable;
-						if(mi.existeResponsable(response.actividadesProceso[x].id) == -1)
-							mi.cargaTrabajo.push({id: id, responsable: responsable, actividadesAtrasadas: 0, actividadesProceso: 1});
-						else{
-							for(y in mi.cargaTrabajo){
-								if(id == mi.cargaTrabajo[y].id)
-									mi.cargaTrabajo[y].actividadesProceso += 1;
-							}
-						}
-					}
-					
-					mi.rowCollection = [];
-					mi.rowCollection = mi.cargaTrabajo;
-			        mi.displayedCollection = [].concat(mi.rowCollection);
-			        
-			        var totalAtrasadas = 0;
-			        var totalProceso = 0;
-			        
-			        for (var i=0; i<mi.cargaTrabajo.length; i++){
-			        	totalAtrasadas += Number(mi.cargaTrabajo[i].actividadesAtrasadas);
-			        	totalProceso += Number(mi.cargaTrabajo[i].actividadesProceso);
-			        }
-			        
-			        mi.idTotal = 0;
-			        mi.responsableTotal = "Total";
-			        mi.actividadesAtrasadasTotal = totalAtrasadas;
-			        mi.actividadesProcesoTotal = totalProceso;
-			        
-			        mi.exportar = true;
-			        mi.rowCollectionActividades = [];
-			        mi.labels = [];
-			        mi.data = [];
-			        mi.series = [];
-				}
+						
+						$http.post('/SCargaTrabajo', 
+								{
+									accion: 'getCargaTrabajoPrestamo', 
+									idPrestamos:idPrestamos,
+									idComponentes:idComponentes,
+									idProductos:idProductos,
+									idSubproductos:idSubproductos,
+									anio_inicio:mi.fechaInicio,
+									anio_fin: mi.fechaFin
+									
+								}).success(function(response){
+									if(response.success){
+										mi.rowCollection = [];
+										mi.rowCollection = response.cargatrabajo;
+								        mi.displayedCollection = [].concat(mi.rowCollection);
+								        mi.actividadesAtrasadasTotal = 0;
+										mi.actividadesAlertaTotal = 0;
+										mi.actividadesACumplirTotal = 0; 
+										mi.actividadesCompletadas  = 0;
+								        for (x in mi.rowCollection){
+								        	mi.actividadesAtrasadasTotal = mi.actividadesAtrasadasTotal + mi.rowCollection[x].actividadesAtrasadas;
+											mi.actividadesAlertaTotal = mi.actividadesAlertaTotal + mi.rowCollection[x].actividadesAlerta;
+											mi.actividadesACumplirTotal = mi.actividadesACumplirTotal +  mi.rowCollection[x].actividadesACumplir; 
+											mi.actividadesCompletadas = mi.actividadesCompletadas + mi.rowCollection[x].actividadesCompletadas;
+								        }
+								        
+								        
+								    	
+								    	 mi.labels = ["Retrasadas", "En alerta", "A cumplir","Completadas"];
+								    	 mi.data = [mi.actividadesAtrasadasTotal, mi.actividadesAlertaTotal,
+								    		 mi.actividadesACumplirTotal,mi.actividadesCompletadas];
+								    	 
+								    	 mi.mostrar = true;
+									}
+								});
+						
+						
+						$http.post('/SCargaTrabajo', 
+								{
+									accion: 'getActividadesTerminadas', 
+									idPrestamos:idPrestamos,
+									idComponentes:idComponentes,
+									idProductos:idProductos,
+									idSubproductos:idSubproductos,
+									anio_inicio:mi.fechaInicio,
+									anio_fin: mi.fechaFin
+									
+									
+								}).success(function(response){
+									if(response.success){
+										mi.actividadesterminadas = response.actividadesterminadas;
+										mi.dataChartLine = [];
+										mi.etiquetasChartLine=[];
+										
+										var aniotemp=0;
+										for (x in mi.actividadesterminadas ){
+											
+											
+											if (x > 0 ){
+												var sigueinteMes = mi.obtenerSiguienteMes(mestemp,aniotemp);
+												while (sigueinteMes.mes < mi.actividadesterminadas[x].mes 
+														|| sigueinteMes.anio < mi.actividadesterminadas[x].anio){
+													mi.dataChartLine.push(0);
+													mi.etiquetasChartLine.push (mi.obtenerMes(sigueinteMes.mes) + 
+															(mi.fechaInicio != mi.fechaFin ? "-" + sigueinteMes.anio : ""));
+													sigueinteMes = mi.obtenerSiguienteMes(sigueinteMes.mes,sigueinteMes.anio);	
+												}
+											}
+											mi.dataChartLine.push(mi.actividadesterminadas[x].total)
+											mi.etiquetasChartLine.push(mi.obtenerMes(mi.actividadesterminadas[x].mes) + 
+													(mi.fechaInicio != mi.fechaFin ? "-" + mi.actividadesterminadas[x].anio : ""));
+											 
+											mestemp = mi.actividadesterminadas[x].mes;
+											aniotemp = mi.actividadesterminadas[x].anio;
+										}
+										
+										
+										  
+										  mi.dataChartLine = [
+											  mi.dataChartLine
+										    
+										  ];
+									}
+								});
 			});
+			
+			
+			
+			
+		}
+	};
+	
+	mi.obtenerSiguienteMes = function(mes,anio){
+		var siguiente = [];
+		if (mes <12){
+			siguiente.mes = mes+ 1;
+			siguiente.anio=anio;
+		}else{
+			siguiente.mes = 1;
+			siguiente.anio = anio+ 1;
+		}
+		return siguiente;
+	}
+	
+	
+	mi.agregarhijos = function (hijos){
+		for (x in hijos){
+			
+			mi.objetosSeleccionados.push(
+					{
+						objetoId: hijos[x].objetoId,
+						objetoTipo: hijos[x].objetoTipo
+					}
+			);
+		
+			if (hijos[x].children!=null || hijos[x].children!= undefined)
+				mi.agregarhijos(hijos[x].children);
 		}
 	}
 	
@@ -373,4 +429,316 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	}
 	
 	mi.reset();
+	
+	// ------------
+	mi.getEstructura = function (){
+		
+		if(mi.prestamo.value > 0)
+		{
+			if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
+					mi.fechaFin != null && mi.fechaFin.toString().length == 4)
+			{
+				if (mi.fechaFin >= mi.fechaInicio){
+					mi.inicializar();
+					mi.generar();
+				}else{
+					$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
+				}
+			}
+		}
+		
+		
+		
+		
+	}
+	
+	mi.llamarModal = function(idproyecto) {
+		var resultado = $q.defer();
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'estructuraproyecto.jsp',
+			controller : 'modalEstructura',
+			controllerAs : 'estructura',
+			backdrop : 'static',
+			size : 'md',
+			resolve : {
+				$idproyecto : function() {
+					return idproyecto;
+				}				
+			}
+		});
+		
+		modalInstance.result.then(function(itemSeleccionado) {
+			resultado.resolve(itemSeleccionado);
+		});
+		return resultado.promise;
+	};
+	
+	mi.filtrarEstrucrura = function(titulo, mensaje){
+		var resultado = mi.llamarModal(mi.prestamo.value); 
+		mi.mostrar = false;
+		resultado.then(function(itemSeleccionados) {
+			mi.objetosSeleccionados = itemSeleccionados;
+			var idPrestamos = "";
+			var idComponentes = "";
+			var idProductos = "";
+			var idSubproductos = "";
+			
+			for (x in mi.objetosSeleccionados){
+				switch (mi.objetosSeleccionados[x].objetoTipo){
+					case 1: idPrestamos = idPrestamos + (idPrestamos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+					break;
+					case 2: idComponentes = idComponentes + (idComponentes.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+					break;
+					case 3: idProductos = idProductos + (idProductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+					break;
+					case 4: idSubproductos = idSubproductos + (idSubproductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+					break;
+				} 
+			}
+			
+			$http.post('/SCargaTrabajo', 
+					{
+						accion: 'getCargaTrabajoPrestamo', 
+						idPrestamos:idPrestamos,
+						idComponentes:idComponentes,
+						idProductos:idProductos,
+						idSubproductos:idSubproductos
+						
+					}).success(function(response){
+						if(response.success){
+							mi.rowCollection = [];
+							mi.rowCollection = response.cargatrabajo;
+					        mi.displayedCollection = [].concat(mi.rowCollection);
+					        mi.actividadesAtrasadasTotal = 0;
+							mi.actividadesAlertaTotal = 0;
+							mi.actividadesACumplirTotal = 0; 
+							mi.actividadesCompletadas  = 0;
+					        for (x in mi.rowCollection){
+					        	mi.actividadesAtrasadasTotal = mi.actividadesAtrasadasTotal + mi.rowCollection[x].actividadesAtrasadas;
+								mi.actividadesAlertaTotal = mi.actividadesAlertaTotal + mi.rowCollection[x].actividadesAlerta;
+								mi.actividadesACumplirTotal = mi.actividadesACumplirTotal +  mi.rowCollection[x].actividadesACumplir; 
+								mi.actividadesCompletadas = mi.actividadesCompletadas + mi.rowCollection[x].actividadesCompletadas;
+					        }
+					        
+					        
+					    	
+					    	 mi.labels = ["Actividades retrasadas", "Actividades en alerta", "Actividades a cumplir","Actividades completadas"];
+					    	 mi.data = [mi.actividadesAtrasadasTotal, mi.actividadesAlertaTotal,
+					    		 mi.actividadesACumplirTotal,mi.actividadesCompletadas];
+					    	 mi.mostrar = true;
+						}
+					});
+			
+			
+		});
+	};
+	
+	
+	mi.llamarModalEstructuraResponsable = function(idproyecto,idresponsable) {
+		var resultado = $q.defer();
+		var modalInstance = $uibModal.open({
+			animation : 'true',
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'estructuraresponsable.jsp',
+			controller : 'modalEstructuraResponsable',
+			controllerAs : 'estructura',
+			backdrop : 'static',
+			size : 'lg',
+			resolve : {
+				$idproyecto : function() {
+					return idproyecto;
+				},
+				$idresponsable : function() {
+					return idresponsable;
+				}	
+			}
+		});
+		
+		modalInstance.result.then(function(itemSeleccionado) {
+			resultado.resolve(itemSeleccionado);
+		});
+		return resultado.promise;
+	};
+	
+	
+	mi.actividadesResponsable = function(valor){
+		var resultado = mi.llamarModalEstructuraResponsable(mi.prestamo.value,valor.id); 
+	};
+	
+	
+	mi.obtenerMes = function(valor){
+		switch (valor){
+			case 1: return "Ene"; 
+			case 2: return "Feb"; 
+			case 3: return "Mar"; 
+			case 4: return "Abr"; 
+			case 5: return "May"; 
+			case 6: return "Jun"; 
+			case 7: return "Jul"; 
+			case 8: return "Ago"; 
+			case 9: return "Sept"; 
+			case 10: return "Octe"; 
+			case 11: return "Nov"; 
+			case 12: return "Dic"; 
+		}
+	}
+	
+	mi.inicializar = function(){
+		mi.idTotal = 0;
+	    mi.responsableTotal = "Total";
+	    mi.actividadesAtrasadasTotal = 0;
+		mi.actividadesAlertaTotal = 0;
+		mi.actividadesACumplirTotal = 0; 
+		mi.actividadesCompletadas  = 0;
+	    mi.exportar = false;
+	    mi.grafica = true;
+	    mi.idPrestamo = 0;
+	    mi.estructuraProyecto=[];
+	    mi.objetosSeleccionados=[];
+	    mi.datosTabla = [];
+	    mi.mostrar = false;
+	    
+	    mi.dataChartLine = [];
+	    mi.etiquetasChartLine = [];
+	    mi.actividadesterminadas = [];
+	};
+	
 }]);
+
+
+
+app.controller('modalEstructura', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log', '$idproyecto',modalEstructura ]);
+
+function modalEstructura($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $idproyecto) {
+
+	var mi = this;
+	
+	mi.seleccionados = [];
+	
+	$http.post('/SCargaTrabajo', {accion: 'getEstructrua', idPrestamo :$idproyecto}).success(
+			function(response){
+				mi.estructuraProyecto = response.estructura;
+				
+	});
+
+	
+
+	mi.ok = function() {
+		mi.seleccionados = [];
+		
+		mi.customOpts = {
+			  useCheckboxes: false,
+			  onToggle: mi.awesomeCallback,
+			  twistieCollapsedTpl: '<span class="glyphicon glyphicon-chevron-right"></span>',
+			  twistieExpandedTpl: '<span class="glyphicon glyphicon-chevron-down"></span>',
+			  
+			};
+		
+		if (mi.estructuraProyecto.selected)
+			mi.seleccionados.push({objetoId: mi.estructuraProyecto.objetoId, objetoTipo: mi.estructuraProyecto.objetoTipo});
+		
+		if (mi.estructuraProyecto.children!=null || mi.estructuraProyecto.children!= undefined)
+			mi.agregarhijos(mi.estructuraProyecto.children);
+		
+		if (mi.seleccionados.length > 0) {
+			$uibModalInstance.close(mi.seleccionados);
+		} else {
+			$utilidades.mensaje('warning', 'Debe seleccionar una fila');
+		}
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+	
+	mi.agregarhijos = function (hijos){
+		for (x in hijos){
+			if (hijos[x].selected)
+				mi.seleccionados.push(
+						{
+							objetoId: hijos[x].objetoId,
+							objetoTipo: hijos[x].objetoTipo
+						}
+				);
+			
+			if (hijos[x].children!=null || hijos[x].children!= undefined)
+				mi.agregarhijos(hijos[x].children);
+		}
+	}
+};
+
+
+app.controller('modalEstructuraResponsable', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log', '$idproyecto','$idresponsable',modalEstructuraResponsable ]);
+
+function modalEstructuraResponsable($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $idproyecto,$idresponsable) {
+
+	var mi = this;
+	
+	
+	
+	$http.post('/SCargaTrabajo', {accion: 'getEstructruaPorResponsable', idPrestamo :$idproyecto,idColaborador:$idresponsable}).success(
+			function(response){
+				mi.estructuraProyecto = response.estructura;
+				
+	});
+
+	
+
+	mi.ok = function() {
+		
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+	
+	mi.claseIcon = function (item) {
+	    switch (item.objetoTipo) {
+	        case 1:
+	            return 'glyphicon glyphicon-record';
+	        case 2:
+	            return 'glyphicon glyphicon-th';
+	        case 3:
+	            return 'glyphicon glyphicon-certificate';
+	        case 4:
+	            return 'glyphicon glyphicon-link';
+	        case 5:
+	            return 'glyphicon glyphicon-th-list';
+	    }
+	};
+	
+	mi.obtenerColor = function(row){
+		
+		 
+		var style={}
+		switch (row.estado){
+			case 1: style.color="#fd9496"; break;
+			case 2: style.color="#e2e291"; break;
+			case 3: style.color="#c7e7a5"; break;
+			case 4: style.color="#b0cfe8"; break;
+		}
+		return style;
+	}
+	
+
+	mi.seriesLine = function (){
+		
+		
+		
+	}
+	
+	
+	
+	
+};
+

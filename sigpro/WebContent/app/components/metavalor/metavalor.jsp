@@ -18,7 +18,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="17040">
-			       		<label class="btn btn-primary" ng-click="metavc.nuevo()" title="Nuevo">
+			       		<label class="btn btn-primary" ng-click="metavc.nuevoValor()" title="Nuevo">
 						<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			       </shiro:hasPermission> 
 			       <shiro:hasPermission name="17010">
@@ -92,6 +92,15 @@
     						<label  class="floating-label">Tipo de Dato</label>
 						</div>
 						<div class="form-group">
+							<input type="text" id="fecha" class="inputText" uib-datepicker-popup="{{metavc.formatofecha}}" ng-model="metavc.metavalor.fecha" is-open="metavc.fc_abierto"
+												datepicker-options="metavc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metavc.abrirPopupFecha(1000)"
+												ng-value="metavc.metavalor.fecha" onblur="this.setAttribute('value', this.value);"  ng-required="true"/>
+												<span class="label-icon" ng-click="metavc.abrirPopupFecha(1000)">
+													<i class="glyphicon glyphicon-calendar"></i>
+												</span>
+							<label class="floating-label">* Fecha de Meta</label>
+						</div>
+						<div class="form-group">
     						<input type="text" class="inputText"  ng-model="metavc.metavalor.valor" ng-required="true"
     						ng-value="metavc.metavalor.valor" onblur="this.setAttribute('value', this.value);">
     						<label  class="floating-label">* Valor</label>
@@ -101,7 +110,9 @@
 			</div>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
-				<div class="col-sm-12 operation_buttons" align="right">
+				
+    		</div>
+    		<div class="operation_buttons" align="right">
 					<div class="btn-group">
 						<shiro:hasPermission name="17020">
 				        	<label class="btn btn-success" ng-click="form.$valid ? metavc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
@@ -111,6 +122,5 @@
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 	    			</div>
 	    		</div>
-    		</div>
 		</div>
 	</div>

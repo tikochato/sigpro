@@ -29,12 +29,16 @@ import com.google.gson.reflect.TypeToken;
 import dao.ActividadDAO;
 import dao.ActividadPropiedadDAO;
 import dao.ActividadPropiedadValorDAO;
+import dao.AsignacionRaciDAO;
 import pojo.Actividad;
 import pojo.ActividadPropiedad;
 import pojo.ActividadPropiedadValor;
 import pojo.ActividadPropiedadValorId;
 import pojo.ActividadTipo;
 import pojo.AcumulacionCosto;
+import pojo.AsignacionRaci;
+import pojo.Colaborador;
+import pojo.MatrizRaci;
 import utilities.Utils;
 
 @WebServlet("/SActividad")
@@ -70,6 +74,13 @@ public class SActividad extends HttpServlet {
 		BigDecimal costoReal;
 		Integer acumulacionCostoId;
 		String acumulacionCostoNombre;
+		String fechaInicioReal;
+		String fechaFinReal;
+		BigDecimal presupuestoModificado;
+		BigDecimal presupuestoPagado;
+		BigDecimal presupuestoVigente;
+		BigDecimal presupuestoDevengado;
+		Integer avanceFinanciero;
 		int estado;
 	}
 
@@ -79,6 +90,13 @@ public class SActividad extends HttpServlet {
 		String label;
 		String valor;
 		String valor_f;
+	}
+	
+	class stasignacionroles {
+		Integer id;
+		String nombre;
+		String rol;
+		String nombrerol;
 	}
 
     /**
@@ -156,9 +174,9 @@ public class SActividad extends HttpServlet {
 				temp.longitud = actividad.getLongitud();
 				temp.latitud = actividad.getLatitud();
 				temp.costo = actividad.getCosto();
-				temp.costoReal = actividad.getCostoReal();
 				temp.acumulacionCostoId = actividad.getAcumulacionCosto().getId();
 				temp.acumulacionCostoNombre = actividad.getAcumulacionCosto().getNombre();
+				
 				stactividads.add(temp);
 			}
 
@@ -191,9 +209,9 @@ public class SActividad extends HttpServlet {
 				temp.longitud = actividad.getLongitud();
 				temp.latitud = actividad.getLatitud();
 				temp.costo = actividad.getCosto();
-				temp.costoReal = actividad.getCostoReal();
 				temp.acumulacionCostoId = actividad.getAcumulacionCosto().getId();
 				temp.acumulacionCostoNombre = actividad.getAcumulacionCosto().getNombre();
+				
 				stactividads.add(temp);
 			}
 
@@ -226,20 +244,24 @@ public class SActividad extends HttpServlet {
 					String duracionDimension = map.get("duracionDimension");
 					String longitud = map.get("longitud");
 					BigDecimal costo = Utils.String2BigDecimal(map.get("costo"), null);
-					BigDecimal costoReal = Utils.String2BigDecimal(map.get("costoReal"), null);
-					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
 					String latitud = map.get("latitud");
-
+					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
+					
+					
 					ActividadTipo actividadTipo= new ActividadTipo();
 					actividadTipo.setId(actividadtipoid);
+					AcumulacionCosto acumulacionCosto = null;
+					if(acumulacionCostoid != 0){
+						acumulacionCosto = new AcumulacionCosto();
+						acumulacionCosto.setId(acumulacionCostoid);	
+					}
 					
-					AcumulacionCosto acumulacionCosto = new AcumulacionCosto();
-					acumulacionCosto.setId(acumulacionCostoid);
-
 					type = new TypeToken<List<stdatadinamico>>() {
 					}.getType();
 
 					List<stdatadinamico> datos = (map.get("datadinamica")!=null && map.get("datadinamica").compareTo("{}")!=0) ?  gson.fromJson(map.get("datadinamica"), type) : new ArrayList<stdatadinamico>();
+					
+					
 					
 					Actividad actividad;
 					if(esnuevo){
@@ -249,8 +271,7 @@ public class SActividad extends HttpServlet {
 						
 						actividad = new Actividad(actividadTipo, acumulacionCosto, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra, fuente,
-								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,costoReal,
-								null,null);
+								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo, null,null,null);
 					}
 					else{
 						actividad = ActividadDAO.getActividadPorId(id,usuario);
@@ -271,10 +292,47 @@ public class SActividad extends HttpServlet {
 						actividad.setLatitud(latitud);
 						actividad.setLongitud(longitud);
 						actividad.setCosto(costo);
-						actividad.setCostoReal(costoReal);
 						actividad.setAcumulacionCosto(acumulacionCosto);
 					}
+					
 					result = ActividadDAO.guardarActividad(actividad);
+					
+					
+					if (result ){
+						List<AsignacionRaci> asignaciones_temp = AsignacionRaciDAO.getAsignacionPorTarea(actividad.getId(), 5);
+						
+						if (asignaciones_temp!=null){
+							for (AsignacionRaci asign : asignaciones_temp){
+								AsignacionRaciDAO.eliminarTotalAsignacion(asign);
+							}
+						}
+						
+						
+						Integer proyectoId = ActividadDAO.getProyectoId(actividad.getId());
+						MatrizRaci matrizRaci = AsignacionRaciDAO.getMatrizPorObjeto(proyectoId, 1);
+						
+						String asignaciones_param = map.get("asignacionroles");
+						
+						String[] asignaciones = asignaciones_param.split("\\|");
+						if (asignaciones.length > 0){
+							for (String temp : asignaciones){
+								AsignacionRaci asigna_temp = new AsignacionRaci();
+								String[] datosaasignacion = temp.split("~");
+								Colaborador colaborador = new Colaborador();
+								colaborador.setId(Integer.parseInt(datosaasignacion[0]));
+								
+								asigna_temp.setColaborador(colaborador);
+								asigna_temp.setEstado(1);
+								asigna_temp.setFechaCreacion(new Date());
+								asigna_temp.setMatrizRaci(matrizRaci);
+								asigna_temp.setObjetoId(actividad.getId());
+								asigna_temp.setObjetoTipo(5);
+								asigna_temp.setRolRaci(datosaasignacion[1]);
+								asigna_temp.setUsuarioCreo(usuario);
+								result = result && AsignacionRaciDAO.guardarAsignacion(asigna_temp);
+							}
+						}
+					}
 
 					Set<ActividadPropiedadValor> valores_temp = actividad.getActividadPropiedadValors();
 					actividad.setActividadPropiedadValors(null);
@@ -391,9 +449,9 @@ public class SActividad extends HttpServlet {
 				temp.longitud = actividad.getLongitud();
 				temp.latitud = actividad.getLatitud();
 				temp.costo = actividad.getCosto();
-				temp.costoReal = actividad.getCostoReal();
-				temp.acumulacionCostoId = actividad.getAcumulacionCosto() == null ? 0 : actividad.getAcumulacionCosto().getId();
-				temp.acumulacionCostoNombre = actividad.getAcumulacionCosto() == null ? "" : actividad.getAcumulacionCosto().getNombre();
+				temp.acumulacionCostoId = actividad.getAcumulacionCosto().getId();
+				temp.acumulacionCostoNombre = actividad.getAcumulacionCosto().getNombre();
+				
 				stactividads.add(temp);
 			}
 
@@ -440,7 +498,6 @@ public class SActividad extends HttpServlet {
 			temp.duracion = actividad.getDuracion();
 			temp.duracionDimension = actividad.getDuracionDimension();
 			temp.costo = actividad.getCosto();
-			temp.costoReal = actividad.getCostoReal();
 			temp.acumulacionCostoId = actividad.getAcumulacionCosto().getId();
 			temp.acumulacionCostoNombre = actividad.getAcumulacionCosto().getNombre();
 			
@@ -505,4 +562,6 @@ public class SActividad extends HttpServlet {
         gz.close();
         output.close();
 	}
+	
+	
 }

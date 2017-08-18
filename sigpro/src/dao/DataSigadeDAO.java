@@ -1,15 +1,13 @@
 package dao;
 
 import java.util.List;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import pojoSigade.DtmAvanceFisfinanDetDti;
 import pojoSigade.DtmAvanceFisfinanDti;
-import utilities.CHibernateSessionSIGADE;
+import utilities.CHibernateSession;
 import utilities.CLogger;
 
 public class DataSigadeDAO {
@@ -17,7 +15,7 @@ public class DataSigadeDAO {
 	
 	public static List<DtmAvanceFisfinanDti> getInf(){
 		List<DtmAvanceFisfinanDti> ret = new ArrayList<DtmAvanceFisfinanDti>();
-		Session session = CHibernateSessionSIGADE.getSessionFactory().openSession();
+		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			Query<DtmAvanceFisfinanDti> criteria = session.createQuery("FROM dtm_avance_fisfinan_dti p ", DtmAvanceFisfinanDti.class);
 			ret = criteria.getResultList();
@@ -33,7 +31,7 @@ public class DataSigadeDAO {
 	
 	public static DtmAvanceFisfinanDti getInfPorId(String noPrestamo,String codigoPresupuestario){
 		DtmAvanceFisfinanDti ret = null;
-		Session session = CHibernateSessionSIGADE.getSessionFactory().openSession();
+		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query =String.join("", "SELECT i FROM dtm_avance_fisfinan_dti i ",
 					"where i.id.codigoPresupuestario = :codPre ",
@@ -52,17 +50,16 @@ public class DataSigadeDAO {
 		return ret;
 	}
 	
-	public static DtmAvanceFisfinanDti getavanceFisFinanDMS1(String noPrestamo,String codigoPresupuestario){
+	public static DtmAvanceFisfinanDti getavanceFisFinanDMS1(String codigoPresupuestario){
 		DtmAvanceFisfinanDti ret = null;
-		Session session = CHibernateSessionSIGADE.getSessionFactory().openSession();
+		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
-			String query =String.join(" ", "select * from dtm_avance_fisfinan_dti fis",
-					"where fis.NO_PRESTAMO = ?1",
-					"and fis.CODIGO_PRESUPUESTARIO = ?2");
+			String query =String.join(" ", "select * from dtm_avance_fisfinan_dti fis",		
+					"where fis.CODIGO_PRESUPUESTARIO = ?1");
 			Query<DtmAvanceFisfinanDti> criteria = session.createNativeQuery(query,DtmAvanceFisfinanDti.class);
-			criteria.setParameter("1", noPrestamo);
-			criteria.setParameter("2", codigoPresupuestario);
+			
+			criteria.setParameter("1", codigoPresupuestario);
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
@@ -74,17 +71,17 @@ public class DataSigadeDAO {
 		return ret;
 	}
 	
-	public static List<Object> getAVANCE_FISFINAN_DET_DTI(String codigoPresupeustario){
-		List<Object> ret = null;
-		Session session = CHibernateSessionSIGADE.getSessionFactory().openSession();
+	public static List<?> getAVANCE_FISFINAN_DET_DTI(String codigoPresupeustario){
+		List<?> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
 			String query =String.join(" ", "select ejercicio_fiscal,mes_desembolso,sum(desembolsos_mes_gtq) ",
-					"from DTM_AVANCE_FISFINAN_DET_DTI",
+					"from dtm_avance_fisfinan_det_dti",
 					"where codigo_presupuestario = ?2",
 					"group by ejercicio_fiscal,mes_desembolso",
 					"order by ejercicio_fiscal,mes_desembolso asc");
-			Query criteria = session.createNativeQuery(query);
+			Query<?> criteria = session.createNativeQuery(query);
 			criteria.setParameter("2", codigoPresupeustario);
 			ret = criteria.getResultList();
 		}

@@ -142,7 +142,7 @@
 							</div>
 							<div class="form-group col-sm-2" >
 							  <input type="number" class="inputText" ng-model="actividadc.actividad.proyecto" ng-value="actividadc.actividad.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-							  <label for="iproy_" class="floating-label">Préstamo</label>
+							  <label for="iproy_" class="floating-label">Proyecto</label>
 							</div>
 							<div class="form-group col-sm-2" >
 							  <input type="number" class="inputText" ng-model="actividadc.actividad.actividad" ng-value="actividadc.actividad.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
@@ -163,7 +163,7 @@
 							<span class="label-icon" ng-click="actividadc.buscarActividadTipo()"><i class="glyphicon glyphicon-search"></i></span>
 							<label for="campo3" class="floating-label">* Tipo de Actividad</label>
 						</div>
-						<div class="form-group" >
+						<div class="form-group" ng-if="false">
 						    <input type="text" class="inputText" id="iactividadResponsable" name="iactividadResponsable" ng-model="actividadc.actividad.actividadResponsable" ng-value="actividadc.actividad.actividadResponsable" 
 							ng-click="actividadc.buscarActividadResponsable()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
 							<span class="label-icon" ng-click="actividadc.buscarActividadResponsable()"><i class="glyphicon glyphicon-search"></i></span>
@@ -228,17 +228,12 @@
 						</div>
 						
 						<div class="form-group" >
-					       <input type="number" class="inputText" ng-model="actividadc.actividad.costoReal" ng-value="actividadc.actividad.costoReal" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
-					       <label for="iprog" class="floating-label">Costo Real</label>
-						</div>
-						
-						<div class="form-group" >
-						    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="actividadc.actividad.acumulacionCostoNombre" ng-value="actividadc.actividad.acumulacionCosto" 
-							ng-click="actividadc.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+						    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="actividadc.actividad.acumulacionCostoNombre" ng-value="actividadc.actividad.acumulacionCostoNombre" 
+							ng-click="actividadc.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="actividadc.actividad.costo > 0"/>
 							<span class="label-icon" ng-click="actividadc.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
 							<label for="campo3" class="floating-label">* Acumulación Costo</label>
-						</div>
-						
+						</div>	
+											
 						<div ng-repeat="campo in actividadc.camposdinamicos">
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >
@@ -279,6 +274,53 @@
 								</div>
 							</div>
 						</div>
+				<br/>
+				
+				<div align="center">
+					<h5>Asignacion de Responsables</h5>
+					<div style="height: 35px;" >
+						<div style="text-align: right;">
+							<div class="btn-group" role="group" aria-label="">
+								<a class="btn btn-default" href
+									ng-click="actividadc.buscarActividadResponsable()" role="button"
+									uib-tooltip="Asignar nueva propiedad" tooltip-placement="left">
+									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<table
+					st-table="actividadc.responsables"
+					class="table table-striped table-bordered table-hover table-propiedades">
+					<thead >
+						<tr>
+							<th style="width: 60px;">ID</th>
+							<th>Nombre</th>
+							<th>Rol</th>
+							<th style="width: 30px;">Quitar</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr st-select-row="row"
+							ng-repeat="row in actividadc.responsables">
+							<td>{{row.id}}</td>
+							<td>{{row.nombre}}</td>
+							<td>{{row.nombrerol}}</td>
+							
+							<td>
+								<button type="button"
+									ng-click="actividadc.eliminarResponsable(row)"
+									class="btn btn-sm btn-danger">
+									<i class="glyphicon glyphicon-minus-sign"> </i>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</div>
+				
 				<br/>
 				<div class="panel panel-default">
 					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>

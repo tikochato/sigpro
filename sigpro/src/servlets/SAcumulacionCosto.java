@@ -14,7 +14,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,9 +52,7 @@ public class SAcumulacionCosto extends HttpServlet {
 			StringBuilder sb = new StringBuilder();
 			BufferedReader br = request.getReader();
 			String str;
-			HttpSession sesionweb = request.getSession();
-			String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
-			
+						
 			while ((str = br.readLine()) != null) {
 				sb.append(str);
 			}

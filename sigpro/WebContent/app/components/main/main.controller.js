@@ -105,9 +105,6 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
              .when('/usuarios/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'usuarioController\'" class="all_page"></div>'
             })
-             .when('/informeUnidadEjecutora/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'informeUnidadController\'" class="all_page"></div>'
-            })
             .when('/riesgotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgotipoController\'" class="all_page"></div>'
             })
@@ -180,6 +177,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/informacionPresupuestaria/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'informacionPresupuestariaController\'" class="all_page"></div>'
             })
+            .when('/administracionTransaccional/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'administracionTransaccionalController\'" class="all_page"></div>'
+            })
             .when('/responsabletipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'responsabletipoController\'" class="all_page"></div>'
             })
@@ -195,9 +195,12 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/desembolsos/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'desembolsosController\'" class="all_page"></div>'
             })
-             /*.when('/gestionUsuarios/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'gestionUsuariosController\'" class="all_page"></div>'
-            })*/
+            .when('/matrizraci/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'matrizraciController\'" class="all_page"></div>'
+            })
+            .when('/categoriaadquisicion/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'categoriaAdquisicionController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -353,13 +356,7 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'riesgotipoController',
 	    	   script: '/app/components/riesgotipo/riesgotipo.controller.js',
 	    	   template: '/app/components/riesgotipo/riesgotipo.jsp'
-	       }, 
-	       {
-	    	   name: 'gestionUsuariosController',
-	    	   script: '/app/components/usuarios/gestionUsuario.js',
-	    	   template: '/app/components/usuarios/gestionUsuario.jsp'
-	       },
-	       {
+	       }, {
 	    	   name: 'riesgoController',
 	    	   script: '/app/components/riesgo/riesgo.controller.js',
 	    	   template: '/app/components/riesgo/riesgo.jsp'
@@ -485,11 +482,20 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'desembolsosController',
 	    	   script: '/app/components/reportes/desembolsos/desembolsos.controller.js',
 	    	   template: '/app/components/reportes/desembolsos/desembolsos.jsp'
+	       },{
+	    	   name: 'administracionTransaccionalController',
+	    	   script: '/app/components/reportes/administraciontransaccional/administracionTransaccional.controller.js',
+	    	   template: '/app/components/reportes/administraciontransaccional/administracionTransaccional.jsp'
 	       },
 	       {
-	    	   name: 'informeUnidadController',
-	    	   script: '/app/components/usuarios/informeUnidadEjecutora.js',
-	    	   template: '/app/components/usuarios/informeUnidadEjecutora.jsp'
+	    	   name: 'matrizraciController',
+	    	   script: '/app/components/reportes/matrizraci/matrizraci.controller.js',
+	    	   template: '/app/components/reportes/matrizraci/matrizraci.jsp'
+	       },
+	       {
+	    	   name: 'categoriaAdquisicionController',
+	    	   script: '/app/components/categoriaadquisicion/categoriaAdquisicion.controller.js',
+	    	   template: '/app/components/categoriaadquisicion/categoriaAdquisicion.jsp'
 	       }
 
 	   ];
@@ -526,9 +532,6 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 
 	$scope.hideBarFromMenu=function(){
 		$scope.hidebar = true;
-		if (document.getElementById("title")){
-			document.getElementById("title").scrollIntoView();
-		}
 	}
 	
 

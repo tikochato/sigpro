@@ -1,5 +1,5 @@
 package pojo;
-// Generated Jul 7, 2017 9:40:24 AM by Hibernate Tools 5.2.3.Final
+// Generated Aug 14, 2017 12:17:40 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class AcumulacionCosto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7230140977342034382L;
+	private static final long serialVersionUID = 8015213596989810385L;
 	private Integer id;
 	private String nombre;
 	private String usuarioCreo;
@@ -33,7 +33,11 @@ public class AcumulacionCosto implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
+	private Set<Componente> componentes = new HashSet<Componente>(0);
+	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<Actividad> actividads = new HashSet<Actividad>(0);
+	private Set<Proyecto> proyectos = new HashSet<Proyecto>(0);
+	private Set<Subproducto> subproductos = new HashSet<Subproducto>(0);
 
 	public AcumulacionCosto() {
 	}
@@ -46,14 +50,19 @@ public class AcumulacionCosto implements java.io.Serializable {
 	}
 
 	public AcumulacionCosto(String nombre, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, Set<Actividad> actividads) {
+			Date fechaActualizacion, int estado, Set<Componente> componentes, Set<Producto> productos,
+			Set<Actividad> actividads, Set<Proyecto> proyectos, Set<Subproducto> subproductos) {
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
+		this.componentes = componentes;
+		this.productos = productos;
 		this.actividads = actividads;
+		this.proyectos = proyectos;
+		this.subproductos = subproductos;
 	}
 
 	@Id
@@ -125,12 +134,48 @@ public class AcumulacionCosto implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "acumulacionCosto")
+	public Set<Componente> getComponentes() {
+		return this.componentes;
+	}
+
+	public void setComponentes(Set<Componente> componentes) {
+		this.componentes = componentes;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "acumulacionCosto")
+	public Set<Producto> getProductos() {
+		return this.productos;
+	}
+
+	public void setProductos(Set<Producto> productos) {
+		this.productos = productos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "acumulacionCosto")
 	public Set<Actividad> getActividads() {
 		return this.actividads;
 	}
 
 	public void setActividads(Set<Actividad> actividads) {
 		this.actividads = actividads;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "acumulacionCosto")
+	public Set<Proyecto> getProyectos() {
+		return this.proyectos;
+	}
+
+	public void setProyectos(Set<Proyecto> proyectos) {
+		this.proyectos = proyectos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "acumulacionCosto")
+	public Set<Subproducto> getSubproductos() {
+		return this.subproductos;
+	}
+
+	public void setSubproductos(Set<Subproducto> subproductos) {
+		this.subproductos = subproductos;
 	}
 
 }

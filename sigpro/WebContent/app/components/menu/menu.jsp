@@ -16,7 +16,7 @@
 	                <span class="icon-bar"></span>
 	                <span class="icon-bar"></span>
 	            </label>
-	            <a class="navbar-brand" href="/main.jsp"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Inicio</a>
+	            <a class="navbar-brand" href="/main.jsp"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> </a>
 		    </div>		    
 		    <div class="collapse navbar-collapse" id="navBar">
 	            <ul class="nav navbar-nav">
@@ -52,6 +52,7 @@
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/recursounidadmedida">Unidad de Medida para Recurso</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/responsabletipo/rv">Tipo de Responsable</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/responsablerol/rv">Resonsable rol</a></li></shiro:hasPermission>
+				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/categoriaadquisicion/rv">Categoría de Adquisiciones</a></li></shiro:hasPermission>
 			                        </ul>
 	                    		</li>
 	                    		</shiro:hasPermission>
@@ -85,7 +86,9 @@
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/planejecucion/rp">Plan de ejecución</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/prestamometas">Metas de Préstamo</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/desembolsos/rp">Desembolsos</a></li></shiro:hasPermission>
-                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/informeUnidadEjecutora">informe de Unidad Ejecutora</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/administracionTransaccional/rp">Administración transaccional</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/matrizraci/rp">Matriz RACI</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/mapa">Mapa</a></li></shiro:hasPermission>
                     	</ul>
                     </li>
                     <shiro:hasPermission name="34010">
@@ -99,9 +102,6 @@
                     </li>
                     </shiro:hasPermission>
                    
-                    <li uib-dropdown>
-	                	<shiro:hasPermission name="24010"><a   href="#!/mapa"><span class="glyphicon" aria-hidden="true"></span> Mapa</a></shiro:hasPermission>	                    
-	                </li>
 	            </ul>
 	            <ul class="nav navbar-nav navbar-right">
 	            	<shiro:authenticated><li><a href="#!/usuarioinfo"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Mi info.</a></li></shiro:authenticated>

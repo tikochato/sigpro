@@ -1,6 +1,4 @@
 package pojo;
-// Generated 11/07/2017 11:54:39 AM by Hibernate Tools 5.2.0.CR1
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
@@ -54,6 +52,7 @@ public class RolUsuarioProyectoId implements java.io.Serializable {
 		this.usuario = usuario;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -68,6 +67,7 @@ public class RolUsuarioProyectoId implements java.io.Serializable {
 						&& castOther.getUsuario() != null && this.getUsuario().equals(castOther.getUsuario())));
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 

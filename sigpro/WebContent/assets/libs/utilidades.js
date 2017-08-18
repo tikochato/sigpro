@@ -33,6 +33,40 @@ app.provider('Utilidades', function() {
 							.test(correo);
 				}
 
+				dataFactory.getCantidadCabecerasReporte = function(areaReporte, totalAnios, totalCabeceras, tamanioMinimoColumna, columnasTotal){
+					while (totalCabeceras>0){
+						var columnasAMostrar = (totalCabeceras * totalAnios) + totalAnios + columnasTotal;
+						var tamanioColumna = (areaReporte / columnasAMostrar);
+						if (tamanioColumna > tamanioMinimoColumna){
+							return totalCabeceras;
+						}else{
+							totalCabeceras--;
+						}
+					}
+					return totalCabeceras;
+				}
+				
+				dataFactory.getTamanioColumnaReporte = function(areaReporte, totalAnios, cabecerasAMostrar, columnasTotal){
+					var columnasAMostrar = (cabecerasAMostrar * totalAnios) + totalAnios + columnasTotal;
+					var tamanioPropuesto = (areaReporte / columnasAMostrar);
+                    return Math.floor(tamanioPropuesto);
+				}
+
 				return dataFactory;
 			} ];
-});
+})
+
+app.filter('formatoMillones', function() {
+    return function(numero, millones) {
+    	if(numero != null){
+	        if(millones){
+	        	var res = ((numero/1000000).toFixed(2));
+	        	return ('Q '+res.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+	        }
+	        return ('Q '+ (Number(numero).toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    	}
+    };
+})
+
+;
+

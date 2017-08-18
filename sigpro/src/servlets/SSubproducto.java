@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
@@ -25,6 +26,7 @@ import dao.SubproductoDAO;
 import dao.SubproductoPropiedadDAO;
 import dao.SubproductoPropiedadValorDAO;
 import dao.SubproductoUsuarioDAO;
+import pojo.AcumulacionCosto;
 import pojo.Producto;
 import pojo.Subproducto;
 import pojo.SubproductoPropiedad;
@@ -73,6 +75,9 @@ public class SSubproducto extends HttpServlet {
 		Integer fuente;
 		String latitud;
 		String longitud;
+		BigDecimal costo;
+		Integer acumulacionCosto;
+		String acumulacionCostoNombre;
 	}
 	
 	
@@ -165,7 +170,14 @@ public class SSubproducto extends HttpServlet {
 			Integer actividad = Utils.String2Int(map.get("actividad"), null);
 			String latitud = map.get("latitud");
 			String longitud = map.get("longitud");
+			BigDecimal costo = new BigDecimal(map.get("costo"));
+			Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCostoId"), null);
 			
+			AcumulacionCosto acumulacionCosto = null;
+			if(acumulacionCostoid != 0){
+				acumulacionCosto = new AcumulacionCosto();
+				acumulacionCosto.setId(acumulacionCostoid);
+			}
 			
 			Gson gson = new Gson();
 		
@@ -183,9 +195,9 @@ public class SSubproducto extends HttpServlet {
 			
 			if (esnuevo){
 				
-				subproducto = new Subproducto(producto, subproductoTipo, unidadEjecutora, nombre, descripcion, 
+				subproducto = new Subproducto(acumulacionCosto, null, subproductoTipo, unidadEjecutora, nombre, descripcion, 
 						 usuario, null, new DateTime().toDate(), null, 1
-						, snip, programa, subprograma, proyecto_, actividad, obra, fuente, latitud, longitud,null, null);
+						, snip, programa, subprograma, proyecto_, actividad, obra, fuente, latitud, longitud,costo,null, null);
 				
 			}else{
 				subproducto = SubproductoDAO.getSubproductoPorId(id);
@@ -205,6 +217,8 @@ public class SSubproducto extends HttpServlet {
 				subproducto.setFechaActualizacion(new DateTime().toDate());
 				subproducto.setLatitud(latitud);
 				subproducto.setLongitud(longitud);
+				subproducto.setCosto(costo);
+				subproducto.setAcumulacionCosto(acumulacionCosto);
 			}
 			ret = SubproductoDAO.guardarSubproducto(subproducto);
 			

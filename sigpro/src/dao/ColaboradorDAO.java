@@ -66,7 +66,7 @@ public class ColaboradorDAO {
 
 			pojo = new Colaborador(UnidadEjecutoraDAO.getUnidadEjecutora(codigoUnidadEjecutora),UsuarioDAO.getUsuario(usuario),
 					primerNombre, segundoNombre, primerApellido, segundoApellido, cui, 1, usuario_creacion, null, fecha_creacion, null,
-					null, null, null);
+					null, null, null,null);
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try {
 				session.beginTransaction();
@@ -142,7 +142,7 @@ public class ColaboradorDAO {
 	}
 
 	public static List<Colaborador> getPagina(int pagina, int registros,String filtro_pnombre, String filtro_snombre, String filtro_papellido, String filtro_sapellido,
-			String filtro_cui, String filtro_unidad_ejecutora, String columna_ordenada, String orden_direccion) {
+			String filtro_cui, String filtro_unidad_ejecutora, String columna_ordenada, String orden_direccion, String excluir) {
 		List<Colaborador> ret = new ArrayList<Colaborador>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
@@ -161,7 +161,9 @@ public class ColaboradorDAO {
 			if(filtro_unidad_ejecutora!=null && filtro_unidad_ejecutora.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " c.unidadEjecutora.nombre LIKE '%", filtro_unidad_ejecutora,"%' ");
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			query = String.join(" ", query, (excluir!=null && excluir.length()>0 ? "and c.id not in (" + excluir + ")" : ""));
 			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
+			
 			Query<Colaborador> criteria = session.createQuery(query,Colaborador.class);
 			criteria.setFirstResult(((pagina-1)*(registros)));
 			criteria.setMaxResults(registros);
@@ -179,7 +181,7 @@ public class ColaboradorDAO {
 		String jsonEntidades = "";
 
 		List<Colaborador> pojos = getPagina(pagina, registros, filtro_pnombre, filtro_snombre, filtro_papellido, filtro_sapellido,
-				filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion);
+				filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion,null);
 
 		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
 
@@ -215,7 +217,7 @@ public class ColaboradorDAO {
 	public static String getJson2() {
 		String jsonEntidades = "";
 
-		List<Colaborador> pojos = getPagina(1, 10000, null, null, null, null, null, null, null, null);
+		List<Colaborador> pojos = getPagina(1, 10000, null, null, null, null, null, null, null, null,null);
 
 		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
 

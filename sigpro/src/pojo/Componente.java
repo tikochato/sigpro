@@ -1,6 +1,7 @@
 package pojo;
-// Generated Jul 7, 2017 9:40:24 AM by Hibernate Tools 5.2.3.Final
+// Generated Aug 14, 2017 12:17:40 PM by Hibernate Tools 5.2.3.Final
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,8 +28,9 @@ public class Componente implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8635708408558124494L;
+	private static final long serialVersionUID = -7764140363410116295L;
 	private Integer id;
+	private AcumulacionCosto acumulacionCosto;
 	private ComponenteTipo componenteTipo;
 	private Proyecto proyecto;
 	private UnidadEjecutora unidadEjecutora;
@@ -48,6 +50,7 @@ public class Componente implements java.io.Serializable {
 	private Integer fuente;
 	private String latitud;
 	private String longitud;
+	private BigDecimal costo;
 	private Set<ComponenteUsuario> componenteUsuarios = new HashSet<ComponenteUsuario>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<ComponentePropiedadValor> componentePropiedadValors = new HashSet<ComponentePropiedadValor>(0);
@@ -66,12 +69,13 @@ public class Componente implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public Componente(ComponenteTipo componenteTipo, Proyecto proyecto, UnidadEjecutora unidadEjecutora, String nombre,
-			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto_1,
-			Integer actividad, Integer obra, Integer fuente, String latitud, String longitud,
-			Set<ComponenteUsuario> componenteUsuarios, Set<Producto> productos,
-			Set<ComponentePropiedadValor> componentePropiedadValors) {
+	public Componente(AcumulacionCosto acumulacionCosto, ComponenteTipo componenteTipo, Proyecto proyecto,
+			UnidadEjecutora unidadEjecutora, String nombre, String descripcion, String usuarioCreo,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Long snip,
+			Integer programa, Integer subprograma, Integer proyecto_1, Integer actividad, Integer obra, Integer fuente,
+			String latitud, String longitud, BigDecimal costo, Set<ComponenteUsuario> componenteUsuarios,
+			Set<Producto> productos, Set<ComponentePropiedadValor> componentePropiedadValors) {
+		this.acumulacionCosto = acumulacionCosto;
 		this.componenteTipo = componenteTipo;
 		this.proyecto = proyecto;
 		this.unidadEjecutora = unidadEjecutora;
@@ -91,6 +95,7 @@ public class Componente implements java.io.Serializable {
 		this.fuente = fuente;
 		this.latitud = latitud;
 		this.longitud = longitud;
+		this.costo = costo;
 		this.componenteUsuarios = componenteUsuarios;
 		this.productos = productos;
 		this.componentePropiedadValors = componentePropiedadValors;
@@ -106,6 +111,16 @@ public class Componente implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "acumulacion_costoid")
+	public AcumulacionCosto getAcumulacionCosto() {
+		return this.acumulacionCosto;
+	}
+
+	public void setAcumulacionCosto(AcumulacionCosto acumulacionCosto) {
+		this.acumulacionCosto = acumulacionCosto;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -282,6 +297,15 @@ public class Componente implements java.io.Serializable {
 
 	public void setLongitud(String longitud) {
 		this.longitud = longitud;
+	}
+
+	@Column(name = "costo", precision = 15)
+	public BigDecimal getCosto() {
+		return this.costo;
+	}
+
+	public void setCosto(BigDecimal costo) {
+		this.costo = costo;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")

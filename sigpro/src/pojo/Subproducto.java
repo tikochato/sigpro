@@ -1,6 +1,7 @@
 package pojo;
-// Generated Jul 7, 2017 9:40:24 AM by Hibernate Tools 5.2.3.Final
+// Generated Aug 14, 2017 12:17:40 PM by Hibernate Tools 5.2.3.Final
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,8 +28,9 @@ public class Subproducto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -987060806472524097L;
+	private static final long serialVersionUID = 4554292527435640836L;
 	private Integer id;
+	private AcumulacionCosto acumulacionCosto;
 	private Producto producto;
 	private SubproductoTipo subproductoTipo;
 	private UnidadEjecutora unidadEjecutora;
@@ -48,6 +50,7 @@ public class Subproducto implements java.io.Serializable {
 	private Integer fuente;
 	private String latitud;
 	private String longitud;
+	private BigDecimal costo;
 	private Set<SubproductoPropiedadValor> subproductoPropiedadValors = new HashSet<SubproductoPropiedadValor>(0);
 	private Set<SubproductoUsuario> subproductoUsuarios = new HashSet<SubproductoUsuario>(0);
 
@@ -65,11 +68,13 @@ public class Subproducto implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public Subproducto(Producto producto, SubproductoTipo subproductoTipo, UnidadEjecutora unidadEjecutora,
-			String nombre, String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
-			Integer actividad, Integer obra, Integer fuente, String latitud, String longitud,
+	public Subproducto(AcumulacionCosto acumulacionCosto, Producto producto, SubproductoTipo subproductoTipo,
+			UnidadEjecutora unidadEjecutora, String nombre, String descripcion, String usuarioCreo,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Long snip,
+			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, Integer fuente,
+			String latitud, String longitud, BigDecimal costo,
 			Set<SubproductoPropiedadValor> subproductoPropiedadValors, Set<SubproductoUsuario> subproductoUsuarios) {
+		this.acumulacionCosto = acumulacionCosto;
 		this.producto = producto;
 		this.subproductoTipo = subproductoTipo;
 		this.unidadEjecutora = unidadEjecutora;
@@ -89,6 +94,7 @@ public class Subproducto implements java.io.Serializable {
 		this.fuente = fuente;
 		this.latitud = latitud;
 		this.longitud = longitud;
+		this.costo = costo;
 		this.subproductoPropiedadValors = subproductoPropiedadValors;
 		this.subproductoUsuarios = subproductoUsuarios;
 	}
@@ -103,6 +109,16 @@ public class Subproducto implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "acumulacion_costoid")
+	public AcumulacionCosto getAcumulacionCosto() {
+		return this.acumulacionCosto;
+	}
+
+	public void setAcumulacionCosto(AcumulacionCosto acumulacionCosto) {
+		this.acumulacionCosto = acumulacionCosto;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -279,6 +295,15 @@ public class Subproducto implements java.io.Serializable {
 
 	public void setLongitud(String longitud) {
 		this.longitud = longitud;
+	}
+
+	@Column(name = "costo", precision = 15)
+	public BigDecimal getCosto() {
+		return this.costo;
+	}
+
+	public void setCosto(BigDecimal costo) {
+		this.costo = costo;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subproducto")

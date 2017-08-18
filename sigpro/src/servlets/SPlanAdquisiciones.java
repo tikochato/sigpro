@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.sql.Connection;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,46 +32,47 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
-import dao.ActividadPropiedadDAO;
-import dao.ActividadPropiedadValorDAO;
 import dao.ComponenteDAO;
-import dao.ConfiguracionesDAO;
+import dao.InformacionPresupuestariaDAO;
+import dao.PlanAdquisicionesDAO;
+import dao.PlanAdquisicionesDetalleDAO;
+import dao.PrestamoDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
+import dao.SubproductoDAO;
 import pojo.Actividad;
-import pojo.ActividadPropiedad;
-import pojo.ActividadPropiedadValor;
-import pojo.ActividadPropiedadValorId;
+import pojo.CategoriaAdquisicion;
 import pojo.Componente;
+import pojo.PlanAdquisiciones;
+import pojo.PlanAdquisicionesDetalle;
+import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Proyecto;
+import pojo.Subproducto;
 import utilities.CExcel;
 import utilities.CLogger;
+import utilities.CMariaDB;
 import utilities.Utils;
 
 @WebServlet("/SPlanAdquisiciones")
 public class SPlanAdquisiciones extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static int OBJETO_ID_COMPONENTE = 2;
-	private static int OBJETO_ID_PRODUCTO = 3;
-	private static int OBJETO_ID_SUBPRODUCTO = 4;
-	private static int OBJETO_ID_ACTIVIDAD= 5;
-	private static Integer idTipoActividad;
 	
-	class stInformePresupuesto{
-		int id;
-		int idPrestamo;
-		int objetoTipo;
-		int idObjetoTipo;
+	class stplanadquisiciones{
+		Integer objetoId;
+		Integer objetoTipo;
+		Integer predecesorId;
+		Integer objetoPredecesorTipo;
+		Integer idPlanAdquisiciones;
 		String nombre;
-		int posicionArbol;
-		int objetoTipoPredecesor;
-		int idPredecesor;
-		String hijo;
-		String fechaInicio;
-		String fechaFin;
-		int acumulacionCostos;
-		String columnas;
+		Integer nivel;
+		Integer $$treeLevel;
+		Integer tipoAdquisicion;
+		Integer categoriaAdquisicion;
+		String unidadMedida;
+		Integer cantidad;
+		BigDecimal costo;
+		BigDecimal total;
 		String planificadoDocs;
 		String realDocs;
 		String planificadoLanzamiento;
@@ -80,9 +83,27 @@ public class SPlanAdquisiciones extends HttpServlet {
 		String realAdjudica;
 		String planificadoFirma;
 		String realFirma;
-		int tipo;
+		List<String> hijos;
+		boolean c0;
+		boolean c1;
+		boolean c2;
+		boolean c3;
+		boolean c4;
+		boolean c5;
+		boolean c6;
+		boolean c7;
+		boolean c8;
+		boolean c9;
+		boolean c10;
+		boolean c11;
+		boolean c12;
+		boolean c13;
+		boolean c14;
+		boolean c15;
+		boolean bloqueado;
+		boolean contieneDatos;
 	}
-       
+	
     public SPlanAdquisiciones() {
         super();
     }
@@ -97,6 +118,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		Gson gson = new Gson();
 		Type type = new TypeToken<Map<String, String>>(){}.getType();
+
 		StringBuilder sb = new StringBuilder();
 		BufferedReader br = request.getReader();
 		String str;
@@ -108,112 +130,624 @@ public class SPlanAdquisiciones extends HttpServlet {
 		String response_text = "";
 		
 		Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-		idTipoActividad = Utils.String2Int(ConfiguracionesDAO.getValorConfiguracionByNombre("IdTipoActividadPlanAdquisiciones"));
 		
 		if (accion.equals("generarPlan")){
-			List<stInformePresupuesto> componentes = obtenerComponentes(idPrestamo,usuario);
+			List<stplanadquisiciones> lstprestamo = new ArrayList<stplanadquisiciones>();
+			stplanadquisiciones tempPrestamo = new stplanadquisiciones();
+			Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"), null);
+			Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
 			
-			List<stInformePresupuesto> resultPrestamo = new ArrayList<stInformePresupuesto>();
-			for (stInformePresupuesto p : componentes ){
-				stInformePresupuesto dataEjecutado = new stInformePresupuesto();
-				
-				dataEjecutado = new stInformePresupuesto();
-				dataEjecutado.id = p.id;
-				dataEjecutado.idPrestamo = idPrestamo;
-				dataEjecutado.objetoTipo = p.objetoTipo;
-				dataEjecutado.posicionArbol = p.posicionArbol;
-				dataEjecutado.idObjetoTipo = p.idObjetoTipo;
-				dataEjecutado.nombre = p.nombre;
-				dataEjecutado.idPredecesor = p.idPredecesor;
-				dataEjecutado.objetoTipoPredecesor = p.objetoTipoPredecesor;
-				dataEjecutado.fechaInicio = p.fechaInicio;
-				dataEjecutado.fechaFin = p.fechaFin;
-				dataEjecutado.planificadoDocs = p.planificadoDocs == null ? "" : p.planificadoDocs;
-				dataEjecutado.realDocs = p.realDocs == null ? "" : p.realDocs;
-				dataEjecutado.planificadoLanzamiento = p.planificadoLanzamiento == null ? "" : p.planificadoLanzamiento;
-				dataEjecutado.realLanzamiento = p.realLanzamiento == null ? "" : p.realLanzamiento;
-				dataEjecutado.planificadoRecepcionEval = p.planificadoRecepcionEval == null ? "" : p.planificadoRecepcionEval;
-				dataEjecutado.realRecepcionEval = p.realRecepcionEval == null ? "" : p.realRecepcionEval;
-				dataEjecutado.planificadoAdjudica = p.planificadoAdjudica == null ? "" : p.planificadoAdjudica;
-				dataEjecutado.realAdjudica = p.realAdjudica == null ? "" : p.realAdjudica;
-				dataEjecutado.planificadoFirma = p.planificadoFirma == null ? "" : p.planificadoFirma;
-				dataEjecutado.realFirma = p.realFirma == null ? "" : p.realFirma;
-				dataEjecutado.tipo = p.tipo;
-				resultPrestamo.add(dataEjecutado);	
+			Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(idPrestamo, 1);
+			String fechaSuscripcion = Utils.formatDate(prestamo.getFechaSuscripcion());
+			String fechaCierre = Utils.formatDate(prestamo.getFechaCierreOrigianlUe());
+			
+			PlanAdquisiciones planAdquisicion = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(1, proyecto.getId());
+			idPlanAdquisiciones = planAdquisicion != null ? planAdquisicion.getId() : null;
+			
+			tempPrestamo.objetoId = proyecto.getId();
+			tempPrestamo.nombre = proyecto.getNombre();
+			tempPrestamo.objetoTipo = 1;
+			tempPrestamo.nivel = 1;
+			tempPrestamo.predecesorId = 0;
+			tempPrestamo.objetoPredecesorTipo = 0;
+			inicializarColumnasOcultas(tempPrestamo);
+			
+			if(idPlanAdquisiciones == null){
+				planAdquisicion = new PlanAdquisiciones();
+				planAdquisicion.setObjetoId(proyecto.getId());
+				planAdquisicion.setObjetoTipo(1);
+				planAdquisicion.setUsuarioCreo(usuario);
+				planAdquisicion.setFechaCreacion(new DateTime().toDate());
+				planAdquisicion.setEstado(1);
+				PlanAdquisicionesDAO.guardarPlanAdquisicion(planAdquisicion);
+				idPlanAdquisiciones = planAdquisicion.getId();
 			}
 			
-			response_text=new GsonBuilder().serializeNulls().create().toJson(resultPrestamo);
-	        response_text = String.join("", "\"componentes\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text, "}");
-		}else if(accion.equals("guardarPlan")){
-			try{
+			if(idPlanAdquisiciones != null){
+				PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(1, proyecto.getId());
+					tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+					tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
+					tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0 : 0;
+					tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
+					tempPrestamo.cantidad = detallePlan != null ? detallePlan.getCantidad() : 0;
+					tempPrestamo.costo = detallePlan != null ? detallePlan.getPrecioUnitario() : new BigDecimal(0);
+					tempPrestamo.total = detallePlan != null ? detallePlan.getTotal() : new BigDecimal(0);
+					tempPrestamo.planificadoDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocPlanificado()) : null;
+					tempPrestamo.realDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocReal()) : null;
+					tempPrestamo.planificadoLanzamiento = detallePlan != null  ? Utils.formatDate(detallePlan.getLanzamientoEventoPlanificado()) : null;
+					tempPrestamo.realLanzamiento = detallePlan != null ? Utils.formatDate(detallePlan.getLanzamientoEventoReal()) : null;
+					tempPrestamo.planificadoRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasPlanificado()) : null;
+					tempPrestamo.realRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasReal()) : null;
+					tempPrestamo.planificadoAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionPlanificado()) : null;
+					tempPrestamo.realAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionReal()) : null;
+					tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
+					tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
+					tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+			}
+			
+			if(CMariaDB.connect()){
+				Connection conn = CMariaDB.getConnection();
 				
-				Integer id = Utils.String2Int(map.get("id"));
-				Date planificadoDocs = Utils.dateFromString(map.get("planificadoDocs"));
-				Date realDocs = Utils.dateFromString(map.get("realDocs"));
-				Date planificadoLanzamiento = Utils.dateFromString(map.get("planificadoLanzamiento"));
-				Date realLanzamiento = Utils.dateFromString(map.get("realLanzamiento"));
-				Date planificadoRecepcionEval = Utils.dateFromString(map.get("planificadoRecepcionEval"));
-				Date realRecepcionEval = Utils.dateFromString(map.get("realRecepcionEval"));
-				Date planificadoAdjudica = Utils.dateFromString(map.get("planificadoAdjudica"));
-				Date realAdjudica = Utils.dateFromString(map.get("realAdjudica"));
-				Date planificadoFirma =  Utils.dateFromString(map.get("planificadoFirma"));
-				Date realFirma = Utils.dateFromString(map.get("realFirma"));
+				ArrayList<Integer> componentes = InformacionPresupuestariaDAO.getEstructuraArbolComponentes(idPrestamo, conn);
 				
-				int contador = 0;
-				Actividad actividad = ActividadDAO.getActividadPorId(id, usuario);
-				List<ActividadPropiedad> actividadpropiedades = ActividadPropiedadDAO.getActividadPropiedadesPorTipoActividad(actividad.getActividadTipo().getId());
-				for(ActividadPropiedad actividadPropiedad : actividadpropiedades){
-					ActividadPropiedadValorId idValor = new ActividadPropiedadValorId(actividad.getId(),actividadPropiedad.getId());
-					ActividadPropiedadValor valor = new ActividadPropiedadValor(idValor, actividad, actividadPropiedad,null, null, null, null,
-							usuario, null, new DateTime().toDate(), null, 1);
+				tempPrestamo.hijos = new ArrayList<String>();
+				for(Integer componente: componentes){
+					tempPrestamo.hijos.add(componente+",2");
+				}
+				
+				//calcular actividades hijas prestamo
+				ArrayList<ArrayList<Integer>> actividadesPrestamo = InformacionPresupuestariaDAO.getEstructuraArbolPrestamoActividades(idPrestamo, conn);
+				
+				if(tempPrestamo.hijos == null){
+					tempPrestamo.hijos = new ArrayList<String>();
+				}
+				for(ArrayList<Integer> actividad: actividadesPrestamo){
+					if(actividad.get(1) == 0)
+						tempPrestamo.hijos.add(actividad.get(0)+",5");
+				}
+				
+				stplanadquisiciones padre = null;
+				
+				int nivel = 0;
+				
+				lstprestamo.add(tempPrestamo);
+				
+				for(Integer componente:componentes){
+					tempPrestamo = new stplanadquisiciones();
 					
-					if(contador == 0){
-						valor.setValorTiempo(planificadoDocs);
-					}else if(contador == 1){
-						valor.setValorTiempo(realDocs);
-					}else if(contador == 2){
-						valor.setValorTiempo(planificadoLanzamiento);
-					}else if(contador == 3){
-						valor.setValorTiempo(realLanzamiento);
-					}else if(contador == 4){
-						valor.setValorTiempo(planificadoRecepcionEval);
-					}else if(contador == 5){
-						valor.setValorTiempo(realRecepcionEval);
-					}else if(contador == 6){
-						valor.setValorTiempo(planificadoAdjudica);
-					}else if(contador == 7){
-						valor.setValorTiempo(realAdjudica);
-					}else if(contador == 8){
-						valor.setValorTiempo(planificadoFirma);
-					}else if(contador == 9){
-						valor.setValorTiempo(realFirma);
+					Componente objComponente = ComponenteDAO.getComponentePorId(componente, usuario);
+					tempPrestamo.objetoId = objComponente.getId();
+					tempPrestamo.nombre = objComponente.getNombre();
+					tempPrestamo.objetoTipo = 2;
+					tempPrestamo.nivel = 2;
+					tempPrestamo.predecesorId = idPrestamo;
+					tempPrestamo.objetoPredecesorTipo = 1;
+					inicializarColumnasOcultas(tempPrestamo);
+					
+					if(idPlanAdquisiciones != null){
+						PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(2, objComponente.getId());
+						tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+						tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
+						tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0: 0;
+						tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
+						tempPrestamo.cantidad = detallePlan != null ? detallePlan.getCantidad() : 0;
+						tempPrestamo.costo = detallePlan != null ? detallePlan.getPrecioUnitario() : new BigDecimal(0);
+						tempPrestamo.total = detallePlan != null ? detallePlan.getTotal() : new BigDecimal(0);
+						tempPrestamo.planificadoDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocPlanificado()) : null;
+						tempPrestamo.realDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocReal()) : null;
+						tempPrestamo.planificadoLanzamiento = detallePlan != null  ? Utils.formatDate(detallePlan.getLanzamientoEventoPlanificado()) : null;
+						tempPrestamo.realLanzamiento = detallePlan != null ? Utils.formatDate(detallePlan.getLanzamientoEventoReal()) : null;
+						tempPrestamo.planificadoRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasPlanificado()) : null;
+						tempPrestamo.realRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasReal()) : null;
+						tempPrestamo.planificadoAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionPlanificado()) : null;
+						tempPrestamo.realAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionReal()) : null;
+						tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
+						tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
+						tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+					}
+										
+					ArrayList<Integer> productos = InformacionPresupuestariaDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
+					
+					tempPrestamo.hijos = new ArrayList<String>();
+					for(Integer producto: productos){
+						tempPrestamo.hijos.add(producto+",3");
 					}
 					
-					contador++;
-					ActividadPropiedadValorDAO.guardarActividadPropiedadValor(valor);
+					//actividades hijas componente
+					ArrayList<ArrayList<Integer>> actividadesComponente = InformacionPresupuestariaDAO.getEstructuraArbolComponentesActividades(idPrestamo, objComponente.getId(), conn);
+					
+					if(tempPrestamo.hijos == null){
+						tempPrestamo.hijos = new ArrayList<String>();
+					}
+					for(ArrayList<Integer> actividad: actividadesComponente){
+						if(actividad.get(1) == 0)
+							tempPrestamo.hijos.add(actividad.get(0)+",5");
+					}
+					
+					lstprestamo.add(tempPrestamo);
+					for(Integer producto: productos){
+						tempPrestamo = new stplanadquisiciones();
+						
+						Producto objProducto = ProductoDAO.getProductoPorId(producto);
+						tempPrestamo.objetoId = objProducto.getId();
+						tempPrestamo.nombre = objProducto.getNombre();
+						tempPrestamo.objetoTipo = 3;
+						tempPrestamo.nivel = 3;
+						tempPrestamo.predecesorId = objComponente.getId();
+						tempPrestamo.objetoPredecesorTipo = 2;
+						inicializarColumnasOcultas(tempPrestamo);
+						
+						if(idPlanAdquisiciones != null){
+							PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(3, objProducto.getId());
+							tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+							tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
+							tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0 : 0;
+							tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
+							tempPrestamo.cantidad = detallePlan != null ? detallePlan.getCantidad() : 0;
+							tempPrestamo.costo = detallePlan != null ? detallePlan.getPrecioUnitario() : new BigDecimal(0);
+							tempPrestamo.total = detallePlan != null ? detallePlan.getTotal() : new BigDecimal(0);
+							tempPrestamo.planificadoDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocPlanificado()) : null;
+							tempPrestamo.realDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocReal()) : null;
+							tempPrestamo.planificadoLanzamiento = detallePlan != null  ? Utils.formatDate(detallePlan.getLanzamientoEventoPlanificado()) : null;
+							tempPrestamo.realLanzamiento = detallePlan != null ? Utils.formatDate(detallePlan.getLanzamientoEventoReal()) : null;
+							tempPrestamo.planificadoRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasPlanificado()) : null;
+							tempPrestamo.realRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasReal()) : null;
+							tempPrestamo.planificadoAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionPlanificado()) : null;
+							tempPrestamo.realAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionReal()) : null;
+							tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
+							tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
+							tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+						}
+						
+						ArrayList<Integer> subproductos = InformacionPresupuestariaDAO.getEstructuraArbolSubProducto(idPrestamo,objComponente.getId(),objProducto.getId(), conn);
+						
+						tempPrestamo.hijos = new ArrayList<String>();
+						for(Integer subproducto: subproductos){
+							tempPrestamo.hijos.add(subproducto+",4");
+						}
+						
+						//actividades hijas de producto
+						ArrayList<ArrayList<Integer>> actividadesProducto = InformacionPresupuestariaDAO.getEstructuraArbolProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(), conn);
+						
+						if(tempPrestamo.hijos == null){
+							tempPrestamo.hijos = new ArrayList<String>();
+						}
+						for(ArrayList<Integer> actividad: actividadesProducto){
+							if(actividad.get(1) == 0)
+								tempPrestamo.hijos.add(actividad.get(0)+",5");
+						}
+						
+						lstprestamo.add(tempPrestamo);
+						
+						for(Integer subproducto: subproductos){
+							tempPrestamo = new stplanadquisiciones();
+							
+							Subproducto objSubProducto = SubproductoDAO.getSubproductoPorId(subproducto);
+							tempPrestamo.objetoId = objSubProducto.getId();
+							tempPrestamo.nombre = objSubProducto.getNombre();
+							tempPrestamo.objetoTipo = 4;
+							tempPrestamo.nivel = 4;
+							tempPrestamo.predecesorId = objProducto.getId();
+							tempPrestamo.objetoPredecesorTipo = 3;
+							inicializarColumnasOcultas(tempPrestamo);
+							
+							if(idPlanAdquisiciones != null){
+								PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(4, objSubProducto.getId());
+								tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+								tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
+								tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0 : 0;
+								tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
+								tempPrestamo.cantidad = detallePlan != null ? detallePlan.getCantidad() : 0;
+								tempPrestamo.costo = detallePlan != null ? detallePlan.getPrecioUnitario() : new BigDecimal(0);
+								tempPrestamo.total = detallePlan != null ? detallePlan.getTotal() : new BigDecimal(0);
+								tempPrestamo.planificadoDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocPlanificado()) : null;
+								tempPrestamo.realDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocReal()) : null;
+								tempPrestamo.planificadoLanzamiento = detallePlan != null  ? Utils.formatDate(detallePlan.getLanzamientoEventoPlanificado()) : null;
+								tempPrestamo.realLanzamiento = detallePlan != null ? Utils.formatDate(detallePlan.getLanzamientoEventoReal()) : null;
+								tempPrestamo.planificadoRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasPlanificado()) : null;
+								tempPrestamo.realRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasReal()) : null;
+								tempPrestamo.planificadoAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionPlanificado()) : null;
+								tempPrestamo.realAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionReal()) : null;
+								tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
+								tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
+								tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+							}
+							
+							lstprestamo.add(tempPrestamo);
+							
+							//actividades de sub producto
+							ArrayList<ArrayList<Integer>> actividadesSubProducto = InformacionPresupuestariaDAO.getEstructuraArbolSubProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(),objSubProducto.getId(), conn);
+							
+							tempPrestamo.hijos = new ArrayList<String>();
+							for(ArrayList<Integer> actividad: actividadesSubProducto){
+								if(actividad.get(1) == 0)
+									tempPrestamo.hijos.add(actividad.get(0)+",5");
+							}
+
+							padre = null;
+							nivel = 0;
+
+							for(ArrayList<Integer> actividad : actividadesSubProducto){
+								tempPrestamo = new stplanadquisiciones();
+								
+								Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+								tempPrestamo.objetoId = objActividad.getId();
+								tempPrestamo.nombre = objActividad.getNombre();
+								tempPrestamo.objetoTipo = 5;
+								tempPrestamo.nivel = 5 + actividad.get(1);
+								if(actividad.get(1)== 0){
+									tempPrestamo.predecesorId = objSubProducto.getId();
+									tempPrestamo.objetoPredecesorTipo = 4;
+								}else{
+									if(nivel != actividad.get(1)){
+										padre = lstprestamo.get(lstprestamo.size() - 1);
+									}
+									
+									if(padre.hijos == null)
+										padre.hijos = new ArrayList<String>();
+									
+									padre.hijos.add(actividad.get(0)+",5");	
+									
+									tempPrestamo.predecesorId = padre.objetoId;
+									tempPrestamo.objetoPredecesorTipo = 5;
+									
+									nivel = actividad.get(1);
+								}
+								inicializarColumnasOcultas(tempPrestamo);
+								
+								if(idPlanAdquisiciones != null){
+									PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(5, objActividad.getId());
+									tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+									tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
+									tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0 : 0;
+									tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
+									tempPrestamo.cantidad = detallePlan != null ? detallePlan.getCantidad() : 0;
+									tempPrestamo.costo = detallePlan != null ? detallePlan.getPrecioUnitario() : new BigDecimal(0);
+									tempPrestamo.total = detallePlan != null ? detallePlan.getTotal() : new BigDecimal(0);
+									tempPrestamo.planificadoDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocPlanificado()) : null;
+									tempPrestamo.realDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocReal()) : null;
+									tempPrestamo.planificadoLanzamiento = detallePlan != null  ? Utils.formatDate(detallePlan.getLanzamientoEventoPlanificado()) : null;
+									tempPrestamo.realLanzamiento = detallePlan != null ? Utils.formatDate(detallePlan.getLanzamientoEventoReal()) : null;
+									tempPrestamo.planificadoRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasPlanificado()) : null;
+									tempPrestamo.realRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasReal()) : null;
+									tempPrestamo.planificadoAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionPlanificado()) : null;
+									tempPrestamo.realAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionReal()) : null;
+									tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
+									tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
+									tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+								}
+								
+								lstprestamo.add(tempPrestamo);
+							}
+						}
+						
+						//actividades producto
+						//ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(), conn);
+						
+						tempPrestamo.hijos = new ArrayList<String>();
+						for(ArrayList<Integer> actividad: actividadesProducto){
+							if(actividad.get(1) == 0)
+								tempPrestamo.hijos.add(actividad.get(0)+",5");
+						}
+
+						padre = null;
+						nivel = 0;
+
+						for(ArrayList<Integer> actividad : actividadesProducto){
+							tempPrestamo = new stplanadquisiciones();
+							
+							Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+							tempPrestamo.objetoId = objActividad.getId();
+							tempPrestamo.nombre = objActividad.getNombre();
+							tempPrestamo.objetoTipo = 5;
+							tempPrestamo.nivel = 4 + actividad.get(1);
+							if(actividad.get(1)==0){
+								tempPrestamo.predecesorId = objProducto.getId();
+								tempPrestamo.objetoPredecesorTipo = 3;
+							}else{
+								if(nivel != actividad.get(1)){
+									padre = lstprestamo.get(lstprestamo.size() - 1);
+								}
+								
+								if(padre.hijos == null)
+									padre.hijos = new ArrayList<String>();
+								
+								padre.hijos.add(actividad.get(0)+",5");	
+								
+								tempPrestamo.predecesorId = padre.objetoId;
+								tempPrestamo.objetoPredecesorTipo = 5;
+
+								nivel = actividad.get(1);
+							}
+							inicializarColumnasOcultas(tempPrestamo);
+							
+							if(idPlanAdquisiciones != null){
+								PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(5, objActividad.getId());
+								tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+								tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
+								tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0 : 0;
+								tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
+								tempPrestamo.cantidad = detallePlan != null ? detallePlan.getCantidad() : 0;
+								tempPrestamo.costo = detallePlan != null ? detallePlan.getPrecioUnitario() : new BigDecimal(0);
+								tempPrestamo.total = detallePlan != null ? detallePlan.getTotal() : new BigDecimal(0);
+								tempPrestamo.planificadoDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocPlanificado()) : null;
+								tempPrestamo.realDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocReal()) : null;
+								tempPrestamo.planificadoLanzamiento = detallePlan != null  ? Utils.formatDate(detallePlan.getLanzamientoEventoPlanificado()) : null;
+								tempPrestamo.realLanzamiento = detallePlan != null ? Utils.formatDate(detallePlan.getLanzamientoEventoReal()) : null;
+								tempPrestamo.planificadoRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasPlanificado()) : null;
+								tempPrestamo.realRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasReal()) : null;
+								tempPrestamo.planificadoAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionPlanificado()) : null;
+								tempPrestamo.realAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionReal()) : null;
+								tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
+								tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
+								tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+							}
+							
+							lstprestamo.add(tempPrestamo);
+						}
+					}
+					
+					//actividades componente
+					//ArrayList<ArrayList<Integer>> actividadesComponente = InformacionPresupuestariaDAO.getEstructuraArbolComponentesActividades(idPrestamo, objComponente.getId(), conn);
+					
+					padre = null;
+					nivel = 0;
+					for(ArrayList<Integer> actividad : actividadesComponente){
+						tempPrestamo = new stplanadquisiciones();
+						
+						Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+						tempPrestamo.objetoId = objActividad.getId();
+						tempPrestamo.nombre = objActividad.getNombre();
+						tempPrestamo.objetoTipo = 5;
+						tempPrestamo.nivel = 3 + actividad.get(1);
+						if(actividad.get(1) == 0){
+							tempPrestamo.predecesorId = objComponente.getId();
+							tempPrestamo.objetoPredecesorTipo = 2;
+						}else{
+							if(nivel != actividad.get(1)){
+								padre = lstprestamo.get(lstprestamo.size() - 1);
+							}
+							
+							if(padre.hijos == null)
+								padre.hijos = new ArrayList<String>();
+							
+							padre.hijos.add(actividad.get(0)+",5");	
+							
+							tempPrestamo.predecesorId = padre.objetoId;
+							//tempPrestamo.predecesorId = objActividad.getId();
+							tempPrestamo.objetoPredecesorTipo = 5;
+							
+							nivel = actividad.get(1);
+						}
+						inicializarColumnasOcultas(tempPrestamo);
+						
+						if(idPlanAdquisiciones != null){
+							PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(5, objActividad.getId());
+							tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+							tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
+							tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0 : 0;
+							tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
+							tempPrestamo.cantidad = detallePlan != null ? detallePlan.getCantidad() : 0;
+							tempPrestamo.costo = detallePlan != null ? detallePlan.getPrecioUnitario() : new BigDecimal(0);
+							tempPrestamo.total = detallePlan != null ? detallePlan.getTotal() : new BigDecimal(0);
+							tempPrestamo.planificadoDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocPlanificado()) : null;
+							tempPrestamo.realDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocReal()) : null;
+							tempPrestamo.planificadoLanzamiento = detallePlan != null  ? Utils.formatDate(detallePlan.getLanzamientoEventoPlanificado()) : null;
+							tempPrestamo.realLanzamiento = detallePlan != null ? Utils.formatDate(detallePlan.getLanzamientoEventoReal()) : null;
+							tempPrestamo.planificadoRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasPlanificado()) : null;
+							tempPrestamo.realRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasReal()) : null;
+							tempPrestamo.planificadoAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionPlanificado()) : null;
+							tempPrestamo.realAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionReal()) : null;
+							tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
+							tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
+							tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+						}
+						
+						lstprestamo.add(tempPrestamo);
+					}
 				}
+				
+				//actividades prestamo
+				actividadesPrestamo = InformacionPresupuestariaDAO.getEstructuraArbolPrestamoActividades(idPrestamo, conn);
+				
+				padre = null;
+				nivel = 0;
+				for(ArrayList<Integer> actividad : actividadesPrestamo){
+					tempPrestamo = new stplanadquisiciones();
+					
+					Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+					tempPrestamo.objetoId = objActividad.getId();
+					tempPrestamo.nombre = objActividad.getNombre();
+					tempPrestamo.objetoTipo = 5;
+					tempPrestamo.nivel = 2 + actividad.get(1);
+					if(actividad.get(1)==0){
+						tempPrestamo.predecesorId = idPrestamo;
+						tempPrestamo.objetoPredecesorTipo = 1;
+					}else{
+						if(nivel != actividad.get(1)){
+							padre = lstprestamo.get(lstprestamo.size() - 1);
+						}
+						
+						if(padre.hijos == null)
+							padre.hijos = new ArrayList<String>();
+						
+						padre.hijos.add(actividad.get(0)+",5");	
+						
+						tempPrestamo.predecesorId = padre.objetoId;
+						tempPrestamo.objetoPredecesorTipo = 5;
+						nivel = actividad.get(1);
+					}
+					inicializarColumnasOcultas(tempPrestamo);
+					
+					if(idPlanAdquisiciones != null){
+						PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(5, objActividad.getId());
+						tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+						tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
+						tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0 : 0;
+						tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
+						tempPrestamo.cantidad = detallePlan != null ? detallePlan.getCantidad() : 0;
+						tempPrestamo.costo = detallePlan != null ? detallePlan.getPrecioUnitario() : new BigDecimal(0);
+						tempPrestamo.total = detallePlan != null ? detallePlan.getTotal() : new BigDecimal(0);
+						tempPrestamo.planificadoDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocPlanificado()) : null;
+						tempPrestamo.realDocs = detallePlan != null ? Utils.formatDate(detallePlan.getPreparacionDocReal()) : null;
+						tempPrestamo.planificadoLanzamiento = detallePlan != null  ? Utils.formatDate(detallePlan.getLanzamientoEventoPlanificado()) : null;
+						tempPrestamo.realLanzamiento = detallePlan != null ? Utils.formatDate(detallePlan.getLanzamientoEventoReal()) : null;
+						tempPrestamo.planificadoRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasPlanificado()) : null;
+						tempPrestamo.realRecepcionEval = detallePlan != null ? Utils.formatDate(detallePlan.getRecepcionOfertasReal()) : null;
+						tempPrestamo.planificadoAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionPlanificado()) : null;
+						tempPrestamo.realAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionReal()) : null;
+						tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
+						tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
+						tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+					}
+					
+					lstprestamo.add(tempPrestamo);
+				}
+				
+				response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
+		        response_text = String.join("", "\"proyecto\":",response_text);
+		        response_text = String.join("", "{\"success\":true,\"fechaSuscripcion\": \""+ fechaSuscripcion + "\", \"fechaCierre\": \"" + fechaCierre + "\",", response_text, "}");
+			}
+		}else if(accion.equals("guardarPlan")){
+			try{
+				boolean result = false;
+				String data = map.get("data");
+				String[] datos = data.split("°");
+				
+				for(String str1: datos){
+					String[] row = str1.split(",");
+					
+					Integer objetoId = Utils.String2Int(row[0]);
+					Integer objetoTipo = Utils.String2Int(row[1]);
+					Integer tipoAdquisicion = Utils.String2Int(row[2]);
+					Integer categoriaAdquisicionId = Utils.String2Int(row[3]);
+					
+					CategoriaAdquisicion categoriaAdquisicion;
+					if(categoriaAdquisicionId != 0){
+						categoriaAdquisicion = new CategoriaAdquisicion();
+						categoriaAdquisicion.setId(categoriaAdquisicionId);					
+					}else
+					{
+						categoriaAdquisicion = null;
+					}
+					
+					Integer planAdquisicionesId = Utils.String2Int(row[4]);
+					PlanAdquisiciones planAdquisiciones;
+					if(planAdquisicionesId != 0){
+						planAdquisiciones = new PlanAdquisiciones();
+						planAdquisiciones.setId(planAdquisicionesId);
+					}else{
+						planAdquisiciones = null;
+					}
+						
+					String unidadMedida = row[5] == null ? "" : row[5]; 
+					
+					Integer cantidad = Utils.String2Int(row[6]);
+					BigDecimal costo = new BigDecimal(row[7]);
+					BigDecimal total = new BigDecimal(row[8]);
+
+					if(objetoTipo == 1 && !total.equals(BigDecimal.ZERO)){
+						Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId, usuario);
+						proyecto.setCosto(total);
+						proyecto.setUsuarioActualizo(usuario);
+						proyecto.setFechaActualizacion(new Date());
+						ProyectoDAO.guardarProyecto(proyecto);
+					}else if(objetoTipo == 2 && !total.equals(BigDecimal.ZERO)){
+						Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
+						componente.setCosto(total);
+						componente.setUsuarioActualizo(usuario);
+						componente.setFechaActualizacion(new Date());
+						ComponenteDAO.guardarComponente(componente);
+					}else if(objetoTipo == 3 && !total.equals(BigDecimal.ZERO)){
+						Producto producto = ProductoDAO.getProductoPorId(objetoId,usuario);
+						producto.setCosto(total);
+						producto.setUsuarioActualizo(usuario);
+						producto.setFechaActualizacion(new Date());
+						ProductoDAO.guardarProducto(producto);
+					}else if(objetoTipo == 4 && !total.equals(BigDecimal.ZERO)){
+						Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId, usuario);
+						subproducto.setCosto(total);
+						subproducto.setUsuarioActualizo(usuario);
+						subproducto.setFechaActualizacion(new Date());
+						SubproductoDAO.guardarSubproducto(subproducto);
+					}else if(objetoTipo == 5 && !total.equals(BigDecimal.ZERO) ){
+						Actividad actividad = ActividadDAO.getActividadPorId(objetoId, usuario);
+						actividad.setCosto(total);
+						actividad.setUsuarioActualizo(usuario);
+						actividad.setFechaActualizacion(new Date());
+						ActividadDAO.guardarActividad(actividad);
+					}
+					
+					Date planificadoDocs = Utils.dateFromString(row[9]);
+					Date realDocs = Utils.dateFromString(row[10]);
+					Date planificadoLanzamiento = Utils.dateFromString(row[11]);
+					Date realLanzamiento = Utils.dateFromString(row[12]);
+					Date planificadoRecepcionEval = Utils.dateFromString(row[13]);
+					Date realRecepcionEval = Utils.dateFromString(row[14]);
+					Date planificadoAdjudica = Utils.dateFromString(row[15]);
+					Date realAdjudica = Utils.dateFromString(row[16]);
+					Date planificadoFirma =  Utils.dateFromString(row[17]);
+					Date realFirma = Utils.dateFromString(row[18]);
+					Integer bloqueado = Utils.String2Boolean(row[19],0);
+
+					PlanAdquisicionesDetalle plan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
+					if(plan != null){
+						plan.setTipoAdquisicion(tipoAdquisicion);
+						plan.setCategoriaAdquisicion(categoriaAdquisicion);
+						plan.setUnidadMedida(unidadMedida);
+						plan.setCantidad(cantidad);
+						plan.setPrecioUnitario(costo);
+						plan.setTotal(total);
+						plan.setPreparacionDocPlanificado(planificadoDocs);
+						plan.setPreparacionDocReal(realDocs);
+						plan.setLanzamientoEventoPlanificado(planificadoLanzamiento);
+						plan.setLanzamientoEventoReal(realLanzamiento);
+						plan.setRecepcionOfertasPlanificado(planificadoRecepcionEval);
+						plan.setRecepcionOfertasReal(realRecepcionEval);
+						plan.setAdjudicacionPlanificado(planificadoAdjudica);
+						plan.setAdjudicacionReal(realAdjudica);
+						plan.setFirmaContratoPlanificado(planificadoFirma);
+						plan.setFirmaContratoReal(realFirma);
+						plan.setObjetoId(objetoId);
+						plan.setObjetoTipo(objetoTipo);
+						plan.setUsuarioCreo(usuario);
+						plan.setFechaCreacion(new DateTime().toDate());
+						plan.setEstado(1);
+						plan.setBloqueado(bloqueado);
+					}else{
+						plan = new PlanAdquisicionesDetalle(categoriaAdquisicion,planAdquisiciones, tipoAdquisicion,unidadMedida,cantidad, total, costo, 
+								planificadoDocs, realDocs, planificadoLanzamiento, realLanzamiento, planificadoRecepcionEval, realRecepcionEval, 
+								planificadoAdjudica, realAdjudica, planificadoFirma, realFirma, objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
+								bloqueado);
+					}
+					
+					result = PlanAdquisicionesDetalleDAO.guardarPlanAdquisicion(plan);
+					
+					if(!result)
+						break;
+				}
+				
+				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"), "}");
 			}
 			catch (Throwable e) {
 				e.printStackTrace();
 			}
-			
 		}else if(accion.equals("exportarExcel")){
 			String data = map.get("data");
-			String nombreInforme = "Plan de adquisiciones AÑO FISCAL " + Year.now().getValue();
+			String nombreInforme = "Plan de adquisiciones Aï¿½O FISCAL " + Year.now().getValue();
 			
 			Map<String,Object[]> reporte = new HashMap<>();
 			Type listType = new TypeToken<List<Map<String, String>>>() {}.getType();
 			List<Map<String, String>> datos = gson.fromJson(data, listType);
 			
 			String[] encabezadosCombinados = new String[5];
-			encabezadosCombinados[0] = "Preparación de Documentos,2";
+			encabezadosCombinados[0] = "Preparaciï¿½n de Documentos,2";
 			encabezadosCombinados[1] = "Lanzamiento de evento,2";
-			encabezadosCombinados[2] = "Recepción y evaluación de ofertas,2";
-			encabezadosCombinados[3] = "Adjudicación,2";
+			encabezadosCombinados[2] = "Recepciï¿½n y evaluaciï¿½n de ofertas,2";
+			encabezadosCombinados[3] = "Adjudicaciï¿½n,2";
 			encabezadosCombinados[4] = "Firma de contrato,2";
 			
-			reporte.put("0", new Object[] {"Componente", "Método", "Planificado", "Real", "Planificado", "Real", "Planificado", "Real", "Planificado", "Real", "Planificado", "Real"});
+			reporte.put("0", new Object[] {"Componente", "Mï¿½todo", "Planificado", "Real", "Planificado", "Real", "Planificado", "Real", "Planificado", "Real", "Planificado", "Real"});
 			
 			int fila = 1;
 			
@@ -284,128 +818,23 @@ public class SPlanAdquisiciones extends HttpServlet {
 		}
 	}
 	
-	private List<stInformePresupuesto> obtenerComponentes(int proyectoId, String usuario){
-		Proyecto proyecto = ProyectoDAO.getProyectoPorId(proyectoId, usuario);
-		List<stInformePresupuesto> lstdataEjecutado = new ArrayList<>();
-		if (proyecto!=null){
-			stInformePresupuesto dataEjecutado = new stInformePresupuesto();
-			
-			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
-					null, null, null, null, null, usuario);
-			for (Componente componente : componentes){
-				dataEjecutado = new stInformePresupuesto();
-				dataEjecutado.objetoTipo = OBJETO_ID_COMPONENTE;
-				dataEjecutado.posicionArbol = 2;
-				dataEjecutado.idObjetoTipo = componente.getId();
-				dataEjecutado.nombre = componente.getNombre();
-				dataEjecutado.idPredecesor = proyecto.getId();
-				dataEjecutado.objetoTipoPredecesor = 1;
-				lstdataEjecutado.add(dataEjecutado);
-				
-				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
-						null, null, null, null, null, usuario);
-				for (Producto producto : productos){
-					dataEjecutado = new stInformePresupuesto();
-					dataEjecutado.objetoTipo = OBJETO_ID_PRODUCTO;
-					dataEjecutado.posicionArbol = 3;
-					dataEjecutado.nombre = producto.getNombre();
-					dataEjecutado.idObjetoTipo = producto.getId();
-					dataEjecutado.idPredecesor = componente.getId();
-					dataEjecutado.objetoTipoPredecesor = 2;
-					lstdataEjecutado.add(dataEjecutado);
-					
-					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
-							null, null, null, null, null, usuario);
-					for (Actividad actividad : actividades ){
-						lstdataEjecutado = ObtenerActividades(actividad,usuario,lstdataEjecutado,OBJETO_ID_SUBPRODUCTO,producto.getId(), OBJETO_ID_PRODUCTO);
-					}
-				}
-				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), OBJETO_ID_COMPONENTE,
-						null, null, null, null, null, usuario);
-				for (Actividad actividad : actividades ){
-					lstdataEjecutado = ObtenerActividades(actividad,usuario,lstdataEjecutado,OBJETO_ID_PRODUCTO, componente.getId(),OBJETO_ID_COMPONENTE);
-				}
-			}
-		}
-		
-		return lstdataEjecutado;
-	}
-	
-	private List<stInformePresupuesto> ObtenerActividades(Actividad actividad, String usuario, List<stInformePresupuesto> lstdataEjecutado, int posicionArbol, 
-			int idPredecesor, int objetoTipoPredecesor){
-		
-		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, actividad.getId(), OBJETO_ID_ACTIVIDAD, 
-				null, null,null, null, null, usuario);
-		
-		if(actividad.getActividadTipo().getId() == idTipoActividad){
-			List<ActividadPropiedad> actividadpropiedades = ActividadPropiedadDAO.getActividadPropiedadesPorTipoActividad(actividad.getActividadTipo().getId());
-			
-			List<HashMap<String,Object>> campos = new ArrayList<>();
-			for(ActividadPropiedad propiedad : actividadpropiedades){
-				HashMap <String,Object> campo = new HashMap<String, Object>();
-				ActividadPropiedadValor valor = ActividadPropiedadValorDAO.getValorPorActividadYPropiedad(propiedad.getId(),actividad.getId());
-				campo.put("valor", valor == null ? "" : valor.getValorTiempo());
-				campos.add(campo);
-			}
-			
-			stInformePresupuesto dataEjecutado = new stInformePresupuesto();
-			dataEjecutado = new stInformePresupuesto();
-			dataEjecutado.objetoTipo = OBJETO_ID_ACTIVIDAD;
-			dataEjecutado.posicionArbol = posicionArbol;
-			dataEjecutado.idObjetoTipo = actividad.getId();
-			dataEjecutado.nombre =   actividad.getNombre();
-			dataEjecutado.idPredecesor = idPredecesor;
-			dataEjecutado.objetoTipoPredecesor = objetoTipoPredecesor;
-			if (campos.size() > 0){
-				Date valor = null;
-				for(int i = 0; i < campos.size(); i++){
-					HashMap <String,Object> campo = campos.get(i);
-					valor = campo.get("valor") == "" ? null : (Date)campo.get("valor");
-					if (i == 0){
-						dataEjecutado.planificadoDocs = Utils.formatDate(valor);
-					}else if (i == 1){
-						dataEjecutado.realDocs = Utils.formatDate(valor);
-					}else if (i == 2){
-						dataEjecutado.planificadoLanzamiento = Utils.formatDate(valor);
-					}else if (i == 3){
-						dataEjecutado.realLanzamiento = Utils.formatDate(valor);
-					}else if (i == 4){
-						dataEjecutado.planificadoRecepcionEval = Utils.formatDate(valor);
-					}else if (i == 5){
-						dataEjecutado.realRecepcionEval = Utils.formatDate(valor);
-					}else if (i == 6){
-						dataEjecutado.planificadoAdjudica = Utils.formatDate(valor);
-					}else if (i == 7){
-						dataEjecutado.realAdjudica = Utils.formatDate(valor);
-					}else if (i == 8){
-						dataEjecutado.planificadoFirma = Utils.formatDate(valor);
-					}else if (i == 9){
-						dataEjecutado.realFirma = Utils.formatDate(valor);
-					}
-					
-				}
-
-				dataEjecutado.tipo = 1;
-			}else{
-				dataEjecutado.planificadoDocs = "";
-				dataEjecutado.realDocs = "";
-				dataEjecutado.planificadoLanzamiento = "";
-				dataEjecutado.realLanzamiento = "";
-				dataEjecutado.planificadoRecepcionEval = "";
-				dataEjecutado.realRecepcionEval = "";
-				dataEjecutado.planificadoAdjudica = "";
-				dataEjecutado.realAdjudica = "";
-				dataEjecutado.planificadoFirma = "";
-				dataEjecutado.realFirma = "";
-				dataEjecutado.tipo = 1;
-			}
-			lstdataEjecutado.add(dataEjecutado);
-			
-			for(Actividad subActividad : actividades){
-				lstdataEjecutado = ObtenerActividades(subActividad, usuario, lstdataEjecutado, posicionArbol + 1, actividad.getId(), OBJETO_ID_ACTIVIDAD);
-			}
-		}
-		
-		return lstdataEjecutado;
+	private static void inicializarColumnasOcultas(stplanadquisiciones tempPrestamo){
+		tempPrestamo.c0 = false;
+		tempPrestamo.c1 = false;
+		tempPrestamo.c2 = false;
+		tempPrestamo.c3 = false;
+		tempPrestamo.c4 = false;
+		tempPrestamo.c5 = false;
+		tempPrestamo.c6 = false;
+		tempPrestamo.c7 = false;
+		tempPrestamo.c8 = false;
+		tempPrestamo.c9 = false;
+		tempPrestamo.c10 = false;
+		tempPrestamo.c11 = false;
+		tempPrestamo.c12 = false;
+		tempPrestamo.c13 = false;
+		tempPrestamo.c14 = false;
+		tempPrestamo.c15 = false;
+		tempPrestamo.bloqueado = false;
 	}
 }

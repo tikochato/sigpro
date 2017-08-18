@@ -77,6 +77,7 @@ nav.navbar{
   &:hover{color: rgba(0, 0, 0, .4)}
 }
 
+
 .maincontainer{
 	margin: 15px;
 	padding-top: 15px;
@@ -315,8 +316,9 @@ input[type='checkbox'] ~ .floating-label {
   border: none;
   border-bottom: 1px solid rgba(0,0,0,0.12);
   background: transparent;
+  z-index: 2;
+  position: relative;
 }
-
 		
 .form-group {
   position: relative;
@@ -333,12 +335,12 @@ input[type='checkbox'] ~ .floating-label {
 
 .floating-label {
   position: absolute;
-  pointer-events: none;
   top: 18px;
   transition: 0.2s ease all;
   border: none;
   color: rgba(0,0,0,0.38);
   font-weight: bold;
+  z-index: 1;
 }	
 
 .label-icon{
@@ -350,7 +352,6 @@ input[type='checkbox'] ~ .floating-label {
 .label-form{
 	 font-size: 11px;
 	 opacity: 1;
-	 pointer-events: none;
 	 color: rgba(0,0,0,0.38) !important;
 	 font-weight: bold;
 }
@@ -446,6 +447,7 @@ h2 {
 	font-weight: normal; 
 	cursor:text; 
 	height: 50%;
+	z-index: 3;
 }
 
 /*para columnas de Planficado y Real en tablas*/

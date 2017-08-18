@@ -89,7 +89,7 @@ public class SReporte extends HttpServlet {
 			Integer idProducto = Utils.String2Int(map.get("idProducto"),0);
 			Integer idSubProducto = Utils.String2Int(map.get("idSubProducto"),0);
 			
-			List<Object> actividades = ReporteDAO.getActividadesCargaTrabajo(idProyecto, idComponente, idProducto, idSubProducto);
+			List<?> actividades = ReporteDAO.getActividadesCargaTrabajo(idProyecto, idComponente, idProducto, idSubProducto);
 			List<cargaTrabajo> atrasadas = new ArrayList<cargaTrabajo>();
 			List<cargaTrabajo> proceso = new ArrayList<cargaTrabajo>();
 			
@@ -147,7 +147,7 @@ public class SReporte extends HttpServlet {
 			
 			//List<Actividad> actividades = ReporteDAO.getActividadesResponsable(responsableId, usuario);
 			List<stActividades> lstActividades = new ArrayList<stActividades>();
-			List<Object> actividades = ReporteDAO.getActividadesCargaTrabajo(idProyecto, idComponente, idProducto, idSubProducto);
+			List<?> actividades = ReporteDAO.getActividadesCargaTrabajo(idProyecto, idComponente, idProducto, idSubProducto);
 			
 			for(Object obj : actividades){
 				Object[] row = (Object[]) obj;
@@ -155,34 +155,36 @@ public class SReporte extends HttpServlet {
 				if((Integer)row[3] == responsableId){
 					int idActividad = (Integer)row[0];
 					int porcentajeAvance = (Integer)row[2];
-					
-					Actividad actividad = ActividadDAO.getActividadPorId(idActividad, usuario);
-					String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad, usuario).split(";");
-					stActividades temp = new stActividades();
-					
-					try{
-						Date inicio = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
-			                    .parse(fechaInicioFin[0]);
-			            Date fin = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
-			                    .parse(fechaInicioFin[1]);
-			            Date hoy = new DateTime().toDate();
+				
+					if (porcentajeAvance > 0 && porcentajeAvance < 100){
+						Actividad actividad = ActividadDAO.getActividadPorId(idActividad, usuario);
+						String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad, usuario).split(";");
+						stActividades temp = new stActividades();
 						
-						if(hoy.after(inicio) && hoy.before(fin)){
-							temp.estado = "En Proceso";
-						} else if(hoy.after(fin)){
-							temp.estado = "Atrasado";
+						try{
+							Date inicio = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
+				                    .parse(fechaInicioFin[0]);
+				            Date fin = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
+				                    .parse(fechaInicioFin[1]);
+				            Date hoy = new DateTime().toDate();
+							
+							if(hoy.after(inicio) && hoy.before(fin)){
+								temp.estado = "En Proceso";
+							} else if(hoy.after(fin)){
+								temp.estado = "Atrasado";
+							}
 						}
+						catch (Throwable e) {
+				            e.printStackTrace();
+				        }
+						
+						temp.id = actividad.getId();
+						temp.nombre = actividad.getNombre();
+						temp.fechaInicio = fechaInicioFin[0];
+						temp.fechaFin = fechaInicioFin[1];
+						temp.porcentaje = actividad.getPorcentajeAvance();
+						lstActividades.add(temp);
 					}
-					catch (Throwable e) {
-			            e.printStackTrace();
-			        }
-					
-					temp.id = actividad.getId();
-					temp.nombre = actividad.getNombre();
-					temp.fechaInicio = fechaInicioFin[0];
-					temp.fechaFin = fechaInicioFin[1];
-					temp.porcentaje = actividad.getPorcentajeAvance();
-					lstActividades.add(temp);
 				}
 			}
 			

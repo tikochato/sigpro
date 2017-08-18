@@ -15,6 +15,7 @@
         <mapping class="pojo.ActividadUsuario" />
         <mapping class="pojo.ActividadUsuarioId" />
         <mapping class="pojo.AcumulacionCosto" />
+        <mapping class="pojo.AsignacionRaci" />
         <mapping class="pojo.AutorizacionTipo" />
         <mapping class="pojo.ComponenteUsuario" />
         <mapping class="pojo.ComponenteUsuarioId" />
@@ -38,6 +39,8 @@
         <mapping class="pojo.Desembolso" />
         <mapping class="pojo.DesembolsoTipo" />
         <mapping class="pojo.Documento" />
+        <mapping class="pojoSigade.DtmAvanceFisfinanDetDti" />
+        <mapping class="pojoSigade.DtmAvanceFisfinanDti" />
         <mapping class="pojo.EjecucionEstado" />
         <mapping class="pojo.Entidad" />
         <mapping class="pojo.EstadoInforme" />
@@ -53,6 +56,7 @@
         <mapping class="pojo.HitoTipo" />
         <mapping class="pojo.InteresTipo" />
         <mapping class="pojo.InformePresupuesto" />
+        <mapping class="pojo.MatrizRaci" />
         <mapping class="pojo.Meta" />
         <mapping class="pojo.MetaTipo" />
         <mapping class="pojo.MetaUnidadMedida" />
@@ -63,6 +67,8 @@
         <mapping class="pojo.ObjetoResponsableRol" />
         <mapping class="pojo.ObjetoRiesgo" />
         <mapping class="pojo.ObjetoRiesgoId" />
+        <mapping class="pojo.Pago" />
+        <mapping class="pojo.PlanAdquisiciones" />
         <mapping class="pojo.Permiso" />
         <mapping class="pojo.Prestamo" />
         <mapping class="pojo.ProdtipoPropiedad" />
@@ -110,8 +116,11 @@
         <mapping class="pojo.SubproductoUsuarioId" />
         <mapping class="pojo.TipoMoneda" />
         <mapping class="pojo.UnidadEjecutora" />
+        <mapping class="pojo.UnidadMedida" />
         <mapping class="pojo.Usuario" />
         <mapping class="pojo.UsuarioLog" />
         <mapping class="pojo.UsuarioPermiso" />
+        <mapping class="pojo.CategoriaAdquisicion" />
+        <mapping class="pojo.PlanAdquisicionesDetalle" />
     </session-factory>
 </hibernate-configuration>

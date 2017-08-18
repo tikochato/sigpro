@@ -44,6 +44,8 @@ public class SMetaValor extends HttpServlet {
 		BigDecimal valorDecimal; 
 		Date valorTiempo;
 		String valor;
+		Integer estado;
+		Date fechaIngreso;
 	}
 
     public SMetaValor() {
@@ -78,7 +80,7 @@ public class SMetaValor extends HttpServlet {
 			for(MetaValor metaValor : MetaValores){
 				stmetavalor temp = new stmetavalor();
 				temp.metaid = metaValor.getId().getMetaid();
-				temp.fecha = Utils.formatDateHour( metaValor.getId().getFecha());
+				temp.fecha = Utils.formatDate( metaValor.getId().getFecha());
 				temp.usuario = metaValor.getUsuario();
 				temp.valorEntero = metaValor.getValorEntero();
 				temp.valorString = metaValor.getValorString();
@@ -133,7 +135,8 @@ public class SMetaValor extends HttpServlet {
 				MetaValor MetaValor;
 				if(esnuevo){		
 					MetaValorId = new MetaValorId(Meta.getId(), new DateTime().toDate());
-					MetaValor = new MetaValor(MetaValorId, Meta, usuario, valorEntero, valorString, valorDecimal, valorTiempo);
+
+					MetaValor = new MetaValor(MetaValorId, Meta, usuario, valorEntero, valorString, valorDecimal, valorTiempo, 1, new Date());
 				}
 				else{
 					MetaValorId = new MetaValorId(Meta.getId(), fecha);

@@ -17,7 +17,9 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.GsonBuilder;
 
+import dao.AsignacionRaciDAO;
 import dao.ColaboradorDAO;
+import pojo.AsignacionRaci;
 import pojo.Colaborador;
 import utilities.Utils;
 
@@ -82,9 +84,10 @@ public class SColaborador extends HttpServlet {
 			String filtro_unidad_ejecutora = parametro.get("filtro_unidad_ejecutora");
 			String columna_ordenada  = parametro.get("columna_ordenada");
 			String orden_direccion = parametro.get("orden_direccion");
+			String excluir = parametro.get("idResponsables");
 			
 			List<Colaborador> colaboradores = ColaboradorDAO.getPagina(pagina, registros, filtro_pnombre, filtro_snombre, filtro_papellido, filtro_sapellido,
-						filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion);
+						filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion,excluir);
 
 			List<stcolaborador> listaColaborador = new ArrayList<stcolaborador>();
 
@@ -141,7 +144,7 @@ public class SColaborador extends HttpServlet {
 				String orden_direccion = parametro.get("orden_direccion");
 				
 				List<Colaborador> colaboradores = ColaboradorDAO.getPagina(pagina, registros, filtro_pnombre, filtro_snombre, filtro_papellido, filtro_sapellido,
-							filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion);
+							filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion,null);
 
 				List<stcolaborador> listaColaborador = new ArrayList<stcolaborador>();
 
@@ -202,7 +205,7 @@ public class SColaborador extends HttpServlet {
 				String orden_direccion = parametro.get("orden_direccion");
 			
 				List<Colaborador> colaboradores = ColaboradorDAO.getPagina(pagina, registros, filtro_pnombre, filtro_snombre, filtro_papellido, filtro_sapellido,
-							filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion);
+							filtro_cui, filtro_unidad_ejecutora, columna_ordenada, orden_direccion,null);
 
 				List<stcolaborador> listaColaborador = new ArrayList<stcolaborador>();
 
@@ -266,6 +269,43 @@ public class SColaborador extends HttpServlet {
 			if(valido){
 				response_text = "{\"success\":true}";
 			}
+			
+		} else if (accion.equals("obtenerPorId")){
+			
+			
+			Integer id = Utils.String2Int(parametro.get("id"), -1);
+			AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(id, 5, "r");
+			
+			if (asignacion != null && asignacion.getColaborador() != null){
+				stcolaborador temp = new stcolaborador();
+				Colaborador colaborador = asignacion.getColaborador();
+				temp.id = colaborador.getId();
+				temp.primerNombre = colaborador.getPnombre();
+				temp.segundoNombre = colaborador.getSnombre();
+				temp.primerApellido = colaborador.getPapellido();
+				temp.segundoApellido = colaborador.getSapellido();
+				temp.cui = colaborador.getCui();
+
+				temp.usuario = colaborador.getUsuario().getUsuario();
+				temp.unidadEjecutora = colaborador.getUnidadEjecutora().getUnidadEjecutora();
+				temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
+				
+				temp.usuarioCreo = colaborador.getUsuarioCreo();
+				temp.usuarioActualizo = colaborador.getUsuarioActualizo();
+				temp.fechaCreacion = Utils.formatDateHour(colaborador.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(colaborador.getFechaActualizacion());
+				temp.nombreCompleto = String.join(" ", temp.primerNombre,
+						temp.segundoNombre!=null ? temp.segundoNombre : "" ,
+						temp.primerApellido !=null ? temp.primerApellido : "" ,
+						temp.segundoApellido !=null ? temp.segundoApellido : "");
+				
+				response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
+		        response_text = String.join("", "\"colaborador\":",response_text);
+		        response_text = String.join("", "{\"success\":true,", response_text,"}");
+			}else{
+				 response_text = String.join("", "{\"success\":false}");
+			}
+			
 			
 		}
 

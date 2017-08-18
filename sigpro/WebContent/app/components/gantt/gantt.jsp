@@ -33,14 +33,7 @@
 	    <div class="panel panel-default">
 	    	<div class="panel-heading"><h3>Gantt</h3></div>
 	    </div>
-	    <div class="grid_loading" ng-hide="!ganttc.mostrarcargando">
-		  	<div class="msg">
-		      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
-				  <br /><br />
-				  <b>Cargando, por favor espere...</b>
-			  </span>
-			</div>
-		</div>
+	    
 		
 		<div class="subtitulo">
 			{{ ganttc.objetoTipoNombre }} {{ ganttc.proyectoNombre }}
@@ -69,10 +62,19 @@
 			</div>
 		</div>
 		 <div class="row" align="center" >
-		 
 		    <div class="gantt-chart">
 				<div ds:gantt-chart id="ganttChartView" items="items" 
-				settings="settings" auto-refresh="{{ true }}" style="min-height: 400px"></div>
+				settings="settings" auto-refresh="{{ true }}" style="min-height: 400px">
+				
+				</div>
+				<div class="grid_loading" ng-hide="!ganttc.mostrarcargando" style="z-index: 100">
+				  	<div class="msg">
+				      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
+						  <br /><br />
+						  <b>Cargando, por favor espere...</b>
+					  </span>
+					</div>
+				  </div>
 	    	</div>
 			<br/>
 		</div>

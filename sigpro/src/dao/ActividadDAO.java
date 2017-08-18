@@ -424,4 +424,166 @@ public class ActividadDAO {
 	        }
 	        return true;
 	}
+	
+	
+	public static List<Actividad> getActividadsPorObjetos(String idPrestamos, String idComponentes, String idProductos,
+			String idSubproductos,int anio_inicio, int anio_fin){
+		List<Actividad> ret = new ArrayList<Actividad>();
+		List<Actividad> subactividades = new ArrayList<Actividad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select distinct ac.* ",
+							"from actividad ac , (",
+							    "select p.id, 1 objeto_tipo",
+								"from proyecto p",
+								"where p.id = ",idPrestamos,
+								"union",
+								"select c.id, 2 objeto_tipo",
+								"from proyecto p",
+								"left outer join componente c on c.proyectoid = p.id",
+								"where c.id in (" + idComponentes + ")",
+								"union",
+								"select pr.id,3 objeto_tipo",
+								"from proyecto p",
+								"left outer join componente c on c.proyectoid = p.id",
+								"left outer join producto pr on pr.componenteid = c.id",
+								"where pr.id in ("+ idProductos + ")",
+								"union ",
+								"select s.id,4 objeto_tipo",
+								"from proyecto p",
+								"left outer join componente c on c.proyectoid = p.id",
+								"left outer join producto pr on pr.componenteid = c.id",
+								"left outer join subproducto s on s.productoid = pr.id",
+								"where s.id in (" + idSubproductos + ")",							    
+							    ") t1, asignacion_raci ar",
+							"where ac.objeto_id = t1.id",
+							"and (ac.id = ar.objeto_id and ar.objeto_tipo = 5)",
+							"and ac.objeto_tipo = t1.objeto_tipo",
+							"and ac.estado = 1",
+							"and year(ac.fecha_fin ) between ?1 and ?2");
+			Query<Actividad> criteria = session.createNativeQuery(query,Actividad.class);
+			criteria.setParameter("1", anio_inicio);
+			criteria.setParameter("2", anio_fin);
+			ret = criteria.getResultList();
+			for(Actividad actividad : ret){
+				subactividades.addAll(getActividadsSubactividadsPorObjeto(actividad.getId(), 5));
+			}
+			ret.addAll(subactividades);			
+		}
+		catch(Throwable e){
+			CLogger.write("12", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<?> getActividadesTerminadas(String idPrestamos, String idComponentes, String idProductos,
+			String idSubproductos, Integer colaboradorid, int anio_inicio, int anio_fin){
+		List<?> ret= null;
+		
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select year(t2.fecha_fin) anio, month(t2.fecha_fin) mes, count(t2.id) total",
+						"from (",
+							"select distinct ac.* ",
+							"from actividad ac , (",
+							    "select p.id, 1 objeto_tipo",
+								"from proyecto p",
+								"where p.id = ",idPrestamos,
+								"union",
+								"select c.id, 2 objeto_tipo",
+								"from proyecto p",
+								"left outer join componente c on c.proyectoid = p.id",
+								"where c.id in (" + idComponentes + ")",
+								"union",
+								"select pr.id,3 objeto_tipo",
+								"from proyecto p",
+								"left outer join componente c on c.proyectoid = p.id",
+								"left outer join producto pr on pr.componenteid = c.id",
+								"where pr.id in ("+ idProductos + ")",
+								"union ",
+								"select s.id,4 objeto_tipo",
+								"from proyecto p",
+								"left outer join componente c on c.proyectoid = p.id",
+								"left outer join producto pr on pr.componenteid = c.id",
+								"left outer join subproducto s on s.productoid = pr.id",
+								"where s.id in (" + idSubproductos + ")",							    
+							    ") t1, asignacion_raci ar",
+							"where ac.objeto_id = t1.id",
+							"and (ac.id = ar.objeto_id and ar.objeto_tipo = 5)",
+							"and ac.objeto_tipo = t1.objeto_tipo",
+							"and ac.estado = 1",
+							(colaboradorid != null && colaboradorid > 0 ?  "and ar.colaboradorid = ?1" : ""),
+							"and year(ac.fecha_fin ) between ?2 and ?3",
+							"and porcentaje_avance = 100",
+							") t2",
+							"group by year(t2.fecha_fin) , month(t2.fecha_fin) asc");
+			Query<?> criteria = session.createNativeQuery(query);
+			if (colaboradorid != null && colaboradorid > 0)
+				criteria.setParameter("1", colaboradorid);
+			criteria.setParameter("2", anio_inicio);
+			criteria.setParameter("3", anio_fin);
+			ret = criteria.getResultList();
+			
+		}
+		catch(Throwable e){
+			CLogger.write("13", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Actividad getActividadPorIdResponsable(int id, String usuario,Integer responsable,String rol){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		Actividad ret = null;
+		try{
+			String query = String.join(" ", "select a.*",
+				"from actividad a,asignacion_raci ar",
+				"where a.id = ar.objeto_id ",
+				"and ar.objeto_tipo = 5",
+				"and a.estado = 1",
+				"and a.id = ?1",
+				"and ar.colaboradorid = ?2",
+				"and ar.rol_raci = ?3");
+			Query<Actividad> criteria = session.createNativeQuery(query, Actividad.class);
+			criteria.setParameter("1", id);
+			criteria.setParameter("2", responsable);
+			criteria.setParameter("3", rol);
+			
+			ret = criteria.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("2", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Integer getProyectoId(Integer activdadId){
+		Integer ret=0;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select  e.prestamo",
+							"from  estructura_arbol e",
+							"where e.actividad = ?1");
+			
+			Query<?> id = session.createNativeQuery(query);
+			id.setParameter("1", activdadId);
+			Object o = id.getSingleResult();
+			ret = (Integer) o;
+		}
+		catch(Throwable e){
+			CLogger.write("8", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

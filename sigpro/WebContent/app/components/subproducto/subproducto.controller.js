@@ -275,6 +275,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				unidadEjecutora : mi.unidadEjecutora,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				longitud: mi.subproducto.longitud,
+				costo: mi.subproducto.costo == null ? 0 : mi.subproducto.costo,
+				acumulacionCostoId: mi.subproducto.acumulacionCostoId == null ? 0 : mi.subproducto.acumulacionCostoId,
 				latitud : mi.subproducto.latitud,
 				esnuevo : mi.esNuevo
 			};
@@ -392,6 +394,23 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 		}
 	};
 
+	mi.buscarAcumulacionCosto = function(){
+		var resultado = mi.llamarModalBusqueda('/SAcumulacionCosto', {
+			accion : 'numeroAcumulacionCosto' 
+		}, function(pagina, elementosPorPagina){
+			return{
+				accion: 'getAcumulacionCosto',
+				pagina: pagina,
+				numeroacumulacioncosto : elementosPorPagina
+			}
+		}, 'id','nombre');
+		
+		resultado.then(function(itemSeleccionado){
+			mi.subproducto.acumulacionCostoNombre = itemSeleccionado.nombre;
+			mi.subproducto.acumulacionCostoId = itemSeleccionado.id;
+		});
+	}
+	
 	mi.llamarModalBusqueda = function(servlet, datosTotal, datosCarga, columnaId,columnaNombre) {
 		var resultado = $q.defer();
 
