@@ -170,27 +170,27 @@
 						</div>
 						<div class="form-group-row row"  ng-show="usuarioc.esNuevo">
 							<div class="form-group col-sm-4" >
-						          <input type="text" class="inputText" ng-model="usuarioc.tipoUsuario.nombre"  ng-disabled="true" 
+						          <input type="text" class="inputText" ng-model="usuarioc.tipoUsuario.nombre"  
 						          		ng-value="usuarioc.tipoUsuario.nombre" 
 						          		ng-click="!usuarioc.cargandoPermisos? usuarioc.buscarPermiso(1) : ''" >
 						          <span class="label-icon" ng-click="!usuarioc.cargandoPermisos? usuarioc.buscarPermiso(1) : ''"><i class="glyphicon glyphicon-search"></i></span>
 						          <label class="floating-label" >Tipo de Usuario</label>
 						    </div>
 							<div class="form-group col-sm-4" ng-show="usuarioc.tipoUsuario.id==4 || usuarioc.tipoUsuario.id==5">
-						          <input type="text" class="inputText" ng-model="usuarioc.usuariosSelected.colaborador"  ng-disabled="true" 
+						          <input type="text" class="inputText" ng-model="usuarioc.usuariosSelected.colaborador"  
 						          		ng-value="usuarioc.usuariosSelected.colaborador" 
 						          		ng-click="usuarioc.buscarColaborador()" >
 						          <span class="label-icon" ng-click=" usuarioc.buscarColaborador()"><i class="glyphicon glyphicon-search"></i></span>
 						          <label class="floating-label" >Colaborador</label>
 						    </div>
 						    <div class="form-group col-sm-4" ng-show="usuarioc.tipoUsuario.id==4 || usuarioc.tipoUsuario.id==5">
-						          <input type="text" class="inputText" ng-model="usuarioc.nombreUnidadEjecutora"  ng-disabled="true" 
+						          <input type="text" class="inputText" ng-model="usuarioc.nombreUnidadEjecutora" 
 						          		ng-value="usuarioc.nombreUnidadEjecutora" 
 						          		 >
 						          <label class="floating-label" >UnidadEjecutora</label>
 						    </div>
 						    <div class="form-group col-sm-8" ng-show="usuarioc.tipoUsuario.id==6">
-						          <input type="text" class="inputText" ng-model="usuarioc.nombreCooperante"  ng-disabled="true" 
+						          <input type="text" class="inputText" ng-model="usuarioc.nombreCooperante"   
 						          		ng-value="usuarioc.nombreCooperante"  >
 						          <span class="label-icon" ng-click=" usuarioc.buscarPermiso(3)"><i class="glyphicon glyphicon-search"></i></span>
 						          <label class="floating-label" >Cooperante</label>
