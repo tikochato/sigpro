@@ -100,7 +100,7 @@
 			    </label>
 			    <label>
 			      <input type="checkbox" ng-model="mostrarProyectos" ng-click="mostrar(1)">
-			      Préstamos
+			      Proyecto
 			    </label>
 			    <label>
 			      <input type="checkbox" ng-model="mostrarComponentes" ng-click="mostrar(2)">

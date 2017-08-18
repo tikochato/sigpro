@@ -29,7 +29,7 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
 		function(response) {
 			mi.prestamos = [];
-			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un préstamo'});
+			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un proyecto'});
 			if (response.success){
 				for (var i = 0; i < response.entidades.length; i++){
 					mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
