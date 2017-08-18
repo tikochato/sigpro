@@ -6,13 +6,16 @@
 	<style type="text/css">
 	.cabecera {
 		position: absolute;
-	    margin-top: -47px;
+	    margin-top: -32px;
 	    flex-shrink: 0;
 	    overflow-x: hidden;
-	    width: 99%;
+	    width: 100%;
 	}
 	
-	
+	.cabeceraSticky{
+		display: block;float: left;
+	}
+		
 	.divTabla{
 	    width: 100%;
 	    height: 200px;
@@ -82,19 +85,19 @@
 		    			<table st-table="controller.displayedCollection" st-safe-src="controller.rowCollection" class="table table-striped"
 		    			ng-if="controller.mostrar">
 							<thead  class="cabecera">
-								<tr>
+								<tr style="width: 99%; display:block;">
 									<th style="display: none;">Id</th>
-									<th class="label-form" style="width: 43%" st-sort="row.responsable" >Responsable</th>
-									<th class="label-form" style="width: 15%; text-align: center;" st-sort="row.responsable">Actividades retrasadas</th>
-									<th class="label-form" style="width: 15%; text-align: center;" st-sort="row.actividadesAtrasadas">Actividades en alerta</th>
-									<th class="label-form" style="width: 15%; text-align: center;" st-sort="row.actividadesACumplir">Actividades a cumplir</th>
-									<th class="label-form" style="width: 15%; text-align: center;" st-sort="row.actividadesCompletadas">Actividades completadas</th>
+									<th class="label-form cabeceraSticky" style="width: 40%" st-sort="row.responsable" >Responsable</th>
+									<th class="label-form cabeceraSticky" style="width: 15%; text-align: center;" st-sort="row.responsable">Actividades retrasadas</th>
+									<th class="label-form cabeceraSticky" style="width: 15%; text-align: center;" st-sort="row.actividadesAtrasadas">Actividades en alerta</th>
+									<th class="label-form cabeceraSticky" style="width: 15%; text-align: center;" st-sort="row.actividadesACumplir">Actividades a cumplir</th>
+									<th class="label-form cabeceraSticky" style="width: 15%; text-align: center;" st-sort="row.actividadesCompletadas">Actividades completadas</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr ng-repeat="row in controller.displayedCollection" ng-click="controller.actividadesResponsable(row)">
 									<td style="display: none;" >{{row.id}}</td>
-									<td style="width: 43%" >{{row.responsable}}</td>
+									<td style="width: 40%" >{{row.responsable}}</td>
 									<td style="text-align: center; width: 15%;">{{row.actividadesAtrasadas}}</td>
 									<td style="text-align: center; width: 15%;">{{row.actividadesAlerta}}</td>
 									<td style="text-align: center; width: 15%;">{{row.actividadesACumplir}}</td>

@@ -155,6 +155,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
             $scope.$digest();
         });
 		
+		$scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
 		
 		mi.mostrarActividades = function(row){
 			mi.llamarModalActividades(row.objetoId, row.objetoTipo);

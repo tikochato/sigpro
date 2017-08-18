@@ -974,6 +974,7 @@ app.directive('scrollespejo', ['$window', function($window) {
                 scope.controller.calcularTamanosPantalla();
                 scope.$digest();
               });
+            scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
         }
     };
 }])

@@ -72,7 +72,9 @@
 		    width: auto;
 		}
 	
-	
+		.btn-default.active{
+			font-weight: bold;
+		}
 </style>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
@@ -102,13 +104,12 @@
 							
 							<option value="">Seleccione una préstamo</option>
 						</select>
-						<label for="prestamo" class="floating-label">Préstamos</label>
 					</div>
 					<div class="form-group col-sm-2">
 						<input type="number"  class="inputText" ng-model="desembolsosc.anioSeleccionado" maxlength="4" 
 						ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
 						ng-change="desembolsosc.generarReporte()"/>
-					  	<label for="campo.id" class="floating-label">*Año Inicial</label>
+					  	<label for="campo.id" class="floating-label" style="left: 0">*Año Inicial</label>
 					</div>
 					
 					<div class="col-sm-6" align="right" ng-hide="!desembolsosc.mostrar" >

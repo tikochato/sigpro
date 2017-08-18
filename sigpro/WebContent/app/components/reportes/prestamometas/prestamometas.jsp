@@ -157,7 +157,6 @@
 						<select  class="inputText" ng-model="controller.prestamo"
 							ng-options="a.text for a in controller.prestamos"
 							ng-change="controller.validar(1)"></select>
-						<label for="prestamo" class="floating-label">Préstamos</label>
 					</div>
 					
 					<div class="form-group col-sm-1">
@@ -197,7 +196,7 @@
 								<label class="btn btn-default" ng-model="controller.grupoMostrado.real"  uib-btn-checkbox ng-click="controller.verificaSeleccionTipo(2)" uib-tooltip="Real" role="button" tabindex="8" aria-invalid="false">
 								<span>R</span></label>
 	    					</div>
-							<div class="btn-group" style="padding-left: 20px;">
+							<div class="btn-group" style="padding-left: 20px;" ng-hide="true">
 								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrarDescargar">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
 							</div>
@@ -205,9 +204,9 @@
 					</div>
     			<br><br><br><br>
 	    	</div>
-	    	<div style="width: 100%; height: 70%" id="reporte">
+	    	<div style="width: 100%; height: calc(70% - 32px)" id="reporte">
 	    		
-				<div class="grid_loading" ng-hide="!controller.mostrarCargando">
+				<div class="grid_loading" ng-hide="!controller.mostrarCargando" style="height: calc(80% - 32px)">
 						<div class="msg">
 							<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
 								<br />
@@ -307,6 +306,7 @@
 			    		</div>
 				</div>
 	    	</div>
+	    	<br>
 	    	<div class="row">
 					<div class="col-sm-3"></div>
 					<div class="col-sm-6" style="text-align: center;">

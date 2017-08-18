@@ -109,6 +109,9 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 		  case 4:
 			  return "classRolI"; break;
 		  }   
+		  if (value.rolId == -1)
+			  return "claseNombre"
+			  
 	  };
 	  
 	  mi.claseIcon = function (item,index) {
