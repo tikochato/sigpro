@@ -467,6 +467,8 @@ app.controller(
 
 	mi.buscarPermiso = function(tipo) {
 		if(tipo===1 && mi.esNuevo){
+			mi.usuariosSelected.colaborador="";
+			mi.nombreUnidadEjecutora="";
 			mi.prestamosAsignados=[];
 		}
 		var modalInstance = $uibModal.open({
@@ -493,7 +495,7 @@ app.controller(
 					mi.cargandoPermisos=true;
 					mi.tipoUsuario.id=resultadoSeleccion.rol.id;
 					mi.tipoUsuario.nombre=resultadoSeleccion.rol.nombre;
-					if(resultadoSeleccion.rol.id==2 ||resultadoSeleccion.rol.id==3){
+					if(resultadoSeleccion.rol.id==2 ||resultadoSeleccion.rol.id==3 ||resultadoSeleccion.rol.id==1){
 						if(mi.esNuevo){
 							mi.prestamosAsignados=[];
 						}
