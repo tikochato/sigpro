@@ -100,7 +100,8 @@ public class ColaboradorDAO {
 			pojo.setFechaActualizacion(new Date());
 
 			pojo.setUnidadEjecutora(UnidadEjecutoraDAO.getUnidadEjecutora(codigoUnidadEjecutora));
-			pojo.setUsuario(UsuarioDAO.getUsuario(usuario));
+			if(usuario!=null)
+				pojo.setUsuario(UsuarioDAO.getUsuario(usuario));
 
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try {
@@ -229,7 +230,8 @@ public class ColaboradorDAO {
 				estructuraPojo.primerApellido = pojo.getPapellido();
 				estructuraPojo.segundoApellido = pojo.getSapellido();
 				estructuraPojo.cui = pojo.getCui();
-				estructuraPojo.usuario = pojo.getUsuario().getUsuario();
+				if(pojo.getUsuario()!=null)
+					estructuraPojo.usuario = pojo.getUsuario().getUsuario();
 				estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora().getUnidadEjecutora();
 				estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
 				estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();

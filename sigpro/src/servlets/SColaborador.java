@@ -99,8 +99,8 @@ public class SColaborador extends HttpServlet {
 				temp.primerApellido = colaborador.getPapellido();
 				temp.segundoApellido = colaborador.getSapellido();
 				temp.cui = colaborador.getCui();
-
-				temp.usuario = colaborador.getUsuario().getUsuario();
+				if(colaborador.getUsuario()!=null)
+					temp.usuario = colaborador.getUsuario().getUsuario();
 				temp.unidadEjecutora = colaborador.getUnidadEjecutora().getUnidadEjecutora();
 				temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
 				
@@ -156,8 +156,8 @@ public class SColaborador extends HttpServlet {
 					temp.primerApellido = colaborador.getPapellido();
 					temp.segundoApellido = colaborador.getSapellido();
 					temp.cui = colaborador.getCui();
-
-					temp.usuario = colaborador.getUsuario().getUsuario();
+					if(colaborador.getUsuario()!= null)
+						temp.usuario = colaborador.getUsuario().getUsuario();
 					temp.unidadEjecutora = colaborador.getUnidadEjecutora().getUnidadEjecutora();
 					temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
 					
@@ -217,8 +217,8 @@ public class SColaborador extends HttpServlet {
 					temp.primerApellido = colaborador.getPapellido();
 					temp.segundoApellido = colaborador.getSapellido();
 					temp.cui = colaborador.getCui();
-
-					temp.usuario = colaborador.getUsuario().getUsuario();
+					if(colaborador.getUsuario()!=null)
+						temp.usuario = colaborador.getUsuario().getUsuario();
 					temp.unidadEjecutora = colaborador.getUnidadEjecutora().getUnidadEjecutora();
 					temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
 					

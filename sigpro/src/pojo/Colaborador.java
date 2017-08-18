@@ -105,7 +105,7 @@ public class Colaborador implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "usuariousuario")
+	@JoinColumn(name = "usuariousuario", nullable = true)
 	public Usuario getUsuario() {
 		return this.usuario;
 	}

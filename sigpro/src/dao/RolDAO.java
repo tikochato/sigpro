@@ -28,6 +28,24 @@ public class RolDAO {
 		
 		return ret;
 	}
+	public static Rol getRol(int id){
+		Rol ret= new Rol();
+		List<Rol> tmp = new ArrayList<Rol>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Rol> criteria = session.createQuery("FROM Rol r where r.id =:id", Rol.class);
+			criteria.setParameter("id",id);
+			tmp = criteria.getResultList();
+			ret = tmp.get(0);
+		}
+		catch(Throwable e){
+			CLogger.write("1", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 	
 	public static List<RolPermiso> getPermisosPorRol(int rolid){
 		List <RolPermiso> ret = new ArrayList<RolPermiso>();
