@@ -3,6 +3,8 @@ var app = angular.module('mapaController', [ 'ngTouch' ]);
 app.controller('mapaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','uiGmapGoogleMapApi',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,uiGmapGoogleMapApi) {
 
+	var mi = this;
+	
 	$scope.geoposicionlat =  14.6290845;
 	$scope.geoposicionlong = -90.5116158;
 
@@ -17,44 +19,72 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 	$scope.mostrarSubproductos = true;
 	$scope.mostrarActividades = true;
 	$scope.proyectoid = $routeParams.proyecto_id;
-	$scope.proyectoNombre = "";
-	$scope.objetoTipoNombre="";
-	$scope.titulo=$routeParams.proyecto_id != null ? "" : "de Préstamos" ;
+	
+	
 	$scope.accionServlet = $scope.proyectoid!=null ? 'getMarcasPorProyecto' : 'getMarcasProyecto';
 	$scope.mostrarControles = $scope.proyectoid!=null;
+	mi.mostrar = false;
+	
+	
+	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
+		function(response) {
+			mi.prestamos = [];
+			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un préstamo'});
+			if (response.success){
+				for (var i = 0; i < response.entidades.length; i++){
+					mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
+				}
+				
+				if ($scope.proyectoid !=null && $scope.proyectoid != undefined){
+					for (x in mi.prestamos){
+						if (mi.prestamos[x].value == $scope.proyectoid){
+							mi.prestamo = mi.prestamos[x];
+							mi.cargar();
+							break;
+						}
+						
+					}
+					
+				}else{
+					mi.prestamo = mi.prestamos[0];
+				}
+				
+				
+			}
+	});
 
-	uiGmapGoogleMapApi.then(function() {
-		$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong },
-		   zoom: 15,
-		   height: 400,
-		   width: 200,
-		   options: {
-			   streetViewControl: false,
-			   scrollwheel: true,
-			  draggable: true,
-			  mapTypeId: google.maps.MapTypeId.SATELLITE
-		   },
-		   events:{
-			   click: function (map,evtName,evt) {
-				   $scope.posicion = {latitude: evt[0].latLng.lat()+"", longitude: evt[0].latLng.lng()+""} ;
-				   $scope.$evalAsync();
-			   }
-		   },
-		   refresh: true
-		};
-    });
+	mi.cargarMapa = function(){
+		
+		uiGmapGoogleMapApi.then(function() {
+			$scope.map = { center: { latitude: $scope.geoposicionlat, longitude: $scope.geoposicionlong },
+			   zoom: 15,
+			   height: 400,
+			   width: 200,
+			   options: {
+				   streetViewControl: false,
+				   scrollwheel: true,
+				  draggable: true,
+				  mapTypeId: google.maps.MapTypeId.SATELLITE
+			   },
+			   events:{
+				   click: function (map,evtName,evt) {
+					   $scope.posicion = {latitude: evt[0].latLng.lat()+"", longitude: evt[0].latLng.lng()+""} ;
+					   $scope.$evalAsync();
+				   }
+			   },
+			   refresh: true
+			};
+	    });
+		
+	}
+	
 
 	$http.post('/SMapa', { accion: $scope.accionServlet, proyectoId:$routeParams.proyecto_id}).success(
 			function(response) {
 				$scope.marcas = response.marcas;
 	});
 
-	$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id }).success(
-			function(response) {
-				$scope.proyectoid = response.id;
-				$scope.proyectoNombre = response.nombre;
-				$scope.objetoTipoNombre="Proyecto";
-	});
+	
 
 	 $scope.mostrar = function (objetoId) {
 
@@ -114,6 +144,23 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 				}
 		    });
 	 };
+	 
+	 mi.cargar = function(){
+		 if (mi.prestamo!=null && mi.prestamo.value > 0){
+		 $http.post('/SMapa', { accion: 'getMarcasPorProyecto', proyectoId:mi.prestamo.value}).success(
+					function(response) {
+						$scope.marcas = response.marcas;
+						for (x in $scope.marcas){
+							if ($scope.marcas[x].objetoTipoId == 1){
+								$scope.geoposicionlat =  $scope.marcas[x].posicion.latitude;
+								$scope.geoposicionlong = $scope.marcas[x].posicion.longitude;
+							}
+						}
+						mi.mostrar=true;
+						mi.cargarMapa();
+			});
+		 } 
+	 }
 
 }]);
 
