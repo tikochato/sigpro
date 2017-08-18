@@ -50,13 +50,13 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.getStatusColor = function (status) {
 		    switch (status) {
 		        case 'Completada':
-		            return 'Green';
+		            return '#b0cfe8';
 		        case 'To do':
-		            return 'Gray';
+		            return '#e2e291';
 		        case 'Atrasada':
-		            return 'Red';
+		            return '#fd9496';
 		        case 'En progreso':
-		            return 'Orange';
+		            return '#c7e7a5';
 		        default:
 		            return 'Transparent';
 		    }
@@ -177,9 +177,14 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		columns.splice(4, 0, {
 		    header: '', width: 30,
 		    cellTemplate: function (item) {
-		        var rectangle = document.createElement('div');
+		        /*var rectangle = document.createElement('div');
 		        rectangle.innerHTML = '&nbsp;';
 		        rectangle.setAttribute('style', 'background-color: ' + mi.getStatusColor(mi.getStatus(item)));
+		        return rectangle;*/
+		        var rectangle = document.createElement('div');
+		        rectangle.innerHTML = '&nbsp;';
+		        rectangle.setAttribute('class', 'glyphicon glyphicon-certificate');
+		        rectangle.setAttribute('style', 'color: ' + mi.getStatusColor(mi.getStatus(item)));
 		        return rectangle;
 		    }
 		});
@@ -200,11 +205,49 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		columns[8].header = 'Completada';
 		columns[9].header = 'Responsable';
 		columns[9].isReadOnly = true;
-		columns.splice(10, 0, { header: 'Duración (d)', width: 80, cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(64, 8) });
+		
+		//columns.splice(10, 0, { header: 'Duración (d)', width: 80, cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(64, 8) });
+		columns.splice(10, 0, {
+		    header: 'Duración (d)', 
+		    width: 80,
+		    isReadOnly: true,
+		    cellStyle: 'text-align: right;',
+		    cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(64, 8)
+		});
+		
 		columns.splice(11 , 0, { header: 'Predecesor', width: 70, cellTemplate: DlhSoft.Controls.GanttChartView.getPredecessorsColumnTemplate(84) });
-		columns.push({ header: 'Costo Planificado (Q)', width: 110, cellTemplate: DlhSoft.Controls.GanttChartView.getCostColumnTemplate(84) });
-		columns.push({ header: 'Meta Planificada', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaPlanificada; }, function (value) { item.metaPlanificada = value; }); } });
-		columns.push({ header: 'Meta Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaReal; }, function (value) { item.metaReal = value; }); } });
+		
+		//columns.push({ header: 'Costo Planificado (Q)', width: 110, cellTemplate: DlhSoft.Controls.GanttChartView.getCostColumnTemplate(84) });
+		columns.splice(12, 0, {
+		    header: 'Costo Planificado (Q)', 
+		    width: 110,
+		    isReadOnly: true,
+		    cellStyle: 'text-align: right;',
+		    cellTemplate: DlhSoft.Controls.GanttChartView.getCostColumnTemplate(84)
+
+		});		
+		
+		//columns.push({ header: 'Meta Planificada', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaPlanificada; }, function (value) { item.metaPlanificada = value; }); } });
+		columns.splice(13, 0, {
+		    header: 'Meta Planificada', 
+		    width: 80,
+		    isReadOnly: true,
+		    cellStyle: 'text-align: right;',
+		    cellTemplate: function (item) {
+		        return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return item.metaPlanificada; });
+		    }
+		});	
+		
+		//columns.push({ header: 'Meta Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaReal; }, function (value) { item.metaReal = value; }); } });
+		columns.splice(14, 0, {
+		    header: 'Meta Real', 
+		    width: 80,
+		    isReadOnly: true,
+		    cellStyle: 'text-align: right;',
+		    cellTemplate: function (item) {
+		        return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return item.metaReal; });
+		    }
+		});
 		
 		
 		for(var i=0; i<columns.length;i++)

@@ -25,6 +25,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
+import dao.AsignacionRaciDAO;
 import dao.ComponenteDAO;
 import dao.HitoDAO;
 import dao.HitoResultadoDAO;
@@ -32,6 +33,7 @@ import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
+import pojo.AsignacionRaci;
 import pojo.Componente;
 import pojo.Hito;
 import pojo.HitoResultado;
@@ -54,6 +56,8 @@ public class SAvanceActividades extends HttpServlet {
 	class stActividad{
 		int id;
 		int porcentajeAvance;
+		String nombre;
+		String responsable;
 		String fechaInicio;
 		String fechaFin;
 	}
@@ -66,12 +70,23 @@ public class SAvanceActividades extends HttpServlet {
 	}
 	
 	class stAvance{
+		Integer objetoId;
+		Integer objetoTipo;
 		String nombre;
 		double sinIniciar;
 		double proceso;
 		double completadas;
 		double retrasadas;
 		int tipo;
+	}
+	
+	class stelementosActividadesAvance{
+		Integer id;
+		String nombre;
+		String fechaInicial;
+		String fechaFinal;
+		Integer avance;
+		String responsable;
 	}
 	
     public SAvanceActividades() {
@@ -113,16 +128,14 @@ public class SAvanceActividades extends HttpServlet {
 			String cantidades = "";
 			stAvance temp = new stAvance();
 			stCantidad tCantidad = new stCantidad();
-			Proyecto proyecto = null;
 			
 			DecimalFormat df2 = new DecimalFormat("###.##");
 			
 			try{
+				Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
 				List<stActividad> actividades = getActividadesProyecto(idPrestamo, usuario);
 				if (actividades != null){
-					
-					proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
-					
+
 					totalActividades = actividades.size();
 				
 					for (stActividad actividad : actividades){
@@ -182,7 +195,9 @@ public class SAvanceActividades extends HttpServlet {
 					}
 					
 					temp = new stAvance();
-					temp.nombre = "Estado total de actividades";
+					temp.objetoId = idPrestamo;
+					temp.objetoTipo = 1;
+					temp.nombre = "Total de actividades";
 					temp.sinIniciar = Double.valueOf(df2.format(totalSinIniciar));
 					temp.proceso = Double.valueOf(df2.format(totalEnProceso));
 					temp.completadas = Double.valueOf(df2.format(totalCompletadas));
@@ -258,7 +273,9 @@ public class SAvanceActividades extends HttpServlet {
 					totalRetrasadas = (totalRetrasadas/totalHitos)*100;
 					
 					temp = new stAvance();
-					temp.nombre = "Estado total de hitos";
+					temp.objetoId = idPrestamo;
+					temp.objetoTipo = 1;
+					temp.nombre = "Total de hitos";
 					temp.sinIniciar = Double.valueOf(df2.format(totalSinIniciar));
 					temp.completadas = Double.valueOf(df2.format(totalCompletadas));
 					temp.retrasadas = Double.valueOf(df2.format(totalRetrasadas));
@@ -339,6 +356,8 @@ public class SAvanceActividades extends HttpServlet {
 							}
 							
 							temp = new stAvance();
+							temp.objetoId = producto.getId();
+							temp.objetoTipo = 3;
 							temp.nombre = producto.getNombre();
 							temp.sinIniciar = Double.valueOf(df2.format(totalSinIniciar));
 							temp.proceso = Double.valueOf(df2.format(totalEnProceso));
@@ -359,6 +378,23 @@ public class SAvanceActividades extends HttpServlet {
 				e.printStackTrace();
 		    }
 			
+			response_text = String.join("", "{\"success\":true ", response_text, "}");
+		}else if(accion.equals("getActividadesProyecto")){
+			List<stActividad> actividades = getActividadesProyecto(idPrestamo, usuario);
+			List<stelementosActividadesAvance> lstElementosActividadesAvance = new ArrayList<stelementosActividadesAvance>();
+			for(stActividad actividad : actividades){
+				stelementosActividadesAvance temp = new stelementosActividadesAvance();
+				temp.id = actividad.id;
+				temp.nombre = actividad.nombre;
+				temp.fechaInicial = actividad.fechaInicio;
+				temp.fechaFinal = actividad.fechaFin;
+				temp.avance = actividad.porcentajeAvance;
+				temp.responsable = actividad.responsable;
+				lstElementosActividadesAvance.add(temp);
+			}
+			
+			response_text = new GsonBuilder().serializeNulls().create().toJson(lstElementosActividadesAvance);
+			response_text = String.join("", ",\"items\":",response_text);
 			response_text = String.join("", "{\"success\":true ", response_text, "}");
 		}
 		
@@ -450,6 +486,9 @@ public class SAvanceActividades extends HttpServlet {
 		
 		stActividad temp = new stActividad();
 		temp.id = actividad.getId();
+		temp.nombre = actividad.getNombre();
+		AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(actividad.getId(), 5, "R"); 
+		temp.responsable = asignacion.getColaborador().getPnombre() + " " + asignacion.getColaborador().getPapellido();
 		temp.porcentajeAvance = actividad.getPorcentajeAvance();
 		String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad, usuario).split(";");
 		temp.fechaInicio = fechaInicioFin[0];

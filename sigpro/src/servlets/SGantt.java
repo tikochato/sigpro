@@ -550,7 +550,7 @@ public class SGantt extends HttpServlet {
 
 			for (Hito hito:hitos){
 				items = String.join(",",items,
-						construirItem(null,hito.getId(),OBJETO_ID_HITO, hito.getNombre(), 1, null, hito.getFecha(),
+						construirItem(hito.getId(),hito.getId(),OBJETO_ID_HITO, hito.getNombre(), 1, null, hito.getFecha(),
 								null,true,null,null,null,null));
 			}
 		}

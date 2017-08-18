@@ -9,8 +9,8 @@ app.filter('calculatePercentage', function () {
 	  };
 	});
 
-app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$window',
-	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$window){
+app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$window','$q','$uibModal',
+	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$window, $q,$uibModal){
 		var mi = this;
 		mi.mostrarCargando = false;
 		mi.mostrardiv=false;
@@ -154,4 +154,65 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
             mi.calcularTamanosPantalla();
             $scope.$digest();
         });
+		
+		
+		mi.mostrarActividades = function(row){
+			mi.llamarModalActividades(row.objetoId, row.objetoTipo);
+		}
+		
+		mi.llamarModalActividades = function(objetoId,objetoTipo) {
+			var resultado = $q.defer();
+			var modalInstance = $uibModal.open({
+				animation : 'true',
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				templateUrl : 'objetoavance.jsp',
+				controller : 'modalAvance',
+				controllerAs : 'controller',
+				backdrop : 'static',
+				size : 'lg',
+				resolve : {
+					objetoId : function() {
+						return objetoId;
+					},
+					objetoTipo : function() {
+						return objetoTipo;
+					}	
+				}
+			});
+			
+			modalInstance.result.then(function(itemSeleccionado) {
+				resultado.resolve(itemSeleccionado);
+			});
+			return resultado.promise;
+		};
 }]);
+
+app.controller('modalAvance', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log', 'objetoId','objetoTipo',modalAvance ]);
+
+function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $utilidades, $timeout, $log, objetoId,objetoTipo) {
+	var mi = this;	
+
+	if(objetoTipo == 1){
+		mi.mostrarcargando = true;
+		$http.post('/SAvanceActividades', {
+			accion: 'getActividadesProyecto',
+			idPrestamo: objetoId,
+		}).success(function(response){
+			if (response.success){
+				mi.items = response.items;
+				mi.mostrarcargando = false;
+			}
+		});
+	}
+
+	mi.ok = function() {
+		
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+};

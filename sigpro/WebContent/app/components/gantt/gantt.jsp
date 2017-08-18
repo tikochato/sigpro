@@ -43,6 +43,8 @@
 		    <form>
 		    	
 				<div class="btn-group">
+					<label class="btn btn-default" ng-click="ganttc.pesoProducto(ganttc.proyectoid)"><span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"
+						uib-tooltip="Peso de productos"></span></label>
 					<label class="btn btn-default" ng-click="ganttc.exportar()"><span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"
 						uib-tooltip="Exportar"></span> Exportar</label>
 					<label class="btn btn-default" ng-click="ganttc.zoomAcercar()"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"
@@ -52,14 +54,7 @@
 				</div>
 				
 			</form>
-			</div>
-			
-			<div class="operation_buttons" align="left">
-			<div class="btn-group">
-				<label class="btn btn-default" ng-click="ganttc.pesoProducto(ganttc.proyectoid)"><span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"
-					uib-tooltip="Peso de productos"></span></label>
-			</div>
-			</div>
+			</div>			
 		</div>
 		 <div class="row" align="center" >
 		    <div class="gantt-chart">
