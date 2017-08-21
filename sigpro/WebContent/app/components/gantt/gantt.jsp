@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 	<style>
 		.tamanoDiv{
-			height: calc(100% - 50px)
+			height: calc(100% - 100px);
 		}
 	</style>
 
@@ -42,8 +42,8 @@
 		<div class="subtitulo">
 			{{ ganttc.objetoTipoNombre }} {{ ganttc.proyectoNombre }}
 		</div>
-		<div class="row tamanoDiv" align="center" style="height: 100%" id="reporte">
-			<div class="col-sm-12" style="height: 100%">
+		<div class="row" align="center" style="height: 90%" id="reporte">
+			<div class="col-sm-12 tamanoDiv">
 				<div class="row" align="center" style="height: 10%">
 				    <div class="operation_buttons" align="right">
 				    <form>
@@ -61,7 +61,7 @@
 					</form>
 					</div>			
 				</div>
-				 <div class="row" align="center" style="height: 90%" id="gantt">
+				 <div class="row" align="center" id="gantt">
 				    <div class="gantt-chart">
 						<div ds:gantt-chart id="ganttChartView" items="items" settings="settings" auto-refresh="{{ true }}" style="height: 400px">
 						</div>

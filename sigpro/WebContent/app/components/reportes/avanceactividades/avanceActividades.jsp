@@ -153,7 +153,7 @@
 												</tr>
 											</thead>
 											<tbody class="cuerpoTablaDatos">
-												<tr ng-repeat="row in controller.displayedCollectionHitos" uib-tooltip="{{row.nombre}}" tooltip-placement="center">
+												<tr ng-repeat="row in controller.displayedCollectionHitos" uib-tooltip="{{row.nombre}}" tooltip-placement="center" ng-click="controller.mostrarActividades(row);">
 													<td style="display: none;">{{row.id}}</td>
 													<td style="text-align: left; min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; nowrap; overflow: hidden;">{{row.nombre}}</td>
 													<td style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"><span ng-style="controller.obtenerColor(row);" class="glyphicon glyphicon-certificate"></span></td>
@@ -198,7 +198,7 @@
 												</tr>
 											</thead>
 											<tbody class="cuerpoTablaDatos">
-												<tr ng-repeat="row in controller.displayedProductos" uib-tooltip="{{row.nombre}}" tooltip-placement="center">
+												<tr ng-repeat="row in controller.displayedProductos" uib-tooltip="{{row.nombre}}" tooltip-placement="center" ng-click="controller.mostrarActividades(row);">
 													<td style="display: none;">{{row.id}}</td>
 													<td style="text-align: left; min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; nowrap; overflow: hidden;">{{row.nombre}}</td>
 													<td style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"><span ng-style="controller.obtenerColor(row);" class="glyphicon glyphicon-certificate"></span></td>

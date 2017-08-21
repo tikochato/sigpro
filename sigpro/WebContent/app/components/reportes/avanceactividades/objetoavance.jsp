@@ -10,7 +10,7 @@
 </style>
 
 <div class="modal-header">
-     <h3 class="modal-title">Actividades de {{controller.nombre}}</h3>
+     <h3 class="modal-title">{{controller.nombre}}</h3>
 </div>
 <div class="modal-body" id="modal-body">
 	<div class="row">
@@ -27,8 +27,7 @@
 				<div style="padding: 1px;">
 					<div class="panel panel-default">
 						<div class="panel panel-body">
-							<table st-table="controller.displayedItems" st-safe-src="controller.items"
-							class="table table-striped table-bordered table-hover">
+							<table st-table="controller.displayedItems" st-safe-src="controller.items" class="table table-striped table-bordered table-hover">
 								<thead >
 									<tr>
 										<th style="display: none;">id</th>
@@ -41,13 +40,13 @@
 								</thead>
 								<tbody>
 									<tr st-select-row="row"
-										ng-repeat="row in controller.items">
+										ng-repeat="row in controller.displayedItems">
 										<td style="display: none;">{{row.id}}</td>
 										<td>{{row.nombre}}</td>
 										<td style="text-align: center">{{row.fechaInicial}}</td>
 										<td style="text-align: center">{{row.fechaFinal}}</td>
 										<td style="text-align: right">{{row.avance}}%</td>
-										<td>{{row.responsable}}</td>
+										<td style="text-align: center">{{row.responsable}}</td>
 									</tr>
 								</tbody>
 							</table>

@@ -223,7 +223,7 @@ public class SAvanceActividades extends HttpServlet {
 					proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
 					
 					listaResult = new ArrayList<stAvance>();
-					double  totalHitos = hitos.size();
+					double  totalHitos = 0;
 					
 					Corte = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
 							.parse(fechaCorte);
@@ -239,22 +239,27 @@ public class SAvanceActividades extends HttpServlet {
 						if(hitoResultado != null){
 							if(Corte.before(fechaHito) && hitoResultado.getValorEntero() == 0){
 								totalSinIniciar++;
+								totalHitos++;
 							}
 							
 							if(Corte.after(fechaHito) && hitoResultado.getValorEntero() == 0){
 								totalRetrasadas++;
+								totalHitos++;
 							}
 							
 							if(Corte.after(fechaHito) && hitoResultado.getValorEntero() == 1){
 								totalCompletadas++;
+								totalHitos++;
 							}
 						}else{
 							if (Corte.before(fechaHito)){
 								totalSinIniciar++;
+								totalHitos++;
 							}
 							
 							if (Corte.after(fechaHito)){
 								totalRetrasadas++;
+								totalHitos++;
 							}
 						}
 					}
@@ -274,7 +279,7 @@ public class SAvanceActividades extends HttpServlet {
 					
 					temp = new stAvance();
 					temp.objetoId = idPrestamo;
-					temp.objetoTipo = 1;
+					temp.objetoTipo = 10;
 					temp.nombre = "Total de hitos";
 					temp.sinIniciar = Double.valueOf(df2.format(totalSinIniciar));
 					temp.completadas = Double.valueOf(df2.format(totalCompletadas));
@@ -381,6 +386,71 @@ public class SAvanceActividades extends HttpServlet {
 			response_text = String.join("", "{\"success\":true ", response_text, "}");
 		}else if(accion.equals("getActividadesProyecto")){
 			List<stActividad> actividades = getActividadesProyecto(idPrestamo, usuario);
+			List<stelementosActividadesAvance> lstElementosActividadesAvance = new ArrayList<stelementosActividadesAvance>();
+			for(stActividad actividad : actividades){
+				stelementosActividadesAvance temp = new stelementosActividadesAvance();
+				temp.id = actividad.id;
+				temp.nombre = actividad.nombre;
+				temp.fechaInicial = actividad.fechaInicio;
+				temp.fechaFinal = actividad.fechaFin;
+				temp.avance = actividad.porcentajeAvance;
+				temp.responsable = actividad.responsable;
+				lstElementosActividadesAvance.add(temp);
+			}
+			
+			response_text = new GsonBuilder().serializeNulls().create().toJson(lstElementosActividadesAvance);
+			response_text = String.join("", ",\"items\":",response_text);
+			response_text = String.join("", "{\"success\":true ", response_text, "}");
+		}else if(accion.equals("getHitos")){
+			Date Corte = new Date();
+			List<Hito> hitos = HitoDAO.getHitosPaginaPorProyecto(0, 0, idPrestamo, null, null, null, null, null);
+			List<stelementosActividadesAvance> lstElementosActividadesAvance = new ArrayList<stelementosActividadesAvance>();
+			
+			for(Hito hito : hitos){
+				stelementosActividadesAvance temp = null;
+				HitoResultado hitoResultado = HitoResultadoDAO.getHitoResultadoActivoPorHito(hito.getId());
+				Date fechaHito = new Date();
+				try{	
+					fechaHito = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
+							.parse(Utils.formatDate(hito.getFecha()));
+					if(hitoResultado != null){					
+							if((Corte.before(fechaHito) && hitoResultado.getValorEntero() == 0) || (Corte.after(fechaHito) && hitoResultado.getValorEntero() == 0)){
+								temp = new stelementosActividadesAvance();
+								temp.id = hito.getId();
+								temp.nombre = hito.getNombre();
+								temp.avance = 0;
+								temp.fechaInicial = Utils.formatDate(hito.getFecha());
+								lstElementosActividadesAvance.add(temp);
+							}else if(Corte.after(fechaHito) && hitoResultado.getValorEntero() == 1){
+								temp = new stelementosActividadesAvance();
+								temp.id = hito.getId();
+								temp.nombre = hito.getNombre();
+								temp.avance = 100;
+								temp.fechaFinal = Utils.formatDate(hito.getFecha());
+								lstElementosActividadesAvance.add(temp);
+							}
+					}else{
+						if (Corte.after(fechaHito)){
+							temp = new stelementosActividadesAvance();
+							temp.id = hito.getId();
+							temp.nombre = hito.getNombre();
+							temp.avance = 0;
+							temp.fechaInicial = Utils.formatDate(hito.getFecha());
+							lstElementosActividadesAvance.add(temp);
+						}
+					}
+				}catch (Throwable e) {
+					e.printStackTrace();
+			    }
+			}
+			
+			response_text = new GsonBuilder().serializeNulls().create().toJson(lstElementosActividadesAvance);
+			response_text = String.join("", ",\"items\":",response_text);
+			response_text = String.join("", "{\"success\":true ", response_text, "}");
+		}else if(accion.equals("getActividadesProducto")){
+			Integer productoId = Utils.String2Int(map.get("productoId"));
+			Producto producto = ProductoDAO.getProductoPorId(productoId);
+			List<stActividad> actividades = getActividadesProducto(producto, usuario);
 			List<stelementosActividadesAvance> lstElementosActividadesAvance = new ArrayList<stelementosActividadesAvance>();
 			for(stActividad actividad : actividades){
 				stelementosActividadesAvance temp = new stelementosActividadesAvance();

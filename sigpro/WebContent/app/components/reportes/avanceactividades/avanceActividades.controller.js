@@ -158,10 +158,10 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		$scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
 		
 		mi.mostrarActividades = function(row){
-			mi.llamarModalActividades(row.objetoId, row.objetoTipo);
+			mi.llamarModalActividades(row);
 		}
 		
-		mi.llamarModalActividades = function(objetoId,objetoTipo) {
+		mi.llamarModalActividades = function(objetoRow) {
 			var resultado = $q.defer();
 			var modalInstance = $uibModal.open({
 				animation : 'true',
@@ -173,12 +173,9 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 				backdrop : 'static',
 				size : 'lg',
 				resolve : {
-					objetoId : function() {
-						return objetoId;
-					},
-					objetoTipo : function() {
-						return objetoTipo;
-					}	
+					objetoRow : function(){
+						return objetoRow;
+					}
 				}
 			});
 			
@@ -191,16 +188,46 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 
 app.controller('modalAvance', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', 'objetoId','objetoTipo',modalAvance ]);
+	'$timeout', '$log', 'objetoRow',modalAvance ]);
 
-function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $utilidades, $timeout, $log, objetoId,objetoTipo) {
+function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $utilidades, $timeout, $log, objetoRow) {
 	var mi = this;	
 
-	if(objetoTipo == 1){
+	if(objetoRow.objetoTipo == 1){
 		mi.mostrarcargando = true;
+		mi.nombre = "Actividades de préstamo";
 		$http.post('/SAvanceActividades', {
 			accion: 'getActividadesProyecto',
-			idPrestamo: objetoId,
+			idPrestamo: objetoRow.objetoId,
+			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
+		}).success(function(response){
+			if (response.success){
+				mi.items = response.items;
+				mi.displayedItems = [].concat(mi.items);	
+				mi.mostrarcargando = false;
+			}
+		});
+	}else if(objetoRow.objetoTipo == 10){
+		mi.mostrarcargando = true;
+		mi.nombre = "Hitos de préstamo";
+		$http.post('/SAvanceActividades', {
+			accion: 'getHitos',
+			idPrestamo: objetoRow.objetoId,
+			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
+		}).success(function(response){
+			if (response.success){
+				mi.items = response.items;
+				mi.displayedItems = [].concat(mi.items);	
+				mi.mostrarcargando = false;
+			}
+		});
+	}else if(objetoRow.objetoTipo == 3){
+		mi.mostrarcargando = true;
+		mi.nombre = "Actividades de producto: " + objetoRow.nombre;
+		$http.post('/SAvanceActividades', {
+			accion: 'getActividadesProducto',
+			productoId: objetoRow.objetoId,
+			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
 		}).success(function(response){
 			if (response.success){
 				mi.items = response.items;

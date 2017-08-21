@@ -671,7 +671,8 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		//mi.anchoPantalla = Math.floor(document.getElementById("reporte").offsetHeight);
 		mi.anchoGantt = Math.floor(document.getElementById("gantt").offsetHeight);
 		//mi.anchoPantalla = mi.anchoPantalla - (mi.anchoPantalla * 0.18);
-		mi.anchoGantt = {"height" : + Math.round(mi.anchoGantt) + "px"};
+		//mi.anchoGantt = {"height" : + Math.round(mi.anchoGantt) + "px"};
+		mi.anchoGantt = Math.round(mi.anchoGantt - 32) + "px";
 	}
 	
 	mi.calcularTamanosPantalla();
