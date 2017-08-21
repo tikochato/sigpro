@@ -153,7 +153,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				}
 			}
 			
-			if(mi.riesgo!=null && mi.riesgo.nombre!='' && mi.riesgoTipoid!=''){
+			if(mi.riesgo!=null && mi.riesgo.nombre!='' && mi.riesgoTipoid!='' && mi.probabilidad!=null){
 				$http.post('/SRiesgo', {
 					accion: 'guardarRiesgo',
 					esnuevo: mi.esnuevo,
