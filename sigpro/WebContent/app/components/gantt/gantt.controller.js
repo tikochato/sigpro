@@ -14,8 +14,8 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.proyectoNombre = "";
 		mi.objetoTipoNombre = "";
 		mi.mostrarcargando = true;
-		var date = new Date(), year = date.getFullYear(), month = date.getMonth();
-
+		var date = new Date(), year = date.getFullYear(), month = date.getMonth();		
+		
 		$window.document.title = $utilidades.sistema_nombre+' - Gantt';
 		
 		var servlet_ = $routeParams.objeto_tipo == 1 ? '/SProyecto' : 'SPrograma';
@@ -194,20 +194,21 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		columns.splice(9,0);
 		columns[3].header = 'Nombre';
 		columns[3].width = 300;
-		
-		columns[5].header = 'Inicio';
+		columns[5].header = 'Estado';
 		columns[5].width = 85;
-		columns[6].header = 'Fin';
+		columns[6].header = 'Inicio';
 		columns[6].width = 85;
-		columns[7].header = 'Hito';
-		columns[7].width = 60;
-		columns[7].isReadOnly = true;
-		columns[8].header = 'Completada';
-		columns[9].header = 'Responsable';
-		columns[9].isReadOnly = true;
+		columns[7].header = 'Fin';
+		columns[7].width = 85;
+		columns[8].header = 'Hito';
+		columns[8].width = 60;
+		columns[8].isReadOnly = true;
+		columns[9].header = 'Completada';
+		columns[10].header = 'Responsable';
+		columns[10].isReadOnly = true;
 		
 		//columns.splice(10, 0, { header: 'Duración (d)', width: 80, cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(64, 8) });
-		columns.splice(10, 0, {
+		columns.splice(11, 0, {
 		    header: 'Duración (d)', 
 		    width: 80,
 		    isReadOnly: true,
@@ -215,20 +216,23 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		    cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(64, 8)
 		});
 		
-		columns.splice(11 , 0, { header: 'Predecesor', width: 70, cellTemplate: DlhSoft.Controls.GanttChartView.getPredecessorsColumnTemplate(84) });
+		columns.splice(12 , 0, { header: 'Predecesor', width: 70, cellTemplate: DlhSoft.Controls.GanttChartView.getPredecessorsColumnTemplate(84) });
 		
 		//columns.push({ header: 'Costo Planificado (Q)', width: 110, cellTemplate: DlhSoft.Controls.GanttChartView.getCostColumnTemplate(84) });
-		columns.splice(12, 0, {
+		columns.splice(13, 0, {
 		    header: 'Costo Planificado (Q)', 
 		    width: 110,
 		    isReadOnly: true,
 		    cellStyle: 'text-align: right;',
-		    cellTemplate: DlhSoft.Controls.GanttChartView.getCostColumnTemplate(84)
+		    cellTemplate: function (item) {
+		    	return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return numeral(item.costo).format('$ 0,0') });
+	
+		    }
 
 		});		
 		
 		//columns.push({ header: 'Meta Planificada', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaPlanificada; }, function (value) { item.metaPlanificada = value; }); } });
-		columns.splice(13, 0, {
+		columns.splice(14, 0, {
 		    header: 'Meta Planificada', 
 		    width: 80,
 		    isReadOnly: true,
@@ -239,7 +243,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		});	
 		
 		//columns.push({ header: 'Meta Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaReal; }, function (value) { item.metaReal = value; }); } });
-		columns.splice(14, 0, {
+		columns.splice(15, 0, {
 		    header: 'Meta Real', 
 		    width: 80,
 		    isReadOnly: true,
@@ -661,8 +665,21 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 				}
 			}, function() {
 			});
-	};
-		  
+	};	
+	
+	mi.calcularTamanosPantalla = function(){
+		//mi.anchoPantalla = Math.floor(document.getElementById("reporte").offsetHeight);
+		mi.anchoGantt = Math.floor(document.getElementById("gantt").offsetHeight);
+		//mi.anchoPantalla = mi.anchoPantalla - (mi.anchoPantalla * 0.18);
+		mi.anchoGantt = {"height" : + Math.round(mi.anchoGantt) + "px"};
+	}
+	
+	mi.calcularTamanosPantalla();
+	
+	angular.element($window).bind('resize', function(){ 
+        mi.calcularTamanosPantalla();
+        $scope.$digest();
+    });
 	}// fin function controller
 
 ]);

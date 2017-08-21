@@ -204,6 +204,7 @@ function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $u
 		}).success(function(response){
 			if (response.success){
 				mi.items = response.items;
+				mi.displayedItems = [].concat(mi.items);	
 				mi.mostrarcargando = false;
 			}
 		});
