@@ -6,6 +6,7 @@ import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.joda.time.DateTime;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -18,7 +19,13 @@ import pojo.UsuarioLogId;
 import pojo.UsuarioPermiso;
 import pojo.UsuarioPermisoId;
 import pojo.Colaborador;
+import pojo.Cooperante;
 import pojo.Permiso;
+import pojo.Proyecto;
+import pojo.ProyectoUsuario;
+import pojo.RolUsuarioProyecto;
+import pojo.RolUsuarioProyectoId;
+import pojo.UnidadEjecutora;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +39,7 @@ public class UsuarioDAO {
 		Usuario ret = null;
 		try{
 			session.beginTransaction();
-			ret = session.get(Usuario.class,usuario);
+			ret = session.get(Usuario.class,usuario.toLowerCase());
 		}
 		catch(Throwable e){
 			CLogger.write("1", UsuarioDAO.class, e);
@@ -170,6 +177,83 @@ public class UsuarioDAO {
 		
 		return ret;
 	}
+	public static boolean asignarPrestamos(String usuario, List <Integer> prestamos, String usuario_creo){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			
+			for(int i =0; i<prestamos.size();i++){
+				Query query = session.createSQLQuery(
+						"CALL asignar_proyecto(:proyecto , :usuario, :usuario_creo)")
+						.setParameter("proyecto", prestamos.get(i))
+						.setParameter("usuario", usuario.toString())
+						.setParameter("usuario_creo", usuario_creo.toString());
+				query.executeUpdate();
+				
+			}			
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("2", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
+	public static boolean asignarPrestamoRol(String usuario, List <Integer> prestamos, int rol){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			for(int i =0; i<prestamos.size();i++){
+				RolUsuarioProyectoId rolUsuarioProyectoId = new RolUsuarioProyectoId(rol,prestamos.get(i).intValue(),usuario);
+				RolUsuarioProyecto rolUsuario = new RolUsuarioProyecto(rolUsuarioProyectoId);
+				session.saveOrUpdate(rolUsuario);
+				if( i % 20 == 0 ){
+					session.flush();
+		            session.clear();
+		        }	
+			}		
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("2", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
+	public static boolean desasignarPrestamo(String usuario, List <Integer> prestamos){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			for(int i =0; i<prestamos.size();i++){
+				Query query = session.createSQLQuery(
+						"CALL desasignar_proyecto(:proyecto , :usuario)")
+						.setParameter("proyecto", prestamos.get(i))
+						.setParameter("usuario", usuario.toString());
+				query.executeUpdate();
+			}			
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("2", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
 	
 	public static boolean desactivarPermisosUsuario(String usuario, List <Integer> permisos, String usuarioTexto){
 		boolean ret = false;
@@ -240,6 +324,78 @@ public class UsuarioDAO {
 		
 		return ret;
 	}
+	public static UnidadEjecutora  getUnidadEjecutora(String usuario){
+		UnidadEjecutora ret = new UnidadEjecutora();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		List <UnidadEjecutora> unidades = new ArrayList <UnidadEjecutora> ();
+		String consulta ="Select u FROM UnidadEjecutora u, RolUsuarioProyecto r, Proyecto p where p.id =r.id.proyecto and p.unidadEjecutora.id = u.id and r.id.usuario =:usuario ";
+		try{
+			session.beginTransaction();
+			Query<UnidadEjecutora> criteria = session.createQuery(consulta, UnidadEjecutora.class);
+			criteria.setParameter("usuario", usuario);
+			unidades = criteria.getResultList();
+			if(unidades.size()>0){
+				ret = unidades.get(0);
+			}
+			
+		}
+		catch(Throwable e){
+			CLogger.write("5", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}				
+		return ret;
+	}
+	
+	public static Cooperante getCooperantePorUsuario(String usuario){
+		Cooperante ret = new Cooperante();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		List <Cooperante> unidades = new ArrayList <Cooperante> ();
+		String consulta ="Select u FROM Cooperante u, RolUsuarioProyecto r, Proyecto p where p.id =r.id.proyecto and p.cooperante.id = u.id and r.id.usuario =:usuario ";
+		try{
+			session.beginTransaction();
+			Query<Cooperante> criteria = session.createQuery(consulta, Cooperante.class);
+			criteria.setParameter("usuario", usuario);
+			unidades = criteria.getResultList();
+			if(unidades.size()>0){
+				ret = unidades.get(0);
+			}
+			
+		}
+		catch(Throwable e){
+			CLogger.write("5", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static int getRolPorUsuario(String usuario){
+		int ret = 0;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		List <Integer> unidades = new ArrayList <Integer> ();
+		String consulta ="Select r.id.rol FROM  RolUsuarioProyecto r where r.id.usuario =:usuario ";
+		try{
+			session.beginTransaction();
+			Query<Integer> criteria = session.createQuery(consulta, Integer.class);
+			criteria.setParameter("usuario", usuario);
+			unidades = criteria.getResultList();
+			if(unidades.size()>0){
+				ret = unidades.get(0);
+			}
+		}
+		catch(Throwable e){
+			CLogger.write("5", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	
 	public static boolean editarUsuario(Usuario usuario, String usuarioActualizo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -264,6 +420,22 @@ public class UsuarioDAO {
 		try{
 			session.beginTransaction();
 			Query<UsuarioPermiso> criteria = session.createQuery("FROM UsuarioPermiso where usuariousuario=:usuario and estado = 1", UsuarioPermiso.class);
+			criteria.setParameter("usuario", usuario);
+			ret = criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("6", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List <ProyectoUsuario> getPrestamosAsignadosPorUsuario(String usuario){
+		List <ProyectoUsuario> ret = new ArrayList <ProyectoUsuario> ();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			Query<ProyectoUsuario> criteria = session.createQuery("FROM ProyectoUsuario where id.usuario=:usuario", ProyectoUsuario.class);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getResultList();
 		}catch(Throwable e){
@@ -374,4 +546,50 @@ public class UsuarioDAO {
 		}
 		return ret;
 	}
+		
+	public static List <Proyecto> getPrestamosPorElemento(int elemento, int id_elemento,String usuario){
+		String busqueda="";
+		if(elemento==4 || elemento==5){
+			busqueda="Select p FROM Proyecto p, ProyectoUsuario u where p.unidadEjecutora.unidadEjecutora =:id and p.estado=1 and p.id =u.id.proyectoid and u.id.usuario=:usuario";
+		}else if(elemento==6){
+			busqueda= "Select p FROM Proyecto p, ProyectoUsuario u where p.cooperante.id =:id and p.estado=1 and p.id =u.id.proyectoid and u.id.usuario=:usuario";
+		}else{
+			busqueda= "Select p FROM Proyecto p where  p.estado=1";
+		}
+		List <Proyecto> ret = new ArrayList<Proyecto> ();
+		
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query <Proyecto> criteria = session.createQuery(busqueda, Proyecto.class);
+			if(elemento>=4){
+				criteria.setParameter("id",id_elemento);
+				criteria.setParameter("usuario",usuario);
+			}
+			ret =criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("7", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	
+	public static List <RolUsuarioProyecto> getUsuariosPorPrestamo(int proyecto){
+		List <RolUsuarioProyecto> ret = new ArrayList<RolUsuarioProyecto> ();
+		
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query <RolUsuarioProyecto> criteria = session.createQuery("FROM RolUsuarioProyecto where id.proyecto=:proyecto", RolUsuarioProyecto.class);
+			criteria.setParameter("proyecto",proyecto);
+			ret =criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("7", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	
 }
