@@ -118,7 +118,7 @@ public class SMatrizRiesgo extends HttpServlet {
 				if (objetoRiesgo!=null){
 					temp.objetoTipo = objetoRiesgo.getId().getObjetoTipo();
 					switch (temp.objetoTipo){
-					case 1: temp.objetoTipoNombre = "Préstamo"; break;
+					case 1: temp.objetoTipoNombre = "Proyecto"; break;
 					case 2: temp.objetoTipoNombre = "Componente"; break;
 					case 3: temp.objetoTipoNombre = "Producto"; break;
 					case 4: temp.objetoTipoNombre = "Subproducto"; break;
@@ -181,7 +181,7 @@ public class SMatrizRiesgo extends HttpServlet {
 				ObjetoRiesgo objetoRiesgo = RiesgoDAO.getObjetoRiesgo(riesgo.getId());
 				if (objetoRiesgo!=null){
 					switch (objetoRiesgo.getId().getObjetoTipo()){
-					case 1: objetoTipoNombre = "Préstamo"; break;
+					case 1: objetoTipoNombre = "Proyecto"; break;
 					case 2: objetoTipoNombre = "Componente"; break;
 					case 3: objetoTipoNombre = "Producto"; break;
 					case 4: objetoTipoNombre = "Subproducto"; break;

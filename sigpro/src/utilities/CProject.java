@@ -231,7 +231,7 @@ public class CProject {
 				, 0, usuario, null, new Date(), 
 				null, 1, null, null, null,null, null, null, null, objetoId, objetoTipo, 
 				(( Double ) task.getDuration().getDuration()).intValue()
-				, task.getDuration().getUnits().getName() 
+				, task.getDuration().getUnits().getName()
 				,itemPredecesor!=null ? itemPredecesor.objetoId : null
 				, itemPredecesor != null ? itemPredecesor.objetoTipo : null
 				, null, null, new BigDecimal(task.getCost().toString()),new BigDecimal(task.getActualCost().toString()),null,null

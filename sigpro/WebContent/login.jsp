@@ -14,7 +14,7 @@
 		<div class="row-fluid">
 		<form class="login-form">
 			<div class="panel panel-default">
-			  <div class="panel-heading" style="background-color: #c7c7c7; color: #ffffff;">{{ login.sistema_nombre }}</div>
+			  <div class="panel-heading" style="background-color: #24292e; color: #9d9d9d;">{{ login.sistema_nombre }}</div>
 			  <div class="panel-body">
 			    <label for="user" class="sr-only">Usuario</label>
 		        <input ng-model="login.username" ng-change="showerror=false" type="text" 

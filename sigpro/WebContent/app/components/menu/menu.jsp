@@ -88,6 +88,7 @@
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/desembolsos/rp">Desembolsos</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/administracionTransaccional/rp">Administración transaccional</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/matrizraci/rp">Matriz RACI</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/mapa">Mapa</a></li></shiro:hasPermission>
                     	</ul>
                     </li>
                     <shiro:hasPermission name="34010">
