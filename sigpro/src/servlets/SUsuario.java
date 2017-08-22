@@ -12,19 +12,29 @@ import java.io.BufferedReader;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ColaboradorDAO;
+import dao.ProyectoDAO;
+import dao.RolDAO;
 import dao.UsuarioDAO;
 import pojo.Colaborador;
 import pojo.Permiso;
 import pojo.Usuario;
 import pojo.UsuarioPermiso;
+import pojo.Proyecto;
+import pojo.ProyectoUsuario;
+import pojo.Rol;
+import pojo.RolUsuarioProyecto;
+import pojo.UnidadEjecutora;
 import utilities.Utils;
 
 /**
@@ -67,6 +77,15 @@ public class SUsuario extends HttpServlet {
 		Integer id;
 		String nombre;
 		String descripcion;
+	}
+	class stproyecto{
+		Integer id;
+		String nombre;		
+	}
+	class stproyecto_usuario{
+		Integer id;
+		String nombre;
+		String usuario;
 	}
        
     /**
@@ -173,9 +192,25 @@ public class SUsuario extends HttpServlet {
 							stpermisos.add(usuariopermiso);
 						}
 					}
+					List <ProyectoUsuario>proyectos = new ArrayList <ProyectoUsuario>();
+					List <stproyecto_usuario>stproyectos = new ArrayList <stproyecto_usuario>();
+					proyectos = UsuarioDAO.getPrestamosAsignadosPorUsuario(usuario);
+					if(proyectos !=null && proyectos.size()>0){
+						for(ProyectoUsuario proyectoUsuario : proyectos){
+							stproyecto_usuario proyecto_usuario= new stproyecto_usuario();
+							proyecto_usuario.id=proyectoUsuario.getId().getProyectoid();
+							proyecto_usuario.nombre=ProyectoDAO.getProyecto(proyecto_usuario.id).getNombre();
+							proyecto_usuario.usuario=proyectoUsuario.getId().getUsuario();
+							stproyectos.add(proyecto_usuario);
+						}
+					}
+					Integer rol = UsuarioDAO.getRolPorUsuario(usuario);
+					Integer unidadEjecutora = UsuarioDAO.getUnidadEjecutora(usuario).getUnidadEjecutora();
+					Integer cooperante = UsuarioDAO.getCooperantePorUsuario(usuario).getId();
 					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stpermisos);
+					String proyectos_usuarios= new GsonBuilder().serializeNulls().create().toJson(stproyectos);
 					response_text  = String.join("", "\"permisos\":",respuesta);
-					response_text = String.join("", "{\"success\":true,", response_text ,"}");
+					response_text = String.join("", "{\"success\":true,", response_text ,",\"proyectos\": "+proyectos_usuarios+"," +"\"rol\": "+rol+",\"unidadEjecutora\": "+unidadEjecutora+"," +"\"cooperante\": "+cooperante+"}");
 				}
 			}else if(accion.compareTo("getUsuarios")==0){
 				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
@@ -276,13 +311,22 @@ public class SUsuario extends HttpServlet {
 						String nuevopassword = map.get("password");
 						String nuevomail = map.get("email").toLowerCase();
 						String permisosAsignados = map.get("permisos");
+						String prestamosAsignados=map.get("prestamos");
+						String rol =map.get("rol");
 						HttpSession sesionweb = request.getSession();
-						if(nuevousuario!=null && nuevopassword!=null && nuevomail != null && permisosAsignados!=null){
+						if(nuevousuario!=null && nuevopassword!=null && nuevomail != null && permisosAsignados!=null && rol!=null){
 							if(!UsuarioDAO.existeUsuario(nuevousuario)){
 								if(nuevousuario.compareTo("")!=0 && nuevopassword.compareTo("")!=0 && nuevomail.compareTo("")!=0){
 									String usuarioCreo =sesionweb.getAttribute("usuario").toString();
 									boolean registro = UsuarioDAO.registroUsuario(nuevousuario, nuevomail, nuevopassword,usuarioCreo);
 									if(registro){
+										if(prestamosAsignados.compareTo("[]")!=0){
+											Gson entradaJson = new Gson();
+											Type tipo = new TypeToken<List<Integer>>() {}.getType();
+											List<Integer> prestamos = entradaJson.fromJson(prestamosAsignados, tipo);
+											UsuarioDAO.asignarPrestamos(usuario, prestamos,usuarioCreo);
+											UsuarioDAO.asignarPrestamoRol(usuario, prestamos, Integer.parseInt(rol));
+										}
 										if(permisosAsignados.compareTo("[]")!=0){
 											Gson entradaJson = new Gson();
 											Type tipo = new TypeToken<List<Integer>>() {}.getType();
@@ -359,6 +403,52 @@ public class SUsuario extends HttpServlet {
 				String respuesta = new GsonBuilder().serializeNulls().create().toJson(stusuarios);
 				response_text = String.join("", "\"usuarios\": ",respuesta);
 				response_text = String.join("", "{\"success\":true,", response_text,"}");
+			}else if(accion.compareTo("getPrestamosPorElemento")==0){
+				String elemento = map.get("tipo");
+				String id_elemento = map.get("id");
+				if(elemento!=null && id_elemento!=null){
+					HttpSession sesionweb = request.getSession();
+					String usuario_consulta =sesionweb.getAttribute("usuario").toString();
+					List <Proyecto> proyectos = UsuarioDAO.getPrestamosPorElemento(Integer.parseInt(elemento),Integer.parseInt(id_elemento),usuario_consulta);
+					List <stproyecto>stproyectos = new  ArrayList<stproyecto>();
+					for(Proyecto proyecto : proyectos){
+						stproyecto tmpProyecto = new stproyecto();
+						tmpProyecto.id = proyecto.getId();
+						tmpProyecto.nombre= proyecto.getNombre();
+						stproyectos.add(tmpProyecto);
+					}
+					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stproyectos);
+					response_text = String.join("", "\"prestamos\": ",respuesta);
+					response_text = String.join("", "{\"success\":true,", response_text,"}");
+				}
+			}else if(accion.compareTo("getUsuarioPorPrestamo")==0){
+				String proyecto = map.get("proyecto");
+				if(proyecto!=null){
+					List <RolUsuarioProyecto> rolUsuarios = UsuarioDAO.getUsuariosPorPrestamo(Integer.parseInt(proyecto));
+					List <stproyecto_usuario>usuarios = new  ArrayList<stproyecto_usuario>();
+					for(RolUsuarioProyecto rolusuario : rolUsuarios){
+						stproyecto_usuario tmp = new stproyecto_usuario();
+						tmp.id=rolusuario.getId().getRol();
+						Rol tmpRol = new Rol();
+						tmpRol =RolDAO.getRol(rolusuario.getId().getRol());
+						tmp.nombre=tmpRol.getNombre();
+						Usuario us_tmp= new Usuario();
+						us_tmp=UsuarioDAO.getUsuario(rolusuario.getId().getUsuario());
+						String nombre_col = "";
+						if(us_tmp.getColaboradors()!=null){
+							Set <Colaborador> colaboradores= new HashSet <Colaborador>();
+							colaboradores = us_tmp.getColaboradors();							
+							for (Colaborador col :colaboradores){
+								nombre_col = col.getPnombre()+ " "+ col.getPapellido();
+							}
+						}
+						tmp.usuario=nombre_col+" "+rolusuario.getId().getUsuario()+" - "+us_tmp.getEmail();
+						usuarios.add(tmp);
+					}
+					String respuesta = new GsonBuilder().serializeNulls().create().toJson(usuarios);
+					response_text = String.join("", "\"usuarios\": ",respuesta);
+					response_text = String.join("", "{\"success\":true,", response_text,"}");
+				}
 			}
 		}else{
 			response_text = String.join("","{ \"success\": false, \"error\":\"No se enviaron los parametros deseados\" }");

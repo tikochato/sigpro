@@ -57,6 +57,9 @@
 					</div>
 				  </div>
 				</div>
+				<div class="total-rows">
+						  Total de {{  usuarioc.totalUsuarios + (usuarioc.totalUsuarios == 1 ? " Usuario" : " Usuarios" ) }}
+					   </div>
 				<ul uib-pagination total-items="usuarioc.totalUsuarios"
 						ng-model="usuarioc.paginaActual"
 						max-size="usuarioc.numeroMaximoPaginas"
@@ -81,8 +84,8 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="34020">
-						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid && !usuarioc.cargandoPermisos ? usuarioc.guardarUsuario() : '' ) :  (form.$valid  ? usuarioc.guardarUsuario() : '' )" 
-							ng-disabled="usuarioc.esNuevo ? form1.$invalid || usuarioc.cargandoPermisos : form.$invalid  || usuarioc.cargandoPermisos" uib-tooltip="Guardar">
+						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid && !usuarioc.cargandoPermisos &&  usuarioc.tipoUsuario.grupo!= '' ? usuarioc.guardarUsuario() : '' ) :  (form.$valid  ? usuarioc.guardarUsuario() : '' )" 
+							ng-disabled="usuarioc.esNuevo ? form1.$invalid || usuarioc.cargandoPermisos || usuarioc.tipoUsuario.grupo== '' : form.$invalid  || usuarioc.cargandoPermisos" uib-tooltip="Guardar">
 						<span class="glyphicon glyphicon-floppy-saved"></span>Guardar</label>
 					</shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()"  uib-tooltip="Ir a Tabla">
@@ -107,6 +110,46 @@
     							ng-value="usuarioc.usuariosSelected.password" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">* Contraseña</label>
 						</div>
+						<br>
+						<h3 ng-show="!usuarioc.esNuevo">Préstamos Asignados</h3>
+						<div class="col-sm-12 operation_buttons" align="right" style="margin-left: -1%;" ng-if="!usuarioc.esNuevo">
+							<div class="btn-group">
+								<label class="btn btn-default" ng-click="usuarioc.buscarPrestamosNuevos()"
+														ng-disabled="" 
+													uib-tooltip="Agregar permiso" ng-disabled="usuarioc.cargandoPermisos">
+									<span class="glyphicon glyphicon-plus"></span>
+									Agregar préstamo.
+								</label>
+							</div>
+						</div>
+						<table style="width: 100%; overflow-y: scroll;height: 175px;display: block;"
+							st-table="usuarioc.prestamosAsignados"  ng-show="!usuarioc.esNuevo"
+							class="table table-striped  table-bordered table-hover table-propiedades">
+								<thead>
+									<tr>
+										<th style="width: 100%;">Nombre</th>
+										<th style="width: 5%;">Quitar</th>
+				
+									</tr>
+								</thead>
+								<tbody>
+									<tr st-select-row="row"
+										ng-repeat="row in usuarioc.prestamosAsignados">
+										<td>{{row.nombre}}</td>
+										<td>
+											<button type="button"
+												ng-click="usuarioc.eliminarPrestamo($index,row)"
+												class="btn btn-sm btn-danger">
+												<i class="glyphicon glyphicon-minus-sign"> </i>
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						<label ng-show="!usuarioc.esNuevo">
+							<input type="checkbox" ng-model="usuarioc.verAreaPermisos" ng-true-value="'true'" ng-false-value="'false'">
+						    	Ver permisos
+						</label>
 
 				</form>
 				<form name="form1">
@@ -125,13 +168,65 @@
     							ng-value="usuarioc.claves.password2" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">* Vuelva a ingresar la contraseña</label>
 						</div>
-						<div class="form-group" >
-					          <input type="text" class="inputText" ng-model="usuarioc.usuariosSelected.colaborador"  ng-disabled="true" 
-					          		ng-value="usuarioc.usuariosSelected.colaborador" onblur="this.setAttribute('value', this.value);"
-					          		ng-click="usuarioc.tieneColaborador ? '' : usuarioc.buscarColaborador()" >
-					          <span class="label-icon" ng-click="usuarioc.tieneColaborador ? '' : usuarioc.buscarColaborador()" uib-tooltip="buscar colaborador"><i class="glyphicon glyphicon-search"></i></span>
-					          <label class="floating-label" >Colaborador</label>
-					      </div>
+						<div class="form-group-row row"  ng-show="usuarioc.esNuevo">
+							<div class="form-group col-sm-4" >
+						          <input type="text" class="inputText" ng-model="usuarioc.tipoUsuario.nombre"  
+						          		ng-value="usuarioc.tipoUsuario.nombre" 
+						          		ng-click="!usuarioc.cargandoPermisos? usuarioc.buscarPermiso(1) : ''" readonly >
+						          <span class="label-icon" ng-click="!usuarioc.cargandoPermisos? usuarioc.buscarPermiso(1) : ''"><i class="glyphicon glyphicon-search"></i></span>
+						          <label class="floating-label" >Tipo de Usuario</label>
+						    </div>
+							<div class="form-group col-sm-4" ng-show="usuarioc.tipoUsuario.id==4 || usuarioc.tipoUsuario.id==5">
+						          <input type="text" class="inputText" ng-model="usuarioc.usuariosSelected.colaborador"  
+						          		ng-value="usuarioc.usuariosSelected.colaborador" 
+						          		ng-click="usuarioc.buscarColaborador()"  readonly>
+						          <span class="label-icon" ng-click=" usuarioc.buscarColaborador()"><i class="glyphicon glyphicon-search"></i></span>
+						          <label class="floating-label" >Colaborador</label>
+						    </div>
+						    <div class="form-group col-sm-4" ng-show="usuarioc.tipoUsuario.id==4 || usuarioc.tipoUsuario.id==5">
+						          <input type="text" class="inputText" ng-model="usuarioc.nombreUnidadEjecutora" 
+						          		ng-value="usuarioc.nombreUnidadEjecutora" 
+						          		 readonly>
+						          <label class="floating-label" >UnidadEjecutora</label>
+						    </div>
+						    <div class="form-group col-sm-8" ng-show="usuarioc.tipoUsuario.id==6">
+						          <input type="text" class="inputText" ng-model="usuarioc.nombreCooperante"    ng-click="usuarioc.buscarPermiso(3)"
+						          		ng-value="usuarioc.nombreCooperante"  readonly>
+						          <span class="label-icon" ng-click="usuarioc.buscarPermiso(3)"><i class="glyphicon glyphicon-search"></i></span>
+						          <label class="floating-label" >Cooperante</label>
+						    </div>
+						    <!--  tabla de los proyectos asignados -->
+							<table style="width: 100%; overflow-y: scroll;height: 175px;display: block;"
+							st-table="usuarioc.prestamosAsignados"
+							class="table table-striped  table-bordered table-hover table-propiedades">
+								<thead>
+									<tr>
+										<th style="width: 100%;">Nombre</th>
+										<th style="width: 5%;">Quitar</th>
+				
+									</tr>
+								</thead>
+								<tbody>
+									<tr st-select-row="row"
+										ng-repeat="row in usuarioc.prestamosAsignados">
+										<td>{{row.nombre}}</td>
+										<td>
+											<button type="button"
+												ng-click="usuarioc.eliminarPrestamo($index)"
+												class="btn btn-sm btn-danger">
+												<i class="glyphicon glyphicon-minus-sign"> </i>
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<label>
+						      <input type="checkbox" ng-model="usuarioc.verAreaPermisos" ng-true-value="'true'" ng-false-value="'false'">
+						      Ver permisos
+						    </label>
+						</div>
+						
+					      
 						<br>
 				</form>
 				
@@ -141,16 +236,10 @@
 			<div class="row">
 			<div class="col-sm-12">
 			
-		<div align="center" ng-show="usuarioc.isCollapsed">
+		<div align="center" ng-show="usuarioc.isCollapsed && usuarioc.verAreaPermisos == 'true'">
 				<h3 ng-show="usuarioc.isCollapsed">Permisos</h3>
 				<div class="col-sm-12 operation_buttons" align="right" style="margin-left: -1%;" ng-if="usuarioc.esNuevo">
 					<div class="btn-group">
-						<label class="btn btn-default" ng-click="!usuarioc.cargandoPermisos? usuarioc.buscarPermiso(1) : ''"
-												ng-disabled="" 
-											uib-tooltip="Seleccionar Rol" ng-disabled="usuarioc.cargandoPermisos" >
-							<span class="glyphicon glyphicon-zoom-in"></span>
-							Seleccionar Rol
-						</label>
 						<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(0)"
 												ng-disabled="" 
 											uib-tooltip="Agregar permiso" ng-disabled="usuarioc.cargandoPermisos">
@@ -173,31 +262,31 @@
 				<table style="width: 95%; overflow-y: scroll;height: 175px;display: block;"
 				st-table="usuarioc.permisosAsignados"
 				class="table table-striped  table-bordered table-hover table-propiedades">
-				<thead >
-					<tr>
-						<th style="width: 5%;">Nombre</th>
-						<th>Descripción</th>
-						<th style="width: 30px;">Quitar</th>
-
-					</tr>
-				</thead>
-				<tbody>
-					<tr st-select-row="row"
-						ng-repeat="row in usuarioc.permisosAsignados">
-						<td>{{row.nombre}}</td>
-						<td>{{row.descripcion}}</td>
-						<td>
-							<button type="button"
-								ng-click="usuarioc.eliminarPermiso(row)"
-								class="btn btn-sm btn-danger">
-								<i class="glyphicon glyphicon-minus-sign"> </i>
-							</button>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+					<thead >
+						<tr>
+							<th style="width: 5%;">Nombre</th>
+							<th>Descripción</th>
+							<th style="width: 30px;">Quitar</th>
+	
+						</tr>
+					</thead>
+					<tbody>
+						<tr st-select-row="row"
+							ng-repeat="row in usuarioc.permisosAsignados">
+							<td>{{row.nombre}}</td>
+							<td>{{row.descripcion}}</td>
+							<td>
+								<button type="button"
+									ng-click="usuarioc.eliminarPermiso(row)"
+									class="btn btn-sm btn-danger">
+									<i class="glyphicon glyphicon-minus-sign"> </i>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			
-			<div class="grid_loading" ng-if="usuarioc.cargandoPermisos">
+			<div class="grid_loading" ng-if="usuarioc.cargandoPermisos" style="margin-top:80px; width: 96%; margin-left: 1%;">
 				<div class="msg">
 					<span><i class="fa fa-spinner fa-spin fa-4x"></i>
 						<br><br>
@@ -210,6 +299,7 @@
 		</div>
 		
 		</div>
+			<br>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			        <shiro:hasPermission name="34020">

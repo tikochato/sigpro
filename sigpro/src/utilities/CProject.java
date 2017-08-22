@@ -221,17 +221,17 @@ public class CProject {
 		}
 		
 		List<ResourceAssignment> recursos = task.getResourceAssignments();
-		if (recursos!=null && recursos.size()>0){
-			recursos.get(0).getResource().getName();
-		}
+		//if (recursos!=null && recursos.size()>0){
+			//recursos.get(0).getResource().getName();
+		//}
 		
 		
 		
 		Actividad actividad = new Actividad(actividadTipo,null, task.getName(), null, task.getStart(), task.getFinish()
-				, task.getPercentageComplete() != null ? (Integer) task.getPercentageComplete(): 0, usuario, null, new Date(), 
+				, 0, usuario, null, new Date(), 
 				null, 1, null, null, null,null, null, null, null, objetoId, objetoTipo, 
 				(( Double ) task.getDuration().getDuration()).intValue()
-				, task.getDuration().getUnits().getName() 
+				, task.getDuration().getUnits().getName()
 				,itemPredecesor!=null ? itemPredecesor.objetoId : null
 				, itemPredecesor != null ? itemPredecesor.objetoTipo : null
 				, null, null, new BigDecimal(task.getCost().toString()),new BigDecimal(task.getActualCost().toString()),null,null
