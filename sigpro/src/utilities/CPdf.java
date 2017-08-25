@@ -60,11 +60,8 @@ public class CPdf {
 
 				BaseTable table = new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 
-				Row<PDPage> headerRow = table.createRow(15f);
-				float distribucion = 100/3;
+				Row<PDPage> headerRow = table.createRow(15f);			
 				float cuarta =15;
-				float mitad=distribucion/2;
-				float tercera= (20/3)+5/6;
 				//nombre - unidad de medida
 				Cell<PDPage> cell = headerRow.createCell(25, "Nombre");
 				cell = headerRow.createCell(6, "Unidad de Medida");
@@ -83,6 +80,20 @@ public class CPdf {
 				/*Row<PDPage> row = table.createRow(12);
 				cell = row.createCell(30, "Data 1");
 				cell = row.createCell(70, "Some value");*/
+				//creando fila
+				Row<PDPage> row = table.createRow(12);
+				 cell = headerRow.createCell(25, "Préstamo");
+				cell = headerRow.createCell(6, " ");
+				
+				//cuatrimestres
+				cell = headerRow.createCell(cuarta, "Cuatrimestre 1");
+				cell = headerRow.createCell(cuarta, "Cuatrimestre 2");
+				cell = headerRow.createCell(cuarta, "Cuatrimestre 3");
+				
+				//totales
+				cell = headerRow.createCell(8, "Total Anual");
+				cell = headerRow.createCell(8, "Total");
+				cell = headerRow.createCell(8, "Meta Final");
 
 				table.draw();
 			    contentStream.close();
