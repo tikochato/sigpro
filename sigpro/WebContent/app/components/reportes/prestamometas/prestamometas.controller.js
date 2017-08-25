@@ -174,6 +174,21 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			}
 			mi.scrollPosicion = elemento.scrollLeft;
 		}
+		mi.exportarPdf=function(){
+			console.log("checkpoint");
+			$http.post('/SPrestamoMetas', { accion: 'exportarPdf' } ).then(
+					  function successCallback(response) {
+							var anchor = angular.element('<a/>');
+						    anchor.attr({
+						         href: 'data:application/pdf;base64,' + response.data,
+						         target: '_blank',
+						         download: 'PrestamoMestas.pdf'
+						     })[0].click();
+						  }.bind(this), function errorCallback(response){
+						 		
+						 	}
+						 );
+		};
 		
 		mi.validar = function(noElemento){
 			if(mi.prestamo.value > 0)

@@ -1,6 +1,9 @@
 package servlets;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -18,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
+import org.apache.shiro.codec.Base64;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,6 +37,7 @@ import pojo.Producto;
 import pojo.Proyecto;
 import utilities.CMariaDB;
 import utilities.Utils;
+import utilities.CPdf;
 
 @WebServlet("/SPrestamoMetas")
 public class SPrestamoMetas extends HttpServlet {
@@ -232,7 +236,53 @@ public class SPrestamoMetas extends HttpServlet {
 //			outStream.write(outArray);
 //			outStream.flush();
 
-		}else{
+		}else if(accion.equals("exportarPdf")){
+			//Creamos el documento de pdf
+			CPdf archivo = new CPdf();
+			String path = archivo.ExportPdf();
+			File file=new File(path);
+			if(file.exists()){
+		        FileInputStream is = null;
+		        try {
+		        	is = new FileInputStream(file);
+		        }
+		        catch (Exception e) {
+		        	
+		        }
+		        //
+		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		        
+		        int readByte = 0;
+		        byte[] buffer = new byte[2024];
+
+                while(true)
+                {
+                    readByte = is.read(buffer);
+                    if(readByte == -1)
+                    {
+                        break;
+                    }
+                    outByteStream.write(buffer);
+                }
+                
+                file.delete();
+                
+                is.close();
+                outByteStream.flush();
+                outByteStream.close();
+                
+		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+				response.setContentType("application/pdf");
+				response.setContentLength(outArray.length);
+				response.setHeader("Expires:", "0"); 
+				response.setHeader("Content-Disposition", "in-line; 'PrestamoMestas.pdf'");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+			}
+			
+		}
+		else{
 			response_text = "{ \"success\": false }";
 		}
 

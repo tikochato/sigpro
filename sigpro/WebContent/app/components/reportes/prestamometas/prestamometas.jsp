@@ -172,6 +172,10 @@
 						ng-change="controller.validar(3)"/>
 					  	<label for="campo.id" class="floating-label">*Año Final</label>
 					</div>
+					<div class="form-group col-sm-1">
+						<label class="btn btn-primary" ng-click="controller.exportarPdf()" uib-tooltip="Nuevo">
+						<span class="glyphicon glyphicon-plus"></span> PDF</label>
+					</div>
 					<div class="col-sm-7" align="right" ng-hide="!controller.mostrarDescargar">
 						<div class="form-group col-sm-1">
 						</div>
