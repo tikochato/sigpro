@@ -14,12 +14,15 @@ import org.apache.poi.hssf.usermodel.HSSFCreationHelper;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
@@ -119,10 +122,15 @@ public class CExcel {
 		cell.setCellValue(value);
 		CellStyle estiloCelda =bold ? cs_currency_bold : cs_currency;
 		if(borde){
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
+			estiloCelda.setBorderTop(BorderStyle.THIN);
+			estiloCelda.setBorderLeft(BorderStyle.THIN);
+			estiloCelda.setBorderRight(BorderStyle.THIN);
+			estiloCelda.setBorderBottom(BorderStyle.THIN);
+		}else{
+			estiloCelda.setBorderTop(BorderStyle.NONE);
+			estiloCelda.setBorderLeft(BorderStyle.NONE);
+			estiloCelda.setBorderRight(BorderStyle.NONE);
+			estiloCelda.setBorderBottom(BorderStyle.NONE);
 		}
 		cell.setCellStyle(estiloCelda);
 	}
@@ -131,14 +139,19 @@ public class CExcel {
 		cell = sheet.getRow(irow) != null ? (sheet.getRow(irow).getCell(icell) != null
 				? sheet.getRow(irow).getCell(icell) : sheet.getRow(irow).createCell(icell))
 				: sheet.createRow(irow).createCell(icell);
+				CellStyle estiloCelda =cs_normal;
 				if(borde){
-					CellStyle estiloCelda = workbook.createCellStyle();
-					estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-					estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-					estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-					estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-					cell.setCellStyle(estiloCelda);
+					estiloCelda.setBorderTop(BorderStyle.THIN);
+					estiloCelda.setBorderLeft(BorderStyle.THIN);
+					estiloCelda.setBorderRight(BorderStyle.THIN);
+					estiloCelda.setBorderBottom(BorderStyle.THIN);
+				}else{
+					estiloCelda.setBorderTop(BorderStyle.NONE);
+					estiloCelda.setBorderLeft(BorderStyle.NONE);
+					estiloCelda.setBorderRight(BorderStyle.NONE);
+					estiloCelda.setBorderBottom(BorderStyle.NONE);
 				}
+				cell.setCellStyle(estiloCelda);
 		cell.setCellValue(value);
 	}
 
@@ -149,10 +162,15 @@ public class CExcel {
 		cell.setCellValue(value / 100.00);
 		CellStyle estiloCelda =bold ? cs_percent_bold : cs_percent;
 		if(borde){
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
+			estiloCelda.setBorderTop(BorderStyle.THIN);
+			estiloCelda.setBorderLeft(BorderStyle.THIN);
+			estiloCelda.setBorderRight(BorderStyle.THIN);
+			estiloCelda.setBorderBottom(BorderStyle.THIN);
+		}else{
+			estiloCelda.setBorderTop(BorderStyle.NONE);
+			estiloCelda.setBorderLeft(BorderStyle.NONE);
+			estiloCelda.setBorderRight(BorderStyle.NONE);
+			estiloCelda.setBorderBottom(BorderStyle.NONE);
 		}
 		cell.setCellStyle(estiloCelda);
 	}
@@ -164,10 +182,15 @@ public class CExcel {
 		cell.setCellValue(value);
 		CellStyle estiloCelda =cs_normal;
 		if(borde){
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
+			estiloCelda.setBorderTop(BorderStyle.THIN);
+			estiloCelda.setBorderLeft(BorderStyle.THIN);
+			estiloCelda.setBorderRight(BorderStyle.THIN);
+			estiloCelda.setBorderBottom(BorderStyle.THIN);
+		}else{
+			estiloCelda.setBorderTop(BorderStyle.NONE);
+			estiloCelda.setBorderLeft(BorderStyle.NONE);
+			estiloCelda.setBorderRight(BorderStyle.NONE);
+			estiloCelda.setBorderBottom(BorderStyle.NONE);
 		}
 		cell.setCellStyle(estiloCelda);
 	}
@@ -179,10 +202,15 @@ public class CExcel {
 		cell.setCellValue(value);
 		CellStyle estiloCelda =(bold) ? cs_bold : cs_normal;
 		if(borde){
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
+			estiloCelda.setBorderTop(BorderStyle.THIN);
+			estiloCelda.setBorderLeft(BorderStyle.THIN);
+			estiloCelda.setBorderRight(BorderStyle.THIN);
+			estiloCelda.setBorderBottom(BorderStyle.THIN);
+		}else{
+			estiloCelda.setBorderTop(BorderStyle.NONE);
+			estiloCelda.setBorderLeft(BorderStyle.NONE);
+			estiloCelda.setBorderRight(BorderStyle.NONE);
+			estiloCelda.setBorderBottom(BorderStyle.NONE);
 		}
 		cell.setCellStyle(estiloCelda);
 	}
@@ -194,10 +222,15 @@ public class CExcel {
 		cell.setCellValue(value);
 		CellStyle estiloCelda =(letraMin) ? cs_min : cs_normal;
 		if(borde){
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
-			estiloCelda.setBorderBottom(CellStyle.BORDER_THIN);
+			estiloCelda.setBorderTop(BorderStyle.THIN);
+			estiloCelda.setBorderLeft(BorderStyle.THIN);
+			estiloCelda.setBorderRight(BorderStyle.THIN);
+			estiloCelda.setBorderBottom(BorderStyle.THIN);
+		}else{
+			estiloCelda.setBorderTop(BorderStyle.NONE);
+			estiloCelda.setBorderLeft(BorderStyle.NONE);
+			estiloCelda.setBorderRight(BorderStyle.NONE);
+			estiloCelda.setBorderBottom(BorderStyle.NONE);
 		}
 		cell.setCellStyle(estiloCelda);
 	}
@@ -231,9 +264,9 @@ public class CExcel {
 		setCellValueString("Ministerio de Finanzas Públicas", 0, 0, true, false);
 		setCellValueString("Proyecto SIPRO", 1, 0, true, false);
 		setCellValueString(report_name, 4, 0, true, false);
-		combineCells(4, 4, 0, celdasCombinadas);
-		combineCells(0, 0, 0, 3);
-		combineCells(1, 1, 0, 3);
+		combineCells(4, 4, 0, celdasCombinadas,false,false);
+		combineCells(0, 0, 0, 3,false,false);
+		combineCells(1, 1, 0, 3,false,false);
 	}
 	
 	private void Footer(int line, DateTime now, String usuario) {
@@ -246,7 +279,29 @@ public class CExcel {
 		setCellValueString(usuario,line,1,false, true, false);
 	}
 	
-	private void combineCells(int inicioFila, int finFila, int inicioColumna, int finColumna) {
+	private void combineCells(int inicioFila, int finFila, int inicioColumna, int finColumna, boolean border, boolean centrado) {
+		if(border || centrado){
+			for(int i=inicioFila; i<=finFila;i++){
+				for(int j=inicioColumna; j<=finColumna; j++){
+					cell = sheet.getRow(i) != null ? (sheet.getRow(i).getCell(j) != null
+							? sheet.getRow(i).getCell(j) : sheet.getRow(i).createCell(j))
+							: sheet.createRow(i).createCell(j);
+					CellStyle estiloCelda = workbook.createCellStyle();
+					estiloCelda.setFont(font_bold);
+					if(border){
+						estiloCelda.setBorderTop(BorderStyle.THIN);
+						estiloCelda.setBorderLeft(BorderStyle.THIN);
+						estiloCelda.setBorderRight(BorderStyle.THIN);
+						estiloCelda.setBorderBottom(BorderStyle.THIN);
+					}
+					if(centrado){
+						estiloCelda.setAlignment(HorizontalAlignment.CENTER);
+						estiloCelda.setVerticalAlignment(VerticalAlignment.CENTER);
+					}
+					cell.setCellStyle(estiloCelda);
+				}
+			}
+		}
 		sheet.addMergedRegion(new CellRangeAddress(inicioFila, finFila, inicioColumna, finColumna));
 	}
 
@@ -322,7 +377,7 @@ public class CExcel {
 		if (headers.length > 0) {
 			for (int i = 0; i < headers[0].length; i++){
 				if(headers[0][i].toString().isEmpty()){
-					combineCells(line, line, i-1, i);
+					combineCells(line, line, i-1, i, borde,true);
 				}else{
 					setCellValueString(headers[0][i].toString(), line, i, true, borde);
 				}
@@ -331,7 +386,7 @@ public class CExcel {
 				line++;
 				for (int i = 0; i < headers[5].length; i++){
 					if(headers[5][i].toString().isEmpty()){
-						combineCells(line-1, line, i, i);
+						combineCells(line-1, line, i, i, borde,true);
 					}else{
 						setCellValueString(headers[5][i].toString(), line, i, true, borde);
 					}
@@ -361,9 +416,11 @@ public class CExcel {
 							case "percent":
 								setCellValuePercent(Double.parseDouble(data[i][j]), line, j, false, borde);
 							}
+						}else{
+							setCellValueString("", line, j, false, borde);
 						}
 						if(headers.length>7 && !headers[6][j].isEmpty()){
-							setRowOperation(headers[7][j], headers[6][j], "double", line, j);
+							setRowOperation(data[i], headers[7][j], headers[6][j], "double", line, j);
 						}
 					}
 					if (HasGroup && data[i] == null) {
@@ -421,7 +478,7 @@ public class CExcel {
 		return line;
 	}
 	
-	private int setRowOperation(String columnas, String operacion, String style, int line, int row){
+	private int setRowOperation(String[] fila, String columnas, String operacion, String style, int line, int row){
 		String signoOperacion="";
 		String finOperacion="";
 		String formula="";
@@ -438,6 +495,7 @@ public class CExcel {
 			break;
 		}
 		for (int i = 0; i < columna.length; i++) {
+			//if (!columna[i].isEmpty() && fila[row] != null){
 			if (!columna[i].isEmpty()){
 				if(formula.isEmpty()){
 					formula = CellReference.convertNumToColString(Integer.parseInt(columna[i])) + (line+1);
@@ -446,8 +504,10 @@ public class CExcel {
 				}
 			}
 		}
-		formula+=finOperacion;
-		setCellFormula(formula, line, row, style, true);
+		if(!formula.isEmpty()){
+			formula=formula+finOperacion;
+			setCellFormula(formula, line, row, style, true);
+		}
 		return line;
 	}
 
