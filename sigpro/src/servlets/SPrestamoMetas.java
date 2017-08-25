@@ -238,7 +238,7 @@ public class SPrestamoMetas extends HttpServlet {
 
 		}else if(accion.equals("exportarPdf")){
 			//Creamos el documento de pdf
-			CPdf archivo = new CPdf();
+			CPdf archivo = new CPdf("Metas de Préstamo");
 			String path = archivo.ExportPdf();
 			File file=new File(path);
 			if(file.exists()){
