@@ -9,8 +9,8 @@ app.filter('calculatePercentage', function () {
 	  };
 	});
 
-app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$window',
-	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$window){
+app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$window','$q','$uibModal',
+	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$window, $q,$uibModal){
 		var mi = this;
 		mi.mostrarCargando = false;
 		mi.mostrardiv=false;
@@ -154,5 +154,94 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
             mi.calcularTamanosPantalla();
             $scope.$digest();
         });
+		
 		$scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
+		
+		mi.mostrarActividades = function(row){
+			mi.llamarModalActividades(row);
+		}
+		
+		mi.llamarModalActividades = function(objetoRow) {
+			var resultado = $q.defer();
+			var modalInstance = $uibModal.open({
+				animation : 'true',
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				templateUrl : 'objetoavance.jsp',
+				controller : 'modalAvance',
+				controllerAs : 'controller',
+				backdrop : 'static',
+				size : 'lg',
+				resolve : {
+					objetoRow : function(){
+						return objetoRow;
+					}
+				}
+			});
+			
+			modalInstance.result.then(function(itemSeleccionado) {
+				resultado.resolve(itemSeleccionado);
+			});
+			return resultado.promise;
+		};
 }]);
+
+app.controller('modalAvance', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log', 'objetoRow',modalAvance ]);
+
+function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $utilidades, $timeout, $log, objetoRow) {
+	var mi = this;	
+
+	if(objetoRow.objetoTipo == 1){
+		mi.mostrarcargando = true;
+		mi.nombre = "Actividades de préstamo";
+		$http.post('/SAvanceActividades', {
+			accion: 'getActividadesProyecto',
+			idPrestamo: objetoRow.objetoId,
+			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
+		}).success(function(response){
+			if (response.success){
+				mi.items = response.items;
+				mi.displayedItems = [].concat(mi.items);	
+				mi.mostrarcargando = false;
+			}
+		});
+	}else if(objetoRow.objetoTipo == 10){
+		mi.mostrarcargando = true;
+		mi.nombre = "Hitos de préstamo";
+		$http.post('/SAvanceActividades', {
+			accion: 'getHitos',
+			idPrestamo: objetoRow.objetoId,
+			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
+		}).success(function(response){
+			if (response.success){
+				mi.items = response.items;
+				mi.displayedItems = [].concat(mi.items);	
+				mi.mostrarcargando = false;
+			}
+		});
+	}else if(objetoRow.objetoTipo == 3){
+		mi.mostrarcargando = true;
+		mi.nombre = "Actividades de producto: " + objetoRow.nombre;
+		$http.post('/SAvanceActividades', {
+			accion: 'getActividadesProducto',
+			productoId: objetoRow.objetoId,
+			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
+		}).success(function(response){
+			if (response.success){
+				mi.items = response.items;
+				mi.displayedItems = [].concat(mi.items);	
+				mi.mostrarcargando = false;
+			}
+		});
+	}
+
+	mi.ok = function() {
+		
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+};

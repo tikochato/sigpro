@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.codec.Base64;
 
 import com.google.gson.Gson;
@@ -28,6 +29,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ComponenteDAO;
+import dao.MetaUnidadMedidaDAO;
 import dao.PrestamoMetasDAO;
 
 import dao.ProductoDAO;
@@ -35,6 +37,7 @@ import dao.ProyectoDAO;
 import pojo.Componente;
 import pojo.Producto;
 import pojo.Proyecto;
+import utilities.CExcel;
 import utilities.CMariaDB;
 import utilities.Utils;
 import utilities.CPdf;
@@ -69,6 +72,14 @@ public class SPrestamoMetas extends HttpServlet {
 		BigDecimal[] diciembre;
 		BigDecimal anio;
 	}
+	
+	final int AGRUPACION_MES= 1;
+	final int AGRUPACION_BIMESTRE = 2;
+	final int AGRUPACION_TRIMESTRE = 3;
+	final int AGRUPACION_CUATRIMESTRE= 4;
+	final int AGRUPACION_SEMESTRE= 5;
+	final int AGRUPACION_ANUAL= 6;
+	final int OBJETOTIPO_PRODUCTO= 3;
 
     public SPrestamoMetas() {
         super();
@@ -107,134 +118,32 @@ public class SPrestamoMetas extends HttpServlet {
 
 		if(accion.equals("getMetasProducto")){
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-			Integer anoInicial = Utils.String2Int(map.get("anoInicial"),0);
-			Integer anoFinal = Utils.String2Int(map.get("anoFinal"),0);
+			Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
+			Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
+			List<stprestamo> lstPrestamo = getMetasPrestamo(idPrestamo, anioInicial, anioFinal, usuario);
 			
-			Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
-			
-			if(proyecto != null){
-				List<stprestamo> lstPrestamo = new ArrayList<>();
-				stprestamo tempPrestamo = null;
-			
-				tempPrestamo = new stprestamo();
-				if(CMariaDB.connect()){
-						Connection conn = CMariaDB.getConnection();
-						ArrayList<Integer> componentes = PrestamoMetasDAO.getEstructuraArbolComponentes(idPrestamo, conn);
-						
-						tempPrestamo.nombre = proyecto.getNombre();
-						tempPrestamo.objeto_id = proyecto.getId();
-						tempPrestamo.objeto_tipo = 1;
-						tempPrestamo.nivel = 1;
-						
-						ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();
-						
-						tempPrestamo = getMetas(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo);
-						
-						lstPrestamo.add(tempPrestamo);
-						
-						for(Integer componente:componentes){
-							tempPrestamo = new stprestamo();
-							Componente objComponente = ComponenteDAO.getComponentePorId(componente, usuario);
-							tempPrestamo.nombre = objComponente.getNombre();
-							tempPrestamo.objeto_id = objComponente.getId();
-							tempPrestamo.objeto_tipo = 2;
-							tempPrestamo.nivel = 2;
-							
-							 presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();
-							
-							tempPrestamo = getMetas(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo);
-							
-							lstPrestamo.add(tempPrestamo);							
-							ArrayList<Integer> productos = PrestamoMetasDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
-							for(Integer producto: productos){
-								tempPrestamo = new stprestamo();
-								Producto objProducto = ProductoDAO.getProductoPorId(producto);
-								tempPrestamo.nombre = objProducto.getNombre();
-								tempPrestamo.objeto_id = objProducto.getId();
-								tempPrestamo.objeto_tipo = 3;
-								tempPrestamo.nivel = 3;
-								tempPrestamo.lineaBase = new BigDecimal(0);
-								tempPrestamo.metaFinal = new BigDecimal(0);
-								
-								presupuestoPrestamo = PrestamoMetasDAO.getMetasPorProducto(producto, 
-										anoInicial, anoFinal, conn);
-								
-								tempPrestamo = getMetas(presupuestoPrestamo, anoInicial, anoFinal, tempPrestamo);
-								lstPrestamo.add(tempPrestamo);
-							
-							} 
-							
-						}
-						
-						CMariaDB.close();
-						response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
-				        response_text = String.join("", "\"prestamo\":",response_text);
-				        response_text = String.join("", "{\"success\":true,", response_text, "}");
-					}else{
-						response_text = String.join("", "{\"success\":false}");
-					}
-				}
-		
-		}else if(accion.equals("guardarProyectoMeta")){
-//			
-//			stmeta metavalor = new stmeta();
-//			metavalor.id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0; 
-//			metavalor.fecha = map.get("fecha")!=null ? map.get("fecha") : "";
-//			metavalor.valor = map.get("valor")!=null ? map.get("valor") : "";
-//			metavalor.tipoMetaId = map.get("tipoMetaId")!=null ? Integer.parseInt(map.get("tipoMetaId")) : 0; 
-//			metavalor.unidadMedidaId = map.get("unidadMedidaId")!=null ? Integer.parseInt(map.get("unidadMedidaId")) : 0; 
-//			metavalor.objetoId = map.get("objetoId")!=null ? Integer.parseInt(map.get("objetoId")) : 0;
-//			metavalor.objetoTipoId = map.get("objetoTipoId")!=null ? Integer.parseInt(map.get("objetoTipoId")) : 0;
-//						
-//			metavalor = guardarProductoMetaValor(metavalor, usuario);
-//			
-//			response_text=new GsonBuilder().serializeNulls().create().toJson(metavalor);
-//	        response_text = String.join("", "\"metavalor\":",response_text);
-//	        response_text = String.join("", "{\"success\":true,", response_text,"}");
-//	        
-//	        response.setHeader("Content-Encoding", "gzip");
-//			response.setCharacterEncoding("UTF-8");
-//
-//	        OutputStream output = response.getOutputStream();
-//			GZIPOutputStream gz = new GZIPOutputStream(output);
-//	        gz.write(response_text.getBytes("UTF-8"));
-//	        gz.close();
-//	        output.close();
-		}else if(accion.equals("congelarPrestamoMeta")){
-//			Integer proyectoId = map.get("proyectoid")!=null ? Integer.parseInt(map.get("proyectoid")) : 0;
-//			Boolean exito = false;
-//			
-//			exito = congelarPrestamoMeta(proyectoId, usuario);
-//			
-//			response_text=new GsonBuilder().serializeNulls().create().toJson(exito);
-//	        response_text = String.join("", "\"metavalor\":",response_text);
-//	        response_text = String.join("", "{\"success\":true,", response_text,"}");
-//	        
-//	        response.setHeader("Content-Encoding", "gzip");
-//			response.setCharacterEncoding("UTF-8");
-//
-//	        OutputStream output = response.getOutputStream();
-//			GZIPOutputStream gz = new GZIPOutputStream(output);
-//	        gz.write(response_text.getBytes("UTF-8"));
-//	        gz.close();
-//	        output.close();
+			if (!lstPrestamo.isEmpty()){
+				response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
+		        response_text = String.join("", "\"prestamo\":",response_text);
+		        response_text = String.join("", "{\"success\":true,", response_text, "}");
+			}else{
+				response_text = String.join("", "{\"success\":false}");
+			}
 		}else if (accion.equals("exportarExcel")){
-//			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
-//			int anioInicio = Utils.String2Int(map.get("fechaInicio"), 0);
-//			int anioFin = Utils.String2Int(map.get("fechaFin"), 0);
-//			int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
-//			String filas = map.get("filas");
-//			String columnas = map.get("columnas");
-//			
-//	        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, filas, columnas, usuario);
-//		
-//			response.setContentType("application/ms-excel");
-//			response.setContentLength(outArray.length);
-//			response.setHeader("Expires:", "0"); 
-//			response.setHeader("Content-Disposition", "attachment; MetasPrestamo_.xls");
-//			OutputStream outStream = response.getOutputStream();
-//			outStream.write(outArray);
-//			outStream.flush();
+			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
+			int anioInicio = Utils.String2Int(map.get("fechaInicio"), 0);
+			int anioFin = Utils.String2Int(map.get("fechaFin"), 0);
+			int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
+			
+	        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, 2, usuario);
+		
+			response.setContentType("application/ms-excel");
+			response.setContentLength(outArray.length);
+			response.setHeader("Expires:", "0"); 
+			response.setHeader("Content-Disposition", "attachment; MetasPrestamo_.xls");
+			OutputStream outStream = response.getOutputStream();
+			outStream.write(outArray);
+			outStream.flush();
 
 		}else if(accion.equals("exportarPdf")){
 			//Creamos el documento de pdf
@@ -294,6 +203,66 @@ public class SPrestamoMetas extends HttpServlet {
         gz.write(response_text.getBytes("UTF-8"));
         gz.close();
         output.close();
+	}
+	
+	private List<stprestamo> getMetasPrestamo(int idPrestamo, int anioInicial, int anioFinal, String usuario){
+		List<stprestamo> lstPrestamo = new ArrayList<>();
+		Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
+		if(proyecto != null){
+		if(CMariaDB.connect()){
+			stprestamo tempPrestamo =  new stprestamo();
+				Connection conn = CMariaDB.getConnection();
+				ArrayList<Integer> componentes = PrestamoMetasDAO.getEstructuraArbolComponentes(idPrestamo, conn);
+				
+				tempPrestamo.nombre = proyecto.getNombre();
+				tempPrestamo.objeto_id = proyecto.getId();
+				tempPrestamo.objeto_tipo = 1;
+				tempPrestamo.nivel = 1;
+				
+				ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();
+				
+				tempPrestamo = getMetas(presupuestoPrestamo, anioInicial, anioFinal, tempPrestamo);
+				
+				lstPrestamo.add(tempPrestamo);
+				
+				for(Integer componente:componentes){
+					tempPrestamo = new stprestamo();
+					Componente objComponente = ComponenteDAO.getComponentePorId(componente, usuario);
+					tempPrestamo.nombre = objComponente.getNombre();
+					tempPrestamo.objeto_id = objComponente.getId();
+					tempPrestamo.objeto_tipo = 2;
+					tempPrestamo.nivel = 2;
+					
+					 presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();
+					
+					tempPrestamo = getMetas(presupuestoPrestamo, anioInicial, anioFinal, tempPrestamo);
+					
+					lstPrestamo.add(tempPrestamo);							
+					ArrayList<Integer> productos = PrestamoMetasDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
+					for(Integer producto: productos){
+						tempPrestamo = new stprestamo();
+						Producto objProducto = ProductoDAO.getProductoPorId(producto);
+						tempPrestamo.nombre = objProducto.getNombre();
+						tempPrestamo.objeto_id = objProducto.getId();
+						tempPrestamo.objeto_tipo = 3;
+						tempPrestamo.nivel = 3;
+						tempPrestamo.lineaBase = new BigDecimal(0);
+						tempPrestamo.metaFinal = new BigDecimal(0);
+						
+						presupuestoPrestamo = PrestamoMetasDAO.getMetasPorProducto(producto, 
+								anioInicial, anioFinal, conn);
+						
+						tempPrestamo = getMetas(presupuestoPrestamo, anioInicial, anioFinal, tempPrestamo);
+						lstPrestamo.add(tempPrestamo);
+					
+					} 
+					
+				}
+				
+				CMariaDB.close();
+			}
+		}
+		return lstPrestamo;
 	}
 	
 	private stprestamo getMetas (ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo,
@@ -374,6 +343,342 @@ public class SPrestamoMetas extends HttpServlet {
 			anio.diciembre = new BigDecimal[2];
 			
 		return anio;		
+	}
+	
+	private byte[] exportarExcel(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, String usuario) throws IOException{
+		byte [] outArray = null;
+		CExcel excel=null;
+		String headers[][];
+		String datosMetas[][];
+		
+		Workbook wb=null;
+		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		try{			
+			excel = new CExcel("Metas de Préstamo", false);
+			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
+			datosMetas = generarDatosMetas(prestamoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
+			wb=excel.generateExcelOfData(datosMetas, "Metas de Préstamo", headers, null, true, usuario);
+		
+		wb.write(outByteStream);
+		outArray = Base64.encode(outByteStream.toByteArray());
+		}catch(Exception e){
+			System.out.println(e);
+		}
+		return outArray;
+	}
+	
+	private String[][] generarHeaders(int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion){
+		String headers[][];
+		String[][] AgrupacionesTitulo = new String[][]{{"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"},
+			{"Bimestre 1", "Bimestre 2","Bimestre 3","Bimestre 4","Bimestre 5","Bimestre 6"},
+			{"Trimestre 1", "Trimestre 2", "Trimestre 3", "Trimestre 4"},
+			{"Cuatrimestre 1", "Cuatrimestre 2", "Cuatrimestre 3"},
+			{"Semestre 1","Semestre 2"},
+			{"Anual"}
+		};
+		
+		int totalesCant = 2;
+		int aniosDiferencia =(anioFin-anioInicio)+1; 
+		int columnasTotal = (aniosDiferencia*(AgrupacionesTitulo[agrupacion-1].length));
+		int factorVisualizacion = 1;
+		if(tipoVisualizacion == 2){
+			columnasTotal = columnasTotal*2;
+			totalesCant+=(aniosDiferencia*2);
+			columnasTotal += 2+totalesCant+1;
+			factorVisualizacion = 2;
+		}else{
+			totalesCant+=aniosDiferencia;
+			columnasTotal += 2+totalesCant; //Nombre, Unidad medida, totales por año, total, meta final
+		}
+		
+		String titulo[] = new String[columnasTotal];
+		String tipo[] = new String[columnasTotal];
+		String subtitulo[] = new String[columnasTotal];
+		String operacionesFila[] = new String[columnasTotal];
+		String columnasOperacion[] = new String[columnasTotal];
+		String totales[] = new String[totalesCant];
+		titulo[0]="Nombre";
+		titulo[1]="Unidad de Medida";
+		tipo[0]="string";
+		tipo[1]="string";
+		subtitulo[0]="";
+		subtitulo[1]="";
+		operacionesFila[0]="";
+		operacionesFila[1]="";
+		columnasOperacion[0]="";
+		columnasOperacion[1]="";
+		for(int i=0;i<totalesCant;i++){ //Inicializar totales
+			totales[i]="";
+		}
+		int pos=2;
+		for(int i=0; i<AgrupacionesTitulo[agrupacion-1].length; i++){
+			for (int j=0; j<aniosDiferencia; j++){
+				titulo[pos] = AgrupacionesTitulo[agrupacion-1][i] + " " + (anioInicio+j);
+				tipo[pos] = "double";
+				operacionesFila[pos]="";
+				columnasOperacion[pos]="";
+				totales[j*factorVisualizacion]+=pos+",";
+				if(tipoVisualizacion==1){
+					subtitulo[pos]="Real";
+				}else{
+					subtitulo[pos]="Planificado";
+				}
+				pos++;
+				if(tipoVisualizacion == 2){
+					titulo[pos] = "";
+					tipo[pos] = "double";
+					subtitulo[pos]="Real";
+					operacionesFila[pos]="";
+					columnasOperacion[pos]="";
+					totales[(j*factorVisualizacion)+1]+=pos+",";
+					pos++;
+				}
+			}
+		}
+		for (int j=0; j<aniosDiferencia; j++){
+			titulo[pos] = "Total " + (anioInicio+j);
+			tipo[pos] = "double";
+			operacionesFila[pos]="sum";
+			columnasOperacion[pos]= totales[j*factorVisualizacion];
+			totales[totalesCant-factorVisualizacion] += pos+",";
+			if(tipoVisualizacion==1){
+				subtitulo[pos]="Real";
+			}else{
+				subtitulo[pos]="Planificado";
+			}
+			pos++;
+			if(tipoVisualizacion == 2){
+				titulo[pos] = "";
+				tipo[pos] = "double";
+				subtitulo[pos]="Real";
+				operacionesFila[pos]="sum";
+				columnasOperacion[pos]=totales[(j*factorVisualizacion)+1];
+				totales[totalesCant-1] += pos+",";
+				pos++;
+			}
+		}
+		titulo[pos] = "Total";
+		tipo[pos] = "double";
+		operacionesFila[pos]="sum";
+		columnasOperacion[pos]=totales[totalesCant-factorVisualizacion];
+		if(tipoVisualizacion==1){
+			subtitulo[pos]="Real";
+		}else{
+			subtitulo[pos]="Planificado";
+		}
+		pos++;
+		if(tipoVisualizacion == 2){
+			titulo[pos] = "";
+			tipo[pos] = "double";
+			subtitulo[pos]="Real";
+			operacionesFila[pos]="sum";
+			columnasOperacion[pos]=totales[totalesCant-1];
+			pos++;
+		}
+		titulo[pos] = "Meta Final";
+		tipo[pos] = "double";
+		subtitulo[pos]="";
+		operacionesFila[pos]="";
+		columnasOperacion[pos]="";
+		
+		headers = new String[][]{
+			titulo,  //titulos
+			{""}, //mapeo
+			tipo, //tipo dato
+			{""}, //operaciones columnas
+			{""}, //operaciones div
+			subtitulo,
+			operacionesFila,
+			columnasOperacion
+			};
+			
+		return headers;
+	}
+	
+	public String[][] generarDatosMetas(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, int columnasTotal, String usuario){
+		String[][] datos = null;
+		int columna = 0;int factorVisualizacion=1;
+		if(tipoVisualizacion==2){
+			factorVisualizacion = 2;
+		}
+		int sumaColumnas = ((anioFin-anioInicio) + 1)*factorVisualizacion;
+		List<stprestamo> lstPrestamo = getMetasPrestamo(prestamoId, anioInicio, anioFin, usuario);		
+		if (lstPrestamo != null && !lstPrestamo.isEmpty()){
+			datos = new String[lstPrestamo.size()][columnasTotal];
+			for (int i=0; i<lstPrestamo.size(); i++){
+				columna = 0;
+				stprestamo prestamo = lstPrestamo.get(i);
+				String sangria;
+				switch (prestamo.objeto_tipo){
+					case 1: sangria = ""; break;
+					case 2: sangria = "   "; break;
+					case 3: sangria = "      "; break;
+					case 4: sangria = "         "; break;
+					case 5: sangria = "            "; break;
+					default: sangria = "";
+				}
+				datos[i][columna] = sangria+prestamo.nombre;
+				columna++;
+				if(lstPrestamo.get(i).unidadDeMedida!=null){
+					datos[i][columna] = MetaUnidadMedidaDAO.getMetaUnidadMedidaPorId(lstPrestamo.get(i).unidadDeMedida).getNombre();
+				}
+				columna++;
+				if(lstPrestamo.get(i).objeto_tipo == OBJETOTIPO_PRODUCTO){
+					int posicion = columna;
+					//Valores planificado-real
+					for(int a=0; a<prestamo.anios.length; a++){
+						//Verificar nullos y volverlos 0
+						prestamo.anios[a].enero[0]=(prestamo.anios[a].enero[0]==null) ? new BigDecimal(0) : prestamo.anios[a].enero[0];
+						prestamo.anios[a].febrero[0]=(prestamo.anios[a].febrero[0]==null) ? new BigDecimal(0) : prestamo.anios[a].febrero[0];
+						prestamo.anios[a].marzo[0]=(prestamo.anios[a].marzo[0]==null) ? new BigDecimal(0) : prestamo.anios[a].marzo[0];
+						prestamo.anios[a].abril[0]=(prestamo.anios[a].abril[0]==null) ? new BigDecimal(0) : prestamo.anios[a].abril[0];
+						prestamo.anios[a].mayo[0]=(prestamo.anios[a].mayo[0]==null) ? new BigDecimal(0) : prestamo.anios[a].mayo[0];
+						prestamo.anios[a].junio[0]=(prestamo.anios[a].junio[0]==null) ? new BigDecimal(0) : prestamo.anios[a].junio[0];
+						prestamo.anios[a].julio[0]=(prestamo.anios[a].julio[0]==null) ? new BigDecimal(0) : prestamo.anios[a].julio[0];
+						prestamo.anios[a].agosto[0]=(prestamo.anios[a].agosto[0]==null) ? new BigDecimal(0) : prestamo.anios[a].agosto[0];
+						prestamo.anios[a].septiembre[0]=(prestamo.anios[a].septiembre[0]==null) ? new BigDecimal(0) : prestamo.anios[a].septiembre[0];
+						prestamo.anios[a].octubre[0]=(prestamo.anios[a].octubre[0]==null) ? new BigDecimal(0) : prestamo.anios[a].octubre[0];
+						prestamo.anios[a].noviembre[0]=(prestamo.anios[a].noviembre[0]==null) ? new BigDecimal(0) : prestamo.anios[a].noviembre[0];
+						prestamo.anios[a].diciembre[0]=(prestamo.anios[a].diciembre[0]==null) ? new BigDecimal(0) : prestamo.anios[a].diciembre[0];
+						prestamo.anios[a].enero[1]=(prestamo.anios[a].enero[1]==null) ? new BigDecimal(0) : prestamo.anios[a].enero[1];
+						prestamo.anios[a].febrero[1]=(prestamo.anios[a].febrero[1]==null) ? new BigDecimal(0) : prestamo.anios[a].febrero[1];
+						prestamo.anios[a].marzo[1]=(prestamo.anios[a].marzo[1]==null) ? new BigDecimal(0) : prestamo.anios[a].marzo[1];
+						prestamo.anios[a].abril[1]=(prestamo.anios[a].abril[1]==null) ? new BigDecimal(0) : prestamo.anios[a].abril[1];
+						prestamo.anios[a].mayo[1]=(prestamo.anios[a].mayo[1]==null) ? new BigDecimal(0) : prestamo.anios[a].mayo[1];
+						prestamo.anios[a].junio[1]=(prestamo.anios[a].junio[1]==null) ? new BigDecimal(0) : prestamo.anios[a].junio[1];
+						prestamo.anios[a].julio[1]=(prestamo.anios[a].julio[1]==null) ? new BigDecimal(0) : prestamo.anios[a].julio[1];
+						prestamo.anios[a].agosto[1]=(prestamo.anios[a].agosto[1]==null) ? new BigDecimal(0) : prestamo.anios[a].agosto[1];
+						prestamo.anios[a].septiembre[1]=(prestamo.anios[a].septiembre[1]==null) ? new BigDecimal(0) : prestamo.anios[a].septiembre[1];
+						prestamo.anios[a].octubre[1]=(prestamo.anios[a].octubre[1]==null) ? new BigDecimal(0) : prestamo.anios[a].octubre[1];
+						prestamo.anios[a].noviembre[1]=(prestamo.anios[a].noviembre[1]==null) ? new BigDecimal(0) : prestamo.anios[a].noviembre[1];
+						prestamo.anios[a].diciembre[1]=(prestamo.anios[a].diciembre[1]==null) ? new BigDecimal(0) : prestamo.anios[a].diciembre[1];
+						posicion = columna + (a*factorVisualizacion);
+						switch(agrupacion){
+						case AGRUPACION_MES:
+							if(tipoVisualizacion==0 || tipoVisualizacion==2){
+								datos[i][posicion]= prestamo.anios[a].enero[0].toString();
+								datos[i][posicion+(1*sumaColumnas)]= prestamo.anios[a].febrero[0].toString();
+								datos[i][posicion+(2*sumaColumnas)]= prestamo.anios[a].marzo[0].toString();
+								datos[i][posicion+(3*sumaColumnas)]= prestamo.anios[a].abril[0].toString();
+								datos[i][posicion+(4*sumaColumnas)]= prestamo.anios[a].mayo[0].toString();
+								datos[i][posicion+(5*sumaColumnas)]= prestamo.anios[a].junio[0].toString();
+								datos[i][posicion+(6*sumaColumnas)]= prestamo.anios[a].julio[0].toString();
+								datos[i][posicion+(7*sumaColumnas)]= prestamo.anios[a].agosto[0].toString();
+								datos[i][posicion+(8*sumaColumnas)]= prestamo.anios[a].septiembre[0].toString();
+								datos[i][posicion+(9*sumaColumnas)]= prestamo.anios[a].octubre[0].toString();
+								datos[i][posicion+(10*sumaColumnas)]= prestamo.anios[a].noviembre[0].toString();
+								datos[i][posicion+(11*sumaColumnas)]= prestamo.anios[a].diciembre[0].toString();
+							}
+							if(tipoVisualizacion == 2){
+								posicion++;
+							}
+							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
+								datos[i][posicion]= prestamo.anios[a].enero[1].toString();
+								datos[i][posicion+(1*sumaColumnas)]= prestamo.anios[a].febrero[1].toString();
+								datos[i][posicion+(2*sumaColumnas)]= prestamo.anios[a].marzo[1].toString();
+								datos[i][posicion+(3*sumaColumnas)]= prestamo.anios[a].abril[1].toString();
+								datos[i][posicion+(4*sumaColumnas)]= prestamo.anios[a].mayo[1].toString();
+								datos[i][posicion+(5*sumaColumnas)]= prestamo.anios[a].junio[1].toString();
+								datos[i][posicion+(6*sumaColumnas)]= prestamo.anios[a].julio[1].toString();
+								datos[i][posicion+(7*sumaColumnas)]= prestamo.anios[a].agosto[1].toString();
+								datos[i][posicion+(8*sumaColumnas)]= prestamo.anios[a].septiembre[1].toString();
+								datos[i][posicion+(9*sumaColumnas)]= prestamo.anios[a].octubre[1].toString();
+								datos[i][posicion+(10*sumaColumnas)]= prestamo.anios[a].noviembre[1].toString();
+								datos[i][posicion+(11*sumaColumnas)]= prestamo.anios[a].diciembre[1].toString();
+							}
+							posicion = posicion+(11*sumaColumnas);
+							break;
+						case AGRUPACION_BIMESTRE:
+							if(tipoVisualizacion==0 || tipoVisualizacion==2){
+								datos[i][posicion]= (prestamo.anios[a].enero[0].add(prestamo.anios[a].febrero[0])).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].marzo[0].add(prestamo.anios[a].abril[0])).toString();
+								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].mayo[0].add(prestamo.anios[a].junio[0])).toString();
+								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0])).toString();
+								datos[i][posicion+(4*sumaColumnas)]= (prestamo.anios[a].septiembre[0].add(prestamo.anios[a].octubre[0])).toString();
+								datos[i][posicion+(5*sumaColumnas)]= (prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0])).toString();
+							}
+							if(tipoVisualizacion == 2){
+								posicion++;
+							}
+							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
+								datos[i][posicion]= (prestamo.anios[a].enero[1].add(prestamo.anios[a].febrero[1])).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].marzo[1].add(prestamo.anios[a].abril[1])).toString();
+								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].mayo[1].add(prestamo.anios[a].junio[1])).toString();
+								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1])).toString();
+								datos[i][posicion+(4*sumaColumnas)]= (prestamo.anios[a].septiembre[1].add(prestamo.anios[a].octubre[1])).toString();
+								datos[i][posicion+(5*sumaColumnas)]= (prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1])).toString();
+							}
+							posicion = posicion+(11*sumaColumnas);
+							break;
+						case AGRUPACION_TRIMESTRE:
+							if(tipoVisualizacion==0 || tipoVisualizacion==2){
+								datos[i][posicion]= (prestamo.anios[a].enero[0].add(prestamo.anios[a].febrero[0].add(prestamo.anios[a].marzo[0]))).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].abril[0].add(prestamo.anios[a].mayo[0].add(prestamo.anios[a].junio[0]))).toString();
+								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0].add(prestamo.anios[a].septiembre[0]))).toString();
+								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].octubre[0].add(prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0]))).toString();
+							}
+							if(tipoVisualizacion == 2){
+								posicion++;
+							}
+							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
+								datos[i][posicion]= (prestamo.anios[a].enero[1].add(prestamo.anios[a].febrero[1].add(prestamo.anios[a].marzo[1]))).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].abril[1].add(prestamo.anios[a].mayo[1].add(prestamo.anios[a].junio[1]))).toString();
+								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1].add(prestamo.anios[a].septiembre[1]))).toString();
+								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].octubre[1].add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1]))).toString();
+							}
+							posicion = posicion+(11*sumaColumnas);
+							break;
+						case AGRUPACION_CUATRIMESTRE:
+							if(tipoVisualizacion==0 || tipoVisualizacion==2){
+								datos[i][posicion]= (prestamo.anios[a].enero[0].add(prestamo.anios[a].febrero[0]).add(prestamo.anios[a].marzo[0].add(prestamo.anios[a].abril[0]))).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mayo[0]).add(prestamo.anios[a].junio[0].add(prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0]))).toString();
+								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].septiembre[0].add(prestamo.anios[a].octubre[0]).add(prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0]))).toString();
+							}
+							if(tipoVisualizacion == 2){
+								posicion++;
+							}
+							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
+								datos[i][posicion]= (prestamo.anios[a].enero[1].add(prestamo.anios[a].febrero[1]).add(prestamo.anios[a].marzo[1].add(prestamo.anios[a].abril[1]))).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mayo[1]).add(prestamo.anios[a].junio[1].add(prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1]))).toString();
+								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].septiembre[1].add(prestamo.anios[a].octubre[1]).add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1]))).toString();
+							}
+							posicion = posicion+(11*sumaColumnas);
+							break;
+						case AGRUPACION_SEMESTRE:
+							if(tipoVisualizacion==0 || tipoVisualizacion==2){
+								datos[i][posicion]= (prestamo.anios[a].enero[0].add(prestamo.anios[a].febrero[0]).add(prestamo.anios[a].marzo[0].add(prestamo.anios[a].abril[0].add(prestamo.anios[a].mayo[0].add(prestamo.anios[a].junio[0]))))).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0]).add(prestamo.anios[a].septiembre[0].add(prestamo.anios[a].octubre[0].add(prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0]))))).toString();
+							}
+							if(tipoVisualizacion == 2){
+								posicion++;
+							}
+							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
+								datos[i][posicion]= (prestamo.anios[a].enero[1].add(prestamo.anios[a].febrero[1]).add(prestamo.anios[a].marzo[1].add(prestamo.anios[a].abril[1].add(prestamo.anios[a].mayo[1].add(prestamo.anios[a].junio[1]))))).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1]).add(prestamo.anios[a].septiembre[1].add(prestamo.anios[a].octubre[1].add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1]))))).toString();
+							}
+							posicion = posicion+(11*sumaColumnas);
+							break;
+						case AGRUPACION_ANUAL:
+							if(tipoVisualizacion==0 || tipoVisualizacion==2){
+								datos[i][posicion]= (prestamo.anios[a].enero[0].add(prestamo.anios[a].febrero[0]).add(prestamo.anios[a].marzo[0].add(prestamo.anios[a].abril[0].add(prestamo.anios[a].mayo[0].add(prestamo.anios[a].junio[0]))))
+										.add(prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0]).add(prestamo.anios[a].septiembre[0].add(prestamo.anios[a].octubre[0].add(prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0])))))).toString();
+							}
+							if(tipoVisualizacion == 2){
+								posicion++;
+							}
+							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
+								datos[i][posicion]= (prestamo.anios[a].enero[1].add(prestamo.anios[a].febrero[1]).add(prestamo.anios[a].marzo[1].add(prestamo.anios[a].abril[1].add(prestamo.anios[a].mayo[1].add(prestamo.anios[a].junio[1]))))
+										.add(prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1]).add(prestamo.anios[a].septiembre[1].add(prestamo.anios[a].octubre[1].add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1])))))).toString();
+							}
+							posicion = posicion+(11*sumaColumnas);
+							break;
+						}
+					}
+					datos[i][columnasTotal-1]=prestamo.metaFinal.toString();
+				}
+			}
+		}
+		return datos;
 	}
 	
 //

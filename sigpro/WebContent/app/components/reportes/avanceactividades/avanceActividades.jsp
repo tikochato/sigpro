@@ -40,6 +40,9 @@
 		}
 	</style>
 	<div ng-controller="avanceActividadesController as controller" class="maincontainer all_page" id="title">
+		<script type="text/ng-template" id="objetoavance.jsp">
+    		<%@ include file="/app/components/reportes/avanceactividades/objetoavance.jsp"%>
+  		</script>
 		<shiro:lacksPermission name="24010">
 			<p ng-init="controller.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
@@ -103,7 +106,7 @@
 														</tr>
 													</thead>
 													<tbody class="cuerpoTablaDatos">
-														<tr ng-repeat="row in controller.displayedCollectionActividades" uib-tooltip="{{row.nombre}}" tooltip-placement="center">
+														<tr ng-repeat="row in controller.displayedCollectionActividades" uib-tooltip="{{row.nombre}}" tooltip-placement="center" ng-click="controller.mostrarActividades(row);">
 															<td style="display: none;">{{row.id}}</td>
 															<td style="text-align: left; min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; nowrap; overflow: hidden;">{{row.nombre}}</td>
 															<td style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"><span ng-style="controller.obtenerColor(row);" class="glyphicon glyphicon-certificate"></span></td>
@@ -150,7 +153,7 @@
 												</tr>
 											</thead>
 											<tbody class="cuerpoTablaDatos">
-												<tr ng-repeat="row in controller.displayedCollectionHitos" uib-tooltip="{{row.nombre}}" tooltip-placement="center">
+												<tr ng-repeat="row in controller.displayedCollectionHitos" uib-tooltip="{{row.nombre}}" tooltip-placement="center" sng-click="controller.mostrarActividades(row);">
 													<td style="display: none;">{{row.id}}</td>
 													<td style="text-align: left; min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; nowrap; overflow: hidden;">{{row.nombre}}</td>
 													<td style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"><span ng-style="controller.obtenerColor(row);" class="glyphicon glyphicon-certificate"></span></td>
@@ -195,7 +198,7 @@
 												</tr>
 											</thead>
 											<tbody class="cuerpoTablaDatos">
-												<tr ng-repeat="row in controller.displayedProductos" uib-tooltip="{{row.nombre}}" tooltip-placement="center">
+												<tr ng-repeat="row in controller.displayedProductos" uib-tooltip="{{row.nombre}}" tooltip-placement="center" ng-click="controller.mostrarActividades(row);">
 													<td style="display: none;">{{row.id}}</td>
 													<td style="text-align: left; min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; nowrap; overflow: hidden;">{{row.nombre}}</td>
 													<td style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"><span ng-style="controller.obtenerColor(row);" class="glyphicon glyphicon-certificate"></span></td>
