@@ -2,7 +2,10 @@ package utilities;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -13,6 +16,9 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;
 import be.quodlibet.boxable.Row;
+import be.quodlibet.boxable.datatable.DataTable;
+import be.quodlibet.*;
+
 
 public class CPdf {
 	/**
@@ -84,15 +90,16 @@ public class CPdf {
 				BaseTable table = new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 
 				table.addHeaderRow(agregarCabecera(table,cabeceras));
+			
+				
 				
 				/**
 				 * creando la segunda fila de encabezado
 				 */
 				//creando fila
-				//Cell<PDPage> cell =
 				Row<PDPage> row = table.createRow(12);
 				row= agregarCabecera_pt2(row, cabeceras);
-				//18 filas máximo
+				table.addHeaderRow(row);
 				
 				for(int i=0; i<datosMetas.length;i++){
 					row= agregarFila(table,datosMetas[i]);
@@ -159,15 +166,17 @@ public class CPdf {
 		public Row<PDPage> agregarCabecera(BaseTable table,String cabecera[]){
 			Row<PDPage> headerRow = table.createRow(12);
 			Cell<PDPage> cell = headerRow.createCell(celda_a, "");
-			cell = headerRow.createCell(celda_c, "");			
+			cell = headerRow.createCell(celda_c, "");	
+			cell.setHeaderCell(true);
 			for(int i =2; i<cabecera.length-1;i++){
 				if(!cabecera[i].isEmpty()){
 					cell = headerRow.createCell(celda_b*2, cabecera[i]);
+					cell.setHeaderCell(true);
 				}
 			}
 			
 			cell = headerRow.createCell(celda_b, "");
-			
+			cell.setHeaderCell(true);
 			return headerRow;
 			
 		}
@@ -175,27 +184,28 @@ public class CPdf {
 			System.out.println(cabecera.length);
 			Cell<PDPage> cell = row.createCell(celda_a, cabecera[0]);
 			cell.setFontSize(cell.getFontSize()-1f);
+			cell.setHeaderCell(true);
 			cell = row.createCell(celda_c, cabecera[1]);	
 			cell.setFontSize(cell.getFontSize()-1f);
+			cell.setHeaderCell(true);
 			int control =1;
 			for(int i =0; i<(cabecera.length-3)*2;i++){
 				if(control==2){
 					control=1;
 					cell = row.createCell(celda_b, "Real");
 					cell.setFontSize(cell.getFontSize()-1f);
+					cell.setHeaderCell(true);
 				}else{
 					control++;
 					cell = row.createCell(celda_b, "Planificado");
 					cell.setFontSize(cell.getFontSize()-1f);
+					cell.setHeaderCell(true);
 				}
-				/*
-				if(!cabecera[i].isEmpty()){
-					cell = row.createCell(celda_b*2, cabecera[i]);
-				}*/
 			}
 			
 			cell = row.createCell(celda_b, "Meta Final");
 			cell.setFontSize(cell.getFontSize()-1f);
+			cell.setHeaderCell(true);
 			return row;
 			
 		}
