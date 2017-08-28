@@ -92,7 +92,9 @@
 					</div>
 		</div>
 		<div class="row">
-	    <div class="operation_buttons" align="right" style="width: 97%">
+	    <div class="col-sm-12 operation_buttons" align="right" style="width: 97%">
+	    
+	    
 	    	 <div class="checkbox" ng-hide="!mapac.mostrar">
 			    <label>
 			      <input type="checkbox" ng-model="mostrarTodo" ng-click="mostrar(0)">
@@ -114,10 +116,33 @@
 			      <input type="checkbox" ng-model="mostrarSubproductos" ng-click="mostrar(4)">
 			      Subproductos
 			    </label>
-			    <label>
-			      <input type="checkbox" ng-model="mostrarActividades" ng-click="mostrar(5)">
-			      Actividades
-			    </label>
+			    &nbsp;&nbsp;&nbsp;&nbsp;
+			    <lavel >
+			    	<input type="checkbox" ng-model="mostrarActividades" ng-click="mostrar(5)">
+			    	<span  ng-dropdown-multiselect="" options="mapac.transclusionData" selected-model="mapac.transclusionModel" 
+			    	extra-settings="mapac.transclusionSettings"
+			    	events="mapac.selectActividad">
+				    	<toggle-dropdown>
+				    		Actividades
+				    		<span class="glyphicon glyphicon-menu-down"></span>
+				    	</toggle-dropdown>
+			    	</span>	
+			    </lavel>
+		    	
+			    
+			    
+			    
+			    
+			    
+			    
+			    	
+			    
+			    	
+			   
+			    
+			    
+			    
+			    
 			  </div>
 	    	 
 	    </div>
@@ -162,7 +187,7 @@
 								 </ui-gmap-marker>
 							 </div>
 							 <div ng-switch-when="5">
-								<ui-gmap-marker ng-if="mostrarTodo || mostrarActividades" 
+								<ui-gmap-marker ng-if="mostrarTodo || (mostrarActividades && marca.mostrar)" 
 									 idkey="marca.id" coords="marca.posicion" icon = "marca.icon"
 									 click="abrirInformacion(marca.objetoId,marca.objetoTipoId)" 
 									 options="{title:marca.nombre}"  
