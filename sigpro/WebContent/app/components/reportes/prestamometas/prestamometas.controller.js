@@ -488,13 +488,19 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		};
 		
 		mi.exportarExcel = function(){
-			 
+			 var tipoVisualizacion = 0;
+			 if (mi.grupoMostrado.planificado && mi.grupoMostrado.real){
+				 tipoVisualizacion = 2;
+			 }else if(mi.grupoMostrado.real){
+				 tipoVisualizacion = 1;
+			 }
 			 $http.post('/SPrestamoMetas', { 
 				 accion: 'exportarExcel', 
 				 proyectoid: mi.prestamo.value,
 				 fechaInicio: mi.fechaInicio,
 				 fechaFin: mi.fechaFin,
 				 agrupacion: mi.agrupacionActual,
+				 tipoVisualizacion: tipoVisualizacion,
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
