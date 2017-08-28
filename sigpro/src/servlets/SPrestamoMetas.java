@@ -131,8 +131,9 @@ public class SPrestamoMetas extends HttpServlet {
 			int anioInicio = Utils.String2Int(map.get("fechaInicio"), 0);
 			int anioFin = Utils.String2Int(map.get("fechaFin"), 0);
 			int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
+			int tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
 			
-	        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, 2, usuario);
+	        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, usuario);
 		
 			response.setContentType("application/ms-excel");
 			response.setContentLength(outArray.length);
@@ -476,8 +477,12 @@ public class SPrestamoMetas extends HttpServlet {
 				columna++;
 				if(lstPrestamo.get(i).objeto_tipo == OBJETOTIPO_PRODUCTO){
 					int posicion = columna;
+					BigDecimal totalAniosP = new BigDecimal(0);
+					BigDecimal totalAniosR = new BigDecimal(0);
 					//Valores planificado-real
 					for(int a=0; a<prestamo.anios.length; a++){
+						posicion = columna + (a*factorVisualizacion);
+						
 						//Verificar nullos y volverlos 0
 						prestamo.anios[a].enero[0]=(prestamo.anios[a].enero[0]==null) ? new BigDecimal(0) : prestamo.anios[a].enero[0];
 						prestamo.anios[a].febrero[0]=(prestamo.anios[a].febrero[0]==null) ? new BigDecimal(0) : prestamo.anios[a].febrero[0];
@@ -503,7 +508,13 @@ public class SPrestamoMetas extends HttpServlet {
 						prestamo.anios[a].octubre[1]=(prestamo.anios[a].octubre[1]==null) ? new BigDecimal(0) : prestamo.anios[a].octubre[1];
 						prestamo.anios[a].noviembre[1]=(prestamo.anios[a].noviembre[1]==null) ? new BigDecimal(0) : prestamo.anios[a].noviembre[1];
 						prestamo.anios[a].diciembre[1]=(prestamo.anios[a].diciembre[1]==null) ? new BigDecimal(0) : prestamo.anios[a].diciembre[1];
-						posicion = columna + (a*factorVisualizacion);
+						
+						BigDecimal totalAnualP = (prestamo.anios[a].enero[0].add(prestamo.anios[a].febrero[0]).add(prestamo.anios[a].marzo[0].add(prestamo.anios[a].abril[0].add(prestamo.anios[a].mayo[0].add(prestamo.anios[a].junio[0]))))
+								.add(prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0]).add(prestamo.anios[a].septiembre[0].add(prestamo.anios[a].octubre[0].add(prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0]))))));
+						BigDecimal totalAnualR = (prestamo.anios[a].enero[1].add(prestamo.anios[a].febrero[1]).add(prestamo.anios[a].marzo[1].add(prestamo.anios[a].abril[1].add(prestamo.anios[a].mayo[1].add(prestamo.anios[a].junio[1]))))
+								.add(prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1]).add(prestamo.anios[a].septiembre[1].add(prestamo.anios[a].octubre[1].add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1]))))));
+						totalAniosP = totalAniosP.add(totalAnualP);
+						totalAniosR = totalAniosR.add(totalAnualR);
 						switch(agrupacion){
 						case AGRUPACION_MES:
 							if(tipoVisualizacion==0 || tipoVisualizacion==2){
@@ -519,6 +530,7 @@ public class SPrestamoMetas extends HttpServlet {
 								datos[i][posicion+(9*sumaColumnas)]= prestamo.anios[a].octubre[0].toString();
 								datos[i][posicion+(10*sumaColumnas)]= prestamo.anios[a].noviembre[0].toString();
 								datos[i][posicion+(11*sumaColumnas)]= prestamo.anios[a].diciembre[0].toString();
+								datos[i][posicion+(12*sumaColumnas)]= totalAnualP.toString();
 							}
 							if(tipoVisualizacion == 2){
 								posicion++;
@@ -536,8 +548,12 @@ public class SPrestamoMetas extends HttpServlet {
 								datos[i][posicion+(9*sumaColumnas)]= prestamo.anios[a].octubre[1].toString();
 								datos[i][posicion+(10*sumaColumnas)]= prestamo.anios[a].noviembre[1].toString();
 								datos[i][posicion+(11*sumaColumnas)]= prestamo.anios[a].diciembre[1].toString();
+								datos[i][posicion+(12*sumaColumnas)]= totalAnualR.toString();
 							}
-							posicion = posicion+(11*sumaColumnas);
+							if(tipoVisualizacion == 2){
+								posicion--;
+							}
+							posicion = posicion+(13*sumaColumnas);
 							break;
 						case AGRUPACION_BIMESTRE:
 							if(tipoVisualizacion==0 || tipoVisualizacion==2){
@@ -547,6 +563,7 @@ public class SPrestamoMetas extends HttpServlet {
 								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0])).toString();
 								datos[i][posicion+(4*sumaColumnas)]= (prestamo.anios[a].septiembre[0].add(prestamo.anios[a].octubre[0])).toString();
 								datos[i][posicion+(5*sumaColumnas)]= (prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0])).toString();
+								datos[i][posicion+(6*sumaColumnas)]= totalAnualP.toString();
 							}
 							if(tipoVisualizacion == 2){
 								posicion++;
@@ -558,8 +575,12 @@ public class SPrestamoMetas extends HttpServlet {
 								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1])).toString();
 								datos[i][posicion+(4*sumaColumnas)]= (prestamo.anios[a].septiembre[1].add(prestamo.anios[a].octubre[1])).toString();
 								datos[i][posicion+(5*sumaColumnas)]= (prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1])).toString();
+								datos[i][posicion+(6*sumaColumnas)]= totalAnualR.toString();
 							}
-							posicion = posicion+(11*sumaColumnas);
+							if(tipoVisualizacion == 2){
+								posicion--;
+							}
+							posicion = posicion+(7*sumaColumnas);
 							break;
 						case AGRUPACION_TRIMESTRE:
 							if(tipoVisualizacion==0 || tipoVisualizacion==2){
@@ -567,6 +588,7 @@ public class SPrestamoMetas extends HttpServlet {
 								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].abril[0].add(prestamo.anios[a].mayo[0].add(prestamo.anios[a].junio[0]))).toString();
 								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0].add(prestamo.anios[a].septiembre[0]))).toString();
 								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].octubre[0].add(prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0]))).toString();
+								datos[i][posicion+(4*sumaColumnas)]= totalAnualP.toString();
 							}
 							if(tipoVisualizacion == 2){
 								posicion++;
@@ -576,14 +598,19 @@ public class SPrestamoMetas extends HttpServlet {
 								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].abril[1].add(prestamo.anios[a].mayo[1].add(prestamo.anios[a].junio[1]))).toString();
 								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1].add(prestamo.anios[a].septiembre[1]))).toString();
 								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].octubre[1].add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1]))).toString();
+								datos[i][posicion+(4*sumaColumnas)]= totalAnualR.toString();
 							}
-							posicion = posicion+(11*sumaColumnas);
+							if(tipoVisualizacion == 2){
+								posicion--;
+							}
+							posicion = posicion+(5*sumaColumnas);
 							break;
 						case AGRUPACION_CUATRIMESTRE:
 							if(tipoVisualizacion==0 || tipoVisualizacion==2){
 								datos[i][posicion]= (prestamo.anios[a].enero[0].add(prestamo.anios[a].febrero[0]).add(prestamo.anios[a].marzo[0].add(prestamo.anios[a].abril[0]))).toString();
 								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mayo[0]).add(prestamo.anios[a].junio[0].add(prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0]))).toString();
 								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].septiembre[0].add(prestamo.anios[a].octubre[0]).add(prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0]))).toString();
+								datos[i][posicion+(3*sumaColumnas)]= totalAnualP.toString();
 							}
 							if(tipoVisualizacion == 2){
 								posicion++;
@@ -592,13 +619,18 @@ public class SPrestamoMetas extends HttpServlet {
 								datos[i][posicion]= (prestamo.anios[a].enero[1].add(prestamo.anios[a].febrero[1]).add(prestamo.anios[a].marzo[1].add(prestamo.anios[a].abril[1]))).toString();
 								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mayo[1]).add(prestamo.anios[a].junio[1].add(prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1]))).toString();
 								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].septiembre[1].add(prestamo.anios[a].octubre[1]).add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1]))).toString();
+								datos[i][posicion+(3*sumaColumnas)]= totalAnualR.toString();
 							}
-							posicion = posicion+(11*sumaColumnas);
+							if(tipoVisualizacion == 2){
+								posicion--;
+							}
+							posicion = posicion+(4*sumaColumnas);
 							break;
 						case AGRUPACION_SEMESTRE:
 							if(tipoVisualizacion==0 || tipoVisualizacion==2){
 								datos[i][posicion]= (prestamo.anios[a].enero[0].add(prestamo.anios[a].febrero[0]).add(prestamo.anios[a].marzo[0].add(prestamo.anios[a].abril[0].add(prestamo.anios[a].mayo[0].add(prestamo.anios[a].junio[0]))))).toString();
 								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0]).add(prestamo.anios[a].septiembre[0].add(prestamo.anios[a].octubre[0].add(prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0]))))).toString();
+								datos[i][posicion+(2*sumaColumnas)]= totalAnualP.toString();
 							}
 							if(tipoVisualizacion == 2){
 								posicion++;
@@ -606,24 +638,40 @@ public class SPrestamoMetas extends HttpServlet {
 							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
 								datos[i][posicion]= (prestamo.anios[a].enero[1].add(prestamo.anios[a].febrero[1]).add(prestamo.anios[a].marzo[1].add(prestamo.anios[a].abril[1].add(prestamo.anios[a].mayo[1].add(prestamo.anios[a].junio[1]))))).toString();
 								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1]).add(prestamo.anios[a].septiembre[1].add(prestamo.anios[a].octubre[1].add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1]))))).toString();
+								datos[i][posicion+(2*sumaColumnas)]= totalAnualR.toString();
 							}
-							posicion = posicion+(11*sumaColumnas);
+							if(tipoVisualizacion == 2){
+								posicion--;
+							}
+							posicion = posicion+(3*sumaColumnas);
 							break;
 						case AGRUPACION_ANUAL:
 							if(tipoVisualizacion==0 || tipoVisualizacion==2){
-								datos[i][posicion]= (prestamo.anios[a].enero[0].add(prestamo.anios[a].febrero[0]).add(prestamo.anios[a].marzo[0].add(prestamo.anios[a].abril[0].add(prestamo.anios[a].mayo[0].add(prestamo.anios[a].junio[0]))))
-										.add(prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0]).add(prestamo.anios[a].septiembre[0].add(prestamo.anios[a].octubre[0].add(prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0])))))).toString();
+								datos[i][posicion]= totalAnualP.toString();
+								datos[i][posicion+(1*sumaColumnas)]= totalAnualP.toString();
 							}
 							if(tipoVisualizacion == 2){
 								posicion++;
 							}
 							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
-								datos[i][posicion]= (prestamo.anios[a].enero[1].add(prestamo.anios[a].febrero[1]).add(prestamo.anios[a].marzo[1].add(prestamo.anios[a].abril[1].add(prestamo.anios[a].mayo[1].add(prestamo.anios[a].junio[1]))))
-										.add(prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1]).add(prestamo.anios[a].septiembre[1].add(prestamo.anios[a].octubre[1].add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1])))))).toString();
+								datos[i][posicion]= totalAnualR.toString();
+								datos[i][posicion+(1*sumaColumnas)]= totalAnualR.toString();
 							}
-							posicion = posicion+(11*sumaColumnas);
+							if(tipoVisualizacion == 2){
+								posicion--;
+							}
+							posicion = posicion+(2*sumaColumnas);
 							break;
 						}
+					}
+					if(tipoVisualizacion==0 || tipoVisualizacion==2){
+						datos[i][posicion]= totalAniosP.toString();
+					}
+					if(tipoVisualizacion == 2){
+						posicion++;
+					}
+					if(tipoVisualizacion==1 || tipoVisualizacion == 2){
+						datos[i][posicion]= totalAniosR.toString();
 					}
 					datos[i][columnasTotal-1]=prestamo.metaFinal.toString();
 				}

@@ -57,7 +57,9 @@ public class CExcel {
 	CellStyle cs_currency;
 	CellStyle cs_percent;
 	CellStyle cs_bold;
+	CellStyle cs_bold_border;
 	CellStyle cs_normal;
+	CellStyle cs_normal_border;
 	CellStyle cs_min;
 	Font font;
 	Font font_bold;
@@ -101,9 +103,23 @@ public class CExcel {
 
 		cs_bold = workbook.createCellStyle();
 		cs_bold.setFont(font_bold);
+		
+		cs_bold_border = workbook.createCellStyle();
+		cs_bold_border.setFont(font_bold);
+		cs_bold_border.setBorderTop(BorderStyle.THIN);
+		cs_bold_border.setBorderLeft(BorderStyle.THIN);
+		cs_bold_border.setBorderRight(BorderStyle.THIN);
+		cs_bold_border.setBorderBottom(BorderStyle.THIN);
 
 		cs_normal = workbook.createCellStyle();
 		cs_normal.setFont(font);
+		
+		cs_normal_border = workbook.createCellStyle();
+		cs_normal_border.setFont(font);
+		cs_normal_border.setBorderTop(BorderStyle.THIN);
+		cs_normal_border.setBorderLeft(BorderStyle.THIN);
+		cs_normal_border.setBorderRight(BorderStyle.THIN);
+		cs_normal_border.setBorderBottom(BorderStyle.THIN);
 		
 		cs_min = workbook.createCellStyle();
 		cs_min.setFont(font_min);
@@ -139,18 +155,7 @@ public class CExcel {
 		cell = sheet.getRow(irow) != null ? (sheet.getRow(irow).getCell(icell) != null
 				? sheet.getRow(irow).getCell(icell) : sheet.getRow(irow).createCell(icell))
 				: sheet.createRow(irow).createCell(icell);
-				CellStyle estiloCelda =cs_normal;
-				if(borde){
-					estiloCelda.setBorderTop(BorderStyle.THIN);
-					estiloCelda.setBorderLeft(BorderStyle.THIN);
-					estiloCelda.setBorderRight(BorderStyle.THIN);
-					estiloCelda.setBorderBottom(BorderStyle.THIN);
-				}else{
-					estiloCelda.setBorderTop(BorderStyle.NONE);
-					estiloCelda.setBorderLeft(BorderStyle.NONE);
-					estiloCelda.setBorderRight(BorderStyle.NONE);
-					estiloCelda.setBorderBottom(BorderStyle.NONE);
-				}
+				CellStyle estiloCelda =borde ? cs_normal_border : cs_normal;
 				cell.setCellStyle(estiloCelda);
 		cell.setCellValue(value);
 	}
@@ -180,18 +185,7 @@ public class CExcel {
 				? sheet.getRow(irow).getCell(icell) : sheet.getRow(irow).createCell(icell))
 				: sheet.createRow(irow).createCell(icell);
 		cell.setCellValue(value);
-		CellStyle estiloCelda =cs_normal;
-		if(borde){
-			estiloCelda.setBorderTop(BorderStyle.THIN);
-			estiloCelda.setBorderLeft(BorderStyle.THIN);
-			estiloCelda.setBorderRight(BorderStyle.THIN);
-			estiloCelda.setBorderBottom(BorderStyle.THIN);
-		}else{
-			estiloCelda.setBorderTop(BorderStyle.NONE);
-			estiloCelda.setBorderLeft(BorderStyle.NONE);
-			estiloCelda.setBorderRight(BorderStyle.NONE);
-			estiloCelda.setBorderBottom(BorderStyle.NONE);
-		}
+		CellStyle estiloCelda =borde ? cs_normal_border : cs_normal;
 		cell.setCellStyle(estiloCelda);
 	}
 
@@ -202,15 +196,7 @@ public class CExcel {
 		cell.setCellValue(value);
 		CellStyle estiloCelda =(bold) ? cs_bold : cs_normal;
 		if(borde){
-			estiloCelda.setBorderTop(BorderStyle.THIN);
-			estiloCelda.setBorderLeft(BorderStyle.THIN);
-			estiloCelda.setBorderRight(BorderStyle.THIN);
-			estiloCelda.setBorderBottom(BorderStyle.THIN);
-		}else{
-			estiloCelda.setBorderTop(BorderStyle.NONE);
-			estiloCelda.setBorderLeft(BorderStyle.NONE);
-			estiloCelda.setBorderRight(BorderStyle.NONE);
-			estiloCelda.setBorderBottom(BorderStyle.NONE);
+			estiloCelda =(bold) ? cs_bold_border : cs_normal_border;
 		}
 		cell.setCellStyle(estiloCelda);
 	}
@@ -495,8 +481,7 @@ public class CExcel {
 			break;
 		}
 		for (int i = 0; i < columna.length; i++) {
-			//if (!columna[i].isEmpty() && fila[row] != null){
-			if (!columna[i].isEmpty()){
+			if (!columna[i].isEmpty() && fila[row] != null){
 				if(formula.isEmpty()){
 					formula = CellReference.convertNumToColString(Integer.parseInt(columna[i])) + (line+1);
 				}else{
