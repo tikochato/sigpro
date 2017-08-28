@@ -206,7 +206,7 @@
 								<span>R</span></label>
 	    					</div>
 							<div class="btn-group" style="padding-left: 20px;">
-								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="true">
+								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
 							</div>
 						</div>
