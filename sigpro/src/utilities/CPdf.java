@@ -99,7 +99,7 @@ public class CPdf {
 				}
 				table.draw();
 			    contentStream.close();
-			    path = String.join("","temp_",((Long) new Date().getTime()).toString(),".pdf");
+			    path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 				FileOutputStream out = 
 						new FileOutputStream(new File(path));
 				doc.save(out);
@@ -150,10 +150,9 @@ public class CPdf {
 			Cell<PDPage> cell = row.createCell(celda_b, suma_planificada+"");
 			cell = row.createCell(celda_b, suma_real+"");
 			cell = row.createCell(celda_b, suma_planificada+"");
-			cell = row.createCell(celda_b, suma_real+"");
+			cell = row.createCell(celda_b, suma_real+"");	
 			cell = row.createCell(celda_b, datos[datos.length-1]);
 			cell.setFontSize(cell.getFontSize()-.5f);
-			System.out.println(entrada);
 			return row;
 		}
 		
