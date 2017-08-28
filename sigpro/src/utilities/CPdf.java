@@ -98,7 +98,7 @@ public class CPdf {
 				 */
 				//creando fila
 				Row<PDPage> row = table.createRow(12);
-				row= agregarCabecera_pt2(row, cabeceras);
+				row= agregarCabecera_pt2(row, datosMetas[0]);
 				table.addHeaderRow(row);
 				
 				for(int i=0; i<datosMetas.length;i++){
@@ -124,7 +124,7 @@ public class CPdf {
 			int control =0;
 			String entrada="";
 				
-			for(int i=0;i<datos.length-1;i++){
+			for(int i=0;i<datos.length;i++){
 				String texto="";
 				if(datos[i]==null||datos[i].isEmpty()){
 					texto="";
@@ -154,12 +154,12 @@ public class CPdf {
 					cell.setFontSize(cell.getFontSize()-.5f);
 				}
 			}
-			Cell<PDPage> cell = row.createCell(celda_b, suma_planificada+"");
+			/*Cell<PDPage> cell = row.createCell(celda_b, suma_planificada+"");
 			cell = row.createCell(celda_b, suma_real+"");
 			cell = row.createCell(celda_b, suma_planificada+"");
 			cell = row.createCell(celda_b, suma_real+"");	
 			cell = row.createCell(celda_b, datos[datos.length-1]);
-			cell.setFontSize(cell.getFontSize()-.5f);
+			cell.setFontSize(cell.getFontSize()-.5f);*/
 			return row;
 		}
 		
@@ -182,30 +182,30 @@ public class CPdf {
 		}
 		public Row<PDPage> agregarCabecera_pt2(Row<PDPage> row,String cabecera[]){
 			System.out.println(cabecera.length);
-			Cell<PDPage> cell = row.createCell(celda_a, cabecera[0]);
+			Cell<PDPage> cell = row.createCell(celda_a, "Nombre");
 			cell.setFontSize(cell.getFontSize()-1f);
-			cell.setHeaderCell(true);
-			cell = row.createCell(celda_c, cabecera[1]);	
+			//cell.setHeaderCell(true);
+			cell = row.createCell(celda_c,"Meta Unidad Medida");	
 			cell.setFontSize(cell.getFontSize()-1f);
-			cell.setHeaderCell(true);
+			//cell.setHeaderCell(true);
 			int control =1;
-			for(int i =0; i<(cabecera.length-3)*2;i++){
+			for(int i =0; i<cabecera.length-3;i++){
 				if(control==2){
 					control=1;
 					cell = row.createCell(celda_b, "Real");
 					cell.setFontSize(cell.getFontSize()-1f);
-					cell.setHeaderCell(true);
+					//cell.setHeaderCell(true);
 				}else{
 					control++;
 					cell = row.createCell(celda_b, "Planificado");
 					cell.setFontSize(cell.getFontSize()-1f);
-					cell.setHeaderCell(true);
+					//cell.setHeaderCell(true);
 				}
 			}
 			
 			cell = row.createCell(celda_b, "Meta Final");
 			cell.setFontSize(cell.getFontSize()-1f);
-			cell.setHeaderCell(true);
+			//cell.setHeaderCell(true);
 			return row;
 			
 		}
