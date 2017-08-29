@@ -600,7 +600,8 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			estructuraGuardar += ((row.realAdjudica == null || row.realAdjudica == "") ? null : row.realAdjudica) + ",";
 			estructuraGuardar += ((row.planificadoFirma == null || row.planificadoFirma == "") ? null : row.planificadoFirma) + ",";
 			estructuraGuardar += ((row.realFirma == null || row.realFirma == "") ? null : row.realFirma) + ",";
-			estructuraGuardar += row.bloqueado;
+			estructuraGuardar += row.bloqueado + ",";
+			estructuraGuardar += row.nog;
 			estructuraGuardar += "°";
 		}
 		
@@ -750,7 +751,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 		row = mi.datoSeleccionado;
 		if (row != undefined){
 			if(row.bloqueado != true){
-				if(!isNaN(moment(row.planificadoAdjudica,'DD/MM/YYYY').toDate())){
+				if(!isNaN(moment(row.planificadoFirma,'DD/MM/YYYY').toDate())){
 					var modalInstance = $uibModal.open({
 						animation : 'true',
 						ariaLabelledBy : 'modal-title',
