@@ -1,7 +1,6 @@
 package pojo;
-// Generated Aug 14, 2017 12:17:40 PM by Hibernate Tools 5.2.3.Final
+// Generated Aug 28, 2017 4:46:57 PM by Hibernate Tools 5.2.3.Final
 
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
@@ -14,27 +13,22 @@ public class MvArbolId implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5618148617169726562L;
-	private long prestamo;
-	private Integer componente;
-	private Integer producto;
-	private Integer subproducto;
-	private long level;
-	private Integer actividad;
-	private Long treelevel;
-	private String treepath;
-	private Date fechaInicio;
+	private static final long serialVersionUID = -1280058044354171831L;
+	private byte prestamo;
+	private byte componente;
+	private byte producto;
+	private byte subproducto;
+	private byte level;
+	private byte actividad;
+	private byte treelevel;
+	private byte treepath;
+	private byte fechaInicio;
 
 	public MvArbolId() {
 	}
 
-	public MvArbolId(long prestamo, long level) {
-		this.prestamo = prestamo;
-		this.level = level;
-	}
-
-	public MvArbolId(long prestamo, Integer componente, Integer producto, Integer subproducto, long level,
-			Integer actividad, Long treelevel, String treepath, Date fechaInicio) {
+	public MvArbolId(byte prestamo, byte componente, byte producto, byte subproducto, byte level, byte actividad,
+			byte treelevel, byte treepath, byte fechaInicio) {
 		this.prestamo = prestamo;
 		this.componente = componente;
 		this.producto = producto;
@@ -47,83 +41,83 @@ public class MvArbolId implements java.io.Serializable {
 	}
 
 	@Column(name = "prestamo", nullable = false)
-	public long getPrestamo() {
+	public byte getPrestamo() {
 		return this.prestamo;
 	}
 
-	public void setPrestamo(long prestamo) {
+	public void setPrestamo(byte prestamo) {
 		this.prestamo = prestamo;
 	}
 
-	@Column(name = "componente")
-	public Integer getComponente() {
+	@Column(name = "componente", nullable = false)
+	public byte getComponente() {
 		return this.componente;
 	}
 
-	public void setComponente(Integer componente) {
+	public void setComponente(byte componente) {
 		this.componente = componente;
 	}
 
-	@Column(name = "producto")
-	public Integer getProducto() {
+	@Column(name = "producto", nullable = false)
+	public byte getProducto() {
 		return this.producto;
 	}
 
-	public void setProducto(Integer producto) {
+	public void setProducto(byte producto) {
 		this.producto = producto;
 	}
 
-	@Column(name = "subproducto")
-	public Integer getSubproducto() {
+	@Column(name = "subproducto", nullable = false)
+	public byte getSubproducto() {
 		return this.subproducto;
 	}
 
-	public void setSubproducto(Integer subproducto) {
+	public void setSubproducto(byte subproducto) {
 		this.subproducto = subproducto;
 	}
 
 	@Column(name = "level", nullable = false)
-	public long getLevel() {
+	public byte getLevel() {
 		return this.level;
 	}
 
-	public void setLevel(long level) {
+	public void setLevel(byte level) {
 		this.level = level;
 	}
 
-	@Column(name = "actividad")
-	public Integer getActividad() {
+	@Column(name = "actividad", nullable = false)
+	public byte getActividad() {
 		return this.actividad;
 	}
 
-	public void setActividad(Integer actividad) {
+	public void setActividad(byte actividad) {
 		this.actividad = actividad;
 	}
 
-	@Column(name = "treelevel")
-	public Long getTreelevel() {
+	@Column(name = "treelevel", nullable = false)
+	public byte getTreelevel() {
 		return this.treelevel;
 	}
 
-	public void setTreelevel(Long treelevel) {
+	public void setTreelevel(byte treelevel) {
 		this.treelevel = treelevel;
 	}
 
-	@Column(name = "treepath", length = 511)
-	public String getTreepath() {
+	@Column(name = "treepath", nullable = false)
+	public byte getTreepath() {
 		return this.treepath;
 	}
 
-	public void setTreepath(String treepath) {
+	public void setTreepath(byte treepath) {
 		this.treepath = treepath;
 	}
 
-	@Column(name = "fecha_inicio", length = 19)
-	public Date getFechaInicio() {
+	@Column(name = "fecha_inicio", nullable = false)
+	public byte getFechaInicio() {
 		return this.fechaInicio;
 	}
 
-	public void setFechaInicio(Date fechaInicio) {
+	public void setFechaInicio(byte fechaInicio) {
 		this.fechaInicio = fechaInicio;
 	}
 
@@ -137,39 +131,27 @@ public class MvArbolId implements java.io.Serializable {
 			return false;
 		MvArbolId castOther = (MvArbolId) other;
 
-		return (this.getPrestamo() == castOther.getPrestamo())
-				&& ((this.getComponente() == castOther.getComponente()) || (this.getComponente() != null
-						&& castOther.getComponente() != null && this.getComponente().equals(castOther.getComponente())))
-				&& ((this.getProducto() == castOther.getProducto()) || (this.getProducto() != null
-						&& castOther.getProducto() != null && this.getProducto().equals(castOther.getProducto())))
-				&& ((this.getSubproducto() == castOther.getSubproducto())
-						|| (this.getSubproducto() != null && castOther.getSubproducto() != null
-								&& this.getSubproducto().equals(castOther.getSubproducto())))
-				&& (this.getLevel() == castOther.getLevel())
-				&& ((this.getActividad() == castOther.getActividad()) || (this.getActividad() != null
-						&& castOther.getActividad() != null && this.getActividad().equals(castOther.getActividad())))
-				&& ((this.getTreelevel() == castOther.getTreelevel()) || (this.getTreelevel() != null
-						&& castOther.getTreelevel() != null && this.getTreelevel().equals(castOther.getTreelevel())))
-				&& ((this.getTreepath() == castOther.getTreepath()) || (this.getTreepath() != null
-						&& castOther.getTreepath() != null && this.getTreepath().equals(castOther.getTreepath())))
-				&& ((this.getFechaInicio() == castOther.getFechaInicio())
-						|| (this.getFechaInicio() != null && castOther.getFechaInicio() != null
-								&& this.getFechaInicio().equals(castOther.getFechaInicio())));
+		return (this.getPrestamo() == castOther.getPrestamo()) && (this.getComponente() == castOther.getComponente())
+				&& (this.getProducto() == castOther.getProducto())
+				&& (this.getSubproducto() == castOther.getSubproducto()) && (this.getLevel() == castOther.getLevel())
+				&& (this.getActividad() == castOther.getActividad())
+				&& (this.getTreelevel() == castOther.getTreelevel()) && (this.getTreepath() == castOther.getTreepath())
+				&& (this.getFechaInicio() == castOther.getFechaInicio());
 	}
 
 	@Override
 	public int hashCode() {
 		int result = 17;
 
-		result = 37 * result + (int) this.getPrestamo();
-		result = 37 * result + (getComponente() == null ? 0 : this.getComponente().hashCode());
-		result = 37 * result + (getProducto() == null ? 0 : this.getProducto().hashCode());
-		result = 37 * result + (getSubproducto() == null ? 0 : this.getSubproducto().hashCode());
-		result = 37 * result + (int) this.getLevel();
-		result = 37 * result + (getActividad() == null ? 0 : this.getActividad().hashCode());
-		result = 37 * result + (getTreelevel() == null ? 0 : this.getTreelevel().hashCode());
-		result = 37 * result + (getTreepath() == null ? 0 : this.getTreepath().hashCode());
-		result = 37 * result + (getFechaInicio() == null ? 0 : this.getFechaInicio().hashCode());
+		result = 37 * result + this.getPrestamo();
+		result = 37 * result + this.getComponente();
+		result = 37 * result + this.getProducto();
+		result = 37 * result + this.getSubproducto();
+		result = 37 * result + this.getLevel();
+		result = 37 * result + this.getActividad();
+		result = 37 * result + this.getTreelevel();
+		result = 37 * result + this.getTreepath();
+		result = 37 * result + this.getFechaInicio();
 		return result;
 	}
 

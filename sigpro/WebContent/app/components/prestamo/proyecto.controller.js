@@ -255,6 +255,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				directorProyecto: mi.directorProyectoId,
 				impactos : listaImpactos,
 				miembros: miembros,
+				objetoivoEspecifico: mi.proyecto.objetivoEspecifico,
+				visionGeneral : mi.proyecto.visionGeneral,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				
 				t:moment().unix()
@@ -508,6 +510,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
 			$scope.active = 0;
+			
+			mi.obtenerComponentes();
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea editar');
@@ -1109,7 +1113,36 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	        if (index !== -1) {
 	            mi.miembros.splice(index, 1);
 	        }
+		};
+		
+		
+		mi.componentes = [];
+		
+		mi.obtenerComponentes = function(){
+			var parametros = {
+					accion: 'getComponentesPaginaPorProyecto',
+					proyectoid:mi.proyecto.id,
+				    t:moment().unix()
+			}
+			
+			$http.post('/SComponente', parametros).then(function(response){
+				
+				if (response.data.success){
+					
+					mi.componentes = [];
+					mi.componentes = response.data.componentes;
+			        mi.displayedComponentes = [].concat(mi.componentes);
+					
+				}else{
+					$utilidades.mensaje('warning', 'No se encontraron datos con los parámetros ingresados..');
+				}
+				
+			});
+			
 		}
+		
+		
+		
 } ]);
 
 app.controller('buscarPorProyecto', [ '$uibModalInstance',

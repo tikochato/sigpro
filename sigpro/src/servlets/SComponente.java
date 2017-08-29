@@ -87,16 +87,12 @@ public class SComponente extends HttpServlet {
 		String valor_f;
 	}
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    
     public SComponente() {
         super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String response_text = "{ \"success\": false }";
 
@@ -110,9 +106,6 @@ public class SComponente extends HttpServlet {
         output.close();
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		HttpSession sesionweb = request.getSession();
@@ -243,7 +236,7 @@ public class SComponente extends HttpServlet {
 					String duracionDimension = map.get("duracionDimension");
 					
 					AcumulacionCosto acumulacionCosto = null;
-					if(acumulacionCostoid != 0){
+					if(acumulacionCostoid != null){
 						acumulacionCosto = new AcumulacionCosto();
 						acumulacionCosto.setId(Utils.String2Int(map.get("acumulacionCosto")));
 					}
@@ -265,7 +258,7 @@ public class SComponente extends HttpServlet {
 
 					Componente componente;
 					if(esnuevo){
-						componente = new Componente(acumulacionCosto,componenteTipo, null, unidadEjecutora, nombre,
+						componente = new Componente(acumulacionCosto,componenteTipo, proyecto, unidadEjecutora, nombre,
 								descripcion, usuario, null, new DateTime().toDate(), null, 1,
 								snip, programa, subPrograma, proyecto_, actividad,obra, latitud,longitud, costo, renglon, ubicacionGeografica, fechaInicio, fechaFin, duracion, duracionDimension, null,null,null,null);
 					}

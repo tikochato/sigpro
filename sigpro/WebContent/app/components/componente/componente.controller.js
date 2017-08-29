@@ -181,7 +181,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					longitud: mi.componente.longitud,
 					latitud : mi.componente.latitud,
 					costo: mi.componente.costo == null ? 0 : mi.componente.costo,
-					acumulacionCosto: mi.componente.acumulacionCostoId == null ? 0 : mi.componente.acumulacionCostoId,
+					acumulacionCosto: mi.componente.acumulacionCostoId == null ? null : mi.componente.acumulacionCostoId,
 					fechaInicio: moment(mi.componente.fechaInicio).format('DD/MM/YYYY'),
 					fechaFin: moment(mi.componente.fechaFin).format('DD/MM/YYYY'),
 					duaracion: mi.componente.duracion,

@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -42,6 +42,12 @@ public class SMapa extends HttpServlet {
 	private static int OBJETO_ID_PRODUCTO = 3;
 	private static int OBJETO_ID_SUBPRODUCTO = 4;
 	private static int OBJETO_ID_ACTIVIDAD= 5;
+	
+	int totalSinIniciar = 0;
+	int totalEnProceso = 0;
+	int totalRetrasadas = 0;
+	int totalCompletadas = 0;
+	
 	class stobjeto {
 		Integer id;
 		String nombreOjetoTipo;
@@ -87,7 +93,7 @@ public class SMapa extends HttpServlet {
 				if (proyecto.getLongitud()!=null && proyecto.getLatitud()!=null){
 					id++;
 					marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-					getMarca(id,proyecto.getId(),1, proyecto.getNombre(),proyecto.getLatitud(), proyecto.getLongitud()));
+					getMarca(id,proyecto.getId(),1, proyecto.getNombre(),proyecto.getLatitud(), proyecto.getLongitud(),null,null,null,null,null));
 				}
 			}
 			
@@ -101,7 +107,7 @@ public class SMapa extends HttpServlet {
 				if (proyecto.getLongitud()!=null && proyecto.getLatitud()!=null){
 					id++;
 					marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-					getMarca(id,proyecto.getId(),1, proyecto.getNombre(),proyecto.getLatitud(), proyecto.getLongitud()));
+					getMarca(id,proyecto.getId(),1, proyecto.getNombre(),proyecto.getLatitud(), proyecto.getLongitud(),null,null,null,null,null));
 				}
 			}
 			
@@ -110,7 +116,7 @@ public class SMapa extends HttpServlet {
 				if (componente.getLatitud()!=null && componente.getLongitud()!=null){
 					id++;
 					marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-							getMarca(id,componente.getId(),2, componente.getNombre(),componente.getLatitud(), componente.getLongitud()));
+							getMarca(id,componente.getId(),2, componente.getNombre(),componente.getLatitud(), componente.getLongitud(),null,null,null,null,null));
 				}
 			}
 			
@@ -119,7 +125,7 @@ public class SMapa extends HttpServlet {
 				if (producto.getLatitud()!=null && producto.getLongitud()!=null){
 					id++;
 					marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-							getMarca(id,producto.getId(),3, producto.getNombre(), producto.getLatitud(), producto.getLongitud()));
+							getMarca(id,producto.getId(),3, producto.getNombre(), producto.getLatitud(), producto.getLongitud(),null,null,null,null,null));
 				}
 			}
 			
@@ -128,7 +134,7 @@ public class SMapa extends HttpServlet {
 				if (subproducto.getLatitud()!=null && subproducto.getLongitud()!=null){
 					id++;
 					marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-							getMarca(id,subproducto.getId(),4, subproducto.getNombre(), subproducto.getLatitud(), subproducto.getLongitud()));
+							getMarca(id,subproducto.getId(),4, subproducto.getNombre(), subproducto.getLatitud(), subproducto.getLongitud(),null,null,null,null,null));
 				}
 			}
 			
@@ -137,13 +143,16 @@ public class SMapa extends HttpServlet {
 				if (actividad.getLatitud()!=null && actividad.getLongitud()!=null){
 					id++;
 					marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-							getMarca(id, actividad.getId(),5, actividad.getNombre(),actividad.getLatitud(), actividad.getLongitud()));
+							getMarca(id, actividad.getId(),5, actividad.getNombre(),actividad.getLatitud(), actividad.getLongitud()
+									,actividad.getFechaInicio(),actividad.getFechaFin(),actividad.getPorcentajeAvance(),null,null));
 				}
 			}
 			
 			response_text = String.join("","{\"marcas\" : [",marcas,"]}" );
 			
 		}else if (accion.equals("getMarcasPorProyecto")){
+			
+			
 			
 			int id = 0;
 			String marcas = "";
@@ -153,10 +162,10 @@ public class SMapa extends HttpServlet {
 			if (proyecto.getLongitud()!=null && proyecto.getLatitud()!=null){
 				id++;
 				marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-				getMarca(id,proyecto.getId(),1, proyecto.getNombre(),proyecto.getLatitud(), proyecto.getLongitud()));
+				getMarca(id,proyecto.getId(),1, proyecto.getNombre(),proyecto.getLatitud(), proyecto.getLongitud(),null,null,null,null,null));
 			}
 				
-				
+			
 				
 			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyecto.getId(),
 					null, null, null,null,null, usuario);
@@ -164,7 +173,7 @@ public class SMapa extends HttpServlet {
 				if (componente.getLatitud()!=null && componente.getLongitud()!=null){
 					id++;
 					marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-							getMarca(id,componente.getId(),OBJETO_ID_COMPONENTE, componente.getNombre(),componente.getLatitud(), componente.getLongitud()));
+							getMarca(id,componente.getId(),OBJETO_ID_COMPONENTE, componente.getNombre(),componente.getLatitud(), componente.getLongitud(),null,null,null,null,null));
 				}
 				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
 						null, null, null, null, null, usuario);
@@ -172,25 +181,30 @@ public class SMapa extends HttpServlet {
 					if (producto.getLatitud()!=null && producto.getLongitud()!=null){
 						id++;
 						marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-								getMarca(id,producto.getId(),OBJETO_ID_PRODUCTO, producto.getNombre(), producto.getLatitud(), producto.getLongitud()));
+								getMarca(id,producto.getId(),OBJETO_ID_PRODUCTO, producto.getNombre(), producto.getLatitud(), producto.getLongitud(),null,null,null,null,null));
 					}
 					List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
 							null, null, null, null, null, usuario);
 					for (Subproducto subproducto :subproductos){
-						if (subproducto.getLatitud()!=null && subproducto.getLongitud()!=null){
-							id++;
-							marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-									getMarca(id,subproducto.getId(),OBJETO_ID_SUBPRODUCTO, subproducto.getNombre(), subproducto.getLatitud(), subproducto.getLongitud()));
-						}
+						
 						
 						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO
 								, null, null, null, null, null, usuario);
+						totalCompletadas = 0;
+						
 						for (Actividad actividad :actividades){
 							if (actividad.getLatitud()!=null && actividad.getLongitud()!=null){
 								id++;
 								marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-										getMarca(id, actividad.getId(),OBJETO_ID_ACTIVIDAD, actividad.getNombre(),actividad.getLatitud(), actividad.getLongitud()));
+										getMarca(id, actividad.getId(),OBJETO_ID_ACTIVIDAD, actividad.getNombre(),actividad.getLatitud(), actividad.getLongitud()
+												,actividad.getFechaInicio(),actividad.getFechaFin(),actividad.getPorcentajeAvance(),null,null));
 							}
+						}
+						
+						if (subproducto.getLatitud()!=null && subproducto.getLongitud()!=null){
+							id++;
+							marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
+									getMarca(id,subproducto.getId(),OBJETO_ID_SUBPRODUCTO, subproducto.getNombre(), subproducto.getLatitud(), subproducto.getLongitud(),null,null,null,actividades.size(),totalCompletadas));
 						}
 					}
 					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO
@@ -199,7 +213,8 @@ public class SMapa extends HttpServlet {
 						if (actividad.getLatitud()!=null && actividad.getLongitud()!=null){
 							id++;
 							marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-									getMarca(id, actividad.getId(),5, actividad.getNombre(),actividad.getLatitud(), actividad.getLongitud()));
+									getMarca(id, actividad.getId(),5, actividad.getNombre(),actividad.getLatitud(), actividad.getLongitud()
+											,actividad.getFechaInicio(),actividad.getFechaFin(),actividad.getPorcentajeAvance(),null,null));
 						}
 					}
 					
@@ -210,7 +225,8 @@ public class SMapa extends HttpServlet {
 					if (actividad.getLatitud()!=null && actividad.getLongitud()!=null){
 						id++;
 						marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-								getMarca(id, actividad.getId(),OBJETO_ID_ACTIVIDAD, actividad.getNombre(),actividad.getLatitud(), actividad.getLongitud()));
+								getMarca(id, actividad.getId(),OBJETO_ID_ACTIVIDAD, actividad.getNombre(),actividad.getLatitud(), actividad.getLongitud()
+										,actividad.getFechaInicio(),actividad.getFechaFin(),actividad.getPorcentajeAvance(),null,null));
 					}
 				}	
 			}
@@ -221,7 +237,8 @@ public class SMapa extends HttpServlet {
 				if (actividad.getLatitud()!=null && actividad.getLongitud()!=null){
 					id++;
 					marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-							getMarca(id, actividad.getId(),OBJETO_ID_ACTIVIDAD, actividad.getNombre(),actividad.getLatitud(), actividad.getLongitud()));
+							getMarca(id, actividad.getId(),OBJETO_ID_ACTIVIDAD, actividad.getNombre(),actividad.getLatitud(), actividad.getLongitud()
+									,actividad.getFechaInicio(),actividad.getFechaFin(),actividad.getPorcentajeAvance(),null,null));
 				}
 			}
 			
@@ -236,7 +253,7 @@ public class SMapa extends HttpServlet {
 			switch (objetoTipo){
 			case 1: 
 				Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId, usuario);
-				objeto.nombreOjetoTipo = "Préstamo";
+				objeto.nombreOjetoTipo = "Proyecto";
 				objeto.id = proyecto.getId();
 				objeto.nombre = proyecto.getNombre();
 				objeto.fechaCreacion = Utils.formatDate(proyecto.getFechaCreacion());
@@ -309,7 +326,16 @@ public class SMapa extends HttpServlet {
         output.close();
 	}
 	
-	private String getMarca(Integer id, Integer objetoId,Integer objetoTipoId,  String nombre, String latitud, String longitud){
+	private String getMarca(Integer id, Integer objetoId,Integer objetoTipoId,  String nombre, 
+			String latitud, String longitud, Date fechaInicio, Date fechaFin, Integer porcentajeAvance,
+			Integer total, Integer enProceso){
+		String estado = "";
+		if (fechaInicio != null && fechaFin != null && porcentajeAvance != null){
+			estado = estructuraEstado(fechaInicio, fechaFin, new Date(), porcentajeAvance);
+		}else if (total!=null && enProceso !=null){
+			estado = getEstadoObjeto(total, enProceso);
+		}
+		
 		return  String.join("", "{\"id\": ", id.toString(),",",
 				"\"objetoId\": ", objetoId.toString(),",",
 				"\"objetoTipoId\": ", objetoTipoId.toString(), ",",
@@ -317,9 +343,39 @@ public class SMapa extends HttpServlet {
 				"\"posicion\" : {"
 				,"\"latitude\": \"",latitud,"\","
 				,"\"longitude\": \"",longitud,"\"}, "
+				,estado
 				, "\"icon\": { \"url\": \"/assets/img/marcas/marca_",objetoTipoId.toString()
 				,".png\", \"scaledSize\": { \"width\": 32, \"height\": 32 }}}"
 				);
+	}
+	
+	private String estructuraEstado(Date fechaInicio, Date fechaFin, Date hoy, Integer porcentajeAvance){
+		if (porcentajeAvance == 0){
+			totalSinIniciar++;
+			return "\"nombreEstado\" : \"Sin iniciar\",\"idEstado\":1,\"mostrar\":\"true\","; 
+		}
+		if(hoy.after(fechaInicio) && hoy.before(fechaFin) 
+				&& porcentajeAvance > 0 && porcentajeAvance < 100){
+			totalEnProceso++;
+			return "\"nombreEstado\" : \"En proceso\",\"idEstado\":2,\"mostrar\":\"true\",";
+			
+		}
+		if (hoy.after(fechaInicio) && porcentajeAvance > 0 
+				&& porcentajeAvance < 100 ){
+			totalRetrasadas++;
+			return "\"nombreEstado\" : \"Retrasada\",\"idEstado\":3,\"mostrar\":\"true\",";
+			
+		}
+		if(porcentajeAvance == 100){
+			totalCompletadas++;
+			return "\"nombreEstado\" : \"Completadas\",\"idEstado\":4,\"mostrar\":\"true\",";
+		}
+		return "\"mostrar\" : \"true\","; 
+	}
+	
+	private String getEstadoObjeto(Integer total, Integer enProceso){
+		double avance = (enProceso/total)*100;
+		return "\"porcentajeEstado\" : " + avance + ",\"mostrar\":\"true\",";
 	}
 
 }

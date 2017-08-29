@@ -103,27 +103,28 @@
 						</div>
 						
 						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.impactoProyectado" ng-value="riesgoc.riesgo.impactoProyectado" onblur="this.setAttribute('value', this.value);">
+    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.impactoProyectado" ng-value="riesgoc.riesgo.impactoProyectado" onblur="this.setAttribute('value', this.value);" ng-required="true">
     						<label for="campo5" class="floating-label">Impacto proyectado</label>
 						</div>
 						
 						<div class="form-group">
-							<input type="number" class="inputText" ng-model="riesgoc.riesgo.impacto"  ng-value="riesgoc.riesgo.impacto" onblur="this.setAttribute('value', this.value);">
+							<input type="number" class="inputText" ng-model="riesgoc.riesgo.impacto"  ng-value="riesgoc.riesgo.impacto" onblur="this.setAttribute('value', this.value);" ng-required="true">
 							<label for="campo5" class="floating-label">Impacto</label>
 						</div>
 						
 						<div class="form-group">
-							<input type="number"  class="inputText" ng-model="riesgoc.riesgo.puntuacionImpacto" ng-value="riesgoc.riesgo.puntuacionImpacto" onblur="this.setAttribute('value', this.value);"
-							ng-min="1" ng-max="10">
+							<input type="number"  class="inputText" ng-model="riesgoc.riesgo.puntuacionImpacto" ng-value="riesgoc.riesgo.puntuacionImpacto" onblur="this.setAttribute('value', this.value);" 
+							ng-min="1" ng-max="10" ng-required="true">
 							<label for="campo5" class="floating-label">Puntuación de impacto</label>
 						</div>
 						
 						<div class="form-group">
 							<select class="inputText" ng-model="riesgoc.probabilidad"
-								ng-options="probabilidad as probabilidad.nombre for probabilidad in riesgoc.probabilidades track by probabilidad.valor">
-								<option value="">Probabilidad</option>
+								ng-options="probabilidad as probabilidad.nombre for probabilidad in riesgoc.probabilidades track by probabilidad.valor"
+								ng-required="true">
+								<option value="">Seleccione probabilidad</option>
 							</select>
-							<label for="nombre" class="floating-label">* Tipo dato</label>
+							<label for="nombre" class="floating-label">* Probabilidad</label>
 						</div>
 						
 						<div class="form-group">
@@ -158,7 +159,7 @@
 							<input type="text" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" ng-model="riesgoc.riesgo.fechaEjecucion" is-open="riesgoc.fe_abierto"
 									datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
 									ng-value="riesgoc.riesgo.fechaEjecucion" onblur="this.setAttribute('value', this.value);"   
-									ng-click="riesgoc.abrirPopupFecha(1000)"/>
+									ng-click="riesgoc.abrirPopupFecha(1000)" ng-required="true"/>
 								<span class="label-icon" ng-click="riesgoc.abrirPopupFecha(1000)">
 										<i class="glyphicon glyphicon-calendar"></i>
 								</span>

@@ -164,7 +164,8 @@ public class CProject {
 		unidadEjecturoa.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
 		Proyecto proyecto = new Proyecto(null,null,cooperante, proyectoTipo, unidadEjecturoa
 				, task.getName(), null, usuario, null, new Date(), null, 1
-				, null, null, null, null, null, null, null,null, null, null, null, null, null, null,null,null,null,null,null,null,null);
+				, null, null, null, null, null, null, null,null, null, null, null, null, null, null,null,null,null,
+				null,null,null,null,null,null);
 		
 		return ProyectoDAO.guardarProyecto(proyecto) ? proyecto : null;
 	}
@@ -231,7 +232,7 @@ public class CProject {
 				, 0, usuario, null, new Date(), 
 				null, 1, null, null, null,null, null, null, null, objetoId, objetoTipo, 
 				(( Double ) task.getDuration().getDuration()).intValue()
-				, task.getDuration().getUnits().getName() 
+				, task.getDuration().getUnits().getName()
 				,itemPredecesor!=null ? itemPredecesor.objetoId : null
 				, itemPredecesor != null ? itemPredecesor.objetoTipo : null
 				, null, null, new BigDecimal(task.getCost().toString()),new BigDecimal(task.getActualCost().toString()),null,null

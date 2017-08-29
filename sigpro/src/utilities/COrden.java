@@ -147,6 +147,7 @@ public class COrden {
 					Componente componente = componentes.get(0);
 					componente.setOrden(1);
 					ComponenteDAO.guardarComponente(componente);
+					calcularFechasPadre(proyecto.getId(), 1, usuario, 2);
 				}
 			}
 		} else if(objetoTipo == 3){
@@ -185,6 +186,8 @@ public class COrden {
 					Producto producto = productos.get(0);
 					producto.setOrden(1);
 					ProductoDAO.guardarProducto(producto);
+					calcularFechasPadre(componente.getId(), 2, usuario, 3);
+					calcularOrdenObjetosSuperiores(componente.getId(), 2, usuario);
 				}			
 			}
 		} else if(objetoTipo == 4){
@@ -218,11 +221,13 @@ public class COrden {
 			        }
 			        
 			        calcularFechasPadre(producto.getId(), 3, usuario, 4);
-			        calcularOrdenObjetosSuperiores(producto.getComponente().getId(), 2, usuario);
+			        calcularOrdenObjetosSuperiores(producto.getId(), 3, usuario);
 				}else{
 					Subproducto subproducto = subproductos.get(0);
 					subproducto.setOrden(1);
 					SubproductoDAO.guardarSubproducto(subproducto);
+					calcularFechasPadre(producto.getId(), 3, usuario, 4);
+					calcularOrdenObjetosSuperiores(producto.getId(), 3, usuario);
 				}			
 			}
 		}

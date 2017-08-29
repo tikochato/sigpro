@@ -206,7 +206,7 @@ public class SSubproducto extends HttpServlet {
 			
 			if (esnuevo){
 				
-				subproducto = new Subproducto(acumulacionCosto, null, subproductoTipo, unidadEjecutora, nombre, descripcion, 
+				subproducto = new Subproducto(acumulacionCosto, producto, subproductoTipo, unidadEjecutora, nombre, descripcion, 
 						 usuario, null, new DateTime().toDate(), null, 1, snip, programa, subprograma, proyecto_, actividad, 
 						 obra, latitud, longitud,costo,renglon, ubicacionGeografica, fechaInicio, fechaFin, duracion, duracionDimension, null,null, null);
 				
@@ -239,7 +239,7 @@ public class SSubproducto extends HttpServlet {
 			ret = SubproductoDAO.guardarSubproducto(subproducto);
 			
 			COrden orden = new COrden();
-			orden.calcularOrdenObjetosSuperiores(productoId, 3, usuario);
+			orden.calcularOrdenObjetosSuperiores(subproducto.getId(), 4, usuario);
 			
 			if (ret){
 				SubproductoUsuarioId subproductoUsuarioId = new SubproductoUsuarioId(subproducto.getId(), usuario);

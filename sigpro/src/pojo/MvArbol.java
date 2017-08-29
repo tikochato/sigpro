@@ -1,5 +1,5 @@
 package pojo;
-// Generated Aug 14, 2017 12:17:40 PM by Hibernate Tools 5.2.3.Final
+// Generated Aug 28, 2017 4:46:57 PM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -31,14 +31,14 @@ public class MvArbol implements java.io.Serializable {
 	@EmbeddedId
 
 	@AttributeOverrides({ @AttributeOverride(name = "prestamo", column = @Column(name = "prestamo", nullable = false)),
-			@AttributeOverride(name = "componente", column = @Column(name = "componente")),
-			@AttributeOverride(name = "producto", column = @Column(name = "producto")),
-			@AttributeOverride(name = "subproducto", column = @Column(name = "subproducto")),
+			@AttributeOverride(name = "componente", column = @Column(name = "componente", nullable = false)),
+			@AttributeOverride(name = "producto", column = @Column(name = "producto", nullable = false)),
+			@AttributeOverride(name = "subproducto", column = @Column(name = "subproducto", nullable = false)),
 			@AttributeOverride(name = "level", column = @Column(name = "level", nullable = false)),
-			@AttributeOverride(name = "actividad", column = @Column(name = "actividad")),
-			@AttributeOverride(name = "treelevel", column = @Column(name = "treelevel")),
-			@AttributeOverride(name = "treepath", column = @Column(name = "treepath", length = 511)),
-			@AttributeOverride(name = "fechaInicio", column = @Column(name = "fecha_inicio", length = 19)) })
+			@AttributeOverride(name = "actividad", column = @Column(name = "actividad", nullable = false)),
+			@AttributeOverride(name = "treelevel", column = @Column(name = "treelevel", nullable = false)),
+			@AttributeOverride(name = "treepath", column = @Column(name = "treepath", nullable = false)),
+			@AttributeOverride(name = "fechaInicio", column = @Column(name = "fecha_inicio", nullable = false)) })
 	public MvArbolId getId() {
 		return this.id;
 	}

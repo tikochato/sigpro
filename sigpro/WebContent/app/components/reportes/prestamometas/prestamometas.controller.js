@@ -249,8 +249,8 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			var datos = {
 				accion : 'getMetasProducto',
 				idPrestamo: mi.prestamo.value,
-				anoInicial: mi.fechaInicio,
-				anoFinal: mi.fechaFin
+				anioInicial: mi.fechaInicio,
+				anioFinal: mi.fechaFin
 			};
 		
 			mi.mostrarCargando = true;
@@ -486,6 +486,36 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			}
 			return valor[tipoMeta];
 		};
+		
+		mi.exportarExcel = function(){
+			 var tipoVisualizacion = 0;
+			 if (mi.grupoMostrado.planificado && mi.grupoMostrado.real){
+				 tipoVisualizacion = 2;
+			 }else if(mi.grupoMostrado.real){
+				 tipoVisualizacion = 1;
+			 }
+			 $http.post('/SPrestamoMetas', { 
+				 accion: 'exportarExcel', 
+				 proyectoid: mi.prestamo.value,
+				 fechaInicio: mi.fechaInicio,
+				 fechaFin: mi.fechaFin,
+				 agrupacion: mi.agrupacionActual,
+				 tipoVisualizacion: tipoVisualizacion,
+				 t:moment().unix()
+			  } ).then(
+					  function successCallback(response) {
+						  var anchor = angular.element('<a/>');
+						  anchor.attr({
+					         href: 'data:application/ms-excel;base64,' + response.data,
+					         target: '_blank',
+					         download: 'MetasPrestamo.xls'
+						  })[0].click();
+					  }.bind(this), function errorCallback(response){
+						 		
+				 	}
+			  	);
+			};
+		
 		
 }]);
 

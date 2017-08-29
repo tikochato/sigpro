@@ -2,7 +2,10 @@
 	pageEncoding="UTF-8"%>
 	<style type="text/css">
 	
-		
+		.divMapa{
+			height: calc(80% - 50px);
+			width: 100%;
+		}
 		
 		
 	</style>	
@@ -81,19 +84,25 @@
 	  <div class="panel-heading"><h3>Mapa</h3></div>
 	</div>
 	    
-		<div class="subtitulo">
-			{{ objetoTipoNombre }} {{ proyectoNombre }}
+		<div class="row" style="width: 100%;">
+					<div class="form-group col-sm-4" align="left">
+						<select  class="inputText" ng-model="mapac.prestamo"
+							ng-options="a.text for a in mapac.prestamos"
+							ng-change="mapac.cargar()"></select>
+					</div>
 		</div>
-	    								
-	    <div class="operation_buttons" align="right">
-	    	 <div class="checkbox" ng-hide="!mostrarControles">
+		<div class="row">
+	    <div class="col-sm-12 operation_buttons" align="right" style="width: 97%">
+	    
+	    
+	    	 <div class="checkbox" ng-hide="!mapac.mostrar">
 			    <label>
 			      <input type="checkbox" ng-model="mostrarTodo" ng-click="mostrar(0)">
 			      Todos
 			    </label>
 			    <label>
 			      <input type="checkbox" ng-model="mostrarProyectos" ng-click="mostrar(1)">
-			      Préstamos
+			      Proyecto
 			    </label>
 			    <label>
 			      <input type="checkbox" ng-model="mostrarComponentes" ng-click="mostrar(2)">
@@ -107,17 +116,41 @@
 			      <input type="checkbox" ng-model="mostrarSubproductos" ng-click="mostrar(4)">
 			      Subproductos
 			    </label>
-			    <label>
-			      <input type="checkbox" ng-model="mostrarActividades" ng-click="mostrar(5)">
-			      Actividades
-			    </label>
+			    &nbsp;&nbsp;&nbsp;&nbsp;
+			    <lavel >
+			    	<input type="checkbox" ng-model="mostrarActividades" ng-click="mostrar(5)">
+			    	<span  ng-dropdown-multiselect="" options="mapac.transclusionData" selected-model="mapac.transclusionModel" 
+			    	extra-settings="mapac.transclusionSettings"
+			    	events="mapac.selectActividad">
+				    	<toggle-dropdown>
+				    		Actividades
+				    		<span class="glyphicon glyphicon-menu-down"></span>
+				    	</toggle-dropdown>
+			    	</span>	
+			    </lavel>
+		    	
+			    
+			    
+			    
+			    
+			    
+			    
+			    	
+			    
+			    	
+			   
+			    
+			    
+			    
+			    
 			  </div>
 	    	 
 	    </div>
-	    
-        <div  >
-        	  <div class="modal-body" style="height: 450px; ">
-	        	<ui-gmap-google-map id="mainmap"  center="map.center" zoom="map.zoom" options="map.options" events="map.events"  >
+	    </div>
+        <div class=" modal-body row divMapa"  >
+        	  <div class=" divMapa" >
+	        	<ui-gmap-google-map id="mainmap"  center="map.center" zoom="map.zoom" options="map.options" events="map.events"
+	        	ng-if="mapac.mostrar"  >
 	      			
 					<div ng-repeat="marca in marcas track by marca.id">
 						<div ng-switch on ="marca.objetoTipoId">
@@ -154,7 +187,7 @@
 								 </ui-gmap-marker>
 							 </div>
 							 <div ng-switch-when="5">
-								<ui-gmap-marker ng-if="mostrarTodo || mostrarActividades" 
+								<ui-gmap-marker ng-if="mostrarTodo || (mostrarActividades && marca.mostrar)" 
 									 idkey="marca.id" coords="marca.posicion" icon = "marca.icon"
 									 click="abrirInformacion(marca.objetoId,marca.objetoTipoId)" 
 									 options="{title:marca.nombre}"  
@@ -166,6 +199,5 @@
 				</ui-gmap-google-map>
 			</div>
 		</div>
-		
-	   
+		<br>
 	</div>
