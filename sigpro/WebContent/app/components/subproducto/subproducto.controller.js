@@ -23,6 +23,15 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	mi.productoid = "";
 	mi.productoNombre = "";
 	mi.objetoTipoNombre = "";
+	
+	mi.fechaFinPadre;
+
+	mi.dimensiones = [
+		{value:0,nombre:'Seleccione una opción'},
+		{value:1,nombre:'Dias',sigla:'d'}
+	];
+	
+	mi.duracionDimension = mi.dimensiones[0];
 
 	mi.propiedadesValor = [];
 	mi.camposdinamicos = {};
@@ -38,7 +47,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	$http.post('/SSubproducto', { accion: 'obtenerSubproductoPorId', id: $routeParams.subproducto_id }).success(
 			function(response) {
 				mi.subproductoid = response.id;
-				mi.subproductoNombre = response.nombre;
+				mi.subproductoNombre = response.nombre;				
 	});
 	
 	$http.post('/SProducto', { accion: 'obtenerProductoPorId', id: $routeParams.producto_id }).success(
@@ -46,13 +55,27 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				mi.productoid = response.id;
 				mi.productoNombre = response.nombre;
 				mi.objetoTipoNombre = "Producto";
+				var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
+				mi.modificarFechaInicial(fechaInicioPadre);
 	});
 	
+	mi.modificarFechaInicial = function(fechaPadre){
+		mi.fi_opciones.minDate = fechaPadre;
+	}
+	
 	mi.formatofecha = 'dd/MM/yyyy';
+	
 	mi.fechaOptions = {
 			formatYear : 'yy',
 			maxDate : new Date(2030, 12, 31),
 			minDate : new Date(1970, 1, 1),
+			startingDay : 1
+	};
+	
+	mi.fi_opciones = {
+			formatYear : 'yy',
+			maxDate : new Date(2050, 12, 31),
+			minDate : new Date(1990, 1, 1),
 			startingDay : 1
 	};
 
@@ -83,6 +106,13 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				mi.data = response.data.subproductos;
 				mi.opcionesGrid.data = mi.data;
 				mi.mostrarCargando = false;
+				
+				for(x in mi.data){
+					if(mi.data[x].fechaInicio != "")
+						mi.data[x].fechaInicio = moment(mi.data[x].fechaInicio, 'DD/MM/YYYY').toDate();
+					if(mi.data[x].fechaFin != "")
+						mi.data[x].fechaFin = moment(mi.data[x].fechaFin, 'DD/MM/YYYY').toDate();
+				}
 			}
 		});
 	};
@@ -268,7 +298,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				proyecto_ : mi.subproducto.proyecto_,
 				actividad: mi.subproducto.actividad,
 				obra: mi.subproducto.obra,
-				fuente: mi.subproducto.fuente,
+				renglon: mi.subproducto.renglon,
+				ubicacionGeografica: mi.subproducto.ubicacionGeografica,
 				producto : ($routeParams.producto_id == undefined ? 0 : $routeParams.producto_id),
 				subproductoPadre : mi.subproductoPadre,
 				tiposubproductoid : mi.tipo,
@@ -277,6 +308,10 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				longitud: mi.subproducto.longitud,
 				costo: mi.subproducto.costo == null ? 0 : mi.subproducto.costo,
 				acumulacionCostoId: mi.subproducto.acumulacionCostoId == null ? 0 : mi.subproducto.acumulacionCostoId,
+				fechaInicio: moment(mi.subproducto.fechaInicio).format('DD/MM/YYYY'),
+				fechaFin: moment(mi.subproducto.fechaFin).format('DD/MM/YYYY'),
+				duaracion: mi.subproducto.duracion,
+				duracionDimension: mi.duracionDimension.sigla,
 				latitud : mi.subproducto.latitud,
 				esnuevo : mi.esNuevo
 			};
@@ -314,12 +349,24 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 			mi.esNuevo = false;
 			mi.tipo = mi.subproducto.idSubproductoTipo;
 			mi.tipoNombre = mi.subproducto.subproductoTipo;
+			
+			if(mi.subproducto.duracionDimension == 'd'){
+				mi.duracionDimension = mi.dimensiones[1];
+			}else{
+				mi.duracionDimension = mi.dimensiones[0];
+			}
 
 			mi.subproductoPadre = mi.subproducto.idSubproducto;
 			mi.subproductoPadreNombre = mi.subproducto.subproducto;
 			
 			mi.unidadEjecutora = mi.subproducto.unidadEjectuora;
 			mi.unidadEjecutoraNombre = mi.subproducto.nombreUnidadEjecutora;
+			
+			if(mi.fechaFinPadre != null && !isNaN(mi.fechaFinPadre)){
+				mi.subproducto.fechaInicio = mi.sumarDias(mi.fechaFinPadre,2, 'd');
+				mi.primerhijo = true;
+			}
+			
 			mi.coordenadas = (mi.subproducto.latitud !=null ?  mi.subproducto.latitud : '') +
 			(mi.subproducto.latitud!=null ? ', ' : '') + (mi.subproducto.longitud!=null ? mi.subproducto.longitud : '');
 			
@@ -496,8 +543,37 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	};
 	
 	mi.abrirPopupFecha = function(index) {
-		mi.camposdinamicos[index].isOpen = true;
+		if(index > 0 && index<1000){
+			mi.camposdinamicos[index].isOpen = true;
+		}
+		else{
+			switch(index){
+				case 1000: mi.fi_abierto = true; break;
+				case 1001: mi.ff_abierto = true; break;
+			}
+		}
 	};
+	
+	mi.cambioDuracion = function(dimension){
+		mi.subproducto.fechaFin = mi.sumarDias(mi.subproducto.fechaInicio,mi.subproducto.duracion, dimension.sigla);
+	}
+	
+	mi.sumarDias = function(fecha, dias, dimension){
+		if(dimension != undefined && dias != undefined && fecha != ""){
+			var cnt = 0;
+		    var tmpDate = moment(fecha);
+		    while (cnt < (dias -1 )) {
+		    	if(dimension=='d'){
+		    		tmpDate = tmpDate.add(1,'days');	
+		    	}
+		        if (tmpDate.weekday() != moment().day("Sunday").weekday() && tmpDate.weekday() != moment().day("Saturday").weekday()) {
+		            cnt = cnt + 1;
+		        }
+		    }
+		    tmpDate = moment(tmpDate,'DD/MM/YYYY').toDate();
+		    return tmpDate;
+		}
+	}
 
 	mi.buscarSubproducto = function() {
 

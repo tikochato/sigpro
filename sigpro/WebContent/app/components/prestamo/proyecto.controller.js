@@ -1116,6 +1116,27 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		};
 		
 		
+		mi.buscarCodigoPresupuestario = function() {	
+			var resultado = mi.llamarModalBusqueda('/SDataSigade', {
+				accion : 'totalElementos'	
+			}, function(pagina, elementosPorPagina) {
+				return {
+					accion : 'getcodigos',
+					pagina : pagina,
+					registros : elementosPorPagina
+				};
+			},'codigopresupuestario','numeroprestamo');
+
+			resultado.then(function(itemSeleccionado) {
+				if (itemSeleccionado!=null && itemSeleccionado != undefined){
+					mi.prestamo.codigoPresupuestario = Number(itemSeleccionado.codigopresupuestario);
+					mi.cargaSigade();
+				}
+				
+			});
+		};
+		
+		
 		mi.componentes = [];
 		
 		mi.obtenerComponentes = function(){
@@ -1138,7 +1159,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				}
 				
 			});
-			
 		}
 		
 		
@@ -1180,7 +1200,7 @@ function buscarPorProyecto($uibModalInstance, $scope, $http, $interval,
 			name : $columnaId,
 			cellClass : 'grid-align-right',
 			type : 'number',
-			width : 70
+			width : 100
 		}, {
 			displayName : 'Nombre',
 			name : $columnaNombre,

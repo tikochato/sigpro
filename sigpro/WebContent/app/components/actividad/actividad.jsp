@@ -132,29 +132,39 @@
 							</div>
 						</div>
 						<div class="form-group-row row" >
-							<div class="form-group col-sm-2" >
-							       <input type="number" class="inputText" ng-model="actividadc.actividad.programa" ng-value="actividadc.actividad.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
-							       <label for="iprog" class="floating-label">Programa</label>
-							</div>
-							<div class="form-group col-sm-2" >
-							  <input type="number" class="inputText" ng-model="actividadc.actividad.subprograma" ng-value="actividadc.actividad.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-							  <label for="isubprog" class="floating-label">Subprograma</label>
-							</div>
-							<div class="form-group col-sm-2" >
-							  <input type="number" class="inputText" ng-model="actividadc.actividad.proyecto" ng-value="actividadc.actividad.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-							  <label for="iproy_" class="floating-label">Proyecto</label>
-							</div>
-							<div class="form-group col-sm-2" >
-							  <input type="number" class="inputText" ng-model="actividadc.actividad.actividad" ng-value="actividadc.actividad.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-							  <label for="iobra" class="floating-label">Actividad</label>
-							</div>
-							<div class="form-group col-sm-2" >
-							  <input type="number" class="inputText" ng-model="actividadc.actividad.obra" ng-value="actividadc.actividad.obra" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-							  <label for="iobra" class="floating-label">Obra</label>
-							</div>
-							 <div class="form-group col-sm-2">
-							  <input type="number" class="inputText" ng-model="actividadc.actividad.fuente" ng-value="actividadc.actividad.fuente" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-							  <label for="fuente" class="floating-label">Fuente</label>
+							<div style="width: 100%">
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 14%; padding-right:5px;">
+											<input name="programa" type="number" class="inputText" ng-model="actividadc.actividad.programa" ng-value="actividadc.actividad.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;" />
+							       			<label for="programa" class="floating-label">Programa</label>
+										</td>
+										<td style="width: 14%; padding-right:5px;">
+											<input type="number" class="inputText" ng-model="actividadc.actividad.subprograma" ng-value="actividadc.actividad.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+							  				<label for="isubprog" class="floating-label">Subprograma</label>
+										</td>
+										<td style="width: 14%; padding-right:5px;">
+											<input type="number" class="inputText" ng-model="actividadc.actividad.proyecto_" ng-value="actividadc.actividad.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+							  				<label for="iproy_" class="floating-label">Proyecto</label>
+										</td>
+										<td style="width: 14%; padding-right:5px;">
+											<input type="number" class="inputText" ng-model="actividadc.actividad.actividad" ng-value="actividadc.actividad.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+								  			<label for="iobra" class="floating-label">Actividad</label>
+										</td>
+										<td style="width: 14%; padding-right:5px;">
+											<input type="number" class="inputText" ng-model="actividadc.actividad.obra" ng-value="actividadc.actividad.obra" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+							 				<label for="iobra" class="floating-label">Obra</label>
+										</td>
+										<td style="width: 14%; padding-right:5px;">
+											<input type="number" class="inputText" ng-model="actividadc.actividad.renglon" ng-value="actividadc.actividad.renglon" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+							  				<label for="fuente" class="floating-label">Renglon</label>
+										</td>
+										<td style="width: 14%; padding-right:5px;">
+											<input type="number" class="inputText" ng-model="actividadc.actividad.ubicacionGeografica" ng-value="actividadc.actividad.ubicacionGeografica" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+							  				<label for="fuente" class="floating-label">Ubicación Geográfica</label>
+										</td>
+									</tr>
+								</table>
 							</div>
 						</div>
 						<div class="form-group" >
@@ -185,14 +195,34 @@
 						   <label class="floating-label">Descripción</label>
 						</div>
 						
-						
 						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<select class="inputText" ng-model="actividadc.duracionDimension"
+										ng-options="dim as dim.nombre for dim in actividadc.dimensiones track by dim.value"
+										 required>
+									<option value="">Seleccione una opción</option>
+									</select>
+									<label for="nombre" class="floating-label">* Dimension</label>
+								</div>
+							</div>
 							
 							<div class="col-sm-6">
-								
+								<div class="form-group">
+								   <input class="inputText"  type="number"
+								     ng-model="actividadc.actividad.duracion" ng-value="actividadc.actividad.duracion"   
+								     onblur="this.setAttribute('value', this.value);"  min="1" max="100" ng-required="true" 
+								     ng-readonly="actividadc.duracionDimension != '' ? false : true"
+								     ng-change="actividadc.actividad.fechaInicio != null && actividadc.duracionDimension != '' ? actividadc.cambioDuracion(actividadc.duracionDimension) : ''">
+								   <label class="floating-label">* Duración</label>
+								</div>	
+							</div>
+							
+							<div class="col-sm-6">
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaInicio" is-open="actividadc.fi_abierto"
-								            datepicker-options="actividadc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin()" ng-required="true"  ng-click="actividadc.abrirPopupFecha(1000)"
+								            datepicker-options="actividadc.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin(); actividadc.cambioDuracion(actividadc.duracionDimension);" ng-required="true"  
+								            ng-click="actividadc.abrirPopupFecha(1000)"
 								            ng-value="actividadc.actividad.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
 								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1000)">
 								              <i class="glyphicon glyphicon-calendar"></i>
@@ -205,7 +235,8 @@
 							
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaFin" is-open="actividadc.ff_abierto"
-								            datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin()" ng-required="true"  ng-click="actividadc.abrirPopupFecha(1001)"
+								            datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin()" ng-required="true"
+								            ng-readonly="false"  
 								            ng-value="actividadc.actividad.fechaFin" onblur="this.setAttribute('value', this.value);"/>
 								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1001)">
 								              <i class="glyphicon glyphicon-calendar"></i>
@@ -358,11 +389,8 @@
 
 				</form>
 			</div>
-			
-			
-			
 		<div class="col-sm-12 operation_buttons" align="right">
-		<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 			<div class="btn-group">
 				<shiro:hasPermission name="24020">
 					<label class="btn btn-success" ng-click="form.$valid ? actividadc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar" uib-tooltip="Guardar">

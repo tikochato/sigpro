@@ -94,5 +94,24 @@ public class DataSigadeDAO {
 		return ret;
 	}
 	
+	public static List<DtmAvanceFisfinanDti> getCodigos(){
+		List<DtmAvanceFisfinanDti> ret = new ArrayList<>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		
+		try{
+			String query =String.join(" ", "select d from DtmAvanceFisfinanDti d");
+			Query<DtmAvanceFisfinanDti> criteria = session.createQuery(query,DtmAvanceFisfinanDti.class);
+
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("4", DataSigadeDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 
 }
