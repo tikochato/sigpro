@@ -70,7 +70,8 @@ public class SProyecto extends HttpServlet {
 		Integer proyecto;
 		Integer actividad;
 		Integer obra;
-		Integer fuente;
+		Integer renglon;
+		Integer ubicacionGeografica;
 		String longitud;
 		String latitud;
 		Integer directorProyectoId;
@@ -152,7 +153,6 @@ public class SProyecto extends HttpServlet {
 				dato.proyecto = proyecto.getProyecto();
 				dato.obra = proyecto.getObra();
 				dato.actividad = proyecto.getActividad();
-				dato.fuente = proyecto.getFuente();
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
 				dato.costo = proyecto.getCosto();
@@ -204,7 +204,8 @@ public class SProyecto extends HttpServlet {
 				dato.proyecto = proyecto.getProyecto();
 				dato.obra = proyecto.getObra();
 				dato.actividad = proyecto.getActividad();
-				dato.fuente = proyecto.getFuente();
+				dato.renglon = proyecto.getRenglon();
+				dato.ubicacionGeografica =proyecto.getUbicacionGeografica(); 
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
 				dato.acumulacionCosto = proyecto.getAcumulacionCosto().getId();
@@ -255,7 +256,8 @@ public class SProyecto extends HttpServlet {
 				dato.proyecto = proyecto.getProyecto();
 				dato.obra = proyecto.getObra();
 				dato.actividad = proyecto.getActividad();
-				dato.fuente = proyecto.getFuente();
+				dato.renglon = proyecto.getRenglon();
+				dato.ubicacionGeografica =proyecto.getUbicacionGeografica(); 
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
 				dato.acumulacionCosto = proyecto.getAcumulacionCosto() != null ? proyecto.getAcumulacionCosto().getId() : null;
@@ -305,7 +307,8 @@ public class SProyecto extends HttpServlet {
 				dato.proyecto = proyecto.getProyecto();
 				dato.obra = proyecto.getObra();
 				dato.actividad = proyecto.getActividad();
-				dato.fuente = proyecto.getFuente();
+				dato.renglon = proyecto.getRenglon();
+				dato.ubicacionGeografica =proyecto.getUbicacionGeografica(); 
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
 				dato.acumulacionCosto = proyecto.getAcumulacionCosto().getId();
@@ -342,6 +345,8 @@ public class SProyecto extends HttpServlet {
 				Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
 				String longitud = map.get("longitud");
 				String latitud = map.get("latitud");
+				Integer renglon = map.get("renglon")!=null ? Integer.parseInt(map.get("renglon")):null;
+				Integer ubicacionGeografica = map.get("ubicacionGeografica")!=null ? Integer.parseInt(map.get("ubicacionGeografica")):null;
 				BigDecimal costo = new BigDecimal(map.get("costo"));
 				
 				AcumulacionCosto acumulacionCosto = new AcumulacionCosto();
@@ -369,8 +374,9 @@ public class SProyecto extends HttpServlet {
 
 				if(esnuevo){
 					proyecto = new Proyecto(acumulacionCosto,directorProyecto, cooperante, null, unidadEjecutora, nombre, descripcion,
-							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, obra, fuente,
-							latitud, longitud, objetivo, enunciadoAlcance, costo,null, null, null, null, null, null, null,null,null);
+							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, obra, latitud, 
+							longitud, objetivo, enunciadoAlcance, costo,renglon, ubicacionGeografica, null, null, null, null, null, null, null, 
+							null, null, null,null,null,null);
 					
 					
 				}else{
@@ -389,7 +395,6 @@ public class SProyecto extends HttpServlet {
 					proyecto.setProyecto(proyecto_);
 					proyecto.setActividad(actividad);
 					proyecto.setObra(obra);
-					proyecto.setFuente(fuente);
 					proyecto.setLongitud(longitud);
 					proyecto.setLatitud(latitud);
 					proyecto.setColaborador(directorProyecto);

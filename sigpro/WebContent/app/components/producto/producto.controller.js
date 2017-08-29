@@ -33,20 +33,48 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.coordenadas = "";
 	mi.objetoTipoNombre = "";
 	
+	mi.dimensiones = [
+		{value:0,nombre:'Seleccione una opción'},
+		{value:1,nombre:'Dias',sigla:'d'}
+	];
+	
+	mi.duracionDimension = mi.dimensiones[0];
+	
 	$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id }).success(
 			function(response) {
 				mi.componenteid = response.id;
 				mi.componenteNombre = response.nombre;
 				mi.objetoTipoNombre = "Componente";
+				var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
+				mi.modificarFechaInicial(fechaInicioPadre);
 	});
 	
-	mi.formatofecha = 'dd/MM/yyyy';
-	mi.fechaOptions = {
+	mi.modificarFechaInicial = function(fechaPadre){
+		mi.fi_opciones.minDate = fechaPadre;
+	}
+	
+	mi.fi_opciones = {
 			formatYear : 'yy',
 			maxDate : new Date(2020, 5, 22),
 			minDate : new Date(1900, 1, 1),
 			startingDay : 1
+	}
+	
+	mi.ff_opciones = {
+			formatYear : 'yy',
+			maxDate : new Date(2020, 5, 22),
+			minDate : new Date(1900, 1, 1),
+			startingDay : 1
+	}
+	
+	mi.fechaOptions = {
+			formatYear : 'yy',
+			maxDate : new Date(2050, 12, 31),
+			minDate : new Date(1990, 1, 1),
+			startingDay : 1
 	};
+	
+	mi.formatofecha = 'dd/MM/yyyy';
 
 	mi.cambioPagina = function() {
 		mi.cargarTabla(mi.paginaActual);
@@ -74,6 +102,13 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				mi.data = response.data.productos;
 				mi.opcionesGrid.data = mi.data;
 				mi.mostrarCargando = false;
+				
+				for(x in mi.data){
+					if(mi.data[x].fechaInicio != "")
+						mi.data[x].fechaInicio = moment(mi.data[x].fechaInicio, 'DD/MM/YYYY').toDate();
+					if(mi.data[x].fechaFin != "")
+						mi.data[x].fechaFin = moment(mi.data[x].fechaFin, 'DD/MM/YYYY').toDate();
+				}
 			}
 		});
 	};
@@ -260,7 +295,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				proyecto_ : mi.producto.proyecto_,
 				actividad: mi.producto.actividad,
 				obra: mi.producto.obra,
-				fuente: mi.producto.fuente,
+				renglon: mi.producto.renglon,
+				ubicacionGeografica: mi.producto.ubicacionGeografica,
 				componente : $routeParams.componente_id,
 				productoPadre : mi.productoPadre,
 				tipoproductoid : mi.tipo,
@@ -269,6 +305,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				latitud : mi.producto.latitud,
 				costo: mi.producto.costo == null ? 0 : mi.producto.costo,
 				acumulacionCosto: mi.producto.acumulacionCostoId == null ? 0 : mi.producto.acumulacionCostoId,
+				fechaInicio: moment(mi.producto.fechaInicio).format('DD/MM/YYYY'),
+				fechaFin: moment(mi.producto.fechaFin).format('DD/MM/YYYY'),
+				duaracion: mi.producto.duracion,
+				duracionDimension: mi.duracionDimension.sigla,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				esnuevo : mi.esNuevo
 			};
@@ -305,6 +345,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			mi.esNuevo = false;
 			mi.tipo = mi.producto.idProductoTipo;
 			mi.tipoNombre = mi.producto.productoTipo;
+			
+			if(mi.producto.duracionDimension == 'd'){
+				mi.duracionDimension = mi.dimensiones[1];
+			}else{
+				mi.duracionDimension = mi.dimensiones[0];
+			}
 
 			mi.productoPadre = mi.producto.idProducto;
 			mi.productoPadreNombre = mi.producto.producto;
@@ -500,8 +546,37 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 	
 	mi.abrirPopupFecha = function(index) {
-		mi.camposdinamicos[index].isOpen = true;
+		if(index > 0 && index<1000){
+			mi.camposdinamicos[index].isOpen = true;
+		}
+		else{
+			switch(index){
+				case 1000: mi.fi_abierto = true; break;
+				case 1001: mi.ff_abierto = true; break;
+			}
+		}
 	};
+	
+	mi.cambioDuracion = function(dimension){
+		mi.producto.fechaFin = mi.sumarDias(mi.producto.fechaInicio,mi.producto.duracion, dimension.sigla);
+	}
+	
+	mi.sumarDias = function(fecha, dias, dimension){
+		if(dimension != undefined && dias != undefined && fecha != ""){
+			var cnt = 0;
+		    var tmpDate = moment(fecha);
+		    while (cnt < (dias -1 )) {
+		    	if(dimension=='d'){
+		    		tmpDate = tmpDate.add(1,'days');	
+		    	}
+		        if (tmpDate.weekday() != moment().day("Sunday").weekday() && tmpDate.weekday() != moment().day("Saturday").weekday()) {
+		            cnt = cnt + 1;
+		        }
+		    }
+		    tmpDate = moment(tmpDate,'DD/MM/YYYY').toDate();
+		    return tmpDate;
+		}
+	}
 
 	mi.buscarProducto = function() {
 

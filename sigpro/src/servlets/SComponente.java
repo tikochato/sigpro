@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +38,7 @@ import pojo.ComponenteTipo;
 import pojo.Proyecto;
 import pojo.UnidadEjecutora;
 import utilities.Utils;
+import utilities.COrden;
 
 /**
  * Servlet implementation class SComponente
@@ -62,13 +64,18 @@ public class SComponente extends HttpServlet {
 		Integer proyecto_;
 		Integer obra;
 		Integer actividad;
-		Integer fuente;
+		Integer renglon;
+		Integer ubicacionGeografica;
+		Integer duracion;
+		String duracionDimension;
+		String fechaInicio;
+		String fechaFin;
 		int unidadejecutoraid;
 		String unidadejecutoranombre;
 		String latitud;
 		String longitud;
 		BigDecimal costo;
-		Integer acumulacionCosto;
+		Integer acumulacionCostoId;
 		String acumulacionCostoNombre;
 	}
 
@@ -144,14 +151,19 @@ public class SComponente extends HttpServlet {
 				temp.subprograma = componente.getSubprograma();
 				temp.proyecto_ = componente.getProyecto_1();
 				temp.actividad = componente.getActividad();
+				temp.renglon = componente.getRenglon();
+				temp.ubicacionGeografica = componente.getUbicacionGeografica();
+				temp.duracion = componente.getDuracion();
+				temp.duracionDimension = componente.getDuracionDimension();
+				temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
+				temp.fechaFin = Utils.formatDate(componente.getFechaFin());
 				temp.obra = componente.getObra();
-				temp.fuente = componente.getFuente();
 				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				temp.latitud = componente.getLatitud();
 				temp.longitud = componente.getLongitud();
 				temp.costo = componente.getCosto();
-				temp.acumulacionCosto = componente.getAcumulacionCosto().getId();
+				temp.acumulacionCostoId = componente.getAcumulacionCosto().getId();
 				temp.acumulacionCostoNombre = componente.getAcumulacionCosto().getNombre();
 				stcomponentes.add(temp);
 			}
@@ -182,14 +194,19 @@ public class SComponente extends HttpServlet {
 				temp.proyecto_ = componente.getProyecto_1();
 				temp.obra = componente.getObra();
 				temp.actividad = componente.getActividad();
-				temp.fuente = componente.getFuente();
+				temp.renglon = componente.getRenglon();
+				temp.ubicacionGeografica = componente.getUbicacionGeografica();
 				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				temp.latitud = componente.getLatitud();
 				temp.longitud = componente.getLongitud();
 				temp.costo = componente.getCosto();
-				temp.acumulacionCosto = componente.getAcumulacionCosto().getId();
+				temp.acumulacionCostoId = componente.getAcumulacionCosto().getId();
 				temp.acumulacionCostoNombre = componente.getAcumulacionCosto().getNombre();
+				temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
+				temp.fechaFin = Utils.formatDate(componente.getFechaFin());
+				temp.duracion = componente.getDuracion();
+				temp.duracionDimension = componente.getDuracionDimension();
 				stcomponentes.add(temp);
 			}
 
@@ -214,11 +231,16 @@ public class SComponente extends HttpServlet {
 					Integer proyecto_ = map.get("proyecto_")!=null ? Integer.parseInt(map.get("proyecto_")) : null;
 					Integer actividad = map.get("actividad")!=null ? Integer.parseInt(map.get("actividad")):null;
 					Integer obra = map.get("obra")!=null ? Integer.parseInt(map.get("obra")):null;
-					Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
+					Integer renglon = map.get("renglon")!=null ? Integer.parseInt(map.get("renglon")):null;
+					Integer ubicacionGeografica = map.get("ubicacionGeografica")!=null ? Integer.parseInt(map.get("ubicacionGeografica")):null;
 					String latitud = map.get("latitud");
 					String longitud = map.get("longitud");
 					BigDecimal costo = new BigDecimal(map.get("costo"));
 					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
+					Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
+					Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
+					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
+					String duracionDimension = map.get("duracionDimension");
 					
 					AcumulacionCosto acumulacionCosto = null;
 					if(acumulacionCostoid != 0){
@@ -245,7 +267,7 @@ public class SComponente extends HttpServlet {
 					if(esnuevo){
 						componente = new Componente(acumulacionCosto,componenteTipo, null, unidadEjecutora, nombre,
 								descripcion, usuario, null, new DateTime().toDate(), null, 1,
-								snip, programa, subPrograma, proyecto_, actividad,obra, fuente, latitud,longitud, costo, null,null,null);
+								snip, programa, subPrograma, proyecto_, actividad,obra, latitud,longitud, costo, renglon, ubicacionGeografica, fechaInicio, fechaFin, duracion, duracionDimension, null,null,null,null);
 					}
 					else{
 						componente = ComponenteDAO.getComponentePorId(id,usuario);
@@ -258,16 +280,23 @@ public class SComponente extends HttpServlet {
 						componente.setSubprograma(subPrograma);
 						componente.setProyecto_1(proyecto_);
 						componente.setObra(obra);
+						componente.setRenglon(renglon);
+						componente.setUbicacionGeografica(ubicacionGeografica);
 						componente.setActividad(actividad);
-						componente.setFuente(fuente);
-						componente.getFuente();
 						componente.setLatitud(latitud);
 						componente.setLongitud(longitud);
 						componente.setCosto(costo);
 						componente.setAcumulacionCosto(acumulacionCosto);
+						componente.setFechaInicio(fechaInicio);
+						componente.setFechaFin(fechaFin);
+						componente.setDuracion(duracion);
+						componente.setDuracionDimension(duracionDimension);
 					}
 					result = ComponenteDAO.guardarComponente(componente);
 
+					COrden orden = new COrden();
+					orden.calcularOrdenObjetosSuperiores(proyectoid, 1, usuario);
+					
 					Set<ComponentePropiedadValor> valores_temp = componente.getComponentePropiedadValors();
 					componente.setComponentePropiedadValors(null);
 					if (valores_temp!=null){
@@ -413,15 +442,20 @@ public class SComponente extends HttpServlet {
 				temp.subprograma = componente.getSubprograma();
 				temp.proyecto_ = componente.getProyecto_1();
 				temp.obra = componente.getObra();
+				temp.renglon = componente.getRenglon();
+				temp.ubicacionGeografica = componente.getUbicacionGeografica();
 				temp.actividad = componente.getActividad();
-				temp.fuente = componente.getFuente();
 				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				temp.latitud = componente.getLatitud();
 				temp.longitud = componente.getLongitud();
 				temp.costo = componente.getCosto();
-				temp.acumulacionCosto = componente.getAcumulacionCosto() != null ? componente.getAcumulacionCosto().getId() : null;
+				temp.acumulacionCostoId = componente.getAcumulacionCosto() != null ? componente.getAcumulacionCosto().getId() : null;
 				temp.acumulacionCostoNombre = componente.getAcumulacionCosto() != null ? componente.getAcumulacionCosto().getNombre() : null;
+				temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
+				temp.fechaFin = Utils.formatDate(componente.getFechaFin());
+				temp.duracion = componente.getDuracion();
+				temp.duracionDimension = componente.getDuracionDimension();
 				stcomponentes.add(temp);
 			}
 
@@ -434,7 +468,7 @@ public class SComponente extends HttpServlet {
 			Componente componente = ComponenteDAO.getComponentePorId(id,usuario);
 
 			response_text = String.join("","{ \"success\": ",(componente!=null && componente.getId()!=null ? "true" : "false"),", "
-				+ "\"id\": " + (componente!=null ? componente.getId():"0") +", "
+				+ "\"id\": " + (componente!=null ? componente.getId():"0") +", " + "\"fechaInicio\": \"" + (componente!=null ? Utils.formatDate(componente.getFechaInicio()): null) +"\", "
 				+ "\"nombre\": \"" + (componente!=null ? componente.getNombre():"Indefinido") +"\" }");
 
 		}else if(accion.equals("getComponentePorId")){

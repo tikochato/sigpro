@@ -80,36 +80,42 @@ public class SObjeto extends HttpServlet {
 			Integer objetoTipo= Utils.getParameterInteger(map, "tipo");
 			String nombre="";
 			String tiponombre = "";
+			String fechaInicio = "";
 			if(objetoTipo!=null){
 				switch(objetoTipo){
 					case 1: //Proyecto;
 						tiponombre = "Proyecto";
 						Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId,usuario);
 						nombre = (proyecto!=null) ? proyecto.getNombre() : "";
+						fechaInicio = (proyecto!=null) ? Utils.formatDate(proyecto.getFechaInicio()) : "";
 						break;
 					case 2: //Componente;
 						tiponombre = "Componente";
 						Componente componente = ComponenteDAO.getComponentePorId(objetoId,usuario);
 						nombre = (componente!=null) ? componente.getNombre() : "";
+						fechaInicio = (componente!=null) ? Utils.formatDate(componente.getFechaInicio()) : "";
 						break;
 					case 3: //Producto
 						tiponombre = "Producto";
 						Producto producto = ProductoDAO.getProductoPorId(objetoId,usuario);
 						nombre = (producto!=null) ? producto.getNombre() : "";
+						fechaInicio = (producto!=null) ? Utils.formatDate(producto.getFechaInicio()) : "";
 						break;
 					case 4: //Subproducto
 						tiponombre = "Subproducto";
 						Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId,usuario);
 						nombre = (subproducto!=null) ? subproducto.getNombre() : "";
+						fechaInicio = (subproducto!=null) ? Utils.formatDate(subproducto.getFechaInicio()) : "";
 						break;
 					case 5: //Actividad
 						tiponombre = "Actividad";
 						Actividad actividad = ActividadDAO.getActividadPorId(objetoId,usuario);
 						nombre = (actividad!=null) ? actividad.getNombre() : "";
+						fechaInicio = (actividad!=null) ? Utils.formatDate(actividad.getFechaInicio()) : "";
 						break;
 				}
 			}
-			response_text = String.join("", "{\"success\":true, \"nombre\":\"", nombre ,"\", \"tiponombre\":\"",tiponombre,"\"}");
+			response_text = String.join("", "{\"success\":true, \"nombre\":\"", nombre ,"\", \"tiponombre\":\"",tiponombre,"\" , \"fechaInicio\" : \"", fechaInicio, "\"}");
 		}
 		else{
 			response_text = "{ \"success\": false }";

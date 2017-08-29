@@ -33,6 +33,13 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		mi.orden = null;
 		mi.coordenadas = "";
 
+		mi.dimensiones = [
+			{value:0,nombre:'Seleccione una opción'},
+			{value:1,nombre:'Dias',sigla:'d'}
+		];
+		
+		mi.duracionDimension = mi.dimensiones[0];
+		
 		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id }).success(
 				function(response) {
 					mi.proyectoid = response.id;
@@ -133,6 +140,14 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			}).success(
 					function(response) {
 						mi.componentes = response.componentes;
+						
+						for(x in mi.componentes){
+							if(mi.componentes[x].fechaInicio != "")
+								mi.componentes[x].fechaInicio = moment(mi.componentes[x].fechaInicio, 'DD/MM/YYYY').toDate();
+							if(mi.componentes[x].fechaFin != "")
+								mi.componentes[x].fechaFin = moment(mi.componentes[x].fechaFin, 'DD/MM/YYYY').toDate();
+						}
+
 						mi.gridOptions.data = mi.componentes;
 						mi.mostrarcargando = false;
 					});
@@ -159,14 +174,19 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					proyecto_: mi.componente.proyecto_,
 					actividad: mi.componente.actividad,
 					obra:mi.componente.obra,
-					fuente: mi.componente.fuente,
+					renglon: mi.componente.renglon,
+					ubicacionGeografica: mi.componente.ubicacionGeografica,
 					esnuevo: mi.esnuevo,
 					unidadejecutoraid:mi.unidadejecutoraid,
 					longitud: mi.componente.longitud,
 					latitud : mi.componente.latitud,
 					costo: mi.componente.costo == null ? 0 : mi.componente.costo,
 					acumulacionCosto: mi.componente.acumulacionCostoId == null ? 0 : mi.componente.acumulacionCostoId,
-					datadinamica : JSON.stringify(mi.camposdinamicos)
+					fechaInicio: moment(mi.componente.fechaInicio).format('DD/MM/YYYY'),
+					fechaFin: moment(mi.componente.fechaFin).format('DD/MM/YYYY'),
+					duaracion: mi.componente.duracion,
+					duracionDimension: mi.duracionDimension.sigla,
+					datadinamica : JSON.stringify(mi.camposdinamicos),
 				}).success(function(response){
 					if(response.success){
 						mi.componente.id = response.id;
@@ -238,6 +258,13 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				mi.unidadejecutoranombre= mi.componente.unidadejecutoranombre;
 				mi.componentetipoid=mi.componente.componentetipoid;
 				mi.componentetiponombre=mi.componente.componentetiponombre;
+				
+				if(mi.componente.duracionDimension == 'd'){
+					mi.duracionDimension = mi.dimensiones[1];
+				}else{
+					mi.duracionDimension = mi.dimensiones[0];
+				}
+				
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.coordenadas = (mi.componente.latitud !=null ?  mi.componente.latitud : '') +
@@ -298,9 +325,37 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		}
 
 		mi.abrirPopupFecha = function(index) {
-			mi.camposdinamicos[index].isOpen = true;
+			if(index > 0 && index<1000){
+				mi.camposdinamicos[index].isOpen = true;
+			}
+			else{
+				switch(index){
+					case 1000: mi.fi_abierto = true; break;
+					case 1001: mi.ff_abierto = true; break;
+				}
+			}
 		};
 
+		mi.cambioDuracion = function(dimension){
+			mi.componente.fechaFin = mi.sumarDias(mi.componente.fechaInicio,mi.componente.duracion, dimension.sigla);
+		}
+		
+		mi.sumarDias = function(fecha, dias, dimension){
+			if(dimension != undefined && dias != undefined && fecha != ""){
+				var cnt = 0;
+			    var tmpDate = moment(fecha);
+			    while (cnt < (dias -1 )) {
+			    	if(dimension=='d'){
+			    		tmpDate = tmpDate.add(1,'days');	
+			    	}
+			        if (tmpDate.weekday() != moment().day("Sunday").weekday() && tmpDate.weekday() != moment().day("Saturday").weekday()) {
+			            cnt = cnt + 1;
+			        }
+			    }
+			    tmpDate = moment(tmpDate,'DD/MM/YYYY').toDate();
+			    return tmpDate;
+			}
+		}
 		
 		mi.irAProductos=function(componenteid){
 			if(mi.componente!=null){

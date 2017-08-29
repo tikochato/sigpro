@@ -37,6 +37,7 @@ import pojo.SubproductoUsuario;
 import pojo.SubproductoUsuarioId;
 import pojo.UnidadEjecutora;
 import utilities.Utils;
+import utilities.COrden;
 
 @WebServlet("/SSubproducto")
 public class SSubproducto extends HttpServlet {
@@ -72,7 +73,12 @@ public class SSubproducto extends HttpServlet {
 		Integer proyecto;
 		Integer actividad;
 		Integer obra;
-		Integer fuente;
+		Integer renglon;
+		Integer ubicacionGeografica;
+		Integer duracion;
+		String duracionDimension;
+		String fechaInicio;
+		String fechaFin;
 		String latitud;
 		String longitud;
 		BigDecimal costo;
@@ -166,12 +172,17 @@ public class SSubproducto extends HttpServlet {
 			Integer subprograma = Utils.String2Int(map.get("subprograma"), null);
 			Integer proyecto_ = Utils.String2Int(map.get("proyecto_"), null);
 			Integer obra = Utils.String2Int(map.get("obra"), null);
-			Integer fuente = Utils.String2Int(map.get("fuente"), null);
+			Integer renglon = map.get("renglon")!=null ? Integer.parseInt(map.get("renglon")):null;
+			Integer ubicacionGeografica = map.get("ubicacionGeografica")!=null ? Integer.parseInt(map.get("ubicacionGeografica")):null;
 			Integer actividad = Utils.String2Int(map.get("actividad"), null);
 			String latitud = map.get("latitud");
 			String longitud = map.get("longitud");
 			BigDecimal costo = new BigDecimal(map.get("costo"));
 			Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCostoId"), null);
+			Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
+			Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
+			Integer duracion = Utils.String2Int(map.get("duaracion"), null);
+			String duracionDimension = map.get("duracionDimension");
 			
 			AcumulacionCosto acumulacionCosto = null;
 			if(acumulacionCostoid != 0){
@@ -196,8 +207,8 @@ public class SSubproducto extends HttpServlet {
 			if (esnuevo){
 				
 				subproducto = new Subproducto(acumulacionCosto, null, subproductoTipo, unidadEjecutora, nombre, descripcion, 
-						 usuario, null, new DateTime().toDate(), null, 1
-						, snip, programa, subprograma, proyecto_, actividad, obra, fuente, latitud, longitud,costo,null, null);
+						 usuario, null, new DateTime().toDate(), null, 1, snip, programa, subprograma, proyecto_, actividad, 
+						 obra, latitud, longitud,costo,renglon, ubicacionGeografica, fechaInicio, fechaFin, duracion, duracionDimension, null,null, null);
 				
 			}else{
 				subproducto = SubproductoDAO.getSubproductoPorId(id);
@@ -212,15 +223,23 @@ public class SSubproducto extends HttpServlet {
 				subproducto.setProyecto(proyecto_);
 				subproducto.setObra(obra);
 				subproducto.setActividad(actividad);
-				subproducto.setFuente(fuente);
+				subproducto.setRenglon(renglon);
+				subproducto.setUbicacionGeografica(ubicacionGeografica);
 				subproducto.setUsuarioActualizo(usuario);
 				subproducto.setFechaActualizacion(new DateTime().toDate());
 				subproducto.setLatitud(latitud);
 				subproducto.setLongitud(longitud);
 				subproducto.setCosto(costo);
 				subproducto.setAcumulacionCosto(acumulacionCosto);
+				subproducto.setFechaInicio(fechaInicio);
+				subproducto.setFechaFin(fechaFin);
+				subproducto.setDuracion(duracion);
+				subproducto.setDuracionDimension(duracionDimension);
 			}
 			ret = SubproductoDAO.guardarSubproducto(subproducto);
+			
+			COrden orden = new COrden();
+			orden.calcularOrdenObjetosSuperiores(productoId, 3, usuario);
 			
 			if (ret){
 				SubproductoUsuarioId subproductoUsuarioId = new SubproductoUsuarioId(subproducto.getId(), usuario);
@@ -390,7 +409,7 @@ public class SSubproducto extends HttpServlet {
 
 		Utils.writeJSon(response, resultadoJson);
 	}
-
+	
 	private void listarComponentes(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 		int registros = Utils.String2Int(parametro.get("registros"), 20);
@@ -414,7 +433,7 @@ public class SSubproducto extends HttpServlet {
 		String resultadoJson = "";
 		
 		resultadoJson = String.join("","{ \"success\": ",(subproducto!=null && subproducto.getId()!=null ? "true" : "false"),", "
-			+ "\"id\": " + (subproducto!=null ? subproducto.getId():"0") +", "
+			+ "\"id\": " + (subproducto!=null ? subproducto.getId():"0") +", "  + "\"fechaInicio\": \"" + (subproducto!=null ? Utils.formatDate(subproducto.getFechaInicio()): null) +"\", "
 			+ "\"nombre\": \"" + (subproducto!=null ? subproducto.getNombre():"Indefinido") +"\" }");
 		Utils.writeJSon(response, resultadoJson);	
 	}

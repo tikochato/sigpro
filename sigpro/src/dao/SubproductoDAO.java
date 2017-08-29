@@ -37,7 +37,12 @@ public class SubproductoDAO {
 		Integer proyecto_;
 		Integer actividad;
 		Integer obra;
-		Integer fuente;
+		Integer renglon;
+		Integer ubicacionGeografica;
+		Integer duracion;
+		String duracionDimension;
+		String fechaInicio;
+		String fechaFin;
 		Integer estado;
 		String fechaCreacion;
 		String usuarioCreo;
@@ -226,7 +231,12 @@ public class SubproductoDAO {
 			estructuraPojo.proyecto_ = pojo.getProyecto();
 			estructuraPojo.obra = pojo.getObra();
 			estructuraPojo.actividad = pojo.getActividad();
-			estructuraPojo.fuente = pojo.getFuente();
+			estructuraPojo.renglon = pojo.getRenglon();
+			estructuraPojo.ubicacionGeografica = pojo.getUbicacionGeografica();
+			estructuraPojo.duracion = pojo.getDuracion();
+			estructuraPojo.duracionDimension = pojo.getDuracionDimension();
+			estructuraPojo.fechaInicio = Utils.formatDate(pojo.getFechaInicio());
+			estructuraPojo.fechaFin = Utils.formatDate(pojo.getFechaFin());
 			estructuraPojo.snip = pojo.getSnip();
 			estructuraPojo.estado = pojo.getEstado();
 			estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();
@@ -319,5 +329,42 @@ public class SubproductoDAO {
 		String subproducto =   Utils.getJSonString("subproducto", estructuraPojo);
 		return subproducto;
 		
+	}
+	
+	public static Subproducto getSubproductoInicial(Integer productoId, String usuario){
+		Subproducto ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "FROM Subproducto sp where sp.estado=1 and sp.orden=1 and sp.producto.id=:productoId and sp.usuarioCreo=:usuario";
+			Query<Subproducto> criteria = session.createQuery(query, Subproducto.class);
+			criteria.setParameter("productoId", productoId);
+			criteria.setParameter("usuario", usuario);
+			ret = criteria.getSingleResult();
+		}catch(Throwable e){
+			CLogger.write("11", SubproductoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Subproducto getSubproductoFechaMaxima(Integer productoId, String usuario){
+		Subproducto ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "FROM Subproducto sp where sp.estado=1 and sp.producto.id=:productoId and sp.usuarioCreo=:usuario order by sp.fechaFin desc";
+			Query<Subproducto> criteria = session.createQuery(query, Subproducto.class);
+			criteria.setMaxResults(1);
+			criteria.setParameter("productoId", productoId);
+			criteria.setParameter("usuario", usuario);
+			ret = criteria.getSingleResult();
+		}catch(Throwable e){
+			CLogger.write("12", SubproductoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
 	}
 }
