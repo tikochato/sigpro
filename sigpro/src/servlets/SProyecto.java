@@ -391,9 +391,10 @@ public class SProyecto extends HttpServlet {
 
 				if(esnuevo){
 					proyecto = new Proyecto(acumulacionCosto,directorProyecto, cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion,
-							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, obra,latitud, longitud, objetivo, 
-							enunciadoAlcance, costo, renglon, ubicacionGeografica, null, null, null, null, objetivoEspecifico, visionGeneral,
-							null, null, null, null, null, null, null,null,null);
+							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, obra,latitud, 
+							longitud, objetivo,enunciadoAlcance, costo, objetivoEspecifico,visionGeneral,renglon, ubicacionGeografica, 
+							null, null, null, null, 
+							null, null, null, null, null, null, null,null,null,null);
 					
 					
 				}else{
