@@ -6,7 +6,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
@@ -33,6 +34,11 @@ import utilities.Utils;
 @WebServlet("/SDataSigade")
 public class SDataSigade extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	class stcodigopresupuestario{
+		String codigopresupuestario;
+		String numeroprestamo;
+	}
+	
 	class stprestamo{
 		String fechaCorte;
 		String codigoPresupuestario;
@@ -163,7 +169,25 @@ public class SDataSigade extends HttpServlet {
 				
 		        response_text =  "{\"success\":false}";
 			}
+		}else if (accion.equals("getcodigos")) {
+			List<DtmAvanceFisfinanDti> prestamos = DataSigadeDAO.getCodigos();
+			List<stcodigopresupuestario> codigos = new ArrayList<>();
+			for (DtmAvanceFisfinanDti prestamo : prestamos){
+				stcodigopresupuestario temp = new stcodigopresupuestario();
+				temp.codigopresupuestario = prestamo.getId().getCodigoPresupuestario();
+				temp.numeroprestamo = prestamo.getId().getNoPrestamo();
+				codigos.add(temp);
+			}
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(codigos);
+	        response_text = String.join("", "\"prestamo\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
+		else{
+			
+	        response_text =  "{\"success\":false}";
+		}
+		
 		
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");

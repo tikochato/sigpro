@@ -145,23 +145,27 @@
 					<div class="panel panel-default">
 						<div class="panel-heading label-form" style="text-align: center;">Información General del Préstamo</div>
 						<div class="panel-body">
+													
+							
 							<div class="row">
-								<div class="col-sm-5">
+								<div class="col-sm-12">
 									<div class="form-group">
-										<input  type="number" class="inputText" ng-model="controller.prestamo.codigoPresupuestario" ng-required="true" 
-										ng-value="controller.prestamo.codigoPresupuestario" onblur="this.setAttribute('value', this.value);">
-										<label class="floating-label" >* Código presupuestario</label>
+										<input type="text" class="inputText"   
+										ng-model="controller.prestamo.codigoPresupuestario" ng-readonly="true" ng-required="true"
+										ng-click="controller.buscarCodigoPresupuestario()"
+										onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.codigoPresupuestario" />			            	
+										<span class="label-icon" ng-click="controller.buscarCodigoPresupuestario()">
+											<i class="glyphicon glyphicon-search"></i>
+										</span>
+										<label class="floating-label">* Código presupuestario</label>
 									</div>
 								</div>
-								<div class="col-sm-2" align="right" >
-								<label class="btn btn-default" ng-click="controller.cargaSigade()" uib-tooltip="Cargar datos de SIGADE" tooltip-placement="bottom">
-								<span class="glyphicon glyphicon-search"></span></label>
-								</div>
-								
-								
 							</div>
+							
+							
+							
 							<div class="row">
-								<div class="col-sm-5">
+								<div class="col-sm-12">
 									<div class="form-group">
 										<input type="text" class="inputText"  ng-model="controller.prestamo.numeroPrestamo" ng-required="true" 
 										ng-value="controller.prestamo.numeroPrestamo" onblur="this.setAttribute('value', this.value);">
@@ -463,7 +467,7 @@
 						</div>
 					</div>
 					
-					<div class="form-group" ng-show="controller.unidadejecutoranombre.length>0" >
+					<div class="form-group" ng-show="controller.unidadejecutoranombre.length>0"  >
 			            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.entidadnombre" ng-readonly="true"  
 			            	 ng-value="controller.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
 			            	<label for="campo3" class="floating-label">Organismo Ejecutor</label>
@@ -477,7 +481,7 @@
 			          	<label for="campo3" class="floating-label">* Unidad Ejecutora</label>
 					</div>
 	
-					<div class="form-group"  >
+					<div class="form-group" ng-if="false"  >
 			            	<input type="text" class="inputText" id="icoope" name="icoope" ng-model="controller.cooperantenombre" ng-readonly="true" ng-required="true" 
 			            		ng-click="controller.buscarCooperante()" ng-value="controller.cooperantenombre" onblur="this.setAttribute('value', this.value);"/>
 			            	<span class="label-icon" ng-click="controller.buscarCooperante()"><i class="glyphicon glyphicon-search"></i></span>
