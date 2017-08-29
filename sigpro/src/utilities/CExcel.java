@@ -1,6 +1,7 @@
 package utilities;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -68,11 +69,36 @@ public class CExcel {
 	CellStyle cs_currency_bold;
 	CellStyle cs_percent_bold;
 	boolean HasGroup;
+	
+	private static String EXCEL_CHART_BAR_PATH = "/archivos/plantillas/TemplateChartBar.xls";
+	private static String EXCEL_CHART_PIE_PATH = "/archivos/plantillas/TemplateChartPie.xls";
+	private static String EXCEL_CHART_AREA_PATH = "/archivos/plantillas/TemplateChartArea.xls";
+	private static int EXCEL_CHART_BAR = 1;
+	private static int EXCEL_CHART_PIE = 2;
+	private static int EXCEL_CHART_AREA = 3;
+	
+	class stGrafica {
+		String titulo;
+		int tipo;
+		String leyendaX;
+		String leyendaY;
+		String[][] data;
+	}
 
 	public CExcel(String sheet_name, boolean hasGroup) {
 		HasGroup = hasGroup;
 		workbook = new HSSFWorkbook();
 		sheet = workbook.createSheet();
+		
+		try {
+			FileInputStream fileInputStream = new FileInputStream(EXCEL_CHART_BAR_PATH);
+			workbook = new HSSFWorkbook(fileInputStream);
+			sheet = workbook.getSheetAt(0);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		if (sheet_name != null)
 			workbook.setSheetName(0, sheet_name);
 		font = workbook.createFont();
@@ -351,6 +377,11 @@ public class CExcel {
 	
 	public Workbook generateExcelOfData(String[][] data, String report_name, String[][] headers, String[][] extra_lines, boolean borde, String usuario) {
 		int line = 5;
+		
+		if(true){
+			line = generateChart();
+		}
+		
 		if (extra_lines != null) {
 			for (int i = 0; i < extra_lines.length; i++) {
 				setCellValueString(extra_lines[i][0], line, 0, true, borde);
@@ -511,6 +542,13 @@ public class CExcel {
 			ret += "+" + column + "" + lineas.get(i);
 		}
 		return ret.substring(1);
+	}
+	
+	public int generateChart(){
+		int linea = 5; 
+		
+		linea = 20;
+		return linea;
 	}
 
 	// nuevo
