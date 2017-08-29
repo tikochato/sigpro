@@ -1,5 +1,7 @@
 package utilities;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -65,6 +67,15 @@ public class COrden {
 	}	
 	
 	public void calcularOrdenObjetosSuperiores(Integer objetoId, Integer objetoTipo, String usuario){
+		Date fechaMax = new Date();
+		try{
+			String fMax = "01/01/2200";
+			DateFormat format = new SimpleDateFormat("DD/MM/YYYY");
+			fechaMax = format.parse(fMax);
+		}
+		catch (Exception ex) {
+		}
+		
 		if(objetoTipo == 1){
 			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, objetoId, null, null, 
 					null, null, null, usuario);
@@ -74,7 +85,7 @@ public class COrden {
 				Integer orden = 1;
 				
 				for(Componente componente : componentes){
-					fechas.put(componente.getId(), componente.getFechaInicio() != null ? componente.getFechaInicio().getTime() : new Date().getTime());
+					fechas.put(componente.getId(), componente.getFechaInicio() != null ? componente.getFechaInicio().getTime() : fechaMax.getTime());
 				}
 				
 				Set<Entry<Integer, Long>> set = fechas.entrySet();
@@ -112,7 +123,7 @@ public class COrden {
 					Integer orden = 1;
 					
 					for(Componente componente : componentes){
-						fechas.put(componente.getId(), componente.getFechaInicio() != null ? componente.getFechaInicio().getTime() : new Date().getTime());
+						fechas.put(componente.getId(), componente.getFechaInicio() != null ? componente.getFechaInicio().getTime() : fechaMax.getTime());
 					}
 					
 					Set<Entry<Integer, Long>> set = fechas.entrySet();
@@ -150,7 +161,7 @@ public class COrden {
 					Map<Integer, Long> fechas = new TreeMap<Integer, Long>();
 					Integer orden = 1;
 					for(Producto producto : productos){
-						fechas.put(producto.getId(), producto.getFechaInicio() != null ? producto.getFechaInicio().getTime() : new Date().getTime());
+						fechas.put(producto.getId(), producto.getFechaInicio() != null ? producto.getFechaInicio().getTime() : fechaMax.getTime());
 					}
 					
 					Set<Entry<Integer, Long>> set = fechas.entrySet();
@@ -188,7 +199,7 @@ public class COrden {
 					Map<Integer, Long> fechas = new TreeMap<Integer, Long>();
 					Integer orden = 1;
 					for(Subproducto subproducto : subproductos){
-						fechas.put(subproducto.getId(), subproducto.getFechaInicio() != null ? subproducto.getFechaInicio().getTime() : new Date().getTime());
+						fechas.put(subproducto.getId(), subproducto.getFechaInicio() != null ? subproducto.getFechaInicio().getTime() : fechaMax.getTime());
 					}
 					
 					Set<Entry<Integer, Long>> set = fechas.entrySet();
