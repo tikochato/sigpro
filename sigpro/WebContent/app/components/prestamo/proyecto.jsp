@@ -141,7 +141,7 @@
 			<form name="form">
 			<uib-tabset active="active">
 				
-				<uib-tab ng-click="controller.getPorcentajes();" index="0" heading="Datos del préstamo">
+				<uib-tab ng-click="controller.getPorcentajes();" index="0" heading="Datos del préstamo" >
 					<div class="panel panel-default">
 						<div class="panel-heading label-form" style="text-align: center;">Información General del Préstamo</div>
 						<div class="panel-body">
@@ -372,222 +372,268 @@
 					
 				</uib-tab>
 				
-				<uib-tab index="1" heading="Datos generales">
-				<div class="form-group">
-					<label for="id" class="floating-label">ID {{ controller.proyecto.id }}</label>
-					<br/><br/>
-				</div>
-				
-				<div class="form-group">
-			      <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="controller.proyecto.nombre" ng-value="controller.proyecto.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" >
-			      <label class="floating-label">* Nombre</label>
-				</div>
-
-				<div class="form-group"  ng-hide="true" >
-					<input type="number" class="inputText" name="isnip" id="isnip"  ng-model="controller.proyecto.snip" ng-value="controller.proyecto.snip" onblur="this.setAttribute('value', this.value);">
-				      <label class="floating-label">SNIP</label>
-				</div>
-				
-				<div class="form-group-row row" ng-hide="true" >
-					<div class="form-group col-sm-2" >
-					       <input type="number" class="inputText" ng-model="controller.proyecto.programa" ng-value="controller.proyecto.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
-					       <label for="iprog" class="floating-label">Programa</label>
+				<uib-tab index="1" heading="Datos generales" >
+					<div class="form-group">
+						<label for="id" class="floating-label">ID {{ controller.proyecto.id }}</label>
+						<br/><br/>
 					</div>
-					<div class="form-group col-sm-2" >
-					  <input type="number" class="inputText" ng-model="controller.proyecto.subprograma" ng-value="controller.proyecto.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-					  <label for="isubprog" class="floating-label">Subprograma</label>
-					</div>
-					<div class="form-group col-sm-2" >
-					  <input type="number" class="inputText" ng-model="controller.proyecto.proyecto" ng-value="controller.proyecto.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-					  <label for="iproy_" class="floating-label">Proyecto</label>
-					</div>
-					<div class="form-group col-sm-2" >
-					  <input type="number" class="inputText" ng-model="controller.proyecto.actividad" ng-value="controller.proyecto.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-					  <label for="iobra" class="floating-label">Actividad</label>
-					</div>
-					<div class="form-group col-sm-2" >
-					  <input type="number" class="inputText" ng-model="controller.proyecto.obra" ng-value="controller.proyecto.obra" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-					  <label for="iobra" class="floating-label">Obra</label>
-					</div>
-					<div class="form-group col-sm-2" >
-					  <input type="number" class="inputText" ng-model="controller.proyecto.fuente" ng-value="controller.proyecto.fuente" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-					  <label for="campo5" class="floating-label">Fuente</label>
-					</div>
-				</div>
 					
-				<div class="form-group" >
-		            	<input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="controller.proyectotiponombre" ng-value="controller.proyectotiponombre" 
-		            		ng-click="controller.buscarProyectoTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
-		            	<span class="label-icon" ng-click="controller.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>
-		          	<label for="campo3" class="floating-label">* Caracterización Préstamo</label>
-				</div>
-
-				<div ng-repeat="campo in controller.camposdinamicos">
-					<div ng-switch="campo.tipo">
-						<div ng-switch-when="texto" class="form-group" >
-							<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
-								ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
-							<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-						</div>
-						<div ng-switch-when="entero" class="form-group" >
-							<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
-							ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
-							<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-						</div>
-						<div ng-switch-when="decimal" class="form-group" >
-							<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
-							ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
-							<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-						</div>
-						<div ng-switch-when="booleano" class="form-group" >
-							<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
-							<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-						</div>
-						<div ng-switch-when="fecha" class="form-group" >
-							<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-												datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="controller.abrirPopupFecha($index)"
-												ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
-												<span class="label-icon" ng-click="controller.abrirPopupFecha($index)">
-													<i class="glyphicon glyphicon-calendar"></i>
-												</span>
-							<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-						</div>
-						<div ng-switch-when="select" class="form-group" >
-							<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
-											<option value="">Seleccione una opción</option>
-											<option ng-repeat="number in campo.opciones"
-												ng-value="number.valor">{{number.label}}</option>
-						</select>
-							<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-						</div>
+					<div class="form-group" >
+				      <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="controller.proyecto.nombre" ng-value="controller.proyecto.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" >
+				      <label class="floating-label">* Nombre</label>
 					</div>
-				</div>
-				
-				<div class="form-group" ng-show="controller.unidadejecutoranombre.length>0">
-		            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.entidadnombre" ng-readonly="true" ng-required="true" 
-		            	 ng-value="controller.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
-		            	<label for="campo3" class="floating-label">Organismo Ejecutor</label>
-		          	
-				</div>
-
-				<div class="form-group">
-		            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.unidadejecutoranombre" ng-readonly="true" ng-required="true" 
-		            	ng-click="controller.buscarUnidadEjecutora()" ng-value="controller.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
-		            <span class="label-icon" ng-click="controller.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
-		          	<label for="campo3" class="floating-label">* Unidad Ejecutora</label>
-				</div>
-
-				<div class="form-group" >
-		            	<input type="text" class="inputText" id="icoope" name="icoope" ng-model="controller.cooperantenombre" ng-readonly="true" ng-required="true" 
-		            		ng-click="controller.buscarCooperante()" ng-value="controller.cooperantenombre" onblur="this.setAttribute('value', this.value);"/>
-		            	<span class="label-icon" ng-click="controller.buscarCooperante()"><i class="glyphicon glyphicon-search"></i></span>
-		          	<label for="campo3" class="floating-label">* Organismo financiero internacional</label>
-				</div>
-				
-				<div class="form-group" ng-if="false">
-		            	<input type="text" class="inputText" ng-model="controller.coordenadas" ng-readonly="true" 
-		            		ng-value="controller.coordenadas" onblur="this.setAttribute('value', this.value);"
-		            		ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "/>
-		            	<span class="label-icon" ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
-			          	<label class="floating-label">Coordenadas</label>
-				</div>
-				
-				<div class="form-group">
-						<input  ng-model="controller.proyecto.objetivo"
-							class="inputText" id="objetivo"
-							ng-value="controller.proyecto.objetivo" onblur="this.setAttribute('value', this.value);">
-						<label for="objetivo" class="floating-label">Objetivo</label>
+	
+					<div class="form-group"  ng-hide="true"  >
+						<input type="number" class="inputText" name="isnip" id="isnip"  ng-model="controller.proyecto.snip" ng-value="controller.proyecto.snip" onblur="this.setAttribute('value', this.value);">
+					      <label class="floating-label">SNIP</label>
 					</div>
-				<br/>
-				
-				<div class="panel panel-default" ng-hide="controller.esNuevoDocumento">
-					<div class="panel-heading label-form" style="text-align: center;">Archivos adjuntos</div>
-					<div class="panel-body">
-						<div style="width: 95%; float: left">
-						<table st-table="controller.displayedCollection" st-safe-src="controller.rowCollection" class="table table-striped">
-							<thead>
-								<tr>
-									<th style="display: none;">Id</th>
-									<th class="label-form">Nombre</th>
-									<th class="label-form">Extensión</th>
-									<th class="label-form">Descarga</th>
-									<th class="label-form">Eliminar</th>
-								</tr>
-								<tr>
-									<th colspan="5"><input st-search="" class="form-control" placeholder="busqueda global ..." type="text"/></th>
-								</tr>
-							</thead>
-							<tbody>
-							<tr ng-repeat="row in controller.displayedCollection">
-								<td style="display: none;">{{row.id}}</td>
-								<td>{{row.nombre}}</td>
-								<td>{{row.extension}}</td>
-								<td align="center">
-									<button type="button"
-										ng-click="controller.descargarDocumento(row)"
-										uib-tooltip="Descargar documento" tooltip-placement="bottom"
-										class="btn btn-default">
-										<i class="glyphicon glyphicon-download-alt"> </i>
-									</button>
-								</td>
-								<td align="center">
-									<button type="button"
-										ng-click="controller.eliminarDocumento(row)"
-										uib-tooltip="Eliminar documento" tooltip-placement="bottom"
-										class="btn btn-default">
-										<i class="glyphicon glyphicon-minus-sign"> </i>
-									</button>
-								</td>
-							</tr>
-							</tbody>
-						</table>
-        				</div>
-    					<div style="width: 5%; float: right" align="right">
-    						<div class="btn-group">
-								<label class="btn btn-default" ng-model="controller.adjuntarDocumento"
-									ng-click="controller.adjuntarDocumentos();" uib-tooltip="Adjuntar documento" tooltip-placement="bottom">
-								<span class="glyphicon glyphicon-plus"></span></label>
-							</div>
-        				</div>
-					</div>
-				</div>
 					
-				<div class="panel panel-default">
-					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
-					<div class="panel-body">
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo" class="label-form">Usuario que creo</label>
-				  					<p class="">{{ controller.proyecto.usuarioCreo }}</pl>
-								</div>
+					<div class="form-group-row row" ng-hide="true"  >
+						<div class="form-group col-sm-2" >
+						       <input type="number" class="inputText" ng-model="controller.proyecto.programa" ng-value="controller.proyecto.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
+						       <label for="iprog" class="floating-label">Programa</label>
+						</div>
+						<div class="form-group col-sm-2" ng-if="false" >
+						  <input type="number" class="inputText" ng-model="controller.proyecto.subprograma" ng-value="controller.proyecto.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+						  <label for="isubprog" class="floating-label">Subprograma</label>
+						</div>
+						<div class="form-group col-sm-2"  ng-if="false">
+						  <input type="number" class="inputText" ng-model="controller.proyecto.proyecto" ng-value="controller.proyecto.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+						  <label for="iproy_" class="floating-label">Proyecto</label>
+						</div>
+						<div class="form-group col-sm-2" ng-if="false">
+						  <input type="number" class="inputText" ng-model="controller.proyecto.actividad" ng-value="controller.proyecto.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+						  <label for="iobra" class="floating-label">Actividad</label>
+						</div>
+						<div class="form-group col-sm-2" ng-if="false">
+						  <input type="number" class="inputText" ng-model="controller.proyecto.obra" ng-value="controller.proyecto.obra" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+						  <label for="iobra" class="floating-label">Obra</label>
+						</div>
+						<div class="form-group col-sm-2" ng-if="false">
+						  <input type="number" class="inputText" ng-model="controller.proyecto.fuente" ng-value="controller.proyecto.fuente" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+						  <label for="campo5" class="floating-label">Fuente</label>
+						</div>
+					</div>
+						
+					<div class="form-group" >
+			            	<input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="controller.proyectotiponombre" ng-value="controller.proyectotiponombre" 
+			            		ng-click="controller.buscarProyectoTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+			            	<span class="label-icon" ng-click="controller.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>
+			          	<label for="campo3" class="floating-label">* Caracterización Préstamo</label>
+					</div>
+	
+					<div ng-repeat="campo in controller.camposdinamicos" >
+						<div ng-switch="campo.tipo">
+							<div ng-switch-when="texto" class="form-group" >
+								<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
+									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
+								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 							</div>
-							<div class="col-sm-6">
-								<div class="form-group">
-									<label for="fechaCreacion" class="label-form">Fecha de creación</label>
-				  					<p class="">{{ controller.proyecto.fechaCreacion }}</p>
-								</div>
+							<div ng-switch-when="entero" class="form-group" >
+								<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
+								ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+							</div>
+							<div ng-switch-when="decimal" class="form-group" >
+								<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
+								ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+							</div>
+							<div ng-switch-when="booleano" class="form-group" >
+								<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+							</div>
+							<div ng-switch-when="fecha" class="form-group" >
+								<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+													datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="controller.abrirPopupFecha($index)"
+													ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+													<span class="label-icon" ng-click="controller.abrirPopupFecha($index)">
+														<i class="glyphicon glyphicon-calendar"></i>
+													</span>
+								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+							</div>
+							<div ng-switch-when="select" class="form-group" >
+								<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
+												<option value="">Seleccione una opción</option>
+												<option ng-repeat="number in campo.opciones"
+													ng-value="number.valor">{{number.label}}</option>
+							</select>
+								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label>
-				  					<p class="">{{ controller.proyecto.usuarioactualizo }}</p>
+					</div>
+					
+					<div class="form-group" ng-show="controller.unidadejecutoranombre.length>0" >
+			            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.entidadnombre" ng-readonly="true"  
+			            	 ng-value="controller.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
+			            	<label for="campo3" class="floating-label">Organismo Ejecutor</label>
+			          	
+					</div>
+	
+					<div class="form-group" >
+			            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.unidadejecutoranombre" ng-readonly="true" ng-required="true" 
+			            	ng-click="controller.buscarUnidadEjecutora()" ng-value="controller.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
+			            <span class="label-icon" ng-click="controller.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
+			          	<label for="campo3" class="floating-label">* Unidad Ejecutora</label>
+					</div>
+	
+					<div class="form-group"  >
+			            	<input type="text" class="inputText" id="icoope" name="icoope" ng-model="controller.cooperantenombre" ng-readonly="true" ng-required="true" 
+			            		ng-click="controller.buscarCooperante()" ng-value="controller.cooperantenombre" onblur="this.setAttribute('value', this.value);"/>
+			            	<span class="label-icon" ng-click="controller.buscarCooperante()"><i class="glyphicon glyphicon-search"></i></span>
+			          	<label for="campo3" class="floating-label">* Organismo financiero internacional</label>
+					</div>
+					
+					<div class="form-group" ng-if="false" >
+			            	<input type="text" class="inputText" ng-model="controller.coordenadas" ng-readonly="true" 
+			            		ng-value="controller.coordenadas" onblur="this.setAttribute('value', this.value);"
+			            		ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "/>
+			            	<span class="label-icon" ng-click="controller.open(controller.proyecto.latitud, controller.proyecto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
+				          	<label class="floating-label">Coordenadas</label>
+					</div>
+					
+					<div class="form-group" >
+							<input  ng-model="controller.proyecto.objetivo"
+								class="inputText" id="objetivo"
+								ng-value="controller.proyecto.objetivo" onblur="this.setAttribute('value', this.value);">
+							<label for="objetivo" class="floating-label">Objetivo</label>
+					</div>
+					
+					<div class="form-group" >
+							<input  ng-model="controller.proyecto.objetivoEspecifico"
+								class="inputText" 
+								ng-value="controller.proyecto.objetivoEspecifico" onblur="this.setAttribute('value', this.value);">
+							<label for="objetivo" class="floating-label">Objetivos específicos</label>
+					</div>
+					
+					<div class="form-group" >
+							<input  ng-model="controller.proyecto.visionGeneral"
+								class="inputText" 
+								ng-value="controller.proyecto.visionGeneral" onblur="this.setAttribute('value', this.value);">
+							<label for="objetivo" class="floating-label">Visión general</label>
+					</div>
+					
+					<br/>
+					
+					<div class="panel panel-default" ng-hide="controller.esNuevoDocumento" >
+						<div class="panel-heading label-form" style="text-align: center;">Archivos adjuntos</div>
+						<div class="panel-body">
+							<div style="width: 95%; float: left">
+							<table st-table="controller.displayedCollection" st-safe-src="controller.rowCollection" class="table table-striped">
+								<thead>
+									<tr>
+										<th style="display: none;">Id</th>
+										<th class="label-form">Nombre</th>
+										<th class="label-form">Extensión</th>
+										<th class="label-form">Descarga</th>
+										<th class="label-form">Eliminar</th>
+									</tr>
+									<tr>
+										<th colspan="5"><input st-search="" class="form-control" placeholder="busqueda global ..." type="text"/></th>
+									</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="row in controller.displayedCollection">
+									<td style="display: none;">{{row.id}}</td>
+									<td>{{row.nombre}}</td>
+									<td>{{row.extension}}</td>
+									<td align="center">
+										<button type="button"
+											ng-click="controller.descargarDocumento(row)"
+											uib-tooltip="Descargar documento" tooltip-placement="bottom"
+											class="btn btn-default">
+											<i class="glyphicon glyphicon-download-alt"> </i>
+										</button>
+									</td>
+									<td align="center">
+										<button type="button"
+											ng-click="controller.eliminarDocumento(row)"
+											uib-tooltip="Eliminar documento" tooltip-placement="bottom"
+											class="btn btn-default">
+											<i class="glyphicon glyphicon-minus-sign"> </i>
+										</button>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+	        				</div>
+	    					<div style="width: 5%; float: right" align="right">
+	    						<div class="btn-group">
+									<label class="btn btn-default" ng-model="controller.adjuntarDocumento"
+										ng-click="controller.adjuntarDocumentos();" uib-tooltip="Adjuntar documento" tooltip-placement="bottom">
+									<span class="glyphicon glyphicon-plus"></span></label>
+								</div>
+	        				</div>
+						</div>
+					</div>
+					
+					
+					<div class="panel panel-default" ng-hide="controller.esNuevoDocumento" >
+						<div class="panel-heading label-form" style="text-align: center;">Componentes</div>
+						<div class="panel-body">
+							<div style="width: 95%; float: left">
+							<table st-table="controller.displayedComponentes"
+							 st-safe-src="controller.componentes" class="table table-striped">
+								<thead>
+									<tr>
+										<th style="display: none;">Id</th>
+										<th class="label-form">Nombre</th>
+									</tr>
+									<tr>
+										<th colspan="5"><input st-search="" 
+										class="form-control" placeholder="busqueda global ..." type="text"/></th>
+									</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="row in controller.displayedComponentes">
+									<td>{{row.nombre}}</td>
+								</tr>
+								</tbody>
+							</table>
+	        				</div>
+	    					
+						</div>
+					</div>
+					
+					
+					
+						
+					<div class="panel panel-default">
+						<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group" style="text-align: right">
+										<label for="usuarioCreo" class="label-form">Usuario que creo</label>
+					  					<p class="">{{ controller.proyecto.usuarioCreo }}</pl>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="fechaCreacion" class="label-form">Fecha de creación</label>
+					  					<p class="">{{ controller.proyecto.fechaCreacion }}</p>
+									</div>
 								</div>
 							</div>
-							<div class="col-sm-6">
-								<div class="form-group">
-									<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label>
-				  					<p class="">{{ controller.proyecto.fechaactualizacion }}</p>
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group" style="text-align: right">
+										<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label>
+					  					<p class="">{{ controller.proyecto.usuarioactualizo }}</p>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label>
+					  					<p class="">{{ controller.proyecto.fechaactualizacion }}</p>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 				</uib-tab>
 				
-				<uib-tab ng-click="controller.getPorcentajes();" index="2" heading="Datos Entidad Ejecutora">
+				<uib-tab ng-click="controller.getPorcentajes();" index="2" heading="Datos Entidad Ejecutora" >
 					<div class="panel panel-default">
 						<div class="panel-heading label-form" style="text-align: center;">Información Específica del Préstamo en la Entidad Ejecutora</div>
 						<div class="panel-body">
@@ -790,7 +836,7 @@
 				
 				</uib-tab>
 				
-				<uib-tab index="3" heading="Datos adicionales" ng-if="controller.mostrarPrestamo">
+				<uib-tab index="3" heading="Datos adicionales" ng-if="controller.mostrarPrestamo" >
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
