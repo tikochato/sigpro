@@ -113,6 +113,7 @@ public class SPrestamo extends HttpServlet {
 		String usuarioActualizo;
 		String fechaCreacion;
 		String fechaActualizacion;
+		
 	}
        
     

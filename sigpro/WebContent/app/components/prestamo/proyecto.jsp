@@ -467,7 +467,7 @@
 						</div>
 					</div>
 					
-					<div class="form-group" ng-show="controller.unidadejecutoranombre.length>0" >
+					<div class="form-group" ng-show="controller.unidadejecutoranombre.length>0"  >
 			            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.entidadnombre" ng-readonly="true"  
 			            	 ng-value="controller.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
 			            	<label for="campo3" class="floating-label">Organismo Ejecutor</label>
@@ -481,7 +481,7 @@
 			          	<label for="campo3" class="floating-label">* Unidad Ejecutora</label>
 					</div>
 	
-					<div class="form-group"  >
+					<div class="form-group" ng-if="false"  >
 			            	<input type="text" class="inputText" id="icoope" name="icoope" ng-model="controller.cooperantenombre" ng-readonly="true" ng-required="true" 
 			            		ng-click="controller.buscarCooperante()" ng-value="controller.cooperantenombre" onblur="this.setAttribute('value', this.value);"/>
 			            	<span class="label-icon" ng-click="controller.buscarCooperante()"><i class="glyphicon glyphicon-search"></i></span>
