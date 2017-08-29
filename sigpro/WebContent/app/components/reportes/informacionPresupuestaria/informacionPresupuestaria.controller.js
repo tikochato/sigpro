@@ -294,8 +294,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			var datos = {
 				accion : 'generarInforme',
 				idPrestamo: mi.prestamo.value,
-				anoInicial: mi.fechaInicio,
-				anoFinal: mi.fechaFin,
+				anioInicial: mi.fechaInicio,
+				anioFinal: mi.fechaFin,
 				t: (new Date()).getTime()
 			};
 			
@@ -663,6 +663,36 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			var valor = mi.totales[itemIndice].anio[anioIndice].valor;
 			return valor;
 		};
+		
+		mi.exportarExcel = function(){
+			console.log("exportar");
+			 var tipoVisualizacion = 0;
+			 if (mi.grupoMostrado.planificado && mi.grupoMostrado.real){
+				 tipoVisualizacion = 2;
+			 }else if(mi.grupoMostrado.real){
+				 tipoVisualizacion = 1;
+			 }
+			 $http.post('/SInformacionPresupuestaria', { 
+				 accion: 'exportarExcel', 
+				 idPrestamo: mi.prestamo.value,
+				 anioInicial: mi.fechaInicio,
+				 anioFinal: mi.fechaFin,
+				 agrupacion: mi.agrupacionActual,
+				 tipoVisualizacion: tipoVisualizacion,
+				 t:moment().unix()
+			  } ).then(
+					  function successCallback(response) {
+						  var anchor = angular.element('<a/>');
+						  anchor.attr({
+					         href: 'data:application/ms-excel;base64,' + response.data,
+					         target: '_blank',
+					         download: 'EjecucionPresupuestaria.xls'
+						  })[0].click();
+					  }.bind(this), function errorCallback(response){
+						 		
+				 	}
+			  	);
+			};
 		
 }]);
 

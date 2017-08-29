@@ -119,7 +119,7 @@ public class SPrestamoMetas extends HttpServlet {
 			Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
 			List<stprestamo> lstPrestamo = getMetasPrestamo(idPrestamo, anioInicial, anioFinal, usuario);
 			
-			if (!lstPrestamo.isEmpty()){
+			if (null != lstPrestamo && !lstPrestamo.isEmpty()){
 				response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
 		        response_text = String.join("", "\"prestamo\":",response_text);
 		        response_text = String.join("", "{\"success\":true,", response_text, "}");
@@ -314,7 +314,7 @@ public class SPrestamoMetas extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			System.out.println(e);
+			System.out.println("exportarExcel: "+e);
 		}
 		return outArray;
 	}
@@ -550,10 +550,7 @@ public class SPrestamoMetas extends HttpServlet {
 								datos[i][posicion+(11*sumaColumnas)]= prestamo.anios[a].diciembre[1].toString();
 								datos[i][posicion+(12*sumaColumnas)]= totalAnualR.toString();
 							}
-							if(tipoVisualizacion == 2){
-								posicion--;
-							}
-							posicion = posicion+(13*sumaColumnas);
+							posicion = posicion+(12*sumaColumnas)+1;
 							break;
 						case AGRUPACION_BIMESTRE:
 							if(tipoVisualizacion==0 || tipoVisualizacion==2){
@@ -577,10 +574,7 @@ public class SPrestamoMetas extends HttpServlet {
 								datos[i][posicion+(5*sumaColumnas)]= (prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1])).toString();
 								datos[i][posicion+(6*sumaColumnas)]= totalAnualR.toString();
 							}
-							if(tipoVisualizacion == 2){
-								posicion--;
-							}
-							posicion = posicion+(7*sumaColumnas);
+							posicion = posicion+(6*sumaColumnas)+1;
 							break;
 						case AGRUPACION_TRIMESTRE:
 							if(tipoVisualizacion==0 || tipoVisualizacion==2){
@@ -600,10 +594,7 @@ public class SPrestamoMetas extends HttpServlet {
 								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].octubre[1].add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1]))).toString();
 								datos[i][posicion+(4*sumaColumnas)]= totalAnualR.toString();
 							}
-							if(tipoVisualizacion == 2){
-								posicion--;
-							}
-							posicion = posicion+(5*sumaColumnas);
+							posicion = posicion+(4*sumaColumnas)+1;
 							break;
 						case AGRUPACION_CUATRIMESTRE:
 							if(tipoVisualizacion==0 || tipoVisualizacion==2){
@@ -621,10 +612,7 @@ public class SPrestamoMetas extends HttpServlet {
 								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].septiembre[1].add(prestamo.anios[a].octubre[1]).add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1]))).toString();
 								datos[i][posicion+(3*sumaColumnas)]= totalAnualR.toString();
 							}
-							if(tipoVisualizacion == 2){
-								posicion--;
-							}
-							posicion = posicion+(4*sumaColumnas);
+							posicion = posicion+(3*sumaColumnas)+1;
 							break;
 						case AGRUPACION_SEMESTRE:
 							if(tipoVisualizacion==0 || tipoVisualizacion==2){
@@ -640,10 +628,7 @@ public class SPrestamoMetas extends HttpServlet {
 								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1]).add(prestamo.anios[a].septiembre[1].add(prestamo.anios[a].octubre[1].add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1]))))).toString();
 								datos[i][posicion+(2*sumaColumnas)]= totalAnualR.toString();
 							}
-							if(tipoVisualizacion == 2){
-								posicion--;
-							}
-							posicion = posicion+(3*sumaColumnas);
+							posicion = posicion+(2*sumaColumnas)+1;
 							break;
 						case AGRUPACION_ANUAL:
 							if(tipoVisualizacion==0 || tipoVisualizacion==2){
@@ -657,10 +642,7 @@ public class SPrestamoMetas extends HttpServlet {
 								datos[i][posicion]= totalAnualR.toString();
 								datos[i][posicion+(1*sumaColumnas)]= totalAnualR.toString();
 							}
-							if(tipoVisualizacion == 2){
-								posicion--;
-							}
-							posicion = posicion+(2*sumaColumnas);
+							posicion = posicion+(1*sumaColumnas)+1;
 							break;
 						}
 					}
