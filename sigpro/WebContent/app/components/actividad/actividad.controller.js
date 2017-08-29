@@ -26,6 +26,33 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		
+		mi.dimensiones = [
+			{value:1,nombre:'Dias',sigla:'d'}
+		];
+		
+		mi.duracionDimension = mi.dimensiones[0];
+		
+		mi.cambioDuracion = function(dimension){
+			mi.actividad.fechaFin = mi.sumarDias(mi.actividad.fechaInicio,mi.actividad.duracion, dimension.sigla);
+		}
+		
+		mi.sumarDias = function(fecha, dias, dimension){
+			if(dimension != undefined && dias != undefined && fecha != ""){
+				var cnt = 0;
+			    var tmpDate = moment(fecha);
+			    while (cnt < (dias -1 )) {
+			    	if(dimension=='d'){
+			    		tmpDate = tmpDate.add(1,'days');	
+			    	}
+			        if (tmpDate.weekday() != moment().day("Sunday").weekday() && tmpDate.weekday() != moment().day("Saturday").weekday()) {
+			            cnt = cnt + 1;
+			        }
+			    }
+			    tmpDate = moment(tmpDate,'DD/MM/YYYY').toDate();
+			    return tmpDate;
+			}
+		}
+		
 		mi.responsables =[];
 
 		mi.columnaOrdenada=null;
@@ -38,7 +65,13 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					mi.objetoid = response.id;
 					mi.objetoNombre = response.nombre;
 					mi.objetoTipoNombre = response.tiponombre;
+					var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
+					mi.modificarFechaInicial(fechaInicioPadre);
 		});
+		
+		mi.modificarFechaInicial = function(fechaPadre){
+			mi.fi_opciones.minDate = fechaPadre;
+		}
 		
 		mi.editarElemento = function (event) {
 	        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
@@ -54,6 +87,13 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				startingDay : 1
 		};
 
+		mi.fi_opciones = {
+				formatYear : 'yy',
+				maxDate : new Date(2050, 12, 31),
+				minDate : new Date(1990, 1, 1),
+				startingDay : 1
+		};
+		
 		mi.ff_opciones = {
 				formatYear : 'yy',
 				maxDate : new Date(2050, 12, 31),
@@ -184,8 +224,13 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					latitud : mi.actividad.latitud,
 					costo: mi.actividad.costo == null ? 0 : mi.actividad.costo,
 					acumulacionCosto: mi.actividad.acumulacionCostoId == null ? 0 : mi.actividad.acumulacionCostoId,
-					fuente: mi.actividad.fuente,
+					renglon: mi.actividad.renglon,
+					ubicacionGeografica: mi.actividad.ubicacionGeografica,
 					asignacionroles: asignaciones,
+					fechaInicio: moment(mi.actividad.fechaInicio).format('DD/MM/YYYY'),
+					fechaFin: moment(mi.actividad.fechaFin).format('DD/MM/YYYY'),
+					duaracion: mi.actividad.duracion,
+					duracionDimension: mi.duracionDimension.sigla,
 					datadinamica : JSON.stringify(mi.camposdinamicos)
 				}).success(function(response){
 					if(response.success){
@@ -242,6 +287,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			mi.actividadtipoid = "";
 			mi.actividadnombre = "";
 			mi.mostraringreso=true;
+			mi.duracionDimension = '';
 			mi.esnuevo = true;
 			mi.actividad = {};
 			mi.coordenadas = "";
@@ -254,6 +300,12 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				mi.mostraringreso = true;
 				mi.actividadtipoid = mi.actividad.actividadtipoid;
 				mi.esnuevo = false;
+				
+				if(mi.actividad.duracionDimension.toLowerCase() == 'd'){
+					mi.duracionDimension = mi.dimensiones[0];
+				}else{
+					mi.duracionDimension = '';
+				}
 				
 				mi.coordenadas = (mi.actividad.latitud !=null ?  mi.actividad.latitud : '') +
 				(mi.actividad.latitud!=null ? ', ' : '') + (mi.actividad.longitud!=null ? mi.actividad.longitud : '');

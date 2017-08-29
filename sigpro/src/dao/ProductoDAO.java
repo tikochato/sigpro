@@ -249,6 +249,41 @@ public class ProductoDAO {
 		return ret;
 	}
 	
+	public static Producto getProductoInicial(Integer componenteId, String usuario){
+		Producto ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "FROM Producto p where p.estado=1 and p.orden=1 and p.componente.id=:componenteId and p.usuarioCreo=:usuario";
+			Query<Producto> criteria = session.createQuery(query, Producto.class);
+			criteria.setParameter("componenteId", componenteId);
+			criteria.setParameter("usuario", usuario);
+			ret = criteria.getSingleResult();
+		}catch(Throwable e){
+			CLogger.write("11", ProductoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 	
+	public static Producto getProductoFechaMaxima(Integer componenteId, String usuario){
+		Producto ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "FROM Producto p where p.estado=1 and p.componente.id=:componenteId and p.usuarioCreo=:usuario order by p.fechaFin desc";
+			Query<Producto> criteria = session.createQuery(query, Producto.class);
+			criteria.setMaxResults(1);
+			criteria.setParameter("componenteId", componenteId);
+			criteria.setParameter("usuario", usuario);
+			ret = criteria.getSingleResult();
+		}catch(Throwable e){
+			CLogger.write("12", ProductoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 	
 }

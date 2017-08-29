@@ -133,35 +133,39 @@
 					</div>
 				
 					<div class="form-group-row row" >
-						<div class="form-group col-sm-2" >
-					       <input type="number" class="inputText" ng-model="subproducto.subproducto.programa"  ng-maxlength="4" style="text-align: center" 
-					       		ng-value="subproducto.subproducto.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-					       <label for="iprog" class="floating-label">Programa</label>
-						</div>
-						<div class="form-group col-sm-2" >
-						  <input type="number" class="inputText" ng-model="subproducto.subproducto.subprograma" 
-						  		ng-value="subproducto.subproducto.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
-						  <label for="isubprog" class="floating-label">Subprograma</label>
-						</div>
-						<div class="form-group col-sm-2" >
-						  <input type="number" class="inputText" ng-model="subproducto.subproducto.proyecto_"  ng-maxlength="4" style="text-align: center" 
-						  		ng-value="subproducto.subproducto.proyecto_" onblur="this.setAttribute('value', this.value);"/>
-						  <label for="iproy_" class="floating-label">Proyecto</label>
-						</div>
-						<div class="form-group col-sm-2" >
-						  <input type="number" class="inputText" ng-model="subproducto.subproducto.actividad" ng-maxlength="4" style="text-align: center" 
-						  		ng-value="subproducto.subproducto.actividad" onblur="this.setAttribute('value', this.value);"/>
-						  <label for="iobra" class="floating-label">Actividad</label>
-						</div>
-						<div class="form-group col-sm-2" >
-						  <input type="number" class="inputText" ng-model="subproducto.subproducto.obra" ng-maxlength="4" style="text-align: center" 
-						  		ng-value="subproducto.subproducto.obra" onblur="this.setAttribute('value', this.value);"/>
-						  <label for="iobra" class="floating-label">Obra</label>
-						</div>
-						<div class="form-group col-sm-2" >
-						  <input type="number" class="inputText" ng-model="subproducto.subproducto.fuente" ng-maxlength="4" style="text-align: center" 
-						  		 ng-value="subproducto.subproducto.fuente" onblur="this.setAttribute('value', this.value);"/>
-						  <label for="campo5" class="floating-label">Fuente</label>
+						<div style="width: 100%">
+							<table style="width: 100%">
+								<tr>
+									<td style="width: 14%; padding-right:5px;">
+										<input name="programa" type="number" class="inputText" ng-model="subproducto.subproducto.programa" ng-value="subproducto.subproducto.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;" />
+						       			<label for="programa" class="floating-label">Programa</label>
+									</td>
+									<td style="width: 14%; padding-right:5px;">
+										<input type="number" class="inputText" ng-model="subproducto.subproducto.subprograma" ng-value="subproducto.subproducto.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+						  				<label for="isubprog" class="floating-label">Subprograma</label>
+									</td>
+									<td style="width: 14%; padding-right:5px;">
+										<input type="number" class="inputText" ng-model="subproducto.subproducto.proyecto_" ng-value="subproducto.subproducto.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+						  				<label for="iproy_" class="floating-label">Proyecto</label>
+									</td>
+									<td style="width: 14%; padding-right:5px;">
+										<input type="number" class="inputText" ng-model="subproducto.subproducto.actividad" ng-value="subproducto.subproducto.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+							  			<label for="iobra" class="floating-label">Actividad</label>
+									</td>
+									<td style="width: 14%; padding-right:5px;">
+										<input type="number" class="inputText" ng-model="subproducto.subproducto.obra" ng-value="subproducto.subproducto.obra" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+						 				<label for="iobra" class="floating-label">Obra</label>
+									</td>
+									<td style="width: 14%; padding-right:5px;">
+										<input type="number" class="inputText" ng-model="subproducto.subproducto.renglon" ng-value="subproducto.subproducto.renglon" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+						  				<label for="fuente" class="floating-label">Renglon</label>
+									</td>
+									<td style="width: 14%; padding-right:5px;">
+										<input type="number" class="inputText" ng-model="subproducto.subproducto.ubicacionGeografica" ng-value="subproducto.subproducto.ubicacionGeografica" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+						  				<label for="fuente" class="floating-label">Ubicación Geográfica</label>
+									</td>
+								</tr>
+							</table>
 						</div>
 					</div>
 					
@@ -236,16 +240,65 @@
 							</div>
 					</div>
 					<div class="form-group" >
-					       <input type="number" class="inputText" ng-model="subproducto.subproducto.costo" ng-value="subproducto.subproducto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
-					       <label for="iprog" class="floating-label">Costo</label>
+				       <input type="number" class="inputText" ng-model="subproducto.subproducto.costo" ng-value="subproducto.subproducto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
+				       <label for="iprog" class="floating-label">Costo</label>
+					</div>
+					
+					<div class="form-group" >
+					    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="subproducto.subproducto.acumulacionCostoNombre" ng-value="subproducto.subproducto.acumulacionCostoNombre" 
+						ng-click="subproducto.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="subproducto.subproducto.costo > 0"/>
+						<span class="label-icon" ng-click="subproducto.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
+						<label for="campo3" class="floating-label">* Acumulación Costo</label>
+					</div>
+					
+					<div class = "row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<select class="inputText" ng-model="subproducto.duracionDimension"
+									ng-options="dim as dim.nombre for dim in subproducto.dimensiones track by dim.value"
+									 ng-required="true">
+								</select>
+								<label for="nombre" class="floating-label">* Dimension</label>
+							</div>
+						</div>
+							
+						<div class="col-sm-6">
+							<div class="form-group">
+							   <input class="inputText"  type="number"
+							     ng-model="subproducto.subproducto.duracion" ng-value="subproducto.subproducto.duracion"   
+							     onblur="this.setAttribute('value', this.value);"  min="1" max="100" ng-required="true" 
+							     ng-readonly="subproducto.duracionDimension.value != 0 ? false : true"
+							     ng-change="subproducto.subproducto.fechaInicio != null && subproducto.duracionDimension != 0 ? subproducto.cambioDuracion(subproducto.duracionDimension) : ''">
+							   <label class="floating-label">* Duración</label>
+							</div>	
+						</div>
+							
+						<div class="col-sm-6">
+							<div class="form-group" >
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}" ng-model="subproducto.subproducto.fechaInicio" is-open="subproducto.fi_abierto"
+							            datepicker-options="subproducto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="subproducto.cambioDuracion(subproducto.duracionDimension);" ng-required="true"  
+							            ng-click="subproducto.primerhijo != true ? subproducto.abrirPopupFecha(1000) : ''" ng-value="subproducto.subproducto.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
+							            <span class="label-icon" ng-click="producto.abrirPopupFecha(1000)">
+							              <i class="glyphicon glyphicon-calendar"></i>
+							            </span>
+							  <label for="campo.id" class="floating-label">* Fecha de Inicio</label>
+							</div>
 						</div>
 						
-						<div class="form-group" >
-						    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="subproducto.subproducto.acumulacionCostoNombre" ng-value="subproducto.subproducto.acumulacionCostoNombre" 
-							ng-click="subproducto.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="subproducto.subproducto.costo > 0"/>
-							<span class="label-icon" ng-click="subproducto.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
-							<label for="campo3" class="floating-label">* Acumulación Costo</label>
+						<div class="col-sm-6">
+							<div class="form-group" >
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}" ng-model="subproducto.subproducto.fechaFin" is-open="subproducto.ff_abierto"
+							            datepicker-options="subproducto.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true" ng-click=""
+							            ng-value="subproducto.subproducto.fechaFin" onblur="this.setAttribute('value', this.value);"
+							            ng-readonly="true"/>
+							            <span class="label-icon" ng-click="subproducto.abrirPopupFecha(1001)">
+							              <i class="glyphicon glyphicon-calendar"></i>
+							            </span>
+							  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
+							</div>
 						</div>
+					</div>
+						
 				<div class="panel panel-default">
 					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">
@@ -294,5 +347,4 @@
 			</div>
 		</div>
 	</div>
-
 </div>

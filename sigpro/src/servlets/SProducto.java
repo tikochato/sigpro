@@ -40,6 +40,7 @@ import pojo.ProductoUsuario;
 import pojo.ProductoUsuarioId;
 import pojo.UnidadEjecutora;
 import utilities.Utils;
+import utilities.COrden;
 
 @WebServlet("/SProducto")
 public class SProducto extends HttpServlet {
@@ -62,7 +63,12 @@ public class SProducto extends HttpServlet {
 		Integer proyecto_;
 		Integer actividad;
 		Integer obra;
-		Integer fuente;
+		Integer renglon;
+		Integer ubicacionGeografica;
+		Integer duracion;
+		String duracionDimension;
+		String fechaInicio;
+		String fechaFin;
 		Integer estado;
 		String fechaCreacion;
 		String usuarioCreo;
@@ -72,7 +78,7 @@ public class SProducto extends HttpServlet {
 		String longitud;
 		Integer peso;
 		BigDecimal costo;
-		Integer acumulacionCosto;
+		Integer acumulacionCostoId;
 		String acumulacionCostoNombre;
 	}
 	
@@ -136,7 +142,12 @@ public class SProducto extends HttpServlet {
 				temp.proyecto_ = producto.getProyecto();
 				temp.obra = producto.getObra();
 				temp.actividad = producto.getActividad();
-				temp.fuente = producto.getFuente();
+				temp.renglon = producto.getRenglon();
+				temp.ubicacionGeografica = producto.getUbicacionGeografica();
+				temp.duracion = producto.getDuracion();
+				temp.duracionDimension = producto.getDuracionDimension();
+				temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
+				temp.fechaFin = Utils.formatDate(producto.getFechaFin());
 				temp.snip = producto.getSnip();
 				temp.estado = producto.getEstado();
 				temp.usuarioCreo = producto.getUsuarioCreo();
@@ -147,7 +158,7 @@ public class SProducto extends HttpServlet {
 				temp.longitud = producto.getLongitud();
 				temp.peso = producto.getPeso();
 				temp.costo = producto.getCosto();
-				temp.acumulacionCosto = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getId() : null;
+				temp.acumulacionCostoId = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getId() : null;
 				temp.acumulacionCostoNombre = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getNombre() : null;
 
 				if (producto.getComponente() != null) {
@@ -193,13 +204,18 @@ public class SProducto extends HttpServlet {
 				Integer subprograma = Utils.String2Int(parametro.get("subprograma"), null);
 				Integer proyecto_ = Utils.String2Int(parametro.get("proyecto_"), null);
 				Integer obra = Utils.String2Int(parametro.get("obra"), null);
-				Integer fuente = Utils.String2Int(parametro.get("fuente"), null);
+				Integer renglon = parametro.get("renglon")!=null ? Integer.parseInt(parametro.get("renglon")):null;
+				Integer ubicacionGeografica = parametro.get("ubicacionGeografica")!=null ? Integer.parseInt(parametro.get("ubicacionGeografica")):null;
 				Integer actividad = Utils.String2Int(parametro.get("actividad"), null);
 				String latitud = parametro.get("latitud");
 				String longitud = parametro.get("longitud");
 				Integer peso = Utils.String2Int(parametro.get("peso"), null);
 				BigDecimal costo = new BigDecimal(parametro.get("costo"));
 				Integer acumulacionCostoid = Utils.String2Int(parametro.get("acumulacionCosto"), null);
+				Date fechaInicio = Utils.dateFromString(parametro.get("fechaInicio"));
+				Date fechaFin = Utils.dateFromString(parametro.get("fechaFin"));
+				Integer duracion = Utils.String2Int(parametro.get("duaracion"), null);
+				String duracionDimension = parametro.get("duracionDimension");
 				
 				AcumulacionCosto acumulacionCosto = null;
 				if(acumulacionCostoid != 0){
@@ -224,9 +240,10 @@ public class SProducto extends HttpServlet {
 				
 				if (esnuevo){
 					
-					producto = new Producto(acumulacionCosto, componente, null, unidadEjecutora, nombre, descripcion, 
-							 usuario, null, new DateTime().toDate(), null, 1
-							, snip, programa, subprograma, proyecto_, actividad, obra, fuente, latitud, longitud,null,costo,null,null,null);
+					producto = new Producto(acumulacionCosto, componente, productoTipo, unidadEjecutora, nombre, descripcion, 
+							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subprograma, proyecto_, 
+							actividad, obra, latitud, longitud,null,costo, renglon, ubicacionGeografica,fechaInicio, 
+							fechaFin, duracion, duracionDimension,null,null,null,null);
 					
 				}else{
 					producto = ProductoDAO.getProductoPorId(id);
@@ -241,7 +258,8 @@ public class SProducto extends HttpServlet {
 					producto.setProyecto(proyecto_);
 					producto.setObra(obra);
 					producto.setActividad(actividad);
-					producto.setFuente(fuente);
+					producto.setRenglon(renglon);
+					producto.setUbicacionGeografica(ubicacionGeografica);
 					producto.setUsuarioActualizo(usuario);
 					producto.setFechaActualizacion(new DateTime().toDate());
 					producto.setLatitud(latitud);
@@ -249,8 +267,17 @@ public class SProducto extends HttpServlet {
 					producto.setPeso(peso);
 					producto.setCosto(costo);
 					producto.setAcumulacionCosto(acumulacionCosto);
+					producto.setFechaInicio(fechaInicio);
+					producto.setFechaFin(fechaFin);
+					producto.setDuracion(duracion);
+					producto.setDuracionDimension(duracionDimension);
 				}
+				
 				ret = ProductoDAO.guardarProducto(producto);
+				
+				COrden orden = new COrden();
+				orden.calcularOrdenObjetosSuperiores(producto.getId(), 3, usuario);
+				
 				
 				if (ret){
 					ProductoUsuarioId productoUsuarioId = new ProductoUsuarioId(producto.getId(), usuario);
@@ -329,7 +356,8 @@ public class SProducto extends HttpServlet {
 					temp.proyecto_ = producto.getProyecto();
 					temp.obra = producto.getObra();
 					temp.actividad = producto.getActividad();
-					temp.fuente = producto.getFuente();
+					temp.renglon = producto.getRenglon();
+					temp.ubicacionGeografica = producto.getUbicacionGeografica();
 					temp.snip = producto.getSnip();
 					temp.estado = producto.getEstado();
 					temp.usuarioCreo = producto.getUsuarioCreo();
@@ -340,9 +368,13 @@ public class SProducto extends HttpServlet {
 					temp.longitud = producto.getLongitud();
 					temp.peso = producto.getPeso();
 					temp.costo = producto.getCosto();
-					temp.acumulacionCosto = producto.getAcumulacionCosto().getId();
+					temp.acumulacionCostoId = producto.getAcumulacionCosto().getId();
 					temp.acumulacionCostoNombre = producto.getAcumulacionCosto().getNombre();
-
+					temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
+					temp.fechaFin = Utils.formatDate(producto.getFechaFin());
+					temp.duracion = producto.getDuracion();
+					temp.duracionDimension = producto.getDuracionDimension();
+					
 					if (producto.getComponente() != null) {
 						temp.idComponente = producto.getComponente().getId();
 						temp.componente = producto.getComponente().getNombre();
@@ -402,7 +434,8 @@ public class SProducto extends HttpServlet {
 				temp.proyecto_ = producto.getProyecto();
 				temp.obra = producto.getObra();
 				temp.actividad = producto.getActividad();
-				temp.fuente = producto.getFuente();
+				temp.renglon = producto.getRenglon();
+				temp.ubicacionGeografica = producto.getUbicacionGeografica();
 				temp.snip = producto.getSnip();
 				temp.estado = producto.getEstado();
 				temp.usuarioCreo = producto.getUsuarioCreo();
@@ -413,9 +446,13 @@ public class SProducto extends HttpServlet {
 				temp.longitud = producto.getLongitud();
 				temp.peso = producto.getPeso();
 				temp.costo = producto.getCosto();
-				temp.acumulacionCosto = producto.getAcumulacionCosto().getId();
+				temp.acumulacionCostoId = producto.getAcumulacionCosto().getId();
 				temp.acumulacionCostoNombre = producto.getAcumulacionCosto().getNombre();
-
+				temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
+				temp.fechaFin = Utils.formatDate(producto.getFechaFin());
+				temp.duracion = producto.getDuracion();
+				temp.duracionDimension = producto.getDuracionDimension();
+				
 				if (producto.getComponente() != null) {
 					temp.idComponente = producto.getComponente().getId();
 					temp.componente = producto.getComponente().getNombre();
@@ -463,7 +500,8 @@ public class SProducto extends HttpServlet {
 				temp.proyecto_ = producto.getProyecto();
 				temp.obra = producto.getObra();
 				temp.actividad = producto.getActividad();
-				temp.fuente = producto.getFuente();
+				temp.renglon = producto.getRenglon();
+				temp.ubicacionGeografica = producto.getUbicacionGeografica();
 				temp.snip = producto.getSnip();
 				temp.estado = producto.getEstado();
 				temp.usuarioCreo = producto.getUsuarioCreo();
@@ -474,9 +512,13 @@ public class SProducto extends HttpServlet {
 				temp.longitud = producto.getLongitud();
 				temp.peso = producto.getPeso();
 				temp.costo = producto.getCosto();
-				temp.acumulacionCosto = producto.getAcumulacionCosto().getId();
+				temp.acumulacionCostoId = producto.getAcumulacionCosto().getId();
 				temp.acumulacionCostoNombre = producto.getAcumulacionCosto().getNombre();
-
+				temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
+				temp.fechaFin = Utils.formatDate(producto.getFechaFin());
+				temp.duracion = producto.getDuracion();
+				temp.duracionDimension = producto.getDuracionDimension();
+				
 				if (producto.getComponente() != null) {
 					temp.idComponente = producto.getComponente().getId();
 					temp.componente = producto.getComponente().getNombre();
@@ -516,7 +558,7 @@ public class SProducto extends HttpServlet {
 			Producto producto = ProductoDAO.getProductoPorId(id,usuario);
 
 			response_text = String.join("","{ \"success\": ",(producto!=null && producto.getId()!=null ? "true" : "false"),", "
-				+ "\"id\": " + (producto!=null ? producto.getId():"0") +", "
+				+ "\"id\": " + (producto!=null ? producto.getId():"0") +", "  + "\"fechaInicio\": \"" + (producto!=null ? Utils.formatDate(producto.getFechaFin()): null) +"\", "
 				+ "\"nombre\": \"" + (producto!=null ? producto.getNombre():"Indefinido") +"\" }");
 
 		}else if(accion.equals("getProductoPorId")){
@@ -650,5 +692,4 @@ public class SProducto extends HttpServlet {
         gz.close();
         output.close();
 	}
-
 }
