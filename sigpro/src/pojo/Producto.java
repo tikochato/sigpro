@@ -1,5 +1,5 @@
 package pojo;
-// Generated Aug 28, 2017 4:46:57 PM by Hibernate Tools 5.2.3.Final
+// Generated Aug 29, 2017 4:40:10 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1397850192527511628L;
+	private static final long serialVersionUID = -3515031053931754559L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Componente componente;
@@ -47,11 +47,17 @@ public class Producto implements java.io.Serializable {
 	private Integer proyecto;
 	private Integer actividad;
 	private Integer obra;
-	private Integer fuente;
 	private String latitud;
 	private String longitud;
 	private Integer peso;
 	private BigDecimal costo;
+	private Integer renglon;
+	private Integer ubicacionGeografica;
+	private Date fechaInicio;
+	private Date fechaFin;
+	private Integer duracion;
+	private String duracionDimension;
+	private Integer orden;
 	private Set<ProductoUsuario> productoUsuarios = new HashSet<ProductoUsuario>(0);
 	private Set<Subproducto> subproductos = new HashSet<Subproducto>(0);
 	private Set<ProductoPropiedadValor> productoPropiedadValors = new HashSet<ProductoPropiedadValor>(0);
@@ -72,9 +78,11 @@ public class Producto implements java.io.Serializable {
 	public Producto(AcumulacionCosto acumulacionCosto, Componente componente, ProductoTipo productoTipo,
 			UnidadEjecutora unidadEjecutora, String nombre, String descripcion, String usuarioCreo,
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado, Long snip,
-			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, Integer fuente,
-			String latitud, String longitud, Integer peso, BigDecimal costo, Set<ProductoUsuario> productoUsuarios,
-			Set<Subproducto> subproductos, Set<ProductoPropiedadValor> productoPropiedadValors) {
+			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, String latitud,
+			String longitud, Integer peso, BigDecimal costo, Integer renglon, Integer ubicacionGeografica,
+			Date fechaInicio, Date fechaFin, Integer duracion, String duracionDimension, Integer orden,
+			Set<ProductoUsuario> productoUsuarios, Set<Subproducto> subproductos,
+			Set<ProductoPropiedadValor> productoPropiedadValors) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.componente = componente;
 		this.productoTipo = productoTipo;
@@ -92,11 +100,17 @@ public class Producto implements java.io.Serializable {
 		this.proyecto = proyecto;
 		this.actividad = actividad;
 		this.obra = obra;
-		this.fuente = fuente;
 		this.latitud = latitud;
 		this.longitud = longitud;
 		this.peso = peso;
 		this.costo = costo;
+		this.renglon = renglon;
+		this.ubicacionGeografica = ubicacionGeografica;
+		this.fechaInicio = fechaInicio;
+		this.fechaFin = fechaFin;
+		this.duracion = duracion;
+		this.duracionDimension = duracionDimension;
+		this.orden = orden;
 		this.productoUsuarios = productoUsuarios;
 		this.subproductos = subproductos;
 		this.productoPropiedadValors = productoPropiedadValors;
@@ -273,15 +287,6 @@ public class Producto implements java.io.Serializable {
 		this.obra = obra;
 	}
 
-	@Column(name = "fuente")
-	public Integer getFuente() {
-		return this.fuente;
-	}
-
-	public void setFuente(Integer fuente) {
-		this.fuente = fuente;
-	}
-
 	@Column(name = "latitud", length = 30)
 	public String getLatitud() {
 		return this.latitud;
@@ -316,6 +321,71 @@ public class Producto implements java.io.Serializable {
 
 	public void setCosto(BigDecimal costo) {
 		this.costo = costo;
+	}
+
+	@Column(name = "renglon")
+	public Integer getRenglon() {
+		return this.renglon;
+	}
+
+	public void setRenglon(Integer renglon) {
+		this.renglon = renglon;
+	}
+
+	@Column(name = "ubicacion_geografica")
+	public Integer getUbicacionGeografica() {
+		return this.ubicacionGeografica;
+	}
+
+	public void setUbicacionGeografica(Integer ubicacionGeografica) {
+		this.ubicacionGeografica = ubicacionGeografica;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_inicio", length = 19)
+	public Date getFechaInicio() {
+		return this.fechaInicio;
+	}
+
+	public void setFechaInicio(Date fechaInicio) {
+		this.fechaInicio = fechaInicio;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_fin", length = 19)
+	public Date getFechaFin() {
+		return this.fechaFin;
+	}
+
+	public void setFechaFin(Date fechaFin) {
+		this.fechaFin = fechaFin;
+	}
+
+	@Column(name = "duracion")
+	public Integer getDuracion() {
+		return this.duracion;
+	}
+
+	public void setDuracion(Integer duracion) {
+		this.duracion = duracion;
+	}
+
+	@Column(name = "duracion_dimension", length = 1)
+	public String getDuracionDimension() {
+		return this.duracionDimension;
+	}
+
+	public void setDuracionDimension(String duracionDimension) {
+		this.duracionDimension = duracionDimension;
+	}
+
+	@Column(name = "orden")
+	public Integer getOrden() {
+		return this.orden;
+	}
+
+	public void setOrden(Integer orden) {
+		this.orden = orden;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")

@@ -819,14 +819,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		},'id','nombre');
 
 		resultado.then(function(itemSeleccionado) {
-			if (prestamo){
+			
 				mi.prestamo.cooperanteid= itemSeleccionado.id;
-				mi.prestamo.cooperantenombre = itemSeleccionado.nombre;
-			}
-			else{
+				mi.prestamo.cooperantenombre = itemSeleccionado.siglas + " - " + itemSeleccionado.nombre;
+			
 				mi.cooperanteid= itemSeleccionado.id;
-				mi.cooperantenombre = itemSeleccionado.nombre;
-			}
+				mi.cooperantenombre = itemSeleccionado.siglas + " - " + itemSeleccionado.nombre;
+			
 
 		});
 	};
@@ -1022,6 +1021,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					mi.prestamo.fechaVigencia = moment(response.data.prestamo.fechaVigencia,'DD/MM/YYYY').toDate();
 					mi.proyecto.nombre = mi.proyecto.nombre == null || mi.proyecto.nombre == undefined || mi.proyecto.nombre == '' ?
 							mi.prestamo.proyectoPrograma : mi.proyecto.nombre;
+					mi.cooperanteid = mi.prestamo.cooperanteid;
+					
 					mi.getPorcentajes();
 				}else{
 					$utilidades.mensaje('warning', 'No se encontraron datos con los parámetros ingresados');
