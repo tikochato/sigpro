@@ -28,13 +28,13 @@ public class CPdf {
 	private float celda_a=21;
 	private float celda_b=(float)6.7;
 	private float celda_c=6;
-	
+	private float font_size=7f;
 	/*
 	 * variables de texto
 	 * */
 	private String titulo ="";
 	private String anio="";
-	
+	private int numero_columnas=13;
 	/**
 	 * Variables del documento
 	 */
@@ -47,7 +47,6 @@ public class CPdf {
 			doc = new PDDocument();
 			page = new PDPage(new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth()));
 		    doc.addPage( page );
-			
 		}
 		public String ExportPdf(String [][]headers, String [][]datosMetas){
 			String path = "";
@@ -77,7 +76,7 @@ public class CPdf {
 				float margin = 50;
 				// starting y position is whole page height subtracted by top and bottom margin
 				float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
-				System.out.println(yStartNewPage);
+				//System.out.println(yStartNewPage);
 				// we want table across whole page width (subtracted by left and right margin ofcourse)
 				float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
 
@@ -88,9 +87,8 @@ public class CPdf {
 				float yPosition = 525;
 
 				BaseTable table = new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
-
 				table.addHeaderRow(agregarCabecera(table,cabeceras));
-			
+				
 				
 				
 				/**
@@ -99,16 +97,21 @@ public class CPdf {
 				//creando fila
 				Row<PDPage> row = table.createRow(12);
 				row= agregarCabecera_pt2(row, datosMetas[0]);
+				table.setTableIsBroken(true);
+				/*List<Row <PDPage>> li= table.getRows();
+				li.get(0).getHeight();*/
 				table.addHeaderRow(row);
 				
 				for(int i=0; i<datosMetas.length;i++){
 					row= agregarFila(table,datosMetas[i]);
 				}
 				table.draw();
+				List <BaseTable> def = getTables(table);
+				//int a = table.getHeader().getColCount();
+				//System.out.println(a);
 			    contentStream.close();
 			    path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
-				FileOutputStream out = 
-						new FileOutputStream(new File(path));
+				FileOutputStream out = new FileOutputStream(new File(path));
 				doc.save(out);
 				doc.close();
 			}catch(Exception o){
@@ -145,21 +148,15 @@ public class CPdf {
 				}
 				if(i==0){
 					Cell<PDPage> cell = row.createCell(celda_a, texto);
-					cell.setFontSize(cell.getFontSize()-.5f);
+					cell.setFontSize(font_size);
 				}else if(i==1){
 					Cell<PDPage>cell = row.createCell(celda_c, texto);
-					cell.setFontSize(cell.getFontSize()-.5f);
+					cell.setFontSize(font_size);
 				}else{
 					Cell<PDPage> cell = row.createCell(celda_b, texto);
-					cell.setFontSize(cell.getFontSize()-.5f);
+					cell.setFontSize(font_size);
 				}
 			}
-			/*Cell<PDPage> cell = row.createCell(celda_b, suma_planificada+"");
-			cell = row.createCell(celda_b, suma_real+"");
-			cell = row.createCell(celda_b, suma_planificada+"");
-			cell = row.createCell(celda_b, suma_real+"");	
-			cell = row.createCell(celda_b, datos[datos.length-1]);
-			cell.setFontSize(cell.getFontSize()-.5f);*/
 			return row;
 		}
 		
@@ -181,39 +178,51 @@ public class CPdf {
 			
 		}
 		public Row<PDPage> agregarCabecera_pt2(Row<PDPage> row,String cabecera[]){
-			System.out.println(cabecera.length);
+			//System.out.println(cabecera.length);
 			Cell<PDPage> cell = row.createCell(celda_a, "Nombre");
 			cell.setFontSize(cell.getFontSize()-1f);
-			//cell.setHeaderCell(true);
 			cell = row.createCell(celda_c,"Meta Unidad Medida");	
 			cell.setFontSize(cell.getFontSize()-1f);
-			//cell.setHeaderCell(true);
 			int control =1;
 			for(int i =0; i<cabecera.length-3;i++){
 				if(control==2){
 					control=1;
 					cell = row.createCell(celda_b, "Real");
 					cell.setFontSize(cell.getFontSize()-1f);
-					//cell.setHeaderCell(true);
 				}else{
 					control++;
 					cell = row.createCell(celda_b, "Planificado");
 					cell.setFontSize(cell.getFontSize()-1f);
-					//cell.setHeaderCell(true);
 				}
 			}
 			
 			cell = row.createCell(celda_b, "Meta Final");
 			cell.setFontSize(cell.getFontSize()-1f);
 			//cell.setHeaderCell(true);
+			
 			return row;
 			
 		}
 		
-		private static PDPage addNewPage(PDDocument doc) {
-			PDPage page = new PDPage();
-			doc.addPage(page);
-			return page;
+		public List<List<Row<PDPage>>> getTables(BaseTable def){
+			def.document.
+			List<List<Row<PDPage>>> ret = new ArrayList<List<Row<PDPage>>>();
+			
+			int num = (int)Math.ceil(((def.getRows().get(0).getColCount()-3)/5)+((def.getRows().get(0).getColCount()-3)% 5)); 
+			for(int i=0;i<num;i++){
+				BaseTable table = new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
+			}
+			return ret;
 		}
-		
+		private void ChangeSize(){
+			celda_a=(float)celda_a/2;
+			celda_b=(float)celda_b/2;
+			celda_c=(float)celda_b/2;
+			font_size=(float)font_size/2;
+		}
+		private void configurarPaginacion(String []entrada){
+			if(entrada.length>numero_columnas){
+				
+			}
+		}
 }

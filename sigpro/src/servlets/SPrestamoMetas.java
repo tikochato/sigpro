@@ -153,7 +153,7 @@ public class SPrestamoMetas extends HttpServlet {
 			String datosMetas[][];
 			int anioInicio=2017;
 			int anioFin=2017;
-			int agrupacion=5;
+			int agrupacion=3;
 			int tipoVisualizacion=2;
 			int  prestamoId=30;
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
