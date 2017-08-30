@@ -135,29 +135,39 @@
 					</div>
 				
 					<div class="form-group-row row" >
-						<div class="form-group col-sm-2" >
-						       <input type="number" class="inputText" ng-model="producto.producto.programa" ng-value="producto.producto.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
-						       <label for="iprog" class="floating-label">Programa</label>
-						</div>
-						<div class="form-group col-sm-2" >
-						  <input type="number" class="inputText" ng-model="producto.producto.subprograma" ng-value="producto.producto.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
-						  <label for="isubprog" class="floating-label">Subprograma</label>
-						</div>
-						<div class="form-group col-sm-2" >
-						  <input type="number" class="inputText" ng-model="producto.producto.proyecto_" ng-value="producto.producto.proyecto_" onblur="this.setAttribute('value', this.value);"  ng-maxlength="4" style="text-align: center" />
-						  <label for="iproy_" class="floating-label">Proyecto</label>
-						</div>
-						<div class="form-group col-sm-2" >
-						  <input type="number" class="inputText" ng-model="producto.producto.actividad" ng-value="producto.producto.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"  />
-						  <label for="iproy_" class="floating-label">Actividad</label>
-						</div>
-						<div class="form-group col-sm-2" >
-						  <input type="number" class="inputText" ng-model="producto.producto.obra" ng-value="producto.producto.obra" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-						  <label for="iobra" class="floating-label">Obra</label>
-						</div>
-						<div class="form-group col-sm-2" >
-						  <input type="number" class="inputText" ng-model="producto.producto.fuente" ng-value="producto.producto.fuente" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
-						  <label for="campo5" class="floating-label">Fuente</label>
+						<div style="width: 100%">
+							<table style="width: 100%">
+								<tr>
+									<td style="width: 14%; padding-right:5px;">
+										<input name="programa" type="number" class="inputText" ng-model="producto.producto.programa" ng-value="producto.producto.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;" />
+						       			<label for="programa" class="floating-label">Programa</label>
+									</td>
+									<td style="width: 14%; padding-right:5px;">
+										<input type="number" class="inputText" ng-model="producto.producto.subprograma" ng-value="producto.producto.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+						  				<label for="isubprog" class="floating-label">Subprograma</label>
+									</td>
+									<td style="width: 14%; padding-right:5px;">
+										<input type="number" class="inputText" ng-model="producto.producto.proyecto_" ng-value="producto.producto.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+						  				<label for="iproy_" class="floating-label">Proyecto</label>
+									</td>
+									<td style="width: 14%; padding-right:5px;">
+										<input type="number" class="inputText" ng-model="producto.producto.actividad" ng-value="producto.producto.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+							  			<label for="iobra" class="floating-label">Actividad</label>
+									</td>
+									<td style="width: 14%; padding-right:5px;">
+										<input type="number" class="inputText" ng-model="producto.producto.obra" ng-value="producto.producto.obra" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+						 				<label for="iobra" class="floating-label">Obra</label>
+									</td>
+									<td style="width: 14%; padding-right:5px;">
+										<input type="number" class="inputText" ng-model="producto.producto.renglon" ng-value="producto.producto.renglon" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+						  				<label for="fuente" class="floating-label">Renglon</label>
+									</td>
+									<td style="width: 14%; padding-right:5px;">
+										<input type="number" class="inputText" ng-model="producto.producto.ubicacionGeografica" ng-value="producto.producto.ubicacionGeografica" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+						  				<label for="fuente" class="floating-label">Ubicación Geográfica</label>
+									</td>
+								</tr>
+							</table>
 						</div>
 					</div>
 					
@@ -229,16 +239,64 @@
 					</div>
 					
 					<div class="form-group" >
-					       <input type="number" class="inputText" ng-model="producto.producto.costo" ng-value="producto.producto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
-					       <label for="iprog" class="floating-label">Costo</label>
+				       <input type="number" class="inputText" ng-model="producto.producto.costo" ng-value="producto.producto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
+				       <label for="iprog" class="floating-label">Costo</label>
+					</div>
+						
+					<div class="form-group" >
+					    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="producto.producto.acumulacionCostoNombre" ng-value="producto.producto.acumulacionCostoNombre" 
+						ng-click="producto.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="producto.producto.costo > 0"/>
+						<span class="label-icon" ng-click="producto.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
+						<label for="campo3" class="floating-label">* Acumulación Costo</label>
+					</div>
+					
+					<div class = "row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<select class="inputText" ng-model="producto.duracionDimension"
+									ng-options="dim as dim.nombre for dim in producto.dimensiones track by dim.value"
+									 ng-required="true">
+								</select>
+								<label for="nombre" class="floating-label">* Dimension</label>
+							</div>
+						</div>
+							
+						<div class="col-sm-6">
+							<div class="form-group">
+							   <input class="inputText"  type="number"
+							     ng-model="producto.producto.duracion" ng-value="producto.producto.duracion"   
+							     onblur="this.setAttribute('value', this.value);"  min="1" max="100" ng-required="true" 
+							     ng-readonly="producto.duracionDimension.value != 0 ? false : true"
+							     ng-change="producto.producto.fechaInicio != null && producto.duracionDimension.value != 0 ? producto.cambioDuracion(producto.duracionDimension) : ''">
+							   <label class="floating-label">* Duración</label>
+							</div>	
+						</div>
+							
+						<div class="col-sm-6">
+							<div class="form-group" >
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" min={{producto.fechaInicioPadre}} ng-model="producto.producto.fechaInicio" is-open="producto.fi_abierto"
+							            datepicker-options="producto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="producto.cambioDuracion(producto.duracionDimension);" ng-required="true"  
+							            ng-click="producto.abrirPopupFecha(1000)" ng-value="producto.producto.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
+							            <span class="label-icon" ng-click="producto.abrirPopupFecha(1000)">
+							              <i class="glyphicon glyphicon-calendar"></i>
+							            </span>
+							  <label for="campo.id" class="floating-label">* Fecha de Inicio</label>
+							</div>
 						</div>
 						
-						<div class="form-group" >
-						    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="producto.producto.acumulacionCostoNombre" ng-value="producto.producto.acumulacionCostoNombre" 
-							ng-click="producto.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="producto.producto.costo > 0"/>
-							<span class="label-icon" ng-click="producto.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
-							<label for="campo3" class="floating-label">* Acumulación Costo</label>
+						<div class="col-sm-6">
+							<div class="form-group" >
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" ng-model="producto.producto.fechaFin" is-open="producto.ff_abierto"
+							            datepicker-options="producto.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true" ng-click=""
+							            ng-value="producto.producto.fechaFin" onblur="this.setAttribute('value', this.value);"
+							            ng-readonly="true"/>
+							            <span class="label-icon" ng-click="producto.abrirPopupFecha(1001)">
+							              <i class="glyphicon glyphicon-calendar"></i>
+							            </span>
+							  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
+							</div>
 						</div>
+					</div>
 					
 				<div class="panel panel-default">
 					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
@@ -289,5 +347,4 @@
 			</div>
 		</div>
 	</div>
-
 </div>

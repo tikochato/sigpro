@@ -1,5 +1,5 @@
 package pojo;
-// Generated Aug 14, 2017 12:17:40 PM by Hibernate Tools 5.2.3.Final
+// Generated Aug 29, 2017 4:40:10 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6378681945139907778L;
+	private static final long serialVersionUID = 18726627632192962L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
 	private AcumulacionCosto acumulacionCosto;
@@ -48,7 +48,6 @@ public class Actividad implements java.io.Serializable {
 	private Integer proyecto;
 	private Integer actividad;
 	private Integer obra;
-	private Integer fuente;
 	private int objetoId;
 	private int objetoTipo;
 	private int duracion;
@@ -58,7 +57,9 @@ public class Actividad implements java.io.Serializable {
 	private String latitud;
 	private String longitud;
 	private BigDecimal costo;
-	private BigDecimal costoReal;
+	private Integer renglon;
+	private Integer ubicacionGeografica;
+	private Integer orden;
 	private Set<ActividadPropiedadValor> actividadPropiedadValors = new HashSet<ActividadPropiedadValor>(0);
 	private Set<ActividadUsuario> actividadUsuarios = new HashSet<ActividadUsuario>(0);
 
@@ -85,9 +86,9 @@ public class Actividad implements java.io.Serializable {
 	public Actividad(ActividadTipo actividadTipo, AcumulacionCosto acumulacionCosto, String nombre, String descripcion,
 			Date fechaInicio, Date fechaFin, int porcentajeAvance, String usuarioCreo, String usuarioActualizo,
 			Date fechaCreacion, Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma,
-			Integer proyecto, Integer actividad, Integer obra, Integer fuente, int objetoId, int objetoTipo,
-			int duracion, String duracionDimension, Integer predObjetoId, Integer predObjetoTipo, String latitud,
-			String longitud, BigDecimal costo, BigDecimal costoReal,
+			Integer proyecto, Integer actividad, Integer obra, int objetoId, int objetoTipo, int duracion,
+			String duracionDimension, Integer predObjetoId, Integer predObjetoTipo, String latitud, String longitud,
+			BigDecimal costo, Integer renglon, Integer ubicacionGeografica, Integer orden,
 			Set<ActividadPropiedadValor> actividadPropiedadValors, Set<ActividadUsuario> actividadUsuarios) {
 		this.actividadTipo = actividadTipo;
 		this.acumulacionCosto = acumulacionCosto;
@@ -107,7 +108,6 @@ public class Actividad implements java.io.Serializable {
 		this.proyecto = proyecto;
 		this.actividad = actividad;
 		this.obra = obra;
-		this.fuente = fuente;
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
 		this.duracion = duracion;
@@ -117,7 +117,9 @@ public class Actividad implements java.io.Serializable {
 		this.latitud = latitud;
 		this.longitud = longitud;
 		this.costo = costo;
-		this.costoReal = costoReal;
+		this.renglon = renglon;
+		this.ubicacionGeografica = ubicacionGeografica;
+		this.orden = orden;
 		this.actividadPropiedadValors = actividadPropiedadValors;
 		this.actividadUsuarios = actividadUsuarios;
 	}
@@ -302,15 +304,6 @@ public class Actividad implements java.io.Serializable {
 		this.obra = obra;
 	}
 
-	@Column(name = "fuente")
-	public Integer getFuente() {
-		return this.fuente;
-	}
-
-	public void setFuente(Integer fuente) {
-		this.fuente = fuente;
-	}
-
 	@Column(name = "objeto_id", nullable = false)
 	public int getObjetoId() {
 		return this.objetoId;
@@ -392,13 +385,31 @@ public class Actividad implements java.io.Serializable {
 		this.costo = costo;
 	}
 
-	@Column(name = "costo_real", precision = 15)
-	public BigDecimal getCostoReal() {
-		return this.costoReal;
+	@Column(name = "renglon")
+	public Integer getRenglon() {
+		return this.renglon;
 	}
 
-	public void setCostoReal(BigDecimal costoReal) {
-		this.costoReal = costoReal;
+	public void setRenglon(Integer renglon) {
+		this.renglon = renglon;
+	}
+
+	@Column(name = "ubicacion_geografica")
+	public Integer getUbicacionGeografica() {
+		return this.ubicacionGeografica;
+	}
+
+	public void setUbicacionGeografica(Integer ubicacionGeografica) {
+		this.ubicacionGeografica = ubicacionGeografica;
+	}
+
+	@Column(name = "orden")
+	public Integer getOrden() {
+		return this.orden;
+	}
+
+	public void setOrden(Integer orden) {
+		this.orden = orden;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actividad")

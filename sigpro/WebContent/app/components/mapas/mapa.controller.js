@@ -1,4 +1,4 @@
-var app = angular.module('mapaController', [ 'ngTouch' ]);
+var app = angular.module('mapaController', [ 'ngTouch','angularjs-dropdown-multiselect' ]);
 
 app.controller('mapaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','uiGmapGoogleMapApi',
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,uiGmapGoogleMapApi) {
@@ -95,6 +95,14 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 		 		$scope.mostrarProductos = $scope.mostrarTodo;
 		 		$scope.mostrarSubproductos = $scope.mostrarTodo;
 		 		$scope.mostrarActividades = $scope.mostrarTodo;
+		 		if ($scope.mostrarTodo){
+		 			mi.transclusionModel = [mi.transclusionData[0],mi.transclusionData[1],mi.transclusionData[2],mi.transclusionData[3]];
+		 		}else{
+		 			mi.transclusionModel = [];
+		 		}
+		 		for (x in $scope.marcas){
+		 			$scope.marcas[x].mostrar = true;
+				 }
 		 		break;
 		 	case 1:
 		 		$scope.mostrarTodo = $scope.mostrarProyectos && $scope.mostrarComponentes && $scope.mostrarProductos
@@ -113,8 +121,19 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 				&& $scope.mostrarSubproductos && $scope.mostrarActividades ? true : false;
 		 		break;
 		 	case 5:
+		 		
 		 		$scope.mostrarTodo = $scope.mostrarProyectos && $scope.mostrarComponentes && $scope.mostrarProductos
-				&& $scope.mostrarSubproductos && $scope.mostrarActividades ? true : false;
+				&& $scope.mostrarSubproductos && $scope.mostrarActividades;
+		 		if ($scope.mostrarActividades)
+		 			mi.transclusionModel = [mi.transclusionData[0],mi.transclusionData[1],mi.transclusionData[2],mi.transclusionData[3]];
+		 		else
+		 			mi.transclusionModel = [];
+		 		for (x in $scope.marcas){
+					 if ($scope.marcas[x].objetoTipoId==5 )
+						 $scope.marcas[x].mostrar = true;
+				 }
+		 		
+		 		
 		 		break;
 		 }
 	  };
@@ -160,6 +179,41 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 						mi.cargarMapa();
 			});
 		 } 
+	 };
+	 
+	 
+	 mi.transclusionData = [  { id: 1, label: 'Sin iniciar' }, { id: 2, label: 'En proceso' }, { id: 3, label: 'Retrasadas' },{ id: 4, label: 'Completadas' }]; 
+	 mi.transclusionSettings = { dynamicTitle: false, showCheckAll: false, showUncheckAll:false,};
+	 mi.transclusionModel = [mi.transclusionData[0],mi.transclusionData[1],mi.transclusionData[2],mi.transclusionData[3]];
+
+	 
+	 mi.selectActividad = {
+			 onItemSelect: function(item) {
+				 for (x in $scope.marcas){
+					 if ($scope.marcas[x].objetoTipoId==5 && $scope.marcas[x].idEstado == item.id)
+						 $scope.marcas[x].mostrar = true;
+				 }
+				 $scope.mostrarActividades = true;
+				 if (mi.transclusionModel.length == 4)
+					 mi.getMostrarTodo();
+			 },
+			 onItemDeselect:function(item) {
+				 for (x in $scope.marcas){
+					 if ($scope.marcas[x].objetoTipoId==5 && $scope.marcas[x].idEstado == item.id)
+						 $scope.marcas[x].mostrar = false;
+				 }
+				 $scope.mostrarTodo = false;
+				 
+				 if (mi.transclusionModel.length == 0){
+					 $scope.mostrarActividades = false;
+				 }
+				 
+			 }
+	 };
+	 
+	 mi.getMostrarTodo = function(){
+		 $scope.mostrarTodo = $scope.mostrarProyectos && $scope.mostrarComponentes && $scope.mostrarProductos
+			&& $scope.mostrarSubproductos && $scope.mostrarActividades && mi.transclusionModel.length == 4 ;
 	 }
 
 }]);

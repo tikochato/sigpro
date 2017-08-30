@@ -113,6 +113,7 @@ public class SPrestamo extends HttpServlet {
 		String usuarioActualizo;
 		String fechaCreacion;
 		String fechaActualizacion;
+		
 	}
        
     
@@ -217,7 +218,7 @@ public class SPrestamo extends HttpServlet {
 				temp.desembolsoAFechaUeUsd = prestamo.getDesembolsoAFechaUeUsd();
 				temp.montoPorDesembolsarUeUsd = prestamo.getMontoPorDesembolsarUeUsd();
 				temp.cooperanteid = prestamo.getCooperante().getId();
-				temp.cooperantenombre = prestamo.getCooperante().getNombre();
+				temp.cooperantenombre =  prestamo.getCooperante().getSiglas() + " - " + prestamo.getCooperante().getNombre();
 				
 				temp.unidadEjecutora = prestamo.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadEjecutoraNombre = prestamo.getUnidadEjecutora().getNombre();

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Aug 14, 2017 12:17:40 PM by Hibernate Tools 5.2.3.Final
+// Generated Aug 29, 2017 4:40:10 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5358732282952784317L;
+	private static final long serialVersionUID = 568262205993193583L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Colaborador colaborador;
@@ -48,12 +48,20 @@ public class Proyecto implements java.io.Serializable {
 	private Integer proyecto;
 	private Integer actividad;
 	private Integer obra;
-	private Integer fuente;
 	private String latitud;
 	private String longitud;
 	private String objetivo;
 	private String enunciadoAlcance;
 	private BigDecimal costo;
+	private String objetivoEspecifico;
+	private String visionGeneral;
+	private Integer renglon;
+	private Integer ubicacionGeografica;
+	private Date fechaInicio;
+	private Date fechaFin;
+	private Integer duracion;
+	private String duracionDimension;
+	private Integer orden;
 	private Set<Desembolso> desembolsos = new HashSet<Desembolso>(0);
 	private Set<Hito> hitos = new HashSet<Hito>(0);
 	private Set<ProgramaProyecto> programaProyectos = new HashSet<ProgramaProyecto>(0);
@@ -82,7 +90,9 @@ public class Proyecto implements java.io.Serializable {
 			ProyectoTipo proyectoTipo, UnidadEjecutora unidadEjecutora, String nombre, String descripcion,
 			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
 			Long snip, Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra,
-			Integer fuente, String latitud, String longitud, String objetivo, String enunciadoAlcance, BigDecimal costo,
+			String latitud, String longitud, String objetivo, String enunciadoAlcance, BigDecimal costo,
+			String objetivoEspecifico, String visionGeneral, Integer renglon, Integer ubicacionGeografica,
+			Date fechaInicio, Date fechaFin, Integer duracion, String duracionDimension, Integer orden,
 			Set<Desembolso> desembolsos, Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos,
 			Set<MatrizRaci> matrizRacis, Set<ProyectoMiembro> proyectoMiembros, Set<ProyectoImpacto> proyectoImpactos,
 			Set<ProyectoPropedadValor> proyectoPropedadValors, Set<ProyectoUsuario> proyectoUsuarios,
@@ -105,12 +115,20 @@ public class Proyecto implements java.io.Serializable {
 		this.proyecto = proyecto;
 		this.actividad = actividad;
 		this.obra = obra;
-		this.fuente = fuente;
 		this.latitud = latitud;
 		this.longitud = longitud;
 		this.objetivo = objetivo;
 		this.enunciadoAlcance = enunciadoAlcance;
 		this.costo = costo;
+		this.objetivoEspecifico = objetivoEspecifico;
+		this.visionGeneral = visionGeneral;
+		this.renglon = renglon;
+		this.ubicacionGeografica = ubicacionGeografica;
+		this.fechaInicio = fechaInicio;
+		this.fechaFin = fechaFin;
+		this.duracion = duracion;
+		this.duracionDimension = duracionDimension;
+		this.orden = orden;
 		this.desembolsos = desembolsos;
 		this.hitos = hitos;
 		this.programaProyectos = programaProyectos;
@@ -303,15 +321,6 @@ public class Proyecto implements java.io.Serializable {
 		this.obra = obra;
 	}
 
-	@Column(name = "fuente")
-	public Integer getFuente() {
-		return this.fuente;
-	}
-
-	public void setFuente(Integer fuente) {
-		this.fuente = fuente;
-	}
-
 	@Column(name = "latitud", length = 30)
 	public String getLatitud() {
 		return this.latitud;
@@ -355,6 +364,89 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setCosto(BigDecimal costo) {
 		this.costo = costo;
+	}
+
+	@Column(name = "objetivo_especifico", length = 4000)
+	public String getObjetivoEspecifico() {
+		return this.objetivoEspecifico;
+	}
+
+	public void setObjetivoEspecifico(String objetivoEspecifico) {
+		this.objetivoEspecifico = objetivoEspecifico;
+	}
+
+	@Column(name = "vision_general", length = 45)
+	public String getVisionGeneral() {
+		return this.visionGeneral;
+	}
+
+	public void setVisionGeneral(String visionGeneral) {
+		this.visionGeneral = visionGeneral;
+	}
+
+	@Column(name = "renglon")
+	public Integer getRenglon() {
+		return this.renglon;
+	}
+
+	public void setRenglon(Integer renglon) {
+		this.renglon = renglon;
+	}
+
+	@Column(name = "ubicacion_geografica")
+	public Integer getUbicacionGeografica() {
+		return this.ubicacionGeografica;
+	}
+
+	public void setUbicacionGeografica(Integer ubicacionGeografica) {
+		this.ubicacionGeografica = ubicacionGeografica;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_inicio", length = 19)
+	public Date getFechaInicio() {
+		return this.fechaInicio;
+	}
+
+	public void setFechaInicio(Date fechaInicio) {
+		this.fechaInicio = fechaInicio;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_fin", length = 19)
+	public Date getFechaFin() {
+		return this.fechaFin;
+	}
+
+	public void setFechaFin(Date fechaFin) {
+		this.fechaFin = fechaFin;
+	}
+
+	@Column(name = "duracion")
+	public Integer getDuracion() {
+		return this.duracion;
+	}
+
+	public void setDuracion(Integer duracion) {
+		this.duracion = duracion;
+	}
+
+	@Column(name = "duracion_dimension", length = 1)
+	public String getDuracionDimension() {
+		return this.duracionDimension;
+	}
+
+	public void setDuracionDimension(String duracionDimension) {
+		this.duracionDimension = duracionDimension;
+	}
+
+	@Column(name = "orden")
+	public Integer getOrden() {
+		return this.orden;
+	}
+
+	public void setOrden(Integer orden) {
+		this.orden = orden;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")

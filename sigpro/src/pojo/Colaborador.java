@@ -1,5 +1,5 @@
 package pojo;
-// Generated Aug 14, 2017 12:17:40 PM by Hibernate Tools 5.2.3.Final
+// Generated Aug 29, 2017 4:40:10 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Colaborador implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8097051654149960573L;
+	private static final long serialVersionUID = 6096647849851152937L;
 	private Integer id;
 	private UnidadEjecutora unidadEjecutora;
 	private Usuario usuario;
@@ -35,7 +35,7 @@ public class Colaborador implements java.io.Serializable {
 	private String snombre;
 	private String papellido;
 	private String sapellido;
-	private Long cui;
+	private long cui;
 	private int estado;
 	private String usuarioCreo;
 	private String usuarioActualizo;
@@ -49,7 +49,7 @@ public class Colaborador implements java.io.Serializable {
 	public Colaborador() {
 	}
 
-	public Colaborador(UnidadEjecutora unidadEjecutora, String pnombre, String papellido, Long cui, int estado,
+	public Colaborador(UnidadEjecutora unidadEjecutora, String pnombre, String papellido, long cui, int estado,
 			String usuarioCreo, Date fechaCreacion) {
 		this.unidadEjecutora = unidadEjecutora;
 		this.pnombre = pnombre;
@@ -61,7 +61,7 @@ public class Colaborador implements java.io.Serializable {
 	}
 
 	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String snombre,
-			String papellido, String sapellido, Long cui, int estado, String usuarioCreo, String usuarioActualizo,
+			String papellido, String sapellido, long cui, int estado, String usuarioCreo, String usuarioActualizo,
 			Date fechaCreacion, Date fechaActualizacion, Set<AsignacionRaci> asignacionRacis, Set<Proyecto> proyectos,
 			Set<ProyectoMiembro> proyectoMiembros, Set<Riesgo> riesgos) {
 		this.unidadEjecutora = unidadEjecutora;
@@ -105,7 +105,7 @@ public class Colaborador implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "usuariousuario", nullable = true)
+	@JoinColumn(name = "usuariousuario")
 	public Usuario getUsuario() {
 		return this.usuario;
 	}
@@ -151,11 +151,11 @@ public class Colaborador implements java.io.Serializable {
 	}
 
 	@Column(name = "cui", nullable = false)
-	public Long getCui() {
+	public long getCui() {
 		return this.cui;
 	}
 
-	public void setCui(Long cui) {
+	public void setCui(long cui) {
 		this.cui = cui;
 	}
 

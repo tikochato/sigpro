@@ -70,7 +70,8 @@ public class SProyecto extends HttpServlet {
 		Integer proyecto;
 		Integer actividad;
 		Integer obra;
-		Integer fuente;
+		Integer renglon;
+		Integer ubicacionGeografica;
 		String longitud;
 		String latitud;
 		Integer directorProyectoId;
@@ -78,6 +79,8 @@ public class SProyecto extends HttpServlet {
 		BigDecimal costo;
 		Integer acumulacionCosto;
 		String acumulacionCostoNombre;
+		String objetivoEspecifico;
+		String visionGeneral;
 	};
 
 	class stdatadinamico {
@@ -152,12 +155,13 @@ public class SProyecto extends HttpServlet {
 				dato.proyecto = proyecto.getProyecto();
 				dato.obra = proyecto.getObra();
 				dato.actividad = proyecto.getActividad();
-				dato.fuente = proyecto.getFuente();
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
 				dato.costo = proyecto.getCosto();
 				dato.acumulacionCosto = proyecto.getAcumulacionCosto() != null ? proyecto.getAcumulacionCosto().getId() : null;
 				dato.acumulacionCostoNombre = proyecto.getAcumulacionCosto() != null ? proyecto.getAcumulacionCosto().getNombre() : null;
+				dato.objetivoEspecifico = proyecto.getObjetivoEspecifico()!=null ? proyecto.getObjetivoEspecifico() : null;
+				dato.visionGeneral = proyecto.getVisionGeneral() !=null ? proyecto.getVisionGeneral() : null;
 				
 				dato.directorProyectoId = proyecto.getColaborador() != null ? proyecto.getColaborador().getId() : 0;
 				dato.directorProyectoId = proyecto.getColaborador()!= null ? proyecto.getColaborador().getId() : null;
@@ -204,11 +208,14 @@ public class SProyecto extends HttpServlet {
 				dato.proyecto = proyecto.getProyecto();
 				dato.obra = proyecto.getObra();
 				dato.actividad = proyecto.getActividad();
-				dato.fuente = proyecto.getFuente();
+				dato.renglon = proyecto.getRenglon();
+				dato.ubicacionGeografica =proyecto.getUbicacionGeografica(); 
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
 				dato.acumulacionCosto = proyecto.getAcumulacionCosto().getId();
 				dato.acumulacionCostoNombre = proyecto.getAcumulacionCosto().getNombre();
+				dato.objetivoEspecifico = proyecto.getObjetivoEspecifico()!=null ? proyecto.getObjetivoEspecifico() : null;
+				dato.visionGeneral = proyecto.getVisionGeneral() !=null ? proyecto.getVisionGeneral() : null;
 				
 				dato.directorProyectoId = proyecto.getColaborador()!= null ? proyecto.getColaborador().getId() : null;
 				dato.directorProyectoNmbre = proyecto.getColaborador()!= null ? (proyecto.getColaborador().getPnombre()
@@ -255,11 +262,14 @@ public class SProyecto extends HttpServlet {
 				dato.proyecto = proyecto.getProyecto();
 				dato.obra = proyecto.getObra();
 				dato.actividad = proyecto.getActividad();
-				dato.fuente = proyecto.getFuente();
+				dato.renglon = proyecto.getRenglon();
+				dato.ubicacionGeografica =proyecto.getUbicacionGeografica(); 
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
 				dato.acumulacionCosto = proyecto.getAcumulacionCosto() != null ? proyecto.getAcumulacionCosto().getId() : null;
 				dato.acumulacionCostoNombre = proyecto.getAcumulacionCosto() != null ? proyecto.getAcumulacionCosto().getNombre() : null;
+				dato.objetivoEspecifico = proyecto.getObjetivoEspecifico()!=null ? proyecto.getObjetivoEspecifico() : null;
+				dato.visionGeneral = proyecto.getVisionGeneral() !=null ? proyecto.getVisionGeneral() : null;
 				
 				dato.directorProyectoId = proyecto.getColaborador()!= null ? proyecto.getColaborador().getId() : null;
 				dato.directorProyectoNmbre = proyecto.getColaborador()!= null ? (proyecto.getColaborador().getPnombre()
@@ -305,11 +315,14 @@ public class SProyecto extends HttpServlet {
 				dato.proyecto = proyecto.getProyecto();
 				dato.obra = proyecto.getObra();
 				dato.actividad = proyecto.getActividad();
-				dato.fuente = proyecto.getFuente();
+				dato.renglon = proyecto.getRenglon();
+				dato.ubicacionGeografica =proyecto.getUbicacionGeografica(); 
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
 				dato.acumulacionCosto = proyecto.getAcumulacionCosto().getId();
 				dato.acumulacionCostoNombre = proyecto.getAcumulacionCosto().getNombre();
+				dato.objetivoEspecifico = proyecto.getObjetivoEspecifico()!=null ? proyecto.getObjetivoEspecifico() : null;
+				dato.visionGeneral = proyecto.getVisionGeneral() !=null ? proyecto.getVisionGeneral() : null;
 				
 				dato.directorProyectoId = proyecto.getColaborador()!= null ? proyecto.getColaborador().getId() : null;
 				dato.directorProyectoNmbre = proyecto.getColaborador()!= null ? (proyecto.getColaborador().getPnombre()
@@ -339,13 +352,19 @@ public class SProyecto extends HttpServlet {
 				Integer proyecto_ = map.get("proyecto_")!=null ? Integer.parseInt(map.get("proyecto_")) : null;
 				Integer actividad = map.get("actividad")!=null ? Integer.parseInt(map.get("actividad")):null;
 				Integer obra = map.get("obra")!=null ? Integer.parseInt(map.get("obra")):null;
-				Integer fuente = map.get("fuente")!=null ? Integer.parseInt(map.get("fuente")):null;
 				String longitud = map.get("longitud");
 				String latitud = map.get("latitud");
-				BigDecimal costo = new BigDecimal(map.get("costo"));
-				
-				AcumulacionCosto acumulacionCosto = new AcumulacionCosto();
-				acumulacionCosto.setId(Utils.String2Int(map.get("acumulacionCosto")));
+				Integer renglon = map.get("renglon")!=null ? Integer.parseInt(map.get("renglon")):null;
+				Integer ubicacionGeografica = map.get("ubicacionGeografica")!=null ? Integer.parseInt(map.get("ubicacionGeografica")):null;
+				BigDecimal costo = map.get("costo") != null && map.get("costo").length() > 0 ? new BigDecimal(map.get("costo")) : null;
+				String objetivoEspecifico = map.get("objetoivoEspecifico");
+				String visionGeneral = map.get("visionGeneral");
+
+				AcumulacionCosto acumulacionCosto = null;
+				if (map.get("acumulacionCosto")!=null){
+					acumulacionCosto = new AcumulacionCosto();
+					acumulacionCosto.setId(Utils.String2Int(map.get("acumulacionCosto")));
+				}
 				
 				String enunciadoAlcance = map.get("enunciadoAlcance");
 
@@ -357,9 +376,12 @@ public class SProyecto extends HttpServlet {
 
 				Cooperante cooperante = new Cooperante();
 				cooperante.setId(map.get("cooperanteid")!=null ? Integer.parseInt(map.get("cooperanteid")): null);
-				
-				Colaborador directorProyecto = new Colaborador();
-				directorProyecto.setId(map.get("directorProyecto")!=null ? Integer.parseInt(map.get("directorProyecto")): null);
+
+				Colaborador directorProyecto = null;
+				if (map.get("directorProyecto")!=null && map.get("directorProyecto").length()>0){
+					directorProyecto = new Colaborador();
+					directorProyecto.setId(map.get("directorProyecto")!=null ? Integer.parseInt(map.get("directorProyecto")): null);
+				}
 				
 				
 				type = new TypeToken<List<stdatadinamico>>() {
@@ -368,9 +390,11 @@ public class SProyecto extends HttpServlet {
 				List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
 
 				if(esnuevo){
-					proyecto = new Proyecto(acumulacionCosto,directorProyecto, cooperante, null, unidadEjecutora, nombre, descripcion,
-							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, obra, fuente,
-							latitud, longitud, objetivo, enunciadoAlcance, costo,null, null, null, null, null, null, null,null,null);
+					proyecto = new Proyecto(acumulacionCosto,directorProyecto, cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion,
+							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, obra,latitud, 
+							longitud, objetivo,enunciadoAlcance, costo, objetivoEspecifico,visionGeneral,renglon, ubicacionGeografica, 
+							null, null, null, null, 
+							null, null, null, null, null, null, null,null,null,null);
 					
 					
 				}else{
@@ -389,13 +413,14 @@ public class SProyecto extends HttpServlet {
 					proyecto.setProyecto(proyecto_);
 					proyecto.setActividad(actividad);
 					proyecto.setObra(obra);
-					proyecto.setFuente(fuente);
 					proyecto.setLongitud(longitud);
 					proyecto.setLatitud(latitud);
 					proyecto.setColaborador(directorProyecto);
 					proyecto.setEnunciadoAlcance(enunciadoAlcance);
 					proyecto.setCosto(costo);
 					proyecto.setAcumulacionCosto(acumulacionCosto);
+					proyecto.setObjetivoEspecifico(objetivoEspecifico);
+					proyecto.setVisionGeneral(visionGeneral);
 
 				    List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
 					proyecto.setProyectoPropedadValors(null);

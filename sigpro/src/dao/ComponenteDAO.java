@@ -206,4 +206,41 @@ public class ComponenteDAO {
 		}
 		return ret;
 	}
+	
+	public static Componente getComponenteInicial(Integer proyectoId, String usuario){
+		Componente ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "FROM Componente c where c.estado=1 and c.orden=1 and c.proyecto.id=:proyectoId and c.usuarioCreo=:usuario";
+			Query<Componente> criteria = session.createQuery(query, Componente.class);
+			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("usuario", usuario);
+			ret = criteria.getSingleResult();
+		}catch(Throwable e){
+			CLogger.write("11", ComponenteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Componente getComponenteFechaMaxima(Integer proyectoId, String usuario){
+		Componente ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "FROM Componente c where c.estado=1 and c.proyecto.id=:proyectoId and c.usuarioCreo=:usuario order by c.fechaFin desc";
+			Query<Componente> criteria = session.createQuery(query, Componente.class);
+			criteria.setMaxResults(1);
+			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("usuario", usuario);
+			ret = criteria.getSingleResult();
+		}catch(Throwable e){
+			CLogger.write("12", ComponenteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

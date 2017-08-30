@@ -586,4 +586,43 @@ public class ActividadDAO {
 		}
 		return ret;
 	}
+	
+	public static Actividad getActividadInicial(Integer objetoId, Integer objetoTipo, String usuario){
+		Actividad ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "FROM Actividad a where a.estado=1 and a.orden=1 and a.objetoId=:objetoId and a.objetoTipo=:objetoTipo and a.usuarioCreo=:usuario";
+			Query<Actividad> criteria = session.createQuery(query, Actividad.class);
+			criteria.setParameter("objetoId", objetoId);
+			criteria.setParameter("objetoTipo", objetoTipo);
+			criteria.setParameter("usuario", usuario);
+			ret = criteria.getSingleResult();
+		}catch(Throwable e){
+			CLogger.write("9", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Actividad getActividadFechaMaxima(Integer objetoId, Integer objetoTipo, String usuario){
+		Actividad ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "FROM Actividad a where a.estado=1 and a.objetoId=:objetoId and a.objetoTipo=:objetoTipo and a.usuarioCreo=:usuario order by a.fechaFin desc";
+			Query<Actividad> criteria = session.createQuery(query, Actividad.class);
+			criteria.setMaxResults(1);
+			criteria.setParameter("objetoId", objetoId);
+			criteria.setParameter("objetoTipo", objetoTipo);
+			criteria.setParameter("usuario", usuario);
+			ret = criteria.getSingleResult();
+		}catch(Throwable e){
+			CLogger.write("9", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }
