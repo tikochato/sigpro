@@ -153,12 +153,12 @@ public class SPrestamoMetas extends HttpServlet {
 			String datosMetas[][];
 			int anioInicio=2017;
 			int anioFin=2017;
-			int agrupacion=3;
+			int agrupacion=4;
 			int tipoVisualizacion=2;
 			int  prestamoId=30;
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
 			datosMetas = generarDatosMetas(prestamoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-			String path = archivo.ExportPdf(headers, datosMetas);
+			String path = archivo.ExportPdf(headers, datosMetas,tipoVisualizacion);
 			File file=new File(path);
 			if(file.exists()){
 		        FileInputStream is = null;
