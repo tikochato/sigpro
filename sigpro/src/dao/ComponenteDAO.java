@@ -73,6 +73,7 @@ public class ComponenteDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			Componente.setEstado(0);
+			Componente.setOrden(null);
 			session.beginTransaction();
 			session.update(Componente);
 			session.getTransaction().commit();

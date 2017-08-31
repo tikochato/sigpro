@@ -279,7 +279,7 @@ public class SubproductoDAO {
 
 		if (pojo != null) {
 			pojo.setEstado(0);
-
+			pojo.setOrden(null);
 			Session session = CHibernateSession.getSessionFactory().openSession();
 
 			try {
@@ -307,7 +307,7 @@ public class SubproductoDAO {
 			CriteriaQuery<Subproducto> criteria = builder.createQuery(Subproducto.class);
 			Root<Subproducto> root = criteria.from(Subproducto.class);
 			criteria.select( root );
-			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
+			criteria.where( builder.and(builder.equal( root.get("id"), id )));
 			ret = session.createQuery( criteria ).getSingleResult();
 		}
 		catch(Throwable e){

@@ -601,7 +601,8 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			estructuraGuardar += ((row.planificadoFirma == null || row.planificadoFirma == "") ? null : row.planificadoFirma) + ",";
 			estructuraGuardar += ((row.realFirma == null || row.realFirma == "") ? null : row.realFirma) + ",";
 			estructuraGuardar += row.bloqueado + ",";
-			estructuraGuardar += row.nog;
+			estructuraGuardar += row.nog + ",";
+			estructuraGuardar += row.numeroContrato;
 			estructuraGuardar += "°";
 		}
 		
@@ -619,6 +620,11 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			mi.mostrarTablas = true;
 		})
 	}
+	
+	String.prototype.replaceAll = function(search, replacement) {
+	    var target = this;
+	    return target.replace(new RegExp(search, 'g'), replacement);
+	};
 	
 	mi.calcularPadre = function(idPredecesor, objetoTipoPredecesor){
 		var padre = mi.obtenerEntidad(idPredecesor, objetoTipoPredecesor);
@@ -770,16 +776,22 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 							},
 							nombre: function(){
 								return row.nombre;
+							},
+							numeroContrato : function(){
+								return row.numeroContrato;
 							}
 						}
 					});
 
 					modalInstance.result.then(function(resultado) {
+						if(resultado.numeroContrato != null){
+							row.numeroContrato = resultado.numeroContrato;
+						}
 						$utilidades.mensaje('success','Pagos agregados con éxito.');
 					}, function() {
 					});
 				}else{
-					$utilidades.mensaje('warning', 'Debe de ingresar fecha de \"Adjudicación\".');
+					$utilidades.mensaje('warning', 'Debe de ingresar fecha de \"Firma contrato\".');
 				}
 			}	
 		}else
@@ -790,10 +802,10 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 
 app.controller('modalPago', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log',   '$uibModal', '$q' ,'idObjeto','objetoTipo','nombre',modalPago ]);
+	'$timeout', '$log',   '$uibModal', '$q' ,'idObjeto','objetoTipo','nombre','numeroContrato',modalPago ]);
 
 function modalPago($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idObjeto, objetoTipo, nombre) {
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idObjeto, objetoTipo, nombre, numeroContrato) {
 
 	var mi = this;
 	mi.planAdquisicionesPagos = [];
@@ -803,6 +815,7 @@ function modalPago($uibModalInstance, $scope, $http, $interval,
 	mi.formatofecha = 'MMMM';
 	mi.enMillones = false;
 	mi.mostrarcargando = false;
+	mi.numeroContrato = numeroContrato;
 	
 	mi.fechaOptions = {
 			formatYear : 'MMM',
@@ -865,9 +878,9 @@ function modalPago($uibModalInstance, $scope, $http, $interval,
 				function(response) {
 					if (response.data.success) {
 						mi.planAdquisicionesPagos = response.data.pagos;
-						$uibModalInstance.close(true);
+						$uibModalInstance.close({success: true, numeroContrato: mi.numeroContrato});
 					}else
-						$uibModalInstance.close(false);
+						$uibModalInstance.close({success: false, numeroContrato: mi.numeroContrato});
 			});
 	};
 	

@@ -130,6 +130,7 @@ public class ActividadDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			Actividad.setEstado(0);
+			Actividad.setOrden(null);
 			session.beginTransaction();
 			session.update(Actividad);
 			session.getTransaction().commit();

@@ -296,8 +296,14 @@ public class SSubproducto extends HttpServlet {
 	
 	private void eliminar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		int codigo = Utils.String2Int(parametro.get("codigo"), -1);
+		
+		Subproducto pojo = SubproductoDAO.getSubproductoPorId(codigo,usuario);
+		
 		boolean eliminado = SubproductoDAO.eliminar(codigo, usuario);
 		if (eliminado) {
+			COrden orden = new COrden();
+			orden.calcularOrdenObjetosSuperiores(pojo.getId(), 4, usuario);
+			
 			listar(parametro, response);
 		}
 	}
