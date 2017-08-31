@@ -306,7 +306,7 @@ public class SPrestamoMetas extends HttpServlet {
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
-			excel = new CExcel("Metas de Préstamo", false);
+			excel = new CExcel("Metas de Préstamo", false, null);
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
 			datosMetas = generarDatosMetas(prestamoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 			wb=excel.generateExcelOfData(datosMetas, "Metas de Préstamo", headers, null, true, usuario);

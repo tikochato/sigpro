@@ -612,7 +612,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 			try{
 				boolean result = false;
 				String data = map.get("data");
-				String[] datos = data.split("°");
+				String[] datos = data.split("ï¿½");
 				
 				for(String str1: datos){
 					String[] row = str1.split(",");
@@ -771,7 +771,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 	
 	private void exportarExcel(Map<String,Object[]> datos, String nombreInforme, String usuario, HttpServletResponse response, String[] encabezadosCombinados, int inicio){
 		try{
-			CExcel excel = new CExcel("Reporte",false);
+			CExcel excel = new CExcel("Reporte",false,null);
 			String path = excel.ExportarExcel2(datos, nombreInforme, usuario,encabezadosCombinados, inicio);
 			File file=new File(path);
 			if(file.exists()){

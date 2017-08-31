@@ -1217,7 +1217,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
-			excel = new CExcel("Ejecución presupuestaria", false);
+			excel = new CExcel("Ejecución presupuestaria", false, null);
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
 			datosInforme = generarDatosReporte(prestamoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 			wb=excel.generateExcelOfData(datosInforme, "Ejecución presupuestaria", headers, null, true, usuario);

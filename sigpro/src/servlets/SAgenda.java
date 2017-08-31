@@ -110,7 +110,7 @@ public class SAgenda extends HttpServlet {
 	        output.close();
 	        
 		}else if (accion.equals("exportarExcel")){
-			CExcel excel = new CExcel("Agenda",false);
+			CExcel excel = new CExcel("Agenda",false,null);
 			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
 			List<stagenda> lstagenda = obtenerListado(proyectoId, usuario);
 			
