@@ -53,7 +53,6 @@ class stentidad {
 public class CExcel {
 	Workbook workbook;
 	Sheet sheet;
-	Sheet sheet_grafica;
 	Row row;
 	Cell cell;
 	CellStyle cs_currency;
@@ -94,17 +93,16 @@ public class CExcel {
 						fileInputStream = new FileInputStream(CGraficaExcel.EXCEL_CHART_BAR_PATH);
 				}
 				workbook = new HSSFWorkbook(fileInputStream);
-				sheet_grafica = workbook.getSheetAt(0);
+				sheet = workbook.getSheetAt(0);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		
-		if (sheet_name != null){
-			sheet = workbook.createSheet(sheet_name);
-			workbook.setSheetOrder(sheet_name,0);
 		}else{
 			sheet = workbook.createSheet();
+		}
+		
+		if(sheet_name != null && !sheet_name.isEmpty()){
+			workbook.setSheetName(0, sheet_name);
 		}
 		font = workbook.createFont();
 		font.setFontHeightInPoints((short) 11);
@@ -263,7 +261,6 @@ public class CExcel {
 		cell = sheet.getRow(irow) != null ? (sheet.getRow(irow).getCell(icell) != null
 				? sheet.getRow(irow).getCell(icell) : sheet.getRow(irow).createCell(icell))
 				: sheet.createRow(irow).createCell(icell);
-		// cell.setCellType(Cell.CELL_TYPE_FORMULA);
 		cell.setCellFormula(formula);
 		switch (style) {
 		case "currency":
@@ -382,6 +379,11 @@ public class CExcel {
 	
 	public Workbook generateExcelOfData(String[][] data, String report_name, String[][] headers, String[][] extra_lines, boolean borde, String usuario) {
 		int line = 5;
+		DateTime fechaActual = DateTime.now();
+		
+		if(stgrafica != null){
+			line = generateChart(report_name, fechaActual, usuario);
+		}
 		
 		if (extra_lines != null) {
 			for (int i = 0; i < extra_lines.length; i++) {
@@ -452,13 +454,8 @@ public class CExcel {
 			
 			line = setOperations(headers, lineas, line, first_data_line, last_data_line);
 		}
-		DateTime fechaActual = DateTime.now();
 		Header(report_name, headers[0].length);
 		Footer(line++, fechaActual, usuario);
-				
-		if(stgrafica != null){
-			generateChart(report_name, fechaActual, usuario);
-		}
 		
 		return workbook;
 	}
@@ -552,136 +549,43 @@ public class CExcel {
 	}
 	
 	public int generateChart(String report_name, DateTime fechaActual, String usuario){ 
-		setCellValueStringChart(report_name, 4, 0, true, false);
+		setCellValueString(stgrafica.leyendaX, 6, 0, true, true);
+		setCellValueString(stgrafica.leyendaY, 7, 0, true, true);
 
-		setCellValueStringChart(stgrafica.leyendaX, 7, 1, true, false);
-		setCellValueStringChart(stgrafica.leyendaY, 7, 2, true, false);
-
-		int linea = 8;
+		int linea = 6;
 		int columna = 1;
 		for(int i=0; i<stgrafica.data.length; i++){
 			for(int j=0; j<stgrafica.data[i].length; j++){
-				switch (stgrafica.tipoData[j]) {
+				switch (stgrafica.tipoData[i]) {
 				case "int":
-						setCellValueIntChart(Integer.parseInt(stgrafica.data[i][j]), linea, columna+j, false);
+						setCellValueInt(Integer.parseInt(stgrafica.data[i][j]), linea, columna+j, false);
 					break;
 				case "double":
-					setCellValueDoubleChart(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false);
+					setCellValueDouble(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false);
 					break;	
 				case "currency":
-					setCellValueCurrencyChart(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false, false);
+					setCellValueCurrency(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false, false);
 					break;
 				case "string":
-					setCellValueStringChart(String.class.cast(stgrafica.data[i][j]), linea, columna+j, false, false);
+					setCellValueString(String.class.cast(stgrafica.data[i][j]), linea, columna+j, false, false);
 					break;
 				case "percent":
-					setCellValuePercentChart(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false, false);
+					setCellValuePercent(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false, false);
+				}
+				if(stgrafica.igualarCeldas != null && stgrafica.igualarCeldas[i][j]!= null && !stgrafica.igualarCeldas[i][j].isEmpty()){
+					String ah = stgrafica.igualarCeldas[i][j];
+					String[] celda = ah.split("\\.");
+					String formula = CellReference.convertNumToColString(Integer.parseInt(celda[0])) + celda[1];
+					setCellFormula(formula, linea, columna+j, stgrafica.tipoData[i], false);
 				}
 			}
 			linea++;
 		}
-		if(linea<23){
-			linea = 25;
-		}else{
-			linea+=2;
-		}
-		
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("d/M/yyyy h:mm a");
-		setCellValueStringChart("Fecha de Generación: "+fmt.print(fechaActual), linea, 0, false, true, false);
-		linea++;
-		setCellValueStringChart("Usuario: "+usuario, linea, 0, false, true, false);
+
+		setCellValueString(report_name, 26, 0, true, false);
+		linea = 27;
 		
 		return linea;
-	}
-	
-	public void setCellValueCurrencyChart(double value, int irow, int icell, boolean bold, boolean borde) {
-		cell = sheet_grafica.getRow(irow) != null ? (sheet_grafica.getRow(irow).getCell(icell) != null
-				? sheet_grafica.getRow(irow).getCell(icell) : sheet_grafica.getRow(irow).createCell(icell))
-				: sheet_grafica.createRow(irow).createCell(icell);
-		cell.setCellValue(value);
-		CellStyle estiloCelda =bold ? cs_currency_bold : cs_currency;
-		if(borde){
-			estiloCelda.setBorderTop(BorderStyle.THIN);
-			estiloCelda.setBorderLeft(BorderStyle.THIN);
-			estiloCelda.setBorderRight(BorderStyle.THIN);
-			estiloCelda.setBorderBottom(BorderStyle.THIN);
-		}else{
-			estiloCelda.setBorderTop(BorderStyle.NONE);
-			estiloCelda.setBorderLeft(BorderStyle.NONE);
-			estiloCelda.setBorderRight(BorderStyle.NONE);
-			estiloCelda.setBorderBottom(BorderStyle.NONE);
-		}
-		cell.setCellStyle(estiloCelda);
-	}
-
-	public void setCellValueDoubleChart(double value, int irow, int icell, boolean borde) {
-		cell = sheet_grafica.getRow(irow) != null ? (sheet_grafica.getRow(irow).getCell(icell) != null
-				? sheet_grafica.getRow(irow).getCell(icell) : sheet_grafica.getRow(irow).createCell(icell))
-				: sheet_grafica.createRow(irow).createCell(icell);
-				CellStyle estiloCelda =borde ? cs_normal_border : cs_normal;
-				cell.setCellStyle(estiloCelda);
-		cell.setCellValue(value);
-	}
-
-	public void setCellValuePercentChart(double value, int irow, int icell, boolean bold, boolean borde) {
-		cell = sheet_grafica.getRow(irow) != null ? (sheet_grafica.getRow(irow).getCell(icell) != null
-				? sheet_grafica.getRow(irow).getCell(icell) : sheet_grafica.getRow(irow).createCell(icell))
-				: sheet_grafica.createRow(irow).createCell(icell);
-		cell.setCellValue(value / 100.00);
-		CellStyle estiloCelda =bold ? cs_percent_bold : cs_percent;
-		if(borde){
-			estiloCelda.setBorderTop(BorderStyle.THIN);
-			estiloCelda.setBorderLeft(BorderStyle.THIN);
-			estiloCelda.setBorderRight(BorderStyle.THIN);
-			estiloCelda.setBorderBottom(BorderStyle.THIN);
-		}else{
-			estiloCelda.setBorderTop(BorderStyle.NONE);
-			estiloCelda.setBorderLeft(BorderStyle.NONE);
-			estiloCelda.setBorderRight(BorderStyle.NONE);
-			estiloCelda.setBorderBottom(BorderStyle.NONE);
-		}
-		cell.setCellStyle(estiloCelda);
-	}
-
-	public void setCellValueIntChart(int value, int irow, int icell, boolean borde) {
-		cell = sheet_grafica.getRow(irow) != null ? (sheet_grafica.getRow(irow).getCell(icell) != null
-				? sheet_grafica.getRow(irow).getCell(icell) : sheet_grafica.getRow(irow).createCell(icell))
-				: sheet_grafica.createRow(irow).createCell(icell);
-		cell.setCellValue(value);
-		CellStyle estiloCelda =borde ? cs_normal_border : cs_normal;
-		cell.setCellStyle(estiloCelda);
-	}
-
-	public void setCellValueStringChart(String value, int irow, int icell, boolean bold, boolean borde) {
-		cell = sheet_grafica.getRow(irow) != null ? (sheet_grafica.getRow(irow).getCell(icell) != null
-				? sheet_grafica.getRow(irow).getCell(icell) : sheet_grafica.getRow(irow).createCell(icell))
-				: sheet_grafica.createRow(irow).createCell(icell);
-		cell.setCellValue(value);
-		CellStyle estiloCelda =(bold) ? cs_bold : cs_normal;
-		if(borde){
-			estiloCelda =(bold) ? cs_bold_border : cs_normal_border;
-		}
-		cell.setCellStyle(estiloCelda);
-	}
-	
-	public void setCellValueStringChart(String value, int irow, int icell, boolean bold, boolean letraMin, boolean borde) {
-		cell = sheet_grafica.getRow(irow) != null ? (sheet_grafica.getRow(irow).getCell(icell) != null
-				? sheet_grafica.getRow(irow).getCell(icell) : sheet_grafica.getRow(irow).createCell(icell))
-				: sheet_grafica.createRow(irow).createCell(icell);
-		cell.setCellValue(value);
-		CellStyle estiloCelda =(letraMin) ? cs_min : cs_normal;
-		if(borde){
-			estiloCelda.setBorderTop(BorderStyle.THIN);
-			estiloCelda.setBorderLeft(BorderStyle.THIN);
-			estiloCelda.setBorderRight(BorderStyle.THIN);
-			estiloCelda.setBorderBottom(BorderStyle.THIN);
-		}else{
-			estiloCelda.setBorderTop(BorderStyle.NONE);
-			estiloCelda.setBorderLeft(BorderStyle.NONE);
-			estiloCelda.setBorderRight(BorderStyle.NONE);
-			estiloCelda.setBorderBottom(BorderStyle.NONE);
-		}
-		cell.setCellStyle(estiloCelda);
 	}
 
 	// nuevo

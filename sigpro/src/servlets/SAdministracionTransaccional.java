@@ -142,7 +142,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 		try{			
 			headers = generarHeaders();
 			datos = generarDatos(usuario);
-			CGraficaExcel grafica = generarGrafica();
+			CGraficaExcel grafica = generarGrafica(datos);
 			excel = new CExcel("Administración Transaccional", false, grafica);
 			wb=excel.generateExcelOfData(datos, "Administración Transaccional", headers, null, true, usuario);
 		
@@ -212,16 +212,19 @@ public class SAdministracionTransaccional extends HttpServlet {
 		return datos;
 	}
 	
-	public CGraficaExcel generarGrafica(){
+	public CGraficaExcel generarGrafica(String[][] datosTabla){
 		
 		String[][] datos = new String[][]{
-			{"Creados",totalCreados.toString()},
-			{"Actualizados",totalActualizados.toString()},
-			{"Eliminados",totalEliminados.toString()}
+			{"Creados","Actualizados","Eliminados"},
+			{totalCreados.toString(),totalActualizados.toString(),totalEliminados.toString()}
+		};
+		String[][] datosIgualar= new String[][]{
+			{"","",""},
+			{"1."+(datosTabla.length+30),"2."+(datosTabla.length+30),"3."+(datosTabla.length+30)}
 		};
 		
 		String[] tipoData = new String[]{"string","int"};
-		CGraficaExcel grafica = new CGraficaExcel("Administración Transaccional", CGraficaExcel.EXCEL_CHART_BAR, "Cantidad", "Estados", datos, tipoData);
+		CGraficaExcel grafica = new CGraficaExcel("Administración Transaccional", CGraficaExcel.EXCEL_CHART_BAR, "Cantidad", "Estados", datos, tipoData, datosIgualar);
 	
 		return grafica;
 	}

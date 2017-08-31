@@ -7,6 +7,7 @@ public class CGraficaExcel {
 	String leyendaY;
 	String[][] data;
 	String [] tipoData;
+	String[][] igualarCeldas;
 		
 	public static final String EXCEL_CHART_BAR_PATH = "/archivos/plantillas/TemplateChartBar.xls";
 	public static final String EXCEL_CHART_PIE_PATH = "/archivos/plantillas/TemplateChartPie.xls";
@@ -18,13 +19,14 @@ public class CGraficaExcel {
 	public static final String EXCEL_SHEET_PIE = "GraficoPie";
 	public static final String EXCEL_SHEET_AREA = "GraficoArea";
 	
-	public CGraficaExcel(String titulo, int tipo, String leyendaX, String leyendaY, String[][] data, String[] tipoData) {
+	public CGraficaExcel(String titulo, int tipo, String leyendaX, String leyendaY, String[][] data, String[] tipoData, String[][] igualarCeldas) {
 		this.titulo = titulo;
 		this.tipo = tipo;
 		this.leyendaX = leyendaX;
 		this.leyendaY = leyendaY;
 		this.data = data;
 		this.tipoData = tipoData;
+		this.igualarCeldas = igualarCeldas;
 	}
 
 	public String getTitulo() {
@@ -62,6 +64,12 @@ public class CGraficaExcel {
 	}
 	public void setTipoData(String[] tipoData) {
 		this.tipoData = tipoData;
+	}
+	public String[][] getIgualarCeldas() {
+		return igualarCeldas;
+	}
+	public void setIgualarCeldas(String[][] igualarCeldas) {
+		this.igualarCeldas = igualarCeldas;
 	}
 	
 }
