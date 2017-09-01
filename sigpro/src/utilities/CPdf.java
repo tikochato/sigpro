@@ -42,55 +42,58 @@ public class CPdf {
 		public CPdf(String titulo){
 			this.titulo=titulo;
 			doc = new PDDocument();
-			page = new PDPage(new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth()));
-		    doc.addPage( page );
+			
 		}
 		public String ExportPdf(String [][]headers, String [][]datosMetas, int visualizacion){
 			String path = "";
 			try{	
 			    String [] cabeceras = new String[headers[0].length];
-			    System.arraycopy( headers[0], 0, cabeceras, 0, headers[0].length );;
-			   
-			    PDPageContentStream contentStream = new PDPageContentStream(doc, page);
-
-				// Define a text content stream using the selected font, moving the cursor and drawing the text "Hello World"
-				PDFont font = PDType1Font.HELVETICA_BOLD;
-				
-				contentStream.beginText();
-				contentStream.setFont(font, 18);
-				//definir x, y
-				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas Públicas");
-				contentStream.endText();
-				
-				contentStream.beginText();
-				contentStream.setFont(font, 12);
-				//definir x, y
-				contentStream.newLineAtOffset(50, 530);
-				contentStream.showText("Reporte: "+titulo);
-				contentStream.endText();
-				
-				float margin = 50;
-				float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
-				float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
-
-				boolean drawContent = true;
-				float yStart = yStartNewPage;
-				float bottomMargin = 70;
-				// y position is your coordinate of top left corner of the table
-				float yPosition = 525;
-
-				/*BaseTable table = new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
-				table.addHeaderRow(agregarCabecera(table,cabeceras));*/
+			    System.arraycopy( headers[0], 0, cabeceras, 0, headers[0].length );
 				String [][]cabeceras_fixed= configurarCabeceras(cabeceras,datosMetas[0]);
 				List <String[][]>tablas =divTablas(cabeceras_fixed,datosMetas,visualizacion);
 				System.out.println(tablas.size()+"  -tablas");
+				PDFont font = PDType1Font.HELVETICA_BOLD;
+				
 				for(int x=0;x<tablas.size();x++){
+					page = new PDPage(new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth()));
+				    doc.addPage( page );
+					PDPageContentStream contentStream = new PDPageContentStream(doc, page);
+					
+					// Define a text content stream using the selected font, moving the cursor and drawing the text "Hello World"
+					
+					if(x==0){
+						contentStream.beginText();
+						contentStream.setFont(font, 18);
+						//definir x, y
+						contentStream.newLineAtOffset(50, 550);
+						contentStream.showText("Ministerio de Finanzas Públicas");
+						contentStream.endText();
+						
+						contentStream.beginText();
+						contentStream.setFont(font, 12);
+						//definir x, y
+						contentStream.newLineAtOffset(50, 530);
+						contentStream.showText("Reporte: "+titulo);
+						contentStream.endText();
+					}
+					
+					
+					float margin = 50;
+					float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
+					float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
+
+					boolean drawContent = true;
+					float yStart = yStartNewPage;
+					float bottomMargin = 70;
+					// y position is your coordinate of top left corner of the table
+					float yPosition = 525;
+					
 					String[][] tabla_tmp = tablas.get(x);
 					BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 					boolean ultimo=x==tablas.size()-1;
 					table_x.addHeaderRow(agregarCabecera(table_x,tabla_tmp[0],x,ultimo,visualizacion));
 					table_x.draw();
+					contentStream.close();
 				}
 				
 				
@@ -107,8 +110,8 @@ public class CPdf {
 					row= agregarFila(table,datosMetas[i]);
 				}*/
 				//table.draw();
-			    contentStream.close();
-			    path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
+			    
+			    path = String.join("","",((Long) new Date().getTime()).toString(),".pdf");
 				FileOutputStream out = new FileOutputStream(new File(path));
 				doc.save(out);
 				doc.close();
