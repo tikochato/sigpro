@@ -71,10 +71,7 @@ public class CPdf {
 				contentStream.endText();
 				
 				float margin = 50;
-				// starting y position is whole page height subtracted by top and bottom margin
 				float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
-				//System.out.println(yStartNewPage);
-				// we want table across whole page width (subtracted by left and right margin ofcourse)
 				float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
 
 				boolean drawContent = true;
@@ -83,32 +80,33 @@ public class CPdf {
 				// y position is your coordinate of top left corner of the table
 				float yPosition = 525;
 
-				BaseTable table = new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
-				table.addHeaderRow(agregarCabecera(table,cabeceras));
-				
-				//imprimir(configurarCabeceras(cabeceras,datosMetas[0]));
-				//imprimir(datosMetas);
-				List <String[][]>tablas =divTablas(configurarCabeceras(cabeceras,datosMetas[0]),datosMetas,visualizacion);
+				/*BaseTable table = new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
+				table.addHeaderRow(agregarCabecera(table,cabeceras));*/
+				String [][]cabeceras_fixed= configurarCabeceras(cabeceras,datosMetas[0]);
+				List <String[][]>tablas =divTablas(cabeceras_fixed,datosMetas,visualizacion);
 				System.out.println(tablas.size()+"  -tablas");
-				imprimir(tablas.get(0));
+				for(int x=0;x<tablas.size();x++){
+					String[][] tabla_tmp = tablas.get(x);
+					BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
+					boolean ultimo=x==tablas.size()-1;
+					table_x.addHeaderRow(agregarCabecera(table_x,tabla_tmp[0],x,ultimo,visualizacion));
+					table_x.draw();
+				}
+				
+				
 				/**
 				 * creando la segunda fila de encabezado
 				 */
 				//creando fila
-				Row<PDPage> row = table.createRow(12);
+				/*Row<PDPage> row = table.createRow(12);
 				row= agregarCabecera_pt2(row, datosMetas[0]);
 				table.setTableIsBroken(true);
-				/*List<Row <PDPage>> li= table.getRows();
-				li.get(0).getHeight();*/
 				table.addHeaderRow(row);
 				
 				for(int i=0; i<datosMetas.length;i++){
 					row= agregarFila(table,datosMetas[i]);
-				}
-				table.draw();
-				//List <BaseTable> def = getTables(table);
-				//int a = table.getHeader().getColCount();
-				//System.out.println(a);
+				}*/
+				//table.draw();
 			    contentStream.close();
 			    path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 				FileOutputStream out = new FileOutputStream(new File(path));
@@ -121,30 +119,13 @@ public class CPdf {
 		}
 		
 		public Row<PDPage> agregarFila(BaseTable table, String []datos){
-			Row<PDPage> row = table.createRow(12);
-			double suma_real=0;
-			double suma_planificada=0;
-			int control =0;
-			String entrada="";
-				
+			Row<PDPage> row = table.createRow(12);			
 			for(int i=0;i<datos.length;i++){
 				String texto="";
 				if(datos[i]==null||datos[i].isEmpty()){
 					texto="";
-					entrada+=i+": ,";
 				}else{
 					texto=datos[i];
-					entrada+=i+": "+texto+",";
-					if(i>1){
-						if(control==2){
-							suma_real=suma_real+Double.parseDouble(datos[i]);
-						}else{
-							control++;
-							suma_planificada=suma_planificada+Double.parseDouble(datos[i]);
-						}
-					}
-					
-					
 				}
 				if(i==0){
 					Cell<PDPage> cell = row.createCell(celda_a, texto);
@@ -160,20 +141,32 @@ public class CPdf {
 			return row;
 		}
 		
-		public Row<PDPage> agregarCabecera(BaseTable table,String cabecera[]){
+		public Row<PDPage> agregarCabecera(BaseTable table,String cabecera[], int posicion, boolean ultimo, int visualizacion){
 			Row<PDPage> headerRow = table.createRow(12);
-			Cell<PDPage> cell = headerRow.createCell(celda_a, "");
+			int corrimiento=0;
+			float tam_celda=celda_b;
+			Cell<PDPage> cell;
+			if(visualizacion==2){
+				tam_celda=tam_celda*2;
+			}
+			if(posicion==0){
+				corrimiento=2;
+				cell = headerRow.createCell(celda_a, "");
+				cell = headerRow.createCell(celda_c, "");	
+			}			
 			cell = headerRow.createCell(celda_c, "");	
 			cell.setHeaderCell(true);
-			for(int i =2; i<cabecera.length-1;i++){
-				if(!cabecera[i].isEmpty()){
-					cell = headerRow.createCell(celda_b*2, cabecera[i]);
+			for(int i =corrimiento; i<cabecera.length-1;i++){
+				if(cabecera[i]!=null&& !cabecera[i].isEmpty()){
+					cell = headerRow.createCell(tam_celda, cabecera[i]);
 					cell.setHeaderCell(true);
 				}
 			}
-			
-			cell = headerRow.createCell(celda_b, "");
-			cell.setHeaderCell(true);
+			if(ultimo){
+				cell = headerRow.createCell(celda_b, "");
+				cell.setHeaderCell(true);
+			}
+				
 			return headerRow;
 			
 		}
@@ -198,28 +191,13 @@ public class CPdf {
 			
 			cell = row.createCell(celda_b, "Meta Final");
 			cell.setFontSize(cell.getFontSize()-1f);
-			//cell.setHeaderCell(true);
 			
 			return row;
 			
 		}
 		
-		public List<List<Row<PDPage>>> getTables(BaseTable def){
-			
-			List<List<Row<PDPage>>> ret = new ArrayList<List<Row<PDPage>>>();
-			
-			/*int num = (int)Math.ceil(((def.getRows().get(0).getColCount()-3)/5)+((def.getRows().get(0).getColCount()-3)% 5)); 
-			for(int i=0;i<num;i++){
-				BaseTable table = new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
-			}*/
-			return ret;
-		}
-		/*private void ChangeSize(){
-			celda_a=(float)celda_a/2;
-			celda_b=(float)celda_b/2;
-			celda_c=(float)celda_b/2;
-			font_size=(float)font_size/2;
-		}*/
+		
+		
 		private String[][] configurarCabeceras(String []cabecera, String []subcabecera){
 			String [][]ret=new String [2][subcabecera.length];
 			//primera línea.
@@ -250,36 +228,36 @@ public class CPdf {
 			return ret;
 		}
 		
-		void imprimir(String [][]entrada){
-			for(int i =0; i<entrada.length;i++){
-				String salida="";
-				for(int j=0; j<entrada[i].length;j++){
-					salida+=entrada[i][j];
-					salida+="-";
-				}
-				System.out.println(salida);
-			}
-		}
 		private List<String[][]> divTablas(String[][]cabecera, String[][]datos, int visualizacion){
 			List <String[][]>ret  = new ArrayList<String[][]>();
 			int totalFilas= cabecera.length+datos.length;
-			int residuo=((datos[0].length-3)% 10);
 			if(visualizacion==2){
 				int num = (int)Math.ceil(
 						((datos[0].length-3)/10)+((datos[0].length-3)% 10)*0.1
 						);
-				for(int x=0; x<num; x++){
-					String [][] tabla_tmp= new String[totalFilas][12];
-					int medida= x<num-1? 12: residuo;
-					for(int y=0; y<totalFilas;y++){
-						if(y<2){
-							System.arraycopy(cabecera[y], 12*x, tabla_tmp[y], 0, medida);
-						}else{
-							System.arraycopy( datos[y-2], 12*x, tabla_tmp[y], 0, medida);
+				int num_col_data=datos[0].length;
+				try{
+					for(int x=0; x<num; x++){
+						String [][] tabla_tmp= new String[totalFilas][12];
+						int medida= x<num-1? 12: num_col_data-(12*x);
+						int tam_cab= x==0? 7: 6;
+						int pos_cab= x==1? 7: 6;
+						for(int y=0; y<totalFilas;y++){
+							if(y==0){
+								System.arraycopy(cabecera[y], pos_cab*x, tabla_tmp[y], 0, tam_cab);
+							}else if(y==1){
+								System.arraycopy(cabecera[y], 12*x, tabla_tmp[y], 0, medida);
+							}else{
+								System.arraycopy( datos[y-2], 12*x, tabla_tmp[y], 0, medida);
+							}
 						}
+						ret.add(tabla_tmp);
 					}
-					ret.add(tabla_tmp);
+					
+				}catch(Exception o){
+					o.printStackTrace();
 				}
+				
 			}
 			return ret;
 		}
