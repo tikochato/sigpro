@@ -92,6 +92,16 @@ public class CPdf {
 					BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 					boolean ultimo=x==tablas.size()-1;
 					table_x.addHeaderRow(agregarCabecera(table_x,tabla_tmp[0],x,ultimo,visualizacion));
+					//table_x.getRows().get(0).set
+					Row<PDPage> row = table_x.createRow(12);
+					
+					table_x.addHeaderRow(
+							agregarCabecera_pt2(row, tabla_tmp[1],x==0)
+					);
+					//agregamos los datos
+					for(int i=2;i<tabla_tmp.length;i++){
+						row= agregarFila(table_x,tabla_tmp[i], x==0,x==tablas.size()-1);
+					}
 					table_x.draw();
 					contentStream.close();
 				}
@@ -111,7 +121,7 @@ public class CPdf {
 				}*/
 				//table.draw();
 			    
-			    path = String.join("","",((Long) new Date().getTime()).toString(),".pdf");
+			    path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 				FileOutputStream out = new FileOutputStream(new File(path));
 				doc.save(out);
 				doc.close();
@@ -121,9 +131,27 @@ public class CPdf {
 			return path;
 		}
 		
-		public Row<PDPage> agregarFila(BaseTable table, String []datos){
-			Row<PDPage> row = table.createRow(12);			
-			for(int i=0;i<datos.length;i++){
+		public Row<PDPage> agregarFila(BaseTable table, String []datos, boolean primero, boolean ultimo){
+			Row<PDPage> row = table.createRow(12);
+			int cont=0;
+			if(primero){
+				Cell<PDPage> cell = row.createCell(celda_a, datos[0]);
+				cell.setFontSize(font_size);
+				cell = row.createCell(celda_c, datos[1]);
+				cell.setFontSize(font_size);
+				cont=2;
+				
+			}for(int i=cont;i<datos.length;i++){
+				if(!ultimo){
+					Cell<PDPage> cell = row.createCell(celda_b, datos[i]);
+					cell.setFontSize(font_size);
+				}else if(datos[i]!=null &&!datos[i].isEmpty()){
+					Cell<PDPage> cell = row.createCell(celda_b, datos[i]);
+					cell.setFontSize(font_size);
+				}
+				
+			}
+			/*for(int i=0;i<datos.length;i++){
 				String texto="";
 				if(datos[i]==null||datos[i].isEmpty()){
 					texto="";
@@ -133,14 +161,14 @@ public class CPdf {
 				if(i==0){
 					Cell<PDPage> cell = row.createCell(celda_a, texto);
 					cell.setFontSize(font_size);
-				}else if(i==1){
+				}else 	if(i==1){
 					Cell<PDPage>cell = row.createCell(celda_c, texto);
 					cell.setFontSize(font_size);
 				}else{
 					Cell<PDPage> cell = row.createCell(celda_b, texto);
 					cell.setFontSize(font_size);
 				}
-			}
+			}*/
 			return row;
 		}
 		
@@ -157,10 +185,8 @@ public class CPdf {
 				cell = headerRow.createCell(celda_a, "");
 				cell = headerRow.createCell(celda_c, "");	
 			}			
-			cell = headerRow.createCell(celda_c, "");	
-			cell.setHeaderCell(true);
-			for(int i =corrimiento; i<cabecera.length-1;i++){
-				if(cabecera[i]!=null&& !cabecera[i].isEmpty()){
+			for(int i =corrimiento; i<cabecera.length;i++){
+				if(cabecera[i]!=null&& !cabecera[i].isEmpty()&&i!=cabecera.length-1){
 					cell = headerRow.createCell(tam_celda, cabecera[i]);
 					cell.setHeaderCell(true);
 				}
@@ -173,14 +199,20 @@ public class CPdf {
 			return headerRow;
 			
 		}
-		public Row<PDPage> agregarCabecera_pt2(Row<PDPage> row,String cabecera[]){
+		public Row<PDPage> agregarCabecera_pt2(Row<PDPage> row,String cabecera[],boolean primero){
 			//System.out.println(cabecera.length);
-			Cell<PDPage> cell = row.createCell(celda_a, "Nombre");
-			cell.setFontSize(cell.getFontSize()-1f);
-			cell = row.createCell(celda_c,"Meta Unidad Medida");	
-			cell.setFontSize(cell.getFontSize()-1f);
+			Cell<PDPage> cell;
+			int cont=0;
+			if(primero){
+				cell = row.createCell(celda_a, cabecera[0]);
+				cell.setFontSize(cell.getFontSize()-1f);
+				cell = row.createCell(celda_c,cabecera[1]);	
+				cell.setFontSize(cell.getFontSize()-1f);
+				cont=2;
+			}
 			int control =1;
-			for(int i =0; i<cabecera.length-3;i++){
+			for(int i =cont; i<cabecera.length;i++){
+				/*
 				if(control==2){
 					control=1;
 					cell = row.createCell(celda_b, "Real");
@@ -189,11 +221,13 @@ public class CPdf {
 					control++;
 					cell = row.createCell(celda_b, "Planificado");
 					cell.setFontSize(cell.getFontSize()-1f);
+				}*/
+				if(cabecera[i]!=null&&!cabecera[i].isEmpty()){
+					cell = row.createCell(celda_b, cabecera[i]);
+					cell.setFontSize(cell.getFontSize()-1f);
 				}
+				
 			}
-			
-			cell = row.createCell(celda_b, "Meta Final");
-			cell.setFontSize(cell.getFontSize()-1f);
 			
 			return row;
 			
@@ -244,10 +278,11 @@ public class CPdf {
 						String [][] tabla_tmp= new String[totalFilas][12];
 						int medida= x<num-1? 12: num_col_data-(12*x);
 						int tam_cab= x==0? 7: 6;
-						int pos_cab= x==1? 7: 6;
+						int pos_cab= 7;
 						for(int y=0; y<totalFilas;y++){
 							if(y==0){
 								System.arraycopy(cabecera[y], pos_cab*x, tabla_tmp[y], 0, tam_cab);
+								pos_cab=pos_cab+6;
 							}else if(y==1){
 								System.arraycopy(cabecera[y], 12*x, tabla_tmp[y], 0, medida);
 							}else{
