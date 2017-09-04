@@ -28,7 +28,7 @@
 		}
 		
 		.colorCeldaBloqueado{
-			background-color: #e6e6e6;
+			background-color: #d9d9d9;
 		}
 		
 		.colorCeldaDesbloqueado{
@@ -245,6 +245,7 @@
 				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 75px; max-width: 75px">Cant.</th>
 				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 140px; max-width: 140px">Costo</th>
 				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 140px; max-width: 140px">Total</th>
+				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 140px; max-width: 140px">NOG</th>
 				    						<th class="label-form" colspan="2" style="text-align: center">Prep. de docs.</th>
 				    						<th class="label-form" colspan="2" style="text-align: center">Lanz. de evento</th>
 				    						<th class="label-form" colspan="2" style="text-align: center">Recep. y eval. ofertas</th>
@@ -297,13 +298,19 @@
 				    						<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: right; min-width: 140px; max-width: 140px" ng-click="row.bloqueado == false ? controller.ocultar(row, 4) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 4) : ''">
 					    						<div style="height: 25px;">
 					    							<label ng-show="!row.c4">{{row.costo || 0 | formatoMillones : controller.enMillones}}</label>
-					    							<input ng-show="row.c4" ng-blur="controller.ocultar(row,4);" ng-model="row.costo" ng-change="controller.calcularTotal(row); controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" type="number" style="max-width: 135px; text-align: right" focus-on-show></input>
+					    							<input ng-show="row.c4" ng-blur="controller.ocultar(row,4);" ng-model="row.costo" ng-change="controller.calcularTotal(row); controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" type="number" style="max-width: 120px; text-align: right" focus-on-show></input>
 					    						</div>
 				    						</td>
 				    						<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="min-width: 140px; max-width: 140px; text-align: right">
 					    						<div style="height: 25px;">
 					    							{{row.total | formatoMillones : controller.enMillones}}
 					    						</div>
+				    						</td>
+				    						<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="min-width: 140px; max-width: 140px; text-align: right" ng-click="row.bloqueado == false ? controller.ocultar(row, 5) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 5) : ''">
+				    							<div style="height: 25px;">
+				    								<label ng-show="!row.c5">{{row.nog}}</label>
+				    								<input ng-show="row.c5" ng-blur="controller.ocultar(row,5);" ng-model="row.nog" ng-change="controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" type="number" style="max-width: 120px; text-align: right" maxlength="8" focus-on-show></input>
+				    							</div>
 				    						</td>
 				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;" ng-click="row.bloqueado == false ? controller.ocultar(row, 6) : ''" ng-focus="row.bloqueado == false ? controller.ocultar(row, 6) : ''">
 					    						<div style="height: 25px;">

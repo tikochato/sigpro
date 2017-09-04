@@ -330,8 +330,15 @@ public class SProducto extends HttpServlet {
 			}
 		} else if (accion.equals("borrar")) {
 			int codigo = Utils.String2Int(parametro.get("codigo"), -1);
+			
+			Producto pojo = ProductoDAO.getProductoPorId(codigo,usuario);
+			
 			boolean eliminado = ProductoDAO.eliminar(codigo, usuario);
+			
 			if (eliminado) {
+				COrden orden = new COrden();
+				orden.calcularOrdenObjetosSuperiores(pojo.getId(), 3, usuario);
+				
 				int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
 				int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 				int registros = Utils.String2Int(parametro.get("registros"), 20);
@@ -368,8 +375,8 @@ public class SProducto extends HttpServlet {
 					temp.longitud = producto.getLongitud();
 					temp.peso = producto.getPeso();
 					temp.costo = producto.getCosto();
-					temp.acumulacionCostoId = producto.getAcumulacionCosto().getId();
-					temp.acumulacionCostoNombre = producto.getAcumulacionCosto().getNombre();
+					temp.acumulacionCostoId = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getId() : null;
+					temp.acumulacionCostoNombre = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getNombre() : null;
 					temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
 					temp.fechaFin = Utils.formatDate(producto.getFechaFin());
 					temp.duracion = producto.getDuracion();
