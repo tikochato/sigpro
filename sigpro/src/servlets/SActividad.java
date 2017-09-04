@@ -511,8 +511,8 @@ public class SActividad extends HttpServlet {
 			temp.duracion = actividad.getDuracion();
 			temp.duracionDimension = actividad.getDuracionDimension();
 			temp.costo = actividad.getCosto();
-			temp.acumulacionCostoId = actividad.getAcumulacionCosto().getId();
-			temp.acumulacionCostoNombre = actividad.getAcumulacionCosto().getNombre();
+			temp.acumulacionCostoId = actividad.getAcumulacionCosto()!=null ? actividad.getAcumulacionCosto().getId(): null;
+			temp.acumulacionCostoNombre = actividad.getAcumulacionCosto()!=null ? actividad.getAcumulacionCosto().getNombre(): null;
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"actividad\":",response_text);
@@ -521,31 +521,43 @@ public class SActividad extends HttpServlet {
 		}else if(accion.equals("guardarModal")){
 			boolean result = false;
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			boolean esnuevo = map.get("esnuevo").equals("true");
+			int objetoId = map.get("objetoId")!=null ? Integer.parseInt(map.get("objetoId")) : 0;
+			int objetoTipo = map.get("objetoTipo")!=null ? Integer.parseInt(map.get("objetoTipo")) : 0;
+			Actividad actividad = null;
+			if(id>0 || (esnuevo && objetoId > 0 && objetoTipo > 0)){
+				String nombre = map.get("nombre");
+				String descripcion = map.get("descripcion");
+				Date fechaInicio = Utils.dateFromString(map.get("fechainicio"));
+				Date fechaFin = Utils.dateFromString(map.get("fechafin"));
+				Integer porcentajeAvance = Utils.getParameterInteger(map, "porcentajeavance");
+				Integer duracion = Utils.String2Int(map.get("duracion"), null);
+				String duracionDimension = map.get("duracionDimension");
+				int actividadtipoid =Utils.getParameterInteger(map, "actividadtipoid");
+				
+				ActividadTipo actividadTipo= new ActividadTipo();
+				actividadTipo.setId(actividadtipoid);
+				
+				if (esnuevo){
+					actividad = new Actividad(actividadTipo, nombre, fechaInicio, fechaFin, porcentajeAvance
+							, usuario, new Date(), 1, objetoId, objetoTipo, duracion, duracionDimension);
+				}else{
+					actividad = ActividadDAO.getActividadPorId(id,usuario);
+					actividad.setNombre(nombre);
+					actividad.setDescripcion(descripcion);
+					actividad.setUsuarioActualizo(usuario);
+					actividad.setFechaActualizacion(new Date());
+					actividad.setFechaInicio(fechaInicio);
+					actividad.setFechaFin(fechaFin);
+					actividad.setPorcentajeAvance(porcentajeAvance);
+					actividad.setActividadTipo(actividadTipo);
+					actividad.setDuracion(duracion);
+					actividad.setDuracionDimension(duracionDimension);
+					
+				}
+				result = ActividadDAO.guardarActividad(actividad);
+			}
 			
-			String nombre = map.get("nombre");
-			String descripcion = map.get("descripcion");
-			Date fechaInicio = Utils.dateFromString(map.get("fechainicio"));
-			Date fechaFin = Utils.dateFromString(map.get("fechafin"));
-			Integer porcentajeAvance = Utils.getParameterInteger(map, "porcentajeavance");
-			Integer duracion = Utils.String2Int(map.get("duracion"), null);
-			String duracionDimension = map.get("duracionDimension");
-			int actividadtipoid =Utils.getParameterInteger(map, "actividadtipoid");
-			
-			ActividadTipo actividadTipo= new ActividadTipo();
-			actividadTipo.setId(actividadtipoid);
-
-			Actividad actividad = ActividadDAO.getActividadPorId(id,usuario);
-			actividad.setNombre(nombre);
-			actividad.setDescripcion(descripcion);
-			actividad.setUsuarioActualizo(usuario);
-			actividad.setFechaActualizacion(new DateTime().toDate());
-			actividad.setFechaInicio(fechaInicio);
-			actividad.setFechaFin(fechaFin);
-			actividad.setPorcentajeAvance(porcentajeAvance);
-			actividad.setActividadTipo(actividadTipo);
-			actividad.setDuracion(duracion);
-			actividad.setDuracionDimension(duracionDimension);
-			result = ActividadDAO.guardarActividad(actividad);
 			if (result){
 				stactividad temp = new stactividad();
 				temp.id = actividad.getId();
@@ -560,6 +572,8 @@ public class SActividad extends HttpServlet {
 			}else{
 				response_text = "{ \"success\": false }";
 			}
+			
+			
 		}
 		else{
 			response_text = "{ \"success\": false }";

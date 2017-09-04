@@ -63,7 +63,8 @@
 				</div>
 				 <div class="row" align="center" id="gantt">
 				    <div class="gantt-chart">
-						<div ds:gantt-chart id="ganttChartView" items="items" settings="settings" auto-refresh="{{ true }}" style="height: 400px">
+						<div ds:gantt-chart id="ganttChartView" items="items"  settings="settings" auto-refresh="{{ true }}" style="height: 400px"
+						>
 						</div>
 						<div class="grid_loading" ng-hide="!ganttc.mostrarcargando" style="z-index: 100">
 						  	<div class="msg">

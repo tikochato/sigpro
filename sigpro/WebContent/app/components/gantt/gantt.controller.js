@@ -1,4 +1,5 @@
-var app = angular.module('ganttController', ['DlhSoft.ProjectData.GanttChart.Directives','DlhSoft.Kanban.Angular.Components','ui.grid.edit', 'ui.grid.rowEdit']);
+var app = angular.module('ganttController', ['DlhSoft.ProjectData.GanttChart.Directives',
+		'DlhSoft.Kanban.Angular.Components','ui.grid.edit', 'ui.grid.rowEdit','ui.bootstrap.contextMenu']);
 
 var GanttChartView = DlhSoft.Controls.GanttChartView;
 //Query string syntax: ?theme
@@ -575,7 +576,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 			});
 		};
 		  
-		mi.editarActividad = function(idactividad,index) {
+		mi.editarActividad = function(idactividad,index,objetoId,objetoTipo) {
 
 				var modalInstance = $uibModal.open({
 					animation : 'true',
@@ -592,6 +593,12 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 						},
 						idactividad: function() {
 							return idactividad;
+						},
+						objetoId: function() {
+							return objetoId;
+						},
+						objetoTipo: function() {
+							return objetoTipo;
 						}
 					}
 				});
@@ -681,6 +688,29 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
         mi.calcularTamanosPantalla();
         $scope.$digest();
     });
+	
+	mi.nuevaActividad = function(objetoId, objetoTipo){
+		mi.editarActividad(0,0,objetoId,objetoTipo);
+	};
+	
+	$scope.menuOptions = [
+        ['Nuevo componente', function () {
+            console.log('componente...');
+        }],
+        
+        ['Nuevo producto', function () {
+           console.log('producto...')
+        }],
+        ['Nuevo subproducto', function () {
+            console.log('producto...')
+        }],
+        ['Nueva actividad', function () {
+        	mi.nuevaActividad (121,3);
+         }]
+        
+        
+    ];
+	
 	}// fin function controller
 
 ]);
@@ -1245,10 +1275,10 @@ function modalEditarSubproducto($uibModalInstance, $scope, $http, $interval,
 
 app.controller('modalEditarActividad', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log',   '$uibModal', '$q' ,'idactividad',modalEditarActividad ]);
+	'$timeout', '$log',   '$uibModal', '$q' ,'idactividad','objetoId','objetoTipo',modalEditarActividad ]);
 
 function modalEditarActividad($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $uibModal, $q,idactividad) {
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q,idactividad,objetoId,objetoTipo) {
 
 	var mi = this;
 	mi.actividad = {};
@@ -1283,22 +1313,29 @@ function modalEditarActividad($uibModalInstance, $scope, $http, $interval,
 		}
 	};
 	
-	$http.post('/SActividad',{ accion: 'getActividadPorId', id:idactividad,t:moment().unix()
-	  }).then(
-
-		function(response) {
-			mi.actividad = response.data.actividad;
-			mi.actividad.fechaInicio = moment(mi.actividad.fechaInicio,'DD/MM/YYYY').toDate();
-			mi.actividad.fechaFin = moment(mi.actividad.fechaFin,'DD/MM/YYYY').toDate();
-			mi.ff_opciones.minDate = mi.actividad.fechaInicio;
-			mi.duracionDimension = {
-					"id": mi.actividad.duracionDimension === 'd' ? 1 : 0,
-					"nombre": mi.actividad.duracionDimension,
-					"sigla": 'd'
-			};
-			mi.primeraActividad = mi.actividad.prececesorId == undefined 
-				|| mi.actividad.prececesorId == null ? true : false;
-	});
+	if (idactividad!=null && idactividad!= undefined && idactividad != ''){
+	
+		$http.post('/SActividad',{ accion: 'getActividadPorId', id:idactividad,t:moment().unix()
+		  }).then(
+	
+			function(response) {
+				mi.actividad = response.data.actividad;
+				mi.actividad.fechaInicio = moment(mi.actividad.fechaInicio,'DD/MM/YYYY').toDate();
+				mi.actividad.fechaFin = moment(mi.actividad.fechaFin,'DD/MM/YYYY').toDate();
+				mi.ff_opciones.minDate = mi.actividad.fechaInicio;
+				mi.duracionDimension = {
+						"id": mi.actividad.duracionDimension === 'd' ? 1 : 0,
+						"nombre": mi.actividad.duracionDimension,
+						"sigla": 'd'
+				};
+				mi.primeraActividad = mi.actividad.prececesorId == undefined 
+					|| mi.actividad.prececesorId == null ? true : false;
+				mi.esNuevo = false;
+		});
+	}else{
+		mi.actividad = {};
+		mi.esNuevo = true;
+	}
 	
 	mi.cambioDuracion = function(){
 		mi.actividad.fechaFin = mi.sumarDias(mi.actividad.fechaInicio,mi.actividad.duracion);
@@ -1386,6 +1423,9 @@ function modalEditarActividad($uibModalInstance, $scope, $http, $interval,
 				porcentajeavance: mi.actividad.porcentajeavance,
 				duracion:mi.actividad.duracion,
 				duracionDimension:mi.duracionDimension.sigla,
+				objetoId : objetoId,
+				objetoTipo: objetoTipo,
+				esnuevo : mi.esNuevo,
 				t:moment().unix()
 			};
 			$http.post('/SActividad',param_data).then(
