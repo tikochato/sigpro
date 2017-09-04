@@ -475,6 +475,11 @@ public class CExcel {
 					setCellFormula("sum(" + colname + first_data_line + ":" + colname + last_data_line + ")", line,
 							i, headers[2][i], true);
 				break;
+			case "sub":
+				colname = CellReference.convertNumToColString(i);
+					setCellFormula("(" + colname + first_data_line + "-" + colname + last_data_line + ")", line,
+							i, headers[2][i], true);
+				break;
 			case "avg":
 				colname = CellReference.convertNumToColString(i);
 				if (HasGroup)
@@ -558,19 +563,19 @@ public class CExcel {
 			for(int j=0; j<stgrafica.data[i].length; j++){
 				switch (stgrafica.tipoData[i]) {
 				case "int":
-						setCellValueInt(Integer.parseInt(stgrafica.data[i][j]), linea, columna+j, false);
+						setCellValueInt(Integer.parseInt(stgrafica.data[i][j]), linea, columna+j, true);
 					break;
 				case "double":
-					setCellValueDouble(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false);
+					setCellValueDouble(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, true);
 					break;	
 				case "currency":
-					setCellValueCurrency(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false, false);
+					setCellValueCurrency(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false, true);
 					break;
 				case "string":
-					setCellValueString(String.class.cast(stgrafica.data[i][j]), linea, columna+j, false, false);
+					setCellValueString(String.class.cast(stgrafica.data[i][j]), linea, columna+j, false, true);
 					break;
 				case "percent":
-					setCellValuePercent(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false, false);
+					setCellValuePercent(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false, true);
 				}
 				if(stgrafica.igualarCeldas != null && stgrafica.igualarCeldas[i][j]!= null && !stgrafica.igualarCeldas[i][j].isEmpty()){
 					String ah = stgrafica.igualarCeldas[i][j];
