@@ -106,9 +106,11 @@ public class COrden {
 		        
 		        calcularFechasPadre(objetoId, 1, usuario, 2);
 			}else{
-				Componente componente = componentes.get(0);
-				componente.setOrden(1);
-				ComponenteDAO.guardarComponente(componente);
+				if(componentes.size() > 0){
+					Componente componente = componentes.get(0);
+					componente.setOrden(1);
+					ComponenteDAO.guardarComponente(componente);
+				}
 			}
 		} else if(objetoTipo == 2){
 			Componente c = ComponenteDAO.getComponentePorId(objetoId, usuario);
@@ -144,10 +146,12 @@ public class COrden {
 			        
 			        calcularFechasPadre(proyecto.getId(), 1, usuario, 2);
 				}else{
-					Componente componente = componentes.get(0);
-					componente.setOrden(1);
-					ComponenteDAO.guardarComponente(componente);
-					calcularFechasPadre(proyecto.getId(), 1, usuario, 2);
+					if(componentes.size() > 0){
+						Componente componente = componentes.get(0);
+						componente.setOrden(1);
+						ComponenteDAO.guardarComponente(componente);
+						calcularFechasPadre(proyecto.getId(), 1, usuario, 2);
+					}
 				}
 			}
 		} else if(objetoTipo == 3){
@@ -183,11 +187,13 @@ public class COrden {
 			        calcularFechasPadre(componente.getId(), 2, usuario, 3);
 			        calcularOrdenObjetosSuperiores(componente.getId(), 2, usuario);
 				}else{
-					Producto producto = productos.get(0);
-					producto.setOrden(1);
-					ProductoDAO.guardarProducto(producto);
-					calcularFechasPadre(componente.getId(), 2, usuario, 3);
-					calcularOrdenObjetosSuperiores(componente.getId(), 2, usuario);
+					if(productos.size() > 0){
+						Producto producto = productos.get(0);
+						producto.setOrden(1);
+						ProductoDAO.guardarProducto(producto);
+						calcularFechasPadre(componente.getId(), 2, usuario, 3);
+						calcularOrdenObjetosSuperiores(componente.getId(), 2, usuario);
+					}
 				}			
 			}
 		} else if(objetoTipo == 4){
@@ -223,11 +229,13 @@ public class COrden {
 			        calcularFechasPadre(producto.getId(), 3, usuario, 4);
 			        calcularOrdenObjetosSuperiores(producto.getId(), 3, usuario);
 				}else{
-					Subproducto subproducto = subproductos.get(0);
-					subproducto.setOrden(1);
-					SubproductoDAO.guardarSubproducto(subproducto);
-					calcularFechasPadre(producto.getId(), 3, usuario, 4);
-					calcularOrdenObjetosSuperiores(producto.getId(), 3, usuario);
+					if(subproductos.size() > 0){
+						Subproducto subproducto = subproductos.get(0);
+						subproducto.setOrden(1);
+						SubproductoDAO.guardarSubproducto(subproducto);
+						calcularFechasPadre(producto.getId(), 3, usuario, 4);
+						calcularOrdenObjetosSuperiores(producto.getId(), 3, usuario);	
+					}
 				}			
 			}
 		}

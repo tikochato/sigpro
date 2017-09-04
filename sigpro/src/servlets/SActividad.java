@@ -400,8 +400,19 @@ public class SActividad extends HttpServlet {
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
 				Actividad actividad = ActividadDAO.getActividadPorId(id,usuario);
+				Integer objetoId = actividad.getObjetoId();
+				Integer objetoTipo = actividad.getObjetoTipo();
+				
 				actividad.setUsuarioActualizo(usuario);
-				response_text = String.join("","{ \"success\": ",(ActividadDAO.eliminarActividad(actividad) ? "true" : "false")," }");
+				boolean eliminado = ActividadDAO.eliminarActividad(actividad);
+				
+				if(eliminado){
+					COrden orden = new COrden();
+					orden.calcularOrdenActividades(objetoId, objetoTipo, usuario);
+					orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario);
+				}
+				
+				response_text = String.join("","{ \"success\": ",( eliminado ? "true" : "false")," }");
 			}
 			else
 				response_text = "{ \"success\": false }";

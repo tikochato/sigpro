@@ -390,7 +390,18 @@ public class SComponente extends HttpServlet {
 			if(id>0){
 				Componente componente = ComponenteDAO.getComponentePorId(id,usuario);
 				componente.setUsuarioActualizo(usuario);
-				response_text = String.join("","{ \"success\": ",(ComponenteDAO.eliminarComponente(componente) ? "true" : "false")," }");
+				
+				Integer objetoId = componente.getProyecto().getId();
+				Integer objetoTipo = 1;
+				
+				boolean eliminado = ComponenteDAO.eliminarComponente(componente);
+				
+				if(eliminado){
+					COrden orden = new COrden();
+					orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario);
+				}
+				
+				response_text = String.join("","{ \"success\": ",(eliminado ? "true" : "false")," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
