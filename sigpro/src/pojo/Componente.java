@@ -1,6 +1,7 @@
 package pojo;
 // Generated Sep 4, 2017 9:37:50 AM by Hibernate Tools 5.2.3.Final
 
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -60,7 +61,9 @@ public class Componente implements java.io.Serializable {
 	private Set<ComponenteUsuario> componenteUsuarios = new HashSet<ComponenteUsuario>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<ComponentePropiedadValor> componentePropiedadValors = new HashSet<ComponentePropiedadValor>(0);
-
+	
+	
+	
 	public Componente() {
 	}
 

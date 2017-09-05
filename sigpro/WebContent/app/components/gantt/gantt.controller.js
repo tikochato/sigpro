@@ -15,7 +15,9 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.proyectoNombre = "";
 		mi.objetoTipoNombre = "";
 		mi.mostrarcargando = true;
-		var date = new Date(), year = date.getFullYear(), month = date.getMonth();		
+		var date = new Date(), year = date.getFullYear(), month = date.getMonth();	
+		mi.objetoId=null;
+		mi.objetoTipo=null;
 		
 		$window.document.title = $utilidades.sistema_nombre+' - Gantt';
 		
@@ -292,56 +294,62 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		$scope.settings = settings;
 		
 		mi.ganttChartView;
-		var formatData = new FormData();
-		 
-		formatData.append("accion",$routeParams.objeto_tipo == 1 ? 'getProyecto' : 'getPrograma');
-		formatData.append($routeParams.objeto_tipo == 1 ? "proyecto_id" : "programa_id",$routeParams.objeto_id);
 		
-		$http.post('/SGantt', formatData, {
-			headers: {'Content-Type': undefined},
-			transformRequest: angular.identity
-		 }).success(
-				function(response) {
-					
-					var items =  response.items;
-					$scope.settings.displayedTime = moment(items[0].start,'DD/MM/YYYY hh:mm:ss').toDate();
-					
-					for(var i=0; i< items.length; i++){
-						if(items[i].start)
-							items[i].start = moment(items[i].start,'DD/MM/YYYY hh:mm:ss').toDate();
-						if(items[i].finish)
-							items[i].finish = moment(items[i].finish,'DD/MM/YYYY hh:mm:ss').toDate();
-						if(items[i].identation)
-							items[i].indentation = Number(items[i].indentation);
-						if (items[i].Cost)
-							items[i].Cost = Number(items[i].Cost);
+		mi.cargarProyecto = function (){
+			var formatData = new FormData();
+			 
+			formatData.append("accion",$routeParams.objeto_tipo == 1 ? 'getProyecto' : 'getPrograma');
+			formatData.append($routeParams.objeto_tipo == 1 ? "proyecto_id" : "programa_id",$routeParams.objeto_id);
+			
+			$http.post('/SGantt', formatData, {
+				headers: {'Content-Type': undefined},
+				transformRequest: angular.identity
+			 }).success(
+					function(response) {
 						
-						items[i].expandend = items[i].expanded=='true' ? true : false;
-						items[i].isMilestone = items[i].isMilestone=='true' ? true : false;
-					}
-					$scope.items = items;
-					$scope.settings.timelineStart =items[0].start;
-					mi.ganttChartView = document.getElementById('ganttChartView');
-					
-					
-					var predecesores = response.predecesores;
-					
-					for (var predecesor in predecesores){
+						var items =  response.items;
+						$scope.settings.displayedTime = moment(items[0].start,'DD/MM/YYYY hh:mm:ss').toDate();
+						
 						for(var i=0; i< items.length; i++){
-							if (items[i].id === predecesores[predecesor].id){
-								for(var j=0; j< items.length; j++){
-									if (items[j].id == predecesores[predecesor].idPredecesor){
-										items[i].predecessors = [{ item: items[j] }];
-										break;
+							if(items[i].start)
+								items[i].start = moment(items[i].start,'DD/MM/YYYY hh:mm:ss').toDate();
+							if(items[i].finish)
+								items[i].finish = moment(items[i].finish,'DD/MM/YYYY hh:mm:ss').toDate();
+							if(items[i].identation)
+								items[i].indentation = Number(items[i].indentation);
+							if (items[i].Cost)
+								items[i].Cost = Number(items[i].Cost);
+							
+							items[i].expandend = items[i].expanded=='true' ? true : false;
+							items[i].isMilestone = items[i].isMilestone=='true' ? true : false;
+						}
+						$scope.items = items;
+						$scope.settings.timelineStart =items[0].start;
+						mi.ganttChartView = document.getElementById('ganttChartView');
+						
+						
+						var predecesores = response.predecesores;
+						
+						for (var predecesor in predecesores){
+							for(var i=0; i< items.length; i++){
+								if (items[i].id === predecesores[predecesor].id){
+									for(var j=0; j< items.length; j++){
+										if (items[j].id == predecesores[predecesor].idPredecesor){
+											items[i].predecessors = [{ item: items[j] }];
+											break;
+										}
 									}
+									break;
 								}
-								break;
 							}
 						}
-					}
-					
-					mi.mostrarcargando = false;
-		});	
+						
+						mi.mostrarcargando = false;
+			});	
+		};
+		
+		
+		mi.cargarProyecto();
 		
 		mi.zoomAcercar = function(){
 			mi.zoom =(mi.zoom<1) ? mi.zoom + 0.05 :  mi.zoom + 1;
@@ -433,19 +441,32 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 					mi.editarPrestamo(item.objetoId,item.index);
 					break;
 				case '2':
-					mi.editarComponente(item.objetoId,item.index);
+					mi.editarComponente(item.objetoId,item.index,0,false);
 					break;
 				case '3':
-					mi.editarProducto(item.objetoId,item.index);
+					mi.editarProducto(item.objetoId,item.index,0,false);
 					break;
 				case '4':
-					mi.editarSubproducto(item.objetoId,item.index);
+					mi.editarSubproducto(item.objetoId,item.index,0,false);
 					break;
 				case '5':
 					mi.editarActividad(item.objetoId,item.index);
 					break;
 			}
 		  }
+		  
+		  
+		  
+		  
+		  settings.mouseHandler = function (eventName, isOnItemsArea, isOnChart, row, column, button, clickCount, e) {
+			    if (button == 3 ){
+			    	mi.objetoId = row.objetoId;
+			    	mi.objetoTipo = row.objetoTipo;
+			    }
+			};
+
+		  
+		  
 		  
 		  mi.editarPrestamo = function(idprestamo,index) {
 				var modalInstance = $uibModal.open({
@@ -480,7 +501,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		};
 		
 		
-		mi.editarComponente = function(idcomponente,index) {
+		mi.editarComponente = function(idcomponente,index,objetoId,esnuevo) {
 			var modalInstance = $uibModal.open({
 				animation : 'true',
 				ariaLabelledBy : 'modal-title',
@@ -496,14 +517,24 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 					},
 					index: function(){
 						return index;
-					}
+					},
+					objetoId : function(){
+						return objetoId;
+					},
+					esnuevo : function(){
+						return esnuevo;
+					} 
 				}
 			});
 
 			modalInstance.result.then(function(resultado) {
 				if (resultado != undefined){
 					$scope.items[index].content = resultado.nombre;
-					$utilidades.mensaje('success','Item modificado con éxito');
+					if (esnuevo){
+						mi.cargarProyecto();
+					}
+					
+					$utilidades.mensaje('success','Componente ' + (esnuevo ? 'Creado' : 'modificado') +' con éxito');
 				}else{
 					$utilidades.mensaje('danger', 'Error al guardar el item de componente');
 				}
@@ -512,7 +543,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 			});
 		};
 		
-		mi.editarProducto = function(idproducto,index) {
+		mi.editarProducto = function(idproducto,index,componenteId,esnuevo) {
 			var modalInstance = $uibModal.open({
 				animation : 'true',
 				ariaLabelledBy : 'modal-title',
@@ -528,6 +559,12 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 					},
 					index: function(){
 						return index;
+					},
+					componenteId: function(){
+						return componenteId;
+					},
+					esnuevo: function(){
+						return esnuevo;
 					}
 				}
 			});
@@ -535,7 +572,10 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 			modalInstance.result.then(function(resultado) {
 				if (resultado != undefined){
 					$scope.items[index].content = resultado.nombre;
-					$utilidades.mensaje('success','Item modificado con éxito');
+					if (esnuevo){
+						mi.cargarProyecto();
+					}
+					$utilidades.mensaje('success','Producto ' + (esnuevo ? 'creado' : 'modificado') + ' con éxito');
 				}else{
 					$utilidades.mensaje('danger', 'Error al guardar el item de producto');
 				}
@@ -544,7 +584,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 			});
 		};
 		
-		mi.editarSubproducto = function(idsubproducto,index) {
+		mi.editarSubproducto = function(idsubproducto,index,productoId,esnuevo) {
 			var modalInstance = $uibModal.open({
 				animation : 'true',
 				ariaLabelledBy : 'modal-title',
@@ -560,6 +600,12 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 					},
 					index: function(){
 						return index;
+					},
+					productoId: function(){
+						return productoId;
+					},
+					esnuevo: function(){
+						return esnuevo;
 					}
 				}
 			});
@@ -567,9 +613,12 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 			modalInstance.result.then(function(resultado) {
 				if (resultado != undefined){
 					$scope.items[index].content = resultado.nombre;
-					$utilidades.mensaje('success','Item modificado con éxito');
+					if(esnuevo){
+						mi.cargarProyecto();
+					}
+					$utilidades.mensaje('success','Subproducto '+ (esnuevo ? 'Creado' : 'modificado') + ' con éxito');
 				}else{
-					$utilidades.mensaje('danger', 'Error al guardar el item de subproducto');
+					$utilidades.mensaje('danger', 'Error al guardar el  subproducto');
 				}
 
 			}, function() {
@@ -610,7 +659,10 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 						$scope.items[index].finish = mi.sumarDias($scope.items[index].start,resultado.duracion); 
 						$scope.items[index].duration = Number(resultado.duracion);
 						mi.reconfigurarFechas($scope.items[index],(index +1),Number($scope.items[index].duracion), $scope.items[index].start);
-						$utilidades.mensaje('success','Item modificado con éxito');
+						
+						if (objetoId!=null && objetoTipo!=null)
+							mi.cargarProyecto();
+						$utilidades.mensaje('success','Item ' + (objetoId!=null ? 'creado' : 'modificado') + ' con éxito');
 					}else{
 						$utilidades.mensaje('danger', 'Error al guardar el item de actividad');
 					}
@@ -693,19 +745,50 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.editarActividad(0,0,objetoId,objetoTipo);
 	};
 	
+	var customHtml = '<div style="cursor: pointer; background-color: #f5f5f5; padding: 0px 19px; font-weight: bold;">' +
+    'Nuevo </div>';
+	
+	
+	var customItem = {
+			enabled: function() {return false},
+		    html: customHtml
+		 };
+	
 	$scope.menuOptions = [
-        ['Nuevo componente', function () {
-            console.log('componente...');
+		
+        ['<div class="glyphicon glyphicon-th"></div><span>&nbsp;Nuevo componente</span>', function () {
+            mi.editarComponente (0,0,mi.objetoId,true);
+            mi.objetoId = null;
+	    	mi.objetoTipo = null;
+        }, function() {
+            return mi.objetoTipo==1; 
         }],
         
-        ['Nuevo producto', function () {
-           console.log('producto...')
+        ['<div class="glyphicon glyphicon-certificate"></div><span>&nbsp;Nuevo producto</span>', function () {
+           mi.editarProducto (0,0,mi.objetoId,true);
+           mi.objetoId = null;
+           mi.objetoTipo = null;
+        }, function() {
+            return mi.objetoTipo==2; 
         }],
-        ['Nuevo subproducto', function () {
-            console.log('producto...')
+        ['<div class="glyphicon glyphicon-link"></div><span>&nbsp;Nuevo subproducto</span>', function () {
+        	mi.editarSubproducto(0,0,mi.objetoId,true);
+        	mi.objetoId = null;
+	    	mi.objetoTipo = null;
+            
+        }, function() {
+            return mi.objetoTipo==3; 
         }],
-        ['Nueva actividad', function () {
-        	mi.nuevaActividad (121,3);
+        ['<div class="glyphicon glyphicon-th-list"></div><span>&nbsp;Nueva actividad</span>', function () {
+        	if (mi.objetoId != null && mi.objetoTipo != null){
+        		
+        		mi.nuevaActividad (mi.objetoId,mi.objetoTipo);
+        	}
+        	
+        	mi.objetoId = null;
+	    	mi.objetoTipo = null;
+         }, function() {
+             return true; 
          }]
         
         
@@ -737,7 +820,7 @@ function modalEditarPrestamo($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.proyecto = {};
 	
-	$http.post('/SProyecto',{ accion: 'getProyectoPorId', id:idprestamo,t:moment().unix()
+	$http.post('/SProyecto',{ accion: 'getProyectoPorId', id:idprestamo,t: (new Date()).getTime()
 	  }).then(
 
 	function(response) {
@@ -895,15 +978,16 @@ function modalEditarPrestamo($uibModalInstance, $scope, $http, $interval,
 
 app.controller('modalEditarComponente', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', '$uibModal', '$q', 'idcomponente', modalEditarComponente ]);
+	'$timeout', '$log', '$uibModal', '$q', 'idcomponente', 'objetoId','esnuevo', modalEditarComponente ]);
 
 function modalEditarComponente($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idcomponente) {
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idcomponente,objetoId,esnuevo) {
 
 	var mi = this;
 	mi.componente = {};
 	
 	$http.post('/SComponente',{ accion: 'getComponentePorId', id:idcomponente,t:moment().unix()
+	
 	  }).then(
 
 	function(response) {
@@ -994,7 +1078,8 @@ function modalEditarComponente($uibModalInstance, $scope, $http, $interval,
 				id: mi.componente.id,
 				nombre: mi.componente.nombre,
 				unidadejecutoraid:mi.unidadejecutoraid,
-				esnuevo: false,
+				proyectoId:objetoId,
+				esnuevo:esnuevo,
 				t:moment().unix()
 			};
 			$http.post('/SComponente',param_data).then(
@@ -1009,15 +1094,29 @@ function modalEditarComponente($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
+	
+	mi.borrar = function(){
+		$http.post('/SComponente', {
+			accion: 'borrarComponente',
+			id: mi.componente.id
+		}).success(function(response){
+			if(response.success){
+				$uibModalInstance.dismiss('borrar');
+			}
+			else
+				$uibModalInstance.close(undefined);
+				
+		});
+	};
 }
 
 
 app.controller('modalEditarProducto', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', '$uibModal', '$q', 'idproducto', modalEditarProducto ]);
+	'$timeout', '$log', '$uibModal', '$q', 'idproducto', 'componenteId', 'esnuevo',modalEditarProducto ]);
 
 function modalEditarProducto($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idproducto) {
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idproducto, componenteId, esnuevo) {
 
 	var mi = this;
 	mi.componente = {};
@@ -1114,6 +1213,8 @@ function modalEditarProducto($uibModalInstance, $scope, $http, $interval,
 				nombre : mi.producto.nombre,
 				tipoproductoid : mi.tipo,
 				unidadEjecutora : mi.unidadEjecutora,
+				componenteId : componenteId,
+				esnuevo:esnuevo,
 				t:moment().unix()
 			};
 			$http.post('/SProducto',param_data).then(
@@ -1128,15 +1229,30 @@ function modalEditarProducto($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
+	
+	mi.borrar = function(){
+		var datos = {
+				accion : 'borrar',
+				codigo : mi.producto.id
+		};
+		$http.post('/SProducto', datos).success(
+				function(response) {
+					if (response.success) {
+						$uibModalInstance.dismiss('borrar');
+					}
+					else
+						$uibModalInstance.close(undefined);
+				});
+	};
 }
 
 
 app.controller('modalEditarSubproducto', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', '$uibModal', '$q', 'idsubproducto', modalEditarSubproducto ]);
+	'$timeout', '$log', '$uibModal', '$q', 'idsubproducto','productoId','esnuevo', modalEditarSubproducto ]);
 
 function modalEditarSubproducto($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idsubproducto) {
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idsubproducto,productoId,esnuevo) {
 
 	var mi = this;
 	mi.componente = {};
@@ -1147,10 +1263,10 @@ function modalEditarSubproducto($uibModalInstance, $scope, $http, $interval,
 	function(response) {
 		if (response.data.subproducto!=null){
 			mi.subproducto = response.data.subproducto;
-			mi.tipo = mi.subproducto.idSubproductoTipo;
-			mi.tipoNombre = mi.subproducto.subproductoTipo;
+			mi.tipo = mi.subproducto.subProductoTipoId;
+			mi.tipoNombre = mi.subproducto.subProductoTipo;
 			
-			mi.unidadEjecutora = mi.subproducto.unidadEjectuora;
+			mi.unidadEjecutora = mi.subproducto.unidadEjecutora;
 			mi.unidadEjecutoraNombre = mi.subproducto.nombreUnidadEjecutora;
 		}
 	});
@@ -1256,6 +1372,8 @@ function modalEditarSubproducto($uibModalInstance, $scope, $http, $interval,
 				nombre : mi.subproducto.nombre,
 				tiposubproductoid : mi.tipo,
 				unidadEjecutora : mi.unidadEjecutora,
+				productoId : productoId,
+				esnuevo:esnuevo,
 				t:moment().unix()
 			};
 			$http.post('/SSubproducto',param_data).then(
@@ -1270,6 +1388,21 @@ function modalEditarSubproducto($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
+	
+	mi.borrar = function() {
+		var datos = {
+			accion : 'borrar',
+			codigo : mi.subproducto.id
+		};
+		$http.post('/SSubproducto', datos).success(
+				function(response) {
+					if (response.success) {
+						$uibModalInstance.dismiss('borrar');
+					}
+					else
+						$uibModalInstance.close(undefined);
+				});
+	}
 }
 
 
@@ -1440,7 +1573,19 @@ function modalEditarActividad($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
-
+	
+	mi.borrar = function() {
+			$http.post('/SActividad', {
+				accion: 'borrarActividad',
+				id: mi.actividad.id
+			}).success(function(response){
+				if(response.success){
+					$uibModalInstance.dismiss('borrar');
+				}
+				else
+					$uibModalInstance.close(undefined);
+			});
+		}
 
 }
 

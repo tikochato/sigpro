@@ -345,26 +345,39 @@ public class SComponente extends HttpServlet {
 		else if(accion.equals("guardarModal")){
 			try{
 				boolean result = false;
-				
 				int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-				String nombre = map.get("nombre");	
-				int componentetipoid = map.get("componentetipoid")!=null ? Integer.parseInt(map.get("componentetipoid")) : 0;	
-				int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;	
-				ComponenteTipo componenteTipo= new ComponenteTipo();
-				componenteTipo.setId(componentetipoid);
-				UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-				unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
-
-				Componente componente;
-				componente = ComponenteDAO.getComponentePorId(id,usuario);
-				componente.setNombre(nombre);
-				componente.setComponenteTipo(componenteTipo);
-				componente.setUnidadEjecutora(unidadEjecutora);
-				componente.setUsuarioActualizo(usuario);
-				componente.setFechaActualizacion(new DateTime().toDate());
-					
-				result = ComponenteDAO.guardarComponente(componente);
+				boolean esnuevo = map.get("esnuevo").equals("true");
+				Integer proyectoId = Utils.String2Int(map.get("proyectoId"));
 				
+				
+				
+				Componente componente = null;
+				if(id>0 || esnuevo ){
+					String nombre = map.get("nombre");	
+					int componentetipoid = map.get("componentetipoid")!=null ? Integer.parseInt(map.get("componentetipoid")) : 0;	
+					int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;
+					ComponenteTipo componenteTipo= new ComponenteTipo();
+					componenteTipo.setId(componentetipoid);
+					UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
+					unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
+					
+					if (esnuevo){
+						Proyecto proyecto = new Proyecto();
+						proyecto.setId(proyectoId);
+						componente = new Componente(componenteTipo, 
+								proyecto, unidadEjecutora, nombre, usuario, new Date(), 1);
+						
+					}else {
+						componente = ComponenteDAO.getComponentePorId(id,usuario);
+						componente.setNombre(nombre);
+						componente.setComponenteTipo(componenteTipo);
+						componente.setUnidadEjecutora(unidadEjecutora);
+						componente.setUsuarioActualizo(usuario);
+						componente.setFechaActualizacion(new DateTime().toDate());
+						
+					}
+					result = ComponenteDAO.guardarComponente(componente);
+				}
 				stcomponente temp = new stcomponente();
 				if (result){
 					temp.id = componente.getId();
@@ -378,8 +391,7 @@ public class SComponente extends HttpServlet {
 			        response_text = String.join("", "{\"success\":true,", response_text,"}");
 				}else{
 					response_text = "{ \"success\": false }";
-				}
-				
+				}	
 			}
 			catch (Throwable e){
 				response_text = "{ \"success\": false }";

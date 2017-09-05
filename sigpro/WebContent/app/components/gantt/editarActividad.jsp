@@ -6,8 +6,7 @@
 	<div class="row">
 	<div class="col-sm-12">
 		<form name="form">
-			<uib-tabset active="active">
-				<uib-tab index="0" heading="Requeridos">
+			
 				
 					<div class="form-group">
 						<label for="id" class="floating-label">ID {{actividadc.actividad.id }}</label>
@@ -81,14 +80,7 @@
 					     onblur="this.setAttribute('value', this.value);"  min="0" max="100" ng-required="true" >
 					   <label class="floating-label">* Avance %</label>
 					</div>	
-				</uib-tab>
-				<uib-tab index="1" heading="Opcionales">
-					<div class="form-group">
-   						<input type="text" class="inputText" id="descripcion" ng-model="actividadc.actividad.descripcion"  ng-value="proyectopropiedadc.proyectopropiedad.descripcion" onblur="this.setAttribute('value', this.value);" >
-						<label for="descripcion" class="floating-label">Descripción</label>
-					</div>		
-				</uib-tab>
-			</uib-tabset>
+				
 			
 		</form>
 		<br/>
@@ -98,6 +90,7 @@
 			        <label class="btn btn-success" ng-click="form.$valid ? actividadc.ok() : ''" 
 			        ng-disabled="!form.$valid" title="Guardar" uib-tooltip="Guardar"> Guardar</label>
 					<label class="btn btn-primary" ng-click="actividadc.cancel()">Cancelar</label>
+					<label class="btn btn-danger" ng-click="actividadc.borrar()" ng-disabled="actividadc.esnuevo">Borrar</label>
 		    	</div>
 		      
 		    </div>

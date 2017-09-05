@@ -447,60 +447,78 @@ public class SSubproducto extends HttpServlet {
 	private void getSubproductoPorId(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		Integer id = parametro.get("id")!=null ? Integer.parseInt(parametro.get("id")) : 0;
 		Subproducto subproducto = SubproductoDAO.getSubproductoPorId(id,usuario);
-		
-		stsubproducto temp = new stsubproducto();
-		temp.id = subproducto.getId();
-		temp.nombre = subproducto.getNombre();
-		temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
-		temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
-		temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
-		temp.unidadEjecutora = subproducto.getUnidadEjecutora().getUnidadEjecutora();
-		String resultadoJson = Utils.getJSonString("subproducto", temp);
-		resultadoJson = "{\"success\":true," + resultadoJson + "}";
-		Utils.writeJSon(response, resultadoJson);	
+		String resultadoJson="";
+		if (subproducto!=null){
+			stsubproducto temp = new stsubproducto();
+			temp.id = subproducto.getId();
+			temp.nombre = subproducto.getNombre();
+			temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
+			temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
+			temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
+			temp.unidadEjecutora = subproducto.getUnidadEjecutora().getUnidadEjecutora();
+			resultadoJson = Utils.getJSonString("subproducto", temp);
+			resultadoJson = "{\"success\":true," + resultadoJson + "}";	
+		}else{
+			resultadoJson = "{ \"success\": false }";
+				
+		}
+		Utils.writeJSon(response, resultadoJson);
 	}
 	
 	private void guardarModal(Map<String, String> map, HttpServletResponse response, HttpServletRequest request) throws IOException {
+		boolean ret = false;
 		String resultadoJson="";
 		int id = Utils.String2Int(map.get("id"));
-		Subproducto subproducto;
-		boolean ret = false;
+		boolean esnuevo = map.get("esnuevo").equals("true");
 		
+		Integer productoId = Utils.String2Int(map.get("productoId"));
+		
+		Subproducto subproducto = null;
 		try{
-			String nombre = map.get("nombre");
-			Integer tiposubproductoId = Utils.String2Int(map.get("tiposubproductoid")); 
-			Integer unidadEjecutoraId = Utils.String2Int(map.get("unidadEjecutora"));
-			
-			SubproductoTipo subproductoTipo = new SubproductoTipo();
-			subproductoTipo.setId(tiposubproductoId);
-			UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-			unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
-			
-			
-			subproducto = SubproductoDAO.getSubproductoPorId(id);
-			if (subproducto!=null){	
-				subproducto.setSubproductoTipo(subproductoTipo);
-				subproducto.setUnidadEjecutora(unidadEjecutora);
-				subproducto.setNombre(nombre);
+			if(id>0 || esnuevo ){
+				String nombre = map.get("nombre");
+				Integer tiposubproductoId = Utils.String2Int(map.get("tiposubproductoid")); 
+				Integer unidadEjecutoraId = Utils.String2Int(map.get("unidadEjecutora"));
+				
+				
+				SubproductoTipo subproductoTipo = new SubproductoTipo();
+				subproductoTipo.setId(tiposubproductoId);
+				UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
+				unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
+				
+				if(esnuevo){
+					Producto producto = new Producto();
+					producto.setId(productoId);
+					subproducto = new Subproducto(producto, subproductoTipo, unidadEjecutora, nombre, usuario, new Date(), 1);
+				}else{
+					subproducto = SubproductoDAO.getSubproductoPorId(id);
+					if (subproducto!=null){	
+						subproducto.setSubproductoTipo(subproductoTipo);
+						subproducto.setUnidadEjecutora(unidadEjecutora);
+						subproducto.setNombre(nombre);
+					}
+				}
+				
+				ret = SubproductoDAO.guardarSubproducto(subproducto);
+				stsubproducto temp = new stsubproducto();
+				if (ret){
+					temp.id = subproducto.getId();
+					temp.nombre = subproducto.getNombre();
+					temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
+					temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
+					temp.unidadEjecutora = subproducto.getUnidadEjecutora().getUnidadEjecutora();
+					temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
+					resultadoJson = Utils.getJSonString("subproducto", temp);
+					resultadoJson = "{\"success\":true," + resultadoJson + "}";
+				}else{
+					resultadoJson = "{ \"success\": false }";
+				}
+				
+				}
 			}
-			
-			ret = SubproductoDAO.guardarSubproducto(subproducto);
-			stsubproducto temp = new stsubproducto();
-			if (ret){
-				temp.id = subproducto.getId();
-				temp.nombre = subproducto.getNombre();
-				temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
-				temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
-				temp.unidadEjecutora = subproducto.getUnidadEjecutora().getUnidadEjecutora();
-				temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
-			}
-			resultadoJson = Utils.getJSonString("subproducto", temp);
-			resultadoJson = "{\"success\":true," + resultadoJson + "}";
-			
-			}
-			catch (Throwable e){
-				resultadoJson = "{ \"success\": false }";
-			}
+		catch (Throwable e){
+			resultadoJson = "{ \"success\": false }";
+		}
 		Utils.writeJSon(response, resultadoJson);
 	}
 }

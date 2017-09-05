@@ -596,29 +596,38 @@ public class SProducto extends HttpServlet {
 			response_text = String.join("", "{\"success\":true,", response_text,"}");
 
 		} else if (accion.equals("guardarModal")) {
-			
-			int id = Utils.String2Int(parametro.get("id"));
-			Producto producto;
 			boolean ret = false;
+			int id = Utils.String2Int(parametro.get("id"));
+			boolean esnuevo = parametro.get("esnuevo").equals("true");
+			Integer componenteId = Utils.String2Int(parametro.get("componenteId"));
+			Producto producto = null;
 			
-			String nombre = parametro.get("nombre");
-			Integer tipoproductoId = Utils.String2Int(parametro.get("tipoproductoid")); 
-			Integer unidadEjecutoraId = Utils.String2Int(parametro.get("unidadEjecutora"));
+			if(id>0 || esnuevo ){
 			
-			ProductoTipo productoTipo = new ProductoTipo();
-			productoTipo.setId(tipoproductoId);
-			UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-			unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);	
-			
-			producto = ProductoDAO.getProductoPorId(id);
-			
-			producto.setProductoTipo(productoTipo);
-			producto.setUnidadEjecutora(unidadEjecutora);
-			producto.setNombre(nombre);
-			producto.setUsuarioActualizo(usuario);
-			producto.setFechaActualizacion(new DateTime().toDate());
-			
-			ret = ProductoDAO.guardarProducto(producto);
+				String nombre = parametro.get("nombre");
+				Integer tipoproductoId = Utils.String2Int(parametro.get("tipoproductoid")); 
+				Integer unidadEjecutoraId = Utils.String2Int(parametro.get("unidadEjecutora"));
+				
+				ProductoTipo productoTipo = new ProductoTipo();
+				productoTipo.setId(tipoproductoId);
+				UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
+				unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
+				if(esnuevo){
+					Componente componente = new Componente();
+					componente.setId(componenteId);
+					producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, usuario, new Date());
+					producto.setEstado(1);
+				}else{
+					producto = ProductoDAO.getProductoPorId(id);
+					producto.setProductoTipo(productoTipo);
+					producto.setUnidadEjecutora(unidadEjecutora);
+					producto.setNombre(nombre);
+					producto.setUsuarioActualizo(usuario);
+					producto.setFechaActualizacion(new DateTime().toDate());
+				}
+				
+				ret = ProductoDAO.guardarProducto(producto);
+			}
 			
 			stproducto temp = new stproducto();
 			if (ret) {
@@ -638,11 +647,14 @@ public class SProducto extends HttpServlet {
 					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 				}
+				response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
+				response_text = String.join("", "\"producto\":",response_text);
+				response_text = String.join("", "{\"success\":true,", response_text,"}");
+			}else{
+				response_text = "{ \"success\": false }";
 			}
 
-			response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
-			response_text = String.join("", "\"producto\":",response_text);
-			response_text = String.join("", "{\"success\":true,", response_text,"}");
+			
 				
 				
 		}else if (accion.equals("getProductoPorProyecto")) {
