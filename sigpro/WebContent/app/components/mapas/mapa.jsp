@@ -7,6 +7,16 @@
 			width: 100%;
 		}
 		
+		.label-form2 {
+		    font-size: 13px;
+		    opacity: 1;
+		    color: rgba(0,0,0,0.38) !important;
+		    font-weight: bold;
+		}
+		.label-form2:hover{
+			color: rgba(0,0,0,0.5) !important;
+			
+		}
 		
 	</style>	
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
@@ -70,6 +80,15 @@
 						{{ infoc.objeto.fechaactualizacion }}
 					</div>
 				</div>
+
+				<div class="row">
+					<div class="col-sm-6" style="text-align: right">
+						<label for="nombre">Estado</label>
+					</div>
+					<div class="col-sm-6">
+						{{ infoc.objeto.estadoNombre }}
+					</div>
+				</div>
 				
 
 				</div>
@@ -92,33 +111,58 @@
 					</div>
 		</div>
 		<div class="row">
-	    <div class="col-sm-12 operation_buttons" align="right" style="width: 97%">
+	    <div class="col-sm-12 operation_buttons" align="right" style="width: 99%">
 	    
 	    
 	    	 <div class="checkbox" ng-hide="!mapac.mostrar">
-			    <label>
+			    <span class="label-form2">
 			      <input type="checkbox" ng-model="mostrarTodo" ng-click="mostrar(0)">
-			      Todos
-			    </label>
-			    <label>
-			      <input type="checkbox" ng-model="mostrarProyectos" ng-click="mostrar(1)">
-			      Proyecto
-			    </label>
-			    <label>
-			      <input type="checkbox" ng-model="mostrarComponentes" ng-click="mostrar(2)">
-			      Componentes
-			    </label>
-			    <label>
-			      <input type="checkbox" ng-model="mostrarProductos" ng-click="mostrar(3)">
-			      Productos
-			    </label>
-			    <label>
-			      <input type="checkbox" ng-model="mostrarSubproductos" ng-click="mostrar(4)">
-			      Subproductos
-			    </label>
+			      <span style="font-weight: bold;">Todos</span>
+			    </span>
 			    &nbsp;&nbsp;&nbsp;&nbsp;
-			    <lavel >
-			    	<input type="checkbox" ng-model="mostrarActividades" ng-click="mostrar(5)">
+			    <span class="label-form2">
+			      <input type="checkbox" ng-model="mostrarProyectos" ng-click="mostrar(1)">
+			      <span style="font-weight: bold;">Proyecto</span>
+			    </span>
+			    &nbsp;&nbsp;&nbsp;&nbsp;
+			    <span class="label-form2">
+			      <input type="checkbox" ng-model="mostrarComponentes" ng-click="mostrar(2)">
+			      <span  ng-dropdown-multiselect="" options="mapac.optionComponentes" selected-model="mapac.estadoComponentes" 
+			    	extra-settings="mapac.extraSetingComponentes"
+			    	events="mapac.selectComponente">
+				    	<toggle-dropdown>
+				    		Componentes
+				    		<span class="glyphicon glyphicon-menu-down"></span>
+				    	</toggle-dropdown>
+			      </span>
+			    </span>
+			    &nbsp;&nbsp;&nbsp;&nbsp;
+			    <span class="label-form2">
+			      <input type="checkbox" ng-model="mostrarProductos" ng-click="mostrar(3)">
+			      <span  ng-dropdown-multiselect="" options="mapac.optionProductos" selected-model="mapac.estadoProductos" 
+			    	extra-settings="mapac.extraSetingProductos"
+			    	events="mapac.selectProducto">
+				    	<toggle-dropdown>
+				    		Productos
+				    		<span class="glyphicon glyphicon-menu-down"></span>
+				    	</toggle-dropdown>
+			      </span>
+			    </span>
+			    &nbsp;&nbsp;&nbsp;&nbsp;
+			    <span class="label-form2">
+			      <input type="checkbox" ng-model="mostrarSubproductos" ng-click="mostrar(4)">
+			      <span  ng-dropdown-multiselect="" options="mapac.optionSubproductos" selected-model="mapac.estadoSubproductos" 
+			    	extra-settings="mapac.extraSetingSubproductos"
+			    	events="mapac.selectSubproducto">
+				    	<toggle-dropdown>
+				    		Subproductos
+				    		<span class="glyphicon glyphicon-menu-down"></span>
+				    	</toggle-dropdown>
+			      </span>	
+			    </span>
+			    &nbsp;&nbsp;&nbsp;&nbsp;
+			    <span class="label-form2">
+			    	<input type="checkbox" ng-model="mostrarActividades" ng-click="mostrar(5)" >
 			    	<span  ng-dropdown-multiselect="" options="mapac.transclusionData" selected-model="mapac.transclusionModel" 
 			    	extra-settings="mapac.transclusionSettings"
 			    	events="mapac.selectActividad">
@@ -127,18 +171,9 @@
 				    		<span class="glyphicon glyphicon-menu-down"></span>
 				    	</toggle-dropdown>
 			    	</span>	
-			    </lavel>
+			    </span>
 		    	
 			    
-			    
-			    
-			    
-			    
-			    
-			    	
-			    
-			    	
-			   
 			    
 			    
 			    
@@ -157,31 +192,31 @@
 							<div ng-switch-when="1">
 								<ui-gmap-marker ng-if="mostrarTodo || mostrarProyectos" 
 									 idkey="marca.id" coords="marca.posicion" icon = "marca.icon"
-									 click="abrirInformacion(marca.objetoId,marca.objetoTipoId)" 
+									 click="abrirInformacion(marca.objetoId,marca.objetoTipoId,marca.idEstado,marca.porcentajeEstado)" 
 									 options="{title:marca.nombre}"  
 									 >
 								 </ui-gmap-marker>
 							 </div>
 							 <div ng-switch-when="2">
-								<ui-gmap-marker ng-if="mostrarTodo || mostrarComponentes" 
+								<ui-gmap-marker ng-if="mostrarTodo || (mostrarComponentes && marca.mostrar)" 
 									 idkey="marca.id" coords="marca.posicion" icon = "marca.icon"
-									 click="abrirInformacion(marca.objetoId,marca.objetoTipoId)" 
+									 click="abrirInformacion(marca.objetoId,marca.objetoTipoId,marca.idEstado,marca.porcentajeEstado)" 
 									 options="{title:marca.nombre}"  
 									 >
 								 </ui-gmap-marker>
 							 </div>
 							 <div ng-switch-when="3">
-								<ui-gmap-marker ng-if="mostrarTodo || mostrarProductos" 
+								<ui-gmap-marker ng-if="mostrarTodo || (mostrarProductos && marca.mostrar )" 
 									 idkey="marca.id" coords="marca.posicion" icon = "marca.icon"
-									 click="abrirInformacion(marca.objetoId,marca.objetoTipoId)" 
+									 click="abrirInformacion(marca.objetoId,marca.objetoTipoId,marca.idEstado,marca.porcentajeEstado)" 
 									 options="{title:marca.nombre}"  
 									 >
 								 </ui-gmap-marker>
 							 </div>
 							 <div ng-switch-when="4">
-								<ui-gmap-marker ng-if="mostrarTodo || mostrarSubproductos" 
+								<ui-gmap-marker ng-if="mostrarTodo || (mostrarSubproductos && marca.mostrar )" 
 									 idkey="marca.id" coords="marca.posicion" icon = "marca.icon"
-									 click="abrirInformacion(marca.objetoId,marca.objetoTipoId)" 
+									 click="abrirInformacion(marca.objetoId,marca.objetoTipoId,marca.idEstado,marca.porcentajeEstado)" 
 									 options="{title:marca.nombre}"  
 									 >
 								 </ui-gmap-marker>
@@ -189,7 +224,7 @@
 							 <div ng-switch-when="5">
 								<ui-gmap-marker ng-if="mostrarTodo || (mostrarActividades && marca.mostrar)" 
 									 idkey="marca.id" coords="marca.posicion" icon = "marca.icon"
-									 click="abrirInformacion(marca.objetoId,marca.objetoTipoId)" 
+									 click="abrirInformacion(marca.objetoId,marca.objetoTipoId,marca.idEstado,marca.porcentajeEstado)" 
 									 options="{title:marca.nombre}"  
 									 >
 								 </ui-gmap-marker>

@@ -2,14 +2,11 @@ package servlets;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -52,7 +49,6 @@ import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.CExcel;
-import utilities.CLogger;
 import utilities.CMariaDB;
 import utilities.Utils;
 
@@ -151,7 +147,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 			try{
 				boolean result = false;
 				String data = map.get("data");
-				String[] datos = data.split("�");
+				String[] datos = data.split("°");
 				
 				for(String str1: datos){
 					String[] row = str1.split(",");
@@ -259,8 +255,8 @@ public class SPlanAdquisiciones extends HttpServlet {
 					}else{
 						plan = new PlanAdquisicionesDetalle(categoriaAdquisicion,planAdquisiciones, tipoAdquisicion,unidadMedida,cantidad, total, costo, 
 								planificadoDocs, realDocs, planificadoLanzamiento, realLanzamiento, planificadoRecepcionEval, realRecepcionEval, 
-								planificadoAdjudica, realAdjudica, planificadoFirma, realFirma, numeroContrato, objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
-								bloqueado,nog);
+								planificadoAdjudica, realAdjudica, planificadoFirma, realFirma,  objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
+								bloqueado, numeroContrato, nog);
 					}
 					
 					result = PlanAdquisicionesDetalleDAO.guardarPlanAdquisicion(plan);
@@ -322,13 +318,9 @@ public class SPlanAdquisiciones extends HttpServlet {
 	private List<stplanadquisiciones> generarPlan(Integer idPlanAdquisiciones, Integer idPrestamo, String usuario){
 		List<stplanadquisiciones> lstprestamo = new ArrayList<stplanadquisiciones>();
 		stplanadquisiciones tempPrestamo = new stplanadquisiciones();
-
+		
 		Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
-		
-		Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(idPrestamo, 1);
-		String fechaSuscripcion = Utils.formatDate(prestamo.getFechaSuscripcion());
-		String fechaCierre = Utils.formatDate(prestamo.getFechaCierreOrigianlUe());
-		
+				
 		PlanAdquisiciones planAdquisicion = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(1, proyecto.getId());
 		idPlanAdquisiciones = planAdquisicion != null ? planAdquisicion.getId() : null;
 		
@@ -817,7 +809,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		String headers[][];
 		String datos[][];
 		
-		Workboo wb=null;
+		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders();

@@ -151,10 +151,13 @@ mi.options = {
 		mi.columnas=[];
 		//mi.agrupacion = mi.agruapacion == null || mi.agrupacion == undefined ? 1 : mi.agrupacion;
 		mi.agrupacion = 1;
+		mi.desembolsosGrafica = [];
 	}
 	
 	mi.generarReporte = function (){
+		mi.inicializarDatos();
 		mi.mostrarDescargar = false;
+		
 		if ( mi.prestamoSeleccionado != null && mi.anioSeleccionado > 0 &&  mi.anioSeleccionado.toString().length == 4 ){
 			mi.inicializarDatos();
 			mi.mostrar=true;

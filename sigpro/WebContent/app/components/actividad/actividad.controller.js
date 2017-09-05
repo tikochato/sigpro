@@ -444,9 +444,10 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			var idResponsables = "";
 			var idRoles = [];
 			for (x in mi.responsables){
-				idResponsables = idResponsables + (x > 0 ? "," : "") + mi.responsables[x].id;
+				//idResponsables = idResponsables + (x > 0 ? "," : "") + mi.responsables[x].id;
 				idRoles.push(mi.responsables[x].rol);
 			}
+			
 			var resultado = mi.llamarModalBusqueda('/SColaborador', {
 				accion : 'totalElementos'	
 			}, function(pagina, elementosPorPagina) {

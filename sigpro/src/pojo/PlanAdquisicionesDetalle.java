@@ -1,5 +1,5 @@
 package pojo;
-// Generated Aug 29, 2017 4:40:10 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 5, 2017 4:14:55 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2822836334728884861L;
+	private static final long serialVersionUID = -1852463094582834050L;
 	private Integer id;
 	private CategoriaAdquisicion categoriaAdquisicion;
 	private PlanAdquisiciones planAdquisiciones;
@@ -52,6 +52,8 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 	private Date fechaActualizacion;
 	private int estado;
 	private Integer bloqueado;
+	private String numeroContrato;
+	private Long nog;
 
 	public PlanAdquisicionesDetalle() {
 	}
@@ -72,7 +74,7 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 			Date lanzamientoEventoReal, Date recepcionOfertasPlanificado, Date recepcionOfertasReal,
 			Date adjudicacionPlanificado, Date adjudicacionReal, Date firmaContratoPlanificado, Date firmaContratoReal,
 			int objetoId, int objetoTipo, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, Integer bloqueado) {
+			Date fechaActualizacion, int estado, Integer bloqueado, String numeroContrato, Long nog) {
 		this.categoriaAdquisicion = categoriaAdquisicion;
 		this.planAdquisiciones = planAdquisiciones;
 		this.tipoAdquisicion = tipoAdquisicion;
@@ -98,6 +100,8 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
 		this.bloqueado = bloqueado;
+		this.numeroContrato = numeroContrato;
+		this.nog = nog;
 	}
 
 	@Id
@@ -349,6 +353,24 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 
 	public void setBloqueado(Integer bloqueado) {
 		this.bloqueado = bloqueado;
+	}
+
+	@Column(name = "numero_contrato", length = 45)
+	public String getNumeroContrato() {
+		return this.numeroContrato;
+	}
+
+	public void setNumeroContrato(String numeroContrato) {
+		this.numeroContrato = numeroContrato;
+	}
+
+	@Column(name = "nog")
+	public Long getNog() {
+		return this.nog;
+	}
+
+	public void setNog(Long nog) {
+		this.nog = nog;
 	}
 
 }
