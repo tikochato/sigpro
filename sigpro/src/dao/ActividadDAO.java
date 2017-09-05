@@ -472,7 +472,7 @@ public class ActividadDAO {
 			ret.addAll(subactividades);			
 		}
 		catch(Throwable e){
-			CLogger.write("12", ActividadDAO.class, e);
+			CLogger.write("11", ActividadDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -530,7 +530,7 @@ public class ActividadDAO {
 			
 		}
 		catch(Throwable e){
-			CLogger.write("13", ActividadDAO.class, e);
+			CLogger.write("12", ActividadDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -558,7 +558,7 @@ public class ActividadDAO {
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
-			CLogger.write("2", ActividadDAO.class, e);
+			CLogger.write("13", ActividadDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -580,7 +580,7 @@ public class ActividadDAO {
 			ret = (Integer) o;
 		}
 		catch(Throwable e){
-			CLogger.write("8", ActividadDAO.class, e);
+			CLogger.write("14", ActividadDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -599,7 +599,7 @@ public class ActividadDAO {
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getSingleResult();
 		}catch(Throwable e){
-			CLogger.write("9", ActividadDAO.class, e);
+			CLogger.write("15", ActividadDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -619,9 +619,47 @@ public class ActividadDAO {
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getSingleResult();
 		}catch(Throwable e){
-			CLogger.write("9", ActividadDAO.class, e);
+			CLogger.write("16", ActividadDAO.class, e);
 		}
 		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Actividad getActividadPorIdOrden(int id, String usuario, Session session){
+		Actividad ret = null;
+		try{
+			String query = "FROM Actividad where id=:id";
+			if (usuario != null){
+				query += " AND id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )";
+			}
+			Query<Actividad> criteria = session.createQuery(query, Actividad.class);
+			criteria.setParameter("id", id);
+			if(usuario != null){
+			criteria.setParameter("usuario", usuario);
+			}
+			ret = criteria.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("17", ActividadDAO.class, e);
+			session.getTransaction().rollback();
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean guardarActividadOrden(Actividad Actividad, Session session){
+		boolean ret = false;
+		try{
+			session.saveOrUpdate(Actividad);
+			ActividadUsuario au = new ActividadUsuario(new ActividadUsuarioId(Actividad.getId(), Actividad.getUsuarioCreo()),Actividad);
+			session.saveOrUpdate(au);
+			ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("18", ActividadDAO.class, e);
+			session.getTransaction().rollback();
 			session.close();
 		}
 		return ret;
