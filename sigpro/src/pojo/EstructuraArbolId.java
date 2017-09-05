@@ -11,6 +11,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class EstructuraArbolId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5214447754136064787L;
 	private Integer prestamo;
 	private Integer componente;
 	private Integer producto;
@@ -118,6 +122,7 @@ public class EstructuraArbolId implements java.io.Serializable {
 		this.fechaFin = fechaFin;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -149,6 +154,7 @@ public class EstructuraArbolId implements java.io.Serializable {
 						&& castOther.getFechaFin() != null && this.getFechaFin().equals(castOther.getFechaFin())));
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 

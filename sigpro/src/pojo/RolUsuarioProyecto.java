@@ -15,6 +15,10 @@ import javax.persistence.Table;
 @Table(name = "rol_usuario_proyecto", catalog = "sipro")
 public class RolUsuarioProyecto implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4544038347637757622L;
 	private RolUsuarioProyectoId id;
 
 	public RolUsuarioProyecto() {

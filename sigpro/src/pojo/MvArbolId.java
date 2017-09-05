@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class MvArbolId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1280058044354171831L;
 	private byte prestamo;
 	private byte componente;
 	private byte producto;
@@ -117,6 +121,7 @@ public class MvArbolId implements java.io.Serializable {
 		this.fechaInicio = fechaInicio;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -134,6 +139,7 @@ public class MvArbolId implements java.io.Serializable {
 				&& (this.getFechaInicio() == castOther.getFechaInicio());
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 

@@ -15,6 +15,10 @@ import javax.persistence.Table;
 @Table(name = "ejecucion_presupuestaria", catalog = "sipro")
 public class EjecucionPresupuestaria implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 65327629709604300L;
 	private EjecucionPresupuestariaId id;
 
 	public EjecucionPresupuestaria() {

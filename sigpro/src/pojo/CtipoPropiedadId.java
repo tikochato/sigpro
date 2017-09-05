@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class CtipoPropiedadId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8552251174636414201L;
 	private int componenteTipoid;
 	private int componentePropiedadid;
 
@@ -39,6 +43,7 @@ public class CtipoPropiedadId implements java.io.Serializable {
 		this.componentePropiedadid = componentePropiedadid;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -52,6 +57,7 @@ public class CtipoPropiedadId implements java.io.Serializable {
 				&& (this.getComponentePropiedadid() == castOther.getComponentePropiedadid());
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 

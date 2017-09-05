@@ -15,6 +15,10 @@ import javax.persistence.Table;
 @Table(name = "mv_arbol", catalog = "sipro")
 public class MvArbol implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6739285975892030110L;
 	private MvArbolId id;
 
 	public MvArbol() {

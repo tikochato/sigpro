@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ComponenteUsuarioId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -297937538350198936L;
 	private int componenteid;
 	private String usuario;
 
@@ -39,6 +43,7 @@ public class ComponenteUsuarioId implements java.io.Serializable {
 		this.usuario = usuario;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -53,6 +58,7 @@ public class ComponenteUsuarioId implements java.io.Serializable {
 						&& castOther.getUsuario() != null && this.getUsuario().equals(castOther.getUsuario())));
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 

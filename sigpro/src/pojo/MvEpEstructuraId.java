@@ -11,6 +11,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class MvEpEstructuraId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8803975496713000142L;
 	private Integer ejercicio;
 	private Integer fuente;
 	private Integer organismo;
@@ -252,6 +256,7 @@ public class MvEpEstructuraId implements java.io.Serializable {
 		this.diciembre = diciembre;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -307,6 +312,7 @@ public class MvEpEstructuraId implements java.io.Serializable {
 						&& castOther.getDiciembre() != null && this.getDiciembre().equals(castOther.getDiciembre())));
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 

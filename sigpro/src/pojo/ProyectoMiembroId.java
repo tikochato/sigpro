@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ProyectoMiembroId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8560493063640463731L;
 	private int proyectoid;
 	private int colaboradorid;
 
@@ -39,6 +43,7 @@ public class ProyectoMiembroId implements java.io.Serializable {
 		this.colaboradorid = colaboradorid;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -52,6 +57,7 @@ public class ProyectoMiembroId implements java.io.Serializable {
 				&& (this.getColaboradorid() == castOther.getColaboradorid());
 	}
 
+	@Override
 	public int hashCode() {
 		int result = 17;
 
