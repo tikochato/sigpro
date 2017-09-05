@@ -241,6 +241,12 @@
 								</select>
 		
 					</div>
+					<div class="operation_buttons"  style="float: right;">
+		    			<div class="btn-group" role="group" aria-label="">
+							<label class="btn btn-default" ng-click="racic.exportarExcel()" uib-tooltip="Exportar" ng-hide="!racic.mostrarTabla">
+							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
+						</div>
+		    		</div>
 				</form>
 				<br/>
 				<br/>
