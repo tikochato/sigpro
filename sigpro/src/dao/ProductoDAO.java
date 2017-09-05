@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.LockModeType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -56,6 +57,7 @@ public class ProductoDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
+			producto.setNivel(2);
 			session.saveOrUpdate(producto);
 			ProductoUsuario pu = new ProductoUsuario(new ProductoUsuarioId(producto.getId(), producto.getUsuarioCreo()), producto
 					, producto.getUsuarioCreo(), null, new Date(), null);
@@ -182,7 +184,7 @@ public class ProductoDAO {
 
 		if (pojo != null) {
 			pojo.setEstado(0);
-
+			pojo.setOrden(null);
 			Session session = CHibernateSession.getSessionFactory().openSession();
 
 			try {
@@ -210,7 +212,7 @@ public class ProductoDAO {
 			CriteriaQuery<Producto> criteria = builder.createQuery(Producto.class);
 			Root<Producto> root = criteria.from(Producto.class);
 			criteria.select( root );
-			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
+			criteria.where( builder.and(builder.equal( root.get("id"), id )));
 			ret = session.createQuery( criteria ).getSingleResult();
 		}
 		catch(Throwable e){
@@ -249,9 +251,8 @@ public class ProductoDAO {
 		return ret;
 	}
 	
-	public static Producto getProductoInicial(Integer componenteId, String usuario){
+	public static Producto getProductoInicial(Integer componenteId, String usuario, Session session){
 		Producto ret = null;
-		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = "FROM Producto p where p.estado=1 and p.orden=1 and p.componente.id=:componenteId and p.usuarioCreo=:usuario";
 			Query<Producto> criteria = session.createQuery(query, Producto.class);
@@ -260,16 +261,14 @@ public class ProductoDAO {
 			ret = criteria.getSingleResult();
 		}catch(Throwable e){
 			CLogger.write("11", ProductoDAO.class, e);
-		}
-		finally{
+			session.getTransaction().rollback();
 			session.close();
 		}
 		return ret;
 	}
 	
-	public static Producto getProductoFechaMaxima(Integer componenteId, String usuario){
+	public static Producto getProductoFechaMaxima(Integer componenteId, String usuario, Session session){
 		Producto ret = null;
-		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = "FROM Producto p where p.estado=1 and p.componente.id=:componenteId and p.usuarioCreo=:usuario order by p.fechaFin desc";
 			Query<Producto> criteria = session.createQuery(query, Producto.class);
@@ -279,11 +278,62 @@ public class ProductoDAO {
 			ret = criteria.getSingleResult();
 		}catch(Throwable e){
 			CLogger.write("12", ProductoDAO.class, e);
-		}
-		finally{
+			session.getTransaction().rollback();
 			session.close();
 		}
 		return ret;
 	}
 	
+	public static List<Producto> getProductosOrden(Integer componenteid, String usuario, Session session) {
+		List<Producto> ret = new ArrayList<Producto>();
+		try {
+			
+			String query = "SELECT p FROM Producto p WHERE p.estado = 1 AND p.componente.id = :componenteid ";
+			query = String.join("", query, " AND p.id in (SELECT u.id.productoid from ProductoUsuario u where u.id.usuario=:usuario )");
+			
+			Query<Producto> criteria = session.createQuery(query,Producto.class);
+			criteria.setParameter("usuario", usuario);
+			criteria.setParameter("componenteid", componenteid);
+			ret = criteria.getResultList();
+		} catch (Throwable e) {
+			CLogger.write("13", ProductoDAO.class, e);
+			session.getTransaction().rollback();
+			session.close();
+		} 
+		return ret;
+	}
+	
+	public static Producto getProductoPorIdOrden(int id, String usuario, Session session) {
+		Producto ret = null;
+		try {
+			Query<Producto> criteria = session.createQuery("FROM Producto where id=:id AND id in (SELECT u.id.productoid from ProductoUsuario u where u.id.usuario=:usuario )", Producto.class).setLockMode(LockModeType.PESSIMISTIC_READ);
+			criteria.setParameter("id", id);
+			criteria.setParameter("usuario", usuario);
+			 ret = criteria.getSingleResult();;
+		} catch (Throwable e) {
+			CLogger.write("14", ProductoDAO.class, e);
+			session.getTransaction().rollback();
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean guardarProductoOrden(Producto producto, Session session) {
+		boolean ret = false;
+		try {
+			session.saveOrUpdate(producto);
+			ProductoUsuario pu = new ProductoUsuario(new ProductoUsuarioId(producto.getId(), producto.getUsuarioCreo()), producto
+					, producto.getUsuarioCreo(), null, new Date(), null);
+			
+			session.flush();
+			session.clear();
+			session.saveOrUpdate(pu);
+			ret = true;
+		} catch (Throwable e) {
+			CLogger.write("15", ProductoDAO.class, e);
+			session.getTransaction().rollback();
+			session.close();
+		}
+		return ret;
+	}
 }

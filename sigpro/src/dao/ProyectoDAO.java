@@ -3,6 +3,8 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.LockModeType;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -39,6 +41,8 @@ public class ProyectoDAO implements java.io.Serializable  {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
+			proyecto.setTreePath("1");
+			proyecto.setNivel(0);
 			session.saveOrUpdate(proyecto);
 			ProyectoUsuario pu = new ProyectoUsuario(new ProyectoUsuarioId(proyecto.getId(), proyecto.getUsuarioCreo()), proyecto);
 			session.saveOrUpdate(pu);
@@ -275,6 +279,39 @@ public class ProyectoDAO implements java.io.Serializable  {
 			session.close();
 		}
 
+		return ret;
+	}
+	
+	public static Proyecto getProyectoOrden(int id, Session session){
+		Proyecto ret = null;
+		try{
+			Query<Proyecto> criteria = session.createQuery("FROM Proyecto where id=:id", Proyecto.class).setLockMode(LockModeType.PESSIMISTIC_READ);
+			criteria.setParameter("id", id);
+			 ret = criteria.getSingleResult();;
+		}
+		catch(Throwable e){
+			CLogger.write("11", ProyectoDAO.class, e);
+		}
+		return ret;
+	}
+	
+	public static boolean guardarProyectoOrden(Proyecto proyecto, Session session){
+		boolean ret = false;
+		try{
+			proyecto.setTreePath("1");
+			session.saveOrUpdate(proyecto);
+			ProyectoUsuario pu = new ProyectoUsuario(new ProyectoUsuarioId(proyecto.getId(), proyecto.getUsuarioCreo()), proyecto);
+			
+			session.flush();
+			session.clear();
+			session.saveOrUpdate(pu);
+			ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("12", ProyectoDAO.class, e);
+			session.getTransaction().rollback();
+			session.close();
+		}
 		return ret;
 	}
 }

@@ -73,6 +73,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		Integer cantidad;
 		BigDecimal costo;
 		BigDecimal total;
+		Long nog;
 		String planificadoDocs;
 		String realDocs;
 		String planificadoLanzamiento;
@@ -83,6 +84,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		String realAdjudica;
 		String planificadoFirma;
 		String realFirma;
+		String numeroContrato;
 		List<String> hijos;
 		boolean c0;
 		boolean c1;
@@ -125,7 +127,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		while ((str = br.readLine()) != null) {
 			sb.append(str);
 		}
-		Map<String, String> map = gson.fromJson(sb.toString(), type);
+		HashMap<String, String> map = gson.fromJson(sb.toString(), type);
 		String accion = map.get("accion")!=null ? map.get("accion") : "";
 		String response_text = "";
 		
@@ -182,7 +184,9 @@ public class SPlanAdquisiciones extends HttpServlet {
 					tempPrestamo.realAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionReal()) : null;
 					tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
 					tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
+					tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 					tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+					tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
 			}
 			
 			if(CMariaDB.connect()){
@@ -242,8 +246,10 @@ public class SPlanAdquisiciones extends HttpServlet {
 						tempPrestamo.planificadoAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionPlanificado()) : null;
 						tempPrestamo.realAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionReal()) : null;
 						tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
+						tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 						tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
 						tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+						tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
 					}
 										
 					ArrayList<Integer> productos = InformacionPresupuestariaDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
@@ -296,7 +302,9 @@ public class SPlanAdquisiciones extends HttpServlet {
 							tempPrestamo.realAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionReal()) : null;
 							tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
 							tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
+							tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 							tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+							tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
 						}
 						
 						ArrayList<Integer> subproductos = InformacionPresupuestariaDAO.getEstructuraArbolSubProducto(idPrestamo,objComponente.getId(),objProducto.getId(), conn);
@@ -350,7 +358,9 @@ public class SPlanAdquisiciones extends HttpServlet {
 								tempPrestamo.realAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionReal()) : null;
 								tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
 								tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
+								tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 								tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+								tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
 							}
 							
 							lstprestamo.add(tempPrestamo);
@@ -414,7 +424,9 @@ public class SPlanAdquisiciones extends HttpServlet {
 									tempPrestamo.realAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionReal()) : null;
 									tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
 									tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
+									tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 									tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+									tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
 								}
 								
 								lstprestamo.add(tempPrestamo);
@@ -480,7 +492,9 @@ public class SPlanAdquisiciones extends HttpServlet {
 								tempPrestamo.realAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionReal()) : null;
 								tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
 								tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
+								tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 								tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+								tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
 							}
 							
 							lstprestamo.add(tempPrestamo);
@@ -540,7 +554,9 @@ public class SPlanAdquisiciones extends HttpServlet {
 							tempPrestamo.realAdjudica = detallePlan != null ? Utils.formatDate(detallePlan.getAdjudicacionReal()) : null;
 							tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
 							tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
+							tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 							tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+							tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
 						}
 						
 						lstprestamo.add(tempPrestamo);
@@ -599,6 +615,8 @@ public class SPlanAdquisiciones extends HttpServlet {
 						tempPrestamo.planificadoFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoPlanificado()) : null;
 						tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
 						tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
+						tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
+						tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
 					}
 					
 					lstprestamo.add(tempPrestamo);
@@ -689,7 +707,8 @@ public class SPlanAdquisiciones extends HttpServlet {
 					Date planificadoFirma =  Utils.dateFromString(row[17]);
 					Date realFirma = Utils.dateFromString(row[18]);
 					Integer bloqueado = Utils.String2Boolean(row[19],0);
-
+					Long nog = Utils.String2Long(row[20]);
+					String numeroContrato = row[21];
 					PlanAdquisicionesDetalle plan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
 					if(plan != null){
 						plan.setTipoAdquisicion(tipoAdquisicion);
@@ -714,11 +733,13 @@ public class SPlanAdquisiciones extends HttpServlet {
 						plan.setFechaCreacion(new DateTime().toDate());
 						plan.setEstado(1);
 						plan.setBloqueado(bloqueado);
+						plan.setNog(nog);
+						plan.setNumeroContrato(numeroContrato);
 					}else{
 						plan = new PlanAdquisicionesDetalle(categoriaAdquisicion,planAdquisiciones, tipoAdquisicion,unidadMedida,cantidad, total, costo, 
 								planificadoDocs, realDocs, planificadoLanzamiento, realLanzamiento, planificadoRecepcionEval, realRecepcionEval, 
-								planificadoAdjudica, realAdjudica, planificadoFirma, realFirma, objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
-								bloqueado);
+								planificadoAdjudica, realAdjudica, planificadoFirma, realFirma, numeroContrato, objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
+								bloqueado,nog);
 					}
 					
 					result = PlanAdquisicionesDetalleDAO.guardarPlanAdquisicion(plan);

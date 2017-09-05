@@ -91,6 +91,7 @@ public class SubproductoDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
+			subproducto.setNivel(3);
 			session.saveOrUpdate(subproducto);
 			SubproductoUsuario su = new SubproductoUsuario(new SubproductoUsuarioId(subproducto.getId(),subproducto.getUsuarioCreo())
 					, subproducto, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
@@ -279,7 +280,7 @@ public class SubproductoDAO {
 
 		if (pojo != null) {
 			pojo.setEstado(0);
-
+			pojo.setOrden(null);
 			Session session = CHibernateSession.getSessionFactory().openSession();
 
 			try {
@@ -307,7 +308,7 @@ public class SubproductoDAO {
 			CriteriaQuery<Subproducto> criteria = builder.createQuery(Subproducto.class);
 			Root<Subproducto> root = criteria.from(Subproducto.class);
 			criteria.select( root );
-			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
+			criteria.where( builder.and(builder.equal( root.get("id"), id )));
 			ret = session.createQuery( criteria ).getSingleResult();
 		}
 		catch(Throwable e){
@@ -367,4 +368,24 @@ public class SubproductoDAO {
 		}
 		return ret;
 	}
+	
+	public static boolean guardarSubproductoOrden(Subproducto subproducto, Session session) {
+		boolean ret = false;
+		try {
+			session.saveOrUpdate(subproducto);
+			SubproductoUsuario su = new SubproductoUsuario(new SubproductoUsuarioId(subproducto.getId(),subproducto.getUsuarioCreo())
+					, subproducto, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
+			
+			session.flush();
+			session.clear();
+			session.saveOrUpdate(su);
+			ret = true;
+		} catch (Throwable e) {
+			CLogger.write("13", SubproductoDAO.class, e);
+			session.getTransaction().rollback();
+			session.close();
+		}
+		return ret;
+	}
+
 }

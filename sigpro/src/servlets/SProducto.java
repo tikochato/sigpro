@@ -276,8 +276,7 @@ public class SProducto extends HttpServlet {
 				ret = ProductoDAO.guardarProducto(producto);
 				
 				COrden orden = new COrden();
-				orden.calcularOrdenObjetosSuperiores(producto.getId(), 3, usuario);
-				
+				orden.calcularOrdenObjetosSuperiores(3, producto.getId(), 3, usuario, COrden.getSessionCalculoOrden());				
 				
 				if (ret){
 					ProductoUsuarioId productoUsuarioId = new ProductoUsuarioId(producto.getId(), usuario);
@@ -330,8 +329,15 @@ public class SProducto extends HttpServlet {
 			}
 		} else if (accion.equals("borrar")) {
 			int codigo = Utils.String2Int(parametro.get("codigo"), -1);
+			
+			Producto pojo = ProductoDAO.getProductoPorId(codigo,usuario);
+			
 			boolean eliminado = ProductoDAO.eliminar(codigo, usuario);
+			
 			if (eliminado) {
+				COrden orden = new COrden();
+				orden.calcularOrdenObjetosSuperiores(3, pojo.getId(), 3, usuario, COrden.getSessionCalculoOrden());		
+				
 				int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
 				int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 				int registros = Utils.String2Int(parametro.get("registros"), 20);
@@ -368,8 +374,8 @@ public class SProducto extends HttpServlet {
 					temp.longitud = producto.getLongitud();
 					temp.peso = producto.getPeso();
 					temp.costo = producto.getCosto();
-					temp.acumulacionCostoId = producto.getAcumulacionCosto().getId();
-					temp.acumulacionCostoNombre = producto.getAcumulacionCosto().getNombre();
+					temp.acumulacionCostoId = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getId() : null;
+					temp.acumulacionCostoNombre = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getNombre() : null;
 					temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
 					temp.fechaFin = Utils.formatDate(producto.getFechaFin());
 					temp.duracion = producto.getDuracion();

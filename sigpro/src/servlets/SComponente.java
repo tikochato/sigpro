@@ -286,9 +286,9 @@ public class SComponente extends HttpServlet {
 						componente.setDuracionDimension(duracionDimension);
 					}
 					result = ComponenteDAO.guardarComponente(componente);
-
 					COrden orden = new COrden();
-					orden.calcularOrdenObjetosSuperiores(proyectoid, 1, usuario);
+					
+					orden.calcularOrdenObjetosSuperiores(2, componente.getId(), 2, usuario, COrden.getSessionCalculoOrden());
 					
 					Set<ComponentePropiedadValor> valores_temp = componente.getComponentePropiedadValors();
 					componente.setComponentePropiedadValors(null);
@@ -390,7 +390,18 @@ public class SComponente extends HttpServlet {
 			if(id>0){
 				Componente componente = ComponenteDAO.getComponentePorId(id,usuario);
 				componente.setUsuarioActualizo(usuario);
-				response_text = String.join("","{ \"success\": ",(ComponenteDAO.eliminarComponente(componente) ? "true" : "false")," }");
+				
+				Integer objetoId = componente.getProyecto().getId();
+				Integer objetoTipo = 1;
+				
+				boolean eliminado = ComponenteDAO.eliminarComponente(componente);
+				
+				if(eliminado){
+					COrden orden = new COrden();
+					orden.calcularOrdenObjetosSuperiores(2, objetoId, objetoTipo, usuario, COrden.getSessionCalculoOrden());
+				}
+				
+				response_text = String.join("","{ \"success\": ",(eliminado ? "true" : "false")," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
