@@ -440,7 +440,11 @@ public class CExcel {
 									setCellValueInt(Integer.parseInt(data[i][j]), line, j, borde);
 								break;
 							case "double":
-								setCellValueDouble(Double.parseDouble(data[i][j]), line, j, borde);
+								if(!data[i][j].isEmpty()){
+									setCellValueDouble(Double.parseDouble(data[i][j]), line, j, borde);
+								}else{
+									setCellValueString("", line, j, false, borde);
+								}
 								break;	
 							case "currency":
 								setCellValueCurrency(Double.parseDouble(data[i][j]), line, j, false, borde);
