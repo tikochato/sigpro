@@ -630,7 +630,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 			try{
 				boolean result = false;
 				String data = map.get("data");
-				String[] datos = data.split("°");
+				String[] datos = data.split("ï¿½");
 				
 				for(String str1: datos){
 					String[] row = str1.split(",");
@@ -738,8 +738,8 @@ public class SPlanAdquisiciones extends HttpServlet {
 					}else{
 						plan = new PlanAdquisicionesDetalle(categoriaAdquisicion,planAdquisiciones, tipoAdquisicion,unidadMedida,cantidad, total, costo, 
 								planificadoDocs, realDocs, planificadoLanzamiento, realLanzamiento, planificadoRecepcionEval, realRecepcionEval, 
-								planificadoAdjudica, realAdjudica, planificadoFirma, realFirma, numeroContrato, objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
-								bloqueado,nog);
+								planificadoAdjudica, realAdjudica, planificadoFirma, realFirma,  objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
+								bloqueado, numeroContrato, nog);
 					}
 					
 					result = PlanAdquisicionesDetalleDAO.guardarPlanAdquisicion(plan);

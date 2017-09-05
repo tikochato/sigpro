@@ -308,7 +308,7 @@
 				<br/>
 				
 				<div align="center">
-					<h5>Asignacion de Responsables</h5>
+					<h5>Asignación de Responsables</h5>
 					<div style="height: 35px;" >
 						<div style="text-align: right;">
 							<div class="btn-group" role="group" aria-label="">
