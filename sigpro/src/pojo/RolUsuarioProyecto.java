@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 4, 2017 9:37:50 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 5, 2017 4:14:55 PM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -15,10 +15,6 @@ import javax.persistence.Table;
 @Table(name = "rol_usuario_proyecto", catalog = "sipro")
 public class RolUsuarioProyecto implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4544038347637757622L;
 	private RolUsuarioProyectoId id;
 
 	public RolUsuarioProyecto() {

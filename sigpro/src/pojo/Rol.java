@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 4, 2017 9:37:50 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 5, 2017 4:14:55 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -22,10 +22,6 @@ import javax.persistence.TemporalType;
 @Table(name = "rol", catalog = "sipro")
 public class Rol implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -547233844092466361L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;

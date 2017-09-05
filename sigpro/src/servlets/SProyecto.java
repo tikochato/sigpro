@@ -394,7 +394,7 @@ public class SProyecto extends HttpServlet {
 							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, obra,latitud, 
 							longitud, objetivo,enunciadoAlcance, costo, objetivoEspecifico,visionGeneral,renglon, ubicacionGeografica, 
 							null, null, null, null, 
-							null, null, null, null, null, null, null,null,null,null);
+							null, null, null, null, null, null, null,null,null,null,null,null);
 					
 					
 				}else{

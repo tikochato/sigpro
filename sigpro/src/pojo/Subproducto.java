@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 4, 2017 9:37:50 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 5, 2017 4:14:55 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,10 +25,6 @@ import javax.persistence.TemporalType;
 @Table(name = "subproducto", catalog = "sipro")
 public class Subproducto implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -329761492141877789L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Producto producto;
@@ -57,6 +53,8 @@ public class Subproducto implements java.io.Serializable {
 	private Integer duracion;
 	private String duracionDimension;
 	private Integer orden;
+	private String treePath;
+	private Integer nivel;
 	private Set<SubproductoPropiedadValor> subproductoPropiedadValors = new HashSet<SubproductoPropiedadValor>(0);
 	private Set<SubproductoUsuario> subproductoUsuarios = new HashSet<SubproductoUsuario>(0);
 
@@ -79,7 +77,7 @@ public class Subproducto implements java.io.Serializable {
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Long snip,
 			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, String latitud,
 			String longitud, BigDecimal costo, Integer renglon, Integer ubicacionGeografica, Date fechaInicio,
-			Date fechaFin, Integer duracion, String duracionDimension, Integer orden,
+			Date fechaFin, Integer duracion, String duracionDimension, Integer orden, String treePath, Integer nivel,
 			Set<SubproductoPropiedadValor> subproductoPropiedadValors, Set<SubproductoUsuario> subproductoUsuarios) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.producto = producto;
@@ -108,6 +106,8 @@ public class Subproducto implements java.io.Serializable {
 		this.duracion = duracion;
 		this.duracionDimension = duracionDimension;
 		this.orden = orden;
+		this.treePath = treePath;
+		this.nivel = nivel;
 		this.subproductoPropiedadValors = subproductoPropiedadValors;
 		this.subproductoUsuarios = subproductoUsuarios;
 	}
@@ -373,6 +373,24 @@ public class Subproducto implements java.io.Serializable {
 
 	public void setOrden(Integer orden) {
 		this.orden = orden;
+	}
+
+	@Column(name = "treePath", length = 45)
+	public String getTreePath() {
+		return this.treePath;
+	}
+
+	public void setTreePath(String treePath) {
+		this.treePath = treePath;
+	}
+
+	@Column(name = "nivel")
+	public Integer getNivel() {
+		return this.nivel;
+	}
+
+	public void setNivel(Integer nivel) {
+		this.nivel = nivel;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subproducto")

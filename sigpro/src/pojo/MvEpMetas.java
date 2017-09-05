@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 4, 2017 9:37:50 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 5, 2017 4:14:55 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import javax.persistence.Column;
@@ -16,10 +16,6 @@ import javax.persistence.Table;
 @Table(name = "mv_ep_metas", catalog = "sipro")
 public class MvEpMetas implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2859974549072564393L;
 	private Integer id;
 	private int ejercicio;
 	private int objetoId;
