@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.hibernate.Session;
 import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
@@ -303,9 +304,11 @@ public class SActividad extends HttpServlet {
 					
 					result = ActividadDAO.guardarActividad(actividad);
 					
+					Session session = COrden.getSessionCalculoOrden();
+					
 					COrden orden = new COrden();
-					orden.calcularOrdenActividades(objetoId, objetoTipo, usuario);
-					orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario);
+					orden.calcularOrdenActividades(5,objetoId, objetoTipo, usuario, session);
+					orden.calcularOrdenObjetosSuperiores(5,objetoId, objetoTipo, usuario, session);
 					
 					if (result ){
 						List<AsignacionRaci> asignaciones_temp = AsignacionRaciDAO.getAsignacionPorTarea(actividad.getId(), 5);
@@ -407,9 +410,12 @@ public class SActividad extends HttpServlet {
 				boolean eliminado = ActividadDAO.eliminarActividad(actividad);
 				
 				if(eliminado){
+					
+					Session session = COrden.getSessionCalculoOrden();
+					
 					COrden orden = new COrden();
-					orden.calcularOrdenActividades(objetoId, objetoTipo, usuario);
-					orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario);
+					orden.calcularOrdenActividades(5,objetoId, objetoTipo, usuario, session);
+					orden.calcularOrdenObjetosSuperiores(5,objetoId, objetoTipo, usuario, session);
 				}
 				
 				response_text = String.join("","{ \"success\": ",( eliminado ? "true" : "false")," }");
