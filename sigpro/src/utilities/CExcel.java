@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -250,11 +252,24 @@ public class CExcel {
 		cell.setCellStyle(estiloCelda);
 	}
 	
-	public void setCellValueDate(Date value, int irow, int icell) {
+	public void setCellValueDate(Date value, int irow, int icell, Boolean borde) {
 		cell = sheet.getRow(irow) != null ? (sheet.getRow(irow).getCell(icell) != null
 				? sheet.getRow(irow).getCell(icell) : sheet.getRow(irow).createCell(icell))
 				: sheet.createRow(irow).createCell(icell);
 		cell.setCellValue(value);
+		CellStyle estiloCelda =cs_normal;
+		if(borde){
+			estiloCelda.setBorderTop(BorderStyle.THIN);
+			estiloCelda.setBorderLeft(BorderStyle.THIN);
+			estiloCelda.setBorderRight(BorderStyle.THIN);
+			estiloCelda.setBorderBottom(BorderStyle.THIN);
+		}else{
+			estiloCelda.setBorderTop(BorderStyle.NONE);
+			estiloCelda.setBorderLeft(BorderStyle.NONE);
+			estiloCelda.setBorderRight(BorderStyle.NONE);
+			estiloCelda.setBorderBottom(BorderStyle.NONE);
+		}
+		cell.setCellStyle(estiloCelda);
 	}
 
 	public void setCellFormula(String formula, int irow, int icell, String style, boolean bold) {
@@ -425,7 +440,11 @@ public class CExcel {
 									setCellValueInt(Integer.parseInt(data[i][j]), line, j, borde);
 								break;
 							case "double":
-								setCellValueDouble(Double.parseDouble(data[i][j]), line, j, borde);
+								if(!data[i][j].isEmpty()){
+									setCellValueDouble(Double.parseDouble(data[i][j]), line, j, borde);
+								}else{
+									setCellValueString("", line, j, false, borde);
+								}
 								break;	
 							case "currency":
 								setCellValueCurrency(Double.parseDouble(data[i][j]), line, j, false, borde);
@@ -435,6 +454,14 @@ public class CExcel {
 								break;
 							case "percent":
 								setCellValuePercent(Double.parseDouble(data[i][j]), line, j, false, borde);
+							case "date":
+								if(!data[i][j].isEmpty()){
+									DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+									Date date = format.parse(data[i][j]);
+									setCellValueDate(date, line, j, borde);
+								}else{
+									setCellValueString("", line, j, false, borde);
+								}
 							}
 						}else{
 							setCellValueString("", line, j, false, borde);
@@ -463,39 +490,46 @@ public class CExcel {
 	private int setOperations(String[][] headers, ArrayList<String> lineas, int line, int first_data_line, int last_data_line){
 		last_data_line = (line > first_data_line) ? line : last_data_line;
 		String colname = "";
-		for (int i = 0; i < headers[3].length; i++) {
-			switch (headers[3][i]) {
-			case "":
-				break;
-			case "sum":
-				colname = CellReference.convertNumToColString(i);
-				if (HasGroup)
-					setCellFormula(getSumCells(colname, lineas), line, i, headers[2][i], true);
-				else
-					setCellFormula("sum(" + colname + first_data_line + ":" + colname + last_data_line + ")", line,
-							i, headers[2][i], true);
-				break;
-			case "avg":
-				colname = CellReference.convertNumToColString(i);
-				if (HasGroup)
-					setCellFormula("(" + getSumCells(colname, lineas) + ")/" + lineas.size(), line, i,
-							headers[2][i], true);
-				else
-					setCellFormula("average(" + colname + first_data_line + ":" + colname + last_data_line + ")",
+		if(headers[3]!=null){
+			for (int i = 0; i < headers[3].length; i++) {
+				switch (headers[3][i]) {
+				case "":
+					break;
+				case "sum":
+					colname = CellReference.convertNumToColString(i);
+					if (HasGroup)
+						setCellFormula(getSumCells(colname, lineas), line, i, headers[2][i], true);
+					else
+						setCellFormula("sum(" + colname + first_data_line + ":" + colname + last_data_line + ")", line,
+								i, headers[2][i], true);
+					break;
+				case "sub":
+					colname = CellReference.convertNumToColString(i);
+						setCellFormula("(" + colname + first_data_line + "-" + colname + last_data_line + ")", line,
+								i, headers[2][i], true);
+					break;
+				case "avg":
+					colname = CellReference.convertNumToColString(i);
+					if (HasGroup)
+						setCellFormula("(" + getSumCells(colname, lineas) + ")/" + lineas.size(), line, i,
+								headers[2][i], true);
+					else
+						setCellFormula("average(" + colname + first_data_line + ":" + colname + last_data_line + ")",
+								line, i, headers[2][i], true);
+					break;
+				case "div":
+					String[] operandos = headers[4][i].split(",");
+					setCellFormula(CellReference.convertNumToColString(getColumnbyName(operandos[0], headers))
+							+ (line + 1) + "/"
+							+ CellReference.convertNumToColString(getColumnbyName(operandos[1], headers)) + (line + 1),
 							line, i, headers[2][i], true);
-				break;
-			case "div":
-				String[] operandos = headers[4][i].split(",");
-				setCellFormula(CellReference.convertNumToColString(getColumnbyName(operandos[0], headers))
-						+ (line + 1) + "/"
-						+ CellReference.convertNumToColString(getColumnbyName(operandos[1], headers)) + (line + 1),
-						line, i, headers[2][i], true);
-				break;
+					break;
+				}
 			}
+			line++;
+			for (int colnum = 0; colnum <= sheet.getLastRowNum(); colnum++)
+				sheet.autoSizeColumn(colnum);
 		}
-		line++;
-		for (int colnum = 0; colnum <= sheet.getLastRowNum(); colnum++)
-			sheet.autoSizeColumn(colnum);
 		return line;
 	}
 	
@@ -558,19 +592,19 @@ public class CExcel {
 			for(int j=0; j<stgrafica.data[i].length; j++){
 				switch (stgrafica.tipoData[i]) {
 				case "int":
-						setCellValueInt(Integer.parseInt(stgrafica.data[i][j]), linea, columna+j, false);
+						setCellValueInt(Integer.parseInt(stgrafica.data[i][j]), linea, columna+j, true);
 					break;
 				case "double":
-					setCellValueDouble(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false);
+					setCellValueDouble(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, true);
 					break;	
 				case "currency":
-					setCellValueCurrency(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false, false);
+					setCellValueCurrency(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false, true);
 					break;
 				case "string":
-					setCellValueString(String.class.cast(stgrafica.data[i][j]), linea, columna+j, false, false);
+					setCellValueString(String.class.cast(stgrafica.data[i][j]), linea, columna+j, false, true);
 					break;
 				case "percent":
-					setCellValuePercent(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false, false);
+					setCellValuePercent(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false, true);
 				}
 				if(stgrafica.igualarCeldas != null && stgrafica.igualarCeldas[i][j]!= null && !stgrafica.igualarCeldas[i][j].isEmpty()){
 					String ah = stgrafica.igualarCeldas[i][j];

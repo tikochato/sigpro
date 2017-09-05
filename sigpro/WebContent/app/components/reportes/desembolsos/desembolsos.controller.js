@@ -12,6 +12,9 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	mi.tabla = {};
 	mi.anioFiscal = "";
 	mi.mesReportado = "";
+	mi.anioInicial=0;
+	mi.anioFinal=0;
+	mi.mostrarDescargar = false;
 	
 	mi.desembolsos= [];
 	mi.desembolsosOriginal = [];
@@ -151,7 +154,7 @@ mi.options = {
 	}
 	
 	mi.generarReporte = function (){
-		
+		mi.mostrarDescargar = false;
 		if ( mi.prestamoSeleccionado != null && mi.anioSeleccionado > 0 &&  mi.anioSeleccionado.toString().length == 4 ){
 			mi.inicializarDatos();
 			mi.mostrar=true;
@@ -173,10 +176,15 @@ mi.options = {
 							item.nombre = anios_temp[x];
 							mi.anios.push(item);
 						}
+						if(mi.anios){
+							mi.anioInicial = mi.anios[0].id;
+							mi.anioFinal = mi.anios[mi.anios.length-1].id;
+						}
 						
 						//mi.anioSeleccionado = mi.anios!=null && mi.anios != undefined && mi.anios.length > 0 ?  mi.anios[0].id : undefined;
 						//mi.agrupacion = mi.agrupaciones[0].id;
 						mi.mostrar = true;
+						mi.mostrarDescargar = true;
 						mi.asignarSerie(mi.agrupacion);
 						
 				}else{
@@ -429,5 +437,29 @@ mi.options = {
 			 }
 		  
 	 }
+	 
+
+		mi.exportarExcel = function(){
+			 $http.post('/SDesembolsos', { 
+				 accion: 'exportarExcel', 
+				 proyectoid: mi.prestamoSeleccionado.value,
+				 anioInicial: mi.anioInicial,
+				 anioFinal: mi.anioFinal,
+				 ejercicioFiscal: mi.anioSeleccionado,
+				 agrupacion: mi.agrupacion,
+				 t:moment().unix()
+			  } ).then(
+					  function successCallback(response) {
+						  var anchor = angular.element('<a/>');
+						  anchor.attr({
+					         href: 'data:application/ms-excel;base64,' + response.data,
+					         target: '_blank',
+					         download: 'Desembolsos.xls'
+						  })[0].click();
+					  }.bind(this), function errorCallback(response){
+						 		console.log(response);
+				 	}
+			  	);
+			};
 	 
 }]);

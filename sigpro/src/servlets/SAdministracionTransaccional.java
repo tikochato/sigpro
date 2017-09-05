@@ -156,25 +156,6 @@ public class SAdministracionTransaccional extends HttpServlet {
 	
 	private String[][] generarHeaders(){
 		String headers[][];
-				
-		String titulo[] = new String[4];
-		String tipo[] = new String[4];
-		String columnasOperacion[] = new String[4];
-		titulo[0]="Usuario";
-		tipo[0]="string";
-		columnasOperacion[0]="";
-		
-		titulo[1]="Creados";
-		tipo[1]="int";
-		columnasOperacion[1]="sum";
-		
-		titulo[2]="Actualizados";
-		tipo[2]="int";
-		columnasOperacion[2]="";
-		
-		titulo[3]="Eliminados";
-		tipo[3]="int";
-		columnasOperacion[3]="";
 		
 		headers = new String[][]{
 			{"Usuario", "Creados", "Actualizados", "Eliminados"},  //titulos

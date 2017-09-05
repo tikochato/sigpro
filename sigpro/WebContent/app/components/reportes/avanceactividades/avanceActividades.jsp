@@ -69,6 +69,12 @@
 				            </span>
 					  	<label for="campo.id" class="floating-label">*Fecha Corte</label>
 					</div>
+					<div class="col-sm-1 operation_buttons" align="right" style="float: right;">
+		    			<div class="btn-group" role="group" aria-label="">
+							<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrardiv" role="button" tabindex="0" aria-hidden="false" style="">
+							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
+						</div>
+		    		</div>
 	    		</div>
 		    </div>
 		    <div class="col-sm-12">
