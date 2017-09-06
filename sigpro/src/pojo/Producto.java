@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 5, 2017 4:14:55 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -392,7 +392,7 @@ public class Producto implements java.io.Serializable {
 		this.orden = orden;
 	}
 
-	@Column(name = "treePath", length = 45)
+	@Column(name = "treePath", length = 1000)
 	public String getTreePath() {
 		return this.treePath;
 	}
