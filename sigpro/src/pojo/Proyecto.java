@@ -1,5 +1,5 @@
 package pojo;
-// Generated Aug 29, 2017 4:40:10 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 568262205993193583L;
+	private static final long serialVersionUID = 6282888278003221830L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Colaborador colaborador;
@@ -62,6 +62,8 @@ public class Proyecto implements java.io.Serializable {
 	private Integer duracion;
 	private String duracionDimension;
 	private Integer orden;
+	private String treePath;
+	private Integer nivel;
 	private Set<Desembolso> desembolsos = new HashSet<Desembolso>(0);
 	private Set<Hito> hitos = new HashSet<Hito>(0);
 	private Set<ProgramaProyecto> programaProyectos = new HashSet<ProgramaProyecto>(0);
@@ -92,8 +94,8 @@ public class Proyecto implements java.io.Serializable {
 			Long snip, Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra,
 			String latitud, String longitud, String objetivo, String enunciadoAlcance, BigDecimal costo,
 			String objetivoEspecifico, String visionGeneral, Integer renglon, Integer ubicacionGeografica,
-			Date fechaInicio, Date fechaFin, Integer duracion, String duracionDimension, Integer orden,
-			Set<Desembolso> desembolsos, Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos,
+			Date fechaInicio, Date fechaFin, Integer duracion, String duracionDimension, Integer orden, String treePath,
+			Integer nivel, Set<Desembolso> desembolsos, Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos,
 			Set<MatrizRaci> matrizRacis, Set<ProyectoMiembro> proyectoMiembros, Set<ProyectoImpacto> proyectoImpactos,
 			Set<ProyectoPropedadValor> proyectoPropedadValors, Set<ProyectoUsuario> proyectoUsuarios,
 			Set<Componente> componentes) {
@@ -129,6 +131,8 @@ public class Proyecto implements java.io.Serializable {
 		this.duracion = duracion;
 		this.duracionDimension = duracionDimension;
 		this.orden = orden;
+		this.treePath = treePath;
+		this.nivel = nivel;
 		this.desembolsos = desembolsos;
 		this.hitos = hitos;
 		this.programaProyectos = programaProyectos;
@@ -447,6 +451,24 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setOrden(Integer orden) {
 		this.orden = orden;
+	}
+
+	@Column(name = "treePath", length = 1000)
+	public String getTreePath() {
+		return this.treePath;
+	}
+
+	public void setTreePath(String treePath) {
+		this.treePath = treePath;
+	}
+
+	@Column(name = "nivel")
+	public Integer getNivel() {
+		return this.nivel;
+	}
+
+	public void setNivel(Integer nivel) {
+		this.nivel = nivel;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")

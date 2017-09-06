@@ -184,6 +184,26 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 			});
 			return resultado.promise;
 		};
+		
+		mi.exportarExcel = function(){
+			$http.post('/SAvanceActividades', { 
+				accion: 'exportarExcel', 	
+				idPrestamo: mi.prestamo.value,
+				fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
+				t:moment().unix()
+			  } ).then(
+					  function successCallback(response) {
+						  var anchor = angular.element('<a/>');
+						  anchor.attr({
+					         href: 'data:application/ms-excel;base64,' + response.data,
+					         target: '_blank',
+					         download: 'ReporteAvances.xls'
+						  })[0].click();
+					  }.bind(this), function errorCallback(response){
+						 		
+				 	}
+			  	);
+			};
 }]);
 
 app.controller('modalAvance', [ '$uibModalInstance',

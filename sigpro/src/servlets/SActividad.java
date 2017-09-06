@@ -90,8 +90,8 @@ public class SActividad extends HttpServlet {
 		BigDecimal presupuestoVigente;
 		BigDecimal presupuestoDevengado;
 		Integer avanceFinanciero;
-		Integer proyectoBase;
 		int estado;
+		Integer proyectoBase;
 	}
 
 	class stdatadinamico {
@@ -188,6 +188,7 @@ public class SActividad extends HttpServlet {
 				temp.acumulacionCostoId = actividad.getAcumulacionCosto().getId();
 				temp.acumulacionCostoNombre = actividad.getAcumulacionCosto().getNombre();
 				temp.proyectoBase = actividad.getProyectoBase();
+				
 				stactividads.add(temp);
 			}
 
@@ -262,28 +263,30 @@ public class SActividad extends HttpServlet {
 					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
 					Integer renglon = map.get("renglon")!=null ? Integer.parseInt(map.get("renglon")):null;
 					Integer ubicacionGeografica = map.get("ubicacionGeografica")!=null ? Integer.parseInt(map.get("ubicacionGeografica")):null;
-
+					
+					
+					
 					switch (objetoTipo){
-					case 1:
-						proyectoBase = objetoId;
-						break;
-					case 2:
-						Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
-						proyectoBase = componente.getProyecto().getId();
-						break;
-					case 3:
-						Producto producto = ProductoDAO.getProductoPorId(objetoId);
-						proyectoBase = producto.getComponente().getProyecto().getId();
-						break;
-					case 4:
-						Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
-						proyectoBase = subproducto.getProducto().getComponente().getProyecto().getId();
-					break;
-					case 5:
-						Actividad actividad = ActividadDAO.getActividadPorId(objetoId, usuario);
-						proyectoBase = actividad.getProyectoBase();
-						break;
-					}
+	                    case 1:
+	                        proyectoBase = objetoId;
+	                        break;
+	                    case 2:
+	                        Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
+	                        proyectoBase = componente.getProyecto().getId();
+	                        break;
+	                    case 3:
+	                        Producto producto = ProductoDAO.getProductoPorId(objetoId);
+	                        proyectoBase = producto.getComponente().getProyecto().getId();
+	                        break;
+	                    case 4:
+	                        Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
+	                        proyectoBase = subproducto.getProducto().getComponente().getProyecto().getId();
+	                    break;
+	                    case 5:
+	                        Actividad actividad = ActividadDAO.getActividadPorId(objetoId, usuario);
+	                        proyectoBase = actividad.getProyectoBase();
+	                        break;
+                    }
 					
 					ActividadTipo actividadTipo= new ActividadTipo();
 					actividadTipo.setId(actividadtipoid);
@@ -306,9 +309,7 @@ public class SActividad extends HttpServlet {
 						
 						actividad = new Actividad(actividadTipo, acumulacionCosto, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra,
-								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,renglon, ubicacionGeografica, 0, "",0,proyectoBase, null, null);
-								//objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,renglon, ubicacionGeografica, null, null,null, null,null);
-
+								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,renglon, ubicacionGeografica, null, null,null, proyectoBase,null,null);
 					}
 					else{
 						actividad = ActividadDAO.getActividadPorId(id,usuario);
@@ -333,7 +334,6 @@ public class SActividad extends HttpServlet {
 						actividad.setAcumulacionCosto(acumulacionCosto);
 						actividad.setDuracion(duracion);
 						actividad.setDuracionDimension(duracionDimension);
-						actividad.setProyectoBase(proyectoBase);
 					}
 					
 					result = ActividadDAO.guardarActividad(actividad);
@@ -563,11 +563,9 @@ public class SActividad extends HttpServlet {
 			temp.duracion = actividad.getDuracion();
 			temp.duracionDimension = actividad.getDuracionDimension();
 			temp.costo = actividad.getCosto();
-			temp.acumulacionCostoId = actividad.getAcumulacionCosto().getId();
-			temp.acumulacionCostoNombre = actividad.getAcumulacionCosto().getNombre();
-			temp.proyectoBase = actividad.getProyectoBase();
 			temp.acumulacionCostoId = actividad.getAcumulacionCosto()!=null ? actividad.getAcumulacionCosto().getId(): null;
 			temp.acumulacionCostoNombre = actividad.getAcumulacionCosto()!=null ? actividad.getAcumulacionCosto().getNombre(): null;
+			temp.proyectoBase = actividad.getProyectoBase();
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"actividad\":",response_text);

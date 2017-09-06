@@ -1,5 +1,5 @@
 package pojo;
-// Generated Aug 28, 2017 4:46:57 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -95,7 +95,7 @@ public class EstructuraArbolId implements java.io.Serializable {
 		this.treelevel = treelevel;
 	}
 
-	@Column(name = "treepath", length = 511)
+	@Column(name = "treepath_", length = 511)
 	public String getTreepath() {
 		return this.treepath;
 	}

@@ -174,6 +174,34 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			}
 			mi.scrollPosicion = elemento.scrollLeft;
 		}
+		mi.exportarPdf=function(){
+			 var tipoVisualizacion = 0;
+			 if (mi.grupoMostrado.planificado && mi.grupoMostrado.real){
+				 tipoVisualizacion = 2;
+			 }else if(mi.grupoMostrado.real){
+				 tipoVisualizacion = 1;
+			 }
+			$http.post('/SPrestamoMetas', { 
+				accion: 'exportarPdf',
+				proyectoid: mi.prestamo.value,
+				fechaInicio: mi.fechaInicio,
+				fechaFin: mi.fechaFin,
+				agrupacion: mi.agrupacionActual,
+				tipoVisualizacion: tipoVisualizacion,
+				t:moment().unix()
+			  } ).then(
+					  function successCallback(response) {
+							var anchor = angular.element('<a/>');
+						    anchor.attr({
+						         href: 'data:application/pdf;base64,' + response.data,
+						         target: '_blank',
+						         download: 'PrestamoMetas.pdf'
+						     })[0].click();
+						  }.bind(this), function errorCallback(response){
+						 		
+						 	}
+						 );
+		};
 		
 		mi.validar = function(noElemento){
 			if(mi.prestamo.value > 0)

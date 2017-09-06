@@ -1,5 +1,5 @@
 package pojo;
-// Generated Aug 28, 2017 4:46:57 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -36,7 +36,7 @@ public class EstructuraArbol implements java.io.Serializable {
 			@AttributeOverride(name = "subproducto", column = @Column(name = "subproducto")),
 			@AttributeOverride(name = "actividad", column = @Column(name = "actividad")),
 			@AttributeOverride(name = "treelevel", column = @Column(name = "treelevel")),
-			@AttributeOverride(name = "treepath", column = @Column(name = "treepath", length = 511)),
+			@AttributeOverride(name = "treepath", column = @Column(name = "treepath_", length = 511)),
 			@AttributeOverride(name = "fechaInicio", column = @Column(name = "fecha_inicio", length = 19)),
 			@AttributeOverride(name = "fechaFin", column = @Column(name = "fecha_fin", length = 19)) })
 	public EstructuraArbolId getId() {

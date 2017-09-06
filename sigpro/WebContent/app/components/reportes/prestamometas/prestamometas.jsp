@@ -172,6 +172,13 @@
 						ng-change="controller.validar(3)"/>
 					  	<label for="campo.id" class="floating-label">*Año Final</label>
 					</div>
+					<!-- 
+					<div class="form-group col-sm-1">
+						<label class="btn btn-primary" ng-click="controller.exportarPdf()" uib-tooltip="Nuevo">
+						<span class="glyphicon glyphicon-plus"></span> PDF</label>
+					</div>
+					 -->
+					
 					<div class="col-sm-7" align="right" ng-hide="!controller.mostrarDescargar">
 						<div class="form-group col-sm-1">
 						</div>
@@ -197,8 +204,10 @@
 								<span>R</span></label>
 	    					</div>
 							<div class="btn-group" style="padding-left: 20px;">
-								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrarDescargar">
+								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar Excel" ng-hide="!controller.mostrarDescargar">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
+								<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar PDF" ng-hide="!controller.mostrarDescargar">
+								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 							</div>
 						</div>
 					</div>
