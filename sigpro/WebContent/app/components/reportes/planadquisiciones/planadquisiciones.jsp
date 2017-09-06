@@ -177,7 +177,7 @@
 								<span class="glyphicon glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></label>
 							</div>
 							<div class="btn-group">
-								<label class="btn btn-default"  ng-click="controller.exportarExcel();" uib-tooltip="Exportar" ng-hide="true">
+								<label class="btn btn-default"  ng-click="controller.exportarExcel();" uib-tooltip="Exportar" ng-hide="!controller.mostrarBotones">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
 							</div>
 						</div>

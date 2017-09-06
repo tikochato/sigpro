@@ -160,7 +160,7 @@ public class SMatrizRiesgo extends HttpServlet {
 	        output.close();
 	        
 		} else if (accion.equals("exportarExcel")){
-			CExcel excel = new CExcel("MatrizRiesgos",false);
+			CExcel excel = new CExcel("MatrizRiesgos",false,null);
 			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
 			List<Riesgo> riesgos = RiesgoDAO.getMatrizRiesgo(proyectoId);
 			Map<String,Object[]> datos = new HashMap<>();

@@ -230,7 +230,7 @@ public class SReporte extends HttpServlet {
 	
 	private void exportarExcel(Map<String,Object[]> datos, String nombreInforme, String usuario, HttpServletResponse response){
 		try{
-			CExcel excel = new CExcel("Reporte",false);
+			CExcel excel = new CExcel("Reporte",false,null);
 			String path = excel.ExportarExcel(datos, nombreInforme, usuario);
 			File file=new File(path);
 			if(file.exists()){
