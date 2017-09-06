@@ -4,6 +4,8 @@
 		.tamanoDiv{
 			height: calc(100% - 100px);
 		}
+		
+		
 	</style>
 
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
@@ -63,7 +65,8 @@
 				</div>
 				 <div class="row" align="center" id="gantt">
 				    <div class="gantt-chart">
-						<div ds:gantt-chart id="ganttChartView" items="items" settings="settings" auto-refresh="{{ true }}" style="height: 400px">
+						<div ds:gantt-chart id="ganttChartView" items="items"  settings="settings" auto-refresh="{{ true }}" style="height: 400px"
+						context-menu="menuOptions">
 						</div>
 						<div class="grid_loading" ng-hide="!ganttc.mostrarcargando" style="z-index: 100">
 						  	<div class="msg">

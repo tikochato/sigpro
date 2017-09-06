@@ -84,6 +84,12 @@ public class CProject {
 	String itemsProject;
 	boolean multiproyecto;
 	
+	int contComponente = 0;
+	int contProducto = 0;
+	int contSubproducto = 0;
+	
+	
+	
 	HashMap<Integer,stitem> items;
 	
 	public CProject (String nombre){
@@ -164,25 +170,33 @@ public class CProject {
 		unidadEjecturoa.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
 		Proyecto proyecto = new Proyecto(null,null,cooperante, proyectoTipo, unidadEjecturoa
 				, task.getName(), null, usuario, null, new Date(), null, 1
-				, null, null, null, null, null, null, null,null, null, null, null, null, null, null,null,null,null,
-				null,null,null,null,null,null,null,null,null,null,null,null);
+				, null, null, null, null, null, null, null,null, null, null, null, null, null, null,null,
+				task.getStart(),task.getFinish(),(( Double ) task.getDuration().getDuration()).intValue()
+				, task.getDuration().getUnits().getName()
+				,null,"1",0,null,null,null,null,null,null,null,null,null);
 		
 		return ProyectoDAO.guardarProyecto(proyecto) ? proyecto : null;
 	}
 	
 	public Componente crearComponente(Task task,Proyecto proyecto ,String usuario){
+		contComponente++;
+		
 		ComponenteTipo componenteTipo = new ComponenteTipo();
 		componenteTipo.setId(COMPONENTE_TIPO_ID_DEFECTO);
 		UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
 		unidadEjecutora.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
 		
-		Componente componente = new Componente(null,componenteTipo, proyecto, unidadEjecutora, task.getName(), null, usuario, null, new Date(), null, 1
-				, null, null, null, null, null, null, null, null, null, null,null,null,null,null,null,null,null,null,null);
+		Componente componente = new Componente(null,componenteTipo, proyecto, unidadEjecutora, task.getName(), null, 
+				usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, null,
+				null,null,task.getStart(),task.getFinish(),(( Double ) task.getDuration().getDuration()).intValue()
+				, task.getDuration().getUnits().getName()
+				,null,proyecto.getTreePath()+"."+contComponente,1,null,null,null);
 		
 		return ComponenteDAO.guardarComponente(componente) ? componente : null;
 	}
 	
 	public Producto crearProducto (Task task, Componente componente,String usuario){
+		contProducto++;
 		ProductoTipo productoTipo = new ProductoTipo();
 		productoTipo.setId(PRODUCTO_TIPO_ID_DEFECTO);
 		UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
@@ -191,7 +205,10 @@ public class CProject {
 		Producto producto = new Producto(null,componente, productoTipo, unidadEjecutora
 				,task.getName() , null, usuario, null, new Date(), null,1, 
 				 null, null, null, null, null, null, null, 
-				null, null, null,null,null,null,null,null,null,null,null,null,null);
+				null, null, null,null,null,
+				task.getStart(),task.getFinish(),(( Double ) task.getDuration().getDuration()).intValue()
+				, task.getDuration().getUnits().getName(),
+				null,componente.getTreePath() + "." + contProducto,2,null,null,null);
 		
 		return ProductoDAO.guardarProducto(producto) ? producto : null;
 	}
@@ -204,7 +221,7 @@ public class CProject {
 		unidadEjecutroa.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
 		
 		Subproducto subproducto = new Subproducto(null,producto, subproductoTipo, unidadEjecutroa,task.getName(), null, usuario, null, new Date(), null, 1, 
-				null, null, null, null, null, null, null, null, null,null,null,null,null,null,null,null,null,null);
+				null, null, null, null, null, null, null, null, null,null,null,null,null,null,null,null,null,null,null,null);
 		
 		return SubproductoDAO.guardarSubproducto(subproducto) ? subproducto : null;
 	}
@@ -235,7 +252,7 @@ public class CProject {
 				, task.getDuration().getUnits().getName()
 				,itemPredecesor!=null ? itemPredecesor.objetoId : null
 				, itemPredecesor != null ? itemPredecesor.objetoTipo : null
-				, null, null, new BigDecimal(task.getCost().toString()),null,null,null,null,null
+				, null, null, new BigDecimal(task.getCost().toString()),null,null,null,null,null,null,null
 				);
 		
 		
@@ -283,6 +300,9 @@ public class CProject {
 	private boolean listaJerarquica(Task task,String usuario,Object objeto)
 	{
 		indetnacion ++;
+		if (indetnacion == 3){
+			contProducto=0;
+		}
 		Object objeto_temp = null;
 		if (task.getID()>= 0 && 	indetnacion >=  0 ){ 
 			stitem item_ = new stitem();
@@ -315,6 +335,7 @@ public class CProject {
 				}
 			}else if (indetnacion == 2){
 				if (tieneHijos){
+					
 					objeto_temp =  crearComponente(task, (Proyecto) objeto, usuario);
 					cargarItem(task,((Componente) objeto_temp).getId(), OBJETO_ID_COMPONENTE);
 				}
@@ -358,6 +379,7 @@ public class CProject {
 	      listaJerarquica(child,usuario,objeto_temp);
 		}
 		indetnacion --;
+		
 		return true;
 	}
 	

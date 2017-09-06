@@ -39,6 +39,7 @@
 			    <div class="btn-group">
 			        <label class="btn btn-success" ng-click="form.$valid ? productoc.ok() : ''" ng-disabled="!form.$valid"> Guardar</label>
 					<label class="btn btn-primary" ng-click="productoc.cancel()">Cancelar</label>
+					<label class="btn btn-danger" ng-click="productoc.borrar()" ng-disabled="productoc.esnuevo">Borrar</label>
 		    	</div>
 		      
 		    </div>

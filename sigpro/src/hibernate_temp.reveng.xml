@@ -13,8 +13,15 @@
 	<table-filter match-name="actividad_usuario"
 		match-catalog="sipro">
 	</table-filter>
+	<table-filter match-name="acumulacion_costo"
+		match-catalog="sipro">
+	</table-filter>
+	<table-filter match-name="asignacion_raci" match-catalog="sipro"></table-filter>
 	<table-filter match-name="atipo_propiedad" match-catalog="sipro"></table-filter>
 	<table-filter match-name="autorizacion_tipo"
+		match-catalog="sipro">
+	</table-filter>
+	<table-filter match-name="categoria_adquisicion"
 		match-catalog="sipro">
 	</table-filter>
 	<table-filter match-name="colaborador" match-catalog="sipro"></table-filter>
@@ -29,16 +36,28 @@
 	<table-filter match-name="componente_usuario"
 		match-catalog="sipro">
 	</table-filter>
+	<table-filter match-name="configuraciones" match-catalog="sipro"></table-filter>
 	<table-filter match-name="cooperante" match-catalog="sipro"></table-filter>
 	<table-filter match-name="ctipo_propiedad" match-catalog="sipro"></table-filter>
 	<table-filter match-name="dato_tipo" match-catalog="sipro"></table-filter>
 	<table-filter match-name="desembolso" match-catalog="sipro"></table-filter>
 	<table-filter match-name="desembolso_tipo" match-catalog="sipro"></table-filter>
 	<table-filter match-name="documento" match-catalog="sipro"></table-filter>
+	<table-filter match-name="dtm_avance_fisfinan_det_dti"
+		match-catalog="sipro">
+	</table-filter>
+	<table-filter match-name="dtm_avance_fisfinan_dti"
+		match-catalog="sipro">
+	</table-filter>
 	<table-filter match-name="ejecucion_estado" match-catalog="sipro"></table-filter>
+	<table-filter match-name="ejecucion_presupuestaria"
+		match-catalog="sipro">
+	</table-filter>
 	<table-filter match-name="entidad" match-catalog="sipro"></table-filter>
+	<table-filter match-name="estado" match-catalog="sipro"></table-filter>
 	<table-filter match-name="estado_informe" match-catalog="sipro"></table-filter>
 	<table-filter match-name="estado_tabla" match-catalog="sipro"></table-filter>
+	<table-filter match-name="estructura_arbol" match-catalog="sipro"></table-filter>
 	<table-filter match-name="formulario" match-catalog="sipro"></table-filter>
 	<table-filter match-name="formulario_item" match-catalog="sipro"></table-filter>
 	<table-filter match-name="formulario_item_opcion"
@@ -58,12 +77,18 @@
 		match-catalog="sipro">
 	</table-filter>
 	<table-filter match-name="interes_tipo" match-catalog="sipro"></table-filter>
+	<table-filter match-name="matriz_raci" match-catalog="sipro"></table-filter>
 	<table-filter match-name="meta" match-catalog="sipro"></table-filter>
 	<table-filter match-name="meta_tipo" match-catalog="sipro"></table-filter>
 	<table-filter match-name="meta_unidad_medida"
 		match-catalog="sipro">
 	</table-filter>
 	<table-filter match-name="meta_valor" match-catalog="sipro"></table-filter>
+	<table-filter match-name="mv_arbol" match-catalog="sipro"></table-filter>
+	<table-filter match-name="mv_ep_estructura" match-catalog="sipro"></table-filter>
+	<table-filter match-name="mv_ep_metas" match-catalog="sipro"></table-filter>
+	<table-filter match-name="mv_ep_prestamo" match-catalog="sipro"></table-filter>
+	<table-filter match-name="mv_pr_estructura" match-catalog="sipro"></table-filter>
 	<table-filter match-name="objeto_formulario"
 		match-catalog="sipro">
 	</table-filter>
@@ -73,7 +98,14 @@
 		match-catalog="sipro">
 	</table-filter>
 	<table-filter match-name="objeto_riesgo" match-catalog="sipro"></table-filter>
+	<table-filter match-name="pago" match-catalog="sipro"></table-filter>
 	<table-filter match-name="permiso" match-catalog="sipro"></table-filter>
+	<table-filter match-name="plan_adquisiciones"
+		match-catalog="sipro">
+	</table-filter>
+	<table-filter match-name="plan_adquisiciones_detalle"
+		match-catalog="sipro">
+	</table-filter>
 	<table-filter match-name="prestamo" match-catalog="sipro"></table-filter>
 	<table-filter match-name="prodtipo_propiedad"
 		match-catalog="sipro">
@@ -102,6 +134,8 @@
 		match-catalog="sipro">
 	</table-filter>
 	<table-filter match-name="proyecto" match-catalog="sipro"></table-filter>
+	<table-filter match-name="proyecto_impacto" match-catalog="sipro"></table-filter>
+	<table-filter match-name="proyecto_miembro" match-catalog="sipro"></table-filter>
 	<table-filter match-name="proyecto_propedad_valor"
 		match-catalog="sipro">
 	</table-filter>
@@ -132,6 +166,9 @@
 	<table-filter match-name="riesgo_tipo" match-catalog="sipro"></table-filter>
 	<table-filter match-name="rol" match-catalog="sipro"></table-filter>
 	<table-filter match-name="rol_permiso" match-catalog="sipro"></table-filter>
+	<table-filter match-name="rol_usuario_proyecto"
+		match-catalog="sipro">
+	</table-filter>
 	<table-filter match-name="rtipo_propiedad" match-catalog="sipro"></table-filter>
 	<table-filter match-name="subprodtipo_propiedad"
 		match-catalog="sipro">
@@ -147,8 +184,10 @@
 	<table-filter match-name="subproducto_usuario"
 		match-catalog="sipro">
 	</table-filter>
+	<table-filter match-name="termino" match-catalog="sipro"></table-filter>
 	<table-filter match-name="tipo_moneda" match-catalog="sipro"></table-filter>
 	<table-filter match-name="unidad_ejecutora" match-catalog="sipro"></table-filter>
+	<table-filter match-name="unidad_medida" match-catalog="sipro"></table-filter>
 	<table-filter match-name="usuario" match-catalog="sipro"></table-filter>
 	<table-filter match-name="usuario_log" match-catalog="sipro"></table-filter>
 	<table-filter match-name="usuario_permiso" match-catalog="sipro"></table-filter>

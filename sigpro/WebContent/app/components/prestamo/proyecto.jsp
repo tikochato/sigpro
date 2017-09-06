@@ -572,35 +572,6 @@
 					</div>
 					
 					
-					<div class="panel panel-default" ng-hide="controller.esNuevoDocumento" >
-						<div class="panel-heading label-form" style="text-align: center;">Componentes</div>
-						<div class="panel-body">
-							<div style="width: 95%; float: left">
-							<table st-table="controller.displayedComponentes"
-							 st-safe-src="controller.componentes" class="table table-striped">
-								<thead>
-									<tr>
-										<th style="display: none;">Id</th>
-										<th class="label-form">Nombre</th>
-									</tr>
-									<tr>
-										<th colspan="5"><input st-search="" 
-										class="form-control" placeholder="busqueda global ..." type="text"/></th>
-									</tr>
-								</thead>
-								<tbody>
-								<tr ng-repeat="row in controller.displayedComponentes">
-									<td>{{row.nombre}}</td>
-								</tr>
-								</tbody>
-							</table>
-	        				</div>
-	    					
-						</div>
-					</div>
-					
-					
-					
 						
 					<div class="panel panel-default">
 						<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
