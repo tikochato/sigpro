@@ -747,10 +747,13 @@ public class SPlanAdquisiciones extends HttpServlet {
 						plan.setNumeroContrato(numeroContrato);
 						plan.setMontoContrato(montoContrato);
 					}else{
-						plan = new PlanAdquisicionesDetalle(categoriaAdquisicion,planAdquisiciones, tipoAdquisicion,unidadMedida,cantidad, total, costo, 
+						plan = new PlanAdquisicionesDetalle(categoriaAdquisicion,planAdquisiciones, tipoAdquisicion,unidadMedida,cantidad, total, nog, costo, 
 								planificadoDocs, realDocs, planificadoLanzamiento, realLanzamiento, planificadoRecepcionEval, realRecepcionEval, 
-								planificadoAdjudica, realAdjudica, planificadoFirma, realFirma, numeroContrato, objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
-								bloqueado,nog, montoContrato);
+								planificadoAdjudica, realAdjudica, planificadoFirma, realFirma, numeroContrato, montoContrato, objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
+								bloqueado);
+						
+						//planificadoAdjudica, realAdjudica, planificadoFirma, realFirma, numeroContrato, objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
+						//bloqueado,nog, montoContrato);
 					}
 					
 					result = PlanAdquisicionesDetalleDAO.guardarPlanAdquisicion(plan);
