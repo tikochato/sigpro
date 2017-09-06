@@ -175,8 +175,21 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			mi.scrollPosicion = elemento.scrollLeft;
 		}
 		mi.exportarPdf=function(){
-			console.log("checkpoint");
-			$http.post('/SPrestamoMetas', { accion: 'exportarPdf' } ).then(
+			 var tipoVisualizacion = 0;
+			 if (mi.grupoMostrado.planificado && mi.grupoMostrado.real){
+				 tipoVisualizacion = 2;
+			 }else if(mi.grupoMostrado.real){
+				 tipoVisualizacion = 1;
+			 }
+			$http.post('/SPrestamoMetas', { 
+				accion: 'exportarPdf',
+				proyectoid: mi.prestamo.value,
+				fechaInicio: mi.fechaInicio,
+				fechaFin: mi.fechaFin,
+				agrupacion: mi.agrupacionActual,
+				tipoVisualizacion: tipoVisualizacion,
+				t:moment().unix()
+			  } ).then(
 					  function successCallback(response) {
 							var anchor = angular.element('<a/>');
 						    anchor.attr({
