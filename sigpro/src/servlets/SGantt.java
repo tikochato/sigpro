@@ -692,6 +692,12 @@ public class SGantt extends HttpServlet {
 
 	}
 	
+	private String cargarProyecto(Integer proyectoId,String usuario, HashMap<Integer,List<Integer>> predecesores){
+		
+		return null;
+		
+	}
+	
 	private String obtenerItemsActividades2(ArrayList<ArrayList<Integer>> actividades,int objetoTipo,int nivelObjeto,HashMap<Integer,List<Integer>> predecesores
 			,String usuario){
 		String ret = "";
