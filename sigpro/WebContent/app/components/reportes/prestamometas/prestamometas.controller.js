@@ -195,7 +195,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 						    anchor.attr({
 						         href: 'data:application/pdf;base64,' + response.data,
 						         target: '_blank',
-						         download: 'PrestamoMestas.pdf'
+						         download: 'PrestamoMetas.pdf'
 						     })[0].click();
 						  }.bind(this), function errorCallback(response){
 						 		
