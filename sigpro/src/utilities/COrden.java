@@ -72,9 +72,8 @@ public class COrden {
 	        for(Map.Entry<Integer, Long> entry:list){
 	        	Object[] objeto = getObjeto(entry.getKey(), 5, estructuraPrestamo);
 	        	Actividad actividad = (Actividad)objeto[3];
-	        	actividad.setTreePath(treePath + "." + orden);
-	 			String[] level = treePath.split("\\.");
-	        	actividad.setNivel(level.length + 1);
+	        	actividad.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
+	 			actividad.setNivel(getNivel(treePath + String.format("%6s", orden).replace(' ', '0')));
 	        	actividad.setOrden(orden);
 	        	ActividadDAO.guardarActividadOrden(actividad, session);
 	        	orden++;
@@ -86,8 +85,6 @@ public class COrden {
 	        
 	        //Obtener fecha inicial y final del padre de las actividades	        
 	        if(objetoTipo == 5){//recursivo si son subactividades
-	        	//Actividad actividad = ActividadDAO.getActividadPorId(objetoId, usuario);
-	        	//calcularOrdenActividades(actividad.getObjetoId(),actividad.getObjetoTipo(),usuario, session);
 	        	Object[] objActividad = getObjeto(objetoId, objetoTipo, estructuraPrestamo);
 	        	calcularOrdenActividades(5, (Integer)objActividad[1], (Integer)objActividad[2], usuario, session);
 	        	
@@ -96,9 +93,9 @@ public class COrden {
 	 		if(hijos.size() == 1){
 	 			Actividad actividad = (Actividad)hijos.get(0)[3];
 	 			actividad.setOrden(1);
-	 			actividad.setTreePath(treePath + "." + 1);
-	 			String[] level = treePath.split("\\.");
-	        	actividad.setNivel(level.length + 1);
+	 			actividad.setTreePath(treePath + String.format("%6s", 1).replace(' ', '0'));
+	 			Integer level = getNivel(treePath + String.format("%6s", 1).replace(' ', '0'));
+	        	actividad.setNivel(level);
 				ActividadDAO.guardarActividadOrden(actividad, session);
 				
 				commitCalculoOrden(session);
@@ -110,7 +107,14 @@ public class COrden {
 			}
 
 		}
-	}	
+	}
+	
+	private Integer getNivel(String treePath){
+		treePath = treePath.substring(1,treePath.length());
+		double longitudTree = treePath.length();
+		String[] result = new String[(int)Math.ceil(longitudTree/6)];
+	    return result.length + 1;
+	}
 	
 	public void calcularOrdenObjetosSuperiores(Integer nivel, Integer objetoId, Integer objetoTipo, String usuario, Session session){
 		if(estructuraPrestamo == null){
@@ -153,7 +157,7 @@ public class COrden {
 		        	Object[] objeto = getObjeto(entry.getKey(), 2, estructuraPrestamo);
 		        	Componente componente = (Componente)objeto[3];
 		        	componente.setOrden(orden);
-		        	componente.setTreePath(treePath + "." + orden);
+		        	componente.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
 		        	ComponenteDAO.guardarComponenteOrden(componente, session);
 		        	orden++;
 		        }
@@ -165,7 +169,7 @@ public class COrden {
 				if(hijos.size() == 1){
 					Componente componente = (Componente)hijos.get(0)[3];
 					componente.setOrden(1);
-					componente.setTreePath(treePath + "." + 1);
+					componente.setTreePath(treePath +  String.format("%6s", 1).replace(' ', '0'));
 					ComponenteDAO.guardarComponenteOrden(componente, session);
 					
 					//commitCalculoOrden(session);
@@ -192,7 +196,7 @@ public class COrden {
 		        for(Map.Entry<Integer, Long> entry:list){
 		        	Object[] objeto = getObjeto(entry.getKey(), 3, estructuraPrestamo);
 		        	Producto producto = (Producto)objeto[3];
-		        	producto.setTreePath(treePath + "." + orden);
+		        	producto.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
 		        	producto.setOrden(orden);
 		        	ProductoDAO.guardarProductoOrden(producto, session);
 		        	orden++;
@@ -207,7 +211,7 @@ public class COrden {
 				if(hijos.size() == 1){
 					Producto producto = (Producto)hijos.get(0)[3];
 					producto.setOrden(1);
-					producto.setTreePath(treePath + "." + 1);
+					producto.setTreePath(treePath  + String.format("%6s", 1).replace(' ', '0'));
 					ProductoDAO.guardarProductoOrden(producto, session);
 
 			        //commitCalculoOrden(session);
@@ -238,7 +242,7 @@ public class COrden {
 		        	Object[] objeto = getObjeto(entry.getKey(), 3, estructuraPrestamo);
 		        	Subproducto subproducto = (Subproducto)objeto[3];
 		        	subproducto.setOrden(orden);
-		        	subproducto.setTreePath(treePath + "." + orden);
+		        	subproducto.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
 		        	SubproductoDAO.guardarSubproductoOrden(subproducto, session);
 		        	orden++;
 		        }
@@ -252,7 +256,7 @@ public class COrden {
 				if(hijos.size() == 1){
 					Subproducto subproducto = (Subproducto)hijos.get(0)[3];
 					subproducto.setOrden(1);
-					subproducto.setTreePath(treePath + "." + 1);
+					subproducto.setTreePath(treePath  + String.format("%6s", 1).replace(' ', '0'));
 					SubproductoDAO.guardarSubproductoOrden(subproducto, session);
 					//commitCalculoOrden(session);
 					

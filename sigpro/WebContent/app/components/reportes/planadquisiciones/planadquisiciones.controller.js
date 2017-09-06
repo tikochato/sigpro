@@ -602,7 +602,8 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			estructuraGuardar += ((row.realFirma == null || row.realFirma == "") ? null : row.realFirma) + ",";
 			estructuraGuardar += row.bloqueado + ",";
 			estructuraGuardar += row.nog + ",";
-			estructuraGuardar += row.numeroContrato;
+			estructuraGuardar += row.numeroContrato + ",";
+			estructuraGuardar += row.montoContrato;
 			estructuraGuardar += "°";
 		}
 		
@@ -773,6 +774,9 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 							},
 							numeroContrato : function(){
 								return row.numeroContrato;
+							},
+							montoContrato : function(){
+								return row.montoContrato;
 							}
 						}
 					});
@@ -780,6 +784,10 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					modalInstance.result.then(function(resultado) {
 						if(resultado.numeroContrato != null){
 							row.numeroContrato = resultado.numeroContrato;
+						}
+						
+						if(resultado.montoContrato != null){
+							row.montoContrato = resultado.montoContrato;
 						}
 						$utilidades.mensaje('success','Pagos agregados con éxito.');
 					}, function() {
@@ -799,7 +807,7 @@ app.controller('modalPago', [ '$uibModalInstance',
 	'$timeout', '$log',   '$uibModal', '$q' ,'idObjeto','objetoTipo','nombre','numeroContrato',modalPago ]);
 
 function modalPago($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idObjeto, objetoTipo, nombre, numeroContrato) {
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idObjeto, objetoTipo, nombre, numeroContrato, montoContrato) {
 
 	var mi = this;
 	mi.planAdquisicionesPagos = [];
@@ -810,6 +818,7 @@ function modalPago($uibModalInstance, $scope, $http, $interval,
 	mi.enMillones = false;
 	mi.mostrarcargando = false;
 	mi.numeroContrato = numeroContrato;
+	mi.montoContrato = montoContrato;
 	
 	mi.fechaOptions = {
 			formatYear : 'MMM',
@@ -872,9 +881,9 @@ function modalPago($uibModalInstance, $scope, $http, $interval,
 				function(response) {
 					if (response.data.success) {
 						mi.planAdquisicionesPagos = response.data.pagos;
-						$uibModalInstance.close({success: true, numeroContrato: mi.numeroContrato});
+						$uibModalInstance.close({success: true, numeroContrato: mi.numeroContrato, montoContrato: mi.montoContrato});
 					}else
-						$uibModalInstance.close({success: false, numeroContrato: mi.numeroContrato});
+						$uibModalInstance.close({success: false, numeroContrato: mi.numeroContrato, montoContrato: mi.montoContrato});
 			});
 	};
 	
