@@ -1,5 +1,5 @@
 package pojo;
-// Generated Aug 29, 2017 4:40:10 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 18726627632192962L;
+	private static final long serialVersionUID = 5560528327278163066L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
 	private AcumulacionCosto acumulacionCosto;
@@ -60,6 +60,9 @@ public class Actividad implements java.io.Serializable {
 	private Integer renglon;
 	private Integer ubicacionGeografica;
 	private Integer orden;
+	private String treePath;
+	private Integer nivel;
+	private Integer proyectoBase;
 	private Set<ActividadPropiedadValor> actividadPropiedadValors = new HashSet<ActividadPropiedadValor>(0);
 	private Set<ActividadUsuario> actividadUsuarios = new HashSet<ActividadUsuario>(0);
 
@@ -88,8 +91,9 @@ public class Actividad implements java.io.Serializable {
 			Date fechaCreacion, Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma,
 			Integer proyecto, Integer actividad, Integer obra, int objetoId, int objetoTipo, int duracion,
 			String duracionDimension, Integer predObjetoId, Integer predObjetoTipo, String latitud, String longitud,
-			BigDecimal costo, Integer renglon, Integer ubicacionGeografica, Integer orden,
-			Set<ActividadPropiedadValor> actividadPropiedadValors, Set<ActividadUsuario> actividadUsuarios) {
+			BigDecimal costo, Integer renglon, Integer ubicacionGeografica, Integer orden, String treePath,
+			Integer nivel, Integer proyectoBase, Set<ActividadPropiedadValor> actividadPropiedadValors,
+			Set<ActividadUsuario> actividadUsuarios) {
 		this.actividadTipo = actividadTipo;
 		this.acumulacionCosto = acumulacionCosto;
 		this.nombre = nombre;
@@ -120,6 +124,9 @@ public class Actividad implements java.io.Serializable {
 		this.renglon = renglon;
 		this.ubicacionGeografica = ubicacionGeografica;
 		this.orden = orden;
+		this.treePath = treePath;
+		this.nivel = nivel;
+		this.proyectoBase = proyectoBase;
 		this.actividadPropiedadValors = actividadPropiedadValors;
 		this.actividadUsuarios = actividadUsuarios;
 	}
@@ -410,6 +417,33 @@ public class Actividad implements java.io.Serializable {
 
 	public void setOrden(Integer orden) {
 		this.orden = orden;
+	}
+
+	@Column(name = "treePath", length = 1000)
+	public String getTreePath() {
+		return this.treePath;
+	}
+
+	public void setTreePath(String treePath) {
+		this.treePath = treePath;
+	}
+
+	@Column(name = "nivel")
+	public Integer getNivel() {
+		return this.nivel;
+	}
+
+	public void setNivel(Integer nivel) {
+		this.nivel = nivel;
+	}
+
+	@Column(name = "proyecto_base")
+	public Integer getProyectoBase() {
+		return this.proyectoBase;
+	}
+
+	public void setProyectoBase(Integer proyectoBase) {
+		this.proyectoBase = proyectoBase;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actividad")

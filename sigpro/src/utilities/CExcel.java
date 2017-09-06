@@ -1,10 +1,13 @@
 package utilities;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -68,13 +71,41 @@ public class CExcel {
 	CellStyle cs_currency_bold;
 	CellStyle cs_percent_bold;
 	boolean HasGroup;
-
-	public CExcel(String sheet_name, boolean hasGroup) {
+	CGraficaExcel stgrafica;
+		
+	public CExcel(String sheet_name, boolean hasGroup, CGraficaExcel grafica) {
 		HasGroup = hasGroup;
 		workbook = new HSSFWorkbook();
-		sheet = workbook.createSheet();
-		if (sheet_name != null)
+		
+		if(grafica != null){
+			try {
+				stgrafica = grafica;
+				FileInputStream fileInputStream;
+				switch(stgrafica.tipo){
+					case CGraficaExcel.EXCEL_CHART_BAR: 
+						fileInputStream = new FileInputStream(CGraficaExcel.EXCEL_CHART_BAR_PATH);
+						break;
+					case CGraficaExcel.EXCEL_CHART_PIE: 
+						fileInputStream = new FileInputStream(CGraficaExcel.EXCEL_CHART_PIE_PATH);
+						break;
+					case CGraficaExcel.EXCEL_CHART_AREA: 
+						fileInputStream = new FileInputStream(CGraficaExcel.EXCEL_CHART_AREA_PATH);
+						break;
+					default: 
+						fileInputStream = new FileInputStream(CGraficaExcel.EXCEL_CHART_BAR_PATH);
+				}
+				workbook = new HSSFWorkbook(fileInputStream);
+				sheet = workbook.getSheetAt(0);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}else{
+			sheet = workbook.createSheet();
+		}
+		
+		if(sheet_name != null && !sheet_name.isEmpty()){
 			workbook.setSheetName(0, sheet_name);
+		}
 		font = workbook.createFont();
 		font.setFontHeightInPoints((short) 11);
 
@@ -221,18 +252,30 @@ public class CExcel {
 		cell.setCellStyle(estiloCelda);
 	}
 	
-	public void setCellValueDate(Date value, int irow, int icell) {
+	public void setCellValueDate(Date value, int irow, int icell, Boolean borde) {
 		cell = sheet.getRow(irow) != null ? (sheet.getRow(irow).getCell(icell) != null
 				? sheet.getRow(irow).getCell(icell) : sheet.getRow(irow).createCell(icell))
 				: sheet.createRow(irow).createCell(icell);
 		cell.setCellValue(value);
+		CellStyle estiloCelda =cs_normal;
+		if(borde){
+			estiloCelda.setBorderTop(BorderStyle.THIN);
+			estiloCelda.setBorderLeft(BorderStyle.THIN);
+			estiloCelda.setBorderRight(BorderStyle.THIN);
+			estiloCelda.setBorderBottom(BorderStyle.THIN);
+		}else{
+			estiloCelda.setBorderTop(BorderStyle.NONE);
+			estiloCelda.setBorderLeft(BorderStyle.NONE);
+			estiloCelda.setBorderRight(BorderStyle.NONE);
+			estiloCelda.setBorderBottom(BorderStyle.NONE);
+		}
+		cell.setCellStyle(estiloCelda);
 	}
 
 	public void setCellFormula(String formula, int irow, int icell, String style, boolean bold) {
 		cell = sheet.getRow(irow) != null ? (sheet.getRow(irow).getCell(icell) != null
 				? sheet.getRow(irow).getCell(icell) : sheet.getRow(irow).createCell(icell))
 				: sheet.createRow(irow).createCell(icell);
-		// cell.setCellType(Cell.CELL_TYPE_FORMULA);
 		cell.setCellFormula(formula);
 		switch (style) {
 		case "currency":
@@ -351,6 +394,12 @@ public class CExcel {
 	
 	public Workbook generateExcelOfData(String[][] data, String report_name, String[][] headers, String[][] extra_lines, boolean borde, String usuario) {
 		int line = 5;
+		DateTime fechaActual = DateTime.now();
+		
+		if(stgrafica != null){
+			line = generateChart(report_name, fechaActual, usuario);
+		}
+		
 		if (extra_lines != null) {
 			for (int i = 0; i < extra_lines.length; i++) {
 				setCellValueString(extra_lines[i][0], line, 0, true, borde);
@@ -388,10 +437,14 @@ public class CExcel {
 						if(data[i][j]!=null) {
 							switch (headers[2][j]) {
 							case "int":
-									setCellValueInt(Integer.class.cast(data[i][j]), line, j, borde);
+									setCellValueInt(Integer.parseInt(data[i][j]), line, j, borde);
 								break;
 							case "double":
-								setCellValueDouble(Double.parseDouble(data[i][j]), line, j, borde);
+								if(!data[i][j].isEmpty()){
+									setCellValueDouble(Double.parseDouble(data[i][j]), line, j, borde);
+								}else{
+									setCellValueString("", line, j, false, borde);
+								}
 								break;	
 							case "currency":
 								setCellValueCurrency(Double.parseDouble(data[i][j]), line, j, false, borde);
@@ -401,11 +454,19 @@ public class CExcel {
 								break;
 							case "percent":
 								setCellValuePercent(Double.parseDouble(data[i][j]), line, j, false, borde);
+							case "date":
+								if(!data[i][j].isEmpty()){
+									DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+									Date date = format.parse(data[i][j]);
+									setCellValueDate(date, line, j, borde);
+								}else{
+									setCellValueString("", line, j, false, borde);
+								}
 							}
 						}else{
 							setCellValueString("", line, j, false, borde);
 						}
-						if(headers.length>7 && !headers[6][j].isEmpty()){
+						if(headers.length>7 && headers[6]!=null && !headers[6][j].isEmpty()){
 							setRowOperation(data[i], headers[7][j], headers[6][j], "double", line, j);
 						}
 					}
@@ -421,46 +482,54 @@ public class CExcel {
 			line = setOperations(headers, lineas, line, first_data_line, last_data_line);
 		}
 		Header(report_name, headers[0].length);
-		Footer(line++, DateTime.now(), usuario);
+		Footer(line++, fechaActual, usuario);
+		
 		return workbook;
 	}
 	
 	private int setOperations(String[][] headers, ArrayList<String> lineas, int line, int first_data_line, int last_data_line){
 		last_data_line = (line > first_data_line) ? line : last_data_line;
 		String colname = "";
-		for (int i = 0; i < headers[3].length; i++) {
-			switch (headers[3][i]) {
-			case "":
-				break;
-			case "sum":
-				colname = CellReference.convertNumToColString(i);
-				if (HasGroup)
-					setCellFormula(getSumCells(colname, lineas), line, i, headers[2][i], true);
-				else
-					setCellFormula("sum(" + colname + first_data_line + ":" + colname + last_data_line + ")", line,
-							i, headers[2][i], true);
-				break;
-			case "avg":
-				colname = CellReference.convertNumToColString(i);
-				if (HasGroup)
-					setCellFormula("(" + getSumCells(colname, lineas) + ")/" + lineas.size(), line, i,
-							headers[2][i], true);
-				else
-					setCellFormula("average(" + colname + first_data_line + ":" + colname + last_data_line + ")",
+		if(headers[3]!=null){
+			for (int i = 0; i < headers[3].length; i++) {
+				switch (headers[3][i]) {
+				case "":
+					break;
+				case "sum":
+					colname = CellReference.convertNumToColString(i);
+					if (HasGroup)
+						setCellFormula(getSumCells(colname, lineas), line, i, headers[2][i], true);
+					else
+						setCellFormula("sum(" + colname + first_data_line + ":" + colname + last_data_line + ")", line,
+								i, headers[2][i], true);
+					break;
+				case "sub":
+					colname = CellReference.convertNumToColString(i);
+						setCellFormula("(" + colname + first_data_line + "-" + colname + last_data_line + ")", line,
+								i, headers[2][i], true);
+					break;
+				case "avg":
+					colname = CellReference.convertNumToColString(i);
+					if (HasGroup)
+						setCellFormula("(" + getSumCells(colname, lineas) + ")/" + lineas.size(), line, i,
+								headers[2][i], true);
+					else
+						setCellFormula("average(" + colname + first_data_line + ":" + colname + last_data_line + ")",
+								line, i, headers[2][i], true);
+					break;
+				case "div":
+					String[] operandos = headers[4][i].split(",");
+					setCellFormula(CellReference.convertNumToColString(getColumnbyName(operandos[0], headers))
+							+ (line + 1) + "/"
+							+ CellReference.convertNumToColString(getColumnbyName(operandos[1], headers)) + (line + 1),
 							line, i, headers[2][i], true);
-				break;
-			case "div":
-				String[] operandos = headers[4][i].split(",");
-				setCellFormula(CellReference.convertNumToColString(getColumnbyName(operandos[0], headers))
-						+ (line + 1) + "/"
-						+ CellReference.convertNumToColString(getColumnbyName(operandos[1], headers)) + (line + 1),
-						line, i, headers[2][i], true);
-				break;
+					break;
+				}
 			}
+			line++;
+			for (int colnum = 0; colnum <= sheet.getLastRowNum(); colnum++)
+				sheet.autoSizeColumn(colnum);
 		}
-		line++;
-		for (int colnum = 0; colnum <= sheet.getLastRowNum(); colnum++)
-			sheet.autoSizeColumn(colnum);
 		return line;
 	}
 	
@@ -511,6 +580,46 @@ public class CExcel {
 			ret += "+" + column + "" + lineas.get(i);
 		}
 		return ret.substring(1);
+	}
+	
+	public int generateChart(String report_name, DateTime fechaActual, String usuario){ 
+		setCellValueString(stgrafica.leyendaX, 6, 0, true, true);
+		setCellValueString(stgrafica.leyendaY, 7, 0, true, true);
+
+		int linea = 6;
+		int columna = 1;
+		for(int i=0; i<stgrafica.data.length; i++){
+			for(int j=0; j<stgrafica.data[i].length; j++){
+				switch (stgrafica.tipoData[i]) {
+				case "int":
+						setCellValueInt(Integer.parseInt(stgrafica.data[i][j]), linea, columna+j, true);
+					break;
+				case "double":
+					setCellValueDouble(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, true);
+					break;	
+				case "currency":
+					setCellValueCurrency(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false, true);
+					break;
+				case "string":
+					setCellValueString(String.class.cast(stgrafica.data[i][j]), linea, columna+j, false, true);
+					break;
+				case "percent":
+					setCellValuePercent(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false, true);
+				}
+				if(stgrafica.igualarCeldas != null && stgrafica.igualarCeldas[i][j]!= null && !stgrafica.igualarCeldas[i][j].isEmpty()){
+					String ah = stgrafica.igualarCeldas[i][j];
+					String[] celda = ah.split("\\.");
+					String formula = CellReference.convertNumToColString(Integer.parseInt(celda[0])) + celda[1];
+					setCellFormula(formula, linea, columna+j, stgrafica.tipoData[i], false);
+				}
+			}
+			linea++;
+		}
+
+		setCellValueString(report_name, 26, 0, true, false);
+		linea = 27;
+		
+		return linea;
 	}
 
 	// nuevo

@@ -243,7 +243,7 @@ public class SProducto extends HttpServlet {
 					producto = new Producto(acumulacionCosto, componente, productoTipo, unidadEjecutora, nombre, descripcion, 
 							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subprograma, proyecto_, 
 							actividad, obra, latitud, longitud,null,costo, renglon, ubicacionGeografica,fechaInicio, 
-							fechaFin, duracion, duracionDimension,null,null,null,null);
+							fechaFin, duracion, duracionDimension,null,null,null,null,null,null);
 					
 				}else{
 					producto = ProductoDAO.getProductoPorId(id);
@@ -276,8 +276,7 @@ public class SProducto extends HttpServlet {
 				ret = ProductoDAO.guardarProducto(producto);
 				
 				COrden orden = new COrden();
-				orden.calcularOrdenObjetosSuperiores(producto.getId(), 3, usuario);
-				
+				orden.calcularOrdenObjetosSuperiores(3, producto.getId(), 3, usuario, COrden.getSessionCalculoOrden());				
 				
 				if (ret){
 					ProductoUsuarioId productoUsuarioId = new ProductoUsuarioId(producto.getId(), usuario);
@@ -330,8 +329,15 @@ public class SProducto extends HttpServlet {
 			}
 		} else if (accion.equals("borrar")) {
 			int codigo = Utils.String2Int(parametro.get("codigo"), -1);
+			
+			Producto pojo = ProductoDAO.getProductoPorId(codigo,usuario);
+			
 			boolean eliminado = ProductoDAO.eliminar(codigo, usuario);
+			
 			if (eliminado) {
+				COrden orden = new COrden();
+				orden.calcularOrdenObjetosSuperiores(3, pojo.getId(), 3, usuario, COrden.getSessionCalculoOrden());		
+				
 				int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
 				int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 				int registros = Utils.String2Int(parametro.get("registros"), 20);
@@ -368,8 +374,8 @@ public class SProducto extends HttpServlet {
 					temp.longitud = producto.getLongitud();
 					temp.peso = producto.getPeso();
 					temp.costo = producto.getCosto();
-					temp.acumulacionCostoId = producto.getAcumulacionCosto().getId();
-					temp.acumulacionCostoNombre = producto.getAcumulacionCosto().getNombre();
+					temp.acumulacionCostoId = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getId() : null;
+					temp.acumulacionCostoNombre = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getNombre() : null;
 					temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
 					temp.fechaFin = Utils.formatDate(producto.getFechaFin());
 					temp.duracion = producto.getDuracion();
@@ -589,29 +595,38 @@ public class SProducto extends HttpServlet {
 			response_text = String.join("", "{\"success\":true,", response_text,"}");
 
 		} else if (accion.equals("guardarModal")) {
-			
-			int id = Utils.String2Int(parametro.get("id"));
-			Producto producto;
 			boolean ret = false;
+			int id = Utils.String2Int(parametro.get("id"));
+			boolean esnuevo = parametro.get("esnuevo").equals("true");
+			Integer componenteId = Utils.String2Int(parametro.get("componenteId"));
+			Producto producto = null;
 			
-			String nombre = parametro.get("nombre");
-			Integer tipoproductoId = Utils.String2Int(parametro.get("tipoproductoid")); 
-			Integer unidadEjecutoraId = Utils.String2Int(parametro.get("unidadEjecutora"));
+			if(id>0 || esnuevo ){
 			
-			ProductoTipo productoTipo = new ProductoTipo();
-			productoTipo.setId(tipoproductoId);
-			UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-			unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);	
-			
-			producto = ProductoDAO.getProductoPorId(id);
-			
-			producto.setProductoTipo(productoTipo);
-			producto.setUnidadEjecutora(unidadEjecutora);
-			producto.setNombre(nombre);
-			producto.setUsuarioActualizo(usuario);
-			producto.setFechaActualizacion(new DateTime().toDate());
-			
-			ret = ProductoDAO.guardarProducto(producto);
+				String nombre = parametro.get("nombre");
+				Integer tipoproductoId = Utils.String2Int(parametro.get("tipoproductoid")); 
+				Integer unidadEjecutoraId = Utils.String2Int(parametro.get("unidadEjecutora"));
+				
+				ProductoTipo productoTipo = new ProductoTipo();
+				productoTipo.setId(tipoproductoId);
+				UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
+				unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
+				if(esnuevo){
+					Componente componente = new Componente();
+					componente.setId(componenteId);
+					producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, usuario, new Date());
+					producto.setEstado(1);
+				}else{
+					producto = ProductoDAO.getProductoPorId(id);
+					producto.setProductoTipo(productoTipo);
+					producto.setUnidadEjecutora(unidadEjecutora);
+					producto.setNombre(nombre);
+					producto.setUsuarioActualizo(usuario);
+					producto.setFechaActualizacion(new DateTime().toDate());
+				}
+				
+				ret = ProductoDAO.guardarProducto(producto);
+			}
 			
 			stproducto temp = new stproducto();
 			if (ret) {
@@ -631,11 +646,14 @@ public class SProducto extends HttpServlet {
 					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 				}
+				response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
+				response_text = String.join("", "\"producto\":",response_text);
+				response_text = String.join("", "{\"success\":true,", response_text,"}");
+			}else{
+				response_text = "{ \"success\": false }";
 			}
 
-			response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
-			response_text = String.join("", "\"producto\":",response_text);
-			response_text = String.join("", "{\"success\":true,", response_text,"}");
+			
 				
 				
 		}else if (accion.equals("getProductoPorProyecto")) {

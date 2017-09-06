@@ -3,6 +3,8 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.LockModeType;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -53,6 +55,7 @@ public class ComponenteDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
+			Componente.setNivel(1);
 			session.saveOrUpdate(Componente);
 			ComponenteUsuario cu = new ComponenteUsuario(new ComponenteUsuarioId(Componente.getId(), Componente.getUsuarioCreo()), Componente);
 			session.saveOrUpdate(cu);
@@ -73,6 +76,7 @@ public class ComponenteDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			Componente.setEstado(0);
+			Componente.setOrden(null);
 			session.beginTransaction();
 			session.update(Componente);
 			session.getTransaction().commit();
@@ -207,9 +211,8 @@ public class ComponenteDAO {
 		return ret;
 	}
 	
-	public static Componente getComponenteInicial(Integer proyectoId, String usuario){
+	public static Componente getComponenteInicial(Integer proyectoId, String usuario, Session session){
 		Componente ret = null;
-		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = "FROM Componente c where c.estado=1 and c.orden=1 and c.proyecto.id=:proyectoId and c.usuarioCreo=:usuario";
 			Query<Componente> criteria = session.createQuery(query, Componente.class);
@@ -218,16 +221,14 @@ public class ComponenteDAO {
 			ret = criteria.getSingleResult();
 		}catch(Throwable e){
 			CLogger.write("11", ComponenteDAO.class, e);
-		}
-		finally{
+			session.getTransaction().rollback();
 			session.close();
 		}
 		return ret;
 	}
 	
-	public static Componente getComponenteFechaMaxima(Integer proyectoId, String usuario){
+	public static Componente getComponenteFechaMaxima(Integer proyectoId, String usuario, Session session){
 		Componente ret = null;
-		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = "FROM Componente c where c.estado=1 and c.proyecto.id=:proyectoId and c.usuarioCreo=:usuario order by c.fechaFin desc";
 			Query<Componente> criteria = session.createQuery(query, Componente.class);
@@ -237,8 +238,59 @@ public class ComponenteDAO {
 			ret = criteria.getSingleResult();
 		}catch(Throwable e){
 			CLogger.write("12", ComponenteDAO.class, e);
+			session.getTransaction().rollback();
+			session.close();
 		}
-		finally{
+		return ret;
+	}
+	
+	public static List<Componente> getComponentesOrden(Integer proyectoId, String usuario, Session session){
+		List<Componente> ret = null;
+		try{
+			String query = String.join(" ", "SELECT c FROM Componente c where c.estado=1 and c.proyecto.id=:proyectoId");
+			query = String.join(" ", query, "AND c.id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario)");
+			Query<Componente> criteria = session.createQuery(query,Componente.class);
+			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("usuario", usuario);
+			ret = criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("13", ComponenteDAO.class, e);
+			session.getTransaction().rollback();
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Componente getComponentePorIdOrden(int id, String usuario, Session session){
+		Componente ret = null;
+		try{
+			Query<Componente> criteria = session.createQuery("FROM Componente where id=:id AND id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )", Componente.class);
+			criteria.setParameter("id", id);
+			criteria.setParameter("usuario", usuario);
+			 ret = criteria.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("14", ComponenteDAO.class, e);
+			session.getTransaction().rollback();
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean guardarComponenteOrden(Componente Componente, Session session){
+		boolean ret = false;
+		try{
+			session.saveOrUpdate(Componente);
+			ComponenteUsuario cu = new ComponenteUsuario(new ComponenteUsuarioId(Componente.getId(), Componente.getUsuarioCreo()), Componente);
+			
+			session.flush();
+			session.clear();
+			session.saveOrUpdate(cu);
+			ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("15", ComponenteDAO.class, e);
+			session.getTransaction().rollback();
 			session.close();
 		}
 		return ret;

@@ -693,8 +693,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 						 );
 		};
 		mi.exportarExcel = function(){
-			console.log("exportar");
 			 var tipoVisualizacion = 0;
+			 var data = mi.data;
 			 if (mi.grupoMostrado.planificado && mi.grupoMostrado.real){
 				 tipoVisualizacion = 2;
 			 }else if(mi.grupoMostrado.real){

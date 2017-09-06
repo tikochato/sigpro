@@ -97,33 +97,57 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 		 		$scope.mostrarActividades = $scope.mostrarTodo;
 		 		if ($scope.mostrarTodo){
 		 			mi.transclusionModel = [mi.transclusionData[0],mi.transclusionData[1],mi.transclusionData[2],mi.transclusionData[3]];
+		 			mi.estadoSubproductos = [mi.optionSubproductos[0],mi.optionSubproductos[1],mi.optionSubproductos[2]];
+		 			mi.estadoProductos = [mi.optionProductos[0],mi.optionProductos[1],mi.optionProductos[2]];
+		 			mi.estadoComponentes = [mi.optionComponentes[0],mi.optionComponentes[1],mi.optionComponentes[2]];
 		 		}else{
 		 			mi.transclusionModel = [];
+		 			mi.estadoSubproductos = [];
+		 			mi.estadoProductos = [];
+		 			mi.estadoComponentes = [];
 		 		}
 		 		for (x in $scope.marcas){
 		 			$scope.marcas[x].mostrar = true;
 				 }
 		 		break;
 		 	case 1:
-		 		$scope.mostrarTodo = $scope.mostrarProyectos && $scope.mostrarComponentes && $scope.mostrarProductos
-				&& $scope.mostrarSubproductos && $scope.mostrarActividades ? true : false;
+		 		mi.getMostrarTodo();
 		 		break;
 		 	case 2:
-		 		$scope.mostrarTodo = $scope.mostrarProyectos && $scope.mostrarComponentes && $scope.mostrarProductos
-				&& $scope.mostrarSubproductos && $scope.mostrarActividades ? true : false;
+		 		if ($scope.mostrarComponentes)
+		 			mi.estadoComponentes = [mi.optionComponentes[0],mi.optionComponentes[1],mi.optionComponentes[2]];
+		 		else
+		 			mi.estadoComponentes = [];
+		 		for (x in $scope.marcas){
+					 if ($scope.marcas[x].objetoTipoId==2 )
+						 $scope.marcas[x].mostrar = true;
+				 }
+		 		mi.getMostrarTodo();
 		 		break;
 		 	case 3:
-		 		$scope.mostrarTodo = $scope.mostrarProyectos && $scope.mostrarComponentes && $scope.mostrarProductos
-				&& $scope.mostrarSubproductos && $scope.mostrarActividades ? true : false;
+		 		if ($scope.mostrarProductos)
+		 			mi.estadoProductos = [mi.optionProductos[0],mi.optionProductos[1],mi.optionProductos[2]];
+		 		else
+		 			mi.estadoProductos = [];
+		 		for (x in $scope.marcas){
+					 if ($scope.marcas[x].objetoTipoId==3 )
+						 $scope.marcas[x].mostrar = true;
+				 }
+		 		mi.getMostrarTodo();
 		 		break;
 		 	case 4:
-		 		$scope.mostrarTodo = $scope.mostrarProyectos && $scope.mostrarComponentes && $scope.mostrarProductos
-				&& $scope.mostrarSubproductos && $scope.mostrarActividades ? true : false;
+		 		
+		 		if ($scope.mostrarSubproductos)
+		 			mi.estadoSubproductos = [mi.optionSubproductos[0],mi.optionSubproductos[1],mi.optionSubproductos[2]];
+		 		else
+		 			mi.estadoSubproductos = [];
+		 		for (x in $scope.marcas){
+					 if ($scope.marcas[x].objetoTipoId==4 )
+						 $scope.marcas[x].mostrar = true;
+				 }
+		 		mi.getMostrarTodo();
 		 		break;
 		 	case 5:
-		 		
-		 		$scope.mostrarTodo = $scope.mostrarProyectos && $scope.mostrarComponentes && $scope.mostrarProductos
-				&& $scope.mostrarSubproductos && $scope.mostrarActividades;
 		 		if ($scope.mostrarActividades)
 		 			mi.transclusionModel = [mi.transclusionData[0],mi.transclusionData[1],mi.transclusionData[2],mi.transclusionData[3]];
 		 		else
@@ -133,7 +157,7 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 						 $scope.marcas[x].mostrar = true;
 				 }
 		 		
-		 		
+		 		mi.getMostrarTodo();
 		 		break;
 		 }
 	  };
@@ -144,7 +168,7 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 
 
 
-	  $scope.abrirInformacion = function (objetoId , objetoTipo) {
+	  $scope.abrirInformacion = function (objetoId , objetoTipo, idEstado ,avance) {
 		    var modalInstance = $uibModal.open({
 
 		      ariaLabelledBy: 'Información',
@@ -159,6 +183,12 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 					},
 					$objetoTipo : function() {
 						return objetoTipo;
+					},
+					$idEstado : function() {
+						return idEstado;
+					},
+					$avance : function() {
+						return avance;
 					}
 				}
 		    });
@@ -211,9 +241,185 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 			 }
 	 };
 	 
+	 
+	 mi.optionSubproductos = [  { id: 1, label: 'Aceptacion' }, { id: 2, label: 'Advertencia' }, { id: 3, label: 'Riesgo' }]; 
+	 mi.extraSetingSubproductos = { dynamicTitle: false, showCheckAll: false, showUncheckAll:false,};
+	 mi.estadoSubproductos = [mi.optionSubproductos[0],mi.optionSubproductos[1],mi.optionSubproductos[2]];
+	 
+	 mi.selectSubproducto = {
+			 onItemSelect: function(item) {
+				 for (x in $scope.marcas){
+					 if (item.id == 3){
+						 if ($scope.marcas[x].objetoTipoId==4 && $scope.marcas[x].porcentajeEstado >= 0 &&
+								 $scope.marcas[x].porcentajeEstado <= 40)
+							 $scope.marcas[x].mostrar = true;
+					 }else if (item.id == 2){
+						 if ($scope.marcas[x].objetoTipoId==4 && $scope.marcas[x].porcentajeEstado > 40 &&
+								 $scope.marcas[x].porcentajeEstado <= 60){
+							 $scope.marcas[x].mostrar = true;
+						 }
+					 }else if (item.id == 1){
+						 if ($scope.marcas[x].objetoTipoId==4 && $scope.marcas[x].porcentajeEstado > 60 &&
+								 $scope.marcas[x].porcentajeEstado <= 100){
+							 $scope.marcas[x].mostrar = true;
+						 }
+					 }
+				 }
+				 $scope.mostrarSubproductos = true;
+				 if (mi.estadoSubproductos.length == 3)
+					 mi.getMostrarTodo();
+			 },
+			 onItemDeselect:function(item) {
+				 
+				 for (x in $scope.marcas){
+					 if (item.id == 3){
+						 if ($scope.marcas[x].objetoTipoId==4 && $scope.marcas[x].porcentajeEstado >= 0 &&
+								 $scope.marcas[x].porcentajeEstado <= 40){
+							 $scope.marcas[x].mostrar = false;
+						 }
+					 }else if (item.id == 2){
+						 if ($scope.marcas[x].objetoTipoId==4 && $scope.marcas[x].porcentajeEstado > 40 &&
+								 $scope.marcas[x].porcentajeEstado <= 60){
+							 $scope.marcas[x].mostrar = false;
+						 }
+					 }else if (item.id == 1){
+						 if ($scope.marcas[x].objetoTipoId==4 && $scope.marcas[x].porcentajeEstado > 60 &&
+								 $scope.marcas[x].porcentajeEstado <= 100){
+							 $scope.marcas[x].mostrar = false;
+						 }
+					 }
+				 }
+				 $scope.mostrarTodo = false;
+				 
+				 if (mi.estadoSubproductos.length == 0){
+					 $scope.mostrarSubproductos = false;
+				 }
+				 
+			 }
+	 };
+	 
+	 
+	 mi.optionProductos = [  { id: 1, label: 'Aceptacion' }, { id: 2, label: 'Advertencia' }, { id: 3, label: 'Riesgo' }]; 
+	 mi.extraSetingProductos = { dynamicTitle: false, showCheckAll: false, showUncheckAll:false,};
+	 mi.estadoProductos = [mi.optionProductos[0],mi.optionProductos[1],mi.optionProductos[2]];
+	 
+	 mi.selectProducto = {
+			 onItemSelect: function(item) {
+				 for (x in $scope.marcas){
+					 if (item.id == 3){
+						 if ($scope.marcas[x].objetoTipoId==3 && $scope.marcas[x].porcentajeEstado >= 0 &&
+								 $scope.marcas[x].porcentajeEstado <= 40)
+							 $scope.marcas[x].mostrar = true;
+					 }else if (item.id == 2){
+						 if ($scope.marcas[x].objetoTipoId==3 && $scope.marcas[x].porcentajeEstado > 40 &&
+								 $scope.marcas[x].porcentajeEstado <= 60){
+							 $scope.marcas[x].mostrar = true;
+						 }
+					 }else if (item.id == 1){
+						 if ($scope.marcas[x].objetoTipoId==3 && $scope.marcas[x].porcentajeEstado > 60 &&
+								 $scope.marcas[x].porcentajeEstado <= 100){
+							 $scope.marcas[x].mostrar = true;
+						 }
+					 }
+				 }
+				 $scope.mostrarProductos = true;
+				 if (mi.estadoProductos.length == 3)
+					 mi.getMostrarTodo();
+			 },
+			 onItemDeselect:function(item) {
+				 
+				 for (x in $scope.marcas){
+					 if (item.id == 3){
+						 if ($scope.marcas[x].objetoTipoId==3 && $scope.marcas[x].porcentajeEstado >= 0 &&
+								 $scope.marcas[x].porcentajeEstado <= 40){
+							 $scope.marcas[x].mostrar = false;
+						 }
+					 }else if (item.id == 2){
+						 if ($scope.marcas[x].objetoTipoId==3 && $scope.marcas[x].porcentajeEstado > 40 &&
+								 $scope.marcas[x].porcentajeEstado <= 60){
+							 $scope.marcas[x].mostrar = false;
+						 }
+					 }else if (item.id == 1){
+						 if ($scope.marcas[x].objetoTipoId==3 && $scope.marcas[x].porcentajeEstado > 60 &&
+								 $scope.marcas[x].porcentajeEstado <= 100){
+							 $scope.marcas[x].mostrar = false;
+						 }
+					 }
+						 
+				 }
+				 $scope.mostrarTodo = false;
+				 
+				 if (mi.estadoProductos.length == 0){
+					 $scope.mostrarProductos = false;
+				 }
+				 
+			 }
+	 };
+	 
+	 
+	 mi.optionComponentes = [  { id: 1, label: 'Aceptacion' }, { id: 2, label: 'Advertencia' }, { id: 3, label: 'Riesgo' }]; 
+	 mi.extraSetingComponentes = { dynamicTitle: false, showCheckAll: false, showUncheckAll:false,};
+	 mi.estadoComponentes = [mi.optionComponentes[0],mi.optionComponentes[1],mi.optionComponentes[2]];
+	 
+	 mi.selectComponente = {
+			 onItemSelect: function(item) {
+				 for (x in $scope.marcas){
+					 if (item.id == 3){
+						 if ($scope.marcas[x].objetoTipoId==2 && $scope.marcas[x].porcentajeEstado >= 0 &&
+								 $scope.marcas[x].porcentajeEstado <= 40)
+							 $scope.marcas[x].mostrar = true;
+					 }else if (item.id == 2){
+						 if ($scope.marcas[x].objetoTipoId==2 && $scope.marcas[x].porcentajeEstado > 40 &&
+								 $scope.marcas[x].porcentajeEstado <= 60){
+							 $scope.marcas[x].mostrar = true;
+						 }
+					 }else if (item.id == 1){
+						 if ($scope.marcas[x].objetoTipoId==2 && $scope.marcas[x].porcentajeEstado > 60 &&
+								 $scope.marcas[x].porcentajeEstado <= 100){
+							 $scope.marcas[x].mostrar = true;
+						 }
+					 }
+				 }
+				 $scope.mostrarComponentes = true;
+				 if (mi.estadoComponentes.length == 3)
+					 mi.getMostrarTodo();
+			 },
+			 onItemDeselect:function(item) {
+				 
+				 for (x in $scope.marcas){
+					 if (item.id == 3){
+						 if ($scope.marcas[x].objetoTipoId==2 && $scope.marcas[x].porcentajeEstado >= 0 &&
+								 $scope.marcas[x].porcentajeEstado <= 40){
+							 $scope.marcas[x].mostrar = false;
+						 }
+					 }else if (item.id == 2){
+						 if ($scope.marcas[x].objetoTipoId==2 && $scope.marcas[x].porcentajeEstado > 40 &&
+								 $scope.marcas[x].porcentajeEstado <= 60){
+							 $scope.marcas[x].mostrar = false;
+						 }
+					 }else if (item.id == 1){
+						 if ($scope.marcas[x].objetoTipoId==2 && $scope.marcas[x].porcentajeEstado > 60 &&
+								 $scope.marcas[x].porcentajeEstado <= 100){
+							 $scope.marcas[x].mostrar = false;
+						 }
+					 }
+				 }
+				 $scope.mostrarTodo = false;
+				 
+				 if (mi.estadoComponentes.length == 0){
+					 $scope.mostrarComponentes = false;
+				 }
+				 
+			 }
+	 };
+
+	 
+	 
+	 
 	 mi.getMostrarTodo = function(){
 		 $scope.mostrarTodo = $scope.mostrarProyectos && $scope.mostrarComponentes && $scope.mostrarProductos
-			&& $scope.mostrarSubproductos && $scope.mostrarActividades && mi.transclusionModel.length == 4 ;
+			&& $scope.mostrarSubproductos && $scope.mostrarActividades && mi.transclusionModel.length == 4
+			&& mi.estadoSubproductos.length == 3 && mi.estadoProductos.length == 3 && mi.estadoComponentes.length == 3;
 	 }
 
 }]);
@@ -221,10 +427,10 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 
 app.controller('modalInformacion', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', '$objetoId', '$objetoTipo',  modalInformacion ]);
+	'$timeout', '$log', '$objetoId', '$objetoTipo', '$idEstado', '$avance',  modalInformacion ]);
 
 function modalInformacion($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $objetoId, $objetoTipo) {
+	i18nService, $utilidades, $timeout, $log, $objetoId, $objetoTipo,$idEstado,$avance) {
 
 	var mi = this;
 	mi.objeto={};
@@ -235,6 +441,24 @@ function modalInformacion($uibModalInstance, $scope, $http, $interval,
 		objetoTipo: $objetoTipo
 	}).success(function(response) {
 		mi.objeto = response.objeto;
+		if ($objetoTipo == 5){
+			switch ($idEstado){
+				case 1 : mi.objeto.estadoNombre = "Sin Iniciar"; break;
+				case 2 : mi.objeto.estadoNombre = "En proceso"; break;
+				case 3 : mi.objeto.estadoNombre = "Retrasada"; break;
+				case 4 : mi.objeto.estadoNombre = "Completada"; break;
+				
+			}
+			mi.objeto.avance = $avance;
+		}else {
+			if ($avance >=0 && $avance <= 40)
+				mi.objeto.estadoNombre = "Riesgo";
+			else if ($avance >40 && $avance <= 60)
+				mi.objeto.estadoNombre = "Advertencia";
+			else if ($avance >60 && $avance <= 100)
+				mi.objeto.estadoNombre = "Aceptación";
+			mi.objeto.avance = $avance;
+		}
 	});
 
 	 mi.ok = function () {

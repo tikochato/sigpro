@@ -2,6 +2,7 @@ package servlets;
 
 import java.sql.Connection;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -21,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.shiro.codec.Base64;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,6 +42,8 @@ import pojo.Componente;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
+import utilities.CExcel;
+import utilities.CGraficaExcel;
 import utilities.CMariaDB;
 import utilities.Utils;
 
@@ -160,44 +165,13 @@ public class SCargaTrabajo extends HttpServlet {
 				String idComponentes = map.get("idComponentes") != null && map.get("idComponentes").length() > 0 ? map.get("idComponentes") : "0";
 				String idProductos = map.get("idProductos") != null && map.get("idProductos").length() > 0 ? map.get("idProductos") : "0";
 				String idSubproductos = map.get("idSubproductos") != null && map.get("idSubproductos").length() > 0 ? map.get("idSubproductos") : "0";
-				
-				
-				List<Actividad> actividades = ActividadDAO.getActividadsPorObjetos
-						(idPrestamos, idComponentes, idProductos, idSubproductos,anio_inicio,anio_fin);
-				
-				List<stcargatrabajo> cargas = new ArrayList<stcargatrabajo>();
-				
-				for(Actividad actividad : actividades){
-					
-						
-						Colaborador colaborador = AsignacionRaciDAO.getResponsablePorRol(actividad.getId(), 5, "r");
-						
-						
-						Date hoy = new Date();
-						Date siguienteSemana = sumarDiasFecha(hoy, 7);
-						Date siguienteMes = sumarDiasFecha(siguienteSemana, 23);
-
-						if (actividad.getPorcentajeAvance() != 100){
-							if (actividad.getFechaFin().before(hoy)){
-								agregarCarga(cargas, colaborador, 0, 1, 0, 0);
-							}else {
-								if (actividad.getFechaFin().after(hoy) && actividad.getFechaFin().before(siguienteSemana)){
-									agregarCarga(cargas, colaborador, 0, 0, 0, 1);
-								}else if (actividad.getFechaFin().after(siguienteSemana) && actividad.getFechaFin().before(siguienteMes)){
-									agregarCarga(cargas, colaborador, 0, 0, 1, 0);
-								}
-							}
-							
-						}else{
-							agregarCarga(cargas, colaborador, 1, 0, 0, 0);
-						}
-				}
+								
+				List<stcargatrabajo> cargas = getCargaTrabajoPrestamo(idPrestamos, idComponentes, idProductos, idSubproductos, anio_inicio, anio_fin);
 				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(cargas);
 		        response_text = String.join("", "\"cargatrabajo\":",response_text);
 		        response_text = String.join("", "{\"success\":true,", response_text,"}");
 			}else if(accion.equals("getActividadesTerminadas")){
-				
 				Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
 				Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
 				String idPrestamos = map.get("idPrestamos") != null && map.get("idPrestamos").length() > 0? map.get("idPrestamos") : "0";
@@ -205,12 +179,9 @@ public class SCargaTrabajo extends HttpServlet {
 				String idProductos = map.get("idProductos") != null && map.get("idProductos").length() > 0 ? map.get("idProductos") : "0";
 				String idSubproductos = map.get("idSubproductos") != null && map.get("idSubproductos").length() > 0 ? map.get("idSubproductos") : "0";
 				Integer colaboradorId = Utils.String2Int(map.get("colaboradorid"));
-				
-				
-			
+							
 				List<?> objActividades =ActividadDAO.getActividadesTerminadas(idPrestamos, idComponentes, idProductos,
 						idSubproductos, colaboradorId, anio_inicio, anio_fin);
-				
 				
 				List<stactividadterminada> actividadesTerminadas = new ArrayList<>();
 				if (objActividades!=null && objActividades.size() > 0)
@@ -334,9 +305,26 @@ public class SCargaTrabajo extends HttpServlet {
 							response_text = String.join("", "{\"success\":false}");
 						}
 					}
-			} 
-		else
-					response_text = String.join("", "{\"success\":false}");
+			}else if (accion.equals("exportarExcel")){
+				Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
+				Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
+				String idPrestamos = map.get("idPrestamos") != null && map.get("idPrestamos").length() > 0? map.get("idPrestamos") : "0";
+				String idComponentes = map.get("idComponentes") != null && map.get("idComponentes").length() > 0 ? map.get("idComponentes") : "0";
+				String idProductos = map.get("idProductos") != null && map.get("idProductos").length() > 0 ? map.get("idProductos") : "0";
+				String idSubproductos = map.get("idSubproductos") != null && map.get("idSubproductos").length() > 0 ? map.get("idSubproductos") : "0";
+				
+		        byte [] outArray = exportarExcel(idPrestamos, idComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario);
+			
+				response.setContentType("application/ms-excel");
+				response.setContentLength(outArray.length);
+				response.setHeader("Expires:", "0"); 
+				response.setHeader("Content-Disposition", "attachment; CargaTrabajo_.xls");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+			}else{
+				response_text = "{ \"success\": false }";
+			}
 		
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
@@ -382,6 +370,40 @@ public class SCargaTrabajo extends HttpServlet {
 			carga.actividadesACumplir = aCumplir;
 			cargas.add(carga);
 		}
+	}
+	
+	private List<stcargatrabajo> getCargaTrabajoPrestamo(String idPrestamos, String idComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin){
+		List<Actividad> actividades = ActividadDAO.getActividadsPorObjetos
+				(idPrestamos, idComponentes, idProductos, idSubproductos,anio_inicio,anio_fin);
+		
+		List<stcargatrabajo> cargas = new ArrayList<stcargatrabajo>();
+		
+		for(Actividad actividad : actividades){
+			
+				
+				Colaborador colaborador = AsignacionRaciDAO.getResponsablePorRol(actividad.getId(), 5, "r");
+				
+				
+				Date hoy = new Date();
+				Date siguienteSemana = sumarDiasFecha(hoy, 7);
+				Date siguienteMes = sumarDiasFecha(siguienteSemana, 23);
+
+				if (actividad.getPorcentajeAvance() != 100){
+					if (actividad.getFechaFin().before(hoy)){
+						agregarCarga(cargas, colaborador, 0, 1, 0, 0);
+					}else {
+						if (actividad.getFechaFin().after(hoy) && actividad.getFechaFin().before(siguienteSemana)){
+							agregarCarga(cargas, colaborador, 0, 0, 0, 1);
+						}else if (actividad.getFechaFin().after(siguienteSemana) && actividad.getFechaFin().before(siguienteMes)){
+							agregarCarga(cargas, colaborador, 0, 0, 1, 0);
+						}
+					}
+					
+				}else{
+					agregarCarga(cargas, colaborador, 1, 0, 0, 0);
+				}
+		}
+		return cargas;
 	}
 	
 	public Date sumarDiasFecha(Date fecha, int dias){
@@ -437,9 +459,78 @@ public class SCargaTrabajo extends HttpServlet {
 		}
 	}
 	
+	private byte[] exportarExcel(String idPrestamos, String idComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin, String usuario) throws IOException{
+		byte [] outArray = null;
+		CExcel excel=null;
+		String headers[][];
+		String datos[][];
+		
+		Workbook wb=null;
+		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		try{			
+			headers = generarHeaders();
+			datos = generarDatos(idPrestamos, idComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario);
+			CGraficaExcel grafica = generarGrafica(datos);
+			excel = new CExcel("Administración Transaccional", false, grafica);
+			wb=excel.generateExcelOfData(datos, "Carga de Trabajo", headers, null, true, usuario);
+		
+		wb.write(outByteStream);
+		outArray = Base64.encode(outByteStream.toByteArray());
+		}catch(Exception e){
+			System.out.println("exportarExcel: "+e);
+		}
+		return outArray;
+	}
 	
+	private String[][] generarHeaders(){
+		String headers[][];
+		
+		headers = new String[][]{
+			{"Responsable", "Actividades Retrasadas", "Actividades en Alerta", "Actividades a Cumplir", "Actividades Completadas"},  //titulos
+			null, //mapeo
+			{"string", "int", "int", "int", "int"}, //tipo dato
+			{"", "sum", "sum", "sum", "sum"}, //operaciones columnas
+			null, //operaciones div
+			null,
+			null,
+			null
+			};
+			
+		return headers;
+	}
 	
+	public String[][] generarDatos(String idPrestamos, String idComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin, String usuario){
+		List<stcargatrabajo> cargas = getCargaTrabajoPrestamo(idPrestamos, idComponentes, idProductos, idSubproductos, anio_inicio, anio_fin);
+		String[][] datos = null;
+		
+		if (cargas != null && !cargas.isEmpty()){ 
+			datos = new String[cargas.size()][5];
+			for (int i=0; i<cargas.size(); i++){
+				datos[i][0]=cargas.get(i).responsable;
+				datos[i][1]=String.valueOf(cargas.get(i).actividadesAtrasadas);
+				datos[i][2]=String.valueOf(cargas.get(i).actividadesAlerta);
+				datos[i][3]=String.valueOf(cargas.get(i).actividadesACumplir);
+				datos[i][4]=String.valueOf(cargas.get(i).actividadesCompletadas);
+			}
+		}
+			
+		return datos;
+	}
 	
+	public CGraficaExcel generarGrafica(String[][] datosTabla){
+		
+		String[][] datos = new String[][]{
+			{"Actividades Retrasadas", "Actividades en Alerta", "Actividades a Cumplir", "Actividades Completadas"},
+			{"0","0","0","0"}
+		};
+		String[][] datosIgualar= new String[][]{
+			{"","","",""},
+			{"1."+(datosTabla.length+30),"2."+(datosTabla.length+30),"3."+(datosTabla.length+30),"4."+(datosTabla.length+30)}
+		};
+		
+		String[] tipoData = new String[]{"string","int"};
+		CGraficaExcel grafica = new CGraficaExcel("Carga de Trabajo", CGraficaExcel.EXCEL_CHART_PIE, "Cantidad", "Estados", datos, tipoData, datosIgualar);
 	
-
+		return grafica;
+	}
 }
