@@ -1366,13 +1366,13 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			{"Anual"}
 		};
 		
-		int totalesCant = 2;
+		int totalesCant = 1;
 		int aniosDiferencia =(anioFin-anioInicio)+1; 
 		int columnasTotal = (aniosDiferencia*(AgrupacionesTitulo[agrupacion-1].length));
 		int factorVisualizacion = 1;
 		if(tipoVisualizacion == 2){
 			columnasTotal = columnasTotal*2;
-			totalesCant+=(aniosDiferencia*2);
+			totalesCant=(aniosDiferencia*2)+(totalesCant*2);
 			columnasTotal += 1+totalesCant;
 			factorVisualizacion = 2;
 		}else{
@@ -1729,9 +1729,9 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			for(int j=0; j<AgrupacionesTitulo[agrupacion-1].length; j++){
 				datosIgualar[0][columna]="";
 				
-				datosIgualar[1][columna]=posicionDatos+"."+(datosTabla.length+30);
+				datosIgualar[1][columna]=posicionDatos+"."+(31);
 				if(tipoVisualizacion==2){
-					datosIgualar[2][columna]=(posicionDatos+1)+"."+(datosTabla.length+30);
+					datosIgualar[2][columna]=(posicionDatos+1)+"."+(31);
 				}else{
 					datosIgualar[2][columna]="";
 				}
