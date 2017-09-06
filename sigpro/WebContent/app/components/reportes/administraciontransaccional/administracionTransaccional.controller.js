@@ -86,4 +86,23 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
         });
 		
 		mi.calcularTamanosPantalla();
+		
+		mi.exportarExcel = function(){
+			$http.post('/SAdministracionTransaccional', { 
+				 accion: 'exportarExcel', 
+				 t:moment().unix()
+			  } ).then(
+					  function successCallback(response) {
+						  var anchor = angular.element('<a/>');
+						  anchor.attr({
+					         href: 'data:application/ms-excel;base64,' + response.data,
+					         target: '_blank',
+					         download: 'AdministracionTransaccional.xls'
+						  })[0].click();
+					  }.bind(this), function errorCallback(response){
+						 		
+				 	}
+			  	);
+			};
+		
 }]);

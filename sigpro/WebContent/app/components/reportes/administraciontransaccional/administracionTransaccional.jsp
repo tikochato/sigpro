@@ -65,6 +65,12 @@
 				</div>
 				<br>
 				<div class="row" align="center">
+					<div class="col-sm-12 operation_buttons" align="right">
+		    			<div class="btn-group" role="group" aria-label="">
+							<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrarTablas">
+							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
+						</div>
+		    		</div>
 			    	<div class="col-sm-12">
 			    		<div style="width: 100%; height: 85%; text-align: center">
 			    			<div class="row">

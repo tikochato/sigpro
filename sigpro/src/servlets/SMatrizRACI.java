@@ -2,6 +2,7 @@ package servlets;
 
 import java.sql.Connection;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -17,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.shiro.codec.Base64;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,6 +39,7 @@ import pojo.Componente;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
+import utilities.CExcel;
 import utilities.CMariaDB;
 import utilities.Utils;
 
@@ -110,139 +114,20 @@ public class SMatrizRACI extends HttpServlet {
 		
 		if(accion.equals("getMatriz")){
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-			stmatriz tempmatriz = new stmatriz();
-			Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
-			
-			if(proyecto != null){
+			List<stmatriz> lstMatriz = getMatriz(idPrestamo, usuario);
+			List<stcolaborador> stcolaboradores = getColaboradores(idPrestamo, usuario);
+			if(lstMatriz!=null && stcolaboradores!=null){
+				String response_col = new GsonBuilder().serializeNulls().create().toJson(stcolaboradores);
 				
-				List<stmatriz> lstMatriz = new ArrayList<>();
-				if(CMariaDB.connect()){
-						Connection conn = CMariaDB.getConnection();
-						ArrayList<Integer> componentes = InformacionPresupuestariaDAO.getEstructuraArbolComponentes(idPrestamo, conn);
-						tempmatriz = new stmatriz();
-						tempmatriz.objetoId = proyecto.getId();
-						tempmatriz.objetoNombre = proyecto.getNombre();
-						tempmatriz.nivel = 1;
-						tempmatriz.objetoTipo = 1;
-						getAsignacionRACI(tempmatriz);
-						lstMatriz.add(tempmatriz);
-						
-						for(Integer componente:componentes){
-							
-							Componente objComponente = ComponenteDAO.getComponentePorId(componente, usuario);
-							tempmatriz = new stmatriz();
-							tempmatriz.objetoId = objComponente.getId();
-							tempmatriz.objetoNombre = objComponente.getNombre();
-							tempmatriz.nivel = 2;
-							tempmatriz.objetoTipo = 2;
-							getAsignacionRACI(tempmatriz);
-							lstMatriz.add(tempmatriz);
-							
-							
-							ArrayList<Integer> productos = InformacionPresupuestariaDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
-							for(Integer producto: productos){
-								
-								Producto objProducto = ProductoDAO.getProductoPorId(producto);
-								tempmatriz = new stmatriz();
-								tempmatriz.objetoId = objProducto.getId();
-								tempmatriz.objetoNombre = objProducto.getNombre();
-								tempmatriz.nivel = 3;
-								tempmatriz.objetoTipo = 3;
-								getAsignacionRACI(tempmatriz);
-								lstMatriz.add(tempmatriz);
-							
-								ArrayList<Integer> subproductos = InformacionPresupuestariaDAO.getEstructuraArbolSubProducto(idPrestamo,objComponente.getId(),objProducto.getId(), conn);
-								for(Integer subproducto: subproductos){
-									
-									Subproducto objSubProducto = SubproductoDAO.getSubproductoPorId(subproducto);
-									tempmatriz = new stmatriz();
-									tempmatriz.objetoId = objSubProducto.getId();
-									tempmatriz.objetoNombre = objSubProducto.getNombre();
-									tempmatriz.nivel = 4;
-									tempmatriz.objetoTipo = 4;
-									getAsignacionRACI(tempmatriz);
-									lstMatriz.add(tempmatriz);
-							
-									ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolSubProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(),objSubProducto.getId(), conn);
-									for(ArrayList<Integer> actividad : actividades){
-										
-										Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
-										tempmatriz = new stmatriz();
-										tempmatriz.objetoId = objActividad.getId();
-										tempmatriz.objetoNombre = objActividad.getNombre();
-										tempmatriz.nivel = 5 + actividad.get(1);
-										tempmatriz.objetoTipo = 5;
-										getAsignacionRACI(tempmatriz);
-										lstMatriz.add(tempmatriz);
-															
-									}
-								}
-						
-								ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(), conn);
-								for(ArrayList<Integer> actividad : actividades){
-									Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
-									tempmatriz = new stmatriz();
-									tempmatriz.objetoId = objActividad.getId();
-									tempmatriz.objetoNombre = objActividad.getNombre();
-									tempmatriz.nivel = 5 + actividad.get(1);
-									tempmatriz.objetoTipo = 5;
-									getAsignacionRACI(tempmatriz);
-									lstMatriz.add(tempmatriz);
-								}  
-							} 
-						
-							ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolComponentesActividades(idPrestamo, objComponente.getId(), conn);							
-							for(ArrayList<Integer> actividad : actividades){
-								Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
-								tempmatriz = new stmatriz();
-								tempmatriz.objetoId = objActividad.getId();
-								tempmatriz.objetoNombre = objActividad.getNombre();
-								tempmatriz.nivel = 5 + actividad.get(1);
-								tempmatriz.objetoTipo = 5;
-								getAsignacionRACI(tempmatriz);
-								lstMatriz.add(tempmatriz);
-								
-							} 
-						}
-					
-						ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolPrestamoActividades(idPrestamo, conn);
-						
-						for(ArrayList<Integer> actividad : actividades){
-							Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
-							tempmatriz = new stmatriz();
-							tempmatriz.objetoId = objActividad.getId();
-							tempmatriz.objetoNombre = objActividad.getNombre();
-							tempmatriz.nivel = 5 + actividad.get(1);
-							tempmatriz.objetoTipo = 5;
-							getAsignacionRACI(tempmatriz);
-							lstMatriz.add(tempmatriz);
-						
-						}
-						
-						CMariaDB.close();
-						
-						List<Colaborador> colaboradores = AsignacionRaciDAO.getColaboradoresPorProyecto(idPrestamo);
-						List<stcolaborador> stcolaboradores = new ArrayList<stcolaborador>();
-						for (Colaborador colaborador : colaboradores){
-							stcolaborador temp = new stcolaborador();
-							temp.id = colaborador.getId();
-							temp.nombre = colaborador.getPnombre() + " " + colaborador.getPapellido();
-							stcolaboradores.add(temp);
-						}
-						
-						String response_col = new GsonBuilder().serializeNulls().create().toJson(stcolaboradores);
-						
-						response_text=new GsonBuilder().serializeNulls().create().toJson(lstMatriz);
-				        response_text = String.join("", "\"matriz\":",response_text,",",
-				        		"\"colaboradores\":",response_col);
-				        
-				        response_text = String.join("", "{\"success\":true,", response_text, "}");
-					}else{
-						response_text = String.join("", "{\"success\":false}");
-					}
-				}
-		}
-		else if(accion.equals("getInformacionTarea")){
+				response_text=new GsonBuilder().serializeNulls().create().toJson(lstMatriz);
+		        response_text = String.join("", "\"matriz\":",response_text,",",
+		        		"\"colaboradores\":",response_col);
+		        
+		        response_text = String.join("", "{\"success\":true,", response_text, "}");
+			}else{
+				response_text = String.join("", "{\"success\":false}");
+			}
+		}else if(accion.equals("getInformacionTarea")){
 			Integer objetoId = Utils.String2Int(map.get("objetoId"),0);
 			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"),0);
 			String rol = map.get("rol");
@@ -311,8 +196,21 @@ public class SMatrizRACI extends HttpServlet {
 	        response_text = String.join("", "\"asignaciones\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text, "}");
 			
-		}else
+		}else if (accion.equals("exportarExcel")){
+			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
+			
+	        byte [] outArray = exportarExcel(idPrestamo, usuario);
+		
+			response.setContentType("application/ms-excel");
+			response.setContentLength(outArray.length);
+			response.setHeader("Expires:", "0"); 
+			response.setHeader("Content-Disposition", "attachment; MatrizRACI_.xls");
+			OutputStream outStream = response.getOutputStream();
+			outStream.write(outArray);
+			outStream.flush();
+		}else{
 			response_text = "{ \"success\": false }";
+		}
 		
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
@@ -323,6 +221,140 @@ public class SMatrizRACI extends HttpServlet {
 	    gz.close();
 	    output.close();
 
+	}
+	
+	private List<stmatriz> getMatriz(Integer idPrestamo, String usuario){
+		List<stmatriz> lstMatriz=null;
+		Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
+		
+		if(proyecto != null){
+			stmatriz tempmatriz = new stmatriz();
+			lstMatriz = new ArrayList<>();
+			if(CMariaDB.connect()){
+					Connection conn = CMariaDB.getConnection();
+					ArrayList<Integer> componentes = InformacionPresupuestariaDAO.getEstructuraArbolComponentes(idPrestamo, conn);
+					tempmatriz = new stmatriz();
+					tempmatriz.objetoId = proyecto.getId();
+					tempmatriz.objetoNombre = proyecto.getNombre();
+					tempmatriz.nivel = 1;
+					tempmatriz.objetoTipo = 1;
+					getAsignacionRACI(tempmatriz);
+					lstMatriz.add(tempmatriz);
+					
+					for(Integer componente:componentes){
+						
+						Componente objComponente = ComponenteDAO.getComponentePorId(componente, usuario);
+						tempmatriz = new stmatriz();
+						tempmatriz.objetoId = objComponente.getId();
+						tempmatriz.objetoNombre = objComponente.getNombre();
+						tempmatriz.nivel = 2;
+						tempmatriz.objetoTipo = 2;
+						getAsignacionRACI(tempmatriz);
+						lstMatriz.add(tempmatriz);
+						
+						
+						ArrayList<Integer> productos = InformacionPresupuestariaDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
+						for(Integer producto: productos){
+							
+							Producto objProducto = ProductoDAO.getProductoPorId(producto);
+							tempmatriz = new stmatriz();
+							tempmatriz.objetoId = objProducto.getId();
+							tempmatriz.objetoNombre = objProducto.getNombre();
+							tempmatriz.nivel = 3;
+							tempmatriz.objetoTipo = 3;
+							getAsignacionRACI(tempmatriz);
+							lstMatriz.add(tempmatriz);
+						
+							ArrayList<Integer> subproductos = InformacionPresupuestariaDAO.getEstructuraArbolSubProducto(idPrestamo,objComponente.getId(),objProducto.getId(), conn);
+							for(Integer subproducto: subproductos){
+								
+								Subproducto objSubProducto = SubproductoDAO.getSubproductoPorId(subproducto);
+								tempmatriz = new stmatriz();
+								tempmatriz.objetoId = objSubProducto.getId();
+								tempmatriz.objetoNombre = objSubProducto.getNombre();
+								tempmatriz.nivel = 4;
+								tempmatriz.objetoTipo = 4;
+								getAsignacionRACI(tempmatriz);
+								lstMatriz.add(tempmatriz);
+						
+								ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolSubProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(),objSubProducto.getId(), conn);
+								for(ArrayList<Integer> actividad : actividades){
+									
+									Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+									tempmatriz = new stmatriz();
+									tempmatriz.objetoId = objActividad.getId();
+									tempmatriz.objetoNombre = objActividad.getNombre();
+									tempmatriz.nivel = 5 + actividad.get(1);
+									tempmatriz.objetoTipo = 5;
+									getAsignacionRACI(tempmatriz);
+									lstMatriz.add(tempmatriz);
+														
+								}
+							}
+					
+							ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(), conn);
+							for(ArrayList<Integer> actividad : actividades){
+								Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+								tempmatriz = new stmatriz();
+								tempmatriz.objetoId = objActividad.getId();
+								tempmatriz.objetoNombre = objActividad.getNombre();
+								tempmatriz.nivel = 5 + actividad.get(1);
+								tempmatriz.objetoTipo = 5;
+								getAsignacionRACI(tempmatriz);
+								lstMatriz.add(tempmatriz);
+							}  
+						} 
+					
+						ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolComponentesActividades(idPrestamo, objComponente.getId(), conn);							
+						for(ArrayList<Integer> actividad : actividades){
+							Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+							tempmatriz = new stmatriz();
+							tempmatriz.objetoId = objActividad.getId();
+							tempmatriz.objetoNombre = objActividad.getNombre();
+							tempmatriz.nivel = 5 + actividad.get(1);
+							tempmatriz.objetoTipo = 5;
+							getAsignacionRACI(tempmatriz);
+							lstMatriz.add(tempmatriz);
+							
+						} 
+					}
+				
+					ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolPrestamoActividades(idPrestamo, conn);
+					
+					for(ArrayList<Integer> actividad : actividades){
+						Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+						tempmatriz = new stmatriz();
+						tempmatriz.objetoId = objActividad.getId();
+						tempmatriz.objetoNombre = objActividad.getNombre();
+						tempmatriz.nivel = 5 + actividad.get(1);
+						tempmatriz.objetoTipo = 5;
+						getAsignacionRACI(tempmatriz);
+						lstMatriz.add(tempmatriz);
+					
+					}
+					
+					CMariaDB.close();
+				}
+			}
+		return lstMatriz;
+	}
+	
+	private List<stcolaborador> getColaboradores(Integer idPrestamo, String usuario){
+		List<stcolaborador> stcolaboradores = null;
+		Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
+		
+		if(proyecto != null){
+			List<Colaborador> colaboradores = AsignacionRaciDAO.getColaboradoresPorProyecto(idPrestamo);
+			stcolaboradores = new ArrayList<stcolaborador>();
+			for (Colaborador colaborador : colaboradores){
+				stcolaborador temp = new stcolaborador();
+				temp.id = colaborador.getId();
+				temp.nombre = colaborador.getPnombre() + " " + colaborador.getPapellido();
+				stcolaboradores.add(temp);
+			}
+		}
+		
+		return stcolaboradores;
 	}
 	
 	public void getAsignacionRACI(stmatriz item){
@@ -345,6 +377,99 @@ public class SMatrizRACI extends HttpServlet {
 				}
 			}
 		}
+	}
+	
+	private byte[] exportarExcel(Integer idPrestamo, String usuario) throws IOException{
+		byte [] outArray = null;
+		CExcel excel=null;
+		String headers[][];
+		String datos[][];
+		
+		Workbook wb=null;
+		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		try{			
+			List<stcolaborador> colaboradores = getColaboradores(idPrestamo, usuario);
+			if(colaboradores!=null){
+				headers = generarHeaders(colaboradores);
+				datos = generarDatos(idPrestamo, colaboradores, usuario);
+				excel = new CExcel("Matriz RACI", false, null);
+				wb=excel.generateExcelOfData(datos, "Matriz RACI", headers, null, true, usuario);
+			
+				wb.write(outByteStream);
+				outArray = Base64.encode(outByteStream.toByteArray());
+			}
+		}catch(Exception e){
+			System.out.println("exportarExcel: "+e);
+		}
+		return outArray;
+	}
+	
+	private String[][] generarHeaders(List<stcolaborador> colaboradores){
+		String headers[][];
+		Integer totalColumnas = colaboradores.size()+1;
+		String titulo[] = new String[totalColumnas];
+		String tipo[] = new String[totalColumnas];
+		String operacion[] = new String[totalColumnas];
+		titulo[0]="Tareas";
+		tipo[0]="string";
+		operacion[0]="";
+		
+		for (int i=0; i<colaboradores.size(); i++){
+			titulo[i+1] = colaboradores.get(i).nombre;
+			tipo[i+1] = "string";
+			operacion[i+1] = "";
+		}
+		
+		headers = new String[][]{
+			titulo,  //titulos
+			null, //mapeo
+			tipo, //tipo dato
+			operacion, //operaciones columnas
+			null, //operaciones div
+			null,
+			null,
+			null
+			};
+			
+		return headers;
+	}
+	
+	public String[][] generarDatos(Integer idPrestamo, List<stcolaborador> colaboradores, String usuario){
+		List<stmatriz> stmatriz = getMatriz(idPrestamo, usuario);
+		String[][] datos = null;
+		
+		if(stmatriz!= null && colaboradores!=null){
+			datos = new String[stmatriz.size()][colaboradores.size()+1];
+			for (int i=0; i<stmatriz.size(); i++){
+				stmatriz matriz = stmatriz.get(i);
+				String sangria;
+				switch (matriz.objetoTipo){
+					case 1: sangria = ""; break;
+					case 2: sangria = "   "; break;
+					case 3: sangria = "      "; break;
+					case 4: sangria = "         "; break;
+					case 5: sangria = "            "; break;
+					default: sangria = "";
+				}
+				datos[i][0]=sangria+matriz.objetoNombre;
+				for(int c=0; c<colaboradores.size(); c++){
+					stcolaborador colaborador = colaboradores.get(c);
+					if(matriz.idR==colaborador.id){
+						datos[i][c+1]="R";
+					}else if(matriz.idA==colaborador.id){
+						datos[i][c+1]="A";
+					}else if(matriz.idC==colaborador.id){
+						datos[i][c+1]="C";
+					}else if(matriz.idI==colaborador.id){
+						datos[i][c+1]="I";
+					}else{
+						datos[i][c+1]="";
+					}
+				}
+			}
+		}
+		
+		return datos;
 	}
 
 }

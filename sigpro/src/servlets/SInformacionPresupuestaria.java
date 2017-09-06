@@ -2,6 +2,8 @@ package servlets;
 import java.sql.Connection;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -43,8 +45,10 @@ import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.CExcel;
+import utilities.CGraficaExcel;
 import utilities.CLogger;
 import utilities.CMariaDB;
+import utilities.CPdf;
 import utilities.Utils;
 
 @WebServlet("/SInformacionPresupuestaria")
@@ -152,7 +156,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
 			Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 			Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-
+			
 	        byte [] outArray = exportarExcel(idPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, usuario);
 		
 			response.setContentType("application/ms-excel");
@@ -162,6 +166,59 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			OutputStream outStream = response.getOutputStream();
 			outStream.write(outArray);
 			outStream.flush();
+			
+		}else if(accion.equals("exportarPdf")){
+			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
+			Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
+			Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
+			Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
+			Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
+			CPdf archivo = new CPdf("Metas de Pr閟tamo");
+			String headers[][];
+			String datosMetas[][];
+			headers = generarHeaders(anioInicial, anioFinal, agrupacion, tipoVisualizacion);
+			datosMetas = generarDatosReporte(idPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, headers[0].length, usuario);
+			String path = archivo.ExportPdfMetasPrestamo(headers, datosMetas,tipoVisualizacion);
+			File file=new File(path);
+			if(file.exists()){
+		        FileInputStream is = null;
+		        try {
+		        	is = new FileInputStream(file);
+		        }
+		        catch (Exception e) {
+		        	
+		        }
+		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		        
+		        int readByte = 0;
+		        byte[] buffer = new byte[2024];
+
+                while(true)
+                {
+                    readByte = is.read(buffer);
+                    if(readByte == -1)
+                    {
+                        break;
+                    }
+                    outByteStream.write(buffer);
+                }
+                
+                file.delete();
+                
+                is.close();
+                outByteStream.flush();
+                outByteStream.close();
+                
+		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+				response.setContentType("application/pdf");
+				response.setContentLength(outArray.length);
+				response.setHeader("Expires:", "0"); 
+				response.setHeader("Content-Disposition", "in-line; 'PrestamoMetas.pdf'");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+			}
+
 			
 		}
 		
@@ -1207,6 +1264,125 @@ public class SInformacionPresupuestaria extends HttpServlet {
 	}
 	
 	
+	private Integer obtenerPosicionEntidad(List<stprestamo> lstPrestamo, Integer objetoId, Integer objetoTipo){
+		for (int i=0; i<lstPrestamo.size(); i++){
+			stprestamo prestamo = lstPrestamo.get(i);
+			Integer objeto_id =prestamo.objeto_id;
+			Integer objeto_tipo = prestamo.objeto_tipo;
+			if (objetoId.intValue() == objeto_id.intValue() && objetoTipo.intValue() == objeto_tipo.intValue()){
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	private List<stprestamo> calcularCostos(List<stprestamo> lstPrestamo, Integer posicion){
+		stprestamo prestamo = lstPrestamo.get(posicion);
+		if(prestamo.hijos!=null && !prestamo.hijos.isEmpty()){
+			for(int i=0; i<prestamo.hijos.size(); i++){
+				String strhijo = prestamo.hijos.get(i);
+				Integer posicionHijo = obtenerPosicionEntidad(lstPrestamo, Integer.parseInt(strhijo.split(",")[0]), Integer.parseInt(strhijo.split(",")[1]));
+				stprestamo prestamohijo = calcularCostosRecursivo(lstPrestamo, posicionHijo);
+				if(prestamohijo!=null){
+					for(int a=0; a<prestamo.anios.length; a++){
+						prestamo.anios[a].enero.planificado = prestamo.anios[a].enero.planificado!=null ? prestamo.anios[a].enero.planificado : new BigDecimal(0);
+						prestamo.anios[a].febrero.planificado = prestamo.anios[a].febrero.planificado!=null ? prestamo.anios[a].febrero.planificado : new BigDecimal(0);
+						prestamo.anios[a].marzo.planificado = prestamo.anios[a].marzo.planificado!=null ? prestamo.anios[a].marzo.planificado : new BigDecimal(0);
+						prestamo.anios[a].abril.planificado = prestamo.anios[a].abril.planificado!=null ? prestamo.anios[a].abril.planificado : new BigDecimal(0);
+						prestamo.anios[a].mayo.planificado = prestamo.anios[a].mayo.planificado!=null ? prestamo.anios[a].mayo.planificado : new BigDecimal(0);
+						prestamo.anios[a].junio.planificado = prestamo.anios[a].junio.planificado!=null ? prestamo.anios[a].junio.planificado : new BigDecimal(0);
+						prestamo.anios[a].julio.planificado = prestamo.anios[a].julio.planificado!=null ? prestamo.anios[a].julio.planificado : new BigDecimal(0);
+						prestamo.anios[a].agosto.planificado = prestamo.anios[a].agosto.planificado!=null ? prestamo.anios[a].agosto.planificado : new BigDecimal(0);
+						prestamo.anios[a].septiembre.planificado = prestamo.anios[a].septiembre.planificado!=null ? prestamo.anios[a].septiembre.planificado : new BigDecimal(0);
+						prestamo.anios[a].octubre.planificado = prestamo.anios[a].octubre.planificado!=null ? prestamo.anios[a].octubre.planificado : new BigDecimal(0);
+						prestamo.anios[a].noviembre.planificado = prestamo.anios[a].noviembre.planificado!=null ? prestamo.anios[a].noviembre.planificado : new BigDecimal(0);
+						prestamo.anios[a].diciembre.planificado = prestamo.anios[a].diciembre.planificado!=null ? prestamo.anios[a].diciembre.planificado : new BigDecimal(0);
+						
+						prestamohijo.anios[a].enero.planificado = prestamohijo.anios[a].enero.planificado!=null ? prestamohijo.anios[a].enero.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].febrero.planificado = prestamohijo.anios[a].febrero.planificado!=null ? prestamohijo.anios[a].febrero.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].marzo.planificado = prestamohijo.anios[a].marzo.planificado!=null ? prestamohijo.anios[a].marzo.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].abril.planificado = prestamohijo.anios[a].abril.planificado!=null ? prestamohijo.anios[a].abril.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].mayo.planificado = prestamohijo.anios[a].mayo.planificado!=null ? prestamohijo.anios[a].mayo.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].junio.planificado = prestamohijo.anios[a].junio.planificado!=null ? prestamohijo.anios[a].junio.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].julio.planificado = prestamohijo.anios[a].julio.planificado!=null ? prestamohijo.anios[a].julio.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].agosto.planificado = prestamohijo.anios[a].agosto.planificado!=null ? prestamohijo.anios[a].agosto.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].septiembre.planificado = prestamohijo.anios[a].septiembre.planificado!=null ? prestamohijo.anios[a].septiembre.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].octubre.planificado = prestamohijo.anios[a].octubre.planificado!=null ? prestamohijo.anios[a].octubre.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].noviembre.planificado = prestamohijo.anios[a].noviembre.planificado!=null ? prestamohijo.anios[a].noviembre.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].diciembre.planificado = prestamohijo.anios[a].diciembre.planificado!=null ? prestamohijo.anios[a].diciembre.planificado : new BigDecimal(0);
+						
+						prestamo.anios[a].enero.planificado = prestamo.anios[a].enero.planificado.add(prestamohijo.anios[a].enero.planificado);
+						prestamo.anios[a].febrero.planificado = prestamo.anios[a].febrero.planificado.add(prestamohijo.anios[a].febrero.planificado);
+						prestamo.anios[a].marzo.planificado = prestamo.anios[a].marzo.planificado.add(prestamohijo.anios[a].marzo.planificado);
+						prestamo.anios[a].abril.planificado = prestamo.anios[a].abril.planificado.add(prestamohijo.anios[a].abril.planificado);
+						prestamo.anios[a].mayo.planificado = prestamo.anios[a].mayo.planificado.add(prestamohijo.anios[a].mayo.planificado);
+						prestamo.anios[a].junio.planificado = prestamo.anios[a].junio.planificado.add(prestamohijo.anios[a].junio.planificado);
+						prestamo.anios[a].julio.planificado = prestamo.anios[a].julio.planificado.add(prestamohijo.anios[a].julio.planificado);
+						prestamo.anios[a].agosto.planificado = prestamo.anios[a].agosto.planificado.add(prestamohijo.anios[a].agosto.planificado);
+						prestamo.anios[a].septiembre.planificado = prestamo.anios[a].septiembre.planificado.add(prestamohijo.anios[a].septiembre.planificado);
+						prestamo.anios[a].octubre.planificado = prestamo.anios[a].octubre.planificado.add(prestamohijo.anios[a].octubre.planificado);
+						prestamo.anios[a].noviembre.planificado = prestamo.anios[a].noviembre.planificado.add(prestamohijo.anios[a].noviembre.planificado);
+						prestamo.anios[a].diciembre.planificado = prestamo.anios[a].diciembre.planificado.add(prestamohijo.anios[a].diciembre.planificado);
+					}
+				}
+			}
+		}
+		return lstPrestamo;
+	}
+	
+	private stprestamo calcularCostosRecursivo(List<stprestamo> lstPrestamo, Integer posicion){
+		stprestamo prestamo = lstPrestamo.get(posicion);
+		if(prestamo.hijos!=null && !prestamo.hijos.isEmpty()){
+			for(int i=0; i<prestamo.hijos.size(); i++){
+				String strhijo = prestamo.hijos.get(i);
+				Integer posicionHijo = obtenerPosicionEntidad(lstPrestamo, Integer.parseInt(strhijo.split(",")[0]), Integer.parseInt(strhijo.split(",")[1]));
+				stprestamo prestamohijo = calcularCostosRecursivo(lstPrestamo, posicionHijo);
+				if(prestamohijo!=null){
+					for(int a=0; a<prestamo.anios.length; a++){
+						prestamo.anios[a].enero.planificado = prestamo.anios[a].enero.planificado!=null ? prestamo.anios[a].enero.planificado : new BigDecimal(0);
+						prestamo.anios[a].febrero.planificado = prestamo.anios[a].febrero.planificado!=null ? prestamo.anios[a].febrero.planificado : new BigDecimal(0);
+						prestamo.anios[a].marzo.planificado = prestamo.anios[a].marzo.planificado!=null ? prestamo.anios[a].marzo.planificado : new BigDecimal(0);
+						prestamo.anios[a].abril.planificado = prestamo.anios[a].abril.planificado!=null ? prestamo.anios[a].abril.planificado : new BigDecimal(0);
+						prestamo.anios[a].mayo.planificado = prestamo.anios[a].mayo.planificado!=null ? prestamo.anios[a].mayo.planificado : new BigDecimal(0);
+						prestamo.anios[a].junio.planificado = prestamo.anios[a].junio.planificado!=null ? prestamo.anios[a].junio.planificado : new BigDecimal(0);
+						prestamo.anios[a].julio.planificado = prestamo.anios[a].julio.planificado!=null ? prestamo.anios[a].julio.planificado : new BigDecimal(0);
+						prestamo.anios[a].agosto.planificado = prestamo.anios[a].agosto.planificado!=null ? prestamo.anios[a].agosto.planificado : new BigDecimal(0);
+						prestamo.anios[a].septiembre.planificado = prestamo.anios[a].septiembre.planificado!=null ? prestamo.anios[a].septiembre.planificado : new BigDecimal(0);
+						prestamo.anios[a].octubre.planificado = prestamo.anios[a].octubre.planificado!=null ? prestamo.anios[a].octubre.planificado : new BigDecimal(0);
+						prestamo.anios[a].noviembre.planificado = prestamo.anios[a].noviembre.planificado!=null ? prestamo.anios[a].noviembre.planificado : new BigDecimal(0);
+						prestamo.anios[a].diciembre.planificado = prestamo.anios[a].diciembre.planificado!=null ? prestamo.anios[a].diciembre.planificado : new BigDecimal(0);
+						
+						prestamohijo.anios[a].enero.planificado = prestamohijo.anios[a].enero.planificado!=null ? prestamohijo.anios[a].enero.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].febrero.planificado = prestamohijo.anios[a].febrero.planificado!=null ? prestamohijo.anios[a].febrero.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].marzo.planificado = prestamohijo.anios[a].marzo.planificado!=null ? prestamohijo.anios[a].marzo.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].abril.planificado = prestamohijo.anios[a].abril.planificado!=null ? prestamohijo.anios[a].abril.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].mayo.planificado = prestamohijo.anios[a].mayo.planificado!=null ? prestamohijo.anios[a].mayo.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].junio.planificado = prestamohijo.anios[a].junio.planificado!=null ? prestamohijo.anios[a].junio.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].julio.planificado = prestamohijo.anios[a].julio.planificado!=null ? prestamohijo.anios[a].julio.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].agosto.planificado = prestamohijo.anios[a].agosto.planificado!=null ? prestamohijo.anios[a].agosto.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].septiembre.planificado = prestamohijo.anios[a].septiembre.planificado!=null ? prestamohijo.anios[a].septiembre.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].octubre.planificado = prestamohijo.anios[a].octubre.planificado!=null ? prestamohijo.anios[a].octubre.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].noviembre.planificado = prestamohijo.anios[a].noviembre.planificado!=null ? prestamohijo.anios[a].noviembre.planificado : new BigDecimal(0);
+						prestamohijo.anios[a].diciembre.planificado = prestamohijo.anios[a].diciembre.planificado!=null ? prestamohijo.anios[a].diciembre.planificado : new BigDecimal(0);
+						
+						prestamo.anios[a].enero.planificado = prestamo.anios[a].enero.planificado.add(prestamohijo.anios[a].enero.planificado);
+						prestamo.anios[a].febrero.planificado = prestamo.anios[a].febrero.planificado.add(prestamohijo.anios[a].febrero.planificado);
+						prestamo.anios[a].marzo.planificado = prestamo.anios[a].marzo.planificado.add(prestamohijo.anios[a].marzo.planificado);
+						prestamo.anios[a].abril.planificado = prestamo.anios[a].abril.planificado.add(prestamohijo.anios[a].abril.planificado);
+						prestamo.anios[a].mayo.planificado = prestamo.anios[a].mayo.planificado.add(prestamohijo.anios[a].mayo.planificado);
+						prestamo.anios[a].junio.planificado = prestamo.anios[a].junio.planificado.add(prestamohijo.anios[a].junio.planificado);
+						prestamo.anios[a].julio.planificado = prestamo.anios[a].julio.planificado.add(prestamohijo.anios[a].julio.planificado);
+						prestamo.anios[a].agosto.planificado = prestamo.anios[a].agosto.planificado.add(prestamohijo.anios[a].agosto.planificado);
+						prestamo.anios[a].septiembre.planificado = prestamo.anios[a].septiembre.planificado.add(prestamohijo.anios[a].septiembre.planificado);
+						prestamo.anios[a].octubre.planificado = prestamo.anios[a].octubre.planificado.add(prestamohijo.anios[a].octubre.planificado);
+						prestamo.anios[a].noviembre.planificado = prestamo.anios[a].noviembre.planificado.add(prestamohijo.anios[a].noviembre.planificado);
+						prestamo.anios[a].diciembre.planificado = prestamo.anios[a].diciembre.planificado.add(prestamohijo.anios[a].diciembre.planificado);
+					}
+				}
+			}
+		}
+		return prestamo;
+	}
 	
 	private byte[] exportarExcel(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, String usuario) throws IOException{
 		byte [] outArray = null;
@@ -1217,9 +1393,15 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
-			excel = new CExcel("Ejecuci贸n presupuestaria", false);
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
-			datosInforme = generarDatosReporte(prestamoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
+
+			List<stprestamo> lstPrestamo = getInformacionPresupuestaria(prestamoId, anioInicio, anioFin, usuario);	
+			lstPrestamo = calcularCostos(lstPrestamo, 0);
+			
+			datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
+			CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
+
+			excel = new CExcel("Ejecuci贸n presupuestaria", false, grafica);
 			wb=excel.generateExcelOfData(datosInforme, "Ejecuci贸n presupuestaria", headers, null, true, usuario);
 		
 		wb.write(outByteStream);
@@ -1240,13 +1422,13 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			{"Anual"}
 		};
 		
-		int totalesCant = 2;
+		int totalesCant = 1;
 		int aniosDiferencia =(anioFin-anioInicio)+1; 
 		int columnasTotal = (aniosDiferencia*(AgrupacionesTitulo[agrupacion-1].length));
 		int factorVisualizacion = 1;
 		if(tipoVisualizacion == 2){
 			columnasTotal = columnasTotal*2;
-			totalesCant+=(aniosDiferencia*2);
+			totalesCant=(aniosDiferencia*2)+(totalesCant*2);
 			columnasTotal += 1+totalesCant;
 			factorVisualizacion = 2;
 		}else{
@@ -1348,14 +1530,14 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatosReporte(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, int columnasTotal, String usuario){
+	public String[][] generarDatosReporte(List<stprestamo> lstPrestamo, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, int columnasTotal, String usuario){
 		String[][] datos = null;
 		int columna = 0;int factorVisualizacion=1;
 		if(tipoVisualizacion==2){
 			factorVisualizacion = 2;
 		}
 		int sumaColumnas = ((anioFin-anioInicio) + 1)*factorVisualizacion;
-		List<stprestamo> lstPrestamo = getInformacionPresupuestaria(prestamoId, anioInicio, anioFin, usuario);		
+		
 		if (lstPrestamo != null && !lstPrestamo.isEmpty()){
 			datos = new String[lstPrestamo.size()][columnasTotal];
 			for (int i=0; i<lstPrestamo.size(); i++){
@@ -1555,4 +1737,70 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		}
 		return datos;
 	}
+	
+
+	
+	public CGraficaExcel generarGrafica(String[][] datosTabla, Integer tipoVisualizacion, Integer agrupacion, Integer anioInicio, Integer anioFin){
+		String[][] AgrupacionesTitulo = new String[][]{{"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"},
+			{"Bimestre 1", "Bimestre 2","Bimestre 3","Bimestre 4","Bimestre 5","Bimestre 6"},
+			{"Trimestre 1", "Trimestre 2", "Trimestre 3", "Trimestre 4"},
+			{"Cuatrimestre 1", "Cuatrimestre 2", "Cuatrimestre 3"},
+			{"Semestre 1","Semestre 2"},
+			{"Anual"}
+		};
+		
+		int aniosDiferencia =(anioFin-anioInicio)+1; 
+		int columnasTotal = (aniosDiferencia*(AgrupacionesTitulo[agrupacion-1].length));
+		
+		String titulo[] = new String[columnasTotal];
+		String valor[] = new String[columnasTotal];
+		Integer columna=0;
+		for(int i=0; i<aniosDiferencia; i++){
+			for(int j=0; j<AgrupacionesTitulo[agrupacion-1].length; j++){
+				titulo[columna] = AgrupacionesTitulo[agrupacion-1][j] + " - "+(anioInicio+i);
+				valor[columna]="0";
+				columna++;
+			}
+			
+		}
+		String[][] datos = new String[][]{
+			titulo,
+			valor, 
+			valor
+		};
+		
+
+		columna = 0;
+		int columnaDatos=1;
+		int factorVisualizacion=1;
+		if(tipoVisualizacion==2){
+			factorVisualizacion = 2;
+		}
+		int sumaColumnas = ((anioFin-anioInicio) + 1)*factorVisualizacion;
+		
+		String[][] datosIgualar= new String[3][columnasTotal];
+		
+		for(int i=0; i<aniosDiferencia; i++){
+			Integer posicionDatos = columnaDatos;
+			for(int j=0; j<AgrupacionesTitulo[agrupacion-1].length; j++){
+				datosIgualar[0][columna]="";
+				
+				datosIgualar[1][columna]=posicionDatos+"."+(31);
+				if(tipoVisualizacion==2){
+					datosIgualar[2][columna]=(posicionDatos+1)+"."+(31);
+				}else{
+					datosIgualar[2][columna]="";
+				}
+				posicionDatos+=sumaColumnas;
+				columna++;
+			}
+			columnaDatos+=factorVisualizacion;
+		}
+		
+		String[] tipoData = new String[]{"string","double","double"};
+		CGraficaExcel grafica = new CGraficaExcel("Administraci贸n Transaccional", CGraficaExcel.EXCEL_CHART_AREA, "Meses", "Planificado", datos, tipoData, datosIgualar);
+	
+		return grafica;
+	}
+	
 }
