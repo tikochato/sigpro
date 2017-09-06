@@ -2,6 +2,8 @@ package servlets;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -38,6 +40,7 @@ import pojo.Proyecto;
 import utilities.CExcel;
 import utilities.CMariaDB;
 import utilities.Utils;
+import utilities.CPdf;
 
 @WebServlet("/SPrestamoMetas")
 public class SPrestamoMetas extends HttpServlet {
@@ -143,7 +146,60 @@ public class SPrestamoMetas extends HttpServlet {
 			outStream.write(outArray);
 			outStream.flush();
 
-		}else{
+		}else if(accion.equals("exportarPdf")){
+			CPdf archivo = new CPdf("Metas de Préstamo");
+			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
+			int anioInicio = Utils.String2Int(map.get("fechaInicio"), 0);
+			int anioFin = Utils.String2Int(map.get("fechaFin"), 0);
+			int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
+			int tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
+			String headers[][];
+			String datosMetas[][];
+			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
+			datosMetas = generarDatosMetas(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
+			String path = archivo.ExportPdfMetasPrestamo(headers, datosMetas,tipoVisualizacion);
+			File file=new File(path);
+			if(file.exists()){
+		        FileInputStream is = null;
+		        try {
+		        	is = new FileInputStream(file);
+		        }
+		        catch (Exception e) {
+		        	
+		        }
+		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		        
+		        int readByte = 0;
+		        byte[] buffer = new byte[2024];
+
+                while(true)
+                {
+                    readByte = is.read(buffer);
+                    if(readByte == -1)
+                    {
+                        break;
+                    }
+                    outByteStream.write(buffer);
+                }
+                
+                file.delete();
+                
+                is.close();
+                outByteStream.flush();
+                outByteStream.close();
+                
+		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+				response.setContentType("application/pdf");
+				response.setContentLength(outArray.length);
+				response.setHeader("Expires:", "0"); 
+				response.setHeader("Content-Disposition", "in-line; 'PrestamoMetas.pdf'");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+			}
+			
+		}
+		else{
 			response_text = "{ \"success\": false }";
 		}
 
