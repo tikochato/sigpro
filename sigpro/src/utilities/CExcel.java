@@ -97,7 +97,8 @@ public class CExcel {
 				workbook = new HSSFWorkbook(fileInputStream);
 				sheet = workbook.getSheetAt(0);
 			} catch (IOException e) {
-				CLogger.write("4", CExcel.class, e);
+				e.printStackTrace();
+				CLogger.write("6", CExcel.class, e);
 			}
 		}else{
 			sheet = workbook.createSheet();
@@ -381,7 +382,7 @@ public class CExcel {
 						lineas.add((line + 1) + "");
 					}
 				} catch (Exception e) {
-					CLogger.write("4", CExcel.class, e);
+					CLogger.write("7", CExcel.class, e);
 				}
 				line++;
 			}			
@@ -482,7 +483,8 @@ public class CExcel {
 			Header(report_name, headers[0].length);
 			Footer(line++, fechaActual, usuario);
 		} catch (Exception e) {
-			CLogger.write("4", CExcel.class, e);
+			e.printStackTrace();
+			CLogger.write("1", CExcel.class, e);
 		}
 		
 		return workbook;
@@ -677,9 +679,9 @@ public class CExcel {
 			out.close();
 
 		} catch (FileNotFoundException e) {
-			CLogger.write("4", CExcel.class, e);
+			CLogger.write("2", CExcel.class, e);
 		} catch (IOException e) {
-			CLogger.write("4", CExcel.class, e);
+			CLogger.write("3", CExcel.class, e);
 		}
 		return path;
 	}
@@ -717,7 +719,7 @@ public class CExcel {
 		} catch (FileNotFoundException e) {
 			CLogger.write("4", CExcel.class, e);
 		} catch (IOException e) {
-			CLogger.write("4", CExcel.class, e);
+			CLogger.write("5", CExcel.class, e);
 		}
 		return path;
 	}

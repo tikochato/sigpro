@@ -241,16 +241,20 @@ public class SAvanceActividades extends HttpServlet {
 			response_text = String.join("", ",\"items\":",response_text);
 			response_text = String.join("", "{\"success\":true ", response_text, "}");
 		}else if (accion.equals("exportarExcel")){
+			try{
+		        byte [] outArray = exportarExcel(idPrestamo, fechaCorte, usuario);
 			
-	        byte [] outArray = exportarExcel(idPrestamo, fechaCorte, usuario);
-		
-			response.setContentType("application/ms-excel");
-			response.setContentLength(outArray.length);
-			response.setHeader("Expires:", "0"); 
-			response.setHeader("Content-Disposition", "attachment; ReporteAvances_.xls");
-			OutputStream outStream = response.getOutputStream();
-			outStream.write(outArray);
-			outStream.flush();
+				response.setContentType("application/ms-excel");
+				response.setContentLength(outArray.length);
+				response.setHeader("Expires:", "0"); 
+				response.setHeader("Content-Disposition", "attachment; ReporteAvances_.xls");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+			}catch(Exception e){
+				e.printStackTrace();
+				CLogger.write("1", SAvanceActividades.class, e);
+			}
 		}else{
 			response_text = "{ \"success\": false }";
 		}
@@ -363,7 +367,7 @@ public class SAvanceActividades extends HttpServlet {
 				resultado.total = totalActividades;
 			}
 		}catch(Exception e){
-			System.out.println(e);
+			CLogger.write("2", SAvanceActividades.class, e);
 		}
 		return resultado;
 	}
@@ -461,7 +465,7 @@ public class SAvanceActividades extends HttpServlet {
 			resultado.total = totalHitos;
 		}
 		}catch(Exception e){
-			System.out.println(e);
+			CLogger.write("3", SAvanceActividades.class, e);
 		}
 		return resultado;
 	}
@@ -568,7 +572,7 @@ public class SAvanceActividades extends HttpServlet {
 				resultado.total = totalProductos;
 			}
 		}catch(Exception e){
-			System.out.println(e);
+			CLogger.write("4", SAvanceActividades.class, e);
 		}
 		return resultado;
 	}
@@ -668,7 +672,7 @@ public class SAvanceActividades extends HttpServlet {
 	}
 	
 
-	private byte[] exportarExcel(Integer idPrestamo, String fechaCorte, String usuario) throws IOException{
+	private byte[] exportarExcel(Integer idPrestamo, String fechaCorte, String usuario) {
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -685,7 +689,8 @@ public class SAvanceActividades extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			System.out.println("exportarExcel: "+e);
+			e.printStackTrace();
+			CLogger.write("4", SAvanceActividades.class, e);
 		}
 		return outArray;
 	}
