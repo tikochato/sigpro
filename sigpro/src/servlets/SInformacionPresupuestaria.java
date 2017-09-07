@@ -234,6 +234,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 	        gz.close();
 	        output.close();
 		}catch(Exception e){
+			e.printStackTrace();
 			CLogger.write("1", SInformacionPresupuestaria.class, e);			
 		}
 	}
@@ -1413,6 +1414,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
+			e.printStackTrace();
 			CLogger.write("4", SInformacionPresupuestaria.class, e);
 		}
 		return outArray;

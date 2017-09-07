@@ -97,6 +97,7 @@ public class CExcel {
 				workbook = new HSSFWorkbook(fileInputStream);
 				sheet = workbook.getSheetAt(0);
 			} catch (IOException e) {
+				e.printStackTrace();
 				CLogger.write("6", CExcel.class, e);
 			}
 		}else{
@@ -482,6 +483,7 @@ public class CExcel {
 			Header(report_name, headers[0].length);
 			Footer(line++, fechaActual, usuario);
 		} catch (Exception e) {
+			e.printStackTrace();
 			CLogger.write("1", CExcel.class, e);
 		}
 		

@@ -325,6 +325,7 @@ public class SCargaTrabajo extends HttpServlet {
 					outStream.write(outArray);
 					outStream.flush();
 				}catch(Exception e){
+					e.printStackTrace();
 					CLogger.write("1", SCargaTrabajo.class, e);
 				}
 			}else{
@@ -482,6 +483,7 @@ public class SCargaTrabajo extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
+			e.printStackTrace();
 			CLogger.write("4", SCargaTrabajo.class, e);
 		}
 		return outArray;

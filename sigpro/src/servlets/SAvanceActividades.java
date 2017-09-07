@@ -252,6 +252,7 @@ public class SAvanceActividades extends HttpServlet {
 				outStream.write(outArray);
 				outStream.flush();
 			}catch(Exception e){
+				e.printStackTrace();
 				CLogger.write("1", SAvanceActividades.class, e);
 			}
 		}else{
@@ -688,6 +689,7 @@ public class SAvanceActividades extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
+			e.printStackTrace();
 			CLogger.write("4", SAvanceActividades.class, e);
 		}
 		return outArray;
