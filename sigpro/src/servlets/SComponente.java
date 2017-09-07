@@ -357,6 +357,10 @@ public class SComponente extends HttpServlet {
 					String nombre = map.get("nombre");	
 					int componentetipoid = map.get("componentetipoid")!=null ? Integer.parseInt(map.get("componentetipoid")) : 0;	
 					int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;
+					Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
+					Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
+					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
+					String duracionDimension = map.get("duracionDimension");
 					ComponenteTipo componenteTipo= new ComponenteTipo();
 					componenteTipo.setId(componentetipoid);
 					UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
@@ -365,8 +369,8 @@ public class SComponente extends HttpServlet {
 					if (esnuevo){
 						Proyecto proyecto = new Proyecto();
 						proyecto.setId(proyectoId);
-						componente = new Componente(componenteTipo, 
-								proyecto, unidadEjecutora, nombre, usuario, new Date(), 1);
+						componente = new Componente(componenteTipo, proyecto, unidadEjecutora, nombre, usuario, 
+								new Date(), 1, fechaInicio, fechaFin, duracion, duracionDimension);
 						
 					}else {
 						componente = ComponenteDAO.getComponentePorId(id,usuario);
@@ -375,9 +379,16 @@ public class SComponente extends HttpServlet {
 						componente.setUnidadEjecutora(unidadEjecutora);
 						componente.setUsuarioActualizo(usuario);
 						componente.setFechaActualizacion(new DateTime().toDate());
+						componente.setFechaInicio(fechaInicio);
+						componente.setFechaFin(fechaFin);
+						componente.setDuracion(duracion);
+						componente.setDuracionDimension(duracionDimension);
 						
 					}
 					result = ComponenteDAO.guardarComponente(componente);
+					COrden orden = new COrden();
+					orden.calcularOrdenObjetosSuperiores(2, componente.getId(), 2, usuario, COrden.getSessionCalculoOrden());
+					
 				}
 				stcomponente temp = new stcomponente();
 				if (result){

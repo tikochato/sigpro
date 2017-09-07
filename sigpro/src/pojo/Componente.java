@@ -67,7 +67,8 @@ public class Componente implements java.io.Serializable {
 	}
 
 	public Componente(ComponenteTipo componenteTipo, Proyecto proyecto, UnidadEjecutora unidadEjecutora, String nombre,
-			String usuarioCreo, Date fechaCreacion, int estado) {
+			String usuarioCreo, Date fechaCreacion, int estado, Date fechaInicio,
+			Date fechaFin, Integer duracion, String duracionDimension) {
 		this.componenteTipo = componenteTipo;
 		this.proyecto = proyecto;
 		this.unidadEjecutora = unidadEjecutora;
@@ -75,6 +76,10 @@ public class Componente implements java.io.Serializable {
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
+		this.fechaInicio = fechaInicio;
+		this.fechaFin = fechaFin;
+		this.duracion = duracion;
+		this.duracionDimension = duracionDimension;
 	}
 
 	public Componente(AcumulacionCosto acumulacionCosto, ComponenteTipo componenteTipo, Proyecto proyecto,
