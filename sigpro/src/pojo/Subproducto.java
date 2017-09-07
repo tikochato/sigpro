@@ -66,7 +66,8 @@ public class Subproducto implements java.io.Serializable {
 	}
 
 	public Subproducto(Producto producto, SubproductoTipo subproductoTipo, UnidadEjecutora unidadEjecutora,
-			String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+			String nombre, String usuarioCreo, Date fechaCreacion, int estado, Date fechaInicio,
+			Date fechaFin, Integer duracion, String duracionDimension) {
 		this.producto = producto;
 		this.subproductoTipo = subproductoTipo;
 		this.unidadEjecutora = unidadEjecutora;
@@ -74,6 +75,10 @@ public class Subproducto implements java.io.Serializable {
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
+		this.fechaInicio = fechaInicio;
+		this.fechaFin = fechaFin;
+		this.duracion = duracion;
+		this.duracionDimension = duracionDimension;
 	}
 
 	public Subproducto(AcumulacionCosto acumulacionCosto, Producto producto, SubproductoTipo subproductoTipo,
