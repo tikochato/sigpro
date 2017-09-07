@@ -13,7 +13,6 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,7 +33,6 @@ import pojo.Proyecto;
 import pojo.ProyectoUsuario;
 import pojo.Rol;
 import pojo.RolUsuarioProyecto;
-import pojo.UnidadEjecutora;
 import utilities.Utils;
 
 /**
@@ -144,7 +142,7 @@ public class SUsuario extends HttpServlet {
 						eliminacion = UsuarioDAO.desactivarPermisosUsuario(usuario, permisos, usuarioActualizo);
 					}
 					if(asignacion || eliminacion){
-						response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualización de permisos exitosa\" }");
+						response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualizaciï¿½n de permisos exitosa\" }");
 					}else{
 						response_text = String.join("","{ \"success\": false, \"error\":\"no se actualizaron los permisos\" }");
 					}
@@ -278,7 +276,7 @@ public class SUsuario extends HttpServlet {
 					}
 					
 				}else{
-					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros deseados.\" }");
+					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parï¿½metros deseados.\" }");
 				}
 			}else if(accion.compareTo("usuarioActual")==0){
 				HttpSession sesionweb = request.getSession();
@@ -331,7 +329,7 @@ public class SUsuario extends HttpServlet {
 											Gson entradaJson = new Gson();
 											Type tipo = new TypeToken<List<Integer>>() {}.getType();
 											List<Integer> permisos = entradaJson.fromJson(permisosAsignados, tipo);
-											response_text = String.join("","{ \"success\": ",(UsuarioDAO.asignarPermisosUsuario(nuevousuario, permisos, usuarioCreo) ? "true ,  \"message\":\"Usuario creado y asignación de permisos exitosa\" " : "true, \"message\":\"Usuario creado, asignación de permisos no exitosa\""),"}");
+											response_text = String.join("","{ \"success\": ",(UsuarioDAO.asignarPermisosUsuario(nuevousuario, permisos, usuarioCreo) ? "true ,  \"message\":\"Usuario creado y asignaciï¿½n de permisos exitosa\" " : "true, \"message\":\"Usuario creado, asignaciï¿½n de permisos no exitosa\""),"}");
 										}else{
 											response_text = String.join("", "{\"success\":true, \"message\":\"usuario creado exitosamente\" }");
 										}
@@ -357,21 +355,21 @@ public class SUsuario extends HttpServlet {
 								usuarioEdicion.setEmail(email);
 								HttpSession sesionweb = request.getSession();
 								if(UsuarioDAO.editarUsuario(usuarioEdicion, sesionweb.getAttribute("usuario").toString())){
-									response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualización de usuario exitosa.\" }");
+									response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualizaciï¿½n de usuario exitosa.\" }");
 								}else{
 									response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo actualizar al usuario. \" }");
 								}
 								
 							}else{
-								response_text = String.join("","{ \"success\": false, \"error\":\"no se encontró al usuario. \" }");
+								response_text = String.join("","{ \"success\": false, \"error\":\"no se encontrï¿½ al usuario. \" }");
 							}
 						}else{
-							response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros correctos \" }");
+							response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parï¿½metros correctos \" }");
 						}
 						
 					}
 				}else{
-					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros correctos \" }");
+					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parï¿½metros correctos \" }");
 				}
 			}else if(accion.compareTo("getColaboradores")==0){
 				String resultadoJson = "";

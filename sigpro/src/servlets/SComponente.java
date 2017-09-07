@@ -289,7 +289,7 @@ public class SComponente extends HttpServlet {
 					result = ComponenteDAO.guardarComponente(componente);
 					COrden orden = new COrden();
 					
-					orden.calcularOrdenObjetosSuperiores(2, componente.getId(), 2, usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId());
+					orden.calcularOrdenObjetosSuperiores(componente.getProyecto().getId(), 1, usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId());
 					
 					Set<ComponentePropiedadValor> valores_temp = componente.getComponentePropiedadValors();
 					componente.setComponentePropiedadValors(null);
@@ -387,7 +387,7 @@ public class SComponente extends HttpServlet {
 					}
 					result = ComponenteDAO.guardarComponente(componente);
 					COrden orden = new COrden();
-					orden.calcularOrdenObjetosSuperiores(2, componente.getId(), 2, usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId());
+					orden.calcularOrdenObjetosSuperiores(componente.getProyecto().getId(), 1,  usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId());
 					
 				}
 				stcomponente temp = new stcomponente();
@@ -426,7 +426,7 @@ public class SComponente extends HttpServlet {
 				
 				if(eliminado){
 					COrden orden = new COrden();
-					orden.calcularOrdenObjetosSuperiores(2, objetoId, objetoTipo, usuario, COrden.getSessionCalculoOrden(),objetoId);
+					orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, COrden.getSessionCalculoOrden(),objetoId);
 				}
 				
 				response_text = String.join("","{ \"success\": ",(eliminado ? "true" : "false")," }");

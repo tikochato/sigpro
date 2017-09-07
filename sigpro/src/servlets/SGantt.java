@@ -1,6 +1,5 @@
 package servlets;
 
-import java.sql.Connection;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -42,7 +41,6 @@ import dao.ActividadDAO;
 import dao.ComponenteDAO;
 import dao.EstructuraProyectoDAO;
 import dao.HitoDAO;
-import dao.InformacionPresupuestariaDAO;
 import dao.MetaValorDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
@@ -53,7 +51,6 @@ import pojo.Hito;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
-import utilities.CMariaDB;
 import utilities.CProject;
 import utilities.Utils;
 
@@ -137,9 +134,7 @@ public class SGantt extends HttpServlet {
 
 		if(accion.equals("getProyecto")){
 			predecesores = new HashMap<>();
-			if (proyectoId == 30)
-				items = getProyecto(proyectoId, usuario, predecesores);
-			else
+			
 			items = cargarProyecto(proyectoId,usuario,predecesores);
 			
 
@@ -568,135 +563,7 @@ public class SGantt extends HttpServlet {
 
 	}
 
-	private String getProyecto2(Integer proyectoId,String usuario, HashMap<Integer,List<Integer>> predecesores){
 
-		String items_actividad="";
-		String items_subproducto="";
-		String items_producto="";
-		String items_componente="";
-		String items="";
-
-
-		Proyecto proyecto = ProyectoDAO.getProyectoPorId(proyectoId, usuario);
-
-		if(proyecto != null){
-			Date fechaPrimeraActividad = null;
-
-			if(CMariaDB.connect()){
-					Connection conn = CMariaDB.getConnection();
-					ArrayList<Integer> componentes = InformacionPresupuestariaDAO.getEstructuraArbolComponentes(proyectoId, conn);
-					items_componente="";
-
-					for(Integer componente:componentes){
-						Componente objComponente = ComponenteDAO.getComponentePorId(componente, usuario);
-
-						ArrayList<Integer> productos = InformacionPresupuestariaDAO.getEstructuraArbolProducto(proyectoId, objComponente.getId(), conn);
-						items_producto="";
-						for(Integer producto: productos){
-							Producto objProducto = ProductoDAO.getProductoPorId(producto);
-							
-
-							ArrayList<Integer> subproductos = InformacionPresupuestariaDAO.getEstructuraArbolSubProducto(proyectoId,objComponente.getId(),objProducto.getId(), conn);
-							for(Integer subproducto: subproductos){
-								Subproducto objSubProducto = SubproductoDAO.getSubproductoPorId(subproducto);
-								
-
-
-								ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolSubProductoActividades(proyectoId, objComponente.getId(), objProducto.getId(),objSubProducto.getId(), conn);
-								
-								for(ArrayList<Integer> actividad : actividades){
-									
-									Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
-									if (fechaPrimeraActividad==null) {
-										fechaPrimeraActividad = objActividad.getFechaInicio();
-									}
-
-									List<Integer> idPredecesores = new ArrayList<>();
-									if (objActividad.getPredObjetoId()!=null){
-										idPredecesores.add(objActividad.getPredObjetoId());
-										predecesores.put(objActividad.getId(), idPredecesores);
-									}
-
-
-									items_actividad = String.join(items_actividad.trim().length()>0 ? "," : "",items_actividad,
-											construirItem(objActividad.getId(),objActividad.getId(),OBJETO_ID_ACTIVIDAD,objActividad.getNombre(), 4,
-													true, objActividad.getFechaInicio(), objActividad.getFechaFin(),
-													false,objActividad.getDuracion(),objActividad.getCosto(),null,null));
-
-
-								}
-
-								items_subproducto = String.join(items_subproducto.trim().length()>0 ? ",":"", items_subproducto,
-										construirItem(objSubProducto.getId(),objSubProducto.getId(),OBJETO_ID_SUBPRODUCTO, objSubProducto.getNombre(),3, true,
-												fechaPrimeraActividad, null,false,null,null,null,null));
-								items_subproducto = items_actividad.trim().length() > 0 ? String.join(",", items_subproducto,items_actividad) : items_subproducto;
-								items_actividad = "";
-
-							}
-							
-							
-							BigDecimal metaPlanificada = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(2, objProducto.getId(), OBJETO_ID_PRODUCTO);
-							BigDecimal metaReal = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(1, objProducto.getId(), OBJETO_ID_PRODUCTO);
-
-							items_producto = String.join(items_producto.trim().length()>0 ? "," : "",items_producto,
-									construirItem(objProducto.getId(),objProducto.getId(),OBJETO_ID_PRODUCTO, objProducto.getNombre(),2, true, fechaPrimeraActividad,
-											null,false,null,null,metaPlanificada,metaReal));
-							items_producto = items_subproducto.trim().length() > 0 ? String.join(",",items_producto, items_subproducto) : items_producto;
-
-							
-
-							ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolProductoActividades(proyectoId, objComponente.getId(), objProducto.getId(), conn);
-							
-								
-							items_actividad = obtenerItemsActividades2(actividades,3,3,predecesores,usuario);
-							
-							items_producto = (items_actividad.length()>0 ? String.join(",", items_producto,items_actividad):items_producto);
-							items_actividad = "";
-						}
-
-						ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolComponentesActividades(proyectoId, objComponente.getId(), conn);
-						items_actividad = obtenerItemsActividades2(actividades,2,2,predecesores,usuario);
-						
-						
-						items_componente = String.join(items_componente.trim().length()>0 ? "," : "",items_componente,
-								construirItem(objComponente.getId(),objComponente.getId(),OBJETO_ID_COMPONENTE,objComponente.getNombre(),1, true, fechaPrimeraActividad,
-										null,false,null,null,null,null));
-						items_componente = items_producto.trim().length() > 0 ? String.join(",", items_componente,items_producto) : items_componente;
-
-						
-						items_componente = (items_actividad.length()>0 ? String.join(",", items_componente,items_actividad):items_componente);
-						items_actividad = "";
-						
-					}
-					
-					
-
-					ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolPrestamoActividades(proyectoId, conn);
-					
-					items_actividad = obtenerItemsActividades2(actividades,1,1,predecesores,usuario);
-					items_componente = (items_actividad.length()>0 ? String.join(",", items_componente,items_actividad):items_componente);
-					
-					items = String.join(",",construirItem(proyecto.getId(),proyecto.getId(),OBJETO_ID_PROYECTO,proyecto.getNombre()
-							,null, true, fechaPrimeraActividad, null,false,null,null,null,null),items_componente);
-					
-					List<Hito> hitos = HitoDAO.getHitosPaginaPorProyecto(0, 0, proyectoId, null, null, null, null, null);
-
-					for (Hito hito:hitos){
-						items = String.join(",",items,
-								construirItem(null,hito.getId(),OBJETO_ID_HITO, hito.getNombre(), 1, null, hito.getFecha(),
-										null,true,null,null,null,null));
-					}
-
-					
-					CMariaDB.close();
-
-			}
-					
-			}
-			
-			return items;
-
-	}
 	
 	private String cargarProyecto(Integer proyectoId,String usuario, HashMap<Integer,List<Integer>> predecesores){
 		
@@ -741,36 +608,6 @@ public class SGantt extends HttpServlet {
 		}
 		return items;
 		
-	}
-	
-	private String obtenerItemsActividades2(ArrayList<ArrayList<Integer>> actividades,int objetoTipo,int nivelObjeto,HashMap<Integer,List<Integer>> predecesores
-			,String usuario){
-		String ret = "";
-
-		
-		if (!actividades.isEmpty()){
-			for(ArrayList<Integer> actividad : actividades){
-				Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
-				
-				String retRec = obtenerItemsActividadesRecursivas(objActividad.getId(), OBJETO_ID_ACTIVIDAD, nivelObjeto + 1, predecesores);
-				List<Integer> idPredecesores = new ArrayList<>();
-				if (objActividad.getPredObjetoId()!=null && retRec!=null && retRec.isEmpty()){
-					idPredecesores.add(objActividad.getPredObjetoId());
-					predecesores.put(objActividad.getId(), idPredecesores);
-				}
-
-				ret = String.join(ret.trim().length()>0 ? "," : "",ret,
-						construirItem(objActividad.getId(),objActividad.getId(),OBJETO_ID_ACTIVIDAD,objActividad.getNombre(),
-								nivelObjeto, true, objActividad.getFechaInicio(), objActividad.getFechaFin(),
-								false,objActividad.getDuracion(),objActividad.getCosto(),null,null));
-
-
-				if (retRec!=null && retRec.length()>0){
-					ret = String.join(",", ret,retRec);
-				}	
-			}
-		}
-		return ret;
 	}
 	
 	

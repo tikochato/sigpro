@@ -1147,7 +1147,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 					}
 				}
 				
-				Integer acumulacionCosto = 0;
+				/*Integer acumulacionCosto = 0;
 				if(actividad == null && fechasNoActividades != null){
 					
 					if(proyecto != null){
@@ -1164,7 +1164,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				}else if(actividad != null){
 					acumulacionCosto = actividad.getAcumulacionCosto() != null ? actividad.getAcumulacionCosto().getId() : 0;
 					
-				}			
+				}	*/		
 				
 				//int pos = anioFinal- objprestamopresupuesto.get(12).intValue();
 				
