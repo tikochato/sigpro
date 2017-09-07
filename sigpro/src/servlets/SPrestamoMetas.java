@@ -38,6 +38,7 @@ import pojo.Componente;
 import pojo.Producto;
 import pojo.Proyecto;
 import utilities.CExcel;
+import utilities.CLogger;
 import utilities.CMariaDB;
 import utilities.Utils;
 import utilities.CPdf;
@@ -136,18 +137,21 @@ public class SPrestamoMetas extends HttpServlet {
 			int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 			int tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
 			
-	        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, usuario);
-		
-			response.setContentType("application/ms-excel");
-			response.setContentLength(outArray.length);
-			response.setHeader("Expires:", "0"); 
-			response.setHeader("Content-Disposition", "attachment; MetasPrestamo_.xls");
-			OutputStream outStream = response.getOutputStream();
-			outStream.write(outArray);
-			outStream.flush();
-
+			try{
+		        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, usuario);
+			
+				response.setContentType("application/ms-excel");
+				response.setContentLength(outArray.length);
+				response.setHeader("Expires:", "0"); 
+				response.setHeader("Content-Disposition", "attachment; MetasPrestamo_.xls");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+			}catch(Exception e){
+				CLogger.write("1", SAdministracionTransaccional.class, e);
+			}
 		}else if(accion.equals("exportarPdf")){
-			CPdf archivo = new CPdf("Metas de Préstamo");
+			CPdf archivo = new CPdf("Metas de Prï¿½stamo");
 			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
 			int anioInicio = Utils.String2Int(map.get("fechaInicio"), 0);
 			int anioFin = Utils.String2Int(map.get("fechaFin"), 0);
@@ -370,7 +374,7 @@ public class SPrestamoMetas extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			System.out.println("exportarExcel: "+e);
+			CLogger.write("4", SPrestamoMetas.class, e);
 		}
 		return outArray;
 	}

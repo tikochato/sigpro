@@ -49,6 +49,7 @@ import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.CExcel;
+import utilities.CLogger;
 import utilities.CMariaDB;
 import utilities.Utils;
 
@@ -272,7 +273,8 @@ public class SPlanAdquisiciones extends HttpServlet {
 			}
 		}else if(accion.equals("exportarExcel")){
 			Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"), null);
-			 byte [] outArray = exportarExcel(idPlanAdquisiciones, idPrestamo, usuario);
+			try{ 
+				byte [] outArray = exportarExcel(idPlanAdquisiciones, idPrestamo, usuario);
 				
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -281,6 +283,9 @@ public class SPlanAdquisiciones extends HttpServlet {
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
+			}catch(Exception e){
+				CLogger.write("1", SPlanAdquisiciones.class, e);
+			}
 		}else{
 			response_text = "{ \"success\": false }";
 		}
@@ -820,7 +825,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			System.out.println("exportarExcel: "+e);
+			CLogger.write("4", SPlanAdquisiciones.class, e);
 		}
 		return outArray;
 	}

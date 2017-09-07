@@ -28,6 +28,7 @@ import com.google.gson.reflect.TypeToken;
 import dao.AdministracionTransaccionalDAO;
 import utilities.CExcel;
 import utilities.CGraficaExcel;
+import utilities.CLogger;
 import utilities.CMariaDB;
 import utilities.Utils;
 
@@ -89,16 +90,19 @@ public class SAdministracionTransaccional extends HttpServlet {
 	        response_text = String.join("", "\"usuarios\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}else if (accion.equals("exportarExcel")){
+			try{
+		        byte [] outArray = exportarExcel(usuario);
 			
-	        byte [] outArray = exportarExcel(usuario);
-		
-			response.setContentType("application/ms-excel");
-			response.setContentLength(outArray.length);
-			response.setHeader("Expires:", "0"); 
-			response.setHeader("Content-Disposition", "attachment; AdministracionTransaccional_.xls");
-			OutputStream outStream = response.getOutputStream();
-			outStream.write(outArray);
-			outStream.flush();
+				response.setContentType("application/ms-excel");
+				response.setContentLength(outArray.length);
+				response.setHeader("Expires:", "0"); 
+				response.setHeader("Content-Disposition", "attachment; AdministracionTransaccional_.xls");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+			}catch(Exception e){
+				CLogger.write("1", SAdministracionTransaccional.class, e);
+			}
 		}else{
 			response_text = "{ \"success\": false }";
 		}
@@ -131,7 +135,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 		return lstusuarios;
 	}
 	
-	private byte[] exportarExcel(String usuario) throws IOException{
+	private byte[] exportarExcel(String usuario){
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -149,7 +153,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			System.out.println("exportarExcel: "+e);
+			CLogger.write("4", SAdministracionTransaccional.class, e);
 		}
 		return outArray;
 	}
