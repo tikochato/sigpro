@@ -607,9 +607,41 @@ public class SActividad extends HttpServlet {
 					actividad.setActividadTipo(actividadTipo);
 					actividad.setDuracion(duracion);
 					actividad.setDuracionDimension(duracionDimension);
+					objetoTipo = actividad.getObjetoTipo();
+					objetoId = actividad.getObjetoId();
 					
 				}
 				result = ActividadDAO.guardarActividad(actividad);
+				
+				Session session = COrden.getSessionCalculoOrden();
+				Integer proyectoBase=0;
+				
+				switch (objetoTipo){
+                case 1:
+                    proyectoBase = objetoId;
+                    break;
+                case 2:
+                    Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
+                    proyectoBase = componente.getProyecto().getId();
+                    break;
+                case 3:
+                    Producto producto = ProductoDAO.getProductoPorId(objetoId);
+                    proyectoBase = producto.getComponente().getProyecto().getId();
+                    break;
+                case 4:
+                    Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
+                    proyectoBase = subproducto.getProducto().getComponente().getProyecto().getId();
+                break;
+                case 5:
+                    Actividad actividadTemp = ActividadDAO.getActividadPorId(objetoId, usuario);
+                    proyectoBase = actividadTemp.getProyectoBase();
+                    break;
+            }
+				
+				
+				COrden orden = new COrden();
+				orden.calcularOrdenActividades(5,objetoId, objetoTipo, usuario, session,proyectoBase);
+				orden.calcularOrdenObjetosSuperiores(5,objetoId, objetoTipo, usuario, session,proyectoBase);
 			}
 			
 			if (result){
