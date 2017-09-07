@@ -106,167 +106,200 @@ public class SAvanceActividades extends HttpServlet {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
-		HttpSession sesionweb = request.getSession();
-		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
-		Gson gson = new Gson();
-		Type type = new TypeToken<Map<String, String>>(){}.getType();
-		StringBuilder sb = new StringBuilder();
-		BufferedReader br = request.getReader();
-		String str;
-		while ((str = br.readLine()) != null) {
-			sb.append(str);
-		}
-		Map<String, String> map = gson.fromJson(sb.toString(), type);
-		String accion = map.get("accion")!=null ? map.get("accion") : "";
-		String response_text = "";
-		Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-		String fechaCorte = map.get("fechaCorte");
-		if (accion.equals("getAvance")){
+	protected void doPost(HttpServletRequest request, HttpServletResponse response){
+		try{		
+			Exception exception = new Exception("SAvanceActividades.java - ignore");
 			
-			try{
-				stElementoResult avanceActividades = getAvanceActividades(idPrestamo, fechaCorte, usuario);
-					
-				if(avanceActividades != null){
-					response_text = new GsonBuilder().serializeNulls().create().toJson(avanceActividades.listaResult);
-					response_text = String.join("", ",\"actividades\":",response_text);
-					String cantidades = new GsonBuilder().serializeNulls().create().toJson(avanceActividades.listaResultCantidad);
-					response_text += String.join("", ",\"cantidadesActividades\":",cantidades);
-					response_text += String.join("", ",\"totalActividades\":" + avanceActividades.total,response_text);
-				}
-				
-				stElementoResult avanceHitos = getAvanceHitos(idPrestamo, fechaCorte, usuario);
-				
-				if(avanceHitos != null){
-					String cantidades = new GsonBuilder().serializeNulls().create().toJson(avanceHitos.listaResultCantidad);
-					response_text += String.join("", ",\"cantidadHitos\":",cantidades);
-					String response_hitos = new GsonBuilder().serializeNulls().create().toJson(avanceHitos.listaResult);
-					response_text += String.join("", ",\"hitos\":",response_hitos);
-					response_text = String.join("", ",\"totalHitos\":" + avanceHitos.total,response_text);
-				}
-				
-				stElementoResult avanceProductos = getAvanceProductos(idPrestamo, fechaCorte, usuario);
-				
-				if(avanceProductos != null){
-					String response_productos = new GsonBuilder().serializeNulls().create().toJson(avanceProductos.listaResult);
-					response_text += String.join("", ",\"productos\":",response_productos);
-					response_text = String.join("", ",\"totalProductos\":" + avanceProductos.total,response_text);
-				}
-			}catch (Throwable e) {
-				e.printStackTrace();
-		    }
+		    CLogger.writeFullConsole("Inicia doPost - ", exception);
 			
-			response_text = String.join("", "{\"success\":true ", response_text, "}");
-		}else if(accion.equals("getActividadesProyecto")){
-			List<stActividad> actividades = getActividadesProyecto(idPrestamo, usuario);
-			List<stelementosActividadesAvance> lstElementosActividadesAvance = new ArrayList<stelementosActividadesAvance>();
-			for(stActividad actividad : actividades){
-				stelementosActividadesAvance temp = new stelementosActividadesAvance();
-				temp.id = actividad.id;
-				temp.nombre = actividad.nombre;
-				temp.fechaInicial = actividad.fechaInicio;
-				temp.fechaFinal = actividad.fechaFin;
-				temp.avance = actividad.porcentajeAvance;
-				temp.responsable = actividad.responsable;
-				lstElementosActividadesAvance.add(temp);
+			request.setCharacterEncoding("UTF-8");
+			HttpSession sesionweb = request.getSession();
+			String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
+			
+			CLogger.writeFullConsole("Gson - ", exception);
+			
+			Gson gson = new Gson();
+			Type type = new TypeToken<Map<String, String>>(){}.getType();
+			
+			CLogger.writeFullConsole("StringBuildes - ", exception);
+			
+			StringBuilder sb = new StringBuilder();
+			BufferedReader br = request.getReader();
+			String str;
+			
+			CLogger.writeFullConsole("while str - ", exception);
+			
+			while ((str = br.readLine()) != null) {
+				sb.append(str);
 			}
+			Map<String, String> map = gson.fromJson(sb.toString(), type);
+			String accion = map.get("accion")!=null ? map.get("accion") : "";
 			
-			response_text = new GsonBuilder().serializeNulls().create().toJson(lstElementosActividadesAvance);
-			response_text = String.join("", ",\"items\":",response_text);
-			response_text = String.join("", "{\"success\":true ", response_text, "}");
-		}else if(accion.equals("getHitos")){
-			Date Corte = new Date();
-			List<Hito> hitos = HitoDAO.getHitosPaginaPorProyecto(0, 0, idPrestamo, null, null, null, null, null);
-			List<stelementosActividadesAvance> lstElementosActividadesAvance = new ArrayList<stelementosActividadesAvance>();
+			CLogger.writeFullConsole("Map accion - ", exception);
 			
-			for(Hito hito : hitos){
-				stelementosActividadesAvance temp = null;
-				HitoResultado hitoResultado = HitoResultadoDAO.getHitoResultadoActivoPorHito(hito.getId());
-				Date fechaHito = new Date();
-				try{	
-					fechaHito = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
-							.parse(Utils.formatDate(hito.getFecha()));
-					if(hitoResultado != null){					
-							if((Corte.before(fechaHito) && hitoResultado.getValorEntero() == 0) || (Corte.after(fechaHito) && hitoResultado.getValorEntero() == 0)){
+			String response_text = "";
+			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
+			String fechaCorte = map.get("fechaCorte");
+			
+			CLogger.writeFullConsole("if accion - ", exception);
+			
+			if (accion.equals("getAvance")){
+				
+				try{
+					stElementoResult avanceActividades = getAvanceActividades(idPrestamo, fechaCorte, usuario);
+						
+					if(avanceActividades != null){
+						response_text = new GsonBuilder().serializeNulls().create().toJson(avanceActividades.listaResult);
+						response_text = String.join("", ",\"actividades\":",response_text);
+						String cantidades = new GsonBuilder().serializeNulls().create().toJson(avanceActividades.listaResultCantidad);
+						response_text += String.join("", ",\"cantidadesActividades\":",cantidades);
+						response_text += String.join("", ",\"totalActividades\":" + avanceActividades.total,response_text);
+					}
+					
+					stElementoResult avanceHitos = getAvanceHitos(idPrestamo, fechaCorte, usuario);
+					
+					if(avanceHitos != null){
+						String cantidades = new GsonBuilder().serializeNulls().create().toJson(avanceHitos.listaResultCantidad);
+						response_text += String.join("", ",\"cantidadHitos\":",cantidades);
+						String response_hitos = new GsonBuilder().serializeNulls().create().toJson(avanceHitos.listaResult);
+						response_text += String.join("", ",\"hitos\":",response_hitos);
+						response_text = String.join("", ",\"totalHitos\":" + avanceHitos.total,response_text);
+					}
+					
+					stElementoResult avanceProductos = getAvanceProductos(idPrestamo, fechaCorte, usuario);
+					
+					if(avanceProductos != null){
+						String response_productos = new GsonBuilder().serializeNulls().create().toJson(avanceProductos.listaResult);
+						response_text += String.join("", ",\"productos\":",response_productos);
+						response_text = String.join("", ",\"totalProductos\":" + avanceProductos.total,response_text);
+					}
+				}catch (Throwable e) {
+					e.printStackTrace();
+			    }
+				
+				response_text = String.join("", "{\"success\":true ", response_text, "}");
+			}else if(accion.equals("getActividadesProyecto")){
+				List<stActividad> actividades = getActividadesProyecto(idPrestamo, usuario);
+				List<stelementosActividadesAvance> lstElementosActividadesAvance = new ArrayList<stelementosActividadesAvance>();
+				for(stActividad actividad : actividades){
+					stelementosActividadesAvance temp = new stelementosActividadesAvance();
+					temp.id = actividad.id;
+					temp.nombre = actividad.nombre;
+					temp.fechaInicial = actividad.fechaInicio;
+					temp.fechaFinal = actividad.fechaFin;
+					temp.avance = actividad.porcentajeAvance;
+					temp.responsable = actividad.responsable;
+					lstElementosActividadesAvance.add(temp);
+				}
+				
+				response_text = new GsonBuilder().serializeNulls().create().toJson(lstElementosActividadesAvance);
+				response_text = String.join("", ",\"items\":",response_text);
+				response_text = String.join("", "{\"success\":true ", response_text, "}");
+			}else if(accion.equals("getHitos")){
+				Date Corte = new Date();
+				List<Hito> hitos = HitoDAO.getHitosPaginaPorProyecto(0, 0, idPrestamo, null, null, null, null, null);
+				List<stelementosActividadesAvance> lstElementosActividadesAvance = new ArrayList<stelementosActividadesAvance>();
+				
+				for(Hito hito : hitos){
+					stelementosActividadesAvance temp = null;
+					HitoResultado hitoResultado = HitoResultadoDAO.getHitoResultadoActivoPorHito(hito.getId());
+					Date fechaHito = new Date();
+					try{	
+						fechaHito = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
+								.parse(Utils.formatDate(hito.getFecha()));
+						if(hitoResultado != null){					
+								if((Corte.before(fechaHito) && hitoResultado.getValorEntero() == 0) || (Corte.after(fechaHito) && hitoResultado.getValorEntero() == 0)){
+									temp = new stelementosActividadesAvance();
+									temp.id = hito.getId();
+									temp.nombre = hito.getNombre();
+									temp.avance = 0;
+									temp.fechaInicial = Utils.formatDate(hito.getFecha());
+									lstElementosActividadesAvance.add(temp);
+								}else if(Corte.after(fechaHito) && hitoResultado.getValorEntero() == 1){
+									temp = new stelementosActividadesAvance();
+									temp.id = hito.getId();
+									temp.nombre = hito.getNombre();
+									temp.avance = 100;
+									temp.fechaFinal = Utils.formatDate(hito.getFecha());
+									lstElementosActividadesAvance.add(temp);
+								}
+						}else{
+							if (Corte.after(fechaHito)){
 								temp = new stelementosActividadesAvance();
 								temp.id = hito.getId();
 								temp.nombre = hito.getNombre();
 								temp.avance = 0;
 								temp.fechaInicial = Utils.formatDate(hito.getFecha());
 								lstElementosActividadesAvance.add(temp);
-							}else if(Corte.after(fechaHito) && hitoResultado.getValorEntero() == 1){
-								temp = new stelementosActividadesAvance();
-								temp.id = hito.getId();
-								temp.nombre = hito.getNombre();
-								temp.avance = 100;
-								temp.fechaFinal = Utils.formatDate(hito.getFecha());
-								lstElementosActividadesAvance.add(temp);
 							}
-					}else{
-						if (Corte.after(fechaHito)){
-							temp = new stelementosActividadesAvance();
-							temp.id = hito.getId();
-							temp.nombre = hito.getNombre();
-							temp.avance = 0;
-							temp.fechaInicial = Utils.formatDate(hito.getFecha());
-							lstElementosActividadesAvance.add(temp);
 						}
-					}
-				}catch (Throwable e) {
+					}catch (Throwable e) {
+						e.printStackTrace();
+				    }
+				}
+				
+				response_text = new GsonBuilder().serializeNulls().create().toJson(lstElementosActividadesAvance);
+				response_text = String.join("", ",\"items\":",response_text);
+				response_text = String.join("", "{\"success\":true ", response_text, "}");
+			}else if(accion.equals("getActividadesProducto")){
+				Integer productoId = Utils.String2Int(map.get("productoId"));
+				Producto producto = ProductoDAO.getProductoPorId(productoId);
+				List<stActividad> actividades = getActividadesProducto(producto, usuario);
+				List<stelementosActividadesAvance> lstElementosActividadesAvance = new ArrayList<stelementosActividadesAvance>();
+				for(stActividad actividad : actividades){
+					stelementosActividadesAvance temp = new stelementosActividadesAvance();
+					temp.id = actividad.id;
+					temp.nombre = actividad.nombre;
+					temp.fechaInicial = actividad.fechaInicio;
+					temp.fechaFinal = actividad.fechaFin;
+					temp.avance = actividad.porcentajeAvance;
+					temp.responsable = actividad.responsable;
+					lstElementosActividadesAvance.add(temp);
+				}
+				
+				response_text = new GsonBuilder().serializeNulls().create().toJson(lstElementosActividadesAvance);
+				response_text = String.join("", ",\"items\":",response_text);
+				response_text = String.join("", "{\"success\":true ", response_text, "}");
+			}else if (accion.equals("exportarExcel")){
+				try{
+					CLogger.writeFullConsole("accion: exportarExcel - ", exception);
+					
+			        byte [] outArray = exportarExcel(idPrestamo, fechaCorte, usuario);
+				
+			        CLogger.writeFullConsole("accion: exportarExcel() return - ", exception);
+			        
+					response.setContentType("application/ms-excel");
+					response.setContentLength(outArray.length);
+					
+					CLogger.writeFullConsole("outArray.length - ", exception);
+					
+					response.setHeader("Expires:", "0"); 
+					response.setHeader("Content-Disposition", "attachment; ReporteAvances_.xls");
+					OutputStream outStream = response.getOutputStream();
+					
+					CLogger.writeFullConsole("write outArray - ", exception);
+					
+					outStream.write(outArray);
+					outStream.flush();
+				}catch(Exception e){
 					e.printStackTrace();
-			    }
+					CLogger.write("1", SAvanceActividades.class, e);
+				}
+			}else{
+				response_text = "{ \"success\": false }";
 			}
 			
-			response_text = new GsonBuilder().serializeNulls().create().toJson(lstElementosActividadesAvance);
-			response_text = String.join("", ",\"items\":",response_text);
-			response_text = String.join("", "{\"success\":true ", response_text, "}");
-		}else if(accion.equals("getActividadesProducto")){
-			Integer productoId = Utils.String2Int(map.get("productoId"));
-			Producto producto = ProductoDAO.getProductoPorId(productoId);
-			List<stActividad> actividades = getActividadesProducto(producto, usuario);
-			List<stelementosActividadesAvance> lstElementosActividadesAvance = new ArrayList<stelementosActividadesAvance>();
-			for(stActividad actividad : actividades){
-				stelementosActividadesAvance temp = new stelementosActividadesAvance();
-				temp.id = actividad.id;
-				temp.nombre = actividad.nombre;
-				temp.fechaInicial = actividad.fechaInicio;
-				temp.fechaFinal = actividad.fechaFin;
-				temp.avance = actividad.porcentajeAvance;
-				temp.responsable = actividad.responsable;
-				lstElementosActividadesAvance.add(temp);
-			}
-			
-			response_text = new GsonBuilder().serializeNulls().create().toJson(lstElementosActividadesAvance);
-			response_text = String.join("", ",\"items\":",response_text);
-			response_text = String.join("", "{\"success\":true ", response_text, "}");
-		}else if (accion.equals("exportarExcel")){
-			try{
-		        byte [] outArray = exportarExcel(idPrestamo, fechaCorte, usuario);
-			
-				response.setContentType("application/ms-excel");
-				response.setContentLength(outArray.length);
-				response.setHeader("Expires:", "0"); 
-				response.setHeader("Content-Disposition", "attachment; ReporteAvances_.xls");
-				OutputStream outStream = response.getOutputStream();
-				outStream.write(outArray);
-				outStream.flush();
-			}catch(Exception e){
-				e.printStackTrace();
-				CLogger.write("1", SAvanceActividades.class, e);
-			}
-		}else{
-			response_text = "{ \"success\": false }";
+			response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
+	
+	        OutputStream output = response.getOutputStream();
+			GZIPOutputStream gz = new GZIPOutputStream(output);
+	        gz.write(response_text.getBytes("UTF-8"));
+	        gz.close();
+	        output.close();
+		}catch(Exception e){
+			e.printStackTrace();
 		}
-		
-		response.setHeader("Content-Encoding", "gzip");
-		response.setCharacterEncoding("UTF-8");
-
-        OutputStream output = response.getOutputStream();
-		GZIPOutputStream gz = new GZIPOutputStream(output);
-        gz.write(response_text.getBytes("UTF-8"));
-        gz.close();
-        output.close();
 		
 	}
 	
