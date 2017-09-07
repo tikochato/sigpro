@@ -591,31 +591,7 @@ public class SActividad extends HttpServlet {
 				
 				ActividadTipo actividadTipo= new ActividadTipo();
 				actividadTipo.setId(actividadtipoid);
-				
-				if (esnuevo){
-					actividad = new Actividad(actividadTipo, nombre, fechaInicio, fechaFin, porcentajeAvance
-							, usuario, new Date(), 1, objetoId, objetoTipo, duracion, duracionDimension);
-				}else{
-					actividad = ActividadDAO.getActividadPorId(id,usuario);
-					actividad.setNombre(nombre);
-					actividad.setDescripcion(descripcion);
-					actividad.setUsuarioActualizo(usuario);
-					actividad.setFechaActualizacion(new Date());
-					actividad.setFechaInicio(fechaInicio);
-					actividad.setFechaFin(fechaFin);
-					actividad.setPorcentajeAvance(porcentajeAvance);
-					actividad.setActividadTipo(actividadTipo);
-					actividad.setDuracion(duracion);
-					actividad.setDuracionDimension(duracionDimension);
-					objetoTipo = actividad.getObjetoTipo();
-					objetoId = actividad.getObjetoId();
-					
-				}
-				result = ActividadDAO.guardarActividad(actividad);
-				
-				Session session = COrden.getSessionCalculoOrden();
 				Integer proyectoBase=0;
-				
 				switch (objetoTipo){
                 case 1:
                     proyectoBase = objetoId;
@@ -637,6 +613,34 @@ public class SActividad extends HttpServlet {
                     proyectoBase = actividadTemp.getProyectoBase();
                     break;
             }
+				
+				if (esnuevo){
+					actividad = new Actividad(actividadTipo, nombre, fechaInicio, fechaFin, porcentajeAvance
+							, usuario, new Date(), 1, objetoId, objetoTipo, duracion, duracionDimension);
+					actividad.setProyectoBase(proyectoBase);
+				}else{
+					actividad = ActividadDAO.getActividadPorId(id,usuario);
+					actividad.setNombre(nombre);
+					actividad.setDescripcion(descripcion);
+					actividad.setUsuarioActualizo(usuario);
+					actividad.setFechaActualizacion(new Date());
+					actividad.setFechaInicio(fechaInicio);
+					actividad.setFechaFin(fechaFin);
+					actividad.setPorcentajeAvance(porcentajeAvance);
+					actividad.setActividadTipo(actividadTipo);
+					actividad.setDuracion(duracion);
+					actividad.setDuracionDimension(duracionDimension);
+					objetoTipo = actividad.getObjetoTipo();
+					objetoId = actividad.getObjetoId();
+					
+					
+				}
+				result = ActividadDAO.guardarActividad(actividad);
+				
+				Session session = COrden.getSessionCalculoOrden();
+				
+				
+				
 				
 				
 				COrden orden = new COrden();

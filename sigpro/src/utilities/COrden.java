@@ -241,7 +241,7 @@ public class COrden {
 		        });
 		        
 		        for(Map.Entry<Integer, Long> entry:list){
-		        	Object[] objeto = getObjeto(entry.getKey(), 3, estructuraPrestamo);
+		        	Object[] objeto = getObjeto(entry.getKey(), 4, estructuraPrestamo);
 		        	Subproducto subproducto = (Subproducto)objeto[3];
 		        	subproducto.setOrden(orden);
 		        	subproducto.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
