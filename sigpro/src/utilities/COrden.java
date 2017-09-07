@@ -134,7 +134,7 @@ public class COrden {
 		
 		getTransactionSession(session);
 		Object[] objPadre = getObjeto(objetoId, objetoTipo, estructuraPrestamo);
-		String treePath = (String)getObjeto((Integer)objPadre[1], (Integer)objPadre[2], estructuraPrestamo)[6];
+		String treePath = (objetoTipo==1) ? "1" : (String)getObjeto((Integer)objPadre[1], (Integer)objPadre[2], estructuraPrestamo)[6];
 		List<Object[]> hijos = getHijos(nivel, (Integer)objPadre[1], (Integer)objPadre[2], estructuraPrestamo);
 		Map<Integer, Long> fechas = new TreeMap<Integer, Long>();
 		Integer orden = 1;
