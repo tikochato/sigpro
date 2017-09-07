@@ -108,26 +108,24 @@ public class SAvanceActividades extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
 		try{		
-			Exception exception = new Exception("SAvanceActividades.java - ignore");
-			
-		    CLogger.writeFullConsole("Inicia doPost - ", exception);
+			CLogger.write_simple("1", SAvanceActividades.class, "Inicia doPost - 111");
 			
 			request.setCharacterEncoding("UTF-8");
 			HttpSession sesionweb = request.getSession();
 			String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 			
-			CLogger.writeFullConsole("Gson - ", exception);
+			CLogger.write_simple("2", SAvanceActividades.class, "Gson - 117");
 			
 			Gson gson = new Gson();
 			Type type = new TypeToken<Map<String, String>>(){}.getType();
 			
-			CLogger.writeFullConsole("StringBuildes - ", exception);
+			CLogger.write_simple("3", SAvanceActividades.class, "StringBuildes - 122");
 			
 			StringBuilder sb = new StringBuilder();
 			BufferedReader br = request.getReader();
 			String str;
 			
-			CLogger.writeFullConsole("while str - ", exception);
+			CLogger.write_simple("3", SAvanceActividades.class, "while str - 128");
 			
 			while ((str = br.readLine()) != null) {
 				sb.append(str);
@@ -135,17 +133,19 @@ public class SAvanceActividades extends HttpServlet {
 			Map<String, String> map = gson.fromJson(sb.toString(), type);
 			String accion = map.get("accion")!=null ? map.get("accion") : "";
 			
-			CLogger.writeFullConsole("Map accion - ", exception);
+			CLogger.write_simple("3", SAvanceActividades.class, "Map accion - 136");
 			
 			String response_text = "";
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 			String fechaCorte = map.get("fechaCorte");
 			
-			CLogger.writeFullConsole("if accion - ", exception);
+			CLogger.write_simple("4", SAvanceActividades.class, "if accion - 142");
 			
 			if (accion.equals("getAvance")){
 				
 				try{
+					CLogger.write_simple("4", SAvanceActividades.class, "getAvance  - 147");
+					
 					stElementoResult avanceActividades = getAvanceActividades(idPrestamo, fechaCorte, usuario);
 						
 					if(avanceActividades != null){
@@ -262,22 +262,22 @@ public class SAvanceActividades extends HttpServlet {
 				response_text = String.join("", "{\"success\":true ", response_text, "}");
 			}else if (accion.equals("exportarExcel")){
 				try{
-					CLogger.writeFullConsole("accion: exportarExcel - ", exception);
+					CLogger.write_simple("4", SAvanceActividades.class, "accion: exportarExcel - 263");
 					
 			        byte [] outArray = exportarExcel(idPrestamo, fechaCorte, usuario);
 				
-			        CLogger.writeFullConsole("accion: exportarExcel() return - ", exception);
+			        CLogger.write_simple("4", SAvanceActividades.class, "accion: accion: exportarExcel() return - 267");
 			        
 					response.setContentType("application/ms-excel");
 					response.setContentLength(outArray.length);
 					
-					CLogger.writeFullConsole("outArray.length - ", exception);
+					CLogger.write_simple("4", SAvanceActividades.class, "outArray.length return - 272");
 					
 					response.setHeader("Expires:", "0"); 
 					response.setHeader("Content-Disposition", "attachment; ReporteAvances_.xls");
 					OutputStream outStream = response.getOutputStream();
 					
-					CLogger.writeFullConsole("write outArray - ", exception);
+					CLogger.write_simple("4", SAvanceActividades.class, "write outArray  - 278");
 					
 					outStream.write(outArray);
 					outStream.flush();
