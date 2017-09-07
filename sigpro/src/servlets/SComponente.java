@@ -357,6 +357,10 @@ public class SComponente extends HttpServlet {
 					String nombre = map.get("nombre");	
 					int componentetipoid = map.get("componentetipoid")!=null ? Integer.parseInt(map.get("componentetipoid")) : 0;	
 					int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;
+					Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
+					Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
+					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
+					String duracionDimension = map.get("duracionDimension");
 					ComponenteTipo componenteTipo= new ComponenteTipo();
 					componenteTipo.setId(componentetipoid);
 					UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
@@ -365,8 +369,8 @@ public class SComponente extends HttpServlet {
 					if (esnuevo){
 						Proyecto proyecto = new Proyecto();
 						proyecto.setId(proyectoId);
-						componente = new Componente(componenteTipo, 
-								proyecto, unidadEjecutora, nombre, usuario, new Date(), 1);
+						componente = new Componente(componenteTipo, proyecto, unidadEjecutora, nombre, usuario, 
+								new Date(), 1, fechaInicio, fechaFin, duracion, duracionDimension);
 						
 					}else {
 						componente = ComponenteDAO.getComponentePorId(id,usuario);
@@ -375,9 +379,16 @@ public class SComponente extends HttpServlet {
 						componente.setUnidadEjecutora(unidadEjecutora);
 						componente.setUsuarioActualizo(usuario);
 						componente.setFechaActualizacion(new DateTime().toDate());
+						componente.setFechaInicio(fechaInicio);
+						componente.setFechaFin(fechaFin);
+						componente.setDuracion(duracion);
+						componente.setDuracionDimension(duracionDimension);
 						
 					}
 					result = ComponenteDAO.guardarComponente(componente);
+					COrden orden = new COrden();
+					orden.calcularOrdenObjetosSuperiores(2, componente.getId(), 2, usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId());
+					
 				}
 				stcomponente temp = new stcomponente();
 				if (result){
@@ -387,6 +398,10 @@ public class SComponente extends HttpServlet {
 					temp.componentetiponombre = componente.getComponenteTipo().getNombre();
 					temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
 					temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+					temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
+					temp.fechaFin = Utils.formatDate(componente.getFechaFin());
+					temp.duracion = componente.getDuracion();
+					temp.duracionDimension = componente.getDuracionDimension();
 					response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 			        response_text = String.join("", "\"componente\":",response_text);
 			        response_text = String.join("", "{\"success\":true,", response_text,"}");
@@ -499,6 +514,10 @@ public class SComponente extends HttpServlet {
 				temp.componentetiponombre = componente.getComponenteTipo().getNombre();
 				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+				temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
+				temp.fechaFin = Utils.formatDate(componente.getFechaFin());
+				temp.duracion = componente.getDuracion();
+				temp.duracionDimension = componente.getDuracionDimension();
 			}
 
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);

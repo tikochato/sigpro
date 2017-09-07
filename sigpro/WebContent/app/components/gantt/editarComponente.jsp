@@ -31,6 +31,53 @@
 	            <span class="label-icon" ng-click="componentec.buscarComponenteTipo()"><i class="glyphicon glyphicon-search"></i></span>
 	          	<label for="campo3" class="floating-label">* Tipo de Componente</label>
 			</div>
+			<div class = "row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<select class="inputText" ng-model="componentec.duracionDimension"
+							ng-options="dim as dim.nombre for dim in componentec.dimensiones track by dim.value"
+							 ng-required="true">
+						</select>
+						<label for="nombre" class="floating-label">* Dimension</label>
+					</div>
+				</div>
+				
+				<div class="col-sm-6">
+					<div class="form-group">
+					   <input class="inputText"  type="number"
+					     ng-model="componentec.duracion" ng-value="componentec.duracion"   
+					     onblur="this.setAttribute('value', this.value);"  min="1" max="500" ng-required="true" 
+					     ng-readonly="componentec.duracionDimension.value != 0 ? false : true"
+					     ng-change="componentec.fechaInicio != null && componentec.duracionDimension.value != 0 ? componentec.cambioDuracion(componentec.duracionDimension) : ''">
+					   <label class="floating-label">* Duración</label>
+					</div>	
+				</div>
+				
+				<div class="col-sm-6">
+					<div class="form-group" >
+					  <input type="text"  class="inputText" uib-datepicker-popup="{{componentec.formatofecha}}" ng-model="componentec.fechaInicio" is-open="componentec.fi_abierto"
+					            datepicker-options="componentec.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="componentec.cambioDuracion(componentec.duracionDimension);" ng-required="true"  
+					            ng-click="componentec.abrirPopupFecha(1000)" ng-value="componentec.fechaInicio" onblur="this.setAttribute('value', this.value);">
+					            <span class="label-icon" ng-click="componentec.abrirPopupFecha(1000)">
+					              <i class="glyphicon glyphicon-calendar"></i>
+					            </span>
+					  <label for="campo.id" class="floating-label">* Fecha de Inicio</label>
+					</div>
+				</div>
+			
+				<div class="col-sm-6">
+					<div class="form-group" >
+					  <input type="text"  class="inputText" uib-datepicker-popup="{{componentec.formatofecha}}" ng-model="componentec.fechaFin" is-open="componentec.ff_abierto"
+					            datepicker-options="componentec.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true" ng-click=""
+					            ng-value="componentec.fechaFin" onblur="this.setAttribute('value', this.value);"
+					            ng-readonly="true"/>
+					            <span class="label-icon" ng-click="componentec.abrirPopupFecha(1001)">
+					              <i class="glyphicon glyphicon-calendar"></i>
+					            </span>
+					  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
+					</div>
+				</div>
+			</div>
 			
 		</form>
 		<br/>
