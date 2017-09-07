@@ -671,7 +671,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			 }else if(mi.grupoMostrado.real){
 				 tipoVisualizacion = 1;
 			 }
-			$http.post('/SPrestamoMetas', { 
+			 console.log("checkout 1");
+			$http.post('/SInformacionPresupuestaria', { 
 				accion: 'exportarPdf',
 				proyectoid: mi.prestamo.value,
 				fechaInicio: mi.fechaInicio,
@@ -685,7 +686,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 						    anchor.attr({
 						         href: 'data:application/pdf;base64,' + response.data,
 						         target: '_blank',
-						         download: 'PrestamoMetas.pdf'
+						         download: 'InformaciónPresupuestaria.pdf'
 						     })[0].click();
 						  }.bind(this), function errorCallback(response){
 						 		
