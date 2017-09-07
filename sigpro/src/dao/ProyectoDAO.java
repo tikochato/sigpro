@@ -300,11 +300,8 @@ public class ProyectoDAO implements java.io.Serializable  {
 		try{
 			proyecto.setTreePath("1");
 			session.saveOrUpdate(proyecto);
-			ProyectoUsuario pu = new ProyectoUsuario(new ProyectoUsuarioId(proyecto.getId(), proyecto.getUsuarioCreo()), proyecto);
-			
 			session.flush();
 			session.clear();
-			session.saveOrUpdate(pu);
 			ret = true;
 		}
 		catch(Throwable e){

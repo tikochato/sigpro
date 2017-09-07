@@ -341,8 +341,7 @@ public class SActividad extends HttpServlet {
 					Session session = COrden.getSessionCalculoOrden();
 					
 					COrden orden = new COrden();
-					orden.calcularOrdenActividades(5,objetoId, objetoTipo, usuario, session,proyectoBase);
-					orden.calcularOrdenObjetosSuperiores(5,objetoId, objetoTipo, usuario, session,proyectoBase);
+					orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase);
 					
 					if (result ){
 						List<AsignacionRaci> asignaciones_temp = AsignacionRaciDAO.getAsignacionPorTarea(actividad.getId(), 5);
@@ -449,8 +448,7 @@ public class SActividad extends HttpServlet {
 					Session session = COrden.getSessionCalculoOrden();
 					
 					COrden orden = new COrden();
-					orden.calcularOrdenActividades(5,objetoId, objetoTipo, usuario, session,proyectoId);
-					orden.calcularOrdenObjetosSuperiores(5,objetoId, objetoTipo, usuario, session,proyectoId);
+					orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoId);
 				}
 				
 				response_text = String.join("","{ \"success\": ",( eliminado ? "true" : "false")," }");
@@ -644,8 +642,7 @@ public class SActividad extends HttpServlet {
 				
 				
 				COrden orden = new COrden();
-				orden.calcularOrdenActividades(5,objetoId, objetoTipo, usuario, session,proyectoBase);
-				orden.calcularOrdenObjetosSuperiores(5,objetoId, objetoTipo, usuario, session,proyectoBase);
+				orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase);
 			}
 			
 			if (result){
