@@ -44,6 +44,7 @@ import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.CExcel;
 import utilities.CGraficaExcel;
+import utilities.CLogger;
 import utilities.CMariaDB;
 import utilities.Utils;
 
@@ -306,22 +307,26 @@ public class SCargaTrabajo extends HttpServlet {
 						}
 					}
 			}else if (accion.equals("exportarExcel")){
-				Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
-				Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
-				String idPrestamos = map.get("idPrestamos") != null && map.get("idPrestamos").length() > 0? map.get("idPrestamos") : "0";
-				String idComponentes = map.get("idComponentes") != null && map.get("idComponentes").length() > 0 ? map.get("idComponentes") : "0";
-				String idProductos = map.get("idProductos") != null && map.get("idProductos").length() > 0 ? map.get("idProductos") : "0";
-				String idSubproductos = map.get("idSubproductos") != null && map.get("idSubproductos").length() > 0 ? map.get("idSubproductos") : "0";
+				try{
+					Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
+					Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
+					String idPrestamos = map.get("idPrestamos") != null && map.get("idPrestamos").length() > 0? map.get("idPrestamos") : "0";
+					String idComponentes = map.get("idComponentes") != null && map.get("idComponentes").length() > 0 ? map.get("idComponentes") : "0";
+					String idProductos = map.get("idProductos") != null && map.get("idProductos").length() > 0 ? map.get("idProductos") : "0";
+					String idSubproductos = map.get("idSubproductos") != null && map.get("idSubproductos").length() > 0 ? map.get("idSubproductos") : "0";
+					
+			        byte [] outArray = exportarExcel(idPrestamos, idComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario);
 				
-		        byte [] outArray = exportarExcel(idPrestamos, idComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario);
-			
-				response.setContentType("application/ms-excel");
-				response.setContentLength(outArray.length);
-				response.setHeader("Expires:", "0"); 
-				response.setHeader("Content-Disposition", "attachment; CargaTrabajo_.xls");
-				OutputStream outStream = response.getOutputStream();
-				outStream.write(outArray);
-				outStream.flush();
+					response.setContentType("application/ms-excel");
+					response.setContentLength(outArray.length);
+					response.setHeader("Expires:", "0"); 
+					response.setHeader("Content-Disposition", "attachment; CargaTrabajo_.xls");
+					OutputStream outStream = response.getOutputStream();
+					outStream.write(outArray);
+					outStream.flush();
+				}catch(Exception e){
+					CLogger.write("1", SCargaTrabajo.class, e);
+				}
 			}else{
 				response_text = "{ \"success\": false }";
 			}
@@ -477,7 +482,7 @@ public class SCargaTrabajo extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			System.out.println("exportarExcel: "+e);
+			CLogger.write("4", SCargaTrabajo.class, e);
 		}
 		return outArray;
 	}
