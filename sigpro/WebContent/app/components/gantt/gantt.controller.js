@@ -989,6 +989,8 @@ function modalEditarComponente($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.componente = {};
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.fechaInicio =  "";
+	mi.fechaFin = "";
 	
 	mi.dimensiones = [
 		{value:0,nombre:'Seleccione una opción'},
@@ -1004,23 +1006,25 @@ function modalEditarComponente($uibModalInstance, $scope, $http, $interval,
 			startingDay : 1
 	};
 	
-	$http.post('/SComponente',{ accion: 'getComponentePorId', id:idcomponente,t:moment().unix()
+	if (idcomponente!=null && idcomponente!= undefined && idcomponente != ''){
+		$http.post('/SComponente',{ accion: 'getComponentePorId', id:idcomponente,t:moment().unix()
+		
+		  }).then(
 	
-	  }).then(
-
-	function(response) {
-		if (response.data.componente!=null){
-			mi.componente = response.data.componente;
-			mi.unidadejecutoraid= mi.componente.unidadejecutoraid;
-			mi.unidadejecutoranombre= mi.componente.unidadejecutoranombre;
-			mi.componentetipoid=mi.componente.componentetipoid;
-			mi.componentetiponombre=mi.componente.componentetiponombre;
-			mi.fechaInicio =  moment(mi.componente.fechaInicio,'DD/MM/YYYY').toDate();
-			mi.fechaFin = moment(mi.componente.fechaFin,'DD/MM/YYYY').toDate();
-			mi.duracion = mi.componente.duracion;
-			mi.duracionDimension = mi.dimensiones[1];
-		}
-	});
+		function(response) {
+			if (response.data.componente!=null){
+				mi.componente = response.data.componente;
+				mi.unidadejecutoraid= mi.componente.unidadejecutoraid;
+				mi.unidadejecutoranombre= mi.componente.unidadejecutoranombre;
+				mi.componentetipoid=mi.componente.componentetipoid;
+				mi.componentetiponombre=mi.componente.componentetiponombre;
+				mi.fechaInicio =  moment(mi.componente.fechaInicio,'DD/MM/YYYY').toDate();
+				mi.fechaFin = moment(mi.componente.fechaFin,'DD/MM/YYYY').toDate();
+				mi.duracion = mi.componente.duracion;
+				mi.duracionDimension = mi.dimensiones[1];
+			}
+		});
+	}
 	
 	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
 		var resultado = $q.defer();
@@ -1180,6 +1184,8 @@ function modalEditarProducto($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.componente = {};
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.fechaInicio =  "";
+	mi.fechaFin = "";
 	
 	mi.dimensiones = [
 		{value:0,nombre:'Seleccione una opción'},
@@ -1195,23 +1201,26 @@ function modalEditarProducto($uibModalInstance, $scope, $http, $interval,
 			startingDay : 1
 	};
 	
-	$http.post('/SProducto',{ accion: 'getProductoPorId', id:idproducto,t:moment().unix()
-	  }).then(
-
-	function(response) {
-		if (response.data.producto!=null){
-			mi.producto = response.data.producto;
-			mi.productoPadreNombre = mi.producto.producto;
-			mi.unidadEjecutora = mi.producto.unidadEjectuora;
-			mi.unidadEjecutoraNombre = mi.producto.nombreUnidadEjecutora;
-			mi.tipo = mi.producto.idProductoTipo;
-			mi.tipoNombre = mi.producto.productoTipo;
-			mi.fechaInicio =  moment(mi.producto.fechaInicio,'DD/MM/YYYY').toDate();
-			mi.fechaFin = moment(mi.producto.fechaFin,'DD/MM/YYYY').toDate();
-			mi.duracion = mi.producto.duracion;
-			mi.duracionDimension = mi.dimensiones[1];
-		}
-	});
+	if (idproducto!=null && idproducto!= undefined && idproducto != ''){
+		
+		$http.post('/SProducto',{ accion: 'getProductoPorId', id:idproducto,t:moment().unix()
+		  }).then(
+	
+		function(response) {
+			if (response.data.producto!=null){
+				mi.producto = response.data.producto;
+				mi.productoPadreNombre = mi.producto.producto;
+				mi.unidadEjecutora = mi.producto.unidadEjectuora;
+				mi.unidadEjecutoraNombre = mi.producto.nombreUnidadEjecutora;
+				mi.tipo = mi.producto.idProductoTipo;
+				mi.tipoNombre = mi.producto.productoTipo;
+				mi.fechaInicio =  moment(mi.producto.fechaInicio,'DD/MM/YYYY').toDate();
+				mi.fechaFin = moment(mi.producto.fechaFin,'DD/MM/YYYY').toDate();
+				mi.duracion = mi.producto.duracion;
+				mi.duracionDimension = mi.dimensiones[1];
+			}
+		});
+	}
 	
 	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
 		var resultado = $q.defer();
@@ -1372,6 +1381,8 @@ function modalEditarSubproducto($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.componente = {};
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.fechaInicio =  "";
+	mi.fechaFin = "";
 	
 	mi.dimensiones = [
 		{value:0,nombre:'Seleccione una opción'},
@@ -1381,29 +1392,31 @@ function modalEditarSubproducto($uibModalInstance, $scope, $http, $interval,
 	mi.duracionDimension = mi.dimensiones[0];
 	
 	mi.fechaOptions = {
-			formatYear : 'yyyy',
+			formatYear : 'yy',
 			maxDate : new Date(2050, 12, 31),
 			minDate : new Date(1990, 1, 1),
 			startingDay : 1
 	};
 	
-	$http.post('/SSubproducto',{ accion: 'getSubproductoPorId', id:idsubproducto,t:moment().unix()
-	  }).then(
-
-	function(response) {
-		if (response.data.subproducto!=null){
-			mi.subproducto = response.data.subproducto;
-			mi.tipo = mi.subproducto.subProductoTipoId;
-			mi.tipoNombre = mi.subproducto.subProductoTipo;
-			
-			mi.unidadEjecutora = mi.subproducto.unidadEjecutora;
-			mi.unidadEjecutoraNombre = mi.subproducto.nombreUnidadEjecutora;
-			mi.fechaInicio =  moment(mi.subproducto.fechaInicio,'DD/MM/YYYY').toDate();
-			mi.fechaFin = moment(mi.subproducto.fechaFin,'DD/MM/YYYY').toDate();
-			mi.duracion = mi.subproducto.duracion;
-			mi.duracionDimension = mi.dimensiones[1];
-		}
-	});
+	if (idsubproducto!=null && idsubproducto!= undefined && idsubproducto != ''){
+		$http.post('/SSubproducto',{ accion: 'getSubproductoPorId', id:idsubproducto,t:moment().unix()
+		  }).then(
+	
+		function(response) {
+			if (response.data.subproducto!=null){
+				mi.subproducto = response.data.subproducto;
+				mi.tipo = mi.subproducto.subProductoTipoId;
+				mi.tipoNombre = mi.subproducto.subProductoTipo;
+				
+				mi.unidadEjecutora = mi.subproducto.unidadEjecutora;
+				mi.unidadEjecutoraNombre = mi.subproducto.nombreUnidadEjecutora;
+				mi.fechaInicio =  moment(mi.subproducto.fechaInicio,'DD/MM/YYYY').toDate();
+				mi.fechaFin = moment(mi.subproducto.fechaFin,'DD/MM/YYYY').toDate();
+				mi.duracion = mi.subproducto.duracion;
+				mi.duracionDimension = mi.dimensiones[1];
+			}
+		});
+	}
 	
 	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
 		var resultado = $q.defer();

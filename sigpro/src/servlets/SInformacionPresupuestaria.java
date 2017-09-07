@@ -1409,7 +1409,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			System.out.println(e);
+			CLogger.write("4", SInformacionPresupuestaria.class, e);
 		}
 		return outArray;
 	}
