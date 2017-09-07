@@ -38,7 +38,7 @@
 				<div class="col-sm-6">
 					<div class="form-group">
 						<select class="inputText" ng-model="subproductoc.duracionDimension"
-							ng-options="dim as dim.nombre for dim in productoc.dimensiones track by dim.value"
+							ng-options="dim as dim.nombre for dim in subproductoc.dimensiones track by dim.value"
 							 ng-required="true">
 						</select>
 						<label for="nombre" class="floating-label">* Dimension</label>
@@ -51,7 +51,7 @@
 					     ng-model="subproductoc.duracion" ng-value="subproductoc.duracion"   
 					     onblur="this.setAttribute('value', this.value);"  min="1" max="500" ng-required="true" 
 					     ng-readonly="subproductoc.duracionDimension.value != 0 ? false : true"
-					     ng-change="subproductoc.fechaInicio != null && subproductoc.duracionDimension.value != 0 ? productoc.cambioDuracion(productoc.duracionDimension) : ''">
+					     ng-change="subproductoc.fechaInicio != null && subproductoc.duracionDimension.value != 0 ? subproductoc.cambioDuracion(subproductoc.duracionDimension) : ''">
 					   <label class="floating-label">* Duración</label>
 					</div>	
 				</div>
@@ -59,7 +59,7 @@
 				<div class="col-sm-6">
 					<div class="form-group" >
 					  <input type="text"  class="inputText" uib-datepicker-popup="{{subproductoc.formatofecha}}" ng-model="subproductoc.fechaInicio" is-open="subproductoc.fi_abierto"
-					            datepicker-options="subproductoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="subproductoc.cambioDuracion(productoc.duracionDimension);" ng-required="true"  
+					            datepicker-options="subproductoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="subproductoc.cambioDuracion(subproductoc.duracionDimension);" ng-required="true"  
 					            ng-click="subproductoc.abrirPopupFecha(1000)" ng-value="subproductoc.fechaInicio" onblur="this.setAttribute('value', this.value);">
 					            <span class="label-icon" ng-click="subproductoc.abrirPopupFecha(1000)">
 					              <i class="glyphicon glyphicon-calendar"></i>

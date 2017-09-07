@@ -591,6 +591,10 @@ public class SProducto extends HttpServlet {
 					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 				}
+				temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
+				temp.fechaFin = Utils.formatDate(producto.getFechaFin());
+				temp.duracion = producto.getDuracion();
+				temp.duracionDimension = producto.getDuracionDimension();
 			}
 
 			response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
@@ -609,6 +613,10 @@ public class SProducto extends HttpServlet {
 				String nombre = parametro.get("nombre");
 				Integer tipoproductoId = Utils.String2Int(parametro.get("tipoproductoid")); 
 				Integer unidadEjecutoraId = Utils.String2Int(parametro.get("unidadEjecutora"));
+				Date fechaInicio = Utils.dateFromString(parametro.get("fechaInicio"));
+				Date fechaFin = Utils.dateFromString(parametro.get("fechaFin"));
+				Integer duracion = Utils.String2Int(parametro.get("duaracion"), null);
+				String duracionDimension = parametro.get("duracionDimension");
 				
 				ProductoTipo productoTipo = new ProductoTipo();
 				productoTipo.setId(tipoproductoId);
@@ -617,7 +625,7 @@ public class SProducto extends HttpServlet {
 				if(esnuevo){
 					Componente componente = new Componente();
 					componente.setId(componenteId);
-					producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, usuario, new Date());
+					producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, usuario, new Date(), fechaInicio, fechaFin, duracion, duracionDimension);
 					producto.setEstado(1);
 				}else{
 					producto = ProductoDAO.getProductoPorId(id);
@@ -626,6 +634,10 @@ public class SProducto extends HttpServlet {
 					producto.setNombre(nombre);
 					producto.setUsuarioActualizo(usuario);
 					producto.setFechaActualizacion(new DateTime().toDate());
+					producto.setFechaInicio(fechaInicio);
+					producto.setFechaFin(fechaFin);
+					producto.setDuracion(duracion);
+					producto.setDuracionDimension(duracionDimension);
 				}
 				
 				ret = ProductoDAO.guardarProducto(producto);
@@ -649,6 +661,10 @@ public class SProducto extends HttpServlet {
 					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 				}
+				temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
+				temp.fechaFin = Utils.formatDate(producto.getFechaFin());
+				temp.duracion = producto.getDuracion();
+				temp.duracionDimension = producto.getDuracionDimension();
 				response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
 				response_text = String.join("", "\"producto\":",response_text);
 				response_text = String.join("", "{\"success\":true,", response_text,"}");
