@@ -153,7 +153,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			CLogger.write("4", SAdministracionTransaccional.class, e);
+			CLogger.write("2", SAdministracionTransaccional.class, e);
 		}
 		return outArray;
 	}
