@@ -188,7 +188,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		        	is = new FileInputStream(file);
 		        }
 		        catch (Exception e) {
-		        	
+					CLogger.write("4", SInformacionPresupuestaria.class, e);
 		        }
 		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		        
@@ -741,7 +741,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 						}
 					}
 					catch(Exception e){
-						
+						CLogger.write("4", SInformacionPresupuestaria.class, e);
 					}
 					
 					Calendar cal = Calendar.getInstance();
