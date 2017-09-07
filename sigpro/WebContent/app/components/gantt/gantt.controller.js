@@ -995,6 +995,7 @@ function modalEditarComponente($uibModalInstance, $scope, $http, $interval,
 		{value:1,nombre:'Dias',sigla:'d'}
 	];
 	
+	mi.duracionDimension = mi.dimensiones[0];
 
 	mi.fechaOptions = {
 			formatYear : 'yy',
@@ -1185,7 +1186,8 @@ function modalEditarProducto($uibModalInstance, $scope, $http, $interval,
 		{value:1,nombre:'Dias',sigla:'d'}
 	];
 	
-
+	mi.duracionDimension = mi.dimensiones[0];
+	
 	mi.fechaOptions = {
 			formatYear : 'yy',
 			maxDate : new Date(2050, 12, 31),
@@ -1204,9 +1206,9 @@ function modalEditarProducto($uibModalInstance, $scope, $http, $interval,
 			mi.unidadEjecutoraNombre = mi.producto.nombreUnidadEjecutora;
 			mi.tipo = mi.producto.idProductoTipo;
 			mi.tipoNombre = mi.producto.productoTipo;
-			mi.fechaInicio = mi.componente.fechaInicio;
-			mi.fechaFin = mi.componente.fechaFin;
-			mi.duracion = mi.componente.duracion;
+			mi.fechaInicio = mi.producto.fechaInicio;
+			mi.fechaFin = mi.producto.fechaFin;
+			mi.duracion = mi.producto.duracion;
 			mi.duracionDimension = mi.dimensiones[1];
 		}
 	});
@@ -1376,7 +1378,8 @@ function modalEditarSubproducto($uibModalInstance, $scope, $http, $interval,
 		{value:1,nombre:'Dias',sigla:'d'}
 	];
 	
-
+	mi.duracionDimension = mi.dimensiones[0];
+	
 	mi.fechaOptions = {
 			formatYear : 'yy',
 			maxDate : new Date(2050, 12, 31),
@@ -1395,9 +1398,9 @@ function modalEditarSubproducto($uibModalInstance, $scope, $http, $interval,
 			
 			mi.unidadEjecutora = mi.subproducto.unidadEjecutora;
 			mi.unidadEjecutoraNombre = mi.subproducto.nombreUnidadEjecutora;
-			mi.fechaInicio = mi.componente.fechaInicio;
-			mi.fechaFin = mi.componente.fechaFin;
-			mi.duracion = mi.componente.duracion;
+			mi.fechaInicio = mi.subproducto.fechaInicio;
+			mi.fechaFin = mi.subproducto.fechaFin;
+			mi.duracion = mi.subproducto.duracion;
 			mi.duracionDimension = mi.dimensiones[1];
 		}
 	});
