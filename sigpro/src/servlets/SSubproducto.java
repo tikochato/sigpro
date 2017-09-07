@@ -442,6 +442,9 @@ public class SSubproducto extends HttpServlet {
 		
 		resultadoJson = String.join("","{ \"success\": ",(subproducto!=null && subproducto.getId()!=null ? "true" : "false"),", "
 			+ "\"id\": " + (subproducto!=null ? subproducto.getId():"0") +", "  + "\"fechaInicio\": \"" + (subproducto!=null ? Utils.formatDate(subproducto.getFechaInicio()): null) +"\", "
+			+ "\"fechaFin\": \"" + (subproducto!=null ? Utils.formatDate(subproducto.getFechaInicio()): null) +"\", "
+			+ "\"duracion\": " + (subproducto!=null ? subproducto.getDuracion():"null") +", "  
+			+ "\"duracionDimension\": " + (subproducto!=null ? subproducto.getDuracionDimension():"null") +", "
 			+ "\"nombre\": \"" + (subproducto!=null ? subproducto.getNombre():"Indefinido") +"\" }");
 		Utils.writeJSon(response, resultadoJson);	
 	}
@@ -458,6 +461,10 @@ public class SSubproducto extends HttpServlet {
 			temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
 			temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
 			temp.unidadEjecutora = subproducto.getUnidadEjecutora().getUnidadEjecutora();
+			temp.fechaInicio = Utils.formatDate(subproducto.getFechaInicio());
+			temp.fechaFin = Utils.formatDate(subproducto.getFechaFin());
+			temp.duracion = subproducto.getDuracion();
+			temp.duracionDimension = subproducto.getDuracionDimension();
 			resultadoJson = Utils.getJSonString("subproducto", temp);
 			resultadoJson = "{\"success\":true," + resultadoJson + "}";	
 		}else{
@@ -481,7 +488,10 @@ public class SSubproducto extends HttpServlet {
 				String nombre = map.get("nombre");
 				Integer tiposubproductoId = Utils.String2Int(map.get("tiposubproductoid")); 
 				Integer unidadEjecutoraId = Utils.String2Int(map.get("unidadEjecutora"));
-				
+				Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
+				Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
+				Integer duracion = Utils.String2Int(map.get("duaracion"), null);
+				String duracionDimension = map.get("duracionDimension");
 				
 				SubproductoTipo subproductoTipo = new SubproductoTipo();
 				subproductoTipo.setId(tiposubproductoId);
@@ -491,13 +501,18 @@ public class SSubproducto extends HttpServlet {
 				if(esnuevo){
 					Producto producto = new Producto();
 					producto.setId(productoId);
-					subproducto = new Subproducto(producto, subproductoTipo, unidadEjecutora, nombre, usuario, new Date(), 1);
+					subproducto = new Subproducto(producto, subproductoTipo, unidadEjecutora, nombre, usuario, new Date(), 1,
+							fechaInicio, fechaFin, duracion, duracionDimension);
 				}else{
 					subproducto = SubproductoDAO.getSubproductoPorId(id);
 					if (subproducto!=null){	
 						subproducto.setSubproductoTipo(subproductoTipo);
 						subproducto.setUnidadEjecutora(unidadEjecutora);
 						subproducto.setNombre(nombre);
+						subproducto.setFechaInicio(fechaInicio);
+						subproducto.setFechaFin(fechaFin);
+						subproducto.setDuracion(duracion);
+						subproducto.setDuracionDimension(duracionDimension);
 					}
 				}
 				
@@ -510,6 +525,10 @@ public class SSubproducto extends HttpServlet {
 					temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
 					temp.unidadEjecutora = subproducto.getUnidadEjecutora().getUnidadEjecutora();
 					temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
+					temp.fechaInicio = Utils.formatDate(subproducto.getFechaInicio());
+					temp.fechaFin = Utils.formatDate(subproducto.getFechaFin());
+					temp.duracion = subproducto.getDuracion();
+					temp.duracionDimension = subproducto.getDuracionDimension();
 					resultadoJson = Utils.getJSonString("subproducto", temp);
 					resultadoJson = "{\"success\":true," + resultadoJson + "}";
 				}else{
