@@ -2,6 +2,7 @@ package servlets;
 import java.sql.Connection;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,6 +25,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.codec.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -123,21 +126,36 @@ public class SInformacionPresupuestaria extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 		try{
+			Exception exception = new Exception("SinformacionPresupuestaria.java - ignore");
+			
+		    CLogger.writeFullConsole("Inicia doPost - ", exception);
+			
 			request.setCharacterEncoding("UTF-8");
 			HttpSession sesionweb = request.getSession();
 			String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
+			
+		    CLogger.writeFullConsole("Gson - ", exception);
+			
 			Gson gson = new Gson();
 			Type type = new TypeToken<Map<String, String>>(){}.getType();
+			
+		    CLogger.writeFullConsole("StringBuilder - ", exception);
+		    
 			StringBuilder sb = new StringBuilder();
 			BufferedReader br = request.getReader();
 			String str;
+			
+		    CLogger.writeFullConsole("while str - ", exception);
+		    
 			while ((str = br.readLine()) != null) {
 				sb.append(str);
 			}
 			Map<String, String> map = gson.fromJson(sb.toString(), type);
 			String accion = map.get("accion")!=null ? map.get("accion") : "";
 			String response_text = "";
-					
+			
+		    CLogger.writeFullConsole("if accion  - ", exception);
+		    
 			if(accion.equals("generarInforme")){
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
@@ -152,14 +170,21 @@ public class SInformacionPresupuestaria extends HttpServlet {
 					response_text = String.join("", "{\"success\":false}");
 				}
 			}else if(accion.equals("exportarExcel")){
+				
+			    CLogger.writeFullConsole("accion: exportarExcel  - ", exception);
+				
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
 				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
 				Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 				Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
 				
+			    CLogger.writeFullConsole("exportarExcel() - ", exception);
+				
 		        byte [] outArray = exportarExcel(idPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, usuario);
 			
+			    CLogger.writeFullConsole("repuesta exportarExcel()- ", exception);
+		        
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
 				response.setHeader("Expires:", "0"); 
