@@ -241,16 +241,19 @@ public class SAvanceActividades extends HttpServlet {
 			response_text = String.join("", ",\"items\":",response_text);
 			response_text = String.join("", "{\"success\":true ", response_text, "}");
 		}else if (accion.equals("exportarExcel")){
+			try{
+		        byte [] outArray = exportarExcel(idPrestamo, fechaCorte, usuario);
 			
-	        byte [] outArray = exportarExcel(idPrestamo, fechaCorte, usuario);
-		
-			response.setContentType("application/ms-excel");
-			response.setContentLength(outArray.length);
-			response.setHeader("Expires:", "0"); 
-			response.setHeader("Content-Disposition", "attachment; ReporteAvances_.xls");
-			OutputStream outStream = response.getOutputStream();
-			outStream.write(outArray);
-			outStream.flush();
+				response.setContentType("application/ms-excel");
+				response.setContentLength(outArray.length);
+				response.setHeader("Expires:", "0"); 
+				response.setHeader("Content-Disposition", "attachment; ReporteAvances_.xls");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+			}catch(Exception e){
+				CLogger.write("1", SAvanceActividades.class, e);
+			}
 		}else{
 			response_text = "{ \"success\": false }";
 		}
@@ -685,7 +688,7 @@ public class SAvanceActividades extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			System.out.println("exportarExcel: "+e);
+			CLogger.write("4", SAvanceActividades.class, e);
 		}
 		return outArray;
 	}

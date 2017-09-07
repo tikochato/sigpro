@@ -33,6 +33,7 @@ import dao.PrestamoDAO;
 import pojo.Prestamo;
 import utilities.CExcel;
 import utilities.CGraficaExcel;
+import utilities.CLogger;
 import utilities.Utils;
 
 
@@ -150,6 +151,7 @@ public class SDesembolsos extends HttpServlet {
 			Integer anioFinal = Utils.String2Int(map.get("anioFinal"));
 			Integer agrupacion = Utils.String2Int(map.get("agrupacion"));
 			
+			try{
 		        byte [] outArray = exportarExcel(proyectoId, anioInicial, anioFinal, ejercicioFiscal, agrupacion, usuario);
 			
 				response.setContentType("application/ms-excel");
@@ -159,6 +161,9 @@ public class SDesembolsos extends HttpServlet {
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
+			}catch(Exception e){
+				CLogger.write("1", SDesembolsos.class, e);
+			}
 		}else{
 			response_text = "{ \"success\": false }";
 		}
@@ -192,7 +197,7 @@ public class SDesembolsos extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			System.out.println("exportarExcel: "+e);
+			CLogger.write("4", SDesembolsos.class, e);
 		}
 		return outArray;
 	}
