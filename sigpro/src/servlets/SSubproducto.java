@@ -240,7 +240,7 @@ public class SSubproducto extends HttpServlet {
 			ret = SubproductoDAO.guardarSubproducto(subproducto);
 			
 			COrden orden = new COrden();
-			orden.calcularOrdenObjetosSuperiores(4, subproducto.getId(), 4, usuario, COrden.getSessionCalculoOrden(),
+			orden.calcularOrdenObjetosSuperiores(subproducto.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),
 					subproducto.getProducto().getComponente().getProyecto().getId());
 			
 			if (ret){
@@ -304,7 +304,7 @@ public class SSubproducto extends HttpServlet {
 		boolean eliminado = SubproductoDAO.eliminar(codigo, usuario);
 		if (eliminado) {
 			COrden orden = new COrden();
-			orden.calcularOrdenObjetosSuperiores(4, pojo.getId(), 4, usuario, COrden.getSessionCalculoOrden(),proyectoId);
+			orden.calcularOrdenObjetosSuperiores(pojo.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),proyectoId);
 			
 			listar(parametro, response);
 		}
@@ -517,6 +517,12 @@ public class SSubproducto extends HttpServlet {
 				}
 				
 				ret = SubproductoDAO.guardarSubproducto(subproducto);
+				
+				COrden orden = new COrden();
+				orden.calcularOrdenObjetosSuperiores(subproducto.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),
+						subproducto.getProducto().getComponente().getProyecto().getId());
+				
+				
 				stsubproducto temp = new stsubproducto();
 				if (ret){
 					temp.id = subproducto.getId();
