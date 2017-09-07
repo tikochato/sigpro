@@ -387,7 +387,7 @@ public class SComponente extends HttpServlet {
 					}
 					result = ComponenteDAO.guardarComponente(componente);
 					COrden orden = new COrden();
-					orden.calcularOrdenObjetosSuperiores(2, componente.getId(), 2, usuario, COrden.getSessionCalculoOrden());
+					orden.calcularOrdenObjetosSuperiores(2, componente.getId(), 2, usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId());
 					
 				}
 				stcomponente temp = new stcomponente();
@@ -398,6 +398,10 @@ public class SComponente extends HttpServlet {
 					temp.componentetiponombre = componente.getComponenteTipo().getNombre();
 					temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
 					temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+					temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
+					temp.fechaFin = Utils.formatDate(componente.getFechaFin());
+					temp.duracion = componente.getDuracion();
+					temp.duracionDimension = componente.getDuracionDimension();
 					response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 			        response_text = String.join("", "\"componente\":",response_text);
 			        response_text = String.join("", "{\"success\":true,", response_text,"}");
@@ -510,6 +514,10 @@ public class SComponente extends HttpServlet {
 				temp.componentetiponombre = componente.getComponenteTipo().getNombre();
 				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+				temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
+				temp.fechaFin = Utils.formatDate(componente.getFechaFin());
+				temp.duracion = componente.getDuracion();
+				temp.duracionDimension = componente.getDuracionDimension();
 			}
 
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);

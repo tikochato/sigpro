@@ -985,6 +985,20 @@ function modalEditarComponente($uibModalInstance, $scope, $http, $interval,
 
 	var mi = this;
 	mi.componente = {};
+	mi.formatofecha = 'dd/MM/yyyy';
+	
+	mi.dimensiones = [
+		{value:0,nombre:'Seleccione una opción'},
+		{value:1,nombre:'Dias',sigla:'d'}
+	];
+	
+
+	mi.fechaOptions = {
+			formatYear : 'yy',
+			maxDate : new Date(2050, 12, 31),
+			minDate : new Date(1990, 1, 1),
+			startingDay : 1
+	};
 	
 	$http.post('/SComponente',{ accion: 'getComponentePorId', id:idcomponente,t:moment().unix()
 	
@@ -997,6 +1011,10 @@ function modalEditarComponente($uibModalInstance, $scope, $http, $interval,
 			mi.unidadejecutoranombre= mi.componente.unidadejecutoranombre;
 			mi.componentetipoid=mi.componente.componentetipoid;
 			mi.componentetiponombre=mi.componente.componentetiponombre;
+			mi.fechaInicio = mi.componente.fechaInicio;
+			mi.fechaFin = mi.componente.fechaFin;
+			mi.duracion = mi.componente.duracion;
+			mi.duracionDimension = mi.dimensiones[1];
 		}
 	});
 	
@@ -1071,6 +1089,39 @@ function modalEditarComponente($uibModalInstance, $scope, $http, $interval,
 		});
 	};
 	
+	mi.abrirPopupFecha = function(index) {
+		if(index > 0 && index<1000){
+			mi.camposdinamicos[index].isOpen = true;
+		}
+		else{
+			switch(index){
+				case 1000: mi.fi_abierto = true; break;
+				case 1001: mi.ff_abierto = true; break;
+			}
+		}
+	};
+	
+	mi.cambioDuracion = function(dimension){
+		mi.fechaFin = mi.sumarDias(mi.fechaInicio,mi.duracion, dimension.sigla);
+	}
+	
+	mi.sumarDias = function(fecha, dias, dimension){
+		if(dimension != undefined && dias != undefined && fecha != ""){
+			var cnt = 0;
+		    var tmpDate = moment(fecha);
+		    while (cnt < (dias -1 )) {
+		    	if(dimension=='d'){
+		    		tmpDate = tmpDate.add(1,'days');	
+		    	}
+		        if (tmpDate.weekday() != moment().day("Sunday").weekday() && tmpDate.weekday() != moment().day("Saturday").weekday()) {
+		            cnt = cnt + 1;
+		        }
+		    }
+		    tmpDate = moment(tmpDate,'DD/MM/YYYY').toDate();
+		    return tmpDate;
+		}
+	}
+	
 	mi.ok = function() {
 		var param_data = {
 				accion : 'guardarModal',
@@ -1080,6 +1131,10 @@ function modalEditarComponente($uibModalInstance, $scope, $http, $interval,
 				unidadejecutoraid:mi.unidadejecutoraid,
 				proyectoId:objetoId,
 				esnuevo:esnuevo,
+				fechaInicio: moment(mi.fechaInicio).format('DD/MM/YYYY'),
+				fechaFin: moment(mi.fechaFin).format('DD/MM/YYYY'),
+				duaracion: mi.duracion,
+				duracionDimension: mi.duracionDimension.value,
 				t:moment().unix()
 			};
 			$http.post('/SComponente',param_data).then(
