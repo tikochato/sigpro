@@ -1015,8 +1015,8 @@ function modalEditarComponente($uibModalInstance, $scope, $http, $interval,
 			mi.unidadejecutoranombre= mi.componente.unidadejecutoranombre;
 			mi.componentetipoid=mi.componente.componentetipoid;
 			mi.componentetiponombre=mi.componente.componentetiponombre;
-			mi.fechaInicio = mi.componente.fechaInicio;
-			mi.fechaFin = mi.componente.fechaFin;
+			mi.fechaInicio =  moment(mi.componente.fechaInicio,'DD/MM/YYYY').toDate();
+			mi.fechaFin = moment(mi.componente.fechaFin,'DD/MM/YYYY').toDate();
 			mi.duracion = mi.componente.duracion;
 			mi.duracionDimension = mi.dimensiones[1];
 		}
@@ -1206,8 +1206,8 @@ function modalEditarProducto($uibModalInstance, $scope, $http, $interval,
 			mi.unidadEjecutoraNombre = mi.producto.nombreUnidadEjecutora;
 			mi.tipo = mi.producto.idProductoTipo;
 			mi.tipoNombre = mi.producto.productoTipo;
-			mi.fechaInicio = mi.producto.fechaInicio;
-			mi.fechaFin = mi.producto.fechaFin;
+			mi.fechaInicio =  moment(mi.producto.fechaInicio,'DD/MM/YYYY').toDate();
+			mi.fechaFin = moment(mi.producto.fechaFin,'DD/MM/YYYY').toDate();
 			mi.duracion = mi.producto.duracion;
 			mi.duracionDimension = mi.dimensiones[1];
 		}
@@ -1381,7 +1381,7 @@ function modalEditarSubproducto($uibModalInstance, $scope, $http, $interval,
 	mi.duracionDimension = mi.dimensiones[0];
 	
 	mi.fechaOptions = {
-			formatYear : 'yy',
+			formatYear : 'yyyy',
 			maxDate : new Date(2050, 12, 31),
 			minDate : new Date(1990, 1, 1),
 			startingDay : 1
@@ -1398,8 +1398,8 @@ function modalEditarSubproducto($uibModalInstance, $scope, $http, $interval,
 			
 			mi.unidadEjecutora = mi.subproducto.unidadEjecutora;
 			mi.unidadEjecutoraNombre = mi.subproducto.nombreUnidadEjecutora;
-			mi.fechaInicio = mi.subproducto.fechaInicio;
-			mi.fechaFin = mi.subproducto.fechaFin;
+			mi.fechaInicio =  moment(mi.subproducto.fechaInicio,'DD/MM/YYYY').toDate();
+			mi.fechaFin = moment(mi.subproducto.fechaFin,'DD/MM/YYYY').toDate();
 			mi.duracion = mi.subproducto.duracion;
 			mi.duracionDimension = mi.dimensiones[1];
 		}
