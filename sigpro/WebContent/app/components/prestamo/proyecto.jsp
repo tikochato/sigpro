@@ -377,7 +377,7 @@
 					
 					
 				</uib-tab>
-				
+				<shiro:hasPermission name="43010">
 				<uib-tab index="1" heading="Datos generales" >
 					<div class="form-group">
 						<label for="id" class="floating-label">ID {{ controller.proyecto.id }}</label>
@@ -609,7 +609,8 @@
 						</div>
 					</div>
 				</uib-tab>
-				
+				</shiro:hasPermission>
+				<shiro:hasPermission name="43010">
 				<uib-tab ng-click="controller.getPorcentajes();" index="2" heading="Datos Entidad Ejecutora" >
 					<div class="panel panel-default">
 						<div class="panel-heading label-form" style="text-align: center;">Información Específica del Préstamo en la Entidad Ejecutora</div>
@@ -812,7 +813,8 @@
 					</div>
 				
 				</uib-tab>
-				
+				</shiro:hasPermission>
+				<shiro:hasPermission name="43010">
 				<uib-tab index="3" heading="Datos adicionales" ng-if="controller.mostrarPrestamo" >
 					<div class="row">
 						<div class="col-sm-3">
@@ -1183,7 +1185,8 @@
 					</div>
 				
 				</uib-tab>
-
+				</shiro:hasPermission>
+				<shiro:hasPermission name="43010">
 				<uib-tab index= "4" heading="Acta de constitución" ng-if="false">
 					
 					<div class="form-group">
@@ -1288,6 +1291,7 @@
 						</table>
 					</div>
 				</uib-tab>
+				</shiro:hasPermission>
 			</uib-tabset>
 			</form>
 		</div>
