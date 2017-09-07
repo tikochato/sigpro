@@ -641,6 +641,12 @@ public class SProducto extends HttpServlet {
 				}
 				
 				ret = ProductoDAO.guardarProducto(producto);
+				
+				Componente c = ComponenteDAO.getComponentePorId(producto.getComponente().getId(), usuario);
+				
+				COrden orden = new COrden();
+				orden.calcularOrdenObjetosSuperiores(3, producto.getId(), 3, usuario, COrden.getSessionCalculoOrden(),
+						c.getProyecto().getId());
 			}
 			
 			stproducto temp = new stproducto();

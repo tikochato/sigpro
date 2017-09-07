@@ -517,6 +517,12 @@ public class SSubproducto extends HttpServlet {
 				}
 				
 				ret = SubproductoDAO.guardarSubproducto(subproducto);
+				
+				COrden orden = new COrden();
+				orden.calcularOrdenObjetosSuperiores(4, subproducto.getId(), 4, usuario, COrden.getSessionCalculoOrden(),
+						subproducto.getProducto().getComponente().getProyecto().getId());
+				
+				
 				stsubproducto temp = new stsubproducto();
 				if (ret){
 					temp.id = subproducto.getId();
