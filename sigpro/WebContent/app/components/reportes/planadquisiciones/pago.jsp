@@ -20,6 +20,23 @@
 				</div>
 				<div class = "row">
 					<div class="col-sm-6">
+						<div class="form-group">
+						   	<input type="text" class="inputText" id="inombre" ng-model="controller.numeroContrato" ng-value="controller.numeroContrato"   
+						     onblur="this.setAttribute('value', this.value);">
+						  	<label class="floating-label">* Numero de contrato</label>
+						</div>
+					</div>
+					
+					<div class="col-sm-6">
+						<div class="form-group">
+						   	<input type="number" class="inputText" id="inombre" ng-model="controller.montoContrato" ng-value="controller.montoContrato"   
+						     onblur="this.setAttribute('value', this.value);">
+						  	<label class="floating-label">* Monto del contrato</label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-6">
 						<div class="form-group" >
 						  <input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.fechaPago" is-open="controller.fi_abierto"
 						            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="controller.cambioDuracion()" 
@@ -39,14 +56,7 @@
 						</div>
 					</div>
 				</div>
-				<div class = "row">
-					<div class="col-sm-6">
-						<div class="form-group">
-						   	<input type="text" class="inputText" id="inombre" ng-model="controller.numeroContrato" ng-value="controller.numeroContrato"   
-						     onblur="this.setAttribute('value', this.value);">
-						  	<label class="floating-label">* Numero de contrato</label>
-						</div>
-					</div>
+				<div class="row">
 					<div class="col-sm-6">
 						<div class="form-group">
 						   	<input type="text" class="inputText" id="inombre" ng-model="controller.descripcion" ng-value="controller.descripcion"   
