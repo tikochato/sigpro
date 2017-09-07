@@ -143,7 +143,9 @@
 				
 				<uib-tab ng-click="controller.getPorcentajes();" index="0" heading="Datos del préstamo" >
 					<div class="panel panel-default">
-						<div class="panel-heading label-form" style="text-align: center;">Información General del Préstamo</div>
+						<shiro:hasPermission name="43010">
+							<div class="panel-heading label-form" style="text-align: center;">Información General del Préstamo</div>
+						</shiro:hasPermission>
 						<div class="panel-body">
 													
 							
