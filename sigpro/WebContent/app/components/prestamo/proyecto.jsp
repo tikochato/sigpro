@@ -1184,7 +1184,7 @@
 					</div>
 				
 				</uib-tab>
-
+				<shiro:hasPermission name="43010">
 				<uib-tab index= "4" heading="Acta de constitución" ng-if="false">
 					
 					<div class="form-group">
@@ -1289,6 +1289,7 @@
 						</table>
 					</div>
 				</uib-tab>
+				</shiro:hasPermission>
 			</uib-tabset>
 			</form>
 		</div>

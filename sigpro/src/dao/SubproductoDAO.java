@@ -373,12 +373,8 @@ public class SubproductoDAO {
 		boolean ret = false;
 		try {
 			session.saveOrUpdate(subproducto);
-			SubproductoUsuario su = new SubproductoUsuario(new SubproductoUsuarioId(subproducto.getId(),subproducto.getUsuarioCreo())
-					, subproducto, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
-			
 			session.flush();
 			session.clear();
-			session.saveOrUpdate(su);
 			ret = true;
 		} catch (Throwable e) {
 			CLogger.write("13", SubproductoDAO.class, e);

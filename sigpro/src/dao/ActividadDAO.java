@@ -653,8 +653,8 @@ public class ActividadDAO {
 		boolean ret = false;
 		try{
 			session.saveOrUpdate(Actividad);
-			ActividadUsuario au = new ActividadUsuario(new ActividadUsuarioId(Actividad.getId(), Actividad.getUsuarioCreo()),Actividad);
-			session.saveOrUpdate(au);
+			session.flush();
+			session.clear();
 			ret = true;
 		}
 		catch(Throwable e){

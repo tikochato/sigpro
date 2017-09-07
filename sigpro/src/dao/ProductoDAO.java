@@ -322,12 +322,8 @@ public class ProductoDAO {
 		boolean ret = false;
 		try {
 			session.saveOrUpdate(producto);
-			ProductoUsuario pu = new ProductoUsuario(new ProductoUsuarioId(producto.getId(), producto.getUsuarioCreo()), producto
-					, producto.getUsuarioCreo(), null, new Date(), null);
-			
 			session.flush();
 			session.clear();
-			session.saveOrUpdate(pu);
 			ret = true;
 		} catch (Throwable e) {
 			CLogger.write("15", ProductoDAO.class, e);
