@@ -1,19 +1,13 @@
 package utilities;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 import org.hibernate.Session;
-
-import java.util.Map.Entry;
+import org.joda.time.DateTime;
 
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
@@ -30,304 +24,133 @@ public class COrden {
 	
 	List<Object[]> estructuraPrestamo = null;
 	
-	public void calcularOrdenActividades(Integer nivel, Integer objetoId, Integer objetoTipo, String usuario, Session session){
-		if(estructuraPrestamo == null){
-			estructuraPrestamo = getEstructuraPrestamo(30, usuario);
-		}
-		
-		Date fechaMax = new Date();
-		try{
-			String fMax = "01/01/2200";
-			DateFormat format = new SimpleDateFormat("DD/MM/YYYY");
-			fechaMax = format.parse(fMax);
-		}
-		catch (Exception ex) {
-		}
-		
-		getTransactionSession(session);
-		
-		Object[] objPadre = getObjeto(objetoId, objetoTipo, estructuraPrestamo);
-		String treePath = (String)getObjeto((Integer)objPadre[4], (Integer)objPadre[5], estructuraPrestamo)[6];
-		List<Object[]> hijos = getHijos(nivel, objetoId, objetoTipo, estructuraPrestamo);
-		
-		//List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, objetoId, objetoTipo, null, null, null, null, null, usuario);
-		
-		if(hijos != null && hijos.size() > 1){
-			Map<Integer, Long> fechas = new TreeMap<Integer, Long>();
-			//Encontrar orden
-			Integer orden = 1;
-			for(Object[] obj : hijos){
-				Actividad actividad = (Actividad)obj[3];
-				fechas.put(actividad.getId(), actividad.getFechaInicio() != null ? actividad.getFechaInicio().getTime() : fechaMax.getTime());
-			}
-			
-			Set<Entry<Integer, Long>> set = fechas.entrySet();
-	        List<Entry<Integer, Long>> list = new ArrayList<Entry<Integer, Long>>(set);
-	        Collections.sort(list, new Comparator<Map.Entry<Integer, Long>>(){
-	            public int compare( Map.Entry<Integer, Long> o1, Map.Entry<Integer, Long> o2 )
-	            {
-	                return (o1.getValue()).compareTo(o2.getValue());
-	            }
-	        });
-	        for(Map.Entry<Integer, Long> entry:list){
-	        	Object[] objeto = getObjeto(entry.getKey(), 5, estructuraPrestamo);
-	        	Actividad actividad = (Actividad)objeto[3];
-	        	actividad.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
-	 			actividad.setNivel(getNivel(treePath + String.format("%6s", orden).replace(' ', '0')));
-	        	actividad.setOrden(orden);
-	        	ActividadDAO.guardarActividadOrden(actividad, session);
-	        	orden++;
-	        }
-	        
-	        commitCalculoOrden(session);
-	        calcularFechasPadre(objetoId, objetoTipo, usuario, 5, session, estructuraPrestamo);
-	        commitCalculoOrden(session);
-	        
-	        //Obtener fecha inicial y final del padre de las actividades	        
-	        if(objetoTipo == 5){//recursivo si son subactividades
-	        	Object[] objActividad = getObjeto(objetoId, objetoTipo, estructuraPrestamo);
-	        	calcularOrdenActividades(5, (Integer)objActividad[1], (Integer)objActividad[2], usuario, session);
-	        	
-	        }
-	 	}else{
-	 		if(hijos.size() == 1){
-	 			Actividad actividad = (Actividad)hijos.get(0)[3];
-	 			actividad.setOrden(1);
-	 			actividad.setTreePath(treePath + String.format("%6s", 1).replace(' ', '0'));
-	 			Integer level = getNivel(treePath + String.format("%6s", 1).replace(' ', '0'));
-	        	actividad.setNivel(level);
-				ActividadDAO.guardarActividadOrden(actividad, session);
-				
-				commitCalculoOrden(session);
-		        calcularFechasPadre(objetoId, objetoTipo, usuario, 5, session, estructuraPrestamo);
-		        commitCalculoOrden(session);
-		        
-		        calcularOrdenObjetosSuperiores(objetoTipo,objetoId, objetoTipo, usuario, session);
-		        commitCalculoOrden(session);
-			}
-
-		}
-	}
-	
 	private Integer getNivel(String treePath){
 		treePath = treePath.substring(1,treePath.length());
 		double longitudTree = treePath.length();
 		String[] result = new String[(int)Math.ceil(longitudTree/6)];
-	    return result.length + 1;
+	    return result.length ;
 	}
 	
-	public void calcularOrdenObjetosSuperiores(Integer nivel, Integer objetoId, Integer objetoTipo, String usuario, Session session){
+	public void calcularOrdenObjetosSuperiores(Integer objetoId, Integer objetoTipo, String usuario, 
+			Session session, Integer proyectoId){
 		if(estructuraPrestamo == null){
-			estructuraPrestamo = getEstructuraPrestamo(30, usuario);
+			estructuraPrestamo = getEstructuraPrestamo(proyectoId, usuario);
 		}
 				
-		Date fechaMax = new Date();
-		try{
-			String fMax = "01/01/2200";
-			DateFormat format = new SimpleDateFormat("DD/MM/YYYY");
-			fechaMax = format.parse(fMax);
-		}
-		catch (Exception ex) {
-		}
+		Date fechaMax = new DateTime(2200,1,1,0,0).toDate();
 		
 		getTransactionSession(session);
 		Object[] objPadre = getObjeto(objetoId, objetoTipo, estructuraPrestamo);
-		String treePath = (String)getObjeto((Integer)objPadre[1], (Integer)objPadre[2], estructuraPrestamo)[6];
-		List<Object[]> hijos = getHijos(nivel, (Integer)objPadre[1], (Integer)objPadre[2], estructuraPrestamo);
-		Map<Integer, Long> fechas = new TreeMap<Integer, Long>();
+		String treePath = (objetoTipo==1) ? "1" : (String)getObjeto((Integer)objPadre[4], (Integer)objPadre[5], estructuraPrestamo)[6];
+		List<Object[]> hijos = getHijos((Integer)objPadre[4], (Integer)objPadre[5], estructuraPrestamo);
+		ArrayList<Long[]> fechas = new ArrayList<Long[]>();
 		Integer orden = 1;
 		
-		if(objetoTipo == 2){
-			if(hijos.size() > 1){		
-				for(Object[] obj : hijos){
-					Componente componente = (Componente)obj[3];
-					fechas.put(componente.getId(), componente.getFechaInicio() != null ? componente.getFechaInicio().getTime() : fechaMax.getTime());
-				}
-				
-				Set<Entry<Integer, Long>> set = fechas.entrySet();
-		        List<Entry<Integer, Long>> list = new ArrayList<Entry<Integer, Long>>(set);
-		        Collections.sort(list, new Comparator<Map.Entry<Integer, Long>>(){
-		            public int compare( Map.Entry<Integer, Long> o1, Map.Entry<Integer, Long> o2 )
-		            {
-		                return (o1.getValue()).compareTo(o2.getValue());
-		            }
-		        });
-		        
-		        for(Map.Entry<Integer, Long> entry:list){
-		        	Object[] objeto = getObjeto(entry.getKey(), 2, estructuraPrestamo);
-		        	Componente componente = (Componente)objeto[3];
-		        	componente.setOrden(orden);
-		        	componente.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
-		        	ComponenteDAO.guardarComponenteOrden(componente, session);
-		        	orden++;
-		        }
-		        
-		        //commitCalculoOrden(session);
-		        calcularFechasPadre((Integer)objPadre[1], 1, usuario, 2, session, estructuraPrestamo);
-		        //commitCalculoOrden(session);
-			}else{
-				if(hijos.size() == 1){
-					Componente componente = (Componente)hijos.get(0)[3];
-					componente.setOrden(1);
-					componente.setTreePath(treePath +  String.format("%6s", 1).replace(' ', '0'));
-					ComponenteDAO.guardarComponenteOrden(componente, session);
-					
-					//commitCalculoOrden(session);
-			        calcularFechasPadre(objetoId, 1, usuario, 2, session, estructuraPrestamo);
-			        //commitCalculoOrden(session);
-				}
-			}
-		} else if(objetoTipo == 3){
-			if(hijos.size() > 1){
-				for(Object[] obj : hijos){
+		for(Object[] obj: hijos){
+			switch((int)obj[5]){
+				case 2: Componente componente = (Componente)obj[3];
+					fechas.add(new Long[]{new Long(componente.getId()), new Long(2), componente.getFechaInicio() != null ? componente.getFechaInicio().getTime() : fechaMax.getTime()});
+					break;
+				case 3:
 					Producto producto = (Producto)obj[3];
-					fechas.put(producto.getId(), producto.getFechaInicio() != null ? producto.getFechaInicio().getTime() : fechaMax.getTime());
-				}
-
-				Set<Entry<Integer, Long>> set = fechas.entrySet();
-		        List<Entry<Integer, Long>> list = new ArrayList<Entry<Integer, Long>>(set);
-		        Collections.sort(list, new Comparator<Map.Entry<Integer, Long>>(){
-		            public int compare( Map.Entry<Integer, Long> o1, Map.Entry<Integer, Long> o2 )
-		            {
-		                return (o1.getValue()).compareTo(o2.getValue());
-		            }
-		        });
-				
-		        for(Map.Entry<Integer, Long> entry:list){
-		        	Object[] objeto = getObjeto(entry.getKey(), 3, estructuraPrestamo);
-		        	Producto producto = (Producto)objeto[3];
-		        	producto.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
-		        	producto.setOrden(orden);
-		        	ProductoDAO.guardarProductoOrden(producto, session);
-		        	orden++;
-		        }
-		        
-		        //commitCalculoOrden(session);
-		        calcularFechasPadre((Integer)objPadre[1], 2, usuario, 3, session, estructuraPrestamo);
-		        //commitCalculoOrden(session);
-		        calcularOrdenObjetosSuperiores(2,(Integer)objPadre[1], (Integer)objPadre[2], usuario, session);
-		        //commitCalculoOrden(session);
-			}else{
-				if(hijos.size() == 1){
-					Producto producto = (Producto)hijos.get(0)[3];
-					producto.setOrden(1);
-					producto.setTreePath(treePath  + String.format("%6s", 1).replace(' ', '0'));
-					ProductoDAO.guardarProductoOrden(producto, session);
-
-			        //commitCalculoOrden(session);
-			        calcularFechasPadre((Integer)objPadre[1], 2, usuario, 3, session, estructuraPrestamo);
-			        //commitCalculoOrden(session);
-			        calcularOrdenObjetosSuperiores(2,(Integer)objPadre[1], (Integer)objPadre[2], usuario, session);
-			        //commitCalculoOrden(session);
-				}
-			}
-			
-		} else if(objetoTipo == 4){
-			if(hijos.size() > 1){
-				for(Object[] obj : hijos){
+					fechas.add(new Long[]{ new Long(producto.getId()), new Long(3), producto.getFechaInicio() != null ? producto.getFechaInicio().getTime() : fechaMax.getTime()});
+					break;
+				case 4:
 					Subproducto subproducto = (Subproducto)obj[3];
-					fechas.put(subproducto.getId(), subproducto.getFechaInicio() != null ? subproducto.getFechaInicio().getTime() : fechaMax.getTime());
-				}
-				
-				Set<Entry<Integer, Long>> set = fechas.entrySet();
-		        List<Entry<Integer, Long>> list = new ArrayList<Entry<Integer, Long>>(set);
-		        Collections.sort(list, new Comparator<Map.Entry<Integer, Long>>(){
-		            public int compare( Map.Entry<Integer, Long> o1, Map.Entry<Integer, Long> o2 )
-		            {
-		                return (o1.getValue()).compareTo(o2.getValue());
-		            }
-		        });
-		        
-		        for(Map.Entry<Integer, Long> entry:list){
-		        	Object[] objeto = getObjeto(entry.getKey(), 3, estructuraPrestamo);
-		        	Subproducto subproducto = (Subproducto)objeto[3];
-		        	subproducto.setOrden(orden);
-		        	subproducto.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
-		        	SubproductoDAO.guardarSubproductoOrden(subproducto, session);
-		        	orden++;
-		        }
-		        
-		        //commitCalculoOrden(session);
-		        calcularFechasPadre((Integer)objPadre[1], 3, usuario, 4, session, estructuraPrestamo);
-		        //commitCalculoOrden(session);
-		        calcularOrdenObjetosSuperiores(3,(Integer)objPadre[1], (Integer)objPadre[2], usuario, session);
-		        //commitCalculoOrden(session);
-			}else{
-				if(hijos.size() == 1){
-					Subproducto subproducto = (Subproducto)hijos.get(0)[3];
-					subproducto.setOrden(1);
-					subproducto.setTreePath(treePath  + String.format("%6s", 1).replace(' ', '0'));
-					SubproductoDAO.guardarSubproductoOrden(subproducto, session);
-					//commitCalculoOrden(session);
-					
-					calcularFechasPadre((Integer)objPadre[1], 3, usuario, 4, session, estructuraPrestamo);
-			        //commitCalculoOrden(session);
-			        calcularOrdenObjetosSuperiores(3,(Integer)objPadre[1], (Integer)objPadre[2], usuario, session);
-			        //commitCalculoOrden(session);
-				}
+					fechas.add(new Long[]{new Long(subproducto.getId()), new Long(4),subproducto.getFechaInicio() != null ? subproducto.getFechaInicio().getTime() : fechaMax.getTime()});
+					break;
+				case 5:
+					Actividad actividad = (Actividad)obj[3];
+					fechas.add(new Long[]{ new Long(actividad.getId()),new Long(5), actividad.getFechaInicio() != null ? actividad.getFechaInicio().getTime() : fechaMax.getTime()});
+					break;
 			}
 		}
 		
-		 commitCalculoOrden(session);
+		Collections.sort(fechas, new Comparator<Long[]>(){
+            public int compare( Long[] o1, Long[] o2 )
+            {
+                return (o1[2].compareTo(o2[2]));
+            }
+        });
+        
+		Date fecha_menor = new DateTime(2200,1,1,0,0).toDate();
+		Date fecha_mayor = new DateTime(1970,1,1,0,0).toDate();
+        for(Long[] entry:fechas){
+        	Object[] objeto = getObjeto(entry[0].intValue(), entry[1].intValue(), estructuraPrestamo);
+        	switch(entry[1].intValue()){
+        		case 2:
+        			Componente componente = (Componente)objeto[3];
+    	        	componente.setOrden(orden);
+    	        	componente.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
+    	        	componente.setNivel(getNivel(componente.getTreePath()));
+    	        	ComponenteDAO.guardarComponenteOrden(componente, session);
+    	        	fecha_menor = componente.getFechaInicio()!=null && fecha_menor.after(componente.getFechaInicio()) ? componente.getFechaInicio() : fecha_menor;
+    	        	fecha_mayor = componente.getFechaFin()!=null && fecha_mayor.before(componente.getFechaFin()) ? componente.getFechaFin() : fecha_mayor;
+        			break;
+        		case 3:
+        			Producto producto = (Producto)objeto[3];
+    	        	producto.setOrden(orden);
+    	        	producto.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
+    	        	producto.setNivel(getNivel(producto.getTreePath()));
+    	        	ProductoDAO.guardarProductoOrden(producto, session);
+    	        	fecha_menor = producto.getFechaInicio()!=null && fecha_menor.after(producto.getFechaInicio()) ? producto.getFechaInicio() : fecha_menor;
+    	        	fecha_mayor = producto.getFechaFin()!=null && fecha_mayor.before(producto.getFechaFin()) ? producto.getFechaFin() : fecha_mayor;
+        			break;
+        		case 4:
+        			Subproducto sproducto = (Subproducto)objeto[3];
+        			sproducto.setOrden(orden);
+        			sproducto.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
+        			sproducto.setNivel(getNivel(sproducto.getTreePath()));
+    	        	SubproductoDAO.guardarSubproductoOrden(sproducto, session);
+    	        	fecha_menor = sproducto.getFechaInicio()!=null && fecha_menor.after(sproducto.getFechaInicio()) ? sproducto.getFechaInicio() : fecha_menor;
+    	        	fecha_mayor = sproducto.getFechaFin()!=null && fecha_mayor.before(sproducto.getFechaFin()) ? sproducto.getFechaFin() : fecha_mayor;
+        			break;
+        		case 5:
+        			Actividad actividad = (Actividad)objeto[3];
+        			actividad.setOrden(orden);
+        			actividad.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
+        			actividad.setNivel(getNivel(actividad.getTreePath()));
+    	        	ActividadDAO.guardarActividadOrden(actividad, session);
+    	        	fecha_menor = actividad.getFechaInicio()!=null && fecha_menor.after(actividad.getFechaInicio()) ? actividad.getFechaInicio() : fecha_menor;
+    	        	fecha_mayor = actividad.getFechaFin()!=null && fecha_mayor.before(actividad.getFechaFin()) ? actividad.getFechaFin() : fecha_mayor;
+        			break;
+        	}
+	        orden++;
+        }
+        switch((int)objPadre[2]){
+        	case 1: Proyecto proyecto = (Proyecto)getObjeto((int)objPadre[1], 1, estructuraPrestamo)[3];
+        		proyecto.setFechaInicio(fecha_menor);
+        		proyecto.setFechaFin(fecha_mayor);
+        		ProyectoDAO.guardarProyectoOrden(proyecto, session);
+        		break;
+        	case 2: Componente componente = (Componente)getObjeto((int)objPadre[1], 2, estructuraPrestamo)[3];
+        		componente.setFechaInicio(fecha_menor);
+        		componente.setFechaFin(fecha_mayor);
+	    		ComponenteDAO.guardarComponenteOrden(componente, session);
+	    		break;	
+        	case 3: Producto producto = (Producto)getObjeto((int)objPadre[1], 3, estructuraPrestamo)[3];
+	        	producto.setFechaInicio(fecha_menor);
+	        	producto.setFechaFin(fecha_mayor);
+	    		ProductoDAO.guardarProductoOrden(producto, session);
+	    		break;
+        	case 4: Subproducto subproducto = (Subproducto)getObjeto((int)objPadre[1], 4, estructuraPrestamo)[3];
+	        	subproducto.setFechaInicio(fecha_menor);
+	        	subproducto.setFechaFin(fecha_mayor);
+	    		SubproductoDAO.guardarSubproductoOrden(subproducto, session);
+	    		break;
+        	case 5: Actividad actividad = (Actividad)getObjeto((int)objPadre[1], 5, estructuraPrestamo)[3];
+	        	actividad.setFechaInicio(fecha_menor);
+	        	actividad.setFechaFin(fecha_mayor);
+	    		ActividadDAO.guardarActividadOrden(actividad, session);
+	    		break;
+        }
+        if((Integer)objPadre[1]>0){
+        	calcularOrdenObjetosSuperiores((Integer)objPadre[1], (Integer)objPadre[2], usuario, session,proyectoId);
+        }
+		commitCalculoOrden(session);
 	}
 
-	private static void calcularFechasPadre(Integer objetoIdPadre, Integer objetoTipoPadre, String usuario, Integer objetoNivelActual, Session session, List<Object[]> estructuraPrestamo){
-		Proyecto proyecto = null;
-		Componente componente =  null;
-		Producto producto = null;
-		Subproducto subproducto = null;
-		Actividad actividad = null;
-		Date fechaInicial = new Date();
-		Date fechaFinal = new Date();
-		
-		getTransactionSession(session);
-		
-		//Obtener fecha Inicial y fecha final
-		if(objetoNivelActual == 2){//Padre del 2 es proyecto
-			fechaInicial = getObjetoFechaInicial(2, objetoIdPadre, objetoTipoPadre, estructuraPrestamo);
-			fechaFinal = getObjetoFechaFin(2, objetoIdPadre, objetoTipoPadre, estructuraPrestamo);
-		} else if(objetoNivelActual == 3){//Padre del 3 es componente
-			fechaInicial = getObjetoFechaInicial(3, objetoIdPadre, objetoTipoPadre, estructuraPrestamo);
-			fechaFinal = getObjetoFechaFin(3, objetoIdPadre, objetoTipoPadre, estructuraPrestamo);
-		} else if(objetoNivelActual == 4){//Padre del 4 es producto
-			fechaInicial = getObjetoFechaInicial(4, objetoIdPadre, objetoTipoPadre, estructuraPrestamo);
-			fechaFinal = getObjetoFechaFin(4, objetoIdPadre, objetoTipoPadre, estructuraPrestamo);
-		} else if(objetoNivelActual == 5){//padre del 5 es proyecto, componente, producto, subproducto ó actividad
-			fechaInicial = getObjetoFechaInicial(5, objetoIdPadre, objetoTipoPadre, estructuraPrestamo);
-			fechaFinal = getObjetoFechaFin(5, objetoIdPadre, objetoTipoPadre, estructuraPrestamo);
-		}
-		
-		if(objetoTipoPadre == 1){
-    		proyecto = (Proyecto)getObjeto(objetoIdPadre, 1, estructuraPrestamo)[3];
-    		proyecto.setFechaInicio(fechaInicial);
-    		proyecto.setFechaFin(fechaFinal);
-    		ProyectoDAO.guardarProyectoOrden(proyecto, session);
-    	}else if(objetoTipoPadre == 2){
-    		componente = (Componente)getObjeto(objetoIdPadre, 2, estructuraPrestamo)[3];
-    		//componente = ComponenteDAO.getComponentePorId(objetoIdPadre, usuario);
-    		componente.setFechaInicio(fechaInicial);
-    		componente.setFechaFin(fechaFinal);
-    		ComponenteDAO.guardarComponenteOrden(componente, session);
-    	}else if(objetoTipoPadre == 3){
-    		producto = (Producto)getObjeto(objetoIdPadre, 3, estructuraPrestamo)[3];
-    		//producto = ProductoDAO.getProductoPorId(objetoIdPadre);
-    		producto.setFechaInicio(fechaInicial);
-    		producto.setFechaFin(fechaFinal);
-    		ProductoDAO.guardarProducto(producto);
-    	}else if(objetoTipoPadre == 4){
-    		subproducto = (Subproducto)getObjeto(objetoIdPadre, 4, estructuraPrestamo)[3];
-    		//subproducto = SubproductoDAO.getSubproductoPorId(objetoIdPadre);
-    		subproducto.setFechaInicio(fechaInicial);
-    		subproducto.setFechaFin(fechaFinal);
-    		SubproductoDAO.guardarSubproducto(subproducto);
-    	}else if(objetoTipoPadre == 5){
-    		actividad = (Actividad)getObjeto(objetoIdPadre, 5, estructuraPrestamo)[3];
-    		//actividad = ActividadDAO.getActividadPorId(objetoIdPadre, usuario);
-    		actividad.setFechaInicio(fechaInicial);
-    		actividad.setFechaFin(fechaFinal);
-    		ActividadDAO.guardarActividad(actividad);
-    	}
-	}
+	
 	
 	private static List<Object[]> getEstructuraPrestamo(Integer proyectoId, String usuario){
 		Object[] objProyecto = null;
@@ -465,14 +288,12 @@ public class COrden {
 		return lstProyecto;
 	}
 	
-	private static List<Object[]> getHijos(Integer nivel, Integer objetoPadreId, Integer objetoPadreTipo, List<Object[]> estructuraPrestamo){
+	private static List<Object[]> getHijos(Integer objetoPadreId, Integer objetoPadreTipo, List<Object[]> estructuraPrestamo){
 		List<Object[]> ret = new ArrayList<Object[]>();
 		try{
 			for(Object[] obj : estructuraPrestamo){
-				if(((Integer)obj[0]).intValue() == nivel){
-					if(((Integer)obj[1]).intValue() == objetoPadreId && ((Integer)obj[2]).intValue() == objetoPadreTipo){
-						ret.add(obj);
-					}
+				if(((Integer)obj[1]).intValue() == objetoPadreId && ((Integer)obj[2]).intValue() == objetoPadreTipo){
+					ret.add(obj);
 				}
 			}
 		}catch(Exception ex){
@@ -493,130 +314,6 @@ public class COrden {
 			return null;
 		}
 		
-		return ret;
-	}
-	
-	private static Date getObjetoFechaInicial(Integer nivel, Integer objetoPadreId, Integer objetoTipoPadre, List<Object[]> estructuraPrestamo){
-		Date ret = null;
-		Date fechaMax = new Date();
-
-		try{
-			String fMax = "01/01/2200";
-			DateFormat format = new SimpleDateFormat("DD/MM/YYYY");
-			fechaMax = format.parse(fMax);
-			
-			List<Object[]> hijos = getHijos(nivel, objetoPadreId, objetoTipoPadre, estructuraPrestamo);
-			Map<Integer, Long> fechas = new TreeMap<Integer, Long>();
-			for(Object[] obj : hijos){
-				if(nivel == 2){
-					Componente componente = (Componente)obj[3];
-					fechas.put(componente.getId(), componente.getFechaInicio() != null ? componente.getFechaInicio().getTime() : fechaMax.getTime());	
-				}else if(nivel == 3){
-					Producto producto = (Producto)obj[3];
-					fechas.put(producto.getId(), producto.getFechaInicio() != null ? producto.getFechaInicio().getTime() : fechaMax.getTime());
-				}else if(nivel == 4){
-					Subproducto subproducto = (Subproducto)obj[3];
-					fechas.put(subproducto.getId(), subproducto.getFechaInicio() != null ? subproducto.getFechaInicio().getTime() : fechaMax.getTime());
-				}else if(nivel == 5){
-					Actividad actividad = (Actividad)obj[3];
-					fechas.put(actividad.getId(), actividad.getFechaInicio() != null ? actividad.getFechaInicio().getTime() : fechaMax.getTime());
-				}
-				
-			}
-			
-			Set<Entry<Integer, Long>> set = fechas.entrySet();
-	        List<Entry<Integer, Long>> list = new ArrayList<Entry<Integer, Long>>(set);
-	        Collections.sort(list, new Comparator<Map.Entry<Integer, Long>>(){
-	            public int compare( Map.Entry<Integer, Long> o1, Map.Entry<Integer, Long> o2 )
-	            {
-	                return (o1.getValue()).compareTo(o2.getValue());
-	            }
-	        });
-	        
-	        for(Map.Entry<Integer, Long> entry:list){
-	        	if(nivel == 2){
-	        		Componente componente = (Componente)getObjeto(entry.getKey(), nivel, estructuraPrestamo)[3];
-	        		return componente.getFechaInicio();	
-	        	}else if(nivel == 3){
-	        		Producto producto = (Producto)getObjeto(entry.getKey(), nivel, estructuraPrestamo)[3];
-	        		return producto.getFechaInicio();
-	        	}else if(nivel == 4){
-	        		Subproducto subproducto = (Subproducto)getObjeto(entry.getKey(), nivel, estructuraPrestamo)[3];
-	        		return subproducto.getFechaInicio();
-	        	}else if(nivel == 5){
-	        		Actividad actividad = (Actividad)getObjeto(entry.getKey(), nivel, estructuraPrestamo)[3];
-	        		return actividad.getFechaInicio();
-	        	}
-	        }
-			
-			
-		}catch(Exception ex){
-			
-		}
-		return ret;
-	}
-	
-	private static Date getObjetoFechaFin(Integer nivel, Integer objetoPadreId, Integer objetoTipoPadre, List<Object[]> estructuraPrestamo){
-		Date ret = null;
-		//Date fechaMax = new Date();
-
-		try{
-			//String fMax = "01/01/2200";
-			//DateFormat format = new SimpleDateFormat("DD/MM/YYYY");
-			//fechaMax = format.parse(fMax);
-			
-			List<Object[]> hijos = getHijos(nivel, objetoPadreId, objetoTipoPadre, estructuraPrestamo);
-			Map<Integer, Long> fechas = new TreeMap<Integer, Long>();
-			for(Object[] obj : hijos){
-				if(nivel == 2){
-					Componente componente = (Componente)obj[3];
-					fechas.put(componente.getId(), componente.getFechaFin() != null ? componente.getFechaFin().getTime() : 0);	
-				}else if(nivel == 3){
-					Producto producto = (Producto)obj[3];
-					fechas.put(producto.getId(), producto.getFechaFin() != null ? producto.getFechaFin().getTime() : 0);
-				}else if(nivel == 4){
-					Subproducto subproducto = (Subproducto)obj[3];
-					fechas.put(subproducto.getId(), subproducto.getFechaFin() != null ? subproducto.getFechaFin().getTime() : 0);
-				}else if(nivel == 5){
-					Actividad actividad = (Actividad)obj[3];
-					fechas.put(actividad.getId(), actividad.getFechaFin() != null ? actividad.getFechaFin().getTime() : 0);
-				}
-				
-			}
-			
-			Set<Entry<Integer, Long>> set = fechas.entrySet();
-	        List<Entry<Integer, Long>> list = new ArrayList<Entry<Integer, Long>>(set);
-	        Collections.sort(list, new Comparator<Map.Entry<Integer, Long>>(){
-	            public int compare( Map.Entry<Integer, Long> o1, Map.Entry<Integer, Long> o2 )
-	            {
-	                return (o2.getValue()).compareTo(o1.getValue());
-	            }
-	        });
-	        
-	        for(Map.Entry<Integer, Long> entry:list){
-	        	if(nivel == 2){
-	        		Componente componente = (Componente)getObjeto(entry.getKey(), nivel, estructuraPrestamo)[3];
-	        		if(componente.getFechaFin() != null)
-	        			return componente.getFechaFin();
-	        	}else if(nivel == 3){
-	        		Producto producto = (Producto)getObjeto(entry.getKey(), nivel, estructuraPrestamo)[3];
-	        		if(producto.getFechaFin() != null)
-	        			return producto.getFechaFin();
-	        	}else if(nivel == 4){
-	        		Subproducto subproducto = (Subproducto)getObjeto(entry.getKey(), nivel, estructuraPrestamo)[3];
-	        		if(subproducto.getFechaFin() != null)
-	        			return subproducto.getFechaFin();
-	        	}else if(nivel == 5){
-	        		Actividad actividad = (Actividad)getObjeto(entry.getKey(), nivel, estructuraPrestamo)[3];
-	        		if(actividad.getFechaFin() != null)
-	        			return actividad.getFechaFin();
-	        	}
-	        }
-			
-			
-		}catch(Exception ex){
-			
-		}
 		return ret;
 	}
 	

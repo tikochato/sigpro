@@ -68,13 +68,17 @@ public class Producto implements java.io.Serializable {
 	}
 
 	public Producto(Componente componente, ProductoTipo productoTipo, UnidadEjecutora unidadEjecutora, String nombre,
-			String usuarioCreo, Date fechaCreacion) {
+			String usuarioCreo, Date fechaCreacion, Date fechaInicio, Date fechaFin, Integer duracion, String duracionDimension) {
 		this.componente = componente;
 		this.productoTipo = productoTipo;
 		this.unidadEjecutora = unidadEjecutora;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
+		this.fechaInicio = fechaInicio;
+		this.fechaFin = fechaFin;
+		this.duracion = duracion;
+		this.duracionDimension = duracionDimension;
 	}
 
 	public Producto(AcumulacionCosto acumulacionCosto, Componente componente, ProductoTipo productoTipo,

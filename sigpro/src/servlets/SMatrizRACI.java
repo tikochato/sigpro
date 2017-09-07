@@ -40,6 +40,7 @@ import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.CExcel;
+import utilities.CLogger;
 import utilities.CMariaDB;
 import utilities.Utils;
 
@@ -199,15 +200,19 @@ public class SMatrizRACI extends HttpServlet {
 		}else if (accion.equals("exportarExcel")){
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 			
+			try{
 	        byte [] outArray = exportarExcel(idPrestamo, usuario);
 		
-			response.setContentType("application/ms-excel");
-			response.setContentLength(outArray.length);
-			response.setHeader("Expires:", "0"); 
-			response.setHeader("Content-Disposition", "attachment; MatrizRACI_.xls");
-			OutputStream outStream = response.getOutputStream();
-			outStream.write(outArray);
-			outStream.flush();
+				response.setContentType("application/ms-excel");
+				response.setContentLength(outArray.length);
+				response.setHeader("Expires:", "0"); 
+				response.setHeader("Content-Disposition", "attachment; MatrizRACI_.xls");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+			}catch(Exception e){
+				CLogger.write("1", SMatrizRACI.class, e);
+			}
 		}else{
 			response_text = "{ \"success\": false }";
 		}
@@ -399,7 +404,7 @@ public class SMatrizRACI extends HttpServlet {
 				outArray = Base64.encode(outByteStream.toByteArray());
 			}
 		}catch(Exception e){
-			System.out.println("exportarExcel: "+e);
+			CLogger.write("4", SMatrizRACI.class, e);
 		}
 		return outArray;
 	}

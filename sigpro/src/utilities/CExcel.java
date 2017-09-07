@@ -98,6 +98,7 @@ public class CExcel {
 				sheet = workbook.getSheetAt(0);
 			} catch (IOException e) {
 				e.printStackTrace();
+				CLogger.write("6", CExcel.class, e);
 			}
 		}else{
 			sheet = workbook.createSheet();
@@ -381,7 +382,7 @@ public class CExcel {
 						lineas.add((line + 1) + "");
 					}
 				} catch (Exception e) {
-					
+					CLogger.write("7", CExcel.class, e);
 				}
 				line++;
 			}			
@@ -396,93 +397,95 @@ public class CExcel {
 		int line = 5;
 		DateTime fechaActual = DateTime.now();
 		
-		if(stgrafica != null){
-			line = generateChart(report_name, fechaActual, usuario);
-		}
-		
-		if (extra_lines != null) {
-			for (int i = 0; i < extra_lines.length; i++) {
-				setCellValueString(extra_lines[i][0], line, 0, true, borde);
-				
-				setCellValueString(extra_lines[i][1], line, 1, false, borde);
-				line++;
+		try {
+			if(stgrafica != null){
+				line = generateChart(report_name, fechaActual, usuario);
 			}
-		}
-		line++;
-		if (headers.length > 0) {
-			for (int i = 0; i < headers[0].length; i++){
-				if(headers[0][i].toString().isEmpty()){
-					combineCells(line, line, i-1, i, borde,true);
-				}else{
-					setCellValueString(headers[0][i].toString(), line, i, true, borde);
-				}
-			}
-			if(headers[5] != null){ 
-				line++;
-				for (int i = 0; i < headers[5].length; i++){
-					if(headers[5][i].toString().isEmpty()){
-						combineCells(line-1, line, i, i, borde,true);
-					}else{
-						setCellValueString(headers[5][i].toString(), line, i, true, borde);
-					}
+			
+			if (extra_lines != null) {
+				for (int i = 0; i < extra_lines.length; i++) {
+					setCellValueString(extra_lines[i][0], line, 0, true, borde);
+					
+					setCellValueString(extra_lines[i][1], line, 1, false, borde);
+					line++;
 				}
 			}
 			line++;
-			int first_data_line = line + 1;
-			int last_data_line = line + 1;
-			ArrayList<String> lineas = new ArrayList<String>();
-			for (int i = 0; i < data.length; i++) {			
-				try {
-					for (int j = 0; j < data[i].length; j++) {
-						if(data[i][j]!=null) {
-							switch (headers[2][j]) {
-							case "int":
-									setCellValueInt(Integer.parseInt(data[i][j]), line, j, borde);
-								break;
-							case "double":
-								if(!data[i][j].isEmpty()){
-									setCellValueDouble(Double.parseDouble(data[i][j]), line, j, borde);
-								}else{
-									setCellValueString("", line, j, false, borde);
-								}
-								break;	
-							case "currency":
-								setCellValueCurrency(Double.parseDouble(data[i][j]), line, j, false, borde);
-								break;
-							case "string":
-								setCellValueString(String.class.cast(data[i][j]), line, j, false, borde);
-								break;
-							case "percent":
-								setCellValuePercent(Double.parseDouble(data[i][j]), line, j, false, borde);
-							case "date":
-								if(!data[i][j].isEmpty()){
-									DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-									Date date = format.parse(data[i][j]);
-									setCellValueDate(date, line, j, borde);
-								}else{
-									setCellValueString("", line, j, false, borde);
-								}
-							}
+			if (headers.length > 0) {
+				for (int i = 0; i < headers[0].length; i++){
+					if(headers[0][i].toString().isEmpty()){
+						combineCells(line, line, i-1, i, borde,true);
+					}else{
+						setCellValueString(headers[0][i].toString(), line, i, true, borde);
+					}
+				}
+				if(headers[5] != null){ 
+					line++;
+					for (int i = 0; i < headers[5].length; i++){
+						if(headers[5][i].toString().isEmpty()){
+							combineCells(line-1, line, i, i, borde,true);
 						}else{
-							setCellValueString("", line, j, false, borde);
-						}
-						if(headers.length>7 && headers[6]!=null && !headers[6][j].isEmpty()){
-							setRowOperation(data[i], headers[7][j], headers[6][j], "double", line, j);
+							setCellValueString(headers[5][i].toString(), line, i, true, borde);
 						}
 					}
-					if (HasGroup && data[i] == null) {
-						lineas.add((line + 1) + "");
-					}
-				} catch (Exception e) {
-					System.out.println(e);
 				}
 				line++;
+				int first_data_line = line + 1;
+				int last_data_line = line + 1;
+				ArrayList<String> lineas = new ArrayList<String>();
+				for (int i = 0; i < data.length; i++) {	
+						for (int j = 0; j < data[i].length; j++) {
+							if(data[i][j]!=null) {
+								switch (headers[2][j]) {
+								case "int":
+										setCellValueInt(Integer.parseInt(data[i][j]), line, j, borde);
+									break;
+								case "double":
+									if(!data[i][j].isEmpty()){
+										setCellValueDouble(Double.parseDouble(data[i][j]), line, j, borde);
+									}else{
+										setCellValueString("", line, j, false, borde);
+									}
+									break;	
+								case "currency":
+									setCellValueCurrency(Double.parseDouble(data[i][j]), line, j, false, borde);
+									break;
+								case "string":
+									setCellValueString(String.class.cast(data[i][j]), line, j, false, borde);
+									break;
+								case "percent":
+									setCellValuePercent(Double.parseDouble(data[i][j]), line, j, false, borde);
+								case "date":
+									if(!data[i][j].isEmpty()){
+										DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+										Date date = format.parse(data[i][j]);
+										setCellValueDate(date, line, j, borde);
+									}else{
+										setCellValueString("", line, j, false, borde);
+									}
+								}
+							}else{
+								setCellValueString("", line, j, false, borde);
+							}
+							if(headers.length>7 && headers[6]!=null && !headers[6][j].isEmpty()){
+								setRowOperation(data[i], headers[7][j], headers[6][j], "double", line, j);
+							}
+						}
+						if (HasGroup && data[i] == null) {
+							lineas.add((line + 1) + "");
+						}
+					
+					line++;
+				}
+				
+				line = setOperations(headers, lineas, line, first_data_line, last_data_line);
 			}
-			
-			line = setOperations(headers, lineas, line, first_data_line, last_data_line);
+			Header(report_name, headers[0].length);
+			Footer(line++, fechaActual, usuario);
+		} catch (Exception e) {
+			e.printStackTrace();
+			CLogger.write("1", CExcel.class, e);
 		}
-		Header(report_name, headers[0].length);
-		Footer(line++, fechaActual, usuario);
 		
 		return workbook;
 	}
@@ -676,9 +679,9 @@ public class CExcel {
 			out.close();
 
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			CLogger.write("2", CExcel.class, e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			CLogger.write("3", CExcel.class, e);
 		}
 		return path;
 	}
@@ -714,9 +717,9 @@ public class CExcel {
 			out.close();
 
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			CLogger.write("4", CExcel.class, e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			CLogger.write("5", CExcel.class, e);
 		}
 		return path;
 	}

@@ -121,117 +121,122 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
-		HttpSession sesionweb = request.getSession();
-		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
-		Gson gson = new Gson();
-		Type type = new TypeToken<Map<String, String>>(){}.getType();
-		StringBuilder sb = new StringBuilder();
-		BufferedReader br = request.getReader();
-		String str;
-		while ((str = br.readLine()) != null) {
-			sb.append(str);
-		}
-		Map<String, String> map = gson.fromJson(sb.toString(), type);
-		String accion = map.get("accion")!=null ? map.get("accion") : "";
-		String response_text = "";
-				
-		if(accion.equals("generarInforme")){
-			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-			Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
-			Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
-			List<stprestamo> lstPrestamo = getInformacionPresupuestaria(idPrestamo, anioInicial, anioFinal, usuario);
-			
-			if (null != lstPrestamo && !lstPrestamo.isEmpty()){
-				response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
-		        response_text = String.join("", "\"prestamo\":",response_text);
-		        response_text = String.join("", "{\"success\":true,", response_text, "}");
-			}else{
-				response_text = String.join("", "{\"success\":false}");
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+		try{
+			request.setCharacterEncoding("UTF-8");
+			HttpSession sesionweb = request.getSession();
+			String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
+			Gson gson = new Gson();
+			Type type = new TypeToken<Map<String, String>>(){}.getType();
+			StringBuilder sb = new StringBuilder();
+			BufferedReader br = request.getReader();
+			String str;
+			while ((str = br.readLine()) != null) {
+				sb.append(str);
 			}
-		}else if(accion.equals("exportarExcel")){
-			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-			Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
-			Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
-			Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
-			Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
+			Map<String, String> map = gson.fromJson(sb.toString(), type);
+			String accion = map.get("accion")!=null ? map.get("accion") : "";
+			String response_text = "";
+					
+			if(accion.equals("generarInforme")){
+				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
+				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
+				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
+				List<stprestamo> lstPrestamo = getInformacionPresupuestaria(idPrestamo, anioInicial, anioFinal, usuario);
+				
+				if (null != lstPrestamo && !lstPrestamo.isEmpty()){
+					response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
+			        response_text = String.join("", "\"prestamo\":",response_text);
+			        response_text = String.join("", "{\"success\":true,", response_text, "}");
+				}else{
+					response_text = String.join("", "{\"success\":false}");
+				}
+			}else if(accion.equals("exportarExcel")){
+				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
+				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
+				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
+				Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
+				Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
+				
+		        byte [] outArray = exportarExcel(idPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, usuario);
 			
-	        byte [] outArray = exportarExcel(idPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, usuario);
-		
-			response.setContentType("application/ms-excel");
-			response.setContentLength(outArray.length);
-			response.setHeader("Expires:", "0"); 
-			response.setHeader("Content-Disposition", "attachment; EjecucionPresupuestaria_.xls");
-			OutputStream outStream = response.getOutputStream();
-			outStream.write(outArray);
-			outStream.flush();
-			
-		}else if(accion.equals("exportarPdf")){
-			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-			Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
-			Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
-			Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
-			Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-			CPdf archivo = new CPdf("Metas de Préstamo");
-			String headers[][];
-			String datosMetas[][];
-			headers = generarHeaders(anioInicial, anioFinal, agrupacion, tipoVisualizacion);
-			List<stprestamo> lstPrestamo = getInformacionPresupuestaria(idPrestamo, anioInicial, anioFinal, usuario);	
-			lstPrestamo = calcularCostos(lstPrestamo, 0);
-			datosMetas = generarDatosReporte(lstPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-			String path = archivo.ExportPdfMetasPrestamo(headers, datosMetas,tipoVisualizacion);
-			File file=new File(path);
-			if(file.exists()){
-		        FileInputStream is = null;
-		        try {
-		        	is = new FileInputStream(file);
-		        }
-		        catch (Exception e) {
-		        	
-		        }
-		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
-		        
-		        int readByte = 0;
-		        byte[] buffer = new byte[2024];
-
-                while(true)
-                {
-                    readByte = is.read(buffer);
-                    if(readByte == -1)
-                    {
-                        break;
-                    }
-                    outByteStream.write(buffer);
-                }
-                
-                file.delete();
-                
-                is.close();
-                outByteStream.flush();
-                outByteStream.close();
-                
-		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
-				response.setContentType("application/pdf");
+				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
 				response.setHeader("Expires:", "0"); 
-				response.setHeader("Content-Disposition", "in-line; 'PrestamoMetas.pdf'");
+				response.setHeader("Content-Disposition", "attachment; EjecucionPresupuestaria_.xls");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
+				
+			}else if(accion.equals("exportarPdf")){
+				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
+				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
+				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
+				Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
+				Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
+				CPdf archivo = new CPdf("Metas de Préstamo");
+				String headers[][];
+				String datosMetas[][];
+				headers = generarHeaders(anioInicial, anioFinal, agrupacion, tipoVisualizacion);
+				List<stprestamo> lstPrestamo = getInformacionPresupuestaria(idPrestamo, anioInicial, anioFinal, usuario);	
+				lstPrestamo = calcularCostos(lstPrestamo, 0);
+				datosMetas = generarDatosReporte(lstPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, headers[0].length, usuario);
+				String path = archivo.ExportPdfMetasPrestamo(headers, datosMetas,tipoVisualizacion);
+				File file=new File(path);
+				if(file.exists()){
+			        FileInputStream is = null;
+			        try {
+			        	is = new FileInputStream(file);
+			        }
+			        catch (Exception e) {
+						CLogger.write("5", SInformacionPresupuestaria.class, e);
+			        }
+			        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+			        
+			        int readByte = 0;
+			        byte[] buffer = new byte[2024];
+	
+	                while(true)
+	                {
+	                    readByte = is.read(buffer);
+	                    if(readByte == -1)
+	                    {
+	                        break;
+	                    }
+	                    outByteStream.write(buffer);
+	                }
+	                
+	                file.delete();
+	                
+	                is.close();
+	                outByteStream.flush();
+	                outByteStream.close();
+	                
+			        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+					response.setContentType("application/pdf");
+					response.setContentLength(outArray.length);
+					response.setHeader("Expires:", "0"); 
+					response.setHeader("Content-Disposition", "in-line; 'PrestamoMetas.pdf'");
+					OutputStream outStream = response.getOutputStream();
+					outStream.write(outArray);
+					outStream.flush();
+				}
+	
+				
 			}
-
 			
+			response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
+	
+	        OutputStream output = response.getOutputStream();
+			GZIPOutputStream gz = new GZIPOutputStream(output);
+	        gz.write(response_text.getBytes("UTF-8"));
+	        gz.close();
+	        output.close();
+		}catch(Exception e){
+			e.printStackTrace();
+			CLogger.write("1", SInformacionPresupuestaria.class, e);			
 		}
-		
-		response.setHeader("Content-Encoding", "gzip");
-		response.setCharacterEncoding("UTF-8");
-
-        OutputStream output = response.getOutputStream();
-		GZIPOutputStream gz = new GZIPOutputStream(output);
-        gz.write(response_text.getBytes("UTF-8"));
-        gz.close();
-        output.close();
 	}
 	
 	private List<stprestamo>  getInformacionPresupuestaria(int idPrestamo, int anioInicial, int anioFinal, String usuario){
@@ -741,7 +746,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 						}
 					}
 					catch(Exception e){
-						
+						CLogger.write("2", SInformacionPresupuestaria.class, e);
 					}
 					
 					Calendar cal = Calendar.getInstance();
@@ -963,7 +968,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 									}
 								}
 							}catch(Throwable e){
-								CLogger.write("2", SInformacionPresupuestaria.class, e);
+								CLogger.write("3", SInformacionPresupuestaria.class, e);
 							}
 						}						
 					}else if(acumulacionCosto ==3){
@@ -1142,7 +1147,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 					}
 				}
 				
-				Integer acumulacionCosto = 0;
+				/*Integer acumulacionCosto = 0;
 				if(actividad == null && fechasNoActividades != null){
 					
 					if(proyecto != null){
@@ -1159,7 +1164,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				}else if(actividad != null){
 					acumulacionCosto = actividad.getAcumulacionCosto() != null ? actividad.getAcumulacionCosto().getId() : 0;
 					
-				}			
+				}	*/		
 				
 				//int pos = anioFinal- objprestamopresupuesto.get(12).intValue();
 				
@@ -1386,7 +1391,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		return prestamo;
 	}
 	
-	private byte[] exportarExcel(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, String usuario) throws IOException{
+	private byte[] exportarExcel(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, String usuario){
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -1409,7 +1414,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			System.out.println(e);
+			e.printStackTrace();
+			CLogger.write("4", SInformacionPresupuestaria.class, e);
 		}
 		return outArray;
 	}
