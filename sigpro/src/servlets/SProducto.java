@@ -567,7 +567,7 @@ public class SProducto extends HttpServlet {
 			Producto producto = ProductoDAO.getProductoPorId(id,usuario);
 
 			response_text = String.join("","{ \"success\": ",(producto!=null && producto.getId()!=null ? "true" : "false"),", "
-				+ "\"id\": " + (producto!=null ? producto.getId():"0") +", "  + "\"fechaInicio\": \"" + (producto!=null ? Utils.formatDate(producto.getFechaFin()): null) +"\", "
+				+ "\"id\": " + (producto!=null ? producto.getId():"0") +", "  + "\"fechaInicio\": \"" + (producto!=null ? Utils.formatDate(producto.getFechaInicio()): null) +"\", "
 				+ "\"nombre\": \"" + (producto!=null ? producto.getNombre():"Indefinido") +"\" }");
 
 		}else if(accion.equals("getProductoPorId")){
