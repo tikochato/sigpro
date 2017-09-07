@@ -316,14 +316,16 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 							if(items[i].finish)
 								items[i].finish = moment(items[i].finish,'DD/MM/YYYY hh:mm:ss').toDate();
 							if(items[i].identation)
-								items[i].indentation = Number(items[i].indentation);
+								items[i].indentation = items[i].indentation+0;
 							if (items[i].Cost)
 								items[i].Cost = Number(items[i].Cost);
 							
 							items[i].expandend = items[i].expanded=='true' ? true : false;
 							items[i].isMilestone = items[i].isMilestone=='true' ? true : false;
+							
 						}
 						$scope.items = items;
+						
 						$scope.settings.timelineStart =items[0].start;
 						mi.ganttChartView = document.getElementById('ganttChartView');
 						
@@ -392,6 +394,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 						items[i].isMilestone = items[i].isMilestone=='true' ? true : false;
 					}
 					$scope.items = items;
+					
 					$scope.settings.timelineStart =items[0].start;
 					mi.ganttChartView = document.getElementById('ganttChartView');
 				}

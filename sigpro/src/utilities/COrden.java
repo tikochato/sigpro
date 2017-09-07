@@ -114,7 +114,7 @@ public class COrden {
 		treePath = treePath.substring(1,treePath.length());
 		double longitudTree = treePath.length();
 		String[] result = new String[(int)Math.ceil(longitudTree/6)];
-	    return result.length + 1;
+	    return result.length ;
 	}
 	
 	public void calcularOrdenObjetosSuperiores(Integer nivel, Integer objetoId, Integer objetoTipo, String usuario, 
