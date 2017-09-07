@@ -174,14 +174,14 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
 				Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 				Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-				CPdf archivo = new CPdf("Metas de PrÃ©stamo");
+				CPdf archivo = new CPdf("Información presupuestaria");
 				String headers[][];
 				String datosMetas[][];
 				headers = generarHeaders(anioInicial, anioFinal, agrupacion, tipoVisualizacion);
 				List<stprestamo> lstPrestamo = getInformacionPresupuestaria(idPrestamo, anioInicial, anioFinal, usuario);	
 				lstPrestamo = calcularCostos(lstPrestamo, 0);
 				datosMetas = generarDatosReporte(lstPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-				String path = archivo.ExportPdfMetasPrestamo(headers, datosMetas,tipoVisualizacion);
+				String path = archivo.ExportarPdfEjecucionPresupuestaria(headers, datosMetas,tipoVisualizacion);
 				File file=new File(path);
 				if(file.exists()){
 			        FileInputStream is = null;

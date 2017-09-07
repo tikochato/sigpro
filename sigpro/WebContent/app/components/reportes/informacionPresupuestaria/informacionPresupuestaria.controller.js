@@ -674,9 +674,9 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			 console.log("checkout 1");
 			$http.post('/SInformacionPresupuestaria', { 
 				accion: 'exportarPdf',
-				proyectoid: mi.prestamo.value,
-				fechaInicio: mi.fechaInicio,
-				fechaFin: mi.fechaFin,
+				idPrestamo: mi.prestamo.value,
+				anioInicial: mi.fechaInicio,
+				anioFinal: mi.fechaFin,
 				agrupacion: mi.agrupacionActual,
 				tipoVisualizacion: tipoVisualizacion,
 				t:moment().unix()

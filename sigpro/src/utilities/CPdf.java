@@ -38,7 +38,7 @@ public class CPdf {
 	 */
 	private PDDocument doc;
 	private PDPage page;
-	
+	private int tipo_reporte=0;
 	
 		public CPdf(String titulo){
 			this.titulo=titulo;
@@ -204,43 +204,80 @@ public class CPdf {
 		
 		
 		private String[][] configurarCabeceras(String []cabecera, String []subcabecera, int visualizacion){
-			String [][]ret=new String [2][subcabecera.length];
-			//primera línea.
-			ret[0][0]=" ";
-			ret[0][1]=" ";
-			int cont=2;
-			for(int i =2; i<cabecera.length-1;i++){
-				if(!cabecera[i].isEmpty()&&cabecera[i].compareTo("null")!=0){
-					ret[0][cont]=cabecera[i];
-					cont++;
-				}
-			}
-			ret[1][0]="Nombre";
-			ret[1][1]="Meta Unidad Medida";
-			int control =1;
-			//segunda línea
-			if(visualizacion==2){
-				for(int i =0; i<subcabecera.length-3;i++){
-					cont=i;
-					if(control==2){
-						control=1;
-						ret[1][i+2]="Real";
-					}else{
-						control++;
-						ret[1][i+2]="Planificado";
+			String [][]ret = new String[2][];
+			if(tipo_reporte==0){
+				ret=new String [2][subcabecera.length];
+				//primera línea.
+				ret[0][0]=" ";
+				ret[0][1]=" ";
+				int cont=2;
+				for(int i =2; i<cabecera.length-1;i++){
+					if(!cabecera[i].isEmpty()&&cabecera[i].compareTo("null")!=0){
+						ret[0][cont]=cabecera[i];
+						cont++;
 					}
 				}
-				ret[1][ret[1].length-1]="Meta Final";
-			}else{
-				String tipo= visualizacion==0? "planificado" : "Real";
-				for(int i =0; i<subcabecera.length-3;i++){
-					cont=i;
-					ret[1][i+2]=tipo;
-					
+				ret[1][0]="Nombre";
+				ret[1][1]="Meta Unidad Medida";
+				int control =1;
+				//segunda línea
+				if(visualizacion==2){
+					for(int i =0; i<subcabecera.length-3;i++){
+						cont=i;
+						if(control==2){
+							control=1;
+							ret[1][i+2]="Real";
+						}else{
+							control++;
+							ret[1][i+2]="Planificado";
+						}
+					}
+					ret[1][ret[1].length-1]="Meta Final";
+				}else{
+					String tipo= visualizacion==0? "planificado" : "Real";
+					for(int i =0; i<subcabecera.length-3;i++){
+						cont=i;
+						ret[1][i+2]=tipo;
+						
+					}
+					ret[1][ret[1].length-1]="Meta Final";
 				}
-				ret[1][ret[1].length-1]="Meta Final";
+				
+			}else if(tipo_reporte==1){
+				ret=new String [2][subcabecera.length];
+				//primera línea.
+				ret[0][0]=" ";
+				int cont=1;
+				for(int i =1; i<cabecera.length-1;i++){
+					if(!cabecera[i].isEmpty()&&cabecera[i].compareTo("null")!=0){
+						ret[0][cont]=cabecera[i];
+						cont++;
+					}
+				}
+				ret[1][0]="Nombre";
+				int control =1;
+				//segunda línea
+				if(visualizacion==2){
+					for(int i =0; i<subcabecera.length-1;i++){
+						cont=i;
+						if(control==2){
+							control=1;
+							ret[1][i+1]="Real";
+						}else{
+							control++;
+							ret[1][i+1]="Planificado";
+						}
+					}
+				}else{
+					String tipo= visualizacion==0? "planificado" : "Real";
+					for(int i =0; i<subcabecera.length-3;i++){
+						cont=i;
+						ret[1][i+2]=tipo;
+						
+					}
+				}				
 			}
-			
+
 			return ret;
 		}
 		
@@ -303,5 +340,82 @@ public class CPdf {
 			return ret;
 		}
 		
+		
+		
+		public String ExportarPdfEjecucionPresupuestaria(String [][]headers, String [][]datosMetas, int visualizacion){
+			String path = "";
+			tipo_reporte=1;
+			try{	
+			    String [] cabeceras = new String[headers[0].length];
+			    System.arraycopy( headers[0], 0, cabeceras, 0, headers[0].length );
+				String [][]cabeceras_fixed= configurarCabeceras(cabeceras,datosMetas[0],visualizacion);
+				List <String[][]>tablas =divTablas(cabeceras_fixed,datosMetas,visualizacion);
+				restante= visualizacion==2? (datosMetas[0].length % 12):(datosMetas[0].length % 13) ;
+				PDFont font = PDType1Font.HELVETICA_BOLD;
+				List<Float> altura= new ArrayList<Float>();
+				for(int x=0;x<tablas.size();x++){
+					page = new PDPage(new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth()));
+				    doc.addPage( page );
+					PDPageContentStream contentStream = new PDPageContentStream(doc, page);
+					
+					if(x==0){
+						contentStream.beginText();
+						contentStream.setFont(font, 18);
+						//definir x, y
+						contentStream.newLineAtOffset(50, 550);
+						contentStream.showText("Ministerio de Finanzas Públicas");
+						contentStream.endText();
+						contentStream.beginText();
+						contentStream.setFont(font, 12);
+						//definir x, y
+						contentStream.newLineAtOffset(50, 530);
+						contentStream.showText("Reporte: "+titulo);
+						contentStream.endText();
+					}
+					
+					
+					float margin = 50;
+					float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
+					float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
+
+					boolean drawContent = true;
+					//float yStart = yStartNewPage;
+					float bottomMargin = 70;
+					// y position is your coordinate of top left corner of the table
+					//float yPosition = 525;
+					
+					String[][] tabla_tmp = tablas.get(x);
+					BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
+					boolean ultimo=x==tablas.size()-1;
+					table_x.addHeaderRow(agregarCabecera(table_x,tabla_tmp[0],x,ultimo,visualizacion));
+					//table_x.getRows().get(0).set
+					Row<PDPage> row = table_x.createRow(12);
+					
+					table_x.addHeaderRow(
+							agregarCabecera_pt2(row, tabla_tmp[1],x==0)
+					);
+					//agregamos los datos
+					for(int i=2;i<tabla_tmp.length;i++){
+						row= agregarFila(table_x,tabla_tmp[i], x==0,x==tablas.size()-1);
+					}
+					if(x==0){
+						altura=obtenerAlturas(table_x);
+					}else{
+						for(int i=0; i<table_x.getRows().size(); i++){
+							table_x.getRows().get(i).setHeight(altura.get(i));
+						}
+					}
+					table_x.draw();
+					contentStream.close();
+				}
+			    path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
+				FileOutputStream out = new FileOutputStream(new File(path));
+				doc.save(out);
+				doc.close();
+			}catch(Exception o){
+				o.printStackTrace();
+			}
+			return path;
+		}
 		
 }
