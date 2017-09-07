@@ -279,11 +279,8 @@ public class ComponenteDAO {
 		boolean ret = false;
 		try{
 			session.saveOrUpdate(Componente);
-			ComponenteUsuario cu = new ComponenteUsuario(new ComponenteUsuarioId(Componente.getId(), Componente.getUsuarioCreo()), Componente);
-			
 			session.flush();
 			session.clear();
-			session.saveOrUpdate(cu);
 			ret = true;
 		}
 		catch(Throwable e){

@@ -117,28 +117,28 @@ public class COrden {
         	}
 	        orden++;
         }
-        switch((int)objPadre[2]){
-        	case 1: Proyecto proyecto = (Proyecto)getObjeto((int)objPadre[1], 1, estructuraPrestamo)[3];
+        switch((int)objPadre[5]){
+        	case 1: Proyecto proyecto = (Proyecto)getObjeto((int)objPadre[4], 1, estructuraPrestamo)[3];
         		proyecto.setFechaInicio(fecha_menor);
         		proyecto.setFechaFin(fecha_mayor);
         		ProyectoDAO.guardarProyectoOrden(proyecto, session);
         		break;
-        	case 2: Componente componente = (Componente)getObjeto((int)objPadre[1], 2, estructuraPrestamo)[3];
+        	case 2: Componente componente = (Componente)getObjeto((int)objPadre[4], 2, estructuraPrestamo)[3];
         		componente.setFechaInicio(fecha_menor);
         		componente.setFechaFin(fecha_mayor);
 	    		ComponenteDAO.guardarComponenteOrden(componente, session);
 	    		break;	
-        	case 3: Producto producto = (Producto)getObjeto((int)objPadre[1], 3, estructuraPrestamo)[3];
+        	case 3: Producto producto = (Producto)getObjeto((int)objPadre[4], 3, estructuraPrestamo)[3];
 	        	producto.setFechaInicio(fecha_menor);
 	        	producto.setFechaFin(fecha_mayor);
 	    		ProductoDAO.guardarProductoOrden(producto, session);
 	    		break;
-        	case 4: Subproducto subproducto = (Subproducto)getObjeto((int)objPadre[1], 4, estructuraPrestamo)[3];
+        	case 4: Subproducto subproducto = (Subproducto)getObjeto((int)objPadre[4], 4, estructuraPrestamo)[3];
 	        	subproducto.setFechaInicio(fecha_menor);
 	        	subproducto.setFechaFin(fecha_mayor);
 	    		SubproductoDAO.guardarSubproductoOrden(subproducto, session);
 	    		break;
-        	case 5: Actividad actividad = (Actividad)getObjeto((int)objPadre[1], 5, estructuraPrestamo)[3];
+        	case 5: Actividad actividad = (Actividad)getObjeto((int)objPadre[4], 5, estructuraPrestamo)[3];
 	        	actividad.setFechaInicio(fecha_menor);
 	        	actividad.setFechaFin(fecha_mayor);
 	    		ActividadDAO.guardarActividadOrden(actividad, session);
@@ -206,60 +206,24 @@ public class COrden {
 						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), 4, null, null, null, null, null, usuario);
 						for(Actividad actividad : actividades){
 							lstProyecto = obtenerActividades(actividad, lstProyecto, usuario, subproducto.getId(), 4);
-							/*objProyecto = new Object[7];
-							objProyecto[0] = 5;
-							objProyecto[1] = subproducto.getId();
-							objProyecto[2] = 4;
-							objProyecto[3] = actividad;
-							objProyecto[4] = actividad.getId();
-							objProyecto[5] = 5;
-							objProyecto[6] = actividad.getTreePath();
-							lstProyecto.add(objProyecto);*/
 						}
 					}
 					
 					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), 3, null, null, null, null, null, usuario);
 					for(Actividad actividad : actividades){
 						lstProyecto = obtenerActividades(actividad, lstProyecto, usuario, producto.getId(), 3);
-						/*objProyecto = new Object[7];
-						objProyecto[0] = 5;
-						objProyecto[1] = producto.getId();
-						objProyecto[2] = 3;
-						objProyecto[3] = actividad;
-						objProyecto[4] = actividad.getId();
-						objProyecto[5] = 5;
-						objProyecto[6] = actividad.getTreePath();
-						lstProyecto.add(objProyecto);*/
 					}
 				}
 				
 				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), 2, null, null, null, null, null, usuario);
 				for(Actividad actividad : actividades){
 					lstProyecto = obtenerActividades(actividad, lstProyecto, usuario, componente.getId(), 2);
-					/*objProyecto = new Object[7];
-					objProyecto[0] = 5;
-					objProyecto[1] = componente.getId();
-					objProyecto[2] = 2;
-					objProyecto[3] = actividad;
-					objProyecto[4] = actividad.getId();
-					objProyecto[5] = 5;
-					objProyecto[6] = actividad.getTreePath();
-					lstProyecto.add(objProyecto);*/
 				}
 			}
 			
 			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, proyecto.getId(), 1, null, null, null, null, null, usuario);
 			for(Actividad actividad : actividades){
 				lstProyecto = obtenerActividades(actividad, lstProyecto, usuario, proyecto.getId(), 1);
-				/*objProyecto = new Object[7];
-				objProyecto[0] = 5;
-				objProyecto[1] = proyecto.getId();
-				objProyecto[2] = 1;
-				objProyecto[3] = actividad;
-				objProyecto[4] = actividad.getId();
-				objProyecto[5] = 5;
-				objProyecto[6] = actividad.getTreePath();
-				lstProyecto.add(objProyecto);*/
 			}
 			
 		}catch(Exception ex){

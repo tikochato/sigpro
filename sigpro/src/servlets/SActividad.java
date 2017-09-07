@@ -638,9 +638,6 @@ public class SActividad extends HttpServlet {
 				Session session = COrden.getSessionCalculoOrden();
 				
 				
-				
-				
-				
 				COrden orden = new COrden();
 				orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase);
 			}

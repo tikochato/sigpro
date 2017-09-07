@@ -499,8 +499,7 @@ public class SSubproducto extends HttpServlet {
 				unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
 				
 				if(esnuevo){
-					Producto producto = new Producto();
-					producto.setId(productoId);
+					Producto producto = ProductoDAO.getProductoPorId(productoId, usuario);
 					subproducto = new Subproducto(producto, subproductoTipo, unidadEjecutora, nombre, usuario, new Date(), 1,
 							fechaInicio, fechaFin, duracion, duracionDimension);
 				}else{
@@ -517,6 +516,8 @@ public class SSubproducto extends HttpServlet {
 				}
 				
 				ret = SubproductoDAO.guardarSubproducto(subproducto);
+				
+				
 				
 				COrden orden = new COrden();
 				orden.calcularOrdenObjetosSuperiores(subproducto.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),
