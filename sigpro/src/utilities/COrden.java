@@ -30,9 +30,10 @@ public class COrden {
 	
 	List<Object[]> estructuraPrestamo = null;
 	
-	public void calcularOrdenActividades(Integer nivel, Integer objetoId, Integer objetoTipo, String usuario, Session session){
+	public void calcularOrdenActividades(Integer nivel, Integer objetoId, Integer objetoTipo, String usuario,
+			Session session, Integer proyectoId){
 		if(estructuraPrestamo == null){
-			estructuraPrestamo = getEstructuraPrestamo(30, usuario);
+			estructuraPrestamo = getEstructuraPrestamo(proyectoId, usuario);
 		}
 		
 		Date fechaMax = new Date();
@@ -86,7 +87,7 @@ public class COrden {
 	        //Obtener fecha inicial y final del padre de las actividades	        
 	        if(objetoTipo == 5){//recursivo si son subactividades
 	        	Object[] objActividad = getObjeto(objetoId, objetoTipo, estructuraPrestamo);
-	        	calcularOrdenActividades(5, (Integer)objActividad[1], (Integer)objActividad[2], usuario, session);
+	        	calcularOrdenActividades(5, (Integer)objActividad[1], (Integer)objActividad[2], usuario, session,proyectoId);
 	        	
 	        }
 	 	}else{
@@ -102,7 +103,7 @@ public class COrden {
 		        calcularFechasPadre(objetoId, objetoTipo, usuario, 5, session, estructuraPrestamo);
 		        commitCalculoOrden(session);
 		        
-		        calcularOrdenObjetosSuperiores(objetoTipo,objetoId, objetoTipo, usuario, session);
+		        calcularOrdenObjetosSuperiores(objetoTipo,objetoId, objetoTipo, usuario, session,proyectoId);
 		        commitCalculoOrden(session);
 			}
 
@@ -116,9 +117,10 @@ public class COrden {
 	    return result.length + 1;
 	}
 	
-	public void calcularOrdenObjetosSuperiores(Integer nivel, Integer objetoId, Integer objetoTipo, String usuario, Session session){
+	public void calcularOrdenObjetosSuperiores(Integer nivel, Integer objetoId, Integer objetoTipo, String usuario, 
+			Session session, Integer proyectoId){
 		if(estructuraPrestamo == null){
-			estructuraPrestamo = getEstructuraPrestamo(30, usuario);
+			estructuraPrestamo = getEstructuraPrestamo(proyectoId, usuario);
 		}
 				
 		Date fechaMax = new Date();
@@ -173,7 +175,7 @@ public class COrden {
 					ComponenteDAO.guardarComponenteOrden(componente, session);
 					
 					//commitCalculoOrden(session);
-			        calcularFechasPadre(objetoId, 1, usuario, 2, session, estructuraPrestamo);
+			        calcularFechasPadre((Integer)objPadre[1], 1, usuario, 2, session, estructuraPrestamo);
 			        //commitCalculoOrden(session);
 				}
 			}
@@ -205,7 +207,7 @@ public class COrden {
 		        //commitCalculoOrden(session);
 		        calcularFechasPadre((Integer)objPadre[1], 2, usuario, 3, session, estructuraPrestamo);
 		        //commitCalculoOrden(session);
-		        calcularOrdenObjetosSuperiores(2,(Integer)objPadre[1], (Integer)objPadre[2], usuario, session);
+		        calcularOrdenObjetosSuperiores(2,(Integer)objPadre[1], (Integer)objPadre[2], usuario, session,proyectoId);
 		        //commitCalculoOrden(session);
 			}else{
 				if(hijos.size() == 1){
@@ -217,7 +219,7 @@ public class COrden {
 			        //commitCalculoOrden(session);
 			        calcularFechasPadre((Integer)objPadre[1], 2, usuario, 3, session, estructuraPrestamo);
 			        //commitCalculoOrden(session);
-			        calcularOrdenObjetosSuperiores(2,(Integer)objPadre[1], (Integer)objPadre[2], usuario, session);
+			        calcularOrdenObjetosSuperiores(2,(Integer)objPadre[1], (Integer)objPadre[2], usuario, session,proyectoId);
 			        //commitCalculoOrden(session);
 				}
 			}
@@ -250,7 +252,7 @@ public class COrden {
 		        //commitCalculoOrden(session);
 		        calcularFechasPadre((Integer)objPadre[1], 3, usuario, 4, session, estructuraPrestamo);
 		        //commitCalculoOrden(session);
-		        calcularOrdenObjetosSuperiores(3,(Integer)objPadre[1], (Integer)objPadre[2], usuario, session);
+		        calcularOrdenObjetosSuperiores(3,(Integer)objPadre[1], (Integer)objPadre[2], usuario, session,proyectoId);
 		        //commitCalculoOrden(session);
 			}else{
 				if(hijos.size() == 1){
@@ -262,7 +264,7 @@ public class COrden {
 					
 					calcularFechasPadre((Integer)objPadre[1], 3, usuario, 4, session, estructuraPrestamo);
 			        //commitCalculoOrden(session);
-			        calcularOrdenObjetosSuperiores(3,(Integer)objPadre[1], (Integer)objPadre[2], usuario, session);
+			        calcularOrdenObjetosSuperiores(3,(Integer)objPadre[1], (Integer)objPadre[2], usuario, session,proyectoId);
 			        //commitCalculoOrden(session);
 				}
 			}
@@ -292,7 +294,7 @@ public class COrden {
 		} else if(objetoNivelActual == 4){//Padre del 4 es producto
 			fechaInicial = getObjetoFechaInicial(4, objetoIdPadre, objetoTipoPadre, estructuraPrestamo);
 			fechaFinal = getObjetoFechaFin(4, objetoIdPadre, objetoTipoPadre, estructuraPrestamo);
-		} else if(objetoNivelActual == 5){//padre del 5 es proyecto, componente, producto, subproducto ó actividad
+		} else if(objetoNivelActual == 5){//padre del 5 es proyecto, componente, producto, subproducto ï¿½ actividad
 			fechaInicial = getObjetoFechaInicial(5, objetoIdPadre, objetoTipoPadre, estructuraPrestamo);
 			fechaFinal = getObjetoFechaFin(5, objetoIdPadre, objetoTipoPadre, estructuraPrestamo);
 		}

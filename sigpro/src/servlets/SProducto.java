@@ -276,7 +276,8 @@ public class SProducto extends HttpServlet {
 				ret = ProductoDAO.guardarProducto(producto);
 				
 				COrden orden = new COrden();
-				orden.calcularOrdenObjetosSuperiores(3, producto.getId(), 3, usuario, COrden.getSessionCalculoOrden());				
+				orden.calcularOrdenObjetosSuperiores(3, producto.getId(), 3, usuario, COrden.getSessionCalculoOrden(),
+						producto.getComponente().getProyecto().getId());				
 				
 				if (ret){
 					ProductoUsuarioId productoUsuarioId = new ProductoUsuarioId(producto.getId(), usuario);
@@ -331,12 +332,12 @@ public class SProducto extends HttpServlet {
 			int codigo = Utils.String2Int(parametro.get("codigo"), -1);
 			
 			Producto pojo = ProductoDAO.getProductoPorId(codigo,usuario);
-			
+			Integer proyectoId = pojo.getComponente().getProyecto().getId();
 			boolean eliminado = ProductoDAO.eliminar(codigo, usuario);
 			
 			if (eliminado) {
 				COrden orden = new COrden();
-				orden.calcularOrdenObjetosSuperiores(3, pojo.getId(), 3, usuario, COrden.getSessionCalculoOrden());		
+				orden.calcularOrdenObjetosSuperiores(3, pojo.getId(), 3, usuario, COrden.getSessionCalculoOrden(),proyectoId);		
 				
 				int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
 				int pagina = Utils.String2Int(parametro.get("pagina"), 1);

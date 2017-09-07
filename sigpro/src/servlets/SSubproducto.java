@@ -240,7 +240,8 @@ public class SSubproducto extends HttpServlet {
 			ret = SubproductoDAO.guardarSubproducto(subproducto);
 			
 			COrden orden = new COrden();
-			orden.calcularOrdenObjetosSuperiores(4, subproducto.getId(), 4, usuario, COrden.getSessionCalculoOrden());
+			orden.calcularOrdenObjetosSuperiores(4, subproducto.getId(), 4, usuario, COrden.getSessionCalculoOrden(),
+					subproducto.getProducto().getComponente().getProyecto().getId());
 			
 			if (ret){
 				SubproductoUsuarioId subproductoUsuarioId = new SubproductoUsuarioId(subproducto.getId(), usuario);
@@ -299,11 +300,11 @@ public class SSubproducto extends HttpServlet {
 		int codigo = Utils.String2Int(parametro.get("codigo"), -1);
 		
 		Subproducto pojo = SubproductoDAO.getSubproductoPorId(codigo,usuario);
-		
+		Integer proyectoId = pojo.getProducto().getComponente().getProyecto().getId();
 		boolean eliminado = SubproductoDAO.eliminar(codigo, usuario);
 		if (eliminado) {
 			COrden orden = new COrden();
-			orden.calcularOrdenObjetosSuperiores(4, pojo.getId(), 4, usuario, COrden.getSessionCalculoOrden());
+			orden.calcularOrdenObjetosSuperiores(4, pojo.getId(), 4, usuario, COrden.getSessionCalculoOrden(),proyectoId);
 			
 			listar(parametro, response);
 		}

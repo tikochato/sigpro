@@ -137,8 +137,11 @@ public class SGantt extends HttpServlet {
 
 		if(accion.equals("getProyecto")){
 			predecesores = new HashMap<>();
+			if (proyectoId == 30)
+				items = getProyecto(proyectoId, usuario, predecesores);
+			else
 			items = cargarProyecto(proyectoId,usuario,predecesores);
-			//items = obtenerProyecto(proyectoId, usuario, predecesores);
+			
 
 			String estructruaPredecesores = getEstructuraPredecesores(predecesores);
 			items = String.join("","{\"items\" : [", items,"]"
