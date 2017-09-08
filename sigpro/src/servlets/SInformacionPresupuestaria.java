@@ -1444,7 +1444,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		CLogger.write_simple("5", SInformacionPresupuestaria.class, "1445");
 		outArray = Base64.encode(outByteStream.toByteArray());
 		CLogger.write_simple("5", SInformacionPresupuestaria.class, "1447");
-		}catch(Exception e){
+		}catch(IOException e){
+			
 			CLogger.write("5", SInformacionPresupuestaria.class, e);
 		}
 		return outArray;
