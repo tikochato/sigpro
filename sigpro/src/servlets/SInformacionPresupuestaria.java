@@ -1432,14 +1432,22 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			lstPrestamo = calcularCostos(lstPrestamo, 0);
 			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1434");
 			
-			datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
+			//datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
+			datosInforme = new String[][]{
+					{"",""}
+			};
+			
 			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1437");
-			CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
+			
+			//CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
 			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1439");
-			excel = new CExcel("Ejecución presupuestaria", false, grafica);
+			
+			excel = new CExcel("Ejecución presupuestaria", false, null);
+			
 			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1441");
 			wb=excel.generateExcelOfData(datosInforme, "Ejecución presupuestaria", headers, null, true, usuario);
 			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1443");
+			
 		wb.write(outByteStream);
 		CLogger.write_simple("5", SInformacionPresupuestaria.class, "1445");
 		outArray = Base64.encode(outByteStream.toByteArray());
