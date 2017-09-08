@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -1434,6 +1435,11 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			excel = new CExcel("Ejecucion presupuestaria", false, grafica);
 			wb=excel.generateExcelOfData(datosInforme, "Ejecución presupuestaria", headers, null, true, usuario);
 			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1443");
+			
+			// Write the output to a file
+		    FileOutputStream fileOut = new FileOutputStream("/logs/reporte.xls");
+		    wb.write(fileOut);
+		    CLogger.write_simple("5", SInformacionPresupuestaria.class, "archivo excel escrito");
 			
 		wb.write(outByteStream);
 		CLogger.write_simple("5", SInformacionPresupuestaria.class, "1445");
