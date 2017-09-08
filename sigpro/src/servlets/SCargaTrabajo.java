@@ -478,9 +478,13 @@ public class SCargaTrabajo extends HttpServlet {
 			CGraficaExcel grafica = generarGrafica(datos);
 			excel = new CExcel("Administración Transaccional", false, grafica);
 			wb=excel.generateExcelOfData(datos, "Carga de Trabajo", headers, null, true, usuario);
-		
+			
+			CLogger.write_simple("4", SCargaTrabajo.class, "wb 482");
+			
 		wb.write(outByteStream);
+		CLogger.write_simple("4", SCargaTrabajo.class, "wb write 485");
 		outArray = Base64.encode(outByteStream.toByteArray());
+		CLogger.write_simple("4", SCargaTrabajo.class, "outArray 487");
 		}catch(Exception e){
 		    CLogger.write_simple("1", SCargaTrabajo.class, e.getMessage());
 		}
