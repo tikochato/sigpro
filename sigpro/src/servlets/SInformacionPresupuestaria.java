@@ -1429,14 +1429,9 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			List<stprestamo> lstPrestamo = getInformacionPresupuestaria(prestamoId, anioInicio, anioFin, usuario);	
 			lstPrestamo = calcularCostos(lstPrestamo, 0);
 			
-			datosInforme = new String[][]{
-					{""}
-			};
-			
-//			datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-//			CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
-//			excel = new CExcel("Ejecucion presupuestaria", false, grafica);
-			excel = new CExcel("Ejecucion presupuestaria", false, null);
+			datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
+			CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
+			excel = new CExcel("Ejecucion presupuestaria", false, grafica);
 			wb=excel.generateExcelOfData(datosInforme, "Ejecución presupuestaria", headers, null, true, usuario);
 			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1443");
 			
