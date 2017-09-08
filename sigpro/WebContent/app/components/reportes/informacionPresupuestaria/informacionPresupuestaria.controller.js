@@ -671,7 +671,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			 }else if(mi.grupoMostrado.real){
 				 tipoVisualizacion = 1;
 			 }
-			 console.log("checkout 1");
 			$http.post('/SInformacionPresupuestaria', { 
 				accion: 'exportarPdf',
 				idPrestamo: mi.prestamo.value,
