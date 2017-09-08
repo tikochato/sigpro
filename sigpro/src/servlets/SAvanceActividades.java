@@ -108,44 +108,29 @@ public class SAvanceActividades extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
 		try{		
-			Exception exception = new Exception("SAvanceActividades.java - ignore");
-			
-		    CLogger.writeFullConsole("Inicia doPost - ", exception);
-			
 			request.setCharacterEncoding("UTF-8");
 			HttpSession sesionweb = request.getSession();
 			String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 			
-			CLogger.writeFullConsole("Gson - ", exception);
-			
 			Gson gson = new Gson();
 			Type type = new TypeToken<Map<String, String>>(){}.getType();
-			
-			CLogger.writeFullConsole("StringBuildes - ", exception);
-			
 			StringBuilder sb = new StringBuilder();
 			BufferedReader br = request.getReader();
 			String str;
-			
-			CLogger.writeFullConsole("while str - ", exception);
-			
+						
 			while ((str = br.readLine()) != null) {
 				sb.append(str);
 			}
 			Map<String, String> map = gson.fromJson(sb.toString(), type);
 			String accion = map.get("accion")!=null ? map.get("accion") : "";
 			
-			CLogger.writeFullConsole("Map accion - ", exception);
-			
 			String response_text = "";
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 			String fechaCorte = map.get("fechaCorte");
-			
-			CLogger.writeFullConsole("if accion - ", exception);
-			
+						
 			if (accion.equals("getAvance")){
 				
-				try{
+				try{					
 					stElementoResult avanceActividades = getAvanceActividades(idPrestamo, fechaCorte, usuario);
 						
 					if(avanceActividades != null){
@@ -174,7 +159,7 @@ public class SAvanceActividades extends HttpServlet {
 						response_text = String.join("", ",\"totalProductos\":" + avanceProductos.total,response_text);
 					}
 				}catch (Throwable e) {
-					e.printStackTrace();
+				    CLogger.write_simple("1", SAvanceActividades.class, e.getMessage());					
 			    }
 				
 				response_text = String.join("", "{\"success\":true ", response_text, "}");
@@ -234,7 +219,7 @@ public class SAvanceActividades extends HttpServlet {
 							}
 						}
 					}catch (Throwable e) {
-						e.printStackTrace();
+					    CLogger.write_simple("2", SAvanceActividades.class, e.getMessage());
 				    }
 				}
 				
@@ -262,28 +247,18 @@ public class SAvanceActividades extends HttpServlet {
 				response_text = String.join("", "{\"success\":true ", response_text, "}");
 			}else if (accion.equals("exportarExcel")){
 				try{
-					CLogger.writeFullConsole("accion: exportarExcel - ", exception);
-					
 			        byte [] outArray = exportarExcel(idPrestamo, fechaCorte, usuario);
-				
-			        CLogger.writeFullConsole("accion: exportarExcel() return - ", exception);
-			        
+							        
 					response.setContentType("application/ms-excel");
-					response.setContentLength(outArray.length);
-					
-					CLogger.writeFullConsole("outArray.length - ", exception);
-					
+					response.setContentLength(outArray.length);					
 					response.setHeader("Expires:", "0"); 
 					response.setHeader("Content-Disposition", "attachment; ReporteAvances_.xls");
 					OutputStream outStream = response.getOutputStream();
 					
-					CLogger.writeFullConsole("write outArray - ", exception);
-					
 					outStream.write(outArray);
 					outStream.flush();
 				}catch(Exception e){
-					e.printStackTrace();
-					CLogger.write("1", SAvanceActividades.class, e);
+				    CLogger.write_simple("3", SAvanceActividades.class, e.getMessage());
 				}
 			}else{
 				response_text = "{ \"success\": false }";
@@ -298,7 +273,7 @@ public class SAvanceActividades extends HttpServlet {
 	        gz.close();
 	        output.close();
 		}catch(Exception e){
-			e.printStackTrace();
+		    CLogger.write_simple("4", SAvanceActividades.class, e.getMessage());
 		}
 		
 	}
@@ -400,7 +375,7 @@ public class SAvanceActividades extends HttpServlet {
 				resultado.total = totalActividades;
 			}
 		}catch(Exception e){
-			CLogger.write("2", SAvanceActividades.class, e);
+		    CLogger.write_simple("5", SAvanceActividades.class, e.getMessage());
 		}
 		return resultado;
 	}
@@ -498,7 +473,7 @@ public class SAvanceActividades extends HttpServlet {
 			resultado.total = totalHitos;
 		}
 		}catch(Exception e){
-			CLogger.write("3", SAvanceActividades.class, e);
+		    CLogger.write_simple("6", SAvanceActividades.class, e.getMessage());
 		}
 		return resultado;
 	}
@@ -605,7 +580,7 @@ public class SAvanceActividades extends HttpServlet {
 				resultado.total = totalProductos;
 			}
 		}catch(Exception e){
-			CLogger.write("4", SAvanceActividades.class, e);
+		    CLogger.write_simple("7", SAvanceActividades.class, e.getMessage());
 		}
 		return resultado;
 	}
@@ -629,7 +604,7 @@ public class SAvanceActividades extends HttpServlet {
 			}
 			return result;
 		}catch(Throwable e){
-			CLogger.write("1", SReporte.class, e);
+		    CLogger.write_simple("8", SAvanceActividades.class, e.getMessage());
 			return null;
 		}
 	}
@@ -676,7 +651,7 @@ public class SAvanceActividades extends HttpServlet {
 			return result;
 		}
 		catch(Throwable e){
-			CLogger.write("1", SReporte.class, e);
+		    CLogger.write_simple("9", SAvanceActividades.class, e.getMessage());
 			return null;
 		}
 	}
@@ -714,16 +689,19 @@ public class SAvanceActividades extends HttpServlet {
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
+
+		    CLogger.write_simple("2", SCargaTrabajo.class, "Exportando Headers 693");
 			headers = generarHeaders();
+			CLogger.write_simple("2", SCargaTrabajo.class, "Exportando Datos 695");
 			datos = generarDatos(idPrestamo, fechaCorte, usuario);
+			CLogger.write_simple("2", SCargaTrabajo.class, "Creando Reporte 697");
 			excel = new CExcel("Reporte de Avance", false, null);
 			wb=excel.generateExcelOfData(datos, "Reporte de Avance", headers, null, true, usuario);
-		
+			CLogger.write_simple("2", SCargaTrabajo.class, "Reporte Creado 700");
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			e.printStackTrace();
-			CLogger.write("4", SAvanceActividades.class, e);
+		    CLogger.write_simple("10", SAvanceActividades.class, e.getMessage());
 		}
 		return outArray;
 	}
@@ -764,6 +742,9 @@ public class SAvanceActividades extends HttpServlet {
 			totalProductos = avanceProductos.listaResult.size();
 		}
 		
+
+		CLogger.write_simple("2", SCargaTrabajo.class, "totalActividades "+totalActividades+" totalHitos "+totalHitos+" totalProductos "+totalProductos);
+		
 		datos = new String[totalActividades+totalHitos+totalProductos+6+2][6];
 
 		Integer fila = 1;
@@ -779,6 +760,7 @@ public class SAvanceActividades extends HttpServlet {
 			datos[fila][5] = String.valueOf(avanceActividades.listaResult.get(i).retrasadas)+"%";
 			fila++;
 		}
+		CLogger.write_simple("2", SCargaTrabajo.class, "forActividades ");
 		datos[fila][0]="Total de Actividades: "+totalActividades;
 		datos[fila][1]="";
 		datos[fila][2] = avanceActividades!=null ? String.valueOf(avanceActividades.listaResultCantidad.get(0).completadas) : "0";
@@ -800,6 +782,7 @@ public class SAvanceActividades extends HttpServlet {
 			datos[fila][5] = String.valueOf(avanceHitos.listaResult.get(i).retrasadas)+"%";
 			fila++;
 		}
+		CLogger.write_simple("2", SCargaTrabajo.class, "forHitos ");
 		datos[fila][0]="Total de Hitos: "+totalHitos;
 		datos[fila][1]="";
 		datos[fila][2] = avanceHitos!=null ? String.valueOf(avanceHitos.listaResultCantidad.get(0).completadas) : "0";
@@ -821,6 +804,7 @@ public class SAvanceActividades extends HttpServlet {
 			datos[fila][5] = String.valueOf(avanceProductos.listaResult.get(i).retrasadas)+"%";
 			fila++;
 		}
+		CLogger.write_simple("2", SCargaTrabajo.class, "forProductos ");
 		datos[fila][0]="Total de Productos: "+totalProductos;
 		datos[fila][1]="";
 		datos[fila][2] = (avanceProductos!=null && avanceProductos.listaResultCantidad!=null) ? String.valueOf(avanceProductos.listaResultCantidad.get(0).completadas) : "0";

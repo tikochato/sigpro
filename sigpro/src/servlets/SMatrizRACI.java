@@ -211,7 +211,7 @@ public class SMatrizRACI extends HttpServlet {
 				outStream.write(outArray);
 				outStream.flush();
 			}catch(Exception e){
-				CLogger.write("1", SMatrizRACI.class, e);
+				CLogger.write_simple("1", SMatrizRACI.class, e.getMessage());
 			}
 		}else{
 			response_text = "{ \"success\": false }";
@@ -404,7 +404,7 @@ public class SMatrizRACI extends HttpServlet {
 				outArray = Base64.encode(outByteStream.toByteArray());
 			}
 		}catch(Exception e){
-			CLogger.write("4", SMatrizRACI.class, e);
+			CLogger.write_simple("2", SMatrizRACI.class, e.getMessage());
 		}
 		return outArray;
 	}
