@@ -30,12 +30,7 @@ public class CPdf {
 	 * variables de texto
 	 * */
 	private String titulo ="";
-	//private String anio="";
-	//private int numero_columnas=13;
 	float restante;
-	/**
-	 * Variables del documento
-	 */
 	private PDDocument doc;
 	private PDPage page;
 	private int tipo_reporte=0;

@@ -174,7 +174,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
 				Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 				Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-				CPdf archivo = new CPdf("Información presupuestaria");
+				CPdf archivo = new CPdf("Ejecución presupuestaria");
 				String headers[][];
 				String datosMetas[][];
 				headers = generarHeaders(anioInicial, anioFinal, agrupacion, tipoVisualizacion);
@@ -216,7 +216,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 					response.setContentType("application/pdf");
 					response.setContentLength(outArray.length);
 					response.setHeader("Expires:", "0"); 
-					response.setHeader("Content-Disposition", "in-line; 'PrestamoMetas.pdf'");
+					response.setHeader("Content-Disposition", "in-line; 'EjecucionPresupuestaria.pdf'");
 					OutputStream outStream = response.getOutputStream();
 					outStream.write(outArray);
 					outStream.flush();

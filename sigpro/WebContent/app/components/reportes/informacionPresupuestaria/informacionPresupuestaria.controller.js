@@ -685,7 +685,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 						    anchor.attr({
 						         href: 'data:application/pdf;base64,' + response.data,
 						         target: '_blank',
-						         download: 'InformaciónPresupuestaria.pdf'
+						         download: 'EjecucionPresupuestaria.pdf'
 						     })[0].click();
 						  }.bind(this), function errorCallback(response){
 						 		
