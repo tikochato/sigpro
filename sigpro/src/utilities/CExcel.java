@@ -74,6 +74,7 @@ public class CExcel {
 	CGraficaExcel stgrafica;
 		
 	public CExcel(String sheet_name, boolean hasGroup, CGraficaExcel grafica) {
+		 
 		HasGroup = hasGroup;
 		workbook = new HSSFWorkbook();
 		
@@ -97,7 +98,7 @@ public class CExcel {
 				workbook = new HSSFWorkbook(fileInputStream);
 				sheet = workbook.getSheetAt(0);
 			} catch (IOException e) {
-				CLogger.write_simple("6", CExcel.class, e.getMessage());
+				CLogger.write("6", CExcel.class, e);
 			}
 		}else{
 			sheet = workbook.createSheet();
@@ -381,7 +382,7 @@ public class CExcel {
 						lineas.add((line + 1) + "");
 					}
 				} catch (Exception e) {
-					CLogger.write_simple("7", CExcel.class, e.getMessage());
+					CLogger.write("7", CExcel.class, e);
 				}
 				line++;
 			}			
@@ -482,7 +483,7 @@ public class CExcel {
 			Header(report_name, headers[0].length);
 			Footer(line++, fechaActual, usuario);
 		} catch (Exception e) {
-		    CLogger.write_simple("1", CExcel.class, e.getMessage());
+		    CLogger.write("1", CExcel.class, e);
 		}
 		
 		return workbook;
@@ -677,9 +678,9 @@ public class CExcel {
 			out.close();
 
 		} catch (FileNotFoundException e) {
-			CLogger.write_simple("2", CExcel.class, e.getMessage());
+			CLogger.write("2", CExcel.class, e);
 		} catch (IOException e) {
-			CLogger.write_simple("3", CExcel.class, e.getMessage());
+			CLogger.write("3", CExcel.class, e);
 		}
 		return path;
 	}
@@ -726,9 +727,9 @@ public class CExcel {
 			out.close();
 
 		} catch (FileNotFoundException e) {
-			CLogger.write_simple("4", CExcel.class, e.getMessage());
+			CLogger.write("4", CExcel.class, e);
 		} catch (IOException e) {
-			CLogger.write_simple("5", CExcel.class, e.getMessage());
+			CLogger.write("5", CExcel.class, e);
 		}
 		CLogger.write_simple("4", CExcel.class, "path: "+path+" 733");
 		return path;
