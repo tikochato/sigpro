@@ -248,15 +248,17 @@ public class SAvanceActividades extends HttpServlet {
 			}else if (accion.equals("exportarExcel")){
 				try{
 			        byte [] outArray = exportarExcel(idPrestamo, fechaCorte, usuario);
-							        
+			        CLogger.write_simple("3", SAvanceActividades.class, "251");
 					response.setContentType("application/ms-excel");
 					response.setContentLength(outArray.length);					
 					response.setHeader("Expires:", "0"); 
 					response.setHeader("Content-Disposition", "attachment; ReporteAvances_.xls");
 					OutputStream outStream = response.getOutputStream();
-					
+					CLogger.write_simple("3", SAvanceActividades.class, "257");
 					outStream.write(outArray);
+					CLogger.write_simple("3", SAvanceActividades.class, "259");
 					outStream.flush();
+					CLogger.write_simple("3", SAvanceActividades.class, "261");
 				}catch(Exception e){
 				    CLogger.write_simple("3", SAvanceActividades.class, e.getMessage());
 				}
@@ -690,17 +692,17 @@ public class SAvanceActividades extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 
-		    CLogger.write_simple("2", SCargaTrabajo.class, "Exportando Headers 693");
+		    CLogger.write_simple("2", SAvanceActividades.class, "Exportando Headers 693");
 			headers = generarHeaders();
-			CLogger.write_simple("2", SCargaTrabajo.class, "Exportando Datos 695");
+			CLogger.write_simple("2", SAvanceActividades.class, "Exportando Datos 695");
 			datos = generarDatos(idPrestamo, fechaCorte, usuario);
-			CLogger.write_simple("2", SCargaTrabajo.class, "Creando Reporte 697");
+			CLogger.write_simple("2", SAvanceActividades.class, "Creando Reporte 697");
 			excel = new CExcel("Reporte de Avance", false, null);
 			wb=excel.generateExcelOfData(datos, "Reporte de Avance", headers, null, true, usuario);
-			CLogger.write_simple("2", SCargaTrabajo.class, "Reporte Creado 700");
+			CLogger.write_simple("2", SAvanceActividades.class, "Reporte Creado 700");
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
-		CLogger.write_simple("2", SCargaTrabajo.class, "Devolviendo Reporte de exportarExcel 703");
+		CLogger.write_simple("2", SAvanceActividades.class, "Devolviendo Reporte de exportarExcel 703");
 		}catch(Exception e){
 		    CLogger.write_simple("10", SAvanceActividades.class, e.getMessage());
 		}
@@ -743,9 +745,6 @@ public class SAvanceActividades extends HttpServlet {
 			totalProductos = avanceProductos.listaResult.size();
 		}
 		
-
-		CLogger.write_simple("2", SCargaTrabajo.class, "totalActividades "+totalActividades+" totalHitos "+totalHitos+" totalProductos "+totalProductos);
-		
 		datos = new String[totalActividades+totalHitos+totalProductos+6+2][6];
 
 		Integer fila = 1;
@@ -761,7 +760,6 @@ public class SAvanceActividades extends HttpServlet {
 			datos[fila][5] = String.valueOf(avanceActividades.listaResult.get(i).retrasadas)+"%";
 			fila++;
 		}
-		CLogger.write_simple("2", SCargaTrabajo.class, "forActividades ");
 		datos[fila][0]="Total de Actividades: "+totalActividades;
 		datos[fila][1]="";
 		datos[fila][2] = avanceActividades!=null ? String.valueOf(avanceActividades.listaResultCantidad.get(0).completadas) : "0";
@@ -783,7 +781,6 @@ public class SAvanceActividades extends HttpServlet {
 			datos[fila][5] = String.valueOf(avanceHitos.listaResult.get(i).retrasadas)+"%";
 			fila++;
 		}
-		CLogger.write_simple("2", SCargaTrabajo.class, "forHitos ");
 		datos[fila][0]="Total de Hitos: "+totalHitos;
 		datos[fila][1]="";
 		datos[fila][2] = avanceHitos!=null ? String.valueOf(avanceHitos.listaResultCantidad.get(0).completadas) : "0";
@@ -805,7 +802,6 @@ public class SAvanceActividades extends HttpServlet {
 			datos[fila][5] = String.valueOf(avanceProductos.listaResult.get(i).retrasadas)+"%";
 			fila++;
 		}
-		CLogger.write_simple("2", SCargaTrabajo.class, "forProductos ");
 		datos[fila][0]="Total de Productos: "+totalProductos;
 		datos[fila][1]="";
 		datos[fila][2] = (avanceProductos!=null && avanceProductos.listaResultCantidad!=null) ? String.valueOf(avanceProductos.listaResultCantidad.get(0).completadas) : "0";
