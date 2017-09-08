@@ -700,6 +700,7 @@ public class SAvanceActividades extends HttpServlet {
 			CLogger.write_simple("2", SCargaTrabajo.class, "Reporte Creado 700");
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
+		CLogger.write_simple("2", SCargaTrabajo.class, "Devolviendo Reporte de exportarExcel 703");
 		}catch(Exception e){
 		    CLogger.write_simple("10", SAvanceActividades.class, e.getMessage());
 		}
