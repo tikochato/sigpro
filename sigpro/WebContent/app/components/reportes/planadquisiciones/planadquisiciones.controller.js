@@ -63,6 +63,20 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	
 	mi.ddlOpcionesTiposAdquisicion = [{id: 0, value: "Seleccionar"}];
 	
+	mi.obtenerTipoAdquisicion = function(){
+		$http.post('/STipoAdquisicion', {accion: 'getTipoAdquisicionPaginaPorCooperante', idCooperante: mi.cooperanteId}).success(
+			function(response){
+				mi.ddlOpcionesTiposAdquisicion = [];
+				mi.ddlOpcionesTiposAdquisicion = [{id: 0, value: "Seleccionar"}];
+				if(response.success){
+					for(x in response.cooperanteTipoAdquisiciones){
+						mi.ddlOpcionesTiposAdquisicion.push({id: response.cooperanteTipoAdquisiciones[x].id, value: response.cooperanteTipoAdquisiciones[x].nombre});
+					}
+				}
+			}
+		);
+	}
+	
 	$http.post('/SCategoriaAdquisicion', {accion: 'getCategoriaAdquisicion'}).success(
 		function(response){
 			mi.ddlcategoriaAdquisiciones = [];
@@ -604,7 +618,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			estructuraGuardar += row.nog + ",";
 			estructuraGuardar += row.numeroContrato + ",";
 			estructuraGuardar += row.montoContrato;
-			estructuraGuardar += "°";
+			estructuraGuardar += "|";
 		}
 		
 		$http.post('/SPlanAdquisiciones', {
@@ -667,6 +681,8 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 					mi.crearArbol(response.proyecto);
 					mi.fechaSuscripcion = moment(response.fechaSuscripcion,'DD/MM/YYYY').toDate();
 					mi.fechaCierre = moment(response.fechaCierre,'DD/MM/YYYY').toDate();
+					mi.cooperanteId = response.cooperanteId;
+					mi.obtenerTipoAdquisicion();
 					mi.mostrarCargando = false;
 					mi.mostrarBotones = true;
 					mi.mostrarTablas = true;
@@ -697,6 +713,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	        			mi.datoSeleccionado.cantidad = 0;
 	        			mi.datoSeleccionado.costo = 0;
 	        			mi.datoSeleccionado.total = 0;
+	        			mi.datoSeleccionado.nog = 0;
 	        			mi.datoSeleccionado.planificadoDocs = null;
 	        			mi.datoSeleccionado.realDocs = null;
 	        			mi.datoSeleccionado.planificadoLanzamiento = null;
@@ -804,7 +821,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 
 app.controller('modalPago', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log',   '$uibModal', '$q' ,'idObjeto','objetoTipo','nombre','numeroContrato',modalPago ]);
+	'$timeout', '$log',   '$uibModal', '$q' ,'idObjeto','objetoTipo','nombre','numeroContrato','montoContrato',modalPago ]);
 
 function modalPago($uibModalInstance, $scope, $http, $interval,
 	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idObjeto, objetoTipo, nombre, numeroContrato, montoContrato) {

@@ -84,6 +84,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		String planificadoFirma;
 		String realFirma;
 		String numeroContrato;
+		BigDecimal montoContrato;
 		List<String> hijos;
 		boolean c0;
 		boolean c1;
@@ -139,16 +140,17 @@ public class SPlanAdquisiciones extends HttpServlet {
 			Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(idPrestamo, 1);
 			String fechaSuscripcion = Utils.formatDate(prestamo.getFechaSuscripcion());
 			String fechaCierre = Utils.formatDate(prestamo.getFechaCierreOrigianlUe());
+			Integer cooperanteId = prestamo.getCooperante().getId();
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 	        response_text = String.join("", "\"proyecto\":",response_text);
-	        response_text = String.join("", "{\"success\":true,\"fechaSuscripcion\": \""+ fechaSuscripcion + "\", \"fechaCierre\": \"" + fechaCierre + "\",", response_text, "}");
+	        response_text = String.join("", "{\"success\":true,\"fechaSuscripcion\": \""+ fechaSuscripcion + "\", \"fechaCierre\": \"" + fechaCierre + "\", \"cooperanteId\": " + cooperanteId + ",", response_text, "}");
 		        
 		}else if(accion.equals("guardarPlan")){
 			try{
 				boolean result = false;
 				String data = map.get("data");
-				String[] datos = data.split("°");
+				String[] datos = data.split("\\|");
 				
 				for(String str1: datos){
 					String[] row = str1.split(",");
@@ -178,9 +180,15 @@ public class SPlanAdquisiciones extends HttpServlet {
 						
 					String unidadMedida = row[5] == null ? "" : row[5]; 
 					
-					Integer cantidad = Utils.String2Int(row[6]);
-					BigDecimal costo = new BigDecimal(row[7]);
-					BigDecimal total = new BigDecimal(row[8]);
+					Integer cantidad = 0;
+					if(!row[6].equals("null"))
+						cantidad = Utils.String2Int(row[6]);
+					BigDecimal costo = BigDecimal.ZERO;
+					if(!row[7].equals("null"))
+						costo = new BigDecimal(row[7]);
+					BigDecimal total = BigDecimal.ZERO;
+					if(!row[8].equals("null"))
+						total = new BigDecimal(row[8]);
 
 					if(objetoTipo == 1 && !total.equals(BigDecimal.ZERO)){
 						Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId, usuario);
@@ -227,6 +235,9 @@ public class SPlanAdquisiciones extends HttpServlet {
 					Integer bloqueado = Utils.String2Boolean(row[19],0);
 					Long nog = Utils.String2Long(row[20]);
 					String numeroContrato = row[21];
+					BigDecimal montoContrato = BigDecimal.ZERO;
+					if (!row[22].equals("null"))
+						montoContrato = new BigDecimal(row[22]);
 					PlanAdquisicionesDetalle plan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
 					if(plan != null){
 						plan.setTipoAdquisicion(tipoAdquisicion);
@@ -253,11 +264,12 @@ public class SPlanAdquisiciones extends HttpServlet {
 						plan.setBloqueado(bloqueado);
 						plan.setNog(nog);
 						plan.setNumeroContrato(numeroContrato);
+						plan.setMontoContrato(montoContrato);
 					}else{
-						plan = new PlanAdquisicionesDetalle(categoriaAdquisicion,planAdquisiciones, tipoAdquisicion,unidadMedida,cantidad, total, costo, 
+						plan = new PlanAdquisicionesDetalle(categoriaAdquisicion,planAdquisiciones, tipoAdquisicion,unidadMedida,cantidad, total, nog, costo, 
 								planificadoDocs, realDocs, planificadoLanzamiento, realLanzamiento, planificadoRecepcionEval, realRecepcionEval, 
-								planificadoAdjudica, realAdjudica, planificadoFirma, realFirma,  objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
-								bloqueado, numeroContrato, nog);
+								planificadoAdjudica, realAdjudica, planificadoFirma, realFirma,  numeroContrato, montoContrato, objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
+								bloqueado);
 					}
 					
 					result = PlanAdquisicionesDetalleDAO.guardarPlanAdquisicion(plan);
@@ -370,6 +382,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 				tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 				tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 				tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+				tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 		}
 		
 		if(CMariaDB.connect()){
@@ -433,6 +446,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 					tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
 					tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 					tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+					tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 				}
 									
 				ArrayList<Integer> productos = InformacionPresupuestariaDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
@@ -488,6 +502,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 						tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 						tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 						tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+						tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 					}
 					
 					ArrayList<Integer> subproductos = InformacionPresupuestariaDAO.getEstructuraArbolSubProducto(idPrestamo,objComponente.getId(),objProducto.getId(), conn);
@@ -544,6 +559,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 							tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 							tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 							tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+							tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 						}
 						
 						lstprestamo.add(tempPrestamo);
@@ -610,6 +626,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 								tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 								tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 								tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+								tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 							}
 							
 							lstprestamo.add(tempPrestamo);
@@ -678,6 +695,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 							tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 							tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 							tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+							tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 						}
 						
 						lstprestamo.add(tempPrestamo);
@@ -740,6 +758,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 						tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 						tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 						tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+						tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 					}
 					
 					lstprestamo.add(tempPrestamo);
@@ -800,6 +819,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 					tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 					tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 					tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+					tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 				}
 				
 				lstprestamo.add(tempPrestamo);
