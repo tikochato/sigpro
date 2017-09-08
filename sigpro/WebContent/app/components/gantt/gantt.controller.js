@@ -453,7 +453,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 					mi.editarSubproducto(item.objetoId,item.index,0,false);
 					break;
 				case '5':
-					mi.editarActividad(item.objetoId,item.index);
+					mi.editarActividad(item.objetoId,item.index,item.parent.id,item.parent.objetoTipo);
 					break;
 			}
 		  }
