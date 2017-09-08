@@ -566,27 +566,6 @@ public class ActividadDAO {
 		return ret;
 	}
 	
-	public static Integer getProyectoId(Integer activdadId){
-		Integer ret=0;
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		try{
-			String query = String.join(" ", "select  e.prestamo",
-							"from  estructura_arbol e",
-							"where e.actividad = ?1");
-			
-			Query<?> id = session.createNativeQuery(query);
-			id.setParameter("1", activdadId);
-			Object o = id.getSingleResult();
-			ret = (Integer) o;
-		}
-		catch(Throwable e){
-			CLogger.write("14", ActividadDAO.class, e);
-		}
-		finally{
-			session.close();
-		}
-		return ret;
-	}
 	
 	public static Actividad getActividadInicial(Integer objetoId, Integer objetoTipo, String usuario){
 		Actividad ret = null;

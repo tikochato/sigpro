@@ -119,6 +119,7 @@ public class AsignacionRaciDAO {
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
+			
 			session.beginTransaction();
 			session.saveOrUpdate(asignacion);
 			session.getTransaction().commit();
