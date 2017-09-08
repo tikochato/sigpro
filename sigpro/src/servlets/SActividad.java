@@ -32,7 +32,7 @@ import dao.ActividadPropiedadDAO;
 import dao.ActividadPropiedadValorDAO;
 import dao.AsignacionRaciDAO;
 import dao.ComponenteDAO;
-import dao.MatrizRaciDAO;
+//import dao.MatrizRaciDAO;
 import dao.ProductoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
@@ -366,7 +366,7 @@ public class SActividad extends HttpServlet {
 							proyTemp.setId(proyectoId);
 							matrizRaci.setProyecto(proyTemp);
 							matrizRaci.setUsuarioCreo(usuario);
-							MatrizRaciDAO.guardarMatrizRaci(matrizRaci);
+							//MatrizRaciDAO.guardarMatrizRaci(matrizRaci);
 							
 						}
 						
