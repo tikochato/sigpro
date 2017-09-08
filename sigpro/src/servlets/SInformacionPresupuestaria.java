@@ -1426,24 +1426,18 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		try{			
 			CLogger.write_simple("5", SInformacionPresupuestaria.class, "Generando headers");
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1430");
 			List<stprestamo> lstPrestamo = getInformacionPresupuestaria(prestamoId, anioInicio, anioFin, usuario);	
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1432");
 			lstPrestamo = calcularCostos(lstPrestamo, 0);
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1434");
 			
 			datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1437");
 			CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1439");
 			excel = new CExcel("Ejecución presupuestaria", false, grafica);
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1441");
 			wb=excel.generateExcelOfData(datosInforme, "Ejecución presupuestaria", headers, null, true, usuario);
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1443");
-		wb.write(outByteStream);
-		CLogger.write_simple("5", SInformacionPresupuestaria.class, "1445");
-		outArray = Base64.encode(outByteStream.toByteArray());
-		CLogger.write_simple("5", SInformacionPresupuestaria.class, "1447");
+			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1443 ");
+			wb.write(outByteStream);
+			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1445");
+			outArray = Base64.encode(outByteStream.toByteArray());
+			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1447");
 		}catch(Exception e){
 			CLogger.write("5", SInformacionPresupuestaria.class, e);
 		}
