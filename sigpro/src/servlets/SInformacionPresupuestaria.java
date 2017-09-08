@@ -1426,25 +1426,17 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		try{			
 			CLogger.write_simple("5", SInformacionPresupuestaria.class, "Generando headers");
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1430");
 			List<stprestamo> lstPrestamo = getInformacionPresupuestaria(prestamoId, anioInicio, anioFin, usuario);	
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1432");
 			lstPrestamo = calcularCostos(lstPrestamo, 0);
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1434");
 			
-			//datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 			datosInforme = new String[][]{
-					{"",""}
+					{""}
 			};
 			
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1437");
-			
-			//CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1439");
-			
-			excel = new CExcel("Ejecución presupuestaria", false, null);
-			
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1441");
+//			datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
+//			CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
+//			excel = new CExcel("Ejecucion presupuestaria", false, grafica);
+			excel = new CExcel("Ejecucion presupuestaria", false, null);
 			wb=excel.generateExcelOfData(datosInforme, "Ejecución presupuestaria", headers, null, true, usuario);
 			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1443");
 			
