@@ -2,6 +2,7 @@ package servlets;
 import java.sql.Connection;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.codec.Base64;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -213,7 +215,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			        	is = new FileInputStream(file);
 			        }
 			        catch (Exception e) {
-						CLogger.write("5", SInformacionPresupuestaria.class, e);
+						CLogger.write("1", SInformacionPresupuestaria.class, e);
 			        }
 			        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 			        
@@ -258,8 +260,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 	        gz.close();
 	        output.close();
 		}catch(Exception e){
-			e.printStackTrace();
-			CLogger.write("1", SInformacionPresupuestaria.class, e);			
+			CLogger.write("2", SInformacionPresupuestaria.class, e);		
 		}
 	}
 	
@@ -770,7 +771,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 						}
 					}
 					catch(Exception e){
-						CLogger.write("2", SInformacionPresupuestaria.class, e);
+						CLogger.write("3", SInformacionPresupuestaria.class, e);
 					}
 					
 					Calendar cal = Calendar.getInstance();
@@ -992,7 +993,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 									}
 								}
 							}catch(Throwable e){
-								CLogger.write("3", SInformacionPresupuestaria.class, e);
+								CLogger.write("4", SInformacionPresupuestaria.class, e);
 							}
 						}						
 					}else if(acumulacionCosto ==3){
@@ -1438,8 +1439,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			e.printStackTrace();
-			CLogger.write("4", SInformacionPresupuestaria.class, e);
+			CLogger.write("5", SInformacionPresupuestaria.class, e);
 		}
 		return outArray;
 	}

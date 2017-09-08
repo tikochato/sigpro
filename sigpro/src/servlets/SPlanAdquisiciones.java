@@ -269,7 +269,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"), "}");
 			}
 			catch (Throwable e) {
-				e.printStackTrace();
+				CLogger.write_simple("1", SPlanAdquisiciones.class, e.getMessage());
 			}
 		}else if(accion.equals("exportarExcel")){
 			Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"), null);
@@ -284,7 +284,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 				outStream.write(outArray);
 				outStream.flush();
 			}catch(Exception e){
-				CLogger.write("1", SPlanAdquisiciones.class, e);
+				CLogger.write_simple("2", SPlanAdquisiciones.class, e.getMessage());
 			}
 		}else{
 			response_text = "{ \"success\": false }";
@@ -825,7 +825,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			CLogger.write("4", SPlanAdquisiciones.class, e);
+			CLogger.write_simple("3", SPlanAdquisiciones.class, e.getMessage());
 		}
 		return outArray;
 	}
