@@ -151,33 +151,62 @@ public class CPdf {
 			Row<PDPage> headerRow = table.createRow(12);
 			int corrimiento=0;
 			float tam_celda=celda_b;
-			Cell<PDPage> cell;			
-			if(posicion==0){
-				corrimiento=2;
-				cell = headerRow.createCell(celda_a, "");
-				cell = headerRow.createCell(celda_c, "");	
-			}
-			if(visualizacion==2){
-				tam_celda=tam_celda*2;
-				for(int i =corrimiento; i<cabecera.length;i++){
-					if(cabecera[i]!=null&& !cabecera[i].isEmpty()&&i!=cabecera.length-1){
-						cell = headerRow.createCell(tam_celda, cabecera[i]);
-						cell.setHeaderCell(true);
+			Cell<PDPage> cell;
+			if(tipo_reporte==0){
+				if(posicion==0){
+					corrimiento=2;
+					cell = headerRow.createCell(celda_a, "");
+					cell = headerRow.createCell(celda_c, "");	
+				}
+				if(visualizacion==2){
+					tam_celda=tam_celda*2;
+					for(int i =corrimiento; i<cabecera.length;i++){
+						if(cabecera[i]!=null&& !cabecera[i].isEmpty()&&i!=cabecera.length-1){
+							cell = headerRow.createCell(tam_celda, cabecera[i]);
+							cell.setHeaderCell(true);
+						}
+					}
+				}else{
+					for(int i =corrimiento; i<cabecera.length;i++){
+						if(cabecera[i]!=null&& !cabecera[i].isEmpty()&&i!=cabecera.length){
+							cell = headerRow.createCell(tam_celda, cabecera[i]);
+							cell.setHeaderCell(true);
+						}
 					}
 				}
-			}else{
-				for(int i =corrimiento; i<cabecera.length;i++){
-					if(cabecera[i]!=null&& !cabecera[i].isEmpty()&&i!=cabecera.length){
-						cell = headerRow.createCell(tam_celda, cabecera[i]);
-						cell.setHeaderCell(true);
+				
+				if(ultimo){
+					cell = headerRow.createCell(celda_b, "");
+					cell.setHeaderCell(true);
+				}
+			}else if(tipo_reporte==1){
+				if(posicion==0){
+					corrimiento=1;
+					cell = headerRow.createCell(celda_a, "");
+				}
+				if(visualizacion==2){
+					tam_celda=(float)13.4;
+					for(int i =corrimiento; i<cabecera.length;i++){
+						if(cabecera[i]!=null&& !cabecera[i].isEmpty()&&i!=cabecera.length-1){
+							cell = headerRow.createCell(tam_celda, cabecera[i]);
+							cell.setHeaderCell(true);
+						}
+					}
+				}else{
+					for(int i =corrimiento; i<cabecera.length;i++){
+						if(cabecera[i]!=null&& !cabecera[i].isEmpty()&&i!=cabecera.length){
+							cell = headerRow.createCell(tam_celda, cabecera[i]);
+							cell.setHeaderCell(true);
+						}
 					}
 				}
+				/*
+				if(ultimo){
+					cell = headerRow.createCell(celda_b, "");
+					cell.setHeaderCell(true);
+				}*/
 			}
 			
-			if(ultimo){
-				cell = headerRow.createCell(celda_b, "");
-				cell.setHeaderCell(true);
-			}
 			return headerRow;
 			
 		}
