@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -97,8 +96,8 @@ public class CExcel {
 				}
 				workbook = new HSSFWorkbook(fileInputStream);
 				sheet = workbook.getSheetAt(0);
-			} catch (IOException e) {
-				CLogger.write("6", CExcel.class, e);
+			} catch (Exception e) {
+				CLogger.write("1", CExcel.class, e);
 			}
 		}else{
 			sheet = workbook.createSheet();
@@ -396,7 +395,6 @@ public class CExcel {
 	public Workbook generateExcelOfData(String[][] data, String report_name, String[][] headers, String[][] extra_lines, boolean borde, String usuario) {
 		int line = 5;
 		DateTime fechaActual = DateTime.now();
-		
 		try {
 			if(stgrafica != null){
 				line = generateChart(report_name, fechaActual, usuario);
@@ -477,7 +475,6 @@ public class CExcel {
 					
 					line++;
 				}
-				
 				line = setOperations(headers, lineas, line, first_data_line, last_data_line);
 			}
 			Header(report_name, headers[0].length);
@@ -679,7 +676,7 @@ public class CExcel {
 
 		} catch (FileNotFoundException e) {
 			CLogger.write("2", CExcel.class, e);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			CLogger.write("3", CExcel.class, e);
 		}
 		return path;
@@ -728,7 +725,7 @@ public class CExcel {
 
 		} catch (FileNotFoundException e) {
 			CLogger.write("4", CExcel.class, e);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			CLogger.write("5", CExcel.class, e);
 		}
 		CLogger.write_simple("4", CExcel.class, "path: "+path+" 733");
