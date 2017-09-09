@@ -124,41 +124,21 @@ public class SInformacionPresupuestaria extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 		try{
-			
-		    CLogger.write_simple("1", SInformacionPresupuestaria.class, "Inicia doPost - 130");
-			
 			request.setCharacterEncoding("UTF-8");
 			HttpSession sesionweb = request.getSession();
-			String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
-			
-
-		    CLogger.write_simple("2", SInformacionPresupuestaria.class, "Inicia doPost - 137");
-			
+			String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;			
 			Gson gson = new Gson();
 			Type type = new TypeToken<Map<String, String>>(){}.getType();
-			
-			CLogger.write_simple("3", SInformacionPresupuestaria.class, "StringBuilder - 142");
-		    
 			StringBuilder sb = new StringBuilder();
 			BufferedReader br = request.getReader();
 			String str;
-			
-			CLogger.write_simple("4", SInformacionPresupuestaria.class, "while str - 148");
-		    
 			while ((str = br.readLine()) != null) {
 				sb.append(str);
 			}
 			Map<String, String> map = gson.fromJson(sb.toString(), type);
 			String accion = map.get("accion")!=null ? map.get("accion") : "";
 			String response_text = "";
-			
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "if accion - ");
-		    
 			if(accion.equals("generarInforme")){
-				
-
-			    CLogger.write_simple("1", SInformacionPresupuestaria.class, "Generar Informe - 162");
-			    
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
 				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
@@ -181,20 +161,12 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		        gz.close();
 		        output.close();
 			}else if(accion.equals("exportarExcel")){
-				CLogger.write_simple("6", SInformacionPresupuestaria.class, "accion: exportarExcel - 173");
-				
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
 				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
 				Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 				Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-				
-				CLogger.write_simple("7", SInformacionPresupuestaria.class, "exportarExcel() - 181");
-				
 		        byte [] outArray = exportarExcel(idPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, usuario);
-			
-		        CLogger.write_simple("8", SInformacionPresupuestaria.class, "repuesta exportarExcel() - 185");
-		        
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
 				response.setHeader("Expires:", "0"); 
