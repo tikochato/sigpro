@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -174,15 +173,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				response.setHeader("Content-Disposition", "attachment; EjecucionPresupuestaria_.xls");
 				ServletOutputStream outStream = response.getOutputStream();
 				//OutputStream outStream = response.getOutputStream();
-				byte[] buffer = new byte[2048];
-				for(int i=0; i<outArray.length; i=i+2048){
-					
-					buffer = Arrays.copyOfRange(outArray, i, (i+2048<outArray.length?i+2048:outArray.length));
-					outStream.write(buffer);
-					outStream.flush();
-				}
-				
-				
+				outStream.write(outArray);
+				outStream.flush();
 				outStream.close();
 			}else if(accion.equals("exportarPdf")){
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
