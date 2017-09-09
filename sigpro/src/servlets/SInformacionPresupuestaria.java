@@ -170,7 +170,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		        byte [] outArray = exportarExcel(idPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, usuario);
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
-//				response.setHeader("Expires:", "0"); 
+				response.setHeader("Expires:", "0"); 
 				response.setHeader("Content-Disposition", "attachment; EjecucionPresupuestaria_.xls");
 				ServletOutputStream outStream = response.getOutputStream();
 				//OutputStream outStream = response.getOutputStream();
