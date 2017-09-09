@@ -170,13 +170,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		        byte [] outArray = exportarExcel(idPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, usuario);
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
-<<<<<<< HEAD
 				response.setHeader("Cache-Control", "no-cache"); 
 				response.setHeader("Content-Disposition", "attachment; Ejecucion_Presupuestaria.xls");
-=======
-				response.setHeader("Expires:", "0"); 
-				response.setHeader("Content-Disposition", "attachment; EjecucionPresupuestaria_.xls");
->>>>>>> branch 'master' of https://github.com/MINFIN-GT/sigpro.git
 				ServletOutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
