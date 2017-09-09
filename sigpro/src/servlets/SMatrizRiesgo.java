@@ -248,8 +248,8 @@ public class SMatrizRiesgo extends HttpServlet {
 		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
-				response.setHeader("Expires:", "0"); // eliminates browser caching
-				response.setHeader("Content-Disposition", "attachment; Matriz_Riesgos.xls");
+				response.setHeader("Cache-Control", "no-cache"); // eliminates browser caching
+				response.setHeader("Content-Disposition", "attachment; Matriz_de_Riesgos.xls");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();

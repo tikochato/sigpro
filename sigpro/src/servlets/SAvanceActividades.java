@@ -251,8 +251,8 @@ public class SAvanceActividades extends HttpServlet {
 			        CLogger.write_simple("3", SAvanceActividades.class, "251");
 					response.setContentType("application/ms-excel");
 					response.setContentLength(outArray.length);					
-					response.setHeader("Expires:", "0"); 
-					response.setHeader("Content-Disposition", "attachment; ReporteAvances_.xls");
+					response.setHeader("Cache-Control", "no-cache"); 
+					response.setHeader("Content-Disposition", "attachment; Reporte_Avances_de_Actividades.xls");
 					OutputStream outStream = response.getOutputStream();
 					CLogger.write_simple("3", SAvanceActividades.class, "257");
 					outStream.write(outArray);
@@ -269,11 +269,13 @@ public class SAvanceActividades extends HttpServlet {
 			response.setHeader("Content-Encoding", "gzip");
 			response.setCharacterEncoding("UTF-8");
 	
-	        OutputStream output = response.getOutputStream();
-			GZIPOutputStream gz = new GZIPOutputStream(output);
-	        gz.write(response_text.getBytes("UTF-8"));
-	        gz.close();
-	        output.close();
+			if (!accion.equals("exportarExcel")){
+		        OutputStream output = response.getOutputStream();
+				GZIPOutputStream gz = new GZIPOutputStream(output);
+		        gz.write(response_text.getBytes("UTF-8"));
+		        gz.close();
+		        output.close();
+			}
 		}catch(Exception e){
 		    CLogger.write_simple("4", SAvanceActividades.class, e.getMessage());
 		}

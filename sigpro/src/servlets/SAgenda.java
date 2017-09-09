@@ -159,29 +159,22 @@ public class SAgenda extends HttpServlet {
                     }
                     outByteStream.write(buffer);
                 }
-                CLogger.write_simple("4", SAgenda.class, "file delete 162");
                 file.delete();
                 
                 is.close();
                 outByteStream.flush();
                 outByteStream.close();
                 
-                CLogger.write_simple("4", SAgenda.class, "outbyte close 169");
-                
-
-		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+                byte [] outArray = Base64.encode(outByteStream.toByteArray());
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
-				response.setHeader("Expires:", "0"); 
-				response.setHeader("Content-Disposition", "attachment; Agenda_.xls");
-				CLogger.write_simple("4", SAgenda.class, "outbyte response 177");
+				response.setHeader("Cache-Control", "no-cache"); 
+				response.setHeader("Content-Disposition", "attachment; Agenda.xls");
 				OutputStream outStream = response.getOutputStream();
 
-				CLogger.write_simple("4", SAgenda.class, "outbyte write 180");
 				outStream.write(outArray);
 				outStream.flush();
 
-				CLogger.write_simple("4", SAgenda.class, "outbyte flush 184");
 			}
 		}
 	}

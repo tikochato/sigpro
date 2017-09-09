@@ -236,7 +236,7 @@ public class SDocumentosAdjuntos extends HttpServlet {
 							  response.addHeader("Content-Length", Long.toString(file.length()));
 							}
 							
-							response.setHeader("Expires:", "0");
+							response.setHeader("Cache-Control", "no-cache");
 							
 							byte [] buffer = new byte[8192];
 							for (int length = 0; (length = fileIn.read(buffer)) > 0;){
