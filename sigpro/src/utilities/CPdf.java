@@ -521,4 +521,12 @@ public class CPdf {
 			return path;
 		}
 		
+		public String ExportarPdfAvanceActividades(String [][]headers, String[][]datos, String usuario){
+			String path="";
+			
+			return path;
+		}
+		
+		
+		
 }
