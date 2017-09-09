@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -17,6 +16,7 @@ import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -171,6 +171,15 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				}else{
 					response_text = String.join("", "{\"success\":false}");
 				}
+
+				response.setHeader("Content-Encoding", "gzip");
+				response.setCharacterEncoding("UTF-8");
+		
+		        OutputStream output = response.getOutputStream();
+				GZIPOutputStream gz = new GZIPOutputStream(output);
+		        gz.write(response_text.getBytes("UTF-8"));
+		        gz.close();
+		        output.close();
 			}else if(accion.equals("exportarExcel")){
 				CLogger.write_simple("6", SInformacionPresupuestaria.class, "accion: exportarExcel - 173");
 				
@@ -190,7 +199,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				response.setContentLength(outArray.length);
 				response.setHeader("Expires:", "0"); 
 				response.setHeader("Content-Disposition", "attachment; EjecucionPresupuestaria_.xls");
-				OutputStream outStream = response.getOutputStream();
+				ServletOutputStream outStream = response.getOutputStream();
+				//OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
 				
@@ -250,15 +260,6 @@ public class SInformacionPresupuestaria extends HttpServlet {
 	
 				
 			}
-			
-			response.setHeader("Content-Encoding", "gzip");
-			response.setCharacterEncoding("UTF-8");
-	
-	        OutputStream output = response.getOutputStream();
-			GZIPOutputStream gz = new GZIPOutputStream(output);
-	        gz.write(response_text.getBytes("UTF-8"));
-	        gz.close();
-	        output.close();
 		}catch(Exception e){
 			CLogger.write("2", SInformacionPresupuestaria.class, e);		
 		}
@@ -1425,26 +1426,16 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "Generando headers");
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
 			List<stprestamo> lstPrestamo = getInformacionPresupuestaria(prestamoId, anioInicio, anioFin, usuario);	
 			lstPrestamo = calcularCostos(lstPrestamo, 0);
-			
 			datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 			CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
 			excel = new CExcel("Ejecucion presupuestaria", false, grafica);
 			wb=excel.generateExcelOfData(datosInforme, "Ejecución presupuestaria", headers, null, true, usuario);
-			CLogger.write_simple("5", SInformacionPresupuestaria.class, "1443");
-			
-			// Write the output to a file
-		    FileOutputStream fileOut = new FileOutputStream("/logs/reporte.xls");
-		    wb.write(fileOut);
-		    CLogger.write_simple("5", SInformacionPresupuestaria.class, "archivo excel escrito");
-			
-		wb.write(outByteStream);
-		CLogger.write_simple("5", SInformacionPresupuestaria.class, "1445");
-		outArray = Base64.encode(outByteStream.toByteArray());
-		CLogger.write_simple("5", SInformacionPresupuestaria.class, "1447");
+			wb.write(outByteStream);
+			outByteStream.close();
+			outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
 			CLogger.write("5", SInformacionPresupuestaria.class, e);
 		}
