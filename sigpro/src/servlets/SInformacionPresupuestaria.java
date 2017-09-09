@@ -119,7 +119,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
    }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+//		response.getWriter().append("Served at: ").append(request.getContextPath());
+		doPost(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
@@ -169,7 +170,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		        byte [] outArray = exportarExcel(idPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, usuario);
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
-				response.setHeader("Expires:", "0"); 
+//				response.setHeader("Expires:", "0"); 
 				response.setHeader("Content-Disposition", "attachment; EjecucionPresupuestaria_.xls");
 				ServletOutputStream outStream = response.getOutputStream();
 				//OutputStream outStream = response.getOutputStream();
