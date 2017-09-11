@@ -29,6 +29,7 @@ import dao.ProductoDAO;
 import dao.ProductoPropiedadDAO;
 import dao.ProductoPropiedadValorDAO;
 import dao.ProductoUsuarioDAO;
+import dao.UnidadEjecutoraDAO;
 import pojo.AcumulacionCosto;
 import pojo.Componente;
 import pojo.Producto;
@@ -56,6 +57,8 @@ public class SProducto extends HttpServlet {
 		Integer idProductoTipo;
 		String productoTipo;
 		Integer unidadEjectuora;
+		Integer entidad;
+		Integer ejercicio;
 		String nombreUnidadEjecutora;
 		Long snip;
 		Integer programa;
@@ -172,7 +175,9 @@ public class SProducto extends HttpServlet {
 				}
 				
 				if (producto.getUnidadEjecutora() != null){
-					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadEjectuora = producto.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.entidad = producto.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 				}
 
@@ -198,6 +203,8 @@ public class SProducto extends HttpServlet {
 				Integer productoPadreId = Utils.String2Int(parametro.get("productoPadre"));
 				Integer tipoproductoId = Utils.String2Int(parametro.get("tipoproductoid")); 
 				Integer unidadEjecutoraId = Utils.String2Int(parametro.get("unidadEjecutora"));
+				Integer entidadId = Utils.String2Int(parametro.get("entidadId"));
+				Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"));
 				
 				Long snip = Utils.String2Long(parametro.get("snip"), null);
 				Integer programa = Utils.String2Int(parametro.get("programa"), null);
@@ -235,7 +242,7 @@ public class SProducto extends HttpServlet {
 				productoPadre.setId(productoPadreId);
 				ProductoTipo productoTipo = new ProductoTipo();
 				productoTipo.setId(tipoproductoId);
-				UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
+				UnidadEjecutora unidadEjecutora = new UnidadEjecutoraDAO().getUnidadEjecutora(ejercicio,entidadId,unidadEjecutoraId);
 				unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
 				
 				if (esnuevo){
