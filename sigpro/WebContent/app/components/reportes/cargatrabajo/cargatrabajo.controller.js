@@ -448,7 +448,48 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			 	}
 		  	);
 		};
-	
+		mi.exportarPdf = function(){
+
+			var idPrestamos = "";
+			var idComponentes = "";
+			var idProductos = "";
+			var idSubproductos = "";
+			
+			for (x in mi.objetosSeleccionados){
+				switch (mi.objetosSeleccionados[x].objetoTipo){
+					case 1: idPrestamos = idPrestamos + (idPrestamos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+					break;
+					case 2: idComponentes = idComponentes + (idComponentes.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+					break;
+					case 3: idProductos = idProductos + (idProductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+					break;
+					case 4: idSubproductos = idSubproductos + (idSubproductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
+					break;
+				} 
+			}
+			
+			$http.post('/SCargaTrabajo', { 
+				accion: 'exportarPdf', 
+				idPrestamos:idPrestamos,
+				idComponentes:idComponentes,
+				idProductos:idProductos,
+				idSubproductos:idSubproductos,
+				anio_inicio:mi.fechaInicio,
+				anio_fin: mi.fechaFin,
+				t:moment().unix()
+			  } ).then(
+					  function successCallback(response) {
+						  var anchor = angular.element('<a/>');
+						  anchor.attr({
+					         href: 'data:application/pdf;base64,' + response.data,
+					         target: '_blank',
+					         download: 'CargaTrabajo.pdf'
+						  })[0].click();
+					  }.bind(this), function errorCallback(response){
+						 		
+				 	}
+			  	);
+			};
 	mi.reset();
 	
 	// ------------
