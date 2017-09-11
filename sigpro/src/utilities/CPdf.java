@@ -557,6 +557,16 @@ public class CPdf {
 				cell = headerRow.createCell(celda_b*2,headers[0][4] );
 				cell = headerRow.createCell(celda_b*2,headers[0][5] );
 				table_x.addHeaderRow(headerRow);
+				
+				for(int i=0; i<datos.length;i++){
+					Row<PDPage> row = table_x.createRow(12);
+					cell = row.createCell((float)(celda_a*1.5),datos[i][0] );
+					cell = row.createCell(celda_b*2,datos[i][1] );
+					cell = row.createCell(celda_b*2,datos[i][2] );
+					cell = row.createCell(celda_b*2,datos[i][3] );
+					cell = row.createCell(celda_b*2,datos[i][4] );
+					cell = row.createCell(celda_b*2,datos[i][5] );
+				}
 				table_x.draw();
 				contentStream.close();
 				path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
