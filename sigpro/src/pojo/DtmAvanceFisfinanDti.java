@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 11, 2017 11:21:21 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 3:37:18 PM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -15,6 +15,10 @@ import javax.persistence.Table;
 @Table(name = "dtm_avance_fisfinan_dti", catalog = "sipro")
 public class DtmAvanceFisfinanDti implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2433797917442891308L;
 	private DtmAvanceFisfinanDtiId id;
 
 	public DtmAvanceFisfinanDti() {

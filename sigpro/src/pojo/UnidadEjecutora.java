@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 11, 2017 11:21:21 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 3:37:18 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +10,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -21,15 +22,19 @@ import javax.persistence.Table;
 @Table(name = "unidad_ejecutora", catalog = "sipro")
 public class UnidadEjecutora implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6599626815570098360L;
 	private UnidadEjecutoraId id;
 	private Entidad entidad;
 	private String nombre;
-	private Set<Componente> componentes = new HashSet<Componente>(0);
+	private Set<Proyecto> proyectos = new HashSet<Proyecto>(0);
 	private Set<Colaborador> colaboradors = new HashSet<Colaborador>(0);
 	private Set<Subproducto> subproductos = new HashSet<Subproducto>(0);
-	private Set<Prestamo> prestamos = new HashSet<Prestamo>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
-	private Set<Proyecto> proyectos = new HashSet<Proyecto>(0);
+	private Set<Prestamo> prestamos = new HashSet<Prestamo>(0);
+	private Set<Componente> componentes = new HashSet<Componente>(0);
 
 	public UnidadEjecutora() {
 	}
@@ -40,18 +45,18 @@ public class UnidadEjecutora implements java.io.Serializable {
 		this.nombre = nombre;
 	}
 
-	public UnidadEjecutora(UnidadEjecutoraId id, Entidad entidad, String nombre, Set<Componente> componentes,
-			Set<Colaborador> colaboradors, Set<Subproducto> subproductos, Set<Prestamo> prestamos,
-			Set<Producto> productos, Set<Proyecto> proyectos) {
+	public UnidadEjecutora(UnidadEjecutoraId id, Entidad entidad, String nombre, Set<Proyecto> proyectos,
+			Set<Colaborador> colaboradors, Set<Subproducto> subproductos, Set<Producto> productos,
+			Set<Prestamo> prestamos, Set<Componente> componentes) {
 		this.id = id;
 		this.entidad = entidad;
 		this.nombre = nombre;
-		this.componentes = componentes;
+		this.proyectos = proyectos;
 		this.colaboradors = colaboradors;
 		this.subproductos = subproductos;
-		this.prestamos = prestamos;
 		this.productos = productos;
-		this.proyectos = proyectos;
+		this.prestamos = prestamos;
+		this.componentes = componentes;
 	}
 
 	@EmbeddedId
@@ -69,7 +74,9 @@ public class UnidadEjecutora implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "entidadentidad", nullable = false, insertable = false, updatable = false)
+	@JoinColumns({
+			@JoinColumn(name = "entidadentidad", referencedColumnName = "entidad", nullable = false, insertable = false, updatable = false),
+			@JoinColumn(name = "ejercicio", referencedColumnName = "ejercicio", nullable = false, insertable = false, updatable = false) })
 	public Entidad getEntidad() {
 		return this.entidad;
 	}
@@ -88,12 +95,12 @@ public class UnidadEjecutora implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unidadEjecutora")
-	public Set<Componente> getComponentes() {
-		return this.componentes;
+	public Set<Proyecto> getProyectos() {
+		return this.proyectos;
 	}
 
-	public void setComponentes(Set<Componente> componentes) {
-		this.componentes = componentes;
+	public void setProyectos(Set<Proyecto> proyectos) {
+		this.proyectos = proyectos;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unidadEjecutora")
@@ -115,15 +122,6 @@ public class UnidadEjecutora implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unidadEjecutora")
-	public Set<Prestamo> getPrestamos() {
-		return this.prestamos;
-	}
-
-	public void setPrestamos(Set<Prestamo> prestamos) {
-		this.prestamos = prestamos;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unidadEjecutora")
 	public Set<Producto> getProductos() {
 		return this.productos;
 	}
@@ -133,12 +131,21 @@ public class UnidadEjecutora implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unidadEjecutora")
-	public Set<Proyecto> getProyectos() {
-		return this.proyectos;
+	public Set<Prestamo> getPrestamos() {
+		return this.prestamos;
 	}
 
-	public void setProyectos(Set<Proyecto> proyectos) {
-		this.proyectos = proyectos;
+	public void setPrestamos(Set<Prestamo> prestamos) {
+		this.prestamos = prestamos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unidadEjecutora")
+	public Set<Componente> getComponentes() {
+		return this.componentes;
+	}
+
+	public void setComponentes(Set<Componente> componentes) {
+		this.componentes = componentes;
 	}
 
 }

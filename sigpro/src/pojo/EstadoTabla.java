@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 11, 2017 11:21:21 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 3:37:18 PM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -15,6 +15,10 @@ import javax.persistence.Table;
 @Table(name = "estado_tabla", catalog = "sipro")
 public class EstadoTabla implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3820706860642481308L;
 	private EstadoTablaId id;
 	private String valores;
 

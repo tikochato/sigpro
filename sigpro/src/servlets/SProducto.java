@@ -242,8 +242,8 @@ public class SProducto extends HttpServlet {
 				productoPadre.setId(productoPadreId);
 				ProductoTipo productoTipo = new ProductoTipo();
 				productoTipo.setId(tipoproductoId);
-				UnidadEjecutora unidadEjecutora = new UnidadEjecutoraDAO().getUnidadEjecutora(ejercicio,entidadId,unidadEjecutoraId);
-				unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
+				new UnidadEjecutoraDAO();
+				UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio,entidadId,unidadEjecutoraId);
 				
 				if (esnuevo){
 					
@@ -402,7 +402,9 @@ public class SProducto extends HttpServlet {
 					}
 					
 					if (producto.getUnidadEjecutora() != null){
-						temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
+						temp.unidadEjectuora = producto.getUnidadEjecutora().getId().getUnidadEjecutora();
+						temp.entidad = producto.getUnidadEjecutora().getId().getEntidadentidad();
+						temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 						temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 					}
 
@@ -480,7 +482,9 @@ public class SProducto extends HttpServlet {
 				}
 				
 				if (producto.getUnidadEjecutora() != null){
-					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadEjectuora = producto.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.entidad = producto.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 				}
 
@@ -546,7 +550,9 @@ public class SProducto extends HttpServlet {
 				}
 				
 				if (producto.getUnidadEjecutora() != null){
-					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadEjectuora = producto.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.entidad = producto.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 				}
 
@@ -595,7 +601,9 @@ public class SProducto extends HttpServlet {
 				}
 				
 				if (producto.getUnidadEjecutora() != null){
-					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadEjectuora = producto.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.entidad = producto.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 				}
 				temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
@@ -620,6 +628,8 @@ public class SProducto extends HttpServlet {
 				String nombre = parametro.get("nombre");
 				Integer tipoproductoId = Utils.String2Int(parametro.get("tipoproductoid")); 
 				Integer unidadEjecutoraId = Utils.String2Int(parametro.get("unidadEjecutora"));
+				Integer entidadId = Utils.String2Int(parametro.get("entidadId"));
+				Integer ejercicio = Utils.String2Int("ejercicio");
 				Date fechaInicio = Utils.dateFromString(parametro.get("fechaInicio"));
 				Date fechaFin = Utils.dateFromString(parametro.get("fechaFin"));
 				Integer duracion = Utils.String2Int(parametro.get("duaracion"), null);
@@ -627,8 +637,7 @@ public class SProducto extends HttpServlet {
 				
 				ProductoTipo productoTipo = new ProductoTipo();
 				productoTipo.setId(tipoproductoId);
-				UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-				unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
+				UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidadId, unidadEjecutoraId);
 				if(esnuevo){
 					Componente componente = new Componente();
 					componente.setId(componenteId);
@@ -675,7 +684,9 @@ public class SProducto extends HttpServlet {
 				}
 				
 				if (producto.getUnidadEjecutora() != null){
-					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadEjectuora = producto.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.entidad = producto.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 				}
 				temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());

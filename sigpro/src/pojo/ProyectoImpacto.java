@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 11, 2017 11:21:21 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 3:37:18 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -21,6 +22,10 @@ import javax.persistence.TemporalType;
 @Table(name = "proyecto_impacto", catalog = "sipro")
 public class ProyectoImpacto implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 751573919827225672L;
 	private Integer id;
 	private Entidad entidad;
 	private Proyecto proyecto;
@@ -69,7 +74,8 @@ public class ProyectoImpacto implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "entidadentidad", nullable = false)
+	@JoinColumns({ @JoinColumn(name = "entidadentidad", referencedColumnName = "entidad", nullable = false),
+			@JoinColumn(name = "ejercicio", referencedColumnName = "ejercicio", nullable = false) })
 	public Entidad getEntidad() {
 		return this.entidad;
 	}
