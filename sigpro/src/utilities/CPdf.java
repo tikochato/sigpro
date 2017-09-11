@@ -550,7 +550,7 @@ public class CPdf {
 				int corrimiento=0;
 				float tam_celda=celda_b*2;
 				Cell<PDPage> cell;
-				cell = headerRow.createCell((float)(celda_a*2),headers[0][0] );
+				cell = headerRow.createCell((float)(celda_a*1.5),headers[0][0] );
 				cell = headerRow.createCell(tam_celda,headers[0][1] );
 				cell = headerRow.createCell(tam_celda,headers[0][2] );
 				cell = headerRow.createCell(tam_celda,headers[0][3] );
