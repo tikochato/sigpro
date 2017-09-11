@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 11, 2017 10:44:41 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 11:21:21 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -49,6 +49,7 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 	private int estado;
 	private Integer bloqueado;
 	private String numeroContrato;
+	private BigDecimal montoContrato;
 	private Long nog;
 
 	public PlanAdquisicionesDetalle() {
@@ -70,7 +71,8 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 			Date lanzamientoEventoReal, Date recepcionOfertasPlanificado, Date recepcionOfertasReal,
 			Date adjudicacionPlanificado, Date adjudicacionReal, Date firmaContratoPlanificado, Date firmaContratoReal,
 			int objetoId, int objetoTipo, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, Integer bloqueado, String numeroContrato, Long nog) {
+			Date fechaActualizacion, int estado, Integer bloqueado, String numeroContrato, BigDecimal montoContrato,
+			Long nog) {
 		this.categoriaAdquisicion = categoriaAdquisicion;
 		this.planAdquisiciones = planAdquisiciones;
 		this.tipoAdquisicion = tipoAdquisicion;
@@ -97,6 +99,7 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 		this.estado = estado;
 		this.bloqueado = bloqueado;
 		this.numeroContrato = numeroContrato;
+		this.montoContrato = montoContrato;
 		this.nog = nog;
 	}
 
@@ -358,6 +361,15 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 
 	public void setNumeroContrato(String numeroContrato) {
 		this.numeroContrato = numeroContrato;
+	}
+
+	@Column(name = "monto_contrato", precision = 15)
+	public BigDecimal getMontoContrato() {
+		return this.montoContrato;
+	}
+
+	public void setMontoContrato(BigDecimal montoContrato) {
+		this.montoContrato = montoContrato;
 	}
 
 	@Column(name = "nog")

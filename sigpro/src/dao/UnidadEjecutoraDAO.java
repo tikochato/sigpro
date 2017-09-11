@@ -73,7 +73,7 @@ public class UnidadEjecutoraDAO {
 		if (pojo == null) {
 
 			pojo = new UnidadEjecutora();
-			pojo.setUnidadEjecutora(codigo);
+			//pojo.setUnidadEjecutora(codigo);
 			pojo.setNombre(nombre);
 
 			pojo.setEntidad(EntidadDAO.getEntidad(codigoEntidad));
@@ -169,9 +169,9 @@ public class UnidadEjecutoraDAO {
 		for (UnidadEjecutora pojo : pojos) {
 			EstructuraPojo estructuraPojo = new EstructuraPojo();
 
-			estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora();
+			estructuraPojo.unidadEjecutora = pojo.getId().getUnidadEjecutora();
 			estructuraPojo.nombreUnidadEjecutora = pojo.getNombre();
-			estructuraPojo.entidad = pojo.getEntidad().getEntidad();
+			estructuraPojo.entidad = pojo.getEntidad().getId().getEntidad();
 			estructuraPojo.nombreEntidad = pojo.getEntidad().getNombre();
 			
 
@@ -193,9 +193,9 @@ public class UnidadEjecutoraDAO {
 		for (UnidadEjecutora pojo : pojos) {
 			EstructuraPojo estructuraPojo = new EstructuraPojo();
 
-			estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora();
+			estructuraPojo.unidadEjecutora = pojo.getId().getUnidadEjecutora();
 			estructuraPojo.nombreUnidadEjecutora = pojo.getNombre();
-			estructuraPojo.entidad = pojo.getEntidad().getEntidad();
+			estructuraPojo.entidad = pojo.getEntidad().getId().getEntidad();
 			estructuraPojo.nombreEntidad = pojo.getEntidad().getNombre();
 			
 

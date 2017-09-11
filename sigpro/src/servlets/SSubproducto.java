@@ -500,8 +500,11 @@ public class SSubproducto extends HttpServlet {
 				
 				if(esnuevo){
 					Producto producto = ProductoDAO.getProductoPorId(productoId, usuario);
-					subproducto = new Subproducto(producto, subproductoTipo, unidadEjecutora, nombre, usuario, new Date(), 1,
-							fechaInicio, fechaFin, duracion, duracionDimension);
+					subproducto = new Subproducto(producto, subproductoTipo, unidadEjecutora, nombre, usuario, new Date(), 1);
+					subproducto.setFechaInicio(fechaInicio);
+					subproducto.setFechaFin(fechaFin);
+					subproducto.setDuracionDimension(duracionDimension);
+					subproducto.setDuracion(duracion);
 				}else{
 					subproducto = SubproductoDAO.getSubproductoPorId(id);
 					if (subproducto!=null){	

@@ -195,7 +195,9 @@ public class ColaboradorDAO {
 			estructuraPojo.cui = pojo.getCui();
 
 			estructuraPojo.usuario = pojo.getUsuario().getUsuario();
-			estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora().getUnidadEjecutora();
+			
+			estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora().getId().getUnidadEjecutora();
+			
 			estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
 			
 			estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();
@@ -232,7 +234,7 @@ public class ColaboradorDAO {
 				estructuraPojo.cui = pojo.getCui();
 				if(pojo.getUsuario()!=null)
 					estructuraPojo.usuario = pojo.getUsuario().getUsuario();
-				estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora().getUnidadEjecutora();
+				estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora().getId().getUnidadEjecutora();
 				estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
 				estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();
 				estructuraPojo.usuarioActualizo = pojo.getUsuarioActualizo();

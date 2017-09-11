@@ -101,7 +101,7 @@ public class SColaborador extends HttpServlet {
 				temp.cui = colaborador.getCui();
 				if(colaborador.getUsuario()!=null)
 					temp.usuario = colaborador.getUsuario().getUsuario();
-				temp.unidadEjecutora = colaborador.getUnidadEjecutora().getUnidadEjecutora();
+				temp.unidadEjecutora = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
 				temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
 				
 				temp.usuarioCreo = colaborador.getUsuarioCreo();
@@ -158,7 +158,8 @@ public class SColaborador extends HttpServlet {
 					temp.cui = colaborador.getCui();
 					if(colaborador.getUsuario()!= null)
 						temp.usuario = colaborador.getUsuario().getUsuario();
-					temp.unidadEjecutora = colaborador.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadEjecutora = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
+					
 					temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
 					
 					temp.usuarioCreo = colaborador.getUsuarioCreo();
@@ -219,7 +220,7 @@ public class SColaborador extends HttpServlet {
 					temp.cui = colaborador.getCui();
 					if(colaborador.getUsuario()!=null)
 						temp.usuario = colaborador.getUsuario().getUsuario();
-					temp.unidadEjecutora = colaborador.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadEjecutora = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
 					temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
 					
 					temp.usuarioCreo = colaborador.getUsuarioCreo();
@@ -287,7 +288,8 @@ public class SColaborador extends HttpServlet {
 				temp.cui = colaborador.getCui();
 
 				temp.usuario = colaborador.getUsuario().getUsuario();
-				temp.unidadEjecutora = colaborador.getUnidadEjecutora().getUnidadEjecutora();
+				
+				temp.unidadEjecutora = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
 				temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
 				
 				temp.usuarioCreo = colaborador.getUsuarioCreo();
