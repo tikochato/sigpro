@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 11, 2017 11:21:21 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 3:37:18 PM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ProgramaProyectoId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6693791864773252071L;
 	private int programaid;
 	private int proyectoid;
 

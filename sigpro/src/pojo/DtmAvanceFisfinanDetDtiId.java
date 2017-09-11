@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 11, 2017 11:21:21 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 3:37:18 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import javax.persistence.Column;
@@ -11,6 +11,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7475666699510787638L;
 	private long ejercicioFiscal;
 	private String mesDesembolso;
 	private String codigoPresupuestario;

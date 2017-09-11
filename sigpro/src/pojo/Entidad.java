@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 11, 2017 11:21:21 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 3:37:18 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,11 +19,15 @@ import javax.persistence.Table;
 @Table(name = "entidad", catalog = "sipro")
 public class Entidad implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9007715066381999444L;
 	private EntidadId id;
 	private String nombre;
 	private String abreviatura;
-	private Set<UnidadEjecutora> unidadEjecutoras = new HashSet<UnidadEjecutora>(0);
 	private Set<ProyectoImpacto> proyectoImpactos = new HashSet<ProyectoImpacto>(0);
+	private Set<UnidadEjecutora> unidadEjecutoras = new HashSet<UnidadEjecutora>(0);
 
 	public Entidad() {
 	}
@@ -33,13 +37,13 @@ public class Entidad implements java.io.Serializable {
 		this.nombre = nombre;
 	}
 
-	public Entidad(EntidadId id, String nombre, String abreviatura, Set<UnidadEjecutora> unidadEjecutoras,
-			Set<ProyectoImpacto> proyectoImpactos) {
+	public Entidad(EntidadId id, String nombre, String abreviatura, Set<ProyectoImpacto> proyectoImpactos,
+			Set<UnidadEjecutora> unidadEjecutoras) {
 		this.id = id;
 		this.nombre = nombre;
 		this.abreviatura = abreviatura;
-		this.unidadEjecutoras = unidadEjecutoras;
 		this.proyectoImpactos = proyectoImpactos;
+		this.unidadEjecutoras = unidadEjecutoras;
 	}
 
 	@EmbeddedId
@@ -73,21 +77,21 @@ public class Entidad implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "entidad")
-	public Set<UnidadEjecutora> getUnidadEjecutoras() {
-		return this.unidadEjecutoras;
-	}
-
-	public void setUnidadEjecutoras(Set<UnidadEjecutora> unidadEjecutoras) {
-		this.unidadEjecutoras = unidadEjecutoras;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "entidad")
 	public Set<ProyectoImpacto> getProyectoImpactos() {
 		return this.proyectoImpactos;
 	}
 
 	public void setProyectoImpactos(Set<ProyectoImpacto> proyectoImpactos) {
 		this.proyectoImpactos = proyectoImpactos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "entidad")
+	public Set<UnidadEjecutora> getUnidadEjecutoras() {
+		return this.unidadEjecutoras;
+	}
+
+	public void setUnidadEjecutoras(Set<UnidadEjecutora> unidadEjecutoras) {
+		this.unidadEjecutoras = unidadEjecutoras;
 	}
 
 }

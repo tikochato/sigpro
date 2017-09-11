@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 11, 2017 11:21:21 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 3:37:18 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -24,6 +24,10 @@ import javax.persistence.TemporalType;
 @Table(name = "matriz_raci", catalog = "sipro")
 public class MatrizRaci implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6605635342313776568L;
 	private Integer id;
 	private Proyecto proyecto;
 	private int estado;
