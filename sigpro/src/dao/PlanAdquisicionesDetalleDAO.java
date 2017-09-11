@@ -1,5 +1,7 @@
 package dao;
 
+import javax.persistence.NoResultException;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -35,7 +37,11 @@ public class PlanAdquisicionesDetalleDAO {
 			criteria.setParameter("objetoId", ObjetoId);
 			criteria.setParameter("objetoTipo", objetoTipo);
 			ret = criteria.getSingleResult();
-		}catch(Throwable e){
+		}
+		catch(NoResultException e){
+			
+		}
+		catch(Throwable e){
 			CLogger.write("2", PlanAdquisicionesDetalleDAO.class, e);
 		}
 		finally{

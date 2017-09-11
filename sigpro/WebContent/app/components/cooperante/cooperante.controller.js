@@ -15,11 +15,14 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.paginaActual = 1;
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
-
+			mi.mostrarTipoAdquisicion = false;
 			mi.columnaOrdenada=null;
 			mi.ordenDireccion = null;
 			mi.filtros = [];
-
+			
+			mi.cooperanteTipoAdquisiciones = [];
+			mi.paginaActualTiposAdquisicion=1;
+			
 			mi.editarElemento = function (event) {
 		        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
 		        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
@@ -112,13 +115,22 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 							mi.mostrarcargando = false;
 						});
 			}
-
+			
 			mi.redireccionSinPermisos=function(){
 				$window.location.href = '/main.jsp#!/forbidden';
 			}
 
 			mi.guardar=function(){
 				if(mi.cooperante!=null && mi.cooperante.nombre!=null){
+					var tipoAdquisicioneIds="";
+					for (i = 0 ; i<mi.cooperanteTipoAdquisiciones.length ; i ++){
+						if (i==0){
+							tipoAdquisicioneIds = tipoAdquisicioneIds.concat("",mi.cooperanteTipoAdquisiciones[i].id);
+						}else{
+							tipoAdquisicioneIds = tipoAdquisicioneIds.concat(",",mi.cooperanteTipoAdquisiciones[i].id);
+						}
+					}
+					
 					$http.post('/SCooperante', {
 						accion: 'guardarCooperante',
 						esnuevo: mi.esnuevo,
@@ -126,7 +138,8 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 						codigo: mi.cooperante.codigo,
 						siglas: mi.cooperante.siglas,
 						nombre: mi.cooperante.nombre,
-						descripcion: mi.cooperante.descripcion
+						descripcion: mi.cooperante.descripcion,
+						tipoAdquisicioneIds: tipoAdquisicioneIds
 					}).success(function(response){
 						if(response.success){
 							mi.cooperante.id=response.id;
@@ -187,6 +200,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 				if(mi.cooperante!=null && mi.cooperante.id!=null){
 					mi.mostraringreso = true;
 					mi.esnuevo = false;
+					mi.cargarTotalTipoAdquisicion();
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar el Cooperante que desea editar');
@@ -236,5 +250,179 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 							mi.cargarTabla(1);
 						});
 			}
+			
+			mi.gridOptionsTipoAdquisicion = {
+					enableRowSelection : true,
+					enableRowHeaderSelection : false,
+					multiSelect: false,
+					modifierKeysToMultiSelect: false,
+					noUnselect: true,
+					enableFiltering: true,
+					enablePaginationControls: false,
+				    paginationPageSize: 10,
+					columnDefs : [
+						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
+					    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left' },
+					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
+					    { name: 'datotiponombre', displayName: 'Tipo Dato'}
 
-			} ]);
+					],
+					onRegisterApi: function(gridApi) {
+						mi.gridApi = gridApi;
+						gridApi.selection.on.rowSelectionChanged($scope,function(row) {
+							mi.programapropiedad = row.entity;
+						});
+					}
+			};
+			
+			mi.cargarTipoAdquisicion = function(pagina){
+
+				mi.mostrarcargando=true;
+				$http.post('/STipoAdquisicion',
+						{
+							accion: 'getTipoAdquisicionPaginaPorCooperante',
+							pagina: pagina,
+							idCooperante:mi.cooperante!=null ? mi.cooperante.id : null,
+							numeroTipoAdquisicion: $utilidades.elementosPorPagina }).success(
+					function(response) {
+
+						mi.cooperanteTipoAdquisiciones = response.cooperanteTipoAdquisiciones;
+						mi.gridOptionsTipoAdquisicion.data = mi.cooperanteTipoAdquisiciones;
+						mi.mostrarcargando = false;
+						mi.mostrarTipoAdquisicion = true
+					});
+
+			}
+			
+			mi.cargarTotalTipoAdquisicion = function(){
+				$http.post('/STipoAdquisicion', { accion: 'numeroTipoAdquisicion' }).success(
+						function(response) {
+							mi.totalTipoAdquisicion = response.totalTipoAdquisicion;
+							mi.cargarTipoAdquisicion(mi.paginaActualTiposAdquisicion);
+						}
+				);
+			}
+			
+			mi.buscarTipoAdquisicion = function() {
+				var modalInstance = $uibModal.open({
+				    animation : 'true',
+				    ariaLabelledBy : 'modal-title',
+				    ariaDescribedBy : 'modal-body',
+				    templateUrl : 'tipoAdquisicion.jsp',
+				    controller : 'modalTipoAdquisicion',
+				    controllerAs : 'modalBuscar',
+				    backdrop : 'static',
+				    size : 'md',
+				    resolve : {
+				    	tipoAdquisicionesIds : function() {
+							var tipoAdquisicionesIds = "";
+							var tipoAdquisicionTemp;
+							for (i = 0, len = mi.cooperanteTipoAdquisiciones.length;  i < len; i++) {
+					    		if (i == 0){
+					    			tipoAdquisicionesIds = tipoAdquisicionesIds.concat("",mi.cooperanteTipoAdquisiciones[i].id);
+					    		}else{
+					    			tipoAdquisicionesIds = tipoAdquisicionesIds.concat(",",mi.cooperanteTipoAdquisiciones[i].id);
+					    		}
+					    	}
+						    return tipoAdquisicionesIds;
+						}
+				    }
+
+				});
+
+				modalInstance.result.then(function(selectedItem) {
+					mi.cooperanteTipoAdquisiciones.push(selectedItem);
+
+				}, function() {
+				});
+			}
+
+	} ]);
+
+app.controller('modalTipoAdquisicion', ['$uibModalInstance', '$scope', '$http', '$interval', 'i18nService',
+	'Utilidades', '$timeout', '$log','tipoAdquisicionesIds', modalTipoAdquisicion]);
+
+function modalTipoAdquisicion($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log, tipoAdquisicionesIds) {
+	var mi = this;
+
+	mi.totalElementos = 0;
+	mi.paginaActual = 1;
+	mi.numeroMaximoPaginas = 5;
+	mi.elementosPorPagina = 9;
+
+	mi.mostrarCargando = false;
+	mi.data = [];
+
+	mi.itemSeleccionado = null;
+	mi.seleccionado = false;
+
+    $http.post('/STipoAdquisicion', {
+    	accion : 'numeroTipoAdquisicionesDisponibles'
+        }).success(function(response) {
+    	mi.totalElementos = response.totaltiposAdquisiciones;
+    	mi.elementosPorPagina = mi.totalElementos;
+    	mi.cargarData(1);
+    });
+
+    mi.opcionesGrid = {
+		data : mi.data,
+		columnDefs : [
+			{displayName : 'Id', name : 'id', cellClass : 'grid-align-right', type : 'number', width : 100
+			}, { displayName : 'Nombre', name : 'nombre', cellClass : 'grid-align-left'}
+		],
+		enableRowSelection : true,
+		enableRowHeaderSelection : false,
+		multiSelect : false,
+		modifierKeysToMultiSelect : false,
+		noUnselect : false,
+		enableFiltering : true,
+		enablePaginationControls : false,
+		paginationPageSize : 5,
+		onRegisterApi : function(gridApi) {
+		    mi.gridApi = gridApi;
+		    mi.gridApi.selection.on.rowSelectionChanged($scope,
+			    mi.seleccionarTipoAdquisicion);
+		}
+    }
+
+    mi.seleccionarTipoAdquisicion = function(row) {
+    	mi.itemSeleccionado = row.entity;
+    	mi.seleccionado = row.isSelected;
+    };
+
+    mi.cargarData = function(pagina) {
+    	var datos = {
+    	    accion : 'getTiposAdquisicionTotalDisponibles',
+    	    pagina : pagina,
+    	    tipoAdquisicionesIds: tipoAdquisicionesIds,
+    	    registros : mi.elementosPorPagina
+    	};
+
+    	mi.mostrarCargando = true;
+    	$http.post('/STipoAdquisicion', datos).then(function(response) {
+    	    if (response.data.success) {
+
+    	    	mi.data = response.data.cooperanteTipoAdquisiciones;
+    	    	mi.opcionesGrid.data = mi.data;
+    			mi.mostrarCargando = false;
+    	    }
+    	});
+
+     };
+     
+     mi.cambioPagina = function() {
+    	mi.cargarData(mi.paginaActual);
+      }
+
+     mi.ok = function() {
+    	if (mi.seleccionado) {
+    	    $uibModalInstance.close(mi.itemSeleccionado);
+    	} else {
+    	    $utilidades.mensaje('warning', 'Debe seleccionar un tipo de adquisición');
+    	}
+     };
+
+     mi.cancel = function() {
+    	$uibModalInstance.dismiss('cancel');
+     };
+}
