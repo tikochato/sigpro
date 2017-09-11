@@ -104,5 +104,23 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 				 	}
 			  	);
 			};
+			
+		mi.exportarPdf=function(){
+			$http.post('/SAdministracionTransaccional', { 
+				 accion: 'exportarPdf', 
+				 t:moment().unix()
+			  } ).then(
+					  function successCallback(response) {
+						  var anchor = angular.element('<a/>');
+						  anchor.attr({
+					         href: 'data:application/pdf;base64,' + response.data,
+					         target: '_blank',
+					         download: 'AdministracionTransaccional.pdf'
+						  })[0].click();
+					  }.bind(this), function errorCallback(response){
+						 		
+				 	}
+			  	);
+		};
 		
 }]);

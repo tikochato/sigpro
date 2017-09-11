@@ -615,7 +615,6 @@ public class CPdf {
 				cell = headerRow.createCell(celda_b*2,headers[0][2] );
 				cell = headerRow.createCell(celda_b*2,headers[0][3] );
 				cell = headerRow.createCell(celda_b*2,headers[0][4] );
-				//cell = headerRow.createCell(celda_b*2,headers[0][5] );
 				table_x.addHeaderRow(headerRow);
 				
 				for(int i=0; i<datos.length;i++){
@@ -625,7 +624,61 @@ public class CPdf {
 					cell = row.createCell(celda_b*2,datos[i][2] );
 					cell = row.createCell(celda_b*2,datos[i][3] );
 					cell = row.createCell(celda_b*2,datos[i][4] );
-					//cell = row.createCell(celda_b*2,datos[i][5] );
+				}
+				table_x.draw();
+				contentStream.close();
+				path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
+					FileOutputStream out = new FileOutputStream(new File(path));
+					doc.save(out);
+					doc.close();
+			}catch(Exception o){
+				o.printStackTrace();
+			}
+			
+			
+			return path;
+		}
+		public String ExportarPdfAdministracionTransaccional	(String [][]headers, String [][]datos, String usuario){
+			String path ="";
+			tipo_reporte=4;
+			try{
+				String [] cabeceras = new String[headers[0].length];
+				PDFont font = PDType1Font.HELVETICA_BOLD;
+				page = new PDPage(new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth()));
+			    doc.addPage( page );
+				PDPageContentStream contentStream = new PDPageContentStream(doc, page);
+				contentStream.beginText();
+				contentStream.setFont(font, 18);
+				contentStream.newLineAtOffset(50, 550);
+				contentStream.showText("Ministerio de Finanzas Públicas");
+				contentStream.endText();
+				contentStream.beginText();
+				contentStream.setFont(font, 12);
+				contentStream.newLineAtOffset(50, 530);
+				contentStream.showText("Reporte: "+titulo);
+				contentStream.endText();
+				float margin = 50;
+				float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
+				float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
+				boolean drawContent = true;
+				float bottomMargin = 70;
+				BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
+				Row<PDPage> headerRow = table_x.createRow(12);
+				int corrimiento=0;
+				float tam_celda=celda_b*2.5f;
+				Cell<PDPage> cell;
+				cell = headerRow.createCell((float)(celda_a*2.3f),headers[0][0] );
+				cell = headerRow.createCell(tam_celda,headers[0][1] );
+				cell = headerRow.createCell(tam_celda,headers[0][2] );
+				cell = headerRow.createCell(tam_celda,headers[0][3] );
+				table_x.addHeaderRow(headerRow);
+				
+				for(int i=0; i<datos.length;i++){
+					Row<PDPage> row = table_x.createRow(12);
+					cell = row.createCell((float)(celda_a*2.3f),datos[i][0] );
+					cell = row.createCell(tam_celda,datos[i][1] );
+					cell = row.createCell(tam_celda,datos[i][2] );
+					cell = row.createCell(tam_celda,datos[i][3] );
 				}
 				table_x.draw();
 				contentStream.close();
