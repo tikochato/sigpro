@@ -32,7 +32,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 	mi.totalProyectos = 0;
 	mi.mostrarPrestamo = true;
-
+	mi.ordenTab=0;
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion = null;
 	mi.filtros = [];
@@ -570,7 +570,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		mi.esColapsado=false;
 		mi.esNuevo = false;
 	}
-
+	mi.cambioOrden=function(){
+		mi.ordenTab++;
+	}
 	mi.guardarEstado=function(){
 		var estado = mi.gridApi.saveState.save();
 		var tabla_data = { action: 'guardaEstado', grid:'proyceto', estado: JSON.stringify(estado) };
