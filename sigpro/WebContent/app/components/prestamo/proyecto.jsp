@@ -31,7 +31,9 @@
 	<shiro:lacksPermission name="24010">
 		<p ng-init="controller.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
-	
+	<shiro:hasPermission name="43010">
+		<p ng-init="controller.cambioOrden()"></p>
+	</shiro:hasPermission>
 	<div class="panel panel-default">
 	  <div class="panel-heading"><h3>Préstamos</h3></div>
 	</div>
@@ -376,7 +378,7 @@
 					
 				</uib-tab>
 				</shiro:hasPermission>
-				<uib-tab index="0" heading="Datos generales" >
+				<uib-tab index="controller.ordenTab" heading="Datos generales" >
 					<div class="form-group">
 						<label for="id" class="floating-label">ID {{ controller.proyecto.id }}</label>
 						<br/><br/>
@@ -608,7 +610,7 @@
 					</div>
 				</uib-tab>
 				<shiro:hasPermission name="43010">
-				<uib-tab ng-click="controller.getPorcentajes();" index="2" heading="Datos Entidad Ejecutora" >
+				<uib-tab ng-click="controller.getPorcentajes();" index="controller.ordenTab+1" heading="Datos Entidad Ejecutora" >
 					<div class="panel panel-default">
 						<div class="panel-heading label-form" style="text-align: center;">Información Específica del Préstamo en la Entidad Ejecutora</div>
 						<div class="panel-body">
@@ -810,7 +812,7 @@
 					</div>
 				
 				</uib-tab>
-				<uib-tab index="3" heading="Datos adicionales" ng-if="controller.mostrarPrestamo" >
+				<uib-tab index="controller.ordenTab+2" heading="Datos adicionales" ng-if="controller.mostrarPrestamo" >
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
@@ -1179,7 +1181,7 @@
 					</div>
 				
 				</uib-tab>
-				<uib-tab index= "4" heading="Acta de constitución" ng-if="false">
+				<uib-tab index= "controller.ordenTab+3" heading="Acta de constitución" ng-if="false">
 					
 					<div class="form-group">
 						<label for="id" class="floating-label">Nombre del Proyecto {{ controller.proyecto.nombre }}</label>
