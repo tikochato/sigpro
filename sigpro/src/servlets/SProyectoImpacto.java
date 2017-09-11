@@ -71,7 +71,7 @@ public class SProyectoImpacto extends HttpServlet {
 			if (proyectoImpactos!=null){
 				for (ProyectoImpacto pi : proyectoImpactos){
 					stimpacto temp = new stimpacto();
-					temp.entidadId = pi.getEntidad().getEntidad();
+					temp.entidadId = pi.getEntidad().getId().getEntidad();
 					temp.entidadNombre = pi.getEntidad().getNombre();
 					temp.impacto = pi.getImpacto();
 					temp.estado = pi.getEstado();
