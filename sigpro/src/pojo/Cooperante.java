@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 11:21:21 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -22,10 +22,6 @@ import javax.persistence.TemporalType;
 @Table(name = "cooperante", catalog = "sipro")
 public class Cooperante implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4963512447232962463L;
 	private Integer id;
 	private int codigo;
 	private String siglas;
@@ -37,6 +33,7 @@ public class Cooperante implements java.io.Serializable {
 	private Date fechaActualizacion;
 	private int estado;
 	private Set<Proyecto> proyectos = new HashSet<Proyecto>(0);
+	private Set<TipoAdquisicion> tipoAdquisicions = new HashSet<TipoAdquisicion>(0);
 	private Set<Prestamo> prestamos = new HashSet<Prestamo>(0);
 
 	public Cooperante() {
@@ -52,7 +49,7 @@ public class Cooperante implements java.io.Serializable {
 
 	public Cooperante(int codigo, String siglas, String nombre, String descripcion, String usuarioCreo,
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Set<Proyecto> proyectos,
-			Set<Prestamo> prestamos) {
+			Set<TipoAdquisicion> tipoAdquisicions, Set<Prestamo> prestamos) {
 		this.codigo = codigo;
 		this.siglas = siglas;
 		this.nombre = nombre;
@@ -63,6 +60,7 @@ public class Cooperante implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
 		this.proyectos = proyectos;
+		this.tipoAdquisicions = tipoAdquisicions;
 		this.prestamos = prestamos;
 	}
 
@@ -168,6 +166,15 @@ public class Cooperante implements java.io.Serializable {
 
 	public void setProyectos(Set<Proyecto> proyectos) {
 		this.proyectos = proyectos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cooperante")
+	public Set<TipoAdquisicion> getTipoAdquisicions() {
+		return this.tipoAdquisicions;
+	}
+
+	public void setTipoAdquisicions(Set<TipoAdquisicion> tipoAdquisicions) {
+		this.tipoAdquisicions = tipoAdquisicions;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cooperante")

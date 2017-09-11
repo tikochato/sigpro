@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 11:21:21 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -11,10 +11,6 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class EstructuraArbolId implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5214447754136064787L;
 	private Integer prestamo;
 	private Integer componente;
 	private Integer producto;
@@ -122,7 +118,6 @@ public class EstructuraArbolId implements java.io.Serializable {
 		this.fechaFin = fechaFin;
 	}
 
-	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -154,7 +149,6 @@ public class EstructuraArbolId implements java.io.Serializable {
 						&& castOther.getFechaFin() != null && this.getFechaFin().equals(castOther.getFechaFin())));
 	}
 
-	@Override
 	public int hashCode() {
 		int result = 17;
 

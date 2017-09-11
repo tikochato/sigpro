@@ -261,7 +261,7 @@ public class SubproductoDAO {
 			}
 			
 			if (pojo.getUnidadEjecutora() != null){
-				estructuraPojo.unidadEjectuora = pojo.getUnidadEjecutora().getUnidadEjecutora();
+				estructuraPojo.unidadEjectuora = pojo.getUnidadEjecutora().getId().getUnidadEjecutora();
 				estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
 			}
 			

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 11:21:21 AM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,10 +15,6 @@ import javax.persistence.Table;
 @Table(name = "mv_pr_estructura", catalog = "sipro")
 public class MvPrEstructura implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 9107978885989862821L;
 	private Integer id;
 	private Integer objetoId;
 	private Integer objetoTipo;

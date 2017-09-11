@@ -1,14 +1,14 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 11:21:21 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -21,11 +21,7 @@ import javax.persistence.Table;
 @Table(name = "unidad_ejecutora", catalog = "sipro")
 public class UnidadEjecutora implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8956254344413330777L;
-	private Integer unidadEjecutora;
+	private UnidadEjecutoraId id;
 	private Entidad entidad;
 	private String nombre;
 	private Set<Componente> componentes = new HashSet<Componente>(0);
@@ -38,13 +34,16 @@ public class UnidadEjecutora implements java.io.Serializable {
 	public UnidadEjecutora() {
 	}
 
-	public UnidadEjecutora(Entidad entidad, String nombre) {
+	public UnidadEjecutora(UnidadEjecutoraId id, Entidad entidad, String nombre) {
+		this.id = id;
 		this.entidad = entidad;
 		this.nombre = nombre;
 	}
 
-	public UnidadEjecutora(Entidad entidad, String nombre, Set<Componente> componentes, Set<Colaborador> colaboradors,
-			Set<Subproducto> subproductos, Set<Prestamo> prestamos, Set<Producto> productos, Set<Proyecto> proyectos) {
+	public UnidadEjecutora(UnidadEjecutoraId id, Entidad entidad, String nombre, Set<Componente> componentes,
+			Set<Colaborador> colaboradors, Set<Subproducto> subproductos, Set<Prestamo> prestamos,
+			Set<Producto> productos, Set<Proyecto> proyectos) {
+		this.id = id;
 		this.entidad = entidad;
 		this.nombre = nombre;
 		this.componentes = componentes;
@@ -55,20 +54,22 @@ public class UnidadEjecutora implements java.io.Serializable {
 		this.proyectos = proyectos;
 	}
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
+	@EmbeddedId
 
-	@Column(name = "unidad_ejecutora", unique = true, nullable = false)
-	public Integer getUnidadEjecutora() {
-		return this.unidadEjecutora;
+	@AttributeOverrides({
+			@AttributeOverride(name = "unidadEjecutora", column = @Column(name = "unidad_ejecutora", nullable = false)),
+			@AttributeOverride(name = "entidadentidad", column = @Column(name = "entidadentidad", nullable = false)),
+			@AttributeOverride(name = "ejercicio", column = @Column(name = "ejercicio", nullable = false)) })
+	public UnidadEjecutoraId getId() {
+		return this.id;
 	}
 
-	public void setUnidadEjecutora(Integer unidadEjecutora) {
-		this.unidadEjecutora = unidadEjecutora;
+	public void setId(UnidadEjecutoraId id) {
+		this.id = id;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "entidadentidad", nullable = false)
+	@JoinColumn(name = "entidadentidad", nullable = false, insertable = false, updatable = false)
 	public Entidad getEntidad() {
 		return this.entidad;
 	}

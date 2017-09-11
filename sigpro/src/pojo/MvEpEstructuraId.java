@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 11:21:21 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import javax.persistence.Column;
@@ -11,10 +11,6 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class MvEpEstructuraId implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8803975496713000142L;
 	private Integer ejercicio;
 	private Integer fuente;
 	private Integer organismo;
@@ -256,7 +252,6 @@ public class MvEpEstructuraId implements java.io.Serializable {
 		this.diciembre = diciembre;
 	}
 
-	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -312,7 +307,6 @@ public class MvEpEstructuraId implements java.io.Serializable {
 						&& castOther.getDiciembre() != null && this.getDiciembre().equals(castOther.getDiciembre())));
 	}
 
-	@Override
 	public int hashCode() {
 		int result = 17;
 

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 11:21:21 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.AttributeOverride;
@@ -21,10 +21,6 @@ import javax.persistence.TemporalType;
 @Table(name = "subprodtipo_propiedad", catalog = "sipro")
 public class SubprodtipoPropiedad implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8667260906584946121L;
 	private SubprodtipoPropiedadId id;
 	private SubproductoPropiedad subproductoPropiedad;
 	private SubproductoTipo subproductoTipo;

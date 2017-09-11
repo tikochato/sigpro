@@ -625,8 +625,12 @@ public class SProducto extends HttpServlet {
 				if(esnuevo){
 					Componente componente = new Componente();
 					componente.setId(componenteId);
-					producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, usuario, new Date(), fechaInicio, fechaFin, duracion, duracionDimension);
+					producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, usuario, new Date());
 					producto.setEstado(1);
+					producto.setFechaInicio(fechaInicio);
+					producto.setFechaFin(fechaFin);
+					producto.setDuracion(duracion);
+					producto.setDuracionDimension(duracionDimension);
 				}else{
 					producto = ProductoDAO.getProductoPorId(id);
 					producto.setProductoTipo(productoTipo);

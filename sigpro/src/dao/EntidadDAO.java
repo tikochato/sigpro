@@ -70,7 +70,7 @@ public class EntidadDAO {
 
 		if (nuevaEntidad == null) {
 			nuevaEntidad = new Entidad();
-			nuevaEntidad.setEntidad(entidad);
+			//nuevaEntidad.setEntidad(entidad);
 			nuevaEntidad.setNombre(nombre);
 			nuevaEntidad.setAbreviatura(abreviatura);
 			nuevaEntidad.setUnidadEjecutoras(null);
@@ -155,7 +155,7 @@ public class EntidadDAO {
 
 		for (Entidad entidadPojo : entidadesPojo) {
 			EstructuraEntidad entidad = new EstructuraEntidad();
-			entidad.entidad = entidadPojo.getEntidad();
+			entidad.entidad = entidadPojo.getId().getEntidad();
 			entidad.nombre = entidadPojo.getNombre();
 			entidad.abreviatura = entidadPojo.getAbreviatura();
 
