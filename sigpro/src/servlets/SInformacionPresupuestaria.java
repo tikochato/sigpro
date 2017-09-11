@@ -170,10 +170,9 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		        byte [] outArray = exportarExcel(idPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, usuario);
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
-				response.setHeader("Expires:", "0"); 
-				response.setHeader("Content-Disposition", "attachment; EjecucionPresupuestaria_.xls");
+				response.setHeader("Cache-Control", "no-cache"); 
+				response.setHeader("Content-Disposition", "attachment; Ejecucion_Presupuestaria.xls");
 				ServletOutputStream outStream = response.getOutputStream();
-				//OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
 				outStream.close();
@@ -224,8 +223,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			        byte [] outArray = Base64.encode(outByteStream.toByteArray());
 					response.setContentType("application/pdf");
 					response.setContentLength(outArray.length);
-					response.setHeader("Expires:", "0"); 
-					response.setHeader("Content-Disposition", "in-line; 'PrestamoMetas.pdf'");
+					response.setHeader("Cache-Control", "no-cache"); 
+					response.setHeader("Content-Disposition", "in-line; 'Ejecucion_Presupuestaria.pdf'");
 					OutputStream outStream = response.getOutputStream();
 					outStream.write(outArray);
 					outStream.flush();

@@ -319,8 +319,8 @@ public class SCargaTrabajo extends HttpServlet {
 				
 					response.setContentType("application/ms-excel");
 					response.setContentLength(outArray.length);
-					response.setHeader("Expires:", "0"); 
-					response.setHeader("Content-Disposition", "attachment; CargaTrabajo_.xls");
+					response.setHeader("Cache-Control", "no-cache"); 
+					response.setHeader("Content-Disposition", "attachment; CargaTrabajo_de_Trabajo.xls");
 					OutputStream outStream = response.getOutputStream();
 					outStream.write(outArray);
 					outStream.flush();
@@ -331,15 +331,17 @@ public class SCargaTrabajo extends HttpServlet {
 				response_text = "{ \"success\": false }";
 			}
 		
-		response.setHeader("Content-Encoding", "gzip");
-		response.setCharacterEncoding("UTF-8");
-		
-	    OutputStream output = response.getOutputStream();
-		GZIPOutputStream gz = new GZIPOutputStream(output);
-	    gz.write(response_text.getBytes("UTF-8"));
-	    gz.close();
-	    output.close();
-	
+			response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
+			
+			
+			if (!accion.equals("exportarExcel")){
+			    OutputStream output = response.getOutputStream();
+				GZIPOutputStream gz = new GZIPOutputStream(output);
+			    gz.write(response_text.getBytes("UTF-8"));
+			    gz.close();
+			    output.close();
+			}
 		}
 	
 	private String construirItem(String nombre, Integer objetoId, Integer objetoTipo, String value,String hijos){

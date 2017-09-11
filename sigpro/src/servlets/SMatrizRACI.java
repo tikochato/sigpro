@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
+import java.math.BigInteger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,6 +29,7 @@ import com.google.gson.reflect.TypeToken;
 import dao.ActividadDAO;
 import dao.AsignacionRaciDAO;
 import dao.ComponenteDAO;
+import dao.EstructuraProyectoDAO;
 import dao.InformacionPresupuestariaDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
@@ -114,8 +116,13 @@ public class SMatrizRACI extends HttpServlet {
 		String response_text="";
 		
 		if(accion.equals("getMatriz")){
+			List<stmatriz> lstMatriz;
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-			List<stmatriz> lstMatriz = getMatriz(idPrestamo, usuario);
+			if (idPrestamo == 30)
+				lstMatriz = getMatriz(idPrestamo, usuario);
+			else
+				lstMatriz = getMatriz(idPrestamo);
+				
 			List<stcolaborador> stcolaboradores = getColaboradores(idPrestamo, usuario);
 			if(lstMatriz!=null && stcolaboradores!=null){
 				String response_col = new GsonBuilder().serializeNulls().create().toJson(stcolaboradores);
@@ -205,8 +212,8 @@ public class SMatrizRACI extends HttpServlet {
 		
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
-				response.setHeader("Expires:", "0"); 
-				response.setHeader("Content-Disposition", "attachment; MatrizRACI_.xls");
+				response.setHeader("Cache-Control", "no-cache"); 
+				response.setHeader("Content-Disposition", "attachment; Matriz_RACI.xls");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
@@ -225,7 +232,23 @@ public class SMatrizRACI extends HttpServlet {
 	    gz.write(response_text.getBytes("UTF-8"));
 	    gz.close();
 	    output.close();
-
+	
+	}
+	
+	private List<stmatriz> getMatriz(Integer idPrestamo){
+		List<stmatriz> lstMatriz= new ArrayList<>();
+		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+		for(Object objeto : estructuraProyecto){
+			Object[] obj = (Object[]) objeto;
+			stmatriz tempmatriz = new stmatriz();
+			tempmatriz.objetoId = (Integer)obj[0];
+			tempmatriz.objetoNombre = (String)obj[1];
+			tempmatriz.nivel = (Integer)obj[4] +1;
+			tempmatriz.objetoTipo = ((BigInteger) obj[2]).intValue();
+			getAsignacionRACI(tempmatriz);
+			lstMatriz.add(tempmatriz);
+		}
+		return lstMatriz;
 	}
 	
 	private List<stmatriz> getMatriz(Integer idPrestamo, String usuario){
