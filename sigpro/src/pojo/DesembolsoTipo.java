@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 11, 2017 10:44:41 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -22,10 +22,6 @@ import javax.persistence.TemporalType;
 @Table(name = "desembolso_tipo", catalog = "sipro")
 public class DesembolsoTipo implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5139108494337064059L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
