@@ -44,7 +44,7 @@ public class EntidadDAO {
 		return entidades;
 	}
 
-	public static Entidad getEntidad(Integer entidad) {
+	public static Entidad getEntidad(Integer entidad, Integer ejercicio) {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Entidad ret = null;
 		try {
@@ -53,7 +53,7 @@ public class EntidadDAO {
 			CriteriaQuery<Entidad> criteria = builder.createQuery(Entidad.class);
 			Root<Entidad> root = criteria.from(Entidad.class);
 			criteria.select(root);
-			criteria.where(builder.equal(root.get("entidad"), entidad));
+			criteria.where(builder.and(builder.equal(root.get("id.entidad"), entidad), builder.equal(root.get("id.ejercicio"), ejercicio)));
 			ret = session.createQuery(criteria).getSingleResult();
 		} catch (Throwable e) {
 			CLogger.write("2", EntidadDAO.class, e);
@@ -63,9 +63,9 @@ public class EntidadDAO {
 		return ret;
 	}
 
-	public static boolean guardarEntidad(int entidad, String nombre, String abreviatura) {
+	public static boolean guardarEntidad(int entidad, int ejercicio, String nombre, String abreviatura) {
 
-		Entidad nuevaEntidad = getEntidad(entidad);
+		Entidad nuevaEntidad = getEntidad(entidad, ejercicio);
 		boolean ret = false;
 
 		if (nuevaEntidad == null) {
@@ -91,9 +91,9 @@ public class EntidadDAO {
 		return ret;
 	}
 
-	public static boolean actualizarEntidad(int entidad, String abreviatura) {
+	public static boolean actualizarEntidad(int entidad, int ejercicio,String abreviatura) {
 
-		Entidad existeEntidad = getEntidad(entidad);
+		Entidad existeEntidad = getEntidad(entidad, ejercicio);
 		boolean ret = false;
 
 		if (existeEntidad != null) {

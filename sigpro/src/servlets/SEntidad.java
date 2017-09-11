@@ -67,24 +67,24 @@ public class SEntidad extends HttpServlet {
     }
 
     private void crearEntidad(Map<String, String> parametro, HttpServletResponse response) throws IOException {
-	Integer entidad = Utils.String2Int(parametro.get("entidad"), -1);
-	String nombre = parametro.get("nombre");
-	String abreviatura = parametro.get("abreviatura");
-
-	boolean creado = EntidadDAO.guardarEntidad(entidad, nombre, abreviatura);
-
-	if (creado) {
-	    listarEntidades(parametro, response);
-	} else {
-
-	}
+		Integer entidad = Utils.String2Int(parametro.get("entidad"), -1);
+		String nombre = parametro.get("nombre");
+		String abreviatura = parametro.get("abreviatura");
+		Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"),-1);
+	
+		boolean creado = EntidadDAO.guardarEntidad(entidad, ejercicio, nombre, abreviatura);
+	
+		if (creado) {
+		    listarEntidades(parametro, response);
+		} 
     }
 
     private void actualizarEntidad(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 	Integer entidad = Utils.String2Int(parametro.get("entidad"), -1);
 	String abreviatura = parametro.get("abreviatura");
-
-	boolean actualizado = EntidadDAO.actualizarEntidad(entidad, abreviatura);
+	Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"),-1);
+	
+	boolean actualizado = EntidadDAO.actualizarEntidad(entidad,ejercicio, abreviatura);
 
 	if (actualizado) {
 	    listarEntidades(parametro, response);

@@ -7,13 +7,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import org.joda.time.DateTime;
 
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
+import dao.ComponenteTipoDAO;
+import dao.CooperanteDAO;
+import dao.EntidadDAO;
 import dao.ProductoDAO;
 import dao.ProgramaDAO;
 import dao.ProyectoDAO;
+import dao.ProyectoTipoDAO;
 import dao.SubproductoDAO;
+import dao.UnidadEjecutoraDAO;
 import net.sf.mpxj.ProjectFile;
 import net.sf.mpxj.Relation;
 import net.sf.mpxj.Task;
@@ -64,7 +70,8 @@ public class CProject {
 	static int PROGRAMA_TIPO_ID_DEFECTO = 1;
 	static int COOPERANTE_ID_DEFECTO = 1;
 	static int PROYECTO_TIPO_ID_DEFECTO = 3;
-	static int UNIDAD_EJECUTORA_ID_DEFECTO = 1;
+	static int ENTIDAD_ID_DEFECTO = 0;
+	static int UNIDAD_EJECUTORA_ID_DEFECTO = 0;
 	static int COMPONENTE_TIPO_ID_DEFECTO = 2;
 	static int PRODUCTO_TIPO_ID_DEFECTO = 7;
 	static int SUBPRODUCTO_TIPO__ID_DEFECTO = 1;
@@ -162,12 +169,9 @@ public class CProject {
 	}
 	
 	public Proyecto crearProyecto(Task task,String usuario){
-		Cooperante cooperante = new Cooperante();
-		cooperante.setId(COOPERANTE_ID_DEFECTO);
-		ProyectoTipo proyectoTipo = new ProyectoTipo();
-		proyectoTipo.setId(PROYECTO_TIPO_ID_DEFECTO);
-		UnidadEjecutora unidadEjecturoa = new UnidadEjecutora();
-		unidadEjecturoa.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
+		Cooperante cooperante =CooperanteDAO.getCooperantePorCodigo(COOPERANTE_ID_DEFECTO);
+		ProyectoTipo proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(PROYECTO_TIPO_ID_DEFECTO);
+		UnidadEjecutora unidadEjecturoa = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(),ENTIDAD_ID_DEFECTO,UNIDAD_EJECUTORA_ID_DEFECTO);
 		Proyecto proyecto = new Proyecto(null,null,cooperante, proyectoTipo, unidadEjecturoa
 				, task.getName(), null, usuario, null, new Date(), null, 1
 				, null, null, null, null, null, null, null,null, null, null, null, null, null, null,null,
@@ -181,10 +185,10 @@ public class CProject {
 	public Componente crearComponente(Task task,Proyecto proyecto ,String usuario,int orden){
 		
 		
-		ComponenteTipo componenteTipo = new ComponenteTipo();
-		componenteTipo.setId(COMPONENTE_TIPO_ID_DEFECTO);
-		UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-		unidadEjecutora.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
+		ComponenteTipo componenteTipo = ComponenteTipoDAO.getComponenteTipoPorId(COMPONENTE_TIPO_ID_DEFECTO);
+		
+		int year = new DateTime().getYear();
+		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
 		
 		
 		
@@ -201,8 +205,7 @@ public class CProject {
 		
 		ProductoTipo productoTipo = new ProductoTipo();
 		productoTipo.setId(PRODUCTO_TIPO_ID_DEFECTO);
-		UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-		unidadEjecutora.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
+		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(), ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
 		
 		Producto producto = new Producto(null,componente, productoTipo, unidadEjecutora
 				,task.getName() , null, usuario, null, new Date(), null,1, 
@@ -220,8 +223,7 @@ public class CProject {
 		SubproductoTipo subproductoTipo = new SubproductoTipo();
 		subproductoTipo.setId(SUBPRODUCTO_TIPO__ID_DEFECTO);
 		
-		UnidadEjecutora unidadEjecutroa = new UnidadEjecutora();
-		unidadEjecutroa.setUnidadEjecutora(UNIDAD_EJECUTORA_ID_DEFECTO);
+		UnidadEjecutora unidadEjecutroa = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(), ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
 		
 		Subproducto subproducto = new Subproducto(null,producto, subproductoTipo, unidadEjecutroa,task.getName(), 
 				null, usuario, null, new Date(), null, 1,null, null, null, null, null, null, null, null,

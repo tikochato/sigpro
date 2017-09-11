@@ -10,6 +10,7 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojo.Entidad;
 import pojo.UnidadEjecutora;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -27,7 +28,7 @@ public class UnidadEjecutoraDAO {
 		String fechaActualizacion;
 	}
 
-	public static UnidadEjecutora getUnidadEjecutora(Integer unidadEjecutora) {
+	public static UnidadEjecutora getUnidadEjecutora(Integer ejercicio, Integer entidad,Integer unidadEjecutora) {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		UnidadEjecutora ret = null;
 		try {
@@ -36,7 +37,8 @@ public class UnidadEjecutoraDAO {
 			CriteriaQuery<UnidadEjecutora> criteria = builder.createQuery(UnidadEjecutora.class);
 			Root<UnidadEjecutora> root = criteria.from(UnidadEjecutora.class);
 			criteria.select(root);
-			criteria.where(builder.equal(root.get("unidadEjecutora"), unidadEjecutora));
+			criteria.where(builder.and(builder.equal(root.get("unidadEjecutora"), unidadEjecutora), 
+					builder.and(builder.equal(root.get("id.entidadentidad"),entidad)),builder.equal(root.get("id.ejercicio"), ejercicio)));
 			ret = session.createQuery(criteria).getSingleResult();
 		} catch (Throwable e) {
 			CLogger.write("2", UnidadEjecutoraDAO.class, e);
@@ -65,9 +67,9 @@ public class UnidadEjecutoraDAO {
 		return ret;
 	}
 	
-	public static boolean guardar(int codigo, String nombre, int codigoEntidad) {
+	public static boolean guardar(int idEntidad, int ejercicio,int id, String nombre) {
 
-		UnidadEjecutora pojo = getUnidadEjecutora(codigo);
+		UnidadEjecutora pojo = getUnidadEjecutora(ejercicio, idEntidad,id);
 		boolean ret = false;
 
 		if (pojo == null) {
@@ -76,7 +78,7 @@ public class UnidadEjecutoraDAO {
 			//pojo.setUnidadEjecutora(codigo);
 			pojo.setNombre(nombre);
 
-			pojo.setEntidad(EntidadDAO.getEntidad(codigoEntidad));
+			pojo.setEntidad(EntidadDAO.getEntidad(ejercicio, idEntidad));
 
 			pojo.setProyectos(null);
 			pojo.setColaboradors(null);
@@ -97,15 +99,15 @@ public class UnidadEjecutoraDAO {
 		return ret;
 	}
 
-	public static boolean actualizar(int codigo, String nombre, int codigoEntidad) {
+	public static boolean actualizar(int idEntidad, int ejercicio,int id, String nombre) {
 
-		UnidadEjecutora pojo = getUnidadEjecutora(codigo);
+		UnidadEjecutora pojo = getUnidadEjecutora(ejercicio, idEntidad, id);
 		boolean ret = false;
 
 		if (pojo != null) {
 
 			pojo.setNombre(nombre);
-			pojo.setEntidad(EntidadDAO.getEntidad(codigoEntidad));
+			pojo.setEntidad(EntidadDAO.getEntidad(ejercicio, idEntidad));
 
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try {

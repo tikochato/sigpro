@@ -86,8 +86,9 @@ public class SUnidadEjecutora extends HttpServlet {
     		int codigo = Utils.String2Int(parametro.get("codigo"));
     		String nombre = parametro.get("nombre");
     		int codigoEntidad = Utils.String2Int(parametro.get("entidad"));
+    		Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"),-1);
     	   		
-    		boolean creado = UnidadEjecutoraDAO.guardar(codigo, nombre, codigoEntidad);
+    		boolean creado = UnidadEjecutoraDAO.guardar(codigoEntidad, ejercicio, codigo, nombre);
     		if (creado) {
     		    listar(parametro, response);
     		}
@@ -102,8 +103,9 @@ public class SUnidadEjecutora extends HttpServlet {
 		int codigo = Utils.String2Int(parametro.get("codigo"));
 		String nombre = parametro.get("nombre");
 		int codigoEntidad = Utils.String2Int(parametro.get("entidad"));
+		Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"),-1);
 	
-		boolean actualizado = UnidadEjecutoraDAO.actualizar(codigo, nombre, codigoEntidad);
+		boolean actualizado = UnidadEjecutoraDAO.actualizar(codigoEntidad, ejercicio, codigo, nombre);
 	
 		if (actualizado) {
 		    listar(parametro, response);
