@@ -227,7 +227,7 @@ public class SComponente extends HttpServlet {
 					int proyectoid= map.get("proyectoid")!=null ? Integer.parseInt(map.get("proyectoid")) : 0;
 					int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;
 					int ejercicio =Utils.String2Int(map.get("ejercicio"),0);
-					int entidadId = Utils.String2Int(map.get("entidadId"));
+					int entidad = Utils.String2Int(map.get("entidad"));
 					Long snip = map.get("snip")!=null ? Long.parseLong(map.get("snip")) : null;
 					Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
 					Integer subPrograma = map.get("subprograma")!=null ?  Integer.parseInt(map.get("subprograma")) : null;
@@ -256,7 +256,7 @@ public class SComponente extends HttpServlet {
 
 					UnidadEjecutora unidadEjecutora_ = new UnidadEjecutora();
 					
-					UnidadEjecutoraId ueIdTemp  = new UnidadEjecutoraId(unidadEjecutoraId, entidadId, ejercicio);
+					UnidadEjecutoraId ueIdTemp  = new UnidadEjecutoraId(unidadEjecutoraId, entidad, ejercicio);
 					unidadEjecutora_.setId(ueIdTemp);
 					
 
@@ -371,7 +371,7 @@ public class SComponente extends HttpServlet {
 					String nombre = map.get("nombre");	
 					int componentetipoid = map.get("componentetipoid")!=null ? Integer.parseInt(map.get("componentetipoid")) : 0;	
 					int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;
-					int entidadId = Utils.String2Int(map.get("entidadId"),0);
+					int entidad = Utils.String2Int(map.get("entidad"),0);
 					int ejercicio = Utils.String2Int(map.get("ejercicio"),0);
 					Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
 					Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
@@ -379,7 +379,7 @@ public class SComponente extends HttpServlet {
 					String duracionDimension = map.get("duracionDimension");
 					ComponenteTipo componenteTipo= new ComponenteTipo();
 					componenteTipo.setId(componentetipoid);
-					UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidadId,unidadEjecutoraId);
+					UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad,unidadEjecutoraId);
 					
 					if (esnuevo){
 						Proyecto proyecto = new Proyecto();

@@ -32,6 +32,8 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		mi.filtros = [];
 		mi.orden = null;
 		mi.coordenadas = "";
+		mi.entidad='';
+		mi.ejercicio = '';
 
 		mi.dimensiones = [
 			{value:0,nombre:'Seleccione una opción'},
@@ -177,6 +179,8 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					renglon: mi.componente.renglon,
 					ubicacionGeografica: mi.componente.ubicacionGeografica,
 					esnuevo: mi.esnuevo,
+					ejercicio: mi.ejercicio,
+					entidad: mi.entidad,
 					unidadejecutoraid:mi.unidadejecutoraid,
 					longitud: mi.componente.longitud,
 					latitud : mi.componente.latitud,
@@ -396,7 +400,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		}
 		
 		mi.buscarAcumulacionCosto = function(){
-			var resultado = mi.llamarModalBusqueda('/SAcumulacionCosto', {
+			var resultado = mi.llamarModalBusqueda('Acumulación','/SAcumulacionCosto', {
 				accion : 'numeroAcumulacionCosto' 
 			}, function(pagina, elementosPorPagina){
 				return{
@@ -404,7 +408,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					pagina: pagina,
 					numeroacumulacioncosto : elementosPorPagina
 				}
-			}, 'id','nombre');
+			}, 'id','nombre',false);
 			
 			resultado.then(function(itemSeleccionado){
 				mi.componente.acumulacionCostoNombre = itemSeleccionado.nombre;
@@ -412,7 +416,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			});
 		}
 
-		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
+		mi.llamarModalBusqueda = function(titulo,servlet, accionServlet, datosCarga,columnaId,columnaNombre, showfilters) {
 			var resultado = $q.defer();
 			var modalInstance = $uibModal.open({
 				animation : 'true',
@@ -424,6 +428,9 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				backdrop : 'static',
 				size : 'md',
 				resolve : {
+					$titulo : function() {
+						return titulo;
+					},
 					$servlet : function() {
 						return servlet;
 					},
@@ -438,6 +445,9 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					},
 					$columnaNombre : function() {
 						return columnaNombre;
+					},
+					$showfilters: function(){
+						return showfilters;
 					}
 				}
 			});
@@ -450,7 +460,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 
 
 		mi.buscarComponenteTipo = function() {
-			var resultado = mi.llamarModalBusqueda('/SComponenteTipo', {
+			var resultado = mi.llamarModalBusqueda('Tipos de Componente','/SComponenteTipo', {
 				accion : 'numeroComponenteTipos'
 			}, function(pagina, elementosPorPagina) {
 				return {
@@ -458,7 +468,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					pagina : pagina,
 					numerocomponentetipos : elementosPorPagina
 				};
-			},'id','nombre');
+			},'id','nombre',false);
 
 			resultado.then(function(itemSeleccionado) {
 				mi.componentetipoid = itemSeleccionado.id;
@@ -492,19 +502,23 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		};
 
 		mi.buscarUnidadEjecutora = function() {
-			var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
+			var resultado = mi.llamarModalBusqueda('Unidades Ejecutoras','/SUnidadEjecutora', {
 				accion : 'totalElementos'
-			}, function(pagina, elementosPorPagina) {
+			}, function(pagina, elementosPorPagina,entidad, ejercicio) {
 				return {
 					accion : 'cargar',
 					pagina : pagina,
-					registros : elementosPorPagina
+					registros : elementosPorPagina,
+					entidad: entidad,
+					ejercicio: ejercicio
 				};
-			},'unidadEjecutora','nombreUnidadEjecutora');
+			},'unidadEjecutora','nombreUnidadEjecutora',true);
 
 			resultado.then(function(itemSeleccionado) {
 				mi.unidadejecutoraid = itemSeleccionado.unidadEjecutora;
 				mi.unidadejecutoranombre = itemSeleccionado.nombreUnidadEjecutora;
+				mi.entidad = itemSeleccionado.entidad;
+				mi.ejercicio = itemSeleccionado.ejercicio;
 			});
 		};
 		
@@ -541,11 +555,11 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 
 app.controller('buscarPorComponente', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', '$servlet', '$accionServlet', '$datosCarga',
-	'$columnaId','$columnaNombre',buscarPorComponente ]);
+	'$timeout', '$log', '$titulo','$servlet', '$accionServlet', '$datosCarga',
+	'$columnaId','$columnaNombre','$showfilters',buscarPorComponente ]);
 
 function buscarPorComponente($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $servlet,$accionServlet,$datosCarga,$columnaId,$columnaNombre) {
+	i18nService, $utilidades, $timeout, $log, $titulo,$servlet,$accionServlet,$datosCarga,$columnaId,$columnaNombre,$showfilters) {
 
 	var mi = this;
 
@@ -559,13 +573,42 @@ function buscarPorComponente($uibModalInstance, $scope, $http, $interval,
 
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
+	mi.showfilters = $showfilters;
+	mi.ejercicios = [];
+	mi.entidades = [];
+	mi.entidad = '';
+	mi.ejercicio = '';
+	mi.titulo = $titulo;
 
-	$http.post($servlet, $accionServlet).success(function(response) {
-		for ( var key in response) {
-			mi.totalElementos = response[key];
-		}
-		mi.cargarData(1);
-	});
+	if(mi.showfilters){
+		var current_year = moment().year();
+		for(var i=current_year-5; i<=current_year; i++)
+			mi.ejercicios.push(i);
+		mi.ejercicio = current_year;
+		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
+			mi.entidades = response.entidades;
+			if(mi.entidades.length>0){
+				$accionServlet.ejercicio = mi.ejercicio;
+				$accionServlet.entidad = mi.entidades[0].entidad;
+				mi.entidad=mi.entidades[0];
+				$http.post($servlet, $accionServlet).success(function(response) {
+					for ( var key in response) {
+						mi.totalElementos = response[key];
+					}
+					mi.cargarData(1,mi.ejercicio,mi.entidad.entidad);
+				});
+			}
+			
+		});
+	}
+	else{
+		$http.post($servlet, $accionServlet).success(function(response) {
+			for ( var key in response) {
+				mi.totalElementos = response[key];
+			}
+			mi.cargarData(1,0, 0);
+		});
+	}
 
 	mi.opcionesGrid = {
 		data : mi.data,
@@ -600,9 +643,9 @@ function buscarPorComponente($uibModalInstance, $scope, $http, $interval,
 		mi.seleccionado = row.isSelected;
 	};
 
-	mi.cargarData = function(pagina) {
+	mi.cargarData = function(pagina, ejercicio, entidad) {
 		mi.mostrarCargando = true;
-		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina)).then(
+		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina, entidad,ejercicio)).then(
 				function(response) {
 					if (response.data.success) {
 
@@ -618,7 +661,7 @@ function buscarPorComponente($uibModalInstance, $scope, $http, $interval,
 	};
 
 	mi.cambioPagina = function() {
-		mi.cargarData(mi.paginaActual);
+		mi.cargarData(mi.paginaActual, mi.ejercicio, mi.entidad);
 	}
 
 	mi.ok = function() {
