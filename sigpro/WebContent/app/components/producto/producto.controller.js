@@ -598,19 +598,24 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 	
 	mi.buscarUnidadEjecutora = function() {
-		var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
+		var resultado = mi.llamarModalBusqueda('Unidad Ejecutora','/SUnidadEjecutora', {
 			accion : 'totalElementos'
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'cargar',
 				pagina : pagina,
-				registros : elementosPorPagina
+				registros : elementosPorPagina,
+				entidad:entidad,
+				
+					
 			};
-		},'unidadEjecutora','nombreUnidadEjecutora');
+		},'unidadEjecutora','nombreUnidadEjecutora',false);
 
 		resultado.then(function(itemSeleccionado) {
 			mi.unidadEjecutora = itemSeleccionado.unidadEjecutora;
 			mi.unidadEjecutoraNombre = itemSeleccionado.nombreUnidadEjecutora;
+			mi.ejercicio = itemSeleccionado.ejercicio;
+			mi.entidad = itemSeleccionado.entidad;
 		});
 	};
 	

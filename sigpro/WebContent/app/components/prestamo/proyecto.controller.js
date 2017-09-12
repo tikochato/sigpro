@@ -274,83 +274,89 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 						mi.proyecto.usuarioactualizo = response.data.usuarioactualizo;
 						mi.proyecto.fechaactualizacion = response.data.fechaactualizacion;
 						mi.obtenerTotalProyectos();
-						var param_data = {
-								accion: "gurdarPrestamo",
-								objetoId: mi.proyecto.id,
-								objetoTipo: 1,
-								codigoPresupuestario: mi.prestamo.codigoPresupuestario,
-								numeroPrestamo: mi.prestamo.numeroPrestamo,
-								proyetoPrograma: mi.prestamo.proyectoPrograma,
-								unidadEjecutora: mi.prestamo.unidadEjecutora,
-								cooperanteUeId: mi.prestamo.cooperanteid,
-								fechaDecreto: moment(mi.prestamo.fechaDecreto).format('DD/MM/YYYY'),
-								fechaSuscripcion: moment(mi.prestamo.fechaSuscripcion).format('DD/MM/YYYY'),
-								fechaVigencia: moment(mi.prestamo.fechaVigencia).format('DD/MM/YYYY'),
-								tipoMonedaId: mi.prestamo.tipoMonedaId,
-								montoContratado: mi.prestamo.montoContratado,
-								montoContratadoUsd: mi.prestamo.montoContratadoUsd,
-								montoContratadoQtz: mi.prestamo.montoContratadoQtz,
-								desembolsoAFechaUsd: mi.prestamo.desembolsoAFechaUsd,
-								montoPorDesembolsarUsd: mi.prestamo.montoPorDesembolsarUsd,
-								fechaElegibilidad: moment(mi.prestamo.fechaElegibilidadUe).format('DD/MM/YYYY'),
-								fechaCierreOriginal:  moment(mi.prestamo.fechaCierreOrigianlUe).format('DD/MM/YYYY'),
-								fechaCierreActual: moment(mi.prestamo.fechaCierreActualUe).format('DD/MM/YYYY'),
-								mesesProrroga: mi.prestamo.mesesProrrogaUe,
-								montoAisignadoUe: mi.prestamo.montoAsignadoUe,
-								desembolsoAFechaUe: mi.prestamo.desembolsoAFechaUe,
-								montoPorDesembolsarUe: mi.prestamo.montoPorDesembolsarUe,
-								montoAsignadoUeUsd: mi.prestamo.montoAsignadoUeUsd,
-								montoAsignadoUeQtz: mi.prestamo.montoAsignadoUeQtz,
-								desembolsoAFechaUeUsd: mi.prestamo.desembolsoAFechaUeUsd,
-								montoPorDesembolsarUeUsd: mi.prestamo.montoPorDesembolsarUeUsd,
-								destino : mi.prestamo.destino,
-								sectorEconomico: mi.prestamo.sectorEconomico,
-								fechaFimra: mi.prestamo.fechaFirma != undefined ? moment(mi.prestamo.fechaFirma).format('DD/MM/YYYY') : undefined,
-								tipoAutorizacionId : mi.prestamo.tipoAutorizacionId,
-								numeroAutorizacion: mi.prestamo.numeroAutorizacion,
-								fechaAutorizacion: mi.prestamo.fechaAutorizacion != undefined ? moment(mi.prestamo.fechaAutorizacion).format('DD/MM/YYYY') : undefined,
-								aniosPlazo: mi.prestamo.aniosPlazo != undefined ? mi.prestamo.aniosPlazo : undefined,
-								aniosGracia: mi.prestamo.aniosGracia,
-								fechaFinEjecucion: mi.prestamo.fechaFinEjecucion != undefined ? moment(mi.prestamo.fechaFinEjecucion).format('DD/MM/YYYY') : undefined,
-								periodoEjecucion: mi.prestamo.periodoEjecucion != "" ? mi.prestamo.periodoEjecucion : undefined,
-								tipoInteresId: mi.prestamo.tipoInteresId,
-								porcentajeInteres: mi.prestamo.porcentajeInteres,
-								porcentajeComisionCompra: mi.prestamo.porcentajeComisionCompra,
-								amortizado: mi.prestamo.amortizado,
-								porAmortizar: mi.prestamo.porAmortizar,
-								principalAnio: mi.prestamo.principalAnio,
-								interesesAnio : mi.prestamo.interesesAnio,
-								comisionCompromisoAnio: mi.prestamo.comisionCompromisoAnio,
-								otrosGastos: mi.prestamo.otrosGastos,
-								principalAcumulado: mi.prestamo.principalAcumulado,
-								interesesAcumulados: mi.prestamo.interesesAcumulados,
-								comisionCompromisoAcumulado: mi.prestamo.comisionCompromisoAcumulado,
-								otrosCargosAcumulados: mi.prestamo.otrosCargosAcumulados,
-								presupuestoAsignadoFuncionamiento: mi.prestamo.presupuestoAsignadoFuncionamiento,
-								presupuestoAsignadoInversion: mi.prestamo.presupuestoAsignadoInversion,
-								presupuestoModificadoFuncionamiento: mi.prestamo.presupuestoModificadoFun,
-								presupuestoModificadoInversion: mi.prestamo.presupuestoModificadoInv,
-								presupuestoVigenteFuncionamiento: mi.prestamo.presupuestoVigenteFun,
-								presupuestoVigenteInversion: mi.prestamo.presupuestoVigenteInv,
-								presupuestoDevengadoFunconamiento:mi.prestamo.presupuestoDevengadoFun,
-								presupuestoDevengadoInversion:mi.prestamo.presupuestoDevengadoInv,
-								presupuestoPagadoFuncionamiento: mi.prestamo.presupuestoPagadoFun,
-								presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoInv,
-								saldoCuentas: mi.prestamo.saldoCuentas,
-								desembolsoReal: mi.prestamo.desembolsoReal,
-								ejecucionEstadoId: mi.prestamo.ejecucionEstadoId != undefined ? mi.prestamo.ejecucionEstadoId : undefined,
-								fechaCorte : mi.prestamo.fechaCorte != undefined ? moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY') : undefined,
-								t:moment().unix()
-							};
+						
+						if (mi.prestamo!=null && mi.prestamo.codigoPresupuestario !=null && mi.prestamo.codigoPresupuestario != ''){
+							var param_data = {
+									accion: "gurdarPrestamo",
+									objetoId: mi.proyecto.id,
+									objetoTipo: 1,
+									codigoPresupuestario: mi.prestamo.codigoPresupuestario,
+									numeroPrestamo: mi.prestamo.numeroPrestamo,
+									proyetoPrograma: mi.prestamo.proyectoPrograma,
+									unidadEjecutora: mi.prestamo.unidadEjecutora,
+									cooperanteUeId: mi.prestamo.cooperanteid,
+									fechaDecreto: moment(mi.prestamo.fechaDecreto).format('DD/MM/YYYY'),
+									fechaSuscripcion: moment(mi.prestamo.fechaSuscripcion).format('DD/MM/YYYY'),
+									fechaVigencia: moment(mi.prestamo.fechaVigencia).format('DD/MM/YYYY'),
+									tipoMonedaId: mi.prestamo.tipoMonedaId,
+									montoContratado: mi.prestamo.montoContratado,
+									montoContratadoUsd: mi.prestamo.montoContratadoUsd,
+									montoContratadoQtz: mi.prestamo.montoContratadoQtz,
+									desembolsoAFechaUsd: mi.prestamo.desembolsoAFechaUsd,
+									montoPorDesembolsarUsd: mi.prestamo.montoPorDesembolsarUsd,
+									fechaElegibilidad: moment(mi.prestamo.fechaElegibilidadUe).format('DD/MM/YYYY'),
+									fechaCierreOriginal:  moment(mi.prestamo.fechaCierreOrigianlUe).format('DD/MM/YYYY'),
+									fechaCierreActual: moment(mi.prestamo.fechaCierreActualUe).format('DD/MM/YYYY'),
+									mesesProrroga: mi.prestamo.mesesProrrogaUe,
+									montoAisignadoUe: mi.prestamo.montoAsignadoUe,
+									desembolsoAFechaUe: mi.prestamo.desembolsoAFechaUe,
+									montoPorDesembolsarUe: mi.prestamo.montoPorDesembolsarUe,
+									montoAsignadoUeUsd: mi.prestamo.montoAsignadoUeUsd,
+									montoAsignadoUeQtz: mi.prestamo.montoAsignadoUeQtz,
+									desembolsoAFechaUeUsd: mi.prestamo.desembolsoAFechaUeUsd,
+									montoPorDesembolsarUeUsd: mi.prestamo.montoPorDesembolsarUeUsd,
+									destino : mi.prestamo.destino,
+									sectorEconomico: mi.prestamo.sectorEconomico,
+									fechaFimra: mi.prestamo.fechaFirma != undefined ? moment(mi.prestamo.fechaFirma).format('DD/MM/YYYY') : undefined,
+									tipoAutorizacionId : mi.prestamo.tipoAutorizacionId,
+									numeroAutorizacion: mi.prestamo.numeroAutorizacion,
+									fechaAutorizacion: mi.prestamo.fechaAutorizacion != undefined ? moment(mi.prestamo.fechaAutorizacion).format('DD/MM/YYYY') : undefined,
+									aniosPlazo: mi.prestamo.aniosPlazo != undefined ? mi.prestamo.aniosPlazo : undefined,
+									aniosGracia: mi.prestamo.aniosGracia,
+									fechaFinEjecucion: mi.prestamo.fechaFinEjecucion != undefined ? moment(mi.prestamo.fechaFinEjecucion).format('DD/MM/YYYY') : undefined,
+									periodoEjecucion: mi.prestamo.periodoEjecucion != "" ? mi.prestamo.periodoEjecucion : undefined,
+									tipoInteresId: mi.prestamo.tipoInteresId,
+									porcentajeInteres: mi.prestamo.porcentajeInteres,
+									porcentajeComisionCompra: mi.prestamo.porcentajeComisionCompra,
+									amortizado: mi.prestamo.amortizado,
+									porAmortizar: mi.prestamo.porAmortizar,
+									principalAnio: mi.prestamo.principalAnio,
+									interesesAnio : mi.prestamo.interesesAnio,
+									comisionCompromisoAnio: mi.prestamo.comisionCompromisoAnio,
+									otrosGastos: mi.prestamo.otrosGastos,
+									principalAcumulado: mi.prestamo.principalAcumulado,
+									interesesAcumulados: mi.prestamo.interesesAcumulados,
+									comisionCompromisoAcumulado: mi.prestamo.comisionCompromisoAcumulado,
+									otrosCargosAcumulados: mi.prestamo.otrosCargosAcumulados,
+									presupuestoAsignadoFuncionamiento: mi.prestamo.presupuestoAsignadoFuncionamiento,
+									presupuestoAsignadoInversion: mi.prestamo.presupuestoAsignadoInversion,
+									presupuestoModificadoFuncionamiento: mi.prestamo.presupuestoModificadoFun,
+									presupuestoModificadoInversion: mi.prestamo.presupuestoModificadoInv,
+									presupuestoVigenteFuncionamiento: mi.prestamo.presupuestoVigenteFun,
+									presupuestoVigenteInversion: mi.prestamo.presupuestoVigenteInv,
+									presupuestoDevengadoFunconamiento:mi.prestamo.presupuestoDevengadoFun,
+									presupuestoDevengadoInversion:mi.prestamo.presupuestoDevengadoInv,
+									presupuestoPagadoFuncionamiento: mi.prestamo.presupuestoPagadoFun,
+									presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoInv,
+									saldoCuentas: mi.prestamo.saldoCuentas,
+									desembolsoReal: mi.prestamo.desembolsoReal,
+									ejecucionEstadoId: mi.prestamo.ejecucionEstadoId != undefined ? mi.prestamo.ejecucionEstadoId : undefined,
+									fechaCorte : mi.prestamo.fechaCorte != undefined ? moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY') : undefined,
+									t:moment().unix()
+								};
+								
 							
-							$http.post('/SPrestamo',param_data).then(
-									function(response) {
-										if (response.data.success) {
-											$utilidades.mensaje('success','Programa '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
-											mi.esNuevo = false;
-										}else
-											$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Programa');
-							});
+								$http.post('/SPrestamo',param_data).then(
+										function(response) {
+											if (response.data.success) {
+												
+											}else
+												$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Programa');
+								});
+						} 
+						$utilidades.mensaje('success','Programa '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+						mi.esNuevo = false;
+						
 						
 					}else
 						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
@@ -419,6 +425,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			mi.unidadejecutoraid=mi.proyecto.unidadejecutoraid;
 			mi.unidadejecutoranombre=mi.proyecto.unidadejecutora;
 			mi.entidadnombre = mi.proyecto.nombreEntidad;
+			mi.ejercicio = mi.proyecto.ejercicio;
+			mi.entidad = mi.proyecto.entidadentidad;
 			mi.cooperanteid=mi.proyecto.cooperanteid;
 			mi.cooperantenombre=mi.proyecto.cooperante;
 			mi.directorProyectoNombre = mi.proyecto.directorProyectoNmbre;
