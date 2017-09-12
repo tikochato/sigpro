@@ -10,7 +10,6 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import pojo.Entidad;
 import pojo.UnidadEjecutora;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -22,6 +21,7 @@ public class UnidadEjecutoraDAO {
 		String nombreUnidadEjecutora;
 		Integer entidad;
 		String nombreEntidad;
+		Integer ejercicio;
 		String usuarioCreo;
 		String usuarioActualizo;
 		String fechaCreacion;
@@ -125,12 +125,14 @@ public class UnidadEjecutoraDAO {
 		return ret;
 	}
 
-	public static List<UnidadEjecutora> getPagina(int pagina, int registros) {
+	public static List<UnidadEjecutora> getPagina(int pagina, int registros, int ejercicio, int entidad) {
 		List<UnidadEjecutora> ret = new ArrayList<UnidadEjecutora>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<UnidadEjecutora> criteria = session.createQuery("SELECT e FROM UnidadEjecutora e",
+			Query<UnidadEjecutora> criteria = session.createQuery("SELECT e FROM UnidadEjecutora e where e.id.entidadentidad=:entidad and e.id.ejercicio=:ejercicio",
 					UnidadEjecutora.class);
+			criteria.setParameter("entidad", entidad);
+			criteria.setParameter("ejercicio", ejercicio);
 			criteria.setFirstResult(((pagina - 1) * (registros)));
 			criteria.setMaxResults(registros);
 			ret = criteria.getResultList();
@@ -142,14 +144,15 @@ public class UnidadEjecutoraDAO {
 		return ret;
 	}
 	
-	public static List<UnidadEjecutora> getPaginaPorEntidad(int pagina, int registros, int entidadId) {
+	public static List<UnidadEjecutora> getPaginaPorEntidad(int pagina, int registros, int entidadId, int ejercicio) {
 		List<UnidadEjecutora> ret = new ArrayList<UnidadEjecutora>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			Query<UnidadEjecutora> criteria = session.createQuery("SELECT e FROM UnidadEjecutora e "
-					+"inner join e.entidad en where en.entidad=:entidadId",
+					+"inner join e.entidad en where en.id.entidad=:entidadId and en.id.ejercicio=:ejercicio",
 					UnidadEjecutora.class);
 			criteria.setParameter("entidadId", entidadId);
+			criteria.setParameter("ejercicio", ejercicio);
 			criteria.setFirstResult(((pagina - 1) * (registros)));
 			criteria.setMaxResults(registros);
 			ret = criteria.getResultList();
@@ -161,16 +164,18 @@ public class UnidadEjecutoraDAO {
 		return ret;
 	}
 
-	public static String getJson(int pagina, int registros) {
+	public static String getJson(int pagina, int registros, int ejercicio, int entidad) {
 		String jsonEntidades = "";
 
-		List<UnidadEjecutora> pojos = getPagina(pagina, registros);
+		List<UnidadEjecutora> pojos = getPagina(pagina, registros,ejercicio, entidad);
 
 		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
 
 		for (UnidadEjecutora pojo : pojos) {
 			EstructuraPojo estructuraPojo = new EstructuraPojo();
 
+			estructuraPojo.entidad = pojo.getId().getEntidadentidad();
+			estructuraPojo.ejercicio = pojo.getId().getEjercicio();
 			estructuraPojo.unidadEjecutora = pojo.getId().getUnidadEjecutora();
 			estructuraPojo.nombreUnidadEjecutora = pojo.getNombre();
 			estructuraPojo.entidad = pojo.getEntidad().getId().getEntidad();
@@ -185,10 +190,10 @@ public class UnidadEjecutoraDAO {
 		return jsonEntidades;
 	}
 	
-	public static String getJsonPorEntidad(int pagina, int registros, int entidadId) {
+	public static String getJsonPorEntidad(int pagina, int registros, int entidadId, int ejercicio) {
 		String jsonEntidades = "";
 
-		List<UnidadEjecutora> pojos = getPaginaPorEntidad(pagina, registros, entidadId);
+		List<UnidadEjecutora> pojos = getPaginaPorEntidad(pagina, registros, entidadId, ejercicio);
 
 		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
 
@@ -209,13 +214,17 @@ public class UnidadEjecutoraDAO {
 		return jsonEntidades;
 	}
 
-	public static Long getTotal() {
+	public static Long getTotal(int ejercicio, int entidad) {
 		Long ret = 0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
-			Query<Long> conteo = session.createQuery("SELECT count(e.unidadEjecutora) FROM UnidadEjecutora e",
-					Long.class);
-			ret = conteo.getSingleResult();
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+			Root<UnidadEjecutora> root = criteria.from(UnidadEjecutora.class);
+			criteria.select(builder.count(root));
+			criteria.where(builder.and(builder.equal(root.get("id").get("entidadentidad"),entidad),builder.equal(root.get("id").get("ejercicio"), ejercicio)));
+			Query<Long> query = session.createQuery(criteria);
+	         ret = query.getSingleResult();
 		} catch (Throwable e) {
 			CLogger.write("7", UnidadEjecutoraDAO.class, e);
 		} finally {
@@ -224,14 +233,15 @@ public class UnidadEjecutoraDAO {
 		return ret;
 	}
 
-	public static List<UnidadEjecutora> getUnidadEjecutoras() {
+	public static List<UnidadEjecutora> getUnidadEjecutoras(int ejercicio, int entidad) {
 		List<UnidadEjecutora> ret = new ArrayList<UnidadEjecutora>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
-
 			CriteriaQuery<UnidadEjecutora> criteria = builder.createQuery(UnidadEjecutora.class);
 			Root<UnidadEjecutora> root = criteria.from(UnidadEjecutora.class);
+			criteria.select(root);
+			criteria.where(builder.and(builder.equal(root.get("id").get("entidadentidad"),entidad),builder.equal(root.get("id").get("ejercicio"), ejercicio)));
 			criteria.select(root);
 			ret = session.createQuery(criteria).getResultList();
 		} catch (Throwable e) {

@@ -8,22 +8,22 @@ public class EntidadDAOTest {
 	
 	@Test
 	public void getEntidadesTest(){
-		assertNotNull(EntidadDAO.getEntidades());
+		assertNotNull(EntidadDAO.getEntidades(2017));
 	}
 	
 	@Test
 	public void getEntidadTest(){
-		assertEquals(EntidadDAO.getEntidad(0),null);
+		assertEquals(EntidadDAO.getEntidad(2017,0),null);
 	}
 	
 	@Test
 	public void guardarEntidadTest(){
-		assertEquals(EntidadDAO.guardarEntidad(0, null, null),false);
+		assertEquals(EntidadDAO.guardarEntidad(2017,0, null, null),false);
 	}
 	
 	@Test
 	public void actualizarEntidadTest(){
-		assertEquals(EntidadDAO.actualizarEntidad(0, null),false);
+		assertEquals(EntidadDAO.actualizarEntidad(2017,0, null),false);
 	}
 	
 	@Test

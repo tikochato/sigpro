@@ -195,7 +195,7 @@
 										<span class="label-icon" ng-click="controller.buscarUnidadEjecutoraPrestamo()">
 											<i class="glyphicon glyphicon-search"></i>
 										</span>
-										<label class="floating-label">* Unidad Ejecutor</label>
+										<label class="floating-label">* Unidad Ejecutora</label>
 									</div>
 								</div>
 							</div>

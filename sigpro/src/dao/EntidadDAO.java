@@ -16,6 +16,7 @@ import utilities.CLogger;
 import utilities.Utils;
 
 class EstructuraEntidad {
+	Integer ejercicio;
 	Integer entidad;
 	String nombre;
 	String abreviatura;
@@ -23,7 +24,7 @@ class EstructuraEntidad {
 
 public class EntidadDAO {
 
-	public static List<Entidad> getEntidades() {
+	public static List<Entidad> getEntidades(int ejercicio) {
 		List<Entidad> entidades = new ArrayList<Entidad>();
 
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -33,6 +34,7 @@ public class EntidadDAO {
 			CriteriaQuery<Entidad> criteria = builder.createQuery(Entidad.class);
 			Root<Entidad> root = criteria.from(Entidad.class);
 			criteria.select(root);
+			criteria.where(builder.equal(root.get("id").get("ejercicio"), ejercicio));
 			entidades = session.createQuery(criteria).getResultList();
 
 		} catch (Throwable e) {
@@ -155,6 +157,28 @@ public class EntidadDAO {
 
 		for (Entidad entidadPojo : entidadesPojo) {
 			EstructuraEntidad entidad = new EstructuraEntidad();
+			entidad.entidad = entidadPojo.getId().getEntidad();
+			entidad.nombre = entidadPojo.getNombre();
+			entidad.abreviatura = entidadPojo.getAbreviatura();
+
+			entidades.add(entidad);
+		}
+
+		jsonEntidades = Utils.getJSonString("entidades", entidades);
+
+		return jsonEntidades;
+	}
+	
+	public static String getJsonEntidadesPorEjercicio(int ejercicio) {
+		String jsonEntidades = "";
+
+		List<Entidad> entidadesPojo = getEntidades(ejercicio);
+
+		List<EstructuraEntidad> entidades = new ArrayList<EstructuraEntidad>();
+
+		for (Entidad entidadPojo : entidadesPojo) {
+			EstructuraEntidad entidad = new EstructuraEntidad();
+			entidad.ejercicio = entidadPojo.getId().getEjercicio();
 			entidad.entidad = entidadPojo.getId().getEntidad();
 			entidad.nombre = entidadPojo.getNombre();
 			entidad.abreviatura = entidadPojo.getAbreviatura();

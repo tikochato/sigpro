@@ -22,6 +22,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.poryectotipoid = "";
 	mi.proyectotiponombre="";
 	mi.unidadejecutoraid="";
+	mi.entidad="";
+	mi.ejercicio="";
 	mi.unidadejecutoranombre="";
 	mi.entidadnombre="";
 	mi.cooperanteid="";
@@ -241,6 +243,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				objetivo: mi.proyecto.objetivo,
 				descripcion:mi.proyecto.descripcion,
 				proyectotipoid: mi.poryectotipoid,
+				ejercicio: mi.ejercicio,
+				entidadid: mi.entidad,
 				unidadejecutoraid: mi.unidadejecutoraid,
 				cooperanteid: mi.cooperanteid,
 				programa: mi.proyecto.programa,
@@ -681,7 +685,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		}
 	};
 
-	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
+	mi.llamarModalBusqueda = function(titulo,servlet, accionServlet, datosCarga,columnaId,columnaNombre, showfilters) {
 		var resultado = $q.defer();
 		var modalInstance = $uibModal.open({
 			animation : 'true',
@@ -693,6 +697,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			backdrop : 'static',
 			size : 'md',
 			resolve : {
+				$titulo: function(){
+					return titulo;
+				},
 				$servlet : function() {
 					return servlet;
 				},
@@ -707,6 +714,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				},
 				$columnaNombre : function() {
 					return columnaNombre;
+				},
+				$showfilters: function(){
+					return showfilters;
 				}
 			}
 		});
@@ -717,38 +727,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		return resultado.promise;
 	};
 
-	mi.llamarModalBusquedaUnidadEjec = function(servlet, accionServlet, datosCarga) {
-		var resultado = $q.defer();
-		var modalInstance = $uibModal.open({
-			animation : 'true',
-			ariaLabelledBy : 'modal-title',
-			ariaDescribedBy : 'modal-body',
-			templateUrl : 'buscarPorProyecto.jsp',
-			controller : 'buscarPorProyectoUnidadEjec',
-			controllerAs : 'modalBuscar',
-			backdrop : 'static',
-			size : 'md',
-			resolve : {
-				$servlet : function() {
-					return servlet;
-				},
-				$accionServlet : function() {
-					return accionServlet;
-				},
-				$datosCarga : function() {
-					return datosCarga;
-				}
-			}
-		});
-
-		modalInstance.result.then(function(itemSeleccionado) {
-			resultado.resolve(itemSeleccionado);
-		});
-		return resultado.promise;
-	};
 
 	mi.buscarProyectoTipo = function() {
-		var resultado = mi.llamarModalBusqueda('/SProyectoTipo', {
+		var resultado = mi.llamarModalBusqueda('Tipos de Préstamo','/SProyectoTipo', {
 			accion : 'numeroProyectoTipos'
 		}, function(pagina, elementosPorPagina) {
 			return {
@@ -756,7 +737,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				pagina : pagina,
 				numeroproyectotipo : elementosPorPagina
 			};
-		},'id','nombre');
+		},'id','nombre',false);
 
 		resultado.then(function(itemSeleccionado) {
 			mi.poryectotipoid= itemSeleccionado.id;
@@ -792,17 +773,23 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	};
 
 	mi.buscarUnidadEjecutora = function() {
-		var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
-			accion : 'totalElementos'
-		}, function(pagina, elementosPorPagina) {
+		var resultado = mi.llamarModalBusqueda('Unidades Ejecutoras','/SUnidadEjecutora', {
+			accion : 'totalElementos',
+			ejercicio: mi.ejercicio,
+			entidad: mi.entidad
+		}, function(pagina, elementosPorPagina,ejercicio,entidad) {
 			return {
 				accion : 'cargar',
 				pagina : pagina,
+				ejercicio: ejercicio,
+				entidad: entidad,
 				registros : elementosPorPagina
 			};
-		},'unidadEjecutora','nombreUnidadEjecutora');
+		},'unidadEjecutora','nombreUnidadEjecutora', true);
 
 		resultado.then(function(itemSeleccionado) {
+			mi.ejercicio = itemSeleccionado.ejercicio;
+			mi.entidad = itemSeleccionado.entidad;
 			mi.unidadejecutoraid= itemSeleccionado.unidadEjecutora;
 			mi.unidadejecutoranombre = itemSeleccionado.nombreUnidadEjecutora;
 			mi.entidadnombre = itemSeleccionado.nombreEntidad;
@@ -810,7 +797,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	};
 
 	mi.buscarCooperante = function(prestamo) {
-		var resultado = mi.llamarModalBusqueda('/SCooperante', {
+		var resultado = mi.llamarModalBusqueda('Cooperantes','/SCooperante', {
 			accion : 'numeroCooperantes', t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
@@ -818,7 +805,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				pagina : pagina,
 				numerocooperantes : elementosPorPagina
 			};
-		},'id','nombre');
+		},'id','nombre', false);
 
 		resultado.then(function(itemSeleccionado) {
 			
@@ -890,25 +877,29 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	};
 	
 	mi.buscarUnidadEjecutoraPrestamo = function() {	
-		var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
-			accion : 'totalElementos'	
+		var resultado = mi.llamarModalBusqueda('Unidades Ejecutoras','/SUnidadEjecutora', {
+			accion : 'totalElementos',
+			ejercicio: mi.ejercicio,
+			entidad: mi.entidad
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'cargar',
 				pagina : pagina,
 				registros : elementosPorPagina
 			};
-		},'unidadEjecutora','nombreUnidadEjecutora');
+		},'unidadEjecutora','nombreUnidadEjecutora', true);
 
 		resultado.then(function(itemSeleccionado) {
 			mi.prestamo.unidadEjecutoraNombre = itemSeleccionado.nombreUnidadEjecutora;
 			mi.prestamo.unidadEjecutora = itemSeleccionado.unidadEjecutora;
+			mi.prestamo.entidad = itemSeleccionado.entidad;
+			mi.prestamo.ejercicio = itemSeleccionado.ejercicio;
 		});
 	};
 	
 	mi.buscarAutorizacionTipo = function() {
 		
-		var resultado = mi.llamarModalBusqueda('/SAutorizacionTipo', {
+		var resultado = mi.llamarModalBusqueda('Tipos de Autorizaciones','/SAutorizacionTipo', {
 			accion : 'numeroAutorizacionTipo'	
 		}, function(pagina, elementosPorPagina) {
 			return {
@@ -916,7 +907,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				pagina : pagina,
 				numeroautorizaciontipo : elementosPorPagina
 			};
-		},'id','nombre');
+		},'id','nombre', false);
 
 		resultado.then(function(itemSeleccionado) {
 			mi.prestamo.tipoAutorizacionNombre = itemSeleccionado.nombre;
@@ -926,7 +917,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	
 	mi.buscarInteresTipo = function() {
 		
-		var resultado = mi.llamarModalBusqueda('/SInteresTipo', {
+		var resultado = mi.llamarModalBusqueda('Tipos de Interes','/SInteresTipo', {
 			accion : 'numeroInteresTipo'	
 		}, function(pagina, elementosPorPagina) {
 			return {
@@ -934,7 +925,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				pagina : pagina,
 				numerointerestipo : elementosPorPagina
 			};
-		},'id','nombre');
+		},'id','nombre', false);
 
 		resultado.then(function(itemSeleccionado) {
 			mi.prestamo.tipoInteresNombre = itemSeleccionado.nombre;
@@ -944,7 +935,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	
 	mi.buscarTipoMoneda = function() {
 		
-		var resultado = mi.llamarModalBusqueda('/STipoMoneda', {
+		var resultado = mi.llamarModalBusqueda('Tipos de Moneda','/STipoMoneda', {
 			accion : 'numeroTipoMonedas'	
 		}, function(pagina, elementosPorPagina) {
 			return {
@@ -952,7 +943,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				pagina : pagina,
 				numerotipomoneda : elementosPorPagina
 			};
-		},'id','nombre');
+		},'id','nombre', false);
 
 		resultado.then(function(itemSeleccionado) {
 			mi.prestamo.tipoMonedaNombre = itemSeleccionado.nombre;
@@ -962,7 +953,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	
 	mi.buscarEstadoEjecucion = function() {
 		
-		var resultado = mi.llamarModalBusqueda('/SEjecucionEstado', {
+		var resultado = mi.llamarModalBusqueda('XXXXX','/SEjecucionEstado', {
 			accion : 'numeroEjecucionEstado'	
 		}, function(pagina, elementosPorPagina) {
 			return {
@@ -970,7 +961,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				pagina : pagina,
 				numeroejecucionestado : elementosPorPagina
 			};
-		},'id','nombre');
+		},'id','nombre', false);
 
 		resultado.then(function(itemSeleccionado) {
 			mi.prestamo.ejecucionEstadoNombre = itemSeleccionado.nombre;
@@ -1035,7 +1026,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		};
 		
 		mi.buscarDirecotorProyecto = function() {
-			var resultado = mi.llamarModalBusqueda('/SColaborador', {
+			var resultado = mi.llamarModalBusqueda('Colaboradores','/SColaborador', {
 				accion : 'totalElementos', t:moment().unix()
 			}, function(pagina, elementosPorPagina) {
 				return {
@@ -1043,7 +1034,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					pagina : pagina,
 					numerocooperantes : elementosPorPagina
 				};
-			},'id','nombreCompleto');
+			},'id','nombreCompleto', false);
 
 			resultado.then(function(itemSeleccionado) {
 				mi.directorProyectoNombre = itemSeleccionado.primerNombre +
@@ -1086,7 +1077,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		}
 		
 		mi.agregarMiembro = function() {
-			var resultado = mi.llamarModalBusqueda('/SColaborador', {
+			var resultado = mi.llamarModalBusqueda('Colaboradores','/SColaborador', {
 				accion : 'totalElementos', t:moment().unix()
 			}, function(pagina, elementosPorPagina) {
 				return {
@@ -1094,7 +1085,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					pagina : pagina,
 					numerocooperantes : elementosPorPagina
 				};
-			},'id','nombreCompleto');
+			},'id','nombreCompleto',false);
 
 			resultado.then(function(itemSeleccionado) {
 				if (itemSeleccionado != undefined ){
@@ -1120,7 +1111,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		
 		
 		mi.buscarCodigoPresupuestario = function() {	
-			var resultado = mi.llamarModalBusqueda('/SDataSigade', {
+			var resultado = mi.llamarModalBusqueda('Código Presupuestario','/SDataSigade', {
 				accion : 'totalElementos'	
 			}, function(pagina, elementosPorPagina) {
 				return {
@@ -1128,7 +1119,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					pagina : pagina,
 					registros : elementosPorPagina
 				};
-			},'codigopresupuestario','numeroprestamo');
+			},'codigopresupuestario','numeroprestamo', false);
 
 			resultado.then(function(itemSeleccionado) {
 				if (itemSeleccionado!=null && itemSeleccionado != undefined){
@@ -1144,11 +1135,11 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 app.controller('buscarPorProyecto', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', '$servlet', '$accionServlet', '$datosCarga',
-	'$columnaId','$columnaNombre',buscarPorProyecto ]);
+	'$timeout', '$log', '$titulo', '$servlet', '$accionServlet', '$datosCarga',
+	'$columnaId','$columnaNombre','$showfilters',buscarPorProyecto ]);
 
 function buscarPorProyecto($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $servlet,$accionServlet,$datosCarga,$columnaId,$columnaNombre) {
+	i18nService, $utilidades, $timeout, $log, $titulo,$servlet,$accionServlet,$datosCarga,$columnaId,$columnaNombre,$showfilters) {
 
 	var mi = this;
 
@@ -1162,13 +1153,42 @@ function buscarPorProyecto($uibModalInstance, $scope, $http, $interval,
 
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
+	
+	mi.showfilters = $showfilters;
+	mi.ejercicios = [];
+	mi.entidades = [];
+	mi.entidad = '';
+	mi.titulo = $titulo;
 
-	$http.post($servlet, $accionServlet).success(function(response) {
-		for ( var key in response) {
-			mi.totalElementos = response[key];
-		}
-		mi.cargarData(1);
-	});
+	if(mi.showfilters){
+		var current_year = moment().year();
+		for(var i=current_year-5; i<=current_year; i++)
+			mi.ejercicios.push(i);
+		mi.ejercicio = current_year;
+		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
+			mi.entidades = response.entidades;
+			if(mi.entidades.length>0){
+				$accionServlet.ejercicio = mi.ejercicio;
+				$accionServlet.entidad = mi.entidades[0].entidad;
+				mi.entidad=mi.entidades[0];
+				$http.post($servlet, $accionServlet).success(function(response) {
+					for ( var key in response) {
+						mi.totalElementos = response[key];
+					}
+					mi.cargarData(1,mi.ejercicio,mi.entidad.entidad);
+				});
+			}
+			
+		});
+	}
+	else{
+		$http.post($servlet, $accionServlet).success(function(response) {
+			for ( var key in response) {
+				mi.totalElementos = response[key];
+			}
+			mi.cargarData(1,0,0);
+		});
+	}
 
 	mi.opcionesGrid = {
 		data : mi.data,
@@ -1203,9 +1223,9 @@ function buscarPorProyecto($uibModalInstance, $scope, $http, $interval,
 		mi.seleccionado = row.isSelected;
 	};
 
-	mi.cargarData = function(pagina) {
+	mi.cargarData = function(pagina,ejercicio, entidad) {
 		mi.mostrarCargando = true;
-		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina)).then(
+		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina,ejercicio, entidad)).then(
 				function(response) {
 					if (response.data.success) {
 
@@ -1221,11 +1241,12 @@ function buscarPorProyecto($uibModalInstance, $scope, $http, $interval,
 	};
 
 	mi.cambioPagina = function() {
-		mi.cargarData(mi.paginaActual);
+		mi.cargarData(mi.paginaActual, mi.ejercicio, mi.entidad);
 	}
 
 	mi.ok = function() {
 		if (mi.seleccionado) {
+			console.log(mi.itemSeleccionado);
 			$uibModalInstance.close(mi.itemSeleccionado);
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar una fila');
@@ -1235,6 +1256,16 @@ function buscarPorProyecto($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
+	
+	mi.cambioEjercicio= function(){
+		console.log('aqui');
+		mi.cargarData(1,mi.ejercicio, mi.entidad.entidad);
+	}
+	
+	mi.cambioEntidad= function(){
+		console.log('aqui1');
+		mi.cargarData(1,mi.ejercicio, mi.entidad.entidad);
+	}
 }
 
 app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogleMapApi','glat','glong',
