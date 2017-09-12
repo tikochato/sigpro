@@ -38,7 +38,6 @@ import pojo.ComponentePropiedadValorId;
 import pojo.ComponenteTipo;
 import pojo.Proyecto;
 import pojo.UnidadEjecutora;
-import pojo.UnidadEjecutoraId;
 import utilities.Utils;
 import utilities.COrden;
 
@@ -76,6 +75,7 @@ public class SComponente extends HttpServlet {
 		int ejercicio;
 		int entidadentidad;
 		String unidadejecutoranombre;
+		String entidadnombre;
 		String latitud;
 		String longitud;
 		BigDecimal costo;
@@ -159,6 +159,7 @@ public class SComponente extends HttpServlet {
 				temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
 				temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+				temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
 				temp.latitud = componente.getLatitud();
 				temp.longitud = componente.getLongitud();
 				temp.costo = componente.getCosto();
@@ -199,6 +200,7 @@ public class SComponente extends HttpServlet {
 				temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
 				temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+				temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
 				temp.latitud = componente.getLatitud();
 				temp.longitud = componente.getLongitud();
 				temp.costo = componente.getCosto();
@@ -254,13 +256,7 @@ public class SComponente extends HttpServlet {
 					ComponenteTipo componenteTipo= new ComponenteTipo();
 					componenteTipo.setId(componentetipoid);
 
-					UnidadEjecutora unidadEjecutora_ = new UnidadEjecutora();
-					
-					UnidadEjecutoraId ueIdTemp  = new UnidadEjecutoraId(unidadEjecutoraId, entidad, ejercicio);
-					unidadEjecutora_.setId(ueIdTemp);
-					
-
-
+					UnidadEjecutora unidadEjecutora_ = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad, unidadEjecutoraId);
 					Proyecto proyecto = new Proyecto();
 					proyecto .setId(proyectoid);
 
@@ -299,6 +295,7 @@ public class SComponente extends HttpServlet {
 						componente.setFechaFin(fechaFin);
 						componente.setDuracion(duracion);
 						componente.setDuracionDimension(duracionDimension);
+						componente.setUnidadEjecutora(unidadEjecutora_);
 					}
 					result = ComponenteDAO.guardarComponente(componente);
 					COrden orden = new COrden();
@@ -419,6 +416,7 @@ public class SComponente extends HttpServlet {
 					temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
 					temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
 					temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+					temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
 					temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
 					temp.fechaFin = Utils.formatDate(componente.getFechaFin());
 					temp.duracion = componente.getDuracion();
@@ -502,6 +500,7 @@ public class SComponente extends HttpServlet {
 				temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
 				temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+				temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
 				temp.latitud = componente.getLatitud();
 				temp.longitud = componente.getLongitud();
 				temp.costo = componente.getCosto();
@@ -538,6 +537,7 @@ public class SComponente extends HttpServlet {
 				temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
 				temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
 				temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+				temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
 				temp.fechaFin = Utils.formatDate(componente.getFechaFin());

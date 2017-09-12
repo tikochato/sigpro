@@ -23,6 +23,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	mi.productoid = "";
 	mi.productoNombre = "";
 	mi.objetoTipoNombre = "";
+	mi.entidad='';
+	mi.ejercicio = '';
 	
 	mi.fechaFinPadre;
 
@@ -304,6 +306,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				subproductoPadre : mi.subproductoPadre,
 				tiposubproductoid : mi.tipo,
 				unidadEjecutora : mi.unidadEjecutora,
+				ejercicio: mi.ejercicio,
+				entidad: mi.entidad,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				longitud: mi.subproducto.longitud,
 				costo: mi.subproducto.costo == null ? 0 : mi.subproducto.costo,
@@ -361,6 +365,9 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 			
 			mi.unidadEjecutora = mi.subproducto.unidadEjectuora;
 			mi.unidadEjecutoraNombre = mi.subproducto.nombreUnidadEjecutora;
+			mi.ejercicio = mi.subproducto.ejercicio;
+			mi.entidad = mi.subproducto.entidadentidad;
+			mi.entidadnombre = mi.subproducto.entidadnombre;
 			
 			if(mi.fechaFinPadre != null && !isNaN(mi.fechaFinPadre)){
 				mi.subproducto.fechaInicio = mi.sumarDias(mi.fechaFinPadre,2, 'd');
@@ -458,7 +465,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 		});
 	}
 	
-	mi.llamarModalBusqueda = function(servlet, datosTotal, datosCarga, columnaId,columnaNombre) {
+	mi.llamarModalBusqueda = function(titulo,servlet, accionServlet, datosCarga, columnaId,columnaNombre, showfilters) {
 		var resultado = $q.defer();
 
 		var modalInstance = $uibModal.open({
@@ -471,11 +478,14 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 			backdrop : 'static',
 			size : 'md',
 			resolve : {
+				$titulo : function() {
+					return titulo;
+				},
 				$servlet : function() {
 					return servlet;
 				},
-				$datosTotal : function() {
-					return datosTotal;
+				$accionServlet : function() {
+					return accionServlet;
 				},
 				$datosCarga : function() {
 					return datosCarga;
@@ -485,6 +495,9 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				},
 				$columnaNombre : function() {
 					return columnaNombre;
+				},
+				$showfilters: function(){
+					return showfilters;
 				}
 			}
 		});
@@ -595,19 +608,24 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	};
 	
 	mi.buscarUnidadEjecutora = function() {
-		var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
+		var resultado = mi.llamarModalBusqueda('Unidades Ejecutoras','/SUnidadEjecutora', {
 			accion : 'totalElementos'
-		}, function(pagina, elementosPorPagina) {
+		}, function(pagina, elementosPorPagina,entidad, ejercicio) {
 			return {
 				accion : 'cargar',
 				pagina : pagina,
-				registros : elementosPorPagina
+				registros : elementosPorPagina,
+				entidad: entidad,
+				ejercicio: ejercicio
 			};
-		},'unidadEjecutora','nombreUnidadEjecutora');
+		},'unidadEjecutora','nombreUnidadEjecutora',true);
 
 		resultado.then(function(itemSeleccionado) {
 			mi.unidadEjecutora = itemSeleccionado.unidadEjecutora;
 			mi.unidadEjecutoraNombre = itemSeleccionado.nombreUnidadEjecutora;
+			mi.entidad = itemSeleccionado.entidad;
+			mi.ejercicio = itemSeleccionado.ejercicio;
+			mi.entidadnombre = itemSeleccionado.nombreEntidad;
 		});
 	};
 	
@@ -644,13 +662,13 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 
 moduloSubproducto.controller('modalBuscarPorSubproducto', [ '$uibModalInstance',
 		'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-		'$timeout', '$log', '$servlet', '$datosTotal', '$datosCarga',
-		'$columnaId','$columnaNombre',
+		'$timeout', '$log',  '$titulo', '$servlet', '$accionServlet', '$datosCarga',
+		'$columnaId','$columnaNombre','$showfilters',
 		modalBuscarPorSubproducto ]);
 
 function modalBuscarPorSubproducto($uibModalInstance, $scope, $http, $interval,
-		i18nService, $utilidades, $timeout, $log, $servlet, $datosTotal,
-		$datosCarga,$columnaId,$columnaNombre) {
+		i18nService, $utilidades, $timeout, $log, $titulo, $servlet, $accionServlet,
+		$datosCarga,$columnaId,$columnaNombre , $showfilters) {
 
 	var mi = this;
 
@@ -665,12 +683,41 @@ function modalBuscarPorSubproducto($uibModalInstance, $scope, $http, $interval,
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
 
-	$http.post($servlet, $datosTotal).success(function(response) {
-		for ( var key in response) {
-			mi.totalElementos = response[key];
-		}
-		mi.cargarTabla(1);
-	});
+	mi.showfilters = $showfilters;
+	mi.ejercicios = [];
+	mi.entidades = [];
+	mi.entidad = '';
+	mi.ejercicio = '';
+	mi.titulo = $titulo;
+	if(mi.showfilters){
+		var current_year = moment().year();
+		for(var i=current_year-5; i<=current_year; i++)
+			mi.ejercicios.push(i);
+		mi.ejercicio = current_year;
+		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
+			mi.entidades = response.entidades;
+			if(mi.entidades.length>0){
+				$accionServlet.ejercicio = mi.ejercicio;
+				$accionServlet.entidad = mi.entidades[0].entidad;
+				mi.entidad=mi.entidades[0];
+				$http.post($servlet, $accionServlet).success(function(response) {
+					for ( var key in response) {
+						mi.totalElementos = response[key];
+					}
+					mi.cargarTabla(1,mi.ejercicio,mi.entidad.entidad);
+				});
+			}
+			
+		});
+	}else{
+		$http.post($servlet, $datosTotal).success(function(response) {
+			for ( var key in response) {
+				mi.totalElementos = response[key];
+			}
+			mi.cargarTabla(1,0,0);
+		});
+	}
+	
 
 	mi.opcionesGrid = {
 		data : mi.data,
@@ -706,9 +753,9 @@ function modalBuscarPorSubproducto($uibModalInstance, $scope, $http, $interval,
 		mi.seleccionado = row.isSelected;
 	};
 
-	mi.cargarTabla = function(pagina) {
+	mi.cargarTabla = function(pagina, ejercicio, entidad) {
 		mi.mostrarCargando = true;
-		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina)).then(
+		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina, entidad,ejercicio)).then(
 				function(response) {
 					if (response.data.success) {
 
@@ -737,6 +784,14 @@ function modalBuscarPorSubproducto($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
+	
+	mi.cambioEjercicio= function(){
+		mi.cargarTabla(1,mi.ejercicio, mi.entidad.entidad);
+	}
+	
+	mi.cambioEntidad= function(){
+		mi.cargarTabla(1,mi.ejercicio, mi.entidad.entidad);
+	}
 
 };
 

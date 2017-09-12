@@ -15,7 +15,7 @@
   <div class="row" ng-show="modalBuscar.showfilters">
   	<div class="col-sm-12">
   		<select class="inputText" ng-model="modalBuscar.entidad" ng-change="modalBuscar.cambioEntidad()"
-  		ng-options="nombre as entidad.nombre for entidad in modalBuscar.entidades track by entidad.entidad">
+  		ng-options="entidad as entidad.nombre for entidad in modalBuscar.entidades track by entidad.entidad">
 	    </select><br>
   	</div>
   </div>
