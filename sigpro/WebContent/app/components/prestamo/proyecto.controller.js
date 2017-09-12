@@ -1170,8 +1170,11 @@ function buscarPorProyecto($uibModalInstance, $rootScope,$scope, $http, $interva
 	mi.ejercicios = [];
 	mi.entidades = [];
 	mi.titulo = $titulo;
-	mi.entidad = $entidad;
-	mi.ejercicio = $entidad.ejercicio;
+	
+	if(mi.showfilters){
+		mi.entidad = $entidad;
+		mi.ejercicio = $entidad.ejercicio;
+	}
 	
 	if(mi.showfilters){
 		var current_year = moment().year();
@@ -1257,7 +1260,6 @@ function buscarPorProyecto($uibModalInstance, $rootScope,$scope, $http, $interva
 
 	mi.ok = function() {
 		if (mi.seleccionado) {
-			console.log(mi.itemSeleccionado);
 			$uibModalInstance.close(mi.itemSeleccionado);
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar una fila');
