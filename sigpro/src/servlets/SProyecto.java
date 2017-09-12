@@ -62,6 +62,7 @@ public class SProyecto extends HttpServlet {
 		String unidadejecutora;
 		int unidadejecutoraid;
 		int entidadentidad;
+		String entidadnombre;
 		int ejercicio;
 		String cooperante;
 		int cooperanteid;
@@ -149,6 +150,7 @@ public class SProyecto extends HttpServlet {
 				dato.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
 				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
 				dato.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
+				dato.entidadnombre = proyecto.getUnidadEjecutora().getEntidad().getNombre();
 				dato.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
 				dato.cooperante = proyecto.getCooperante().getNombre();
 				dato.cooperanteid = proyecto.getCooperante().getId();
@@ -204,6 +206,7 @@ public class SProyecto extends HttpServlet {
 				dato.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
 				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
 				dato.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
+				dato.entidadnombre = proyecto.getUnidadEjecutora().getEntidad().getNombre();
 				dato.ejercicio = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
 				dato.cooperante = proyecto.getCooperante().getNombre();
 				dato.cooperanteid = proyecto.getCooperante().getId();
@@ -260,6 +263,7 @@ public class SProyecto extends HttpServlet {
 				dato.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
 				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
 				dato.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
+				dato.entidadnombre = proyecto.getUnidadEjecutora().getEntidad().getNombre();
 				dato.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
 				dato.cooperante = proyecto.getCooperante().getNombre();
 				dato.cooperanteid = proyecto.getCooperante().getId();
@@ -315,6 +319,7 @@ public class SProyecto extends HttpServlet {
 				dato.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
 				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
 				dato.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
+				dato.entidadnombre = proyecto.getUnidadEjecutora().getEntidad().getNombre();
 				dato.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
 				dato.cooperante = proyecto.getCooperante().getNombre();
 				dato.cooperanteid = proyecto.getCooperante().getId();

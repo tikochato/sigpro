@@ -1,6 +1,6 @@
 var app = angular.module('sipro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
-                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','documentoAdjunto','dialogoConfirmacion','ngAria','ngMaterial','ngMessages']);
+                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','documentoAdjunto','dialogoConfirmacion','ngAria','ngMaterial','ngMessages','angucomplete-alt']);
 
 app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($routeProvider, $locationProvider,FlashProvider) {
 	   $locationProvider.hashPrefix('!');
@@ -522,6 +522,8 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
    function($scope,$document,deviceDetector,$rootScope,$location,$window,$utilidades, $routeParams){
 	$scope.lastscroll = 0;
 	$scope.hidebar = false;
+	
+	$rootScope.catalogo_entidades_anos=1;
 
 	numeral.language('es', numeral_language);
 	$window.document.title =  'MINFIN - '+$utilidades.sistema_nombre;

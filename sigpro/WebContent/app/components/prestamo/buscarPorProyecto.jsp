@@ -6,17 +6,28 @@
   <br/>
   <div class="row" ng-show="modalBuscar.showfilters">
   	<div class="col-sm-12">
-  		<select class="inputText" ng-model="modalBuscar.ejercicio" ng-change="modalBuscar.cambioEjercicio()"
+  	<select class="inputText" ng-model="modalBuscar.ejercicio" ng-change="modalBuscar.cambioEjercicio()"
   		ng-options="ejercicio as ejercicio for ejercicio in modalBuscar.ejercicios">
-	    </select><br>
+	    </select>
     </div>
   </div>
   <br/>
   <div class="row" ng-show="modalBuscar.showfilters">
   	<div class="col-sm-12">
-  		<select class="inputText" ng-model="modalBuscar.entidad" ng-change="modalBuscar.cambioEntidad()"
+	  	<div angucomplete-alt id="ex1"
+			  placeholder="Buscar Entidades"
+			  pause="100"
+			  selected-object="modalBuscar.cambioEntidad"
+			  local-data="modalBuscar.entidades"
+			  search-fields="nombre"
+			  title-field="nombre"
+			  minlength="3"
+			  input-class="form-control form-control-small"
+			  match-class="angucomplete-highlight"
+			  initial-value="modalBuscar.entidad.nombre"></div>
+  		<!-- <select class="inputText" ng-model="modalBuscar.entidad" ng-change="modalBuscar.cambioEntidad()"
   		ng-options="entidad as entidad.nombre for entidad in modalBuscar.entidades track by entidad.entidad">
-	    </select><br>
+	    </select> -->
   	</div>
   </div>
   <br/>
