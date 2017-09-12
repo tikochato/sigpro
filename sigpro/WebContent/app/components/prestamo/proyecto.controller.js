@@ -1183,9 +1183,9 @@ function buscarPorProyecto($uibModalInstance, $rootScope,$scope, $http, $interva
 		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
 			mi.entidades = response.entidades;
 			if(mi.entidades.length>0){
-				$accionServlet.ejercicio = mi.ejercicio;
-				$accionServlet.entidad = mi.entidades[0].entidad;
 				mi.entidad = (mi.entidad===undefined) ? mi.entidades[0] : mi.entidad;
+				$accionServlet.ejercicio = mi.ejercicio;
+				$accionServlet.entidad = mi.entidad.entidad;
 				$http.post($servlet, $accionServlet).success(function(response) {
 					for ( var key in response) {
 						mi.totalElementos = response[key];
