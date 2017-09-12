@@ -1170,8 +1170,11 @@ function buscarPorProyecto($uibModalInstance, $rootScope,$scope, $http, $interva
 	mi.ejercicios = [];
 	mi.entidades = [];
 	mi.titulo = $titulo;
-	mi.entidad = $entidad;
-	mi.ejercicio = $entidad.ejercicio;
+	
+	if(mi.showfilters){
+		mi.entidad = $entidad;
+		mi.ejercicio = $entidad.ejercicio;
+	}
 	
 	if(mi.showfilters){
 		var current_year = moment().year();
@@ -1180,9 +1183,9 @@ function buscarPorProyecto($uibModalInstance, $rootScope,$scope, $http, $interva
 		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
 			mi.entidades = response.entidades;
 			if(mi.entidades.length>0){
-				$accionServlet.ejercicio = mi.ejercicio;
-				$accionServlet.entidad = mi.entidades[0].entidad;
 				mi.entidad = (mi.entidad===undefined) ? mi.entidades[0] : mi.entidad;
+				$accionServlet.ejercicio = mi.ejercicio;
+				$accionServlet.entidad = mi.entidad.entidad;
 				$http.post($servlet, $accionServlet).success(function(response) {
 					for ( var key in response) {
 						mi.totalElementos = response[key];
@@ -1257,7 +1260,6 @@ function buscarPorProyecto($uibModalInstance, $rootScope,$scope, $http, $interva
 
 	mi.ok = function() {
 		if (mi.seleccionado) {
-			console.log(mi.itemSeleccionado);
 			$uibModalInstance.close(mi.itemSeleccionado);
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar una fila');

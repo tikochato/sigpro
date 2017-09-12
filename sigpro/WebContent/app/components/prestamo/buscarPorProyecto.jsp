@@ -25,9 +25,6 @@
 			  input-class="form-control form-control-small"
 			  match-class="angucomplete-highlight"
 			  initial-value="modalBuscar.entidad.nombre"></div>
-  		<!-- <select class="inputText" ng-model="modalBuscar.entidad" ng-change="modalBuscar.cambioEntidad()"
-  		ng-options="entidad as entidad.nombre for entidad in modalBuscar.entidades track by entidad.entidad">
-	    </select> -->
   	</div>
   </div>
   <br/>
