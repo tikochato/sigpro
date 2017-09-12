@@ -60,9 +60,10 @@ public class SSubproducto extends HttpServlet {
 		Integer subProductoTipoId;
 		String subProductoTipo;
 		Integer unidadEjecutora;
-		Integer entidad;
+		Integer entidadentidad;
 		Integer ejercicio;
 		String nombreUnidadEjecutora;
+		String entidadnombre;
 		String nombre;
 		String descripcion;
 		String usuarioCreo;
@@ -169,7 +170,7 @@ public class SSubproducto extends HttpServlet {
 			Integer subproductoPadreId = Utils.String2Int(map.get("subproductoPadre"));
 			Integer tiposubproductoId = Utils.String2Int(map.get("tiposubproductoid")); 
 			Integer unidadEjecutoraId = Utils.String2Int(map.get("unidadEjecutora"));
-			Integer entidadId = Utils.String2Int(map.get("entidadId"));
+			Integer entidadId = Utils.String2Int(map.get("entidad"));
 			Integer ejercicio = Utils.String2Int(map.get("ejercicio"));
 			
 			Long snip = Utils.String2Long(map.get("snip"), null);
@@ -464,7 +465,8 @@ public class SSubproducto extends HttpServlet {
 			temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
 			temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
 			temp.unidadEjecutora = subproducto.getUnidadEjecutora().getId().getUnidadEjecutora();
-			temp.entidad = subproducto.getUnidadEjecutora().getId().getEntidadentidad();
+			temp.entidadentidad = subproducto.getUnidadEjecutora().getId().getEntidadentidad();
+			temp.entidadnombre = subproducto.getUnidadEjecutora().getEntidad().getNombre();
 			temp.ejercicio = subproducto.getUnidadEjecutora().getId().getEjercicio();
 			temp.fechaInicio = Utils.formatDate(subproducto.getFechaInicio());
 			temp.fechaFin = Utils.formatDate(subproducto.getFechaFin());
@@ -541,9 +543,10 @@ public class SSubproducto extends HttpServlet {
 					temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
 					temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
 					temp.unidadEjecutora = subproducto.getUnidadEjecutora().getId().getUnidadEjecutora();
-					temp.entidad = subproducto.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.entidadentidad = subproducto.getUnidadEjecutora().getId().getEntidadentidad();
 					temp.ejercicio = subproducto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
+					temp.entidadnombre = subproducto.getUnidadEjecutora().getEntidad().getNombre();
 					temp.fechaInicio = Utils.formatDate(subproducto.getFechaInicio());
 					temp.fechaFin = Utils.formatDate(subproducto.getFechaFin());
 					temp.duracion = subproducto.getDuracion();

@@ -179,7 +179,13 @@
 						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
 						   <label class="floating-label">SNIP</label>
 						</div>
-							
+						
+						<div class="form-group" ng-show="componentec.unidadejecutoranombre.length>0"  >
+			            	<input type="text" class="inputText" id="iunie" name="iunie" ng-model="componentec.entidadnombre" ng-readonly="true"  
+			            	 ng-value="componentec.entidadnombre" onblur="this.setAttribute('value', this.value);"/>
+			            	<label for="campo3" class="floating-label">Organismo Ejecutor</label>
+			          	
+						</div>
 						
 						<div class="form-group">
 				            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="componentec.unidadejecutoranombre" ng-readonly="true" ng-required="true" 

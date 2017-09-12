@@ -161,7 +161,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
 				}
 			}
-			if(mi.componente!=null && mi.componente.nombre!='' && mi.unidadejecutoraid!=''){
+			
 				$http.post('/SComponente', {
 					accion: 'guardarComponente',
 					esnuevo: mi.esnuevo,
@@ -205,9 +205,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Componente');
 				});
-			}
-			else
-				$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
+			
 		};
 
 		mi.borrar = function(ev) {
@@ -262,6 +260,9 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				mi.unidadejecutoranombre= mi.componente.unidadejecutoranombre;
 				mi.componentetipoid=mi.componente.componentetipoid;
 				mi.componentetiponombre=mi.componente.componentetiponombre;
+				mi.ejercicio = mi.componente.ejercicio;
+				mi.entidad = mi.componente.entidadentidad;
+				mi.entidadnombre = mi.componente.entidadnombre;
 				
 				if(mi.componente.duracionDimension == 'd'){
 					mi.duracionDimension = mi.dimensiones[1];
@@ -519,6 +520,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				mi.unidadejecutoranombre = itemSeleccionado.nombreUnidadEjecutora;
 				mi.entidad = itemSeleccionado.entidad;
 				mi.ejercicio = itemSeleccionado.ejercicio;
+				mi.entidadnombre = itemSeleccionado.nombreEntidad;
 			});
 		};
 		
@@ -675,6 +677,16 @@ function buscarPorComponente($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
+	
+	mi.cambioEjercicio= function(){
+		
+		mi.cargarData(1,mi.ejercicio, mi.entidad.entidad);
+	}
+	
+	mi.cambioEntidad= function(){
+		
+		mi.cargarData(1,mi.ejercicio, mi.entidad.entidad);
+	}
 };
 
 app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogleMapApi','glat','glong',

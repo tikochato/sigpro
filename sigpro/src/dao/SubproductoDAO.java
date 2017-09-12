@@ -31,6 +31,9 @@ public class SubproductoDAO {
 		String subproductoTipo;
 		Integer unidadEjectuora;
 		String nombreUnidadEjecutora;
+		String entidadnombre;
+		Integer entidadentidad;
+		Integer ejercicio;
 		Long snip;
 		Integer programa;
 		Integer subprograma;
@@ -263,6 +266,9 @@ public class SubproductoDAO {
 			if (pojo.getUnidadEjecutora() != null){
 				estructuraPojo.unidadEjectuora = pojo.getUnidadEjecutora().getId().getUnidadEjecutora();
 				estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
+				estructuraPojo.entidadentidad = pojo.getUnidadEjecutora().getId().getEntidadentidad();
+				estructuraPojo.ejercicio = pojo.getUnidadEjecutora().getId().getEjercicio();
+				estructuraPojo.entidadnombre = pojo.getUnidadEjecutora().getEntidad().getNombre();
 			}
 			
 			listaEstructuraPojos.add(estructuraPojo);
