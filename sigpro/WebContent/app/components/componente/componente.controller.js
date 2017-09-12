@@ -600,7 +600,7 @@ function buscarPorComponente($uibModalInstance, $rootScope, $scope, $http, $inte
 			if(mi.entidades.length>0){
 				mi.entidad = (mi.entidad===undefined) ? mi.entidades[0] : mi.entidad;
 				$accionServlet.ejercicio = mi.ejercicio;
-				$accionServlet.entidad = mi.entidades[0].entidad;
+				$accionServlet.entidad = mi.entidad.entidad;
 				$http.post($servlet, $accionServlet).success(function(response) {
 					for ( var key in response) {
 						mi.totalElementos = response[key];

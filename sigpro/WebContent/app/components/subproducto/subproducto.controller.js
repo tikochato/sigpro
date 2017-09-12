@@ -694,11 +694,11 @@ function modalBuscarPorSubproducto($uibModalInstance, $rootScope,$scope, $http, 
 	mi.entidad = '';
 	mi.ejercicio = '';
 	mi.titulo = $titulo;
-	mi.entidad = $entidad;
-	mi.ejercicio = $entidad.ejercicio;
-
 	
+
 	if(mi.showfilters){
+		mi.entidad = $entidad;
+		mi.ejercicio = $entidad.ejercicio;
 		var current_year = moment().year();
 		for(var i=current_year-$rootScope.catalogo_entidades_anos; i<=current_year; i++)
 			mi.ejercicios.push(i);
@@ -706,9 +706,9 @@ function modalBuscarPorSubproducto($uibModalInstance, $rootScope,$scope, $http, 
 		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
 			mi.entidades = response.entidades;
 			if(mi.entidades.length>0){
+				mi.entidad = (mi.entidad===undefined) ? mi.entidades[0] : mi.entidad;
 				$accionServlet.ejercicio = mi.ejercicio;
-				$accionServlet.entidad = mi.entidades[0].entidad;
-				mi.entidad=mi.entidades[0];
+				$accionServlet.entidad = mi.entidad.entidad;
 				$http.post($servlet, $accionServlet).success(function(response) {
 					for ( var key in response) {
 						mi.totalElementos = response[key];
@@ -719,7 +719,7 @@ function modalBuscarPorSubproducto($uibModalInstance, $rootScope,$scope, $http, 
 			
 		});
 	}else{
-		$http.post($servlet, $datosTotal).success(function(response) {
+		$http.post($servlet, $accionServlet).success(function(response) {
 			for ( var key in response) {
 				mi.totalElementos = response[key];
 			}
@@ -779,7 +779,7 @@ function modalBuscarPorSubproducto($uibModalInstance, $rootScope,$scope, $http, 
 	};
 
 	mi.cambioPagina = function() {
-		mi.cargarTabla(mi.paginaActual);
+		mi.cargarTabla(mi.paginaActual, mi.ejercicio, mi.entidad.entidad);
 	}
 
 	mi.ok = function() {
