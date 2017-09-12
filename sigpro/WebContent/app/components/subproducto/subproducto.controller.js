@@ -449,7 +449,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.buscarAcumulacionCosto = function(){
-		var resultado = mi.llamarModalBusqueda('/SAcumulacionCosto', {
+		var resultado = mi.llamarModalBusqueda('Acumulacion Costo','/SAcumulacionCosto', {
 			accion : 'numeroAcumulacionCosto' 
 		}, function(pagina, elementosPorPagina){
 			return{
@@ -457,7 +457,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				pagina: pagina,
 				numeroacumulacioncosto : elementosPorPagina
 			}
-		}, 'id','nombre');
+		}, 'id','nombre',false,null);
 		
 		resultado.then(function(itemSeleccionado){
 			mi.subproducto.acumulacionCostoNombre = itemSeleccionado.nombre;
@@ -465,7 +465,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 		});
 	}
 	
-	mi.llamarModalBusqueda = function(titulo,servlet, accionServlet, datosCarga, columnaId,columnaNombre, showfilters) {
+	mi.llamarModalBusqueda = function(titulo,servlet, accionServlet, datosCarga, columnaId,columnaNombre, 
+			showfilters, entidad) {
 		var resultado = $q.defer();
 
 		var modalInstance = $uibModal.open({
@@ -498,6 +499,9 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				},
 				$showfilters: function(){
 					return showfilters;
+				},
+				$entidad: function(){
+					return entidad;
 				}
 			}
 		});
@@ -511,7 +515,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.buscarTipo = function() {
-		var resultado = mi.llamarModalBusqueda('/SSubproductoTipo', {
+		var resultado = mi.llamarModalBusqueda('Tipo de subproducto','/SSubproductoTipo', {
 			accion : 'totalElementos'
 		}, function(pagina, elementosPorPagina) {
 			return {
@@ -519,7 +523,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				pagina : pagina,
 				registros : elementosPorPagina
 			};
-		},'id','nombre');
+		},'id','nombre',false, null);
 
 		resultado.then(function(itemSeleccionado) {
 			mi.tipo = itemSeleccionado.id;
@@ -590,7 +594,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 
 	mi.buscarSubproducto = function() {
 
-		var resultado = mi.llamarModalBusqueda('/SSubproducto', {
+		var resultado = mi.llamarModalBusqueda('Subproducto','/SSubproducto', {
 			accion : 'totalElementos'
 		}, function(pagina, elementosPorPagina) {
 			return {
@@ -598,7 +602,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				pagina : pagina,
 				registros : elementosPorPagina
 			};
-		},'id','nombre');
+		},'id','nombre',false,null);
 
 		resultado.then(function(itemSeleccionado) {
 			mi.subproductoPadre = itemSeleccionado.id;
@@ -618,7 +622,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				entidad: entidad,
 				ejercicio: ejercicio
 			};
-		},'unidadEjecutora','nombreUnidadEjecutora',true);
+		},'unidadEjecutora','nombreUnidadEjecutora',
+		true,{entidad: mi.entidad, ejercicio: mi.ejercicio, abreviatura:'', nombre: mi.entidadnombre});
 
 		resultado.then(function(itemSeleccionado) {
 			mi.unidadEjecutora = itemSeleccionado.unidadEjecutora;
@@ -661,14 +666,14 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 }
 
 moduloSubproducto.controller('modalBuscarPorSubproducto', [ '$uibModalInstance',
-		'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+		'$rootScope','$scope', '$http', '$interval', 'i18nService', 'Utilidades',
 		'$timeout', '$log',  '$titulo', '$servlet', '$accionServlet', '$datosCarga',
-		'$columnaId','$columnaNombre','$showfilters',
+		'$columnaId','$columnaNombre','$showfilters','$entidad',
 		modalBuscarPorSubproducto ]);
 
-function modalBuscarPorSubproducto($uibModalInstance, $scope, $http, $interval,
+function modalBuscarPorSubproducto($uibModalInstance, $rootScope,$scope, $http, $interval,
 		i18nService, $utilidades, $timeout, $log, $titulo, $servlet, $accionServlet,
-		$datosCarga,$columnaId,$columnaNombre , $showfilters) {
+		$datosCarga,$columnaId,$columnaNombre , $showfilters,$entidad) {
 
 	var mi = this;
 
@@ -689,11 +694,15 @@ function modalBuscarPorSubproducto($uibModalInstance, $scope, $http, $interval,
 	mi.entidad = '';
 	mi.ejercicio = '';
 	mi.titulo = $titulo;
+	mi.entidad = $entidad;
+	mi.ejercicio = $entidad.ejercicio;
+
+	
 	if(mi.showfilters){
 		var current_year = moment().year();
-		for(var i=current_year-5; i<=current_year; i++)
+		for(var i=current_year-$rootScope.catalogo_entidades_anos; i<=current_year; i++)
 			mi.ejercicios.push(i);
-		mi.ejercicio = current_year;
+		
 		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
 			mi.entidades = response.entidades;
 			if(mi.entidades.length>0){
@@ -789,8 +798,17 @@ function modalBuscarPorSubproducto($uibModalInstance, $scope, $http, $interval,
 		mi.cargarTabla(1,mi.ejercicio, mi.entidad.entidad);
 	}
 	
-	mi.cambioEntidad= function(){
-		mi.cargarTabla(1,mi.ejercicio, mi.entidad.entidad);
+	mi.cambioEntidad= function(selected){
+		if(selected!==undefined){
+			mi.entidad = selected.originalObject;
+			$http.post('/SUnidadEjecutora', {accion:"totalElementos", ejercicio: mi.entidad.ejercicio,entidad: mi.entidad.entidad}).success(function(response) {
+				for ( var key in response) {
+					mi.totalElementos = response[key];
+				}
+				mi.cargarTabla(1,mi.ejercicio, mi.entidad.entidad);
+			});
+		}
+		
 	}
 
 };

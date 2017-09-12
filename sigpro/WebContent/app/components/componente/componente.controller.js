@@ -409,7 +409,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					pagina: pagina,
 					numeroacumulacioncosto : elementosPorPagina
 				}
-			}, 'id','nombre',false);
+			}, 'id','nombre',false,null);
 			
 			resultado.then(function(itemSeleccionado){
 				mi.componente.acumulacionCostoNombre = itemSeleccionado.nombre;
@@ -417,7 +417,8 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			});
 		}
 
-		mi.llamarModalBusqueda = function(titulo,servlet, accionServlet, datosCarga,columnaId,columnaNombre, showfilters) {
+		mi.llamarModalBusqueda = function(titulo,servlet, accionServlet, datosCarga,columnaId,
+				columnaNombre, showfilters,entidad) {
 			var resultado = $q.defer();
 			var modalInstance = $uibModal.open({
 				animation : 'true',
@@ -449,6 +450,9 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					},
 					$showfilters: function(){
 						return showfilters;
+					},
+					$entidad: function(){
+						return entidad;
 					}
 				}
 			});
@@ -469,7 +473,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					pagina : pagina,
 					numerocomponentetipos : elementosPorPagina
 				};
-			},'id','nombre',false);
+			},'id','nombre',false, null);
 
 			resultado.then(function(itemSeleccionado) {
 				mi.componentetipoid = itemSeleccionado.id;
@@ -513,7 +517,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					entidad: entidad,
 					ejercicio: ejercicio
 				};
-			},'unidadEjecutora','nombreUnidadEjecutora',true);
+			},'unidadEjecutora','nombreUnidadEjecutora',true,{entidad: mi.entidad, ejercicio: mi.ejercicio, abreviatura:'', nombre: mi.entidadnombre});
 
 			resultado.then(function(itemSeleccionado) {
 				mi.unidadejecutoraid = itemSeleccionado.unidadEjecutora;
@@ -556,12 +560,13 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 } ]);
 
 app.controller('buscarPorComponente', [ '$uibModalInstance',
-	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$rootScope','$scope', '$http', '$interval', 'i18nService', 'Utilidades',
 	'$timeout', '$log', '$titulo','$servlet', '$accionServlet', '$datosCarga',
-	'$columnaId','$columnaNombre','$showfilters',buscarPorComponente ]);
+	'$columnaId','$columnaNombre','$showfilters','$entidad',buscarPorComponente ]);
 
-function buscarPorComponente($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $titulo,$servlet,$accionServlet,$datosCarga,$columnaId,$columnaNombre,$showfilters) {
+function buscarPorComponente($uibModalInstance, $rootScope, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $titulo,$servlet,$accionServlet,$datosCarga
+	,$columnaId,$columnaNombre,$showfilters,$entidad) {
 
 	var mi = this;
 
@@ -581,18 +586,21 @@ function buscarPorComponente($uibModalInstance, $scope, $http, $interval,
 	mi.entidad = '';
 	mi.ejercicio = '';
 	mi.titulo = $titulo;
+	
 
 	if(mi.showfilters){
+		mi.entidad = $entidad;
+		mi.ejercicio = $entidad.ejercicio;
 		var current_year = moment().year();
-		for(var i=current_year-5; i<=current_year; i++)
+		for(var i=current_year-$rootScope.catalogo_entidades_anos; i<=current_year; i++)
 			mi.ejercicios.push(i);
-		mi.ejercicio = current_year;
+		
 		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
 			mi.entidades = response.entidades;
 			if(mi.entidades.length>0){
+				mi.entidad = (mi.entidad===undefined) ? mi.entidades[0] : mi.entidad;
 				$accionServlet.ejercicio = mi.ejercicio;
 				$accionServlet.entidad = mi.entidades[0].entidad;
-				mi.entidad=mi.entidades[0];
 				$http.post($servlet, $accionServlet).success(function(response) {
 					for ( var key in response) {
 						mi.totalElementos = response[key];
@@ -663,7 +671,7 @@ function buscarPorComponente($uibModalInstance, $scope, $http, $interval,
 	};
 
 	mi.cambioPagina = function() {
-		mi.cargarData(mi.paginaActual, mi.ejercicio, mi.entidad);
+		mi.cargarData(mi.paginaActual, mi.ejercicio, mi.entidad.entidad);
 	}
 
 	mi.ok = function() {
@@ -679,13 +687,19 @@ function buscarPorComponente($uibModalInstance, $scope, $http, $interval,
 	};
 	
 	mi.cambioEjercicio= function(){
-		
 		mi.cargarData(1,mi.ejercicio, mi.entidad.entidad);
 	}
 	
-	mi.cambioEntidad= function(){
-		
-		mi.cargarData(1,mi.ejercicio, mi.entidad.entidad);
+	mi.cambioEntidad= function(selected){
+		if(selected!==undefined){
+			mi.entidad = selected.originalObject;
+			$http.post('/SUnidadEjecutora', {accion:"totalElementos", ejercicio: mi.entidad.ejercicio,entidad: mi.entidad.entidad}).success(function(response) {
+				for ( var key in response) {
+					mi.totalElementos = response[key];
+				}
+				mi.cargarData(1,mi.ejercicio, mi.entidad.entidad);
+			});
+		}
 	}
 };
 
