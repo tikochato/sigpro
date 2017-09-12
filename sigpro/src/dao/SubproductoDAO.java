@@ -14,6 +14,7 @@ import org.hibernate.query.Query;
 import pojo.Subproducto;
 import pojo.SubproductoUsuario;
 import pojo.SubproductoUsuarioId;
+import pojo.Usuario;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 import utilities.Utils;
@@ -96,8 +97,9 @@ public class SubproductoDAO {
 			session.beginTransaction();
 			subproducto.setNivel(3);
 			session.saveOrUpdate(subproducto);
+			Usuario usu = UsuarioDAO.getUsuario(subproducto.getUsuarioCreo());
 			SubproductoUsuario su = new SubproductoUsuario(new SubproductoUsuarioId(subproducto.getId(),subproducto.getUsuarioCreo())
-					, subproducto, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
+					, subproducto, usu, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
 			session.saveOrUpdate(su);
 			session.getTransaction().commit();
 			ret = true;

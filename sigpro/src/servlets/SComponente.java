@@ -296,6 +296,7 @@ public class SComponente extends HttpServlet {
 						componente.setDuracion(duracion);
 						componente.setDuracionDimension(duracionDimension);
 						componente.setUnidadEjecutora(unidadEjecutora_);
+						componente.setComponenteTipo(componenteTipo);
 					}
 					result = ComponenteDAO.guardarComponente(componente);
 					COrden orden = new COrden();

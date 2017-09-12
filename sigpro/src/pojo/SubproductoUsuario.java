@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 11, 2017 3:37:18 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.AttributeOverride;
@@ -24,9 +24,10 @@ public class SubproductoUsuario implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -193634598898339980L;
+	private static final long serialVersionUID = 8286459347531023880L;
 	private SubproductoUsuarioId id;
 	private Subproducto subproducto;
+	private Usuario usuario;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
@@ -35,18 +36,20 @@ public class SubproductoUsuario implements java.io.Serializable {
 	public SubproductoUsuario() {
 	}
 
-	public SubproductoUsuario(SubproductoUsuarioId id, Subproducto subproducto, String usuarioCreo,
+	public SubproductoUsuario(SubproductoUsuarioId id, Subproducto subproducto, Usuario usuario, String usuarioCreo,
 			Date fechaCreacion) {
 		this.id = id;
 		this.subproducto = subproducto;
+		this.usuario = usuario;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public SubproductoUsuario(SubproductoUsuarioId id, Subproducto subproducto, String usuarioCreo,
+	public SubproductoUsuario(SubproductoUsuarioId id, Subproducto subproducto, Usuario usuario, String usuarioCreo,
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion) {
 		this.id = id;
 		this.subproducto = subproducto;
+		this.usuario = usuario;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
@@ -74,6 +77,16 @@ public class SubproductoUsuario implements java.io.Serializable {
 
 	public void setSubproducto(Subproducto subproducto) {
 		this.subproducto = subproducto;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "usuario", nullable = false, insertable = false, updatable = false)
+	public Usuario getUsuario() {
+		return this.usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	@Column(name = "usuario_creo", nullable = false, length = 30)

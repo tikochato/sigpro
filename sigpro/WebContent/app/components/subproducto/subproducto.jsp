@@ -187,7 +187,7 @@
 			            <input type="text" class="inputText" ng-model="subproducto.tipoNombre" ng-readonly="true" ng-required="true" 
 			            	ng-value="subproducto.tipoNombre" onblur="this.setAttribute('value', this.value);" 
 			            	ng-click="subproducto.buscarTipo()"/>
-			            <span class="label-icon" ng-click="subproducto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
+	            			<span class="label-icon" ng-click="subproducto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
 			            <label class="floating-label">* Tipo</label>
 			        </div>
 			        
