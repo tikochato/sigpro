@@ -30,6 +30,7 @@ import dao.ProductoPropiedadDAO;
 import dao.ProductoPropiedadValorDAO;
 import dao.ProductoUsuarioDAO;
 import dao.UnidadEjecutoraDAO;
+import dao.UsuarioDAO;
 import pojo.AcumulacionCosto;
 import pojo.Componente;
 import pojo.Producto;
@@ -40,6 +41,7 @@ import pojo.ProductoTipo;
 import pojo.ProductoUsuario;
 import pojo.ProductoUsuarioId;
 import pojo.UnidadEjecutora;
+import pojo.Usuario;
 import utilities.Utils;
 import utilities.COrden;
 
@@ -292,7 +294,8 @@ public class SProducto extends HttpServlet {
 				
 				if (ret){
 					ProductoUsuarioId productoUsuarioId = new ProductoUsuarioId(producto.getId(), usuario);
-					ProductoUsuario productoUsuario =  new ProductoUsuario(productoUsuarioId, producto, usuario, null, new DateTime().toDate(),null);
+					Usuario usu = UsuarioDAO.getUsuario(usuario);
+					ProductoUsuario productoUsuario =  new ProductoUsuario(productoUsuarioId, producto, usu,usuario, null, new DateTime().toDate(),null);
 					ProductoUsuarioDAO.guardarProductoUsuario(productoUsuario);
 					
 					for (stdatadinamico data : datos) {

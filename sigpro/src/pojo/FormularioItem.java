@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 11, 2017 3:37:18 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -24,10 +24,6 @@ import javax.persistence.TemporalType;
 @Table(name = "formulario_item", catalog = "sipro")
 public class FormularioItem implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2291788632844898856L;
 	private Integer id;
 	private Formulario formulario;
 	private FormularioItemTipo formularioItemTipo;

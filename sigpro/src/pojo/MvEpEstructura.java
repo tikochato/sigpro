@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 11, 2017 3:37:18 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -15,10 +15,6 @@ import javax.persistence.Table;
 @Table(name = "mv_ep_estructura", catalog = "sipro")
 public class MvEpEstructura implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3992423520345251641L;
 	private MvEpEstructuraId id;
 
 	public MvEpEstructura() {

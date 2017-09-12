@@ -27,6 +27,7 @@ import dao.SubproductoPropiedadDAO;
 import dao.SubproductoPropiedadValorDAO;
 import dao.SubproductoUsuarioDAO;
 import dao.UnidadEjecutoraDAO;
+import dao.UsuarioDAO;
 import pojo.AcumulacionCosto;
 import pojo.Producto;
 import pojo.Subproducto;
@@ -37,6 +38,7 @@ import pojo.SubproductoTipo;
 import pojo.SubproductoUsuario;
 import pojo.SubproductoUsuarioId;
 import pojo.UnidadEjecutora;
+import pojo.Usuario;
 import utilities.Utils;
 import utilities.COrden;
 
@@ -249,7 +251,8 @@ public class SSubproducto extends HttpServlet {
 			
 			if (ret){
 				SubproductoUsuarioId subproductoUsuarioId = new SubproductoUsuarioId(subproducto.getId(), usuario);
-				SubproductoUsuario subproductoUsuario =  new SubproductoUsuario(subproductoUsuarioId, subproducto, usuario, null, new DateTime().toDate(),null);
+				Usuario usu = UsuarioDAO.getUsuario(usuario);
+				SubproductoUsuario subproductoUsuario =  new SubproductoUsuario(subproductoUsuarioId, subproducto, usu, usuario, null, new DateTime().toDate(),null);
 				SubproductoUsuarioDAO.guardarSubproductoUsuario(subproductoUsuario);
 				
 				for (stdatadinamico data : datos) {

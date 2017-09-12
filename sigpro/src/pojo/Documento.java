@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 11, 2017 3:37:18 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -18,10 +18,6 @@ import javax.persistence.TemporalType;
 @Table(name = "documento", catalog = "sipro")
 public class Documento implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3045261203196833993L;
 	private Integer id;
 	private String nombre;
 	private String extension;

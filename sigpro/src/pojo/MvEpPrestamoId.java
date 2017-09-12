@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 11, 2017 3:37:18 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import javax.persistence.Column;
@@ -11,10 +11,6 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class MvEpPrestamoId implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7566817387684812991L;
 	private Integer ejercicio;
 	private Integer fuente;
 	private Integer organismo;

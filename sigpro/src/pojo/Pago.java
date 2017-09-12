@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 11, 2017 3:37:18 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -19,10 +19,6 @@ import javax.persistence.TemporalType;
 @Table(name = "pago", catalog = "sipro")
 public class Pago implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2515870160951484035L;
 	private Integer id;
 	private int objetoId;
 	private int objetoTipo;
