@@ -15,6 +15,7 @@ import org.hibernate.query.Query;
 import pojo.Producto;
 import pojo.ProductoUsuario;
 import pojo.ProductoUsuarioId;
+import pojo.Usuario;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -59,7 +60,8 @@ public class ProductoDAO {
 			session.beginTransaction();
 			producto.setNivel(2);
 			session.saveOrUpdate(producto);
-			ProductoUsuario pu = new ProductoUsuario(new ProductoUsuarioId(producto.getId(), producto.getUsuarioCreo()), producto
+			Usuario usu = UsuarioDAO.getUsuario( producto.getUsuarioCreo());
+			ProductoUsuario pu = new ProductoUsuario(new ProductoUsuarioId(producto.getId(), producto.getUsuarioCreo()), producto,usu
 					, producto.getUsuarioCreo(), null, new Date(), null);
 			session.saveOrUpdate(pu);
 			session.getTransaction().commit();

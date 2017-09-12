@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class UsuarioPermisoId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4240961492492996626L;
 	private String usuariousuario;
 	private int permisoid;
 

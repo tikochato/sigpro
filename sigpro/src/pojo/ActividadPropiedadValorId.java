@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ActividadPropiedadValorId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1806577738966142949L;
 	private int actividadid;
 	private int actividadPropiedadid;
 

@@ -11,6 +11,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class EjecucionPresupuestariaId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 236986724371094529L;
 	private Integer ejercicio;
 	private Integer mes;
 	private Long entidad;

@@ -28,6 +28,10 @@ import javax.persistence.TemporalType;
 @Table(name = "componente", catalog = "sipro")
 public class Componente implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5409426097141355903L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private ComponenteTipo componenteTipo;

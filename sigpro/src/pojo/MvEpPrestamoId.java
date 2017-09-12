@@ -11,6 +11,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class MvEpPrestamoId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7566817387684812991L;
 	private Integer ejercicio;
 	private Integer fuente;
 	private Integer organismo;

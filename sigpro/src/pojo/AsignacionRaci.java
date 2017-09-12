@@ -21,6 +21,10 @@ import javax.persistence.TemporalType;
 @Table(name = "asignacion_raci", catalog = "sipro")
 public class AsignacionRaci implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7641261201861788785L;
 	private Integer id;
 	private Colaborador colaborador;
 	private MatrizRaci matrizRaci;

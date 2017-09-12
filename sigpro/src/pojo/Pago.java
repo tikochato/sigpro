@@ -19,6 +19,10 @@ import javax.persistence.TemporalType;
 @Table(name = "pago", catalog = "sipro")
 public class Pago implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2515870160951484035L;
 	private Integer id;
 	private int objetoId;
 	private int objetoTipo;

@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class SubprodtipoPropiedadId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5874448577393979832L;
 	private int subproductoTipoid;
 	private int subproductoPropiedadid;
 

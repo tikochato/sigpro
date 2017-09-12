@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class MvArbolId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1280058044354171831L;
 	private byte prestamo;
 	private byte componente;
 	private byte producto;
