@@ -754,5 +754,72 @@ public class CPdf {
 			return path;
 		}
 		
-
+		public String exportarDesembolsos	(String [][]headers, String [][]datos, String usuario){
+			String path ="";
+			tipo_reporte=5;
+			try{
+				PDFont font = PDType1Font.HELVETICA_BOLD;
+				page = new PDPage(new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth()));
+			    doc.addPage( page );
+				PDPageContentStream contentStream = new PDPageContentStream(doc, page);
+				contentStream.beginText();
+				contentStream.setFont(font, 18);
+				contentStream.newLineAtOffset(50, 550);
+				contentStream.showText("Ministerio de Finanzas Públicas");
+				contentStream.endText();
+				contentStream.beginText();
+				contentStream.setFont(font, 12);
+				contentStream.newLineAtOffset(50, 530);
+				contentStream.showText("Reporte: "+titulo);
+				contentStream.endText();
+				float margin = 50;
+				float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
+				float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
+				boolean drawContent = true;
+				float bottomMargin = 70;
+				BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
+				Row<PDPage> headerRow = table_x.createRow(12);
+				float tam_celda=celda_b*1.05f;
+				contentStream.setFont(font, 10);
+				Cell<PDPage> cell;
+				for(int i=0;i<headers[0].length;i++){					
+					cell = headerRow.createCell(tam_celda,headers[0][i] );
+					cell.setFontSize(7);
+				}
+				table_x.addHeaderRow(headerRow);
+				/*cell = headerRow.createCell((float)(celda_a*2),headers[0][0] );
+				cell = headerRow.createCell(tam_celda,headers[0][1] );
+				cell = headerRow.createCell(tam_celda,headers[0][2] );
+				cell = headerRow.createCell(tam_celda,headers[0][3] );
+				cell = headerRow.createCell(tam_celda,headers[0][4] );
+				cell = headerRow.createCell(tam_celda,headers[0][5] );
+				table_x.addHeaderRow(headerRow);*/
+				
+				for(int i=0; i<datos.length;i++){
+					Row<PDPage> row = table_x.createRow(12);
+					for(int j=0; j<datos[i].length;j++){
+						cell = row.createCell(tam_celda,datos[i][j] );
+						cell.setFontSize(7);
+					}
+					/*cell = row.createCell((float)(celda_a*2),datos[i][0] );
+					cell = row.createCell(tam_celda,datos[i][1] );
+					cell = row.createCell(tam_celda,datos[i][2] );
+					cell = row.createCell(tam_celda,datos[i][3] );
+					cell = row.createCell(tam_celda,datos[i][4] );
+					cell = row.createCell(tam_celda,datos[i][5] );*/
+				}
+				table_x.draw();
+				contentStream.close();
+				path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
+					FileOutputStream out = new FileOutputStream(new File(path));
+					doc.save(out);
+					doc.close();
+			}catch(Exception o){
+				o.printStackTrace();
+			}
+			
+			
+			return path;
+		}
+			
 }

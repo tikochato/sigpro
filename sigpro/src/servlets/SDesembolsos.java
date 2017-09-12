@@ -2,6 +2,8 @@ package servlets;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -34,6 +36,7 @@ import pojo.Prestamo;
 import utilities.CExcel;
 import utilities.CGraficaExcel;
 import utilities.CLogger;
+import utilities.CPdf;
 import utilities.Utils;
 
 
@@ -164,7 +167,59 @@ public class SDesembolsos extends HttpServlet {
 			}catch(Exception e){
 				CLogger.write("1", SDesembolsos.class, e);
 			}
-		}else{
+		}else if(accion.equals("exportarPdf")){
+			Integer ejercicioFiscal = Utils.String2Int(map.get("ejercicioFiscal"));
+			Integer proyectoId = Utils.String2Int(map.get("proyectoid"));
+			Integer anioInicial = Utils.String2Int(map.get("anioInicial"));
+			Integer anioFinal = Utils.String2Int(map.get("anioFinal"));
+			Integer agrupacion = Utils.String2Int(map.get("agrupacion"));
+			CPdf archivo = new CPdf("Administración Transaccional");
+			String headers[][];
+			String datos[][];
+			headers = generarHeaders(anioInicial, anioFinal, ejercicioFiscal, agrupacion);
+			datos = generarDatos(proyectoId, anioInicial, anioFinal, ejercicioFiscal, agrupacion, headers, usuario);
+			String path = archivo.exportarDesembolsos(headers, datos,usuario);
+			File file=new File(path);
+			if(file.exists()){
+		        FileInputStream is = null;
+		        try {
+		        	is = new FileInputStream(file);
+		        }
+		        catch (Exception e) {
+					CLogger.write("5", SAdministracionTransaccional.class, e);
+		        }
+		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		        
+		        int readByte = 0;
+		        byte[] buffer = new byte[2024];
+
+                while(true)
+                {
+                    readByte = is.read(buffer);
+                    if(readByte == -1)
+                    {
+                        break;
+                    }
+                    outByteStream.write(buffer);
+                }
+                
+                file.delete();
+                
+                is.close();
+                outByteStream.flush();
+                outByteStream.close();
+                
+		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+				response.setContentType("application/pdf");
+				response.setContentLength(outArray.length);
+				response.setHeader("Expires:", "0"); 
+				response.setHeader("Content-Disposition", "in-line; 'AdministracionTransaccional.pdf'");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+			}
+		}
+		else{
 			response_text = "{ \"success\": false }";
 		}
 		
