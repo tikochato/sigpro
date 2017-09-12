@@ -274,7 +274,7 @@ public class SPrestamo extends HttpServlet {
 			Date fechaElegibilidadUe = Utils.dateFromString(map.get("fechaElegibilidad"));
 			Date fechaCierreOrigianlUe = Utils.dateFromString(map.get("fechaCierreOriginal"));
 			Date fechaCierreActualUe = Utils.dateFromString(map.get("fechaCierreActual"));
-			int mesesProrrogaUe = Utils.String2Int(map.get("mesesProrroga"), null);
+			int mesesProrrogaUe = Utils.String2Int(map.get("mesesProrroga"), 0);
 			BigDecimal montoAsignadoUe = Utils.String2BigDecimal(map.get("montoAisignadoUe"), null);
 			BigDecimal desembolsoAFechaUe = Utils.String2BigDecimal(map.get("desembolsoAFechaUe"), null);
 			BigDecimal montoPorDesembolsarUe = Utils.String2BigDecimal(map.get("montoPorDesembolsarUe"), null);

@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.UnidadEjecutora;
+import pojo.UnidadEjecutoraId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 import utilities.Utils;
@@ -37,8 +38,8 @@ public class UnidadEjecutoraDAO {
 			CriteriaQuery<UnidadEjecutora> criteria = builder.createQuery(UnidadEjecutora.class);
 			Root<UnidadEjecutora> root = criteria.from(UnidadEjecutora.class);
 			criteria.select(root);
-			criteria.where(builder.and(builder.equal(root.get("unidadEjecutora"), unidadEjecutora), 
-					builder.and(builder.equal(root.get("id.entidadentidad"),entidad)),builder.equal(root.get("id.ejercicio"), ejercicio)));
+			UnidadEjecutoraId unidadEjecutoraId = new UnidadEjecutoraId(unidadEjecutora, entidad, ejercicio);
+			criteria.where(builder.and(builder.equal(root.get("id"), unidadEjecutoraId)));
 			ret = session.createQuery(criteria).getSingleResult();
 		} catch (Throwable e) {
 			CLogger.write("2", UnidadEjecutoraDAO.class, e);
