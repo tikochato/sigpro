@@ -290,12 +290,13 @@ public class SPlanAdquisiciones extends HttpServlet {
 				CLogger.write("1", SPlanAdquisiciones.class, e);
 			}
 		}else if(accion.equals("exportarPdf")){
-			CPdf archivo = new CPdf("Administraci髇 Transaccional");
+			CPdf archivo = new CPdf("Plan de adquisiciones");
 			String headers[][];
 			String datos[][];
 			headers = generarHeaders();
-			datos = generarDatos(usuario);
-			String path = archivo.ExportarPdfAdministracionTransaccional(headers, datos,usuario);
+			Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"), null);
+			datos = generarDatos(idPlanAdquisiciones, idPrestamo, usuario);
+			String path = archivo.exportarPlanAdquisiciones(headers, datos,usuario);
 			File file=new File(path);
 			if(file.exists()){
 		        FileInputStream is = null;
@@ -884,8 +885,8 @@ public class SPlanAdquisiciones extends HttpServlet {
 		String headers[][];
 		
 		headers = new String[][]{
-			{"Nombre", "Tipo de Adquisici贸n", "Unidad de Medida", "Categor铆a de Aquisicion", "Cantidad", "Costo", "Total", "Preparaci贸n de Documentos", "", "Lanzamiento de Evento","", 
-				"Recepci贸n y Evaluaci贸n de Ofertas", "", "Adjudicaci贸n", "", "Firma de Contrato", ""},  //titulos
+			{"Nombre", "Tipo de Adquisici髇", "Unidad de Medida", "Categor韆 de Aquisici髇", "Cantidad", "Costo", "Total", "Preparaci髇 de Documentos", "", "Lanzamiento de Evento","", 
+				"Recepci髇 y Evaluaci髇 de Ofertas", "", "Adjudicaci髇", "", "Firma de Contrato", ""},  //titulos
 			null, //mapeo
 			{"string", "string", "string", "string", "double", "currency", "currency", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string"}, //tipo dato
 			null, //operaciones columnas
