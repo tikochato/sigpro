@@ -471,7 +471,7 @@
 					
 					<div class="form-group" ng-show="controller.unidadejecutoranombre.length>0"  >
 			            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.entidadnombre" ng-readonly="true"  
-			            	 ng-value="controller.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
+			            	 ng-value="controller.entidadnombre" onblur="this.setAttribute('value', this.value);"/>
 			            	<label for="campo3" class="floating-label">Organismo Ejecutor</label>
 			          	
 					</div>
