@@ -85,7 +85,7 @@ public class SDocumentosAdjuntos extends HttpServlet {
 					if(accion.equals("agregarDocumento")){
 						try {						
 							if(esNuevo){
-								String directorioTemporal = "/Archivos/Temporales/";
+								String directorioTemporal = "/archivos/temporales/";
 								if (objetoId != 0){
 									directorioTemporal = directorioTemporal + objetoId+ "/";
 								}
@@ -214,7 +214,7 @@ public class SDocumentosAdjuntos extends HttpServlet {
 					BufferedInputStream fileIn = new BufferedInputStream(null);
 					try{
 						List<Documento> documento = DocumentosAdjuntosDAO.getDocumentoById(idDocumento);
-						String directorioTemporal = "/Archivos/Temporales";
+						String directorioTemporal = "/archivos/temporales";
 						
 						for (Documento doc : documento){
 							String filePath = directorioTemporal+"/"+doc.getIdObjeto()+"/"+doc.getIdTipoObjeto()+"/"+doc.getNombre();
@@ -236,7 +236,7 @@ public class SDocumentosAdjuntos extends HttpServlet {
 							  response.addHeader("Content-Length", Long.toString(file.length()));
 							}
 							
-							response.setHeader("Expires:", "0");
+							response.setHeader("Cache-Control", "no-cache");
 							
 							byte [] buffer = new byte[8192];
 							for (int length = 0; (length = fileIn.read(buffer)) > 0;){

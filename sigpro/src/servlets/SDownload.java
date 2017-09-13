@@ -102,8 +102,8 @@ public class SDownload extends HttpServlet {
 			        byte [] outArray = Base64.encode(outByteStream.toByteArray());
 					response.setContentType("application/ms-project");
 					response.setContentLength(outArray.length);
-					response.setHeader("Expires:", "0"); 
-					response.setHeader("Content-Disposition", "attachment; programa .mpx");
+					response.setHeader("Cache-Control", "no-cache"); 
+					response.setHeader("Content-Disposition", "attachment; prestamo.mpx");
 					OutputStream outStream = response.getOutputStream();
 					outStream.write(outArray);
 					outStream.flush();

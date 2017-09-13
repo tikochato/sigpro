@@ -203,7 +203,7 @@ public class SUsuario extends HttpServlet {
 						}
 					}
 					Integer rol = UsuarioDAO.getRolPorUsuario(usuario);
-					Integer unidadEjecutora = UsuarioDAO.getUnidadEjecutora(usuario).getUnidadEjecutora();
+					Integer unidadEjecutora = UsuarioDAO.getUnidadEjecutora(usuario).getId().getUnidadEjecutora();
 					Integer cooperante = UsuarioDAO.getCooperantePorUsuario(usuario).getId();
 					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stpermisos);
 					String proyectos_usuarios= new GsonBuilder().serializeNulls().create().toJson(stproyectos);
@@ -293,7 +293,7 @@ public class SUsuario extends HttpServlet {
 					usuarioStr.snombre=colaboradorActual.getSnombre();
 					usuarioStr.papellido=colaboradorActual.getPapellido();
 					usuarioStr.sapellido=colaboradorActual.getSapellido();
-					usuarioStr.unidad_ejecutora=String.valueOf(colaboradorActual.getUnidadEjecutora().getUnidadEjecutora());
+					usuarioStr.unidad_ejecutora=String.valueOf(colaboradorActual.getUnidadEjecutora().getId().getUnidadEjecutora());
 					usuarioStr.id=colaboradorActual.getId();
 				}
 				

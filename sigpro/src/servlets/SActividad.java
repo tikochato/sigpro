@@ -32,6 +32,7 @@ import dao.ActividadPropiedadDAO;
 import dao.ActividadPropiedadValorDAO;
 import dao.AsignacionRaciDAO;
 import dao.ComponenteDAO;
+import dao.MatrizRaciDAO;
 import dao.ProductoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
@@ -45,6 +46,7 @@ import pojo.Colaborador;
 import pojo.Componente;
 import pojo.MatrizRaci;
 import pojo.Producto;
+import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.Utils;
 import utilities.COrden;
@@ -334,6 +336,7 @@ public class SActividad extends HttpServlet {
 						actividad.setAcumulacionCosto(acumulacionCosto);
 						actividad.setDuracion(duracion);
 						actividad.setDuracionDimension(duracionDimension);
+						actividad.setProyectoBase(proyectoBase);
 					}
 					
 					result = ActividadDAO.guardarActividad(actividad);
@@ -344,6 +347,7 @@ public class SActividad extends HttpServlet {
 					orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase);
 					
 					if (result ){
+						
 						List<AsignacionRaci> asignaciones_temp = AsignacionRaciDAO.getAsignacionPorTarea(actividad.getId(), 5);
 						
 						if (asignaciones_temp!=null){
@@ -352,8 +356,19 @@ public class SActividad extends HttpServlet {
 							}
 						}
 						
-						Integer proyectoId = ActividadDAO.getProyectoId(actividad.getId());
+						Integer proyectoId = actividad.getProyectoBase();
 						MatrizRaci matrizRaci = AsignacionRaciDAO.getMatrizPorObjeto(proyectoId, 1);
+						if (matrizRaci == null){
+							matrizRaci = new MatrizRaci();
+							matrizRaci.setEstado(1);
+							matrizRaci.setFechaCreacion(new Date());
+							Proyecto proyTemp = new Proyecto();
+							proyTemp.setId(proyectoId);
+							matrizRaci.setProyecto(proyTemp);
+							matrizRaci.setUsuarioCreo(usuario);
+							MatrizRaciDAO.guardarMatrizRaci(matrizRaci);
+							
+						}
 						
 						String asignaciones_param = map.get("asignacionroles");
 						
@@ -636,9 +651,6 @@ public class SActividad extends HttpServlet {
 				result = ActividadDAO.guardarActividad(actividad);
 				
 				Session session = COrden.getSessionCalculoOrden();
-				
-				
-				
 				
 				
 				COrden orden = new COrden();

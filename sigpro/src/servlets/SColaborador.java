@@ -101,7 +101,7 @@ public class SColaborador extends HttpServlet {
 				temp.cui = colaborador.getCui();
 				if(colaborador.getUsuario()!=null)
 					temp.usuario = colaborador.getUsuario().getUsuario();
-				temp.unidadEjecutora = colaborador.getUnidadEjecutora().getUnidadEjecutora();
+				temp.unidadEjecutora = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
 				temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
 				
 				temp.usuarioCreo = colaborador.getUsuarioCreo();
@@ -125,11 +125,13 @@ public class SColaborador extends HttpServlet {
 			String primerApellido = parametro.get("primerApellido");
 			String segundoApellido = parametro.get("segundoApellido");
 			Long cui = Utils.String2Long(parametro.get("cui"));
+			Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"), -1);
+			Integer entidad = Utils.String2Int(parametro.get("entidad"), -1);
 			Integer codigoUnidadEjecutora = Utils.String2Int(parametro.get("unidadEjecutora"), -1);
 			String usuarioParametro = parametro.get("usuario");
 
 			boolean creado = ColaboradorDAO.guardar(-1, primerNombre, segundoNombre, null, primerApellido, segundoApellido,
-					null, cui, codigoUnidadEjecutora, usuarioParametro, usuario, new Date());
+					null, cui, ejercicio, entidad,codigoUnidadEjecutora, usuarioParametro, usuario, new Date());
 
 			if (creado) {
 				int pagina = Utils.String2Int(parametro.get("pagina"), 1);
@@ -158,7 +160,8 @@ public class SColaborador extends HttpServlet {
 					temp.cui = colaborador.getCui();
 					if(colaborador.getUsuario()!= null)
 						temp.usuario = colaborador.getUsuario().getUsuario();
-					temp.unidadEjecutora = colaborador.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadEjecutora = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
+					
 					temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
 					
 					temp.usuarioCreo = colaborador.getUsuarioCreo();
@@ -186,11 +189,13 @@ public class SColaborador extends HttpServlet {
 			String primerApellido = parametro.get("primerApellido");
 			String segundoApellido = parametro.get("segundoApellido");
 			Long cui = Utils.String2Long(parametro.get("cui"));
+			Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"), -1);
+			Integer entidad = Utils.String2Int(parametro.get("entidad"), -1);
 			Integer codigoUnidadEjecutora = Utils.String2Int(parametro.get("unidadEjecutora"), -1);
 			String usuarioParametro = parametro.get("usuario");
 
 			boolean actualizado = ColaboradorDAO.actualizar(id, primerNombre, segundoNombre, primerApellido,
-					segundoApellido, cui, codigoUnidadEjecutora, usuarioParametro, usuario);
+					segundoApellido, cui,ejercicio, entidad, codigoUnidadEjecutora, usuarioParametro, usuario);
 
 			if (actualizado) {
 				int pagina = Utils.String2Int(parametro.get("pagina"), 1);
@@ -219,7 +224,7 @@ public class SColaborador extends HttpServlet {
 					temp.cui = colaborador.getCui();
 					if(colaborador.getUsuario()!=null)
 						temp.usuario = colaborador.getUsuario().getUsuario();
-					temp.unidadEjecutora = colaborador.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadEjecutora = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
 					temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
 					
 					temp.usuarioCreo = colaborador.getUsuarioCreo();
@@ -287,7 +292,8 @@ public class SColaborador extends HttpServlet {
 				temp.cui = colaborador.getCui();
 
 				temp.usuario = colaborador.getUsuario().getUsuario();
-				temp.unidadEjecutora = colaborador.getUnidadEjecutora().getUnidadEjecutora();
+				
+				temp.unidadEjecutora = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
 				temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
 				
 				temp.usuarioCreo = colaborador.getUsuarioCreo();

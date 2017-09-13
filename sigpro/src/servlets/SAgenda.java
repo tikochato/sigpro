@@ -38,6 +38,7 @@ import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.CExcel;
+import utilities.CLogger;
 import utilities.Utils;
 
 
@@ -141,9 +142,9 @@ public class SAgenda extends HttpServlet {
 		        	is = new FileInputStream(file);
 		        }
 		        catch (Exception e) {
-		        	
+					CLogger.write_simple("4", CExcel.class, e.getMessage());
 		        }
-		        //
+
 		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		        
 		        int readByte = 0;
@@ -158,21 +159,22 @@ public class SAgenda extends HttpServlet {
                     }
                     outByteStream.write(buffer);
                 }
-                
                 file.delete();
                 
                 is.close();
                 outByteStream.flush();
                 outByteStream.close();
                 
-		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+                byte [] outArray = Base64.encode(outByteStream.toByteArray());
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
-				response.setHeader("Expires:", "0"); 
-				response.setHeader("Content-Disposition", "attachment; Agenda_.xls");
+				response.setHeader("Cache-Control", "no-cache"); 
+				response.setHeader("Content-Disposition", "attachment; Agenda.xls");
 				OutputStream outStream = response.getOutputStream();
+
 				outStream.write(outArray);
 				outStream.flush();
+
 			}
 		}
 	}

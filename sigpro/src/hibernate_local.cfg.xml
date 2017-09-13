@@ -113,6 +113,7 @@
         <mapping class="pojo.SubproductoUsuario" />
         <mapping class="pojo.SubproductoUsuarioId" />
         <mapping class="pojo.TipoMoneda" />
+        <mapping class="pojo.TipoAdquisicion" />
         <mapping class="pojo.UnidadEjecutora" />
         <mapping class="pojo.UnidadMedida" />
         <mapping class="pojo.Usuario" />

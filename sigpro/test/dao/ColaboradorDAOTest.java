@@ -13,7 +13,7 @@ public class ColaboradorDAOTest {
 	
 	@Test
 	public void guardarTest(){
-		assertNotNull(ColaboradorDAO.guardar(1, "unit_test", "unit_test", "", "unit_Test", "unit_test", "unit_test", 0L, 1, "admin", "",null));
+		assertNotNull(ColaboradorDAO.guardar(1, "unit_test", "unit_test", "", "unit_Test", "unit_test", "unit_test", 0L, 2017,1,1, "admin", "",null));
 	}
 	
 

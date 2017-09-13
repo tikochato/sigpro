@@ -53,6 +53,7 @@
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/responsabletipo/rv">Tipo de Responsable</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/responsablerol/rv">Resonsable rol</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/categoriaadquisicion/rv">Categoría de Adquisiciones</a></li></shiro:hasPermission>
+				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="#!/tipoadquisicion/rv">Tipo de Adquisiciones</a></li></shiro:hasPermission>
 			                        </ul>
 	                    		</li>
 	                    		</shiro:hasPermission>
@@ -79,16 +80,16 @@
                     <li uib-dropdown>
                     	<a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Reportes <b class="caret"></b></a>
                     	<ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/avanceactividades/rp">Avance Actividades</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/administracionTransaccional/rp">Administración transaccional</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/avanceactividades/rp">Avance Actividades</a></li></shiro:hasPermission>                    		
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/cargatrabajo/rp">Carga de Trabajo</a></li></shiro:hasPermission>
-                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/informacionPresupuestaria/rp">Información presupuestaria</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/desembolsos/rp">Desembolsos</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/informacionPresupuestaria/rp">Ejecución presupuestaria</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/mapa">Mapa</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/matrizraci/rp">Matriz RACI</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/prestamometas">Metas de Préstamo</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/planadquisiciones/rp">Plan de adquisiciones</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/planejecucion/rp">Plan de ejecución</a></li></shiro:hasPermission>
-                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/prestamometas">Metas de Préstamo</a></li></shiro:hasPermission>
-                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/desembolsos/rp">Desembolsos</a></li></shiro:hasPermission>
-                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/administracionTransaccional/rp">Administración transaccional</a></li></shiro:hasPermission>
-                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/matrizraci/rp">Matriz RACI</a></li></shiro:hasPermission>
-                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="#!/mapa">Mapa</a></li></shiro:hasPermission>
                     	</ul>
                     </li>
                     <shiro:hasPermission name="34010">

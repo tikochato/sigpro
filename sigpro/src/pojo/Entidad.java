@@ -1,14 +1,14 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,38 +22,40 @@ public class Entidad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5332999264284436595L;
-	private Integer entidad;
+	private static final long serialVersionUID = -9007715066381999444L;
+	private EntidadId id;
 	private String nombre;
 	private String abreviatura;
-	private Set<UnidadEjecutora> unidadEjecutoras = new HashSet<UnidadEjecutora>(0);
 	private Set<ProyectoImpacto> proyectoImpactos = new HashSet<ProyectoImpacto>(0);
+	private Set<UnidadEjecutora> unidadEjecutoras = new HashSet<UnidadEjecutora>(0);
 
 	public Entidad() {
 	}
 
-	public Entidad(String nombre) {
+	public Entidad(EntidadId id, String nombre) {
+		this.id = id;
 		this.nombre = nombre;
 	}
 
-	public Entidad(String nombre, String abreviatura, Set<UnidadEjecutora> unidadEjecutoras,
-			Set<ProyectoImpacto> proyectoImpactos) {
+	public Entidad(EntidadId id, String nombre, String abreviatura, Set<ProyectoImpacto> proyectoImpactos,
+			Set<UnidadEjecutora> unidadEjecutoras) {
+		this.id = id;
 		this.nombre = nombre;
 		this.abreviatura = abreviatura;
-		this.unidadEjecutoras = unidadEjecutoras;
 		this.proyectoImpactos = proyectoImpactos;
+		this.unidadEjecutoras = unidadEjecutoras;
 	}
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
+	@EmbeddedId
 
-	@Column(name = "entidad", unique = true, nullable = false)
-	public Integer getEntidad() {
-		return this.entidad;
+	@AttributeOverrides({ @AttributeOverride(name = "entidad", column = @Column(name = "entidad", nullable = false)),
+			@AttributeOverride(name = "ejercicio", column = @Column(name = "ejercicio", nullable = false)) })
+	public EntidadId getId() {
+		return this.id;
 	}
 
-	public void setEntidad(Integer entidad) {
-		this.entidad = entidad;
+	public void setId(EntidadId id) {
+		this.id = id;
 	}
 
 	@Column(name = "nombre", nullable = false, length = 1000)
@@ -75,21 +77,21 @@ public class Entidad implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "entidad")
-	public Set<UnidadEjecutora> getUnidadEjecutoras() {
-		return this.unidadEjecutoras;
-	}
-
-	public void setUnidadEjecutoras(Set<UnidadEjecutora> unidadEjecutoras) {
-		this.unidadEjecutoras = unidadEjecutoras;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "entidad")
 	public Set<ProyectoImpacto> getProyectoImpactos() {
 		return this.proyectoImpactos;
 	}
 
 	public void setProyectoImpactos(Set<ProyectoImpacto> proyectoImpactos) {
 		this.proyectoImpactos = proyectoImpactos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "entidad")
+	public Set<UnidadEjecutora> getUnidadEjecutoras() {
+		return this.unidadEjecutoras;
+	}
+
+	public void setUnidadEjecutoras(Set<UnidadEjecutora> unidadEjecutoras) {
+		this.unidadEjecutoras = unidadEjecutoras;
 	}
 
 }

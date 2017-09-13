@@ -322,14 +322,13 @@ public class SCargaTrabajo extends HttpServlet {
 				
 					response.setContentType("application/ms-excel");
 					response.setContentLength(outArray.length);
-					response.setHeader("Expires:", "0"); 
-					response.setHeader("Content-Disposition", "attachment; CargaTrabajo_.xls");
+					response.setHeader("Cache-Control", "no-cache"); 
+					response.setHeader("Content-Disposition", "attachment; CargaTrabajo_de_Trabajo.xls");
 					OutputStream outStream = response.getOutputStream();
 					outStream.write(outArray);
 					outStream.flush();
 				}catch(Exception e){
-					e.printStackTrace();
-					CLogger.write("1", SCargaTrabajo.class, e);
+				    CLogger.write_simple("2", SCargaTrabajo.class, e.getMessage());
 				}
 			}else if(accion.equals("exportarPdf")){
 				CPdf archivo = new CPdf("Carga de trabajo");
@@ -388,15 +387,17 @@ public class SCargaTrabajo extends HttpServlet {
 				response_text = "{ \"success\": false }";
 			}
 		
-		response.setHeader("Content-Encoding", "gzip");
-		response.setCharacterEncoding("UTF-8");
-		
-	    OutputStream output = response.getOutputStream();
-		GZIPOutputStream gz = new GZIPOutputStream(output);
-	    gz.write(response_text.getBytes("UTF-8"));
-	    gz.close();
-	    output.close();
-	
+			response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
+			
+			
+			if (!accion.equals("exportarExcel")){
+			    OutputStream output = response.getOutputStream();
+				GZIPOutputStream gz = new GZIPOutputStream(output);
+			    gz.write(response_text.getBytes("UTF-8"));
+			    gz.close();
+			    output.close();
+			}
 		}
 	
 	private String construirItem(String nombre, Integer objetoId, Integer objetoTipo, String value,String hijos){
@@ -535,12 +536,15 @@ public class SCargaTrabajo extends HttpServlet {
 			CGraficaExcel grafica = generarGrafica(datos);
 			excel = new CExcel("Administración Transaccional", false, grafica);
 			wb=excel.generateExcelOfData(datos, "Carga de Trabajo", headers, null, true, usuario);
-		
+			
+			CLogger.write_simple("4", SCargaTrabajo.class, "wb 482");
+			
 		wb.write(outByteStream);
+		CLogger.write_simple("4", SCargaTrabajo.class, "wb write 485");
 		outArray = Base64.encode(outByteStream.toByteArray());
+		CLogger.write_simple("4", SCargaTrabajo.class, "outArray 487");
 		}catch(Exception e){
-			e.printStackTrace();
-			CLogger.write("4", SCargaTrabajo.class, e);
+		    CLogger.write_simple("1", SCargaTrabajo.class, e.getMessage());
 		}
 		return outArray;
 	}

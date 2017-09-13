@@ -23,6 +23,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.PrestamoDAO;
+import dao.UnidadEjecutoraDAO;
 import pojo.AutorizacionTipo;
 import pojo.Cooperante;
 import pojo.EjecucionEstado;
@@ -156,7 +157,7 @@ public class SPrestamo extends HttpServlet {
 				temp.numeroPrestamo = prestamo.getNumeroPrestamo(); 
 				temp.destino = prestamo.getDestino();
 				temp.sectorEconomico = prestamo.getSectorEconomico();
-				temp.unidadEjecutora = prestamo.getUnidadEjecutora().getUnidadEjecutora();
+				temp.unidadEjecutora = prestamo.getUnidadEjecutora().getId().getUnidadEjecutora();
 				temp.unidadEjecutoraNombre = prestamo.getUnidadEjecutora().getNombre();
 				temp.fechaFirma = (prestamo.getFechaFirma() == null ? null : Utils.formatDate(prestamo.getFechaFirma()));
 				temp.tipoAutorizacionId = (prestamo.getAutorizacionTipo() == null ? null : prestamo.getAutorizacionTipo().getId());
@@ -220,7 +221,7 @@ public class SPrestamo extends HttpServlet {
 				temp.cooperanteid = prestamo.getCooperante().getId();
 				temp.cooperantenombre =  prestamo.getCooperante().getSiglas() + " - " + prestamo.getCooperante().getNombre();
 				
-				temp.unidadEjecutora = prestamo.getUnidadEjecutora().getUnidadEjecutora();
+				temp.unidadEjecutora = prestamo.getUnidadEjecutora().getId().getUnidadEjecutora();
 				temp.unidadEjecutoraNombre = prestamo.getUnidadEjecutora().getNombre();
 				
 				temp.usuarioCreo = prestamo.getUsuarioCreo();
@@ -248,9 +249,11 @@ public class SPrestamo extends HttpServlet {
 			String numeroPrestamo =  map.get("numeroPrestamo"); 
 			String  proyectoPrograma = map.get("proyetoPrograma");
 			
+			int ejercicio = Utils.String2Int(map.get("ejercicio"), 0);
+			int entidad = Utils.String2Int(map.get("entidad"), 0);
 			int unidadEjecutoraPrestamo = Utils.String2Int(map.get("unidadEjecutora"), 0);
-			UnidadEjecutora unidadEjecutora_ = new UnidadEjecutora();
-			unidadEjecutora_.setUnidadEjecutora(unidadEjecutoraPrestamo);
+			
+			UnidadEjecutora unidadEjecutora_ = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad, unidadEjecutoraPrestamo);
 			
 			Cooperante cooperanteUe = new Cooperante();
 			cooperanteUe.setId(map.get("cooperanteUeId")!=null ? Integer.parseInt(map.get("cooperanteUeId")): null);
@@ -271,7 +274,7 @@ public class SPrestamo extends HttpServlet {
 			Date fechaElegibilidadUe = Utils.dateFromString(map.get("fechaElegibilidad"));
 			Date fechaCierreOrigianlUe = Utils.dateFromString(map.get("fechaCierreOriginal"));
 			Date fechaCierreActualUe = Utils.dateFromString(map.get("fechaCierreActual"));
-			int mesesProrrogaUe = Utils.String2Int(map.get("mesesProrroga"), null);
+			int mesesProrrogaUe = Utils.String2Int(map.get("mesesProrroga"), 0);
 			BigDecimal montoAsignadoUe = Utils.String2BigDecimal(map.get("montoAisignadoUe"), null);
 			BigDecimal desembolsoAFechaUe = Utils.String2BigDecimal(map.get("desembolsoAFechaUe"), null);
 			BigDecimal montoPorDesembolsarUe = Utils.String2BigDecimal(map.get("montoPorDesembolsarUe"), null);

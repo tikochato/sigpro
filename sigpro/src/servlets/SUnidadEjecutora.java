@@ -37,7 +37,7 @@ public class SUnidadEjecutora extends HttpServlet {
 		} else if (parametro.get("accion").compareTo("actualizar") == 0) {
 		    actualizar(parametro, response);
 		} else if (parametro.get("accion").compareTo("totalElementos") == 0) {
-		    total(response);
+		    total(parametro,response);
 		} else if (parametro.get("accion").compareTo("cargarPorEntidad") == 0){
 			listarPorEntidad(parametro, response);
 		}
@@ -46,10 +46,11 @@ public class SUnidadEjecutora extends HttpServlet {
     private void listar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 		int registros = Utils.String2Int(parametro.get("registros"), 20);
-	
+		int entidadId = Utils.String2Int(parametro.get("entidad"), 0);
+		int ejercicio = Utils.String2Int(parametro.get("ejercicio"), 0);
 		String resultadoJson = "";
 	
-		resultadoJson = UnidadEjecutoraDAO.getJson(pagina, registros);
+		resultadoJson = UnidadEjecutoraDAO.getJson(pagina, registros, ejercicio, entidadId);
 	
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 		    resultadoJson = "{\"success\":false}";
@@ -66,9 +67,10 @@ public class SUnidadEjecutora extends HttpServlet {
 		int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 		int registros = Utils.String2Int(parametro.get("registros"), 20);
 		int entidadId = Utils.String2Int(parametro.get("entidadId"), 0);
+		int ejercicio = Utils.String2Int(parametro.get("ejercicio"), 0);
 		String resultadoJson = "";
 	
-		resultadoJson = UnidadEjecutoraDAO.getJsonPorEntidad(pagina, registros, entidadId);
+		resultadoJson = UnidadEjecutoraDAO.getJsonPorEntidad(pagina, registros, entidadId, ejercicio);
 	
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 		    resultadoJson = "{\"success\":false}";
@@ -86,8 +88,9 @@ public class SUnidadEjecutora extends HttpServlet {
     		int codigo = Utils.String2Int(parametro.get("codigo"));
     		String nombre = parametro.get("nombre");
     		int codigoEntidad = Utils.String2Int(parametro.get("entidad"));
+    		Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"),-1);
     	   		
-    		boolean creado = UnidadEjecutoraDAO.guardar(codigo, nombre, codigoEntidad);
+    		boolean creado = UnidadEjecutoraDAO.guardar(codigoEntidad, ejercicio, codigo, nombre);
     		if (creado) {
     		    listar(parametro, response);
     		}
@@ -102,17 +105,20 @@ public class SUnidadEjecutora extends HttpServlet {
 		int codigo = Utils.String2Int(parametro.get("codigo"));
 		String nombre = parametro.get("nombre");
 		int codigoEntidad = Utils.String2Int(parametro.get("entidad"));
+		Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"),-1);
 	
-		boolean actualizado = UnidadEjecutoraDAO.actualizar(codigo, nombre, codigoEntidad);
+		boolean actualizado = UnidadEjecutoraDAO.actualizar(codigoEntidad, ejercicio, codigo, nombre);
 	
 		if (actualizado) {
 		    listar(parametro, response);
 		}
     }
 
-    private void total(HttpServletResponse response) throws IOException {
-		Long total = UnidadEjecutoraDAO.getTotal();
-	
+    private void total(Map<String, String> parametro,HttpServletResponse response) throws IOException {
+		int codigoEntidad = Utils.String2Int(parametro.get("entidad"));
+		Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"),-1);
+		Long total = UnidadEjecutoraDAO.getTotal(ejercicio, codigoEntidad);
+		
 		String resultadoJson = "{\"success\":true, \"total\":"
 		                       + total
 		                       + "}";

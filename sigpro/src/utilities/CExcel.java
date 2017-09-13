@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -74,6 +73,7 @@ public class CExcel {
 	CGraficaExcel stgrafica;
 		
 	public CExcel(String sheet_name, boolean hasGroup, CGraficaExcel grafica) {
+		 
 		HasGroup = hasGroup;
 		workbook = new HSSFWorkbook();
 		
@@ -96,9 +96,8 @@ public class CExcel {
 				}
 				workbook = new HSSFWorkbook(fileInputStream);
 				sheet = workbook.getSheetAt(0);
-			} catch (IOException e) {
-				e.printStackTrace();
-				CLogger.write("6", CExcel.class, e);
+			} catch (Exception e) {
+				CLogger.write("1", CExcel.class, e);
 			}
 		}else{
 			sheet = workbook.createSheet();
@@ -396,7 +395,6 @@ public class CExcel {
 	public Workbook generateExcelOfData(String[][] data, String report_name, String[][] headers, String[][] extra_lines, boolean borde, String usuario) {
 		int line = 5;
 		DateTime fechaActual = DateTime.now();
-		
 		try {
 			if(stgrafica != null){
 				line = generateChart(report_name, fechaActual, usuario);
@@ -477,14 +475,12 @@ public class CExcel {
 					
 					line++;
 				}
-				
 				line = setOperations(headers, lineas, line, first_data_line, last_data_line);
 			}
 			Header(report_name, headers[0].length);
 			Footer(line++, fechaActual, usuario);
 		} catch (Exception e) {
-			e.printStackTrace();
-			CLogger.write("1", CExcel.class, e);
+		    CLogger.write("1", CExcel.class, e);
 		}
 		
 		return workbook;
@@ -680,7 +676,7 @@ public class CExcel {
 
 		} catch (FileNotFoundException e) {
 			CLogger.write("2", CExcel.class, e);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			CLogger.write("3", CExcel.class, e);
 		}
 		return path;
@@ -694,6 +690,8 @@ public class CExcel {
 		rownum = 6;
 		int columnas = 0;
 
+		CLogger.write_simple("4", CExcel.class, "ExportarExcel for 695");
+		
 		for (int i = 0; i < datos.size(); i++) {
 			Row row = sheet_.createRow(rownum++);
 			Object[] objArr = datos.get(i + "");
@@ -703,6 +701,9 @@ public class CExcel {
 			}
 			columnas = objArr.length > columnas ? objArr.length : columnas;
 		}
+		
+		CLogger.write_simple("4", CExcel.class, "ExportarExcel fin for 707");
+		
 		setEncabezado(titulo, columnas);
 		piePagina(usuario);
 		sheet_.autoSizeColumn(0);
@@ -710,17 +711,24 @@ public class CExcel {
 		sheet_.autoSizeColumn(2);
 		sheet_.autoSizeColumn(3);
 
+		CLogger.write_simple("4", CExcel.class, "Encabezados -pie 716");
+		
 		try {
+			CLogger.write_simple("4", CExcel.class, "path 719");
 			path = String.join("", "/archivos/temporales/temp_", ((Long) new Date().getTime()).toString(), ".xls");
+			CLogger.write_simple("4", CExcel.class, "FileOutputStream 721");
 			FileOutputStream out = new FileOutputStream(new File(path));
+			CLogger.write_simple("4", CExcel.class, "workbook out 723");
 			workbook_.write(out);
+			CLogger.write_simple("4", CExcel.class, "out.close 725");
 			out.close();
 
 		} catch (FileNotFoundException e) {
 			CLogger.write("4", CExcel.class, e);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			CLogger.write("5", CExcel.class, e);
 		}
+		CLogger.write_simple("4", CExcel.class, "path: "+path+" 733");
 		return path;
 	}
 

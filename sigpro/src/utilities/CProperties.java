@@ -25,6 +25,8 @@ public class CProperties {
 		properties = new Properties();
 		input = CProperties.class.getClassLoader().getResourceAsStream("config.properties");
 		try{
+			System.setProperty("org.apache.poi.util.POILogger", "org.apache.poi.util.CommonsLogger" );
+			
 			properties.load(input);
 			memsql_host = properties.getProperty("memsql_host");
 			memsql_port = properties.getProperty("memsql_port") != null ? 

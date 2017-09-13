@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -66,8 +67,7 @@ public class Subproducto implements java.io.Serializable {
 	}
 
 	public Subproducto(Producto producto, SubproductoTipo subproductoTipo, UnidadEjecutora unidadEjecutora,
-			String nombre, String usuarioCreo, Date fechaCreacion, int estado, Date fechaInicio,
-			Date fechaFin, Integer duracion, String duracionDimension) {
+			String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
 		this.producto = producto;
 		this.subproductoTipo = subproductoTipo;
 		this.unidadEjecutora = unidadEjecutora;
@@ -75,10 +75,6 @@ public class Subproducto implements java.io.Serializable {
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
-		this.fechaInicio = fechaInicio;
-		this.fechaFin = fechaFin;
-		this.duracion = duracion;
-		this.duracionDimension = duracionDimension;
 	}
 
 	public Subproducto(AcumulacionCosto acumulacionCosto, Producto producto, SubproductoTipo subproductoTipo,
@@ -164,7 +160,10 @@ public class Subproducto implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "unidad_ejecutoraunidad_ejecutora", nullable = false)
+	@JoinColumns({
+			@JoinColumn(name = "unidad_ejecutoraunidad_ejecutora", referencedColumnName = "unidad_ejecutora", nullable = false),
+			@JoinColumn(name = "entidad", referencedColumnName = "entidadentidad", nullable = false),
+			@JoinColumn(name = "ejercicio", referencedColumnName = "ejercicio", nullable = false) })
 	public UnidadEjecutora getUnidadEjecutora() {
 		return this.unidadEjecutora;
 	}

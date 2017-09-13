@@ -11,6 +11,11 @@
 		    color: rgba(0,0,0,0.38) !important;
 		    font-weight: bold;
 		}
+		.label-Options {
+			text-overflow: ellipsis;
+		    width:190px;
+    		overflow: hidden;
+		}
 	    .ui-grid-tree-header-row {
 	        font-weight: normal !important;
 	    }
@@ -241,7 +246,7 @@
 		    						style="max-width: {{controller.tamanoTotal}}px;">
 		    						<thead id="divCabecerasDatos" class="theadDatos">
 		    							<tr>
-		    								<th class="label-form" rowspan="2" style="text-align: center; min-width: 130px; max-width: 130px">Tipo de Adq.</th>
+		    								<th class="label-form" rowspan="2" style="text-align: center; min-width: 200px; max-width: 200px">Tipo de Adq.</th>
 				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 150px; max-width: 150px">Ud. Medida</th>
 				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 200px; max-width: 200px">Cat. de Adq.</th>
 				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 75px; max-width: 75px">Cant.</th>
@@ -269,9 +274,9 @@
 		    						</thead>
 		    						<tbody class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo>
 		    							<tr ng-repeat="row in controller.rowCollectionPrestamo">
-		    								<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" ng-blur="row.bloqueado == false ? controller.ocultar(row,0) : ''" style="min-width: 130px; max-width: 130px"  ng-focus="row.bloqueado == false ? controller.ocultar(row, 0) : ''" ng-click="row.bloqueado == false ? '' : ''" next-on-tab>
+		    								<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" ng-blur="row.bloqueado == false ? controller.ocultar(row,0) : ''" style="min-width: 200px; max-width: 200px"  ng-focus="row.bloqueado == false ? controller.ocultar(row, 0) : ''" ng-click="row.bloqueado == false ? '' : ''" next-on-tab>
 		    									<div style="height: 25px;">
-			    									<label ng-show="!row.c0">{{controller.ddlOpcionesTiposAdquisicion[row.tipoAdquisicion].value}}</label>
+			    									<label class="label-Options" ng-show="!row.c0" >{{controller.ddlOpcionesTiposAdquisicion[row.tipoAdquisicion].value}}</label>
 								    				<select ng-show="row.c0" ng-blur="controller.ocultar(row,0);" ng-model="row.tipoAdquisicion" ng-change="controller.bloquearPadre(row, true); controller.bloquearHijos(row.hijos, true);" class="form-control" next-on-tab>
 								    					<option ng-selected="row.tipoAdquisicion != null ? y.id=={{row.tipoAdquisicion}} : 0" ng-repeat="y in controller.ddlOpcionesTiposAdquisicion" value={{y.id}}>{{y.value}}</option>
 								    				</select>

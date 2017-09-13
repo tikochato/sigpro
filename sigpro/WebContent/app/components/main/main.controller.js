@@ -1,6 +1,6 @@
 var app = angular.module('sipro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
-                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','documentoAdjunto','dialogoConfirmacion','ngAria','ngMaterial','ngMessages']);
+                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','documentoAdjunto','dialogoConfirmacion','ngAria','ngMaterial','ngMessages','angucomplete-alt']);
 
 app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($routeProvider, $locationProvider,FlashProvider) {
 	   $locationProvider.hashPrefix('!');
@@ -200,6 +200,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             })
             .when('/categoriaadquisicion/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'categoriaAdquisicionController\'" class="all_page"></div>'
+            })
+            .when('/tipoadquisicion/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'tipoAdquisicionController\'" class="all_page"></div>'
             })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -496,6 +499,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'categoriaAdquisicionController',
 	    	   script: '/app/components/categoriaadquisicion/categoriaAdquisicion.controller.js',
 	    	   template: '/app/components/categoriaadquisicion/categoriaAdquisicion.jsp'
+	       },
+	       {
+	    	   name: 'tipoAdquisicionController',
+	    	   script: '/app/components/tipoadquisicion/tipoAdquisicion.controller.js',
+	    	   template: '/app/components/tipoadquisicion/tipoAdquisicion.jsp'
 	       }
 
 	   ];
@@ -514,6 +522,8 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
    function($scope,$document,deviceDetector,$rootScope,$location,$window,$utilidades, $routeParams){
 	$scope.lastscroll = 0;
 	$scope.hidebar = false;
+	
+	$rootScope.catalogo_entidades_anos=1;
 
 	numeral.language('es', numeral_language);
 	$window.document.title =  'MINFIN - '+$utilidades.sistema_nombre;

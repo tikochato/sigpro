@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -12,6 +12,9 @@ import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -28,7 +31,7 @@ public class Componente implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8612755535776551525L;
+	private static final long serialVersionUID = 5409426097141355903L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private ComponenteTipo componenteTipo;
@@ -59,7 +62,7 @@ public class Componente implements java.io.Serializable {
 	private Integer orden;
 	private String treePath;
 	private Integer nivel;
-	private Set<ComponenteUsuario> componenteUsuarios = new HashSet<ComponenteUsuario>(0);
+	private Set<Usuario> usuarios = new HashSet<Usuario>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<ComponentePropiedadValor> componentePropiedadValors = new HashSet<ComponentePropiedadValor>(0);
 
@@ -67,8 +70,7 @@ public class Componente implements java.io.Serializable {
 	}
 
 	public Componente(ComponenteTipo componenteTipo, Proyecto proyecto, UnidadEjecutora unidadEjecutora, String nombre,
-			String usuarioCreo, Date fechaCreacion, int estado, Date fechaInicio,
-			Date fechaFin, Integer duracion, String duracionDimension) {
+			String usuarioCreo, Date fechaCreacion, int estado) {
 		this.componenteTipo = componenteTipo;
 		this.proyecto = proyecto;
 		this.unidadEjecutora = unidadEjecutora;
@@ -76,10 +78,6 @@ public class Componente implements java.io.Serializable {
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
-		this.fechaInicio = fechaInicio;
-		this.fechaFin = fechaFin;
-		this.duracion = duracion;
-		this.duracionDimension = duracionDimension;
 	}
 
 	public Componente(AcumulacionCosto acumulacionCosto, ComponenteTipo componenteTipo, Proyecto proyecto,
@@ -88,8 +86,7 @@ public class Componente implements java.io.Serializable {
 			Integer programa, Integer subprograma, Integer proyecto_1, Integer actividad, Integer obra, String latitud,
 			String longitud, BigDecimal costo, Integer renglon, Integer ubicacionGeografica, Date fechaInicio,
 			Date fechaFin, Integer duracion, String duracionDimension, Integer orden, String treePath, Integer nivel,
-			Set<ComponenteUsuario> componenteUsuarios, Set<Producto> productos,
-			Set<ComponentePropiedadValor> componentePropiedadValors) {
+			Set<Usuario> usuarios, Set<Producto> productos, Set<ComponentePropiedadValor> componentePropiedadValors) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.componenteTipo = componenteTipo;
 		this.proyecto = proyecto;
@@ -119,7 +116,7 @@ public class Componente implements java.io.Serializable {
 		this.orden = orden;
 		this.treePath = treePath;
 		this.nivel = nivel;
-		this.componenteUsuarios = componenteUsuarios;
+		this.usuarios = usuarios;
 		this.productos = productos;
 		this.componentePropiedadValors = componentePropiedadValors;
 	}
@@ -167,7 +164,10 @@ public class Componente implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "unidad_ejecutoraunidad_ejecutora", nullable = false)
+	@JoinColumns({
+			@JoinColumn(name = "unidad_ejecutoraunidad_ejecutora", referencedColumnName = "unidad_ejecutora", nullable = false),
+			@JoinColumn(name = "entidad", referencedColumnName = "entidadentidad", nullable = false),
+			@JoinColumn(name = "ejercicio", referencedColumnName = "ejercicio", nullable = false) })
 	public UnidadEjecutora getUnidadEjecutora() {
 		return this.unidadEjecutora;
 	}
@@ -405,13 +405,16 @@ public class Componente implements java.io.Serializable {
 		this.nivel = nivel;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")
-	public Set<ComponenteUsuario> getComponenteUsuarios() {
-		return this.componenteUsuarios;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "componente_usuario", catalog = "sipro", joinColumns = {
+			@JoinColumn(name = "componenteid", nullable = false, updatable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "usuario", nullable = false, updatable = false) })
+	public Set<Usuario> getUsuarios() {
+		return this.usuarios;
 	}
 
-	public void setComponenteUsuarios(Set<ComponenteUsuario> componenteUsuarios) {
-		this.componenteUsuarios = componenteUsuarios;
+	public void setUsuarios(Set<Usuario> usuarios) {
+		this.usuarios = usuarios;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")

@@ -142,8 +142,8 @@ public class SPrestamoMetas extends HttpServlet {
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
-				response.setHeader("Expires:", "0"); 
-				response.setHeader("Content-Disposition", "attachment; MetasPrestamo_.xls");
+				response.setHeader("Cache-Control", "no-cache"); 
+				response.setHeader("Content-Disposition", "attachment; Metas_de_Prestamo.xls");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
@@ -195,8 +195,8 @@ public class SPrestamoMetas extends HttpServlet {
 		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
 				response.setContentType("application/pdf");
 				response.setContentLength(outArray.length);
-				response.setHeader("Expires:", "0"); 
-				response.setHeader("Content-Disposition", "in-line; 'PrestamoMetas.pdf'");
+				response.setHeader("Cache-Control", "no-cache"); 
+				response.setHeader("Content-Disposition", "in-line; 'Metas_de_Prestamo.pdf'");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();

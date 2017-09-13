@@ -26,9 +26,6 @@ import dao.CooperanteDAO;
 import pojo.Cooperante;
 import utilities.Utils;
 
-/**
- * Servlet implementation class SCooperante
- */
 @WebServlet("/SCooperante")
 public class SCooperante extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -45,30 +42,23 @@ public class SCooperante extends HttpServlet {
 		String fechaActualizacion;
 		int estado;
 	}
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+
     public SCooperante() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();
 		Type type = new TypeToken<Map<String, String>>(){}.getType();
 		StringBuilder sb = new StringBuilder();
 		BufferedReader br = request.getReader();
+		HttpSession sesionweb = request.getSession();
+		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		String str;
 		while ((str = br.readLine()) != null) {
 			sb.append(str);
@@ -130,7 +120,6 @@ public class SCooperante extends HttpServlet {
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("guardarCooperante")){
-			HttpSession sesionweb = request.getSession();
 			boolean result = false;
 			boolean esnuevo = map.get("esnuevo").equals("true");
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
@@ -144,7 +133,7 @@ public class SCooperante extends HttpServlet {
 					
 					
 					cooperante = new Cooperante(codigo, siglas, nombre, descripcion, 
-							sesionweb.getAttribute("usuario").toString(), null, new DateTime().toDate(), null, 1, null,null);
+							usuario, null, new DateTime().toDate(), null, 1, null, null,null);
 				}
 				else{
 					cooperante = CooperanteDAO.getCooperantePorId(id);
@@ -152,10 +141,12 @@ public class SCooperante extends HttpServlet {
 					cooperante.setNombre(nombre);
 					cooperante.setSiglas(siglas);
 					cooperante.setDescripcion(descripcion);
-					cooperante.setUsuarioActualizo(sesionweb.getAttribute("usuario").toString());
+					cooperante.setUsuarioActualizo(usuario);
 					cooperante.setFechaActualizacion(new DateTime().toDate());
 				}
+				
 				result = CooperanteDAO.guardarCooperante(cooperante);
+				
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 						+ "\"id\": " + cooperante.getId() , ","
 						, "\"usuarioCreo\": \"" , cooperante.getUsuarioCreo(),"\","
@@ -168,7 +159,6 @@ public class SCooperante extends HttpServlet {
 				response_text = "{ \"success\": false }";
 		}
 		else if(accion.equals("borrarCooperante")){
-			HttpSession sesionweb = request.getSession();
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
 				Cooperante cooperante = CooperanteDAO.getCooperantePorId(id);

@@ -8,37 +8,37 @@ public class UnidadEjecutoraDAOTest {
 	
 	@Test
 	public void getUnidadEjecutoraTest(){
-		assertEquals(UnidadEjecutoraDAO.getUnidadEjecutora(0),null);
+		assertEquals(UnidadEjecutoraDAO.getUnidadEjecutora(2017,0,0),null);
 	}
 	
 	@Test
 	public void guardarTest(){
-		assertEquals(UnidadEjecutoraDAO.guardar(0, "admin", 0),false);
+		assertEquals(UnidadEjecutoraDAO.guardar(0,2017,0, "admin"),false);
 	}
 	
 	@Test
 	public void 	actualizarTest(){
-		assertEquals(UnidadEjecutoraDAO.actualizar(0, "admin", 0),false);
+		assertEquals(UnidadEjecutoraDAO.actualizar(0,2017,0, "admin"),false);
 	}
 	
 	
 	@Test
 	public void getPaginaTest(){
-		assertNotNull(UnidadEjecutoraDAO.getPagina(1, 1));
+		assertNotNull(UnidadEjecutoraDAO.getPagina(2017,0,1, 1));
 	}
 	
 	@Test
 	public void getJsonTest(){
-		assertEquals(UnidadEjecutoraDAO.getJson(1, 1).getClass(),String.class);
+		assertEquals(UnidadEjecutoraDAO.getJson(2017,0,1, 1).getClass(),String.class);
 	}
 	
 	@Test
 	public void getTotalTest(){
-		assertEquals(UnidadEjecutoraDAO.getTotal().getClass(),Long.class);
+		assertEquals(UnidadEjecutoraDAO.getTotal(2017,0).getClass(),Long.class);
 	}
 	
 	@Test
 	public void getUnidadEjecutorasTest(){
-		assertNotNull(UnidadEjecutoraDAO.getUnidadEjecutoras());
+		assertNotNull(UnidadEjecutoraDAO.getUnidadEjecutoras(2017,0));
 	}
 }

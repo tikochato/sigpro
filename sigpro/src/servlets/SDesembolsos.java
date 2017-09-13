@@ -159,13 +159,13 @@ public class SDesembolsos extends HttpServlet {
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
-				response.setHeader("Expires:", "0"); 
-				response.setHeader("Content-Disposition", "attachment; Desembolsos_.xls");
+				response.setHeader("Cache-Control", "no-cache"); 
+				response.setHeader("Content-Disposition", "attachment; Desembolsos.xls");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
 			}catch(Exception e){
-				CLogger.write("1", SDesembolsos.class, e);
+				CLogger.write_simple("1", SDesembolsos.class, e.getMessage());
 			}
 		}else if(accion.equals("exportarPdf")){
 			Integer ejercicioFiscal = Utils.String2Int(map.get("ejercicioFiscal"));
@@ -226,12 +226,13 @@ public class SDesembolsos extends HttpServlet {
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
 
-
-        OutputStream output = response.getOutputStream();
-		GZIPOutputStream gz = new GZIPOutputStream(output);
-        gz.write(response_text.getBytes("UTF-8"));
-        gz.close();
-        output.close();
+		if (!accion.equals("exportarExcel")){
+	        OutputStream output = response.getOutputStream();
+			GZIPOutputStream gz = new GZIPOutputStream(output);
+	        gz.write(response_text.getBytes("UTF-8"));
+	        gz.close();
+	        output.close();
+		}
 	}
 		
 	private byte[] exportarExcel(int proyectoId, int anioInicio, int anioFin, int ejercicioFiscal, int agrupacion, String usuario) throws IOException{
@@ -252,7 +253,7 @@ public class SDesembolsos extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			CLogger.write("4", SDesembolsos.class, e);
+			CLogger.write_simple("2", SDesembolsos.class, e.getMessage());
 		}
 		return outArray;
 	}

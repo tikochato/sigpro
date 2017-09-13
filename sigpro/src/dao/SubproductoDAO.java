@@ -14,6 +14,7 @@ import org.hibernate.query.Query;
 import pojo.Subproducto;
 import pojo.SubproductoUsuario;
 import pojo.SubproductoUsuarioId;
+import pojo.Usuario;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 import utilities.Utils;
@@ -31,6 +32,9 @@ public class SubproductoDAO {
 		String subproductoTipo;
 		Integer unidadEjectuora;
 		String nombreUnidadEjecutora;
+		String entidadnombre;
+		Integer entidadentidad;
+		Integer ejercicio;
 		Long snip;
 		Integer programa;
 		Integer subprograma;
@@ -93,8 +97,9 @@ public class SubproductoDAO {
 			session.beginTransaction();
 			subproducto.setNivel(3);
 			session.saveOrUpdate(subproducto);
+			Usuario usu = UsuarioDAO.getUsuario(subproducto.getUsuarioCreo());
 			SubproductoUsuario su = new SubproductoUsuario(new SubproductoUsuarioId(subproducto.getId(),subproducto.getUsuarioCreo())
-					, subproducto, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
+					, subproducto, usu, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
 			session.saveOrUpdate(su);
 			session.getTransaction().commit();
 			ret = true;
@@ -261,8 +266,11 @@ public class SubproductoDAO {
 			}
 			
 			if (pojo.getUnidadEjecutora() != null){
-				estructuraPojo.unidadEjectuora = pojo.getUnidadEjecutora().getUnidadEjecutora();
+				estructuraPojo.unidadEjectuora = pojo.getUnidadEjecutora().getId().getUnidadEjecutora();
 				estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
+				estructuraPojo.entidadentidad = pojo.getUnidadEjecutora().getId().getEntidadentidad();
+				estructuraPojo.ejercicio = pojo.getUnidadEjecutora().getId().getEjercicio();
+				estructuraPojo.entidadnombre = pojo.getUnidadEjecutora().getEntidad().getNombre();
 			}
 			
 			listaEstructuraPojos.add(estructuraPojo);
@@ -373,12 +381,8 @@ public class SubproductoDAO {
 		boolean ret = false;
 		try {
 			session.saveOrUpdate(subproducto);
-			SubproductoUsuario su = new SubproductoUsuario(new SubproductoUsuarioId(subproducto.getId(),subproducto.getUsuarioCreo())
-					, subproducto, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
-			
 			session.flush();
 			session.clear();
-			session.saveOrUpdate(su);
 			ret = true;
 		} catch (Throwable e) {
 			CLogger.write("13", SubproductoDAO.class, e);

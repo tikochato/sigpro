@@ -47,7 +47,6 @@ public class EstructuraProyectoDAO {
 				"left outer join proyecto p on p.id=a.proyecto_base",
 				"where p.id= ?1 and a.estado=1 and p.estado=1",
 				") arbol",
-				"where arbol.treePath is not null",
 				"order by treePath;");			
 			
 			Query<?> criteria = session.createNativeQuery(query);

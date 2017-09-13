@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -118,14 +119,15 @@ public class SInformacionPresupuestaria extends HttpServlet {
    }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+//		response.getWriter().append("Served at: ").append(request.getContextPath());
+		doPost(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 		try{
 			request.setCharacterEncoding("UTF-8");
 			HttpSession sesionweb = request.getSession();
-			String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
+			String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;			
 			Gson gson = new Gson();
 			Type type = new TypeToken<Map<String, String>>(){}.getType();
 			StringBuilder sb = new StringBuilder();
@@ -137,7 +139,6 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			Map<String, String> map = gson.fromJson(sb.toString(), type);
 			String accion = map.get("accion")!=null ? map.get("accion") : "";
 			String response_text = "";
-					
 			if(accion.equals("generarInforme")){
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
@@ -151,23 +152,30 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				}else{
 					response_text = String.join("", "{\"success\":false}");
 				}
+
+				response.setHeader("Content-Encoding", "gzip");
+				response.setCharacterEncoding("UTF-8");
+		
+		        OutputStream output = response.getOutputStream();
+				GZIPOutputStream gz = new GZIPOutputStream(output);
+		        gz.write(response_text.getBytes("UTF-8"));
+		        gz.close();
+		        output.close();
 			}else if(accion.equals("exportarExcel")){
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
 				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
 				Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 				Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-				
 		        byte [] outArray = exportarExcel(idPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, usuario);
-			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
-				response.setHeader("Expires:", "0"); 
-				response.setHeader("Content-Disposition", "attachment; EjecucionPresupuestaria_.xls");
-				OutputStream outStream = response.getOutputStream();
+				response.setHeader("Cache-Control", "no-cache"); 
+				response.setHeader("Content-Disposition", "attachment; Ejecucion_Presupuestaria.xls");
+				ServletOutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
-				
+				outStream.close();
 			}else if(accion.equals("exportarPdf")){
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
@@ -189,7 +197,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			        	is = new FileInputStream(file);
 			        }
 			        catch (Exception e) {
-						CLogger.write("5", SInformacionPresupuestaria.class, e);
+						CLogger.write("1", SInformacionPresupuestaria.class, e);
 			        }
 			        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 			        
@@ -215,8 +223,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			        byte [] outArray = Base64.encode(outByteStream.toByteArray());
 					response.setContentType("application/pdf");
 					response.setContentLength(outArray.length);
-					response.setHeader("Expires:", "0"); 
-					response.setHeader("Content-Disposition", "in-line; 'EjecucionPresupuestaria.pdf'");
+					response.setHeader("Cache-Control", "no-cache"); 
+					response.setHeader("Content-Disposition", "in-line; 'Ejecucion_Presupuestaria.pdf'");
 					OutputStream outStream = response.getOutputStream();
 					outStream.write(outArray);
 					outStream.flush();
@@ -224,18 +232,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 	
 				
 			}
-			
-			response.setHeader("Content-Encoding", "gzip");
-			response.setCharacterEncoding("UTF-8");
-	
-	        OutputStream output = response.getOutputStream();
-			GZIPOutputStream gz = new GZIPOutputStream(output);
-	        gz.write(response_text.getBytes("UTF-8"));
-	        gz.close();
-	        output.close();
 		}catch(Exception e){
-			e.printStackTrace();
-			CLogger.write("1", SInformacionPresupuestaria.class, e);			
+			CLogger.write("2", SInformacionPresupuestaria.class, e);		
 		}
 	}
 	
@@ -746,7 +744,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 						}
 					}
 					catch(Exception e){
-						CLogger.write("2", SInformacionPresupuestaria.class, e);
+						CLogger.write("3", SInformacionPresupuestaria.class, e);
 					}
 					
 					Calendar cal = Calendar.getInstance();
@@ -968,7 +966,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 									}
 								}
 							}catch(Throwable e){
-								CLogger.write("3", SInformacionPresupuestaria.class, e);
+								CLogger.write("4", SInformacionPresupuestaria.class, e);
 							}
 						}						
 					}else if(acumulacionCosto ==3){
@@ -1401,21 +1399,17 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
-
 			List<stprestamo> lstPrestamo = getInformacionPresupuestaria(prestamoId, anioInicio, anioFin, usuario);	
 			lstPrestamo = calcularCostos(lstPrestamo, 0);
-			
 			datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 			CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
-
-			excel = new CExcel("Ejecución presupuestaria", false, grafica);
-			wb=excel.generateExcelOfData(datosInforme, "Ejecución presupuestaria", headers, null, true, usuario);
-		
-		wb.write(outByteStream);
-		outArray = Base64.encode(outByteStream.toByteArray());
+			excel = new CExcel("Ejecucion presupuestaria", false, grafica);
+			wb=excel.generateExcelOfData(datosInforme, "Ejecuci�n presupuestaria", headers, null, true, usuario);
+			wb.write(outByteStream);
+			outByteStream.close();
+			outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			e.printStackTrace();
-			CLogger.write("4", SInformacionPresupuestaria.class, e);
+			CLogger.write("5", SInformacionPresupuestaria.class, e);
 		}
 		return outArray;
 	}
@@ -1441,7 +1435,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			factorVisualizacion = 2;
 		}else{
 			totalesCant+=aniosDiferencia;
-			columnasTotal += 1+totalesCant; //Nombre, totales por año, total
+			columnasTotal += 1+totalesCant; //Nombre, totales por a�o, total
 		}
 		
 		String titulo[] = new String[columnasTotal];
@@ -1806,7 +1800,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		}
 		
 		String[] tipoData = new String[]{"string","double","double"};
-		CGraficaExcel grafica = new CGraficaExcel("Administración Transaccional", CGraficaExcel.EXCEL_CHART_AREA, "Meses", "Planificado", datos, tipoData, datosIgualar);
+		CGraficaExcel grafica = new CGraficaExcel("Administraci�n Transaccional", CGraficaExcel.EXCEL_CHART_AREA, "Meses", "Planificado", datos, tipoData, datosIgualar);
 	
 		return grafica;
 	}
