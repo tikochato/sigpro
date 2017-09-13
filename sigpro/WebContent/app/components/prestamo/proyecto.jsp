@@ -184,21 +184,6 @@
 									</div>
 								</div>
 							</div>
-							
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group">
-										<input type="text" class="inputText"   
-										ng-model="controller.prestamo.unidadEjecutoraNombre" ng-readonly="true" ng-required="true"
-										ng-click="controller.buscarUnidadEjecutoraPrestamo()"
-										onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.unidadEjecutoraNombre" />			            	
-										<span class="label-icon" ng-click="controller.buscarUnidadEjecutoraPrestamo()">
-											<i class="glyphicon glyphicon-search"></i>
-										</span>
-										<label class="floating-label">* Unidad Ejecutora</label>
-									</div>
-								</div>
-							</div>
 							<div class="row">
 								<div class="col-sm-12">
 									<div class="form-group" >

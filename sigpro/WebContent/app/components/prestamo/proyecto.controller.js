@@ -283,7 +283,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 									codigoPresupuestario: mi.prestamo.codigoPresupuestario,
 									numeroPrestamo: mi.prestamo.numeroPrestamo,
 									proyetoPrograma: mi.prestamo.proyectoPrograma,
-									unidadEjecutora: mi.prestamo.unidadEjecutora,
+									unidadEjecutora: mi.unidadejecutoraid,
+									entidad: mi.entidad, 
+									ejercicio: mi.ejercicio,
 									cooperanteUeId: mi.prestamo.cooperanteid,
 									fechaDecreto: moment(mi.prestamo.fechaDecreto).format('DD/MM/YYYY'),
 									fechaSuscripcion: moment(mi.prestamo.fechaSuscripcion).format('DD/MM/YYYY'),
@@ -349,12 +351,11 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 								$http.post('/SPrestamo',param_data).then(
 										function(response) {
 											if (response.data.success) {
-												
+												$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 											}else
-												$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Programa');
+												$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
 								});
 						} 
-						$utilidades.mensaje('success','Programa '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esNuevo = false;
 						
 						
