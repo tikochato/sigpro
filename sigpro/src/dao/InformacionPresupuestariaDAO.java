@@ -3,6 +3,7 @@ package dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Date;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,18 +12,59 @@ import java.util.ArrayList;
 import utilities.CLogger;
  
 public class InformacionPresupuestariaDAO {
+		
+	public static String getConsultaEstructuraArbol(int idPrestamo){
+		String str_Query = String.join(" ", "select * from (",
+				" select p.id prestamo, null componente, null producto, null subproducto, null actividad, p.nombre, 1 objeto_tipo,  p.treePath, p.nivel, p.fecha_inicio,",
+				" p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0",
+				" from proyecto p",
+				" where p.id= ",String.valueOf(idPrestamo)," and p.estado=1",
+				" union",
+				" select c.proyectoid prestamo, c.id componente, null producto, null subproducto, null actividad, c.nombre, 2 objeto_tipo,  c.treePath, c.nivel, c.fecha_inicio,",
+				" c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0",
+				" from componente c",
+				" where c.proyectoid=",String.valueOf(idPrestamo)," and c.estado=1",
+				" union",
+				" select p.id prestamo, c.id componente, pr.id producto, null subproducto, null actividad, pr.nombre, 3 objeto_tipo , pr.treePath, pr.nivel, pr.fecha_inicio,",
+				" pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0",
+				" from producto pr",
+				" left outer join componente c on c.id=pr.componenteid",
+				" left outer join proyecto p on p.id=c.proyectoid",
+				" where p.id= ",String.valueOf(idPrestamo)," and p.estado=1 and c.estado=1 and pr.estado=1",
+				" union",
+				" select p.id prestamo, c.id componente, pr.id producto, sp.id subproducto, null actividad,  sp.nombre, 4 objeto_tipo,  sp.treePath, sp.nivel, sp.fecha_inicio,",
+				" sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0",
+				" from subproducto sp",
+				" left outer join producto pr on pr.id=sp.productoid",
+				" left outer join componente c on c.id=pr.componenteid",
+				" left outer join proyecto p on p.id=c.proyectoid",
+				" where p.id= ",String.valueOf(idPrestamo)," and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1",
+				" union",
+				" select p.id proyecto, null componente, null producto, null subproducto, a.id actividad, a.nombre, 5 objeto_tipo,  a.treePath, a.nivel, a.fecha_inicio,",
+				" a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id",
+				" from actividad a",
+				" left outer join proyecto p on p.id=a.proyecto_base",
+				" where p.id= ",String.valueOf(idPrestamo)," and a.estado=1 and p.estado=1",
+				" ) arbol",
+				" order by treePath"
+				);
+		
+		return str_Query;
+	}
+	
 	public static ArrayList<Date> getEstructuraArbolPrestamoFecha(int idPrestamo, Connection conn){
     	ArrayList<Date> ret = new ArrayList<Date>();
         try {
             if( !conn.isClosed() ){
                 try{
-                    String str_Query = String.join(" ","select min(fecha_inicio) fecha_inicio, max(fecha_fin) fecha_fin from estructura_arbol",
+                	String str_Query = String.join(" ","select fecha_inicio, fecha_fin ",
+                			"from (",getConsultaEstructuraArbol(idPrestamo),") estructura_arbol",
                             "where prestamo = ? ",
-                            "and componente  is not null",
-                            "and producto  is not null",
-                            "and subproducto  is not null",
-                            "group by componente",
-                            "order by 2;");
+                            "and componente  is null",
+                            "and producto  is null",
+                            "and subproducto  is null",
+                            "and actividad is null;"
+                            );
                     
                     PreparedStatement pstm  = conn.prepareStatement(str_Query);
                     pstm.setInt(1, idPrestamo);
@@ -54,7 +96,8 @@ public class InformacionPresupuestariaDAO {
         try {
             if( !conn.isClosed() ){
                 try{
-                    String str_Query = String.join(" ","select componente, min(fecha_inicio) fecha from estructura_arbol",
+                    String str_Query = String.join(" ","select componente, min(fecha_inicio) fecha ",
+                    		"from (",getConsultaEstructuraArbol(idPrestamo),") estructura_arbol",
                             "where prestamo = ? ",
                             "and componente is not null",
                             "group by componente",
@@ -88,11 +131,14 @@ public class InformacionPresupuestariaDAO {
         try {
             if( !conn.isClosed() ){
                 try{
-                    String str_Query = String.join(" ","select min(fecha_inicio) fecha_inicio, max(fecha_fin) fecha_fin from estructura_arbol",
+                    String str_Query = String.join(" ","select fecha_inicio,fecha_fin",
+                    		"from (",getConsultaEstructuraArbol(idPrestamo),") estructura_arbol",
                             "where prestamo = ? ",
                             "and componente = ?",
-                            "group by componente",
-                            "order by 2;");
+                            "and producto  is null",
+                            "and subproducto  is null",
+                            "and actividad is null;"
+                    		);
                     
                     PreparedStatement pstm  = conn.prepareStatement(str_Query);
                     pstm.setInt(1, idPrestamo);
@@ -124,13 +170,14 @@ public class InformacionPresupuestariaDAO {
         try {
             if( !conn.isClosed()){
                 try{
-                    String str_Query = String.join(" ","select producto, min(fecha_inicio) fecha ",
-                            "from estructura_arbol",
+                    String str_Query = String.join(" ","select producto, fecha_inicio",
+                    		"from (",getConsultaEstructuraArbol(idPrestamo),") estructura_arbol",
                             "where prestamo = ? ",
                             "and componente = ? ",
                             "and producto is not null",
-                            "group by producto",
-                            "order by 2");
+                            "and subproducto  is null",
+                            "and actividad is null;"
+                    		);
                     
                     PreparedStatement pstm  = conn.prepareStatement(str_Query);
                     pstm.setInt(1, idPrestamo);
@@ -162,13 +209,14 @@ public class InformacionPresupuestariaDAO {
         try {
             if( !conn.isClosed()){
                 try{
-                    String str_Query = String.join(" ","select producto, min(fecha_inicio) fecha_inicio, max(fecha_fin) fecha_fin ",
-                            "from estructura_arbol",
+                    String str_Query = String.join(" ","select producto, fecha_inicio, fecha_fin ",
+                    		"from (",getConsultaEstructuraArbol(idPrestamo),") estructura_arbol",
                             "where prestamo = ? ",
                             "and componente = ? ",
                             "and producto = ?",
-                            "group by producto",
-                            "order by 2");
+                            "and subproducto  is null",
+                            "and actividad is null;"
+                    		);
                     
                     PreparedStatement pstm  = conn.prepareStatement(str_Query);
                     pstm.setInt(1, idPrestamo);
@@ -202,13 +250,14 @@ public class InformacionPresupuestariaDAO {
         try {
             if( !conn.isClosed() ){
                 try{
-                    String str_Query = String.join(" ","select subproducto, min(fecha_inicio) fecha from estructura_arbol",
+                    String str_Query = String.join(" ","select subproducto,fecha_inicio",
+                    		"from (",getConsultaEstructuraArbol(idPrestamo),") estructura_arbol",
                             "where prestamo = ? ",
                             "and componente = ? ",
                             "and producto = ? ",
                             "and subproducto is not null",
-                            "group by subproducto",
-                            "order by 2;");
+                            "and actividad is null;"
+                            );
                     PreparedStatement pstm  = conn.prepareStatement(str_Query);
                     pstm.setInt(1, idPrestamo);
                     pstm.setInt(2, idComponente);
@@ -240,13 +289,13 @@ public class InformacionPresupuestariaDAO {
         try {
             if( !conn.isClosed() ){
                 try{
-                    String str_Query = String.join(" ","select min(fecha_inicio) fecha_inicio, max(fecha_fin) fecha_fin from estructura_arbol",
+                    String str_Query = String.join(" ","select fecha_inicio, fecha_fin",
+                    		"from (",getConsultaEstructuraArbol(idPrestamo),") estructura_arbol",
                             "where prestamo = ? ",
                             "and componente = ? ",
                             "and producto = ? ",
                             "and subproducto = ?",
-                            "group by subproducto",
-                            "order by 2;");
+                            "and actividad is null;");
                     PreparedStatement pstm  = conn.prepareStatement(str_Query);
                     pstm.setInt(1, idPrestamo);
                     pstm.setInt(2, idComponente);
@@ -275,30 +324,57 @@ public class InformacionPresupuestariaDAO {
         return ret;
     }
     
-    public static ArrayList<ArrayList<Integer>> getEstructuraArbolComponentesActividades(int idPrestamo, int idComponente, Connection conn){
+    public static ArrayList<ArrayList<Integer>> getEstructuraArbolActividades(int idPrestamo, String treePath, Connection conn){
     	ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
         try {
             if( !conn.isClosed()){
                 try{
-                    String str_Query = String.join(" ","select prestamo,componente, actividad, treelevel, min(fecha_inicio) fecha",
-                            "from estructura_arbol",
-                            "where prestamo = ? ",
-                            "and componente = ? ",
-                            "and producto is null",
-                            "and actividad is not null",
-                            "group by prestamo, componente, actividad",
-                            "order by 5, treelevel");
+                	String str_treePathInicial = String.join("",treePath, "000000");
+                	String str_treePathFinal = String.join("",treePath, "999999");
+                    String str_Query = String.join(" ","select * from (",
+            				" select p.id prestamo, null componente, null producto, null subproducto, null actividad, p.nombre, 1 objeto_tipo,  p.treePath, p.nivel, p.fecha_inicio,",
+            				" p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0",
+            				" from proyecto p",
+            				" where p.id= ",String.valueOf(idPrestamo)," and p.estado=1",
+            				" union",
+            				" select c.proyectoid prestamo, c.id componente, null producto, null subproducto, null actividad, c.nombre, 2 objeto_tipo,  c.treePath, c.nivel, c.fecha_inicio,",
+            				" c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0",
+            				" from componente c",
+            				" where c.proyectoid=",String.valueOf(idPrestamo)," and c.estado=1",
+            				" union",
+            				" select p.id prestamo, c.id componente, pr.id producto, null subproducto, null actividad, pr.nombre, 3 objeto_tipo , pr.treePath, pr.nivel, pr.fecha_inicio,",
+            				" pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0",
+            				" from producto pr",
+            				" left outer join componente c on c.id=pr.componenteid",
+            				" left outer join proyecto p on p.id=c.proyectoid",
+            				" where p.id= ",String.valueOf(idPrestamo)," and p.estado=1 and c.estado=1 and pr.estado=1",
+            				" union",
+            				" select p.id prestamo, c.id componente, pr.id producto, sp.id subproducto, null actividad,  sp.nombre, 4 objeto_tipo,  sp.treePath, sp.nivel, sp.fecha_inicio,",
+            				" sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0",
+            				" from subproducto sp",
+            				" left outer join producto pr on pr.id=sp.productoid",
+            				" left outer join componente c on c.id=pr.componenteid",
+            				" left outer join proyecto p on p.id=c.proyectoid",
+            				" where p.id= ",String.valueOf(idPrestamo)," and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1",
+            				" union",
+            				" select p.id proyecto, null componente, null producto, null subproducto, a.id actividad, a.nombre, 5 objeto_tipo,  a.treePath, a.nivel, a.fecha_inicio,",
+            				" a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id",
+            				" from actividad a",
+            				" left outer join proyecto p on p.id=a.proyecto_base",
+            				" where p.id= ",String.valueOf(idPrestamo)," and a.estado=1 and p.estado=1",
+            				" ) arbol",
+            				" where treePath > ",str_treePathInicial," and treePath < ",str_treePathFinal," ",
+            				" and actividad is not null",
+            				" order by treePath"
+            				);
                     
                     PreparedStatement pstm  = conn.prepareStatement(str_Query);
                     pstm.setFetchSize(50);
-                    pstm.setInt(1, idPrestamo);
-                    pstm.setInt(2, idComponente);
                     ResultSet rs = pstm.executeQuery();
                     
                     while(rs!=null && rs.next()){
                         ArrayList<Integer> temp = new ArrayList<Integer>();
                         temp.add(rs.getInt("actividad"));
-                        temp.add(rs.getInt("treelevel"));
                         ret.add(temp);
                     }
                     
@@ -314,143 +390,6 @@ public class InformacionPresupuestariaDAO {
         } catch (SQLException e) {
             CLogger.write("4", InformacionPresupuestariaDAO.class, e);
         }
-        return ret;
-    }
-    
-    public static ArrayList<ArrayList<Integer>> getEstructuraArbolProductoActividades(int idPrestamo, int idComponente, int idProducto, Connection conn){
-        ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
-        try {
-            if( !conn.isClosed()){
-                try{
-                    String str_Query = String.join(" ","select prestamo,componente, producto, actividad, treelevel, min(fecha_inicio) fecha",
-                            "from estructura_arbol",
-                            "where prestamo = ? ",
-                            "and componente = ? ",
-                            "and producto = ? ",
-                            "and subproducto is null",
-                            "and actividad is not null",
-                            "group by prestamo, componente, producto,actividad",
-                            "order by 6, treelevel");
-                    
-                    PreparedStatement pstm  = conn.prepareStatement(str_Query);
-                    pstm.setFetchSize(50);
-                    pstm.setInt(1, idPrestamo);
-                    pstm.setInt(2, idComponente);
-                    pstm.setInt(3, idProducto);
-                    ResultSet rs = pstm.executeQuery();
-                    
-                    while(rs!=null && rs.next()){
-                    	ArrayList<Integer> temp = new ArrayList<Integer>();
-                        temp.add(rs.getInt("actividad"));
-                        temp.add(rs.getInt("treelevel"));
-                        ret.add(temp);
-                    }
-                    
-                    rs.close();
-                    pstm.close();
-                }
-                catch(Throwable e){
-                    e.printStackTrace();
-                    CLogger.write("5", InformacionPresupuestariaDAO.class, e);
-                }
-                
-            }
-        } catch (SQLException e) {
-            CLogger.write("5", InformacionPresupuestariaDAO.class, e);
-        }
-        
-        
-        
-        return ret;
-    }
-    
-    public static ArrayList<ArrayList<Integer>> getEstructuraArbolSubProductoActividades(int idPrestamo, int idComponente, int idProducto, int idsubProducto,
-            Connection conn){
-    	ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
-        try {
-            if( !conn.isClosed() ){
-                try{
-                    String str_Query = String.join(" ","select prestamo,componente, producto, subproducto, actividad, treelevel,min(fecha_inicio) fecha",
-                            "from estructura_arbol",
-                            "where prestamo = ? ",
-                            "and componente = ? ",
-                            "and producto = ? ",
-                            "and subproducto = ? ",
-                            "and actividad is not null",
-                            "group by prestamo, componente, producto,subproducto, actividad",
-                            "order by 7, treelevel");
-                    
-                    PreparedStatement pstm  = conn.prepareStatement(str_Query);
-                    pstm.setFetchSize(1000);
-                    pstm.setInt(1, idPrestamo);
-                    pstm.setInt(2, idComponente);
-                    pstm.setInt(3, idProducto);
-                    pstm.setInt(4, idsubProducto);
-                    ResultSet rs = pstm.executeQuery();
-                    
-                    while(rs!=null && rs.next()){
-                        ArrayList<Integer> temp = new ArrayList<Integer>();
-                        temp.add(rs.getInt("actividad"));
-                        temp.add(rs.getInt("treelevel"));
-                        ret.add(temp);
-                    }
-                    
-                    rs.close();
-                    pstm.close();
-                }
-                catch(Throwable e){
-                    e.printStackTrace();
-                    CLogger.write("6",InformacionPresupuestariaDAO.class, e);
-                }
-                
-            }
-        } catch (SQLException e) {
-            CLogger.write("6", InformacionPresupuestariaDAO.class, e);
-        }
-        
-        return ret;
-    }
-    
-    public static ArrayList<ArrayList<Integer>> getEstructuraArbolPrestamoActividades(int idPrestamo, Connection conn){
-    	 ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
-        try {
-            if( !conn.isClosed() ){
-                try{
-                    String str_Query = String.join(" ","select prestamo,actividad, treelevel, min(fecha_inicio) fecha",
-                            "from estructura_arbol",
-                            "where prestamo = ? ",
-                            "and componente is null",
-                            "and producto is null",
-                            "and subproducto is null",
-                            "and actividad is not null",
-                            "group by prestamo, actividad",
-                            "order by 4, treelevel");
-                    
-                    PreparedStatement pstm  = conn.prepareStatement(str_Query);
-                    pstm.setFetchSize(50);
-                    pstm.setInt(1, idPrestamo);
-                    ResultSet rs = pstm.executeQuery();
-                    
-                    while(rs!=null && rs.next()){
-                        ArrayList<Integer> temp = new ArrayList<Integer>();
-                        temp.add(rs.getInt("actividad"));
-                        temp.add( rs.getInt("treelevel"));   
-                        ret.add(temp);
-                    }
-                    
-                    rs.close();
-                    pstm.close();
-                    
-                }
-                catch(Throwable e){
-                    e.printStackTrace();
-                    CLogger.write("7",InformacionPresupuestariaDAO.class, e);
-                }
-            }
-        } catch (SQLException e) {
-            CLogger.write("7", InformacionPresupuestariaDAO.class, e);
-        }
-        
         return ret;
     }
     
