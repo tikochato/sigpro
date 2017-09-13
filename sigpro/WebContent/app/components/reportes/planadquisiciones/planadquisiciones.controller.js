@@ -752,6 +752,25 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 		  	);
 		};
 	
+	mi.exportarPdf=function(){
+		$http.post('/SPlanAdquisiciones', { 
+			 accion: 'exportarPdf', 
+			 idPrestamo: mi.idPrestamo,
+			 informeCompleto: mi.informeCompleto,			 
+			 t:moment().unix()
+		  } ).then(
+				  function successCallback(response) {
+					  var anchor = angular.element('<a/>');
+					  anchor.attr({
+				         href: 'data:application/pdf;base64,' + response.data,
+				         target: '_blank',
+				         download: 'PlanAdquisiciones.pdf'
+					  })[0].click();
+				  }.bind(this), function errorCallback(response){
+					 		
+			 	}
+		  	);
+	};
 	mi.crearArbol = function(datos){
 		mi.data = datos;
 		var tab = "\t";

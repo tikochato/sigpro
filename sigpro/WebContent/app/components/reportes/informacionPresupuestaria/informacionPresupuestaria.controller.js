@@ -671,11 +671,11 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			 }else if(mi.grupoMostrado.real){
 				 tipoVisualizacion = 1;
 			 }
-			$http.post('/SPrestamoMetas', { 
+			$http.post('/SInformacionPresupuestaria', { 
 				accion: 'exportarPdf',
-				proyectoid: mi.prestamo.value,
-				fechaInicio: mi.fechaInicio,
-				fechaFin: mi.fechaFin,
+				idPrestamo: mi.prestamo.value,
+				anioInicial: mi.fechaInicio,
+				anioFinal: mi.fechaFin,
 				agrupacion: mi.agrupacionActual,
 				tipoVisualizacion: tipoVisualizacion,
 				t:moment().unix()
@@ -685,7 +685,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 						    anchor.attr({
 						         href: 'data:application/pdf;base64,' + response.data,
 						         target: '_blank',
-						         download: 'PrestamoMetas.pdf'
+						         download: 'EjecucionPresupuestaria.pdf'
 						     })[0].click();
 						  }.bind(this), function errorCallback(response){
 						 		

@@ -3,6 +3,8 @@ package servlets;
 import java.sql.Connection;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -46,6 +48,7 @@ import utilities.CExcel;
 import utilities.CGraficaExcel;
 import utilities.CLogger;
 import utilities.CMariaDB;
+import utilities.CPdf;
 import utilities.Utils;
 
 
@@ -327,7 +330,60 @@ public class SCargaTrabajo extends HttpServlet {
 				}catch(Exception e){
 				    CLogger.write_simple("2", SCargaTrabajo.class, e.getMessage());
 				}
-			}else{
+			}else if(accion.equals("exportarPdf")){
+				CPdf archivo = new CPdf("Carga de trabajo");
+				Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
+				Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
+				String idPrestamos = map.get("idPrestamos") != null && map.get("idPrestamos").length() > 0? map.get("idPrestamos") : "0";
+				String idComponentes = map.get("idComponentes") != null && map.get("idComponentes").length() > 0 ? map.get("idComponentes") : "0";
+				String idProductos = map.get("idProductos") != null && map.get("idProductos").length() > 0 ? map.get("idProductos") : "0";
+				String idSubproductos = map.get("idSubproductos") != null && map.get("idSubproductos").length() > 0 ? map.get("idSubproductos") : "0";
+				String headers[][];
+				String datos[][];
+				headers = generarHeaders();
+				datos = generarDatos(idPrestamos, idComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario);
+				String path = archivo.ExportarPdfCargaTrabajo(headers, datos,usuario);
+				File file=new File(path);
+				if(file.exists()){
+			        FileInputStream is = null;
+			        try {
+			        	is = new FileInputStream(file);
+			        }
+			        catch (Exception e) {
+						CLogger.write("5", SInformacionPresupuestaria.class, e);
+			        }
+			        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+			        
+			        int readByte = 0;
+			        byte[] buffer = new byte[2024];
+
+	                while(true)
+	                {
+	                    readByte = is.read(buffer);
+	                    if(readByte == -1)
+	                    {
+	                        break;
+	                    }
+	                    outByteStream.write(buffer);
+	                }
+	                
+	                file.delete();
+	                
+	                is.close();
+	                outByteStream.flush();
+	                outByteStream.close();
+	                
+			        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+					response.setContentType("application/pdf");
+					response.setContentLength(outArray.length);
+					response.setHeader("Expires:", "0"); 
+					response.setHeader("Content-Disposition", "in-line; 'EjecucionPresupuestaria.pdf'");
+					OutputStream outStream = response.getOutputStream();
+					outStream.write(outArray);
+					outStream.flush();
+				}
+			}
+			else{
 				response_text = "{ \"success\": false }";
 			}
 		

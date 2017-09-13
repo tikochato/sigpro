@@ -73,6 +73,8 @@
 		    			<div class="btn-group" role="group" aria-label="">
 							<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrardiv" role="button" tabindex="0" aria-hidden="false" style="">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
+							<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar PDF" ng-hide="!controller.mostrardiv">
+							<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 						</div>
 		    		</div>
 	    		</div>

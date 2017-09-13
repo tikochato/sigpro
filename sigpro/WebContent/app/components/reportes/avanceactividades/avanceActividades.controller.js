@@ -204,6 +204,26 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 				 	}
 			  	);
 			};
+			
+		mi.exportarPdf=function(){
+			$http.post('/SAvanceActividades', { 
+				accion: 'exportarPdf', 	
+				idPrestamo: mi.prestamo.value,
+				fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
+				t:moment().unix()
+			  } ).then(
+					  function successCallback(response) {
+						  var anchor = angular.element('<a/>');
+						  anchor.attr({
+					         href: 'data:application/pdf;base64,' + response.data,
+					         target: '_blank',
+					         download: 'ReporteAvances.pdf'
+						  })[0].click();
+					  }.bind(this), function errorCallback(response){
+						 		
+				 	}
+			  	);
+		};
 }]);
 
 app.controller('modalAvance', [ '$uibModalInstance',

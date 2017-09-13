@@ -464,5 +464,28 @@ mi.options = {
 				 	}
 			  	);
 			};
+		
+		mi.exportarPdf=function(){
+			 $http.post('/SDesembolsos', { 
+				 accion: 'exportarPdf', 
+				 proyectoid: mi.prestamoSeleccionado.value,
+				 anioInicial: mi.anioInicial,
+				 anioFinal: mi.anioFinal,
+				 ejercicioFiscal: mi.anioSeleccionado,
+				 agrupacion: mi.agrupacion,
+				 t:moment().unix()
+			  } ).then(
+					  function successCallback(response) {
+						  var anchor = angular.element('<a/>');
+						  anchor.attr({
+					         href: 'data:application/pdf;base64,' + response.data,
+					         target: '_blank',
+					         download: 'Desembolsos.pdf'
+						  })[0].click();
+					  }.bind(this), function errorCallback(response){
+						 		console.log(response);
+				 	}
+			  	);
+		};
 	 
 }]);
