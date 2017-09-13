@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -8,6 +8,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -23,7 +26,7 @@ public class Usuario implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 502660570156269632L;
+	private static final long serialVersionUID = 1285001385553196115L;
 	private String usuario;
 	private String password;
 	private String salt;
@@ -34,7 +37,11 @@ public class Usuario implements java.io.Serializable {
 	private Date fechaActualizacion;
 	private int estado;
 	private Set<Colaborador> colaboradors = new HashSet<Colaborador>(0);
+	private Set<ProductoUsuario> productoUsuarios = new HashSet<ProductoUsuario>(0);
+	private Set<Componente> componentes = new HashSet<Componente>(0);
 	private Set<UsuarioPermiso> usuarioPermisos = new HashSet<UsuarioPermiso>(0);
+	private Set<ProyectoUsuario> proyectoUsuarios = new HashSet<ProyectoUsuario>(0);
+	private Set<SubproductoUsuario> subproductoUsuarios = new HashSet<SubproductoUsuario>(0);
 
 	public Usuario() {
 	}
@@ -50,7 +57,9 @@ public class Usuario implements java.io.Serializable {
 
 	public Usuario(String usuario, String password, String salt, String email, String usuarioCreo,
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Set<Colaborador> colaboradors, Set<UsuarioPermiso> usuarioPermisos) {
+			Set<Colaborador> colaboradors, Set<ProductoUsuario> productoUsuarios, Set<Componente> componentes,
+			Set<UsuarioPermiso> usuarioPermisos, Set<ProyectoUsuario> proyectoUsuarios,
+			Set<SubproductoUsuario> subproductoUsuarios) {
 		this.usuario = usuario;
 		this.password = password;
 		this.salt = salt;
@@ -61,7 +70,11 @@ public class Usuario implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
 		this.colaboradors = colaboradors;
+		this.productoUsuarios = productoUsuarios;
+		this.componentes = componentes;
 		this.usuarioPermisos = usuarioPermisos;
+		this.proyectoUsuarios = proyectoUsuarios;
+		this.subproductoUsuarios = subproductoUsuarios;
 	}
 
 	@Id
@@ -159,12 +172,51 @@ public class Usuario implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
+	public Set<ProductoUsuario> getProductoUsuarios() {
+		return this.productoUsuarios;
+	}
+
+	public void setProductoUsuarios(Set<ProductoUsuario> productoUsuarios) {
+		this.productoUsuarios = productoUsuarios;
+	}
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "componente_usuario", catalog = "sipro", joinColumns = {
+			@JoinColumn(name = "usuario", nullable = false, updatable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "componenteid", nullable = false, updatable = false) })
+	public Set<Componente> getComponentes() {
+		return this.componentes;
+	}
+
+	public void setComponentes(Set<Componente> componentes) {
+		this.componentes = componentes;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
 	public Set<UsuarioPermiso> getUsuarioPermisos() {
 		return this.usuarioPermisos;
 	}
 
 	public void setUsuarioPermisos(Set<UsuarioPermiso> usuarioPermisos) {
 		this.usuarioPermisos = usuarioPermisos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
+	public Set<ProyectoUsuario> getProyectoUsuarios() {
+		return this.proyectoUsuarios;
+	}
+
+	public void setProyectoUsuarios(Set<ProyectoUsuario> proyectoUsuarios) {
+		this.proyectoUsuarios = proyectoUsuarios;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
+	public Set<SubproductoUsuario> getSubproductoUsuarios() {
+		return this.subproductoUsuarios;
+	}
+
+	public void setSubproductoUsuarios(Set<SubproductoUsuario> subproductoUsuarios) {
+		this.subproductoUsuarios = subproductoUsuarios;
 	}
 
 }

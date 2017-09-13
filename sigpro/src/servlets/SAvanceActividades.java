@@ -2,6 +2,8 @@ package servlets;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -43,6 +45,7 @@ import pojo.HitoResultado;
 import pojo.Producto;
 import pojo.Subproducto;
 import utilities.CExcel;
+import utilities.CPdf;
 import utilities.CLogger;
 import utilities.Utils;
 
@@ -258,7 +261,55 @@ public class SAvanceActividades extends HttpServlet {
 				}catch(Exception e){
 				    CLogger.write_simple("3", SAvanceActividades.class, e.getMessage());
 				}
-			}else{
+			}else if(accion.equals("exportarPdf")){
+				CPdf archivo = new CPdf("Reporte de Avance");
+				String headers[][];
+				String datos[][];
+				headers = generarHeaders();
+				datos = generarDatos(idPrestamo, fechaCorte, usuario);
+				String path = archivo.ExportarPdfAvanceActividades(headers, datos,usuario);
+				File file=new File(path);
+				if(file.exists()){
+			        FileInputStream is = null;
+			        try {
+			        	is = new FileInputStream(file);
+			        }
+			        catch (Exception e) {
+						CLogger.write("5", SInformacionPresupuestaria.class, e);
+			        }
+			        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+			        
+			        int readByte = 0;
+			        byte[] buffer = new byte[2024];
+
+	                while(true)
+	                {
+	                    readByte = is.read(buffer);
+	                    if(readByte == -1)
+	                    {
+	                        break;
+	                    }
+	                    outByteStream.write(buffer);
+	                }
+	                
+	                file.delete();
+	                
+	                is.close();
+	                outByteStream.flush();
+	                outByteStream.close();
+	                
+			        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+					response.setContentType("application/pdf");
+					response.setContentLength(outArray.length);
+					response.setHeader("Expires:", "0"); 
+					response.setHeader("Content-Disposition", "in-line; 'AvanceActividades.pdf'");
+					OutputStream outStream = response.getOutputStream();
+					outStream.write(outArray);
+					outStream.flush();
+				}
+				
+			}
+			else{
 				response_text = "{ \"success\": false }";
 			}
 			

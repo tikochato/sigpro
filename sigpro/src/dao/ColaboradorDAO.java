@@ -57,14 +57,14 @@ public class ColaboradorDAO {
 
 	public static boolean guardar(Integer codigo, String primerNombre, String segundoNombre, String otrosNombres,
 			String primerApellido, String segundoApellido, String otrosApellidos, Long cui,
-			Integer codigoUnidadEjecutora, String usuario, String usuario_creacion, Date fecha_creacion) {
+			Integer ejercicio, Integer entidad,Integer codigoUnidadEjecutora, String usuario, String usuario_creacion, Date fecha_creacion) {
 
 		Colaborador pojo = getColaborador(codigo);
 		boolean ret = false;
 
 		if (pojo == null) {
 
-			pojo = new Colaborador(UnidadEjecutoraDAO.getUnidadEjecutora(codigoUnidadEjecutora),UsuarioDAO.getUsuario(usuario),
+			pojo = new Colaborador(UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad,codigoUnidadEjecutora),UsuarioDAO.getUsuario(usuario),
 					primerNombre, segundoNombre, primerApellido, segundoApellido, cui, 1, usuario_creacion, null, fecha_creacion, null,
 					null, null, null,null);
 			Session session = CHibernateSession.getSessionFactory().openSession();
@@ -85,7 +85,7 @@ public class ColaboradorDAO {
 
 	public static boolean actualizar(Integer codigo, String primerNombre, String segundoNombre, 
 			String primerApellido, String segundoApellido, Long cui,
-			Integer codigoUnidadEjecutora, String usuario, String usuarioc) {
+			Integer ejercicio, Integer entidad,Integer codigoUnidadEjecutora, String usuario, String usuarioc) {
 
 		Colaborador pojo = getColaborador(codigo);
 		boolean ret = false;
@@ -99,7 +99,7 @@ public class ColaboradorDAO {
 			pojo.setUsuarioActualizo(usuarioc);
 			pojo.setFechaActualizacion(new Date());
 
-			pojo.setUnidadEjecutora(UnidadEjecutoraDAO.getUnidadEjecutora(codigoUnidadEjecutora));
+			pojo.setUnidadEjecutora(UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad,codigoUnidadEjecutora));
 			if(usuario!=null)
 				pojo.setUsuario(UsuarioDAO.getUsuario(usuario));
 
@@ -195,7 +195,9 @@ public class ColaboradorDAO {
 			estructuraPojo.cui = pojo.getCui();
 
 			estructuraPojo.usuario = pojo.getUsuario().getUsuario();
-			estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora().getUnidadEjecutora();
+			
+			estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora().getId().getUnidadEjecutora();
+			
 			estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
 			
 			estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();
@@ -232,7 +234,7 @@ public class ColaboradorDAO {
 				estructuraPojo.cui = pojo.getCui();
 				if(pojo.getUsuario()!=null)
 					estructuraPojo.usuario = pojo.getUsuario().getUsuario();
-				estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora().getUnidadEjecutora();
+				estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora().getId().getUnidadEjecutora();
 				estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
 				estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();
 				estructuraPojo.usuarioActualizo = pojo.getUsuarioActualizo();

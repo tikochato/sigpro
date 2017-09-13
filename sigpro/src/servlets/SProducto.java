@@ -29,6 +29,8 @@ import dao.ProductoDAO;
 import dao.ProductoPropiedadDAO;
 import dao.ProductoPropiedadValorDAO;
 import dao.ProductoUsuarioDAO;
+import dao.UnidadEjecutoraDAO;
+import dao.UsuarioDAO;
 import pojo.AcumulacionCosto;
 import pojo.Componente;
 import pojo.Producto;
@@ -39,6 +41,7 @@ import pojo.ProductoTipo;
 import pojo.ProductoUsuario;
 import pojo.ProductoUsuarioId;
 import pojo.UnidadEjecutora;
+import pojo.Usuario;
 import utilities.Utils;
 import utilities.COrden;
 
@@ -56,7 +59,10 @@ public class SProducto extends HttpServlet {
 		Integer idProductoTipo;
 		String productoTipo;
 		Integer unidadEjectuora;
+		int entidadentidad;
+		int ejercicio;
 		String nombreUnidadEjecutora;
+		String entidadnombre;
 		Long snip;
 		Integer programa;
 		Integer subprograma;
@@ -172,8 +178,11 @@ public class SProducto extends HttpServlet {
 				}
 				
 				if (producto.getUnidadEjecutora() != null){
-					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadEjectuora = producto.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.entidadentidad = producto.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
+					temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
 				}
 
 				listaProducto.add(temp);
@@ -198,6 +207,8 @@ public class SProducto extends HttpServlet {
 				Integer productoPadreId = Utils.String2Int(parametro.get("productoPadre"));
 				Integer tipoproductoId = Utils.String2Int(parametro.get("tipoproductoid")); 
 				Integer unidadEjecutoraId = Utils.String2Int(parametro.get("unidadEjecutora"));
+				Integer entidad = Utils.String2Int(parametro.get("entidad"));
+				Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"));
 				
 				Long snip = Utils.String2Long(parametro.get("snip"), null);
 				Integer programa = Utils.String2Int(parametro.get("programa"), null);
@@ -235,8 +246,8 @@ public class SProducto extends HttpServlet {
 				productoPadre.setId(productoPadreId);
 				ProductoTipo productoTipo = new ProductoTipo();
 				productoTipo.setId(tipoproductoId);
-				UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-				unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
+				new UnidadEjecutoraDAO();
+				UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio,entidad,unidadEjecutoraId);
 				
 				if (esnuevo){
 					
@@ -283,7 +294,8 @@ public class SProducto extends HttpServlet {
 				
 				if (ret){
 					ProductoUsuarioId productoUsuarioId = new ProductoUsuarioId(producto.getId(), usuario);
-					ProductoUsuario productoUsuario =  new ProductoUsuario(productoUsuarioId, producto, usuario, null, new DateTime().toDate(),null);
+					Usuario usu = UsuarioDAO.getUsuario(usuario);
+					ProductoUsuario productoUsuario =  new ProductoUsuario(productoUsuarioId, producto, usu,usuario, null, new DateTime().toDate(),null);
 					ProductoUsuarioDAO.guardarProductoUsuario(productoUsuario);
 					
 					for (stdatadinamico data : datos) {
@@ -395,8 +407,11 @@ public class SProducto extends HttpServlet {
 					}
 					
 					if (producto.getUnidadEjecutora() != null){
-						temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
+						temp.unidadEjectuora = producto.getUnidadEjecutora().getId().getUnidadEjecutora();
+						temp.entidadentidad = producto.getUnidadEjecutora().getId().getEntidadentidad();
+						temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 						temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
+						temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
 					}
 
 					listaProducto.add(temp);
@@ -473,8 +488,11 @@ public class SProducto extends HttpServlet {
 				}
 				
 				if (producto.getUnidadEjecutora() != null){
-					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadEjectuora = producto.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.entidadentidad = producto.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
+					temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
 				}
 
 				listaProducto.add(temp);
@@ -539,8 +557,11 @@ public class SProducto extends HttpServlet {
 				}
 				
 				if (producto.getUnidadEjecutora() != null){
-					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadEjectuora = producto.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.entidadentidad = producto.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
+					temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
 				}
 
 				stproductos.add(temp);
@@ -588,8 +609,11 @@ public class SProducto extends HttpServlet {
 				}
 				
 				if (producto.getUnidadEjecutora() != null){
-					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadEjectuora = producto.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.entidadentidad = producto.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
+					temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
 				}
 				temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
 				temp.fechaFin = Utils.formatDate(producto.getFechaFin());
@@ -613,6 +637,8 @@ public class SProducto extends HttpServlet {
 				String nombre = parametro.get("nombre");
 				Integer tipoproductoId = Utils.String2Int(parametro.get("tipoproductoid")); 
 				Integer unidadEjecutoraId = Utils.String2Int(parametro.get("unidadEjecutora"));
+				Integer entidadId = Utils.String2Int(parametro.get("entidadId"));
+				Integer ejercicio = Utils.String2Int("ejercicio");
 				Date fechaInicio = Utils.dateFromString(parametro.get("fechaInicio"));
 				Date fechaFin = Utils.dateFromString(parametro.get("fechaFin"));
 				Integer duracion = Utils.String2Int(parametro.get("duaracion"), null);
@@ -620,13 +646,16 @@ public class SProducto extends HttpServlet {
 				
 				ProductoTipo productoTipo = new ProductoTipo();
 				productoTipo.setId(tipoproductoId);
-				UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-				unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
+				UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidadId, unidadEjecutoraId);
 				if(esnuevo){
 					Componente componente = new Componente();
 					componente.setId(componenteId);
-					producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, usuario, new Date(), fechaInicio, fechaFin, duracion, duracionDimension);
+					producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, usuario, new Date());
 					producto.setEstado(1);
+					producto.setFechaInicio(fechaInicio);
+					producto.setFechaFin(fechaFin);
+					producto.setDuracion(duracion);
+					producto.setDuracionDimension(duracionDimension);
 				}else{
 					producto = ProductoDAO.getProductoPorId(id);
 					producto.setProductoTipo(productoTipo);
@@ -664,8 +693,11 @@ public class SProducto extends HttpServlet {
 				}
 				
 				if (producto.getUnidadEjecutora() != null){
-					temp.unidadEjectuora = producto.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadEjectuora = producto.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.entidadentidad = producto.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
+					temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
 				}
 				temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
 				temp.fechaFin = Utils.formatDate(producto.getFechaFin());

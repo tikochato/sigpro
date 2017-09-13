@@ -1,6 +1,35 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <div class="modal-body" id="modal-body">
   <div class="row">
+  	<div class="col-sm-12" style="font-weight: bold;">{{ modalBuscar.titulo }}</div>
+  </div>
+  <br/>
+  <div class="row" ng-show="modalBuscar.showfilters">
+  	<div class="col-sm-12">
+  		<select class="inputText" ng-model="modalBuscar.ejercicio" ng-change="modalBuscar.cambioEjercicio()"
+  		ng-options="ejercicio as ejercicio for ejercicio in modalBuscar.ejercicios">
+	    </select><br>
+    </div>
+  </div>
+  <br/>
+  <div class="row" ng-show="modalBuscar.showfilters">
+  	<div class="col-sm-12">
+	  	<div angucomplete-alt id="ex1"
+			  placeholder="Buscar Entidades"
+			  pause="100"
+			  selected-object="modalBuscar.cambioEntidad"
+			  local-data="modalBuscar.entidades"
+			  search-fields="nombre"
+			  title-field="nombre"
+			  minlength="3"
+			  input-class="form-control form-control-small"
+			  match-class="angucomplete-highlight"
+			  initial-value="modalBuscar.entidad.nombre">
+		</div>
+  	</div>
+  </div>
+  <br/>
+  <div class="row">
     <div class="col-sm-12">
       <div id="grid1" ui-grid="modalBuscar.opcionesGrid" ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination>
         <div class="grid_loading" ng-hide="!modalBuscar.mostrarCargando">

@@ -2,6 +2,8 @@ package servlets;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -51,6 +53,7 @@ import pojo.Subproducto;
 import utilities.CExcel;
 import utilities.CLogger;
 import utilities.CMariaDB;
+import utilities.CPdf;
 import utilities.Utils;
 
 @WebServlet("/SPlanAdquisiciones")
@@ -84,6 +87,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		String planificadoFirma;
 		String realFirma;
 		String numeroContrato;
+		BigDecimal montoContrato;
 		List<String> hijos;
 		boolean c0;
 		boolean c1;
@@ -139,16 +143,17 @@ public class SPlanAdquisiciones extends HttpServlet {
 			Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(idPrestamo, 1);
 			String fechaSuscripcion = Utils.formatDate(prestamo.getFechaSuscripcion());
 			String fechaCierre = Utils.formatDate(prestamo.getFechaCierreOrigianlUe());
+			Integer cooperanteId = prestamo.getCooperante().getId();
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 	        response_text = String.join("", "\"proyecto\":",response_text);
-	        response_text = String.join("", "{\"success\":true,\"fechaSuscripcion\": \""+ fechaSuscripcion + "\", \"fechaCierre\": \"" + fechaCierre + "\",", response_text, "}");
+	        response_text = String.join("", "{\"success\":true,\"fechaSuscripcion\": \""+ fechaSuscripcion + "\", \"fechaCierre\": \"" + fechaCierre + "\", \"cooperanteId\": " + cooperanteId + ",", response_text, "}");
 		        
 		}else if(accion.equals("guardarPlan")){
 			try{
 				boolean result = false;
 				String data = map.get("data");
-				String[] datos = data.split("掳");
+				String[] datos = data.split("\\|");
 				
 				for(String str1: datos){
 					String[] row = str1.split(",");
@@ -178,9 +183,15 @@ public class SPlanAdquisiciones extends HttpServlet {
 						
 					String unidadMedida = row[5] == null ? "" : row[5]; 
 					
-					Integer cantidad = Utils.String2Int(row[6]);
-					BigDecimal costo = new BigDecimal(row[7]);
-					BigDecimal total = new BigDecimal(row[8]);
+					Integer cantidad = 0;
+					if(!row[6].equals("null"))
+						cantidad = Utils.String2Int(row[6]);
+					BigDecimal costo = BigDecimal.ZERO;
+					if(!row[7].equals("null"))
+						costo = new BigDecimal(row[7]);
+					BigDecimal total = BigDecimal.ZERO;
+					if(!row[8].equals("null"))
+						total = new BigDecimal(row[8]);
 
 					if(objetoTipo == 1 && !total.equals(BigDecimal.ZERO)){
 						Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId, usuario);
@@ -227,6 +238,9 @@ public class SPlanAdquisiciones extends HttpServlet {
 					Integer bloqueado = Utils.String2Boolean(row[19],0);
 					Long nog = Utils.String2Long(row[20]);
 					String numeroContrato = row[21];
+					BigDecimal montoContrato = BigDecimal.ZERO;
+					if (!row[22].equals("null"))
+						montoContrato = new BigDecimal(row[22]);
 					PlanAdquisicionesDetalle plan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
 					if(plan != null){
 						plan.setTipoAdquisicion(tipoAdquisicion);
@@ -253,11 +267,12 @@ public class SPlanAdquisiciones extends HttpServlet {
 						plan.setBloqueado(bloqueado);
 						plan.setNog(nog);
 						plan.setNumeroContrato(numeroContrato);
+						plan.setMontoContrato(montoContrato);
 					}else{
-						plan = new PlanAdquisicionesDetalle(categoriaAdquisicion,planAdquisiciones, tipoAdquisicion,unidadMedida,cantidad, total, costo, 
+						plan = new PlanAdquisicionesDetalle(categoriaAdquisicion,planAdquisiciones, tipoAdquisicion,unidadMedida,cantidad, total,  costo, 
 								planificadoDocs, realDocs, planificadoLanzamiento, realLanzamiento, planificadoRecepcionEval, realRecepcionEval, 
-								planificadoAdjudica, realAdjudica, planificadoFirma, realFirma,  objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
-								bloqueado, numeroContrato, nog);
+								planificadoAdjudica, realAdjudica, planificadoFirma, realFirma, objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
+								bloqueado,  numeroContrato, montoContrato,nog);
 					}
 					
 					result = PlanAdquisicionesDetalleDAO.guardarPlanAdquisicion(plan);
@@ -286,7 +301,55 @@ public class SPlanAdquisiciones extends HttpServlet {
 			}catch(Exception e){
 				CLogger.write_simple("2", SPlanAdquisiciones.class, e.getMessage());
 			}
-		}else{
+		}else if(accion.equals("exportarPdf")){
+			CPdf archivo = new CPdf("Plan de adquisiciones");
+			String headers[][];
+			String datos[][];
+			headers = generarHeaders();
+			Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"), null);
+			datos = generarDatos(idPlanAdquisiciones, idPrestamo, usuario);
+			String path = archivo.exportarPlanAdquisiciones(headers, datos,usuario);
+			File file=new File(path);
+			if(file.exists()){
+		        FileInputStream is = null;
+		        try {
+		        	is = new FileInputStream(file);
+		        }
+		        catch (Exception e) {
+					CLogger.write("5", SAdministracionTransaccional.class, e);
+		        }
+		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		        
+		        int readByte = 0;
+		        byte[] buffer = new byte[2024];
+
+                while(true)
+                {
+                    readByte = is.read(buffer);
+                    if(readByte == -1)
+                    {
+                        break;
+                    }
+                    outByteStream.write(buffer);
+                }
+                
+                file.delete();
+                
+                is.close();
+                outByteStream.flush();
+                outByteStream.close();
+                
+		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+				response.setContentType("application/pdf");
+				response.setContentLength(outArray.length);
+				response.setHeader("Expires:", "0"); 
+				response.setHeader("Content-Disposition", "in-line; 'planAdquisiciones.pdf'");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+			}
+		}
+		else{
 			response_text = "{ \"success\": false }";
 		}
 		
@@ -370,6 +433,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 				tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 				tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 				tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+				tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 		}
 		
 		if(CMariaDB.connect()){
@@ -433,6 +497,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 					tempPrestamo.realFirma = detallePlan != null ? Utils.formatDate(detallePlan.getFirmaContratoReal()) : null;
 					tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 					tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+					tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 				}
 									
 				ArrayList<Integer> productos = InformacionPresupuestariaDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
@@ -488,6 +553,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 						tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 						tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 						tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+						tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 					}
 					
 					ArrayList<Integer> subproductos = InformacionPresupuestariaDAO.getEstructuraArbolSubProducto(idPrestamo,objComponente.getId(),objProducto.getId(), conn);
@@ -544,6 +610,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 							tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 							tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 							tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+							tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 						}
 						
 						lstprestamo.add(tempPrestamo);
@@ -610,6 +677,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 								tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 								tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 								tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+								tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 							}
 							
 							lstprestamo.add(tempPrestamo);
@@ -678,6 +746,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 							tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 							tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 							tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+							tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 						}
 						
 						lstprestamo.add(tempPrestamo);
@@ -740,6 +809,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 						tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 						tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 						tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+						tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 					}
 					
 					lstprestamo.add(tempPrestamo);
@@ -800,6 +870,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 					tempPrestamo.bloqueado = detallePlan != null ? detallePlan.getBloqueado() == 1 ? true : false : false;
 					tempPrestamo.numeroContrato = detallePlan != null ? detallePlan.getNumeroContrato() : null;
 					tempPrestamo.nog = detallePlan != null ? detallePlan.getNog() : null;
+					tempPrestamo.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 				}
 				
 				lstprestamo.add(tempPrestamo);
@@ -834,8 +905,8 @@ public class SPlanAdquisiciones extends HttpServlet {
 		String headers[][];
 		
 		headers = new String[][]{
-			{"Nombre", "Tipo de Adquisici贸n", "Unidad de Medida", "Categor铆a de Aquisicion", "Cantidad", "Costo", "Total", "Preparaci贸n de Documentos", "", "Lanzamiento de Evento","", 
-				"Recepci贸n y Evaluaci贸n de Ofertas", "", "Adjudicaci贸n", "", "Firma de Contrato", ""},  //titulos
+			{"Nombre", "Tipo de Adquisici髇", "Unidad de Medida", "Categor韆 de Aquisici髇", "Cantidad", "Costo", "Total", "Preparaci髇 de Documentos", "", "Lanzamiento de Evento","", 
+				"Recepci髇 y Evaluaci髇 de Ofertas", "", "Adjudicaci髇", "", "Firma de Contrato", ""},  //titulos
 			null, //mapeo
 			{"string", "string", "string", "string", "double", "currency", "currency", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string"}, //tipo dato
 			null, //operaciones columnas

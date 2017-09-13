@@ -176,13 +176,13 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
 				Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 				Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-				CPdf archivo = new CPdf("Metas de PrÃ©stamo");
+				CPdf archivo = new CPdf("Ejecución presupuestaria");
 				String headers[][];
 				String datosMetas[][];
 				headers = generarHeaders(anioInicial, anioFinal, agrupacion, tipoVisualizacion);
 				List<stprestamo> lstPrestamo = getInformacionPresupuestaria(idPrestamo, anioInicial, anioFinal, usuario);	
 				datosMetas = generarDatosReporte(lstPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-				String path = archivo.ExportPdfMetasPrestamo(headers, datosMetas,tipoVisualizacion);
+				String path = archivo.ExportarPdfEjecucionPresupuestaria(headers, datosMetas,tipoVisualizacion);
 				File file=new File(path);
 				if(file.exists()){
 			        FileInputStream is = null;
@@ -481,7 +481,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 			CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
 			excel = new CExcel("Ejecucion presupuestaria", false, grafica);
-			wb=excel.generateExcelOfData(datosInforme, "EjecuciÃ³n presupuestaria", headers, null, true, usuario);
+			wb=excel.generateExcelOfData(datosInforme, "Ejecución presupuestaria", headers, null, true, usuario);
 			wb.write(outByteStream);
 			outByteStream.close();
 			outArray = Base64.encode(outByteStream.toByteArray());
@@ -512,7 +512,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			factorVisualizacion = 2;
 		}else{
 			totalesCant+=aniosDiferencia;
-			columnasTotal += 1+totalesCant; //Nombre, totales por aÃ±o, total
+			columnasTotal += 1+totalesCant; //Nombre, totales por año, total
 		}
 		
 		String titulo[] = new String[columnasTotal];
@@ -858,7 +858,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		}
 		
 		String[] tipoData = new String[]{"string","double","double"};
-		CGraficaExcel grafica = new CGraficaExcel("AdministraciÃ³n Transaccional", CGraficaExcel.EXCEL_CHART_AREA, "Meses", "Planificado", datos, tipoData, datosIgualar);
+		CGraficaExcel grafica = new CGraficaExcel("Administración Transaccional", CGraficaExcel.EXCEL_CHART_AREA, "Meses", "Planificado", datos, tipoData, datosIgualar);
 	
 		return grafica;
 	}

@@ -31,7 +31,9 @@
 	<shiro:lacksPermission name="24010">
 		<p ng-init="controller.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
-	
+	<shiro:hasPermission name="43010">
+		<p ng-init="controller.cambioOrden()"></p>
+	</shiro:hasPermission>
 	<div class="panel panel-default">
 	  <div class="panel-heading"><h3>Préstamos</h3></div>
 	</div>
@@ -179,21 +181,6 @@
 									<input type="text" class="inputText"   ng-model="controller.prestamo.proyectoPrograma" ng-required="true"
 									onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.proyectoPrograma"  >
 									<label class="floating-label">* Proyecto/Programa</label>
-									</div>
-								</div>
-							</div>
-							
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group">
-										<input type="text" class="inputText"   
-										ng-model="controller.prestamo.unidadEjecutoraNombre" ng-readonly="true" ng-required="true"
-										ng-click="controller.buscarUnidadEjecutoraPrestamo()"
-										onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.unidadEjecutoraNombre" />			            	
-										<span class="label-icon" ng-click="controller.buscarUnidadEjecutoraPrestamo()">
-											<i class="glyphicon glyphicon-search"></i>
-										</span>
-										<label class="floating-label">* Unidad Ejecutor</label>
 									</div>
 								</div>
 							</div>
@@ -376,7 +363,7 @@
 					
 				</uib-tab>
 				</shiro:hasPermission>
-				<uib-tab index="0" heading="Datos generales" >
+				<uib-tab index="controller.ordenTab" heading="Datos generales" >
 					<div class="form-group">
 						<label for="id" class="floating-label">ID {{ controller.proyecto.id }}</label>
 						<br/><br/>
@@ -469,7 +456,7 @@
 					
 					<div class="form-group" ng-show="controller.unidadejecutoranombre.length>0"  >
 			            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.entidadnombre" ng-readonly="true"  
-			            	 ng-value="controller.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
+			            	 ng-value="controller.entidadnombre" onblur="this.setAttribute('value', this.value);"/>
 			            	<label for="campo3" class="floating-label">Organismo Ejecutor</label>
 			          	
 					</div>
@@ -608,7 +595,7 @@
 					</div>
 				</uib-tab>
 				<shiro:hasPermission name="43010">
-				<uib-tab ng-click="controller.getPorcentajes();" index="2" heading="Datos Entidad Ejecutora" >
+				<uib-tab ng-click="controller.getPorcentajes();" index="controller.ordenTab+1" heading="Datos Entidad Ejecutora" >
 					<div class="panel panel-default">
 						<div class="panel-heading label-form" style="text-align: center;">Información Específica del Préstamo en la Entidad Ejecutora</div>
 						<div class="panel-body">
@@ -810,7 +797,7 @@
 					</div>
 				
 				</uib-tab>
-				<uib-tab index="3" heading="Datos adicionales" ng-if="controller.mostrarPrestamo" >
+				<uib-tab index="controller.ordenTab+2" heading="Datos adicionales" ng-if="controller.mostrarPrestamo" >
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
@@ -1179,7 +1166,7 @@
 					</div>
 				
 				</uib-tab>
-				<uib-tab index= "4" heading="Acta de constitución" ng-if="false">
+				<uib-tab index= "controller.ordenTab+3" heading="Acta de constitución" ng-if="false">
 					
 					<div class="form-group">
 						<label for="id" class="floating-label">Nombre del Proyecto {{ controller.proyecto.nombre }}</label>

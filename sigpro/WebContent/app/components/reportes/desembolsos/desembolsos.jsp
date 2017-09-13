@@ -142,6 +142,9 @@
 									<div class="btn-group" style="padding-left: 20px;">
 										<label class="btn btn-default" ng-click="desembolsosc.exportarExcel()" uib-tooltip="Exportar" ng-hide="!desembolsosc.mostrarDescargar">
 										<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
+										<label class="btn btn-default" ng-click="desembolsosc.exportarPdf()" uib-tooltip="Exportar PDF" ng-hide="!desembolsosc.mostrarDescargar">
+										<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
+										
 							</div>
 						</div>
 			    	</div>

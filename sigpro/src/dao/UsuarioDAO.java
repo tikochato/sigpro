@@ -22,6 +22,7 @@ import pojo.Cooperante;
 import pojo.Permiso;
 import pojo.Proyecto;
 import pojo.ProyectoUsuario;
+import pojo.ProyectoUsuarioId;
 import pojo.RolUsuarioProyecto;
 import pojo.RolUsuarioProyectoId;
 import pojo.UnidadEjecutora;
@@ -183,13 +184,9 @@ public class UsuarioDAO {
 			session.beginTransaction();
 			
 			for(int i =0; i<prestamos.size();i++){
-				Query query = session.createSQLQuery(
-						"CALL asignar_proyecto(:proyecto , :usuario, :usuario_creo)")
-						.setParameter("proyecto", prestamos.get(i))
-						.setParameter("usuario", usuario.toString())
-						.setParameter("usuario_creo", usuario_creo.toString());
-				query.executeUpdate();
-				
+				Proyecto proyecto = ProyectoDAO.getProyecto(prestamos.get(i));
+				proyecto.getProyectoUsuarios().add(new ProyectoUsuario(new ProyectoUsuarioId(prestamos.get(i), usuario_creo), proyecto, UsuarioDAO.getUsuario(usuario_creo)));
+				session.save(proyecto);
 			}			
 			session.getTransaction().commit();
 			ret = true;
@@ -235,11 +232,11 @@ public class UsuarioDAO {
 		try{
 			session.beginTransaction();
 			for(int i =0; i<prestamos.size();i++){
-				Query query = session.createSQLQuery(
-						"CALL desasignar_proyecto(:proyecto , :usuario)")
-						.setParameter("proyecto", prestamos.get(i))
-						.setParameter("usuario", usuario.toString());
-				query.executeUpdate();
+				Query<ProyectoUsuario> criteria = session.createQuery("FROM ProyectoUsuario where id.proyectoid=:id AND id.usuario", ProyectoUsuario.class);
+				criteria.setParameter("id", prestamos.get(i));
+				criteria.setParameter("usuario", usuario);
+				ProyectoUsuario pu = criteria.getSingleResult();
+				session.delete(pu);
 			}			
 			session.getTransaction().commit();
 			ret = true;

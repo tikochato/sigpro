@@ -32,6 +32,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.esNuevo = false;
 	mi.coordenadas = "";
 	mi.objetoTipoNombre = "";
+	mi.entidad='';
+	mi.ejercicio = '';
 	
 	mi.dimensiones = [
 		{value:0,nombre:'Seleccione una opción'},
@@ -301,6 +303,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				productoPadre : mi.productoPadre,
 				tipoproductoid : mi.tipo,
 				unidadEjecutora : mi.unidadEjecutora,
+				ejercicio: mi.ejercicio,
+				entidad: mi.entidad,
 				longitud: mi.producto.longitud,
 				latitud : mi.producto.latitud,
 				costo: mi.producto.costo == null ? 0 : mi.producto.costo,
@@ -345,6 +349,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			mi.esNuevo = false;
 			mi.tipo = mi.producto.idProductoTipo;
 			mi.tipoNombre = mi.producto.productoTipo;
+		
 			
 			if(mi.producto.duracionDimension == 'd'){
 				mi.duracionDimension = mi.dimensiones[1];
@@ -357,6 +362,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			
 			mi.unidadEjecutora = mi.producto.unidadEjectuora;
 			mi.unidadEjecutoraNombre = mi.producto.nombreUnidadEjecutora;
+			mi.entidad = mi.producto.entidadentidad;
+			mi.ejercicio = mi.producto.ejercicio;
+			mi.entidadnombre = mi.producto.entidadnombre;
 			
 			mi.coordenadas = (mi.producto.latitud !=null ?  mi.producto.latitud : '') +
 			(mi.producto.latitud!=null ? ', ' : '') + (mi.producto.longitud!=null ? mi.producto.longitud : '');
@@ -445,7 +453,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 	
 	mi.buscarAcumulacionCosto = function(){
-		var resultado = mi.llamarModalBusqueda('/SAcumulacionCosto', {
+		var resultado = mi.llamarModalBusqueda('Acumulación Costo','/SAcumulacionCosto', {
 			accion : 'numeroAcumulacionCosto' 
 		}, function(pagina, elementosPorPagina){
 			return{
@@ -453,7 +461,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				pagina: pagina,
 				numeroacumulacioncosto : elementosPorPagina
 			}
-		}, 'id','nombre');
+		}, 'id','nombre', false,null);
 		
 		resultado.then(function(itemSeleccionado){
 			mi.producto.acumulacionCostoNombre = itemSeleccionado.nombre;
@@ -461,7 +469,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		});
 	}
 
-	mi.llamarModalBusqueda = function(servlet, datosTotal, datosCarga, columnaId,columnaNombre) {
+	mi.llamarModalBusqueda = function(titulo, servlet, accionServlet,  datosCarga, columnaId,columnaNombre, showfilters, entidad) {
 		var resultado = $q.defer();
 
 		var modalInstance = $uibModal.open({
@@ -474,11 +482,14 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			backdrop : 'static',
 			size : 'md',
 			resolve : {
+				$titulo : function() {
+					return titulo;
+				},
 				$servlet : function() {
 					return servlet;
 				},
-				$datosTotal : function() {
-					return datosTotal;
+				$accionServlet : function() {
+					return accionServlet;
 				},
 				$datosCarga : function() {
 					return datosCarga;
@@ -488,6 +499,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				},
 				$columnaNombre : function() {
 					return columnaNombre;
+				},
+				$showfilters: function(){
+					return showfilters;
+				},
+				$entidad: function(){
+					return entidad;
 				}
 			}
 		});
@@ -501,7 +518,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.buscarTipo = function() {
-		var resultado = mi.llamarModalBusqueda('/SProductoTipo', {
+		var resultado = mi.llamarModalBusqueda('Tipos de Producto','/SProductoTipo', {
 			accion : 'totalElementos'
 		}, function(pagina, elementosPorPagina) {
 			return {
@@ -509,7 +526,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				pagina : pagina,
 				registros : elementosPorPagina
 			};
-		},'id','nombre');
+		},'id','nombre',false, null);
 
 		resultado.then(function(itemSeleccionado) {
 			mi.tipo = itemSeleccionado.id;
@@ -580,7 +597,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 
 	mi.buscarProducto = function() {
 
-		var resultado = mi.llamarModalBusqueda('/SProducto', {
+		var resultado = mi.llamarModalBusqueda('Productos','/SProducto', {
 			accion : 'totalElementos'
 		}, function(pagina, elementosPorPagina) {
 			return {
@@ -588,7 +605,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				pagina : pagina,
 				registros : elementosPorPagina
 			};
-		},'id','nombre');
+		},'id','nombre', false, null);
 
 		resultado.then(function(itemSeleccionado) {
 			mi.productoPadre = itemSeleccionado.id;
@@ -598,19 +615,24 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 	
 	mi.buscarUnidadEjecutora = function() {
-		var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
+		var resultado = mi.llamarModalBusqueda('Unidades Ejecutoras','/SUnidadEjecutora', {
 			accion : 'totalElementos'
-		}, function(pagina, elementosPorPagina) {
+		}, function(pagina, elementosPorPagina,entidad, ejercicio) {
 			return {
 				accion : 'cargar',
 				pagina : pagina,
-				registros : elementosPorPagina
+				registros : elementosPorPagina,
+				entidad:entidad,
+				ejercicio: ejercicio
 			};
-		},'unidadEjecutora','nombreUnidadEjecutora');
+		},'unidadEjecutora','nombreUnidadEjecutora',true,{entidad: mi.entidad, ejercicio: mi.ejercicio, abreviatura:'', nombre: mi.entidadnombre});
 
 		resultado.then(function(itemSeleccionado) {
 			mi.unidadEjecutora = itemSeleccionado.unidadEjecutora;
 			mi.unidadEjecutoraNombre = itemSeleccionado.nombreUnidadEjecutora;
+			mi.entidad = itemSeleccionado.entidad;
+			mi.ejercicio = itemSeleccionado.ejercicio;
+			mi.entidadnombre = itemSeleccionado.nombreEntidad;
 		});
 	};
 	
@@ -646,14 +668,14 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 }
 
 moduloProducto.controller('modalBuscarPorProducto', [ '$uibModalInstance',
-		'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-		'$timeout', '$log', '$servlet', '$datosTotal', '$datosCarga',
-		'$columnaId','$columnaNombre',
+		'$rootScope','$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+		'$timeout', '$log', '$titulo','$servlet', '$accionServlet', '$datosCarga',
+		'$columnaId','$columnaNombre', '$showfilters', '$entidad',
 		modalBuscarPorProducto ]);
 
-function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
-		i18nService, $utilidades, $timeout, $log, $servlet, $datosTotal,
-		$datosCarga,$columnaId,$columnaNombre) {
+function modalBuscarPorProducto($uibModalInstance, $rootScope,$scope, $http, $interval,
+		i18nService, $utilidades, $timeout, $log, $titulo, $servlet, $accionServlet,
+		$datosCarga,$columnaId,$columnaNombre, $showfilters, $entidad) {
 
 	var mi = this;
 
@@ -667,13 +689,44 @@ function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
 
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
+	mi.showfilters = $showfilters;
+	mi.ejercicios = [];
+	mi.entidades = [];
+	mi.titulo = $titulo;
+	
+	if(mi.showfilters){
+		var current_year = moment().year();
+		mi.entidad = $entidad;
+		mi.ejercicio = $entidad.ejercicio;
+		for(var i=current_year-$rootScope.catalogo_entidades_anos; i<=current_year; i++)
+			mi.ejercicios.push(i);
+		
+		mi.ejercicio = (mi.ejercicio == "") ? current_year : mi.ejercicio;
+		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
+			mi.entidades = response.entidades;
+			if(mi.entidades.length>0){
+				mi.entidad = (mi.entidad===undefined) ? mi.entidades[0] : mi.entidad;
+				$accionServlet.ejercicio = mi.ejercicio;
+				$accionServlet.entidad = mi.entidad.entidad;
+				$http.post($servlet, $accionServlet).success(function(response) {
+					for ( var key in response) {
+						mi.totalElementos = response[key];
+					}
+					mi.cargarTabla(1,mi.ejercicio,mi.entidad.entidad);
+				});
+			}
+		});
+		
+	}else{
 
-	$http.post($servlet, $datosTotal).success(function(response) {
-		for ( var key in response) {
-			mi.totalElementos = response[key];
-		}
-		mi.cargarTabla(1);
-	});
+		$http.post($servlet, $accionServlet).success(function(response) {
+			for ( var key in response) {
+				mi.totalElementos = response[key];
+			}
+			mi.cargarTabla(1,0,0);
+		});
+	
+	}
 
 	mi.opcionesGrid = {
 		data : mi.data,
@@ -709,9 +762,9 @@ function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
 		mi.seleccionado = row.isSelected;
 	};
 
-	mi.cargarTabla = function(pagina) {
+	mi.cargarTabla = function(pagina,ejercicio, entidad) {
 		mi.mostrarCargando = true;
-		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina)).then(
+		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina, entidad,ejercicio)).then(
 				function(response) {
 					if (response.data.success) {
 
@@ -726,7 +779,7 @@ function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
 	};
 
 	mi.cambioPagina = function() {
-		mi.cargarTabla(mi.paginaActual);
+		mi.cargarTabla(mi.paginaActual, mi.ejercicio, mi.entidad.entidad);
 	}
 
 	mi.ok = function() {
@@ -740,6 +793,22 @@ function modalBuscarPorProducto($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
+	
+	mi.cambioEjercicio= function(){	
+		mi.cargarTabla(1,mi.ejercicio, mi.entidad.entidad);
+	}
+	
+	mi.cambioEntidad= function(selected){
+		if(selected!==undefined){
+			mi.entidad = selected.originalObject;
+			$http.post('/SUnidadEjecutora', {accion:"totalElementos", ejercicio: mi.entidad.ejercicio,entidad: mi.entidad.entidad}).success(function(response) {
+				for ( var key in response) {
+					mi.totalElementos = response[key];
+				}
+				mi.cargarTabla(1,mi.ejercicio,mi.entidad.entidad);
+			});
+		}
+	}
 
 };
 

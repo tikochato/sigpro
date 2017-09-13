@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -44,7 +44,6 @@ public class UsuarioLogId implements java.io.Serializable {
 		this.fecha = fecha;
 	}
 
-	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -60,7 +59,6 @@ public class UsuarioLogId implements java.io.Serializable {
 						&& castOther.getFecha() != null && this.getFecha().equals(castOther.getFecha())));
 	}
 
-	@Override
 	public int hashCode() {
 		int result = 17;
 

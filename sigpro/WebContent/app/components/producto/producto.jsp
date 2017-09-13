@@ -178,6 +178,13 @@
 			          <label for="campo3" class="floating-label">* Tipo</label>
 			        </div>
 			        
+			        <div class="form-group" ng-show="producto.unidadEjecutoraNombre.length>0"  >
+			            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="producto.entidadnombre" ng-readonly="true"  
+			            	 ng-value="producto.entidadnombre" onblur="this.setAttribute('value', this.value);"/>
+			            	<label for="campo3" class="floating-label">Organismo Ejecutor</label>
+			          	
+					</div>
+			        
 			        <div class="form-group">
 			            <input type="text" class="inputText" ng-model="producto.unidadEjecutoraNombre" ng-value="producto.unidadEjecutoraNombre" 
 			            	ng-click="producto.buscarUnidadEjecutora()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>

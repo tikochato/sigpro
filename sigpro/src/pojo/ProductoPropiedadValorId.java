@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -43,7 +43,6 @@ public class ProductoPropiedadValorId implements java.io.Serializable {
 		this.productoid = productoid;
 	}
 
-	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -57,7 +56,6 @@ public class ProductoPropiedadValorId implements java.io.Serializable {
 				&& (this.getProductoid() == castOther.getProductoid());
 	}
 
-	@Override
 	public int hashCode() {
 		int result = 17;
 

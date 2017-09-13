@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1852463094582834050L;
+	private static final long serialVersionUID = 4789316518902979027L;
 	private Integer id;
 	private CategoriaAdquisicion categoriaAdquisicion;
 	private PlanAdquisiciones planAdquisiciones;
@@ -53,6 +53,7 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 	private int estado;
 	private Integer bloqueado;
 	private String numeroContrato;
+	private BigDecimal montoContrato;
 	private Long nog;
 
 	public PlanAdquisicionesDetalle() {
@@ -74,7 +75,8 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 			Date lanzamientoEventoReal, Date recepcionOfertasPlanificado, Date recepcionOfertasReal,
 			Date adjudicacionPlanificado, Date adjudicacionReal, Date firmaContratoPlanificado, Date firmaContratoReal,
 			int objetoId, int objetoTipo, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, Integer bloqueado, String numeroContrato, Long nog) {
+			Date fechaActualizacion, int estado, Integer bloqueado, String numeroContrato, BigDecimal montoContrato,
+			Long nog) {
 		this.categoriaAdquisicion = categoriaAdquisicion;
 		this.planAdquisiciones = planAdquisiciones;
 		this.tipoAdquisicion = tipoAdquisicion;
@@ -101,6 +103,7 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 		this.estado = estado;
 		this.bloqueado = bloqueado;
 		this.numeroContrato = numeroContrato;
+		this.montoContrato = montoContrato;
 		this.nog = nog;
 	}
 
@@ -362,6 +365,15 @@ public class PlanAdquisicionesDetalle implements java.io.Serializable {
 
 	public void setNumeroContrato(String numeroContrato) {
 		this.numeroContrato = numeroContrato;
+	}
+
+	@Column(name = "monto_contrato", precision = 15)
+	public BigDecimal getMontoContrato() {
+		return this.montoContrato;
+	}
+
+	public void setMontoContrato(BigDecimal montoContrato) {
+		this.montoContrato = montoContrato;
 	}
 
 	@Column(name = "nog")

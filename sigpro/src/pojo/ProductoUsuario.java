@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.AttributeOverride;
@@ -24,9 +24,10 @@ public class ProductoUsuario implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8137482262666214807L;
+	private static final long serialVersionUID = -1582751083045184702L;
 	private ProductoUsuarioId id;
 	private Producto producto;
+	private Usuario usuario;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
@@ -35,15 +36,17 @@ public class ProductoUsuario implements java.io.Serializable {
 	public ProductoUsuario() {
 	}
 
-	public ProductoUsuario(ProductoUsuarioId id, Producto producto) {
+	public ProductoUsuario(ProductoUsuarioId id, Producto producto, Usuario usuario) {
 		this.id = id;
 		this.producto = producto;
+		this.usuario = usuario;
 	}
 
-	public ProductoUsuario(ProductoUsuarioId id, Producto producto, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion) {
+	public ProductoUsuario(ProductoUsuarioId id, Producto producto, Usuario usuario, String usuarioCreo,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion) {
 		this.id = id;
 		this.producto = producto;
+		this.usuario = usuario;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
@@ -71,6 +74,16 @@ public class ProductoUsuario implements java.io.Serializable {
 
 	public void setProducto(Producto producto) {
 		this.producto = producto;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "usuario", nullable = false, insertable = false, updatable = false)
+	public Usuario getUsuario() {
+		return this.usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	@Column(name = "usuario_creo", length = 30)

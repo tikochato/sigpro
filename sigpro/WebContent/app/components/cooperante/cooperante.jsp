@@ -7,6 +7,10 @@
 			<p ng-init="cooperantec.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
 		
+		<script type="text/ng-template" id="tipoAdquisicion.jsp">
+    	<%@ include file="/app/components/cooperante/tipoAdquisicion.jsp"%>
+  		</script>
+		
 		<div class="panel panel-default">
 		    <div class="panel-heading"><h3>Cooperantes</h3></div>
 		</div>
@@ -114,6 +118,28 @@
 						   <label class="floating-label">Descripción</label>
 						</div>
 						<br/>
+						<div align="center">
+							<h5 class="label-form">Tipo de Adquisición</h5>
+							<br/>
+							<table style="width: 75%;"
+							st-table="cooperantec.cooperanteTipoAdquisiciones"
+							class="table table-striped  table-bordered">
+								<thead >
+									<tr>
+										<th class="label-form">ID</th>
+										<th class="label-form">Nombre</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr st-select-row="row"
+										ng-repeat="row in cooperantec.cooperanteTipoAdquisiciones">
+										<td>{{row.id}}</td>
+										<td>{{row.nombre}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
 						<div class="panel panel-default">
 							<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 							<div class="panel-body">

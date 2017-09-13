@@ -38,8 +38,8 @@ public class SEntidad extends HttpServlet {
 	    actualizarEntidad(parametro, response);
 	} else if (parametro.get("accion").compareTo("totalEntidades") == 0) {
 	    totalEntidades(parametro,response);
-	}
-
+	} else if (parametro.get("accion").compareTo("entidadesporejercicio")==0)
+		listarEntidadesPorEjercicio(parametro,response);
     }
 
     private void listarEntidades(Map<String, String> parametro, HttpServletResponse response) throws IOException {
@@ -65,26 +65,42 @@ public class SEntidad extends HttpServlet {
 
 	Utils.writeJSon(response, jsonEntidades);
     }
+    
+    private void listarEntidadesPorEjercicio(Map<String, String> parametro, HttpServletResponse response) throws IOException {
+    	int ejercicio = Utils.String2Int(parametro.get("ejercicio"), 0);
+
+    	String jsonEntidades = EntidadDAO.getJsonEntidadesPorEjercicio(ejercicio);
+
+    	if (Utils.isNullOrEmpty(jsonEntidades)) {
+    	    jsonEntidades = "{\"success\":false}";
+    	} else {
+    	    jsonEntidades = "{\"success\":true,"
+    	                    + jsonEntidades
+    	                    + "}";
+    	}
+
+    	Utils.writeJSon(response, jsonEntidades);
+        }
 
     private void crearEntidad(Map<String, String> parametro, HttpServletResponse response) throws IOException {
-	Integer entidad = Utils.String2Int(parametro.get("entidad"), -1);
-	String nombre = parametro.get("nombre");
-	String abreviatura = parametro.get("abreviatura");
-
-	boolean creado = EntidadDAO.guardarEntidad(entidad, nombre, abreviatura);
-
-	if (creado) {
-	    listarEntidades(parametro, response);
-	} else {
-
-	}
+		Integer entidad = Utils.String2Int(parametro.get("entidad"), -1);
+		String nombre = parametro.get("nombre");
+		String abreviatura = parametro.get("abreviatura");
+		Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"),-1);
+	
+		boolean creado = EntidadDAO.guardarEntidad(entidad, ejercicio, nombre, abreviatura);
+	
+		if (creado) {
+		    listarEntidades(parametro, response);
+		} 
     }
 
     private void actualizarEntidad(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 	Integer entidad = Utils.String2Int(parametro.get("entidad"), -1);
 	String abreviatura = parametro.get("abreviatura");
-
-	boolean actualizado = EntidadDAO.actualizarEntidad(entidad, abreviatura);
+	Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"),-1);
+	
+	boolean actualizado = EntidadDAO.actualizarEntidad(entidad,ejercicio, abreviatura);
 
 	if (actualizado) {
 	    listarEntidades(parametro, response);

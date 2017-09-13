@@ -29,6 +29,7 @@ import com.google.gson.reflect.TypeToken;
 import dao.ComponenteDAO;
 import dao.ComponentePropiedadDAO;
 import dao.ComponentePropiedadValorDAO;
+import dao.UnidadEjecutoraDAO;
 import pojo.AcumulacionCosto;
 import pojo.Componente;
 import pojo.ComponentePropiedad;
@@ -71,7 +72,10 @@ public class SComponente extends HttpServlet {
 		String fechaInicio;
 		String fechaFin;
 		int unidadejecutoraid;
+		int ejercicio;
+		int entidadentidad;
 		String unidadejecutoranombre;
+		String entidadnombre;
 		String latitud;
 		String longitud;
 		BigDecimal costo;
@@ -151,8 +155,11 @@ public class SComponente extends HttpServlet {
 				temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
 				temp.fechaFin = Utils.formatDate(componente.getFechaFin());
 				temp.obra = componente.getObra();
-				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
+				temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+				temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+				temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+				temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
 				temp.latitud = componente.getLatitud();
 				temp.longitud = componente.getLongitud();
 				temp.costo = componente.getCosto();
@@ -189,8 +196,11 @@ public class SComponente extends HttpServlet {
 				temp.actividad = componente.getActividad();
 				temp.renglon = componente.getRenglon();
 				temp.ubicacionGeografica = componente.getUbicacionGeografica();
-				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
+				temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+				temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+				temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+				temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
 				temp.latitud = componente.getLatitud();
 				temp.longitud = componente.getLongitud();
 				temp.costo = componente.getCosto();
@@ -218,6 +228,8 @@ public class SComponente extends HttpServlet {
 					int componentetipoid = map.get("componentetipoid")!=null ? Integer.parseInt(map.get("componentetipoid")) : 0;
 					int proyectoid= map.get("proyectoid")!=null ? Integer.parseInt(map.get("proyectoid")) : 0;
 					int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;
+					int ejercicio =Utils.String2Int(map.get("ejercicio"),0);
+					int entidad = Utils.String2Int(map.get("entidad"));
 					Long snip = map.get("snip")!=null ? Long.parseLong(map.get("snip")) : null;
 					Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
 					Integer subPrograma = map.get("subprograma")!=null ?  Integer.parseInt(map.get("subprograma")) : null;
@@ -244,10 +256,7 @@ public class SComponente extends HttpServlet {
 					ComponenteTipo componenteTipo= new ComponenteTipo();
 					componenteTipo.setId(componentetipoid);
 
-					UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-					unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
-
-
+					UnidadEjecutora unidadEjecutora_ = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad, unidadEjecutoraId);
 					Proyecto proyecto = new Proyecto();
 					proyecto .setId(proyectoid);
 
@@ -258,7 +267,8 @@ public class SComponente extends HttpServlet {
 
 					Componente componente;
 					if(esnuevo){
-						componente = new Componente(acumulacionCosto,componenteTipo, proyecto, unidadEjecutora, nombre,
+						
+						componente = new Componente(acumulacionCosto,componenteTipo, proyecto, unidadEjecutora_, nombre,
 								descripcion, usuario, null, new DateTime().toDate(), null, 1,
 								snip, programa, subPrograma, proyecto_, actividad,obra, latitud,longitud, costo, renglon, 
 								ubicacionGeografica, fechaInicio, fechaFin, duracion, duracionDimension, null,null,null,null,null,null);
@@ -285,6 +295,8 @@ public class SComponente extends HttpServlet {
 						componente.setFechaFin(fechaFin);
 						componente.setDuracion(duracion);
 						componente.setDuracionDimension(duracionDimension);
+						componente.setUnidadEjecutora(unidadEjecutora_);
+						componente.setComponenteTipo(componenteTipo);
 					}
 					result = ComponenteDAO.guardarComponente(componente);
 					COrden orden = new COrden();
@@ -357,20 +369,25 @@ public class SComponente extends HttpServlet {
 					String nombre = map.get("nombre");	
 					int componentetipoid = map.get("componentetipoid")!=null ? Integer.parseInt(map.get("componentetipoid")) : 0;	
 					int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;
+					int entidad = Utils.String2Int(map.get("entidad"),0);
+					int ejercicio = Utils.String2Int(map.get("ejercicio"),0);
 					Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
 					Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
 					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
 					String duracionDimension = map.get("duracionDimension");
 					ComponenteTipo componenteTipo= new ComponenteTipo();
 					componenteTipo.setId(componentetipoid);
-					UnidadEjecutora unidadEjecutora = new UnidadEjecutora();
-					unidadEjecutora.setUnidadEjecutora(unidadEjecutoraId);
+					UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad,unidadEjecutoraId);
 					
 					if (esnuevo){
 						Proyecto proyecto = new Proyecto();
 						proyecto.setId(proyectoId);
 						componente = new Componente(componenteTipo, proyecto, unidadEjecutora, nombre, usuario, 
-								new Date(), 1, fechaInicio, fechaFin, duracion, duracionDimension);
+								new Date(), 1);
+						componente.setFechaInicio(fechaInicio);
+						componente.setFechaFin(fechaFin);
+						componente.setDuracion(duracion);
+						componente.setDuracionDimension(duracionDimension);
 						
 					}else {
 						componente = ComponenteDAO.getComponentePorId(id,usuario);
@@ -396,8 +413,11 @@ public class SComponente extends HttpServlet {
 					temp.nombre = componente.getNombre();
 					temp.componentetipoid = componente.getComponenteTipo().getId();
 					temp.componentetiponombre = componente.getComponenteTipo().getNombre();
-					temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
+					temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+					temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
 					temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+					temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
 					temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
 					temp.fechaFin = Utils.formatDate(componente.getFechaFin());
 					temp.duracion = componente.getDuracion();
@@ -477,8 +497,11 @@ public class SComponente extends HttpServlet {
 				temp.renglon = componente.getRenglon();
 				temp.ubicacionGeografica = componente.getUbicacionGeografica();
 				temp.actividad = componente.getActividad();
-				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
+				temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+				temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+				temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+				temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
 				temp.latitud = componente.getLatitud();
 				temp.longitud = componente.getLongitud();
 				temp.costo = componente.getCosto();
@@ -512,7 +535,10 @@ public class SComponente extends HttpServlet {
 				temp.nombre = componente.getNombre();
 				temp.componentetipoid = componente.getComponenteTipo().getId();
 				temp.componentetiponombre = componente.getComponenteTipo().getNombre();
-				temp.unidadejecutoraid = componente.getUnidadEjecutora().getUnidadEjecutora();
+				temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+				temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+				temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+				temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
 				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
 				temp.fechaFin = Utils.formatDate(componente.getFechaFin());
