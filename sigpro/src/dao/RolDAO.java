@@ -8,6 +8,7 @@ import org.hibernate.query.Query;
 
 import pojo.Rol;
 import pojo.RolPermiso;
+import pojo.RolUsuarioProyecto;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -35,6 +36,24 @@ public class RolDAO {
 		try{
 			Query<Rol> criteria = session.createQuery("FROM Rol r where r.id =:id", Rol.class);
 			criteria.setParameter("id",id);
+			tmp = criteria.getResultList();
+			ret = tmp.get(0);
+		}
+		catch(Throwable e){
+			CLogger.write("1", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	public static RolUsuarioProyecto getRolUser(String user){
+		RolUsuarioProyecto ret= new RolUsuarioProyecto();
+		List<RolUsuarioProyecto> tmp = new ArrayList<RolUsuarioProyecto>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<RolUsuarioProyecto> criteria = session.createQuery("FROM RolUsuarioProyecto r where r.id.usuario = :usuario", RolUsuarioProyecto.class);
+			criteria.setParameter("usuario",user);
 			tmp = criteria.getResultList();
 			ret = tmp.get(0);
 		}
