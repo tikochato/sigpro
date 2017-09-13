@@ -164,7 +164,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		var n = 0;
 		if (tipo==1)
 		{
-			if(mi.prestamo.desembolsoAFechaUsd != undefined && mi.prestamo.montoContratado != undefined){
+			if(mi.prestamo.desembolsoAFechaUsd !== undefined && mi.prestamo.montoContratado !== undefined){
 				n = (mi.prestamo.desembolsoAFechaUsd / mi.prestamo.montoContratado) * 100;
 				mi.prestamo.desembolsoAFechaUsdP = Number(n.toFixed(2));
 				mi.prestamo.montoPorDesembolsarUsd= ((1 - (mi.prestamo.desembolsoAFechaUsdP/100) ) *  mi.prestamo.montoContratado);
@@ -173,26 +173,25 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				
 			}
 		}else if (tipo==2){
-			if(mi.prestamo.montoContratadoUsd != undefined && mi.prestamo.montoPorDesembolsarUsd != undefined){
+			if(mi.prestamo.montoContratadoUsd !== undefined && mi.prestamo.montoPorDesembolsarUsd !== undefined){
 				n = (mi.prestamo.montoPorDesembolsarUsd / mi.prestamo.montoContratadoUsd) * 100;
 				mi.prestamo.montoPorDesembolsarUsdP = Number(n.toFixed(2));
 				
 			}
 		}else if (tipo==3){
-			if(mi.prestamo.desembolsoAFechaUeUsd != undefined && mi.prestamo.montoAsignadoUe != undefined){
-				n = (mi.prestamo.desembolsoAFechaUeUsd / mi.prestamo.montoAsignadoUe) * 100;
+			if(mi.prestamo.desembolsoAFechaUeUsd !== undefined && mi.prestamo.montoAsignadoUe !== undefined){
+				n = (mi.prestamo.desembolsoAFechaUeUsd / mi.prestamo.montoAsignadoUeUsd) * 100;
 				mi.prestamo.desembolsoAFechaUeUsdP = Number(n.toFixed(2));
-				mi.prestamo.montoPorDesembolsarUeUsd = ((1 - (mi.prestamo.desembolsoAFechaUeUsdP/100) ) *  mi.prestamo.montoAsignadoUe);
-				mi.prestamo.montoPorDesembolsarUeUsdP= 100- Number(mi.prestamo.desembolsoAFechaUeUsdP.toFixed(2));
-				mi.prestamo.montoPorDesembolsarUeUsdP = Number(mi.prestamo.montoPorDesembolsarUeUsdP.toFixed(2))
+				mi.prestamo.montoPorDesembolsarUeUsd = ((1.00 - (mi.prestamo.desembolsoAFechaUeUsdP/100.00) ) *  (mi.prestamo.montoAsignadoUeUsd*1.00));
+				mi.prestamo.montoPorDesembolsarUeUsdP= 100.00 - mi.prestamo.desembolsoAFechaUeUsdP;
 			}
 		}else if(tipo==4){
-			if(mi.prestamo.montoAsignadoUeUsd != undefined && mi.prestamo.montoPorDesembolsarUeUsd != undefined){
+			if(mi.prestamo.montoAsignadoUeUsd !== undefined && mi.prestamo.montoPorDesembolsarUeUsd !== undefined){
 				n = (mi.prestamo.montoPorDesembolsarUeUsd / mi.prestamo.montoAsignadoUeUsd) * 100;
 				mi.prestamo.montoPorDesembolsarUeUsdP = Number(n.toFixed(2));
 			}
 		}else if(tipo==5){
-			if(mi.prestamo.fechaCierreActualUe != undefined && mi.prestamo.fechaElegibilidadUe != undefined){
+			if(mi.prestamo.fechaCierreActualUe !== undefined && mi.prestamo.fechaElegibilidadUe !== undefined){
 				var fechaInicio = moment(mi.prestamo.fechaElegibilidadUe).format('DD/MM/YYYY').split('/');
 				var fechaFinal = moment(mi.prestamo.fechaCierreActualUe).format('DD/MM/YYYY').split('/');
 				var ffechaInicio = Date.UTC(fechaInicio[2],fechaInicio[1]-1,fechaInicio[0]);

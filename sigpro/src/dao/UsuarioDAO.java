@@ -28,6 +28,7 @@ import pojo.RolUsuarioProyectoId;
 import pojo.UnidadEjecutora;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -185,8 +186,10 @@ public class UsuarioDAO {
 			
 			for(int i =0; i<prestamos.size();i++){
 				Proyecto proyecto = ProyectoDAO.getProyecto(prestamos.get(i));
-				proyecto.getProyectoUsuarios().add(new ProyectoUsuario(new ProyectoUsuarioId(prestamos.get(i), usuario_creo), proyecto, UsuarioDAO.getUsuario(usuario_creo)));
-				session.save(proyecto);
+				ProyectoUsuario pu = new ProyectoUsuario(new ProyectoUsuarioId(prestamos.get(i), usuario), proyecto, UsuarioDAO.getUsuario(usuario),
+						usuario_creo,null, new Date(), null);
+				pu.setProyecto(proyecto);
+				session.save(pu);
 			}			
 			session.getTransaction().commit();
 			ret = true;
