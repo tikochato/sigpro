@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,6 @@ import pojo.Componente;
 import pojo.Pago;
 import pojo.Prestamo;
 import pojo.Producto;
-import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.CExcel;
 import utilities.CGraficaExcel;
@@ -176,7 +174,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
 				Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 				Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-				CPdf archivo = new CPdf("Ejecución presupuestaria");
+				CPdf archivo = new CPdf("Ejecuciï¿½n presupuestaria");
 				String headers[][];
 				String datosMetas[][];
 				headers = generarHeaders(anioInicial, anioFinal, agrupacion, tipoVisualizacion);
@@ -327,10 +325,15 @@ public class SInformacionPresupuestaria extends HttpServlet {
 							int finMes = anioObj.anio==anioFinal ? mesFinal : 11;
 							for(int m=inicioActual; m<=finMes; m++){
 								if(anioObj.anio == anioInicial && m==mesInicial){
-									Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
-									int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-									diasMes = diasMes-diaInicial;
-									anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
+									if(m==mesFinal){
+										int diasMes = diaFinal-diaInicial;
+										anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
+									}else{
+										Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
+										int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+										diasMes = diasMes-diaInicial;
+										anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
+									}
 								}else if(anioObj.anio == anioFinal && m== mesFinal){
 									anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diaFinal));
 								}else{
@@ -434,31 +437,26 @@ public class SInformacionPresupuestaria extends HttpServlet {
 	
 	private stanio[] calcularCostoRecursivo(List<stprestamo> lstPrestamo, Integer posicion, Integer nivel, Integer anioInicial, Integer anioFinal){
 		stanio[] anios = inicializarStanio (anioInicial, anioFinal);
-		Integer posicionPadre = -1;
-		boolean recorrerHijos = true;
 		while(posicion <lstPrestamo.size()){
 			stprestamo prestamo = lstPrestamo.get(posicion);
 			if(prestamo.nivel.equals(nivel)){
-				
-				
+				if(posicion+1<lstPrestamo.size()){
+					if(lstPrestamo.get(posicion+1).nivel.equals(nivel+1)){
+						stanio[] aniosTemp = calcularCostoRecursivo(lstPrestamo, posicion+1, nivel+1, anioInicial, anioFinal);				
+						for(int a=0; a<anios.length; a++){
+							for(int m=0; m<12; m++){
+								if(aniosTemp[a].mes[m].planificado.compareTo(BigDecimal.ZERO) > 0){
+									prestamo.anios[a].mes[m].planificado = aniosTemp[a].mes[m].planificado;
+								}
+							}
+						}
+					}
+				}
 				for(int a=0; a<anios.length; a++){
 					for(int m=0; m<12;m++){
 						anios[a].mes[m].planificado = anios[a].mes[m].planificado.add(prestamo.anios[a].mes[m].planificado);
 					}
 				}
-				posicionPadre = posicionPadre==-1 ? posicion : posicionPadre;
-				recorrerHijos = true;
-			}else if(prestamo.nivel.equals(nivel+1) && recorrerHijos){
-				stanio[] aniosTemp = calcularCostoRecursivo(lstPrestamo, posicion, nivel+1, anioInicial, anioFinal);				
-				for(int a=0; a<anios.length; a++){
-					for(int m=0; m<12; m++){
-						if(aniosTemp[a].mes[m].planificado.compareTo(BigDecimal.ZERO) > 0){
-							lstPrestamo.get(posicionPadre).anios[a].mes[m].planificado = aniosTemp[a].mes[m].planificado;
-							anios[a].mes[m].planificado = anios[a].mes[m].planificado.add(aniosTemp[a].mes[m].planificado);
-						}
-					}
-				}
-				recorrerHijos=false;
 			}else if(prestamo.nivel < nivel){
 				return anios;
 			}
@@ -481,7 +479,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 			CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
 			excel = new CExcel("Ejecucion presupuestaria", false, grafica);
-			wb=excel.generateExcelOfData(datosInforme, "Ejecución presupuestaria", headers, null, true, usuario);
+			wb=excel.generateExcelOfData(datosInforme, "Ejecucion presupuestaria", headers, null, true, usuario);
 			wb.write(outByteStream);
 			outByteStream.close();
 			outArray = Base64.encode(outByteStream.toByteArray());
@@ -512,7 +510,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			factorVisualizacion = 2;
 		}else{
 			totalesCant+=aniosDiferencia;
-			columnasTotal += 1+totalesCant; //Nombre, totales por año, total
+			columnasTotal += 1+totalesCant; //Nombre, totales por aï¿½o, total
 		}
 		
 		String titulo[] = new String[columnasTotal];
@@ -641,8 +639,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 						posicion = columna + (a*factorVisualizacion);
 						
 						for(int m=0; m<12; m++){
-							prestamo.anios[a].mes[m].planificado=(prestamo.anios[a].mes[m].planificado==null) ? new BigDecimal(0) : prestamo.anios[a].mes[m].planificado;
-							prestamo.anios[a].mes[m].real=(prestamo.anios[a].mes[m].real==null) ? new BigDecimal(0) : prestamo.anios[a].mes[m].real;
+							prestamo.anios[a].mes[m].planificado=(prestamo.anios[a].mes[m].planificado==null) ? new BigDecimal(0) : prestamo.anios[a].mes[m].planificado.setScale(2, BigDecimal.ROUND_DOWN);;
+							prestamo.anios[a].mes[m].real=(prestamo.anios[a].mes[m].real==null) ? new BigDecimal(0) : prestamo.anios[a].mes[m].real.setScale(2, BigDecimal.ROUND_DOWN);;
 						}
 						
 						BigDecimal totalAnualP = new BigDecimal(0);
@@ -692,78 +690,78 @@ public class SInformacionPresupuestaria extends HttpServlet {
 							break;
 						case AGRUPACION_BIMESTRE:
 							if(tipoVisualizacion==0 || tipoVisualizacion==2){
-								datos[i][posicion]= (prestamo.anios[a].enero.planificado.add(prestamo.anios[a].febrero.planificado)).toString();
-								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].marzo.planificado.add(prestamo.anios[a].abril.planificado)).toString();
-								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].mayo.planificado.add(prestamo.anios[a].junio.planificado)).toString();
-								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].julio.planificado.add(prestamo.anios[a].agosto.planificado)).toString();
-								datos[i][posicion+(4*sumaColumnas)]= (prestamo.anios[a].septiembre.planificado.add(prestamo.anios[a].octubre.planificado)).toString();
-								datos[i][posicion+(5*sumaColumnas)]= (prestamo.anios[a].noviembre.planificado.add(prestamo.anios[a].diciembre.planificado)).toString();
+								datos[i][posicion]= (prestamo.anios[a].mes[0].planificado.add(prestamo.anios[a].mes[1].planificado)).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mes[2].planificado.add(prestamo.anios[a].mes[3].planificado)).toString();
+								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].mes[4].planificado.add(prestamo.anios[a].mes[5].planificado)).toString();
+								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].mes[6].planificado.add(prestamo.anios[a].mes[7].planificado)).toString();
+								datos[i][posicion+(4*sumaColumnas)]= (prestamo.anios[a].mes[8].planificado.add(prestamo.anios[a].mes[9].planificado)).toString();
+								datos[i][posicion+(5*sumaColumnas)]= (prestamo.anios[a].mes[10].planificado.add(prestamo.anios[a].mes[11].planificado)).toString();
 								datos[i][posicion+(6*sumaColumnas)]= totalAnualP.toString();
 							}
 							if(tipoVisualizacion == 2){
 								posicion++;
 							}
 							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
-								datos[i][posicion]= (prestamo.anios[a].enero.real.add(prestamo.anios[a].febrero.real)).toString();
-								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].marzo.real.add(prestamo.anios[a].abril.real)).toString();
-								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].mayo.real.add(prestamo.anios[a].junio.real)).toString();
-								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].julio.real.add(prestamo.anios[a].agosto.real)).toString();
-								datos[i][posicion+(4*sumaColumnas)]= (prestamo.anios[a].septiembre.real.add(prestamo.anios[a].octubre.real)).toString();
-								datos[i][posicion+(5*sumaColumnas)]= (prestamo.anios[a].noviembre.real.add(prestamo.anios[a].diciembre.real)).toString();
+								datos[i][posicion]= (prestamo.anios[a].mes[0].real.add(prestamo.anios[a].mes[1].real)).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mes[2].real.add(prestamo.anios[a].mes[3].real)).toString();
+								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].mes[4].real.add(prestamo.anios[a].mes[5].real)).toString();
+								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].mes[6].real.add(prestamo.anios[a].mes[7].real)).toString();
+								datos[i][posicion+(4*sumaColumnas)]= (prestamo.anios[a].mes[8].real.add(prestamo.anios[a].mes[9].real)).toString();
+								datos[i][posicion+(5*sumaColumnas)]= (prestamo.anios[a].mes[10].real.add(prestamo.anios[a].mes[11].real)).toString();
 								datos[i][posicion+(6*sumaColumnas)]= totalAnualR.toString();
 							}
 							posicion = posicion+(6*sumaColumnas)+1;
 							break;
 						case AGRUPACION_TRIMESTRE:
 							if(tipoVisualizacion==0 || tipoVisualizacion==2){
-								datos[i][posicion]= (prestamo.anios[a].enero.planificado.add(prestamo.anios[a].febrero.planificado.add(prestamo.anios[a].marzo.planificado))).toString();
-								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].abril.planificado.add(prestamo.anios[a].mayo.planificado.add(prestamo.anios[a].junio.planificado))).toString();
-								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].julio.planificado.add(prestamo.anios[a].agosto.planificado.add(prestamo.anios[a].septiembre.planificado))).toString();
-								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].octubre.planificado.add(prestamo.anios[a].noviembre.planificado.add(prestamo.anios[a].diciembre.planificado))).toString();
+								datos[i][posicion]= (prestamo.anios[a].mes[0].planificado.add(prestamo.anios[a].mes[1].planificado.add(prestamo.anios[a].mes[2].planificado))).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mes[3].planificado.add(prestamo.anios[a].mes[4].planificado.add(prestamo.anios[a].mes[5].planificado))).toString();
+								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].mes[6].planificado.add(prestamo.anios[a].mes[7].planificado.add(prestamo.anios[a].mes[8].planificado))).toString();
+								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].mes[9].planificado.add(prestamo.anios[a].mes[10].planificado.add(prestamo.anios[a].mes[11].planificado))).toString();
 								datos[i][posicion+(4*sumaColumnas)]= totalAnualP.toString();
 							}
 							if(tipoVisualizacion == 2){
 								posicion++;
 							}
 							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
-								datos[i][posicion]= (prestamo.anios[a].enero.real.add(prestamo.anios[a].febrero.real.add(prestamo.anios[a].marzo.real))).toString();
-								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].abril.real.add(prestamo.anios[a].mayo.real.add(prestamo.anios[a].junio.real))).toString();
-								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].julio.real.add(prestamo.anios[a].agosto.real.add(prestamo.anios[a].septiembre.real))).toString();
-								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].octubre.real.add(prestamo.anios[a].noviembre.real.add(prestamo.anios[a].diciembre.real))).toString();
+								datos[i][posicion]= (prestamo.anios[a].mes[0].real.add(prestamo.anios[a].mes[1].real.add(prestamo.anios[a].mes[2].real))).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mes[3].real.add(prestamo.anios[a].mes[4].real.add(prestamo.anios[a].mes[5].real))).toString();
+								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].mes[6].real.add(prestamo.anios[a].mes[7].real.add(prestamo.anios[a].mes[8].real))).toString();
+								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].mes[9].real.add(prestamo.anios[a].mes[10].real.add(prestamo.anios[a].mes[11].real))).toString();
 								datos[i][posicion+(4*sumaColumnas)]= totalAnualR.toString();
 							}
 							posicion = posicion+(4*sumaColumnas)+1;
 							break;
 						case AGRUPACION_CUATRIMESTRE:
 							if(tipoVisualizacion==0 || tipoVisualizacion==2){
-								datos[i][posicion]= (prestamo.anios[a].enero.planificado.add(prestamo.anios[a].febrero.planificado).add(prestamo.anios[a].marzo.planificado.add(prestamo.anios[a].abril.planificado))).toString();
-								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mayo.planificado).add(prestamo.anios[a].junio.planificado.add(prestamo.anios[a].julio.planificado.add(prestamo.anios[a].agosto.planificado))).toString();
-								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].septiembre.planificado.add(prestamo.anios[a].octubre.planificado).add(prestamo.anios[a].noviembre.planificado.add(prestamo.anios[a].diciembre.planificado))).toString();
+								datos[i][posicion]= (prestamo.anios[a].mes[0].planificado.add(prestamo.anios[a].mes[1].planificado).add(prestamo.anios[a].mes[2].planificado.add(prestamo.anios[a].mes[3].planificado))).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mes[4].planificado).add(prestamo.anios[a].mes[5].planificado.add(prestamo.anios[a].mes[6].planificado.add(prestamo.anios[a].mes[7].planificado))).toString();
+								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].mes[8].planificado.add(prestamo.anios[a].mes[9].planificado).add(prestamo.anios[a].mes[10].planificado.add(prestamo.anios[a].mes[11].planificado))).toString();
 								datos[i][posicion+(3*sumaColumnas)]= totalAnualP.toString();
 							}
 							if(tipoVisualizacion == 2){
 								posicion++;
 							}
 							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
-								datos[i][posicion]= (prestamo.anios[a].enero.real.add(prestamo.anios[a].febrero.real).add(prestamo.anios[a].marzo.real.add(prestamo.anios[a].abril.real))).toString();
-								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mayo.real).add(prestamo.anios[a].junio.real.add(prestamo.anios[a].julio.real.add(prestamo.anios[a].agosto.real))).toString();
-								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].septiembre.real.add(prestamo.anios[a].octubre.real).add(prestamo.anios[a].noviembre.real.add(prestamo.anios[a].diciembre.real))).toString();
+								datos[i][posicion]= (prestamo.anios[a].mes[0].real.add(prestamo.anios[a].mes[1].real).add(prestamo.anios[a].mes[2].real.add(prestamo.anios[a].mes[3].real))).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mes[4].real).add(prestamo.anios[a].mes[5].real.add(prestamo.anios[a].mes[6].real.add(prestamo.anios[a].mes[7].real))).toString();
+								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].mes[8].real.add(prestamo.anios[a].mes[9].real).add(prestamo.anios[a].mes[10].real.add(prestamo.anios[a].mes[11].real))).toString();
 								datos[i][posicion+(3*sumaColumnas)]= totalAnualR.toString();
 							}
 							posicion = posicion+(3*sumaColumnas)+1;
 							break;
 						case AGRUPACION_SEMESTRE:
 							if(tipoVisualizacion==0 || tipoVisualizacion==2){
-								datos[i][posicion]= (prestamo.anios[a].enero.planificado.add(prestamo.anios[a].febrero.planificado).add(prestamo.anios[a].marzo.planificado.add(prestamo.anios[a].abril.planificado.add(prestamo.anios[a].mayo.planificado.add(prestamo.anios[a].junio.planificado))))).toString();
-								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].julio.planificado.add(prestamo.anios[a].agosto.planificado).add(prestamo.anios[a].septiembre.planificado.add(prestamo.anios[a].octubre.planificado.add(prestamo.anios[a].noviembre.planificado.add(prestamo.anios[a].diciembre.planificado))))).toString();
+								datos[i][posicion]= (prestamo.anios[a].mes[0].planificado.add(prestamo.anios[a].mes[1].planificado).add(prestamo.anios[a].mes[2].planificado.add(prestamo.anios[a].mes[3].planificado.add(prestamo.anios[a].mes[4].planificado.add(prestamo.anios[a].mes[5].planificado))))).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mes[6].planificado.add(prestamo.anios[a].mes[7].planificado).add(prestamo.anios[a].mes[8].planificado.add(prestamo.anios[a].mes[9].planificado.add(prestamo.anios[a].mes[10].planificado.add(prestamo.anios[a].mes[11].planificado))))).toString();
 								datos[i][posicion+(2*sumaColumnas)]= totalAnualP.toString();
 							}
 							if(tipoVisualizacion == 2){
 								posicion++;
 							}
 							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
-								datos[i][posicion]= (prestamo.anios[a].enero.real.add(prestamo.anios[a].febrero.real).add(prestamo.anios[a].marzo.real.add(prestamo.anios[a].abril.real.add(prestamo.anios[a].mayo.real.add(prestamo.anios[a].junio.real))))).toString();
-								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].julio.real.add(prestamo.anios[a].agosto.real).add(prestamo.anios[a].septiembre.real.add(prestamo.anios[a].octubre.real.add(prestamo.anios[a].noviembre.real.add(prestamo.anios[a].diciembre.real))))).toString();
+								datos[i][posicion]= (prestamo.anios[a].mes[0].real.add(prestamo.anios[a].mes[1].real).add(prestamo.anios[a].mes[2].real.add(prestamo.anios[a].mes[3].real.add(prestamo.anios[a].mes[4].real.add(prestamo.anios[a].mes[5].real))))).toString();
+								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mes[6].real.add(prestamo.anios[a].mes[7].real).add(prestamo.anios[a].mes[8].real.add(prestamo.anios[a].mes[9].real.add(prestamo.anios[a].mes[10].real.add(prestamo.anios[a].mes[11].real))))).toString();
 								datos[i][posicion+(2*sumaColumnas)]= totalAnualR.toString();
 							}
 							posicion = posicion+(2*sumaColumnas)+1;
@@ -858,7 +856,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		}
 		
 		String[] tipoData = new String[]{"string","double","double"};
-		CGraficaExcel grafica = new CGraficaExcel("Administración Transaccional", CGraficaExcel.EXCEL_CHART_AREA, "Meses", "Planificado", datos, tipoData, datosIgualar);
+		CGraficaExcel grafica = new CGraficaExcel("AdministraciÃ³n Transaccional", CGraficaExcel.EXCEL_CHART_AREA, "Meses", "Planificado", datos, tipoData, datosIgualar);
 	
 		return grafica;
 	}

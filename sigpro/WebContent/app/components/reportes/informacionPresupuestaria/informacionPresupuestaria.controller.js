@@ -227,69 +227,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			}
 		}
 		
-		mi.calcularCostos = function (row){
-			if(row.hijos != undefined && row.hijos.length > 0){
-				for(x in row.hijos){
-					var hijo = mi.obtenerEntidad(row.hijos[x].split(',')[0],row.hijos[x].split(',')[1]);
-					var costossanios = [];
-					costosanios = mi.calcularCostosRecursivo(hijo);
-					if(costosanios != undefined && costosanios.length > 0){
-						for(h in row.anios){
-							row.anios[h].enero.planificado += costosanios[h].enero != null ? costosanios[h].enero : null;
-							row.anios[h].febrero.planificado += costosanios[h].febrero != null ? costosanios[h].febrero : 0;
-							row.anios[h].marzo.planificado += costosanios[h].marzo != null ? costosanios[h].marzo : 0;
-							row.anios[h].abril.planificado += costosanios[h].abril != null ? costosanios[h].abril : 0;
-							row.anios[h].mayo.planificado += costosanios[h].mayo != null ? costosanios[h].mayo : 0;
-							row.anios[h].junio.planificado += costosanios[h].junio != null ? costosanios[h].junio : 0;
-							row.anios[h].julio.planificado += costosanios[h].julio != null ? costosanios[h].julio : 0;
-							row.anios[h].agosto.planificado += costosanios[h].agosto != null ? costosanios[h].agosto : 0;
-							row.anios[h].septiembre.planificado += costosanios[h].septiembre != null ? costosanios[h].septiembre : 0;
-							row.anios[h].octubre.planificado += costosanios[h].octubre != null ? costosanios[h].octubre : 0;
-							row.anios[h].noviembre.planificado += costosanios[h].noviembre != null ? costosanios[h].noviembre : 0;
-							row.anios[h].diciembre.planificado += costosanios[h].diciembre != null ? costosanios[h].diciembre : 0;
-						}
-					}
-				}
-			}
-		}
-		
-		mi.calcularCostosRecursivo = function (row){
-			if(row.hijos != undefined && row.hijos.length > 0){
-				for(y in row.hijos){
-					var hijo = mi.obtenerEntidad(row.hijos[y].split(',')[0],row.hijos[y].split(',')[1]);
-					var costosanios = [];
-					costosanios = mi.calcularCostosRecursivo(hijo);
-					if(costosanios != undefined && costosanios.length > 0){
-						for(h in row.anios){
-							row.anios[h].enero.planificado += costosanios[h].enero != null ? costosanios[h].enero : null;
-							row.anios[h].febrero.planificado += costosanios[h].febrero != null ? costosanios[h].febrero : 0;
-							row.anios[h].marzo.planificado += costosanios[h].marzo != null ? costosanios[h].marzo : 0;
-							row.anios[h].abril.planificado += costosanios[h].abril != null ? costosanios[h].abril : 0;
-							row.anios[h].mayo.planificado += costosanios[h].mayo != null ? costosanios[h].mayo : 0;
-							row.anios[h].junio.planificado += costosanios[h].junio != null ? costosanios[h].junio : 0;
-							row.anios[h].julio.planificado += costosanios[h].julio != null ? costosanios[h].julio : 0;
-							row.anios[h].agosto.planificado += costosanios[h].agosto != null ? costosanios[h].agosto : 0;
-							row.anios[h].septiembre.planificado += costosanios[h].septiembre != null ? costosanios[h].septiembre : 0;
-							row.anios[h].octubre.planificado += costosanios[h].octubre != null ? costosanios[h].octubre : 0;
-							row.anios[h].noviembre.planificado += costosanios[h].noviembre != null ? costosanios[h].noviembre : 0;
-							row.anios[h].diciembre.planificado += costosanios[h].diciembre != null ? costosanios[h].diciembre : 0;
-						}
-					}
-				}
-				var costos = [];
-				for(g in row.anios){
-					costos.push({enero : row.anios[g].enero.planificado, febrero : row.anios[g].febrero.planificado, marzo : row.anios[g].marzo.planificado,abril : row.anios[g].abril.planificado,mayo : row.anios[g].mayo.planificado,junio : row.anios[g].junio.planificado,agosto : row.anios[g].agosto.planificado,septiembre : row.anios[g].septiembre.planificado,octubre : row.anios[g].octubre.planificado,noviembre : row.anios[g].noviembre.planificado,diciembre : row.anios[g].diciembre.planificado});
-				}	
-				return costos;
-			}else{
-				var costos = [];
-				for(g in row.anios){
-					costos.push({enero : row.anios[g].enero.planificado, febrero : row.anios[g].febrero.planificado, marzo : row.anios[g].marzo.planificado,abril : row.anios[g].abril.planificado,mayo : row.anios[g].mayo.planificado,junio : row.anios[g].junio.planificado,agosto : row.anios[g].agosto.planificado,septiembre : row.anios[g].septiembre.planificado,octubre : row.anios[g].octubre.planificado,noviembre : row.anios[g].noviembre.planificado,diciembre : row.anios[g].diciembre.planificado});
-				}	
-				return costos;
-			}
-		}
-		
 		mi.cargarTabla = function(agrupacion) {			
 			var datos = {
 				accion : 'generarInforme',
@@ -309,8 +246,6 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 					mi.data = response.data.prestamo;
 					mi.totales = [];
 					
-//					mi.calcularCostos(mi.data[0]);
-
 					 for (x in mi.data){
 						 var totalFinalPlanificado = 0;
 						 var totalFinalReal = 0;
@@ -343,154 +278,133 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 						mi.mostrarCargando = false;
 					})
 					
-//					var agrupaValor = [];
-//					var montoPlanificado = [];
-//					var montoReal = [];
-//					if(agrupacion == 1){
-//						for(var i=mi.fechaInicio; i<=mi.fechaFin; i++){
-//							for(var j=0; j<12;j++){
-//								agrupaValor.push(MES_DISPLAY_NAME_GRAFICA[j] + "-" + i);
-//							}
-//						}
-//						
-//						mi.optionsGrafica.scales.xAxes[0].scaleLabel.labelString = "Meses";
-//						mi.labels = agrupaValor;
-//						
-//						for(var h=0; h < ((mi.fechaFin - mi.fechaInicio)+1); h++){
-//							montoPlanificado.push(mi.data[0].anios[h].enero.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].febrero.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].marzo.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].abril.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].mayo.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].junio.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].julio.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].agosto.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].septiembre.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].octubre.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].noviembre.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].diciembre.planificado);
-//							
-//							montoReal.push(mi.data[0].anios[h].enero.real);
-//							montoReal.push(mi.data[0].anios[h].febrero.real);
-//							montoReal.push(mi.data[0].anios[h].marzo.real);
-//							montoReal.push(mi.data[0].anios[h].abril.real);
-//							montoReal.push(mi.data[0].anios[h].mayo.real);
-//							montoReal.push(mi.data[0].anios[h].junio.real);
-//							montoReal.push(mi.data[0].anios[h].julio.real);
-//							montoReal.push(mi.data[0].anios[h].agosto.real);
-//							montoReal.push(mi.data[0].anios[h].septiembre.real);
-//							montoReal.push(mi.data[0].anios[h].octubre.real);
-//							montoReal.push(mi.data[0].anios[h].noviembre.real);
-//							montoReal.push(mi.data[0].anios[h].diciembre.real);
-//						}
-//					}else if(agrupacion == 2){
-//						for(var i=mi.fechaInicio; i<=mi.fechaFin; i++){
-//							for(var j=0; j<6;j++){
-//								agrupaValor.push((j+1) + "-" + i);
-//							}
-//						}
-//						
-//						mi.optionsGrafica.scales.xAxes[0].scaleLabel.labelString = "Bimestres";
-//						mi.labels = agrupaValor;
-//						
-//						for(var h=0; h < ((mi.fechaFin - mi.fechaInicio)+1); h++){
-//							montoPlanificado.push(mi.data[0].anios[h].enero.planificado + mi.data[0].anios[h].febrero.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].marzo.planificado + mi.data[0].anios[h].abril.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].mayo.planificado + mi.data[0].anios[h].junio.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].julio.planificado + mi.data[0].anios[h].agosto.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].septiembre.planificado + mi.data[0].anios[h].octubre.planificado);							
-//							montoPlanificado.push(mi.data[0].anios[h].noviembre.planificado + mi.data[0].anios[h].diciembre.planificado);
-//							
-//							montoReal.push(mi.data[0].anios[h].enero.real + mi.data[0].anios[h].febrero.real);
-//							montoReal.push(mi.data[0].anios[h].marzo.real + mi.data[0].anios[h].abril.real);
-//							montoReal.push(mi.data[0].anios[h].mayo.real + mi.data[0].anios[h].junio.real);
-//							montoReal.push(mi.data[0].anios[h].julio.real + mi.data[0].anios[h].agosto.real);
-//							montoReal.push(mi.data[0].anios[h].septiembre.real + mi.data[0].anios[h].octubre.real);
-//							montoReal.push(mi.data[0].anios[h].noviembre.real + mi.data[0].anios[h].diciembre.real);
-//						}
-//					}else if(agrupacion == 3){
-//						for(var i=mi.fechaInicio; i<=mi.fechaFin; i++){
-//							for(var j=0; j<4;j++){
-//								agrupaValor.push((j+1) + "-" + i);
-//							}
-//						}
-//						
-//						mi.optionsGrafica.scales.xAxes[0].scaleLabel.labelString = "Trimestres";
-//						mi.labels = agrupaValor;
-//						
-//						for(var h=0; h < ((mi.fechaFin - mi.fechaInicio)+1); h++){
-//							montoPlanificado.push(mi.data[0].anios[h].enero.planificado + mi.data[0].anios[h].febrero.planificado + mi.data[0].anios[h].marzo.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].abril.planificado + mi.data[0].anios[h].mayo.planificado + mi.data[0].anios[h].junio.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].julio.planificado + mi.data[0].anios[h].agosto.planificado + mi.data[0].anios[h].septiembre.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].octubre.planificado + mi.data[0].anios[h].noviembre.planificado + mi.data[0].anios[h].diciembre.planificado);
-//							
-//							montoReal.push(mi.data[0].anios[h].enero.real + mi.data[0].anios[h].febrero.real + mi.data[0].anios[h].marzo.real);
-//							montoReal.push(mi.data[0].anios[h].abril.real + mi.data[0].anios[h].mayo.real + mi.data[0].anios[h].junio.real);
-//							montoReal.push(mi.data[0].anios[h].julio.real + mi.data[0].anios[h].agosto.real + mi.data[0].anios[h].septiembre.real);
-//							montoReal.push(mi.data[0].anios[h].octubre.real + mi.data[0].anios[h].noviembre.real + mi.data[0].anios[h].diciembre.real);
-//						}
-//					}else if(agrupacion == 4){
-//						for(var i=mi.fechaInicio; i<=mi.fechaFin; i++){
-//							for(var j=0; j<3;j++){
-//								agrupaValor.push((j+1) + "-" + i);
-//							}
-//						}
-//						
-//						mi.optionsGrafica.scales.xAxes[0].scaleLabel.labelString = "Cuatrimestres";
-//						mi.labels = agrupaValor;
-//						
-//						for(var h=0; h < ((mi.fechaFin - mi.fechaInicio)+1); h++){
-//							montoPlanificado.push(mi.data[0].anios[h].enero.planificado + mi.data[0].anios[h].febrero.planificado + mi.data[0].anios[h].marzo.planificado + mi.data[0].anios[h].abril.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].mayo.planificado + mi.data[0].anios[h].junio.planificado + mi.data[0].anios[h].julio.planificado + mi.data[0].anios[h].agosto.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].septiembre.planificado + mi.data[0].anios[h].octubre.planificado + mi.data[0].anios[h].noviembre.planificado + mi.data[0].anios[h].diciembre.planificado);
-//							
-//							montoReal.push(mi.data[0].anios[h].enero.real + mi.data[0].anios[h].febrero.real + mi.data[0].anios[h].marzo.real + mi.data[0].anios[h].abril.real);
-//							montoReal.push(mi.data[0].anios[h].mayo.real + mi.data[0].anios[h].junio.real + mi.data[0].anios[h].julio.real + mi.data[0].anios[h].agosto.real);
-//							montoReal.push(mi.data[0].anios[h].septiembre.real + mi.data[0].anios[h].octubre.real + mi.data[0].anios[h].noviembre.real + mi.data[0].anios[h].diciembre.real);
-//						}
-//
-//					}else if(agrupacion == 5){
-//						for(var i=mi.fechaInicio; i<=mi.fechaFin; i++){
-//							for(var j=0; j<2;j++){
-//								agrupaValor.push((j+1) + "-" + i);
-//							}
-//						}
-//						
-//						mi.optionsGrafica.scales.xAxes[0].scaleLabel.labelString = "Semestres";
-//						mi.labels = agrupaValor;
-//						
-//						for(var h=0; h < ((mi.fechaFin - mi.fechaInicio)+1); h++){
-//							montoPlanificado.push(mi.data[0].anios[h].enero.planificado + mi.data[0].anios[h].febrero.planificado + mi.data[0].anios[h].marzo.planificado + mi.data[0].anios[h].abril.planificado + mi.data[0].anios[h].mayo.planificado + mi.data[0].anios[h].junio.planificado);
-//							montoPlanificado.push(mi.data[0].anios[h].julio.planificado + mi.data[0].anios[h].agosto.planificado + mi.data[0].anios[h].septiembre.planificado + mi.data[0].anios[h].octubre.planificado + mi.data[0].anios[h].noviembre.planificado + mi.data[0].anios[h].diciembre.planificado);
-//							
-//							montoReal.push(mi.data[0].anios[h].enero.real + mi.data[0].anios[h].febrero.real + mi.data[0].anios[h].marzo.real + mi.data[0].anios[h].abril.real + mi.data[0].anios[h].mayo.real + mi.data[0].anios[h].junio.real);
-//							montoReal.push(mi.data[0].anios[h].julio.real + mi.data[0].anios[h].agosto.real + mi.data[0].anios[h].septiembre.real + mi.data[0].anios[h].octubre.real + mi.data[0].anios[h].noviembre.real + mi.data[0].anios[h].diciembre.real);
-//						}
-//					}else if(agrupacion == 6){
-//						for(var i=mi.fechaInicio; i<=mi.fechaFin; i++){
-//							for(var j=0; j<1;j++){
-//								agrupaValor.push(i);
-//							}
-//						}
-//						
-//						mi.optionsGrafica.scales.xAxes[0].scaleLabel.labelString = "Años";
-//						mi.labels = agrupaValor;
-//						
-//						for(var h=0; h < ((mi.fechaFin - mi.fechaInicio)+1); h++){
-//							montoPlanificado.push(mi.data[0].anios[h].enero.planificado + mi.data[0].anios[h].febrero.planificado + mi.data[0].anios[h].marzo.planificado + mi.data[0].anios[h].abril.planificado + mi.data[0].anios[h].mayo.planificado + mi.data[0].anios[h].junio.planificado + mi.data[0].anios[h].julio.planificado + mi.data[0].anios[h].agosto.planificado + mi.data[0].anios[h].septiembre.planificado + mi.data[0].anios[h].octubre.planificado + mi.data[0].anios[h].noviembre.planificado + mi.data[0].anios[h].diciembre.planificado);
-//							
-//							montoReal.push(mi.data[0].anios[h].enero.real + mi.data[0].anios[h].febrero.real + mi.data[0].anios[h].marzo.real + mi.data[0].anios[h].abril.real + mi.data[0].anios[h].mayo.real + mi.data[0].anios[h].junio.real + mi.data[0].anios[h].julio.real + mi.data[0].anios[h].agosto.real + mi.data[0].anios[h].septiembre.real + mi.data[0].anios[h].octubre.real + mi.data[0].anios[h].noviembre.real + mi.data[0].anios[h].diciembre.real);
-//						}
-//					}
-//					
-//					mi.dataGrafica = [
-//					    montoPlanificado,
-//					    montoReal
-//					];
-//						
-//					mi.series = ['Planificado', 'Real'];
-//					
-//					mi.convertirMillones();
+					var agrupaValor = [];
+					var montoPlanificado = [];
+					var montoReal = [];
+					if(agrupacion == 1){
+						for(var i=mi.fechaInicio; i<=mi.fechaFin; i++){
+							for(var j=0; j<12;j++){
+								agrupaValor.push(MES_DISPLAY_NAME_GRAFICA[j] + "-" + i);
+							}
+						}
+						
+						mi.optionsGrafica.scales.xAxes[0].scaleLabel.labelString = "Meses";
+						mi.labels = agrupaValor;
+						
+						for(var h=0; h < ((mi.fechaFin - mi.fechaInicio)+1); h++){
+							for(var m=0; m<12; m++){
+								montoPlanificado.push(mi.data[0].anios[h].mes[m].planificado);
+								montoReal.push(mi.data[0].anios[h].mes[m].real);
+							}
+						}
+					}else if(agrupacion == 2){
+						for(var i=mi.fechaInicio; i<=mi.fechaFin; i++){
+							for(var j=0; j<6;j++){
+								agrupaValor.push((j+1) + "-" + i);
+							}
+						}
+						
+						mi.optionsGrafica.scales.xAxes[0].scaleLabel.labelString = "Bimestres";
+						mi.labels = agrupaValor;
+						
+						for(var h=0; h < ((mi.fechaFin - mi.fechaInicio)+1); h++){
+							montoPlanificado.push(mi.data[0].anios[h].mes[0].planificado + mi.data[0].anios[h].mes[1].planificado);
+							montoPlanificado.push(mi.data[0].anios[h].mes[2].planificado + mi.data[0].anios[h].mes[3].planificado);
+							montoPlanificado.push(mi.data[0].anios[h].mes[4].planificado + mi.data[0].anios[h].mes[5].planificado);
+							montoPlanificado.push(mi.data[0].anios[h].mes[6].planificado + mi.data[0].anios[h].mes[7].planificado);
+							montoPlanificado.push(mi.data[0].anios[h].mes[8].planificado + mi.data[0].anios[h].mes[9].planificado);							
+							montoPlanificado.push(mi.data[0].anios[h].mes[10].planificado + mi.data[0].anios[h].mes[11].planificado);
+							
+							montoReal.push(mi.data[0].anios[h].mes[0].real + mi.data[0].anios[h].mes[1].real);
+							montoReal.push(mi.data[0].anios[h].mes[2].real + mi.data[0].anios[h].mes[3].real);
+							montoReal.push(mi.data[0].anios[h].mes[4].real + mi.data[0].anios[h].mes[5].real);
+							montoReal.push(mi.data[0].anios[h].mes[6].real + mi.data[0].anios[h].mes[7].real);
+							montoReal.push(mi.data[0].anios[h].mes[8].real + mi.data[0].anios[h].mes[9].real);							
+							montoReal.push(mi.data[0].anios[h].mes[10].real + mi.data[0].anios[h].mes[11].real);
+						}
+					}else if(agrupacion == 3){
+						for(var i=mi.fechaInicio; i<=mi.fechaFin; i++){
+							for(var j=0; j<4;j++){
+								agrupaValor.push((j+1) + "-" + i);
+							}
+						}
+						
+						mi.optionsGrafica.scales.xAxes[0].scaleLabel.labelString = "Trimestres";
+						mi.labels = agrupaValor;
+						
+						for(var h=0; h < ((mi.fechaFin - mi.fechaInicio)+1); h++){
+							montoPlanificado.push(mi.data[0].anios[h].mes[0].planificado + mi.data[0].anios[h].mes[1].planificado + mi.data[0].anios[h].mes[2].planificado);
+							montoPlanificado.push(mi.data[0].anios[h].mes[3].planificado + mi.data[0].anios[h].mes[4].planificado + mi.data[0].anios[h].mes[5].planificado);
+							montoPlanificado.push(mi.data[0].anios[h].mes[6].planificado + mi.data[0].anios[h].mes[7].planificado + mi.data[0].anios[h].mes[8].planificado);
+							montoPlanificado.push(mi.data[0].anios[h].mes[9].planificado + mi.data[0].anios[h].mes[10].planificado + mi.data[0].anios[h].mes[11].planificado);
+							
+							montoReal.push(mi.data[0].anios[h].mes[0].real + mi.data[0].anios[h].mes[1].real + mi.data[0].anios[h].mes[2].real);
+							montoReal.push(mi.data[0].anios[h].mes[3].real + mi.data[0].anios[h].mes[4].real + mi.data[0].anios[h].mes[5].real);
+							montoReal.push(mi.data[0].anios[h].mes[6].real + mi.data[0].anios[h].mes[7].real + mi.data[0].anios[h].mes[8].real);
+							montoReal.push(mi.data[0].anios[h].mes[9].real + mi.data[0].anios[h].mes[10].real + mi.data[0].anios[h].mes[11].real);
+						}
+					}else if(agrupacion == 4){
+						for(var i=mi.fechaInicio; i<=mi.fechaFin; i++){
+							for(var j=0; j<3;j++){
+								agrupaValor.push((j+1) + "-" + i);
+							}
+						}
+						
+						mi.optionsGrafica.scales.xAxes[0].scaleLabel.labelString = "Cuatrimestres";
+						mi.labels = agrupaValor;
+						
+						for(var h=0; h < ((mi.fechaFin - mi.fechaInicio)+1); h++){
+							montoPlanificado.push(mi.data[0].anios[h].mes[0].planificado + mi.data[0].anios[h].mes[1].planificado + mi.data[0].anios[h].mes[2].planificado + mi.data[0].anios[h].mes[3].planificado);
+							montoPlanificado.push(mi.data[0].anios[h].mes[4].planificado + mi.data[0].anios[h].mes[5].planificado + mi.data[0].anios[h].mes[6].planificado + mi.data[0].anios[h].mes[7].planificado);
+							montoPlanificado.push(mi.data[0].anios[h].mes[8].planificado + mi.data[0].anios[h].mes[9].planificado + mi.data[0].anios[h].mes[10].planificado + mi.data[0].anios[h].mes[11].planificado);
+							
+							montoReal.push(mi.data[0].anios[h].mes[0].real + mi.data[0].anios[h].mes[1].real + mi.data[0].anios[h].mes[2].real + mi.data[0].anios[h].mes[3].real);
+							montoReal.push(mi.data[0].anios[h].mes[4].real + mi.data[0].anios[h].mes[5].real + mi.data[0].anios[h].mes[6].real + mi.data[0].anios[h].mes[7].real);
+							montoReal.push(mi.data[0].anios[h].mes[8].real + mi.data[0].anios[h].mes[9].real + mi.data[0].anios[h].mes[10].real + mi.data[0].anios[h].mes[11].real);
+						}
+
+					}else if(agrupacion == 5){
+						for(var i=mi.fechaInicio; i<=mi.fechaFin; i++){
+							for(var j=0; j<2;j++){
+								agrupaValor.push((j+1) + "-" + i);
+							}
+						}
+						
+						mi.optionsGrafica.scales.xAxes[0].scaleLabel.labelString = "Semestres";
+						mi.labels = agrupaValor;
+						
+						for(var h=0; h < ((mi.fechaFin - mi.fechaInicio)+1); h++){
+							montoPlanificado.push(mi.data[0].anios[h].mes[0].planificado + mi.data[0].anios[h].mes[1].planificado + mi.data[0].anios[h].mes[2].planificado + mi.data[0].anios[h].mes[3].planificado + mi.data[0].anios[h].mes[4].planificado + mi.data[0].anios[h].mes[5].planificado);
+							montoPlanificado.push(mi.data[0].anios[h].mes[6].planificado + mi.data[0].anios[h].mes[7].planificado + mi.data[0].anios[h].mes[8].planificado + mi.data[0].anios[h].mes[9].planificado + mi.data[0].anios[h].mes[10].planificado + mi.data[0].anios[h].mes[11].planificado);
+							
+							montoReal.push(mi.data[0].anios[h].mes[0].real + mi.data[0].anios[h].mes[1].real + mi.data[0].anios[h].mes[2].real + mi.data[0].anios[h].mes[3].real + mi.data[0].anios[h].mes[4].real + mi.data[0].anios[h].mes[5].real);
+							montoReal.push(mi.data[0].anios[h].mes[6].real + mi.data[0].anios[h].mes[7].real + mi.data[0].anios[h].mes[8].real + mi.data[0].anios[h].mes[9].real + mi.data[0].anios[h].mes[10].real + mi.data[0].anios[h].mes[11].real);
+						}
+					}else if(agrupacion == 6){
+						for(var i=mi.fechaInicio; i<=mi.fechaFin; i++){
+							for(var j=0; j<1;j++){
+								agrupaValor.push(i);
+							}
+						}
+						
+						mi.optionsGrafica.scales.xAxes[0].scaleLabel.labelString = "Años";
+						mi.labels = agrupaValor;
+						
+						for(var h=0; h < ((mi.fechaFin - mi.fechaInicio)+1); h++){
+							montoPlanificado.push(mi.data[0].anios[h].mes[0].planificado + mi.data[0].anios[h].mes[1].planificado + mi.data[0].anios[h].mes[2].planificado + mi.data[0].anios[h].mes[3].planificado + mi.data[0].anios[h].mes[4].planificado + mi.data[0].anios[h].mes[5].planificado + mi.data[0].anios[h].mes[6].planificado + mi.data[0].anios[h].mes[7].planificado + mi.data[0].anios[h].mes[8].planificado + mi.data[0].anios[h].mes[9].planificado + mi.data[0].anios[h].mes[10].planificado + mi.data[0].anios[h].mes[11].planificado);
+							
+							montoReal.push(mi.data[0].anios[h].mes[0].real + mi.data[0].anios[h].mes[1].real + mi.data[0].anios[h].mes[2].real + mi.data[0].anios[h].mes[3].real + mi.data[0].anios[h].mes[4].real + mi.data[0].anios[h].mes[5].real + mi.data[0].anios[h].mes[6].real + mi.data[0].anios[h].mes[7].real + mi.data[0].anios[h].mes[8].real + mi.data[0].anios[h].mes[9].real + mi.data[0].anios[h].mes[10].real + mi.data[0].anios[h].mes[11].real);
+						}
+					}
+					
+					mi.dataGrafica = [
+					    montoPlanificado,
+					    montoReal
+					];
+						
+					mi.series = ['Planificado', 'Real'];
+					
+					mi.convertirMillones();
 				}
 			});
 	}
