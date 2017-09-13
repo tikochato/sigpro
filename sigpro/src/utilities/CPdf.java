@@ -15,6 +15,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;
 import be.quodlibet.boxable.Row;
+import servlets.SAdministracionTransaccional;
 
 
 public class CPdf {
@@ -103,7 +104,7 @@ public class CPdf {
 				doc.save(out);
 				doc.close();
 			}catch(Exception o){
-				o.printStackTrace();
+				CLogger.write("1", CPdf.class, o);
 			}
 			return path;
 		}
@@ -359,7 +360,7 @@ public class CPdf {
 						}
 						
 					}catch(Exception o){
-						o.printStackTrace();
+						CLogger.write("2", CPdf.class, o);
 					}
 				}else{
 					int num = (int)Math.ceil(
@@ -382,7 +383,7 @@ public class CPdf {
 						}
 						
 					}catch(Exception o){
-						o.printStackTrace();
+						CLogger.write("3", CPdf.class, o);
 					}
 				}
 			}else if(tipo_reporte==1){
@@ -418,7 +419,7 @@ public class CPdf {
 						}
 						
 					}catch(Exception o){
-						o.printStackTrace();
+						CLogger.write("4", CPdf.class, o);
 					}
 				}else{
 					int num = (int)Math.ceil(
@@ -441,7 +442,7 @@ public class CPdf {
 						}
 						
 					}catch(Exception o){
-						o.printStackTrace();
+						CLogger.write("5", CPdf.class, o);
 					}
 				}
 			}
@@ -516,7 +517,7 @@ public class CPdf {
 				doc.save(out);
 				doc.close();
 			}catch(Exception o){
-				o.printStackTrace();
+				CLogger.write("6", CPdf.class, o);
 			}
 			return path;
 		}
@@ -572,7 +573,7 @@ public class CPdf {
 					doc.save(out);
 					doc.close();
 			}catch(Exception o){
-				o.printStackTrace();
+				CLogger.write("7", CPdf.class, o);
 			}
 			
 			
@@ -627,7 +628,7 @@ public class CPdf {
 					doc.save(out);
 					doc.close();
 			}catch(Exception o){
-				o.printStackTrace();
+				CLogger.write("8", CPdf.class, o);
 			}
 			
 			
@@ -681,7 +682,7 @@ public class CPdf {
 					doc.save(out);
 					doc.close();
 			}catch(Exception o){
-				o.printStackTrace();
+				CLogger.write("9", CPdf.class, o);
 			}
 			
 			
@@ -750,7 +751,7 @@ public class CPdf {
 					doc.save(out);
 					doc.close();
 			}catch(Exception o){
-				o.printStackTrace();
+				CLogger.write("10", CPdf.class, o);
 			}
 			
 			
@@ -804,7 +805,7 @@ public class CPdf {
 					doc.save(out);
 					doc.close();
 			}catch(Exception o){
-				o.printStackTrace();
+				CLogger.write("11", CPdf.class, o);
 			}
 			
 			
@@ -937,7 +938,7 @@ public class CPdf {
 					doc.save(out);
 					doc.close();
 			}catch(Exception o){
-				o.printStackTrace();
+				CLogger.write("12", CPdf.class, o);
 			}
 			
 			
