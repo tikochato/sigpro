@@ -706,7 +706,7 @@ function modalBuscarPorSubproducto($uibModalInstance, $rootScope,$scope, $http, 
 		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
 			mi.entidades = response.entidades;
 			if(mi.entidades.length>0){
-				mi.entidad = (mi.entidad===undefined) ? mi.entidades[0] : mi.entidad;
+				mi.entidad = (mi.entidad== "") ? mi.entidades[0] : mi.entidad;
 				$accionServlet.ejercicio = mi.ejercicio;
 				$accionServlet.entidad = mi.entidad.entidad;
 				$http.post($servlet, $accionServlet).success(function(response) {

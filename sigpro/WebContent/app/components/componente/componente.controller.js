@@ -594,7 +594,7 @@ function buscarPorComponente($uibModalInstance, $rootScope, $scope, $http, $inte
 		var current_year = moment().year();
 		for(var i=current_year-$rootScope.catalogo_entidades_anos; i<=current_year; i++)
 			mi.ejercicios.push(i);
-		mi.ejercicio = mi.ejercicio===undefined ? current_year : mi.ejercicio;
+		mi.ejercicio = mi.ejercicio=="" ? current_year : mi.ejercicio;
 		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
 			mi.entidades = response.entidades;
 			if(mi.entidades.length>0){
