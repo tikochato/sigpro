@@ -15,7 +15,6 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;
 import be.quodlibet.boxable.Row;
-import servlets.SAdministracionTransaccional;
 
 
 public class CPdf {
