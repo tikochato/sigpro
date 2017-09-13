@@ -234,7 +234,7 @@ app.controller(
 		}else{
 			if(mi.usuariosSelected.email!==""){
 				if(validarEmail(mi.usuariosSelected.email)){
-					if(usuarioMail===mi.usuariosSelected.email && passwordLocal=== mi.usuariosSelected.password){
+					if(usuarioMail===mi.usuariosSelected.email && passwordLocal=== mi.usuariosSelected.password && mi.prestamosNuevos.length==0){
 						if(mi.nuevosPermisos.length==0 && mi.permisosEliminados.length==0){
 							$utilidades.mensaje('danger','No se ha realizado ningún cambio.');
 
@@ -275,6 +275,7 @@ app.controller(
 									email:mi.usuariosSelected.email,
 									prestamosNuevos:JSON.stringify(mi.prestamosNuevos),
 									prestamosEliminados: JSON.stringify(mi.prestamosEliminados),
+									t: new Date().getTime(),
 									esnuevo:false
 								}).success(
 									function(data) {
@@ -399,7 +400,8 @@ app.controller(
 			mi.prestamosNuevos=[];
 			$http.post('/SUsuario', {
 	    		accion:'obtenerPermisos',
-	    		usuario: mi.usuariosSelected.usuario
+	    		usuario: mi.usuariosSelected.usuario,
+	    		t: new Date().getTime()
 	    	}).then(function(response) {
 	    	    mi.permisosAsignados =response.data.permisos;
 	    	    mi.prestamosAsignados = response.data.proyectos;
