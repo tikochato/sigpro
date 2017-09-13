@@ -89,6 +89,16 @@ public class SAdministracionTransaccional extends HttpServlet {
 			response_text=new GsonBuilder().serializeNulls().create().toJson(lstusuarios);
 	        response_text = String.join("", "\"usuarios\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+	        
+			response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
+
+	        OutputStream output = response.getOutputStream();
+			GZIPOutputStream gz = new GZIPOutputStream(output);
+	        gz.write(response_text.getBytes("UTF-8"));
+	        gz.close();
+	        output.close();
+
 		}else if (accion.equals("exportarExcel")){
 			try{
 		        byte [] outArray = exportarExcel(usuario);
@@ -105,18 +115,17 @@ public class SAdministracionTransaccional extends HttpServlet {
 			}
 		}else{
 			response_text = "{ \"success\": false }";
-		}
-		
-		response.setHeader("Content-Encoding", "gzip");
-		response.setCharacterEncoding("UTF-8");
+			
+			response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
 
-		if (accion.equals("exportarExcel")){
 	        OutputStream output = response.getOutputStream();
 			GZIPOutputStream gz = new GZIPOutputStream(output);
 	        gz.write(response_text.getBytes("UTF-8"));
 	        gz.close();
 	        output.close();
-		}
+
+		}		
 	}
 	
 	private List<stusuario> getAdministracionTransaccional(){
