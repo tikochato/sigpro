@@ -1173,14 +1173,12 @@ function buscarPorProyecto($uibModalInstance, $rootScope,$scope, $http, $interva
 	mi.titulo = $titulo;
 	
 	if(mi.showfilters){
+		var current_year = moment().year();
 		mi.entidad = $entidad;
 		mi.ejercicio = $entidad.ejercicio;
-	}
-	
-	if(mi.showfilters){
-		var current_year = moment().year();
 		for(var i=current_year-$rootScope.catalogo_entidades_anos; i<=current_year; i++)
 			mi.ejercicios.push(i);
+		mi.ejercicio = (mi.ejercicio == "") ? current_year : mi.ejercicio;
 		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
 			mi.entidades = response.entidades;
 			if(mi.entidades.length>0){
