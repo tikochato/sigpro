@@ -666,14 +666,16 @@
 										ng-change="controller.setPorcentaje(3);"
 										ng-blur="controller.ocultarLabel('label_class_6')" 
 										id="label_class_6"
+										ui-number-mask="4"
 										>
-										 <label 
+										<!--  <label 
 											class="money-label" 
 											ng-class="controller.label_class_6" 
 											ng-click="controller.ocultarLabel('label_class_6')"
 										>
 											{{controller.prestamo.montoAsignadoUe | number}}
-										</label>
+										</label> -->
+										
 										<label class="floating-label">* Monto Asignado</label>
 									</div>
 								</div>
