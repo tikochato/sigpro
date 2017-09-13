@@ -354,6 +354,16 @@ public class SUsuario extends HttpServlet {
 							if(email!=null){
 								usuarioEdicion.setEmail(email);
 								HttpSession sesionweb = request.getSession();
+								String prestamosAsignados=map.get("prestamosNuevos");
+								
+								int rol = RolDAO.getRolUser(usuario).getId().getRol();
+								if(prestamosAsignados.compareTo("[]")!=0){
+									Gson entradaJson = new Gson();
+									Type tipo = new TypeToken<List<Integer>>() {}.getType();
+									List<Integer> prestamos = entradaJson.fromJson(prestamosAsignados, tipo);
+									UsuarioDAO.asignarPrestamos(usuario, prestamos,usuario);
+									UsuarioDAO.asignarPrestamoRol(usuario, prestamos, rol);
+								}
 								if(UsuarioDAO.editarUsuario(usuarioEdicion, sesionweb.getAttribute("usuario").toString())){
 									response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualizaci�n de usuario exitosa.\" }");
 								}else{

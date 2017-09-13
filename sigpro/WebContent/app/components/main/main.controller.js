@@ -1,6 +1,6 @@
 var app = angular.module('sipro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
-                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','documentoAdjunto','dialogoConfirmacion','ngAria','ngMaterial','ngMessages','angucomplete-alt']);
+                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ui.utils.masks','ngFlash','ngUtilidades','documentoAdjunto','dialogoConfirmacion','ngAria','ngMaterial','ngMessages','angucomplete-alt']);
 
 app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($routeProvider, $locationProvider,FlashProvider) {
 	   $locationProvider.hashPrefix('!');
