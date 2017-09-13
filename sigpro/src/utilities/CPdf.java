@@ -840,7 +840,6 @@ public class CPdf {
 					float bottomMargin = 70;
 					BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 					Row<PDPage> headerRow = table_x.createRow(12);
-					//agregar la primera cabecera
 					float tam_celda=celda_b*1.05f;
 					Cell<PDPage> cell;
 					if(contador==0){
@@ -868,7 +867,6 @@ public class CPdf {
 					}
 					table_x.addHeaderRow(headerRow);
 					Row<PDPage> headerRow_ = table_x.createRow(12);
-					//agregar segunda cabecara
 					if(contador==0){
 						int control=1;
 						tam_celda=celda_b*1.05f;
@@ -897,7 +895,6 @@ public class CPdf {
 						}
 						table_x.addHeaderRow(headerRow_);
 					}
-					//agregar valores
 					for(int x=0; x<datos.length;x++){
 						Row<PDPage> row = table_x.createRow(12);
 						if(contador==0){
