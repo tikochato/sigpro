@@ -525,7 +525,6 @@ public class CPdf {
 			String path="";
 			tipo_reporte=2;
 			try{
-				String [] cabeceras = new String[headers[0].length];
 				PDFont font = PDType1Font.HELVETICA_BOLD;
 				page = new PDPage(new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth()));
 			    doc.addPage( page );
@@ -547,7 +546,6 @@ public class CPdf {
 				float bottomMargin = 70;
 				BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 				Row<PDPage> headerRow = table_x.createRow(12);
-				int corrimiento=0;
 				float tam_celda=celda_b*2;
 				Cell<PDPage> cell;
 				cell = headerRow.createCell((float)(celda_a*1.5),headers[0][0] );
@@ -585,7 +583,6 @@ public class CPdf {
 			String path ="";
 			tipo_reporte=3;
 			try{
-				String [] cabeceras = new String[headers[0].length];
 				PDFont font = PDType1Font.HELVETICA_BOLD;
 				page = new PDPage(new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth()));
 			    doc.addPage( page );
@@ -607,8 +604,6 @@ public class CPdf {
 				float bottomMargin = 70;
 				BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 				Row<PDPage> headerRow = table_x.createRow(12);
-				int corrimiento=0;
-				float tam_celda=celda_b;
 				Cell<PDPage> cell;
 				cell = headerRow.createCell((float)(celda_a*2),headers[0][0] );
 				cell = headerRow.createCell(celda_b*2,headers[0][1] );
@@ -664,7 +659,6 @@ public class CPdf {
 				float bottomMargin = 70;
 				BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 				Row<PDPage> headerRow = table_x.createRow(12);
-				int corrimiento=0;
 				float tam_celda=celda_b*2.5f;
 				Cell<PDPage> cell;
 				cell = headerRow.createCell((float)(celda_a*2.3f),headers[0][0] );
@@ -720,7 +714,6 @@ public class CPdf {
 				float bottomMargin = 70;
 				BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 				Row<PDPage> headerRow = table_x.createRow(12);
-				int corrimiento=0;
 				float tam_celda=celda_b*1.7f;
 				Cell<PDPage> cell;
 				cell = headerRow.createCell((float)(celda_a*2),headers[0][0] );
