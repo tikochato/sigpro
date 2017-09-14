@@ -100,7 +100,7 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 				$http.post('/SRecursoUnidadMedida', { accion: 'getRecursoUnidadMedidasPagina', pagina: pagina, numerorecursounidadmedidas: $utilidades.elementosPorPagina,
 					filtro_nombre: mi.filtros['nombre'], 
 					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
 					}).success(
 				
 						function(response) {
@@ -121,7 +121,8 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 						codigo: mi.medida.codigo,
 						nombre: mi.medida.nombre,
 						descripcion: mi.medida.descripcion,
-						simbolo: mi.medida.simbolo
+						simbolo: mi.medida.simbolo,
+						t: (new Date()).getTime()
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','medida '+(mi.esnueva ? 'creada' : 'guardada')+' con éxito');
@@ -152,7 +153,8 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 						if(data){
 							$http.post('/SRecursoUnidadMedida', {
 								accion: 'borrarRecursoUnidadMedida',
-								id: mi.medida.id
+								id: mi.medida.id,
+								t: (new Date()).getTime()
 							}).success(function(response){
 								if(response.success){
 									$utilidades.mensaje('success','Unidad de medida borrada con éxito');
@@ -213,7 +215,7 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 			mi.obtenerTotalUnidadesMedida = function(){
 				$http.post('/SRecursoUnidadMedida', { accion: 'numeroRecursoUnidadMedidas',
 					filtro_nombre: mi.filtros['nombre'], 
-					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']}).success(
+					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: (new Date()).getTime()}).success(
 				
 						function(response) {
 							mi.totalmedidas = response.totalRecursoUnidadMedidas;
