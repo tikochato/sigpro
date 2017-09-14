@@ -33,6 +33,7 @@ import pojo.RiesgoPropiedad;
 import pojo.RiesgoPropiedadValor;
 import pojo.RiesgoPropiedadValorId;
 import pojo.RiesgoTipo;
+import utilities.CLogger;
 import utilities.Utils;
 
 /**
@@ -381,6 +382,7 @@ public class SRiesgo extends HttpServlet {
 				}
 			}
 			catch (Throwable e){
+				CLogger.write_simple("1", SRiesgo.class, e.getMessage());
 				response_text = "{ \"success\": false }";
 			}
 		}
