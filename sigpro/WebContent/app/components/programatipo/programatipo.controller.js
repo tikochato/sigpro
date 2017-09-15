@@ -139,7 +139,8 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 					id: mi.programatipo.id,
 					nombre: mi.programatipo.nombre,
 					descripcion: mi.programatipo.descripcion,
-					propiedades: idspropiedad
+					propiedades: idspropiedad,
+					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
 						$utilidades.mensaje('success','Tipo de Programa '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
@@ -183,7 +184,8 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 					if(data){
 						$http.post('/SProgramaTipo', {
 							accion: 'borrarProgramaTipo',
-							id: mi.programatipo.id
+							id: mi.programatipo.id,
+							t: (new Date()).getTime()
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Tipo de Programa borrado con éxito');
@@ -340,7 +342,7 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 			    ariaLabelledBy : 'modal-title',
 			    ariaDescribedBy : 'modal-body',
 			    templateUrl : 'buscarpropiedad.jsp',
-			    controller : 'modalBuscarPropiedad',
+			    controller : 'modalBuscarPropiedadProgramaTipo',
 			    controllerAs : 'modalBuscar',
 			    backdrop : 'static',
 			    size : 'md',
@@ -369,12 +371,10 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 		}
 } ]);
 
-app.controller('modalBuscarPropiedad', [
+app.controller('modalBuscarPropiedadProgramaTipo', [
 	'$uibModalInstance', '$scope', '$http', '$interval', 'i18nService',
-	'Utilidades', '$timeout', '$log','idspropiedad', modalBuscarPropiedad
-]);
-
-function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log,idspropiedad) {
+	'Utilidades', '$timeout', '$log','idspropiedad',
+function ($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log,idspropiedad) {
 
 	var mi = this;
 
@@ -461,3 +461,4 @@ function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval, i18nS
     	$uibModalInstance.dismiss('cancel');
      };
 }
+	]);

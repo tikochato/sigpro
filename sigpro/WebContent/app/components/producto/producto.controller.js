@@ -205,7 +205,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		var tabla_data = {
 			action : 'guardaEstado',
 			grid : 'producto',
-			estado : JSON.stringify(estado)
+			estado : JSON.stringify(estado),
+			t: (new Date()).getTime()
 		};
 		$http.post('/SEstadoTabla', tabla_data).then(function(response) {
 
@@ -266,7 +267,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				if(data){
 					var datos = {
 							accion : 'borrar',
-							codigo : mi.producto.id
+							codigo : mi.producto.id,
+							t: (new Date()).getTime()
 						};
 						$http.post('/SProducto', datos).success(
 								function(response) {
@@ -324,7 +326,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				duaracion: mi.producto.duracion,
 				duracionDimension: mi.duracionDimension.sigla,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
-				esnuevo : mi.esNuevo
+				esnuevo : mi.esNuevo,
+				t: (new Date()).getTime()
 			};
 
 			$http.post('/SProducto', datos).then(

@@ -131,7 +131,8 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 						id: mi.recursopropiedad.id,
 						nombre: mi.recursopropiedad.nombre,
 						descripcion: mi.recursopropiedad.descripcion,
-						datoTipoId: mi.datoTipoSeleccionado.id
+						datoTipoId: mi.datoTipoSeleccionado.id,
+						t: (new Date()).getTime()
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Propiedad de Recurso '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
@@ -163,7 +164,8 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 						if(data){
 							$http.post('/SRecursoPropiedad', {
 								accion: 'borrarRecursoPropiedad',
-								id: mi.recursopropiedad.id
+								id: mi.recursopropiedad.id,
+								t: (new Date()).getTime()
 							}).success(function(response){
 								if(response.success){
 									$utilidades.mensaje('success','Propiedad del Recurso borrada con éxito');

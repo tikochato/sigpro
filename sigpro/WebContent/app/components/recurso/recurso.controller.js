@@ -139,7 +139,8 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 					id: mi.recurso.id,
 					nombre: mi.recurso.nombre,
 					descripcion: mi.recurso.descripcion,
-					datadinamica : JSON.stringify(mi.camposdinamicos)
+					datadinamica : JSON.stringify(mi.camposdinamicos),
+					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
 						mi.recurso.id = response.id;
@@ -171,7 +172,8 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 					if(data){
 						$http.post('/SRecurso', {
 							accion: 'borrarRecurso',
-							id: mi.recurso.id
+							id: mi.recurso.id,
+							t: (new Date()).getTime()
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Recurso borrado con éxito');

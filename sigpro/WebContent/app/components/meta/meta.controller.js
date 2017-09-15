@@ -164,8 +164,8 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 						unidadMedidaId: mi.unidadMedidaSeleccionado.id,
 						datoTipoId: mi.tipoValorSeleccionado.id,
 						objetoTipo:  $routeParams.tipo,
-						objetoId:$routeParams.id
-						
+						objetoId:$routeParams.id,
+						t: (new Date()).getTime()						
 					}).success(function(response){
 						if(response.success){
 							mi.meta.id = response.id;
@@ -196,7 +196,8 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 						if(data){
 							$http.post('/SMeta', {
 								accion: 'borrarMeta',
-								id: mi.meta.id
+								id: mi.meta.id,
+								t: (new Date()).getTime()
 							}).success(function(response){
 								if(response.success){
 									$utilidades.mensaje('success','Meta borrada con éxito');

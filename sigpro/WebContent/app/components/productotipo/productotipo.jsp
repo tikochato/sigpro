@@ -3,7 +3,7 @@
 <%@ page import="org.apache.shiro.SecurityUtils"%>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 
-<div ng-controller="controlProductoTipo as productoTipo" class="maincontainer all_page" >
+<div ng-controller="ProductoTipoController as productoTipo" class="maincontainer all_page" >
 	<script type="text/ng-template" id="buscarPropiedad.jsp">
 	    <%@ include file="/app/components/productotipo/buscarPropiedad.jsp"%>
 	</script>

@@ -1,12 +1,11 @@
-var moduloProductoTipo = angular.module('moduloProductoTipo', [ 'ngTouch',
+var app = angular.module('ProductoTipoController', [ 'ngTouch',
 		'smart-table' ]);
 
-moduloProductoTipo.controller('controlProductoTipo', [ '$scope',
+app.controller('ProductoTipoController', [ '$scope',
 		'$routeParams', '$route', '$window', '$location', '$mdDialog',
 		'$uibModal', '$http', '$interval', 'i18nService', 'Utilidades',
-		'$timeout', '$log',  'dialogoConfirmacion', controlProductoTipo ]);
-
-function controlProductoTipo($scope, $routeParams, $route, $window, $location,
+		'$timeout', '$log',  'dialogoConfirmacion',
+function($scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
 		$timeout, $log, $dialogoConfirmacion) {
 	i18nService.setCurrentLang('es');
@@ -234,7 +233,8 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 				if(data){
 					var datos = {
 							accion : 'borrar',
-							codigo : mi.entidadSeleccionada.id
+							codigo : mi.entidadSeleccionada.id,
+							t: (new Date()).getTime()
 						};
 						$http.post('/SProductoTipo', datos).success(
 								function(response) {
@@ -269,7 +269,8 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 				nombre : mi.nombre,
 				descripcion : mi.descripcion,
 				usuario : 'temporal',
-				propiedades : JSON.stringify(mi.propiedadesTipo)
+				propiedades : JSON.stringify(mi.propiedadesTipo),
+				t: (new Date()).getTime()
 			};
 
 			$http.post('/SProductoTipo', datos).then(
@@ -300,7 +301,8 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 				nombre : mi.nombre,
 				descripcion : mi.descripcion,
 				usuario : 'temporal',
-				propiedades : JSON.stringify(mi.propiedadesTipo)
+				propiedades : JSON.stringify(mi.propiedadesTipo),
+				t: (new Date()).getTime()
 			};
 
 			$http.post('/SProductoTipo', datos).then(
@@ -374,7 +376,7 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 			ariaLabelledBy : 'modal-title',
 			ariaDescribedBy : 'modal-body',
 			templateUrl : 'buscarPropiedad.jsp',
-			controller : 'modalBuscarPropiedad',
+			controller : 'modalBuscarPropiedadProductoTipo',
 			controllerAs : 'modalBuscar',
 			backdrop : 'static',
 			size : 'md'
@@ -418,13 +420,12 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 		return true;
 	}
 
-}
+} ]);
 
-moduloProductoTipo.controller('modalBuscarPropiedad', [ '$uibModalInstance',
+app.controller('modalBuscarPropiedadProductoTipo', [ '$uibModalInstance',
 		'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-		'$timeout', '$log', modalBuscarPropiedad ]);
-
-function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval,
+		'$timeout', '$log', 
+function ($uibModalInstance, $scope, $http, $interval,
 		i18nService, $utilidades, $timeout, $log) {
 
 	var mi = this;
@@ -528,3 +529,4 @@ function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval,
 	};
 
 }
+]);

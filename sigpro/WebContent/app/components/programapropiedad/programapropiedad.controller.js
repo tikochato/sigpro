@@ -120,7 +120,8 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 					id: mi.programapropiedad.id,
 					nombre: mi.programapropiedad.nombre,
 					descripcion: mi.programapropiedad.descripcion,
-					datoTipoId: mi.datotiposeleccionado.id
+					datoTipoId: mi.datotiposeleccionado.id,
+					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
 						$utilidades.mensaje('success','Propiedad de Programa '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
@@ -151,7 +152,8 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 					if(data){
 						$http.post('/SProgramaPropiedad', {
 							accion: 'borrarProgramaPropiedad',
-							id: mi.programapropiedad.id
+							id: mi.programapropiedad.id,
+							t: (new Date()).getTime()
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Propiedad de Programa borrado con éxito');

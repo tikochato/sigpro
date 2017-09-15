@@ -136,7 +136,8 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 					id: mi.recursotipo.id,
 					nombre: mi.recursotipo.nombre,
 					descripcion: mi.recursotipo.descripcion,
-					propiedades: idspropiedad.length > 0 ? idspropiedad : null
+					propiedades: idspropiedad.length > 0 ? idspropiedad : null,
+					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
 						$utilidades.mensaje('success','Tipo de Recurso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
@@ -178,7 +179,8 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 					if(data){
 						$http.post('/SRecursoTipo', {
 							accion: 'borrarRecursoTipo',
-							id: mi.recursotipo.id
+							id: mi.recursotipo.id,
+							t: (new Date()).getTime()
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Tipo de Recurso borrado con éxito');

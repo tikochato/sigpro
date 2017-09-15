@@ -229,7 +229,8 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 				if(data){
 					var datos = {
 							accion : 'borrar',
-							codigo : mi.entidadSeleccionada.id
+							codigo : mi.entidadSeleccionada.id,
+							t: (new Date()).getTime()
 						};
 						$http.post('/SProductoPropiedad', datos).success(
 								function(response) {
@@ -272,7 +273,8 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 				nombre : mi.nombre,
 				descripcion : mi.descripcion,
 				tipo : mi.datoTipoSeleccionado.id,
-				usuario : 'temporal'
+				usuario : 'temporal',
+				t: (new Date()).getTime()
 			};
 			
 			$http.post('/SProductoPropiedad', datos).then(
@@ -303,7 +305,8 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 				nombre : mi.nombre,
 				descripcion : mi.descripcion,
 				tipo : mi.datoTipoSeleccionado.id,
-				usuario : 'temporal'
+				usuario : 'temporal',
+				t: (new Date()).getTime()
 			};
 
 			$http.post('/SProductoPropiedad', datos).then(

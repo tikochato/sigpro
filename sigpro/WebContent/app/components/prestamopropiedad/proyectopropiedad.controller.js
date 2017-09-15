@@ -109,7 +109,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 						mi.proyectopropiedades = response.proyectopropiedades;
 						mi.gridOptions.data = mi.proyectopropiedades;
 						mi.mostrarcargando = false;
-//						mi.paginaActual = pagina;
+						mi.paginaActual = pagina;
 					});
 		}
 		mi.redireccionSinPermisos=function(){
@@ -123,7 +123,8 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 					id: mi.proyectopropiedad.id,
 					nombre: mi.proyectopropiedad.nombre,
 					descripcion: mi.proyectopropiedad.descripcion,
-					datoTipoId: mi.tipoDatoSeleccionado.id
+					datoTipoId: mi.tipoDatoSeleccionado.id,
+					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
 						$utilidades.mensaje('success','Propiedad de Préstamo '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
@@ -154,7 +155,8 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 					if(data){
 						$http.post('/SProyectoPropiedad', {
 							accion: 'borrarProyectoPropiedad',
-							id: mi.proyectopropiedad.id
+							id: mi.proyectopropiedad.id,
+							t: (new Date()).getTime()
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Propiedad de Préstamo borrado con éxito');
