@@ -34,9 +34,7 @@ import pojo.Proyecto;
 import utilities.CLogger;
 import utilities.Utils;
 
-/**
- * Servlet implementation class SHito
- */
+
 @WebServlet("/SHito")
 public class SHito extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -57,16 +55,12 @@ public class SHito extends HttpServlet {
 		int estado;
 	}
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    
     public SHito() {
         super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String response_text = "{ \"success\": false }";
 
@@ -80,9 +74,7 @@ public class SHito extends HttpServlet {
         output.close();
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		HttpSession sesionweb = request.getSession();
@@ -226,6 +218,7 @@ public class SHito extends HttpServlet {
 					hito.setFecha(fecha);
 					hito.setUsuarioActualizo(usuario);					
 					hito.setFechaActualizacion(new DateTime().toDate());
+					hito.setHitoTipo(hitoTipo);
 				}
 				result = HitoDAO.guardarHito(hito);
 				
@@ -266,9 +259,6 @@ public class SHito extends HttpServlet {
 					
 					result = HitoResultadoDAO.guardarHitoResultado(hitoResultado);
 				}
-				
-				
-				
 				
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 						+ "\"id\": " + hito.getId() , ","

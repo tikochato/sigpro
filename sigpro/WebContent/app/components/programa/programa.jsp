@@ -296,181 +296,222 @@
 					</uib-tab>
 					
 					<uib-tab ng-click="programac.getPorcentajes();" index="1" heading="Datos del préstamo">
-					<div class="panel panel-default">
-						<div class="panel-heading label-form" style="text-align: center;">Información General del Préstamo</div>
-						<div class="panel-body">
-							<div class="row">
-								<div class="col-sm-5">
-									<div class="form-group">
-										<input  type="number" class="inputText" ng-model="programac.prestamo.codigoPresupuestario" ng-required="true"
-										ng-value="programac.prestamo.codigoPresupuestario" onblur="this.setAttribute('value', this.value);">
-										<label class="floating-label" >* Código presupuestario</label>
+						<div class="panel panel-default">
+							<div class="panel-heading label-form" style="text-align: center;">Información General del Préstamo</div>
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="form-group">
+											<input type="text" class="inputText"   
+											ng-model="controller.prestamo.codigoPresupuestario" ng-readonly="true" ng-required="true"
+											ng-click="controller.buscarCodigoPresupuestario()"
+											onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.codigoPresupuestario" />			            	
+											<span class="label-icon" ng-click="controller.buscarCodigoPresupuestario()">
+												<i class="glyphicon glyphicon-search"></i>
+											</span>
+											<label class="floating-label">* Código presupuestario</label>
+										</div>
 									</div>
 								</div>
-								<div class="col-sm-5">
-									<div class="form-group">
-										<input type="text" class="inputText"  ng-model="programac.prestamo.numeroPrestamo" ng-required="true"
-										ng-value="programac.prestamo.numeroPrestamo" onblur="this.setAttribute('value', this.value);">
-										<label class="floating-label" >* Número de prestamo</label>
+								
+								
+								
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="form-group">
+											<input type="text" class="inputText"  ng-model="controller.prestamo.numeroPrestamo" ng-required="true" 
+											ng-value="controller.prestamo.numeroPrestamo" onblur="this.setAttribute('value', this.value);">
+											<label class="floating-label" >* Número de prestamo</label>
+										</div>
 									</div>
 								</div>
-								<div class="col-sm-2" align="right" >
-								<label class="btn btn-default" ng-click="programac.cargaSigade()" uib-tooltip="Cargar datos de SIGADE" tooltip-placement="bottom">
-								<span class="glyphicon glyphicon-search"></span></label>
-								</div>
-
-
-							</div>
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group">
-									<input type="text" class="inputText"   ng-model="programac.prestamo.proyectoPrograma" ng-required="true"
-									onblur="this.setAttribute('value', this.value);" ng-value="programac.prestamo.proyectoPrograma"  >
-									<label class="floating-label">* Proyecto/Programa</label>
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="form-group">
+										<input type="text" class="inputText"   ng-model="controller.prestamo.proyectoPrograma" ng-required="true"
+										onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.proyectoPrograma"  >
+										<label class="floating-label">* Proyecto/Programa</label>
+										</div>
 									</div>
 								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group">
-										<input type="text" class="inputText"
-										ng-model="programac.prestamo.unidadEjecutoraNombre" ng-readonly="true" ng-required="true"
-										ng-click="programac.buscarUnidadEjecutoraPrestamo()"
-										onblur="this.setAttribute('value', this.value);" ng-value="programac.prestamo.unidadEjecutoraNombre" />
-										<span class="label-icon" ng-click="programac.buscarUnidadEjecutoraPrestamo()">
-											<i class="glyphicon glyphicon-search"></i>
-										</span>
-										<label class="floating-label">* Unidad Ejecutora</label>
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="form-group" >
+											<input type="text" class="inputText" id="icoope" name="icoope" ng-model="controller.prestamo.cooperantenombre" ng-readonly="true" ng-required="true" 
+												ng-click="controller.buscarCooperante(true)" ng-value="controller.prestamo.cooperantenombre" onblur="this.setAttribute('value', this.value);"/>
+											<span class="label-icon" ng-click="controller.buscarCooperante(true)"><i class="glyphicon glyphicon-search"></i></span>
+											<label for="campo3" class="floating-label">* Organismo financiero internacional</label>
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group" >
-										<input type="text" class="inputText" id="icoope" name="icoope" ng-model="programac.prestamo.cooperantenombre" ng-readonly="true" ng-required="true"
-											ng-click="programac.buscarCooperante(true)" ng-value="programac.prestamo.cooperantenombre" onblur="this.setAttribute('value', this.value);"/>
-										<span class="label-icon" ng-click="programac.buscarCooperante(true)"><i class="glyphicon glyphicon-search"></i></span>
-										<label for="campo3" class="floating-label">* Cooperante</label>
-									</div>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-4">
-									<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaDecreto" is-open="programac.fd_abierto"
-											datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-											ng-click="programac.abrirPopupFecha(1007)" ng-value="programac.prestamo.fechaDecreto" onblur="this.setAttribute('value', this.value);"/>
-										<span class="label-icon" ng-click="programac.abrirPopupFecha(1007)">
-											<i class="glyphicon glyphicon-calendar"></i>
-										</span>
-										<label class="floating-label">* Fecha Decreto</label>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaSuscripcion" is-open="programac.fs_abierto"
-											datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-											ng-click="programac.abrirPopupFecha(1008)" ng-value="programac.prestamo.fechaSuscripcion" onblur="this.setAttribute('value', this.value);"/>
-											<span class="label-icon" ng-click="programac.abrirPopupFecha(1008)">
+								
+								<div class="row">
+									<div class="col-sm-4">
+										<div class="form-group">    						
+											<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaDecreto" is-open="controller.fd_abierto"
+												datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
+												ng-click="controller.abrirPopupFecha(1007)" ng-value="controller.prestamo.fechaDecreto" onblur="this.setAttribute('value', this.value);"/>
+											<span class="label-icon" ng-click="controller.abrirPopupFecha(1007)">	
 												<i class="glyphicon glyphicon-calendar"></i>
-										</span>
-										<label class="floating-label">* Fecha de Suscripción</label>
+											</span>
+											<label class="floating-label">* Fecha Decreto</label>
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-group">
+											<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaSuscripcion" is-open="controller.fs_abierto"
+												datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
+												ng-click="controller.abrirPopupFecha(1008)" ng-value="controller.prestamo.fechaSuscripcion" onblur="this.setAttribute('value', this.value);"/>
+												<span class="label-icon" ng-click="controller.abrirPopupFecha(1008)">
+													<i class="glyphicon glyphicon-calendar"></i>
+											</span>
+											<label class="floating-label">* Fecha de Suscripción</label>
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-group">
+											<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaVigencia" is-open="controller.fv_abierto"
+												datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
+												ng-click="controller.abrirPopupFecha(1012)" ng-value="controller.prestamo.fechaVigencia" onblur="this.setAttribute('value', this.value);"/>
+												<span class="label-icon" ng-click="controller.abrirPopupFecha(1012)">
+													<i class="glyphicon glyphicon-calendar"></i>
+											</span>
+											<label class="floating-label">* Fecha de vigencia</label>
+										</div>
 									</div>
 								</div>
-								<div class="col-sm-4">
-									<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaVigencia" is-open="programac.fv_abierto"
-											datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-											ng-click="programac.abrirPopupFecha(1012)" ng-value="programac.prestamo.fechaVigencia" onblur="this.setAttribute('value', this.value);"/>
-											<span class="label-icon" ng-click="programac.abrirPopupFecha(1012)">
-												<i class="glyphicon glyphicon-calendar"></i>
-										</span>
-										<label class="floating-label">* Fecha de vigencia</label>
+								
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<input type="text" class="inputText"  
+											ng-model="controller.prestamo.tipoMonedaNombre" ng-readonly="true" ng-required="true"
+											ng-click="controller.buscarTipoMoneda()"
+											onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.tipoMonedaNombre"/>
+											<span class="label-icon" ng-click="controller.buscarTipoMoneda()">
+												<i class="glyphicon glyphicon-search"></i>
+											</span>
+											<label class="floating-label">* Tipo de Moneda</label>
+										</div>
+									</div>
+									
+									<div class="col-sm-6">
+										<div class="form-group money-input">
+											<input type="number" 
+											 class="inputText"  
+											 ng-model="controller.prestamo.montoContratado" 
+											 ng-required="true"
+											 ng-value="controller.prestamo.montoContratado"
+											 onblur="this.setAttribute('value', this.value);" 
+											 ng-change="controller.setPorcentaje(1);" 
+											 ng-blur="controller.ocultarLabel('label_class_1')" 
+											 id="label_class_1"
+											 >
+											<label class="money-label" ng-class="controller.label_class_1" ng-click="controller.ocultarLabel('label_class_1')">{{controller.prestamo.montoContratado | number}}</label>
+											<label class="floating-label" >* Monto Contratado</label>
+										</div>
 									</div>
 								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" class="inputText"
-										ng-model="programac.prestamo.tipoMonedaNombre" ng-readonly="true" ng-required="true"
-										ng-click="programac.buscarTipoMoneda()"
-										onblur="this.setAttribute('value', this.value);" ng-value="programac.prestamo.tipoMonedaNombre"/>
-										<span class="label-icon" ng-click="programac.buscarTipoMoneda()">
-											<i class="glyphicon glyphicon-search"></i>
-										</span>
-										<label class="floating-label">* Tipo de Moneda</label>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<input type="number" 
+											 class="inputText"  
+											 ng-model="controller.prestamo.montoContratadoUsd" 
+											 ng-required="true"
+											 ng-value="controller.prestamo.montoContratadoUsd" 
+											 onblur="this.setAttribute('value', this.value);" 
+											 ng-change="controller.setPorcentaje(2);"
+											 ng-blur="controller.ocultarLabel('label_class_2')" 
+											 id="label_class_2"
+											 ng-click="controller.ocultarLabel('label_class_2')"
+											 >
+											 <label class="money-label" ng-class="controller.label_class_2" ng-click="controller.ocultarLabel('label_class_2')">{{controller.prestamo.montoContratadoUsd | number}}</label>
+											<label class="floating-label" >* Monto Contratado $</label>
+										</div>
+									</div>
+									
+									<div class="col-sm-6">
+										<div class="form-group">
+											<input type="number" 
+											class="inputText" 
+											ng-model="controller.prestamo.montoContratadoQtz" 
+											ng-required="true"
+											ng-value="controller.prestamo.montoContratadoQtz" 
+											onblur="this.setAttribute('value', this.value);"
+											ng-blur="controller.ocultarLabel('label_class_3')" 
+											id="label_class_3"
+											>
+											<label class="money-label" ng-class="controller.label_class_3" ng-click="controller.ocultarLabel('label_class_3')">{{controller.prestamo.montoContratadoQtz | number}}</label>
+											<label class="floating-label" >* Monto Contratado Q</label>
+										</div>
 									</div>
 								</div>
-
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="number" class="inputText"  ng-model="programac.prestamo.montoContratado" ng-required="true"
-										ng-value="programac.prestamo.montoContratado" onblur="this.setAttribute('value', this.value);" ng-change="programac.setPorcentaje(1);">
-										<label class="floating-label" >* Monto Contratado</label>
+								
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<input type="number" 
+											class="inputText" 
+											ng-model="controller.prestamo.desembolsoAFechaUsd" 
+											ng-required="true"
+											ng-value="controller.prestamo.desembolsoAFechaUsd" 
+											onblur="this.setAttribute('value', this.value);" 
+											ng-change="controller.setPorcentaje(1);"
+											ng-blur="controller.ocultarLabel('label_class_4')" 
+											id="label_class_4"
+											>
+											<label class="money-label" 
+											ng-class="controller.label_class_4" 
+											ng-click="controller.ocultarLabel('label_class_4')" 
+											>{{ controller.prestamo.desembolsoAFechaUsd | number}}</label>
+											<label class="floating-label">* Desembolso a la Fecha $</label>
+										</div>
+									</div>
+									
+									<div class="col-sm-6">
+										<div class="form-group">
+											<input type="number" class="inputText" ng-model="controller.prestamo.desembolsoAFechaUsdP" ng-disabled="true"
+											ng-value="controller.prestamo.desembolsoAFechaUsdP" onblur="this.setAttribute('value', this.value);" />
+											<label class="floating-label">Desembolso a la Fecha %</label>
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="number" class="inputText"  ng-model="programac.prestamo.montoContratadoUsd" ng-required="true"
-										ng-value="programac.prestamo.montoContratadoUsd" onblur="this.setAttribute('value', this.value);" ng-change="programac.setPorcentaje(2);">
-										<label class="floating-label" >* Monto Contratado $</label>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<input type="number" 
+											class="inputText" 
+											ng-model="controller.prestamo.montoPorDesembolsarUsd" 
+											ng-required="true"
+											ng-value="controller.prestamo.montoPorDesembolsarUsd" 
+											onblur="this.setAttribute('value', this.value);" 
+											ng-change="controller.setPorcentaje(2);"
+											ng-disabled="true"
+											ng-blur="controller.ocultarLabel('label_class_5')" 
+											id="label_class_5"
+											/>
+											<label class="money-label" 
+											ng-class="controller.label_class_5" 
+											ng-click="controller.ocultarLabel('label_class_5')" 
+											>{{ controller.prestamo.montoPorDesembolsarUsd | number}}</label>
+											<label class="floating-label">* Monto por Desembolsar $</label>
+										</div>
 									</div>
-								</div>
-
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="number" class="inputText"  ng-model="programac.prestamo.montoContratadoQtz" ng-required="true"
-										ng-value="programac.prestamo.montoContratadoQtz" onblur="this.setAttribute('value', this.value);">
-										<label class="floating-label" >* Monto Contratado Q</label>
-									</div>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="number" class="inputText" ng-model="programac.prestamo.desembolsoAFechaUsd" ng-required="true"
-										ng-value="programac.prestamo.desembolsoAFechaUsd" onblur="this.setAttribute('value', this.value);" ng-change="programac.setPorcentaje(1);"/>
-										<label class="floating-label">* Desembolso a la Fecha $</label>
-									</div>
-								</div>
-
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="number" class="inputText" ng-model="programac.prestamo.desembolsoAFechaUsdP" ng-disabled="true"
-										ng-value="programac.prestamo.desembolsoAFechaUsdP" onblur="this.setAttribute('value', this.value);" />
-										<label class="floating-label">Desembolso a la Fecha %</label>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="number" class="inputText" ng-model="programac.prestamo.montoPorDesembolsarUsd" ng-required="true"
-										ng-value="programac.prestamo.montoPorDesembolsarUsd" onblur="this.setAttribute('value', this.value);" ng-change="programac.setPorcentaje(2);"/>
-										<label class="floating-label">* Monto por Desembolsar $</label>
-									</div>
-								</div>
-
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="number" class="inputText" ng-model="programac.prestamo.montoPorDesembolsarUsdP" ng-disabled="true"
-										ng-value="programac.prestamo.montoPorDesembolsarUsdP" onblur="this.setAttribute('value', this.value);"/>
-										<label class="floating-label">Monto por Desembolsar %</label>
+									
+									<div class="col-sm-6">
+										<div class="form-group">
+											<input type="number" class="inputText" ng-model="controller.prestamo.montoPorDesembolsarUsdP" ng-disabled="true"
+											ng-value="controller.prestamo.montoPorDesembolsarUsdP" onblur="this.setAttribute('value', this.value);"/>
+											<label class="floating-label">Monto por Desembolsar %</label>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-
+						
 					
-				</uib-tab>
+					</uib-tab>
 				
 				<uib-tab ng-click="programac.getPorcentajes();" index="2" heading="Datos Entidad Ejecutroa">
 					<div class="panel panel-default">
@@ -479,22 +520,22 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaElegibilidadUe" is-open="programac.fe_abierto"
-											datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="programac.setPorcentaje(5);"
-											ng-click="programac.abrirPopupFecha(1009)" ng-value="programac.prestamo.fechaElegibilidadUe" onblur="this.setAttribute('value', this.value);"/>
-										<span class="label-icon" ng-click="programac.abrirPopupFecha(1009)">
+										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaElegibilidadUe" is-open="controller.fe_abierto"
+											datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="controller.setPorcentaje(5);"
+											ng-click="controller.abrirPopupFecha(1009)" ng-value="controller.prestamo.fechaElegibilidadUe" onblur="this.setAttribute('value', this.value);"/>
+										<span class="label-icon" ng-click="controller.abrirPopupFecha(1009)">
 												<i class="glyphicon glyphicon-calendar"></i>
 										</span>
 										<label class="floating-label">* Fecha de Elegibilidad</label>
 									</div>
 								</div>
-
+								
 								<div class="col-sm-6">
 									<div class="form-group">
-											<input type="text" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaCierreOrigianlUe" is-open="programac.fco_abierto"
-												datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="programac.setPorcentaje(5);"
-												ng-click="programac.abrirPopupFecha(1010)" ng-value="programac.prestamo.fechaCierreOrigianlUe" onblur="this.setAttribute('value', this.value);"/>
-											<span class="label-icon" ng-click="programac.abrirPopupFecha(1010)">
+											<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaCierreOrigianlUe" is-open="controller.fco_abierto"
+												datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="controller.setPorcentaje(5);"
+												ng-click="controller.abrirPopupFecha(1010)" ng-value="controller.prestamo.fechaCierreOrigianlUe" onblur="this.setAttribute('value', this.value);"/>
+											<span class="label-icon" ng-click="controller.abrirPopupFecha(1010)">
 													<i class="glyphicon glyphicon-calendar"></i>
 											</span>
 										<label class="floating-label">* Fecha de Cierre Original</label>
@@ -504,147 +545,190 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
-											<input type="text" class="inputText"   uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaCierreActualUe" is-open="programac.fca_abierto"
-												datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="programac.setPorcentaje(5);"
-												ng-click="programac.abrirPopupFecha(1011)" ng-value="programac.prestamo.fechaCierreActualUe" onblur="this.setAttribute('value', this.value);"/>
-											<span class="label-icon" ng-click="programac.abrirPopupFecha(1011)">
+											<input type="text" class="inputText"   uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaCierreActualUe" is-open="controller.fca_abierto"
+												datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="controller.setPorcentaje(5);"
+												ng-click="controller.abrirPopupFecha(1011)" ng-value="controller.prestamo.fechaCierreActualUe" onblur="this.setAttribute('value', this.value);"/>
+											<span class="label-icon" ng-click="controller.abrirPopupFecha(1011)">
 													<i class="glyphicon glyphicon-calendar"></i>
 											</span>
 										<label  class="floating-label">* Fecha de Cierre Actual</label>
 									</div>
 								</div>
-
+								
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" class="inputText"  ng-model="programac.prestamo.mesesProrrogaUe" ng-required="true"
-										ng-value="programac.prestamo.mesesProrrogaUe" onblur="this.setAttribute('value', this.value);"/>
+										<input type="number" class="inputText"  ng-model="controller.prestamo.mesesProrrogaUe" ng-required="true"
+										ng-value="controller.prestamo.mesesProrrogaUe" onblur="this.setAttribute('value', this.value);"/>
 										<label class="floating-label">* Meses de Prórroga</label>
 									</div>
 								</div>
 							</div>
-
+							
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" class="inputText"   ng-model="programac.prestamo.plazoEjecucionUe" ng-disabled="true"
-										ng-value="programac.prestamo.plazoEjecucionUe" onblur="this.setAttribute('value', this.value);"/>
+										<input type="number" class="inputText"   ng-model="controller.prestamo.plazoEjecucionUe" ng-disabled="true"
+										ng-value="controller.prestamo.plazoEjecucionUe" onblur="this.setAttribute('value', this.value);"/>
 										<label class="floating-label">Plazo de Ejecución %</label>
 									</div>
 								</div>
-
+								
 								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="number" class="inputText" ng-model="programac.prestamo.montoAsignadoUe" ng-required="true"
-										ng-value="programac.prestamo.montoAsignadoUe" onblur="this.setAttribute('value', this.value);" ng-change="programac.setPorcentaje(3);"/>
+									<div class="form-group">							
+										<input type="text" 
+										class="inputText" 
+										ng-model="controller.prestamo.montoAsignadoUe" 
+										ng-required="true"
+										ng-value="controller.prestamo.montoAsignadoUe"
+										onblur="this.setAttribute('value', this.value);" 
+										id="label_class_6"
+										ui-number-mask="0"
+										>
 										<label class="floating-label">* Monto Asignado</label>
 									</div>
 								</div>
 							</div>
 							<div class="row">
-
+								
 								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="number" class="inputText" ng-model="programac.prestamo.montoAsignadoUeUsd" ng-required="true"
-										ng-value="programac.prestamo.montoAsignadoUeUsd" onblur="this.setAttribute('value', this.value);"/>
+									<div class="form-group">							
+										<input 
+										type="text" 
+										class="inputText" 
+										ng-model="controller.prestamo.montoAsignadoUeUsd" 
+										ng-required="true" 
+										ng-value="controller.prestamo.montoAsignadoUeUsd" 
+										onblur="this.setAttribute('value', this.value);"
+										ng-change="controller.setPorcentaje(3);"
+										id="label_class_7"
+										ui-number-mask="0"
+										/>
 										<label class="floating-label">* Monto Asignado $</label>
 									</div>
 								</div>
-
+								
 								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="number" class="inputText" ng-model="programac.prestamo.montoAsignadoUeQtz" ng-required="true"
-										ng-value="programac.prestamo.montoAsignadoUeQtz" onblur="this.setAttribute('value', this.value);" ng-change="programac.setPorcentaje(4);"/>
+									<div class="form-group">							
+										<input 
+										type="text" 
+										class="inputText" 
+										ng-model="controller.prestamo.montoAsignadoUeQtz" 
+										ng-required="true" 
+										ng-value="controller.prestamo.montoAsignadoUeQtz" 
+										onblur="this.setAttribute('value', this.value);" 
+										id="label_class_8"
+										ui-number-mask="0"
+										>
 										<label class="floating-label">* Monto Asignado Q</label>
 									</div>
 								</div>
 							</div>
-
+							
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" class="inputText" ng-model="programac.prestamo.desembolsoAFechaUeUsd" ng-required="true"
-										ng-value="programac.prestamo.desembolsoAFechaUeUsd" onblur="this.setAttribute('value', this.value);" ng-change="programac.setPorcentaje(3);"/>
+										<input type="text" 
+										class="inputText" 
+										ng-model="controller.prestamo.desembolsoAFechaUeUsd" 
+										ng-required="true"
+										ng-value="controller.prestamo.desembolsoAFechaUeUsd" 
+										onblur="this.setAttribute('value', this.value);" 
+										ng-change="controller.setPorcentaje(3);"
+										id="label_class_9"
+										ui-number-mask="0"
+										>
 										<label class="floating-label">* Desembolso a la Fecha $</label>
 									</div>
 								</div>
-
+								
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" class="inputText" ng-model="programac.prestamo.desembolsoAFechaUeUsdP" ng-disabled="true"
-										ng-value="programac.prestamo.desembolsoAFechaUeUsdP" onblur="this.setAttribute('value', this.value);"/>
+										<input type="number" class="inputText" ng-model="controller.prestamo.desembolsoAFechaUeUsdP" ng-disabled="true"
+										ng-value="controller.prestamo.desembolsoAFechaUeUsdP" onblur="this.setAttribute('value', this.value);"/>
 										<label class="floating-label">Desembolsos a la fecha %</label>
 									</div>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="number" class="inputText" ng-model="programac.prestamo.montoPorDesembolsarUeUsd" ng-required="true"
-										ng-value="programac.prestamo.montoPorDesembolsarUeUsd" onblur="this.setAttribute('value', this.value);" ng-change="programac.setPorcentaje(4);"/>
+									<div class="form-group">							
+										<input type="text" 
+										class="inputText" 
+										ng-model="controller.prestamo.montoPorDesembolsarUeUsd" 
+										ng-required="true" 
+										ng-value="controller.prestamo.montoPorDesembolsarUeUsd" 
+										onblur="this.setAttribute('value', this.value);" 
+										ng-change="controller.setPorcentaje(4);"
+										ng-disabled="true"
+										id="label_class_10"
+										ui-number-mask="0"
+										/>
 										<label class="floating-label">* Monto por desembolsar $</label>
 									</div>
 								</div>
-
+								
 								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="number" class="inputText" ng-model="programac.prestamo.montoPorDesembolsarUeUsdP" ng-disabled="true"
-										ng-value="programac.prestamo.montoPorDesembolsarUeUsdP" onblur="this.setAttribute('value', this.value);"/>
+									<div class="form-group">							
+										<input type="text" class="inputText" ng-model="controller.prestamo.montoPorDesembolsarUeUsdP" ng-disabled="true" 
+										ng-value="controller.prestamo.montoPorDesembolsarUeUsdP" onblur="this.setAttribute('value', this.value);" ui-number-mask="2"/>
 										<label class="floating-label">Monto por desembolsar %</label>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				
 				</uib-tab>
+
+
+
+
 
 				<uib-tab index="3" heading="Datos adicionales" >
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input  type="text" class="inputText"   ng-model="programac.prestamo.numeroAutorizacion"
-							   	onblur="this.setAttribute('value', this.value);" ng-value="programac.prestamo.numeroAutorizacion">
+							   	<input  type="text" class="inputText"   ng-model="controller.prestamo.numeroAutorizacion" 
+							   	onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.numeroAutorizacion">
 							   	<label class="floating-label">Número Autorización</label>
 							</div>
 						</div>
-
+					
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="text" class="inputText"  ng-model="programac.prestamo.destino"
-							   	ng-value="programac.prestamo.destino" onblur="this.setAttribute('value', this.value);">
+							   	<input type="text" class="inputText"  ng-model="controller.prestamo.destino" 
+							   	ng-value="controller.prestamo.destino" onblur="this.setAttribute('value', this.value);">
 							   	<label class="floating-label" >Destino</label>
 							</div>
 						</div>
-
+						
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="text" class="inputText"  ng-model="programac.prestamo.sectorEconomico"
-							   	ng-value="programac.prestamo.sectorEconomico" onblur="this.setAttribute('value', this.value);">
+							   	<input type="text" class="inputText"  ng-model="controller.prestamo.sectorEconomico" 
+							   	ng-value="controller.prestamo.sectorEconomico" onblur="this.setAttribute('value', this.value);">
 							   	<label class="floating-label" >Sector Económico</label>
 							</div>
 						</div>
-
+						
 						<div class="col-sm-3">
 							<div class="form-group">
-								<input type="text" class="inputText"  uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaFirma" is-open="programac.ff_abierto"
-									datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
-									ng-click="programac.abrirPopupFecha(1004)" ng-value="programac.prestamo.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
-								<span class="label-icon" ng-click="programac.abrirPopupFecha(1004)">
+								<input type="text" class="inputText"  uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaFirma" is-open="controller.ff_abierto"
+									datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+									ng-click="controller.abrirPopupFecha(1004)" ng-value="controller.prestamo.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
+								<span class="label-icon" ng-click="controller.abrirPopupFecha(1004)">
 									<i class="glyphicon glyphicon-calendar"></i>
 								</span>
 								<label class="floating-label">Fecha de Firma</label>
-
+								
 							</div>
 						</div>
 					</div>
-
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-								<input type="text" class="inputText"  uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaCorte" is-open="programac.fc_abierto"
-													datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
-													ng-click="programac.abrirPopupFecha(1003)" ng-value="programac.prestamo.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
-								<span class="label-icon" ng-click="programac.abrirPopupFecha(1003)">
+								<input type="text" class="inputText"  uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaCorte" is-open="controller.fc_abierto"
+													datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+													ng-click="controller.abrirPopupFecha(1003)" ng-value="controller.prestamo.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
+								<span class="label-icon" ng-click="controller.abrirPopupFecha(1003)">
 									<i class="glyphicon glyphicon-calendar"></i>
 								</span>
 								<label class="floating-label">Fecha de Corte</label>
@@ -653,41 +737,41 @@
 
 						<div class="col-sm-6">
 							<div class="form-group">
-				            	<input type="text" class="inputText"
-				            	ng-model="programac.prestamo.tipoAutorizacionNombre" ng-readonly="true"
-				            	ng-click="programac.buscarAutorizacionTipo()"
-				            	onblur="this.setAttribute('value', this.value);" ng-value="programac.prestamo.tipoAutorizacionNombre"			            	/>
-				            	<span class="label-icon" ng-click="programac.buscarAutorizacionTipo()"><i class="glyphicon glyphicon-search"></i></span>
+				            	<input type="text" class="inputText"    
+				            	ng-model="controller.prestamo.tipoAutorizacionNombre" ng-readonly="true" 
+				            	ng-click="controller.buscarAutorizacionTipo()"
+				            	onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.tipoAutorizacionNombre"			            	/>
+				            	<span class="label-icon" ng-click="controller.buscarAutorizacionTipo()"><i class="glyphicon glyphicon-search"></i></span>				          	
 					          	<label class="floating-label">Tipo Autorización</label>
 							</div>
 						</div>
 					</div>
-
+					
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-							   	<input  type="number" class="inputText" ng-model="programac.prestamo.aniosPlazo" max="100" min="0"
-							   	ng-value="programac.prestamo.aniosPlazo" onblur="this.setAttribute('value', this.value);">
+							   	<input  type="number" class="inputText" ng-model="controller.prestamo.aniosPlazo" max="100" min="0" 
+							   	ng-value="controller.prestamo.aniosPlazo" onblur="this.setAttribute('value', this.value);">
 							   	<label class="floating-label">Años Plazo</label>
 							</div>
 						</div>
-
+							
 						<div class="col-sm-6">
 							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="programac.prestamo.aniosGracia" max="100" min="0"
-							   		ng-value="programac.prestamo.aniosGracia" onblur="this.setAttribute('value', this.value);">
+							   	<input type="number" class="inputText" ng-model="controller.prestamo.aniosGracia" max="100" min="0" 
+							   		ng-value="controller.prestamo.aniosGracia" onblur="this.setAttribute('value', this.value);">
 							   	<label  class="floating-label">Años de Gracia</label>
 							</div>
 						</div>
 					</div>
-
+					
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-								<input type="text" class="inputText"  uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaAutorizacion" is-open="programac.fa_abierto"
-									datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
-									ng-click="programac.abrirPopupFecha(1005)" ng-value="programac.prestamo.fechaAutorizacion" onblur="this.setAttribute('value', this.value);"/>
-								<span class="label-icon" ng-click="programac.abrirPopupFecha(1005)">
+								<input type="text" class="inputText"  uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaAutorizacion" is-open="controller.fa_abierto"
+									datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+									ng-click="controller.abrirPopupFecha(1005)" ng-value="controller.prestamo.fechaAutorizacion" onblur="this.setAttribute('value', this.value);"/>
+								<span class="label-icon" ng-click="controller.abrirPopupFecha(1005)">
 									<i class="glyphicon glyphicon-calendar"></i>
 								</span>
 								<label class="floating-label">Fecha de Autorización</label>
@@ -695,278 +779,277 @@
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group">
-								<input type="text" class="inputText"  uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaFinEjecucion" is-open="programac.ffe_abierto"
-									datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
-									ng-click="programac.abrirPopupFecha(1006)" ng-value="programac.prestamo.fechaFinEjecucion" onblur="this.setAttribute('value', this.value);"/>
-								<span class="label-icon" ng-click="programac.abrirPopupFecha(1006)">
+								<input type="text" class="inputText"  uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaFinEjecucion" is-open="controller.ffe_abierto"
+									datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+									ng-click="controller.abrirPopupFecha(1006)" ng-value="controller.prestamo.fechaFinEjecucion" onblur="this.setAttribute('value', this.value);"/>
+								<span class="label-icon" ng-click="controller.abrirPopupFecha(1006)">
 									<i class="glyphicon glyphicon-calendar"></i>
 								</span>
 								<label class="floating-label">Fecha Fin de Ejecución</label>
 							</div>
 						</div>
 					</div>
-
+					
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-				            	<input type="text" class="inputText" ng-model="programac.prestamo.tipoInteresNombre" ng-readonly="true"
-				            	ng-click="programac.buscarInteresTipo()"
-				            	onblur="this.setAttribute('value', this.value);" ng-value="programac.prestamo.tipoInteresNombre"/>
-				            	<span class="label-icon" ng-click="programac.buscarInteresTipo()">
+				            	<input type="text" class="inputText" ng-model="controller.prestamo.tipoInteresNombre" ng-readonly="true"
+				            	ng-click="controller.buscarInteresTipo()"
+				            	onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.tipoInteresNombre"/>
+				            	<span class="label-icon" ng-click="controller.buscarInteresTipo()">
 				            		<i class="glyphicon glyphicon-search"></i>
 				            	</span>
 					          	<label class="floating-label">Tipo de Interés</label>
 							</div>
 						</div>
-
+						
 						<div class="col-sm-6">
 							<div class="form-group">
-							   	<input type="number" class="inputText"  ng-model="programac.prestamo.porcentajeInteres"
-							   	onblur="this.setAttribute('value', this.value);" ng-value="programac.prestamo.porcentajeInteres"/>
+							   	<input type="number" class="inputText"  ng-model="controller.prestamo.porcentajeInteres"  
+							   	onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.porcentajeInteres"/>
 							   	<label class="floating-label">Porcentaje de Interés</label>
 							</div>
 						</div>
 					</div>
-
+					
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-							   	<input  class="inputText" type="number"  ng-model="programac.prestamo.periodoEjecucion" max="100" min="0"
-							   	ng-value="programac.prestamo.periodoEjecucion" onblur="this.setAttribute('value', this.value);">
+							   	<input  class="inputText" type="number"  ng-model="controller.prestamo.periodoEjecucion" max="100" min="0" 
+							   	ng-value="controller.prestamo.periodoEjecucion" onblur="this.setAttribute('value', this.value);">
 							   	<label class="floating-label">Período de Ejecución</label>
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group">
-							   	<input type="number" class="inputText"  ng-model="programac.prestamo.porcentajeComisionCompra"
-							   	onblur="this.setAttribute('value', this.value);" ng-value="programac.prestamo.porcentajeComisionCompra"/>
+							   	<input type="number" class="inputText"  ng-model="controller.prestamo.porcentajeComisionCompra"  
+							   	onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.porcentajeComisionCompra"/>
 							   	<label class="floating-label">Porcentaje Comisión Compra</label>
 							</div>
 						</div>
 					</div>
-
+					
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="programac.prestamo.amortizado"
-							   	ng-value="programac.prestamo.amortizado" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number" class="inputText" ng-model="controller.prestamo.amortizado"  
+							   	ng-value="controller.prestamo.amortizado" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Amortizado</label>
 							</div>
-
+							
 						</div>
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="programac.prestamo.porAmortizar"
-							   	ng-value="programac.prestamo.porAmortizar" onblur="this.setAttribute('value', this.value);" />
+							   	<input type="number" class="inputText" ng-model="controller.prestamo.porAmortizar" 
+							   	ng-value="controller.prestamo.porAmortizar" onblur="this.setAttribute('value', this.value);" />
 							   	<label class="floating-label">Por Amortizar</label>
 							</div>
 						</div>
 
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText"  ng-model="programac.prestamo.principalAnio"
-							   	ng-value="programac.prestamo.principalAnio" onblur="this.setAttribute('value', this.value);" />
+							   	<input type="number" class="inputText"  ng-model="controller.prestamo.principalAnio" 
+							   	ng-value="controller.prestamo.principalAnio" onblur="this.setAttribute('value', this.value);" />
 							   	<label class="floating-label">Principal del Año</label>
 							</div>
 						</div>
 					</div>
-
-					<div class="row">
+					
+					<div class="row">						
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="programac.prestamo.interesesAnio"
-							   	ng-value="programac.prestamo.interesesAnio" onblur="this.setAttribute('value', this.value);" />
+							   	<input type="number" class="inputText" ng-model="controller.prestamo.interesesAnio"  
+							   	ng-value="controller.prestamo.interesesAnio" onblur="this.setAttribute('value', this.value);" />
 							   	<label class="floating-label">Intereses del Año</label>
 							</div>
 						</div>
-
+						
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="programac.prestamo.comisionCompromisoAnio"
-							   	ng-value="programac.prestamo.comisionCompromisoAnio" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number" class="inputText" ng-model="controller.prestamo.comisionCompromisoAnio"  
+							   	ng-value="controller.prestamo.comisionCompromisoAnio" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Comisión Compromiso del Año</label>
 							</div>
 						</div>
-
+						
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="programac.prestamo.otrosGastos"
-							   	ng-value="programac.prestamo.otrosGastos" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number" class="inputText" ng-model="controller.prestamo.otrosGastos"  
+							   	ng-value="controller.prestamo.otrosGastos" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Otros Gastos</label>
 							</div>
 						</div>
 
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="programac.prestamo.principalAcumulado"
-							   	ng-value="programac.prestamo.principalAcumulado" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number" class="inputText" ng-model="controller.prestamo.principalAcumulado"  
+							   	ng-value="controller.prestamo.principalAcumulado" onblur="this.setAttribute('value', this.value);"/>
 							   	<label  class="floating-label">Principal Acumulado</label>
 							</div>
 						</div>
 					</div>
-
-					<div class="row">
+					
+					<div class="row"> 
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number"  class="inputText"  ng-model="programac.prestamo.interesesAcumulados"
-							   	ng-value="programac.prestamo.interesesAcumulados" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number"  class="inputText"  ng-model="controller.prestamo.interesesAcumulados" 
+							   	ng-value="controller.prestamo.interesesAcumulados" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Intereses Acumulados</label>
 							</div>
 						</div>
-
+						
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number"  class="inputText"  ng-model="programac.prestamo.comisionCompromisoAcumulado"
-							   	ng-value="programac.prestamo.comisionCompromisoAcumulado" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number"  class="inputText"  ng-model="controller.prestamo.comisionCompromisoAcumulado"  
+							   	ng-value="controller.prestamo.comisionCompromisoAcumulado" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Comisión Compromiso Acumulado</label>
 							</div>
 						</div>
-
+						
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number"  class="inputText"  ng-model="programac.prestamo.otrosCargosAcumulados"
-							   	ng-value="programac.prestamo.otrosCargosAcumulados" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number"  class="inputText"  ng-model="controller.prestamo.otrosCargosAcumulados"  
+							   	ng-value="controller.prestamo.otrosCargosAcumulados" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label" >Otros Cargos Acumulados</label>
 							</div>
-						</div>
+						</div>					
 					</div>
-
+					
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-							   	<input type="number"  class="inputText"  ng-model="programac.prestamo.presupuestoAsignadoFuncionamiento"
-								ng-value="programac.prestamo.presupuestoAsignadoFuncionamiento" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number"  class="inputText"  ng-model="controller.prestamo.presupuestoAsignadoFuncionamiento" 
+								ng-value="controller.prestamo.presupuestoAsignadoFuncionamiento" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Presupuesto Asignado Funcionamiento</label>
 							</div>
 						</div>
-
+					
 						<div class="col-sm-6">
 							<div class="form-group">
-							   	<input type="number" class="inputText"  ng-model="programac.prestamo.presupuestoModificadoFun"
-							   	ng-value="programac.prestamo.presupuestoModificadoFun" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number" class="inputText"  ng-model="controller.prestamo.presupuestoModificadoFun"  
+							   	ng-value="controller.prestamo.presupuestoModificadoFun" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Presupuesto Modificado Funcionamiento</label>
 							</div>
 						</div>
 					</div>
-
+					
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="programac.prestamo.presupuestoVigenteFun"
-							   	ng-value="programac.prestamo.presupuestoVigenteFun" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number" class="inputText" ng-model="controller.prestamo.presupuestoVigenteFun" 
+							   	ng-value="controller.prestamo.presupuestoVigenteFun" onblur="this.setAttribute('value', this.value);"/>
 							   	<label  class="floating-label">Presupuesto Vigente Funcionamiento</label>
 							</div>
 						</div>
-
+						
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number"   class="inputText" ng-model="programac.prestamo.presupuestoAsignadoInversion"
-							   	ng-value="programac.prestamo.presupuestoAsignadoInversion" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number"   class="inputText" ng-model="controller.prestamo.presupuestoAsignadoInversion"  
+							   	ng-value="controller.prestamo.presupuestoAsignadoInversion" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Presupuesto Asignado Inversion</label>
 							</div>
 						</div>
-
+						
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText"  ng-model="programac.prestamo.presupuestoModificadoInv"
-							   	ng-value="programac.prestamo.presupuestoModificadoInv" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number" class="inputText"  ng-model="controller.prestamo.presupuestoModificadoInv" 
+							   	ng-value="controller.prestamo.presupuestoModificadoInv" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Presupuesto Modificado Inversión</label>
 							</div>
 						</div>
 
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText"  ng-model="programac.prestamo.presupuestoVigenteInv"
-							   	ng-value="programac.prestamo.presupuestoVigenteInv" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number" class="inputText"  ng-model="controller.prestamo.presupuestoVigenteInv" 
+							   	ng-value="controller.prestamo.presupuestoVigenteInv" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Presupuesto Vigente Inversión</label>
 							</div>
 						</div>
-					</div>
-
+					</div>		
+								
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="programac.prestamo.presupuestoDevengadoFun"
-							   	ng-value="programac.prestamo.presupuestoDevengadoFun" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number" class="inputText" ng-model="controller.prestamo.presupuestoDevengadoFun" 
+							   	ng-value="controller.prestamo.presupuestoDevengadoFun" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Presupuesto Devengado Funcionamiento</label>
 							</div>
 						</div>
-
+					
 						<div class="col-sm-6">
 							<div class="form-group">
-							   	<input type="number"  class="inputText" ng-model="programac.prestamo.presupuestoDevengadoInv"
-							   	ng-value="programac.prestamo.presupuestoDevengadoInv" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number"  class="inputText" ng-model="controller.prestamo.presupuestoDevengadoInv"  
+							   	ng-value="controller.prestamo.presupuestoDevengadoInv" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Presupuesto Devengado Inversión</label>
 							</div>
 						</div>
 					</div>
-
+					
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="programac.prestamo.presupuestoPagadoFun"
-							   	ng-value="programac.prestamo.presupuestoPagadoFun" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number" class="inputText" ng-model="controller.prestamo.presupuestoPagadoFun" 
+							   	ng-value="controller.prestamo.presupuestoPagadoFun" onblur="this.setAttribute('value', this.value);"/>
 							   	<label  class="floating-label">Presupuesto Pagado Funcionamiento </label>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText"  ng-model="programac.prestamo.presupuestoPagadoInv"
-							   		ng-value="programac.prestamo.presupuestoPagadoInv" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number" class="inputText"  ng-model="controller.prestamo.presupuestoPagadoInv"  
+							   		ng-value="controller.prestamo.presupuestoPagadoInv" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Presupuesto Pagado Inversión </label>
 							</div>
 						</div>
 
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="programac.prestamo.saldoCuentas"
-							   	ng-value="programac.prestamo.saldoCuentas" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number" class="inputText" ng-model="controller.prestamo.saldoCuentas"
+							   	ng-value="controller.prestamo.saldoCuentas" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Saldo de Cuentas </label>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="programac.prestamo.desembolsoReal"
-							   	ng-value="programac.prestamo.desembolsoReal" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number" class="inputText" ng-model="controller.prestamo.desembolsoReal"
+							   	ng-value="controller.prestamo.desembolsoReal" onblur="this.setAttribute('value', this.value);"/>  
 							   	<label class="floating-label">Desembolso Real GTQ</label>
 							</div>
 						</div>
 					</div>
-
-					<div class="row">
+					
+					<div class="row">	
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="programac.prestamo.desembolsoAFechaUe"
-							   	ng-value="programac.prestamo.desembolsoAFechaUe" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number" class="inputText" ng-model="controller.prestamo.desembolsoAFechaUe"
+							   	ng-value="controller.prestamo.desembolsoAFechaUe" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Desembolso a la Fecha</label>
 							</div>
 						</div>
-
+						
 						<div class="col-sm-3">
 							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="programac.prestamo.montoPorDesembolsarUe"
-							   	ng-value="programac.prestamo.montoPorDesembolsarUe" onblur="this.setAttribute('value', this.value);"/>
+							   	<input type="number" class="inputText" ng-model="controller.prestamo.montoPorDesembolsarUe"
+							   	ng-value="controller.prestamo.montoPorDesembolsarUe" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">Monto por Desembolsar</label>
 							</div>
 						</div>
 					</div>
-
+					
 					<div class="form-group">
-		            	<input type="text" class="inputText"
-		            	ng-click="programac.buscarEstadoEjecucion()"
-		            	ng-model="programac.prestamo.ejecucionEstadoNombre" ng-readonly="true"
-		            	onblur="this.setAttribute('value', this.value);" ng-value="programac.prestamo.ejecucionEstadoNombre" />
-		            	<span class="label-icon" ng-click="programac.buscarEstadoEjecucion()"><i class="glyphicon glyphicon-search"></i></span>
+		            	<input type="text" class="inputText"  
+		            	ng-click="controller.buscarEstadoEjecucion()"
+		            	ng-model="controller.prestamo.ejecucionEstadoNombre" ng-readonly="true"
+		            	onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.ejecucionEstadoNombre" />
+		            	<span class="label-icon" ng-click="controller.buscarEstadoEjecucion()"><i class="glyphicon glyphicon-search"></i></span>
 			          	<label class="floating-label">Estado de Ejecución</label>
 					</div>
-
+					
 					<div class="form-group">
-						<input type="text" ng-model="programac.proyecto.descripcion"
-							class="inputText" id="campo2"
-							ng-value="programac.proyecto.descripcion" onblur="this.setAttribute('value', this.value);">
+						<input type="text" ng-model="controller.proyecto.descripcion"
+							class="inputText" id="campo2" 
+							ng-value="controller.proyecto.descripcion" onblur="this.setAttribute('value', this.value);">
 						<label for="campo2" class="floating-label">Descripción</label>
 					</div>
-
 				</uib-tab>
 					
 				</uib-tabset>	

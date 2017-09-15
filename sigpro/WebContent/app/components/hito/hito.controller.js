@@ -131,7 +131,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 				numeroproyecto:  $utilidades.elementosPorPagina,
 				filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
-				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion}).success(
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion,t: (new Date()).getTime()}).success(
 					function(response) {
 						mi.hitos = response.hitos;
 						mi.gridOptions.data = mi.hitos;
@@ -201,6 +201,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Hito que desea borrar');
 		};
+		
 		mi.redireccionSinPermisos=function(){
 			$window.location.href = '/main.jsp#!/forbidden';		
 		}
@@ -227,6 +228,9 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 				mi.hitodatotipoid = mi.hito.datotipoid;
 				mi.mostraringreso = true;
 				switch(mi.hitodatotipoid){
+					case 2: 
+						mi.hitoresultado = Number(mi.hito.resultado);
+						break;
 					case 3: 
 						mi.hitoresultado = Number(mi.hito.resultado);
 						break;
@@ -266,7 +270,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 		mi.obtenerTotalHitos = function(){
 			$http.post('/SHito', { accion: 'numeroHitosPorProyecto', proyectoid:$routeParams.proyecto_id,
 				filtro_nombre: mi.filtros['nombre'],
-				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],t: (new Date()).getTime()  }).then(
 					function(response) {
 						mi.totalHitos = response.data.totalhitos;
 						mi.paginaActual = 1;
@@ -334,12 +338,14 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 
 	mi.buscarHitoTipo = function() {
 		var resultado = mi.llamarModalBusqueda('/SHitoTipo', {
-			accion : 'numeroHitoTipos'
+			accion : 'numeroHitoTipos',t: (new Date()).getTime()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getHitoTiposPagina',
 				pagina : pagina,
-				numerohitotipos : elementosPorPagina
+				numerohitotipos : elementosPorPagina,
+				t: (new Date()).getTime()
+				
 			};
 		});
 
@@ -347,7 +353,8 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 			mi.hitotipoid = itemSeleccionado.id;
 			mi.hitotipoNombre = itemSeleccionado.nombre;
 			mi.hitodatotipoid = itemSeleccionado.idTipo;
-			console.log(mi.hitodatotipoid);
+			mi.hitoresultado = '';
+			
 		});
 	};
 

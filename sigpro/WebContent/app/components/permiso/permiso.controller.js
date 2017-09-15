@@ -81,15 +81,13 @@ app.controller(
 			cellClass : 'grid-align-left',
 			enableFiltering: false
 		}
-		
-
 		],
 
 	};
 	mi.cargarTabla=function(pagina){
 		$http.post('/SPermiso',
 				{ accion : 'getPermisosPagina',  pagina: pagina, numeroPermisos: mi.elementosPorPagina ,filtro_id: mi.filtros['id'],filtro_nombre: mi.filtros['nombre'],
-			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).success(function(data) {
+			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] ,t: (new Date()).getTime()  }).success(function(data) {
 				mi.gridOptions.data =  data.permisos;
 				mi.mostrarcargando=false;
 		});
@@ -157,17 +155,18 @@ app.controller(
 							if(data.success){
 								if(mi.esNuevo){
 									mi.paginaActual=1;
-									mi.cargarTabla(mi.paginaActual);
+									mi.obtenerTotalPermisos();
 									$utilidades.mensaje('success','Permiso agregado exitosamente');
 								}else{
 									mi.paginaActual=1;
-									mi.cargarTabla(mi.paginaActual);
+									mi.obtenerTotalPermisos();
 									$utilidades.mensaje('success','Permiso actualizado exitosamente');
 								}
 								mi.permisoSelected.usuarioCreo = data.usuarioCreo;
 								mi.permisoSelected.fechaCreacion = data.fechaCreacion;
 								mi.permisoSelected.usuarioActualizo = data.usuarioactualizo;
 								mi.permisoSelected.fechaActualizacion = data.fechaactualizacion;
+								mi.esNuevo = false;
 								
 							}else{
 								$utilidades.mensaje('danger','No se pudieron aplicar los cambios');
@@ -197,6 +196,7 @@ app.controller(
 							$utilidades.mensaje('success','Permiso borrado con éxito');
 							mi.cargarTabla(mi.paginaActual);
 							mi.permisoSelected={id:"",nombre:"", descripcion:""};
+							mi.obtenerTotalPermisos();
 						}
 						else
 							$utilidades.mensaje('danger','Error al borrar el Permiso');
@@ -239,7 +239,7 @@ app.controller(
 		});
 	}
 	
-	$http.post('/SPermiso', { accion: 'getTotalPermisos' }).success(
+	$http.post('/SPermiso', { accion: 'getTotalPermisos',t: (new Date()).getTime() }).success(
 			function(response) {
 				mi.totalPermisos=response.totalPermisos;
 				mi.cargarTabla(mi.paginaActual);
@@ -248,7 +248,7 @@ app.controller(
 	mi.filtrar = function(evt){
 		if(evt.keyCode==13){
 			$http.post('/SPermiso', { accion: 'getTotalPermisos',	filtro_id: mi.filtros['id'],filtro_nombre: mi.filtros['nombre'],
-				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).success(
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] ,t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.totalPermisos = response.totalPermisos;
 						mi.cargarTabla(mi.paginaActual);
@@ -257,4 +257,14 @@ app.controller(
 			});
 		}
 	};
+	
+	mi.obtenerTotalPermisos = function(){
+		$http.post('/SPermiso', { accion: 'getTotalPermisos',t: (new Date()).getTime() }).success(
+				function(response) {
+					mi.totalPermisos=response.totalPermisos;
+					mi.cargarTabla(mi.paginaActual);
+		});
+		
+	};
+	
 } ]);

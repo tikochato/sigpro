@@ -100,7 +100,7 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 				$http.post('/SMetaUnidadMedida', { accion: 'getMetaUnidadMedidasPagina', pagina: pagina, numerometaunidadmedidas: $utilidades.elementosPorPagina,
 					filtro_nombre: mi.filtros['nombre'], 
 					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion 
+					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
 				}).success(
 				
 						function(response) {
@@ -221,7 +221,9 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 			}
 			
 			mi.obtenerTotalMetaUnidades = function(){
-				$http.post('/SMetaUnidadMedida', { accion: 'numeroMetaUnidadMedidas', filtro_nombre:mi.filtros["nombre"] , filtro_usuario_creo:mi.filtros["usuario_creo"] , filtro_fecha_creacion:mi.filtros["fecha_creacion"]}).success(
+				$http.post('/SMetaUnidadMedida', { accion: 'numeroMetaUnidadMedidas', filtro_nombre:mi.filtros["nombre"] , filtro_usuario_creo:mi.filtros["usuario_creo"] 
+				, filtro_fecha_creacion:mi.filtros["fecha_creacion"],t: (new Date()).getTime()}).success(
+				
 						function(response) {
 							mi.totalmedidas = response.totalMetaUnidadMedidas;
 							mi.cargarTabla(1);
