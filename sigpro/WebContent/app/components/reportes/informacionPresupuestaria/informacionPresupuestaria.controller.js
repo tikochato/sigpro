@@ -1,7 +1,7 @@
 var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'smart-table']);
 
-app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Utilidades','i18nService','$timeout', '$q','dialogoConfirmacion',
-	function($scope, $http, $interval, $utilidades,i18nService,$timeout, $q, $dialogoConfirmacion){
+app.controller('informacionPresupuestariaController', ['$scope', '$http', '$interval', 'Utilidades','i18nService','$timeout','$window', '$q','dialogoConfirmacion',
+	function($scope, $http, $interval, $utilidades,i18nService,$timeout,$window, $q, $dialogoConfirmacion){
 		var mi = this;
 		i18nService.setCurrentLang('es');
 		mi.fechaInicio = "";

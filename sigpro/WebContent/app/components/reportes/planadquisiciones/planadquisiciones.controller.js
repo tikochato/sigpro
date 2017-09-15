@@ -1,6 +1,6 @@
 var app = angular.module('planAdquisicionesController', ['ngTouch','ngAnimate','ui.grid.edit', 'ui.grid.rowEdit','ui.utils.masks']);
-app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
-	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal) {
+app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout','$window', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
+	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout,$window, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal) {
 	var mi = this;
 	var anioFiscal = new Date();
 	mi.anio = anioFiscal.getFullYear();
@@ -840,10 +840,9 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 
 app.controller('modalPago', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log',   '$uibModal', '$q' ,'idObjeto','objetoTipo','nombre','numeroContrato','montoContrato',modalPago ]);
-
-function modalPago($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idObjeto, objetoTipo, nombre, numeroContrato, montoContrato) {
+	'$timeout', '$log',   '$uibModal', '$q','$window' ,'idObjeto','objetoTipo','nombre','numeroContrato','montoContrato', 
+function ($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q,$window, idObjeto, objetoTipo, nombre, numeroContrato, montoContrato) {
 
 	var mi = this;
 	mi.planAdquisicionesPagos = [];
@@ -949,6 +948,7 @@ function modalPago($uibModalInstance, $scope, $http, $interval,
 	
 	mi.cargarPagos();
 }
+]);
 
 app.directive('focusOnShow', function($timeout) {
     return {
