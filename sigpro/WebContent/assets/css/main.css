@@ -194,7 +194,7 @@ nav.navbar{
 	width: 100%;
 	font-size: 16px;
 	padding: 0 40px 0 40px;
-	z-index: 1000;
+	z-index: 10000;
 }
 
 .ng-invalid, .ng-invalid:invalid {
@@ -533,4 +533,12 @@ h2 {
 	
 .angucomplete-highlight {
 	color: #ff0000;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    z-index: 99999;
 }
