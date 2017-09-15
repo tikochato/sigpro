@@ -542,3 +542,7 @@ h2 {
     border-radius: 4px;
     z-index: 99999;
 }
+
+.cols_treeview{
+	height: calc(100% - 30px);
+}

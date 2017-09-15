@@ -27,9 +27,7 @@ import dao.HitoTipoDAO;
 import pojo.HitoTipo;
 import utilities.Utils;
 
-/**
- * Servlet implementation class SHitoTipo
- */
+
 @WebServlet("/SHitoTipo")
 public class SHitoTipo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -48,16 +46,12 @@ public class SHitoTipo extends HttpServlet {
 		
 	}
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    
     public SHitoTipo() {
         super();   
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String response_text = "{ \"success\": false }";
 
@@ -71,9 +65,7 @@ public class SHitoTipo extends HttpServlet {
         output.close();
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		HttpSession sesionweb = request.getSession();

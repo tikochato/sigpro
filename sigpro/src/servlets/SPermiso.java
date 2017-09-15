@@ -26,9 +26,7 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
-/**
- * Servlet implementation class SPermiso
- */
+
 @WebServlet("/SPermiso")
 public class SPermiso extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -43,17 +41,11 @@ public class SPermiso extends HttpServlet {
 		String fechaActualizacion;
 		int estado;
 	}
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    
     public SPermiso() {
         super();
     }
 
-	
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setHeader("Content-Encoding", "gzip");
@@ -104,13 +96,13 @@ public class SPermiso extends HttpServlet {
 						permiso.setUsuarioActualizo(sesionweb.getAttribute("usuario").toString());
 						permiso.setFechaActualizacion(new DateTime().toDate());
 						response_text = String.join("","{ \"success\": ",(PermisoDAO.guardarPermiso(permiso) ? "true" : "false"),", "
-							, "\"data\":",permiso.getId() + "", ","
-							, "\"id\": " , permiso.getId() + "" , ","
-							, "\"usuarioCreo\": \"" , permiso.getUsuarioCreo(),"\","
-							, "\"fechaCreacion\":\" " , Utils.formatDateHour(permiso.getFechaCreacion()),"\","
-							, "\"usuarioactualizo\": \"" , permiso.getUsuarioActualizo() != null ? permiso.getUsuarioActualizo() : "","\","
-							, "\"fechaactualizacion\": \"" , Utils.formatDateHour(permiso.getFechaActualizacion()),"\""
-							," }");
+								, "\"data\":",permiso.getId() + "", ","
+								, "\"id\": " , permiso.getId()+ "" , ","
+								, "\"usuarioCreo\": \"" , permiso.getUsuarioCreo(),"\","
+								, "\"fechaCreacion\":\" " , Utils.formatDateHour(permiso.getFechaCreacion()),"\","
+								, "\"usuarioactualizo\": \"" , permiso.getUsuarioActualizo() != null ? permiso.getUsuarioActualizo() : "","\","
+								, "\"fechaactualizacion\": \"" , Utils.formatDateHour(permiso.getFechaActualizacion()),"\""
+								," }");
 					}else{
 						response_text = String.join("", "{\"success\":false, \"error\":\"parametro vacio\" }");
 					}
@@ -141,6 +133,7 @@ public class SPermiso extends HttpServlet {
 					tmp.fechaCreacion= Utils.formatDateHour(permiso.getFechaCreacion());
 					tmp.usuarioActualizo=permiso.getUsuarioActualizo();
 					tmp.fechaActualizacion=Utils.formatDateHour( permiso.getFechaActualizacion());
+					tmp.usuarioActualizo=permiso.getUsuarioActualizo();
 					tmp.estado = permiso.getEstado();
 					stpermisos.add(tmp);
 				}

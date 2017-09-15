@@ -27,12 +27,12 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 			
 			mi.filtros = [];
 			
-			$http.post('/SMeta', { accion: 'obtenerMetaPorId', id: $routeParams.metaid }).success(
+			$http.post('/SMeta', { accion: 'obtenerMetaPorId', id: $routeParams.metaid,t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.nombreMeta = response.nombre;
 			});
 			
-			$http.post('/SDatoTipo', { accion: 'getDatoTipoPorId', id: $routeParams.datotipoid }).success(
+			$http.post('/SDatoTipo', { accion: 'getDatoTipoPorId', id: $routeParams.datotipoid,t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.datoTipoNombre = response.nombre;
 			});
@@ -56,7 +56,8 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 					minDate : new Date(1990, 1, 1),
 					startingDay : 1
 			};
-		
+			
+			
 			mi.gridOptions = {
 					enableRowSelection : true,
 					enableRowHeaderSelection : false,
@@ -66,8 +67,6 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 					enableFiltering: true,
 					enablePaginationControls: false,
 				    paginationPageSize: $utilidades.elementosPorPagina,
-				    useExternalFiltering: true,
-				    useExternalSorting: true,
 				    rowTemplate: '<div ng-dblclick="grid.appScope.metavc.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 					columnDefs : [ 
 						{ name: 'fecha', width: 400, displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'', enableFiltering: false
@@ -124,38 +123,33 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
 				$http.post('/SMetaValor', { accion: 'getMetaValoresTabla', 
-					metaid: $routeParams.metaid, datotipoid: $routeParams.datotipoid 
+					metaid: $routeParams.metaid, datotipoid: $routeParams.datotipoid ,t: (new Date()).getTime()
+					, pagina:mi.paginaActual, totalValores:$utilidades.elementosPorPagina
 				}).success(
 						function(response) {
 							mi.metavalores = response.MetaValores;
 							mi.gridOptions.data = mi.metavalores;
+							for (x in mi.metavalores){
+								switch (mi.metavalores[x].datoTipo){
+									case 2: mi.metavalores[x].valor = Number(mi.metavalores[x].valor);
+									case 3: mi.metavalores[x].valor = Number(mi.metavalores[x].valor);
+								}
+							}
 							mi.mostrarcargando = false;
+							
 						});
 			}
 			mi.redireccionSinPermisos=function(){
 				$window.location.href = '/main.jsp#!/forbidden';		
 			}
+			
+			
 			mi.guardar=function(){
 				if(mi.metavalor!=null && mi.metavalor.valor!='' && mi.metavalor.valor!=null ){
-					switch(parseInt(mi.datoTipoId)){
-						case 1: //texto
-							mi.metavalor.valorString = mi.metavalor.valor;
-							break;
-						case 2: //entero
-							mi.metavalor.valorEntero = mi.metavalor.valor;
-							break;
-						case 3: //decimal
-							mi.metavalor.valorDecimal = mi.metavalor.valor;
-							break;
-						case 4: //booleano
-
-							break;
-						case 5: //fecha
-							mi.metavalor.valorTiempo = mi.metavalor.valor;
-							break;
-						default: 
-							mi.metavalor.valorString = null;
-					}
+					var valorTemp = mi.metavalor.valor;
+					if (mi.datoTipoId == 5)
+						valorTemp = moment(valorTemp).format('DD/MM/YYYY');
+						
 					$http.post('/SMetaValor', {
 						accion: 'guardarMetaValor',
 						esnuevo: mi.nuevo,
@@ -164,7 +158,10 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 						valorEntero: mi.metavalor.valorEntero,
 						valorString: mi.metavalor.valorString,
 						valorDecimal: mi.metavalor.valorDecimal,
-						valorTiempo: mi.metavalor.valorTiempo
+						valorTiempo: mi.metavalor.valorTiempo,
+						datotipoid: mi.datoTipoId,
+						valor : valorTemp
+						
 						
 					}).success(function(response){
 						if(response.success){
@@ -186,6 +183,37 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 				mi.nuevo = true;
 				mi.metavalor = {};
 				mi.gridApi.selection.clearSelectedRows();
+			};
+			
+			mi.borrar = function(ev) {
+				if(mi.metavalor!=null ){
+					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+							, "Confirmación de Borrado"
+							, '¿Desea borrar el valor de meta ?'
+							, "Borrar"
+							, "Cancelar")
+					.result.then(function(data) {
+						if(data){
+							$http.post('/SMetaValor', {
+								accion: 'borrarMetaValor',
+								metaid: mi.metavalorId,
+								fecha: moment(mi.metavalor.fecha).format('DD/MM/YYYY')
+							}).success(function(response){
+								if(response.success){
+									$utilidades.mensaje('success','Valor de la meta borrado con éxito');
+									mi.metavalor=null;
+									mi.obtenerTotalMetaValores();
+								}
+								else
+									$utilidades.mensaje('danger','Error al borrar el valor de la meta');
+							});
+						}
+					}, function(){
+						
+					});
+				}
+				else
+					$utilidades.mensaje('warning','Debe seleccionar el Hito que desea borrar');
 			};
 
 			mi.editar = function() {
@@ -229,12 +257,24 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 			}
 			
 			mi.obtenerTotalMetaValores =  function() {
-				$http.post('/SMetaValor', { accion: 'numeroMetaValores', metaid: $routeParams.metaid }).success(
+				$http.post('/SMetaValor', { accion: 'numeroMetaValores', metaid: $routeParams.metaid ,t: (new Date()).getTime()}).success(
 						function(response) {
 							mi.totalMetaValores = response.totalMetaValores;
 							mi.cargarTabla(1);
 						});
 				
-				}
-			}
+				};
+				
+			mi.popupfecharesultado = function() {
+			    mi.popupfecharesultado.abierto = false;
+			};
+			
+			mi.abirpopupreultado = function() {
+				 mi.popupfecharesultado.abierto = true;
+			};
+		
+				
+		}
+			
+			
 	]);

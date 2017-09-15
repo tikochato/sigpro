@@ -1,7 +1,7 @@
 var app = angular.module('sipro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
                                        'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','documentoAdjunto','dialogoConfirmacion',
-                                       'ngAria','ngMaterial','ngMessages','angucomplete-alt','ui.utils.masks']);
+                                       'ngAria','ngMaterial','ngMessages','angucomplete-alt','ui.utils.masks','treeControl']);
 
 app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($routeProvider, $locationProvider,FlashProvider) {
 	   $locationProvider.hashPrefix('!');
@@ -519,10 +519,18 @@ app.config(['uiGmapGoogleMapApiProvider',function(uiGmapGoogleMapApiProvider) {
     });
 }]);
 
-app.controller('MainController',['$scope','$document','deviceDetector','$rootScope','$location','$window','Utilidades', "$routeParams",
-   function($scope,$document,deviceDetector,$rootScope,$location,$window,$utilidades, $routeParams){
+app.controller('MainController',['$scope','$document','deviceDetector','$rootScope','$location','$window','Utilidades', "$routeParams","$http",
+   function($scope,$document,deviceDetector,$rootScope,$location,$window,$utilidades, $routeParams,$http){
 	$scope.lastscroll = 0;
 	$scope.hidebar = false;
+	
+	mi = this;
+	mi.treedata=[];
+	mi.expanded=[];
+	
+	mi.tree_options={
+		
+	};
 	
 	$rootScope.catalogo_entidades_anos=1;
 
@@ -561,4 +569,17 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 			$window.ga('send', 'pageview', $location.path());
 		}
     });
+	
+	mi.showSelected=function(nodo){
+		
+	}
+	
+	$http.post('/SProyecto',
+			{ accion: 'controlArbol', id: 36 }).success(
+		function(response) {
+			mi.treedata=response.proyecto;
+			if(mi.treedata.id==0)
+				mi.expanded.push(mi.treedata.children[0])
+		});
+	
 }]);

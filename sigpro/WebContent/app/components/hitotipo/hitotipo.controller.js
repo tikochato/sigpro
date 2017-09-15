@@ -23,7 +23,8 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 		mi.filtros = [];
 		
 		$http.post('/SDatoTipo', {
-			accion : 'cargarCombo'
+			accion : 'cargarCombo',
+			t: (new Date()).getTime()
 		}).success(function(response) {
 			mi.datoTipos = response.datoTipos;
 		});
@@ -106,7 +107,7 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 			$http.post('/SHitoTipo', { accion: 'getHitoTiposPagina', pagina: pagina, numerohitotipos: $utilidades.elementosPorPagina,
 				filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] ,
-				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion }).success(
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion,t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.hitotipos = response.hitotipos;
 						mi.gridOptions.data = mi.hitotipos;
@@ -132,7 +133,7 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 						mi.hitotipo.fechaCreacion = response.fechaCreacion;
 						mi.hitotipo.usuarioActualizo = response.usuarioactualizo;
 						mi.hitotipo.fechaActualizacion = response.fechaactualizacion;
-						mi.cargarTabla();
+						mi.obtenerTotalHitoTipos(1);
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Tipo Hito');
@@ -158,7 +159,7 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 							if(response.success){
 								$utilidades.mensaje('success','Tipo Hito borrado con éxito');
 								mi.hitotipo = null;
-								mi.cargarTabla();
+								mi.obtenerTotalHitoTipos(1);
 							}
 							else
 								$utilidades.mensaje('danger','Error al borrar el Tipo Hito');
@@ -228,7 +229,7 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 		mi.obtenerTotalHitoTipos=function(){
 			$http.post('/SHitoTipo', { accion: 'numeroHitoTipos',
 				filtro_nombre: mi.filtros['nombre'],
-				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.totalHitotipo = response.totalhitotipos;
 						mi.cargarTabla(1);

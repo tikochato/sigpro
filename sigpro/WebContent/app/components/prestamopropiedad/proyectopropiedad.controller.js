@@ -99,7 +99,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 			filtro_nombre: mi.filtros['nombre'], 
 			filtro_usuario_creo: mi.filtros['usuario_creo'],
 		    filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-		    columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion }).success(
+		    columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.proyectopropiedades = response.proyectopropiedades;
 						mi.gridOptions.data = mi.proyectopropiedades;
@@ -214,7 +214,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 		mi.obtenerTotalProyectoPropiedades = function() { 
 			$http.post('/SProyectoPropiedad', { accion: 'numeroProyectoPropiedades',filtro_nombre: mi.filtros['nombre'], 
 				filtro_usuario_creo: mi.filtros['usuario_creo'],
-			    filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+			    filtro_fecha_creacion: mi.filtros['fecha_creacion'],t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.totalProyectoPropiedades = response.totalproyectopropiedades;
 						mi.cargarTabla(1);
@@ -229,7 +229,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 			}
 		}
 		
-		$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
+		$http.post('/SDatoTipo', { accion: 'cargarCombo',t: (new Date()).getTime() }).success(
 				function(response) {
 					mi.tipodatos = response.datoTipos;
 		});

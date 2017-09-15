@@ -26,16 +26,12 @@ import dao.MetaTipoDAO;
 import pojo.MetaTipo;
 import utilities.Utils;
 
-/**
- * Servlet implementation class SMetaTipo
- */
+
 @WebServlet("/SMetaTipo")
 public class SMetaTipo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    
 	public class sttipometa{
 		Integer id;
 		String nombre;
@@ -49,19 +45,13 @@ public class SMetaTipo extends HttpServlet {
 	
     public SMetaTipo() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
+		response.getWriter().append("{ \"success\": false }").append(request.getContextPath());
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();
