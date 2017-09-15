@@ -13,7 +13,6 @@ import dao.ActividadDAO;
 import dao.ComponenteDAO;
 import dao.ComponenteTipoDAO;
 import dao.CooperanteDAO;
-import dao.EntidadDAO;
 import dao.ProductoDAO;
 import dao.ProgramaDAO;
 import dao.ProyectoDAO;
