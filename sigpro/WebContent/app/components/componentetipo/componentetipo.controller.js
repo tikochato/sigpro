@@ -104,11 +104,12 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 			$http.post('/SComponenteTipo', { accion: 'getComponentetiposPagina', pagina: pagina, numerocomponentetipos: $utilidades.elementosPorPagina,
 				filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
-				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion }).success(
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.componentetipos = response.componentetipos;
 						mi.gridOptions.data = mi.componentetipos;
 						mi.mostrarcargando = false;
+						mi.paginaActual = pagina;
 					});
 		}
 		mi.redireccionSinPermisos=function(){
@@ -131,7 +132,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 					id: mi.componentetipo.id,
 					nombre: mi.componentetipo.nombre,
 					descripcion: mi.componentetipo.descripcion,
-					propiedades: idspropiedad.length > 0 ? idspropiedad : null
+					propiedades: idspropiedad.length > 0 ? idspropiedad : null, t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
 						$utilidades.mensaje('success','Tipo Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
@@ -172,7 +173,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 					if(data){
 						$http.post('/SComponenteTipo', {
 							accion: 'borrarComponenteTipo',
-							id: mi.componentetipo.id
+							id: mi.componentetipo.id, t: (new Date()).getTime()
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Tipo Componente borrado con éxito');
@@ -236,7 +237,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 		mi.obtenerTotalComponenteTipos = function(){
 			$http.post('/SComponenteTipo', { accion: 'numeroComponenteTipos',
 				filtro_nombre: mi.filtros['nombre'],
-				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'], t: (new Date()).getTime()  }).then(
 					function(response) {
 						mi.totalComponentetipos = response.data.totalcomponentetipos;
 						mi.paginaActual = 1;
@@ -275,7 +276,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 						accion: 'getComponentePropiedadPaginaPorTipo',
 						pagina: pagina,
 						idComponenteTipo:mi.componentetipo!=null ? mi.componentetipo.id : null, 
-						numerocomponentepropiedad: $utilidades.elementosPorPagina }).success(
+						numerocomponentepropiedad: $utilidades.elementosPorPagina, t: (new Date()).getTime() }).success(
 				function(response) {
 					
 					mi.componentepropiedades = response.componentepropiedades;
@@ -287,7 +288,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 		}
 		
 		mi.cargarTotalPropiedades = function(){
-			$http.post('/SComponentePropiedad', { accion: 'numeroComponentePropiedades' }).success(
+			$http.post('/SComponentePropiedad', { accion: 'numeroComponentePropiedades', t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.totalComponentepropiedades = response.totalcomponentepropiedades;
 						mi.cargarTablaPropiedades(mi.paginaActualPropiedades);
@@ -325,6 +326,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 		}
 		
 		mi.buscarPropiedad = function(titulo, mensaje) {
+			titulo = 'Propiedades de Componente';
 			var modalInstance = $uibModal.open({
 			    animation : 'true',
 			    ariaLabelledBy : 'modal-title',
@@ -346,6 +348,9 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 				    		}
 				    	}
 					    return idspropiedad;
+					},
+					$titulo : function(){
+						return titulo;
 					}
 			    }
 
@@ -361,10 +366,10 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 
 app.controller('modalBuscarComponentePropiedad', [
 	'$uibModalInstance', '$scope', '$http', '$interval', 'i18nService',
-	'Utilidades', '$timeout', '$log','idspropiedad', modalBuscarComponentePropiedad
+	'Utilidades', '$timeout', '$log','idspropiedad','$titulo', modalBuscarComponentePropiedad
 ]);
 
-function modalBuscarComponentePropiedad($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log,idspropiedad) {
+function modalBuscarComponentePropiedad($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log,idspropiedad, $titulo) {
 	
 	var mi = this;
 
@@ -372,7 +377,7 @@ function modalBuscarComponentePropiedad($uibModalInstance, $scope, $http, $inter
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = 5;
 	mi.elementosPorPagina = 9;
-	
+	mi.titulo = $titulo;
 	mi.mostrarCargando = false;
 	mi.data = [];
 	
@@ -380,10 +385,9 @@ function modalBuscarComponentePropiedad($uibModalInstance, $scope, $http, $inter
 	mi.seleccionado = false;
 	
     $http.post('/SComponentePropiedad', {
-    	accion : 'numeroComponentePropiedadesDisponibles'
+    	accion : 'numeroComponentePropiedadesDisponibles', t: (new Date()).getTime()
         }).success(function(response) {
     	mi.totalElementos = response.totalcomponentepropiedades;
-    	//mi.elementosPorPagina = mi.totalElementos;
     	mi.cargarData(1);
     });
     
@@ -415,10 +419,10 @@ function modalBuscarComponentePropiedad($uibModalInstance, $scope, $http, $inter
 
     mi.cargarData = function(pagina) {
     	var datos = {
-    	    accion : 'getComponentePropiedadesTotalDisponibles',
+    	    accion : 'getComponentePropiedadPagina',
     	    pagina : pagina,
-    	    idspropiedades: idspropiedad,
-    	    registros : mi.elementosPorPagina
+    	    numerocomponentepropiedades: mi.elementosPorPagina,
+    	    registros : mi.elementosPorPagina, t: (new Date()).getTime()
     	};
 
     	mi.mostrarCargando = true;

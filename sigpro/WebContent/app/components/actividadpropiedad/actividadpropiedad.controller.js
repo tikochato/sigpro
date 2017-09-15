@@ -108,13 +108,14 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 				$http.post('/SActividadPropiedad', { accion: 'getActividadPropiedadPagina', pagina: pagina, numeroactividadpropiedad: $utilidades.elementosPorPagina,
 					filtro_nombre: mi.filtros['nombre'], 
 					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: new Date().getTime()
 				}).success(
 				
 						function(response) {
 							mi.actividadpropiedades = response.actividadpropiedades;
 							mi.gridOptions.data = mi.actividadpropiedades;
 							mi.mostrarcargando = false;
+							mi.paginaActual = pagina;
 						});
 			}
 			
@@ -126,7 +127,8 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 						id: mi.actividadpropiedad.id,
 						nombre: mi.actividadpropiedad.nombre,
 						descripcion: mi.actividadpropiedad.descripcion,
-						datoTipoId: mi.actividadpropiedad.datotipoid.id
+						datoTipoId: mi.actividadpropiedad.datotipoid.id, 
+						t: new Date().getTime()
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Propiedad de Actividad '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
@@ -157,7 +159,8 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 						if(data){
 							$http.post('/SActividadPropiedad', {
 								accion: 'borrarActividadPropiedad',
-								id: mi.actividadpropiedad.id
+								id: mi.actividadpropiedad.id, 
+								t: new Date().getTime()
 							}).success(function(response){
 								if(response.success){
 									$utilidades.mensaje('success','Propiedad de Actividad borrado con éxito');
@@ -184,7 +187,8 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 				    $mdDialog.show(confirm).then(function() {
 				    	$http.post('/SActividadPropiedad', {
 							accion: 'borrarActividadPropiedad',
-							id: mi.actividadpropiedad.id
+							id: mi.actividadpropiedad.id, 
+							t: new Date().getTime()
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Propiedad de Actividad borrado con éxito');
@@ -258,7 +262,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 			
 			mi.obtenerTotalActividadPropiedades = function(){
 				$http.post('/SActividadPropiedad', { accion: 'numeroActividadPropiedades', filtro_nombre: mi.filtros['nombre'], 
-					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: new Date().getTime() }).success(
 						function(response) {
 							mi.totalActividadPropiedades = response.totalactividadpropiedades;
 							mi.cargarTabla(1);
