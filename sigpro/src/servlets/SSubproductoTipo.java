@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dao.ProdTipoPropiedadDAO;
+import dao.SubprodTipoPropiedadDAO;
 import dao.SubproductoTipoDAO;
 import utilities.Utils;
 
@@ -133,7 +134,7 @@ public class SSubproductoTipo extends HttpServlet {
 
 		String resultadoJson = "";
 
-		resultadoJson = ProdTipoPropiedadDAO.getJson(codigoTipo);
+		resultadoJson = SubprodTipoPropiedadDAO.getJson(codigoTipo);
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";

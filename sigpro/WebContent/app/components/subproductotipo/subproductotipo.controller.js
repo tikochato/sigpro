@@ -173,11 +173,10 @@ function controlSubproductoTipo($scope, $routeParams, $route, $window, $location
 		mi.esForma = true;
 		mi.entityselected = null;
 		mi.esNuevo = true;
-
+		mi.entidadSeleccionada ={};
 		mi.codigo = "";
 		mi.nombre = "";
 		mi.descripcion = "";
-
 		mi.propiedadesTipo = [];
 
 	}
@@ -391,13 +390,16 @@ function controlSubproductoTipo($scope, $routeParams, $route, $window, $location
 	};
 
 	mi.verificarPropiedad = function(codigoTipo, codigoPropiedad) {
-		for (var i = 0; i < mi.propiedadesTipo.length; i++) {
-			if (mi.propiedadesTipo[i].idTipo === codigoTipo
-					&& mi.propiedadesTipo[i].idPropiedad === codigoPropiedad) {
-				return false;
+		if(mi.propiedadesTipo.length>0){
+			for (var i = 0; i < mi.propiedadesTipo.length; i++) {
+				if (mi.propiedadesTipo[i].idTipo === codigoTipo
+						&& mi.propiedadesTipo[i].idPropiedad === codigoPropiedad) {
+					return false;
+				}
 			}
-		}
 
+		}
+		
 		return true;
 	}
 
