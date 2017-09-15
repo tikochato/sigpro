@@ -666,8 +666,7 @@ function modalBuscarActividadTipo($uibModalInstance, $scope, $http, $interval,
 	$http.post('/SActividadTipo', {
 		accion : 'numeroActividadTipos', t: new Date().getTime()
 	}).success(function(response) {
-		mi.totalElementos = response.totalcooperantes;
-		mi.elementosPorPagina = mi.totalElementos;
+		mi.totalElementos = response.totalactividadtipos;
 		mi.cargarData(1);
 	});
 
@@ -707,13 +706,14 @@ function modalBuscarActividadTipo($uibModalInstance, $scope, $http, $interval,
 
 	mi.cargarData = function(pagina) {
 		var datos = {
-			accion : 'cargar',
+			accion : 'getActividadtiposPagina',
 			pagina : pagina,
-			registros : mi.elementosPorPagina
+			numeroactividadstipo : mi.elementosPorPagina, 
+			t: new Date().getTime()
 		};
 
 		mi.mostrarCargando = true;
-		$http.post('/SActividadTipo', {accion : 'getActividadtiposPagina', t: new Date().getTime()}).then(function(response) {
+		$http.post('/SActividadTipo', datos).then(function(response) {
 			if (response.data.success) {
 				mi.data = response.data.actividadtipos;
 				mi.opcionesGrid.data = mi.data;
