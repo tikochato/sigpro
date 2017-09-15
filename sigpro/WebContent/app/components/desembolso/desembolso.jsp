@@ -112,7 +112,7 @@
 					</div>
 					
 					<div class="form-group">
-					   <input type="number" name="imonto"  class="inputText" id="imonto" 
+					   <input type="text" name="imonto"  class="inputText" id="imonto" ui-number-mask="2"
 					     ng-model="desembolsoc.desembolso.monto" ng-value="desembolsoc.desembolso.monto"   
 					     onblur="this.setAttribute('value', this.value);" ng-required="true" >
 					   <label class="floating-label">* Monto</label>

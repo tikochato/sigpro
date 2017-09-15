@@ -99,7 +99,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 				$http.post('/SMetaTipo', { accion: 'getMetaTiposPagina', pagina: pagina, numerometatipo: $utilidades.elementosPorPagina,
 					filtro_nombre: mi.filtros['nombre'], 
 					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion 
+					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion,t: (new Date()).getTime() 
 				}).success(
 				
 						function(response) {
@@ -155,7 +155,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 								if(response.success){
 									$utilidades.mensaje('success','Tipo de meta borrado con éxito');
 									mi.tipo = null;
-									mi.cargarTabla();
+									mi.obtenerTotalMetaTipos();
 								}
 								else
 									$utilidades.mensaje('danger','Error al borrar el tipo de meta');
@@ -220,7 +220,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 			
 			mi.obtenerTotalMetaTipos =  function(){
 				$http.post('/SMetaTipo', { accion: 'numeroMetaTipos', filtro_nombre: mi.filtros['nombre'], 
-					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: (new Date()).getTime() }).success(
 						function(response) {
 							mi.totaltipos = response.totalMetaTipos;
 							mi.cargarTabla(mi.paginaActual);

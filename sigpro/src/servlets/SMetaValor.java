@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.joda.time.DateTime;
+
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,13 +39,14 @@ public class SMetaValor extends HttpServlet {
 		Integer metaid;
 		String fecha;
 		String usuario;
+		Integer datoTipo;
 		Integer valorEntero;
 		String valorString;
 		BigDecimal valorDecimal; 
 		Date valorTiempo;
 		String valor;
 		Integer estado;
-		Date fechaIngreso;
+		String fechaIngreso;
 	}
 
     public SMetaValor() {
@@ -53,7 +54,7 @@ public class SMetaValor extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -75,35 +76,35 @@ public class SMetaValor extends HttpServlet {
 		if(accion.equals("getMetaValoresTabla")){
 			Integer metaid =  map.get("metaid")!=null  ? Integer.parseInt(map.get("metaid")) : 0;
 			Integer datoTipoId =  map.get("datotipoid")!=null  ? Integer.parseInt(map.get("datotipoid")) : 0;
-			List<MetaValor> MetaValores = MetaValorDAO.getValoresMeta(metaid);
+			Integer pagina = Utils.String2Int(map.get("pagina"),0);
+			Integer totalValores = Utils.String2Int(map.get("totalValores"),0);
+			
+			List<MetaValor> MetaValores = MetaValorDAO.getValoresMeta(metaid, pagina, totalValores);
 			List<stmetavalor> tmetavalores = new ArrayList<stmetavalor>();
 			for(MetaValor metaValor : MetaValores){
 				stmetavalor temp = new stmetavalor();
 				temp.metaid = metaValor.getId().getMetaid();
 				temp.fecha = Utils.formatDate( metaValor.getId().getFecha());
 				temp.usuario = metaValor.getUsuario();
-				temp.valorEntero = metaValor.getValorEntero();
-				temp.valorString = metaValor.getValorString();
-				temp.valorDecimal = metaValor.getValorDecimal();
-				temp.valorTiempo = metaValor.getValorTiempo();
+				temp.usuario = metaValor.getUsuario();
+				temp.fechaIngreso = Utils.formatDate(metaValor.getFechaIngreso());
+				temp.datoTipo = datoTipoId;
+				
 				switch(datoTipoId){
 					case 1: //texto
-						temp.valor = temp.valorString;
+						temp.valor = metaValor.getValorString();
 						break;
 					case 2: //entero
-						temp.valor = temp.valorEntero.toString();
+						temp.valor = metaValor.getValorEntero() != null ? metaValor.getValorEntero().toString() : null;
 						break;
 					case 3: //decimal
-						temp.valor = temp.valorDecimal.toString();
-						break;
-					case 4: //booleano
-						temp.valor = "";
+						temp.valor = metaValor.getValorDecimal() !=null  ? metaValor.getValorDecimal().toString(): null;
+						
 						break;
 					case 5: //fecha
-						temp.valor = Utils.formatDateHour(temp.valorTiempo);
+						temp.valor = Utils.formatDate(metaValor.getValorTiempo());
 						break;
-					default: 
-						temp.valor = "";
+					
 				}
 				tmetavalores.add(temp);
 			}
@@ -113,39 +114,73 @@ public class SMetaValor extends HttpServlet {
 		}
 		else if(accion.equals("getMetaValores")){
 			Integer metaid =  map.get("metaid")!=null  ? Integer.parseInt(map.get("metaid")) : 0;
-			List<MetaValor> MetaValores = MetaValorDAO.getValoresMeta(metaid);
+			List<MetaValor> MetaValores = MetaValorDAO.getValoresMeta(metaid,0,0);
 			response_text=new GsonBuilder().serializeNulls().create().toJson(MetaValores);
 	        response_text = String.join("", "\"MetaValores\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("guardarMetaValor")){
+
+			
 			boolean result = false;
 			boolean esnuevo = map.get("esnuevo")!=null ? map.get("esnuevo").equals("true") :  false;
 			int metaid = map.get("metaid")!=null ? Integer.parseInt(map.get("metaid")) : 0;
 			Date fecha = Utils.dateFromString(map.get("fecha"));
+			Integer datoTipoId =  map.get("datotipoid")!=null  ? Integer.parseInt(map.get("datotipoid")) : 0;
 			
 			if(metaid>0 || esnuevo){
-				Integer valorEntero = map.get("valorEntero")!=null ? Integer.parseInt(map.get("valorEntero")) : null;
-				String valorString = map.get("valorString");
-				BigDecimal valorDecimal = Utils.String2BigDecimal(map.get("valorDecimal"), null); 
-				Date valorTiempo = map.get("valorEntero")!=null ? Utils.dateFromString(map.get("valorTiempo")) : null;
-				
+				String valor = map.get("valor");
 				Meta Meta = MetaDAO.getMetaPorId(metaid);
 				MetaValorId MetaValorId;
 				MetaValor MetaValor;
+				
+				String valorTexto = null;
+				Integer valorEntero = null;
+				BigDecimal ValorDecimal = null;
+				Date valorFecha = null;
+				switch (datoTipoId){
+					case 1: //texto
+						valorTexto = valor;
+						break;
+					case 2: //entero
+						valorEntero = Utils.String2Int(valor);
+						break;
+					case 3: //decimal
+						ValorDecimal = Utils.String2BigDecimal(valor, null);
+						break;
+					case 5: //fecha
+						valorFecha = Utils.dateFromString(valor);
+						break;
+				}
+				
+				
 				if(esnuevo){		
-					MetaValorId = new MetaValorId(Meta.getId(), new DateTime().toDate());
-
-					MetaValor = new MetaValor(MetaValorId, Meta, usuario, valorEntero, valorString, valorDecimal, valorTiempo, 1, new Date());
+				
+					
+					MetaValorId = new MetaValorId(Meta.getId(), fecha);
+					MetaValor = new MetaValor(MetaValorId, Meta, usuario, valorEntero, valorTexto, ValorDecimal, valorFecha, 1, new Date());
 				}
 				else{
 					MetaValorId = new MetaValorId(Meta.getId(), fecha);
 					MetaValor = MetaValorDAO.getMetaValorPorId(MetaValorId);
-					MetaValor.setValorDecimal(valorDecimal);
-					MetaValor.setValorEntero(valorEntero);
-					MetaValor.setValorString(valorString);
-					MetaValor.setValorTiempo(valorTiempo);
+					
+					switch (datoTipoId){
+						case 1: //texto
+							MetaValor.setValorString(valorTexto);
+							break;
+						case 2: //entero
+							MetaValor.setValorEntero(valorEntero);
+							break;
+						case 3: //decimal
+							MetaValor.setValorDecimal(ValorDecimal);
+							break;
+						case 5: //fecha
+							MetaValor.setValorTiempo(valorFecha);
+							break;
+					}
+					
 					MetaValor.setUsuario(usuario);
+
 				}
 				result = MetaValorDAO.guardarMetaValor(MetaValor);
 				
@@ -155,6 +190,7 @@ public class SMetaValor extends HttpServlet {
 			}
 			else
 				response_text = "{ \"success\": false }";
+			
 		}
 		else if(accion.equals("borrarMetaValor")){
 			int metaid = map.get("metaid")!=null ? Integer.parseInt(map.get("metaid")) : 0;

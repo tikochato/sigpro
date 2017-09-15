@@ -144,7 +144,7 @@
 							  				<label for="isubprog" class="floating-label">Subprograma</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
-											<input type="number" class="inputText" ng-model="actividadc.actividad.proyecto_" ng-value="actividadc.actividad.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+											<input type="number" class="inputText" ng-model="actividadc.actividad.proyecto" ng-value="actividadc.actividad.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 							  				<label for="iproy_" class="floating-label">Proyecto</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
@@ -173,16 +173,10 @@
 							<span class="label-icon" ng-click="actividadc.buscarActividadTipo()"><i class="glyphicon glyphicon-search"></i></span>
 							<label for="campo3" class="floating-label">* Tipo de Actividad</label>
 						</div>
-						<div class="form-group" ng-if="false">
-						    <input type="text" class="inputText" id="iactividadResponsable" name="iactividadResponsable" ng-model="actividadc.actividad.actividadResponsable" ng-value="actividadc.actividad.actividadResponsable" 
-							ng-click="actividadc.buscarActividadResponsable()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
-							<span class="label-icon" ng-click="actividadc.buscarActividadResponsable()"><i class="glyphicon glyphicon-search"></i></span>
-							<label for="campo3" class="floating-label">* Responsable</label>
-						</div>
 						
 						<div class="form-group" >
 						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="actividadc.coordenadas" ng-value="actividadc.coordenadas" 
-								            		ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="false"/>
+								            		ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true"/>
 							<span class="label-icon" ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
 							<label for="campo3" class="floating-label">Coordenadas</label>
 						</div>
@@ -200,8 +194,7 @@
 								<div class="form-group">
 									<select class="inputText" ng-model="actividadc.duracionDimension"
 										ng-options="dim as dim.nombre for dim in actividadc.dimensiones track by dim.value"
-										 required>
-									<option value="">Seleccione una opción</option>
+										 ng-required="true">
 									</select>
 									<label for="nombre" class="floating-label">* Dimension</label>
 								</div>
@@ -211,8 +204,8 @@
 								<div class="form-group">
 								   <input class="inputText"  type="number"
 								     ng-model="actividadc.actividad.duracion" ng-value="actividadc.actividad.duracion"   
-								     onblur="this.setAttribute('value', this.value);"  min="1" max="100" ng-required="true" 
-								     ng-readonly="actividadc.duracionDimension != '' ? false : true"
+								     onblur="this.setAttribute('value', this.value);"  min="1" ng-required="true" 
+								     ng-readonly="actividadc.duracionDimension.value != 0 ? false : true"
 								     ng-change="actividadc.actividad.fechaInicio != null && actividadc.duracionDimension != '' ? actividadc.cambioDuracion(actividadc.duracionDimension) : ''">
 								   <label class="floating-label">* Duración</label>
 								</div>	
@@ -222,7 +215,7 @@
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaInicio" is-open="actividadc.fi_abierto"
 								            datepicker-options="actividadc.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin(); actividadc.cambioDuracion(actividadc.duracionDimension);" ng-required="true"  
-								            ng-click="actividadc.abrirPopupFecha(1000)"
+								            ng-click="actividadc.abrirPopupFecha(1000)" readonly="readonly"
 								            ng-value="actividadc.actividad.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
 								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1000)">
 								              <i class="glyphicon glyphicon-calendar"></i>
@@ -236,7 +229,7 @@
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaFin" is-open="actividadc.ff_abierto"
 								            datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin()" ng-required="true"
-								            ng-readonly="false"  
+								            readonly="readonly"
 								            ng-value="actividadc.actividad.fechaFin" onblur="this.setAttribute('value', this.value);"/>
 								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1001)">
 								              <i class="glyphicon glyphicon-calendar"></i>
@@ -254,15 +247,16 @@
 						</div>
 						
 						<div class="form-group" >
-					       <input type="number" class="inputText" ng-model="actividadc.actividad.costo" ng-value="actividadc.actividad.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
-					       <label for="iprog" class="floating-label">Costo</label>
+					       <input type="text" class="inputText" ng-model="actividadc.actividad.costo" ng-value="actividadc.actividad.costo" ui-number-mask="2"
+					       	onblur="this.setAttribute('value', this.value);" style="text-align: left" ng-required="actividadc.actividad.acumulacionCostoId > 0"/>
+					       <label for="iprog" class="floating-label">{{actividadc.actividad.acumulacionCostoId > 0 ? "* Costo" : "Costo"}}</label>
 						</div>
 						
 						<div class="form-group" >
 						    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="actividadc.actividad.acumulacionCostoNombre" ng-value="actividadc.actividad.acumulacionCostoNombre" 
-							ng-click="actividadc.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="actividadc.actividad.costo > 0"/>
+							ng-click="actividadc.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="actividadc.actividad.costo != null || actividadc.actividad.costo > 0"/>
 							<span class="label-icon" ng-click="actividadc.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
-							<label for="campo3" class="floating-label">* Acumulación Costo</label>
+							<label for="campo3" class="floating-label">{{actividadc.actividad.costo > 0 ? "* Acumulación Costo" : "Acumulación Costo"}} </label>
 						</div>	
 											
 						<div ng-repeat="campo in actividadc.camposdinamicos">
@@ -274,7 +268,7 @@
 								</div>
 								<div ng-switch-when="entero" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
-									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);" />
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="decimal" class="form-group" >

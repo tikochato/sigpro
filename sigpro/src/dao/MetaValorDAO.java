@@ -21,7 +21,7 @@ public class MetaValorDAO {
 	private static Integer ESTADO_ACTIVO = 1;
 	private static Integer ESTADO_CONGELADO = 2;
 	
-	public static List<MetaValor> getValoresMeta(int metaid){
+	public static List<MetaValor> getValoresMeta(int metaid, int pagina, int totalValores){
 		List<MetaValor> ret = new ArrayList<MetaValor>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -30,7 +30,11 @@ public class MetaValorDAO {
 			CriteriaQuery<MetaValor> criteria = builder.createQuery(MetaValor.class);
 			Root<MetaValor> root = criteria.from(MetaValor.class);
 			criteria.select( root );
+		
 			criteria.where( builder.and(builder.equal( root.get("id").get("metaid"), metaid ),builder.or(builder.equal(root.get("estado"), ESTADO_ACTIVO), builder.equal(root.get("estado"), ESTADO_CONGELADO))));
+			
+			session.createQuery( criteria ).setFirstResult(((pagina-1)*(totalValores)));
+			session.createQuery( criteria ).setMaxResults(totalValores);
 			ret = session.createQuery( criteria ).getResultList();
 		}
 		catch(Throwable e){

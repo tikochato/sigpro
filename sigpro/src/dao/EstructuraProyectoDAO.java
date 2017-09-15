@@ -70,11 +70,11 @@ public class EstructuraProyectoDAO {
 		List<?> estructuras = EstructuraProyectoDAO.getEstructuraProyecto(id);
 		if(estructuras.size()>0){
 			Object[] dato = (Object[]) estructuras.get(0);
-			root = new Nodo((Integer)dato[0],((BigInteger)dato[2]).intValue(),(String)dato[1],(Integer)dato[4],(String)dato[3], new ArrayList<Nodo>(), null);
+			root = new Nodo((Integer)dato[0],((BigInteger)dato[2]).intValue(),(String)dato[1],(Integer)dato[4], new ArrayList<Nodo>(), null);
 			Nodo nivel_actual_estructura = root;
 			for(int i=1; i<estructuras.size(); i++){
 				dato = (Object[]) estructuras.get(i);
-				Nodo nodo = new Nodo((Integer)dato[0],((BigInteger)dato[2]).intValue(),(String)dato[1],(Integer)dato[4],(String)dato[3], new ArrayList<Nodo>(), null);
+				Nodo nodo = new Nodo((Integer)dato[0],((BigInteger)dato[2]).intValue(),(String)dato[1],(Integer)dato[4], new ArrayList<Nodo>(), null);
 				if(nodo.nivel!=nivel_actual_estructura.nivel+1){
 					if(nodo.nivel>nivel_actual_estructura.nivel){
 						nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);
