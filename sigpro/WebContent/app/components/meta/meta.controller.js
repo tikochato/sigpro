@@ -153,7 +153,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			}			
 			
 			mi.guardar=function(){
-				if(mi.meta!=null && mi.meta.nombre!='' && mi.tipoMetaSeleccionado!=null && mi.unidadMedidaSeleccionado!=null  ){
+				if(mi.meta!=null && mi.tipoMetaSeleccionado!=null && mi.unidadMedidaSeleccionado!=null  ){
 					$http.post('/SMeta', {
 						accion: 'guardarMeta',
 						esnueva: mi.esnueva,
@@ -189,7 +189,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				if(mi.meta!=null){
 					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 							, "Confirmación de Borrado"
-							, '¿Desea borrar la Meta "'+mi.meta.nombre+'"?'
+							, '¿Desea borrar la Meta "'+mi.meta.id+'"?'
 							, "Borrar"
 							, "Cancelar")
 					.result.then(function(data) {
