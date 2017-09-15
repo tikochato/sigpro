@@ -46,7 +46,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				startingDay : 1
 		};
 		
-		$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo }).success(
+		$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo, t: (new Date()).getTime()}).success(
 				function(response) {
 					mi.objetoid = response.id;
 					mi.objetoNombre = response.nombre;
@@ -133,7 +133,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				numeroriesgos: $utilidades.elementosPorPagina, objetoid:$routeParams.objeto_id,objetotipo:$routeParams.objeto_tipo
 				,filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
 				}).success(
 
 					function(response) {
@@ -175,7 +175,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					ejecutado: mi.ejecutado == true ? 1 : 0 ,
 					fechaejecucion: moment(mi.riesgo.fechaEjecucion).format('DD/MM/YYYY'),
 					objetoTipo:  $routeParams.objeto_tipo,
-					datadinamica : JSON.stringify(mi.camposdinamicos)
+					datadinamica : JSON.stringify(mi.camposdinamicos),
+					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
 						mi.esnuevo = false;
@@ -206,7 +207,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					if(data){
 						$http.post('/SRiesgo', {
 							accion: 'borrarRiesgo',
-							id: mi.riesgo.id
+							id: mi.riesgo.id,
+							t: (new Date()).getTime()
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Riesgo borrado con éxito');
@@ -228,6 +230,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.nuevo = function() {
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
+			mi.colaboradorNombre="";
+			mi.colaboradorid="";
 			mi.riesgo = {};
 			mi.riesgoTipoid = "";
 			mi.riesgoTipoNombre="";
@@ -267,7 +271,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				var parametros = { 
 						accion: 'getRiesgoPropiedadPorTipo', 
 						idRiesgo: mi.riesgo.id,
-						idRiesgoTipo: mi.riesgoTipoid
+						idRiesgoTipo: mi.riesgoTipoid,
+						t: (new Date()).getTime()
 				}
 				
 				$http.post('/SRiesgoPropiedad', parametros).then(function(response){
@@ -310,11 +315,11 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			mi.cargarTabla(mi.paginaActual);
 		}
 		
-		mi.reiniciarVista=function(){
-			if($location.path()==('/riesgo/rv'))
+		mi.reiniciarVista=function(){ 
+			if($location.path()==('/riesgo/'+$routeParams.objeto_id + "/"+$routeParams.objeto_tipo+'/rv' ))
 				$route.reload();
 			else
-				$location.path('/riesgo/rv');
+				$location.path('/riesgo/'+$routeParams.objeto_id + "/"+$routeParams.objeto_tipo+'/rv' );
 		}
 		
 		mi.abrirPopupFecha = function(index) {
@@ -343,7 +348,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			$http.post('/SRiesgo', { accion: 'numeroRiesgosPorObjeto',
 				objetoid:$routeParams.objeto_id,objetotipo:$routeParams.objeto_tipo
 				,filtro_nombre: mi.filtros['nombre'],
-				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).then(
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: (new Date()).getTime()  }).then(
 					function(response) {
 						mi.totalRiesgos = response.data.totalriesgos;
 						mi.paginaActual = 1;
@@ -351,7 +356,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			});
 		};
 		
-		$http.post('/SRiesgo', { accion: 'numeroRiesgos' }).success(
+		$http.post('/SRiesgo', { accion: 'numeroRiesgos', t: (new Date()).getTime() }).success(
 				function(response) {
 					mi.totalRiesgos = response.totalriesgos;
 					mi.cargarTabla(1);
@@ -415,7 +420,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			var parametros = { 
 					accion: 'getRiesgoPropiedadPorTipo', 
 					idRiesgo: mi.riesgo!=null ? mi.riesgo.id : 0,
-					idRiesgoTipo: itemSeleccionado.id
+					idRiesgoTipo: itemSeleccionado.id,
+					t: (new Date()).getTime()
 			}
 			
 			$http.post('/SRiesgoPropiedad', parametros).then(function(response){

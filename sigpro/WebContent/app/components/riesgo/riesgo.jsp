@@ -159,7 +159,7 @@
 							<input type="text" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" ng-model="riesgoc.riesgo.fechaEjecucion" is-open="riesgoc.fe_abierto"
 									datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
 									ng-value="riesgoc.riesgo.fechaEjecucion" onblur="this.setAttribute('value', this.value);"   
-									ng-click="riesgoc.abrirPopupFecha(1000)" ng-required="true"/>
+									ng-click="riesgoc.abrirPopupFecha(1000)" ng-required="true" readonly/>
 								<span class="label-icon" ng-click="riesgoc.abrirPopupFecha(1000)">
 										<i class="glyphicon glyphicon-calendar"></i>
 								</span>
