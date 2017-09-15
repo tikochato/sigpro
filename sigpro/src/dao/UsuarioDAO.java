@@ -60,7 +60,7 @@ public class UsuarioDAO {
 			session.saveOrUpdate(usuariolog);
 			session.getTransaction().commit();
 		}catch(Throwable e){
-			CLogger.write("3", EstadoTablaDAO.class, e);
+			CLogger.write("2", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -115,7 +115,7 @@ public class UsuarioDAO {
 			session.getTransaction().commit();
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("1", UsuarioDAO.class, e);
+			CLogger.write("5", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -143,7 +143,7 @@ public class UsuarioDAO {
 				ret = true;
 			} 
 		}catch(Throwable e){
-			CLogger.write("2", UsuarioDAO.class, e);
+			CLogger.write("6", UsuarioDAO.class, e);
 		}finally{
 			session.close();
 		}
@@ -170,7 +170,7 @@ public class UsuarioDAO {
 			session.getTransaction().commit();
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("2", UsuarioDAO.class, e);
+			CLogger.write("7", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -194,7 +194,7 @@ public class UsuarioDAO {
 			session.getTransaction().commit();
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("2", UsuarioDAO.class, e);
+			CLogger.write("8", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -220,7 +220,7 @@ public class UsuarioDAO {
 			session.getTransaction().commit();
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("2", UsuarioDAO.class, e);
+			CLogger.write("9", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -244,7 +244,7 @@ public class UsuarioDAO {
 			session.getTransaction().commit();
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("2", UsuarioDAO.class, e);
+			CLogger.write("10", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -274,7 +274,7 @@ public class UsuarioDAO {
 			session.getTransaction().commit();
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("3", UsuarioDAO.class, e);
+			CLogger.write("11", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -292,7 +292,7 @@ public class UsuarioDAO {
 			}
 		}
 		catch(Throwable e){
-			CLogger.write("5", UsuarioDAO.class, e);
+			CLogger.write("12", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -315,7 +315,7 @@ public class UsuarioDAO {
 			ret=true;
 		}
 		catch(Throwable e){
-			CLogger.write("5", UsuarioDAO.class, e);
+			CLogger.write("13", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -339,7 +339,7 @@ public class UsuarioDAO {
 			
 		}
 		catch(Throwable e){
-			CLogger.write("5", UsuarioDAO.class, e);
+			CLogger.write("14", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -363,7 +363,7 @@ public class UsuarioDAO {
 			
 		}
 		catch(Throwable e){
-			CLogger.write("5", UsuarioDAO.class, e);
+			CLogger.write("15", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -386,7 +386,7 @@ public class UsuarioDAO {
 			}
 		}
 		catch(Throwable e){
-			CLogger.write("5", UsuarioDAO.class, e);
+			CLogger.write("16", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -406,7 +406,7 @@ public class UsuarioDAO {
 			session.getTransaction().commit();
 			ret=true;
 		}catch(Throwable e){
-			CLogger.write("5", UsuarioDAO.class, e);
+			CLogger.write("17", UsuarioDAO.class, e);
 		}finally{
 			session.close();
 		}
@@ -422,7 +422,7 @@ public class UsuarioDAO {
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getResultList();
 		}catch(Throwable e){
-			CLogger.write("6", UsuarioDAO.class, e);
+			CLogger.write("17", UsuarioDAO.class, e);
 		}finally{
 			session.close();
 		}
@@ -438,7 +438,7 @@ public class UsuarioDAO {
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getResultList();
 		}catch(Throwable e){
-			CLogger.write("6", UsuarioDAO.class, e);
+			CLogger.write("18", UsuarioDAO.class, e);
 		}finally{
 			session.close();
 		}
@@ -454,7 +454,7 @@ public class UsuarioDAO {
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getResultList();
 		}catch(Throwable e){
-			CLogger.write("6", UsuarioDAO.class, e);
+			CLogger.write("19", UsuarioDAO.class, e);
 		}finally{
 			session.close();
 		}
@@ -483,7 +483,7 @@ public class UsuarioDAO {
 			criteria.setMaxResults(numeroUsuarios);
 			ret =criteria.getResultList();
 		}catch(Throwable e){
-			CLogger.write("7", UsuarioDAO.class, e);
+			CLogger.write("20", UsuarioDAO.class, e);
 		}finally{
 			session.close();
 		}
@@ -509,7 +509,7 @@ public class UsuarioDAO {
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
 		}catch(Throwable e){
-			CLogger.write("8", UsuarioDAO.class, e);
+			CLogger.write("21", UsuarioDAO.class, e);
 		}finally{
 			session.close();
 		}
@@ -524,7 +524,7 @@ public class UsuarioDAO {
 			criteria.setParameter("usuario",usuario);
 			ret =criteria.getSingleResult();
 		} catch (Throwable e) {
-			CLogger.write("2", ColaboradorDAO.class, e);
+			CLogger.write("22", UsuarioDAO.class, e);
 		} finally {
 			session.close();
 		}
@@ -539,7 +539,7 @@ public class UsuarioDAO {
 			criteria.setParameter("estado",1);
 			ret =criteria.getResultList();
 		}catch(Throwable e){
-			CLogger.write("7", UsuarioDAO.class, e);
+			CLogger.write("23", UsuarioDAO.class, e);
 		}finally{
 			session.close();
 		}
@@ -566,7 +566,7 @@ public class UsuarioDAO {
 			}
 			ret =criteria.getResultList();
 		}catch(Throwable e){
-			CLogger.write("7", UsuarioDAO.class, e);
+			CLogger.write("24", UsuarioDAO.class, e);
 		}finally{
 			session.close();
 		}
@@ -583,7 +583,7 @@ public class UsuarioDAO {
 			criteria.setParameter("proyecto",proyecto);
 			ret =criteria.getResultList();
 		}catch(Throwable e){
-			CLogger.write("7", UsuarioDAO.class, e);
+			CLogger.write("25", UsuarioDAO.class, e);
 		}finally{
 			session.close();
 		}

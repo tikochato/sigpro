@@ -203,7 +203,9 @@ public class SUsuario extends HttpServlet {
 						}
 					}
 					Integer rol = UsuarioDAO.getRolPorUsuario(usuario);
-					Integer unidadEjecutora = UsuarioDAO.getUnidadEjecutora(usuario).getId().getUnidadEjecutora();
+					Integer unidadEjecutora =0;
+					if(rol>0)
+						unidadEjecutora = UsuarioDAO.getUnidadEjecutora(usuario).getId().getUnidadEjecutora();
 					Integer cooperante = UsuarioDAO.getCooperantePorUsuario(usuario).getId();
 					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stpermisos);
 					String proyectos_usuarios= new GsonBuilder().serializeNulls().create().toJson(stproyectos);
