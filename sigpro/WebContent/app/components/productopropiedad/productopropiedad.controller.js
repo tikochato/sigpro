@@ -30,7 +30,7 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 	mi.ordenDireccion = null;
 	mi.filtros = [];
 	
-	$http.post('/SDatoTipo', {accion : 'cargarCombo'}).success(function(response) {
+	$http.post('/SDatoTipo', {accion : 'cargarCombo', t: (new Date()).getTime()}).success(function(response) {
 		mi.datoTipos = response.datoTipos;
 	});
 	
@@ -39,7 +39,7 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 		mi.cargarTabla(mi.paginaActual);
 	}
 
-	$http.post('/SProductoPropiedad', {accion : 'totalElementos'}).success(function(response) {
+	$http.post('/SProductoPropiedad', {accion : 'totalElementos', t: (new Date()).getTime()}).success(function(response) {
 		mi.totalElementos = response.total;
 		mi.cargarTabla(1);
 	});
@@ -53,7 +53,7 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 			registros : mi.elementosPorPagina,
 			filtro_nombre: mi.filtros['nombre'], 
 			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
 		};
 
 		mi.mostrarCargando = true;
@@ -63,6 +63,7 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 				mi.data = response.data.productoPropiedades;
 				mi.opcionesGrid.data = mi.data;
 				mi.mostrarCargando = false;
+				mi.paginaActual = pagina;
 			}
 		});
 
@@ -212,7 +213,7 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 
 		} else {
 			$utilidades.mensaje('warning',
-					'Debe seleccionar una PROPIEDAD DE PRODUCTO');
+					'Debe seleccionar una propiedad de producto');
 		}
 
 	};
@@ -221,25 +222,26 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 		if (mi.seleccionada) {
 			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 					, "Confirmación de Borrado"
-					, '¿Desea borrar "' + mi.entidadSeleccionada.nombre + '"?'
+					, '¿Desea borrar la propiedad "' + mi.entidadSeleccionada.nombre + '"?'
 					, "Borrar"
 					, "Cancelar")
 			.result.then(function(data) {
 				if(data){
 					var datos = {
 							accion : 'borrar',
-							codigo : mi.entidadSeleccionada.id
+							codigo : mi.entidadSeleccionada.id,
+							t: (new Date()).getTime()
 						};
 						$http.post('/SProductoPropiedad', datos).success(
 								function(response) {
 									if (response.success) {
 										$utilidades.mensaje('success',
-												'Propiedad de Producto borrado con éxito');
+												'Propiedad de Producto borrada con éxito');
 										mi.seleccionada = null;
-										mi.cargarTabla(1);
+										mi.obtenerTotalProductoPropiedades();
 									} else
 										$utilidades.mensaje('danger',
-												'Error al borrar el Tipo de Producto');
+												'Error al borrar la propiedad del Producto');
 								});
 				}
 			}, function(){
@@ -247,14 +249,18 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 			});
 		} else {
 			$utilidades.mensaje('warning',
-					'Debe seleccionar una PROPIEDAD DE PRODUCTO que desee borrar');
+					'Debe seleccionar una propiedad de producto que desee borrar');
 		}
 	};
 
 	mi.guardar = function() {
+		mi.entidadSeleccionada = {
+				nombre: mi.nombre,
+				descripcion: mi.descripcion,
+				tipo: mi.datoTipoSeleccionado.id
+		}
 		
 		if ($utilidades.esCadenaVacia(mi.nombre)
-				|| $utilidades.esCadenaVacia(mi.descripcion)
 				|| !$utilidades.esNumero(mi.datoTipoSeleccionado.id)) {
 			$utilidades.mensaje('danger',
 					'Debe de llenar todos los campos obligatorios');
@@ -267,7 +273,8 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 				nombre : mi.nombre,
 				descripcion : mi.descripcion,
 				tipo : mi.datoTipoSeleccionado.id,
-				usuario : 'temporal'
+				usuario : 'temporal',
+				t: (new Date()).getTime()
 			};
 			
 			$http.post('/SProductoPropiedad', datos).then(
@@ -284,10 +291,10 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 							mi.entidadSeleccionada.fechaActualizacion = response.data.fechaactualizacion;
 							
 							$utilidades.mensaje('success',
-									'Propiedad de Producto guardado con exito.');
+									'Propiedad de Producto guardada con exito.');
 						} else {
 							$utilidades.mensaje('danger',
-									'Propiedad de Producto ya existe');
+									'La Propiedad de Producto ya existe');
 						}
 
 					});
@@ -298,7 +305,8 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 				nombre : mi.nombre,
 				descripcion : mi.descripcion,
 				tipo : mi.datoTipoSeleccionado.id,
-				usuario : 'temporal'
+				usuario : 'temporal',
+				t: (new Date()).getTime()
 			};
 
 			$http.post('/SProductoPropiedad', datos).then(
@@ -316,10 +324,10 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 							mi.obtenerTotalProductoPropiedades();
 
 							$utilidades.mensaje('success',
-									'Propiedad de Producto actualizado con exito.');
+									'Propiedad de Producto actualizada con exito.');
 						} else {
 							$utilidades.mensaje('danger',
-									'Error al actualizar datos');
+									'Error al actualizar datos de propiedad');
 						}
 					});
 
@@ -349,7 +357,7 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 	mi.obtenerTotalProductoPropiedades=function(){
 		$http.post('/SProductoPropiedad', { accion: 'totalElementos',objetoid:$routeParams.objeto_id, tipo: mi.objetotipo,
 			filtro_nombre: mi.filtros['nombre'],
-			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: (new Date()).getTime() }).success(
 				function(response) {
 					mi.totalElementos = response.total;
 					mi.cargarTabla(1);

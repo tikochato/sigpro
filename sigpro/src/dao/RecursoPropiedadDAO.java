@@ -115,7 +115,7 @@ public class RecursoPropiedadDAO {
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			//componentePropiedad.setEstado(0);
+			recursoPropiedad.setEstado(0);
 			session.beginTransaction();
 			session.update(recursoPropiedad);
 			session.getTransaction().commit();

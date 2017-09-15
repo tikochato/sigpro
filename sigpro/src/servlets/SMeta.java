@@ -38,9 +38,6 @@ import pojo.Producto;
 import pojo.Proyecto;
 import utilities.Utils;
 
-/**
- * Servlet implementation class SMeta
- */
 @WebServlet("/SMeta")
 public class SMeta extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -78,23 +75,14 @@ public class SMeta extends HttpServlet {
 		String usuarioActulizo;
 	}
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public SMeta() {
         super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();

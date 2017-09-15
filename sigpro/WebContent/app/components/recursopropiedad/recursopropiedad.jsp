@@ -8,7 +8,7 @@
 		</shiro:lacksPermission>
 		
 		<div class="panel panel-default">
-	  		<div class="panel-heading"><h3>Propiedad Recurso</h3></div>
+	  		<div class="panel-heading"><h3>Propiedades de Recurso</h3></div>
 		</div>
 	
 		<div align="center" ng-hide="recursopropiedadc.mostraringreso">
@@ -98,8 +98,9 @@
 								ng-model="recursopropiedadc.datoTipoSeleccionado" 
 								ng-options="opcion as opcion.nombre for opcion in recursopropiedadc.tipodatos" ng-required="true"
 								ng-readonly="true" 
-								ng-disabled="!recursopropiedadc.esnuevo" 
-								></select>
+								ng-disabled="!recursopropiedadc.esnuevo">
+								<option value="">Seleccione un tipo</option>
+							</select>
 							<label for="nombre" class="floating-label">* Tipo dato</label>
 						</div>
 						<div class="form-group">

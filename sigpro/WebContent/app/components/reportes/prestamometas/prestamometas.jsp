@@ -314,10 +314,10 @@
 					<div class="col-sm-3"></div>
 					<div class="col-sm-6" style="text-align: center;">
 						<label class="btn btn-default" ng-click="controller.anterior()" uib-tooltip="Anterior" ng-hide="!controller.movimiento" 
-								tooltip-placement="bottom" ng-disabled="!controller.AnteriorActivo">
+								tooltip-placement="bottom">
 						<span class="glyphicon glyphicon-chevron-left"></span></label>
 						<label class="btn btn-default" ng-click="controller.siguiente()" uib-tooltip="Siguiente" ng-hide="!controller.movimiento"
-								tooltip-placement="bottom" ng-disabled="!controller.SiguienteActivo">
+								tooltip-placement="bottom">
 						<span class="glyphicon glyphicon-chevron-right"></span></label>
 					</div>
 					<div class="col-sm-3">

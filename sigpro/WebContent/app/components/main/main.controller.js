@@ -38,7 +38,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             	template: '<div load-on-demand="\'moduloColaborador\'" class="all_page"></div>'
             })
             .when('/productotipo/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'moduloProductoTipo\'" class="all_page"></div>'
+            	template: '<div load-on-demand="\'ProductoTipoController\'" class="all_page"></div>'
             })
             .when('/productopropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProductoPropiedad\'" class="all_page"></div>'
@@ -257,7 +257,7 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   script: '/app/components/colaborador/colaborador.controller.js',
 	    	   template: '/app/components/colaborador/colaborador.jsp'
 	       }, {
-	    	   name: 'moduloProductoTipo',
+	    	   name: 'ProductoTipoController',
 	    	   script: '/app/components/productotipo/productotipo.controller.js',
 	    	   template: '/app/components/productotipo/productotipo.jsp'
 	       }, {

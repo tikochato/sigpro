@@ -1,12 +1,11 @@
-var moduloProductoTipo = angular.module('moduloProductoTipo', [ 'ngTouch',
+var app = angular.module('ProductoTipoController', [ 'ngTouch',
 		'smart-table' ]);
 
-moduloProductoTipo.controller('controlProductoTipo', [ '$scope',
+app.controller('ProductoTipoController', [ '$scope',
 		'$routeParams', '$route', '$window', '$location', '$mdDialog',
 		'$uibModal', '$http', '$interval', 'i18nService', 'Utilidades',
-		'$timeout', '$log',  'dialogoConfirmacion', controlProductoTipo ]);
-
-function controlProductoTipo($scope, $routeParams, $route, $window, $location,
+		'$timeout', '$log',  'dialogoConfirmacion',
+function($scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
 		$timeout, $log, $dialogoConfirmacion) {
 	i18nService.setCurrentLang('es');
@@ -41,7 +40,8 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 			registros : mi.elementosPorPagina,
 			filtro_nombre: mi.filtros['nombre'], 
 			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion,
+			t: (new Date()).getTime()
 		};
 
 		mi.mostrarCargando = true;
@@ -52,6 +52,7 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 				mi.opcionesGrid.data = mi.data;
 
 				mi.mostrarCargando = false;
+				mi.paginaActual = pagina;
 			}
 		});
 
@@ -173,7 +174,7 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 		mi.descripcion = "";
 		mi.entidadSeleccionada.usuarioCreo = "";
 		mi.entidadSeleccionada.fechaCreacion = "";
-		mi.entidadSeleccionada.usuairoActulizo = "";
+		mi.entidadSeleccionada.usuarioActualizo = "";
 		mi.entidadSeleccionada.fechaActualizacion = "";
 		mi.propiedadesTipo = [];
 
@@ -203,7 +204,8 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 
 			var datos = {
 				accion : 'tipoPropiedades',
-				codigoTipo : mi.entidadSeleccionada.id
+				codigoTipo : mi.entidadSeleccionada.id,
+				t: (new Date()).getTime()
 			};
 
 			$http.post('/SProductoTipo', datos).then(function(response) {
@@ -215,7 +217,7 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 
 		} else {
 			$utilidades.mensaje('warning',
-					'Debe seleccionar un TIPO DE PRODUCTO');
+					'Debe seleccionar un Tipo de Producto');
 		}
 
 	};
@@ -224,14 +226,15 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 		if (mi.seleccionada) {
 			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 					, "Confirmación de Borrado"
-					, '¿Desea borrar "' + mi.entidadSeleccionada.nombre + '"?'
+					, '¿Desea borrar el tipo "' + mi.entidadSeleccionada.nombre + '"?'
 					, "Borrar"
 					, "Cancelar")
 			.result.then(function(data) {
 				if(data){
 					var datos = {
 							accion : 'borrar',
-							codigo : mi.entidadSeleccionada.id
+							codigo : mi.entidadSeleccionada.id,
+							t: (new Date()).getTime()
 						};
 						$http.post('/SProductoTipo', datos).success(
 								function(response) {
@@ -250,11 +253,15 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 			});
 		} else {
 			$utilidades.mensaje('warning',
-					'Debe seleccionar un TIPO DE PRODUCTO que desee borrar');
+					'Debe seleccionar un Tipo de Producto que desee borrar');
 		}
 	};
 
 	mi.guardar = function() {
+		mi.entidadSeleccionada = {
+				nombre : mi.nombre,
+				descripcion : mi.descripcion
+		}
 		
 		if (mi.esNuevo) {
 			var datos = {
@@ -262,7 +269,8 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 				nombre : mi.nombre,
 				descripcion : mi.descripcion,
 				usuario : 'temporal',
-				propiedades : JSON.stringify(mi.propiedadesTipo)
+				propiedades : JSON.stringify(mi.propiedadesTipo),
+				t: (new Date()).getTime()
 			};
 
 			$http.post('/SProductoTipo', datos).then(
@@ -273,16 +281,16 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 							mi.codigo = response.data.id;
 							mi.entidadSeleccionada.usuarioCreo = response.data.usuarioCreo;
 							mi.entidadSeleccionada.fechaCreacion = response.data.fechaCreacion;
-							mi.entidadSeleccionada.usuairoActulizo = response.data.usuarioactualizo;
+							mi.entidadSeleccionada.usuarioActualizo = response.data.usuarioactualizo;
 							mi.entidadSeleccionada.fechaActualizacion = response.data.fechaactualizacion;
 							
 							mi.esNuevo=false;
 							$utilidades.mensaje('success',
-									'El tipo de producto se creo con éxito.');
+									'El Tipo de Producto se creo con éxito.');
 							mi.obtenerTotalProductoTipo();
 						} else {
 							$utilidades.mensaje('danger',
-									'Error la guardar el tipo de producto');
+									'Error al guardar el Tipo de producto');
 						}
 
 					});
@@ -293,7 +301,8 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 				nombre : mi.nombre,
 				descripcion : mi.descripcion,
 				usuario : 'temporal',
-				propiedades : JSON.stringify(mi.propiedadesTipo)
+				propiedades : JSON.stringify(mi.propiedadesTipo),
+				t: (new Date()).getTime()
 			};
 
 			$http.post('/SProductoTipo', datos).then(
@@ -303,16 +312,16 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 							mi.opcionesGrid.data = mi.data;
 							mi.entidadSeleccionada.usuarioCreo = response.data.usuarioCreo;
 							mi.entidadSeleccionada.fechaCreacion = response.data.fechaCreacion;
-							mi.entidadSeleccionada.usuairoActulizo = response.data.usuarioactualizo;
+							mi.entidadSeleccionada.usuarioActualizo = response.data.usuarioactualizo;
 							mi.entidadSeleccionada.fechaActualizacion = response.data.fechaactualizacion;
 							
 							mi.esNuevo=false;
 							$utilidades.mensaje('success',
-									'El tipo de producto se guardo con éxito');
+									'El Tipo de Producto se guardo con éxito');
 							mi.obtenerTotalProductoTipo();
 						} else {
 							$utilidades.mensaje('danger',
-									'Error al guardar el tipo de producto');
+									'Error al guardar el Tipo de Producto');
 						}
 					});
 
@@ -353,7 +362,7 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 	mi.obtenerTotalProductoTipo = function(){
 		$http.post('/SProductoTipo', { accion: 'totalElementos',objetoid:$routeParams.objeto_id, tipo: mi.objetotipo,
 			filtro_nombre: mi.filtros['nombre'],
-			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: (new Date()).getTime() }).success(
 				function(response) {
 					mi.totalElementos = response.total;
 					mi.paginaActual = 1;
@@ -367,7 +376,7 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 			ariaLabelledBy : 'modal-title',
 			ariaDescribedBy : 'modal-body',
 			templateUrl : 'buscarPropiedad.jsp',
-			controller : 'modalBuscarPropiedad',
+			controller : 'modalBuscarPropiedadProductoTipo',
 			controllerAs : 'modalBuscar',
 			backdrop : 'static',
 			size : 'md'
@@ -411,13 +420,12 @@ function controlProductoTipo($scope, $routeParams, $route, $window, $location,
 		return true;
 	}
 
-}
+} ]);
 
-moduloProductoTipo.controller('modalBuscarPropiedad', [ '$uibModalInstance',
+app.controller('modalBuscarPropiedadProductoTipo', [ '$uibModalInstance',
 		'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-		'$timeout', '$log', modalBuscarPropiedad ]);
-
-function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval,
+		'$timeout', '$log', 
+function ($uibModalInstance, $scope, $http, $interval,
 		i18nService, $utilidades, $timeout, $log) {
 
 	var mi = this;
@@ -434,7 +442,7 @@ function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval,
 	mi.seleccionado = false;
 
 	$http.post('/SProductoPropiedad', {
-		accion : 'totalElementos'
+		accion : 'totalElementos', t: (new Date()).getTime()
 	}).success(function(response) {
 		mi.totalElementos = response.total;
 		mi.cargarTabla(1);
@@ -489,7 +497,8 @@ function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval,
 		var datos = {
 			accion : 'cargar',
 			pagina : pagina,
-			registros : mi.elementosPorPagina
+			registros : mi.elementosPorPagina, 
+			t: (new Date()).getTime()
 		};
 
 		mi.mostrarCargando = true;
@@ -520,3 +529,4 @@ function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval,
 	};
 
 }
+]);

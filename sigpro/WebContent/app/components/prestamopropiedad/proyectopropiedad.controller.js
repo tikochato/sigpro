@@ -9,6 +9,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 		mi.mostrarcargando=true;
 		mi.proyectopropiedades = [];
 		mi.proyectopropiedad;
+		mi.tipoDatoSeleccionado = 0;
 		mi.mostraringreso=false;
 		mi.esnuevo = false;
 		mi.totalProyectoPropiedades = 0;
@@ -63,6 +64,9 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 							grid.appScope.proyectopropiedadc.columnaOrdenada=sortColumns[0].field;
 							grid.appScope.proyectopropiedadc.ordenDireccion = sortColumns[0].sort.direction;
 
+							if(grid.appScope.proyectopropiedadc.columnaOrdenada=="datotiponombre"){
+								grid.appScope.proyectopropiedadc.columnaOrdenada="datoTipo";
+							}
 							grid.appScope.proyectopropiedadc.cargarTabla(grid.appScope.proyectopropiedadc.paginaActual);
 						}
 						else if(sortColumns.length>1){
@@ -99,28 +103,31 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 			filtro_nombre: mi.filtros['nombre'], 
 			filtro_usuario_creo: mi.filtros['usuario_creo'],
 		    filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-		    columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime() }).success(
+		    columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, 
+		    t: (new Date()).getTime()}).success(
 					function(response) {
 						mi.proyectopropiedades = response.proyectopropiedades;
 						mi.gridOptions.data = mi.proyectopropiedades;
 						mi.mostrarcargando = false;
+						mi.paginaActual = pagina;
 					});
 		}
 		mi.redireccionSinPermisos=function(){
 			$window.location.href = '/main.jsp#!/forbidden';		
 		}
 		mi.guardar=function(){
-			if(mi.proyectopropiedad!=null && mi.proyectopropiedad.datotipoid!=null){
+			if(mi.proyectopropiedad!=null && mi.tipoDatoSeleccionado!=null){
 				$http.post('/SProyectoPropiedad', {
 					accion: 'guardarProyectoPropiedad',
 					esnuevo: mi.esnuevo,
 					id: mi.proyectopropiedad.id,
 					nombre: mi.proyectopropiedad.nombre,
 					descripcion: mi.proyectopropiedad.descripcion,
-					datoTipoId: mi.proyectopropiedad.datotipoid.id
+					datoTipoId: mi.tipoDatoSeleccionado.id,
+					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success','Propiedad de Préstamo '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+						$utilidades.mensaje('success','Propiedad de Préstamo '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
 						mi.proyectopropiedad.id = response.id;
 						mi.proyectopropiedad.usuarioCreo = response.usuarioCreo;
 						mi.proyectopropiedad.fechaCreacion = response.fechaCreacion;
@@ -130,7 +137,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 						mi.obtenerTotalProyectoPropiedades();
 					}
 					else
-						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' la Propiedad de Préstamo');
+						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' la Propiedad de Préstamo');
 				});
 			}
 			else
@@ -141,14 +148,15 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 			if(mi.proyectopropiedad!=null && mi.proyectopropiedad.id!=null){
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
-						, '¿Desea borrar la Propiedad Préstamo "'+mi.proyectopropiedad.nombre+'"?'
+						, '¿Desea borrar la Propiedad de Préstamo "'+mi.proyectopropiedad.nombre+'"?'
 						, "Borrar"
 						, "Cancelar")
 				.result.then(function(data) {
 					if(data){
 						$http.post('/SProyectoPropiedad', {
 							accion: 'borrarProyectoPropiedad',
-							id: mi.proyectopropiedad.id
+							id: mi.proyectopropiedad.id,
+							t: (new Date()).getTime()
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Propiedad de Préstamo borrado con éxito');
@@ -164,13 +172,14 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 				});
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar la Propiedad Préstamo que desea borrar');
+				$utilidades.mensaje('warning','Debe seleccionar la Propiedad de Préstamo que desea borrar');
 		};
 	
 		mi.nuevo = function() {
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
 			mi.proyectopropiedad = {};
+			mi.tipoDatoSeleccionado=0;
 			mi.gridApi.selection.clearSelectedRows();
 		};
 	
@@ -178,14 +187,14 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 			if(mi.proyectopropiedad!=null && mi.proyectopropiedad.id!=null){
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
-				mi.proyectopropiedad.datotipoid = {
+				mi.tipoDatoSeleccionado = {
 						"id" : mi.proyectopropiedad.datotipoid,
 						"nombre" : mi.proyectopropiedad.datotiponombre
 				}
 
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar la Propiedad de Preéstamo que desea editar');
+				$utilidades.mensaje('warning','Debe seleccionar la Propiedad de Préstamo que desea editar');
 		}
 	
 		mi.irATabla = function() {
@@ -214,7 +223,8 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 		mi.obtenerTotalProyectoPropiedades = function() { 
 			$http.post('/SProyectoPropiedad', { accion: 'numeroProyectoPropiedades',filtro_nombre: mi.filtros['nombre'], 
 				filtro_usuario_creo: mi.filtros['usuario_creo'],
-			    filtro_fecha_creacion: mi.filtros['fecha_creacion'],t: (new Date()).getTime() }).success(
+			    filtro_fecha_creacion: mi.filtros['fecha_creacion'], 
+			    t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.totalProyectoPropiedades = response.totalproyectopropiedades;
 						mi.cargarTabla(1);
@@ -229,7 +239,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 			}
 		}
 		
-		$http.post('/SDatoTipo', { accion: 'cargarCombo',t: (new Date()).getTime() }).success(
+		$http.post('/SDatoTipo', { accion: 'cargarCombo', t: (new Date()).getTime() }).success(
 				function(response) {
 					mi.tipodatos = response.datoTipos;
 		});

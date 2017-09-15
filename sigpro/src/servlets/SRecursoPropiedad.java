@@ -51,7 +51,6 @@ public class SRecursoPropiedad extends HttpServlet {
      */
     public SRecursoPropiedad() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**

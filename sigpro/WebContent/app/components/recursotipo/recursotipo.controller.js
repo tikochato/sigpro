@@ -106,13 +106,14 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 			$http.post('/SRecursoTipo', { accion: 'getRecursotiposPagina', pagina: pagina, numerorecursostipo: $utilidades.elementosPorPagina, 
 				filtro_nombre: mi.filtros['nombre'], 
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
 			}).success(
 			
 					function(response) {
 						mi.recursotipos = response.recursotipos;
 						mi.gridOptions.data = mi.recursotipos;
 						mi.mostrarcargando = false;
+						mi.paginaActual = pagina;
 					});
 		}
 		mi.redireccionSinPermisos=function(){
@@ -135,7 +136,8 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 					id: mi.recursotipo.id,
 					nombre: mi.recursotipo.nombre,
 					descripcion: mi.recursotipo.descripcion,
-					propiedades: idspropiedad.length > 0 ? idspropiedad : null
+					propiedades: idspropiedad.length > 0 ? idspropiedad : null,
+					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
 						$utilidades.mensaje('success','Tipo de Recurso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
@@ -159,6 +161,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 			if(mi.recursotipo!=null && mi.recursotipo.id!=null){
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
+				mi.recursopropiedades =[];
 				mi.cargarTotalPropiedades();
 			}
 			else
@@ -176,7 +179,8 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 					if(data){
 						$http.post('/SRecursoTipo', {
 							accion: 'borrarRecursoTipo',
-							id: mi.recursotipo.id
+							id: mi.recursotipo.id,
+							t: (new Date()).getTime()
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Tipo de Recurso borrado con éxito');
@@ -200,7 +204,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 			mi.esnuevo = true;
 			mi.recursotipo = {};
 			mi.gridApi.selection.clearSelectedRows();
-			mi.cargarTotalPropiedades();
+			mi.recursopropiedades =[];
 		};
 	
 		mi.irATabla = function() {
@@ -238,15 +242,14 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 		
 		mi.obtenerTotalRecursoTipos = function(){
 			$http.post('/SRecursoTipo', { accion: 'numeroRecursoTipos',filtro_nombre: mi.filtros['nombre'], 
-				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.totalRecursotipos = response.totalrecursotipos;
 						mi.cargarTabla(1);
 					}
 			);
 		}
-		//----
-		
+				
 		mi.gridOptionsrecursoPropiedad = {
 				enableRowSelection : true,
 				enableRowHeaderSelection : false,
@@ -278,7 +281,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 						accion: 'getRecursoPropiedadPaginaPorTipo',
 						pagina: pagina,
 						idRecursoTipo:mi.recursotipo!=null ? mi.recursotipo.id : null, 
-						numerorecursopropiedad: $utilidades.elementosPorPagina }).success(
+						numerorecursopropiedad: $utilidades.elementosPorPagina, t: (new Date()).getTime() }).success(
 				function(response) {
 					
 					mi.recursopropiedades = response.recursopropiedades;
@@ -290,7 +293,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 		}
 		
 		mi.cargarTotalPropiedades = function(){
-			$http.post('/SRecursoPropiedad', { accion: 'numeroRecursoPropiedades' }).success(
+			$http.post('/SRecursoPropiedad', { accion: 'numeroRecursoPropiedades', t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.totalComponentepropiedades = response.totalrecursopropiedades;
 						mi.cargarTablaPropiedades(mi.paginaActualPropiedades);
@@ -383,7 +386,7 @@ function modalBuscarRecursoPropiedad($uibModalInstance, $scope, $http, $interval
 	mi.seleccionado = false;
 	
     $http.post('/SRecursoPropiedad', {
-    	accion : 'numerorecursoPropiedadesDisponibles'
+    	accion : 'numerorecursoPropiedadesDisponibles', t: (new Date()).getTime()
         }).success(function(response) {
     	mi.totalElementos = response.totalrecursopropiedades;
     	mi.elementosPorPagina = mi.totalElementos;
@@ -421,7 +424,8 @@ function modalBuscarRecursoPropiedad($uibModalInstance, $scope, $http, $interval
     	    accion : 'getRecursoPropiedadesTotalDisponibles',
     	    pagina : pagina,
     	    idspropiedades: idspropiedad,
-    	    numerorecursopropiedad : mi.elementosPorPagina
+    	    numerorecursopropiedad : mi.elementosPorPagina, 
+    	    t: (new Date()).getTime()
     	};
 
     	mi.mostrarCargando = true;
