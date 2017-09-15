@@ -754,13 +754,13 @@ public class SProyecto extends HttpServlet {
 		else if(accion.equals("controlArbol")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			Nodo arbol = EstructuraProyectoDAO.getEstructuraProyectoArbol(id);
-			response_text=new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create().toJson(arbol);
+			Nodo root = new Nodo(0, 0, "", 0, new ArrayList<Nodo>(), null);
+			arbol.parent = root;
+			root.children.add(arbol);
+			response_text=new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create().toJson(root);
 	        response_text = String.join("", "\"proyecto\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
-		}else{
-			response_text = "{ \"success\": false }";
 		}
-
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
 
