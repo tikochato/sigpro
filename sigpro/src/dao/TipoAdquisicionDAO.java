@@ -25,7 +25,7 @@ public class TipoAdquisicionDAO {
 			ret = conteo.getSingleResult();
 		}
 		catch(NonUniqueResultException e){
-			
+			CLogger.write("1", TipoAdquisicionDAO.class, e);
 		}
 		catch(Throwable e){
 			CLogger.write("1", TipoAdquisicionDAO.class, e);
@@ -48,7 +48,7 @@ public class TipoAdquisicionDAO {
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("2", ProgramaPropiedadDAO.class, e);
+			CLogger.write("2", TipoAdquisicionDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -75,7 +75,7 @@ public class TipoAdquisicionDAO {
 			ret = criteria.getSingleResult();
 		}
 		catch(NonUniqueResultException e){
-			
+			CLogger.write("3", TipoAdquisicionDAO.class, e);
 		}
 		catch(Throwable e){
 			CLogger.write("3", TipoAdquisicionDAO.class, e);
@@ -150,7 +150,7 @@ public class TipoAdquisicionDAO {
 			ret = criteria.getSingleResult();
 		}
 		catch(NoResultException e){
-			
+			CLogger.write("6", TipoAdquisicionDAO.class, e);
 		}
 		catch(Throwable e){
 			CLogger.write("6", TipoAdquisicionDAO.class, e);
