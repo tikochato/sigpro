@@ -338,8 +338,8 @@ public class SProyecto extends HttpServlet {
 				dato.ubicacionGeografica =proyecto.getUbicacionGeografica(); 
 				dato.longitud = proyecto.getLongitud();
 				dato.latitud = proyecto.getLatitud();
-				dato.acumulacionCosto = proyecto.getAcumulacionCosto().getId();
-				dato.acumulacionCostoNombre = proyecto.getAcumulacionCosto().getNombre();
+				dato.acumulacionCosto = proyecto.getAcumulacionCosto() !=null ? proyecto.getAcumulacionCosto().getId() : null;
+				dato.acumulacionCostoNombre = proyecto.getAcumulacionCosto() != null ? proyecto.getAcumulacionCosto().getNombre() : null;
 				dato.objetivoEspecifico = proyecto.getObjetivoEspecifico()!=null ? proyecto.getObjetivoEspecifico() : null;
 				dato.visionGeneral = proyecto.getVisionGeneral() !=null ? proyecto.getVisionGeneral() : null;
 				
