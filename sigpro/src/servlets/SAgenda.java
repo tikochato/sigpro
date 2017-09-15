@@ -164,17 +164,15 @@ public class SAgenda extends HttpServlet {
                 is.close();
                 outByteStream.flush();
                 outByteStream.close();
-                
-                byte [] outArray = Base64.encode(outByteStream.toByteArray());
+
+		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
 				response.setHeader("Cache-Control", "no-cache"); 
 				response.setHeader("Content-Disposition", "attachment; Agenda.xls");
 				OutputStream outStream = response.getOutputStream();
-
 				outStream.write(outArray);
 				outStream.flush();
-
 			}
 		}
 	}

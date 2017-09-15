@@ -28,6 +28,7 @@ import dao.RecursoUnidadMedidaDAO;
 import pojo.Recurso;
 import pojo.RecursoTipo;
 import pojo.RecursoUnidadMedida;
+import utilities.CLogger;
 import utilities.Utils;
 
 /**
@@ -199,6 +200,7 @@ public class SRecurso extends HttpServlet {
 					response_text = "{ \"success\": false }";
 			}
 			catch (Throwable e){
+				CLogger.write("1", SRecurso.class, e);
 				response_text = "{ \"success\": false }";
 			}
 		}

@@ -43,6 +43,7 @@ import pojo.ProductoUsuarioId;
 import pojo.UnidadEjecutora;
 import pojo.Usuario;
 import utilities.Utils;
+import utilities.CLogger;
 import utilities.COrden;
 
 @WebServlet("/SProducto")
@@ -221,7 +222,7 @@ public class SProducto extends HttpServlet {
 				String latitud = parametro.get("latitud");
 				String longitud = parametro.get("longitud");
 				Integer peso = Utils.String2Int(parametro.get("peso"), null);
-				BigDecimal costo = new BigDecimal(parametro.get("costo"));
+				BigDecimal costo = Utils.String2BigDecimal(parametro.get("costo"), null);
 				Integer acumulacionCostoid = Utils.String2Int(parametro.get("acumulacionCosto"), null);
 				Date fechaInicio = Utils.dateFromString(parametro.get("fechaInicio"));
 				Date fechaFin = Utils.dateFromString(parametro.get("fechaFin"));
@@ -229,7 +230,7 @@ public class SProducto extends HttpServlet {
 				String duracionDimension = parametro.get("duracionDimension");
 				
 				AcumulacionCosto acumulacionCosto = null;
-				if(acumulacionCostoid != 0){
+				if(acumulacionCostoid!= null && acumulacionCostoid > 0){
 					acumulacionCosto = new AcumulacionCosto();
 					acumulacionCosto.setId(Utils.String2Int(parametro.get("acumulacionCosto")));
 				}
@@ -299,7 +300,7 @@ public class SProducto extends HttpServlet {
 					ProductoUsuarioDAO.guardarProductoUsuario(productoUsuario);
 					
 					for (stdatadinamico data : datos) {
-						if (data.valor!=null && data.valor.length()>0 && data.valor.compareTo("null")!=0){
+						if (data.id != null && data.valor!=null && data.valor.compareTo("null")!=0 && data.valor.length()>0 ){
 							ProductoPropiedad producotPropiedad = ProductoPropiedadDAO.getProductoPropiedadPorId(Integer.parseInt(data.id));
 							ProductoPropiedadValorId idValor = new ProductoPropiedadValorId(Integer.parseInt(data.id),producto.getId());
 							ProductoPropiedadValor valor = new ProductoPropiedadValor(idValor, producto, producotPropiedad, null, null, null, null, 
@@ -336,6 +337,7 @@ public class SProducto extends HttpServlet {
 						," }");
 				}
 				catch (Throwable e){
+					CLogger.write("1", SProducto.class, e);
 					response_text = "{ \"success\": false }";
 				}
 				

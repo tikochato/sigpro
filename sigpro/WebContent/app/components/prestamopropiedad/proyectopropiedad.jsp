@@ -93,11 +93,11 @@
 							<label for="nombre" class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
-							<select class="inputText" ng-model="proyectopropiedadc.proyectopropiedad.datotipoid"
+							<select class="inputText" ng-model="proyectopropiedadc.tipoDatoSeleccionado"
 								ng-options="tipo as tipo.nombre for tipo in proyectopropiedadc.tipodatos track by tipo.id"
 								ng-readonly="true"
 								ng-disabled="!proyectopropiedadc.esnuevo" ng-required="true">
-								<option value="">Seleccione una opción</option>
+								<option value="">Seleccione Tipo</option>
 							</select>
 								<label for="nombre" class="floating-label">* Tipo dato</label>
 						</div>
