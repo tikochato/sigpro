@@ -26,6 +26,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.EntidadDAO;
+import dao.EstructuraProyectoDAO;
+import dao.Nodo;
 import dao.ProyectoDAO;
 import dao.ProyectoImpactoDAO;
 import dao.ProyectoMiembroDAO;
@@ -667,6 +669,13 @@ public class SProyecto extends HttpServlet {
 	        response_text = String.join("", "\"proyecto\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 
+		}
+		else if(accion.equals("controlArbol")){
+			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			Nodo arbol = EstructuraProyectoDAO.getEstructuraProyectoArbol(id);
+			response_text=new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create().toJson(arbol);
+	        response_text = String.join("", "\"proyecto\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}else{
 			response_text = "{ \"success\": false }";
 		}
