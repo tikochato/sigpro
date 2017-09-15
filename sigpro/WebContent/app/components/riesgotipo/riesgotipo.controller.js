@@ -106,7 +106,7 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 			$http.post('/SRiesgoTipo', { accion: 'getRiesgotiposPagina', pagina: pagina, numeroriesgostipo: $utilidades.elementosPorPagina,
 				objetoid: $routeParams.objeto_id, tipo: mi.objetotipo, filtro_nombre: mi.filtros['nombre'], 
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
 			}).success(
 					function(response) {
 						mi.riesgotipos = response.riesgotipos;
@@ -130,6 +130,7 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 				
 				$http.post('/SRiesgoTipo', {
 					accion: 'guardarRiesgotipo',
+					t: (new Date()).getTime(),
 					esnuevo: mi.esnuevo,
 					id: mi.riesgotipo.id,
 					nombre: mi.riesgotipo.nombre,
@@ -175,7 +176,8 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 					if(data){
 						$http.post('/SRiesgoTipo', {
 							accion: 'borrarRiesgoTipo',
-							id: mi.riesgotipo.id
+							id: mi.riesgotipo.id,
+							t: (new Date()).getTime()
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Tipo Riesgo borrado con éxito');
@@ -235,7 +237,7 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 		mi.obtenerTotalTipoRiesgos = function(){
 			$http.post('/SRiesgoTipo', { accion: 'numeroRiesgoTipos',
 				filtro_nombre: mi.filtros['nombre'], 
-				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).then(
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: (new Date()).getTime() }).then(
 					function(response) {
 						mi.totalRiesgotipos = response.data.totalriesgos;
 						mi.paginaActual = 1;
@@ -275,6 +277,7 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 					{ 
 						accion: 'getRiesgoPropiedadPaginaPorTipo',
 						pagina: pagina,
+						t: (new Date()).getTime(),
 						idRiesgoTipo:mi.riesgotipo!=null ? mi.riesgotipo.id : null, 
 						numeroriesgopropiedad: $utilidades.elementosPorPagina }).success(
 				function(response) {
@@ -287,7 +290,7 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 		}
 		
 		mi.cargarTotalPropiedades = function(){
-			$http.post('/SComponentePropiedad', { accion: 'numeroComponentePropiedades' }).success(
+			$http.post('/SComponentePropiedad', { accion: 'numeroComponentePropiedades', t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.totalRiesgopropiedades = response.totalriesgopropiedades;
 						mi.cargarTablaPropiedades(mi.paginaActualPropiedades);
@@ -380,7 +383,7 @@ function modalBuscarRiesgoPropiedad($uibModalInstance, $scope, $http, $interval,
 	mi.seleccionado = false;
 	
     $http.post('/SRiesgoPropiedad', {
-    	accion : 'numeroriesgoPropiedadesDisponibles'
+    	accion : 'numeroriesgoPropiedadesDisponibles', t: (new Date()).getTime()
         }).success(function(response) {
     	mi.totalElementos = response.totalriesgopropiedades;
     	mi.elementosPorPagina = mi.totalElementos;
@@ -418,7 +421,8 @@ function modalBuscarRiesgoPropiedad($uibModalInstance, $scope, $http, $interval,
     	    accion : 'getRiesgoPropiedadesTotalDisponibles',
     	    pagina : pagina,
     	    idspropiedades: idspropiedad,
-    	    numerocomponentepropiedad : mi.elementosPorPagina
+    	    numerocomponentepropiedad : mi.elementosPorPagina,
+    	    t: (new Date()).getTime()
     	};
 
     	mi.mostrarCargando = true;
