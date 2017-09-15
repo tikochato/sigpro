@@ -104,8 +104,8 @@
    		 </div>
 	
 	      <div class="form-group">
-	        <input type="text" class="inputText" ng-model="subproductoPropiedad.descripcion" ng-value="subproductoPropiedad.descripcion" onblur="this.setAttribute('value', this.value);"/>
-	        <label class="floating-label">Descripción</label>
+	        <input type="text" class="inputText" ng-model="subproductoPropiedad.descripcion" ng-value="subproductoPropiedad.descripcion" onblur="this.setAttribute('value', this.value);" ng-required="true"/>
+	        <label class="floating-label">* Descripción</label>
 	      </div>
 	      <div class="panel panel-default">
 				<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
@@ -114,13 +114,13 @@
 						<div class="col-sm-6">
 							<div class="form-group" style="text-align: right">
 								<label for="usuarioCreo" class="label-form">Usuario que creo</label> 
-								<p class=""> {{ subproductoPropiedad.entidadSeleccionada.usuarioCreo }}</p>
+								<p class=""> {{ subproductoPropiedad.auditoria.usuarioCreo }}</p>
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group" >
 								<label for="fechaCreacion" class="label-form">Fecha de creación</label>
-								<p class="" id="fechaCreacion"> {{ subproductoPropiedad.entidadSeleccionada.fechaCreacion }} </p>
+								<p class="" id="fechaCreacion"> {{ subproductoPropiedad.auditoria.fechaCreacion }} </p>
 							</div>
 						</div>
 					</div>
@@ -128,13 +128,13 @@
 						<div class="col-sm-6">
 							<div class="form-group" style="text-align: right">
 								<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label> 
-								<p class="" id="usuarioCreo">{{ subproductoPropiedad.entidadSeleccionada.usuarioActualizo }} </p>
+								<p class="" id="usuarioCreo">{{ subproductoPropiedad.auditoria.usuarioActualizo }} </p>
 							</div>	
 						</div>
 						<div class="col-sm-6">		
 							<div class="form-group">
 								<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label> 
-								<p class="" id="usuarioCreo">{{ subproductoPropiedad.entidadSeleccionada.fechaActualizacion }} </p>
+								<p class="" id="usuarioCreo">{{ subproductoPropiedad.auditoria.fechaActualizacion }} </p>
 							</div>
 						</div>
 					</div>
