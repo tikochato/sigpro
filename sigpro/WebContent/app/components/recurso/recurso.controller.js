@@ -112,12 +112,13 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 			$http.post('/SRecurso', { accion: 'getRecursosPagina', 
 				pagina: pagina, numerorecursos: $utilidades.elementosPorPagina, filtro_nombre: mi.filtros['nombre'], 
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
 			}).success(
 					function(response) {
 						mi.recursos = response.recursos;
 						mi.gridOptions.data = mi.recursos;
 						mi.mostrarcargando = false;
+						mi.paginaActual = pagina;
 					});
 		}
 		mi.redireccionSinPermisos=function(){
@@ -152,7 +153,7 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 						mi.esnuevo = false;
 					}
 					else
-						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Recurso');
+						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Recurso');
 				});
 			}
 			else
@@ -254,7 +255,7 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 		mi.obtenerTotalRecursos = function(){
 			$http.post('/SRecurso', { accion: 'numeroRecursos',
 				filtro_nombre: mi.filtros['nombre'], 
-				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: (new Date()).getTime()
 				}).success(
 					function(response) {
 						mi.totalRecursos = response.totalrecursos;
@@ -347,7 +348,8 @@ function modalBuscarRecursoTipo($uibModalInstance, $scope, $http, $interval,
 	mi.seleccionado = false;
 
 	$http.post('/SRecursoTipo', {
-		accion : 'numeroRecursoTipos'
+		accion : 'numeroRecursoTipos',
+		t: (new Date()).getTime()
 	}).success(function(response) {
 		mi.totalElementos = response.totalrecursostipos;
 		mi.elementosPorPagina = mi.totalElementos;
@@ -396,7 +398,7 @@ function modalBuscarRecursoTipo($uibModalInstance, $scope, $http, $interval,
 		};
 
 		mi.mostrarCargando = true;
-		$http.post('/SRecursoTipo', {accion : 'getRecursotiposPagina'}).then(function(response) {
+		$http.post('/SRecursoTipo', {accion : 'getRecursotiposPagina', t: (new Date()).getTime()}).then(function(response) {
 			if (response.data.success) {
 				mi.data = response.data.recursotipos;
 				mi.opcionesGrid.data = mi.data;
@@ -443,7 +445,8 @@ function modalBuscarUnidadMedida($uibModalInstance, $scope, $http, $interval,
 	mi.seleccionado = false;
 
 	$http.post('/SRecursoUnidadMedida', {
-		accion : 'numeroRecursoUnidadMedidas'
+		accion : 'numeroRecursoUnidadMedidas',
+		t: (new Date()).getTime()
 	}).success(function(response) {
 		mi.totalElementos = response.totalRecursoUnidadMedidas;
 		mi.elementosPorPagina = mi.totalElementos;
@@ -492,7 +495,7 @@ function modalBuscarUnidadMedida($uibModalInstance, $scope, $http, $interval,
 		};
 
 		mi.mostrarCargando = true;
-		$http.post('/SRecursoUnidadMedida', {accion : 'getRecursoUnidadMedidasPagina'}).then(function(response) {
+		$http.post('/SRecursoUnidadMedida', {accion : 'getRecursoUnidadMedidasPagina', t: (new Date()).getTime()}).then(function(response) {
 			if (response.data.success) {
 				mi.medidas = response.data.RecursoUnidadMedidas;
 				mi.opcionesGrid.data = mi.medidas;

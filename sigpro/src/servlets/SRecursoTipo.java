@@ -57,7 +57,6 @@ public class SRecursoTipo extends HttpServlet {
      */
     public SRecursoTipo() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**

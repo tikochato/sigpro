@@ -33,7 +33,7 @@ public class SProductoTipo extends HttpServlet {
 		String nombre;
 		String descripcion;
 		String usuarioCreo;
-		String usuairoActulizo;
+		String usuarioActualizo;
 		String fechaCreacion;
 		String fechaActualizacion;
 		int estado;
@@ -85,7 +85,7 @@ public class SProductoTipo extends HttpServlet {
 				temp.nombre = productotipo.getNombre();
 				temp.descripcion = productotipo.getDescripcion();
 				temp.usuarioCreo = productotipo.getUsuarioCreo();
-				temp.usuairoActulizo = productotipo.getUsuarioActualizo();
+				temp.usuarioActualizo = productotipo.getUsuarioActualizo();
 				temp.fechaCreacion = Utils.formatDateHour(productotipo.getFechaCreacion());
 				temp.fechaActualizacion = Utils.formatDateHour(productotipo.getFechaActualizacion());
 				temp.estado = productotipo.getEstado();
@@ -153,7 +153,7 @@ public class SProductoTipo extends HttpServlet {
 					temp.nombre = productotipo.getNombre();
 					temp.descripcion = productotipo.getDescripcion();
 					temp.usuarioCreo = productotipo.getUsuarioCreo();
-					temp.usuairoActulizo = productotipo.getUsuarioActualizo();
+					temp.usuarioActualizo = productotipo.getUsuarioActualizo();
 					temp.fechaCreacion = Utils.formatDateHour(productotipo.getFechaCreacion());
 					temp.fechaActualizacion = Utils.formatDateHour(productotipo.getFechaActualizacion());
 					temp.estado = productotipo.getEstado();

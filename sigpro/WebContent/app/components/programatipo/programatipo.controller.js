@@ -109,13 +109,14 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 				,filtro_nombre: mi.filtros['nombre'] 
 				,filtro_usuario_creo: mi.filtros['usuarioCreo']
 			    ,filtro_fecha_creacion: mi.filtros['fechaCreacion']
-			    ,columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+			    ,columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
 			    }).success(
 			
 					function(response) {
 						mi.programatipos = response.porgramatipos;
 						mi.gridOptions.data = mi.programatipos;
 						mi.mostrarcargando = false;
+						mi.paginaActual = pagina;
 					});
 		}
 		mi.redireccionSinPermisos=function(){
@@ -141,7 +142,7 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 					propiedades: idspropiedad
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success','Tipo de Programa'+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+						$utilidades.mensaje('success','Tipo de Programa '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 						mi.programatipo.id = response.id;
 						mi.programatipo.usuarioCreo = response.usuarioCreo;
@@ -243,7 +244,7 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 		mi.obtenerTotalProgramatipos = function(){
 			$http.post('/SProgramaTipo', { accion: 'numeroProgramaTipos',
 				filtro_nombre: mi.filtros['nombre'], 
-				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'] }).then(
+				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'] , t: (new Date()).getTime()}).then(
 					function(response) {
 						mi.totalProgramatipos = response.data.totalprogramatipos;
 						mi.paginaActual = 1;
@@ -283,7 +284,7 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 						accion: 'getProgramaPropiedadPaginaPorTipoProg',
 						pagina: pagina,
 						idProgramaTipo:mi.programatipo!=null ? mi.programatipo.id : null,
-						numeroprogramapropiedad: $utilidades.elementosPorPagina }).success(
+						numeroprogramapropiedad: $utilidades.elementosPorPagina , t: (new Date()).getTime()}).success(
 				function(response) {
 
 					mi.programapropiedades = response.programapropiedades;
@@ -296,7 +297,7 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 
 
 		mi.cargarTotalPropiedades = function(){
-			$http.post('/SProgramaPropiedad', { accion: 'numeroProgramaPropiedades' }).success(
+			$http.post('/SProgramaPropiedad', { accion: 'numeroProgramaPropiedades', t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.totalProgramapropiedades = response.totalprogramapropiedades;
 						mi.cargarTablaPropiedades(mi.paginaActualPropiedades);
@@ -389,7 +390,7 @@ function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval, i18nS
 	mi.seleccionado = false;
 
     $http.post('/SProgramaPropiedad', {
-    	accion : 'numeroProgramaPropiedadesDisponibles'
+    	accion : 'numeroProgramaPropiedadesDisponibles', t: (new Date()).getTime()
         }).success(function(response) {
     	mi.totalElementos = response.totalprogramapropiedades;
     	mi.elementosPorPagina = mi.totalElementos;
@@ -427,7 +428,8 @@ function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval, i18nS
     	    accion : 'getProgramaPropiedadesTotalDisponibles',
     	    pagina : pagina,
     	    idspropiedades: idspropiedad,
-    	    registros : mi.elementosPorPagina
+    	    registros : mi.elementosPorPagina,
+    	    t: (new Date()).getTime()
     	};
 
     	mi.mostrarCargando = true;

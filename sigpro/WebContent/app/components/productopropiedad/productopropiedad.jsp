@@ -101,7 +101,7 @@
 		      <div class="form-group">   			
     			<select class="inputText" ng-model="productoPropiedad.datoTipoSeleccionado" ng-options="tipo as tipo.nombre for tipo in productoPropiedad.datoTipos track by tipo.id" ng-required="true"
     			ng-readonly="true" ng-disabled="!productoPropiedad.esNuevo" ng-required="true">
-					<option disabled selected value> -- Seleccione Tipo -- </option>
+					<option disabled selected value>Seleccione Tipo</option>
 				</select>
 		        <label for="campo2" class="floating-label">* Tipo</label>  
     		 </div>

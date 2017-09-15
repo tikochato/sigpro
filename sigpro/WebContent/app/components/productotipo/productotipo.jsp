@@ -176,7 +176,7 @@
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
 									<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label> 
-									<p class="" id="usuarioCreo">{{ productoTipo.entidadSeleccionada.usuairoActulizo }} </p>
+									<p class="" id="usuarioCreo">{{ productoTipo.entidadSeleccionada.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
