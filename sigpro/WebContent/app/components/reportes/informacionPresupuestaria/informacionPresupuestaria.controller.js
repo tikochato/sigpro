@@ -236,8 +236,8 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			
 			$http.post('/SInformacionPresupuestaria', datos).then(function(response) {
 				if (response.data.success) {
-					mi.dataOriginal = response.data.prestamo;
-					mi.data = response.data.prestamo;
+					mi.dataOriginal = JSON.parse(JSON.stringify(response.data.prestamo));
+					mi.data = JSON.parse(JSON.stringify(response.data.prestamo));
 					mi.totales = [];
 					
 					 for (x in mi.data){
