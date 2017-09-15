@@ -571,7 +571,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
     });
 	
 	mi.showSelected=function(nodo){
-		console.log(nodo);
+		
 	}
 	
 	$http.post('/SProyecto',
