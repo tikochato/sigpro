@@ -105,12 +105,13 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 					numeroproyecto:  $utilidades.elementosPorPagina,
 					filtro_nombre: mi.filtros['nombre'], 
 					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
-					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion		
+					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()		
 					}).success(
 						function(response) {
 							mi.componentepropiedades = response.componentepropiedades;
 							mi.gridOptions.data = mi.componentepropiedades;
 							mi.mostrarcargando = false;
+							mi.paginaActual = pagina;
 						});
 			}
 			mi.redireccionSinPermisos=function(){
@@ -125,7 +126,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 						id: mi.componentepropiedad.id,
 						nombre: mi.componentepropiedad.nombre,
 						descripcion: mi.componentepropiedad.descripcion,
-						datoTipoId: mi.datotipo.id
+						datoTipoId: mi.datotipo.id, t: (new Date()).getTime()
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Propiedad Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
@@ -156,7 +157,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 						if(data){
 							$http.post('/SComponentePropiedad', {
 								accion: 'borrarComponentePropiedad',
-								id: mi.componentepropiedad.id
+								id: mi.componentepropiedad.id, t: (new Date()).getTime()
 							}).success(function(response){
 								if(response.success){
 									$utilidades.mensaje('success','Propiedad Componente borrado con éxito');
@@ -230,7 +231,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			mi.obtenerTotalComponentePropiedades = function(){
 				$http.post('/SComponentePropiedad', { accion: 'numeroComponentePropiedades',
 					filtro_nombre: mi.filtros['nombre'],
-					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'], t: (new Date()).getTime()  }).then(
 						function(response) {
 							mi.totalComponentePropiedades = response.data.totalcomponentepropiedades;
 							mi.paginaActual = 1;
@@ -239,7 +240,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			}
 			
 			
-			$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
+			$http.post('/SDatoTipo', { accion: 'cargarCombo', t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.tipodatos = response.datoTipos;
 			});

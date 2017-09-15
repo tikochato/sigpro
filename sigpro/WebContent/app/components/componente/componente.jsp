@@ -256,15 +256,16 @@
 						</div>
 						
 						<div class="form-group" >
-					       <input type="number" class="inputText" ng-model="componentec.componente.costo" ng-value="componentec.componente.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
-					       <label for="iprog" class="floating-label">Costo</label>
+					       <input type="text" class="inputText" ng-model="componentec.componente.costo" ng-value="componentec.componente.costo" ui-number-mask="2"
+					       ng-required="componentec.componente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
+					       <label for="iprog" class="floating-label">{{componentec.componente.acumulacionCostoId > 0 ? "* Costo" : "Costo"}}</label>
 						</div>
 						
 						<div class="form-group" >
 						    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="componentec.componente.acumulacionCostoNombre" ng-value="componentec.componente.acumulacionCostoNombre" 
 							ng-click="componentec.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="componentec.componente.costo > 0"/>
 							<span class="label-icon" ng-click="componentec.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
-							<label for="campo3" class="floating-label">Acumulación Costo</label>
+							<label for="campo3" class="floating-label">{{componentec.componente.costo > 0 ? "* Acumulación Costo" : "Acumulación Costo"}} </label>
 						</div>
 						
 						<div class = "row">
@@ -292,7 +293,8 @@
 							<div class="col-sm-6">
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{componentec.formatofecha}}" ng-model="componentec.componente.fechaInicio" is-open="componentec.fi_abierto"
-								            datepicker-options="componentec.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="componentec.cambioDuracion(componentec.duracionDimension);" ng-required="true"  
+								            datepicker-options="componentec.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="componentec.cambioDuracion(componentec.duracionDimension);" ng-required="true"
+								            readonly="readonly"  
 								            ng-click="componentec.abrirPopupFecha(1000)" ng-value="componentec.componente.fechaInicio" onblur="this.setAttribute('value', this.value);">
 								            <span class="label-icon" ng-click="componentec.abrirPopupFecha(1000)">
 								              <i class="glyphicon glyphicon-calendar"></i>
@@ -305,6 +307,7 @@
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{componentec.formatofecha}}" ng-model="componentec.componente.fechaFin" is-open="componentec.ff_abierto"
 								            datepicker-options="componentec.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true" ng-click=""
+								            readonly="readonly"
 								            ng-value="componentec.componente.fechaFin" onblur="this.setAttribute('value', this.value);"
 								            ng-readonly="true"/>
 								            <span class="label-icon" ng-click="componentec.abrirPopupFecha(1001)">

@@ -27,6 +27,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		
 		mi.dimensiones = [
+			{value:0,nombre:'Seleccione una opción'},
 			{value:1,nombre:'Dias',sigla:'d'}
 		];
 		
@@ -60,7 +61,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.coordenadas = "";
 
 		mi.filtros = [];
-		$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo }).success(
+		$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo, t: new Date().getTime()}).success(
 				function(response) {
 					mi.objetoid = response.id;
 					mi.objetoNombre = response.nombre;
@@ -130,8 +131,6 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					mi.gridApi = gridApi;
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 						mi.actividad = row.entity;
-						mi.actividad.fechaInicio = moment(mi.actividad.fechaInicio,'DD/MM/YYYY').toDate();
-						mi.actividad.fechaFin = moment(mi.actividad.fechaFin,'DD/MM/YYYY').toDate();
 						mi.ff_opciones.minDate = mi.actividad.fechaInicio;
 					});
 
@@ -160,7 +159,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 						 mi.obtenerTotalActividades();
 				    }
 				    else{
-				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'actividades', t: (new Date()).getTime()}).then(function(response){
+				    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'actividades', t: new Date().getTime()}).then(function(response){
 						      if(response.data.success && response.data.estado!='')
 						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
 						      mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
@@ -182,12 +181,17 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				objetoid: $routeParams.objeto_id, tipo: mi.objetotipo,
 				filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: new Date().getTime()
 			}).success(
 					function(response) {
 						mi.actividades = response.actividades;
+						for(x in mi.actividades){
+							mi.actividades[x].fechaInicio = moment(mi.actividades[x].fechaInicio,'DD/MM/YYYY').toDate();
+							mi.actividades[x].fechaFin = moment(mi.actividades[x].fechaFin,'DD/MM/YYYY').toDate();
+						}
 						mi.gridOptions.data = mi.actividades;
 						mi.mostrarcargando = false;
+						mi.paginaActual = pagina;
 					});
 		}
 
@@ -222,7 +226,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					obra: mi.actividad.obra,
 					longitud: mi.actividad.longitud,
 					latitud : mi.actividad.latitud,
-					costo: mi.actividad.costo == null ? 0 : mi.actividad.costo,
+					costo: mi.actividad.costo == null ? null : mi.actividad.costo,
 					acumulacionCosto: mi.actividad.acumulacionCostoId == null ? 0 : mi.actividad.acumulacionCostoId,
 					renglon: mi.actividad.renglon,
 					ubicacionGeografica: mi.actividad.ubicacionGeografica,
@@ -231,7 +235,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					fechaFin: moment(mi.actividad.fechaFin).format('DD/MM/YYYY'),
 					duaracion: mi.actividad.duracion,
 					duracionDimension: mi.duracionDimension.sigla,
-					datadinamica : JSON.stringify(mi.camposdinamicos)
+					datadinamica : JSON.stringify(mi.camposdinamicos),
+					t: new Date().getTime()
 				}).success(function(response){
 					if(response.success){
 						mi.actividad.id = response.id;
@@ -239,7 +244,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 						mi.actividad.fechaCreacion=response.fechaCreacion;
 						mi.actividad.usuarioActualizo=response.usuarioactualizo;
 						mi.actividad.fechaActualizacion=response.fechaactualizacion;
-						$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardado')+' con éxito');
+						$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
 						mi.obtenerTotalActividades();
 						mi.esnuevo = false;					
 					}
@@ -262,7 +267,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					if(data){
 						$http.post('/SActividad', {
 							accion: 'borrarActividad',
-							id: mi.actividad.id
+							id: mi.actividad.id, t: new Date().getTime()
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Actividad borrada con éxito');
@@ -291,6 +296,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			mi.esnuevo = true;
 			mi.actividad = {};
 			mi.coordenadas = "";
+			mi.duracionDimension = mi.dimensiones[0];
 			mi.gridApi.selection.clearSelectedRows();
 		};
 
@@ -302,7 +308,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				mi.esnuevo = false;
 				
 				if(mi.actividad.duracionDimension.toLowerCase() == 'd'){
-					mi.duracionDimension = mi.dimensiones[0];
+					mi.duracionDimension = mi.dimensiones[1];
 				}else{
 					mi.duracionDimension = '';
 				}
@@ -313,7 +319,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				var parametros = {
 						accion: 'getActividadPropiedadPorTipo',
 						idActividad: mi.actividad.id,
-					    idActividadTipo: mi.actividad.actividadtipoid
+					    idActividadTipo: mi.actividad.actividadtipoid, t: new Date().getTime()
 				}
 				$http.post('/SActividadPropiedad', parametros).then(function(response){
 					mi.camposdinamicos = response.data.actividadpropiedades
@@ -339,8 +345,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				$http.post('/SMatrizRACI', {
 					accion: 'getAsignacionPorObjeto',
 					objetoId: mi.actividad.id,
-					objetoTipo:5
-					
+					objetoTipo:5, 
+					t: new Date().getTime()
 				}).success(function(response){
 					mi.responsables =[];
 					if (response.success)
@@ -368,7 +374,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 
 		mi.guardarEstado=function(){
 			var estado = mi.gridApi.saveState.save();
-			var tabla_data = { action: 'guardaEstado', grid:'actividades', estado: JSON.stringify(estado), t: (new Date()).getTime() };
+			var tabla_data = { action: 'guardaEstado', grid:'actividades', estado: JSON.stringify(estado), t: new Date().getTime() };
 			$http.post('/SEstadoTabla', tabla_data).then(function(response){
 
 			});
@@ -433,7 +439,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.obtenerTotalActividades=function(){
 			$http.post('/SActividad', { accion: 'numeroActividadesPorObjeto',objetoid:$routeParams.objeto_id, tipo: mi.objetotipo,
 				filtro_nombre: mi.filtros['nombre'],
-				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: new Date().getTime() }).success(
 					function(response) {
 						mi.totalActividades = response.totalactividades;
 						mi.cargarTabla(1);
@@ -532,7 +538,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		
 
 		mi.buscarActividadTipo = function(titulo, mensaje) {
-
+			titulo = 'Tipo de Actividad';
 			var modalInstance = $uibModal.open({
 				animation : 'true',
 				ariaLabelledBy : 'modal-title',
@@ -559,7 +565,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				var parametros = {
 						accion: 'getActividadPropiedadPorTipo',
 						idActividad: mi.actividad!=null ? mi.actividad.id : 0,
-						idActividadTipo: selectedItem.id
+						idActividadTipo: selectedItem.id, t: new Date().getTime()
 				}
 
 				$http.post('/SActividadPropiedad', parametros).then(function(response){
@@ -653,12 +659,12 @@ function modalBuscarActividadTipo($uibModalInstance, $scope, $http, $interval,
 
 	mi.mostrarCargando = false;
 	mi.data = [];
-
+	mi.titulo = titulo;
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
 
 	$http.post('/SActividadTipo', {
-		accion : 'numeroActividadTipos'
+		accion : 'numeroActividadTipos', t: new Date().getTime()
 	}).success(function(response) {
 		mi.totalElementos = response.totalcooperantes;
 		mi.elementosPorPagina = mi.totalElementos;
@@ -707,7 +713,7 @@ function modalBuscarActividadTipo($uibModalInstance, $scope, $http, $interval,
 		};
 
 		mi.mostrarCargando = true;
-		$http.post('/SActividadTipo', {accion : 'getActividadtiposPagina'}).then(function(response) {
+		$http.post('/SActividadTipo', {accion : 'getActividadtiposPagina', t: new Date().getTime()}).then(function(response) {
 			if (response.data.success) {
 				mi.data = response.data.actividadtipos;
 				mi.opcionesGrid.data = mi.data;

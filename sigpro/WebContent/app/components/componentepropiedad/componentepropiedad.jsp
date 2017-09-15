@@ -114,7 +114,7 @@
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-sm-6">
-										<div class="form-group label-form" style="text-align: right">
+										<div class="form-group" style="text-align: right">
 											<label for="usuarioCreo" class="label-form" >Usuario que creo</label>
 				    						<p>{{ componentepropiedadc.componentepropiedad.usuarioCreo }}</p>
 										</div>

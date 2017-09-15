@@ -152,6 +152,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 
 						mi.gridOptions.data = mi.componentes;
 						mi.mostrarcargando = false;
+						mi.paginaActual = pagina;
 					});
 		}
 
@@ -184,7 +185,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					unidadejecutoraid:mi.unidadejecutoraid,
 					longitud: mi.componente.longitud,
 					latitud : mi.componente.latitud,
-					costo: mi.componente.costo == null ? 0 : mi.componente.costo,
+					costo: mi.componente.costo == null ? null : mi.componente.costo,
 					acumulacionCosto: mi.componente.acumulacionCostoId == null ? null : mi.componente.acumulacionCostoId,
 					fechaInicio: moment(mi.componente.fechaInicio).format('DD/MM/YYYY'),
 					fechaFin: moment(mi.componente.fechaFin).format('DD/MM/YYYY'),
@@ -249,9 +250,10 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			mi.esnuevo = true;
 			mi.componente = {};
 			mi.camposdinamicos = {};
+			mi.duracionDimension = '';
 			mi.coordenadas = "";
+			mi.duracionDimension = mi.dimensiones[0];
 			mi.gridApi.selection.clearSelectedRows();
-
 		};
 
 		mi.editar = function() {
@@ -264,7 +266,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				mi.entidad = mi.componente.entidadentidad;
 				mi.entidadnombre = mi.componente.entidadnombre;
 				
-				if(mi.componente.duracionDimension == 'd'){
+				if(mi.componente.duracionDimension.toLowerCase() == 'd'){
 					mi.duracionDimension = mi.dimensiones[1];
 				}else{
 					mi.duracionDimension = mi.dimensiones[0];

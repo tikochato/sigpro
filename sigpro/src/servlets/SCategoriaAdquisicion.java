@@ -35,10 +35,10 @@ public class SCategoriaAdquisicion extends HttpServlet {
 		Integer id;
 		String nombre;
 		String descripcion;
-		String usuario_creo;
-		String usuario_actualizo;
-		String fecha_creo;
-		String fecha_actualizacion;
+		String usuarioCreo;
+		String usuarioActualizo;
+		String fechaCreacion;
+		String fechaActualizacion;
 		Integer estado;
 	}
 	
@@ -75,10 +75,10 @@ public class SCategoriaAdquisicion extends HttpServlet {
 				temp.id = categoriaAdquisicion.getId();
 				temp.nombre = categoriaAdquisicion.getNombre();
 				temp.descripcion = categoriaAdquisicion.getDescripcion();
-				temp.usuario_creo = categoriaAdquisicion.getUsuarioCreo();
-				temp.usuario_actualizo = categoriaAdquisicion.getUsuarioActualizo();
-				temp.fecha_creo = Utils.formatDate(categoriaAdquisicion.getFechaCreacion());
-				temp.fecha_actualizacion = Utils.formatDate(categoriaAdquisicion.getFechaActualizacion());
+				temp.usuarioCreo = categoriaAdquisicion.getUsuarioCreo();
+				temp.usuarioActualizo = categoriaAdquisicion.getUsuarioActualizo();
+				temp.fechaCreacion = Utils.formatDateHour(categoriaAdquisicion.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(categoriaAdquisicion.getFechaActualizacion());
 				temp.estado = categoriaAdquisicion.getEstado();
 				lstCategoriaAdquisicion.add(temp);
 			}
@@ -109,10 +109,10 @@ public class SCategoriaAdquisicion extends HttpServlet {
 				temp.id = categoriaAdquisicion.getId();
 				temp.nombre = categoriaAdquisicion.getNombre();
 				temp.descripcion = categoriaAdquisicion.getDescripcion();
-				temp.usuario_creo = categoriaAdquisicion.getUsuarioCreo();
-				temp.usuario_actualizo = categoriaAdquisicion.getUsuarioActualizo();
-				temp.fecha_creo = Utils.formatDate(categoriaAdquisicion.getFechaCreacion());
-				temp.fecha_actualizacion = Utils.formatDate(categoriaAdquisicion.getFechaActualizacion());
+				temp.usuarioCreo = categoriaAdquisicion.getUsuarioCreo();
+				temp.usuarioActualizo = categoriaAdquisicion.getUsuarioActualizo();
+				temp.fechaCreacion = Utils.formatDateHour(categoriaAdquisicion.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(categoriaAdquisicion.getFechaActualizacion());
 				temp.estado = categoriaAdquisicion.getEstado();
 				lstCategoriaAdquisicion.add(temp);
 			}
@@ -147,8 +147,8 @@ public class SCategoriaAdquisicion extends HttpServlet {
 						+ "\"id\": " + categoria.getId() ,","
 						, "\"usuarioCreo\": \"" , categoria.getUsuarioCreo(),"\","
 						, "\"fechaCreacion\":\" " , Utils.formatDateHour(categoria.getFechaCreacion()),"\","
-						, "\"usuarioactualizo\": \"" , categoria.getUsuarioActualizo() != null ? categoria.getUsuarioActualizo() : "","\","
-						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(categoria.getFechaActualizacion()),"\""+
+						, "\"usuarioActualizo\": \"" , categoria.getUsuarioActualizo() != null ? categoria.getUsuarioActualizo() : "","\","
+						, "\"fechaActualizacion\": \"" , Utils.formatDateHour(categoria.getFechaActualizacion()),"\""+
 						" }");
 			}
 		}else if(accion.equals("borrarCategoria")){

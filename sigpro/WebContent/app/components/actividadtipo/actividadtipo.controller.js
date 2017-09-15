@@ -110,12 +110,13 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 			$http.post('/SActividadTipo', { accion: 'getActividadtiposPagina', pagina: pagina, numeroactividadstipo: $utilidades.elementosPorPagina,
 				filtro_nombre: mi.filtros['nombre'], 
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: new Date().getTime()
 			}).success(
 					function(response) {
 						mi.actividadtipos = response.actividadtipos;
 						mi.gridOptions.data = mi.actividadtipos;
 						mi.mostrarcargando = false;
+						mi.paginaActual = pagina;
 					});
 		}
 		
@@ -136,7 +137,8 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 					id: mi.actividadtipo.id,
 					nombre: mi.actividadtipo.nombre,
 					descripcion: mi.actividadtipo.descripcion,
-					propiedades: idspropiedad.length > 0 ? idspropiedad : null
+					propiedades: idspropiedad.length > 0 ? idspropiedad : null,
+					t: new Date().getTime()
 				}).success(function(response){
 					if(response.success){
 						mi.actividadtipo.id = response.id;
@@ -177,7 +179,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 					if(data){
 						$http.post('/SActividadTipo', {
 							accion: 'borrarActividadTipo',
-							id: mi.actividadtipo.id
+							id: mi.actividadtipo.id, t: new Date().getTime()
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Tipo de Actividad borrado con éxito');
@@ -240,7 +242,8 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 				accion: 'numeroActividadTipos',
 				filtro_nombre: mi.filtros['nombre'], 
 				filtro_usuario_creo: mi.filtros['usuario_creo'], 
-				filtro_fecha_creacion: mi.filtros['fecha_creacion']
+				filtro_fecha_creacion: mi.filtros['fecha_creacion'], 
+				t: new Date().getTime()
 				}).success(
 				function(response) {
 					mi.totalActividadtipos = response.totalactividadtipos;
@@ -280,7 +283,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 					{ 
 						accion: 'getActividadPropiedadPaginaPorTipo',
 						pagina: pagina,
-						idActividadTipo:mi.actividadtipo!=null ? mi.actividadtipo.id : null, 
+						idActividadTipo:mi.actividadtipo!=null ? mi.actividadtipo.id : null, t: new Date().getTime(),
 						numeroactividadpropiedad: $utilidades.elementosPorPagina }).success(
 				function(response) {
 					
@@ -293,7 +296,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 		}
 		
 		mi.cargarTotalPropiedades = function(){
-			$http.post('/SActividadPropiedad', { accion: 'numeroActividadPropiedades' }).success(
+			$http.post('/SActividadPropiedad', { accion: 'numeroActividadPropiedades', t: new Date().getTime() }).success(
 					function(response) {
 						mi.totalActividadpropiedades = response.totalactividadpropiedades;
 						mi.cargarTablaPropiedades(mi.paginaActualPropiedades);
@@ -386,7 +389,7 @@ function modalBuscarActividadPropiedad($uibModalInstance, $scope, $http, $interv
 	mi.seleccionado = false;
 	
     $http.post('/SActividadPropiedad', {
-    	accion : 'numeroactividadoPropiedadesDisponibles'
+    	accion : 'numeroactividadoPropiedadesDisponibles', t: new Date().getTime()
         }).success(function(response) {
     	mi.totalElementos = response.totalactividadpropiedades;
     	mi.elementosPorPagina = mi.totalElementos;
@@ -424,7 +427,7 @@ function modalBuscarActividadPropiedad($uibModalInstance, $scope, $http, $interv
     	    accion : 'getActividadPropiedadesTotalDisponibles',
     	    pagina : pagina,
     	    idspropiedades: idspropiedad,
-    	    registros : mi.elementosPorPagina
+    	    registros : mi.elementosPorPagina, t: new Date().getTime()
     	};
 
     	mi.mostrarCargando = true;
