@@ -194,7 +194,7 @@ nav.navbar{
 	width: 100%;
 	font-size: 16px;
 	padding: 0 40px 0 40px;
-	z-index: 1000;
+	z-index: 10000;
 }
 
 .ng-invalid, .ng-invalid:invalid {

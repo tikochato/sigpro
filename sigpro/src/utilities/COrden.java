@@ -158,49 +158,21 @@ public class COrden {
 		
 		try{
 			Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
-			objProyecto = new Object[7];
-			objProyecto[0] = 1;//nivel
-			objProyecto[1] = 0;//padreid
-			objProyecto[2] = 0;//padreobjetoTipo
-			objProyecto[3] = proyecto;
-			objProyecto[4] = proyecto.getId();
-			objProyecto[5] = 1;
-			objProyecto[6] = proyecto.getTreePath() == null ? "1" : proyecto.getTreePath();
+			objProyecto = new Object[]{ 1, 0, 0, proyecto, proyecto.getId(),1, proyecto.getTreePath() == null ? "1" : proyecto.getTreePath() };
 			lstProyecto.add(objProyecto);
 			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0,0, proyectoId, null, null, null, null, null, usuario);
 			for(Componente componente : componentes){
-				objProyecto = new Object[7];
-				objProyecto[0] = 2;
-				objProyecto[1] = proyectoId;
-				objProyecto[2] = 1;
-				objProyecto[3] = componente;
-				objProyecto[4] = componente.getId();
-				objProyecto[5] = 2;
-				objProyecto[6] = componente.getTreePath();
+				objProyecto = new Object[]{2, proyectoId, 1, componente, componente.getId(), 2, componente.getTreePath()};
 				lstProyecto.add(objProyecto);
 				
 				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(), null, null, null, null, null, usuario);
 				for(Producto producto : productos){
-					objProyecto = new Object[7];
-					objProyecto[0] = 3;
-					objProyecto[1] = producto.getComponente().getId();
-					objProyecto[2] = 2;
-					objProyecto[3] = producto;
-					objProyecto[4] = producto.getId();
-					objProyecto[5] = 3;
-					objProyecto[6] = producto.getTreePath();
+					objProyecto = new Object[]{ 3, producto.getComponente().getId(), 2, producto, producto.getId(), 3, producto.getTreePath()};
 					lstProyecto.add(objProyecto);
 					
 					List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(), null, null, null, null, null, usuario);
 					for(Subproducto subproducto : subproductos){
-						objProyecto = new Object[7];
-						objProyecto[0] = 4;
-						objProyecto[1] = subproducto.getProducto().getId();
-						objProyecto[2] = 3;
-						objProyecto[3] = subproducto;
-						objProyecto[4] = subproducto.getId();
-						objProyecto[5] = 4;
-						objProyecto[6] = subproducto.getTreePath();
+						objProyecto = new Object[]{ 4, subproducto.getProducto().getId(), 3, subproducto, subproducto.getId(), 4, subproducto.getTreePath()};
 						lstProyecto.add(objProyecto);
 						
 						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), 4, null, null, null, null, null, usuario);
@@ -232,16 +204,9 @@ public class COrden {
 		return lstProyecto;
 	}
 	
-	private static List<Object[]> obtenerActividades(Actividad actividad, List<Object[]> lstProyecto, String usuario, Integer objetoPadreId, Integer objectoPadreTipo){
+	private static List<Object[]> obtenerActividades(Actividad actividad, List<Object[]> lstProyecto, String usuario, Integer objetoPadreId, Integer objetoPadreTipo){
 		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, actividad.getId(), 5, null, null, null, null, null, usuario);
-		Object[] objProyecto = new Object[7];
-		objProyecto[0] = 5;
-		objProyecto[1] = objetoPadreId;
-		objProyecto[2] = objectoPadreTipo;
-		objProyecto[3] = actividad;
-		objProyecto[4] = actividad.getId();
-		objProyecto[5] = 5;
-		objProyecto[6] = actividad.getTreePath();
+		Object[] objProyecto = new Object[]{5, objetoPadreId, objetoPadreTipo, actividad, actividad.getId(), 5, actividad.getTreePath()};
 		lstProyecto.add(objProyecto);
 		
 		for(Actividad subActividad : actividades){
