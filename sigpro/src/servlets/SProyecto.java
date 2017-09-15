@@ -90,6 +90,7 @@ public class SProyecto extends HttpServlet {
 		String acumulacionCostoNombre;
 		String objetivoEspecifico;
 		String visionGeneral;
+		stprestamo prestamo;
 		
 	};
 
@@ -373,6 +374,8 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getSnombre() 
 										+ " " + proyecto.getColaborador().getPapellido()
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
+				
+				dato.prestamo = obtenerPrestamo(map, proyecto.getId(),1);
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -772,10 +775,9 @@ public class SProyecto extends HttpServlet {
 	}	
 	
 	
-	private stprestamo obtenerPrestamo(Map<String, String> map){
+	private stprestamo obtenerPrestamo(Map<String, String> map,int objetoId, int objetoTipo){
 		
-		int objetoId = Utils.String2Int(map.get("objetoId"));
-		int objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+		
 		stprestamo ret =  null;
 		Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(objetoId, objetoTipo);
 		
@@ -787,7 +789,7 @@ public class SProyecto extends HttpServlet {
 			ret.destino = prestamo.getDestino();
 			ret.sectorEconomico = prestamo.getSectorEconomico();
 			ret.unidadEjecutora = prestamo.getUnidadEjecutora().getId().getUnidadEjecutora();
-			ret.unidadEjecutoraNombre = prestamo.getUnidadEjecutora().getNombre();
+			ret.unidadEjecutoraNombre = prestamo.getUnidadEjecutora() !=null ? prestamo.getUnidadEjecutora().getNombre() : null;
 			ret.fechaFirma = (prestamo.getFechaFirma() == null ? null : Utils.formatDate(prestamo.getFechaFirma()));
 			ret.tipoAutorizacionId = (prestamo.getAutorizacionTipo() == null ? null : prestamo.getAutorizacionTipo().getId());
 			ret.tipoAutorizacionNombre = (prestamo.getAutorizacionTipo() == null ? null : prestamo.getAutorizacionTipo().getNombre());
