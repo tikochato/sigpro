@@ -20,7 +20,7 @@ function controlSubproductoTipo($scope, $routeParams, $route, $window, $location
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
-
+	mi.auditoria={};
 	mi.propiedadesTipo = [];
 	
 	mi.columnaOrdenada=null;
@@ -169,7 +169,7 @@ function controlSubproductoTipo($scope, $routeParams, $route, $window, $location
 
 	mi.nuevo = function() {
 		mi.limpiarSeleccion();
-
+		mi.auditoria={};
 		mi.esForma = true;
 		mi.entityselected = null;
 		mi.esNuevo = true;
@@ -271,6 +271,8 @@ function controlSubproductoTipo($scope, $routeParams, $route, $window, $location
 							mi.data = response.data.subproductoTipos;
 							mi.opcionesGrid.data = mi.data;
 							mi.codigo = response.data.id;
+							mi.auditoria.usuarioCreo=response.data.usuarioCreo;
+							mi.auditoria.fechaCreacion= response.data.fechaCreacion;
 							mi.esNuevo=false;
 							$utilidades.mensaje('success',
 									'El tipo de prodcuto se creo con éxito.');
@@ -297,6 +299,10 @@ function controlSubproductoTipo($scope, $routeParams, $route, $window, $location
 							mi.data = response.data.subproductoTipos;
 							mi.opcionesGrid.data = mi.data;
 							mi.esNuevo=false;
+							mi.auditoria.usuarioCreo=response.data.usuarioCreo;
+							mi.auditoria.fechaCreacion= response.data.fechaCreacion;
+							mi.auditoria.usuarioActualizo=response.data.usuarioActualizo;
+							mi.auditoria.fechaActualizacion= response.data.fechaActualizacion;
 							$utilidades.mensaje('success',
 									'El tipo de subproducto se guardo con éxito');
 							mi.obtenerTotalSubproductoTipo();
@@ -313,7 +319,18 @@ function controlSubproductoTipo($scope, $routeParams, $route, $window, $location
 		mi.esForma = false;
 		mi.esNuevo=false;
 	};
-
+	function mostrarActualizacion(input){
+		for(var i=0; i<input.length; i++){
+			if(input[i].id==mi.codigo){
+				mi.auditoria.usuarioCreo=input[i]["usuarioCreo"];
+				mi.auditoria.fechaCreacion=input[i]["fechaCreacion"];
+				mi.auditoria.usuarioActualizo=input[i]["usuarioActualizo"];
+				mi.auditoria.fechaActualizacion=input[i]["fechaActualizacion"];
+				break;
+			}
+		}
+		
+	};
 	mi.eliminarPropiedad = function(index) {
 		for (var i = 0; i < mi.propiedadesTipo.length; i++) {
 			if (mi.propiedadesTipo[i].estado === "E") {
@@ -330,6 +347,7 @@ function controlSubproductoTipo($scope, $routeParams, $route, $window, $location
 			}
 		}
 	};
+	
 	
 	mi.filtrar = function(evt){
 		if(evt.keyCode==13){

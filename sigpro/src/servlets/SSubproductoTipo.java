@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.ProdTipoPropiedadDAO;
 import dao.SubprodTipoPropiedadDAO;
 import dao.SubproductoTipoDAO;
 import utilities.Utils;
@@ -91,7 +90,7 @@ public class SSubproductoTipo extends HttpServlet {
 		Integer creado = SubproductoTipoDAO.guardar(-1, nombre, descripcion, propiedades, usuario);
 
 		String resultadoJson = String.join("","{ \"success\": ",(creado!=null ? "true" : "false"),", "
-				+ "\"id\": " + creado +" }");
+				+ "\"id\": " + creado +","+"\"usuarioCreo\":\""+usuario+"\",\"fechaCreacion\":\""+SubproductoTipoDAO.getSubproductoTipo(creado).getFechaCreacion().toString()+"\" }");
 		 
 
 		Utils.writeJSon(response, resultadoJson);
@@ -104,7 +103,7 @@ public class SSubproductoTipo extends HttpServlet {
 		String propiedades = parametro.get("propiedades");
 
 		boolean actualizado = SubproductoTipoDAO.actualizar(codigo, nombre, descripcion, propiedades, usuario);
-		String resultadoJson = String.join("","{ \"success\": ",(actualizado ? "true" : "false") + "}");
+		String resultadoJson = String.join("","{ \"success\": ",(actualizado ? "true" : "false")  +",\"usuarioCreo\":\""+SubproductoTipoDAO.getSubproductoTipo(codigo).getUsuarioCreo().toString()+"\",\"fechaCreacion\":\""+SubproductoTipoDAO.getSubproductoTipo(codigo).getFechaCreacion().toString()+"\",\"usuarioActualizo\":\""+usuario+"\",\"fechaActualizacion\":\""+SubproductoTipoDAO.getSubproductoTipo(codigo).getFechaActualizacion().toString()+"\"}");
 		Utils.writeJSon(response, resultadoJson);
 	}
 
