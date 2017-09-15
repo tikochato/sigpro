@@ -19,7 +19,7 @@ import be.quodlibet.boxable.Row;
 
 public class CPdf {
 	/**
-	 * variables de control de tamaño de celdas
+	 * variables de control de tamaï¿½o de celdas
 	 * */
 	
 	private float celda_a=21;
@@ -59,7 +59,7 @@ public class CPdf {
 						contentStream.beginText();
 						contentStream.setFont(font, 18);
 						contentStream.newLineAtOffset(50, 550);
-						contentStream.showText("Ministerio de Finanzas Públicas");
+						contentStream.showText("Ministerio de Finanzas Publicas");
 						contentStream.endText();
 						contentStream.beginText();
 						contentStream.setFont(font, 12);
@@ -255,7 +255,7 @@ public class CPdf {
 			String [][]ret = new String[2][];
 			if(tipo_reporte==0){
 				ret=new String [2][subcabecera.length];
-				//primera línea.
+				//primera lï¿½nea.
 				ret[0][0]=" ";
 				ret[0][1]=" ";
 				int cont=2;
@@ -268,7 +268,7 @@ public class CPdf {
 				ret[1][0]="Nombre";
 				ret[1][1]="Meta Unidad Medida";
 				int control =1;
-				//segunda línea
+				//segunda lï¿½nea
 				if(visualizacion==2){
 					for(int i =0; i<subcabecera.length-3;i++){
 						cont=i;
@@ -472,7 +472,7 @@ public class CPdf {
 						contentStream.beginText();
 						contentStream.setFont(font, 18);
 						contentStream.newLineAtOffset(50, 550);
-						contentStream.showText("Ministerio de Finanzas Públicas");
+						contentStream.showText("Ministerio de Finanzas Publicas");
 						contentStream.endText();
 						contentStream.beginText();
 						contentStream.setFont(font, 12);
@@ -532,7 +532,7 @@ public class CPdf {
 				contentStream.beginText();
 				contentStream.setFont(font, 18);
 				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas Públicas");
+				contentStream.showText("Ministerio de Finanzas Publicas");
 				contentStream.endText();
 				contentStream.beginText();
 				contentStream.setFont(font, 12);
@@ -590,7 +590,7 @@ public class CPdf {
 				contentStream.beginText();
 				contentStream.setFont(font, 18);
 				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas Públicas");
+				contentStream.showText("Ministerio de Finanzas Publicas");
 				contentStream.endText();
 				contentStream.beginText();
 				contentStream.setFont(font, 12);
@@ -645,7 +645,7 @@ public class CPdf {
 				contentStream.beginText();
 				contentStream.setFont(font, 18);
 				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas Públicas");
+				contentStream.showText("Ministerio de Finanzas Publicas");
 				contentStream.endText();
 				contentStream.beginText();
 				contentStream.setFont(font, 12);
@@ -700,7 +700,7 @@ public class CPdf {
 				contentStream.beginText();
 				contentStream.setFont(font, 18);
 				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas Públicas");
+				contentStream.showText("Ministerio de Finanzas Publicas");
 				contentStream.endText();
 				contentStream.beginText();
 				contentStream.setFont(font, 12);
@@ -768,7 +768,7 @@ public class CPdf {
 				contentStream.beginText();
 				contentStream.setFont(font, 18);
 				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas Públicas");
+				contentStream.showText("Ministerio de Finanzas Publicas");
 				contentStream.endText();
 				contentStream.beginText();
 				contentStream.setFont(font, 12);
@@ -828,7 +828,7 @@ public class CPdf {
 						contentStream.beginText();
 						contentStream.setFont(font, 18);
 						contentStream.newLineAtOffset(50, 550);
-						contentStream.showText("Ministerio de Finanzas Públicas");
+						contentStream.showText("Ministerio de Finanzas Publicas");
 						contentStream.endText();
 						contentStream.beginText();
 						contentStream.setFont(font, 12);

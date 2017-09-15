@@ -174,7 +174,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
 				Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 				Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-				CPdf archivo = new CPdf("Ejecuci�n presupuestaria");
+				CPdf archivo = new CPdf("Ejecucion presupuestaria");
 				String headers[][];
 				String datosMetas[][];
 				headers = generarHeaders(anioInicial, anioFinal, agrupacion, tipoVisualizacion);
@@ -856,7 +856,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		}
 		
 		String[] tipoData = new String[]{"string","double","double"};
-		CGraficaExcel grafica = new CGraficaExcel("Administración Transaccional", CGraficaExcel.EXCEL_CHART_AREA, "Meses", "Planificado", datos, tipoData, datosIgualar);
+		CGraficaExcel grafica = new CGraficaExcel("Ejecucion Presupuestaria", CGraficaExcel.EXCEL_CHART_AREA, "Meses", "Planificado", datos, tipoData, datosIgualar);
 	
 		return grafica;
 	}
