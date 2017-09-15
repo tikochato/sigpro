@@ -25,16 +25,10 @@ import dao.MetaUnidadMedidaDAO;
 import pojo.MetaUnidadMedida;
 import utilities.Utils;
 
-/**
- * Servlet implementation class SMetaUnidadMedida
- */
+
 @WebServlet("/SMetaUnidadMedida")
 public class SMetaUnidadMedida extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
 	
 	public class stunidadmeta{
 		Integer id;

@@ -35,9 +35,13 @@ public class SColaborador extends HttpServlet {
 		String primerApellido;
 		String segundoApellido;
 		String otrosApellidos;
+		String unidadejecutoranombre;
+		int unidadejecutoraid;
+		int entidadentidad;
+		String entidadnombre;
+		int ejercicio;
 		Long cui;
 		Integer unidadEjecutora;
-		String nombreUnidadEjecutora;
 		String usuario;
 		String usuarioCreo;
 		String usuarioActualizo;
@@ -101,8 +105,11 @@ public class SColaborador extends HttpServlet {
 				temp.cui = colaborador.getCui();
 				if(colaborador.getUsuario()!=null)
 					temp.usuario = colaborador.getUsuario().getUsuario();
-				temp.unidadEjecutora = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
-				temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
+				temp.unidadejecutoranombre = colaborador.getUnidadEjecutora().getNombre();
+				temp.unidadejecutoraid = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
+				temp.entidadentidad = colaborador.getUnidadEjecutora().getId().getEntidadentidad();
+				temp.entidadnombre = colaborador.getUnidadEjecutora().getEntidad().getNombre();
+				temp.ejercicio = colaborador.getUnidadEjecutora().getId().getEjercicio();
 				
 				temp.usuarioCreo = colaborador.getUsuarioCreo();
 				temp.usuarioActualizo = colaborador.getUsuarioActualizo();
@@ -126,10 +133,10 @@ public class SColaborador extends HttpServlet {
 			String segundoApellido = parametro.get("segundoApellido");
 			Long cui = Utils.String2Long(parametro.get("cui"));
 			Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"), -1);
-			Integer entidad = Utils.String2Int(parametro.get("entidad"), -1);
-			Integer codigoUnidadEjecutora = Utils.String2Int(parametro.get("unidadEjecutora"), -1);
+			Integer entidad = Utils.String2Int(parametro.get("entidadid"), -1);
+			Integer codigoUnidadEjecutora = Utils.String2Int(parametro.get("unidadejecutoraid"), -1);
 			String usuarioParametro = parametro.get("usuario");
-
+			
 			boolean creado = ColaboradorDAO.guardar(-1, primerNombre, segundoNombre, null, primerApellido, segundoApellido,
 					null, cui, ejercicio, entidad,codigoUnidadEjecutora, usuarioParametro, usuario, new Date());
 
@@ -162,8 +169,11 @@ public class SColaborador extends HttpServlet {
 						temp.usuario = colaborador.getUsuario().getUsuario();
 					temp.unidadEjecutora = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
 					
-					temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
-					
+					temp.unidadejecutoranombre = colaborador.getUnidadEjecutora().getNombre();
+					temp.unidadejecutoraid = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.entidadentidad = colaborador.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.entidadnombre = colaborador.getUnidadEjecutora().getEntidad().getNombre();
+					temp.ejercicio = colaborador.getUnidadEjecutora().getId().getEjercicio();
 					temp.usuarioCreo = colaborador.getUsuarioCreo();
 					temp.usuarioActualizo = colaborador.getUsuarioActualizo();
 					temp.fechaCreacion = Utils.formatDateHour(colaborador.getFechaCreacion());
@@ -190,8 +200,8 @@ public class SColaborador extends HttpServlet {
 			String segundoApellido = parametro.get("segundoApellido");
 			Long cui = Utils.String2Long(parametro.get("cui"));
 			Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"), -1);
-			Integer entidad = Utils.String2Int(parametro.get("entidad"), -1);
-			Integer codigoUnidadEjecutora = Utils.String2Int(parametro.get("unidadEjecutora"), -1);
+			Integer entidad = Utils.String2Int(parametro.get("entidadid"), -1);
+			Integer codigoUnidadEjecutora = Utils.String2Int(parametro.get("unidadejecutoraid"), -1);
 			String usuarioParametro = parametro.get("usuario");
 
 			boolean actualizado = ColaboradorDAO.actualizar(id, primerNombre, segundoNombre, primerApellido,
@@ -225,8 +235,11 @@ public class SColaborador extends HttpServlet {
 					if(colaborador.getUsuario()!=null)
 						temp.usuario = colaborador.getUsuario().getUsuario();
 					temp.unidadEjecutora = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
-					temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
-					
+					temp.unidadejecutoranombre = colaborador.getUnidadEjecutora().getNombre();
+					temp.unidadejecutoraid = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.entidadentidad = colaborador.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.entidadnombre = colaborador.getUnidadEjecutora().getEntidad().getNombre();
+					temp.ejercicio = colaborador.getUnidadEjecutora().getId().getEjercicio();
 					temp.usuarioCreo = colaborador.getUsuarioCreo();
 					temp.usuarioActualizo = colaborador.getUsuarioActualizo();
 					temp.fechaCreacion = Utils.formatDateHour(colaborador.getFechaCreacion());
@@ -294,7 +307,11 @@ public class SColaborador extends HttpServlet {
 				temp.usuario = colaborador.getUsuario().getUsuario();
 				
 				temp.unidadEjecutora = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
-				temp.nombreUnidadEjecutora = colaborador.getUnidadEjecutora().getNombre();
+				temp.unidadejecutoranombre = colaborador.getUnidadEjecutora().getNombre();
+				temp.unidadejecutoraid = colaborador.getUnidadEjecutora().getId().getUnidadEjecutora();
+				temp.entidadentidad = colaborador.getUnidadEjecutora().getId().getEntidadentidad();
+				temp.entidadnombre = colaborador.getUnidadEjecutora().getEntidad().getNombre();
+				temp.ejercicio = colaborador.getUnidadEjecutora().getId().getEjercicio();
 				
 				temp.usuarioCreo = colaborador.getUsuarioCreo();
 				temp.usuarioActualizo = colaborador.getUsuarioActualizo();

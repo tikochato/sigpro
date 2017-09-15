@@ -70,7 +70,7 @@
 				</div>
 	    	</shiro:hasPermission>
 		</div>		
-		<div class="row second-main-form" ng-show="controller.mostraringreso">
+		<div class="row second-main-form" ng-hide="!controller.mostraringreso">
 			<div class="page-header">
 			    <h2 ng-hide="!controller.esnuevo"><small>Nueva categoria de adquisición</small></h2>
 				<h2 ng-hide="controller.esnuevo"><small>Edición de categoria de adquisición</small></h2>
@@ -86,7 +86,7 @@
 					<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 				</div>
 			</div>
-		</div>
+
 		
 		<div class="col-sm-12">
 			<form name="form">
@@ -152,4 +152,5 @@
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
+				</div>
 </div>

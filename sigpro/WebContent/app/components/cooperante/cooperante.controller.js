@@ -113,6 +113,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 							mi.cooperantes = response.cooperantes;
 							mi.gridOptions.data = mi.cooperantes;
 							mi.mostrarcargando = false;
+							mi.paginaActual = pagina;
 						});
 			}
 			
@@ -122,14 +123,14 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 
 			mi.guardar=function(){
 				if(mi.cooperante!=null && mi.cooperante.nombre!=null){
-					var tipoAdquisicioneIds="";
-					for (i = 0 ; i<mi.cooperanteTipoAdquisiciones.length ; i ++){
-						if (i==0){
-							tipoAdquisicioneIds = tipoAdquisicioneIds.concat("",mi.cooperanteTipoAdquisiciones[i].id);
-						}else{
-							tipoAdquisicioneIds = tipoAdquisicioneIds.concat(",",mi.cooperanteTipoAdquisiciones[i].id);
-						}
-					}
+//					var tipoAdquisicioneIds="";
+//					for (i = 0 ; i<mi.cooperanteTipoAdquisiciones.length ; i ++){
+//						if (i==0){
+//							tipoAdquisicioneIds = tipoAdquisicioneIds.concat("",mi.cooperanteTipoAdquisiciones[i].id);
+//						}else{
+//							tipoAdquisicioneIds = tipoAdquisicioneIds.concat(",",mi.cooperanteTipoAdquisiciones[i].id);
+//						}
+//					}
 					
 					$http.post('/SCooperante', {
 						accion: 'guardarCooperante',
@@ -139,7 +140,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 						siglas: mi.cooperante.siglas,
 						nombre: mi.cooperante.nombre,
 						descripcion: mi.cooperante.descripcion,
-						tipoAdquisicioneIds: tipoAdquisicioneIds
+//						tipoAdquisicioneIds: tipoAdquisicioneIds
 					}).success(function(response){
 						if(response.success){
 							mi.cooperante.id=response.id;
@@ -209,6 +210,7 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 			mi.irATabla = function() {
 				mi.mostraringreso=false;
 				mi.esnuevo=false;
+				mi.cooperanteTipoAdquisiciones = null;
 			}
 
 			mi.guardarEstado=function(){

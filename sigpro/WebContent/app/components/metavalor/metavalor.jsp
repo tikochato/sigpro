@@ -24,7 +24,12 @@
 			       <shiro:hasPermission name="17010">
 			       		<label class="btn btn-primary" ng-click="metavc.editar()" title="Editar">
 						<span class="glyphicon glyphicon-pencil"></span> Editar</label>
-			       </shiro:hasPermission>			        
+			       </shiro:hasPermission>	
+			       <shiro:hasPermission name="15030">
+			       		<label class="btn btn-danger" ng-click="metavc.borrar()">
+			       		<span class="glyphicon glyphicon-trash"></span>Borrar
+			       		</label>
+			       </shiro:hasPermission>  		        
 			        
     			</div>				
     		</div>
@@ -37,6 +42,7 @@
 					</div>
 				</div>
 				<br/>
+				
 				<div id="maingrid" ui-grid="metavc.gridOptions" ui-grid-save-state 
 						ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination class="grid">
 					<div class="grid_loading" ng-hide="!metavc.mostrarcargando">
@@ -48,7 +54,11 @@
 					</div>
 				  </div>
 				</div>
-				<ul uib-pagination total-items="metavc.totalMetas" 
+				<br/>
+				<div class="total-rows">
+				  Total de {{  metavc.totalMetaValores + (metavc.totalMetaValores == 1 ? " valor de meta" : " valores de metas" ) }}
+				</div>
+				<ul uib-pagination total-items="metavc.totalMetaValores" 
 						ng-model="metavc.paginaActual" 
 						max-size="metavc.numeroMaximoPaginas" 
 						items-per-page="metavc.elementosPorPagina"
@@ -94,17 +104,58 @@
 						<div class="form-group">
 							<input type="text" id="fecha" class="inputText" uib-datepicker-popup="{{metavc.formatofecha}}" ng-model="metavc.metavalor.fecha" is-open="metavc.fc_abierto"
 												datepicker-options="metavc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metavc.abrirPopupFecha(1000)"
-												ng-value="metavc.metavalor.fecha" onblur="this.setAttribute('value', this.value);"  ng-required="true"/>
+												ng-value="metavc.metavalor.fecha" onblur="this.setAttribute('value', this.value);"  ng-required="true" ng-readonly="true"/>
 												<span class="label-icon" ng-click="metavc.abrirPopupFecha(1000)">
 													<i class="glyphicon glyphicon-calendar"></i>
 												</span>
 							<label class="floating-label">* Fecha de Meta</label>
 						</div>
-						<div class="form-group">
-    						<input type="text" class="inputText"  ng-model="metavc.metavalor.valor" ng-required="true"
-    						ng-value="metavc.metavalor.valor" onblur="this.setAttribute('value', this.value);">
-    						<label  class="floating-label">* Valor</label>
+						
+						<div class="form-group" ng-if="metavc.datoTipoId>0">
+							
+							<div ng-switch="metavc.datoTipoId" class="form-group">
+								<input ng-switch-when="1" type="text"  ng-model="metavc.metavalor.valor" class="inputText" 
+										ng-value="metavc.metavalor.valor" onblur="this.setAttribute('value', this.value);"/>	
+								<input ng-switch-when="2" type="number"  numbers-Only ng-model="metavc.metavalor.valor" class="inputText" 
+										ng-value="metavc.metavalor.valor" onblur="this.setAttribute('value', this.value);"/>	
+								<input ng-switch-when="3" type="number"   ng-model="metavc.metavalor.valor" class="inputText" 
+										ng-value="metavc.metavalor.valor" onblur="this.setAttribute('value', this.value);"/>
+								<input ng-switch-when="4" type="checkbox"  ng-model="hitoc.hitoresultado"/>
+								
+								<input ng-switch-when="5" type="text"  class="inputText" uib-datepicker-popup="{{metavc.formatofecha}}" ng-model="metavc.metavalor.valor" is-open="metavc.popupfecharesultado.abierto"
+										datepicker-options="metavc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
+										ng-value="metavc.metavalor.valor" onblur="this.setAttribute('value', this.value);"
+										ng-click="metavc.abirpopupreultado()" ng-readonly="true"/>
+								<span ng-switch="5" class="label-icon" ng-click="metavc.abirpopupreultado()">
+									<i class="glyphicon glyphicon-calendar"></i>
+								</span>
+								
+								<label  class="floating-label" >* Valor</label>
+							</div>
+							
 						</div>
+						
+						
+						<br/>
+						<div class="panel panel-default">
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label class="label-form">Usuario que creo</label> 
+									<p class=""> {{ metavc.metavalor.usuario }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label class="label-form">Fecha de creación</label>
+									<p > {{ metavc.metavalor.fechaIngreso }} </p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 					
 				</form>
 			</div>

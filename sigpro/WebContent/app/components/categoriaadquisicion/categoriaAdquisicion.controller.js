@@ -1,7 +1,7 @@
 var app = angular.module('categoriaAdquisicionController',['ngTouch']);
 
-app.controller('categoriaAdquisicionController', ['$scope', '$http', '$interval','Utilidades','i18nService','uiGridConstants','dialogoConfirmacion','$window','$routeParams','$location','uiGridConstants',
-	function($scope, $http, $interval,$utilidades,i18nService,uiGridConstants,$dialogoConfirmacion, $window, $routeParams,$location,uiGridConstants){
+app.controller('categoriaAdquisicionController', ['$scope', '$http', '$interval','Utilidades','i18nService','uiGridConstants','dialogoConfirmacion','$window','$routeParams','$location','uiGridConstants','$route',
+	function($scope, $http, $interval,$utilidades,i18nService,uiGridConstants,$dialogoConfirmacion, $window, $routeParams,$location,uiGridConstants,$route){
 	var mi = this;
 	
 	$window.document.title = $utilidades.sistema_nombre+' - Categoría de Adquisición';
@@ -51,7 +51,7 @@ app.controller('categoriaAdquisicionController', ['$scope', '$http', '$interval'
 	}
 	
 	mi.borrar = function(ev) {
-		if(mi.actividad!=null && mi.actividad.id!=null){
+		if(mi.categoriaAdquisicion!=null && mi.categoriaAdquisicion.id!=null){
 			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 					, "Confirmación de Borrado"
 					, '¿Desea borrar la Categoría de adquisicion "'+mi.categoriaAdquisicion.nombre+'"?'
@@ -61,12 +61,13 @@ app.controller('categoriaAdquisicionController', ['$scope', '$http', '$interval'
 				if(data){
 					$http.post('/SCategoriaAdquisicion', {
 						accion: 'borrarCategoria',
-						id: mi.actividad.id
+						id: mi.categoriaAdquisicion.id,
+						t: new Date().getTime()
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Categoría de adquisición borrada con éxito');
-							mi.actividad = null;
-							mi.obtenerTotalActividades();
+							mi.categoriaAdquisicion = null;
+							mi.obtenerTotalcategoriaAdquisicion();
 						}
 						else
 							$utilidades.mensaje('danger','Error al borrar la Categoría de adquisición');
@@ -88,13 +89,14 @@ app.controller('categoriaAdquisicionController', ['$scope', '$http', '$interval'
 				esnuevo: mi.esnuevo,
 				id: mi.categoriaAdquisicion.id,
 				nombre: mi.categoriaAdquisicion.nombre,
-				descripcion: mi.categoriaAdquisicion.descripcion
+				descripcion: mi.categoriaAdquisicion.descripcion,
+				t: new Date().getTime()
 			}).success(function(response){
 				mi.categoriaAdquisicion.usuarioCreo = response.usuarioCreo;
 				mi.categoriaAdquisicion.fechaCreacion = response.fechaCreacion;
-				mi.categoriaAdquisicion.usuarioActualizo = response.usuarioactualizo;
-				mi.categoriaAdquisicion.fechaActualizacion = response.fechaactualizacion;
-				$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardado')+' con éxito');
+				mi.categoriaAdquisicion.usuarioActualizo = response.usuarioActualizo;
+				mi.categoriaAdquisicion.fechaActualizacion = response.fechaActualizacion;
+				$utilidades.mensaje('success','Categoría de adquisición '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
 				mi.obtenerTotalcategoriaAdquisicion();
 				mi.esnuevo = false;	
 			})
@@ -117,7 +119,8 @@ app.controller('categoriaAdquisicionController', ['$scope', '$http', '$interval'
 
 	mi.obtenerTotalcategoriaAdquisicion=function(){
 		$http.post('/SCategoriaAdquisicion', { accion: 'numeroCategoriaPorObjeto', filtro_nombre: mi.filtros['nombre'],
-			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
+			t: new Date().getTime() }).success(
 				function(response) {
 					mi.totalCategoriaAdquisiciones = response.totalCategoriaAdquisiciones;
 					mi.cargarTabla(1);
@@ -130,14 +133,24 @@ app.controller('categoriaAdquisicionController', ['$scope', '$http', '$interval'
 			objetoid: $routeParams.objeto_id, tipo: mi.objetotipo,
 			filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion,
+			t: new Date().getTime()
 		}).success(
 				function(response) {
 					mi.categoriaAdquisiciones = response.categoriaAdquisiciones;
 					mi.gridOptions.data = mi.categoriaAdquisiciones;
 					mi.mostrarcargando = false;
+					mi.paginaActual = pagina;
 				});
 	}
+	
+	mi.filtrar = function(evt){
+		if(evt.keyCode==13){
+			mi.obtenerTotalcategoriaAdquisicion();
+			mi.gridApi.selection.clearSelectedRows();
+			mi.categoriaAdquisiciones = null;
+		}
+	};
 	
 	mi.gridOptions = {
 			enableRowSelection : true,
@@ -157,10 +170,10 @@ app.controller('categoriaAdquisicionController', ['$scope', '$http', '$interval'
 					filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'nombre\']" ng-keypress="grid.appScope.controller.filtrar($event)"></input></div>'
 			    },
 			    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-			    { name: 'usuario_creo', displayName: 'Usuario Creación',
+			    { name: 'usuarioCreo', displayName: 'Usuario Creación',
 			    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.controller.filtrar($event)"></input></div>'
 			    },
-			    { name: 'fecha_creacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
+			    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
 			    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.controller.filtrar($event)"></input></div>'
 			    }
 			],
@@ -194,10 +207,10 @@ app.controller('categoriaAdquisicionController', ['$scope', '$http', '$interval'
 
 				if($routeParams.reiniciar_vista=='rv'){
 					mi.guardarEstado();
-					 mi.obtenerTotalcategoriaAdquisicion();
+					mi.obtenerTotalcategoriaAdquisicion();
 			    }
 			    else{
-			    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'actividades', t: (new Date()).getTime()}).then(function(response){
+			    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'categoriaadquisicion', t: (new Date()).getTime()}).then(function(response){
 					      if(response.data.success && response.data.estado!='')
 					    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
 					      mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);

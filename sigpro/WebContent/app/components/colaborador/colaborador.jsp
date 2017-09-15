@@ -92,6 +92,7 @@
 	    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 	  </div>
 	</div>
+	<div class="col-sm-12">
 	    <form name="form" class="css-form">
 		     	<div class="form-group">
 				   <input type="text" name="nombre"  class="inputText" id="nombre" 
@@ -126,7 +127,7 @@
 				   <label class="floating-label">* CUI</label>
 				</div>
 			  	<div class="form-group" >
-				    <input type="text" class="inputText" id="unidadEjecutora" name="unidadEjecutora" ng-model="colaborador.colaborador.nombreUnidadEjecutora" ng-value="colaborador.colaborador.nombreUnidadEjecutora" 
+				    <input type="text" class="inputText" id="unidadEjecutora" name="unidadEjecutora" ng-model="colaborador.colaborador.unidadejecutoranombre" ng-value="colaborador.colaborador.unidadejecutoranombre" 
 						            		ng-click="colaborador.esNuevo? colaborador.buscarUnidadEjecutora(): ''" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
 					<span class="label-icon" ng-click="colaborador.esNuevo? colaborador.buscarUnidadEjecutora(): ''"><i class="glyphicon glyphicon-search"></i></span>
 					<label for="campo3" class="floating-label">* Nombre Unidad Ejecutora</label>
@@ -172,9 +173,10 @@
 			 </div>
 			</div>
 	    </form>
-    
+    </div>
    <div class="operation_buttons" align="right">
     <div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
+    <div class="col-sm-12 operation_buttons" align="right">
 	  <div class="btn-group">
 	    <shiro:hasPermission name="4020">
 	      <label class="btn btn-success" ng-click="form.$valid ? colaborador.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
@@ -182,6 +184,7 @@
 	    </shiro:hasPermission>
 	    <label class="btn btn-primary" ng-click="colaborador.cancelar()" title="Ir a Tabla">
 	    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+	  </div>
 	  </div>
 	</div>
   </div>

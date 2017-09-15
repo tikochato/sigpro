@@ -1,5 +1,7 @@
 package dao;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -9,6 +11,7 @@ import utilities.CHibernateSession;
 import utilities.CLogger;
 
 public class EstructuraProyectoDAO {
+	
 	public static List<?> getEstructuraProyecto(Integer idProyecto){
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -60,6 +63,32 @@ public class EstructuraProyectoDAO {
 			session.close();
 		}
 		return ret;
+	}
+	
+	public static Nodo getEstructuraProyectoArbol(int id){
+		Nodo root = null;
+		List<?> estructuras = EstructuraProyectoDAO.getEstructuraProyecto(id);
+		if(estructuras.size()>0){
+			Object[] dato = (Object[]) estructuras.get(0);
+			root = new Nodo((Integer)dato[0],((BigInteger)dato[2]).intValue(),(String)dato[1],(Integer)dato[4], new ArrayList<Nodo>(), null);
+			Nodo nivel_actual_estructura = root;
+			for(int i=1; i<estructuras.size(); i++){
+				dato = (Object[]) estructuras.get(i);
+				Nodo nodo = new Nodo((Integer)dato[0],((BigInteger)dato[2]).intValue(),(String)dato[1],(Integer)dato[4], new ArrayList<Nodo>(), null);
+				if(nodo.nivel!=nivel_actual_estructura.nivel+1){
+					if(nodo.nivel>nivel_actual_estructura.nivel){
+						nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);
+					}
+					else{
+						for(int j=0; j<=(nivel_actual_estructura.nivel-nodo.nivel+1); j++)
+							nivel_actual_estructura=nivel_actual_estructura.parent;
+					}
+				}
+				nodo.parent = nivel_actual_estructura;
+				nivel_actual_estructura.children.add(nodo);
+			}
+		}
+		return root;
 	}
 
 }

@@ -1,31 +1,27 @@
-/**
- * 
- */
 var moduloColaborador = angular.module('moduloColaborador', [ 'ngTouch']);
 
-moduloColaborador.controller('controlColaborador', [ '$scope', '$routeParams',
-		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',
-		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', 'dialogoConfirmacion', 
-		controlColaborador ]);
+moduloColaborador.controller('controlColaborador', [ '$scope', '$routeParams','$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',
+		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', 'dialogoConfirmacion','$q',controlColaborador ]);
 
-function controlColaborador($scope, $routeParams, $route, $window, $location,
-		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
-		$timeout, $log, $dialogoConfirmacion) {
+function controlColaborador($scope, $routeParams, $route, $window, $location, $mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
+		$timeout, $log, $dialogoConfirmacion, $q) {
 	i18nService.setCurrentLang('es');
 	var mi = this;
 
 	$window.document.title = $utilidades.sistema_nombre+' - Colaborador';
 
-	
 	mi.esForma = false;
-
+	mi.entidad="";
+	mi.ejercicio="";
+	mi.unidadejecutoranombre="";
+	mi.entidadnombre="";
 	mi.totalElementos = 0;
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion=null;
-
+	mi.unidadesejecutoras = [];
 	mi.cambioPagina = function() {
 		mi.cargarData(mi.paginaActual);
 	}
@@ -56,6 +52,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 				mi.opcionesGrid.data = mi.data;
 
 				mi.mostrarCargando = false;
+				mi.paginaActual = pagina;
 			}
 		});
 
@@ -201,7 +198,8 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 		mi.esForma = true;
 		mi.colaborador = {};
 		mi.esNuevo = true;
-
+		mi.unidadejecutoraid="";
+		mi.unidadejecutoranombre="";
 		mi.usuarioValido = false;
 		mi.gridApi.selection.clearSelectedRows();
 	}
@@ -212,7 +210,11 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 		if (mi.colaborador!=null && mi.colaborador.id!=null) {
 			mi.esForma = true;
 			mi.esNuevo = false;
-
+			mi.unidadejecutoraid=mi.colaborador.unidadejecutoraid;
+			mi.unidadejecutoranombre=mi.colaborador.unidadejecutora;
+			mi.entidadnombre = mi.colaborador.entidadnombre;
+			mi.ejercicio = mi.colaborador.ejercicio;
+			mi.entidad = mi.colaborador.entidadentidad;
 			mi.validarUsuario();
 
 		} else {
@@ -230,7 +232,9 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 				primerApellido : mi.colaborador.primerApellido,
 				segundoApellido : mi.colaborador.segundoApellido,
 				cui : mi.colaborador.cui,
-				unidadEjecutora : mi.colaborador.unidadEjecutora,
+				ejercicio: mi.ejercicio,
+				entidadid: mi.entidad,
+				unidadejecutoraid: mi.colaborador.unidadejecutoraid,
 				usuario : mi.colaborador.usuario
 			};
 
@@ -261,7 +265,9 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 				primerApellido : mi.colaborador.primerApellido,
 				segundoApellido : mi.colaborador.segundoApellido,
 				cui : mi.colaborador.cui,
-				unidadEjecutora : mi.colaborador.unidadEjecutora,
+				ejercicio: mi.ejercicio,
+				entidadid: mi.entidad,
+				unidadejecutoraid : mi.colaborador.unidadejecutoraid,
 				usuario : mi.colaborador.usuario
 			};
 
@@ -346,8 +352,32 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 		});
 	}
 
-	mi.buscarUnidadEjecutora = function(titulo, mensaje) {
+	mi.buscarUnidadEjecutora = function() {
+		var resultado = mi.llamarModalBusqueda('Unidades Ejecutoras','/SUnidadEjecutora', {
+			accion : 'totalElementos',
+			ejercicio: mi.ejercicio,
+			entidad: mi.entidad
+		}, function(pagina, elementosPorPagina,ejercicio,entidad) {
+			return {
+				accion : 'cargar',
+				pagina : pagina,
+				ejercicio: ejercicio,
+				entidad: entidad,
+				registros : elementosPorPagina
+			};
+		},'unidadEjecutora','nombreUnidadEjecutora', true, {entidad: mi.entidad, ejercicio: mi.ejercicio, abreviatura:'', nombre: mi.entidadnombre});
 
+		resultado.then(function(itemSeleccionado) {
+			mi.ejercicio = itemSeleccionado.ejercicio;
+			mi.entidad = itemSeleccionado.entidad;
+			mi.colaborador.unidadejecutoraid= itemSeleccionado.unidadEjecutora;
+			mi.colaborador.unidadejecutoranombre = itemSeleccionado.nombreUnidadEjecutora;
+			mi.colaborador.entidadnombre = itemSeleccionado.nombreEntidad;
+		});
+	};
+	
+	mi.llamarModalBusqueda = function(titulo,servlet, accionServlet, datosCarga,columnaId,columnaNombre, showfilters,entidad) {
+		var resultado = $q.defer();
 		var modalInstance = $uibModal.open({
 			animation : 'true',
 			ariaLabelledBy : 'modal-title',
@@ -356,15 +386,39 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 			controller : 'modalBuscarUnidadEjecutora',
 			controllerAs : 'modalBuscar',
 			backdrop : 'static',
-			size : 'md'
+			size : 'md',
+			resolve : {
+				$titulo: function(){
+					return titulo;
+				},
+				$servlet : function() {
+					return servlet;
+				},
+				$accionServlet : function() {
+					return accionServlet;
+				},
+				$datosCarga : function() {
+					return datosCarga;
+				},
+				$columnaId : function() {
+					return columnaId;
+				},
+				$columnaNombre : function() {
+					return columnaNombre;
+				},
+				$showfilters: function(){
+					return showfilters;
+				},
+				$entidad: function(){
+					return entidad;
+				}
+			}
 		});
 
-		modalInstance.result.then(function(selectedItem) {
-			mi.colaborador.unidadEjecutora = selectedItem.unidadEjecutora;
-			mi.colaborador.nombreUnidadEjecutora = selectedItem.nombreUnidadEjecutora;
-
-		}, function() {
+		modalInstance.result.then(function(itemSeleccionado) {
+			resultado.resolve(itemSeleccionado);
 		});
+		return resultado.promise;
 	};
 
 	mi.usuarioValido = false;
@@ -412,10 +466,12 @@ function controlColaborador($scope, $routeParams, $route, $window, $location,
 
 moduloColaborador.controller('modalBuscarUnidadEjecutora', [
 		'$uibModalInstance', '$scope', '$http', '$interval', 'i18nService',
-		'Utilidades', '$timeout', '$log', modalBuscarUnidadEjecutora ]);
+		'Utilidades', '$timeout', '$log','$titulo', '$servlet', '$accionServlet', '$datosCarga',
+		'$columnaId','$columnaNombre','$showfilters','$entidad','$rootScope', modalBuscarUnidadEjecutora ]);
 
 function modalBuscarUnidadEjecutora($uibModalInstance, $scope, $http,
-		$interval, i18nService, $utilidades, $timeout, $log) {
+		$interval, i18nService, $utilidades, $timeout, $log,$titulo, $servlet, $accionServlet, $datosCarga,
+		$columnaId,$columnaNombre,$showfilters,$entidad,$rootScope) {
 
 	var mi = this;
 
@@ -423,20 +479,47 @@ function modalBuscarUnidadEjecutora($uibModalInstance, $scope, $http,
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = 5;
 	mi.elementosPorPagina = 9;
-
+	mi.showfilters = $showfilters;
 	mi.mostrarCargando = false;
 	mi.data = [];
-
+	mi.ejercicios = [];
+	mi.entidades = [];
+	mi.titulo = $titulo;
+	
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
-
-	$http.post('/SUnidadEjecutora', {
-		accion : 'totalEntidades'
-	}).success(function(response) {
-		mi.totalElementos = response.total;
-		mi.elementosPorPagina = mi.totalElementos;
-		mi.cargarData(1);
-	});
+	
+	if(mi.showfilters){
+		var current_year = moment().year();
+		mi.entidad = $entidad;
+		mi.ejercicio = $entidad.ejercicio;
+		for(var i=current_year-$rootScope.catalogo_entidades_anos; i<=current_year; i++)
+			mi.ejercicios.push(i);
+		mi.ejercicio = (mi.ejercicio == "") ? current_year : mi.ejercicio;
+		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
+			mi.entidades = response.entidades;
+			if(mi.entidades.length>0){
+				mi.entidad = (mi.entidad===undefined) ? mi.entidades[0] : mi.entidad;
+				$accionServlet.ejercicio = mi.ejercicio;
+				$accionServlet.entidad = mi.entidad.entidad;
+				$http.post($servlet, $accionServlet).success(function(response) {
+					for ( var key in response) {
+						mi.totalElementos = response[key];
+					}
+					mi.cargarData(1,mi.ejercicio,mi.entidad.entidad);
+				});
+			}
+			
+		});
+	}
+	else{
+		$http.post($servlet, $accionServlet).success(function(response) {
+			for ( var key in response) {
+				mi.totalElementos = response[key];
+			}
+			mi.cargarData(1,0,0);
+		});
+	}
 
 	mi.opcionesGrid = {
 		data : mi.data,
@@ -472,21 +555,20 @@ function modalBuscarUnidadEjecutora($uibModalInstance, $scope, $http,
 		mi.seleccionado = row.isSelected;
 	};
 
-	mi.cargarData = function(pagina) {
-		var datos = {
-			accion : 'cargar',
-			pagina : pagina,
-			registros : mi.elementosPorPagina
-		};
-
+	mi.cargarData = function(pagina,ejercicio, entidad) {
 		mi.mostrarCargando = true;
-		$http.post('/SUnidadEjecutora', datos).then(function(response) {
-			if (response.data.success) {
-				mi.data = response.data.unidadesEjecutoras;
-				mi.opcionesGrid.data = mi.data;
-				mi.mostrarCargando = false;
-			}
-		});
+		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina,ejercicio, entidad)).then(
+				function(response) {
+					if (response.data.success) {
+						for ( var key in response.data) {
+							if (key != 'success')
+								mi.data = response.data[key];
+						}
+						mi.opcionesGrid.data = mi.data;
+
+						mi.mostrarCargando = false;
+					}
+				});
 	};
 
 	mi.cambioPagina = function() {

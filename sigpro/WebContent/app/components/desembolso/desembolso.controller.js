@@ -123,6 +123,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 							mi.desembolsos = response.desembolsos;
 							mi.gridOptions.data = mi.desembolsos;
 							mi.mostrarcargando = false;
+							mi.paginaActual = pagina;
 						});
 			};
 			
@@ -232,7 +233,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.obtenerTotalDesembolsos = function(){
 				$http.post('/SDesembolso', { accion: 'numeroDesembolsosPorProyecto', proyectoid:mi.proyectoid,
 					filtro_fecha: mi.filtros['fecha'],
-					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'], t: new Date().getTime()  }).then(
 						function(response) {
 							mi.totalDesembolsos = response.data.totaldesembolsos;
 							mi.paginaActual = 1;
@@ -340,7 +341,7 @@ function modalBuscarDesembolsoTipo($uibModalInstance, $scope, $http, $interval,
 	mi.seleccionado = false;
 	
 	$http.post('/SDesembolsoTipo', {
-		accion : 'numeroDesembolsoTipo'
+		accion : 'numeroDesembolsoTipo', t: new Date().getTime()
 	}).success(function(response) {
 		mi.totalElementos = response.total;
 		mi.elementosPorPagina = mi.totalElementos;
@@ -378,7 +379,7 @@ function modalBuscarDesembolsoTipo($uibModalInstance, $scope, $http, $interval,
 	
 	mi.cargarData = function(pagina) {
 		mi.mostrarCargando = true;
-		$http.post('/SDesembolsoTipo', {accion : 'getDesembolsotiposPagina'}).then(function(response) {
+		$http.post('/SDesembolsoTipo', {accion : 'getDesembolsotiposPagina', t: new Date().getTime()}).then(function(response) {
 			if (response.data.success) {
 				mi.data = response.data.desembolsotipos;
 				mi.opcionesGrid.data = mi.data;
@@ -427,7 +428,7 @@ function modalBuscarTipoMoneda($uibModalInstance, $scope, $http, $interval,
 	mi.seleccionado = false;
 	
 	mi.mostrarCargando = true;
-	$http.post('/STipoMoneda', {accion : 'getTipoMonedas'}).then(function(response) {
+	$http.post('/STipoMoneda', {accion : 'getTipoMonedas', t: new Date().getTime()}).then(function(response) {
 		if (response.data.success) {
 			mi.data = response.data.tipoMonedas;
 			mi.opcionesGrid.data = mi.data;

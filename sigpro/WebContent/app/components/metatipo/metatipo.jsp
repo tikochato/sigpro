@@ -53,7 +53,7 @@
 				<div class="total-rows">
 				  Total de {{  metatipoc.totaltipos + (metatipoc.totaltipos == 1 ? " Tipo de Meta" : " Tipos de Meta" ) }}
 				</div>
-				<ul uib-pagination total-items="metatipoc.totalCooperantes" 
+				<ul uib-pagination total-items="metatipoc.totaltipos" 
 						ng-model="metatipoc.paginaActual" 
 						max-size="metatipoc.numeroMaximoPaginas" 
 						items-per-page="metatipoc.elementosPorPagina"
@@ -99,7 +99,7 @@
 						</div>
 						<div class="form-group">
 							
-    						<input type="text" class="inputText"  ng-model="metatipoc.tipo.descripcion" ng-required="true"
+    						<input type="text" class="inputText"  ng-model="metatipoc.tipo.descripcion" 
     						ng-value="metatipoc.tipo.descripcion" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">Descripción</label>
 						</div>
