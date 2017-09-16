@@ -898,11 +898,13 @@ function modalPago($uibModalInstance, $scope, $http, $interval,
 	
 	
 	mi.agregarPago = function(){
-		mi.planAdquisicionesPagos.push({id:0,fecha: moment(mi.fechaPago).format('MMMM'), fechaReal: moment(mi.fechaPago).format('DD/MM/YYYY'), pago: parseFloat(mi.montoPago).toFixed(2), descripcion: mi.descripcion});
-		
-		mi.fechaPago = null;
-		mi.montoPago = null;
-		mi.descripcion = null;
+		if(mi.fechaPago != null && mi.montoPago != null){
+			mi.planAdquisicionesPagos.push({id:0,fecha: moment(mi.fechaPago).format('MMMM'), fechaReal: moment(mi.fechaPago).format('DD/MM/YYYY'), pago: parseFloat(mi.montoPago).toFixed(2), descripcion: mi.descripcion});
+			
+			mi.fechaPago = null;
+			mi.montoPago = null;
+			mi.descripcion = null;
+		}
 	}
 	
 	mi.ok = function() {
@@ -921,6 +923,21 @@ function modalPago($uibModalInstance, $scope, $http, $interval,
 					}else
 						$uibModalInstance.close({success: false, numeroContrato: mi.numeroContrato, montoContrato: mi.montoContrato});
 			});
+			
+			$http.post('/SPlanAdquisiciones', 
+				{
+					accion: 'guardarMontoContrato', 
+					numeroContrato: mi.numeroContrato, 
+					montoContrato: mi.montoContrato,
+					objetoId : mi.idObjeto,
+					objetoTipo : mi.objetoTipo
+				}).then(
+				function(response){
+					if(response.data.success){
+						
+					}
+				}
+			);
 	};
 	
 	mi.eliminarPago = function(row){

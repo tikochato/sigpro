@@ -291,6 +291,17 @@ public class SPlanAdquisiciones extends HttpServlet {
 			catch (Throwable e) {
 				CLogger.write("2", SPlanAdquisiciones.class, e);
 			}
+		}else if(accion.equals("guardarMontoContrato")){
+			Integer objetoId = Utils.String2Int(map.get("objetoId"));
+			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+			String numeroContrato = map.get("numeroContrato");
+			BigDecimal montoContrato = Utils.String2BigDecimal(map.get("montoContrato"), null);
+			
+			PlanAdquisicionesDetalle planAdquisicionDetalle = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
+			planAdquisicionDetalle.setMontoContrato(montoContrato);
+			planAdquisicionDetalle.setNumeroContrato(numeroContrato);
+			PlanAdquisicionesDetalleDAO.guardarPlanAdquisicion(planAdquisicionDetalle);
+			
 		}else if(accion.equals("exportarExcel")){
 			Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"), null);
 			try{ 

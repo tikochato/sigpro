@@ -24,7 +24,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.PagoDAO;
+import dao.PlanAdquisicionesDAO;
 import pojo.Pago;
+import pojo.PlanAdquisiciones;
 import utilities.CLogger;
 import utilities.Utils;
 
@@ -85,7 +87,7 @@ public class SPago extends HttpServlet {
 		}else if(accion.equals("guardarPagos")){
 			Integer idObjeto = Utils.String2Int(map.get("idObjeto"));
 			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
-			
+			boolean result = false;
 			String dataPagos = map.get("pagos");
 			
 			Type listType = new TypeToken<List<Map<String, String>>>() {}.getType();
@@ -98,14 +100,16 @@ public class SPago extends HttpServlet {
 				for(Map<String, String> pago : pagos){
 					if(Utils.String2Int(pago.get("id")) == 0){
 						nuevoPago = new Pago(idObjeto, objetoTipo, formatter.parse(pago.get("fechaReal")), new BigDecimal(pago.get("pago")), pago.get("descripcion"), usuario, null, new Date(), null,1);
-						PagoDAO.guardarPago(nuevoPago);
-					}
+						result = PagoDAO.guardarPago(nuevoPago);	
+					}else
+						result = true;
 				}
 			}catch(Throwable e){
 				CLogger.write("1", SPago.class, e);
+				result = false;
 			}
 			
-			List<Pago> Pagos = PagoDAO.getPagosByObjetoTipo(idObjeto,objetoTipo);
+			/*List<Pago> Pagos = PagoDAO.getPagosByObjetoTipo(idObjeto,objetoTipo);
 			
 			List<stPago> resultado = new ArrayList<stPago>();
 			for(Pago pago :Pagos){
@@ -115,11 +119,11 @@ public class SPago extends HttpServlet {
 				temp.pago = pago.getPago();
 				temp.descripcion = pago.getDescripcion();
 				resultado.add(temp);
-			}
+			}*/
 			
-			response_text=new GsonBuilder().serializeNulls().create().toJson(resultado);
+			/*response_text=new GsonBuilder().serializeNulls().create().toJson(resultado);*/
 	        response_text = String.join("", "\"pagos\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text, "}");
+	        response_text = String.join("", "{\"success\":" + (result) + ",", response_text, "}");
 		}else if (accion.equals("eliminarPago")){
 			Integer idPago = Utils.String2Int(map.get("idPago"));
 			

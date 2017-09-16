@@ -38,12 +38,11 @@ public class Pago implements java.io.Serializable {
 	public Pago() {
 	}
 
-	public Pago(int objetoId, int objetoTipo, Date fechaPago, String descripcion, String usuarioCreo,
+	public Pago(int objetoId, int objetoTipo, Date fechaPago, String usuarioCreo,
 			Date fechaCreacion) {
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
 		this.fechaPago = fechaPago;
-		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 	}
@@ -111,7 +110,7 @@ public class Pago implements java.io.Serializable {
 		this.pago = pago;
 	}
 
-	@Column(name = "descripcion", nullable = false, length = 100)
+	@Column(name = "descripcion", length = 100)
 	public String getDescripcion() {
 		return this.descripcion;
 	}
