@@ -255,7 +255,7 @@
 					    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="subproducto.subproducto.acumulacionCostoNombre" ng-value="subproducto.subproducto.acumulacionCostoNombre" 
 						ng-click="subproducto.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="subproducto.subproducto.costo > 0"/>
 						<span class="label-icon" ng-click="subproducto.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
-						<label for="campo3" class="floating-label">* Acumulación Costo</label>
+						<label for="campo3" class="floating-label"> Acumulación Costo</label>
 					</div>
 					
 					<div class = "row">
@@ -284,7 +284,7 @@
 							<div class="form-group" >
 							  <input type="text"  class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}" ng-model="subproducto.subproducto.fechaInicio" is-open="subproducto.fi_abierto"
 							            datepicker-options="subproducto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="subproducto.cambioDuracion(subproducto.duracionDimension);" ng-required="true"  
-							            ng-click="subproducto.primerhijo != true ? subproducto.abrirPopupFecha(1000) : ''" ng-value="subproducto.subproducto.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
+							            ng-click="subproducto.primerhijo != true ? subproducto.abrirPopupFecha(1000) : ''" ng-value="subproducto.subproducto.fechaInicio" onblur="this.setAttribute('value', this.value);" readonly/>
 							            <span class="label-icon" ng-click="producto.abrirPopupFecha(1000)">
 							              <i class="glyphicon glyphicon-calendar"></i>
 							            </span>

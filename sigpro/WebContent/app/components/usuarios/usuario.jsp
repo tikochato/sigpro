@@ -49,13 +49,13 @@
 				<div id="grid1" ui-grid="usuarioc.gridOptions" ui-grid-save-state
 						ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination class="usuarioc.myGrid">
 						<div class="grid_loading" ng-hide="!usuarioc.mostrarcargando">
-				  	<div class="msg">
-				      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
-						  <br /><br />
-						  <b>Cargando, por favor espere...</b>
-					  </span>
-					</div>
-				  </div>
+						  	<div class="msg">
+						      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
+								  <br /><br />
+								  <b>Cargando, por favor espere...</b>
+							  </span>
+							</div>
+						  </div>
 				</div>
 				<div class="total-rows">
 						  Total de {{  usuarioc.totalUsuarios + (usuarioc.totalUsuarios == 1 ? " Usuario" : " Usuarios" ) }}
@@ -93,21 +93,23 @@
     			</div>
     		</div>
 			<div class="col-sm-12">
-				<form name="form">
+				<form name="form" autocomplete="off">
 
 						<div class="form-group" ng-show="!usuarioc.esNuevo && !usuarioc.mostrarCambioPassword">
-    						<input type="text" class="inputText" id="usuario" ng-model="usuarioc.usuariosSelected.usuario" 
-    							ng-value="usuarioc.usuariosSelected.usuario" onblur="this.setAttribute('value', this.value);" readonly>
+    						<input type="text" class="inputText" id="lllll" ng-model="usuarioc.usuariosSelected.usuario" 
+    							ng-value="usuarioc.usuariosSelected.usuario" onblur="this.setAttribute('value', this.value);" autocomplete="off" readonly>
     						<label class="floating-label">* Usuario</label>
 						</div>
+						<input type="text" class="inputText" id="mailFake" autocomplete="off" ng-hide="true">
 						<div class="form-group" ng-show="!usuarioc.mostrarCambioPassword">
-    						<input type="text" class="inputText" id="correo" ng-model="usuarioc.usuariosSelected.email" ng-required="true"
+    						<input type="text" class="inputText" id="mail" ng-model="usuarioc.usuariosSelected.email" ng-required="true" autocomplete="off"
     							ng-value="usuarioc.usuariosSelected.email" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">* Correo electrónico</label>
 						</div>
+						<input type="password" class="inputText" id="passFake" autocomplete="off" ng-hide="true">
 						<div class="form-group" ng-show="!usuarioc.esNuevo">
-    						<input type="password" class="inputText" id="password1" ng-model="usuarioc.usuariosSelected.password" ng-required="true"
-    							ng-value="usuarioc.usuariosSelected.password" onblur="this.setAttribute('value', this.value);">
+    						<input type="password" class="inputText" id="pass" ng-model="usuarioc.usuariosSelected.password" ng-required="true"
+    							ng-value="usuarioc.usuariosSelected.password" onblur="this.setAttribute('value', this.value);" autocomplete="off">
     						<label class="floating-label">* Contraseña</label>
 						</div>
 						<br>
@@ -122,7 +124,8 @@
 								</label>
 							</div>
 						</div>
-						<table style="width: 100%; overflow-y: scroll;height: 175px;display: block;"
+						 <div> 
+						 	<table style="width: 100%; overflow-y: scroll;height: 175px;display: block; margin-top:20%;"
 							st-table="usuarioc.prestamosAsignados"  ng-show="!usuarioc.esNuevo"
 							class="table table-striped  table-bordered table-hover table-propiedades">
 								<thead>
@@ -144,28 +147,39 @@
 											</button>
 										</td>
 									</tr>
-								</tbody>
+								</tbody>								
 							</table>
-						<label ng-show="!usuarioc.esNuevo">
+							<div class="grid_loading" ng-hide="usuarioc.esNuevo" ng-if="usuarioc.cargandoPermisos" style="margin-top:15%; width: 100%;height: 280px">
+							<div class="msg">
+								<span><i class="fa fa-spinner fa-spin fa-4x"></i>
+									<br><br>
+									<b>Cargando, por favor espere...</b>
+								</span>
+							</div>
+						</div> 							
+						 </div>
+					<label ng-show="!usuarioc.esNuevo">
 							<input type="checkbox" ng-model="usuarioc.verAreaPermisos" ng-true-value="'true'" ng-false-value="'false'">
 						    	Ver permisos
-						</label>
+						</label>	
 
 				</form>
-				<form name="form1">
+				<form name="form1" autocomplete="off">
+					<input type="text" class="inputText" id="mailFake" autocomplete="off" ng-hide="true">
 					<div class="form-group" ng-show="usuarioc.esNuevo">
-    						<input type="text" class="inputText" id="usuario" ng-model="usuarioc.usuariosSelected.usuario" ng-required="true"
-    							ng-value="usuarioc.usuariosSelected.usuario" onblur="this.setAttribute('value', this.value);">
+    						<input type="text" class="inputText" id="lllll" ng-model="usuarioc.usuariosSelected.usuario" ng-required="true"
+    							ng-value="usuarioc.usuariosSelected.usuario" onblur="this.setAttribute('value', this.value);" autocomplete="off">
     						<label class="floating-label">* Usuario</label>
 					</div>
+					<input type="password" class="inputText" id="passFake" autocomplete="off" ng-hide="true">
 					<div class="form-group" ng-show="usuarioc.esNuevo">
-    						<input type="password" class="inputText" id="password1" ng-model="usuarioc.claves.password1" ng-required="true"
-    							ng-value="usuarioc.claves.password1" onblur="this.setAttribute('value', this.value);">
+    						<input type="password" class="inputText" id="clavllle" ng-model="usuarioc.claves.password1" ng-required="true"
+    							ng-value="usuarioc.claves.password1" onblur="this.setAttribute('value', this.value);" autocomplete="off">
     						<label class="floating-label">* Contraseña</label>
 						</div>
 						<div class="form-group" ng-show="usuarioc.esNuevo">
-    						<input type="password" class="inputText" id="password2" ng-model="usuarioc.claves.password2" ng-required="true"
-    							ng-value="usuarioc.claves.password2" onblur="this.setAttribute('value', this.value);">
+    						<input type="password" class="inputText" id="clave" ng-model="usuarioc.claves.password2" ng-required="true"
+    							ng-value="usuarioc.claves.password2" onblur="this.setAttribute('value', this.value);" autocomplete="off">
     						<label class="floating-label">* Vuelva a ingresar la contraseña</label>
 						</div>
 						<div class="form-group-row row"  ng-show="usuarioc.esNuevo">
@@ -174,7 +188,7 @@
 						          		ng-value="usuarioc.tipoUsuario.nombre" 
 						          		ng-click="!usuarioc.cargandoPermisos? usuarioc.buscarPermiso(1) : ''" readonly >
 						          <span class="label-icon" ng-click="!usuarioc.cargandoPermisos? usuarioc.buscarPermiso(1) : ''"><i class="glyphicon glyphicon-search"></i></span>
-						          <label class="floating-label" >Tipo de Usuario</label>
+						          <label class="floating-label" >* Tipo de Usuario</label>
 						    </div>
 							<div class="form-group col-sm-4" ng-show="usuarioc.tipoUsuario.id==4 || usuarioc.tipoUsuario.id==5">
 						          <input type="text" class="inputText" ng-model="usuarioc.usuariosSelected.colaborador"  
@@ -219,7 +233,18 @@
 										</td>
 									</tr>
 								</tbody>
-							</table>
+							</table>	
+							 
+							<div class="grid_loading" ng-if="usuarioc.cargandoPermisos && usuarioc.esNuevo" style="margin-top:35px; width: 100%; height:200px; ">
+								<div class="msg">
+									<span><i class="fa fa-spinner fa-spin fa-4x"></i>
+										<br><br>
+										<b>Cargando, por favor espere...</b>
+									</span>
+								</div>
+							</div> 		
+							 
+											
 							<label>
 						      <input type="checkbox" ng-model="usuarioc.verAreaPermisos" ng-true-value="'true'" ng-false-value="'false'">
 						      Ver permisos

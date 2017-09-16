@@ -202,7 +202,12 @@ public class SRiesgoPropiedad extends HttpServlet {
 				}
 				result = RiesgoPropiedadDAO.guardarRiesgoPropiedad(riesgoPropiedad);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + riesgoPropiedad.getId() +" }");
+						+ "\"id\": " + riesgoPropiedad.getId() ,
+						 ",\"fechaCreacion\":\" " , Utils.formatDateHour(riesgoPropiedad.getFechaCreacion()),"\","
+							, "\"usuarioactualizo\": \"" , riesgoPropiedad.getUsuarioActualizo() != null ? riesgoPropiedad.getUsuarioActualizo() : "","\","
+							, "\"fechaactualizacion\": \"" , Utils.formatDateHour(riesgoPropiedad.getFechaActualizacion()),"\""
+							, ",\"usuarioCreo\": \"" , riesgoPropiedad.getUsuarioCreo(),"\""
+						+" }");
 			}
 			else
 				response_text = "{ \"success\": false }";

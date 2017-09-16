@@ -40,6 +40,7 @@ import pojo.SubproductoUsuarioId;
 import pojo.UnidadEjecutora;
 import pojo.Usuario;
 import utilities.Utils;
+import utilities.CLogger;
 import utilities.COrden;
 
 @WebServlet("/SSubproducto")
@@ -293,6 +294,8 @@ public class SSubproducto extends HttpServlet {
 					," }");
 			}
 			catch (Throwable e){
+				CLogger.write_simple("1", SSubproducto.class, e.getMessage());
+
 				resultadoJson = "{ \"success\": false }";
 			}
 			
@@ -563,6 +566,7 @@ public class SSubproducto extends HttpServlet {
 				}
 			}
 		catch (Throwable e){
+			CLogger.write_simple("2", SSubproducto.class, e.getMessage());
 			resultadoJson = "{ \"success\": false }";
 		}
 		Utils.writeJSon(response, resultadoJson);

@@ -167,13 +167,13 @@
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
 									<label for="usuarioCreo" class="label-form">Usuario que creo</label> 
-									<p class=""> {{ subproductoTipo.entidadSeleccionada.usuarioCreo }}</p>
+									<p class=""> {{ subproductoTipo.auditoria.usuarioCreo }}</p>
 								</div>
 							</div>
 							<div class="col-sm-6">
 								<div class="form-group" >
 									<label for="fechaCreacion" class="label-form">Fecha de creación</label>
-									<p class="" id="fechaCreacion"> {{ subproductoTipo.entidadSeleccionada.fechaCreacion }} </p>
+									<p class="" id="fechaCreacion"> {{ subproductoTipo.auditoria.fechaCreacion }} </p>
 								</div>
 							</div>
 						</div>
@@ -181,13 +181,13 @@
 							<div class="col-sm-6">
 								<div class="form-group" style="text-align: right">
 									<label for="usuarioActualizo" class="label-form">Usuario que actualizo</label> 
-									<p class="" id="usuarioCreo">{{ subproductoTipo.entidadSeleccionada.usuairoActulizo }} </p>
+									<p class="" id="usuarioCreo">{{ subproductoTipo.auditoria.usuarioActualizo }} </p>
 								</div>	
 							</div>
 							<div class="col-sm-6">		
 								<div class="form-group">
 									<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label> 
-									<p class="" id="usuarioCreo">{{ subproductoTipo.entidadSeleccionada.fechaActualizacion }} </p>
+									<p class="" id="usuarioCreo">{{ subproductoTipo.auditoria.fechaActualizacion }} </p>
 								</div>
 							</div>
 						</div>
