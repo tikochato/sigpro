@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -38,11 +38,12 @@ public class Pago implements java.io.Serializable {
 	public Pago() {
 	}
 
-	public Pago(int objetoId, int objetoTipo, Date fechaPago, String usuarioCreo,
+	public Pago(int objetoId, int objetoTipo, Date fechaPago, String descripcion, String usuarioCreo,
 			Date fechaCreacion) {
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
 		this.fechaPago = fechaPago;
+		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 	}
@@ -110,7 +111,7 @@ public class Pago implements java.io.Serializable {
 		this.pago = pago;
 	}
 
-	@Column(name = "descripcion", length = 100)
+	@Column(name = "descripcion", nullable = false, length = 100)
 	public String getDescripcion() {
 		return this.descripcion;
 	}
