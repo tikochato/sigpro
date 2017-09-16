@@ -149,7 +149,7 @@
 									</tr>
 								</tbody>								
 							</table>
-							<div class="grid_loading" ng-if="usuarioc.cargandoPermisos" style="margin-top:12%; width: 100%;height: 62%; z-index=10;">
+							<div class="grid_loading" ng-hide="usuarioc.esNuevo" ng-if="usuarioc.cargandoPermisos" style="margin-top:12%; width: 100%;height: 62%;">
 							<div class="msg">
 								<span><i class="fa fa-spinner fa-spin fa-4x"></i>
 									<br><br>
@@ -165,11 +165,13 @@
 
 				</form>
 				<form name="form1" autocomplete="off">
+					<input type="text" class="inputText" id="mailFake" autocomplete="off" ng-hide="true">
 					<div class="form-group" ng-show="usuarioc.esNuevo">
     						<input type="text" class="inputText" id="lllll" ng-model="usuarioc.usuariosSelected.usuario" ng-required="true"
     							ng-value="usuarioc.usuariosSelected.usuario" onblur="this.setAttribute('value', this.value);" autocomplete="off">
     						<label class="floating-label">* Usuario</label>
 					</div>
+					<input type="password" class="inputText" id="passFake" autocomplete="off" ng-hide="true">
 					<div class="form-group" ng-show="usuarioc.esNuevo">
     						<input type="password" class="inputText" id="clavllle" ng-model="usuarioc.claves.password1" ng-required="true"
     							ng-value="usuarioc.claves.password1" onblur="this.setAttribute('value', this.value);" autocomplete="off">
@@ -231,7 +233,18 @@
 										</td>
 									</tr>
 								</tbody>
-							</table>							
+							</table>	
+							 
+							<div class="grid_loading" ng-if="usuarioc.cargandoPermisos && usuarioc.esNuevo" style="margin-top:35px; width: 100%; height:200px; ">
+								<div class="msg">
+									<span><i class="fa fa-spinner fa-spin fa-4x"></i>
+										<br><br>
+										<b>Cargando, por favor espere...</b>
+									</span>
+								</div>
+							</div> 		
+							 
+											
 							<label>
 						      <input type="checkbox" ng-model="usuarioc.verAreaPermisos" ng-true-value="'true'" ng-false-value="'false'">
 						      Ver permisos
@@ -300,6 +313,7 @@
 			
 			<div class="grid_loading" ng-if="usuarioc.cargandoPermisos" style="margin-top:80px; width: 96%; margin-left: 1%;">
 				<div class="msg">
+				=========================================================================
 					<span><i class="fa fa-spinner fa-spin fa-4x"></i>
 						<br><br>
 						<b>Cargando, por favor espere...</b>
