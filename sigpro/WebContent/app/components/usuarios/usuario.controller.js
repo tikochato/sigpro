@@ -236,11 +236,8 @@ app.controller(
 		}else{
 			if(mi.usuariosSelected.email!==""){
 				if(validarEmail(mi.usuariosSelected.email)){
-					if(usuarioMail===mi.usuariosSelected.email && passwordLocal=== mi.usuariosSelected.password && mi.prestamosNuevos.length==0){
-						if(mi.nuevosPermisos.length==0 && mi.permisosEliminados.length==0){
-							$utilidades.mensaje('danger','No se ha realizado ningún cambio.');
-
-						}else{
+					if(usuarioMail===mi.usuariosSelected.email && passwordLocal=== mi.usuariosSelected.password && mi.prestamosNuevos.length==0 && mi.prestamosEliminados.length==0){
+						
 							$http.post('/SUsuario',
 									{
 										accion: 'actualizarPermisos',
@@ -268,7 +265,7 @@ app.controller(
 
 											}
 								});
-						}
+						
 
 					}else{
 						$http.post('/SUsuario',
@@ -284,7 +281,6 @@ app.controller(
 									function(data) {
 										if(data.success){
 											if(mi.nuevosPermisos.length==0 && mi.permisosEliminados.length==0){
-												mi.isCollapsed = false;
 												mi.cargarTabla(mi.paginaActual);
 												if(mi.usuariosSelected.password!==passwordLocal){
 													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password, t: (new Date()).getTime()}).success(
@@ -296,7 +292,7 @@ app.controller(
 																}
 													});
 												}
-
+												$utilidades.mensaje('success', 'usuario guardado exitosamente.');
 											}else{
 												$http.post('/SUsuario',
 														{
@@ -348,7 +344,7 @@ app.controller(
     if(mi.colaboradorSeleccionado && mi.tipoUsuario.id==4 &&validarEmail(mi.usuariosSelected.email) ){
       mi.asignarColaborador();
     }
-
+    $utilidades.mensaje('success', 'usuario guardado exitosamente.');
   };
 
 

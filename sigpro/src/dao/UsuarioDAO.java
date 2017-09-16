@@ -235,7 +235,7 @@ public class UsuarioDAO {
 		try{
 			session.beginTransaction();
 			for(int i =0; i<prestamos.size();i++){
-				Query<ProyectoUsuario> criteria = session.createQuery("FROM ProyectoUsuario where id.proyectoid=:id AND id.usuario", ProyectoUsuario.class);
+				Query<ProyectoUsuario> criteria = session.createQuery("FROM ProyectoUsuario where id.proyectoid=:id AND id.usuario=:usuario ", ProyectoUsuario.class);
 				criteria.setParameter("id", prestamos.get(i));
 				criteria.setParameter("usuario", usuario);
 				ProyectoUsuario pu = criteria.getSingleResult();
