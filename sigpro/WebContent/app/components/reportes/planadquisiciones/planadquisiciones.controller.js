@@ -674,8 +674,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			mi.idPrestamo = mi.prestamo.value;
 			$http.post('/SPlanAdquisiciones',{
 				accion: 'generarPlan',
-				idPrestamo: mi.idPrestamo,
-				informeCompleto: mi.informeCompleto,
+				idPrestamo: mi.idPrestamo
 			}).success(function(response){
 				if(response.success){
 					mi.crearArbol(response.proyecto);
@@ -840,9 +839,9 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 
 app.controller('modalPago', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log',   '$uibModal', '$q' ,'idObjeto','objetoTipo','nombre','numeroContrato','montoContrato',modalPago ]);
+	'$timeout', '$log',   '$uibModal', '$q' ,'idObjeto','objetoTipo','nombre','numeroContrato','montoContrato',
 
-function modalPago($uibModalInstance, $scope, $http, $interval,
+function ($uibModalInstance, $scope, $http, $interval,
 	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idObjeto, objetoTipo, nombre, numeroContrato, montoContrato) {
 
 	var mi = this;
@@ -965,7 +964,7 @@ function modalPago($uibModalInstance, $scope, $http, $interval,
 	};
 	
 	mi.cargarPagos();
-}
+} ]);
 
 app.directive('focusOnShow', function($timeout) {
     return {

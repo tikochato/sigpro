@@ -240,7 +240,7 @@ public class SComponente extends HttpServlet {
 					Integer ubicacionGeografica = map.get("ubicacionGeografica")!=null ? Integer.parseInt(map.get("ubicacionGeografica")):null;
 					String latitud = map.get("latitud");
 					String longitud = map.get("longitud");
-					BigDecimal costo = Utils.String2BigDecimal(map.get("costo") == "0" ? null : map.get("costo"), null);
+					BigDecimal costo = Utils.String2BigDecimal(map.get("costo").equals("0") ? null : map.get("costo"), null);
 					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
 					Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
 					Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
