@@ -251,17 +251,13 @@ public class SAvanceActividades extends HttpServlet {
 			}else if (accion.equals("exportarExcel")){
 				try{
 			        byte [] outArray = exportarExcel(idPrestamo, fechaCorte, usuario);
-			        CLogger.write_simple("3", SAvanceActividades.class, "251");
 					response.setContentType("application/ms-excel");
 					response.setContentLength(outArray.length);					
 					response.setHeader("Cache-Control", "no-cache"); 
 					response.setHeader("Content-Disposition", "attachment; Reporte_Avances_de_Actividades.xls");
 					OutputStream outStream = response.getOutputStream();
-					CLogger.write_simple("3", SAvanceActividades.class, "257");
 					outStream.write(outArray);
-					CLogger.write_simple("3", SAvanceActividades.class, "259");
 					outStream.flush();
-					CLogger.write_simple("3", SAvanceActividades.class, "261");
 				}catch(Exception e){
 				    CLogger.write_simple("3", SAvanceActividades.class, e.getMessage());
 				}
@@ -744,18 +740,12 @@ public class SAvanceActividades extends HttpServlet {
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
-
-		    CLogger.write_simple("2", SAvanceActividades.class, "Exportando Headers 693");
 			headers = generarHeaders();
-			CLogger.write_simple("2", SAvanceActividades.class, "Exportando Datos 695");
 			datos = generarDatos(idPrestamo, fechaCorte, usuario);
-			CLogger.write_simple("2", SAvanceActividades.class, "Creando Reporte 697");
 			excel = new CExcel("Reporte de Avance", false, null);
 			wb=excel.generateExcelOfData(datos, "Reporte de Avance", headers, null, true, usuario);
-			CLogger.write_simple("2", SAvanceActividades.class, "Reporte Creado 700");
-		wb.write(outByteStream);
-		outArray = Base64.encode(outByteStream.toByteArray());
-		CLogger.write_simple("2", SAvanceActividades.class, "Devolviendo Reporte de exportarExcel 703");
+			wb.write(outByteStream);
+			outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
 		    CLogger.write_simple("10", SAvanceActividades.class, e.getMessage());
 		}

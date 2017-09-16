@@ -137,18 +137,23 @@ public class SPlanAdquisiciones extends HttpServlet {
 		Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 		
 		if (accion.equals("generarPlan")){
-			Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"), null);
-			List<stplanadquisiciones> lstprestamo = generarPlan(idPlanAdquisiciones, idPrestamo, usuario);
 			
-			Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(idPrestamo, 1);
-			String fechaSuscripcion = Utils.formatDate(prestamo.getFechaSuscripcion());
-			String fechaCierre = Utils.formatDate(prestamo.getFechaCierreOrigianlUe());
-			Integer cooperanteId = prestamo.getCooperante().getId();
-			
-			response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
-	        response_text = String.join("", "\"proyecto\":",response_text);
-	        response_text = String.join("", "{\"success\":true,\"fechaSuscripcion\": \""+ fechaSuscripcion + "\", \"fechaCierre\": \"" + fechaCierre + "\", \"cooperanteId\": " + cooperanteId + ",", response_text, "}");
-		        
+			try{
+				Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"), null);
+				List<stplanadquisiciones> lstprestamo = generarPlan(idPlanAdquisiciones, idPrestamo, usuario);
+				
+				Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(idPrestamo, 1);
+				String fechaSuscripcion = Utils.formatDate(prestamo.getFechaSuscripcion());
+				String fechaCierre = Utils.formatDate(prestamo.getFechaCierreOrigianlUe());
+				Integer cooperanteId = prestamo.getCooperante().getId();
+				
+				response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
+		        response_text = String.join("", "\"proyecto\":",response_text);
+		        response_text = String.join("", "{\"success\":true,\"fechaSuscripcion\": \""+ fechaSuscripcion + "\", \"fechaCierre\": \"" + fechaCierre + "\", \"cooperanteId\": " + cooperanteId + ",", response_text, "}");
+			}
+			catch (Exception e){
+				CLogger.write_simple("1", SPlanAdquisiciones.class, e.getMessage());
+			}
 		}else if(accion.equals("guardarPlan")){
 			try{
 				boolean result = false;
@@ -284,7 +289,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"), "}");
 			}
 			catch (Throwable e) {
-				CLogger.write_simple("1", SPlanAdquisiciones.class, e.getMessage());
+				CLogger.write_simple("2", SPlanAdquisiciones.class, e.getMessage());
 			}
 		}else if(accion.equals("exportarExcel")){
 			Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"), null);
@@ -299,7 +304,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 				outStream.write(outArray);
 				outStream.flush();
 			}catch(Exception e){
-				CLogger.write_simple("2", SPlanAdquisiciones.class, e.getMessage());
+				CLogger.write_simple("3", SPlanAdquisiciones.class, e.getMessage());
 			}
 		}else if(accion.equals("exportarPdf")){
 			CPdf archivo = new CPdf("Plan de adquisiciones");
@@ -316,7 +321,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		        	is = new FileInputStream(file);
 		        }
 		        catch (Exception e) {
-					CLogger.write("5", SAdministracionTransaccional.class, e);
+					CLogger.write("4", SAdministracionTransaccional.class, e);
 		        }
 		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		        
@@ -905,8 +910,8 @@ public class SPlanAdquisiciones extends HttpServlet {
 		String headers[][];
 		
 		headers = new String[][]{
-			{"Nombre", "Tipo de Adquisición", "Unidad de Medida", "Categoría de Aquisición", "Cantidad", "Costo", "Total", "Preparación de Documentos", "", "Lanzamiento de Evento","", 
-				"Recepción y Evaluación de Ofertas", "", "Adjudicación", "", "Firma de Contrato", ""},  //titulos
+			{"Nombre", "Tipo de Adquisiciï¿½n", "Unidad de Medida", "Categorï¿½a de Aquisiciï¿½n", "Cantidad", "Costo", "Total", "Preparaciï¿½n de Documentos", "", "Lanzamiento de Evento","", 
+				"Recepciï¿½n y Evaluaciï¿½n de Ofertas", "", "Adjudicaciï¿½n", "", "Firma de Contrato", ""},  //titulos
 			null, //mapeo
 			{"string", "string", "string", "string", "double", "currency", "currency", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string"}, //tipo dato
 			null, //operaciones columnas

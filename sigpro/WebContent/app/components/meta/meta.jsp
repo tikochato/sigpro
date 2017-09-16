@@ -14,7 +14,7 @@
 			{{metac.nombrePcp}}
 		</div>
 				
-		<div class="row" align="center" ng-hide="metac.mostraringreso">
+		<div align="center" ng-hide="metac.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="17040">
@@ -37,7 +37,8 @@
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
 					<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
-						<a class="btn btn-default" href ng-click="metac.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
+						<a class="btn btn-default" href ng-click="metac.reiniciarVista()" role="button" uib-tooltip="Reiniciar la vista de la tabla" tooltip-placement="left">
+						<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
 					</div>
 					</div>
 				</div>
@@ -53,6 +54,8 @@
 					</div>
 				  </div>
 				</div>
+				<br/>
+				<div class="total-rows">Total de {{  metac.totalMetas + (metac.totalMetas == 1 ? " Meta" : " Metas" ) }}</div>
 				<ul uib-pagination total-items="metac.totalMetas" 
 						ng-model="metac.paginaActual" 
 						max-size="metac.numeroMaximoPaginas" 
@@ -97,9 +100,9 @@
 							<br/><br/>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText"  ng-model="metac.meta.nombre" ng-required="true"
+    						<input type="text" class="inputText"  ng-model="metac.meta.nombre"
     						ng-value="metac.meta.nombre" onblur="this.setAttribute('value', this.value);">
-    						<label  class="floating-label">* Nombre</label>
+    						<label  class="floating-label">Nombre</label>
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText"  ng-model="metac.meta.descripcion"
@@ -107,34 +110,31 @@
     						<label  class="floating-label">Descripción</label>
 						</div>
 						<div class="form-group">
-							<select  class="inputText" ng-model="metac.meta.tipoMetaId" ng-required="true">
-								<option value="">Seleccione una opción</option>
-								<option ng-repeat="opcion in metac.metatipos"
-									ng-selected="opcion.id == metac.meta.tipoMetaId"
-									ng-value="opcion.id">{{opcion.nombre}}
-								</option>
+							<select class="inputText" ng-model="metac.tipoMetaSeleccionado"
+								ng-options="tipo as tipo.nombre for tipo in metac.metatipos track by tipo.id"
+								ng-readonly="true"
+								ng-required="true">
+								<option value="">Seleccione un tipo</option>
 							</select>
 							<label class="floating-label">* Tipo Meta</label>
 						</div>
 						<div class="form-group">
-							<select  class="inputText" ng-model="metac.meta.unidadMedidaId" ng-required="true">
-								<option value="">Seleccione una opción</option>
-								<option ng-repeat="opcion in metac.metaunidades"
-									ng-selected="opcion.id == metac.meta.unidadMedidaId"
-									ng-value="opcion.id">{{opcion.nombre}}
-								</option>
+							<select class="inputText" ng-model="metac.unidadMedidaSeleccionado"
+								ng-options="unidad as unidad.nombre for unidad in metac.metaunidades track by unidad.id"
+								ng-readonly="true"
+								ng-required="true">
+								<option value="">Seleccione una unidad</option>
 							</select>
 							<label class="floating-label">* Unidad de Medida</label>
 						</div>
-						<div class="form-group">
-							<select  class="inputText" ng-model="metac.meta.datoTipoId" ng-required="true">
-								<option value="">Seleccione una opción</option>
-								<option ng-repeat="opcion in metac.datoTipos"
-									ng-selected="opcion.id == metac.meta.datoTipoId"
-									ng-value="opcion.id">{{opcion.nombre}}
-								</option>
+						<div class="form-group" ng-hide="true">
+							<select class="inputText" ng-model="metac.tipoValorSeleccionado"
+								ng-options="tipoValor as tipoValor.nombre for tipoValor in metac.datoTipos track by tipoValor.id"
+								ng-readonly="true"
+								ng-required="true">
+								<option value="">Seleccione una unidad</option>
 							</select>
-							<label class="floating-label">* Tipo de Valor</label>
+							<label class="floating-label">* Tipo Dato</label>
 						</div>
 					<br/>
 					
