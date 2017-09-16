@@ -473,37 +473,33 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				}
 			});
 			
+			if (mi.programa.prestamo!=null && mi.programa.prestamo!= undefined && mi.programa.prestamo!= ''){
+				mi.prestamo = JSON.parse( JSON.stringify( mi.programa.prestamo ) ); 
+				mi.prestamo.fechaCorte = mi.prestamo.fechaCorte != undefined ?  moment(mi.prestamo.fechaCorte,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaFirma = mi.prestamo.fechaFirma != undefined ? moment (mi.prestamo.fechaFirma,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaAutorizacion = mi.prestamo.fechaAutorizacion != undefined ? moment(mi.prestamo.fechaAutorizacion,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaFinEjecucion = mi.prestamo.fechaFinEjecucion != undefined ? moment (mi.prestamo.fechaFinEjecucion,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaDecreto = mi.prestamo.fechaDecreto != undefined ? moment (mi.prestamo.fechaDecreto,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaSuscripcion = mi.prestamo.fechaSuscripcion != undefined ? moment(mi.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaElegibilidadUe = mi.prestamo.fechaElegibilidadUe != undefined ? moment(mi.prestamo.fechaElegibilidadUe,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaCierreOrigianlUe = mi.prestamo.fechaCierreOrigianlUe != undefined ? moment (mi.prestamo.fechaCierreOrigianlUe,'DD/MM/YYYY').toDate() : undefined; 
+				mi.prestamo.fechaCierreActualUe = mi.prestamo.fechaCierreActualUe != undefined ? moment (mi.prestamo.fechaCierreActualUe,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaVigencia = mi.prestamo.fechaVigencia != undefined ? moment(mi.prestamo.fechaVigencia,'DD/MM/YYYY').toDate() : undefined;
+				mi.unidadejecutoraid=mi.prestamo.unidadejecutoraid;
+				mi.unidadejecutoranombre=mi.prestamo.unidadejecutora;
+				mi.entidad = mi.prestamo.entidadentidad;
+				mi.entidadnombre = mi.prestamo.entidadnombre;
+				mi.ejercicio = mi.prestamo.ejercicio;
+			}
+			
+			
+			
 			parametros = {
 					accion: 'getPrestamo',
 					objetoId: mi.programa.id,
 				    objetoTipo : 6,
 				    t:moment().unix()
 			}
-			
-			$http.post('/SPrestamo', parametros).then(function(response){
-				if (response.data.prestamo!=null){
-					mi.prestamo = response.data.prestamo;
-					mi.prestamo.fechaCorte = mi.prestamo.fechaCorte != undefined ?  moment(mi.prestamo.fechaCorte,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaFirma = mi.prestamo.fechaFirma != undefined ? moment (mi.prestamo.fechaFirma,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaAutorizacion = mi.prestamo.fechaAutorizacion != undefined ? moment(mi.prestamo.fechaAutorizacion,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaFinEjecucion = mi.prestamo.fechaFinEjecucion != undefined ? moment (mi.prestamo.fechaFinEjecucion,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaDecreto = mi.prestamo.fechaDecreto != undefined ? moment (mi.prestamo.fechaDecreto,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaSuscripcion = mi.prestamo.fechaSuscripcion != undefined ? moment(mi.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaElegibilidadUe = mi.prestamo.fechaElegibilidadUe != undefined ? moment(mi.prestamo.fechaElegibilidadUe,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaCierreOrigianlUe = mi.prestamo.fechaCierreOrigianlUe != undefined ? moment (mi.prestamo.fechaCierreOrigianlUe,'DD/MM/YYYY').toDate() : undefined; 
-					mi.prestamo.fechaCierreActualUe = mi.prestamo.fechaCierreActualUe != undefined ? moment (mi.prestamo.fechaCierreActualUe,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaVigencia = mi.prestamo.fechaVigencia != undefined ? moment(mi.prestamo.fechaVigencia,'DD/MM/YYYY').toDate() : undefined;
-					
-					/*mi.unidadejecutoraid=mi.prestamo.unidadejecutoraid;
-					mi.unidadejecutoranombre=mi.proyecto.unidadejecutora;
-					mi.entidadnombre = mi.proyecto.entidadnombre;
-					mi.ejercicio = mi.proyecto.ejercicio;
-					mi.entidad = mi.proyecto.entidadentidad;*/
-
-				}
-				
-			});
-			
 			
 			parametros = {
 					accion: 'obtenerProyectosPorPrograma',
@@ -568,15 +564,16 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	};
 	
 	mi.buscarCooperante = function(prestamo) {
-		var resultado = mi.llamarModalBusqueda('/SCooperante', {
+		var resultado = mi.llamarModalBusqueda('Cooperante','/SCooperante', {
 			accion : 'numeroCooperantes', t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getCooperantesPagina',
 				pagina : pagina,
 				numerocooperantes : elementosPorPagina
+				, t:moment().unix()
 			};
-		},'id','nombre');
+		},'id','nombre',false,null);
 
 		resultado.then(function(itemSeleccionado) {
 			if (prestamo){
@@ -592,15 +589,16 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	};
 	
 	mi.buscarUnidadEjecutoraPrestamo = function() {	
-		var resultado = mi.llamarModalBusqueda('/SUnidadEjecutora', {
-			accion : 'totalElementos'	
+		var resultado = mi.llamarModalBusqueda('Unidad Ejecutora','/SUnidadEjecutora', {
+			accion : 'totalElementos' , t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'cargar',
 				pagina : pagina,
 				registros : elementosPorPagina
+				, t:moment().unix()
 			};
-		},'unidadEjecutora','nombreUnidadEjecutora');
+		},'unidadEjecutora','nombreUnidadEjecutora',false,null);
 
 		resultado.then(function(itemSeleccionado) {
 			mi.prestamo.unidadEjecutoraNombre = itemSeleccionado.nombreUnidadEjecutora;
@@ -688,12 +686,13 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 
 	mi.buscarProgramaTipo = function() {
 		var resultado = mi.llamarModalBusqueda('Tipo programa','/SProgramaTipo', {
-			accion : 'numeroProgramaTipos'
+			accion : 'numeroProgramaTipos', t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getProgramaTipoPagina',
 				pagina : pagina,
 				numeroprogramatipo : elementosPorPagina
+				, t:moment().unix()
 			};
 		},'id','nombre',false,null);
 
@@ -765,6 +764,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			accion : 'totalElementos',
 			ejercicio: mi.ejercicio,
 			entidad: mi.entidad
+			, t:moment().unix()
 		}, function(pagina, elementosPorPagina,ejercicio,entidad) {
 			return {
 				accion : 'cargar',
@@ -772,6 +772,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				ejercicio: ejercicio,
 				entidad: entidad,
 				registros : elementosPorPagina
+				, t:moment().unix()
 			};
 		},'unidadEjecutora','nombreUnidadEjecutora', true, {entidad: mi.entidad, ejercicio: mi.ejercicio, abreviatura:'', nombre: mi.entidadnombre});
 
@@ -786,15 +787,16 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	
 	mi.buscarAutorizacionTipo = function() {
 		
-		var resultado = mi.llamarModalBusqueda('/SAutorizacionTipo', {
-			accion : 'numeroAutorizacionTipo'	
+		var resultado = mi.llamarModalBusqueda('Tipo Autorización','/SAutorizacionTipo', {
+			accion : 'numeroAutorizacionTipo'	 , t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getAutorizacionTipoPagin',
 				pagina : pagina,
 				numeroautorizaciontipo : elementosPorPagina
+				, t:moment().unix()
 			};
-		},'id','nombre');
+		},'id','nombre',false,null);
 
 		resultado.then(function(itemSeleccionado) {
 			mi.prestamo.tipoAutorizacionNombre = itemSeleccionado.nombre;
@@ -804,13 +806,14 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	
 	mi.buscarInteresTipo = function() {
 		
-		var resultado = mi.llamarModalBusqueda('/SInteresTipo', {
-			accion : 'numeroInteresTipo'	
+		var resultado = mi.llamarModalBusqueda('Tipo Interes','/SInteresTipo', {
+			accion : 'numeroInteresTipo' , t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getAutorizacionTipoPagin',
 				pagina : pagina,
 				numerointerestipo : elementosPorPagina
+				, t:moment().unix()
 			};
 		},'id','nombre');
 
@@ -824,13 +827,14 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	
 	mi.buscarTipoMoneda = function() {
 		
-		var resultado = mi.llamarModalBusqueda('/STipoMoneda', {
-			accion : 'numeroTipoMonedas'	
+		var resultado = mi.llamarModalBusqueda('Tipo Moneda','/STipoMoneda', {
+			accion : 'numeroTipoMonedas' , t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getTipoMonedaPagina',
 				pagina : pagina,
 				numerotipomoneda : elementosPorPagina
+				, t:moment().unix()
 			};
 		},'id','nombre');
 
@@ -842,13 +846,14 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 	
 	mi.buscarEstadoEjecucion = function() {
 		
-		var resultado = mi.llamarModalBusqueda('/SEjecucionEstado', {
-			accion : 'numeroEjecucionEstado'	
+		var resultado = mi.llamarModalBusqueda('Estado de ejecución','/SEjecucionEstado', {
+			accion : 'numeroEjecucionEstado', t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getEjecucionEstadoPagina',
 				pagina : pagina,
 				numeroejecucionestado : elementosPorPagina
+				, t:moment().unix()
 			};
 		},'id','nombre');
 
@@ -884,19 +889,16 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 		
 	};
 	 
-	 
-	 
-		
-		
 		
 		mi.buscarCodigoPresupuestario = function() {	
 			var resultado = mi.llamarModalBusqueda('Código Presupuestario','/SDataSigade', {
-				accion : 'totalElementos'	
+				accion : 'totalElementos'	, t:moment().unix()
 			}, function(pagina, elementosPorPagina) {
 				return {
 					accion : 'getcodigos',
 					pagina : pagina,
 					registros : elementosPorPagina
+					, t:moment().unix()
 				};
 			},'codigopresupuestario','numeroprestamo', false, null);
 
@@ -1022,7 +1024,7 @@ function buscarPorPrograma($uibModalInstance, $rootScope,$scope, $http, $interva
 	};
 
 	mi.cambioPagina = function() {
-		mi.cargarData(mi.paginaActual, mi.ejercicio, mi.entidad.entidad);
+		mi.cargarData(mi.paginaActual, mi.ejercicio, mi.entidad!= undefined ? mi.entidad.entidad : null);
 	}
 
 	mi.ok = function() {
