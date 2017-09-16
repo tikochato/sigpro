@@ -1265,7 +1265,7 @@ function buscarPorProyecto($uibModalInstance, $rootScope,$scope, $http, $interva
 	};
 
 	mi.cambioPagina = function() {
-		mi.cargarData(mi.paginaActual, mi.ejercicio, mi.entidad.entidad);
+		mi.cargarData(mi.paginaActual, mi.ejercicio, mi.entidad!= undefined ? mi.entidad.entidad : null);
 	}
 
 	mi.ok = function() {
