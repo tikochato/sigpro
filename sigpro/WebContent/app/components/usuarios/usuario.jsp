@@ -100,13 +100,15 @@
     							ng-value="usuarioc.usuariosSelected.usuario" onblur="this.setAttribute('value', this.value);" autocomplete="off" readonly>
     						<label class="floating-label">* Usuario</label>
 						</div>
+						<input type="text" class="inputText" id="mailFake" autocomplete="off" ng-hide="true">
 						<div class="form-group" ng-show="!usuarioc.mostrarCambioPassword">
-    						<input type="text" class="inputText" id="pp" ng-model="usuarioc.usuariosSelected.email" ng-required="true" autocomplete="off"
+    						<input type="text" class="inputText" id="mail" ng-model="usuarioc.usuariosSelected.email" ng-required="true" autocomplete="off"
     							ng-value="usuarioc.usuariosSelected.email" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">* Correo electrónico</label>
 						</div>
+						<input type="password" class="inputText" id="passFake" autocomplete="off" ng-hide="true">
 						<div class="form-group" ng-show="!usuarioc.esNuevo">
-    						<input type="password" class="inputText" id="dkdkdkd" ng-model="usuarioc.usuariosSelected.password" ng-required="true"
+    						<input type="password" class="inputText" id="pass" ng-model="usuarioc.usuariosSelected.password" ng-required="true"
     							ng-value="usuarioc.usuariosSelected.password" onblur="this.setAttribute('value', this.value);" autocomplete="off">
     						<label class="floating-label">* Contraseña</label>
 						</div>
