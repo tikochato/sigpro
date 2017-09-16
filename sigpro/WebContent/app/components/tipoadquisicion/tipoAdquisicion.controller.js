@@ -22,7 +22,7 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 			$http.post('/STipoAdquisicion', { accion: 'numeroTipoAdquisicion', 
 				filtro_cooperante: mi.filtros['cooperante'],
 				filtro_nombre: mi.filtros['nombre'], 
-				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'] }).then(
+				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'], t: (new Date()).getTime() }).then(
 					function(response) {
 						mi.totalTipoAdquisicion = response.data.totalTipoAdquisicion;
 						mi.paginaActual = 1;
@@ -37,7 +37,7 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 				,filtro_nombre: mi.filtros['nombre'] 
 				,filtro_usuario_creo: mi.filtros['usuarioCreo']
 			    ,filtro_fecha_creacion: mi.filtros['fechaCreacion']
-			    ,columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+			    ,columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
 			    }).success(
 			
 					function(response) {
@@ -133,6 +133,9 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 			if(mi.seleccionada){
 				mi.mostraringreso = true;
 				mi.esNuevo = false;	
+			}else{
+				$utilidades.mensaje('warning',
+				'Debe seleccionar un TIPO DE ADQUISICION que desee editar');
 			}
 		}
 		
@@ -147,7 +150,9 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 					if(data){
 						var datos = {
 								accion : 'borrarTipoAdquisicion',
-								tipoAdquisicionId : mi.tipoAdquisicion.id
+								tipoAdquisicionId : mi.tipoAdquisicion.id,
+								t: (new Date()).getTime()
+
 							};
 							$http.post('/STipoAdquisicion', datos).success(
 									function(response) {
@@ -158,7 +163,7 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 											mi.obtenerTotalTipoAdquisicion();
 										} else
 											$utilidades.mensaje('danger',
-													'Error al borrar el Tipo de Adquisición');
+													'Error al bSorrar el Tipo de Adquisición');
 									});
 					}
 				}, function(){
@@ -166,11 +171,12 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 				});
 			} else {
 				$utilidades.mensaje('warning',
-						'Debe seleccionar un TIPO DE PRODUCTO que desee borrar');
+						'Debe seleccionar un TIPO DE ADQUISICION que desee borrar');
 			}
 		}
 		
 		mi.irATabla = function(){
+			mi.seleccionada=false;
 			mi.mostraringreso = false;
 		}
 		
@@ -252,7 +258,8 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 				idTipoAdquisicion : mi.tipoAdquisicion.id,
 				idCooperante : mi.tipoAdquisicion.cooperanteId,
 				nombreTipoAdquisicion : mi.tipoAdquisicion.nombre,
-				esNuevo : mi.esNuevo
+				esNuevo : mi.esNuevo,
+				t: (new Date()).getTime()
 			}).success(function(response){
 				if(response.success){
 					mi.tipoAdquisicion.usuarioCreo = response.usuarioCreo;
@@ -281,7 +288,7 @@ function modalBuscar($uibModalInstance, $scope, $http, $interval,
 	mi.elementosPorPagina = 9;
 	mi.mostrarCargando = false;
 	mi.data = [];
-	
+	$accionServlet.t=(new Date()).getTime();
 
 	$http.post($servlet, $accionServlet).success(function(response) {
 		for ( var key in response) {

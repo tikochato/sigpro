@@ -104,7 +104,7 @@
 				</div>
 
 				<div class="form-group">
-					<input type="text" class="inputText" id="nombre" ng-model="controller.tipoAdquisicion.nombre" ng-value="controller.programatipo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
+					<input type="text" class="inputText" id="nombre" ng-model="controller.tipoAdquisicion.nombre" ng-value="controller.tipoAdquisicion.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
 						<label for="nombre" class="floating-label">* Nombre</label>
 				</div>
 				<br />

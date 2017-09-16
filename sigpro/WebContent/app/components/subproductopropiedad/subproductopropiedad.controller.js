@@ -25,12 +25,12 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 	
 	mi.datoTipos = [];
 	mi.datoTipoSeleccionado = null;
-	
+	mi.auditoria={};
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion = null;
 	mi.filtros = [];
 	
-	$http.post('/SDatoTipo', {accion : 'cargarCombo'}).success(function(response) {
+	$http.post('/SDatoTipo', {accion : 'cargarCombo', t: (new Date()).getTime()}).success(function(response) {
 		mi.datoTipos = response.datoTipos;
 	});
 	
@@ -39,7 +39,7 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 		mi.cargarTabla(mi.paginaActual);
 	}
 
-	$http.post('/SSubproductoPropiedad', {accion : 'totalElementos'}).success(function(response) {
+	$http.post('/SSubproductoPropiedad', {accion : 'totalElementos', t: (new Date()).getTime()}).success(function(response) {
 		mi.totalElementos = response.total;
 		mi.cargarTabla(1);
 	});
@@ -53,7 +53,8 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 			registros : mi.elementosPorPagina,
 			filtro_nombre: mi.filtros['nombre'], 
 			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion,
+			t: (new Date()).getTime()
 		};
 
 		mi.mostrarCargando = true;
@@ -63,14 +64,26 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 				mi.data = response.data.subproductoPropiedades;
 				mi.opcionesGrid.data = mi.data;
 				mi.mostrarCargando = false;
+				mostrarActualizacion(mi.data);
 			}
 		});
 
 	};
-
+	function mostrarActualizacion(input){
+		for(var i=0; i<input.length; i++){
+			if(input[i].id==mi.codigo){
+				mi.auditoria.usuarioCreo=input[i]["usuarioCreo"];
+				mi.auditoria.fechaCreacion=input[i]["fechaCreacion"];
+				mi.auditoria.usuarioActualizo=input[i]["usuarioActualizo"];
+				mi.auditoria.fechaActualizacion=input[i]["fechaActualizacion"];
+				break;
+			}
+		}
+		
+	};
 	mi.entidadSeleccionada = -1;
 	mi.seleccionada = false;
-
+	mi.sub_actual=0;
 	mi.editarElemento = function (event) {
         var filaId = angular.element(event.toElement).scope().rowRenderIndex;
         mi.gridApi.selection.selectRow(mi.opcionesGrid.data[filaId]);
@@ -167,7 +180,7 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 	}
 	mi.nuevo = function() {
 		mi.limpiarSeleccion();
-
+		mi.auditoria={};
 		mi.esForma = true;
 		mi.entityselected = null;
 		mi.esNuevo = true;
@@ -200,7 +213,7 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 			mi.codigo = mi.entidadSeleccionada.id;
 			mi.nombre = mi.entidadSeleccionada.nombre;
 			mi.descripcion = mi.entidadSeleccionada.descripcion;
-
+			mi.auditoria=mi.entidadSeleccionada;
 			mi.datoTipoSeleccionado = {
 					"id" : mi.entidadSeleccionada.idTipo,
 					"nombre" : mi.entidadSeleccionada.tipo
@@ -224,7 +237,8 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 				if(data){
 					var datos = {
 							accion : 'borrar',
-							codigo : mi.entidadSeleccionada.id
+							codigo : mi.entidadSeleccionada.id,
+							t: (new Date()).getTime()
 						};
 						$http.post('/SSubproductoPropiedad', datos).success(
 								function(response) {
@@ -263,7 +277,8 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 				nombre : mi.nombre,
 				descripcion : mi.descripcion,
 				tipo : mi.datoTipoSeleccionado.id,
-				usuario : 'temporal'
+				usuario : 'temporal',
+				t: (new Date()).getTime()
 			};
 			
 			$http.post('/SSubproductoPropiedad', datos).then(
@@ -274,6 +289,7 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 							mi.esNuevo = false;
 							mi.obtenerTotalSubproductoPropiedades();
 							mi.codigo = response.data.id;
+							mi.sub_tipo=mi.codigo;
 							$utilidades.mensaje('success',
 									'Propiedad de subproducto guardado con exito.');
 						} else {
@@ -289,7 +305,8 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 				nombre : mi.nombre,
 				descripcion : mi.descripcion,
 				tipo : mi.datoTipoSeleccionado.id,
-				usuario : 'temporal'
+				usuario : 'temporal',
+				t: (new Date()).getTime()
 			};
 
 			$http.post('/SSubproductoPropiedad', datos).then(
@@ -300,7 +317,7 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 							mi.opcionesGrid.data = mi.data;
 							mi.esNuevo = false;
 							mi.obtenerTotalSubproductoPropiedades();
-
+							mostrarActualizacion(mi.data);
 							$utilidades.mensaje('success',
 									'Propiedad de subproducto actualizado con exito.');
 						} else {
@@ -335,7 +352,7 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 	mi.obtenerTotalSubproductoPropiedades=function(){
 		$http.post('/SSubproductoPropiedad', { accion: 'totalElementos',objetoid:$routeParams.objeto_id, tipo: mi.objetotipo,
 			filtro_nombre: mi.filtros['nombre'],
-			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: (new Date()).getTime() }).success(
 				function(response) {
 					mi.totalElementos = response.total;
 					mi.cargarTabla(1);

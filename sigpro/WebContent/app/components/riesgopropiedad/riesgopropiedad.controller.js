@@ -101,7 +101,8 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 			$http.post('/SRiesgoPropiedad', { accion: 'getRiesgoPropiedadPagina', pagina: pagina, numeroriesgopropiedad: $utilidades.elementosPorPagina,
 				filtro_nombre: mi.filtros['nombre'], 
 				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion,
+				t: (new Date()).getTime()
 				}).success(
 					function(response) {
 						mi.riesgopropiedades = response.riesgopropiedades;
@@ -120,12 +121,17 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 					id: mi.riesgopropiedad.id,
 					nombre: mi.riesgopropiedad.nombre,
 					descripcion: mi.riesgopropiedad.descripcion,
-					datoTipoId: mi.riesgopropiedad.datotipoid.id
+					datoTipoId: mi.riesgopropiedad.datotipoid.id,
+					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
 						$utilidades.mensaje('success','Propiedad Riesgo '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.riesgopropiedad.id = response.id;
 						mi.esnuevo = false;
+						mi.riesgopropiedad.usuarioCreo=response.usuarioCreo;
+						mi.riesgopropiedad.fechaCreacion =response.fechaCreacion;
+						mi.riesgopropiedad.usuarioActualizo =response.usuarioactualizo;
+						mi.riesgopropiedad.fechaActualizacion = response.fechaactualizacion;
 						mi.obtenerTotalRiesgoPropiedades();
 					}
 					else
@@ -147,7 +153,8 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 					if(data){
 						$http.post('/SRiesgoPropiedad', {
 							accion: 'borrarRiesgoPropiedad',
-							id: mi.riesgopropiedad.id
+							id: mi.riesgopropiedad.id,
+							t: (new Date()).getTime()
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Propiedad Riesgo borrado con éxito');
@@ -222,7 +229,7 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 		mi.obtenerTotalRiesgoPropiedades=function(){
 			$http.post('/SRiesgoPropiedad', { accion: 'numeroRiesgoPropiedades',objetoid:$routeParams.objeto_id, tipo: mi.objetotipo,
 				filtro_nombre: mi.filtros['nombre'],
-				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.totalRiesgoPropiedades = response.totalriesgopropiedades;
 						mi.cargarTabla(1);
@@ -233,12 +240,7 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 		
 		
 
-		/*$http.post('/SRiesgoPropiedad', { accion: 'numeroRiesgoPropiedades' }).success(
-				function(response) {
-					mi.totalRiesgoPropiedades = response.totalriesgopropiedades;
-					mi.cargarTabla(1);
-		});*/
-		$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
+		$http.post('/SDatoTipo', { accion: 'cargarCombo', t: (new Date()).getTime() }).success(
 				function(response) {
 					mi.tipodatos = response.datoTipos;
 		});
