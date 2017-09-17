@@ -109,40 +109,6 @@
 				   <label class="floating-label">Descripción</label>
 				</div>
 				<br/>
-				<div class="panel panel-default">
-					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
-					<div class="panel-body">
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label for="usuarioCreo" class="label-form" >Usuario que creo</label> 
-									<p  id="usuarioCreo"> {{ componentetipoc.componentetipo.usuarioCreo }}</p>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="form-group" >
-									<label class="label-form"for="fechaCreacion">Fecha de creación</label>
-									<p id="fechaCreacion"> {{ componentetipoc.componentetipo.fechaCreacion }} </p>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group" style="text-align: right">
-									<label class="label-form" for="usuarioActualizo">Usuario que actualizo</label> 
-									<p id="usuarioCreo">{{ componentetipoc.componentetipo.usuarioActualizo }} </p>
-								</div>	
-							</div>
-							<div class="col-sm-6">		
-								<div class="form-group">
-									<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label> 
-									<p id="usuarioCreo">{{ componentetipoc.componentetipo.fechaActualizacion }} </p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<br />
 				<h5>Propiedades</h5>
 				<div align="center">
 					<div style="height: 35px; width: 75%">
@@ -188,6 +154,40 @@
 					</tbody>
 				</table>
 				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label for="usuarioCreo" class="label-form" >Usuario que creo</label> 
+									<p  id="usuarioCreo"> {{ componentetipoc.componentetipo.usuarioCreo }}</p>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group" >
+									<label class="label-form"for="fechaCreacion">Fecha de creación</label>
+									<p id="fechaCreacion"> {{ componentetipoc.componentetipo.fechaCreacion }} </p>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group" style="text-align: right">
+									<label class="label-form" for="usuarioActualizo">Usuario que actualizo</label> 
+									<p id="usuarioCreo">{{ componentetipoc.componentetipo.usuarioActualizo }} </p>
+								</div>	
+							</div>
+							<div class="col-sm-6">		
+								<div class="form-group">
+									<label for="fechaActualizacion" class="label-form">Fecha de actualizacion</label> 
+									<p id="usuarioCreo">{{ componentetipoc.componentetipo.fechaActualizacion }} </p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<br />
 			</form>
 		</div>
 		<br />

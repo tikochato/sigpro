@@ -47,22 +47,11 @@
     </div>
     </div>
     <br/>
-    <div class="row" ng-if="modalBuscar.mostrarRoles">
-    	<div class="col-sm-12">
-			<div class="form-group">
-					<select class="inputText" ng-model="modalBuscar.rolAsignado"
-						ng-options="rol as rol.nombre for rol in modalBuscar.roles track by rol.id"
-						ng-required="true">
-						<option value="">Seleccione una opción</option>
-					</select>
-				    <label for="nombre" class="floating-label">* Rol</label>
-			</div>
-			</div>
-	</div>
     <div class="row">
 	    <div class="col-sm-12 operation_buttons" align="right">
 		    <div class="btn-group">
 		        <label class="btn btn-success" ng-click="modalBuscar.ok()"> &nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;</label>
+		        <label class="btn btn-danger" ng-click="modalBuscar.borrar()"> &nbsp;&nbsp;&nbsp;&nbsp;Borrar&nbsp;&nbsp;&nbsp;&nbsp;</label>
 				<label class="btn btn-primary" ng-click="modalBuscar.cancel()">Cancelar</label>
 	    	</div>
 	      

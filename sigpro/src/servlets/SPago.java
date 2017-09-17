@@ -97,7 +97,7 @@ public class SPago extends HttpServlet {
 			try{
 				for(Map<String, String> pago : pagos){
 					if(Utils.String2Int(pago.get("id")) == 0){
-						nuevoPago = new Pago(idObjeto, objetoTipo, formatter.parse(pago.get("fechaReal")), new BigDecimal(pago.get("pago")), pago.get("descripcion") == null ? " " : pago.get("descripcion"), usuario, null, new Date(), null,1);
+						nuevoPago = new Pago(idObjeto, objetoTipo, formatter.parse(pago.get("fechaReal")), new BigDecimal(pago.get("pago")), pago.get("descripcion") == null ? "" : pago.get("descripcion"), usuario, null, new Date(), null,1);
 						result = PagoDAO.guardarPago(nuevoPago);	
 					}else
 						result = true;

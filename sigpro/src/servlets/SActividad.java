@@ -257,7 +257,7 @@ public class SActividad extends HttpServlet {
 					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
 					String duracionDimension = map.get("duracionDimension");
 					String longitud = map.get("longitud");
-					BigDecimal costo = Utils.String2BigDecimal(map.get("costo").equals("0") ? null : map.get("costo"), null);
+					BigDecimal costo = Utils.String2BigDecimal(map.get("costo") != null && map.get("costo").equals("0") ? null : map.get("costo"), null);
 					String latitud = map.get("latitud");
 					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
 					Integer renglon = map.get("renglon")!=null ? Integer.parseInt(map.get("renglon")):null;
