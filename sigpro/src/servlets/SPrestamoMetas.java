@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.sql.Connection;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,18 +28,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.ComponenteDAO;
+import dao.EstructuraProyectoDAO;
 import dao.MetaUnidadMedidaDAO;
-import dao.PrestamoMetasDAO;
 
-import dao.ProductoDAO;
-import dao.ProyectoDAO;
-import pojo.Componente;
-import pojo.Producto;
-import pojo.Proyecto;
 import utilities.CExcel;
 import utilities.CLogger;
-import utilities.CMariaDB;
 import utilities.Utils;
 import utilities.CPdf;
 
@@ -50,7 +43,7 @@ public class SPrestamoMetas extends HttpServlet {
 	class stprestamo{
 		String nombre;
 		Integer objeto_id;
-		Integer objeto_tipo;
+		int objeto_tipo;
 		Integer unidadDeMedida;
 		BigDecimal lineaBase;
 		BigDecimal metaFinal;
@@ -218,60 +211,19 @@ public class SPrestamoMetas extends HttpServlet {
 	}
 	
 	private List<stprestamo> getMetasPrestamo(int idPrestamo, int anioInicial, int anioFinal, String usuario){
-		List<stprestamo> lstPrestamo = new ArrayList<>();
-		Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
-		if(proyecto != null){
-		if(CMariaDB.connect()){
+		List<stprestamo> lstPrestamo= new ArrayList<>();
+		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+		for(Object objeto : estructuraProyecto){
+			Object[] obj = (Object[]) objeto;
 			stprestamo tempPrestamo =  new stprestamo();
-				Connection conn = CMariaDB.getConnection();
-				ArrayList<Integer> componentes = PrestamoMetasDAO.getEstructuraArbolComponentes(idPrestamo, conn);
-				
-				tempPrestamo.nombre = proyecto.getNombre();
-				tempPrestamo.objeto_id = proyecto.getId();
-				tempPrestamo.objeto_tipo = 1;
-				tempPrestamo.nivel = 1;
-				
-				ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();
-				
+			tempPrestamo.objeto_id = (Integer)obj[0];
+			tempPrestamo.nombre = (String)obj[1];
+			tempPrestamo.nivel = (Integer)obj[4] +1;
+			tempPrestamo.objeto_tipo = ((BigInteger) obj[2]).intValue();
+			if(tempPrestamo.objeto_tipo <=3){
+				ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();			
 				tempPrestamo = getMetas(presupuestoPrestamo, anioInicial, anioFinal, tempPrestamo);
-				
 				lstPrestamo.add(tempPrestamo);
-				
-				for(Integer componente:componentes){
-					tempPrestamo = new stprestamo();
-					Componente objComponente = ComponenteDAO.getComponentePorId(componente, usuario);
-					tempPrestamo.nombre = objComponente.getNombre();
-					tempPrestamo.objeto_id = objComponente.getId();
-					tempPrestamo.objeto_tipo = 2;
-					tempPrestamo.nivel = 2;
-					
-					 presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();
-					
-					tempPrestamo = getMetas(presupuestoPrestamo, anioInicial, anioFinal, tempPrestamo);
-					
-					lstPrestamo.add(tempPrestamo);							
-					ArrayList<Integer> productos = PrestamoMetasDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
-					for(Integer producto: productos){
-						tempPrestamo = new stprestamo();
-						Producto objProducto = ProductoDAO.getProductoPorId(producto);
-						tempPrestamo.nombre = objProducto.getNombre();
-						tempPrestamo.objeto_id = objProducto.getId();
-						tempPrestamo.objeto_tipo = 3;
-						tempPrestamo.nivel = 3;
-						tempPrestamo.lineaBase = new BigDecimal(0);
-						tempPrestamo.metaFinal = new BigDecimal(0);
-						
-						presupuestoPrestamo = PrestamoMetasDAO.getMetasPorProducto(producto, 
-								anioInicial, anioFinal, conn);
-						
-						tempPrestamo = getMetas(presupuestoPrestamo, anioInicial, anioFinal, tempPrestamo);
-						lstPrestamo.add(tempPrestamo);
-					
-					} 
-					
-				}
-				
-				CMariaDB.close();
 			}
 		}
 		return lstPrestamo;

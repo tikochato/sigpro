@@ -247,9 +247,9 @@ function controlColaborador($scope, $routeParams, $route, $window, $location, $m
 							mi.colaborador.usuarioActualizo=response.data.colaborador.usuarioActualizo;
 							mi.colaborador.fechaActualizacion=response.data.colaborador.fechaActualizacion;
 							mi.opcionesGrid.data = mi.data;
-
 							$utilidades.mensaje('success',
 									'Colaborador guardado con exito.');
+							mi.obtenerTotalColaboradores();
 						} else {
 							$utilidades.mensaje('danger',
 									'Error al guardar al Colaborador.');
@@ -323,7 +323,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location, $m
 			$utilidades.mensaje('warning','Debe seleccionar al Colaborador que desea borrar');
 	};
 
-	mi.cancelar = function() {
+	mi.irATabla = function() {
 		mi.esForma = false;
 		mi.esNuevo= false;
 	};

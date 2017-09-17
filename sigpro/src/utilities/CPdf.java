@@ -59,7 +59,7 @@ public class CPdf {
 						contentStream.beginText();
 						contentStream.setFont(font, 18);
 						contentStream.newLineAtOffset(50, 550);
-						contentStream.showText("Ministerio de Finanzas P�blicas");
+						contentStream.showText("Ministerio de Finanzas Publicas");
 						contentStream.endText();
 						contentStream.beginText();
 						contentStream.setFont(font, 12);
@@ -472,7 +472,7 @@ public class CPdf {
 						contentStream.beginText();
 						contentStream.setFont(font, 18);
 						contentStream.newLineAtOffset(50, 550);
-						contentStream.showText("Ministerio de Finanzas P�blicas");
+						contentStream.showText("Ministerio de Finanzas Publicas");
 						contentStream.endText();
 						contentStream.beginText();
 						contentStream.setFont(font, 12);
@@ -532,7 +532,7 @@ public class CPdf {
 				contentStream.beginText();
 				contentStream.setFont(font, 18);
 				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas P�blicas");
+				contentStream.showText("Ministerio de Finanzas Publicas");
 				contentStream.endText();
 				contentStream.beginText();
 				contentStream.setFont(font, 12);
@@ -547,6 +547,7 @@ public class CPdf {
 				BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 				Row<PDPage> headerRow = table_x.createRow(12);
 				float tam_celda=celda_b*2;
+				
 				headerRow.createCell((float)(celda_a*1.5),headers[0][0] );
 				headerRow.createCell(tam_celda,headers[0][1] );
 				headerRow.createCell(tam_celda,headers[0][2] );
@@ -589,7 +590,7 @@ public class CPdf {
 				contentStream.beginText();
 				contentStream.setFont(font, 18);
 				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas P�blicas");
+				contentStream.showText("Ministerio de Finanzas Publicas");
 				contentStream.endText();
 				contentStream.beginText();
 				contentStream.setFont(font, 12);
@@ -603,6 +604,7 @@ public class CPdf {
 				float bottomMargin = 70;
 				BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 				Row<PDPage> headerRow = table_x.createRow(12);
+				
 				headerRow.createCell((float)(celda_a*2),headers[0][0] );
 				headerRow.createCell(celda_b*2,headers[0][1] );
 				headerRow.createCell(celda_b*2,headers[0][2] );
@@ -643,7 +645,7 @@ public class CPdf {
 				contentStream.beginText();
 				contentStream.setFont(font, 18);
 				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas P�blicas");
+				contentStream.showText("Ministerio de Finanzas Publicas");
 				contentStream.endText();
 				contentStream.beginText();
 				contentStream.setFont(font, 12);
@@ -697,7 +699,7 @@ public class CPdf {
 				contentStream.beginText();
 				contentStream.setFont(font, 18);
 				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas P�blicas");
+				contentStream.showText("Ministerio de Finanzas Publicas");
 				contentStream.endText();
 				contentStream.beginText();
 				contentStream.setFont(font, 12);
@@ -764,7 +766,7 @@ public class CPdf {
 				contentStream.beginText();
 				contentStream.setFont(font, 18);
 				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas P�blicas");
+				contentStream.showText("Ministerio de Finanzas Publicas");
 				contentStream.endText();
 				contentStream.beginText();
 				contentStream.setFont(font, 12);
@@ -824,7 +826,7 @@ public class CPdf {
 						contentStream.beginText();
 						contentStream.setFont(font, 18);
 						contentStream.newLineAtOffset(50, 550);
-						contentStream.showText("Ministerio de Finanzas P�blicas");
+						contentStream.showText("Ministerio de Finanzas Publicas");
 						contentStream.endText();
 						contentStream.beginText();
 						contentStream.setFont(font, 12);

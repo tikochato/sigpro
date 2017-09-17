@@ -64,7 +64,8 @@ public class ProyectoPropiedadDAO {
 	}
 	
 	
-	public static List<ProyectoPropiedad> getProyectoPropiedadPaginaTotalDisponibles(int pagina, int numeroproyectopropiedades, String idPropiedades){
+	public static List<ProyectoPropiedad> getProyectoPropiedadPaginaTotalDisponibles(int pagina, int numeroproyectopropiedades, String idPropiedades,
+			int numeroElementos){
 		List<ProyectoPropiedad> ret = new ArrayList<ProyectoPropiedad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -72,7 +73,7 @@ public class ProyectoPropiedadDAO {
 					+ (idPropiedades!=null && idPropiedades.length()>0 ?  " and p.id not in ("+ idPropiedades + ")" : "") 
 					,ProyectoPropiedad.class);
 			criteria.setFirstResult(((pagina-1)*(numeroproyectopropiedades)));
-			criteria.setMaxResults(numeroproyectopropiedades);
+			criteria.setMaxResults(numeroElementos);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){

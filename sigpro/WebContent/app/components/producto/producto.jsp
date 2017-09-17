@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="org.apache.shiro.SecurityUtils"%>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
-<div ng-controller="controlProducto as producto" class="maincontainer all_page">
+<div ng-controller="controlProducto as producto" ng-class=" producto.esTreeview ? 'maincontainer_treeview all_page' : 'maincontainer all_page'">
 	
 	<script type="text/ng-template" id="map.html">
         <div class="modal-header">
@@ -25,17 +25,17 @@
 		<p ng-init="producto.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
 
-	<div class="panel panel-default">
+	<div class="panel panel-default" ng-if="!producto.esTreeview">
 		<div class="panel-heading">
 			<h3>Producto</h3>
 		</div>
 	</div>
-		<div class="subtitulo">
-			{{ producto.objetoTipoNombre }} {{ producto.componenteNombre }}
+		<div class="subtitulo" ng-if="!producto.esTreeview">
+			{{ producto.objetoTipoNombre }}: {{ producto.componenteNombre }}
 		</div>
 	
   
-	<div align="center" ng-hide="producto.esForma">
+	<div align="center" ng-hide="producto.esForma" ng-if="!producto.esTreeview">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="21040">
@@ -91,13 +91,13 @@
 
 	</div>
 
-	<div ng-show="producto.esForma" class="row second-main-form">
+	<div ng-show="producto.esForma || producto.esTreeview" class="row second-main-form">
 		<div class="page-header">
 			<h2 ng-hide="!producto.esNuevo"><small>Nuevo Producto</small></h2>
 			<h2 ng-hide="producto.esNuevo"><small>Edición de Producto</small></h2>
 		</div>
 		<div class="operation_buttons" >
-			<div class="btn-group" ng-hide="producto.esNuevo">
+			<div class="btn-group" ng-hide="producto.esNuevo" ng-if="!producto.esTreeview">
 				<label class="btn btn-default" ng-click="producto.irASubproductos()" uib-tooltip="Subproductos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-link"></span></label>
 				<label class="btn btn-default" ng-click="producto.irAActividades()" uib-tooltip="Actividades" tooltip-placement="bottom">
@@ -112,8 +112,10 @@
 					<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="producto.cancelar()" uib-tooltip="Ir a Tabla">
+				<label ng-if="!producto.esTreeview" class="btn btn-primary" ng-click="producto.cancelar()" uib-tooltip="Ir a Tabla">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+				<label ng-if="producto.esTreeview" class="btn btn-danger" ng-click="producto.t_borrar()" ng-disabled="!(producto.producto.id>0)" uib-tooltip="Borrar">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
 		<div>
@@ -147,7 +149,7 @@
 						  				<label for="isubprog" class="floating-label">Subprograma</label>
 									</td>
 									<td style="width: 14%; padding-right:5px;">
-										<input type="number" class="inputText" ng-model="producto.producto.proyecto_" ng-value="producto.producto.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+										<input type="number" class="inputText" ng-model="producto.producto.proyecto_" ng-value="producto.producto.proyecto_" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 						  				<label for="iproy_" class="floating-label">Proyecto</label>
 									</td>
 									<td style="width: 14%; padding-right:5px;">
@@ -164,7 +166,7 @@
 									</td>
 									<td style="width: 14%; padding-right:5px;">
 										<input type="number" class="inputText" ng-model="producto.producto.ubicacionGeografica" ng-value="producto.producto.ubicacionGeografica" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
-						  				<label for="fuente" class="floating-label">Ubicación Geográfica</label>
+						  				<label for="fuente" class="floating-label">Geográfico</label>
 									</td>
 								</tr>
 							</table>
@@ -246,15 +248,17 @@
 					</div>
 					
 					<div class="form-group" >
-				       <input type="number" class="inputText" ng-model="producto.producto.costo" ng-value="producto.producto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
-				       <label for="iprog" class="floating-label">Costo</label>
+				       <input type="text" class="inputText" ng-model="producto.producto.costo" ng-value="producto.producto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left"
+				       ng-required="producto.producto.acumulacionCostoNombre != null"
+										ui-number-mask="2" />
+				       <label for="iprog" class="floating-label">{{producto.producto.acumulacionCostoNombre  != null ?"* Costo":"Costo"}}</label>
 					</div>
 						
 					<div class="form-group" >
 					    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="producto.producto.acumulacionCostoNombre" ng-value="producto.producto.acumulacionCostoNombre" 
-						ng-click="producto.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="producto.producto.costo > 0"/>
+						ng-click="producto.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="producto.producto.costo != null "/>
 						<span class="label-icon" ng-click="producto.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
-						<label for="campo3" class="floating-label">* Acumulación Costo</label>
+						<label for="campo3" class="floating-label">{{producto.producto.costo  != null ?"* Acumulación Costo":"Acumulación Costo"}}</label>
 					</div>
 					
 					<div class = "row">
@@ -272,7 +276,7 @@
 							<div class="form-group">
 							   <input class="inputText"  type="number"
 							     ng-model="producto.producto.duracion" ng-value="producto.producto.duracion"   
-							     onblur="this.setAttribute('value', this.value);"  min="1" max="100" ng-required="true" 
+							     onblur="this.setAttribute('value', this.value);"  min="1" ng-required="true" 
 							     ng-readonly="producto.duracionDimension.value != 0 ? false : true"
 							     ng-change="producto.producto.fechaInicio != null && producto.duracionDimension.value != 0 ? producto.cambioDuracion(producto.duracionDimension) : ''">
 							   <label class="floating-label">* Duración</label>
@@ -283,7 +287,7 @@
 							<div class="form-group" >
 							  <input type="text"  class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" min={{producto.fechaInicioPadre}} ng-model="producto.producto.fechaInicio" is-open="producto.fi_abierto"
 							            datepicker-options="producto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="producto.cambioDuracion(producto.duracionDimension);" ng-required="true"  
-							            ng-click="producto.abrirPopupFecha(1000)" ng-value="producto.producto.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
+							            ng-click="producto.abrirPopupFecha(1000)" ng-value="producto.producto.fechaInicio" onblur="this.setAttribute('value', this.value);" ng-readonly="true"/>
 							            <span class="label-icon" ng-click="producto.abrirPopupFecha(1000)">
 							              <i class="glyphicon glyphicon-calendar"></i>
 							            </span>
@@ -297,7 +301,7 @@
 							            datepicker-options="producto.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true" ng-click=""
 							            ng-value="producto.producto.fechaFin" onblur="this.setAttribute('value', this.value);"
 							            ng-readonly="true"/>
-							            <span class="label-icon" ng-click="producto.abrirPopupFecha(1001)">
+							            <span class="label-icon">
 							              <i class="glyphicon glyphicon-calendar"></i>
 							            </span>
 							  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
@@ -349,8 +353,10 @@
 					<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="producto.cancelar()" uib-tooltip="Ir a Tabla">
+				<label ng-if="!producto.esTreeview" class="btn btn-primary" ng-click="producto.cancelar()" uib-tooltip="Ir a Tabla">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+				<label ng-if="producto.esTreeview" class="btn btn-danger" ng-click="producto.t_borrar()" ng-disabled="!(producto.producto.id>0)" uib-tooltip="Borrar">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
 	</div>

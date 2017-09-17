@@ -2,16 +2,18 @@ var moduloProducto = angular.module('moduloProducto', [ 'ngTouch',
 		'smart-table']);
 
 moduloProducto.controller('controlProducto', [ '$scope', '$routeParams',
-		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',
+		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http', '$rootScope',
 		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'dialogoConfirmacion', 
 		controlProducto ]);
 
 function controlProducto($scope, $routeParams, $route, $window, $location,
-		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
+		$mdDialog, $uibModal, $http, $rootScope, $interval, i18nService, $utilidades,
 		$timeout, $log, $q, $dialogoConfirmacion) {
 	var mi = this;  
 	i18nService.setCurrentLang('es');
 	$window.document.title = $utilidades.sistema_nombre+' - Producto';
+	
+	mi.esTreeview = $rootScope.treeview;
 	    
 	mi.componenteid = $routeParams.componente_id;
 	mi.esForma = false;
@@ -40,9 +42,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		{value:1,nombre:'Dias',sigla:'d'}
 	];
 	
-	mi.duracionDimension = mi.dimensiones[0];
+	mi.duracionDimension = mi.dimensiones[1];
 	
-	$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id }).success(
+	$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id, t: (new Date()).getTime()}).success(
 			function(response) {
 				mi.componenteid = response.id;
 				mi.componenteNombre = response.nombre;
@@ -83,7 +85,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	}
 
 	
-	mi.mostrarCargando = true;
+	mi.mostrarCargando = (mi.esTreeview) ? false : true;
 	mi.data = [];
 	mi.cargarTabla = function(pagina) {
 		var datos = {
@@ -95,7 +97,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuarioCreo'], 
 			filtro_fecha_creacion: mi.filtros['fechaCreacion'],
-			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, 
+			t: (new Date()).getTime()
 		};
 
 		mi.mostrarCargando = true;
@@ -104,6 +107,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				mi.data = response.data.productos;
 				mi.opcionesGrid.data = mi.data;
 				mi.mostrarCargando = false;
+				mi.paginaActual = pagina;
 				
 				for(x in mi.data){
 					if(mi.data[x].fechaInicio != "")
@@ -204,7 +208,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			action : 'guardaEstado',
 			grid : 'producto',
 			estado : JSON.stringify(estado),
-			t : (new Date()).getTime()
+			t: (new Date()).getTime()
 		};
 		$http.post('/SEstadoTabla', tabla_data).then(function(response) {
 
@@ -215,7 +219,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	}
 	mi.nuevo = function() {
 		mi.limpiarSeleccion();
-
+		
 		mi.esForma = true;
 		mi.entityselected = null;
 		mi.esNuevo = true;
@@ -231,6 +235,14 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		mi.producto = {};
 		
 		mi.coordenadas = "";
+		
+
+		mi.duracionDimension = mi.dimensiones[1];
+		mi.producto.duracion = 0;
+		
+		for (campos in mi.camposdinamicos) {
+			mi.camposdinamicos[campos].valor = null;
+		}
 
 	}
 
@@ -250,24 +262,25 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		if (mi.producto!=null && mi.producto.id!=null) {
 			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 					, "Confirmación de Borrado"
-					, '¿Desea borrar "' + mi.producto.nombre + '"?'
+					, '¿Desea borrar el producto "' + mi.producto.nombre + '"?'
 					, "Borrar"
 					, "Cancelar")
 			.result.then(function(data) {
 				if(data){
 					var datos = {
 							accion : 'borrar',
-							codigo : mi.producto.id
+							codigo : mi.producto.id,
+							t: (new Date()).getTime()
 						};
 						$http.post('/SProducto', datos).success(
 								function(response) {
 									if (response.success) {
-										$utilidades.mensaje('success','Tipo de Producto borrado con éxito');
+										$utilidades.mensaje('success','Producto borrado con éxito');
 										mi.producto = null;
 										mi.obtenerTotalProductos();			
 									} else{
 										$utilidades.mensaje('danger',
-												'Error al borrar el Tipo de Producto');
+												'Error al borrar el Producto');
 									}
 								});
 				}
@@ -276,16 +289,17 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			});
 		} else {
 			$utilidades.mensaje('warning',
-					'Debe seleccionar un PRODUCTO que desee borrar');
+					'Debe seleccionar el producto que desee borrar');
 		}
 	};
 
 	mi.guardar = function() {
-		for (campos in mi.camposdinamicos) {
-			if (mi.camposdinamicos[campos].tipo === 'fecha') {
-				mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
+		if(mi.duracionDimension.sigla!=null && mi.duracionDimension.sigla!=''){
+			for (campos in mi.camposdinamicos) {
+				if (mi.camposdinamicos[campos].tipo === 'fecha') {
+					mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
+				}
 			}
-		}
 			var datos = {
 				accion : 'guardar',
 				id: mi.producto.id,
@@ -299,7 +313,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				obra: mi.producto.obra,
 				renglon: mi.producto.renglon,
 				ubicacionGeografica: mi.producto.ubicacionGeografica,
-				componente : $routeParams.componente_id,
+				componente : mi.componenteid,
 				productoPadre : mi.productoPadre,
 				tipoproductoid : mi.tipo,
 				unidadEjecutora : mi.unidadEjecutora,
@@ -307,14 +321,15 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				entidad: mi.entidad,
 				longitud: mi.producto.longitud,
 				latitud : mi.producto.latitud,
-				costo: mi.producto.costo == null ? 0 : mi.producto.costo,
-				acumulacionCosto: mi.producto.acumulacionCostoId == null ? 0 : mi.producto.acumulacionCostoId,
+				costo: mi.producto.costo,
+				acumulacionCosto: mi.producto.acumulacionCostoId,
 				fechaInicio: moment(mi.producto.fechaInicio).format('DD/MM/YYYY'),
 				fechaFin: moment(mi.producto.fechaFin).format('DD/MM/YYYY'),
 				duaracion: mi.producto.duracion,
 				duracionDimension: mi.duracionDimension.sigla,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
-				esnuevo : mi.esNuevo
+				esnuevo : mi.esNuevo,
+				t: (new Date()).getTime()
 			};
 
 			$http.post('/SProducto', datos).then(
@@ -331,10 +346,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							mi.producto.fechaactualizacion = response.data.fechaactualizacion;
 							mi.obtenerTotalProductos();
 						} else {
-							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
+							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el Producto');
 						}
 					});
-		
+		} else {
+			$utilidades.mensaje('danger','Debe seleccionar una dimensión válida');
+		}
 	};
 
 	mi.cancelar = function() {
@@ -372,7 +389,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			var parametros = {
 					accion: 'getProductoPropiedadPorTipo', 
 					idproducto: mi.producto.id,
-					idproductotipo: mi.tipo
+					idproductotipo: mi.tipo,
+					t: (new Date()).getTime()
 			}
 			$http.post('/SProductoPropiedad', parametros).then(function(response){
 				mi.camposdinamicos = response.data.productopropiedades
@@ -391,7 +409,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				}
 			});
 		} else {
-			$utilidades.mensaje('warning', 'Debe seleccionar un PRODUCTO');
+			$utilidades.mensaje('warning', 'Debe seleccionar el producto que desee editar');
 		}
 
 	};
@@ -420,7 +438,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.obtenerTotalProductos = function(){
 		$http.post('/SProducto', { accion: 'totalElementos',componenteid : $routeParams.componente_id,
 			filtro_nombre: mi.filtros['nombre'],
-			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'], t: (new Date()).getTime() }).then(
 				function(response) {
 					mi.totalElementos = response.data.total;
 					mi.paginaActual = 1;
@@ -535,7 +553,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			var parametros = { 
 				accion: 'getProductoPropiedadPorTipo', 
 				idproducto: mi.producto.id,
-				idproductotipo: itemSeleccionado.id
+				idproductotipo: itemSeleccionado.id, 
+				t: (new Date()).getTime()
 			}
 			$http.post('/SProductoPropiedad', parametros).then(function(response){
 				mi.camposdinamicos = response.data.productopropiedades;
@@ -665,6 +684,55 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		});
 	  };
 	  
+	  if(mi.esTreeview){
+		  $http.post('/SProducto', { accion : 'getProductoPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
+					if (response.data.success) {
+						mi.producto = response.data.producto;
+						if(mi.producto.fechaInicio != "")
+							mi.producto.fechaInicio = moment(mi.producto.fechaInicio, 'DD/MM/YYYY').toDate();
+						if(mi.producto.fechaFin != "")
+							mi.producto.fechaFin = moment(mi.producto.fechaFin, 'DD/MM/YYYY').toDate();
+						mi.editar();
+					}
+				});
+	  }
+	  
+	  mi.t_borrar = function(ev) {
+			if (mi.producto!=null && mi.producto.id!=null) {
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el producto "' + mi.producto.nombre + '"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						/*var datos = {
+								accion : 'borrar',
+								codigo : mi.producto.id,
+								t: (new Date()).getTime()
+							};
+							$http.post('/SProducto', datos).success(
+									function(response) {
+										if (response.success) {
+											
+											$utilidades.mensaje('success','Producto borrado con éxito');
+											mi.producto = null;			
+										} else{
+											$utilidades.mensaje('danger',
+													'Error al borrar el Producto');
+										}
+									});*/
+						$rootScope.$emit("eliminarNodo", {});
+					}
+				}, function(){
+					
+				});
+			} else {
+				$utilidades.mensaje('warning',
+						'Debe seleccionar el producto que desee borrar');
+			}
+		};
+	  
 }
 
 moduloProducto.controller('modalBuscarPorProducto', [ '$uibModalInstance',
@@ -702,7 +770,7 @@ function modalBuscarPorProducto($uibModalInstance, $rootScope,$scope, $http, $in
 			mi.ejercicios.push(i);
 		
 		mi.ejercicio = (mi.ejercicio == "") ? current_year : mi.ejercicio;
-		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
+		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio, t: (new Date()).getTime()}).success(function(response) {
 			mi.entidades = response.entidades;
 			if(mi.entidades.length>0){
 				mi.entidad = (mi.entidad===undefined) ? mi.entidades[0] : mi.entidad;
@@ -764,7 +832,7 @@ function modalBuscarPorProducto($uibModalInstance, $rootScope,$scope, $http, $in
 
 	mi.cargarTabla = function(pagina,ejercicio, entidad) {
 		mi.mostrarCargando = true;
-		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina, entidad,ejercicio)).then(
+		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina, entidad,ejercicio, (new Date()).getTime())).then(
 				function(response) {
 					if (response.data.success) {
 
@@ -779,7 +847,11 @@ function modalBuscarPorProducto($uibModalInstance, $rootScope,$scope, $http, $in
 	};
 
 	mi.cambioPagina = function() {
-		mi.cargarTabla(mi.paginaActual, mi.ejercicio, mi.entidad.entidad);
+		var entidad=null;
+		if(mi.entidad){
+			entidad = mi.entidad.entidad
+		}
+		mi.cargarTabla(mi.paginaActual, mi.ejercicio, entidad);
 	}
 
 	mi.ok = function() {
@@ -801,7 +873,7 @@ function modalBuscarPorProducto($uibModalInstance, $rootScope,$scope, $http, $in
 	mi.cambioEntidad= function(selected){
 		if(selected!==undefined){
 			mi.entidad = selected.originalObject;
-			$http.post('/SUnidadEjecutora', {accion:"totalElementos", ejercicio: mi.entidad.ejercicio,entidad: mi.entidad.entidad}).success(function(response) {
+			$http.post('/SUnidadEjecutora', {accion:"totalElementos", ejercicio: mi.entidad.ejercicio,entidad: mi.entidad.entidad, t: (new Date()).getTime()}).success(function(response) {
 				for ( var key in response) {
 					mi.totalElementos = response[key];
 				}

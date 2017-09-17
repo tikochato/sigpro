@@ -689,8 +689,6 @@ public class CExcel {
 
 		rownum = 6;
 		int columnas = 0;
-
-		CLogger.write_simple("4", CExcel.class, "ExportarExcel for 695");
 		
 		for (int i = 0; i < datos.size(); i++) {
 			Row row = sheet_.createRow(rownum++);
@@ -701,26 +699,18 @@ public class CExcel {
 			}
 			columnas = objArr.length > columnas ? objArr.length : columnas;
 		}
-		
-		CLogger.write_simple("4", CExcel.class, "ExportarExcel fin for 707");
-		
+				
 		setEncabezado(titulo, columnas);
 		piePagina(usuario);
 		sheet_.autoSizeColumn(0);
 		sheet_.autoSizeColumn(1);
 		sheet_.autoSizeColumn(2);
 		sheet_.autoSizeColumn(3);
-
-		CLogger.write_simple("4", CExcel.class, "Encabezados -pie 716");
 		
 		try {
-			CLogger.write_simple("4", CExcel.class, "path 719");
 			path = String.join("", "/archivos/temporales/temp_", ((Long) new Date().getTime()).toString(), ".xls");
-			CLogger.write_simple("4", CExcel.class, "FileOutputStream 721");
 			FileOutputStream out = new FileOutputStream(new File(path));
-			CLogger.write_simple("4", CExcel.class, "workbook out 723");
 			workbook_.write(out);
-			CLogger.write_simple("4", CExcel.class, "out.close 725");
 			out.close();
 
 		} catch (FileNotFoundException e) {
@@ -728,7 +718,6 @@ public class CExcel {
 		} catch (Exception e) {
 			CLogger.write("5", CExcel.class, e);
 		}
-		CLogger.write_simple("4", CExcel.class, "path: "+path+" 733");
 		return path;
 	}
 

@@ -4,7 +4,7 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 			var mi=this;
 			
-			$window.document.title = $utilidades.sistema_nombre+' - Recurso Propiedad';
+			$window.document.title = $utilidades.sistema_nombre+' - Propiedades de Recurso';
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
 			mi.recursopropiedades = [];
@@ -22,7 +22,7 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 			mi.ordenDireccion = null;
 			mi.filtros = [];
 			
-			$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
+			$http.post('/SDatoTipo', { accion: 'cargarCombo', t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.tipodatos = response.datoTipos;
 			});
@@ -111,12 +111,13 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 				$http.post('/SRecursoPropiedad', { accion: 'getRecursoPropiedadPagina', pagina: pagina, numerorecursopropiedad: $utilidades.elementosPorPagina,
 					filtro_nombre: mi.filtros['nombre'], 
 					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
 					}).success(
 						function(response) {
 							mi.recursopropiedades = response.recursopropiedades;
 							mi.gridOptions.data = mi.recursopropiedades;
 							mi.mostrarcargando = false;
+							mi.paginaActual = pagina;
 						});
 			}
 			mi.redireccionSinPermisos=function(){
@@ -130,10 +131,11 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 						id: mi.recursopropiedad.id,
 						nombre: mi.recursopropiedad.nombre,
 						descripcion: mi.recursopropiedad.descripcion,
-						datoTipoId: mi.datoTipoSeleccionado.id
+						datoTipoId: mi.datoTipoSeleccionado.id,
+						t: (new Date()).getTime()
 					}).success(function(response){
 						if(response.success){
-							$utilidades.mensaje('success','Propiedad Recurso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+							$utilidades.mensaje('success','Propiedad de Recurso '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
 							mi.recursopropiedad.id = response.id;
 							mi.recursopropiedad.usuarioCreo = response.usuarioCreo;
 							mi.recursopropiedad.fechaCreacion = response.fechaCreacion;
@@ -144,7 +146,7 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 							mi.obtenerTotalRecursoPropiedades();
 						}
 						else
-							$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' la Propiedad Recurso');
+							$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' la Propiedad del Recurso');
 					});
 				}
 				else
@@ -155,22 +157,23 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 				if(mi.recursopropiedad!=null && mi.recursopropiedad.id!=null){
 					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 							, "Confirmación de Borrado"
-							, '¿Desea borrar la Prppiedad Recurso "'+mi.recursopropiedad.nombre+'"?'
+							, '¿Desea borrar la Propiedad del Recurso "'+mi.recursopropiedad.nombre+'"?'
 							, "Borrar"
 							, "Cancelar")
 					.result.then(function(data) {
 						if(data){
 							$http.post('/SRecursoPropiedad', {
 								accion: 'borrarRecursoPropiedad',
-								id: mi.recursopropiedad.id
+								id: mi.recursopropiedad.id,
+								t: (new Date()).getTime()
 							}).success(function(response){
 								if(response.success){
-									$utilidades.mensaje('success','Propiedad Recurso borrado con éxito');
+									$utilidades.mensaje('success','Propiedad del Recurso borrada con éxito');
 									mi.recursopropiedad = null;
-									mi.cargarTabla();
+									mi.obtenerTotalRecursoPropiedades();
 								}
 								else
-									$utilidades.mensaje('danger','Error al borrar la Propiedad Recurso');
+									$utilidades.mensaje('danger','Error al borrar la Propiedad del Recurso');
 							});
 						}
 					}, function(){
@@ -178,13 +181,14 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 					});
 				}
 				else
-					$utilidades.mensaje('warning','Debe seleccionar la Propiedad Recurso que desea borrar');
+					$utilidades.mensaje('warning','Debe seleccionar la Propiedad del Recurso que desea borrar');
 			};
 
 			mi.nueva = function() {
 				mi.mostraringreso=true;
 				mi.esnuevo = true;
 				mi.recursopropiedad = {};
+				mi.datoTipoSeleccionado = null;
 				mi.gridApi.selection.clearSelectedRows();
 			};
 
@@ -194,7 +198,7 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 					mi.esnuevo = false;
 				}
 				else
-					$utilidades.mensaje('warning','Debe seleccionar la Propiedad Recurso que desea editar');
+					$utilidades.mensaje('warning','Debe seleccionar la Propiedad del Recurso que desea editar');
 			}
 
 			mi.irATabla = function() {
@@ -229,7 +233,7 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 			}
 			mi.obtenerTotalRecursoPropiedades=function(){
 				$http.post('/SRecursoPropiedad', { accion: 'numeroRecursoPropiedades', filtro_nombre: mi.filtros['nombre'], 
-					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: (new Date()).getTime() }).success(
 						function(response) {
 							mi.totalRecursoPropiedades = response.totalrecursopropiedades;
 							mi.cargarTabla(1);

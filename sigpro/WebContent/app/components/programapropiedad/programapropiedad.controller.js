@@ -16,6 +16,7 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		mi.tipodatos = [];
+		mi.datotiposeleccionado = 0;
 		
 		mi.filtros=[];
 		mi.columnaOrdenada=null;
@@ -45,7 +46,7 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.programapropiedadc.filtros[\'nombre\']" ng-keypress="grid.appScope.programapropiedadc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-				    { name: 'datotiponombre', displayName: 'Tipo dato', cellClass: 'grid-align-left', enableFiltering: false},
+				    { name: 'datotiponombre', displayName: 'Tipo dato', cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false},
 				    { name: 'usuarioCreo', displayName: 'Usuario Creación',
 				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.programapropiedadc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.programapropiedadc.filtrar($event)"></input></div>'
 				    },
@@ -100,25 +101,27 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 			filtro_nombre: mi.filtros['nombre'], 
 			filtro_usuario_creo: mi.filtros['usuario_creo'],
 		    filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-		    columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion }).success(
+		    columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()}).success(
 					function(response) {
 						mi.programapropiedades = response.programapropiedades;
 						mi.gridOptions.data = mi.programapropiedades;
 						mi.mostrarcargando = false;
+						mi.paginaActual = pagina;
 					});
 		}
 		mi.redireccionSinPermisos=function(){
 			$window.location.href = '/main.jsp#!/forbidden';		
 		}
 		mi.guardar=function(){
-			if(mi.programapropiedad!=null && mi.programapropiedad.datotipoid!=null){
+			if(mi.programapropiedad!=null && mi.datotiposeleccionado!=null){
 				$http.post('/SProgramaPropiedad', {
 					accion: 'guardarProgramaPropiedad',
 					esnuevo: mi.esnuevo,
 					id: mi.programapropiedad.id,
 					nombre: mi.programapropiedad.nombre,
 					descripcion: mi.programapropiedad.descripcion,
-					datoTipoId: mi.programapropiedad.datotipoid.id
+					datoTipoId: mi.datotiposeleccionado.id,
+					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
 						$utilidades.mensaje('success','Propiedad de Programa '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
@@ -149,7 +152,8 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 					if(data){
 						$http.post('/SProgramaPropiedad', {
 							accion: 'borrarProgramaPropiedad',
-							id: mi.programapropiedad.id
+							id: mi.programapropiedad.id,
+							t: (new Date()).getTime()
 						}).success(function(response){
 							if(response.success){
 								$utilidades.mensaje('success','Propiedad de Programa borrado con éxito');
@@ -173,13 +177,14 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 			mi.esnuevo = true;
 			mi.programapropiedad = {};
 			mi.gridApi.selection.clearSelectedRows();
+			mi.datotiposeleccionado = 0;
 		};
 	
 		mi.editar = function() {
 			if(mi.programapropiedad!=null && mi.programapropiedad.id!=null){
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
-				mi.programapropiedad.datotipoid = {
+				mi.datotiposeleccionado = {
 						"id" : mi.programapropiedad.datotipoid,
 						"nombre" : mi.programapropiedad.datotiponombre
 				}
@@ -215,7 +220,7 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 		mi.obtenerTotalProgramaPropiedades = function() { 
 			$http.post('/SProgramaPropiedad', { accion: 'numeroProgramaPropiedades',filtro_nombre: mi.filtros['nombre'], 
 				filtro_usuario_creo: mi.filtros['usuario_creo'],
-			    filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(
+			    filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.totalProgramaPropiedades = response.totalprogramapropiedades;
 						mi.cargarTabla(1);
@@ -230,7 +235,7 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 			}
 		}
 		
-		$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
+		$http.post('/SDatoTipo', { accion: 'cargarCombo', t: (new Date()).getTime() }).success(
 				function(response) {
 					mi.tipodatos = response.datoTipos;
 		});
