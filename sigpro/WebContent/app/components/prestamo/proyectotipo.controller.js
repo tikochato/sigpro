@@ -110,7 +110,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 				,filtro_nombre: mi.filtros['nombre'] 
 				,filtro_usuario_creo: mi.filtros['usuario_creo']
 			    ,filtro_fecha_creacion: mi.filtros['fecha_creacion']
-			    ,columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+			    ,columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
 			    }).success(
 			
 					function(response) {
@@ -237,7 +237,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 		mi.obtenerTotalProyectotipos = function(){
 			$http.post('/SProyectoTipo', { accion: 'numeroProyectoTipos',
 				filtro_nombre: mi.filtros['nombre'], 
-				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'] }).then(
+				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'], t: (new Date()).getTime() }).then(
 					function(response) {
 						mi.totalProyectotipos = response.data.totalproyectotipos;
 						mi.paginaActual = 1;
@@ -277,7 +277,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 						accion: 'getProyectoPropiedadPaginaPorTipoProy',
 						pagina: pagina,
 						idProyectoTipo:mi.proyectotipo!=null ? mi.proyectotipo.id : null,
-						numeroproyectopropiedad: $utilidades.elementosPorPagina }).success(
+						numeroproyectopropiedad: $utilidades.elementosPorPagina , t: (new Date()).getTime()}).success(
 				function(response) {
 
 					mi.proyectopropiedades = response.proyectopropiedades;
@@ -290,7 +290,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 
 
 		mi.cargarTotalPropiedades = function(){
-			$http.post('/SProyectoPropiedad', { accion: 'numeroProyectoPropiedades' }).success(
+			$http.post('/SProyectoPropiedad', { accion: 'numeroProyectoPropiedades', t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.totalProyectopropiedades = response.totalproyectopropiedades;
 						mi.cargarTablaPropiedades(mi.paginaActualPropiedades);
@@ -383,10 +383,10 @@ function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval, i18nS
 	mi.seleccionado = false;
 
     $http.post('/SProyectoPropiedad', {
-    	accion : 'numeroProyectoPropiedadesDisponibles'
+    	accion : 'numeroProyectoPropiedadesDisponibles' , t: (new Date()).getTime()
         }).success(function(response) {
     	mi.totalElementos = response.totalproyectopropiedades;
-    	mi.elementosPorPagina = mi.totalElementos;
+    	
     	mi.cargarData(1);
     });
 
@@ -421,7 +421,9 @@ function modalBuscarPropiedad($uibModalInstance, $scope, $http, $interval, i18nS
     	    accion : 'getProyectoPropiedadesTotalDisponibles',
     	    pagina : pagina,
     	    idspropiedades: idspropiedad,
-    	    numeroproyectopropiedad : mi.elementosPorPagina
+    	    numeroproyectopropiedad : mi.elementosPorPagina,
+    	    numeroElementos:mi.elementosPorPagina,
+    	    t: (new Date()).getTime()
     	};
 
     	mi.mostrarCargando = true;

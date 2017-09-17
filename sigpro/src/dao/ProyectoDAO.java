@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.LockModeType;
+import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -69,6 +70,8 @@ public class ProyectoDAO implements java.io.Serializable  {
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
 			 ret = criteria.getSingleResult();
+		} catch (NoResultException e){
+			
 		}
 		catch(Throwable e){
 			CLogger.write("3", ProyectoDAO.class, e);
@@ -161,7 +164,9 @@ public class ProyectoDAO implements java.io.Serializable  {
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			if(usuario!=null)
 				query = String.join("", query, " AND p.id in (SELECT u.id.proyectoid from ProyectoUsuario u where u.id.usuario=:usuario )");
-			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
+			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) :
+						String.join(" ", query, "ORDER BY fecha_creacion ASC");
+			
 			Query<Proyecto> criteria = session.createQuery(query,Proyecto.class);
 			criteria.setParameter("usuario", usuario);
 			criteria.setFirstResult(((pagina-1)*(numeroproyecto)));
