@@ -196,7 +196,7 @@ app.controller(
 	};
 	mi.guardarUsuario=function(){
 		if(mi.esNuevo){
-			if(mi.claves.password1!=="" && mi.claves.password2!=="" && mi.usuariosSelected.usuario!=="" && mi.usuariosSelected.email!==""){
+			if(mi.claves.password1!=="" && mi.claves.password2!=="" && mi.usuariosSelected.usuario!=="" && mi.usuariosSelected.email!=="" && mi.nombreUnidadEjecutora!=="SIN UNIDAD EJECUTORA"){
 				if(validarEmail(mi.usuariosSelected.email)){
 					if(mi.claves.password1===mi.claves.password2){
 						mi.usuariosSelected.password= mi.claves.password1;
@@ -231,7 +231,7 @@ app.controller(
 				}
 
 			}else{
-				$utilidades.mensaje('danger','Los campos no deben de quedar vacios.');
+				$utilidades.mensaje('danger','Los campos obligatorios están vacíos.');
 			}
 		}else{
 			if(mi.usuariosSelected.email!==""){

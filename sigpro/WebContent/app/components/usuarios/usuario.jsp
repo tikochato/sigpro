@@ -111,13 +111,25 @@
 						<div class="form-group" ng-show="!usuarioc.esNuevo">
     						<input type="password" class="inputText" id="pass" ng-model="usuarioc.usuariosSelected.password" ng-required="true"
     							ng-value="usuarioc.usuariosSelected.password" onblur="this.setAttribute('value', this.value);" autocomplete="off">
-    						<label class="floating-label">* Contraseña--</label>
+    						<label class="floating-label">* Contraseña</label>
 						</div>
 						<div class="form-group"  ng-show="!usuarioc.esNuevo">
 						          <input type="text" class="inputText" ng-model="usuarioc.tipoUsuarioRol"  
 						          		ng-value="usuarioc.tipoUsuarioRol" onblur="this.setAttribute('value', this.value);" readonly >						          
 						          <label class="floating-label" >* Tipo de Usuario</label>
 						</div>
+						<div class="form-group col-sm-6" ng-show="usuarioc.tipoUsuarioRol==4 || usuarioc.tipoUsuario.id==5">
+						          <input type="text" class="inputText" ng-model="usuarioc.usuariosSelected.colaborador"  
+						          		ng-value="usuarioc.usuariosSelected.colaborador"  readonly>
+						         
+						          <label class="floating-label" >Colaborador</label>
+						</div>
+						    <div class="form-group col-sm-6" ng-show="usuarioc.tipoUsuarioRol==4 || usuarioc.tipoUsuario.id==5">
+						          <input type="text" class="inputText" ng-model="usuarioc.usuariosSelected.unidad_ejecutora" 
+						          		ng-value="usuarioc.usuariosSelected.unidad_ejecutora" 
+						          		 readonly>
+						          <label class="floating-label" >Unidad Ejecutora</label>
+						    </div>
 						<br>
 						<h3 ng-show="!usuarioc.esNuevo">Préstamos Asignados</h3>
 						<div class="col-sm-12 operation_buttons" align="right" style="    margin-left: 15px;" ng-if="!usuarioc.esNuevo">
@@ -206,7 +218,7 @@
 						          <input type="text" class="inputText" ng-model="usuarioc.nombreUnidadEjecutora" 
 						          		ng-value="usuarioc.nombreUnidadEjecutora" 
 						          		 readonly>
-						          <label class="floating-label" >Unidad Ejecutora</label>
+						          <label class="floating-label" >* Unidad Ejecutora</label>
 						    </div>
 						    <div class="form-group col-sm-12" ng-show="usuarioc.tipoUsuario.id==6">
 						          <input type="text" class="inputText" ng-model="usuarioc.nombreCooperante"    ng-click="usuarioc.buscarPermiso(3)"
@@ -335,14 +347,14 @@
 			<br>
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			        <shiro:hasPermission name="34020">
-						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid && !usuarioc.cargandoPermisos ? usuarioc.guardarUsuario() : '' ) :  (form.$valid && !usuarioc.cargandoPermisos  ? usuarioc.guardarUsuario() : '' )" 
-							ng-disabled="usuarioc.esNuevo ? form1.$invalid || usuarioc.cargandoPermisos : form.$invalid  || usuarioc.cargandoPermisos" uib-tooltip="Guardar">
+					<shiro:hasPermission name="34020">
+						<label class="btn btn-success" ng-click="usuarioc.esNuevo ? (form1.$valid && !usuarioc.cargandoPermisos &&  usuarioc.tipoUsuario.grupo!= '' ? usuarioc.guardarUsuario() : '' ) :  (form.$valid  ? usuarioc.guardarUsuario() : '' )" 
+							ng-disabled="usuarioc.esNuevo ? form1.$invalid || usuarioc.cargandoPermisos || usuarioc.tipoUsuario.grupo== '' : form.$invalid  || usuarioc.cargandoPermisos" uib-tooltip="Guardar">
 						<span class="glyphicon glyphicon-floppy-saved"></span>Guardar</label>
 					</shiro:hasPermission>
 			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()"  uib-tooltip="Ir a Tabla">
 					<span class="glyphicon glyphicon-list-alt"></span>Ir a Tabla</label>
-    		</div>
+    			</div>
     	</div>
 		</div>
 		
