@@ -181,6 +181,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			 }else if(mi.grupoMostrado.real){
 				 tipoVisualizacion = 1;
 			 }
+			 mi.mostrarCargando = true;
 			$http.post('/SPrestamoMetas', { 
 				accion: 'exportarPdf',
 				proyectoid: mi.prestamo.value,
@@ -191,6 +192,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
+						  mi.mostrarCargando = false;
 							var anchor = angular.element('<a/>');
 						    anchor.attr({
 						         href: 'data:application/pdf;base64,' + response.data,
@@ -198,7 +200,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 						         download: 'PrestamoMetas.pdf'
 						     })[0].click();
 						  }.bind(this), function errorCallback(response){
-						 		
+							  mi.mostrarCargando = false;
 						 	}
 						 );
 		};
@@ -522,6 +524,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			 }else if(mi.grupoMostrado.real){
 				 tipoVisualizacion = 1;
 			 }
+			 mi.mostrarCargando = true;
 			 $http.post('/SPrestamoMetas', { 
 				 accion: 'exportarExcel', 
 				 proyectoid: mi.prestamo.value,
@@ -532,6 +535,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
+						  mi.mostrarCargando = false;
 						  var anchor = angular.element('<a/>');
 						  anchor.attr({
 					         href: 'data:application/ms-excel;base64,' + response.data,
@@ -539,7 +543,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 					         download: 'MetasPrestamo.xls'
 						  })[0].click();
 					  }.bind(this), function errorCallback(response){
-						 		
+						  mi.mostrarCargando = false;		
 				 	}
 			  	);
 			};

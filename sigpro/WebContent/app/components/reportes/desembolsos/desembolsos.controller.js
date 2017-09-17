@@ -443,6 +443,7 @@ mi.options = {
 	 
 
 		mi.exportarExcel = function(){
+			mi.mostrarCargando = true;
 			 $http.post('/SDesembolsos', { 
 				 accion: 'exportarExcel', 
 				 proyectoid: mi.prestamoSeleccionado.value,
@@ -453,6 +454,7 @@ mi.options = {
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
+						  mi.mostrarCargando = false;
 						  var anchor = angular.element('<a/>');
 						  anchor.attr({
 					         href: 'data:application/ms-excel;base64,' + response.data,
@@ -460,12 +462,13 @@ mi.options = {
 					         download: 'Desembolsos.xls'
 						  })[0].click();
 					  }.bind(this), function errorCallback(response){
-						 		console.log(response);
+						  mi.mostrarCargando = false;
 				 	}
 			  	);
 			};
 		
 		mi.exportarPdf=function(){
+			mi.mostrarCargando = true;
 			 $http.post('/SDesembolsos', { 
 				 accion: 'exportarPdf', 
 				 proyectoid: mi.prestamoSeleccionado.value,
@@ -476,6 +479,7 @@ mi.options = {
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
+						  mi.mostrarCargando = false;
 						  var anchor = angular.element('<a/>');
 						  anchor.attr({
 					         href: 'data:application/pdf;base64,' + response.data,
@@ -483,7 +487,7 @@ mi.options = {
 					         download: 'Desembolsos.pdf'
 						  })[0].click();
 					  }.bind(this), function errorCallback(response){
-						 		console.log(response);
+						  mi.mostrarCargando = false;
 				 	}
 			  	);
 		};
