@@ -24,11 +24,15 @@
 		</div>
         <div class="modal-footer">
             <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+			<button class="btn btn-danger" type="button" ng-click="borrar()">Quitar coordenadas</button>
         </div>
     </script>
     
 	    <script type="text/ng-template" id="buscarPorComponente.jsp">
     		<%@ include file="/app/components/componente/buscarPorComponente.jsp"%>
+  	    </script>
+  	    <script type="text/ng-template" id="buscarAcumulacionCosto.jsp">
+    		<%@ include file="/app/components/componente/buscarAcumulacionCosto.jsp"%>
   	    </script>
   	    <shiro:lacksPermission name="5010">
 			<p ng-init="componentec.redireccionSinPermisos()"></p>
@@ -263,9 +267,9 @@
 						
 						<div class="form-group" >
 						    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="componentec.componente.acumulacionCostoNombre" ng-value="componentec.componente.acumulacionCostoNombre" 
-							ng-click="componentec.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="componentec.componente.costo > 0"/>
+							ng-click="componentec.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="componentec.componente.costo != null && componentec.componente.costo > 0"/>
 							<span class="label-icon" ng-click="componentec.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
-							<label for="campo3" class="floating-label">{{componentec.componente.costo != null ? "* Tipo de acumulación de costo" : "Tipo de acumulación de costo"}} </label>
+							<label for="campo3" class="floating-label">{{componentec.componente.costo != null && componentec.componente.costo > 0 ? "* Tipo de acumulación del costo" : "Tipo de acumulación del costo"}} </label>
 						</div>
 						
 						<div class = "row">

@@ -36,17 +36,19 @@ public class ComponentePropiedad implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
+	private Integer estado;
 	private Set<CtipoPropiedad> ctipoPropiedads = new HashSet<CtipoPropiedad>(0);
 	private Set<ComponentePropiedadValor> componentePropiedadValors = new HashSet<ComponentePropiedadValor>(0);
 
 	public ComponentePropiedad() {
 	}
 
-	public ComponentePropiedad(DatoTipo datoTipo, String nombre, String usuarioCreo, Date fechaCreacion) {
+	public ComponentePropiedad(DatoTipo datoTipo, String nombre, String usuarioCreo, Date fechaCreacion, Integer estado) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
+		this.estado = estado;
 	}
 
 	public ComponentePropiedad(DatoTipo datoTipo, String nombre, String descripcion, String usuarioCreo,
@@ -158,5 +160,13 @@ public class ComponentePropiedad implements java.io.Serializable {
 	public void setComponentePropiedadValors(Set<ComponentePropiedadValor> componentePropiedadValors) {
 		this.componentePropiedadValors = componentePropiedadValors;
 	}
+	
+	@Column(name = "estado", nullable = false)
+	public int getEstado() {
+		return this.estado;
+	}
 
+	public void setEstado(int estado) {
+		this.estado = estado;
+	}
 }

@@ -190,7 +190,7 @@ public class SComponentePropiedad extends HttpServlet {
 				
 				ComponentePropiedad componentePropiedad;
 				if(esnuevo){
-					componentePropiedad = new ComponentePropiedad(datoTipo, nombre, usuario, new DateTime().toDate());
+					componentePropiedad = new ComponentePropiedad(datoTipo, nombre, usuario, new DateTime().toDate(), 1);
 				}
 				else{
 					componentePropiedad = ComponentePropiedadDAO.getComponentePropiedadPorId(id);

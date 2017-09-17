@@ -114,7 +114,7 @@ public class ComponentePropiedadDAO {
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			//componentePropiedad.setEstado(0);
+			componentePropiedad.setEstado(0);
 			session.beginTransaction();
 			session.update(componentePropiedad);
 			session.getTransaction().commit();
@@ -154,7 +154,7 @@ public class ComponentePropiedadDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			
-			String query = "SELECT c FROM ComponentePropiedad c ";
+			String query = "SELECT c FROM ComponentePropiedad c WHERE c.estado=1";
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");
@@ -163,7 +163,7 @@ public class ComponentePropiedadDAO {
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(c.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
 			
-			query = String.join(" ", query, (query_a.length()>0 ? String.join("","WHERE (",query_a,")") : ""));
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
 			
 			Query<ComponentePropiedad> criteria = session.createQuery(query,ComponentePropiedad.class);
