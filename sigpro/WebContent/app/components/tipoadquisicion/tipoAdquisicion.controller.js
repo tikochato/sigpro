@@ -266,7 +266,8 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 					mi.tipoAdquisicion.fechaCreacion = response.fechaCreacion;
 					mi.tipoAdquisicion.usuarioActualizo = response.usuarioactualizo;
 					mi.tipoAdquisicion.fechaActualizacion = response.fechaactualizacion;
-					
+					mi.tipoAdquisicion.id=response.id;
+					mi.esNuevo=false;
 					$utilidades.mensaje('success', 'Tipo de adquisicion guardado con éxito');
 				}
 			})
