@@ -164,7 +164,7 @@
 									</td>
 									<td style="width: 14%; padding-right:5px;">
 										<input type="number" class="inputText" ng-model="producto.producto.ubicacionGeografica" ng-value="producto.producto.ubicacionGeografica" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
-						  				<label for="fuente" class="floating-label">Ubicación Geográfica</label>
+						  				<label for="fuente" class="floating-label">Geográfico</label>
 									</td>
 								</tr>
 							</table>

@@ -16,7 +16,7 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		mi.tipodatos = [];
-		mi.datotiposeleccionado = 0;
+		mi.datotiposeleccionado = null;
 		
 		mi.filtros=[];
 		mi.columnaOrdenada=null;
@@ -177,7 +177,7 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 			mi.esnuevo = true;
 			mi.programapropiedad = {};
 			mi.gridApi.selection.clearSelectedRows();
-			mi.datotiposeleccionado = 0;
+			mi.datotiposeleccionado = null;
 		};
 	
 		mi.editar = function() {
