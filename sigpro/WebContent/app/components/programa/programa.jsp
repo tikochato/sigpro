@@ -139,7 +139,8 @@
 										<div ng-switch-when="fecha" class="form-group" >
 											<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
 																datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="programac.abrirPopupFecha($index)"
-																ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+																ng-value="campo.valor" onblur="this.setAttribute('value', this.value);" 
+																ng-readonly="true"/>
 																<span class="label-icon" ng-click="programac.abrirPopupFecha($index)">
 																	<i class="glyphicon glyphicon-calendar"></i>
 																</span>
@@ -364,8 +365,9 @@
 										<div class="form-group">    						
 											<input type="text" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaDecreto" is-open="programac.fd_abierto"
 												datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-												ng-click="programac.abrirPopupFecha(1007)" ng-value="programac.prestamo.fechaDecreto" onblur="this.setAttribute('value', this.value);"/>
-											<span class="label-icon" ng-click="programac.abrirPopupFecha(1007)">	
+												ng-click="programac.abrirPopupFecha(1007)" ng-value="programac.prestamo.fechaDecreto" onblur="this.setAttribute('value', this.value);"
+												ng-readonly="true"/>
+											<span class="label-icon" ng-click="programac.abrirPopupFecha(1007)" >	
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
 											<label class="floating-label">* Fecha Decreto</label>
@@ -375,7 +377,8 @@
 										<div class="form-group">
 											<input type="text" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaSuscripcion" is-open="programac.fs_abierto"
 												datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-												ng-click="programac.abrirPopupFecha(1008)" ng-value="programac.prestamo.fechaSuscripcion" onblur="this.setAttribute('value', this.value);"/>
+												ng-click="programac.abrirPopupFecha(1008)" ng-value="programac.prestamo.fechaSuscripcion" onblur="this.setAttribute('value', this.value);" 
+												ng-readonly="true"/>
 												<span class="label-icon" ng-click="programac.abrirPopupFecha(1008)">
 													<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -386,7 +389,8 @@
 										<div class="form-group">
 											<input type="text" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaVigencia" is-open="programac.fv_abierto"
 												datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-												ng-click="programac.abrirPopupFecha(1012)" ng-value="programac.prestamo.fechaVigencia" onblur="this.setAttribute('value', this.value);"/>
+												ng-click="programac.abrirPopupFecha(1012)" ng-value="programac.prestamo.fechaVigencia" onblur="this.setAttribute('value', this.value);"
+												ng-readonly="true"/>
 												<span class="label-icon" ng-click="programac.abrirPopupFecha(1012)">
 													<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -536,7 +540,8 @@
 									<div class="form-group">
 										<input type="text" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaElegibilidadUe" is-open="programac.fe_abierto"
 											datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="programac.setPorcentaje(5);"
-											ng-click="programac.abrirPopupFecha(1009)" ng-value="programac.prestamo.fechaElegibilidadUe" onblur="this.setAttribute('value', this.value);"/>
+											ng-click="programac.abrirPopupFecha(1009)" ng-value="programac.prestamo.fechaElegibilidadUe" onblur="this.setAttribute('value', this.value);"
+											ng-readonly="true"/>
 										<span class="label-icon" ng-click="programac.abrirPopupFecha(1009)">
 												<i class="glyphicon glyphicon-calendar"></i>
 										</span>
@@ -548,7 +553,8 @@
 									<div class="form-group">
 											<input type="text" class="inputText" uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaCierreOrigianlUe" is-open="programac.fco_abierto"
 												datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="programac.setPorcentaje(5);"
-												ng-click="programac.abrirPopupFecha(1010)" ng-value="programac.prestamo.fechaCierreOrigianlUe" onblur="this.setAttribute('value', this.value);"/>
+												ng-click="programac.abrirPopupFecha(1010)" ng-value="programac.prestamo.fechaCierreOrigianlUe" onblur="this.setAttribute('value', this.value);"
+												ng-readonly="true"/>
 											<span class="label-icon" ng-click="programac.abrirPopupFecha(1010)">
 													<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -561,7 +567,8 @@
 									<div class="form-group">
 											<input type="text" class="inputText"   uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaCierreActualUe" is-open="programac.fca_abierto"
 												datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="programac.setPorcentaje(5);"
-												ng-click="programac.abrirPopupFecha(1011)" ng-value="programac.prestamo.fechaCierreActualUe" onblur="this.setAttribute('value', this.value);"/>
+												ng-click="programac.abrirPopupFecha(1011)" ng-value="programac.prestamo.fechaCierreActualUe" onblur="this.setAttribute('value', this.value);"
+												ng-readonly="true"/>
 											<span class="label-icon" ng-click="programac.abrirPopupFecha(1011)">
 													<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -727,7 +734,8 @@
 							<div class="form-group">
 								<input type="text" class="inputText"  uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaFirma" is-open="programac.ff_abierto"
 									datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
-									ng-click="programac.abrirPopupFecha(1004)" ng-value="programac.prestamo.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
+									ng-click="programac.abrirPopupFecha(1004)" ng-value="programac.prestamo.fechaCorte" onblur="this.setAttribute('value', this.value);"
+									ng-readonly="true"/>
 								<span class="label-icon" ng-click="programac.abrirPopupFecha(1004)">
 									<i class="glyphicon glyphicon-calendar"></i>
 								</span>
@@ -741,7 +749,8 @@
 							<div class="form-group">
 								<input type="text" class="inputText"  uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaCorte" is-open="programac.fc_abierto"
 													datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
-													ng-click="programac.abrirPopupFecha(1003)" ng-value="programac.prestamo.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
+													ng-click="programac.abrirPopupFecha(1003)" ng-value="programac.prestamo.fechaCorte" onblur="this.setAttribute('value', this.value);"
+													ng-readonly="true"/>
 								<span class="label-icon" ng-click="programac.abrirPopupFecha(1003)">
 									<i class="glyphicon glyphicon-calendar"></i>
 								</span>
@@ -784,7 +793,8 @@
 							<div class="form-group">
 								<input type="text" class="inputText"  uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaAutorizacion" is-open="programac.fa_abierto"
 									datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
-									ng-click="programac.abrirPopupFecha(1005)" ng-value="programac.prestamo.fechaAutorizacion" onblur="this.setAttribute('value', this.value);"/>
+									ng-click="programac.abrirPopupFecha(1005)" ng-value="programac.prestamo.fechaAutorizacion" onblur="this.setAttribute('value', this.value);"
+									ng-readonly="true"/>
 								<span class="label-icon" ng-click="programac.abrirPopupFecha(1005)">
 									<i class="glyphicon glyphicon-calendar"></i>
 								</span>
@@ -795,7 +805,8 @@
 							<div class="form-group">
 								<input type="text" class="inputText"  uib-datepicker-popup="{{programac.formatofecha}}" ng-model="programac.prestamo.fechaFinEjecucion" is-open="programac.ffe_abierto"
 									datepicker-options="programac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
-									ng-click="programac.abrirPopupFecha(1006)" ng-value="programac.prestamo.fechaFinEjecucion" onblur="this.setAttribute('value', this.value);"/>
+									ng-click="programac.abrirPopupFecha(1006)" ng-value="programac.prestamo.fechaFinEjecucion" onblur="this.setAttribute('value', this.value);"
+									ng-readonly="true"/>
 								<span class="label-icon" ng-click="programac.abrirPopupFecha(1006)">
 									<i class="glyphicon glyphicon-calendar"></i>
 								</span>

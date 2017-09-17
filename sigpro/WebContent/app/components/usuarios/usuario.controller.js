@@ -111,7 +111,7 @@ app.controller(
 	mi.cargarTabla=function(pagina){
 		$http.post('/SUsuario',
 				{ accion : 'getUsuarios',  pagina: pagina, numeroUsuarios: mi.elementosPorPagina,filtro_usuario: mi.filtros['usuario'],filtro_email: mi.filtros['email'],
-			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'] }).success(function(data) {
+			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: (new Date()).getTime() }).success(function(data) {
 				mi.gridOptions.data =  data.usuarios;
 				mi.mostrarcargando=false;
 				
@@ -209,7 +209,9 @@ app.controller(
 									permisos:JSON.stringify(mi.nuevosPermisos),
 									prestamos:JSON.stringify(getIdsPrestamos(mi.prestamosAsignados)),
 									rol: mi.tipoUsuario.id,
-									esnuevo:true
+									esnuevo:true,
+									t: (new Date()).getTime()
+
 								}
 								).success(
 									function(data) {
@@ -234,17 +236,15 @@ app.controller(
 		}else{
 			if(mi.usuariosSelected.email!==""){
 				if(validarEmail(mi.usuariosSelected.email)){
-					if(usuarioMail===mi.usuariosSelected.email && passwordLocal=== mi.usuariosSelected.password && mi.prestamosNuevos.length==0){
-						if(mi.nuevosPermisos.length==0 && mi.permisosEliminados.length==0){
-							$utilidades.mensaje('danger','No se ha realizado ningún cambio.');
-
-						}else{
+					if(usuarioMail===mi.usuariosSelected.email && passwordLocal=== mi.usuariosSelected.password && mi.prestamosNuevos.length==0 && mi.prestamosEliminados.length==0){
+						
 							$http.post('/SUsuario',
 									{
 										accion: 'actualizarPermisos',
 										usuario:mi.usuariosSelected.usuario,
 										permisosNuevos:JSON.stringify(mi.nuevosPermisos),
-										permisosEliminados:JSON.stringify(mi.permisosEliminados)
+										permisosEliminados:JSON.stringify(mi.permisosEliminados),
+										t: (new Date()).getTime()
 									}).success(
 										function(data) {
 											if(data.success){
@@ -252,7 +252,7 @@ app.controller(
 												mi.nuevosPermisos=[];
 												mi.permisosEliminados=[];
 												if(mi.usuariosSelected.password!==passwordLocal){
-													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
+													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password, t: (new Date()).getTime()}).success(
 															function(response) {
 																if(response.success){
 																	 $utilidades.mensaje('success', 'cambio de contraseña Exitoso.');
@@ -265,7 +265,7 @@ app.controller(
 
 											}
 								});
-						}
+						
 
 					}else{
 						$http.post('/SUsuario',
@@ -281,10 +281,9 @@ app.controller(
 									function(data) {
 										if(data.success){
 											if(mi.nuevosPermisos.length==0 && mi.permisosEliminados.length==0){
-												mi.isCollapsed = false;
 												mi.cargarTabla(mi.paginaActual);
 												if(mi.usuariosSelected.password!==passwordLocal){
-													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
+													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password, t: (new Date()).getTime()}).success(
 															function(response) {
 																if(response.success){
 																	 $utilidades.mensaje('success', 'actualizacion de datos exitosa.');
@@ -293,21 +292,22 @@ app.controller(
 																}
 													});
 												}
-
+												$utilidades.mensaje('success', 'usuario guardado exitosamente.');
 											}else{
 												$http.post('/SUsuario',
 														{
 															accion: 'actualizarPermisos',
 															usuario:mi.usuariosSelected.usuario,
 															permisosNuevos:JSON.stringify(mi.nuevosPermisos),
-															permisosEliminados:JSON.stringify(mi.permisosEliminados)
+															permisosEliminados:JSON.stringify(mi.permisosEliminados),
+															t: (new Date()).getTime()
 														}).success(
 															function(data) {
 																if(data.success){
 																	mi.nuevosPermisos=[];
 																	mi.permisosEliminados=[];
 																	if(mi.usuariosSelected.password!==passwordLocal){
-																		$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password}).success(
+																		$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password, t: (new Date()).getTime()}).success(
 																				function(response) {
 																					if(response.success){
 																						mi.paginaActual=1;
@@ -334,17 +334,17 @@ app.controller(
 
 					}
 				}else{
-					$utilidades.mensaje('danger','correo electrónico no válido.');
+					$utilidades.mensaje('warning','correo electrónico no válido.');
 				}
 
 			}else{
-				$utilidades.mensaje('danger','Los campos no deben de quedar vacios.');
+				$utilidades.mensaje('warning','Los campos no deben de quedar vacios.');
 			}
 		}
     if(mi.colaboradorSeleccionado && mi.tipoUsuario.id==4 &&validarEmail(mi.usuariosSelected.email) ){
       mi.asignarColaborador();
     }
-
+    $utilidades.mensaje('success', 'usuario guardado exitosamente.');
   };
 
 
@@ -359,7 +359,8 @@ app.controller(
 				if(data){
 					$http.post('/SUsuario', {
 						accion: 'eliminarUsuario',
-						usuario: mi.usuariosSelected.usuario
+						usuario: mi.usuariosSelected.usuario,
+						t: (new Date()).getTime()
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Usuario elimiado con éxito');
@@ -374,7 +375,7 @@ app.controller(
 				
 			});
 		}else{
-		    $utilidades.mensaje('danger','Seleccione un usuario');
+		    $utilidades.mensaje('warning','Seleccione un usuario');
 		}
 	};
 	
@@ -411,7 +412,7 @@ app.controller(
 	    	   mi.cargandoPermisos=false;
 	    	});
 		}else{
-			$utilidades.mensaje('danger','Seleccione un usuario');
+			$utilidades.mensaje('warning','Seleccione un usuario');
 		}
 
 	};
@@ -506,7 +507,7 @@ app.controller(
 					if(resultadoSeleccion.rol.id!==6 && resultadoSeleccion.rol.id!==4){
 						mi.tipoUsuario.grupo=resultadoSeleccion.id;
 					}
-					$http.post('/SRol',{accion:'getPermisosPorRol',id:resultadoSeleccion.rol.id}).success(
+					$http.post('/SRol',{accion:'getPermisosPorRol',id:resultadoSeleccion.rol.id, t: (new Date()).getTime()}).success(
 							function(response){
 								mi.permisosAsignados=response.permisos;
 								mi.nuevosPermisos=response.ids;
@@ -579,7 +580,8 @@ app.controller(
 			var datos = {
 					accion : 'getPrestamosPorElemento',
 					id : id,
-					tipo:tipo
+					tipo:tipo,
+					t: (new Date()).getTime()
 				};
 			$http.post('/SUsuario', datos).then(
 					function(response) {
@@ -618,7 +620,8 @@ app.controller(
 					cui :  mi.colaborador.cui,
 					unidadEjecutora :  mi.colaborador.unidadEjecutora,
 					usuario : mi.usuariosSelected.usuario,
-					seleccion:mi.tipoUsuario.grupo
+					seleccion:mi.tipoUsuario.grupo,
+					t: (new Date()).getTime()
 				};
 
 				$http.post('/SColaborador', datos).then(
@@ -641,7 +644,7 @@ app.controller(
 	mi.filtrar = function(evt){
 		if(evt.keyCode==13){
 			$http.post('/SUsuario', { accion: 'getTotalUsuarios',	filtro_usuario: mi.filtros['usuario'],filtro_email: mi.filtros['email'],
-				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  }).success(
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'], t: (new Date()).getTime()  }).success(
 					function(response) {
 						mi.totalUsuarios  = response.totalUsuarios;
 						mi.cargarTabla(mi.paginaActual);
@@ -652,7 +655,7 @@ app.controller(
 	};
 
 	$http.post('/SUsuario', { accion: 'getTotalUsuarios', 	filtro_nombre: mi.filtros['nombre'],
-		filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],filtro_email:mi.filtros["email"]  }).success(
+		filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],filtro_email:mi.filtros["email"], t: (new Date()).getTime()  }).success(
 			function(response) {
 				mi.totalUsuarios = response.totalUsuarios;
 				mi.cargarTabla(mi.paginaActual);
@@ -671,7 +674,8 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 		mi.mostrarCargando = true;
 		if(infoPermisos.tipo===1){
 			$http.post('/SRol', {
-	    		accion:'getRoles'
+	    		accion:'getRoles',
+	    		t: (new Date()).getTime()
 	    	}).then(function(response) {
 	    	    if (response.data.success) {
 	    	    	mi.data = response.data.roles;
@@ -889,7 +893,8 @@ function modalBuscarColaborador($uibModalInstance, $scope, $http, $interval, i18
     var datos = {
 			accion : 'getColaboradores',
 			pagina :1,
-			registros : 100
+			registros : 100,
+			t: (new Date()).getTime()
 		};
 
 		mi.mostrarCargando = true;
@@ -986,6 +991,7 @@ function modalBuscarPrestamos($uibModalInstance, $scope, $http, $interval, i18nS
     }else if(infoUsuario.rol==6){
     	datos.id=infoUsuario.cooperante;
     }
+    datos.t= (new Date()).getTime();
     mi.mostrarCargando = true;
 	$http.post('/SUsuario', datos).then(function(response) {
 		if (response.data.success) {

@@ -261,7 +261,6 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				objetoivoEspecifico: mi.proyecto.objetivoEspecifico,
 				visionGeneral : mi.proyecto.visionGeneral,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
-				
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(
@@ -272,7 +271,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 						mi.proyecto.fechaCreacion = response.data.fechaCreacion;
 						mi.proyecto.usuarioactualizo = response.data.usuarioactualizo;
 						mi.proyecto.fechaactualizacion = response.data.fechaactualizacion;
-						mi.obtenerTotalProyectos();
+						
 						
 						if (mi.prestamo!=null && mi.prestamo.codigoPresupuestario !=null && mi.prestamo.codigoPresupuestario != ''){
 							var param_data = {
@@ -355,6 +354,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 												$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
 								});
 						} 
+						
+						mi.obtenerTotalProyectos();
 						mi.esNuevo = false;
 						
 						
@@ -418,7 +419,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.editar = function() {
 		if(mi.proyecto!=null && mi.proyecto.id!=null){
-			mi.prestamo = [];
+			
 			mi.esNuevoDocumento = false;
 			mi.poryectotipoid = mi.proyecto.proyectotipoid;
 			mi.proyectotiponombre=mi.proyecto.proyectotipo;
@@ -470,22 +471,19 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				    t:moment().unix()
 			}
 			
-			$http.post('/SPrestamo', parametros).then(function(response){
-				if (response.data.prestamo!=null){
-					mi.prestamo = response.data.prestamo;
-					mi.prestamo.fechaCorte = mi.prestamo.fechaCorte != undefined ?  moment(mi.prestamo.fechaCorte,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaFirma = mi.prestamo.fechaFirma != undefined ? moment (mi.prestamo.fechaFirma,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaAutorizacion = mi.prestamo.fechaAutorizacion != undefined ? moment(mi.prestamo.fechaAutorizacion,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaFinEjecucion = mi.prestamo.fechaFinEjecucion != undefined ? moment (mi.prestamo.fechaFinEjecucion,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaDecreto = mi.prestamo.fechaDecreto != undefined ? moment (mi.prestamo.fechaDecreto,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaSuscripcion = mi.prestamo.fechaSuscripcion != undefined ? moment(mi.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaElegibilidadUe = mi.prestamo.fechaElegibilidadUe != undefined ? moment(mi.prestamo.fechaElegibilidadUe,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaCierreOrigianlUe = mi.prestamo.fechaCierreOrigianlUe != undefined ? moment (mi.prestamo.fechaCierreOrigianlUe,'DD/MM/YYYY').toDate() : undefined; 
-					mi.prestamo.fechaCierreActualUe = mi.prestamo.fechaCierreActualUe != undefined ? moment (mi.prestamo.fechaCierreActualUe,'DD/MM/YYYY').toDate() : undefined;
-					mi.prestamo.fechaVigencia = mi.prestamo.fechaVigencia != undefined ? moment(mi.prestamo.fechaVigencia,'DD/MM/YYYY').toDate() : undefined;
-				}
-				
-			});
+			mi.prestamo = JSON.parse( JSON.stringify( mi.proyecto.prestamo ) ); 
+			mi.prestamo.fechaCorte = mi.prestamo.fechaCorte != undefined ?  moment(mi.prestamo.fechaCorte,'DD/MM/YYYY').toDate() : undefined;
+			mi.prestamo.fechaFirma = mi.prestamo.fechaFirma != undefined ? moment (mi.prestamo.fechaFirma,'DD/MM/YYYY').toDate() : undefined;
+			mi.prestamo.fechaAutorizacion = mi.prestamo.fechaAutorizacion != undefined ? moment(mi.prestamo.fechaAutorizacion,'DD/MM/YYYY').toDate() : undefined;
+			mi.prestamo.fechaFinEjecucion = mi.prestamo.fechaFinEjecucion != undefined ? moment (mi.prestamo.fechaFinEjecucion,'DD/MM/YYYY').toDate() : undefined;
+			mi.prestamo.fechaDecreto = mi.prestamo.fechaDecreto != undefined ? moment (mi.prestamo.fechaDecreto,'DD/MM/YYYY').toDate() : undefined;
+			mi.prestamo.fechaSuscripcion = mi.prestamo.fechaSuscripcion != undefined ? moment(mi.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate() : undefined;
+			mi.prestamo.fechaElegibilidadUe = mi.prestamo.fechaElegibilidadUe != undefined ? moment(mi.prestamo.fechaElegibilidadUe,'DD/MM/YYYY').toDate() : undefined;
+			mi.prestamo.fechaCierreOrigianlUe = mi.prestamo.fechaCierreOrigianlUe != undefined ? moment (mi.prestamo.fechaCierreOrigianlUe,'DD/MM/YYYY').toDate() : undefined; 
+			mi.prestamo.fechaCierreActualUe = mi.prestamo.fechaCierreActualUe != undefined ? moment (mi.prestamo.fechaCierreActualUe,'DD/MM/YYYY').toDate() : undefined;
+			mi.prestamo.fechaVigencia = mi.prestamo.fechaVigencia != undefined ? moment(mi.prestamo.fechaVigencia,'DD/MM/YYYY').toDate() : undefined;
+			
+			mi.getPorcentajes();
 			
 			parametros = {
 					accion: 'obtenerProyectosPorPrograma',
@@ -548,6 +546,9 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		formatData.append("accion","getDocumentos");
 		formatData.append("idObjeto", objetoId);
 		formatData.append("idTipoObjeto", tipoObjetoId);
+		formatData.append("t", moment().unix());
+		
+		
 		$http.post('/SDocumentosAdjuntos', formatData, {
 			headers: {'Content-Type': undefined},
 			transformRequest: angular.identity,
@@ -741,12 +742,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 
 	mi.buscarProyectoTipo = function() {
 		var resultado = mi.llamarModalBusqueda('Tipos de Préstamo','/SProyectoTipo', {
-			accion : 'numeroProyectoTipos'
+			accion : 'numeroProyectoTipos',t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getProyectoTipoPagina',
 				pagina : pagina,
-				numeroproyectotipo : elementosPorPagina
+				numeroproyectotipo : elementosPorPagina,
+				t:moment().unix()
 			};
 		},'id','nombre',false, null);
 
@@ -787,14 +789,15 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		var resultado = mi.llamarModalBusqueda('Unidades Ejecutoras','/SUnidadEjecutora', {
 			accion : 'totalElementos',
 			ejercicio: mi.ejercicio,
-			entidad: mi.entidad
+			entidad: mi.entidad ,t:moment().unix()
 		}, function(pagina, elementosPorPagina,ejercicio,entidad) {
 			return {
 				accion : 'cargar',
 				pagina : pagina,
 				ejercicio: ejercicio,
 				entidad: entidad,
-				registros : elementosPorPagina
+				registros : elementosPorPagina,
+				t:moment().unix()
 			};
 		},'unidadEjecutora','nombreUnidadEjecutora', true, {entidad: mi.entidad, ejercicio: mi.ejercicio, abreviatura:'', nombre: mi.entidadnombre});
 
@@ -814,7 +817,8 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			return {
 				accion : 'getCooperantesPagina',
 				pagina : pagina,
-				numerocooperantes : elementosPorPagina
+				numerocooperantes : elementosPorPagina,
+				t:moment().unix()
 			};
 		},'id','nombre', false, null);
 
@@ -891,12 +895,14 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		var resultado = mi.llamarModalBusqueda('Unidades Ejecutoras','/SUnidadEjecutora', {
 			accion : 'totalElementos',
 			ejercicio: mi.ejercicio,
-			entidad: mi.entidad
+			entidad: mi.entidad,
+			t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'cargar',
 				pagina : pagina,
-				registros : elementosPorPagina
+				registros : elementosPorPagina,
+				t:moment().unix()
 			};
 		},'unidadEjecutora','nombreUnidadEjecutora', true,{entidad: mi.entidad, ejercicio: mi.ejercicio, abreviatura:'', nombre: mi.entidadnombre});
 
@@ -912,12 +918,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.buscarAutorizacionTipo = function() {
 		
 		var resultado = mi.llamarModalBusqueda('Tipos de Autorizaciones','/SAutorizacionTipo', {
-			accion : 'numeroAutorizacionTipo'	
+			accion : 'numeroAutorizacionTipo' ,t:moment().unix()	
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getAutorizacionTipoPagin',
 				pagina : pagina,
-				numeroautorizaciontipo : elementosPorPagina
+				numeroautorizaciontipo : elementosPorPagina,
+				t:moment().unix()
 			};
 		},'id','nombre', false, null);
 
@@ -930,12 +937,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.buscarInteresTipo = function() {
 		
 		var resultado = mi.llamarModalBusqueda('Tipos de Interes','/SInteresTipo', {
-			accion : 'numeroInteresTipo'	
+			accion : 'numeroInteresTipo' ,t:moment().unix()	
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getAutorizacionTipoPagin',
 				pagina : pagina,
-				numerointerestipo : elementosPorPagina
+				numerointerestipo : elementosPorPagina,
+				t:moment().unix()
 			};
 		},'id','nombre', false, null);
 
@@ -948,12 +956,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.buscarTipoMoneda = function() {
 		
 		var resultado = mi.llamarModalBusqueda('Tipos de Moneda','/STipoMoneda', {
-			accion : 'numeroTipoMonedas'	
+			accion : 'numeroTipoMonedas',t:moment().unix()	
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getTipoMonedaPagina',
 				pagina : pagina,
 				numerotipomoneda : elementosPorPagina
+				,t:moment().unix()
 			};
 		},'id','nombre', false, null);
 
@@ -966,12 +975,13 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.buscarEstadoEjecucion = function() {
 		
 		var resultado = mi.llamarModalBusqueda('Estado de Ejecución','/SEjecucionEstado', {
-			accion : 'numeroEjecucionEstado'	
+			accion : 'numeroEjecucionEstado' ,t:moment().unix()	
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getEjecucionEstadoPagina',
 				pagina : pagina,
 				numeroejecucionestado : elementosPorPagina
+				,t:moment().unix()
 			};
 		},'id','nombre', false, null);
 
@@ -1045,6 +1055,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					accion : 'cargar',
 					pagina : pagina,
 					numerocooperantes : elementosPorPagina
+					,t:moment().unix()
 				};
 			},'id','nombreCompleto', false, null);
 
@@ -1096,6 +1107,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 					accion : 'cargar',
 					pagina : pagina,
 					numerocooperantes : elementosPorPagina
+					,t:moment().unix()
 				};
 			},'id','nombreCompleto',false, null);
 
@@ -1124,12 +1136,12 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 		
 		mi.buscarCodigoPresupuestario = function() {	
 			var resultado = mi.llamarModalBusqueda('Código Presupuestario','/SDataSigade', {
-				accion : 'totalElementos'	
+				accion : 'totalElementos',t:moment().unix()	
 			}, function(pagina, elementosPorPagina) {
 				return {
 					accion : 'getcodigos',
 					pagina : pagina,
-					registros : elementosPorPagina
+					registros : elementosPorPagina ,t:moment().unix()
 				};
 			},'codigopresupuestario','numeroprestamo', false, null);
 
@@ -1178,7 +1190,7 @@ function buscarPorProyecto($uibModalInstance, $rootScope,$scope, $http, $interva
 		for(var i=current_year-$rootScope.catalogo_entidades_anos; i<=current_year; i++)
 			mi.ejercicios.push(i);
 		mi.ejercicio = (mi.ejercicio == "") ? current_year : mi.ejercicio;
-		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
+		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio,t:moment().unix()}).success(function(response) {
 			mi.entidades = response.entidades;
 			if(mi.entidades.length>0){
 				mi.entidad = (mi.entidad===undefined) ? mi.entidades[0] : mi.entidad;
@@ -1253,7 +1265,7 @@ function buscarPorProyecto($uibModalInstance, $rootScope,$scope, $http, $interva
 	};
 
 	mi.cambioPagina = function() {
-		mi.cargarData(mi.paginaActual, mi.ejercicio, mi.entidad.entidad);
+		mi.cargarData(mi.paginaActual, mi.ejercicio, mi.entidad!= undefined ? mi.entidad.entidad : null);
 	}
 
 	mi.ok = function() {
@@ -1275,7 +1287,7 @@ function buscarPorProyecto($uibModalInstance, $rootScope,$scope, $http, $interva
 	mi.cambioEntidad=function(selected){
 		if(selected!==undefined){
 			mi.entidad = selected.originalObject;
-			$http.post('/SUnidadEjecutora', {accion:"totalElementos", ejercicio: mi.entidad.ejercicio,entidad: mi.entidad.entidad}).success(function(response) {
+			$http.post('/SUnidadEjecutora', {accion:"totalElementos", ejercicio: mi.entidad.ejercicio,entidad: mi.entidad.entidad,t:moment().unix()}).success(function(response) {
 				for ( var key in response) {
 					mi.totalElementos = response[key];
 				}
@@ -1375,6 +1387,8 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 			formatData.append("file",mi.archivos);  
 			formatData.append("accion",'importar');
 			formatData.append("multiproyecto",mi.multiproyecto ? 1 : 0);
+			formatData.append("t",moment().unix());
+			
 			$http.post('/SGantt',formatData, {
 					headers: {'Content-Type': undefined},
 					transformRequest: angular.identity
@@ -1439,12 +1453,13 @@ function modalAgregarImpacto($uibModalInstance, $scope, $http, $interval,
 
 	mi.buscarEntidad = function() {
 		var resultado = mi.llamarModalBusqueda('/SEntidad', {
-			accion : 'totalEntidades'
+			accion : 'totalEntidades',t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'cargar',
 				pagina : pagina,
 				registros : elementosPorPagina
+				,t:moment().unix()
 			};
 		},'entidad','nombre');
 		resultado.then(function(itemSeleccionado) {

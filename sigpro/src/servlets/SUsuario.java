@@ -203,7 +203,9 @@ public class SUsuario extends HttpServlet {
 						}
 					}
 					Integer rol = UsuarioDAO.getRolPorUsuario(usuario);
-					Integer unidadEjecutora = UsuarioDAO.getUnidadEjecutora(usuario).getId().getUnidadEjecutora();
+					Integer unidadEjecutora =0;
+					if(rol>0)
+						unidadEjecutora = UsuarioDAO.getUnidadEjecutora(usuario).getId().getUnidadEjecutora();
 					Integer cooperante = UsuarioDAO.getCooperantePorUsuario(usuario).getId();
 					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stpermisos);
 					String proyectos_usuarios= new GsonBuilder().serializeNulls().create().toJson(stproyectos);
@@ -355,7 +357,7 @@ public class SUsuario extends HttpServlet {
 								usuarioEdicion.setEmail(email);
 								HttpSession sesionweb = request.getSession();
 								String prestamosAsignados=map.get("prestamosNuevos");
-								
+								String prestamosEliminados= map.get("prestamosEliminados");
 								int rol = RolDAO.getRolUser(usuario).getId().getRol();
 								if(prestamosAsignados.compareTo("[]")!=0){
 									Gson entradaJson = new Gson();
@@ -363,6 +365,12 @@ public class SUsuario extends HttpServlet {
 									List<Integer> prestamos = entradaJson.fromJson(prestamosAsignados, tipo);
 									UsuarioDAO.asignarPrestamos(usuario, prestamos,usuario);
 									UsuarioDAO.asignarPrestamoRol(usuario, prestamos, rol);
+								}
+								if(prestamosEliminados.compareTo("[]")!=0){
+									Gson entradaJson = new Gson();
+									Type tipo = new TypeToken<List<Integer>>() {}.getType();
+									List<Integer> prestamos = entradaJson.fromJson(prestamosEliminados, tipo);
+									UsuarioDAO.desasignarPrestamo(usuario, prestamos);
 								}
 								if(UsuarioDAO.editarUsuario(usuarioEdicion, sesionweb.getAttribute("usuario").toString())){
 									response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualizaci�n de usuario exitosa.\" }");

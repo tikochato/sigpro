@@ -46,13 +46,13 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	
 	mi.coordenadas = "";
 	
-	$http.post('/SSubproducto', { accion: 'obtenerSubproductoPorId', id: $routeParams.subproducto_id }).success(
+	$http.post('/SSubproducto', { accion: 'obtenerSubproductoPorId', id: $routeParams.subproducto_id, t: (new Date()).getTime() }).success(
 			function(response) {
 				mi.subproductoid = response.id;
 				mi.subproductoNombre = response.nombre;				
 	});
 	
-	$http.post('/SProducto', { accion: 'obtenerProductoPorId', id: $routeParams.producto_id }).success(
+	$http.post('/SProducto', { accion: 'obtenerProductoPorId', id: $routeParams.producto_id , t: (new Date()).getTime()}).success(
 			function(response) {
 				mi.productoid = response.id;
 				mi.productoNombre = response.nombre;
@@ -99,7 +99,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 			filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuarioCreo'], 
 			filtro_fecha_creacion: mi.filtros['fechaCreacion'],
-			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion,
+			t: (new Date()).getTime()
 		};
 
 		mi.mostrarCargando = true;
@@ -260,7 +261,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				if(data){
 					var datos = {
 							accion : 'borrar',
-							codigo : mi.subproducto.id
+							codigo : mi.subproducto.id,
+							t: (new Date()).getTime()
 						};
 						$http.post('/SSubproducto', datos).success(
 								function(response) {
@@ -317,7 +319,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				duaracion: mi.subproducto.duracion,
 				duracionDimension: mi.duracionDimension.sigla,
 				latitud : mi.subproducto.latitud,
-				esnuevo : mi.esNuevo
+				esnuevo : mi.esNuevo,
+				t: (new Date()).getTime()
 			};
 
 			$http.post('/SSubproducto', datos).then(
@@ -380,7 +383,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 			var parametros = {
 					accion: 'getSubproductoPropiedadPorTipo', 
 					idsubproducto: mi.subproducto.id,
-					idsubproductotipo: mi.tipo
+					idsubproductotipo: mi.tipo,
+					t: (new Date()).getTime()
 			}
 			$http.post('/SSubproductoPropiedad', parametros).then(function(response){
 				mi.camposdinamicos = response.data.subproductopropiedades
@@ -428,7 +432,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	mi.obtenerTotalSubproductos = function(){
 		$http.post('/SSubproducto', { accion: 'totalElementos', productoid: $routeParams.producto_id,
 			filtro_nombre: mi.filtros['nombre'],
-			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'], t: (new Date()).getTime()  }).then(
 				function(response) {
 					mi.totalElementos = response.data.total;
 					mi.paginaActual = 1;
@@ -532,7 +536,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 			var parametros = { 
 				accion: 'getSubproductoPropiedadPorTipo', 
 				idsubproducto: mi.subproducto.id,
-				idsubproductotipo: itemSeleccionado.id
+				idsubproductotipo: itemSeleccionado.id,
+				t: (new Date()).getTime()
 			}
 			$http.post('/SSubproductoPropiedad', parametros).then(function(response){
 				mi.camposdinamicos = response.data.subproductopropiedades;
@@ -703,11 +708,12 @@ function modalBuscarPorSubproducto($uibModalInstance, $rootScope,$scope, $http, 
 		for(var i=current_year-$rootScope.catalogo_entidades_anos; i<=current_year; i++)
 			mi.ejercicios.push(i);
 		mi.ejercicio = (mi.ejercicio == "") ? current_year : mi.ejercicio;
-		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
+		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio, t: (new Date()).getTime()}).success(function(response) {
 			mi.entidades = response.entidades;
 			if(mi.entidades.length>0){
 				mi.entidad = (mi.entidad===undefined) ? mi.entidades[0] : mi.entidad;
 				$accionServlet.ejercicio = mi.ejercicio;
+				$accionServlet.t= (new Date()).getTime();
 				$accionServlet.entidad = mi.entidad.entidad;
 				$http.post($servlet, $accionServlet).success(function(response) {
 					for ( var key in response) {
@@ -719,6 +725,7 @@ function modalBuscarPorSubproducto($uibModalInstance, $rootScope,$scope, $http, 
 			
 		});
 	}else{
+		$accionServlet.t=(new Date()).getTime();
 		$http.post($servlet, $accionServlet).success(function(response) {
 			for ( var key in response) {
 				mi.totalElementos = response[key];
@@ -764,6 +771,7 @@ function modalBuscarPorSubproducto($uibModalInstance, $rootScope,$scope, $http, 
 
 	mi.cargarTabla = function(pagina, ejercicio, entidad) {
 		mi.mostrarCargando = true;
+		$servlet.t=(new Date()).getTime();
 		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina, entidad,ejercicio)).then(
 				function(response) {
 					if (response.data.success) {
@@ -801,7 +809,7 @@ function modalBuscarPorSubproducto($uibModalInstance, $rootScope,$scope, $http, 
 	mi.cambioEntidad= function(selected){
 		if(selected!==undefined){
 			mi.entidad = selected.originalObject;
-			$http.post('/SUnidadEjecutora', {accion:"totalElementos", ejercicio: mi.entidad.ejercicio,entidad: mi.entidad.entidad}).success(function(response) {
+			$http.post('/SUnidadEjecutora', {accion:"totalElementos", ejercicio: mi.entidad.ejercicio,entidad: mi.entidad.entidad, t: (new Date()).getTime()}).success(function(response) {
 				for ( var key in response) {
 					mi.totalElementos = response[key];
 				}

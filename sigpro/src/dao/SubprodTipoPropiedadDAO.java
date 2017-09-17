@@ -198,7 +198,7 @@ public class SubprodTipoPropiedadDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			Query<SubprodtipoPropiedad> criteria = session.createQuery(
-					"SELECT e FROM SubprodtipoPropiedad e where e.id.productoTipoid = :id", SubprodtipoPropiedad.class);
+					"SELECT e FROM SubprodtipoPropiedad e where e.id.subproductoTipoid = :id", SubprodtipoPropiedad.class);
 			criteria.setParameter("id", codigoTipo);
 			ret = criteria.getResultList();
 		} catch (Throwable e) {
@@ -229,7 +229,7 @@ public class SubprodTipoPropiedadDAO {
 			listaEstructuraPojos.add(estructuraPojo);
 		}
 
-		jsonEntidades = Utils.getJSonString("productoTipos", listaEstructuraPojos);
+		jsonEntidades = Utils.getJSonString("subproductoTipos", listaEstructuraPojos);
 
 		return jsonEntidades;
 	}
