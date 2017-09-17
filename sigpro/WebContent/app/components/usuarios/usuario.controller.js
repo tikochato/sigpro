@@ -54,6 +54,7 @@ app.controller(
 	mi.tieneColaborador=false;
 	mi.edicionPermisos=false;
 	mi.filtros=[];
+	var check_mess=false;
 	mi.tipoUsuario={id:"",nombre:"",grupo:""};
 	mi.nombreUnidadEjecutora="";
 	mi.nombreCooperante="";
@@ -218,9 +219,11 @@ app.controller(
 										if(data.success){
 											mi.paginaActual=1;
 											$utilidades.mensaje('success','Usuario creado exitosamente!');
+											check_mess=true;
 											mi.cargarTabla(mi.paginaActual);
 											mi.nuevosPermisos=[];
 											mi.esNuevo=false;
+											mi.tipoUsuarioRol=mi.tipoUsuario.nombre;
 										}
 							});
 					}else{
@@ -292,7 +295,10 @@ app.controller(
 																}
 													});
 												}
-												$utilidades.mensaje('success', 'usuario guardado exitosamente.');
+												if(!check_mess){
+													$utilidades.mensaje('success', 'Usuario creado exitosamente.');
+												}
+												
 											}else{
 												$http.post('/SUsuario',
 														{
@@ -344,7 +350,10 @@ app.controller(
     if(mi.colaboradorSeleccionado && mi.tipoUsuario.id==4 &&validarEmail(mi.usuariosSelected.email) ){
       mi.asignarColaborador();
     }
-    $utilidades.mensaje('success', 'usuario guardado exitosamente.');
+    if(!check_mess){
+
+        $utilidades.mensaje('success', 'Usuario creado exitosamente.');
+    }
   };
 
 
