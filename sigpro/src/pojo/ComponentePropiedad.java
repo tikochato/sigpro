@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -36,19 +36,17 @@ public class ComponentePropiedad implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private Integer estado;
 	private Set<CtipoPropiedad> ctipoPropiedads = new HashSet<CtipoPropiedad>(0);
 	private Set<ComponentePropiedadValor> componentePropiedadValors = new HashSet<ComponentePropiedadValor>(0);
 
 	public ComponentePropiedad() {
 	}
 
-	public ComponentePropiedad(DatoTipo datoTipo, String nombre, String usuarioCreo, Date fechaCreacion, Integer estado) {
+	public ComponentePropiedad(DatoTipo datoTipo, String nombre, String usuarioCreo, Date fechaCreacion) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
-		this.estado = estado;
 	}
 
 	public ComponentePropiedad(DatoTipo datoTipo, String nombre, String descripcion, String usuarioCreo,
@@ -160,13 +158,5 @@ public class ComponentePropiedad implements java.io.Serializable {
 	public void setComponentePropiedadValors(Set<ComponentePropiedadValor> componentePropiedadValors) {
 		this.componentePropiedadValors = componentePropiedadValors;
 	}
-	
-	@Column(name = "estado", nullable = false)
-	public int getEstado() {
-		return this.estado;
-	}
 
-	public void setEstado(int estado) {
-		this.estado = estado;
-	}
 }
