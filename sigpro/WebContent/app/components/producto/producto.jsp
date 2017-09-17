@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="org.apache.shiro.SecurityUtils"%>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
-<div ng-controller="controlProducto as producto" class="maincontainer all_page">
+<div ng-controller="controlProducto as producto" ng-class=" producto.esTreeview ? 'maincontainer_treeview all_page' : 'maincontainer all_page'">
 	
 	<script type="text/ng-template" id="map.html">
         <div class="modal-header">
@@ -25,17 +25,17 @@
 		<p ng-init="producto.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
 
-	<div class="panel panel-default">
+	<div class="panel panel-default" ng-if="!producto.esTreeview">
 		<div class="panel-heading">
 			<h3>Producto</h3>
 		</div>
 	</div>
-		<div class="subtitulo">
-			{{ producto.objetoTipoNombre }} {{ producto.componenteNombre }}
+		<div class="subtitulo" ng-if="!producto.esTreeview">
+			{{ producto.objetoTipoNombre }}: {{ producto.componenteNombre }}
 		</div>
 	
   
-	<div align="center" ng-hide="producto.esForma">
+	<div align="center" ng-hide="producto.esForma" ng-if="!producto.esTreeview">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="21040">
@@ -91,13 +91,13 @@
 
 	</div>
 
-	<div ng-show="producto.esForma" class="row second-main-form">
+	<div ng-show="producto.esForma || producto.esTreeview" class="row second-main-form">
 		<div class="page-header">
 			<h2 ng-hide="!producto.esNuevo"><small>Nuevo Producto</small></h2>
 			<h2 ng-hide="producto.esNuevo"><small>Edición de Producto</small></h2>
 		</div>
 		<div class="operation_buttons" >
-			<div class="btn-group" ng-hide="producto.esNuevo">
+			<div class="btn-group" ng-hide="producto.esNuevo" ng-if="!producto.esTreeview">
 				<label class="btn btn-default" ng-click="producto.irASubproductos()" uib-tooltip="Subproductos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-link"></span></label>
 				<label class="btn btn-default" ng-click="producto.irAActividades()" uib-tooltip="Actividades" tooltip-placement="bottom">
@@ -112,8 +112,10 @@
 					<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="producto.cancelar()" uib-tooltip="Ir a Tabla">
+				<label ng-if="!producto.esTreeview" class="btn btn-primary" ng-click="producto.cancelar()" uib-tooltip="Ir a Tabla">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+				<label ng-if="producto.esTreeview" class="btn btn-danger" ng-click="producto.t_borrar()" ng-disabled="!(producto.producto.id>0)" uib-tooltip="Borrar">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
 		<div>
@@ -351,8 +353,10 @@
 					<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="producto.cancelar()" uib-tooltip="Ir a Tabla">
+				<label ng-if="!producto.esTreeview" class="btn btn-primary" ng-click="producto.cancelar()" uib-tooltip="Ir a Tabla">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+				<label ng-if="producto.esTreeview" class="btn btn-danger" ng-click="producto.t_borrar()" ng-disabled="!(producto.producto.id>0)" uib-tooltip="Borrar">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
 	</div>

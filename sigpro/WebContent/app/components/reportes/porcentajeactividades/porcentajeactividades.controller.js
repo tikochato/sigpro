@@ -14,7 +14,7 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 		mi.componentes = [];
 		mi.productos = [];
 		mi.mostrarcargando=false;
-		
+		mi.mostrar = false;
 		var KanbanBoard = DlhSoft.Controls.KanbanBoard;
 		
 		mi.tObjetos = [
@@ -50,6 +50,7 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 				mi.resetKanban();
 				mi.getComponentes();
 			}
+			mi.refrescar();
 		}
 		
 		mi.getComponentes = function(){
@@ -86,6 +87,8 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 							}
 						});
 			}
+			
+			mi.refrescar();
 		}
 		
 		mi.refrescar = function(){
@@ -105,6 +108,7 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 			case 5:
 				break;
 			}
+			mi.mostrar = true;
 		};
 		
 		mi.resetKanban = function(){
@@ -126,13 +130,13 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 					proyecto_id:$routeParams.proyectoId
 				}
 				ejecutar = true;
-			}if(mi.tObjeto.value == 2 && mi.componente.value != 0){
+			}if(mi.tObjeto.value == 2 && mi.componente!= undefined && mi.componente.value != 0){
 				param_data = {
 					accion : "getKanbanComponente", 
 					componente_id : mi.componente.value
 				}
 				ejecutar = true;
-			} else if(mi.tObjeto.value == 3 && mi.componente.value != 0 && mi.producto.value != 0){
+			} else if(mi.tObjeto.value == 3 && mi.componente != undefined && mi.componente.value != 0 && mi.producto.value != 0){
 				param_data = {
 					accion : "getKanbanProducto", 
 					producto_id : mi.producto.value
@@ -167,7 +171,9 @@ app.controller('porcentajeactividadesController',['$scope','$http','$interval','
 					});	
 			}
 		}
+		mi.refrescar();
 		mi.mostrarcargando=false;
+		
 	}
 ]);
 

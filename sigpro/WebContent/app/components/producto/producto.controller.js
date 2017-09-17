@@ -2,16 +2,18 @@ var moduloProducto = angular.module('moduloProducto', [ 'ngTouch',
 		'smart-table']);
 
 moduloProducto.controller('controlProducto', [ '$scope', '$routeParams',
-		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',
+		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http', '$rootScope',
 		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'dialogoConfirmacion', 
 		controlProducto ]);
 
 function controlProducto($scope, $routeParams, $route, $window, $location,
-		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
+		$mdDialog, $uibModal, $http, $rootScope, $interval, i18nService, $utilidades,
 		$timeout, $log, $q, $dialogoConfirmacion) {
 	var mi = this;  
 	i18nService.setCurrentLang('es');
 	$window.document.title = $utilidades.sistema_nombre+' - Producto';
+	
+	mi.esTreeview = $rootScope.treeview;
 	    
 	mi.componenteid = $routeParams.componente_id;
 	mi.esForma = false;
@@ -83,7 +85,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	}
 
 	
-	mi.mostrarCargando = true;
+	mi.mostrarCargando = (mi.esTreeview) ? false : true;
 	mi.data = [];
 	mi.cargarTabla = function(pagina) {
 		var datos = {
@@ -311,7 +313,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				obra: mi.producto.obra,
 				renglon: mi.producto.renglon,
 				ubicacionGeografica: mi.producto.ubicacionGeografica,
-				componente : $routeParams.componente_id,
+				componente : mi.componenteid,
 				productoPadre : mi.productoPadre,
 				tipoproductoid : mi.tipo,
 				unidadEjecutora : mi.unidadEjecutora,
@@ -681,6 +683,55 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	    }, function() {
 		});
 	  };
+	  
+	  if(mi.esTreeview){
+		  $http.post('/SProducto', { accion : 'getProductoPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
+					if (response.data.success) {
+						mi.producto = response.data.producto;
+						if(mi.producto.fechaInicio != "")
+							mi.producto.fechaInicio = moment(mi.producto.fechaInicio, 'DD/MM/YYYY').toDate();
+						if(mi.producto.fechaFin != "")
+							mi.producto.fechaFin = moment(mi.producto.fechaFin, 'DD/MM/YYYY').toDate();
+						mi.editar();
+					}
+				});
+	  }
+	  
+	  mi.t_borrar = function(ev) {
+			if (mi.producto!=null && mi.producto.id!=null) {
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el producto "' + mi.producto.nombre + '"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						/*var datos = {
+								accion : 'borrar',
+								codigo : mi.producto.id,
+								t: (new Date()).getTime()
+							};
+							$http.post('/SProducto', datos).success(
+									function(response) {
+										if (response.success) {
+											
+											$utilidades.mensaje('success','Producto borrado con éxito');
+											mi.producto = null;			
+										} else{
+											$utilidades.mensaje('danger',
+													'Error al borrar el Producto');
+										}
+									});*/
+						$rootScope.$emit("eliminarNodo", {});
+					}
+				}, function(){
+					
+				});
+			} else {
+				$utilidades.mensaje('warning',
+						'Debe seleccionar el producto que desee borrar');
+			}
+		};
 	  
 }
 

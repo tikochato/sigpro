@@ -11,21 +11,30 @@
 		<div class="panel panel-default">
 	  		<div class="panel-heading"><h3>Matriz de Riesgos</h3></div>
 		</div>
-		<div class="subtitulo">
-			{{ matrizriesgoc.objetoTipoNombre }} {{ matrizriesgoc.proyectoNombre }}
+		
+		
+		<div class="row">
+			<div class="form-group col-sm-6">
+				<select  class="inputText" ng-model="matrizriesgoc.proyectoId"
+					ng-options="a.text for a in matrizriesgoc.prestamos"
+					ng-change="matrizriesgoc.cargarMatriz()"></select>
+			</div>
 		</div>
 			
 		
 		<div class="row" align="center" >
 			<br>
+			<div class="col-sm-12 " ng-hide="!matrizriesgoc.mostrarTabla">
 			<div class="operation_buttons" align="right">
-					<div class="btn-group">
-						<label class="btn btn-primary" ng-click="matrizriesgoc.exportarExcel()" uib-tooltip="Exportar">
-						<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span> Exportar</label>
+					<div class="btn-group">		
+						<label class="btn btn-default" ng-click="matrizriesgoc.exportarExcel()" uib-tooltip="Exportar" >
+						<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
 					</div>
 			</div>
-			<div class="col-sm-12 ">
-				<table st-table="matrizriesgoc.riesgos" st-safe-src="matrizriesgoc.lista" class="table table-condensed table-hover" >
+			</div>
+			<div class="col-sm-12 " ng-hide="!matrizriesgoc.mostrarTabla">
+				<table st-table="matrizriesgoc.riesgos" st-safe-src="matrizriesgoc.lista" class="table table-condensed table-hover"
+				ng-hide="!matrizriesgoc.mostrarTabla" >
 					<thead>
 						<tr>
 							<th class="label-form">Riesgo</th>

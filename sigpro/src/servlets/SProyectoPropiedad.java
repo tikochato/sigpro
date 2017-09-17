@@ -131,7 +131,8 @@ public class SProyectoPropiedad extends HttpServlet {
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			String idsPropiedades = map.get("idspropiedades")!=null ? map.get("idspropiedades").toString()   : "0";
 			int numeroProyectoPropiedad = map.get("numeroproyectopropiedad")!=null  ? Integer.parseInt(map.get("numeroproyectopropiedad")) : 0;
-			List<ProyectoPropiedad> proyectopropiedades = ProyectoPropiedadDAO.getProyectoPropiedadPaginaTotalDisponibles(pagina, numeroProyectoPropiedad,idsPropiedades);
+			int numeroElementos = Utils.String2Int("numeroElementos",9);
+			List<ProyectoPropiedad> proyectopropiedades = ProyectoPropiedadDAO.getProyectoPropiedadPaginaTotalDisponibles(pagina, numeroProyectoPropiedad,idsPropiedades,numeroElementos);
 			List<stproyectopropiedad> stproyectopropiedad=new ArrayList<stproyectopropiedad>();
 			for(ProyectoPropiedad proyectopropiedad:proyectopropiedades){
 				stproyectopropiedad temp =new stproyectopropiedad();

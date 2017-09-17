@@ -36,21 +36,23 @@ public class ComponentePropiedad implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
+	private int estado;
 	private Set<CtipoPropiedad> ctipoPropiedads = new HashSet<CtipoPropiedad>(0);
 	private Set<ComponentePropiedadValor> componentePropiedadValors = new HashSet<ComponentePropiedadValor>(0);
 
 	public ComponentePropiedad() {
 	}
 
-	public ComponentePropiedad(DatoTipo datoTipo, String nombre, String usuarioCreo, Date fechaCreacion) {
+	public ComponentePropiedad(DatoTipo datoTipo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
+		this.estado = estado;
 	}
 
 	public ComponentePropiedad(DatoTipo datoTipo, String nombre, String descripcion, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Set<CtipoPropiedad> ctipoPropiedads,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Set<CtipoPropiedad> ctipoPropiedads,
 			Set<ComponentePropiedadValor> componentePropiedadValors) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
@@ -139,6 +141,15 @@ public class ComponentePropiedad implements java.io.Serializable {
 
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
+	}
+	
+	@Column(name = "estado", nullable = false)
+	public int getEstado() {
+		return this.estado;
+	}
+
+	public void setEstado(int estado) {
+		this.estado = estado;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componentePropiedad")

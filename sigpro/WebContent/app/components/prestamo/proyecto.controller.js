@@ -1011,12 +1011,17 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	    });
 
 	    modalInstance.result.then(function(coordenadas) {
-	    	if (coordenadas !=null){
+	    	if (coordenadas !=undefined){
 		    	mi.coordenadas = coordenadas.latitude + ", " + coordenadas.longitude;
 		    	mi.proyecto.latitud= coordenadas.latitude;
 				mi.proyecto.longitud = coordenadas.longitude;
+	    	}else{
+	    		mi.coordenadas = "";
+		    	mi.proyecto.latitud= null
+				mi.proyecto.longitud = null;
 	    	}
 	    }, function() {
+	    	
 		});
 	  };
 	  
@@ -1329,6 +1334,11 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 
 	  $scope.ok = function () {
 		  $uibModalInstance.close($scope.posicion);
+	  };
+	  
+	  $scope.cancel = function () {
+		  $uibModalInstance.close(undefined);
+		  
 	  };
 }]);
 
