@@ -387,6 +387,7 @@ app.controller(
 		mi.edicionPermisos=true;
 	};
 	mi.editarUsuario=function(){
+		mi.tipoUsuarioRol="";
 		if(mi.usuariosSelected.usuario!==""){
 			mi.isCollapsed = true;
 			mi.esNuevo=false;
@@ -394,6 +395,7 @@ app.controller(
 			if(mi.usuariosSelected.colaborador!=null){
 				mi.tieneColaborador=true;
 			}
+			mi.tipoUsuarioRol=mi.getTipoRol(mi.usuariosSelected.rol)
 			mi.cargandoPermisos= true;
 			mi.permisosAsignados=[];
 			mi.prestamosAsignados=[];
@@ -607,7 +609,30 @@ app.controller(
 			mi.prestamosAsignados.splice(index,1);
 		}
 	};
-	
+	mi.getTipoRol=function(input){
+		var ret="";
+		switch(input) {
+		    case 1:
+		        ret= "Superadministador";
+		        break;
+		    case 2:
+		    	 ret= "Administrador";
+		        break;
+		    case 3:
+		    	 ret= "DCP";
+		        break;
+		    case 4:
+		    	ret= "Unidad Ejecutora";
+		        break;
+		    case 5:
+		    	ret= "Planificador";
+		        break;
+		    case 6:
+		    	ret= "Cooperante";
+		        break;
+		}
+		return ret;
+	}
 	mi.asignarColaborador= function(){
 		if(mi.colaboradorSeleccionado){
 			var datos = {

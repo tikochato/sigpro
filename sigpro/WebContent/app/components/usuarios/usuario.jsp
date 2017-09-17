@@ -106,11 +106,17 @@
     							ng-value="usuarioc.usuariosSelected.email" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">* Correo electrónico</label>
 						</div>
+						
 						<input type="password" class="inputText" id="passFake" autocomplete="off" ng-hide="true">
 						<div class="form-group" ng-show="!usuarioc.esNuevo">
     						<input type="password" class="inputText" id="pass" ng-model="usuarioc.usuariosSelected.password" ng-required="true"
     							ng-value="usuarioc.usuariosSelected.password" onblur="this.setAttribute('value', this.value);" autocomplete="off">
-    						<label class="floating-label">* Contraseña</label>
+    						<label class="floating-label">* Contraseña--</label>
+						</div>
+						<div class="form-group"  ng-show="!usuarioc.esNuevo">
+						          <input type="text" class="inputText" ng-model="usuarioc.tipoUsuarioRol"  
+						          		ng-value="usuarioc.tipoUsuarioRol" onblur="this.setAttribute('value', this.value);" readonly >						          
+						          <label class="floating-label" >* Tipo de Usuario</label>
 						</div>
 						<br>
 						<h3 ng-show="!usuarioc.esNuevo">Préstamos Asignados</h3>
@@ -200,7 +206,7 @@
 						          <input type="text" class="inputText" ng-model="usuarioc.nombreUnidadEjecutora" 
 						          		ng-value="usuarioc.nombreUnidadEjecutora" 
 						          		 readonly>
-						          <label class="floating-label" >UnidadEjecutora</label>
+						          <label class="floating-label" >Unidad Ejecutora</label>
 						    </div>
 						    <div class="form-group col-sm-12" ng-show="usuarioc.tipoUsuario.id==6">
 						          <input type="text" class="inputText" ng-model="usuarioc.nombreCooperante"    ng-click="usuarioc.buscarPermiso(3)"
