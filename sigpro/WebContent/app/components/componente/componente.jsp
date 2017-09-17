@@ -162,11 +162,11 @@
 										</td>
 										<td style="width: 14%; padding-right:5px;">
 											<input type="number" class="inputText" ng-model="componentec.componente.renglon" ng-value="componentec.componente.renglon" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
-							  				<label for="fuente" class="floating-label">Renglon</label>
+							  				<label for="fuente" class="floating-label">Renglón</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
 											<input type="number" class="inputText" ng-model="componentec.componente.ubicacionGeografica" ng-value="componentec.componente.ubicacionGeografica" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
-							  				<label for="fuente" class="floating-label">Ubicación Geográfica</label>
+							  				<label for="fuente" class="floating-label">Geográfico</label>
 										</td>
 									</tr>
 								</table>
@@ -265,7 +265,7 @@
 						    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="componentec.componente.acumulacionCostoNombre" ng-value="componentec.componente.acumulacionCostoNombre" 
 							ng-click="componentec.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="componentec.componente.costo > 0"/>
 							<span class="label-icon" ng-click="componentec.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
-							<label for="campo3" class="floating-label">{{componentec.componente.costo != null ? "* Acumulación Costo" : "Acumulación Costo"}} </label>
+							<label for="campo3" class="floating-label">{{componentec.componente.costo != null ? "* Tipo de acumulación de costo" : "Tipo de acumulación de costo"}} </label>
 						</div>
 						
 						<div class = "row">
