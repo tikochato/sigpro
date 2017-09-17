@@ -403,7 +403,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		}
 		
 		mi.buscarAcumulacionCosto = function(){
-			var resultado = mi.llamarModalBusqueda('Acumulación','/SAcumulacionCosto', {
+			var resultado = mi.llamarModalBusquedaAcumulacion('Tipo de acumulación del costo','/SAcumulacionCosto', {
 				accion : 'numeroAcumulacionCosto' 
 			}, function(pagina, elementosPorPagina){
 				return{
@@ -418,6 +418,52 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				mi.componente.acumulacionCostoId = itemSeleccionado.id;
 			});
 		}
+		
+		mi.llamarModalBusquedaAcumulacion = function(titulo,servlet, accionServlet, datosCarga,columnaId,
+				columnaNombre, showfilters,entidad) {
+			var resultado = $q.defer();
+			var modalInstance = $uibModal.open({
+				animation : 'true',
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				templateUrl : 'buscarAcumulacionCosto.jsp',
+				controller : 'buscarPorComponente',
+				controllerAs : 'modalBuscar',
+				backdrop : 'static',
+				size : 'md',
+				resolve : {
+					$titulo : function() {
+						return titulo;
+					},
+					$servlet : function() {
+						return servlet;
+					},
+					$accionServlet : function() {
+						return accionServlet;
+					},
+					$datosCarga : function() {
+						return datosCarga;
+					},
+					$columnaId : function() {
+						return columnaId;
+					},
+					$columnaNombre : function() {
+						return columnaNombre;
+					},
+					$showfilters: function(){
+						return showfilters;
+					},
+					$entidad: function(){
+						return entidad;
+					}
+				}
+			});
+
+			modalInstance.result.then(function(itemSeleccionado) {
+				resultado.resolve(itemSeleccionado);
+			});
+			return resultado.promise;
+		};
 
 		mi.llamarModalBusqueda = function(titulo,servlet, accionServlet, datosCarga,columnaId,
 				columnaNombre, showfilters,entidad) {
@@ -551,10 +597,14 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		    });
 
 		    modalInstance.result.then(function(coordenadas) {
-		    	if (coordenadas !=null){
+		    	if (coordenadas !=null && coordenadas != ""){
 			    	mi.coordenadas = coordenadas.latitude + ", " + coordenadas.longitude;
 			    	mi.componente.latitud= coordenadas.latitude;
 					mi.componente.longitud = coordenadas.longitude;
+		    	}else{
+		    		mi.coordenadas = null;
+		    		mi.componente.latitud = null;
+		    		mi.componente.longitud = null;
 		    	}
 		    }, function() {
 			});
@@ -684,6 +734,10 @@ function buscarPorComponente($uibModalInstance, $rootScope, $scope, $http, $inte
 			$utilidades.mensaje('warning', 'Debe seleccionar una fila');
 		}
 	};
+	
+	mi.borrar = function(){
+		$uibModalInstance.close("");	
+	}
 
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
@@ -736,6 +790,10 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 
 	  $scope.ok = function () {
 		  $uibModalInstance.close($scope.posicion);
+	  };
+	  
+	  $scope.borrar = function () {
+		  $uibModalInstance.close(null);
 	  };
 }]);
 

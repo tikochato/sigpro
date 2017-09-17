@@ -12,7 +12,7 @@ app.factory('dialogoConfirmacion',['$mdDialog','$uibModal', '$http',
 			    templateUrl : '/app/components/dialogoconfirmacion/dialogoConfirmacion.jsp',
 			    controller: 'dialogoConfirmacionController',
 			    controllerAs: 'dialogoCtrl',
-			    size : 'sm',
+			    size : 'md',
 			    backdrop : 'static',
 			    scope: $scope,
 			    resolve : {

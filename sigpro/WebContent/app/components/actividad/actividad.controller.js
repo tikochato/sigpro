@@ -477,7 +477,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		}
 		
 		mi.buscarAcumulacionCosto = function(){
-			var resultado = mi.llamarModalBusqueda('/SAcumulacionCosto', {
+			var resultado = mi.llamarModalBusquedaAcumulacion('/SAcumulacionCosto', {
 				accion : 'numeroAcumulacionCosto' 
 			}, function(pagina, elementosPorPagina){
 				return{
@@ -492,6 +492,50 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				mi.actividad.acumulacionCostoId = itemSeleccionado.id;
 			});
 		}
+		
+		mi.llamarModalBusquedaAcumulacion = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre,idResponsables, idRoles) {
+			var resultado = $q.defer();
+			var modalInstance = $uibModal.open({
+				animation : 'true',
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				templateUrl : 'buscarAcumulacionCosto.jsp',
+				controller : 'modalBuscar',
+				controllerAs : 'modalBuscar',
+				backdrop : 'static',
+				size : 'md',
+				resolve : {
+					$servlet : function() {
+						return servlet;
+					},
+					$accionServlet : function() {
+						return accionServlet;
+					},
+					$datosCarga : function() {
+						return datosCarga;
+					},
+					$columnaId : function() {
+						return columnaId;
+					},
+					$columnaNombre : function() {
+						return columnaNombre;
+					},
+					$idResponsables : function() {
+						return idResponsables;
+					},
+					$idRoles : function() {
+						return idRoles;
+					}
+					
+				}
+			});
+
+			modalInstance.result.then(function(itemSeleccionado) {
+				resultado.resolve(itemSeleccionado);
+			});
+			return resultado.promise;
+		};
+
 		
 		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre,idResponsables, idRoles) {
 			var resultado = $q.defer();
@@ -613,10 +657,14 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 	    });
 
 	    modalInstance.result.then(function(coordenadas) {
-	    	if (coordenadas !=null){
+	    	if (coordenadas !=null && coordenadas != ""){
 		    	mi.coordenadas = coordenadas.latitude + ", " + coordenadas.longitude;
 		    	mi.actividad.latitud= coordenadas.latitude;
 				mi.actividad.longitud = coordenadas.longitude;
+	    	}else{
+	    		mi.coordenadas = null;
+	    		mi.actividad.latitud = null;
+	    		mi.actividad.longitud = null;
 	    	}
 	    }, function() {
 		});
@@ -772,6 +820,10 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 	  $scope.ok = function () {
 		  $uibModalInstance.close($scope.posicion);
 	  };
+	  
+	  $scope.borrar = function () {
+		  $uibModalInstance.close(null);
+	  };
 }]);
 
 
@@ -867,6 +919,10 @@ function modalBuscar($uibModalInstance, $scope, $http, $interval,
 
 	mi.cambioPagina = function() {
 		mi.cargarData(mi.paginaActual);
+	}
+	
+	mi.borrar = function(){
+		$uibModalInstance.close("");	
 	}
 
 	mi.ok = function() {

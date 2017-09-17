@@ -183,7 +183,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 								if(response.success){
 									$utilidades.mensaje('success','Desembolso borrado con éxito');
 									mi.desembolso = null;
-									mi.cargarTabla();
+									mi.obtenerTotalDesembolsos();
 								}
 								else
 									$utilidades.mensaje('danger','Error al borrar el Desembolso');
