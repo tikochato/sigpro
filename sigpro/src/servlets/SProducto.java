@@ -472,8 +472,8 @@ public class SProducto extends HttpServlet {
 				temp.longitud = producto.getLongitud();
 				temp.peso = producto.getPeso();
 				temp.costo = producto.getCosto();
-				temp.acumulacionCostoId = producto.getAcumulacionCosto().getId();
-				temp.acumulacionCostoNombre = producto.getAcumulacionCosto().getNombre();
+				temp.acumulacionCostoId = producto.getAcumulacionCosto()!= null ? producto.getAcumulacionCosto().getId(): null;
+				temp.acumulacionCostoNombre = producto.getAcumulacionCosto()!= null ? producto.getAcumulacionCosto().getNombre() : null;
 				temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
 				temp.fechaFin = Utils.formatDate(producto.getFechaFin());
 				temp.duracion = producto.getDuracion();
@@ -541,8 +541,8 @@ public class SProducto extends HttpServlet {
 				temp.longitud = producto.getLongitud();
 				temp.peso = producto.getPeso();
 				temp.costo = producto.getCosto();
-				temp.acumulacionCostoId = producto.getAcumulacionCosto().getId();
-				temp.acumulacionCostoNombre = producto.getAcumulacionCosto().getNombre();
+				temp.acumulacionCostoId = producto.getAcumulacionCosto()!= null ? producto.getAcumulacionCosto().getId(): null;
+				temp.acumulacionCostoNombre = producto.getAcumulacionCosto()!= null ? producto.getAcumulacionCosto().getNombre() : null;
 				temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
 				temp.fechaFin = Utils.formatDate(producto.getFechaFin());
 				temp.duracion = producto.getDuracion();

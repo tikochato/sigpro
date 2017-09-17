@@ -15,7 +15,10 @@
 						</ui-gmap-google-map>
 		</div>
         <div class="modal-footer">
-            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+			 <div class="btn-group">
+				<label class="btn btn-success" ng-click="ok()"> &nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;</label>
+				<label class="btn btn-primary" ng-click="cancel()">Quitar</label>
+			<div class="btn-group">
         </div>
     </script>
 

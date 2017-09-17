@@ -58,7 +58,7 @@
 				</div>
 			</div>
 			<br/>
-			<div class="total-rows">Total de {{  proyectotipoc.totalProyectotipos + (proyectotipoc.totalProyectotipos == 1 ? " Tipo de Proyecto" : " Tipos de Proyectos" ) }}</div>
+			<div class="total-rows">Total de {{  proyectotipoc.totalProyectotipos + (proyectotipoc.totalProyectotipos == 1 ? " Tipo de Préstamo" : " Tipos de Préstamo" ) }}</div>
 			<ul uib-pagination total-items="proyectotipoc.totalProyectotipos"
 				ng-model="proyectotipoc.paginaActual"
 				max-size="proyectotipoc.numeroMaximoPaginas"
@@ -98,10 +98,10 @@
 				</div>
 				<div class="form-group">
 					<input type="text"
-						class="inputText" id="descripcion" 
+						class="inputText"  
 						ng-model="proyectotipoc.proyectotipo.descripcion"
 						 ng-value="proyectotipoc.proyectotipo.descripcion" onblur="this.setAttribute('value', this.value);" >
-					<label for="descripcion" class="floating-label">Descripción</label>
+					<label  class="floating-label">Descripción</label>
 				</div>
 				<br />
 				<div align="center">
