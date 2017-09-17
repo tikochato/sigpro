@@ -85,7 +85,7 @@
     
     <div class="col-sm-12">
 	    <form name="form">
-	      <div class="form-group">
+	      <div class="form-group" ng-show="!subproductoPropiedad.esNuevo">
 		        <label for="id" class="floating-label">ID {{ subproductoPropiedad.codigo }}</label>
 		        <br/><br/>
 	      </div>
@@ -104,8 +104,8 @@
    		 </div>
 	
 	      <div class="form-group">
-	        <input type="text" class="inputText" ng-model="subproductoPropiedad.descripcion" ng-value="subproductoPropiedad.descripcion" onblur="this.setAttribute('value', this.value);" ng-required="true"/>
-	        <label class="floating-label">* Descripción</label>
+	        <input type="text" class="inputText" ng-model="subproductoPropiedad.descripcion" ng-value="subproductoPropiedad.descripcion" onblur="this.setAttribute('value', this.value);" />
+	        <label class="floating-label">Descripción</label>
 	      </div>
 	      <div class="panel panel-default">
 				<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
