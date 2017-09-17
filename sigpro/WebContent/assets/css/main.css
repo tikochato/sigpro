@@ -84,6 +84,10 @@ nav.navbar{
 	padding-bottom: 30px;
 }
 
+.maincontainer_treeview{
+	
+}
+
 .glyphicon {
     position: relative;
     top: 1px;
@@ -544,5 +548,5 @@ h2 {
 }
 
 .cols_treeview{
-	height: calc(100% - 30px);
+	height: calc(100% - 55px);
 }

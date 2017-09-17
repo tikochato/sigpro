@@ -525,6 +525,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	$scope.hidebar = false;
 	
 	$rootScope.catalogo_entidades_anos=1;
+	$rootScope.treeview = false;
 
 	numeral.language('es', numeral_language);
 	$window.document.title =  'MINFIN - '+$utilidades.sistema_nombre;

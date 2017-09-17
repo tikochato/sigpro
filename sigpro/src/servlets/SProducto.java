@@ -621,6 +621,10 @@ public class SProducto extends HttpServlet {
 				temp.fechaFin = Utils.formatDate(producto.getFechaFin());
 				temp.duracion = producto.getDuracion();
 				temp.duracionDimension = producto.getDuracionDimension();
+				temp.usuarioCreo = producto.getUsuarioCreo();
+				temp.usuarioactualizo = producto.getUsuarioActualizo();
+				temp.fechaCreacion = Utils.formatDateHour(producto.getFechaCreacion());
+				temp.fechaactualizacion = Utils.formatDateHour(producto.getFechaActualizacion());
 			}
 
 			response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
