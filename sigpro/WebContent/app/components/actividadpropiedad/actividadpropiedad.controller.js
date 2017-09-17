@@ -147,7 +147,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 				else
 					$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
 			};
-
+			
 			mi.borrar = function(ev) {
 				if(mi.actividadpropiedad!=null && mi.actividadpropiedad.id!=null){
 					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
@@ -173,33 +173,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 						}
 					}, function(){
 						
-					});	
-					
-					
-					var confirm = $mdDialog.confirm()
-				          .title('Confirmación de borrado')
-				          .textContent('¿Desea borrar la Prppiedad de Actividad "'+mi.actividadpropiedad.nombre+'"?')
-				          .ariaLabel('Confirmación de borrado')
-				          .targetEvent(ev)
-				          .ok('Borrar')
-				          .cancel('Cancelar');
-	
-				    $mdDialog.show(confirm).then(function() {
-				    	$http.post('/SActividadPropiedad', {
-							accion: 'borrarActividadPropiedad',
-							id: mi.actividadpropiedad.id, 
-							t: new Date().getTime()
-						}).success(function(response){
-							if(response.success){
-								$utilidades.mensaje('success','Propiedad de Actividad borrado con éxito');
-								mi.cargarTabla();
-							}
-							else
-								$utilidades.mensaje('danger','Error al borrar la Propiedad de Actividad');
-						});
-				    }, function() {
-				    
-				    });
+					});						
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar la Propiedad de Actividad que desea borrar');
