@@ -74,7 +74,7 @@ public class SubproductoTipoDAO {
 				session.getTransaction().commit();
 				
 				if (propiedades!=null && propiedades.length()>0 && !propiedades.isEmpty())
-					retCampos = ProdTipoPropiedadDAO.persistirPropiedades(id, propiedades, usuario);
+					retCampos = SubprodTipoPropiedadDAO.persistirPropiedades(id, propiedades, usuario);
 
 			} catch (Throwable e) {
 				CLogger.write("2", SubproductoTipoDAO.class, e);
@@ -101,10 +101,12 @@ public class SubproductoTipoDAO {
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try {
 				session.beginTransaction();
-				session.update(pojo);
+				session.saveOrUpdate(pojo);
+				
 				session.getTransaction().commit();
-
-				ret = SubprodTipoPropiedadDAO.persistirPropiedades(codigo, propiedades, usuario);
+				ret=true;
+				if(propiedades!=null)
+					ret = SubprodTipoPropiedadDAO.persistirPropiedades(codigo, propiedades, usuario);
 			} catch (Throwable e) {
 				CLogger.write("3", SubproductoTipoDAO.class, e);
 			} finally {

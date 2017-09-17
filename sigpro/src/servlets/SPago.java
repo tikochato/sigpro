@@ -85,7 +85,7 @@ public class SPago extends HttpServlet {
 		}else if(accion.equals("guardarPagos")){
 			Integer idObjeto = Utils.String2Int(map.get("idObjeto"));
 			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
-			
+			boolean result = false;
 			String dataPagos = map.get("pagos");
 			
 			Type listType = new TypeToken<List<Map<String, String>>>() {}.getType();
@@ -97,12 +97,14 @@ public class SPago extends HttpServlet {
 			try{
 				for(Map<String, String> pago : pagos){
 					if(Utils.String2Int(pago.get("id")) == 0){
-						nuevoPago = new Pago(idObjeto, objetoTipo, formatter.parse(pago.get("fechaReal")), new BigDecimal(pago.get("pago")), pago.get("descripcion"), usuario, null, new Date(), null,1);
-						PagoDAO.guardarPago(nuevoPago);
-					}
+						nuevoPago = new Pago(idObjeto, objetoTipo, formatter.parse(pago.get("fechaReal")), new BigDecimal(pago.get("pago")), pago.get("descripcion") == null ? "" : pago.get("descripcion"), usuario, null, new Date(), null,1);
+						result = PagoDAO.guardarPago(nuevoPago);	
+					}else
+						result = true;
 				}
 			}catch(Throwable e){
 				CLogger.write("1", SPago.class, e);
+				result = false;
 			}
 			
 			List<Pago> Pagos = PagoDAO.getPagosByObjetoTipo(idObjeto,objetoTipo);
@@ -119,7 +121,7 @@ public class SPago extends HttpServlet {
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(resultado);
 	        response_text = String.join("", "\"pagos\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text, "}");
+	        response_text = String.join("", "{\"success\":" + (result) + ",", response_text, "}");
 		}else if (accion.equals("eliminarPago")){
 			Integer idPago = Utils.String2Int(map.get("idPago"));
 			

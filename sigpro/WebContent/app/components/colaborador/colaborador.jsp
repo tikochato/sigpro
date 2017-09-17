@@ -88,7 +88,7 @@
 	      <label class="btn btn-success" ng-click="form.$valid ? colaborador.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
 	      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 	    </shiro:hasPermission>
-	    <label class="btn btn-primary" ng-click="colaborador.cancelar()" title="Ir a Tabla">
+	    <label class="btn btn-primary" ng-click="colaborador.irATabla()" title="Ir a Tabla">
 	    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 	  </div>
 	</div>
