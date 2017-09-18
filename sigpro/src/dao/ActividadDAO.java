@@ -85,9 +85,9 @@ public class ActividadDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Actividad ret = null;
 		try{
-			String query = "FROM Actividad where id=:id";
+			String query = "FROM Actividad a where a.id=:id";
 			if (usuario != null){
-				query += " AND id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )";
+				query += " AND a.id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )";
 			}
 			Query<Actividad> criteria = session.createQuery(query, Actividad.class);
 			criteria.setParameter("id", id);

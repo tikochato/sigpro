@@ -181,6 +181,7 @@ public class SMeta extends HttpServlet {
 				result = MetaDAO.guardarMeta(Meta);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 						, "\"id\": " , Meta.getId().toString() , ","
+						, "\"datoTipoId\": " , Meta.getDatoTipo().getId().toString() , ","
 						, "\"usuarioCreo\": \"" , Meta.getUsuarioCreo(),"\","
 						, "\"fechaCreacion\":\" " , Utils.formatDateHour(Meta.getFechaCreacion()),"\","
 						, "\"usuarioactualizo\": \"" , Meta.getUsuarioActualizo() != null ? Meta.getUsuarioActualizo() : "","\","

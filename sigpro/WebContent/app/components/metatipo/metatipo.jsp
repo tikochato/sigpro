@@ -94,7 +94,8 @@
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText"  ng-model="metatipoc.tipo.nombre" ng-required="true"
-    						ng-value="metatipoc.tipo.nombre" onblur="this.setAttribute('value', this.value);">
+    						ng-value="metatipoc.tipo.nombre" onblur="this.setAttribute('value', this.value);"
+    						show-focus="metatipoc.mostraringreso">
     						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
