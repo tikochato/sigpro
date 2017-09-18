@@ -198,7 +198,10 @@ function controlSubproductoTipo($scope, $routeParams, $route, $window, $location
 			mi.esForma = true;
 			mi.entityselected = null;
 			mi.esNuevo = false;
-
+			mi.auditoria.usuarioCreo=mi.entidadSeleccionada.usuarioCreo;
+			mi.auditoria.usuarioActualizo=mi.entidadSeleccionada.usuairoActulizo;
+			mi.auditoria.fechaCreacion=mi.entidadSeleccionada.fechaCreacion;
+			mi.auditoria.fechaActualizacion=mi.entidadSeleccionada.fechaActualizacion;
 			mi.codigo = mi.entidadSeleccionada.id;
 			mi.nombre = mi.entidadSeleccionada.nombre;
 			mi.descripcion = mi.entidadSeleccionada.descripcion;
