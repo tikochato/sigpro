@@ -3,6 +3,8 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 
@@ -41,8 +43,9 @@ public class CategoriaAdquisicionDAO {
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			Query<Long> criteria = session.createQuery(query,Long.class);
 			ret = criteria.getSingleResult();
-		}
-		catch(Throwable e){
+		} catch (NoResultException e){
+			
+		} catch(Throwable e){
 			CLogger.write("2", CategoriaAdquisicionDAO.class, e);
 		}
 		finally{
@@ -89,8 +92,9 @@ public class CategoriaAdquisicionDAO {
 			Query<CategoriaAdquisicion> criteria = session.createQuery(query, CategoriaAdquisicion.class);
 			criteria.setParameter("id", id);
 			ret = criteria.getSingleResult();
-		}
-		catch(Throwable e){
+		} catch (NoResultException e){
+			
+		} catch(Throwable e){
 			CLogger.write("4", CategoriaAdquisicionDAO.class, e);
 		}
 		finally{

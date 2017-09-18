@@ -3,6 +3,7 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -47,8 +48,9 @@ public class MetaDAO {
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
 			ret = session.createQuery( criteria ).getSingleResult();
-		}
-		catch(Throwable e){
+		}catch (NoResultException e){
+			
+		}catch(Throwable e){
 			CLogger.write("2", MetaDAO.class, e);
 		}
 		finally{
@@ -168,6 +170,8 @@ public class MetaDAO {
 			conteo.setParameter("objetoId", id);
 			conteo.setParameter("objetotipo", tipo);
 			ret = conteo.getSingleResult();
+		}catch (NoResultException e){
+			
 		}
 		catch(Throwable e){
 			CLogger.write("7", MetaDAO.class, e);

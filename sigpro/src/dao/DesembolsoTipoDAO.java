@@ -4,6 +4,7 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -26,8 +27,9 @@ public class DesembolsoTipoDAO {
 				query = String.join("",query, " AND d.nombre LIKE '%",filtro_nombre,"%'");
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
-		}
-		catch(Throwable e){
+		}catch (NoResultException e){
+			
+		}catch(Throwable e){
 			CLogger.write("1", DesembolsoTipoDAO.class, e);
 		}
 		finally{

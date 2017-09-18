@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -95,8 +97,9 @@ public class ActividadDAO {
 			criteria.setParameter("usuario", usuario);
 			}
 			ret = criteria.getSingleResult();
-		}
-		catch(Throwable e){
+		} catch (NoResultException e){
+			
+		} catch(Throwable e){
 			CLogger.write("2", ActividadDAO.class, e);
 		}
 		finally{
@@ -212,8 +215,9 @@ public class ActividadDAO {
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			conteo.setParameter("usuario", usuario);
 			ret = conteo.getSingleResult();
-		}
-		catch(Throwable e){
+		} catch (NoResultException e){
+			
+		} catch(Throwable e){
 			CLogger.write("7", ActividadDAO.class, e);
 		}
 		finally{
@@ -280,8 +284,9 @@ public class ActividadDAO {
 			criteria.setParameter("objetoTipo", objetoTipo);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getSingleResult();
-		}
-		catch(Throwable e){
+		} catch (NoResultException e){
+			
+		} catch(Throwable e){
 			CLogger.write("9", ActividadDAO.class, e);
 		}
 		finally{
@@ -556,8 +561,9 @@ public class ActividadDAO {
 			criteria.setParameter("3", rol);
 			
 			ret = criteria.getSingleResult();
-		}
-		catch(Throwable e){
+		} catch (NoResultException e){
+			
+		} catch(Throwable e){
 			CLogger.write("13", ActividadDAO.class, e);
 		}
 		finally{
@@ -577,7 +583,9 @@ public class ActividadDAO {
 			criteria.setParameter("objetoTipo", objetoTipo);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getSingleResult();
-		}catch(Throwable e){
+		} catch (NoResultException e){
+			
+		} catch(Throwable e){
 			CLogger.write("15", ActividadDAO.class, e);
 		}
 		finally{
@@ -597,7 +605,9 @@ public class ActividadDAO {
 			criteria.setParameter("objetoTipo", objetoTipo);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getSingleResult();
-		}catch(Throwable e){
+		} catch (NoResultException e){
+			
+		} catch(Throwable e){
 			CLogger.write("16", ActividadDAO.class, e);
 		}
 		finally{
@@ -619,8 +629,9 @@ public class ActividadDAO {
 			criteria.setParameter("usuario", usuario);
 			}
 			ret = criteria.getSingleResult();
-		}
-		catch(Throwable e){
+		} catch (NoResultException e){
+			
+		} catch(Throwable e){
 			CLogger.write("17", ActividadDAO.class, e);
 			session.getTransaction().rollback();
 			session.close();

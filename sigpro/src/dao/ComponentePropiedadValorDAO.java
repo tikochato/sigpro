@@ -1,5 +1,6 @@
 package dao;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -22,6 +23,8 @@ public class ComponentePropiedadValorDAO {
 			criteria.select(root);
 			criteria.where(builder.equal(root.get("id"), new ComponentePropiedadValorId(idComponente, idPropiedad)));
 			ret = session.createQuery(criteria).getSingleResult();
+		} catch (NoResultException e){
+			
 		} catch (Throwable e) {
 			CLogger.write("1", ProductoPropiedadValorDAO.class, e);
 		} finally {

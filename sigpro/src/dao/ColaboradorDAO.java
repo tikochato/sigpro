@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -47,6 +48,8 @@ public class ColaboradorDAO {
 			criteria.select(root);
 			criteria.where(builder.equal(root.get("id"), codigo));
 			ret = session.createQuery(criteria).getSingleResult();
+		}catch (NoResultException e){
+			
 		} catch (Throwable e) {
 			CLogger.write("2", ColaboradorDAO.class, e);
 		} finally {
@@ -276,6 +279,8 @@ public class ColaboradorDAO {
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			Query<Long> criteria = session.createQuery(query,Long.class);
 			ret = criteria.getSingleResult();
+		} catch (NoResultException e){
+			
 		} catch (Throwable e) {
 			CLogger.write("7", ColaboradorDAO.class, e);
 		} finally {

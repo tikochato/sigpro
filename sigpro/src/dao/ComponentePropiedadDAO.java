@@ -3,6 +3,7 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -42,8 +43,9 @@ public class ComponentePropiedadDAO {
 		try{
 			Query<Long> conteo = session.createQuery("SELECT count(p.id) FROM ComponentePropiedad p where p.estado=1",Long.class);
 			ret = conteo.getSingleResult();
-		}
-		catch(Throwable e){
+		}catch (NoResultException e){
+			
+		}catch(Throwable e){
 			CLogger.write("2", ComponentePropiedadDAO.class, e);
 		}
 		finally{

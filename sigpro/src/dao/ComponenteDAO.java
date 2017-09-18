@@ -3,6 +3,8 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -38,8 +40,9 @@ public class ComponenteDAO {
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
 			 ret = criteria.getSingleResult();
-		}
-		catch(Throwable e){
+		} catch (NoResultException e){
+			
+		} catch(Throwable e){
 			CLogger.write("2", ComponenteDAO.class, e);
 		}
 		finally{
@@ -133,8 +136,9 @@ public class ComponenteDAO {
 			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM Componente c WHERE c.estado=1 AND  c.id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )",Long.class);
 			conteo.setParameter("usuario", usuario);
 			ret = conteo.getSingleResult();
-		}
-		catch(Throwable e){
+		}catch (NoResultException e){
+			
+		}catch(Throwable e){
 			CLogger.write("7", ComponenteDAO.class, e);
 		}
 		finally{
@@ -199,8 +203,9 @@ public class ComponenteDAO {
 			conteo.setParameter("proyId", proyectoId);
 			conteo.setParameter("usuario", usuario);
 			ret = conteo.getSingleResult();
-		}
-		catch(Throwable e){
+		}catch (NoResultException e){
+			
+		}catch(Throwable e){
 			CLogger.write("9", ComponenteDAO.class, e);
 		}
 		finally{
@@ -217,7 +222,9 @@ public class ComponenteDAO {
 			criteria.setParameter("proyectoId", proyectoId);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getSingleResult();
-		}catch(Throwable e){
+		}catch (NoResultException e){
+			
+		} catch(Throwable e){
 			CLogger.write("11", ComponenteDAO.class, e);
 			session.getTransaction().rollback();
 			session.close();
@@ -234,7 +241,9 @@ public class ComponenteDAO {
 			criteria.setParameter("proyectoId", proyectoId);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getSingleResult();
-		}catch(Throwable e){
+		}catch (NoResultException e){
+			
+		} catch(Throwable e){
 			CLogger.write("12", ComponenteDAO.class, e);
 			session.getTransaction().rollback();
 			session.close();
@@ -266,8 +275,9 @@ public class ComponenteDAO {
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
 			 ret = criteria.getSingleResult();
-		}
-		catch(Throwable e){
+		}catch (NoResultException e){
+			
+		} catch(Throwable e){
 			CLogger.write("14", ComponenteDAO.class, e);
 			session.getTransaction().rollback();
 			session.close();
