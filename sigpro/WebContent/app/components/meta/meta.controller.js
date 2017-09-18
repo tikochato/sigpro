@@ -17,9 +17,6 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
 			mi.metatipos = [];
 			mi.metasunidades = [];
-			mi.tipoMetaSeleccionado=null;
-			mi.unidadMedidaSeleccionado=null;
-			mi.tipoValorSeleccionado=null;
 			
 			mi.nombrePcp = "";
 			mi.nombreTipoPcp = "";
@@ -30,29 +27,29 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			mi.filtros = [];
 			
 			switch($routeParams.tipo){
-				case "1": mi.nombreTipoPcp = "Préstamo"; break;
+				case "1": mi.nombreTipoPcp = "Proyecto"; break;
 				case "2": mi.nombreTipoPcp = "Componente"; break;
 				case "3": mi.nombreTipoPcp = "Producto"; break;
 				case "4": mi.nombreTipoPcp = "Subproducto"; break;
 				
 			}
 			
-			$http.post('/SMeta', { accion: 'getPcp', id: $routeParams.id, tipo: $routeParams.tipo, t: (new Date()).getTime()}).success(
+			$http.post('/SMeta', { accion: 'getPcp', id: $routeParams.id, tipo: $routeParams.tipo }).success(
 					function(response) {
 						mi.nombrePcp = response.nombre;
 			});
 			
-			$http.post('/SMeta', { accion: 'getMetasTipos', t: (new Date()).getTime() }).success(
+			$http.post('/SMeta', { accion: 'getMetasTipos' }).success(
 					function(response) {
 						mi.metatipos = response.MetasTipos;
 			});
 			
-			$http.post('/SMeta', { accion: 'getMetasUnidadesMedida', t: (new Date()).getTime() }).success(
+			$http.post('/SMeta', { accion: 'getMetasUnidadesMedida' }).success(
 					function(response) {
 						mi.metaunidades = response.MetasUnidades;
 			});
 			
-			$http.post('/SDatoTipo', { accion: 'cargarCombo', t: (new Date()).getTime() }).success(
+			$http.post('/SDatoTipo', { accion: 'cargarCombo' }).success(
 					function(response) {
 						mi.datoTipos = response.datoTipos;
 			});
@@ -139,33 +136,31 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 					id: $routeParams.id, tipo: $routeParams.tipo,
 					filtro_nombre: mi.filtros['nombre'], 
 					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
+					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion 
 				}).success(
 						function(response) {
 							mi.metas = response.Metas;
 							mi.gridOptions.data = mi.metas;
 							mi.mostrarcargando = false;
-							mi.paginaActual = pagina;
 						});
 			}
 			mi.redireccionSinPermisos=function(){
 				$window.location.href = '/main.jsp#!/forbidden';		
-			}			
-			
+			}
 			mi.guardar=function(){
-				if(mi.meta!=null && mi.tipoMetaSeleccionado!=null && mi.unidadMedidaSeleccionado!=null  ){
+				if(mi.meta!=null && mi.meta.nombre!='' && mi.meta.tipoMetaId>0 && mi.meta.unidadMedidaId>0 && mi.meta.datoTipoId>0 ){
 					$http.post('/SMeta', {
 						accion: 'guardarMeta',
 						esnueva: mi.esnueva,
 						id: mi.meta.id,
 						nombre: mi.meta.nombre,
 						descripcion: mi.meta.descripcion,
-						tipoMetaId:  mi.tipoMetaSeleccionado.id,
-						unidadMedidaId: mi.unidadMedidaSeleccionado.id,
-						datoTipoId: mi.tipoValorSeleccionado.id,
+						tipoMetaId:  mi.meta.tipoMetaId,
+						unidadMedidaId: mi.meta.unidadMedidaId,
+						datoTipoId: mi.meta.datoTipoId,
 						objetoTipo:  $routeParams.tipo,
-						objetoId:$routeParams.id,
-						t: (new Date()).getTime()						
+						objetoId:$routeParams.id
+						
 					}).success(function(response){
 						if(response.success){
 							mi.meta.id = response.id;
@@ -174,8 +169,8 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 							mi.meta.usuarioActualizo = response.usuarioactualizo;
 							mi.meta.fechaActualizacion = response.fechaactualizacion;
 							$utilidades.mensaje('success','Meta '+(mi.esnueva ? 'creada' : 'guardada')+' con éxito');
-							mi.esnueva = false;
 							mi.obtenerTotalMetas();
+							mi.esnueva = false;
 						}
 						else
 							$utilidades.mensaje('danger','Error al '+(mi.esnueva ? 'crear' : 'guardar')+' la Meta');
@@ -189,15 +184,14 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				if(mi.meta!=null){
 					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 							, "Confirmación de Borrado"
-							, '¿Desea borrar la Meta "'+mi.meta.id+'"?'
+							, '¿Desea borrar la Meta "'+mi.meta.nombre+'"?'
 							, "Borrar"
 							, "Cancelar")
 					.result.then(function(data) {
 						if(data){
 							$http.post('/SMeta', {
 								accion: 'borrarMeta',
-								id: mi.meta.id,
-								t: (new Date()).getTime()
+								id: mi.meta.id
 							}).success(function(response){
 								if(response.success){
 									$utilidades.mensaje('success','Meta borrada con éxito');
@@ -220,12 +214,6 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				mi.mostraringreso=true;
 				mi.esnueva = true;
 				mi.meta = {};
-				mi.tipoMetaSeleccionado=null;				
-				mi.unidadMedidaSeleccionado=null;
-				mi.tipoValorSeleccionado = {
-						"id" : 3,
-						"nombre" : "decimal"
-				}
 				mi.gridApi.selection.clearSelectedRows();
 			};
 
@@ -233,22 +221,9 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				if(mi.meta!=null && mi.meta.id!=null){
 					mi.mostraringreso = true;
 					mi.esnueva = false;
-					mi.tipoMetaSeleccionado = {
-							"id" : mi.meta.tipoMetaId,
-							"nombre" : mi.meta.tipoMetaNombre
-					}
-					mi.unidadMedidaSeleccionado = {
-							"id" : mi.meta.unidadMedidaId,
-							"nombre" : mi.meta.unidadMedidaNombre
-					}
-					mi.tipoValorSeleccionado = {
-							"id" : 3,
-							"nombre" : "decimal"
-					}
 				}
-				else{
+				else
 					$utilidades.mensaje('warning','Debe seleccionar la Meta que desea editar');
-				}
 			}
 
 			mi.irATabla = function() {
@@ -289,24 +264,13 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			}
 			
 			mi.obtenerTotalMetas =  function() {
-				$http.post('/SMeta', { accion: 'numeroMetas', id: $routeParams.id, tipo: $routeParams.tipo, t: (new Date()).getTime()}).success(
+				$http.post('/SMeta', { accion: 'numeroMetas', id: $routeParams.id, tipo: $routeParams.tipo  }).success(
 						function(response) {
-							mi.totalMetas = response.totalMetas;
+							mi.totalMetas = response.totalmetas;
 							mi.cargarTabla(1);
 						});
 				
 				}
 			}
 
-	]);
-
-app.directive('showFocus', function($timeout) {
-	  return function(scope, element, attrs) {
-	    scope.$watch(attrs.showFocus, 
-	      function (newValue) { 
-	        $timeout(function() {
-	            element[0].focus();	          
-	        });
-	      },true);
-	  };    
-	});
+]);

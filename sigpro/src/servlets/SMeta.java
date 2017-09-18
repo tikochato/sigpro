@@ -38,6 +38,9 @@ import pojo.Producto;
 import pojo.Proyecto;
 import utilities.Utils;
 
+/**
+ * Servlet implementation class SMeta
+ */
 @WebServlet("/SMeta")
 public class SMeta extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -75,14 +78,23 @@ public class SMeta extends HttpServlet {
 		String usuarioActulizo;
 	}
 
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
     public SMeta() {
         super();
     }
 
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 	}
 
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();
@@ -153,7 +165,7 @@ public class SMeta extends HttpServlet {
 			boolean esnuevo = map.get("esnueva")!=null ? map.get("esnueva").equals("true") :  false;
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0 || esnuevo){
-				String nombre = map.get("nombre")!=null ? map.get("nombre") : "";
+				String nombre = map.get("nombre");
 				Integer idMetaTipo = map.get("tipoMetaId")!=null ? Integer.parseInt(map.get("tipoMetaId")) : 1;
 				MetaTipo metaTipo = MetaTipoDAO.getMetaTipoPorId(idMetaTipo);
 				Integer idUnidadMedida = map.get("unidadMedidaId")!=null ? Integer.parseInt(map.get("unidadMedidaId")) : 0;
@@ -273,5 +285,4 @@ public class SMeta extends HttpServlet {
         gz.close();
         output.close();
 	}
-
 }
