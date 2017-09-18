@@ -299,14 +299,3 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			}
 
 	]);
-
-app.directive('showFocus', function($timeout) {
-	  return function(scope, element, attrs) {
-	    scope.$watch(attrs.showFocus, 
-	      function (newValue) { 
-	        $timeout(function() {
-	            element[0].focus();	          
-	        });
-	      },true);
-	  };    
-	});

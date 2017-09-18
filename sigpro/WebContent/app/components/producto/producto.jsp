@@ -15,6 +15,7 @@
 		</div>
         <div class="modal-footer">
             <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+			<button class="btn btn-danger" type="button" ng-click="borrar()">Quitar coordenadas</button>
         </div>
     </script>
     
@@ -127,7 +128,7 @@
 					</div>
 								
 					<div class="form-group">
-						<input type="text" class="inputText" ng-model="producto.producto.nombre" ng-value="producto.producto.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" />
+						<input type="text" class="inputText" ng-model="producto.producto.nombre" ng-value="producto.producto.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="producto.esForma"/>
 						<label class="floating-label">* Nombre</label> 
 					</div>
 					

@@ -675,10 +675,14 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	    });
 
 	    modalInstance.result.then(function(coordenadas) {
-	    	if (coordenadas !=null){
+	    	if (coordenadas !=null && coordenadas != ""){
 		    	mi.coordenadas = coordenadas.latitude + ", " + coordenadas.longitude;
 		    	mi.producto.latitud= coordenadas.latitude;
 				mi.producto.longitud = coordenadas.longitude;
+	    	}else{
+	    		mi.coordenadas = null;
+	    		mi.producto.latitud = null;
+	    		mi.producto.longitud = null;
 	    	}
 	    }, function() {
 		});
@@ -914,5 +918,9 @@ moduloProducto.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', '
 
 	  $scope.ok = function () {
 		  $uibModalInstance.close($scope.posicion);
+	  };
+
+	  $scope.borrar = function () {
+		  $uibModalInstance.close(null);
 	  };
 }]);
