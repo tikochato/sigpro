@@ -30,7 +30,7 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.EstructuraProyectoDAO;
 import dao.MetaUnidadMedidaDAO;
-
+import dao.PrestamoMetasDAO;
 import utilities.CExcel;
 import utilities.CLogger;
 import utilities.Utils;
@@ -141,7 +141,7 @@ public class SPrestamoMetas extends HttpServlet {
 				outStream.write(outArray);
 				outStream.flush();
 			}catch(Exception e){
-				CLogger.write("1", SAdministracionTransaccional.class, e);
+				CLogger.write("1", SPrestamoMetas.class, e);
 			}
 		}else if(accion.equals("exportarPdf")){
 			CPdf archivo = new CPdf("Metas de Prestamo");
@@ -223,7 +223,10 @@ public class SPrestamoMetas extends HttpServlet {
 			tempPrestamo.nivel = (Integer)obj[4] +1;
 			tempPrestamo.objeto_tipo = ((BigInteger) obj[2]).intValue();
 			if(tempPrestamo.objeto_tipo <=3){
-				ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();			
+				ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();
+				if(tempPrestamo.objeto_tipo == 3){
+					presupuestoPrestamo = PrestamoMetasDAO.getMetasPorProducto(tempPrestamo.objeto_id, anioInicial, anioFinal);
+				}
 				tempPrestamo = getMetas(presupuestoPrestamo, anioInicial, anioFinal, tempPrestamo);
 				lstPrestamo.add(tempPrestamo);
 			}
@@ -266,11 +269,22 @@ public class SPrestamoMetas extends HttpServlet {
 				aniotemp.noviembre[1] = objprestamopresupuesto.get(21);
 				aniotemp.diciembre[0] = objprestamopresupuesto.get(22);
 				aniotemp.diciembre[1] = objprestamopresupuesto.get(23);
-				int pos = anoFinal- objprestamopresupuesto.get(24).intValue();
-				aniotemp.anio = new BigDecimal(anoInicial + pos);
+				int anio = objprestamopresupuesto.get(24).intValue();
+				int pos = anio - anoInicial;  
+				aniotemp.anio = new BigDecimal(anio);
 				prestamo.unidadDeMedida = Integer.parseInt(objprestamopresupuesto.get(25).toString());
-				prestamo.lineaBase = prestamo.lineaBase.add(objprestamopresupuesto.get(26));
-				prestamo.metaFinal = prestamo.metaFinal.add(objprestamopresupuesto.get(27));
+				if(objprestamopresupuesto.get(26)!=null){
+					if(prestamo.lineaBase == null){
+						prestamo.lineaBase = new BigDecimal(0);
+					}
+					prestamo.lineaBase = prestamo.lineaBase.add(objprestamopresupuesto.get(26));
+				}
+				if(objprestamopresupuesto.get(27)!=null){
+					if(prestamo.metaFinal == null){
+						prestamo.metaFinal = new BigDecimal(0);
+					}
+					prestamo.metaFinal = prestamo.metaFinal.add(objprestamopresupuesto.get(27));
+				}
 				anios[pos] = aniotemp;
 			}
 		}
