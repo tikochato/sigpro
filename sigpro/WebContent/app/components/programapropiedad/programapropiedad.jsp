@@ -90,7 +90,8 @@
     						<br/><br/>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="programapropiedadc.programapropiedad.nombre"  ng-value="programapropiedadc.programapropiedad.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
+    						<input type="text" class="inputText" ng-model="programapropiedadc.programapropiedad.nombre"  ng-value="programapropiedadc.programapropiedad.nombre" 
+    						onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="programapropiedadc.mostraringreso">
 							<label for="nombre" class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">

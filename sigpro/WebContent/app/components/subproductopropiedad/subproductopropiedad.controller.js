@@ -264,7 +264,6 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 	mi.guardar = function() {
 		
 		if ($utilidades.esCadenaVacia(mi.nombre)
-				|| $utilidades.esCadenaVacia(mi.descripcion)
 				|| !$utilidades.esNumero(mi.datoTipoSeleccionado.id)) {
 			$utilidades.mensaje('danger',
 					'Debe de llenar todos los campos obligatorios');

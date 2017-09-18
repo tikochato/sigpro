@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojo.Cooperante;
 import pojo.Rol;
 import pojo.RolPermiso;
 import pojo.RolUsuarioProyecto;
@@ -55,6 +56,26 @@ public class RolDAO {
 			Query<RolUsuarioProyecto> criteria = session.createQuery("FROM RolUsuarioProyecto r where r.id.usuario = :usuario", RolUsuarioProyecto.class);
 			criteria.setParameter("usuario",user);
 			tmp = criteria.getResultList();
+			if(tmp.size()>0)
+				ret = tmp.get(0);
+		}
+		catch(Throwable e){
+			CLogger.write("1", RolDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	public static Cooperante getCooperante(String user){
+		Cooperante ret = new Cooperante();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			List <Cooperante> tmp = new ArrayList<Cooperante>();
+			String query="Select p.proyecto.cooperante from ProyectoUsuario p where p.id.usuario=:usuario";
+			Query<Cooperante> criteria = session.createQuery(query, Cooperante.class);
+			criteria.setParameter("usuario",user);
+			tmp = criteria.getResultList();
 			ret = tmp.get(0);
 		}
 		catch(Throwable e){
@@ -65,7 +86,6 @@ public class RolDAO {
 		}
 		return ret;
 	}
-	
 	public static List<RolPermiso> getPermisosPorRol(int rolid){
 		List <RolPermiso> ret = new ArrayList<RolPermiso>();
 		Session session = CHibernateSession.getSessionFactory().openSession();

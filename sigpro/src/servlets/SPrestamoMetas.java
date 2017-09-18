@@ -144,7 +144,7 @@ public class SPrestamoMetas extends HttpServlet {
 				CLogger.write("1", SAdministracionTransaccional.class, e);
 			}
 		}else if(accion.equals("exportarPdf")){
-			CPdf archivo = new CPdf("Metas de Pr�stamo");
+			CPdf archivo = new CPdf("Metas de Prestamo");
 			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
 			int anioInicio = Utils.String2Int(map.get("fechaInicio"), 0);
 			int anioFin = Utils.String2Int(map.get("fechaFin"), 0);
@@ -188,7 +188,7 @@ public class SPrestamoMetas extends HttpServlet {
 		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
 				response.setContentType("application/pdf");
 				response.setContentLength(outArray.length);
-				response.setHeader("Cache-Control", "no-cache"); 
+				response.setHeader("Cache-Control", "no-cache");  
 				response.setHeader("Content-Disposition", "in-line; 'Metas_de_Prestamo.pdf'");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
@@ -200,14 +200,16 @@ public class SPrestamoMetas extends HttpServlet {
 			response_text = "{ \"success\": false }";
 		}
 
-		response.setHeader("Content-Encoding", "gzip");
-		response.setCharacterEncoding("UTF-8");
+		if(!accion.equals("exportarExcel") && !accion.equals("exportarPdf")){
+			response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
 
-        OutputStream output = response.getOutputStream();
-		GZIPOutputStream gz = new GZIPOutputStream(output);
-        gz.write(response_text.getBytes("UTF-8"));
-        gz.close();
-        output.close();
+	        OutputStream output = response.getOutputStream();
+			GZIPOutputStream gz = new GZIPOutputStream(output);
+	        gz.write(response_text.getBytes("UTF-8"));
+	        gz.close();
+	        output.close();
+		}
 	}
 	
 	private List<stprestamo> getMetasPrestamo(int idPrestamo, int anioInicial, int anioFinal, String usuario){
@@ -667,7 +669,7 @@ public class SPrestamoMetas extends HttpServlet {
 					if(tipoVisualizacion==1 || tipoVisualizacion == 2){
 						datos[i][posicion]= totalAniosR.toString();
 					}
-					datos[i][columnasTotal-1]=prestamo.metaFinal.toString();
+					datos[i][columnasTotal-1]=prestamo.metaFinal!=null ? prestamo.metaFinal.toString() : "";
 				}
 			}
 		}

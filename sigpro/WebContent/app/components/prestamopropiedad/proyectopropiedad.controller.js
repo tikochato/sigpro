@@ -179,7 +179,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
 			mi.proyectopropiedad = {};
-			mi.tipoDatoSeleccionado=0;
+			mi.tipoDatoSeleccionado=null;
 			mi.gridApi.selection.clearSelectedRows();
 		};
 	
@@ -246,3 +246,15 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 		
 	} 
 ]);
+
+
+app.directive('showFocus', function($timeout) {
+	  return function(scope, element, attrs) {
+	    scope.$watch(attrs.showFocus, 
+	      function (newValue) { 
+	        $timeout(function() {
+	            element[0].focus();	          
+	        });
+	      },true);
+	  };    
+	});

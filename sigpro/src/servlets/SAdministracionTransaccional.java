@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -117,7 +118,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 				CLogger.write("1", SAdministracionTransaccional.class, e);
 			}
 		}else if(accion.equals("exportarPdf")){
-			CPdf archivo = new CPdf("Administración Transaccional");
+			CPdf archivo = new CPdf("Administracion Transaccional");
 			String headers[][];
 			String datos[][];
 			headers = generarHeaders();
@@ -156,7 +157,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
 				response.setContentType("application/pdf");
 				response.setContentLength(outArray.length);
-				response.setHeader("Expires:", "0"); 
+				response.setHeader("Cache-Control", "no-cache"); 
 				response.setHeader("Content-Disposition", "in-line; 'AdministracionTransaccional.pdf'");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
@@ -181,15 +182,20 @@ public class SAdministracionTransaccional extends HttpServlet {
 	private List<stusuario> getAdministracionTransaccional(){
 		List<stusuario> lstusuarios = new ArrayList<stusuario>();
 		if(CMariaDB.connect()){
-			Connection conn = CMariaDB.getConnection();
-			List<List<String>> usuarios = AdministracionTransaccionalDAO.obtenerUsuarios(conn);
-			for(List<String> user : usuarios){
-				stusuario temp = new stusuario();
-				temp.usuario = user.get(0);
-				temp.creados = Utils.String2Int(user.get(1));
-				temp.actualizados = Utils.String2Int(user.get(2));
-				temp.eliminados = Utils.String2Int(user.get(3));
-				lstusuarios.add(temp);
+			try {
+				Connection conn = CMariaDB.getConnection();
+				List<List<String>> usuarios = AdministracionTransaccionalDAO.obtenerUsuarios(conn);
+				for(List<String> user : usuarios){
+					stusuario temp = new stusuario();
+					temp.usuario = user.get(0);
+					temp.creados = Utils.String2Int(user.get(1));
+					temp.actualizados = Utils.String2Int(user.get(2));
+					temp.eliminados = Utils.String2Int(user.get(3));
+					lstusuarios.add(temp);
+				}
+				conn.close();
+			} catch (SQLException e) {
+				CLogger.write("1", SAdministracionTransaccional.class, e);
 			}
 		}
 		return lstusuarios;
