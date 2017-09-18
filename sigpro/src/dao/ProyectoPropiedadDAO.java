@@ -117,7 +117,9 @@ public class ProyectoPropiedadDAO {
 			Root<ProyectoPropiedad> root = criteria.from(ProyectoPropiedad.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal( root.get("estado"), 1 )));
-			ret = session.createQuery( criteria ).getSingleResult();
+			List<ProyectoPropiedad> lista = session.createQuery( criteria ).getResultList();
+			ret = !lista.isEmpty() ? lista.get(0) : null;
+			
 		}
 		catch(Throwable e){
 			CLogger.write("6", ProyectoPropiedadDAO.class, e);
