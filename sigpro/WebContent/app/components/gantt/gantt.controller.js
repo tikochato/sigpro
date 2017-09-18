@@ -103,6 +103,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 				areTaskDependencyConstraintsEnabled: true,
 				currentTime: new Date(),
 				itemHeight: 30,
+				isReadOnly:true,
 				barCornerRadius: 8,
 				months: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
 				daysOfWeek: ['D','L','M','M','J','V','S'],

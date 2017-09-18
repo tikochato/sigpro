@@ -79,6 +79,8 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 
 	mi.getDocumentosAdjuntos = function(objetoId, tipoObjetoId){
 		mi.rowCollection = [];
+		mi.displayedCollection = [];
+		mi.esNuevoDocumento = true;
 		var formatData = new FormData();
 		formatData.append("accion","getDocumentos");
 		formatData.append("idObjeto", objetoId);
@@ -90,6 +92,8 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			if (response.data.success) {
 				 mi.rowCollection = response.data.documentos;
 		         mi.displayedCollection = [].concat(mi.rowCollection);
+		         if (mi.rowCollection.length>0)
+		        	 mi.esNuevoDocumento = false;
 			}
 		});
 	}
@@ -435,6 +439,9 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 		mi.proyectos =[];
 		mi.gridApi.selection.clearSelectedRows();
 		mi.prestamo = [];
+		mi.rowCollection = [];
+		mi.displayedCollection = [];
+		mi.esNuevoDocumento = true;
 		$scope.active = 0;
 	};
 
@@ -445,6 +452,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 			mi.esColapsado = true;
 			mi.esNuevo = false;
 			mi.prestamo = {};
+			
 			
 			
 			var parametros = {
@@ -1053,7 +1061,16 @@ function buscarPorPrograma($uibModalInstance, $rootScope,$scope, $http, $interva
 				mi.cargarData(1,mi.ejercicio,mi.entidad.entidad);
 			});
 		}
-	};
+	};	
+};
 
-	
-}
+app.directive('showFocus', function($timeout) {
+    return function(scope, element, attrs) {
+      scope.$watch(attrs.showFocus,
+        function (newValue) {
+          $timeout(function() {
+              element[0].focus();             
+          });
+        },true);
+    };   
+  });

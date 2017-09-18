@@ -169,6 +169,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 					}).success(function(response){
 						if(response.success){
 							mi.meta.id = response.id;
+							mi.meta.datoTipoId = response.datoTipoId;
 							mi.meta.usuarioCreo = response.usuarioCreo;
 							mi.meta.fechaCreacion = response.fechaCreacion;
 							mi.meta.usuarioActualizo = response.usuarioactualizo;

@@ -3,6 +3,7 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -51,6 +52,7 @@ public class ProgramaPropiedadDAO {
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			Query<Long> criteria = session.createQuery(query,Long.class);
 			ret = criteria.getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("2", ProgramaPropiedadDAO.class, e);
@@ -115,6 +117,7 @@ public class ProgramaPropiedadDAO {
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal( root.get("estado"), 1 )));
 			ret = session.createQuery( criteria ).getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("6", ProgramaPropiedadDAO.class, e);
@@ -134,6 +137,7 @@ public class ProgramaPropiedadDAO {
 					,Long.class);
 					
 			ret = conteo.getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("7", ProgramaPropiedadDAO.class, e);

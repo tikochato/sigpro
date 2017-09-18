@@ -91,7 +91,8 @@
 					</div>
 					<div class="form-group">
    						<input type="text" class="inputText" ng-model="hitotipoc.hitotipo.nombre" ng-required="true"
-   						ng-value="hitotipoc.hitotipo.nombre" onblur="this.setAttribute('value', this.value);">
+   						ng-value="hitotipoc.hitotipo.nombre" onblur="this.setAttribute('value', this.value);"
+   						show-focus="hitotipoc.mostraringreso">
    						<label class="floating-label">* Nombre</label>
 					</div>
 					<div class="form-group">

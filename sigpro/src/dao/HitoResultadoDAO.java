@@ -2,6 +2,7 @@ package dao;
 
 
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -24,6 +25,7 @@ public class HitoResultadoDAO {
 			criteria.setParameter("hitoId", hitoId);
 			
 			ret = criteria.getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("1", HitoResultadoDAO.class, e);
@@ -45,7 +47,7 @@ public class HitoResultadoDAO {
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
 			ret = session.createQuery( criteria ).getSingleResult();
-			
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("2", HitoDAO.class, e);

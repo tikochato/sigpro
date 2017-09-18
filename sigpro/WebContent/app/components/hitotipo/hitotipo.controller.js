@@ -238,6 +238,17 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 		mi.redireccionSinPermisos=function(){
 			$window.location.href = '/main.jsp#!/forbidden';		
 		}
-		
-		
 	} ]);
+
+
+app.directive('showFocus', function($timeout) {
+  return function(scope, element, attrs) {
+    scope.$watch(attrs.showFocus,
+      function (newValue) {
+        $timeout(function() {
+            element[0].focus();             
+        });
+      },true);
+  };   
+});
+
