@@ -142,7 +142,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 						mi.componentetipo.fechaCreacion=response.fechaCreacion;
 						mi.componentetipo.usuarioActualizo=response.usuarioactualizo;
 						mi.componentetipo.fechaActualizacion=response.fechaactualizacion;
-						mi.cargarTabla();
+						mi.obtenerTotalComponenteTipos();
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo Componente');
@@ -178,7 +178,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 							if(response.success){
 								$utilidades.mensaje('success','Tipo Componente borrado con éxito');
 								mi.componentetipo = null;
-								mi.cargarTabla();
+								mi.obtenerTotalComponenteTipos();
 							}
 							else
 								$utilidades.mensaje('danger','Error al borrar el Tipo Componente');
@@ -451,4 +451,15 @@ function modalBuscarComponentePropiedad($uibModalInstance, $scope, $http, $inter
      mi.cancel = function() {
     	$uibModalInstance.dismiss('cancel');
      };
-}
+};
+
+app.directive('showFocus', function($timeout) {
+    return function(scope, element, attrs) {
+      scope.$watch(attrs.showFocus,
+        function (newValue) {
+          $timeout(function() {
+              element[0].focus();             
+          });
+        },true);
+    };   
+  });

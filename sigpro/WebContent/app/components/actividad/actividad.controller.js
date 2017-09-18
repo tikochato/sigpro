@@ -1,15 +1,17 @@
 var app = angular.module('actividadController', []);
 
-app.controller('actividadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$sce','uiGmapGoogleMapApi', 'dialogoConfirmacion', 
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$sce,uiGmapGoogleMapApi, $dialogoConfirmacion) {
+app.controller('actividadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$sce','uiGmapGoogleMapApi', 'dialogoConfirmacion','documentoAdjunto', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$sce,uiGmapGoogleMapApi, $dialogoConfirmacion, $documentoAdjunto) {
 		var mi=this;
 
+		mi.rowCollection = [];
 		$window.document.title = $utilidades.sistema_nombre+' - Actividades';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.actividades = [];
 		mi.actividad;
 		mi.mostraringreso=false;
+		mi.esNuevoDocumento = true;
 		mi.esnuevo = false;
 		mi.totalActividades = 0;
 		mi.objetoid = $routeParams.objeto_id;
@@ -25,6 +27,58 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
+		
+		mi.adjuntarDocumentos = function(){
+			$documentoAdjunto.getModalDocumento($scope, 5, mi.actividad.id)
+			.result.then(function(data) {
+				if (data != ""){
+					mi.rowCollection = [];
+					mi.rowCollection = data;
+			        mi.displayedCollection = [].concat(mi.rowCollection);
+				}
+			}, function(){
+				
+			});
+		}
+
+		mi.getDocumentosAdjuntos = function(objetoId, tipoObjetoId){
+			mi.rowCollection = [];
+			var formatData = new FormData();
+			formatData.append("accion","getDocumentos");
+			formatData.append("idObjeto", objetoId);
+			formatData.append("idTipoObjeto", tipoObjetoId);
+			formatData.append("t", moment().unix());
+			
+			
+			$http.post('/SDocumentosAdjuntos', formatData, {
+				headers: {'Content-Type': undefined},
+				transformRequest: angular.identity,
+			}).then(function(response) {
+				if (response.data.success) {
+					 mi.rowCollection = response.data.documentos;
+			         mi.displayedCollection = [].concat(mi.rowCollection);
+				}
+			});
+		}
+		
+		mi.descargarDocumento= function(row){
+			var url = "/SDocumentosAdjuntos?accion=getDescarga&id="+row.id;
+			window.location.href = url;
+		}
+		
+		mi.eliminarDocumento= function(row){
+			$http.post('/SDocumentosAdjuntos?accion=eliminarDocumento&id='+row.id)
+			.then(function successCAllback(response){
+				if (response.data.success){
+					var indice = mi.rowCollection.indexOf(row);
+					if (indice !== -1) {
+				       mi.rowCollection.splice(indice, 1);		       
+				    }
+					mi.rowCollection = [];
+					mi.getDocumentosAdjuntos(5, mi.actividad.id);
+				}
+			});
+		};
 		
 		mi.dimensiones = [
 			{value:0,nombre:'Seleccione una opción'},
@@ -246,7 +300,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 						mi.actividad.fechaActualizacion=response.fechaactualizacion;
 						$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
 						mi.obtenerTotalActividades();
-						mi.esnuevo = false;					
+						mi.esnuevo = false;		
+						mi.esNuevoDocumento = false;
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' la Actividad');
@@ -287,6 +342,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		};
 
 		mi.nuevo = function() {
+			mi.esNuevoDocumento = true;
 			mi.datotipoid = "";
 			mi.datotiponombre = "";
 			mi.actividadtipoid = "";
@@ -298,10 +354,13 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			mi.coordenadas = "";
 			mi.duracionDimension = mi.dimensiones[0];
 			mi.gridApi.selection.clearSelectedRows();
+			mi.actividad.porcentajeavance = 0;
 		};
 
 		mi.editar = function() {
 			if(mi.actividad!=null && mi.actividad.id!=null){
+				mi.getDocumentosAdjuntos(5, mi.actividad.id);
+				mi.esNuevoDocumento = false;
 				mi.actividadResponsable = "";
 				mi.mostraringreso = true;
 				mi.actividadtipoid = mi.actividad.actividadtipoid;
@@ -687,8 +746,6 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		  }
 		  return "";
 	  }
-		
-
 } ]);
 
 app.controller('modalBuscarActividadTipo', [ '$uibModalInstance',
@@ -941,3 +998,14 @@ function modalBuscar($uibModalInstance, $scope, $http, $interval,
 		$uibModalInstance.dismiss('cancel');
 	};
 }
+
+app.directive('showFocus', function($timeout) {
+    return function(scope, element, attrs) {
+      scope.$watch(attrs.showFocus,
+        function (newValue) {
+          $timeout(function() {
+              element[0].focus();             
+          });
+        },true);
+    };   
+  });

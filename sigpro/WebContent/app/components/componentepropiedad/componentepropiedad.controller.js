@@ -136,7 +136,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 							mi.componentepropiedad.usuarioActualizo=response.usuarioactualizo;
 							mi.componentepropiedad.fechaActualizacion=response.fechaactualizacion;
 							mi.esnuevo = false;
-							mi.cargarTabla();
+							mi.obtenerTotalComponentePropiedades();
 						}
 						else
 							$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' la Propiedad Componente');
@@ -246,3 +246,15 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			});
 			
 		} ]);
+
+app.directive('showFocus', function($timeout) {
+    return function(scope, element, attrs) {
+      scope.$watch(attrs.showFocus,
+        function (newValue) {
+          $timeout(function() {
+              element[0].focus();             
+          });
+        },true);
+    };   
+  });
+

@@ -61,7 +61,7 @@
 				</div>
 				<br>
 				<div class="total-rows">
-				  Total de {{  desembolsoc.totalDesembolsos + (desembolsoc.totalDesembolsos == 1 ? " Desembolsos" : " Desembolso" ) }}
+				  Total de {{  desembolsoc.totalDesembolsos + (desembolsoc.totalDesembolsos == 1 ? " Desembolso" : " Desembolsos" ) }}
 				</div>
 				<ul uib-pagination total-items="desembolsoc.totalDesembolsos" 
 						ng-model="desembolsoc.paginaActual" 
@@ -114,7 +114,7 @@
 					<div class="form-group">
 					   <input type="text" name="imonto"  class="inputText" id="imonto" ui-number-mask="2"
 					     ng-model="desembolsoc.desembolso.monto" ng-value="desembolsoc.desembolso.monto"   
-					     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+					     onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="desembolsoc.mostraringreso">
 					   <label class="floating-label">* Monto</label>
 					</div>
 					<div class="form-group" >

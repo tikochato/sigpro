@@ -147,8 +147,8 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 						mi.actividadtipo.usuarioActualizo=response.usuarioactualizo;
 						mi.actividadtipo.fechaActualizacion=response.fechaactualizacion;
 						$utilidades.mensaje('success','Tipo de Actividad '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+						mi.obtenerTotalActividadPropiedades();
 						mi.esnuevo = false;
-						mi.cargarTabla();
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo de Actividad');
@@ -184,7 +184,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 							if(response.success){
 								$utilidades.mensaje('success','Tipo de Actividad borrado con éxito');
 								mi.actividadtipo = null;
-								mi.cargarTabla();
+								mi.obtenerTotalActividadPropiedades();
 							}
 							else
 								$utilidades.mensaje('danger','Error al borrar el Tipo de Actividad');
@@ -459,4 +459,15 @@ function modalBuscarActividadPropiedad($uibModalInstance, $scope, $http, $interv
      mi.cancel = function() {
     	$uibModalInstance.dismiss('cancel');
      };
-}
+};
+
+app.directive('showFocus', function($timeout) {
+    return function(scope, element, attrs) {
+      scope.$watch(attrs.showFocus,
+        function (newValue) {
+          $timeout(function() {
+              element[0].focus();             
+          });
+        },true);
+    };   
+  });

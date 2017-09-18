@@ -24,7 +24,7 @@ public class ComponentePropiedadDAO {
 			Query<ComponentePropiedad> criteria = session.createQuery("select p from ComponentePropiedad p "
 					+ "inner join p.ctipoPropiedads ptp "
 					+ "inner join ptp.componenteTipo pt  "
-					+ "where pt.id =  " + idTipoComponente + " ",ComponentePropiedad.class);
+					+ "where p.estado=1 and pt.id =  " + idTipoComponente + " ",ComponentePropiedad.class);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
@@ -40,7 +40,7 @@ public class ComponentePropiedadDAO {
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(p.id) FROM ComponentePropiedad p ",Long.class);
+			Query<Long> conteo = session.createQuery("SELECT count(p.id) FROM ComponentePropiedad p where p.estado=1",Long.class);
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
@@ -56,7 +56,7 @@ public class ComponentePropiedadDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			Query<ComponentePropiedad> criteria = session.createQuery("select p from ComponentePropiedad p  "
-					+ (idPropiedades!=null && idPropiedades.length()>0 ?  " where p.id not in ("+ idPropiedades + ")" : "")
+					+ (idPropiedades!=null && idPropiedades.length()>0 ?  " where p.estado=1 and p.id not in ("+ idPropiedades + ")" : "")
 					,ComponentePropiedad.class);
 			criteria.setFirstResult(((pagina-1)*(numerocomponentepropiedades)));
 			criteria.setMaxResults(numerocomponentepropiedades);
@@ -186,7 +186,7 @@ public class ComponentePropiedadDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			
-			String query = "SELECT count(c.id) FROM ComponentePropiedad c ";
+			String query = "SELECT count(c.id) FROM ComponentePropiedad c WHERE c.estado=1";
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");
@@ -195,7 +195,7 @@ public class ComponentePropiedadDAO {
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(c.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
 			
-			query = String.join(" ", query, (query_a.length()>0 ? String.join("","WHERE (",query_a,")") : ""));
+			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			
 			
 			Query<Long> conteo = session.createQuery(query,Long.class);
@@ -218,7 +218,7 @@ public class ComponentePropiedadDAO {
 				+ "from componente_tipo ct "
 				+ "join ctipo_propiedad ctp ON ctp.componente_tipoid = ct.id "
 				+ "join componente_propiedad cp ON cp.id = ctp.componente_propiedadid "
-				+ " where ct.id = :idTipoComp",ComponentePropiedad.class);
+				+ " where ct.id = :idTipoComp and cp.estado=1",ComponentePropiedad.class);
 			
 			criteria.setParameter("idTipoComp", idTipoComponente);
 			ret = criteria.getResultList();

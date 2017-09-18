@@ -54,7 +54,7 @@
 				</div>
 				<br>
 				<div class="total-rows">
-				  Total de {{  cooperantec.totalCooperantes + (cooperantec.totalCooperantes == 1 ? " Cooperante" : " Cooperante" ) }}
+				  Total de {{  cooperantec.totalCooperantes + (cooperantec.totalCooperantes == 1 ? " Cooperante" : " Cooperantes" ) }}
 				</div>
 				<ul uib-pagination total-items="cooperantec.totalCooperantes" 
 						ng-model="cooperantec.paginaActual" 
@@ -96,7 +96,7 @@
 						<div class="form-group">
 						   <input type="number" name="codigo"  class="inputText" id="codigo" 
 						     ng-model="cooperantec.cooperante.codigo" ng-value="cooperantec.cooperante.codigo"   
-						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+						     onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="cooperantec.mostraringreso">
 						   <label class="floating-label">* Código</label>
 						</div>
 						<div class="form-group">

@@ -200,7 +200,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 						mi.componente.usuarioActualizo=response.usuarioactualizo;
 						mi.componente.fechaActualizacion=response.fechaactualizacion;
 						$utilidades.mensaje('success','Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
-						mi.cargarTabla();
+						mi.obtenerTotalComponentes();
 						mi.esnuevo = false;
 					}
 					else
@@ -225,7 +225,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 							if(response.success){
 								$utilidades.mensaje('success','Cooperante borrado con éxito');
 								mi.componente = null;
-								mi.cargarTabla();
+								mi.obtenerTotalComponentes();
 							}
 							else
 								$utilidades.mensaje('danger','Error al borrar el Cooperante');
@@ -797,3 +797,13 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 	  };
 }]);
 
+app.directive('showFocus', function($timeout) {
+    return function(scope, element, attrs) {
+      scope.$watch(attrs.showFocus,
+        function (newValue) {
+          $timeout(function() {
+              element[0].focus();             
+          });
+        },true);
+    };   
+  });

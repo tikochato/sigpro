@@ -130,7 +130,7 @@
 						</div>
 						<div class="form-group">
     						<div class="form-group">
-							   <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="actividadc.actividad.nombre" ng-value="actividadc.actividad.nombre"  onblur="this.setAttribute('value', this.value);" ng-required="true" >
+							   <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="actividadc.actividad.nombre" ng-value="actividadc.actividad.nombre"  onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="actividadc.mostraringreso">
 							   <label class="floating-label">* Nombre</label>
 							</div>
 						</div>
@@ -348,8 +348,62 @@
 					</tbody>
 				</table>
 				</div>
-				
 				<br/>
+				
+				<div class="panel panel-default" ng-hide="actividadc.esNuevoDocumento" >
+						<div class="panel-heading label-form" style="text-align: center;">Archivos adjuntos</div>
+						<div class="panel-body">
+							<div style="width: 95%; float: left">
+							<table st-table="actividadc.displayedCollection" st-safe-src="actividadc.rowCollection" class="table table-striped">
+								<thead>
+									<tr>
+										<th style="display: none;">Id</th>
+										<th class="label-form">Nombre</th>
+										<th class="label-form">Extensión</th>
+										<th class="label-form">Descarga</th>
+										<th class="label-form">Eliminar</th>
+									</tr>
+									<tr>
+										<th colspan="5"><input st-search="" class="form-control" placeholder="busqueda global ..." type="text"/></th>
+									</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="row in actividadc.displayedCollection">
+									<td style="display: none;">{{row.id}}</td>
+									<td>{{row.nombre}}</td>
+									<td>{{row.extension}}</td>
+									<td align="center">
+										<button type="button"
+											ng-click="actividadc.descargarDocumento(row)"
+											uib-tooltip="Descargar documento" tooltip-placement="bottom"
+											class="btn btn-default">
+											<i class="glyphicon glyphicon-download-alt"> </i>
+										</button>
+									</td>
+									<td align="center">
+										<button type="button"
+											ng-click="actividadc.eliminarDocumento(row)"
+											uib-tooltip="Eliminar documento" tooltip-placement="bottom"
+											class="btn btn-default">
+											<i class="glyphicon glyphicon-minus-sign"> </i>
+										</button>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+	        				</div>
+	    					<div style="width: 5%; float: right" align="right">
+	    						<div class="btn-group">
+									<label class="btn btn-default" ng-model="actividadc.adjuntarDocumento"
+										ng-click="actividadc.adjuntarDocumentos();" uib-tooltip="Adjuntar documento" tooltip-placement="bottom">
+									<span class="glyphicon glyphicon-plus"></span></label>
+								</div>
+	        				</div>
+						</div>
+					</div>
+				
+				
+				
 				<div class="panel panel-default">
 					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 					<div class="panel-body">

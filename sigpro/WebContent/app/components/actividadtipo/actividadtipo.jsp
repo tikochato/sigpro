@@ -97,7 +97,7 @@
 				<div class="form-group">
 				   <input type="text" name="nombre"  class="inputText" id="nombre" 
 				     ng-model="actividadtipoc.actividadtipo.nombre" ng-value="actividadtipoc.actividadtipo.nombre"   
-				     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+				     onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="actividadtipoc.mostraringreso">
 				   <label class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group">

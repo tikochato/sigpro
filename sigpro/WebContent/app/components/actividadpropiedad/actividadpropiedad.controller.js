@@ -138,7 +138,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 							mi.actividadpropiedad.usuarioActualizo=response.usuarioactualizo;
 							mi.actividadpropiedad.fechaActualizacion=response.fechaactualizacion;
 							mi.esnuevo = false;
-							mi.cargarTabla();
+							mi.obtenerTotalActividadPropiedades();
 						}
 						else
 							$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' la Propiedad de Actividad');
@@ -165,7 +165,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 								if(response.success){
 									$utilidades.mensaje('success','Propiedad de Actividad borrado con éxito');
 									mi.actividadpropiedad = null;
-									mi.cargarTabla();
+									mi.obtenerTotalActividadPropiedades();
 								}
 								else
 									$utilidades.mensaje('danger','Error al borrar la Propiedad de Actividad');
@@ -249,3 +249,14 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 			});
 			
 		} ]);
+
+app.directive('showFocus', function($timeout) {
+    return function(scope, element, attrs) {
+      scope.$watch(attrs.showFocus,
+        function (newValue) {
+          $timeout(function() {
+              element[0].focus();             
+          });
+        },true);
+    };   
+  });

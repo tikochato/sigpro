@@ -59,7 +59,7 @@
 				</div>
 			</div>
 			<br/>
-			<div class="total-rows">Total de {{  componentetipoc.totalComponentetipos + (componentetipoc.totalComponentetipos == 1 ? " Tipo de Componente" : " Tipos de Compoentes" ) }}</div>
+			<div class="total-rows">Total de {{  componentetipoc.totalComponentetipos + (componentetipoc.totalComponentetipos == 1 ? " Tipo de Componente" : " Tipos de Componentes" ) }}</div>
 			<ul uib-pagination total-items="componentetipoc.totalComponentetipos"
 				ng-model="componentetipoc.paginaActual"
 				max-size="componentetipoc.numeroMaximoPaginas"
@@ -98,7 +98,7 @@
 				<div class="form-group">
 				   <input type="text" name="inombre"  class="inputText" id="inombre" 
 				     ng-model="componentetipoc.componentetipo.nombre" value="{{componentetipoc.componentetipo.nombre}}"   
-				     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+				     onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="componentetipoc.mostraringreso">
 				   <label class="floating-label">* Nombre</label>
 				</div>
 				
@@ -130,7 +130,7 @@
 						<tr>
 							<th>ID</th>
 							<th>Nombre</th>
-							<th>Descripicon</th>
+							<th>Descripción</th>
 							<th>Tipo Dato</th>
 							<th style="width: 30px;">Quitar</th>
 

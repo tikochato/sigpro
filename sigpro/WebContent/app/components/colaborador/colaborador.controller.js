@@ -25,7 +25,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location, $m
 	mi.cambioPagina = function() {
 		mi.cargarData(mi.paginaActual);
 	}
-
+	
 	mi.filtros = [];
 	mi.mostrarCargando = true;
 	mi.data = [];
@@ -194,7 +194,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location, $m
 	}
 
 	mi.nuevo = function() {
-		
+		mi.mostraringreso = true;
 		mi.esForma = true;
 		mi.colaborador = {};
 		mi.esNuevo = true;
@@ -208,6 +208,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location, $m
 
 	mi.editar = function() {
 		if (mi.colaborador!=null && mi.colaborador.id!=null) {
+			mi.mostraringreso = true;
 			mi.esForma = true;
 			mi.esNuevo = false;
 			mi.unidadejecutoraid=mi.colaborador.unidadejecutoraid;
@@ -247,12 +248,10 @@ function controlColaborador($scope, $routeParams, $route, $window, $location, $m
 							mi.colaborador.usuarioActualizo=response.data.colaborador.usuarioActualizo;
 							mi.colaborador.fechaActualizacion=response.data.colaborador.fechaActualizacion;
 							mi.opcionesGrid.data = mi.data;
-							$utilidades.mensaje('success',
-									'Colaborador guardado con exito.');
+							$utilidades.mensaje('success', 'Colaborador guardado con exito.');
 							mi.obtenerTotalColaboradores();
 						} else {
-							$utilidades.mensaje('danger',
-									'Error al guardar al Colaborador.');
+							$utilidades.mensaje('danger','Error al guardar al Colaborador.');
 						}
 
 					});
@@ -297,7 +296,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location, $m
 		if(mi.colaborador!=null && mi.colaborador.id!=null){
 			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 					, "Confirmación de Borrado"
-					, '¿Desea borrar al colaborador "'+mi.colaborador.primerNombre+' '+mi.colaborador.segundoNombre+' '+mi.colaborador.primerApellido+' '+mi.colaborador.segundoApellido+'"?'
+					, '¿Desea borrar al colaborador "' + mi.colaborador.primerNombre + ' ' + (mi.colaborador.segundoNombre != null ? mi.colaborador.segundoNombre : '') + ' ' + mi.colaborador.primerApellido + ' ' + (mi.colaborador.segundoApellido != null ? mi.colaborador.segundoApellido : '') + '"?'
 					, "Borrar"
 					, "Cancelar")
 			.result.then(function(data) {
@@ -675,5 +674,15 @@ function modalBuscarUsuario($uibModalInstance, $scope, $http, $interval, i18nSer
      mi.cancel = function() {
     	$uibModalInstance.dismiss('cancel');
      };
-}
+};
 
+app.directive('showFocus', function($timeout) {
+    return function(scope, element, attrs) {
+      scope.$watch(attrs.showFocus,
+        function (newValue) {
+          $timeout(function() {
+              element[0].focus();             
+          });
+        },true);
+    };   
+  });
