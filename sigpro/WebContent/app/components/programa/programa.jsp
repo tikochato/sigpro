@@ -105,7 +105,8 @@
 		  					<br/><br/>
 						</div>
 						<div class="form-group">
-							<input type="text"  class="inputText" ng-model="programac.programa.nombre" ng-value="programac.programa.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" >
+							<input type="text"  class="inputText" ng-model="programac.programa.nombre" ng-value="programac.programa.nombre" onblur="this.setAttribute('value', this.value);" 
+							ng-required="true" show-focus="programac.esColapsado">
 							<label  class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group" >
