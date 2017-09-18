@@ -140,13 +140,12 @@ public class SPlanAdquisiciones extends HttpServlet {
 			if (accion.equals("generarPlan")){
 				
 				try{
-					Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"), null);
-					List<stplanadquisiciones> lstprestamo = generarPlan(idPlanAdquisiciones, idPrestamo, usuario);
+					List<stplanadquisiciones> lstprestamo = generarPlan(idPrestamo, usuario);
 					
 					Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(idPrestamo, 1);
 					String fechaSuscripcion = Utils.formatDate(prestamo.getFechaSuscripcion());
 					String fechaCierre = Utils.formatDate(prestamo.getFechaCierreOrigianlUe());
-					Integer cooperanteId = prestamo.getCooperante().getId();
+					Integer cooperanteId = prestamo.getCooperante() != null && prestamo.getCooperante().getId() != 0 ? prestamo.getCooperante().getId() : 0;
 					
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 			        response_text = String.join("", "\"proyecto\":",response_text);
@@ -323,8 +322,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 				String headers[][];
 				String datos[][];
 				headers = generarHeaders();
-				Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"), null);
-				datos = generarDatos(idPlanAdquisiciones, idPrestamo, usuario);
+				datos = generarDatos(idPrestamo, usuario);
 				String path = archivo.exportarPlanAdquisiciones(headers, datos,usuario);
 				File file=new File(path);
 				if(file.exists()){
@@ -405,7 +403,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		tempPrestamo.bloqueado = false;
 	}
 	
-	private List<stplanadquisiciones> generarPlan(Integer idPlanAdquisiciones, Integer idPrestamo, String usuario){
+	private List<stplanadquisiciones> generarPlan(Integer idPrestamo, String usuario){
 		try{
 			List<stplanadquisiciones> lstprestamo = new ArrayList<stplanadquisiciones>();
 			stplanadquisiciones tempPrestamo = new stplanadquisiciones();
@@ -413,7 +411,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 			Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
 					
 			PlanAdquisiciones planAdquisicion = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(1, proyecto.getId());
-			idPlanAdquisiciones = planAdquisicion != null ? planAdquisicion.getId() : null;
+			Integer idPlanAdquisiciones = planAdquisicion != null ? planAdquisicion.getId() : null;
 			
 			tempPrestamo.objetoId = proyecto.getId();
 			tempPrestamo.nombre = proyecto.getNombre();
@@ -915,7 +913,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders();
-			datos = generarDatos(idPlanAdquisiciones, idPrestamo, usuario);
+			datos = generarDatos(idPrestamo, usuario);
 			excel = new CExcel("Plan Adquisiciones", false, null);
 			wb=excel.generateExcelOfData(datos, "Plan Adquisiciones", headers, null, true, usuario);
 		
@@ -946,9 +944,9 @@ public class SPlanAdquisiciones extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatos(Integer idPlanAdquisiciones, Integer idPrestamo, String usuario){
+	public String[][] generarDatos(Integer idPrestamo, String usuario){
 		String[][] datos = null;
-		List<stplanadquisiciones> lstprestamo = generarPlan(idPlanAdquisiciones, idPrestamo, usuario);
+		List<stplanadquisiciones> lstprestamo = generarPlan(idPrestamo, usuario);
 		
 		if (lstprestamo != null && !lstprestamo.isEmpty()){ 
 			datos = new String[lstprestamo.size()][17];
