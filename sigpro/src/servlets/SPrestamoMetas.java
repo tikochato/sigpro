@@ -217,18 +217,21 @@ public class SPrestamoMetas extends HttpServlet {
 		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
 		for(Object objeto : estructuraProyecto){
 			Object[] obj = (Object[]) objeto;
-			stprestamo tempPrestamo =  new stprestamo();
-			tempPrestamo.objeto_id = (Integer)obj[0];
-			tempPrestamo.nombre = (String)obj[1];
-			tempPrestamo.nivel = (Integer)obj[4] +1;
-			tempPrestamo.objeto_tipo = ((BigInteger) obj[2]).intValue();
-			if(tempPrestamo.objeto_tipo <=3){
-				ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();
-				if(tempPrestamo.objeto_tipo == 3){
-					presupuestoPrestamo = PrestamoMetasDAO.getMetasPorProducto(tempPrestamo.objeto_id, anioInicial, anioFinal);
+			Integer nivel = (Integer)obj[4];
+			if(nivel!= null){
+				stprestamo tempPrestamo =  new stprestamo();
+				tempPrestamo.objeto_id = (Integer)obj[0];
+				tempPrestamo.nombre = (String)obj[1];
+				tempPrestamo.nivel = nivel +1;
+				tempPrestamo.objeto_tipo = ((BigInteger) obj[2]).intValue();
+				if(tempPrestamo.objeto_tipo <=3){
+					ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();
+					if(tempPrestamo.objeto_tipo == 3){
+						presupuestoPrestamo = PrestamoMetasDAO.getMetasPorProducto(tempPrestamo.objeto_id, anioInicial, anioFinal);
+					}
+					tempPrestamo = getMetas(presupuestoPrestamo, anioInicial, anioFinal, tempPrestamo);
+					lstPrestamo.add(tempPrestamo);
 				}
-				tempPrestamo = getMetas(presupuestoPrestamo, anioInicial, anioFinal, tempPrestamo);
-				lstPrestamo.add(tempPrestamo);
 			}
 		}
 		return lstPrestamo;

@@ -34,7 +34,6 @@ public class PrestamoMetasDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
                     CLogger.write("1", PrestamoMetasDAO.class, e);
                 }
             }
@@ -72,7 +71,6 @@ public class PrestamoMetasDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
                     CLogger.write("2", PrestamoMetasDAO.class, e);
                 }
                 
@@ -109,7 +107,6 @@ public class PrestamoMetasDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
                     CLogger.write("3", PrestamoMetasDAO.class, e);
                 }            
             }
@@ -152,7 +149,6 @@ public class PrestamoMetasDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
                     CLogger.write("4", PrestamoMetasDAO.class, e);
                 }
                 
@@ -196,7 +192,6 @@ public class PrestamoMetasDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
                     CLogger.write("5", PrestamoMetasDAO.class, e);
                 }
                 
@@ -245,7 +240,6 @@ public class PrestamoMetasDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
                     CLogger.write("6",PrestamoMetasDAO.class, e);
                 }
                 
@@ -289,7 +283,6 @@ public class PrestamoMetasDAO {
                     
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
                     CLogger.write("7",PrestamoMetasDAO.class, e);
                 }
             }

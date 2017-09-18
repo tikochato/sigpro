@@ -27,7 +27,8 @@ public class ProductoTipoDAO {
 			Root<ProductoTipo> root = criteria.from(ProductoTipo.class);
 			criteria.select(root);
 			criteria.where(builder.equal(root.get("id"), codigo));
-			ret = session.createQuery(criteria).getSingleResult();
+			List<ProductoTipo> lista = session.createQuery(criteria).getResultList();
+			ret = !lista.isEmpty() ? lista.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("1", ProductoTipoDAO.class, e);
 		} finally {
