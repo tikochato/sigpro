@@ -63,7 +63,8 @@
 						<input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.fechaCorte" is-open="controller.fi_abierto"
 				            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="controller.generar()" 
 				            ng-required="true"  ng-click="controller.abrirPopupFecha(1000)"
-				            ng-value="controller.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
+				            ng-value="controller.fechaCorte" onblur="this.setAttribute('value', this.value);"
+				            ng-readonly="true" ng-click="controller.abrirPopupFecha(1000)"/>
 				            <span class="label-icon" ng-click="controller.abrirPopupFecha(1000)">
 				              <i class="glyphicon glyphicon-calendar"></i>
 				            </span>

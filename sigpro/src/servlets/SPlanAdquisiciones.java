@@ -358,7 +358,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
 				response.setContentType("application/pdf");
 				response.setContentLength(outArray.length);
-				response.setHeader("Expires:", "0"); 
+				response.setHeader("Cache-Control", "no-cache"); 
 				response.setHeader("Content-Disposition", "in-line; 'planAdquisiciones.pdf'");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
@@ -369,14 +369,16 @@ public class SPlanAdquisiciones extends HttpServlet {
 			response_text = "{ \"success\": false }";
 		}
 		
-		response.setHeader("Content-Encoding", "gzip");
-		response.setCharacterEncoding("UTF-8");
+		if(!accion.equals("exportarExcel") && !accion.equals("exportarPdf")){
+			response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
 
-        OutputStream output = response.getOutputStream();
-		GZIPOutputStream gz = new GZIPOutputStream(output);
-        gz.write(response_text.getBytes("UTF-8"));
-        gz.close();
-        output.close();
+	        OutputStream output = response.getOutputStream();
+			GZIPOutputStream gz = new GZIPOutputStream(output);
+	        gz.write(response_text.getBytes("UTF-8"));
+	        gz.close();
+	        output.close();
+		}
 	}
 	
 	private static void inicializarColumnasOcultas(stplanadquisiciones tempPrestamo){
@@ -925,8 +927,8 @@ public class SPlanAdquisiciones extends HttpServlet {
 		String headers[][];
 		
 		headers = new String[][]{
-			{"Nombre", "Tipo de Adquisici�n", "Unidad de Medida", "Categor�a de Aquisici�n", "Cantidad", "Costo", "Total", "Preparaci�n de Documentos", "", "Lanzamiento de Evento","", 
-				"Recepci�n y Evaluaci�n de Ofertas", "", "Adjudicaci�n", "", "Firma de Contrato", ""},  //titulos
+			{"Nombre", "Tipo de Adquisicion", "Unidad de Medida", "Categoria de Aquisicion", "Cantidad", "Costo", "Total", "Preparacion de Documentos", "", "Lanzamiento de Evento","", 
+				"Recepcion y Evaluacion de Ofertas", "", "Adjudicacion", "", "Firma de Contrato", ""},  //titulos
 			null, //mapeo
 			{"string", "string", "string", "string", "double", "currency", "currency", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string"}, //tipo dato
 			null, //operaciones columnas

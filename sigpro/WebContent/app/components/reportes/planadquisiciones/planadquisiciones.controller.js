@@ -732,6 +732,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	}
 	
 	mi.exportarExcel = function(){
+		mi.mostrarCargando = true;
 		$http.post('/SPlanAdquisiciones', { 
 			 accion: 'exportarExcel', 
 			 idPrestamo: mi.idPrestamo,
@@ -739,6 +740,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			 t:moment().unix()
 		  } ).then(
 				  function successCallback(response) {
+					  mi.mostrarCargando = false;
 					  var anchor = angular.element('<a/>');
 					  anchor.attr({
 				         href: 'data:application/ms-excel;base64,' + response.data,
@@ -746,12 +748,13 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				         download: 'PlanAdquisiciones.xls'
 					  })[0].click();
 				  }.bind(this), function errorCallback(response){
-					 		
+					  mi.mostrarCargando = false;
 			 	}
 		  	);
 		};
 	
 	mi.exportarPdf=function(){
+		mi.mostrarCargando = true;
 		$http.post('/SPlanAdquisiciones', { 
 			 accion: 'exportarPdf', 
 			 idPrestamo: mi.idPrestamo,
@@ -759,6 +762,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			 t:moment().unix()
 		  } ).then(
 				  function successCallback(response) {
+					  mi.mostrarCargando = false;
 					  var anchor = angular.element('<a/>');
 					  anchor.attr({
 				         href: 'data:application/pdf;base64,' + response.data,
@@ -766,7 +770,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 				         download: 'PlanAdquisiciones.pdf'
 					  })[0].click();
 				  }.bind(this), function errorCallback(response){
-					 		
+					  mi.mostrarCargando = false;
 			 	}
 		  	);
 	};

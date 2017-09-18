@@ -18,7 +18,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="17040">
-			       		<label class="btn btn-primary" ng-click="metac.nueva()" title="Nuevo">
+			       		<label class="btn btn-primary" ng-click="metac.nueva()" title="Nuevo" click="setFocusToTextBox()">
 						<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			       </shiro:hasPermission> 
 			       <shiro:hasPermission name="17010">
@@ -101,7 +101,7 @@
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText"  ng-model="metac.meta.nombre"
-    						ng-value="metac.meta.nombre" onblur="this.setAttribute('value', this.value);">
+    						ng-value="metac.meta.nombre" onblur="this.setAttribute('value', this.value);" show-focus="metac.mostraringreso">
     						<label  class="floating-label">Nombre</label>
 						</div>
 						<div class="form-group">

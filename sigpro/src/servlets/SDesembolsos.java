@@ -165,7 +165,7 @@ public class SDesembolsos extends HttpServlet {
 				outStream.write(outArray);
 				outStream.flush();
 			}catch(Exception e){
-				CLogger.write_simple("1", SDesembolsos.class, e.getMessage());
+				CLogger.write("1", SDesembolsos.class, e);
 			}
 		}else if(accion.equals("exportarPdf")){
 			Integer ejercicioFiscal = Utils.String2Int(map.get("ejercicioFiscal"));
@@ -173,7 +173,7 @@ public class SDesembolsos extends HttpServlet {
 			Integer anioInicial = Utils.String2Int(map.get("anioInicial"));
 			Integer anioFinal = Utils.String2Int(map.get("anioFinal"));
 			Integer agrupacion = Utils.String2Int(map.get("agrupacion"));
-			CPdf archivo = new CPdf("Administración Transaccional");
+			CPdf archivo = new CPdf("Desembolsos");
 			String headers[][];
 			String datos[][];
 			headers = generarHeaders(anioInicial, anioFinal, ejercicioFiscal, agrupacion);
@@ -186,7 +186,7 @@ public class SDesembolsos extends HttpServlet {
 		        	is = new FileInputStream(file);
 		        }
 		        catch (Exception e) {
-					CLogger.write("5", SAdministracionTransaccional.class, e);
+					CLogger.write("5", SDesembolsos.class, e);
 		        }
 		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		        
@@ -212,8 +212,8 @@ public class SDesembolsos extends HttpServlet {
 		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
 				response.setContentType("application/pdf");
 				response.setContentLength(outArray.length);
-				response.setHeader("Expires:", "0"); 
-				response.setHeader("Content-Disposition", "in-line; 'AdministracionTransaccional.pdf'");
+				response.setHeader("Cache-Control", "no-cache"); 
+				response.setHeader("Content-Disposition", "in-line; 'Desembolsos.pdf'");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
@@ -223,10 +223,10 @@ public class SDesembolsos extends HttpServlet {
 			response_text = "{ \"success\": false }";
 		}
 		
-		response.setHeader("Content-Encoding", "gzip");
-		response.setCharacterEncoding("UTF-8");
+		if(!accion.equals("exportarExcel") && !accion.equals("exportarPdf")){
+			response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
 
-		if (!accion.equals("exportarExcel")){
 	        OutputStream output = response.getOutputStream();
 			GZIPOutputStream gz = new GZIPOutputStream(output);
 	        gz.write(response_text.getBytes("UTF-8"));
