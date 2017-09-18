@@ -67,7 +67,7 @@ public class CProject {
 	
 	
 	static int PROGRAMA_TIPO_ID_DEFECTO = 1;
-	static int COOPERANTE_ID_DEFECTO = 1;
+	static int COOPERANTE_ID_DEFECTO = 0;
 	static int PROYECTO_TIPO_ID_DEFECTO = 3;
 	static int ENTIDAD_ID_DEFECTO = 0;
 	static int UNIDAD_EJECUTORA_ID_DEFECTO = 0;
