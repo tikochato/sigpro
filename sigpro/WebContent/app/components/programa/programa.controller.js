@@ -1061,7 +1061,16 @@ function buscarPorPrograma($uibModalInstance, $rootScope,$scope, $http, $interva
 				mi.cargarData(1,mi.ejercicio,mi.entidad.entidad);
 			});
 		}
-	};
+	};	
+};
 
-	
-}
+app.directive('showFocus', function($timeout) {
+    return function(scope, element, attrs) {
+      scope.$watch(attrs.showFocus,
+        function (newValue) {
+          $timeout(function() {
+              element[0].focus();             
+          });
+        },true);
+    };   
+  });

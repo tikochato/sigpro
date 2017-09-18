@@ -232,3 +232,14 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 				} 
 			}
 ]);
+
+app.directive('showFocus', function($timeout) {
+	  return function(scope, element, attrs) {
+	    scope.$watch(attrs.showFocus,
+	      function (newValue) {
+	        $timeout(function() {
+	            element[0].focus();             
+	        });
+	      },true);
+	  };   
+	});
