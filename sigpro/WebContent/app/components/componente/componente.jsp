@@ -287,7 +287,7 @@
 								<div class="form-group">
 								   <input class="inputText"  type="number"
 								     ng-model="componentec.componente.duracion" ng-value="componentec.componente.duracion"   
-								     onblur="this.setAttribute('value', this.value);"  min="1" max="100" ng-required="true" 
+								     onblur="this.setAttribute('value', this.value);"  min="1" ng-required="true" 
 								     ng-readonly="componentec.duracionDimension.value != 0 ? false : true"
 								     ng-change="componentec.componente.fechaInicio != null && componentec.duracionDimension.value != 0 ? componentec.cambioDuracion(componentec.duracionDimension) : ''">
 								   <label class="floating-label">* Duración</label>
