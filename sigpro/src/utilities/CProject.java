@@ -400,14 +400,14 @@ public class CProject {
 				contActividad++;
 				objetoTipoTemp=5;
 					objeto_temp = crearActividad(task, usuario,((Subproducto) objeto).getId(),OBJETO_ID_SUBPRODUCTO 
-							,5,((Subproducto) objeto).getTreePath(),
+							,4,((Subproducto) objeto).getTreePath(),
 							objetoTipo == 5 ? contadorLocal : contActividad,proyectoBase_);
 					cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
 			}else if (indetnacion > 5){
 				objetoTipoTemp=5;
 				contadorLocal ++;
 				objeto_temp = crearActividad(task, usuario,((Actividad) objeto).getId(),OBJETO_ID_ACTIVIDAD 
-						,indetnacion,((Actividad) objeto).getTreePath(),contadorLocal,proyectoBase_);
+						,indetnacion-1,((Actividad) objeto).getTreePath(),contadorLocal,proyectoBase_);
 				cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
 			}
 			
