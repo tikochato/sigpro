@@ -1,7 +1,7 @@
 var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'smart-table']);
 
-app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Utilidades','i18nService','$timeout', '$q','dialogoConfirmacion',
-	function($scope, $http, $interval, $utilidades,i18nService,$timeout, $q, $dialogoConfirmacion){
+app.controller('informacionPresupuestariaController', ['$scope', '$http', '$interval', 'Utilidades','i18nService','$timeout','$window', '$q','dialogoConfirmacion',
+	function($scope, $http, $interval, $utilidades,i18nService,$timeout,$window, $q, $dialogoConfirmacion){
 		var mi = this;
 		i18nService.setCurrentLang('es');
 		mi.fechaInicio = "";
@@ -654,6 +654,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			 }else if(mi.grupoMostrado.real){
 				 tipoVisualizacion = 1;
 			 }
+			 mi.mostrarCargando = true;
 			$http.post('/SInformacionPresupuestaria', { 
 				accion: 'exportarPdf',
 				idPrestamo: mi.prestamo.value,
@@ -664,6 +665,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 				t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
+						  mi.mostrarCargando = false;
 							var anchor = angular.element('<a/>');
 						    anchor.attr({
 						         href: 'data:application/pdf;base64,' + response.data,
@@ -671,7 +673,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 						         download: 'EjecucionPresupuestaria.pdf'
 						     })[0].click();
 						  }.bind(this), function errorCallback(response){
-						 		
+							  mi.mostrarCargando = false;
 						 	}
 						 );
 		};
@@ -683,6 +685,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 			 }else if(mi.grupoMostrado.real){
 				 tipoVisualizacion = 1;
 			 }
+			 mi.mostrarCargando = true;
 			 $http.post('/SInformacionPresupuestaria', { 
 				 accion: 'exportarExcel', 
 				 idPrestamo: mi.prestamo.value,
@@ -693,6 +696,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
+						  mi.mostrarCargando = false;
 						  var anchor = angular.element('<a/>');
 						  anchor.attr({
 					         href: 'data:application/ms-excel;base64,' + response.data,
@@ -700,7 +704,7 @@ app.controller('adquisicionesController', ['$scope', '$http', '$interval', 'Util
 					         download: 'EjecucionPresupuestaria.xls'
 						  })[0].click();
 					  }.bind(this), function errorCallback(response){
-						 		
+						  mi.mostrarCargando = false;
 				 	}
 			  	);
 			};

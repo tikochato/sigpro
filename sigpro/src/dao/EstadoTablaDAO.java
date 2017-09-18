@@ -30,7 +30,8 @@ public class EstadoTablaDAO {
 		try{
 			EstadoTablaId estadotablaid = new EstadoTablaId(usuario,tabla);
 			EstadoTabla estadotabla = session.get(EstadoTabla.class,estadotablaid);
-			ret=estadotabla.getValores();
+			if(estadotabla!=null)
+				ret=estadotabla.getValores();
 		}catch(Throwable e){
 			CLogger.write("3", EstadoTablaDAO.class, e);
 		}

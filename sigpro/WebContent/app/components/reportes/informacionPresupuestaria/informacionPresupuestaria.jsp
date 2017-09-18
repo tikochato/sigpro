@@ -141,7 +141,7 @@
 		
 	</style>
 
-<div ng-controller="adquisicionesController as controller" class="maincontainer all_page" id="title" style="height: 100%">
+<div ng-controller="informacionPresupuestariaController as controller" class="maincontainer all_page" id="title" style="height: 100%">
 	
     <shiro:lacksPermission name="24010">
 			<p ng-init="controller.redireccionSinPermisos()"></p>

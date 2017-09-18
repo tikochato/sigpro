@@ -8,26 +8,56 @@ app.controller('agendaController',['$scope','$http','$interval','i18nService','U
 	mi.proyectoid = "";
 	mi.proyectoNombre = "";
 	mi.objetoTipoNombre = "";
+	mi.mostrarcargando = true;
+	mi.proyectoId = [];
+	mi.proyectoId.value = $routeParams.proyectoId;
+	mi.mostrarTabla = false; 
 	
 	$window.document.title = $utilidades.sistema_nombre+' - Agenda de Actividades';
 	i18nService.setCurrentLang('es');
 	 
-	$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyectoId }).success(
+	
+	
+	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
 			function(response) {
-				mi.proyectoid = response.id;
-				mi.proyectoNombre = response.nombre;
-				mi.objetoTipoNombre = "Proyecto";
-	});
+				mi.prestamos = [];
+				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un proyecto'});
+				if (response.success){
+					for (var i = 0; i < response.entidades.length; i++){
+						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
+					}
+					
+					if ($routeParams.proyectoId!=null && $routeParams.proyectoId != undefined){
+						for (x in mi.prestamos){
+							if (mi.prestamos[x].value == $routeParams.proyectoId){
+								mi.proyectoId = mi.prestamos[x];
+								mi.cargarAgenda();
+								break;
+							}
+						}
+					}else{
+						mi.prestamo = mi.prestamos[0];
+					}
+				}
+		});
 	 
-	 $http.post('/SAgenda', { accion: 'getAgenda', proyectoid:$routeParams.proyectoId, t: (new Date()).getTime()})
-	 .then(function(response){
-		 mi.lista = response.data.agenda;
-		 mi.agenda = [].concat(mi.lista);
-		 var tab = "\t";
-		 for (x in mi.agenda){
-			 mi.agenda[x].nombre = tab.repeat(mi.agenda[x].objetoTipo -1) + mi.agenda[x].nombre; 
-		 }
-	});	
+	mi.cargarAgenda = function (){
+		mi.agenda = [];
+		mi.lista = [];
+		 mi.mostrarTabla=false;
+		 $http.post('/SAgenda', { accion: 'getAgenda', proyectoid:mi.proyectoId.value, t: (new Date()).getTime()})
+		 .then(function(response){
+			 mi.lista = response.data.agenda;
+			 mi.agenda = [].concat(mi.lista);
+			 var tab = "\t";
+			 for (x in mi.agenda){
+				 mi.agenda[x].nombre = tab.repeat(mi.agenda[x].objetoTipo -1) + mi.agenda[x].nombre; 
+			 }
+			 mi.mostrarcargando = false;
+			 if(mi.lista.length > 0)
+				 mi.mostrarTabla=true;
+		});	
+	};
 	 
 	 mi.exportarExcel = function(){
 			$http.post('/SAgenda', { accion: 'exportarExcel', proyectoid:$routeParams.proyectoId,t:moment().unix()
@@ -44,6 +74,23 @@ app.controller('agendaController',['$scope','$http','$interval','i18nService','U
 							 	}
 							 );
 		};
+		
+		 mi.claseIcon = function (objetoTipo) {
+			   
+			    switch (objetoTipo) {
+			        case 1:
+			            return 'glyphicon glyphicon-record';
+			        case 2:
+			            return 'glyphicon glyphicon-th';
+			        case 3:
+			            return 'glyphicon glyphicon-certificate';
+			        case 4:
+			            return 'glyphicon glyphicon-link';
+			        case 5:
+			            return 'glyphicon glyphicon-th-list';
+			    }
+			   
+			};
 	
 	
 }]);

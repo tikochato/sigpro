@@ -103,7 +103,7 @@ public class SSubproductoTipo extends HttpServlet {
 		String propiedades = parametro.get("propiedades");
 
 		boolean actualizado = SubproductoTipoDAO.actualizar(codigo, nombre, descripcion, propiedades, usuario);
-		String resultadoJson = String.join("","{ \"success\": ",(actualizado ? "true" : "false")  +",\"usuarioCreo\":\""+SubproductoTipoDAO.getSubproductoTipo(codigo).getUsuarioCreo().toString()+"\",\"fechaCreacion\":\""+SubproductoTipoDAO.getSubproductoTipo(codigo).getFechaCreacion().toString()+"\",\"usuarioActualizo\":\""+usuario+"\",\"fechaActualizacion\":\""+SubproductoTipoDAO.getSubproductoTipo(codigo).getFechaActualizacion().toString()+"\"}");
+		String resultadoJson = String.join("","{ \"success\": ",(actualizado ? "true" : "false")  +",\"usuarioCreo\":\""+ SubproductoTipoDAO.getSubproductoTipo(codigo).getUsuarioCreo().toString()+"\",\"fechaCreacion\":\""+Utils.formatDateHour( SubproductoTipoDAO.getSubproductoTipo(codigo).getFechaCreacion())+"\",\"usuarioActualizo\":\""+usuario+"\",\"fechaActualizacion\":\""+Utils.formatDateHour(SubproductoTipoDAO.getSubproductoTipo(codigo).getFechaActualizacion())+"\"}");
 		Utils.writeJSon(response, resultadoJson);
 	}
 

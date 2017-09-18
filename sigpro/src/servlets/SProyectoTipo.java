@@ -137,7 +137,7 @@ public class SProyectoTipo extends HttpServlet {
 					}
 				}
 				
-				//result = ProyectoTipoDAO.guardarProyectoTipo(proyectoTipo);
+				result = ProyectoTipoDAO.guardarProyectoTipo(proyectoTipo);
 				
 				String[] idsPropiedades =  map.get("propiedades") != null && map.get("propiedades").length()>0 ? map.get("propiedades").toString().split(",") : null;
 				if (idsPropiedades !=null && idsPropiedades.length>0){

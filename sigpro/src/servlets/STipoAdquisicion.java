@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import dao.CooperanteDAO;
 import dao.TipoAdquisicionDAO;
 import pojo.Cooperante;
 import pojo.TipoAdquisicion;
@@ -162,9 +163,8 @@ public class STipoAdquisicion extends HttpServlet {
 			Integer idTipoAdquisicion = Utils.String2Int(map.get("idTipoAdquisicion"));
 			Cooperante cooperante = new Cooperante();
 			if(idCooperante != null){
-				cooperante.setId(idCooperante);
+				cooperante= CooperanteDAO.getCooperantePorId(idCooperante);
 			}
-			
 			boolean result = false;
 			boolean esNuevo = map.get("esNuevo").equals("true");
 			TipoAdquisicion tipoAdquisicion = null;

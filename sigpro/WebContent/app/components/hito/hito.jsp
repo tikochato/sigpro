@@ -45,7 +45,10 @@
 					</div>
 					</div>
 				</div>
-				<br/>
+			</div>
+			
+			<div class="col-sm-12" align="center">
+			<br/>
 				<div id="maingrid" ui-grid="hitoc.gridOptions" ui-grid-save-state 
 						ui-grid-move-columns ui-grid-resize-columns ui-grid-selection ui-grid-pinning ui-grid-pagination class="grid">
 					<div class="grid_loading" ng-hide="!hitoc.mostrarcargando">
@@ -135,11 +138,11 @@
 							
 							<div ng-switch="hitoc.hitodatotipoid" class="form-group">
 								<input ng-switch-when="1" type="text"  ng-model="hitoc.hitoresultado" class="inputText" 
-										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
+										ng-value="hitoc.hitoresultado" onblur="this.setAttribute('value', this.value);"/>	
 								<input ng-switch-when="2" type="number"  numbers-Only ng-model="hitoc.hitoresultado" class="inputText" 
-										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
+										ng-value="hitoc.hitoresultado" onblur="this.setAttribute('value', this.value);"/>	
 								<input ng-switch-when="3" type="number"   ng-model="hitoc.hitoresultado" class="inputText" 
-										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+										ng-value="hitoc.hitoresultado" onblur="this.setAttribute('value', this.value);"/>
 								<input ng-switch-when="4" type="checkbox"  ng-model="hitoc.hitoresultado"/>
 								<p ng-switch-when="5">
 									<input type="text"  class="inputText" uib-datepicker-popup="{{hitoc.formatofecha}}" ng-model="hitoc.hitoresultado" is-open="hitoc.popupfecharesultado.abierto"

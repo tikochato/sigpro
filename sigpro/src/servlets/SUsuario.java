@@ -65,6 +65,8 @@ public class SUsuario extends HttpServlet {
 		String snombre;
 		String papellido;
 		String sapellido;
+		int rol;
+		String cooperante;
 		Long cui;
 		String unidad_ejecutora;
 		int id;
@@ -224,6 +226,16 @@ public class SUsuario extends HttpServlet {
 				for(Usuario usuario: usuarios){
 					stusuario usuariotmp =new  stusuario();
 					usuariotmp.usuario =usuario.getUsuario();
+					RolUsuarioProyecto tmp= RolDAO.getRolUser(usuariotmp.usuario);
+					if(tmp.getId()!=null){
+						int rolid= tmp.getId().getRol();
+						usuariotmp.rol=rolid==0? 1: rolid;
+					}else{
+						usuariotmp.rol=1;
+					}
+					if(usuariotmp.rol!=0 &&usuariotmp.rol==6){
+						usuariotmp.cooperante= RolDAO.getCooperante(usuariotmp.usuario).getNombre();
+					}
 					usuariotmp.email = usuario.getEmail();
 					usuariotmp.usuarioCreo=usuario.getUsuarioCreo();
 					usuariotmp.usuarioActualizo= usuario.getUsuarioActualizo();
@@ -233,6 +245,7 @@ public class SUsuario extends HttpServlet {
 					Colaborador colaborador_tmp=UsuarioDAO.getColaborador(usuariotmp.usuario);
 					if(colaborador_tmp!=null){
 						usuariotmp.colaborador=colaborador_tmp.getPapellido()+", "+colaborador_tmp.getPnombre();
+						usuariotmp.unidad_ejecutora=colaborador_tmp.getUnidadEjecutora().getNombre();
 					}				
 					stusuarios.add(usuariotmp);
 				}

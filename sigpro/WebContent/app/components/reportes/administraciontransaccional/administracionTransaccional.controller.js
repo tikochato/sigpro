@@ -88,11 +88,13 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 		mi.calcularTamanosPantalla();
 		
 		mi.exportarExcel = function(){
+			mi.mostrarCargando = true;
 			$http.post('/SAdministracionTransaccional', { 
 				 accion: 'exportarExcel', 
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
+						  mi.mostrarCargando = false;
 						  var anchor = angular.element('<a/>');
 						  anchor.attr({
 					         href: 'data:application/ms-excel;base64,' + response.data,
@@ -100,17 +102,19 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 					         download: 'AdministracionTransaccional.xls'
 						  })[0].click();
 					  }.bind(this), function errorCallback(response){
-						 		
+						  mi.mostrarCargando = false;	
 				 	}
 			  	);
 			};
 			
 		mi.exportarPdf=function(){
+			mi.mostrarCargando = true;
 			$http.post('/SAdministracionTransaccional', { 
 				 accion: 'exportarPdf', 
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
+							mi.mostrarCargando = false;
 						  var anchor = angular.element('<a/>');
 						  anchor.attr({
 					         href: 'data:application/pdf;base64,' + response.data,
@@ -118,7 +122,7 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 					         download: 'AdministracionTransaccional.pdf'
 						  })[0].click();
 					  }.bind(this), function errorCallback(response){
-						 		
+						  mi.mostrarCargando = false;
 				 	}
 			  	);
 		};
