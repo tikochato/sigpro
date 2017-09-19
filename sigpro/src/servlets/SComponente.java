@@ -324,7 +324,7 @@ public class SComponente extends HttpServlet {
 					}
 					result = ComponenteDAO.guardarComponente(componente);
 					
-					if(!result){
+					if(result){
 						COrden orden = new COrden();
 						orden.calcularOrdenObjetosSuperiores(componente.getProyecto().getId(), 1, usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId());
 					}
