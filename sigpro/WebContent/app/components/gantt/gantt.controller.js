@@ -302,6 +302,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 			 
 			formatData.append("accion",$routeParams.objeto_tipo == 1 ? 'getProyecto' : 'getPrograma');
 			formatData.append($routeParams.objeto_tipo == 1 ? "proyecto_id" : "programa_id",$routeParams.objeto_id);
+			formatData.append("t",new Date().getTime());
 			
 			$http.post('/SGantt', formatData, {
 				headers: {'Content-Type': undefined},
