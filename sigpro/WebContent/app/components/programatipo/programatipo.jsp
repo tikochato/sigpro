@@ -16,7 +16,7 @@
 	  <div class="panel-heading"><h3>Tipo de Programa</h3></div>
 	</div>
 	
-	<div align="center" ng-if="!programatipoc.mostraringreso">
+	<div align="center" ng-show="!programatipoc.mostraringreso">
 		<br />
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
@@ -71,7 +71,7 @@
 		</shiro:hasPermission>	
 	</div>
 
-	<div class="row second-main-form" ng-if="programatipoc.mostraringreso">
+	<div class="row second-main-form" ng-show="programatipoc.mostraringreso">
 		<div class="page-header">
 			<h2 ng-hide="!programatipoc.esnuevo"><small>Nuevo tipo de programa</small></h2>
 			<h2 ng-hide="programatipoc.esnuevo"><small>Edición tipo de programa</small></h2>
