@@ -91,7 +91,7 @@
 		<div class="col-sm-12">
 			<form name="form" class="css-form">
 				<div class="form-group">
-						<label for="campo0" class="floating-label">ID {{productoTipo.codigo}}</label>
+						<label for="campo0" class="floating-label id_class">ID {{productoTipo.codigo}}</label>
 						<br/><br/>
 				</div>
 

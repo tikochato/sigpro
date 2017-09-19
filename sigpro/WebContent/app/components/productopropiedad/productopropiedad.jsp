@@ -89,7 +89,7 @@
 	    <form name="form" class="css-form" novalidate>
 	
 		      <div class="form-group ">
-		        <label class="floating-label">ID {{ productoPropiedad.codigo }}</label>
+		        <label class="floating-label id_class">ID {{ productoPropiedad.codigo }}</label>
 		        <br/><br/>
 		      </div>
 

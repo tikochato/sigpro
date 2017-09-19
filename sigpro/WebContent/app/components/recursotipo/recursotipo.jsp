@@ -89,7 +89,7 @@
 		<div class="col-sm-12">
 			<form name ="form">
 				<div class="form-group" ng-show="!recursotipoc.esnuevo">
-					<label for="id" class="floating-label">ID {{recursotipoc.recursotipo.id }}</label>
+					<label for="id" class="floating-label id_class">ID {{recursotipoc.recursotipo.id }}</label>
 					<br/><br/> 
 				</div>
 

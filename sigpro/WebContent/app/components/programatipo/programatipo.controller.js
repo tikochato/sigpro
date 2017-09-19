@@ -166,8 +166,8 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 			if(mi.programatipo!=null && mi.programatipo.id!=null){
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
-				$utilidades.setFocus(document.getElementById("nombre"));
 				mi.cargarTotalPropiedades();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Programa que desea editar');
@@ -209,9 +209,10 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
 			mi.programatipo = {};
-			$utilidades.setFocus(document.getElementById("nombre"));
+			mi.programapropiedades = [];
+			mi.gridOptionsProgramaPropiedad.data = [];
 			mi.gridApi.selection.clearSelectedRows();
-			mi.cargarTotalPropiedades();
+			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 
 		mi.irATabla = function() {

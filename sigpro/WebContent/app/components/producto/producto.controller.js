@@ -243,7 +243,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		for (campos in mi.camposdinamicos) {
 			mi.camposdinamicos[campos].valor = null;
 		}
-
+		$utilidades.setFocus(document.getElementById("nombre"));
 	}
 
 	mi.limpiarSeleccion = function() {
@@ -407,6 +407,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							break;
 					}
 				}
+				$utilidades.setFocus(document.getElementById("nombre"));
 			});
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar el producto que desee editar');
