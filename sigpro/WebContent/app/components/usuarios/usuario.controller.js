@@ -535,8 +535,17 @@ app.controller(
 				mi.nombreCooperante=resultadoSeleccion.cooperante.nombre;
 			}
 			else{
-				mi.permisosAsignados.push(resultadoSeleccion);
-				mi.nuevosPermisos.push(resultadoSeleccion.id);
+				if(mi.permisosAsignados.length>0){
+					for(var i=0;i<resultadoSeleccion.length;i++){
+						mi.permisosAsignados.push(resultadoSeleccion[i]);
+					}
+				}else{
+					mi.permisosAsignados=resultadoSeleccion;
+				}
+				
+				for(var i=0;i<resultadoSeleccion.length;i++){
+					mi.nuevosPermisos.push(resultadoSeleccion[i].id);
+				}
 			}
 			
 		}, function() {
@@ -792,7 +801,7 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 			{
 				displayName : 'ID',
 				name : 'id',
-				cellClass : 'grid-align-right',
+				cellClass : 'grid-align-left',
 				enableFiltering: true,
 				type : 'text', width : 150
 
@@ -800,7 +809,7 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 			{
 				displayName : 'nombre',
 				name : 'nombre',
-				cellClass : 'grid-align-right',
+				cellClass : 'grid-align-left',
 				enableFiltering: true
 
 			},
@@ -811,15 +820,22 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 			}
 		];
 	}
-	
-
+	mi.tipo_vista=infoPermisos.tipo;
+	mi.selecciorTodo=function(){
+		mi.gridApi.selection.selectAllRows();
+	}
+	mi.deseleccionarTodo=function(){
+		 mi.gridApi.selection.clearSelectedRows();
+	}
+	mi.dataSeleccion=[];
     mi.opcionesGrid = {
 		data : mi.data,
 		enableFiltering: true,
 		columnDefs : especificaciones,
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
-		multiSelect : false,
+		enableSelectAll: infoPermisos.tipo==0? true :false,
+		multiSelect : infoPermisos.tipo==0? true :false,
 		modifierKeysToMultiSelect : false,
 		noUnselect : false,
 		enableFiltering : true,
@@ -827,8 +843,14 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
 		paginationPageSize : 5,
 		onRegisterApi : function(gridApi) {
 		    mi.gridApi = gridApi;
+		    gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows){
+	    		 asignar(rows);
+	    	});
 		    mi.gridApi.selection.on.rowSelectionChanged($scope,
-			    mi.seleccionarPermiso);
+				    mi.seleccionarPermiso);
+		    gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                mi.dataSeleccion.push(row.entity);
+            });
 		}
     }
 
@@ -837,17 +859,27 @@ function modalBuscarPermiso($uibModalInstance, $scope, $http, $interval, i18nSer
     	mi.seleccionado = row.isSelected;
     };
 
-
+    function asignar(input){
+    	for(var i=0;i<input.length;i++){
+    		 mi.dataSeleccion.push(input[i].entity);
+    	}
+    	return true;
+    };
      mi.ok = function() {
     	if (mi.seleccionado) {
     		if(infoPermisos.tipo===1){
     			 $uibModalInstance.close({tipo:1, rol:mi.itemSeleccionado});
     		}else if(infoPermisos.tipo===3){
     			 $uibModalInstance.close({tipo:3, cooperante:mi.itemSeleccionado});
-    		}else{
+    		}else if(infoPermisos.tipo===0){
+    			 $uibModalInstance.close(mi.dataSeleccion);
+    		}
+    		else{
     			 $uibModalInstance.close(mi.itemSeleccionado);
     		}
     	   
+    	}else if(mi.tipo_vista==0){
+    		 $uibModalInstance.close(mi.dataSeleccion);
     	} else {
     	    $utilidades.mensaje('warning', 'Debe seleccionar un permiso');
     	}
