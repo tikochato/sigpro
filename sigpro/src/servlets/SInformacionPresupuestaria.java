@@ -240,40 +240,43 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		
 		for(Object objeto : estructuraProyecto){
 			Object[] obj = (Object[]) objeto;
-			stprestamo tempPrestamo =  new stprestamo();
-			tempPrestamo.objeto_id = (Integer)obj[0];
-			tempPrestamo.nombre = (String)obj[1];
-			tempPrestamo.nivel = (Integer)obj[4];
-			tempPrestamo.objeto_tipo = ((BigInteger) obj[2]).intValue();
-			tempPrestamo.fecha_inicial = new DateTime((Timestamp)obj[5]);
-			tempPrestamo.fecha_final = new DateTime((Timestamp)obj[6]);
-			tempPrestamo.anios = inicializarStanio(anioInicial, anioFinal);
-			tempPrestamo.acumulacion_costoid = (Integer)obj[11];
-			tempPrestamo.costo = (BigDecimal)obj[9];
-			
-			try {
-				if(CMariaDB.connect()){
-					Connection conn = CMariaDB.getConnection();
-					if(tempPrestamo.objeto_tipo == 1){
-					objPrestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(tempPrestamo.objeto_id, 1);
-						if(objPrestamo != null ){
-							codigoPresupuestario = Long.toString(objPrestamo.getCodigoPresupuestario());
-							fuente = Utils.String2Int(codigoPresupuestario.substring(0,2));
-							organismo = Utils.String2Int(codigoPresupuestario.substring(2,6));
-							correlativo = Utils.String2Int(codigoPresupuestario.substring(6,10));
-						}
-					}			
-					tempPrestamo = getPresupuestoReal(tempPrestamo, fuente, organismo, correlativo, anioInicial, anioFinal, conn, usuario);
-					tempPrestamo = getPresupuestoPlanificado(tempPrestamo, usuario);
-					conn.close();
+			Integer nivel = (Integer)obj[4];
+			if(nivel != null){
+				stprestamo tempPrestamo =  new stprestamo();
+				tempPrestamo.objeto_id = (Integer)obj[0];
+				tempPrestamo.nombre = (String)obj[1];
+				tempPrestamo.nivel = nivel;
+				tempPrestamo.objeto_tipo = ((BigInteger) obj[2]).intValue();
+				tempPrestamo.fecha_inicial = new DateTime((Timestamp)obj[5]);
+				tempPrestamo.fecha_final = new DateTime((Timestamp)obj[6]);
+				tempPrestamo.anios = inicializarStanio(anioInicial, anioFinal);
+				tempPrestamo.acumulacion_costoid = (Integer)obj[11];
+				tempPrestamo.costo = (BigDecimal)obj[9];
+				
+				try {
+					if(CMariaDB.connect()){
+						Connection conn = CMariaDB.getConnection();
+						if(tempPrestamo.objeto_tipo == 1){
+						objPrestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(tempPrestamo.objeto_id, 1);
+							if(objPrestamo != null ){
+								codigoPresupuestario = Long.toString(objPrestamo.getCodigoPresupuestario());
+								fuente = Utils.String2Int(codigoPresupuestario.substring(0,2));
+								organismo = Utils.String2Int(codigoPresupuestario.substring(2,6));
+								correlativo = Utils.String2Int(codigoPresupuestario.substring(6,10));
+							}
+						}			
+						tempPrestamo = getPresupuestoReal(tempPrestamo, fuente, organismo, correlativo, anioInicial, anioFinal, conn, usuario);
+						tempPrestamo = getPresupuestoPlanificado(tempPrestamo, usuario);
+						conn.close();
+					}
+				} catch (SQLException e) {
+					CLogger.write("3", SInformacionPresupuestaria.class, e);
 				}
-			} catch (SQLException e) {
-				CLogger.write("3", SInformacionPresupuestaria.class, e);
-			}
-			tempPrestamo.fecha_inicial = null;
-			tempPrestamo.fecha_final = null;
-			lstPrestamo.add(tempPrestamo);
+				tempPrestamo.fecha_inicial = null;
+				tempPrestamo.fecha_final = null;
+				lstPrestamo.add(tempPrestamo);
 
+			}
 		}
 		if(lstPrestamo!=null && !lstPrestamo.isEmpty()){
 			stanio[] aniosTemp = calcularCostoRecursivo(lstPrestamo, 1, 1, anioInicial, anioFinal);
@@ -316,7 +319,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 							}
 						}else if(prestamo.acumulacion_costoid == 2){
 							int dias = (int)((prestamo.fecha_final.getMillis() - prestamo.fecha_inicial.getMillis())/(1000*60*60*24));
-							BigDecimal costoDiario = prestamo.costo.divide(new BigDecimal(dias),5, BigDecimal.ROUND_HALF_UP);
+							BigDecimal costoDiario = prestamo.costo != null ? prestamo.costo.divide(new BigDecimal(dias),5, BigDecimal.ROUND_HALF_UP) : new BigDecimal(0);
 							int inicioActual = 0;
 							if(anioObj.anio == anioInicial){
 								inicioActual = mesInicial;
@@ -439,26 +442,28 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		stanio[] anios = inicializarStanio (anioInicial, anioFinal);
 		while(posicion <lstPrestamo.size()){
 			stprestamo prestamo = lstPrestamo.get(posicion);
-			if(prestamo.nivel.equals(nivel)){
-				if(posicion+1<lstPrestamo.size()){
-					if(lstPrestamo.get(posicion+1).nivel.equals(nivel+1)){
-						stanio[] aniosTemp = calcularCostoRecursivo(lstPrestamo, posicion+1, nivel+1, anioInicial, anioFinal);				
-						for(int a=0; a<anios.length; a++){
-							for(int m=0; m<12; m++){
-								if(aniosTemp[a].mes[m].planificado.compareTo(BigDecimal.ZERO) > 0){
-									prestamo.anios[a].mes[m].planificado = aniosTemp[a].mes[m].planificado;
+			if(prestamo.nivel != null){
+				if(prestamo.nivel.equals(nivel)){
+					if(posicion+1<lstPrestamo.size()){
+						if(lstPrestamo.get(posicion+1).nivel.equals(nivel+1)){
+							stanio[] aniosTemp = calcularCostoRecursivo(lstPrestamo, posicion+1, nivel+1, anioInicial, anioFinal);				
+							for(int a=0; a<anios.length; a++){
+								for(int m=0; m<12; m++){
+									if(aniosTemp[a].mes[m].planificado.compareTo(BigDecimal.ZERO) > 0){
+										prestamo.anios[a].mes[m].planificado = aniosTemp[a].mes[m].planificado;
+									}
 								}
 							}
 						}
 					}
-				}
-				for(int a=0; a<anios.length; a++){
-					for(int m=0; m<12;m++){
-						anios[a].mes[m].planificado = anios[a].mes[m].planificado.add(prestamo.anios[a].mes[m].planificado);
+					for(int a=0; a<anios.length; a++){
+						for(int m=0; m<12;m++){
+							anios[a].mes[m].planificado = anios[a].mes[m].planificado.add(prestamo.anios[a].mes[m].planificado);
+						}
 					}
+				}else if(prestamo.nivel < nivel){
+					return anios;
 				}
-			}else if(prestamo.nivel < nivel){
-				return anios;
 			}
 			posicion++;
 		}

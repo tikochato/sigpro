@@ -142,7 +142,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 						mi.componentetipo.fechaCreacion=response.fechaCreacion;
 						mi.componentetipo.usuarioActualizo=response.usuarioactualizo;
 						mi.componentetipo.fechaActualizacion=response.fechaactualizacion;
-						mi.cargarTabla();
+						mi.obtenerTotalComponenteTipos();
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo Componente');
@@ -157,6 +157,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.cargarTotalPropiedades();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Componente que desea editar');
@@ -178,7 +179,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 							if(response.success){
 								$utilidades.mensaje('success','Tipo Componente borrado con éxito');
 								mi.componentetipo = null;
-								mi.cargarTabla();
+								mi.obtenerTotalComponenteTipos();
 							}
 							else
 								$utilidades.mensaje('danger','Error al borrar el Tipo Componente');
@@ -198,14 +199,14 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 			mi.componentetipo = {};
 			mi.gridApi.selection.clearSelectedRows();
 			mi.cargarTotalPropiedades();
+			
+			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 	
 		mi.irATabla = function() {
 			mi.mostraringreso=false;
 			mi.esnuevo=false;
 		}
-		
-		
 		
 		mi.guardarEstado=function(){
 			var estado = mi.gridApi.saveState.save();
@@ -451,4 +452,4 @@ function modalBuscarComponentePropiedad($uibModalInstance, $scope, $http, $inter
      mi.cancel = function() {
     	$uibModalInstance.dismiss('cancel');
      };
-}
+};

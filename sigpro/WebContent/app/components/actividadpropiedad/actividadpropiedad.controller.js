@@ -138,7 +138,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 							mi.actividadpropiedad.usuarioActualizo=response.usuarioactualizo;
 							mi.actividadpropiedad.fechaActualizacion=response.fechaactualizacion;
 							mi.esnuevo = false;
-							mi.cargarTabla();
+							mi.obtenerTotalActividadPropiedades();
 						}
 						else
 							$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' la Propiedad de Actividad');
@@ -165,7 +165,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 								if(response.success){
 									$utilidades.mensaje('success','Propiedad de Actividad borrado con éxito');
 									mi.actividadpropiedad = null;
-									mi.cargarTabla();
+									mi.obtenerTotalActividadPropiedades();
 								}
 								else
 									$utilidades.mensaje('danger','Error al borrar la Propiedad de Actividad');
@@ -186,6 +186,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 				mi.esnuevo = true;
 				mi.actividadpropiedad = {};
 				mi.gridApi.selection.clearSelectedRows();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			};
 
 			mi.editar = function() {
@@ -198,6 +199,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 							"id" : mi.actividadpropiedad.datotipoid,
 							"nombre" : mi.actividadpropiedad.datotiponombre
 					}
+					$utilidades.setFocus(document.getElementById("nombre"));
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar la Propiedad de Actividad que desea editar');

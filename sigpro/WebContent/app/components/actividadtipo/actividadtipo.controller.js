@@ -147,8 +147,8 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 						mi.actividadtipo.usuarioActualizo=response.usuarioactualizo;
 						mi.actividadtipo.fechaActualizacion=response.fechaactualizacion;
 						$utilidades.mensaje('success','Tipo de Actividad '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+						mi.obtenerTotalActividadPropiedades();
 						mi.esnuevo = false;
-						mi.cargarTabla();
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo de Actividad');
@@ -163,6 +163,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.cargarTotalPropiedades();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Actividad que desea editar');
@@ -184,7 +185,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 							if(response.success){
 								$utilidades.mensaje('success','Tipo de Actividad borrado con éxito');
 								mi.actividadtipo = null;
-								mi.cargarTabla();
+								mi.obtenerTotalActividadPropiedades();
 							}
 							else
 								$utilidades.mensaje('danger','Error al borrar el Tipo de Actividad');
@@ -204,6 +205,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 			mi.actividadtipo = {};
 			mi.gridApi.selection.clearSelectedRows();
 			mi.cargarTotalPropiedades();
+			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 	
 		mi.irATabla = function() {
@@ -459,4 +461,4 @@ function modalBuscarActividadPropiedad($uibModalInstance, $scope, $http, $interv
      mi.cancel = function() {
     	$uibModalInstance.dismiss('cancel');
      };
-}
+};

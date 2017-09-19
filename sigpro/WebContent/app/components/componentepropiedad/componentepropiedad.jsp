@@ -49,7 +49,7 @@
 				  </div>
 				</div>
 				<br/>
-			<div class="total-rows">Total de {{  componentepropiedadc.totalComponentePropiedades + (componentepropiedadc.totalComponentePropiedades == 1 ? " Componente" : " Componentes" ) }}</div>
+			<div class="total-rows">Total de {{  componentepropiedadc.totalComponentePropiedades + (componentepropiedadc.totalComponentePropiedades == 1 ? " Propiedad de Componente" : " Propiedades de Componentes" ) }}</div>
 				<ul uib-pagination total-items="componentepropiedadc.totalComponentePropiedades"
 						ng-model="componentepropiedadc.paginaActual"
 						max-size="componentepropiedadc.numeroMaximoPaginas"
@@ -84,13 +84,13 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group">
-							<label for="id" class="floating-label">ID {{ componentepropiedadc.componentepropiedad.id }}</label>
+							<label for="id" class="floating-label id_class">ID {{ componentepropiedadc.componentepropiedad.id }}</label>
 							<br/><br/>
 						</div>
 						<div class="form-group">
 						   <input type="text" name="inombre"  class="inputText" id="nombre" 
 						     ng-model="componentepropiedadc.componentepropiedad.nombre" ng-value="componentepropiedadc.componentepropiedad.nombre"   
-						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+						     onblur="this.setAttribute('value', this.value);" ng-required="true">
 						   <label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">

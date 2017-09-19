@@ -50,7 +50,7 @@
 				</div>
 				<br>
 				<div class="total-rows">
-				  Total de {{  desembolsotipoc.totalDesembolsoTipo + (desembolsotipoc.totalDesembolsoTipo == 1 ? " Tipo de Desembolso" : " Tipos de Desembolso" ) }}
+				  Total de {{  desembolsotipoc.totalDesembolsoTipo + (desembolsotipoc.totalDesembolsoTipo == 1 ? " Tipo de Desembolso" : " Tipos de Desembolsos" ) }}
 				</div>
 				<ul uib-pagination total-items="desembolsotipoc.totalTiposDesembolso" 
 						ng-model="desembolsotipoc.paginaActual" 
@@ -87,14 +87,14 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group">
-						  <label for="id" class="floating-label">ID {{ desembolsotipoc.desembolsotipo.id }}</label>
+						  <label for="id" class="floating-label id_class">ID {{ desembolsotipoc.desembolsotipo.id }}</label>
 						  <br/><br/>
 						</div>
 						
 						<div class="form-group">
 						   <input type="text" name="nombre"  class="inputText" id="nombre" 
 						     ng-model="desembolsotipoc.desembolsotipo.nombre" ng-value="desembolsotipoc.desembolsotipo.nombre"   
-						     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+						     onblur="this.setAttribute('value', this.value);" ng-required="true">
 						   <label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
