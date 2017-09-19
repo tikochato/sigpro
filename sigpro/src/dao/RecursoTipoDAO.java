@@ -49,7 +49,8 @@ public class RecursoTipoDAO {
 			Root<RecursoTipo> root = criteria.from(RecursoTipo.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
-			ret = session.createQuery( criteria ).getSingleResult();
+			List<RecursoTipo> lista = session.createQuery( criteria ).getResultList();
+			ret = !lista.isEmpty() ? lista.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("2", RecursoTipoDAO.class, e);

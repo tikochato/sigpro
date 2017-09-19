@@ -44,7 +44,8 @@ public class ProductoDAO {
 			Query<Producto> criteria = session.createQuery("FROM Producto where id=:id AND id in (SELECT u.id.productoid from ProductoUsuario u where u.id.usuario=:usuario )", Producto.class);
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
-			 ret = criteria.getSingleResult();;
+			List<Producto> lista = criteria.getResultList();
+			ret = !lista.isEmpty() ? lista.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("2", ProductoDAO.class, e);
 		} finally {
@@ -215,7 +216,8 @@ public class ProductoDAO {
 			Root<Producto> root = criteria.from(Producto.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id )));
-			ret = session.createQuery( criteria ).getSingleResult();
+			List<Producto> lista = session.createQuery( criteria ).getResultList();
+			ret = !lista.isEmpty() ? lista.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("9", ProductoDAO.class, e);
@@ -260,7 +262,8 @@ public class ProductoDAO {
 			Query<Producto> criteria = session.createQuery(query, Producto.class);
 			criteria.setParameter("componenteId", componenteId);
 			criteria.setParameter("usuario", usuario);
-			ret = criteria.getSingleResult();
+			List<Producto> lista = criteria.getResultList();
+			ret = !lista.isEmpty() ? lista.get(0) : null;
 		}catch(Throwable e){
 			CLogger.write("11", ProductoDAO.class, e);
 			session.getTransaction().rollback();
@@ -277,7 +280,8 @@ public class ProductoDAO {
 			criteria.setMaxResults(1);
 			criteria.setParameter("componenteId", componenteId);
 			criteria.setParameter("usuario", usuario);
-			ret = criteria.getSingleResult();
+			List<Producto> lista = criteria.getResultList();
+			ret = !lista.isEmpty() ? lista.get(0) : null;
 		}catch(Throwable e){
 			CLogger.write("12", ProductoDAO.class, e);
 			session.getTransaction().rollback();
@@ -311,7 +315,8 @@ public class ProductoDAO {
 			Query<Producto> criteria = session.createQuery("FROM Producto where id=:id AND id in (SELECT u.id.productoid from ProductoUsuario u where u.id.usuario=:usuario )", Producto.class).setLockMode(LockModeType.PESSIMISTIC_READ);
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
-			 ret = criteria.getSingleResult();;
+			List<Producto> lista = criteria.getResultList();
+			ret = !lista.isEmpty() ? lista.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("14", ProductoDAO.class, e);
 			session.getTransaction().rollback();

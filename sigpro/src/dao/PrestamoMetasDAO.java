@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import utilities.CLogger;
+import utilities.CMariaDB;
  
 public class PrestamoMetasDAO {
     public static ArrayList<Integer> getEstructuraArbolComponentes(int idPrestamo, Connection conn){
@@ -33,7 +34,6 @@ public class PrestamoMetasDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
                     CLogger.write("1", PrestamoMetasDAO.class, e);
                 }
             }
@@ -71,7 +71,6 @@ public class PrestamoMetasDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
                     CLogger.write("2", PrestamoMetasDAO.class, e);
                 }
                 
@@ -108,7 +107,6 @@ public class PrestamoMetasDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
                     CLogger.write("3", PrestamoMetasDAO.class, e);
                 }            
             }
@@ -151,7 +149,6 @@ public class PrestamoMetasDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
                     CLogger.write("4", PrestamoMetasDAO.class, e);
                 }
                 
@@ -195,7 +192,6 @@ public class PrestamoMetasDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
                     CLogger.write("5", PrestamoMetasDAO.class, e);
                 }
                 
@@ -244,7 +240,6 @@ public class PrestamoMetasDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
                     CLogger.write("6",PrestamoMetasDAO.class, e);
                 }
                 
@@ -288,7 +283,6 @@ public class PrestamoMetasDAO {
                     
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
                     CLogger.write("7",PrestamoMetasDAO.class, e);
                 }
             }
@@ -299,16 +293,51 @@ public class PrestamoMetasDAO {
         return ret;
     }
     
-    public static ArrayList<ArrayList<BigDecimal>> getMetasPorProducto(Integer producto, Integer anoInicial, Integer anoFinal, Connection conn){
+    public static ArrayList<ArrayList<BigDecimal>> getMetasPorProducto(Integer producto, Integer anoInicial, Integer anoFinal){
     	ArrayList<ArrayList<BigDecimal>> result = new ArrayList<ArrayList<BigDecimal>>();
 
 		try{
-			if(!conn.isClosed() ){
-				String str_Query = String.join(" ", "select ejercicio, objeto_id, objeto_tipo, meta_unidad_medidaid, eneroP, eneroR, febreroP, febreroR, marzoP, marzoR, abrilP, abrilR, mayoP, mayoR, junioP, junioR, julioP, julioR, agostoP, agostoR, septiembreP, septiembreR, octubreP, octubreR, noviembreP, noviembreR, diciembreP, diciembreR, lineaBase, metaFinal ",
-						"from mv_ep_metas where ",
-						"objeto_id=? and ",
-						"objeto_tipo=? and",
-						"ejercicio between ? and ? ");
+			if(CMariaDB.connect()){
+				Connection conn = CMariaDB.getConnection();
+				String str_Query = String.join(" ", "select t1.anio ejercicio, t1.objeto_id, t1.objeto_tipo, t1.meta_unidad_medidaid, ",
+						"SUM(case when t1.mes = 1 and t1.meta_tipoid = 1 then t1.valor end) eneroP, ",
+						"SUM(case when t1.mes = 1 and t1.meta_tipoid = 2 then t1.valor end) eneroR, ",
+						"SUM(case when t1.mes = 2 and t1.meta_tipoid = 1 then t1.valor end) febreroP, ",
+						"SUM(case when t1.mes = 2 and t1.meta_tipoid = 2 then t1.valor end) febreroR, ",
+						"SUM(case when t1.mes = 3 and t1.meta_tipoid = 1 then t1.valor end) marzoP, ",
+						"SUM(case when t1.mes = 3 and t1.meta_tipoid = 2 then t1.valor end) marzoR, ",
+						"SUM(case when t1.mes = 4 and t1.meta_tipoid = 1 then t1.valor end) abrilP, ",
+						"SUM(case when t1.mes = 4 and t1.meta_tipoid = 2 then t1.valor end) abrilR, ",
+						"SUM(case when t1.mes = 5 and t1.meta_tipoid = 1 then t1.valor end) mayoP, ",
+						"SUM(case when t1.mes = 5 and t1.meta_tipoid = 2 then t1.valor end) mayoR, ",
+						"SUM(case when t1.mes = 6 and t1.meta_tipoid = 1 then t1.valor end) junioP, ",
+						"SUM(case when t1.mes = 6 and t1.meta_tipoid = 2 then t1.valor end) junioR, ",
+						"SUM(case when t1.mes = 7 and t1.meta_tipoid = 1 then t1.valor end) julioP, ",
+						"SUM(case when t1.mes = 7 and t1.meta_tipoid = 2 then t1.valor end) julioR, ",
+						"SUM(case when t1.mes = 8 and t1.meta_tipoid = 1 then t1.valor end) agostoP, ",
+						"SUM(case when t1.mes = 8 and t1.meta_tipoid = 2 then t1.valor end) agostoR, ",
+						"SUM(case when t1.mes = 9 and t1.meta_tipoid = 1 then t1.valor end) septiembreP, ",
+						"SUM(case when t1.mes = 9 and t1.meta_tipoid = 2 then t1.valor end) septiembreR, ",
+						"SUM(case when t1.mes = 10 and t1.meta_tipoid = 1 then t1.valor end) octubreP, ",
+						"SUM(case when t1.mes = 10 and t1.meta_tipoid = 2 then t1.valor end) octubreR, ",
+						"SUM(case when t1.mes = 11 and t1.meta_tipoid = 1 then t1.valor end) noviembreP, ",
+						"SUM(case when t1.mes = 11 and t1.meta_tipoid = 2 then t1.valor end) noviembreR, ",
+						"SUM(case when t1.mes = 12 and t1.meta_tipoid = 1 then t1.valor end) diciembreP, ",
+						"SUM(case when t1.mes = 12 and t1.meta_tipoid = 2 then t1.valor end) diciembreR, ",
+						"SUM(case when t1.meta_tipoid = 3 then t1.valor end) lineaBase, ",
+						"SUM(case when t1.meta_tipoid = 4 then t1.valor end) metaFinal ",
+						"from ",
+						"( ",
+						"select m.objeto_id, m.objeto_tipo, m.meta_tipoid, m.meta_unidad_medidaid, YEAR(mv.fecha) anio, MONTH(mv.fecha) mes, ",
+						"mv.valor_decimal valor ",
+						"from meta m ",
+						"join meta_valor mv on m.id = mv.metaid ",
+						"where m.objeto_id = ? and m.objeto_tipo = ? ",
+						"and m.estado = 1 ",
+						"and (mv.estado = 1 or mv.estado = 2) ",
+						") t1 ",
+						"where t1.anio between ? and ? ",
+						"group by t1.anio ");
 				PreparedStatement pstm  = conn.prepareStatement(str_Query);
 				pstm.setFetchSize(1000);
                 pstm.setInt(1, producto);
@@ -352,6 +381,7 @@ public class PrestamoMetasDAO {
                 
                 rs.close();
                 pstm.close();
+                conn.close();
 			}
 		}
 		catch(Throwable e){

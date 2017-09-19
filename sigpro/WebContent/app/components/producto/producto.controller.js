@@ -243,7 +243,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		for (campos in mi.camposdinamicos) {
 			mi.camposdinamicos[campos].valor = null;
 		}
-		setTimeout(function(){document.getElementById('campo_d').focus();},100);
+		$utilidades.setFocus(document.getElementById("nombre"));
 	}
 
 	mi.limpiarSeleccion = function() {
@@ -407,7 +407,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							break;
 					}
 				}
-				setTimeout(function(){document.getElementById('campo_d').focus();},100);
+				$utilidades.setFocus(document.getElementById("nombre"));
 			});
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar el producto que desee editar');
@@ -676,10 +676,14 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	    });
 
 	    modalInstance.result.then(function(coordenadas) {
-	    	if (coordenadas !=null){
+	    	if (coordenadas !=null && coordenadas != ""){
 		    	mi.coordenadas = coordenadas.latitude + ", " + coordenadas.longitude;
 		    	mi.producto.latitud= coordenadas.latitude;
 				mi.producto.longitud = coordenadas.longitude;
+	    	}else{
+	    		mi.coordenadas = null;
+	    		mi.producto.latitud = null;
+	    		mi.producto.longitud = null;
 	    	}
 	    }, function() {
 		});
@@ -915,5 +919,9 @@ moduloProducto.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', '
 
 	  $scope.ok = function () {
 		  $uibModalInstance.close($scope.posicion);
+	  };
+
+	  $scope.borrar = function () {
+		  $uibModalInstance.close(null);
 	  };
 }]);
