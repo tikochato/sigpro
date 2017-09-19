@@ -3,6 +3,7 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -42,8 +43,7 @@ public class ActividadPropiedadDAO {
 		try{
 			Query<Long> conteo = session.createQuery("SELECT count(p.id) FROM ActividadPropiedad p where p.estado=1 ",Long.class);
 			ret = conteo.getSingleResult();
-		}
-		catch(Throwable e){
+		} catch(Throwable e){
 			CLogger.write("2", ActividadPropiedadDAO.class, e);
 		}
 		finally{
@@ -74,6 +74,8 @@ public class ActividadPropiedadDAO {
 	public static ActividadPropiedad getActividadPropiedadPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		ActividadPropiedad ret = null;
+		
+		List<ActividadPropiedad> listRet = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
@@ -81,9 +83,12 @@ public class ActividadPropiedadDAO {
 			Root<ActividadPropiedad> root = criteria.from(ActividadPropiedad.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id )));
-			ret = session.createQuery( criteria ).getSingleResult();
-		}
-		catch(Throwable e){
+			listRet = session.createQuery( criteria ).getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		} catch (NoResultException e){
+			
+		} catch(Throwable e){
 			CLogger.write("4", ActividadPropiedadDAO.class, e);
 		}
 		finally{
@@ -192,8 +197,7 @@ public class ActividadPropiedadDAO {
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
-		}
-		catch(Throwable e){
+		} catch(Throwable e){
 			CLogger.write("9", ActividadPropiedadDAO.class, e);
 		}
 		finally{

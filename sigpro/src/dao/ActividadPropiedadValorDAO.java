@@ -1,5 +1,7 @@
 package dao;
 
+import java.util.List;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -15,13 +17,16 @@ public class ActividadPropiedadValorDAO {
 	public static ActividadPropiedadValor getValorPorActividadYPropiedad(int idPropiedad,int idActividad){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		ActividadPropiedadValor ret = null;
+		List<ActividadPropiedadValor> listRet = null;
 		try {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<ActividadPropiedadValor> criteria = builder.createQuery(ActividadPropiedadValor.class);
 			Root<ActividadPropiedadValor> root = criteria.from(ActividadPropiedadValor.class);
 			criteria.select(root);
 			criteria.where(builder.equal(root.get("id"), new ActividadPropiedadValorId(idActividad, idPropiedad)));
-			ret = session.createQuery(criteria).getSingleResult();
+			listRet = session.createQuery(criteria).getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("1", ProductoPropiedadValorDAO.class, e);
 		} finally {

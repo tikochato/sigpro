@@ -39,9 +39,7 @@ public class AcumulacionCostoDAO {
 			
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
-		}
-		catch(Throwable e){
-			e.printStackTrace();
+		} catch(Throwable e){
 			CLogger.write("2", AcumulacionCosto.class, e);
 		}
 		finally{

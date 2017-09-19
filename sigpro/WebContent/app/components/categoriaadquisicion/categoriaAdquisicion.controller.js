@@ -33,6 +33,7 @@ app.controller('categoriaAdquisicionController', ['$scope', '$http', '$interval'
 		mi.esnuevo = true;
 		mi.categoriaAdquisicion = {};
 		mi.gridApi.selection.clearSelectedRows();
+		$utilidades.setFocus(document.getElementById("inombre"));
 	};
 	
 	mi.editarElemento = function (event) {
@@ -45,6 +46,7 @@ app.controller('categoriaAdquisicionController', ['$scope', '$http', '$interval'
 		if(mi.categoriaAdquisicion !=null && mi.categoriaAdquisicion.id!=null){
 			mi.esnuevo = false;
 			mi.mostraringreso = true;
+			$utilidades.setFocus(document.getElementById("inombre"));
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar la Categoría de adquisición que desea editar');
