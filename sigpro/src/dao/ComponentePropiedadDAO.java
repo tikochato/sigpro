@@ -76,6 +76,7 @@ public class ComponentePropiedadDAO {
 	public static ComponentePropiedad getComponentePropiedadPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		ComponentePropiedad ret = null;
+		List<ComponentePropiedad> listRet = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
@@ -83,7 +84,9 @@ public class ComponentePropiedadDAO {
 			Root<ComponentePropiedad> root = criteria.from(ComponentePropiedad.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id )));
-			ret = session.createQuery( criteria ).getSingleResult();
+			listRet = session.createQuery( criteria ).getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("4", ComponentePropiedadDAO.class, e);

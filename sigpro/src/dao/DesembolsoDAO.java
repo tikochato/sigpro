@@ -3,7 +3,6 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -40,6 +39,7 @@ public class DesembolsoDAO {
 	public static Desembolso getDesembolsoPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Desembolso ret = null;
+		List<Desembolso> listRet = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
@@ -47,10 +47,10 @@ public class DesembolsoDAO {
 			Root<Desembolso> root = criteria.from(Desembolso.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
-			ret = session.createQuery( criteria ).getSingleResult();
-		}catch (NoResultException e){
+			listRet = session.createQuery( criteria ).getResultList();
 			
-		}catch(Throwable e){
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		} catch(Throwable e){
 			CLogger.write("2", DesembolsoDAO.class, e);
 		}
 		finally{
@@ -231,8 +231,4 @@ public class DesembolsoDAO {
 		}
 		return ret;
 	}
-	
-	
-	
-
 }

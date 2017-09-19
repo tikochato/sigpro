@@ -85,6 +85,7 @@ public class ActividadDAO {
 
 	public static Actividad getActividadPorId(int id, String usuario){
 		Session session = CHibernateSession.getSessionFactory().openSession();
+		List<Actividad> listRet = null;
 		Actividad ret = null;
 		try{
 			String query = "FROM Actividad where id=:id";
@@ -96,9 +97,9 @@ public class ActividadDAO {
 			if(usuario != null){
 			criteria.setParameter("usuario", usuario);
 			}
-			ret = criteria.getSingleResult();
-		} catch (NoResultException e){
+			listRet = criteria.getResultList();
 			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch(Throwable e){
 			CLogger.write("2", ActividadDAO.class, e);
 		}
@@ -215,8 +216,6 @@ public class ActividadDAO {
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			conteo.setParameter("usuario", usuario);
 			ret = conteo.getSingleResult();
-		} catch (NoResultException e){
-			
 		} catch(Throwable e){
 			CLogger.write("7", ActividadDAO.class, e);
 		}
@@ -284,9 +283,7 @@ public class ActividadDAO {
 			criteria.setParameter("objetoTipo", objetoTipo);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getSingleResult();
-		} catch (NoResultException e){
-			
-		} catch(Throwable e){
+		}catch(Throwable e){
 			CLogger.write("9", ActividadDAO.class, e);
 		}
 		finally{
@@ -546,6 +543,7 @@ public class ActividadDAO {
 	public static Actividad getActividadPorIdResponsable(int id, String usuario,Integer responsable,String rol){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Actividad ret = null;
+		List<Actividad> listRet = null;
 		try{
 			String query = String.join(" ", "select a.*",
 				"from actividad a,asignacion_raci ar",
@@ -560,9 +558,9 @@ public class ActividadDAO {
 			criteria.setParameter("2", responsable);
 			criteria.setParameter("3", rol);
 			
-			ret = criteria.getSingleResult();
-		} catch (NoResultException e){
+			listRet = criteria.getResultList();
 			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch(Throwable e){
 			CLogger.write("13", ActividadDAO.class, e);
 		}
@@ -575,6 +573,7 @@ public class ActividadDAO {
 	
 	public static Actividad getActividadInicial(Integer objetoId, Integer objetoTipo, String usuario){
 		Actividad ret = null;
+		List<Actividad> listRet = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = "FROM Actividad a where a.estado=1 and a.orden=1 and a.objetoId=:objetoId and a.objetoTipo=:objetoTipo and a.usuarioCreo=:usuario";
@@ -582,9 +581,9 @@ public class ActividadDAO {
 			criteria.setParameter("objetoId", objetoId);
 			criteria.setParameter("objetoTipo", objetoTipo);
 			criteria.setParameter("usuario", usuario);
-			ret = criteria.getSingleResult();
-		} catch (NoResultException e){
+			listRet = criteria.getResultList();
 			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch(Throwable e){
 			CLogger.write("15", ActividadDAO.class, e);
 		}
@@ -596,6 +595,7 @@ public class ActividadDAO {
 	
 	public static Actividad getActividadFechaMaxima(Integer objetoId, Integer objetoTipo, String usuario){
 		Actividad ret = null;
+		List<Actividad> listRet = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = "FROM Actividad a where a.estado=1 and a.objetoId=:objetoId and a.objetoTipo=:objetoTipo and a.usuarioCreo=:usuario order by a.fechaFin desc";
@@ -604,7 +604,11 @@ public class ActividadDAO {
 			criteria.setParameter("objetoId", objetoId);
 			criteria.setParameter("objetoTipo", objetoTipo);
 			criteria.setParameter("usuario", usuario);
-			ret = criteria.getSingleResult();
+			
+			listRet = criteria.getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+			
 		} catch (NoResultException e){
 			
 		} catch(Throwable e){
@@ -618,6 +622,7 @@ public class ActividadDAO {
 	
 	public static Actividad getActividadPorIdOrden(int id, String usuario, Session session){
 		Actividad ret = null;
+		List<Actividad> listRet = null;
 		try{
 			String query = "FROM Actividad where id=:id";
 			if (usuario != null){
@@ -628,8 +633,10 @@ public class ActividadDAO {
 			if(usuario != null){
 			criteria.setParameter("usuario", usuario);
 			}
-			ret = criteria.getSingleResult();
-		} catch (NoResultException e){
+			
+			listRet = criteria.getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 			
 		} catch(Throwable e){
 			CLogger.write("17", ActividadDAO.class, e);

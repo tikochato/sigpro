@@ -701,7 +701,7 @@ public class SAvanceActividades extends HttpServlet {
 			return result;
 		}
 		catch(Throwable e){
-		    CLogger.write_simple("9", SAvanceActividades.class, e.getMessage());
+		    CLogger.write("9", SAvanceActividades.class, e);
 			return null;
 		}
 	}
@@ -710,23 +710,28 @@ public class SAvanceActividades extends HttpServlet {
 		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, actividad.getId(), OBJETO_ID_SUBACTIVIDAD, 
 				null, null,null, null, null, usuario);
 		
-		stActividad temp = new stActividad();
-		temp.id = actividad.getId();
-		temp.nombre = actividad.getNombre();
-		AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(actividad.getId(), 5, "R"); 
-		temp.responsable = asignacion.getColaborador().getPnombre() + " " + asignacion.getColaborador().getPapellido();
-		temp.porcentajeAvance = actividad.getPorcentajeAvance();
-		String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad, usuario).split(";");
-		temp.fechaInicio = fechaInicioFin[0];
-		temp.fechaFin = fechaInicioFin[1];
-		
-		items.add(temp);
-		
-		for(Actividad subActividad : actividades){
-			items = ObtenerActividades(subActividad, usuario, items);
+		try{
+			stActividad temp = new stActividad();
+			temp.id = actividad.getId();
+			temp.nombre = actividad.getNombre();
+			AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(actividad.getId(), 5, "R"); 
+			temp.responsable = (asignacion != null ? asignacion.getColaborador().getPnombre() : null) + " " + (asignacion != null ? asignacion.getColaborador().getPapellido() : null);
+			temp.porcentajeAvance = actividad.getPorcentajeAvance();
+			String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad, usuario).split(";");
+			temp.fechaInicio = fechaInicioFin[0];
+			temp.fechaFin = fechaInicioFin[1];
+			
+			items.add(temp);
+			
+			for(Actividad subActividad : actividades){
+				items = ObtenerActividades(subActividad, usuario, items);
+			}
+			
+			return items;
+		}catch(Exception e){
+			CLogger.write("10", SAvanceActividades.class, e);
+			return null;
 		}
-		
-		return items;
 	}
 	
 

@@ -3,7 +3,6 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -40,6 +39,7 @@ public class CooperanteDAO {
 	public static Cooperante getCooperantePorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Cooperante ret = null;
+		List<Cooperante> listRet = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
@@ -47,10 +47,10 @@ public class CooperanteDAO {
 			Root<Cooperante> root = criteria.from(Cooperante.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
-			ret = session.createQuery( criteria ).getSingleResult();
-		}catch (NoResultException e){
+			listRet = session.createQuery( criteria ).getResultList();
 			
-		}catch(Throwable e){
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		} catch(Throwable e){
 			CLogger.write("2", CooperanteDAO.class, e);
 		}
 		finally{
@@ -164,9 +164,7 @@ public class CooperanteDAO {
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
-		}catch (NoResultException e){
-			
-		}catch(Throwable e){
+		} catch(Throwable e){
 			CLogger.write("7", CooperanteDAO.class, e);
 		}
 		finally{
@@ -177,16 +175,17 @@ public class CooperanteDAO {
 	
 	public static Cooperante getCooperantePorCodigo(int codigo){
 		Cooperante ret=null;
+		List<Cooperante> listRet = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = "SELECT c FROM Cooperante c WHERE c.estado=1 and c.codigo= :codigo";
 			
 			Query<Cooperante> conteo = session.createQuery(query,Cooperante.class);
 			conteo.setParameter("codigo", codigo);
-			ret = conteo.getSingleResult();
-		}catch (NoResultException e){
+			listRet = conteo.getResultList();
 			
-		}catch(Throwable e){
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		} catch(Throwable e){
 			CLogger.write("7", CooperanteDAO.class, e);
 		}
 		finally{

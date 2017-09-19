@@ -39,6 +39,7 @@ public class HitoDAO {
 	public static Hito getHitoPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Hito ret = null;
+		List<Hito> listRet = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
@@ -46,7 +47,9 @@ public class HitoDAO {
 			Root<Hito> root = criteria.from(Hito.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
-			ret = session.createQuery( criteria ).getSingleResult();
+			listRet = session.createQuery( criteria ).getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("2", HitoDAO.class, e);

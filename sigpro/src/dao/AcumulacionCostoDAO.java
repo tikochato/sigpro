@@ -3,8 +3,6 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.NoResultException;
-
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -41,10 +39,7 @@ public class AcumulacionCostoDAO {
 			
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
-		} catch (NoResultException e){
-			
 		} catch(Throwable e){
-			e.printStackTrace();
 			CLogger.write("2", AcumulacionCosto.class, e);
 		}
 		finally{

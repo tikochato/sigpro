@@ -3,7 +3,6 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -43,6 +42,7 @@ public class ActividadTipoDAO {
 	public static ActividadTipo getActividadTipoPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		ActividadTipo ret = null;
+		List<ActividadTipo> listRet = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
@@ -50,9 +50,9 @@ public class ActividadTipoDAO {
 			Root<ActividadTipo> root = criteria.from(ActividadTipo.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
-			ret = session.createQuery( criteria ).getSingleResult();
-		} catch (NoResultException e){
+			listRet = session.createQuery( criteria ).getResultList();
 			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch(Throwable e){
 			CLogger.write("2", ActividadTipoDAO.class, e);
 		}
@@ -88,10 +88,6 @@ public class ActividadTipoDAO {
 		return ret;
 	}
 	
-	
-	
-	
-	
 	public static boolean eliminarActividadTipo(ActividadTipo actividadTipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -112,8 +108,6 @@ public class ActividadTipoDAO {
 		return ret;
 	}
 	
-	
-	
 	public static boolean eliminarTotalActividadTipo(ActividadTipo actividadTipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -131,7 +125,6 @@ public class ActividadTipoDAO {
 		}
 		return ret;
 	}
-	
 	
 	public static List<ActividadTipo> getActividadTiposPagina(int pagina, int numeroactividadstipo,
 			String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion,
@@ -178,8 +171,6 @@ public class ActividadTipoDAO {
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
-		} catch (NoResultException e){
-			
 		} catch(Throwable e){
 			CLogger.write("7", ActividadTipoDAO.class, e);
 		}

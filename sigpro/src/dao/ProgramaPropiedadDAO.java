@@ -107,6 +107,7 @@ public class ProgramaPropiedadDAO {
 	public static ProgramaPropiedad getProgramaPropiedadPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		ProgramaPropiedad ret = null;
+		List<ProgramaPropiedad> listRet = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
@@ -114,7 +115,9 @@ public class ProgramaPropiedadDAO {
 			Root<ProgramaPropiedad> root = criteria.from(ProgramaPropiedad.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal( root.get("estado"), 1 )));
-			ret = session.createQuery( criteria ).getSingleResult();
+			listRet = session.createQuery( criteria ).getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("6", ProgramaPropiedadDAO.class, e);

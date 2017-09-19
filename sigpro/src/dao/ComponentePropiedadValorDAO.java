@@ -1,6 +1,7 @@
 package dao;
 
-import javax.persistence.NoResultException;
+import java.util.List;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -16,15 +17,16 @@ public class ComponentePropiedadValorDAO {
 	public static ComponentePropiedadValor getValorPorComponenteYPropiedad(int idPropiedad,int idComponente){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		ComponentePropiedadValor ret = null;
+		List<ComponentePropiedadValor> listRet = null;
 		try {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<ComponentePropiedadValor> criteria = builder.createQuery(ComponentePropiedadValor.class);
 			Root<ComponentePropiedadValor> root = criteria.from(ComponentePropiedadValor.class);
 			criteria.select(root);
 			criteria.where(builder.equal(root.get("id"), new ComponentePropiedadValorId(idComponente, idPropiedad)));
-			ret = session.createQuery(criteria).getSingleResult();
-		} catch (NoResultException e){
+			listRet = session.createQuery(criteria).getResultList();
 			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("1", ProductoPropiedadValorDAO.class, e);
 		} finally {

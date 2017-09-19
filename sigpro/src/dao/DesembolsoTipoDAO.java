@@ -4,7 +4,6 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -27,8 +26,6 @@ public class DesembolsoTipoDAO {
 				query = String.join("",query, " AND d.nombre LIKE '%",filtro_nombre,"%'");
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
-		}catch (NoResultException e){
-			
 		}catch(Throwable e){
 			CLogger.write("1", DesembolsoTipoDAO.class, e);
 		}
@@ -41,6 +38,7 @@ public class DesembolsoTipoDAO {
 	public static DesembolsoTipo getDesembolosTipoPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		DesembolsoTipo ret = null;
+		List<DesembolsoTipo> listRet = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
@@ -48,7 +46,9 @@ public class DesembolsoTipoDAO {
 			Root<DesembolsoTipo> root = criteria.from(DesembolsoTipo.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
-			ret = session.createQuery( criteria ).getSingleResult();
+			listRet = session.createQuery( criteria ).getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("2", DesembolsoTipoDAO.class, e);
@@ -117,7 +117,4 @@ public class DesembolsoTipoDAO {
 		}
 		return ret;
 	}
-	
-
-
 }
