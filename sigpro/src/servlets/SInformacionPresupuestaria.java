@@ -347,7 +347,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 							}
 						}else if(prestamo.acumulacion_costoid ==3){
 							if(anioFinal == anioObj.anio){
-								anioObj.mes[mesFinal].planificado =  prestamo.costo;
+								anioObj.mes[mesFinal].planificado =  prestamo.costo != null ? prestamo.costo : new BigDecimal(0);
 							}
 						}
 					}
