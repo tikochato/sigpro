@@ -51,6 +51,12 @@ app.provider('Utilidades', function() {
 					var tamanioPropuesto = (areaReporte / columnasAMostrar);
                     return Math.floor(tamanioPropuesto);
 				}
+				
+				dataFactory.setFocus = function(elemento){
+					if(elemento !== undefined && elemento !== null){
+						setTimeout(function(){elemento.focus();}, 100);
+					}
+				}
 
 				return dataFactory;
 			} ];

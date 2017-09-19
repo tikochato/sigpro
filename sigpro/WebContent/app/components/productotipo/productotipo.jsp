@@ -91,13 +91,13 @@
 		<div class="col-sm-12">
 			<form name="form" class="css-form">
 				<div class="form-group">
-						<label for="campo0" class="floating-label">ID {{productoTipo.codigo}}</label>
+						<label for="campo0" class="floating-label id_class">ID {{productoTipo.codigo}}</label>
 						<br/><br/>
 				</div>
 
 				
 				<div class="form-group">
-					<input type="text" class="inputText" ng-model="productoTipo.nombre"  ng-value="productoTipo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" />
+					<input type="text" id="nombre" class="inputText" ng-model="productoTipo.nombre"  ng-value="productoTipo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" />
 					<label class="floating-label">* Nombre</label> 
 				</div>
 

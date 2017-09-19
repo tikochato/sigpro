@@ -82,7 +82,8 @@ public class RecursoPropiedadDAO {
 			Root<RecursoPropiedad> root = criteria.from(RecursoPropiedad.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id )));
-			ret = session.createQuery( criteria ).getSingleResult();
+			List<RecursoPropiedad> lista = session.createQuery( criteria ).getResultList();
+			ret = !lista.isEmpty() ? lista.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("4", RecursoPropiedadDAO.class, e);

@@ -190,12 +190,14 @@ app.controller('recursopropiedadController',['$scope','$http','$interval','i18nS
 				mi.recursopropiedad = {};
 				mi.datoTipoSeleccionado = null;
 				mi.gridApi.selection.clearSelectedRows();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			};
 
 			mi.editar = function() {
 				if(mi.recursopropiedad!=null && mi.recursopropiedad.id!=null){
 					mi.mostraringreso = true;
 					mi.esnuevo = false;
+					$utilidades.setFocus(document.getElementById("nombre"));
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar la Propiedad del Recurso que desea editar');

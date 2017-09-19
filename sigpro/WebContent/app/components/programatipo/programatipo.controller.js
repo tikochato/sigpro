@@ -167,6 +167,7 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.cargarTotalPropiedades();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Programa que desea editar');
@@ -208,8 +209,10 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
 			mi.programatipo = {};
+			mi.programapropiedades = [];
+			mi.gridOptionsProgramaPropiedad.data = [];
 			mi.gridApi.selection.clearSelectedRows();
-			mi.cargarTotalPropiedades();
+			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 
 		mi.irATabla = function() {
@@ -463,13 +466,4 @@ function ($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades,
 }
 	]);
 
-app.directive('showFocus', function($timeout) {
-	  return function(scope, element, attrs) {
-	    scope.$watch(attrs.showFocus, 
-	      function (newValue) { 
-	        $timeout(function() {
-	            element[0].focus();	          
-	        });
-	      },true);
-	  };    
-	});
+

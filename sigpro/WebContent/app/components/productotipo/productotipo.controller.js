@@ -177,7 +177,7 @@ function($scope, $routeParams, $route, $window, $location,
 		mi.entidadSeleccionada.usuarioActualizo = "";
 		mi.entidadSeleccionada.fechaActualizacion = "";
 		mi.propiedadesTipo = [];
-
+		$utilidades.setFocus(document.getElementById("nombre"));
 	}
 
 	mi.limpiarSeleccion = function() {
@@ -214,7 +214,7 @@ function($scope, $routeParams, $route, $window, $location,
 			
 				}
 			});
-
+			$utilidades.setFocus(document.getElementById("nombre"));
 		} else {
 			$utilidades.mensaje('warning',
 					'Debe seleccionar un Tipo de Producto');
