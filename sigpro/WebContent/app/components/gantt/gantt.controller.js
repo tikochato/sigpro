@@ -219,10 +219,9 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		    cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(64, 8)
 		});
 		
-		columns.splice(12 , 0, { header: 'Predecesor', width: 70, cellTemplate: DlhSoft.Controls.GanttChartView.getPredecessorsColumnTemplate(84) });
 		
 		//columns.push({ header: 'Costo Planificado (Q)', width: 110, cellTemplate: DlhSoft.Controls.GanttChartView.getCostColumnTemplate(84) });
-		columns.splice(13, 0, {
+		columns.splice(12, 0, {
 		    header: 'Costo Planificado (Q)', 
 		    width: 110,
 		    isReadOnly: true,
@@ -234,27 +233,6 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 
 		});		
 		
-		//columns.push({ header: 'Meta Planificada', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaPlanificada; }, function (value) { item.metaPlanificada = value; }); } });
-		columns.splice(14, 0, {
-		    header: 'Meta Planificada', 
-		    width: 80,
-		    isReadOnly: true,
-		    cellStyle: 'text-align: right;',
-		    cellTemplate: function (item) {
-		        return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return item.metaPlanificada; });
-		    }
-		});	
-		
-		//columns.push({ header: 'Meta Real', width: 80, cellTemplate: function (item) { return DlhSoft.Controls.GanttChartView.textInputColumnTemplateBase(document, 64, function () { return item.metaReal; }, function (value) { item.metaReal = value; }); } });
-		columns.splice(15, 0, {
-		    header: 'Meta Real', 
-		    width: 80,
-		    isReadOnly: true,
-		    cellStyle: 'text-align: right;',
-		    cellTemplate: function (item) {
-		        return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return item.metaReal; });
-		    }
-		});
 		
 		
 		for(var i=0; i<columns.length;i++)

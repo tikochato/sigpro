@@ -46,8 +46,6 @@ import pojo.UnidadEjecutora;
 
 public class CProject {
 	
-	
-	
 	class stitem {
 		int id;
 		Integer idUnico;
@@ -505,6 +503,8 @@ public class CProject {
 		}
 		return path;
 	}	
+	
+	
 	
 
 }
