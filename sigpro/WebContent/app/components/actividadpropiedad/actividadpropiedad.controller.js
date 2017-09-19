@@ -49,7 +49,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 					    },
 					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 					    { name: 'datotiponombre', displayName: 'Tipo dato', cellClass: 'grid-align-left', enableFiltering: false},
-					    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
+					    { name: 'usuarioCreo', displayName: 'Usuario Creación', cellClass: 'grid-align-left',
 					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.actividadpropiedadc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.actividadpropiedadc.filtrar($event)"></input></div>'
 					    },
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',

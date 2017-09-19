@@ -110,7 +110,7 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 		    },
 		    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
 		    {displayName : 'Tipo', name : 'tipo', cellClass : 'grid-align-left', enableFiltering: false, enableSorting: false},
-		    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
+		    { name: 'usuarioCreo', displayName: 'Usuario Creación', cellClass: 'grid-align-left',
 		    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.subproductoPropiedad.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.subproductoPropiedad.filtrar($event)"></input></div>'
 		    },
 		    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
