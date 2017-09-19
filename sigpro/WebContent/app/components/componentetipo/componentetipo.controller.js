@@ -50,7 +50,7 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.componentetipoc.filtros[\'nombre\']" ng-keypress="grid.appScope.componentetipoc.filtrar($event)" ></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-				    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
+				    { name: 'usuarioCreo', displayName: 'Usuario Creación', cellClass: 'grid-align-left',
 				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.componentetipoc.filtros[\'usuarioCreo\']" ng-keypress="grid.appScope.componentetipoc.filtrar($event)" ></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',

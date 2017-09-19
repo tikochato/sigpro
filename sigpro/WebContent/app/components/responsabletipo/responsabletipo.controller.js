@@ -147,7 +147,7 @@ app.controller('responsabletipoController',['$scope','$http','$interval','i18nSe
 					filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'nombre\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>'
 				},
 				{ name: 'descripcion', displayName: 'Descripcion', cellClass: 'grid-align-left', enableFiltering: false},
-				{ name: 'usuarioCreo', displayName: 'Usuario Creación',
+				{ name: 'usuarioCreo', displayName: 'Usuario Creación', cellClass: 'grid-align-left',
 					filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'usuario_creo\']"  ng-keypress="grid.appScope.controller.filtrar($event)" style="width:90px;"></input></div>'
 				},
 			    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',

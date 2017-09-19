@@ -53,8 +53,8 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 				    	,filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.programatipoc.filtros[\'nombre\']" ng-keypress="grid.appScope.programatipoc.filtrar($event)" style="width:175px;"></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-				    { name: 'usuarioCreo', displayName: 'Usuario Creación' 
-				    	,filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.programatipoc.filtros[\'usuarioCreo\']" ng-keypress="grid.appScope.programatipoc.filtrar($event)"></input></div>'
+				    { name: 'usuarioCreo', displayName: 'Usuario Creación', cellClass: 'grid-align-left',
+				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.programatipoc.filtros[\'usuarioCreo\']" ng-keypress="grid.appScope.programatipoc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
 				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.programatipoc.filtros[\'fechaCreacion\']" ng-keypress="grid.appScope.programatipoc.filtrar($event)" ></input></div>'
