@@ -5,7 +5,7 @@ var app = angular.module('sipro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDe
 
 app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($routeProvider, $locationProvider,FlashProvider) {
 	   $locationProvider.hashPrefix('!');
-	   //$locationProvider.html5Mode(true);
+	   $locationProvider.html5Mode({ enabled: false, requireBase: false});
 	   
 	   $routeProvider
 	   		/*.when('/main',{
@@ -25,7 +25,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/prestamo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
             })
-            .when('/prestamometas/:reiniciar_vista?',{
+            .when('/prestamometas',{
             	template: '<div load-on-demand="\'prestamometasController\'" class="all_page"></div>'
             })
             .when('/entidad/:reiniciar_vista?',{
@@ -154,11 +154,8 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/programa/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'programaController\'" class="all_page"></div>'
             })
-            .when('/mapa/:proyecto_id/:reiniciar_vista?',{
+            .when('/mapa/:proyecto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'mapaController\'" class="all_page"></div>'
-            })
-            .when("/:redireccion?",{
-            	controller:"MainController"
             })
             .when('/matrizriesgo/:proyectoId',{
             	template: '<div load-on-demand="\'matrizriesgoController\'" class="all_page"></div>'
@@ -178,7 +175,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/informacionPresupuestaria/',{
             	template: '<div load-on-demand="\'informacionPresupuestariaController\'" class="all_page"></div>'
             })
-            .when('/at/',{
+            .when("/administracionTransaccional/",{
             	template: '<div load-on-demand="\'administracionTransaccionalController\'" class="all_page"></div>'
             })
             .when('/responsabletipo/:reiniciar_vista?',{
@@ -204,6 +201,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             })
             .when('/tipoadquisicion/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'tipoAdquisicionController\'" class="all_page"></div>'
+            })
+            .when("/:redireccion?",{
+            	controller:"MainController"
             })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -552,8 +552,9 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	}
 
 	$scope.device = deviceDetector;
-
-	$rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+	
+	$rootScope.$on('$routeChangeSuccess', function (event, next) {
+	      
 		if($routeParams.redireccion=="forbidden"){
 			$utilidades.mensaje('danger','No tiene permiso de acceder a esta área');	
 		}
