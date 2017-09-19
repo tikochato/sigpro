@@ -159,6 +159,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.cargarTotalPropiedades();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Préstamo que desea editar');
@@ -201,6 +202,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 			mi.proyectotipo = {};
 			mi.gridApi.selection.clearSelectedRows();
 			mi.cargarTotalPropiedades();
+			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 
 		mi.irATabla = function() {

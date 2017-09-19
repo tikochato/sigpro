@@ -207,7 +207,7 @@ public class SMetaValor extends HttpServlet {
 		else if(accion.equals("numeroMetaValores")){
 			Integer metaid =  map.get("metaid")!=null  ? Integer.parseInt(map.get("metaid")) : 0;
 			Meta Meta = MetaDAO.getMetaPorId(metaid);
-			response_text = String.join("","{ \"success\": true, \"totalMetaValores\":",String.valueOf(Meta.getMetaValors().size())," }");
+			response_text = String.join("","{ \"success\": true, \"totalMetaValores\":",String.valueOf(Meta.getMetaValors()!=null ? Meta.getMetaValors().size(): 0)," }");
 		}
 		else{
 			response_text = "{ \"success\": false }";
