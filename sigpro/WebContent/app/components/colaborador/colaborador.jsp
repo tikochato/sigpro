@@ -97,7 +97,7 @@
 		     	<div class="form-group">
 				   <input type="text" name="nombre"  class="inputText" id="nombre" 
 				     ng-model="colaborador.colaborador.primerNombre" ng-value="colaborador.colaborador.primerNombre"   
-				     onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="colaborador.mostraringreso">
+				     onblur="this.setAttribute('value', this.value);" ng-required="true">
 				   <label class="floating-label">* Primer Nombre</label>
 				</div>
 		

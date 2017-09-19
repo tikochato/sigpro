@@ -125,12 +125,12 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group">
-							<label for="id" class="floating-label">ID {{actividadc.actividad.id }}</label>
+							<label for="id" class="floating-label id_class">ID {{actividadc.actividad.id }}</label>
 							<br/><br/>
 						</div>
 						<div class="form-group">
     						<div class="form-group">
-							   <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="actividadc.actividad.nombre" ng-value="actividadc.actividad.nombre"  onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="actividadc.mostraringreso">
+							   <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="actividadc.actividad.nombre" ng-value="actividadc.actividad.nombre"  onblur="this.setAttribute('value', this.value);" ng-required="true">
 							   <label class="floating-label">* Nombre</label>
 							</div>
 						</div>

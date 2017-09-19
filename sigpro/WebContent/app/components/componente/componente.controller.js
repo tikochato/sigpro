@@ -254,6 +254,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			mi.coordenadas = "";
 			mi.duracionDimension = mi.dimensiones[0];
 			mi.gridApi.selection.clearSelectedRows();
+			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 
 		mi.editar = function() {
@@ -302,6 +303,8 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 								break;
 						}
 					}
+					
+					$utilidades.setFocus(document.getElementById("nombre"));
 				});
 			}
 			else
@@ -796,14 +799,3 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 		  $uibModalInstance.close(null);
 	  };
 }]);
-
-app.directive('showFocus', function($timeout) {
-    return function(scope, element, attrs) {
-      scope.$watch(attrs.showFocus,
-        function (newValue) {
-          $timeout(function() {
-              element[0].focus();             
-          });
-        },true);
-    };   
-  });

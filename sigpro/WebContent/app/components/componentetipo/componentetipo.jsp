@@ -16,7 +16,7 @@
 		</div>
 
 
-	<div class="row" align="center" ng-if="!componentetipoc.mostraringreso">
+	<div class="row" align="center" ng-show="!componentetipoc.mostraringreso">
 		
 		<div class="col-sm-12 operation_buttons" align="right">
 		  <div class="btn-group">
@@ -72,7 +72,7 @@
 	
 	</div>
 
-	<div class="row second-main-form" ng-if="componentetipoc.mostraringreso">
+	<div class="row second-main-form" ng-show="componentetipoc.mostraringreso">
 		<div class="page-header">
 		    <h2 ng-hide="!componentetipoc.esnuevo"><small>Nuevo Tipo Componente</small></h2>
 		    <h2 ng-hide="componentetipoc.esnuevo"><small>Edición de Tipo Componente</small></h2>
@@ -91,14 +91,14 @@
 		<div class="col-sm-12">
 			<form name="form" id="form">
 				<div class="form-group">
-				  <label for="id" class="floating-label">ID {{componentetipoc.componentetipo.id }}</label>
+				  <label for="id" class="floating-label id_class">ID {{componentetipoc.componentetipo.id }}</label>
 				  <br/><br/>
 				</div>
 
 				<div class="form-group">
-				   <input type="text" name="inombre"  class="inputText" id="inombre" 
+				   <input type="text" name="inombre"  class="inputText" id="nombre" 
 				     ng-model="componentetipoc.componentetipo.nombre" value="{{componentetipoc.componentetipo.nombre}}"   
-				     onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="componentetipoc.mostraringreso">
+				     onblur="this.setAttribute('value', this.value);" ng-required="true">
 				   <label class="floating-label">* Nombre</label>
 				</div>
 				

@@ -182,6 +182,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 				mi.esnuevo = true;
 				mi.componentepropiedad = {};
 				mi.gridApi.selection.clearSelectedRows();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			};
 
 			mi.editar = function() {
@@ -192,6 +193,8 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 							"id" : mi.componentepropiedad.datotipoid,
 							"nombre" : mi.componentepropiedad.datotiponombre
 					}
+					
+					$utilidades.setFocus(document.getElementById("nombre"));
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar la Propiedad Componente que desea editar');
@@ -246,15 +249,3 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 			});
 			
 		} ]);
-
-app.directive('showFocus', function($timeout) {
-    return function(scope, element, attrs) {
-      scope.$watch(attrs.showFocus,
-        function (newValue) {
-          $timeout(function() {
-              element[0].focus();             
-          });
-        },true);
-    };   
-  });
-

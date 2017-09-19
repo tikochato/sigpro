@@ -129,14 +129,14 @@
 			<div class="col-sm-12">
 				<form name="form" id="form">
 						<div class="form-group">
-						  <label for="id" class="floating-label">ID {{ componentec.componente.id }}</label>
+						  <label for="id" class="floating-label id_class">ID {{ componentec.componente.id }}</label>
 						  <br/><br/>
 						</div>
 						
 						<div class="form-group">
 						   <input type="text" name="nombre"  class="inputText" id="nombre" 
 						     ng-model="componentec.componente.nombre" ng-value="componentec.componente.nombre"   
-						     onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="componentec.mostraringreso">
+						     onblur="this.setAttribute('value', this.value);" ng-required="true">
 						   <label class="floating-label">* Nombre</label>
 						</div>
 						

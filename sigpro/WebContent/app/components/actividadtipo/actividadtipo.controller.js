@@ -163,6 +163,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.cargarTotalPropiedades();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Actividad que desea editar');
@@ -204,6 +205,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 			mi.actividadtipo = {};
 			mi.gridApi.selection.clearSelectedRows();
 			mi.cargarTotalPropiedades();
+			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 	
 		mi.irATabla = function() {
@@ -460,14 +462,3 @@ function modalBuscarActividadPropiedad($uibModalInstance, $scope, $http, $interv
     	$uibModalInstance.dismiss('cancel');
      };
 };
-
-app.directive('showFocus', function($timeout) {
-    return function(scope, element, attrs) {
-      scope.$watch(attrs.showFocus,
-        function (newValue) {
-          $timeout(function() {
-              element[0].focus();             
-          });
-        },true);
-    };   
-  });

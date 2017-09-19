@@ -186,6 +186,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 				mi.esnuevo = true;
 				mi.actividadpropiedad = {};
 				mi.gridApi.selection.clearSelectedRows();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			};
 
 			mi.editar = function() {
@@ -198,6 +199,7 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 							"id" : mi.actividadpropiedad.datotipoid,
 							"nombre" : mi.actividadpropiedad.datotiponombre
 					}
+					$utilidades.setFocus(document.getElementById("nombre"));
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar la Propiedad de Actividad que desea editar');
@@ -249,14 +251,3 @@ app.controller('actividadpropiedadController',['$scope','$http','$interval','i18
 			});
 			
 		} ]);
-
-app.directive('showFocus', function($timeout) {
-    return function(scope, element, attrs) {
-      scope.$watch(attrs.showFocus,
-        function (newValue) {
-          $timeout(function() {
-              element[0].focus();             
-          });
-        },true);
-    };   
-  });

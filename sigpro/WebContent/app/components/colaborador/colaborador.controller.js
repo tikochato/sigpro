@@ -202,6 +202,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location, $m
 		mi.unidadejecutoranombre="";
 		mi.usuarioValido = false;
 		mi.gridApi.selection.clearSelectedRows();
+		$utilidades.setFocus(document.getElementById("nombre"));
 	}
 
 	
@@ -217,7 +218,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location, $m
 			mi.ejercicio = mi.colaborador.ejercicio;
 			mi.entidad = mi.colaborador.entidadentidad;
 			mi.validarUsuario();
-
+			$utilidades.setFocus(document.getElementById("nombre"));
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar un Conlabordor');
 		}

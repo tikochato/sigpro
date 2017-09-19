@@ -90,13 +90,13 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group">
-						  <label for="id" class="floating-label">ID {{ cooperantec.cooperante.id }}</label>
+						  <label for="id" class="floating-label id_class">ID {{ cooperantec.cooperante.id }}</label>
 						  <br/><br/>
 						</div>
 						<div class="form-group">
 						   <input type="number" name="codigo"  class="inputText" id="codigo" 
 						     ng-model="cooperantec.cooperante.codigo" ng-value="cooperantec.cooperante.codigo"   
-						     onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="cooperantec.mostraringreso">
+						     onblur="this.setAttribute('value', this.value);" ng-required="true">
 						   <label class="floating-label">* Código</label>
 						</div>
 						<div class="form-group">

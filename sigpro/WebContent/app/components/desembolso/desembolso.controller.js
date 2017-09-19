@@ -165,6 +165,8 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 				mi.desembolsotipoid="";
 				mi.desembolsonombre="";
 				mi.gridApi.selection.clearSelectedRows();
+				
+				$utilidades.setFocus(document.getElementById("imonto"));
 			};
 			
 			mi.borrar = function(ev) {
@@ -202,6 +204,8 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 					mi.fecha = moment(mi.desembolso.fecha, 'DD/MM/YYYY').toDate();
 					mi.mostraringreso = true;
 					mi.esnuevo = false;
+					
+					$utilidades.setFocus(document.getElementById("imonto"));
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar el Desembolso que desea editar');
@@ -483,16 +487,4 @@ function modalBuscarTipoMoneda($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
-
 }
-
-app.directive('showFocus', function($timeout) {
-    return function(scope, element, attrs) {
-      scope.$watch(attrs.showFocus,
-        function (newValue) {
-          $timeout(function() {
-              element[0].focus();             
-          });
-        },true);
-    };   
-  });

@@ -195,6 +195,8 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 				mi.esnuevo = true;
 				mi.cooperante = {};
 				mi.gridApi.selection.clearSelectedRows();
+				
+				$utilidades.setFocus(document.getElementById("codigo"));
 			};
 
 			mi.editar = function() {
@@ -202,6 +204,8 @@ app.controller('cooperanteController',['$scope','$http','$interval','i18nService
 					mi.mostraringreso = true;
 					mi.esnuevo = false;
 					mi.cargarTotalTipoAdquisicion();
+					
+					$utilidades.setFocus(document.getElementById("codigo"));
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar el Cooperante que desea editar');
@@ -428,14 +432,3 @@ function modalTipoAdquisicion($uibModalInstance, $scope, $http, $interval, i18nS
     	$uibModalInstance.dismiss('cancel');
      };
 }
-
-app.directive('showFocus', function($timeout) {
-    return function(scope, element, attrs) {
-      scope.$watch(attrs.showFocus,
-        function (newValue) {
-          $timeout(function() {
-              element[0].focus();             
-          });
-        },true);
-    };   
-  });

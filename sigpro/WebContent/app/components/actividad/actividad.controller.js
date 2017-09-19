@@ -355,6 +355,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			mi.duracionDimension = mi.dimensiones[0];
 			mi.gridApi.selection.clearSelectedRows();
 			mi.actividad.porcentajeavance = 0;
+			$utilidades.setFocus(document.getElementById("inombre"));
 		};
 
 		mi.editar = function() {
@@ -399,6 +400,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 						}
 
 					}
+					$utilidades.setFocus(document.getElementById("inombre"));
 				});
 				
 				$http.post('/SMatrizRACI', {
@@ -998,14 +1000,3 @@ function modalBuscar($uibModalInstance, $scope, $http, $interval,
 		$uibModalInstance.dismiss('cancel');
 	};
 }
-
-app.directive('showFocus', function($timeout) {
-    return function(scope, element, attrs) {
-      scope.$watch(attrs.showFocus,
-        function (newValue) {
-          $timeout(function() {
-              element[0].focus();             
-          });
-        },true);
-    };   
-  });

@@ -128,6 +128,8 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 				mi.esnuevo = true;
 				mi.desembolsotipo = {};
 				mi.gridApi.selection.clearSelectedRows();
+				
+				$utilidades.setFocus(document.getElementById("nombre"));
 			};
 			
 			mi.guardar=function(){
@@ -161,6 +163,8 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 				if(mi.desembolsotipo!=null && mi.desembolsotipo.id!=null){
 					mi.mostraringreso = true;
 					mi.esnuevo = false;
+					
+					$utilidades.setFocus(document.getElementById("nombre"));
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar el Tipo Desembolso que desea editar');
@@ -213,14 +217,3 @@ app.controller('desembolsotipoController',['$scope','$http','$interval','i18nSer
 			};
 			
 }]);
-
-app.directive('showFocus', function($timeout) {
-    return function(scope, element, attrs) {
-      scope.$watch(attrs.showFocus,
-        function (newValue) {
-          $timeout(function() {
-              element[0].focus();             
-          });
-        },true);
-    };   
-  });
