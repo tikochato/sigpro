@@ -19,7 +19,7 @@ public class ProyectoPropiedadDAOTest {
 	
 	@Test
 	public void getProyectoPropiedadPaginaTotalDisponiblesTest(){
-		assertNotNull(ProyectoPropiedadDAO.getProyectoPropiedadPaginaTotalDisponibles(0, 0, "{}"));
+		assertNotNull(ProyectoPropiedadDAO.getProyectoPropiedadPaginaTotalDisponibles(0, 0, "{}",0));
 	}
 
 

@@ -122,12 +122,12 @@
 		<div class="col-sm-12">
 			<form name="form" class="css-form">
 					<div class="form-group">
-						<label id="campo0" name="campo0" class="floating-label">ID {{ producto.producto.id }}</label>
+						<label id="campo0" name="campo0" class="floating-label id_class">ID {{ producto.producto.id }}</label>
 						<br/><br/>
 					</div>
 								
 					<div class="form-group">
-						<input type="text" class="inputText" ng-model="producto.producto.nombre" ng-value="producto.producto.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" />
+						<input type="text" class="inputText" ng-model="producto.producto.nombre" ng-value="producto.producto.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" id="campo_d"/>
 						<label class="floating-label">* Nombre</label> 
 					</div>
 					
