@@ -178,6 +178,7 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 			mi.esnuevo = true;
 			mi.riesgopropiedad = {};
 			mi.gridApi.selection.clearSelectedRows();
+			$utilidades.setFocus(document.getElementById("nombre"));
 			
 		};
 
@@ -189,6 +190,7 @@ app.controller('riesgopropiedadController',['$scope','$http','$interval','i18nSe
 						"id" : mi.riesgopropiedad.datotipoid,
 						"nombre" : mi.riesgopropiedad.datotiponombre
 				}
+				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar la Propiedad Riesgo que desea editar');

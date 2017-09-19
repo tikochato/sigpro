@@ -16,7 +16,7 @@
 		{{ riesgoc.objetoTipoNombre }} {{ riesgoc.objetoNombre }}
 		</div>
 		
-		<div class="row" align="center" ng-if="!riesgoc.mostraringreso">
+		<div class="row" align="center" ng-show="!riesgoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="30040">
@@ -68,7 +68,7 @@
 			</div>
     		</shiro:hasPermission>
 		</div>
-		<div class="row second-main-form" ng-if="riesgoc.mostraringreso">
+		<div class="row second-main-form" ng-show="riesgoc.mostraringreso">
 			<div class="page-header">
 				<h2 ng-hide="!riesgoc.esnuevo"><small>Nuevo riesgo</small></h2>
 				<h2 ng-hide="riesgoc.esnuevo"><small>Edición de riesgo</small></h2>
@@ -87,7 +87,7 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group" ng-show="!riesgoc.esnuevo">
-							<label for="id" class="floating-label">ID {{ riesgoc.riesgo.id }}</label>
+							<label for="id" class="floating-label id_class">ID {{ riesgoc.riesgo.id }}</label>
     						<br/><br/>
 						</div>
 						<div class="form-group">

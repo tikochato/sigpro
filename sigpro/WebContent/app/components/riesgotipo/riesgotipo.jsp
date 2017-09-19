@@ -15,7 +15,7 @@
 	  <div class="panel-heading"><h3>Tipo de Riesgo</h3></div>
 	</div>
 
-	<div class="row" align="center" ng-if="!riesgotipoc.mostraringreso">
+	<div class="row" align="center" ng-show="!riesgotipoc.mostraringreso">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 				<shiro:hasPermission name="32040">
@@ -69,7 +69,7 @@
 		</shiro:hasPermission>
 	</div>
 
-	<div class="row second-main-form" ng-if="riesgotipoc.mostraringreso">
+	<div class="row second-main-form" ng-show="riesgotipoc.mostraringreso">
 		<div class="page-header">
 			<h2 ng-hide="!riesgotipoc.esnuevo"><small>Nuevo Tipo Riesgo</small></h2>
 			<h2 ng-hide="riesgotipoc.esnuevo"><small>Edición de Tipo Riesgo</small></h2>
@@ -87,7 +87,7 @@
 		<div class="col-sm-12">
 			<form name="form">
 				<div class="form-group">
-					<label for="id"  class="floating-label">ID {{riesgotipoc.riesgotipo.id }}</label> 
+					<label for="id"  class="floating-label id_class">ID {{riesgotipoc.riesgotipo.id }}</label> 
 					<br/><br/>
 				</div>
 

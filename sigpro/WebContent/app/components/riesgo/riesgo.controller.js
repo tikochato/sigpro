@@ -242,6 +242,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			mi.camposdinamicos = {};
 			mi.probabilidad = {}; 
 			mi.gridApi.selection.clearSelectedRows();
+			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 
 		mi.editar = function() {
@@ -258,6 +259,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				mi.esnuevo = false;
 				mi.colaboradorNombre = mi.riesgo.colaboradorNombre;
 				mi.colaboradorId = mi.riesgo.colaboradorId;
+				$utilidades.setFocus(document.getElementById("nombre"));
 				if (mi.riesgo.probabilidad !=null && mi.riesgo.probabilidad > 0){
 					mi.probabilidad = {
 							"valor" : mi.riesgo.probabilidad,

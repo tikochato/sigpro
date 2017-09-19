@@ -46,6 +46,7 @@ app.controller('responsabletipoController',['$scope','$http','$interval','i18nSe
 		mi.responsableTipo = {};
 		mi.esColapsado = true;
 		mi.gridApi.selection.clearSelectedRows();
+		$utilidades.setFocus(document.getElementById("nombre"));
 	}
 	
 	mi.filtrar = function(evt){
@@ -86,6 +87,7 @@ app.controller('responsabletipoController',['$scope','$http','$interval','i18nSe
 		if(mi.responsableTipo!= null && mi.responsableTipo.id!= null){
 			mi.esNuevo = false;
 			mi.esColapsado = true;
+			$utilidades.setFocus(document.getElementById("nombre"));
 		}else
 			$utilidades.mensaje('warning','Debe seleccionar el tipo de responsable que desea editar');
 	}

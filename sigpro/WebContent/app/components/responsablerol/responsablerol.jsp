@@ -87,12 +87,12 @@
 		<div class="col-sm-12">
 			<form name="form">
 				<div class="form-group">
-					<label for="id" class="floating-label">ID {{ controller.responsableRol.id }}</label>
+					<label for="id" class="floating-label id_class">ID {{ controller.responsableRol.id }}</label>
 					<br/><br/>
 				</div>
 				
 				<div class="form-group">
-			      <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="controller.responsableRol.nombre" ng-value="controller.responsableRol.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" >
+			      <input type="text" name="inombre"  class="inputText" id="nombre" ng-model="controller.responsableRol.nombre" ng-value="controller.responsableRol.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" >
 			      <label class="floating-label">* Nombre</label>
 				</div>
 				
