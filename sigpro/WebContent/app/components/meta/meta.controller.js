@@ -228,6 +228,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 						"nombre" : "decimal"
 				}
 				mi.gridApi.selection.clearSelectedRows();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			};
 
 			mi.editar = function() {
@@ -246,6 +247,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 							"id" : 3,
 							"nombre" : "decimal"
 					}
+					$utilidades.setFocus(document.getElementById("nombre"));
 				}
 				else{
 					$utilidades.mensaje('warning','Debe seleccionar la Meta que desea editar');

@@ -91,7 +91,7 @@
     						<br/><br/>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" id="nombre" ng-model="recursoc.recurso.nombre"  ng-value="recursoc.recurso.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="recursoc.mostraringreso">
+    						<input type="text" class="inputText" id="nombre" ng-model="recursoc.recurso.nombre"  ng-value="recursoc.recurso.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
 							<label for="nombre" class="floating-label">* Nombre</label>
 						</div>
 

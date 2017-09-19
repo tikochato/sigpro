@@ -100,8 +100,8 @@
 							<br/><br/>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText"  ng-model="metac.meta.nombre"
-    						ng-value="metac.meta.nombre" onblur="this.setAttribute('value', this.value);" show-focus="metac.mostraringreso">
+    						<input type="text" id="nombre" class="inputText"  ng-model="metac.meta.nombre"
+    						ng-value="metac.meta.nombre" onblur="this.setAttribute('value', this.value);">
     						<label  class="floating-label">Nombre</label>
 						</div>
 						<div class="form-group">

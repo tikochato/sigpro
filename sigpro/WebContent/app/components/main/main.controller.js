@@ -563,18 +563,3 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 		}
     });
 }]);
-
-
-app.directive('showFocus', function($timeout) {
-  return function(scope, element, attrs) {
-    scope.$watch(attrs.showFocus, 
-      function (newValue) { 
-        $timeout(function() {
-        	if(element[0]!=null){
-        		element[0].focus();	 
-        	}
-        });
-      },true);
-  };    
-});
-

@@ -97,7 +97,7 @@
 
 				
 				<div class="form-group">
-					<input type="text" class="inputText" ng-model="productoTipo.nombre"  ng-value="productoTipo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" />
+					<input type="text" id="nombre" class="inputText" ng-model="productoTipo.nombre"  ng-value="productoTipo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" />
 					<label class="floating-label">* Nombre</label> 
 				</div>
 

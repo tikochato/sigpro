@@ -178,6 +178,7 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 			mi.programapropiedad = {};
 			mi.gridApi.selection.clearSelectedRows();
 			mi.datotiposeleccionado = null;
+			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 	
 		mi.editar = function() {
@@ -188,7 +189,7 @@ app.controller('programapropiedadController',['$scope','$http','$interval','i18n
 						"id" : mi.programapropiedad.datotipoid,
 						"nombre" : mi.programapropiedad.datotiponombre
 				}
-
+				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar la Propiedad de Programa que desea editar');

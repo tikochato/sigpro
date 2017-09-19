@@ -182,6 +182,7 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 		mi.entidadSeleccionada.fechaActualizacion = "";
 		
 		mi.datoTipoSeleccionado = null;
+		$utilidades.setFocus(document.getElementById("nombre"));
 	}
 
 	mi.limpiarSeleccion = function() {
@@ -210,7 +211,7 @@ function controlProductoPropiedad($scope, $routeParams, $route, $window, $locati
 					"id" : mi.entidadSeleccionada.idTipo,
 					"nombre" : mi.entidadSeleccionada.tipo
 			}
-
+			$utilidades.setFocus(document.getElementById("nombre"));
 		} else {
 			$utilidades.mensaje('warning',
 					'Debe seleccionar una propiedad de producto');

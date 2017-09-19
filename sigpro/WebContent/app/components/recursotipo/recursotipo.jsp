@@ -94,7 +94,7 @@
 				</div>
 
 				<div class="form-group">
-					<input type="text" class="inputText" ng-value="recursotipoc.recursotipo.nombre" ng-model="recursotipoc.recursotipo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="recursotipoc.mostraringreso">
+					<input type="text" id="nombre" class="inputText" ng-value="recursotipoc.recursotipo.nombre" ng-model="recursotipoc.recursotipo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
 					<label class="floating-label">* Nombre</label> 
 				</div>
 				<div class="form-group">

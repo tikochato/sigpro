@@ -166,6 +166,7 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 			if(mi.programatipo!=null && mi.programatipo.id!=null){
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
+				$utilidades.setFocus(document.getElementById("nombre"));
 				mi.cargarTotalPropiedades();
 			}
 			else
@@ -208,6 +209,7 @@ app.controller('programatipoController',['$scope','$http','$interval','i18nServi
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
 			mi.programatipo = {};
+			$utilidades.setFocus(document.getElementById("nombre"));
 			mi.gridApi.selection.clearSelectedRows();
 			mi.cargarTotalPropiedades();
 		};

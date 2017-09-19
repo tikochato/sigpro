@@ -201,12 +201,14 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 			mi.esnuevo = true;
 			mi.recurso = {};
 			mi.gridApi.selection.clearSelectedRows();
+			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 
 		mi.editar = function() {
 			if(mi.recurso!=null && mi.recurso.id!=null){
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
+				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Recurso que desea editar');
