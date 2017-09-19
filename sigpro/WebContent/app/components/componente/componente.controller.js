@@ -40,6 +40,13 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 			{value:1,nombre:'Dias',sigla:'d'}
 		];
 		
+		mi.validarRequiredCosto = function(costo){
+			if(costo != null && costo > 0)
+				return "* Tipo de acumulación del costo";
+			else
+				return "Tipo de acumulación del costo";
+		}
+		
 		mi.duracionDimension = mi.dimensiones[0];
 		
 		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id }).success(

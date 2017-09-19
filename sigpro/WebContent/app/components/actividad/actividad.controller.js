@@ -28,6 +28,13 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		
+		mi.validarRequiredCosto = function(costo){
+			if(costo != null && costo > 0)
+				return "* Tipo de acumulación del costo";
+			else
+				return "Tipo de acumulación del costo";
+		}
+		
 		mi.adjuntarDocumentos = function(){
 			$documentoAdjunto.getModalDocumento($scope, 5, mi.actividad.id)
 			.result.then(function(data) {

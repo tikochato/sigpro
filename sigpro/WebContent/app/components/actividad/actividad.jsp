@@ -259,7 +259,7 @@
 						    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="actividadc.actividad.acumulacionCostoNombre" ng-value="actividadc.actividad.acumulacionCostoNombre" 
 							ng-click="actividadc.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="actividadc.actividad.costo != null && actividadc.actividad.costo > 0"/>
 							<span class="label-icon" ng-click="actividadc.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
-							<label for="campo3" class="floating-label">{{actividadc.actividad.costo != null  && actividadc.actividad.costo > 0 ? "* Tipo de acumulación del costo" : "Tipo de acumulación del costo"}} </label>
+							<label for="campo3" class="floating-label">{{actividadc.validarRequiredCosto(actividadc.actividad.costo)}} </label>
 						</div>	
 											
 						<div ng-repeat="campo in actividadc.camposdinamicos">
