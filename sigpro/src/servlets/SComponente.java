@@ -72,9 +72,9 @@ public class SComponente extends HttpServlet {
 		String duracionDimension;
 		String fechaInicio;
 		String fechaFin;
-		int unidadejecutoraid;
-		int ejercicio;
-		int entidadentidad;
+		Integer unidadejecutoraid;
+		Integer ejercicio;
+		Integer entidadentidad;
 		String unidadejecutoranombre;
 		String entidadnombre;
 		String latitud;
