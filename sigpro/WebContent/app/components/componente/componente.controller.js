@@ -189,7 +189,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					esnuevo: mi.esnuevo,
 					ejercicio: mi.ejercicio,
 					entidad: mi.entidad,
-					unidadejecutoraid:mi.unidadejecutoraid,
+					unidadejecutoraid:mi.unidadejecutoraid == "" ? null : mi.unidadejecutoraid,
 					longitud: mi.componente.longitud,
 					latitud : mi.componente.latitud,
 					costo: mi.componente.costo == null ? null : mi.componente.costo,
