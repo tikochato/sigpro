@@ -374,7 +374,7 @@ public class CProject {
 					objetoTipoTemp=5;
 					contadorLocal = objetoTipo == 5 ? contadorLocal++ : contadorLocal;
 					objeto_temp = crearActividad(task, usuario,((Componente) objeto).getId(),OBJETO_ID_COMPONENTE
-							,3,((Componente) objeto).getTreePath(),
+							,2,((Componente) objeto).getTreePath(),
 							objetoTipo == 5 ? contadorLocal : contProducto,proyectoBase_);
 					cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
 					
@@ -393,7 +393,7 @@ public class CProject {
 					objetoTipoTemp=5;
 					contadorLocal = objetoTipo == 5 ? contadorLocal++ : contadorLocal;
 					objeto_temp = crearActividad(task, usuario,((Producto) objeto).getId(),OBJETO_ID_PRODUCTO 
-							,4,((Producto) objeto).getTreePath(),contSubproducto,proyectoBase_);
+							,3,((Producto) objeto).getTreePath(),contSubproducto,proyectoBase_);
 					cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
 				}
 			}else if (indetnacion == 5){

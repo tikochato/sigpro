@@ -262,6 +262,8 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 			columns[i].headerClass = 'gantt-chart-header-column';
 		
 		settings.columns = columns;
+		settings.isReadOnly = true;
+		settings.isGridReadOnly = true;
 		
 		settings.itemPropertyChangeHandler = function (item, propertyName, isDirect, isFinal) {
 			
