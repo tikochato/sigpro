@@ -23,7 +23,9 @@ import pojo.ComponenteUsuario;
 import pojo.ComponenteUsuarioId;
 import pojo.Cooperante;
 import pojo.Permiso;
+import pojo.Producto;
 import pojo.ProductoUsuario;
+import pojo.ProductoUsuarioId;
 import pojo.Proyecto;
 import pojo.ProyectoUsuario;
 import pojo.ProyectoUsuarioId;
@@ -678,5 +680,54 @@ public class UsuarioDAO {
 		return ret;
 	}
 	
+	
+	public static boolean asignarProductos(String usuario, List <Integer> productos, String usuario_creo){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			
+			for(int i =0; i<productos.size();i++){
+				Producto producto = ProductoDAO.getProductoPorId(productos.get(i));
+				ProductoUsuario uu = new ProductoUsuario(new ProductoUsuarioId(productos.get(i), usuario), producto, UsuarioDAO.getUsuario(usuario));
+				session.save(uu);
+			}			
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("30", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
+	public static boolean desasignarEstructurasPermisos(String usuario){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			Query<?> criteria = session.createQuery("delete ProyectoUsuario where id.usuario=:usuario ");
+			criteria.setParameter("usuario", usuario);
+			criteria.executeUpdate();
+			Query<?> criteria_c = session.createQuery("delete ComponenteUsuario where id.usuario=:usuario ");
+			criteria_c.setParameter("usuario", usuario);
+			criteria_c.executeUpdate();
+			Query<?> criteria_u = session.createQuery("delete ProductoUsuario where id.usuario=:usuario ");
+			criteria_u.setParameter("usuario", usuario);
+			criteria_u.executeUpdate();
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("31", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
 	
 }
