@@ -271,10 +271,17 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 			
 			mi.abirpopupreultado = function() {
 				 mi.popupfecharesultado.abierto = true;
-			};
-		
-				
+			};		
 		}
-			
-			
 	]);
+
+app.directive('showFocus', function($timeout) {
+	  return function(scope, element, attrs) {
+	    scope.$watch(attrs.showFocus,
+	      function (newValue) {
+	        $timeout(function() {
+	            element[0].focus();             
+	        });
+	      },true);
+	  };   
+	});

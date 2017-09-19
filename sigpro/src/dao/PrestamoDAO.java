@@ -1,5 +1,7 @@
 package dao;
 
+import javax.persistence.NoResultException;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -22,6 +24,7 @@ public class PrestamoDAO {
 			criteria.setParameter("objId", objetoId);
 			criteria.setParameter("objTipo", objetoTipo);
 			ret = criteria.getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("1", PrestamoDAO.class, e);
@@ -42,6 +45,7 @@ public class PrestamoDAO {
 					+ " and op.estado= 1", ObjetoPrestamo.class);
 			criteria.setParameter("idPrestamo", idPrestamo);
 			ret = criteria.getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			e.printStackTrace();

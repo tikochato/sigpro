@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -79,6 +80,7 @@ public class MetaValorDAO {
 			criteria.setParameter("estadoCongelado", ESTADO_CONGELADO);
 			criteria.setMaxResults(1);
 			ret = criteria.getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("2", MetaValorDAO.class, e);
@@ -100,6 +102,7 @@ public class MetaValorDAO {
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), metavalorid), builder.or(builder.equal(root.get("estado"), ESTADO_ACTIVO), builder.equal(root.get("estado"), ESTADO_CONGELADO))));
 			ret = session.createQuery( criteria ).getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("3", MetaValorDAO.class, e);
@@ -183,6 +186,7 @@ public class MetaValorDAO {
 			conteo.setParameter("estado", ESTADO_ACTIVO);
 			conteo.setParameter("estadoCongelado", ESTADO_CONGELADO);
 			ret = conteo.getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("7", MetaValorDAO.class, e);
@@ -214,6 +218,7 @@ public class MetaValorDAO {
 			criteria.setParameter("5", ESTADO_CONGELADO);
 			criteria.setMaxResults(1);
 			ret = (BigDecimal) criteria.getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("8", MetaValorDAO.class, e);

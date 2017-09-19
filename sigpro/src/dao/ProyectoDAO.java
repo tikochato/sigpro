@@ -89,6 +89,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			Query<Proyecto> criteria = session.createQuery("FROM Proyecto where id=:id", Proyecto.class);
 			criteria.setParameter("id", id);
 			 ret = criteria.getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("3", ProyectoDAO.class, e);
@@ -137,6 +138,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			Query<Long> criteria = session.createQuery(query,Long.class);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("5", ProyectoDAO.class, e);
@@ -234,6 +236,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 				query = String.join("", query, " AND p.id not in ("+idsProyectos + " )");
 			Query<Long> criteria = session.createQuery(query,Long.class);
 			ret = criteria.getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("8", ProyectoDAO.class, e);
@@ -294,7 +297,8 @@ public class ProyectoDAO implements java.io.Serializable  {
 		try{
 			Query<Proyecto> criteria = session.createQuery("FROM Proyecto where id=:id", Proyecto.class).setLockMode(LockModeType.PESSIMISTIC_READ);
 			criteria.setParameter("id", id);
-			 ret = criteria.getSingleResult();;
+			 ret = criteria.getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("11", ProyectoDAO.class, e);
