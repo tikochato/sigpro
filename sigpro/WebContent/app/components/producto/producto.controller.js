@@ -487,6 +487,13 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			mi.producto.acumulacionCostoId = itemSeleccionado.id;
 		});
 	}
+	
+	mi.validarRequiredCosto = function(costo){
+		if(costo != null && costo > 0)
+			return "* Tipo de acumulación del costo";
+		else
+			return "Tipo de acumulación del costo";
+	}
 
 	mi.llamarModalBusqueda = function(titulo, servlet, accionServlet,  datosCarga, columnaId,columnaNombre, showfilters, entidad) {
 		var resultado = $q.defer();

@@ -247,15 +247,15 @@
 							</div>
 					</div>
 					<div class="form-group" >
-				       <input type="number" class="inputText" ng-model="subproducto.subproducto.costo" ng-value="subproducto.subproducto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
+				       <input type="text" class="inputText" ng-model="subproducto.subproducto.costo" ng-value="subproducto.subproducto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" ui-number-mask="2"/>
 				       <label for="iprog" class="floating-label">Costo</label>
 					</div>
 					
 					<div class="form-group" >
 					    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="subproducto.subproducto.acumulacionCostoNombre" ng-value="subproducto.subproducto.acumulacionCostoNombre" 
-						ng-click="subproducto.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="subproducto.subproducto.costo > 0"/>
+						ng-click="subproducto.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="subproducto.subproducto.costo != null && subproducto.subproducto.costo > 0"/>
 						<span class="label-icon" ng-click="subproducto.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
-						<label for="campo3" class="floating-label"> Acumulación Costo</label>
+						<label for="campo3" class="floating-label">{{subproducto.validarRequiredCosto(subproducto.subproducto.costo)}}</label>
 					</div>
 					
 					<div class = "row">

@@ -342,29 +342,31 @@ public class SRiesgo extends HttpServlet {
 						if (data.valor!=null && data.valor.length()>0 && data.valor.compareTo("null")!=0){
 							RiesgoPropiedad riesgoPropiedad = RiesgoPropiedadDAO.getRiesgoPropiedadPorId(Integer.parseInt(data.id));
 							RiesgoPropiedadValorId idValor = new RiesgoPropiedadValorId(riesgo.getId(),Integer.parseInt(data.id));
-							RiesgoPropiedadValor valor = new RiesgoPropiedadValor(idValor, riesgo, 
-									riesgoPropiedad, 1, usuario, new DateTime().toDate());
-		
-							if(riesgoPropiedad != null && idValor != null && valor != null){
-								switch (riesgoPropiedad.getDatoTipo().getId()){
-								case 1:
-									valor.setValorString(data.valor);
-									break;
-								case 2:
-									valor.setValorEntero(Utils.String2Int(data.valor, null));
-									break;
-								case 3:
-									valor.setValorDecimal(Utils.String2BigDecimal(data.valor, null));
-									break;
-								case 4:
-									valor.setValorEntero(Utils.String2Boolean(data.valor, null));
-									break;
-								case 5:
-									SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-									valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
-									break;
+							
+							if(riesgoPropiedad != null && idValor != null){
+								RiesgoPropiedadValor valor = new RiesgoPropiedadValor(idValor, riesgo, 
+										riesgoPropiedad, 1, usuario, new DateTime().toDate());
+								if(valor!=null){
+									switch (riesgoPropiedad.getDatoTipo().getId()){
+									case 1:
+										valor.setValorString(data.valor);
+										break;
+									case 2:
+										valor.setValorEntero(Utils.String2Int(data.valor, null));
+										break;
+									case 3:
+										valor.setValorDecimal(Utils.String2BigDecimal(data.valor, null));
+										break;
+									case 4:
+										valor.setValorEntero(Utils.String2Boolean(data.valor, null));
+										break;
+									case 5:
+										SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+										valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
+										break;
+									}
+									result = (result && RiesgoPropiedadValorDAO.guardarRiesgoPropiedadValor(valor));
 								}
-								result = (result && RiesgoPropiedadValorDAO.guardarRiesgoPropiedadValor(valor));
 							}
 						}
 					}

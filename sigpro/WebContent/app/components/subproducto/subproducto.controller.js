@@ -249,7 +249,12 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 		mi.seleccionada = row.isSelected;
 	};
 
-	
+	mi.validarRequiredCosto = function(costo){
+		if(costo != null && costo > 0)
+			return "* Tipo de acumulación del costo";
+		else
+			return "Tipo de acumulación del costo";
+	}
 
 	mi.borrar = function(ev) {
 		if (mi.subproducto!=null && mi.subproducto.id!=null) {
