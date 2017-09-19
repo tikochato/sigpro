@@ -184,6 +184,15 @@ public class SProducto extends HttpServlet {
 					temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 					temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
+				}else{
+					Componente componente = ComponenteDAO.getComponente(componenteid);
+					if (componente!=null && componente.getUnidadEjecutora()!=null){
+						temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+						temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+						temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+						temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
+						temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+					}
 				}
 
 				listaProducto.add(temp);
@@ -506,6 +515,15 @@ public class SProducto extends HttpServlet {
 					temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 					temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
+				}else{
+					Componente componente = ComponenteDAO.getComponente(componenteid);
+					if (componente!=null && componente.getUnidadEjecutora()!=null){
+						temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+						temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+						temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+						temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
+						temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+					}
 				}
 
 				listaProducto.add(temp);
@@ -575,6 +593,15 @@ public class SProducto extends HttpServlet {
 					temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 					temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
+				}else{
+					Componente componente = ComponenteDAO.getComponente(componenteid);
+					if (componente!=null && componente.getUnidadEjecutora()!=null){
+						temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+						temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+						temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+						temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
+						temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+					}
 				}
 
 				stproductos.add(temp);
@@ -627,6 +654,15 @@ public class SProducto extends HttpServlet {
 					temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 					temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
+				}else{
+					Componente componente = ComponenteDAO.getComponente(producto.getComponente().getId());
+					if (componente!=null && componente.getUnidadEjecutora()!=null){
+						temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+						temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+						temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+						temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
+						temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+					}
 				}
 				temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
 				temp.fechaFin = Utils.formatDate(producto.getFechaFin());
@@ -715,7 +751,18 @@ public class SProducto extends HttpServlet {
 					temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 					temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
+				}else{
+					Componente componente = ComponenteDAO.getComponente(producto.getId());
+					if (componente!=null && componente.getUnidadEjecutora()!=null){
+						temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+						temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+						temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+						temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
+						temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+					}
 				}
+				
+				
 				temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
 				temp.fechaFin = Utils.formatDate(producto.getFechaFin());
 				temp.duracion = producto.getDuracion();
