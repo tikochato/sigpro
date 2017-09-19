@@ -5,7 +5,7 @@ var app = angular.module('sipro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDe
 
 app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($routeProvider, $locationProvider,FlashProvider) {
 	   $locationProvider.hashPrefix('!');
-	   //$locationProvider.html5Mode(true);
+	   $locationProvider.html5Mode({ enabled: false, requireBase: false});
 	   
 	   $routeProvider
 	   		/*.when('/main',{
@@ -16,7 +16,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
         			}
         		}
         	})*/
-		    .when('/gantt/:objeto_id?/:objeto_tipo?',{
+		    .when('/gantt/:objeto_id/:objeto_tipo',{
             	template: '<div load-on-demand="\'ganttController\'" class="all_page"></div>'
             })
             .when('/cooperante/:reiniciar_vista?',{
@@ -25,7 +25,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/prestamo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
             })
-            .when('/prestamometas/:reiniciar_vista?',{
+            .when('/prestamometas',{
             	template: '<div load-on-demand="\'prestamometasController\'" class="all_page"></div>'
             })
             .when('/entidad/:reiniciar_vista?',{
@@ -52,7 +52,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/subproductopropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloSubproductoPropiedad\'" class="all_page"></div>'
             })
-            .when('/subproducto/:producto_id?/:reiniciar_vista?',{
+            .when('/subproducto/:producto_id/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloSubproducto\'" class="all_page"></div>'
             })
             .when('/prestamotipo/:reiniciar_vista?',{
@@ -109,10 +109,10 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/riesgotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgotipoController\'" class="all_page"></div>'
             })
-            .when('/riesgo/:objeto_id?/:objeto_tipo?/:reiniciar_vista?',{
+            .when('/riesgo/:objeto_id/:objeto_tipo?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgoController\'" class="all_page"></div>'
             })
-            .when('/hito/:proyecto_id?/:reiniciar_vista?',{
+            .when('/hito/:proyecto_id/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'hitoController\'" class="all_page"></div>'
             })
             .when('/recursotipo/:reiniciar_vista?',{
@@ -133,7 +133,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
              .when('/formularioitemtipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'formularioitemtipoController\'" class="all_page"></div>'
             })
-            .when('/actividad/:objeto_id?/:objeto_tipo?/:reiniciar_vista?',{
+            .when('/actividad/:objeto_id/:objeto_tipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'actividadController\'" class="all_page"></div>'
             })
             .when('/actividadtipo/:reiniciar_vista?',{
@@ -157,28 +157,25 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/mapa/:proyecto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'mapaController\'" class="all_page"></div>'
             })
-            .when("/:redireccion?",{
-            	controller:"MainController"
-            })
-            .when('/matrizriesgo/:proyectoId?',{
+            .when('/matrizriesgo/:proyectoId',{
             	template: '<div load-on-demand="\'matrizriesgoController\'" class="all_page"></div>'
             })
-            .when('/agenda/:proyectoId?',{
+            .when('/agenda/:proyectoId',{
             	template: '<div load-on-demand="\'agendaController\'" class="all_page"></div>'
             })
             .when('/porcentajeactividades/:proyectoId?',{
             	template: '<div load-on-demand="\'porcentajeactividadesController\'" class="all_page"></div>'
             })
-            .when('/avanceactividades/:reiniciar_vista?',{
+            .when('/avanceactividades/',{
             	template: '<div load-on-demand="\'avanceActividadesController\'" class="all_page"></div>'
             })
-            .when('/cargatrabajo/:reiniciar_vista?',{
+            .when('/cargatrabajo/',{
             	template: '<div load-on-demand="\'cargatrabajoController\'" class="all_page"></div>'
             })
-            .when('/informacionPresupuestaria/:reiniciar_vista?',{
+            .when('/informacionPresupuestaria/',{
             	template: '<div load-on-demand="\'informacionPresupuestariaController\'" class="all_page"></div>'
             })
-            .when('/administracionTransaccional/:reiniciar_vista?',{
+            .when("/administracionTransaccional/",{
             	template: '<div load-on-demand="\'administracionTransaccionalController\'" class="all_page"></div>'
             })
             .when('/responsabletipo/:reiniciar_vista?',{
@@ -187,16 +184,16 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/responsablerol/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'responsablerolController\'" class="all_page"></div>'
             })
-            .when('/planadquisiciones/:reiniciar_vista?',{
+            .when('/planadquisiciones/',{
             	template: '<div load-on-demand="\'planAdquisicionesController\'" class="all_page"></div>'
             })
-            .when('/planejecucion/:reiniciar_vista?',{
+            .when('/planejecucion/',{
             	template: '<div load-on-demand="\'planejecucionController\'" class="all_page"></div>'
             })
-            .when('/desembolsos/:reiniciar_vista?',{
+            .when('/desembolsos/',{
             	template: '<div load-on-demand="\'desembolsosController\'" class="all_page"></div>'
             })
-            .when('/matrizraci/:reiniciar_vista?',{
+            .when('/matrizraci/',{
             	template: '<div load-on-demand="\'matrizraciController\'" class="all_page"></div>'
             })
             .when('/categoriaadquisicion/:reiniciar_vista?',{
@@ -204,6 +201,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             })
             .when('/tipoadquisicion/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'tipoAdquisicionController\'" class="all_page"></div>'
+            })
+            .when("/:redireccion?",{
+            	controller:"MainController"
             })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -552,8 +552,9 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	}
 
 	$scope.device = deviceDetector;
-
-	$rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+	
+	$rootScope.$on('$routeChangeSuccess', function (event, next) {
+	      
 		if($routeParams.redireccion=="forbidden"){
 			$utilidades.mensaje('danger','No tiene permiso de acceder a esta área');	
 		}
