@@ -61,6 +61,8 @@ public class ComponenteDAO {
 			session.saveOrUpdate(Componente);
 			ComponenteUsuario cu = new ComponenteUsuario(new ComponenteUsuarioId(Componente.getId(), Componente.getUsuarioCreo()), Componente);
 			session.saveOrUpdate(cu);
+			ComponenteUsuario cu_admin = new ComponenteUsuario(new ComponenteUsuarioId(Componente.getId(), "admin"), Componente);
+			session.saveOrUpdate(cu_admin);
 			session.getTransaction().commit();
 			ret = true;
 		}
