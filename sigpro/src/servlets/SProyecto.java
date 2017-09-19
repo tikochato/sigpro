@@ -64,10 +64,10 @@ public class SProyecto extends HttpServlet {
 		int proyectotipoid;
 		String proyectotipo;
 		String unidadejecutora;
-		int unidadejecutoraid;
-		int entidadentidad;
+		Integer unidadejecutoraid;
+		Integer entidadentidad;
 		String entidadnombre;
-		int ejercicio;
+		Integer ejercicio;
 		String cooperante;
 		int cooperanteid;
 		String fechaCreacion;
@@ -108,7 +108,7 @@ public class SProyecto extends HttpServlet {
 		String numeroPrestamo;
 		String destino;
 		String sectorEconomico;
-		int unidadEjecutora;
+		Integer unidadEjecutora;
 		String unidadEjecutoraNombre;
 		String fechaFirma;
 		Integer tipoAutorizacionId;
@@ -344,11 +344,11 @@ public class SProyecto extends HttpServlet {
 				dato.snip = proyecto.getSnip();
 				dato.proyectotipo = proyecto.getProyectoTipo().getNombre();
 				dato.proyectotipoid = proyecto.getProyectoTipo().getId();
-				dato.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
-				dato.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
-				dato.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
-				dato.entidadnombre = proyecto.getUnidadEjecutora().getEntidad().getNombre();
-				dato.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
+				dato.unidadejecutora = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getNombre() :"";
+				dato.unidadejecutoraid = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getUnidadEjecutora() : null;
+				dato.entidadentidad = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEntidadentidad() : null;
+				dato.entidadnombre = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getEntidad().getNombre() : "";
+				dato.ejercicio = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEjercicio() : null;
 				dato.cooperante = proyecto.getCooperante().getNombre();
 				dato.cooperanteid = proyecto.getCooperante().getId();
 				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
@@ -449,7 +449,7 @@ public class SProyecto extends HttpServlet {
 				Long snip = map.get("snip")!=null ? Long.parseLong(map.get("snip")) : null;
 				String objetivo = map.get("objetivo");
 				String descripcion = map.get("descripcion");
-				Integer ejercicio = Utils.String2Int(map.get("ejercicio"),-1);
+				Integer ejercicio = (map.get("ejercicio")!=null) ? Utils.String2Int(map.get("ejercicio"),-1) : null;
 
 				Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
 				Integer subPrograma = map.get("subprograma")!=null ?  Integer.parseInt(map.get("subprograma")) : null;
@@ -463,8 +463,8 @@ public class SProyecto extends HttpServlet {
 				BigDecimal costo = map.get("costo") != null && map.get("costo").length() > 0 ? new BigDecimal(map.get("costo")) : null;
 				String objetivoEspecifico = map.get("objetoivoEspecifico");
 				String visionGeneral = map.get("visionGeneral");
-				Integer unidad_ejecutora = Utils.String2Int(map.get("unidadejecutoraid"));
-				Integer entidad = Utils.String2Int(map.get("entidadid"));
+				Integer unidad_ejecutora = (map.get("unidadejecutoraid")!=null) ? Utils.String2Int(map.get("unidadejecutoraid")) : null;
+				Integer entidad = (map.get("entidad")!=null) ? Utils.String2Int(map.get("entidadid")) : null;
 
 				AcumulacionCosto acumulacionCosto = null;
 				if (map.get("acumulacionCosto")!=null){
@@ -477,7 +477,7 @@ public class SProyecto extends HttpServlet {
 				ProyectoTipo proyectoTipo = new ProyectoTipo();
 				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): null);
 
-				UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad , unidad_ejecutora);
+				UnidadEjecutora unidadEjecutora = (ejercicio!=null && entidad!=null && unidad_ejecutora!=null) ? UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad , unidad_ejecutora) :null;
 
 				Cooperante cooperante = new Cooperante();
 				cooperante.setId(map.get("cooperanteid")!=null ? Integer.parseInt(map.get("cooperanteid")): null);
@@ -800,7 +800,7 @@ public class SProyecto extends HttpServlet {
 			ret.numeroPrestamo = prestamo.getNumeroPrestamo();
 			ret.destino = prestamo.getDestino();
 			ret.sectorEconomico = prestamo.getSectorEconomico();
-			ret.unidadEjecutora = prestamo.getUnidadEjecutora().getId().getUnidadEjecutora();
+			ret.unidadEjecutora = prestamo.getUnidadEjecutora() !=null ? prestamo.getUnidadEjecutora().getId().getUnidadEjecutora() : null;
 			ret.unidadEjecutoraNombre = prestamo.getUnidadEjecutora() !=null ? prestamo.getUnidadEjecutora().getNombre() : null;
 			ret.fechaFirma = (prestamo.getFechaFirma() == null ? null : Utils.formatDate(prestamo.getFechaFirma()));
 			ret.tipoAutorizacionId = (prestamo.getAutorizacionTipo() == null ? null : prestamo.getAutorizacionTipo().getId());
@@ -864,14 +864,14 @@ public class SProyecto extends HttpServlet {
 			ret.cooperanteid = prestamo.getCooperante().getId();
 			ret.cooperantenombre =  prestamo.getCooperante().getSiglas() + " - " + prestamo.getCooperante().getNombre();
 
-			ret.unidadEjecutora = prestamo.getUnidadEjecutora().getId().getUnidadEjecutora();
-			ret.unidadEjecutoraNombre = prestamo.getUnidadEjecutora().getNombre();
+			ret.unidadEjecutora = prestamo.getUnidadEjecutora() !=null ? prestamo.getUnidadEjecutora().getId().getUnidadEjecutora() : null;
+			ret.unidadEjecutoraNombre = prestamo.getUnidadEjecutora() !=null ? prestamo.getUnidadEjecutora().getNombre() : "";
 
 			ret.usuarioCreo = prestamo.getUsuarioCreo();
 			ret.usuarioActualizo = prestamo.getUsuarioActualizo();
 			ret.fechaCreacion = Utils.formatDate(prestamo.getFechaCreacion());
 			ret.fechaActualizacion = Utils.formatDate(prestamo.getFechaActualizacion());
-			ret.nombreEntidadEjecutora = prestamo.getUnidadEjecutora().getEntidad().getNombre();
+			ret.nombreEntidadEjecutora = prestamo.getUnidadEjecutora() !=null ? prestamo.getUnidadEjecutora().getEntidad().getNombre() : "";
 		}
 
 		return ret;

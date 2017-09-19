@@ -98,13 +98,13 @@
 			<div class="col-sm-12">
 				<form name="form" id="form">
 						<div class="form-group" ng-show="!hitoc.esnuevo">
-							<label for="id" class="floating-label">ID  {{ hitoc.hito.id }} </label>
+							<label for="id" class="floating-label id_class">ID  {{ hitoc.hito.id }} </label>
     						<br/><br/>
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText"  ng-model="hitoc.hito.nombre" ng-required="true"
     						 ng-value="hitoc.hito.nombre" onblur="this.setAttribute('value', this.value);"
-    						 show-focus="hitoc.mostraringreso">
+    						 id="nombre">
     						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">

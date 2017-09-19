@@ -45,7 +45,7 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 						},
 						{ name: 'simbolo', width: 85, displayName: 'Símbolo', cellClass: 'grid-align-center', enableFiltering: false},
 						{ name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-					    { name: 'usuarioCreo', displayName: 'Usuario Creación',
+					    { name: 'usuarioCreo', displayName: 'Usuario Creación', cellClass: 'grid-align-left',
 					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.metaunidadc.filtros[\'usuario_creo\']"  ng-keypress="grid.appScope.metaunidadc.filtrar($event,2)"></input></div>'
 					    },
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
@@ -177,6 +177,7 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 				mi.esnueva = true;
 				mi.medida = {};
 				mi.gridApi.selection.clearSelectedRows();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			};
 
 			mi.editar = function() {
@@ -186,6 +187,7 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar la unidad de medida que desea editar');
+				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 
 			mi.irATabla = function() {
@@ -232,14 +234,3 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 				} 
 			}
 ]);
-
-app.directive('showFocus', function($timeout) {
-	  return function(scope, element, attrs) {
-	    scope.$watch(attrs.showFocus,
-	      function (newValue) {
-	        $timeout(function() {
-	            element[0].focus();             
-	        });
-	      },true);
-	  };   
-	});

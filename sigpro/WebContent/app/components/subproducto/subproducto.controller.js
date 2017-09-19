@@ -148,7 +148,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 			{ displayName : 'Tipo', name : 'subproductoTipo', cellClass : 'grid-align-left', enableFiltering: false, enableSorting: false},  
 			{ displayName : 'Producto', name : 'producto', cellClass : 'grid-align-left', visible : false },
 			{ displayName : 'Subproducto', name : 'subproducto', cellClass : 'grid-align-left', visible : false },
-			{ name: 'usuarioCreo', displayName: 'Usuario Creación',
+			{ name: 'usuarioCreo', displayName: 'Usuario Creación',cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-keypress="grid.appScope.subproducto.filtrar($event,2)" ></input></div>'
 			},
 		    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
@@ -249,7 +249,12 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 		mi.seleccionada = row.isSelected;
 	};
 
-	
+	mi.validarRequiredCosto = function(costo){
+		if(costo != null && costo > 0)
+			return "* Tipo de acumulación del costo";
+		else
+			return "Tipo de acumulación del costo";
+	}
 
 	mi.borrar = function(ev) {
 		if (mi.subproducto!=null && mi.subproducto.id!=null) {

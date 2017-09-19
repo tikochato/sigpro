@@ -89,13 +89,13 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group" ng-show="!metaunidadc.esnueva">
-    						<label for="id" class="floating-label">ID {{ metaunidadc.medida.id }}</label>
+    						<label for="id" class="floating-label id_class">ID {{ metaunidadc.medida.id }}</label>
 							<br/><br/>
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText" ng-model="metaunidadc.medida.nombre" ng-required="true"
     						ng-value="metaunidadc.medida.nombre" onblur="this.setAttribute('value', this.value);"
-    						show-focus="metaunidadc.mostraringreso">
+    						id="nombre">
     						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">

@@ -65,6 +65,11 @@ public class ProductoDAO {
 			ProductoUsuario pu = new ProductoUsuario(new ProductoUsuarioId(producto.getId(), producto.getUsuarioCreo()), producto,usu
 					, producto.getUsuarioCreo(), null, new Date(), null);
 			session.saveOrUpdate(pu);
+			if(!producto.getUsuarioCreo().equals("admin")){
+				ProductoUsuario pu_admin = new ProductoUsuario(new ProductoUsuarioId(producto.getId(), "admin"), producto,usu
+						, producto.getUsuarioCreo(), null, new Date(), null);
+				session.saveOrUpdate(pu_admin);
+			}
 			session.getTransaction().commit();
 			ret = true;
 		} catch (Throwable e) {

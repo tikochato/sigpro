@@ -103,6 +103,11 @@ public class SubproductoDAO {
 			SubproductoUsuario su = new SubproductoUsuario(new SubproductoUsuarioId(subproducto.getId(),subproducto.getUsuarioCreo())
 					, subproducto, usu, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
 			session.saveOrUpdate(su);
+			if(!subproducto.getUsuarioCreo().equals("admin")){
+				SubproductoUsuario su_admin = new SubproductoUsuario(new SubproductoUsuarioId(subproducto.getId(),"admin")
+						, subproducto, usu, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
+				session.saveOrUpdate(su_admin);
+			}
 			session.getTransaction().commit();
 			ret = true;
 		} catch (Throwable e) {
@@ -273,6 +278,13 @@ public class SubproductoDAO {
 				estructuraPojo.entidadentidad = pojo.getUnidadEjecutora().getId().getEntidadentidad();
 				estructuraPojo.ejercicio = pojo.getUnidadEjecutora().getId().getEjercicio();
 				estructuraPojo.entidadnombre = pojo.getUnidadEjecutora().getEntidad().getNombre();
+			}
+			else if(pojo.getProducto().getUnidadEjecutora()!=null){
+				estructuraPojo.unidadEjectuora = pojo.getProducto().getUnidadEjecutora().getId().getUnidadEjecutora();
+				estructuraPojo.nombreUnidadEjecutora = pojo.getProducto().getUnidadEjecutora().getNombre();
+				estructuraPojo.entidadentidad = pojo.getProducto().getUnidadEjecutora().getId().getEntidadentidad();
+				estructuraPojo.ejercicio = pojo.getProducto().getUnidadEjecutora().getId().getEjercicio();
+				estructuraPojo.entidadnombre = pojo.getProducto().getUnidadEjecutora().getEntidad().getNombre();
 			}
 			
 			listaEstructuraPojos.add(estructuraPojo);

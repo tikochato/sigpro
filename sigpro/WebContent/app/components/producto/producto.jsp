@@ -190,7 +190,7 @@
 			        
 			        <div class="form-group">
 			            <input type="text" class="inputText" ng-model="producto.unidadEjecutoraNombre" ng-value="producto.unidadEjecutoraNombre" 
-			            	ng-click="producto.buscarUnidadEjecutora()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+			            	ng-click="producto.buscarUnidadEjecutora()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" />
 			            <span class="label-icon" ng-click="producto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
 			          <label for="campo5" class="floating-label">* Unidad Ejecutora</label>
 			        </div>
@@ -257,9 +257,9 @@
 						
 					<div class="form-group" >
 					    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="producto.producto.acumulacionCostoNombre" ng-value="producto.producto.acumulacionCostoNombre" 
-						ng-click="producto.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="producto.producto.costo != null "/>
+						ng-click="producto.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="producto.producto.costo != null && producto.producto.costo>0"/>
 						<span class="label-icon" ng-click="producto.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
-						<label for="campo3" class="floating-label">{{producto.producto.costo  != null ?"* Acumulación Costo":"Acumulación Costo"}}</label>
+						<label for="campo3" class="floating-label">{{producto.validarRequiredCosto(producto.producto.costo)}}</label>
 					</div>
 					
 					<div class = "row">

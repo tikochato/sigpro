@@ -101,12 +101,12 @@
 				<uib-tabset active="active">
 					<uib-tab index="0" heading="Datos del programa">
 						<div class="form-group">
-							<label for="id" class="floating-label">ID {{ programac.programa.id }}</label>
+							<label for="id" class="floating-label id_class">ID {{ programac.programa.id }}</label>
 		  					<br/><br/>
 						</div>
 						<div class="form-group">
 							<input type="text"  class="inputText" ng-model="programac.programa.nombre" ng-value="programac.programa.nombre" onblur="this.setAttribute('value', this.value);" 
-							ng-required="true" show-focus="programac.esColapsado">
+							ng-required="true" show-focus="programac.esColapsado" id="nombre">
 							<label  class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group" >

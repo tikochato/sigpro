@@ -44,7 +44,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.metatipoc.filtros[\'nombre\']" ng-keypress="grid.appScope.metatipoc.filtrar($event)"></input></div>'
 						},
 					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-					    { name: 'usuarioCreo', displayName: 'Usuario Creación',
+					    { name: 'usuarioCreo', displayName: 'Usuario Creación', cellClass: 'grid-align-left',
 					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.metatipoc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.metatipoc.filtrar($event)"></input></div>'
 					    },
 					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
@@ -174,6 +174,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 				mi.esnueva = true;
 				mi.tipo = {};
 				mi.gridApi.selection.clearSelectedRows();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			};
 
 			mi.editar = function() {
@@ -183,6 +184,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar el tipo de meta que desea editar');
+				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 
 			mi.irATabla = function() {
@@ -230,13 +232,4 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 			} 
 ]);
 
-app.directive('showFocus', function($timeout) {
-	  return function(scope, element, attrs) {
-	    scope.$watch(attrs.showFocus,
-	      function (newValue) {
-	        $timeout(function() {
-	            element[0].focus();             
-	        });
-	      },true);
-	  };   
-	});
+

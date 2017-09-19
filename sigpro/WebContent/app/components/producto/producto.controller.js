@@ -148,7 +148,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			{ displayName : 'Tipo', name : 'productoTipo', cellClass : 'grid-align-left', enableFiltering: false, enableSorting: false},  
 			{ displayName : 'Componente', name : 'componente', cellClass : 'grid-align-left', visible : false },
 			{ displayName : 'Producto', name : 'producto', cellClass : 'grid-align-left', visible : false },
-			{ name: 'usuarioCreo', displayName: 'Usuario Creación',
+			{ name: 'usuarioCreo', displayName: 'Usuario Creación',cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"  style="width: 90%;" ng-keypress="grid.appScope.producto.filtrar($event,2)" ></input></div>'
 			},
 		    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
@@ -486,6 +486,13 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			mi.producto.acumulacionCostoNombre = itemSeleccionado.nombre;
 			mi.producto.acumulacionCostoId = itemSeleccionado.id;
 		});
+	}
+	
+	mi.validarRequiredCosto = function(costo){
+		if(costo != null && costo > 0)
+			return "* Tipo de acumulación del costo";
+		else
+			return "Tipo de acumulación del costo";
 	}
 
 	mi.llamarModalBusqueda = function(titulo, servlet, accionServlet,  datosCarga, columnaId,columnaNombre, showfilters, entidad) {

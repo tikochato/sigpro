@@ -53,7 +53,7 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.hitotipoc.filtros[\'nombre\']" ng-keypress="grid.appScope.hitotipoc.filtrar($event)" style="width:175px;"></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-				    { name: 'usuarioCreo', displayName: 'Usuario Creación',
+				    { name: 'usuarioCreo', displayName: 'Usuario Creación', cellClass: 'grid-align-left',
 				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"style="width: 90%;" ng-model="grid.appScope.hitotipoc.filtros[\'usuario_creo\']"  ng-keypress="grid.appScope.hitotipoc.filtrar($event)" style="width:90px;"></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
@@ -179,6 +179,7 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 			mi.hitotipo = null;
 			mi.datoTipoSeleccionado = null;
 			mi.gridApi.selection.clearSelectedRows();
+			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 	
 		mi.editar = function() {
@@ -192,6 +193,7 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo Hito que desea editar');
+			$utilidades.setFocus(document.getElementById("nombre"));
 		}
 	
 		mi.irATabla = function() {
@@ -239,16 +241,4 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 			$window.location.href = '/main.jsp#!/forbidden';		
 		}
 	} ]);
-
-
-app.directive('showFocus', function($timeout) {
-  return function(scope, element, attrs) {
-    scope.$watch(attrs.showFocus,
-      function (newValue) {
-        $timeout(function() {
-            element[0].focus();             
-        });
-      },true);
-  };   
-});
 

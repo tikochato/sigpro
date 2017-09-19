@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 19, 2017 6:41:06 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Prestamo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1421743170076446836L;
+	private static final long serialVersionUID = 7198693220635568885L;
 	private Integer id;
 	private AutorizacionTipo autorizacionTipo;
 	private Cooperante cooperante;
@@ -104,16 +104,15 @@ public class Prestamo implements java.io.Serializable {
 	public Prestamo() {
 	}
 
-	public Prestamo(Cooperante cooperante, TipoMoneda tipoMoneda, UnidadEjecutora unidadEjecutora,
-			long codigoPresupuestario, String numeroPrestamo, BigDecimal montoContratado, String usuarioCreo,
-			int estado, String proyectoPrograma, Date fechaDecreto, Date fechaSuscripcion, Date fechaElegibilidadUe,
-			Date fechaCierreOrigianlUe, Date fechaCierreActualUe, int mesesProrrogaUe, BigDecimal montoAsignadoUe,
-			Date fechaVigencia, BigDecimal montoContratadoUsd, BigDecimal montoContratadoQtz,
-			BigDecimal desembolsoAFechaUsd, BigDecimal montoPorDesembolsarUsd, BigDecimal montoAsignadoUeUsd,
-			BigDecimal montoAsignadoUeQtz, BigDecimal desembolsoAFechaUeUsd, BigDecimal montoPorDesembolsarUeUsd) {
+	public Prestamo(Cooperante cooperante, TipoMoneda tipoMoneda, long codigoPresupuestario, String numeroPrestamo,
+			BigDecimal montoContratado, String usuarioCreo, int estado, String proyectoPrograma, Date fechaDecreto,
+			Date fechaSuscripcion, Date fechaElegibilidadUe, Date fechaCierreOrigianlUe, Date fechaCierreActualUe,
+			int mesesProrrogaUe, BigDecimal montoAsignadoUe, Date fechaVigencia, BigDecimal montoContratadoUsd,
+			BigDecimal montoContratadoQtz, BigDecimal desembolsoAFechaUsd, BigDecimal montoPorDesembolsarUsd,
+			BigDecimal montoAsignadoUeUsd, BigDecimal montoAsignadoUeQtz, BigDecimal desembolsoAFechaUeUsd,
+			BigDecimal montoPorDesembolsarUeUsd) {
 		this.cooperante = cooperante;
 		this.tipoMoneda = tipoMoneda;
-		this.unidadEjecutora = unidadEjecutora;
 		this.codigoPresupuestario = codigoPresupuestario;
 		this.numeroPrestamo = numeroPrestamo;
 		this.montoContratado = montoContratado;
@@ -294,10 +293,9 @@ public class Prestamo implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumns({
-			@JoinColumn(name = "unidad_ejecutoraunidad_ejecutora", referencedColumnName = "unidad_ejecutora", nullable = false),
-			@JoinColumn(name = "entidad", referencedColumnName = "entidadentidad", nullable = false),
-			@JoinColumn(name = "ejercicio", referencedColumnName = "ejercicio", nullable = false) })
+	@JoinColumns({ @JoinColumn(name = "unidad_ejecutoraunidad_ejecutora", referencedColumnName = "unidad_ejecutora"),
+			@JoinColumn(name = "entidad", referencedColumnName = "entidadentidad"),
+			@JoinColumn(name = "ejercicio", referencedColumnName = "ejercicio") })
 	public UnidadEjecutora getUnidadEjecutora() {
 		return this.unidadEjecutora;
 	}

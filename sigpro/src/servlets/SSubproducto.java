@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ComponenteDAO;
@@ -172,9 +174,9 @@ public class SSubproducto extends HttpServlet {
 			Integer productoId = Utils.String2Int(map.get("producto"));
 			Integer subproductoPadreId = Utils.String2Int(map.get("subproductoPadre"));
 			Integer tiposubproductoId = Utils.String2Int(map.get("tiposubproductoid")); 
-			Integer unidadEjecutoraId = Utils.String2Int(map.get("unidadEjecutora"));
-			Integer entidadId = Utils.String2Int(map.get("entidad"));
-			Integer ejercicio = Utils.String2Int(map.get("ejercicio"));
+			Integer unidadEjecutoraId = map.get("unidadEjecutora")!=null ? Utils.String2Int(map.get("unidadEjecutora")) : null;
+			Integer entidadId = map.get("entidad")!=null ?  Utils.String2Int(map.get("entidad")) : null;
+			Integer ejercicio = map.get("ejercicio")!=null ? Utils.String2Int(map.get("ejercicio")) : null;
 			
 			Long snip = Utils.String2Long(map.get("snip"), null);
 			Integer programa = Utils.String2Int(map.get("programa"), null);
@@ -210,7 +212,7 @@ public class SSubproducto extends HttpServlet {
 			subproductoPadre.setId(subproductoPadreId);
 			SubproductoTipo subproductoTipo = new SubproductoTipo();
 			subproductoTipo.setId(tiposubproductoId);
-			UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidadId, unidadEjecutoraId);			
+			UnidadEjecutora unidadEjecutora = (ejercicio!=null && entidadId!=null && unidadEjecutoraId!=null) ? UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidadId, unidadEjecutoraId) : null;			
 			if (esnuevo){
 				
 				subproducto = new Subproducto(acumulacionCosto, producto, subproductoTipo, unidadEjecutora, nombre, descripcion, 
@@ -370,11 +372,6 @@ public class SSubproducto extends HttpServlet {
 
 		String resultadoJson = "";
 		
-		resultadoJson = Utils.getJSonString("subproductos", SubproductoDAO.getSubproductosPagina(pagina, registros,componenteid,
-				filtro_nombre,filtro_usuario_creo
-				,filtro_fecha_creacion,columna_ordenada,orden_direccion,usuario));
-		
-		/*
 		List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(pagina, registros,componenteid,
 				filtro_nombre,filtro_usuario_creo
 				,filtro_fecha_creacion,columna_ordenada,orden_direccion,usuario);
@@ -398,7 +395,6 @@ public class SSubproducto extends HttpServlet {
 			temp.proyecto = subproducto.getProyecto();
 			temp.actividad = subproducto.getActividad();
 			temp.obra = subproducto.getObra();
-			temp.fuente = subproducto.getFuente();
 			temp.latitud = subproducto.getLatitud();
 			temp.longitud = subproducto.getLongitud();
 			
@@ -408,15 +404,19 @@ public class SSubproducto extends HttpServlet {
 			}
 			
 			if (subproducto.getUnidadEjecutora() != null){
-				temp.unidadEjecutora = subproducto.getUnidadEjecutora().getUnidadEjecutora();
+				temp.unidadEjecutora = subproducto.getUnidadEjecutora().getId().getUnidadEjecutora();
 				temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
+			}
+			else if (subproducto.getProducto().getUnidadEjecutora()!=null){
+				temp.unidadEjecutora = subproducto.getProducto().getUnidadEjecutora().getId().getUnidadEjecutora();
+				temp.nombreUnidadEjecutora = subproducto.getProducto().getUnidadEjecutora().getNombre();
 			}
 			
 			listaSubProducto.add(temp);
 		}
 		
 		resultadoJson=new GsonBuilder().serializeNulls().create().toJson(listaSubProducto);
-		resultadoJson =  "\"subproductos\":" + resultadoJson;*/
+		resultadoJson =  "\"subproductos\":" + resultadoJson;
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";
@@ -513,7 +513,7 @@ public class SSubproducto extends HttpServlet {
 				
 				if(esnuevo){
 					Producto producto = ProductoDAO.getProductoPorId(productoId, usuario);
-					subproducto = new Subproducto(producto, subproductoTipo, unidadEjecutora, nombre, usuario, new Date(), 1);
+					subproducto = new Subproducto(producto, subproductoTipo,  nombre, usuario, new Date(), 1);
 					subproducto.setFechaInicio(fechaInicio);
 					subproducto.setFechaFin(fechaFin);
 					subproducto.setDuracionDimension(duracionDimension);

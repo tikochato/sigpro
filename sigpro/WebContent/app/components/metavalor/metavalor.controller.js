@@ -223,6 +223,7 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar el Valor que desea editar');
+				
 			}
 
 			mi.irATabla = function() {
@@ -274,14 +275,3 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 			};		
 		}
 	]);
-
-app.directive('showFocus', function($timeout) {
-	  return function(scope, element, attrs) {
-	    scope.$watch(attrs.showFocus,
-	      function (newValue) {
-	        $timeout(function() {
-	            element[0].focus();             
-	        });
-	      },true);
-	  };   
-	});
