@@ -165,14 +165,12 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 		}
 	 
 	 mi.exportarExcel = function(){
-		 mi.mostrarCargando = true;
 			$http.post('/SMatrizRACI', { 
 				 accion: 'exportarExcel', 
 				 idPrestamo: mi.prestamoSeleccionado.value, 
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
-						  mi.mostrarCargando = false;
 						  var anchor = angular.element('<a/>');
 						  anchor.attr({
 					         href: 'data:application/ms-excel;base64,' + response.data,
@@ -180,20 +178,17 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 					         download: 'MatrizRACI.xls'
 						  })[0].click();
 					  }.bind(this), function errorCallback(response){
-						  mi.mostrarCargando = false;
 				 	}
 			  	);
 			};
 			
 	 mi.exportarPdf=function(){
-		 mi.mostrarCargando = true;
 		 $http.post('/SMatrizRACI', { 
 			 accion: 'exportarPdf', 
 			 idPrestamo: mi.prestamoSeleccionado.value, 
 			 t:moment().unix()
 		  } ).then(
 				  function successCallback(response) {
-					  mi.mostrarCargando = false;
 					  var anchor = angular.element('<a/>');
 					  anchor.attr({
 				         href: 'data:application/pdf;base64,' + response.data,
@@ -201,7 +196,6 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 				         download: 'MatrizRACI.pdf'
 					  })[0].click();
 				  }.bind(this), function errorCallback(response){
-					  mi.mostrarCargando = false;
 			 	}
 		  	);
 	 };

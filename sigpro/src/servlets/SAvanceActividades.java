@@ -714,7 +714,11 @@ public class SAvanceActividades extends HttpServlet {
 		temp.id = actividad.getId();
 		temp.nombre = actividad.getNombre();
 		AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(actividad.getId(), 5, "R"); 
-		temp.responsable = asignacion.getColaborador().getPnombre() + " " + asignacion.getColaborador().getPapellido();
+		if(asignacion!= null){
+			temp.responsable = asignacion.getColaborador().getPnombre() + " " + asignacion.getColaborador().getPapellido();
+		}else{
+			temp.responsable = "";
+		}
 		temp.porcentajeAvance = actividad.getPorcentajeAvance();
 		String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad, usuario).split(";");
 		temp.fechaInicio = fechaInicioFin[0];

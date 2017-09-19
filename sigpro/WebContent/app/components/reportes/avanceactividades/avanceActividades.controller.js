@@ -186,7 +186,6 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		};
 		
 		mi.exportarExcel = function(){
-			mi.mostrarCargando = true;
 			$http.post('/SAvanceActividades', { 
 				accion: 'exportarExcel', 	
 				idPrestamo: mi.prestamo.value,
@@ -194,7 +193,6 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 				t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
-						  mi.mostrarCargando = false;
 						  var anchor = angular.element('<a/>');
 						  anchor.attr({
 					         href: 'data:application/ms-excel;base64,' + response.data,
@@ -202,13 +200,11 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 					         download: 'ReporteAvances.xls'
 						  })[0].click();
 					  }.bind(this), function errorCallback(response){
-						  mi.mostrarCargando = false;
 				 	}
 			  	);
 			};
 			
 		mi.exportarPdf=function(){
-			mi.mostrarCargando = true;
 			$http.post('/SAvanceActividades', { 
 				accion: 'exportarPdf', 	
 				idPrestamo: mi.prestamo.value,
@@ -216,7 +212,6 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 				t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
-						  mi.mostrarCargando = false;
 						  var anchor = angular.element('<a/>');
 						  anchor.attr({
 					         href: 'data:application/pdf;base64,' + response.data,
@@ -224,7 +219,6 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 					         download: 'ReporteAvances.pdf'
 						  })[0].click();
 					  }.bind(this), function errorCallback(response){
-						  mi.mostrarCargando = false;
 				 	}
 			  	);
 		};
