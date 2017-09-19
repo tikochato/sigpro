@@ -64,6 +64,7 @@ public class AsignacionRaciDAO {
 	
 	public static AsignacionRaci getAsignacionPorRolTarea(Integer objetoId, Integer objetoTipo , String rol){
 		AsignacionRaci ret = null;
+		List<AsignacionRaci> listRet = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = String.join(" ", "select a from AsignacionRaci a",
@@ -76,7 +77,10 @@ public class AsignacionRaciDAO {
 			criteria.setParameter("objId", objetoId);
 			criteria.setParameter("objTipo", objetoTipo);
 			criteria.setParameter("rol", rol);
-			ret = criteria.getSingleResult();
+			
+			listRet = criteria.getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("3", AsignacionRaciDAO.class, e);
@@ -90,6 +94,7 @@ public class AsignacionRaciDAO {
 	
 	public static Colaborador getResponsablePorRol(Integer objetoId, int objetoTipo,String rol){
 		Colaborador ret = null;
+		List<Colaborador> listRet = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = String.join(" ", "select c ",
@@ -104,7 +109,9 @@ public class AsignacionRaciDAO {
 			criteria.setParameter("objId", objetoId);
 			criteria.setParameter("objTipo", objetoTipo);
 			criteria.setParameter("rol", rol);
-			ret = criteria.getSingleResult();
+			listRet = criteria.getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("4", AsignacionRaciDAO.class, e);
@@ -136,6 +143,7 @@ public class AsignacionRaciDAO {
 	
 	public static MatrizRaci getMatrizPorObjeto(Integer objetoId, Integer objetoTipo){
 		MatrizRaci ret = null;
+		List<MatrizRaci> listRet = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = String.join(" ", "select m from MatrizRaci m",
@@ -148,7 +156,9 @@ public class AsignacionRaciDAO {
 			Query<MatrizRaci> criteria = session.createQuery(query, MatrizRaci.class);
 			criteria.setParameter("objId", objetoId);
 			criteria.setParameter("objTipo", objetoTipo);
-			ret = criteria.getSingleResult();
+			listRet = criteria.getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("6", AsignacionRaciDAO.class, e);

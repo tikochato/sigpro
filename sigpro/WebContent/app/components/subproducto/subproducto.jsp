@@ -115,13 +115,13 @@
 			<form name="form" class="css-form">
 				
 					<div class="form-group">
-						<label for="id" class="floating-label">ID {{subproducto.subproducto.id}}</label>
+						<label for="id" class="floating-label id_class">ID {{subproducto.subproducto.id}}</label>
 						<br/><br/> 
 					</div>
 				
 				
 					<div class="form-group">
-						<input type="text" class="inputText" ng-model="subproducto.subproducto.nombre" ng-required="true" 
+						<input type="text" id="nombre" class="inputText" ng-model="subproducto.subproducto.nombre" ng-required="true" 
 						ng-value="subproducto.subproducto.nombre" onblur="this.setAttribute('value', this.value);"/>
 						<label class="floating-label">* Nombre</label>
 					</div>
@@ -273,7 +273,7 @@
 							<div class="form-group">
 							   <input class="inputText"  type="number"
 							     ng-model="subproducto.subproducto.duracion" ng-value="subproducto.subproducto.duracion"   
-							     onblur="this.setAttribute('value', this.value);"  min="1" max="100" ng-required="true" 
+							     onblur="this.setAttribute('value', this.value);"  min="1" ng-required="true" 
 							     ng-readonly="subproducto.duracionDimension.value != 0 ? false : true"
 							     ng-change="subproducto.subproducto.fechaInicio != null && subproducto.duracionDimension != 0 ? subproducto.cambioDuracion(subproducto.duracionDimension) : ''">
 							   <label class="floating-label">* Duración</label>

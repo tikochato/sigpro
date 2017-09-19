@@ -49,6 +49,8 @@ public class ProyectoDAO implements java.io.Serializable  {
 			Usuario usu = UsuarioDAO.getUsuario( proyecto.getUsuarioCreo());
 			ProyectoUsuario pu = new ProyectoUsuario(new ProyectoUsuarioId(proyecto.getId(),proyecto.getUsuarioCreo()), proyecto,usu);
 			session.saveOrUpdate(pu);
+			ProyectoUsuario pu_admin = new ProyectoUsuario(new ProyectoUsuarioId(proyecto.getId(),"admin"), proyecto,usu);
+			session.saveOrUpdate(pu_admin);
 			session.getTransaction().commit();
 			ret = true;
 		}
@@ -318,6 +320,22 @@ public class ProyectoDAO implements java.io.Serializable  {
 		catch(Throwable e){
 			CLogger.write("12", ProyectoDAO.class, e);
 			session.getTransaction().rollback();
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<Proyecto> getTodosProyectos(){
+		List<Proyecto> ret = new ArrayList<Proyecto>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Proyecto> criteria = session.createQuery("FROM Proyecto p where p.estado=1", Proyecto.class);
+			ret =   criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("13", Proyecto.class, e);
+		}
+		finally{
 			session.close();
 		}
 		return ret;

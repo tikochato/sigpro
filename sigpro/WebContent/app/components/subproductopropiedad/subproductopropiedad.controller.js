@@ -190,6 +190,7 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 		mi.descripcion = "";
 		
 		mi.datoTipoSeleccionado = null;
+		$utilidades.setFocus(document.getElementById("nombre"));
 	}
 
 	mi.limpiarSeleccion = function() {
@@ -218,7 +219,7 @@ function controlSubproductoPropiedad($scope, $routeParams, $route, $window, $loc
 					"id" : mi.entidadSeleccionada.idTipo,
 					"nombre" : mi.entidadSeleccionada.tipo
 			}
-
+			$utilidades.setFocus(document.getElementById("nombre"));
 		} else {
 			$utilidades.mensaje('warning',
 					'Debe seleccionar una propiedad de subproducto');

@@ -20,7 +20,7 @@
 			{{ desembolsoc.objetoTipoNombre }} {{ desembolsoc.proyectonombre }}
 		</div>
 		
-		<div class="row" align="center" ng-if="!desembolsoc.mostraringreso">
+		<div class="row" align="center" ng-show="!desembolsoc.mostraringreso">
 			
     		<div class="col-sm-12 operation_buttons" align="right">
 			  <div class="btn-group">
@@ -61,7 +61,7 @@
 				</div>
 				<br>
 				<div class="total-rows">
-				  Total de {{  desembolsoc.totalDesembolsos + (desembolsoc.totalDesembolsos == 1 ? " Desembolsos" : " Desembolso" ) }}
+				  Total de {{  desembolsoc.totalDesembolsos + (desembolsoc.totalDesembolsos == 1 ? " Desembolso" : " Desembolsos" ) }}
 				</div>
 				<ul uib-pagination total-items="desembolsoc.totalDesembolsos" 
 						ng-model="desembolsoc.paginaActual" 
@@ -97,7 +97,7 @@
 			<div class="col-sm-12">
 				<form name="form" id="form">
 					<div class="form-group">
-					  <label for="id" class="floating-label">ID {{ desembolsoc.desembolso.id }}</label>
+					  <label for="id" class="floating-label id_class">ID {{ desembolsoc.desembolso.id }}</label>
 					  <br/><br/>
 					</div>
 					
@@ -114,7 +114,7 @@
 					<div class="form-group">
 					   <input type="text" name="imonto"  class="inputText" id="imonto" ui-number-mask="2"
 					     ng-model="desembolsoc.desembolso.monto" ng-value="desembolsoc.desembolso.monto"   
-					     onblur="this.setAttribute('value', this.value);" ng-required="true" >
+					     onblur="this.setAttribute('value', this.value);" ng-required="true">
 					   <label class="floating-label">* Monto</label>
 					</div>
 					<div class="form-group" >

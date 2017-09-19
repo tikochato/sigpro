@@ -18,7 +18,7 @@
 	  <div class="panel-heading"><h3>Tipo de Adquisición</h3></div>
 	</div>
 	
-	<div align="center" ng-if="!controller.mostraringreso">
+	<div align="center" ng-show="!controller.mostraringreso">
 		<br />
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
@@ -73,7 +73,7 @@
 		</shiro:hasPermission>	
 	</div>
 
-	<div class="row second-main-form" ng-if="controller.mostraringreso">
+	<div class="row second-main-form" ng-show="controller.mostraringreso">
 		<div class="page-header">
 			<h2 ng-hide="!controller.esnuevo"><small>Nuevo tipo de adquisición</small></h2>
 			<h2 ng-hide="controller.esnuevo"><small>Edición tipo de adquisicion</small></h2>
@@ -92,7 +92,7 @@
 		<div class="col-sm-12">
 			<form name="form" id="form">
 				<div class="form-group">
-					<label for="id" class="floating-label">ID {{controller.tipoAdquisicion.id }}</label>
+					<label for="id" class="floating-label id_class">ID {{controller.tipoAdquisicion.id }}</label>
 					<br/><br/>
 				</div>
 				

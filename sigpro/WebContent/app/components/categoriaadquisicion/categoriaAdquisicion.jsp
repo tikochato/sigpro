@@ -10,7 +10,7 @@
 		</shiro:lacksPermission>
 		
    		<div class="panel panel-default">
-			<div class="panel-heading"><h3>Categorías de Adquisición</h3></div>
+			<div class="panel-heading"><h3>Categorías de Adquisiciones</h3></div>
 		</div>	
 		<div class="subtitulo">
 			{{ controller.objetoTipoNombre }} {{ controller.objetoNombre }}
@@ -55,7 +55,7 @@
 					  </div>
 					</div>
 					<br/>
-					<div class="total-rows">Total de {{  controller.totalCategoriaAdquisiciones + (controller.totalCategoriaAdquisiciones == 1 ? " Categoria de adquisicion" : " Categoria de adquisiciones" ) }}</div>-
+					<div class="total-rows">Total de {{  controller.totalCategoriaAdquisiciones + (controller.totalCategoriaAdquisiciones == 1 ? " Categoría de adquisicion" : " Categorias de adquisiciones" ) }}</div>-
 					<ul uib-pagination total-items="controller.totalCategoriaAdquisiciones"
 							ng-model="actividadc.paginaActual"
 							max-size="actividadc.numeroMaximoPaginas"
@@ -91,13 +91,13 @@
 		<div class="col-sm-12">
 			<form name="form">
 				<div class="form-group">
-					<label for="id" class="floating-label">ID {{controller.categoriaAdquisicion.id }}</label>
+					<label for="id" class="floating-label id_class">ID {{controller.categoriaAdquisicion.id }}</label>
 					<br/><br/>
 				</div>
 				
 				<div class="form-group">
    					<div class="form-group">
-					   <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="controller.categoriaAdquisicion.nombre" ng-value="controller.categoriaAdquisicion.nombre"  onblur="this.setAttribute('value', this.value);" ng-required="true" >
+					   <input type="text" name="inombre" class="inputText" id="inombre" ng-model="controller.categoriaAdquisicion.nombre" ng-value="controller.categoriaAdquisicion.nombre"  onblur="this.setAttribute('value', this.value);" ng-required="true">
 					   <label class="floating-label">* Nombre</label>
 					</div>
 					<div class="form-group">
@@ -152,5 +152,5 @@
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>
-				</div>
+	</div>
 </div>

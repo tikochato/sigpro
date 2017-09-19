@@ -48,6 +48,7 @@ public class SComponentePropiedad extends HttpServlet {
 		String usuarioActualizo;
 		String fechaCreacion;
 		String fechaActualizacion;
+		Integer estado;
 	}
        
     /**
@@ -110,6 +111,7 @@ public class SComponentePropiedad extends HttpServlet {
 				temp.fechaCreacion = Utils.formatDateHour(componentepropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = componentepropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = componentepropiedad.getUsuarioCreo();
+				temp.estado = componentepropiedad.getEstado();
 				stcomponentepropiedad.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stcomponentepropiedad);
@@ -138,6 +140,7 @@ public class SComponentePropiedad extends HttpServlet {
 				temp.fechaCreacion = Utils.formatDateHour(componentepropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = componentepropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = componentepropiedad.getUsuarioCreo();
+				temp.estado = componentepropiedad.getEstado();
 				stcomponentepropiedad.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stcomponentepropiedad);
@@ -161,6 +164,7 @@ public class SComponentePropiedad extends HttpServlet {
 				temp.fechaCreacion = Utils.formatDateHour(componentepropiedad.getFechaCreacion());	
 				temp.usuarioActualizo = componentepropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = componentepropiedad.getUsuarioCreo();
+				temp.estado = componentepropiedad.getEstado();
 				stcomponentepropiedad.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stcomponentepropiedad);

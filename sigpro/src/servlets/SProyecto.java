@@ -757,11 +757,25 @@ public class SProyecto extends HttpServlet {
 		else if(accion.equals("controlArbol")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			Nodo arbol = EstructuraProyectoDAO.getEstructuraProyectoArbol(id);
-			Nodo root = new Nodo(0, 0, "", 0, new ArrayList<Nodo>(), null);
+			Nodo root = new Nodo(0, 0, "", 0, new ArrayList<Nodo>(), null, false);
 			arbol.parent = root;
 			root.children.add(arbol);
 			response_text=new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create().toJson(root);
 	        response_text = String.join("", "\"proyecto\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}
+		else if(accion.equals("controlArbolTodosProyectos")){
+			String pusuario = map.get("usuario");
+			ArrayList<Nodo> proyectos = EstructuraProyectoDAO.getEstructuraProyectosArbol(pusuario);
+			Nodo root = new Nodo(0, 0, "", 0, new ArrayList<Nodo>(), null, false);
+			if(proyectos!=null){
+				for(int i=0; i<proyectos.size(); i++){
+					proyectos.get(i).parent = root;
+				}
+				root.children=proyectos;
+			}
+			response_text=new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().create().toJson(root);
+	        response_text = String.join("", "\"proyectos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		response.setHeader("Content-Encoding", "gzip");

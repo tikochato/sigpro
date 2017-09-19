@@ -3,7 +3,6 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -20,14 +19,16 @@ public class ProgramaPropiedadValorDAO {
 	public static ProgramaPropiedadValor getValorPorProgramaYPropiedad(int idPropiedad,int idPrograma){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		ProgramaPropiedadValor ret = null;
+		List<ProgramaPropiedadValor> listRet = null;
 		try {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<ProgramaPropiedadValor> criteria = builder.createQuery(ProgramaPropiedadValor.class);
 			Root<ProgramaPropiedadValor> root = criteria.from(ProgramaPropiedadValor.class);
 			criteria.select(root);
 			criteria.where(builder.equal(root.get("id"), new ProgramaPropiedadValorId(idPropiedad,idPrograma)),builder.equal(root.get("estado"), 1));
-			ret = session.createQuery(criteria).getSingleResult();
-		} catch (NoResultException e){
+			listRet = session.createQuery(criteria).getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("1", ProgramaPropiedadValorDAO.class, e);
 		} finally {

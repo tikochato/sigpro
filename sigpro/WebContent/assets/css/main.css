@@ -554,3 +554,7 @@ h2 {
 .cols_treeview{
 	height: calc(100% - 55px);
 }
+
+.tree-node-noselected > div > span{
+	font-weight: normal;
+}

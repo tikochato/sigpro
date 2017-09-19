@@ -42,6 +42,7 @@ public class ComponenteTipoDAO {
 	public static ComponenteTipo getComponenteTipoPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		ComponenteTipo ret = null;
+		List<ComponenteTipo> listRet = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
@@ -49,9 +50,10 @@ public class ComponenteTipoDAO {
 			Root<ComponenteTipo> root = criteria.from(ComponenteTipo.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
-			ret = session.createQuery( criteria ).getSingleResult();
-		}
-		catch(Throwable e){
+			listRet = session.createQuery( criteria ).getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		} catch(Throwable e){
 			CLogger.write("2", ComponenteTipoDAO.class, e);
 		}
 		finally{
@@ -183,8 +185,7 @@ public class ComponenteTipoDAO {
 			
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			ret = conteo.getSingleResult();
-		}
-		catch(Throwable e){
+		} catch(Throwable e){
 			CLogger.write("7", ComponenteTipoDAO.class, e);
 		}
 		finally{

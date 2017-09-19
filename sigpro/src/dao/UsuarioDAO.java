@@ -18,8 +18,12 @@ import pojo.UsuarioLogId;
 import pojo.UsuarioPermiso;
 import pojo.UsuarioPermisoId;
 import pojo.Colaborador;
+import pojo.Componente;
+import pojo.ComponenteUsuario;
+import pojo.ComponenteUsuarioId;
 import pojo.Cooperante;
 import pojo.Permiso;
+import pojo.ProductoUsuario;
 import pojo.Proyecto;
 import pojo.ProyectoUsuario;
 import pojo.ProyectoUsuarioId;
@@ -591,6 +595,84 @@ public class UsuarioDAO {
 		}catch(Throwable e){
 			CLogger.write("25", UsuarioDAO.class, e);
 		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean asignarComponentes(String usuario, List <Integer> componentes, String usuario_creo){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			
+			for(int i =0; i<componentes.size();i++){
+				Componente componente = ComponenteDAO.getComponente(componentes.get(i));
+				ComponenteUsuario cu = new ComponenteUsuario(new ComponenteUsuarioId(componentes.get(i), usuario), componente);
+				cu.setComponente(componente);
+				session.save(cu);
+			}			
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("26", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
+	public static boolean checkUsuarioProyecto(String usuario, int proyectoid){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		boolean ret = false;
+		try {
+			Query <ProyectoUsuario> criteria = session.createQuery("FROM ProyectoUsuario where usuario.usuario=:usuario and proyecto.id=:id", ProyectoUsuario.class);
+			criteria.setParameter("usuario",usuario);
+			criteria.setParameter("id", proyectoid);
+			List<ProyectoUsuario> listRet = null;
+			listRet = criteria.getResultList();
+			ret = !listRet.isEmpty() ? true : false;
+		} catch (Throwable e) {
+			CLogger.write("27", UsuarioDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean checkUsuarioComponente(String usuario, int componenteid){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		boolean ret = false;
+		try {
+			Query <ComponenteUsuario> criteria = session.createQuery("FROM ComponenteUsuario where id.usuario=:usuario and id.componenteid=:id", ComponenteUsuario.class);
+			criteria.setParameter("usuario",usuario);
+			criteria.setParameter("id", componenteid);
+			List<ComponenteUsuario> listRet = null;
+			listRet = criteria.getResultList();
+			ret = !listRet.isEmpty() ? true : false;
+		} catch (Throwable e) {
+			CLogger.write("28", UsuarioDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean checkUsuarioProducto(String usuario, int productoid){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		boolean ret = false;
+		try {
+			Query <ProductoUsuario> criteria = session.createQuery("FROM ProductoUsuario where id.usuario=:usuario and id.productoid=:id", ProductoUsuario.class);
+			criteria.setParameter("usuario",usuario);
+			criteria.setParameter("id", productoid);
+			List<ProductoUsuario> listRet = null;
+			listRet = criteria.getResultList();
+			ret = !listRet.isEmpty() ? true : false;
+		} catch (Throwable e) {
+			CLogger.write("29", UsuarioDAO.class, e);
+		} finally {
 			session.close();
 		}
 		return ret;

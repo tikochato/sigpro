@@ -654,7 +654,6 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 			 }else if(mi.grupoMostrado.real){
 				 tipoVisualizacion = 1;
 			 }
-			 mi.mostrarCargando = true;
 			$http.post('/SInformacionPresupuestaria', { 
 				accion: 'exportarPdf',
 				idPrestamo: mi.prestamo.value,
@@ -665,7 +664,6 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 				t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
-						  mi.mostrarCargando = false;
 							var anchor = angular.element('<a/>');
 						    anchor.attr({
 						         href: 'data:application/pdf;base64,' + response.data,
@@ -673,7 +671,6 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 						         download: 'EjecucionPresupuestaria.pdf'
 						     })[0].click();
 						  }.bind(this), function errorCallback(response){
-							  mi.mostrarCargando = false;
 						 	}
 						 );
 		};
@@ -685,7 +682,6 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 			 }else if(mi.grupoMostrado.real){
 				 tipoVisualizacion = 1;
 			 }
-			 mi.mostrarCargando = true;
 			 $http.post('/SInformacionPresupuestaria', { 
 				 accion: 'exportarExcel', 
 				 idPrestamo: mi.prestamo.value,
@@ -696,7 +692,6 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
-						  mi.mostrarCargando = false;
 						  var anchor = angular.element('<a/>');
 						  anchor.attr({
 					         href: 'data:application/ms-excel;base64,' + response.data,
@@ -704,7 +699,6 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 					         download: 'EjecucionPresupuestaria.xls'
 						  })[0].click();
 					  }.bind(this), function errorCallback(response){
-						  mi.mostrarCargando = false;
 				 	}
 			  	);
 			};

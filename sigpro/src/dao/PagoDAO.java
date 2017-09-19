@@ -66,13 +66,15 @@ public class PagoDAO {
 	
 	public static Pago getPagobyId(int idPago){
 		Pago ret = null;
-		
+		List<Pago> listRet = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
 			Query<Pago> pago = session.createQuery("FROM Pago p where p.id=:id",Pago.class);
 			pago.setParameter("id", idPago);
-			ret = pago.getSingleResult();
+			listRet = pago.getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("4", PagoDAO.class, e);

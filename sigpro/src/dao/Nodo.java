@@ -14,11 +14,13 @@ public class Nodo {
 	@Expose
 	public int nivel;
 	@Expose
+	public boolean estado;
+	@Expose
 	public ArrayList<Nodo> children;
 	@Expose(serialize = false)
 	public Nodo parent;
 	
-	public Nodo(int id, int objeto_tipo, String nombre, int nivel, ArrayList<Nodo> children, Nodo parent) {
+	public Nodo(int id, int objeto_tipo, String nombre, int nivel, ArrayList<Nodo> children, Nodo parent, boolean estado) {
 		super();
 		this.id = id;
 		this.objeto_tipo = objeto_tipo;
@@ -26,5 +28,6 @@ public class Nodo {
 		this.nivel = nivel;
 		this.children = children;
 		this.parent = parent;
+		this.estado = estado;
 	}
 }
