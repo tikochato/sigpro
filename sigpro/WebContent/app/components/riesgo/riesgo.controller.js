@@ -240,8 +240,10 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			mi.productoid="";
 			mi.productoNombre="";
 			mi.camposdinamicos = {};
-			mi.probabilidad = {}; 
+			mi.probabilidad=null; 
+			mi.riesgo.fechaEjecucion=null;
 			mi.gridApi.selection.clearSelectedRows();
+			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 
 		mi.editar = function() {
@@ -267,14 +269,13 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					mi.probabilidad = {};
 				}
 				mi.ejecutado = mi.riesgo.ejecutado == 1;
-				
+				$utilidades.setFocus(document.getElementById("nombre"));
 				var parametros = { 
 						accion: 'getRiesgoPropiedadPorTipo', 
 						idRiesgo: mi.riesgo.id,
 						idRiesgoTipo: mi.riesgoTipoid,
 						t: (new Date()).getTime()
 				}
-				
 				$http.post('/SRiesgoPropiedad', parametros).then(function(response){
 					mi.camposdinamicos = response.data.componentepropiedades;					
 					for (campos in mi.camposdinamicos) {
@@ -294,6 +295,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 						}
 					}
 				});
+				
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Riesgo que desea editar');

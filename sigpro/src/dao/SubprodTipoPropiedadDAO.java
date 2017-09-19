@@ -42,7 +42,9 @@ public class SubprodTipoPropiedadDAO {
 			Root<SubprodtipoPropiedad> root = criteria.from(SubprodtipoPropiedad.class);
 			criteria.select(root);
 			criteria.where(builder.equal(root.get("id"), new SubprodtipoPropiedadId(codigoTipo, codigoPropiedad)));
-			ret = session.createQuery(criteria).getSingleResult();
+			List<SubprodtipoPropiedad> listRet = null;
+			listRet = session.createQuery(criteria).getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("1", SubprodTipoPropiedadDAO.class, e);
 		} finally {
