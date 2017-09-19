@@ -86,7 +86,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			{ name : 'proyectotipo',    displayName : 'Caracterización préstamo' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
 			{ name : 'unidadejecutora',    displayName : 'Unidad ejecutora' ,cellClass: 'grid-align-left', enableFiltering: false , enableSorting: false },
 			{ name : 'cooperante',   displayName : 'Organismo financiero internacional' ,cellClass: 'grid-align-left',  enableFiltering: false , enableSorting: false },
-			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',
+			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'usuario_creo\']"  ng-keypress="grid.appScope.controller.filtrar($event)" style="width:90px;"></input></div>'
 			},
 		    { name: 'fechaCreacion', width: 100, displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',

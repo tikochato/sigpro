@@ -135,7 +135,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.programac.filtros[\'nombre\']" ng-keypress="grid.appScope.programac.filtrar($event)" ></input></div>'
 			},
 			{ name : 'programatipo',    displayName : 'Tipo programa' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
-			{ name: 'usuarioCreo',  displayName: 'Usuario Creación',
+			{ name: 'usuarioCreo',  displayName: 'Usuario Creación',cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"style="width: 90%;" ng-model="grid.appScope.programac.filtros[\'usuario_creo\']"  ng-keypress="grid.appScope.programac.filtrar($event)" ></input></div>'
 			},
 		    { name: 'fechaCreacion',  displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
