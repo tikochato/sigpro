@@ -345,25 +345,27 @@ public class SRiesgo extends HttpServlet {
 							RiesgoPropiedadValor valor = new RiesgoPropiedadValor(idValor, riesgo, 
 									riesgoPropiedad, 1, usuario, new DateTime().toDate());
 		
-							switch (riesgoPropiedad.getDatoTipo().getId()){
-							case 1:
-								valor.setValorString(data.valor);
-								break;
-							case 2:
-								valor.setValorEntero(Utils.String2Int(data.valor, null));
-								break;
-							case 3:
-								valor.setValorDecimal(Utils.String2BigDecimal(data.valor, null));
-								break;
-							case 4:
-								valor.setValorEntero(Utils.String2Boolean(data.valor, null));
-								break;
-							case 5:
-								SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-								valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
-								break;
-						}
-							result = (result && RiesgoPropiedadValorDAO.guardarRiesgoPropiedadValor(valor));
+							if(riesgoPropiedad != null && idValor != null && valor != null){
+								switch (riesgoPropiedad.getDatoTipo().getId()){
+								case 1:
+									valor.setValorString(data.valor);
+									break;
+								case 2:
+									valor.setValorEntero(Utils.String2Int(data.valor, null));
+									break;
+								case 3:
+									valor.setValorDecimal(Utils.String2BigDecimal(data.valor, null));
+									break;
+								case 4:
+									valor.setValorEntero(Utils.String2Boolean(data.valor, null));
+									break;
+								case 5:
+									SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+									valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
+									break;
+								}
+								result = (result && RiesgoPropiedadValorDAO.guardarRiesgoPropiedadValor(valor));
+							}
 						}
 					}
 					
@@ -382,7 +384,7 @@ public class SRiesgo extends HttpServlet {
 				}
 			}
 			catch (Throwable e){
-				CLogger.write_simple("1", SRiesgo.class, e.getMessage());
+				CLogger.write("1", SRiesgo.class, e);
 				response_text = "{ \"success\": false }";
 			}
 		}
