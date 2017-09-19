@@ -114,7 +114,7 @@
     						<label class="floating-label">* Contraseña</label>
 						</div>
 						<br/>
-						<div class="row">
+						<div class="row" ng-hide="usuarioc.esNuevo">
 							<div class="col-sm-6">
 								<h3 ng-show="!usuarioc.esNuevo">Estructuras</h3>
 							</div>
@@ -175,6 +175,18 @@
     						<input type="password" class="inputText" id="clave" ng-model="usuarioc.claves.password2" ng-required="true"
     							ng-value="usuarioc.claves.password2" onblur="this.setAttribute('value', this.value);" autocomplete="off">
     						<label class="floating-label">* Vuelva a ingresar la contraseña</label>
+						</div>
+						<br/>
+						<div class="row" ng-show="usuarioc.esNuevo">
+							<div class="col-sm-6">
+								<h3 ng-show="!usuarioc.esNuevo">Estructuras</h3>
+							</div>
+							<div class="col-sm-6" align="right">
+								<div class="btn-group">
+							    	<label class="btn btn-default" ng-click="usuarioc.seleccionarTodo()">Todos</label>
+							    	<label class="btn btn-default" ng-click="usuarioc.deseleccionarTodo()">Ninguno</label>		       
+						    	</div>
+							</div>
 						</div>
 						<div class="form-group-row row"  ng-show="usuarioc.esNuevo">
 							<h3 ng-show="!usuarioc.esNuevo">Estructuras</h3>

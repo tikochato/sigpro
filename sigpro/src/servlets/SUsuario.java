@@ -379,14 +379,14 @@ public class SUsuario extends HttpServlet {
 												}
 											}
 										}
-										if(prestamosAsignados.compareTo("[]")!=0){
+										if(prestamosAsignados!=null && prestamosAsignados.compareTo("[]")!=0){
 											Gson entradaJson = new Gson();
 											Type tipo = new TypeToken<List<Integer>>() {}.getType();
 											List<Integer> prestamos = entradaJson.fromJson(prestamosAsignados, tipo);
 											UsuarioDAO.asignarPrestamos(usuario, prestamos,usuario_texto);
 											UsuarioDAO.asignarPrestamoRol(usuario, prestamos, Integer.parseInt(rol));
 										}
-										if(permisosAsignados.compareTo("[]")!=0){
+										if(permisosAsignados!=null && permisosAsignados.compareTo("[]")!=0){
 											Gson entradaJson = new Gson();
 											Type tipo = new TypeToken<List<Integer>>() {}.getType();
 											List<Integer> permisos = entradaJson.fromJson(permisosAsignados, tipo);

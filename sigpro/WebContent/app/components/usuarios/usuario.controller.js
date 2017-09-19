@@ -205,7 +205,7 @@ app.controller(
 		mi.esNuevo = true;
 		$utilidades.setFocus(document.getElementById("mail"));
 		$http.post('/SProyecto',
-				{ accion: 'controlArbolTodosProyectos', usuario: '' }).success(
+				{ accion: 'controlArbolTodosProyectos', usuario: '', t: (new Date()).getTime() }).success(
 			function(response) {
 				mi.treedata=response.proyectos;
 				if(mi.treedata.id==0){
@@ -460,7 +460,7 @@ app.controller(
 	    	   mi.cargandoPermisos=false;
 	    	});
 			$http.post('/SProyecto',
-					{ accion: 'controlArbolTodosProyectos', usuario: mi.usuariosSelected.usuario }).success(
+					{ accion: 'controlArbolTodosProyectos', usuario: mi.usuariosSelected.usuario, t: (new Date()).getTime() }).success(
 				function(response) {
 					mi.treedata=response.proyectos;
 					if(mi.treedata.id==0){
