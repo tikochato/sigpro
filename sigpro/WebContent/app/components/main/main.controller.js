@@ -90,13 +90,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             })
             .when('/componentepropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'componentepropiedadController\'" class="all_page"></div>'
-            })
-            .when('/recursounidadmedida/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'recursounidadmedidaController\'" class="all_page"></div>'
-            })
-            .when('/recursopropiedad/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'recursopropiedadController\'" class="all_page"></div>'
-            })
+            })            
             .when('/riesgopropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgopropiedadController\'" class="all_page"></div>'
             })
