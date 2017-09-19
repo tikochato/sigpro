@@ -192,7 +192,7 @@
 			            <input type="text" class="inputText" ng-model="producto.unidadEjecutoraNombre" ng-value="producto.unidadEjecutoraNombre" 
 			            	ng-click="producto.buscarUnidadEjecutora()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" />
 			            <span class="label-icon" ng-click="producto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
-			          <label for="campo5" class="floating-label">* Unidad Ejecutora</label>
+			          <label for="campo5" class="floating-label">Unidad Ejecutora</label>
 			        </div>
 			        
 			        <div class="form-group">
