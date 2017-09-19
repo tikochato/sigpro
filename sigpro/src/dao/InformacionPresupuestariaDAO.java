@@ -37,7 +37,6 @@ public class InformacionPresupuestariaDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
                     CLogger.write("1", InformacionPresupuestariaDAO.class, e);
                 }
             }
@@ -72,8 +71,7 @@ public class InformacionPresupuestariaDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
-                    CLogger.write("1", InformacionPresupuestariaDAO.class, e);
+                    CLogger.write("2", InformacionPresupuestariaDAO.class, e);
                 }
             }
         } catch ( SQLException e) {
@@ -108,8 +106,7 @@ public class InformacionPresupuestariaDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
-                    CLogger.write("1", InformacionPresupuestariaDAO.class, e);
+                    CLogger.write("3", InformacionPresupuestariaDAO.class, e);
                 }
             }
         } catch ( SQLException e) {
@@ -147,7 +144,7 @@ public class InformacionPresupuestariaDAO {
                 }
                 catch(Throwable e){
                     e.printStackTrace();
-                    CLogger.write("2", InformacionPresupuestariaDAO.class, e);
+                    CLogger.write("4", InformacionPresupuestariaDAO.class, e);
                 }
                 
             }
@@ -186,13 +183,12 @@ public class InformacionPresupuestariaDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
-                    CLogger.write("2", InformacionPresupuestariaDAO.class, e);
+                    CLogger.write("5", InformacionPresupuestariaDAO.class, e);
                 }
                 
             }
         } catch (SQLException e) {
-            CLogger.write("2", InformacionPresupuestariaDAO.class, e);
+            CLogger.write("6", InformacionPresupuestariaDAO.class, e);
         }
         return ret;
     }
@@ -223,12 +219,11 @@ public class InformacionPresupuestariaDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
-                    CLogger.write("3", InformacionPresupuestariaDAO.class, e);
+                    CLogger.write("7", InformacionPresupuestariaDAO.class, e);
                 }            
             }
         } catch (SQLException e) {
-            CLogger.write("3", InformacionPresupuestariaDAO.class, e);
+            CLogger.write("8", InformacionPresupuestariaDAO.class, e);
         }
         
         
@@ -264,11 +259,11 @@ public class InformacionPresupuestariaDAO {
                 }
                 catch(Throwable e){
                     e.printStackTrace();
-                    CLogger.write("3", InformacionPresupuestariaDAO.class, e);
+                    CLogger.write("9", InformacionPresupuestariaDAO.class, e);
                 }            
             }
         } catch (SQLException e) {
-            CLogger.write("3", InformacionPresupuestariaDAO.class, e);
+            CLogger.write("9", InformacionPresupuestariaDAO.class, e);
         }
         
         
@@ -306,13 +301,12 @@ public class InformacionPresupuestariaDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
-                    CLogger.write("4", InformacionPresupuestariaDAO.class, e);
+                    CLogger.write("10", InformacionPresupuestariaDAO.class, e);
                 }
                 
             }
         } catch (SQLException e) {
-            CLogger.write("4", InformacionPresupuestariaDAO.class, e);
+            CLogger.write("11", InformacionPresupuestariaDAO.class, e);
         }
         return ret;
     }
@@ -350,17 +344,13 @@ public class InformacionPresupuestariaDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
-                    CLogger.write("5", InformacionPresupuestariaDAO.class, e);
+                    CLogger.write("12", InformacionPresupuestariaDAO.class, e);
                 }
                 
             }
         } catch (SQLException e) {
-            CLogger.write("5", InformacionPresupuestariaDAO.class, e);
+            CLogger.write("13", InformacionPresupuestariaDAO.class, e);
         }
-        
-        
-        
         return ret;
     }
     
@@ -399,13 +389,12 @@ public class InformacionPresupuestariaDAO {
                     pstm.close();
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
-                    CLogger.write("6",InformacionPresupuestariaDAO.class, e);
+                    CLogger.write("14",InformacionPresupuestariaDAO.class, e);
                 }
                 
             }
         } catch (SQLException e) {
-            CLogger.write("6", InformacionPresupuestariaDAO.class, e);
+            CLogger.write("15", InformacionPresupuestariaDAO.class, e);
         }
         
         return ret;
@@ -443,12 +432,11 @@ public class InformacionPresupuestariaDAO {
                     
                 }
                 catch(Throwable e){
-                    e.printStackTrace();
-                    CLogger.write("7",InformacionPresupuestariaDAO.class, e);
+                    CLogger.write("16",InformacionPresupuestariaDAO.class, e);
                 }
             }
         } catch (SQLException e) {
-            CLogger.write("7", InformacionPresupuestariaDAO.class, e);
+            CLogger.write("17", InformacionPresupuestariaDAO.class, e);
         }
         
         return ret;
@@ -498,7 +486,7 @@ public class InformacionPresupuestariaDAO {
 			}
 		}
 		catch(Throwable e){
-			CLogger.write("8", ReporteDAO.class, e);
+			CLogger.write("18", ReporteDAO.class, e);
 		}
 		
 		return result;
@@ -554,7 +542,7 @@ public class InformacionPresupuestariaDAO {
 			}
 		}
 		catch(Throwable e){
-			CLogger.write("6", ReporteDAO.class, e);
+			CLogger.write("19", ReporteDAO.class, e);
 		}
 		
 		return result;

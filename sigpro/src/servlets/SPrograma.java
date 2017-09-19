@@ -386,7 +386,8 @@ public class SPrograma extends HttpServlet {
 					+ "\"id\": " + (programa!=null ? programa.getId():"") +", "
 					+ "\"nombre\": \"" + (programa!=null ? programa.getNombre():"") +"\" }");
 
-		}else
+		}
+		else
 		{
 			response_text = "{ \"success\": false }";
 		}

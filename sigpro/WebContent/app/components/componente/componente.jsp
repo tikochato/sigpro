@@ -129,14 +129,14 @@
 			<div class="col-sm-12">
 				<form name="form" id="form">
 						<div class="form-group">
-						  <label for="id" class="floating-label">ID {{ componentec.componente.id }}</label>
+						  <label for="id" class="floating-label id_class">ID {{ componentec.componente.id }}</label>
 						  <br/><br/>
 						</div>
 						
 						<div class="form-group">
-						   <input type="text" name="nombre"  class="inputText" id="nombre" 
+						   <input type="text" name="nombre" class="inputText" id="nombre" 
 						     ng-model="componentec.componente.nombre" ng-value="componentec.componente.nombre"   
-						     onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="componentec.mostraringreso">
+						     onblur="this.setAttribute('value', this.value);" ng-required="true">
 						   <label class="floating-label">* Nombre</label>
 						</div>
 						
@@ -269,7 +269,7 @@
 						    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="componentec.componente.acumulacionCostoNombre" ng-value="componentec.componente.acumulacionCostoNombre" 
 							ng-click="componentec.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="componentec.componente.costo != null && componentec.componente.costo > 0"/>
 							<span class="label-icon" ng-click="componentec.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
-							<label for="campo3" class="floating-label">{{componentec.componente.costo != null && componentec.componente.costo > 0 ? "* Tipo de acumulación del costo" : "Tipo de acumulación del costo"}} </label>
+							<label for="campo3" class="floating-label">{{componentec.validarRequiredCosto(componentec.componente.costo)}} </label>
 						</div>
 						
 						<div class = "row">
@@ -287,7 +287,7 @@
 								<div class="form-group">
 								   <input class="inputText"  type="number"
 								     ng-model="componentec.componente.duracion" ng-value="componentec.componente.duracion"   
-								     onblur="this.setAttribute('value', this.value);"  min="1" max="100" ng-required="true" 
+								     onblur="this.setAttribute('value', this.value);"  min="1" ng-required="true" 
 								     ng-readonly="componentec.duracionDimension.value != 0 ? false : true"
 								     ng-change="componentec.componente.fechaInicio != null && componentec.duracionDimension.value != 0 ? componentec.cambioDuracion(componentec.duracionDimension) : ''">
 								   <label class="floating-label">* Duración</label>

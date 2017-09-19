@@ -95,13 +95,13 @@
 
 				<div class="form-group">
 					<div class="form-group">
-						<label for="id" class="floating-label">ID {{subproductoTipo.codigo}}</label>
+						<label for="id" class="floating-label id_class">ID {{subproductoTipo.codigo}}</label>
 						<br/><br/>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<input type="text" class="inputText" ng-model="subproductoTipo.nombre" ng-required="true" ng-value="subproductoTipo.nombre" onblur="this.setAttribute('value', this.value);"/>
+					<input type="text" id="nombre" class="inputText" ng-model="subproductoTipo.nombre" ng-required="true" ng-value="subproductoTipo.nombre" onblur="this.setAttribute('value', this.value);"/>
 					<label for="nombre" class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group">

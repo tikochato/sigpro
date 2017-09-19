@@ -1,8 +1,7 @@
 package dao;
 
+import java.util.List;
 
-
-import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -19,13 +18,15 @@ public class HitoResultadoDAO {
 	
 	public static HitoResultado getHitoResultadoActivoPorHito(int hitoId){
 		HitoResultado ret = null;
+		List<HitoResultado> listRet = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			Query<HitoResultado> criteria = session.createQuery("SELECT r FROM HitoResultado r WHERE r.hito.id = :hitoId and r.estado=1",HitoResultado.class);
 			criteria.setParameter("hitoId", hitoId);
 			
-			ret = criteria.getSingleResult();
-		} catch (NoResultException e){
+			listRet = criteria.getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("1", HitoResultadoDAO.class, e);
@@ -39,6 +40,7 @@ public class HitoResultadoDAO {
 	public static HitoResultado getHitoResultadoPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		HitoResultado ret = null;
+		List<HitoResultado> listRet = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
@@ -46,8 +48,9 @@ public class HitoResultadoDAO {
 			Root<HitoResultado> root = criteria.from(HitoResultado.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
-			ret = session.createQuery( criteria ).getSingleResult();
-		} catch (NoResultException e){
+			listRet = session.createQuery( criteria ).getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("2", HitoDAO.class, e);

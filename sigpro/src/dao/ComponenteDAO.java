@@ -3,6 +3,8 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -33,13 +35,15 @@ public class ComponenteDAO {
 	public static Componente getComponentePorId(int id, String usuario){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Componente ret = null;
+		List<Componente> listRet = null;
 		try{
 			Query<Componente> criteria = session.createQuery("FROM Componente where id=:id AND id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )", Componente.class);
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
-			 ret = criteria.getSingleResult();
-		}
-		catch(Throwable e){
+			 listRet = criteria.getResultList();
+			 
+			 ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		} catch(Throwable e){
 			CLogger.write("2", ComponenteDAO.class, e);
 		}
 		finally{
@@ -133,8 +137,7 @@ public class ComponenteDAO {
 			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM Componente c WHERE c.estado=1 AND  c.id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )",Long.class);
 			conteo.setParameter("usuario", usuario);
 			ret = conteo.getSingleResult();
-		}
-		catch(Throwable e){
+		} catch(Throwable e){
 			CLogger.write("7", ComponenteDAO.class, e);
 		}
 		finally{
@@ -199,8 +202,9 @@ public class ComponenteDAO {
 			conteo.setParameter("proyId", proyectoId);
 			conteo.setParameter("usuario", usuario);
 			ret = conteo.getSingleResult();
-		}
-		catch(Throwable e){
+		}catch (NoResultException e){
+			
+		}catch(Throwable e){
 			CLogger.write("9", ComponenteDAO.class, e);
 		}
 		finally{
@@ -211,13 +215,16 @@ public class ComponenteDAO {
 	
 	public static Componente getComponenteInicial(Integer proyectoId, String usuario, Session session){
 		Componente ret = null;
+		List<Componente> listRet = null;
 		try{
 			String query = "FROM Componente c where c.estado=1 and c.orden=1 and c.proyecto.id=:proyectoId and c.usuarioCreo=:usuario";
 			Query<Componente> criteria = session.createQuery(query, Componente.class);
 			criteria.setParameter("proyectoId", proyectoId);
 			criteria.setParameter("usuario", usuario);
-			ret = criteria.getSingleResult();
-		}catch(Throwable e){
+			listRet = criteria.getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		} catch(Throwable e){
 			CLogger.write("11", ComponenteDAO.class, e);
 			session.getTransaction().rollback();
 			session.close();
@@ -227,14 +234,20 @@ public class ComponenteDAO {
 	
 	public static Componente getComponenteFechaMaxima(Integer proyectoId, String usuario, Session session){
 		Componente ret = null;
+		List<Componente> listRet = null;
 		try{
 			String query = "FROM Componente c where c.estado=1 and c.proyecto.id=:proyectoId and c.usuarioCreo=:usuario order by c.fechaFin desc";
 			Query<Componente> criteria = session.createQuery(query, Componente.class);
 			criteria.setMaxResults(1);
 			criteria.setParameter("proyectoId", proyectoId);
 			criteria.setParameter("usuario", usuario);
-			ret = criteria.getSingleResult();
-		}catch(Throwable e){
+			
+			listRet = criteria.getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		}catch (NoResultException e){
+			
+		} catch(Throwable e){
 			CLogger.write("12", ComponenteDAO.class, e);
 			session.getTransaction().rollback();
 			session.close();
@@ -261,13 +274,15 @@ public class ComponenteDAO {
 	
 	public static Componente getComponentePorIdOrden(int id, String usuario, Session session){
 		Componente ret = null;
+		List<Componente> listRet = null;
 		try{
 			Query<Componente> criteria = session.createQuery("FROM Componente where id=:id AND id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )", Componente.class);
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
-			 ret = criteria.getSingleResult();
-		}
-		catch(Throwable e){
+			listRet = criteria.getResultList();
+			 
+			 ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		} catch(Throwable e){
 			CLogger.write("14", ComponenteDAO.class, e);
 			session.getTransaction().rollback();
 			session.close();
@@ -286,6 +301,25 @@ public class ComponenteDAO {
 		catch(Throwable e){
 			CLogger.write("15", ComponenteDAO.class, e);
 			session.getTransaction().rollback();
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Componente getComponente(int id){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		Componente ret = null;
+		List<Componente> listRet = null;
+		try{
+			Query<Componente> criteria = session.createQuery("FROM Componente where id=:id", Componente.class);
+			criteria.setParameter("id", id);
+			 listRet = criteria.getResultList();
+			 
+			 ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		} catch(Throwable e){
+			CLogger.write("16", ComponenteDAO.class, e);
+		}
+		finally{
 			session.close();
 		}
 		return ret;

@@ -39,6 +39,7 @@ public class ColaboradorDAO {
 	public static Colaborador getColaborador(Integer codigo) {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Colaborador ret = null;
+		List<Colaborador> listRet = null;
 		try {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
@@ -46,7 +47,9 @@ public class ColaboradorDAO {
 			Root<Colaborador> root = criteria.from(Colaborador.class);
 			criteria.select(root);
 			criteria.where(builder.equal(root.get("id"), codigo));
-			ret = session.createQuery(criteria).getSingleResult();
+			listRet = session.createQuery(criteria).getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("2", ColaboradorDAO.class, e);
 		} finally {

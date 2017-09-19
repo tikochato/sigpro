@@ -96,7 +96,7 @@
 				<form name="form" autocomplete="off">
 
 						<div class="form-group" ng-show="!usuarioc.esNuevo && !usuarioc.mostrarCambioPassword">
-    						<input type="text" class="inputText" id="lllll" ng-model="usuarioc.usuariosSelected.usuario" 
+    						<input type="text" class="inputText" id="usuario" ng-model="usuarioc.usuariosSelected.usuario" 
     							ng-value="usuarioc.usuariosSelected.usuario" onblur="this.setAttribute('value', this.value);" autocomplete="off" readonly>
     						<label class="floating-label">* Usuario</label>
 						</div>

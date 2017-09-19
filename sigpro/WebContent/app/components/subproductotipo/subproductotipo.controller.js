@@ -178,7 +178,7 @@ function controlSubproductoTipo($scope, $routeParams, $route, $window, $location
 		mi.nombre = "";
 		mi.descripcion = "";
 		mi.propiedadesTipo = [];
-
+		$utilidades.setFocus(document.getElementById("nombre"));
 	}
 
 	mi.limpiarSeleccion = function() {
@@ -205,7 +205,7 @@ function controlSubproductoTipo($scope, $routeParams, $route, $window, $location
 			mi.codigo = mi.entidadSeleccionada.id;
 			mi.nombre = mi.entidadSeleccionada.nombre;
 			mi.descripcion = mi.entidadSeleccionada.descripcion;
-
+			$utilidades.setFocus(document.getElementById("nombre"));
 			var datos = {
 				accion : 'tipoPropiedades',
 				codigoTipo : mi.entidadSeleccionada.id

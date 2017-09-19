@@ -187,6 +187,7 @@ app.controller(
 		mi.isCollapsed = true;
 		mi.entityselected = null;
 		mi.esNuevo = true;
+		$utilidades.setFocus(document.getElementById("mail"));
 	};
 	function getIdsPrestamos(prestamos){
 		var ids=[]
@@ -410,6 +411,7 @@ app.controller(
 			mi.prestamosAsignados=[];
 			mi.prestamosEliminados=[];
 			mi.prestamosNuevos=[];
+			$utilidades.setFocus(document.getElementById("usuario"));
 			$http.post('/SUsuario', {
 	    		accion:'obtenerPermisos',
 	    		usuario: mi.usuariosSelected.usuario,

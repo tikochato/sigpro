@@ -5,9 +5,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ include file="/app/shared/includes.jsp"%>
-<link rel="stylesheet" type="text/css" href="/assets/css/angular-tree/tree-control-attribute.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/angular-tree/tree-control.css" />
-<script src="/assets/libs/angular-tree-control.js"></script>
 <script src="/app/components/main_treeview/main_treeview.controller.js"></script>
 <title></title>
 </head>

@@ -322,4 +322,20 @@ public class ProyectoDAO implements java.io.Serializable  {
 		}
 		return ret;
 	}
+	
+	public static List<Proyecto> getTodosProyectos(){
+		List<Proyecto> ret = new ArrayList<Proyecto>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Proyecto> criteria = session.createQuery("FROM Proyecto p where p.estado=1", Proyecto.class);
+			ret =   criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("13", Proyecto.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

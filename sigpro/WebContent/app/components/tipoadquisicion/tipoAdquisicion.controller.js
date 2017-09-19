@@ -133,6 +133,7 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 			if(mi.seleccionada){
 				mi.mostraringreso = true;
 				mi.esNuevo = false;	
+				$utilidades.setFocus(document.getElementById("icoope"));
 			}else{
 				$utilidades.mensaje('warning',
 				'Debe seleccionar un TIPO DE ADQUISICION que desee editar');
@@ -185,6 +186,7 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 			
 			mi.mostraringreso = true;
 			mi.esNuevo = true;
+			$utilidades.setFocus(document.getElementById("icoope"));
 		}
 		
 		mi.limpiarSeleccion = function() {

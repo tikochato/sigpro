@@ -136,7 +136,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 							mi.componentepropiedad.usuarioActualizo=response.usuarioactualizo;
 							mi.componentepropiedad.fechaActualizacion=response.fechaactualizacion;
 							mi.esnuevo = false;
-							mi.cargarTabla();
+							mi.obtenerTotalComponentePropiedades();
 						}
 						else
 							$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' la Propiedad Componente');
@@ -182,6 +182,7 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 				mi.esnuevo = true;
 				mi.componentepropiedad = {};
 				mi.gridApi.selection.clearSelectedRows();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			};
 
 			mi.editar = function() {
@@ -192,6 +193,8 @@ app.controller('componentepropiedadController',['$scope','$http','$interval','i1
 							"id" : mi.componentepropiedad.datotipoid,
 							"nombre" : mi.componentepropiedad.datotiponombre
 					}
+					
+					$utilidades.setFocus(document.getElementById("nombre"));
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar la Propiedad Componente que desea editar');

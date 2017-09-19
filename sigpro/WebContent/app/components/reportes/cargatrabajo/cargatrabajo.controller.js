@@ -425,7 +425,6 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 				break;
 			} 
 		}
-		mi.mostrarCargando = true;
 		$http.post('/SCargaTrabajo', { 
 			accion: 'exportarExcel', 
 			idPrestamos:idPrestamos,
@@ -437,7 +436,6 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			t:moment().unix()
 		  } ).then(
 				  function successCallback(response) {
-					  mi.mostrarCargando = false;
 					  var anchor = angular.element('<a/>');
 					  anchor.attr({
 				         href: 'data:application/ms-excel;base64,' + response.data,
@@ -445,7 +443,6 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 				         download: 'CargaTrabajo.xls'
 					  })[0].click();
 				  }.bind(this), function errorCallback(response){
-					  mi.mostrarCargando = false;
 			 	}
 		  	);
 		};
