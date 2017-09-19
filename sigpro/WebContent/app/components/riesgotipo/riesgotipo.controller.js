@@ -159,6 +159,7 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 			if(mi.riesgotipo!=null){
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
+				$utilidades.setFocus(document.getElementById("nombre"));
 				mi.cargarTotalPropiedades();
 			}
 			else
@@ -201,6 +202,7 @@ app.controller('riesgotipoController',['$scope','$http','$interval','i18nService
 			mi.esnuevo = true;
 			mi.riesgotipo = null;
 			mi.gridApi.selection.clearSelectedRows();
+			$utilidades.setFocus(document.getElementById("nombre"));
 			mi.cargarTotalPropiedades();
 		};
 	

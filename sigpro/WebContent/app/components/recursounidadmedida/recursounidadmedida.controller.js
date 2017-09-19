@@ -178,12 +178,14 @@ app.controller('recursounidadmedidaController',['$scope','$http','$interval','i1
 				mi.esnueva = true;
 				mi.medida = {};
 				mi.gridApi.selection.clearSelectedRows();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			};
 
 			mi.editar = function() {
 				if(mi.medida!=null && mi.medida.id!=null){
 					mi.mostraringreso = true;
 					mi.esnueva = false;
+					$utilidades.setFocus(document.getElementById("nombre"));
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar la unidad de medida que desea editar');

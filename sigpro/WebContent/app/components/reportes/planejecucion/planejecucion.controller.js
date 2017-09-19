@@ -104,10 +104,8 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 	}
 	
 	mi.exportarExcel = function(){
-		mi.mostrarCargando = true;
 			$http.post('/SAgenda', { accion: 'exportarExcel', proyectoid:$routeParams.proyectoId,t:moment().unix()
 				  } ).then( function successCallback(response) {
-					  mi.mostrarCargando = false;
 						var anchor = angular.element('<a/>');
 					    anchor.attr({
 					         href: 'data:application/ms-excel;base64,' + response.data,
@@ -115,7 +113,6 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 					         download: 'Agenda.xls'
 					     })[0].click();
 					  }.bind(this), function errorCallback(response){
-						  mi.mostrarCargando = false;
 					 	}
 					 );
 		};

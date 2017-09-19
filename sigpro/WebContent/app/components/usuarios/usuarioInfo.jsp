@@ -32,11 +32,11 @@
 						    <label class="floating-label">Usuario</label>  
 						</div>
 						<div class="form-group" ng-show="usuarioc.esoculto" >
-							<input type="text" name="inombre"  class="inputText" ng-model="usuarioc.usuarioActual.email" ng-value="usuarioc.usuarioActual.email" ng-disabled="true" >
+							<input type="text" name="inombre" class="inputText" ng-model="usuarioc.usuarioActual.email" ng-value="usuarioc.usuarioActual.email" ng-disabled="true" >
 						    <label for="nombre" class="floating-label">Correo electrónico</label>  
 						</div>
 						<div class="form-group" ng-show="!usuarioc.esoculto" >
-    						<input  class="inputText" type="text" ng-model="usuarioc.usuarioActual.email" ng-value="usuarioc.usuarioActual.email" onblur="this.setAttribute('value', this.value);" ng-required="true"/>
+    						<input  class="inputText" id="correo" type="text" ng-model="usuarioc.usuarioActual.email" ng-value="usuarioc.usuarioActual.email" onblur="this.setAttribute('value', this.value);" ng-required="true"/>
     						<label for="nombre" class="floating-label">Correo electrónico</label>  
 						</div>
 						<div class="form-group" ng-show="!usuarioc.esoculto">

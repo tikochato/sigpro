@@ -134,7 +134,7 @@
 						</div>
 						
 						<div class="form-group">
-						   <input type="text" name="nombre"  class="inputText" id="nombre" 
+						   <input type="text" name="nombre" class="inputText" id="nombre" 
 						     ng-model="componentec.componente.nombre" ng-value="componentec.componente.nombre"   
 						     onblur="this.setAttribute('value', this.value);" ng-required="true">
 						   <label class="floating-label">* Nombre</label>

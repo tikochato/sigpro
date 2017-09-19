@@ -85,7 +85,7 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group">
-							<label for="id" class="floating-label">ID {{ riesgopropiedadc.riesgopropiedad.id }}</label>
+							<label for="id" class="floating-label id_class">ID {{ riesgopropiedadc.riesgopropiedad.id }}</label>
     						<br/><br/>
 						</div>
 						<div class="form-group">

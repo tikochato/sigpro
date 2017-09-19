@@ -235,7 +235,8 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 		mi.propiedadesValor = [];
 		mi.subproducto = {};
 		mi.coordenadas = "";
-
+		
+		$utilidades.setFocus(document.getElementById("nombre"));
 	}
 
 	mi.limpiarSeleccion = function() {
@@ -376,6 +377,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				mi.subproducto.fechaInicio = mi.sumarDias(mi.fechaFinPadre,2, 'd');
 				mi.primerhijo = true;
 			}
+			$utilidades.setFocus(document.getElementById("nombre"));
 			
 			mi.coordenadas = (mi.subproducto.latitud !=null ?  mi.subproducto.latitud : '') +
 			(mi.subproducto.latitud!=null ? ', ' : '') + (mi.subproducto.longitud!=null ? mi.subproducto.longitud : '');
