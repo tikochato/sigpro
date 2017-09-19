@@ -3,6 +3,7 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -139,6 +140,7 @@ public class HitoDAO {
 		try{
 			Query<Long> conteo = session.createQuery("SELECT count(h.id) FROM Hito h WHERE h.estado=1",Long.class);
 			ret = conteo.getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("7", HitoDAO.class, e);
@@ -202,6 +204,7 @@ public class HitoDAO {
 			Query<Long> conteo = session.createQuery(query,Long.class);
 			conteo.setParameter("proyId", proyectoId);
 			ret = conteo.getSingleResult();
+		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("7", HitoDAO.class, e);

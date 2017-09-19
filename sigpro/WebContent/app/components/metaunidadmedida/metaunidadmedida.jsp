@@ -94,7 +94,8 @@
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText" ng-model="metaunidadc.medida.nombre" ng-required="true"
-    						ng-value="metaunidadc.medida.nombre" onblur="this.setAttribute('value', this.value);">
+    						ng-value="metaunidadc.medida.nombre" onblur="this.setAttribute('value', this.value);"
+    						show-focus="metaunidadc.mostraringreso">
     						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
@@ -104,7 +105,8 @@
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText" ng-model="metaunidadc.medida.simbolo"
-    						ng-value="metaunidadc.medida.simbolo" onblur="this.setAttribute('value', this.value);">
+    						ng-value="metaunidadc.medida.simbolo" onblur="this.setAttribute('value', this.value);"
+    						maxlength="10">
     						<label class="floating-label">Símbolo</label>
 						</div>
 						<br/>

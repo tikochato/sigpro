@@ -471,19 +471,21 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 				    t:moment().unix()
 			}
 			
-			mi.prestamo = JSON.parse( JSON.stringify( mi.proyecto.prestamo ) ); 
-			mi.prestamo.fechaCorte = mi.prestamo.fechaCorte != undefined ?  moment(mi.prestamo.fechaCorte,'DD/MM/YYYY').toDate() : undefined;
-			mi.prestamo.fechaFirma = mi.prestamo.fechaFirma != undefined ? moment (mi.prestamo.fechaFirma,'DD/MM/YYYY').toDate() : undefined;
-			mi.prestamo.fechaAutorizacion = mi.prestamo.fechaAutorizacion != undefined ? moment(mi.prestamo.fechaAutorizacion,'DD/MM/YYYY').toDate() : undefined;
-			mi.prestamo.fechaFinEjecucion = mi.prestamo.fechaFinEjecucion != undefined ? moment (mi.prestamo.fechaFinEjecucion,'DD/MM/YYYY').toDate() : undefined;
-			mi.prestamo.fechaDecreto = mi.prestamo.fechaDecreto != undefined ? moment (mi.prestamo.fechaDecreto,'DD/MM/YYYY').toDate() : undefined;
-			mi.prestamo.fechaSuscripcion = mi.prestamo.fechaSuscripcion != undefined ? moment(mi.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate() : undefined;
-			mi.prestamo.fechaElegibilidadUe = mi.prestamo.fechaElegibilidadUe != undefined ? moment(mi.prestamo.fechaElegibilidadUe,'DD/MM/YYYY').toDate() : undefined;
-			mi.prestamo.fechaCierreOrigianlUe = mi.prestamo.fechaCierreOrigianlUe != undefined ? moment (mi.prestamo.fechaCierreOrigianlUe,'DD/MM/YYYY').toDate() : undefined; 
-			mi.prestamo.fechaCierreActualUe = mi.prestamo.fechaCierreActualUe != undefined ? moment (mi.prestamo.fechaCierreActualUe,'DD/MM/YYYY').toDate() : undefined;
-			mi.prestamo.fechaVigencia = mi.prestamo.fechaVigencia != undefined ? moment(mi.prestamo.fechaVigencia,'DD/MM/YYYY').toDate() : undefined;
-			
-			mi.getPorcentajes();
+			if (mi.proyecto.prestamo !=null){
+				mi.prestamo = JSON.parse( JSON.stringify( mi.proyecto.prestamo ) ); 
+				mi.prestamo.fechaCorte = mi.prestamo.fechaCorte != undefined ?  moment(mi.prestamo.fechaCorte,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaFirma = mi.prestamo.fechaFirma != undefined ? moment (mi.prestamo.fechaFirma,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaAutorizacion = mi.prestamo.fechaAutorizacion != undefined ? moment(mi.prestamo.fechaAutorizacion,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaFinEjecucion = mi.prestamo.fechaFinEjecucion != undefined ? moment (mi.prestamo.fechaFinEjecucion,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaDecreto = mi.prestamo.fechaDecreto != undefined ? moment (mi.prestamo.fechaDecreto,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaSuscripcion = mi.prestamo.fechaSuscripcion != undefined ? moment(mi.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaElegibilidadUe = mi.prestamo.fechaElegibilidadUe != undefined ? moment(mi.prestamo.fechaElegibilidadUe,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaCierreOrigianlUe = mi.prestamo.fechaCierreOrigianlUe != undefined ? moment (mi.prestamo.fechaCierreOrigianlUe,'DD/MM/YYYY').toDate() : undefined; 
+				mi.prestamo.fechaCierreActualUe = mi.prestamo.fechaCierreActualUe != undefined ? moment (mi.prestamo.fechaCierreActualUe,'DD/MM/YYYY').toDate() : undefined;
+				mi.prestamo.fechaVigencia = mi.prestamo.fechaVigencia != undefined ? moment(mi.prestamo.fechaVigencia,'DD/MM/YYYY').toDate() : undefined;
+				
+				mi.getPorcentajes();
+			}
 			
 			parametros = {
 					accion: 'obtenerProyectosPorPrograma',
