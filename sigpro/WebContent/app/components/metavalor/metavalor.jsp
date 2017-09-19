@@ -97,7 +97,8 @@
 							<br/><br/>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText"  ng-model="metavc.metavalor.datoTipoNombre" 
+    						<input type="text" class="inputText"  ng-model="metavc.metavalor.datotiponombre" 
+    						ng-value = "metavc.datoTipoNombre"
     						id = "nombre" ng-disabled="true">
     						<label  class="floating-label">Tipo de Dato</label>
 						</div>
