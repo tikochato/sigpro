@@ -89,12 +89,12 @@
 		<div class="col-sm-12">
 			<form name ="form">
 				<div class="form-group" ng-show="!recursotipoc.esnuevo">
-					<label for="id" class="floating-label">ID {{recursotipoc.recursotipo.id }}</label>
+					<label for="id" class="floating-label id_class">ID {{recursotipoc.recursotipo.id }}</label>
 					<br/><br/> 
 				</div>
 
 				<div class="form-group">
-					<input type="text" class="inputText" ng-value="recursotipoc.recursotipo.nombre" ng-model="recursotipoc.recursotipo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
+					<input type="text" id="nombre" class="inputText" ng-value="recursotipoc.recursotipo.nombre" ng-model="recursotipoc.recursotipo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
 					<label class="floating-label">* Nombre</label> 
 				</div>
 				<div class="form-group">
