@@ -89,13 +89,13 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group" ng-show="!metatipoc.esnueva">
-							<label for="id" class="floating-label">ID {{ metatipoc.tipo.id}}</label>
+							<label for="id" class="floating-label id_class">ID {{ metatipoc.tipo.id}}</label>
 							<br/><br/>
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText"  ng-model="metatipoc.tipo.nombre" ng-required="true"
     						ng-value="metatipoc.tipo.nombre" onblur="this.setAttribute('value', this.value);"
-    						show-focus="metatipoc.mostraringreso">
+    						id="nombre">
     						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">

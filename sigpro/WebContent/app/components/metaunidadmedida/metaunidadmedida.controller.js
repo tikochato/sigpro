@@ -177,6 +177,7 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 				mi.esnueva = true;
 				mi.medida = {};
 				mi.gridApi.selection.clearSelectedRows();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			};
 
 			mi.editar = function() {
@@ -186,6 +187,7 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar la unidad de medida que desea editar');
+				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 
 			mi.irATabla = function() {
@@ -232,14 +234,3 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 				} 
 			}
 ]);
-
-app.directive('showFocus', function($timeout) {
-	  return function(scope, element, attrs) {
-	    scope.$watch(attrs.showFocus,
-	      function (newValue) {
-	        $timeout(function() {
-	            element[0].focus();             
-	        });
-	      },true);
-	  };   
-	});

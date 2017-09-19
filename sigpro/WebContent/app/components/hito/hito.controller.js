@@ -163,6 +163,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 						mi.hito.usuarioActualizo = response.usuarioActualizo;
 						mi.hito.fechaActualizacion = response.fechaActualizacion;
 						mi.obtenerTotalHitos();
+						$utilidades.setFocus(document.getElementById("nombre"));
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Hito');
@@ -215,7 +216,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 			mi.hitoresultado = null;
 			mi.hitoresultadocomentario = null;
 			mi.gridApi.selection.clearSelectedRows();
-			
+			$utilidades.setFocus(document.getElementById("nombre"));
 			
 		};
 
@@ -247,6 +248,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Hito que desea editar');
+			$utilidades.setFocus(document.getElementById("nombre"));
 		}
 
 		mi.irATabla = function() {
@@ -453,13 +455,4 @@ function buscarHitoTipo($uibModalInstance, $scope, $http, $interval,
 	};
 };
 
-app.directive('showFocus', function($timeout) {
-    return function(scope, element, attrs) {
-      scope.$watch(attrs.showFocus,
-        function (newValue) {
-          $timeout(function() {
-              element[0].focus();             
-          });
-        },true);
-    };   
-  });
+

@@ -174,6 +174,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 				mi.esnueva = true;
 				mi.tipo = {};
 				mi.gridApi.selection.clearSelectedRows();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			};
 
 			mi.editar = function() {
@@ -183,6 +184,7 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 				}
 				else
 					$utilidades.mensaje('warning','Debe seleccionar el tipo de meta que desea editar');
+				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 
 			mi.irATabla = function() {
@@ -230,13 +232,4 @@ app.controller('metatipoController',['$scope','$http','$interval','i18nService',
 			} 
 ]);
 
-app.directive('showFocus', function($timeout) {
-	  return function(scope, element, attrs) {
-	    scope.$watch(attrs.showFocus,
-	      function (newValue) {
-	        $timeout(function() {
-	            element[0].focus();             
-	        });
-	      },true);
-	  };   
-	});
+
