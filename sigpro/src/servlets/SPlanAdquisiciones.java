@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -131,7 +130,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 			while ((str = br.readLine()) != null) {
 				sb.append(str);
 			}
-			HashMap<String, String> map = gson.fromJson(sb.toString(), type);
+			Map<String, String> map = gson.fromJson(sb.toString(), type);
 			String accion = map.get("accion")!=null ? map.get("accion") : "";
 			String response_text = "";
 			
