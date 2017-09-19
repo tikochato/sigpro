@@ -305,4 +305,23 @@ public class ComponenteDAO {
 		}
 		return ret;
 	}
+	
+	public static Componente getComponente(int id){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		Componente ret = null;
+		List<Componente> listRet = null;
+		try{
+			Query<Componente> criteria = session.createQuery("FROM Componente where id=:id", Componente.class);
+			criteria.setParameter("id", id);
+			 listRet = criteria.getResultList();
+			 
+			 ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		} catch(Throwable e){
+			CLogger.write("16", ComponenteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

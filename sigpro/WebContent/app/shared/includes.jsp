@@ -13,6 +13,8 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.adds.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/kanban.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/ivh-treeview.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/angular-tree/tree-control-attribute.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/angular-tree/tree-control.css" />
 <script type="text/javascript" src="/assets/libs/angular/angular.js"></script>
 <script type="text/javascript" src="/assets/libs/angular/angular-route.min.js"></script>
 <script type="text/javascript" src="/assets/libs/angular/angular-animate.min.js"></script>
@@ -58,6 +60,8 @@
 <script type="text/javascript" src="/assets/libs/Chart.PieceLabel.js"></script>
 <script type="text/javascript" src="/assets/libs/angularjs-dropdown-multiselect.js"></script>
 <script type="text/javascript" src="/assets/libs/angucomplete-alt.min.js"></script>
+<script src="/assets/libs/angular-tree-control.js"></script>
+<script type="text/javascript" src="/assets/libs/tri-state.js"></script>
 
 <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPq-t4dJ1GV1kdtXoVZfG7PtfEAHrhr00&callback=initMap" type="text/javascript"></script> -->
 <script>
