@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 12, 2017 3:58:47 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 19, 2017 6:11:00 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8602366231263338654L;
+	private static final long serialVersionUID = -5623254536495238633L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Componente componente;
@@ -68,11 +68,10 @@ public class Producto implements java.io.Serializable {
 	public Producto() {
 	}
 
-	public Producto(Componente componente, ProductoTipo productoTipo, UnidadEjecutora unidadEjecutora, String nombre,
-			String usuarioCreo, Date fechaCreacion) {
+	public Producto(Componente componente, ProductoTipo productoTipo, String nombre, String usuarioCreo,
+			Date fechaCreacion) {
 		this.componente = componente;
 		this.productoTipo = productoTipo;
-		this.unidadEjecutora = unidadEjecutora;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
@@ -164,10 +163,9 @@ public class Producto implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumns({
-			@JoinColumn(name = "unidad_ejecutoraunidad_ejecutora", referencedColumnName = "unidad_ejecutora", nullable = false),
-			@JoinColumn(name = "entidad", referencedColumnName = "entidadentidad", nullable = false),
-			@JoinColumn(name = "ejercicio", referencedColumnName = "ejercicio", nullable = false) })
+	@JoinColumns({ @JoinColumn(name = "unidad_ejecutoraunidad_ejecutora", referencedColumnName = "unidad_ejecutora"),
+			@JoinColumn(name = "entidad", referencedColumnName = "entidadentidad"),
+			@JoinColumn(name = "ejercicio", referencedColumnName = "ejercicio") })
 	public UnidadEjecutora getUnidadEjecutora() {
 		return this.unidadEjecutora;
 	}

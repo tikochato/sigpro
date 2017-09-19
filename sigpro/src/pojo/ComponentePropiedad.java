@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 6, 2017 10:45:35 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 19, 2017 6:11:00 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class ComponentePropiedad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7536351348923490552L;
+	private static final long serialVersionUID = -3232448945509749529L;
 	private Integer id;
 	private DatoTipo datoTipo;
 	private String nombre;
@@ -52,8 +52,8 @@ public class ComponentePropiedad implements java.io.Serializable {
 	}
 
 	public ComponentePropiedad(DatoTipo datoTipo, String nombre, String descripcion, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Set<CtipoPropiedad> ctipoPropiedads,
-			Set<ComponentePropiedadValor> componentePropiedadValors) {
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
+			Set<CtipoPropiedad> ctipoPropiedads, Set<ComponentePropiedadValor> componentePropiedadValors) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -61,6 +61,7 @@ public class ComponentePropiedad implements java.io.Serializable {
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
+		this.estado = estado;
 		this.ctipoPropiedads = ctipoPropiedads;
 		this.componentePropiedadValors = componentePropiedadValors;
 	}
@@ -142,7 +143,7 @@ public class ComponentePropiedad implements java.io.Serializable {
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
-	
+
 	@Column(name = "estado", nullable = false)
 	public int getEstado() {
 		return this.estado;
