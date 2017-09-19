@@ -113,13 +113,22 @@
     							ng-value="usuarioc.usuariosSelected.password" onblur="this.setAttribute('value', this.value);" autocomplete="off">
     						<label class="floating-label">* Contraseña</label>
 						</div>
-						
-						<h3 ng-show="!usuarioc.esNuevo">Préstamos Asignados</h3>
+						<br/>
+						<div class="row">
+							<div class="col-sm-6">
+								<h3 ng-show="!usuarioc.esNuevo">Estructuras</h3>
+							</div>
+							<div class="col-sm-6" align="right">
+								<div class="btn-group">
+							    	<label class="btn btn-default" ng-click="usuarioc.seleccionarTodo()">Todos</label>
+							    	<label class="btn btn-default" ng-click="usuarioc.deseleccionarTodo()">Ninguno</label>		       
+						    	</div>
+							</div>
+						</div>
 						<div ng-hide="usuarioc.esNuevo">
-							
-							 <div ng-hide="usuarioc.esNuevo" style="width: 100%; height:300px; overflow-y: scroll;">
+							 <div ng-hide="usuarioc.esNuevo" style="width: 100%; height:300px; overflow-y: scroll;" class="panel panel-default">
 							    <div treecontrol="" class="tree-light" tree-model="usuarioc.treedata" options="usuarioc.tree_options" 
-								expanded-nodes="usuarioc.expanded" on-selection="usuarioc.showSelected(node)" style="width: 1000px; margin: 10px 0 0 -30px;">
+								expanded-nodes="usuarioc.expanded" on-selection="usuarioc.showSelected(node)" style="width: 1000px; margin: 10px 0 0 0;">
 		     				  	  <span ng-switch="" on="node.objeto_tipo">
 							             <span ng-switch-when="1" class="glyphicon glyphicon-record" aria-hidden="true" style="color: #4169E1;"></span>
 							             <span ng-switch-when="2" class="glyphicon glyphicon-th" aria-hidden="true" style="color: #4169E1;"></span>
@@ -168,10 +177,10 @@
     						<label class="floating-label">* Vuelva a ingresar la contraseña</label>
 						</div>
 						<div class="form-group-row row"  ng-show="usuarioc.esNuevo">
-							
-						    <div  style="width: 100%; height:300px; overflow-y: scroll;">
+							<h3 ng-show="!usuarioc.esNuevo">Estructuras</h3>
+						    <div  style="width: 100%; height:300px; overflow-y: scroll;" class="panel panel-default">
 						    <div treecontrol="" class="tree-light" tree-model="usuarioc.treedata" options="usuarioc.tree_options" 
-							expanded-nodes="usuarioc.expanded" on-selection="usuarioc.showSelected(node)" style="width: 1000px; margin: 10px 0 0 -30px;">
+							expanded-nodes="usuarioc.expanded" on-selection="usuarioc.showSelected(node)" style="width: 1000px; margin: 10px 0 0 0">
 	     				  	  <span ng-switch="" on="node.objeto_tipo">
 						             <span ng-switch-when="1" class="glyphicon glyphicon-record" aria-hidden="true" style="color: #4169E1;"></span>
 						             <span ng-switch-when="2" class="glyphicon glyphicon-th" aria-hidden="true" style="color: #4169E1;"></span>
