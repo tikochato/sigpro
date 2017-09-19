@@ -114,7 +114,7 @@
 						
 						<div class="form-group">
 							<input type="number"  class="inputText" ng-model="riesgoc.riesgo.puntuacionImpacto" ng-value="riesgoc.riesgo.puntuacionImpacto" onblur="this.setAttribute('value', this.value);" 
-							ng-min="1" ng-max="10" ng-required="true">
+							min="1" max="10" ng-required="true">
 							<label for="campo5" class="floating-label">* Puntuación de impacto</label>
 						</div>
 						
@@ -157,7 +157,7 @@
 						
 						<div class="form-group">
 							<input type="text" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" ng-model="riesgoc.riesgo.fechaEjecucion" is-open="riesgoc.fe_abierto"
-									datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
+									datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true"
 									ng-value="riesgoc.riesgo.fechaEjecucion" onblur="this.setAttribute('value', this.value);"   
 									ng-click="riesgoc.abrirPopupFecha(1000)"  readonly/>
 								<span class="label-icon" ng-click="riesgoc.abrirPopupFecha(1000)">

@@ -240,7 +240,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			mi.productoid="";
 			mi.productoNombre="";
 			mi.camposdinamicos = {};
-			mi.probabilidad = {}; 
+			mi.probabilidad=null; 
+			mi.riesgo.fechaEjecucion=null;
 			mi.gridApi.selection.clearSelectedRows();
 		};
 
