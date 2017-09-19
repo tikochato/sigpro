@@ -83,7 +83,7 @@ app.controller('testController',['$scope','$http','$interval','i18nService','Uti
 			
 			mi.onOk = function(){
 				var str = mi.getChecksArbol(mi.treedata);
-				console.log(str);
+				//console.log(str);
 			}
 			
 		} ]);
