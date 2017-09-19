@@ -382,7 +382,7 @@ public class SComponente extends HttpServlet {
 					if (esnuevo){
 						Proyecto proyecto = new Proyecto();
 						proyecto.setId(proyectoId);
-						componente = new Componente(componenteTipo, proyecto, unidadEjecutora, nombre, usuario, 
+						componente = new Componente(componenteTipo, proyecto,  nombre, usuario, 
 								new Date(), 1);
 						componente.setFechaInicio(fechaInicio);
 						componente.setFechaFin(fechaFin);
