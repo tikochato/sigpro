@@ -103,9 +103,11 @@ public class SubproductoDAO {
 			SubproductoUsuario su = new SubproductoUsuario(new SubproductoUsuarioId(subproducto.getId(),subproducto.getUsuarioCreo())
 					, subproducto, usu, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
 			session.saveOrUpdate(su);
-			SubproductoUsuario su_admin = new SubproductoUsuario(new SubproductoUsuarioId(subproducto.getId(),"admin")
-					, subproducto, usu, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
-			session.saveOrUpdate(su_admin);
+			if(!subproducto.getUsuarioCreo().equals("admin")){
+				SubproductoUsuario su_admin = new SubproductoUsuario(new SubproductoUsuarioId(subproducto.getId(),"admin")
+						, subproducto, usu, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
+				session.saveOrUpdate(su_admin);
+			}
 			session.getTransaction().commit();
 			ret = true;
 		} catch (Throwable e) {

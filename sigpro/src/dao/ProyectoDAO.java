@@ -49,8 +49,10 @@ public class ProyectoDAO implements java.io.Serializable  {
 			Usuario usu = UsuarioDAO.getUsuario( proyecto.getUsuarioCreo());
 			ProyectoUsuario pu = new ProyectoUsuario(new ProyectoUsuarioId(proyecto.getId(),proyecto.getUsuarioCreo()), proyecto,usu);
 			session.saveOrUpdate(pu);
-			ProyectoUsuario pu_admin = new ProyectoUsuario(new ProyectoUsuarioId(proyecto.getId(),"admin"), proyecto,usu);
-			session.saveOrUpdate(pu_admin);
+			if(!proyecto.getUsuarioCreo().equals("admin")){
+				ProyectoUsuario pu_admin = new ProyectoUsuario(new ProyectoUsuarioId(proyecto.getId(),"admin"), proyecto,usu);
+				session.saveOrUpdate(pu_admin);
+			}
 			session.getTransaction().commit();
 			ret = true;
 		}
