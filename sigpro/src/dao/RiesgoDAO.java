@@ -48,7 +48,9 @@ public class RiesgoDAO {
 			Root<Riesgo> root = criteria.from(Riesgo.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
-			ret = session.createQuery( criteria ).getSingleResult();
+			List<Riesgo> listRet = null;
+			listRet =session.createQuery( criteria ).getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("2", RiesgoDAO.class, e);
@@ -291,6 +293,7 @@ public class RiesgoDAO {
 		ObjetoRiesgo ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
+			List<ObjetoRiesgo> listRet = null;
 			String query = String .join(" ", "select o.* ",
 							"from riesgo r",
 							"join objeto_riesgo o on o.riesgoid = r.id",
@@ -299,8 +302,8 @@ public class RiesgoDAO {
 							"order by o.fecha_creacion desc limit 1 ");
 			Query<ObjetoRiesgo> criteria = session.createNativeQuery(query,ObjetoRiesgo.class);
 			criteria.setParameter("objid", idRiesgo);
-			
-			ret = criteria.getSingleResult();
+			listRet = criteria.getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("11", RiesgoDAO.class, e);
