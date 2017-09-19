@@ -85,20 +85,20 @@
     
     <div class="col-sm-12">
 	    <form name="form">
-	      <div class="form-group" ng-show="!subproductoPropiedad.esNuevo">
-		        <label for="id" class="floating-label id_class">ID {{ subproductoPropiedad.codigo }}</label>
+	      <div class="form-group" >
+		        <label for="id" class="floating-label">ID {{ subproductoPropiedad.codigo }}</label>
 		        <br/><br/>
 	      </div>
 
 	      <div class="form-group">
-	        <input type="text" id="nombre" class="inputText" ng-model="subproductoPropiedad.nombre" ng-required="true"  ng-value="subproductoPropiedad.nombre" onblur="this.setAttribute('value', this.value);"/>
+	        <input type="text" class="inputText" ng-model="subproductoPropiedad.nombre" ng-required="true"  ng-value="subproductoPropiedad.nombre" onblur="this.setAttribute('value', this.value);"/>
 	        <label class="floating-label">* Nombre</label>
 	      </div>
 
 	      <div class="form-group">   			
    			<select class="inputText" ng-model="subproductoPropiedad.datoTipoSeleccionado" ng-options="tipo as tipo.nombre for tipo in subproductoPropiedad.datoTipos track by tipo.id" ng-required="true"
    			ng-readonly="true" ng-disabled="!subproductoPropiedad.esNuevo" ng-required="true">
-				<option disabled selected value> -- Seleccione Tipo -- </option>
+				<option disabled selected value>Seleccione Tipo</option>
 			</select>
 			<label for="campo2" class="floating-label">* Tipo</label>
    		 </div>

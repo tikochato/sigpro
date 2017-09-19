@@ -78,10 +78,12 @@ public class SubproductoDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Subproducto ret = null;
 		try {
+			List<Subproducto> listRet = null;
 			Query<Subproducto> criteria = session.createQuery("FROM Subproducto where id=:id AND id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )", Subproducto.class);
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
-			 ret = (Subproducto) criteria.getSingleResult();;
+			listRet=criteria.getResultList();
+			 ret =!listRet.isEmpty() ? listRet.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("2", SubproductoDAO.class, e);
 		} finally {
@@ -312,12 +314,13 @@ public class SubproductoDAO {
 		Subproducto ret = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
-
+			List<Subproducto> listRet = null;
 			CriteriaQuery<Subproducto> criteria = builder.createQuery(Subproducto.class);
 			Root<Subproducto> root = criteria.from(Subproducto.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id )));
-			ret = session.createQuery( criteria ).getSingleResult();
+			listRet= session.createQuery( criteria ).getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("2", SubproductoDAO.class, e);
@@ -348,7 +351,9 @@ public class SubproductoDAO {
 			Query<Subproducto> criteria = session.createQuery(query, Subproducto.class);
 			criteria.setParameter("productoId", productoId);
 			criteria.setParameter("usuario", usuario);
-			ret = criteria.getSingleResult();
+			List<Subproducto> listRet = null;
+			listRet = criteria.getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}catch(Throwable e){
 			CLogger.write("11", SubproductoDAO.class, e);
 		}
@@ -367,7 +372,9 @@ public class SubproductoDAO {
 			criteria.setMaxResults(1);
 			criteria.setParameter("productoId", productoId);
 			criteria.setParameter("usuario", usuario);
-			ret = criteria.getSingleResult();
+			List<Subproducto> listRet = null;
+			listRet = criteria.getResultList();
+			 ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}catch(Throwable e){
 			CLogger.write("12", SubproductoDAO.class, e);
 		}

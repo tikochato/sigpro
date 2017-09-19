@@ -166,7 +166,7 @@
 									</tr>
 								</tbody>								
 							</table>
-							<div class="grid_loading" ng-hide="usuarioc.esNuevo" ng-if="usuarioc.cargandoPermisos" style="margin-top:15%; width: 100%;height: 280px">
+							<div class="grid_loading" ng-hide="usuarioc.esNuevo" ng-if="usuarioc.cargandoPermisos" style="margin-top:23%; width: 100%;height: 290px">
 							<div class="msg">
 								<span><i class="fa fa-spinner fa-spin fa-4x"></i>
 									<br><br>

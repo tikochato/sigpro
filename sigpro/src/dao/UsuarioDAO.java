@@ -77,7 +77,9 @@ public class UsuarioDAO {
 			Root<Permiso> root = criteria.from(Permiso.class);
 			criteria.select( root );
 			criteria.where( builder.equal( root.get("id"), permisonombre ) );
-			Permiso permiso = session.createQuery( criteria ).getSingleResult();
+			List<Permiso> listRet = null;
+			listRet =session.createQuery( criteria ).getResultList();
+			Permiso permiso = !listRet.isEmpty() ? listRet.get(0) : null;
 			if(permiso !=null){
 				UsuarioPermisoId usuariopermisoid = new UsuarioPermisoId(usuario,permiso.getId());
 				UsuarioPermiso usuariopermiso = session.get(UsuarioPermiso.class, usuariopermisoid);
@@ -238,7 +240,9 @@ public class UsuarioDAO {
 				Query<ProyectoUsuario> criteria = session.createQuery("FROM ProyectoUsuario where id.proyectoid=:id AND id.usuario=:usuario ", ProyectoUsuario.class);
 				criteria.setParameter("id", prestamos.get(i));
 				criteria.setParameter("usuario", usuario);
-				ProyectoUsuario pu = criteria.getSingleResult();
+				List<ProyectoUsuario> listRet = null;
+				listRet = criteria.getResultList();				            
+				ProyectoUsuario pu = !listRet.isEmpty() ? listRet.get(0) : null;
 				session.delete(pu);
 			}			
 			session.getTransaction().commit();
@@ -522,7 +526,9 @@ public class UsuarioDAO {
 		try {
 			Query <Colaborador> criteria = session.createQuery("FROM Colaborador where usuariousuario =:usuario", Colaborador.class);
 			criteria.setParameter("usuario",usuario);
-			ret =criteria.getSingleResult();
+			List<Colaborador> listRet = null;
+			listRet = criteria.getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("22", UsuarioDAO.class, e);
 		} finally {

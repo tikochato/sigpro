@@ -74,12 +74,13 @@ public class RiesgoPropiedadDAO {
 		RiesgoPropiedad ret = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
-
+			List<RiesgoPropiedad> listRet = null;
 			CriteriaQuery<RiesgoPropiedad> criteria = builder.createQuery(RiesgoPropiedad.class);
 			Root<RiesgoPropiedad> root = criteria.from(RiesgoPropiedad.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal( root.get("estado"), 1 )));
-			ret = session.createQuery( criteria ).getSingleResult();
+			listRet =session.createQuery( criteria ).getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("4", RiesgoPropiedadDAO.class, e);
