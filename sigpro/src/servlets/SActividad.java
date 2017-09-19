@@ -145,8 +145,7 @@ public class SActividad extends HttpServlet {
 		String str;
 		while ((str = br.readLine()) != null) {
 			sb.append(str);
-		}
-		;
+		};
 		Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String accion = map.get("accion");
 		String response_text="";
