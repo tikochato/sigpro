@@ -315,7 +315,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 					if(prestamo.acumulacion_costoid != null){
 						if(prestamo.acumulacion_costoid == 1){						
 							if(anioInicial == anioObj.anio){
-								anioObj.mes[mesInicial].planificado =  prestamo.costo;
+								anioObj.mes[mesInicial].planificado =  prestamo.costo != null ? prestamo.costo : new BigDecimal(0);
 							}
 						}else if(prestamo.acumulacion_costoid == 2){
 							int dias = (int)((prestamo.fecha_final.getMillis() - prestamo.fecha_inicial.getMillis())/(1000*60*60*24));
