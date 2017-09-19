@@ -1,4 +1,4 @@
-var app = angular.module('usuarioController', [ 'ngTouch', 'ui.grid.edit' ]);
+var app = angular.module('usuarioController', [ 'ngTouch', 'ui.grid.edit','indeterminate' ,'treeControl']);
 
 app.controller(
  'usuarioController',
@@ -30,6 +30,7 @@ app.controller(
 	mi.unidadEjecutoraUsuario="";
 	mi.cooperanteUsuario="";
 	mi.rolUsuario="";
+	mi.cargarArbol=false;
 	mi.cargandoPermisos=false;
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
@@ -180,6 +181,7 @@ app.controller(
 		mi.verAreaPermisos=!mi.verAreaPermisos;
 	}
 	mi.nuevoUsuario=function(){
+		mi.cargarArbol=false;
 		mi.claves.password1="";
 		mi.claves.password2="";
 		mi.permisosAsignados=[];
@@ -188,6 +190,16 @@ app.controller(
 		mi.entityselected = null;
 		mi.esNuevo = true;
 		$utilidades.setFocus(document.getElementById("mail"));
+		$http.post('/SProyecto',
+				{ accion: 'controlArbolTodosProyectos', usuario: '' }).success(
+			function(response) {
+				mi.treedata=response.proyectos;
+				if(mi.treedata.id==0){
+					mi.expanded.push(mi.treedata.children[0]);
+					mi.setParentNode(mi.treedata);
+					mi.cargarArbol=true;
+				}
+			});
 	};
 	function getIdsPrestamos(prestamos){
 		var ids=[]
@@ -197,19 +209,21 @@ app.controller(
 		return ids;
 	};
 	mi.guardarUsuario=function(){
+		var asignaciones =mi.getChecksArbol(mi.treedata);
 		if(mi.esNuevo){
 			if(mi.claves.password1!=="" && mi.claves.password2!=="" && mi.usuariosSelected.usuario!=="" && mi.usuariosSelected.email!=="" && mi.nombreUnidadEjecutora!=="SIN UNIDAD EJECUTORA"){
 				if(validarEmail(mi.usuariosSelected.email)){
 					if(mi.claves.password1===mi.claves.password2){
-						mi.usuariosSelected.password= mi.claves.password1;
+						mi.usuariosSelected.password= mi.claves.password1;						
 						$http.post('/SUsuario',
 								{
-									accion: 'guardarUsuario',
+									accion: 'guardarNuevoUsuario',
 									usuario:mi.usuariosSelected.usuario,
 									email:mi.usuariosSelected.email,
 									password:mi.usuariosSelected.password,
 									permisos:JSON.stringify(mi.nuevosPermisos),
-									prestamos:JSON.stringify(getIdsPrestamos(mi.prestamosAsignados)),
+									//prestamos:JSON.stringify(getIdsPrestamos(mi.prestamosAsignados)),
+									estructuraAsignada:asignaciones,
 									rol: mi.tipoUsuario.id,
 									esnuevo:true,
 									t: (new Date()).getTime()
@@ -274,10 +288,10 @@ app.controller(
 					}else{
 						$http.post('/SUsuario',
 								{
-									accion: 'guardarUsuario',
+									accion: 'guardarNuevoUsuario',
 									usuario:mi.usuariosSelected.usuario,
 									email:mi.usuariosSelected.email,
-									prestamosNuevos:JSON.stringify(mi.prestamosNuevos),
+									estructuraAsignada:asignaciones ,
 									prestamosEliminados: JSON.stringify(mi.prestamosEliminados),
 									t: new Date().getTime(),
 									esnuevo:false
@@ -399,6 +413,16 @@ app.controller(
 	mi.editarUsuario=function(){
 		mi.tipoUsuarioRol="";
 		if(mi.usuariosSelected.usuario!==""){
+			mi.treedata=[];
+			mi.expanded=[];
+			mi.nodo_seleccionado;
+			mi.tree_options={
+					injectClasses:{
+						liSelected: 'tree-node-noselected',
+						labelSelected: 'tree-node-noselected',
+					}
+				};			
+			mi.cargarArbol=false;
 			mi.isCollapsed = true;
 			mi.esNuevo=false;
 			passwordLocal=mi.usuariosSelected.password;
@@ -424,6 +448,17 @@ app.controller(
 	    	    mi.cooperanteUsuario=response.data.cooperante;
 	    	   mi.cargandoPermisos=false;
 	    	});
+			$http.post('/SProyecto',
+					{ accion: 'controlArbolTodosProyectos', usuario: mi.usuariosSelected.usuario }).success(
+				function(response) {
+					mi.treedata=response.proyectos;
+					if(mi.treedata.id==0){
+						mi.expanded.push(mi.treedata.children[0]);
+						mi.setParentNode(mi.treedata);
+						mi.cargarArbol=true;
+					}
+				});
+			
 		}else{
 			$utilidades.mensaje('warning','Seleccione un usuario');
 		}
@@ -705,6 +740,84 @@ app.controller(
 				mi.totalUsuarios = response.totalUsuarios;
 				mi.cargarTabla(mi.paginaActual);
 	});
+	
+	mi.treedata=[];
+	mi.expanded=[];
+	
+	mi.nodo_seleccionado;
+	
+	mi.tree_options={
+		injectClasses:{
+			liSelected: 'tree-node-noselected',
+			labelSelected: 'tree-node-noselected',
+		}
+	};
+	
+	mi.setParentNode=function(nodo){
+		for(var i=0; i<nodo.children.length;i++){
+			nodo.children[i].parent = nodo;
+			mi.setParentNode(nodo.children[i]);
+		}
+	}
+	
+	
+	
+	mi.showSelected=function(nodo){
+		//console.log(nodo);
+	};
+	
+	mi.onChange = function(nodo){
+		if(nodo.estado==null)
+			nodo.estado = false;
+		mi.checkDescendientes(nodo);
+		mi.checkAncestros(nodo);
+	}
+	
+	mi.checkDescendientes=function(nodo){
+		for(var i=0; nodo.children!== null && i<nodo.children.length; i++){
+			nodo.children[i].estado = nodo.estado;
+			mi.checkDescendientes(nodo.children[i]);
+		}
+	}
+	
+	mi.checkAncestros=function(nodo){
+		estado = true;
+		for(var i = 0; nodo.parent!=null && nodo.parent.children!= null && i<nodo.parent.children.length; i++){
+			estado = nodo.parent.children[i].estado!=true ? null : estado;
+		}
+		estado_2 = false;
+		for(var i = 0; nodo.parent!=null && nodo.parent.children!= null && i<nodo.parent.children.length; i++){
+			estado_2 = nodo.parent.children[i].estado!=false ? null : estado_2;
+		}
+		estado = (estado_2==null ? estado : estado_2);
+		if(nodo.parent!=null){
+			nodo.parent.estado = estado;
+			mi.checkAncestros(nodo.parent);
+		}
+	}
+	
+	mi.getChecksArbol = function(nodo){
+		var ret='';
+		for(var i=0; nodo.children!=null && i<nodo.children.length; i++){
+			if(nodo.children[i].estado==null || nodo.children[i].estado){
+				ret = ret + '|' + nodo.children[i].objeto_tipo + ',' + nodo.children[i].id;
+			}
+			var temp = mi.getChecksArbol(nodo.children[i]);
+			ret =  (temp.length>0 ? ret + '|' + temp : ret);
+		}
+		return ret.substring(1);
+	}
+	
+	mi.onOk = function(){
+		var str = mi.getChecksArbol(mi.treedata);
+		console.log(str);
+	}
+	
+	
+	
+	
+	
+	
 } ]);
 
 app.controller('modalBuscarPermiso', [

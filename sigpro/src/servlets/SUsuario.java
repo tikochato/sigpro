@@ -428,16 +428,22 @@ public class SUsuario extends HttpServlet {
 											UsuarioDAO.asignarPrestamoRol(usuario, prestamos, Integer.parseInt(rol));
 										}*/
 										if(estructuraAsignada.compareTo("")!=0){
-											
+											String[] asignaciones = estructuraAsignada.split("/");
+											for(int i=0; i<asignaciones.length;i++){
+												String[] asignacion = asignaciones[i].split("/");
+												int tipo_id= Integer.parseInt(asignacion[0]);
+												int objeto_id= Integer.parseInt(asignacion[1]);
+												
+											}
 										}
-										if(permisosAsignados.compareTo("[]")!=0){
+										/*if(permisosAsignados.compareTo("[]")!=0){
 											Gson entradaJson = new Gson();
 											Type tipo = new TypeToken<List<Integer>>() {}.getType();
 											List<Integer> permisos = entradaJson.fromJson(permisosAsignados, tipo);
 											response_text = String.join("","{ \"success\": ",(UsuarioDAO.asignarPermisosUsuario(nuevousuario, permisos, usuarioCreo) ? "true ,  \"message\":\"Usuario creado y asignaci�n de permisos exitosa\" " : "true, \"message\":\"Usuario creado, asignaci�n de permisos no exitosa\""),"}");
 										}else{
 											response_text = String.join("", "{\"success\":true, \"message\":\"usuario creado exitosamente\" }");
-										}
+										}*/
 										
 									}else{
 										response_text = String.join("", "{ \"success\": false, \"error\":\"Error al registrar nuevo usuario\" }");
