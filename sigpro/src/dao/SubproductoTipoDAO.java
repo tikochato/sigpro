@@ -34,12 +34,13 @@ public class SubproductoTipoDAO {
 		SubproductoTipo ret = null;
 		try {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
-
 			CriteriaQuery<SubproductoTipo> criteria = builder.createQuery(SubproductoTipo.class);
 			Root<SubproductoTipo> root = criteria.from(SubproductoTipo.class);
 			criteria.select(root);
 			criteria.where(builder.equal(root.get("id"), codigo));
-			ret = session.createQuery(criteria).getSingleResult();
+			List<SubproductoTipo> listRet = null;
+			listRet = session.createQuery(criteria).getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("1", SubproductoTipoDAO.class, e);
 		} finally {

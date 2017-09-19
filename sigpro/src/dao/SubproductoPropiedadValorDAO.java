@@ -50,7 +50,9 @@ public class SubproductoPropiedadValorDAO {
 			Root<SubproductoPropiedadValor> root = criteria.from(SubproductoPropiedadValor.class);
 			criteria.select(root);
 			criteria.where(builder.equal(root.get("id"), new SubproductoPropiedadValorId(propiedadId, productoId)));
-			ret = session.createQuery(criteria).getSingleResult();
+			List<SubproductoPropiedadValor> listRet = null;
+			listRet =session.createQuery(criteria).getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("1", SubproductoPropiedadValorDAO.class, e);
 		} finally {
@@ -265,7 +267,9 @@ public class SubproductoPropiedadValorDAO {
 			Root<SubproductoPropiedadValor> root = criteria.from(SubproductoPropiedadValor.class);
 			criteria.select(root);
 			criteria.where(builder.equal(root.get("id"), new SubproductoPropiedadValorId( idPropiedad,idProducto)));
-			ret = session.createQuery(criteria).getSingleResult();
+			List<SubproductoPropiedadValor> listRet = null;
+			listRet =  session.createQuery(criteria).getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("9", SubproductoPropiedadValorDAO.class, e);
 		} finally {

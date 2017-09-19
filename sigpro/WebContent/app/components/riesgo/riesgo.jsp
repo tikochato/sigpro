@@ -16,7 +16,7 @@
 		{{ riesgoc.objetoTipoNombre }} {{ riesgoc.objetoNombre }}
 		</div>
 		
-		<div class="row" align="center" ng-if="!riesgoc.mostraringreso">
+		<div class="row" align="center" ng-show="!riesgoc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="30040">
@@ -68,7 +68,7 @@
 			</div>
     		</shiro:hasPermission>
 		</div>
-		<div class="row second-main-form" ng-if="riesgoc.mostraringreso">
+		<div class="row second-main-form" ng-show="riesgoc.mostraringreso">
 			<div class="page-header">
 				<h2 ng-hide="!riesgoc.esnuevo"><small>Nuevo riesgo</small></h2>
 				<h2 ng-hide="riesgoc.esnuevo"><small>Edición de riesgo</small></h2>
@@ -87,7 +87,7 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group" ng-show="!riesgoc.esnuevo">
-							<label for="id" class="floating-label">ID {{ riesgoc.riesgo.id }}</label>
+							<label for="id" class="floating-label id_class">ID {{ riesgoc.riesgo.id }}</label>
     						<br/><br/>
 						</div>
 						<div class="form-group">
@@ -114,7 +114,7 @@
 						
 						<div class="form-group">
 							<input type="number"  class="inputText" ng-model="riesgoc.riesgo.puntuacionImpacto" ng-value="riesgoc.riesgo.puntuacionImpacto" onblur="this.setAttribute('value', this.value);" 
-							ng-min="1" ng-max="10" ng-required="true">
+							min="1" max="10" ng-required="true">
 							<label for="campo5" class="floating-label">* Puntuación de impacto</label>
 						</div>
 						
@@ -124,7 +124,7 @@
 								ng-required="true">
 								<option value="">Seleccione probabilidad</option>
 							</select>
-							<label for="nombre" class="floating-label">* Probabilidad</label>
+							<label  class="floating-label">* Probabilidad</label>
 						</div>
 						
 						<div class="form-group">
@@ -157,7 +157,7 @@
 						
 						<div class="form-group">
 							<input type="text" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" ng-model="riesgoc.riesgo.fechaEjecucion" is-open="riesgoc.fe_abierto"
-									datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
+									datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true"
 									ng-value="riesgoc.riesgo.fechaEjecucion" onblur="this.setAttribute('value', this.value);"   
 									ng-click="riesgoc.abrirPopupFecha(1000)"  readonly/>
 								<span class="label-icon" ng-click="riesgoc.abrirPopupFecha(1000)">

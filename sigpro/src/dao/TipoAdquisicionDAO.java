@@ -146,8 +146,10 @@ public class TipoAdquisicionDAO {
 		try{
 			Query<TipoAdquisicion> criteria = session.createQuery("FROM TipoAdquisicion ta where ta.id=:tipoAdquisicionId"
 					,TipoAdquisicion.class);
+			List<TipoAdquisicion> listRet = null;
 			criteria.setParameter("tipoAdquisicionId", tipoAdquisicionId);
-			ret = criteria.getSingleResult();
+			listRet = criteria.getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(NoResultException e){
 			CLogger.write("6", TipoAdquisicionDAO.class, e);

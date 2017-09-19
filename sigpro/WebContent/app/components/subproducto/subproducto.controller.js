@@ -220,7 +220,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	}
 	mi.nuevo = function() {
 		mi.limpiarSeleccion();
-
+		mi.camposdinamicos={};
 		mi.esForma = true;
 		mi.entityselected = null;
 		mi.esNuevo = true;

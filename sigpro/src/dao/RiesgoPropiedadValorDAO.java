@@ -20,13 +20,15 @@ public class RiesgoPropiedadValorDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		RiesgoPropiedadValor ret = null;
 		try {
+			List<RiesgoPropiedadValor> listRet = null;
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<RiesgoPropiedadValor> criteria = builder.createQuery(RiesgoPropiedadValor.class);
 			Root<RiesgoPropiedadValor> root = criteria.from(RiesgoPropiedadValor.class);
 			criteria.select(root);
 			
 			criteria.where(builder.equal(root.get("id"), new RiesgoPropiedadValorId(idRiesgo, idPropiedad)),builder.equal( root.get("estado"), 1));
-			ret = session.createQuery(criteria).getSingleResult();
+			listRet =session.createQuery(criteria).getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("1", RiesgoPropiedadValorDAO.class, e);
 		} finally {

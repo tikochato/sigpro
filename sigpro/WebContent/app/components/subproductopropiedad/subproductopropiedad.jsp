@@ -85,7 +85,7 @@
     
     <div class="col-sm-12">
 	    <form name="form">
-	      <div class="form-group" ng-show="!subproductoPropiedad.esNuevo">
+	      <div class="form-group" >
 		        <label for="id" class="floating-label">ID {{ subproductoPropiedad.codigo }}</label>
 		        <br/><br/>
 	      </div>
@@ -98,7 +98,7 @@
 	      <div class="form-group">   			
    			<select class="inputText" ng-model="subproductoPropiedad.datoTipoSeleccionado" ng-options="tipo as tipo.nombre for tipo in subproductoPropiedad.datoTipos track by tipo.id" ng-required="true"
    			ng-readonly="true" ng-disabled="!subproductoPropiedad.esNuevo" ng-required="true">
-				<option disabled selected value> -- Seleccione Tipo -- </option>
+				<option disabled selected value>Seleccione Tipo</option>
 			</select>
 			<label for="campo2" class="floating-label">* Tipo</label>
    		 </div>

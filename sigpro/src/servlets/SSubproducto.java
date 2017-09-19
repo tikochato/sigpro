@@ -245,7 +245,6 @@ public class SSubproducto extends HttpServlet {
 				subproducto.setDuracionDimension(duracionDimension);
 			}
 			ret = SubproductoDAO.guardarSubproducto(subproducto);
-			
 			COrden orden = new COrden();
 			orden.calcularOrdenObjetosSuperiores(subproducto.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),
 					subproducto.getProducto().getComponente().getProyecto().getId());
@@ -259,7 +258,7 @@ public class SSubproducto extends HttpServlet {
 				for (stdatadinamico data : datos) {
 					if (data.valor!=null && data.valor.length()>0 && data.valor.compareTo("null")!=0){
 						SubproductoPropiedad producotPropiedad = SubproductoPropiedadDAO.getSubproductoPropiedadPorId(Integer.parseInt(data.id));
-						SubproductoPropiedadValorId idValor = new SubproductoPropiedadValorId(Integer.parseInt(data.id),subproducto.getId());
+						SubproductoPropiedadValorId idValor = new SubproductoPropiedadValorId(subproducto.getId(),Integer.parseInt(data.id));
 						SubproductoPropiedadValor valor = new SubproductoPropiedadValor(idValor, subproducto, producotPropiedad, null, null, null, null, 
 								usuario, null, new DateTime().toDate(), null, 1);
 	

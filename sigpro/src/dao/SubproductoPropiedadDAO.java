@@ -50,7 +50,9 @@ public class SubproductoPropiedadDAO {
 			Root<SubproductoPropiedad> root = criteria.from(SubproductoPropiedad.class);
 			criteria.select(root);
 			criteria.where(builder.equal(root.get("id"), codigo));
-			ret = session.createQuery(criteria).getSingleResult();
+			List<SubproductoPropiedad> listRet = null;
+			listRet = session.createQuery(criteria).getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("1", SubproductoPropiedadDAO.class, e);
 		} finally {
@@ -298,7 +300,9 @@ public class SubproductoPropiedadDAO {
 			Root<SubproductoPropiedad> root = criteria.from(SubproductoPropiedad.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal( root.get("estado"), 1 )));
-			ret = session.createQuery( criteria ).getSingleResult();
+			List<SubproductoPropiedad> listRet = null;
+			listRet =session.createQuery( criteria ).getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("8", SubproductoPropiedadDAO.class, e);

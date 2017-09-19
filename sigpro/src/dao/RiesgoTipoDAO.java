@@ -43,12 +43,13 @@ public class RiesgoTipoDAO {
 		RiesgoTipo ret = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
-
+			List<RiesgoTipo> listRet = null;
 			CriteriaQuery<RiesgoTipo> criteria = builder.createQuery(RiesgoTipo.class);
 			Root<RiesgoTipo> root = criteria.from(RiesgoTipo.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
-			ret = session.createQuery( criteria ).getSingleResult();
+			listRet = session.createQuery( criteria ).getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("2", RiesgoTipoDAO.class, e);
