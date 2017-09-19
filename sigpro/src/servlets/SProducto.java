@@ -60,8 +60,8 @@ public class SProducto extends HttpServlet {
 		Integer idProductoTipo;
 		String productoTipo;
 		Integer unidadEjectuora;
-		int entidadentidad;
-		int ejercicio;
+		Integer entidadentidad;
+		Integer ejercicio;
 		String nombreUnidadEjecutora;
 		String entidadnombre;
 		Long snip;
@@ -203,10 +203,12 @@ public class SProducto extends HttpServlet {
 				try{
 				String nombre = parametro.get("nombre");
 				String descripcion = parametro.get("descripcion");
-
+				
+				
 				Integer componenteId = Utils.String2Int(parametro.get("componente"));
 				Integer productoPadreId = Utils.String2Int(parametro.get("productoPadre"));
-				Integer tipoproductoId = Utils.String2Int(parametro.get("tipoproductoid")); 
+				Integer tipoproductoId = Utils.String2Int(parametro.get("tipoproductoid"));
+				
 				Integer unidadEjecutoraId = Utils.String2Int(parametro.get("unidadEjecutora"));
 				Integer entidad = Utils.String2Int(parametro.get("entidad"));
 				Integer ejercicio = Utils.String2Int(parametro.get("ejercicio"));
@@ -414,6 +416,15 @@ public class SProducto extends HttpServlet {
 						temp.ejercicio = producto.getUnidadEjecutora().getId().getEjercicio();
 						temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 						temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
+					}else{
+						Componente componente = ComponenteDAO.getComponente(componenteid);
+						if (componente!=null && componente.getUnidadEjecutora()!=null){
+							temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+							temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+							temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+							temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
+							temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+						}
 					}
 
 					listaProducto.add(temp);
@@ -656,7 +667,7 @@ public class SProducto extends HttpServlet {
 				if(esnuevo){
 					Componente componente = new Componente();
 					componente.setId(componenteId);
-					producto = new Producto(componente, productoTipo, unidadEjecutora, nombre, usuario, new Date());
+					producto = new Producto(componente, productoTipo,  nombre, usuario, new Date());
 					producto.setEstado(1);
 					producto.setFechaInicio(fechaInicio);
 					producto.setFechaFin(fechaFin);
