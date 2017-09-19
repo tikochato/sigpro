@@ -443,6 +443,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 		mi.displayedCollection = [];
 		mi.esNuevoDocumento = true;
 		$scope.active = 0;
+		$utilidades.setFocus(document.getElementById("nombre"));
 	};
 
 	mi.editar = function() {
@@ -524,6 +525,7 @@ app.controller('programaController',['$scope','$http','$interval','i18nService',
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el Programa que desea editar');
+		$utilidades.setFocus(document.getElementById("nombre"));
 	}
 
 	mi.irATabla = function() {
@@ -1063,14 +1065,3 @@ function buscarPorPrograma($uibModalInstance, $rootScope,$scope, $http, $interva
 		}
 	};	
 };
-
-app.directive('showFocus', function($timeout) {
-    return function(scope, element, attrs) {
-      scope.$watch(attrs.showFocus,
-        function (newValue) {
-          $timeout(function() {
-              element[0].focus();             
-          });
-        },true);
-    };   
-  });

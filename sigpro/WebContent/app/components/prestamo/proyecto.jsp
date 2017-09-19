@@ -371,7 +371,7 @@
 				</shiro:hasPermission>
 				<uib-tab index="controller.ordenTab" heading="Datos generales" >
 					<div class="form-group">
-						<label for="id" class="floating-label">ID {{ controller.proyecto.id }}</label>
+						<label for="id" class="floating-label id_class">ID {{ controller.proyecto.id }}</label>
 						<br/><br/>
 					</div>
 					

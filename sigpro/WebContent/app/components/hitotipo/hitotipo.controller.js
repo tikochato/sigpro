@@ -179,6 +179,7 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 			mi.hitotipo = null;
 			mi.datoTipoSeleccionado = null;
 			mi.gridApi.selection.clearSelectedRows();
+			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 	
 		mi.editar = function() {
@@ -192,6 +193,7 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo Hito que desea editar');
+			$utilidades.setFocus(document.getElementById("nombre"));
 		}
 	
 		mi.irATabla = function() {
@@ -239,16 +241,4 @@ app.controller('hitotipoController',['$scope','$http','$interval','i18nService',
 			$window.location.href = '/main.jsp#!/forbidden';		
 		}
 	} ]);
-
-
-app.directive('showFocus', function($timeout) {
-  return function(scope, element, attrs) {
-    scope.$watch(attrs.showFocus,
-      function (newValue) {
-        $timeout(function() {
-            element[0].focus();             
-        });
-      },true);
-  };   
-});
 

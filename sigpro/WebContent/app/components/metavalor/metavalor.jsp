@@ -93,12 +93,12 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group">
-							<label for="id" class="floating-label">Meta ID {{ metavc.metavalorId  }}</label>
+							<label for="id" class="floating-label id_class">Meta ID {{ metavc.metavalorId  }}</label>
 							<br/><br/>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText"  ng-model="metavc.metavalor.datotiponombre" 
-    						ng-value="metavc.datoTipoNombre" ng-disabled="true">
+    						<input type="text" class="inputText"  ng-model="metavc.metavalor.datoTipoNombre" 
+    						id = "nombre" ng-disabled="true">
     						<label  class="floating-label">Tipo de Dato</label>
 						</div>
 						<div class="form-group">
