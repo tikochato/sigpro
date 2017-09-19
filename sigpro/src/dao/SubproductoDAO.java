@@ -279,6 +279,13 @@ public class SubproductoDAO {
 				estructuraPojo.ejercicio = pojo.getUnidadEjecutora().getId().getEjercicio();
 				estructuraPojo.entidadnombre = pojo.getUnidadEjecutora().getEntidad().getNombre();
 			}
+			else if(pojo.getProducto().getUnidadEjecutora()!=null){
+				estructuraPojo.unidadEjectuora = pojo.getProducto().getUnidadEjecutora().getId().getUnidadEjecutora();
+				estructuraPojo.nombreUnidadEjecutora = pojo.getProducto().getUnidadEjecutora().getNombre();
+				estructuraPojo.entidadentidad = pojo.getProducto().getUnidadEjecutora().getId().getEntidadentidad();
+				estructuraPojo.ejercicio = pojo.getProducto().getUnidadEjecutora().getId().getEjercicio();
+				estructuraPojo.entidadnombre = pojo.getProducto().getUnidadEjecutora().getEntidad().getNombre();
+			}
 			
 			listaEstructuraPojos.add(estructuraPojo);
 		}

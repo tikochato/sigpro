@@ -199,11 +199,11 @@
 					</div>
 			        
 			        <div class="form-group">
-			            <input type="text" class="inputText" ng-model="subproducto.unidadEjecutoraNombre" ng-readonly="true" ng-required="true" 
+			            <input type="text" class="inputText" ng-model="subproducto.unidadEjecutoraNombre" ng-readonly="true" 
 			            	ng-value="subproducto.unidadEjecutoraNombre" onblur="this.setAttribute('value', this.value);" 
 			            	ng-click="subproducto.buscarUnidadEjecutora()"/>
 			            <span class="label-icon" ng-click="subproducto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
-			          <label class="floating-label">* Unidad Ejecutora</label>
+			          <label class="floating-label">Unidad Ejecutora</label>
 			        </div>
 			        
 			        <div class="form-group" ng-repeat="campo in subproducto.camposdinamicos">

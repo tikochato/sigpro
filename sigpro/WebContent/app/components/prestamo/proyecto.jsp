@@ -469,10 +469,10 @@
 					</div>
 	
 					<div class="form-group" >
-			            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.unidadejecutoranombre" ng-readonly="true" ng-required="true" 
+			            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.unidadejecutoranombre" ng-readonly="true"
 			            	ng-click="controller.buscarUnidadEjecutora()" ng-value="controller.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
 			            <span class="label-icon" ng-click="controller.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
-			          	<label for="campo3" class="floating-label">* Unidad Ejecutora</label>
+			          	<label for="campo3" class="floating-label">Unidad Ejecutora</label>
 					</div>
 	
 					<div class="form-group" ng-if="false"  >
