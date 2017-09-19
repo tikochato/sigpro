@@ -16,7 +16,7 @@
 	  <div class="panel-heading"><h3>Tipo de Programa</h3></div>
 	</div>
 	
-	<div align="center" ng-if="!programatipoc.mostraringreso">
+	<div align="center" ng-show="!programatipoc.mostraringreso">
 		<br />
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
@@ -71,7 +71,7 @@
 		</shiro:hasPermission>	
 	</div>
 
-	<div class="row second-main-form" ng-if="programatipoc.mostraringreso">
+	<div class="row second-main-form" ng-show="programatipoc.mostraringreso">
 		<div class="page-header">
 			<h2 ng-hide="!programatipoc.esnuevo"><small>Nuevo tipo de programa</small></h2>
 			<h2 ng-hide="programatipoc.esnuevo"><small>Edición tipo de programa</small></h2>
@@ -90,13 +90,13 @@
 		<div class="col-sm-12">
 			<form name="form" id="form">
 				<div class="form-group">
-					<label for="id" class="floating-label">ID {{programatipoc.programatipo.id }}</label>
+					<label for="id" class="floating-label id_class">ID {{programatipoc.programatipo.id }}</label>
 					<br/><br/>
 				</div>
 
 				<div class="form-group">
-					<input type="text" class="inputText" id="nombre" ng-model="programatipoc.programatipo.nombre" ng-value="programatipoc.programatipo.nombre" 
-					onblur="this.setAttribute('value', this.value);" ng-required="true" show-focus="programatipoc.mostraringreso">
+					<input type="text" id="nombre" class="inputText" ng-model="programatipoc.programatipo.nombre" ng-value="programatipoc.programatipo.nombre" 
+					onblur="this.setAttribute('value', this.value);" ng-required="true">
 						<label for="nombre" class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group">

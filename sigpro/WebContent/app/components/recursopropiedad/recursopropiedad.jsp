@@ -86,11 +86,11 @@
 			<div class="col-sm-12">
 				<form name="form">
 						<div class="form-group">
-							<label for="id" class="floating-label">ID {{ recursopropiedadc.recursopropiedad.id }}</label>
+							<label for="id" class="floating-label id_class">ID {{ recursopropiedadc.recursopropiedad.id }}</label>
     						<br/><br/>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="recursopropiedadc.recursopropiedad.nombre" ng-value="recursopropiedadc.recursopropiedad.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
+    						<input type="text" id="nombre" class="inputText" ng-model="recursopropiedadc.recursopropiedad.nombre" ng-value="recursopropiedadc.recursopropiedad.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
 							<label for="nombre" class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">

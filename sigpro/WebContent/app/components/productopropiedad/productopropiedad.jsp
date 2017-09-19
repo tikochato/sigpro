@@ -89,12 +89,12 @@
 	    <form name="form" class="css-form" novalidate>
 	
 		      <div class="form-group ">
-		        <label class="floating-label">ID {{ productoPropiedad.codigo }}</label>
+		        <label class="floating-label id_class">ID {{ productoPropiedad.codigo }}</label>
 		        <br/><br/>
 		      </div>
 
 		      <div class="form-group">
-		        <input type="text" class="inputText" ng-model="productoPropiedad.nombre"  ng-value="productoPropiedad.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" />
+		        <input type="text" id="nombre" class="inputText" ng-model="productoPropiedad.nombre"  ng-value="productoPropiedad.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" />
 		        <label for="campo1" class="floating-label">* Nombre</label> 
 		      </div>
 

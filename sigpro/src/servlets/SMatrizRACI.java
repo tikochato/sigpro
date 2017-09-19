@@ -221,7 +221,7 @@ public class SMatrizRACI extends HttpServlet {
 				outStream.write(outArray);
 				outStream.flush();
 			}catch(Exception e){
-				CLogger.write_simple("1", SMatrizRACI.class, e.getMessage());
+				CLogger.write("1", SMatrizRACI.class, e);
 			}
 		}else if(accion.equals("exportarPdf")){
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
@@ -481,7 +481,7 @@ public class SMatrizRACI extends HttpServlet {
 				outArray = Base64.encode(outByteStream.toByteArray());
 			}
 		}catch(Exception e){
-			CLogger.write_simple("2", SMatrizRACI.class, e.getMessage());
+			CLogger.write("2", SMatrizRACI.class, e);
 		}
 		return outArray;
 	}
