@@ -5,8 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.NoResultException;
-
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -608,8 +606,6 @@ public class ActividadDAO {
 			listRet = criteria.getResultList();
 			
 			ret = !listRet.isEmpty() ? listRet.get(0) : null;
-			
-		} catch (NoResultException e){
 			
 		} catch(Throwable e){
 			CLogger.write("16", ActividadDAO.class, e);
