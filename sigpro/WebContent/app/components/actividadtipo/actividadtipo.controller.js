@@ -54,7 +54,7 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.actividadtipoc.filtros[\'nombre\']" ng-keypress="grid.appScope.actividadtipoc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-				    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
+				    { name: 'usuarioCreo', displayName: 'Usuario Creación', cellClass: 'grid-align-left',
 				    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.actividadtipoc.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.actividadtipoc.filtrar($event)"></input></div>'
 				    },
 				    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', 
