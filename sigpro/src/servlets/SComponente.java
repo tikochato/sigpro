@@ -29,6 +29,7 @@ import com.google.gson.reflect.TypeToken;
 import dao.ComponenteDAO;
 import dao.ComponentePropiedadDAO;
 import dao.ComponentePropiedadValorDAO;
+import dao.ProyectoDAO;
 import dao.UnidadEjecutoraDAO;
 import pojo.AcumulacionCosto;
 import pojo.Componente;
@@ -155,10 +156,20 @@ public class SComponente extends HttpServlet {
 				temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
 				temp.fechaFin = Utils.formatDate(componente.getFechaFin());
 				temp.obra = componente.getObra();
-				temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
-				temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
-				temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
-				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+				
+				if(componente.getUnidadEjecutora() != null){
+					temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+					temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+				}else{
+					Proyecto proyecto = ProyectoDAO.getProyecto(componente.getProyecto().getId());
+					temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
+					temp.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.unidadejecutoranombre = proyecto.getUnidadEjecutora().getNombre();
+				}
+				
 				temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
 				temp.latitud = componente.getLatitud();
 				temp.longitud = componente.getLongitud();
@@ -196,11 +207,22 @@ public class SComponente extends HttpServlet {
 				temp.actividad = componente.getActividad();
 				temp.renglon = componente.getRenglon();
 				temp.ubicacionGeografica = componente.getUbicacionGeografica();
-				temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
-				temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
-				temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
-				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
-				temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+				
+				if(componente.getUnidadEjecutora() != null){
+					temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+					temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+					temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+				}else{
+					Proyecto proyecto = ProyectoDAO.getProyecto(componente.getProyecto().getId());
+					temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
+					temp.entidadentidad = proyecto.getUnidadEjecutora().getId().getEjercicio();
+					temp.unidadejecutoranombre = proyecto.getUnidadEjecutora().getNombre();
+					temp.entidadnombre = proyecto.getUnidadEjecutora().getEntidad().getNombre();
+				}
+				
 				temp.latitud = componente.getLatitud();
 				temp.longitud = componente.getLongitud();
 				temp.costo = componente.getCosto();
@@ -227,9 +249,11 @@ public class SComponente extends HttpServlet {
 					String descripcion = map.get("descripcion");
 					int componentetipoid = map.get("componentetipoid")!=null ? Integer.parseInt(map.get("componentetipoid")) : 0;
 					int proyectoid= map.get("proyectoid")!=null ? Integer.parseInt(map.get("proyectoid")) : 0;
-					int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;
-					int ejercicio =Utils.String2Int(map.get("ejercicio"),0);
-					int entidad = Utils.String2Int(map.get("entidad"));
+					
+					Integer unidadEjecutoraId = map.get("unidadejecutoraid") != null ? Integer.parseInt(map.get("unidadejecutoraid")) : null;
+					Integer ejercicio = map.get("unidadejecutoraid") != null ? map.get("ejercicio") != null ? Utils.String2Int(map.get("ejercicio")) : null : null;
+					Integer entidad = map.get("unidadejecutoraid") != null ? map.get("entidad") != null ? Utils.String2Int(map.get("entidad")) : null : null;
+					
 					Long snip = map.get("snip")!=null ? Long.parseLong(map.get("snip")) : null;
 					Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;
 					Integer subPrograma = map.get("subprograma")!=null ?  Integer.parseInt(map.get("subprograma")) : null;
@@ -299,9 +323,11 @@ public class SComponente extends HttpServlet {
 						componente.setComponenteTipo(componenteTipo);
 					}
 					result = ComponenteDAO.guardarComponente(componente);
-					COrden orden = new COrden();
 					
-					orden.calcularOrdenObjetosSuperiores(componente.getProyecto().getId(), 1, usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId());
+					if(!result){
+						COrden orden = new COrden();
+						orden.calcularOrdenObjetosSuperiores(componente.getProyecto().getId(), 1, usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId());
+					}
 					
 					Set<ComponentePropiedadValor> valores_temp = componente.getComponentePropiedadValors();
 					componente.setComponentePropiedadValors(null);
@@ -413,10 +439,20 @@ public class SComponente extends HttpServlet {
 					temp.nombre = componente.getNombre();
 					temp.componentetipoid = componente.getComponenteTipo().getId();
 					temp.componentetiponombre = componente.getComponenteTipo().getNombre();
-					temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
-					temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
-					temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
-					temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+					
+					if(componente.getUnidadEjecutora() != null){
+						temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+						temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+						temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+						temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+					}else{
+						Proyecto proyecto = ProyectoDAO.getProyecto(componente.getProyecto().getId());
+						temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
+						temp.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
+						temp.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
+						temp.unidadejecutoranombre = proyecto.getUnidadEjecutora().getNombre();
+					}
+					
 					temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
 					temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
 					temp.fechaFin = Utils.formatDate(componente.getFechaFin());
@@ -497,11 +533,22 @@ public class SComponente extends HttpServlet {
 				temp.renglon = componente.getRenglon();
 				temp.ubicacionGeografica = componente.getUbicacionGeografica();
 				temp.actividad = componente.getActividad();
-				temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
-				temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
-				temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
-				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
-				temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+				
+				if(componente.getUnidadEjecutora() != null){
+					temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+					temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+					temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+				}else{
+					Proyecto proyecto = ProyectoDAO.getProyecto(componente.getProyecto().getId());
+					temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
+					temp.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.unidadejecutoranombre = proyecto.getUnidadEjecutora().getNombre();
+					temp.entidadnombre = proyecto.getUnidadEjecutora().getEntidad().getNombre();
+				}
+				
 				temp.latitud = componente.getLatitud();
 				temp.longitud = componente.getLongitud();
 				temp.costo = componente.getCosto();
@@ -535,11 +582,22 @@ public class SComponente extends HttpServlet {
 				temp.nombre = componente.getNombre();
 				temp.componentetipoid = componente.getComponenteTipo().getId();
 				temp.componentetiponombre = componente.getComponenteTipo().getNombre();
-				temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
-				temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
-				temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
-				temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
-				temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+				
+				if(componente.getUnidadEjecutora() != null){
+					temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+					temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+					temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+				}else{
+					Proyecto proyecto = ProyectoDAO.getProyecto(componente.getProyecto().getId());
+					temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
+					temp.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.entidadnombre = proyecto.getUnidadEjecutora().getEntidad().getNombre();
+					temp.unidadejecutoranombre = proyecto.getUnidadEjecutora().getNombre();
+				}
+				
 				temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
 				temp.fechaFin = Utils.formatDate(componente.getFechaFin());
 				temp.duracion = componente.getDuracion();
