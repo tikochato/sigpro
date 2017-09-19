@@ -253,7 +253,7 @@ public class SDesembolsos extends HttpServlet {
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			CLogger.write_simple("2", SDesembolsos.class, e.getMessage());
+			CLogger.write("2", SDesembolsos.class, e);
 		}
 		return outArray;
 	}

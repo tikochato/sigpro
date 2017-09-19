@@ -181,6 +181,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 			mi.proyectopropiedad = {};
 			mi.tipoDatoSeleccionado=null;
 			mi.gridApi.selection.clearSelectedRows();
+			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 	
 		mi.editar = function() {
@@ -191,7 +192,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 						"id" : mi.proyectopropiedad.datotipoid,
 						"nombre" : mi.proyectopropiedad.datotiponombre
 				}
-
+				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar la Propiedad de Préstamo que desea editar');
@@ -247,14 +248,3 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 	} 
 ]);
 
-
-app.directive('showFocus', function($timeout) {
-	  return function(scope, element, attrs) {
-	    scope.$watch(attrs.showFocus, 
-	      function (newValue) { 
-	        $timeout(function() {
-	            element[0].focus();	          
-	        });
-	      },true);
-	  };    
-	});

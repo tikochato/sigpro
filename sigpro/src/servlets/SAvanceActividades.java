@@ -162,7 +162,7 @@ public class SAvanceActividades extends HttpServlet {
 						response_text = String.join("", ",\"totalProductos\":" + avanceProductos.total,response_text);
 					}
 				}catch (Throwable e) {
-				    CLogger.write_simple("1", SAvanceActividades.class, e.getMessage());					
+				    CLogger.write("1", SAvanceActividades.class, e);					
 			    }
 				
 				response_text = String.join("", "{\"success\":true ", response_text, "}");
@@ -222,7 +222,7 @@ public class SAvanceActividades extends HttpServlet {
 							}
 						}
 					}catch (Throwable e) {
-					    CLogger.write_simple("2", SAvanceActividades.class, e.getMessage());
+					    CLogger.write("2", SAvanceActividades.class, e);
 				    }
 				}
 				
@@ -323,7 +323,7 @@ public class SAvanceActividades extends HttpServlet {
 		        output.close();
 			}
 		}catch(Exception e){
-		    CLogger.write_simple("4", SAvanceActividades.class, e.getMessage());
+		    CLogger.write("4", SAvanceActividades.class, e);
 		}
 		
 	}
@@ -425,7 +425,7 @@ public class SAvanceActividades extends HttpServlet {
 				resultado.total = totalActividades;
 			}
 		}catch(Exception e){
-		    CLogger.write_simple("5", SAvanceActividades.class, e.getMessage());
+		    CLogger.write("5", SAvanceActividades.class, e);
 		}
 		return resultado;
 	}
@@ -523,7 +523,7 @@ public class SAvanceActividades extends HttpServlet {
 			resultado.total = totalHitos;
 		}
 		}catch(Exception e){
-		    CLogger.write_simple("6", SAvanceActividades.class, e.getMessage());
+		    CLogger.write("6", SAvanceActividades.class, e);
 		}
 		return resultado;
 	}
@@ -630,7 +630,7 @@ public class SAvanceActividades extends HttpServlet {
 				resultado.total = totalProductos;
 			}
 		}catch(Exception e){
-		    CLogger.write_simple("7", SAvanceActividades.class, e.getMessage());
+		    CLogger.write("7", SAvanceActividades.class, e);
 		}
 		return resultado;
 	}
@@ -654,7 +654,7 @@ public class SAvanceActividades extends HttpServlet {
 			}
 			return result;
 		}catch(Throwable e){
-		    CLogger.write_simple("8", SAvanceActividades.class, e.getMessage());
+		    CLogger.write("8", SAvanceActividades.class, e);
 			return null;
 		}
 	}
@@ -701,7 +701,7 @@ public class SAvanceActividades extends HttpServlet {
 			return result;
 		}
 		catch(Throwable e){
-		    CLogger.write_simple("9", SAvanceActividades.class, e.getMessage());
+		    CLogger.write("9", SAvanceActividades.class, e);
 			return null;
 		}
 	}
@@ -746,7 +746,7 @@ public class SAvanceActividades extends HttpServlet {
 			wb.write(outByteStream);
 			outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-		    CLogger.write_simple("10", SAvanceActividades.class, e.getMessage());
+		    CLogger.write("10", SAvanceActividades.class, e);
 		}
 		return outArray;
 	}

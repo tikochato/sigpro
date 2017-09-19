@@ -39,7 +39,8 @@ public class ProductoPropiedadDAO {
 			Root<ProductoPropiedad> root = criteria.from(ProductoPropiedad.class);
 			criteria.select(root);
 			criteria.where(builder.equal(root.get("id"), codigo));
-			ret = session.createQuery(criteria).getSingleResult();
+			List<ProductoPropiedad> lista = session.createQuery(criteria).getResultList();
+			ret = !lista.isEmpty() ? lista.get(0) : null;
 		} catch (Throwable e) {
 			CLogger.write("1", ProductoPropiedadDAO.class, e);
 		} finally {
@@ -259,7 +260,8 @@ public class ProductoPropiedadDAO {
 			Root<ProductoPropiedad> root = criteria.from(ProductoPropiedad.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal( root.get("estado"), 1 )));
-			ret = session.createQuery( criteria ).getSingleResult();
+			List<ProductoPropiedad> lista = session.createQuery( criteria ).getResultList();
+			ret = !lista.isEmpty() ? lista.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("8", ProductoPropiedadDAO.class, e);

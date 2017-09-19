@@ -163,6 +163,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 				mi.esnuevo = false;
 				mi.recursopropiedades =[];
 				mi.cargarTotalPropiedades();
+				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Recurso que desea editar');
@@ -205,6 +206,7 @@ app.controller('recursotipoController',['$scope','$http','$interval','i18nServic
 			mi.recursotipo = {};
 			mi.gridApi.selection.clearSelectedRows();
 			mi.recursopropiedades =[];
+			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 	
 		mi.irATabla = function() {
