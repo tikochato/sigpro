@@ -49,7 +49,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		
 		mi.duracionDimension = mi.dimensiones[0];
 		
-		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id }).success(
+		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id, t: (new Date()).getTime() }).success(
 				function(response) {
 					mi.proyectoid = response.id;
 					mi.proyectoNombre = response.nombre;
@@ -145,7 +145,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				numeroproyecto:  $utilidades.elementosPorPagina,
 				filtro_nombre: mi.filtros['nombre'], filtro_snip: mi.filtros['snip'],
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
-				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion,t: (new Date()).getTime()
 			}).success(
 					function(response) {
 						mi.componentes = response.componentes;
@@ -290,6 +290,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 						accion: 'getComponentePropiedadPorTipo',
 						idComponente: mi.componente!=null ? mi.componente.id : 0,
 						idComponenteTipo: mi.componentetipoid
+						,t: (new Date()).getTime()
 				}
 
 				$http.post('/SComponentePropiedad', parametros).then(function(response){
@@ -404,7 +405,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		mi.obtenerTotalComponentes = function(){
 			$http.post('/SComponente', { accion: 'numeroComponentesPorProyecto', proyectoid: $routeParams.proyecto_id,
 				filtro_nombre: mi.filtros['nombre'],
-				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],t: (new Date()).getTime()  }).then(
 					function(response) {
 						mi.totalComponentes = response.data.totalcomponentes;
 						mi.paginaActual = 1;
@@ -540,6 +541,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 						accion: 'getComponentePropiedadPorTipo',
 						idComponente: mi.componente!=null ? mi.componente.id : 0,
 						idComponenteTipo: mi.componentetipoid
+						,t: (new Date()).getTime()
 				}
 
 				$http.post('/SComponentePropiedad', parametros).then(function(response){

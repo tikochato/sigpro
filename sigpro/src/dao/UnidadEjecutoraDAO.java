@@ -32,6 +32,7 @@ public class UnidadEjecutoraDAO {
 	public static UnidadEjecutora getUnidadEjecutora(Integer ejercicio, Integer entidad,Integer unidadEjecutora) {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		UnidadEjecutora ret = null;
+		List<UnidadEjecutora> listRet = null;
 		try {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
@@ -40,8 +41,11 @@ public class UnidadEjecutoraDAO {
 			criteria.select(root);
 			UnidadEjecutoraId unidadEjecutoraId = new UnidadEjecutoraId(unidadEjecutora, entidad, ejercicio);
 			criteria.where(builder.and(builder.equal(root.get("id"), unidadEjecutoraId)));
-			ret = session.createQuery(criteria).getSingleResult();
-		} catch (Throwable e) {
+			listRet = session.createQuery(criteria).getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		}
+		catch(Throwable e){
 			CLogger.write("2", UnidadEjecutoraDAO.class, e);
 		} finally {
 			session.close();
