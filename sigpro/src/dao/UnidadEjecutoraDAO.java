@@ -39,11 +39,13 @@ public class UnidadEjecutoraDAO {
 			CriteriaQuery<UnidadEjecutora> criteria = builder.createQuery(UnidadEjecutora.class);
 			Root<UnidadEjecutora> root = criteria.from(UnidadEjecutora.class);
 			criteria.select(root);
-			UnidadEjecutoraId unidadEjecutoraId = new UnidadEjecutoraId(unidadEjecutora, entidad, ejercicio);
-			criteria.where(builder.and(builder.equal(root.get("id"), unidadEjecutoraId)));
-			listRet = session.createQuery(criteria).getResultList();
+			if (unidadEjecutora != null && entidad !=null && ejercicio !=null){
+				UnidadEjecutoraId unidadEjecutoraId = new UnidadEjecutoraId(unidadEjecutora, entidad, ejercicio);
+				criteria.where(builder.and(builder.equal(root.get("id"), unidadEjecutoraId)));
+				listRet = session.createQuery(criteria).getResultList();
+			}
+			ret = listRet !=null &&  !listRet.isEmpty() ? listRet.get(0) : null;
 			
-			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
 			CLogger.write("2", UnidadEjecutoraDAO.class, e);
