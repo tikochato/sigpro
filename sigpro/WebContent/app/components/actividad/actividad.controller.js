@@ -27,6 +27,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
+		mi.responsables=[];
 		
 		mi.validarRequiredCosto = function(costo){
 			if(costo != null && costo > 0)
@@ -114,8 +115,6 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			    return tmpDate;
 			}
 		}
-		
-		mi.responsables =[];
 
 		mi.columnaOrdenada=null;
 		mi.ordenDireccion = null;
@@ -363,6 +362,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 			mi.gridApi.selection.clearSelectedRows();
 			mi.actividad.porcentajeavance = 0;
 			$utilidades.setFocus(document.getElementById("inombre"));
+			mi.responsables =[];
 		};
 
 		mi.editar = function() {
@@ -992,14 +992,18 @@ function modalBuscar($uibModalInstance, $scope, $http, $interval,
 	}
 
 	mi.ok = function() {
-		if (mi.seleccionado && ((mi.rolAsignado != null && mi.rolAsignado != undefined) || !mi.mostrarRoles  )) {
-			if (mi.mostrarRoles){
-				mi.itemSeleccionado.rol = mi.rolAsignado.id;
-				mi.itemSeleccionado.nombrerol = mi.rolAsignado.nombre;
+		if (mi.seleccionado) {
+			if((mi.rolAsignado != null && mi.rolAsignado != undefined)){
+				if (mi.mostrarRoles){
+					mi.itemSeleccionado.rol = mi.rolAsignado.id;
+					mi.itemSeleccionado.nombrerol = mi.rolAsignado.nombre;
+				}
+				$uibModalInstance.close(mi.itemSeleccionado);
+			}else{
+				$utilidades.mensaje('warning', 'Debe seleccionar un rol');
 			}
-			$uibModalInstance.close(mi.itemSeleccionado);
 		} else {
-			$utilidades.mensaje('warning', 'Debe seleccionar una fila');
+			$utilidades.mensaje('warning', 'Debe seleccionar un colaborador');
 		}
 	};
 
