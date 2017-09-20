@@ -146,12 +146,12 @@
 	    width: 100%;
 	    height: 100%;
 	    overflow-y: auto;
-	    margin-top: 151px;
+	    margin-top: 40px;
 	    overflow-x: hidden;
 	}
 	
 	.contenedor{
-		height: calc(100% - 270px);
+		height: calc(100% - 120px);
 	}
 	
 	
@@ -228,8 +228,6 @@
 		
 	
 		<div align="center"  class="contenedor">
-			
-			<div class="col-sm-12 " style="height: 90%">
 				<form name="form">
 					<div class="form-group col-sm-4" >
 							<select  class="inputText" ng-model="racic.prestamoSeleccionado" 
@@ -251,9 +249,18 @@
 						</div>
 		    		</div>
 				</form>
-				<br/>
-				<br/>
-				<div class="divTabla" ng-if="racic.mostrarTabla">
+				<div class="col-sm-12 " style="height: 94%">
+				
+				<div class="grid_loading"  ng-if="racic.mostrarcargando" >
+				  	<div class="msg">
+				      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
+						  <br /><br />
+						  <b>Cargando, por favor espere...</b>
+					  </span>
+					</div>
+				  </div>
+				
+				<div class="divTabla" ng-show="!racic.mostrarTabla">
 	  			
 					<table st-table="racic.matrizRaci" class="table table-header-rotated  table-striped table-hover table-condensed" >
 							<thead class="cabecera">

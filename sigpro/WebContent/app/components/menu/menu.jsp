@@ -103,8 +103,8 @@
                     <li uib-dropdown>
                          <a href="" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Usuarios <b class="caret"></b></a>
                          <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-                         	<shiro:hasPermission name="34010"><li role="menuitem"><a href="/main.jsp#!/usuarios">Usuarios</a></li></shiro:hasPermission>                         	
-                         	<shiro:hasPermission name="20010"><li role="menuitem"><a href="/main.jsp#!/permisos">Permisos</a></li></shiro:hasPermission>                         	  
+                         	<shiro:hasPermission name="34010"><li role="menuitem"><a href="/main.jsp#!/usuarios">Usuarios</a></li></shiro:hasPermission>  
+                         	                        	  
                          	<shiro:hasPermission name="4010"><li role="menuitem"><a href="/main.jsp#!/colaborador">Colaboradores</a></li></shiro:hasPermission>                       	
                          </ul>
                     </li>

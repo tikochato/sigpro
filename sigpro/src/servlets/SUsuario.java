@@ -128,6 +128,7 @@ public class SUsuario extends HttpServlet {
 				if(usuario!=null && permisosNuevos!=null && permisosEliminados!=null){
 					boolean asignacion=false;
 					boolean eliminacion=false;
+					boolean asigna_estructuras=false;
 					Gson entradaJson = new Gson();
 					Type tipo = new TypeToken<List<Integer>>() {}.getType();
 					String usuarioActualizo ="";
@@ -143,8 +144,31 @@ public class SUsuario extends HttpServlet {
 						List<Integer> permisos = entradaJson.fromJson(permisosEliminados, tipo);
 						eliminacion = UsuarioDAO.desactivarPermisosUsuario(usuario, permisos, usuarioActualizo);
 					}
-					if(asignacion || eliminacion){
-						response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualizaci�n de permisos exitosa\" }");
+					String estructura_permisos = map.get("estructuraAsignada");
+					String[] estructuras = estructura_permisos.split("\\|");
+					int id=0;
+					int objeto_tipo=0;
+					if(estructuras!=null){
+						UsuarioDAO.desasignarEstructurasPermisos(usuario);
+						for(int i=0; i<estructuras.length; i++){
+							String[] permiso = estructuras[i].split(",");
+							if(permiso!=null && permiso.length==2){
+								objeto_tipo = Integer.parseInt(permiso[0]);
+								id = Integer.parseInt(permiso[1]);
+								List<Integer> ids_estructuras = new ArrayList<Integer>();
+								ids_estructuras.add(id);
+								switch(objeto_tipo){
+									case 1: UsuarioDAO.asignarPrestamos(usuario, ids_estructuras, usuarioActualizo); break;
+									case 2: UsuarioDAO.asignarComponentes(usuario, ids_estructuras, usuarioActualizo); break;
+									case 3: UsuarioDAO.asignarProductos(usuario, ids_estructuras, usuarioActualizo); break;
+									
+								}
+							}
+						}
+						asigna_estructuras=true;
+					}
+					if(asignacion || eliminacion || asigna_estructuras){
+						response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualización de permisos exitosa\" }");
 					}else{
 						response_text = String.join("","{ \"success\": false, \"error\":\"no se actualizaron los permisos\" }");
 					}
@@ -291,7 +315,7 @@ public class SUsuario extends HttpServlet {
 					}
 					
 				}else{
-					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los par�metros deseados.\" }");
+					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros deseados.\" }");
 				}
 			}else if(accion.compareTo("usuarioActual")==0){
 				HttpSession sesionweb = request.getSession();
@@ -318,6 +342,8 @@ public class SUsuario extends HttpServlet {
 			}else if(accion.compareTo("guardarUsuario")==0){
 				String usuario =map.get("usuario");
 				String esnuevo = map.get("esnuevo");
+				HttpSession sesionweb = request.getSession();
+				String usuario_texto = sesionweb.getAttribute("usuario")!=null? sesionweb.getAttribute("usuario").toString(): "";
 				if(usuario!=null && esnuevo!=null){
 					if(esnuevo.compareTo("true")==0){
 						String nuevousuario = map.get("usuario").toLowerCase();
@@ -326,25 +352,45 @@ public class SUsuario extends HttpServlet {
 						String permisosAsignados = map.get("permisos");
 						String prestamosAsignados=map.get("prestamos");
 						String rol =map.get("rol");
-						HttpSession sesionweb = request.getSession();
 						if(nuevousuario!=null && nuevopassword!=null && nuevomail != null && permisosAsignados!=null && rol!=null){
 							if(!UsuarioDAO.existeUsuario(nuevousuario)){
 								if(nuevousuario.compareTo("")!=0 && nuevopassword.compareTo("")!=0 && nuevomail.compareTo("")!=0){
-									String usuarioCreo =sesionweb.getAttribute("usuario").toString();
-									boolean registro = UsuarioDAO.registroUsuario(nuevousuario, nuevomail, nuevopassword,usuarioCreo);
+									boolean registro = UsuarioDAO.registroUsuario(nuevousuario, nuevomail, nuevopassword,usuario_texto);
 									if(registro){
-										if(prestamosAsignados.compareTo("[]")!=0){
+										String estructura_permisos = map.get("estructuraAsignada");
+										String[] estructuras = estructura_permisos.split("\\|");
+										int id=0;
+										int objeto_tipo=0;
+										if(estructuras!=null){
+											UsuarioDAO.desasignarEstructurasPermisos(usuario);
+											for(int i=0; i<estructuras.length; i++){
+												String[] permiso = estructuras[i].split(",");
+												if(permiso!=null && permiso.length==2){
+													objeto_tipo = Integer.parseInt(permiso[0]);
+													id = Integer.parseInt(permiso[1]);
+													List<Integer> ids_estructuras = new ArrayList<Integer>();
+													ids_estructuras.add(id);
+													switch(objeto_tipo){
+														case 1: UsuarioDAO.asignarPrestamos(usuario, ids_estructuras, usuario_texto); break;
+														case 2: UsuarioDAO.asignarComponentes(usuario, ids_estructuras, usuario_texto); break;
+														case 3: UsuarioDAO.asignarProductos(usuario, ids_estructuras, usuario_texto); break;
+														
+													}
+												}
+											}
+										}
+										if(prestamosAsignados!=null && prestamosAsignados.compareTo("[]")!=0){
 											Gson entradaJson = new Gson();
 											Type tipo = new TypeToken<List<Integer>>() {}.getType();
 											List<Integer> prestamos = entradaJson.fromJson(prestamosAsignados, tipo);
-											UsuarioDAO.asignarPrestamos(usuario, prestamos,usuarioCreo);
+											UsuarioDAO.asignarPrestamos(usuario, prestamos,usuario_texto);
 											UsuarioDAO.asignarPrestamoRol(usuario, prestamos, Integer.parseInt(rol));
 										}
-										if(permisosAsignados.compareTo("[]")!=0){
+										if(permisosAsignados!=null && permisosAsignados.compareTo("[]")!=0){
 											Gson entradaJson = new Gson();
 											Type tipo = new TypeToken<List<Integer>>() {}.getType();
 											List<Integer> permisos = entradaJson.fromJson(permisosAsignados, tipo);
-											response_text = String.join("","{ \"success\": ",(UsuarioDAO.asignarPermisosUsuario(nuevousuario, permisos, usuarioCreo) ? "true ,  \"message\":\"Usuario creado y asignaci�n de permisos exitosa\" " : "true, \"message\":\"Usuario creado, asignaci�n de permisos no exitosa\""),"}");
+											response_text = String.join("","{ \"success\": ",(UsuarioDAO.asignarPermisosUsuario(nuevousuario, permisos, usuario_texto) ? "true ,  \"message\":\"Usuario creado y asignación de permisos exitosa\" " : "true, \"message\":\"Usuario creado, asignación de permisos no exitosa\""),"}");
 										}else{
 											response_text = String.join("", "{\"success\":true, \"message\":\"usuario creado exitosamente\" }");
 										}
@@ -368,105 +414,30 @@ public class SUsuario extends HttpServlet {
 							String email = map.get("email");
 							if(email!=null){
 								usuarioEdicion.setEmail(email);
-								HttpSession sesionweb = request.getSession();
 								String prestamosAsignados=map.get("prestamosNuevos");
 								String prestamosEliminados= map.get("prestamosEliminados");
-								int rol = RolDAO.getRolUser(usuario).getId().getRol();
-								if(prestamosAsignados.compareTo("[]")!=0){
-									Gson entradaJson = new Gson();
-									Type tipo = new TypeToken<List<Integer>>() {}.getType();
-									List<Integer> prestamos = entradaJson.fromJson(prestamosAsignados, tipo);
-									UsuarioDAO.asignarPrestamos(usuario, prestamos,usuario);
-									UsuarioDAO.asignarPrestamoRol(usuario, prestamos, rol);
-								}
-								if(prestamosEliminados.compareTo("[]")!=0){
-									Gson entradaJson = new Gson();
-									Type tipo = new TypeToken<List<Integer>>() {}.getType();
-									List<Integer> prestamos = entradaJson.fromJson(prestamosEliminados, tipo);
-									UsuarioDAO.desasignarPrestamo(usuario, prestamos);
-								}
-								if(UsuarioDAO.editarUsuario(usuarioEdicion, sesionweb.getAttribute("usuario").toString())){
-									response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualizaci�n de usuario exitosa.\" }");
-								}else{
-									response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo actualizar al usuario. \" }");
-								}
-								
-							}else{
-								response_text = String.join("","{ \"success\": false, \"error\":\"no se encontr� al usuario. \" }");
-							}
-						}else{
-							response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los par�metros correctos \" }");
-						}
-						
-					}
-				}else{
-					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los par�metros correctos \" }");
-				}
-			}else if(accion.compareTo("guardarNuevoUsuario")==0){
-				String usuario =map.get("usuario");
-				String esnuevo = map.get("esnuevo");
-				if(usuario!=null && esnuevo!=null){
-					if(esnuevo.compareTo("true")==0){
-						String nuevousuario = map.get("usuario").toLowerCase();
-						String nuevopassword = map.get("password");
-						String nuevomail = map.get("email").toLowerCase();
-						String permisosAsignados = map.get("permisos");
-						String estructuraAsignada=map.get("estructuraAsignada");
-						String rol =map.get("rol");
-						HttpSession sesionweb = request.getSession();
-						if(nuevousuario!=null && nuevopassword!=null && nuevomail != null && permisosAsignados!=null && rol!=null){
-							if(!UsuarioDAO.existeUsuario(nuevousuario)){
-								if(nuevousuario.compareTo("")!=0 && nuevopassword.compareTo("")!=0 && nuevomail.compareTo("")!=0){
-									String usuarioCreo =sesionweb.getAttribute("usuario").toString();
-									boolean registro = UsuarioDAO.registroUsuario(nuevousuario, nuevomail, nuevopassword,usuarioCreo);
-									if(registro){
-										/*if(prestamosAsignados.compareTo("[]")!=0){
-											Gson entradaJson = new Gson();
-											Type tipo = new TypeToken<List<Integer>>() {}.getType();
-											List<Integer> prestamos = entradaJson.fromJson(prestamosAsignados, tipo);
-											UsuarioDAO.asignarPrestamos(usuario, prestamos,usuarioCreo);
-											UsuarioDAO.asignarPrestamoRol(usuario, prestamos, Integer.parseInt(rol));
-										}*/
-										if(estructuraAsignada.compareTo("")!=0){
-											String[] asignaciones = estructuraAsignada.split("/");
-											for(int i=0; i<asignaciones.length;i++){
-												String[] asignacion = asignaciones[i].split("/");
-												int tipo_id= Integer.parseInt(asignacion[0]);
-												int objeto_id= Integer.parseInt(asignacion[1]);
+								String estructura_permisos = map.get("estructuraAsignada");
+								String[] estructuras = estructura_permisos.split("\\|");
+								int id=0;
+								int objeto_tipo=0;
+								if(estructuras!=null){
+									UsuarioDAO.desasignarEstructurasPermisos(usuario);
+									for(int i=0; i<estructuras.length; i++){
+										String[] permiso = estructuras[i].split(",");
+										if(permiso!=null && permiso.length==2){
+											objeto_tipo = Integer.parseInt(permiso[0]);
+											id = Integer.parseInt(permiso[1]);
+											List<Integer> ids_estructuras = new ArrayList<Integer>();
+											ids_estructuras.add(id);
+											switch(objeto_tipo){
+												case 1: UsuarioDAO.asignarPrestamos(usuario, ids_estructuras, usuario_texto); break;
+												case 2: UsuarioDAO.asignarComponentes(usuario, ids_estructuras, usuario_texto); break;
+												case 3: UsuarioDAO.asignarProductos(usuario, ids_estructuras, usuario_texto); break;
 												
 											}
 										}
-										/*if(permisosAsignados.compareTo("[]")!=0){
-											Gson entradaJson = new Gson();
-											Type tipo = new TypeToken<List<Integer>>() {}.getType();
-											List<Integer> permisos = entradaJson.fromJson(permisosAsignados, tipo);
-											response_text = String.join("","{ \"success\": ",(UsuarioDAO.asignarPermisosUsuario(nuevousuario, permisos, usuarioCreo) ? "true ,  \"message\":\"Usuario creado y asignaci�n de permisos exitosa\" " : "true, \"message\":\"Usuario creado, asignaci�n de permisos no exitosa\""),"}");
-										}else{
-											response_text = String.join("", "{\"success\":true, \"message\":\"usuario creado exitosamente\" }");
-										}*/
-										
-									}else{
-										response_text = String.join("", "{ \"success\": false, \"error\":\"Error al registrar nuevo usuario\" }");
 									}
-								}else{
-									response_text = String.join("", "{ \"success\": false, \"error\":\"Parametros vacios\" }");
 								}
-							}else{
-								response_text = String.join("", "{ \"success\": false, \"error\":\"Ya existe ese usuario\" }");
-							}
-							
-						}else{
-							response_text = String.join("", "{ \"success\": false, \"error\":\"No se enviaron los parametros deseados\" }");
-						}
-					}else{
-						Usuario usuarioEdicion = UsuarioDAO.getUsuario(usuario);
-						if(usuarioEdicion!=null){
-							String email = map.get("email");
-							if(email!=null){
-								usuarioEdicion.setEmail(email);
-								HttpSession sesionweb = request.getSession();
-								String prestamosAsignados=map.get("prestamosNuevos");
-								String prestamosEliminados= map.get("prestamosEliminados");
 								int rol = RolDAO.getRolUser(usuario).getId().getRol();
 								if(prestamosAsignados.compareTo("[]")!=0){
 									Gson entradaJson = new Gson();
@@ -482,23 +453,22 @@ public class SUsuario extends HttpServlet {
 									UsuarioDAO.desasignarPrestamo(usuario, prestamos);
 								}
 								if(UsuarioDAO.editarUsuario(usuarioEdicion, sesionweb.getAttribute("usuario").toString())){
-									response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualizaci�n de usuario exitosa.\" }");
+									response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualización de usuario exitosa.\" }");
 								}else{
 									response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo actualizar al usuario. \" }");
 								}
 								
 							}else{
-								response_text = String.join("","{ \"success\": false, \"error\":\"no se encontr� al usuario. \" }");
+								response_text = String.join("","{ \"success\": false, \"error\":\"no se encontró al usuario. \" }");
 							}
 						}else{
-							response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los par�metros correctos \" }");
+							response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros correctos \" }");
 						}
 						
 					}
 				}else{
-					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los par�metros correctos \" }");
+					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros correctos \" }");
 				}
-				
 			}
 			else if(accion.compareTo("getColaboradores")==0){
 				String resultadoJson = "";

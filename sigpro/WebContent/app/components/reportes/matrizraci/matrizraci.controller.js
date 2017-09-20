@@ -13,6 +13,7 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 	mi.matrizRaci = [];
 	mi.encabezadoMatriz = [];
 	mi.mostrarTabla = false;
+	mi.mostrarcargando = false;
 	
 	$window.document.title = $utilidades.sistema_nombre+' - Matriz RACI';
 	i18nService.setCurrentLang('es');
@@ -31,13 +32,18 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 	 
 	 
 	 mi.generarMatriz = function (){
+		 mi.mostrarcargando = true;
 		 mi.inicializarVariables();
-			$http.post('/SMatrizRACI', { accion: 'getMatriz', idPrestamo: mi.prestamoSeleccionado.value }).success(
+			$http.post('/SMatrizRACI', { accion: 'getMatriz', 
+				idPrestamo: mi.prestamoSeleccionado!= null ? mi.prestamoSeleccionado.value : 0 }).success(
+			
 				function(response) {
 					mi.colaboradores = response.colaboradores;
 					mi.matrizAsignacion = response.matriz;
 					mi.construirMatriz();
-					mi.mostrarTabla = true;
+					mi.motrarTabla = true;
+					mi.mostrarcargando = false;
+					
 			});	
 	  };
 	  
