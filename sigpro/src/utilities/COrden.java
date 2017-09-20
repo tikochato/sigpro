@@ -43,7 +43,7 @@ public class COrden {
 				estructuraPrestamo = getEstructuraPrestamo(proyectoId, usuario);
 			}
 					
-			Date fechaMax = new DateTime(2200,1,1,0,0).toDate();
+			Date fechaMax = new DateTime(2100,1,1,0,0).toDate();
 			
 			getTransactionSession(session);
 			Object[] objPadre = getObjeto(objetoId, objetoTipo, estructuraPrestamo);
