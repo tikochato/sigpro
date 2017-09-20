@@ -631,14 +631,14 @@ public class SProyecto extends HttpServlet {
 				Proyecto proyecto;
 
 				String nombre = map.get("nombre");
-				Integer ejercicio = Utils.String2Int(map.get("ejercicio"),-1);
-				Integer entidad = Utils.String2Int(map.get("entidadid"));
-				Integer unidad_ejecutora = Utils.String2Int(map.get("unidadejecutoraid"));
+				Integer ejercicio = (map.get("ejercicio")!=null) ? Utils.String2Int(map.get("ejercicio"),-1) : null;
+				Integer unidad_ejecutora = (map.get("unidadejecutoraid")!=null) ? Utils.String2Int(map.get("unidadejecutoraid")) : null;
+				Integer entidad = (map.get("entidadid")!=null) ? Utils.String2Int(map.get("entidadid")) : null;
 
 				ProyectoTipo proyectoTipo = new ProyectoTipo();
 				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): null);
 
-				UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad, unidad_ejecutora);
+				UnidadEjecutora unidadEjecutora = (ejercicio!=null && entidad!=null && unidad_ejecutora!=null) ? UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad , unidad_ejecutora) :null;
 
 				Cooperante cooperante = new Cooperante();
 				cooperante.setId(map.get("cooperanteid")!=null ? Integer.parseInt(map.get("cooperanteid")): null);
