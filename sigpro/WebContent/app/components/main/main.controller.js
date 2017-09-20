@@ -94,9 +94,6 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/riesgopropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgopropiedadController\'" class="all_page"></div>'
             })
-            .when('/permisos/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'permisoController\'" class="all_page"></div>'
-            })
              .when('/usuarios/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'usuarioController\'" class="all_page"></div>'
             })

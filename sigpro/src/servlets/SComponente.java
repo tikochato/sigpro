@@ -72,9 +72,9 @@ public class SComponente extends HttpServlet {
 		String duracionDimension;
 		String fechaInicio;
 		String fechaFin;
-		int unidadejecutoraid;
-		int ejercicio;
-		int entidadentidad;
+		Integer unidadejecutoraid;
+		Integer ejercicio;
+		Integer entidadentidad;
 		String unidadejecutoranombre;
 		String entidadnombre;
 		String latitud;
@@ -542,11 +542,11 @@ public class SComponente extends HttpServlet {
 					temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
 				}else{
 					Proyecto proyecto = ProyectoDAO.getProyecto(componente.getProyecto().getId());
-					temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
-					temp.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
-					temp.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
-					temp.unidadejecutoranombre = proyecto.getUnidadEjecutora().getNombre();
-					temp.entidadnombre = proyecto.getUnidadEjecutora().getEntidad().getNombre();
+					temp.unidadejecutoraid = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getUnidadEjecutora() : null;
+					temp.ejercicio = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEjercicio() : null;
+					temp.entidadentidad = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEntidadentidad() : null;
+					temp.unidadejecutoranombre = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getNombre() : "";
+					temp.entidadnombre = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getEntidad().getNombre() : "";
 				}
 				
 				temp.latitud = componente.getLatitud();
@@ -591,11 +591,11 @@ public class SComponente extends HttpServlet {
 					temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				}else{
 					Proyecto proyecto = ProyectoDAO.getProyecto(componente.getProyecto().getId());
-					temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
-					temp.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
-					temp.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
-					temp.entidadnombre = proyecto.getUnidadEjecutora().getEntidad().getNombre();
-					temp.unidadejecutoranombre = proyecto.getUnidadEjecutora().getNombre();
+					temp.unidadejecutoraid = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getUnidadEjecutora() : null;
+					temp.ejercicio = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEjercicio() : null;
+					temp.entidadentidad = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEntidadentidad() : null;
+					temp.entidadnombre = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getEntidad().getNombre() : "";
+					temp.unidadejecutoranombre = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getNombre() : "";
 				}
 				
 				temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
