@@ -251,8 +251,8 @@ public class SComponente extends HttpServlet {
 					int proyectoid= map.get("proyectoid")!=null ? Integer.parseInt(map.get("proyectoid")) : 0;
 					
 					Integer unidadEjecutoraId = map.get("unidadejecutoraid") != null ? Integer.parseInt(map.get("unidadejecutoraid")) : null;
-					Integer ejercicio = map.get("unidadejecutoraid") != null ? map.get("ejercicio") != null ? Utils.String2Int(map.get("ejercicio")) : null : null;
-					Integer entidad = map.get("unidadejecutoraid") != null ? map.get("entidad") != null ? Utils.String2Int(map.get("entidad")) : null : null;
+					Integer ejercicio = map.get("ejercicio") != null ? map.get("ejercicio") != null ? Utils.String2Int(map.get("ejercicio")) : null : null;
+					Integer entidad = map.get("entidad") != null ? map.get("entidad") != null ? Utils.String2Int(map.get("entidad")) : null : null;
 					
 					Long snip = map.get("snip")!=null ? Long.parseLong(map.get("snip")) : null;
 					Integer programa = map.get("programa")!=null ? Integer.parseInt(map.get("programa")) : null;

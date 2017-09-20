@@ -464,7 +464,7 @@ public class SProyecto extends HttpServlet {
 				String objetivoEspecifico = map.get("objetoivoEspecifico");
 				String visionGeneral = map.get("visionGeneral");
 				Integer unidad_ejecutora = (map.get("unidadejecutoraid")!=null) ? Utils.String2Int(map.get("unidadejecutoraid")) : null;
-				Integer entidad = (map.get("entidad")!=null) ? Utils.String2Int(map.get("entidadid")) : null;
+				Integer entidad = (map.get("entidadid")!=null) ? Utils.String2Int(map.get("entidadid")) : null;
 
 				AcumulacionCosto acumulacionCosto = null;
 				if (map.get("acumulacionCosto")!=null){
