@@ -402,7 +402,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		tempPrestamo.bloqueado = false;
 	}
 	
-	private List<stplanadquisiciones> generarPlan(Integer idPrestamo, String usuario){
+	private List<stplanadquisiciones> generarPlan(Integer idPrestamo, String usuario) throws Exception{
 		try{
 			List<stplanadquisiciones> lstprestamo = new ArrayList<stplanadquisiciones>();
 			stplanadquisiciones tempPrestamo = new stplanadquisiciones();
@@ -894,7 +894,8 @@ public class SPlanAdquisiciones extends HttpServlet {
 					}
 					
 					lstprestamo.add(tempPrestamo);
-				}			
+				}	
+				conn.close();
 			}
 			return lstprestamo;
 		}catch(Exception e){
@@ -945,36 +946,41 @@ public class SPlanAdquisiciones extends HttpServlet {
 	
 	public String[][] generarDatos(Integer idPrestamo, String usuario){
 		String[][] datos = null;
-		List<stplanadquisiciones> lstprestamo = generarPlan(idPrestamo, usuario);
-		
-		if (lstprestamo != null && !lstprestamo.isEmpty()){ 
-			datos = new String[lstprestamo.size()][17];
-			for (int i=0; i<lstprestamo.size(); i++){
-					datos[i][0] = lstprestamo.get(i).nombre;
-					datos[i][1] = lstprestamo.get(i).tipoAdquisicion.toString();
-					datos[i][2] = lstprestamo.get(i).unidadMedida;
-					String strCategoria = "";
-					Integer categoria = lstprestamo.get(i).categoriaAdquisicion;
-					if(categoria > 0){
-						strCategoria = CategoriaAdquisicionDAO.getCategoriaPorId(categoria).getNombre();
-					}
-					datos[i][3] = strCategoria;
-					datos[i][4] = lstprestamo.get(i).cantidad.toString();
-					datos[i][5] = lstprestamo.get(i).costo.toString();
-					datos[i][6] = lstprestamo.get(i).total.toString();
-					datos[i][7] = lstprestamo.get(i).planificadoDocs;
-					datos[i][8] = lstprestamo.get(i).realDocs;
-					datos[i][9] = lstprestamo.get(i).planificadoLanzamiento;
-					datos[i][10] = lstprestamo.get(i).realLanzamiento;
-					datos[i][11] = lstprestamo.get(i).planificadoRecepcionEval;
-					datos[i][12] = lstprestamo.get(i).realRecepcionEval;
-					datos[i][13] = lstprestamo.get(i).planificadoAdjudica;
-					datos[i][14] = lstprestamo.get(i).realAdjudica;
-					datos[i][15] = lstprestamo.get(i).planificadoFirma;
-					datos[i][16] = lstprestamo.get(i).realFirma;
-			}
-		}
+		List<stplanadquisiciones> lstprestamo;
+		try {
+			lstprestamo = generarPlan(idPrestamo, usuario);
 			
+			if (lstprestamo != null && !lstprestamo.isEmpty()){ 
+				datos = new String[lstprestamo.size()][17];
+				for (int i=0; i<lstprestamo.size(); i++){
+						datos[i][0] = lstprestamo.get(i).nombre;
+						datos[i][1] = lstprestamo.get(i).tipoAdquisicion.toString();
+						datos[i][2] = lstprestamo.get(i).unidadMedida;
+						String strCategoria = "";
+						Integer categoria = lstprestamo.get(i).categoriaAdquisicion;
+						if(categoria > 0){
+							strCategoria = CategoriaAdquisicionDAO.getCategoriaPorId(categoria).getNombre();
+						}
+						datos[i][3] = strCategoria;
+						datos[i][4] = lstprestamo.get(i).cantidad.toString();
+						datos[i][5] = lstprestamo.get(i).costo.toString();
+						datos[i][6] = lstprestamo.get(i).total.toString();
+						datos[i][7] = lstprestamo.get(i).planificadoDocs;
+						datos[i][8] = lstprestamo.get(i).realDocs;
+						datos[i][9] = lstprestamo.get(i).planificadoLanzamiento;
+						datos[i][10] = lstprestamo.get(i).realLanzamiento;
+						datos[i][11] = lstprestamo.get(i).planificadoRecepcionEval;
+						datos[i][12] = lstprestamo.get(i).realRecepcionEval;
+						datos[i][13] = lstprestamo.get(i).planificadoAdjudica;
+						datos[i][14] = lstprestamo.get(i).realAdjudica;
+						datos[i][15] = lstprestamo.get(i).planificadoFirma;
+						datos[i][16] = lstprestamo.get(i).realFirma;
+				}
+			}
+		} catch (Exception e) {
+			CLogger.write("1", SPlanAdquisiciones.class, e);
+		}
+		
 		return datos;
 	}
 }
