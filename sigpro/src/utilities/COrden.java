@@ -73,81 +73,83 @@ public class COrden {
             }
         });
         
-		Date fecha_menor = new DateTime(2200,1,1,0,0).toDate();
-		Date fecha_mayor = new DateTime(1970,1,1,0,0).toDate();
-        for(Long[] entry:fechas){
-        	Object[] objeto = getObjeto(entry[0].intValue(), entry[1].intValue(), estructuraPrestamo);
-        	switch(entry[1].intValue()){
-        		case 2:
-        			Componente componente = (Componente)objeto[3];
-    	        	componente.setOrden(orden);
-    	        	componente.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
-    	        	componente.setNivel(getNivel(componente.getTreePath()));
-    	        	ComponenteDAO.guardarComponenteOrden(componente, session);
-    	        	fecha_menor = componente.getFechaInicio()!=null && fecha_menor.after(componente.getFechaInicio()) ? componente.getFechaInicio() : fecha_menor;
-    	        	fecha_mayor = componente.getFechaFin()!=null && fecha_mayor.before(componente.getFechaFin()) ? componente.getFechaFin() : fecha_mayor;
-        			break;
-        		case 3:
-        			Producto producto = (Producto)objeto[3];
-    	        	producto.setOrden(orden);
-    	        	producto.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
-    	        	producto.setNivel(getNivel(producto.getTreePath()));
-    	        	ProductoDAO.guardarProductoOrden(producto, session);
-    	        	fecha_menor = producto.getFechaInicio()!=null && fecha_menor.after(producto.getFechaInicio()) ? producto.getFechaInicio() : fecha_menor;
-    	        	fecha_mayor = producto.getFechaFin()!=null && fecha_mayor.before(producto.getFechaFin()) ? producto.getFechaFin() : fecha_mayor;
-        			break;
-        		case 4:
-        			Subproducto sproducto = (Subproducto)objeto[3];
-        			sproducto.setOrden(orden);
-        			sproducto.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
-        			sproducto.setNivel(getNivel(sproducto.getTreePath()));
-    	        	SubproductoDAO.guardarSubproductoOrden(sproducto, session);
-    	        	fecha_menor = sproducto.getFechaInicio()!=null && fecha_menor.after(sproducto.getFechaInicio()) ? sproducto.getFechaInicio() : fecha_menor;
-    	        	fecha_mayor = sproducto.getFechaFin()!=null && fecha_mayor.before(sproducto.getFechaFin()) ? sproducto.getFechaFin() : fecha_mayor;
-        			break;
-        		case 5:
-        			Actividad actividad = (Actividad)objeto[3];
-        			actividad.setOrden(orden);
-        			actividad.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
-        			actividad.setNivel(getNivel(actividad.getTreePath()));
-    	        	ActividadDAO.guardarActividadOrden(actividad, session);
-    	        	fecha_menor = actividad.getFechaInicio()!=null && fecha_menor.after(actividad.getFechaInicio()) ? actividad.getFechaInicio() : fecha_menor;
-    	        	fecha_mayor = actividad.getFechaFin()!=null && fecha_mayor.before(actividad.getFechaFin()) ? actividad.getFechaFin() : fecha_mayor;
-        			break;
-        	}
-	        orden++;
-        }
-        switch((int)objPadre[5]){
-        	case 1: Proyecto proyecto = (Proyecto)getObjeto((int)objPadre[4], 1, estructuraPrestamo)[3];
-        		proyecto.setFechaInicio(fecha_menor);
-        		proyecto.setFechaFin(fecha_mayor);
-        		ProyectoDAO.guardarProyectoOrden(proyecto, session);
-        		break;
-        	case 2: Componente componente = (Componente)getObjeto((int)objPadre[4], 2, estructuraPrestamo)[3];
-        		componente.setFechaInicio(fecha_menor);
-        		componente.setFechaFin(fecha_mayor);
-	    		ComponenteDAO.guardarComponenteOrden(componente, session);
-	    		break;	
-        	case 3: Producto producto = (Producto)getObjeto((int)objPadre[4], 3, estructuraPrestamo)[3];
-	        	producto.setFechaInicio(fecha_menor);
-	        	producto.setFechaFin(fecha_mayor);
-	    		ProductoDAO.guardarProductoOrden(producto, session);
-	    		break;
-        	case 4: Subproducto subproducto = (Subproducto)getObjeto((int)objPadre[4], 4, estructuraPrestamo)[3];
-	        	subproducto.setFechaInicio(fecha_menor);
-	        	subproducto.setFechaFin(fecha_mayor);
-	    		SubproductoDAO.guardarSubproductoOrden(subproducto, session);
-	    		break;
-        	case 5: Actividad actividad = (Actividad)getObjeto((int)objPadre[4], 5, estructuraPrestamo)[3];
-	        	actividad.setFechaInicio(fecha_menor);
-	        	actividad.setFechaFin(fecha_mayor);
-	    		ActividadDAO.guardarActividadOrden(actividad, session);
-	    		break;
-        }
-        if((Integer)objPadre[1]>0){
-        	calcularOrdenObjetosSuperiores((Integer)objPadre[1], (Integer)objPadre[2], usuario, session,proyectoId);
-        }
-		commitCalculoOrden(session);
+		if(hijos.size() > 0){
+			Date fecha_menor = new DateTime(2200,1,1,0,0).toDate();
+			Date fecha_mayor = new DateTime(1970,1,1,0,0).toDate();
+	        for(Long[] entry:fechas){
+	        	Object[] objeto = getObjeto(entry[0].intValue(), entry[1].intValue(), estructuraPrestamo);
+	        	switch(entry[1].intValue()){
+	        		case 2:
+	        			Componente componente = (Componente)objeto[3];
+	    	        	componente.setOrden(orden);
+	    	        	componente.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
+	    	        	componente.setNivel(getNivel(componente.getTreePath()));
+	    	        	ComponenteDAO.guardarComponenteOrden(componente, session);
+	    	        	fecha_menor = componente.getFechaInicio()!=null && fecha_menor.after(componente.getFechaInicio()) ? componente.getFechaInicio() : fecha_menor;
+	    	        	fecha_mayor = componente.getFechaFin()!=null && fecha_mayor.before(componente.getFechaFin()) ? componente.getFechaFin() : fecha_mayor;
+	        			break;
+	        		case 3:
+	        			Producto producto = (Producto)objeto[3];
+	    	        	producto.setOrden(orden);
+	    	        	producto.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
+	    	        	producto.setNivel(getNivel(producto.getTreePath()));
+	    	        	ProductoDAO.guardarProductoOrden(producto, session);
+	    	        	fecha_menor = producto.getFechaInicio()!=null && fecha_menor.after(producto.getFechaInicio()) ? producto.getFechaInicio() : fecha_menor;
+	    	        	fecha_mayor = producto.getFechaFin()!=null && fecha_mayor.before(producto.getFechaFin()) ? producto.getFechaFin() : fecha_mayor;
+	        			break;
+	        		case 4:
+	        			Subproducto sproducto = (Subproducto)objeto[3];
+	        			sproducto.setOrden(orden);
+	        			sproducto.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
+	        			sproducto.setNivel(getNivel(sproducto.getTreePath()));
+	    	        	SubproductoDAO.guardarSubproductoOrden(sproducto, session);
+	    	        	fecha_menor = sproducto.getFechaInicio()!=null && fecha_menor.after(sproducto.getFechaInicio()) ? sproducto.getFechaInicio() : fecha_menor;
+	    	        	fecha_mayor = sproducto.getFechaFin()!=null && fecha_mayor.before(sproducto.getFechaFin()) ? sproducto.getFechaFin() : fecha_mayor;
+	        			break;
+	        		case 5:
+	        			Actividad actividad = (Actividad)objeto[3];
+	        			actividad.setOrden(orden);
+	        			actividad.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
+	        			actividad.setNivel(getNivel(actividad.getTreePath()));
+	    	        	ActividadDAO.guardarActividadOrden(actividad, session);
+	    	        	fecha_menor = actividad.getFechaInicio()!=null && fecha_menor.after(actividad.getFechaInicio()) ? actividad.getFechaInicio() : fecha_menor;
+	    	        	fecha_mayor = actividad.getFechaFin()!=null && fecha_mayor.before(actividad.getFechaFin()) ? actividad.getFechaFin() : fecha_mayor;
+	        			break;
+	        	}
+		        orden++;
+	        }
+	        switch((int)objPadre[5]){
+	        	case 1: Proyecto proyecto = (Proyecto)getObjeto((int)objPadre[4], 1, estructuraPrestamo)[3];
+	        		proyecto.setFechaInicio(fecha_menor);
+	        		proyecto.setFechaFin(fecha_mayor);
+	        		ProyectoDAO.guardarProyectoOrden(proyecto, session);
+	        		break;
+	        	case 2: Componente componente = (Componente)getObjeto((int)objPadre[4], 2, estructuraPrestamo)[3];
+	        		componente.setFechaInicio(fecha_menor);
+	        		componente.setFechaFin(fecha_mayor);
+		    		ComponenteDAO.guardarComponenteOrden(componente, session);
+		    		break;	
+	        	case 3: Producto producto = (Producto)getObjeto((int)objPadre[4], 3, estructuraPrestamo)[3];
+		        	producto.setFechaInicio(fecha_menor);
+		        	producto.setFechaFin(fecha_mayor);
+		    		ProductoDAO.guardarProductoOrden(producto, session);
+		    		break;
+	        	case 4: Subproducto subproducto = (Subproducto)getObjeto((int)objPadre[4], 4, estructuraPrestamo)[3];
+		        	subproducto.setFechaInicio(fecha_menor);
+		        	subproducto.setFechaFin(fecha_mayor);
+		    		SubproductoDAO.guardarSubproductoOrden(subproducto, session);
+		    		break;
+	        	case 5: Actividad actividad = (Actividad)getObjeto((int)objPadre[4], 5, estructuraPrestamo)[3];
+		        	actividad.setFechaInicio(fecha_menor);
+		        	actividad.setFechaFin(fecha_mayor);
+		    		ActividadDAO.guardarActividadOrden(actividad, session);
+		    		break;
+	        }
+	        if((Integer)objPadre[1]>0){
+	        	calcularOrdenObjetosSuperiores((Integer)objPadre[1], (Integer)objPadre[2], usuario, session,proyectoId);
+	        }
+			commitCalculoOrden(session);
+		}
 	}
 
 	
