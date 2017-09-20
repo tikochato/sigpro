@@ -324,11 +324,6 @@ public class SComponente extends HttpServlet {
 					}
 					result = ComponenteDAO.guardarComponente(componente);
 					
-					if(result){
-						COrden orden = new COrden();
-						orden.calcularOrdenObjetosSuperiores(componente.getProyecto().getId(), 1, usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId());
-					}
-					
 					Set<ComponentePropiedadValor> valores_temp = componente.getComponentePropiedadValors();
 					componente.setComponentePropiedadValors(null);
 					if (valores_temp!=null){
@@ -340,7 +335,6 @@ public class SComponente extends HttpServlet {
 					for (stdatadinamico data : datos) {
 						if (data.valor!=null && data.valor.length()>0 && data.valor.compareTo("null")!=0){
 							
-						
 							ComponentePropiedad componentePropiedad = ComponentePropiedadDAO.getComponentePropiedadPorId(Integer.parseInt(data.id));
 							ComponentePropiedadValorId idValor = new ComponentePropiedadValorId(componente.getId(),Integer.parseInt(data.id));
 							ComponentePropiedadValor valor = new ComponentePropiedadValor(idValor, componente, componentePropiedad, usuario, new DateTime().toDate());
@@ -366,6 +360,12 @@ public class SComponente extends HttpServlet {
 							result = (result && ComponentePropiedadValorDAO.guardarComponentePropiedadValor(valor));
 						}
 					}
+					
+					if(result){
+						COrden orden = new COrden();
+						result = orden.calcularOrdenObjetosSuperiores(componente.getProyecto().getId(), 1, usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId());
+					}
+					
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 							+ "\"id\": " + componente.getId() , ","
 							, "\"usuarioCreo\": \"" , componente.getUsuarioCreo(),"\","

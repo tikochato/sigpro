@@ -300,10 +300,6 @@ public class SProducto extends HttpServlet {
 				
 				Componente c = ComponenteDAO.getComponentePorId(producto.getComponente().getId(), usuario);
 				
-				COrden orden = new COrden();
-				orden.calcularOrdenObjetosSuperiores(producto.getComponente().getId(), 2, usuario, COrden.getSessionCalculoOrden(),
-						c.getProyecto().getId());				
-				
 				if (ret){
 					ProductoUsuarioId productoUsuarioId = new ProductoUsuarioId(producto.getId(), usuario);
 					Usuario usu = UsuarioDAO.getUsuario(usuario);
@@ -337,6 +333,12 @@ public class SProducto extends HttpServlet {
 							ret = (ret && ProductoPropiedadValorDAO.guardarProductoPropiedadValor(valor));
 						}
 					}
+				}
+				
+				if(ret){
+					COrden orden = new COrden();
+					ret = orden.calcularOrdenObjetosSuperiores(producto.getComponente().getId(), 2, usuario, COrden.getSessionCalculoOrden(), c.getProyecto().getId());				
+					
 				}
 				
 				response_text = String.join("","{ \"success\": ",(ret ? "true" : "false"),", "
