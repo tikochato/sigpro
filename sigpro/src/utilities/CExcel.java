@@ -69,6 +69,7 @@ public class CExcel {
 	DataFormat dataformat;
 	CellStyle cs_currency_bold;
 	CellStyle cs_percent_bold;
+	CellStyle cs_estiloVariable;
 	boolean HasGroup;
 	CGraficaExcel stgrafica;
 		
@@ -155,6 +156,8 @@ public class CExcel {
 		cs_min = workbook.createCellStyle();
 		cs_min.setFont(font_min);
 
+		cs_estiloVariable = workbook.createCellStyle();
+		
 		estilo0();
 		estilo1();
 		estilo2();
@@ -167,19 +170,14 @@ public class CExcel {
 				? sheet.getRow(irow).getCell(icell) : sheet.getRow(irow).createCell(icell))
 				: sheet.createRow(irow).createCell(icell);
 		cell.setCellValue(value);
-		CellStyle estiloCelda =bold ? cs_currency_bold : cs_currency;
+		cs_estiloVariable.cloneStyleFrom(bold ? cs_currency_bold : cs_currency);
 		if(borde){
-			estiloCelda.setBorderTop(BorderStyle.THIN);
-			estiloCelda.setBorderLeft(BorderStyle.THIN);
-			estiloCelda.setBorderRight(BorderStyle.THIN);
-			estiloCelda.setBorderBottom(BorderStyle.THIN);
-		}else{
-			estiloCelda.setBorderTop(BorderStyle.NONE);
-			estiloCelda.setBorderLeft(BorderStyle.NONE);
-			estiloCelda.setBorderRight(BorderStyle.NONE);
-			estiloCelda.setBorderBottom(BorderStyle.NONE);
+			cs_estiloVariable.setBorderTop(BorderStyle.THIN);
+			cs_estiloVariable.setBorderLeft(BorderStyle.THIN);
+			cs_estiloVariable.setBorderRight(BorderStyle.THIN);
+			cs_estiloVariable.setBorderBottom(BorderStyle.THIN);
 		}
-		cell.setCellStyle(estiloCelda);
+		cell.setCellStyle(cs_estiloVariable);
 	}
 
 	public void setCellValueDouble(double value, int irow, int icell, boolean borde) {
@@ -196,19 +194,14 @@ public class CExcel {
 				? sheet.getRow(irow).getCell(icell) : sheet.getRow(irow).createCell(icell))
 				: sheet.createRow(irow).createCell(icell);
 		cell.setCellValue(value / 100.00);
-		CellStyle estiloCelda =bold ? cs_percent_bold : cs_percent;
+		cs_estiloVariable.cloneStyleFrom(bold ? cs_percent_bold : cs_percent);
 		if(borde){
-			estiloCelda.setBorderTop(BorderStyle.THIN);
-			estiloCelda.setBorderLeft(BorderStyle.THIN);
-			estiloCelda.setBorderRight(BorderStyle.THIN);
-			estiloCelda.setBorderBottom(BorderStyle.THIN);
-		}else{
-			estiloCelda.setBorderTop(BorderStyle.NONE);
-			estiloCelda.setBorderLeft(BorderStyle.NONE);
-			estiloCelda.setBorderRight(BorderStyle.NONE);
-			estiloCelda.setBorderBottom(BorderStyle.NONE);
+			cs_estiloVariable.setBorderTop(BorderStyle.THIN);
+			cs_estiloVariable.setBorderLeft(BorderStyle.THIN);
+			cs_estiloVariable.setBorderRight(BorderStyle.THIN);
+			cs_estiloVariable.setBorderBottom(BorderStyle.THIN);
 		}
-		cell.setCellStyle(estiloCelda);
+		cell.setCellStyle(cs_estiloVariable);
 	}
 
 	public void setCellValueInt(int value, int irow, int icell, boolean borde) {
@@ -237,19 +230,14 @@ public class CExcel {
 				? sheet.getRow(irow).getCell(icell) : sheet.getRow(irow).createCell(icell))
 				: sheet.createRow(irow).createCell(icell);
 		cell.setCellValue(value);
-		CellStyle estiloCelda =(letraMin) ? cs_min : cs_normal;
+		cs_estiloVariable.cloneStyleFrom(letraMin ? cs_min : cs_normal);
 		if(borde){
-			estiloCelda.setBorderTop(BorderStyle.THIN);
-			estiloCelda.setBorderLeft(BorderStyle.THIN);
-			estiloCelda.setBorderRight(BorderStyle.THIN);
-			estiloCelda.setBorderBottom(BorderStyle.THIN);
-		}else{
-			estiloCelda.setBorderTop(BorderStyle.NONE);
-			estiloCelda.setBorderLeft(BorderStyle.NONE);
-			estiloCelda.setBorderRight(BorderStyle.NONE);
-			estiloCelda.setBorderBottom(BorderStyle.NONE);
+			cs_estiloVariable.setBorderTop(BorderStyle.THIN);
+			cs_estiloVariable.setBorderLeft(BorderStyle.THIN);
+			cs_estiloVariable.setBorderRight(BorderStyle.THIN);
+			cs_estiloVariable.setBorderBottom(BorderStyle.THIN);
 		}
-		cell.setCellStyle(estiloCelda);
+		cell.setCellStyle(cs_estiloVariable);
 	}
 	
 	public void setCellValueDate(Date value, int irow, int icell, Boolean borde) {
@@ -257,19 +245,14 @@ public class CExcel {
 				? sheet.getRow(irow).getCell(icell) : sheet.getRow(irow).createCell(icell))
 				: sheet.createRow(irow).createCell(icell);
 		cell.setCellValue(value);
-		CellStyle estiloCelda =cs_normal;
+		cs_estiloVariable.cloneStyleFrom(cs_normal);
 		if(borde){
-			estiloCelda.setBorderTop(BorderStyle.THIN);
-			estiloCelda.setBorderLeft(BorderStyle.THIN);
-			estiloCelda.setBorderRight(BorderStyle.THIN);
-			estiloCelda.setBorderBottom(BorderStyle.THIN);
-		}else{
-			estiloCelda.setBorderTop(BorderStyle.NONE);
-			estiloCelda.setBorderLeft(BorderStyle.NONE);
-			estiloCelda.setBorderRight(BorderStyle.NONE);
-			estiloCelda.setBorderBottom(BorderStyle.NONE);
+			cs_estiloVariable.setBorderTop(BorderStyle.THIN);
+			cs_estiloVariable.setBorderLeft(BorderStyle.THIN);
+			cs_estiloVariable.setBorderRight(BorderStyle.THIN);
+			cs_estiloVariable.setBorderBottom(BorderStyle.THIN);
 		}
-		cell.setCellStyle(estiloCelda);
+		cell.setCellStyle(cs_estiloVariable);
 	}
 
 	public void setCellFormula(String formula, int irow, int icell, String style, boolean bold) {

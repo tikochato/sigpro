@@ -1,6 +1,5 @@
 package servlets;
 
-import java.sql.Connection;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -26,6 +25,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.codec.Base64;
+import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,21 +33,14 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
 import dao.AsignacionRaciDAO;
-import dao.ComponenteDAO;
-import dao.InformacionPresupuestariaDAO;
-import dao.ProductoDAO;
+import dao.EstructuraProyectoDAO;
 import dao.ProyectoDAO;
-import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.Colaborador;
-import pojo.Componente;
-import pojo.Producto;
 import pojo.Proyecto;
-import pojo.Subproducto;
 import utilities.CExcel;
 import utilities.CGraficaExcel;
 import utilities.CLogger;
-import utilities.CMariaDB;
 import utilities.CPdf;
 import utilities.Utils;
 
@@ -56,6 +49,13 @@ import utilities.Utils;
 public class SCargaTrabajo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
+	class stEstructura{
+		String idComponentes="";
+		String idPrestamos="";
+		String idProductos="";
+		String idSubproductos="";
+	}
+	
 	class stcargatrabajo{
 		int id;
 		String responsable;
@@ -110,57 +110,34 @@ public class SCargaTrabajo extends HttpServlet {
 		
 		if(accion.equals("getEstructrua")){
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-			
+			stEstructura estructura = new stEstructura();
 			Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
 			if(proyecto != null){
-				if(CMariaDB.connect()){
-						Connection conn = CMariaDB.getConnection();
-						ArrayList<Integer> componentes = InformacionPresupuestariaDAO.getEstructuraArbolComponentes(idPrestamo, conn);
-						
-						String items_componente="";
-						for(Integer componente:componentes){
-							
-							Componente objComponente = ComponenteDAO.getComponentePorId(componente, usuario);
-							ArrayList<Integer> productos = InformacionPresupuestariaDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
-							String items_producto = "";
-							for(Integer producto: productos){
-								Producto objProducto = ProductoDAO.getProductoPorId(producto);
-								
-								ArrayList<Integer> subproductos = InformacionPresupuestariaDAO.getEstructuraArbolSubProducto(idPrestamo,objComponente.getId(),objProducto.getId(), conn);
-								String items_subproducto = "";
-								for(Integer subproducto: subproductos){
-									Subproducto objSubProducto = SubproductoDAO.getSubproductoPorId(subproducto);
-									items_subproducto = String.join(items_subproducto.length()>0 ? ",":"", 
-											items_subproducto,
-											construirItem(objSubProducto.getNombre(), objSubProducto.getId(), 
-													4, "sp_"+objSubProducto.getId(),null));
-								}
-								
-								items_producto = String.join(items_producto.length()>0 ? ",":"", 
-										 items_producto,
-										construirItem(objProducto.getNombre(), objProducto.getId(), 
-												3, "pr_"+objProducto.getId(),items_subproducto));
-								
-								items_subproducto = "";
-							}
-							items_componente = String.join(items_componente.length()>0 ? ",":"", 
-									 items_componente,
-									construirItem(objComponente.getNombre(), objComponente.getId(), 
-											2, "c_"+objComponente.getId(),items_producto));
-							items_producto = "";	
-						}
-						
-						response_text = String.join("", construirItem(proyecto.getNombre(), proyecto.getId(),
-								1, "p_"+proyecto.getId(), items_componente));
-						
-						
-						
-						CMariaDB.close();
-						 response_text = String.join("", "\"estructura\":",response_text);
-				        response_text = String.join("", "{\"success\":true,", response_text, "}");
-					}else{
-						response_text = String.join("", "{\"success\":false}");
+				List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+				for(Object objeto : estructuraProyecto){
+					Object[] obj = (Object[]) objeto;
+					int objeto_id = (Integer)obj[0];
+					int objeto_tipo = ((BigInteger) obj[2]).intValue();
+					switch(objeto_tipo){
+					case 1: 
+						estructura.idPrestamos += estructura.idPrestamos.isEmpty() ? objeto_id : ","+objeto_id;
+						break;
+					case 2: 
+						estructura.idComponentes += estructura.idComponentes.isEmpty() ? objeto_id : ","+objeto_id;
+						break;
+					case 3: 
+						estructura.idProductos += estructura.idProductos.isEmpty() ? objeto_id : ","+objeto_id;
+						break;
+					case 4: 
+						estructura.idSubproductos += estructura.idSubproductos.isEmpty() ? objeto_id : ","+objeto_id;
+						break;
 					}
+				}
+				response_text=new GsonBuilder().serializeNulls().create().toJson(estructura);
+				response_text = String.join("", "\"estructura\":",response_text);
+				response_text = String.join("", "{\"success\":true,", response_text, "}");
+				}else{
+					response_text = String.join("", "{\"success\":false}");
 				}
 			}else if(accion.equals("getCargaTrabajoPrestamo")){
 				Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
@@ -204,110 +181,76 @@ public class SCargaTrabajo extends HttpServlet {
 			}else if(accion.equals("getEstructruaPorResponsable")){
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 				Integer idColaborador = Utils.String2Int(map.get("idColaborador"),0);
+				Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
+				Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
 				
-				Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
-				if(proyecto != null){
-					if(CMariaDB.connect()){
-						ArrayList<stestructuracolaborador> estructuracolaborador = new ArrayList<>();
-						
-							stestructuracolaborador stprestamo = construirItemPorColaborador(proyecto.getNombre(), 
-									proyecto.getId(), 1, false,null,null);
-							 
+				if(idPrestamo > 0){
+					ArrayList<stestructuracolaborador> estructuracolaborador = new ArrayList<>();
+					List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+					stestructuracolaborador stprestamo=null;
+					stestructuracolaborador stcomponente=null;
+					stestructuracolaborador stproducto=null;
+					stestructuracolaborador stsubproducto=null;
+					
+					for(Object objeto : estructuraProyecto){
+						Object[] obj = (Object[]) objeto;
+						Integer objeto_id = (Integer)obj[0];
+						String nombre = (String)obj[1];
+						Integer objeto_tipo = ((BigInteger) obj[2]).intValue();
+							
+						switch(objeto_tipo){
+						case 1: 
+							stprestamo = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
 							estructuracolaborador.add(stprestamo);
-							Connection conn = CMariaDB.getConnection();
-							ArrayList<Integer> componentes = InformacionPresupuestariaDAO.getEstructuraArbolComponentes(idPrestamo, conn);
-							
-							
-							for(Integer componente:componentes){
-								
-								Componente objComponente = ComponenteDAO.getComponentePorId(componente, usuario);
-								stestructuracolaborador stcomponente = construirItemPorColaborador(objComponente.getNombre(), 
-										objComponente.getId(), 2, false,null,null);
-								
-								estructuracolaborador.add(stcomponente);
-								ArrayList<Integer> productos = InformacionPresupuestariaDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
-								
-								for(Integer producto: productos){
-									Producto objProducto = ProductoDAO.getProductoPorId(producto);
-									stestructuracolaborador stproducto = construirItemPorColaborador(objProducto.getNombre(),
-											objProducto.getId(), 3, false,null,null);
-									estructuracolaborador.add(stproducto);
-									ArrayList<Integer> subproductos = InformacionPresupuestariaDAO.getEstructuraArbolSubProducto(idPrestamo,objComponente.getId(),objProducto.getId(), conn);
-									
-									for(Integer subproducto: subproductos){
-										Subproducto objSubProducto = SubproductoDAO.getSubproductoPorId(subproducto);
-										stestructuracolaborador stsubproducto = construirItemPorColaborador(
-												objSubProducto.getNombre(), objSubProducto.getId(), 4, false,null,null);
-										estructuracolaborador.add(stsubproducto);
-										ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolSubProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(), objSubProducto.getId(), conn);
-										
-										for(ArrayList<Integer> actividad : actividades){
-											Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(actividad.get(0), usuario, idColaborador, "r");
-											if (objActividad!=null){
-												stestructuracolaborador stactividad = construirItemPorColaborador(
-														objActividad.getNombre(), objActividad.getId(), 5, true,objActividad.getFechaInicio(),objActividad.getFechaFin());
-												estructuracolaborador.add(stactividad);
-												getEstado(stactividad, objActividad);
-												stprestamo.mostrar=true;
-												stcomponente.mostrar=true;
-												stproducto.mostrar = true;
-												stsubproducto.mostrar = true;
-												
-											}
-										}
-										
-																			
-									}
-									
-									ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(),  conn);
-									
-									for(ArrayList<Integer> actividad : actividades){
-										Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(actividad.get(0), usuario, idColaborador, "r");
-										if (objActividad!=null){
-											stestructuracolaborador stactividad = construirItemPorColaborador(
-													objActividad.getNombre(), objActividad.getId(), 5, true,objActividad.getFechaInicio(),objActividad.getFechaFin());
-											estructuracolaborador.add(stactividad);
-											getEstado(stactividad, objActividad);
-											stprestamo.mostrar=true;
-											stcomponente.mostrar=true;
-											stproducto.mostrar = true;
-										}
-									}
-									
-										
-								}
-								
-								ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolComponentesActividades(idPrestamo, objComponente.getId(),  conn);
-								for(ArrayList<Integer> actividad : actividades){
-									Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(actividad.get(0), usuario, idColaborador, "r");
-									if (objActividad!=null){
-										stestructuracolaborador stactividad = construirItemPorColaborador(
-												objActividad.getNombre(), objActividad.getId(), 5, true,objActividad.getFechaInicio(),objActividad.getFechaFin());
-										estructuracolaborador.add(stactividad);
-										getEstado(stactividad, objActividad);
-										stprestamo.mostrar=true;
-										stcomponente.mostrar=true;
-									}
+							stcomponente=null;
+							stproducto=null;
+							stsubproducto=null;
+							break;
+						case 2: 
+							stcomponente = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
+							estructuracolaborador.add(stcomponente);
+							stproducto=null;
+							stsubproducto=null;
+							break;
+						case 3: 
+							stproducto = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
+							estructuracolaborador.add(stproducto);
+							stsubproducto=null;
+							break;
+						case 4: 
+							stsubproducto = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
+							estructuracolaborador.add(stsubproducto);
+							break;
+						case 5: 
+							Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(objeto_id, usuario, idColaborador, "r");
+							if (objActividad!=null){
+								stestructuracolaborador stactividad = construirItemPorColaborador(
+										objActividad.getNombre(), objActividad.getId(), 5, true,objActividad.getFechaInicio(),objActividad.getFechaFin());
+								getEstado(stactividad, objActividad, anio_inicio, anio_fin);
+								if(stactividad.estado > 0){
+									estructuracolaborador.add(stactividad);
+									if(stprestamo!=null) stprestamo.mostrar=true;
+									if(stcomponente!=null) stcomponente.mostrar=true;
+									if(stproducto!=null) stproducto.mostrar = true;
+									if(stsubproducto!=null) stsubproducto.mostrar = true;
 								}
 							}
-							CMariaDB.close();
-							ArrayList<stestructuracolaborador> tempestructrua = new ArrayList<>();
-							for (stestructuracolaborador temp:estructuracolaborador){
-								if(temp.mostrar==true)
-									tempestructrua.add(temp);
-							}
-							
-							response_text=new GsonBuilder().serializeNulls().create().toJson(tempestructrua);
-					        response_text = String.join("", "\"estructura\":",response_text);
-					        response_text = String.join("", "{\"success\":true,", response_text,"}");
-							
-							
-							
-							
-							 
-						}else{
-							response_text = String.join("", "{\"success\":false}");
-						}
+							break;
+						}						
+					}
+					
+					ArrayList<stestructuracolaborador> tempestructrua = new ArrayList<>();
+					for (stestructuracolaborador temp:estructuracolaborador){
+						if(temp.mostrar==true)
+							tempestructrua.add(temp);
+					}
+					
+					response_text=new GsonBuilder().serializeNulls().create().toJson(tempestructrua);
+			        response_text = String.join("", "\"estructura\":",response_text);
+			        response_text = String.join("", "{\"success\":true,", response_text,"}");
+												 
+					}else{
+						response_text = String.join("", "{\"success\":false}");
 					}
 			}else if (accion.equals("exportarExcel")){
 				try{
@@ -399,16 +342,6 @@ public class SCargaTrabajo extends HttpServlet {
 			}
 		}
 	
-	private String construirItem(String nombre, Integer objetoId, Integer objetoTipo, String value,String hijos){
-		return String.join("", "{\"label\" :\"",nombre,"\",",
-				"\"value\" :\"",value,"\",",
-				"\"objetoId\" :",objetoId.toString(),",",
-				"\"objetoTipo\" :",objetoTipo.toString(),
-				(hijos!=null && hijos.length()>0 ? ",\"children\": [" + hijos + "]": ""),
-				"}");
-	}
-	
-	
 	private void agregarCarga(List<stcargatrabajo> cargas, Colaborador colaborador, 
 			Integer completadas,Integer retrasadas, Integer aCumplir, Integer alerta){
 		boolean existe = false;
@@ -441,11 +374,9 @@ public class SCargaTrabajo extends HttpServlet {
 		List<stcargatrabajo> cargas = new ArrayList<stcargatrabajo>();
 		
 		for(Actividad actividad : actividades){
-			
 				
 				Colaborador colaborador = AsignacionRaciDAO.getResponsablePorRol(actividad.getId(), 5, "r");
-				
-				
+								
 				Date hoy = new Date();
 				Date siguienteSemana = sumarDiasFecha(hoy, 7);
 				Date siguienteMes = sumarDiasFecha(siguienteSemana, 23);
@@ -496,28 +427,38 @@ public class SCargaTrabajo extends HttpServlet {
 				
 	}
 	
-	private void getEstado(stestructuracolaborador temp, Actividad actividad){
+	private void getEstado(stestructuracolaborador temp, Actividad actividad, int anio_inicio, int anio_fin){
 		Date hoy = new Date();
 		Date siguienteSemana = sumarDiasFecha(hoy, 7);
 		Date siguienteMes = sumarDiasFecha(siguienteSemana, 23);
+		
+		DateTime fechaInicial = new DateTime(actividad.getFechaInicio());
+		int actividad_Inicio = fechaInicial.getYear();
+		DateTime fechaFin = new DateTime(actividad.getFechaFin());
+		int actividad_Fin = fechaFin.getYear();
+		
 
-		if (actividad.getPorcentajeAvance() != 100){
-			if (actividad.getFechaFin().before(hoy)){
-				temp.nombreEstado ="Retrasadas";
-				temp.estado = 1;
-			}else {
-				if (actividad.getFechaFin().after(hoy) && actividad.getFechaFin().before(siguienteSemana)){
+		if(anio_inicio >= actividad_Inicio && anio_inicio <= actividad_Fin && anio_fin >= actividad_Inicio && anio_fin <= actividad_Fin){
+			if (actividad.getPorcentajeAvance() != 100){
+				if (actividad.getFechaFin().before(hoy)){
+					temp.nombreEstado ="Retrasadas";
+					temp.estado = 1;
+				}else if (actividad.getFechaFin().after(hoy) && actividad.getFechaFin().before(siguienteSemana)){
 					temp.nombreEstado ="Alerta";
 					temp.estado = 2;
 				}else if (actividad.getFechaFin().after(siguienteSemana) && actividad.getFechaFin().before(siguienteMes)){
 					temp.nombreEstado ="A cumplir";
 					temp.estado = 3;
+				}else{
+					temp.estado=0;
 				}
+				
+			}else{
+				temp.nombreEstado ="Completadas";
+				temp.estado = 4;
 			}
-			
 		}else{
-			temp.nombreEstado ="Completadas";
-			temp.estado = 4;
+			temp.estado=0;
 		}
 	}
 	
