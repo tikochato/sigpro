@@ -189,7 +189,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					esnuevo: mi.esnuevo,
 					ejercicio: mi.ejercicio,
 					entidad: mi.entidad,
-					unidadejecutoraid:mi.unidadejecutoraid == "" ? null : mi.unidadejecutoraid,
+					unidadejecutoraid:mi.unidadejecutoraid === "" ? null : mi.unidadejecutoraid,
 					longitud: mi.componente.longitud,
 					latitud : mi.componente.latitud,
 					costo: mi.componente.costo == null ? null : mi.componente.costo,
@@ -662,7 +662,7 @@ function buscarPorComponente($uibModalInstance, $rootScope, $scope, $http, $inte
 		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
 			mi.entidades = response.entidades;
 			if(mi.entidades.length>0){
-				mi.entidad = (mi.entidad===undefined || mi.entidad.entidad == null) ? mi.entidades[0] : mi.entidad;
+				mi.entidad = (mi.entidad.entidad == null || mi.entidad===undefined || mi.entidad.entidad =="") ? mi.entidades[0] : mi.entidad;
 				
 				$accionServlet.ejercicio = mi.ejercicio;
 				$accionServlet.entidad = mi.entidad.entidad;

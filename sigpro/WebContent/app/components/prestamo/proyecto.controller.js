@@ -1200,7 +1200,7 @@ function buscarPorProyecto($uibModalInstance, $rootScope,$scope, $http, $interva
 		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio,t:moment().unix()}).success(function(response) {
 			mi.entidades = response.entidades;
 			if(mi.entidades.length>0){
-				mi.entidad = (mi.entidad===undefined) ? mi.entidades[0] : mi.entidad;
+				mi.entidad = (mi.entidad.entidad == null || mi.entidad===undefined || mi.entidad.entidad== "") ? mi.entidades[0] : mi.entidad;
 				$accionServlet.ejercicio = mi.ejercicio;
 				$accionServlet.entidad = mi.entidad.entidad;
 				$http.post($servlet, $accionServlet).success(function(response) {
