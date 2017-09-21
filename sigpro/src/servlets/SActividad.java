@@ -335,13 +335,7 @@ public class SActividad extends HttpServlet {
 					
 					result = ActividadDAO.guardarActividad(actividad);
 					
-					Session session = COrden.getSessionCalculoOrden();
-					
-					COrden orden = new COrden();
-					orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase);
-					
-					if (result ){
-						
+					if (result){
 						List<AsignacionRaci> asignaciones_temp = AsignacionRaciDAO.getAsignacionPorTarea(actividad.getId(), 5);
 						
 						if (asignaciones_temp!=null){
@@ -425,6 +419,14 @@ public class SActividad extends HttpServlet {
 							result = (result && ActividadPropiedadValorDAO.guardarActividadPropiedadValor(valor));
 						}
 					}
+					
+					Session session = COrden.getSessionCalculoOrden();
+					
+					if(result){
+						COrden orden = new COrden();
+						result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase);
+					}
+					
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 							+ "\"id\": " + actividad.getId() ,","
 							, "\"usuarioCreo\": \"" , actividad.getUsuarioCreo(),"\","
@@ -450,6 +452,7 @@ public class SActividad extends HttpServlet {
 				Integer proyectoId = actividad.getProyectoBase();
 				
 				actividad.setUsuarioActualizo(usuario);
+				boolean result = false;
 				boolean eliminado = ActividadDAO.eliminarActividad(actividad);
 				
 				if(eliminado){
@@ -457,10 +460,10 @@ public class SActividad extends HttpServlet {
 					Session session = COrden.getSessionCalculoOrden();
 					
 					COrden orden = new COrden();
-					orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoId);
+					result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoId);
 				}
 				
-				response_text = String.join("","{ \"success\": ",( eliminado ? "true" : "false")," }");
+				response_text = String.join("","{ \"success\": ",( result ? "true" : "false")," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
@@ -646,9 +649,8 @@ public class SActividad extends HttpServlet {
 				
 				Session session = COrden.getSessionCalculoOrden();
 				
-				
 				COrden orden = new COrden();
-				orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase);
+				result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase);
 			}
 			
 			if (result){

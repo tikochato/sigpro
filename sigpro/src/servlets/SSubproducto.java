@@ -247,9 +247,6 @@ public class SSubproducto extends HttpServlet {
 				subproducto.setDuracionDimension(duracionDimension);
 			}
 			ret = SubproductoDAO.guardarSubproducto(subproducto);
-			COrden orden = new COrden();
-			orden.calcularOrdenObjetosSuperiores(subproducto.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),
-					subproducto.getProducto().getComponente().getProyecto().getId());
 			
 			if (ret){
 				SubproductoUsuarioId subproductoUsuarioId = new SubproductoUsuarioId(subproducto.getId(), usuario);
@@ -286,6 +283,12 @@ public class SSubproducto extends HttpServlet {
 				}
 			}
 			
+			if(ret){
+				COrden orden = new COrden();
+				ret = orden.calcularOrdenObjetosSuperiores(subproducto.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),
+						subproducto.getProducto().getComponente().getProyecto().getId());
+			}
+			
 			resultadoJson = String.join("","{ \"success\": ",(ret ? "true" : "false"),", "
 					+ "\"id\": " + subproducto.getId().toString(), ","
 					, "\"usuarioCreo\": \"" , subproducto.getUsuarioCreo(),"\","
@@ -306,7 +309,6 @@ public class SSubproducto extends HttpServlet {
 		Utils.writeJSon(response, resultadoJson);
 	}
 
-	
 	private void eliminar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		int codigo = Utils.String2Int(parametro.get("codigo"), -1);
 		
