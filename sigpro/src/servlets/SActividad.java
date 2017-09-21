@@ -422,8 +422,10 @@ public class SActividad extends HttpServlet {
 					
 					Session session = COrden.getSessionCalculoOrden();
 					
-					COrden orden = new COrden();
-					result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase);
+					if(result){
+						COrden orden = new COrden();
+						result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase);
+					}
 					
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 							+ "\"id\": " + actividad.getId() ,","
