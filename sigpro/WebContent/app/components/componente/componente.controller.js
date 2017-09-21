@@ -49,7 +49,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		
 		mi.duracionDimension = mi.dimensiones[0];
 		
-		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id }).success(
+		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id, t: (new Date()).getTime() }).success(
 				function(response) {
 					mi.proyectoid = response.id;
 					mi.proyectoNombre = response.nombre;
@@ -145,7 +145,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				numeroproyecto:  $utilidades.elementosPorPagina,
 				filtro_nombre: mi.filtros['nombre'], filtro_snip: mi.filtros['snip'],
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
-				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion,t: (new Date()).getTime()
 			}).success(
 					function(response) {
 						mi.componentes = response.componentes;
@@ -189,7 +189,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					esnuevo: mi.esnuevo,
 					ejercicio: mi.ejercicio,
 					entidad: mi.entidad,
-					unidadejecutoraid:mi.unidadejecutoraid == "" ? null : mi.unidadejecutoraid,
+					unidadejecutoraid:mi.unidadejecutoraid === "" ? null : mi.unidadejecutoraid,
 					longitud: mi.componente.longitud,
 					latitud : mi.componente.latitud,
 					costo: mi.componente.costo == null ? null : mi.componente.costo,
@@ -290,6 +290,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 						accion: 'getComponentePropiedadPorTipo',
 						idComponente: mi.componente!=null ? mi.componente.id : 0,
 						idComponenteTipo: mi.componentetipoid
+						,t: (new Date()).getTime()
 				}
 
 				$http.post('/SComponentePropiedad', parametros).then(function(response){
@@ -404,7 +405,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		mi.obtenerTotalComponentes = function(){
 			$http.post('/SComponente', { accion: 'numeroComponentesPorProyecto', proyectoid: $routeParams.proyecto_id,
 				filtro_nombre: mi.filtros['nombre'],
-				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion']  }).then(
+				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],t: (new Date()).getTime()  }).then(
 					function(response) {
 						mi.totalComponentes = response.data.totalcomponentes;
 						mi.paginaActual = 1;
@@ -540,6 +541,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 						accion: 'getComponentePropiedadPorTipo',
 						idComponente: mi.componente!=null ? mi.componente.id : 0,
 						idComponenteTipo: mi.componentetipoid
+						,t: (new Date()).getTime()
 				}
 
 				$http.post('/SComponentePropiedad', parametros).then(function(response){
@@ -656,11 +658,11 @@ function buscarPorComponente($uibModalInstance, $rootScope, $scope, $http, $inte
 		var current_year = moment().year();
 		for(var i=current_year-$rootScope.catalogo_entidades_anos; i<=current_year; i++)
 			mi.ejercicios.push(i);
-		mi.ejercicio = mi.ejercicio=="" ? current_year : mi.ejercicio;
+		mi.ejercicio = mi.ejercicio == null || mi.ejercicio=="" ? current_year : mi.ejercicio;
 		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio}).success(function(response) {
 			mi.entidades = response.entidades;
 			if(mi.entidades.length>0){
-				mi.entidad = (mi.entidad===undefined) ? mi.entidades[0] : mi.entidad;
+				mi.entidad = (mi.entidad.entidad == null || mi.entidad===undefined || mi.entidad.entidad =="") ? mi.entidades[0] : mi.entidad;
 				
 				$accionServlet.ejercicio = mi.ejercicio;
 				$accionServlet.entidad = mi.entidad.entidad;

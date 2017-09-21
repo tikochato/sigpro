@@ -35,7 +35,7 @@ public class EntidadDAO {
 			Root<Entidad> root = criteria.from(Entidad.class);
 			criteria.select(root);
 			criteria.where(builder.equal(root.get("id").get("ejercicio"), ejercicio));
-			criteria.orderBy(builder.asc(root.get("nombre")));
+			criteria.orderBy(builder.asc(root.get("id")));
 			entidades = session.createQuery(criteria).getResultList();
 
 		} catch (Throwable e) {

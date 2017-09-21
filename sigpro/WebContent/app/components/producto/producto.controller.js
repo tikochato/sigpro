@@ -781,11 +781,11 @@ function modalBuscarPorProducto($uibModalInstance, $rootScope,$scope, $http, $in
 		for(var i=current_year-$rootScope.catalogo_entidades_anos; i<=current_year; i++)
 			mi.ejercicios.push(i);
 		
-		mi.ejercicio = (mi.ejercicio == "") ? current_year : mi.ejercicio;
+		mi.ejercicio = ( mi.ejercicio == null || mi.ejercicio == "") ? current_year : mi.ejercicio;
 		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio, t: (new Date()).getTime()}).success(function(response) {
 			mi.entidades = response.entidades;
 			if(mi.entidades.length>0){
-				mi.entidad = (mi.entidad===undefined) ? mi.entidades[0] : mi.entidad;
+				mi.entidad = (mi.entidad.entidad == null || mi.entidad===undefined || mi.entidad.entidad =="" ) ? mi.entidades[0] : mi.entidad;
 				$accionServlet.ejercicio = mi.ejercicio;
 				$accionServlet.entidad = mi.entidad.entidad;
 				$http.post($servlet, $accionServlet).success(function(response) {
