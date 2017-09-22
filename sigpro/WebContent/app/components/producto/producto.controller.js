@@ -467,7 +467,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	
 	mi.irAMetas=function(){
 		if(mi.producto.id!=null){
-			$location.path('/meta/'+ mi.producto.id +'/3' );
+			$location.path('/metas/'+ mi.producto.id +'/3' );
 		}
 	};
 	
