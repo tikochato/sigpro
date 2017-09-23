@@ -1,6 +1,8 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -225,6 +227,25 @@ public class DesembolsoDAO {
 		}
 		catch(Throwable e){
 			CLogger.write("8", DesembolsoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static BigDecimal getTotalDesembolsosFuturos(int proyectoId, Date fechaActual){
+		BigDecimal ret= new BigDecimal("0");
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<BigDecimal> conteo = 
+					session.createQuery("select sum(d.monto) from Desembolso d where d.proyecto.id = ?1 and d.fecha > ?2",BigDecimal.class);
+			conteo.setParameter(1, proyectoId);
+			conteo.setParameter(2, fechaActual);
+			ret = conteo.getSingleResult();
+		}
+		catch(Throwable e){
+			CLogger.write("9", DesembolsoDAO.class, e);
 		}
 		finally{
 			session.close();

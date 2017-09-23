@@ -48,8 +48,7 @@
 			                        <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
 			                         <shiro:hasPermission name="36010"><li role="menuitem"><a href="/main.jsp#!/programatipo">Tipo de Programa</a></li></shiro:hasPermission>
 			                         	<shiro:hasPermission name="3010"><li role="menuitem"><a href="/main.jsp#!/actividadtipo">Tipo de Actividad</a></li></shiro:hasPermission>                         	
-			                         	<shiro:hasPermission name="7010"><li role="menuitem"><a href="/main.jsp#!/componentetipo">Tipo de Componente</a></li></shiro:hasPermission>   
-			                         	<shiro:hasPermission name="35010"><li role="menuitem"><a href="/main.jsp#!/desembolsotipo">Tipo de Desembolso</a></li></shiro:hasPermission>
+			                         	<shiro:hasPermission name="7010"><li role="menuitem"><a href="/main.jsp#!/componentetipo">Tipo de Componente</a></li></shiro:hasPermission>
 			                         	<shiro:hasPermission name="16010"><li role="menuitem"><a href="/main.jsp#!/hitotipo">Tipo de Hito</a></li></shiro:hasPermission>                         	
 			                         	<shiro:hasPermission name="18010"><li role="menuitem"><a href="/main.jsp#!/metatipo">Tipo de Meta</a></li></shiro:hasPermission>                         	
 				                        <shiro:hasPermission name="23010"><li role="menuitem"><a href="/main.jsp#!/productotipo">Tipo de Producto</a></li></shiro:hasPermission>

@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.List;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import org.hibernate.Session;
@@ -103,6 +104,33 @@ public class DataSigadeDAO {
 			Query<DtmAvanceFisfinanDti> criteria = session.createQuery(query,DtmAvanceFisfinanDti.class);
 
 			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("4", DataSigadeDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static  BigDecimal totalDesembolsadoAFechaReal (String codigo_presupuestario, int anio, int mes){
+		BigDecimal ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		
+		try{
+			String query =String.join(" ", 
+									"select  sum(distinct desembolsos_mes_gtq)",
+									"from dtm_avance_fisfinan_det_dti",
+									"where codigo_presupuestario = ?1",
+									"and (ejercicio_fiscal < ?2 ",
+									"or (ejercicio_fiscal = ?2 and (cast(mes_desembolso as integer)) < ?3))");
+			Query<?> criteria = session.createNativeQuery(query);
+			criteria.setParameter(1, codigo_presupuestario);
+			criteria.setParameter(2, anio);
+			criteria.setParameter(3, mes);
+			Object object =  criteria.getSingleResult();
+			ret =(BigDecimal) object;
 		}
 		catch(Throwable e){
 			CLogger.write("4", DataSigadeDAO.class, e);
