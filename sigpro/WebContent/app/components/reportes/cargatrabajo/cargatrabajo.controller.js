@@ -24,6 +24,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     mi.dataChartLine = [];
     mi.etiquetasChartLine = [];
     mi.actividadesterminadas = [];
+    mi.estructuraPrestamo = [];
     
     mi.pieColors = ['#fd7b7d','#dddd7d','#bae291','#9cc3e2'];
     
@@ -99,7 +100,8 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			$location.path('/cargatrabajo/rv');
 	}
     
-    $http.post('/SProyecto',{accion: 'getProyectos'}).success(
+    $http.post('/SProyecto',{accion: 'getProyectos',
+		t: new Date().getTime()}).success(
 		function(response) {
 			mi.prestamos = []; 
 			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un préstamo'});
@@ -108,11 +110,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 					mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
 				}
 				mi.prestamo = mi.prestamos[0];
-				
-				
-				
-				
-				
+								
 			}
 		});
     
@@ -215,7 +213,8 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	
 	mi.getEntidades = function(){
 		
-		$http.post('/SEntidad', {accion: 'cargar'}).success(
+		$http.post('/SEntidad', {accion: 'cargar',
+			t: new Date().getTime()}).success(
 				function(response){
 					mi.entidades = [];
 					mi.entidades.push({'value' : 0, 'text' : 'Seleccione una opción'});
@@ -248,35 +247,15 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			mi.idPrestamo = mi.prestamo.value;
 			mi.mostrar = false;
 			
-			$http.post('/SCargaTrabajo', {accion: 'getEstructrua', idPrestamo :mi.prestamo.value}).success(
+			$http.post('/SCargaTrabajo', {accion: 'getEstructrua', idPrestamo :mi.prestamo.value,
+				t: new Date().getTime()}).success(
 					function(response){
-						var estructura = response.estructura;
+						mi.estructuraPrestamo = response.estructura;
 						
-						mi.objetosSeleccionados.push({
-							objetoId: estructura.objetoId,
-							objetoTipo: estructura.objetoTipo
-						})
-						
-						if (estructura.children!=null || estructura.children!= undefined)
-							mi.agregarhijos(estructura.children);
-						
-						var idPrestamos = "";
-						var idComponentes = "";
-						var idProductos = "";
-						var idSubproductos = "";
-						
-						for (x in mi.objetosSeleccionados){
-							switch (mi.objetosSeleccionados[x].objetoTipo){
-								case 1: idPrestamos = idPrestamos + (idPrestamos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
-								break;
-								case 2: idComponentes = idComponentes + (idComponentes.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
-								break;
-								case 3: idProductos = idProductos + (idProductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
-								break;
-								case 4: idSubproductos = idSubproductos + (idSubproductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
-								break;
-							} 
-						}
+						var idPrestamos = mi.estructuraPrestamo.idPrestamos;
+						var idComponentes = mi.estructuraPrestamo.idComponentes;
+						var idProductos = mi.estructuraPrestamo.idProductos;
+						var idSubproductos = mi.estructuraPrestamo.idSubproductos;
 						
 						$http.post('/SCargaTrabajo', 
 								{
@@ -286,7 +265,8 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 									idProductos:idProductos,
 									idSubproductos:idSubproductos,
 									anio_inicio:mi.fechaInicio,
-									anio_fin: mi.fechaFin
+									anio_fin: mi.fechaFin,
+									t: new Date().getTime()
 									
 								}).success(function(response){
 									if(response.success){
@@ -323,7 +303,8 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 									idProductos:idProductos,
 									idSubproductos:idSubproductos,
 									anio_inicio:mi.fechaInicio,
-									anio_fin: mi.fechaFin
+									anio_fin: mi.fechaFin,
+									t: new Date().getTime()
 									
 									
 								}).success(function(response){
@@ -408,23 +389,11 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	
 	mi.exportarExcel = function(){
 
-		var idPrestamos = "";
-		var idComponentes = "";
-		var idProductos = "";
-		var idSubproductos = "";
+		var idPrestamos = mi.estructuraPrestamo.idPrestamos;
+		var idComponentes = mi.estructuraPrestamo.idComponentes;
+		var idProductos = mi.estructuraPrestamo.idProductos;
+		var idSubproductos = mi.estructuraPrestamo.idSubproductos;
 		
-		for (x in mi.objetosSeleccionados){
-			switch (mi.objetosSeleccionados[x].objetoTipo){
-				case 1: idPrestamos = idPrestamos + (idPrestamos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
-				break;
-				case 2: idComponentes = idComponentes + (idComponentes.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
-				break;
-				case 3: idProductos = idProductos + (idProductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
-				break;
-				case 4: idSubproductos = idSubproductos + (idSubproductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
-				break;
-			} 
-		}
 		$http.post('/SCargaTrabajo', { 
 			accion: 'exportarExcel', 
 			idPrestamos:idPrestamos,
@@ -446,26 +415,14 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			 	}
 		  	);
 		};
+		
 		mi.exportarPdf = function(){
 
-			var idPrestamos = "";
-			var idComponentes = "";
-			var idProductos = "";
-			var idSubproductos = "";
-			
-			for (x in mi.objetosSeleccionados){
-				switch (mi.objetosSeleccionados[x].objetoTipo){
-					case 1: idPrestamos = idPrestamos + (idPrestamos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
-					break;
-					case 2: idComponentes = idComponentes + (idComponentes.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
-					break;
-					case 3: idProductos = idProductos + (idProductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
-					break;
-					case 4: idSubproductos = idSubproductos + (idSubproductos.length > 0 ? "," : "") + mi.objetosSeleccionados[x].objetoId; 
-					break;
-				} 
-			}
-			mi.mostrarCargando = true;
+			var idPrestamos = mi.estructuraPrestamo.idPrestamos;
+			var idComponentes = mi.estructuraPrestamo.idComponentes;
+			var idProductos = mi.estructuraPrestamo.idProductos;
+			var idSubproductos = mi.estructuraPrestamo.idSubproductos;
+
 			$http.post('/SCargaTrabajo', { 
 				accion: 'exportarPdf', 
 				idPrestamos:idPrestamos,
@@ -477,7 +434,6 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 				t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
-						  mi.mostrarCargando = false;
 						  var anchor = angular.element('<a/>');
 						  anchor.attr({
 					         href: 'data:application/pdf;base64,' + response.data,
@@ -485,13 +441,12 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 					         download: 'CargaTrabajo.pdf'
 						  })[0].click();
 					  }.bind(this), function errorCallback(response){
-						  mi.mostrarCargando = false;	
 				 	}
 			  	);
 			};
+			
 	mi.reset();
 	
-	// ------------
 	mi.getEstructura = function (){
 		
 		if(mi.prestamo.value > 0)
@@ -566,7 +521,8 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 						idPrestamos:idPrestamos,
 						idComponentes:idComponentes,
 						idProductos:idProductos,
-						idSubproductos:idSubproductos
+						idSubproductos:idSubproductos,
+						t: new Date().getTime()
 						
 					}).success(function(response){
 						if(response.success){
@@ -598,7 +554,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	};
 	
 	
-	mi.llamarModalEstructuraResponsable = function(idproyecto,idresponsable) {
+	mi.llamarModalEstructuraResponsable = function(idproyecto,idresponsable, anioInicio, anioFin) {
 		var resultado = $q.defer();
 		var modalInstance = $uibModal.open({
 			animation : 'true',
@@ -615,7 +571,13 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 				},
 				$idresponsable : function() {
 					return idresponsable;
-				}	
+				},
+				$anioInicio : function() {
+					return anioInicio;
+				},
+				$anioFin : function() {
+					return anioFin;
+				}
 			}
 		});
 		
@@ -627,7 +589,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	
 	
 	mi.actividadesResponsable = function(valor){
-		var resultado = mi.llamarModalEstructuraResponsable(mi.prestamo.value,valor.id); 
+		var resultado = mi.llamarModalEstructuraResponsable(mi.prestamo.value,valor.id,mi.fechaInicio,mi.fechaFin);
 	};
 	
 	
@@ -683,7 +645,8 @@ function modalEstructura($uibModalInstance, $scope, $http, $interval,
 	
 	mi.seleccionados = [];
 	
-	$http.post('/SCargaTrabajo', {accion: 'getEstructrua', idPrestamo :$idproyecto}).success(
+	$http.post('/SCargaTrabajo', {accion: 'getEstructrua', idPrestamo :$idproyecto,
+		t: new Date().getTime()}).success(
 			function(response){
 				mi.estructuraProyecto = response.estructura;
 				
@@ -738,16 +701,23 @@ function modalEstructura($uibModalInstance, $scope, $http, $interval,
 
 app.controller('modalEstructuraResponsable', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', '$idproyecto','$idresponsable',modalEstructuraResponsable ]);
+	'$timeout', '$log', '$idproyecto','$idresponsable','$anioInicio','$anioFin',modalEstructuraResponsable ]);
 
 function modalEstructuraResponsable($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $idproyecto,$idresponsable) {
+	i18nService, $utilidades, $timeout, $log, $idproyecto,$idresponsable,$anioInicio,$anioFin) {
 
 	var mi = this;
 	
 	
 	
-	$http.post('/SCargaTrabajo', {accion: 'getEstructruaPorResponsable', idPrestamo :$idproyecto,idColaborador:$idresponsable}).success(
+	$http.post('/SCargaTrabajo', {
+		accion: 'getEstructruaPorResponsable', 
+		idPrestamo :$idproyecto,
+		idColaborador:$idresponsable,
+		anio_inicio:$anioInicio,
+		anio_fin: $anioFin,
+		t: new Date().getTime()}).success(
+
 			function(response){
 				mi.estructuraProyecto = response.estructura;
 				
