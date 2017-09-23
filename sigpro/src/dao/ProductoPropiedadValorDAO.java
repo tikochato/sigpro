@@ -259,13 +259,16 @@ public class ProductoPropiedadValorDAO {
 	public static ProductoPropiedadValor getValorPorProdcutoYPropiedad(int idPropiedad,int idProducto){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		ProductoPropiedadValor ret = null;
+		List<ProductoPropiedadValor> listRet = null;
 		try {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<ProductoPropiedadValor> criteria = builder.createQuery(ProductoPropiedadValor.class);
 			Root<ProductoPropiedadValor> root = criteria.from(ProductoPropiedadValor.class);
 			criteria.select(root);
 			criteria.where(builder.equal(root.get("id"), new ProductoPropiedadValorId( idPropiedad,idProducto)));
-			ret = session.createQuery(criteria).getSingleResult();
+			listRet = session.createQuery(criteria).getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+			
 		} catch (Throwable e) {
 			CLogger.write("9", ProductoPropiedadValorDAO.class, e);
 		} finally {

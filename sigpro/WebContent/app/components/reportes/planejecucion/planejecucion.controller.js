@@ -38,7 +38,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 
 	  mi.dataRadar = [
 		    [0, 0, 0],  //planificado
-		    [30, 32, 35]  //real
+		    [0, 0, 0]  //real
 		  ];
 	  
 	
@@ -90,7 +90,10 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 							t: (new Date()).getTime()})
 						 .then(function(response){
 							 var fecha_actual = moment(response.data.fecha,'DD/MM/YYYY').toDate();
-							 mi.dataRadar[0][0] = Number(response.data.ejecucionFisica);
+							 mi.dataRadar[1][0] = Number(response.data.ejecucionFisicaR);
+							 mi.dataRadar[0][0] = Number(response.data.ejecucionFisicaP);
+							 mi.dataRadar[0][2] = Number(response.data.ejecucionFinancieraP);
+							 mi.dataRadar[0][1] = Number(response.data.plazoEjecucionP);
 							 mi.mesReportado = mi.obtenerMes(Number(moment(fecha_actual).format('MM')));
 							 mi.anioFiscal = Number(moment(fecha_actual).format('YYYY'));
 							 mi.mostrar = true; 
@@ -125,7 +128,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 				if(mi.prestamo.desembolsoAFechaUsd != undefined && mi.prestamo.montoContratado != undefined){
 					n = (mi.prestamo.desembolsoAFechaUsd / mi.prestamo.montoContratado) * 100;
 					mi.prestamo.desembolsoAFechaUsdP = Number(n.toFixed(2));
-					mi.dataRadar[0][2] = mi.prestamo.desembolsoAFechaUsdP;
+					mi.dataRadar[1][2] = mi.prestamo.desembolsoAFechaUsdP;
 				}
 			}else if (tipo==2){
 				if(mi.prestamo.montoContratadoUsd != undefined && mi.prestamo.montoPorDesembolsarUsd != undefined){
@@ -155,7 +158,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 					if (isNaN(n))
 						n = 0.00;
 					mi.prestamo.plazoEjecucionUe = Number(n.toFixed(2));	
-					mi.dataRadar[0][1] = mi.prestamo.plazoEjecucionUe.toFixed(0);
+					mi.dataRadar[1][1] = mi.prestamo.plazoEjecucionUe.toFixed(0);
 				}	
 			}
 	};
