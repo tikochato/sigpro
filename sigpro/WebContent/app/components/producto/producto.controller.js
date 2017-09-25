@@ -349,7 +349,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							mi.producto.fechaCreacion = response.data.fechaCreacion;
 							mi.producto.usuarioactualizo = response.data.usuarioactualizo;
 							mi.producto.fechaactualizacion = response.data.fechaactualizacion;
-							mi.obtenerTotalProductos();
+							if(!mi.esTreeview)
+								mi.obtenerTotalProductos();
+							mi.t_cambiarNombreNodo();
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el Producto');
 						}
@@ -724,7 +726,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 						, "Cancelar")
 				.result.then(function(data) {
 					if(data){
-						/*var datos = {
+						var datos = {
 								accion : 'borrar',
 								codigo : mi.producto.id,
 								t: (new Date()).getTime()
@@ -739,7 +741,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 											$utilidades.mensaje('danger',
 													'Error al borrar el Producto');
 										}
-									});*/
+									});
 						$rootScope.$emit("eliminarNodo", {});
 					}
 				}, function(){
@@ -751,7 +753,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			}
 		};
 		
-		
+		mi.t_cambiarNombreNodo = function(ev){
+			$rootScope.$emit("cambiarNombreNodo",mi.producto.nombre);
+		}
 		
 		
 		/************************************************* Metas **********************************************/

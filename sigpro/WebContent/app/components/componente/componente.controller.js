@@ -211,9 +211,11 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 						mi.componente.fechaCreacion=response.fechaCreacion;
 						mi.componente.usuarioActualizo=response.usuarioactualizo;
 						mi.componente.fechaActualizacion=response.fechaactualizacion;
-						$utilidades.mensaje('success','Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
-						mi.obtenerTotalComponentes();
+						if(!mi.esTreeview)
+							mi.obtenerTotalComponentes();
 						mi.esnuevo = false;
+						mi.t_cambiarNombreNodo();
+						$utilidades.mensaje('success','Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Componente');
@@ -642,6 +644,46 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					}
 				});
 		  }
+		  
+		  mi.t_borrar = function(ev) {
+				if (mi.producto!=null && mi.producto.id!=null) {
+					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+							, "Confirmación de Borrado"
+							, '¿Desea borrar el componente "' + mi.componente.nombre + '"?'
+							, "Borrar"
+							, "Cancelar")
+					.result.then(function(data) {
+						if(data){
+							var datos = {
+									accion : 'borrar',
+									codigo : mi.componente.id,
+									t: (new Date()).getTime()
+								};
+								$http.post('/SComponente', datos).success(
+										function(response) {
+											if (response.success) {
+												
+												$utilidades.mensaje('success','Componente borrado con éxito');
+												mi.producto = null;			
+											} else{
+												$utilidades.mensaje('danger',
+														'Error al borrar el Componente');
+											}
+										});
+							$rootScope.$emit("eliminarNodo", {});
+						}
+					}, function(){
+						
+					});
+				} else {
+					$utilidades.mensaje('warning',
+							'Debe seleccionar el componente que desee borrar');
+				}
+			};
+			
+			mi.t_cambiarNombreNodo = function(ev){
+				$rootScope.$emit("cambiarNombreNodo",mi.actividad.nombre);
+			}
 } ]);
 
 app.controller('buscarPorComponente', [ '$uibModalInstance',

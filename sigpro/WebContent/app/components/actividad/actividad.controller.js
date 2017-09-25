@@ -313,10 +313,12 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						mi.actividad.fechaCreacion=response.fechaCreacion;
 						mi.actividad.usuarioActualizo=response.usuarioactualizo;
 						mi.actividad.fechaActualizacion=response.fechaactualizacion;
-						$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
-						mi.obtenerTotalActividades();
+						if(!mi.esTreeview)
+							mi.obtenerTotalActividades();
 						mi.esnuevo = false;		
 						mi.esNuevoDocumento = false;
+						mi.t_cambiarNombreNodo();
+						$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' la Actividad');
@@ -780,6 +782,46 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 					}
 				});
 	  }
+	  
+	  mi.t_borrar = function(ev) {
+			if (mi.producto!=null && mi.producto.id!=null) {
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar la actividad "' + mi.actividad.nombre + '"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						var datos = {
+								accion : 'borrar',
+								codigo : mi.actividad.id,
+								t: (new Date()).getTime()
+							};
+							$http.post('/SActividad', datos).success(
+									function(response) {
+										if (response.success) {
+											
+											$utilidades.mensaje('success','Actividad borrada con éxito');
+											mi.producto = null;			
+										} else{
+											$utilidades.mensaje('danger',
+													'Error al borrar la Actividad');
+										}
+									});
+						$rootScope.$emit("eliminarNodo", {});
+					}
+				}, function(){
+					
+				});
+			} else {
+				$utilidades.mensaje('warning',
+						'Debe seleccionar la actividad que desee borrar');
+			}
+		};
+		
+		mi.t_cambiarNombreNodo = function(ev){
+			$rootScope.$emit("cambiarNombreNodo",mi.actividad.nombre);
+		}
 } ]);
 
 app.controller('modalBuscarActividadTipo', [ '$uibModalInstance',
