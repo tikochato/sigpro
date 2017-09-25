@@ -49,7 +49,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 					{ name: 'fecha',  displayName: 'Fecha', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
 						filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.desembolsoc.filtros[\'fecha\']"  ng-keypress="grid.appScope.desembolsoc.filtrar($event)" ></input></div>'
 					},
-					{ name: 'monto', width: 100, displayName: 'Monto', cellClass: 'grid-align-right', type: 'number', cellFilter: 'currency:"Q" : 2', enableFiltering: false },
+					{ name: 'monto', width: 100, displayName: 'Monto', cellClass: 'grid-align-right', type: 'number', cellFilter: 'currency:"" : 2', enableFiltering: false },
 					{ name: 'desembolsotipo', width: 200, displayName: 'Tipo Desembolso',cellClass: 'grid-align-left',enableFiltering: false, enableSorting: false },
 					{ name: 'tipomonedasimbolo', width: 100, displayName: 'Moneda', cellClass: 'grid-align-left', type: 'number', enableFiltering: false, enableSorting: false },
 				    { name: 'usuarioCreo', cellClass: 'grid-align-left', displayName: 'Usuario Creación',
