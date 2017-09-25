@@ -646,7 +646,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 		  }
 		  
 		  mi.t_borrar = function(ev) {
-				if (mi.producto!=null && mi.producto.id!=null) {
+				if (mi.componente!=null && mi.componente.id!=null) {
 					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 							, "Confirmación de Borrado"
 							, '¿Desea borrar el componente "' + mi.componente.nombre + '"?'

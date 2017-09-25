@@ -784,7 +784,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 	  }
 	  
 	  mi.t_borrar = function(ev) {
-			if (mi.producto!=null && mi.producto.id!=null) {
+			if (mi.actividad!=null && mi.actividad.id!=null) {
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
 						, '¿Desea borrar la actividad "' + mi.actividad.nombre + '"?'
