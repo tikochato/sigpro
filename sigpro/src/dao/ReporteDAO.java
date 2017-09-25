@@ -144,7 +144,7 @@ public class ReporteDAO {
 			actividadesIds = query.getResultList();
 			
 			for(Object id : actividadesIds){
-				Actividad actividad = ActividadDAO.getActividadPorId((Integer)id, usuario);
+				Actividad actividad = ActividadDAO.getActividadPorId((Integer)id);
 				result.add(actividad);
 			}
 		}

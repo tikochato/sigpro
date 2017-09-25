@@ -81,20 +81,14 @@ public class ActividadDAO {
 		return ret;
 	}
 
-	public static Actividad getActividadPorId(int id, String usuario){
+	public static Actividad getActividadPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		List<Actividad> listRet = null;
 		Actividad ret = null;
 		try{
 			String query = "FROM Actividad a where a.id=:id";
-			if (usuario != null){
-				query += " AND a.id in (SELECT u.id.actividadid from ActividadUsuario u where u.id.usuario=:usuario )";
-			}
 			Query<Actividad> criteria = session.createQuery(query, Actividad.class);
 			criteria.setParameter("id", id);
-			if(usuario != null){
-			criteria.setParameter("usuario", usuario);
-			}
 			listRet = criteria.getResultList();
 			
 			ret = !listRet.isEmpty() ? listRet.get(0) : null;
@@ -300,7 +294,7 @@ public class ActividadDAO {
 		df.setDuracion(actividad.getDuracion());
 		objetoActividadFechas.add(df);
 		if(actividad.getPredObjetoId() != null && actividad.getPredObjetoId() != actividad.getId()){
-			objetoActividadFechas = getPredecesora(getActividadPorId(actividad.getPredObjetoId(), usuario),usuario, objetoActividadFechas);
+			objetoActividadFechas = getPredecesora(getActividadPorId(actividad.getPredObjetoId()),usuario, objetoActividadFechas);
 			
 			Date fechaFI = null;
 			for(int i = objetoActividadFechas.size()-1; i >= 0; i--){
@@ -327,7 +321,7 @@ public class ActividadDAO {
 		fechasPredecesoras.add(df);
 		
 		if(actividad.getPredObjetoId() != null && actividad.getPredObjetoId() != actividad.getId()){
-			fechasPredecesoras = getPredecesora(getActividadPorId(actividad.getPredObjetoId(), usuario),usuario, fechasPredecesoras);
+			fechasPredecesoras = getPredecesora(getActividadPorId(actividad.getPredObjetoId()),usuario, fechasPredecesoras);
 		}else{
 			fechasPredecesoras.get(fechasPredecesoras.size()-1).setFechaInicial(actividad.getFechaInicio());
 		}
@@ -362,7 +356,7 @@ public class ActividadDAO {
 	public static Actividad getFechasActividad(Actividad actividad){
 		int predecesor = (actividad.getPredObjetoId()!= null)?actividad.getPredObjetoId():0; 
 		if( predecesor > 0){
-			Actividad actividad_pred = getActividadPorId(predecesor, null);
+			Actividad actividad_pred = getActividadPorId(predecesor);
 			actividad_pred = getFechasActividad(actividad_pred);
 			Calendar fecha_final_pred = Calendar.getInstance();
 			fecha_final_pred.setTime(actividad_pred.getFechaFin());

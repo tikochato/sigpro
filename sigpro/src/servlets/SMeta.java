@@ -286,7 +286,7 @@ public class SMeta extends HttpServlet {
 					fechaInicio = (subproducto!=null && subproducto.getFechaInicio()!=null) ? Utils.formatDate(subproducto.getFechaInicio()): "";
 					fechaFin = (subproducto!=null && subproducto.getFechaFin()!=null) ? Utils.formatDate(subproducto.getFechaFin()): "";
 					break;
-				case 5: Actividad actividad = ActividadDAO.getActividadPorId(id,usuario); 
+				case 5: Actividad actividad = ActividadDAO.getActividadPorId(id); 
 					nombre = (actividad!=null) ? actividad.getNombre() : ""; 
 					fechaInicio = (actividad!=null && actividad.getFechaInicio()!=null) ? Utils.formatDate(actividad.getFechaInicio()): "";
 					fechaFin = (actividad!=null && actividad.getFechaFin()!=null) ? Utils.formatDate(actividad.getFechaFin()): "";

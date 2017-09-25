@@ -375,7 +375,7 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getPapellido()
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
 
-				dato.prestamo = obtenerPrestamo(map, proyecto.getId(),1);
+				dato.prestamo = obtenerPrestamo(proyecto.getId(),1);
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -736,27 +736,56 @@ public class SProyecto extends HttpServlet {
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 
-			datos temp = new datos();
+			datos dato = new datos();
 			if (proyecto!=null){
-				temp.id = proyecto.getId();
-				temp.nombre = proyecto.getNombre();
-				temp.proyectotipoid = proyecto.getProyectoTipo().getId();
-				temp.proyectotipo = proyecto.getProyectoTipo().getNombre();
-				temp.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
-				temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
-				temp.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
-				temp.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
-				temp.cooperante = proyecto.getCooperante().getNombre();
-				temp.cooperanteid = proyecto.getCooperante().getId();
+				dato.id = proyecto.getId();
+				dato.nombre = proyecto.getNombre();
+				dato.objetivo = proyecto.getObjetivo();
+				dato.descripcion = proyecto.getDescripcion();
+				dato.snip = proyecto.getSnip();
+				dato.proyectotipo = proyecto.getProyectoTipo().getNombre();
+				dato.proyectotipoid = proyecto.getProyectoTipo().getId();
+				dato.unidadejecutora = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getNombre() :"";
+				dato.unidadejecutoraid = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getUnidadEjecutora() : null;
+				dato.entidadentidad = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEntidadentidad() : null;
+				dato.entidadnombre = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getEntidad().getNombre() : "";
+				dato.ejercicio = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEjercicio() : null;
+				dato.cooperante = proyecto.getCooperante().getNombre();
+				dato.cooperanteid = proyecto.getCooperante().getId();
+				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
+				dato.usuarioCreo = proyecto.getUsuarioCreo();
+				dato.fechaactualizacion = Utils.formatDateHour( proyecto.getFechaActualizacion());
+				dato.usuarioactualizo = proyecto.getUsuarioActualizo();
+				dato.programa = proyecto.getPrograma();
+				dato.subprograma = proyecto.getSubprograma();
+				dato.proyecto = proyecto.getProyecto();
+				dato.obra = proyecto.getObra();
+				dato.actividad = proyecto.getActividad();
+				dato.renglon = proyecto.getRenglon();
+				dato.ubicacionGeografica =proyecto.getUbicacionGeografica();
+				dato.longitud = proyecto.getLongitud();
+				dato.latitud = proyecto.getLatitud();
+				dato.acumulacionCosto = proyecto.getAcumulacionCosto() != null ? proyecto.getAcumulacionCosto().getId() : null;
+				dato.acumulacionCostoNombre = proyecto.getAcumulacionCosto() != null ? proyecto.getAcumulacionCosto().getNombre() : null;
+				dato.objetivoEspecifico = proyecto.getObjetivoEspecifico()!=null ? proyecto.getObjetivoEspecifico() : null;
+				dato.visionGeneral = proyecto.getVisionGeneral() !=null ? proyecto.getVisionGeneral() : null;
+
+				dato.directorProyectoId = proyecto.getColaborador()!= null ? proyecto.getColaborador().getId() : null;
+				dato.directorProyectoNmbre = proyecto.getColaborador()!= null ? (proyecto.getColaborador().getPnombre()
+										+ " " + proyecto.getColaborador().getSnombre()
+										+ " " + proyecto.getColaborador().getPapellido()
+										+ " " + proyecto.getColaborador().getSapellido()) : null;
+
+				dato.prestamo = obtenerPrestamo(proyecto.getId(),1);
 			}
-			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
+			response_text=new GsonBuilder().serializeNulls().create().toJson(dato);
 	        response_text = String.join("", "\"proyecto\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 
 		}
 		else if(accion.equals("controlArbol")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-			Nodo arbol = EstructuraProyectoDAO.getEstructuraProyectoArbol(id);
+			Nodo arbol = EstructuraProyectoDAO.getEstructuraProyectoArbol(id, usuario);
 			Nodo root = new Nodo(0, 0, "", 0, new ArrayList<Nodo>(), null, false);
 			arbol.parent = root;
 			root.children.add(arbol);
@@ -789,7 +818,7 @@ public class SProyecto extends HttpServlet {
 	}
 
 
-	private stprestamo obtenerPrestamo(Map<String, String> map,int objetoId, int objetoTipo){
+	private stprestamo obtenerPrestamo(int objetoId, int objetoTipo){
 		stprestamo ret =  null;
 		Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(objetoId, objetoTipo);
 

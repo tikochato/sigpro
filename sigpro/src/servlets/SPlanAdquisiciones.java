@@ -222,7 +222,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 							subproducto.setFechaActualizacion(new Date());
 							SubproductoDAO.guardarSubproducto(subproducto);
 						}else if(objetoTipo == 5 && !total.equals(BigDecimal.ZERO) ){
-							Actividad actividad = ActividadDAO.getActividadPorId(objetoId, usuario);
+							Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
 							actividad.setCosto(total);
 							actividad.setUsuarioActualizo(usuario);
 							actividad.setFechaActualizacion(new Date());
@@ -650,7 +650,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 							for(ArrayList<Integer> actividad : actividadesSubProducto){
 								tempPrestamo = new stplanadquisiciones();
 								
-								Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+								Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0));
 								tempPrestamo.objetoId = objActividad.getId();
 								tempPrestamo.nombre = objActividad.getNombre();
 								tempPrestamo.objetoTipo = 5;
@@ -719,7 +719,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 						for(ArrayList<Integer> actividad : actividadesProducto){
 							tempPrestamo = new stplanadquisiciones();
 							
-							Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+							Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0));
 							tempPrestamo.objetoId = objActividad.getId();
 							tempPrestamo.nombre = objActividad.getNombre();
 							tempPrestamo.objetoTipo = 5;
@@ -781,7 +781,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 					for(ArrayList<Integer> actividad : actividadesComponente){
 						tempPrestamo = new stplanadquisiciones();
 						
-						Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+						Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0));
 						tempPrestamo.objetoId = objActividad.getId();
 						tempPrestamo.nombre = objActividad.getNombre();
 						tempPrestamo.objetoTipo = 5;
@@ -844,7 +844,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 				for(ArrayList<Integer> actividad : actividadesPrestamo){
 					tempPrestamo = new stplanadquisiciones();
 					
-					Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+					Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0));
 					tempPrestamo.objetoId = objActividad.getId();
 					tempPrestamo.nombre = objActividad.getNombre();
 					tempPrestamo.objetoTipo = 5;

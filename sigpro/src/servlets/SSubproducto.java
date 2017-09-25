@@ -73,8 +73,8 @@ public class SSubproducto extends HttpServlet {
 		String descripcion;
 		String usuarioCreo;
 		String usuarioActualizo;
-		Date fechaCreacion;
-		Date fechaActualizacion;
+		String fechaCreacion;
+		String fechaActualizacion;
 		int estado;
 		Long snip;
 		Integer programa;
@@ -286,7 +286,7 @@ public class SSubproducto extends HttpServlet {
 			if(ret){
 				COrden orden = new COrden();
 				ret = orden.calcularOrdenObjetosSuperiores(subproducto.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),
-						subproducto.getProducto().getComponente().getProyecto().getId());
+						subproducto.getProducto().getComponente().getProyecto().getId(), null, null);
 			}
 			
 			resultadoJson = String.join("","{ \"success\": ",(ret ? "true" : "false"),", "
@@ -317,7 +317,7 @@ public class SSubproducto extends HttpServlet {
 		boolean eliminado = SubproductoDAO.eliminar(codigo, usuario);
 		if (eliminado) {
 			COrden orden = new COrden();
-			orden.calcularOrdenObjetosSuperiores(pojo.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),proyectoId);
+			orden.calcularOrdenObjetosSuperiores(pojo.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),proyectoId, null, null);
 			
 			listar(parametro, response);
 		}
@@ -388,8 +388,8 @@ public class SSubproducto extends HttpServlet {
 			temp.descripcion = subproducto.getDescripcion();
 			temp.usuarioCreo = subproducto.getUsuarioCreo();
 			temp.usuarioActualizo = subproducto.getUsuarioActualizo();
-			temp.fechaCreacion = subproducto.getFechaCreacion();
-			temp.fechaActualizacion = subproducto.getFechaActualizacion();
+			temp.fechaCreacion = Utils.formatDate(subproducto.getFechaCreacion());
+			temp.fechaActualizacion = Utils.formatDate(subproducto.getFechaActualizacion());
 			temp.estado = subproducto.getEstado();
 			temp.snip = subproducto.getSnip();
 			temp.programa = subproducto.getPrograma();
@@ -467,20 +467,44 @@ public class SSubproducto extends HttpServlet {
 		if (subproducto!=null){
 			stsubproducto temp = new stsubproducto();
 			temp.id = subproducto.getId();
+			temp.producto = null;
 			temp.nombre = subproducto.getNombre();
-			temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
-			temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
-			temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
-			temp.unidadEjecutora = subproducto.getUnidadEjecutora().getId().getUnidadEjecutora();
-			temp.entidadentidad = subproducto.getUnidadEjecutora().getId().getEntidadentidad();
-			temp.entidadnombre = subproducto.getUnidadEjecutora().getEntidad().getNombre();
-			temp.ejercicio = subproducto.getUnidadEjecutora().getId().getEjercicio();
+			temp.descripcion = subproducto.getDescripcion();
+			temp.usuarioCreo = subproducto.getUsuarioCreo();
+			temp.usuarioActualizo = subproducto.getUsuarioActualizo();
+			temp.fechaCreacion = Utils.formatDateHour(subproducto.getFechaCreacion());
+			temp.fechaActualizacion = Utils.formatDateHour(subproducto.getFechaActualizacion());
+			temp.estado = subproducto.getEstado();
+			temp.snip = subproducto.getSnip();
+			temp.programa = subproducto.getPrograma();
+			temp.subprograma = subproducto.getSubprograma();
+			temp.proyecto = subproducto.getProyecto();
+			temp.actividad = subproducto.getActividad();
+			temp.obra = subproducto.getObra();
+			temp.latitud = subproducto.getLatitud();
+			temp.longitud = subproducto.getLongitud();
 			temp.fechaInicio = Utils.formatDate(subproducto.getFechaInicio());
 			temp.fechaFin = Utils.formatDate(subproducto.getFechaFin());
 			temp.duracion = subproducto.getDuracion();
 			temp.duracionDimension = subproducto.getDuracionDimension();
-			resultadoJson = Utils.getJSonString("subproducto", temp);
-			resultadoJson = "{\"success\":true," + resultadoJson + "}";	
+			temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
+			temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
+			
+			if (subproducto.getSubproductoTipo() != null){
+				temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
+				temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
+			}
+			
+			if (subproducto.getUnidadEjecutora() != null){
+				temp.unidadEjecutora = subproducto.getUnidadEjecutora().getId().getUnidadEjecutora();
+				temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
+			}
+			else if (subproducto.getProducto().getUnidadEjecutora()!=null){
+				temp.unidadEjecutora = subproducto.getProducto().getUnidadEjecutora().getId().getUnidadEjecutora();
+				temp.nombreUnidadEjecutora = subproducto.getProducto().getUnidadEjecutora().getNombre();
+			}
+			resultadoJson = new GsonBuilder().serializeNulls().create().toJson(temp);
+			resultadoJson = "{\"success\":true," +" \"subproducto\": " + resultadoJson + "}";	
 		}else{
 			resultadoJson = "{ \"success\": false }";
 				
@@ -539,7 +563,7 @@ public class SSubproducto extends HttpServlet {
 				
 				COrden orden = new COrden();
 				orden.calcularOrdenObjetosSuperiores(subproducto.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),
-						subproducto.getProducto().getComponente().getProyecto().getId());
+						subproducto.getProducto().getComponente().getProyecto().getId(), null, null);
 				
 				
 				stsubproducto temp = new stsubproducto();

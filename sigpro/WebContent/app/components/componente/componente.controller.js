@@ -1,10 +1,15 @@
 var app = angular.module('componenteController', []);
 
-app.controller('componenteController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
+app.controller('componenteController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
+	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
 		var mi=this;
-
-		$window.document.title = $utilidades.sistema_nombre+' - Componentes';
+		
+		mi.esTreeview = $rootScope.treeview;
+		mi.botones = true;
+		
+		if(!mi.esTreeview)
+			$window.document.title = $utilidades.sistema_nombre+' - Componentes';
+		
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.componentes = [];
@@ -36,7 +41,6 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		mi.ejercicio = '';
 
 		mi.dimensiones = [
-			{value:0,nombre:'Seleccione una opción'},
 			{value:1,nombre:'Dias',sigla:'d'}
 		];
 		
@@ -164,6 +168,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		}
 
 		mi.guardar=function(esvalido){
+			mi.botones = false;
 			for (campos in mi.camposdinamicos) {
 				if (mi.camposdinamicos[campos].tipo === 'fecha') {
 					mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
@@ -212,6 +217,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Componente');
+					mi.botones = true;
 				});
 			
 		};
@@ -224,6 +230,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 						, "Borrar"
 						, "Cancelar")
 				.result.then(function(data) {
+					mi.botones = false;
 					if(data){
 						$http.post('/SComponente', {
 							accion: 'borrarComponente',
@@ -236,6 +243,7 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 							}
 							else
 								$utilidades.mensaje('danger','Error al borrar el Cooperante');
+							mi.botones = true;
 						});
 					}
 				}, function(){
@@ -274,8 +282,8 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 				mi.entidad = mi.componente.entidadentidad;
 				mi.entidadnombre = mi.componente.entidadnombre;
 				
-				if(mi.componente.duracionDimension.toLowerCase() == 'd'){
-					mi.duracionDimension = mi.dimensiones[1];
+				if(mi.componente.duracionDimension == 'd'){
+					mi.duracionDimension = mi.dimensiones[0];
 				}else{
 					mi.duracionDimension = mi.dimensiones[0];
 				}
@@ -621,6 +629,19 @@ app.controller('componenteController',['$scope','$http','$interval','i18nService
 		    }, function() {
 			});
 		  };
+		  
+		  if(mi.esTreeview){
+			  $http.post('/SComponente', { accion : 'getComponentePorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
+					if (response.data.success) {
+						mi.componente = response.data.componente;
+						if(mi.componente.fechaInicio != "")
+							mi.componente.fechaInicio = moment(mi.componente.fechaInicio, 'DD/MM/YYYY').toDate();
+						if(mi.componente.fechaFin != "")
+							mi.componente.fechaFin = moment(mi.componente.fechaFin, 'DD/MM/YYYY').toDate();
+						mi.editar();
+					}
+				});
+		  }
 } ]);
 
 app.controller('buscarPorComponente', [ '$uibModalInstance',

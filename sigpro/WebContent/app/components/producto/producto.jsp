@@ -23,7 +23,7 @@
 	    <%@ include file="/app/components/producto/buscarPorProducto.jsp"%>
 	</script>
 	<shiro:lacksPermission name="21010">
-		<p ng-init="producto.redireccionSinPermisos()"></p>
+		<span ng-init="producto.redireccionSinPermisos()"></span>
 	</shiro:lacksPermission>
 
 	<div class="panel panel-default" ng-if="!producto.esTreeview">
@@ -97,36 +97,37 @@
 			<h2 ng-hide="!producto.esNuevo"><small>Nuevo Producto</small></h2>
 			<h2 ng-hide="producto.esNuevo"><small>Edición de Producto</small></h2>
 		</div>
-		<div class="operation_buttons" >
+		<div class="operation_buttons">
 			<div class="btn-group" ng-hide="producto.esNuevo" ng-if="!producto.esTreeview">
-				<label class="btn btn-default" ng-click="producto.irASubproductos()" uib-tooltip="Subproductos" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="producto.botones ? producto.irASubproductos() : ''" uib-tooltip="Subproductos" tooltip-placement="bottom" ng-disabled="!producto.botones">
 				<span class="glyphicon glyphicon-link"></span></label>
-				<label class="btn btn-default" ng-click="producto.irAActividades()" uib-tooltip="Actividades" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="producto.botones ? producto.irAActividades() : ''" uib-tooltip="Actividades" tooltip-placement="bottom" ng-disabled="!producto.botones">
 				<span class="glyphicon glyphicon-th-list"></span></label>
-				<label class="btn btn-default" ng-click="producto.irARiesgos()" uib-tooltip="Riesgos" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="producto.botones ? producto.irARiesgos() : ''" uib-tooltip="Riesgos" tooltip-placement="bottom" ng-disabled="!producto.botones">
 				<span class="glyphicon glyphicon-warning-sign"></span></label>
-				<label class="btn btn-default" ng-click="producto.irAMetas()" uib-tooltip="Metas" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="producto.botones ? producto.irAMetas() : ''" uib-tooltip="Metas" tooltip-placement="bottom" ng-disabled="!producto.botones">
 				<span class="glyphicon glyphicon-scale"></span></label>
 			</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="21020">
-					<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+					<label class="btn btn-success" ng-click="producto.mForm.$valid && producto.botones ? producto.guardar() : ''" ng-disabled="!producto.mForm.$valid || !producto.botones" uib-tooltip="Guardar" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
 				</shiro:hasPermission>
-				<label ng-if="!producto.esTreeview" class="btn btn-primary" ng-click="producto.cancelar()" uib-tooltip="Ir a Tabla">
+				<label ng-if="!producto.esTreeview" class="btn btn-primary" ng-click="producto.botones ? producto.cancelar() : ''" uib-tooltip="Ir a Tabla" ng-disabled="!producto.botones">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-				<label ng-if="producto.esTreeview" class="btn btn-danger" ng-click="producto.t_borrar()" ng-disabled="!(producto.producto.id>0)" uib-tooltip="Borrar">
+				<label ng-if="producto.esTreeview" class="btn btn-danger" ng-click=" producto.botones ? producto.t_borrar() : ''" ng-disabled="!(producto.producto.id>0) || !producto.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
-		
+		<div class="col-sm-12" style="margin-top: 10px;">
 		<uib-tabset active="active">
-    	<uib-tab index="0" heading="Edición de Producto">
-    
-		
+    	<uib-tab index="0" name="tproducto">
+		<uib-tab-heading>
+	        <i class="glyphicon glyphicon-certificate"></i> Producto
+	      </uib-tab-heading>
 		<div>
 		<div class="col-sm-12">
-			<form name="form" class="css-form">
+			<form name="producto.mForm" class="css-form">
 					<div class="form-group">
 						<label id="campo0" name="campo0" class="floating-label id_class">ID {{ producto.producto.id }}</label>
 						<br/><br/>
@@ -293,7 +294,7 @@
 							<div class="form-group" >
 							  <input type="text"  class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" min={{producto.fechaInicioPadre}} ng-model="producto.producto.fechaInicio" is-open="producto.fi_abierto"
 							            datepicker-options="producto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="producto.cambioDuracion(producto.duracionDimension);" ng-required="true"  
-							            ng-click="producto.abrirPopupFecha(1000)" ng-value="producto.producto.fechaInicio" onblur="this.setAttribute('value', this.value);" ng-readonly="true"/>
+							            ng-value="producto.producto.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
 							            <span class="label-icon" ng-click="producto.abrirPopupFecha(1000)">
 							              <i class="glyphicon glyphicon-calendar"></i>
 							            </span>
@@ -351,155 +352,47 @@
 			</form>
 			</div>
 		</div>
-		<div class="col-sm-12 operation_buttons" align="right">
-		
-		<div class="label-form" align="center">Los campos marcados con * son obligatorios</div>
-			<div class="btn-group">
-				<shiro:hasPermission name="21020">
-					<label class="btn btn-success" ng-click="form.$valid ? producto.guardar() : ''" ng-disabled="!form.$valid" ng-disabled="!form.$valid" uib-tooltip="Guardar">
-					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
-				</shiro:hasPermission>
-				<label ng-if="!producto.esTreeview" class="btn btn-primary" ng-click="producto.cancelar()" uib-tooltip="Ir a Tabla">
-				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-				<label ng-if="producto.esTreeview" class="btn btn-danger" ng-click="producto.t_borrar()" ng-disabled="!(producto.producto.id>0)" uib-tooltip="Borrar">
-				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
-			</div>
-		</div>
 		</uib-tab>
-		
-		
-		<uib-tab index="1" heading="Metas" ng-click="producto.metasActivo()">
-		<shiro:lacksPermission name="17010">
-			<p ng-init="producto.redireccionSinPermisos()"></p>
-		</shiro:lacksPermission>
-		
-		<div class="panel panel-default">
-			<div class="panel-heading"><h3>Metas de {{ producto.nombreTipoPcp }}</h3></div>
-		</div>
-		<div class="subtitulo">
-			{{producto.nombrePcp}}
-		</div>
-				
-		<div align="center">
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div class="btn-group">
-			       <shiro:hasPermission name="17040">
-			       		<label class="btn btn-primary" ng-click="producto.nuevaMeta()" title="Nuevo">
-						<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
-			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="17030">
-			       		<label class="btn btn-danger" ng-click="producto.borrarMeta()" title="Borrar">
-						<span class="glyphicon glyphicon-trash"></span> Borrar</label>
-			       </shiro:hasPermission>
-			        
-			        
-    			</div>				
-    		</div>
-    		<shiro:hasPermission name="17010">
-    		<div class="col-sm-12" align="center">
-				<br/>
-				<div id="gridMetas" ui-grid="producto.gridOptionsMetas" class="grid" 
-				 	ui-grid-save-state ui-grid-move-columns ui-grid-resize-columns
-					ui-grid-selection ui-grid-auto-resize ui-grid-edit		
-					style="height: 250px;">
-					<div class="grid_loading" ng-hide="!producto.mostrarcargandoMetas">
-				  	<div class="msg">
-				      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
-						  <br /><br />
-						  <b>Cargando, por favor espere...</b>
-					  </span>
-					</div>
-				  </div>
-				</div>
-				<br/>
-				<div class="total-rows">Total de {{  producto.totalMetas + (producto.totalMetas == 1 ? " Meta" : " Metas" ) }}</div>
-			</div>
-			
-			<div class="valores" ng-show="producto.mostrarValores">
-					<br>
-				<div class="form-group col-sm-2" style="text-align: left;">
-					<select class="inputText" 
-						ng-model="producto.anio" 
-						ng-options="opcion for opcion in producto.anios" 
-						ng-readonly="true" ng-required="true" >
-						<option value="">Seleccione un año</option>
-					</select>
-					<label for="nombre" class="floating-label">* Año</label>
-				</div>
-				<div class="col-sm-12" align="center">
-					<br>
-	    			<table class="table table-striped"  style="height: 100%">
-						<thead >
-							<tr>
-								<th style="text-align: center;" class="label-form">Tipo</th>
-		         				<th style="text-align: center;" class="label-form">Enero</th>
-		         				<th style="text-align: center;" class="label-form">Febrero</th>
-		         				<th style="text-align: center;" class="label-form">Marzo</th>
-		         				<th style="text-align: center;" class="label-form">Abril</th>
-		         				<th style="text-align: center;" class="label-form">Mayo</th>
-		         				<th style="text-align: center;" class="label-form">Junio</th>
-		         				<th style="text-align: center;" class="label-form">Julio</th>
-		         				<th style="text-align: center;" class="label-form">Agosto</th>
-		         				<th style="text-align: center;" class="label-form">Septiembre</th>
-		         				<th style="text-align: center;" class="label-form">Octubre</th>
-		         				<th style="text-align: center;" class="label-form">Noviembre</th>
-								<th style="text-align: center;" class="label-form">Diciembre</th>
-		         				<th style="text-align: center;" class="label-form">Total</th>
-		         			</tr>
-						</thead>
-						<tbody >
-							<tr>
-					      		<td nowrap> <p class="nombreFormat">Planificado</p> </td>
-					      		<td nowrap> <p class="nombreFormat">1</p> </td>
-								<td nowrap> <p class="nombreFormat">2</p> </td>
-								<td nowrap> <p class="nombreFormat">3</p> </td>
-								<td nowrap> <p class="nombreFormat">4</p> </td>
-								<td nowrap> <p class="nombreFormat">5</p> </td>
-								<td nowrap> <p class="nombreFormat">6</p> </td>
-								<td nowrap> <p class="nombreFormat">7</p> </td>
-								<td nowrap> <p class="nombreFormat">8</p> </td>
-								<td nowrap> <p class="nombreFormat">9</p> </td>
-								<td nowrap> <p class="nombreFormat">10</p> </td>
-								<td nowrap> <p class="nombreFormat">11</p> </td>
-								<td nowrap> <p class="nombreFormat">12</p> </td>
-								<td nowrap> <p class="nombreFormat">tot</p> </td>
-					      	</tr>
-					      	<tr>
-					      		<td nowrap> <p class="nombreFormat">Real</p> </td>
-					      		<td nowrap> <p class="nombreFormat">1</p> </td>
-								<td nowrap> <p class="nombreFormat">2</p> </td>
-								<td nowrap> <p class="nombreFormat">3</p> </td>
-								<td nowrap> <p class="nombreFormat">4</p> </td>
-								<td nowrap> <p class="nombreFormat">5</p> </td>
-								<td nowrap> <p class="nombreFormat">6</p> </td>
-								<td nowrap> <p class="nombreFormat">7</p> </td>
-								<td nowrap> <p class="nombreFormat">8</p> </td>
-								<td nowrap> <p class="nombreFormat">9</p> </td>
-								<td nowrap> <p class="nombreFormat">10</p> </td>
-								<td nowrap> <p class="nombreFormat">11</p> </td>
-								<td nowrap> <p class="nombreFormat">12</p> </td>
-								<td nowrap> <p class="nombreFormat">tot</p> </td>
-					      	</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			
-    		</shiro:hasPermission>
-    		
-		</div>
+		<uib-tab index="1" ng-click="producto.metasActivo()">
+			<uib-tab-heading>
+	        	<i class="glyphicon glyphicon-scale"></i> Metas
+	      	</uib-tab-heading>
+			<shiro:lacksPermission name="17010">
+				<span ng-init="producto.redireccionSinPermisos()"></span>
+			</shiro:lacksPermission>
+			<%@include file="/app/components/meta/meta.jsp" %>
     	</uib-tab>
-    	
-    	
-	    <uib-tab index="2">
+    	<uib-tab index="2">
 	      <uib-tab-heading>
 	        <i class="glyphicon glyphicon-bell"></i> Riesgos
 	      </uib-tab-heading>
-	      Riesgos
+	    </uib-tab>
+	    <uib-tab index="3">
+	      <uib-tab-heading>
+	        <i class="glyphicon glyphicon-bell"></i> Adquisiciones
+	      </uib-tab-heading>
+	    </uib-tab>
+	    <uib-tab index="4">
+	      <uib-tab-heading>
+	        <i class="glyphicon glyphicon-bell"></i> Desembolsos
+	      </uib-tab-heading>
 	    </uib-tab>
 	  </uib-tabset>
+	</div>	
+		<div class="col-sm-12 operation_buttons" align="right">
 		
-		
+		<div class="label-form" align="center">Los campos marcados con * son obligatorios</div>
+			<div class="btn-group" ng-disabled="!producto.botones">
+				<shiro:hasPermission name="21020">
+					<label class="btn btn-success" ng-click="producto.mForm.$valid && producto.botones ? producto.guardar() : ''" ng-disabled="!producto.mForm.$valid || !producto.botones" uib-tooltip="Guardar">
+					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
+				</shiro:hasPermission>
+				<label ng-if="!producto.esTreeview" class="btn btn-primary" ng-click="producto.botones ? producto.cancelar() : ''" uib-tooltip="Ir a Tabla" ng-disabled="!producto.botones">
+				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+				<label ng-if="producto.esTreeview" class="btn btn-danger" ng-click="producto.botones ? producto.t_borrar() : ''" ng-disabled="!(producto.producto.id>0) || !producto.botones" uib-tooltip="Borrar">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
+			</div>
+		</div>
 		
 	</div>
 </div>

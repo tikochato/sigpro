@@ -298,8 +298,6 @@ public class SProducto extends HttpServlet {
 				
 				ret = ProductoDAO.guardarProducto(producto);
 				
-				Componente c = ComponenteDAO.getComponentePorId(producto.getComponente().getId(), usuario);
-				
 				if (ret){
 					ProductoUsuarioId productoUsuarioId = new ProductoUsuarioId(producto.getId(), usuario);
 					Usuario usu = UsuarioDAO.getUsuario(usuario);
@@ -337,7 +335,7 @@ public class SProducto extends HttpServlet {
 				
 				if(ret){
 					COrden orden = new COrden();
-					ret = orden.calcularOrdenObjetosSuperiores(producto.getComponente().getId(), 2, usuario, COrden.getSessionCalculoOrden(), c.getProyecto().getId());				
+					ret = orden.calcularOrdenObjetosSuperiores(producto.getComponente().getId(), 2, usuario, COrden.getSessionCalculoOrden(), null, null, producto.getId());				
 					
 				}
 				
@@ -361,12 +359,11 @@ public class SProducto extends HttpServlet {
 			int codigo = Utils.String2Int(parametro.get("codigo"), -1);
 			
 			Producto pojo = ProductoDAO.getProductoPorId(codigo,usuario);
-			Integer proyectoId = pojo.getComponente().getProyecto().getId();
 			boolean eliminado = ProductoDAO.eliminar(codigo, usuario);
 			
 			if (eliminado) {
 				COrden orden = new COrden();
-				orden.calcularOrdenObjetosSuperiores(pojo.getComponente().getId(), 2, usuario, COrden.getSessionCalculoOrden(),proyectoId);		
+				orden.calcularOrdenObjetosSuperiores(pojo.getComponente().getId(), 2, usuario, COrden.getSessionCalculoOrden(),null, null, codigo);		
 				
 				int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
 				int pagina = Utils.String2Int(parametro.get("pagina"), 1);
@@ -726,11 +723,9 @@ public class SProducto extends HttpServlet {
 				
 				ret = ProductoDAO.guardarProducto(producto);
 				
-				Componente c = ComponenteDAO.getComponentePorId(producto.getComponente().getId(), usuario);
-				
 				COrden orden = new COrden();
 				orden.calcularOrdenObjetosSuperiores(producto.getComponente().getId(), 2, usuario, COrden.getSessionCalculoOrden(),
-						c.getProyecto().getId());
+						null, null, producto.getId());
 			}
 			
 			stproducto temp = new stproducto();

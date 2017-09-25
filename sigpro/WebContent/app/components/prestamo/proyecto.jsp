@@ -3,8 +3,7 @@
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <div ng-controller="proyectoController as controller"
-	class="maincontainer all_page" id="title">
-	
+	ng-class=" controller.esTreeview ? 'maincontainer_treeview all_page' : 'maincontainer all_page'" id="title">
 	<script type="text/ng-template" id="map.html">
         <div class="modal-header">
             <h3 class="modal-title">Mapa de Ubicación</h3>
@@ -21,7 +20,6 @@
 			<div class="btn-group">
         </div>
     </script>
-
 	<script type="text/ng-template" id="buscarPorProyecto.jsp">
     		<%@ include file="/app/components/prestamo/buscarPorProyecto.jsp"%>
   	 </script>
@@ -32,17 +30,15 @@
     		<%@ include file="/app/components/prestamo/agregarImpacto.jsp"%>
   	 </script>
 	<shiro:lacksPermission name="24010">
-		<p ng-init="controller.redireccionSinPermisos()"></p>
+		<span ng-init="controller.redireccionSinPermisos()"></span>
 	</shiro:lacksPermission>
 	<shiro:hasPermission name="43010">
-		<p ng-init="controller.cambioOrden()"></p>
+		<span ng-init="controller.cambioOrden()"></span>
 	</shiro:hasPermission>
-	<div class="panel panel-default">
+	<div class="panel panel-default" ng-if="!controller.esTreeview">
 	  <div class="panel-heading"><h3>Préstamos</h3></div>
 	</div>
-	
-	<div align="center" ng-hide="controller.esColapsado">
-		<br>
+	<div align="center" ng-hide="controller.esColapsado" ng-if="!controller.esTreeview">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 			<shiro:hasPermission name="24040">
@@ -103,47 +99,49 @@
 
 
 	</div>
-	<div class="row second-main-form" ng-show="controller.esColapsado">
+	<div class="row second-main-form" ng-show="controller.esColapsado || controller.esTreeview">
 		<div class="page-header">
 			<h2 ng-hide="!controller.esNuevo"><small>Nuevo Préstamo</small></h2>
 			<h2 ng-hide="controller.esNuevo"><small>Edición de Préstamo</small></h2>
 			</div>
 		<div class="operation_buttons">
-			<div class="btn-group" ng-hide="controller.esNuevo">
-				<label class="btn btn-default" ng-click="controller.irAComponentes(controller.proyecto.id)" uib-tooltip="Componentes" tooltip-placement="bottom">
+			<div class="btn-group" ng-hide="controller.esNuevo" ng-if="!controller.esTreeview">
+				<label class="btn btn-default" ng-click="controller.botones ? controller.irAComponentes(controller.proyecto.id) : ''" uib-tooltip="Componentes" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-th"></span></label>
-				<label class="btn btn-default" ng-click="controller.irAHitos(controller.proyecto.id)" uib-tooltip="Hitos" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="controller.botones ? controller.irAHitos(controller.proyecto.id) : ''" uib-tooltip="Hitos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-screenshot"></span></label>
-				<label class="btn btn-default" ng-click="controller.irADesembolsos(controller.proyecto.id)" uib-tooltip="Desembolsos" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="controller.botones ? controller.irADesembolsos(controller.proyecto.id) : ''" uib-tooltip="Desembolsos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-usd"></span></label>
-				<label class="btn btn-default" ng-click="controller.irARiesgos(controller.proyecto.id)" uib-tooltip="Riesgos" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="controller.botones ? controller.irARiesgos(controller.proyecto.id) : ''" uib-tooltip="Riesgos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-warning-sign"></span></label>
-				<label class="btn btn-default" ng-click="controller.irAActividades(controller.proyecto.id)" uib-tooltip="Actividades" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="controller.botones ? controller.irAActividades(controller.proyecto.id) : ''" uib-tooltip="Actividades" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-th-list"></span></label>
-				<label class="btn btn-default" ng-click="controller.irAMapa(controller.proyecto.id)" uib-tooltip="Mapa" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMapa(controller.proyecto.id) : ''" uib-tooltip="Mapa" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-globe"></span></label>
-				<label class="btn btn-default" ng-click="controller.irAGantt(controller.proyecto.id)" uib-tooltip="Gantt" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="controller.botones ? controller.irAGantt(controller.proyecto.id) : ''" uib-tooltip="Gantt" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-indent-left"></span></label>
-				<label class="btn btn-default" ng-click="controller.irAKanban(controller.proyecto.id)" uib-tooltip="Cartelera de Actividades" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="controller.botones ? controller.irAKanban(controller.proyecto.id) : ''" uib-tooltip="Cartelera de Actividades" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-blackboard"></span></label>
-				<label class="btn btn-default" ng-click="controller.irAAgenda(controller.proyecto.id)" uib-tooltip="Agenda" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="controller.botones ? controller.irAAgenda(controller.proyecto.id) : ''" uib-tooltip="Agenda" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-calendar"></span></label>
-				<label class="btn btn-default" ng-click="controller.irAMatrizRiesgos(controller.proyecto.id)" uib-tooltip="Matriz de Riesgos" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMatrizRiesgos(controller.proyecto.id) : ''" uib-tooltip="Matriz de Riesgos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-list-alt"></span></label>
 			
 		</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">
-					<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<label class="btn btn-success" ng-click="controller.mForm.$valid && controller.botones ? controller.guardar(form.$valid) : ''" ng-disabled="!controller.mForm.$valid || !controller.botones" uib-tooltip="Guardar" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="controller.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+				<label ng-if="!controller.esTreeview" class="btn btn-primary" ng-click="controller.botones ? controller.irATabla() : ''" uib-tooltip="Ir a Tabla" tooltip-placement="bottom" ng-disabled="!controller.botones">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+				<label ng-if="controller.esTreeview" class="btn btn-danger" ng-click=" controller.botones ? controller.t_borrar() : ''" ng-disabled="!(controller.proyecto.id>0) || !controller.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
 		<br>
 		<div class="col-sm-12">
-			<form name="form">
+			<form name="controller.mForm">
 			<uib-tabset active="active">
 				<shiro:hasPermission name="43010">
 				<uib-tab ng-click="controller.getPorcentajes();" index="0" heading="Datos del préstamo" >
@@ -1253,13 +1251,15 @@
 			</form>
 		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
-			<div class="btn-group">
+			<div class="btn-group" ng-disabled="!controller.botones">
 				<shiro:hasPermission name="24020">
-					<label class="btn btn-success" ng-click="form.$valid ? controller.guardar(form.$valid) : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
+					<label class="btn btn-success" ng-click="controller.mForm.$valid && controller.botones ? controller.guardar(controller.mForm.$valid) : ''" ng-disabled="!controller.mForm.$valid || !controller.botones" uib-tooltip="Guardar" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="controller.irATabla()" uib-tooltip="Ir a Tabla">
+				<label ng-if="!controller.esTreeview" class="btn btn-primary" ng-click="controller.botones ? controller.irATabla() : ''" uib-tooltip="Ir a Tabla" tooltip-placement="bottom" ng-disabled="!controller.botones">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+				<label ng-if="controller.esTreeview" class="btn btn-danger" ng-click=" controller.botones ? controller.t_borrar() : ''" ng-disabled="!(controller.proyecto.id>0) || !controller.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
 	</div>

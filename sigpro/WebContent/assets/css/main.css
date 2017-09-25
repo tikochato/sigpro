@@ -206,7 +206,7 @@ nav.navbar{
 }
 
 .ng-invalid, .ng-invalid:invalid {
-   border-color: #a94442;
+   border-color: #a94442 !important;
 }
 
 .panel-auditoria{
@@ -355,6 +355,7 @@ input[type='checkbox'] ~ .floating-label {
 	right: 5px;
     top: 12px;
     position: absolute;
+    z-index: 3;
 }
 
 .label-form{

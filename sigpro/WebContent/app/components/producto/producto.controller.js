@@ -11,10 +11,13 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		$timeout, $log, $q, uiGridTreeBaseService,uiGridConstants, $dialogoConfirmacion) {
 	var mi = this;  
 	i18nService.setCurrentLang('es');
-	$window.document.title = $utilidades.sistema_nombre+' - Producto';
 	
 	mi.esTreeview = $rootScope.treeview;
-	    
+	mi.botones = true;
+	
+	if(!mi.esTreeview)
+		$window.document.title = $utilidades.sistema_nombre+' - Producto';
+	
 	mi.componenteid = $routeParams.componente_id;
 	mi.esForma = false;
 	mi.totalElementos = 0;
@@ -23,7 +26,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.seleccionada = false;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
-
+	
 	mi.propiedadesValor = [];
 	mi.camposdinamicos = {};
 	
@@ -38,11 +41,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.ejercicio = '';
 	
 	mi.dimensiones = [
-		{value:0,nombre:'Seleccione una opción'},
 		{value:1,nombre:'Dias',sigla:'d'}
 	];
 	
-	mi.duracionDimension = mi.dimensiones[1];
+	mi.duracionDimension = mi.dimensiones[0];
 	
 	$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id, t: (new Date()).getTime()}).success(
 			function(response) {
@@ -237,8 +239,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		mi.coordenadas = "";
 		
 
-		mi.duracionDimension = mi.dimensiones[1];
-		mi.producto.duracion = 0;
+		mi.duracionDimension = mi.dimensiones[0];
 		
 		for (campos in mi.camposdinamicos) {
 			mi.camposdinamicos[campos].valor = null;
@@ -268,6 +269,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 					, "Cancelar")
 			.result.then(function(data) {
 				if(data){
+					mi.botones = false;
 					var datos = {
 							accion : 'borrar',
 							codigo : mi.producto.id,
@@ -283,6 +285,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 										$utilidades.mensaje('danger',
 												'Error al borrar el Producto');
 									}
+									mi.botones = true;
 								});
 				}
 			}, function(){
@@ -295,6 +298,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.guardar = function() {
+		mi.botones = false;
 		if(mi.duracionDimension.sigla!=null && mi.duracionDimension.sigla!=''){
 			for (campos in mi.camposdinamicos) {
 				if (mi.camposdinamicos[campos].tipo === 'fecha') {
@@ -349,6 +353,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el Producto');
 						}
+						mi.botones = true;
 					});
 		} else {
 			$utilidades.mensaje('danger','Debe seleccionar una dimensión válida');
@@ -370,8 +375,6 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		
 			
 			if(mi.producto.duracionDimension == 'd'){
-				mi.duracionDimension = mi.dimensiones[1];
-			}else{
 				mi.duracionDimension = mi.dimensiones[0];
 			}
 
@@ -604,7 +607,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 	
 	mi.cambioDuracion = function(dimension){
-		mi.producto.fechaFin = mi.sumarDias(mi.producto.fechaInicio,mi.producto.duracion, dimension.sigla);
+		if(mi.producto.fechaInicio!==undefined)
+			mi.producto.fechaFin = mi.sumarDias(mi.producto.fechaInicio,mi.producto.duracion, dimension.sigla);
 	}
 	
 	mi.sumarDias = function(fecha, dias, dimension){

@@ -109,7 +109,7 @@ public class SObjeto extends HttpServlet {
 						break;
 					case 5: //Actividad
 						tiponombre = "Actividad";
-						Actividad actividad = ActividadDAO.getActividadPorId(objetoId,usuario);
+						Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
 						nombre = (actividad!=null) ? actividad.getNombre() : "";
 						fechaInicio = (actividad!=null) ? Utils.formatDate(actividad.getFechaInicio()) : "";
 						break;

@@ -1,11 +1,17 @@
 var app = angular.module('actividadController', []);
 
-app.controller('actividadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$sce','uiGmapGoogleMapApi', 'dialogoConfirmacion','documentoAdjunto', 
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$sce,uiGmapGoogleMapApi, $dialogoConfirmacion, $documentoAdjunto) {
+app.controller('actividadController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$sce','uiGmapGoogleMapApi', 'dialogoConfirmacion','documentoAdjunto', 
+	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$sce,uiGmapGoogleMapApi, $dialogoConfirmacion, $documentoAdjunto) {
 		var mi=this;
 
 		mi.rowCollection = [];
-		$window.document.title = $utilidades.sistema_nombre+' - Actividades';
+		
+		mi.esTreeview = $rootScope.treeview;
+		mi.botones = true;
+		
+		if(!mi.esTreeview)
+			$window.document.title = $utilidades.sistema_nombre+' - Actividades';
+		
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.actividades = [];
@@ -28,6 +34,8 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		mi.responsables=[];
+		
+		
 		
 		mi.validarRequiredCosto = function(costo){
 			if(costo != null && costo > 0)
@@ -89,7 +97,6 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		};
 		
 		mi.dimensiones = [
-			{value:0,nombre:'Seleccione una opción'},
 			{value:1,nombre:'Dias',sigla:'d'}
 		];
 		
@@ -121,6 +128,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		mi.coordenadas = "";
 
 		mi.filtros = [];
+		
 		$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo, t: new Date().getTime()}).success(
 				function(response) {
 					mi.objetoid = response.id;
@@ -256,6 +264,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		}
 
 		mi.guardar=function(valid){
+			mi.botones = false;
 			for (campos in mi.camposdinamicos) {
 				if (mi.camposdinamicos[campos].tipo === 'fecha') {
 					mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
@@ -311,6 +320,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' la Actividad');
+					mi.botones = true;
 				});
 			}
 			else
@@ -326,6 +336,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 						, "Cancelar")
 				.result.then(function(data) {
 					if(data){
+						mi.botones = false;
 						$http.post('/SActividad', {
 							accion: 'borrarActividad',
 							id: mi.actividad.id, t: new Date().getTime()
@@ -337,6 +348,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 							}
 							else
 								$utilidades.mensaje('danger','Error al borrar la Actividad');
+							mi.botones = true;
 						});
 					}
 				}, function(){
@@ -375,7 +387,7 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 				mi.esnuevo = false;
 				
 				if(mi.actividad.duracionDimension.toLowerCase() == 'd'){
-					mi.duracionDimension = mi.dimensiones[1];
+					mi.duracionDimension = mi.dimensiones[0];
 				}else{
 					mi.duracionDimension = '';
 				}
@@ -754,6 +766,19 @@ app.controller('actividadController',['$scope','$http','$interval','i18nService'
 		  	case 'i': return "Quien informa";
 		  }
 		  return "";
+	  }
+	  
+	  if(mi.esTreeview){
+		  $http.post('/SActividad', { accion : 'getActividadPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
+					if (response.data.success) {
+						mi.actividad = response.data.actividad;
+						if(mi.actividad.fechaInicio != "")
+							mi.actividad.fechaInicio = moment(mi.actividad.fechaInicio, 'DD/MM/YYYY').toDate();
+						if(mi.actividad.fechaFin != "")
+							mi.actividad.fechaFin = moment(mi.actividad.fechaFin, 'DD/MM/YYYY').toDate();
+						mi.editar();
+					}
+				});
 	  }
 } ]);
 

@@ -37,10 +37,21 @@ public class COrden {
 	}
 	
 	public boolean calcularOrdenObjetosSuperiores(Integer objetoId, Integer objetoTipo, String usuario, 
-			Session session, Integer proyectoId){
+			Session session, Integer proyectoId, Integer componenteId, Integer productoId){
 		try{
+			Integer proyecto_id = null;
 			if(estructuraPrestamo == null){
-				estructuraPrestamo = getEstructuraPrestamo(proyectoId, usuario);
+				if(proyectoId!=null)
+					proyecto_id=proyectoId;
+				else if(componenteId!=null){
+					Componente componente=ComponenteDAO.getComponente(componenteId);
+					proyecto_id = componente.getProyecto().getId();
+				}
+				else if(productoId!=null){
+					Producto producto = ProductoDAO.getProductoPorId(productoId);
+					proyecto_id = producto.getComponente().getProyecto().getId();
+				}
+				estructuraPrestamo = getEstructuraPrestamo(proyecto_id, usuario);
 			}
 					
 			Date fechaMax = new DateTime(2100,1,1,0,0).toDate();
@@ -152,7 +163,7 @@ public class COrden {
 			    		break;
 		        }
 		        if((Integer)objPadre[1]>0){
-		        	calcularOrdenObjetosSuperiores((Integer)objPadre[1], (Integer)objPadre[2], usuario, session,proyectoId);
+		        	calcularOrdenObjetosSuperiores((Integer)objPadre[1], (Integer)objPadre[2], usuario, session,proyectoId,componenteId,productoId);
 		        }
 				commitCalculoOrden(session);
 			}
