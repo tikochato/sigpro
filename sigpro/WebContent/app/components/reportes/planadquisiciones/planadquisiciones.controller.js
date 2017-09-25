@@ -770,10 +770,6 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	};
 	mi.crearArbol = function(datos){
 		mi.data = datos;
-		var tab = "\t";
-		for(x in mi.data){
-			mi.data[x].nombre = tab.repeat(mi.data[x].nivel -1) + mi.data[x].nombre;
-		}
 		
 		mi.rowCollectionPrestamo = [];
 		mi.rowCollectionPrestamo = mi.data;

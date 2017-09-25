@@ -172,5 +172,23 @@ public class EstructuraProyectoDAO {
 		}
 		return ret;
 	}
+	
+	public static List<String> getHijos(String treePathPadre, List<?> estruturaProyecto){
+		ArrayList<String> ret = new ArrayList<String>();
+		for(Object objeto : estruturaProyecto){
+			Object[] obj = (Object[])objeto;
+			String treePath = (String)obj[3];
+			if(treePath != null){
+				if(treePath.length() == treePathPadre.length()+6){
+					String path = treePath.substring(0, treePathPadre.length()); 
+					if(path.equals(treePathPadre)){
+						ret.add((Integer)obj[0]+ "," + ((BigInteger) obj[2]).intValue());
+					}	
+				}	
+			}
+		}
+		
+		return ret;
+	}
 
 }

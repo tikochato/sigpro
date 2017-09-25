@@ -193,6 +193,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/tipoadquisicion/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'tipoAdquisicionController\'" class="all_page"></div>'
             })
+            .when('/adquisicion/:objeto_id/:objeto_tipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'adquisicionController\'" class="all_page"></div>'
+            })
             .when("/:redireccion?",{
             	controller:"MainController"
             })
@@ -496,6 +499,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'tipoAdquisicionController',
 	    	   script: '/app/components/tipoadquisicion/tipoAdquisicion.controller.js',
 	    	   template: '/app/components/tipoadquisicion/tipoAdquisicion.jsp'
+	       },
+	       {
+	    	   name: 'adquisicionController',
+	    	   script: '/app/components/adquisicion/adquisicion.controller.js',
+	    	   template: '/app/components/adquisicion/adquisicion.jsp'
 	       }
 
 	   ];
