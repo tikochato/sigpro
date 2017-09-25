@@ -1,17 +1,22 @@
 var moduloSubproducto = angular.module('moduloSubproducto', [ 'ngTouch',
 		'smart-table' ]);
 
-moduloSubproducto.controller('controlSubproducto', [ '$scope', '$routeParams',
+moduloSubproducto.controller('controlSubproducto', [ '$rootScope','$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',
 		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'dialogoConfirmacion', 
 		controlSubproducto ]);
 
-function controlSubproducto($scope, $routeParams, $route, $window, $location,
+function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
 		$timeout, $log, $q, $dialogoConfirmacion) {
 	var mi = this;  
 	i18nService.setCurrentLang('es');
-	$window.document.title = $utilidades.sistema_nombre+' - Subroducto';
+	mi.esTreeview = $rootScope.treeview;
+	mi.botones = true;
+	
+	if(!mi.esTreeview)
+		$window.document.title = $utilidades.sistema_nombre+' - Subroducto';
+	
 	mi.productoid = $routeParams.producto_id;
 	mi.esForma = false;
 	mi.totalElementos = 0;
@@ -29,7 +34,6 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	mi.fechaFinPadre;
 
 	mi.dimensiones = [
-		{value:0,nombre:'Seleccione una opción'},
 		{value:1,nombre:'Dias',sigla:'d'}
 	];
 	
@@ -46,6 +50,9 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	
 	mi.coordenadas = "";
 	
+	mi.botones =  true;
+
+/*	
 	$http.post('/SSubproducto', { accion: 'obtenerSubproductoPorId', id: $routeParams.subproducto_id, t: (new Date()).getTime() }).success(
 			function(response) {
 				mi.subproductoid = response.id;
@@ -59,7 +66,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 				mi.objetoTipoNombre = "Producto";
 				var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
 				mi.modificarFechaInicial(fechaInicioPadre);
-	});
+	});*/
 	
 	mi.modificarFechaInicial = function(fechaPadre){
 		mi.fi_opciones.minDate = fechaPadre;
@@ -265,6 +272,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 					, "Cancelar")
 			.result.then(function(data) {
 				if(data){
+					mi.botones =  false;
 					var datos = {
 							accion : 'borrar',
 							codigo : mi.subproducto.id,
@@ -280,6 +288,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 									} else
 										$utilidades.mensaje('danger',
 												'Error al borrar el Subproducto');
+									mi.botones =  true;
 								});
 				}
 			}, function(){
@@ -292,6 +301,7 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.guardar = function() {
+		mi.botones =  false;
 		for (campos in mi.camposdinamicos) {
 			if (mi.camposdinamicos[campos].tipo === 'fecha') {
 				mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
@@ -341,11 +351,14 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 							mi.subproducto.fechaCreacion = response.data.fechaCreacion;
 							mi.subproducto.usuarioActualizo = response.data.usuarioactualizo;
 							mi.subproducto.fechaActualizacion = response.data.fechaactualizacion;
-							mi.cargarTabla(mi.paginaActual);
+							if(!mi.esTreeview)
+								mi.cargarTabla(mi.paginaActual);
+							mi.t_cambiarNombreNodo();
 							
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Subproducto');
 						}
+						mi.botones =  true;
 					});
 		
 	};
@@ -360,12 +373,10 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 			mi.esForma = true;
 			mi.entityselected = null;
 			mi.esNuevo = false;
-			mi.tipo = mi.subproducto.idSubproductoTipo;
-			mi.tipoNombre = mi.subproducto.subproductoTipo;
+			mi.tipo = mi.subproducto.subProductoTipoId;
+			mi.tipoNombre = mi.subproducto.subProductoTipo;
 			
 			if(mi.subproducto.duracionDimension == 'd'){
-				mi.duracionDimension = mi.dimensiones[1];
-			}else{
 				mi.duracionDimension = mi.dimensiones[0];
 			}
 
@@ -675,6 +686,58 @@ function controlSubproducto($scope, $routeParams, $route, $window, $location,
 		});
 	  };
 	  
+	  if(mi.esTreeview){
+		  $http.post('/SSubproducto', { accion : 'getSubproductoPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
+					if (response.data.success) {
+						mi.subproducto = response.data.subproducto;
+						if(mi.subproducto.fechaInicio != "")
+							mi.subproducto.fechaInicio = moment(mi.subproducto.fechaInicio, 'DD/MM/YYYY').toDate();
+						if(mi.subproducto.fechaFin != "")
+							mi.subproducto.fechaFin = moment(mi.subproducto.fechaFin, 'DD/MM/YYYY').toDate();
+						mi.editar();
+					}
+				});
+	  }
+	  
+	  mi.t_borrar = function(ev) {
+			if (mi.subproducto!=null && mi.subproducto.id!=null) {
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el subproducto "' + mi.subproducto.nombre + '"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						var datos = {
+								accion : 'borrar',
+								codigo : mi.subproducto.id,
+								t: (new Date()).getTime()
+							};
+							$http.post('/SSubproducto', datos).success(
+									function(response) {
+										if (response.success) {
+											
+											$utilidades.mensaje('success','Subproducto borrado con éxito');
+											mi.producto = null;			
+										} else{
+											$utilidades.mensaje('danger',
+													'Error al borrar el Subproducto');
+										}
+									});
+						$rootScope.$emit("eliminarNodo", {});
+					}
+				}, function(){
+					
+				});
+			} else {
+				$utilidades.mensaje('warning',
+						'Debe seleccionar el subproducto que desee borrar');
+			}
+		};
+		
+		mi.t_cambiarNombreNodo = function(ev){
+			$rootScope.$emit("cambiarNombreNodo",mi.actividad.nombre);
+		}
 }
 
 moduloSubproducto.controller('modalBuscarPorSubproducto', [ '$uibModalInstance',

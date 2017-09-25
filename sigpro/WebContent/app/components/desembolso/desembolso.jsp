@@ -125,7 +125,7 @@
 						</div>
 			        <br/>
 			        
-			        <div class="form-group" >
+			        <div class="form-group" ng-if="false" >
 						    <input type="text" class="inputText" id="idesembolsotipo" name="idesembolsotipo" ng-model="desembolsoc.desembolso.desembolsotipo" ng-value="desembolsoc.desembolso.desembolsotipo" 
 							ng-click="desembolsoc.buscarTipoDesembolso()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
 							<span class="label-icon" ng-click="desembolsoc.buscarTipoDesembolso()"><i class="glyphicon glyphicon-search"></i></span>

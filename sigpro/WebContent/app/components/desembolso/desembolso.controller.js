@@ -116,7 +116,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 				$http.post('/SDesembolso', { accion: 'getDesembolsosPaginaPorProyecto', pagina: pagina, numerodesembolsos: $utilidades.elementosPorPagina,
 					proyectoid: $routeParams.proyecto_id,numeroproyecto:  $utilidades.elementosPorPagina,
 					filtro_fecha: mi.filtros['fecha'], filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
-					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion
+					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
 					}).success(
 				
 						function(response) {
@@ -138,7 +138,8 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 						tipocambio : mi.desembolso.tipocambio,
 						proyectoid : $routeParams.proyecto_id,
 						desembolsotipoid : mi.desembolso.desembolsotipoid,
-						tipo_moneda:mi.desembolso.tipomonedaid
+						tipo_moneda:mi.desembolso.tipomonedaid,
+						t: (new Date()).getTime()
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success','Desembolso '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
@@ -211,7 +212,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 					$utilidades.mensaje('warning','Debe seleccionar el Desembolso que desea editar');
 			};
 
-			$http.post('/SProyecto', { accion: 'obtenerProyectoPorId',id: $routeParams.proyecto_id }).success(
+			$http.post('/SProyecto', { accion: 'obtenerProyectoPorId',id: $routeParams.proyecto_id,t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.proyectonombre = response.nombre;
 						mi.objetoTipoNombre = "Proyecto";

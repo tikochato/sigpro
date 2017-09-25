@@ -322,7 +322,7 @@ public class SMapa extends HttpServlet {
 				objeto.usuarioactualizo = subprodcuto.getUsuarioActualizo();
 				break;
 			case 5:
-				Actividad actividad = ActividadDAO.getActividadPorId(objetoId, usuario);
+				Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
 				objeto.nombreOjetoTipo = "Actividad";
 				objeto.id = actividad.getId();
 				objeto.nombre = actividad.getNombre();

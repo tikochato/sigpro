@@ -73,6 +73,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/metavalor/:metaid/:datotipoid/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'metavalorController\'" class="all_page"></div>'
             })
+            .when('/metas/:id/:tipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'metasController\'" class="all_page"></div>'
+            })
             .when('/test',{
             	template: '<div load-on-demand="\'testController\'" class="all_page"></div>'
             })
@@ -296,7 +299,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       {
 	    	   name: 'metaController',
 	    	   script: '/app/components/meta/meta.controller.js',
-	    	   template: '/app/components/meta/meta.jsp'
+	    	   template: '/app/components/meta/metas.jsp'
+	       },{
+	    	   name: 'metasController',
+	    	   script: '/app/components/meta/metas.controller.js',
+	    	   template: '/app/components/meta/metas.jsp'
 	       },{
 	    	   name: 'metavalorController',
 	    	   script: '/app/components/metavalor/metavalor.controller.js',

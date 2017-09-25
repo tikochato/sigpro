@@ -34,6 +34,7 @@ import dao.AsignacionRaciDAO;
 import dao.ComponenteDAO;
 import dao.MatrizRaciDAO;
 import dao.ProductoDAO;
+import dao.ProyectoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.ActividadPropiedad;
@@ -239,6 +240,8 @@ public class SActividad extends HttpServlet {
 				int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 				if(id>0 || esnuevo){
 					Integer proyectoBase = 0;
+					Integer componenteBase = 0;
+					Integer productoBase = 0;
 					String nombre = map.get("nombre");
 					String descripcion = map.get("descripcion");
 					int actividadtipoid =Utils.getParameterInteger(map, "actividadtipoid");
@@ -261,26 +264,28 @@ public class SActividad extends HttpServlet {
 					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
 					Integer renglon = map.get("renglon")!=null ? Integer.parseInt(map.get("renglon")):null;
 					Integer ubicacionGeografica = map.get("ubicacionGeografica")!=null ? Integer.parseInt(map.get("ubicacionGeografica")):null;
-					
+					proyectoBase = null;
+					componenteBase = null;
+                    productoBase = null;
 					switch (objetoTipo){
 	                    case 1:
 	                        proyectoBase = objetoId;
 	                        break;
 	                    case 2:
-	                        Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
-	                        proyectoBase = componente.getProyecto().getId();
+	                        componenteBase = objetoId;
 	                        break;
 	                    case 3:
-	                        Producto producto = ProductoDAO.getProductoPorId(objetoId);
-	                        proyectoBase = producto.getComponente().getProyecto().getId();
+	                        productoBase = objetoId;
 	                        break;
 	                    case 4:
 	                        Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
-	                        proyectoBase = subproducto.getProducto().getComponente().getProyecto().getId();
+	                        productoBase = subproducto.getProducto().getId();
 	                    break;
 	                    case 5:
-	                        Actividad actividad = ActividadDAO.getActividadPorId(objetoId, usuario);
+	                        Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
 	                        proyectoBase = actividad.getProyectoBase();
+	                        componenteBase = actividad.getComponenteBase();
+	                        productoBase = actividad.getProductoBase();
 	                        break;
                     }
 					
@@ -301,14 +306,15 @@ public class SActividad extends HttpServlet {
 					if(esnuevo){
 						
 						duracion = (int) ((fechaFin.getTime()-fechaInicio.getTime())/86400000);
-						duracionDimension = "D";
+						duracionDimension = "d";
 						
 						actividad = new Actividad(actividadTipo, acumulacionCosto, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra,
-								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,renglon, ubicacionGeografica, null, null,null, proyectoBase,null,null);
+								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,renglon, ubicacionGeografica, null, null,null
+								, proyectoBase,componenteBase,productoBase,null,null);
 					}
 					else{
-						actividad = ActividadDAO.getActividadPorId(id,usuario);
+						actividad = ActividadDAO.getActividadPorId(id);
 						actividad.setNombre(nombre);
 						actividad.setDescripcion(descripcion);
 						actividad.setUsuarioActualizo(usuario);
@@ -331,6 +337,8 @@ public class SActividad extends HttpServlet {
 						actividad.setDuracion(duracion);
 						actividad.setDuracionDimension(duracionDimension);
 						actividad.setProyectoBase(proyectoBase);
+						actividad.setComponenteBase(componenteBase);
+						actividad.setProductoBase(productoBase);
 					}
 					
 					result = ActividadDAO.guardarActividad(actividad);
@@ -344,14 +352,23 @@ public class SActividad extends HttpServlet {
 							}
 						}
 						
-						Integer proyectoId = actividad.getProyectoBase();
+						Integer proyectoId =null;
+						if(actividad.getProyectoBase()!=null)
+							proyectoId = actividad.getProductoBase();
+						else if(actividad.getComponenteBase()!=null){
+							Componente c = ComponenteDAO.getComponente(actividad.getComponenteBase());
+							proyectoId = c.getProyecto().getId();
+						}
+						else if(actividad.getProductoBase()!=null){
+							Producto p = ProductoDAO.getProductoPorId(actividad.getProductoBase());
+							proyectoId = p.getComponente().getProyecto().getId();
+						}
 						MatrizRaci matrizRaci = AsignacionRaciDAO.getMatrizPorObjeto(proyectoId, 1);
 						if (matrizRaci == null){
 							matrizRaci = new MatrizRaci();
 							matrizRaci.setEstado(1);
 							matrizRaci.setFechaCreacion(new Date());
-							Proyecto proyTemp = new Proyecto();
-							proyTemp.setId(proyectoId);
+							Proyecto proyTemp = ProyectoDAO.getProyecto(proyectoId);
 							matrizRaci.setProyecto(proyTemp);
 							matrizRaci.setUsuarioCreo(usuario);
 							MatrizRaciDAO.guardarMatrizRaci(matrizRaci);
@@ -424,7 +441,7 @@ public class SActividad extends HttpServlet {
 					
 					if(result){
 						COrden orden = new COrden();
-						result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase);
+						result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase,componenteBase,productoBase);
 					}
 					
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
@@ -446,10 +463,12 @@ public class SActividad extends HttpServlet {
 		else if(accion.equals("borrarActividad")){
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
-				Actividad actividad = ActividadDAO.getActividadPorId(id,usuario);
+				Actividad actividad = ActividadDAO.getActividadPorId(id);
 				Integer objetoId = actividad.getObjetoId();
 				Integer objetoTipo = actividad.getObjetoTipo();
 				Integer proyectoId = actividad.getProyectoBase();
+				Integer componenteId = actividad.getComponenteBase();
+				Integer productoId = actividad.getProductoBase();
 				
 				actividad.setUsuarioActualizo(usuario);
 				boolean result = false;
@@ -460,7 +479,7 @@ public class SActividad extends HttpServlet {
 					Session session = COrden.getSessionCalculoOrden();
 					
 					COrden orden = new COrden();
-					result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoId);
+					result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoId, componenteId, productoId);
 				}
 				
 				response_text = String.join("","{ \"success\": ",( result ? "true" : "false")," }");
@@ -536,7 +555,7 @@ public class SActividad extends HttpServlet {
 		}
 		else if(accion.equals("obtenerActividadPorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-			Actividad actividad = ActividadDAO.getActividadPorId(id,usuario);
+			Actividad actividad = ActividadDAO.getActividadPorId(id);
 
 			response_text = String.join("","{ \"success\": ",(actividad!=null && actividad.getId()!=null ? "true" : "false"),", "
 				+ "\"id\": " + (actividad!=null ? actividad.getId():"0") +", "
@@ -545,7 +564,7 @@ public class SActividad extends HttpServlet {
 		}
 		else if (accion.equals("getActividadPorId")){
 			Integer id = Utils.String2Int(map.get("id"));
-			Actividad actividad = ActividadDAO.getActividadPorId(id,usuario);
+			Actividad actividad = ActividadDAO.getActividadPorId(id);
 			stactividad temp = new stactividad();
 			temp.descripcion = actividad.getDescripcion();
 			temp.estado = actividad.getEstado();
@@ -601,26 +620,28 @@ public class SActividad extends HttpServlet {
 				
 				ActividadTipo actividadTipo= new ActividadTipo();
 				actividadTipo.setId(actividadtipoid);
-				Integer proyectoBase=0;
+				Integer proyectoBase=null;
+				Integer componenteBase = null;
+				Integer productoBase = null;
 				switch (objetoTipo){
                 case 1:
                     proyectoBase = objetoId;
                     break;
                 case 2:
-                    Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
-                    proyectoBase = componente.getProyecto().getId();
+                    componenteBase = objetoId;
                     break;
                 case 3:
-                    Producto producto = ProductoDAO.getProductoPorId(objetoId);
-                    proyectoBase = producto.getComponente().getProyecto().getId();
-                    break;
+                    productoBase = objetoId;
+                	break;
                 case 4:
                     Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
-                    proyectoBase = subproducto.getProducto().getComponente().getProyecto().getId();
+                    productoBase = subproducto.getProducto().getId();
                 break;
                 case 5:
-                    Actividad actividadTemp = ActividadDAO.getActividadPorId(objetoId, usuario);
+                    Actividad actividadTemp = ActividadDAO.getActividadPorId(objetoId);
                     proyectoBase = actividadTemp.getProyectoBase();
+                    componenteBase = actividadTemp.getComponenteBase();
+                    productoBase = actividadTemp.getProductoBase();
                     break;
             }
 				
@@ -629,7 +650,7 @@ public class SActividad extends HttpServlet {
 							, usuario, new Date(), 1, objetoId, objetoTipo, duracion, duracionDimension);
 					actividad.setProyectoBase(proyectoBase);
 				}else{
-					actividad = ActividadDAO.getActividadPorId(id,usuario);
+					actividad = ActividadDAO.getActividadPorId(id);
 					actividad.setNombre(nombre);
 					actividad.setDescripcion(descripcion);
 					actividad.setUsuarioActualizo(usuario);
@@ -650,7 +671,7 @@ public class SActividad extends HttpServlet {
 				Session session = COrden.getSessionCalculoOrden();
 				
 				COrden orden = new COrden();
-				result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase);
+				result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase,componenteBase, productoBase);
 			}
 			
 			if (result){

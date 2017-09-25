@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import dao.ActividadDAO;
 import dao.ComponenteDAO;
 import dao.DatoTipoDAO;
 import dao.MetaDAO;
@@ -29,6 +30,8 @@ import dao.MetaTipoDAO;
 import dao.MetaUnidadMedidaDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
+import dao.SubproductoDAO;
+import pojo.Actividad;
 import pojo.Componente;
 import pojo.DatoTipo;
 import pojo.Meta;
@@ -36,6 +39,7 @@ import pojo.MetaTipo;
 import pojo.MetaUnidadMedida;
 import pojo.Producto;
 import pojo.Proyecto;
+import pojo.Subproducto;
 import utilities.Utils;
 
 /**
@@ -54,9 +58,7 @@ public class SMeta extends HttpServlet {
 		Integer componente;
 		Integer producto;
 		Integer tipoMetaId;
-		String tipoMetaNombre;
 		Integer unidadMedidaId;
-		String unidadMedidaNombre;
 		String usuarioCreo;
 		String fechaCreacion;
 		String usuarioActualizo;
@@ -64,7 +66,6 @@ public class SMeta extends HttpServlet {
 		Integer objetoId;
 		Integer objetoTipo;
 		Integer datoTipoId;
-		
 	}
 
 	public class sttipometa{
@@ -134,9 +135,7 @@ public class SMeta extends HttpServlet {
 				temp.fechaActualizacion = Utils.formatDateHour(meta.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDateHour(meta.getFechaCreacion());
 				temp.tipoMetaId = meta.getMetaTipo().getId();
-				temp.tipoMetaNombre = meta.getMetaTipo().getNombre();
 				temp.unidadMedidaId = meta.getMetaUnidadMedida().getId();
-				temp.unidadMedidaNombre = meta.getMetaUnidadMedida().getNombre();
 				temp.datoTipoId = meta.getDatoTipo().getId();
 				temp.usuarioActualizo = meta.getUsuarioActualizo();
 				temp.usuarioCreo = meta.getUsuarioCreo();
@@ -262,14 +261,38 @@ public class SMeta extends HttpServlet {
 		}
 		else if(accion.equals("getPcp")){
 			String nombre = "";
+			String fechaInicio = "";
+			String fechaFin = "";
 			Integer tipo = map.get("tipo")!=null ? Integer.parseInt(map.get("tipo")) : 0;
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			switch(tipo){
-				case 1: Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario); nombre = (proyecto!=null) ? proyecto.getNombre() : ""; break;
-				case 2: Componente componente = ComponenteDAO.getComponentePorId(id,usuario); nombre = (componente!=null) ? componente.getNombre() : ""; break;
-				case 3: Producto producto = ProductoDAO.getProductoPorId(id,usuario); nombre = (producto!=null) ? producto.getNombre() : ""; break;
+				case 1: Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario); 
+					nombre = (proyecto!=null) ? proyecto.getNombre() : ""; 
+					fechaInicio = (proyecto!=null && proyecto.getFechaInicio()!=null) ? Utils.formatDate(proyecto.getFechaInicio()): "";
+					fechaFin = (proyecto!=null && proyecto.getFechaFin()!=null) ? Utils.formatDate(proyecto.getFechaFin()): "";
+					break;
+				case 2: Componente componente = ComponenteDAO.getComponentePorId(id,usuario); 
+					nombre = (componente!=null) ? componente.getNombre() : ""; 
+					fechaInicio = (componente!=null && componente.getFechaInicio()!=null) ? Utils.formatDate(componente.getFechaInicio()): "";
+					fechaFin = (componente!=null && componente.getFechaFin()!=null) ? Utils.formatDate(componente.getFechaFin()): "";
+					break;
+				case 3: Producto producto = ProductoDAO.getProductoPorId(id,usuario); 
+					nombre = (producto!=null) ? producto.getNombre() : ""; 
+					fechaInicio = (producto!=null && producto.getFechaInicio()!=null) ? Utils.formatDate(producto.getFechaInicio()): "";
+					fechaFin = (producto!=null && producto.getFechaFin()!=null) ? Utils.formatDate(producto.getFechaFin()): "";
+					break;
+				case 4: Subproducto subproducto = SubproductoDAO.getSubproductoPorId(id,usuario); 
+					nombre = (subproducto!=null) ? subproducto.getNombre() : ""; 
+					fechaInicio = (subproducto!=null && subproducto.getFechaInicio()!=null) ? Utils.formatDate(subproducto.getFechaInicio()): "";
+					fechaFin = (subproducto!=null && subproducto.getFechaFin()!=null) ? Utils.formatDate(subproducto.getFechaFin()): "";
+					break;
+				case 5: Actividad actividad = ActividadDAO.getActividadPorId(id); 
+					nombre = (actividad!=null) ? actividad.getNombre() : ""; 
+					fechaInicio = (actividad!=null && actividad.getFechaInicio()!=null) ? Utils.formatDate(actividad.getFechaInicio()): "";
+					fechaFin = (actividad!=null && actividad.getFechaFin()!=null) ? Utils.formatDate(actividad.getFechaFin()): "";
+					break;
 			}
-	        response_text = String.join("", "\"nombre\":\"",nombre,"\"");
+	        response_text = String.join("", "\"nombre\":\"",nombre,"\", ", "\"fechaInicio\":\"",fechaInicio,"\", ", "\"fechaFin\":\"",fechaFin,"\"");
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else{

@@ -102,7 +102,7 @@ app.controller('adquisicionController',['$scope', '$http', '$interval','Utilidad
 	
 	mi.cargarTabla = function(pagina){
 		mi.mostrarcargando=true;
-		$http.post('/SPlanAdquisiciones', { accion: 'getMetasPagina', pagina: pagina, numerometas: $utilidades.elementosPorPagina, 
+		$http.post('/SPlanAdquisiciones', { accion: 'getAdquisiciones', pagina: pagina, numerometas: $utilidades.elementosPorPagina, 
 			id: $routeParams.id, tipo: $routeParams.tipo,
 			filtro_unidad_medida: mi.filtros['unidadMedida'], filtro_usuario_creo: mi.filtros['usuarioCreo'], 
 			filtro_fecha_creacion: mi.filtros['fechaCreacion'], t: new Date().getTime() }).success(

@@ -1,18 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	 <style>
-		.event_title {
-			font-size: 14px;
-			font-weight: bold;
-		}
-		
-		.posicion{
-			margin-left: -155px;
-		}
-	</style>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-	<div ng-controller="componenteController as componentec" class="maincontainer all_page" id="title">
+	<div ng-controller="componenteController as componentec" ng-class="componentec.esTreeview ? 'maincontainer_treeview all_page' : 'maincontainer all_page'" id="title">
 		<script type="text/ng-template" id="map.html">
         <div class="modal-header">
             <h3 class="modal-title">Mapa de Ubicación</h3>
@@ -35,19 +25,19 @@
     		<%@ include file="/app/components/componente/buscarAcumulacionCosto.jsp"%>
   	    </script>
   	    <shiro:lacksPermission name="5010">
-			<p ng-init="componentec.redireccionSinPermisos()"></p>
+			<span ng-init="componentec.redireccionSinPermisos()"></span>
 		</shiro:lacksPermission>
 		
-		<div class="panel panel-default">
+		<div class="panel panel-default" ng-if="!componentec.esTreeview">
 			<div class="panel-heading"><h3>Componentes</h3></div>
 		</div>
-		<div class="subtitulo">
+		<div class="subtitulo" ng-if="!componentec.esTreeview">
 			{{ componentec.objetoTipoNombre }} {{ componentec.proyectoNombre }}
 		</div>
 		
-		<div  align="center" ng-hide="componentec.mostraringreso">
+		<div  align="center" ng-hide="componentec.mostraringreso" ng-if="!componentec.esTreeview">
 			
-    		<div class="operation_buttons" align="right">
+    		<div class="col-sm-12 operation_buttons" align="right">
 			  <div class="btn-group">
 			  <shiro:hasPermission name="5040">
 			    <label class="btn btn-primary" ng-click="componentec.nuevo()" uib-tooltip="Nuevo">
@@ -100,34 +90,36 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row second-main-form" ng-show="componentec.mostraringreso">
+		<div class="row second-main-form" ng-show="componentec.mostraringreso || componentec.esTreeview">
 			<div class="page-header">
 				<h2 ng-hide="!componentec.esnuevo"><small>Nuevo componente</small></h2>
 				<h2 ng-hide="componentec.esnuevo"><small>Edición de componente</small></h2>
 			</div>
 			
     		<div class="operation_buttons">
-    		  <div class="btn-group" ng-hide="componentec.esnuevo">
-				<label class="btn btn-default" ng-click="componentec.irAProductos(componentec.componente.id)" uib-tooltip="Productos" tooltip-placement="bottom">
+    		  <div class="btn-group" ng-hide="componentec.esnuevo" ng-if="!componentec.esTreeview">
+				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irAProductos(componentec.componente.id) : ''" uib-tooltip="Productos" tooltip-placement="bottom" ng-disabled="!componentec.botones">
 				<span class="glyphicon glyphicon-certificate"></span></label>
-				<label class="btn btn-default" ng-click="componentec.irARiesgos(componentec.componente.id)" uib-tooltip="Riesgos" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irARiesgos(componentec.componente.id) : ''" uib-tooltip="Riesgos" tooltip-placement="bottom" ng-disabled="!componentec.botones">
 				<span class="glyphicon glyphicon-warning-sign"></span></label>
-				<label class="btn btn-default" ng-click="componentec.irAActividades(componentec.componente.id)" uib-tooltip="Actividades" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irAActividades(componentec.componente.id) : ''" uib-tooltip="Actividades" tooltip-placement="bottom" ng-disabled="!componentec.botones">
 				<span class="glyphicon glyphicon-th-list"></span></label>
 			
 		      </div>
 			  <div class="btn-group" style="float: right;">
 			    <shiro:hasPermission name="5020">
-			      <label class="btn btn-success" ng-click="form.$valid ? componentec.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+			      <label class="btn btn-success" ng-click="componentec.mForm.$valid && componentec.botones ? componentec.guardar() : ''" ng-disabled="!componentec.mForm.$valid || !componentec.botones" title="Guardar">
 			      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 			    </shiro:hasPermission>
-			    <label class="btn btn-primary" ng-click="componentec.irATabla()" title="Ir a Tabla">
+			    <label ng-if="!componentec.esTreeview" class="btn btn-primary" ng-click="componentec.botones ? componentec.irATabla() : ''" title="Ir a Tabla" ng-disabled="!componentec.botones">
 			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+			    <label ng-if="componentec.esTreeview" class="btn btn-danger" ng-click=" componentec.botones ? componentec.t_borrar() : ''" ng-disabled="!(componentec.componente.id>0) || !componentec.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			  </div>
 			</div>
 
 			<div class="col-sm-12">
-				<form name="form" id="form">
+				<form name="componentec.mForm">
 						<div class="form-group">
 						  <label for="id" class="floating-label id_class">ID {{ componentec.componente.id }}</label>
 						  <br/><br/>
@@ -298,8 +290,7 @@
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{componentec.formatofecha}}" ng-model="componentec.componente.fechaInicio" is-open="componentec.fi_abierto"
 								            datepicker-options="componentec.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="componentec.cambioDuracion(componentec.duracionDimension);" ng-required="true"
-								            readonly="readonly"  
-								            ng-click="componentec.abrirPopupFecha(1000)" ng-value="componentec.componente.fechaInicio" onblur="this.setAttribute('value', this.value);">
+								            ng-value="componentec.componente.fechaInicio" onblur="this.setAttribute('value', this.value);">
 								            <span class="label-icon" ng-click="componentec.abrirPopupFecha(1000)">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
@@ -361,13 +352,15 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 				<div class="col-sm-12">
-					<div class="btn-group">
+					<div class="btn-group" ng-disabled="!componentec.botones">
 						 <shiro:hasPermission name="5020">
-						      <label class="btn btn-success" ng-click="form.$valid ? componentec.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+						      <label class="btn btn-success" ng-click="componentec.mForm.$valid && componentec.botones ? componentec.guardar() : ''" ng-disabled="!componentec.mForm.$valid || !componentec.botones" title="Guardar">
 						      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 						    </shiro:hasPermission>
-						    <label class="btn btn-primary" ng-click="componentec.irATabla()" title="Ir a Tabla">
+						    <label ng-if="!componentec.esTreeview" class="btn btn-primary" ng-click="componentec.botones ? componentec.irATabla() :''" title="Ir a Tabla" ng-disabled="!componentec.botones">
 						    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+						    <label ng-if="componentec.esTreeview" class="btn btn-danger" ng-click=" componentec.botones ? componentec.t_borrar() : ''" ng-disabled="!(componentec.componente.id>0) || !componentec.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+							<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 	    			</div>
 	    		</div>
     		</div>

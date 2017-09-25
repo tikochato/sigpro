@@ -1,12 +1,16 @@
 var app = angular.module('proyectoController', [ 'ngTouch','smart-table',  'ui.bootstrap.contextMenu']);
 
-app.controller('proyectoController',['$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$filter', 'dialogoConfirmacion', 
-	function($scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$filter, $dialogoConfirmacion) {
+app.controller('proyectoController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$filter', 'dialogoConfirmacion', 
+	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$filter, $dialogoConfirmacion) {
 
 	var mi = this;
 	i18nService.setCurrentLang('es');
 
-	$window.document.title = $utilidades.sistema_nombre+' - Préstamos';
+	mi.esTreeview = $rootScope.treeview;
+	mi.botones = true;
+	
+	if(!mi.esTreeview)
+		$window.document.title = $utilidades.sistema_nombre+' - Préstamos';
 		
 	mi.rowCollection = [];
 	mi.proyecto = null;
@@ -14,7 +18,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 	mi.esNuevoDocumento = true;
 	mi.campos = {};
 	mi.esColapsado = false;
-	mi.mostrarcargando=true;
+	mi.mostrarcargando= (mi.esTreeview) ? false : true;
 	mi.paginaActual = 1;
 	mi.cooperantes = [];
 	mi.proyectotipos = [];
@@ -349,6 +353,7 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 								$http.post('/SPrestamo',param_data).then(
 										function(response) {
 											if (response.data.success) {
+												mi.t_cambiarNombreNodo();
 												$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 											}else
 												$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
@@ -1161,6 +1166,58 @@ app.controller('proyectoController',['$scope','$http','$interval','i18nService',
 			});
 		};
 		
+		if(mi.esTreeview){
+			  $http.post('/SProyecto', { accion : 'getProyectoPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
+						if (response.data.success) {
+							mi.proyecto = response.data.proyecto;
+							if(mi.proyecto.fechaInicio != "")
+								mi.proyecto.fechaInicio = moment(mi.proyecto.fechaInicio, 'DD/MM/YYYY').toDate();
+							if(mi.proyecto.fechaFin != "")
+								mi.proyecto.fechaFin = moment(mi.proyecto.fechaFin, 'DD/MM/YYYY').toDate();
+							mi.editar();
+						}
+					});
+		  }
+		
+		mi.t_borrar = function(ev) {
+			if (mi.proyecto!=null && mi.proyecto.id!=null) {
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el préstamo "' + mi.proyecto.nombre + '"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						var datos = {
+								accion : 'borrar',
+								codigo : mi.proyecto.id,
+								t: (new Date()).getTime()
+							};
+							$http.post('/SProyecto', datos).success(
+									function(response) {
+										if (response.success) {
+											
+											$utilidades.mensaje('success','Préstamo borrado con éxito');
+											mi.producto = null;			
+										} else{
+											$utilidades.mensaje('danger',
+													'Error al borrar el Préstamo');
+										}
+									});
+						$rootScope.$emit("eliminarNodo", {});
+					}
+				}, function(){
+					
+				});
+			} else {
+				$utilidades.mensaje('warning',
+						'Debe seleccionar el préstamo que desee borrar');
+			}
+		};
+		
+		mi.t_cambiarNombreNodo = function(ev){
+			$rootScope.$emit("cambiarNombreNodo",mi.proyecto.nombre);
+		}
 		
 } ]);
 

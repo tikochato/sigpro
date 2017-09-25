@@ -27,6 +27,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.DesembolsoDAO;
+import dao.DesembolsoTipoDAO;
 import dao.TipoMonedaDAO;
 import pojo.Desembolso;
 import pojo.DesembolsoTipo;
@@ -34,9 +35,7 @@ import pojo.Proyecto;
 import pojo.TipoMoneda;
 import utilities.Utils;
 
-/**
- * Servlet implementation class SDesembolso
- */
+
 @WebServlet("/SDesembolso")
 public class SDesembolso extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -59,16 +58,12 @@ public class SDesembolso extends HttpServlet {
 		int estado;
 	}
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    
     public SDesembolso() {
         super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String response_text = "{ \"success\": false }";
 
@@ -82,9 +77,6 @@ public class SDesembolso extends HttpServlet {
         output.close();
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		HttpSession sesionweb = request.getSession();
@@ -187,9 +179,9 @@ public class SDesembolso extends HttpServlet {
 				proyecto.setId(map.get("proyectoid")!=null && map.get("proyectoid").length()>0 ? 
 						Integer.parseInt(map.get("proyectoid")) : null);
 				
-				DesembolsoTipo desembolsoTipo = new DesembolsoTipo();
-				desembolsoTipo.setId(map.get("desembolsotipoid")!=null && map.get("desembolsotipoid").length()>0 ? 
-						Integer.parseInt(map.get("desembolsotipoid")): null);
+				new DesembolsoTipoDAO();
+				DesembolsoTipo desembolsoTipo = DesembolsoTipoDAO.getDesembolosTipoPorId(1);
+				
 				
 				TipoMoneda tipomoneda= TipoMonedaDAO.getTipoMonedaPorId(Integer.parseInt(map.get("tipo_moneda")));
 				Desembolso desembolso;

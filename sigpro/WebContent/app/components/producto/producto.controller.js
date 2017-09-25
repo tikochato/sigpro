@@ -1,20 +1,23 @@
 var moduloProducto = angular.module('moduloProducto', [ 'ngTouch',
-		'smart-table']);
+		'smart-table', 'ui.grid.edit', 'ui.grid.rowEdit', 'ui.grid.pinning', 'ui.grid.autoResize']);
 
 moduloProducto.controller('controlProducto', [ '$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http', '$rootScope',
-		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'dialogoConfirmacion', 
+		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'uiGridTreeBaseService','uiGridConstants', 'dialogoConfirmacion', 
 		controlProducto ]);
 
 function controlProducto($scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $rootScope, $interval, i18nService, $utilidades,
-		$timeout, $log, $q, $dialogoConfirmacion) {
+		$timeout, $log, $q, uiGridTreeBaseService,uiGridConstants, $dialogoConfirmacion) {
 	var mi = this;  
 	i18nService.setCurrentLang('es');
-	$window.document.title = $utilidades.sistema_nombre+' - Producto';
 	
 	mi.esTreeview = $rootScope.treeview;
-	    
+	mi.botones = true;
+	
+	if(!mi.esTreeview)
+		$window.document.title = $utilidades.sistema_nombre+' - Producto';
+	
 	mi.componenteid = $routeParams.componente_id;
 	mi.esForma = false;
 	mi.totalElementos = 0;
@@ -23,7 +26,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.seleccionada = false;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
-
+	
 	mi.propiedadesValor = [];
 	mi.camposdinamicos = {};
 	
@@ -38,11 +41,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.ejercicio = '';
 	
 	mi.dimensiones = [
-		{value:0,nombre:'Seleccione una opción'},
 		{value:1,nombre:'Dias',sigla:'d'}
 	];
 	
-	mi.duracionDimension = mi.dimensiones[1];
+	mi.duracionDimension = mi.dimensiones[0];
 	
 	$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id, t: (new Date()).getTime()}).success(
 			function(response) {
@@ -237,12 +239,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		mi.coordenadas = "";
 		
 
-		mi.duracionDimension = mi.dimensiones[1];
-		mi.producto.duracion = 0;
+		mi.duracionDimension = mi.dimensiones[0];
 		
 		for (campos in mi.camposdinamicos) {
 			mi.camposdinamicos[campos].valor = null;
 		}
+		mi.metasCargadas = false;
 		$utilidades.setFocus(document.getElementById("nombre"));
 	}
 
@@ -267,6 +269,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 					, "Cancelar")
 			.result.then(function(data) {
 				if(data){
+					mi.botones = false;
 					var datos = {
 							accion : 'borrar',
 							codigo : mi.producto.id,
@@ -282,6 +285,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 										$utilidades.mensaje('danger',
 												'Error al borrar el Producto');
 									}
+									mi.botones = true;
 								});
 				}
 			}, function(){
@@ -294,6 +298,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.guardar = function() {
+		mi.botones = false;
 		if(mi.duracionDimension.sigla!=null && mi.duracionDimension.sigla!=''){
 			for (campos in mi.camposdinamicos) {
 				if (mi.camposdinamicos[campos].tipo === 'fecha') {
@@ -344,10 +349,13 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							mi.producto.fechaCreacion = response.data.fechaCreacion;
 							mi.producto.usuarioactualizo = response.data.usuarioactualizo;
 							mi.producto.fechaactualizacion = response.data.fechaactualizacion;
-							mi.obtenerTotalProductos();
+							if(!mi.esTreeview)
+								mi.obtenerTotalProductos();
+							mi.t_cambiarNombreNodo();
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el Producto');
 						}
+						mi.botones = true;
 					});
 		} else {
 			$utilidades.mensaje('danger','Debe seleccionar una dimensión válida');
@@ -369,8 +377,6 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		
 			
 			if(mi.producto.duracionDimension == 'd'){
-				mi.duracionDimension = mi.dimensiones[1];
-			}else{
 				mi.duracionDimension = mi.dimensiones[0];
 			}
 
@@ -407,6 +413,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							break;
 					}
 				}
+				mi.metasCargadas = false;
 				$utilidades.setFocus(document.getElementById("nombre"));
 			});
 		} else {
@@ -467,7 +474,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	
 	mi.irAMetas=function(){
 		if(mi.producto.id!=null){
-			$location.path('/meta/'+ mi.producto.id +'/3' );
+			$location.path('/metas/'+ mi.producto.id +'/3' );
 		}
 	};
 	
@@ -602,7 +609,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 	
 	mi.cambioDuracion = function(dimension){
-		mi.producto.fechaFin = mi.sumarDias(mi.producto.fechaInicio,mi.producto.duracion, dimension.sigla);
+		if(mi.producto.fechaInicio!==undefined)
+			mi.producto.fechaFin = mi.sumarDias(mi.producto.fechaInicio,mi.producto.duracion, dimension.sigla);
 	}
 	
 	mi.sumarDias = function(fecha, dias, dimension){
@@ -718,7 +726,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 						, "Cancelar")
 				.result.then(function(data) {
 					if(data){
-						/*var datos = {
+						var datos = {
 								accion : 'borrar',
 								codigo : mi.producto.id,
 								t: (new Date()).getTime()
@@ -733,7 +741,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 											$utilidades.mensaje('danger',
 													'Error al borrar el Producto');
 										}
-									});*/
+									});
 						$rootScope.$emit("eliminarNodo", {});
 					}
 				}, function(){
@@ -744,6 +752,233 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 						'Debe seleccionar el producto que desee borrar');
 			}
 		};
+		
+		mi.t_cambiarNombreNodo = function(ev){
+			$rootScope.$emit("cambiarNombreNodo",mi.producto.nombre);
+		}
+		
+		
+		/************************************************* Metas **********************************************/
+		
+		mi.metasCargadas = false;
+		
+		mi.metasActivo = function(){
+			if(!mi.metasCargadas){
+				mi.mostrarcargandoMetas=true;
+				mi.mostrarValores = false;
+				mi.metas = [];
+				mi.meta;
+				mi.totalMetas = 0;
+				mi.metatipos = [];
+				mi.metasunidades = [];
+				
+				mi.tipoMetaSeleccionado=null;
+				mi.unidadMedidaSeleccionado=null;
+				mi.tipoValorSeleccionado=null;
+				
+				mi.nombrePcp = "";
+				mi.nombreTipoPcp = "Producto";
+				mi.fechaInicio = "";
+				mi.fechaFin = "";
+							
+				mi.anios=[];
+				mi.anio = null;
+							
+				$http.post('/SMeta', { accion: 'getPcp', id: mi.producto.id, tipo: 3, t: (new Date()).getTime()}).success(
+					function(response) {
+						mi.nombrePcp = response.nombre;
+						mi.fechaInicio = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
+						mi.fechaFin = moment(response.fechaFin, 'DD/MM/YYYY').toDate();
+						var anioInicio = moment(response.fechaInicio, 'DD/MM/YYYY').year();
+						var anioFin = moment(response.fechaFin, 'DD/MM/YYYY').year();
+						for(a = anioInicio; a<=anioFin; a++){
+							mi.anios.push(a);
+						}
+						if(mi.anios.length>0){
+							mi.anio=mi.anios[0];
+						}
+				});
+				
+				$http.post('/SMeta', { accion: 'getMetasTipos', t: (new Date()).getTime() }).success(
+						function(response) {
+							mi.metatipos = response.MetasTipos;
+				});
+				
+				$http.post('/SMeta', { accion: 'getMetasUnidadesMedida', t: (new Date()).getTime() }).success(
+						function(response) {
+							mi.metaunidades = response.MetasUnidades;
+							mi.gridOptionsMetas.columnDefs[3].editDropdownOptionsArray = mi.metaunidades;
+				});
+				
+				$http.post('/SDatoTipo', { accion: 'cargarCombo', t: (new Date()).getTime() }).success(
+						function(response) {
+							mi.datoTipos = response.datoTipos;
+							mi.gridOptionsMetas.columnDefs[4].editDropdownOptionsArray = mi.datoTipos;
+				});
+					
+				mi.obtenerTotalMetas();
+				mi.metasCargadas = true;
+			}
+		}
+		
+		$scope.nombreUnidadMedida = function(id){
+			if (id != null && id > 0){
+				for (i=0; i<mi.metaunidades.length; i++){
+					if(mi.metaunidades[i].id == id){
+						return mi.metaunidades[i].nombre;
+					}
+				}
+			}
+			return "";
+		}
+		
+		$scope.nombreDatoTipo = function(id){
+			if (id != null && id > 0){
+				for (i=0; i<mi.datoTipos.length; i++){
+					if(mi.datoTipos[i].id == id){
+						return mi.datoTipos[i].nombre;
+					}
+				}
+			}
+			return "";
+		}
+			
+		mi.gridOptionsMetas = {
+				enableRowSelection : true,
+				enableRowHeaderSelection : false,
+				multiSelect: false,
+				modifierKeysToMultiSelect: false,
+				noUnselect: true,
+				enableFiltering: false,
+				useExternalFiltering: false,
+			    useExternalSorting: false,
+			    columnDefs : [ 
+					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableCellEdit: false},
+					{ name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left', enableCellEdit: true},
+				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableCellEdit: true},
+				    { name: 'unidadMedidaId', displayName: 'Unidad Medida', cellClass: 'grid-align-left', enableCellEdit: true,
+				    	editableCellTemplate: 'ui-grid/dropdownEditor', editDropdownValueLabel: 'nombre', editDropdownOptionsArray: [],
+				    	cellTemplate: '<div class="ui-grid-cell-contents">{{grid.appScope.nombreUnidadMedida(row.entity.unidadMedidaId)}}</div>'
+				    },
+				    { name: 'datoTipoId', displayName: 'Dato Tipo', cellClass: 'grid-align-left', enableCellEdit: true,
+				    	editableCellTemplate: 'ui-grid/dropdownEditor', editDropdownValueLabel: 'nombre', editDropdownOptionsArray: [],
+				    	cellTemplate: '<div class="ui-grid-cell-contents">{{grid.appScope.nombreDatoTipo(row.entity.datoTipoId)}}</div>'
+				    },
+				    { name: 'objetoId', displayName: 'Meta Final', cellClass: 'grid-align-left', enableCellEdit: true}
+				],
+				onRegisterApi: function(gridApi) {
+					mi.gridApiMetas = gridApi;
+					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
+						mi.meta = row.entity;
+						mi.mostrarValores = true;
+					});
+					
+				}
+			};
+					
+		mi.cargarTablaMetas = function(pagina){
+			mi.mostrarcargandoMetas=true;
+			$http.post('/SMeta', { accion: 'getMetasPagina', pagina: pagina, numerometas: 100, 
+				id: mi.producto.id, tipo: 3,
+				filtro_nombre: mi.filtros['nombre'], 
+				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
+				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
+			}).success(
+					function(response) {
+						mi.metas = response.Metas;
+						mi.gridOptionsMetas.data = mi.metas;
+						mi.mostrarcargandoMetas = false;
+						
+					});
+		}
+		
+		mi.guardarMetas=function(){
+			if(mi.meta!=null && mi.tipoMetaSeleccionado!=null && mi.unidadMedidaSeleccionado!=null  ){
+				$http.post('/SMeta', {
+					accion: 'guardarMeta',
+					esnueva: mi.esnueva,
+					id: mi.meta.id,
+					nombre: mi.meta.nombre,
+					descripcion: mi.meta.descripcion,
+					tipoMetaId:  mi.tipoMetaSeleccionado.id,
+					unidadMedidaId: mi.unidadMedidaSeleccionado.id,
+					datoTipoId: mi.tipoValorSeleccionado.id,
+					objetoTipo: 3,
+					objetoId: mi.producto.id,
+					t: (new Date()).getTime()						
+				}).success(function(response){
+					if(response.success){
+						mi.meta.id = response.id;
+						mi.meta.datoTipoId = response.datoTipoId;
+						mi.meta.usuarioCreo = response.usuarioCreo;
+						mi.meta.fechaCreacion = response.fechaCreacion;
+						mi.meta.usuarioActualizo = response.usuarioactualizo;
+						mi.meta.fechaActualizacion = response.fechaactualizacion;
+						$utilidades.mensaje('success','Meta '+(mi.esnueva ? 'creada' : 'guardada')+' con éxito');
+						mi.obtenerTotalMetas();
+					}
+					else
+						$utilidades.mensaje('danger','Error al '+(mi.esnueva ? 'crear' : 'guardar')+' la Meta');
+				});
+			}
+			else
+				$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
+		};
+
+		mi.borrarMeta = function(ev) {
+			if(mi.meta!=null){
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar la Meta "'+mi.meta.id+'"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						var index = mi.metas.indexOf(mi.meta);
+						if (index > -1) {
+							mi.metas.splice(index, 1);
+							mi.mostrarValores = false;
+						}
+					}
+				}, function(){
+					
+				});
+			}
+			else
+				$utilidades.mensaje('warning','Debe seleccionar la Meta que desea borrar');
+		};
+
+		mi.nuevaMeta = function() {
+			mi.metas.push({  
+		         "id": "",
+		         "nombre":"Nueva Meta Creada",
+		         "descripcion":"",
+		         "estado":1,
+		         "proyecto":null,
+		         "componente":null,
+		         "producto":null,
+		         "tipoMetaId":2,
+		         "unidadMedidaId":1,
+		         "usuarioCreo":"",
+		         "fechaCreacion":"",
+		         "usuarioActualizo":null,
+		         "fechaActualizacion":"",
+		         "objetoId":121,
+		         "objetoTipo":3,
+		         "datoTipoId":1
+		      });
+		};
+				
+		mi.obtenerTotalMetas =  function() {
+			$http.post('/SMeta', { accion: 'numeroMetas', id: mi.producto.id, tipo: 3, t: (new Date()).getTime()}).success(
+					function(response) {
+						mi.totalMetas = response.totalMetas;
+						mi.cargarTablaMetas(1);
+					});
+			
+		}
+		//************** fin metas ****************
+		
 	  
 }
 
@@ -932,3 +1167,4 @@ moduloProducto.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', '
 		  $uibModalInstance.close(null);
 	  };
 }]);
+

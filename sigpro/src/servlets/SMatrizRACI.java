@@ -162,7 +162,7 @@ public class SMatrizRACI extends HttpServlet {
 				informacion.nombreTarea = subproducto.getNombre();
 			break;
 				case 5:
-					Actividad actividad = ActividadDAO.getActividadPorId(objetoId, usuario);
+					Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
 					informacion.nombreTarea = actividad.getNombre();
 				break;
 			}
@@ -362,7 +362,7 @@ public class SMatrizRACI extends HttpServlet {
 								ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolSubProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(),objSubProducto.getId(), conn);
 								for(ArrayList<Integer> actividad : actividades){
 									
-									Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+									Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0));
 									tempmatriz = new stmatriz();
 									tempmatriz.objetoId = objActividad.getId();
 									tempmatriz.objetoNombre = objActividad.getNombre();
@@ -376,7 +376,7 @@ public class SMatrizRACI extends HttpServlet {
 					
 							ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(), conn);
 							for(ArrayList<Integer> actividad : actividades){
-								Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+								Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0));
 								tempmatriz = new stmatriz();
 								tempmatriz.objetoId = objActividad.getId();
 								tempmatriz.objetoNombre = objActividad.getNombre();
@@ -389,7 +389,7 @@ public class SMatrizRACI extends HttpServlet {
 					
 						ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolComponentesActividades(idPrestamo, objComponente.getId(), conn);							
 						for(ArrayList<Integer> actividad : actividades){
-							Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+							Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0));
 							tempmatriz = new stmatriz();
 							tempmatriz.objetoId = objActividad.getId();
 							tempmatriz.objetoNombre = objActividad.getNombre();
@@ -404,7 +404,7 @@ public class SMatrizRACI extends HttpServlet {
 					ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolPrestamoActividades(idPrestamo, conn);
 					
 					for(ArrayList<Integer> actividad : actividades){
-						Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0), usuario);
+						Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0));
 						tempmatriz = new stmatriz();
 						tempmatriz.objetoId = objActividad.getId();
 						tempmatriz.objetoNombre = objActividad.getNombre();

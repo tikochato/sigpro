@@ -170,7 +170,7 @@ public class Utils {
 	}
 	
 	public static String formatDateHour(Date date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss a");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy h:mm:ss a");
 		if (date != null)
 			return sdf.format(date);
 		return "";

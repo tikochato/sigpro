@@ -50,8 +50,6 @@ import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
-import servlets.SInformacionPresupuestaria.stanio;
-import servlets.SInformacionPresupuestaria.stprestamo;
 import utilities.CExcel;
 import utilities.CLogger;
 import utilities.CPdf;
@@ -207,7 +205,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 							subproducto.setFechaActualizacion(new Date());
 							SubproductoDAO.guardarSubproducto(subproducto);
 						}else if(objetoTipo == 5 && !total.equals(BigDecimal.ZERO) ){
-							Actividad actividad = ActividadDAO.getActividadPorId(objetoId, usuario);
+							Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
 							actividad.setCosto(total);
 							actividad.setUsuarioActualizo(usuario);
 							actividad.setFechaActualizacion(new Date());
@@ -455,7 +453,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
 						break;
 						case 5:
-							Actividad actividad = ActividadDAO.getActividadPorId(temp.objetoId, usuario);
+							Actividad actividad = ActividadDAO.getActividadPorId(temp.objetoId);
 							if(actividad != null){
 								temp.predecesorId = actividad.getObjetoId();
 								temp.objetoPredecesorTipo = actividad.getPredObjetoTipo();

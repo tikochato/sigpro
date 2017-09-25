@@ -99,6 +99,7 @@
 								<option value="">Seleccione un tipo</option>
 							</select>
 							<label class="floating-label">* Tipo adquisicion</label>
+						</div>
 						<div class="form-group">
     						<input type="text" class="inputText"  ng-model="controller.adquisicion.descripcion"
     						ng-value="controller.adquisicion.descripcion" onblur="this.setAttribute('value', this.value);">
@@ -113,15 +114,7 @@
 							</select>
 							<label class="floating-label">* Categoría de Adquisición</label>
 						</div>
-						<div class="form-group">
-							<select class="inputText" ng-model="controller.unidadMedidaSeleccionado"
-								ng-options="unidad as unidad.nombre for unidad in controller.adquisicionunidades track by unidad.id"
-								ng-readonly="true"
-								ng-required="true">
-								<option value="">Seleccione una unidad</option>
-							</select>
-							<label class="floating-label">* Unidad de Medida</label>
-						</div>
+						
 						<div class="form-group" ng-hide="true">
 							<select class="inputText" ng-model="controller.tipoValorSeleccionado"
 								ng-options="tipoValor as tipoValor.nombre for tipoValor in controller.datoTipos track by tipoValor.id"

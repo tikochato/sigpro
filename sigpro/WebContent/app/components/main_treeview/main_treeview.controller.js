@@ -28,7 +28,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/producto/:componente_id/:id',{
             	template: '<div load-on-demand="\'moduloProducto\'" class="all_page"></div>'
             })
-            .when('/subproducto/:id',{
+            .when('/subproducto/:producto_id/:id',{
             	template: '<div load-on-demand="\'moduloSubproducto\'" class="all_page"></div>'
             })
             .when('/meta/:id/:tipo/:reiniciar_vista?',{
@@ -43,7 +43,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/desembolso/:proyecto_id/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'desembolsoController\'" class="all_page"></div>'
             })
-            .when('/componente/:proyecto_id/:reiniciar_vista?',{
+            .when('/componente/:proyecto_id/:id',{
             	template: '<div load-on-demand="\'componenteController\'" class="all_page"></div>'
             })
             .when('/riesgo/:objeto_id/:objeto_tipo/:reiniciar_vista?',{
@@ -55,7 +55,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/recurso/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'recursoController\'" class="all_page"></div>'
             })
-            .when('/actividad/:objeto_id/:objeto_tipo/:reiniciar_vista?',{
+            .when('/actividad/:objeto_id/:objeto_tipo/:id',{
             	template: '<div load-on-demand="\'actividadController\'" class="all_page"></div>'
             })
             .when('/programa/:reiniciar_vista?',{
@@ -64,14 +64,14 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/mapa/:proyecto_id/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'mapaController\'" class="all_page"></div>'
             })
-            .when("/:redireccion?",{
-            	controller:"MainController"
-            })
             .when('/agenda/:proyectoId',{
             	template: '<div load-on-demand="\'agendaController\'" class="all_page"></div>'
             })
             .when('/matrizraci/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'matrizraciController\'" class="all_page"></div>'
+            })
+            .when("/:redireccion?",{
+            	controller:"MainController"
             })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
@@ -199,7 +199,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	mi.treedata=[];
 	mi.expanded=[];
 	mi.proyectos=[];
-	mi.proyecto='';
+	mi.proyecto=null;
 	mi.nodo_seleccionado;
 	
 	mi.tree_options={
@@ -234,6 +234,15 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	}
 
 	$scope.device = deviceDetector;
+	
+	$rootScope.$on( "$routeChangeStart", function(event, next, current) {
+		if(mi.proyecto===undefined || mi.proyecto==null){
+		  //event.preventDefault();  
+		  $location.path('/main');
+		}
+	});
+	
+	
 
 	$rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
 		if($routeParams.redireccion=="forbidden"){
@@ -249,7 +258,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 		mi.nodo_seleccionado = nodo;
 		switch(nodo.objeto_tipo){
 			case 1:
-				$location.path("/prestamo"); break;
+				$location.path('/prestamo/'+nodo.id); break;
 			case 2:
 				$location.path('/componente/'+nodo.parent.id+'/'+nodo.id); break;
 			case 3:
@@ -257,7 +266,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 			case 4:
 				$location.path('/subproducto/'+nodo.parent.id+'/'+nodo.id); break;
 			case 5:
-				$location.path('/actividad/'+nodo.parent.id+'/'+nodo.id); break;
+				$location.path('/actividad/'+nodo.parent.id+'/'+nodo.parent.objeto_tipo+'/'+nodo.id); break;
 		}
 		
 		
@@ -293,6 +302,10 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
         mi.eliminaNodo();
      });
 	
+	$rootScope.$on("cambiarNombreNodo",function($evt, nombre){
+		mi.cambiarNombreNodo(nombre);
+	});
+	
 	mi.eliminaNodo=function(){
 		if(mi.nodo_seleccionado){
 			var parent = mi.nodo_seleccionado.parent;
@@ -301,6 +314,12 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 					parent.children.splice(i,1);
 				}
 			}
+		}
+	}
+	
+	mi.cambiarNombreNodo=function(nombre){
+		if(mi.nodo_seleccionado){
+			mi.nodo_seleccionado.nombre = nombre;
 		}
 	}
 	

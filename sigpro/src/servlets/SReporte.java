@@ -103,7 +103,7 @@ public class SReporte extends HttpServlet {
 				int porcentajeAvance = (Integer)row[2];
 				
 				if (porcentajeAvance > 0 && porcentajeAvance < 100){
-					Actividad actividad = ActividadDAO.getActividadPorId(idActividad, usuario);
+					Actividad actividad = ActividadDAO.getActividadPorId(idActividad);
 					String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad,usuario).split(";");
 					
 					try{
@@ -157,7 +157,7 @@ public class SReporte extends HttpServlet {
 					int porcentajeAvance = (Integer)row[2];
 				
 					if (porcentajeAvance > 0 && porcentajeAvance < 100){
-						Actividad actividad = ActividadDAO.getActividadPorId(idActividad, usuario);
+						Actividad actividad = ActividadDAO.getActividadPorId(idActividad);
 						String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad, usuario).split(";");
 						stActividades temp = new stActividades();
 						

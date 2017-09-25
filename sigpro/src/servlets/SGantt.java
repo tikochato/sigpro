@@ -453,7 +453,7 @@ public class SGantt extends HttpServlet {
 				}
 				break;
 			case 5:
-				Actividad actividad = ActividadDAO.getActividadPorId(objetoId, usuario);
+				Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
 				if (actividad!=null){
 					actividad.setNombre(nombre);
 					actividad.setFechaInicio(inicio);

@@ -1,7 +1,7 @@
-var app = angular.module('metaController', []);
+//var app = angular.module('metaController', []);
 
-app.controller('metaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
-		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
+app.controller('metaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog', 'dialogoConfirmacion', 
+		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog, $dialogoConfirmacion) {
 			var mi=this;
 			
 			$window.document.title = $utilidades.sistema_nombre+' - Metas';
@@ -9,12 +9,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			mi.mostrarcargando=true;
 			mi.metas = [];
 			mi.meta;
-			mi.mostraringreso=false;
 			mi.esnueva = false;
-			mi.totalMetas = 0;
-			mi.paginaActual = 1;
-			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
-			mi.elementosPorPagina = $utilidades.elementosPorPagina;
 			mi.metatipos = [];
 			mi.metasunidades = [];
 			mi.tipoMetaSeleccionado=null;
@@ -23,11 +18,6 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			
 			mi.nombrePcp = "";
 			mi.nombreTipoPcp = "";
-			
-			mi.columnaOrdenada=null;
-			mi.ordenDireccion = null;
-			
-			mi.filtros = [];
 			
 			switch($routeParams.tipo){
 				case "1": mi.nombreTipoPcp = "Préstamo"; break;

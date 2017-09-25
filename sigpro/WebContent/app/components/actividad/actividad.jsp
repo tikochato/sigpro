@@ -8,7 +8,7 @@
 	</style>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-	<div ng-controller="actividadController as actividadc" class="maincontainer all_page" id="title">
+	<div ng-controller="actividadController as actividadc" ng-class="actividadc.esTreeview ? 'maincontainer_treeview all_page':'maincontainer all_page'" id="title">
 	<script type="text/ng-template" id="map.html">
         <div class="modal-header">
             <h3 class="modal-title">Mapa de Ubicación</h3>
@@ -33,18 +33,17 @@
   	    </script>
 
   	    <shiro:lacksPermission name="1010">
-
-			<p ng-init="actividadc.redireccionSinPermisos()"></p>
+			<span ng-init="actividadc.redireccionSinPermisos()"></span>
 		</shiro:lacksPermission>
 		
-		<div class="panel panel-default">
+		<div class="panel panel-default" ng-if="!actividadc.esTreeview">
 			<div class="panel-heading"><h3>Actividades</h3></div>
 		</div>
-		<div class="subtitulo">
+		<div class="subtitulo" ng-if="!actividadc.esTreeview">
 			{{ actividadc.objetoTipoNombre }} {{ actividadc.objetoNombre }}
 		</div>
 		
-		<div class="row" align="center" ng-hide="actividadc.mostraringreso">
+		<div class="row" align="center" ng-hide="actividadc.mostraringreso" ng-if="!actividadc.esTreeview">
 			
     		<div class="col-sm-12 operation_buttons" align="right">
 			  <div class="btn-group">
@@ -99,31 +98,33 @@
     		</shiro:hasPermission>
 
 		</div>
-		<div class="row second-main-form" ng-show="actividadc.mostraringreso">
+		<div class="row second-main-form" ng-show="actividadc.mostraringreso || actividadc.esTreeview">
 			<div class="page-header">
 			    <h2 ng-hide="!actividadc.esnuevo"><small>Nueva actividad</small></h2>
 				<h2 ng-hide="actividadc.esnuevo"><small>Edición de actividad</small></h2>
 			</div>
 			
 			<div class="operation_buttons">
-				<div class="btn-group" ng-hide="actividadc.esnuevo">
-				<label class="btn btn-default" ng-click="actividadc.irAActividades(actividadc.actividad.id)" uib-tooltip="Actividad" tooltip-placement="bottom">
+				<div class="btn-group" ng-hide="actividadc.esnuevo" ng-if="!actividadc.esTreeview">
+				<label class="btn btn-default" ng-click="actividadc.botones ? actividadc.irAActividades(actividadc.actividad.id) : ''" uib-tooltip="Actividad" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-th-list"></span></label>
-					<label class="btn btn-default" ng-click="actividadc.irARiesgos(actividadc.actividad.id)" uib-tooltip="Riesgos" tooltip-placement="bottom">
+					<label class="btn btn-default" ng-click="actividadc.botones ? actividadc.irARiesgos(actividadc.actividad.id) : ''" uib-tooltip="Riesgos" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-warning-sign"></span></label>
 				</div>
 				<div class="btn-group" style="float: right;">
 					<shiro:hasPermission name="24020">
-						<label class="btn btn-success" ng-click="form.$valid ? actividadc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
+						<label class="btn btn-success" ng-click="actividadc.mForm.$valid && actividadc.botones ? actividadc.guardar() : ''" ng-disabled="!actividadc.mForm.$valid || !actividadc.botones" uib-tooltip="Guardar" tooltip-placement="bottom">
 						<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 					</shiro:hasPermission>
-					<label class="btn btn-primary" ng-click="actividadc.irATabla()" uib-tooltip="Ir a Tabla" tooltip-placement="bottom">
+					<label ng-if="!actividadc.esTreeview" class="btn btn-primary" ng-click="actividadc.botones ? actividadc.irATabla() : ''" uib-tooltip="Ir a Tabla" ng-disabled="!actividadc.botones" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+					<label ng-if="actividadc.esTreeview" class="btn btn-danger" ng-click=" actividadc.botones ? actividadc.t_borrar() : ''" ng-disabled="!(actividadc.actividad.id>0) || !actividadc.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</div>
 			</div>
 			
 			<div class="col-sm-12">
-				<form name="form">
+				<form name="actividadc.mForm">
 						<div class="form-group">
 							<label for="id" class="floating-label id_class">ID {{actividadc.actividad.id }}</label>
 							<br/><br/>
@@ -218,7 +219,6 @@
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaInicio" is-open="actividadc.fi_abierto"
 								            datepicker-options="actividadc.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin(); actividadc.cambioDuracion(actividadc.duracionDimension);" ng-required="true"  
-								            ng-click="actividadc.abrirPopupFecha(1000)" readonly="readonly"
 								            ng-value="actividadc.actividad.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
 								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1000)">
 								              <i class="glyphicon glyphicon-calendar"></i>
@@ -444,11 +444,13 @@
 			<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 			<div class="btn-group">
 				<shiro:hasPermission name="24020">
-					<label class="btn btn-success" ng-click="form.$valid ? actividadc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar" uib-tooltip="Guardar">
+					<label class="btn btn-success" ng-click="actividadc.mForm.$valid && actividadc.botones ? actividadc.guardar() : ''" ng-disabled="!actividadc.mForm.$valid || !actividadc.botones" title="Guardar" uib-tooltip="Guardar" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="actividadc.irATabla()" title="Ir a Tabla" uib-tooltip="Ir a Tabla">
+				<label ng-if="!actividadc.esTreeview"  class="btn btn-primary" ng-click="actividadc.botones ? actividadc.irATabla() : ''" title="Ir a Tabla" uib-tooltip="Ir a Tabla" ng-disabled="!actividadc.botones">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
+				<label ng-if="actividadc.esTreeview" class="btn btn-danger" ng-click=" actividadc.botones ? actividadc.t_borrar() : ''" ng-disabled="!(actividadc.actividad.id>0) || !actividadc.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
 	</div>

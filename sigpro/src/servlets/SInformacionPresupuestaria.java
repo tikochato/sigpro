@@ -391,7 +391,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 						actividad = subproducto.getActividad();
 						obra = subproducto.getObra();
 						break;
-					case 5: Actividad actividadObj = ActividadDAO.getActividadPorId(prestamo.objeto_id, usuario);
+					case 5: Actividad actividadObj = ActividadDAO.getActividadPorId(prestamo.objeto_id);
 						programa = actividadObj.getPrograma();
 						subprograma = actividadObj.getSubprograma(); 
 						proyecto = actividadObj.getProyecto();
