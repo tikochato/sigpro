@@ -302,6 +302,10 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
         mi.eliminaNodo();
      });
 	
+	$rootScope.$on("cambiarNombreNodo",function($evt, nombre){
+		mi.cambiarNombreNodo(nombre);
+	});
+	
 	mi.eliminaNodo=function(){
 		if(mi.nodo_seleccionado){
 			var parent = mi.nodo_seleccionado.parent;
@@ -310,6 +314,12 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 					parent.children.splice(i,1);
 				}
 			}
+		}
+	}
+	
+	mi.cambiarNombreNodo=function(nombre){
+		if(mi.nodo_seleccionado){
+			mi.nodo_seleccionado.nombre = nombre;
 		}
 	}
 	
