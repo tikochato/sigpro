@@ -1,6 +1,7 @@
 package pojo;
-// Generated Sep 22, 2017 5:37:23 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 25, 2017 8:25:07 PM by Hibernate Tools 5.2.3.Final
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,10 +28,9 @@ public class Meta implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8025612996827494277L;
+	private static final long serialVersionUID = 8841591411640310819L;
 	private Integer id;
 	private DatoTipo datoTipo;
-	private MetaTipo metaTipo;
 	private MetaUnidadMedida metaUnidadMedida;
 	private String nombre;
 	private String descripcion;
@@ -41,26 +41,31 @@ public class Meta implements java.io.Serializable {
 	private Integer estado;
 	private Integer objetoId;
 	private Integer objetoTipo;
-	private Set<MetaValor> metaValors = new HashSet<MetaValor>(0);
+	private Integer metaFinalEntero;
+	private String metaFinalString;
+	private BigDecimal metaFinalDecimal;
+	private Date metaFinalFecha;
+	private Set<MetaAvance> metaAvances = new HashSet<MetaAvance>(0);
+	private Set<MetaPlanificado> metaPlanificados = new HashSet<MetaPlanificado>(0);
 
 	public Meta() {
 	}
 
-	public Meta(DatoTipo datoTipo, MetaTipo metaTipo, MetaUnidadMedida metaUnidadMedida, String nombre,
-			String usuarioCreo, Date fechaCreacion) {
+	public Meta(DatoTipo datoTipo, MetaUnidadMedida metaUnidadMedida, String nombre, String usuarioCreo,
+			Date fechaCreacion) {
 		this.datoTipo = datoTipo;
-		this.metaTipo = metaTipo;
 		this.metaUnidadMedida = metaUnidadMedida;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public Meta(DatoTipo datoTipo, MetaTipo metaTipo, MetaUnidadMedida metaUnidadMedida, String nombre,
-			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, Integer estado, Integer objetoId, Integer objetoTipo, Set<MetaValor> metaValors) {
+	public Meta(DatoTipo datoTipo, MetaUnidadMedida metaUnidadMedida, String nombre, String descripcion,
+			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado,
+			Integer objetoId, Integer objetoTipo, Integer metaFinalEntero, String metaFinalString,
+			BigDecimal metaFinalDecimal, Date metaFinalFecha, Set<MetaAvance> metaAvances,
+			Set<MetaPlanificado> metaPlanificados) {
 		this.datoTipo = datoTipo;
-		this.metaTipo = metaTipo;
 		this.metaUnidadMedida = metaUnidadMedida;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -71,7 +76,12 @@ public class Meta implements java.io.Serializable {
 		this.estado = estado;
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
-		this.metaValors = metaValors;
+		this.metaFinalEntero = metaFinalEntero;
+		this.metaFinalString = metaFinalString;
+		this.metaFinalDecimal = metaFinalDecimal;
+		this.metaFinalFecha = metaFinalFecha;
+		this.metaAvances = metaAvances;
+		this.metaPlanificados = metaPlanificados;
 	}
 
 	@Id
@@ -94,16 +104,6 @@ public class Meta implements java.io.Serializable {
 
 	public void setDatoTipo(DatoTipo datoTipo) {
 		this.datoTipo = datoTipo;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "meta_tipoid", nullable = false)
-	public MetaTipo getMetaTipo() {
-		return this.metaTipo;
-	}
-
-	public void setMetaTipo(MetaTipo metaTipo) {
-		this.metaTipo = metaTipo;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -199,13 +199,59 @@ public class Meta implements java.io.Serializable {
 		this.objetoTipo = objetoTipo;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "meta")
-	public Set<MetaValor> getMetaValors() {
-		return this.metaValors;
+	@Column(name = "meta_final_entero")
+	public Integer getMetaFinalEntero() {
+		return this.metaFinalEntero;
 	}
 
-	public void setMetaValors(Set<MetaValor> metaValors) {
-		this.metaValors = metaValors;
+	public void setMetaFinalEntero(Integer metaFinalEntero) {
+		this.metaFinalEntero = metaFinalEntero;
+	}
+
+	@Column(name = "meta_final_string", length = 65535)
+	public String getMetaFinalString() {
+		return this.metaFinalString;
+	}
+
+	public void setMetaFinalString(String metaFinalString) {
+		this.metaFinalString = metaFinalString;
+	}
+
+	@Column(name = "meta_final_decimal", precision = 15)
+	public BigDecimal getMetaFinalDecimal() {
+		return this.metaFinalDecimal;
+	}
+
+	public void setMetaFinalDecimal(BigDecimal metaFinalDecimal) {
+		this.metaFinalDecimal = metaFinalDecimal;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "meta_final_fecha", length = 19)
+	public Date getMetaFinalFecha() {
+		return this.metaFinalFecha;
+	}
+
+	public void setMetaFinalFecha(Date metaFinalFecha) {
+		this.metaFinalFecha = metaFinalFecha;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "meta")
+	public Set<MetaAvance> getMetaAvances() {
+		return this.metaAvances;
+	}
+
+	public void setMetaAvances(Set<MetaAvance> metaAvances) {
+		this.metaAvances = metaAvances;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "meta")
+	public Set<MetaPlanificado> getMetaPlanificados() {
+		return this.metaPlanificados;
+	}
+
+	public void setMetaPlanificados(Set<MetaPlanificado> metaPlanificados) {
+		this.metaPlanificados = metaPlanificados;
 	}
 
 }
