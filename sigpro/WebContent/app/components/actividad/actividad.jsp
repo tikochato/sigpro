@@ -100,8 +100,8 @@
 		</div>
 		<div class="row second-main-form" ng-show="actividadc.mostraringreso || actividadc.esTreeview">
 			<div class="page-header">
-			    <h2 ng-hide="!actividadc.esnuevo"><small>Nueva actividad</small></h2>
-				<h2 ng-hide="actividadc.esnuevo"><small>Edición de actividad</small></h2>
+			    <h2 ng-if="actividadc.esnuevo"><small>Nueva actividad</small></h2>
+				<h2 ng-if="!actividadc.esnuevo"><small>Edición de actividad</small></h2>
 			</div>
 			
 			<div class="operation_buttons">
@@ -118,7 +118,7 @@
 					</shiro:hasPermission>
 					<label ng-if="!actividadc.esTreeview" class="btn btn-primary" ng-click="actividadc.botones ? actividadc.irATabla() : ''" uib-tooltip="Ir a Tabla" ng-disabled="!actividadc.botones" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-					<label ng-if="actividadc.esTreeview" class="btn btn-danger" ng-click=" actividadc.botones ? actividadc.t_borrar() : ''" ng-disabled="!(actividadc.actividad.id>0) || !actividadc.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+					<label ng-if="actividadc.esTreeview" class="btn btn-danger" ng-click=" actividadc.botones && actividadc.actividad.id>0 ? actividadc.t_borrar() : ''" ng-disabled="!(actividadc.actividad.id>0) || !actividadc.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</div>
 			</div>
@@ -441,15 +441,16 @@
 				</form>
 			</div>
 		<div class="col-sm-12 operation_buttons" align="right">
-			<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios y las fechas deben tener formato de dd/mm/yyyy</div>
+			<br/>
 			<div class="btn-group">
 				<shiro:hasPermission name="24020">
-					<label class="btn btn-success" ng-click="actividadc.mForm.$valid && actividadc.botones ? actividadc.guardar() : ''" ng-disabled="!actividadc.mForm.$valid || !actividadc.botones" title="Guardar" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<label class="btn btn-success" ng-click="actividadc.mForm.$valid && actividadc.botones ? actividadc.guardar() : ''" ng-disabled="!actividadc.mForm.$valid || !actividadc.botones" title="Guardar" uib-tooltip="Guardar" tooltip-placement="top">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label ng-if="!actividadc.esTreeview"  class="btn btn-primary" ng-click="actividadc.botones ? actividadc.irATabla() : ''" title="Ir a Tabla" uib-tooltip="Ir a Tabla" ng-disabled="!actividadc.botones">
+				<label ng-if="!actividadc.esTreeview"  class="btn btn-primary" ng-click="actividadc.botones ? actividadc.irATabla() : ''" title="Ir a Tabla" uib-tooltip="Ir a Tabla" ng-disabled="!actividadc.botones" tooltip-placement="top">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-				<label ng-if="actividadc.esTreeview" class="btn btn-danger" ng-click=" actividadc.botones ? actividadc.t_borrar() : ''" ng-disabled="!(actividadc.actividad.id>0) || !actividadc.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+				<label ng-if="actividadc.esTreeview" class="btn btn-danger" ng-click=" actividadc.botones && actividadc.actividad.id>0 ? actividadc.t_borrar() : ''" ng-disabled="!(actividadc.actividad.id>0) || !actividadc.botones" uib-tooltip="Borrar" tooltip-placement="top">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
