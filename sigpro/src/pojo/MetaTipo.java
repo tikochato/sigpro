@@ -1,16 +1,12 @@
 package pojo;
-// Generated Sep 22, 2017 5:37:23 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 25, 2017 8:25:07 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,7 +21,7 @@ public class MetaTipo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3790508041417353870L;
+	private static final long serialVersionUID = -4105184313781419219L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
@@ -34,7 +30,6 @@ public class MetaTipo implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private Set<Meta> metas = new HashSet<Meta>(0);
 
 	public MetaTipo() {
 	}
@@ -47,7 +42,7 @@ public class MetaTipo implements java.io.Serializable {
 	}
 
 	public MetaTipo(String nombre, String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, Set<Meta> metas) {
+			Date fechaActualizacion, int estado) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
@@ -55,7 +50,6 @@ public class MetaTipo implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.metas = metas;
 	}
 
 	@Id
@@ -133,15 +127,6 @@ public class MetaTipo implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "metaTipo")
-	public Set<Meta> getMetas() {
-		return this.metas;
-	}
-
-	public void setMetas(Set<Meta> metas) {
-		this.metas = metas;
 	}
 
 }

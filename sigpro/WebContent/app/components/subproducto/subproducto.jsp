@@ -107,7 +107,7 @@
 				</shiro:hasPermission>
 				<label ng-if="!subproducto.esTreeview" class="btn btn-primary" ng-click="subproducto.botones ? subproducto.cancelar() : ''" uib-tooltip="Ir a Tabla" tooltip-placement="bottom" ng-disabled="!subproducto.botones">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-				<label ng-if="subproducto.esTreeview" class="btn btn-danger" ng-click=" subproducto.botones ? sbuproducto.t_borrar() : ''" ng-disabled="!(subproducto.subproducto.id>0) || !subproducto.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+				<label ng-if="subproducto.esTreeview" class="btn btn-danger" ng-click=" subproducto.botones ? subproducto.t_borrar() : ''" ng-disabled="!(subproducto.subproducto.id>0) || !subproducto.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
@@ -352,7 +352,7 @@
 				</shiro:hasPermission>
 				<label ng-if="!subproducto.esTreeview" class="btn btn-primary" ng-click="subproducto.botones ? subproducto.cancelar() : ''" uib-tooltip="Ir a Tabla" tooltip-placement="bottom" ng-disabled="!subproducto.botones">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-				<label ng-if="subproducto.esTreeview" class="btn btn-danger" ng-click=" subproducto.botones ? sbuproducto.t_borrar() : ''" ng-disabled="!(subproducto.subproducto.id>0) || !subproducto.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+				<label ng-if="subproducto.esTreeview" class="btn btn-danger" ng-click=" subproducto.botones ? subproducto.t_borrar() : ''" ng-disabled="!(subproducto.subproducto.id>0) || !subproducto.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
