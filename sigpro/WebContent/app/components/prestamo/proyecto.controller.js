@@ -1180,7 +1180,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 		  }
 		
 		mi.t_borrar = function(ev) {
-			if (mi.producto!=null && mi.producto.id!=null) {
+			if (mi.proyecto!=null && mi.proyecto.id!=null) {
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
 						, '¿Desea borrar el préstamo "' + mi.proyecto.nombre + '"?'

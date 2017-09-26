@@ -700,7 +700,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	  }
 	  
 	  mi.t_borrar = function(ev) {
-			if (mi.producto!=null && mi.producto.id!=null) {
+			if (mi.subproducto!=null && mi.subproducto.id!=null) {
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
 						, '¿Desea borrar el subproducto "' + mi.subproducto.nombre + '"?'
