@@ -10,16 +10,22 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			mi.metas = [];
 			mi.meta;
 			mi.esnueva = false;
-			mi.metatipos = [];
+			mi.mostrarValores = false;
 			mi.metasunidades = [];
 			mi.tipoMetaSeleccionado=null;
 			mi.unidadMedidaSeleccionado=null;
 			mi.tipoValorSeleccionado=null;
 			
+			mi.objeto_id = $scope.$parent.objeto_id;
+			mi.objeto_tipo = $scope.$parent.objeto_tipo;
+						
 			mi.nombrePcp = "";
 			mi.nombreTipoPcp = "";
 			
-			switch($routeParams.tipo){
+			mi.anios=[];
+			mi.anio = null;			
+			
+			switch(mi.objeto_tipo){
 				case "1": mi.nombreTipoPcp = "Préstamo"; break;
 				case "2": mi.nombreTipoPcp = "Componente"; break;
 				case "3": mi.nombreTipoPcp = "Producto"; break;
@@ -27,117 +33,74 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				
 			}
 			
-			$http.post('/SMeta', { accion: 'getPcp', id: $routeParams.id, tipo: $routeParams.tipo, t: (new Date()).getTime()}).success(
+			$http.post('/SMeta', { accion: 'getPcp', id: mi.objeto_id, tipo: mi.objeto_tipo, t: (new Date()).getTime()}).success(
 					function(response) {
 						mi.nombrePcp = response.nombre;
+						mi.fechaInicio = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
+						mi.fechaFin = moment(response.fechaFin, 'DD/MM/YYYY').toDate();
+						var anioInicio = moment(response.fechaInicio, 'DD/MM/YYYY').year();
+						var anioFin = moment(response.fechaFin, 'DD/MM/YYYY').year();
+						for(a = anioInicio; a<=anioFin; a++){
+							mi.anios.push(a);
+						}
+						if(mi.anios.length>0){
+							mi.anio=mi.anios[0];
+						}
 			});
-			
-			$http.post('/SMeta', { accion: 'getMetasTipos', t: (new Date()).getTime() }).success(
-					function(response) {
-						mi.metatipos = response.MetasTipos;
-			});
-			
+						
 			$http.post('/SMeta', { accion: 'getMetasUnidadesMedida', t: (new Date()).getTime() }).success(
 					function(response) {
 						mi.metaunidades = response.MetasUnidades;
-			});
-			
-			$http.post('/SDatoTipo', { accion: 'cargarCombo', t: (new Date()).getTime() }).success(
-					function(response) {
-						mi.datoTipos = response.datoTipos;
-			});
-			
-			mi.editarElemento = function (event) {
-		        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
-		        mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
-		        mi.editar();
-		    };
-			
-			mi.gridOptions = {
-					enableRowSelection : true,
-					enableRowHeaderSelection : false,
-					multiSelect: false,
-					modifierKeysToMultiSelect: false,
-					noUnselect: true,
-					enableFiltering: true,
-					enablePaginationControls: false,
-				    paginationPageSize: $utilidades.elementosPorPagina,
-				    useExternalFiltering: true,
-				    useExternalSorting: true,
-				    rowTemplate: '<div ng-dblclick="grid.appScope.metac.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
-					columnDefs : [ 
-						{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-						{ name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left',
-							filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.metac.filtros[\'nombre\']" ng-keypress="grid.appScope.metac.filtrar($event)"></input></div>'
-						},
-					    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableFiltering: false},
-					    { name: 'unidadMedidaNombre', displayName: 'Unidad Medida', cellClass: 'grid-align-left', enableFiltering: false},
-					    { name: 'tipoMetaNombre', displayName: 'Tipo Meta', cellClass: 'grid-align-left', enableFiltering: false},
-					    { name: 'usuarioCreo', displayName: 'Usuario Creación', 
-					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.metac.filtros[\'usuario_creo\']" ng-keypress="grid.appScope.metac.filtrar($event)"></input></div>'
-					    },
-					    { name: 'fechaCreacion', displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-					    	filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.metac.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.metac.filtrar($event)"></input></div>'
-					    }
-					],
-					onRegisterApi: function(gridApi) {
-						mi.gridApi = gridApi;
-						gridApi.selection.on.rowSelectionChanged($scope,function(row) {
-							mi.meta = row.entity;
+						$http.post('/SDatoTipo', { accion: 'cargarCombo', t: (new Date()).getTime() }).success(
+								function(response) {
+									mi.datoTipos = response.datoTipos;
+									mi.cargarTabla();
 						});
-						
-						gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
-							if(sortColumns.length==1){
-								grid.appScope.metac.columnaOrdenada=sortColumns[0].field;
-								grid.appScope.metac.ordenDireccion = sortColumns[0].sort.direction;
-								for(var i = 0; i<sortColumns.length-1; i++)
-									sortColumns[i].unsort();
-								grid.appScope.metac.cargarTabla(grid.appScope.metac.paginaActual);
-							}
-							else if(sortColumns.length>1){
-								sortColumns[0].unsort();
-							}
-							else{
-								if(grid.appScope.metac.columnaOrdenada!=null){
-									grid.appScope.metac.columnaOrdenada=null;
-									grid.appScope.metac.ordenDireccion=null;
-								}
-							}
-								
-						} );
-						
-						if($routeParams.reiniciar_vista=='rv'){
-							mi.guardarEstado();
-							mi.obtenerTotalMetas();
-					    }
-					    else{
-					    	  $http.post('/SEstadoTabla', { action: 'getEstado', grid:'metas', t: (new Date()).getTime()}).then(function(response){
-					    	  if(response.data.success && response.data.estado!='')
-						    	  mi.gridApi.saveState.restore( $scope, response.data.estado);
-					    	  mi.gridApi.colMovable.on.columnPositionChanged($scope, mi.guardarEstado);
-							  mi.gridApi.colResizable.on.columnSizeChanged($scope, mi.guardarEstado);
-							  mi.gridApi.core.on.columnVisibilityChanged($scope, mi.guardarEstado);
-							  mi.obtenerTotalMetas();
-							  });
-					    }
-					}
-				};
+			});
 			
-			mi.cargarTabla = function(pagina){
-				mi.mostrarcargando=true;
-				$http.post('/SMeta', { accion: 'getMetasPagina', pagina: pagina, numerometas: $utilidades.elementosPorPagina, 
-					id: $routeParams.id, tipo: $routeParams.tipo,
-					filtro_nombre: mi.filtros['nombre'], 
-					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
+			
+			mi.cargarTabla = function(){
+				$http.post('/SMeta', { accion: 'getMetasPagina', pagina: 1, numerometas: 1000, 
+					id:mi.objeto_id, tipo: mi.objeto_tipo,
+					t: (new Date()).getTime()
 				}).success(
-						function(response) {
-							mi.metas = response.Metas;
-							mi.gridOptions.data = mi.metas;
-							mi.mostrarcargando = false;
-							mi.paginaActual = pagina;
-						});
+					function(response) {
+						mi.metas = response.Metas;
+						mi.mostrarcargando = false;
+					});
 			}
+			
+			mi.nombreUnidadMedida = function(id){
+				if (id != null && id > 0){
+					for (i=0; i<mi.metaunidades.length; i++){
+						if(mi.metaunidades[i].id == id){
+							return mi.metaunidades[i].nombre;
+						}
+					}
+				}
+				return "";
+			}
+			
+			mi.nombreDatoTipo = function(id){
+				if (id != null && id > 0){
+					for (i=0; i<mi.datoTipos.length; i++){
+						if(mi.datoTipos[i].id == id){
+							return mi.datoTipos[i].nombre;
+						}
+					}
+				}
+				return "";
+			}
+			
+			mi.metaSeleccionada = function(row){
+				mi.meta = row;
+				mi.mostrarValores = true;
+			}
+			
+			mi.editarElemento = function(row, elemento, valor){
+				row[elemento] = valor;
+			}
+						
 			mi.redireccionSinPermisos=function(){
 				$window.location.href = '/main.jsp#!/forbidden';		
 			}			
@@ -153,7 +116,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 						tipoMetaId:  mi.tipoMetaSeleccionado.id,
 						unidadMedidaId: mi.unidadMedidaSeleccionado.id,
 						datoTipoId: mi.tipoValorSeleccionado.id,
-						objetoTipo:  $routeParams.tipo,
+						objetoTipo:  mi.objeto_tipo,
 						objetoId:$routeParams.id,
 						t: (new Date()).getTime()						
 					}).success(function(response){
@@ -244,51 +207,29 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				}
 			}
 
-			mi.irATabla = function() {
-				mi.mostraringreso=false;
-			}
-			
-			mi.guardarEstado=function(){
-				var estado = mi.gridApi.saveState.save();
-				var tabla_data = { action: 'guardaEstado', grid:'metas', estado: JSON.stringify(estado), t: (new Date()).getTime() }; 
-				$http.post('/SEstadoTabla', tabla_data).then(function(response){
-					
-				});
-			}
-			
-			mi.cambioPagina=function(){
-				mi.cargarTabla(mi.paginaActual);
-			}
-			
-			mi.reiniciarVista=function(){
-				if($location.path()=='/meta/'+ $routeParams.id + '/' + $routeParams.tipo + '/rv')
-					$route.reload();
-				else
-					$location.path('/meta/'+ $routeParams.id + '/' + $routeParams.tipo + '/rv');
-			}
-						
-			mi.filtrar = function(evt){
-				if(evt.keyCode==13){
-					mi.obtenerTotalMetas();
-					mi.gridApi.selection.clearSelectedRows();
-					mi.meta = null;
-				}
-			}
-			
-			mi.irAMetaValores=function(){
-				if(mi.meta.id!=null){
-					$location.path('/metavalor/'+ mi.meta.id +'/'+ mi.meta.datoTipoId );
-				}
-			}
-			
-			mi.obtenerTotalMetas =  function() {
-				$http.post('/SMeta', { accion: 'numeroMetas', id: $routeParams.id, tipo: $routeParams.tipo, t: (new Date()).getTime()}).success(
-						function(response) {
-							mi.totalMetas = response.totalMetas;
-							mi.cargarTabla(1);
-						});
-				
-				}
-			}
 
+//			mi.cargarTabla = function(pagina){
+//				mi.mostrarcargando=true;
+//				$http.post('/SMeta', { accion: 'getMetasPagina', pagina: pagina, numerometas: $utilidades.elementosPorPagina, 
+//					id:mi.objeto_id, tipo: mi.objeto_tipo,
+//					filtro_nombre: mi.filtros['nombre'], 
+//					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
+//					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
+//				}).success(
+//						function(response) {
+//							mi.metas = response.Metas;
+//							mi.gridOptions.data = mi.metas;
+//							mi.mostrarcargando = false;
+//							mi.paginaActual = pagina;
+//						});
+//			}
+			
+//			mi.reiniciarVista=function(){
+//				if($location.path()=='/meta/'+mi.objeto_id + '/' + mi.objeto_tipo + '/rv')
+//					$route.reload();
+//				else
+//					$location.path('/meta/'+mi.objeto_id + '/' + mi.objeto_tipo + '/rv');
+//			}
+
+		}
 	]);

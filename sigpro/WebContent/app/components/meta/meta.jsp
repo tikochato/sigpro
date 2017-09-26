@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	
+	<style>
+		.st-selected { background-color: #e0ffff; }
+	</style>
+	
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="metaController as metac" class="all_page" id="title">
@@ -8,18 +13,27 @@
 				<br/>
 				<div class="btn-group btn-group-sm">
 			       <shiro:hasPermission name="17040">
-			       		<label class="btn btn-default" ng-click="producto.nuevaMeta()" uib-tooltip="Nueva">
+			       		<label class="btn btn-default" ng-click="metac.nuevaMeta()" uib-tooltip="Nueva">
 						<span class="glyphicon glyphicon-plus"></span></label>
 			       </shiro:hasPermission> 
 			       <shiro:hasPermission name="17030">
-			       		<label class="btn btn-default" ng-click="producto.borrarMeta()" uib-tooltip="Borrar">
+			       		<label class="btn btn-default" ng-click="metac.borrarMeta()" uib-tooltip="Borrar">
 						<span class="glyphicon glyphicon-trash"></span></label>
 			       </shiro:hasPermission>
 			   	</div>				
     		</div>
     		<shiro:hasPermission name="17010">
     		<div align="center">
-				<table st-table="cmetas" class="table">
+    			<div class="grid_loading" ng-hide="!metac.mostrarCargando">
+					<div class="msg">
+						<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
+							<br />
+							<br /> <b>Cargando, por favor espere...</b> 
+						</span>
+					</div>
+				</div>
+					
+				<table st-table="metac.metas" class="table">
 				<thead>
 				<tr>
 					<th st-sort="id">ID</th>
@@ -31,24 +45,32 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr st-select-row="row" ng-repeat="row in cmetas">
+				<tr st-select-row="row" st-select-mode="single" ng-repeat="row in metac.metas" ng-click="metac.metaSeleccionada(row)">
 					<td>{{row.id | uppercase}}</td>
-					<td>{{row.nombre}}</td>
-					<td>{{row.descripcion}}</td>
-					<td>{{row.dato_tipoid}}</td>
+					<td><input type="text" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
+					<td><input type="text" ng-model="row.descripcion" style="width: 100%; text-align: left"></input></td>
+					<td>
+						<select class="inputText" ng-model="row.unidadMedidaId" ng-options="unidad as unidad.nombre for unidad in metac.metaunidades track by unidad.id"
+			    			ng-readonly="true" >
+							<option disabled selected value>Seleccione Tipo</option>
+						</select>
+					</td>
+					
+					<td>{{metac.nombreUnidadMedida(row.unidadMedidaId)}}</td>
+					<td>{{metac.nombreDatoTipo(row.datoTipoId)}}</td>
 					<td>{{row.meta_final}}</td>
 				</tr>
 				</tbody>
 				</table>
 			</div>
 			<div style="margin-top: 10px;">
-				<div class="panel panel-default">
+				<div class="panel panel-default" >
 					<div class="panel-heading label-form" style="text-align: center;">Valores</div>
 					<div class="panel-body">
 					<div class="form-group col-sm-2" style="text-align: left;">
 						<select class="inputText" 
-							ng-model="producto.anio" 
-							ng-options="opcion for opcion in producto.anios" 
+							ng-model="metac.anio" 
+							ng-options="opcion for opcion in metac.anios" 
 							ng-readonly="true" ng-required="true" >
 							<option value="">Seleccione un año</option>
 						</select>
@@ -56,7 +78,7 @@
 					</div>
 					<div align="center">
 						<br>
-		    			<table class="table table-striped"  style="height: 100%">
+		    			<table class="table table-striped"  style="height: 100%" ng-show="metac.mostrarValores">
 							<thead >
 								<tr>
 									<th style="text-align: center;" class="label-form"></th>

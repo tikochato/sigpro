@@ -11,7 +11,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		$timeout, $log, $q, uiGridTreeBaseService,uiGridConstants, $dialogoConfirmacion) {
 	var mi = this;  
 	i18nService.setCurrentLang('es');
-	
+		
 	mi.esTreeview = $rootScope.treeview;
 	mi.botones = true;
 	
@@ -39,6 +39,11 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.objetoTipoNombre = "";
 	mi.entidad='';
 	mi.ejercicio = '';
+
+	$scope.objeto_id = null;
+	$scope.objeto_tipo = 3;
+	
+	mi.metasCargadas = false;
 	
 	mi.dimensiones = [
 		{value:1,nombre:'Dias',sigla:'d'}
@@ -245,6 +250,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			mi.camposdinamicos[campos].valor = null;
 		}
 		mi.metasCargadas = false;
+		mi.activeTab = 0;
 		$utilidades.setFocus(document.getElementById("nombre"));
 	}
 
@@ -412,6 +418,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 					}
 				}
 				mi.metasCargadas = false;
+				mi.activeTab = 0;
 				$utilidades.setFocus(document.getElementById("nombre"));
 			});
 		} else {
@@ -751,231 +758,13 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			}
 		};
 		
-		
-		
-		
-		/************************************************* Metas **********************************************/
-		
-		mi.metasCargadas = false;
-		
 		mi.metasActivo = function(){
 			if(!mi.metasCargadas){
-				mi.mostrarcargandoMetas=true;
-				mi.mostrarValores = false;
-				mi.metas = [];
-				mi.meta;
-				mi.totalMetas = 0;
-				mi.metatipos = [];
-				mi.metasunidades = [];
-				
-				mi.tipoMetaSeleccionado=null;
-				mi.unidadMedidaSeleccionado=null;
-				mi.tipoValorSeleccionado=null;
-				
-				mi.nombrePcp = "";
-				mi.nombreTipoPcp = "Producto";
-				mi.fechaInicio = "";
-				mi.fechaFin = "";
-							
-				mi.anios=[];
-				mi.anio = null;
-							
-				$http.post('/SMeta', { accion: 'getPcp', id: mi.producto.id, tipo: 3, t: (new Date()).getTime()}).success(
-					function(response) {
-						mi.nombrePcp = response.nombre;
-						mi.fechaInicio = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
-						mi.fechaFin = moment(response.fechaFin, 'DD/MM/YYYY').toDate();
-						var anioInicio = moment(response.fechaInicio, 'DD/MM/YYYY').year();
-						var anioFin = moment(response.fechaFin, 'DD/MM/YYYY').year();
-						for(a = anioInicio; a<=anioFin; a++){
-							mi.anios.push(a);
-						}
-						if(mi.anios.length>0){
-							mi.anio=mi.anios[0];
-						}
-				});
-				
-				$http.post('/SMeta', { accion: 'getMetasTipos', t: (new Date()).getTime() }).success(
-						function(response) {
-							mi.metatipos = response.MetasTipos;
-				});
-				
-				$http.post('/SMeta', { accion: 'getMetasUnidadesMedida', t: (new Date()).getTime() }).success(
-						function(response) {
-							mi.metaunidades = response.MetasUnidades;
-							mi.gridOptionsMetas.columnDefs[3].editDropdownOptionsArray = mi.metaunidades;
-				});
-				
-				$http.post('/SDatoTipo', { accion: 'cargarCombo', t: (new Date()).getTime() }).success(
-						function(response) {
-							mi.datoTipos = response.datoTipos;
-							mi.gridOptionsMetas.columnDefs[4].editDropdownOptionsArray = mi.datoTipos;
-				});
-					
-				mi.obtenerTotalMetas();
+				$scope.objeto_id = mi.producto.id;
 				mi.metasCargadas = true;
 			}
 		}
-		
-		$scope.nombreUnidadMedida = function(id){
-			if (id != null && id > 0){
-				for (i=0; i<mi.metaunidades.length; i++){
-					if(mi.metaunidades[i].id == id){
-						return mi.metaunidades[i].nombre;
-					}
-				}
-			}
-			return "";
-		}
-		
-		$scope.nombreDatoTipo = function(id){
-			if (id != null && id > 0){
-				for (i=0; i<mi.datoTipos.length; i++){
-					if(mi.datoTipos[i].id == id){
-						return mi.datoTipos[i].nombre;
-					}
-				}
-			}
-			return "";
-		}
-			
-		mi.gridOptionsMetas = {
-				enableRowSelection : true,
-				enableRowHeaderSelection : false,
-				multiSelect: false,
-				modifierKeysToMultiSelect: false,
-				noUnselect: true,
-				enableFiltering: false,
-				useExternalFiltering: false,
-			    useExternalSorting: false,
-			    columnDefs : [ 
-					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableCellEdit: false},
-					{ name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left', enableCellEdit: true},
-				    { name: 'descripcion', displayName: 'Descripción', cellClass: 'grid-align-left', enableCellEdit: true},
-				    { name: 'unidadMedidaId', displayName: 'Unidad Medida', cellClass: 'grid-align-left', enableCellEdit: true,
-				    	editableCellTemplate: 'ui-grid/dropdownEditor', editDropdownValueLabel: 'nombre', editDropdownOptionsArray: [],
-				    	cellTemplate: '<div class="ui-grid-cell-contents">{{grid.appScope.nombreUnidadMedida(row.entity.unidadMedidaId)}}</div>'
-				    },
-				    { name: 'datoTipoId', displayName: 'Dato Tipo', cellClass: 'grid-align-left', enableCellEdit: true,
-				    	editableCellTemplate: 'ui-grid/dropdownEditor', editDropdownValueLabel: 'nombre', editDropdownOptionsArray: [],
-				    	cellTemplate: '<div class="ui-grid-cell-contents">{{grid.appScope.nombreDatoTipo(row.entity.datoTipoId)}}</div>'
-				    },
-				    { name: 'objetoId', displayName: 'Meta Final', cellClass: 'grid-align-left', enableCellEdit: true}
-				],
-				onRegisterApi: function(gridApi) {
-					mi.gridApiMetas = gridApi;
-					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
-						mi.meta = row.entity;
-						mi.mostrarValores = true;
-					});
-					
-				}
-			};
-					
-		mi.cargarTablaMetas = function(pagina){
-			mi.mostrarcargandoMetas=true;
-			$http.post('/SMeta', { accion: 'getMetasPagina', pagina: pagina, numerometas: 100, 
-				id: mi.producto.id, tipo: 3,
-				filtro_nombre: mi.filtros['nombre'], 
-				filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
-			}).success(
-					function(response) {
-						mi.metas = response.Metas;
-						mi.gridOptionsMetas.data = mi.metas;
-						mi.mostrarcargandoMetas = false;
-						
-					});
-		}
-		
-		mi.guardarMetas=function(){
-			if(mi.meta!=null && mi.tipoMetaSeleccionado!=null && mi.unidadMedidaSeleccionado!=null  ){
-				$http.post('/SMeta', {
-					accion: 'guardarMeta',
-					esnueva: mi.esnueva,
-					id: mi.meta.id,
-					nombre: mi.meta.nombre,
-					descripcion: mi.meta.descripcion,
-					tipoMetaId:  mi.tipoMetaSeleccionado.id,
-					unidadMedidaId: mi.unidadMedidaSeleccionado.id,
-					datoTipoId: mi.tipoValorSeleccionado.id,
-					objetoTipo: 3,
-					objetoId: mi.producto.id,
-					t: (new Date()).getTime()						
-				}).success(function(response){
-					if(response.success){
-						mi.meta.id = response.id;
-						mi.meta.datoTipoId = response.datoTipoId;
-						mi.meta.usuarioCreo = response.usuarioCreo;
-						mi.meta.fechaCreacion = response.fechaCreacion;
-						mi.meta.usuarioActualizo = response.usuarioactualizo;
-						mi.meta.fechaActualizacion = response.fechaactualizacion;
-						$utilidades.mensaje('success','Meta '+(mi.esnueva ? 'creada' : 'guardada')+' con éxito');
-						mi.obtenerTotalMetas();
-					}
-					else
-						$utilidades.mensaje('danger','Error al '+(mi.esnueva ? 'crear' : 'guardar')+' la Meta');
-				});
-			}
-			else
-				$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
-		};
-
-		mi.borrarMeta = function(ev) {
-			if(mi.meta!=null){
-				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
-						, "Confirmación de Borrado"
-						, '¿Desea borrar la Meta "'+mi.meta.id+'"?'
-						, "Borrar"
-						, "Cancelar")
-				.result.then(function(data) {
-					if(data){
-						var index = mi.metas.indexOf(mi.meta);
-						if (index > -1) {
-							mi.metas.splice(index, 1);
-							mi.mostrarValores = false;
-						}
-					}
-				}, function(){
-					
-				});
-			}
-			else
-				$utilidades.mensaje('warning','Debe seleccionar la Meta que desea borrar');
-		};
-
-		mi.nuevaMeta = function() {
-			mi.metas.push({  
-		         "id": "",
-		         "nombre":"Nueva Meta Creada",
-		         "descripcion":"",
-		         "estado":1,
-		         "proyecto":null,
-		         "componente":null,
-		         "producto":null,
-		         "tipoMetaId":2,
-		         "unidadMedidaId":1,
-		         "usuarioCreo":"",
-		         "fechaCreacion":"",
-		         "usuarioActualizo":null,
-		         "fechaActualizacion":"",
-		         "objetoId":121,
-		         "objetoTipo":3,
-		         "datoTipoId":1
-		      });
-		};
-				
-		mi.obtenerTotalMetas =  function() {
-			$http.post('/SMeta', { accion: 'numeroMetas', id: mi.producto.id, tipo: 3, t: (new Date()).getTime()}).success(
-					function(response) {
-						mi.totalMetas = response.totalMetas;
-						mi.cargarTablaMetas(1);
-					});
-			
-		}
-		//************** fin metas ****************
-		
-	  
+			  
 }
 
 moduloProducto.controller('modalBuscarPorProducto', [ '$uibModalInstance',

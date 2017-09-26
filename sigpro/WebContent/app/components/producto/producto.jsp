@@ -120,7 +120,7 @@
 			</div>
 		</div>
 		<div class="col-sm-12" style="margin-top: 10px;">
-		<uib-tabset active="active">
+		<uib-tabset active="producto.activeTab">
     	<uib-tab index="0" name="tproducto">
 		<uib-tab-heading>
 	        <i class="glyphicon glyphicon-certificate"></i> Producto
@@ -360,7 +360,9 @@
 			<shiro:lacksPermission name="17010">
 				<span ng-init="producto.redireccionSinPermisos()"></span>
 			</shiro:lacksPermission>
-			<%@include file="/app/components/meta/meta.jsp" %>
+			<div ng-if="producto.metasCargadas">
+				<%@include file="/app/components/meta/meta.jsp" %>
+			</div>
     	</uib-tab>
     	<uib-tab index="2">
 	      <uib-tab-heading>

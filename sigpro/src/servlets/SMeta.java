@@ -57,7 +57,6 @@ public class SMeta extends HttpServlet {
 		Integer proyecto;
 		Integer componente;
 		Integer producto;
-		Integer tipoMetaId;
 		Integer unidadMedidaId;
 		String usuarioCreo;
 		String fechaCreacion;
@@ -134,7 +133,6 @@ public class SMeta extends HttpServlet {
 				temp.estado = meta.getEstado();
 				temp.fechaActualizacion = Utils.formatDateHour(meta.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDateHour(meta.getFechaCreacion());
-				temp.tipoMetaId = meta.getMetaTipo().getId();
 				temp.unidadMedidaId = meta.getMetaUnidadMedida().getId();
 				temp.datoTipoId = meta.getDatoTipo().getId();
 				temp.usuarioActualizo = meta.getUsuarioActualizo();
