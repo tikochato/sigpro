@@ -50,16 +50,18 @@
 					<td><input type="text" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
 					<td><input type="text" ng-model="row.descripcion" style="width: 100%; text-align: left"></input></td>
 					<td>
-						<select class="inputText" ng-model="row.unidadMedidaId">
-			    			<option ng-repeat="option in metac.metaunidades" value="{{option.id}}">{{option.nombre}}</option>
+						<select class="inputText" ng-model="row.unidadMedidaId"
+							ng-options="unidad as unidad.nombre for unidad in metac.metaunidades track by unidad.id"
+							 ng-required="true">
 						</select>
 					</td>
 					<td>
-						<select class="inputText" ng-model="row.datoTipoId">
-			    			<option ng-repeat="option in metac.datoTipos" value="{{option.id}}">{{option.nombre}}</option>
+						<select class="inputText" ng-model="row.datoTipoId"
+							ng-options="tipo as tipo.nombre for tipo in metac.datoTipos track by tipo.id"
+							 ng-required="true">
 						</select>
 					</td>
-					<td>{{row.meta_final}}</td>
+					<td><input type="text" ng-model="row.meta_final" style="width: 100%; text-align: left"></input></td>
 				</tr>
 				</tbody>
 				</table>

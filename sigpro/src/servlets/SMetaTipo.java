@@ -122,7 +122,7 @@ public class SMetaTipo extends HttpServlet {
 				String descripcion = map.get("descripcion");
 				MetaTipo MetaTipo;
 				if(esnuevo){
-					MetaTipo = new MetaTipo(nombre, descripcion,usuario,null, new DateTime().toDate(), null, 1, null );
+					MetaTipo = new MetaTipo(nombre, descripcion,usuario,null, new DateTime().toDate(), null, 1);
 				}
 				else{
 					MetaTipo = MetaTipoDAO.getMetaTipoPorId(id);

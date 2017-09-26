@@ -60,12 +60,26 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			
 			
 			mi.cargarTabla = function(){
-				$http.post('/SMeta', { accion: 'getMetasPagina', pagina: 1, numerometas: 1000, 
+				$http.post('/SMeta', { accion: 'getMetasCompletas', 
 					id:mi.objeto_id, tipo: mi.objeto_tipo,
 					t: (new Date()).getTime()
 				}).success(
 					function(response) {
 						mi.metas = response.Metas;
+						for(x in mi.metas){
+							for(um in mi.metaunidades){
+								if(mi.metaunidades[um].id === mi.metas[x].unidadMedidaId){
+									mi.metas[x].unidadMedidaId = mi.metaunidades[um];
+									break;
+								}
+							}
+							for(dt in mi.datoTipos){
+								if(mi.datoTipos[dt].id === mi.metas[x].datoTipoId){
+									mi.metas[x].datoTipoId = mi.datoTipos[dt];
+									break;
+								}
+							}
+						}
 						mi.mostrarcargando = false;
 					});
 			}
