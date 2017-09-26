@@ -122,7 +122,7 @@ public class SMetaTipo extends HttpServlet {
 				String descripcion = map.get("descripcion");
 				MetaTipo MetaTipo;
 				if(esnuevo){
-					MetaTipo = new MetaTipo(nombre, descripcion,usuario,null, new DateTime().toDate(), null, 1, null );
+//					MetaTipo = new MetaTipo(nombre, descripcion,usuario,null, new DateTime().toDate(), null, 1, null );
 				}
 				else{
 					MetaTipo = MetaTipoDAO.getMetaTipoPorId(id);
@@ -131,14 +131,14 @@ public class SMetaTipo extends HttpServlet {
 					MetaTipo.setUsuarioActualizo("admin");
 					MetaTipo.setFechaActualizacion(new DateTime().toDate());
 				}
-				result = MetaTipoDAO.guardarMetaTipo(MetaTipo);
+/*				result = MetaTipoDAO.guardarMetaTipo(MetaTipo);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 						, "\"id\": " , MetaTipo.getId().toString() , ","
 						, "\"usuarioCreo\": \"" , MetaTipo.getUsuarioCreo(),"\","
 						, "\"fechaCreacion\":\" " , Utils.formatDateHour(MetaTipo.getFechaCreacion()),"\","
 						, "\"usuarioactualizo\": \"" , MetaTipo.getUsuarioActualizo() != null ? MetaTipo.getUsuarioActualizo() : "","\","
 						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(MetaTipo.getFechaActualizacion()),"\""
-						," }");
+						," }");*/
 			}
 			else
 				response_text = "{ \"success\": false }";

@@ -351,7 +351,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							mi.producto.fechaactualizacion = response.data.fechaactualizacion;
 							if(!mi.esTreeview)
 								mi.obtenerTotalProductos();
-							mi.t_cambiarNombreNodo();
+							else
+								mi.t_cambiarNombreNodo();
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el Producto');
 						}
@@ -736,13 +737,13 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 										if (response.success) {
 											
 											$utilidades.mensaje('success','Producto borrado con éxito');
-											mi.producto = null;			
+											mi.producto = null;		
+											$rootScope.$emit("eliminarNodo", {});
 										} else{
 											$utilidades.mensaje('danger',
 													'Error al borrar el Producto');
 										}
 									});
-						$rootScope.$emit("eliminarNodo", {});
 					}
 				}, function(){
 					

@@ -134,7 +134,7 @@ public class SMeta extends HttpServlet {
 				temp.estado = meta.getEstado();
 				temp.fechaActualizacion = Utils.formatDateHour(meta.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDateHour(meta.getFechaCreacion());
-				temp.tipoMetaId = meta.getMetaTipo().getId();
+				//temp.tipoMetaId = meta.getme.getMetaTipo().getId();
 				temp.unidadMedidaId = meta.getMetaUnidadMedida().getId();
 				temp.datoTipoId = meta.getDatoTipo().getId();
 				temp.usuarioActualizo = meta.getUsuarioActualizo();
@@ -177,27 +177,27 @@ public class SMeta extends HttpServlet {
 				
 				Meta Meta;
 				if(esnuevo){
-					Meta = new Meta(datoTipo, metaTipo, metaUnidadMedida, nombre, descripcion,
-							usuario, null, new DateTime().toDate(), null, 1, objetoId, objetoTipo, null);
+//					Meta = new Meta(datoTipo, metaTipo, metaUnidadMedida, nombre, descripcion,
+//							usuario, null, new DateTime().toDate(), null, 1, objetoId, objetoTipo, null);
 				}
 				else{
 					Meta = MetaDAO.getMetaPorId(id);
 					Meta.setNombre(nombre);
-					Meta.setMetaTipo(metaTipo);
+//					Meta.setMetaTipo(metaTipo);
 					Meta.setMetaUnidadMedida(metaUnidadMedida);
 					Meta.setDescripcion(descripcion);
 					Meta.setUsuarioActualizo(usuario);
 					Meta.setFechaActualizacion(new DateTime().toDate());
 				}
-				result = MetaDAO.guardarMeta(Meta);
-				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
+//				result = MetaDAO.guardarMeta(Meta);
+/*				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 						, "\"id\": " , Meta.getId().toString() , ","
 						, "\"datoTipoId\": " , Meta.getDatoTipo().getId().toString() , ","
 						, "\"usuarioCreo\": \"" , Meta.getUsuarioCreo(),"\","
 						, "\"fechaCreacion\":\" " , Utils.formatDateHour(Meta.getFechaCreacion()),"\","
 						, "\"usuarioactualizo\": \"" , Meta.getUsuarioActualizo() != null ? Meta.getUsuarioActualizo() : "","\","
 						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(Meta.getFechaActualizacion()),"\""
-						," }");
+						," }");*/
 			}
 			else
 				response_text = "{ \"success\": false }";
