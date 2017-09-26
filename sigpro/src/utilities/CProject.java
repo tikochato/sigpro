@@ -233,7 +233,7 @@ public class CProject {
 	}
 	
 	public Actividad crearActividad(Task task,String usuario, Integer objetoId, Integer objetoTipo,
-			int nivel, String path,int orden, int proyectoBase, Integer componenteBase, Integer productoBase){
+			int nivel, String path,int orden, Integer proyectoBase, Integer componenteBase, Integer productoBase){
 		
 		ActividadTipo actividadTipo = new ActividadTipo();
 		actividadTipo.setId(ACTIVIDAD_ID_DEFECTO);
@@ -355,7 +355,7 @@ public class CProject {
 					objetoTipoTemp=5;
 					contadorLocal = objetoTipo == 5 ? contadorLocal++ : contadorLocal;
 					objeto_temp = crearActividad(task, usuario,((Proyecto) objeto).getId(),OBJETO_ID_PROYECTO 
-							,2,((Proyecto) objeto).getTreePath(),contComponente,proyectoBase_,null,null);
+							,1,((Proyecto) objeto).getTreePath(),contComponente,proyectoBase_,null,null);
 					cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
 				}
 			}else if (indetnacion == 3){
@@ -373,7 +373,7 @@ public class CProject {
 					contadorLocal = objetoTipo == 5 ? contadorLocal++ : contadorLocal;
 					objeto_temp = crearActividad(task, usuario,((Componente) objeto).getId(),OBJETO_ID_COMPONENTE
 							,2,((Componente) objeto).getTreePath(),
-							objetoTipo == 5 ? contadorLocal : contProducto,proyectoBase_,((Componente) objeto).getId(),null);
+							objetoTipo == 5 ? contadorLocal : contProducto,null,((Componente) objeto).getId(),null);
 					cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
 					
 				}
@@ -391,7 +391,7 @@ public class CProject {
 					objetoTipoTemp=5;
 					contadorLocal = objetoTipo == 5 ? contadorLocal++ : contadorLocal;
 					objeto_temp = crearActividad(task, usuario,((Producto) objeto).getId(),OBJETO_ID_PRODUCTO 
-							,3,((Producto) objeto).getTreePath(),contSubproducto,proyectoBase_,null,((Producto) objeto).getId());
+							,3,((Producto) objeto).getTreePath(),contSubproducto,null,null,((Producto) objeto).getId());
 					cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
 				}
 			}else if (indetnacion == 5){
@@ -399,13 +399,14 @@ public class CProject {
 				objetoTipoTemp=5;
 					objeto_temp = crearActividad(task, usuario,((Subproducto) objeto).getId(),OBJETO_ID_SUBPRODUCTO 
 							,4,((Subproducto) objeto).getTreePath(),
-							objetoTipo == 5 ? contadorLocal : contActividad,proyectoBase_,null,null);
+							objetoTipo == 5 ? contadorLocal : contActividad,null,null,((Subproducto) objeto).getProducto().getId());
 					cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
 			}else if (indetnacion > 5){
 				objetoTipoTemp=5;
 				contadorLocal ++;
 				objeto_temp = crearActividad(task, usuario,((Actividad) objeto).getId(),OBJETO_ID_ACTIVIDAD 
-						,indetnacion-1,((Actividad) objeto).getTreePath(),contadorLocal,proyectoBase_,null,null);
+						,indetnacion-1,((Actividad) objeto).getTreePath(),contadorLocal,((Actividad) objeto).getProyectoBase()
+						,((Actividad) objeto).getComponenteBase(),((Actividad) objeto).getProductoBase());
 				cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
 			}
 			
