@@ -793,8 +793,8 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 				.result.then(function(data) {
 					if(data){
 						var datos = {
-								accion : 'borrar',
-								codigo : mi.actividad.id,
+								accion : 'borrarActividad',
+								id : mi.actividad.id,
 								t: (new Date()).getTime()
 							};
 							$http.post('/SActividad', datos).success(
