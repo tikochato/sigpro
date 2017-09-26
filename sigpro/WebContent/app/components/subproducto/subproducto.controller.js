@@ -247,7 +247,8 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	}
 
 	mi.limpiarSeleccion = function() {
-		mi.gridApi.selection.clearSelectedRows();
+		if(!mi.esTreeview)
+			mi.gridApi.selection.clearSelectedRows();
 		mi.seleccionada = false;
 	}
 
@@ -345,7 +346,6 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 							mi.data = response.data.subproductos;
 							mi.opcionesGrid.data = mi.data;
 							$utilidades.mensaje('success','Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
-							mi.esNuevo = false;
 							mi.subproducto.id = response.data.id;
 							mi.subproducto.usuarioCreo = response.data.usuarioCreo;
 							mi.subproducto.fechaCreacion = response.data.fechaCreacion;
@@ -353,8 +353,14 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 							mi.subproducto.fechaActualizacion = response.data.fechaactualizacion;
 							if(!mi.esTreeview)
 								mi.cargarTabla(mi.paginaActual);
-							else
-								mi.t_cambiarNombreNodo();
+							else{
+								if(!mi.esNuevo)
+									mi.t_cambiarNombreNodo();
+								else
+									mi.t_crearNodo(mi.subproducto.id,mi.subproducto.nombre,4,true);
+							}
+							mi.esNuevo = false;
+							
 							
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Subproducto');
@@ -688,16 +694,21 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	  };
 	  
 	  if(mi.esTreeview){
-		  $http.post('/SSubproducto', { accion : 'getSubproductoPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
-					if (response.data.success) {
-						mi.subproducto = response.data.subproducto;
-						if(mi.subproducto.fechaInicio != "")
-							mi.subproducto.fechaInicio = moment(mi.subproducto.fechaInicio, 'DD/MM/YYYY').toDate();
-						if(mi.subproducto.fechaFin != "")
-							mi.subproducto.fechaFin = moment(mi.subproducto.fechaFin, 'DD/MM/YYYY').toDate();
-						mi.editar();
-					}
-				});
+		  if($routeParams.nuevo==1){
+			  mi.nuevo();
+		  }
+		  else{
+			  $http.post('/SSubproducto', { accion : 'getSubproductoPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
+						if (response.data.success) {
+							mi.subproducto = response.data.subproducto;
+							if(mi.subproducto.fechaInicio != "")
+								mi.subproducto.fechaInicio = moment(mi.subproducto.fechaInicio, 'DD/MM/YYYY').toDate();
+							if(mi.subproducto.fechaFin != "")
+								mi.subproducto.fechaFin = moment(mi.subproducto.fechaFin, 'DD/MM/YYYY').toDate();
+							mi.editar();
+						}
+					});
+		  }
 	  }
 	  
 	  mi.t_borrar = function(ev) {
@@ -738,6 +749,10 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		
 		mi.t_cambiarNombreNodo = function(ev){
 			$rootScope.$emit("cambiarNombreNodo",mi.subproducto.nombre);
+		}
+		
+		mi.t_crearNodo=function(id,nombre,objeto_tipo,estado){
+			$rootScope.$emit("crearNodo",{ id: id, nombre: nombre, objeto_tipo: objeto_tipo, estado: estado })
 		}
 }
 

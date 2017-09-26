@@ -90,8 +90,8 @@
 
 	<div ng-show="subproducto.esForma || subproducto.esTreeview" class="row second-main-form">
 		<div class="page-header">
-			<h2 ng-hide="!subproducto.esNuevo"><small>Nuevo Subproducto</small></h2>
-			<h2 ng-hide="subproducto.esNuevo"><small>Edición de Subproducto</small></h2>
+			<h2 ng-if="subproducto.esNuevo"><small>Nuevo Subproducto</small></h2>
+			<h2 ng-if="!subproducto.esNuevo"><small>Edición de Subproducto</small></h2>
 		</div>
 		<div class="col-sm-12 operation_buttons" >
 			<div class="btn-group" ng-hide="subproducto.esNuevo" ng-if="!subproducto.esTreeview">
@@ -286,7 +286,7 @@
 							  <input type="text"  class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}" ng-model="subproducto.subproducto.fechaInicio" is-open="subproducto.fi_abierto"
 							            datepicker-options="subproducto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="subproducto.cambioDuracion(subproducto.duracionDimension);" ng-required="true"  
 							            ng-value="subproducto.subproducto.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
-							            <span class="label-icon" ng-click="producto.abrirPopupFecha(1000)">
+							            <span class="label-icon" ng-click="subproducto.abrirPopupFecha(1000)">
 							              <i class="glyphicon glyphicon-calendar"></i>
 							            </span>
 							  <label for="campo.id" class="floating-label">* Fecha de Inicio</label>
@@ -344,15 +344,16 @@
 			</div>
 		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
-		<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios y las fechas deben tener formato de dd/mm/yyyy</div>
+			<br/>
 			<div class="btn-group">
 				<shiro:hasPermission name="40020">
-					<label class="btn btn-success" ng-click="subproducto.mForm.$valid && subproducto.botones ? subproducto.guardar() : ''" ng-disabled="!subproducto.mForm.$valid || !subproducto.botones" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<label class="btn btn-success" ng-click="subproducto.mForm.$valid && subproducto.botones ? subproducto.guardar() : ''" ng-disabled="!subproducto.mForm.$valid || !subproducto.botones" uib-tooltip="Guardar" tooltip-placement="top">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
 				</shiro:hasPermission>
-				<label ng-if="!subproducto.esTreeview" class="btn btn-primary" ng-click="subproducto.botones ? subproducto.cancelar() : ''" uib-tooltip="Ir a Tabla" tooltip-placement="bottom" ng-disabled="!subproducto.botones">
+				<label ng-if="!subproducto.esTreeview" class="btn btn-primary" ng-click="subproducto.botones ? subproducto.cancelar() : ''" uib-tooltip="Ir a Tabla" tooltip-placement="top" ng-disabled="!subproducto.botones">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-				<label ng-if="subproducto.esTreeview" class="btn btn-danger" ng-click=" subproducto.botones ? subproducto.t_borrar() : ''" ng-disabled="!(subproducto.subproducto.id>0) || !subproducto.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+				<label ng-if="subproducto.esTreeview" class="btn btn-danger" ng-click=" subproducto.botones ? subproducto.t_borrar() : ''" ng-disabled="!(subproducto.subproducto.id>0) || !subproducto.botones" uib-tooltip="Borrar" tooltip-placement="top">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>

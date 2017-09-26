@@ -354,7 +354,7 @@ public class SActividad extends HttpServlet {
 						
 						Integer proyectoId =null;
 						if(actividad.getProyectoBase()!=null)
-							proyectoId = actividad.getProductoBase();
+							proyectoId = actividad.getProyectoBase();
 						else if(actividad.getComponenteBase()!=null){
 							Componente c = ComponenteDAO.getComponente(actividad.getComponenteBase());
 							proyectoId = c.getProyecto().getId();
