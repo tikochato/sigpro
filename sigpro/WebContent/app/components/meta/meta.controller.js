@@ -69,29 +69,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 						mi.mostrarcargando = false;
 					});
 			}
-			
-			mi.nombreUnidadMedida = function(id){
-				if (id != null && id > 0){
-					for (i=0; i<mi.metaunidades.length; i++){
-						if(mi.metaunidades[i].id == id){
-							return mi.metaunidades[i].nombre;
-						}
-					}
-				}
-				return "";
-			}
-			
-			mi.nombreDatoTipo = function(id){
-				if (id != null && id > 0){
-					for (i=0; i<mi.datoTipos.length; i++){
-						if(mi.datoTipos[i].id == id){
-							return mi.datoTipos[i].nombre;
-						}
-					}
-				}
-				return "";
-			}
-			
+						
 			mi.metaSeleccionada = function(row){
 				mi.meta = row;
 				mi.mostrarValores = true;

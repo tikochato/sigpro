@@ -50,14 +50,15 @@
 					<td><input type="text" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
 					<td><input type="text" ng-model="row.descripcion" style="width: 100%; text-align: left"></input></td>
 					<td>
-						<select class="inputText" ng-model="row.unidadMedidaId" ng-options="unidad as unidad.nombre for unidad in metac.metaunidades track by unidad.id"
-			    			ng-readonly="true" >
-							<option disabled selected value>Seleccione Tipo</option>
+						<select class="inputText" ng-model="row.unidadMedidaId">
+			    			<option ng-repeat="option in metac.metaunidades" value="{{option.id}}">{{option.nombre}}</option>
 						</select>
 					</td>
-					
-					<td>{{metac.nombreUnidadMedida(row.unidadMedidaId)}}</td>
-					<td>{{metac.nombreDatoTipo(row.datoTipoId)}}</td>
+					<td>
+						<select class="inputText" ng-model="row.datoTipoId">
+			    			<option ng-repeat="option in metac.datoTipos" value="{{option.id}}">{{option.nombre}}</option>
+						</select>
+					</td>
 					<td>{{row.meta_final}}</td>
 				</tr>
 				</tbody>
@@ -100,18 +101,18 @@
 							<tbody >
 								<tr>
 						      		<td>Planificado</td>
-						      		<td style="text-align: right;">1</td>
-									<td style="text-align: right;">1</td>
-									<td style="text-align: right;">1</td>
-									<td style="text-align: right;">1</td>
-									<td style="text-align: right;">1</td>
-									<td style="text-align: right;">1</td>
-									<td style="text-align: right;">1</td>
-									<td style="text-align: right;">1</td>
-									<td style="text-align: right;">1</td>
-									<td style="text-align: right;">1</td>
-									<td style="text-align: right;">1</td>
-									<td style="text-align: right;">1</td>
+						      		<td style="text-align: right;"><input type="text" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
+									<td style="text-align: right;"><input type="text" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
+									<td style="text-align: right;"><input type="text" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
+									<td style="text-align: right;"><input type="text" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
+									<td style="text-align: right;"><input type="text" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
+									<td style="text-align: right;"><input type="text" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
+									<td style="text-align: right;"><input type="text" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
+									<td style="text-align: right;"><input type="text" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
+									<td style="text-align: right;"><input type="text" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
+									<td style="text-align: right;"><input type="text" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
+									<td style="text-align: right;"><input type="text" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
+									<td style="text-align: right;"><input type="text" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
 									<td style="text-align: right;">12</td>
 						      	</tr>
 						      	<tr>
