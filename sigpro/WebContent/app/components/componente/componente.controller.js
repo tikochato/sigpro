@@ -213,8 +213,13 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 						mi.componente.fechaActualizacion=response.fechaactualizacion;
 						if(!mi.esTreeview)
 							mi.obtenerTotalComponentes();
+						else{
+							if(!mi.esnuevo)
+								mi.t_cambiarNombreNodo();
+							else
+								mi.t_crearNodo(mi.componente.id,mi.componente.nombre,2,true);
+						}
 						mi.esnuevo = false;
-						mi.t_cambiarNombreNodo();
 						$utilidades.mensaje('success','Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 					}
 					else
@@ -270,7 +275,8 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 			mi.duracionDimension = '';
 			mi.coordenadas = "";
 			mi.duracionDimension = mi.dimensiones[0];
-			mi.gridApi.selection.clearSelectedRows();
+			if(!mi.esTreeview)
+				mi.gridApi.selection.clearSelectedRows();
 			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 
@@ -633,16 +639,21 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 		  };
 		  
 		  if(mi.esTreeview){
-			  $http.post('/SComponente', { accion : 'getComponentePorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
-					if (response.data.success) {
-						mi.componente = response.data.componente;
-						if(mi.componente.fechaInicio != "")
-							mi.componente.fechaInicio = moment(mi.componente.fechaInicio, 'DD/MM/YYYY').toDate();
-						if(mi.componente.fechaFin != "")
-							mi.componente.fechaFin = moment(mi.componente.fechaFin, 'DD/MM/YYYY').toDate();
-						mi.editar();
-					}
-				});
+			  if($routeParams.nuevo==1){
+				  mi.nuevo();
+			  }
+			  else{
+				  $http.post('/SComponente', { accion : 'getComponentePorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
+						if (response.data.success) {
+							mi.componente = response.data.componente;
+							if(mi.componente.fechaInicio != "")
+								mi.componente.fechaInicio = moment(mi.componente.fechaInicio, 'DD/MM/YYYY').toDate();
+							if(mi.componente.fechaFin != "")
+								mi.componente.fechaFin = moment(mi.componente.fechaFin, 'DD/MM/YYYY').toDate();
+							mi.editar();
+						}
+					});
+			  }
 		  }
 		  
 		  mi.t_borrar = function(ev) {
@@ -655,8 +666,8 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					.result.then(function(data) {
 						if(data){
 							var datos = {
-									accion : 'borrar',
-									codigo : mi.componente.id,
+									accion : 'borrarComponente',
+									id : mi.componente.id,
 									t: (new Date()).getTime()
 								};
 								$http.post('/SComponente', datos).success(
@@ -664,13 +675,13 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 											if (response.success) {
 												
 												$utilidades.mensaje('success','Componente borrado con éxito');
-												mi.producto = null;			
+												mi.componente = null;		
+												$rootScope.$emit("eliminarNodo", {});
 											} else{
 												$utilidades.mensaje('danger',
 														'Error al borrar el Componente');
 											}
 										});
-							$rootScope.$emit("eliminarNodo", {});
 						}
 					}, function(){
 						
@@ -682,7 +693,11 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 			};
 			
 			mi.t_cambiarNombreNodo = function(ev){
-				$rootScope.$emit("cambiarNombreNodo",mi.actividad.nombre);
+				$rootScope.$emit("cambiarNombreNodo",mi.componente.nombre);
+			}
+			
+			mi.t_crearNodo=function(id,nombre,objeto_tipo,estado){
+				$rootScope.$emit("crearNodo",{ id: id, nombre: nombre, objeto_tipo: objeto_tipo, estado: estado })
 			}
 } ]);
 

@@ -144,7 +144,7 @@
 			<form name="controller.mForm">
 			<uib-tabset active="active">
 				<shiro:hasPermission name="43010">
-				<uib-tab ng-click="controller.getPorcentajes();" index="0" heading="Datos del préstamo" >
+				<uib-tab ng-click="controller.getPorcentajes();" index="0" heading="Préstamo" >
 					<div class="panel panel-default">
 							<div class="panel-heading label-form" style="text-align: center;">Información General del Préstamo</div>
 						<div class="panel-body">
@@ -367,7 +367,7 @@
 					
 				</uib-tab>
 				</shiro:hasPermission>
-				<uib-tab index="controller.ordenTab" heading="Datos generales" >
+				<uib-tab index="controller.ordenTab" heading="Generales" >
 					<div class="form-group">
 						<label for="id" class="floating-label id_class">ID {{ controller.proyecto.id }}</label>
 						<br/><br/>
@@ -600,7 +600,7 @@
 					</div>
 				</uib-tab>
 				<shiro:hasPermission name="43010">
-				<uib-tab ng-click="controller.getPorcentajes();" index="controller.ordenTab+1" heading="Datos Entidad Ejecutora" >
+				<uib-tab ng-click="controller.getPorcentajes();" index="controller.ordenTab+1" heading="Unidad Ejecutora" >
 					<div class="panel panel-default">
 						<div class="panel-heading label-form" style="text-align: center;">Información Específica del Préstamo en la Entidad Ejecutora</div>
 						<div class="panel-body">
@@ -769,7 +769,7 @@
 					</div>
 				
 				</uib-tab>
-				<uib-tab index="controller.ordenTab+2" heading="Datos adicionales" ng-if="controller.mostrarPrestamo" >
+				<uib-tab index="controller.ordenTab+2" heading="Adicionales" ng-if="controller.mostrarPrestamo" >
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
@@ -914,7 +914,7 @@
 							<div class="form-group">
 							   	<input type="number" class="inputText"  ng-model="controller.prestamo.porcentajeComisionCompra"  
 							   	onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.porcentajeComisionCompra"/>
-							   	<label class="floating-label">Porcentaje Comisión Compra</label>
+							   	<label class="floating-label">Porc. Comisión Compra</label>
 							</div>
 						</div>
 					</div>
@@ -958,7 +958,7 @@
 							<div class="form-group">
 							   	<input type="number" class="inputText" ng-model="controller.prestamo.comisionCompromisoAnio"  
 							   	ng-value="controller.prestamo.comisionCompromisoAnio" onblur="this.setAttribute('value', this.value);"/>
-							   	<label class="floating-label">Comisión Compromiso del Año</label>
+							   	<label class="floating-label">Com. Compromiso del Año</label>
 							</div>
 						</div>
 						
@@ -992,7 +992,7 @@
 							<div class="form-group">
 							   	<input type="number"  class="inputText"  ng-model="controller.prestamo.comisionCompromisoAcumulado"  
 							   	ng-value="controller.prestamo.comisionCompromisoAcumulado" onblur="this.setAttribute('value', this.value);"/>
-							   	<label class="floating-label">Comisión Compromiso Acumulado</label>
+							   	<label class="floating-label">Com. Compromiso Acumulado</label>
 							</div>
 						</div>
 						
@@ -1010,7 +1010,7 @@
 							<div class="form-group">
 							   	<input type="number"  class="inputText"  ng-model="controller.prestamo.presupuestoAsignadoFuncionamiento" 
 								ng-value="controller.prestamo.presupuestoAsignadoFuncionamiento" onblur="this.setAttribute('value', this.value);"/>
-							   	<label class="floating-label">Presupuesto Asignado Funcionamiento</label>
+							   	<label class="floating-label">P. Asignado Funcionamiento</label>
 							</div>
 						</div>
 					
@@ -1018,7 +1018,7 @@
 							<div class="form-group">
 							   	<input type="number" class="inputText"  ng-model="controller.prestamo.presupuestoModificadoFun"  
 							   	ng-value="controller.prestamo.presupuestoModificadoFun" onblur="this.setAttribute('value', this.value);"/>
-							   	<label class="floating-label">Presupuesto Modificado Funcionamiento</label>
+							   	<label class="floating-label">P. Modificado Funcionamiento</label>
 							</div>
 						</div>
 					</div>
@@ -1028,7 +1028,7 @@
 							<div class="form-group">
 							   	<input type="number" class="inputText" ng-model="controller.prestamo.presupuestoVigenteFun" 
 							   	ng-value="controller.prestamo.presupuestoVigenteFun" onblur="this.setAttribute('value', this.value);"/>
-							   	<label  class="floating-label">Presupuesto Vigente Funcionamiento</label>
+							   	<label  class="floating-label">P. Vigente Funcionamiento</label>
 							</div>
 						</div>
 						
@@ -1036,7 +1036,7 @@
 							<div class="form-group">
 							   	<input type="number"   class="inputText" ng-model="controller.prestamo.presupuestoAsignadoInversion"  
 							   	ng-value="controller.prestamo.presupuestoAsignadoInversion" onblur="this.setAttribute('value', this.value);"/>
-							   	<label class="floating-label">Presupuesto Asignado Inversion</label>
+							   	<label class="floating-label">P. Asignado Inversion</label>
 							</div>
 						</div>
 						
@@ -1044,7 +1044,7 @@
 							<div class="form-group">
 							   	<input type="number" class="inputText"  ng-model="controller.prestamo.presupuestoModificadoInv" 
 							   	ng-value="controller.prestamo.presupuestoModificadoInv" onblur="this.setAttribute('value', this.value);"/>
-							   	<label class="floating-label">Presupuesto Modificado Inversión</label>
+							   	<label class="floating-label">P. Modificado Inversión</label>
 							</div>
 						</div>
 
@@ -1052,7 +1052,7 @@
 							<div class="form-group">
 							   	<input type="number" class="inputText"  ng-model="controller.prestamo.presupuestoVigenteInv" 
 							   	ng-value="controller.prestamo.presupuestoVigenteInv" onblur="this.setAttribute('value', this.value);"/>
-							   	<label class="floating-label">Presupuesto Vigente Inversión</label>
+							   	<label class="floating-label">P. Vigente Inversión</label>
 							</div>
 						</div>
 					</div>		
@@ -1062,7 +1062,7 @@
 							<div class="form-group">
 							   	<input type="number" class="inputText" ng-model="controller.prestamo.presupuestoDevengadoFun" 
 							   	ng-value="controller.prestamo.presupuestoDevengadoFun" onblur="this.setAttribute('value', this.value);"/>
-							   	<label class="floating-label">Presupuesto Devengado Funcionamiento</label>
+							   	<label class="floating-label">P. Devengado Funcionamiento</label>
 							</div>
 						</div>
 					
@@ -1070,7 +1070,7 @@
 							<div class="form-group">
 							   	<input type="number"  class="inputText" ng-model="controller.prestamo.presupuestoDevengadoInv"  
 							   	ng-value="controller.prestamo.presupuestoDevengadoInv" onblur="this.setAttribute('value', this.value);"/>
-							   	<label class="floating-label">Presupuesto Devengado Inversión</label>
+							   	<label class="floating-label">P. Devengado Inversión</label>
 							</div>
 						</div>
 					</div>
@@ -1080,14 +1080,14 @@
 							<div class="form-group">
 							   	<input type="number" class="inputText" ng-model="controller.prestamo.presupuestoPagadoFun" 
 							   	ng-value="controller.prestamo.presupuestoPagadoFun" onblur="this.setAttribute('value', this.value);"/>
-							   	<label  class="floating-label">Presupuesto Pagado Funcionamiento </label>
+							   	<label  class="floating-label">P. Pagado Funcionamiento </label>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="form-group">
 							   	<input type="number" class="inputText"  ng-model="controller.prestamo.presupuestoPagadoInv"  
 							   		ng-value="controller.prestamo.presupuestoPagadoInv" onblur="this.setAttribute('value', this.value);"/>
-							   	<label class="floating-label">Presupuesto Pagado Inversión </label>
+							   	<label class="floating-label">P. Pagado Inversión </label>
 							</div>
 						</div>
 

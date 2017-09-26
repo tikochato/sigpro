@@ -524,12 +524,10 @@ public class SGantt extends HttpServlet {
 					}
 //					BigDecimal metaPlanificada = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(2, producto.getId(), OBJETO_ID_PRODUCTO);
 //					BigDecimal metaReal = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(1, producto.getId(), OBJETO_ID_PRODUCTO);
-					BigDecimal metaPlanificada = new BigDecimal(0);
-					BigDecimal metaReal = new BigDecimal(0);
 
 					items_producto = String.join(items_producto.trim().length()>0 ? "," : "",items_producto,
 							construirItem(producto.getId(),producto.getId(),OBJETO_ID_PRODUCTO, producto.getNombre(),2, true, fechaPrimeraActividad,
-									null,false,null,producto.getCosto(),metaPlanificada,metaReal));
+									null,false,null,producto.getCosto(),null,null));
 					items_producto = items_subproducto.trim().length() > 0 ? String.join(",",items_producto, items_subproducto) : items_producto;
 
 					items_actividad = obtenerItemsActividades(producto.getId(),3,3,predecesores);
@@ -587,11 +585,9 @@ public class SGantt extends HttpServlet {
 				case 3:
 //					BigDecimal metaPlanificada = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(2, (Integer)obj[0], OBJETO_ID_PRODUCTO);
 //					BigDecimal metaReal = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(1, (Integer)obj[0], OBJETO_ID_PRODUCTO);
-					BigDecimal metaPlanificada = new BigDecimal(0);
-					BigDecimal metaReal = new BigDecimal(0);
 					
 					item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_PRODUCTO, (String)obj[1], (Integer)obj[4], 
-							true, null, null, false,null, (BigDecimal) obj[9], metaPlanificada,metaReal);
+							true, null, null, false,null, (BigDecimal) obj[9], null,null);
 					break;
 				case 4:
 					item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_SUBPRODUCTO, (String)obj[1], (Integer)obj[4], 

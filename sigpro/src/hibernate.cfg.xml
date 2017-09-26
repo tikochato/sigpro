@@ -61,7 +61,9 @@
         <mapping class="pojo.MetaTipo" />
         <mapping class="pojo.MetaUnidadMedida" />
         <mapping class="pojo.MetaAvance" />
+        <mapping class="pojo.MetaAvanceId" />
         <mapping class="pojo.MetaPlanificado" />
+        <mapping class="pojo.MetaPlanificadoId" />
         <mapping class="pojo.ObjetoFormulario" />
         <mapping class="pojo.ObjetoPrestamo" />
         <mapping class="pojo.ObjetoRecurso" />

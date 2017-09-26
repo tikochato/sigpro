@@ -353,7 +353,8 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 								$http.post('/SPrestamo',param_data).then(
 										function(response) {
 											if (response.data.success) {
-												mi.t_cambiarNombreNodo();
+												if(mi.esTreeview)
+													mi.t_cambiarNombreNodo();
 												$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 											}else
 												$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
@@ -1198,13 +1199,13 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 										if (response.success) {
 											
 											$utilidades.mensaje('success','Préstamo borrado con éxito');
-											mi.producto = null;			
+											mi.proyecto = null;		
+											$rootScope.$emit("eliminarNodo", {});
 										} else{
 											$utilidades.mensaje('danger',
 													'Error al borrar el Préstamo');
 										}
 									});
-						$rootScope.$emit("eliminarNodo", {});
 					}
 				}, function(){
 					
