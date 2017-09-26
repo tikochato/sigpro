@@ -101,8 +101,8 @@
 	</div>
 	<div class="row second-main-form" ng-show="controller.esColapsado || controller.esTreeview">
 		<div class="page-header">
-			<h2 ng-hide="!controller.esNuevo"><small>Nuevo Préstamo</small></h2>
-			<h2 ng-hide="controller.esNuevo"><small>Edición de Préstamo</small></h2>
+			<h2 ng-if="controller.esNuevo"><small>Nuevo Préstamo</small></h2>
+			<h2 ng-if="!controller.esNuevo"><small>Edición de Préstamo</small></h2>
 			</div>
 		<div class="operation_buttons">
 			<div class="btn-group" ng-hide="controller.esNuevo" ng-if="!controller.esTreeview">
@@ -609,8 +609,7 @@
 									<div class="form-group">
 										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaElegibilidadUe" is-open="controller.fe_abierto"
 											datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="controller.setPorcentaje(5);"
-											ng-click="controller.abrirPopupFecha(1009)" ng-value="controller.prestamo.fechaElegibilidadUe" onblur="this.setAttribute('value', this.value);"
-											ng-readonly="true"/>
+											ng-value="controller.prestamo.fechaElegibilidadUe" onblur="this.setAttribute('value', this.value);" />
 										<span class="label-icon" ng-click="controller.abrirPopupFecha(1009)">
 												<i class="glyphicon glyphicon-calendar"></i>
 										</span>
@@ -622,8 +621,8 @@
 									<div class="form-group">
 											<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaCierreOrigianlUe" is-open="controller.fco_abierto"
 												datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="controller.setPorcentaje(5);"
-												ng-click="controller.abrirPopupFecha(1010)" ng-value="controller.prestamo.fechaCierreOrigianlUe" onblur="this.setAttribute('value', this.value);"
-												ng-readonly="true"/>
+												ng-value="controller.prestamo.fechaCierreOrigianlUe" onblur="this.setAttribute('value', this.value);"
+											/>
 											<span class="label-icon" ng-click="controller.abrirPopupFecha(1010)">
 													<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -636,7 +635,7 @@
 									<div class="form-group">
 											<input type="text" class="inputText"   uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaCierreActualUe" is-open="controller.fca_abierto"
 												datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="controller.setPorcentaje(5);"
-												ng-click="controller.abrirPopupFecha(1011)" ng-value="controller.prestamo.fechaCierreActualUe" onblur="this.setAttribute('value', this.value);"/>
+												ng-value="controller.prestamo.fechaCierreActualUe" onblur="this.setAttribute('value', this.value);"/>
 											<span class="label-icon" ng-click="controller.abrirPopupFecha(1011)"
 											ng-readonly="true">
 													<i class="glyphicon glyphicon-calendar"></i>
@@ -1251,14 +1250,16 @@
 			</form>
 		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios y las fechas deben tener formato de dd/mm/yyyy</div>
+			<br/>
 			<div class="btn-group" ng-disabled="!controller.botones">
 				<shiro:hasPermission name="24020">
-					<label class="btn btn-success" ng-click="controller.mForm.$valid && controller.botones ? controller.guardar(controller.mForm.$valid) : ''" ng-disabled="!controller.mForm.$valid || !controller.botones" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<label class="btn btn-success" ng-click="controller.mForm.$valid && controller.botones ? controller.guardar(controller.mForm.$valid) : ''" ng-disabled="!controller.mForm.$valid || !controller.botones" uib-tooltip="Guardar" tooltip-placement="top">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label ng-if="!controller.esTreeview" class="btn btn-primary" ng-click="controller.botones ? controller.irATabla() : ''" uib-tooltip="Ir a Tabla" tooltip-placement="bottom" ng-disabled="!controller.botones">
+				<label ng-if="!controller.esTreeview" class="btn btn-primary" ng-click="controller.botones ? controller.irATabla() : ''" uib-tooltip="Ir a Tabla" tooltip-placement="top" ng-disabled="!controller.botones">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-				<label ng-if="controller.esTreeview" class="btn btn-danger" ng-click=" controller.botones ? controller.t_borrar() : ''" ng-disabled="!(controller.proyecto.id>0) || !controller.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+				<label ng-if="controller.esTreeview" class="btn btn-danger" ng-click=" controller.botones ? controller.t_borrar() : ''" ng-disabled="!(controller.proyecto.id>0) || !controller.botones" uib-tooltip="Borrar" tooltip-placement="top">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>

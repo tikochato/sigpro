@@ -94,8 +94,8 @@
 
 	<div ng-show="producto.esForma || producto.esTreeview" class="row second-main-form">
 		<div class="page-header">
-			<h2 ng-hide="!producto.esNuevo"><small>Nuevo Producto</small></h2>
-			<h2 ng-hide="producto.esNuevo"><small>Edición de Producto</small></h2>
+			<h2 ng-if="producto.esNuevo"><small>Nuevo Producto</small></h2>
+			<h2 ng-if="!producto.esNuevo"><small>Edición de Producto</small></h2>
 		</div>
 		<div class="operation_buttons">
 			<div class="btn-group" ng-hide="producto.esNuevo" ng-if="!producto.esTreeview">
@@ -380,16 +380,16 @@
 	  </uib-tabset>
 	</div>	
 		<div class="col-sm-12 operation_buttons" align="right">
-		
-		<div class="label-form" align="center">Los campos marcados con * son obligatorios</div>
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios y las fechas deben tener formato de dd/mm/yyyy</div>
+			<br/>
 			<div class="btn-group" ng-disabled="!producto.botones">
 				<shiro:hasPermission name="21020">
-					<label class="btn btn-success" ng-click="producto.mForm.$valid && producto.botones ? producto.guardar() : ''" ng-disabled="!producto.mForm.$valid || !producto.botones" uib-tooltip="Guardar">
+					<label class="btn btn-success" ng-click="producto.mForm.$valid && producto.botones ? producto.guardar() : ''" ng-disabled="!producto.mForm.$valid || !producto.botones" uib-tooltip="Guardar" tooltip-placement="top">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label> 
 				</shiro:hasPermission>
-				<label ng-if="!producto.esTreeview" class="btn btn-primary" ng-click="producto.botones ? producto.cancelar() : ''" uib-tooltip="Ir a Tabla" ng-disabled="!producto.botones">
+				<label ng-if="!producto.esTreeview" class="btn btn-primary" ng-click="producto.botones ? producto.cancelar() : ''" uib-tooltip="Ir a Tabla" ng-disabled="!producto.botones" tooltip-placement="top">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-				<label ng-if="producto.esTreeview" class="btn btn-danger" ng-click="producto.botones ? producto.t_borrar() : ''" ng-disabled="!(producto.producto.id>0) || !producto.botones" uib-tooltip="Borrar">
+				<label ng-if="producto.esTreeview" class="btn btn-danger" ng-click="producto.botones ? producto.t_borrar() : ''" ng-disabled="!(producto.producto.id>0) || !producto.botones" uib-tooltip="Borrar" tooltip-placement="top">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
