@@ -353,7 +353,8 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 							mi.subproducto.fechaActualizacion = response.data.fechaactualizacion;
 							if(!mi.esTreeview)
 								mi.cargarTabla(mi.paginaActual);
-							mi.t_cambiarNombreNodo();
+							else
+								mi.t_cambiarNombreNodo();
 							
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Subproducto');
@@ -718,13 +719,13 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 										if (response.success) {
 											
 											$utilidades.mensaje('success','Subproducto borrado con éxito');
-											mi.producto = null;			
+											mi.subproducto = null;		
+											$rootScope.$emit("eliminarNodo", {});
 										} else{
 											$utilidades.mensaje('danger',
 													'Error al borrar el Subproducto');
 										}
 									});
-						$rootScope.$emit("eliminarNodo", {});
 					}
 				}, function(){
 					
@@ -736,7 +737,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		};
 		
 		mi.t_cambiarNombreNodo = function(ev){
-			$rootScope.$emit("cambiarNombreNodo",mi.actividad.nombre);
+			$rootScope.$emit("cambiarNombreNodo",mi.subproducto.nombre);
 		}
 }
 

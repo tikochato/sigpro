@@ -315,9 +315,10 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						mi.actividad.fechaActualizacion=response.fechaactualizacion;
 						if(!mi.esTreeview)
 							mi.obtenerTotalActividades();
+						else
+							mi.t_cambiarNombreNodo();
 						mi.esnuevo = false;		
 						mi.esNuevoDocumento = false;
-						mi.t_cambiarNombreNodo();
 						$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
 					}
 					else
@@ -802,13 +803,13 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 										if (response.success) {
 											
 											$utilidades.mensaje('success','Actividad borrada con éxito');
-											mi.producto = null;			
+											mi.actividad = null;		
+											$rootScope.$emit("eliminarNodo", {});
 										} else{
 											$utilidades.mensaje('danger',
 													'Error al borrar la Actividad');
 										}
 									});
-						$rootScope.$emit("eliminarNodo", {});
 					}
 				}, function(){
 					

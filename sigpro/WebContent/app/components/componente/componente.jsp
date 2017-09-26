@@ -113,7 +113,7 @@
 			    </shiro:hasPermission>
 			    <label ng-if="!componentec.esTreeview" class="btn btn-primary" ng-click="componentec.botones ? componentec.irATabla() : ''" title="Ir a Tabla" ng-disabled="!componentec.botones">
 			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-			    <label ng-if="componentec.esTreeview" class="btn btn-danger" ng-click=" componentec.botones ? componentec.t_borrar() : ''" ng-disabled="!(componentec.componente.id>0) || !componentec.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+			    <label ng-if="componentec.esTreeview" class="btn btn-danger" ng-click=" componentec.botones && componentec.componente.id>0 ? componentec.t_borrar() : ''" ng-disabled="!(componentec.componente.id>0) || !componentec.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			  </div>
 			</div>

@@ -16,59 +16,26 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
         			}
         		}
         	})*/
-		    .when('/gantt/:objeto_id/:objeto_tipo',{
-            	template: '<div load-on-demand="\'ganttController\'" class="all_page"></div>'
-            })
-            .when('/prestamo/:id',{
-            	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
-            })
-            .when('/prestamometas/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'prestamometasController\'" class="all_page"></div>'
-            })
-            .when('/producto/:componente_id/:id',{
-            	template: '<div load-on-demand="\'moduloProducto\'" class="all_page"></div>'
-            })
-            .when('/subproducto/:producto_id/:id',{
-            	template: '<div load-on-demand="\'moduloSubproducto\'" class="all_page"></div>'
-            })
-            .when('/meta/:id/:tipo/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'metaController\'" class="all_page"></div>'
-            })
-            .when('/metavalor/:metaid/:datotipoid/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'metavalorController\'" class="all_page"></div>'
-            })
-            .when('/test',{
-            	template: '<div load-on-demand="\'testController\'" class="all_page"></div>'
-            })
-            .when('/desembolso/:proyecto_id/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'desembolsoController\'" class="all_page"></div>'
-            })
-            .when('/componente/:proyecto_id/:id',{
+		   .when('/prestamo/:id',{
+	       		template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
+	       })
+	       .when('/componente/:proyecto_id/:id/:nuevo?',{
             	template: '<div load-on-demand="\'componenteController\'" class="all_page"></div>'
             })
-            .when('/riesgo/:objeto_id/:objeto_tipo/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'riesgoController\'" class="all_page"></div>'
+	   		.when('/producto/:componente_id/:id/:nuevo?',{
+            	template: '<div load-on-demand="\'moduloProducto\'" class="all_page"></div>'
+            })
+            .when('/subproducto/:producto_id/:id/:nuevo?',{
+            	template: '<div load-on-demand="\'moduloSubproducto\'" class="all_page"></div>'
+            })
+            .when('/actividad/:objeto_id/:objeto_tipo/:id/:nuevo?',{
+            	template: '<div load-on-demand="\'actividadController\'" class="all_page"></div>'
+            })
+            .when('/gantt/:objeto_id/:objeto_tipo',{
+            	template: '<div load-on-demand="\'ganttController\'" class="all_page"></div>'
             })
             .when('/hito/:proyecto_id/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'hitoController\'" class="all_page"></div>'
-            })
-            .when('/recurso/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'recursoController\'" class="all_page"></div>'
-            })
-            .when('/actividad/:objeto_id/:objeto_tipo/:id',{
-            	template: '<div load-on-demand="\'actividadController\'" class="all_page"></div>'
-            })
-            .when('/programa/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'programaController\'" class="all_page"></div>'
-            })
-            .when('/mapa/:proyecto_id/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'mapaController\'" class="all_page"></div>'
-            })
-            .when('/agenda/:proyectoId',{
-            	template: '<div load-on-demand="\'agendaController\'" class="all_page"></div>'
-            })
-            .when('/matrizraci/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'matrizraciController\'" class="all_page"></div>'
             })
             .when("/:redireccion?",{
             	controller:"MainController"
@@ -100,22 +67,9 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   template: '/app/components/gantt/gantt.jsp'
 	       },
 	       {
-	    	   name: 'cooperanteController',
-	    	   script: '/app/components/cooperante/cooperante.controller.js',
-	    	   template: '/app/components/cooperante/cooperante.jsp'
-	       },
-	       {
 	    	   name: 'proyectoController',
 	    	   script: '/app/components/prestamo/proyecto.controller.js',
 	    	   template: '/app/components/prestamo/proyecto.jsp'
-	       }, {
-	    	   name: 'prestamometasController',
-	    	   script: '/app/components/reportes/prestamometas/prestamometas.controller.js',
-	    	   template: '/app/components/reportes/prestamometas/prestamometas.jsp'
-	       }, {
-	    	   name: 'moduloColaborador',
-	    	   script: '/app/components/colaborador/colaborador.controller.js',
-	    	   template: '/app/components/colaborador/colaborador.jsp'
 	       }, {
 	    	   name: 'moduloProducto',
 	    	   script: '/app/components/producto/producto.controller.js',
@@ -126,56 +80,18 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   template: '/app/components/subproducto/subproducto.jsp'
 	       },
 	       {
-	    	   name: 'metaController',
-	    	   script: '/app/components/meta/meta.controller.js',
-	    	   template: '/app/components/meta/meta.jsp'
-	       },{
-	    	   name: 'metavalorController',
-	    	   script: '/app/components/metavalor/metavalor.controller.js',
-	    	   template: '/app/components/metavalor/metavalor.jsp'
-	       },
-	       {
-	    	   name: 'desembolsoController',
-	    	   script: '/app/components/desembolso/desembolso.controller.js',
-	    	   template: '/app/components/desembolso/desembolso.jsp'
-	       },
-	       {
 	    	   name: 'componenteController',
 	    	   script: '/app/components/componente/componente.controller.js',
 	    	   template: '/app/components/componente/componente.jsp'
-	       }, {
-	    	   name: 'riesgoController',
-	    	   script: '/app/components/riesgo/riesgo.controller.js',
-	    	   template: '/app/components/riesgo/riesgo.jsp'
 	       }, {
 	    	   name: 'hitoController',
 	    	   script: '/app/components/hito/hito.controller.js',
 	    	   template: '/app/components/hito/hito.jsp'
 	       },
 	       {
-	    	   name: 'recursoController',
-	    	   script: '/app/components/recurso/recurso.controller.js',
-	    	   template: '/app/components/recurso/recurso.jsp'
-	       },
-	       {
 	    	   name: 'actividadController',
 	    	   script: '/app/components/actividad/actividad.controller.js',
 	    	   template: '/app/components/actividad/actividad.jsp'
-	       },
-	       {
-	    	   name: 'programaController',
-	    	   script: '/app/components/programa/programa.controller.js',
-	    	   template: '/app/components/programa/programa.jsp'
-	       },
-	       {
-	    	   name: 'mapaController',
-	    	   script: '/app/components/mapas/mapa.controller.js',
-	    	   template: '/app/components/mapas/mapa.jsp'
-	       },
-	       {
-	    	   name: 'desembolsosController',
-	    	   script: '/app/components/reportes/desembolsos/desembolsos.controller.js',
-	    	   template: '/app/components/reportes/desembolsos/desembolsos.jsp'
 	       }
 
 	   ];
@@ -203,7 +119,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	mi.nodo_seleccionado;
 	
 	mi.tree_options={
-		
+			allowDeselect: false
 	};
 	
 	$rootScope.catalogo_entidades_anos=1;
@@ -298,12 +214,29 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 		}
 	};
 	
+	mi.nuevoObjeto=function(tipo){
+		switch(tipo){
+			case 1: //componente
+				$location.path('/componente/'+mi.nodo_seleccionado.id+'/0/1'); break;
+			case 2: //proudcto
+				$location.path('/producto/'+mi.nodo_seleccionado.id+'/0/1'); break;
+			case 3: //subproducto
+				$location.path('/subproducto/'+mi.nodo_seleccionado.id+'/0/1'); break;
+			case 4: //actividad
+				$location.path('/actividad/'+mi.nodo_seleccionado.parent.id+'/'+mi.nodo_seleccionado.parent.objeto_tipo+'/0/1'); break;
+		}
+	}
+	
 	$rootScope.$on("eliminarNodo", function(){
         mi.eliminaNodo();
      });
 	
 	$rootScope.$on("cambiarNombreNodo",function($evt, nombre){
 		mi.cambiarNombreNodo(nombre);
+	});
+	
+	$rootScope.$on("crearNodo", function($evt, datos){
+		mi.crearNodo(datos.id, datos.nombre, datos.objeto_tipo, datos.estado);
 	});
 	
 	mi.eliminaNodo=function(){
@@ -320,6 +253,13 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	mi.cambiarNombreNodo=function(nombre){
 		if(mi.nodo_seleccionado){
 			mi.nodo_seleccionado.nombre = nombre;
+		}
+	}
+	
+	mi.crearNodo=function(id,nombre,objeto_tipo,estado){
+		if(mi.nodo_seleccionado){
+			mi.nodo_seleccionado.children.push({id: id, nombre: nombre, objeto_tipo: objeto_tipo, estado: estado, nivel: mi.nodo_seleccionado.nivel+1, parent: mi.nodo_seleccionado });
+			mi.nodo_seleccionado=mi.nodo_seleccionado.children[mi.nodo_seleccionado.children.length-1];
 		}
 	}
 	

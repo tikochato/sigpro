@@ -41,7 +41,6 @@ import dao.ActividadDAO;
 import dao.ComponenteDAO;
 import dao.EstructuraProyectoDAO;
 import dao.HitoDAO;
-import dao.MetaValorDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
@@ -523,12 +522,12 @@ public class SGantt extends HttpServlet {
 										fechaPrimeraActividad, null,false,null,subproducto.getCosto(),null,null));
 						items_subproducto = items_actividad.trim().length() > 0 ? String.join(",", items_subproducto,items_actividad) : items_subproducto;
 					}
-					BigDecimal metaPlanificada = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(2, producto.getId(), OBJETO_ID_PRODUCTO);
-					BigDecimal metaReal = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(1, producto.getId(), OBJETO_ID_PRODUCTO);
+//					BigDecimal metaPlanificada = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(2, producto.getId(), OBJETO_ID_PRODUCTO);
+//					BigDecimal metaReal = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(1, producto.getId(), OBJETO_ID_PRODUCTO);
 
 					items_producto = String.join(items_producto.trim().length()>0 ? "," : "",items_producto,
 							construirItem(producto.getId(),producto.getId(),OBJETO_ID_PRODUCTO, producto.getNombre(),2, true, fechaPrimeraActividad,
-									null,false,null,producto.getCosto(),metaPlanificada,metaReal));
+									null,false,null,producto.getCosto(),null,null));
 					items_producto = items_subproducto.trim().length() > 0 ? String.join(",",items_producto, items_subproducto) : items_producto;
 
 					items_actividad = obtenerItemsActividades(producto.getId(),3,3,predecesores);
@@ -584,11 +583,11 @@ public class SGantt extends HttpServlet {
 							true, null, null, false,null, (BigDecimal) obj[9], null, null);
 					break;
 				case 3:
-					BigDecimal metaPlanificada = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(2, (Integer)obj[0], OBJETO_ID_PRODUCTO);
-					BigDecimal metaReal = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(1, (Integer)obj[0], OBJETO_ID_PRODUCTO);
+//					BigDecimal metaPlanificada = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(2, (Integer)obj[0], OBJETO_ID_PRODUCTO);
+//					BigDecimal metaReal = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(1, (Integer)obj[0], OBJETO_ID_PRODUCTO);
 					
 					item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_PRODUCTO, (String)obj[1], (Integer)obj[4], 
-							true, null, null, false,null, (BigDecimal) obj[9], metaPlanificada,metaReal);
+							true, null, null, false,null, (BigDecimal) obj[9], null,null);
 					break;
 				case 4:
 					item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_SUBPRODUCTO, (String)obj[1], (Integer)obj[4], 
