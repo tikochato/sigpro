@@ -351,7 +351,9 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 							mi.subproducto.fechaCreacion = response.data.fechaCreacion;
 							mi.subproducto.usuarioActualizo = response.data.usuarioactualizo;
 							mi.subproducto.fechaActualizacion = response.data.fechaactualizacion;
-							mi.cargarTabla(mi.paginaActual);
+							if(!mi.esTreeview)
+								mi.cargarTabla(mi.paginaActual);
+							mi.t_cambiarNombreNodo();
 							
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Subproducto');
@@ -696,6 +698,46 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 					}
 				});
 	  }
+	  
+	  mi.t_borrar = function(ev) {
+			if (mi.subproducto!=null && mi.subproducto.id!=null) {
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el subproducto "' + mi.subproducto.nombre + '"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						var datos = {
+								accion : 'borrar',
+								codigo : mi.subproducto.id,
+								t: (new Date()).getTime()
+							};
+							$http.post('/SSubproducto', datos).success(
+									function(response) {
+										if (response.success) {
+											
+											$utilidades.mensaje('success','Subproducto borrado con éxito');
+											mi.producto = null;			
+										} else{
+											$utilidades.mensaje('danger',
+													'Error al borrar el Subproducto');
+										}
+									});
+						$rootScope.$emit("eliminarNodo", {});
+					}
+				}, function(){
+					
+				});
+			} else {
+				$utilidades.mensaje('warning',
+						'Debe seleccionar el subproducto que desee borrar');
+			}
+		};
+		
+		mi.t_cambiarNombreNodo = function(ev){
+			$rootScope.$emit("cambiarNombreNodo",mi.actividad.nombre);
+		}
 }
 
 moduloSubproducto.controller('modalBuscarPorSubproducto', [ '$uibModalInstance',

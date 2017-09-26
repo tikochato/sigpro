@@ -353,6 +353,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 								$http.post('/SPrestamo',param_data).then(
 										function(response) {
 											if (response.data.success) {
+												mi.t_cambiarNombreNodo();
 												$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 											}else
 												$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
@@ -1177,6 +1178,46 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 						}
 					});
 		  }
+		
+		mi.t_borrar = function(ev) {
+			if (mi.proyecto!=null && mi.proyecto.id!=null) {
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el préstamo "' + mi.proyecto.nombre + '"?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						var datos = {
+								accion : 'borrar',
+								codigo : mi.proyecto.id,
+								t: (new Date()).getTime()
+							};
+							$http.post('/SProyecto', datos).success(
+									function(response) {
+										if (response.success) {
+											
+											$utilidades.mensaje('success','Préstamo borrado con éxito');
+											mi.producto = null;			
+										} else{
+											$utilidades.mensaje('danger',
+													'Error al borrar el Préstamo');
+										}
+									});
+						$rootScope.$emit("eliminarNodo", {});
+					}
+				}, function(){
+					
+				});
+			} else {
+				$utilidades.mensaje('warning',
+						'Debe seleccionar el préstamo que desee borrar');
+			}
+		};
+		
+		mi.t_cambiarNombreNodo = function(ev){
+			$rootScope.$emit("cambiarNombreNodo",mi.proyecto.nombre);
+		}
 		
 } ]);
 
