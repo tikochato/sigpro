@@ -1,6 +1,6 @@
 package dao;
 
-import javax.persistence.NoResultException;
+import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -27,8 +27,8 @@ public class PlanAdquisicionesDetalleDAO {
 		return ret;
 	}
 	
-	public static PlanAdquisicionesDetalle getPlanAdquisicionByObjeto(int objetoTipo, int ObjetoId){
-		PlanAdquisicionesDetalle ret = null;
+	public static List<PlanAdquisicionesDetalle> getPlanAdquisicionByObjeto(int objetoTipo, int ObjetoId){
+		List<PlanAdquisicionesDetalle> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
@@ -36,12 +36,8 @@ public class PlanAdquisicionesDetalleDAO {
 			Query<PlanAdquisicionesDetalle> criteria = session.createQuery(query, PlanAdquisicionesDetalle.class);
 			criteria.setParameter("objetoId", ObjetoId);
 			criteria.setParameter("objetoTipo", objetoTipo);
-			ret = criteria.getSingleResult();
-		}
-		catch(NoResultException e){
-			
-		}
-		catch(Throwable e){
+			ret = criteria.getResultList();
+		}catch(Throwable e){
 			CLogger.write("2", PlanAdquisicionesDetalleDAO.class, e);
 		}
 		finally{

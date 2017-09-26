@@ -70,8 +70,8 @@
 		</div>
 		<div class="row second-main-form" ng-show="controller.mostraringreso">
 			<div class="page-header">
-			    <h2 ng-hide="!controller.esnueva"><small>Nueva adquisicion</small></h2>
-			    <h2 ng-hide="controller.esnueva"><small>Edición de adquisicion</small></h2>
+			    <h2 ng-hide="!controller.esnuevo"><small>Nueva adquisicion</small></h2>
+			    <h2 ng-hide="controller.esnuevo"><small>Edición de adquisicion</small></h2>
 			</div>
 		
 		<div class="operation_buttons">
@@ -91,38 +91,131 @@
 							<label for="id" class="floating-label id_class">ID {{ controller.adquisicion.id  }}</label>
 							<br/><br/>
 						</div>
-						<div class="form-group">
-							<select class="inputText" ng-model="controller.tipoadquisicionSeleccionado"
-								ng-options="tipo as tipo.nombre for tipo in controller.adquisiciontipos track by tipo.id"
-								ng-readonly="true"
-								ng-required="true">
-								<option value="">Seleccione un tipo</option>
-							</select>
-							<label class="floating-label">* Tipo adquisicion</label>
-						</div>
-						<div class="form-group">
-    						<input type="text" class="inputText"  ng-model="controller.adquisicion.descripcion"
-    						ng-value="controller.adquisicion.descripcion" onblur="this.setAttribute('value', this.value);">
-    						<label  class="floating-label">Unidad medida</label>
-						</div>
-						<div class="form-group">
-							<select class="inputText" ng-model="controller.tipoadquisicionSeleccionado"
-								ng-options="tipo as tipo.nombre for tipo in controller.adquisiciontipos track by tipo.id"
-								ng-readonly="true"
-								ng-required="true">
-								<option value="">Seleccione un tipo</option>
-							</select>
-							<label class="floating-label">* Categoría de Adquisición</label>
+						
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<select class="inputText" ng-model="controller.tipoadquisicionSeleccionado"
+										ng-options="tipo as tipo.nombre for tipo in controller.adquisiciontipos track by tipo.id"
+										ng-readonly="true"
+										ng-required="true">
+										<option value="">Seleccione un tipo</option>
+									</select>
+									<label class="floating-label">* Tipo adquisicion</label>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<select class="inputText" ng-model="controller.tipoadquisicionSeleccionado"
+										ng-options="tipo as tipo.nombre for tipo in controller.adquisiciontipos track by tipo.id"
+										ng-readonly="true"
+										ng-required="true">
+										<option value="">Seleccione un tipo</option>
+									</select>
+									<label class="floating-label">* Categoría de Adquisición</label>
+								</div>
+							</div>
 						</div>
 						
-						<div class="form-group" ng-hide="true">
-							<select class="inputText" ng-model="controller.tipoValorSeleccionado"
-								ng-options="tipoValor as tipoValor.nombre for tipoValor in controller.datoTipos track by tipoValor.id"
-								ng-readonly="true"
-								ng-required="true">
-								<option value="">Seleccione una unidad</option>
-							</select>
-							<label class="floating-label">* Tipo Dato</label>
+						<div class="row">
+							<div class="col-sm-3">
+								<div class="form-group">
+		    						<input type="text" class="inputText"  ng-model="controller.adquisicion.unidadMedida"
+		    						ng-value="controller.adquisicion.unidadMedida" onblur="this.setAttribute('value', this.value);">
+		    						<label  class="floating-label">Unidad medida</label>
+								</div>
+							</div>
+							
+							<div class="col-sm-3">
+								<div class="form-group">
+		    						<input type="number" class="inputText"  ng-model="controller.adquisicion.cantidad"
+		    						ng-value="controller.adquisicion.cantidad" min=0 onblur="this.setAttribute('value', this.value);">
+		    						<label  class="floating-label">Cantidad</label>
+								</div>
+							</div>
+							
+							<div class="col-sm-3">
+								<div class="form-group">
+		    						<input type="number" class="inputText"  ng-model="controller.adquisicion.costo"
+		    						ng-value="controller.adquisicion.costo" min=0 onblur="this.setAttribute('value', this.value);">
+		    						<label  class="floating-label">Costo</label>
+								</div>
+							</div>
+							
+							<div class="col-sm-3">
+								<div class="form-group">
+		    						<input type="number" class="inputText"  ng-model="controller.adquisicion.total"
+		    						ng-value="controller.adquisicion.total" min=0 onblur="this.setAttribute('value', this.value);">
+		    						<label  class="floating-label">Total</label>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<select class="inputText" ng-model="controller.duracionDimension"
+										ng-options="dim as dim.nombre for dim in controller.dimensiones track by dim.value"
+										 ng-required="true">
+									</select>
+									<label for="nombre" class="floating-label">* Dimension</label>
+								</div>
+							</div>
+							
+							<div class="col-sm-6">
+								<div class="form-group">
+								   <input class="inputText"  type="number"
+								     ng-model="controller.adquisicion.duracion" ng-value="controller.actividad.duracion"   
+								     onblur="this.setAttribute('value', this.value);"  min="1" ng-required="true" 
+								     ng-readonly="controller.duracionDimension.value != 0 ? false : true"
+								     ng-change="controller.adquisicion.fechaInicio != null && controller.duracionDimension != '' ? controller.cambioDuracion(controller.duracionDimension) : ''">
+								   <label class="floating-label">* Duración</label>
+								</div>	
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group" >
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.adquisicion.fechaInicio" is-open="controller.fi_abierto"
+								            datepicker-options="controller.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="controller.actualizarfechafin(); controller.cambioDuracion(controller.duracionDimension);" ng-required="true"  
+								            ng-value="controller.adquisicion.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
+								            <span class="label-icon" ng-click="controller.abrirPopupFecha(1000)">
+								              <i class="glyphicon glyphicon-calendar"></i>
+								            </span>
+								  <label for="campo.id" class="floating-label">*Fecha de Inicio</label>
+								</div>
+							</div>
+							
+							<div class="col-sm-4">
+								<div class="form-group" >
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.adquisicion.fechaFin" is-open="controller.ff_abierto"
+								            datepicker-options="controller.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="controller.actualizarfechafin()" ng-required="true"
+								            readonly="readonly"
+								            ng-value="controller.adquisicion.fechaFin" onblur="this.setAttribute('value', this.value);"/>
+								            <span class="label-icon" ng-click="controller.abrirPopupFecha(1001)">
+								              <i class="glyphicon glyphicon-calendar"></i>
+								            </span>
+								  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
+								</div>
+							</div>
+							
+							<div class="col-sm-4">
+								<div class="form-group" >
+								    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="controller.adquisicion.acumulacionCostoNombre" ng-value="controller.adquisicion.acumulacionCostoNombre" 
+									ng-click="controller.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="controller.adquisicion.costo != null && controller.adquisicion.costo > 0"/>
+									<span class="label-icon" ng-click="controller.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
+									<label for="campo3" class="floating-label">{{controller.validarRequiredCosto(controller.adquisicion.costo)}} </label>
+								</div>	
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="form-group">
+		    						<input type="text" class="inputText"  ng-model="controller.adquisicion.observaciones"
+		    						ng-value="controller.adquisicion.observaciones" onblur="this.setAttribute('value', this.value);">
+		    						<label  class="floating-label">Observaciones</label>
+								</div>
+							</div>
 						</div>
 					<br/>
 					

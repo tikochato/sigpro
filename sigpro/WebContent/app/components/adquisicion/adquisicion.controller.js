@@ -21,6 +21,13 @@ app.controller('adquisicionController',['$scope', '$http', '$interval','Utilidad
 				mi.objetoNombre = response.nombre;
 	});
 	
+	mi.validarRequiredCosto = function(costo){
+		if(costo != null && costo > 0)
+			return "* Tipo de acumulación del costo";
+		else
+			return "Tipo de acumulación del costo";
+	}
+	
 	mi.gridOptions = {
 			enableRowSelection : true,
 			enableRowHeaderSelection : false,
@@ -102,8 +109,8 @@ app.controller('adquisicionController',['$scope', '$http', '$interval','Utilidad
 	
 	mi.cargarTabla = function(pagina){
 		mi.mostrarcargando=true;
-		$http.post('/SPlanAdquisiciones', { accion: 'getAdquisiciones', pagina: pagina, numerometas: $utilidades.elementosPorPagina, 
-			id: $routeParams.id, tipo: $routeParams.tipo,
+		$http.post('/SPlanAdquisiciones', { accion: 'getAdquisiciones', pagina: pagina, numeroadquisiciones: $utilidades.elementosPorPagina, 
+			objetoid:$routeParams.objeto_id, objetoTipo: $routeParams.objeto_tipo,
 			filtro_unidad_medida: mi.filtros['unidadMedida'], filtro_usuario_creo: mi.filtros['usuarioCreo'], 
 			filtro_fecha_creacion: mi.filtros['fechaCreacion'], t: new Date().getTime() }).success(
 				function(response) {

@@ -137,7 +137,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 					CLogger.write("2", SPlanAdquisiciones.class, e);
 				}
 			}else if(accion.equals("guardarPlan")){
-				try{
+				/*try{
 					boolean result = false;
 					String data = map.get("data");
 					String[] datos = data.split("\\|");
@@ -272,9 +272,9 @@ public class SPlanAdquisiciones extends HttpServlet {
 				}
 				catch (Throwable e) {
 					CLogger.write("3", SPlanAdquisiciones.class, e);
-				}
+				}*/
 			}else if(accion.equals("guardarMontoContrato")){
-				Integer objetoId = Utils.String2Int(map.get("objetoId"));
+				/*Integer objetoId = Utils.String2Int(map.get("objetoId"));
 				Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
 				String numeroContrato = map.get("numeroContrato");
 				BigDecimal montoContrato = Utils.String2BigDecimal(map.get("montoContrato"), null);
@@ -282,7 +282,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 				PlanAdquisicionesDetalle planAdquisicionDetalle = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
 				planAdquisicionDetalle.setMontoContrato(montoContrato);
 				planAdquisicionDetalle.setNumeroContrato(numeroContrato);
-				PlanAdquisicionesDetalleDAO.guardarPlanAdquisicion(planAdquisicionDetalle);
+				PlanAdquisicionesDetalleDAO.guardarPlanAdquisicion(planAdquisicionDetalle);*/
 				
 			}else if(accion.equals("totalAdquisicionesPorObjeto")){
 				String filtro_unidad_medida = map.get("filtro_unidad_medida");
@@ -294,6 +294,37 @@ public class SPlanAdquisiciones extends HttpServlet {
 				response_text = String.join("","{ \"success\": true, \"totalAdquisiciones\":",PlanAdquisicionesDetalleDAO.getTotalAdquisicionesPorObjeto(objetoId, objetoTipo, filtro_unidad_medida,
 						filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 				
+			}else if(accion.equals("getAdquisiciones")){
+				String filtro_unidad_medida = map.get("filtro_unidad_medida");
+				String filtro_usuario_creo = map.get("filtro_usuario_creo");
+				String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+				
+				int objetoId = map.get("objetoid")!=null  ? Integer.parseInt(map.get("objetoid")) : 0;
+				int objetoTipo = map.get("objetoTipo")!=null  ? Integer.parseInt(map.get("objetoTipo")) : 0;
+				
+				List<PlanAdquisicionesDetalle> adquisiciones = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
+				ArrayList<stplanadquisiciones> lstAdquisiciones = new ArrayList<stplanadquisiciones>();
+				for(PlanAdquisicionesDetalle adquisicion : adquisiciones){
+					stplanadquisiciones temp = new stplanadquisiciones();
+					temp.objetoId = adquisicion.getId();
+					temp.objetoTipo = adquisicion.getObjetoTipo();
+					temp.categoriaAdquisicion = adquisicion.getCategoriaAdquisicion() != null ? adquisicion.getCategoriaAdquisicion().getId() : null;
+					temp.categoriaAdquisicionNombre = adquisicion.getCategoriaAdquisicion() != null ? adquisicion.getCategoriaAdquisicion().getNombre() : null;
+					temp.tipoAdquisicion = adquisicion.getTipoAdquisicion() != null ? adquisicion.getTipoAdquisicion().getId() : null;
+					temp.tipoAdquisicionNombre = adquisicion.getTipoAdquisicion() != null ? adquisicion.getTipoAdquisicion().getNombre() : null;
+					temp.unidadMedida = adquisicion.getUnidadMedida();
+					temp.nog = adquisicion.getNog();
+					temp.planificadoDocs = Utils.formatDate(adquisicion.getPreparacionDocPlanificado());
+					temp.planificadoLanzamiento = Utils.formatDate(adquisicion.getLanzamientoEventoPlanificado());
+					temp.planificadoRecepcionEval = Utils.formatDate(adquisicion.getRecepcionOfertasPlanificado());
+					temp.planificadoAdjudica = Utils.formatDate(adquisicion.getAdjudicacionPlanificado());
+					temp.planificadoFirma = Utils.formatDate(adquisicion.getFirmaContratoPlanificado());
+					lstAdquisiciones.add(temp);
+				}
+				
+				response_text=new GsonBuilder().serializeNulls().create().toJson(lstAdquisiciones);
+		        response_text = String.join("", "\"adquisiciones\":",response_text);
+		        response_text = String.join("", "{\"success\":true, ", response_text, "}");
 			}else if(accion.equals("exportarExcel")){
 				Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"), null);
 				try{ 
@@ -462,7 +493,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 						break;
 					}
 					
-					if(idPlanAdquisiciones != null){
+					/*if(idPlanAdquisiciones != null){
 						PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(temp.objetoTipo, temp.objetoId);
 							temp.idPlanAdquisiciones = idPlanAdquisiciones;
 							temp.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
@@ -488,7 +519,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 							temp.montoContrato = detallePlan != null ? detallePlan.getMontoContrato() : new BigDecimal(0);
 					}
 					
-					lstPrestamo.add(temp);
+					lstPrestamo.add(temp);*/
 				}
 			}
 			
