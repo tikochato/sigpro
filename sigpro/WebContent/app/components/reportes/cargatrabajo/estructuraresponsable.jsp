@@ -34,6 +34,11 @@
 <div class="modal-body" id="modal-body">
   <div class="row">
     <div class="col-sm-12">
+    <div class = "row">
+    	<div ng-dropdown-multiselect="" options="estructura.responsables" 
+    		selected-model="estructura.model" extra-settings="estructura.settings">
+    	</div>
+    </div>
     <div class="row">
     	<div style="padding: 1px;" >
     		<div class="panel panel-default" >
@@ -88,7 +93,7 @@
     <div class="row">
 	    <div class="col-sm-12 operation_buttons" align="right">
 		    <div class="btn-group">
-				<label class="btn btn-primary" ng-click="estructura.cancel()">Cancelar</label>
+				<label class="btn btn-primary" ng-click="estructura.cancel()">Cerrar</label>
 	    	</div>
 	      
 	    </div>

@@ -1,4 +1,4 @@
-var app = angular.module('cargatrabajoController', ['ngTouch','smart-table','ivh.treeview']);
+var app = angular.module('cargatrabajoController', ['ngTouch','smart-table','ivh.treeview','angularjs-dropdown-multiselect']);
 
 
 
@@ -43,6 +43,9 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			    precision: 2
 			  }
 			  };
+    	
+    	
+    	
     	
     	
     	
@@ -324,7 +327,20 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 													mi.dataChartLine.push(0);
 													mi.etiquetasChartLine.push (mi.obtenerMes(sigueinteMes.mes) + 
 															(mi.fechaInicio != mi.fechaFin ? "-" + sigueinteMes.anio : ""));
-													sigueinteMes = mi.obtenerSiguienteMes(sigueinteMes.mes,sigueinteMes.anio);	
+													mi.model = [];
+											    	mi.responsables = [ 
+											    		{id: 1, label: "David"}, 
+											    		{id: 2, label: "Jhon"}, 
+											    		{id: 3, label: "Lisa"},
+											    		{id: 4, label: "Nicole"}, 
+											    		{id: 5, label: "Danny"} ];
+											    	mi.settings = { 
+											    			smartButtonMaxItems: 3,
+											    			smartButtonTextConverter: function(itemText, originalItem) {
+											    					if (itemText === 'Jhon') { return 'Jhonny!'; } return itemText; 
+											    			} 
+											    	};
+						sigueinteMes = mi.obtenerSiguienteMes(sigueinteMes.mes,sigueinteMes.anio);	
 												}
 											}
 											mi.dataChartLine.push(mi.actividadesterminadas[x].total)
@@ -453,7 +469,20 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		{
 			if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
 					mi.fechaFin != null && mi.fechaFin.toString().length == 4)
-			{
+			{mi.model = [];
+	    	mi.responsables = [ 
+	    		{id: 1, label: "David"}, 
+	    		{id: 2, label: "Jhon"}, 
+	    		{id: 3, label: "Lisa"},
+	    		{id: 4, label: "Nicole"}, 
+	    		{id: 5, label: "Danny"} ];
+	    	mi.settings = { 
+	    			smartButtonMaxItems: 3,
+	    			smartButtonTextConverter: function(itemText, originalItem) {
+	    					if (itemText === 'Jhon') { return 'Jhonny!'; } return itemText; 
+	    			} 
+	    	};
+
 				if (mi.fechaFin >= mi.fechaInicio){
 					mi.inicializar();
 					mi.generar();
@@ -651,6 +680,8 @@ function modalEstructura($uibModalInstance, $scope, $http, $interval,
 				mi.estructuraProyecto = response.estructura;
 				
 	});
+	
+	
 
 	
 
@@ -708,7 +739,20 @@ function modalEstructuraResponsable($uibModalInstance, $scope, $http, $interval,
 
 	var mi = this;
 	
+	mi.model = [];
 	
+	mi.responsables = [ 
+		{id: 1, label: "David"}, 
+		{id: 2, label: "Jhon"}, 
+		{id: 3, label: "Lisa"},
+		{id: 4, label: "Nicole"}, 
+		{id: 5, label: "Danny"} ];
+	mi.settings = { 
+			smartButtonMaxItems: 3,
+			smartButtonTextConverter: function(itemText, originalItem) {
+					if (itemText === 'Jhon') { return 'Jhonny!'; } return itemText; 
+			} 
+	};
 	
 	$http.post('/SCargaTrabajo', {
 		accion: 'getEstructruaPorResponsable', 
