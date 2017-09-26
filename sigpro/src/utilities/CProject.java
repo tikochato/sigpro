@@ -355,7 +355,7 @@ public class CProject {
 					objetoTipoTemp=5;
 					contadorLocal = objetoTipo == 5 ? contadorLocal++ : contadorLocal;
 					objeto_temp = crearActividad(task, usuario,((Proyecto) objeto).getId(),OBJETO_ID_PROYECTO 
-							,2,((Proyecto) objeto).getTreePath(),contComponente,proyectoBase_,null,null);
+							,1,((Proyecto) objeto).getTreePath(),contComponente,proyectoBase_,null,null);
 					cargarItem(task,((Actividad) objeto_temp).getId(), OBJETO_ID_ACTIVIDAD);
 				}
 			}else if (indetnacion == 3){

@@ -19,39 +19,42 @@ public class EstructuraProyectoDAO {
 		
 		try{
 			String query =String.join(" ",
-				"select * from (",
-				"select p.id, p.nombre, 1 objeto_tipo,  p.treePath, p.nivel, p.fecha_inicio,",
-				"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid",
-				"from proyecto p",
-				"where p.id= ?1 and p.estado=1",
-				"union",
-				"select c.id, c.nombre, 2 objeto_tipo,  c.treePath, c.nivel, c.fecha_inicio,",
-				"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid",
-				"from componente c",
-				"where c.proyectoid=?1 and c.estado=1",
-				"union",
-				"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.nivel, pr.fecha_inicio,",
-				"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid",
-				"from producto pr",
-				"left outer join componente c on c.id=pr.componenteid",
-				"left outer join proyecto p on p.id=c.proyectoid",
-				"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1",
-				"union",
-				"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.nivel, sp.fecha_inicio,",
-				"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid",
-				"from subproducto sp",
-				"left outer join producto pr on pr.id=sp.productoid",
-				"left outer join componente c on c.id=pr.componenteid",
-				"left outer join proyecto p on p.id=c.proyectoid",
-				"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1",
-				"union",
-				"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.nivel, a.fecha_inicio,",
-				"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid",
-				"from actividad a",
-				"left outer join proyecto p on p.id=a.proyecto_base",
-				"where p.id= ?1 and a.estado=1 and p.estado=1",
-				") arbol",
-				"order by treePath;");			
+					"select * from ( "+
+							"select p.id, p.nombre, 1 objeto_tipo,  p.treePath, p.nivel, p.fecha_inicio, "+
+							"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid  "+
+							"from proyecto p "+
+							"where p.id= ?1 and p.estado=1 "+
+							"union "+
+							"select c.id, c.nombre, 2 objeto_tipo,  c.treePath, c.nivel, c.fecha_inicio, "+
+							"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid "+
+							"from componente c "+
+							"where c.proyectoid=?1 and c.estado=1 "+
+							"union "+
+							"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.nivel, pr.fecha_inicio, "+
+							"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid "+
+							"from producto pr "+
+							"left outer join componente c on c.id=pr.componenteid "+
+							"left outer join proyecto p on p.id=c.proyectoid "+
+							"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1  "+
+							"union "+
+							"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.nivel, sp.fecha_inicio, "+
+							"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid "+
+							"from subproducto sp "+
+							"left outer join producto pr on pr.id=sp.productoid "+
+							"left outer join componente c on c.id=pr.componenteid "+
+							"left outer join proyecto p on p.id=c.proyectoid "+
+							"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1 and sp.id  "+
+							"union "+
+							"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.nivel, a.fecha_inicio, "+
+							"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid "+
+							"from actividad a "+
+							"where a.estado=1 and ( "+
+								"(a.proyecto_base = ?1  ) "+
+								"OR (a.componente_base in (select id from componente where proyectoid=?1) ) "+
+								"OR (a.producto_base in (select p.id from producto p, componente c where p.componenteid=c.id and c.proyectoid=?1) ) "+
+							")"+
+							") arbol "+
+							"order by treePath ");			
 			
 			Query<?> criteria = session.createNativeQuery(query);
 			criteria.setParameter("1", idProyecto);
