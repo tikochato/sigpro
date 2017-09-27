@@ -46,7 +46,7 @@
 	    <br>
 	    	<div class="col-sm-12">
 	    		<div class="row" >	    	
-					  <div class="form-group col-sm-4">
+					  <div class="form-group col-sm-4" style="padding: 5px;">
 						<select  class="inputText" ng-model="controller.prestamo"
 							ng-options="a.text for a in controller.prestamos" 
 							ng-change="controller.getEstructura()"></select>

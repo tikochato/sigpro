@@ -26,6 +26,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     mi.actividadesterminadas = [];
     mi.estructuraPrestamo = [];
     
+    
     mi.pieColors = ['#fd7b7d','#dddd7d','#bae291','#9cc3e2'];
     
     mi.lineColors = ['#9cc3e2'];
@@ -275,6 +276,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 									if(response.success){
 										mi.rowCollection = [];
 										mi.rowCollection = response.cargatrabajo;
+										
 								        mi.displayedCollection = [].concat(mi.rowCollection);
 								        mi.actividadesAtrasadasTotal = 0;
 										mi.actividadesAlertaTotal = 0;
@@ -293,7 +295,9 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 								    	 mi.data = [mi.actividadesAtrasadasTotal, mi.actividadesAlertaTotal,
 								    		 mi.actividadesACumplirTotal,mi.actividadesCompletadas];
 								    	 
-								    	 mi.mostrar = true;
+								    	 mi.mostrar = mi.rowCollection.length > 0 ? true : false;
+								    	 if (!mi.mostrar)
+								    		 $utilidades.mensaje('warning','No se encontraron datos relacionados');
 									}
 								});
 						
@@ -327,19 +331,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 													mi.dataChartLine.push(0);
 													mi.etiquetasChartLine.push (mi.obtenerMes(sigueinteMes.mes) + 
 															(mi.fechaInicio != mi.fechaFin ? "-" + sigueinteMes.anio : ""));
-													mi.model = [];
-											    	mi.responsables = [ 
-											    		{id: 1, label: "David"}, 
-											    		{id: 2, label: "Jhon"}, 
-											    		{id: 3, label: "Lisa"},
-											    		{id: 4, label: "Nicole"}, 
-											    		{id: 5, label: "Danny"} ];
-											    	mi.settings = { 
-											    			smartButtonMaxItems: 3,
-											    			smartButtonTextConverter: function(itemText, originalItem) {
-											    					if (itemText === 'Jhon') { return 'Jhonny!'; } return itemText; 
-											    			} 
-											    	};
+													
 						sigueinteMes = mi.obtenerSiguienteMes(sigueinteMes.mes,sigueinteMes.anio);	
 												}
 											}
@@ -469,19 +461,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		{
 			if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
 					mi.fechaFin != null && mi.fechaFin.toString().length == 4)
-			{mi.model = [];
-	    	mi.responsables = [ 
-	    		{id: 1, label: "David"}, 
-	    		{id: 2, label: "Jhon"}, 
-	    		{id: 3, label: "Lisa"},
-	    		{id: 4, label: "Nicole"}, 
-	    		{id: 5, label: "Danny"} ];
-	    	mi.settings = { 
-	    			smartButtonMaxItems: 3,
-	    			smartButtonTextConverter: function(itemText, originalItem) {
-	    					if (itemText === 'Jhon') { return 'Jhonny!'; } return itemText; 
-	    			} 
-	    	};
+			{
 
 				if (mi.fechaFin >= mi.fechaInicio){
 					mi.inicializar();
@@ -740,32 +720,46 @@ function modalEstructuraResponsable($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	
 	mi.model = [];
+	mi.idsResponsables = $idresponsable;
 	
-	mi.responsables = [ 
-		{id: 1, label: "David"}, 
-		{id: 2, label: "Jhon"}, 
-		{id: 3, label: "Lisa"},
-		{id: 4, label: "Nicole"}, 
-		{id: 5, label: "Danny"} ];
 	mi.settings = { 
-			smartButtonMaxItems: 3,
-			smartButtonTextConverter: function(itemText, originalItem) {
-					if (itemText === 'Jhon') { return 'Jhonny!'; } return itemText; 
-			} 
+			keyboardControls: true, 
+			enableSearch: false, 
+			smartButtonMaxItems: 10,
+			showCheckAll: false,
+			showUncheckAll: false
+			
 	};
 	
 	$http.post('/SCargaTrabajo', {
-		accion: 'getEstructruaPorResponsable', 
+		accion: 'getResponsables', 
 		idPrestamo :$idproyecto,
-		idColaborador:$idresponsable,
-		anio_inicio:$anioInicio,
-		anio_fin: $anioFin,
 		t: new Date().getTime()}).success(
-
 			function(response){
-				mi.estructuraProyecto = response.estructura;
+				mi.responsables = response.colaboradores;
+				for (x in mi.responsables){
+					if (mi.responsables[x].id == $idresponsable){
+						mi.model.push(mi.responsables[x]);
+						mi.getEstructuraPorResponsable();
+						break;
+					}
+				}
 				
 	});
+	
+	mi.getEstructuraPorResponsable = function(){
+		mi.estructuraProyecto={};
+		$http.post('/SCargaTrabajo', {
+			accion: 'getEstructruaPorResponsable', 
+			idPrestamo :$idproyecto,
+			idColaboradores:mi.idsResponsables,
+			anio_inicio:$anioInicio,
+			anio_fin: $anioFin,
+			t: new Date().getTime()}).success(
+				function(response){
+					mi.estructuraProyecto = response.estructura;
+		});
+	}
 
 	
 
@@ -807,13 +801,47 @@ function modalEstructuraResponsable($uibModalInstance, $scope, $http, $interval,
 	
 
 	mi.seriesLine = function (){
-		
-		
-		
 	}
 	
-	
-	
-	
+	 mi.selectColaborador = {
+			 onItemSelect: function(item) {
+				 mi.idsResponsables = "";
+				 for (x in mi.model){
+					 mi.idsResponsables = mi.idsResponsables + (mi.idsResponsables.length > 0 ? ',' : '') + mi.model[x].id
+				 }
+				 mi.getEstructuraPorResponsable();
+				 
+				 
+			 },
+			 onItemDeselect:function(item) {
+				 mi.idsResponsables = "";
+				 for (x in mi.model){
+					 mi.idsResponsables = mi.idsResponsables + (mi.idsResponsables.length > 0 ? ',' : '') + mi.model[x].id
+				 }
+				 mi.getEstructuraPorResponsable();
+			 }
+	 };
+	 
+	 mi.exportarExcel = function(){
+		
+		$http.post('/SCargaTrabajo', { 
+			accion: 'exportarEstructuraExcel', 
+			idPrestamo:$idproyecto,
+			idColaboradores:mi.idsResponsables,
+			anio_inicio:$anioInicio,
+			anio_fin: $anioFin,
+			t: new Date().getTime()
+		  } ).then(
+				  function successCallback(response) {
+					  var anchor = angular.element('<a/>');
+					  anchor.attr({
+				         href: 'data:application/ms-excel;base64,' + response.data,
+				         target: '_blank',
+				         download: 'CargaTrabajo.xls'
+					  })[0].click();
+				  }.bind(this), function errorCallback(response){
+			 	}
+		  	);
+		};
 };
 

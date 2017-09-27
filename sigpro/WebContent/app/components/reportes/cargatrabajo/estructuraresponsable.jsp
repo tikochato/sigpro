@@ -34,9 +34,10 @@
 <div class="modal-body" id="modal-body">
   <div class="row">
     <div class="col-sm-12">
-    <div class = "row">
+    <div class = "row" style="padding: 0px 0px 10px 10px;">
     	<div ng-dropdown-multiselect="" options="estructura.responsables" 
-    		selected-model="estructura.model" extra-settings="estructura.settings">
+    	selected-model="estructura.model" extra-settings="estructura.settings"
+    	events="estructura.selectColaborador">
     	</div>
     </div>
     <div class="row">
@@ -93,7 +94,11 @@
     <div class="row">
 	    <div class="col-sm-12 operation_buttons" align="right">
 		    <div class="btn-group">
+		    	<label class="btn btn-default" ng-click="estructura.exportarExcel()" uib-tooltip="Exportar">
+		    		<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span>
+		    	</label>
 				<label class="btn btn-primary" ng-click="estructura.cancel()">Cerrar</label>
+				
 	    	</div>
 	      
 	    </div>
