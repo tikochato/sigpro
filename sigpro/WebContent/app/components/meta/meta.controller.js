@@ -1,7 +1,7 @@
 //var app = angular.module('metaController', []);
 
-app.controller('metaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog', 'dialogoConfirmacion', 
-		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog, $dialogoConfirmacion) {
+app.controller('metaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog', '$uibModal', 'dialogoConfirmacion', 
+		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog, $uibModal, $dialogoConfirmacion) {
 			var mi=this;
 			
 			$window.document.title = $utilidades.sistema_nombre+' - Metas';
@@ -16,14 +16,31 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			mi.unidadMedidaSeleccionado=null;
 			mi.tipoValorSeleccionado=null;
 			
-			mi.objeto_id = $scope.$parent.objeto_id;
-			mi.objeto_tipo = $scope.$parent.objeto_tipo;
+			if($scope.$parent.controller){
+				mi.objeto_id = $scope.$parent.controller.proyecto.id;
+				mi.objeto_tipo = 1;
+			}else if($scope.$parent.componentec){
+				mi.objeto_id = $scope.$parent.componentec.componente.id;
+				mi.objeto_tipo = 2;
+			}else if($scope.$parent.producto){
+				mi.objeto_id = $scope.$parent.producto.producto.id;
+				mi.objeto_tipo = 3;
+			}else if($scope.$parent.subproducto){
+				mi.objeto_id = $scope.$parent.subproducto.subproducto.id;
+				mi.objeto_tipo = 4;
+			}else if($scope.$parent.actividadc){
+				mi.objeto_id = $scope.$parent.actividadc.actividad.id;
+				mi.objeto_tipo = 5;
+			}
 						
 			mi.nombrePcp = "";
 			mi.nombreTipoPcp = "";
 			
 			mi.anios=[];
 			mi.anio = null;			
+			mi.planificado = null;
+			mi.real = null;
+			mi.planificadoActual = null;
 			
 			switch(mi.objeto_tipo){
 				case "1": mi.nombreTipoPcp = "Préstamo"; break;
@@ -79,19 +96,141 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 									break;
 								}
 							}
+							for(a in mi.metas[x].avance){
+								mi.metas[x].avance[a].fecha = moment(mi.metas[x].avance[a].fecha,'DD/MM/YYYY').toDate(); 
+							}
 						}
 						mi.mostrarcargando = false;
 					});
 			}
 						
 			mi.metaSeleccionada = function(row){
+				if(mi.rowAnterior){
+					if(row != mi.rowAnterior){
+						mi.rowAnterior.isSelected=false;
+					}else{
+						return;
+					}
+				}
+				row.isSelected = true;
+				mi.rowAnterior = row;
 				mi.meta = row;
 				mi.mostrarValores = true;
+				mi.getMetasAnio(mi.meta, mi.anio);	
 			}
 			
-			mi.editarElemento = function(row, elemento, valor){
-				row[elemento] = valor;
+			mi.almacenarPlanificado = function(mes){
+				for(p in mi.meta.planificado){
+					var metaplan = mi.meta.planificado[p]; 
+					if(metaplan.ejercicio == mi.anio){
+						metaplan[mes] = mi.planificado[mes];
+						break;
+					}
+				}
+				mi.meta.planificado.push({"ejercicio":mi.anio, mes:mi.planificado[mes]});
 			}
+			
+			mi.inicializarPlanificadoReal = function(meta){
+				var inicial="";
+				if(meta.datoTipoId.id == 2 || meta.datoTipoId.id == 3){
+					inicial = 0;
+				}
+				mi.planificado = {
+						enero: inicial,
+						febrero: inicial,
+						marzo: inicial,
+						abril: inicial,
+						mayo: inicial,
+						junio: inicial,
+						julio: inicial,
+						agosto: inicial,
+						septiembre: inicial,
+						octubre: inicial,
+						noviembre: inicial,
+						diciembre: inicial,
+						total: inicial
+				}
+				mi.real = {
+						enero: inicial,
+						febrero: inicial,
+						marzo: inicial,
+						abril: inicial,
+						mayo: inicial,
+						junio: inicial,
+						julio: inicial,
+						agosto: inicial,
+						septiembre: inicial,
+						octubre: inicial,
+						noviembre: inicial,
+						diciembre: inicial,
+						total: inicial
+				}
+			}
+			
+			mi.getMetasAnio = function(meta, anio){
+				mi.inicializarPlanificadoReal(meta);
+				var inicial="";
+				if(meta.datoTipoId.id == 2 || meta.datoTipoId.id == 3){
+					inicial = 0;
+					for(i=0; i<meta.avance.length; i++){
+						var fecha = moment(meta.avance[i].fecha).format('DD/MM/YYYY');
+						fecha = moment(fecha, 'DD/MM/YYYY');
+						var mesA = fecha.month();
+						var anioA = fecha.year();					
+						if(anioA == anio){
+							switch(mesA){
+								case 0: mi.real.enero += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+									break;
+								case 1: mi.real.febrero += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+									break;
+								case 2: mi.real.marzo += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+									break;
+								case 3: mi.real.abril += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+									break;
+								case 4: mi.real.mayo += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+									break;
+								case 5: mi.real.junio += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+									break;
+								case 6: mi.real.julio += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+									break;
+								case 7: mi.real.agosto += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+									break;
+								case 8: mi.real.septiembre += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+									break;
+								case 9: mi.real.octubre += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+									break;
+								case 10: mi.real.noviembre += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+									break;
+								case 11: mi.real.diciembre += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+							}
+						}
+					}
+				}
+				for(i=0; i<meta.planificado.length; i++){
+					if(meta.planificado[i].ejercicio == anio){
+						mi.planificadoActual = meta.planificado[i]; 
+						mi.planificado = {
+							enero: meta.planificado[i].enero != null ? meta.planificado[i].enero : inicial,
+							febrero: meta.planificado[i].febrero != null ? meta.planificado[i].febrero : inicial,
+							marzo: meta.planificado[i].marzo != null ? meta.planificado[i].marzo : inicial,
+							abril: meta.planificado[i].abril != null ? meta.planificado[i].abril : inicial,
+							mayo: meta.planificado[i].mayo != null ? meta.planificado[i].mayo : inicial,
+							junio: meta.planificado[i].junio != null ? meta.planificado[i].junio : inicial,
+							julio: meta.planificado[i].julio != null ? meta.planificado[i].julio : inicial,
+							agosto: meta.planificado[i].agosto != null ? meta.planificado[i].agosto : inicial,
+							septiembre: meta.planificado[i].septiembre != null ? meta.planificado[i].septiembre : inicial,
+							octubre: meta.planificado[i].octubre != null ? meta.planificado[i].octubre : inicial,
+							noviembre: meta.planificado[i].noviembre != null ? meta.planificado[i].noviembre : inicial,
+							diciembre: meta.planificado[i].diciembre != null ? meta.planificado[i].diciembre : inicial,
+							total: mi.planificado.enero+mi.planificado.febrero+mi.planificado.marzo+mi.planificado.abril+mi.planificado.mayo
+								+mi.planificado.junio+mi.planificado.julio+mi.planificado.agosto+mi.planificado.septiembre+mi.planificado.octubre
+								+mi.planificado.noviembre+mi.planificado.diciembre
+						}
+						break;
+					}
+				}
+			}
+			
 						
 			mi.redireccionSinPermisos=function(){
 				$window.location.href = '/main.jsp#!/forbidden';		
@@ -131,97 +270,138 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 					$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
 			};
 
-			mi.borrar = function(ev) {
-				if(mi.meta!=null){
-					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+			mi.nuevaMeta = function() {
+				mi.metas.push({  
+			         "id":"",
+			         "nombre":"Nueva Meta",
+			         "descripcion":"",
+			         "estado":1,
+			         "unidadMedidaId":0,
+			         "usuarioCreo":"",
+			         "fechaCreacion":"",
+			         "usuarioActualizo":null,
+			         "fechaActualizacion":"",
+			         "objetoId":mi.objeto_id,
+			         "objetoTipo":mi.objeto_tipo,
+			         "datoTipoId":mi.datoTipos[2],
+			         "metaFinal":null,
+			         "planificado":[  
+	
+			         ],
+			         "avance":[  
+	
+			         ]
+				});
+			};
+
+			mi.borrarMeta = function(meta) {
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 							, "Confirmación de Borrado"
-							, '¿Desea borrar la Meta "'+mi.meta.id+'"?'
+							, '¿Desea borrar la Meta "'+meta.id+'"?'
 							, "Borrar"
 							, "Cancelar")
 					.result.then(function(data) {
 						if(data){
-							$http.post('/SMeta', {
-								accion: 'borrarMeta',
-								id: mi.meta.id,
-								t: (new Date()).getTime()
-							}).success(function(response){
-								if(response.success){
-									$utilidades.mensaje('success','Meta borrada con éxito');
-									mi.meta = null;
-									mi.obtenerTotalMetas();
-								}
-								else
-									$utilidades.mensaje('danger','Error al borrar la Meta');
-							});
+							var index = mi.metas.indexOf(meta);
+							if (index > -1) {
+								mi.metas.splice(index, 1);
+								mi.mostrarValores = false;
+							}
 						}
 					}, function(){
 						
 					});
-				}
-				else
-					$utilidades.mensaje('warning','Debe seleccionar la Meta que desea borrar');
 			};
-
-			mi.nueva = function() {
-				mi.mostraringreso=true;
-				mi.esnueva = true;
-				mi.meta = {};
-				mi.tipoMetaSeleccionado=null;				
-				mi.unidadMedidaSeleccionado=null;
-				mi.tipoValorSeleccionado = {
-						"id" : 3,
-						"nombre" : "decimal"
-				}
-				mi.gridApi.selection.clearSelectedRows();
-				$utilidades.setFocus(document.getElementById("nombre"));
-			};
-
-			mi.editar = function() {
-				if(mi.meta!=null && mi.meta.id!=null){
-					mi.mostraringreso = true;
-					mi.esnueva = false;
-					mi.tipoMetaSeleccionado = {
-							"id" : mi.meta.tipoMetaId,
-							"nombre" : mi.meta.tipoMetaNombre
-					}
-					mi.unidadMedidaSeleccionado = {
-							"id" : mi.meta.unidadMedidaId,
-							"nombre" : mi.meta.unidadMedidaNombre
-					}
-					mi.tipoValorSeleccionado = {
-							"id" : 3,
-							"nombre" : "decimal"
-					}
-					$utilidades.setFocus(document.getElementById("nombre"));
-				}
-				else{
-					$utilidades.mensaje('warning','Debe seleccionar la Meta que desea editar');
-				}
-			}
-
-
-//			mi.cargarTabla = function(pagina){
-//				mi.mostrarcargando=true;
-//				$http.post('/SMeta', { accion: 'getMetasPagina', pagina: pagina, numerometas: $utilidades.elementosPorPagina, 
-//					id:mi.objeto_id, tipo: mi.objeto_tipo,
-//					filtro_nombre: mi.filtros['nombre'], 
-//					filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
-//					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()
-//				}).success(
-//						function(response) {
-//							mi.metas = response.Metas;
-//							mi.gridOptions.data = mi.metas;
-//							mi.mostrarcargando = false;
-//							mi.paginaActual = pagina;
-//						});
-//			}
 			
-//			mi.reiniciarVista=function(){
-//				if($location.path()=='/meta/'+mi.objeto_id + '/' + mi.objeto_tipo + '/rv')
-//					$route.reload();
-//				else
-//					$location.path('/meta/'+mi.objeto_id + '/' + mi.objeto_tipo + '/rv');
-//			}
+			mi.agregarAvances = function() {
+				var modalInstance = $uibModal.open({
+					animation : 'true',
+					ariaLabelledBy : 'modal-title',
+					ariaDescribedBy : 'modal-body',
+					templateUrl : 'metaAvance.jsp',
+					controller : 'modalMetaAvances',
+					controllerAs : 'modalAvances',
+					backdrop : 'static',
+					size : 'md',
+					resolve: {
+					    avance: function(){
+					    	return mi.meta.avance;
+					    },
+					    nombreMeta: function(){
+					    	return mi.meta.nombre;
+					    },
+					    anio: function(){
+					    	return mi.anio;
+					    }
+					  }
+				});
+
+				modalInstance.result.then(function() {
+					mi.getMetasAnio(mi.meta, mi.anio);
+				}, function() {
+				});
+
+			};
 
 		}
 	]);
+
+
+app.controller('modalMetaAvances', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log','dialogoConfirmacion', 'avance', 'nombreMeta', 'anio',
+	function ($uibModalInstance, $scope, $http, $interval,
+		i18nService, $utilidades, $timeout, $log,$dialogoConfirmacion, avance, nombreMeta, anio) {
+	
+		var mi = this;
+		
+		mi.avance = avance;
+		mi.nombreMeta = nombreMeta;
+		mi.anio = anio;
+		mi.formatofecha = 'dd/MM/yyyy';
+		
+		//*****************Manejo de fechas ??????
+		
+		mi.abrirPopupFecha = function(index) {
+			mi.avance[index].isOpen = true;
+		};
+
+		mi.fechaOptions = {
+				formatYear : 'yy',
+				maxDate : new Date(2050, 12, 31),
+				minDate : new Date(1990, 1, 1),
+				startingDay : 1
+		};
+				
+		mi.nuevoAvance = function(){
+			mi.avance.push({  
+	               "fecha": new Date(),
+	               "valor":null,
+	               "usuario":"admin"
+	            });
+		}
+		
+		mi.borrarAvance = function(row){
+			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+					, "Confirmación de Borrado"
+					, '¿Desea borrar el avance con fecha '+row.fecha+'?'
+					, "Borrar"
+					, "Cancelar")
+			.result.then(function(data) {
+				if(data){
+					var index = mi.avance.indexOf(row);
+					if (index > -1) {
+						mi.avance.splice(index, 1);
+					}
+				}
+			}, function(){
+				
+			});
+		}
+		
+		mi.ok = function() {
+			$uibModalInstance.close();
+		};
+	
+	}
+]);

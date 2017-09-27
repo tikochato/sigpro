@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -92,7 +91,7 @@ public class SMeta extends HttpServlet {
 	}
 	
 	public class stavance{
-		Date fecha;
+		String fecha;
 		String valor;
 		String usuario;
 	}
@@ -176,12 +175,12 @@ public class SMeta extends HttpServlet {
 						break;
 					case 3: //decimal
 						temp.metaFinal = meta.getMetaFinalDecimal() !=null  ? meta.getMetaFinalDecimal().toString(): null;
+						break;
 					case 4: //boolean
 						temp.metaFinal = meta.getMetaFinalString();
 						break;
 					case 5: //fecha
 						temp.metaFinal = Utils.formatDate(meta.getMetaFinalFecha());
-						break;
 				}
 				tmetas.add(temp);
 			}
@@ -217,18 +216,19 @@ public class SMeta extends HttpServlet {
 						break;
 					case 3: //decimal
 						temp.metaFinal = meta.getMetaFinalDecimal() !=null  ? meta.getMetaFinalDecimal().toString(): null;
+						break;
 					case 4: //boolean
 						temp.metaFinal = meta.getMetaFinalString();
 						break;
 					case 5: //fecha
 						temp.metaFinal = Utils.formatDate(meta.getMetaFinalFecha());
-						break;
 				}
 				Set<MetaAvance> metaavances = meta.getMetaAvances();
 				temp.avance = new stavance[metaavances.size()];
 				int i=0;
 				for (MetaAvance ma : metaavances) {
-					temp.avance[i].fecha = ma.getId().getFecha();
+					temp.avance[i] = new stavance();
+					temp.avance[i].fecha = Utils.formatDate(ma.getId().getFecha());
 					switch(meta.getDatoTipo().getId()){
 					case 1: //texto
 						temp.avance[i].valor = ma.getValorString();
@@ -238,12 +238,12 @@ public class SMeta extends HttpServlet {
 						break;
 					case 3: //decimal
 						temp.avance[i].valor = ma.getValorDecimal() !=null  ? ma.getValorDecimal().toString(): null;
+						break;
 					case 4: //boolean
 						temp.avance[i].valor = ma.getValorString();
 						break;
 					case 5: //fecha
 						temp.avance[i].valor = Utils.formatDate(ma.getValorTiempo());
-						break;
 					}
 					temp.avance[i].usuario = ma.getUsuario();
 					i++;
@@ -252,6 +252,7 @@ public class SMeta extends HttpServlet {
 				temp.planificado = new stplanificado[metaplanificado.size()];
 				i=0;
 				for (MetaPlanificado mp : metaplanificado) {
+					temp.planificado[i] = new stplanificado();
 					temp.planificado[i].ejercicio = mp.getId().getEjercicio();
 					switch(meta.getDatoTipo().getId()){
 						case 1: //texto
@@ -295,6 +296,7 @@ public class SMeta extends HttpServlet {
 							temp.planificado[i].octubre = mp.getOctubreDecimal() !=null  ? mp.getOctubreDecimal().toString(): null;
 							temp.planificado[i].noviembre = mp.getNoviembreDecimal() !=null  ? mp.getNoviembreDecimal().toString(): null;
 							temp.planificado[i].diciembre = mp.getDiciembreDecimal() !=null  ? mp.getDiciembreDecimal().toString(): null;
+							break;
 						case 4: //boolean
 							temp.planificado[i].enero = mp.getEneroString();
 							temp.planificado[i].febrero = mp.getFebreroString();
@@ -322,7 +324,6 @@ public class SMeta extends HttpServlet {
 							temp.planificado[i].octubre = Utils.formatDate(mp.getOctubreTiempo());
 							temp.planificado[i].noviembre = Utils.formatDate(mp.getNoviembreTiempo());
 							temp.planificado[i].diciembre = Utils.formatDate(mp.getDiciembreTiempo());
-							break;
 						}
 					temp.planificado[i].usuario = mp.getUsuario();
 					i++;
@@ -360,7 +361,6 @@ public class SMeta extends HttpServlet {
 				DatoTipo datoTipo = DatoTipoDAO.getDatoTipo(datoTipoId);
 				Integer objetoId = Utils.getParameterInteger(map, "objetoId");
 				Integer objetoTipo = Utils.getParameterInteger(map, "objetoTipo");
-				String metaFinal = map.get("metaFinal");
 				
 				Meta Meta;
 				if(esnuevo){

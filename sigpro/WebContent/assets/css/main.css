@@ -563,3 +563,6 @@ h2 {
 *:focus {
     outline: none;
 }
+
+/*seleccion en smart-table*/
+.st-selected { background-color: #e0ffff; }

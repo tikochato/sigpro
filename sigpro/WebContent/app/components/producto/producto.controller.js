@@ -1,5 +1,5 @@
 var moduloProducto = angular.module('moduloProducto', [ 'ngTouch',
-		'smart-table', 'ui.grid.edit', 'ui.grid.rowEdit', 'ui.grid.pinning', 'ui.grid.autoResize']);
+		'smart-table', 'ui.grid.pinning', 'ui.grid.autoResize']);
 
 moduloProducto.controller('controlProducto', [ '$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http', '$rootScope',
@@ -39,9 +39,6 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.objetoTipoNombre = "";
 	mi.entidad='';
 	mi.ejercicio = '';
-
-	$scope.objeto_id = null;
-	$scope.objeto_tipo = 3;
 	
 	mi.metasCargadas = false;
 	
@@ -765,12 +762,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			$rootScope.$emit("cambiarNombreNodo",mi.producto.nombre);
 		}
 		
-		
-		
-		
 		mi.metasActivo = function(){
 			if(!mi.metasCargadas){
-				$scope.objeto_id = mi.producto.id;
 				mi.metasCargadas = true;
 			}
 		}
