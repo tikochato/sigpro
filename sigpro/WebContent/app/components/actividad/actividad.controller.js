@@ -315,8 +315,12 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						mi.actividad.fechaActualizacion=response.fechaactualizacion;
 						if(!mi.esTreeview)
 							mi.obtenerTotalActividades();
-						else
-							mi.t_cambiarNombreNodo();
+						else{
+							if(!mi.esnuevo)
+								mi.t_cambiarNombreNodo();
+							else
+								mi.t_crearNodo(mi.actividad.id, mi.actividad.nombre,5,true);
+						}
 						mi.esnuevo = false;		
 						mi.esNuevoDocumento = false;
 						$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
@@ -374,7 +378,8 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 			mi.actividad = {};
 			mi.coordenadas = "";
 			mi.duracionDimension = mi.dimensiones[0];
-			mi.gridApi.selection.clearSelectedRows();
+			if(!mi.esTreeview)
+				mi.gridApi.selection.clearSelectedRows();
 			mi.actividad.porcentajeavance = 0;
 			$utilidades.setFocus(document.getElementById("inombre"));
 			mi.responsables =[];
@@ -772,16 +777,21 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 	  }
 	  
 	  if(mi.esTreeview){
-		  $http.post('/SActividad', { accion : 'getActividadPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
-					if (response.data.success) {
-						mi.actividad = response.data.actividad;
-						if(mi.actividad.fechaInicio != "")
-							mi.actividad.fechaInicio = moment(mi.actividad.fechaInicio, 'DD/MM/YYYY').toDate();
-						if(mi.actividad.fechaFin != "")
-							mi.actividad.fechaFin = moment(mi.actividad.fechaFin, 'DD/MM/YYYY').toDate();
-						mi.editar();
-					}
-				});
+		  if($routeParams.nuevo==1){
+			  mi.nuevo();
+		  }
+		  else{
+			  $http.post('/SActividad', { accion : 'getActividadPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
+						if (response.data.success) {
+							mi.actividad = response.data.actividad;
+							if(mi.actividad.fechaInicio != "")
+								mi.actividad.fechaInicio = moment(mi.actividad.fechaInicio, 'DD/MM/YYYY').toDate();
+							if(mi.actividad.fechaFin != "")
+								mi.actividad.fechaFin = moment(mi.actividad.fechaFin, 'DD/MM/YYYY').toDate();
+							mi.editar();
+						}
+					});
+		  }
 	  }
 	  
 	  mi.t_borrar = function(ev) {
@@ -822,6 +832,10 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		
 		mi.t_cambiarNombreNodo = function(ev){
 			$rootScope.$emit("cambiarNombreNodo",mi.actividad.nombre);
+		}
+		
+		mi.t_crearNodo=function(id,nombre,objeto_tipo,estado){
+			$rootScope.$emit("crearNodo",{ id: id, nombre: nombre, objeto_tipo: objeto_tipo, estado: estado })
 		}
 } ]);
 

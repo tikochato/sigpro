@@ -252,7 +252,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	}
 
 	mi.limpiarSeleccion = function() {
-		mi.gridApi.selection.clearSelectedRows();
+		if(!mi.esTreeview)
+			mi.gridApi.selection.clearSelectedRows();
 		mi.seleccionada = false;
 	}
 
@@ -346,16 +347,19 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							mi.data = response.data.productos;
 							mi.opcionesGrid.data = mi.data;
 							$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+							if(!mi.esTreeview)
+								mi.obtenerTotalProductos();
+							else
+								if(!mi.esNuevo)
+									mi.t_cambiarNombreNodo();
+								else
+									mi.t_crearNodo(mi.producto.id,mi.producto.nombre,3,true);
 							mi.esNuevo = false;
 							mi.producto.id = response.data.id;
 							mi.producto.usuarioCreo = response.data.usuarioCreo;
 							mi.producto.fechaCreacion = response.data.fechaCreacion;
 							mi.producto.usuarioactualizo = response.data.usuarioactualizo;
 							mi.producto.fechaactualizacion = response.data.fechaactualizacion;
-							if(!mi.esTreeview)
-								mi.obtenerTotalProductos();
-							else
-								mi.t_cambiarNombreNodo();
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el Producto');
 						}
@@ -710,16 +714,21 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	  };
 	  
 	  if(mi.esTreeview){
-		  $http.post('/SProducto', { accion : 'getProductoPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
-					if (response.data.success) {
-						mi.producto = response.data.producto;
-						if(mi.producto.fechaInicio != "")
-							mi.producto.fechaInicio = moment(mi.producto.fechaInicio, 'DD/MM/YYYY').toDate();
-						if(mi.producto.fechaFin != "")
-							mi.producto.fechaFin = moment(mi.producto.fechaFin, 'DD/MM/YYYY').toDate();
-						mi.editar();
-					}
-				});
+		  if($routeParams.nuevo==1){
+			  mi.nuevo();
+		  }
+		  else{
+			  $http.post('/SProducto', { accion : 'getProductoPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
+						if (response.data.success) {
+							mi.producto = response.data.producto;
+							if(mi.producto.fechaInicio != "")
+								mi.producto.fechaInicio = moment(mi.producto.fechaInicio, 'DD/MM/YYYY').toDate();
+							if(mi.producto.fechaFin != "")
+								mi.producto.fechaFin = moment(mi.producto.fechaFin, 'DD/MM/YYYY').toDate();
+							mi.editar();
+						}
+					});
+		  }
 	  }
 	  
 	  mi.t_borrar = function(ev) {
@@ -762,12 +771,16 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			$rootScope.$emit("cambiarNombreNodo",mi.producto.nombre);
 		}
 		
+		mi.t_crearNodo=function(id,nombre,objeto_tipo,estado){
+			$rootScope.$emit("crearNodo",{ id: id, nombre: nombre, objeto_tipo: objeto_tipo, estado: estado })
+		}
+
 		mi.metasActivo = function(){
 			if(!mi.metasCargadas){
 				mi.metasCargadas = true;
 			}
 		}
-			  
+	  
 }
 
 moduloProducto.controller('modalBuscarPorProducto', [ '$uibModalInstance',

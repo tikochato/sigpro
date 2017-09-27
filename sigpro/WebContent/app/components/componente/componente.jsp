@@ -92,8 +92,8 @@
 		</div>
 		<div class="row second-main-form" ng-show="componentec.mostraringreso || componentec.esTreeview">
 			<div class="page-header">
-				<h2 ng-hide="!componentec.esnuevo"><small>Nuevo componente</small></h2>
-				<h2 ng-hide="componentec.esnuevo"><small>Edición de componente</small></h2>
+				<h2 ng-if="componentec.esnuevo"><small>Nuevo componente</small></h2>
+				<h2 ng-if="!componentec.esnuevo"><small>Edición de componente</small></h2>
 			</div>
 			
     		<div class="operation_buttons">
@@ -350,16 +350,17 @@
 			</div>
 			
 			<div class="col-sm-12 operation_buttons" align="right">
-				<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
+				<div align="center" class="label-form">Los campos marcados con * son obligatorios y las fechas deben tener formato de dd/mm/yyyy</div>
+				<br/>
 				<div class="col-sm-12">
 					<div class="btn-group" ng-disabled="!componentec.botones">
 						 <shiro:hasPermission name="5020">
-						      <label class="btn btn-success" ng-click="componentec.mForm.$valid && componentec.botones ? componentec.guardar() : ''" ng-disabled="!componentec.mForm.$valid || !componentec.botones" title="Guardar">
+						      <label class="btn btn-success" ng-click="componentec.mForm.$valid && componentec.botones ? componentec.guardar() : ''" ng-disabled="!componentec.mForm.$valid || !componentec.botones" title="Guardar" uib-tooltip="Guardar" tooltip-placement="top">
 						      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 						    </shiro:hasPermission>
-						    <label ng-if="!componentec.esTreeview" class="btn btn-primary" ng-click="componentec.botones ? componentec.irATabla() :''" title="Ir a Tabla" ng-disabled="!componentec.botones">
+						    <label ng-if="!componentec.esTreeview" class="btn btn-primary" ng-click="componentec.botones ? componentec.irATabla() :''" title="Ir a Tabla" ng-disabled="!componentec.botones" uib-tooltip="Ir a Tabla" tooltip-placement="top">
 						    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-						    <label ng-if="componentec.esTreeview" class="btn btn-danger" ng-click=" componentec.botones ? componentec.t_borrar() : ''" ng-disabled="!(componentec.componente.id>0) || !componentec.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+						    <label ng-if="componentec.esTreeview" class="btn btn-danger" ng-click=" componentec.botones && componentec.componente.id>0  ? componentec.t_borrar() : ''" ng-disabled="!(componentec.componente.id>0) || !componentec.botones" uib-tooltip="Borrar" tooltip-placement="top">
 							<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 	    			</div>
 	    		</div>

@@ -218,12 +218,12 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 		switch(tipo){
 			case 1: //componente
 				$location.path('/componente/'+mi.nodo_seleccionado.id+'/0/1'); break;
-			case 2: //proudcto
+			case 2: //producto
 				$location.path('/producto/'+mi.nodo_seleccionado.id+'/0/1'); break;
 			case 3: //subproducto
 				$location.path('/subproducto/'+mi.nodo_seleccionado.id+'/0/1'); break;
 			case 4: //actividad
-				$location.path('/actividad/'+mi.nodo_seleccionado.parent.id+'/'+mi.nodo_seleccionado.parent.objeto_tipo+'/0/1'); break;
+				$location.path('/actividad/'+mi.nodo_seleccionado.id+'/'+mi.nodo_seleccionado.objeto_tipo+'/0/1'); break;
 		}
 	}
 	
@@ -240,14 +240,18 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	});
 	
 	mi.eliminaNodo=function(){
-		if(mi.nodo_seleccionado){
+		if(mi.nodo_seleccionado && mi.nodo_seleccionado.parent!=null){
 			var parent = mi.nodo_seleccionado.parent;
 			for(var i=0; i<parent.children.length;i++){
 				if(parent.children[i].id==mi.nodo_seleccionado.id && parent.children[i].objeto_tipo==mi.nodo_seleccionado.objeto_tipo){
 					parent.children.splice(i,1);
 				}
 			}
+			mi.nodo_seleccionado = parent;
+			mi.showSelected(mi.nodo_seleccionado);
 		}
+		else
+			mi.treedata=[];
 	}
 	
 	mi.cambiarNombreNodo=function(nombre){
