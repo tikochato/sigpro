@@ -25,6 +25,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     mi.etiquetasChartLine = [];
     mi.actividadesterminadas = [];
     mi.estructuraPrestamo = [];
+    mi.mostrarcargando=false;
     
     
     mi.pieColors = ['#fd7b7d','#dddd7d','#bae291','#9cc3e2'];
@@ -167,7 +168,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	}
 	
 	mi.displayObjeto = function(objetoSeleccionado){
-		mi.mostrarcargando=false;
+		//mi.mostrarcargando=false;
 		if(objetoSeleccionado === 0){
 			mi.entidadHide = false;
 			mi.unidadEjecutoraHide = false;
@@ -250,7 +251,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			mi.grafica = true;
 			mi.idPrestamo = mi.prestamo.value;
 			mi.mostrar = false;
-			
+			mi.mostrarcargando=true;
 			$http.post('/SCargaTrabajo', {accion: 'getEstructrua', idPrestamo :mi.prestamo.value,
 				t: new Date().getTime()}).success(
 					function(response){
@@ -296,8 +297,10 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 								    		 mi.actividadesACumplirTotal,mi.actividadesCompletadas];
 								    	 
 								    	 mi.mostrar = mi.rowCollection.length > 0 ? true : false;
+								    	 mi.mostrarcargando=false;
 								    	 if (!mi.mostrar)
 								    		 $utilidades.mensaje('warning','No se encontraron datos relacionados');
+								    	 
 									}
 								});
 						
