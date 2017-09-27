@@ -372,11 +372,6 @@
 	        <i class="glyphicon glyphicon-bell"></i> Adquisiciones
 	      </uib-tab-heading>
 	    </uib-tab>
-	    <uib-tab index="4">
-	      <uib-tab-heading>
-	        <i class="glyphicon glyphicon-bell"></i> Desembolsos
-	      </uib-tab-heading>
-	    </uib-tab>
 	  </uib-tabset>
 	</div>	
 		<div class="col-sm-12 operation_buttons" align="right">

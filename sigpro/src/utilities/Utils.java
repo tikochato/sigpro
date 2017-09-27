@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -187,6 +188,19 @@ public class Utils {
 			}
 		}
 		return rdate;
+	}
+	
+	public static Timestamp stringToTimestamp(String date){
+		Timestamp ret=null;
+		if(date!=null && date.length()>0){
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'");
+			try {
+				ret = new Timestamp(sdf.parse(date).getTime());
+			} catch (ParseException e) {
+				ret = null;
+			}
+		}
+		return ret;
 	}
 	
 	public static Integer getParameterInteger(Map<String, String> map,String name){
