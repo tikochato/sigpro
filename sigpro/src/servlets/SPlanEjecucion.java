@@ -28,6 +28,8 @@ import dao.MetaTipoDAO;
 import dao.PrestamoDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
+import pojo.Meta;
+import pojo.MetaPlanificado;
 import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Proyecto;
@@ -67,7 +69,7 @@ public class SPlanEjecucion extends HttpServlet {
 			Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
 			Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(proyectoId, 1);
 			
-			BigDecimal ejecucionFisicaReal = calcularEjecucionFisica(proyectoId);
+			BigDecimal ejecucionFisicaReal = calcularEjecucionFisicaReal(proyecto);
 			
 			BigDecimal ejecucionFinancieraPlanificada = calcularEjecucionFinanciaeraPlanificada(proyectoId, prestamo.getCodigoPresupuestario()+"", new Date());
 			Double plazoEjecucionPlanificada = calcularPlazoEjecucionPlanificada(proyecto);
@@ -78,7 +80,7 @@ public class SPlanEjecucion extends HttpServlet {
 		    df.setMaximumFractionDigits(2);
 		    
 			response_text = String.join("", "{ \"success\": true ,",
-					"\"ejecucionFisicaR\": \"" , df.format((ejecucionFisicaReal.floatValue() * 100.00)) + "" , "\",",
+					"\"ejecucionFisicaR\": \"" , df.format((ejecucionFisicaReal.floatValue() )) + "" , "\",",
 					"\"ejecucionFinancieraP\": \"" , df.format((ejecucionFinancieraPlanificada.floatValue() * 100.00)) + "" , "\",",
 					"\"plazoEjecucionP\": \"" , df.format((plazoEjecucionPlanificada.floatValue() * 100.00)) + "" , "\",",
 					"\"ejecucionFisicaP\": \"" , df.format((ejecucionFisicaPlanificada.floatValue() * 100.00)) + "" , "\",",
@@ -100,20 +102,12 @@ public class SPlanEjecucion extends HttpServlet {
         output.close();
 	}
 	
-	public BigDecimal calcularEjecucionFisica(Integer proyectoId){
+	public BigDecimal calcularEjecucionFisicaReal(Proyecto proyecto){
 		
-		List<Producto> productos = ProductoDAO.getProductosPorProyecto(proyectoId, null);
-		BigDecimal ejecucionFisica = new BigDecimal("0");
 		
-		for(Producto producto : productos){
-			BigDecimal mvReal = MetaTipoDAO.getMetaValorPorIdObjetoTipoMeta(producto.getId(), 3, 1);
-			BigDecimal mvFinal = MetaTipoDAO.getMetaValorPorIdObjetoTipoMeta(producto.getId(), 3, 4);
-			if (mvReal!=null && mvFinal!=null){
-				ejecucionFisica = ejecucionFisica.add(mvReal.divide(mvFinal, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(
-						(producto.getPeso() !=null ? (double) producto.getPeso() : (Double) (100.0 / productos.size())) / 100)));
-			}
-			
-		}
+		BigDecimal ejecucionFisica = new BigDecimal(proyecto.getEjecucionFisicaReal()!= null ? 
+				proyecto.getEjecucionFisicaReal():0);
+		
 		return ejecucionFisica;
 	}
 	
@@ -142,7 +136,7 @@ public class SPlanEjecucion extends HttpServlet {
 			Long fin = proyecto.getFechaFin().getTime();
 			
 			Long total = fin - inicio;
-			Long transcurrido = fin - hoy;
+			Long transcurrido = hoy - inicio;
 			
 			return transcurrido*1.0/total;
 			
@@ -155,16 +149,149 @@ public BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
 		
 		List<Producto> productos = ProductoDAO.getProductosPorProyecto(proyectoId, null);
 		BigDecimal ejecucionFisica = new BigDecimal("0");
+		Date fecha = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+		int anio = Integer.parseInt(sdf.format(fecha));
+		sdf = new SimpleDateFormat("MM");
+		int mes = Integer.parseInt(sdf.format(fecha));
 		
 		for(Producto producto : productos){
-			BigDecimal mvPlanificada = MetaTipoDAO.getMetaValorPorIdObjetoTipoMeta(producto.getId(), 3, 2);
-			BigDecimal mvFinal = MetaTipoDAO.getMetaValorPorIdObjetoTipoMeta(producto.getId(), 3, 4);
-			if (mvPlanificada!=null && mvFinal!=null){
-				ejecucionFisica = ejecucionFisica.add(mvPlanificada.divide(mvFinal, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(
+			
+			List<Meta> metas = MetaTipoDAO.getMetasPorObjeto(producto.getId(), 3);
+			BigDecimal metaFinal = new BigDecimal(0);
+			BigDecimal metaPlanificada = new BigDecimal(0);
+			for (Meta meta : metas){
+				metaFinal = metaFinal.add( meta.getObjetoTipo()==2 ? 
+						new BigDecimal(meta.getMetaFinalEntero() != null ? meta.getMetaFinalEntero() : 0) : 
+							(meta.getMetaFinalDecimal() != null ? meta.getMetaFinalDecimal() : new BigDecimal(0)) );
+				
+				List<MetaPlanificado> planificadas = MetaTipoDAO.getMetasPlanificadas(meta.getId());
+				for (MetaPlanificado planificado : planificadas){
+					if (planificado.getId().getEjercicio() < anio){
+						metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+								new BigDecimal(planificado.getEneroEntero()!= null ? planificado.getEneroEntero() : 0) :
+									(planificado.getEneroDecimal() !=null ? planificado.getEneroDecimal() : new BigDecimal(0)));
+						
+						metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+								new BigDecimal(planificado.getFebreroEntero()!= null ? planificado.getFebreroEntero() : 0) :
+									(planificado.getFebreroDecimal() !=null ? planificado.getFebreroDecimal() : new BigDecimal(0)));
+						
+						metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+								new BigDecimal(planificado.getMarzoEntero()!= null ? planificado.getMarzoEntero() : 0) :
+									(planificado.getMarzoDecimal() !=null ? planificado.getMarzoDecimal() : new BigDecimal(0)));
+						
+						metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+								new BigDecimal(planificado.getAbrilEntero()!= null ? planificado.getAbrilEntero() : 0) :
+									(planificado.getAbrilDecimal() !=null ? planificado.getAbrilDecimal() : new BigDecimal(0)));
+						
+						metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+								new BigDecimal(planificado.getMayoEntero()!= null ? planificado.getMayoEntero() : 0) :
+									(planificado.getMayoDecimal() !=null ? planificado.getMayoDecimal() : new BigDecimal(0)));
+						
+						metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+								new BigDecimal(planificado.getJunioEntero()!= null ? planificado.getJunioEntero() : 0) :
+									(planificado.getJunioDecimal() !=null ? planificado.getJunioDecimal() : new BigDecimal(0)));
+						
+						metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+								new BigDecimal(planificado.getJulioEntero()!= null ? planificado.getJulioEntero() : 0) :
+									(planificado.getJulioDecimal() !=null ? planificado.getJulioDecimal() : new BigDecimal(0)));
+						
+						metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+								new BigDecimal(planificado.getAgostoEntero()!= null ? planificado.getAgostoEntero() : 0) :
+									(planificado.getAgostoDecimal() !=null ? planificado.getAgostoDecimal() : new BigDecimal(0)));
+						
+						metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+								new BigDecimal(planificado.getSeptiembreEntero()!= null ? planificado.getSeptiembreEntero() : 0) :
+									(planificado.getSeptiembreDecimal() !=null ? planificado.getSeptiembreDecimal() : new BigDecimal(0)));
+						
+						metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+								new BigDecimal(planificado.getOctubreEntero()!= null ? planificado.getOctubreEntero() : 0) :
+									(planificado.getOctubreDecimal() !=null ? planificado.getOctubreDecimal() : new BigDecimal(0)));
+						
+						metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+								new BigDecimal(planificado.getNoviembreEntero()!= null ? planificado.getNoviembreEntero() : 0) :
+									(planificado.getSeptiembreDecimal() !=null ? planificado.getSeptiembreDecimal() : new BigDecimal(0)));
+						
+						metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+								new BigDecimal(planificado.getNoviembreEntero()!= null ? planificado.getNoviembreEntero() : 0) :
+									(planificado.getSeptiembreDecimal() !=null ? planificado.getSeptiembreDecimal() : new BigDecimal(0)));
+					}else if (planificado.getId().getEjercicio() == anio) {
+						for (int i = 1 ; i <= mes;i++){
+							switch (i){
+								case 1:
+									metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+											new BigDecimal(planificado.getEneroEntero()!= null ? planificado.getEneroEntero() : 0) :
+												(planificado.getEneroDecimal() !=null ? planificado.getEneroDecimal() : new BigDecimal(0)));
+									break;
+								case 2:
+									metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+											new BigDecimal(planificado.getFebreroEntero()!= null ? planificado.getFebreroEntero() : 0) :
+												(planificado.getFebreroDecimal() !=null ? planificado.getFebreroDecimal() : new BigDecimal(0)));
+									break;
+								case 3:
+									metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+											new BigDecimal(planificado.getMarzoEntero()!= null ? planificado.getMarzoEntero() : 0) :
+												(planificado.getMarzoDecimal() !=null ? planificado.getMarzoDecimal() : new BigDecimal(0)));
+									break;
+								case 4:
+									metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+											new BigDecimal(planificado.getAbrilEntero()!= null ? planificado.getAbrilEntero() : 0) :
+												(planificado.getAbrilDecimal() !=null ? planificado.getAbrilDecimal() : new BigDecimal(0)));
+									break;
+								case 5:
+									metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+											new BigDecimal(planificado.getMayoEntero()!= null ? planificado.getMayoEntero() : 0) :
+												(planificado.getMayoDecimal() !=null ? planificado.getMayoDecimal() : new BigDecimal(0)));
+									break;
+								case 6:
+									metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+											new BigDecimal(planificado.getJunioEntero()!= null ? planificado.getJunioEntero() : 0) :
+												(planificado.getJunioDecimal() !=null ? planificado.getJunioDecimal() : new BigDecimal(0)));
+									break;
+								case 7:
+									metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+											new BigDecimal(planificado.getJulioEntero()!= null ? planificado.getJulioEntero() : 0) :
+												(planificado.getJulioDecimal() !=null ? planificado.getJulioDecimal() : new BigDecimal(0)));
+									break;
+								case 8:
+									metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+											new BigDecimal(planificado.getAgostoEntero()!= null ? planificado.getAgostoEntero() : 0) :
+												(planificado.getAgostoDecimal() !=null ? planificado.getAgostoDecimal() : new BigDecimal(0)));
+									break;
+								case 9:
+									metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+											new BigDecimal(planificado.getSeptiembreEntero()!= null ? planificado.getSeptiembreEntero() : 0) :
+												(planificado.getSeptiembreDecimal() !=null ? planificado.getSeptiembreDecimal() : new BigDecimal(0)));
+									break;
+								case 10:
+									metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+											new BigDecimal(planificado.getOctubreEntero()!= null ? planificado.getOctubreEntero() : 0) :
+												(planificado.getOctubreDecimal() !=null ? planificado.getOctubreDecimal() : new BigDecimal(0)));
+									break;
+								case 11:
+									metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+											new BigDecimal(planificado.getNoviembreEntero()!= null ? planificado.getNoviembreEntero() : 0) :
+												(planificado.getSeptiembreDecimal() !=null ? planificado.getSeptiembreDecimal() : new BigDecimal(0)));
+									break;
+								case 12:
+									metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
+											new BigDecimal(planificado.getNoviembreEntero()!= null ? planificado.getNoviembreEntero() : 0) :
+												(planificado.getSeptiembreDecimal() !=null ? planificado.getSeptiembreDecimal() : new BigDecimal(0)));
+									break;
+							}
+						}
+					}	
+				}	
+			}
+			
+			if (metaPlanificada!=null && metaFinal!=null){
+				ejecucionFisica = ejecucionFisica.add(metaPlanificada.divide(metaFinal, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(
 						(producto.getPeso() !=null ? (double) producto.getPeso() : (Double) (100.0 / productos.size())) / 100)));
 			}
 			
 		}
-		return ejecucionFisica;
+		return ejecucionFisica; 
+		
+	
 	}
 }
