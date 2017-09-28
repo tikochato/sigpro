@@ -148,9 +148,6 @@
 					</canvas>	
 		    		</div>
 		    	
-		    	
-		    		
-		    	
 		    	</div>
 		    	<div class="row" ng-hide="!controller.mostrarcargando">
 		    	<div class="grid_loading"  style="margin-top: 50px;"   >

@@ -16,6 +16,7 @@
         <mapping class="pojo.ActividadUsuarioId" />
         <mapping class="pojo.AcumulacionCosto" />
         <mapping class="pojo.AsignacionRaci" />
+        <mapping class="pojo.AutorizacionTipo" />
         <mapping class="pojo.ComponenteUsuario" />
         <mapping class="pojo.ComponenteUsuarioId" />
         <mapping class="pojo.ProyectoUsuario" />
@@ -26,7 +27,6 @@
         <mapping class="pojo.ActividadPropiedadValor" />
         <mapping class="pojo.ActividadTipo" />
         <mapping class="pojo.AtipoPropiedad" />
-        <mapping class="pojo.AutorizacionTipo" />
         <mapping class="pojo.Colaborador" />
         <mapping class="pojo.Componente" />
         <mapping class="pojo.ComponentePropiedad" />
@@ -38,10 +38,10 @@
         <mapping class="pojo.DatoTipo" />
         <mapping class="pojo.Desembolso" />
         <mapping class="pojo.DesembolsoTipo" />
-        <mapping class="pojo.Documento" /> 
+        <mapping class="pojo.Documento" />
         <mapping class="pojoSigade.DtmAvanceFisfinanDetDti" />
         <mapping class="pojoSigade.DtmAvanceFisfinanDti" />
-         <mapping class="pojo.EjecucionEstado" />
+        <mapping class="pojo.EjecucionEstado" />
         <mapping class="pojo.Entidad" />
         <mapping class="pojo.EstadoInforme" />
         <mapping class="pojo.EstadoTabla" />
@@ -54,13 +54,16 @@
         <mapping class="pojo.Hito" />
         <mapping class="pojo.HitoResultado" />
         <mapping class="pojo.HitoTipo" />
-        <mapping class="pojo.InformePresupuesto" />
         <mapping class="pojo.InteresTipo" />
+        <mapping class="pojo.InformePresupuesto" />
         <mapping class="pojo.MatrizRaci" />
         <mapping class="pojo.Meta" />
         <mapping class="pojo.MetaTipo" />
         <mapping class="pojo.MetaUnidadMedida" />
-        <mapping class="pojo.MetaValor" />
+        <mapping class="pojo.MetaAvance" />
+        <mapping class="pojo.MetaAvanceId" />
+        <mapping class="pojo.MetaPlanificado" />
+        <mapping class="pojo.MetaPlanificadoId" />
         <mapping class="pojo.ObjetoFormulario" />
         <mapping class="pojo.ObjetoPrestamo" />
         <mapping class="pojo.ObjetoRecurso" />
@@ -79,7 +82,6 @@
         <mapping class="pojo.Programa" />
         <mapping class="pojo.ProgramaPropiedadValor" />
         <mapping class="pojo.ProgramaPropiedad" />
-        <mapping class="pojo.ProgramaProyecto" />
         <mapping class="pojo.ProgramaTipo" />
         <mapping class="pojo.ProgtipoPropiedad" />
         <mapping class="pojo.Proyecto" />
@@ -87,6 +89,7 @@
         <mapping class="pojo.ProyectoImpacto" />
         <mapping class="pojo.ProyectoPropedadValor" />
         <mapping class="pojo.ProyectoPropiedad" />
+        <mapping class="pojo.ProgramaProyecto" />
         <mapping class="pojo.ProyectoTipo" />
         <mapping class="pojo.PtipoPropiedad" />
         <mapping class="pojo.RectipoPropiedad" />
@@ -102,6 +105,8 @@
         <mapping class="pojo.RiesgoTipo" />
         <mapping class="pojo.Rol" />
         <mapping class="pojo.RolPermiso" />
+        <mapping class="pojo.RolUsuarioProyecto" />
+        <mapping class="pojo.RolUsuarioProyectoId" />
         <mapping class="pojo.RtipoPropiedad" />
         <mapping class="pojo.SubprodtipoPropiedad" />
         <mapping class="pojo.SubprodtipoPropiedadId" />
@@ -112,8 +117,8 @@
         <mapping class="pojo.SubproductoTipo" />
         <mapping class="pojo.SubproductoUsuario" />
         <mapping class="pojo.SubproductoUsuarioId" />
-        <mapping class="pojo.TipoMoneda" />
         <mapping class="pojo.TipoAdquisicion" />
+        <mapping class="pojo.TipoMoneda" />
         <mapping class="pojo.UnidadEjecutora" />
         <mapping class="pojo.UnidadMedida" />
         <mapping class="pojo.Usuario" />
