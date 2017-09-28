@@ -2,6 +2,7 @@ package dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -11,6 +12,8 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.Meta;
+import pojo.MetaAvance;
+import pojo.MetaPlanificado;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -76,7 +79,7 @@ public class MetaDAO {
 		}
 		return ret;
 	}
-	
+		
 	public static boolean eliminarMeta(Meta Meta){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -152,6 +155,26 @@ public class MetaDAO {
 		return ret;
 	}
 	
+	public static List<Meta> getMetasObjeto(int id, int tipo){
+		List<Meta> ret = new ArrayList<Meta>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT m FROM Meta m WHERE m.estado = 1 and m.objetoId=:objetoId AND m.objetoTipo=:objetoTipo ";
+			
+			Query<Meta> criteria = session.createQuery(query,Meta.class);
+			criteria.setParameter("objetoId", id);
+			criteria.setParameter("objetoTipo", tipo);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("7", MetaDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	public static Long getTotalMetas(Integer id, Integer tipo,String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -171,7 +194,72 @@ public class MetaDAO {
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
-			CLogger.write("7", MetaDAO.class, e);
+			CLogger.write("8", MetaDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean borrarPlanificadoAvanceMeta(Meta Meta){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Set<MetaPlanificado> metaPlanificados = Meta.getMetaPlanificados();
+			if(metaPlanificados!=null){
+				for(MetaPlanificado planificado : metaPlanificados){
+					session.beginTransaction();
+					session.delete(planificado);
+					session.getTransaction().commit();
+				}
+			}
+			Set<MetaAvance> metaAvances = Meta.getMetaAvances();
+			if(metaAvances!=null){
+				for(MetaAvance avance : metaAvances){
+					session.beginTransaction();
+					session.delete(avance);
+					session.getTransaction().commit();
+				}
+			}
+			ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("9", MetaDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean agregarMetaAvance(MetaAvance metaAvance){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			session.saveOrUpdate(metaAvance);
+			session.getTransaction().commit();
+		}
+		catch(Throwable e){
+			CLogger.write("10", MetaDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean agregarMetaPlanificado(MetaPlanificado metaPlanificado){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			session.saveOrUpdate(metaPlanificado);
+			session.getTransaction().commit();
+		}
+		catch(Throwable e){
+			CLogger.write("11", MetaDAO.class, e);
 		}
 		finally{
 			session.close();
