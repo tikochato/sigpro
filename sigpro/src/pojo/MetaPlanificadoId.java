@@ -15,15 +15,13 @@ public class MetaPlanificadoId implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = -3361974376338530882L;
 	private int metaid;
-	private int mes;
 	private int ejercicio;
 
 	public MetaPlanificadoId() {
 	}
 
-	public MetaPlanificadoId(int metaid, int mes, int ejercicio) {
+	public MetaPlanificadoId(int metaid, int ejercicio) {
 		this.metaid = metaid;
-		this.mes = mes;
 		this.ejercicio = ejercicio;
 	}
 
@@ -34,15 +32,6 @@ public class MetaPlanificadoId implements java.io.Serializable {
 
 	public void setMetaid(int metaid) {
 		this.metaid = metaid;
-	}
-
-	@Column(name = "mes", nullable = false)
-	public int getMes() {
-		return this.mes;
-	}
-
-	public void setMes(int mes) {
-		this.mes = mes;
 	}
 
 	@Column(name = "ejercicio", nullable = false)
@@ -63,7 +52,7 @@ public class MetaPlanificadoId implements java.io.Serializable {
 			return false;
 		MetaPlanificadoId castOther = (MetaPlanificadoId) other;
 
-		return (this.getMetaid() == castOther.getMetaid()) && (this.getMes() == castOther.getMes())
+		return (this.getMetaid() == castOther.getMetaid())
 				&& (this.getEjercicio() == castOther.getEjercicio());
 	}
 
@@ -71,7 +60,6 @@ public class MetaPlanificadoId implements java.io.Serializable {
 		int result = 17;
 
 		result = 37 * result + this.getMetaid();
-		result = 37 * result + this.getMes();
 		result = 37 * result + this.getEjercicio();
 		return result;
 	}
