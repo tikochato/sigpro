@@ -23,7 +23,7 @@
     		</div>
     		<shiro:hasPermission name="9010">
     		<div align="center">
-				<table st-table="desembolsosc.display_desembolsos" st-safe-src="desembolsoc.desembolsos" class="table" >
+				<table st-table="desembolsoc.display_desembolsos" st-safe-src="desembolsoc.desembolsos" class="table" >
 					<thead>
 						<tr>
 							<th st-sort="fecha">Fecha</th>
@@ -35,7 +35,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="row in desembolsoc.desembolsos track by $index" >
+						<tr ng-repeat="row in desembolsoc.display_desembolsos track by $index" >
 							<td style="padding: 0px;"><div class="form-group" style="padding: 3px;">
 													<input type="text" class="inputText"   uib-datepicker-popup="{{desembolsoc.formatofecha}}" ng-model="row.fecha" is-open="row.c_abierto"
 														datepicker-options="desembolsoc.opcionesFecha" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
