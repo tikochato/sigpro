@@ -30,6 +30,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.AdministracionTransaccionalDAO;
+import dao.ColaboradorDAO;
 import utilities.CExcel;
 import utilities.CGraficaExcel;
 import utilities.CLogger;
@@ -173,9 +174,10 @@ public class SAdministracionTransaccional extends HttpServlet {
 		}else if(accion.equals("exportarPdfDetalle")){
 			try{
 				String usuarioDetalle = map.get("usuarioDetalle");
+				String colaborador = ColaboradorDAO.getColaboradorByUsuario(usuarioDetalle);
 				Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
 				Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
-				CPdf archivo = new CPdf("Detalle Administración Transaccional del usuario \"" + usuarioDetalle + "\"");
+				CPdf archivo = new CPdf("Detalle Administración Transaccional del " + (!colaborador.equals("") ? "colaborador " : "usuario ") + colaborador + "("+usuarioDetalle+")" + "\"");
 				String headers[][];
 				String datos[][];
 				headers = generarHeadersDetalle();
@@ -462,8 +464,9 @@ public class SAdministracionTransaccional extends HttpServlet {
 		try{			
 			headers = generarHeadersDetalle();
 			datos = generarDatosDetalle(usuario, fechaInicio, fechaFin);
-			excel = new CExcel("Detalle Administración Transaccional del usuario: " + usuario, false, null);
-			wb=excel.generateExcelOfData(datos, "Detalle Administración Transaccional del usuario: " + usuario, headers, null, true, usuario);
+			String colaborador = ColaboradorDAO.getColaboradorByUsuario(usuario);
+			excel = new CExcel("Detalle Administración Transaccional del " + (!colaborador.equals("") ? "colaborador " : "usuario ") + colaborador + "("+ usuario + ")", false, null);
+			wb=excel.generateExcelOfData(datos, "Detalle Administración Transaccional del " + (!colaborador.equals("") ? "colaborador " : "usuario ") +  colaborador + "("+ usuario + ")", headers, null, true, usuario);
 		
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());

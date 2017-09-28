@@ -274,7 +274,6 @@ public class CExcel {
 	
 	private void Header(String report_name, int celdasCombinadas) {
 		setCellValueString("Ministerio de Finanzas Públicas", 0, 0, true, false);
-		setCellValueString("Proyecto SIPRO", 1, 0, true, false);
 		setCellValueString(report_name, 4, 0, true, false);
 		combineCells(4, 4, 0, celdasCombinadas,false,false);
 		combineCells(0, 0, 0, 3,false,false);

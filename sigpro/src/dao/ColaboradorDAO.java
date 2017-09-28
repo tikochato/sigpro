@@ -290,5 +290,29 @@ public class ColaboradorDAO {
 	public static boolean validarUsuario(String usuario){
 			return UsuarioDAO.getUsuario(usuario) != null;
 	}
+	
+	public static String getColaboradorByUsuario(String usuario){
+		String ret = "";
+		List<?> retList = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String str_Query = String.join(" ", "select concat(pnombre, ' ', snombre, ' ', papellido, ' ',sapellido) nombre_colaborador",
+					"from colaborador c, usuario u",
+					"where c.usuariousuario=u.usuario",
+					"and u.usuario=:usuario");
+			Query<?> criteria = session.createNativeQuery(str_Query);
+			criteria.setParameter("usuario", usuario);
+			retList = criteria.getResultList();
+			if(!retList.isEmpty()){
+				ret = (String)retList.get(0);
+			}
+		}catch(Exception e){
+			CLogger.write("8", ColaboradorDAO.class, e);
+		}finally {
+        	session.close();
+		}
+		
+		return ret;
+	}
 
 }

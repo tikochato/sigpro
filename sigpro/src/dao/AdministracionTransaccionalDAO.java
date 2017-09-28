@@ -216,7 +216,7 @@ public class AdministracionTransaccionalDAO {
 			ret = criteria.getResultList();
 		}catch(Throwable e){
             CLogger.write("3", AdministracionTransaccionalDAO.class, e);
-        }finally {
+		}finally {
         	session.close();
 		}
 		return ret;
@@ -255,7 +255,7 @@ public class AdministracionTransaccionalDAO {
 			ret = criteria.getResultList();
 		}catch(Throwable e){
             CLogger.write("4", AdministracionTransaccionalDAO.class, e);
-        }finally {
+		}finally {
         	session.close();
 		}
 		return ret;
