@@ -32,9 +32,9 @@
 				<tr ng-repeat="row in modalAvances.avanceCollection">
 					<td>
 						<div class="form-group">
-							<input type="text" class="inputText" uib-datepicker-popup="{{modalAvances.formatofecha}}" ng-model="row.fecha" is-open="row.isOpen"
+							<input type="text" class="inputText" uib-datepicker-popup="{{modalAvances.formatofecha}}" ng-model="row.fechaControl" is-open="row.isOpen"
 								datepicker-options="modalAvances.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="modalAvances.abrirPopupFecha($index)"
-								ng-readonly="true"/>
+								ng-change="modalAvances.guardarFecha(row)" ng-readonly="true"/>
 							<span class="label-icon" ng-click="modalAvances.abrirPopupFecha($index)">
 								<i class="glyphicon glyphicon-calendar"></i>
 							</span>

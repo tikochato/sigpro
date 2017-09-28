@@ -17,6 +17,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	
 	if(!mi.esTreeview)
 		$window.document.title = $utilidades.sistema_nombre+' - Producto';
+	mi.child_scope = null;
 	
 	mi.componenteid = $routeParams.componente_id;
 	mi.esForma = false;
@@ -346,7 +347,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 						if (response.data.success) {
 							mi.data = response.data.productos;
 							mi.opcionesGrid.data = mi.data;
-							$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+							if(mi.child_scope!=null)
+								mi.child_scope.guardar('Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
+							else
+								$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 							if(!mi.esTreeview)
 								mi.obtenerTotalProductos();
 							else

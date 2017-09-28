@@ -8,6 +8,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
 			mi.metas = [];
+			mi.metasBorradas = [];
 			mi.meta;
 			mi.esnueva = false;
 			mi.mostrarValores = false;
@@ -19,18 +20,23 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			if($scope.$parent.controller){
 				mi.objeto_id = $scope.$parent.controller.proyecto.id;
 				mi.objeto_tipo = 1;
+				$scope.$parent.controller.child_scope = $scope.metac;
 			}else if($scope.$parent.componentec){
 				mi.objeto_id = $scope.$parent.componentec.componente.id;
 				mi.objeto_tipo = 2;
+				$scope.$parent.componentec.child_scope = $scope.metac;
 			}else if($scope.$parent.producto){
 				mi.objeto_id = $scope.$parent.producto.producto.id;
 				mi.objeto_tipo = 3;
+				$scope.$parent.producto.child_scope = $scope.metac;
 			}else if($scope.$parent.subproducto){
 				mi.objeto_id = $scope.$parent.subproducto.subproducto.id;
 				mi.objeto_tipo = 4;
+				$scope.$parent.subproducto.child_scope = $scope.metac;
 			}else if($scope.$parent.actividadc){
 				mi.objeto_id = $scope.$parent.actividadc.actividad.id;
 				mi.objeto_tipo = 5;
+				$scope.$parent.actividadc.child_scope = $scope.metac;
 			}
 						
 			mi.nombrePcp = "";
@@ -97,7 +103,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 								}
 							}
 							for(a in mi.metas[x].avance){
-								mi.metas[x].avance[a].fecha = moment(mi.metas[x].avance[a].fecha,'DD/MM/YYYY').toDate(); 
+								mi.metas[x].avance[a].fechaControl = moment(mi.metas[x].avance[a].fecha,'DD/MM/YYYY').toDate(); 
 							}
 						}
 						mi.mostrarcargando = false;
@@ -120,14 +126,33 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			}
 			
 			mi.almacenarPlanificado = function(mes){
+				var fila = null;
 				for(p in mi.meta.planificado){
 					var metaplan = mi.meta.planificado[p]; 
 					if(metaplan.ejercicio == mi.anio){
-						metaplan[mes] = mi.planificado[mes];
+						fila = metaplan;
 						break;
 					}
 				}
-				mi.meta.planificado.push({"ejercicio":mi.anio, mes:mi.planificado[mes]});
+				if(fila==null){
+					fila={
+							ejercicio: mi.anio,
+							enero: null,
+							febrero: null,
+							marzo: null,
+							abril: null,
+							mayo: null,
+							junio: null,
+							julio: null,
+							agosto: null,
+							septiembre: null,
+							octubre: null,
+							noviembre: null,
+							diciembre: null
+					}
+					mi.meta.planificado.push(fila);
+				}
+				fila[mes]=mi.planificado[mes];
 			}
 			
 			mi.inicializarPlanificadoReal = function(meta){
@@ -173,35 +198,34 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				if(meta.datoTipoId.id == 2 || meta.datoTipoId.id == 3){
 					inicial = 0;
 					for(i=0; i<meta.avance.length; i++){
-						var fecha = moment(meta.avance[i].fecha).format('DD/MM/YYYY');
-						fecha = moment(fecha, 'DD/MM/YYYY');
+						var fecha = moment(meta.avance[i].fecha, 'DD/MM/YYYY');
 						var mesA = fecha.month();
 						var anioA = fecha.year();					
 						if(anioA == anio){
 							switch(mesA){
-								case 0: mi.real.enero += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+								case 0: mi.real.enero += meta.avance[i].valor!=null ? Number(meta.avance[i].valor) : 0;
 									break;
-								case 1: mi.real.febrero += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+								case 1: mi.real.febrero += meta.avance[i].valor!=null ? Number(meta.avance[i].valor) : 0;
 									break;
-								case 2: mi.real.marzo += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+								case 2: mi.real.marzo += meta.avance[i].valor!=null ? Number(meta.avance[i].valor) : 0;
 									break;
-								case 3: mi.real.abril += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+								case 3: mi.real.abril += meta.avance[i].valor!=null ? Number(meta.avance[i].valor) : 0;
 									break;
-								case 4: mi.real.mayo += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+								case 4: mi.real.mayo += meta.avance[i].valor!=null ? Number(meta.avance[i].valor) : 0;
 									break;
-								case 5: mi.real.junio += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+								case 5: mi.real.junio += meta.avance[i].valor!=null ? Number(meta.avance[i].valor) : 0;
 									break;
-								case 6: mi.real.julio += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+								case 6: mi.real.julio += meta.avance[i].valor!=null ? Number(meta.avance[i].valor) : 0;
 									break;
-								case 7: mi.real.agosto += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+								case 7: mi.real.agosto += meta.avance[i].valor!=null ? Number(meta.avance[i].valor) : 0;
 									break;
-								case 8: mi.real.septiembre += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+								case 8: mi.real.septiembre += meta.avance[i].valor!=null ? Number(meta.avance[i].valor) : 0;
 									break;
-								case 9: mi.real.octubre += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+								case 9: mi.real.octubre += meta.avance[i].valor!=null ? Number(meta.avance[i].valor) : 0;
 									break;
-								case 10: mi.real.noviembre += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+								case 10: mi.real.noviembre += meta.avance[i].valor!=null ? Number(meta.avance[i].valor) : 0;
 									break;
-								case 11: mi.real.diciembre += meta.avance[i].valor!=null ? meta.avance[i].valor : 0;
+								case 11: mi.real.diciembre += meta.avance[i].valor!=null ? Number(meta.avance[i].valor) : 0;
 							}
 						}
 					}
@@ -236,43 +260,29 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				$window.location.href = '/main.jsp#!/forbidden';		
 			}			
 			
-			mi.guardar=function(){
-				if(mi.meta!=null && mi.tipoMetaSeleccionado!=null && mi.unidadMedidaSeleccionado!=null  ){
-					$http.post('/SMeta', {
-						accion: 'guardarMeta',
-						esnueva: mi.esnueva,
-						id: mi.meta.id,
-						nombre: mi.meta.nombre,
-						descripcion: mi.meta.descripcion,
-						tipoMetaId:  mi.tipoMetaSeleccionado.id,
-						unidadMedidaId: mi.unidadMedidaSeleccionado.id,
-						datoTipoId: mi.tipoValorSeleccionado.id,
-						objetoTipo:  mi.objeto_tipo,
-						objetoId:$routeParams.id,
-						t: (new Date()).getTime()						
-					}).success(function(response){
-						if(response.success){
-							mi.meta.id = response.id;
-							mi.meta.datoTipoId = response.datoTipoId;
-							mi.meta.usuarioCreo = response.usuarioCreo;
-							mi.meta.fechaCreacion = response.fechaCreacion;
-							mi.meta.usuarioActualizo = response.usuarioactualizo;
-							mi.meta.fechaActualizacion = response.fechaactualizacion;
-							$utilidades.mensaje('success','Meta '+(mi.esnueva ? 'creada' : 'guardada')+' con éxito');
-							mi.esnueva = false;
-							mi.obtenerTotalMetas();
-						}
-						else
-							$utilidades.mensaje('danger','Error al '+(mi.esnueva ? 'crear' : 'guardar')+' la Meta');
-					});
-				}
-				else
-					$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
-			};
-
+			mi.guardar = function(mensaje, mensaje_error){				
+				var metasArreglo = mi.metas.concat(mi.metasBorradas);
+				
+				var metas = JSON.stringify(metasArreglo);
+				
+				$http.post('/SMeta', {
+					accion: 'guardarMetasCompletas',
+					metas: metas,
+					objeto_id: mi.objeto_id,
+					objeto_tipo: mi.objeto_tipo,
+					t: (new Date()).getTime()
+				}).success(function(response){
+					if(response.success){
+						$utilidades.mensaje('success',mensaje);
+					}
+					else
+						$utilidades.mensaje('danger',mensaje_error);
+				});
+			}
+			
 			mi.nuevaMeta = function() {
 				mi.metas.push({  
-			         "id":"",
+			         "id":null,
 			         "nombre":"Nueva Meta",
 			         "descripcion":"",
 			         "estado":1,
@@ -302,6 +312,10 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 							, "Cancelar")
 					.result.then(function(data) {
 						if(data){
+							if(meta.id!=null){
+								meta.estado=0;
+								mi.metasBorradas.push(meta);
+							}
 							var index = mi.metas.indexOf(meta);
 							if (index > -1) {
 								mi.metas.splice(index, 1);
@@ -332,6 +346,9 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 					    },
 					    anio: function(){
 					    	return mi.anio;
+					    },
+					    fechaInicio: function(){
+					    	return mi.fechaInicio;
 					    }
 					  }
 				});
@@ -349,9 +366,9 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 
 app.controller('modalMetaAvances', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log','dialogoConfirmacion', 'avance', 'nombreMeta', 'anio',
+	'$timeout', '$log','dialogoConfirmacion', 'avance', 'nombreMeta', 'anio', 'fechaInicio',
 	function ($uibModalInstance, $scope, $http, $interval,
-		i18nService, $utilidades, $timeout, $log,$dialogoConfirmacion, avance, nombreMeta, anio) {
+		i18nService, $utilidades, $timeout, $log,$dialogoConfirmacion, avance, nombreMeta, anio, fechaInicio) {
 	
 		var mi = this;
 		
@@ -359,25 +376,28 @@ app.controller('modalMetaAvances', [ '$uibModalInstance',
 		mi.nombreMeta = nombreMeta;
 		mi.anio = anio;
 		mi.formatofecha = 'dd/MM/yyyy';
-		
-		//*****************Manejo de fechas ??????
-		
+				
 		mi.abrirPopupFecha = function(index) {
 			mi.avance[index].isOpen = true;
 		};
 
 		mi.fechaOptions = {
 				formatYear : 'yy',
-				maxDate : new Date(2050, 12, 31),
-				minDate : new Date(1990, 1, 1),
+				maxDate : new Date(),
+				minDate : fechaInicio,
 				startingDay : 1
 		};
+		
+		mi.guardarFecha = function(row){
+			row.fecha = moment(row.fechaControl).format('DD/MM/YYYY');
+		}
 				
 		mi.nuevoAvance = function(){
 			mi.avance.push({  
-	               "fecha": new Date(),
+	               "fecha": moment().format('DD/MM/YYYY'),
+	               "fechaControl": new Date(),
 	               "valor":null,
-	               "usuario":"admin"
+	               "usuario":null
 	            });
 		}
 		

@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +23,9 @@ import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
@@ -37,7 +42,9 @@ import pojo.Componente;
 import pojo.DatoTipo;
 import pojo.Meta;
 import pojo.MetaAvance;
+import pojo.MetaAvanceId;
 import pojo.MetaPlanificado;
+import pojo.MetaPlanificadoId;
 import pojo.MetaTipo;
 import pojo.MetaUnidadMedida;
 import pojo.Producto;
@@ -57,9 +64,6 @@ public class SMeta extends HttpServlet {
 		String nombre;
 		String descripcion;
 		Integer estado;
-		Integer proyecto;
-		Integer componente;
-		Integer producto;
 		Integer unidadMedidaId;
 		String usuarioCreo;
 		String fechaCreacion;
@@ -333,6 +337,274 @@ public class SMeta extends HttpServlet {
 			response_text=new GsonBuilder().serializeNulls().create().toJson(tmetas);
 	        response_text = String.join("", "\"Metas\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}else if(accion.equals("guardarMetasCompletas")){
+			boolean result = false;
+			Integer objetoId =  map.get("objeto_id")!=null  ? Integer.parseInt(map.get("objeto_id")) : 0;
+			Integer objetoTipo =  map.get("objeto_tipo")!=null  ? Integer.parseInt(map.get("objeto_tipo")) : 0;
+			String metas = map.get("metas");
+			
+			JsonParser parser = new JsonParser();
+			JsonArray metasArreglo = parser.parse(metas).getAsJsonArray();
+			for(int i=0; i<metasArreglo.size(); i++){
+				JsonObject objeto = metasArreglo.get(i).getAsJsonObject();
+				Integer id = objeto.get("id").isJsonNull() ? null : objeto.get("id").getAsInt();
+				String nombre = objeto.get("nombre").isJsonNull() ? "" : objeto.get("nombre").getAsString();
+				String descripcion = objeto.get("descripcion").isJsonNull() ? null : objeto.get("descripcion").getAsString();
+				Integer estado = objeto.get("estado").getAsInt();
+				Integer unidadMedidaId = objeto.get("unidadMedidaId").getAsJsonObject().get("id").getAsInt();
+				Integer datoTipoId = objeto.get("datoTipoId").getAsJsonObject().get("id").getAsInt();
+				String metaFinal = objeto.get("metaFinal").isJsonNull() ? null : objeto.get("metaFinal").getAsString();
+				String usuarioActualizo = null;
+				Date fechaActualizacion =  null;				
+				Integer metaFinalEntero=null;
+				String metaFinalString=null;
+				BigDecimal metaFinalDecimal = null;
+				Date metaFinalFecha = null;
+				if(metaFinal!=null){
+					switch(datoTipoId){
+						case 1: //texto
+							metaFinalString = metaFinal;
+							break;
+						case 2: //entero
+							metaFinalEntero = Integer.parseInt(metaFinal);
+							break;
+						case 3: //decimal
+							metaFinalDecimal = new BigDecimal(metaFinal);
+							break;
+						case 4: //boolean
+							metaFinalString = metaFinal;
+							break;
+						case 5: //fecha
+							metaFinalFecha = Utils.dateFromString(metaFinal);
+					}
+				}
+
+				DatoTipo datoTipo = DatoTipoDAO.getDatoTipo(datoTipoId);
+				MetaUnidadMedida metaUnidadMedida = MetaUnidadMedidaDAO.getMetaUnidadMedidaPorId(unidadMedidaId);
+								
+				Meta meta;
+				if(id!=null && id>0){
+					meta = MetaDAO.getMetaPorId(id);
+					meta.setDatoTipo(datoTipo);
+					meta.setMetaUnidadMedida(metaUnidadMedida);
+					meta.setNombre(nombre);
+					meta.setDescripcion(descripcion);
+					meta.setUsuarioActualizo(usuario);
+					meta.setFechaActualizacion(new Date());
+					meta.setEstado(estado);
+					meta.setMetaFinalEntero(metaFinalEntero);
+					meta.setMetaFinalString(metaFinalString);
+					meta.setMetaFinalDecimal(metaFinalDecimal);
+					meta.setMetaFinalFecha(metaFinalFecha);
+					MetaDAO.guardarMeta(meta);
+					result = MetaDAO.borrarPlanificadoAvanceMeta(meta);
+				}else{
+					meta = new Meta(datoTipo, metaUnidadMedida, nombre, descripcion, usuario, usuarioActualizo, new Date(), fechaActualizacion, estado, 
+							objetoId, objetoTipo, metaFinalEntero, metaFinalString, metaFinalDecimal, metaFinalFecha, null, null);
+					result = MetaDAO.guardarMeta(meta);
+				}
+				
+				if(result){
+					//TODO: obtener planificados
+					JsonArray planificados = objeto.get("planificado").getAsJsonArray();
+					for(int p=0; p<planificados.size(); p++){
+						JsonObject planificado = planificados.get(p).getAsJsonObject();
+						Integer ejercicio = planificado.get("ejercicio").getAsInt();
+						String enero = planificado.get("enero").isJsonNull() ? null : planificado.get("enero").getAsString();
+						String febrero = planificado.get("febrero").isJsonNull() ? null : planificado.get("febrero").getAsString();
+						String marzo = planificado.get("marzo").isJsonNull() ? null : planificado.get("marzo").getAsString();
+						String abril = planificado.get("abril").isJsonNull() ? null : planificado.get("abril").getAsString();
+						String mayo = planificado.get("mayo").isJsonNull() ? null : planificado.get("mayo").getAsString();
+						String junio = planificado.get("junio").isJsonNull() ? null : planificado.get("junio").getAsString();
+						String julio = planificado.get("julio").isJsonNull() ? null : planificado.get("julio").getAsString();
+						String agosto = planificado.get("agosto").isJsonNull() ? null : planificado.get("agosto").getAsString();
+						String septiembre = planificado.get("septiembre").isJsonNull() ? null : planificado.get("septiembre").getAsString();
+						String octubre = planificado.get("octubre").isJsonNull() ? null : planificado.get("octubre").getAsString();
+						String noviembre = planificado.get("noviembre").isJsonNull() ? null : planificado.get("noviembre").getAsString();
+						String diciembre = planificado.get("diciembre").isJsonNull() ? null : planificado.get("diciembre").getAsString();
+						
+						Integer eneroEntero = null;
+						Integer febreroEntero = null;
+						Integer marzoEntero = null;
+						Integer abrilEntero = null;
+						Integer mayoEntero = null;
+						Integer junioEntero = null;
+						Integer julioEntero = null;
+						Integer agostoEntero = null;
+						Integer septiembreEntero = null;
+						Integer octubreEntero = null;
+						Integer noviembreEntero = null;
+						Integer diciembreEntero = null;
+						
+						String eneroString = null;
+						String febreroString = null;
+						String marzoString = null;
+						String abrilString = null;
+						String mayoString = null;
+						String junioString = null;
+						String julioString = null;
+						String agostoString = null;
+						String septiembreString = null;
+						String octubreString = null;
+						String noviembreString = null;
+						String diciembreString = null;
+						
+						BigDecimal eneroDecimal = null;
+						BigDecimal febreroDecimal = null;
+						BigDecimal marzoDecimal = null;
+						BigDecimal abrilDecimal = null;
+						BigDecimal mayoDecimal = null;
+						BigDecimal junioDecimal = null;
+						BigDecimal julioDecimal = null;
+						BigDecimal agostoDecimal = null;
+						BigDecimal septiembreDecimal = null;
+						BigDecimal octubreDecimal = null;
+						BigDecimal noviembreDecimal = null;
+						BigDecimal diciembreDecimal = null;
+						
+						Date eneroTiempo = null;
+						Date febreroTiempo = null;
+						Date marzoTiempo = null;
+						Date abrilTiempo = null;
+						Date mayoTiempo = null;
+						Date junioTiempo = null;
+						Date julioTiempo = null;
+						Date agostoTiempo = null;
+						Date septiembreTiempo = null;
+						Date octubreTiempo = null;
+						Date noviembreTiempo = null;
+						Date diciembreTiempo = null;
+						
+						switch(datoTipoId){
+							case 1: //texto
+								eneroString = enero;
+								febreroString = febrero;
+								marzoString = marzo;
+								abrilString = abril;
+								mayoString = mayo;
+								junioString = junio;
+								julioString = julio;
+								agostoString = agosto;
+								septiembreString = septiembre;
+								octubreString = octubre;
+								noviembreString = noviembre;
+								diciembreString = diciembre;
+								break;
+							case 2: //entero
+								eneroEntero = enero!=null ? Integer.parseInt(enero) : null;
+								febreroEntero = febrero!=null ? Integer.parseInt(febrero) : null;
+								marzoEntero = marzo!=null ? Integer.parseInt(marzo) : null;
+								abrilEntero = abril!=null ? Integer.parseInt(abril) : null;
+								mayoEntero = mayo!=null ? Integer.parseInt(mayo) : null;
+								junioEntero = junio!=null ? Integer.parseInt(junio) : null;
+								julioEntero = julio!=null ? Integer.parseInt(julio) : null;
+								agostoEntero = agosto!=null ? Integer.parseInt(agosto) : null;
+								septiembreEntero = septiembre!=null ? Integer.parseInt(septiembre) : null;
+								octubreEntero = octubre!=null ? Integer.parseInt(octubre) : null;
+								noviembreEntero = noviembre!=null ? Integer.parseInt(noviembre) : null;
+								diciembreEntero = diciembre!=null ? Integer.parseInt(diciembre) : null;
+								break;
+							case 3: //decimal
+								eneroDecimal = enero!=null ? new BigDecimal(enero) : null;
+								febreroDecimal = febrero!=null ? new BigDecimal(febrero) : null;
+								marzoDecimal = marzo!=null ? new BigDecimal(marzo) : null;
+								abrilDecimal = abril!=null ? new BigDecimal(abril) : null;
+								mayoDecimal = mayo!=null ? new BigDecimal(mayo) : null;
+								junioDecimal = junio!=null ? new BigDecimal(junio) : null;
+								julioDecimal = julio!=null ? new BigDecimal(julio) : null;
+								agostoDecimal = agosto!=null ? new BigDecimal(agosto) : null;
+								septiembreDecimal = septiembre!=null ? new BigDecimal(septiembre) : null;
+								octubreDecimal = octubre!=null ? new BigDecimal(octubre) : null;
+								noviembreDecimal = noviembre!=null ? new BigDecimal(noviembre) : null;
+								diciembreDecimal = diciembre!=null ? new BigDecimal(diciembre) : null;
+								break;
+							case 4: //boolean
+								eneroString = enero;
+								febreroString = febrero;
+								marzoString = marzo;
+								abrilString = abril;
+								mayoString = mayo;
+								junioString = junio;
+								julioString = julio;
+								agostoString = agosto;
+								septiembreString = septiembre;
+								octubreString = octubre;
+								noviembreString = noviembre;
+								diciembreString = diciembre;
+								break;
+							case 5: //Tiempo
+								eneroTiempo = enero!=null ? Utils.dateFromString(enero) : null;
+								febreroTiempo = febrero!=null ? Utils.dateFromString(febrero) : null;
+								marzoTiempo = marzo!=null ? Utils.dateFromString(marzo) : null;
+								abrilTiempo = abril!=null ? Utils.dateFromString(abril) : null;
+								mayoTiempo = mayo!=null ? Utils.dateFromString(mayo) : null;
+								junioTiempo = junio!=null ? Utils.dateFromString(junio) : null;
+								julioTiempo = julio!=null ? Utils.dateFromString(julio) : null;
+								agostoTiempo = agosto!=null ? Utils.dateFromString(agosto) : null;
+								septiembreTiempo = septiembre!=null ? Utils.dateFromString(septiembre) : null;
+								octubreTiempo = octubre!=null ? Utils.dateFromString(octubre) : null;
+								noviembreTiempo = noviembre!=null ? Utils.dateFromString(noviembre) : null;
+								diciembreTiempo = diciembre!=null ? Utils.dateFromString(diciembre) : null;
+						}
+
+						MetaPlanificadoId planificadoId = new MetaPlanificadoId(meta.getId(), ejercicio);
+						MetaPlanificado metaPlanificado = new MetaPlanificado(planificadoId, meta, eneroEntero, eneroString, eneroDecimal, eneroTiempo, 
+								febreroEntero, febreroString, febreroDecimal, febreroTiempo, marzoEntero, marzoString, marzoDecimal, marzoTiempo, 
+								abrilEntero, abrilString, abrilDecimal, abrilTiempo, mayoEntero, mayoString, mayoDecimal, mayoTiempo, 
+								junioEntero, junioString, junioDecimal, junioTiempo, julioEntero, julioString, julioDecimal, julioTiempo, 
+								agostoEntero, agostoString, agostoDecimal, agostoTiempo, septiembreEntero, septiembreString, septiembreDecimal, septiembreTiempo, 
+								octubreEntero, octubreString, octubreDecimal, octubreTiempo, noviembreEntero, noviembreString, noviembreDecimal, noviembreTiempo, 
+								diciembreEntero, diciembreString, diciembreDecimal, diciembreTiempo, 1, usuario, new Date());
+						MetaDAO.agregarMetaPlanificado(metaPlanificado);
+					}
+					
+					//TODO: obtener avances
+					JsonArray avances = objeto.get("avance").getAsJsonArray();
+					ArrayList<Date> fechasUtilizadas = new ArrayList<Date>(); 
+					for(int a=0; a<avances.size(); a++){
+						JsonObject avance = avances.get(a).getAsJsonObject();
+						Date fecha = Utils.dateFromString(avance.get("fecha").getAsString());
+						String valor = avance.get("valor").isJsonNull() ? null : avance.get("valor").getAsString();
+						String usuarioCrea = avance.get("usuario").isJsonNull()? usuario : avance.get("usuario").getAsString();
+						if(fechasUtilizadas.contains(fecha)){
+							DateTime fechaNueva = new DateTime(fecha);
+							fechaNueva = fechaNueva.plusSeconds(a);
+							fecha = fechaNueva.toDate();
+						}
+						fechasUtilizadas.add(fecha);
+						
+						Integer valorEntero=null;
+						String valorString=null;
+						BigDecimal valorDecimal=null;
+						Date valorTiempo=null;
+						if(valor!=null){
+							switch(datoTipoId){
+								case 1: //texto
+									valorString = valor;
+									break;
+								case 2: //entero
+									valorEntero = Integer.parseInt(valor);
+									break;
+								case 3: //decimal
+									valorDecimal = new BigDecimal(valor);
+									break;
+								case 4: //boolean
+									valorString = valor;
+									break;
+								case 5: //fecha
+									valorTiempo = Utils.dateFromString(valor);
+							}
+						}
+						
+						MetaAvanceId avanceId = new MetaAvanceId(meta.getId(), fecha);
+						MetaAvance metaAvance = new MetaAvance(avanceId, meta, usuarioCrea, valorEntero, valorString, valorDecimal, valorTiempo, 1, new Date());
+						MetaDAO.agregarMetaAvance(metaAvance);
+					}
+				}
+				
+			}
+			
+			response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
 		}
 		else if(accion.equals("getMetas")){
 			List<Meta> Metas = MetaDAO.getMetas();
