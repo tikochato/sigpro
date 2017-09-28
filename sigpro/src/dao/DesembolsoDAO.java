@@ -150,27 +150,13 @@ public class DesembolsoDAO {
 		return ret;
 	}
 	
-	public static List<Desembolso> getDesembolsosPaginaPorProyecto(int pagina, int numeroDesembolsos, int proyectoId,
-			String filtro_fecha, String filtro_usuario_creo,
-			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion){
+	public static List<Desembolso> getDesembolsosPorProyecto(int proyectoId){
 		List<Desembolso> ret = new ArrayList<Desembolso>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = "SELECT d FROM Desembolso d WHERE estado = 1 AND d.proyecto.id = :proyId ";
-			String query_a="";
-			if(filtro_fecha!=null && filtro_fecha.trim().length()>0)
-				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(d.fecha,'%d/%m/%YYYY')) LIKE '%", filtro_fecha,"%' ");
-			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
-				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " d.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
-			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
-				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(d.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
-			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
-			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
-			
 			Query<Desembolso> criteria = session.createQuery(query,Desembolso.class);
 			criteria.setParameter("proyId", proyectoId);
-			criteria.setFirstResult(((pagina-1)*(numeroDesembolsos)));
-			criteria.setMaxResults(numeroDesembolsos);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){

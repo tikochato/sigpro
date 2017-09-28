@@ -563,3 +563,5 @@ h2 {
 *:focus {
     outline: none;
 }
+
+.st-selected { background-color: #e0ffff; }

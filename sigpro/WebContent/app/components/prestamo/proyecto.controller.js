@@ -55,6 +55,10 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	
 	mi.impactos =[];
 	mi.miembros = [];
+	
+	mi.active = 0;
+	
+	mi.child_scope = null;
 
 	mi.fechaOptions = {
 			formatYear : 'yy',
@@ -354,8 +358,12 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 										function(response) {
 											if (response.data.success) {
 												if(mi.esTreeview)
-													mi.t_cambiarNombreNodo();
-												$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+												mi.t_cambiarNombreNodo();
+												if(mi.child_scope!=null)
+													mi.child_scope.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
+												else
+													$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+													
 											}else
 												$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
 								});
@@ -451,7 +459,9 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				    t:moment().unix()
 			}
 			$http.post('/SProyectoPropiedad', parametros).then(function(response){
-				mi.camposdinamicos = response.data.proyectopropiedades
+				mi.camposdinamicos = response.data.proyectopropiedades;
+				mi.desembolsos = undefined;
+				mi.active = 0;
 				for (campos in mi.camposdinamicos) {
 					switch (mi.camposdinamicos[campos].tipo){
 					case "fecha":

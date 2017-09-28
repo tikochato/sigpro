@@ -5,8 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,19 +19,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.joda.time.DateTime;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.DesembolsoDAO;
 import dao.DesembolsoTipoDAO;
+import dao.ProyectoDAO;
 import dao.TipoMonedaDAO;
 import pojo.Desembolso;
-import pojo.DesembolsoTipo;
-import pojo.Proyecto;
-import pojo.TipoMoneda;
 import utilities.Utils;
 
 
@@ -47,8 +42,8 @@ public class SDesembolso extends HttpServlet {
 		Integer proyectoid;
 		String proyecto;
 		Integer desembolsotipoid;
-		Integer tipomonedaid;
-		String tipomonedanombre;
+		Integer tipo_moneda;
+		String tipo_moneda_nombre;
 		String tipomonedasimbolo;
 		String desembolsotipo;
 		String usuarioCreo;
@@ -56,8 +51,7 @@ public class SDesembolso extends HttpServlet {
 		String fechaCreacion;
 		String fechaActualizacion;
 		int estado;
-	}
-       
+	}   
     
     public SDesembolso() {
         super();
@@ -110,8 +104,8 @@ public class SDesembolso extends HttpServlet {
 				temp.desembolsotipoid = desembolso.getDesembolsoTipo().getId();
 				temp.desembolsotipo = desembolso.getDesembolsoTipo().getNombre();
 				temp.proyecto = desembolso.getProyecto().getNombre();
-				temp.tipomonedaid=desembolso.getTipoMoneda().getId();
-				temp.tipomonedanombre=desembolso.getTipoMoneda().getNombre();
+				temp.tipo_moneda=desembolso.getTipoMoneda().getId();
+				temp.tipo_moneda_nombre=desembolso.getTipoMoneda().getNombre();
 				temp.tipomonedasimbolo=desembolso.getTipoMoneda().getSimbolo();
 				temp.proyectoid = desembolso.getProyecto().getId();
 				temp.fechaActualizacion = Utils.formatDateHour(desembolso.getFechaActualizacion());
@@ -139,8 +133,8 @@ public class SDesembolso extends HttpServlet {
 				temp.desembolsotipo = desembolso.getDesembolsoTipo().getNombre();
 				temp.proyecto = desembolso.getProyecto().getNombre();
 				temp.proyectoid = desembolso.getProyecto().getId();
-				temp.tipomonedaid=desembolso.getTipoMoneda().getId();
-				temp.tipomonedanombre=desembolso.getTipoMoneda().getNombre();
+				temp.tipo_moneda=desembolso.getTipoMoneda().getId();
+				temp.tipo_moneda_nombre=desembolso.getTipoMoneda().getNombre();
 				temp.tipomonedasimbolo=desembolso.getTipoMoneda().getSimbolo();
 				temp.fechaActualizacion = Utils.formatDateHour(desembolso.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDateHour(desembolso.getFechaCreacion());
@@ -153,101 +147,52 @@ public class SDesembolso extends HttpServlet {
 	        response_text = String.join("", "\"desembolsos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
-		else if(accion.equals("guardarDesembolso")){
+		else if(accion.equals("guardarDesembolsos")){
 			
-			boolean result = false;
-			boolean esnuevo = map.get("esnuevo").equals("true");
-			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-			if(id>0 || esnuevo){
+				boolean result = true;
+				Integer proyectoid = Utils.String2Int(map.get("proyectoid"));
 				
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				Date fecha = null;
-				try {
-					fecha = sdf.parse(map.get("fecha"));
-				} catch (ParseException e) {
-					e.printStackTrace();
+				String desembolsos = map.get("desembolsos");
+				String[] desembolsos_array = new String[]{};
+				if(desembolsos!=null && desembolsos.length()>0){
+					desembolsos_array = desembolsos.split("},");
 				}
-				BigDecimal monto = map.get("monto")!=null && map.get("monto").length()>0 ?
-						new BigDecimal(map.get("monto")) : null;
-				
-				BigDecimal tipoCambio = new BigDecimal(0);
-				if(map.get("tipocambio")!=null)
-					tipoCambio = new BigDecimal(map.get("tipocambio"));
-				
-				
-				Proyecto proyecto = new Proyecto();
-				proyecto.setId(map.get("proyectoid")!=null && map.get("proyectoid").length()>0 ? 
-						Integer.parseInt(map.get("proyectoid")) : null);
-				
-				new DesembolsoTipoDAO();
-				DesembolsoTipo desembolsoTipo = DesembolsoTipoDAO.getDesembolosTipoPorId(1);
-				
-				
-				TipoMoneda tipomoneda= TipoMonedaDAO.getTipoMonedaPorId(Integer.parseInt(map.get("tipo_moneda")));
-				Desembolso desembolso;
-				if(esnuevo){
-					desembolso = new Desembolso(desembolsoTipo, proyecto, null, fecha, 1, monto, tipoCambio, null, 
-							usuario, null, new Date(), null);
-					desembolso.setTipoMoneda(tipomoneda);
+				Integer id=null;
+				BigDecimal monto=null;
+				Timestamp tfecha=null;
+				Integer tipo_moneda=null;
+				List<Desembolso> ui_desembolsos = new ArrayList<Desembolso>();
+				for(int i=0; i<desembolsos_array.length; i++){
+					if(!desembolsos_array[i].substring(desembolsos_array[i].length()-1).equals("}"))
+						desembolsos_array[i] = String.join("", desembolsos_array[i],"}");
+					map = gson.fromJson(desembolsos_array[i], type);
+					id = Utils.String2Int(map.get("id"));
+					monto = Utils.String2BigDecimal(map.get("monto"), null);
+					tfecha = Utils.stringToTimestamp(map.get("fecha"));
+					tipo_moneda = Utils.String2Int(map.get("tipo_moneda"), null);
+					Desembolso desembolso = new Desembolso(DesembolsoTipoDAO.getDesembolosTipoPorId(1), 
+							ProyectoDAO.getProyecto(proyectoid), TipoMonedaDAO.getTipoMonedaPorId(tipo_moneda), tfecha, 1, monto, 
+							new BigDecimal(0), null, usuario, null, (id==-1) ? new Date() : null, (id>0) ? new Date() : null);
+					if(id>0)
+						desembolso.setId(id);
+					ui_desembolsos.add(desembolso);
+					result = result && DesembolsoDAO.guardarDesembolso(desembolso);
 				}
-				else{
-					
-					desembolso = DesembolsoDAO.getDesembolsoPorId(id);
-					desembolso.setMonto(monto);
-					desembolso.setTipoCambio(tipoCambio);
-					desembolso.setProyecto(proyecto);
-					desembolso.setDesembolsoTipo(desembolsoTipo);
-					desembolso.setFechaActualizacion(new DateTime().toDate());
-					desembolso.setUsuarioActualizo(usuario);
-					desembolso.setTipoMoneda(tipomoneda);
-					
+				List<Desembolso> db_desembolsos = DesembolsoDAO.getDesembolsosPorProyecto(proyectoid);
+				for(int i=0; i<db_desembolsos.size(); i++){
+					boolean no_existe=true;
+					for(int j=0; j<ui_desembolsos.size();j++){
+						if(db_desembolsos.get(i).getId()==ui_desembolsos.get(j).getId())
+							no_existe=false;
+					}
+					if(no_existe)
+						DesembolsoDAO.eliminarDesembolso(db_desembolsos.get(i));
 				}
-				result = DesembolsoDAO.guardarDesembolso(desembolso);
-				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + desembolso.getId() , ","
-						, "\"usuarioCreo\": \"" , desembolso.getUsuarioCreo(),"\","
-						, "\"fechaCreacion\":\" " , Utils.formatDateHour(desembolso.getFechaCreacion()),"\","
-						, "\"usuarioactualizo\": \"" , desembolso.getUsuarioActualizo() != null ? desembolso.getUsuarioActualizo() : "","\","
-						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(desembolso.getFechaActualizacion()),"\""+
-						" }");
-			}
-			else
-				response_text = "{ \"success\": false }";
+				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),"}");
 		}
-		else if(accion.equals("borrarDesembolso")){
-			
-			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-			if(id>0){
-				Desembolso desembolso = DesembolsoDAO.getDesembolsoPorId(id);
-				desembolso.setUsuarioActualizo(usuario);
-				response_text = String.join("","{ \"success\": ",(DesembolsoDAO.eliminarDesembolso(desembolso) ? "true" : "false")," }");
-			}
-			else
-				response_text = "{ \"success\": false }";
-		}
-		else if(accion.equals("numeroDesembolsos")){
-			response_text = String.join("","{ \"success\": true, \"totaldesembolsos\":",DesembolsoDAO.getTotalDesembolsos().toString()," }");
-		}
-		else if(accion.equals("numeroDesembolsosPorProyecto")){
-			String filtro_fecha = map.get("filtro_fecha");
-			String filtro_usuario_creo = map.get("filtro_usuario_creo");
-			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+		else if(accion.equals("getDesembolsosPorProyecto")){
 			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
-			response_text = String.join("","{ \"success\": true, \"totaldesembolsos\":",DesembolsoDAO.
-					getTotalDesembolsosPorProyecto(proyectoId,filtro_fecha,filtro_usuario_creo,filtro_fecha_creacion).toString()," }");
-		}
-		else if(accion.equals("getDesembolsosPaginaPorProyecto")){
-			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
-			int numeroDesembolsos = map.get("numerodesembolsos")!=null  ? Integer.parseInt(map.get("numerodesembolsos")) : 0;
-			String filtro_fecha = map.get("filtro_fecha");
-			String filtro_usuario_creo = map.get("filtro_usuario_creo");
-			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			String columna_ordenada = map.get("columna_ordenada");
-			String orden_direccion = map.get("orden_direccion");
-			List<Desembolso> desembolsos = DesembolsoDAO.
-					getDesembolsosPaginaPorProyecto(pagina, numeroDesembolsos,proyectoId
-							,filtro_fecha,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);
+			List<Desembolso> desembolsos = DesembolsoDAO.getDesembolsosPorProyecto(proyectoId);
 			List<stdesembolso> stdesembolsos=new ArrayList<stdesembolso>();
 			for(Desembolso desembolso:desembolsos){
 				stdesembolso temp =new stdesembolso();
@@ -259,8 +204,8 @@ public class SDesembolso extends HttpServlet {
 				temp.desembolsotipoid = desembolso.getDesembolsoTipo().getId();
 				temp.desembolsotipo = desembolso.getDesembolsoTipo().getNombre();
 				temp.proyecto = desembolso.getProyecto().getNombre();
-				temp.tipomonedaid=desembolso.getTipoMoneda().getId();
-				temp.tipomonedanombre=desembolso.getTipoMoneda().getNombre();
+				temp.tipo_moneda=desembolso.getTipoMoneda().getId();
+				temp.tipo_moneda_nombre=desembolso.getTipoMoneda().getNombre();
 				temp.tipomonedasimbolo=desembolso.getTipoMoneda().getSimbolo();
 				temp.proyectoid = desembolso.getProyecto().getId();
 				temp.fechaActualizacion = Utils.formatDateHour(desembolso.getFechaActualizacion());

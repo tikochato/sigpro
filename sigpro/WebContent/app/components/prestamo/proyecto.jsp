@@ -110,8 +110,6 @@
 				<span class="glyphicon glyphicon-th"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAHitos(controller.proyecto.id) : ''" uib-tooltip="Hitos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-screenshot"></span></label>
-				<label class="btn btn-default" ng-click="controller.botones ? controller.irADesembolsos(controller.proyecto.id) : ''" uib-tooltip="Desembolsos" tooltip-placement="bottom">
-				<span class="glyphicon glyphicon-usd"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irARiesgos(controller.proyecto.id) : ''" uib-tooltip="Riesgos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-warning-sign"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAActividades(controller.proyecto.id) : ''" uib-tooltip="Actividades" tooltip-placement="bottom">
@@ -142,14 +140,10 @@
 		<br>
 		<div class="col-sm-12">
 			<form name="controller.mForm">
-			<uib-tabset active="active">
+			<uib-tabset active="controller.active">
 				<shiro:hasPermission name="43010">
 				<uib-tab ng-click="controller.getPorcentajes();" index="0" heading="Préstamo" >
-					<div class="panel panel-default">
-							<div class="panel-heading label-form" style="text-align: center;">Información General del Préstamo</div>
-						<div class="panel-body">
-													
-							
+					<br/>
 							<div class="row">
 								<div class="col-sm-12">
 									<div class="form-group">
@@ -361,8 +355,6 @@
 									</div>
 								</div>
 							</div>
-						</div>
-					</div>
 					
 					
 				</uib-tab>
@@ -601,9 +593,7 @@
 				</uib-tab>
 				<shiro:hasPermission name="43010">
 				<uib-tab ng-click="controller.getPorcentajes();" index="controller.ordenTab+1" heading="Unidad Ejecutora" >
-					<div class="panel panel-default">
-						<div class="panel-heading label-form" style="text-align: center;">Información Específica del Préstamo en la Entidad Ejecutora</div>
-						<div class="panel-body">
+					<br/>
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
@@ -764,8 +754,6 @@
 									</div>
 								</div>
 							</div>
-						</div>
-					</div>
 				
 				</uib-tab>
 				<uib-tab index="controller.ordenTab+2" heading="Adicionales" ng-if="controller.mostrarPrestamo" >
@@ -1244,6 +1232,9 @@
 							</tbody>
 						</table>
 					</div>
+				</uib-tab>
+				<uib-tab index="4" heading="Desembolsos" ng-click="controller.desembolsos=true" >
+					<div ng-if="controller.desembolsos !== undefined"><%@include file="/app/components/desembolso/desembolso.jsp" %></div>
 				</uib-tab>
 				</shiro:hasPermission>
 			</uib-tabset>
