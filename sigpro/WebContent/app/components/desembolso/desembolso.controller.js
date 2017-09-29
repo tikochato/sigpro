@@ -29,7 +29,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 					 abierto: false
 			 };
 			 
-			 $scope.$parent.controller.child_scope = $scope.desembolsoc;
+			 $scope.$parent.controller.child_desembolso = $scope.desembolsoc;
 			
 			mi.cargarTabla = function(){
 				mi.mostrarcargando=true;
@@ -47,7 +47,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			
 			mi.cargarTabla();
 			
-			mi.guardar=function(mensaje, mensaje_error){
+			mi.guardar=function(call_chain){
 				if(mi.desembolsos!=null && mi.proyectoid!=''){
 					var desembolsos = '';
 					for(var i=0; i<mi.desembolsos.length; i++){
@@ -60,10 +60,10 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 						t: (new Date()).getTime()
 					}).success(function(response){
 						if(response.success){
-							$utilidades.mensaje('success',mensaje);
+							return call_chain();
 						}
 						else
-							$utilidades.mensaje('danger',mensaje_error);
+							return false;
 					});
 				}
 				else

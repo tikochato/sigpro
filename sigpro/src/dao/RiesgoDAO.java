@@ -18,6 +18,7 @@ import utilities.CLogger;
 
 
 public class RiesgoDAO {
+	
 	public static List<Riesgo> getRiesgos(){
 		List<Riesgo> ret = new ArrayList<Riesgo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -67,7 +68,6 @@ public class RiesgoDAO {
 		try{
 			session.beginTransaction();
 			session.saveOrUpdate(riesgo);
-			//objeto
 			ObjetoRiesgoId objetoRiesgoId = new ObjetoRiesgoId(riesgo.getId(), objetoId, objetoTipo);
 			ObjetoRiesgo objetoRiesgo = new ObjetoRiesgo(objetoRiesgoId, riesgo, riesgo.getUsuarioCreo(), 
 					riesgo.getUsuarioActualizo(), riesgo.getFechaCreacion(), riesgo.getFechaActualizacion());
@@ -121,39 +121,6 @@ public class RiesgoDAO {
 		return ret;
 	}
 	
-	public static List<Riesgo> getRiesgosPagina(int pagina, int numeroRiesgos
-			,String filtro_nombre, String filtro_usuario_creo,
-			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion){
-		List<Riesgo> ret = new ArrayList<Riesgo>();
-		
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		try{
-			String query = "SELECT r FROM Riesgo r WHERE r.estado = 1 "
-					;
-			String query_a="";
-			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
-				query_a = String.join("",query_a, " r.nombre LIKE '%",filtro_nombre,"%' ");
-			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
-				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " r.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
-			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
-				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(r.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
-			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
-			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY r.",columna_ordenada,orden_direccion ) : query;
-			
-			Query<Riesgo> criteria = session.createQuery(query,Riesgo.class);
-			criteria.setFirstResult(((pagina-1)*(numeroRiesgos)));
-			criteria.setMaxResults(numeroRiesgos);
-			ret = criteria.getResultList();
-		}
-		catch(Throwable e){
-			CLogger.write("8", RiesgoDAO.class, e);
-		}
-		finally{
-			session.close();
-		}
-		return ret;
-	}
-	
 	public static Long getTotalRiesgos(String filtro_nombre, String filtro_usuario_creo,String filtro_fecha_creacion){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -173,7 +140,7 @@ public class RiesgoDAO {
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
-			CLogger.write("9", RiesgoDAO.class, e);
+			CLogger.write("6", RiesgoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -181,9 +148,7 @@ public class RiesgoDAO {
 		return ret;
 	}
 	
-	public static List<Riesgo> getRiesgosPorObjeto (int pagina, int numeroRiesgos, int objetoId, int objetoTipo
-			,String filtro_nombre, String filtro_usuario_creo,
-			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion){
+	public static List<Riesgo> getRiesgosPorObjeto (int objetoId, int objetoTipo){
 		List<Riesgo> ret = new ArrayList<Riesgo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -195,46 +160,10 @@ public class RiesgoDAO {
 			Query<Riesgo> criteria = session.createQuery(query,Riesgo.class);
 			criteria.setParameter("objid", objetoId);
 			criteria.setParameter("objetoTipo", objetoTipo);
-			criteria.setFirstResult(((pagina-1)*(numeroRiesgos)));
-			criteria.setMaxResults(numeroRiesgos);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("8", RiesgoDAO.class, e);
-		}
-		finally{
-			session.close();
-		}
-		return ret;
-	}
-	
-	public static Long getTotalRiesgosPorProyecto(int objetoId, int objetoTipo
-			,String filtro_nombre, String filtro_usuario_creo,String filtro_fecha_creacion){
-		Long ret=0L;
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		try{
-			
-			String query = "SELECT count(r.id) FROM Riesgo r "
-					+ "join r.objetoRiesgos o "
-					+ "WHERE r.estado = 1 "
-					+ "and o.id.objetoId = :objid "
-					+ "and o.id.objetoTipo = :objetoTipo ";
-			String query_a="";
-			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
-				query_a = String.join("",query_a, " r.nombre LIKE '%",filtro_nombre,"%' ");
-			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
-				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " r.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
-			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
-				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(r.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
-			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
-			
-			Query<Long> conteo = session.createQuery(query,Long.class);
-			conteo.setParameter("objid",objetoId);
-			conteo.setParameter("objetoTipo", objetoTipo);
-			ret = conteo.getSingleResult();
-		}
-		catch(Throwable e){
-			CLogger.write("9", RiesgoDAO.class, e);
+			CLogger.write("7", RiesgoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -271,7 +200,7 @@ public class RiesgoDAO {
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("10", RiesgoDAO.class, e);
+			CLogger.write("8", RiesgoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -296,11 +225,37 @@ public class RiesgoDAO {
 			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}
 		catch(Throwable e){
-			CLogger.write("11", RiesgoDAO.class, e);
+			CLogger.write("9", RiesgoDAO.class, e);
 		}
 		finally{
 			session.close();
 		}
 		return ret;	
+	}
+	
+	
+	public static List<Riesgo> getRiesgosNotIn(Integer objetoId, Integer objetoTipo,List<Integer> riesgos){
+		List<Riesgo> ret = new ArrayList<Riesgo>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT r FROM Riesgo as r inner join r.objetoRiesgos o "
+					+ "WHERE r.estado = 1 "
+					+ "and o.id.objetoId = :objid "
+					+ "and o.id.objetoTipo = :objetoTipo "
+					+ "and r.id NOT IN (:ids)";
+			
+			Query<Riesgo> criteria = session.createQuery(query,Riesgo.class);
+			criteria.setParameter("objid", objetoId);
+			criteria.setParameter("objetoTipo", objetoTipo);
+			criteria.setParameterList("ids", riesgos);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("10", RiesgoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
 	}
 }
