@@ -366,11 +366,6 @@
     	</uib-tab>
     	<uib-tab index="2">
 	      <uib-tab-heading>
-	        <i class="glyphicon glyphicon-bell"></i> Riesgos
-	      </uib-tab-heading>
-	    </uib-tab>
-	    <uib-tab index="3">
-	      <uib-tab-heading>
 	        <i class="glyphicon glyphicon-bell"></i> Adquisiciones
 	      </uib-tab-heading>
 	    </uib-tab>
