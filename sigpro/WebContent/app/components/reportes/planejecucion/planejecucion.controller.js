@@ -66,46 +66,48 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 	}
 	
 	mi.generarReporte = function (){
-		mi.inicializarDatos();
-		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: mi.prestamoSeleccionado.value }).success(
-			function(response) {
-				mi.proyectoid = response.id;
-				mi.proyectoNombre = response.nombre;
-				mi.objetoTipoNombre = "Proyecto";
-				
-				$http.post('/SPrestamo', { accion: 'getPrestamo', objetoId:mi.prestamoSeleccionado.value,
-					objetoTipo:1,
-					t: (new Date()).getTime()})
-				 .then(function(response){
-					 if (response.data.success && response.data.prestamo != null 
-							 && response.data.prestamo != undefined){
-					 mi.prestamo = response.data.prestamo;
-					 //mi.tabla.push({'etiqueta1',})
-					 mi.setPorcentaje(1);
-					 mi.setPorcentaje(2);
-					 mi.setPorcentaje(3);
-					 mi.setPorcentaje(4);
-					 mi.setPorcentaje(5);
-					 mi.mostrarCargando = true;
-					 $http.post('/SPlanEjecucion', { accion: 'getDatosPlan', proyectoId:mi.proyectoid,
-							t: (new Date()).getTime()})
-						 .then(function(response){
-							 var fecha_actual = moment(response.data.fecha,'DD/MM/YYYY').toDate();
-							 mi.dataRadar[1][0] = Number(response.data.ejecucionFisicaR);
-							 mi.dataRadar[0][0] = Number(response.data.ejecucionFisicaP);
-							 mi.dataRadar[0][2] = Number(response.data.ejecucionFinancieraP);
-							 mi.dataRadar[0][1] = Number(response.data.plazoEjecucionP);
-							 mi.mesReportado = mi.obtenerMes(Number(moment(fecha_actual).format('MM')));
-							 mi.anioFiscal = Number(moment(fecha_actual).format('YYYY'));
-							 mi.mostrar = true; 
-							 mi.mostrarCargando = false;
-						});
-					 
-					 }else{
-						 $utilidades.mensaje('warning','No se encontro datos del prestamo');
-					 }
-				});		
-		});	
+		if (mi.prestamoSeleccionado !=null && mi.prestamoSeleccionado != undefined){
+			mi.inicializarDatos();
+			$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: mi.prestamoSeleccionado.value }).success(
+				function(response) {
+					mi.proyectoid = response.id;
+					mi.proyectoNombre = response.nombre;
+					mi.objetoTipoNombre = "Proyecto";
+					
+					$http.post('/SPrestamo', { accion: 'getPrestamo', objetoId:mi.prestamoSeleccionado.value,
+						objetoTipo:1,
+						t: (new Date()).getTime()})
+					 .then(function(response){
+						 if (response.data.success && response.data.prestamo != null 
+								 && response.data.prestamo != undefined){
+						 mi.prestamo = response.data.prestamo;
+						 //mi.tabla.push({'etiqueta1',})
+						 mi.setPorcentaje(1);
+						 mi.setPorcentaje(2);
+						 mi.setPorcentaje(3);
+						 mi.setPorcentaje(4);
+						 mi.setPorcentaje(5);
+						 mi.mostrarCargando = true;
+						 $http.post('/SPlanEjecucion', { accion: 'getDatosPlan', proyectoId:mi.proyectoid,
+								t: (new Date()).getTime()})
+							 .then(function(response){
+								 var fecha_actual = moment(response.data.fecha,'DD/MM/YYYY').toDate();
+								 mi.dataRadar[1][0] = Number(response.data.ejecucionFisicaR);
+								 mi.dataRadar[0][0] = Number(response.data.ejecucionFisicaP);
+								 mi.dataRadar[0][2] = Number(response.data.ejecucionFinancieraP);
+								 mi.dataRadar[0][1] = Number(response.data.plazoEjecucionP);
+								 mi.mesReportado = mi.obtenerMes(Number(moment(fecha_actual).format('MM')));
+								 mi.anioFiscal = Number(moment(fecha_actual).format('YYYY'));
+								 mi.mostrar = true; 
+								 mi.mostrarCargando = false;
+							});
+						 
+						 }else{
+							 $utilidades.mensaje('warning','No se encontro datos del prestamo');
+						 }
+					});		
+			});	
+		}
 	}
 	
 	mi.exportarExcel = function(){
