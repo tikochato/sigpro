@@ -30,6 +30,8 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	mi.enMillones = true;
 	mi.enMillonesAux = true; 
 	
+	mi.datosOrigniales;
+	
 	
 	mi.fechaOptions = {
 			datepickerMode:"year",
@@ -88,7 +90,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			  };
 	
 	
-mi.options = {
+	mi.options = {
 			
 			legend: {
 				display: true,
@@ -155,40 +157,33 @@ mi.options = {
 	}
 	
 	mi.generarReporte = function (){
+		
 		mi.inicializarDatos();
 		mi.mostrarDescargar = false;
 		
-		if ( mi.prestamoSeleccionado != null && mi.anioSeleccionado > 0 &&  mi.anioSeleccionado.toString().length == 4 ){
+		if ( mi.prestamoSeleccionado != null && mi.anio_inicio > 0 &&  mi.anio_inicio.toString().length == 4 ){
 			mi.inicializarDatos();
 			mi.mostrar=true;
-			$http.post('/SDesembolsos', { accion: 'getDesembolsos'
-				, proyectoId: mi.prestamoSeleccionado.value,ejercicioFiscal:2013,proyectoId:mi.prestamoSeleccionado.value }).success(
+			$http.post('/SDesembolsos', { accion: 'getDesembolsos',
+				 proyectoId: mi.prestamoSeleccionado.value,
+				 anio_inicial:mi.anio_inicio,
+				 anio_final:mi.anio_fin,
+				 t: new Date().getTime()
+				
+				}).success(
 		
 				function(response) {
 					if (response.success){
-						mi.lista = response.lista;
-						var anios_temp = [];
-						for (x in mi.lista){
-							anios_temp.push(mi.lista[x].anio);
-						}
-						anios_temp= anios_temp.sort();
+						mi.datosOrigniales = response;
+						mi.asignarSerie2(mi.datosOrigniales.planificado, mi.datosOrigniales.real,mi.datosOrigniales.costos,1);
 						
-						for (x in anios_temp){
-							var item = [];
-							item.id = anios_temp[x];
-							item.nombre = anios_temp[x];
-							mi.anios.push(item);
-						}
-						if(mi.anios){
-							mi.anioInicial = mi.anios[0].id;
-							mi.anioFinal = mi.anios[mi.anios.length-1].id;
-						}
 						
-						//mi.anioSeleccionado = mi.anios!=null && mi.anios != undefined && mi.anios.length > 0 ?  mi.anios[0].id : undefined;
+						
+						//mi.anio_inicio = mi.anios!=null && mi.anios != undefined && mi.anios.length > 0 ?  mi.anios[0].id : undefined;
 						//mi.agrupacion = mi.agrupaciones[0].id;
 						mi.mostrar = true;
 						mi.mostrarDescargar = true;
-						mi.asignarSerie(mi.agrupacion);
+						//mi.asignarSerie(mi.agrupacion);
 						
 				}else{
 					$utilidades.mensaje('warning','No se encontraron datos para el préstamo');
@@ -200,6 +195,282 @@ mi.options = {
 			mi.mostrar = false
 		}
 	}
+	
+	mi.asignarSerie2 = function (planificado, real,costo, agrupacion){
+		
+		var totalReal=0;
+		var totalPlanificado=0;
+		var totalVariacion=0;
+		var totalCostoPlan=0;
+		var variaciones = [];
+		var porcentajeVariaciones = [];
+		var desembolsoPlanificado = [];
+		var desembolsoReal = [];
+		var costoPlan = [];
+		mi.tabla=[];
+		
+		switch (agrupacion){
+			case 1:
+				var totalItems = (mi.anio_fin - mi.anio_inicio +1) * 12;
+				
+				costoPlan.push ("Costo");
+				costoPlan.push (...costo.slice());
+			
+				desembolsoPlanificado.push("Planificado");
+				desembolsoPlanificado.push(...planificado.slice());
+				
+				desembolsoReal.push("Real");
+				desembolsoReal.push(...real.slice());
+				
+				variaciones.push("Variación");
+				porcentajeVariaciones.push("Porcentaje");
+				
+				for (x = 1;x<=totalItems;x++){
+					totalPlanificado = totalPlanificado+ desembolsoPlanificado[x];
+					totalReal = totalReal + desembolsoReal[x];
+					totalCostoPlan= totalCostoPlan + costoPlan[x];
+					var variacion = desembolsoPlanificado[x] - desembolsoReal[x];
+					var var1 = variacion / desembolsoPlanificado[x];
+					var var2 = variacion / desembolsoReal[x];
+					var1 = (var1 * 100).toFixed(2);
+					var2 = (var2 * 100).toFixed(2);
+					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReal[x] ) * 100).toFixed(2);
+					
+					variaciones.push (variacion)
+					porcentajeVariaciones.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
+					totalVariacion = totalVariacion + variacion;
+				}
+				
+				costoPlan.push(totalCostoPlan);
+				desembolsoPlanificado.push(totalPlanificado);
+				desembolsoReal.push(totalReal);
+				variaciones.push(isNaN((totalVariacion /(totalVariacion > 0 ? totalPlanificado : totalReal)*100).toFixed(2)) ? "0%" :
+					(totalVariacion /(totalVariacion > 0 ? totalPlanificado : totalReal)*100).toFixed(2));
+				porcentajeVariaciones.push("");
+				
+				mi.tabla.push(costoPlan);
+				mi.tabla.push(desembolsoPlanificado);
+				mi.tabla.push(desembolsoReal);
+				mi.tabla.push(variaciones);
+				mi.tabla.push(porcentajeVariaciones);
+				
+				mi.generarEtiquetas(agrupacion,totalItems);
+				mi.convertirMillones();
+					
+				break;
+			case 2:
+				var totalItems = (mi.anio_fin - mi.anio_inicio +1) * 6;
+				
+				costoPlan.push ("Costo");
+				desembolsoPlanificado.push("Planificado");
+				desembolsoReal.push("Real");
+				variaciones.push("Variación");
+				porcentajeVariaciones.push("Porcentaje");
+				
+				var costoPlanTemp = [];
+				costoPlanTemp.push(...costo.slice());
+				var desembolsoRTemp =[];
+				desembolsoRTemp.push(...real.slice());
+				var desembolsoPTemp =[];
+				desembolsoPTemp.push(...planificado.slice());
+				var costoPlanAgrupado = [];
+				var desembolsoRAgrupado =[];
+				var desembolsoPAgrupado =[];
+				
+				for (x=0; x< totalItems ; x++){
+					costoPlanAgrupado.push(costoPlanTemp[x * 2] + costoPlanTemp[x * 2 + 1]);
+					desembolsoRAgrupado.push(desembolsoRTemp[x * 2] + desembolsoRTemp[x * 2 + 1] );
+					desembolsoPAgrupado.push(desembolsoPTemp[x * 2] + desembolsoPTemp[x * 2 + 1])
+				}
+				
+				costoPlan.push (...costoPlanAgrupado.slice());			
+				desembolsoPlanificado.push(...desembolsoRAgrupado.slice());
+				desembolsoReal.push(...desembolsoPAgrupado.slice());
+				
+				for (x = 1;x<=totalItems;x++){
+					totalPlanificado = totalPlanificado+ desembolsoPlanificado[x];
+					totalReal = totalReal + desembolsoReal[x];
+					totalCostoPlan= totalCostoPlan + costoPlan[x];
+					var variacion = desembolsoPlanificado[x] - desembolsoReal[x];
+					var var1 = variacion / desembolsoPlanificado[x];
+					var var2 = variacion / desembolsoReal[x];
+					var1 = (var1 * 100).toFixed(2);
+					var2 = (var2 * 100).toFixed(2);
+					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReal[x] ) * 100).toFixed(2);
+					
+					variaciones.push (variacion)
+					porcentajeVariaciones.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
+					totalVariacion = totalVariacion + variacion;
+				}
+				
+				costoPlan.push(totalCostoPlan);
+				desembolsoPlanificado.push(totalPlanificado);
+				desembolsoReal.push(totalReal);
+				variaciones.push(isNaN((totalVariacion /(totalVariacion > 0 ? totalPlanificado : totalReal)*100).toFixed(2)) ? "0%" :
+					(totalVariacion /(totalVariacion > 0 ? totalPlanificado : totalReal)*100).toFixed(2));
+				porcentajeVariaciones.push("");
+				
+				mi.tabla.push(costoPlan);
+				mi.tabla.push(desembolsoPlanificado);
+				mi.tabla.push(desembolsoReal);
+				mi.tabla.push(variaciones);
+				mi.tabla.push(porcentajeVariaciones);
+				
+				mi.generarEtiquetas(agrupacion,totalItems);
+				mi.convertirMillones();
+					
+				break;
+			case 3:
+				var totalItems = (mi.anio_fin - mi.anio_inicio +1) * 4;
+				
+				costoPlan.push ("Costo");
+				desembolsoPlanificado.push("Planificado");
+				desembolsoReal.push("Real");
+				variaciones.push("Variación");
+				porcentajeVariaciones.push("Porcentaje");
+				
+				var costoPlanTemp = [];
+				costoPlanTemp.push(...costo.slice());
+				var desembolsoRTemp =[];
+				desembolsoRTemp.push(...real.slice());
+				var desembolsoPTemp =[];
+				desembolsoPTemp.push(...planificado.slice());
+				var costoPlanAgrupado = [];
+				var desembolsoRAgrupado =[];
+				var desembolsoPAgrupado =[];
+				
+				for (x=0; x< totalItems ; x++){
+					costoPlanAgrupado.push(costoPlanTemp[x * 2] + costoPlanTemp[x * 2 + 1] + costoPlanTemp[x * 2 + 2]);
+					desembolsoRAgrupado.push(desembolsoRTemp[x * 2] + desembolsoRTemp[x * 2 + 1] + desembolsoRTemp[x * 2 + 2] );
+					desembolsoPAgrupado.push(desembolsoPTemp[x * 2] + desembolsoPTemp[x * 2 + 1] + desembolsoPTemp[x * 2 + 2])
+				}
+				
+				costoPlan.push (...costoPlanAgrupado.slice());			
+				desembolsoPlanificado.push(...desembolsoRAgrupado.slice());
+				desembolsoReal.push(...desembolsoPAgrupado.slice());
+				
+				for (x = 1;x<=totalItems;x++){
+					totalPlanificado = totalPlanificado+ desembolsoPlanificado[x];
+					totalReal = totalReal + desembolsoReal[x];
+					totalCostoPlan= totalCostoPlan + costoPlan[x];
+					var variacion = desembolsoPlanificado[x] - desembolsoReal[x];
+					var var1 = variacion / desembolsoPlanificado[x];
+					var var2 = variacion / desembolsoReal[x];
+					var1 = (var1 * 100).toFixed(2);
+					var2 = (var2 * 100).toFixed(2);
+					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReal[x] ) * 100).toFixed(2);
+					
+					variaciones.push (variacion)
+					porcentajeVariaciones.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
+					totalVariacion = totalVariacion + variacion;
+				}
+				
+				costoPlan.push(totalCostoPlan);
+				desembolsoPlanificado.push(totalPlanificado);
+				desembolsoReal.push(totalReal);
+				variaciones.push(isNaN((totalVariacion /(totalVariacion > 0 ? totalPlanificado : totalReal)*100).toFixed(2)) ? "0%" :
+					(totalVariacion /(totalVariacion > 0 ? totalPlanificado : totalReal)*100).toFixed(2));
+				porcentajeVariaciones.push("");
+				
+				mi.tabla.push(costoPlan);
+				mi.tabla.push(desembolsoPlanificado);
+				mi.tabla.push(desembolsoReal);
+				mi.tabla.push(variaciones);
+				mi.tabla.push(porcentajeVariaciones);
+				
+				mi.generarEtiquetas(agrupacion,totalItems);
+				mi.convertirMillones();
+					
+				break;
+		}
+		
+		
+		
+	}
+	
+	mi.generarEtiquetas = function(agrupacion,totalItems){
+		mi.etiqutas = [];
+		mi.columnas = [];
+		switch (agrupacion){
+			case 1:
+				if (totalItems == 12){
+					mi.etiqutas = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+						"Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre",];
+					mi.columnas.push ("Mes");
+					mi.columnas.push(...mi.etiqutas);
+					mi.columnas.push("Total");
+				}else if (totalItems > 12){
+					var totalAnios = mi.anio_fin - mi.anio_inicio +1;
+					mi.columnas.push ("Mes");
+					for (x = mi.anio_inicio;x<=  mi.anio_fin;x++){
+						
+						mi.etiqutas.push ("Ene-" + x);
+						mi.etiqutas.push ("Feb-" + x);
+						mi.etiqutas.push ("Mar-" + x);
+						mi.etiqutas.push ("Abr-" + x);
+						mi.etiqutas.push ("May-" + x);
+						mi.etiqutas.push ("Jun-" + x);
+						mi.etiqutas.push ("Jul-" + x);
+						mi.etiqutas.push ("Ago-" + x);
+						mi.etiqutas.push ("Sep-" + x);
+						mi.etiqutas.push ("Oct-" + x);
+						mi.etiqutas.push ("Nov-" + x);
+						mi.etiqutas.push ("Dic-" + x);
+					}
+					mi.columnas.push(...mi.etiqutas);
+					mi.columnas.push("Total");
+				}
+				break;
+			case 2:
+				if (totalItems == 6){
+					mi.etiqutas = ["1", "2", "3", "4", "5", "6"];
+					mi.columnas.push ("Mes");
+					mi.columnas.push(...mi.etiqutas);
+					mi.columnas.push("Total");
+				}else if (totalItems > 6){
+					var totalAnios = mi.anio_fin - mi.anio_inicio +1;
+					mi.columnas.push ("Mes");
+					for (x = mi.anio_inicio;x<=  mi.anio_fin;x++){
+						
+						mi.etiqutas.push ("1-" + x);
+						mi.etiqutas.push ("2-" + x);
+						mi.etiqutas.push ("3-" + x);
+						mi.etiqutas.push ("4-" + x);
+						mi.etiqutas.push ("5-" + x);
+						mi.etiqutas.push ("6-" + x);
+					}
+					mi.columnas.push(...mi.etiqutas);
+					mi.columnas.push("Total");
+				}
+			break;
+			case 3:
+				if (totalItems == 4){
+					mi.etiqutas = ["1", "2", "3", "4"];
+					mi.columnas.push ("Mes");
+					mi.columnas.push(...mi.etiqutas);
+					mi.columnas.push("Total");
+				}else if (totalItems > 4){
+					var totalAnios = mi.anio_fin - mi.anio_inicio +1;
+					mi.columnas.push ("Mes");
+					for (x = mi.anio_inicio;x<=  mi.anio_fin;x++){
+						
+						mi.etiqutas.push ("1-" + x);
+						mi.etiqutas.push ("2-" + x);
+						mi.etiqutas.push ("3-" + x);
+						mi.etiqutas.push ("4-" + x);
+					}
+					mi.columnas.push(...mi.etiqutas);
+					mi.columnas.push("Total");
+				}
+			break;
+		}
+	};
+	
+	mi.agruparDatos = function(agrupacion){
+		mi.asignarSerie2(mi.datosOrigniales.planificado, mi.datosOrigniales.real,mi.datosOrigniales.costos,agrupacion);
+		
+	};
+	
 	
 	mi.asignarSerie = function(valor){
 	
@@ -259,8 +530,8 @@ mi.options = {
 		
 		if (mi.mostrar && mi.desembolsos!=null){
 			mi.anio = [];
-			mi.anio.id = mi.anioSeleccionado;
-			mi.anio.nombre = mi.anioSeleccionado;
+			mi.anio.id = mi.anio_inicio;
+			mi.anio.nombre = mi.anio_inicio;
 			mi.tabla=[];
 			if (mi.agrupacion < 6){
 				for (x in mi.lista){
@@ -425,19 +696,23 @@ mi.options = {
 	 
 	 mi.convertirMillones = function(){
 		 mi.desembolsosGrafica = [];
+		 mi.desembolsosGrafica[0] = [];
+		 mi.desembolsosGrafica[1] = [];
 		
-		 mi.desembolsosGrafica = JSON.parse(JSON.stringify(mi.desembolsosOriginal));
+		 mi.desembolsosGrafica[0].push(...mi.tabla[1].slice(1,mi.tabla[1].length -1));
+		 mi.desembolsosGrafica[1].push(...mi.tabla[2].slice(1,mi.tabla[2].length -1));
 		 
 		 
-			 for (x in mi.desembolsos){
+			 
 				 
-				 for (y = 0; y<12 ; y++){
-					 if (mi.enMillones){
-						 mi.desembolsosGrafica[x][y] = mi.desembolsosGrafica[x][y] / 1000000;
-					 }else
-						 break;
-				 }
-			 }
+		 for (y = 0; y<mi.datosOrigniales.planificado.length ; y++){
+			 if (mi.enMillones){
+				 mi.desembolsosGrafica[0][y] = mi.desembolsosGrafica[0][y] / 1000000;
+				 mi.desembolsosGrafica[1][y] = mi.desembolsosGrafica[1][y] / 1000000;
+			 }else
+				 break;
+		 }
+			 
 		  
 	 }
 	 
@@ -448,7 +723,7 @@ mi.options = {
 				 proyectoid: mi.prestamoSeleccionado.value,
 				 anioInicial: mi.anioInicial,
 				 anioFinal: mi.anioFinal,
-				 ejercicioFiscal: mi.anioSeleccionado,
+				 ejercicioFiscal: mi.anio_inicio,
 				 agrupacion: mi.agrupacion,
 				 t:moment().unix()
 			  } ).then(
@@ -470,7 +745,7 @@ mi.options = {
 				 proyectoid: mi.prestamoSeleccionado.value,
 				 anioInicial: mi.anioInicial,
 				 anioFinal: mi.anioFinal,
-				 ejercicioFiscal: mi.anioSeleccionado,
+				 ejercicioFiscal: mi.anio_inicio,
 				 agrupacion: mi.agrupacion,
 				 t:moment().unix()
 			  } ).then(
@@ -485,5 +760,19 @@ mi.options = {
 				 	}
 			  	);
 		};
+		
+		mi.validarParametros = function(){
+			if(mi.anio_inicio != null && mi.anio_inicio.toString().length == 4 && 
+					mi.anio_fin != null && mi.anio_fin.toString().length == 4)
+			{
+
+				if (mi.anio_inicio <= mi.anio_fin){
+					
+					mi.generarReporte();
+				}else{
+					$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
+				}
+			}
+		}
 	 
 }]);

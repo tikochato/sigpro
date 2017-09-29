@@ -100,16 +100,22 @@
 							ng-options="a.text for a in desembolsosc.prestamos"
 							ng-readonly="true"
 							ng-required="true"
-							ng-change="desembolsosc.generarReporte()">
+							ng-change="desembolsosc.validarParametros()">
 							
 							<option value="">Seleccione una préstamo</option>
 						</select>
 					</div>
-					<div class="form-group col-sm-2">
-						<input type="number"  class="inputText" ng-model="desembolsosc.anioSeleccionado" maxlength="4" 
-						ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
-						ng-change="desembolsosc.generarReporte()"/>
-					  	<label for="campo.id" class="floating-label" style="left: 0">*Año Inicial</label>
+					<div class="form-group col-sm-1">
+						<input type="number"  class="inputText" ng-model="desembolsosc.anio_inicio" maxlength="4" 
+						ng-value="controller.anioInicial" onblur="this.setAttribute('value', this.value);"
+						ng-change="desembolsosc.validarParametros()"/>
+					  	<label  class="floating-label" style="left: 0">*Año Inicial</label>
+					</div>
+					<div class="form-group col-sm-1">
+						<input type="number"  class="inputText" ng-model="desembolsosc.anio_fin" maxlength="4" 
+						ng-value="controller.anio_fin" onblur="this.setAttribute('value', this.value);"
+						ng-change="desembolsosc.validarParametros()"/>
+					  	<label for="campo.id" class="floating-label" style="left: 0">*Año Final</label>
 					</div>
 					
 					<div class="col-sm-6" align="right" ng-hide="!desembolsosc.mostrar" >
@@ -125,17 +131,17 @@
 										<span>Q</span></label>
 							</div>
 									<div class="btn-group" style="padding-left: 20px;">
-										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="1" ng-click="desembolsosc.asignarSerie(1)" uib-tooltip="Mensual" role="button" tabindex="1" aria-invalid="false">
+										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="1" ng-click="desembolsosc.agruparDatos(1)" uib-tooltip="Mensual" role="button" tabindex="1" aria-invalid="false">
 										<span>M</span></label>
-										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="2" ng-click="desembolsosc.asignarSerie(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
+										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="2" ng-click="desembolsosc.agruparDatos(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
 										<span>B</span></label>
-										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="3" ng-click="desembolsosc.asignarSerie(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
+										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="3" ng-click="desembolsosc.agruparDatos(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
 										<span>T</span></label>
-										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="4" ng-click="desembolsosc.asignarSerie(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
+										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="4" ng-click="desembolsosc.agruparDatos(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
 										<span>C</span></label>
-										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="5" ng-click="desembolsosc.asignarSerie(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
+										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="5" ng-click="desembolsosc.agruparDatos(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
 										<span>S</span></label>
-										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="6" ng-click="desembolsosc.asignarSerie(6)" uib-tooltip="Anual" role="button" tabindex="6" aria-invalid="false">
+										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="6" ng-click="desembolsosc.agruparDatos(6)" uib-tooltip="Anual" role="button" tabindex="6" aria-invalid="false">
 										<span>A</span></label>
 						</div>
 									
@@ -180,6 +186,7 @@
 					 	 <div ng-if=" desembolsosc.esNumero(col)" >
 					 	 	{{col | formatoMillones : desembolsosc.enMillones }}
 					 	 </div>
+					 	 
 					 	 <div ng-if="! desembolsosc.esNumero(col)" >
 					 	 	{{col}}
 					 	 </div>
