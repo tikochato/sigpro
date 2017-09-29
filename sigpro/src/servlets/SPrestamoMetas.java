@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -233,23 +234,31 @@ public class SPrestamoMetas extends HttpServlet {
 					lstPrestamo.add(tempPrestamo);
 					if(tempPrestamo.objeto_tipo == 3){
 						List<Meta> metas = MetaDAO.getMetasObjeto(tempPrestamo.objeto_id, tempPrestamo.objeto_tipo);
-						for(Meta meta : metas){
-							stprestamo tempMeta =  new stprestamo();
-							tempMeta.objeto_id = tempPrestamo.objeto_id;
-							tempMeta.nombre = meta.getNombre();
-							tempMeta.nivel = nivel +2;
-							tempMeta.objeto_tipo = 0;
-							tempMeta.unidadDeMedida = meta.getMetaUnidadMedida().getId();
-							if(meta.getDatoTipo().getId().equals(2)){
-								tempMeta.metaFinal = meta.getMetaFinalEntero()!=null ? new BigDecimal(meta.getMetaFinalEntero()) : null;
-							}if(meta.getDatoTipo().getId().equals(3)){
-								tempMeta.metaFinal = meta.getMetaFinalDecimal();
+						if(metas!=null){
+							Iterator<Meta> iterator = metas.iterator();
+				    	    while(iterator.hasNext()) {
+				    	    	Meta meta = iterator.next();
+				    	    	if(meta!=null){
+									stprestamo tempMeta =  new stprestamo();
+									tempMeta.objeto_id = tempPrestamo.objeto_id;
+									tempMeta.nombre = meta.getNombre();
+									tempMeta.nivel = nivel +2;
+									tempMeta.objeto_tipo = 0;
+									if(meta.getMetaUnidadMedida()!=null){
+										tempMeta.unidadDeMedida = meta.getMetaUnidadMedida().getId();
+									}
+									if(meta.getDatoTipo()!=null && meta.getDatoTipo().getId().equals(2)){
+										tempMeta.metaFinal = meta.getMetaFinalEntero()!=null ? new BigDecimal(meta.getMetaFinalEntero()) : null;
+									}else if(meta.getDatoTipo()!=null && meta.getDatoTipo().getId().equals(3)){
+										tempMeta.metaFinal = meta.getMetaFinalDecimal();
+									}
+									tempMeta.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(meta);
+									metaValores = new ArrayList<ArrayList<BigDecimal>>();
+									metaValores = PrestamoMetasDAO.getMetaValores(meta.getId(), anioInicial, anioFinal);
+									tempMeta = getMetas(metaValores, anioInicial, anioFinal, tempMeta);
+									lstPrestamo.add(tempMeta);
+				    	    	}
 							}
-							tempMeta.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(meta);
-							metaValores = new ArrayList<ArrayList<BigDecimal>>();
-							metaValores = PrestamoMetasDAO.getMetaValores(meta.getId(), anioInicial, anioFinal);
-							tempMeta = getMetas(metaValores, anioInicial, anioFinal, tempMeta);
-							lstPrestamo.add(tempMeta);
 						}
 					}
 				}
@@ -470,7 +479,7 @@ public class SPrestamoMetas extends HttpServlet {
 		operacionesFila[pos]="";
 		columnasOperacion[pos]="";
 		pos++;
-		titulo[pos] = "% Avance";
+		titulo[pos] = "% Avance Final";
 		tipo[pos] = "double";
 		subtitulo[pos]="";
 		operacionesFila[pos]="";
