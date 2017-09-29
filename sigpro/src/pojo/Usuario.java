@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 25, 2017 8:25:07 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 28, 2017 10:43:48 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -8,9 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -26,7 +23,7 @@ public class Usuario implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1285001385553196115L;
+	private static final long serialVersionUID = 8475017658115726308L;
 	private String usuario;
 	private String password;
 	private String salt;
@@ -38,7 +35,7 @@ public class Usuario implements java.io.Serializable {
 	private int estado;
 	private Set<Colaborador> colaboradors = new HashSet<Colaborador>(0);
 	private Set<ProductoUsuario> productoUsuarios = new HashSet<ProductoUsuario>(0);
-	private Set<Componente> componentes = new HashSet<Componente>(0);
+	private Set<ComponenteUsuario> componenteUsuarios = new HashSet<ComponenteUsuario>(0);
 	private Set<UsuarioPermiso> usuarioPermisos = new HashSet<UsuarioPermiso>(0);
 	private Set<ProyectoUsuario> proyectoUsuarios = new HashSet<ProyectoUsuario>(0);
 	private Set<SubproductoUsuario> subproductoUsuarios = new HashSet<SubproductoUsuario>(0);
@@ -57,9 +54,9 @@ public class Usuario implements java.io.Serializable {
 
 	public Usuario(String usuario, String password, String salt, String email, String usuarioCreo,
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Set<Colaborador> colaboradors, Set<ProductoUsuario> productoUsuarios, Set<Componente> componentes,
-			Set<UsuarioPermiso> usuarioPermisos, Set<ProyectoUsuario> proyectoUsuarios,
-			Set<SubproductoUsuario> subproductoUsuarios) {
+			Set<Colaborador> colaboradors, Set<ProductoUsuario> productoUsuarios,
+			Set<ComponenteUsuario> componenteUsuarios, Set<UsuarioPermiso> usuarioPermisos,
+			Set<ProyectoUsuario> proyectoUsuarios, Set<SubproductoUsuario> subproductoUsuarios) {
 		this.usuario = usuario;
 		this.password = password;
 		this.salt = salt;
@@ -71,7 +68,7 @@ public class Usuario implements java.io.Serializable {
 		this.estado = estado;
 		this.colaboradors = colaboradors;
 		this.productoUsuarios = productoUsuarios;
-		this.componentes = componentes;
+		this.componenteUsuarios = componenteUsuarios;
 		this.usuarioPermisos = usuarioPermisos;
 		this.proyectoUsuarios = proyectoUsuarios;
 		this.subproductoUsuarios = subproductoUsuarios;
@@ -180,16 +177,13 @@ public class Usuario implements java.io.Serializable {
 		this.productoUsuarios = productoUsuarios;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "componente_usuario", catalog = "sipro", joinColumns = {
-			@JoinColumn(name = "usuario", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "componenteid", nullable = false, updatable = false) })
-	public Set<Componente> getComponentes() {
-		return this.componentes;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")
+	public Set<ComponenteUsuario> getComponenteUsuarios() {
+		return this.componenteUsuarios;
 	}
 
-	public void setComponentes(Set<Componente> componentes) {
-		this.componentes = componentes;
+	public void setComponenteUsuarios(Set<ComponenteUsuario> componenteUsuarios) {
+		this.componenteUsuarios = componenteUsuarios;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")

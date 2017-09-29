@@ -17,6 +17,8 @@
 		font-weight: bold;
 	}
 	
+	
+	
 </style>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
@@ -47,6 +49,19 @@
 				</div>
 			</form>
 			<br/> <br/><br/>
+			
+			<div class="row" style="height: 500px" ng-hide="!planc.mostrarCargando" >
+				    	<div class="grid_loading"  style="margin-top: 50px;"   >
+						  	<div class="msg">
+						      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
+								  <br /><br />
+								  <b>Cargando, por favor espere...</b>
+							  </span>
+							</div>
+						  </div>
+             </div>
+			
+			
 			
 				<div class="panel panel-default" ng-hide="!planc.mostrar">
 					

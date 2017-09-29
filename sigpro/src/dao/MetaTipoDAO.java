@@ -1,6 +1,5 @@
 package dao;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +10,8 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojo.Meta;
+import pojo.MetaPlanificado;
 import pojo.MetaTipo;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -167,28 +168,47 @@ public class MetaTipoDAO {
 		return ret;
 	}
 	
-	public static BigDecimal getMetaValorPorIdObjetoTipoMeta(Integer objetoId, Integer objetoTipo, Integer metaTipoId){
-		BigDecimal ret=null;
+	public static List<Meta> getMetasPorObjeto(Integer objetoId, Integer objetoTipo){
+		List<Meta> ret=null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = String.join(" ", "select  sum(mv.valor_decimal)", 
-											"from producto p",
-											"join meta m on m.objeto_id = p.id",
-											"join meta_valor mv ON mv.metaid = m.id",
-											"where p.id = ?1",
-											"and m.objeto_tipo = ?2",
-											"and m.meta_tipoid = ?3");
+			String query = String.join(" ", "select  *",
+				"from meta m",
+				"where m.objeto_id = ?1",
+				"and m.objeto_tipo = ?2",
+				"and m.dato_tipoid in (2,3)");
 			
-			
-			Query<?> metavalor = session.createNativeQuery(query);
-			metavalor.setParameter("2", objetoTipo);
-			metavalor.setParameter("3", metaTipoId);
+			Query<Meta> metavalor = session.createNativeQuery(query,Meta.class);
 			metavalor.setParameter("1", objetoId);
+			metavalor.setParameter("2", objetoTipo);
 			
-			ret = (BigDecimal) metavalor.getSingleResult();
+			ret =  metavalor.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("7", MetaTipoDAO.class, e);
+			CLogger.write("8", MetaTipoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<MetaPlanificado> getMetasPlanificadas(Integer metaId){
+		List<MetaPlanificado> ret=null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select *",
+					"from meta_planificado mp",
+					"where mp.metaid = ?1",
+					"and mp.estado = 1");
+			
+			Query<MetaPlanificado> metavalor = session.createNativeQuery(query,MetaPlanificado.class);
+			metavalor.setParameter("1", metaId);
+			
+			ret =  metavalor.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("8", MetaTipoDAO.class, e);
 		}
 		finally{
 			session.close();

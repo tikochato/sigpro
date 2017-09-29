@@ -170,9 +170,17 @@ public class SDesembolso extends HttpServlet {
 					monto = Utils.String2BigDecimal(map.get("monto"), null);
 					tfecha = Utils.stringToTimestamp(map.get("fecha"));
 					tipo_moneda = Utils.String2Int(map.get("tipo_moneda"), null);
-					Desembolso desembolso = new Desembolso(DesembolsoTipoDAO.getDesembolosTipoPorId(1), 
-							ProyectoDAO.getProyecto(proyectoid), TipoMonedaDAO.getTipoMonedaPorId(tipo_moneda), tfecha, 1, monto, 
-							new BigDecimal(0), null, usuario, null, (id==-1) ? new Date() : null, (id>0) ? new Date() : null);
+					Desembolso desembolso =null;
+					if(id>0){
+						desembolso = DesembolsoDAO.getDesembolsoPorId(id);
+						desembolso.setMonto(monto);
+						desembolso.setFecha(tfecha);
+						desembolso.setTipoMoneda(TipoMonedaDAO.getTipoMonedaPorId(tipo_moneda));
+					}
+					else
+						desembolso = new Desembolso(DesembolsoTipoDAO.getDesembolosTipoPorId(1), 
+								ProyectoDAO.getProyecto(proyectoid), TipoMonedaDAO.getTipoMonedaPorId(tipo_moneda), tfecha, 1, monto, 
+								new BigDecimal(0), null, usuario, null, (id==-1) ? new Date() : null, (id>0) ? new Date() : null);
 					if(id>0)
 						desembolso.setId(id);
 					ui_desembolsos.add(desembolso);

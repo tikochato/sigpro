@@ -11,6 +11,7 @@ import org.hibernate.query.Query;
 import pojo.Componente;
 import pojo.ComponenteUsuario;
 import pojo.ComponenteUsuarioId;
+import pojo.Usuario;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -59,10 +60,11 @@ public class ComponenteDAO {
 			session.beginTransaction();
 			Componente.setNivel(1);
 			session.saveOrUpdate(Componente);
-			ComponenteUsuario cu = new ComponenteUsuario(new ComponenteUsuarioId(Componente.getId(), Componente.getUsuarioCreo()), Componente);
+			Usuario usuario = UsuarioDAO.getUsuario(Componente.getUsuarioCreo());
+			ComponenteUsuario cu = new ComponenteUsuario(new ComponenteUsuarioId(Componente.getId(), Componente.getUsuarioCreo()), Componente, usuario);
 			session.saveOrUpdate(cu);
 			if(!Componente.getUsuarioCreo().equals("admin")){
-				ComponenteUsuario cu_admin = new ComponenteUsuario(new ComponenteUsuarioId(Componente.getId(), "admin"), Componente);
+				ComponenteUsuario cu_admin = new ComponenteUsuario(new ComponenteUsuarioId(Componente.getId(), "admin"), Componente, UsuarioDAO.getUsuario("admin"));
 				session.saveOrUpdate(cu_admin);
 			}
 			session.getTransaction().commit();

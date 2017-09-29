@@ -14,6 +14,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 	mi.anioFiscal = "";
 	mi.mesReportado = "";
 	mi.prestamo = {};
+	mi.mostrarCargando = false;
 	
 	mi.fechaOptions = {
 			datepickerMode:"year",
@@ -85,7 +86,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 					 mi.setPorcentaje(3);
 					 mi.setPorcentaje(4);
 					 mi.setPorcentaje(5);
-					 
+					 mi.mostrarCargando = true;
 					 $http.post('/SPlanEjecucion', { accion: 'getDatosPlan', proyectoId:mi.proyectoid,
 							t: (new Date()).getTime()})
 						 .then(function(response){
@@ -97,6 +98,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 							 mi.mesReportado = mi.obtenerMes(Number(moment(fecha_actual).format('MM')));
 							 mi.anioFiscal = Number(moment(fecha_actual).format('YYYY'));
 							 mi.mostrar = true; 
+							 mi.mostrarCargando = false;
 						});
 					 
 					 }else{

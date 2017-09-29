@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 25, 2017 8:25:07 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 28, 2017 10:43:48 AM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -13,7 +13,7 @@ public class MetaPlanificadoId implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3361974376338530882L;
+	private static final long serialVersionUID = -3841532910343893111L;
 	private int metaid;
 	private int ejercicio;
 
@@ -52,8 +52,7 @@ public class MetaPlanificadoId implements java.io.Serializable {
 			return false;
 		MetaPlanificadoId castOther = (MetaPlanificadoId) other;
 
-		return (this.getMetaid() == castOther.getMetaid())
-				&& (this.getEjercicio() == castOther.getEjercicio());
+		return (this.getMetaid() == castOther.getMetaid()) && (this.getEjercicio() == castOther.getEjercicio());
 	}
 
 	public int hashCode() {

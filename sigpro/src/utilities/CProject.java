@@ -174,7 +174,7 @@ public class CProject {
 				, null, null, null, null, null, null, null,null, null, null, null, null, null, null,null,
 				task.getStart(),task.getFinish(),(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName()
-				,null,"1",0,null,null,null,null,null,null,null,null,null);
+				,null,"1",0,0,null,null,null,null,null,null,null,null,null);
 		
 		return ProyectoDAO.guardarProyecto(proyecto) ? proyecto : null;
 	}

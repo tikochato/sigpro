@@ -181,26 +181,16 @@ public class RiesgoDAO {
 		return ret;
 	}
 	
-	public static List<Riesgo> getRiesgosPaginaPorObjeto (int pagina, int numeroRiesgos, int objetoId, int objetoTipo
+	public static List<Riesgo> getRiesgosPorObjeto (int pagina, int numeroRiesgos, int objetoId, int objetoTipo
 			,String filtro_nombre, String filtro_usuario_creo,
 			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion){
 		List<Riesgo> ret = new ArrayList<Riesgo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = "SELECT r FROM Riesgo r "
-					+ "join r.objetoRiesgos o "
+			String query = "SELECT r FROM Riesgo as r inner join r.objetoRiesgos o "
 					+ "WHERE r.estado = 1 "
 					+ "and o.id.objetoId = :objid "
 					+ "and o.id.objetoTipo = :objetoTipo";
-			String query_a="";
-			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
-				query_a = String.join("",query_a, " r.nombre LIKE '%",filtro_nombre,"%' ");
-			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
-				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " r.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
-			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
-				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(r.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
-			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
-			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY r.",columna_ordenada,orden_direccion ) : query;
 			
 			Query<Riesgo> criteria = session.createQuery(query,Riesgo.class);
 			criteria.setParameter("objid", objetoId);

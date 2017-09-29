@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 25, 2017 8:25:07 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 28, 2017 10:43:48 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -161,7 +161,6 @@ public class MetaPlanificado implements java.io.Serializable {
 	@EmbeddedId
 
 	@AttributeOverrides({ @AttributeOverride(name = "metaid", column = @Column(name = "metaid", nullable = false)),
-			@AttributeOverride(name = "mes", column = @Column(name = "mes", nullable = false)),
 			@AttributeOverride(name = "ejercicio", column = @Column(name = "ejercicio", nullable = false)) })
 	public MetaPlanificadoId getId() {
 		return this.id;
