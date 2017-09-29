@@ -4,352 +4,106 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+
+import pojo.Meta;
+import pojo.MetaAvance;
+import utilities.CHibernateSession;
 import utilities.CLogger;
 import utilities.CMariaDB;
  
 public class PrestamoMetasDAO {
-    public static ArrayList<Integer> getEstructuraArbolComponentes(int idPrestamo, Connection conn){
-    	ArrayList<Integer> ret = new ArrayList<Integer>();
-        try {
-            if( !conn.isClosed() ){
-                try{
-                    String str_Query = String.join(" ","select componente, min(fecha_inicio) fecha from estructura_arbol",
-                            "where prestamo = ? ",
-                            "and componente is not null",
-                            "group by componente",
-                            "order by 2;");
-                    
-                    PreparedStatement pstm  = conn.prepareStatement(str_Query);
-                    pstm.setInt(1, idPrestamo);
-                    ResultSet rs = pstm.executeQuery();
-                    
-                    while(rs!=null && rs.next()){
-                       ret.add(rs.getInt("componente") );
-                    }
-                    
-                    rs.close();
-                    pstm.close();
-                }
-                catch(Throwable e){
-                    CLogger.write("1", PrestamoMetasDAO.class, e);
-                }
-            }
-        } catch ( SQLException e) {
-            e.printStackTrace();
-        }
-        return ret;
         
-    }
-    
-    public static ArrayList<Integer> getEstructuraArbolProducto(int idPrestamo, int idComponente, Connection conn){
-    	ArrayList<Integer> ret = new ArrayList<Integer>();
-        try {
-            if( !conn.isClosed()){
-                try{
-                    String str_Query = String.join(" ","select producto, min(fecha_inicio) fecha ",
-                            "from estructura_arbol",
-                            "where prestamo = ? ",
-                            "and componente = ? ",
-                            "and producto is not null",
-                            "group by producto",
-                            "order by 2");
-                    
-                    PreparedStatement pstm  = conn.prepareStatement(str_Query);
-                    pstm.setInt(1, idPrestamo);
-                    pstm.setInt(2, idComponente);
-                    ResultSet rs = pstm.executeQuery();
-                   
-                    
-                    while(rs!=null && rs.next()){
-                        ret.add(rs.getInt("producto"));
-                    }
-                    
-                    rs.close();
-                    pstm.close();
-                }
-                catch(Throwable e){
-                    CLogger.write("2", PrestamoMetasDAO.class, e);
-                }
-                
-            }
-        } catch (SQLException e) {
-            CLogger.write("2", PrestamoMetasDAO.class, e);
-        }
-        return ret;
-    }
-    
-    public static ArrayList<Integer> getEstructuraArbolSubProducto(int idPrestamo,int idComponente, int idProducto, Connection conn){
-    	ArrayList<Integer> ret = new ArrayList<Integer>();
-        try {
-            if( !conn.isClosed() ){
-                try{
-                    String str_Query = String.join(" ","select subproducto, min(fecha_inicio) fecha from estructura_arbol",
-                            "where prestamo = ? ",
-                            "and componente = ? ",
-                            "and producto = ? ",
-                            "and subproducto is not null",
-                            "group by subproducto",
-                            "order by 2;");
-                    PreparedStatement pstm  = conn.prepareStatement(str_Query);
-                    pstm.setInt(1, idPrestamo);
-                    pstm.setInt(2, idComponente);
-                    pstm.setInt(3, idProducto);
-                    ResultSet rs = pstm.executeQuery();
-                    
-                    while(rs!=null && rs.next()){
-                       ret.add(rs.getInt("subproducto"));
-                    }
-                    
-                    rs.close();
-                    pstm.close();
-                }
-                catch(Throwable e){
-                    CLogger.write("3", PrestamoMetasDAO.class, e);
-                }            
-            }
-        } catch (SQLException e) {
-            CLogger.write("3", PrestamoMetasDAO.class, e);
-        }
-        
-        
-        return ret;
-    }
-    
-    public static ArrayList<ArrayList<Integer>> getEstructuraArbolComponentesActividades(int idPrestamo, int idComponente, Connection conn){
-    	ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
-        try {
-            if( !conn.isClosed()){
-                try{
-                    String str_Query = String.join(" ","select prestamo,componente, actividad, treelevel, min(fecha_inicio) fecha",
-                            "from estructura_arbol",
-                            "where prestamo = ? ",
-                            "and componente = ? ",
-                            "and producto is null",
-                            "and actividad is not null",
-                            "group by prestamo, componente, actividad",
-                            "order by 5, treelevel");
-                    
-                    PreparedStatement pstm  = conn.prepareStatement(str_Query);
-                    pstm.setFetchSize(50);
-                    pstm.setInt(1, idPrestamo);
-                    pstm.setInt(2, idComponente);
-                    ResultSet rs = pstm.executeQuery();
-                    
-                    while(rs!=null && rs.next()){
-                        ArrayList<Integer> temp = new ArrayList<Integer>();
-                        temp.add(rs.getInt("actividad"));
-                        temp.add(rs.getInt("treelevel"));
-                        ret.add(temp);
-                    }
-                    
-                    rs.close();
-                    pstm.close();
-                }
-                catch(Throwable e){
-                    CLogger.write("4", PrestamoMetasDAO.class, e);
-                }
-                
-            }
-        } catch (SQLException e) {
-            CLogger.write("4", PrestamoMetasDAO.class, e);
-        }
-        return ret;
-    }
-    
-    public static ArrayList<ArrayList<Integer>> getEstructuraArbolProductoActividades(int idPrestamo, int idComponente, int idProducto, Connection conn){
-        ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
-        try {
-            if( !conn.isClosed()){
-                try{
-                    String str_Query = String.join(" ","select prestamo,componente, producto, actividad, treelevel, min(fecha_inicio) fecha",
-                            "from estructura_arbol",
-                            "where prestamo = ? ",
-                            "and componente = ? ",
-                            "and producto = ? ",
-                            "and subproducto is null",
-                            "and actividad is not null",
-                            "group by prestamo, componente, producto,actividad",
-                            "order by 6, treelevel");
-                    
-                    PreparedStatement pstm  = conn.prepareStatement(str_Query);
-                    pstm.setFetchSize(50);
-                    pstm.setInt(1, idPrestamo);
-                    pstm.setInt(2, idComponente);
-                    pstm.setInt(3, idProducto);
-                    ResultSet rs = pstm.executeQuery();
-                    
-                    while(rs!=null && rs.next()){
-                    	ArrayList<Integer> temp = new ArrayList<Integer>();
-                        temp.add(rs.getInt("actividad"));
-                        temp.add(rs.getInt("treelevel"));
-                        ret.add(temp);
-                    }
-                    
-                    rs.close();
-                    pstm.close();
-                }
-                catch(Throwable e){
-                    CLogger.write("5", PrestamoMetasDAO.class, e);
-                }
-                
-            }
-        } catch (SQLException e) {
-            CLogger.write("5", PrestamoMetasDAO.class, e);
-        }
-        
-        
-        
-        return ret;
-    }
-    
-    public static ArrayList<ArrayList<Integer>> getEstructuraArbolSubProductoActividades(int idPrestamo, int idComponente, int idProducto, int idsubProducto,
-            Connection conn){
-    	ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
-        try {
-            if( !conn.isClosed() ){
-                try{
-                    String str_Query = String.join(" ","select prestamo,componente, producto, subproducto, actividad, treelevel,min(fecha_inicio) fecha",
-                            "from estructura_arbol",
-                            "where prestamo = ? ",
-                            "and componente = ? ",
-                            "and producto = ? ",
-                            "and subproducto = ? ",
-                            "and actividad is not null",
-                            "group by prestamo, componente, producto,subproducto, actividad",
-                            "order by 7, treelevel");
-                    
-                    PreparedStatement pstm  = conn.prepareStatement(str_Query);
-                    pstm.setFetchSize(1000);
-                    pstm.setInt(1, idPrestamo);
-                    pstm.setInt(2, idComponente);
-                    pstm.setInt(3, idProducto);
-                    pstm.setInt(4, idsubProducto);
-                    ResultSet rs = pstm.executeQuery();
-                    
-                    while(rs!=null && rs.next()){
-                        ArrayList<Integer> temp = new ArrayList<Integer>();
-                        temp.add(rs.getInt("actividad"));
-                        temp.add(rs.getInt("treelevel"));
-                        ret.add(temp);
-                    }
-                    
-                    rs.close();
-                    pstm.close();
-                }
-                catch(Throwable e){
-                    CLogger.write("6",PrestamoMetasDAO.class, e);
-                }
-                
-            }
-        } catch (SQLException e) {
-            CLogger.write("6", PrestamoMetasDAO.class, e);
-        }
-        
-        return ret;
-    }
-    
-    public static ArrayList<ArrayList<Integer>> getEstructuraArbolPrestamoActividades(int idPrestamo, Connection conn){
-    	 ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
-        try {
-            if( !conn.isClosed() ){
-                try{
-                    String str_Query = String.join(" ","select prestamo,actividad, treelevel, min(fecha_inicio) fecha",
-                            "from estructura_arbol",
-                            "where prestamo = ? ",
-                            "and componente is null",
-                            "and producto is null",
-                            "and subproducto is null",
-                            "and actividad is not null",
-                            "group by prestamo, actividad",
-                            "order by 4, treelevel");
-                    
-                    PreparedStatement pstm  = conn.prepareStatement(str_Query);
-                    pstm.setFetchSize(50);
-                    pstm.setInt(1, idPrestamo);
-                    ResultSet rs = pstm.executeQuery();
-                    
-                    while(rs!=null && rs.next()){
-                        ArrayList<Integer> temp = new ArrayList<Integer>();
-                        temp.add(rs.getInt("actividad"));
-                        temp.add( rs.getInt("treelevel"));   
-                        ret.add(temp);
-                    }
-                    
-                    rs.close();
-                    pstm.close();
-                    
-                }
-                catch(Throwable e){
-                    CLogger.write("7",PrestamoMetasDAO.class, e);
-                }
-            }
-        } catch (SQLException e) {
-            CLogger.write("7", PrestamoMetasDAO.class, e);
-        }
-        
-        return ret;
-    }
-    
-    public static ArrayList<ArrayList<BigDecimal>> getMetasPorProducto(Integer producto, Integer anoInicial, Integer anoFinal){
+    public static ArrayList<ArrayList<BigDecimal>> getMetaValores(Integer metaId, Integer anioInicial, Integer anioFinal){
     	ArrayList<ArrayList<BigDecimal>> result = new ArrayList<ArrayList<BigDecimal>>();
 
 		try{
 			if(CMariaDB.connect()){
 				Connection conn = CMariaDB.getConnection();
-				String str_Query = String.join(" ", "select t1.anio ejercicio, t1.objeto_id, t1.objeto_tipo, t1.meta_unidad_medidaid, ",
-						"SUM(case when t1.mes = 1 and t1.meta_tipoid = 1 then t1.valor end) eneroP, ",
-						"SUM(case when t1.mes = 1 and t1.meta_tipoid = 2 then t1.valor end) eneroR, ",
-						"SUM(case when t1.mes = 2 and t1.meta_tipoid = 1 then t1.valor end) febreroP, ",
-						"SUM(case when t1.mes = 2 and t1.meta_tipoid = 2 then t1.valor end) febreroR, ",
-						"SUM(case when t1.mes = 3 and t1.meta_tipoid = 1 then t1.valor end) marzoP, ",
-						"SUM(case when t1.mes = 3 and t1.meta_tipoid = 2 then t1.valor end) marzoR, ",
-						"SUM(case when t1.mes = 4 and t1.meta_tipoid = 1 then t1.valor end) abrilP, ",
-						"SUM(case when t1.mes = 4 and t1.meta_tipoid = 2 then t1.valor end) abrilR, ",
-						"SUM(case when t1.mes = 5 and t1.meta_tipoid = 1 then t1.valor end) mayoP, ",
-						"SUM(case when t1.mes = 5 and t1.meta_tipoid = 2 then t1.valor end) mayoR, ",
-						"SUM(case when t1.mes = 6 and t1.meta_tipoid = 1 then t1.valor end) junioP, ",
-						"SUM(case when t1.mes = 6 and t1.meta_tipoid = 2 then t1.valor end) junioR, ",
-						"SUM(case when t1.mes = 7 and t1.meta_tipoid = 1 then t1.valor end) julioP, ",
-						"SUM(case when t1.mes = 7 and t1.meta_tipoid = 2 then t1.valor end) julioR, ",
-						"SUM(case when t1.mes = 8 and t1.meta_tipoid = 1 then t1.valor end) agostoP, ",
-						"SUM(case when t1.mes = 8 and t1.meta_tipoid = 2 then t1.valor end) agostoR, ",
-						"SUM(case when t1.mes = 9 and t1.meta_tipoid = 1 then t1.valor end) septiembreP, ",
-						"SUM(case when t1.mes = 9 and t1.meta_tipoid = 2 then t1.valor end) septiembreR, ",
-						"SUM(case when t1.mes = 10 and t1.meta_tipoid = 1 then t1.valor end) octubreP, ",
-						"SUM(case when t1.mes = 10 and t1.meta_tipoid = 2 then t1.valor end) octubreR, ",
-						"SUM(case when t1.mes = 11 and t1.meta_tipoid = 1 then t1.valor end) noviembreP, ",
-						"SUM(case when t1.mes = 11 and t1.meta_tipoid = 2 then t1.valor end) noviembreR, ",
-						"SUM(case when t1.mes = 12 and t1.meta_tipoid = 1 then t1.valor end) diciembreP, ",
-						"SUM(case when t1.mes = 12 and t1.meta_tipoid = 2 then t1.valor end) diciembreR, ",
-						"SUM(case when t1.meta_tipoid = 3 then t1.valor end) lineaBase, ",
-						"SUM(case when t1.meta_tipoid = 4 then t1.valor end) metaFinal ",
-						"from ",
-						"( ",
-						"select m.objeto_id, m.objeto_tipo, m.meta_tipoid, m.meta_unidad_medidaid, YEAR(mv.fecha) anio, MONTH(mv.fecha) mes, ",
-						"mv.valor_decimal valor ",
-						"from meta m ",
-						"join meta_valor mv on m.id = mv.metaid ",
-						"where m.objeto_id = ? and m.objeto_tipo = ? ",
-						"and m.estado = 1 ",
-						"and (mv.estado = 1 or mv.estado = 2) ",
-						") t1 ",
-						"where t1.anio between ? and ? ",
-						"group by t1.anio ");
+				String str_Query = String.join(" ", "select valores.ejercicio, SUM(eneroP) eneroP, SUM(eneroR) eneroR, SUM(febreroP) febreroP, SUM(febreroR) febreroR,",
+						"SUM(marzoP) marzoP, SUM(marzoR) marzoR, SUM(abrilP) abrilP, SUM(abrilR) abrilR, SUM(mayoP) mayoP, SUM(mayoR) mayoR, SUM(junioP) junioP, SUM(junioR) junioR,",
+						"SUM(julioP) julioP, SUM(julioR) julioR, SUM(agostoP) agostoP, SUM(agostoR) agostoR, SUM(septiembreP) septiembreP, SUM(septiembreR) septiembreR, ",
+						"SUM(octubreP) octubreP, SUM(octubreR) octubreR, SUM(noviembreP) noviembreP, SUM(noviembreR) noviembreR, SUM(diciembreP) diciembreP, SUM(diciembreR) diciembreR ",
+						"from",
+						"(select mp.metaid, ejercicio,",
+						"CASE  WHEN m.dato_tipoid = 2 THEN mp.enero_entero",
+						"WHEN m.dato_tipoid = 3 THEN mp.enero_decimal  END eneroP,",
+						"CASE WHEN m.dato_tipoid = 2 THEN mp.febrero_entero",
+						"WHEN m.dato_tipoid = 3 THEN mp.febrero_decimal END febreroP ,",
+						"CASE WHEN m.dato_tipoid = 2 THEN mp.marzo_entero",
+						"WHEN m.dato_tipoid = 3 THEN mp.marzo_decimal  END marzoP ,",
+						"CASE WHEN m.dato_tipoid = 2 THEN mp.abril_entero",
+						"WHEN m.dato_tipoid = 3 THEN mp.abril_decimal  END abrilP ,",
+						"CASE WHEN m.dato_tipoid = 2 THEN mp.mayo_entero",
+						"WHEN m.dato_tipoid = 3 THEN mp.mayo_decimal  END mayoP ,",
+						"CASE WHEN m.dato_tipoid = 2 THEN mp.junio_entero",
+						"WHEN m.dato_tipoid = 3 THEN mp.junio_decimal  END junioP ,",
+						"CASE WHEN m.dato_tipoid = 2 THEN mp.julio_entero",
+						"WHEN m.dato_tipoid = 3 THEN mp.julio_decimal  END julioP ,",
+						"CASE WHEN m.dato_tipoid = 2 THEN mp.agosto_entero",
+						"WHEN m.dato_tipoid = 3 THEN mp.agosto_decimal  END agostoP ,",
+						"CASE WHEN m.dato_tipoid = 2 THEN mp.septiembre_entero",
+						"WHEN m.dato_tipoid = 3 THEN mp.septiembre_decimal  END septiembreP ,",
+						"CASE WHEN m.dato_tipoid = 2 THEN mp.octubre_entero",
+						"WHEN m.dato_tipoid = 3 THEN mp.octubre_decimal  END octubreP ,",
+						"CASE WHEN m.dato_tipoid = 2 THEN mp.noviembre_entero",
+						"WHEN m.dato_tipoid = 3 THEN mp.noviembre_decimal  END noviembreP ,",
+						"CASE WHEN m.dato_tipoid = 2 THEN mp.diciembre_entero",
+						"WHEN m.dato_tipoid = 3 THEN mp.diciembre_decimal  END diciembreP ,",
+						"0 eneroR, 0 febreroR, 0 marzoR, 0 abrilR, 0 mayoR, 0 junioR, 0 julioR, 0 agostoR, 0 septiembreR, 0 octubreR, 0 noviembreR, 0 diciembreR",
+						"from meta_planificado mp",
+						"join meta m on mp.metaid = m.id",
+						"where metaid = ? ",
+						"and ejercicio between ? and ?",
+						"union",
+						"select t1.metaid, t1.anio ejercicio,", 
+						"0 eneroP, 0 febreroP, 0 marzoP, 0 abrilP, 0 mayoP, 0 junioP, 0 julioP, 0 agostoP, 0 septiembreP, 0 octubreP, 0 noviembreP, 0 diciembreP,",
+						"SUM(case when t1.mes = 1 then t1.valor end) eneroR,", 
+						"SUM(case when t1.mes = 2 then t1.valor end) febreroR, ",
+						"SUM(case when t1.mes = 3 then t1.valor end) marzoR,", 
+						"SUM(case when t1.mes = 4 then t1.valor end) abrilR,", 
+						"SUM(case when t1.mes = 5 then t1.valor end) mayoR,", 
+						"SUM(case when t1.mes = 6 then t1.valor end) junioR,", 
+						"SUM(case when t1.mes = 7 then t1.valor end) julioR,", 
+						"SUM(case when t1.mes = 8 then t1.valor end) agostoR,", 
+						"SUM(case when t1.mes = 9 then t1.valor end) septiembreR,",
+						"SUM(case when t1.mes = 10 then t1.valor end) octubreR,",
+						"SUM(case when t1.mes = 11 then t1.valor end) noviembreR, ",
+						"SUM(case when t1.mes = 12 then t1.valor end) diciembreR",
+						"from (",
+						"select ma.metaid, YEAR(ma.fecha) anio, MONTH(ma.fecha) mes,", 
+						"CASE", 
+						"WHEN m.dato_tipoid = 2 THEN ma.valor_entero",
+						"WHEN m.dato_tipoid = 3 THEN ma.valor_decimal",
+						"END valor", 
+						"from meta_avance ma", 
+						"join meta m on ma.metaid = m.id",
+						"where ma.metaid = ?",
+						"and ma.estado = 1", 
+						"and YEAR(ma.fecha) between ? and ?",
+						") t1",
+						"group by t1.anio",
+						") valores", 
+						"group by ejercicio"
+						);
 				PreparedStatement pstm  = conn.prepareStatement(str_Query);
-				pstm.setFetchSize(1000);
-                pstm.setInt(1, producto);
-                pstm.setInt(2, 3);
-                pstm.setInt(3, anoInicial);
-                pstm.setInt(4, anoFinal);
+				pstm.setInt(1, metaId);
+                pstm.setInt(2, anioInicial);
+                pstm.setInt(3, anioFinal);
+                pstm.setInt(4, metaId);
+                pstm.setInt(5, anioInicial);
+                pstm.setInt(6, anioFinal);
                 ResultSet rs = pstm.executeQuery();
                 
                 while(rs!=null && rs.next()){
                     ArrayList<BigDecimal> temp = new ArrayList<BigDecimal>();
-            		temp.add(rs.getBigDecimal("eneroP"));
-            		temp.add(rs.getBigDecimal("eneroR"));
+                    temp.add(rs.getBigDecimal("eneroP"));
+                    temp.add(rs.getBigDecimal("eneroR"));
                     temp.add(rs.getBigDecimal("febreroP"));
                     temp.add(rs.getBigDecimal("febreroR"));
                     temp.add(rs.getBigDecimal("marzoP"));
@@ -373,9 +127,6 @@ public class PrestamoMetasDAO {
                     temp.add(rs.getBigDecimal("diciembreP"));
                     temp.add(rs.getBigDecimal("diciembreR"));
                     temp.add(new BigDecimal(rs.getInt("ejercicio")));
-                    temp.add(new BigDecimal(rs.getInt("meta_unidad_medidaid")));
-                    temp.add(new BigDecimal(rs.getInt("lineaBase")));
-                    temp.add(new BigDecimal(rs.getInt("metaFinal")));
                     result.add(temp);
                 }
                 
@@ -385,9 +136,56 @@ public class PrestamoMetasDAO {
 			}
 		}
 		catch(Throwable e){
-			CLogger.write("8", ReporteDAO.class, e);
+			CLogger.write("8", PrestamoMetasDAO.class, e);
 		}
 		
 		return result;
 	}
+    
+    public static BigDecimal getPorcentajeAvanceMeta(Meta meta){
+    	BigDecimal totalAvance = null;
+    	Integer datoTipo = meta.getDatoTipo().getId(); 
+    	if(datoTipo.equals(2) || datoTipo.equals(3)){
+	    	totalAvance = new BigDecimal(0);
+	    	
+	    	List<MetaAvance> ret = new ArrayList<MetaAvance>();
+			Session session = CHibernateSession.getSessionFactory().openSession();
+			try{
+				Query<MetaAvance> criteria = session.createQuery("FROM MetaAvance ma where ma.id.metaid =:metaid ", MetaAvance.class);
+				criteria.setParameter("metaid", meta.getId());
+				ret = criteria.getResultList();
+				
+				BigDecimal sumaDecimal = new BigDecimal(0);
+	    		Integer sumaEntero = 0;
+	    		Iterator<MetaAvance> iterator = ret.iterator();
+	    	    while(iterator.hasNext()) {
+	    	    	MetaAvance avance = iterator.next();
+	    			if(datoTipo.equals(2)){
+	    				if(avance.getValorEntero()!=null){
+	    					sumaEntero += avance.getValorEntero();
+	    				}
+	    			}else if(datoTipo.equals(3)){
+	    				if(avance.getValorDecimal()!=null){
+	    					sumaDecimal = sumaDecimal.add(avance.getValorDecimal());
+	    				}
+	    			}
+	    		}
+	    		Integer metaFinalEntero = meta.getMetaFinalEntero()!=null ? meta.getMetaFinalEntero() : 0;
+	    		BigDecimal metaFinalDecimal = meta.getMetaFinalDecimal()!=null ? meta.getMetaFinalDecimal() : new BigDecimal(0);
+	    		if(datoTipo.equals(2) && metaFinalEntero.compareTo(0)!=0){
+    				totalAvance = new BigDecimal((sumaEntero/metaFinalEntero)*100).setScale(2, BigDecimal.ROUND_HALF_UP);
+    			}else if(datoTipo.equals(3)&& metaFinalDecimal.compareTo(new BigDecimal(0))!=0){
+    				totalAvance = (sumaDecimal.divide(metaFinalDecimal)).multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP);
+    			}
+			}
+			catch(Throwable e){
+				CLogger.write("1", PrestamoMetasDAO.class, e);
+			}
+			finally{
+				session.close();
+			}
+    	}
+    	return totalAvance;
+    }
+    
 }

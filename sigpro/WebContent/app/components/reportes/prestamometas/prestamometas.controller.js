@@ -14,7 +14,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	mi.AnteriorActivo = false;
 	mi.enMillones = true;
 	mi.agrupacionActual = 1
-	mi.columnasTotal = 2;
+	mi.columnasTotal = 3;
 	mi.limiteAnios = 5;
 	mi.tamanioMinimoColumna = 125;
 	mi.tamanioMinimoColumnaMillones = 60;
@@ -37,7 +37,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	var AGRUPACION_SEMESTRE= 5;
 	var AGRUPACION_ANUAL= 6;
 	
-	var MES_DISPLAY_NAME = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+	var MES_DISPLAY_NAME = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 	var MES_DISPLAY_NAME_MIN = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 	var BIMESTRE_DISPLAY_NAME = ['Bimestre 1', 'Bimestre 2','Bimestre 3','Bimestre 4','Bimestre 5','Bimestre 6'];
 	var TRIMESTRE_DISPLAY_NAME = ['Trimestre 1', 'Trimestre 2', 'Trimestre 3', 'Trimestre 4'];
@@ -293,7 +293,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 					 for (x in mi.data){
 						 var totalFinal = {"planificado": null, "real": null};
 						 var fila = [];
-						 if(mi.data[x].objeto_tipo == 3){
+						 if(mi.data[x].objeto_tipo == 0){
 							 totalFinal = {"planificado": 0, "real": 0};
 							 for(a in mi.data[x].anios){
 								 var totalAnual = {"planificado": 0, "real": 0};
@@ -307,9 +307,13 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 								 }
 								 totalFinal.planificado += totalAnual.planificado;
 								 totalFinal.real += totalAnual.real;
+								 totalAnual.planificado = parseFloat(totalAnual.planificado).toFixed(2);
+								 totalAnual.real = parseFloat(totalAnual.real).toFixed(2);
 								 var tot = {"valor": totalAnual};
 								 fila.push(tot);
 								 mi.data[x].anios[a] = mi.agruparMeses(anio);
+								 totalFinal.planificado = parseFloat(totalFinal.planificado).toFixed(2);
+								 totalFinal.real = parseFloat(totalFinal.real).toFixed(2);
 							 }
 						 }else{
 							 for(a in mi.data[x].anios){
@@ -391,7 +395,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 							mi.data = JSON.parse(JSON.stringify(mi.dataOriginal));
 							mi.agrupacionActual = agrupacion;
 							for (x in mi.data){
-								 if(mi.data[x].objeto_tipo == 3){
+								 if(mi.data[x].objeto_tipo == 0){
 									 for(a in mi.data[x].anios){
 										 var anio = mi.data[x].anios[a];
 										 mi.data[x].anios[a] = mi.agruparMeses(anio);
@@ -508,7 +512,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			anio = indice - (mes*mi.aniosTotal.length);
 			var item = mi.data[itemIndice];
 			var valor = Object.values(item.anios[anio])[mes];
-			if(valor[tipoMeta]==null && mi.data[itemIndice].objeto_tipo==3){
+			if(valor[tipoMeta]==null && mi.data[itemIndice].objeto_tipo==0){
 				return 0;
 			}
 			return valor[tipoMeta];

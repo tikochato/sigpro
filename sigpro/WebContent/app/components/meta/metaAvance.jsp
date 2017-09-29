@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<style>
+		.filaIngreso  > td{
+			padding: 0px !important;
+			padding-left: 8px !important;
+			padding-right: 8px !important;
+			vertical-align: initial !important; 
+		}
+	</style>
 <div class="modal-body" id="modal-body" style="height: 90vh;">
 <div class="row">
   	<div class="col-sm-12" style="font-weight: bold;">Avances de Meta</div>
@@ -29,18 +37,41 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr ng-repeat="row in modalAvances.avanceCollection">
+				<tr class="filaIngreso" ng-repeat="row in modalAvances.avanceCollection">
 					<td>
 						<div class="form-group">
 							<input type="text" class="inputText" uib-datepicker-popup="{{modalAvances.formatofecha}}" ng-model="row.fechaControl" is-open="row.isOpen"
-								datepicker-options="modalAvances.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="modalAvances.abrirPopupFecha($index)"
+								datepicker-options="modalAvances.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="modalAvances.abrirPopupFecha($index,0)"
 								ng-change="modalAvances.guardarFecha(row)" ng-readonly="true"/>
-							<span class="label-icon" ng-click="modalAvances.abrirPopupFecha($index)">
+							<span class="label-icon" ng-click="modalAvances.abrirPopupFecha($index,0)">
 								<i class="glyphicon glyphicon-calendar"></i>
 							</span>
 						</div>
 					</td>
-					<td><input type="text" class="inputText" ng-model="row.valor" style="width: 100%; text-align: right"></td>
+					<td>
+						<div ng-switch="modalAvances.datoTipo">
+							<div ng-switch-when="texto" >
+								<input type="text" class="inputText" ng-model="row.valorString" style="width: 100%; text-align: left"></input>
+							</div>
+							<div ng-switch-when="entero" class="form-group" >
+								<input type="text" class="inputText" ng-model="row.valorEntero" style="width: 100%; text-align: rigth" ui-number-mask="0"></input>
+							</div>
+							<div ng-switch-when="decimal" class="form-group" >
+								<input type="text" class="inputText" ng-model="row.valorDecimal" style="width: 100%; text-align: rigth" ui-number-mask="2"></input>
+							</div>
+							<div ng-switch-when="booleano" class="form-group" >
+								<input type="checkbox" ng-model="row.valorString" />
+							</div>
+							<div ng-switch-when="fecha" class="form-group" >
+								<input type="text" class="inputText" uib-datepicker-popup="{{modalAvances.formatofecha}}" ng-model="row.valorTiempoControl" is-open="row.isOpenValor"
+									datepicker-options="modalAvances.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="modalAvances.abrirPopupFecha($index,1)"
+									ng-change="modalAvances.guardarFecha(row)" ng-readonly="true"/>
+									<span class="label-icon" ng-click="modalAvances.abrirPopupFecha($index,1)">
+										<i class="glyphicon glyphicon-calendar"></i>
+									</span>
+							</div>
+						</div>
+					</td>
 					<td style="vertical-align: middle;">{{row.usuario}}</td>
 					<shiro:hasPermission name="17030">
 						<td>
