@@ -266,4 +266,52 @@ public class MetaDAO {
 		}
 		return ret;
 	}
+	
+	public static List<Meta> getMetasPorObjeto(Integer objetoId, Integer objetoTipo){
+		List<Meta> ret=null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select  *",
+				"from meta m",
+				"where m.objeto_id = ?1",
+				"and m.objeto_tipo = ?2",
+				"and m.dato_tipoid in (2,3)");
+			
+			Query<Meta> metavalor = session.createNativeQuery(query,Meta.class);
+			metavalor.setParameter("1", objetoId);
+			metavalor.setParameter("2", objetoTipo);
+			
+			ret =  metavalor.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("8", MetaTipoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<MetaPlanificado> getMetasPlanificadas(Integer metaId){
+		List<MetaPlanificado> ret=null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select *",
+					"from meta_planificado mp",
+					"where mp.metaid = ?1",
+					"and mp.estado = 1");
+			
+			Query<MetaPlanificado> metavalor = session.createNativeQuery(query,MetaPlanificado.class);
+			metavalor.setParameter("1", metaId);
+			
+			ret =  metavalor.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("8", MetaTipoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

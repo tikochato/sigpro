@@ -60,6 +60,10 @@ public class SDesembolsos extends HttpServlet {
 		BigDecimal totalReal;
 	}
 	
+	class stdedembolsos{
+		
+	}
+	
     public SDesembolsos() {
         super();
     }
@@ -87,62 +91,90 @@ public class SDesembolsos extends HttpServlet {
 		String accion = map.get("accion");
 		String response_text="";
 		if(accion.equals("getDesembolsos")){
-			Integer ejercicioFiscal = Utils.String2Int(map.get("ejercicioFiscal"));
+			Integer anio_inicial = Utils.String2Int(map.get("anio_inicial"));
+			Integer anio_final = Utils.String2Int(map.get("anio_final"));
+			
 			Integer proyectoId = Utils.String2Int(map.get("proyectoId"));
 			Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(proyectoId, 1);
 			
 			if (prestamo!=null){
 			
-				List<?> objDesembolso =DesembolsoDAO.getDesembolsosPorEjercicio(ejercicioFiscal,proyectoId);
-				Set<Integer> anios = new HashSet<Integer>();
+				List<?> objDesembolso =DesembolsoDAO.getDesembolsosPorEjercicio(proyectoId,anio_inicial,anio_final);
 				
-				Map<Integer,Map<Integer,BigDecimal>> desembolsosPlanificado = new HashMap<>();
-				for(Object obj : objDesembolso){
-					if (desembolsosPlanificado.get((Integer)((Object[]) obj)[0]) == null){
-						desembolsosPlanificado.put((Integer)((Object[]) obj)[0], new HashMap<>());
-						anios.add((Integer)((Object[]) obj)[0]);
+				String planificado="";
+				
+				
+				for (int i = anio_inicial ; i<=anio_final ; i++){
+					for (int j = 1; j<=12 ; j++){
+						Integer anio = objDesembolso.size() > 0 ?  (Integer) ((Object[]) objDesembolso.get(0))[0] : 0;
+						Integer mes = objDesembolso.size() > 0 ?  (Integer) ((Object[]) objDesembolso.get(0))[1] : 0;
+						if (anio.compareTo(i) == 0 && mes.compareTo(j)==0){
+							BigDecimal valor = (BigDecimal) ((Object[]) objDesembolso.get(0))[2];
+							objDesembolso.remove(objDesembolso.get(0));
+							planificado = planificado + (planificado.length()>0 ? "," :"") +  
+									 valor.toString();
+						}else{
+							planificado = planificado + (planificado.length()>0 ? "," :"") +  
+									 "0";
+						}
 					}
-					desembolsosPlanificado.get((Integer)((Object[]) obj)[0]).put((Integer)((Object[]) obj)[1], (BigDecimal)((Object[]) obj)[2]);
 				}
 				
-				List<?> dtmAvance = DataSigadeDAO.getAVANCE_FISFINAN_DET_DTI( prestamo.getCodigoPresupuestario()+"" );
+				List<?> dtmAvance = DataSigadeDAO.getAVANCE_FISFINAN_DET_DTIRango( 
+						prestamo.getCodigoPresupuestario()+"",anio_inicial,anio_final);
 				
-				Map<BigDecimal,Map<Integer,BigDecimal>> desembolsosReal = new HashMap<>();
-				for(Object obj : dtmAvance){
-					if (desembolsosReal.get((BigDecimal)((Object[]) obj)[0]) == null)
-						desembolsosReal.put((BigDecimal)((Object[]) obj)[0], new HashMap<>());
-					if (!anios.contains(((BigDecimal)((Object[]) obj)[0]).intValue()))
-						anios.add(((BigDecimal)((Object[]) obj)[0]).intValue());
-					desembolsosReal.get((BigDecimal)((Object[]) obj)[0]).put(Integer.parseInt((String)((Object[]) obj)[1]),(BigDecimal)((Object[]) obj)[2]);
+				String real="";
+				
+				
+				for (int i = anio_inicial ; i<=anio_final ; i++){
+					for (int j = 1; j<=12 ; j++){
+						Integer anio = dtmAvance.size() > 0 ?  (  ((BigDecimal) ((Object[]) dtmAvance.get(0))[0]).intValue()) : 0;
+						Integer mes = dtmAvance.size() > 0 ?  Integer.parseInt((String) ((Object[]) dtmAvance.get(0))[1]) : 0;
+						if (anio.compareTo(i) == 0 && mes.compareTo(j)==0){
+							BigDecimal valor = (BigDecimal) ((Object[]) dtmAvance.get(0))[2];
+							dtmAvance.remove(dtmAvance.get(0));
+							real = real + (real.length()>0 ? "," :"") +  
+									 valor.toString();
+						}else{
+							real = real + (real.length()>0 ? "," :"") +  
+									 "0";
+						}
+					}
 				}
 				
 				
-				Iterator<Integer> iterator = anios.iterator();
-				String lista = "";
-			    while(iterator.hasNext()) {
-			        Integer anio = iterator.next();
-			        
-			        Map<Integer,BigDecimal> planTemp = desembolsosPlanificado.get(anio);
-			        Map<Integer,BigDecimal> realTemp = desembolsosReal.get(new BigDecimal(anio));
-			        String planificado="";
-					String real="";
-			        
-			        for (int i = 1; i <=12 ; i++){
-						planificado = planificado + (planificado.length()>0 ? "," :"") +  
-								(planTemp!=null && planTemp.get(i)!=null ? planTemp.get(i).toString() : "0");
-			        	
-								
-						real = real + (real.length()>0 ? "," :"") +  
-										(realTemp!=null && realTemp.get(i)!=null ?  realTemp.get(i).toString() : "0");
+				
+				
+				
+				List<?> costos =DesembolsoDAO.getCostosPorEjercicio(proyectoId,anio_inicial,anio_final);
+				
+				String lista_costo="";
+				
+				
+				for (int i = anio_inicial ; i<=anio_final ; i++){
+					for (int j = 1; j<=12 ; j++){
+						Integer anio = costos.size() > 0 ?  (Integer) ((Object[]) costos.get(0))[0] : 0;
+						Integer mes = costos.size() > 0 ?  (Integer) ((Object[]) costos.get(0))[1] : 0;
+						if (anio.compareTo(i) == 0 && mes.compareTo(j)==0){
+							BigDecimal valor = (BigDecimal) ((Object[]) costos.get(0))[2];
+							costos.remove(costos.get(0));
+							lista_costo = lista_costo + (lista_costo.length()>0 ? "," :"") +  
+									 valor.toString();
+						}else{
+							lista_costo = lista_costo + (lista_costo.length()>0 ? "," :"") +  
+									 "0";
+						}
 					}
-			        
-			        planificado = String.join("", "[",planificado,"]");
-					real = String.join("", "[",real,"]");
-					String item = String.join("","{\"anio\":",anio+",","\"desembolsos\": ", "[",planificado,",",real,"]}");
-					lista = lista + (lista.length()>0 ? ",":"") + item;
-			    }
-			    
-			    response_text = String.join("","{ \"success\": true, \"lista\": [" ,lista,"]}");
+				}
+				
+				planificado = String.join("", "[",planificado,"]");    
+				lista_costo = String.join("", "[",lista_costo,"]");
+				real = String.join("", "[",real,"]");
+				
+				
+			    response_text = String.join("","{ \"success\": true, \"planificado\": ",planificado,
+			    		","," \"real\":",real,
+			    		","," \"costos\":",lista_costo,"}");
 			    
 			}else{
 				response_text = "{ \"success\": false }";
@@ -344,7 +376,7 @@ public class SDesembolsos extends HttpServlet {
 		}
 		
 		if (prestamo!=null){
-			List<?> objDesembolso =DesembolsoDAO.getDesembolsosPorEjercicio(ejercicioFiscal,proyectoId);
+			List<?> objDesembolso =DesembolsoDAO.getDesembolsosPorEjercicio(ejercicioFiscal,proyectoId,1);
 			Set<Integer> anios = new HashSet<Integer>();
 			
 			Map<Integer,Map<Integer,BigDecimal>> desembolsosPlanificado = new HashMap<>();
