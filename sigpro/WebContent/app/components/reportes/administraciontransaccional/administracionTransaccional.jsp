@@ -15,6 +15,7 @@
 		    overflow-y: scroll;
 		    overflow-x: hidden;
 		    text-align: center;
+		    margin-right: -15px;
 		}
 		
 		.cuerpoTablafooter {
@@ -31,6 +32,7 @@
 		
 		.theadDatos {
 			flex-shrink: 0; overflow-x: hidden;
+			overflow: hidden;
 		}
 		
 		.divPadreDatos{		
@@ -61,18 +63,47 @@
 							</div>
 						</div>
 			   			<br>
-			   		</div>	
+			   		</div>
+			   		
+				  	<div class="row">
+				  		<div class="col-sm-3">
+							<div class="form-group" >
+							  <input type="text"  class="inputText" ng-model="controller.fechaInicio" maxlength="10" 
+								ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
+								ng-change="controller.validar(1)" ng-required="true"/>
+								<span class="label-icon">
+					              <i class="glyphicon glyphicon-calendar"></i>
+					            </span>
+							  	<label for="campo.id" class="floating-label">*Fecha Inicial</label>
+							</div>
+						</div>
+		
+						<div class="col-sm-3">
+							<div class="form-group" >
+							  <input type="text"  class="inputText" ng-model="controller.fechaFin" maxlength="10" 
+								ng-value="controller.fechaFin" onblur="this.setAttribute('value', this.value);"
+								ng-change="controller.validar(2)" ng-required="true"/>
+								<span class="label-icon">
+					              <i class="glyphicon glyphicon-calendar"></i>
+					            </span>
+							  	<label for="campo.id" class="floating-label">*Fecha Fin</label>
+							</div>
+						</div>
+						
+						<div class="col-sm-3">
+						</div>
+						<div class="col-sm-3" align="right">
+							<div class="btn-group" role="group" aria-label="">
+								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrarTablas">
+								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
+								<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar PDF" ng-hide="!controller.mostrarTablas">
+								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
+							</div>
+						</div>
+				  	</div>
 				</div>
 				<br>
-				<div class="row" align="center">
-					<div class="col-sm-12 operation_buttons" align="right">
-		    			<div class="btn-group" role="group" aria-label="">
-							<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrarTablas">
-							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-							<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar PDF" ng-hide="!controller.mostrarTablas">
-							<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
-						</div>
-		    		</div>
+				<div class="row" align="center" ng-hide="!controller.mostrarTablas">
 			    	<div class="col-sm-12">
 			    		<div style="width: 100%; height: 85%; text-align: center">
 			    			<div class="row">
@@ -95,20 +126,35 @@
 														<th class="label-form" style="max-width:{{controller.tamanoCelda}}px; min-width:{{controller.tamanoCelda}}px; text-align: center;" st-sort="row.creados">Creados</th>
 														<th class="label-form" style="max-width:{{controller.tamanoCelda}}px; min-width:{{controller.tamanoCelda}}px; text-align: center;" st-sort="row.actualizados">Actualizados</th>
 														<th class="label-form" style="max-width:{{controller.tamanoCelda}}px; min-width:{{controller.tamanoCelda}}px; text-align: center;" st-sort="row.eliminados">Eliminados</th>
+														<th class="label-form" style="max-width:{{controller.tamanoCelda}}px; min-width:{{controller.tamanoCelda}}px; text-align: center;">Descargar</th>
 													</tr>
 													<tr>
-														<th colspan="4" ng-hide="true">
-															<input st-search="" placeholder="búsqueda global..." class="input-sm form-control" type="search"/>
+														<th colspan="5">
+															<input st-search="usuario" placeholder="búsqueda por usuario..." class="input-sm form-control" type="search"/>
 														</th>
 													<tr>
 												</thead>
 												<tbody class="cuerpoTablaDatos">
-													<tr ng-repeat="row in controller.displayedDatos" ng-click="controller.totalesPorUsuario(row);">
+													<tr ng-repeat="row in controller.displayedDatos">
 														<td style="display: none;">{{row.id}}</td>
 														<td style="width:{{controller.tamanoCelda}}px; text-align: left;">{{row.usuario}}</td>
 														<td style="width:{{controller.tamanoCelda}}px; text-align: center">{{row.creados}}</td>
 														<td style="width:{{controller.tamanoCelda}}px; text-align: center">{{row.actualizados}}</td>
 														<td style="width:{{controller.tamanoCelda}}px; text-align: center">{{row.eliminados}}</td>
+														<td style="width:{{controller.tamanoCelda}}px; text-align: center">
+															<button type="button"
+																ng-click="controller.descargarExcelDetalle(row)"
+																uib-tooltip="Exportar detalle de {{row.usuario}}" tooltip-placement="bottom"
+																class="btn btn-default">
+																<i class="glyphicon glyphicon-export"> </i>
+															</button>
+															<button type="button"
+																ng-click="controller.exportarPdfDetalle(row)"
+																uib-tooltip="Exportar PDF detallado de {{row.usuario}}" tooltip-placement="bottom"
+																class="btn btn-default">
+																<i class="glyphicon glyphicon-save-file"> </i>
+															</button>
+														</td>
 													</tr>
 												</tbody>
 												<tbody class="cuerpoTablafooter">
@@ -118,6 +164,7 @@
 														<td style="text-align: center; font-weight: bold; max-width:{{controller.tamanoCelda}}px; min-width:{{controller.tamanoCelda}}px;">{{controller.totalCreados}}</td>
 														<td style="text-align: center; font-weight: bold; max-width:{{controller.tamanoCelda}}px; min-width:{{controller.tamanoCelda}}px;">{{controller.totalActualizados}}</td>
 														<td style="text-align: center; font-weight: bold; max-width:{{controller.tamanoCelda}}px; min-width:{{controller.tamanoCelda}}px;">{{controller.totalEliminados}}</td>
+														<td style="text-align: center; font-weight: bold; max-width:{{controller.tamanoCelda}}px; min-width:{{controller.tamanoCelda}}px;"></td>
 													</tr>
 												</tbody>
 											</table>
@@ -127,13 +174,16 @@
 			    			</div>
 			    			<br>
 			    			<div class="row">
-			    				<div class="form-group col-sm-12" align="center">
+			    				<div class="form-group col-sm-2" align="center">
+			    				</div>
+			    				<div class="form-group col-sm-8" align="center">
 			    					<label class="label-form">Transacciones</label>
-									<div style="width: 75%;">
-		   								<canvas id="bar" class="chart chart-bar" chart-data="controller.data" chart-labels="controller.labels" 
-		   									chart-options="controller.charOptions" chart-series="controller.series" chart-legend="false">
-		   								</canvas>
-		 							</div>
+					    			<canvas id="line" class="chart chart-line" chart-data="controller.dataLineales"
+										chart-labels="controller.labelsMeses" chart-series="controller.seriesLineales" chart-options="controller.charOptionsLineales"
+										chart-colors = "controller.radarColors" chart-legend="true">
+									</canvas>
+								</div>
+								<div class="form-group col-sm-2" align="center">
 			    				</div>
 			    			</div>
 			    		</div>

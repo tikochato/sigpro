@@ -79,9 +79,19 @@ public class SubproductoDAO {
 		Subproducto ret = null;
 		try {
 			List<Subproducto> listRet = null;
-			Query<Subproducto> criteria = session.createQuery("FROM Subproducto where id=:id AND id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )", Subproducto.class);
+			String Str_query = String.join(" ","Select sp FROM Subproducto sp",
+					"where id=:id");
+			String Str_usuario = "";
+			if(usuario != null){
+				Str_usuario = String.join(" ", "AND id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )");
+			}
+			
+			Str_query = String.join(" ", Str_query, Str_usuario);
+			Query<Subproducto> criteria = session.createQuery(Str_query, Subproducto.class);
 			criteria.setParameter("id", id);
-			criteria.setParameter("usuario", usuario);
+			if(usuario != null){
+				criteria.setParameter("usuario", usuario);
+			}
 			listRet=criteria.getResultList();
 			 ret =!listRet.isEmpty() ? listRet.get(0) : null;
 		} catch (Throwable e) {

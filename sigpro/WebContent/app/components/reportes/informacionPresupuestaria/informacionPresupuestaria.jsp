@@ -245,7 +245,7 @@
 									<tr ng-repeat="item in controller.data">
 							      		<td nowrap style="min-width:200px; min-height: 35px; height: 35px;">
 							      			<div uib-tooltip="{{item.nombre}}" class="nombreFormat">
-							      				<span ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.objeto_tipo-1}}em"></span>
+							      				<span ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.nivel}}em"></span>
 							      				{{item.nombre}}
 							      			</div>
 							      		</td>

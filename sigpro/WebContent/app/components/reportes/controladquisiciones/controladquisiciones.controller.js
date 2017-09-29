@@ -1,5 +1,5 @@
-var app = angular.module('planAdquisicionesController', ['ngTouch','ngAnimate','ui.grid.edit', 'ui.grid.rowEdit','ui.utils.masks']);
-app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
+var app = angular.module('controlAdquisicionesController', ['ngTouch','ngAnimate','ui.grid.edit', 'ui.grid.rowEdit','ui.utils.masks']);
+app.controller('controlAdquisicionesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal) {
 	var mi = this;
 	var anioFiscal = new Date();
@@ -621,7 +621,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			estructuraGuardar += "|";
 		}
 		
-		$http.post('/SPlanAdquisiciones', {
+		$http.post('/SControlAdquisiciones', {
 			accion: 'guardarPlan',
 			data : estructuraGuardar,
 			t:moment().unix()
@@ -672,7 +672,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 			mi.mostrarCargando = true;
 			mi.mostrarTablas = false;
 			mi.idPrestamo = mi.prestamo.value;
-			$http.post('/SPlanAdquisiciones',{
+			$http.post('/SControlAdquisiciones',{
 				accion: 'generarPlan',
 				idPrestamo: mi.idPrestamo
 			}).success(function(response){
@@ -732,7 +732,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	}
 	
 	mi.exportarExcel = function(){
-		$http.post('/SPlanAdquisiciones', { 
+		$http.post('/SControlAdquisiciones', { 
 			 accion: 'exportarExcel', 
 			 idPrestamo: mi.idPrestamo,
 			 informeCompleto: mi.informeCompleto,			 
@@ -751,7 +751,7 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 		};
 	
 	mi.exportarPdf=function(){
-		$http.post('/SPlanAdquisiciones', { 
+		$http.post('/SControlAdquisiciones', { 
 			 accion: 'exportarPdf', 
 			 idPrestamo: mi.idPrestamo,
 			 informeCompleto: mi.informeCompleto,			 
@@ -770,10 +770,6 @@ app.controller('planAdquisicionesController',['$scope', '$http', '$interval', 'u
 	};
 	mi.crearArbol = function(datos){
 		mi.data = datos;
-		var tab = "\t";
-		for(x in mi.data){
-			mi.data[x].nombre = tab.repeat(mi.data[x].nivel -1) + mi.data[x].nombre;
-		}
 		
 		mi.rowCollectionPrestamo = [];
 		mi.rowCollectionPrestamo = mi.data;
@@ -921,7 +917,7 @@ function ($uibModalInstance, $scope, $http, $interval,
 						$uibModalInstance.close({success: false, numeroContrato: mi.numeroContrato, montoContrato: mi.montoContrato});
 			});
 			
-			$http.post('/SPlanAdquisiciones', 
+			$http.post('/SControlAdquisiciones', 
 				{
 					accion: 'guardarMontoContrato', 
 					numeroContrato: mi.numeroContrato, 

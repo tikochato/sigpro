@@ -95,6 +95,32 @@ public class DataSigadeDAO {
 		return ret;
 	}
 	
+	public static List<?> getAVANCE_FISFINAN_DET_DTIRango(String codigoPresupeustario,int anio_inicio, int anio_fin){
+		List<?> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		
+		try{
+			String query =String.join(" ", "select ejercicio_fiscal,mes_desembolso,sum(desembolsos_mes_gtq) ",
+					"from dtm_avance_fisfinan_det_dti",
+					"where codigo_presupuestario = ?1",
+					"and ejercicio_fiscal between ?2 and ?3",
+					"group by ejercicio_fiscal,mes_desembolso",
+					"order by ejercicio_fiscal,mes_desembolso asc");
+			Query<?> criteria = session.createNativeQuery(query);
+			criteria.setParameter(1, codigoPresupeustario);
+			criteria.setParameter(2, anio_inicio);
+			criteria.setParameter(3, anio_fin);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("4", DataSigadeDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	public static List<DtmAvanceFisfinanDti> getCodigos(){
 		List<DtmAvanceFisfinanDti> ret = new ArrayList<>();
 		Session session = CHibernateSession.getSessionFactory().openSession();

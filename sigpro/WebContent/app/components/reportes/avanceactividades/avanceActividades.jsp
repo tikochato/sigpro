@@ -21,6 +21,13 @@
 		    max-height: 375px; 
 		}
 		
+		.label-form2 {
+	    	font-size: 15px;
+	    	opacity: 1;
+	    	color: rgba(0,0,0,0.38) !important;
+	    	font-weight: bold;
+		}
+		
 		.theadDatos {
 			flex-shrink: 0; overflow-x: hidden;
 		}
@@ -95,55 +102,77 @@
 		    		<div class="row">
 		    			<div class="row">
 			    			<div class="col-sm-12">
-			    				<div class="row">
-					    			<div class="col-sm-12">
-						    			<div style="height: 5%; width: 100%">
-											<div><h4><b>Actividades</b></h4></div>
-										</div>
-										<div class="divPadreDatos">
-											<div class="divTabla"> 
-												<table st-table="controller.displayedCollectionActividades" st-safe-src="controller.rowCollectionActividades" class="table table-striped" style="max-width:{{controller.tamanoPantalla}}px;">
-													<thead class="theadDatos">
-														<tr>
-															<th style="display: none;">Id</th>
-															<th class="label-form" style="min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; text-align: center; nowrap; overflow: hidden;" st-sort="row.nombre">Actividades del proyecto</th>
-															<th style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"></th>
-															<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;" st-sort="row.completadas">Completadas</th>
-															<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;" st-sort="row.sinIniciar">Sin iniciar</th>
-															<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;" st-sort="row.proceso">En proceso</th>
-															<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;" st-sort="row.retrasadas">Retrasadas</th>
-														</tr>
-													</thead>
-													<tbody class="cuerpoTablaDatos">
-														<tr ng-repeat="row in controller.displayedCollectionActividades" uib-tooltip="{{row.nombre}}" tooltip-placement="center" ng-click="controller.mostrarActividades(row);">
-															<td style="display: none;">{{row.id}}</td>
-															<td style="text-align: left; min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; nowrap; overflow: hidden;">{{row.nombre}}</td>
-															<td style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"><span ng-style="controller.obtenerColor(row);" class="glyphicon glyphicon-certificate"></span></td>
-															<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center">{{row.completadas}}%</td>
-															<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center">{{row.sinIniciar}}%</td>
-															<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center">{{row.proceso}}%</td>
-															<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center">{{row.retrasadas}}%</td>
-														</tr>
-													</tbody>
-													<tbody>
-														<tr>
-															<td style="display: none;"></td>
-															<td style="min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; text-align: left; font-weight: bold;">Total de actividades: {{controller.totalActividades}}</td>
-															<td style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"></td>
-															<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; font-weight: bold;">{{controller.totalActividadesCompletadas}}</td>
-															<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; font-weight: bold;">{{controller.totalActividadesSinIniciar}}</td>
-															<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; font-weight: bold;">{{controller.totalActividadesProceso}}</td>
-															<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; font-weight: bold;">{{controller.totalActividadesRetrasadas}}</td>
-														</tr>
-													</tbody>
-												</table>
-											</div>
-										</div>
-					    			</div>
-				    			</div>
+				    			<div style="height: 5%; width: 100%">
+									<div><h4><b>Actividades</b></h4></div>
+								</div>
+								<div class="divPadreDatos">
+									<div class="divTabla"> 
+										<table st-table="controller.displayedCollectionActividades" st-safe-src="controller.rowCollectionActividades" class="table table-striped">
+											<thead class="theadDatos">
+												<tr>
+													<th style="display: none;">Id</th>
+													<th class="label-form" style="min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; text-align: center; nowrap; overflow: hidden;" st-sort="row.nombre">Actividades del proyecto</th>
+													<th style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"></th>
+													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;" st-sort="row.completadas">Completadas</th>
+													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;" st-sort="row.sinIniciar">Sin iniciar</th>
+													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;" st-sort="row.proceso">En proceso</th>
+													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;" st-sort="row.retrasadas">Retrasadas</th>
+													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;" st-sort="row.esperadasfinanio">Esperadas fin de año</th>
+													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;" st-sort="row.aniosSiguientes">Años siguientes</th>
+												</tr>
+											</thead>
+											<tbody class="cuerpoTablaDatos">
+												<tr ng-repeat="row in controller.displayedCollectionActividades" uib-tooltip="{{row.nombre}}" tooltip-placement="center" ng-click="controller.mostrarActividades(row);">
+													<td style="display: none;">{{row.id}}</td>
+													<td style="text-align: left; min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; nowrap; overflow: hidden;">{{row.nombre}}</td>
+													<td style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"><span ng-style="controller.obtenerColor(row);" class="glyphicon glyphicon-certificate"></span></td>
+													<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center">{{row.completadas}}%</td>
+													<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center">{{row.sinIniciar}}%</td>
+													<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center">{{row.proceso}}%</td>
+													<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center">{{row.retrasadas}}%</td>
+													<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center">{{row.esperadasfinanio}}%</td>
+													<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center">{{row.aniosSiguientes}}%</td>
+												</tr>
+											</tbody>
+											<tbody>
+												<tr>
+													<td style="display: none;"></td>
+													<td style="min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; text-align: left; font-weight: bold;">Total de actividades: {{controller.totalActividades}}</td>
+													<td style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"></td>
+													<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; font-weight: bold;">{{controller.totalActividadesCompletadas}}</td>
+													<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; font-weight: bold;">{{controller.totalActividadesSinIniciar}}</td>
+													<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; font-weight: bold;">{{controller.totalActividadesProceso}}</td>
+													<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; font-weight: bold;">{{controller.totalActividadesRetrasadas}}</td>
+													<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; font-weight: bold;">{{controller.totalActividadesEsperadas}}</td>
+													<td style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; font-weight: bold;">{{controller.totalActividadesAnioSiguientes}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
 			    			</div>
+			    		</div>
+			    		<div class="row" ng-hide="!controller.mostrarActProyecto">
+			    			<div class="form-group col-sm-6" align="center">
+			    				<div style="text-align: center" >
+					    			<label class="label-form2">Estado de Actividades</label>
+					    		</div>
+		    					<canvas id="pie" class="chart chart-pie"
+  									chart-data="controller.dataPieProyecto" chart-labels="controller.labelsPieProyecto" 
+  									chart-options="controller.optionsPieProyecto" chart-colors = "controller.pieColors" >
+								</canvas> 
+		    				</div>
+			    			<div class="form-group col-sm-6" align="center">
+			    				<div style="text-align: center" >
+		    						<label class="label-form2">Totales</label>
+		    					</div>
+   								<canvas id="bar" class="chart chart-bar" chart-data="controller.dataBarraProyecto" chart-labels="controller.labelsPieProyecto" 
+   									chart-options="controller.charOptions" chart-colors = "controller.pieColors">
+   								</canvas>
+		    				</div>
 		    			</div>
-		    			<div class="row">
+		    			<br>
+		    			<div class="row" ng-hide="!controller.mostrarHitos">
 			    			<div class="col-sm-12">
 				    			<div style="height: 5%; width: 100%">
 									<div><h4><b>Hitos</b></h4></div>
@@ -156,8 +185,8 @@
 													<th style="display: none;">Id</th>
 													<th class="label-form" style="min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; text-align: center; nowrap; overflow: hidden;">Hitos del proyecto</th>
 													<th style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"></th>
-													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;">Completados</th>
-													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;">Sin iniciar</th>
+													<th class="label-form" style="min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;">Completados</th>
+													<th class="label-form" style="min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;">Sin iniciar</th>
 													<th class="label-form" style="min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;">Retrasadas</th>
 												</tr>
 											</thead>
@@ -166,8 +195,8 @@
 													<td style="display: none;">{{row.id}}</td>
 													<td style="text-align: left; min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; nowrap; overflow: hidden;">{{row.nombre}}</td>
 													<td style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"><span ng-style="controller.obtenerColor(row);" class="glyphicon glyphicon-certificate"></span></td>
-													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px">{{row.completadas}}%</td>
-													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px">{{row.sinIniciar}}%</td>
+													<td style="text-align: center; min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px">{{row.completadas}}%</td>
+													<td style="text-align: center; min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px">{{row.sinIniciar}}%</td>
 													<td style="text-align: center; min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px;">{{row.retrasadas}}%</td>
 												</tr>
 											</tbody>
@@ -176,8 +205,8 @@
 													<td style="display: none;"></td>
 													<td style="text-align: left; font-weight: bold; min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px">Total de hitos: {{controller.totalHitos}}</td>
 													<td style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"></td>
-													<td style="text-align: center; font-weight: bold; min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px">{{controller.totalHitosCompletados}}</td>
-													<td style="text-align: center; font-weight: bold; min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px">{{controller.totalHitosSinIniciar}}</td>
+													<td style="text-align: center; font-weight: bold; min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px">{{controller.totalHitosCompletados}}</td>
+													<td style="text-align: center; font-weight: bold; min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px">{{controller.totalHitosSinIniciar}}</td>
 													<td style="text-align: center; font-weight: bold; min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px">{{controller.totalHitosRetrasados}}</td>
 												</tr>
 											</tbody>
@@ -186,6 +215,27 @@
 								</div>
 				    		</div>
 		    			</div>
+		    			<br/>
+		    			<div class="row" ng-hide="!controller.mostrarHitos">
+			    			<div class="form-group col-sm-6" align="center">
+			    				<div style="text-align: center" >
+					    			<label class="label-form2">Estado de Hitos</label>
+					    		</div>
+		    					<canvas id="pie" class="chart chart-pie"
+  									chart-data="controller.dataPieHitos" chart-labels="controller.labelsPieHitos" 
+  									chart-options="controller.optionsPieProyecto" chart-colors = "controller.pieColorsHitos" >
+								</canvas> 
+		    				</div>
+			    			<div class="form-group col-sm-6" align="center">
+			    				<div style="text-align: center" >
+		    						<label class="label-form2">Totales</label>
+		    					</div>
+   								<canvas id="bar" class="chart chart-bar" chart-data="controller.dataBarraHitos" chart-labels="controller.labelsPieHitos" 
+   									chart-options="controller.charOptionsHitos" chart-colors = "controller.pieColorsHitos">
+   								</canvas>
+		    				</div>
+		    			</div>
+		    			<br/>
 			    		<div class="row">
 				    		<div class="col-sm-12">
 								<div style="height: 5%; width: 100%">
@@ -204,6 +254,8 @@
 													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;" st-sort="sinIniciar">Sin iniciar</th>
 													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;" st-sort="proceso">En proceso</th>
 													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;" st-sort="retrasadas">Retrasadas</th>
+													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;" st-sort="esperadasfinanio">Esperadas fin de año</th>
+													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;" st-sort="aniosSiguientes">Años siguientes</th>
 												</tr>
 											</thead>
 											<tbody class="cuerpoTablaDatos">
@@ -211,10 +263,12 @@
 													<td style="display: none;">{{row.id}}</td>
 													<td style="text-align: left; min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; nowrap; overflow: hidden;">{{row.nombre}}</td>
 													<td style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"><span ng-style="controller.obtenerColor(row);" class="glyphicon glyphicon-certificate"></span></td>
-													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px;">{{row.completadas}}%</td>
-													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px;">{{row.sinIniciar}}%</td>
-													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px;">{{row.proceso}}%</td>
-													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px;">{{row.retrasadas}}%</td>
+													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px;">{{row.completadas}}</td>
+													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px;">{{row.sinIniciar}}</td>
+													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px;">{{row.proceso}}</td>
+													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px;">{{row.retrasadas}}</td>
+													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px;">{{row.esperadasfinanio}}</td>
+													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajes}}px; max-width: {{controller.tamanoColPorcentajes}}px;">{{row.aniosSiguientes}}</td>
 												</tr>
 											</tbody>
 											<tbody>
