@@ -41,9 +41,19 @@ public class ProductoDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Producto ret = null;
 		try {
-			Query<Producto> criteria = session.createQuery("FROM Producto where id=:id AND id in (SELECT u.id.productoid from ProductoUsuario u where u.id.usuario=:usuario )", Producto.class);
+			String Str_query = String.join(" ","Select p FROM Producto p",
+					"where id=:id");
+			String Str_usuario = "";
+			if(usuario != null){
+				Str_usuario = String.join(" ", "AND id in (SELECT u.id.productoid from ProductoUsuario u where u.id.usuario=:usuario )");
+			}
+			
+			Str_query = String.join(" ", Str_query, Str_usuario);
+			Query<Producto> criteria = session.createQuery(Str_query, Producto.class);
 			criteria.setParameter("id", id);
-			criteria.setParameter("usuario", usuario);
+			if(usuario != null){
+				criteria.setParameter("usuario", usuario);
+			}
 			List<Producto> lista = criteria.getResultList();
 			ret = !lista.isEmpty() ? lista.get(0) : null;
 		} catch (Throwable e) {

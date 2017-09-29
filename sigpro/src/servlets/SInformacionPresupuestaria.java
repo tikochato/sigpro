@@ -285,6 +285,10 @@ public class SInformacionPresupuestaria extends HttpServlet {
 					if(aniosTemp[a].mes[m].planificado.compareTo(BigDecimal.ZERO) > 0){
 						lstPrestamo.get(0).anios[a].mes[m].planificado = aniosTemp[a].mes[m].planificado;
 					}
+					
+					if(aniosTemp[a].mes[m].real.compareTo(BigDecimal.ZERO) > 0){
+						lstPrestamo.get(0).anios[a].mes[m].real = aniosTemp[a].mes[m].real;
+					}
 				}
 			}
 		}
@@ -362,7 +366,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		
 			if(prestamo.objeto_tipo == 1){
 				
-					presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoProyecto(fuente, organismo, correlativo,anioInicial,anioFinal, conn);
+					//presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoProyecto(fuente, organismo, correlativo,anioInicial,anioFinal, conn);
 			}else{
 				Integer programa = null;
 				Integer subprograma = null; 
@@ -370,21 +374,21 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				Integer actividad = null;
 				Integer obra = null;
 				switch(prestamo.objeto_tipo){
-					case 2: Componente componente = ComponenteDAO.getComponentePorId(prestamo.objeto_id, usuario);
+					case 2: Componente componente = ComponenteDAO.getComponentePorId(prestamo.objeto_id, null);
 						programa = componente.getPrograma();
 						subprograma = componente.getSubprograma(); 
 						proyecto = componente.getProyecto_1();
 						actividad = componente.getActividad();
 						obra = componente.getObra();
 						break;
-					case 3: Producto producto = ProductoDAO.getProductoPorId(prestamo.objeto_id, usuario);
+					case 3: Producto producto = ProductoDAO.getProductoPorId(prestamo.objeto_id, null);
 						programa = producto.getPrograma();
 						subprograma = producto.getSubprograma(); 
 						proyecto = producto.getProyecto();
 						actividad = producto.getActividad();
 						obra = producto.getObra();
 						break;
-					case 4: Subproducto subproducto = SubproductoDAO.getSubproductoPorId(prestamo.objeto_id, usuario);
+					case 4: Subproducto subproducto = SubproductoDAO.getSubproductoPorId(prestamo.objeto_id, null);
 						programa = subproducto.getPrograma();
 						subprograma = subproducto.getSubprograma(); 
 						proyecto = subproducto.getProyecto();
@@ -452,6 +456,10 @@ public class SInformacionPresupuestaria extends HttpServlet {
 									if(aniosTemp[a].mes[m].planificado.compareTo(BigDecimal.ZERO) > 0){
 										prestamo.anios[a].mes[m].planificado = aniosTemp[a].mes[m].planificado;
 									}
+									
+									if(aniosTemp[a].mes[m].real.compareTo(BigDecimal.ZERO) > 0){
+										prestamo.anios[a].mes[m].real = aniosTemp[a].mes[m].real;
+									}
 								}
 							}
 						}
@@ -459,6 +467,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 					for(int a=0; a<anios.length; a++){
 						for(int m=0; m<12;m++){
 							anios[a].mes[m].planificado = anios[a].mes[m].planificado.add(prestamo.anios[a].mes[m].planificado);
+							anios[a].mes[m].real = anios[a].mes[m].real.add(prestamo.anios[a].mes[m].real);
 						}
 					}
 				}else if(prestamo.nivel < nivel){

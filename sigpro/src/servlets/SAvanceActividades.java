@@ -25,25 +25,21 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.codec.Base64;
+import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.ActividadDAO;
 import dao.AsignacionRaciDAO;
-import dao.ComponenteDAO;
+import dao.EstructuraProyectoDAO;
 import dao.HitoDAO;
 import dao.HitoResultadoDAO;
 import dao.ProductoDAO;
-import dao.SubproductoDAO;
-import pojo.Actividad;
 import pojo.AsignacionRaci;
-import pojo.Componente;
 import pojo.Hito;
 import pojo.HitoResultado;
 import pojo.Producto;
-import pojo.Subproducto;
 import utilities.CExcel;
 import utilities.CPdf;
 import utilities.CLogger;
@@ -53,12 +49,6 @@ import utilities.Utils;
 public class SAvanceActividades extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private static int OBJETO_ID_PROYECTO = 1;
-	private static int OBJETO_ID_COMPONENTE = 2;
-	private static int OBJETO_ID_PRODUCTO = 3;
-	private static int OBJETO_ID_SUBPRODUCTO = 4;
-	private static int OBJETO_ID_SUBACTIVIDAD = 5;
-    
 	class stActividad{
 		int id;
 		int porcentajeAvance;
@@ -73,6 +63,8 @@ public class SAvanceActividades extends HttpServlet {
 		double proceso;
 		double completadas;
 		double retrasadas;
+		double esperadasfinanio;
+		double aniosiguientes;
 	}
 	
 	class stAvance{
@@ -83,6 +75,8 @@ public class SAvanceActividades extends HttpServlet {
 		double proceso;
 		double completadas;
 		double retrasadas;
+		double esperadasfinanio;
+		double aniosSiguientes;
 		int tipo;
 	}
 	
@@ -134,7 +128,7 @@ public class SAvanceActividades extends HttpServlet {
 			if (accion.equals("getAvance")){
 				
 				try{					
-					stElementoResult avanceActividades = getAvanceActividades(idPrestamo, fechaCorte, usuario);
+					stElementoResult avanceActividades = getAvanceActividadesPrestamo(idPrestamo, fechaCorte, usuario);
 						
 					if(avanceActividades != null){
 						response_text = new GsonBuilder().serializeNulls().create().toJson(avanceActividades.listaResult);
@@ -167,22 +161,41 @@ public class SAvanceActividades extends HttpServlet {
 				
 				response_text = String.join("", "{\"success\":true ", response_text, "}");
 			}else if(accion.equals("getActividadesProyecto")){
-				List<stActividad> actividades = getActividadesProyecto(idPrestamo, usuario);
-				List<stelementosActividadesAvance> lstElementosActividadesAvance = new ArrayList<stelementosActividadesAvance>();
-				for(stActividad actividad : actividades){
-					stelementosActividadesAvance temp = new stelementosActividadesAvance();
-					temp.id = actividad.id;
-					temp.nombre = actividad.nombre;
-					temp.fechaInicial = actividad.fechaInicio;
-					temp.fechaFinal = actividad.fechaFin;
-					temp.avance = actividad.porcentajeAvance;
-					temp.responsable = actividad.responsable;
-					lstElementosActividadesAvance.add(temp);
+				List<?> actividades = EstructuraProyectoDAO.getActividadesProyecto(idPrestamo);
+
+				if(actividades != null && !actividades.isEmpty()){
+					List<stActividad> lstActividadesProyecto = new ArrayList<stActividad>();
+					stActividad tempActividad = null;
+					for (Object actividad : actividades){
+						tempActividad = new stActividad();
+						Object[] obj = (Object[])actividad;
+						tempActividad.id = (Integer)obj[0];
+						tempActividad.nombre = (String)obj[1];
+						tempActividad.fechaInicio = Utils.formatDate((Date)obj[5]);
+						tempActividad.fechaFin = Utils.formatDate((Date)obj[6]);
+						tempActividad.porcentajeAvance = (Integer)obj[12];
+						
+						AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(tempActividad.id, 5, "R"); 
+						tempActividad.responsable = asignacion != null ? ((asignacion != null ? asignacion.getColaborador().getPnombre() : null) + " " + (asignacion != null ? asignacion.getColaborador().getPapellido() : null)) : null;
+						lstActividadesProyecto.add(tempActividad);
+					}
+					
+					List<stelementosActividadesAvance> lstElementosActividadesAvance = new ArrayList<stelementosActividadesAvance>();
+					for(stActividad actividad : lstActividadesProyecto){
+						stelementosActividadesAvance temp = new stelementosActividadesAvance();
+						temp.id = actividad.id;
+						temp.nombre = actividad.nombre;
+						temp.fechaInicial = actividad.fechaInicio;
+						temp.fechaFinal = actividad.fechaFin;
+						temp.avance = actividad.porcentajeAvance;
+						temp.responsable = actividad.responsable;
+						lstElementosActividadesAvance.add(temp);
+					}
+					
+					response_text = new GsonBuilder().serializeNulls().create().toJson(lstElementosActividadesAvance);
+					response_text = String.join("", ",\"items\":",response_text);
+					response_text = String.join("", "{\"success\":true ", response_text, "}");
 				}
-				
-				response_text = new GsonBuilder().serializeNulls().create().toJson(lstElementosActividadesAvance);
-				response_text = String.join("", ",\"items\":",response_text);
-				response_text = String.join("", "{\"success\":true ", response_text, "}");
 			}else if(accion.equals("getHitos")){
 				Date Corte = new Date();
 				List<Hito> hitos = HitoDAO.getHitosPaginaPorProyecto(0, 0, idPrestamo, null, null, null, null, null);
@@ -232,7 +245,26 @@ public class SAvanceActividades extends HttpServlet {
 			}else if(accion.equals("getActividadesProducto")){
 				Integer productoId = Utils.String2Int(map.get("productoId"));
 				Producto producto = ProductoDAO.getProductoPorId(productoId);
-				List<stActividad> actividades = getActividadesProducto(producto, usuario);
+				
+				List<?> lstActividadesProducto = EstructuraProyectoDAO.getActividadesByTreePath(producto.getTreePath(), producto.getComponente().getProyecto().getId());
+				List<stActividad> actividades = new ArrayList<stActividad>();
+				if (lstActividadesProducto != null){
+					stActividad tempActividad = null;
+					for (Object actividad : lstActividadesProducto){
+						tempActividad = new stActividad();
+						Object[] obj = (Object[])actividad;
+						tempActividad.id = (Integer)obj[0];
+						tempActividad.nombre = (String)obj[1];
+						tempActividad.fechaInicio = Utils.formatDate((Date)obj[2]);
+						tempActividad.fechaFin = Utils.formatDate((Date)obj[3]);
+						tempActividad.porcentajeAvance = (Integer)obj[4];
+						
+						AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(tempActividad.id, 5, "R"); 
+						tempActividad.responsable = asignacion != null ? ((asignacion != null ? asignacion.getColaborador().getPnombre() : null) + " " + (asignacion != null ? asignacion.getColaborador().getPapellido() : null)) : null;
+						actividades.add(tempActividad);
+					}
+				}
+				
 				List<stelementosActividadesAvance> lstElementosActividadesAvance = new ArrayList<stelementosActividadesAvance>();
 				for(stActividad actividad : actividades){
 					stelementosActividadesAvance temp = new stelementosActividadesAvance();
@@ -328,16 +360,20 @@ public class SAvanceActividades extends HttpServlet {
 		
 	}
 	
-	private stElementoResult getAvanceActividades(Integer idPrestamo, String fechaCorte, String usuario){
+	private stElementoResult getAvanceActividadesPrestamo(Integer idPrestamo, String fechaCorte, String usuario){
 		stElementoResult resultado = null;
 		double  totalActividades = 0;
 		double  totalSinIniciar = 0;
 		double  totalEnProceso = 0;
 		double  totalCompletadas = 0;
 		double  totalRetrasadas = 0;
+		double totalEsperadasAnio = 0;
+		double totalAniosSiguientes = 0;
 		Date inicio = new Date();
 		Date fin = new Date();
 		Date Corte = new Date();
+		DateTime anioCorte = new DateTime();
+		
 		List<stAvance> listaResult = new ArrayList<stAvance>();
 		List<stCantidad> listaResultCantidad = new ArrayList<stCantidad>();
 		stAvance temp = new stAvance();
@@ -346,83 +382,122 @@ public class SAvanceActividades extends HttpServlet {
 		DecimalFormat df2 = new DecimalFormat("###.##");
 		
 		try{
-			List<stActividad> actividades = getActividadesProyecto(idPrestamo, usuario);
+			List<?> actividades = EstructuraProyectoDAO.getActividadesProyecto(idPrestamo);
 			if (actividades != null){
-
-				totalActividades = actividades.size();
-			
-				for (stActividad actividad : actividades){
+				if(actividades.size() > 0){
+					totalActividades = actividades.size();
 					
-					inicio = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
-		                    .parse(actividad.fechaInicio);
-					
-					fin = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
-		                    .parse(actividad.fechaFin);
-					
-					Corte = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
-		                    .parse(fechaCorte);
-					
-					if (actividad.porcentajeAvance == 0){
-						totalSinIniciar++;
+					List<stActividad> lstActividadesProyecto = new ArrayList<stActividad>();
+					stActividad tempActividad = null;
+					for (Object actividad : actividades){
+						tempActividad = new stActividad();
+						Object[] obj = (Object[])actividad;
+						tempActividad.id = (Integer)obj[0];
+						tempActividad.nombre = (String)obj[1];
+						tempActividad.fechaInicio = Utils.formatDate((Date)obj[5]);
+						tempActividad.fechaFin = Utils.formatDate((Date)obj[6]);
+						tempActividad.porcentajeAvance = (Integer)obj[12];
+						
+						AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(tempActividad.id, 5, "R"); 
+						tempActividad.responsable = asignacion != null ? ((asignacion != null ? asignacion.getColaborador().getPnombre() : null) + " " + (asignacion != null ? asignacion.getColaborador().getPapellido() : null)) : null;
+						lstActividadesProyecto.add(tempActividad);
+					}
+						
+					for(stActividad actividad : lstActividadesProyecto){
+						inicio = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
+			                    .parse(actividad.fechaInicio);
+						
+						fin = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
+			                    .parse(actividad.fechaFin);
+						
+						Corte = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
+			                    .parse(fechaCorte);
+						
+						anioCorte = new DateTime(Corte);
+						Integer anio = anioCorte.getYear();
+						
+						DateTime anioFin = new DateTime(anio,12,31,23,59,59);
+						
+						if(actividad.porcentajeAvance >= 0 && actividad.porcentajeAvance < 100 && !inicio.after(anioFin.toDate())){
+							totalEsperadasAnio++;
+						}
+						
+						if (actividad.porcentajeAvance == 0 && (!Corte.after(fin))){
+							totalSinIniciar++;
+						}else if(Corte.after(inicio) && Corte.before(fin) && actividad.porcentajeAvance > 0 && actividad.porcentajeAvance < 100){
+							totalEnProceso++;
+						}else if (Corte.after(fin) && actividad.porcentajeAvance >= 0 && actividad.porcentajeAvance < 100 ){
+							totalRetrasadas++;
+						}else if(actividad.porcentajeAvance == 100){
+							totalCompletadas++;
+						}
+						
+						if(inicio.after(anioFin.toDate())){
+							totalAniosSiguientes++;
+						}
 					}
 					
-					if(Corte.after(inicio) && Corte.before(fin) && actividad.porcentajeAvance > 0 && actividad.porcentajeAvance < 100){
-						totalEnProceso++;
+					tCantidad.sinIniciar = totalSinIniciar;
+					tCantidad.proceso = totalEnProceso;
+					tCantidad.completadas = totalCompletadas;
+					tCantidad.retrasadas = totalRetrasadas;
+					tCantidad.esperadasfinanio = totalEsperadasAnio;
+					tCantidad.aniosiguientes = totalAniosSiguientes;
+					listaResultCantidad.add(tCantidad);
+					totalSinIniciar = (totalSinIniciar/totalActividades)*100;
+					totalEnProceso = (totalEnProceso/totalActividades)*100;
+					totalCompletadas = (totalCompletadas/totalActividades)*100;
+					totalRetrasadas = (totalRetrasadas/totalActividades)*100;
+					totalEsperadasAnio = (totalEsperadasAnio/totalActividades)*100;
+					totalAniosSiguientes = (totalAniosSiguientes/totalActividades)*100;
+					
+					if (Double.isNaN(totalSinIniciar)){
+						totalSinIniciar = 0;
 					}
 					
-					if (Corte.after(fin) && actividad.porcentajeAvance > 0 && actividad.porcentajeAvance < 100 ){
-						totalRetrasadas++;
+					if (Double.isNaN(totalEnProceso)){
+						totalEnProceso = 0;
 					}
 					
-					if(actividad.porcentajeAvance == 100){
-						totalCompletadas++;
+					if (Double.isNaN(totalCompletadas)){
+						totalCompletadas = 0;
 					}
+					
+					if (Double.isNaN(totalRetrasadas)){
+						totalRetrasadas = 0;
+					}
+					
+					if(Double.isNaN(totalEsperadasAnio)){
+						totalEsperadasAnio = 0;
+					}
+					
+					if(Double.isNaN(totalActividades)){
+						totalActividades = 0;
+					}
+					
+					if(Double.isNaN(totalAniosSiguientes)){
+						totalAniosSiguientes = 0;
+					}
+					
+					temp = new stAvance();
+					temp.objetoId = idPrestamo;
+					temp.objetoTipo = 1;
+					temp.nombre = "Total de actividades";
+					temp.sinIniciar = Double.valueOf(df2.format(totalSinIniciar));
+					temp.proceso = Double.valueOf(df2.format(totalEnProceso));
+					temp.completadas = Double.valueOf(df2.format(totalCompletadas));
+					temp.retrasadas = Double.valueOf(df2.format(totalRetrasadas));
+					temp.esperadasfinanio = Double.valueOf(df2.format(totalEsperadasAnio));
+					temp.aniosSiguientes = Double.valueOf(df2.format(totalAniosSiguientes));
+					temp.tipo = 2;
+					
+					listaResult.add(temp);
+					
+					resultado = new stElementoResult();
+					resultado.listaResult = listaResult;
+					resultado.listaResultCantidad = listaResultCantidad;
+					resultado.total = totalActividades;
 				}
-				
-				tCantidad.sinIniciar = totalSinIniciar;
-				tCantidad.proceso = totalEnProceso;
-				tCantidad.completadas = totalCompletadas;
-				tCantidad.retrasadas = totalRetrasadas;
-				
-				listaResultCantidad.add(tCantidad);
-
-				totalSinIniciar = (totalSinIniciar/totalActividades)*100;
-				totalEnProceso = (totalEnProceso/totalActividades)*100;
-				totalCompletadas = (totalCompletadas/totalActividades)*100;
-				totalRetrasadas = (totalRetrasadas/totalActividades)*100;
-				
-				if (Double.isNaN(totalSinIniciar)){
-					totalSinIniciar = 0;
-				}
-				
-				if (Double.isNaN(totalEnProceso)){
-					totalEnProceso = 0;
-				}
-				
-				if (Double.isNaN(totalCompletadas)){
-					totalCompletadas = 0;
-				}
-				
-				if (Double.isNaN(totalRetrasadas)){
-					totalRetrasadas = 0;
-				}
-				
-				temp = new stAvance();
-				temp.objetoId = idPrestamo;
-				temp.objetoTipo = 1;
-				temp.nombre = "Total de actividades";
-				temp.sinIniciar = Double.valueOf(df2.format(totalSinIniciar));
-				temp.proceso = Double.valueOf(df2.format(totalEnProceso));
-				temp.completadas = Double.valueOf(df2.format(totalCompletadas));
-				temp.retrasadas = Double.valueOf(df2.format(totalRetrasadas));
-				temp.tipo = 2;
-				
-				listaResult.add(temp);
-				
-				resultado = new stElementoResult();
-				resultado.listaResult = listaResult;
-				resultado.listaResultCantidad = listaResultCantidad;
-				resultado.total = totalActividades;
 			}
 		}catch(Exception e){
 		    CLogger.write("5", SAvanceActividades.class, e);
@@ -476,7 +551,7 @@ public class SAvanceActividades extends HttpServlet {
 						totalHitos++;
 					}
 					
-					if(Corte.after(fechaHito) && hitoResultado.getValorEntero() == 1){
+					if(Corte.after(fechaHito) && hitoResultado.getValorEntero() > 0){
 						totalCompletadas++;
 						totalHitos++;
 					}
@@ -505,6 +580,18 @@ public class SAvanceActividades extends HttpServlet {
 			totalSinIniciar = (totalSinIniciar/totalHitos)*100;
 			totalCompletadas = (totalCompletadas/totalHitos)*100;
 			totalRetrasadas = (totalRetrasadas/totalHitos)*100;
+			
+			if (Double.isNaN(totalSinIniciar)){
+				totalSinIniciar = 0;
+			}
+			
+			if (Double.isNaN(totalCompletadas)){
+				totalCompletadas = 0;
+			}
+			
+			if (Double.isNaN(totalRetrasadas)){
+				totalRetrasadas = 0;
+			}
 			
 			temp = new stAvance();
 			temp.objetoId = idPrestamo;
@@ -543,20 +630,41 @@ public class SAvanceActividades extends HttpServlet {
 		
 		DecimalFormat df2 = new DecimalFormat("###.##");
 		
-		try{
-			List<Producto> productos = ProductoDAO.getProductosPorProyecto(idPrestamo, usuario);
-			List<stActividad> actividades = getActividadesProyecto(idPrestamo, usuario);
+		try{			
+			List<Producto> productos = ProductoDAO.getProductosPorProyecto(idPrestamo, null);
+			double totalEsperadasAnio = 0;
+			double totalAniosSiguientes = 0;
+			DateTime anioCorte = new DateTime();
+			
 			if(productos != null  && productos.size() > 0){
 				listaResult = new ArrayList<stAvance>();
-				int totalProductos = productos.size();
 				
 				for(Producto producto : productos){
 					totalSinIniciar = 0;
 					totalEnProceso = 0;
 					totalRetrasadas = 0;
 					totalCompletadas = 0;
+					totalEsperadasAnio = 0;
+					totalAniosSiguientes = 0;
 					
-					actividades = getActividadesProducto(producto, usuario);
+					List<?> lstActividadesProducto = EstructuraProyectoDAO.getActividadesByTreePath(producto.getTreePath(), idPrestamo);
+					List<stActividad> actividades = new ArrayList<stActividad>();
+					if (lstActividadesProducto != null){
+						stActividad tempActividad = null;
+						for (Object actividad : lstActividadesProducto){
+							tempActividad = new stActividad();
+							Object[] obj = (Object[])actividad;
+							tempActividad.id = (Integer)obj[0];
+							tempActividad.nombre = (String)obj[1];
+							tempActividad.fechaInicio = Utils.formatDate((Date)obj[2]);
+							tempActividad.fechaFin = Utils.formatDate((Date)obj[3]);
+							tempActividad.porcentajeAvance = (Integer)obj[4];
+							
+							AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(tempActividad.id, 5, "R"); 
+							tempActividad.responsable = asignacion != null ? ((asignacion != null ? asignacion.getColaborador().getPnombre() : null) + " " + (asignacion != null ? asignacion.getColaborador().getPapellido() : null)) : null;
+							actividades.add(tempActividad);
+						}
+					}
 					
 					if(actividades != null && actividades.size() != 0){
 						totalActividades = actividades.size();
@@ -572,27 +680,36 @@ public class SAvanceActividades extends HttpServlet {
 							Corte = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
 									.parse(fechaCorte);
 							
-							if (actividad.porcentajeAvance == 0){
+							anioCorte = new DateTime(Corte);
+							Integer anio = anioCorte.getYear();
+							
+							DateTime anioFin = new DateTime(anio,12,31,23,59,59);
+							
+							if(actividad.porcentajeAvance >= 0 && actividad.porcentajeAvance < 100 && !inicio.after(anioFin.toDate())){
+								totalEsperadasAnio++;
+							}
+							
+							if (actividad.porcentajeAvance == 0 && (!Corte.after(fin))){
 								totalSinIniciar++;
-							}
-							
-							if(Corte.after(inicio) && Corte.before(fin) && actividad.porcentajeAvance > 0 && actividad.porcentajeAvance < 100){
+							}else if(Corte.after(inicio) && Corte.before(fin) && actividad.porcentajeAvance > 0 && actividad.porcentajeAvance < 100){
 								totalEnProceso++;
-							}
-							
-							if (Corte.after(fin) && actividad.porcentajeAvance > 0 && actividad.porcentajeAvance < 100 ){
+							}else if (Corte.after(fin) && actividad.porcentajeAvance >= 0 && actividad.porcentajeAvance < 100 ){
 								totalRetrasadas++;
+							}else if(actividad.porcentajeAvance == 100){
+								totalCompletadas++;
 							}
 							
-							if(actividad.porcentajeAvance == 100){
-								totalCompletadas++;
+							if(inicio.after(anioFin.toDate())){
+								totalAniosSiguientes++;
 							}
 						}
 						
-						totalSinIniciar = (totalSinIniciar/totalActividades)*100;
+						/*totalSinIniciar = (totalSinIniciar/totalActividades)*100;
 						totalEnProceso = (totalEnProceso/totalActividades)*100;
 						totalCompletadas = (totalCompletadas/totalActividades)*100;
 						totalRetrasadas = (totalRetrasadas/totalActividades)*100;
+						totalEsperadasAnio = (totalEsperadasAnio/totalActividades)*100;
+						totalAniosSiguientes = (totalAniosSiguientes/totalActividades)*100;*/
 						
 						if (Double.isNaN(totalSinIniciar)){
 							totalSinIniciar = 0;
@@ -610,6 +727,26 @@ public class SAvanceActividades extends HttpServlet {
 							totalRetrasadas = 0;
 						}
 						
+						if (Double.isNaN(totalEsperadasAnio)){
+							totalEsperadasAnio = 0;
+						}
+						
+						if (Double.isNaN(totalActividades)){
+							totalActividades = 0;
+						}
+						
+						if(Double.isNaN(totalEsperadasAnio)){
+							totalEsperadasAnio = 0;
+						}
+						
+						if(Double.isNaN(totalActividades)){
+							totalActividades = 0;
+						}
+						
+						if(Double.isNaN(totalAniosSiguientes)){
+							totalAniosSiguientes = 0;
+						}
+						
 						temp = new stAvance();
 						temp.objetoId = producto.getId();
 						temp.objetoTipo = 3;
@@ -618,16 +755,18 @@ public class SAvanceActividades extends HttpServlet {
 						temp.proceso = Double.valueOf(df2.format(totalEnProceso));
 						temp.completadas = Double.valueOf(df2.format(totalCompletadas));
 						temp.retrasadas = Double.valueOf(df2.format(totalRetrasadas));
+						temp.esperadasfinanio = Double.valueOf(df2.format(totalEsperadasAnio));
+						temp.aniosSiguientes = Double.valueOf(df2.format(totalAniosSiguientes));
+						
 						temp.tipo = 2;
 						
 						listaResult.add(temp);
-					}else
-						totalProductos = 0;
+					}
 				}
 				
 				resultado = new stElementoResult();
 				resultado.listaResult = listaResult;
-				resultado.total = totalProductos;
+				resultado.total = listaResult.size();
 			}
 		}catch(Exception e){
 		    CLogger.write("7", SAvanceActividades.class, e);
@@ -635,106 +774,6 @@ public class SAvanceActividades extends HttpServlet {
 		return resultado;
 	}
 	
-	private List<stActividad> getActividadesProducto(Producto producto, String usuario){
-		List<stActividad> result = new ArrayList<stActividad>();
-		try{
-			List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
-					null, null, null, null, null, usuario);
-			for (Subproducto subproducto : subproductos){						
-				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
-						null, null, null, null, null, usuario);
-				for (Actividad actividad : actividades ){
-					result = ObtenerActividades(actividad,usuario, result);
-				}
-			}
-			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
-					null, null, null, null, null, usuario);
-			for (Actividad actividad : actividades ){						
-				result = ObtenerActividades(actividad,usuario, result);
-			}
-			return result;
-		}catch(Throwable e){
-		    CLogger.write("8", SAvanceActividades.class, e);
-			return null;
-		}
-	}
-	
-	
-	private List<stActividad> getActividadesProyecto(int idPrestamo, String usuario){
-		List<stActividad> result = new ArrayList<stActividad>();
-		
-		try{
-			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, idPrestamo,
-					null, null, null, null, null, usuario);
-			for (Componente componente : componentes){
-				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
-						null, null, null, null, null, usuario);
-				for (Producto producto : productos){
-					List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
-							null, null, null, null, null, usuario);
-					for (Subproducto subproducto : subproductos){						
-						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
-								null, null, null, null, null, usuario);
-						for (Actividad actividad : actividades ){
-							result = ObtenerActividades(actividad,usuario, result);
-						}
-					}
-					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
-							null, null, null, null, null, usuario);
-					for (Actividad actividad : actividades ){						
-						result = ObtenerActividades(actividad,usuario, result);
-					}
-		
-				}
-				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), OBJETO_ID_COMPONENTE,
-						null, null, null, null, null, usuario);
-				for (Actividad actividad : actividades ){
-					result = ObtenerActividades(actividad,usuario, result);
-				}
-			}
-			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, idPrestamo, OBJETO_ID_PROYECTO,
-					null, null, null, null, null, usuario);
-			for (Actividad actividad : actividades ){				
-				result = ObtenerActividades(actividad,usuario, result);
-			}
-			
-			return result;
-		}
-		catch(Throwable e){
-		    CLogger.write("9", SAvanceActividades.class, e);
-			return null;
-		}
-	}
-	
-	private List<stActividad> ObtenerActividades(Actividad actividad, String usuario, List<stActividad> items){
-		List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, actividad.getId(), OBJETO_ID_SUBACTIVIDAD, 
-				null, null,null, null, null, usuario);
-		
-		try{
-			stActividad temp = new stActividad();
-			temp.id = actividad.getId();
-			temp.nombre = actividad.getNombre();
-			AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(actividad.getId(), 5, "R"); 
-			temp.responsable = (asignacion != null ? asignacion.getColaborador().getPnombre() : null) + " " + (asignacion != null ? asignacion.getColaborador().getPapellido() : null);
-			temp.porcentajeAvance = actividad.getPorcentajeAvance();
-			String[] fechaInicioFin = ActividadDAO.getFechaInicioFin(actividad, usuario).split(";");
-			temp.fechaInicio = fechaInicioFin[0];
-			temp.fechaFin = fechaInicioFin[1];
-			
-			items.add(temp);
-			
-			for(Actividad subActividad : actividades){
-				items = ObtenerActividades(subActividad, usuario, items);
-			}
-			
-			return items;
-		}catch(Exception e){
-			CLogger.write("10", SAvanceActividades.class, e);
-			return null;
-		}
-	}
-	
-
 	private byte[] exportarExcel(Integer idPrestamo, String fechaCorte, String usuario) {
 		byte [] outArray = null;
 		CExcel excel=null;
@@ -760,10 +799,10 @@ public class SAvanceActividades extends HttpServlet {
 		String headers[][];
 		
 		headers = new String[][]{
-			{"Nombre", "Estado", "Completadas", "Sin Iniciar", "En Proceso", "Retrasadas"},  //titulos
+			{"Nombre", "Estado", "Completadas", "Sin Iniciar", "En Proceso", "Retrasadas","Esperadas fin de año", "Años siguientes"},  //titulos
 			null, //mapeo
-			{"string", "string", "string", "string", "string", "string"}, //tipo dato
-			{"", "", "", "", "", ""}, //operaciones columnas
+			{"string", "string", "string", "string", "string", "string", "string", "string"}, //tipo dato
+			{"", "", "", "", "", "", "", ""}, //operaciones columnas
 			null, //operaciones div
 			null,
 			null,
@@ -779,7 +818,7 @@ public class SAvanceActividades extends HttpServlet {
 		Integer totalHitos = 0;
 		Integer totalProductos = 0;
 		
-		stElementoResult avanceActividades = getAvanceActividades(idPrestamo, fechaCorte, usuario);
+		stElementoResult avanceActividades = getAvanceActividadesPrestamo(idPrestamo, fechaCorte, usuario);
 		stElementoResult avanceHitos = getAvanceHitos(idPrestamo, fechaCorte, usuario);
 		stElementoResult avanceProductos = getAvanceProductos(idPrestamo, fechaCorte, usuario);
 		if(avanceActividades!=null){
@@ -792,12 +831,12 @@ public class SAvanceActividades extends HttpServlet {
 			totalProductos = avanceProductos.listaResult.size();
 		}
 		
-		datos = new String[totalActividades+totalHitos+totalProductos+6+2][6];
+		datos = new String[totalActividades+totalHitos+totalProductos+6+2][8];
 
 		Integer fila = 1;
 		
 		datos[0][0] = "Actividades";
-		datos[0][1] = datos[0][2] = datos[0][3] = datos[0][4] = datos[0][5] = "";
+		datos[0][1] = datos[0][2] = datos[0][3] = datos[0][4] = datos[0][5] = datos[0][6] = datos[0][7] = "";
 		for(int i=0; i<totalActividades;i++){
 			datos[fila][0] = "    "+avanceActividades.listaResult.get(i).nombre;
 			datos[fila][1] = "";
@@ -805,6 +844,8 @@ public class SAvanceActividades extends HttpServlet {
 			datos[fila][3] = String.valueOf(avanceActividades.listaResult.get(i).sinIniciar)+"%";
 			datos[fila][4] = String.valueOf(avanceActividades.listaResult.get(i).proceso)+"%";
 			datos[fila][5] = String.valueOf(avanceActividades.listaResult.get(i).retrasadas)+"%";
+			datos[fila][6] = String.valueOf(avanceActividades.listaResult.get(i).esperadasfinanio)+"%";
+			datos[fila][7] = String.valueOf(avanceActividades.listaResult.get(i).aniosSiguientes)+"%";
 			fila++;
 		}
 		datos[fila][0]="Total de Actividades: "+totalActividades;
@@ -813,11 +854,13 @@ public class SAvanceActividades extends HttpServlet {
 		datos[fila][3] = avanceActividades!=null ? String.valueOf(avanceActividades.listaResultCantidad.get(0).sinIniciar) : "0";
 		datos[fila][4] = avanceActividades!=null ? String.valueOf(avanceActividades.listaResultCantidad.get(0).proceso) : "0";
 		datos[fila][5] = avanceActividades!=null ? String.valueOf(avanceActividades.listaResultCantidad.get(0).retrasadas) : "0";
+		datos[fila][6] = avanceActividades!=null ? String.valueOf(avanceActividades.listaResultCantidad.get(0).esperadasfinanio) : "0";
+		datos[fila][7] = avanceActividades!=null ? String.valueOf(avanceActividades.listaResultCantidad.get(0).aniosiguientes) : "0";
 		fila++;
 		fila++;
 		
 		datos[fila][0] = "Hitos";
-		datos[fila][1] = datos[fila][2] = datos[fila][3] = datos[fila][4] = datos[fila][5] = "";
+		datos[fila][1] = datos[fila][2] = datos[fila][3] = datos[fila][4] = datos[fila][5] = datos[fila][7] = datos[fila][7] = "";
 		fila++;
 		for(int i=0; i<totalHitos;i++){
 			datos[fila][0] = "    "+avanceHitos.listaResult.get(i).nombre;
@@ -826,6 +869,8 @@ public class SAvanceActividades extends HttpServlet {
 			datos[fila][3] = String.valueOf(avanceHitos.listaResult.get(i).sinIniciar)+"%";
 			datos[fila][4] = "";
 			datos[fila][5] = String.valueOf(avanceHitos.listaResult.get(i).retrasadas)+"%";
+			datos[fila][6] = "";
+			datos[fila][7] = "";
 			fila++;
 		}
 		datos[fila][0]="Total de Hitos: "+totalHitos;
@@ -834,19 +879,23 @@ public class SAvanceActividades extends HttpServlet {
 		datos[fila][3] = avanceHitos!=null ? String.valueOf(avanceHitos.listaResultCantidad.get(0).sinIniciar) : "0";
 		datos[fila][4] = String.valueOf(0);
 		datos[fila][5] = avanceHitos!=null ? String.valueOf(avanceHitos.listaResultCantidad.get(0).retrasadas) : "0";
+		datos[fila][6] = "";
+		datos[fila][7] = "";
 		fila++;
 		fila++;
 		
 		datos[fila][0] = "Productos";
-		datos[fila][1] = datos[fila][2] = datos[fila][3] = datos[fila][4] = datos[fila][5] = "";
+		datos[fila][1] = datos[fila][2] = datos[fila][3] = datos[fila][4] = datos[fila][5] = datos[fila][6] = datos[fila][7] = "";
 		fila++;
 		for(int i=0; i<totalProductos;i++){
 			datos[fila][0] = "    "+avanceProductos.listaResult.get(i).nombre;
 			datos[fila][1] = "";
-			datos[fila][2] = String.valueOf(avanceProductos.listaResult.get(i).completadas)+"%";
-			datos[fila][3] = String.valueOf(avanceProductos.listaResult.get(i).sinIniciar)+"%";
-			datos[fila][4] = String.valueOf(avanceProductos.listaResult.get(i).proceso)+"%";
-			datos[fila][5] = String.valueOf(avanceProductos.listaResult.get(i).retrasadas)+"%";
+			datos[fila][2] = String.valueOf(avanceProductos.listaResult.get(i).completadas);
+			datos[fila][3] = String.valueOf(avanceProductos.listaResult.get(i).sinIniciar);
+			datos[fila][4] = String.valueOf(avanceProductos.listaResult.get(i).proceso);
+			datos[fila][5] = String.valueOf(avanceProductos.listaResult.get(i).retrasadas);
+			datos[fila][6] = String.valueOf(avanceProductos.listaResult.get(i).esperadasfinanio);
+			datos[fila][7] = String.valueOf(avanceProductos.listaResult.get(i).aniosSiguientes);
 			fila++;
 		}
 		datos[fila][0]="Total de Productos: "+totalProductos;
@@ -855,6 +904,8 @@ public class SAvanceActividades extends HttpServlet {
 		datos[fila][3] = (avanceProductos!=null && avanceProductos.listaResultCantidad!=null) ? String.valueOf(avanceProductos.listaResultCantidad.get(0).sinIniciar) : "0";
 		datos[fila][4] = (avanceProductos!=null && avanceProductos.listaResultCantidad!=null) ? String.valueOf(avanceProductos.listaResultCantidad.get(0).proceso) : "0";
 		datos[fila][5] = (avanceProductos!=null && avanceProductos.listaResultCantidad!=null) ? String.valueOf(avanceProductos.listaResultCantidad.get(0).retrasadas) : "0";
+		datos[fila][6] = (avanceProductos!=null && avanceProductos.listaResultCantidad!=null) ? String.valueOf(avanceProductos.listaResultCantidad.get(0).esperadasfinanio) : "0";
+		datos[fila][7] = (avanceProductos!=null && avanceProductos.listaResultCantidad!=null) ? String.valueOf(avanceProductos.listaResultCantidad.get(0).aniosiguientes) : "0";
 		fila++;
 		
 		return datos;

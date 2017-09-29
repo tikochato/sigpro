@@ -500,21 +500,93 @@ public class InformacionPresupuestariaDAO {
 			if(!conn.isClosed()){
 				if(programa != null && programa >=0){
 					String str_Query = String.join(" ", "select enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre, ejercicio from mv_ep_estructura",
-						"where fuente=? and organismo=? and correlativo=? and programa=? and subprograma=? and proyecto=? and actividad=? and obra=?",
-						"and ejercicio between ? and ?");
+						"where ejercicio between ? and ?");
+					
+					if(fuente != null){
+						str_Query = String.join(" ", str_Query, "and fuente=?");	
+					}
+					
+					if(organismo != null){
+						str_Query = String.join(" ", str_Query, "and organismo=?");	
+					}
+					
+					if(correlativo != null){
+						str_Query = String.join(" ", str_Query, "and correlativo=?");	
+					}
+					
+					if(programa != null){
+						str_Query = String.join(" ", str_Query, "and programa=?");	
+					}
+					
+					if(subprograma != null){
+						str_Query = String.join(" ", str_Query, "and subprograma=?");	
+					}
+					
+					if(proyecto != null){
+						str_Query = String.join(" ", str_Query, "and proyecto=?");	
+					}
+					
+					if(actividad != null){
+						str_Query = String.join(" ", str_Query, "and actividad=?");	
+					}
+					
+					if(obra != null){
+						str_Query = String.join(" ", str_Query, "and obra=?");	
+					}
 					
 					PreparedStatement pstm  = conn.prepareStatement(str_Query);
 					pstm.setFetchSize(1000);
-	                pstm.setInt(1, fuente);
-	                pstm.setInt(2, organismo);
-	                pstm.setInt(3, correlativo);
-	                pstm.setInt(4, programa);
-	                pstm.setInt(5, subprograma);
-	                pstm.setInt(6, proyecto);
-	                pstm.setInt(7, actividad);
-	                pstm.setInt(8, obra);
-	                pstm.setInt(9, anoInicial);
-	                pstm.setInt(10, anoFinal);
+					
+					int pos = 1;
+					if(anoInicial != null){
+						pstm.setInt(pos, anoInicial);
+						pos++;
+					}
+					
+					if(anoFinal != null){
+						pstm.setInt(pos, anoFinal);
+						pos++;
+					}
+	                
+					if(fuente != null){
+						pstm.setInt(pos, fuente);
+						pos++;
+					}
+	                
+					if(organismo != null){
+						pstm.setInt(pos, organismo);
+						pos++;
+					}
+	                
+					if(correlativo != null){
+						pstm.setInt(pos, correlativo);
+						pos++;
+					}
+	                
+					if(programa != null){
+						pstm.setInt(pos, programa);
+						pos++;
+					}
+	                
+					if(subprograma != null){
+						pstm.setInt(pos, subprograma);
+						pos++;
+					}
+	                
+					if(proyecto != null){
+						pstm.setInt(pos, proyecto);
+						pos++;
+					}
+	                
+					if(actividad != null){
+						pstm.setInt(pos, actividad);
+						pos++;
+					}
+	                
+					if(obra != null){
+						pstm.setInt(pos, obra);	
+					}
+	                
 	                ResultSet rs = pstm.executeQuery();
 					
 	                while(rs!=null && rs.next()){
