@@ -730,7 +730,8 @@ function modalEstructuraResponsable($uibModalInstance, $scope, $http, $interval,
 			enableSearch: false, 
 			smartButtonMaxItems: 10,
 			showCheckAll: false,
-			showUncheckAll: false
+			showUncheckAll: false,
+			buttonDefaultText: "Seleccione colaborador"
 			
 	};
 	
