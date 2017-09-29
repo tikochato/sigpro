@@ -197,18 +197,47 @@ public class DesembolsoDAO {
 		return ret;
 	}
 	
-	public static List<?> getDesembolsosPorEjercicio(Integer ejercicioFiscal,Integer idProyecto){
+	public static List<?> getDesembolsosPorEjercicio(Integer idProyecto, int anio_inicial, int anio_final){
 		List<?> ret= null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = String.join(" ", "select year (fecha),month(fecha),SUM(monto)"
-					,"from desembolso"
-					,"where proyectoid = :idProy"
-					,"and estado  = 1"
-					,"GROUP BY year (fecha),month(fecha)",
-					"order by year(fecha),month (fecha) asc");
+			String query = String.join(" ", "select year (fecha) anio ,month(fecha) mes ,SUM(monto)  monto",
+				"from desembolso where proyectoid = ?1",
+				"and estado  = 1", 
+				"and  year(fecha) between ?2 and ?3",
+				"GROUP BY year (fecha),month(fecha) order by year(fecha),month (fecha) asc");
 			Query<?>  desembolsos = session.createNativeQuery(query);
-			desembolsos.setParameter("idProy", idProyecto);
+			desembolsos.setParameter(1, idProyecto);
+			desembolsos.setParameter(2, anio_inicial);
+			desembolsos.setParameter(3, anio_final);
+			ret = desembolsos.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("8", DesembolsoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<?> getCostosPorEjercicio(Integer idProyecto, int anio_inicial, int anio_final){
+		List<?> ret= null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select year (a.fecha_inicio), month (a.fecha_inicio), a.costo",
+						"from actividad a",
+						"where a.estado=1 and ((a.proyecto_base= ?1)",
+						"OR (a.componente_base in (select id from componente where proyectoid= ?1))",
+						"OR (a.producto_base in (select p.id from producto p, componente c where p.componenteid=c.id and c.proyectoid= ?1))",
+						")",
+						"and  year (a.fecha_inicio) between ?2 and ?3",
+						"GROUP BY year (a.fecha_inicio), month (a.fecha_inicio)",
+						"order by year (a.fecha_inicio), month (a.fecha_inicio) asc");
+			Query<?>  desembolsos = session.createNativeQuery(query);
+			desembolsos.setParameter(1, idProyecto);
+			desembolsos.setParameter(2, anio_inicial);
+			desembolsos.setParameter(3, anio_final);
 			ret = desembolsos.getResultList();
 		}
 		catch(Throwable e){

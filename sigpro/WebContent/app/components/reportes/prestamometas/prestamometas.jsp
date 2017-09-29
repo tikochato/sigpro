@@ -233,13 +233,13 @@
 								</thead>
 								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo>
 									<tr ng-repeat="item in controller.data">
-							      		<td nowrap style="min-width:300px; max-width:300px; overflow:hidden;">
+							      		<td nowrap style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">
 							      			<p class="nombreFormat">
-							      				<span ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.objeto_tipo-1}}em"></span>
+							      				<span ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.nivel-1}}em"></span>
 							      				<span uib-tooltip="{{item.nombre}}">{{item.nombre}}</span>
 							      			</p>
 							      		</td>
-							      		<td nowrap style="min-width:100px;">
+							      		<td nowrap style="min-width:100px; min-height: 35px; height: 35px;">
 							      			<p class="nombreFormat" uib-tooltip="{{controller.nombreUnidadMedida(item.unidadDeMedida)}}">{{controller.nombreUnidadMedida(item.unidadDeMedida)}}</p>
 							      		</td>
 							      	</tr>
@@ -281,9 +281,10 @@
 		    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos"  style="height: 100%">
 							<thead class="theadDatos">
 									<tr>
-			          					<th nowrap colspan={{controller.colspan}} style="{{controller.estiloCelda}} text-align: center;" class="label-form">Total Anual</th>
+			          					<th nowrap colspan={{controller.colspan}} style="{{controller.estiloCelda}} text-align: center;" class="label-form"><span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real">Total Anual</span><span ng-hide="controller.grupoMostrado.planificado && controller.grupoMostrado.real">Anual</span></th>
 				          				<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Total</th>
 				          				<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Meta Final</th>
+				          				<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">% Avance</th>
 				          			</tr>
 				          			<tr>
 			          					<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
@@ -303,6 +304,7 @@
 							      			</div>
 										</td>
 										<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.data[$index].metaFinal}}</span></td>
+										<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.data[$index].porcentajeAvance}}{{controller.data[$index].porcentajeAvance!=null? '%':''}}</span></td>
 							      	</tr>
 								</tbody>
 							</table>

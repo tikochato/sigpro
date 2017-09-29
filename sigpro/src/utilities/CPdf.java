@@ -184,6 +184,8 @@ public class CPdf {
 				if(ultimo){
 					cell = headerRow.createCell(celda_b, "");
 					cell.setHeaderCell(true);
+					cell = headerRow.createCell(celda_b, "");
+					cell.setHeaderCell(true);
 				}
 			}else if(tipo_reporte==1){
 				if(posicion==0){
@@ -259,7 +261,7 @@ public class CPdf {
 				ret[0][0]=" ";
 				ret[0][1]=" ";
 				int cont=2;
-				for(int i =2; i<cabecera.length-1;i++){
+				for(int i =2; i<cabecera.length-2;i++){
 					if(!cabecera[i].isEmpty()&&cabecera[i].compareTo("null")!=0){
 						ret[0][cont]=cabecera[i];
 						cont++;
@@ -280,7 +282,8 @@ public class CPdf {
 							ret[1][i+2]="Planificado";
 						}
 					}
-					ret[1][ret[1].length-1]="Meta Final";
+					ret[1][ret[1].length-2]="Meta Final";
+					ret[1][ret[1].length-1]="% Avance";
 				}else{
 					String tipo= visualizacion==0? "planificado" : "Real";
 					for(int i =0; i<subcabecera.length-3;i++){
@@ -288,7 +291,8 @@ public class CPdf {
 						ret[1][i+2]=tipo;
 						
 					}
-					ret[1][ret[1].length-1]="Meta Final";
+					ret[1][ret[1].length-2]="Meta Final";
+					ret[1][ret[1].length-1]="% Avance";
 				}
 				
 			}else if(tipo_reporte==1){

@@ -58,7 +58,8 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	
 	mi.active = 0;
 	
-	mi.child_scope = null;
+	mi.child_desembolso = null;
+	mi.child_riesgo = null;
 
 	mi.fechaOptions = {
 			formatYear : 'yy',
@@ -280,7 +281,6 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 						mi.proyecto.usuarioactualizo = response.data.usuarioactualizo;
 						mi.proyecto.fechaactualizacion = response.data.fechaactualizacion;
 						
-						
 						if (mi.prestamo!=null && mi.prestamo.codigoPresupuestario !=null && mi.prestamo.codigoPresupuestario != ''){
 							var param_data = {
 									accion: "gurdarPrestamo",
@@ -358,9 +358,16 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 										function(response) {
 											if (response.data.success) {
 												if(mi.esTreeview)
-												mi.t_cambiarNombreNodo();
-												if(mi.child_scope!=null)
-													mi.child_scope.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
+													mi.t_cambiarNombreNodo();
+												if(mi.child_desembolso!=null || mi.child_riesgo!=null){
+													if(mi.child_desembolso)
+														ret = mi.child_desembolso.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo',
+																mi.child_riesgo!=null ? mi.child_riesgo.guardar :  null);
+													else if(mi.child_riesgo)
+														ret = mi.child_riesgo.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
+												}
 												else
 													$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 													

@@ -67,7 +67,7 @@
 					  	<label for="campo.id" class="floating-label">*Año Final</label>
 					</div>
 					
-					<div class="col-sm-1 operation_buttons" style="float: right;">
+					<div class="col-sm-6 operation_buttons" style="text-align: right;">
 		    			<div class="btn-group" role="group" aria-label="">
 							<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrar">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
@@ -80,7 +80,7 @@
 			    	</div>
 			    	<div class="row">
 			    	
-			    	<br/><br/>
+			    	<br/><br/><br/>
 			    	
 			    	<div style=" width: 100%; ">
 				    	

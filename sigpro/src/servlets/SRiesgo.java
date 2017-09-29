@@ -4,9 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -22,8 +22,12 @@ import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import dao.ColaboradorDAO;
 import dao.RiesgoDAO;
 import dao.RiesgoPropiedadDAO;
 import dao.RiesgoPropiedadValorDAO;
@@ -64,6 +68,7 @@ public class SRiesgo extends HttpServlet {
 		Integer ejecutado;
 		String fechaEjecucion;
 		int estado;
+		List<HashMap <String,Object>> camposdinamicos;
 	}
 	
 	class stdatadinamico {
@@ -117,70 +122,12 @@ public class SRiesgo extends HttpServlet {
 		Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String accion = map.get("accion");
 		String response_text="";
-		if(accion.equals("getRiesgosPagina")){
-			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numeroRiesgos = map.get("numeroriesgos")!=null  ? Integer.parseInt(map.get("numeroriesgos")) : 0;
-			String filtro_nombre = map.get("filtro_nombre");
-			String filtro_usuario_creo = map.get("filtro_usuario_creo");
-			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			String columna_ordenada = map.get("columna_ordenada");
-			String orden_direccion = map.get("orden_direccion");
-			List<Riesgo> riesgos = RiesgoDAO.getRiesgosPagina(pagina, numeroRiesgos
-					,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);
-			List<striesgo> striesgos=new ArrayList<striesgo>();
-			for(Riesgo riesgo:riesgos){
-				striesgo temp =new striesgo();
-				temp.descripcion = riesgo.getDescripcion();
-				temp.estado = riesgo.getEstado();
-				temp.fechaActualizacion = Utils.formatDateHour(riesgo.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDateHour(riesgo.getFechaCreacion());
-				temp.id = riesgo.getId();
-				temp.nombre = riesgo.getNombre();
-				temp.usuarioActualizo = riesgo.getUsuarioActualizo();
-				temp.usuarioCreo = riesgo.getUsuarioCreo();
-				temp.riesgotipoid = riesgo.getRiesgoTipo().getId();
-				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
-				temp.impactoProyectado = riesgo.getImapctoProyectado();
-				
-				temp.impacto = riesgo.getImpacto();
-				temp.puntuacionImpacto = riesgo.getPuntuacionImpacto();
-				temp.probabilidad = riesgo.getProbabilidad();
-				temp.gatillosSintomas = riesgo.getGatillosSintomas();
-				temp.respuesta = riesgo.getRespuesta();
-				temp.riesgosSecundarios = riesgo.getRiesgosSegundarios();
-										  riesgo.getRiesgosSegundarios();
-				temp.ejecutado = riesgo.getEjecutado();
-				temp.fechaEjecucion = Utils.formatDate(riesgo.getFechaEjecucion());
-				temp.colaboradorid = riesgo.getColaborador().getId();
-				if (riesgo.getColaborador()!=null )
-				temp.colaboradorNombre = String.join(" ", riesgo.getColaborador().getPnombre(),
-						riesgo.getColaborador().getSnombre() !=null ? riesgo.getColaborador().getSnombre() : "",
-						riesgo.getColaborador().getPapellido()!=null ? riesgo.getColaborador().getPapellido() : "",
-						riesgo.getColaborador().getSapellido()!=null ? riesgo.getColaborador().getSapellido() : ""	
-				);
-								
-						
-				striesgos.add(temp);
-			}
-			
-			response_text=new GsonBuilder().serializeNulls().create().toJson(striesgos);
-	        response_text = String.join("", "\"riesgos\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text,"}");
-		}
-		else if(accion.equals("getRiesgosPorObjeto")){
-			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numeroRiesgos = map.get("numeroriesgos")!=null  ? Integer.parseInt(map.get("numeroriesgos")) : 0;
+		if(accion.equals("getRiesgosPorObjeto")){
 			int objetoId = map.get("objetoid")!=null && map.get("objetoid").length()>0 ?
 					Integer.parseInt(map.get("objetoid")): 0;
 			int objetoTipo = map.get("objetotipo")!=null && map.get("objetotipo").length()>0 ? 
 					Integer.parseInt(map.get("objetotipo")) : 0 ;
-			String filtro_nombre = map.get("filtro_nombre");
-			String filtro_usuario_creo = map.get("filtro_usuario_creo");
-			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			String columna_ordenada = map.get("columna_ordenada");
-			String orden_direccion = map.get("orden_direccion");
-			List<Riesgo> riesgos = RiesgoDAO.getRiesgosPorObjeto(pagina, numeroRiesgos,objetoId,objetoTipo
-					,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);
+			List<Riesgo> riesgos = RiesgoDAO.getRiesgosPorObjeto(objetoId,objetoTipo);
 			List<striesgo> striesgos=new ArrayList<striesgo>();
 			for(Riesgo riesgo:riesgos){
 				striesgo temp =new striesgo();
@@ -206,13 +153,46 @@ public class SRiesgo extends HttpServlet {
 				
 				if (riesgo.getColaborador()!=null ){
 					temp.colaboradorid = riesgo.getColaborador().getId();
-				temp.colaboradorNombre = String.join(" ", riesgo.getColaborador().getPnombre(),
+					temp.colaboradorNombre = String.join(" ", riesgo.getColaborador().getPnombre(),
 						riesgo.getColaborador().getSnombre() !=null ? riesgo.getColaborador().getSnombre() : "",
 						riesgo.getColaborador().getPapellido()!=null ? riesgo.getColaborador().getPapellido() : "",
-						riesgo.getColaborador().getSapellido()!=null ? riesgo.getColaborador().getSapellido() : ""	
-				);
+						riesgo.getColaborador().getSapellido()!=null ? riesgo.getColaborador().getSapellido() : "");
 				}
-							
+				
+				List<RiesgoPropiedad> riesgopropiedades = RiesgoPropiedadDAO.getRiesgoPropiedadesPorTipoRiesgo(temp.riesgotipoid);
+
+				List<HashMap<String,Object>> campos = new ArrayList<>();
+				for(RiesgoPropiedad riesgopropiedad:riesgopropiedades){
+					HashMap <String,Object> campo = new HashMap<String, Object>();
+					campo.put("id", riesgopropiedad.getId());
+					campo.put("nombre", riesgopropiedad.getNombre());
+					campo.put("tipo", riesgopropiedad.getDatoTipo().getId());
+					RiesgoPropiedadValor riesgoPropiedadValor = RiesgoPropiedadValorDAO.getValorPorRiesgoYPropiedad(riesgopropiedad.getId(), temp.id);
+					if (riesgoPropiedadValor !=null ){
+						switch ((Integer) campo.get("tipo")){
+							case 1: 
+								campo.put("valor", riesgoPropiedadValor.getValorString());
+								break;
+							case 2:
+								campo.put("valor", riesgoPropiedadValor.getValorEntero());
+								break;
+							case 3:
+								campo.put("valor", riesgoPropiedadValor.getValorDecimal());
+								break;
+							case 4:
+								campo.put("valor", riesgoPropiedadValor.getValorEntero()==1 ? true : false);
+								break;	
+							case 5:
+								campo.put("valor", Utils.formatDate(riesgoPropiedadValor.getValorTiempo()));
+								break;
+						}
+					}
+					else{
+						campo.put("valor", "");
+					}
+					campos.add(campo);
+				}
+				temp.camposdinamicos = campos;
 				striesgos.add(temp);
 			}
 			
@@ -259,78 +239,56 @@ public class SRiesgo extends HttpServlet {
 	        response_text = String.join("", "\"riesgos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
-		else if(accion.equals("guardarRiesgo")){
+		else if(accion.equals("guardarRiesgos")){
 			try{
 				boolean result = false;
-				boolean esnuevo = map.get("esnuevo").equals("true");
-				int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-				if(id>0 || esnuevo){
-					
-					String nombre = map.get("nombre");
-					String descripcion = map.get("descripcion");
-					int riesgotipoid = map.get("riesgotipoid")!=null && map.get("riesgotipoid").length() > 0 ?
-							Integer.parseInt(map.get("riesgotipoid")) : 0;
-				    String impactoProyectado = map.get("impactoproyectado");
-				    Integer impacto = Utils.String2Int(map.get("impacto"),null);
-				    Integer puntuacionImpacto = Utils.String2Int(map.get("puntuacionimpoacto"), null);
-				    Integer probabilidad = Utils.String2Int(map.get("probabilidad"),null);
-				    String gatillosOSintomas = map.get("gatillossintomas");
-				    String respuesta = map.get("respuesta");
-				    String riesgosSecundarios = map.get("riesgossecundarios");
-				    Integer ejecutado = Utils.String2Int(map.get("ejecutado"), null);
-				    Date fechaEjecucion = Utils.dateFromString(map.get("fechaejecucion"));
-				    
+				int objetoId = Utils.String2Int(map.get("objetoId"));
+				int objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+				String sriesgos = map.get("riesgos");
+				JsonParser parser = new JsonParser();
+				JsonArray riesgos = parser.parse(sriesgos).getAsJsonArray();
+				ArrayList<Integer> ids=new ArrayList<Integer>();
+				for(int i=0; i<riesgos.size(); i++){
+					JsonObject objeto = riesgos.get(i).getAsJsonObject();
+					Integer id = objeto.get("id").isJsonNull() ? null : objeto.get("id").getAsInt();
+					String nombre = objeto.get("nombre").isJsonNull() ? null : objeto.get("nombre").getAsString();
+					String descripcion = objeto.get("descripcion").isJsonNull() ? null : objeto.get("descripcion").getAsString();
+					int riesgotipoid = objeto.get("riesgotipoid").isJsonNull() ? 0 : objeto.get("riesgotipoid").getAsInt();
+				    String impactoProyectado = objeto.get("impactoProyectado").isJsonNull() ? null : objeto.get("impactoProyectado").getAsString();
+				    Integer impacto = objeto.get("impacto").isJsonNull() ? null : objeto.get("impacto").getAsInt(); 
+				    Integer puntuacionImpacto = objeto.get("puntuacionImpacto").isJsonNull() ? null : objeto.get("puntuacionImpacto").getAsInt();
+				    Integer probabilidad = objeto.get("probabilidad").isJsonNull() ? null : objeto.get("probabilidad").getAsInt();
+				    String gatillosOSintomas = objeto.get("gatillosSintomas").isJsonNull() ? null : objeto.get("gatillosSintomas").getAsString();
+				    String respuesta = objeto.get("respuesta").isJsonNull() ? null : objeto.get("respuesta").getAsString();
+				    String riesgosSecundarios = objeto.get("riesgosSecundarios").isJsonNull() ? null : objeto.get("riesgosSecundarios").getAsString();
+				    Integer ejecutado = objeto.get("ejecutado").isJsonNull() ? null : objeto.get("ejecutado").getAsInt();
+				    Date fechaEjecucion =  objeto.get("fechaEjecucion").isJsonNull() ? null : Utils.stringToDateZ(objeto.get("fechaEjecucion").getAsString());
 				    
 				    Colaborador colaborador = null;
-				    Integer colobaradorId = Utils.String2Int(map.get("colaboradorid"),null);
+				    Integer colobaradorId = objeto.get("colaboradorid").isJsonNull() || objeto.get("colaboradorid").getAsString().length()==0 ? null : objeto.get("colaboradorid").getAsInt(); 
 				    if (colobaradorId!=null){
-				    	colaborador = new Colaborador();
-				    	colaborador.setId(colobaradorId);
+				    	colaborador = ColaboradorDAO.getColaborador(colobaradorId);
 				    }
 				    
-					
-					RiesgoTipo riesgoTipo= new RiesgoTipo();
+				    RiesgoTipo riesgoTipo= new RiesgoTipo();
 					riesgoTipo.setId(riesgotipoid);
 					
 					type = new TypeToken<List<stdatadinamico>>() {
 					}.getType();
 	
-					List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
-					
-					Riesgo riesgo;
-					if(esnuevo){
-						
-						riesgo = new Riesgo(colaborador, riesgoTipo, nombre, descripcion, usuario, null, new Date(), null, 1,
-								impactoProyectado, impacto, puntuacionImpacto, probabilidad, gatillosOSintomas, respuesta,
-								riesgosSecundarios, ejecutado, fechaEjecucion, null, null);
-						
-						
-					}
-					else{
-						
-						riesgo = RiesgoDAO.getRiesgoPorId(id);
-						riesgo.setRiesgoTipo(riesgoTipo);
-						riesgo.setNombre(nombre);
-						riesgo.setDescripcion(descripcion);
+					List<stdatadinamico> datos = gson.fromJson(objeto.get("camposdinamicos"), type);
+					Riesgo riesgo = new Riesgo(colaborador, riesgoTipo, nombre, descripcion, usuario, null, new Date(), null, 1,
+							impactoProyectado, impacto, puntuacionImpacto, probabilidad, gatillosOSintomas, respuesta,
+							riesgosSecundarios, ejecutado, fechaEjecucion, null, null);
+					if(id!=0){
+						riesgo.setId(id);
 						riesgo.setUsuarioActualizo(usuario);
-						riesgo.setFechaActualizacion(new DateTime().toDate());
-						riesgo.setImapctoProyectado(impactoProyectado);
-						riesgo.setImpacto(impacto);
-						riesgo.setPuntuacionImpacto(puntuacionImpacto);
-						riesgo.setProbabilidad(probabilidad);
-						riesgo.setGatillosSintomas(gatillosOSintomas);
-						riesgo.setRespuesta(respuesta);
-						riesgo.setRiesgosSegundarios(riesgosSecundarios);
-						riesgo.setEjecutado(ejecutado);
-						riesgo.setFechaEjecucion(fechaEjecucion);
-						riesgo.setColaborador(colaborador);
+						riesgo.setFechaActualizacion(new Date());
 					}
-					int objetoId = Utils.String2Int(map.get("objetoId"));
-					int objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+					
 					result = RiesgoDAO.guardarRiesgo(riesgo,objetoId, objetoTipo);
-					
+					ids.add(riesgo.getId());
 					List<RiesgoPropiedadValor> valores_temp = RiesgoPropiedadValorDAO.getRiesgoPropiedadadesValoresPorRiesgo(riesgo.getId());
-					
 					riesgo.setRiesgoPropiedadValors(null);
 					if (valores_temp!=null){
 						for (RiesgoPropiedadValor valor : valores_temp){
@@ -361,8 +319,7 @@ public class SRiesgo extends HttpServlet {
 										valor.setValorEntero(Utils.String2Boolean(data.valor, null));
 										break;
 									case 5:
-										SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-										valor.setValorTiempo(data.valor_f.compareTo("")!=0 ? sdf.parse(data.valor_f) : null);
+										valor.setValorTiempo(data.valor.compareTo("")!=0 ? Utils.stringToDateZ(data.valor) : null);
 										break;
 									}
 									result = (result && RiesgoPropiedadValorDAO.guardarRiesgoPropiedadValor(valor));
@@ -370,20 +327,15 @@ public class SRiesgo extends HttpServlet {
 							}
 						}
 					}
-					
-					
-					
-					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-							+ "\"id\": " + riesgo.getId().toString(), ","
-							, "\"usuarioCreo\": \"" , riesgo.getUsuarioCreo(),"\","
-							, "\"fechaCreacion\":\" " , Utils.formatDateHour(riesgo.getFechaCreacion()),"\","
-							, "\"usuarioactualizo\": \"" , riesgo.getUsuarioActualizo() != null ? riesgo.getUsuarioActualizo() : "","\","
-							, "\"fechaactualizacion\": \"" , Utils.formatDateHour(riesgo.getFechaActualizacion()),"\""
-							," }");
 				}
-				else{
-					response_text = "{ \"success\": false }";
+				List<Riesgo> delete_riesgos = RiesgoDAO.getRiesgosNotIn(objetoId, objetoTipo, ids);
+				for(Riesgo driesgo : delete_riesgos){
+					RiesgoDAO.eliminarRiesgo(driesgo);
 				}
+				String sids="";
+				for(int i=0; i<ids.size(); i++)
+					sids = sids + "," +ids.get(i);
+				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", \"ids\":\"",(sids.length()>0 ? sids.substring(1, sids.length()-1) : ""),"\" }");
 			}
 			catch (Throwable e){
 				CLogger.write("1", SRiesgo.class, e);

@@ -29,8 +29,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.EstructuraProyectoDAO;
+import dao.MetaDAO;
 import dao.MetaUnidadMedidaDAO;
 import dao.PrestamoMetasDAO;
+import dao.ProyectoDAO;
+import pojo.Meta;
+import pojo.MetaUnidadMedida;
 import utilities.CExcel;
 import utilities.CLogger;
 import utilities.Utils;
@@ -45,7 +49,7 @@ public class SPrestamoMetas extends HttpServlet {
 		Integer objeto_id;
 		int objeto_tipo;
 		Integer unidadDeMedida;
-		BigDecimal lineaBase;
+		BigDecimal porcentajeAvance;
 		BigDecimal metaFinal;
 		Integer nivel;
 		stanio[] anios; 
@@ -73,7 +77,6 @@ public class SPrestamoMetas extends HttpServlet {
 	final int AGRUPACION_CUATRIMESTRE= 4;
 	final int AGRUPACION_SEMESTRE= 5;
 	final int AGRUPACION_ANUAL= 6;
-	final int OBJETOTIPO_PRODUCTO= 3;
 
     public SPrestamoMetas() {
         super();
@@ -225,27 +228,43 @@ public class SPrestamoMetas extends HttpServlet {
 				tempPrestamo.nivel = nivel +1;
 				tempPrestamo.objeto_tipo = ((BigInteger) obj[2]).intValue();
 				if(tempPrestamo.objeto_tipo <=3){
-					ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();
-					if(tempPrestamo.objeto_tipo == 3){
-						presupuestoPrestamo = PrestamoMetasDAO.getMetasPorProducto(tempPrestamo.objeto_id, anioInicial, anioFinal);
-					}
-					tempPrestamo = getMetas(presupuestoPrestamo, anioInicial, anioFinal, tempPrestamo);
+					ArrayList<ArrayList<BigDecimal>> metaValores = new ArrayList<ArrayList<BigDecimal>>();
+					tempPrestamo = getMetas(metaValores, anioInicial, anioFinal, tempPrestamo);
 					lstPrestamo.add(tempPrestamo);
+					if(tempPrestamo.objeto_tipo == 3){
+						List<Meta> metas = MetaDAO.getMetasObjeto(tempPrestamo.objeto_id, tempPrestamo.objeto_tipo);
+						for(Meta meta : metas){
+							stprestamo tempMeta =  new stprestamo();
+							tempMeta.objeto_id = tempPrestamo.objeto_id;
+							tempMeta.nombre = meta.getNombre();
+							tempMeta.nivel = nivel +2;
+							tempMeta.objeto_tipo = 0;
+							tempMeta.unidadDeMedida = meta.getMetaUnidadMedida().getId();
+							if(meta.getDatoTipo().getId().equals(2)){
+								tempMeta.metaFinal = meta.getMetaFinalEntero()!=null ? new BigDecimal(meta.getMetaFinalEntero()) : null;
+							}if(meta.getDatoTipo().getId().equals(3)){
+								tempMeta.metaFinal = meta.getMetaFinalDecimal();
+							}
+							tempMeta.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(meta);
+							metaValores = new ArrayList<ArrayList<BigDecimal>>();
+							metaValores = PrestamoMetasDAO.getMetaValores(meta.getId(), anioInicial, anioFinal);
+							tempMeta = getMetas(metaValores, anioInicial, anioFinal, tempMeta);
+							lstPrestamo.add(tempMeta);
+						}
+					}
 				}
 			}
 		}
 		return lstPrestamo;
 	}
 	
-	private stprestamo getMetas (ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo,
+	private stprestamo getMetas (ArrayList<ArrayList<BigDecimal>> metasPrestamo,
 			int anoInicial, int anoFinal, stprestamo prestamo){
 		
 		stanio[] anios = inicializarStanio(anoInicial, anoFinal);
-		if(presupuestoPrestamo.size() > 0){
+		if(metasPrestamo.size() > 0){
 			
-			
-			for(ArrayList<BigDecimal> objprestamopresupuesto : presupuestoPrestamo){
-				
+			for(ArrayList<BigDecimal> objprestamopresupuesto : metasPrestamo){
 				stanio aniotemp = new stanio(); 
 				aniotemp = inicializarStanio(aniotemp);
 				aniotemp.enero[0] = objprestamopresupuesto.get(0);
@@ -275,19 +294,6 @@ public class SPrestamoMetas extends HttpServlet {
 				int anio = objprestamopresupuesto.get(24).intValue();
 				int pos = anio - anoInicial;  
 				aniotemp.anio = new BigDecimal(anio);
-				prestamo.unidadDeMedida = Integer.parseInt(objprestamopresupuesto.get(25).toString());
-				if(objprestamopresupuesto.get(26)!=null){
-					if(prestamo.lineaBase == null){
-						prestamo.lineaBase = new BigDecimal(0);
-					}
-					prestamo.lineaBase = prestamo.lineaBase.add(objprestamopresupuesto.get(26));
-				}
-				if(objprestamopresupuesto.get(27)!=null){
-					if(prestamo.metaFinal == null){
-						prestamo.metaFinal = new BigDecimal(0);
-					}
-					prestamo.metaFinal = prestamo.metaFinal.add(objprestamopresupuesto.get(27));
-				}
 				anios[pos] = aniotemp;
 			}
 		}
@@ -336,11 +342,11 @@ public class SPrestamoMetas extends HttpServlet {
 		
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
-		try{			
+		try{		
 			excel = new CExcel("Metas de Préstamo", false, null);
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
 			datosMetas = generarDatosMetas(prestamoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-			wb=excel.generateExcelOfData(datosMetas, "Metas de Préstamo", headers, null, true, usuario);
+			wb=excel.generateExcelOfData(datosMetas, "Reporte de Metas - Préstamo "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
 		
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
@@ -360,7 +366,7 @@ public class SPrestamoMetas extends HttpServlet {
 			{"Anual"}
 		};
 		
-		int totalesCant = 2;
+		int totalesCant = 3;
 		int aniosDiferencia =(anioFin-anioInicio)+1; 
 		int columnasTotal = (aniosDiferencia*(AgrupacionesTitulo[agrupacion-1].length));
 		int factorVisualizacion = 1;
@@ -463,6 +469,12 @@ public class SPrestamoMetas extends HttpServlet {
 		subtitulo[pos]="";
 		operacionesFila[pos]="";
 		columnasOperacion[pos]="";
+		pos++;
+		titulo[pos] = "% Avance";
+		tipo[pos] = "double";
+		subtitulo[pos]="";
+		operacionesFila[pos]="";
+		columnasOperacion[pos]="";
 		
 		headers = new String[][]{
 			titulo,  //titulos
@@ -493,6 +505,7 @@ public class SPrestamoMetas extends HttpServlet {
 				stprestamo prestamo = lstPrestamo.get(i);
 				String sangria;
 				switch (prestamo.objeto_tipo){
+					case 0: sangria = "         "; break;
 					case 1: sangria = ""; break;
 					case 2: sangria = "   "; break;
 					case 3: sangria = "      "; break;
@@ -503,10 +516,11 @@ public class SPrestamoMetas extends HttpServlet {
 				datos[i][columna] = sangria+prestamo.nombre;
 				columna++;
 				if(lstPrestamo.get(i).unidadDeMedida!=null){
-					datos[i][columna] = MetaUnidadMedidaDAO.getMetaUnidadMedidaPorId(lstPrestamo.get(i).unidadDeMedida).getNombre();
+					MetaUnidadMedida unidad = MetaUnidadMedidaDAO.getMetaUnidadMedidaPorId(lstPrestamo.get(i).unidadDeMedida);
+					datos[i][columna] = unidad!=null ? unidad.getNombre() : "";
 				}
 				columna++;
-				if(lstPrestamo.get(i).objeto_tipo == OBJETOTIPO_PRODUCTO){
+				if(lstPrestamo.get(i).objeto_tipo == 0){ //es meta
 					int posicion = columna;
 					BigDecimal totalAniosP = new BigDecimal(0);
 					BigDecimal totalAniosR = new BigDecimal(0);
@@ -686,31 +700,12 @@ public class SPrestamoMetas extends HttpServlet {
 					if(tipoVisualizacion==1 || tipoVisualizacion == 2){
 						datos[i][posicion]= totalAniosR.toString();
 					}
-					datos[i][columnasTotal-1]=prestamo.metaFinal!=null ? prestamo.metaFinal.toString() : "";
+					datos[i][columnasTotal-2]=prestamo.metaFinal!=null ? prestamo.metaFinal.toString() : "";
+					datos[i][columnasTotal-1]=prestamo.porcentajeAvance!=null ? prestamo.porcentajeAvance.toString() : "";
 				}
 			}
 		}
 		return datos;
 	}
-	
-//
-//	private stproductometa getFechaInicioFinProducto(stproductometa productometa){
-//		Date fechaInicio = null;
-//		Date fechaFin = null;
-//		List <Actividad> actividades = getActividadesProducto(productometa.id);
-//		for(Actividad actividad : actividades){
-//			//actividad = ActividadDAO.getFechasActividad(actividad);
-//			if (fechaInicio == null || fechaInicio.after(actividad.getFechaInicio())){
-//				fechaInicio = actividad.getFechaInicio();
-//			}
-//			if (fechaFin == null || fechaFin.before(actividad.getFechaFin())){
-//				fechaFin = actividad.getFechaFin();
-//			}
-//		}
-//		productometa.fechaInicio = Utils.formatDate(fechaInicio);
-//		productometa.fechaFin = Utils.formatDate(fechaFin);
-//		return productometa;
-//	}
-//	
 	
 }

@@ -195,8 +195,8 @@
 									<div class="form-group">    						
 										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaDecreto" is-open="controller.fd_abierto"
 											datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-											ng-click="controller.abrirPopupFecha(1007)" ng-value="controller.prestamo.fechaDecreto" onblur="this.setAttribute('value', this.value);"
-											ng-readonly="true"/>
+											ng-value="controller.prestamo.fechaDecreto" onblur="this.setAttribute('value', this.value);"
+										/>
 										<span class="label-icon" ng-click="controller.abrirPopupFecha(1007)">	
 											<i class="glyphicon glyphicon-calendar"></i>
 										</span>
@@ -207,8 +207,8 @@
 									<div class="form-group">
 										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaSuscripcion" is-open="controller.fs_abierto"
 											datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-											ng-click="controller.abrirPopupFecha(1008)" ng-value="controller.prestamo.fechaSuscripcion" onblur="this.setAttribute('value', this.value);"
-											ng-readonly="true"/>
+											ng-value="controller.prestamo.fechaSuscripcion" onblur="this.setAttribute('value', this.value);"
+											/>
 											<span class="label-icon" ng-click="controller.abrirPopupFecha(1008)">
 												<i class="glyphicon glyphicon-calendar"></i>
 										</span>
@@ -219,8 +219,8 @@
 									<div class="form-group">
 										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaVigencia" is-open="controller.fv_abierto"
 											datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-											ng-click="controller.abrirPopupFecha(1012)" ng-value="controller.prestamo.fechaVigencia" onblur="this.setAttribute('value', this.value);"
-											ng-readonly="true"/>
+											ng-value="controller.prestamo.fechaVigencia" onblur="this.setAttribute('value', this.value);"
+											/>
 											<span class="label-icon" ng-click="controller.abrirPopupFecha(1012)">
 												<i class="glyphicon glyphicon-calendar"></i>
 										</span>
@@ -1235,6 +1235,9 @@
 				</uib-tab>
 				<uib-tab index="4" heading="Desembolsos" ng-click="controller.desembolsos=true" >
 					<div ng-if="controller.desembolsos !== undefined"><%@include file="/app/components/desembolso/desembolso.jsp" %></div>
+				</uib-tab>
+				<uib-tab index="5" heading="Riesgos" ng-click="controller.riesgos=true" >
+					<div ng-if="controller.riesgos !== undefined"><%@include file="/app/components/riesgo/riesgo.jsp" %></div>
 				</uib-tab>
 				</shiro:hasPermission>
 			</uib-tabset>

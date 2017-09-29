@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -72,31 +73,73 @@ public class SMeta extends HttpServlet {
 		Integer objetoId;
 		Integer objetoTipo;
 		Integer datoTipoId;
-		String metaFinal;
+		String metaFinalString;
+		Integer metaFinalEntero;
+		BigDecimal metaFinalDecimal;
+		String metaFinalTiempo;
 		stplanificado[] planificado;
 		stavance[] avance;
 	}
 	
 	public class stplanificado{
 		Integer ejercicio;
-		String enero;
-		String febrero;
-		String marzo;
-		String abril;
-		String mayo;
-		String junio;
-		String julio;
-		String agosto;
-		String septiembre;
-		String octubre;
-		String noviembre;
-		String diciembre;
+		String eneroString;
+		String febreroString;
+		String marzoString;
+		String abrilString;
+		String mayoString;
+		String junioString;
+		String julioString;
+		String agostoString;
+		String septiembreString;
+		String octubreString;
+		String noviembreString;
+		String diciembreString;
+		Integer eneroEntero;
+		Integer febreroEntero;
+		Integer marzoEntero;
+		Integer abrilEntero;
+		Integer mayoEntero;
+		Integer junioEntero;
+		Integer julioEntero;
+		Integer agostoEntero;
+		Integer septiembreEntero;
+		Integer octubreEntero;
+		Integer noviembreEntero;
+		Integer diciembreEntero;
+		BigDecimal eneroDecimal;
+		BigDecimal febreroDecimal;
+		BigDecimal marzoDecimal;
+		BigDecimal abrilDecimal;
+		BigDecimal mayoDecimal;
+		BigDecimal junioDecimal;
+		BigDecimal julioDecimal;
+		BigDecimal agostoDecimal;
+		BigDecimal septiembreDecimal;
+		BigDecimal octubreDecimal;
+		BigDecimal noviembreDecimal;
+		BigDecimal diciembreDecimal;
+		String eneroTiempo;
+		String febreroTiempo;
+		String marzoTiempo;
+		String abrilTiempo;
+		String mayoTiempo;
+		String junioTiempo;
+		String julioTiempo;
+		String agostoTiempo;
+		String septiembreTiempo;
+		String octubreTiempo;
+		String noviembreTiempo;
+		String diciembreTiempo;
 		String usuario;
 	}
 	
 	public class stavance{
 		String fecha;
-		String valor;
+		Integer valorEntero;
+		String valorString;
+		BigDecimal valorDecimal;
+		String valorTiempo;
 		String usuario;
 	}
 
@@ -170,22 +213,10 @@ public class SMeta extends HttpServlet {
 				temp.datoTipoId = meta.getDatoTipo().getId();
 				temp.usuarioActualizo = meta.getUsuarioActualizo();
 				temp.usuarioCreo = meta.getUsuarioCreo();
-				switch(meta.getDatoTipo().getId()){
-					case 1: //texto
-						temp.metaFinal = meta.getMetaFinalString();
-						break;
-					case 2: //entero
-						temp.metaFinal = meta.getMetaFinalEntero() != null ? meta.getMetaFinalEntero().toString() : null;
-						break;
-					case 3: //decimal
-						temp.metaFinal = meta.getMetaFinalDecimal() !=null  ? meta.getMetaFinalDecimal().toString(): null;
-						break;
-					case 4: //boolean
-						temp.metaFinal = meta.getMetaFinalString();
-						break;
-					case 5: //fecha
-						temp.metaFinal = Utils.formatDate(meta.getMetaFinalFecha());
-				}
+				temp.metaFinalString = meta.getMetaFinalString();
+				temp.metaFinalEntero = meta.getMetaFinalEntero();
+				temp.metaFinalDecimal = meta.getMetaFinalDecimal();
+				temp.metaFinalTiempo = meta.getMetaFinalFecha() != null ? Utils.formatDate(meta.getMetaFinalFecha()) : null;
 				tmetas.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(tmetas);
@@ -211,124 +242,87 @@ public class SMeta extends HttpServlet {
 				temp.datoTipoId = meta.getDatoTipo().getId();
 				temp.usuarioActualizo = meta.getUsuarioActualizo();
 				temp.usuarioCreo = meta.getUsuarioCreo();
-				switch(meta.getDatoTipo().getId()){
-					case 1: //texto
-						temp.metaFinal = meta.getMetaFinalString();
-						break;
-					case 2: //entero
-						temp.metaFinal = meta.getMetaFinalEntero() != null ? meta.getMetaFinalEntero().toString() : null;
-						break;
-					case 3: //decimal
-						temp.metaFinal = meta.getMetaFinalDecimal() !=null  ? meta.getMetaFinalDecimal().toString(): null;
-						break;
-					case 4: //boolean
-						temp.metaFinal = meta.getMetaFinalString();
-						break;
-					case 5: //fecha
-						temp.metaFinal = Utils.formatDate(meta.getMetaFinalFecha());
-				}
+				temp.metaFinalString = meta.getMetaFinalString();
+				temp.metaFinalEntero = meta.getMetaFinalEntero();
+				temp.metaFinalDecimal = meta.getMetaFinalDecimal();
+				temp.metaFinalTiempo = meta.getMetaFinalFecha() != null ? Utils.formatDate(meta.getMetaFinalFecha()) : null;
 				Set<MetaAvance> metaavances = meta.getMetaAvances();
 				temp.avance = new stavance[metaavances.size()];
 				int i=0;
-				for (MetaAvance ma : metaavances) {
+				
+				Iterator<MetaAvance> iterator = metaavances.iterator();
+	    	    while(iterator.hasNext()) {
+	    	    	MetaAvance ma = iterator.next();
 					temp.avance[i] = new stavance();
 					temp.avance[i].fecha = Utils.formatDate(ma.getId().getFecha());
-					switch(meta.getDatoTipo().getId()){
-					case 1: //texto
-						temp.avance[i].valor = ma.getValorString();
-						break;
-					case 2: //entero
-						temp.avance[i].valor = ma.getValorEntero() != null ? ma.getValorEntero().toString() : null;
-						break;
-					case 3: //decimal
-						temp.avance[i].valor = ma.getValorDecimal() !=null  ? ma.getValorDecimal().toString(): null;
-						break;
-					case 4: //boolean
-						temp.avance[i].valor = ma.getValorString();
-						break;
-					case 5: //fecha
-						temp.avance[i].valor = Utils.formatDate(ma.getValorTiempo());
-					}
+					temp.avance[i].valorString = ma.getValorString();
+					temp.avance[i].valorEntero = ma.getValorEntero();
+					temp.avance[i].valorDecimal = ma.getValorDecimal();
+					temp.avance[i].valorTiempo = ma.getValorTiempo() !=null ? Utils.formatDate(ma.getValorTiempo()) : null;
 					temp.avance[i].usuario = ma.getUsuario();
 					i++;
 				}
 				Set<MetaPlanificado> metaplanificado = meta.getMetaPlanificados();
 				temp.planificado = new stplanificado[metaplanificado.size()];
 				i=0;
-				for (MetaPlanificado mp : metaplanificado) {
+				Iterator<MetaPlanificado> iteratorP = metaplanificado.iterator();
+	    	    while(iteratorP.hasNext()) {
+	    	    	MetaPlanificado mp = iteratorP.next();
 					temp.planificado[i] = new stplanificado();
 					temp.planificado[i].ejercicio = mp.getId().getEjercicio();
-					switch(meta.getDatoTipo().getId()){
-						case 1: //texto
-							temp.planificado[i].enero = mp.getEneroString();
-							temp.planificado[i].febrero = mp.getFebreroString();
-							temp.planificado[i].marzo = mp.getMarzoString();
-							temp.planificado[i].abril = mp.getAbrilString();
-							temp.planificado[i].mayo = mp.getMayoString();
-							temp.planificado[i].junio = mp.getJunioString();
-							temp.planificado[i].julio = mp.getJulioString();
-							temp.planificado[i].agosto = mp.getAgostoString();
-							temp.planificado[i].septiembre = mp.getSeptiembreString();
-							temp.planificado[i].octubre = mp.getOctubreString();
-							temp.planificado[i].noviembre = mp.getNoviembreString();
-							temp.planificado[i].diciembre = mp.getDiciembreString();
-							break;
-						case 2: //entero
-							temp.planificado[i].enero = mp.getEneroEntero() != null ? mp.getEneroEntero().toString() : null;
-							temp.planificado[i].febrero = mp.getFebreroEntero() != null ? mp.getFebreroEntero().toString() : null;
-							temp.planificado[i].marzo = mp.getMarzoEntero() != null ? mp.getMarzoEntero().toString() : null;
-							temp.planificado[i].abril = mp.getAbrilEntero() != null ? mp.getAbrilEntero().toString() : null;
-							temp.planificado[i].mayo = mp.getMayoEntero() != null ? mp.getMayoEntero().toString() : null;
-							temp.planificado[i].junio = mp.getJunioEntero() != null ? mp.getJunioEntero().toString() : null;
-							temp.planificado[i].julio = mp.getJulioEntero() != null ? mp.getJulioEntero().toString() : null;
-							temp.planificado[i].agosto = mp.getAgostoEntero() != null ? mp.getAgostoEntero().toString() : null;
-							temp.planificado[i].septiembre = mp.getSeptiembreEntero() != null ? mp.getSeptiembreEntero().toString() : null;
-							temp.planificado[i].octubre = mp.getOctubreEntero() != null ? mp.getOctubreEntero().toString() : null;
-							temp.planificado[i].noviembre = mp.getNoviembreEntero() != null ? mp.getNoviembreEntero().toString() : null;
-							temp.planificado[i].diciembre = mp.getDiciembreEntero() != null ? mp.getDiciembreEntero().toString() : null;
-							break;
-						case 3: //decimal
-							temp.planificado[i].enero = mp.getEneroDecimal() !=null  ? mp.getEneroDecimal().toString(): null;
-							temp.planificado[i].febrero = mp.getFebreroDecimal() !=null  ? mp.getFebreroDecimal().toString(): null;
-							temp.planificado[i].marzo = mp.getMarzoDecimal() !=null  ? mp.getMarzoDecimal().toString(): null;
-							temp.planificado[i].abril = mp.getAbrilDecimal() !=null  ? mp.getAbrilDecimal().toString(): null;
-							temp.planificado[i].mayo = mp.getMayoDecimal() !=null  ? mp.getMayoDecimal().toString(): null;
-							temp.planificado[i].junio = mp.getJunioDecimal() !=null  ? mp.getJunioDecimal().toString(): null;
-							temp.planificado[i].julio = mp.getJulioDecimal() !=null  ? mp.getJulioDecimal().toString(): null;
-							temp.planificado[i].agosto = mp.getAgostoDecimal() !=null  ? mp.getAgostoDecimal().toString(): null;
-							temp.planificado[i].septiembre = mp.getSeptiembreDecimal() !=null  ? mp.getSeptiembreDecimal().toString(): null;
-							temp.planificado[i].octubre = mp.getOctubreDecimal() !=null  ? mp.getOctubreDecimal().toString(): null;
-							temp.planificado[i].noviembre = mp.getNoviembreDecimal() !=null  ? mp.getNoviembreDecimal().toString(): null;
-							temp.planificado[i].diciembre = mp.getDiciembreDecimal() !=null  ? mp.getDiciembreDecimal().toString(): null;
-							break;
-						case 4: //boolean
-							temp.planificado[i].enero = mp.getEneroString();
-							temp.planificado[i].febrero = mp.getFebreroString();
-							temp.planificado[i].marzo = mp.getMarzoString();
-							temp.planificado[i].abril = mp.getAbrilString();
-							temp.planificado[i].mayo = mp.getMayoString();
-							temp.planificado[i].junio = mp.getJunioString();
-							temp.planificado[i].julio = mp.getJulioString();
-							temp.planificado[i].agosto = mp.getAgostoString();
-							temp.planificado[i].septiembre = mp.getSeptiembreString();
-							temp.planificado[i].octubre = mp.getOctubreString();
-							temp.planificado[i].noviembre = mp.getNoviembreString();
-							temp.planificado[i].diciembre = mp.getDiciembreString();
-							break;
-						case 5: //fecha
-							temp.planificado[i].enero = Utils.formatDate(mp.getEneroTiempo());
-							temp.planificado[i].febrero = Utils.formatDate(mp.getFebreroTiempo());
-							temp.planificado[i].marzo = Utils.formatDate(mp.getMarzoTiempo());
-							temp.planificado[i].abril = Utils.formatDate(mp.getAbrilTiempo());
-							temp.planificado[i].mayo = Utils.formatDate(mp.getMayoTiempo());
-							temp.planificado[i].junio = Utils.formatDate(mp.getJunioTiempo());
-							temp.planificado[i].julio = Utils.formatDate(mp.getJulioTiempo());
-							temp.planificado[i].agosto = Utils.formatDate(mp.getAgostoTiempo());
-							temp.planificado[i].septiembre = Utils.formatDate(mp.getSeptiembreTiempo());
-							temp.planificado[i].octubre = Utils.formatDate(mp.getOctubreTiempo());
-							temp.planificado[i].noviembre = Utils.formatDate(mp.getNoviembreTiempo());
-							temp.planificado[i].diciembre = Utils.formatDate(mp.getDiciembreTiempo());
-						}
+					
+					temp.planificado[i].eneroString = mp.getEneroString();
+					temp.planificado[i].febreroString = mp.getFebreroString();
+					temp.planificado[i].marzoString = mp.getMarzoString();
+					temp.planificado[i].abrilString = mp.getAbrilString();
+					temp.planificado[i].mayoString = mp.getMayoString();
+					temp.planificado[i].junioString = mp.getJunioString();
+					temp.planificado[i].julioString = mp.getJulioString();
+					temp.planificado[i].agostoString = mp.getAgostoString();
+					temp.planificado[i].septiembreString = mp.getSeptiembreString();
+					temp.planificado[i].octubreString = mp.getOctubreString();
+					temp.planificado[i].noviembreString = mp.getNoviembreString();
+					temp.planificado[i].diciembreString = mp.getDiciembreString();
+					
+					temp.planificado[i].eneroEntero = mp.getEneroEntero();
+					temp.planificado[i].febreroEntero = mp.getFebreroEntero();
+					temp.planificado[i].marzoEntero = mp.getMarzoEntero();
+					temp.planificado[i].abrilEntero = mp.getAbrilEntero();
+					temp.planificado[i].mayoEntero = mp.getMayoEntero();
+					temp.planificado[i].junioEntero = mp.getJunioEntero();
+					temp.planificado[i].julioEntero = mp.getJulioEntero();
+					temp.planificado[i].agostoEntero = mp.getAgostoEntero();
+					temp.planificado[i].septiembreEntero = mp.getSeptiembreEntero();
+					temp.planificado[i].octubreEntero = mp.getOctubreEntero();
+					temp.planificado[i].noviembreEntero = mp.getNoviembreEntero();
+					temp.planificado[i].diciembreEntero = mp.getDiciembreEntero();
+					
+					temp.planificado[i].eneroDecimal = mp.getEneroDecimal();
+					temp.planificado[i].febreroDecimal = mp.getFebreroDecimal();
+					temp.planificado[i].marzoDecimal = mp.getMarzoDecimal();
+					temp.planificado[i].abrilDecimal = mp.getAbrilDecimal();
+					temp.planificado[i].mayoDecimal = mp.getMayoDecimal();
+					temp.planificado[i].junioDecimal = mp.getJunioDecimal();
+					temp.planificado[i].julioDecimal = mp.getJulioDecimal();
+					temp.planificado[i].agostoDecimal = mp.getAgostoDecimal();
+					temp.planificado[i].septiembreDecimal = mp.getSeptiembreDecimal();
+					temp.planificado[i].octubreDecimal = mp.getOctubreDecimal();
+					temp.planificado[i].noviembreDecimal = mp.getNoviembreDecimal();
+					temp.planificado[i].diciembreDecimal = mp.getDiciembreDecimal();
+					
+					temp.planificado[i].eneroTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getEneroTiempo()) : null;
+					temp.planificado[i].febreroTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getFebreroTiempo()) : null;
+					temp.planificado[i].marzoTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getMarzoTiempo()) : null;
+					temp.planificado[i].abrilTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getAbrilTiempo()) : null;
+					temp.planificado[i].mayoTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getMayoTiempo()) : null;
+					temp.planificado[i].junioTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getJunioTiempo()) : null;
+					temp.planificado[i].julioTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getJulioTiempo()) : null;
+					temp.planificado[i].agostoTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getAgostoTiempo()) : null;
+					temp.planificado[i].septiembreTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getSeptiembreTiempo()) : null;
+					temp.planificado[i].octubreTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getOctubreTiempo()) : null;
+					temp.planificado[i].noviembreTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getNoviembreTiempo()) : null;
+					temp.planificado[i].diciembreTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getDiciembreTiempo()) : null;
+					
 					temp.planificado[i].usuario = mp.getUsuario();
 					i++;
 				}
@@ -353,30 +347,28 @@ public class SMeta extends HttpServlet {
 				Integer estado = objeto.get("estado").getAsInt();
 				Integer unidadMedidaId = objeto.get("unidadMedidaId").getAsJsonObject().get("id").getAsInt();
 				Integer datoTipoId = objeto.get("datoTipoId").getAsJsonObject().get("id").getAsInt();
-				String metaFinal = objeto.get("metaFinal").isJsonNull() ? null : objeto.get("metaFinal").getAsString();
+				
 				String usuarioActualizo = null;
 				Date fechaActualizacion =  null;				
 				Integer metaFinalEntero=null;
 				String metaFinalString=null;
 				BigDecimal metaFinalDecimal = null;
-				Date metaFinalFecha = null;
-				if(metaFinal!=null){
-					switch(datoTipoId){
-						case 1: //texto
-							metaFinalString = metaFinal;
-							break;
-						case 2: //entero
-							metaFinalEntero = Integer.parseInt(metaFinal);
-							break;
-						case 3: //decimal
-							metaFinalDecimal = new BigDecimal(metaFinal);
-							break;
-						case 4: //boolean
-							metaFinalString = metaFinal;
-							break;
-						case 5: //fecha
-							metaFinalFecha = Utils.dateFromString(metaFinal);
-					}
+				Date metaFinalTiempo = null;
+				switch(datoTipoId){
+					case 1: //texto
+						metaFinalString = objeto.get("metaFinalString").isJsonNull() ? null : objeto.get("metaFinalString").getAsString();
+						break;
+					case 2: //entero
+						metaFinalEntero = objeto.get("metaFinalEntero").isJsonNull() ? null : objeto.get("metaFinalEntero").getAsInt();
+						break;
+					case 3: //decimal
+						metaFinalDecimal = objeto.get("metaFinalDecimal").isJsonNull() ? null : objeto.get("metaFinalDecimal").getAsBigDecimal();
+						break;
+					case 4: //boolean
+						metaFinalString = objeto.get("metaFinalString").isJsonNull() ? null : objeto.get("metaFinalString").getAsString();
+						break;
+					case 5: //fecha
+						metaFinalTiempo = objeto.get("metaFinalTiempo").isJsonNull() ? null : Utils.dateFromString(objeto.get("metaFinalTiempo").getAsString());
 				}
 
 				DatoTipo datoTipo = DatoTipoDAO.getDatoTipo(datoTipoId);
@@ -395,33 +387,21 @@ public class SMeta extends HttpServlet {
 					meta.setMetaFinalEntero(metaFinalEntero);
 					meta.setMetaFinalString(metaFinalString);
 					meta.setMetaFinalDecimal(metaFinalDecimal);
-					meta.setMetaFinalFecha(metaFinalFecha);
+					meta.setMetaFinalFecha(metaFinalTiempo);
 					MetaDAO.guardarMeta(meta);
 					result = MetaDAO.borrarPlanificadoAvanceMeta(meta);
 				}else{
 					meta = new Meta(datoTipo, metaUnidadMedida, nombre, descripcion, usuario, usuarioActualizo, new Date(), fechaActualizacion, estado, 
-							objetoId, objetoTipo, metaFinalEntero, metaFinalString, metaFinalDecimal, metaFinalFecha, null, null);
+							objetoId, objetoTipo, metaFinalEntero, metaFinalString, metaFinalDecimal, metaFinalTiempo, null, null);
 					result = MetaDAO.guardarMeta(meta);
 				}
 				
 				if(result){
-					//TODO: obtener planificados
+					//Obtener planificados
 					JsonArray planificados = objeto.get("planificado").getAsJsonArray();
 					for(int p=0; p<planificados.size(); p++){
 						JsonObject planificado = planificados.get(p).getAsJsonObject();
 						Integer ejercicio = planificado.get("ejercicio").getAsInt();
-						String enero = planificado.get("enero").isJsonNull() ? null : planificado.get("enero").getAsString();
-						String febrero = planificado.get("febrero").isJsonNull() ? null : planificado.get("febrero").getAsString();
-						String marzo = planificado.get("marzo").isJsonNull() ? null : planificado.get("marzo").getAsString();
-						String abril = planificado.get("abril").isJsonNull() ? null : planificado.get("abril").getAsString();
-						String mayo = planificado.get("mayo").isJsonNull() ? null : planificado.get("mayo").getAsString();
-						String junio = planificado.get("junio").isJsonNull() ? null : planificado.get("junio").getAsString();
-						String julio = planificado.get("julio").isJsonNull() ? null : planificado.get("julio").getAsString();
-						String agosto = planificado.get("agosto").isJsonNull() ? null : planificado.get("agosto").getAsString();
-						String septiembre = planificado.get("septiembre").isJsonNull() ? null : planificado.get("septiembre").getAsString();
-						String octubre = planificado.get("octubre").isJsonNull() ? null : planificado.get("octubre").getAsString();
-						String noviembre = planificado.get("noviembre").isJsonNull() ? null : planificado.get("noviembre").getAsString();
-						String diciembre = planificado.get("diciembre").isJsonNull() ? null : planificado.get("diciembre").getAsString();
 						
 						Integer eneroEntero = null;
 						Integer febreroEntero = null;
@@ -477,74 +457,74 @@ public class SMeta extends HttpServlet {
 						
 						switch(datoTipoId){
 							case 1: //texto
-								eneroString = enero;
-								febreroString = febrero;
-								marzoString = marzo;
-								abrilString = abril;
-								mayoString = mayo;
-								junioString = junio;
-								julioString = julio;
-								agostoString = agosto;
-								septiembreString = septiembre;
-								octubreString = octubre;
-								noviembreString = noviembre;
-								diciembreString = diciembre;
+								eneroString = planificado.get("eneroString").isJsonNull() ? null : planificado.get("eneroString").getAsString();
+								febreroString = planificado.get("febreroString").isJsonNull() ? null : planificado.get("febreroString").getAsString();
+								marzoString = planificado.get("marzoString").isJsonNull() ? null : planificado.get("marzoString").getAsString();
+								abrilString = planificado.get("abrilString").isJsonNull() ? null : planificado.get("abrilString").getAsString();
+								mayoString = planificado.get("mayoString").isJsonNull() ? null : planificado.get("mayoString").getAsString();
+								junioString = planificado.get("junioString").isJsonNull() ? null : planificado.get("junioString").getAsString();
+								julioString = planificado.get("julioString").isJsonNull() ? null : planificado.get("julioString").getAsString();
+								agostoString = planificado.get("agostoString").isJsonNull() ? null : planificado.get("agostoString").getAsString();
+								septiembreString = planificado.get("septiembreString").isJsonNull() ? null : planificado.get("septiembreString").getAsString();
+								octubreString = planificado.get("octubreString").isJsonNull() ? null : planificado.get("octubreString").getAsString();
+								noviembreString = planificado.get("noviembreString").isJsonNull() ? null : planificado.get("noviembreString").getAsString();
+								diciembreString = planificado.get("diciembreString").isJsonNull() ? null : planificado.get("diciembreString").getAsString();
 								break;
 							case 2: //entero
-								eneroEntero = enero!=null ? Integer.parseInt(enero) : null;
-								febreroEntero = febrero!=null ? Integer.parseInt(febrero) : null;
-								marzoEntero = marzo!=null ? Integer.parseInt(marzo) : null;
-								abrilEntero = abril!=null ? Integer.parseInt(abril) : null;
-								mayoEntero = mayo!=null ? Integer.parseInt(mayo) : null;
-								junioEntero = junio!=null ? Integer.parseInt(junio) : null;
-								julioEntero = julio!=null ? Integer.parseInt(julio) : null;
-								agostoEntero = agosto!=null ? Integer.parseInt(agosto) : null;
-								septiembreEntero = septiembre!=null ? Integer.parseInt(septiembre) : null;
-								octubreEntero = octubre!=null ? Integer.parseInt(octubre) : null;
-								noviembreEntero = noviembre!=null ? Integer.parseInt(noviembre) : null;
-								diciembreEntero = diciembre!=null ? Integer.parseInt(diciembre) : null;
+								eneroEntero = planificado.get("eneroEntero").isJsonNull() ? null : planificado.get("eneroEntero").getAsInt();
+								febreroEntero = planificado.get("febreroEntero").isJsonNull() ? null : planificado.get("febreroEntero").getAsInt();
+								marzoEntero = planificado.get("marzoEntero").isJsonNull() ? null : planificado.get("marzoEntero").getAsInt();
+								abrilEntero = planificado.get("abrilEntero").isJsonNull() ? null : planificado.get("abrilEntero").getAsInt();
+								mayoEntero = planificado.get("mayoEntero").isJsonNull() ? null : planificado.get("mayoEntero").getAsInt();
+								junioEntero = planificado.get("junioEntero").isJsonNull() ? null : planificado.get("junioEntero").getAsInt();
+								julioEntero = planificado.get("julioEntero").isJsonNull() ? null : planificado.get("julioEntero").getAsInt();
+								agostoEntero = planificado.get("agostoEntero").isJsonNull() ? null : planificado.get("agostoEntero").getAsInt();
+								septiembreEntero = planificado.get("septiembreEntero").isJsonNull() ? null : planificado.get("septiembreEntero").getAsInt();
+								octubreEntero = planificado.get("octubreEntero").isJsonNull() ? null : planificado.get("octubreEntero").getAsInt();
+								noviembreEntero = planificado.get("noviembreEntero").isJsonNull() ? null : planificado.get("noviembreEntero").getAsInt();
+								diciembreEntero = planificado.get("diciembreEntero").isJsonNull() ? null : planificado.get("diciembreEntero").getAsInt();
 								break;
 							case 3: //decimal
-								eneroDecimal = enero!=null ? new BigDecimal(enero) : null;
-								febreroDecimal = febrero!=null ? new BigDecimal(febrero) : null;
-								marzoDecimal = marzo!=null ? new BigDecimal(marzo) : null;
-								abrilDecimal = abril!=null ? new BigDecimal(abril) : null;
-								mayoDecimal = mayo!=null ? new BigDecimal(mayo) : null;
-								junioDecimal = junio!=null ? new BigDecimal(junio) : null;
-								julioDecimal = julio!=null ? new BigDecimal(julio) : null;
-								agostoDecimal = agosto!=null ? new BigDecimal(agosto) : null;
-								septiembreDecimal = septiembre!=null ? new BigDecimal(septiembre) : null;
-								octubreDecimal = octubre!=null ? new BigDecimal(octubre) : null;
-								noviembreDecimal = noviembre!=null ? new BigDecimal(noviembre) : null;
-								diciembreDecimal = diciembre!=null ? new BigDecimal(diciembre) : null;
+								eneroDecimal = planificado.get("eneroDecimal").isJsonNull() ? null : planificado.get("eneroDecimal").getAsBigDecimal();
+								febreroDecimal = planificado.get("febreroDecimal").isJsonNull() ? null : planificado.get("febreroDecimal").getAsBigDecimal();
+								marzoDecimal = planificado.get("marzoDecimal").isJsonNull() ? null : planificado.get("marzoDecimal").getAsBigDecimal();
+								abrilDecimal = planificado.get("abrilDecimal").isJsonNull() ? null : planificado.get("abrilDecimal").getAsBigDecimal();
+								mayoDecimal = planificado.get("mayoDecimal").isJsonNull() ? null : planificado.get("mayoDecimal").getAsBigDecimal();
+								junioDecimal = planificado.get("junioDecimal").isJsonNull() ? null : planificado.get("junioDecimal").getAsBigDecimal();
+								julioDecimal = planificado.get("julioDecimal").isJsonNull() ? null : planificado.get("julioDecimal").getAsBigDecimal();
+								agostoDecimal = planificado.get("agostoDecimal").isJsonNull() ? null : planificado.get("agostoDecimal").getAsBigDecimal();
+								septiembreDecimal = planificado.get("septiembreDecimal").isJsonNull() ? null : planificado.get("septiembreDecimal").getAsBigDecimal();
+								octubreDecimal = planificado.get("octubreDecimal").isJsonNull() ? null : planificado.get("octubreDecimal").getAsBigDecimal();
+								noviembreDecimal = planificado.get("noviembreDecimal").isJsonNull() ? null : planificado.get("noviembreDecimal").getAsBigDecimal();
+								diciembreDecimal = planificado.get("diciembreDecimal").isJsonNull() ? null : planificado.get("diciembreDecimal").getAsBigDecimal();
 								break;
 							case 4: //boolean
-								eneroString = enero;
-								febreroString = febrero;
-								marzoString = marzo;
-								abrilString = abril;
-								mayoString = mayo;
-								junioString = junio;
-								julioString = julio;
-								agostoString = agosto;
-								septiembreString = septiembre;
-								octubreString = octubre;
-								noviembreString = noviembre;
-								diciembreString = diciembre;
+								eneroString = planificado.get("eneroString").isJsonNull() ? null : planificado.get("eneroString").getAsString();
+								febreroString = planificado.get("febreroString").isJsonNull() ? null : planificado.get("febreroString").getAsString();
+								marzoString = planificado.get("marzoString").isJsonNull() ? null : planificado.get("marzoString").getAsString();
+								abrilString = planificado.get("abrilString").isJsonNull() ? null : planificado.get("abrilString").getAsString();
+								mayoString = planificado.get("mayoString").isJsonNull() ? null : planificado.get("mayoString").getAsString();
+								junioString = planificado.get("junioString").isJsonNull() ? null : planificado.get("junioString").getAsString();
+								julioString = planificado.get("julioString").isJsonNull() ? null : planificado.get("julioString").getAsString();
+								agostoString = planificado.get("agostoString").isJsonNull() ? null : planificado.get("agostoString").getAsString();
+								septiembreString = planificado.get("septiembreString").isJsonNull() ? null : planificado.get("septiembreString").getAsString();
+								octubreString = planificado.get("octubreString").isJsonNull() ? null : planificado.get("octubreString").getAsString();
+								noviembreString = planificado.get("noviembreString").isJsonNull() ? null : planificado.get("noviembreString").getAsString();
+								diciembreString = planificado.get("diciembreString").isJsonNull() ? null : planificado.get("diciembreString").getAsString();
 								break;
 							case 5: //Tiempo
-								eneroTiempo = enero!=null ? Utils.dateFromString(enero) : null;
-								febreroTiempo = febrero!=null ? Utils.dateFromString(febrero) : null;
-								marzoTiempo = marzo!=null ? Utils.dateFromString(marzo) : null;
-								abrilTiempo = abril!=null ? Utils.dateFromString(abril) : null;
-								mayoTiempo = mayo!=null ? Utils.dateFromString(mayo) : null;
-								junioTiempo = junio!=null ? Utils.dateFromString(junio) : null;
-								julioTiempo = julio!=null ? Utils.dateFromString(julio) : null;
-								agostoTiempo = agosto!=null ? Utils.dateFromString(agosto) : null;
-								septiembreTiempo = septiembre!=null ? Utils.dateFromString(septiembre) : null;
-								octubreTiempo = octubre!=null ? Utils.dateFromString(octubre) : null;
-								noviembreTiempo = noviembre!=null ? Utils.dateFromString(noviembre) : null;
-								diciembreTiempo = diciembre!=null ? Utils.dateFromString(diciembre) : null;
+								eneroTiempo = planificado.get("eneroTiempo").isJsonNull() ? null : Utils.dateFromString(planificado.get("eneroTiempo").getAsString());
+								febreroTiempo = planificado.get("febreroTiempo").isJsonNull() ? null : Utils.dateFromString(planificado.get("febreroTiempo").getAsString());
+								marzoTiempo = planificado.get("marzoTiempo").isJsonNull() ? null : Utils.dateFromString(planificado.get("marzoTiempo").getAsString());
+								abrilTiempo = planificado.get("abrilTiempo").isJsonNull() ? null : Utils.dateFromString(planificado.get("abrilTiempo").getAsString());
+								mayoTiempo = planificado.get("mayoTiempo").isJsonNull() ? null : Utils.dateFromString(planificado.get("mayoTiempo").getAsString());
+								junioTiempo = planificado.get("junioTiempo").isJsonNull() ? null : Utils.dateFromString(planificado.get("junioTiempo").getAsString());
+								julioTiempo = planificado.get("julioTiempo").isJsonNull() ? null : Utils.dateFromString(planificado.get("julioTiempo").getAsString());
+								agostoTiempo = planificado.get("agostoTiempo").isJsonNull() ? null : Utils.dateFromString(planificado.get("agostoTiempo").getAsString());
+								septiembreTiempo = planificado.get("septiembreTiempo").isJsonNull() ? null : Utils.dateFromString(planificado.get("septiembreTiempo").getAsString());
+								octubreTiempo = planificado.get("octubreTiempo").isJsonNull() ? null : Utils.dateFromString(planificado.get("octubreTiempo").getAsString());
+								noviembreTiempo = planificado.get("noviembreTiempo").isJsonNull() ? null : Utils.dateFromString(planificado.get("noviembreTiempo").getAsString());
+								diciembreTiempo = planificado.get("diciembreTiempo").isJsonNull() ? null : Utils.dateFromString(planificado.get("diciembreTiempo").getAsString());
 						}
 
 						MetaPlanificadoId planificadoId = new MetaPlanificadoId(meta.getId(), ejercicio);
@@ -557,14 +537,12 @@ public class SMeta extends HttpServlet {
 								diciembreEntero, diciembreString, diciembreDecimal, diciembreTiempo, 1, usuario, new Date());
 						MetaDAO.agregarMetaPlanificado(metaPlanificado);
 					}
-					
-					//TODO: obtener avances
+					//obtener avances
 					JsonArray avances = objeto.get("avance").getAsJsonArray();
 					ArrayList<Date> fechasUtilizadas = new ArrayList<Date>(); 
 					for(int a=0; a<avances.size(); a++){
 						JsonObject avance = avances.get(a).getAsJsonObject();
 						Date fecha = Utils.dateFromString(avance.get("fecha").getAsString());
-						String valor = avance.get("valor").isJsonNull() ? null : avance.get("valor").getAsString();
 						String usuarioCrea = avance.get("usuario").isJsonNull()? usuario : avance.get("usuario").getAsString();
 						if(fechasUtilizadas.contains(fecha)){
 							DateTime fechaNueva = new DateTime(fecha);
@@ -577,23 +555,21 @@ public class SMeta extends HttpServlet {
 						String valorString=null;
 						BigDecimal valorDecimal=null;
 						Date valorTiempo=null;
-						if(valor!=null){
-							switch(datoTipoId){
-								case 1: //texto
-									valorString = valor;
-									break;
-								case 2: //entero
-									valorEntero = Integer.parseInt(valor);
-									break;
-								case 3: //decimal
-									valorDecimal = new BigDecimal(valor);
-									break;
-								case 4: //boolean
-									valorString = valor;
-									break;
-								case 5: //fecha
-									valorTiempo = Utils.dateFromString(valor);
-							}
+						switch(datoTipoId){
+							case 1: //texto
+								valorString = avance.get("valorString").isJsonNull() ? null : avance.get("valorString").getAsString();
+								break;
+							case 2: //entero
+								valorEntero = avance.get("valorEntero").isJsonNull() ? null : avance.get("valorEntero").getAsInt();
+								break;
+							case 3: //decimal
+								valorDecimal = avance.get("valorDecimal").isJsonNull() ? null : avance.get("valorDecimal").getAsBigDecimal();
+								break;
+							case 4: //boolean
+								valorString = avance.get("valorString").isJsonNull() ? null : avance.get("valorString").getAsString();
+								break;
+							case 5: //fecha
+								valorTiempo = avance.get("valorString").isJsonNull() ? null : Utils.dateFromString(avance.get("valorString").getAsString());
 						}
 						
 						MetaAvanceId avanceId = new MetaAvanceId(meta.getId(), fecha);
