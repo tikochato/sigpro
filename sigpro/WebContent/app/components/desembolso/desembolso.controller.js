@@ -47,7 +47,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			
 			mi.cargarTabla();
 			
-			mi.guardar=function(call_chain){
+			mi.guardar=function(mensaje_success, mensaje_error,call_chain){
 				if(mi.desembolsos!=null && mi.proyectoid!=''){
 					var desembolsos = '';
 					for(var i=0; i<mi.desembolsos.length; i++){
@@ -60,10 +60,13 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 						t: (new Date()).getTime()
 					}).success(function(response){
 						if(response.success){
-							return call_chain();
+							if(call_chain!=null)
+								call_chain(mensaje_success, mensaje_error);
+							else
+								$utilidades.mensaje('success',mensaje_success);
 						}
 						else
-							return false;
+							$utilidades.mensaje('danger',mensaje_error);
 					});
 				}
 				else
@@ -125,10 +128,21 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			};
 			
 			mi.borrar = function(row) {
-		        var index = mi.desembolsos.indexOf(row);
-		        if (index !== -1) {
-		            mi.desembolsos.splice(index, 1);
-		        }
+				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+						, "Confirmación de Borrado"
+						, '¿Desea borrar el Desembolso?'
+						, "Borrar"
+						, "Cancelar")
+				.result.then(function(data) {
+					if(data){
+						
+					}
+				}, function(){
+					var index = mi.desembolsos.indexOf(row);
+			        if (index !== -1) {
+			            mi.desembolsos.splice(index, 1);
+			        }
+				});
 		    }
 			
 } ]);

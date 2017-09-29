@@ -32,11 +32,11 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="row in riesgoc.display_riesgos track by $index">
+						<tr ng-repeat="row in riesgoc.display_riesgos">
 							<td  ng-click="riesgoc.editar(row)">{{ row.nombre }}</td>
 							<td  ng-click="riesgoc.editar(row)">{{ row.descripcion }}</td>
 							<shiro:hasPermission name="30030">
-							<td><label class="btn btn-default btn-xs" ng-click="riesgoc.borrar($index)" uib-tooltip="Borrar" tooltip-placement="left">
+							<td><label class="btn btn-default btn-xs" ng-click="riesgoc.borrar(row)" uib-tooltip="Borrar" tooltip-placement="left">
 								<span class="glyphicon glyphicon-trash"></span></label></td>
 							</shiro:hasPermission>
 						</tr>

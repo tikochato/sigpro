@@ -360,15 +360,13 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 												if(mi.esTreeview)
 													mi.t_cambiarNombreNodo();
 												if(mi.child_desembolso!=null || mi.child_riesgo!=null){
-													var ret=true;
 													if(mi.child_desembolso)
-														ret = mi.child_desembolso.guardar(mi.child_riesgo.guardar);
+														ret = mi.child_desembolso.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo',
+																mi.child_riesgo!=null ? mi.child_riesgo.guardar :  null);
 													else if(mi.child_riesgo)
-														ret = mi.child_riesgo.guardar();
-													if(ret)
-														$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
-													else
-														$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
+														ret = mi.child_riesgo.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
 												}
 												else
 													$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');

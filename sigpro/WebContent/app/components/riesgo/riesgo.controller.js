@@ -60,7 +60,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			$window.location.href = '/main.jsp#!/forbidden';		
 		}
 		
-		mi.guardar=function(){
+		mi.guardar=function(mensaje_success, mensaje_error){
 			
 			if(mi.riesgos.length>0){
 				$http.post('/SRiesgo', {
@@ -75,10 +75,10 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 						for(var i = 0; i<sids.length; i++)
 							mi.riesgos[i].id = parseInt(sids[i]);
 						mi.cargarTabla();
-						return true;
+						$utilidades.mensaje('success',mensaje_success);
 					}
 					else
-						return false;
+						$utilidades.mensaje('danger',mensaje_error);
 				});
 			}
 			else
@@ -95,7 +95,10 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 						, "Cancelar")
 				.result.then(function(data) {
 					if(data){
-						mi.riesgos.splice(index, 1);
+						var index = mi.desembolsos.indexOf(row);
+				        if (index !== -1) {
+				            mi.desembolsos.splice(index, 1);
+				        }
 					}
 				}, function(){
 					
