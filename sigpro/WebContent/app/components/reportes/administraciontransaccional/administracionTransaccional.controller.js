@@ -14,6 +14,13 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 			}
 		}
 		
+		mi.abrirPopupFecha = function(index) {
+			switch(index){
+				case 1000: mi.fi_abierto = true; break;
+				case 1001: mi.ff_abierto = true; break;
+			}
+		};
+		
 		mi.charOptions= {
 			scales: {
 				legend: {
@@ -51,7 +58,7 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 		mi.generar = function(){
 			mi.mostrarcargando = true;
 			mi.mostrarTablas = false;
-			$http.post('/SAdministracionTransaccional', {accion: 'getTransacciones', fechaInicio: mi.fechaInicio, fechaFin: mi.fechaFin, t: new Date().getTime()}).success(
+			$http.post('/SAdministracionTransaccional', {accion: 'getTransacciones', fechaInicio: moment(mi.fechaInicio).format('DD/MM/YYYY'), fechaFin: moment(mi.fechaFin).format('DD/MM/YYYY'), t: new Date().getTime()}).success(
 					function(response){
 						mi.rowDatos = response.usuarios;
 						mi.displayedDatos = [].concat(mi.rowDatos);
