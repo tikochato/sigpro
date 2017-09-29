@@ -203,6 +203,19 @@ public class Utils {
 		return ret;
 	}
 	
+	public static Date stringToDateZ(String date){
+		Date ret=null;
+		if(date!=null && date.length()>0){
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'");
+			try {
+				ret = sdf.parse(date);
+			} catch (ParseException e) {
+				ret = null;
+			}
+		}
+		return ret;
+	}
+	
 	public static Integer getParameterInteger(Map<String, String> map,String name){
 		Integer ret = null;
 		if(name!=null && name.length()>0 && map!=null){

@@ -26,15 +26,12 @@
                     <li>
                     	<shiro:hasPermission name="24010"><a href="/main.jsp#!/programa"><span class="glyphicon" aria-hidden="true"></span> Programas</a></shiro:hasPermission>                       
                     </li>
-                    <li>
-                    	<shiro:hasPermission name="24010"><a   href="/main.jsp#!/prestamo"><span class="glyphicon" aria-hidden="true"></span> Préstamos</a></shiro:hasPermission>                       
-                    </li>
-                    <shiro:hasPermission name="99999">
+                    <shiro:hasPermission name="24010">
 	                    <li uib-dropdown>
 	                    	<a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Préstamos <b class="caret"></b></a> 
 	                    	<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="split-button">
 	                    		<li role="menuitem"><a   href="/main.jsp#!/prestamo"><span class="glyphicon" aria-hidden="true"></span>Lista</a></li>	
-	                    		<li role="menuitem"><a href="/main_treeview.jsp">Vista de árbol</a></li>
+	                    		<li role="menuitem"><a href="/main_treeview.jsp">Árbol</a></li>
 	                    	</ul>                      
 	                    </li>
                     </shiro:hasPermission>

@@ -32,11 +32,6 @@ public class RiesgoDAOTest {
 		assertNotNull(RiesgoDAO.eliminarTotalRiesgo(new Riesgo()));
 	}
 	
-	@Test
-	public void getRiesgosPaginaTest(){
-		assertNotNull(RiesgoDAO.getRiesgosPagina(1, 1, "", "","","",""));
-	}
-	
 	
 	@Test
 	public void getTotalRiesgosTest(){
@@ -45,12 +40,7 @@ public class RiesgoDAOTest {
 	
 	@Test
 	public void getRiesgosPaginaPorProyectoTest(){
-		assertNotNull(RiesgoDAO.getRiesgosPorObjeto(0,0, 0,0,"", "","","",""));
-	}
-	
-	@Test
-	public void getTotalRiesgosPorProyectoTest(){
-		assertEquals(RiesgoDAO.getTotalRiesgosPorProyecto(0,0,"", "","").getClass(),Long.class);
+		assertNotNull(RiesgoDAO.getRiesgosPorObjeto(0,0));
 	}
 	
 	
