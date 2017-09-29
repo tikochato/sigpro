@@ -38,9 +38,19 @@ public class ComponenteDAO {
 		Componente ret = null;
 		List<Componente> listRet = null;
 		try{
-			Query<Componente> criteria = session.createQuery("FROM Componente where id=:id AND id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )", Componente.class);
+			String Str_query = String.join(" ", "Select c FROM Componente c",
+					"where id=:id");
+			String Str_usuario = "";
+			if(usuario != null){
+				Str_usuario = String.join(" ", "AND id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )");
+			}
+			
+			Str_query = String.join(" ", Str_query, Str_usuario);
+			Query<Componente> criteria = session.createQuery(Str_query, Componente.class);
 			criteria.setParameter("id", id);
-			criteria.setParameter("usuario", usuario);
+			if(usuario != null){
+				criteria.setParameter("usuario", usuario);
+			}
 			 listRet = criteria.getResultList();
 			 
 			 ret = !listRet.isEmpty() ? listRet.get(0) : null;
