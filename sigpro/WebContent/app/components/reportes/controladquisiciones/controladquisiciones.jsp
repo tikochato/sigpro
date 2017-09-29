@@ -136,9 +136,9 @@
 		}
 	</style>
 	
-	<div ng-controller="planAdquisicionesController as controller" class="maincontainer all_page" id="title" style="height: 100%">
+	<div ng-controller="controlAdquisicionesController as controller" class="maincontainer all_page" id="title" style="height: 100%">
 		<script type="text/ng-template" id="pago.jsp">
-    		<%@ include file="/app/components/reportes/planadquisiciones/pago.jsp"%>
+    		<%@ include file="/app/components/reportes/controladquisiciones/pago.jsp"%>
   		</script>
 		<shiro:lacksPermission name="24010">
 			<p ng-init="controller.redireccionSinPermisos()"></p>
@@ -148,7 +148,7 @@
 	    		<div style="width: 100%;">
 		    		<div class="row">
 		    			<div class="panel panel-default">
-			  				<div class="panel-heading"><h3>Plan de adquisiciones AÑO FISCAL {{controller.anio}}</h3></div>
+			  				<div class="panel-heading"><h3>Control de adquisiciones AÑO FISCAL {{controller.anio}}</h3></div>
 						</div>
 		    		</div>
 		    		<br>
@@ -159,25 +159,25 @@
 								ng-change="controller.generar();"></select>		
 	    				</div>
 						<div class="operation_buttons" align="right">
-							<div class="btn-group">
+							<div class="btn-group" ng-hide="true">
 								<label class="btn btn-default" ng-model="controller.enMillones"  tooltip-placement="center" uib-btn-radio="true" ng-click="controller.calcularTamaniosCeldas()" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false" ng-hide="!controller.mostrarBotones">
 									<span>MQ</span>
 								</label>
 							</div>
-							<div class="btn-group">
+							<div class="btn-group" ng-hide="true">
 								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="false" ng-click="controller.calcularTamaniosCeldas()" uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false" ng-hide="!controller.mostrarBotones">
 									<span>Q</span>
 								</label>
 							</div>
-							<div class="btn-group">
+							<div class="btn-group" ng-hide="true">
 								<label class="btn btn-default"  ng-click="controller.agregarPagos();" uib-tooltip="Plan de pagos" tooltip-placement="center" ng-hide="!controller.mostrarBotones">
 								<span>P</span></label>
 							</div>
-							<div class="btn-group">
+							<div class="btn-group" ng-hide="true">
 								<label class="btn btn-default"  ng-click="controller.limpiar(row);" uib-tooltip="Limpiar" ng-hide="!controller.mostrarBotones">
 								<span class="glyphicon glyphicon glyphicon-erase" aria-hidden="true"></span></label>
 							</div>
-							<div class="btn-group">
+							<div class="btn-group" ng-hide="true">
 								<label class="btn btn-default"  ng-click="controller.guardarPlan();" uib-tooltip="Guardar" ng-hide="!controller.mostrarBotones">
 								<span class="glyphicon glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></label>
 							</div>
