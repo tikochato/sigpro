@@ -161,7 +161,8 @@ public BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
 			BigDecimal metaFinal = new BigDecimal(0);
 			BigDecimal metaPlanificada = new BigDecimal(0);
 			for (Meta meta : metas){
-				metaFinal = metaFinal.add( meta.getObjetoTipo()==2 ? 
+				if (meta!=null){
+				metaFinal = metaFinal.add( meta.getObjetoTipo()!=null &&  meta.getObjetoTipo()==2 ? 
 						new BigDecimal(meta.getMetaFinalEntero() != null ? meta.getMetaFinalEntero() : 0) : 
 							(meta.getMetaFinalDecimal() != null ? meta.getMetaFinalDecimal() : new BigDecimal(0)) );
 				
@@ -288,6 +289,7 @@ public BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
 					&& !metaFinal.equals(new BigDecimal(0)) && productos.size() > 0  ){
 				ejecucionFisica = ejecucionFisica.add(metaPlanificada.divide(metaFinal, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(
 						(producto.getPeso() !=null ? (double) producto.getPeso() : (Double) (100.0 / productos.size())) / 100)));
+			}
 			}
 		}
 		return ejecucionFisica; 

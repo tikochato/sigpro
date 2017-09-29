@@ -121,10 +121,8 @@ public class SMatrizRACI extends HttpServlet {
 		if(accion.equals("getMatriz")){
 			List<stmatriz> lstMatriz;
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-			if (idPrestamo == 30)
-				lstMatriz = getMatriz(idPrestamo, usuario);
-			else
-				lstMatriz = getMatriz(idPrestamo);
+			
+			lstMatriz = getMatriz(idPrestamo);
 				
 			List<stcolaborador> stcolaboradores = getColaboradores(idPrestamo, usuario);
 			if(lstMatriz!=null && stcolaboradores!=null){
