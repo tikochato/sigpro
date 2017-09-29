@@ -546,7 +546,7 @@ public class CPdf {
 				float bottomMargin = 70;
 				BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 				Row<PDPage> headerRow = table_x.createRow(12);
-				float tam_celda=celda_b*2;
+				float tam_celda=celda_b*1.5f;
 				
 				headerRow.createCell((float)(celda_a*1.5),headers[0][0] );
 				headerRow.createCell(tam_celda,headers[0][1] );
@@ -561,13 +561,13 @@ public class CPdf {
 				for(int i=0; i<datos.length;i++){
 					Row<PDPage> row = table_x.createRow(12);
 					row.createCell((float)(celda_a*1.5),datos[i][0] );
-					row.createCell(celda_b*2,datos[i][1] );
-					row.createCell(celda_b*2,datos[i][2] );
-					row.createCell(celda_b*2,datos[i][3] );
-					row.createCell(celda_b*2,datos[i][4] );
-					row.createCell(celda_b*2,datos[i][5] );
-					row.createCell(celda_b*2,datos[i][6] );
-					row.createCell(celda_b*2,datos[i][7] );
+					row.createCell(tam_celda,datos[i][1] );
+					row.createCell(tam_celda,datos[i][2] );
+					row.createCell(tam_celda,datos[i][3] );
+					row.createCell(tam_celda,datos[i][4] );
+					row.createCell(tam_celda,datos[i][5] );
+					row.createCell(tam_celda,datos[i][6] );
+					row.createCell(tam_celda,datos[i][7] );
 				}
 				table_x.draw();
 				contentStream.close();
