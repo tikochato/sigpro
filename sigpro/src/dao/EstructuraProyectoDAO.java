@@ -246,7 +246,7 @@ public class EstructuraProyectoDAO {
 			for(Object objeto : lstActividadesPrestamo){
 				Object[] obj = (Object[])objeto;
 				String treePathObj = (String)obj[3];
-				if(treePathObj != null){
+				if(treePathObj != null && treePath != null){
 					if(treePath.length() + 6 == treePathObj.length()){
 						if(treePathObj.substring(0, treePath.length()).equals(treePath)){
 							temp = new Object[]{(Integer)obj[0], (String)obj[1], (Date)obj[5], (Date)obj[6], (Integer)obj[12]};

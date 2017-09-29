@@ -90,6 +90,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 					mi.totalProductos = 0;
 					
 					mi.mostrarHitos = false;
+					mi.mostrarActProyecto = false;
 					mi.mostrarCargando = true;
 					$http.post('/SAvanceActividades', {
 						accion: 'getAvance',
@@ -122,6 +123,8 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 																
 								mi.dataPieProyecto = [response.actividades[0].completadas, response.actividades[0].sinIniciar, response.actividades[0].proceso, response.actividades[0].retrasadas];
 								mi.labelsPieProyecto = ["Completadas", "Sin Iniciar", "En Proceso", "Retrasadas"];
+								
+								mi.mostrarActProyecto = true;
 							}
 							
 							mi.totalActividades = response.totalActividades;
@@ -252,7 +255,8 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 			}
 		};
 		
-		mi.pieColors = ['#fd7b7d','#dddd7d','#bae291','#9cc3e2'];
+		mi.pieColors = ['#8ecf4c','#88b4df','#ffff4d','#ff4d4d'];
+		mi.pieColorsHitos = ['#8ecf4c','#88b4df','#ff4d4d'];
 		
 		mi.obtenerColor = function(row){
 			var style={}

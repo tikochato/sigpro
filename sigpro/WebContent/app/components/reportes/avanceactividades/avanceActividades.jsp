@@ -152,7 +152,7 @@
 								</div>
 			    			</div>
 			    		</div>
-			    		<div class="row">
+			    		<div class="row" ng-hide="!controller.mostrarActProyecto">
 			    			<div class="form-group col-sm-6" align="center">
 			    				<div style="text-align: center" >
 					    			<label class="label-form2">Estado de Actividades</label>
@@ -167,7 +167,7 @@
 		    						<label class="label-form2">Totales</label>
 		    					</div>
    								<canvas id="bar" class="chart chart-bar" chart-data="controller.dataBarraProyecto" chart-labels="controller.labelsPieProyecto" 
-   									chart-options="controller.charOptions">
+   									chart-options="controller.charOptions" chart-colors = "controller.pieColors">
    								</canvas>
 		    				</div>
 		    			</div>
@@ -223,7 +223,7 @@
 					    		</div>
 		    					<canvas id="pie" class="chart chart-pie"
   									chart-data="controller.dataPieHitos" chart-labels="controller.labelsPieHitos" 
-  									chart-options="controller.optionsPieProyecto" chart-colors = "controller.pieColors" >
+  									chart-options="controller.optionsPieProyecto" chart-colors = "controller.pieColorsHitos" >
 								</canvas> 
 		    				</div>
 			    			<div class="form-group col-sm-6" align="center">
@@ -231,7 +231,7 @@
 		    						<label class="label-form2">Totales</label>
 		    					</div>
    								<canvas id="bar" class="chart chart-bar" chart-data="controller.dataBarraHitos" chart-labels="controller.labelsPieHitos" 
-   									chart-options="controller.charOptionsHitos">
+   									chart-options="controller.charOptionsHitos" chart-colors = "controller.pieColorsHitos">
    								</canvas>
 		    				</div>
 		    			</div>

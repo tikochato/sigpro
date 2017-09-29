@@ -551,7 +551,7 @@ public class SAvanceActividades extends HttpServlet {
 						totalHitos++;
 					}
 					
-					if(Corte.after(fechaHito) && hitoResultado.getValorEntero() == 1){
+					if(Corte.after(fechaHito) && hitoResultado.getValorEntero() > 0){
 						totalCompletadas++;
 						totalHitos++;
 					}
@@ -580,6 +580,18 @@ public class SAvanceActividades extends HttpServlet {
 			totalSinIniciar = (totalSinIniciar/totalHitos)*100;
 			totalCompletadas = (totalCompletadas/totalHitos)*100;
 			totalRetrasadas = (totalRetrasadas/totalHitos)*100;
+			
+			if (Double.isNaN(totalSinIniciar)){
+				totalSinIniciar = 0;
+			}
+			
+			if (Double.isNaN(totalCompletadas)){
+				totalCompletadas = 0;
+			}
+			
+			if (Double.isNaN(totalRetrasadas)){
+				totalRetrasadas = 0;
+			}
 			
 			temp = new stAvance();
 			temp.objetoId = idPrestamo;
@@ -789,7 +801,7 @@ public class SAvanceActividades extends HttpServlet {
 		headers = new String[][]{
 			{"Nombre", "Estado", "Completadas", "Sin Iniciar", "En Proceso", "Retrasadas","Esperadas fin de año", "Años siguientes"},  //titulos
 			null, //mapeo
-			{"string", "string", "string", "string", "string", "string", "String", "String"}, //tipo dato
+			{"string", "string", "string", "string", "string", "string", "string", "string"}, //tipo dato
 			{"", "", "", "", "", "", "", ""}, //operaciones columnas
 			null, //operaciones div
 			null,
@@ -824,7 +836,7 @@ public class SAvanceActividades extends HttpServlet {
 		Integer fila = 1;
 		
 		datos[0][0] = "Actividades";
-		datos[0][1] = datos[0][2] = datos[0][3] = datos[0][4] = datos[0][5] = "";
+		datos[0][1] = datos[0][2] = datos[0][3] = datos[0][4] = datos[0][5] = datos[0][6] = datos[0][7] = "";
 		for(int i=0; i<totalActividades;i++){
 			datos[fila][0] = "    "+avanceActividades.listaResult.get(i).nombre;
 			datos[fila][1] = "";
@@ -848,7 +860,7 @@ public class SAvanceActividades extends HttpServlet {
 		fila++;
 		
 		datos[fila][0] = "Hitos";
-		datos[fila][1] = datos[fila][2] = datos[fila][3] = datos[fila][4] = datos[fila][5] = "";
+		datos[fila][1] = datos[fila][2] = datos[fila][3] = datos[fila][4] = datos[fila][5] = datos[fila][7] = datos[fila][7] = "";
 		fila++;
 		for(int i=0; i<totalHitos;i++){
 			datos[fila][0] = "    "+avanceHitos.listaResult.get(i).nombre;
@@ -857,6 +869,8 @@ public class SAvanceActividades extends HttpServlet {
 			datos[fila][3] = String.valueOf(avanceHitos.listaResult.get(i).sinIniciar)+"%";
 			datos[fila][4] = "";
 			datos[fila][5] = String.valueOf(avanceHitos.listaResult.get(i).retrasadas)+"%";
+			datos[fila][6] = "";
+			datos[fila][7] = "";
 			fila++;
 		}
 		datos[fila][0]="Total de Hitos: "+totalHitos;
@@ -865,21 +879,23 @@ public class SAvanceActividades extends HttpServlet {
 		datos[fila][3] = avanceHitos!=null ? String.valueOf(avanceHitos.listaResultCantidad.get(0).sinIniciar) : "0";
 		datos[fila][4] = String.valueOf(0);
 		datos[fila][5] = avanceHitos!=null ? String.valueOf(avanceHitos.listaResultCantidad.get(0).retrasadas) : "0";
+		datos[fila][6] = "";
+		datos[fila][7] = "";
 		fila++;
 		fila++;
 		
 		datos[fila][0] = "Productos";
-		datos[fila][1] = datos[fila][2] = datos[fila][3] = datos[fila][4] = datos[fila][5] = "";
+		datos[fila][1] = datos[fila][2] = datos[fila][3] = datos[fila][4] = datos[fila][5] = datos[fila][6] = datos[fila][7] = "";
 		fila++;
 		for(int i=0; i<totalProductos;i++){
 			datos[fila][0] = "    "+avanceProductos.listaResult.get(i).nombre;
 			datos[fila][1] = "";
-			datos[fila][2] = String.valueOf(avanceProductos.listaResult.get(i).completadas)+"%";
-			datos[fila][3] = String.valueOf(avanceProductos.listaResult.get(i).sinIniciar)+"%";
-			datos[fila][4] = String.valueOf(avanceProductos.listaResult.get(i).proceso)+"%";
-			datos[fila][5] = String.valueOf(avanceProductos.listaResult.get(i).retrasadas)+"%";
-			datos[fila][6] = String.valueOf(avanceProductos.listaResult.get(i).esperadasfinanio)+"%";
-			datos[fila][7] = String.valueOf(avanceProductos.listaResult.get(i).aniosSiguientes)+"%";
+			datos[fila][2] = String.valueOf(avanceProductos.listaResult.get(i).completadas);
+			datos[fila][3] = String.valueOf(avanceProductos.listaResult.get(i).sinIniciar);
+			datos[fila][4] = String.valueOf(avanceProductos.listaResult.get(i).proceso);
+			datos[fila][5] = String.valueOf(avanceProductos.listaResult.get(i).retrasadas);
+			datos[fila][6] = String.valueOf(avanceProductos.listaResult.get(i).esperadasfinanio);
+			datos[fila][7] = String.valueOf(avanceProductos.listaResult.get(i).aniosSiguientes);
 			fila++;
 		}
 		datos[fila][0]="Total de Productos: "+totalProductos;

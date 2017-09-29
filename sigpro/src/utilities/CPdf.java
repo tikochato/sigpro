@@ -554,6 +554,8 @@ public class CPdf {
 				headerRow.createCell(tam_celda,headers[0][3] );
 				headerRow.createCell(tam_celda,headers[0][4] );
 				headerRow.createCell(tam_celda,headers[0][5] );
+				headerRow.createCell(tam_celda,headers[0][6] );
+				headerRow.createCell(tam_celda,headers[0][7] );
 				table_x.addHeaderRow(headerRow);
 				
 				for(int i=0; i<datos.length;i++){
@@ -564,6 +566,8 @@ public class CPdf {
 					row.createCell(celda_b*2,datos[i][3] );
 					row.createCell(celda_b*2,datos[i][4] );
 					row.createCell(celda_b*2,datos[i][5] );
+					row.createCell(celda_b*2,datos[i][6] );
+					row.createCell(celda_b*2,datos[i][7] );
 				}
 				table_x.draw();
 				contentStream.close();
