@@ -51,6 +51,7 @@ import pojo.MetaUnidadMedida;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
+import utilities.CLogger;
 import utilities.Utils;
 
 /**
@@ -181,9 +182,16 @@ public class SMeta extends HttpServlet {
 		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		String str;
 		while ((str = br.readLine()) != null) {
+			CLogger.write_simple("0", SMeta.class, str);
 			sb.append(str);
 		}
 		;
+		
+		String texto = sb.toString();
+		CLogger.write_simple("1", SMeta.class, "sb.toString()");
+		CLogger.write_simple("2", SMeta.class, texto);
+		
+		
 		Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String accion = map.get("accion");
 		String response_text="";
