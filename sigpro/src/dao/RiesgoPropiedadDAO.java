@@ -213,7 +213,7 @@ public class RiesgoPropiedadDAO {
 				+ "from riesgo_tipo rt "
 				+ "join rtipo_propiedad rtp ON rtp.riesgo_tipoid = rt.id "
 				+ "join riesgo_propiedad rp ON rp.id = rtp.riesgo_propiedadid "
-				+ " where rt.id = :idTipoRies",RiesgoPropiedad.class);
+				+ " where rt.id = :idTipoRies AND rp.estado = 1",RiesgoPropiedad.class);
 			
 			criteria.setParameter("idTipoRies", idTipoRiesgo);
 			ret = criteria.getResultList();
