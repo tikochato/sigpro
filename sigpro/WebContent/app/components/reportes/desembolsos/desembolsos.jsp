@@ -141,7 +141,8 @@
 										<span>C</span></label>
 										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="5" ng-click="desembolsosc.agruparDatos(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
 										<span>S</span></label>
-										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="6" ng-click="desembolsosc.agruparDatos(6)" uib-tooltip="Anual" role="button" tabindex="6" aria-invalid="false">
+										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="6" ng-click="desembolsosc.anio_inicio != desembolsosc.anio_fin ? desembolsosc.agruparDatos(6) : ''" 
+										uib-tooltip="Anual" role="button" tabindex="6" aria-invalid="false" ng-disabled="desembolsosc.anio_inicio == desembolsosc.anio_fin">
 										<span>A</span></label>
 						</div>
 									

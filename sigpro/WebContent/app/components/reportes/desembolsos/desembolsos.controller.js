@@ -382,6 +382,195 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 				mi.convertirMillones();
 					
 				break;
+			case 4:
+				var totalItems = (mi.anio_fin - mi.anio_inicio +1) * 3;
+				
+				costoPlan.push ("Costo");
+				desembolsoPlanificado.push("Planificado");
+				desembolsoReal.push("Real");
+				variaciones.push("Variación");
+				porcentajeVariaciones.push("Porcentaje");
+				
+				var costoPlanTemp = [];
+				costoPlanTemp.push(...costo.slice());
+				var desembolsoRTemp =[];
+				desembolsoRTemp.push(...real.slice());
+				var desembolsoPTemp =[];
+				desembolsoPTemp.push(...planificado.slice());
+				var costoPlanAgrupado = [];
+				var desembolsoRAgrupado =[];
+				var desembolsoPAgrupado =[];
+				
+				for (x=0; x< totalItems ; x++){
+					costoPlanAgrupado.push(costoPlanTemp[x * 2] + costoPlanTemp[x * 2 + 1] + costoPlanTemp[x * 2 + 2] + costoPlanTemp[x * 2 + 3]);
+					desembolsoRAgrupado.push(desembolsoRTemp[x * 2] + desembolsoRTemp[x * 2 + 1] + desembolsoRTemp[x * 2 + 2] + desembolsoRTemp[x * 2 + 3] );
+					desembolsoPAgrupado.push(desembolsoPTemp[x * 2] + desembolsoPTemp[x * 2 + 1] + desembolsoPTemp[x * 2 + 2] + desembolsoPTemp[x * 2 + 3])
+				}
+				
+				costoPlan.push (...costoPlanAgrupado.slice());			
+				desembolsoPlanificado.push(...desembolsoRAgrupado.slice());
+				desembolsoReal.push(...desembolsoPAgrupado.slice());
+				
+				for (x = 1;x<=totalItems;x++){
+					totalPlanificado = totalPlanificado+ desembolsoPlanificado[x];
+					totalReal = totalReal + desembolsoReal[x];
+					totalCostoPlan= totalCostoPlan + costoPlan[x];
+					var variacion = desembolsoPlanificado[x] - desembolsoReal[x];
+					var var1 = variacion / desembolsoPlanificado[x];
+					var var2 = variacion / desembolsoReal[x];
+					var1 = (var1 * 100).toFixed(2);
+					var2 = (var2 * 100).toFixed(2);
+					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReal[x] ) * 100).toFixed(2);
+					
+					variaciones.push (variacion)
+					porcentajeVariaciones.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
+					totalVariacion = totalVariacion + variacion;
+				}
+				
+				costoPlan.push(totalCostoPlan);
+				desembolsoPlanificado.push(totalPlanificado);
+				desembolsoReal.push(totalReal);
+				variaciones.push(isNaN((totalVariacion /(totalVariacion > 0 ? totalPlanificado : totalReal)*100).toFixed(2)) ? "0%" :
+					(totalVariacion /(totalVariacion > 0 ? totalPlanificado : totalReal)*100).toFixed(2));
+				porcentajeVariaciones.push("");
+				
+				mi.tabla.push(costoPlan);
+				mi.tabla.push(desembolsoPlanificado);
+				mi.tabla.push(desembolsoReal);
+				mi.tabla.push(variaciones);
+				mi.tabla.push(porcentajeVariaciones);
+				
+				mi.generarEtiquetas(agrupacion,totalItems);
+				mi.convertirMillones();
+					
+				break;
+			case 5:
+				var totalItems = (mi.anio_fin - mi.anio_inicio +1) * 2;
+				
+				costoPlan.push ("Costo");
+				desembolsoPlanificado.push("Planificado");
+				desembolsoReal.push("Real");
+				variaciones.push("Variación");
+				porcentajeVariaciones.push("Porcentaje");
+				
+				var costoPlanTemp = [];
+				costoPlanTemp.push(...costo.slice());
+				var desembolsoRTemp =[];
+				desembolsoRTemp.push(...real.slice());
+				var desembolsoPTemp =[];
+				desembolsoPTemp.push(...planificado.slice());
+				var costoPlanAgrupado = [];
+				var desembolsoRAgrupado =[];
+				var desembolsoPAgrupado =[];
+				
+				for (x=0; x< totalItems ; x++){
+					costoPlanAgrupado.push(costoPlanTemp[x * 2] + costoPlanTemp[x * 2 + 1] + costoPlanTemp[x * 2 + 2] + costoPlanTemp[x * 2 + 3] + costoPlanTemp[x * 2 + 4] + costoPlanTemp[x * 2 + 5]);
+					desembolsoRAgrupado.push(desembolsoRTemp[x * 2] + desembolsoRTemp[x * 2 + 1] + desembolsoRTemp[x * 2 + 2] + desembolsoRTemp[x * 2 + 3] + desembolsoRTemp[x * 2 + 4] + desembolsoRTemp[x * 2 + 5] );
+					desembolsoPAgrupado.push(desembolsoPTemp[x * 2] + desembolsoPTemp[x * 2 + 1] + desembolsoPTemp[x * 2 + 2] + desembolsoPTemp[x * 2 + 3]+ desembolsoPTemp[x * 2 + 4]+ desembolsoPTemp[x * 2 + 5])
+				}
+				
+				costoPlan.push (...costoPlanAgrupado.slice());			
+				desembolsoPlanificado.push(...desembolsoRAgrupado.slice());
+				desembolsoReal.push(...desembolsoPAgrupado.slice());
+				
+				for (x = 1;x<=totalItems;x++){
+					totalPlanificado = totalPlanificado+ desembolsoPlanificado[x];
+					totalReal = totalReal + desembolsoReal[x];
+					totalCostoPlan= totalCostoPlan + costoPlan[x];
+					var variacion = desembolsoPlanificado[x] - desembolsoReal[x];
+					var var1 = variacion / desembolsoPlanificado[x];
+					var var2 = variacion / desembolsoReal[x];
+					var1 = (var1 * 100).toFixed(2);
+					var2 = (var2 * 100).toFixed(2);
+					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReal[x] ) * 100).toFixed(2);
+					
+					variaciones.push (variacion)
+					porcentajeVariaciones.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
+					totalVariacion = totalVariacion + variacion;
+				}
+				
+				costoPlan.push(totalCostoPlan);
+				desembolsoPlanificado.push(totalPlanificado);
+				desembolsoReal.push(totalReal);
+				variaciones.push(isNaN((totalVariacion /(totalVariacion > 0 ? totalPlanificado : totalReal)*100).toFixed(2)) ? "0%" :
+					(totalVariacion /(totalVariacion > 0 ? totalPlanificado : totalReal)*100).toFixed(2));
+				porcentajeVariaciones.push("");
+				
+				mi.tabla.push(costoPlan);
+				mi.tabla.push(desembolsoPlanificado);
+				mi.tabla.push(desembolsoReal);
+				mi.tabla.push(variaciones);
+				mi.tabla.push(porcentajeVariaciones);
+				
+				mi.generarEtiquetas(agrupacion,totalItems);
+				mi.convertirMillones();
+					
+				break;
+			case 6:
+				var totalItems = (mi.anio_fin - mi.anio_inicio +1) * 1;
+				
+				costoPlan.push ("Costo");
+				desembolsoPlanificado.push("Planificado");
+				desembolsoReal.push("Real");
+				variaciones.push("Variación");
+				porcentajeVariaciones.push("Porcentaje");
+				
+				var costoPlanTemp = [];
+				costoPlanTemp.push(...costo.slice());
+				var desembolsoRTemp =[];
+				desembolsoRTemp.push(...real.slice());
+				var desembolsoPTemp =[];
+				desembolsoPTemp.push(...planificado.slice());
+				var costoPlanAgrupado = [];
+				var desembolsoRAgrupado =[];
+				var desembolsoPAgrupado =[];
+				
+				for (x=0; x< totalItems ; x++){
+					costoPlanAgrupado.push(costoPlanTemp[x * 2] + costoPlanTemp[x * 2 + 1] + costoPlanTemp[x * 2 + 2] + costoPlanTemp[x * 2 + 3] + costoPlanTemp[x * 2 + 4] + costoPlanTemp[x * 2 + 5]
+					+ costoPlanTemp[x * 2 + 6] + costoPlanTemp[x * 2 + 7] + costoPlanTemp[x * 2 + 8] + costoPlanTemp[x * 2 + 9] + costoPlanTemp[x * 2 + 10] + costoPlanTemp[x * 2 + 11]);
+					desembolsoRAgrupado.push(desembolsoRTemp[x * 2] + desembolsoRTemp[x * 2 + 1] + desembolsoRTemp[x * 2 + 2] + desembolsoRTemp[x * 2 + 3] + desembolsoRTemp[x * 2 + 4] + desembolsoRTemp[x * 2 + 5]
+					+ desembolsoRTemp[x * 2 +6] + desembolsoRTemp[x * 2 + 7] + desembolsoRTemp[x * 2 + 8] + desembolsoRTemp[x * 2 + 9] + desembolsoRTemp[x * 2 + 10] + desembolsoRTemp[x * 2 + 11]);
+					desembolsoPAgrupado.push(desembolsoPTemp[x * 2] + desembolsoPTemp[x * 2 + 1] + desembolsoPTemp[x * 2 + 2] + desembolsoPTemp[x * 2 + 3]+ desembolsoPTemp[x * 2 + 4]+ desembolsoPTemp[x * 2 + 5]
+					+ desembolsoPTemp[x * 2 + 6] + desembolsoPTemp[x * 2 + 7] + desembolsoPTemp[x * 2 + 8] + desembolsoPTemp[x * 2 + 9]+ desembolsoPTemp[x * 2 + 10]+ desembolsoPTemp[x * 2 + 11])
+				}
+				
+				costoPlan.push (...costoPlanAgrupado.slice());			
+				desembolsoPlanificado.push(...desembolsoRAgrupado.slice());
+				desembolsoReal.push(...desembolsoPAgrupado.slice());
+				
+				for (x = 1;x<=totalItems;x++){
+					totalPlanificado = totalPlanificado+ desembolsoPlanificado[x];
+					totalReal = totalReal + desembolsoReal[x];
+					totalCostoPlan= totalCostoPlan + costoPlan[x];
+					var variacion = desembolsoPlanificado[x] - desembolsoReal[x];
+					var var1 = variacion / desembolsoPlanificado[x];
+					var var2 = variacion / desembolsoReal[x];
+					var1 = (var1 * 100).toFixed(2);
+					var2 = (var2 * 100).toFixed(2);
+					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReal[x] ) * 100).toFixed(2);
+					
+					variaciones.push (variacion)
+					porcentajeVariaciones.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
+					totalVariacion = totalVariacion + variacion;
+				}
+				
+				costoPlan.push(totalCostoPlan);
+				desembolsoPlanificado.push(totalPlanificado);
+				desembolsoReal.push(totalReal);
+				variaciones.push(isNaN((totalVariacion /(totalVariacion > 0 ? totalPlanificado : totalReal)*100).toFixed(2)) ? "0%" :
+					(totalVariacion /(totalVariacion > 0 ? totalPlanificado : totalReal)*100).toFixed(2));
+				porcentajeVariaciones.push("");
+				
+				mi.tabla.push(costoPlan);
+				mi.tabla.push(desembolsoPlanificado);
+				mi.tabla.push(desembolsoReal);
+				mi.tabla.push(variaciones);
+				mi.tabla.push(porcentajeVariaciones);
+				
+				mi.generarEtiquetas(agrupacion,totalItems);
+				mi.convertirMillones();
+					
+				break;
 		}
 		
 		
@@ -424,12 +613,12 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			case 2:
 				if (totalItems == 6){
 					mi.etiqutas = ["1", "2", "3", "4", "5", "6"];
-					mi.columnas.push ("Mes");
+					mi.columnas.push ("Semestre");
 					mi.columnas.push(...mi.etiqutas);
 					mi.columnas.push("Total");
 				}else if (totalItems > 6){
 					var totalAnios = mi.anio_fin - mi.anio_inicio +1;
-					mi.columnas.push ("Mes");
+					mi.columnas.push ("Semestre");
 					for (x = mi.anio_inicio;x<=  mi.anio_fin;x++){
 						
 						mi.etiqutas.push ("1-" + x);
@@ -446,9 +635,9 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			case 3:
 				if (totalItems == 4){
 					mi.etiqutas = ["1", "2", "3", "4"];
-					mi.columnas.push ("Mes");
+					mi.columnas.push ("Trimestre");
 					mi.columnas.push(...mi.etiqutas);
-					mi.columnas.push("Total");
+					mi.columnas.push("Trimestre");
 				}else if (totalItems > 4){
 					var totalAnios = mi.anio_fin - mi.anio_inicio +1;
 					mi.columnas.push ("Mes");
@@ -462,6 +651,53 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 					mi.columnas.push(...mi.etiqutas);
 					mi.columnas.push("Total");
 				}
+			break;
+			case 4:
+				if (totalItems == 3){
+					mi.etiqutas = ["1", "2", "3"];
+					mi.columnas.push ("Cuatrimestre");
+					mi.columnas.push(...mi.etiqutas);
+					mi.columnas.push("Total");
+				}else if (totalItems > 3){
+					var totalAnios = mi.anio_fin - mi.anio_inicio +1;
+					mi.columnas.push ("Cuatrimestre");
+					for (x = mi.anio_inicio;x<=  mi.anio_fin;x++){
+						
+						mi.etiqutas.push ("1-" + x);
+						mi.etiqutas.push ("2-" + x);
+						mi.etiqutas.push ("3-" + x);
+					}
+					mi.columnas.push(...mi.etiqutas);
+					mi.columnas.push("Total");
+				}
+			break;
+			case 5:
+				if (totalItems == 2){
+					mi.etiqutas = ["1", "2"];
+					mi.columnas.push ("Semestre");
+					mi.columnas.push(...mi.etiqutas);
+					mi.columnas.push("Total");
+				}else if (totalItems > 2){
+					var totalAnios = mi.anio_fin - mi.anio_inicio +1;
+					mi.columnas.push ("Semestre");
+					for (x = mi.anio_inicio;x<=  mi.anio_fin;x++){
+						
+						mi.etiqutas.push ("1-" + x);
+						mi.etiqutas.push ("2-" + x);
+					}
+					mi.columnas.push(...mi.etiqutas);
+					mi.columnas.push("Total");
+				}
+			break;
+			case 6:
+				
+				for (x = mi.anio_inicio; x <= mi.anio_fin; x++){
+					mi.etiqutas.push(x);
+				}
+				mi.columnas.push ("Año");
+				mi.columnas.push(...mi.etiqutas);
+				mi.columnas.push("Total");
+				
 			break;
 		}
 	};
@@ -671,8 +907,8 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	 
 	 mi.clase = function (value){
 		 switch (value){
-		 case 0: return "planificado";
-		 case 1: return "real2";
+		 case 1: return "planificado";
+		 case 2: return "real2";
 		 default: return "";
 		 }
 	 }
