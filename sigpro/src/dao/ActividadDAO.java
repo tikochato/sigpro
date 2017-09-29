@@ -532,7 +532,7 @@ public class ActividadDAO {
 		return ret;
 	}
 	
-	public static Actividad getActividadPorIdResponsable(int id, String usuario,Integer responsable,String rol){
+	public static Actividad getActividadPorIdResponsable(int id, String responsables,String rol){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Actividad ret = null;
 		List<Actividad> listRet = null;
@@ -543,11 +543,10 @@ public class ActividadDAO {
 				"and ar.objeto_tipo = 5",
 				"and a.estado = 1",
 				"and a.id = ?1",
-				"and ar.colaboradorid = ?2",
+				"and ar.colaboradorid in (",responsables ,")",
 				"and ar.rol_raci = ?3");
 			Query<Actividad> criteria = session.createNativeQuery(query, Actividad.class);
 			criteria.setParameter("1", id);
-			criteria.setParameter("2", responsable);
 			criteria.setParameter("3", rol);
 			
 			listRet = criteria.getResultList();

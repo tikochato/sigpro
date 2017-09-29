@@ -82,6 +82,13 @@ public class SCargaTrabajo extends HttpServlet {
 		String fechaFin;
 	}
 	
+	class stcolaborador{
+		int id;
+		String nombre;
+		String apellido;
+		String label;
+	}
+	
     public SCargaTrabajo() {
         super();
     
@@ -180,7 +187,7 @@ public class SCargaTrabajo extends HttpServlet {
 		        
 			}else if(accion.equals("getEstructruaPorResponsable")){
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-				Integer idColaborador = Utils.String2Int(map.get("idColaborador"),0);
+				String idColaboradores = map.get("idColaboradores");
 				Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
 				Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
 				
@@ -222,7 +229,7 @@ public class SCargaTrabajo extends HttpServlet {
 							estructuracolaborador.add(stsubproducto);
 							break;
 						case 5: 
-							Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(objeto_id, usuario, idColaborador, "r");
+							Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(objeto_id,  idColaboradores, "r");
 							if (objActividad!=null){
 								stestructuracolaborador stactividad = construirItemPorColaborador(
 										objActividad.getNombre(), objActividad.getId(), 5, true,objActividad.getFechaInicio(),objActividad.getFechaFin());
@@ -252,6 +259,20 @@ public class SCargaTrabajo extends HttpServlet {
 					}else{
 						response_text = String.join("", "{\"success\":false}");
 					}
+			}else if (accion.equals("getResponsables")){
+				Integer proyectoId = Utils.String2Int(map.get("idPrestamo"));
+				List<Colaborador> colaboradores = AsignacionRaciDAO.getColaboradoresPorProyecto(proyectoId);
+				List<stcolaborador> stcolaboradores = new ArrayList<>();
+				for (Colaborador c : colaboradores){
+					stcolaborador temp = new stcolaborador();
+					temp.id = c.getId();
+					temp.label = String.join(" ", c.getPnombre(),c.getPapellido());
+					stcolaboradores.add(temp);
+				}
+				response_text=new GsonBuilder().serializeNulls().create().toJson(stcolaboradores);
+		        response_text = String.join("", "\"colaboradores\":",response_text);
+		        response_text = String.join("", "{\"success\":true,", response_text,"}");
+				
 			}else if (accion.equals("exportarExcel")){
 				try{
 					Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
@@ -325,6 +346,23 @@ public class SCargaTrabajo extends HttpServlet {
 					outStream.write(outArray);
 					outStream.flush();
 				}
+			}else if (accion.equals("exportarEstructuraExcel")){
+				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
+				String idColaboradores = map.get("idColaboradores");
+				Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
+				Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
+				
+				 byte [] outArray = exportarEstructuraExcel(idPrestamo, idColaboradores, anio_inicio, anio_fin,  usuario);
+				 
+					
+					response.setContentType("application/ms-excel");
+					response.setContentLength(outArray.length);
+					response.setHeader("Cache-Control", "no-cache"); 
+					response.setHeader("Content-Disposition", "attachment; CargaTrabajo_de_Trabajo.xls");
+					OutputStream outStream = response.getOutputStream();
+					outStream.write(outArray);
+					outStream.flush();
+				
 			}
 			else{
 				response_text = "{ \"success\": false }";
@@ -381,19 +419,21 @@ public class SCargaTrabajo extends HttpServlet {
 				Date siguienteSemana = sumarDiasFecha(hoy, 7);
 				Date siguienteMes = sumarDiasFecha(siguienteSemana, 23);
 
-				if (actividad.getPorcentajeAvance() != 100){
-					if (actividad.getFechaFin().before(hoy)){
-						agregarCarga(cargas, colaborador, 0, 1, 0, 0);
-					}else {
-						if (actividad.getFechaFin().after(hoy) && actividad.getFechaFin().before(siguienteSemana)){
-							agregarCarga(cargas, colaborador, 0, 0, 0, 1);
-						}else if (actividad.getFechaFin().after(siguienteSemana) && actividad.getFechaFin().before(siguienteMes)){
-							agregarCarga(cargas, colaborador, 0, 0, 1, 0);
+				if (colaborador !=null){
+					if (actividad.getPorcentajeAvance() != 100){
+						if (actividad.getFechaFin().before(hoy)){
+							agregarCarga(cargas, colaborador, 0, 1, 0, 0);
+						}else {
+							if (actividad.getFechaFin().after(hoy) && actividad.getFechaFin().before(siguienteSemana)){
+								agregarCarga(cargas, colaborador, 0, 0, 0, 1);
+							}else if (actividad.getFechaFin().after(siguienteSemana) && actividad.getFechaFin().before(siguienteMes)){
+								agregarCarga(cargas, colaborador, 0, 0, 1, 0);
+							}
 						}
+						
+					}else{
+						agregarCarga(cargas, colaborador, 1, 0, 0, 0);
 					}
-					
-				}else{
-					agregarCarga(cargas, colaborador, 1, 0, 0, 0);
 				}
 		}
 		return cargas;
@@ -438,7 +478,7 @@ public class SCargaTrabajo extends HttpServlet {
 		int actividad_Fin = fechaFin.getYear();
 		
 
-		if(anio_inicio >= actividad_Inicio && anio_inicio <= actividad_Fin && anio_fin >= actividad_Inicio && anio_fin <= actividad_Fin){
+		if(anio_inicio <= actividad_Inicio && anio_inicio <= actividad_Fin && anio_fin >= actividad_Inicio && actividad_Fin <= anio_fin){
 			if (actividad.getPorcentajeAvance() != 100){
 				if (actividad.getFechaFin().before(hoy)){
 					temp.nombreEstado ="Retrasadas";
@@ -534,5 +574,134 @@ public class SCargaTrabajo extends HttpServlet {
 		CGraficaExcel grafica = new CGraficaExcel("Carga de Trabajo", CGraficaExcel.EXCEL_CHART_PIE, "Cantidad", "Estados", datos, tipoData, datosIgualar);
 	
 		return grafica;
+	}
+	
+	
+	private byte[] exportarEstructuraExcel(Integer idPrestamos, String idsColaboradores, Integer anio_inicio, Integer anio_fin, String usuario) throws IOException{
+		byte [] outArray = null;
+		CExcel excel=null;
+		String headers[][];
+		String datos[][];
+		
+		Workbook wb=null;
+		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		try{			
+			headers = generarHeadersEstructura();
+			datos = generarDatosEstructura(idPrestamos, idsColaboradores, anio_inicio,  anio_fin, usuario);
+			
+			excel = new CExcel("Carga de Trabajo", false, null);
+			wb=excel.generateExcelOfData(datos, "Estado actividades asignadas", headers, null, true, usuario);
+		wb.write(outByteStream);
+		outArray = Base64.encode(outByteStream.toByteArray());
+		}catch(Exception e){
+		    CLogger.write("1", SCargaTrabajo.class, e);
+		}
+		return outArray;
+	}
+	
+	private String[][] generarHeadersEstructura(){
+		String headers[][];
+		
+		headers = new String[][]{
+			{"Nombre", "Estado","Fecha Inicio", "Fecha Fin"},  //titulos
+			null, //mapeo
+			{"string","string","string", "string"}, //tipo dato
+			{"", "", "", "", ""}, //operaciones columnas
+			null, //operaciones div
+			null,
+			null,
+			null
+			};
+			
+		return headers;
+	}
+	
+	public String[][] generarDatosEstructura(Integer idPrestamo, String idsColaboradores, Integer anio_inicio, Integer anio_fin, String usuario){
+		
+		ArrayList<stestructuracolaborador> estructura = getEstructura(idPrestamo, idsColaboradores, anio_inicio, anio_fin);
+		
+		String[][] datos = null;
+		int i = 0;
+		datos = new String[estructura.size()][4];
+		for (stestructuracolaborador estr : estructura){
+			String indent="";
+			switch (estr.objetoTipo){
+				case 2: indent = "  "; break;
+				case 3: indent = "    "; break;
+				case 4: indent = "      "; break;
+				case 5: indent = "        "; break;
+			}
+			datos[i][0] = indent +  estr.nombre;
+			datos[i][1] = estr.nombreEstado;
+			datos[i][2] = estr.fechaInicio;
+			datos[i][3] = estr.fechaFin;
+			
+			i++;
+		}	
+		return datos;
+	}
+	
+	public ArrayList<stestructuracolaborador> getEstructura(Integer idPrestamo, String idColaboradores
+			, Integer anio_inicio, Integer anio_fin ){
+		ArrayList<stestructuracolaborador> estructuracolaborador = new ArrayList<>();
+		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+		stestructuracolaborador stprestamo=null;
+		stestructuracolaborador stcomponente=null;
+		stestructuracolaborador stproducto=null;
+		stestructuracolaborador stsubproducto=null;
+		
+		for(Object objeto : estructuraProyecto){
+			Object[] obj = (Object[]) objeto;
+			Integer objeto_id = (Integer)obj[0];
+			String nombre = (String)obj[1];
+			Integer objeto_tipo = ((BigInteger) obj[2]).intValue();
+				
+			switch(objeto_tipo){
+			case 1: 
+				stprestamo = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
+				estructuracolaborador.add(stprestamo);
+				stcomponente=null;
+				stproducto=null;
+				stsubproducto=null;
+				break;
+			case 2: 
+				stcomponente = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
+				estructuracolaborador.add(stcomponente);
+				stproducto=null;
+				stsubproducto=null;
+				break;
+			case 3: 
+				stproducto = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
+				estructuracolaborador.add(stproducto);
+				stsubproducto=null;
+				break;
+			case 4: 
+				stsubproducto = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
+				estructuracolaborador.add(stsubproducto);
+				break;
+			case 5: 
+				Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(objeto_id,  idColaboradores, "r");
+				if (objActividad!=null){
+					stestructuracolaborador stactividad = construirItemPorColaborador(
+							objActividad.getNombre(), objActividad.getId(), 5, true,objActividad.getFechaInicio(),objActividad.getFechaFin());
+					getEstado(stactividad, objActividad, anio_inicio, anio_fin);
+					if(stactividad.estado > 0){
+						estructuracolaborador.add(stactividad);
+						if(stprestamo!=null) stprestamo.mostrar=true;
+						if(stcomponente!=null) stcomponente.mostrar=true;
+						if(stproducto!=null) stproducto.mostrar = true;
+						if(stsubproducto!=null) stsubproducto.mostrar = true;
+					}
+				}
+				break;
+			}						
+		}
+		
+		ArrayList<stestructuracolaborador> tempestructrua = new ArrayList<>();
+		for (stestructuracolaborador temp:estructuracolaborador){
+			if(temp.mostrar==true)
+				tempestructrua.add(temp);
+		}
+		return tempestructrua;
 	}
 }

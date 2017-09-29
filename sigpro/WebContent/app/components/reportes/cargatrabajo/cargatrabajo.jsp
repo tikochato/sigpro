@@ -46,7 +46,7 @@
 	    <br>
 	    	<div class="col-sm-12">
 	    		<div class="row" >	    	
-					  <div class="form-group col-sm-4">
+					  <div class="form-group col-sm-4" style="padding: 5px;">
 						<select  class="inputText" ng-model="controller.prestamo"
 							ng-options="a.text for a in controller.prestamos" 
 							ng-change="controller.getEstructura()"></select>
@@ -77,20 +77,16 @@
 		    		</div>
 						   
 						
+			    	</div>
+			    	<div class="row">
 			    	
-			    	<br/><br/><br/> <br/><br/>
+			    	<br/><br/>
+			    	
 			    	<div style=" width: 100%; ">
-				    	<div class="operation_buttons" align="right" ng-hide="true">
-				    		<div class="btn-group">
-										<label class="btn btn-default" ng-model="desembolsosc.enMillones" 
-										uib-btn-radio="true"  uib-tooltip="Filtrar actividades" role="button" 
-										tabindex="0" aria-invalid="false" ng-click="controller.filtrarEstrucrura()">
-										<span class="glyphicon glyphicon-filter" aria-hidden="true"></span></label>
-										
-							</div>
-							
-						</div>
+				    	
 						<div class="divTabla">
+							
+						
 		    			<table st-table="controller.displayedCollection" st-safe-src="controller.rowCollection" class="table table-striped"
 		    			ng-if="controller.mostrar">
 							<thead  class="cabecera">
@@ -127,7 +123,6 @@
 		    	</div>
 			    <br>
 		    	<br>
-		    	
 		    	<div class="row" ng-if="controller.mostrar">
 		    		<div class="col-sm-6">
 		    		<div style="text-align: center" >
@@ -153,12 +148,22 @@
 					</canvas>	
 		    		</div>
 		    	
-		    	
-		    		
-		    	
+		    	</div>
+		    	<div class="row" ng-hide="!controller.mostrarcargando">
+		    	<div class="grid_loading"  style="margin-top: 50px;"   >
+				  	<div class="msg">
+				      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
+						  <br /><br />
+						  <b>Cargando, por favor espere...</b>
+					  </span>
+					</div>
+				  </div>
 		    	</div>
 		    	
+		    	
+		    	
 	    </div>
+	  
 	    
 	
 </div>

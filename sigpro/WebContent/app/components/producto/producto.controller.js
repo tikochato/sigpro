@@ -1,5 +1,5 @@
 var moduloProducto = angular.module('moduloProducto', [ 'ngTouch',
-		'smart-table', 'ui.grid.edit', 'ui.grid.rowEdit', 'ui.grid.pinning', 'ui.grid.autoResize']);
+		'smart-table', 'ui.grid.pinning', 'ui.grid.autoResize']);
 
 moduloProducto.controller('controlProducto', [ '$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http', '$rootScope',
@@ -17,6 +17,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	
 	if(!mi.esTreeview)
 		$window.document.title = $utilidades.sistema_nombre+' - Producto';
+	mi.child_scope = null;
 	
 	mi.componenteid = $routeParams.componente_id;
 	mi.esForma = false;
@@ -39,6 +40,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.objetoTipoNombre = "";
 	mi.entidad='';
 	mi.ejercicio = '';
+	
+	mi.metasCargadas = false;
 	
 	mi.dimensiones = [
 		{value:1,nombre:'Dias',sigla:'d'}
@@ -245,6 +248,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			mi.camposdinamicos[campos].valor = null;
 		}
 		mi.metasCargadas = false;
+		mi.activeTab = 0;
 		$utilidades.setFocus(document.getElementById("nombre"));
 	}
 
@@ -343,7 +347,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 						if (response.data.success) {
 							mi.data = response.data.productos;
 							mi.opcionesGrid.data = mi.data;
-							$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+							if(mi.child_scope!=null)
+								mi.child_scope.guardar('Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
+							else
+								$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 							if(!mi.esTreeview)
 								mi.obtenerTotalProductos();
 							else
@@ -419,6 +426,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 					}
 				}
 				mi.metasCargadas = false;
+				mi.activeTab = 0;
 				$utilidades.setFocus(document.getElementById("nombre"));
 			});
 		} else {
@@ -769,6 +777,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		
 		mi.t_crearNodo=function(id,nombre,objeto_tipo,estado){
 			$rootScope.$emit("crearNodo",{ id: id, nombre: nombre, objeto_tipo: objeto_tipo, estado: estado })
+		}
+
+		mi.metasActivo = function(){
+			if(!mi.metasCargadas){
+				mi.metasCargadas = true;
+			}
 		}
 	  
 }

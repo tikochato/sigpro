@@ -465,6 +465,7 @@ public class SProyecto extends HttpServlet {
 				String visionGeneral = map.get("visionGeneral");
 				Integer unidad_ejecutora = (map.get("unidadejecutoraid")!=null) ? Utils.String2Int(map.get("unidadejecutoraid")) : null;
 				Integer entidad = (map.get("entidadid")!=null) ? Utils.String2Int(map.get("entidadid")) : null;
+				Integer ejecucionFisicaReal = Utils.String2Int(map.get("ejecucionFisicaReal"),null);
 
 				AcumulacionCosto acumulacionCosto = null;
 				if (map.get("acumulacionCosto")!=null){
@@ -499,7 +500,7 @@ public class SProyecto extends HttpServlet {
 							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, obra,latitud,
 							longitud, objetivo,enunciadoAlcance, costo, objetivoEspecifico,visionGeneral,renglon, ubicacionGeografica,
 							null, null, null, null,
-							null, null, null, null, null, null, null,null,null,null,null,null);
+							null, null, null, ejecucionFisicaReal,null, null, null, null,null,null,null,null,null);
 
 
 				}else{
@@ -526,6 +527,7 @@ public class SProyecto extends HttpServlet {
 					proyecto.setAcumulacionCosto(acumulacionCosto);
 					proyecto.setObjetivoEspecifico(objetivoEspecifico);
 					proyecto.setVisionGeneral(visionGeneral);
+					proyecto.setEjecucionFisicaReal(ejecucionFisicaReal);
 
 				    List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
 					proyecto.setProyectoPropedadValors(null);

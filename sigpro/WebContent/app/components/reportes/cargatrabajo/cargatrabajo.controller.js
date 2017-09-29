@@ -1,4 +1,4 @@
-var app = angular.module('cargatrabajoController', ['ngTouch','smart-table','ivh.treeview']);
+var app = angular.module('cargatrabajoController', ['ngTouch','smart-table','ivh.treeview','angularjs-dropdown-multiselect']);
 
 
 
@@ -25,6 +25,8 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     mi.etiquetasChartLine = [];
     mi.actividadesterminadas = [];
     mi.estructuraPrestamo = [];
+    mi.mostrarcargando=false;
+    
     
     mi.pieColors = ['#fd7b7d','#dddd7d','#bae291','#9cc3e2'];
     
@@ -43,6 +45,9 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			    precision: 2
 			  }
 			  };
+    	
+    	
+    	
     	
     	
     	
@@ -163,7 +168,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	}
 	
 	mi.displayObjeto = function(objetoSeleccionado){
-		mi.mostrarcargando=false;
+		//mi.mostrarcargando=false;
 		if(objetoSeleccionado === 0){
 			mi.entidadHide = false;
 			mi.unidadEjecutoraHide = false;
@@ -246,7 +251,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			mi.grafica = true;
 			mi.idPrestamo = mi.prestamo.value;
 			mi.mostrar = false;
-			
+			mi.mostrarcargando=true;
 			$http.post('/SCargaTrabajo', {accion: 'getEstructrua', idPrestamo :mi.prestamo.value,
 				t: new Date().getTime()}).success(
 					function(response){
@@ -272,6 +277,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 									if(response.success){
 										mi.rowCollection = [];
 										mi.rowCollection = response.cargatrabajo;
+										
 								        mi.displayedCollection = [].concat(mi.rowCollection);
 								        mi.actividadesAtrasadasTotal = 0;
 										mi.actividadesAlertaTotal = 0;
@@ -290,7 +296,11 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 								    	 mi.data = [mi.actividadesAtrasadasTotal, mi.actividadesAlertaTotal,
 								    		 mi.actividadesACumplirTotal,mi.actividadesCompletadas];
 								    	 
-								    	 mi.mostrar = true;
+								    	 mi.mostrar = mi.rowCollection.length > 0 ? true : false;
+								    	 mi.mostrarcargando=false;
+								    	 if (!mi.mostrar)
+								    		 $utilidades.mensaje('warning','No se encontraron datos relacionados');
+								    	 
 									}
 								});
 						
@@ -324,7 +334,8 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 													mi.dataChartLine.push(0);
 													mi.etiquetasChartLine.push (mi.obtenerMes(sigueinteMes.mes) + 
 															(mi.fechaInicio != mi.fechaFin ? "-" + sigueinteMes.anio : ""));
-													sigueinteMes = mi.obtenerSiguienteMes(sigueinteMes.mes,sigueinteMes.anio);	
+													
+						sigueinteMes = mi.obtenerSiguienteMes(sigueinteMes.mes,sigueinteMes.anio);	
 												}
 											}
 											mi.dataChartLine.push(mi.actividadesterminadas[x].total)
@@ -454,6 +465,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
 					mi.fechaFin != null && mi.fechaFin.toString().length == 4)
 			{
+
 				if (mi.fechaFin >= mi.fechaInicio){
 					mi.inicializar();
 					mi.generar();
@@ -651,6 +663,8 @@ function modalEstructura($uibModalInstance, $scope, $http, $interval,
 				mi.estructuraProyecto = response.estructura;
 				
 	});
+	
+	
 
 	
 
@@ -708,20 +722,47 @@ function modalEstructuraResponsable($uibModalInstance, $scope, $http, $interval,
 
 	var mi = this;
 	
+	mi.model = [];
+	mi.idsResponsables = $idresponsable;
 	
+	mi.settings = { 
+			keyboardControls: true, 
+			enableSearch: false, 
+			smartButtonMaxItems: 10,
+			showCheckAll: false,
+			showUncheckAll: false
+			
+	};
 	
 	$http.post('/SCargaTrabajo', {
-		accion: 'getEstructruaPorResponsable', 
+		accion: 'getResponsables', 
 		idPrestamo :$idproyecto,
-		idColaborador:$idresponsable,
-		anio_inicio:$anioInicio,
-		anio_fin: $anioFin,
 		t: new Date().getTime()}).success(
-
 			function(response){
-				mi.estructuraProyecto = response.estructura;
+				mi.responsables = response.colaboradores;
+				for (x in mi.responsables){
+					if (mi.responsables[x].id == $idresponsable){
+						mi.model.push(mi.responsables[x]);
+						mi.getEstructuraPorResponsable();
+						break;
+					}
+				}
 				
 	});
+	
+	mi.getEstructuraPorResponsable = function(){
+		mi.estructuraProyecto={};
+		$http.post('/SCargaTrabajo', {
+			accion: 'getEstructruaPorResponsable', 
+			idPrestamo :$idproyecto,
+			idColaboradores:mi.idsResponsables,
+			anio_inicio:$anioInicio,
+			anio_fin: $anioFin,
+			t: new Date().getTime()}).success(
+				function(response){
+					mi.estructuraProyecto = response.estructura;
+		});
+	}
 
 	
 
@@ -763,13 +804,47 @@ function modalEstructuraResponsable($uibModalInstance, $scope, $http, $interval,
 	
 
 	mi.seriesLine = function (){
-		
-		
-		
 	}
 	
-	
-	
-	
+	 mi.selectColaborador = {
+			 onItemSelect: function(item) {
+				 mi.idsResponsables = "";
+				 for (x in mi.model){
+					 mi.idsResponsables = mi.idsResponsables + (mi.idsResponsables.length > 0 ? ',' : '') + mi.model[x].id
+				 }
+				 mi.getEstructuraPorResponsable();
+				 
+				 
+			 },
+			 onItemDeselect:function(item) {
+				 mi.idsResponsables = "";
+				 for (x in mi.model){
+					 mi.idsResponsables = mi.idsResponsables + (mi.idsResponsables.length > 0 ? ',' : '') + mi.model[x].id
+				 }
+				 mi.getEstructuraPorResponsable();
+			 }
+	 };
+	 
+	 mi.exportarExcel = function(){
+		
+		$http.post('/SCargaTrabajo', { 
+			accion: 'exportarEstructuraExcel', 
+			idPrestamo:$idproyecto,
+			idColaboradores:mi.idsResponsables,
+			anio_inicio:$anioInicio,
+			anio_fin: $anioFin,
+			t: new Date().getTime()
+		  } ).then(
+				  function successCallback(response) {
+					  var anchor = angular.element('<a/>');
+					  anchor.attr({
+				         href: 'data:application/ms-excel;base64,' + response.data,
+				         target: '_blank',
+				         download: 'CargaTrabajo.xls'
+					  })[0].click();
+				  }.bind(this), function errorCallback(response){
+			 	}
+		  	);
+		};
 };
 

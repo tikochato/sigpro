@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 25, 2017 8:25:07 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 28, 2017 10:43:48 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4517947036139776532L;
+	private static final long serialVersionUID = 2011624701699905539L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Colaborador colaborador;
@@ -65,6 +65,7 @@ public class Proyecto implements java.io.Serializable {
 	private Integer orden;
 	private String treePath;
 	private Integer nivel;
+	private Integer ejecucionFisicaReal;
 	private Set<Desembolso> desembolsos = new HashSet<Desembolso>(0);
 	private Set<Hito> hitos = new HashSet<Hito>(0);
 	private Set<ProgramaProyecto> programaProyectos = new HashSet<ProgramaProyecto>(0);
@@ -95,10 +96,10 @@ public class Proyecto implements java.io.Serializable {
 			String latitud, String longitud, String objetivo, String enunciadoAlcance, BigDecimal costo,
 			String objetivoEspecifico, String visionGeneral, Integer renglon, Integer ubicacionGeografica,
 			Date fechaInicio, Date fechaFin, Integer duracion, String duracionDimension, Integer orden, String treePath,
-			Integer nivel, Set<Desembolso> desembolsos, Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos,
-			Set<MatrizRaci> matrizRacis, Set<ProyectoMiembro> proyectoMiembros, Set<ProyectoImpacto> proyectoImpactos,
-			Set<ProyectoPropedadValor> proyectoPropedadValors, Set<ProyectoUsuario> proyectoUsuarios,
-			Set<Componente> componentes) {
+			Integer nivel, Integer ejecucionFisicaReal, Set<Desembolso> desembolsos, Set<Hito> hitos,
+			Set<ProgramaProyecto> programaProyectos, Set<MatrizRaci> matrizRacis, Set<ProyectoMiembro> proyectoMiembros,
+			Set<ProyectoImpacto> proyectoImpactos, Set<ProyectoPropedadValor> proyectoPropedadValors,
+			Set<ProyectoUsuario> proyectoUsuarios, Set<Componente> componentes) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.colaborador = colaborador;
 		this.cooperante = cooperante;
@@ -133,6 +134,7 @@ public class Proyecto implements java.io.Serializable {
 		this.orden = orden;
 		this.treePath = treePath;
 		this.nivel = nivel;
+		this.ejecucionFisicaReal = ejecucionFisicaReal;
 		this.desembolsos = desembolsos;
 		this.hitos = hitos;
 		this.programaProyectos = programaProyectos;
@@ -471,6 +473,15 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setNivel(Integer nivel) {
 		this.nivel = nivel;
+	}
+
+	@Column(name = "ejecucion_fisica_real")
+	public Integer getEjecucionFisicaReal() {
+		return this.ejecucionFisicaReal;
+	}
+
+	public void setEjecucionFisicaReal(Integer ejecucionFisicaReal) {
+		this.ejecucionFisicaReal = ejecucionFisicaReal;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")

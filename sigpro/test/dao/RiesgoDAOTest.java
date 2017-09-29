@@ -45,7 +45,7 @@ public class RiesgoDAOTest {
 	
 	@Test
 	public void getRiesgosPaginaPorProyectoTest(){
-		assertNotNull(RiesgoDAO.getRiesgosPaginaPorObjeto(0,0, 0,0,"", "","","",""));
+		assertNotNull(RiesgoDAO.getRiesgosPorObjeto(0,0, 0,0,"", "","","",""));
 	}
 	
 	@Test
