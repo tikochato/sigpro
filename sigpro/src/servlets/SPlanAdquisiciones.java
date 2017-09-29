@@ -24,9 +24,7 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.CategoriaAdquisicionDAO;
 import dao.EstructuraProyectoDAO;
-import dao.PlanAdquisicionesDetalleDAO;
 import pojo.CategoriaAdquisicion;
-import pojo.PlanAdquisicionesDetalle;
 import utilities.CLogger;
 import utilities.Utils;
 
@@ -123,7 +121,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 			stcomponenteplanadquisicion temp = null;
 			
 			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicion(); 
-			PlanAdquisicionesDetalle detallePlan = null;
+			//PlanAdquisicionesDetalle detallePlan = null;
 			for(Object objeto: estruturaProyecto){
 				temp = new stcomponenteplanadquisicion();
 				Object[] obj = (Object[])objeto;
