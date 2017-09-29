@@ -2,6 +2,7 @@ package dao;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -209,6 +210,58 @@ public class EstructuraProyectoDAO {
 			}
 		}
 		return root;
+	}
+	
+	public static List<?> getActividadesProyecto(Integer prestamoId){
+		List<?> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String str_Query = String.join(" ", "select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.nivel, a.fecha_inicio,", 
+					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid,",
+					"a.porcentaje_avance", 
+					"from actividad a", 
+					"where a.estado=1 and ((a.proyecto_base= ?1)", 
+					"OR (a.componente_base in (select id from componente where proyectoid= ?1))", 
+					"OR (a.producto_base in (select p.id from producto p, componente c where p.componenteid=c.id and c.proyectoid= ?1))",
+					")");
+			
+			Query<?> criteria = session.createNativeQuery(str_Query);
+			criteria.setParameter("1", prestamoId);
+			ret = criteria.getResultList();
+		}catch(Exception e){
+			CLogger.write("4", EstructuraProyectoDAO.class, e);
+		}finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
+	public static List<?> getActividadesByTreePath(String treePath, Integer idPrestamo){
+		List<Object[]> ret = new ArrayList<Object[]>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			List<?> lstActividadesPrestamo = getActividadesProyecto(idPrestamo);
+			Object[] temp = new Object[5];
+			for(Object objeto : lstActividadesPrestamo){
+				Object[] obj = (Object[])objeto;
+				String treePathObj = (String)obj[3];
+				if(treePathObj != null){
+					if(treePath.length() + 6 == treePathObj.length()){
+						if(treePathObj.substring(0, treePath.length()).equals(treePath)){
+							temp = new Object[]{(Integer)obj[0], (String)obj[1], (Date)obj[5], (Date)obj[6], (Integer)obj[12]};
+							ret.add(temp);
+						}
+					}
+				}
+			}
+		}catch(Exception e){
+			CLogger.write("5", EstructuraProyectoDAO.class, e);
+		}finally{
+			session.close();
+		}
+		
+		return ret;
 	}
 
 	public static ArrayList<Nodo> getEstructuraProyectosArbol(String usuario) {

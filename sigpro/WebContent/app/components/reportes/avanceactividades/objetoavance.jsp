@@ -34,8 +34,8 @@
 										<th style="width: 40%">Nombre</th>
 										<th style="text-align: center; width: 15%">Fecha Inicial</th>
 										<th style="text-align: center; width: 15%">Fecha Final</th>
-										<th style="text-align: center; width: 10%;" st-sort="avance">Avance</th>
-										<th style="text-align: center; ">Responsable</th>
+										<th style="text-align: center; width: 15%;" st-sort="avance">Avance</th>
+										<th style="text-align: center; width: 15%;">Responsable</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -58,7 +58,7 @@
 			<div class="row">
 			    <div class="col-sm-12 operation_buttons" align="right">
 				    <div class="btn-group">
-						<label class="btn btn-primary" ng-click="controller.cancel()">Cancelar</label>
+						<label class="btn btn-primary" ng-click="controller.cancel()">Cerrar</label>
 			    	</div>
 			    </div>
 	  		</div>

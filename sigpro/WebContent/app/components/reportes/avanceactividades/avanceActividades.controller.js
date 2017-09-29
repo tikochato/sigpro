@@ -31,8 +31,8 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		mi.calcularTamanosPantalla = function(){
 			mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth);
 			mi.tamanoSemaforo = mi.tamanoPantalla * 0.05;
-			mi.tamanoNombres = (mi.tamanoPantalla - mi.tamanoSemaforo) * 0.35;
-			mi.tamanoColPorcentajes = (mi.tamanoPantalla - mi.tamanoNombres - mi.tamanoSemaforo) / 4;
+			mi.tamanoNombres = (mi.tamanoPantalla - mi.tamanoSemaforo) * 0.20;
+			mi.tamanoColPorcentajes = (mi.tamanoPantalla - mi.tamanoNombres - mi.tamanoSemaforo) / 6;
 		}
 		
 		mi.calcularTamanosPantalla();
@@ -89,6 +89,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 					
 					mi.totalProductos = 0;
 					
+					mi.mostrarHitos = false;
 					mi.mostrarCargando = true;
 					$http.post('/SAvanceActividades', {
 						accion: 'getAvance',
@@ -96,9 +97,31 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 						fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
 					}).success(function(response){
 						if (response.success){
+							mi.dataPieProyecto = [];
+							mi.labelsPieProyecto = [];
+							mi.dataBarraProyecto = [];
+							
+							mi.dataPieHitos = [];
+							mi.labelsPieHitos = [];
+							mi.dataBarraHitos  = [];
+							
+							mi.totalActividadesCompletadas = 0;
+							mi.totalActividadesSinIniciar = 0;
+							mi.totalActividadesProceso = 0;
+							mi.totalActividadesRetrasadas = 0;
+							mi.totalActividadesEsperadas = 0;
+							mi.totalActividadesAnioSiguientes = 0;
+							
+							mi.totalHitosCompletados = 0;
+							mi.totalHitosSinIniciar = 0;
+							mi.totalHitosRetrasados = 0;
+							
 							if(response.actividades != undefined){
 								mi.rowCollectionActividades = response.actividades;
 								mi.displayedCollectionActividades = [].concat(mi.rowCollectionActividades);
+																
+								mi.dataPieProyecto = [response.actividades[0].completadas, response.actividades[0].sinIniciar, response.actividades[0].proceso, response.actividades[0].retrasadas];
+								mi.labelsPieProyecto = ["Completadas", "Sin Iniciar", "En Proceso", "Retrasadas"];
 							}
 							
 							mi.totalActividades = response.totalActividades;
@@ -107,11 +130,20 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 								mi.totalActividadesSinIniciar = response.cantidadesActividades[0].sinIniciar;
 								mi.totalActividadesProceso = response.cantidadesActividades[0].proceso;
 								mi.totalActividadesRetrasadas = response.cantidadesActividades[0].retrasadas;
+								mi.totalActividadesEsperadas = response.cantidadesActividades[0].esperadasfinanio;
+								mi.totalActividadesAnioSiguientes = response.cantidadesActividades[0].aniosiguientes;
+								
+								mi.dataBarraProyecto = [mi.totalActividadesCompletadas, mi.totalActividadesSinIniciar, mi.totalActividadesProceso, mi.totalActividadesRetrasadas];
 							}
 							
 							if(response.hitos != undefined){
 								mi.rowCollectionHitos = response.hitos;
 								mi.displayedCollectionHitos = [].concat(mi.rowCollectionHitos);
+																
+								mi.dataPieHitos = [response.hitos[0].completadas, response.hitos[0].sinIniciar, response.hitos[0].retrasadas];
+								mi.labelsPieHitos = ["Completadas", "Sin Iniciar", "Retrasadas"];
+								
+								mi.mostrarHitos = true;
 							}
 							
 							mi.totalHitos = response.totalHitos;
@@ -120,6 +152,8 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 								mi.totalHitosCompletados = response.cantidadHitos[0].completadas;
 								mi.totalHitosSinIniciar = response.cantidadHitos[0].sinIniciar;
 								mi.totalHitosRetrasados = response.cantidadHitos[0].retrasadas
+								
+								mi.dataBarraHitos = [mi.totalHitosCompletados, mi.totalHitosSinIniciar, mi.totalHitosRetrasados];
 							}
 
 							if(response.productos != undefined){
@@ -137,6 +171,88 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 				}
 			}
 		}
+		
+		mi.optionsPieProyecto = {
+			legend: {
+				display: true,
+				position: 'bottom'
+			},
+			pieceLabel: {
+			    render: 'percentage',
+			    fontColor: ['green', 'white', 'red'],
+			    precision: 2
+			  }
+		};
+		
+		mi.charOptions= {
+				legend: {
+					display: false,
+					position: 'bottom'
+				},
+			scales: {
+				yAxes: [
+					{	
+						id: 'y-axis-1',
+						type: 'linear',
+						display: true,
+						position: 'left',
+						ticks: {
+							callback: function (value) {
+								return numeral(value).format('0')
+                        	}
+	                   },
+	                   scaleLabel: {
+	                       display: true,
+	                       labelString: 'Actividades'
+	                   }
+			        	
+			        }
+				],
+				xAxes: [{
+			    	  scaleLabel: {
+	                       display: true,
+	                       labelString: 'Estado'
+	                     }
+			      }
+			      ]
+			}
+		};
+		
+		mi.charOptionsHitos= {
+				legend: {
+					display: false,
+					position: 'bottom'
+				},
+			scales: {
+				yAxes: [
+					{	
+						id: 'y-axis-1',
+						type: 'linear',
+						display: true,
+						position: 'left',
+						ticks: {
+							callback: function (value) {
+								return numeral(value).format('0')
+                        	}
+	                   },
+	                   scaleLabel: {
+	                       display: true,
+	                       labelString: 'Hitos'
+	                   }
+			        	
+			        }
+				],
+				xAxes: [{
+			    	  scaleLabel: {
+	                       display: true,
+	                       labelString: 'Estado'
+	                     }
+			      }
+			      ]
+			}
+		};
+		
+		mi.pieColors = ['#fd7b7d','#dddd7d','#bae291','#9cc3e2'];
 		
 		mi.obtenerColor = function(row){
 			var style={}
