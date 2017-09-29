@@ -200,24 +200,30 @@ public class SMeta extends HttpServlet {
 			List<Meta> Metas = MetaDAO.getMetasPagina(pagina, numeroMetas, id, tipo,filtro_nombre, -1, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			List<stmeta> tmetas = new ArrayList<stmeta>();
 			for(Meta meta : Metas){
-				stmeta temp = new stmeta();
-				temp.id = meta.getId();
-				temp.nombre = meta.getNombre();
-				temp.descripcion = meta.getDescripcion();
-				temp.objetoId = meta.getObjetoId();
-				temp.objetoTipo = meta.getObjetoTipo();
-				temp.estado = meta.getEstado();
-				temp.fechaActualizacion = Utils.formatDateHour(meta.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDateHour(meta.getFechaCreacion());
-				temp.unidadMedidaId = meta.getMetaUnidadMedida().getId();
-				temp.datoTipoId = meta.getDatoTipo().getId();
-				temp.usuarioActualizo = meta.getUsuarioActualizo();
-				temp.usuarioCreo = meta.getUsuarioCreo();
-				temp.metaFinalString = meta.getMetaFinalString();
-				temp.metaFinalEntero = meta.getMetaFinalEntero();
-				temp.metaFinalDecimal = meta.getMetaFinalDecimal();
-				temp.metaFinalTiempo = meta.getMetaFinalFecha() != null ? Utils.formatDate(meta.getMetaFinalFecha()) : null;
-				tmetas.add(temp);
+				if(meta!=null){
+					stmeta temp = new stmeta();
+					temp.id = meta.getId();
+					temp.nombre = meta.getNombre();
+					temp.descripcion = meta.getDescripcion();
+					temp.objetoId = meta.getObjetoId();
+					temp.objetoTipo = meta.getObjetoTipo();
+					temp.estado = meta.getEstado();
+					temp.fechaActualizacion = meta.getFechaActualizacion()!=null?Utils.formatDateHour(meta.getFechaActualizacion()):"";
+					temp.fechaCreacion = meta.getFechaCreacion()!=null?Utils.formatDateHour(meta.getFechaCreacion()):"";
+					if(meta.getMetaUnidadMedida()!=null){
+						temp.unidadMedidaId = meta.getMetaUnidadMedida().getId();
+					}
+					if(meta.getDatoTipo()!=null){
+						temp.datoTipoId = meta.getDatoTipo().getId();
+					}
+					temp.usuarioActualizo = meta.getUsuarioActualizo();
+					temp.usuarioCreo = meta.getUsuarioCreo();
+					temp.metaFinalString = meta.getMetaFinalString();
+					temp.metaFinalEntero = meta.getMetaFinalEntero();
+					temp.metaFinalDecimal = meta.getMetaFinalDecimal();
+					temp.metaFinalTiempo = meta.getMetaFinalFecha() != null ? Utils.formatDate(meta.getMetaFinalFecha()) : null;
+					tmetas.add(temp);
+				}
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(tmetas);
 	        response_text = String.join("", "\"Metas\":",response_text);
@@ -229,104 +235,110 @@ public class SMeta extends HttpServlet {
 			List<Meta> Metas = MetaDAO.getMetasObjeto(id, tipo);
 			List<stmeta> tmetas = new ArrayList<stmeta>();
 			for(Meta meta : Metas){
-				stmeta temp = new stmeta();
-				temp.id = meta.getId();
-				temp.nombre = meta.getNombre();
-				temp.descripcion = meta.getDescripcion();
-				temp.objetoId = meta.getObjetoId();
-				temp.objetoTipo = meta.getObjetoTipo();
-				temp.estado = meta.getEstado();
-				temp.fechaActualizacion = Utils.formatDateHour(meta.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDateHour(meta.getFechaCreacion());
-				temp.unidadMedidaId = meta.getMetaUnidadMedida().getId();
-				temp.datoTipoId = meta.getDatoTipo().getId();
-				temp.usuarioActualizo = meta.getUsuarioActualizo();
-				temp.usuarioCreo = meta.getUsuarioCreo();
-				temp.metaFinalString = meta.getMetaFinalString();
-				temp.metaFinalEntero = meta.getMetaFinalEntero();
-				temp.metaFinalDecimal = meta.getMetaFinalDecimal();
-				temp.metaFinalTiempo = meta.getMetaFinalFecha() != null ? Utils.formatDate(meta.getMetaFinalFecha()) : null;
-				Set<MetaAvance> metaavances = meta.getMetaAvances();
-				temp.avance = new stavance[metaavances.size()];
-				int i=0;
-				
-				Iterator<MetaAvance> iterator = metaavances.iterator();
-	    	    while(iterator.hasNext()) {
-	    	    	MetaAvance ma = iterator.next();
-					temp.avance[i] = new stavance();
-					temp.avance[i].fecha = Utils.formatDate(ma.getId().getFecha());
-					temp.avance[i].valorString = ma.getValorString();
-					temp.avance[i].valorEntero = ma.getValorEntero();
-					temp.avance[i].valorDecimal = ma.getValorDecimal();
-					temp.avance[i].valorTiempo = ma.getValorTiempo() !=null ? Utils.formatDate(ma.getValorTiempo()) : null;
-					temp.avance[i].usuario = ma.getUsuario();
-					i++;
+				if(meta!=null){
+					stmeta temp = new stmeta();
+					temp.id = meta.getId();
+					temp.nombre = meta.getNombre();
+					temp.descripcion = meta.getDescripcion();
+					temp.objetoId = meta.getObjetoId();
+					temp.objetoTipo = meta.getObjetoTipo();
+					temp.estado = meta.getEstado();
+					temp.fechaActualizacion = meta.getFechaActualizacion()!=null?Utils.formatDateHour(meta.getFechaActualizacion()):"";
+					temp.fechaCreacion = meta.getFechaCreacion()!=null?Utils.formatDateHour(meta.getFechaCreacion()):"";
+					if(meta.getMetaUnidadMedida()!=null){
+						temp.unidadMedidaId = meta.getMetaUnidadMedida().getId();
+					}
+					if(meta.getDatoTipo()!=null){
+						temp.datoTipoId = meta.getDatoTipo().getId();
+					}
+					temp.usuarioActualizo = meta.getUsuarioActualizo();
+					temp.usuarioCreo = meta.getUsuarioCreo();
+					temp.metaFinalString = meta.getMetaFinalString();
+					temp.metaFinalEntero = meta.getMetaFinalEntero();
+					temp.metaFinalDecimal = meta.getMetaFinalDecimal();
+					temp.metaFinalTiempo = meta.getMetaFinalFecha() != null ? Utils.formatDate(meta.getMetaFinalFecha()) : null;
+					Set<MetaAvance> metaavances = meta.getMetaAvances();
+					temp.avance = new stavance[metaavances.size()];
+					int i=0;
+					
+					Iterator<MetaAvance> iterator = metaavances.iterator();
+		    	    while(iterator.hasNext()) {
+		    	    	MetaAvance ma = iterator.next();
+						temp.avance[i] = new stavance();
+						temp.avance[i].fecha = Utils.formatDate(ma.getId().getFecha());
+						temp.avance[i].valorString = ma.getValorString();
+						temp.avance[i].valorEntero = ma.getValorEntero();
+						temp.avance[i].valorDecimal = ma.getValorDecimal();
+						temp.avance[i].valorTiempo = ma.getValorTiempo() !=null ? Utils.formatDate(ma.getValorTiempo()) : null;
+						temp.avance[i].usuario = ma.getUsuario();
+						i++;
+					}
+					Set<MetaPlanificado> metaplanificado = meta.getMetaPlanificados();
+					temp.planificado = new stplanificado[metaplanificado.size()];
+					i=0;
+					Iterator<MetaPlanificado> iteratorP = metaplanificado.iterator();
+		    	    while(iteratorP.hasNext()) {
+		    	    	MetaPlanificado mp = iteratorP.next();
+						temp.planificado[i] = new stplanificado();
+						temp.planificado[i].ejercicio = mp.getId().getEjercicio();
+						
+						temp.planificado[i].eneroString = mp.getEneroString();
+						temp.planificado[i].febreroString = mp.getFebreroString();
+						temp.planificado[i].marzoString = mp.getMarzoString();
+						temp.planificado[i].abrilString = mp.getAbrilString();
+						temp.planificado[i].mayoString = mp.getMayoString();
+						temp.planificado[i].junioString = mp.getJunioString();
+						temp.planificado[i].julioString = mp.getJulioString();
+						temp.planificado[i].agostoString = mp.getAgostoString();
+						temp.planificado[i].septiembreString = mp.getSeptiembreString();
+						temp.planificado[i].octubreString = mp.getOctubreString();
+						temp.planificado[i].noviembreString = mp.getNoviembreString();
+						temp.planificado[i].diciembreString = mp.getDiciembreString();
+						
+						temp.planificado[i].eneroEntero = mp.getEneroEntero();
+						temp.planificado[i].febreroEntero = mp.getFebreroEntero();
+						temp.planificado[i].marzoEntero = mp.getMarzoEntero();
+						temp.planificado[i].abrilEntero = mp.getAbrilEntero();
+						temp.planificado[i].mayoEntero = mp.getMayoEntero();
+						temp.planificado[i].junioEntero = mp.getJunioEntero();
+						temp.planificado[i].julioEntero = mp.getJulioEntero();
+						temp.planificado[i].agostoEntero = mp.getAgostoEntero();
+						temp.planificado[i].septiembreEntero = mp.getSeptiembreEntero();
+						temp.planificado[i].octubreEntero = mp.getOctubreEntero();
+						temp.planificado[i].noviembreEntero = mp.getNoviembreEntero();
+						temp.planificado[i].diciembreEntero = mp.getDiciembreEntero();
+						
+						temp.planificado[i].eneroDecimal = mp.getEneroDecimal();
+						temp.planificado[i].febreroDecimal = mp.getFebreroDecimal();
+						temp.planificado[i].marzoDecimal = mp.getMarzoDecimal();
+						temp.planificado[i].abrilDecimal = mp.getAbrilDecimal();
+						temp.planificado[i].mayoDecimal = mp.getMayoDecimal();
+						temp.planificado[i].junioDecimal = mp.getJunioDecimal();
+						temp.planificado[i].julioDecimal = mp.getJulioDecimal();
+						temp.planificado[i].agostoDecimal = mp.getAgostoDecimal();
+						temp.planificado[i].septiembreDecimal = mp.getSeptiembreDecimal();
+						temp.planificado[i].octubreDecimal = mp.getOctubreDecimal();
+						temp.planificado[i].noviembreDecimal = mp.getNoviembreDecimal();
+						temp.planificado[i].diciembreDecimal = mp.getDiciembreDecimal();
+						
+						temp.planificado[i].eneroTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getEneroTiempo()) : null;
+						temp.planificado[i].febreroTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getFebreroTiempo()) : null;
+						temp.planificado[i].marzoTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getMarzoTiempo()) : null;
+						temp.planificado[i].abrilTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getAbrilTiempo()) : null;
+						temp.planificado[i].mayoTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getMayoTiempo()) : null;
+						temp.planificado[i].junioTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getJunioTiempo()) : null;
+						temp.planificado[i].julioTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getJulioTiempo()) : null;
+						temp.planificado[i].agostoTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getAgostoTiempo()) : null;
+						temp.planificado[i].septiembreTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getSeptiembreTiempo()) : null;
+						temp.planificado[i].octubreTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getOctubreTiempo()) : null;
+						temp.planificado[i].noviembreTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getNoviembreTiempo()) : null;
+						temp.planificado[i].diciembreTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getDiciembreTiempo()) : null;
+						
+						temp.planificado[i].usuario = mp.getUsuario();
+						i++;
+					}
+					tmetas.add(temp);
 				}
-				Set<MetaPlanificado> metaplanificado = meta.getMetaPlanificados();
-				temp.planificado = new stplanificado[metaplanificado.size()];
-				i=0;
-				Iterator<MetaPlanificado> iteratorP = metaplanificado.iterator();
-	    	    while(iteratorP.hasNext()) {
-	    	    	MetaPlanificado mp = iteratorP.next();
-					temp.planificado[i] = new stplanificado();
-					temp.planificado[i].ejercicio = mp.getId().getEjercicio();
-					
-					temp.planificado[i].eneroString = mp.getEneroString();
-					temp.planificado[i].febreroString = mp.getFebreroString();
-					temp.planificado[i].marzoString = mp.getMarzoString();
-					temp.planificado[i].abrilString = mp.getAbrilString();
-					temp.planificado[i].mayoString = mp.getMayoString();
-					temp.planificado[i].junioString = mp.getJunioString();
-					temp.planificado[i].julioString = mp.getJulioString();
-					temp.planificado[i].agostoString = mp.getAgostoString();
-					temp.planificado[i].septiembreString = mp.getSeptiembreString();
-					temp.planificado[i].octubreString = mp.getOctubreString();
-					temp.planificado[i].noviembreString = mp.getNoviembreString();
-					temp.planificado[i].diciembreString = mp.getDiciembreString();
-					
-					temp.planificado[i].eneroEntero = mp.getEneroEntero();
-					temp.planificado[i].febreroEntero = mp.getFebreroEntero();
-					temp.planificado[i].marzoEntero = mp.getMarzoEntero();
-					temp.planificado[i].abrilEntero = mp.getAbrilEntero();
-					temp.planificado[i].mayoEntero = mp.getMayoEntero();
-					temp.planificado[i].junioEntero = mp.getJunioEntero();
-					temp.planificado[i].julioEntero = mp.getJulioEntero();
-					temp.planificado[i].agostoEntero = mp.getAgostoEntero();
-					temp.planificado[i].septiembreEntero = mp.getSeptiembreEntero();
-					temp.planificado[i].octubreEntero = mp.getOctubreEntero();
-					temp.planificado[i].noviembreEntero = mp.getNoviembreEntero();
-					temp.planificado[i].diciembreEntero = mp.getDiciembreEntero();
-					
-					temp.planificado[i].eneroDecimal = mp.getEneroDecimal();
-					temp.planificado[i].febreroDecimal = mp.getFebreroDecimal();
-					temp.planificado[i].marzoDecimal = mp.getMarzoDecimal();
-					temp.planificado[i].abrilDecimal = mp.getAbrilDecimal();
-					temp.planificado[i].mayoDecimal = mp.getMayoDecimal();
-					temp.planificado[i].junioDecimal = mp.getJunioDecimal();
-					temp.planificado[i].julioDecimal = mp.getJulioDecimal();
-					temp.planificado[i].agostoDecimal = mp.getAgostoDecimal();
-					temp.planificado[i].septiembreDecimal = mp.getSeptiembreDecimal();
-					temp.planificado[i].octubreDecimal = mp.getOctubreDecimal();
-					temp.planificado[i].noviembreDecimal = mp.getNoviembreDecimal();
-					temp.planificado[i].diciembreDecimal = mp.getDiciembreDecimal();
-					
-					temp.planificado[i].eneroTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getEneroTiempo()) : null;
-					temp.planificado[i].febreroTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getFebreroTiempo()) : null;
-					temp.planificado[i].marzoTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getMarzoTiempo()) : null;
-					temp.planificado[i].abrilTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getAbrilTiempo()) : null;
-					temp.planificado[i].mayoTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getMayoTiempo()) : null;
-					temp.planificado[i].junioTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getJunioTiempo()) : null;
-					temp.planificado[i].julioTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getJulioTiempo()) : null;
-					temp.planificado[i].agostoTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getAgostoTiempo()) : null;
-					temp.planificado[i].septiembreTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getSeptiembreTiempo()) : null;
-					temp.planificado[i].octubreTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getOctubreTiempo()) : null;
-					temp.planificado[i].noviembreTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getNoviembreTiempo()) : null;
-					temp.planificado[i].diciembreTiempo = mp.getEneroTiempo()!=null ? Utils.formatDate(mp.getDiciembreTiempo()) : null;
-					
-					temp.planificado[i].usuario = mp.getUsuario();
-					i++;
-				}
-				tmetas.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(tmetas);
 	        response_text = String.join("", "\"Metas\":",response_text);

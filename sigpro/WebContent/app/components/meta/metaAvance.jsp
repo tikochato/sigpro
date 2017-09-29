@@ -10,16 +10,15 @@
 	</style>
 <div class="modal-body" id="modal-body" style="height: 90vh;">
 <div class="row">
-  	<div class="col-sm-12" style="font-weight: bold;">Avances de Meta</div>
+  	<div class="col-sm-12 page-header" style="font-weight: bold;">Avances de Meta</div>
   	<div class="col-sm-12" style="font-weight: bold;">"{{modalAvances.nombreMeta}}"</div>
   </div>
-  <br/>
   <div>
   	<div class="operation_buttons" align="right">
 		<br/>
 		<div class="btn-group btn-group-sm">
 	       <shiro:hasPermission name="17040">
-	       		<label class="btn btn-default" ng-click="modalAvances.nuevoAvance()" uib-tooltip="Nuevo">
+	       		<label class="btn btn-default" ng-click="modalAvances.nuevoAvance()" uib-tooltip="Nuevo Avance">
 				<span class="glyphicon glyphicon-plus"></span></label>
 	       </shiro:hasPermission> 
 	   	</div>				
