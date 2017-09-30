@@ -68,25 +68,29 @@
 				  	<div class="row">
 				  		<div class="col-sm-3">
 							<div class="form-group" >
-							  <input type="text"  class="inputText" ng-model="controller.fechaInicio" maxlength="10" 
-								ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
-								ng-change="controller.validar(1)" ng-required="true"/>
-								<span class="label-icon">
-					              <i class="glyphicon glyphicon-calendar"></i>
-					            </span>
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.fechaInicio" is-open="controller.fi_abierto"
+						            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="controller.fechaFin != null ? controller.generar() : ''" 
+						            ng-required="true"  ng-click="controller.abrirPopupFecha(1000)"
+						            ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
+						            ng-readonly="true" ng-click="controller.abrirPopupFecha(1000)"/>
+						            <span class="label-icon" ng-click="controller.abrirPopupFecha(1000)">
+						              <i class="glyphicon glyphicon-calendar"></i>
+						            </span>
 							  	<label for="campo.id" class="floating-label">*Fecha Inicial</label>
 							</div>
 						</div>
 		
 						<div class="col-sm-3">
 							<div class="form-group" >
-							  <input type="text"  class="inputText" ng-model="controller.fechaFin" maxlength="10" 
-								ng-value="controller.fechaFin" onblur="this.setAttribute('value', this.value);"
-								ng-change="controller.validar(2)" ng-required="true"/>
-								<span class="label-icon">
-					              <i class="glyphicon glyphicon-calendar"></i>
-					            </span>
-							  	<label for="campo.id" class="floating-label">*Fecha Fin</label>
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.fechaFin" is-open="controller.ff_abierto"
+						            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="controller.fechaInicio != null ? controller.generar() : ''" 
+						            ng-required="true"  ng-click="controller.abrirPopupFecha(1001)"
+						            ng-value="controller.fechaFin" onblur="this.setAttribute('value', this.value);"
+						            ng-readonly="true" ng-click="controller.abrirPopupFecha(1001)"/>
+						            <span class="label-icon" ng-click="controller.abrirPopupFecha(1001)">
+						              <i class="glyphicon glyphicon-calendar"></i>
+						            </span>
+							  	<label for="campo.id" class="floating-label">*Fecha Final</label>
 							</div>
 						</div>
 						
@@ -94,9 +98,9 @@
 						</div>
 						<div class="col-sm-3" align="right">
 							<div class="btn-group" role="group" aria-label="">
-								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar" ng-hide="!controller.mostrarTablas">
+								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!controller.mostrarTablas">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-								<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar PDF" ng-hide="!controller.mostrarTablas">
+								<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!controller.mostrarTablas">
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 							</div>
 						</div>
@@ -144,13 +148,13 @@
 														<td style="width:{{controller.tamanoCelda}}px; text-align: center">
 															<button type="button"
 																ng-click="controller.descargarExcelDetalle(row)"
-																uib-tooltip="Exportar detalle de {{row.usuario}}" tooltip-placement="bottom"
+																uib-tooltip="Exportar a Excel detalle de {{row.usuario}}" tooltip-placement="bottom"
 																class="btn btn-default">
 																<i class="glyphicon glyphicon-export"> </i>
 															</button>
 															<button type="button"
 																ng-click="controller.exportarPdfDetalle(row)"
-																uib-tooltip="Exportar PDF detallado de {{row.usuario}}" tooltip-placement="bottom"
+																uib-tooltip="Exportar a PDF detalle de {{row.usuario}}" tooltip-placement="bottom"
 																class="btn btn-default">
 																<i class="glyphicon glyphicon-save-file"> </i>
 															</button>
