@@ -11,22 +11,22 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import pojo.ProyectoPropedadValor;
-import pojo.ProyectoPropedadValorId;
+import pojo.ProyectoPropiedadValor;
+import pojo.ProyectoPropiedadValorId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
 
 public class ProyectoPropiedadValorDAO {
-	public static ProyectoPropedadValor getValorPorProyectoYPropiedad(int idPropiedad,int idProyecto){
+	public static ProyectoPropiedadValor getValorPorProyectoYPropiedad(int idPropiedad,int idProyecto){
 		Session session = CHibernateSession.getSessionFactory().openSession();
-		ProyectoPropedadValor ret = null;
+		ProyectoPropiedadValor ret = null;
 		try {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
-			CriteriaQuery<ProyectoPropedadValor> criteria = builder.createQuery(ProyectoPropedadValor.class);
-			Root<ProyectoPropedadValor> root = criteria.from(ProyectoPropedadValor.class);
+			CriteriaQuery<ProyectoPropiedadValor> criteria = builder.createQuery(ProyectoPropiedadValor.class);
+			Root<ProyectoPropiedadValor> root = criteria.from(ProyectoPropiedadValor.class);
 			criteria.select(root);
-			criteria.where(builder.equal(root.get("id"), new ProyectoPropedadValorId(idProyecto, idPropiedad)),builder.equal(root.get("estado"), 1));
+			criteria.where(builder.equal(root.get("id"), new ProyectoPropiedadValorId(idProyecto, idPropiedad)),builder.equal(root.get("estado"), 1));
 			ret = session.createQuery(criteria).getSingleResult();
 		} catch (NoResultException e){
 			
@@ -38,7 +38,7 @@ public class ProyectoPropiedadValorDAO {
 		return ret;
 	}
 	
-	public static boolean guardarProyectoPropiedadValor(ProyectoPropedadValor proyectoPropiedadValor){
+	public static boolean guardarProyectoPropiedadValor(ProyectoPropiedadValor proyectoPropiedadValor){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -56,7 +56,7 @@ public class ProyectoPropiedadValorDAO {
 		return ret;
 	}
 	
-	public static boolean eliminarProyectoPropiedadValor(ProyectoPropedadValor proyectoPropiedadValor){
+	public static boolean eliminarProyectoPropiedadValor(ProyectoPropiedadValor proyectoPropiedadValor){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -75,7 +75,7 @@ public class ProyectoPropiedadValorDAO {
 		return ret;
 	}
 	
-	public static boolean eliminarTotalRiesgoPropiedadValor(ProyectoPropedadValor proyectoPropiedadValor){
+	public static boolean eliminarTotalRiesgoPropiedadValor(ProyectoPropiedadValor proyectoPropiedadValor){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -93,15 +93,15 @@ public class ProyectoPropiedadValorDAO {
 		return ret;
 	}
 	
-	public static List<ProyectoPropedadValor> getProyectoPropiedadadesValoresPorProyecto(int idProyecto){
-		List<ProyectoPropedadValor> ret = new ArrayList<ProyectoPropedadValor>();
+	public static List<ProyectoPropiedadValor> getProyectoPropiedadadesValoresPorProyecto(int idProyecto){
+		List<ProyectoPropiedadValor> ret = new ArrayList<ProyectoPropiedadValor>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<ProyectoPropedadValor> criteria = session.createNativeQuery(" select * "
+			Query<ProyectoPropiedadValor> criteria = session.createNativeQuery(" select * "
 					+ "from proyecto_propedad_valor ppv "
 					+ "join proyecto p on p.id = ppv.proyectoid "
 					+ "where p.id = :idProy "
-					+ "and ppv.estado = 1 ",ProyectoPropedadValor.class);
+					+ "and ppv.estado = 1 ",ProyectoPropiedadValor.class);
 			
 			criteria.setParameter("idProy", idProyecto);
 			ret = criteria.getResultList();
