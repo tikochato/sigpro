@@ -564,5 +564,8 @@ h2 {
     outline: none;
 }
 
-/*seleccion en smart-table*/
 .st-selected { background-color: #e0ffff; }
+
+.input-money{
+	text-align: right;
+}

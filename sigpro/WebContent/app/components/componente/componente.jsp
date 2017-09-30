@@ -195,48 +195,6 @@
 				            <span class="label-icon" ng-click="componentec.buscarComponenteTipo()"><i class="glyphicon glyphicon-search"></i></span>
 				          	<label for="campo3" class="floating-label">* Tipo Componente</label>
 						</div>
-						<div ng-repeat="campo in componentec.camposdinamicos">
-							<div ng-switch="campo.tipo">
-								<div ng-switch-when="texto" class="form-group" >
-									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
-										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-								<div ng-switch-when="entero" class="form-group" >
-									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
-									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-								<div ng-switch-when="decimal" class="form-group" >
-									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
-									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-								<div ng-switch-when="booleano" class="form-group" >
-									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-								<div ng-switch-when="fecha" class="form-group" >
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{componentec.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="componentec.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="componentec.abrirPopupFecha($index)"
-														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
-														<span class="label-icon" ng-click="componentec.abrirPopupFecha($index)">
-															<i class="glyphicon glyphicon-calendar"></i>
-														</span>
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-								<div ng-switch-when="select" class="form-group" >
-									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
-													<option value="">Seleccione una opción</option>
-													<option ng-repeat="number in campo.opciones"
-														ng-value="number.valor">{{number.label}}</option>
-								</select>
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-								</div>
-							</div>
-						</div>
-						
-						
 						<div class="form-group" >
 						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="componentec.coordenadas" ng-value="componentec.coordenadas" 
 								            		ng-click="componentec.open(componentec.componente.latitud, componentec.componente.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="false"/>
@@ -312,7 +270,46 @@
 								</div>
 							</div>
 						</div>
-						
+						<div ng-repeat="campo in componentec.camposdinamicos">
+							<div ng-switch="campo.tipo">
+								<div ng-switch-when="texto" class="form-group" >
+									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
+										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="entero" class="form-group" >
+									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
+									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="decimal" class="form-group" >
+									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
+									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="booleano" class="form-group" >
+									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="fecha" class="form-group" >
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{componentec.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+														datepicker-options="componentec.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="componentec.abrirPopupFecha($index)"
+														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+														<span class="label-icon" ng-click="componentec.abrirPopupFecha($index)">
+															<i class="glyphicon glyphicon-calendar"></i>
+														</span>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+								<div ng-switch-when="select" class="form-group" >
+									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
+													<option value="">Seleccione una opción</option>
+													<option ng-repeat="number in campo.opciones"
+														ng-value="number.valor">{{number.label}}</option>
+								</select>
+									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+								</div>
+							</div>
+						</div>
 						<div class="panel panel-default">
 							<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 							<div class="panel-body">

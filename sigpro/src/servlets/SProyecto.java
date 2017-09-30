@@ -893,7 +893,7 @@ public class SProyecto extends HttpServlet {
 			ret.desembolsoAFechaUeUsd = prestamo.getDesembolsoAFechaUeUsd();
 			ret.montoPorDesembolsarUeUsd = prestamo.getMontoPorDesembolsarUeUsd();
 			ret.cooperanteid = prestamo.getCooperante().getId();
-			ret.cooperantenombre =  prestamo.getCooperante().getSiglas() + " - " + prestamo.getCooperante().getNombre();
+			ret.cooperantenombre =  (prestamo.getCooperante().getSiglas()!=null) ? prestamo.getCooperante().getSiglas() + " - " + prestamo.getCooperante().getNombre() : prestamo.getCooperante().getNombre();
 
 			ret.unidadEjecutora = prestamo.getUnidadEjecutora() !=null ? prestamo.getUnidadEjecutora().getId().getUnidadEjecutora() : null;
 			ret.unidadEjecutoraNombre = prestamo.getUnidadEjecutora() !=null ? prestamo.getUnidadEjecutora().getNombre() : "";

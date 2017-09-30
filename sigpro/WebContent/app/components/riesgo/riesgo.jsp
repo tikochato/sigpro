@@ -97,7 +97,14 @@
 							</select>
 							<label  class="floating-label">* Probabilidad</label>
 						</div>
-						
+						<div class="form-group">
+							<input type="text" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" ng-model="riesgoc.fechaEjecucion" is-open="riesgoc.fe_abierto"
+									datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="riesgoc.mostraringreso"
+									ng-value="riesgoc.riesgo.fechaEjecucion" onblur="this.setAttribute('value', this.value);"/>
+								<span class="label-icon" ng-click="riesgoc.abrirPopupFecha(1000)">
+										<i class="glyphicon glyphicon-calendar"></i>
+								</span><label class="floating-label">* Fecha de ejecución</label>
+						</div>
 						<div class="form-group">
     						<input type="text" class="inputText" ng-model="riesgoc.riesgo.gatillosSintomas" ng-value="riesgoc.riesgo.gatillosSintomas" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">Gatillos / sintomas</label>
@@ -124,15 +131,6 @@
 						<div class="form-group">
     						<input type="checkbox"  ng-model="riesgoc.ejecutado" /> 
     						<label class="floating-label">Ejecutado</label>   						
-						</div>
-						
-						<div class="form-group">
-							<input type="text" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" ng-model="riesgoc.fechaEjecucion" is-open="riesgoc.fe_abierto"
-									datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="riesgoc.mostraringreso"
-									ng-value="riesgoc.riesgo.fechaEjecucion" onblur="this.setAttribute('value', this.value);"/>
-								<span class="label-icon" ng-click="riesgoc.abrirPopupFecha(1000)">
-										<i class="glyphicon glyphicon-calendar"></i>
-								</span><label class="floating-label">* Fecha de ejecución</label>
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText" id="descripcion" ng-model="riesgoc.riesgo.descripcion"

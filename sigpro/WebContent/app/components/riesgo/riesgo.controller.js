@@ -173,7 +173,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 						mi.riesgos.push({
 							colaboradorNombre: mi.colaboradorNombre,
 							colaboradorid: mi.colaboradorid,
-							descripcion: mi.riesgo.descripcion,
+							descripcion: mi.riesgo.descripcion == null ? "" : mi.riesgo.descripcion,
 							ejecutado: mi.ejecutado ? 1 : 0,
 							estado: 1,
 							fechaActualizacion: null,
