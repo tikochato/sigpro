@@ -34,15 +34,15 @@ import dao.ActividadDAO;
 import dao.CategoriaAdquisicionDAO;
 import dao.ComponenteDAO;
 import dao.EstructuraProyectoDAO;
-import dao.PlanAdquisicionesDetalleDAO;
+import dao.PlanAdquisicionDetalleDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.CategoriaAdquisicion;
 import pojo.Componente;
-import pojo.PlanAdquisiciones;
-import pojo.PlanAdquisicionesDetalle;
+import pojo.PlanAdquisicion;
+import pojo.PlanAdquisicionDetalle;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
@@ -60,7 +60,7 @@ public class SControlAdquisiciones extends HttpServlet {
 		Integer objetoTipo;
 		Integer predecesorId;
 		Integer objetoPredecesorTipo;
-		Integer idPlanAdquisiciones;
+		Integer idPlanAdquisicion;
 		String nombre;
 		Integer nivel;
 		Integer tipoAdquisicion;
@@ -150,13 +150,13 @@ public class SControlAdquisiciones extends HttpServlet {
 							categoriaAdquisicion = null;
 						}
 						
-						Integer planAdquisicionesId = Utils.String2Int(row[4]);
-						PlanAdquisiciones planAdquisiciones;
-						if(planAdquisicionesId != 0){
-							planAdquisiciones = new PlanAdquisiciones();
-							planAdquisiciones.setId(planAdquisicionesId);
+						Integer PlanAdquisicionId = Utils.String2Int(row[4]);
+						PlanAdquisicion PlanAdquisicion;
+						if(PlanAdquisicionId != 0){
+							PlanAdquisicion = new PlanAdquisicion();
+							PlanAdquisicion.setId(PlanAdquisicionId);
 						}else{
-							planAdquisiciones = null;
+							PlanAdquisicion = null;
 						}
 							
 						String unidadMedida = row[5] == null ? "" : row[5]; 
@@ -219,7 +219,7 @@ public class SControlAdquisiciones extends HttpServlet {
 						BigDecimal montoContrato = BigDecimal.ZERO;
 						if (!row[22].equals("null"))
 							montoContrato = new BigDecimal(row[22]);
-						PlanAdquisicionesDetalle plan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
+						PlanAdquisicionDetalle plan = PlanAdquisicionDetalleDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
 						if(plan != null){
 							plan.setTipoAdquisicion(tipoAdquisicion);
 							plan.setCategoriaAdquisicion(categoriaAdquisicion);
@@ -247,13 +247,13 @@ public class SControlAdquisiciones extends HttpServlet {
 							plan.setNumeroContrato(numeroContrato);
 							plan.setMontoContrato(montoContrato);
 						}else{
-							plan = new PlanAdquisicionesDetalle(categoriaAdquisicion,planAdquisiciones, tipoAdquisicion,unidadMedida,cantidad, total,  costo, 
+							plan = new PlanAdquisicionDetalle(categoriaAdquisicion,PlanAdquisicion, tipoAdquisicion,unidadMedida,cantidad, total,  costo, 
 									planificadoDocs, realDocs, planificadoLanzamiento, realLanzamiento, planificadoRecepcionEval, realRecepcionEval, 
 									planificadoAdjudica, realAdjudica, planificadoFirma, realFirma, objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
 									bloqueado,  numeroContrato, montoContrato,nog);
 						}
 						
-						result = PlanAdquisicionesDetalleDAO.guardarPlanAdquisicion(plan);
+						result = PlanAdquisicionDetalleDAO.guardarPlanAdquisicion(plan);
 						
 						if(!result)
 							break;
@@ -270,15 +270,15 @@ public class SControlAdquisiciones extends HttpServlet {
 				String numeroContrato = map.get("numeroContrato");
 				BigDecimal montoContrato = Utils.String2BigDecimal(map.get("montoContrato"), null);
 				
-				PlanAdquisicionesDetalle planAdquisicionDetalle = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
+				PlanAdquisicionDetalle planAdquisicionDetalle = PlanAdquisicionDetalleDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
 				planAdquisicionDetalle.setMontoContrato(montoContrato);
 				planAdquisicionDetalle.setNumeroContrato(numeroContrato);
-				PlanAdquisicionesDetalleDAO.guardarPlanAdquisicion(planAdquisicionDetalle);
+				PlanAdquisicionDetalleDAO.guardarPlanAdquisicion(planAdquisicionDetalle);
 				
 			}else if(accion.equals("exportarExcel")){
-				Integer idPlanAdquisiciones = Utils.String2Int(map.get("idPlanAdquisiciones"), null);
+				Integer idPlanAdquisicion = Utils.String2Int(map.get("idPlanAdquisicion"), null);
 				try{ 
-					byte [] outArray = exportarExcel(idPlanAdquisiciones, idPrestamo, usuario);
+					byte [] outArray = exportarExcel(idPlanAdquisicion, idPrestamo, usuario);
 					
 					response.setContentType("application/ms-excel");
 					response.setContentLength(outArray.length);
@@ -331,7 +331,7 @@ public class SControlAdquisiciones extends HttpServlet {
 					response.setContentType("application/pdf");
 					response.setContentLength(outArray.length);
 					response.setHeader("Cache-Control", "no-cache"); 
-					response.setHeader("Content-Disposition", "in-line; 'planAdquisiciones.pdf'");
+					response.setHeader("Content-Disposition", "in-line; 'PlanAdquisicion.pdf'");
 					OutputStream outStream = response.getOutputStream();
 					outStream.write(outArray);
 					outStream.flush();
@@ -366,7 +366,7 @@ public class SControlAdquisiciones extends HttpServlet {
 			Integer productoId = 0;
 			
 			for(Object objeto: estruturaProyecto){
-				//Integer idPlanAdquisiciones = 0;
+				//Integer idPlanAdquisicion = 0;
 				Object[] obj = (Object[]) objeto;
 				Integer nivel = (Integer)obj[4];
 				if(nivel != null){
@@ -377,7 +377,7 @@ public class SControlAdquisiciones extends HttpServlet {
 					temp.objetoTipo = ((BigInteger)obj[2]).intValue();
 					temp.nivel = nivel;
 					
-					inicializarPlanAdquisiciones(temp);
+					inicializarPlanAdquisicion(temp);
 					
 					switch(temp.objetoTipo){
 						case 1:
@@ -386,8 +386,8 @@ public class SControlAdquisiciones extends HttpServlet {
 							proyectoId = temp.objetoId;
 							
 							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
-							//PlanAdquisiciones planAdquisicion = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(temp.objetoTipo, temp.objetoId);
-							//idPlanAdquisiciones = planAdquisicion != null ? planAdquisicion.getId() : null;
+							//PlanAdquisicion planAdquisicion = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(temp.objetoTipo, temp.objetoId);
+							//idPlanAdquisicion = planAdquisicion != null ? planAdquisicion.getId() : null;
 							break;
 						case 2:
 							temp.objetoPredecesorTipo = 1;
@@ -428,8 +428,8 @@ public class SControlAdquisiciones extends HttpServlet {
 		}
 	}
 	
-	private void inicializarPlanAdquisiciones(stcontroladquisiciones tempPrestamo){
-		tempPrestamo.idPlanAdquisiciones = 0;
+	private void inicializarPlanAdquisicion(stcontroladquisiciones tempPrestamo){
+		tempPrestamo.idPlanAdquisicion = 0;
 		tempPrestamo.tipoAdquisicion = 0;
 		tempPrestamo.tipoAdquisicionNombre = "";
 		tempPrestamo.categoriaAdquisicion = 0;
@@ -460,8 +460,8 @@ public class SControlAdquisiciones extends HttpServlet {
 //			
 //			Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
 //					
-//			PlanAdquisiciones planAdquisicion = PlanAdquisicionesDAO.getPlanAdquisicionByObjeto(1, proyecto.getId());
-//			Integer idPlanAdquisiciones = planAdquisicion != null ? planAdquisicion.getId() : null;
+//			PlanAdquisicion planAdquisicion = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(1, proyecto.getId());
+//			Integer idPlanAdquisicion = planAdquisicion != null ? planAdquisicion.getId() : null;
 //			
 //			tempPrestamo.objetoId = proyecto.getId();
 //			tempPrestamo.nombre = proyecto.getNombre();
@@ -471,20 +471,20 @@ public class SControlAdquisiciones extends HttpServlet {
 //			tempPrestamo.objetoPredecesorTipo = 0;
 //			inicializarColumnasOcultas(tempPrestamo);
 //			
-//			if(idPlanAdquisiciones == null){
-//				planAdquisicion = new PlanAdquisiciones();
+//			if(idPlanAdquisicion == null){
+//				planAdquisicion = new PlanAdquisicion();
 //				planAdquisicion.setObjetoId(proyecto.getId());
 //				planAdquisicion.setObjetoTipo(1);
 //				planAdquisicion.setUsuarioCreo(usuario);
 //				planAdquisicion.setFechaCreacion(new DateTime().toDate());
 //				planAdquisicion.setEstado(1);
-//				PlanAdquisicionesDAO.guardarPlanAdquisicion(planAdquisicion);
-//				idPlanAdquisiciones = planAdquisicion.getId();
+//				PlanAdquisicionDAO.guardarPlanAdquisicion(planAdquisicion);
+//				idPlanAdquisicion = planAdquisicion.getId();
 //			}
 //			
-//			if(idPlanAdquisiciones != null){
-//				PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(1, proyecto.getId());
-//					tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+//			if(idPlanAdquisicion != null){
+//				PlanAdquisicionDetalle detallePlan = PlanAdquisicionDetalleDAO.getPlanAdquisicionByObjeto(1, proyecto.getId());
+//					tempPrestamo.idPlanAdquisicion = idPlanAdquisicion;
 //					tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
 //					tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0 : 0;
 //					tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
@@ -546,9 +546,9 @@ public class SControlAdquisiciones extends HttpServlet {
 //					tempPrestamo.objetoPredecesorTipo = 1;
 //					inicializarColumnasOcultas(tempPrestamo);
 //					
-//					if(idPlanAdquisiciones != null){
-//						PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(2, objComponente.getId());
-//						tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+//					if(idPlanAdquisicion != null){
+//						PlanAdquisicionDetalle detallePlan = PlanAdquisicionDetalleDAO.getPlanAdquisicionByObjeto(2, objComponente.getId());
+//						tempPrestamo.idPlanAdquisicion = idPlanAdquisicion;
 //						tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
 //						tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0: 0;
 //						tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
@@ -602,9 +602,9 @@ public class SControlAdquisiciones extends HttpServlet {
 //						tempPrestamo.objetoPredecesorTipo = 2;
 //						inicializarColumnasOcultas(tempPrestamo);
 //						
-//						if(idPlanAdquisiciones != null){
-//							PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(3, objProducto.getId());
-//							tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+//						if(idPlanAdquisicion != null){
+//							PlanAdquisicionDetalle detallePlan = PlanAdquisicionDetalleDAO.getPlanAdquisicionByObjeto(3, objProducto.getId());
+//							tempPrestamo.idPlanAdquisicion = idPlanAdquisicion;
 //							tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
 //							tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0 : 0;
 //							tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
@@ -659,9 +659,9 @@ public class SControlAdquisiciones extends HttpServlet {
 //							tempPrestamo.objetoPredecesorTipo = 3;
 //							inicializarColumnasOcultas(tempPrestamo);
 //							
-//							if(idPlanAdquisiciones != null){
-//								PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(4, objSubProducto.getId());
-//								tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+//							if(idPlanAdquisicion != null){
+//								PlanAdquisicionDetalle detallePlan = PlanAdquisicionDetalleDAO.getPlanAdquisicionByObjeto(4, objSubProducto.getId());
+//								tempPrestamo.idPlanAdquisicion = idPlanAdquisicion;
 //								tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
 //								tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0 : 0;
 //								tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
@@ -726,9 +726,9 @@ public class SControlAdquisiciones extends HttpServlet {
 //								}
 //								inicializarColumnasOcultas(tempPrestamo);
 //								
-//								if(idPlanAdquisiciones != null){
-//									PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(5, objActividad.getId());
-//									tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+//								if(idPlanAdquisicion != null){
+//									PlanAdquisicionDetalle detallePlan = PlanAdquisicionDetalleDAO.getPlanAdquisicionByObjeto(5, objActividad.getId());
+//									tempPrestamo.idPlanAdquisicion = idPlanAdquisicion;
 //									tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
 //									tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0 : 0;
 //									tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
@@ -795,9 +795,9 @@ public class SControlAdquisiciones extends HttpServlet {
 //							}
 //							inicializarColumnasOcultas(tempPrestamo);
 //							
-//							if(idPlanAdquisiciones != null){
-//								PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(5, objActividad.getId());
-//								tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+//							if(idPlanAdquisicion != null){
+//								PlanAdquisicionDetalle detallePlan = PlanAdquisicionDetalleDAO.getPlanAdquisicionByObjeto(5, objActividad.getId());
+//								tempPrestamo.idPlanAdquisicion = idPlanAdquisicion;
 //								tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
 //								tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0 : 0;
 //								tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
@@ -858,9 +858,9 @@ public class SControlAdquisiciones extends HttpServlet {
 //						}
 //						inicializarColumnasOcultas(tempPrestamo);
 //						
-//						if(idPlanAdquisiciones != null){
-//							PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(5, objActividad.getId());
-//							tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+//						if(idPlanAdquisicion != null){
+//							PlanAdquisicionDetalle detallePlan = PlanAdquisicionDetalleDAO.getPlanAdquisicionByObjeto(5, objActividad.getId());
+//							tempPrestamo.idPlanAdquisicion = idPlanAdquisicion;
 //							tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
 //							tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0 : 0;
 //							tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
@@ -919,9 +919,9 @@ public class SControlAdquisiciones extends HttpServlet {
 //					}
 //					inicializarColumnasOcultas(tempPrestamo);
 //					
-//					if(idPlanAdquisiciones != null){
-//						PlanAdquisicionesDetalle detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(5, objActividad.getId());
-//						tempPrestamo.idPlanAdquisiciones = idPlanAdquisiciones;
+//					if(idPlanAdquisicion != null){
+//						PlanAdquisicionDetalle detallePlan = PlanAdquisicionDetalleDAO.getPlanAdquisicionByObjeto(5, objActividad.getId());
+//						tempPrestamo.idPlanAdquisicion = idPlanAdquisicion;
 //						tempPrestamo.tipoAdquisicion = detallePlan != null ? detallePlan.getTipoAdquisicion() != null ? detallePlan.getTipoAdquisicion() : 0 : 0;
 //						tempPrestamo.categoriaAdquisicion = detallePlan != null ? detallePlan.getCategoriaAdquisicion() != null ? detallePlan.getCategoriaAdquisicion().getId() : 0 : 0;
 //						tempPrestamo.unidadMedida = detallePlan != null ? detallePlan.getUnidadMedida() : "";
@@ -954,7 +954,7 @@ public class SControlAdquisiciones extends HttpServlet {
 //		}
 //	}
 	
-	private byte[] exportarExcel(Integer idPlanAdquisiciones, Integer idPrestamo, String usuario) throws IOException{
+	private byte[] exportarExcel(Integer idPlanAdquisicion, Integer idPrestamo, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 28, 2017 10:43:48 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 29, 2017 8:14:24 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class CategoriaAdquisicion implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8132832510619713797L;
+	private static final long serialVersionUID = -3405028045207327237L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
@@ -34,7 +34,7 @@ public class CategoriaAdquisicion implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private Set<PlanAdquisicionesDetalle> planAdquisicionesDetalles = new HashSet<PlanAdquisicionesDetalle>(0);
+	private Set<PlanAdquisicionDetalle> planAdquisicionDetalles = new HashSet<PlanAdquisicionDetalle>(0);
 
 	public CategoriaAdquisicion() {
 	}
@@ -48,7 +48,7 @@ public class CategoriaAdquisicion implements java.io.Serializable {
 
 	public CategoriaAdquisicion(String nombre, String descripcion, String usuarioCreo, String usuarioActualizo,
 			Date fechaCreacion, Date fechaActualizacion, int estado,
-			Set<PlanAdquisicionesDetalle> planAdquisicionesDetalles) {
+			Set<PlanAdquisicionDetalle> planAdquisicionDetalles) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
@@ -56,7 +56,7 @@ public class CategoriaAdquisicion implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.planAdquisicionesDetalles = planAdquisicionesDetalles;
+		this.planAdquisicionDetalles = planAdquisicionDetalles;
 	}
 
 	@Id
@@ -137,12 +137,12 @@ public class CategoriaAdquisicion implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "categoriaAdquisicion")
-	public Set<PlanAdquisicionesDetalle> getPlanAdquisicionesDetalles() {
-		return this.planAdquisicionesDetalles;
+	public Set<PlanAdquisicionDetalle> getPlanAdquisicionDetalles() {
+		return this.planAdquisicionDetalles;
 	}
 
-	public void setPlanAdquisicionesDetalles(Set<PlanAdquisicionesDetalle> planAdquisicionesDetalles) {
-		this.planAdquisicionesDetalles = planAdquisicionesDetalles;
+	public void setPlanAdquisicionDetalles(Set<PlanAdquisicionDetalle> planAdquisicionDetalles) {
+		this.planAdquisicionDetalles = planAdquisicionDetalles;
 	}
 
 }

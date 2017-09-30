@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/angular-chart.min.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/ui-grid.min.css" />

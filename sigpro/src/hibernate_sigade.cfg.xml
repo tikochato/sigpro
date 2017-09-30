@@ -4,7 +4,7 @@
 "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-    	<property name="hibernate.connection.datasource">java:comp/env/jdbc/sigade</property>
+    	<property name="hibernate.connection.datasource">java:comp/env/jdbc/sipro_analytic</property>
         <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
         <property name="hibernate.search.autoregister_listeners">true</property>
         <property name="hibernate.current_session_context_class">thread</property>

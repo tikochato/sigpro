@@ -530,7 +530,7 @@ public class SProyecto extends HttpServlet {
 					proyecto.setEjecucionFisicaReal(ejecucionFisicaReal);
 
 				    List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
-					proyecto.setProyectoPropedadValors(null);
+					proyecto.setProyectoPropiedadValors(null);
 					if (valores_temp!=null){
 						for (ProyectoPropedadValor valor : valores_temp){
 							valor.setFechaActualizacion(new DateTime().toDate());

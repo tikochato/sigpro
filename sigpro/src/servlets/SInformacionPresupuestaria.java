@@ -256,6 +256,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				try {
 					if(CMariaDB.connect()){
 						Connection conn = CMariaDB.getConnection();
+						Connection conn_analytic = CMariaDB.getConnection_analytic();
 						if(tempPrestamo.objeto_tipo == 1){
 						objPrestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(tempPrestamo.objeto_id, 1);
 							if(objPrestamo != null ){
@@ -265,8 +266,9 @@ public class SInformacionPresupuestaria extends HttpServlet {
 								correlativo = Utils.String2Int(codigoPresupuestario.substring(6,10));
 							}
 						}			
-						tempPrestamo = getPresupuestoReal(tempPrestamo, fuente, organismo, correlativo, anioInicial, anioFinal, conn, usuario);
+						tempPrestamo = getPresupuestoReal(tempPrestamo, fuente, organismo, correlativo, anioInicial, anioFinal, conn_analytic, usuario);
 						tempPrestamo = getPresupuestoPlanificado(tempPrestamo, usuario);
+						conn_analytic.close();
 						conn.close();
 					}
 				} catch (SQLException e) {
@@ -365,8 +367,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();
 		
 			if(prestamo.objeto_tipo == 1){
-				
-					//presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoProyecto(fuente, organismo, correlativo,anioInicial,anioFinal, conn);
+				presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoProyecto(fuente, organismo, correlativo,anioInicial,anioFinal, conn);
 			}else{
 				Integer programa = null;
 				Integer subprograma = null; 

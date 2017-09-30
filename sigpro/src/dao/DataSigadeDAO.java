@@ -16,7 +16,7 @@ public class DataSigadeDAO {
 	
 	public static List<DtmAvanceFisfinanDti> getInf(){
 		List<DtmAvanceFisfinanDti> ret = new ArrayList<DtmAvanceFisfinanDti>();
-		Session session = CHibernateSession.getSessionFactory().openSession();
+		Session session = CHibernateSession.getSessionFactory_analytic().openSession();
 		try{
 			Query<DtmAvanceFisfinanDti> criteria = session.createQuery("FROM dtm_avance_fisfinan_dti p ", DtmAvanceFisfinanDti.class);
 			ret = criteria.getResultList();
@@ -32,7 +32,7 @@ public class DataSigadeDAO {
 	
 	public static DtmAvanceFisfinanDti getInfPorId(String noPrestamo,String codigoPresupuestario){
 		DtmAvanceFisfinanDti ret = null;
-		Session session = CHibernateSession.getSessionFactory().openSession();
+		Session session = CHibernateSession.getSessionFactory_analytic().openSession();
 		try{
 			String query =String.join("", "SELECT i FROM dtm_avance_fisfinan_dti i ",
 					"where i.id.codigoPresupuestario = :codPre ",
@@ -53,7 +53,7 @@ public class DataSigadeDAO {
 	
 	public static DtmAvanceFisfinanDti getavanceFisFinanDMS1(String codigoPresupuestario){
 		DtmAvanceFisfinanDti ret = null;
-		Session session = CHibernateSession.getSessionFactory().openSession();
+		Session session = CHibernateSession.getSessionFactory_analytic().openSession();
 		
 		try{
 			String query =String.join(" ", "select * from dtm_avance_fisfinan_dti fis",		
@@ -74,7 +74,7 @@ public class DataSigadeDAO {
 	
 	public static List<?> getAVANCE_FISFINAN_DET_DTI(String codigoPresupeustario){
 		List<?> ret = null;
-		Session session = CHibernateSession.getSessionFactory().openSession();
+		Session session = CHibernateSession.getSessionFactory_analytic().openSession();
 		
 		try{
 			String query =String.join(" ", "select ejercicio_fiscal,mes_desembolso,sum(desembolsos_mes_gtq) ",
@@ -97,7 +97,7 @@ public class DataSigadeDAO {
 	
 	public static List<?> getAVANCE_FISFINAN_DET_DTIRango(String codigoPresupeustario,int anio_inicio, int anio_fin){
 		List<?> ret = null;
-		Session session = CHibernateSession.getSessionFactory().openSession();
+		Session session = CHibernateSession.getSessionFactory_analytic().openSession();
 		
 		try{
 			String query =String.join(" ", "select ejercicio_fiscal,mes_desembolso,sum(desembolsos_mes_gtq) ",
@@ -123,7 +123,7 @@ public class DataSigadeDAO {
 	
 	public static List<DtmAvanceFisfinanDti> getCodigos(){
 		List<DtmAvanceFisfinanDti> ret = new ArrayList<>();
-		Session session = CHibernateSession.getSessionFactory().openSession();
+		Session session = CHibernateSession.getSessionFactory_analytic().openSession();
 		
 		try{
 			String query =String.join(" ", "select d from DtmAvanceFisfinanDti d");
@@ -142,7 +142,7 @@ public class DataSigadeDAO {
 	
 	public static  BigDecimal totalDesembolsadoAFechaReal (String codigo_presupuestario, int anio, int mes){
 		BigDecimal ret = null;
-		Session session = CHibernateSession.getSessionFactory().openSession();
+		Session session = CHibernateSession.getSessionFactory_analytic().openSession();
 		
 		try{
 			String query =String.join(" ", 
