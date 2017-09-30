@@ -20,10 +20,7 @@
 		    </div>		    
 		    <div class="collapse navbar-collapse" id="navBar">
 	            <ul class="nav navbar-nav">
-	                <li uib-dropdown>
-	                	<shiro:hasPermission name="8010"><a href="/main.jsp#!/cooperante"><span class="glyphicon" aria-hidden="true"></span> Cooperante</a></shiro:hasPermission>	                    
-	                </li>
-                    <li>
+	                <li>
                     	<shiro:hasPermission name="24010"><a href="/main.jsp#!/programa"><span class="glyphicon" aria-hidden="true"></span> Programas</a></shiro:hasPermission>                       
                     </li>
                     <shiro:hasPermission name="24010">

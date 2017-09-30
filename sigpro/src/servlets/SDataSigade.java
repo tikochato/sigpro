@@ -146,8 +146,10 @@ public class SDataSigade extends HttpServlet {
 			temp.numeroPrestamo = inf.getId().getNoPrestamo();
 			temp.proyectoPrograma = inf.getId().getNombrePrograma();
 			Cooperante cooperante = CooperanteDAO.getCooperantePorCodigo(inf.getId().getCodigoOrganismoFinan());
-			temp.cooperanteid = cooperante.getId();
-			temp.cooperantenombre = cooperante.getNombre();
+			if(cooperante!=null){
+				temp.cooperanteid = cooperante.getId();
+				temp.cooperantenombre = cooperante.getNombre();
+			}
 			
 			temp.fechaDecreto = Utils.formatDate(inf.getId().getFechaDecreto());
 			temp.fechaSuscripcion = Utils.formatDate(inf.getId().getFechaSuscripcion());

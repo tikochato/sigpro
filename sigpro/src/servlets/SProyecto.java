@@ -44,8 +44,8 @@ import pojo.Proyecto;
 import pojo.ProyectoImpacto;
 import pojo.ProyectoMiembro;
 import pojo.ProyectoMiembroId;
-import pojo.ProyectoPropedadValor;
-import pojo.ProyectoPropedadValorId;
+import pojo.ProyectoPropiedadValor;
+import pojo.ProyectoPropiedadValorId;
 import pojo.ProyectoPropiedad;
 import pojo.ProyectoTipo;
 import pojo.UnidadEjecutora;
@@ -529,10 +529,10 @@ public class SProyecto extends HttpServlet {
 					proyecto.setVisionGeneral(visionGeneral);
 					proyecto.setEjecucionFisicaReal(ejecucionFisicaReal);
 
-				    List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
-					proyecto.setProyectoPropedadValors(null);
+				    List<ProyectoPropiedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
+					proyecto.setProyectoPropiedadValors(null);
 					if (valores_temp!=null){
-						for (ProyectoPropedadValor valor : valores_temp){
+						for (ProyectoPropiedadValor valor : valores_temp){
 							valor.setFechaActualizacion(new DateTime().toDate());
 							valor.setUsuarioActualizo("admin");
 							ProyectoPropiedadValorDAO.eliminarProyectoPropiedadValor(valor);
@@ -558,8 +558,8 @@ public class SProyecto extends HttpServlet {
 					for (stdatadinamico data : datos) {
 						if (data.valor!=null && data.valor.length()>0 && data.valor.compareTo("null")!=0){
 							ProyectoPropiedad proyectoPropiedad = ProyectoPropiedadDAO.getProyectoPropiedadPorId(Integer.parseInt(data.id));
-							ProyectoPropedadValorId idValor = new ProyectoPropedadValorId(proyecto.getId(),Integer.parseInt(data.id));
-							ProyectoPropedadValor valor = new ProyectoPropedadValor(idValor, proyecto, proyectoPropiedad, usuario, new DateTime().toDate(), 1);
+							ProyectoPropiedadValorId idValor = new ProyectoPropiedadValorId(proyecto.getId(),Integer.parseInt(data.id));
+							ProyectoPropiedadValor valor = new ProyectoPropiedadValor(idValor, proyecto, proyectoPropiedad, usuario, new DateTime().toDate(), 1);
 
 							switch (proyectoPropiedad.getDatoTipo().getId()){
 								case 1:
@@ -683,9 +683,9 @@ public class SProyecto extends HttpServlet {
 			if(id>0){
 				Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 
-				List<ProyectoPropedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
+				List<ProyectoPropiedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
 				if (valores_temp!=null){
-					for (ProyectoPropedadValor valor : valores_temp){
+					for (ProyectoPropiedadValor valor : valores_temp){
 						valor.setFechaActualizacion(new DateTime().toDate());
 						valor.setUsuarioActualizo(usuario);
 						ProyectoPropiedadValorDAO.eliminarProyectoPropiedadValor(valor);

@@ -4,6 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 <%@ include file="/app/shared/includes.jsp"%>
 <link rel="stylesheet" type="text/css" href="/assets/css/loginform.css" />
 <script src="/app/components/login/login.controller.js"></script>

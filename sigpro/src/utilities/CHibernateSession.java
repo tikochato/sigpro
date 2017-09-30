@@ -17,6 +17,7 @@ public class CHibernateSession {
 		if(!testState){
 			try {
 				Configuration configuration = new Configuration();
+				Configuration configuration_analytic = new Configuration();
 
 				try {
 					InitialContext context = new InitialContext();
@@ -25,9 +26,11 @@ public class CHibernateSession {
 			    	conn.isClosed();
 			    	configuration.configure();
 			    	conn.close();
+			    	
 			    }
 			    catch(Exception e){
-			    	configuration.configure("hibernate_local.cfg.xml");
+			    	configuration.configure("hibernate.cfg.xml");
+			    	configuration_analytic.configure("hibernate_sigade.cfg.xml");
 			    }
 			    
 			    sessionFactory = configuration.buildSessionFactory();
@@ -42,7 +45,7 @@ public class CHibernateSession {
 	public static SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
-	
+		
 	public static void changeEnvinroment(SessionFactory session){
 		sessionFactory = session;
 	}

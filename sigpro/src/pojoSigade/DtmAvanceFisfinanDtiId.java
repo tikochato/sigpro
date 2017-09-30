@@ -1,5 +1,5 @@
 package pojoSigade;
-// Generated Aug 14, 2017 1:05:20 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 29, 2017 10:37:44 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -260,7 +260,6 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.estadoPrestamo = estadoPrestamo;
 	}
 
-	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -333,7 +332,6 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 								&& this.getEstadoPrestamo().equals(castOther.getEstadoPrestamo())));
 	}
 
-	@Override
 	public int hashCode() {
 		int result = 17;
 

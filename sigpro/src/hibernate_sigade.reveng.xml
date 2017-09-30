@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
 
-<hibernate-reverse-engineering></hibernate-reverse-engineering>
+<hibernate-reverse-engineering>
+	<table-filter match-name="dtm_avance_fisfinan_det_dti"
+		match-catalog="sipro_analytic">
+	</table-filter>
+	<table-filter match-name="dtm_avance_fisfinan_dti"
+		match-catalog="sipro_analytic">
+	</table-filter>
+</hibernate-reverse-engineering>

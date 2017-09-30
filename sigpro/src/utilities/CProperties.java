@@ -18,6 +18,7 @@ public class CProperties {
 	private static String maria_user="";
 	private static String maria_password="";
 	private static String maria_schema=null;
+	private static String maria_schema_analytic=null;
 		
 	
 	static{
@@ -40,6 +41,7 @@ public class CProperties {
 			maria_port = properties.getProperty("maria_port") != null ? 
 					Integer.parseInt(properties.getProperty("maria_port")) : null;
 			maria_schema = properties.getProperty("maria_schema");
+			maria_schema_analytic = properties.getProperty("maria_schema_analytic");
 			maria_user = properties.getProperty("maria_user");
 			maria_password = properties.getProperty("maria_password");
 			
@@ -155,5 +157,13 @@ public class CProperties {
 
 	public static void setMaria_schema(String maria_schema) {
 		CProperties.maria_schema = maria_schema;
+	}
+
+	public static String getMaria_schema_analytic() {
+		return maria_schema_analytic;
+	}
+
+	public static void setMaria_schema_analytic(String maria_schema_analytic) {
+		CProperties.maria_schema_analytic = maria_schema_analytic;
 	}
 }
