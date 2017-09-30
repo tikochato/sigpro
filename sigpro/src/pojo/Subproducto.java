@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 29, 2017 8:42:10 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 29, 2017 9:09:55 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;

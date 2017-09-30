@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 29, 2017 8:42:10 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 29, 2017 9:09:55 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class Cooperante implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8898611745794412588L;
+	private static final long serialVersionUID = -5006182936966102380L;
 	private Integer id;
 	private int codigo;
 	private String siglas;
@@ -36,6 +36,7 @@ public class Cooperante implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
+	private Integer ejercicio;
 	private Set<Proyecto> proyectos = new HashSet<Proyecto>(0);
 	private Set<TipoAdquisicion> tipoAdquisicions = new HashSet<TipoAdquisicion>(0);
 	private Set<Prestamo> prestamos = new HashSet<Prestamo>(0);
@@ -52,8 +53,8 @@ public class Cooperante implements java.io.Serializable {
 	}
 
 	public Cooperante(int codigo, String siglas, String nombre, String descripcion, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Set<Proyecto> proyectos,
-			Set<TipoAdquisicion> tipoAdquisicions, Set<Prestamo> prestamos) {
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Integer ejercicio,
+			Set<Proyecto> proyectos, Set<TipoAdquisicion> tipoAdquisicions, Set<Prestamo> prestamos) {
 		this.codigo = codigo;
 		this.siglas = siglas;
 		this.nombre = nombre;
@@ -63,6 +64,7 @@ public class Cooperante implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
+		this.ejercicio = ejercicio;
 		this.proyectos = proyectos;
 		this.tipoAdquisicions = tipoAdquisicions;
 		this.prestamos = prestamos;
@@ -161,6 +163,15 @@ public class Cooperante implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
+	}
+
+	@Column(name = "ejercicio")
+	public Integer getEjercicio() {
+		return this.ejercicio;
+	}
+
+	public void setEjercicio(Integer ejercicio) {
+		this.ejercicio = ejercicio;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cooperante")
