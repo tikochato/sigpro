@@ -66,13 +66,13 @@ public class CProject {
 	
 	static int PROGRAMA_TIPO_ID_DEFECTO = 1;
 	static int COOPERANTE_ID_DEFECTO = 0;
-	static int PROYECTO_TIPO_ID_DEFECTO = 3;
+	static int PROYECTO_TIPO_ID_DEFECTO = 1;
 	static int ENTIDAD_ID_DEFECTO = 0;
 	static int UNIDAD_EJECUTORA_ID_DEFECTO = 0;
-	static int COMPONENTE_TIPO_ID_DEFECTO = 2;
-	static int PRODUCTO_TIPO_ID_DEFECTO = 7;
+	static int COMPONENTE_TIPO_ID_DEFECTO = 1;
+	static int PRODUCTO_TIPO_ID_DEFECTO = 1;
 	static int SUBPRODUCTO_TIPO__ID_DEFECTO = 1;
-	static int ACTIVIDAD_ID_DEFECTO = 7;
+	static int ACTIVIDAD_ID_DEFECTO = 1;
 	
 	private static int OBJETO_ID_PROYECTO = 1;
 	private static int OBJETO_ID_COMPONENTE = 2;
