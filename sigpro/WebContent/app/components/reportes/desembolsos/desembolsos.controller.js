@@ -284,8 +284,8 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 				}
 				
 				costoPlan.push (...costoPlanAgrupado.slice());			
-				desembolsoPlanificado.push(...desembolsoRAgrupado.slice());
-				desembolsoReal.push(...desembolsoPAgrupado.slice());
+				desembolsoPlanificado.push(...desembolsoPAgrupado.slice());
+				desembolsoReal.push(...desembolsoRAgrupado.slice());
 				
 				for (x = 1;x<=totalItems;x++){
 					totalPlanificado = totalPlanificado+ desembolsoPlanificado[x];
@@ -340,14 +340,14 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 				var desembolsoPAgrupado =[];
 				
 				for (x=0; x< totalItems ; x++){
-					costoPlanAgrupado.push(costoPlanTemp[x * 2] + costoPlanTemp[x * 2 + 1] + costoPlanTemp[x * 2 + 2]);
-					desembolsoRAgrupado.push(desembolsoRTemp[x * 2] + desembolsoRTemp[x * 2 + 1] + desembolsoRTemp[x * 2 + 2] );
-					desembolsoPAgrupado.push(desembolsoPTemp[x * 2] + desembolsoPTemp[x * 2 + 1] + desembolsoPTemp[x * 2 + 2])
+					costoPlanAgrupado.push(costoPlanTemp[x * 3] + costoPlanTemp[x * 3 + 1] + costoPlanTemp[x * 3 + 2]);
+					desembolsoRAgrupado.push(desembolsoRTemp[x * 3] + desembolsoRTemp[x * 3 + 1] + desembolsoRTemp[x * 3 + 2] );
+					desembolsoPAgrupado.push(desembolsoPTemp[x * 3] + desembolsoPTemp[x * 3 + 1] + desembolsoPTemp[x * 3 + 2])
 				}
 				
 				costoPlan.push (...costoPlanAgrupado.slice());			
-				desembolsoPlanificado.push(...desembolsoRAgrupado.slice());
-				desembolsoReal.push(...desembolsoPAgrupado.slice());
+				desembolsoPlanificado.push(...desembolsoPAgrupado.slice());
+				desembolsoReal.push(...desembolsoRAgrupado.slice());
 				
 				for (x = 1;x<=totalItems;x++){
 					totalPlanificado = totalPlanificado+ desembolsoPlanificado[x];
@@ -402,14 +402,14 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 				var desembolsoPAgrupado =[];
 				
 				for (x=0; x< totalItems ; x++){
-					costoPlanAgrupado.push(costoPlanTemp[x * 2] + costoPlanTemp[x * 2 + 1] + costoPlanTemp[x * 2 + 2] + costoPlanTemp[x * 2 + 3]);
-					desembolsoRAgrupado.push(desembolsoRTemp[x * 2] + desembolsoRTemp[x * 2 + 1] + desembolsoRTemp[x * 2 + 2] + desembolsoRTemp[x * 2 + 3] );
-					desembolsoPAgrupado.push(desembolsoPTemp[x * 2] + desembolsoPTemp[x * 2 + 1] + desembolsoPTemp[x * 2 + 2] + desembolsoPTemp[x * 2 + 3])
+					costoPlanAgrupado.push(costoPlanTemp[x * 4] + costoPlanTemp[x * 4 + 1] + costoPlanTemp[x * 4 + 2] + costoPlanTemp[x * 4 + 3]);
+					desembolsoRAgrupado.push(desembolsoRTemp[x * 4] + desembolsoRTemp[x * 4 + 1] + desembolsoRTemp[x * 4 + 2] + desembolsoRTemp[x * 4 + 3] );
+					desembolsoPAgrupado.push(desembolsoPTemp[x * 4] + desembolsoPTemp[x * 4 + 1] + desembolsoPTemp[x * 4 + 2] + desembolsoPTemp[x * 4 + 3])
 				}
 				
 				costoPlan.push (...costoPlanAgrupado.slice());			
-				desembolsoPlanificado.push(...desembolsoRAgrupado.slice());
-				desembolsoReal.push(...desembolsoPAgrupado.slice());
+				desembolsoPlanificado.push(...desembolsoPAgrupado.slice());
+				desembolsoReal.push(...desembolsoRAgrupado.slice());
 				
 				for (x = 1;x<=totalItems;x++){
 					totalPlanificado = totalPlanificado+ desembolsoPlanificado[x];
@@ -464,14 +464,14 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 				var desembolsoPAgrupado =[];
 				
 				for (x=0; x< totalItems ; x++){
-					costoPlanAgrupado.push(costoPlanTemp[x * 2] + costoPlanTemp[x * 2 + 1] + costoPlanTemp[x * 2 + 2] + costoPlanTemp[x * 2 + 3] + costoPlanTemp[x * 2 + 4] + costoPlanTemp[x * 2 + 5]);
-					desembolsoRAgrupado.push(desembolsoRTemp[x * 2] + desembolsoRTemp[x * 2 + 1] + desembolsoRTemp[x * 2 + 2] + desembolsoRTemp[x * 2 + 3] + desembolsoRTemp[x * 2 + 4] + desembolsoRTemp[x * 2 + 5] );
-					desembolsoPAgrupado.push(desembolsoPTemp[x * 2] + desembolsoPTemp[x * 2 + 1] + desembolsoPTemp[x * 2 + 2] + desembolsoPTemp[x * 2 + 3]+ desembolsoPTemp[x * 2 + 4]+ desembolsoPTemp[x * 2 + 5])
+					costoPlanAgrupado.push(costoPlanTemp[x * 6] + costoPlanTemp[x * 6 + 1] + costoPlanTemp[x * 6 + 2] + costoPlanTemp[x * 6 + 3] + costoPlanTemp[x * 6 + 4] + costoPlanTemp[x * 6 + 5]);
+					desembolsoRAgrupado.push(desembolsoRTemp[x * 6] + desembolsoRTemp[x * 6 + 1] + desembolsoRTemp[x * 6 + 2] + desembolsoRTemp[x * 6 + 3] + desembolsoRTemp[x * 6 + 4] + desembolsoRTemp[x * 6 + 5] );
+					desembolsoPAgrupado.push(desembolsoPTemp[x * 6] + desembolsoPTemp[x * 6 + 1] + desembolsoPTemp[x * 6 + 2] + desembolsoPTemp[x * 6 + 3]+ desembolsoPTemp[x * 6 + 4]+ desembolsoPTemp[x * 6 + 5]);
 				}
 				
 				costoPlan.push (...costoPlanAgrupado.slice());			
-				desembolsoPlanificado.push(...desembolsoRAgrupado.slice());
-				desembolsoReal.push(...desembolsoPAgrupado.slice());
+				desembolsoPlanificado.push(...desembolsoPAgrupado.slice());
+				desembolsoReal.push(...desembolsoRAgrupado.slice());
 				
 				for (x = 1;x<=totalItems;x++){
 					totalPlanificado = totalPlanificado+ desembolsoPlanificado[x];
@@ -526,17 +526,17 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 				var desembolsoPAgrupado =[];
 				
 				for (x=0; x< totalItems ; x++){
-					costoPlanAgrupado.push(costoPlanTemp[x * 2] + costoPlanTemp[x * 2 + 1] + costoPlanTemp[x * 2 + 2] + costoPlanTemp[x * 2 + 3] + costoPlanTemp[x * 2 + 4] + costoPlanTemp[x * 2 + 5]
-					+ costoPlanTemp[x * 2 + 6] + costoPlanTemp[x * 2 + 7] + costoPlanTemp[x * 2 + 8] + costoPlanTemp[x * 2 + 9] + costoPlanTemp[x * 2 + 10] + costoPlanTemp[x * 2 + 11]);
-					desembolsoRAgrupado.push(desembolsoRTemp[x * 2] + desembolsoRTemp[x * 2 + 1] + desembolsoRTemp[x * 2 + 2] + desembolsoRTemp[x * 2 + 3] + desembolsoRTemp[x * 2 + 4] + desembolsoRTemp[x * 2 + 5]
-					+ desembolsoRTemp[x * 2 +6] + desembolsoRTemp[x * 2 + 7] + desembolsoRTemp[x * 2 + 8] + desembolsoRTemp[x * 2 + 9] + desembolsoRTemp[x * 2 + 10] + desembolsoRTemp[x * 2 + 11]);
-					desembolsoPAgrupado.push(desembolsoPTemp[x * 2] + desembolsoPTemp[x * 2 + 1] + desembolsoPTemp[x * 2 + 2] + desembolsoPTemp[x * 2 + 3]+ desembolsoPTemp[x * 2 + 4]+ desembolsoPTemp[x * 2 + 5]
-					+ desembolsoPTemp[x * 2 + 6] + desembolsoPTemp[x * 2 + 7] + desembolsoPTemp[x * 2 + 8] + desembolsoPTemp[x * 2 + 9]+ desembolsoPTemp[x * 2 + 10]+ desembolsoPTemp[x * 2 + 11])
+					costoPlanAgrupado.push(costoPlanTemp[x * 12] + costoPlanTemp[x * 12 + 1] + costoPlanTemp[x * 12 + 2] + costoPlanTemp[x * 12 + 3] + costoPlanTemp[x * 12 + 4] + costoPlanTemp[x * 12 + 5]
+					+ costoPlanTemp[x * 12 + 6] + costoPlanTemp[x * 12 + 7] + costoPlanTemp[x * 12 + 8] + costoPlanTemp[x * 12 + 9] + costoPlanTemp[x * 12 + 10] + costoPlanTemp[x * 12 + 11]);
+					desembolsoRAgrupado.push(desembolsoRTemp[x * 12] + desembolsoRTemp[x * 12 + 1] + desembolsoRTemp[x * 12 + 2] + desembolsoRTemp[x * 12 + 3] + desembolsoRTemp[x * 12 + 4] + desembolsoRTemp[x * 12 + 5]
+					+ desembolsoRTemp[x * 12 +6] + desembolsoRTemp[x * 12 + 7] + desembolsoRTemp[x * 12 + 8] + desembolsoRTemp[x * 12 + 9] + desembolsoRTemp[x * 12 + 10] + desembolsoRTemp[x * 12 + 11]);
+					desembolsoPAgrupado.push(desembolsoPTemp[x * 2] + desembolsoPTemp[x * 12 + 1] + desembolsoPTemp[x * 12 + 2] + desembolsoPTemp[x * 12 + 3]+ desembolsoPTemp[x * 12 + 4]+ desembolsoPTemp[x * 12 + 5]
+					+ desembolsoPTemp[x * 12 + 6] + desembolsoPTemp[x * 12 + 7] + desembolsoPTemp[x * 12 + 8] + desembolsoPTemp[x * 12 + 9]+ desembolsoPTemp[x * 12 + 10]+ desembolsoPTemp[x * 12 + 11])
 				}
 				
 				costoPlan.push (...costoPlanAgrupado.slice());			
-				desembolsoPlanificado.push(...desembolsoRAgrupado.slice());
-				desembolsoReal.push(...desembolsoPAgrupado.slice());
+				desembolsoPlanificado.push(...desembolsoPAgrupado.slice());
+				desembolsoReal.push(...desembolsoRAgrupado.slice());
 				
 				for (x = 1;x<=totalItems;x++){
 					totalPlanificado = totalPlanificado+ desembolsoPlanificado[x];
