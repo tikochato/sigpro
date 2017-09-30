@@ -295,7 +295,7 @@
 							  <input type="text"  class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" min={{producto.fechaInicioPadre}} ng-model="producto.producto.fechaInicio" is-open="producto.fi_abierto"
 							            datepicker-options="producto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="producto.cambioDuracion(producto.duracionDimension);" ng-required="true"  
 							            ng-value="producto.producto.fechaInicio" onblur="this.setAttribute('value', this.value);" ng-click="producto.abrirPopupFecha(1000)"/>
-							            <span class="label-icon" ng-click="producto.abrirPopupFecha(1000)">
+							            <span class="label-icon">
 							              <i class="glyphicon glyphicon-calendar"></i>
 							            </span>
 							  <label for="campo.id" class="floating-label">* Fecha de Inicio</label>

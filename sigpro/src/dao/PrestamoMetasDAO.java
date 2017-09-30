@@ -173,9 +173,14 @@ public class PrestamoMetasDAO {
 	    		Integer metaFinalEntero = meta.getMetaFinalEntero()!=null ? meta.getMetaFinalEntero() : 0;
 	    		BigDecimal metaFinalDecimal = meta.getMetaFinalDecimal()!=null ? meta.getMetaFinalDecimal() : new BigDecimal(0);
 	    		if(datoTipo.equals(2) && metaFinalEntero.compareTo(0)!=0){
-    				totalAvance = new BigDecimal((sumaEntero/metaFinalEntero)*100).setScale(2, BigDecimal.ROUND_HALF_UP);
+	    			BigDecimal total = new BigDecimal(sumaEntero); 
+	    			total = (total.divide(new BigDecimal(metaFinalEntero), 3, BigDecimal.ROUND_HALF_UP));
+    				total = total.multiply(new BigDecimal(100));
+    				totalAvance = total.setScale(2, BigDecimal.ROUND_HALF_UP);
     			}else if(datoTipo.equals(3)&& metaFinalDecimal.compareTo(new BigDecimal(0))!=0){
-    				totalAvance = (sumaDecimal.divide(metaFinalDecimal)).multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP);
+    				BigDecimal total = (sumaDecimal.divide(metaFinalDecimal, 3, BigDecimal.ROUND_HALF_UP));
+    				total = total.multiply(new BigDecimal(100));
+    				totalAvance = total.setScale(2, BigDecimal.ROUND_HALF_UP);
     			}
 			}
 			catch(Throwable e){

@@ -56,12 +56,14 @@
 						<select class="inputText" ng-model="row.unidadMedidaId"
 							ng-options="unidad as unidad.nombre for unidad in metac.metaunidades track by unidad.id"
 							 ng-required="true">
+						<option disabled selected value>Seleccione Unidad</option>
 						</select>
 					</td>
 					<td>
 						<select class="inputText" ng-model="row.datoTipoId" ng-change="metac.getMetasAnio(row, metac.anio)"
 							ng-options="tipo as tipo.nombre for tipo in metac.datoTipos track by tipo.id"
 							 ng-required="true">
+						<option disabled value>Seleccione Tipo</option>
 						</select>
 					</td>
 					<td>

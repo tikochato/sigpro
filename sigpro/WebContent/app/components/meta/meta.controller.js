@@ -17,28 +17,6 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			mi.unidadMedidaSeleccionado=null;
 			mi.tipoValorSeleccionado=null;
 			
-			if($scope.$parent.controller){
-				mi.objeto_id = $scope.$parent.controller.proyecto.id;
-				mi.objeto_tipo = 1;
-				$scope.$parent.controller.child_scope = $scope.metac;
-			}else if($scope.$parent.componentec){
-				mi.objeto_id = $scope.$parent.componentec.componente.id;
-				mi.objeto_tipo = 2;
-				$scope.$parent.componentec.child_scope = $scope.metac;
-			}else if($scope.$parent.producto){
-				mi.objeto_id = $scope.$parent.producto.producto.id;
-				mi.objeto_tipo = 3;
-				$scope.$parent.producto.child_scope = $scope.metac;
-			}else if($scope.$parent.subproducto){
-				mi.objeto_id = $scope.$parent.subproducto.subproducto.id;
-				mi.objeto_tipo = 4;
-				$scope.$parent.subproducto.child_scope = $scope.metac;
-			}else if($scope.$parent.actividadc){
-				mi.objeto_id = $scope.$parent.actividadc.actividad.id;
-				mi.objeto_tipo = 5;
-				$scope.$parent.actividadc.child_scope = $scope.metac;
-			}
-						
 			mi.nombrePcp = "";
 			mi.nombreTipoPcp = "";
 			
@@ -47,16 +25,39 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			mi.planificado = null;
 			mi.real = null;
 			mi.planificadoActual = null;
-			
-			switch(mi.objeto_tipo){
+						
+			mi.inicializarControlador = function(){
+				if($scope.$parent.controller){
+					mi.objeto_id = $scope.$parent.controller.proyecto.id;
+					mi.objeto_tipo = 1;
+					$scope.$parent.controller.child_scope = $scope.metac;
+				}else if($scope.$parent.componentec){
+					mi.objeto_id = $scope.$parent.componentec.componente.id;
+					mi.objeto_tipo = 2;
+					$scope.$parent.componentec.child_scope = $scope.metac;
+				}else if($scope.$parent.producto){
+					mi.objeto_id = $scope.$parent.producto.producto.id;
+					mi.objeto_tipo = 3;
+					$scope.$parent.producto.child_scope = $scope.metac;
+				}else if($scope.$parent.subproducto){
+					mi.objeto_id = $scope.$parent.subproducto.subproducto.id;
+					mi.objeto_tipo = 4;
+					$scope.$parent.subproducto.child_scope = $scope.metac;
+				}else if($scope.$parent.actividadc){
+					mi.objeto_id = $scope.$parent.actividadc.actividad.id;
+					mi.objeto_tipo = 5;
+					$scope.$parent.actividadc.child_scope = $scope.metac;
+				}
+				
+				switch(mi.objeto_tipo){
 				case "1": mi.nombreTipoPcp = "Préstamo"; break;
 				case "2": mi.nombreTipoPcp = "Componente"; break;
 				case "3": mi.nombreTipoPcp = "Producto"; break;
 				case "4": mi.nombreTipoPcp = "Subproducto"; break;
 				
-			}
-			
-			$http.post('/SMeta', { accion: 'getPcp', id: mi.objeto_id, tipo: mi.objeto_tipo, t: (new Date()).getTime()}).success(
+				}
+				
+				$http.post('/SMeta', { accion: 'getPcp', id: mi.objeto_id, tipo: mi.objeto_tipo, t: (new Date()).getTime()}).success(
 					function(response) {
 						mi.nombrePcp = response.nombre;
 						mi.fechaInicio = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
@@ -69,18 +70,20 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 						if(mi.anios.length>0){
 							mi.anio=mi.anios[0];
 						}
-			});
-						
-			$http.post('/SMeta', { accion: 'getMetasUnidadesMedida', t: (new Date()).getTime() }).success(
-					function(response) {
-						mi.metaunidades = response.MetasUnidades;
-						$http.post('/SDatoTipo', { accion: 'cargarCombo', t: (new Date()).getTime() }).success(
-								function(response) {
-									mi.datoTipos = response.datoTipos;
-									mi.cargarTabla();
-						});
-			});
+				});
+				
+				$http.post('/SMeta', { accion: 'getMetasUnidadesMedida', t: (new Date()).getTime() }).success(
+						function(response) {
+							mi.metaunidades = response.MetasUnidades;
+							$http.post('/SDatoTipo', { accion: 'cargarCombo', t: (new Date()).getTime() }).success(
+									function(response) {
+										mi.datoTipos = response.datoTipos;
+										mi.cargarTabla();
+							});
+				});
+			}
 			
+			mi.inicializarControlador();
 			
 			mi.cargarTabla = function(){
 				$http.post('/SMeta', { accion: 'getMetasCompletas', 
@@ -484,6 +487,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				}).success(function(response){
 					if(response.success){
 						$utilidades.mensaje('success',mensaje);
+						mi.inicializarControlador();
 					}
 					else
 						$utilidades.mensaje('danger',mensaje_error);
@@ -503,7 +507,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			         "fechaActualizacion":"",
 			         "objetoId":mi.objeto_id,
 			         "objetoTipo":mi.objeto_tipo,
-			         "datoTipoId":mi.datoTipos[2],
+			         "datoTipoId":mi.datoTipos[1],
 			         "metaFinalString":null,
 			         "metaFinalEntero":null,
 			         "metaFinalDecimal":null,

@@ -52,7 +52,8 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
     }
 	
 	mi.iconoObjetoTipo = {
-		    1: "glyphicon glyphicon-record",
+			0: "glyphicon glyphicon-scale",
+			1: "glyphicon glyphicon-record",
 		    2: "glyphicon glyphicon-th",
 		    3: "glyphicon glyphicon-certificate",
 		    4: "glyphicon glyphicon-link",
@@ -60,6 +61,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		};
 		
 		mi.tooltipObjetoTipo = {
+			0: "Meta",
 		    1: "Proyecto",
 		    2: "Componente",
 		    3: "Producto",
