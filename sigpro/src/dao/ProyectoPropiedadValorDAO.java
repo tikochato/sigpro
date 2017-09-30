@@ -98,7 +98,7 @@ public class ProyectoPropiedadValorDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			Query<ProyectoPropiedadValor> criteria = session.createNativeQuery(" select * "
-					+ "from proyecto_propedad_valor ppv "
+					+ "from proyecto_propiedad_valor ppv "
 					+ "join proyecto p on p.id = ppv.proyectoid "
 					+ "where p.id = :idProy "
 					+ "and ppv.estado = 1 ",ProyectoPropiedadValor.class);
