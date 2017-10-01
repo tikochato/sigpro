@@ -284,7 +284,7 @@ public class MetaDAO {
 			ret =  metavalor.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("8", MetaTipoDAO.class, e);
+			CLogger.write("12", MetaTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -307,7 +307,27 @@ public class MetaDAO {
 			ret =  metavalor.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("8", MetaTipoDAO.class, e);
+			CLogger.write("13", MetaTipoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<Object[]> getMetaAvancesPorMes(Integer metaId){
+		List<Object[]> ret=null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select year(ma.id.fecha), month(ma.id.fecha), sum(ma.valorEntero), sum(ma.valorDecimal)",
+					"from MetaAvance ma",
+					"where ma.id.metaid = ?1 GROUP BY year(ma.id.fecha), month(ma.id.fecha) ORDER BY year(ma.id.fecha), month(ma.id.fecha)");
+			Query<Object[]> metavalor = session.createQuery(query,Object[].class);
+			metavalor.setParameter("1", metaId);
+			ret =  metavalor.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("14", MetaTipoDAO.class, e);
 		}
 		finally{
 			session.close();

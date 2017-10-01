@@ -87,4 +87,5 @@ public class PlanAdquisicionDAO {
 		
 		return ret;
 	}
+	
 }

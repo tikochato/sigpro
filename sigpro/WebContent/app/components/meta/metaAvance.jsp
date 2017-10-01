@@ -11,7 +11,7 @@
 <div class="modal-body" id="modal-body" style="height: 90vh;">
 <div class="row">
   	<div class="col-sm-12 page-header" style="font-weight: bold;">Avances de Meta</div>
-  	<div class="col-sm-12" style="font-weight: bold;">"{{modalAvances.nombreMeta}}"</div>
+  	<div class="col-sm-12" style="font-weight: bold;">{{modalAvances.nombreMeta}}</div>
   </div>
   <div>
   	<div class="operation_buttons" align="right">
@@ -31,7 +31,6 @@
 				<tr>
 					<th st-sort="fecha">Fecha</th>
 					<th st-sort="valor">Valor</th>
-					<th st-sort="usuario">Usuario Creación</th>
 					<th></th>
 				</tr>
 				</thead>
@@ -40,8 +39,8 @@
 					<td>
 						<div class="form-group">
 							<input type="text" class="inputText" uib-datepicker-popup="{{modalAvances.formatofecha}}" ng-model="row.fechaControl" is-open="row.isOpen"
-								datepicker-options="modalAvances.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="modalAvances.abrirPopupFecha($index,0)"
-								ng-change="modalAvances.guardarFecha(row)" ng-readonly="true"/>
+								datepicker-options="modalAvances.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+								ng-change="modalAvances.guardarFecha(row)"/>
 							<span class="label-icon" ng-click="modalAvances.abrirPopupFecha($index,0)">
 								<i class="glyphicon glyphicon-calendar"></i>
 							</span>
@@ -71,7 +70,6 @@
 							</div>
 						</div>
 					</td>
-					<td style="vertical-align: middle;">{{row.usuario}}</td>
 					<shiro:hasPermission name="17030">
 						<td>
 				       		<label class="btn btn-default btn-xs" ng-click="modalAvances.borrarAvance(row)" uib-tooltip="Borrar">

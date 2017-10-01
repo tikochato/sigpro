@@ -220,6 +220,9 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	mi.cambioProyecto=function(selected){
 		if(mi.proyecto == null || (selected!==undefined && mi.proyecto!=null && selected.originalObject.id!=mi.proyecto.id)){
 			mi.proyecto = selected.originalObject;
+			mi.treedata=[];
+			mi.nodos_expandidos=[];
+			mi.nodo_seleccionado=null;
 			$http.post('/SProyecto',
 					{ accion: 'controlArbol', id: mi.proyecto.id }).success(
 				function(response) {
@@ -227,6 +230,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 					if(mi.treedata.id==0){
 						mi.nodos_expandidos.push(mi.treedata.children[0]);
 						mi.setParentNode(mi.treedata);
+						$location.path('/prestamo/'+mi.proyecto.id); 
 					}
 				});
 		}

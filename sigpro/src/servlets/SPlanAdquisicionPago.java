@@ -23,13 +23,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.PagoDAO;
-import pojo.Pago;
+import dao.PlanAdquisicionDAO;
+import dao.PlanAdquisicionPagoDAO;
+import pojo.PlanAdquisicion;
+import pojo.PlanAdquisicionPago;
 import utilities.CLogger;
 import utilities.Utils;
 
-@WebServlet("/SPago")
-public class SPago extends HttpServlet {
+@WebServlet("/SPlanAdquisicionPago")
+public class SPlanAdquisicionPago extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	class stPago{
@@ -40,7 +42,7 @@ public class SPago extends HttpServlet {
 		String descripcion;
 	}
        
-    public SPago() {
+    public SPlanAdquisicionPago() {
         super();
     }
 
@@ -64,12 +66,11 @@ public class SPago extends HttpServlet {
 		String accion = map.get("accion")!=null ? map.get("accion") : "";
 		String response_text = "";
 		if(accion.equals("getPagos")){
-			Integer idObjeto = Utils.String2Int(map.get("idObjeto"));
-			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
-			List<Pago> Pagos = PagoDAO.getPagosByObjetoTipo(idObjeto, objetoTipo);
+			Integer planId = Utils.String2Int(map.get("planId"));
+			List<PlanAdquisicionPago> Pagos = PlanAdquisicionPagoDAO.getPagosByPlan(planId);
 			
 			List<stPago> resultado = new ArrayList<stPago>();
-			for(Pago pago :Pagos){
+			for(PlanAdquisicionPago pago :Pagos){
 				stPago temp = new stPago();
 				temp.id = pago.getId();
 				temp.fecha = "";
@@ -83,34 +84,36 @@ public class SPago extends HttpServlet {
 	        response_text = String.join("", "\"pagos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text, "}");
 		}else if(accion.equals("guardarPagos")){
-			Integer idObjeto = Utils.String2Int(map.get("idObjeto"));
-			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+			Integer planId = Utils.String2Int(map.get("planId"));
 			boolean result = false;
 			String dataPagos = map.get("pagos");
 			
 			Type listType = new TypeToken<List<Map<String, String>>>() {}.getType();
 			List<Map<String, String>> pagos = gson.fromJson(dataPagos, listType);
 			
-			Pago nuevoPago = null;
+			PlanAdquisicionPago nuevoPago = null;
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 			
 			try{
 				for(Map<String, String> pago : pagos){
 					if(Utils.String2Int(pago.get("id")) == 0){
-						nuevoPago = new Pago(idObjeto, objetoTipo, formatter.parse(pago.get("fechaReal")), new BigDecimal(pago.get("pago")), pago.get("descripcion") == null ? "" : pago.get("descripcion"), usuario, null, new Date(), null,1);
-						result = PagoDAO.guardarPago(nuevoPago);	
+						PlanAdquisicion pa=PlanAdquisicionDAO.getPlanAdquisicionById(planId);
+						nuevoPago = new PlanAdquisicionPago(pa, 
+								formatter.parse(pago.get("fechaReal")), new BigDecimal(pago.get("pago")), 
+								pago.get("descripcion") == null ? "" : pago.get("descripcion"), usuario, null, new Date(), null,1);
+						result = PlanAdquisicionPagoDAO.guardarPago(nuevoPago);	
 					}else
 						result = true;
 				}
 			}catch(Throwable e){
-				CLogger.write("1", SPago.class, e);
+				CLogger.write("1", SPlanAdquisicionPago.class, e);
 				result = false;
 			}
 			
-			List<Pago> Pagos = PagoDAO.getPagosByObjetoTipo(idObjeto,objetoTipo);
+			List<PlanAdquisicionPago> Pagos = PlanAdquisicionPagoDAO.getPagosByPlan(planId);
 			
 			List<stPago> resultado = new ArrayList<stPago>();
-			for(Pago pago :Pagos){
+			for(PlanAdquisicionPago pago :Pagos){
 				stPago temp = new stPago();
 				temp.id = pago.getId();
 				temp.fecha = Utils.formatDate(pago.getFechaPago());
@@ -125,18 +128,17 @@ public class SPago extends HttpServlet {
 		}else if (accion.equals("eliminarPago")){
 			Integer idPago = Utils.String2Int(map.get("idPago"));
 			
-			Pago pago = PagoDAO.getPagobyId(idPago);
-			boolean eliminado = PagoDAO.eliminarPago(pago);
+			PlanAdquisicionPago pago = PlanAdquisicionPagoDAO.getPagobyId(idPago);
+			boolean eliminado = PlanAdquisicionPagoDAO.eliminarPago(pago);
 			
 			if(eliminado)
 				response_text = String.join("", "{\"success\":true}");
 			else
 				response_text = String.join("", "{\"success\":false}");
 		}else if(accion.equals("eliminarPagos")){
-			Integer idObjeto = Utils.String2Int(map.get("idObjeto"));
-			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+			Integer planId = Utils.String2Int(map.get("idObjeto"));
 			
-			boolean eliminado = PagoDAO.eliminarPagos(idObjeto,objetoTipo);
+			boolean eliminado = PlanAdquisicionPagoDAO.eliminarPagos(planId);
 			
 			if(eliminado)
 				response_text = String.join("", "{\"success\":true}");
