@@ -534,26 +534,18 @@ public class CPdf {
 			String path="";
 			tipo_reporte=2;
 			try{
-				PDFont font = PDType1Font.HELVETICA_BOLD;
 				page = new PDPage(new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth()));
 			    doc.addPage( page );
 				PDPageContentStream contentStream = new PDPageContentStream(doc, page);
-				contentStream.beginText();
-				contentStream.setFont(font, 18);
-				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas Publicas");
-				contentStream.endText();
-				contentStream.beginText();
-				contentStream.setFont(font, 12);
-				contentStream.newLineAtOffset(50, 530);
-				contentStream.showText("Reporte: "+titulo);
-				contentStream.endText();
+
+				addHeader(doc, titulo);
+				
 				float margin = 50;
 				float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
 				float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
 				boolean drawContent = true;
 				float bottomMargin = 70;
-				BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
+				BaseTable table_x= new BaseTable(515, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 				Row<PDPage> headerRow = table_x.createRow(12);
 				float tam_celda=celda_b*1.5f;
 				

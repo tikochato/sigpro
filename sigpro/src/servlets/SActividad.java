@@ -472,6 +472,8 @@ public class SActividad extends HttpServlet {
 				
 				actividad.setUsuarioActualizo(usuario);
 				boolean result = false;
+				actividad.setUsuarioActualizo(usuario);
+				actividad.setFechaActualizacion(new Date());
 				boolean eliminado = ActividadDAO.eliminarActividad(actividad);
 				
 				if(eliminado){
