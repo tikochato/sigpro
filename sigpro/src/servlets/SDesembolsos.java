@@ -128,7 +128,7 @@ public class SDesembolsos extends HttpServlet {
 				
 				for (int i = anio_inicial ; i<=anio_final ; i++){
 					for (int j = 1; j<=12 ; j++){
-						Integer anio = dtmAvance.size() > 0 ?  (  ((BigDecimal) ((Object[]) dtmAvance.get(0))[0]).intValue()) : 0;
+						Integer anio = dtmAvance.size() > 0 ?  (  ((Long) ((Object[]) dtmAvance.get(0))[0]).intValue()) : 0;
 						Integer mes = dtmAvance.size() > 0 ?  Integer.parseInt((String) ((Object[]) dtmAvance.get(0))[1]) : 0;
 						if (anio.compareTo(i) == 0 && mes.compareTo(j)==0){
 							BigDecimal valor = (BigDecimal) ((Object[]) dtmAvance.get(0))[2];

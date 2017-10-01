@@ -345,25 +345,24 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			$http.post('/SProducto', datos).then(
 					function(response) {
 						if (response.data.success) {
-							mi.data = response.data.productos;
-							mi.opcionesGrid.data = mi.data;
+							mi.producto.id = response.data.id;
+							mi.producto.usuarioCreo = response.data.usuarioCreo;
+							mi.producto.fechaCreacion = response.data.fechaCreacion;
+							mi.producto.usuarioactualizo = response.data.usuarioactualizo;
+							mi.producto.fechaactualizacion = response.data.fechaactualizacion;
 							if(mi.child_scope!=null)
 								mi.child_scope.guardar('Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
 							else
 								$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 							if(!mi.esTreeview)
 								mi.obtenerTotalProductos();
-							else
+							else{
 								if(!mi.esNuevo)
 									mi.t_cambiarNombreNodo();
 								else
 									mi.t_crearNodo(mi.producto.id,mi.producto.nombre,3,true);
+							}
 							mi.esNuevo = false;
-							mi.producto.id = response.data.id;
-							mi.producto.usuarioCreo = response.data.usuarioCreo;
-							mi.producto.fechaCreacion = response.data.fechaCreacion;
-							mi.producto.usuarioactualizo = response.data.usuarioactualizo;
-							mi.producto.fechaactualizacion = response.data.fechaactualizacion;
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el Producto');
 						}

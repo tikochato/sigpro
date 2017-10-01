@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 28, 2017 10:43:48 AM by Hibernate Tools 5.2.3.Final
+// Generated Sep 29, 2017 9:09:55 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class ProyectoPropiedad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2782668688165357180L;
+	private static final long serialVersionUID = -6663025354719959851L;
 	private Integer id;
 	private DatoTipo datoTipo;
 	private String nombre;
@@ -38,7 +38,7 @@ public class ProyectoPropiedad implements java.io.Serializable {
 	private Date fechaActualizacion;
 	private int estado;
 	private Set<PtipoPropiedad> ptipoPropiedads = new HashSet<PtipoPropiedad>(0);
-	private Set<ProyectoPropedadValor> proyectoPropedadValors = new HashSet<ProyectoPropedadValor>(0);
+	private Set<ProyectoPropiedadValor> proyectoPropiedadValors = new HashSet<ProyectoPropiedadValor>(0);
 
 	public ProyectoPropiedad() {
 	}
@@ -53,7 +53,7 @@ public class ProyectoPropiedad implements java.io.Serializable {
 
 	public ProyectoPropiedad(DatoTipo datoTipo, String nombre, String descripcion, String usuarioCreo,
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Set<PtipoPropiedad> ptipoPropiedads, Set<ProyectoPropedadValor> proyectoPropedadValors) {
+			Set<PtipoPropiedad> ptipoPropiedads, Set<ProyectoPropiedadValor> proyectoPropiedadValors) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -63,7 +63,7 @@ public class ProyectoPropiedad implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
 		this.ptipoPropiedads = ptipoPropiedads;
-		this.proyectoPropedadValors = proyectoPropedadValors;
+		this.proyectoPropiedadValors = proyectoPropiedadValors;
 	}
 
 	@Id
@@ -163,12 +163,12 @@ public class ProyectoPropiedad implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyectoPropiedad")
-	public Set<ProyectoPropedadValor> getProyectoPropedadValors() {
-		return this.proyectoPropedadValors;
+	public Set<ProyectoPropiedadValor> getProyectoPropiedadValors() {
+		return this.proyectoPropiedadValors;
 	}
 
-	public void setProyectoPropedadValors(Set<ProyectoPropedadValor> proyectoPropedadValors) {
-		this.proyectoPropedadValors = proyectoPropedadValors;
+	public void setProyectoPropiedadValors(Set<ProyectoPropiedadValor> proyectoPropiedadValors) {
+		this.proyectoPropiedadValors = proyectoPropiedadValors;
 	}
 
 }

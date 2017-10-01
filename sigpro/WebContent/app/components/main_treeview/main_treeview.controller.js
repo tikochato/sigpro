@@ -113,10 +113,10 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	
 	mi = this;
 	mi.treedata=[];
-	mi.expanded=[];
 	mi.proyectos=[];
 	mi.proyecto=null;
 	mi.nodo_seleccionado;
+	mi.nodos_expandidos=[];
 	
 	mi.tree_options={
 			allowDeselect: false
@@ -152,9 +152,9 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	$scope.device = deviceDetector;
 	
 	$rootScope.$on( "$routeChangeStart", function(event, next, current) {
-		if(mi.proyecto===undefined || mi.proyecto==null){
-		  //event.preventDefault();  
-		  $location.path('/main');
+		if((mi.proyecto===undefined || mi.proyecto==null)){
+			if(next.$$route.originalPath!="/prestamo/:id")
+				$location.path('/main');				
 		}
 	});
 	
@@ -190,6 +190,24 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	
 	$http.post('/SProyecto', { accion: 'getProyectos'}).success(function(response) {
 		mi.proyectos = response.entidades;
+		if($location.$$path.substring(0,9)=='/prestamo' && $routeParams.id!==undefined && $routeParams.id>0){
+			for(var i = 0; i< mi.proyectos.length; i++){
+				if(mi.proyectos[i].id==$routeParams.id){
+					mi.proyecto = mi.proyectos[i];
+					$http.post('/SProyecto',
+							{ accion: 'controlArbol', id: mi.proyecto.id }).success(
+						function(response) {
+							mi.treedata=response.proyecto;
+							if(mi.treedata.id==0){
+								mi.nodos_expandidos.push(mi.treedata.children[0]);
+								mi.setParentNode(mi.treedata);
+								mi.nodo_seleccionado = mi.treedata.children[0];
+							}
+						});
+					break;
+				}
+			}
+		}
 	});
 	
 	mi.setParentNode=function(nodo){
@@ -200,14 +218,14 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	}
 	
 	mi.cambioProyecto=function(selected){
-		if(selected!==undefined){
+		if(mi.proyecto == null || (selected!==undefined && mi.proyecto!=null && selected.originalObject.id!=mi.proyecto.id)){
 			mi.proyecto = selected.originalObject;
 			$http.post('/SProyecto',
 					{ accion: 'controlArbol', id: mi.proyecto.id }).success(
 				function(response) {
 					mi.treedata=response.proyecto;
 					if(mi.treedata.id==0){
-						mi.expanded.push(mi.treedata.children[0]);
+						mi.nodos_expandidos.push(mi.treedata.children[0]);
 						mi.setParentNode(mi.treedata);
 					}
 				});
@@ -263,6 +281,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	mi.crearNodo=function(id,nombre,objeto_tipo,estado){
 		if(mi.nodo_seleccionado){
 			mi.nodo_seleccionado.children.push({id: id, nombre: nombre, objeto_tipo: objeto_tipo, estado: estado, nivel: mi.nodo_seleccionado.nivel+1, parent: mi.nodo_seleccionado });
+			mi.nodos_expandidos.push(mi.nodo_seleccionado);
 			mi.nodo_seleccionado=mi.nodo_seleccionado.children[mi.nodo_seleccionado.children.length-1];
 		}
 	}

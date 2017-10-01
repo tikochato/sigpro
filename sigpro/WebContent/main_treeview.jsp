@@ -4,6 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 <%@ include file="/app/shared/includes.jsp"%>
 <script src="/app/components/main_treeview/main_treeview.controller.js"></script>
 <title></title>
@@ -47,7 +48,7 @@
 			<div class="cols_treeview horizontal-collapse" uib-collapse="mainController.hideTree" horizontal style="margin: 10px 5px 0px 15px; float: left; width: 250px;">
 					<div style="border: thin solid #c3c3c3; border-radius: 4px; overflow: auto; height: 100%;">
 						<div treecontrol="" class="tree-light" tree-model="mainController.treedata" options="mainController.tree_options"  selected-node="mainController.nodo_seleccionado"
-								expanded-nodes="mainController.expanded" on-selection="mainController.showSelected(node)" style="width: 1000px; margin: 10px 0px 0px -5px;">
+								expanded-nodes="mainController.nodos_expandidos" on-selection="mainController.showSelected(node)" style="width: 1000px; margin: 10px 0px 0px -5px;">
 		     				  	  <span ng-switch="" on="node.objeto_tipo">
 							             <span ng-switch-when="1" class="glyphicon glyphicon-record" aria-hidden="true" style="color: #4169E1;"></span>
 							             <span ng-switch-when="2" class="glyphicon glyphicon-th" aria-hidden="true" style="color: #4169E1;"></span>

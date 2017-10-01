@@ -178,7 +178,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				mi.prestamo.desembolsoAFechaUsdP = Number(n.toFixed(2));
 				mi.prestamo.montoPorDesembolsarUsd= ((1 - (mi.prestamo.desembolsoAFechaUsdP/100) ) *  mi.prestamo.montoContratado);
 				mi.prestamo.montoPorDesembolsarUsd= Number(mi.prestamo.montoPorDesembolsarUsd.toFixed(2));
-				mi.prestamo.montoPorDesembolsarUsdP= 100- mi.prestamo.desembolsoAFechaUsdP;
+				mi.prestamo.montoPorDesembolsarUsdP= 100 - mi.prestamo.desembolsoAFechaUsdP;
 				
 			}
 		}else if (tipo==2){
@@ -212,7 +212,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				
 				var dif1 = ffechaFinal - ffechaInicio;
 				var dif2 = ffechaActual - ffechaInicio;
-				n = (dif2 / dif1) * 100;
+				n = (dif1>0) ? (dif2 / dif1) * 100.00 : 0.00;
 				if (isNaN(n))
 					n = 0.00;
 				mi.prestamo.plazoEjecucionUe = Number(n.toFixed(2));
@@ -357,8 +357,11 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 								$http.post('/SPrestamo',param_data).then(
 										function(response) {
 											if (response.data.success) {
-												if(mi.esTreeview)
+												if(mi.esTreeview){
 													mi.t_cambiarNombreNodo();
+												}
+												else
+													mi.obtenerTotalProyectos();
 												if(mi.child_desembolso!=null || mi.child_riesgo!=null){
 													if(mi.child_desembolso)
 														ret = mi.child_desembolso.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
@@ -376,7 +379,6 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 								});
 						} 
 						
-						mi.obtenerTotalProyectos();
 						mi.esNuevo = false;
 						
 						
@@ -660,22 +662,9 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 		});
 	};
 
-	mi.irADesembolsos=function(proyectoid){
-		if(mi.proyecto!=null){
-			$location.path('/desembolso/'+proyectoid);
-		}
-
-	};
-
 	mi.irAComponentes=function(proyectoid){
 		if(mi.proyecto!=null){
 			$location.path('/componente/'+ proyectoid );
-		}
-	};
-
-	mi.irARiesgos=function(proyectoid){
-		if(mi.proyecto!=null){
-			$location.path('/riesgo/' + proyectoid + '/1' );
 		}
 	};
 
@@ -693,29 +682,44 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 
 	mi.irAGantt=function(proyectoid){
 		if(mi.proyecto!=null){
-			$location.path('/gantt/'+ proyectoid + '/1' );
+			if(mi.esTreeview)
+				$window.location='/main.jsp#!/gantt/'+ proyectoid + '/1';
+			else
+				$location.path('/gantt/'+ proyectoid + '/1' );
 		}
 	};
 	mi.irAMapa=function(proyectoid){
 		if(mi.proyecto!=null){
-			$location.path('/mapa/'+ proyectoid );
+			if(mi.esTreeview)
+				$window.location='/main.jsp#!/mapa/'+ proyectoid ;
+			else
+				$location.path('/mapa/'+proyectoid);
 		}
 	};
 	mi.irAKanban=function(proyectoid){
 		if(mi.proyecto!=null){
-			$location.path('/porcentajeactividades/'+ proyectoid );
+			if(mi.esTreeview)
+				$window.location='/main.jsp#!/porcentajeactividades/'+ proyectoid;
+			else
+				$location.path('/porcentajeactividades/'+ proyectoid );
 		}
 	};
 
 	mi.irAAgenda=function(proyectoid){
 		if(mi.proyecto!=null){
-			$location.path('/agenda/'+ proyectoid );
+			if(mi.esTreeview)
+				$window.location='/main.jsp#!/agenda/'+ proyectoid;
+			else
+				$location.path('/agenda/'+ proyectoid);
 		}
 	};
 	
 	mi.irAMatrizRiesgos=function(proyectoid){
 		if(mi.proyecto!=null){
-			$location.path('/matrizriesgo/'+ proyectoid );
+			if(mi.esTreeview)
+				$window.location='/main.jsp#!/matrizriesgo/'+ proyectoid;
+			else
+				$location.path('/matrizriesgo/'+ proyectoid );
 		}
 	};
 

@@ -252,15 +252,15 @@ public class SRiesgo extends HttpServlet {
 					JsonObject objeto = riesgos.get(i).getAsJsonObject();
 					Integer id = objeto.get("id").isJsonNull() ? null : objeto.get("id").getAsInt();
 					String nombre = objeto.get("nombre").isJsonNull() ? null : objeto.get("nombre").getAsString();
-					String descripcion = objeto.get("descripcion").isJsonNull() ? null : objeto.get("descripcion").getAsString();
+					String descripcion = objeto.get("descripcion")!=null ? objeto.get("descripcion")!=null && objeto.get("descripcion").isJsonNull() ? null : objeto.get("descripcion").getAsString() : null;
 					int riesgotipoid = objeto.get("riesgotipoid").isJsonNull() ? 0 : objeto.get("riesgotipoid").getAsInt();
 				    String impactoProyectado = objeto.get("impactoProyectado").isJsonNull() ? null : objeto.get("impactoProyectado").getAsString();
 				    Integer impacto = objeto.get("impacto").isJsonNull() ? null : objeto.get("impacto").getAsInt(); 
 				    Integer puntuacionImpacto = objeto.get("puntuacionImpacto").isJsonNull() ? null : objeto.get("puntuacionImpacto").getAsInt();
 				    Integer probabilidad = objeto.get("probabilidad").isJsonNull() ? null : objeto.get("probabilidad").getAsInt();
-				    String gatillosOSintomas = objeto.get("gatillosSintomas").isJsonNull() ? null : objeto.get("gatillosSintomas").getAsString();
-				    String respuesta = objeto.get("respuesta").isJsonNull() ? null : objeto.get("respuesta").getAsString();
-				    String riesgosSecundarios = objeto.get("riesgosSecundarios").isJsonNull() ? null : objeto.get("riesgosSecundarios").getAsString();
+				    String gatillosOSintomas = objeto.get("gatillosSintomas")!=null ? objeto.get("gatillosSintomas").isJsonNull() ? null : objeto.get("gatillosSintomas").getAsString() : null;
+				    String respuesta = objeto.get("respuesta")!=null ? objeto.get("respuesta").isJsonNull() ? null : objeto.get("respuesta").getAsString() : null;
+				    String riesgosSecundarios = objeto.get("riesgosSecundarios")!=null ? objeto.get("riesgosSecundarios").isJsonNull() ? null : objeto.get("riesgosSecundarios").getAsString() : null;
 				    Integer ejecutado = objeto.get("ejecutado").isJsonNull() ? null : objeto.get("ejecutado").getAsInt();
 				    Date fechaEjecucion =  objeto.get("fechaEjecucion").isJsonNull() ? null : Utils.stringToDateZ(objeto.get("fechaEjecucion").getAsString());
 				    

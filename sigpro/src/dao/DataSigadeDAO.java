@@ -56,11 +56,11 @@ public class DataSigadeDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
-			String query =String.join(" ", "select * from dtm_avance_fisfinan_dti fis",		
-					"where fis.CODIGO_PRESUPUESTARIO = ?1");
-			Query<DtmAvanceFisfinanDti> criteria = session.createNativeQuery(query,DtmAvanceFisfinanDti.class);
+			String query =String.join(" ", "select d from DtmAvanceFisfinanDti d",		
+					"where d.id.codigoPresupuestario = :codigo_presupuestario");
+			Query<DtmAvanceFisfinanDti> criteria = session.createQuery(query,DtmAvanceFisfinanDti.class);
 			
-			criteria.setParameter("1", codigoPresupuestario);
+			criteria.setParameter("codigo_presupuestario", codigoPresupuestario);
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
@@ -77,12 +77,12 @@ public class DataSigadeDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
-			String query =String.join(" ", "select ejercicio_fiscal,mes_desembolso,sum(desembolsos_mes_gtq) ",
-					"from dtm_avance_fisfinan_det_dti",
-					"where codigo_presupuestario = ?2",
-					"group by ejercicio_fiscal,mes_desembolso",
-					"order by ejercicio_fiscal,mes_desembolso asc");
-			Query<?> criteria = session.createNativeQuery(query);
+			String query =String.join(" ", "select d.id.ejercicioFiscal,d.id.mesDesembolso,sum(d.id.desembolsosMesGtq) ",
+					"from DtmAvanceFisfinanDetDti d",
+					"where d.id.codigoPresupuestario = ?2",
+					"group by d.id.ejercicioFiscal, d.id.mesDesembolso",
+					"order by d.id.ejercicioFiscal, d.id.mesDesembolso asc");
+			Query<?> criteria = session.createQuery(query);
 			criteria.setParameter("2", codigoPresupeustario);
 			ret = criteria.getResultList();
 		}
@@ -100,16 +100,16 @@ public class DataSigadeDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
-			String query =String.join(" ", "select ejercicio_fiscal,mes_desembolso,sum(desembolsos_mes_gtq) ",
-					"from dtm_avance_fisfinan_det_dti",
-					"where codigo_presupuestario = ?1",
-					"and ejercicio_fiscal between ?2 and ?3",
-					"group by ejercicio_fiscal,mes_desembolso",
-					"order by ejercicio_fiscal,mes_desembolso asc");
-			Query<?> criteria = session.createNativeQuery(query);
+			String query =String.join(" ", "select d.id.ejercicioFiscal,d.id.mesDesembolso,sum(d.id.desembolsosMesGtq) ",
+					"from DtmAvanceFisfinanDetDti d",
+					"where d.id.codigoPresupuestario = ?1",
+					"and d.id.ejercicioFiscal between ?2 and ?3",
+					"group by d.id.ejercicioFiscal,d.id.mesDesembolso",
+					"order by d.id.ejercicioFiscal,d.id.mesDesembolso asc");
+			Query<?> criteria = session.createQuery(query);
 			criteria.setParameter(1, codigoPresupeustario);
-			criteria.setParameter(2, anio_inicio);
-			criteria.setParameter(3, anio_fin);
+			criteria.setParameter(2, new Long(anio_inicio));
+			criteria.setParameter(3, new Long(anio_fin));
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
@@ -146,12 +146,12 @@ public class DataSigadeDAO {
 		
 		try{
 			String query =String.join(" ", 
-									"select  sum(distinct desembolsos_mes_gtq)",
-									"from dtm_avance_fisfinan_det_dti",
-									"where codigo_presupuestario = ?1",
-									"and (ejercicio_fiscal < ?2 ",
-									"or (ejercicio_fiscal = ?2 and (cast(mes_desembolso as integer)) < ?3))");
-			Query<?> criteria = session.createNativeQuery(query);
+									"select  sum(distinct d.id.desembolsosMesGtq)",
+									"from DtmAvanceFisfinanDetDti d",
+									"where d.id.codigoPresupuestario = ?1",
+									"and (d.id.ejercicioFiscal < ?2 ",
+									"or (d.id.ejercicioFiscal = ?2 and (cast(d.id.mesDesembolso as integer)) < ?3))");
+			Query<?> criteria = session.createQuery(query);
 			criteria.setParameter(1, codigo_presupuestario);
 			criteria.setParameter(2, anio);
 			criteria.setParameter(3, mes);
