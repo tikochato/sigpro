@@ -170,12 +170,20 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	
 	mi.cambioCooperante=function(selected){
 		if(selected!== undefined){
-			mi.cooperantenombre=selected.originalObject.id;
-			mi.cooperanteid=selected.originalObject.nombre;
+			mi.cooperantenombre=selected.originalObject.nombre;
+			mi.cooperanteid=selected.originalObject.id;
+			mi.prestamo.cooperanteid = mi.cooperanteid;
 		}
 		else{
 			mi.cooperantenombre="";
 			mi.cooperanteid="";
+			mi.prestamo.cooperanteid = null;
+		}
+	}
+	
+	mi.blurCooperante=function(){
+		if(document.getElementById("cooperante_value").defaultValue!=mi.cooperantenombre){
+			$scope.$broadcast('angucomplete-alt:clearInput');
 		}
 	}
 	
