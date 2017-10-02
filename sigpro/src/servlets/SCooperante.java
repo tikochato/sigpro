@@ -133,7 +133,7 @@ public class SCooperante extends HttpServlet {
 				if(esnuevo){
 					
 					
-					cooperante = new Cooperante(codigo, siglas, nombre, descripcion, 
+					cooperante = new Cooperante(0,codigo, siglas, nombre, descripcion, 
 							usuario, null, new DateTime().toDate(), null, 1,ejercicio, null, null,null);
 				}
 				else{

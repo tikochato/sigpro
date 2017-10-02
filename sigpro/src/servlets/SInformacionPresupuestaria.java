@@ -38,13 +38,13 @@ import dao.ActividadDAO;
 import dao.ComponenteDAO;
 import dao.EstructuraProyectoDAO;
 import dao.InformacionPresupuestariaDAO;
-import dao.PagoDAO;
+import dao.PlanAdquisicionPagoDAO;
 import dao.PrestamoDAO;
 import dao.ProductoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.Componente;
-import pojo.Pago;
+import pojo.PlanAdquisicionPago;
 import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Subproducto;
@@ -298,11 +298,11 @@ public class SInformacionPresupuestaria extends HttpServlet {
 	}
 	
 	private stprestamo getPresupuestoPlanificado(stprestamo prestamo, String usuario){
-		List<Pago> pagos = PagoDAO.getPagosByObjetoTipo(prestamo.objeto_id, prestamo.objeto_tipo);
+		List<PlanAdquisicionPago> pagos = PlanAdquisicionPagoDAO.getPagosByObjetoTipo(prestamo.objeto_id, prestamo.objeto_tipo);
 		Calendar fechaInicial = Calendar.getInstance();
 		for(stanio anioObj: prestamo.anios){			
 			if(pagos!= null && pagos.size() > 0){
-				for(Pago pago : pagos){
+				for(PlanAdquisicionPago pago : pagos){
 					fechaInicial.setTime(pago.getFechaPago());
 					int mes = fechaInicial.get(Calendar.MONTH);
 					int anio = fechaInicial.get(Calendar.YEAR);					

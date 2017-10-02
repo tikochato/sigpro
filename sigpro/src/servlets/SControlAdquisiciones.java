@@ -34,7 +34,7 @@ import dao.ActividadDAO;
 import dao.CategoriaAdquisicionDAO;
 import dao.ComponenteDAO;
 import dao.EstructuraProyectoDAO;
-import dao.PlanAdquisicionDetalleDAO;
+import dao.PlanAdquisicionDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
@@ -42,7 +42,6 @@ import pojo.Actividad;
 import pojo.CategoriaAdquisicion;
 import pojo.Componente;
 import pojo.PlanAdquisicion;
-import pojo.PlanAdquisicionDetalle;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
@@ -71,7 +70,7 @@ public class SControlAdquisiciones extends HttpServlet {
 		Integer cantidad;
 		BigDecimal costo;
 		BigDecimal total;
-		Long nog;
+		Integer nog;
 		String planificadoDocs;
 		String realDocs;
 		String planificadoLanzamiento;
@@ -214,12 +213,12 @@ public class SControlAdquisiciones extends HttpServlet {
 						Date planificadoFirma =  Utils.dateFromString(row[17]);
 						Date realFirma = Utils.dateFromString(row[18]);
 						Integer bloqueado = Utils.String2Boolean(row[19],0);
-						Long nog = Utils.String2Long(row[20]);
+						Integer nog = Utils.String2Int(row[20]);
 						String numeroContrato = row[21];
 						BigDecimal montoContrato = BigDecimal.ZERO;
 						if (!row[22].equals("null"))
 							montoContrato = new BigDecimal(row[22]);
-						PlanAdquisicionDetalle plan = PlanAdquisicionDetalleDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
+						PlanAdquisicion plan = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
 						if(plan != null){
 							plan.setTipoAdquisicion(tipoAdquisicion);
 							plan.setCategoriaAdquisicion(categoriaAdquisicion);
@@ -243,17 +242,17 @@ public class SControlAdquisiciones extends HttpServlet {
 							plan.setFechaCreacion(new DateTime().toDate());
 							plan.setEstado(1);
 							plan.setBloqueado(bloqueado);
-							plan.setNog(nog);
+							plan.setNog(nog.intValue());
 							plan.setNumeroContrato(numeroContrato);
 							plan.setMontoContrato(montoContrato);
 						}else{
-							plan = new PlanAdquisicionDetalle(categoriaAdquisicion,PlanAdquisicion, tipoAdquisicion,unidadMedida,cantidad, total,  costo, 
+							plan = new PlanAdquisicion(categoriaAdquisicion, tipoAdquisicion,unidadMedida,cantidad, total,  costo, 
 									planificadoDocs, realDocs, planificadoLanzamiento, realLanzamiento, planificadoRecepcionEval, realRecepcionEval, 
-									planificadoAdjudica, realAdjudica, planificadoFirma, realFirma, objetoId, objetoTipo, usuario, null,new DateTime().toDate(), null,1,
-									bloqueado,  numeroContrato, montoContrato,nog);
+									planificadoAdjudica, realAdjudica, planificadoFirma, realFirma, objetoId, objetoTipo, usuario, null, new DateTime().toDate(), null,1,
+									bloqueado,  numeroContrato, montoContrato,nog, null);
 						}
 						
-						result = PlanAdquisicionDetalleDAO.guardarPlanAdquisicion(plan);
+						result = PlanAdquisicionDAO.guardarPlanAdquisicion(plan) > 0;
 						
 						if(!result)
 							break;
@@ -270,10 +269,10 @@ public class SControlAdquisiciones extends HttpServlet {
 				String numeroContrato = map.get("numeroContrato");
 				BigDecimal montoContrato = Utils.String2BigDecimal(map.get("montoContrato"), null);
 				
-				PlanAdquisicionDetalle planAdquisicionDetalle = PlanAdquisicionDetalleDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
-				planAdquisicionDetalle.setMontoContrato(montoContrato);
-				planAdquisicionDetalle.setNumeroContrato(numeroContrato);
-				PlanAdquisicionDetalleDAO.guardarPlanAdquisicion(planAdquisicionDetalle);
+				PlanAdquisicion planAdquisicion = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
+				planAdquisicion.setMontoContrato(montoContrato);
+				planAdquisicion.setNumeroContrato(numeroContrato);
+				PlanAdquisicionDAO.guardarPlanAdquisicion(planAdquisicion);
 				
 			}else if(accion.equals("exportarExcel")){
 				Integer idPlanAdquisicion = Utils.String2Int(map.get("idPlanAdquisicion"), null);

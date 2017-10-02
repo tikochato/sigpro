@@ -174,4 +174,7 @@
 	<table-filter match-name="usuario" match-catalog="sipro"></table-filter>
 	<table-filter match-name="usuario_log" match-catalog="sipro"></table-filter>
 	<table-filter match-name="usuario_permiso" match-catalog="sipro"></table-filter>
+	<table-filter match-name="plan_adquisicion_pago"
+		match-catalog="sipro">
+	</table-filter>
 </hibernate-reverse-engineering>

@@ -134,6 +134,12 @@ public class SMeta extends HttpServlet {
 		String usuario;
 	}
 	
+	public class streal{
+		Integer ejercicio;
+		Long[] realEntero;
+		BigDecimal[] realDecimal;
+	}
+	
 	public class stavance{
 		String fecha;
 		Integer valorEntero;
@@ -187,49 +193,7 @@ public class SMeta extends HttpServlet {
 		Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String accion = map.get("accion");
 		String response_text="";
-		if(accion.equals("getMetasPagina")){
-			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numeroMetas = map.get("numerometas")!=null  ? Integer.parseInt(map.get("numerometas")) : 0;
-			Integer id =  map.get("id")!=null  ? Integer.parseInt(map.get("id")) : 0;
-			Integer tipo =  map.get("tipo")!=null  ? Integer.parseInt(map.get("tipo")) : 0;
-			String filtro_nombre = map.get("filtro_nombre");
-			String filtro_usuario_creo = map.get("filtro_usuario_creo");
-			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			String columna_ordenada = map.get("columna_ordenada");
-			String orden_direccion = map.get("orden_direccion");
-			List<Meta> Metas = MetaDAO.getMetasPagina(pagina, numeroMetas, id, tipo,filtro_nombre, -1, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
-			List<stmeta> tmetas = new ArrayList<stmeta>();
-			for(Meta meta : Metas){
-				if(meta!=null){
-					stmeta temp = new stmeta();
-					temp.id = meta.getId();
-					temp.nombre = meta.getNombre();
-					temp.descripcion = meta.getDescripcion();
-					temp.objetoId = meta.getObjetoId();
-					temp.objetoTipo = meta.getObjetoTipo();
-					temp.estado = meta.getEstado();
-					temp.fechaActualizacion = meta.getFechaActualizacion()!=null?Utils.formatDateHour(meta.getFechaActualizacion()):"";
-					temp.fechaCreacion = meta.getFechaCreacion()!=null?Utils.formatDateHour(meta.getFechaCreacion()):"";
-					if(meta.getMetaUnidadMedida()!=null){
-						temp.unidadMedidaId = meta.getMetaUnidadMedida().getId();
-					}
-					if(meta.getDatoTipo()!=null){
-						temp.datoTipoId = meta.getDatoTipo().getId();
-					}
-					temp.usuarioActualizo = meta.getUsuarioActualizo();
-					temp.usuarioCreo = meta.getUsuarioCreo();
-					temp.metaFinalString = meta.getMetaFinalString();
-					temp.metaFinalEntero = meta.getMetaFinalEntero();
-					temp.metaFinalDecimal = meta.getMetaFinalDecimal();
-					temp.metaFinalTiempo = meta.getMetaFinalFecha() != null ? Utils.formatDate(meta.getMetaFinalFecha()) : null;
-					tmetas.add(temp);
-				}
-			}
-			response_text=new GsonBuilder().serializeNulls().create().toJson(tmetas);
-	        response_text = String.join("", "\"Metas\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text,"}");
-		}
-		else if(accion.equals("getMetasCompletas")){
+		 if(accion.equals("getMetasCompletas")){
 			Integer id =  map.get("id")!=null  ? Integer.parseInt(map.get("id")) : 0;
 			Integer tipo =  map.get("tipo")!=null  ? Integer.parseInt(map.get("tipo")) : 0;
 			List<Meta> Metas = MetaDAO.getMetasObjeto(id, tipo);
@@ -337,6 +301,26 @@ public class SMeta extends HttpServlet {
 						temp.planificado[i].usuario = mp.getUsuario();
 						i++;
 					}
+		    	    /*ArrayList<streal> real_ejercicios=new ArrayList<streal>();
+		    	    if(meta.getDatoTipo().getId()==2 || meta.getDatoTipo().getId()==3){
+						List<Object[]> avance_mensualizado=MetaDAO.getMetaAvancesPorMes(meta.getId());
+						int ejercicio = 0;
+						streal real_ejercicio=null;
+						for(int j=0; j<avance_mensualizado.size(); j++){
+							if(ejercicio!=(Integer)avance_mensualizado.get(j)[0]){
+								if(real_ejercicio!=null)
+									real_ejercicios.add(real_ejercicio);
+								real_ejercicio = new streal();
+								real_ejercicio.ejercicio = (Integer)avance_mensualizado.get(j)[0];
+								real_ejercicio.realEntero = new Long[12];
+								real_ejercicio.realDecimal = new BigDecimal[12];
+							}
+							real_ejercicio.realEntero[(Integer)avance_mensualizado.get(j)[1]-1] = (Long)avance_mensualizado.get(j)[2];
+							real_ejercicio.realDecimal[(Integer)avance_mensualizado.get(j)[1]-1] = (BigDecimal)avance_mensualizado.get(j)[3];
+						}
+						real_ejercicios.add(real_ejercicio);
+					}
+		    	    temp.real = (real_ejercicios!=null) ?(streal[]) real_ejercicios.toArray(new streal[0]) :  null;*/
 					tmetas.add(temp);
 				}
 			}
@@ -589,7 +573,6 @@ public class SMeta extends HttpServlet {
 						MetaDAO.agregarMetaAvance(metaAvance);
 					}
 				}
-				
 			}
 			
 			response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");

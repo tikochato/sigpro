@@ -1,8 +1,10 @@
 package pojo;
-// Generated Sep 29, 2017 9:09:55 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 1, 2017 5:10:27 PM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -16,28 +18,28 @@ public class Estado implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6149209882806645009L;
-	private int id;
+	private static final long serialVersionUID = -9083118759864687469L;
+	private Integer id;
 	private String nombre;
 	private int valor;
 
 	public Estado() {
 	}
 
-	public Estado(int id, String nombre, int valor) {
-		this.id = id;
+	public Estado(String nombre, int valor) {
 		this.nombre = nombre;
 		this.valor = valor;
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 
 	@Column(name = "id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

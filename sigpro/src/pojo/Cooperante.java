@@ -1,5 +1,5 @@
 package pojo;
-// Generated Sep 29, 2017 9:09:55 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 1, 2017 5:10:27 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -7,8 +7,6 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -25,8 +23,8 @@ public class Cooperante implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5006182936966102380L;
-	private Integer id;
+	private static final long serialVersionUID = -3325065852209627260L;
+	private int id;
 	private int codigo;
 	private String siglas;
 	private String nombre;
@@ -44,7 +42,8 @@ public class Cooperante implements java.io.Serializable {
 	public Cooperante() {
 	}
 
-	public Cooperante(int codigo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+	public Cooperante(int id, int codigo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+		this.id = id;
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
@@ -52,9 +51,10 @@ public class Cooperante implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public Cooperante(int codigo, String siglas, String nombre, String descripcion, String usuarioCreo,
+	public Cooperante(int id, int codigo, String siglas, String nombre, String descripcion, String usuarioCreo,
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Integer ejercicio,
 			Set<Proyecto> proyectos, Set<TipoAdquisicion> tipoAdquisicions, Set<Prestamo> prestamos) {
+		this.id = id;
 		this.codigo = codigo;
 		this.siglas = siglas;
 		this.nombre = nombre;
@@ -71,14 +71,13 @@ public class Cooperante implements java.io.Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
 
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
