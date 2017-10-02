@@ -535,7 +535,6 @@ public class InformacionPresupuestariaDAO {
 					}
 					
 					PreparedStatement pstm  = conn.prepareStatement(str_Query);
-					pstm.setFetchSize(1000);
 					
 					int pos = 1;
 					if(anoInicial != null){
@@ -610,6 +609,7 @@ public class InformacionPresupuestariaDAO {
 	                
 	                rs.close();
 	                pstm.close();
+	                conn.close();
 				}
 			}
 		}

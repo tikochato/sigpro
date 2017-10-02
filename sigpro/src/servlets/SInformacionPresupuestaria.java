@@ -74,25 +74,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		stanio[] anios; 
 		Integer acumulacion_costoid;
 		BigDecimal costo;
-		List<String> hijos;
-		Integer predecesorId;
-		Integer objetoPredecesorTipo;
 	}
 	
-	class stprestamobimestre{
-		String nombre;
-		Integer objeto_id;
-		Integer objeto_tipo;
-		Integer nivel;
-		stpresupuesto[] bimestre1;
-		stpresupuesto[] bimestre2;
-		stpresupuesto[] bimestre3;
-		stpresupuesto[] bimestre4;
-		stpresupuesto[] bimestre5;
-		stpresupuesto[] bimestre6;
-		stpresupuesto[] totalAnual;
-		stpresupuesto[] total;
-	}
 	class stanio{
 		stpresupuesto[] mes = new stpresupuesto[12];
 		Integer anio;
