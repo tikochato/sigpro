@@ -14,6 +14,11 @@ public class CPrestamoCostos {
 	stanio[] anios; 
 	Integer acumulacion_costoid;
 	BigDecimal costo;
+	Integer programa;
+	Integer subprograma; 
+	Integer proyecto;
+	Integer actividad;
+	Integer obra;
 	
 	public class stpresupuesto{
 		public BigDecimal planificado;
@@ -30,9 +35,9 @@ public class CPrestamoCostos {
 		
 	}
 	
-	
 	public CPrestamoCostos(String nombre, Integer objeto_id, int objeto_tipo, Integer nivel, DateTime fecha_inicial,
-			DateTime fecha_final, stanio[] anios, Integer acumulacion_costoid, BigDecimal costo) {
+			DateTime fecha_final, stanio[] anios, Integer acumulacion_costoid, BigDecimal costo, Integer programa,
+			Integer subprograma, Integer proyecto, Integer actividad, Integer obra) {
 		super();
 		this.nombre = nombre;
 		this.objeto_id = objeto_id;
@@ -43,8 +48,53 @@ public class CPrestamoCostos {
 		this.anios = anios;
 		this.acumulacion_costoid = acumulacion_costoid;
 		this.costo = costo;
+		this.programa = programa;
+		this.subprograma = subprograma;
+		this.proyecto = proyecto;
+		this.actividad = actividad;
+		this.obra = obra;
 	}
-	
+
+	public Integer getPrograma() {
+		return programa;
+	}
+
+	public void setPrograma(Integer programa) {
+		this.programa = programa;
+	}
+
+	public Integer getSubprograma() {
+		return subprograma;
+	}
+
+	public void setSubprograma(Integer subprograma) {
+		this.subprograma = subprograma;
+	}
+
+	public Integer getProyecto() {
+		return proyecto;
+	}
+
+	public void setProyecto(Integer proyecto) {
+		this.proyecto = proyecto;
+	}
+
+	public Integer getActividad() {
+		return actividad;
+	}
+
+	public void setActividad(Integer actividad) {
+		this.actividad = actividad;
+	}
+
+	public Integer getObra() {
+		return obra;
+	}
+
+	public void setObra(Integer obra) {
+		this.obra = obra;
+	}
+
 	public stanio[] inicializarStanio (Integer anioInicial, Integer anioFinal){		
 		int longitudArrelgo = anioFinal - anioInicial+1;
 		

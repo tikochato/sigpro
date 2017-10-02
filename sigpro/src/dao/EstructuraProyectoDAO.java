@@ -15,13 +15,9 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.joda.time.DateTime;
 
-import pojo.Actividad;
-import pojo.Componente;
 import pojo.PlanAdquisicionPago;
 import pojo.Prestamo;
-import pojo.Producto;
 import pojo.Proyecto;
-import pojo.Subproducto;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 import utilities.CMariaDB;
@@ -341,18 +337,23 @@ public class EstructuraProyectoDAO {
 		
 		for(Object objeto : estructuraProyecto){
 			Object[] obj = (Object[]) objeto;
-			Integer nivel = (Integer)obj[4];
+			Integer nivel = obj[4]!=null ? (Integer)obj[4] : null;
 			if(nivel != null){
 				CPrestamoCostos tempPrestamo =  new CPrestamoCostos();
-				tempPrestamo.setObjeto_id((Integer)obj[0]);
-				tempPrestamo.setNombre((String)obj[1]);
+				tempPrestamo.setObjeto_id(obj[0]!=null ? (Integer)obj[0] : null);
+				tempPrestamo.setNombre(obj[1]!=null ? (String)obj[1] : null);
 				tempPrestamo.setNivel(nivel);
-				tempPrestamo.setObjeto_tipo(((BigInteger) obj[2]).intValue());
-				tempPrestamo.setFecha_inicial(new DateTime((Timestamp)obj[5]));
-				tempPrestamo.setFecha_final(new DateTime((Timestamp)obj[6]));
+				tempPrestamo.setObjeto_tipo(obj[2]!=null ? ((BigInteger) obj[2]).intValue() : null);
+				tempPrestamo.setFecha_inicial(obj[5]!=null ? new DateTime((Timestamp)obj[5]) : null);
+				tempPrestamo.setFecha_final(obj[6]!=null ? new DateTime((Timestamp)obj[6]) : null);
 				tempPrestamo.setAnios(tempPrestamo.inicializarStanio(anioInicial, anioFinal));
-				tempPrestamo.setAcumulacion_costoid((Integer)obj[11]);
-				tempPrestamo.setCosto((BigDecimal)obj[9]);
+				tempPrestamo.setAcumulacion_costoid(obj[11]!=null ? (Integer)obj[11] : null);
+				tempPrestamo.setCosto(obj[9]!=null ? (BigDecimal)obj[9] : null);
+				tempPrestamo.setObjeto_id(obj[12]!=null ? (Integer)obj[12] : null);
+				tempPrestamo.setObjeto_id(obj[13]!=null ? (Integer)obj[13] : null);
+				tempPrestamo.setObjeto_id(obj[14]!=null ? (Integer)obj[14] : null);
+				tempPrestamo.setObjeto_id(obj[15]!=null ? (Integer)obj[15] : null);
+				tempPrestamo.setObjeto_id(obj[16]!=null ? (Integer)obj[16] : null);
 				
 				try {
 					if(CMariaDB.connect()){
@@ -474,46 +475,9 @@ public class EstructuraProyectoDAO {
 			if(prestamo.getObjeto_tipo() == 1){
 				presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoProyecto(fuente, organismo, correlativo,anioInicial,anioFinal, conn);
 			}else{
-				Integer programa = null;
-				Integer subprograma = null; 
-				Integer proyecto = null;
-				Integer actividad = null;
-				Integer obra = null;
-				switch(prestamo.getObjeto_tipo()){
-					case 2: Componente componente = ComponenteDAO.getComponentePorId(prestamo.getObjeto_id(), null);
-						programa = componente.getPrograma();
-						subprograma = componente.getSubprograma(); 
-						proyecto = componente.getProyecto_1();
-						actividad = componente.getActividad();
-						obra = componente.getObra();
-						break;
-					case 3: Producto producto = ProductoDAO.getProductoPorId(prestamo.getObjeto_id(), null);
-						programa = producto.getPrograma();
-						subprograma = producto.getSubprograma(); 
-						proyecto = producto.getProyecto();
-						actividad = producto.getActividad();
-						obra = producto.getObra();
-						break;
-					case 4: Subproducto subproducto = SubproductoDAO.getSubproductoPorId(prestamo.getObjeto_id(), null);
-						programa = subproducto.getPrograma();
-						subprograma = subproducto.getSubprograma(); 
-						proyecto = subproducto.getProyecto();
-						actividad = subproducto.getActividad();
-						obra = subproducto.getObra();
-						break;
-					case 5: Actividad actividadObj = ActividadDAO.getActividadPorId(prestamo.getObjeto_id());
-						programa = actividadObj.getPrograma();
-						subprograma = actividadObj.getSubprograma(); 
-						proyecto = actividadObj.getProyecto();
-						actividad = actividadObj.getActividad();
-						obra = actividadObj.getObra();
-						break;
-				}
-				
-				
 				presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, 
-						anioInicial, anioFinal, programa, subprograma, proyecto, 
-						actividad, obra, conn);
+						anioInicial, anioFinal, prestamo.getPrograma(), prestamo.getSubprograma(), prestamo.getProyecto(), 
+						prestamo.getActividad(), prestamo.getObra(), conn);
 			}
 		
 		if(presupuestoPrestamo.size() > 0){
