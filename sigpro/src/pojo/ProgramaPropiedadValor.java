@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 1:09:17 AM by Hibernate Tools 5.2.3.Final
+// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class ProgramaPropiedadValor implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3859880240688878678L;
+	private static final long serialVersionUID = 1L;
 	private ProgramaPropiedadValorId id;
 	private Programa programa;
 	private ProgramaPropiedad programaPropiedad;

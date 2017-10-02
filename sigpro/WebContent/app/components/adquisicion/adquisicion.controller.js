@@ -13,20 +13,74 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		mi.objetoTipo = 0;
 		mi.objetoId = 0;
 		
-		if($scope.$parent.productoc){
-			$scope.$parent.productoc.child_adquisicion = $scope.adquisicionc;
+		mi.categorias=[];
+		mi.tipos=[];
+		
+		mi.popup_fechas=[false,false,false,false,false,false,false,false,false];
+		
+		mi.parentController=null;
+		
+		if($scope.$parent.producto){
+			$scope.$parent.producto.child_adquisicion = $scope.adquisicionc;
+			mi.parentController = $scope.$parent.producto;
 			mi.objetoTipo = 3;
-			mi.objetoId = $scope.$parent.productoc.producto.id;
+			mi.objetoId = $scope.$parent.producto.producto.id;
 		}
 		if($scope.$parent.subproductoc){
 			$scope.$parent.subproductoc.child_adquisicion = $scope.adquisicionc;
+			mi.parentController = $scope.$parent.subproductoc;
 			mi.objetoTipo = 4;
 			mi.objetoId = $scope.$parent.subproductoc.subproducto.id;
 		}
 		if($scope.$parent.actividadc){
 			$scope.$parent.actividadc.child_adquisicion = $scope.adquisicionc;
+			mi.parentController = $scope.$parent.actividadc;
 			mi.objetoTipo = 5;
 			mi.objetoId = $scope.$parent.actividadc.actividad.id;
+		}
+		
+		$http.post('/STipoAdquisicion', { accion: 'getTipoAdquisicionPorObjeto', objetoId: mi.objetoId, objetoTipo: mi.objetoTipo, t: (new Date()).getTime()}).success(
+				function(response) {
+					mi.tipos = response.tipoAdquisiciones;
+		});
+		
+		$http.post('/SCategoriaAdquisicion', { accion: 'getCategoriasAdquisicion', t: (new Date()).getTime()}).success(
+				function(response) {
+					mi.categorias = response.categoriasAdquisicion;
+		});
+		
+		mi.cambioTipo=function(selected){
+			if(selected!== undefined){
+				mi.adquisicion.tipoNombre=selected.originalObject.nombre;
+				mi.adquisicioin.tipoId=selected.originalObject.id;
+			}
+			else{
+				mi.adquisicion.tipoNombre="";
+				mi.adquisicion.tipoId="";
+			}
+		}
+		
+		mi.blurTipo=function(){
+			if(document.getElementById("tipo_value").defaultValue!=mi.adquisicion.tipoNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','tipo');
+			}
+		}
+		
+		mi.cambioCategoria=function(selected){
+			if(selected!== undefined){
+				mi.adquisicion.categoriaNombre=selected.originalObject.nombre;
+				mi.adquisicioin.categoriaId=selected.originalObject.id;
+			}
+			else{
+				mi.adquisicion.categoriaNombre="";
+				mi.adquisicion.categoriaId="";
+			}
+		}
+		
+		mi.blurCategoria=function(){
+			if(document.getElementById("categoria_value").defaultValue!=mi.adquisicion.categoriaNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','categoria');
+			}
 		}
 		
 		mi.fechaOptions = {
@@ -120,11 +174,8 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		mi.nuevo = function() {
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
-			mi.colaboradorNombre="";
-			mi.colaboradorid="";
-			mi.adquisicion = {};
-			mi.camposdinamicos = {};
-			$utilidades.setFocus(document.getElementById("descripcion"));
+			mi.adquisicion = { 
+			};
 		};
 
 		mi.editar = function(row) {
@@ -153,64 +204,50 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 
 		mi.irATabla = function() {
 			if(mi.esnuevo){
-					if($scope.$parent.controller.mForm.$valid || 
-							($scope.$parent.controller.mForm.$error.required.length==1 && $scope.$parent.controller.mForm.$error.required[0].$name=='form_valid'))
+					console.log(mi.parentController.mForm.$valid);
+					if(mi.parentController.mForm.$valid || 
+							(mi.parentController.mForm.$error.required.length==1 && mi.parentController.mForm.$error.required[0].$name=='form_valid'))
 						mi.adquisiciones.push({
-							colaboradorNombre: mi.colaboradorNombre,
-							colaboradorid: mi.colaboradorid,
-							descripcion: mi.adquisicion.descripcion == null ? "" : mi.adquisicion.descripcion,
-							ejecutado: mi.ejecutado ? 1 : 0,
-							estado: 1,
-							fechaActualizacion: null,
-							fechaCreacion: null,
-							fechaEjecucion:  mi.fechaEjecucion,
-							gatillosSintomas: mi.adquisicion.gatillosSintomas,
-							id: 0,
-							impacto: mi.adquisicion.impacto,
-							impactoProyectado: mi.adquisicion.impactoProyectado,
-							nombre: mi.adquisicion.nombre,
-							probabilidad: mi.probabilidad.valor,
-							puntuacionImpacto: mi.adquisicion.puntuacionImpacto,
-							respuesta: mi.adquisicion.respuesta,
-							riesgosSecundarios: mi.adquisicion.riesgosSecundarios,
-							riesgotipoid: mi.adquisicionTipoid,
-							riesgotiponombre: mi.adquisicionTipoNombre,
-							usuarioActualizo: null,
-							usuarioCreo: null,
-							camposdinamicos: mi.camposdinamicos
+							tipoNombre: mi.adquisicion.tipoNombre,
+							tipoId: mi.adquisicion.tipoId,
+							categoriaNombre: mi.adquisicion.categoriaNombre,
+							categoriaId: mi.adquisicion.categoriaId,
+							medidaNombre: mi.adquisicion.medidaNombre,
+							cantidad: mi.adquisicion.cantidad,
+							precio: mi.adquisicion.precio,
+							total: mi.adquisicion.total,
+							nog: mi.adquisicion.nog,
+							numeroContrato: mi.adquisicion.numeroContrato,
+							montoContrato: mi.adquisicion.montoContrato,
+							preparacionDocumentoPlanificado: moment(mi.adquisicion.preparacionDocumentoPlanifiado).format('DD/MM/YYY'),
+							preparacionDocumentoReal: moment(mi.adquisicion.preparacionDocumentoReal).format('DD/MM/YYYY'),
+							lanzamientoEventoPlanificado:moment(mi.adquisicion.lanzamientoEventoPlanificado).format('DD/MM/YYYY'),
+							lanzamientoEventoReal:moment(mi.adquisicion.lanzamientoEventoReal).format('DD/MM/YYYY'),
+							recepcionOfertasPlanificado:moment(mi.adquisicion.recepcionOfertasPlanificado).format('DD/MM/YYYY'),
+							recepcionOfertasReal:moment(mi.adquisicion.recepcionOfertasReal).format('DD/MM/YYYY'),
+							adjudicacionPlanificado:moment(mi.adquisicion.adjudicacionPlanificado).format('DD/MM/YYYY'),
+							adjudicacionReal:moment(mi.adquisicion.adjudicacionReal).format('DD/MM/YYYY'),
+							firmaContratoPlanificado:moment(mi.adquisicion.firmaContratoPlanificado).format('DD/MM/YYYY'),
+							firmaContratoReal: mi.adquisicion.moment(mi.adquisicion.firmaContratoReal).format('DD/MM/YYYY'),
+							pagos: mi.adquisicion.pagos
 						});
 					mi.mostraringreso=false;
 					mi.esnuevo = false;
 					mi.form_valid = 1;
 				}
-				else if($scope.$parent.controller.mForm.$valid || $scope.$parent.controller.mForm.$error.required[0].$name=='form_valid'){
-					mi.adquisicion.colaboradorNombre = mi.colbaoradorNombre;
-					mi.adquisicion.colaboradorid = mi.colaboradorid;
-					mi.adquisicion.ejecutado = mi.ejecutado ? 1 : 0;
-					mi.adquisicion.riesgotipoid = mi.adquisicionTipoid;
-					mi.adquisicion.riesgotiponombre = mi.adquisicionTipoNombre;
-					mi.adquisicion.probabilidad = mi.probabilidad.valor;
-					mi.adquisicion.fechaEjecucion = mi.fechaEjecucion;
+				else if(mi.parentController.mForm.$valid || mi.parentController.mForm.$error.required[0].$name=='form_valid'){
 					mi.mostraringreso=false;
 					mi.esnuevo = false;
 					mi.form_valid = 1;
 				}
-				else if(!$scope.$parent.controller.mForm.$valid){
+				else if(!mi.parentController.mForm.$valid){
 					$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
 				}
 		}
 	
 		
 		mi.abrirPopupFecha = function(index) {
-			
-			if(index<1000){
-				mi.camposdinamicos[index].isOpen = true;
-			}
-			else{
-				switch(index){
-					case 1000: mi.fe_abierto = true; break;
-				}
-			}
+			mi.popup_fechas[index]=true;
 		};
 		
 		
@@ -385,7 +422,7 @@ function buscarPorRiesgo($uibModalInstance, $scope, $http, $interval,
 		}
 	}
 
-	mi.seleccionarTipoRiesgo = function(row) {
+	mi.seleccionarTipoAdquisicion = function(row) {
 		mi.itemSeleccionado = row.entity;
 		mi.seleccionado = row.isSelected;
 	};

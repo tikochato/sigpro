@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 1:09:17 AM by Hibernate Tools 5.2.3.Final
+// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class MetaAvance implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4311127270017829639L;
+	private static final long serialVersionUID = 1L;
 	private MetaAvanceId id;
 	private Meta meta;
 	private String usuario;

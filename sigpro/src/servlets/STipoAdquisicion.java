@@ -21,9 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.CooperanteDAO;
 import dao.TipoAdquisicionDAO;
-import pojo.Cooperante;
 import pojo.TipoAdquisicion;
 import utilities.Utils;
 
@@ -38,8 +36,7 @@ public class STipoAdquisicion extends HttpServlet {
     class stTipoAdquisicion{
     	Integer id;
     	String nombre;
-    	Integer cooperanteId;
-    	String cooperante;
+    	Integer cooperanteCodigo;
     	String usuarioCreo;
     	String usuarioActualizo;
     	String fechaCreacion;
@@ -84,8 +81,7 @@ public class STipoAdquisicion extends HttpServlet {
 			for(TipoAdquisicion tipoAdquisicion : tipoAdquisiciones){
 				stTipoAdquisicion temp =new stTipoAdquisicion();
 				temp.id = tipoAdquisicion.getId();
-				temp.cooperante = tipoAdquisicion.getCooperante().getNombre();
-				temp.cooperanteId = tipoAdquisicion.getCooperante().getId();
+				temp.cooperanteCodigo = tipoAdquisicion.getCooperantecodigo();
 				temp.nombre = tipoAdquisicion.getNombre();
 				temp.estado = tipoAdquisicion.getEstado();
 				temp.fechaActualizacion = Utils.formatDateHour(tipoAdquisicion.getFechaActualizacion());
@@ -103,18 +99,17 @@ public class STipoAdquisicion extends HttpServlet {
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			response_text = String.join("","{ \"success\": true, \"totalTipoAdquisicion\":",TipoAdquisicionDAO.getTotalTipoAdquisicion(filtro_cooperante, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
-		} else if(accion.equals("getTipoAdquisicionPaginaPorCooperante")){
-			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int idCooperante = map.get("idCooperante")!=null  ? Integer.parseInt(map.get("idCooperante")) : 0;
+		} else if(accion.equals("getTipoAdquisicionPorObjeto")){
+			int objetoId = Utils.String2Int(map.get("objetoId"), 0);
+			int objetoTipo = Utils.String2Int(map.get("objetoTipo"), 0);
 			
-			List<TipoAdquisicion> tipoAdquisiciones = TipoAdquisicionDAO.getTipoAdquisicionPorCooperantePagina(pagina, idCooperante);
+			List<TipoAdquisicion> tipoAdquisiciones = TipoAdquisicionDAO.getTipoAdquisicionPorObjeto(objetoId, objetoTipo);
 					
 			List<stTipoAdquisicion> sttipoadquisicion=new ArrayList<stTipoAdquisicion>();
 			for(TipoAdquisicion tipoAdquisicion : tipoAdquisiciones){
 				stTipoAdquisicion temp =new stTipoAdquisicion();
 				temp.id = tipoAdquisicion.getId();
-				temp.cooperante = tipoAdquisicion.getCooperante().getNombre();
-				temp.cooperanteId = tipoAdquisicion.getCooperante().getId();
+				temp.cooperanteCodigo = tipoAdquisicion.getCooperantecodigo();
 				temp.nombre = tipoAdquisicion.getNombre();
 				temp.estado = tipoAdquisicion.getEstado();
 				temp.fechaActualizacion = Utils.formatDateHour(tipoAdquisicion.getFechaActualizacion());
@@ -124,55 +119,22 @@ public class STipoAdquisicion extends HttpServlet {
 				sttipoadquisicion.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(sttipoadquisicion);
-	        response_text = String.join("", "\"cooperanteTipoAdquisiciones\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text,"}");
-		} else if(accion.equals("getTipoAdquisicionPagina")){
-			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numeroTipoAdquisicion = map.get("numeroTipoAdquisicion")!=null  ? Integer.parseInt(map.get("numeroTipoAdquisicion")) : 0;
-			String filtro_nombre = map.get("filtro_nombre");
-			String filtro_cooperante = map.get("filtro_cooperante");
-			String filtro_usuario_creo = map.get("filtro_usuario_creo");
-			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			String columna_ordenada = map.get("columna_ordenada");
-			String orden_direccion = map.get("orden_direccion");
-			
-			List<TipoAdquisicion> tipoAdquisiciones = TipoAdquisicionDAO.getTipoAdquisicionPagina(pagina, numeroTipoAdquisicion, filtro_cooperante, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
-			List<stTipoAdquisicion> stTipoAdquisicion=new ArrayList<stTipoAdquisicion>();
-			
-			for(TipoAdquisicion tipoAdquisicion : tipoAdquisiciones){
-				stTipoAdquisicion temp =new stTipoAdquisicion();
-				temp.id = tipoAdquisicion.getId();
-				temp.cooperante = tipoAdquisicion.getCooperante().getNombre();
-				temp.cooperanteId = tipoAdquisicion.getCooperante().getId();
-				temp.nombre = tipoAdquisicion.getNombre();
-				temp.estado = tipoAdquisicion.getEstado();
-				temp.fechaActualizacion = Utils.formatDateHour(tipoAdquisicion.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDateHour(tipoAdquisicion.getFechaCreacion());
-				temp.usuarioActualizo = tipoAdquisicion.getUsuarioActualizo();
-				temp.usuarioCreo = tipoAdquisicion.getUsuarioCreo();
-				stTipoAdquisicion.add(temp);
-			}
-			
-			response_text=new GsonBuilder().serializeNulls().create().toJson(stTipoAdquisicion);
-	        response_text = String.join("", "\"tipoAdquisicion\":",response_text);
+	        response_text = String.join("", "\"tipoAdquisiciones\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		} else if(accion.equals("guardarTipoAdquisicion")){
-			Integer idCooperante = Utils.String2Int(map.get("idCooperante"));
+			Integer cooperanteCodigo = Utils.String2Int(map.get("cooperanteCodigo"));
 			String nombreTipoAdquisicion = map.get("nombreTipoAdquisicion");
 			Integer idTipoAdquisicion = Utils.String2Int(map.get("idTipoAdquisicion"));
-			Cooperante cooperante = new Cooperante();
-			if(idCooperante != null){
-				cooperante= CooperanteDAO.getCooperantePorId(idCooperante);
-			}
+			
 			boolean result = false;
 			boolean esNuevo = map.get("esNuevo").equals("true");
 			TipoAdquisicion tipoAdquisicion = null;
 			
 			if(esNuevo){
-				tipoAdquisicion = new TipoAdquisicion(cooperante, nombreTipoAdquisicion, usuario, new Date(), 1);
+				tipoAdquisicion = new TipoAdquisicion(cooperanteCodigo,nombreTipoAdquisicion, usuario, new Date(), 1);
 			}else{
 				tipoAdquisicion = TipoAdquisicionDAO.getTipoAdquisicionPorId(idTipoAdquisicion);
-				tipoAdquisicion.setCooperante(cooperante);
+				tipoAdquisicion.setCooperantecodigo(cooperanteCodigo);
 				tipoAdquisicion.setNombre(nombreTipoAdquisicion);
 				tipoAdquisicion.setFechaActualizacion(new Date());
 				tipoAdquisicion.setUsuarioActualizo(usuario);
