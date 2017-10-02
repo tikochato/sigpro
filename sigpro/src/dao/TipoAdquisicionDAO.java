@@ -8,7 +8,13 @@ import javax.persistence.NoResultException;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.joda.time.DateTime;
 
+import pojo.Actividad;
+import pojo.Componente;
+import pojo.Producto;
+import pojo.Proyecto;
+import pojo.Subproducto;
 import pojo.TipoAdquisicion;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -86,18 +92,45 @@ public class TipoAdquisicionDAO {
 		return ret;
 	}
 	
-	public static List<TipoAdquisicion> getTipoAdquisicionPorCooperantePagina(int pagina,int idCooperante){
+	public static List<TipoAdquisicion> getTipoAdquisicionPorObjeto(int objetoId, int objetoTipo){
 		List<TipoAdquisicion> ret = new ArrayList<TipoAdquisicion>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
+		int cooperanteCodigo=0;
+		switch(objetoTipo){
+			case 3: 
+				Producto producto = ProductoDAO.getProductoPorId(objetoId);
+				cooperanteCodigo = producto.getComponente().getProyecto().getCooperante().getCodigo();
+				break;
+			case 4: 
+				Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
+				cooperanteCodigo = subproducto.getProducto().getComponente().getProyecto().getCooperante().getCodigo();
+				break;
+			case 5: 
+				Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
+				if(actividad.getProyectoBase()!=null){
+					Proyecto proyecto = ProyectoDAO.getProyecto(actividad.getProyectoBase());
+					cooperanteCodigo = (proyecto!=null) ? proyecto.getCooperante().getCodigo() : 0;
+				}
+				else if(actividad.getComponenteBase()!=null){
+					Componente componente = ComponenteDAO.getComponente(actividad.getComponenteBase());
+					cooperanteCodigo = (componente!=null) ? componente.getProyecto().getCooperante().getCodigo() : 0;
+				}
+				else if(actividad.getProductoBase()!=null){
+					Producto tproducto = ProductoDAO.getProductoPorId(actividad.getProductoBase());
+					cooperanteCodigo = (tproducto!=null) ? tproducto.getComponente().getProyecto().getCooperante().getCodigo() : 0;
+				}
+				break;
+		}
 		try{
-			String str_query = "SELECT ta from TipoAdquisicion ta where ta.cooperante.id=:idCooperante and ta.estado=1";
+			DateTime ano = new DateTime();
+			String str_query = "SELECT ta from TipoAdquisicion ta where ta.cooperante.codigo=:codigo and ta.cooperante.ejercicio=:ejercicio and ta.estado=1";
 			Query<TipoAdquisicion> criteria = session.createQuery(str_query,TipoAdquisicion.class);
-			criteria.setParameter("idCooperante", idCooperante);
+			criteria.setParameter("codigo", cooperanteCodigo);
+			criteria.setParameter("ejercicio", ano.getYear());
 			ret = criteria.getResultList();
 		}
 
 		catch(Throwable e){
-			e.printStackTrace();
 			CLogger.write("4", TipoAdquisicionDAO.class, e);
 		}
 		finally{

@@ -68,16 +68,15 @@
 					</div>
 					<div class="form-group col-sm-3">
 						<input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.fechaCorte" is-open="controller.fi_abierto"
-				            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="controller.generar()" 
-				            ng-required="true"  ng-click="controller.abrirPopupFecha(1000)"
-				            ng-value="controller.fechaCorte" onblur="this.setAttribute('value', this.value);"
-				            ng-readonly="true" ng-click="controller.abrirPopupFecha(1000)"/>
+				            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="controller.validarFecha(controller.fechaCorte)" 
+				            ng-required="true"
+				            ng-value="controller.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
 				            <span class="label-icon" ng-click="controller.abrirPopupFecha(1000)">
 				              <i class="glyphicon glyphicon-calendar"></i>
 				            </span>
-					  	<label for="campo.id" class="floating-label">*Fecha Corte</label>
+					  	<label for="campo.id" class="floating-label">*Fecha de Corte</label>
 					</div>
-					<div class="col-sm-1 operation_buttons" align="right" style="float: right;">
+					<div class="col-sm-3 operation_buttons" align="right" style="float: right;">
 		    			<div class="btn-group" role="group" aria-label="">
 							<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!controller.mostrardiv" role="button" tabindex="0" aria-hidden="false" style="">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
@@ -167,7 +166,7 @@
 		    						<label class="label-form2">Totales</label>
 		    					</div>
    								<canvas id="bar" class="chart chart-bar" chart-data="controller.dataBarraProyecto" chart-labels="controller.labelsPieProyecto" 
-   									chart-options="controller.charOptions" chart-colors = "controller.pieColors">
+   									chart-options="controller.charOptions" chart-colors = "controller.pieColors" chart-series="controller.labelsPieProyecto">
    								</canvas>
 		    				</div>
 		    			</div>
@@ -185,19 +184,23 @@
 													<th style="display: none;">Id</th>
 													<th class="label-form" style="min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; text-align: center; nowrap; overflow: hidden;">Hitos del proyecto</th>
 													<th style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"></th>
-													<th class="label-form" style="min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;">Completados</th>
-													<th class="label-form" style="min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;">Sin iniciar</th>
-													<th class="label-form" style="min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px; text-align: center; nowrap; overflow: hidden;">Retrasadas</th>
+													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajesHitos}}px; max-width: {{controller.tamanoColPorcentajesHitos}}px; text-align: center; nowrap; overflow: hidden;">Completados</th>
+													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajesHitos}}px; max-width: {{controller.tamanoColPorcentajesHitos}}px; text-align: center; nowrap; overflow: hidden;">Sin iniciar</th>
+													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajesHitos}}px; max-width: {{controller.tamanoColPorcentajesHitos}}px; text-align: center; nowrap; overflow: hidden;">Retrasadas</th>
+													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajesHitos}}px; max-width: {{controller.tamanoColPorcentajesHitos}}px; text-align: center; nowrap; overflow: hidden;">Esperadas fin de año</th>
+													<th class="label-form" style="min-width: {{controller.tamanoColPorcentajesHitos}}px; max-width: {{controller.tamanoColPorcentajesHitos}}px; text-align: center; nowrap; overflow: hidden;">Años siguientes</th>													
 												</tr>
 											</thead>
 											<tbody class="cuerpoTablaDatos">
-												<tr ng-repeat="row in controller.displayedCollectionHitos" uib-tooltip="{{row.nombre}}" tooltip-placement="center" sng-click="controller.mostrarActividades(row);">
+												<tr ng-repeat="row in controller.displayedCollectionHitos" uib-tooltip="{{row.nombre}}" tooltip-placement="center" ng-click="controller.mostrarActividades(row);">
 													<td style="display: none;">{{row.id}}</td>
 													<td style="text-align: left; min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px; nowrap; overflow: hidden;">{{row.nombre}}</td>
 													<td style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"><span ng-style="controller.obtenerColor(row);" class="glyphicon glyphicon-certificate"></span></td>
-													<td style="text-align: center; min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px">{{row.completadas}}%</td>
-													<td style="text-align: center; min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px">{{row.sinIniciar}}%</td>
-													<td style="text-align: center; min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px;">{{row.retrasadas}}%</td>
+													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajesHitos}}px; max-width: {{controller.tamanoColPorcentajesHitos}}px">{{row.completadas}}%</td>
+													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajesHitos}}px; max-width: {{controller.tamanoColPorcentajesHitos}}px">{{row.sinIniciar}}%</td>
+													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajesHitos}}px; max-width: {{controller.tamanoColPorcentajesHitos}}px;">{{row.retrasadas}}%</td>
+													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajesHitos}}px; max-width: {{controller.tamanoColPorcentajesHitos}}px;">{{row.esperadasfinanio}}%</td>
+													<td style="text-align: center; min-width: {{controller.tamanoColPorcentajesHitos}}px; max-width: {{controller.tamanoColPorcentajesHitos}}px;">{{row.aniosSiguientes}}%</td>
 												</tr>
 											</tbody>
 											<tbody>
@@ -205,9 +208,11 @@
 													<td style="display: none;"></td>
 													<td style="text-align: left; font-weight: bold; min-width:{{controller.tamanoNombres}}px ;max-width:{{controller.tamanoNombres}}px">Total de hitos: {{controller.totalHitos}}</td>
 													<td style="min-width: {{controller.tamanoSemaforo}}px; max-width: {{controller.tamanoSemaforo}}px;"></td>
-													<td style="text-align: center; font-weight: bold; min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px">{{controller.totalHitosCompletados}}</td>
-													<td style="text-align: center; font-weight: bold; min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px">{{controller.totalHitosSinIniciar}}</td>
-													<td style="text-align: center; font-weight: bold; min-width: {{2 * controller.tamanoColPorcentajes}}px; max-width: {{2 * controller.tamanoColPorcentajes}}px">{{controller.totalHitosRetrasados}}</td>
+													<td style="text-align: center; font-weight: bold; min-width: {{controller.tamanoColPorcentajesHitos}}px; max-width: {{controller.tamanoColPorcentajesHitos}}px;">{{controller.totalHitosCompletados}}</td>
+													<td style="text-align: center; font-weight: bold; min-width: {{controller.tamanoColPorcentajesHitos}}px; max-width: {{controller.tamanoColPorcentajesHitos}}px;">{{controller.totalHitosSinIniciar}}</td>
+													<td style="text-align: center; font-weight: bold; min-width: {{controller.tamanoColPorcentajesHitos}}px; max-width: {{controller.tamanoColPorcentajesHitos}}px;">{{controller.totalHitosRetrasados}}</td>
+													<td style="text-align: center; font-weight: bold; min-width: {{controller.tamanoColPorcentajesHitos}}px; max-width: {{controller.tamanoColPorcentajesHitos}}px;">{{controller.totalHitosEsperados}}</td>
+													<td style="text-align: center; font-weight: bold; min-width: {{controller.tamanoColPorcentajesHitos}}px; max-width: {{controller.tamanoColPorcentajesHitos}}px;">{{controller.totalHitosAnioSiguientes}}</td>
 												</tr>
 											</tbody>
 										</table>
@@ -231,7 +236,7 @@
 		    						<label class="label-form2">Totales</label>
 		    					</div>
    								<canvas id="bar" class="chart chart-bar" chart-data="controller.dataBarraHitos" chart-labels="controller.labelsPieHitos" 
-   									chart-options="controller.charOptionsHitos" chart-colors = "controller.pieColorsHitos">
+   									chart-options="controller.charOptionsHitos" chart-colors="controller.pieColorsHitos" chart-series="controller.labelsPieHitos">
    								</canvas>
 		    				</div>
 		    			</div>

@@ -14,6 +14,9 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		var mi = this;
 		mi.mostrarCargando = false;
 		mi.mostrardiv=false;
+		
+		mi.formatofecha = 'dd/MM/yyyy';
+		
 		mi.totalActividades = 0;
 		mi.totalActividadesCompletadas = 0;
 		mi.totalActividadesSinIniciar = 0;
@@ -33,6 +36,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 			mi.tamanoSemaforo = mi.tamanoPantalla * 0.05;
 			mi.tamanoNombres = (mi.tamanoPantalla - mi.tamanoSemaforo) * 0.20;
 			mi.tamanoColPorcentajes = (mi.tamanoPantalla - mi.tamanoNombres - mi.tamanoSemaforo) / 6;
+			mi.tamanoColPorcentajesHitos = (mi.tamanoPantalla - mi.tamanoNombres - mi.tamanoSemaforo) / 5;
 		}
 		
 		mi.calcularTamanosPantalla();
@@ -40,6 +44,11 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		mi.prestamos = [
 			{'value' : 0, 'text' : 'Seleccione un préstamo'},
 		];
+		
+		mi.validarFecha = function(fecha1){
+			if(fecha1 != null)
+				mi.generar();
+		}
 		
 		mi.prestamo = mi.prestamos[0];
 		
@@ -106,6 +115,9 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 							mi.labelsPieHitos = [];
 							mi.dataBarraHitos  = [];
 							
+							mi.labelsPieProyecto = ["Completadas", "Sin Iniciar", "En Proceso", "Retrasadas"];
+							mi.labelsPieHitos = ['Completadas', 'Sin Iniciar', 'Retrasadas'];
+							
 							mi.totalActividadesCompletadas = 0;
 							mi.totalActividadesSinIniciar = 0;
 							mi.totalActividadesProceso = 0;
@@ -122,7 +134,6 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 								mi.displayedCollectionActividades = [].concat(mi.rowCollectionActividades);
 																
 								mi.dataPieProyecto = [response.actividades[0].completadas, response.actividades[0].sinIniciar, response.actividades[0].proceso, response.actividades[0].retrasadas];
-								mi.labelsPieProyecto = ["Completadas", "Sin Iniciar", "En Proceso", "Retrasadas"];
 								
 								mi.mostrarActProyecto = true;
 							}
@@ -144,7 +155,6 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 								mi.displayedCollectionHitos = [].concat(mi.rowCollectionHitos);
 																
 								mi.dataPieHitos = [response.hitos[0].completadas, response.hitos[0].sinIniciar, response.hitos[0].retrasadas];
-								mi.labelsPieHitos = ["Completadas", "Sin Iniciar", "Retrasadas"];
 								
 								mi.mostrarHitos = true;
 							}
@@ -154,7 +164,9 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 							if(response.cantidadHitos != undefined){
 								mi.totalHitosCompletados = response.cantidadHitos[0].completadas;
 								mi.totalHitosSinIniciar = response.cantidadHitos[0].sinIniciar;
-								mi.totalHitosRetrasados = response.cantidadHitos[0].retrasadas
+								mi.totalHitosRetrasados = response.cantidadHitos[0].retrasadas;
+								mi.totalHitosEsperados = response.cantidadHitos[0].esperadasfinanio;
+								mi.totalHitosAnioSiguientes = response.cantidadHitos[0].aniosiguientes;
 								
 								mi.dataBarraHitos = [mi.totalHitosCompletados, mi.totalHitosSinIniciar, mi.totalHitosRetrasados];
 							}

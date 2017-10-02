@@ -62,8 +62,6 @@ public class CExcel {
 	CellStyle cs_bold_border;
 	CellStyle cs_normal;
 	CellStyle cs_normal_border;
-	CellStyle cs_currency_bold_border;
-	CellStyle cs_currency_normal_border;
 	CellStyle cs_min;
 	Font font;
 	Font font_bold;
@@ -93,6 +91,9 @@ public class CExcel {
 						break;
 					case CGraficaExcel.EXCEL_CHART_AREA: 
 						fileInputStream = new FileInputStream(CGraficaExcel.EXCEL_CHART_AREA_PATH);
+						break;
+					case CGraficaExcel.EXCEL_CHART_AREA2: 
+						fileInputStream = new FileInputStream(CGraficaExcel.EXCEL_CHART_AREA2_PATH);
 						break;
 					default: 
 						fileInputStream = new FileInputStream(CGraficaExcel.EXCEL_CHART_BAR_PATH);
@@ -134,22 +135,6 @@ public class CExcel {
 		cs_percent_bold.setFont(font_bold);
 		cs_currency_bold.setDataFormat(dataformat.getFormat("Q #,##0.00"));
 		cs_percent_bold.setDataFormat(dataformat.getFormat("0.00%"));
-		
-		cs_currency_bold_border = workbook.createCellStyle();
-		cs_currency_bold_border.setFont(font_bold);
-		cs_currency_bold_border.setBorderTop(BorderStyle.THIN);
-		cs_currency_bold_border.setBorderLeft(BorderStyle.THIN);
-		cs_currency_bold_border.setBorderRight(BorderStyle.THIN);
-		cs_currency_bold_border.setBorderBottom(BorderStyle.THIN);
-		cs_currency_bold_border.setDataFormat(dataformat.getFormat("Q #,##0.00"));
-		
-		cs_currency_normal_border = workbook.createCellStyle();
-		cs_currency_normal_border.setFont(font_bold);
-		cs_currency_normal_border.setBorderTop(BorderStyle.THIN);
-		cs_currency_normal_border.setBorderLeft(BorderStyle.THIN);
-		cs_currency_normal_border.setBorderRight(BorderStyle.THIN);
-		cs_currency_normal_border.setBorderBottom(BorderStyle.THIN);
-		cs_currency_normal_border.setDataFormat(dataformat.getFormat("Q #,##0.00"));
 
 		cs_bold = workbook.createCellStyle();
 		cs_bold.setFont(font_bold);
@@ -189,14 +174,13 @@ public class CExcel {
 				: sheet.createRow(irow).createCell(icell);
 		cell.setCellValue(value);
 		cs_estiloVariable.cloneStyleFrom(bold ? cs_currency_bold : cs_currency);
-		CellStyle estiloCelda =(bold) ? cs_currency_bold_border : cs_currency_normal_border;
 		if(borde){
 			cs_estiloVariable.setBorderTop(BorderStyle.THIN);
 			cs_estiloVariable.setBorderLeft(BorderStyle.THIN);
 			cs_estiloVariable.setBorderRight(BorderStyle.THIN);
 			cs_estiloVariable.setBorderBottom(BorderStyle.THIN);
 		}
-		cell.setCellStyle(estiloCelda);
+		cell.setCellStyle(cs_estiloVariable);
 	}
 
 	public void setCellValueDouble(double value, int irow, int icell, boolean borde) {

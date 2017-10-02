@@ -95,9 +95,9 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 						, "Cancelar")
 				.result.then(function(data) {
 					if(data){
-						var index = mi.desembolsos.indexOf(row);
+						var index = mi.riesgos.indexOf(row);
 				        if (index !== -1) {
-				            mi.desembolsos.splice(index, 1);
+				            mi.riesgos.splice(index, 1);
 				        }
 					}
 				}, function(){

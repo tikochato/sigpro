@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 1, 2017 5:10:27 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,10 +28,10 @@ public class PlanAdquisicion implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3918617011694845922L;
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private CategoriaAdquisicion categoriaAdquisicion;
-	private Integer tipoAdquisicion;
+	private TipoAdquisicion tipoAdquisicion;
 	private String unidadMedida;
 	private Integer cantidad;
 	private BigDecimal total;
@@ -62,7 +62,11 @@ public class PlanAdquisicion implements java.io.Serializable {
 	public PlanAdquisicion() {
 	}
 
-	public PlanAdquisicion(int objetoId, int objetoTipo, String usuarioCreo, Date fechaCreacion, int estado) {
+	public PlanAdquisicion(CategoriaAdquisicion categoriaAdquisicion, TipoAdquisicion tipoAdquisicion,
+			String unidadMedida, int objetoId, int objetoTipo, String usuarioCreo, Date fechaCreacion, int estado) {
+		this.categoriaAdquisicion = categoriaAdquisicion;
+		this.tipoAdquisicion = tipoAdquisicion;
+		this.unidadMedida = unidadMedida;
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
 		this.usuarioCreo = usuarioCreo;
@@ -70,14 +74,14 @@ public class PlanAdquisicion implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public PlanAdquisicion(CategoriaAdquisicion categoriaAdquisicion, Integer tipoAdquisicion, String unidadMedida,
-			Integer cantidad, BigDecimal total, BigDecimal precioUnitario, Date preparacionDocPlanificado,
-			Date preparacionDocReal, Date lanzamientoEventoPlanificado, Date lanzamientoEventoReal,
-			Date recepcionOfertasPlanificado, Date recepcionOfertasReal, Date adjudicacionPlanificado,
-			Date adjudicacionReal, Date firmaContratoPlanificado, Date firmaContratoReal, int objetoId, int objetoTipo,
-			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Integer bloqueado, String numeroContrato, BigDecimal montoContrato, Integer nog,
-			Set<PlanAdquisicionPago> planAdquisicionPagos) {
+	public PlanAdquisicion(CategoriaAdquisicion categoriaAdquisicion, TipoAdquisicion tipoAdquisicion,
+			String unidadMedida, Integer cantidad, BigDecimal total, BigDecimal precioUnitario,
+			Date preparacionDocPlanificado, Date preparacionDocReal, Date lanzamientoEventoPlanificado,
+			Date lanzamientoEventoReal, Date recepcionOfertasPlanificado, Date recepcionOfertasReal,
+			Date adjudicacionPlanificado, Date adjudicacionReal, Date firmaContratoPlanificado, Date firmaContratoReal,
+			int objetoId, int objetoTipo, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Date fechaActualizacion, int estado, Integer bloqueado, String numeroContrato, BigDecimal montoContrato,
+			Integer nog, Set<PlanAdquisicionPago> planAdquisicionPagos) {
 		this.categoriaAdquisicion = categoriaAdquisicion;
 		this.tipoAdquisicion = tipoAdquisicion;
 		this.unidadMedida = unidadMedida;
@@ -121,7 +125,7 @@ public class PlanAdquisicion implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "categoria_adquisicion")
+	@JoinColumn(name = "categoria_adquisicion", nullable = false)
 	public CategoriaAdquisicion getCategoriaAdquisicion() {
 		return this.categoriaAdquisicion;
 	}
@@ -130,16 +134,17 @@ public class PlanAdquisicion implements java.io.Serializable {
 		this.categoriaAdquisicion = categoriaAdquisicion;
 	}
 
-	@Column(name = "tipo_adquisicion")
-	public Integer getTipoAdquisicion() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "tipo_adquisicion", nullable = false)
+	public TipoAdquisicion getTipoAdquisicion() {
 		return this.tipoAdquisicion;
 	}
 
-	public void setTipoAdquisicion(Integer tipoAdquisicion) {
+	public void setTipoAdquisicion(TipoAdquisicion tipoAdquisicion) {
 		this.tipoAdquisicion = tipoAdquisicion;
 	}
 
-	@Column(name = "unidad_medida", length = 30)
+	@Column(name = "unidad_medida", nullable = false, length = 30)
 	public String getUnidadMedida() {
 		return this.unidadMedida;
 	}

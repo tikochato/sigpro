@@ -562,10 +562,30 @@ h2 {
 
 *:focus {
     outline: none;
+    outline: 0;
 }
 
 .st-selected { background-color: #e0ffff; }
 
 .input-money{
 	text-align: right;
+}
+
+.field-cooperante{
+	border-top: none;
+	border-right: none;
+	border-left: none;
+	border-radius: 0px;
+	background-color: transparent;
+	outline: none;
+	outline: 0;
+	padding-left: 0px;
+	color: rgb(51,51,51);
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.field-cooperante:focus{
+	outline: none;
+	outline: 0;
 }

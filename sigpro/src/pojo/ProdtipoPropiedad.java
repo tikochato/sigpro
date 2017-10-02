@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 1, 2017 5:10:27 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.AttributeOverride;
@@ -24,7 +24,7 @@ public class ProdtipoPropiedad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1062279495911906317L;
+	private static final long serialVersionUID = 1L;
 	private ProdtipoPropiedadId id;
 	private ProductoPropiedad productoPropiedad;
 	private ProductoTipo productoTipo;

@@ -45,10 +45,12 @@ public class UsuarioDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Usuario ret = null;
 		try{
-			session.beginTransaction();
-			ret = session.get(Usuario.class,usuario.toLowerCase());
-		}
-		catch(Throwable e){
+			String query = "FROM Usuario u where u.usuario=:usuario";
+			Query<Usuario> criteria = session.createQuery(query, Usuario.class);
+			criteria.setParameter("usuario", usuario);
+			List<Usuario> listRet = criteria.getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		} catch(Throwable e){
 			CLogger.write("1", UsuarioDAO.class, e);
 		}
 		finally{

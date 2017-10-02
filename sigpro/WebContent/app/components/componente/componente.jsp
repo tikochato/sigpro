@@ -100,8 +100,6 @@
     		  <div class="btn-group" ng-hide="componentec.esnuevo" ng-if="!componentec.esTreeview">
 				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irAProductos(componentec.componente.id) : ''" uib-tooltip="Productos" tooltip-placement="bottom" ng-disabled="!componentec.botones">
 				<span class="glyphicon glyphicon-certificate"></span></label>
-				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irARiesgos(componentec.componente.id) : ''" uib-tooltip="Riesgos" tooltip-placement="bottom" ng-disabled="!componentec.botones">
-				<span class="glyphicon glyphicon-warning-sign"></span></label>
 				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irAActividades(componentec.componente.id) : ''" uib-tooltip="Actividades" tooltip-placement="bottom" ng-disabled="!componentec.botones">
 				<span class="glyphicon glyphicon-th-list"></span></label>
 			
