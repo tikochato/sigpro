@@ -92,6 +92,9 @@ public class CExcel {
 					case CGraficaExcel.EXCEL_CHART_AREA: 
 						fileInputStream = new FileInputStream(CGraficaExcel.EXCEL_CHART_AREA_PATH);
 						break;
+					case CGraficaExcel.EXCEL_CHART_AREA2: 
+						fileInputStream = new FileInputStream(CGraficaExcel.EXCEL_CHART_AREA2_PATH);
+						break;
 					default: 
 						fileInputStream = new FileInputStream(CGraficaExcel.EXCEL_CHART_BAR_PATH);
 				}
