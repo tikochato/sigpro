@@ -199,6 +199,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/planadquisiciones/',{
             	template: '<div load-on-demand="\'planAdquisicionesController\'" class="all_page"></div>'
             })
+            .when('/flujocaja',{
+            	template: '<div load-on-demand="\'flujocajaController\'" class="all_page"></div>'
+            })
             .when("/:redireccion?",{
             	controller:"MainController"
             })
@@ -511,6 +514,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'planAdquisicionesController',
 	    	   script: '/app/components/reportes/planadquisiciones/planAdquisiciones.controller.js',
 	    	   template: '/app/components/reportes/planadquisiciones/planAdquisiciones.jsp'
+	       }, {
+	    	   name: 'flujocajaController',
+	    	   script: '/app/components/reportes/flujocaja/flujocaja.controller.js',
+	    	   template: '/app/components/reportes/flujocaja/flujocaja.jsp'
 	       }
 
 	   ];

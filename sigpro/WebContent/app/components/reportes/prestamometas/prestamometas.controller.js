@@ -89,7 +89,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			if($location.path()=='/prestamometas/rv')
 				$route.reload();
 			else
-				$location.path('/iprestamometas/rv');
+				$location.path('/prestamometas/rv');
 		}
 	    
 	$window.document.title = $utilidades.sistema_nombre+' - Metas de Préstamo';
