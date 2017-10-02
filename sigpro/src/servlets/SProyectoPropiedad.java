@@ -26,7 +26,7 @@ import com.google.gson.reflect.TypeToken;
 import dao.ProyectoPropiedadDAO;
 import dao.ProyectoPropiedadValorDAO;
 import pojo.DatoTipo;
-import pojo.ProyectoPropedadValor;
+import pojo.ProyectoPropiedadValor;
 import pojo.ProyectoPropiedad;
 import utilities.CFormaDinamica;
 import utilities.Utils;
@@ -163,7 +163,7 @@ public class SProyectoPropiedad extends HttpServlet {
 				campo.put("id", proyectoPropiedad.getId());
 				campo.put("nombre", proyectoPropiedad.getNombre());
 				campo.put("tipo", proyectoPropiedad.getDatoTipo().getId());
-				ProyectoPropedadValor proyectoPropiedadValor = ProyectoPropiedadValorDAO.getValorPorProyectoYPropiedad(proyectoPropiedad.getId(), idProyecto);
+				ProyectoPropiedadValor proyectoPropiedadValor = ProyectoPropiedadValorDAO.getValorPorProyectoYPropiedad(proyectoPropiedad.getId(), idProyecto);
 				if (proyectoPropiedadValor !=null ){
 					switch ((Integer) campo.get("tipo")){
 						case 1:

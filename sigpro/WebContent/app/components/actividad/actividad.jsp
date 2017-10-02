@@ -261,7 +261,6 @@
 							<span class="label-icon" ng-click="actividadc.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
 							<label for="campo3" class="floating-label">{{actividadc.validarRequiredCosto(actividadc.actividad.costo)}} </label>
 						</div>	
-											
 						<div ng-repeat="campo in actividadc.camposdinamicos">
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >

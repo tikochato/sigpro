@@ -486,7 +486,7 @@ public class InformacionPresupuestariaDAO {
 			}
 		}
 		catch(Throwable e){
-			CLogger.write("18", ReporteDAO.class, e);
+			CLogger.write("18", InformacionPresupuestariaDAO.class, e);
 		}
 		
 		return result;
@@ -614,7 +614,7 @@ public class InformacionPresupuestariaDAO {
 			}
 		}
 		catch(Throwable e){
-			CLogger.write("19", ReporteDAO.class, e);
+			CLogger.write("19", InformacionPresupuestariaDAO.class, e);
 		}
 		
 		return result;

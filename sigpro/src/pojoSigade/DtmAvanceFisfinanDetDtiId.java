@@ -1,5 +1,5 @@
 package pojoSigade;
-// Generated Aug 14, 2017 12:01:01 PM by Hibernate Tools 5.2.3.Final
+// Generated Sep 29, 2017 10:37:44 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import javax.persistence.Column;
@@ -14,8 +14,8 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1297693381439609781L;
-	private BigDecimal ejercicioFiscal;
+	private static final long serialVersionUID = -4374812953835264368L;
+	private long ejercicioFiscal;
 	private String mesDesembolso;
 	private String codigoPresupuestario;
 	private Integer entidadSicoin;
@@ -30,11 +30,11 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 	public DtmAvanceFisfinanDetDtiId() {
 	}
 
-	public DtmAvanceFisfinanDetDtiId(BigDecimal ejercicioFiscal) {
+	public DtmAvanceFisfinanDetDtiId(long ejercicioFiscal) {
 		this.ejercicioFiscal = ejercicioFiscal;
 	}
 
-	public DtmAvanceFisfinanDetDtiId(BigDecimal ejercicioFiscal, String mesDesembolso, String codigoPresupuestario,
+	public DtmAvanceFisfinanDetDtiId(long ejercicioFiscal, String mesDesembolso, String codigoPresupuestario,
 			Integer entidadSicoin, Integer unidadEjecutoraSicoin, String monedaDesembolso,
 			BigDecimal desembolsosMesMoneda, BigDecimal tcMonUsd, BigDecimal desembolsosMesUsd, BigDecimal tcUsdGtq,
 			BigDecimal desembolsosMesGtq) {
@@ -51,12 +51,12 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 		this.desembolsosMesGtq = desembolsosMesGtq;
 	}
 
-	@Column(name = "ejercicio_fiscal", nullable = false, precision = 15)
-	public BigDecimal getEjercicioFiscal() {
+	@Column(name = "ejercicio_fiscal", nullable = false, precision = 15, scale = 0)
+	public long getEjercicioFiscal() {
 		return this.ejercicioFiscal;
 	}
 
-	public void setEjercicioFiscal(BigDecimal ejercicioFiscal) {
+	public void setEjercicioFiscal(long ejercicioFiscal) {
 		this.ejercicioFiscal = ejercicioFiscal;
 	}
 
@@ -150,7 +150,6 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 		this.desembolsosMesGtq = desembolsosMesGtq;
 	}
 
-	@Override
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -160,9 +159,7 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 			return false;
 		DtmAvanceFisfinanDetDtiId castOther = (DtmAvanceFisfinanDetDtiId) other;
 
-		return ((this.getEjercicioFiscal() == castOther.getEjercicioFiscal())
-				|| (this.getEjercicioFiscal() != null && castOther.getEjercicioFiscal() != null
-						&& this.getEjercicioFiscal().equals(castOther.getEjercicioFiscal())))
+		return (this.getEjercicioFiscal() == castOther.getEjercicioFiscal())
 				&& ((this.getMesDesembolso() == castOther.getMesDesembolso())
 						|| (this.getMesDesembolso() != null && castOther.getMesDesembolso() != null
 								&& this.getMesDesembolso().equals(castOther.getMesDesembolso())))
@@ -193,11 +190,10 @@ public class DtmAvanceFisfinanDetDtiId implements java.io.Serializable {
 								&& this.getDesembolsosMesGtq().equals(castOther.getDesembolsosMesGtq())));
 	}
 
-	@Override
 	public int hashCode() {
 		int result = 17;
 
-		result = 37 * result + (getEjercicioFiscal() == null ? 0 : this.getEjercicioFiscal().hashCode());
+		result = 37 * result + (int) this.getEjercicioFiscal();
 		result = 37 * result + (getMesDesembolso() == null ? 0 : this.getMesDesembolso().hashCode());
 		result = 37 * result + (getCodigoPresupuestario() == null ? 0 : this.getCodigoPresupuestario().hashCode());
 		result = 37 * result + (getEntidadSicoin() == null ? 0 : this.getEntidadSicoin().hashCode());

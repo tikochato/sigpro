@@ -45,18 +45,12 @@ public class SPlanAdquisiciones extends HttpServlet {
 		Integer anio;
 	}
 	
-	class stcategoria{
-		Integer categoriaId;
-		String categoriaNombre;
-		stplan[] anioPlan;
-	}
-	
 	class stcomponenteplanadquisicion{
 		Integer objetoId;
 		String nombre;
 		Integer nivel;
 		Integer objetoTipo;
-		List<stcategoria> categorias;
+		stplan[] anioPlan;
 	}
 		
     public SPlanAdquisiciones() {
@@ -132,20 +126,18 @@ public class SPlanAdquisiciones extends HttpServlet {
 					temp.nombre = (String)obj[1];
 					temp.nivel = 0;
 					temp.objetoTipo = tipo;
+					lstPrestamo.add(temp);
 					
 					//detallePlan = PlanAdquisicionesDetalleDAO.getPlanAdquisicionByObjeto(2, temp.objetoId);
 					
-					List<stcategoria> lstcateogira = new ArrayList<stcategoria>();
-					stcategoria categoria = null; 
 					for(CategoriaAdquisicion cat : lstCategorias){
-						categoria = new stcategoria();
-						categoria.categoriaId = cat.getId();
-						categoria.categoriaNombre = cat.getNombre();
-						lstcateogira.add(categoria);
+						temp = new stcomponenteplanadquisicion();
+						temp.nombre = cat.getNombre();
+						temp.nivel = 1;
+						lstPrestamo.add(temp);
 					}
 					
-					temp.categorias = lstcateogira;
-					lstPrestamo.add(temp);
+					
 				}
 			}
 			return lstPrestamo;

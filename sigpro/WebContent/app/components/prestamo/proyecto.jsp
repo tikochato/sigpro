@@ -105,14 +105,12 @@
 			<h2 ng-if="!controller.esNuevo"><small>Edición de Préstamo</small></h2>
 			</div>
 		<div class="operation_buttons">
-			<div class="btn-group" ng-hide="controller.esNuevo" ng-if="!controller.esTreeview">
-				<label class="btn btn-default" ng-click="controller.botones ? controller.irAComponentes(controller.proyecto.id) : ''" uib-tooltip="Componentes" tooltip-placement="bottom">
+			<div class="btn-group" ng-hide="controller.esNuevo">
+				<label class="btn btn-default" ng-if="!controller.esTreeview" ng-click="controller.botones ? controller.irAComponentes(controller.proyecto.id) : ''" uib-tooltip="Componentes" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-th"></span></label>
-				<label class="btn btn-default" ng-click="controller.botones ? controller.irAHitos(controller.proyecto.id) : ''" uib-tooltip="Hitos" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-if="!controller.esTreeview" ng-click="controller.botones ? controller.irAHitos(controller.proyecto.id) : ''" uib-tooltip="Hitos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-screenshot"></span></label>
-				<label class="btn btn-default" ng-click="controller.botones ? controller.irARiesgos(controller.proyecto.id) : ''" uib-tooltip="Riesgos" tooltip-placement="bottom">
-				<span class="glyphicon glyphicon-warning-sign"></span></label>
-				<label class="btn btn-default" ng-click="controller.botones ? controller.irAActividades(controller.proyecto.id) : ''" uib-tooltip="Actividades" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-if="!controller.esTreeview" ng-click="controller.botones ? controller.irAActividades(controller.proyecto.id) : ''" uib-tooltip="Actividades" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-th-list"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMapa(controller.proyecto.id) : ''" uib-tooltip="Mapa" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-globe"></span></label>
@@ -139,7 +137,7 @@
 		</div>
 		<br>
 		<div class="col-sm-12">
-			<form name="controller.mForm">
+			<form name="controller.mForm" style="margin-top: 10px;">
 			<uib-tabset active="controller.active">
 				<shiro:hasPermission name="43010">
 				<uib-tab ng-click="controller.getPorcentajes();" index="0" heading="Préstamo" >
@@ -245,17 +243,15 @@
 								
 								<div class="col-sm-6">
 									<div class="form-group money-input">
-										<input type="number" 
-										 class="inputText"  
+										<input type="text" 
+										 class="inputText input-money"  
 										 ng-model="controller.prestamo.montoContratado" 
 										 ng-required="true"
 										 ng-value="controller.prestamo.montoContratado"
 										 onblur="this.setAttribute('value', this.value);" 
 										 ng-change="controller.setPorcentaje(1);" 
-										 ng-blur="controller.ocultarLabel('label_class_1')" 
-										 id="label_class_1"
+										 ui-number-mask="0"
 										 >
-										<label class="money-label" ng-class="controller.label_class_1" ng-click="controller.ocultarLabel('label_class_1')">{{controller.prestamo.montoContratado | number}}</label>
 										<label class="floating-label" >* Monto Contratado</label>
 									</div>
 								</div>
@@ -263,34 +259,29 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" 
-										 class="inputText"  
+										<input type="text" 
+										 class="inputText input-money"  
 										 ng-model="controller.prestamo.montoContratadoUsd" 
 										 ng-required="true"
 										 ng-value="controller.prestamo.montoContratadoUsd" 
 										 onblur="this.setAttribute('value', this.value);" 
 										 ng-change="controller.setPorcentaje(2);"
-										 ng-blur="controller.ocultarLabel('label_class_2')" 
-										 id="label_class_2"
-										 ng-click="controller.ocultarLabel('label_class_2')"
+										 ui-number-mask="0"
 										 >
-										 <label class="money-label" ng-class="controller.label_class_2" ng-click="controller.ocultarLabel('label_class_2')">{{controller.prestamo.montoContratadoUsd | number}}</label>
-										<label class="floating-label" >* Monto Contratado $</label>
+										 <label class="floating-label" >* Monto Contratado $</label>
 									</div>
 								</div>
 								
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" 
-										class="inputText" 
+										<input type="text" 
+										class="inputText input-money" 
 										ng-model="controller.prestamo.montoContratadoQtz" 
 										ng-required="true"
 										ng-value="controller.prestamo.montoContratadoQtz" 
 										onblur="this.setAttribute('value', this.value);"
-										ng-blur="controller.ocultarLabel('label_class_3')" 
-										id="label_class_3"
+										ui-number-mask="0"
 										>
-										<label class="money-label" ng-class="controller.label_class_3" ng-click="controller.ocultarLabel('label_class_3')">{{controller.prestamo.montoContratadoQtz | number}}</label>
 										<label class="floating-label" >* Monto Contratado Q</label>
 									</div>
 								</div>
@@ -299,28 +290,23 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" 
-										class="inputText" 
+										<input inputText="text" 
+										class="inputText input-money" 
 										ng-model="controller.prestamo.desembolsoAFechaUsd" 
 										ng-required="true"
 										ng-value="controller.prestamo.desembolsoAFechaUsd" 
 										onblur="this.setAttribute('value', this.value);" 
 										ng-change="controller.setPorcentaje(1);"
-										ng-blur="controller.ocultarLabel('label_class_4')" 
-										id="label_class_4"
+										ui-number-mask="0"
 										>
-										<label class="money-label" 
-										ng-class="controller.label_class_4" 
-										ng-click="controller.ocultarLabel('label_class_4')" 
-										>{{ controller.prestamo.desembolsoAFechaUsd | number}}</label>
 										<label class="floating-label">* Desembolso a la Fecha $</label>
 									</div>
 								</div>
 								
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" class="inputText" ng-model="controller.prestamo.desembolsoAFechaUsdP" ng-disabled="true"
-										ng-value="controller.prestamo.desembolsoAFechaUsdP" onblur="this.setAttribute('value', this.value);" />
+										<input type="text" class="inputText input-money" ng-model="controller.prestamo.desembolsoAFechaUsdP" ng-disabled="true"
+										ng-value="controller.prestamo.desembolsoAFechaUsdP" onblur="this.setAttribute('value', this.value);" ui-number-mask="2"/>
 										<label class="floating-label">Desembolso a la Fecha %</label>
 									</div>
 								</div>
@@ -328,29 +314,24 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" 
-										class="inputText" 
+										<input type="text" 
+										class="inputText input-money" 
 										ng-model="controller.prestamo.montoPorDesembolsarUsd" 
 										ng-required="true"
 										ng-value="controller.prestamo.montoPorDesembolsarUsd" 
 										onblur="this.setAttribute('value', this.value);" 
 										ng-change="controller.setPorcentaje(2);"
 										ng-disabled="true"
-										ng-blur="controller.ocultarLabel('label_class_5')" 
-										id="label_class_5"
+										ui-number-mask="0"
 										/>
-										<label class="money-label" 
-										ng-class="controller.label_class_5" 
-										ng-click="controller.ocultarLabel('label_class_5')" 
-										>{{ controller.prestamo.montoPorDesembolsarUsd | number}}</label>
 										<label class="floating-label">* Monto por Desembolsar $</label>
 									</div>
 								</div>
 								
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" class="inputText" ng-model="controller.prestamo.montoPorDesembolsarUsdP" ng-disabled="true"
-										ng-value="controller.prestamo.montoPorDesembolsarUsdP" onblur="this.setAttribute('value', this.value);"/>
+										<input type="text" class="inputText input-money" ng-model="controller.prestamo.montoPorDesembolsarUsdP" ng-disabled="true"
+										ng-value="controller.prestamo.montoPorDesembolsarUsdP" onblur="this.setAttribute('value', this.value);" ui-number-mask="0"/>
 										<label class="floating-label">Monto por Desembolsar %</label>
 									</div>
 								</div>
@@ -408,48 +389,6 @@
 			            	<span class="label-icon" ng-click="controller.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 			          	<label for="campo3" class="floating-label">* Caracterización Préstamo</label>
 					</div>
-	
-					<div ng-repeat="campo in controller.camposdinamicos" >
-						<div ng-switch="campo.tipo">
-							<div ng-switch-when="texto" class="form-group" >
-								<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
-									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
-								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-							</div>
-							<div ng-switch-when="entero" class="form-group" >
-								<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
-								ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
-								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-							</div>
-							<div ng-switch-when="decimal" class="form-group" >
-								<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
-								ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
-								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-							</div>
-							<div ng-switch-when="booleano" class="form-group" >
-								<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
-								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-							</div>
-							<div ng-switch-when="fecha" class="form-group" >
-								<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
-													datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="controller.abrirPopupFecha($index)"
-													ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"
-													ng-readonly="true"/>
-													<span class="label-icon" ng-click="controller.abrirPopupFecha($index)">
-														<i class="glyphicon glyphicon-calendar"></i>
-													</span>
-								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-							</div>
-							<div ng-switch-when="select" class="form-group" >
-								<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
-												<option value="">Seleccione una opción</option>
-												<option ng-repeat="number in campo.opciones"
-													ng-value="number.valor">{{number.label}}</option>
-							</select>
-								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
-							</div>
-						</div>
-					</div>
 					
 					<div class="form-group" ng-show="controller.unidadejecutoranombre.length>0"  >
 			            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.entidadnombre" ng-readonly="true"  
@@ -500,7 +439,47 @@
 								ng-value="controller.proyecto.visionGeneral" onblur="this.setAttribute('value', this.value);">
 							<label for="objetivo" class="floating-label">Visión general</label>
 					</div>
-					
+					<div ng-repeat="campo in controller.camposdinamicos" >
+						<div ng-switch="campo.tipo">
+							<div ng-switch-when="texto" class="form-group" >
+								<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
+									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
+								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+							</div>
+							<div ng-switch-when="entero" class="form-group" >
+								<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
+								ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+							</div>
+							<div ng-switch-when="decimal" class="form-group" >
+								<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
+								ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+							</div>
+							<div ng-switch-when="booleano" class="form-group" >
+								<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+							</div>
+							<div ng-switch-when="fecha" class="form-group" >
+								<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+													datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="controller.abrirPopupFecha($index)"
+													ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"
+													ng-readonly="true"/>
+													<span class="label-icon" ng-click="controller.abrirPopupFecha($index)">
+														<i class="glyphicon glyphicon-calendar"></i>
+													</span>
+								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+							</div>
+							<div ng-switch-when="select" class="form-group" >
+								<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
+												<option value="">Seleccione una opción</option>
+												<option ng-repeat="number in campo.opciones"
+													ng-value="number.valor">{{number.label}}</option>
+							</select>
+								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+							</div>
+						</div>
+					</div>
 					<br/>
 					
 					<div class="panel panel-default" ng-hide="controller.esNuevoDocumento" >
@@ -646,8 +625,8 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" class="inputText"   ng-model="controller.prestamo.plazoEjecucionUe" ng-disabled="true"
-										ng-value="controller.prestamo.plazoEjecucionUe" onblur="this.setAttribute('value', this.value);"/>
+										<input type="text" class="inputText input-money"   ng-model="controller.prestamo.plazoEjecucionUe" ng-disabled="true"
+										ng-value="controller.prestamo.plazoEjecucionUe" onblur="this.setAttribute('value', this.value);" ui-number-mask="2"/>
 										<label class="floating-label">Plazo de Ejecución %</label>
 									</div>
 								</div>
@@ -655,12 +634,11 @@
 								<div class="col-sm-6">
 									<div class="form-group">							
 										<input type="text" 
-										class="inputText" 
+										class="inputText input-money" 
 										ng-model="controller.prestamo.montoAsignadoUe" 
 										ng-required="true"
 										ng-value="controller.prestamo.montoAsignadoUe"
 										onblur="this.setAttribute('value', this.value);" 
-										id="label_class_6"
 										ui-number-mask="0"
 										>
 										<label class="floating-label">* Monto Asignado</label>
@@ -673,13 +651,12 @@
 									<div class="form-group">							
 										<input 
 										type="text" 
-										class="inputText" 
+										class="inputText input-money" 
 										ng-model="controller.prestamo.montoAsignadoUeUsd" 
 										ng-required="true" 
 										ng-value="controller.prestamo.montoAsignadoUeUsd" 
 										onblur="this.setAttribute('value', this.value);"
 										ng-change="controller.setPorcentaje(3);"
-										id="label_class_7"
 										ui-number-mask="0"
 										/>
 										<label class="floating-label">* Monto Asignado $</label>
@@ -690,12 +667,11 @@
 									<div class="form-group">							
 										<input 
 										type="text" 
-										class="inputText" 
+										class="inputText input-money" 
 										ng-model="controller.prestamo.montoAsignadoUeQtz" 
 										ng-required="true" 
 										ng-value="controller.prestamo.montoAsignadoUeQtz" 
 										onblur="this.setAttribute('value', this.value);" 
-										id="label_class_8"
 										ui-number-mask="0"
 										>
 										<label class="floating-label">* Monto Asignado Q</label>
@@ -707,13 +683,12 @@
 								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="text" 
-										class="inputText" 
+										class="inputText input-money" 
 										ng-model="controller.prestamo.desembolsoAFechaUeUsd" 
 										ng-required="true"
 										ng-value="controller.prestamo.desembolsoAFechaUeUsd" 
 										onblur="this.setAttribute('value', this.value);" 
 										ng-change="controller.setPorcentaje(3);"
-										id="label_class_9"
 										ui-number-mask="0"
 										>
 										<label class="floating-label">* Desembolso a la Fecha $</label>
@@ -722,8 +697,8 @@
 								
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" class="inputText" ng-model="controller.prestamo.desembolsoAFechaUeUsdP" ng-disabled="true"
-										ng-value="controller.prestamo.desembolsoAFechaUeUsdP" onblur="this.setAttribute('value', this.value);"/>
+										<input type="text" class="inputText input-money" ng-model="controller.prestamo.desembolsoAFechaUeUsdP" ng-disabled="true"
+										ng-value="controller.prestamo.desembolsoAFechaUeUsdP" onblur="this.setAttribute('value', this.value);" ui-number-mask="2"/>
 										<label class="floating-label">Desembolsos a la fecha %</label>
 									</div>
 								</div>
@@ -732,14 +707,13 @@
 								<div class="col-sm-6">
 									<div class="form-group">							
 										<input type="text" 
-										class="inputText" 
+										class="inputText input-money" 
 										ng-model="controller.prestamo.montoPorDesembolsarUeUsd" 
 										ng-required="true" 
 										ng-value="controller.prestamo.montoPorDesembolsarUeUsd" 
 										onblur="this.setAttribute('value', this.value);" 
 										ng-change="controller.setPorcentaje(4);"
 										ng-disabled="true"
-										id="label_class_10"
 										ui-number-mask="0"
 										/>
 										<label class="floating-label">* Monto por desembolsar $</label>
@@ -748,7 +722,7 @@
 								
 								<div class="col-sm-6">
 									<div class="form-group">							
-										<input type="text" class="inputText" ng-model="controller.prestamo.montoPorDesembolsarUeUsdP" ng-disabled="true" 
+										<input type="text" class="inputText input-money" ng-model="controller.prestamo.montoPorDesembolsarUeUsdP" ng-disabled="true" 
 										ng-value="controller.prestamo.montoPorDesembolsarUeUsdP" onblur="this.setAttribute('value', this.value);" ui-number-mask="2"/>
 										<label class="floating-label">Monto por desembolsar %</label>
 									</div>

@@ -497,10 +497,10 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			mi.nuevaMeta = function() {
 				mi.metas.push({  
 			         "id":null,
-			         "nombre":"Nueva Meta",
+			         "nombre": null,
 			         "descripcion":"",
 			         "estado":1,
-			         "unidadMedidaId":0,
+			         "unidadMedidaId": null,
 			         "usuarioCreo":"",
 			         "fechaCreacion":"",
 			         "usuarioActualizo":null,
@@ -525,7 +525,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			mi.borrarMeta = function(meta) {
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 							, "Confirmación de Borrado"
-							, '¿Desea borrar la Meta "'+meta.id+'"?'
+							, '¿Desea borrar la Meta "'+ (meta.nombre != null ? meta.nombre : '') +'"?'
 							, "Borrar"
 							, "Cancelar")
 					.result.then(function(data) {

@@ -14,6 +14,13 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 			}
 		}
 		
+		mi.abrirPopupFecha = function(index) {
+			switch(index){
+				case 1000: mi.fi_abierto = true; break;
+				case 1001: mi.ff_abierto = true; break;
+			}
+		};
+		
 		mi.charOptions= {
 			scales: {
 				legend: {
@@ -51,7 +58,7 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 		mi.generar = function(){
 			mi.mostrarcargando = true;
 			mi.mostrarTablas = false;
-			$http.post('/SAdministracionTransaccional', {accion: 'getTransacciones', fechaInicio: mi.fechaInicio, fechaFin: mi.fechaFin, t: new Date().getTime()}).success(
+			$http.post('/SAdministracionTransaccional', {accion: 'getTransacciones', fechaInicio: moment(mi.fechaInicio).format('DD/MM/YYYY'), fechaFin: moment(mi.fechaFin).format('DD/MM/YYYY'), t: new Date().getTime()}).success(
 					function(response){
 						mi.rowDatos = response.usuarios;
 						mi.displayedDatos = [].concat(mi.rowDatos);
@@ -104,8 +111,8 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 		mi.exportarExcel = function(){
 			$http.post('/SAdministracionTransaccional', { 
 				 accion: 'exportarExcel', 
-				 fechaInicio: mi.fechaInicio, 
-				 fechaFin: mi.fechaFin,
+				 fechaInicio: moment(mi.fechaInicio).format('DD/MM/YYYY'), 
+				 fechaFin: moment(mi.fechaFin).format('DD/MM/YYYY'),
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
@@ -124,8 +131,8 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 				$http.post('/SAdministracionTransaccional', {
 					accion: 'exportarExcelDetalle',
 					usuarioDetalle: row.usuario,
-					fechaInicio: mi.fechaInicio, 
-					fechaFin: mi.fechaFin,
+					fechaInicio: moment(mi.fechaInicio).format('DD/MM/YYYY'), 
+					fechaFin: moment(mi.fechaFin).format('DD/MM/YYYY'),
 					t:moment().unix()
 				}).then(
 						  function successCallback(response) {
@@ -133,7 +140,7 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 							  anchor.attr({
 						         href: 'data:application/ms-excel;base64,' + response.data,
 						         target: '_blank',
-						         download: 'AdministracionTransaccional_' + row.usuario +'_' + mi.fechaInicio + '_al_' + mi.fechaFin + '_.xls'
+						         download: 'AdministracionTransaccional_' + row.usuario +'_' + moment(mi.fechaInicio).format('DD/MM/YYYY') + '_al_' + moment(mi.fechaFin).format('DD/MM/YYYY') + '_.xls'
 							  })[0].click();
 						  }.bind(this), function errorCallback(response){
 					 	}
@@ -143,8 +150,8 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 		mi.exportarPdfDetalle=function(row){
 			$http.post('/SAdministracionTransaccional', { 
 				 accion: 'exportarPdfDetalle', 
-				 fechaInicio: mi.fechaInicio, 
-				 fechaFin: mi.fechaFin,
+				 fechaInicio: moment(mi.fechaInicio).format('DD/MM/YYYY'), 
+				 fechaFin: moment(mi.fechaFin).format('DD/MM/YYYY'),
 				 usuarioDetalle: row.usuario,
 				 t:moment().unix()
 			  } ).then(
@@ -153,7 +160,7 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 						  anchor.attr({
 					         href: 'data:application/pdf;base64,' + response.data,
 					         target: '_blank',
-					         download: 'AdministracionTransaccional_' + row.usuario +'_' + mi.fechaInicio + '_al_' + mi.fechaFin + '_.pdf'
+					         download: 'AdministracionTransaccional_' + row.usuario +'_' + moment(mi.fechaInicio).format('DD/MM/YYYY') + '_al_' + moment(mi.fechaFin).format('DD/MM/YYYY') + '_.pdf'
 						  })[0].click();
 					  }.bind(this), function errorCallback(response){
 				 	}
@@ -163,8 +170,8 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 		mi.exportarPdf=function(){
 			$http.post('/SAdministracionTransaccional', { 
 				 accion: 'exportarPdf', 
-				 fechaInicio: mi.fechaInicio, 
-				 fechaFin: mi.fechaFin,
+				 fechaInicio: moment(mi.fechaInicio).format('DD/MM/YYYY'), 
+				 fechaFin: moment(mi.fechaFin).format('DD/MM/YYYY'),
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {

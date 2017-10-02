@@ -38,25 +38,23 @@
 				<table st-table="metac.metasCollection" st-safe-src="metac.metas" class="table">
 				<thead>
 				<tr>
-					<th st-sort="id">ID</th>
-					<th st-sort="nombre">Nombre</th>
+					<th st-sort="nombre">* Nombre</th>
 					<th>Descripción</th>
-					<th st-sort="unidadMedidaId">U. Medida</th>
-					<th st-sort="datoTipoId">Tipo de Dato</th>
+					<th st-sort="unidadMedidaId">* Medida</th>
+					<th st-sort="datoTipoId">*Tipo</th>
 					<th st-sort="metaFinal">Meta Final</th>
 					<th></th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr class="filaIngreso" ng-repeat="row in metac.metasCollection" ng-click="metac.metaSeleccionada(row)" ng-class="row.isSelected ? 'st-selected' : ''">
-					<td style="vertical-align: middle;">{{row.id | uppercase}}</td>
-					<td><input type="text" class="inputText" ng-model="row.nombre" style="width: 100%; text-align: left"></input></td>
+					<td><input type="text" class="inputText" ng-model="row.nombre" style="width: 100%; text-align: left" ng-required="true"></input></td>
 					<td><input type="text" class="inputText" ng-model="row.descripcion" style="width: 100%; text-align: left"></input></td>
 					<td>
 						<select class="inputText" ng-model="row.unidadMedidaId"
 							ng-options="unidad as unidad.nombre for unidad in metac.metaunidades track by unidad.id"
 							 ng-required="true">
-						<option disabled selected value>Seleccione Unidad</option>
+							 <option value="">Elija</option>
 						</select>
 					</td>
 					<td>

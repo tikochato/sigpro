@@ -38,13 +38,13 @@ import dao.ActividadDAO;
 import dao.ComponenteDAO;
 import dao.EstructuraProyectoDAO;
 import dao.InformacionPresupuestariaDAO;
-import dao.PagoDAO;
+import dao.PlanAdquisicionPagoDAO;
 import dao.PrestamoDAO;
 import dao.ProductoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.Componente;
-import pojo.Pago;
+import pojo.PlanAdquisicionPago;
 import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Subproducto;
@@ -239,6 +239,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				try {
 					if(CMariaDB.connect()){
 						Connection conn = CMariaDB.getConnection();
+						Connection conn_analytic = CMariaDB.getConnection_analytic();
 						if(tempPrestamo.objeto_tipo == 1){
 						objPrestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(tempPrestamo.objeto_id, 1);
 							if(objPrestamo != null ){
@@ -248,8 +249,9 @@ public class SInformacionPresupuestaria extends HttpServlet {
 								correlativo = Utils.String2Int(codigoPresupuestario.substring(6,10));
 							}
 						}			
-						tempPrestamo = getPresupuestoReal(tempPrestamo, fuente, organismo, correlativo, anioInicial, anioFinal, conn, usuario);
+						tempPrestamo = getPresupuestoReal(tempPrestamo, fuente, organismo, correlativo, anioInicial, anioFinal, conn_analytic, usuario);
 						tempPrestamo = getPresupuestoPlanificado(tempPrestamo, usuario);
+						conn_analytic.close();
 						conn.close();
 					}
 				} catch (SQLException e) {
@@ -279,11 +281,11 @@ public class SInformacionPresupuestaria extends HttpServlet {
 	}
 	
 	private stprestamo getPresupuestoPlanificado(stprestamo prestamo, String usuario){
-		List<Pago> pagos = PagoDAO.getPagosByObjetoTipo(prestamo.objeto_id, prestamo.objeto_tipo);
+		List<PlanAdquisicionPago> pagos = PlanAdquisicionPagoDAO.getPagosByObjetoTipo(prestamo.objeto_id, prestamo.objeto_tipo);
 		Calendar fechaInicial = Calendar.getInstance();
 		for(stanio anioObj: prestamo.anios){			
 			if(pagos!= null && pagos.size() > 0){
-				for(Pago pago : pagos){
+				for(PlanAdquisicionPago pago : pagos){
 					fechaInicial.setTime(pago.getFechaPago());
 					int mes = fechaInicial.get(Calendar.MONTH);
 					int anio = fechaInicial.get(Calendar.YEAR);					
@@ -348,8 +350,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();
 		
 			if(prestamo.objeto_tipo == 1){
-				
-					//presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoProyecto(fuente, organismo, correlativo,anioInicial,anioFinal, conn);
+				presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoProyecto(fuente, organismo, correlativo,anioInicial,anioFinal, conn);
 			}else{
 				Integer programa = null;
 				Integer subprograma = null; 

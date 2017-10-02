@@ -129,11 +129,12 @@ public class SCooperante extends HttpServlet {
 				String siglas = map.get("siglas");
 				String descripcion = map.get("descripcion");
 				Cooperante cooperante;
+				Integer ejercicio = Utils.String2Int(map.get("ejercicio"));
 				if(esnuevo){
 					
 					
-					cooperante = new Cooperante(codigo, siglas, nombre, descripcion, 
-							usuario, null, new DateTime().toDate(), null, 1, null, null,null);
+					cooperante = new Cooperante(0,codigo, siglas, nombre, descripcion, 
+							usuario, null, new DateTime().toDate(), null, 1,ejercicio, null, null,null);
 				}
 				else{
 					cooperante = CooperanteDAO.getCooperantePorId(id);

@@ -27,6 +27,16 @@
     
 }
 
+.etiqueta {
+    
+    
+    
+    
+    color: rgba(0,0,0,0.38);
+    font-weight: bold;
+    font-size: 11px;
+}
+
 </style>
 <div class="modal-header">
             	<h3 class="modal-title" id="modal-title">Actividades</h3>
@@ -34,6 +44,7 @@
 <div class="modal-body" id="modal-body">
   <div class="row">
     <div class="col-sm-12">
+    <label class="etiqueta">Responsables</label>
     <div class = "row" style="padding: 0px 0px 10px 10px;">
     	<div ng-dropdown-multiselect="" options="estructura.responsables" 
     	selected-model="estructura.model" extra-settings="estructura.settings"
@@ -94,7 +105,7 @@
     <div class="row">
 	    <div class="col-sm-12 operation_buttons" align="right">
 		    <div class="btn-group">
-		    	<label class="btn btn-default" ng-click="estructura.exportarExcel()" uib-tooltip="Exportar">
+		    	<label class="btn btn-default" ng-click="estructura.exportarExcel()" uib-tooltip="Exportar a Excel">
 		    		<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span>
 		    	</label>
 				<label class="btn btn-primary" ng-click="estructura.cancel()">Cerrar</label>
