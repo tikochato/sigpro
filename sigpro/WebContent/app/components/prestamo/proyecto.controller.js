@@ -161,6 +161,24 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				});
 	};
 	
+	$http.post('/SCooperante', { accion: 'getCooperantes', t:moment().unix()
+		}).success(
+			function(response) {
+				mi.cooperantes = response.cooperantes;
+			}
+	);
+	
+	mi.cambioCooperante=function(selected){
+		if(selected!== undefined){
+			mi.cooperantenombre=selected.originalObject.id;
+			mi.cooperanteid=selected.originalObject.nombre;
+		}
+		else{
+			mi.cooperantenombre="";
+			mi.cooperanteid="";
+		}
+	}
+	
 	mi.getPorcentajes = function(){
 		mi.setPorcentaje(1);
 		mi.setPorcentaje(2);
