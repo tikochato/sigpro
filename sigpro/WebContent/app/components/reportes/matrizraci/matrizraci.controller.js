@@ -14,6 +14,7 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 	mi.encabezadoMatriz = [];
 	mi.mostrarTabla = false;
 	mi.mostrarcargando = false;
+	mi.sinColaboradores = false;
 	
 	$window.document.title = $utilidades.sistema_nombre+' - Matriz RACI';
 	i18nService.setCurrentLang('es');
@@ -43,6 +44,7 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 					mi.construirMatriz();
 					mi.motrarTabla = true;
 					mi.mostrarcargando = false;
+					mi.sinColaboradores = response.sinColaboradores;
 					
 			});	
 	  };
@@ -96,7 +98,7 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 	  
 	  mi.claseHeader = function (value){
 		  	if (value > 0)
-		  		return "rotate cabecerath1";
+		  		return (mi.sinColaboradores ? "no_rotate" : "rotate") + " cabecerath1";
 		  	else 
 		  		return "label-form thTarea";
 			 

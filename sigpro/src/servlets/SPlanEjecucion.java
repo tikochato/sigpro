@@ -117,7 +117,7 @@ public class SPlanEjecucion extends HttpServlet {
 		sdf = new SimpleDateFormat("MM");
 		int mes = Integer.parseInt(sdf.format(fecha));
 		BigDecimal totalDesembolsosReales = 
-				DataSigadeDAO.totalDesembolsadoAFechaReal(codigoPresupuestario, anio, mes);
+				DataSigadeDAO.totalDesembolsadoAFechaReal(codigoPresupuestario,new Long( anio), mes);
 		BigDecimal totalDesembolsosPlanificados = 
 				DesembolsoDAO.getTotalDesembolsosFuturos(proyectoId,   fecha);
 		BigDecimal  ejecucionFinanciera = new BigDecimal("0");

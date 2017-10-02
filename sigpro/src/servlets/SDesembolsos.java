@@ -8,12 +8,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.annotation.WebServlet;
@@ -121,11 +117,9 @@ public class SDesembolsos extends HttpServlet {
 				}
 				
 				List<?> dtmAvance = DataSigadeDAO.getAVANCE_FISFINAN_DET_DTIRango( 
-						prestamo.getCodigoPresupuestario()+"",anio_inicial,anio_final);
+						prestamo.getCodigoPresupuestario()+"",anio_inicial,anio_final,1);
 				
-				String real="";
-				
-				
+				String realQ="";
 				for (int i = anio_inicial ; i<=anio_final ; i++){
 					for (int j = 1; j<=12 ; j++){
 						Integer anio = dtmAvance.size() > 0 ?  (  ((Long) ((Object[]) dtmAvance.get(0))[0]).intValue()) : 0;
@@ -133,17 +127,34 @@ public class SDesembolsos extends HttpServlet {
 						if (anio.compareTo(i) == 0 && mes.compareTo(j)==0){
 							BigDecimal valor = (BigDecimal) ((Object[]) dtmAvance.get(0))[2];
 							dtmAvance.remove(dtmAvance.get(0));
-							real = real + (real.length()>0 ? "," :"") +  
+							realQ = realQ + (realQ.length()>0 ? "," :"") +  
 									 valor.toString();
 						}else{
-							real = real + (real.length()>0 ? "," :"") +  
+							realQ = realQ + (realQ.length()>0 ? "," :"") +  
 									 "0";
 						}
 					}
 				}
 				
+				List<?> dtmAvanceD = DataSigadeDAO.getAVANCE_FISFINAN_DET_DTIRango( 
+						prestamo.getCodigoPresupuestario()+"",anio_inicial,anio_final,2);
 				
-				
+				String realD="";
+				for (int i = anio_inicial ; i<=anio_final ; i++){
+					for (int j = 1; j<=12 ; j++){
+						Integer anio = dtmAvanceD.size() > 0 ?  (  ((Long) ((Object[]) dtmAvanceD.get(0))[0]).intValue()) : 0;
+						Integer mes = dtmAvanceD.size() > 0 ?  Integer.parseInt((String) ((Object[]) dtmAvanceD.get(0))[1]) : 0;
+						if (anio.compareTo(i) == 0 && mes.compareTo(j)==0){
+							BigDecimal valor = (BigDecimal) ((Object[]) dtmAvanceD.get(0))[2];
+							dtmAvanceD.remove(dtmAvanceD.get(0));
+							realD = realD + (realD.length()>0 ? "," :"") +  
+									 valor.toString();
+						}else{
+							realD = realD + (realD.length()>0 ? "," :"") +  
+									 "0";
+						}
+					}
+				}
 				
 				
 				List<?> costos =DesembolsoDAO.getCostosPorEjercicio(proyectoId,anio_inicial,anio_final);
@@ -169,25 +180,32 @@ public class SDesembolsos extends HttpServlet {
 				
 				planificado = String.join("", "[",planificado,"]");    
 				lista_costo = String.join("", "[",lista_costo,"]");
-				real = String.join("", "[",real,"]");
+				realQ = String.join("", "[",realQ,"]");
+				realD = String.join("", "[",realD,"]");
 				
 				
 			    response_text = String.join("","{ \"success\": true, \"planificado\": ",planificado,
-			    		","," \"real\":",real,
-			    		","," \"costos\":",lista_costo,"}");
+			    		","," \"real\":",realQ,
+			    		","," \"costos\":",lista_costo,
+			    		","," \"reald\":",realD,"}");
 			    
 			}else{
 				response_text = "{ \"success\": false }";
 			}
 		}else if (accion.equals("exportarExcel")){
-			Integer ejercicioFiscal = Utils.String2Int(map.get("ejercicioFiscal"));
-			Integer proyectoId = Utils.String2Int(map.get("proyectoid"));
-			Integer anioInicial = Utils.String2Int(map.get("anioInicial"));
-			Integer anioFinal = Utils.String2Int(map.get("anioFinal"));
+			
 			Integer agrupacion = Utils.String2Int(map.get("agrupacion"));
+			String real = map.get("real");
+			String realDolares = map.get("realdolares");
+			String variacion = map.get("variacion"); 
+			String porcentaje = map.get("porcentaje"); 
+			String headers_ = map.get("headers");
+			String planificado = map.get("planificado");
+			String costo = map.get("costo");
+			
 			
 			try{
-		        byte [] outArray = exportarExcel(proyectoId, anioInicial, anioFinal, ejercicioFiscal, agrupacion, usuario);
+		        byte [] outArray = exportarExcel(costo, planificado, real, realDolares, variacion, porcentaje, headers_, agrupacion, usuario);
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -200,16 +218,20 @@ public class SDesembolsos extends HttpServlet {
 				CLogger.write("1", SDesembolsos.class, e);
 			}
 		}else if(accion.equals("exportarPdf")){
-			Integer ejercicioFiscal = Utils.String2Int(map.get("ejercicioFiscal"));
-			Integer proyectoId = Utils.String2Int(map.get("proyectoid"));
-			Integer anioInicial = Utils.String2Int(map.get("anioInicial"));
-			Integer anioFinal = Utils.String2Int(map.get("anioFinal"));
-			Integer agrupacion = Utils.String2Int(map.get("agrupacion"));
+			
+			String real = map.get("real");
+			String realDolares = map.get("realdolares");
+			String variacion = map.get("variacion"); 
+			String porcentaje = map.get("porcentaje"); 
+			String headers_ = map.get("headers");
+			String planificado = map.get("planificado");
+			String costo = map.get("costo");
+			
 			CPdf archivo = new CPdf("Desembolsos");
 			String headers[][];
 			String datos[][];
-			headers = generarHeaders(anioInicial, anioFinal, ejercicioFiscal, agrupacion);
-			datos = generarDatos(proyectoId, anioInicial, anioFinal, ejercicioFiscal, agrupacion, headers, usuario);
+			headers = generarHeaders(headers_);
+			datos = generarDatos(costo, planificado, real, realDolares, variacion, porcentaje, headers, usuario);
 			String path = archivo.exportarDesembolsos(headers, datos,usuario);
 			File file=new File(path);
 			if(file.exists()){
@@ -267,7 +289,8 @@ public class SDesembolsos extends HttpServlet {
 		}
 	}
 		
-	private byte[] exportarExcel(int proyectoId, int anioInicio, int anioFin, int ejercicioFiscal, int agrupacion, String usuario) throws IOException{
+	private byte[] exportarExcel(String costo, String planificado, String real, String realDolares, String variacion,
+			String porcentaje, String headers_, int agrupacion, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -276,8 +299,9 @@ public class SDesembolsos extends HttpServlet {
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
-			headers = generarHeaders(anioInicio, anioFin, ejercicioFiscal, agrupacion);
-			datos = generarDatos(proyectoId, anioInicio, anioFin, ejercicioFiscal, agrupacion, headers, usuario);
+			headers = generarHeaders(headers_);
+			datos = generarDatos(costo, planificado, real, realDolares, variacion, porcentaje, headers, usuario);
+			
 			CGraficaExcel grafica = generarGrafica(datos, headers);
 			excel = new CExcel("Desembolsos", false, grafica);
 			wb=excel.generateExcelOfData(datos, "Desembolsos", headers, null, true, usuario);
@@ -290,68 +314,49 @@ public class SDesembolsos extends HttpServlet {
 		return outArray;
 	}
 	
-	private String[][] generarHeaders(int anioInicio, int anioFin, int ejercicioFiscal, int agrupacion){
+	private String[][] generarHeaders(String headers_){
 		String headers[][];
-		String[][] AgrupacionesTitulo = new String[][]{{"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"},
-			{"Bimestre 1", "Bimestre 2","Bimestre 3","Bimestre 4","Bimestre 5","Bimestre 6"},
-			{"Trimestre 1", "Trimestre 2", "Trimestre 3", "Trimestre 4"},
-			{"Cuatrimestre 1", "Cuatrimestre 2", "Cuatrimestre 3"},
-			{"Semestre 1","Semestre 2"},
-			{"Anual"}
-		};
 		
-		int totalesCant = 1;
-		int aniosDiferencia =(anioFin-anioInicio)+1; 
-		int columnasTotal = AgrupacionesTitulo[agrupacion-1].length;
+		String titulos[] = headers_.replace("[", "").
+				replace("]", "").replace("\"", "").split(",");
+		
+		
+		 
+		int columnasTotal = titulos.length;
 				
-		if(agrupacion == AGRUPACION_ANUAL){
-			columnasTotal = aniosDiferencia;
-		}
-		columnasTotal = 1+columnasTotal+totalesCant;
+		
 				
 		String titulo[] = new String[columnasTotal];
 		String tipo[] = new String[columnasTotal];
 		String columnasOperacion[] = new String[columnasTotal];
 		String filasOperacion[] = new String[columnasTotal];
 		String filasOperadores[]= new String[columnasTotal];
-		String totalesFila = "";
 		titulo[0]="Tipo";
 		tipo[0]="string";
 		columnasOperacion[0]="";
 		filasOperacion[0]="";
 		filasOperadores[0]="";
-		
-		int pos=1;
-		
-		if(agrupacion == AGRUPACION_ANUAL){
-			for(int a=0; a<aniosDiferencia; a++){
-				titulo[pos]=String.valueOf(anioInicio+a);
-				tipo[pos]="currency";
-				columnasOperacion[pos]="sub";
-				filasOperacion[pos]="";
-				filasOperadores[pos]="";
-				totalesFila+=pos+",";
-				pos++;
+		String filasOperadas = "";
+		for (int i = 1; i< columnasTotal ; i++){
+			tipo[i] = "double" ;
+			columnasOperacion[i]="";
+			
+			if (i != (columnasTotal -1)){
+				filasOperacion[i]="";
+				filasOperadores[i]="";
+			}else{
+				filasOperacion[i]="";
+				filasOperadores[i]="";
 			}
-		}else{
-			for(int i=0; i<AgrupacionesTitulo[agrupacion-1].length; i++){
-				titulo[pos] = AgrupacionesTitulo[agrupacion-1][i] + " " + (ejercicioFiscal);
-				tipo[pos] = "currency";
-				columnasOperacion[pos]="sub";
-				filasOperacion[pos]="";
-				filasOperadores[pos]="";
-				totalesFila+=pos+",";
-				pos++;
-			}
+			filasOperadas = filasOperadas + (filasOperadas.length()> 0 ? "," : "") + i;
 		}
-		titulo[pos] = "Total";
-		tipo[pos] = "currency";
-		columnasOperacion[pos]="sub";
-		filasOperacion[pos]="sum";
-		filasOperadores[pos]=totalesFila;
+		
+		
+		
+		
 		
 		headers = new String[][]{
-			titulo,  //titulos
+			titulos,  //titulos
 			null, //mapeo
 			tipo, //tipo dato
 			columnasOperacion, //operaciones columnas
@@ -364,160 +369,25 @@ public class SDesembolsos extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatos(int proyectoId, int anioInicio, int anioFin, int ejercicioFiscal, int agrupacion, String[][] headers, String usuario){
-		String[][] datos = new String[2][headers[0].length];
+	public String[][] generarDatos(String costo, String planificado, String real, String realDolares, 
+			String variacion, String porcentaje, String[][] headers, String usuario){
 		
-		Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(proyectoId, 1);
+		String[][] datos = new String[6][headers[0].length];
 		
-		for (int i=0; i<2; i++){
+		for (int i=0; i<6; i++){
 			for (int j=0; j<headers[0].length; j++){
 				datos[i][j] = "0";
 			}
 		}
 		
-		if (prestamo!=null){
-			List<?> objDesembolso =DesembolsoDAO.getDesembolsosPorEjercicio(ejercicioFiscal,proyectoId,1);
-			Set<Integer> anios = new HashSet<Integer>();
+		datos[0] = costo.replace("[","").replace("]", "").replace("\"", "").split(",");
+		datos[1] = planificado.replace("[","").replace("]", "").replace("\"", "").split(",");
+		datos[2] = real.replace("[","").replace("]", "").replace("\"", "").split(",");
+		datos[3] = realDolares.replace("[","").replace("]", "").replace("\"", "").split(",");
+		datos[4] = variacion.replace("[","").replace("]", "").replace("\"", "").split(",");
+		datos[5] = porcentaje.replace("[","").replace("]", "").replace("\"", "").replace("%", "").split(",");
 			
-			Map<Integer,Map<Integer,BigDecimal>> desembolsosPlanificado = new HashMap<>();
-			for(Object obj : objDesembolso){
-				if (desembolsosPlanificado.get((Integer)((Object[]) obj)[0]) == null){
-					desembolsosPlanificado.put((Integer)((Object[]) obj)[0], new HashMap<>());
-					anios.add((Integer)((Object[]) obj)[0]);
-				}
-				desembolsosPlanificado.get((Integer)((Object[]) obj)[0]).put((Integer)((Object[]) obj)[1], (BigDecimal)((Object[]) obj)[2]);
-			}
-			
-			List<?> dtmAvance = DataSigadeDAO.getAVANCE_FISFINAN_DET_DTI( prestamo.getCodigoPresupuestario()+"" );
-			
-			Map<BigDecimal,Map<Integer,BigDecimal>> desembolsosReal = new HashMap<>();
-			for(Object obj : dtmAvance){
-				if (desembolsosReal.get((BigDecimal)((Object[]) obj)[0]) == null)
-					desembolsosReal.put((BigDecimal)((Object[]) obj)[0], new HashMap<>());
-				if (!anios.contains(((BigDecimal)((Object[]) obj)[0]).intValue()))
-					anios.add(((BigDecimal)((Object[]) obj)[0]).intValue());
-				desembolsosReal.get((BigDecimal)((Object[]) obj)[0]).put(Integer.parseInt((String)((Object[]) obj)[1]),(BigDecimal)((Object[]) obj)[2]);
-			}
-			
-			datos[0][0]= "Planificado";
-			datos[1][0]= "Real";
-			
-			Iterator<Integer> iterator = anios.iterator();
-		    while(iterator.hasNext()) {
-		        Integer anio = iterator.next();
-				Integer columna = 1;
-		        
-		        Map<Integer,BigDecimal> planTemp = desembolsosPlanificado.get(anio);
-		        Map<Integer,BigDecimal> realTemp = desembolsosReal.get(new BigDecimal(anio));
-		        
-				stanio anioDesembolso = new stanio();
-				anioDesembolso.anio = anio;
-				anioDesembolso.totalPlanificado = new BigDecimal(0);
-				anioDesembolso.totalReal= new BigDecimal(0);
-				
-		        for (int i = 1; i <=12 ; i++){
-		        	BigDecimal planificado=(planTemp!=null && planTemp.get(i)!=null ? planTemp.get(i) : new BigDecimal(0));
-		        	BigDecimal real=(realTemp!=null && realTemp.get(i)!=null ?  realTemp.get(i) : new BigDecimal(0));
-		        	anioDesembolso.mesPlanificado[i-1] = planificado;
-		        	anioDesembolso.mesReal[i-1] = real;
-
-		        	anioDesembolso.totalPlanificado = anioDesembolso.totalPlanificado.add(planificado);
-		        	anioDesembolso.totalReal = anioDesembolso.totalReal.add(real);
-		        }
-		        
-		        if(anio == ejercicioFiscal && agrupacion != AGRUPACION_ANUAL){
-		        	switch(agrupacion){
-					case AGRUPACION_MES:
-							datos[0][columna]= anioDesembolso.mesPlanificado[0].toString();
-							datos[0][columna+1]= anioDesembolso.mesPlanificado[1].toString();
-							datos[0][columna+2]= anioDesembolso.mesPlanificado[2].toString();
-							datos[0][columna+3]= anioDesembolso.mesPlanificado[3].toString();
-							datos[0][columna+4]= anioDesembolso.mesPlanificado[4].toString();
-							datos[0][columna+5]= anioDesembolso.mesPlanificado[5].toString();
-							datos[0][columna+6]= anioDesembolso.mesPlanificado[6].toString();
-							datos[0][columna+7]= anioDesembolso.mesPlanificado[7].toString();
-							datos[0][columna+8]= anioDesembolso.mesPlanificado[8].toString();
-							datos[0][columna+9]= anioDesembolso.mesPlanificado[9].toString();
-							datos[0][columna+10]= anioDesembolso.mesPlanificado[10].toString();
-							datos[0][columna+11]= anioDesembolso.mesPlanificado[11].toString();
-							datos[0][columna+12]= anioDesembolso.totalPlanificado.toString();
-							
-							datos[1][columna]= anioDesembolso.mesReal[0].toString();
-							datos[1][columna+1]= anioDesembolso.mesReal[1].toString();
-							datos[1][columna+2]= anioDesembolso.mesReal[2].toString();
-							datos[1][columna+3]= anioDesembolso.mesReal[3].toString();
-							datos[1][columna+4]= anioDesembolso.mesReal[4].toString();
-							datos[1][columna+5]= anioDesembolso.mesReal[5].toString();
-							datos[1][columna+6]= anioDesembolso.mesReal[6].toString();
-							datos[1][columna+7]= anioDesembolso.mesReal[7].toString();
-							datos[1][columna+8]= anioDesembolso.mesReal[8].toString();
-							datos[1][columna+9]= anioDesembolso.mesReal[9].toString();
-							datos[1][columna+10]= anioDesembolso.mesReal[10].toString();
-							datos[1][columna+11]= anioDesembolso.mesReal[11].toString();
-							datos[1][columna+12]= anioDesembolso.totalReal.toString();
-						break;
-					case AGRUPACION_BIMESTRE:
-							datos[0][columna]= (anioDesembolso.mesPlanificado[0].add(anioDesembolso.mesPlanificado[1])).toString();
-							datos[0][columna+1]= (anioDesembolso.mesPlanificado[2].add(anioDesembolso.mesPlanificado[3])).toString();
-							datos[0][columna+2]= (anioDesembolso.mesPlanificado[4].add(anioDesembolso.mesPlanificado[5])).toString();
-							datos[0][columna+3]= (anioDesembolso.mesPlanificado[6].add(anioDesembolso.mesPlanificado[7])).toString();
-							datos[0][columna+4]= (anioDesembolso.mesPlanificado[8].add(anioDesembolso.mesPlanificado[9])).toString();
-							datos[0][columna+5]= (anioDesembolso.mesPlanificado[10].add(anioDesembolso.mesPlanificado[11])).toString();
-							datos[0][columna+6]= anioDesembolso.totalPlanificado.toString();
-
-							datos[1][columna]= (anioDesembolso.mesReal[0].add(anioDesembolso.mesReal[1])).toString();
-							datos[1][columna+1]= (anioDesembolso.mesReal[2].add(anioDesembolso.mesReal[3])).toString();
-							datos[1][columna+2]= (anioDesembolso.mesReal[4].add(anioDesembolso.mesReal[5])).toString();
-							datos[1][columna+3]= (anioDesembolso.mesReal[6].add(anioDesembolso.mesReal[7])).toString();
-							datos[1][columna+4]= (anioDesembolso.mesReal[8].add(anioDesembolso.mesReal[9])).toString();
-							datos[1][columna+5]= (anioDesembolso.mesReal[10].add(anioDesembolso.mesReal[11])).toString();
-							datos[1][columna+6]= anioDesembolso.totalReal.toString();
-						break;
-					case AGRUPACION_TRIMESTRE:
-							datos[0][columna]= (anioDesembolso.mesPlanificado[0].add(anioDesembolso.mesPlanificado[1].add(anioDesembolso.mesPlanificado[2]))).toString();
-							datos[0][columna+1]= (anioDesembolso.mesPlanificado[3].add(anioDesembolso.mesPlanificado[4].add(anioDesembolso.mesPlanificado[5]))).toString();
-							datos[0][columna+2]= (anioDesembolso.mesPlanificado[6].add(anioDesembolso.mesPlanificado[7].add(anioDesembolso.mesPlanificado[8]))).toString();
-							datos[0][columna+3]= (anioDesembolso.mesPlanificado[9].add(anioDesembolso.mesPlanificado[10].add(anioDesembolso.mesPlanificado[11]))).toString();
-							datos[0][columna+4]= anioDesembolso.totalPlanificado.toString();
-						
-							datos[1][columna]= (anioDesembolso.mesReal[0].add(anioDesembolso.mesReal[1].add(anioDesembolso.mesReal[2]))).toString();
-							datos[1][columna+1]= (anioDesembolso.mesReal[3].add(anioDesembolso.mesReal[4].add(anioDesembolso.mesReal[5]))).toString();
-							datos[1][columna+2]= (anioDesembolso.mesReal[6].add(anioDesembolso.mesReal[7].add(anioDesembolso.mesReal[8]))).toString();
-							datos[1][columna+3]= (anioDesembolso.mesReal[9].add(anioDesembolso.mesReal[10].add(anioDesembolso.mesReal[11]))).toString();
-							datos[1][columna+4]= anioDesembolso.totalReal.toString();
-						break;
-					case AGRUPACION_CUATRIMESTRE:
-							datos[0][columna]= (anioDesembolso.mesPlanificado[0].add(anioDesembolso.mesPlanificado[1]).add(anioDesembolso.mesPlanificado[2].add(anioDesembolso.mesPlanificado[3]))).toString();
-							datos[0][columna+1]= (anioDesembolso.mesPlanificado[4].add(anioDesembolso.mesPlanificado[5].add(anioDesembolso.mesPlanificado[6].add(anioDesembolso.mesPlanificado[7])))).toString();
-							datos[0][columna+2]= (anioDesembolso.mesPlanificado[8].add(anioDesembolso.mesPlanificado[9]).add(anioDesembolso.mesPlanificado[10].add(anioDesembolso.mesPlanificado[11]))).toString();
-							datos[0][columna+3]= anioDesembolso.totalPlanificado.toString();
-
-							datos[1][columna]= (anioDesembolso.mesReal[0].add(anioDesembolso.mesReal[1].add(anioDesembolso.mesReal[2].add(anioDesembolso.mesReal[3])))).toString();
-							datos[1][columna+1]= (anioDesembolso.mesReal[4]).add(anioDesembolso.mesReal[5].add(anioDesembolso.mesReal[6].add(anioDesembolso.mesReal[7]))).toString();
-							datos[1][columna+2]= (anioDesembolso.mesReal[8].add(anioDesembolso.mesReal[9]).add(anioDesembolso.mesReal[10].add(anioDesembolso.mesReal[11]))).toString();
-							datos[1][columna+3]= anioDesembolso.totalReal.toString();
-						break;
-					case AGRUPACION_SEMESTRE:
-							datos[0][columna]= (anioDesembolso.mesPlanificado[0].add(anioDesembolso.mesPlanificado[1]).add(anioDesembolso.mesPlanificado[2].add(anioDesembolso.mesPlanificado[3].add(anioDesembolso.mesPlanificado[4].add(anioDesembolso.mesPlanificado[5]))))).toString();
-							datos[0][columna+1]= (anioDesembolso.mesPlanificado[6].add(anioDesembolso.mesPlanificado[7]).add(anioDesembolso.mesPlanificado[8].add(anioDesembolso.mesPlanificado[9].add(anioDesembolso.mesPlanificado[10].add(anioDesembolso.mesPlanificado[11]))))).toString();
-							datos[0][columna+2]= anioDesembolso.totalPlanificado.toString();
-
-							datos[1][columna]= (anioDesembolso.mesReal[0].add(anioDesembolso.mesReal[1]).add(anioDesembolso.mesReal[2].add(anioDesembolso.mesReal[3].add(anioDesembolso.mesReal[4].add(anioDesembolso.mesReal[5]))))).toString();
-							datos[1][columna+1]= (anioDesembolso.mesReal[6].add(anioDesembolso.mesReal[7]).add(anioDesembolso.mesReal[8].add(anioDesembolso.mesReal[9].add(anioDesembolso.mesReal[10].add(anioDesembolso.mesReal[11]))))).toString();
-							datos[1][columna+2]= anioDesembolso.totalReal.toString();
-						break;
-					}
-		        	break;
-	        	}
-		         
-		        if(agrupacion == AGRUPACION_ANUAL){
-		        	datos[0][anioDesembolso.anio-anioInicio+1] = anioDesembolso.totalPlanificado.toString();
-		        	datos[1][anioDesembolso.anio-anioInicio+1] = anioDesembolso.totalReal.toString();
-		        }
-		        columna++;
-		    }
-		}
-					
+		       
 		return datos;
 	}
 	
@@ -532,8 +402,8 @@ public class SDesembolsos extends HttpServlet {
 			datos[1][c-1] = datosTabla[0][c];
 			datos[2][c-1] = datosTabla[1][c];
 			datosIgualar[0][c-1]="";
-			datosIgualar[1][c-1]=(c)+"."+(datosTabla.length-2+30);
-			datosIgualar[2][c-1]=(c)+"."+(datosTabla.length-1+30);
+			datosIgualar[1][c-1]=(c)+"."+(datosTabla.length-2+27);
+			datosIgualar[2][c-1]=(c)+"."+(datosTabla.length-1+27);
 			
 		}
 		
