@@ -63,7 +63,7 @@
         <mapping class="pojo.ObjetoRecurso" />
         <mapping class="pojo.ObjetoRiesgo" />
         <mapping class="pojo.ObjetoRiesgoId" />
-        <mapping class="pojo.Pago" />
+        <mapping class="pojo.PlanAdquisicionPago" />
         <mapping class="pojo.PlanAdquisicion" />
         <mapping class="pojo.Permiso" />
         <mapping class="pojo.Prestamo" />
@@ -116,7 +116,6 @@
         <mapping class="pojo.UsuarioLog" />
         <mapping class="pojo.UsuarioPermiso" />
         <mapping class="pojo.CategoriaAdquisicion" />
-        <mapping class="pojo.PlanAdquisicionDetalle" />
         <mapping class="pojo.EjecucionEstado" />
         <mapping class="pojoSigade.DtmAvanceFisfinanDetDti" />
         <mapping class="pojoSigade.DtmAvanceFisfinanDti" />
