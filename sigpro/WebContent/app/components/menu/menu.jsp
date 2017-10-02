@@ -50,9 +50,6 @@
 				                        <shiro:hasPermission name="32010"><li role="menuitem"><a href="/main.jsp#!/riesgotipo">Tipo de Riesgo</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="23010"><li role="menuitem"><a href="/main.jsp#!/subproductotipo">Tipo de Subproducto</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="19010"><li role="menuitem"><a href="/main.jsp#!/metaunidadmedida">Unidad de Medida para Metas</a></li></shiro:hasPermission>
-				                        
-				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="/main.jsp#!/responsabletipo">Tipo de Responsable</a></li></shiro:hasPermission>
-				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="/main.jsp#!/responsablerol">Resonsable rol</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="/main.jsp#!/categoriaadquisicion">Categoría de Adquisiciones</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="/main.jsp#!/tipoadquisicion">Tipo de Adquisiciones</a></li></shiro:hasPermission>
 			                        </ul>

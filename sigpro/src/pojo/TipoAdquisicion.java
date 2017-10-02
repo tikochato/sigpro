@@ -1,7 +1,9 @@
 package pojo;
-// Generated Oct 1, 2017 5:10:27 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 2, 2017 1:09:17 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +12,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,7 +27,7 @@ public class TipoAdquisicion implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 633384170010645006L;
+	private static final long serialVersionUID = 3927994091442100844L;
 	private Integer id;
 	private Cooperante cooperante;
 	private String nombre;
@@ -33,6 +36,7 @@ public class TipoAdquisicion implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
+	private Set<PlanAdquisicion> planAdquisicions = new HashSet<PlanAdquisicion>(0);
 
 	public TipoAdquisicion() {
 	}
@@ -46,7 +50,7 @@ public class TipoAdquisicion implements java.io.Serializable {
 	}
 
 	public TipoAdquisicion(Cooperante cooperante, String nombre, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, int estado) {
+			Date fechaCreacion, Date fechaActualizacion, int estado, Set<PlanAdquisicion> planAdquisicions) {
 		this.cooperante = cooperante;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
@@ -54,6 +58,7 @@ public class TipoAdquisicion implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
+		this.planAdquisicions = planAdquisicions;
 	}
 
 	@Id
@@ -132,6 +137,15 @@ public class TipoAdquisicion implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tipoAdquisicion")
+	public Set<PlanAdquisicion> getPlanAdquisicions() {
+		return this.planAdquisicions;
+	}
+
+	public void setPlanAdquisicions(Set<PlanAdquisicion> planAdquisicions) {
+		this.planAdquisicions = planAdquisicions;
 	}
 
 }

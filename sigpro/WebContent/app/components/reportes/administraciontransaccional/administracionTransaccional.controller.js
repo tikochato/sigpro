@@ -2,23 +2,25 @@ var app = angular.module('administracionTransaccionalController',['ngTouch','sma
 app.controller('administracionTransaccionalController',['$scope', '$http', '$interval','Utilidades','i18nService','$window',
 	function($scope, $http, $interval, $utilidades,i18nService,$window){
 		var mi = this;
-		
-		mi.validar = function(noElemento){
-			if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 10 && 
-					mi.fechaFin != null && mi.fechaFin.toString().length == 10)
-			{
-				if (moment(mi.fechaFin,'DD/MM/YYYY').toDate() < moment(mi.fechaInicio,'DD/MM/YYYY').toDate()){
-						$utilidades.mensaje('warning','Fecha fin es mayor a fecha inicio');
-				}else
-					mi.generar();
-			}
-		}
+		mi.formatofecha = 'dd/MM/yyyy';
 		
 		mi.abrirPopupFecha = function(index) {
 			switch(index){
 				case 1000: mi.fi_abierto = true; break;
 				case 1001: mi.ff_abierto = true; break;
 			}
+		};
+		
+		mi.validarFecha = function(fecha1, fecha2){
+			if(fecha1 != null && fecha2 != null)
+				mi.generar();
+		}
+		
+		mi.fechaOptions = {
+				formatYear : 'yy',
+				maxDate : new Date(2050, 12, 31),
+				minDate : new Date(1990, 1, 1),
+				startingDay : 1
 		};
 		
 		mi.charOptions= {
@@ -253,3 +255,24 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 			};
 		
 }]);
+
+app.directive('stFilteredCollection', function () {
+	  return {
+	    require: '^stTable',
+	    link: function (scope, element, attr, ctrl) {
+	      scope.$watch(ctrl.getFilteredCollection, function(val) {
+	        scope.filteredCollection = val;
+	        
+	        scope.controller.totalCreados = 0;
+	        scope.controller.totalActualizados = 0;
+	        scope.controller.totalEliminados = 0;
+	        
+	        for(x in val){
+	        	scope.controller.totalCreados = scope.controller.totalCreados + val[x].creados;
+	        	scope.controller.totalActualizados = scope.controller.totalActualizados + val[x].actualizados;
+	        	scope.controller.totalEliminados = scope.controller.totalEliminados + val[x].eliminados;
+	        }
+	      })
+	    }
+	  }
+	});

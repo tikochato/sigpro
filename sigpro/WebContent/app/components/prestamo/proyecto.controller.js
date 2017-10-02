@@ -161,6 +161,32 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				});
 	};
 	
+	$http.post('/SCooperante', { accion: 'getCooperantes', t:moment().unix()
+		}).success(
+			function(response) {
+				mi.cooperantes = response.cooperantes;
+			}
+	);
+	
+	mi.cambioCooperante=function(selected){
+		if(selected!== undefined){
+			mi.cooperantenombre=selected.originalObject.nombre;
+			mi.cooperanteid=selected.originalObject.id;
+			mi.prestamo.cooperanteid = mi.cooperanteid;
+		}
+		else{
+			mi.cooperantenombre="";
+			mi.cooperanteid="";
+			mi.prestamo.cooperanteid = null;
+		}
+	}
+	
+	mi.blurCooperante=function(){
+		if(document.getElementById("cooperante_value").defaultValue!=mi.cooperantenombre){
+			$scope.$broadcast('angucomplete-alt:clearInput');
+		}
+	}
+	
 	mi.getPorcentajes = function(){
 		mi.setPorcentaje(1);
 		mi.setPorcentaje(2);

@@ -1,7 +1,10 @@
 package utilities;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,12 +12,14 @@ import java.util.List;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;
 import be.quodlibet.boxable.Row;
+import be.quodlibet.boxable.utils.PDStreamUtils;
 
 
 public class CPdf {
@@ -529,26 +534,18 @@ public class CPdf {
 			String path="";
 			tipo_reporte=2;
 			try{
-				PDFont font = PDType1Font.HELVETICA_BOLD;
 				page = new PDPage(new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth()));
 			    doc.addPage( page );
 				PDPageContentStream contentStream = new PDPageContentStream(doc, page);
-				contentStream.beginText();
-				contentStream.setFont(font, 18);
-				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas Publicas");
-				contentStream.endText();
-				contentStream.beginText();
-				contentStream.setFont(font, 12);
-				contentStream.newLineAtOffset(50, 530);
-				contentStream.showText("Reporte: "+titulo);
-				contentStream.endText();
+
+				addHeader(doc, titulo);
+				
 				float margin = 50;
 				float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
 				float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
 				boolean drawContent = true;
 				float bottomMargin = 70;
-				BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
+				BaseTable table_x= new BaseTable(515, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 				Row<PDPage> headerRow = table_x.createRow(12);
 				float tam_celda=celda_b*1.5f;
 				
@@ -573,7 +570,11 @@ public class CPdf {
 					row.createCell(tam_celda,datos[i][6] );
 					row.createCell(tam_celda,datos[i][7] );
 				}
+				
 				table_x.draw();
+				
+				addFooter(doc, usuario);
+				
 				contentStream.close();
 				path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 					FileOutputStream out = new FileOutputStream(new File(path));
@@ -646,26 +647,18 @@ public class CPdf {
 			String path ="";
 			tipo_reporte=4;
 			try{
-				PDFont font = PDType1Font.HELVETICA_BOLD;
 				page = new PDPage(new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth()));
 			    doc.addPage( page );
 				PDPageContentStream contentStream = new PDPageContentStream(doc, page);
-				contentStream.beginText();
-				contentStream.setFont(font, 18);
-				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas Publicas");
-				contentStream.endText();
-				contentStream.beginText();
-				contentStream.setFont(font, 12);
-				contentStream.newLineAtOffset(50, 530);
-				contentStream.showText("Reporte: "+titulo);
-				contentStream.endText();
+				
+				addHeader(doc, titulo);
+				
 				float margin = 50;
 				float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
 				float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
 				boolean drawContent = true;
 				float bottomMargin = 70;
-				BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
+				BaseTable table_x= new BaseTable(515, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 				Row<PDPage> headerRow = table_x.createRow(12);
 				float tam_celda=celda_b*2.5f;
 				headerRow.createCell((float)(celda_a*2.3f),headers[0][0] );
@@ -682,6 +675,9 @@ public class CPdf {
 					row.createCell(tam_celda,datos[i][3] );
 				}
 				table_x.draw();
+				
+				addFooter(doc, usuario);
+				
 				contentStream.close();
 				path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 					FileOutputStream out = new FileOutputStream(new File(path));
@@ -691,7 +687,6 @@ public class CPdf {
 				CLogger.write("9", CPdf.class, o);
 			}
 			
-			
 			return path;
 		}
 		
@@ -699,26 +694,18 @@ public class CPdf {
 			String path ="";
 			tipo_reporte=4;
 			try{
-				PDFont font = PDType1Font.HELVETICA_BOLD;
 				page = new PDPage(new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth()));
 			    doc.addPage( page );
 				PDPageContentStream contentStream = new PDPageContentStream(doc, page);
-				contentStream.beginText();
-				contentStream.setFont(font, 18);
-				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas Publicas");
-				contentStream.endText();
-				contentStream.beginText();
-				contentStream.setFont(font, 12);
-				contentStream.newLineAtOffset(50, 530);
-				contentStream.showText("Reporte: "+titulo);
-				contentStream.endText();
+
+				addHeader(doc, titulo);
+				
 				float margin = 50;
 				float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
 				float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
 				boolean drawContent = true;
 				float bottomMargin = 70;
-				BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
+				BaseTable table_x= new BaseTable(515, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
 				Row<PDPage> headerRow = table_x.createRow(12);
 				float tam_celda=celda_b*2.0f;
 				headerRow.createCell(tam_celda,headers[0][0] );
@@ -737,6 +724,9 @@ public class CPdf {
 					row.createCell(tam_celda,datos[i][4] );
 				}
 				table_x.draw();
+				
+				addFooter(doc, usuario);
+				
 				contentStream.close();
 				path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 					FileOutputStream out = new FileOutputStream(new File(path));
@@ -746,10 +736,8 @@ public class CPdf {
 				CLogger.write("9", CPdf.class, o);
 			}
 			
-			
 			return path;
 		}
-		
 		
 		public String exportarMatrizRaci	(String [][]headers, String [][]datos, String usuario){
 			String path ="";
@@ -1004,5 +992,50 @@ public class CPdf {
 			
 			return path;
 		}
-			
+		
+		private static void addFooter(PDDocument document, String usuario){
+			try{
+				int numberOfPages = document.getNumberOfPages();
+				
+				for (int i = 0; i < numberOfPages; i++) {
+					PDPage fpage = document.getPage(i);
+					
+					PDPageContentStream contentStream = new PDPageContentStream(document, fpage, AppendMode.APPEND, true);
+		            
+					PDStreamUtils.write(contentStream, "Usuario: " + usuario,
+		                    PDType1Font.HELVETICA_BOLD, 8, 50, 30, new Color(0, 0, 0));
+		            
+		            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		            PDStreamUtils.write(contentStream, "Fecha de Generación: " + df.format(new Date()),
+		                    PDType1Font.HELVETICA_BOLD, 8, 50, 40, new Color(0, 0, 0));
+		            contentStream.close();
+				}
+			}catch(Exception e){
+				CLogger.write("13", CPdf.class, e);
+			}
+		}	
+		
+		private static void addHeader(PDDocument document, String titulo){
+			try{
+				int numberOfPages = document.getNumberOfPages();
+				for (int i = 0; i < numberOfPages; i++) {
+					PDPage fpage = document.getPage(i);
+					
+					PDPageContentStream contentStream = new PDPageContentStream(document, fpage, AppendMode.APPEND, true);
+					
+					PDStreamUtils.write(contentStream, "Ministerio de Finanzas Públicas",
+		                    PDType1Font.HELVETICA_BOLD, 18, 50, 570, new Color(0, 0, 0));
+					
+					PDStreamUtils.write(contentStream, "SIPRO",
+		                    PDType1Font.HELVETICA_BOLD, 18, 50, 550, new Color(0, 0, 0));
+					
+					PDStreamUtils.write(contentStream, "Reporte: " + titulo,
+		                    PDType1Font.HELVETICA_BOLD, 12, 50, 530, new Color(0, 0, 0));
+					
+					contentStream.close();
+				}
+			}catch(Exception e){
+				CLogger.write("14", CPdf.class, e);
+			}
+		}
 }

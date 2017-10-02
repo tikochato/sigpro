@@ -69,10 +69,9 @@
 				  		<div class="col-sm-3">
 							<div class="form-group" >
 							  <input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.fechaInicio" is-open="controller.fi_abierto"
-						            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="controller.fechaFin != null ? controller.generar() : ''" 
-						            ng-required="true"  ng-click="controller.abrirPopupFecha(1000)"
-						            ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
-						            ng-readonly="true" ng-click="controller.abrirPopupFecha(1000)"/>
+						            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+						            ng-required="true" ng-change="controller.validarFecha(controller.fechaInicio, controller.fechaFin)"
+						            ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
 						            <span class="label-icon" ng-click="controller.abrirPopupFecha(1000)">
 						              <i class="glyphicon glyphicon-calendar"></i>
 						            </span>
@@ -83,10 +82,9 @@
 						<div class="col-sm-3">
 							<div class="form-group" >
 							  <input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.fechaFin" is-open="controller.ff_abierto"
-						            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="controller.fechaInicio != null ? controller.generar() : ''" 
-						            ng-required="true"  ng-click="controller.abrirPopupFecha(1001)"
-						            ng-value="controller.fechaFin" onblur="this.setAttribute('value', this.value);"
-						            ng-readonly="true" ng-click="controller.abrirPopupFecha(1001)"/>
+						            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
+						            ng-required="true" ng-change="controller.validarFecha(controller.fechaFin, controller.fechaInicio)"
+						            ng-value="controller.fechaFin" onblur="this.setAttribute('value', this.value);"/>
 						            <span class="label-icon" ng-click="controller.abrirPopupFecha(1001)">
 						              <i class="glyphicon glyphicon-calendar"></i>
 						            </span>
@@ -122,7 +120,7 @@
 											</div>
 									  	</div>
 										<div class="divTabla"> 
-											<table st-table="controller.displayedDatos" st-safe-src="controller.rowDatos" class="table table-striped tablaDatos"  style="max-width:{{controller.tamanoPantalla}}px;">
+											<table st-table="controller.displayedDatos" st-safe-src="controller.rowDatos" class="table table-striped tablaDatos"  style="max-width:{{controller.tamanoPantalla}}px;" st-filtered-collection>
 												<thead class="theadDatos">
 													<tr>
 														<th style="display: none;">Id</th>
@@ -134,7 +132,7 @@
 													</tr>
 													<tr>
 														<th colspan="5">
-															<input st-search="usuario" placeholder="búsqueda por usuario..." class="input-sm form-control" type="search"/>
+															<input st-search="usuario" st-delay="false" placeholder="búsqueda por usuario..." class="input-sm form-control" type="search"/>
 														</th>
 													<tr>
 												</thead>

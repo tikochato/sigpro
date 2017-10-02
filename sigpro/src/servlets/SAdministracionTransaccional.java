@@ -81,6 +81,8 @@ public class SAdministracionTransaccional extends HttpServlet {
 	Integer totalCreados = 0;
 	Integer totalActualizados = 0;
 	Integer totalEliminados = 0;
+	
+	String[] meses = new String[]{"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
        
     public SAdministracionTransaccional() {
         super();
@@ -151,7 +153,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 			response.setContentType("application/ms-excel");
 			response.setContentLength(outArray.length);
 			response.setHeader("Cache-Control", "no-cache"); 
-			response.setHeader("Content-Disposition", "attachment; Administracion_Transaccional.xls");
+			response.setHeader("Content-Disposition", "attachment; Administración_Transaccional.xls");
 			OutputStream outStream = response.getOutputStream();
 			outStream.write(outArray);
 			outStream.flush();
@@ -164,7 +166,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
 				response.setHeader("Cache-Control", "no-cache"); 
-				response.setHeader("Content-Disposition", "attachment; Administracion_Transaccional.xls");
+				response.setHeader("Content-Disposition", "attachment; Administración_Transaccional.xls");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
@@ -177,7 +179,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 				String colaborador = ColaboradorDAO.getColaboradorByUsuario(usuarioDetalle);
 				Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
 				Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
-				CPdf archivo = new CPdf("Detalle Administración Transaccional del " + (!colaborador.equals("") ? "colaborador " : "usuario ") + colaborador + "("+usuarioDetalle+")" + "\"");
+				CPdf archivo = new CPdf("Detalle Administración Transaccional del " + (!colaborador.equals("") ? "colaborador " : "usuario ") + colaborador + "("+usuarioDetalle+")");
 				String headers[][];
 				String datos[][];
 				headers = generarHeadersDetalle();
@@ -217,7 +219,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 					response.setContentType("application/pdf");
 					response.setContentLength(outArray.length);
 					response.setHeader("Cache-Control", "no-cache"); 
-					response.setHeader("Content-Disposition", "in-line; 'AdministracionTransaccional.pdf'");
+					response.setHeader("Content-Disposition", "in-line; 'AdministraciónTransaccional.pdf'");
 					OutputStream outStream = response.getOutputStream();
 					outStream.write(outArray);
 					outStream.flush();
@@ -228,7 +230,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 		}else if(accion.equals("exportarPdf")){
 			Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
 			Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
-			CPdf archivo = new CPdf("Administracion Transaccional");
+			CPdf archivo = new CPdf("Administración Transaccional");
 			String headers[][];
 			String datos[][];
 			headers = generarHeaders();
@@ -268,7 +270,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 				response.setContentType("application/pdf");
 				response.setContentLength(outArray.length);
 				response.setHeader("Cache-Control", "no-cache"); 
-				response.setHeader("Content-Disposition", "in-line; 'AdministracionTransaccional.pdf'");
+				response.setHeader("Content-Disposition", "in-line; 'AdministraciónTransaccional.pdf'");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
@@ -441,7 +443,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 		try{			
 			headers = generarHeaders();
 			datos = generarDatos(fechaInicio, fechaFin);
-			CGraficaExcel grafica = generarGrafica(datos);
+			CGraficaExcel grafica = generarGrafica(datos, fechaInicio, fechaFin);
 			excel = new CExcel("Administración Transaccional", false, grafica);
 			wb=excel.generateExcelOfData(datos, "Administración Transaccional", headers, null, true, usuario);
 		
@@ -555,19 +557,48 @@ public class SAdministracionTransaccional extends HttpServlet {
 		return datos;
 	}
 	
-	public CGraficaExcel generarGrafica(String[][] datosTabla){
+	public CGraficaExcel generarGrafica(String[][] datosTabla, Date fechaInicio, Date fechaFin){
+		List<stagrupacion> creados = getTransaccionesCreadas(fechaInicio, fechaFin);
+		List<stagrupacion> actualizados = getTransaccionesActualizadas(fechaInicio, fechaFin);
+		List<stagrupacion> eliminados = getTransaccionesEliminadas(fechaInicio, fechaFin);
+		DateTime inicio = new DateTime(fechaInicio);
+		DateTime fin = new DateTime(fechaFin);
+		int total = (fin.getYear() - inicio.getYear() + 1) * 12;
+		int cont = 0;
+		int contanios = 0;
+		String[][] datos = new String[4][total];
+		for(int j=0; j < total; j++){
+			if(cont == 12)
+			{
+				cont = 0;
+				contanios++;
+			}
+			datos[0][j] = meses[cont] + "-" + (inicio.getYear() + contanios);
+			cont++;
+		}
 		
-		String[][] datos = new String[][]{
-			{"Creados","Actualizados","Eliminados"},
-			{totalCreados.toString(),totalActualizados.toString(),totalEliminados.toString()}
-		};
-		String[][] datosIgualar= new String[][]{
-			{"","",""},
-			{"1."+(datosTabla.length+30),"2."+(datosTabla.length+30),"3."+(datosTabla.length+30)}
-		};
+		contanios = 0;
+		cont = 0;
+		for(int j=0; j < total; j++){
+			if(cont == 12){
+				cont = 0;
+				contanios++;
+			}
+			datos[1][j] = creados.get(0).anios[contanios].mes[cont].toString();
+			datos[2][j] = actualizados.get(0).anios[contanios].mes[cont].toString();
+			datos[3][j] = eliminados.get(0).anios[contanios].mes[cont].toString();
+			cont++;
+		}
 		
-		String[] tipoData = new String[]{"string","int"};
-		CGraficaExcel grafica = new CGraficaExcel("Administración Transaccional", CGraficaExcel.EXCEL_CHART_BAR, "Cantidad", "Estados", datos, tipoData, datosIgualar);
+		String[] tipoData = new String[total+1];
+		for(int i=0; i<total; i++){
+			if(i==0)
+				tipoData[i] = "string";
+			else
+				tipoData[i] = "int";
+		}
+		
+		CGraficaExcel grafica = new CGraficaExcel("Administración Transaccional", CGraficaExcel.EXCEL_CHART_AREA2, "Meses", "Creados", datos, tipoData, null);
 	
 		return grafica;
 	}

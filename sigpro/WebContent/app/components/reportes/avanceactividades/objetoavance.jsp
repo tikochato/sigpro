@@ -31,11 +31,12 @@
 								<thead >
 									<tr>
 										<th style="display: none;">id</th>
-										<th style="width: 40%">Nombre</th>
-										<th style="text-align: center; width: 15%">Fecha Inicial</th>
-										<th style="text-align: center; width: 15%">Fecha Final</th>
-										<th style="text-align: center; width: 15%;" st-sort="avance">Avance</th>
-										<th style="text-align: center; width: 15%;">Responsable</th>
+										<th style="width: 35%">Nombre</th>
+										<th style="text-align: center; width: 12%">Fecha Inicial</th>
+										<th style="text-align: center; width: 12%">Fecha Final</th>
+										<th style="text-align: center; width: 12%;" st-sort="avance">Avance</th>
+										<th style="text-align: center; width: 12%;">Estado</th>
+										<th style="text-align: center; width: 17%;">Responsable</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -46,6 +47,7 @@
 										<td style="text-align: center">{{row.fechaInicial}}</td>
 										<td style="text-align: center">{{row.fechaFinal}}</td>
 										<td style="text-align: right">{{row.avance}}%</td>
+										<td style="text-align: center">{{row.estado}}</td>
 										<td style="text-align: center">{{row.responsable}}</td>
 									</tr>
 								</tbody>

@@ -1,34 +1,33 @@
-app.controller('riesgoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
+app.controller('adquisicionController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
 		var mi=this;
 		
 		mi.mostrarcargando=true;
-		mi.riesgos = [];
-		mi.riesgo;
+		mi.adquisiciones = [];
+		mi.adquisicion;
 		mi.mostraringreso=false;
 		mi.esnuevo = false;
-		mi.riesgoTipoid = "";
-		mi.riesgoTipoNombre="";
-		mi.componenteid = "";
-		mi.componenteNombre="";
-		mi.productoid="";
-		mi.productoNombre="";
-		mi.colaboradorid = ""
-		mi.colaboradorNombre = "";
 		mi.camposdinamicos = {};
 		mi.formatofecha = 'dd/MM/yyyy';
-		mi.colaboradorid="";
-		mi.colaboradorNombre="";
-		mi.proyectoid = "";
-		mi.fechaEjecucion = null;
 		
-		mi.columnaOrdenada=null;
-		mi.ordenDireccion = null;
-		mi.filtros = [];
-		mi.orden = null;
-		mi.probabilidades = [{valor:1, nombre:"Bajo"},{valor:2,nombre:"Medio"},{valor:3,nombre:"Alto"}];
+		mi.objetoTipo = 0;
+		mi.objetoId = 0;
 		
-		$scope.$parent.controller.child_riesgo = $scope.riesgoc;
+		if($scope.$parent.productoc){
+			$scope.$parent.productoc.child_adquisicion = $scope.adquisicionc;
+			mi.objetoTipo = 3;
+			mi.objetoId = $scope.$parent.productoc.producto.id;
+		}
+		if($scope.$parent.subproductoc){
+			$scope.$parent.subproductoc.child_adquisicion = $scope.adquisicionc;
+			mi.objetoTipo = 4;
+			mi.objetoId = $scope.$parent.subproductoc.subproducto.id;
+		}
+		if($scope.$parent.actividadc){
+			$scope.$parent.actividadc.child_adquisicion = $scope.adquisicionc;
+			mi.objetoTipo = 5;
+			mi.objetoId = $scope.$parent.actividadc.actividad.id;
+		}
 		
 		mi.fechaOptions = {
 				formatYear : 'yy',
@@ -43,14 +42,24 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 	    
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SRiesgo', { accion: 'getRiesgosPorObjeto',  
-				objetoid: $scope.$parent.controller.proyecto.id, objetotipo: 1, t: (new Date()).getTime()
+			$http.post('/SPlanAdquisicion', { accion: 'getPlanAdquisicionPorObjeto',  
+				objetoid: mi.objetoId, objetotipo: mi.objetoTipo, t: (new Date()).getTime()
 				}).success(
 					function(response) {
-						mi.riesgos = response.riesgos;
+						mi.adquisiciones = response.adquisiciones;
 						mi.mostrarcargando = false;
-						for(var i=0; i<mi.riesgos.length; i++)
-							mi.riesgos[i].fechaEjecucion = moment(mi.riesgos[i].fechaEjecucion,'DD/MM/YYYY').toDate();
+						for(var i=0; i<mi.adquisiciones.length; i++){
+							mi.adquisiciones[i].adjudicacionPlanificada = mi.adquisiciones[i].adjudicacionPlanificada!=null ? moment(mi.adquisiciones[i].adjudicacionPlanificada,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].adjudicacionReal = mi.adquisiciones[i].adjudicacionReal!=null ? moment(mi.adquisiciones[i].adjudicacionReal,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].firmaContratoPlanificada = mi.adquisiciones[i].firmaContratoPlanificada!=null ? moment(mi.adquisiciones[i].firmaContratoPlanificada,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].firmaContratoReal = mi.adquisiciones[i].firmaContratoReal!=null ? moment(mi.adquisiciones[i].firmaContratoReal,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].lanzamientoEventoPlanificada = mi.adquisiciones[i].lanzamientoEventoPlanificada!=null ? moment(mi.adquisiciones[i].lanzamientoEventoPlanificada,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].lanzamientoEventoReal = mi.adquisiciones[i].lanzamientoEventoReal!=null ? moment(mi.adquisiciones[i].lanzamientoEventoReal,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].preparacionDocumentosPlanificada = mi.adquisiciones[i].preparacionDocumentosPlanificada!=null ? moment(mi.adquisiciones[i].preparacionDocumentosPlanificada,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].preparacionDocumentosReal = mi.adquisiciones[i].preparacionDocumentosReal!=null ? moment(mi.adquisiciones[i].preparacionDocumentosReal,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].recepcionOfertasPlanificada = mi.adquisiciones[i].recepcionOfertasPlanificada!=null ? moment(mi.adquisiciones[i].recepcionOfertasPlanificada,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].recepcionOfertasReal = mi.adquisiciones[i].recepcionOfertasReal!=null ? moment(mi.adquisiciones[i].recepcionOfertasReal,'DD/MM/YYYY').toDate() : null;
+						}
 					});
 		}
 		
@@ -62,18 +71,18 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		
 		mi.guardar=function(mensaje_success, mensaje_error){
 			
-			if(mi.riesgos.length>0){
-				$http.post('/SRiesgo', {
+			if(mi.adquisiciones.length>0){
+				$http.post('/SPlanAdquisicion', {
 					accion: 'guardarRiesgos',
-					riesgos: JSON.stringify(mi.riesgos),
-					objetoTipo: 1,
-					objetoId: $scope.$parent.controller.proyecto.id,
+					adquisiciones: JSON.stringify(mi.adquisiciones),
+					objetoTipo: mi.objetoTipo,
+					objetoId: mi.objetoId,
 					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
 						var sids = response.ids.length>0 ? response.ids.split(",") : [];
 						for(var i = 0; i<sids.length; i++)
-							mi.riesgos[i].id = parseInt(sids[i]);
+							mi.adquisiciones[i].id = parseInt(sids[i]);
 						mi.cargarTabla();
 						$utilidades.mensaje('success',mensaje_success);
 					}
@@ -86,18 +95,18 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		};
 
 		mi.borrar = function(index) {
-			mi.riesgo = mi.riesgos[index];
-			if(mi.riesgo!=null && index >-1){
+			mi.adquisicion = mi.adquisiciones[index];
+			if(mi.adquisicion!=null && index >-1){
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
-						, '¿Desea borrar el Riesgo "'+mi.riesgo.nombre+'"?'
+						, '¿Desea borrar el Riesgo "'+mi.adquisicion.nombre+'"?'
 						, "Borrar"
 						, "Cancelar")
 				.result.then(function(data) {
 					if(data){
-						var index = mi.desembolsos.indexOf(row);
+						var index = mi.adquisiciones.indexOf(row);
 				        if (index !== -1) {
-				            mi.desembolsos.splice(index, 1);
+				            mi.adquisiciones.splice(index, 1);
 				        }
 					}
 				}, function(){
@@ -105,7 +114,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				});
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar el Riesgo que desea borrar');
+				$utilidades.mensaje('warning','Debe seleccionar la adquisición que desea borrar');
 		};
 
 		mi.nuevo = function() {
@@ -113,52 +122,28 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			mi.esnuevo = true;
 			mi.colaboradorNombre="";
 			mi.colaboradorid="";
-			mi.riesgo = {};
-			mi.riesgoTipoid = "";
-			mi.riesgoTipoNombre="";
-			mi.componenteid = "";
-			mi.componenteNombre="";
-			mi.productoid="";
-			mi.productoNombre="";
+			mi.adquisicion = {};
 			mi.camposdinamicos = {};
-			mi.probabilidad=null; 
-			mi.fechaEjecucion=null;
-			$utilidades.setFocus(document.getElementById("nombre"));
+			$utilidades.setFocus(document.getElementById("descripcion"));
 		};
 
 		mi.editar = function(row) {
-			mi.riesgo=row;
-			if(mi.riesgo!=null){
+			mi.adquisicion=row;
+			if(mi.adquisicion!=null){
 				mi.form_valid = null;
-				mi.riesgoTipoid = mi.riesgo.riesgotipoid;
-				mi.riesgo.fechaEjecucion = mi.riesgo.fechaEjecucion;
-				mi.riesgoTipoNombre = mi.riesgo.riesgotiponombre;
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
-				mi.colaboradorNombre = mi.riesgo.colaboradorNombre;
-				mi.colaboradorId = mi.riesgo.colaboradorid;
-				mi.fechaEjecucion = mi.riesgo.fechaEjecucion;
-				$utilidades.setFocus(document.getElementById("nombre"));
-				if (mi.riesgo.probabilidad !=null && mi.riesgo.probabilidad > 0){
-					mi.probabilidad = {
-							"valor" : mi.riesgo.probabilidad,
-							"nombre" : mi.probabilidades[mi.riesgo.probabilidad - 1].nombre
-					}
-				}else {
-					mi.probabilidad = {};
-				}
-				mi.ejecutado = mi.riesgo.ejecutado == 1;
-				$utilidades.setFocus(document.getElementById("nombre"));
-				for (campos in mi.riesgo.camposdinamicos) {
-					switch (mi.riesgo.camposdinamicos[campos].tipo){
+				$utilidades.setFocus(document.getElementById("descripcion"));
+				for (campos in mi.adquisicion.camposdinamicos) {
+					switch (mi.adquisicion.camposdinamicos[campos].tipo){
 						case 5:
-							mi.riesgo.camposdinamicos[campos].valor = !(mi.riesgo.camposdinamicos[campos].valor instanceof Date) ? moment(mi.riesgo.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : mi.riesgo.camposdinamicos[campos].valor ;
+							mi.adquisicion.camposdinamicos[campos].valor = !(mi.adquisicion.camposdinamicos[campos].valor instanceof Date) ? moment(mi.adquisicion.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : mi.adquisicion.camposdinamicos[campos].valor ;
 							break;
 						case 1:
-							mi.riesgo.camposdinamicos[campos].valor = (mi.riesgo.camposdinamicos[campos].valor!='' && mi.riesgo.camposdinamicos[campos].valor!=null) ? Number(mi.riesgo.camposdinamicos[campos].valor) : null;
+							mi.adquisicion.camposdinamicos[campos].valor = (mi.adquisicion.camposdinamicos[campos].valor!='' && mi.adquisicion.camposdinamicos[campos].valor!=null) ? Number(mi.adquisicion.camposdinamicos[campos].valor) : null;
 							break;
 						case 2:
-							mi.riesgo.camposdinamicos[campos].valor = (mi.riesgo.camposdinamicos[campos].valor!='' &&mi.riesgo.camposdinamicos[campos].valor!=null) ? Number(mi.riesgo.camposdinamicos[campos].valor) : null;
+							mi.adquisicion.camposdinamicos[campos].valor = (mi.adquisicion.camposdinamicos[campos].valor!='' &&mi.adquisicion.camposdinamicos[campos].valor!=null) ? Number(mi.adquisicion.camposdinamicos[campos].valor) : null;
 							break;
 					}
 				}
@@ -170,26 +155,26 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			if(mi.esnuevo){
 					if($scope.$parent.controller.mForm.$valid || 
 							($scope.$parent.controller.mForm.$error.required.length==1 && $scope.$parent.controller.mForm.$error.required[0].$name=='form_valid'))
-						mi.riesgos.push({
+						mi.adquisiciones.push({
 							colaboradorNombre: mi.colaboradorNombre,
 							colaboradorid: mi.colaboradorid,
-							descripcion: mi.riesgo.descripcion == null ? "" : mi.riesgo.descripcion,
+							descripcion: mi.adquisicion.descripcion == null ? "" : mi.adquisicion.descripcion,
 							ejecutado: mi.ejecutado ? 1 : 0,
 							estado: 1,
 							fechaActualizacion: null,
 							fechaCreacion: null,
 							fechaEjecucion:  mi.fechaEjecucion,
-							gatillosSintomas: mi.riesgo.gatillosSintomas,
+							gatillosSintomas: mi.adquisicion.gatillosSintomas,
 							id: 0,
-							impacto: mi.riesgo.impacto,
-							impactoProyectado: mi.riesgo.impactoProyectado,
-							nombre: mi.riesgo.nombre,
+							impacto: mi.adquisicion.impacto,
+							impactoProyectado: mi.adquisicion.impactoProyectado,
+							nombre: mi.adquisicion.nombre,
 							probabilidad: mi.probabilidad.valor,
-							puntuacionImpacto: mi.riesgo.puntuacionImpacto,
-							respuesta: mi.riesgo.respuesta,
-							riesgosSecundarios: mi.riesgo.riesgosSecundarios,
-							riesgotipoid: mi.riesgoTipoid,
-							riesgotiponombre: mi.riesgoTipoNombre,
+							puntuacionImpacto: mi.adquisicion.puntuacionImpacto,
+							respuesta: mi.adquisicion.respuesta,
+							riesgosSecundarios: mi.adquisicion.riesgosSecundarios,
+							riesgotipoid: mi.adquisicionTipoid,
+							riesgotiponombre: mi.adquisicionTipoNombre,
 							usuarioActualizo: null,
 							usuarioCreo: null,
 							camposdinamicos: mi.camposdinamicos
@@ -199,13 +184,13 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					mi.form_valid = 1;
 				}
 				else if($scope.$parent.controller.mForm.$valid || $scope.$parent.controller.mForm.$error.required[0].$name=='form_valid'){
-					mi.riesgo.colaboradorNombre = mi.colbaoradorNombre;
-					mi.riesgo.colaboradorid = mi.colaboradorid;
-					mi.riesgo.ejecutado = mi.ejecutado ? 1 : 0;
-					mi.riesgo.riesgotipoid = mi.riesgoTipoid;
-					mi.riesgo.riesgotiponombre = mi.riesgoTipoNombre;
-					mi.riesgo.probabilidad = mi.probabilidad.valor;
-					mi.riesgo.fechaEjecucion = mi.fechaEjecucion;
+					mi.adquisicion.colaboradorNombre = mi.colbaoradorNombre;
+					mi.adquisicion.colaboradorid = mi.colaboradorid;
+					mi.adquisicion.ejecutado = mi.ejecutado ? 1 : 0;
+					mi.adquisicion.riesgotipoid = mi.adquisicionTipoid;
+					mi.adquisicion.riesgotiponombre = mi.adquisicionTipoNombre;
+					mi.adquisicion.probabilidad = mi.probabilidad.valor;
+					mi.adquisicion.fechaEjecucion = mi.fechaEjecucion;
 					mi.mostraringreso=false;
 					mi.esnuevo = false;
 					mi.form_valid = 1;
@@ -233,7 +218,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			if(evt.keyCode==13){
 				mi.obtenerTotalRiesgos();
 				mi.gridApi.selection.clearSelectedRows();
-				mi.riesgo = null;
+				mi.adquisicion = null;
 			}
 		};
 		
@@ -290,12 +275,12 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		
 		
 		resultado.then(function(itemSeleccionado) {
-			mi.riesgoTipoid = itemSeleccionado.id;
-			mi.riesgoTipoNombre = itemSeleccionado.nombre;
+			mi.adquisicionTipoid = itemSeleccionado.id;
+			mi.adquisicionTipoNombre = itemSeleccionado.nombre;
 			
 			var parametros = { 
 					accion: 'getRiesgoPropiedadPorTipo', 
-					idRiesgo: mi.riesgo!=null ? mi.riesgo.id : 0,
+					idRiesgo: mi.adquisicion!=null ? mi.adquisicion.id : 0,
 					idRiesgoTipo: itemSeleccionado.id,
 					t: (new Date()).getTime()
 			}

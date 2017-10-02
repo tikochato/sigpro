@@ -57,7 +57,7 @@
 <script type="text/javascript" src="/assets/libs/angular/angular-bootstrap-toggle.js"></script>
 <script type="text/javascript" src="/assets/libs/Chart.PieceLabel.js"></script>
 <script type="text/javascript" src="/assets/libs/angularjs-dropdown-multiselect.js"></script>
-<script type="text/javascript" src="/assets/libs/angucomplete-alt.min.js"></script>
+<script type="text/javascript" src="/assets/libs/angucomplete-alt.js"></script>
 <script type="text/javascript" src="/assets/libs/angular-tree-control.js"></script>
 <script type="text/javascript" src="/assets/libs/tri-state.js"></script>
 
