@@ -10,7 +10,7 @@
 			<span ng-init="adquisicionc.redireccionSinPermisos()"></span>
 		</shiro:lacksPermission>
 		<br/>
-		<div class="row" align="center" ng-show="!adquisicioncc.mostraringreso">
+		<div class="row" align="center" ng-show="!adquisicionc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group btn-group-sm">
 			       <shiro:hasPermission name="30040">
@@ -49,7 +49,7 @@
 			</div>
     		</shiro:hasPermission>
 		</div>
-		<div class="row second-main-form" ng-show="adquisicionc.mostraringreso">
+		<div class="row" ng-show="adquisicionc.mostraringreso">
 			<div class="page-header">
 				<h2 ng-if="adquisicionc.esnuevo"><small>Nueva adquisición</small></h2>
 				<h2 ng-if="!adquisicionc.esnuevo"><small>Edición de adquisición</small></h2>
@@ -66,61 +66,67 @@
     						<br/><br/>
 						</div>
 						<div class="form-group">
-				            	<input type="text" class="inputText" ng-model="adquisicionc.adquisicion.tipoNombre" 
-				            	ng-click="adquisicionc.buscarAdquisicionTipo()" ng-readonly="true" ng-required="adquisicionc.mostraringreso"/>
-				            	<span class="label-icon" ng-click="adquisicionc.buscarAdquisicionTipo()"><i class="glyphicon glyphicon-search"></i></span>
-								<label class="floating-label">* Tipo</label>
+				            	<div id="tipo" angucomplete-alt placeholder="" pause="100" selected-object="adquisicion.cambioTipo"
+											  local-data="adquisicionc.tipos" search-fields="nombre" title-field="nombre" field-required="true" field-label="* Tipo"
+											  minlength="2" input-class="form-control form-control-small field-cooperante" match-class="angucomplete-highlight"
+											  initial-value="adquisicionc.adquisicion.tipoNombre" focus-out="adquisicionc.blurTipo()" input-name="tipo"></div>
 						</div>
 						<div class="form-group">
-				            	<input type="text" class="inputText" ng-model="adquisicionc.adquisicion.categoriaNombre" 
-				            	ng-click="adquisicionc.buscarAdquisicionCategoria()" ng-readonly="true" ng-required="adquisicionc.mostraringreso"/>
-				            	<span class="label-icon" ng-click="adquisicionc.buscarAdquisicionCategoria()"><i class="glyphicon glyphicon-search"></i></span>
-								<label class="floating-label">* Categoría</label>
+				            	<div id="categoria" angucomplete-alt placeholder="" pause="100" selected-object="adquisicion.cambioCategoria"
+											  local-data="adquisicionc.categorias" search-fields="nombre" title-field="nombre" field-required="true" field-label="* Categoría"
+											  minlength="2" input-class="form-control form-control-small field-cooperante" match-class="angucomplete-highlight"
+											  initial-value="adquisicionc.adquisicion.categoriaNombre" focus-out="adquisicionc.blurCategoria()" input-name="categoria"></div>
 						</div>
 						<div class="row">
-							<div class="cols-sm-3">
+							<div class="col-sm-3">
 								<div class="form-group">
 										<input type="text" class="inputText" ng-model="adquisicionc.adquisicion.medidaNombre" 
-						            	ng-click="adquisicionc.buscarAdquisicionMedida()" ng-readonly="true" ng-required="adquisicionc.mostraringreso"/>
-						            	<span class="label-icon" ng-click="adquisicionc.buscarAdquisicionMedida()"><i class="glyphicon glyphicon-search"></i></span>
-										<label class="floating-label">* Medida</label>
+						            	ng-required="adquisicionc.mostraringreso"
+						            	ng-value="adquisicionc.adquisicion.medidaNombre" onblur="this.setAttribute('value', this.value);"/>
+						            	<label class="floating-label">* Medida</label>
 								</div>
 							</div>
-							<div class="cols-sm-3">
+							<div class="col-sm-3">
 								<div class="form-group">
-										<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.cantidad" ng-required="adquisicionc.mostraringreso" ui-number-mask="0" />
+										<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.cantidad" ng-required="adquisicionc.mostraringreso" ui-number-mask="0"
+										ng-value="adquisicionc.adquisicion.cantidad" onblur="this.setAttribute('value', this.value);" />
 										<label class="floating-label" >* Cantidad</label>
 								</div>
 							</div>
-							<div class="cols-sm-3">
+							<div class="col-sm-3">
 								<div class="form-group">
-										<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.precioUnitario" ui-number-mask="2" />
+										<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.precioUnitario" ui-number-mask="2" 
+										ng-value="adquisicionc.adquisicion.precioUnitario" onblur="this.setAttribute('value', this.value);"/>
 										<label class="floating-label" >Precio</label>
 								</div>
 							</div>
-							<div class="cols-sm-3">
+							<div class="col-sm-3">
 								<div class="form-group">
-										<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.total" ng-required="adquisicionc.mostraringreso" ui-number-mask="2" />
+										<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.total" ng-required="adquisicionc.mostraringreso" ui-number-mask="2" 
+										ng-value="adquisicionc.adquisicion.total" onblur="this.setAttribute('value', this.value);"/>
 										<label class="floating-label" >* Total</label>
 								</div>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-sm-4">
+							<div class="col-sm-6">
 								<div class="form-group">
-									<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.nog" ui-number-mask="0" />
+									<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.nog" ui-number-mask="0" 
+									ng-value="adquisicionc.adquisicion.nog" onblur="this.setAttribute('value', this.value);"/>
 										<label class="floating-label" >NOG (Número de Orden Guatecompra)</label>
 								</div>
 							</div>
-							<div class="col-sm-4">
+							<div class="col-sm-3">
 								<div class="form-group">
-									<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.numeroContrato" />
+									<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.numeroContrato" 
+									ng-value="adquisicionc.adquisicion.numeroContrato" onblur="this.setAttribute('value', this.value);"/>
 										<label class="floating-label" >Número de contrato</label>
 								</div>
 							</div>
-							<div class="col-sm-4">
+							<div class="col-sm-3">
 								<div class="form-group">
-									<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.montoContrato" ui-number-mask="2" />
+									<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.montoContrato" ui-number-mask="2" 
+									ng-value="adquisicionc.adquisicion.montoContrato" onblur="this.setAttribute('value', this.value);"/>
 										<label class="floating-label" >Monto del contrato</label>
 								</div>
 							</div>
@@ -128,8 +134,9 @@
 							<div class="row">
     							<div class="col-sm-6">
     								<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="adquisicionc.adquisicion.preparacionDocumentoPlanificada" is-open="adquisicionc.popup_fechas[0]"
-											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="adquisicionc.mostraringreso"/>
+										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" ng-model="adquisicionc.adquisicion.preparacionDocumentoPlanificada" is-open="adquisicionc.popup_fechas[0]"
+											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+											ng-value="adquisicionc.adquisicion.preparacionDocumentoPlanificada" onblur="this.setAttribute('value', this.value);"/>
 											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(0)">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -138,8 +145,9 @@
     							</div>
     							<div class="col-sm-6">
     								<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="adquisicionc.adquisicion.preparacionDocumentoReal" is-open="adquisicionc.popup_fechas[1]"
-											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="adquisicionc.mostraringreso"/>
+										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" ng-model="adquisicionc.adquisicion.preparacionDocumentoReal" is-open="adquisicionc.popup_fechas[1]"
+											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+											ng-value="adquisicionc.adquisicion.preparacionDocumentoReal" onblur="this.setAttribute('value', this.value);"/>
 											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(1)">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -150,8 +158,9 @@
 							<div class="row">
     							<div class="col-sm-6">
     								<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="adquisicionc.adquisicion.lanzamientoEventoPlanificada" is-open="adquisicionc.popup_fechas[2]"
-											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="adquisicionc.mostraringreso"/>
+										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" ng-model="adquisicionc.adquisicion.lanzamientoEventoPlanificada" is-open="adquisicionc.popup_fechas[2]"
+											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+											ng-value="adquisicionc.adquisicion.lanzamientoEventoPlanificada" onblur="this.setAttribute('value', this.value);"/>
 											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(2)">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -160,8 +169,9 @@
     							</div>
     							<div class="col-sm-6">
     								<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="adquisicionc.adquisicion.lanzamientoEventoReal" is-open="adquisicionc.popup_fechas[3]"
-											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="adquisicionc.mostraringreso"/>
+										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" ng-model="adquisicionc.adquisicion.lanzamientoEventoReal" is-open="adquisicionc.popup_fechas[3]"
+											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+											ng-value="adquisicionc.adquisicion.lanzamientoEventoReal" onblur="this.setAttribute('value', this.value);"/>
 											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(3)">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -172,8 +182,9 @@
 							<div class="row">
     							<div class="col-sm-6">
     								<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="adquisicionc.adquisicion.recepcionOfertasPlanificada" is-open="adquisicionc.popup_fechas[4]"
-											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="adquisicionc.mostraringreso"/>
+										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" ng-model="adquisicionc.adquisicion.recepcionOfertasPlanificada" is-open="adquisicionc.popup_fechas[4]"
+											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+											ng-value="adquisicionc.adquisicion.recepcionOfertasPlanificada" onblur="this.setAttribute('value', this.value);"/>
 											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(4)">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -182,8 +193,9 @@
     							</div>
     							<div class="col-sm-6">
     								<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="adquisicionc.adquisicion.recepcionOfertasReal" is-open="adquisicionc.popup_fechas[5]"
-											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="adquisicionc.mostraringreso"/>
+										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" ng-model="adquisicionc.adquisicion.recepcionOfertasReal" is-open="adquisicionc.popup_fechas[5]"
+											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+											ng-value="adquisicionc.adquisicion.recepcionOfertasReal" onblur="this.setAttribute('value', this.value);"/>
 											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(5)">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -194,8 +206,9 @@
 							<div class="row">
     							<div class="col-sm-6">
     								<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="adquisicionc.adquisicion.adjudicacionPlanificada" is-open="adquisicionc.popup_fechas[6]"
-											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="adquisicionc.mostraringreso"/>
+										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" ng-model="adquisicionc.adquisicion.adjudicacionPlanificada" is-open="adquisicionc.popup_fechas[6]"
+											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+											ng-value="adquisicionc.adquisicion.adjudicacionPlanificada" onblur="this.setAttribute('value', this.value);"/>
 											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(6)">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -204,8 +217,9 @@
     							</div>
     							<div class="col-sm-6">
     								<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="adquisicionc.adquisicion.adjudicacionReal" is-open="adquisicionc.popup_fechas[7]"
-											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="adquisicionc.mostraringreso"/>
+										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" ng-model="adquisicionc.adquisicion.adjudicacionReal" is-open="adquisicionc.popup_fechas[7]"
+											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+											ng-value="adquisicionc.adquisicion.adjudicacionReal" onblur="this.setAttribute('value', this.value);"/>
 											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(7)">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -216,8 +230,9 @@
 							<div class="row">
     							<div class="col-sm-6">
     								<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="adquisicionc.adquisicion.firmaContratoPlanificada" is-open="adquisicionc.popup_fechas[8]"
-											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="adquisicionc.mostraringreso"/>
+										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" ng-model="adquisicionc.adquisicion.firmaContratoPlanificada" is-open="adquisicionc.popup_fechas[8]"
+											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+											ng-value="adquisicionc.adquisicion.firmaContratoPlanificada" onblur="this.setAttribute('value', this.value);"/>
 											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(8)">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -226,8 +241,9 @@
     							</div>
     							<div class="col-sm-6">
     								<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="adquisicionc.adquisicion.firmaContratoReal" is-open="adquisicionc.popup_fechas[9]"
-											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="adquisicionc.mostraringreso"/>
+										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" ng-model="adquisicionc.adquisicion.firmaContratoReal" is-open="adquisicionc.popup_fechas[9]"
+											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+											ng-value="adquisicionc.adquisicion.firmaContratoReal" onblur="this.setAttribute('value', this.value);"/>
 											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(9)">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>

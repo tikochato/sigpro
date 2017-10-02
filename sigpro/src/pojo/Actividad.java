@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 1:09:17 AM by Hibernate Tools 5.2.3.Final
+// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7628925243171847983L;
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
 	private AcumulacionCosto acumulacionCosto;

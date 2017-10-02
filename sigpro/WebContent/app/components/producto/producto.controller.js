@@ -42,6 +42,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.ejercicio = '';
 	
 	mi.metasCargadas = false;
+	mi.adquisicionesCargadas = false;
 	
 	mi.dimensiones = [
 		{value:1,nombre:'Dias',sigla:'d'}
@@ -781,6 +782,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		mi.metasActivo = function(){
 			if(!mi.metasCargadas){
 				mi.metasCargadas = true;
+			}
+		}
+		
+		mi.adquisicionesActivo = function(){
+			if(!mi.adquisicionesCargadas){
+				mi.adquisicionesCargadas = true;
 			}
 		}
 	  

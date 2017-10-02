@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 1:09:17 AM by Hibernate Tools 5.2.3.Final
+// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -10,8 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -27,9 +25,9 @@ public class TipoAdquisicion implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3927994091442100844L;
+	private static final long serialVersionUID = 1L;
 	private Integer id;
-	private Cooperante cooperante;
+	private int cooperantecodigo;
 	private String nombre;
 	private String usuarioCreo;
 	private String usuarioActualizo;
@@ -41,17 +39,17 @@ public class TipoAdquisicion implements java.io.Serializable {
 	public TipoAdquisicion() {
 	}
 
-	public TipoAdquisicion(Cooperante cooperante, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
-		this.cooperante = cooperante;
+	public TipoAdquisicion(int cooperantecodigo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+		this.cooperantecodigo = cooperantecodigo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
 	}
 
-	public TipoAdquisicion(Cooperante cooperante, String nombre, String usuarioCreo, String usuarioActualizo,
+	public TipoAdquisicion(int cooperantecodigo, String nombre, String usuarioCreo, String usuarioActualizo,
 			Date fechaCreacion, Date fechaActualizacion, int estado, Set<PlanAdquisicion> planAdquisicions) {
-		this.cooperante = cooperante;
+		this.cooperantecodigo = cooperantecodigo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
@@ -73,14 +71,13 @@ public class TipoAdquisicion implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cooperanteid", nullable = false)
-	public Cooperante getCooperante() {
-		return this.cooperante;
+	@Column(name = "cooperantecodigo", nullable = false)
+	public int getCooperantecodigo() {
+		return this.cooperantecodigo;
 	}
 
-	public void setCooperante(Cooperante cooperante) {
-		this.cooperante = cooperante;
+	public void setCooperantecodigo(int cooperantecodigo) {
+		this.cooperantecodigo = cooperantecodigo;
 	}
 
 	@Column(name = "nombre", nullable = false, length = 1000)

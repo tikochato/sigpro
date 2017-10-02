@@ -66,7 +66,7 @@ public class SCategoriaAdquisicion extends HttpServlet {
 		String accion = map.get("accion")!=null ? map.get("accion") : "";
 		String response_text = "";
 		
-		if(accion.equals("getCategoriaAdquisicion")){
+		if(accion.equals("getCategoriasAdquisicion")){
 			List<CategoriaAdquisicion> categoriaAdquisiciones = CategoriaAdquisicionDAO.getCategoriaAdquisicion();
 			
 			List<stcategoriaadquisicion> lstCategoriaAdquisicion = new ArrayList<stcategoriaadquisicion>();
@@ -84,7 +84,7 @@ public class SCategoriaAdquisicion extends HttpServlet {
 			}
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(lstCategoriaAdquisicion);
-	        response_text = String.join("", "\"categoriaAdquisicion\":",response_text);
+	        response_text = String.join("", "\"categoriasAdquisicion\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text, "}");
 		}else if(accion.equals("numeroCategoriaPorObjeto")){
 			String filtro_nombre = map.get("filtro_nombre");
