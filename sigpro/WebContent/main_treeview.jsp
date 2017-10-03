@@ -45,7 +45,7 @@
 			<div style="margin-top: 10px; height: 30px; width: 10px;"></div>
 		</div>
 		<div class="row cols_treeview">
-			<div class="cols_treeview horizontal-collapse" uib-collapse="mainController.hideTree" horizontal style="margin: 10px 5px 0px 15px; float: left; width: 250px;">
+			<div class="cols_treeview horizontal-collapse div_tree" uib-collapse="mainController.hideTree" horizontal>
 					<div style="border: thin solid #c3c3c3; border-radius: 4px; overflow: auto; height: 100%;">
 						<div treecontrol="" class="tree-light" tree-model="mainController.treedata" options="mainController.tree_options"  selected-node="mainController.nodo_seleccionado"
 								expanded-nodes="mainController.nodos_expandidos" on-selection="mainController.showSelected(node)" style="width: 1000px; margin: 10px 0px 0px -5px;">

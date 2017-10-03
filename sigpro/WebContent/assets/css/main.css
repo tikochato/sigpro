@@ -589,3 +589,9 @@ h2 {
 	outline: none;
 	outline: 0;
 }
+
+.div_tree{
+	margin: 10px 5px 0px 15px; 
+	float: left; 
+	width: 250px;
+}
