@@ -199,17 +199,17 @@
 									<span>Q</span></label>
 								</div>
 								<div class="btn-group" style="padding-left: 20px;">
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="1" ng-click="controller.cambiarAgrupacion(1)" uib-tooltip="Mensual" role="button" tabindex="1" aria-invalid="false">
+									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="1" ng-click="controller.cambiarAgrupacion(1)" uib-tooltip="Mes" role="button" tabindex="1" aria-invalid="false">
 									<span>M</span></label>
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="2" ng-click="controller.cambiarAgrupacion(2)" uib-tooltip="Bimestral" role="button" tabindex="2" aria-invalid="false">
+									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="2" ng-click="controller.cambiarAgrupacion(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
 									<span>B</span></label>
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="3" ng-click="controller.cambiarAgrupacion(3)" uib-tooltip="Trimestral" role="button" tabindex="3" aria-invalid="false">
+									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="3" ng-click="controller.cambiarAgrupacion(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
 									<span>T</span></label>
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="4" ng-click="controller.cambiarAgrupacion(4)" uib-tooltip="Cuatrimestral" role="button" tabindex="4" aria-invalid="false">
+									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="4" ng-click="controller.cambiarAgrupacion(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
 									<span>C</span></label>
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="5" ng-click="controller.cambiarAgrupacion(5)" uib-tooltip="Semestral" role="button" tabindex="5" aria-invalid="false">
+									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="5" ng-click="controller.cambiarAgrupacion(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
 									<span>S</span></label>
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="6" ng-click="controller.cambiarAgrupacion(6)" uib-tooltip="Anual" role="button" tabindex="6" aria-invalid="false">
+									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="6" ng-click="controller.cambiarAgrupacion(6)" uib-tooltip="Año" role="button" tabindex="6" aria-invalid="false">
 									<span>A</span></label>
 								</div>
 								<div class="btn-group" style="padding-left: 20px;">
@@ -221,8 +221,7 @@
 							</div>
 						</div>
 		    		</div>
-	    		</div>
-				<br/><br/>
+	    		</div>				
 				<div class="row" style="height: 80%">
 					<div ng-hide="!controller.mostrarCargando" style="width: 100%; height: 95%">
 	    				<div class="grid_loading" ng-hide="!controller.mostrarCargando">
@@ -287,7 +286,7 @@
 								</thead>
 								<tbody class="cuerpoTablaTotales bordeIzquierda" style="height: 350px; max-height: 350px; min-height: 350px" id="divTotales" style="margin-right: 30px" ng-mouseover="controller.activarScroll('divTotales')" scrollespejo tot="{{mi.totales.length}}">
 									<tr ng-repeat="totales in controller.totales" style="height: 35px; max-height: 35px; min-height: 35px">
-										<td ng-repeat="total in totales.anio" style="min-width:200px; text-align: center">
+										<td ng-repeat="total in totales.anio" style="min-width:200px; text-align: left">
 											<div style="min-width:150px;">
 												<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{total.valor.planificado | formatoMillones : controller.enMillones}}</span>
 							      			</div>
@@ -304,7 +303,7 @@
 									<tbody class="cuerpoTablaNombresTot">
 										<tr style="height: 35px; max-height: 35px; min-height: 35px">
 											<td style="font-weight: bold; width: 200px; max-width: 200px; min-width: 200px;" align="right">
-												Totales: 
+												Total Adquisiciones: 
 											</td>									
 										</tr>
 									</tbody>									
@@ -313,7 +312,7 @@
 						</div>
 						<div class="divPadreDatos" style="max-width: {{controller.tamanoTotal}}px">
 							<div class="divTabla">
-								<table class="table table-striped tablaDatos">
+								<table class="table table-striped tablaDatos" style="max-width: {{controller.tamanoTotal + 15}}px;">
 									<tbody class="cuerpoTablaTotal" id="divTablaDatosTot" ng-mouseover="controller.activarScroll('divTablaDatosTot')" scrollespejo>
 										<tr>
 											<td ng-repeat="posicion in controller.sumTotales track by $index" style="font-weight: bold; {{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}">
@@ -328,7 +327,7 @@
 							<table class="table table-striped tablaDatos">
 								<tbody class="cuerpoTablaTotal bordeIzquierda">
 									<tr>
-										<td style="font-weight: bold; min-width:215px; text-align: center; height: 35px; max-height: 35px; min-height: 35px">											
+										<td style="font-weight: bold; min-width:215px; text-align: left; height: 35px; max-height: 35px; min-height: 35px">											
 												{{controller.totalAdquisicion | formatoMillones : controller.enMillones}}
 										</td>
 									</tr>
