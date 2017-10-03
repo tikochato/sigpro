@@ -1,5 +1,5 @@
-app.controller('riesgoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
+app.controller('riesgoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
 		var mi=this;
 		
 		mi.mostrarcargando=true;
@@ -86,8 +86,6 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		};
 
 		mi.borrar = function(index) {
-			mi.riesgo = mi.riesgos[index];
-			if(mi.riesgo!=null && index >-1){
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
 						, '¿Desea borrar el Riesgo "'+mi.riesgo.nombre+'"?'
@@ -103,9 +101,6 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				}, function(){
 					
 				});
-			}
-			else
-				$utilidades.mensaje('warning','Debe seleccionar el Riesgo que desea borrar');
 		};
 
 		mi.nuevo = function() {

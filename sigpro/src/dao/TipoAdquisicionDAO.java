@@ -8,7 +8,6 @@ import javax.persistence.NoResultException;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import org.joda.time.DateTime;
 
 import pojo.Actividad;
 import pojo.Componente;
@@ -122,11 +121,9 @@ public class TipoAdquisicionDAO {
 				break;
 		}
 		try{
-			DateTime ano = new DateTime();
-			String str_query = "SELECT ta from TipoAdquisicion ta where ta.cooperante.codigo=:codigo and ta.cooperante.ejercicio=:ejercicio and ta.estado=1";
+			String str_query = "SELECT ta from TipoAdquisicion ta where ta.cooperantecodigo=:codigo and ta.estado=1";
 			Query<TipoAdquisicion> criteria = session.createQuery(str_query,TipoAdquisicion.class);
 			criteria.setParameter("codigo", cooperanteCodigo);
-			criteria.setParameter("ejercicio", ano.getYear());
 			ret = criteria.getResultList();
 		}
 

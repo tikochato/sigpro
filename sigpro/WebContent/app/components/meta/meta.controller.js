@@ -20,23 +20,23 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			if($scope.$parent.controller){
 				mi.objeto_id = $scope.$parent.controller.proyecto.id;
 				mi.objeto_tipo = 1;
-				$scope.$parent.controller.child_scope = $scope.metac;
+				$scope.$parent.controller.child_metas = $scope.metac;
 			}else if($scope.$parent.componentec){
 				mi.objeto_id = $scope.$parent.componentec.componente.id;
 				mi.objeto_tipo = 2;
-				$scope.$parent.componentec.child_scope = $scope.metac;
+				$scope.$parent.componentec.child_metas = $scope.metac;
 			}else if($scope.$parent.producto){
 				mi.objeto_id = $scope.$parent.producto.producto.id;
 				mi.objeto_tipo = 3;
-				$scope.$parent.producto.child_scope = $scope.metac;
+				$scope.$parent.producto.child_metas = $scope.metac;
 			}else if($scope.$parent.subproducto){
 				mi.objeto_id = $scope.$parent.subproducto.subproducto.id;
 				mi.objeto_tipo = 4;
-				$scope.$parent.subproducto.child_scope = $scope.metac;
+				$scope.$parent.subproducto.child_metas= $scope.metac;
 			}else if($scope.$parent.actividadc){
 				mi.objeto_id = $scope.$parent.actividadc.actividad.id;
 				mi.objeto_tipo = 5;
-				$scope.$parent.actividadc.child_scope = $scope.metac;
+				$scope.$parent.actividadc.child_metas = $scope.metac;
 			}
 						
 			mi.nombrePcp = "";
@@ -470,7 +470,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				$window.location.href = '/main.jsp#!/forbidden';		
 			}			
 			
-			mi.guardar = function(mensaje, mensaje_error){				
+			mi.guardar = function(child_scope, mensaje, mensaje_error){				
 				var metasArreglo = mi.metas.concat(mi.metasBorradas);
 				
 				var metasJson = JSON.stringify(metasArreglo);
@@ -483,7 +483,10 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success',mensaje);
+						if(child_scope!=null)
+							child_scope.guardar(mensaje, mensaje_error);
+						else	
+							$utilidades.mensaje('success',mensaje);
 					}
 					else
 						$utilidades.mensaje('danger',mensaje_error);

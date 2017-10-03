@@ -116,7 +116,9 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 							mi.dataBarraHitos  = [];
 							
 							mi.labelsPieProyecto = ["Completadas", "Sin Iniciar", "En Proceso", "Retrasadas"];
-							mi.labelsPieHitos = ['Completadas', 'Sin Iniciar', 'Retrasadas'];
+							mi.labelsBarProyecto = [moment(mi.fechaCorte).format('YYYY')]
+							mi.labelsPieHitos = [moment(mi.fechaCorte).format('YYYY')];
+							mi.seriesBarHitos = ['Completadas', 'Sin Iniciar', 'Retrasadas']
 							
 							mi.totalActividadesCompletadas = 0;
 							mi.totalActividadesSinIniciar = 0;
@@ -147,7 +149,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 								mi.totalActividadesEsperadas = response.cantidadesActividades[0].esperadasfinanio;
 								mi.totalActividadesAnioSiguientes = response.cantidadesActividades[0].aniosiguientes;
 								
-								mi.dataBarraProyecto = [mi.totalActividadesCompletadas, mi.totalActividadesSinIniciar, mi.totalActividadesProceso, mi.totalActividadesRetrasadas];
+								mi.dataBarraProyecto = [[mi.totalActividadesCompletadas],[mi.totalActividadesSinIniciar],[mi.totalActividadesProceso],[mi.totalActividadesRetrasadas]];
 							}
 							
 							if(response.hitos != undefined){
@@ -168,7 +170,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 								mi.totalHitosEsperados = response.cantidadHitos[0].esperadasfinanio;
 								mi.totalHitosAnioSiguientes = response.cantidadHitos[0].aniosiguientes;
 								
-								mi.dataBarraHitos = [mi.totalHitosCompletados, mi.totalHitosSinIniciar, mi.totalHitosRetrasados];
+								mi.dataBarraHitos = [[mi.totalHitosCompletados], [mi.totalHitosSinIniciar], [mi.totalHitosRetrasados]];
 							}
 
 							if(response.productos != undefined){
@@ -201,7 +203,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		
 		mi.charOptions= {
 				legend: {
-					display: false,
+					display: true,
 					position: 'bottom'
 				},
 			scales: {
@@ -235,7 +237,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		
 		mi.charOptionsHitos= {
 				legend: {
-					display: false,
+					display: true,
 					position: 'bottom'
 				},
 			scales: {

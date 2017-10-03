@@ -165,7 +165,7 @@
 			    				<div style="text-align: center" >
 		    						<label class="label-form2">Totales</label>
 		    					</div>
-   								<canvas id="bar" class="chart chart-bar" chart-data="controller.dataBarraProyecto" chart-labels="controller.labelsPieProyecto" 
+   								<canvas id="bar" class="chart chart-bar" chart-data="controller.dataBarraProyecto" chart-labels="controller.labelsBarProyecto" 
    									chart-options="controller.charOptions" chart-colors = "controller.pieColors" chart-series="controller.labelsPieProyecto">
    								</canvas>
 		    				</div>
@@ -227,7 +227,7 @@
 					    			<label class="label-form2">Estado de Hitos</label>
 					    		</div>
 		    					<canvas id="pie" class="chart chart-pie"
-  									chart-data="controller.dataPieHitos" chart-labels="controller.labelsPieHitos" 
+  									chart-data="controller.dataPieHitos" chart-labels="controller.seriesBarHitos" 
   									chart-options="controller.optionsPieProyecto" chart-colors = "controller.pieColorsHitos" >
 								</canvas> 
 		    				</div>
@@ -236,7 +236,7 @@
 		    						<label class="label-form2">Totales</label>
 		    					</div>
    								<canvas id="bar" class="chart chart-bar" chart-data="controller.dataBarraHitos" chart-labels="controller.labelsPieHitos" 
-   									chart-options="controller.charOptionsHitos" chart-colors="controller.pieColorsHitos" chart-series="controller.labelsPieHitos">
+   									chart-options="controller.charOptionsHitos" chart-colors="controller.pieColorsHitos" chart-series="controller.seriesBarHitos">
    								</canvas>
 		    				</div>
 		    			</div>

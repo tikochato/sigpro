@@ -38,12 +38,14 @@ import dao.ActividadDAO;
 import dao.ComponenteDAO;
 import dao.EstructuraProyectoDAO;
 import dao.InformacionPresupuestariaDAO;
+import dao.PlanAdquisicionDAO;
 import dao.PlanAdquisicionPagoDAO;
 import dao.PrestamoDAO;
 import dao.ProductoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.Componente;
+import pojo.PlanAdquisicion;
 import pojo.PlanAdquisicionPago;
 import pojo.Prestamo;
 import pojo.Producto;
@@ -298,16 +300,21 @@ public class SInformacionPresupuestaria extends HttpServlet {
 	}
 	
 	private stprestamo getPresupuestoPlanificado(stprestamo prestamo, String usuario){
-		List<PlanAdquisicionPago> pagos = PlanAdquisicionPagoDAO.getPagosByObjetoTipo(prestamo.objeto_id, prestamo.objeto_tipo);
+		List<PlanAdquisicion> lstplan = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(prestamo.objeto_tipo, prestamo.objeto_id);		
 		Calendar fechaInicial = Calendar.getInstance();
-		for(stanio anioObj: prestamo.anios){			
-			if(pagos!= null && pagos.size() > 0){
-				for(PlanAdquisicionPago pago : pagos){
-					fechaInicial.setTime(pago.getFechaPago());
-					int mes = fechaInicial.get(Calendar.MONTH);
-					int anio = fechaInicial.get(Calendar.YEAR);					
-					if(anio == anioObj.anio){
-						anioObj.mes[mes].planificado = anioObj.mes[mes].planificado.add(pago.getPago());
+		for(stanio anioObj: prestamo.anios){
+			if(!lstplan.isEmpty()){
+				for(PlanAdquisicion plan : lstplan){
+					List<PlanAdquisicionPago> pagos = PlanAdquisicionPagoDAO.getPagosByPlan(plan.getId());
+					if(pagos!= null && pagos.size() > 0){
+						for(PlanAdquisicionPago pago : pagos){
+							fechaInicial.setTime(pago.getFechaPago());
+							int mes = fechaInicial.get(Calendar.MONTH);
+							int anio = fechaInicial.get(Calendar.YEAR);					
+							if(anio == anioObj.anio){
+								anioObj.mes[mes].planificado = anioObj.mes[mes].planificado.add(pago.getPago());
+							}
+						}
 					}
 				}
 			}else{
@@ -359,6 +366,67 @@ public class SInformacionPresupuestaria extends HttpServlet {
 					}
 				}
 			}
+//			for(PlanAdquisicion plan : lstplan){
+//				List<PlanAdquisicionPago> pagos = PlanAdquisicionPagoDAO.getPagosByPlan(plan.getId());
+//				if(pagos!= null && pagos.size() > 0){
+//					for(PlanAdquisicionPago pago : pagos){
+//						fechaInicial.setTime(pago.getFechaPago());
+//						int mes = fechaInicial.get(Calendar.MONTH);
+//						int anio = fechaInicial.get(Calendar.YEAR);					
+//						if(anio == anioObj.anio){
+//							anioObj.mes[mes].planificado = anioObj.mes[mes].planificado.add(pago.getPago());
+//						}
+//					}
+//				}else{
+//					int diaInicial = prestamo.fecha_inicial.getDayOfMonth();
+//					int mesInicial = prestamo.fecha_inicial.getMonthOfYear() -1;
+//					int anioInicial = prestamo.fecha_inicial.getYear();
+//					int diaFinal = prestamo.fecha_final.getDayOfMonth();
+//					int mesFinal = prestamo.fecha_final.getMonthOfYear() -1;
+//					int anioFinal = prestamo.fecha_final.getYear();
+//					if(anioObj.anio >= anioInicial && anioObj.anio<=anioFinal){
+//						if(prestamo.acumulacion_costoid != null){
+//							if(prestamo.acumulacion_costoid == 1){						
+//								if(anioInicial == anioObj.anio){
+//									anioObj.mes[mesInicial].planificado =  prestamo.costo != null ? prestamo.costo : new BigDecimal(0);
+//								}
+//							}else if(prestamo.acumulacion_costoid == 2){
+//								int dias = (int)((prestamo.fecha_final.getMillis() - prestamo.fecha_inicial.getMillis())/(1000*60*60*24));
+//								BigDecimal costoDiario = prestamo.costo != null ? prestamo.costo.divide(new BigDecimal(dias),5, BigDecimal.ROUND_HALF_UP) : new BigDecimal(0);
+//								int inicioActual = 0;
+//								if(anioObj.anio == anioInicial){
+//									inicioActual = mesInicial;
+//								}
+//								
+//								int finMes = anioObj.anio==anioFinal ? mesFinal : 11;
+//								for(int m=inicioActual; m<=finMes; m++){
+//									if(anioObj.anio == anioInicial && m==mesInicial){
+//										if(m==mesFinal){
+//											int diasMes = diaFinal-diaInicial;
+//											anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
+//										}else{
+//											Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
+//											int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+//											diasMes = diasMes-diaInicial;
+//											anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
+//										}
+//									}else if(anioObj.anio == anioFinal && m== mesFinal){
+//										anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diaFinal));
+//									}else{
+//										Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
+//										int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+//										anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
+//									}
+//								}
+//							}else if(prestamo.acumulacion_costoid ==3){
+//								if(anioFinal == anioObj.anio){
+//									anioObj.mes[mesFinal].planificado =  prestamo.costo != null ? prestamo.costo : new BigDecimal(0);
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
 		}
 		return prestamo;
 	}
