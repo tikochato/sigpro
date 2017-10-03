@@ -57,7 +57,6 @@ public class PlanAdquisicionDAO {
 			criteria.setParameter("objetoId", ObjetoId);
 			criteria.setParameter("objetoTipo", objetoTipo);
 			retList = criteria.getResultList();
-			
 		}catch(Throwable e){
 			CLogger.write("3", PlanAdquisicionDAO.class, e);
 		}

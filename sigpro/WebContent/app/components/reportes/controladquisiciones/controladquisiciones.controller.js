@@ -627,9 +627,9 @@ app.controller('controlAdquisicionesController',['$scope', '$http', '$interval',
 			t:moment().unix()
 		}).success(function(response){
 			if(response.success){
-				$utilidades.mensaje('success','Plan de adquisiciones guardado exitosamente');
+				$utilidades.mensaje('success','Control de adquisiciones guardado exitosamente');
 			}else{
-				$utilidades.mensaje('danger','No se pudo guardar correctamente el plan de adquisiciones');
+				$utilidades.mensaje('danger','No se pudo guardar correctamente el control de adquisiciones');
 			}
 			mi.mostrarGuardando = false;
 			mi.mostrarTablas = true;
@@ -743,7 +743,7 @@ app.controller('controlAdquisicionesController',['$scope', '$http', '$interval',
 					  anchor.attr({
 				         href: 'data:application/ms-excel;base64,' + response.data,
 				         target: '_blank',
-				         download: 'PlanAdquisiciones.xls'
+				         download: 'ControlAdquisiciones.xls'
 					  })[0].click();
 				  }.bind(this), function errorCallback(response){
 			 	}
@@ -762,7 +762,7 @@ app.controller('controlAdquisicionesController',['$scope', '$http', '$interval',
 					  anchor.attr({
 				         href: 'data:application/pdf;base64,' + response.data,
 				         target: '_blank',
-				         download: 'PlanAdquisiciones.pdf'
+				         download: 'ControlAdquisiciones.pdf'
 					  })[0].click();
 				  }.bind(this), function errorCallback(response){
 			 	}
