@@ -16,6 +16,8 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+
 import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;
 import be.quodlibet.boxable.Row;
@@ -808,46 +810,65 @@ public class CPdf {
 		
 		public String exportarDesembolsos(String [][]headers, String [][]datos, String usuario){
 			String path ="";
+			float tam_celda=celda_b*1.21f;
+			int total_columnas = datos[0].length;
+			int total_paginas = (Integer) (total_columnas / 12) + 1;
+			
 			tipo_reporte=5;
 			try{
 				PDFont font = PDType1Font.HELVETICA_BOLD;
-				page = new PDPage(new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth()));
-			    doc.addPage( page );
-				PDPageContentStream contentStream = new PDPageContentStream(doc, page);
-				contentStream.beginText();
-				contentStream.setFont(font, 18);
-				contentStream.newLineAtOffset(50, 550);
-				contentStream.showText("Ministerio de Finanzas Publicas");
-				contentStream.endText();
-				contentStream.beginText();
-				contentStream.setFont(font, 12);
-				contentStream.newLineAtOffset(50, 530);
-				contentStream.showText("Reporte: "+titulo);
-				contentStream.endText();
-				float margin = 50;
-				float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
-				float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
-				boolean drawContent = true;
-				float bottomMargin = 70;
-				BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
-				Row<PDPage> headerRow = table_x.createRow(12);
-				float tam_celda=celda_b*1.05f;
-				Cell<PDPage> cell;
-				for(int i=0;i<headers[0].length;i++){					
-					cell = headerRow.createCell(tam_celda,headers[0][i] );
-					cell.setFontSize(7);
-				}
-				table_x.addHeaderRow(headerRow);
-				
-				for(int i=0; i<datos.length;i++){
-					Row<PDPage> row = table_x.createRow(12);
-					for(int j=0; j<datos[i].length;j++){
-						cell = row.createCell(tam_celda,datos[i][j] );
-						cell.setFontSize(7);
+				Integer pagina = 0;
+					while (pagina < total_paginas ){
+						
+						page = new PDPage(new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth()));
+					    doc.addPage( page );
+						PDPageContentStream contentStream = new PDPageContentStream(doc, page);
+						contentStream.beginText();
+						contentStream.setFont(font, 18);
+						contentStream.newLineAtOffset(50, 550);
+						contentStream.showText("Ministerio de Finanzas Publicas");
+						contentStream.endText();
+						contentStream.beginText();
+						contentStream.setFont(font, 12);
+						contentStream.newLineAtOffset(50, 530);
+						contentStream.showText("Reporte: "+titulo);
+						contentStream.endText();
+						float margin = 50;
+						float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
+						float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
+						boolean drawContent = true;
+						float bottomMargin = 70;
+						BaseTable table_x= new BaseTable(525, yStartNewPage, bottomMargin, tableWidth, margin, doc, page, true, drawContent);
+						Row<PDPage> headerRow = table_x.createRow(12);
+						
+						Cell<PDPage> cell;
+						for(int i=0 + pagina*12;i<(12 + pagina *12);i++){
+							if (i < total_columnas){
+								cell = headerRow.createCell(tam_celda,headers[0][i] );
+								cell.setFontSize(7);
+							}
+						}
+						table_x.addHeaderRow(headerRow);
+						
+						for(int i=0; i<5;i++){
+							Row<PDPage> row = table_x.createRow(12);
+							for(int j=0 + pagina*12; j<(12 + pagina *12);j++){
+								if (j < total_columnas){
+									cell = row.createCell(tam_celda,datos[i][j] );
+									cell.setFontSize(7); 
+								}
+							}
+						}
+						table_x.draw();
+						
+						
+						
+						contentStream.close();
+						pagina++;
 					}
-				}
-				table_x.draw();
-				contentStream.close();
+				
+				
+				
 				path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 					FileOutputStream out = new FileOutputStream(new File(path));
 					doc.save(out);
