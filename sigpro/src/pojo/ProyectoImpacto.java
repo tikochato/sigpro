@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 1, 2017 5:10:27 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -25,7 +25,7 @@ public class ProyectoImpacto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 751573919827225672L;
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private Entidad entidad;
 	private Proyecto proyecto;

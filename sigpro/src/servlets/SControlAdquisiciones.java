@@ -10,7 +10,6 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -24,7 +23,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.codec.Base64;
-import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,19 +30,8 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
 import dao.CategoriaAdquisicionDAO;
-import dao.ComponenteDAO;
 import dao.EstructuraProyectoDAO;
-import dao.PlanAdquisicionDAO;
-import dao.ProductoDAO;
-import dao.ProyectoDAO;
-import dao.SubproductoDAO;
 import pojo.Actividad;
-import pojo.CategoriaAdquisicion;
-import pojo.Componente;
-import pojo.PlanAdquisicion;
-import pojo.Producto;
-import pojo.Proyecto;
-import pojo.Subproducto;
 import utilities.CExcel;
 import utilities.CLogger;
 import utilities.CPdf;
@@ -127,7 +114,7 @@ public class SControlAdquisiciones extends HttpServlet {
 					CLogger.write("2", SControlAdquisiciones.class, e);
 				}
 			}else if(accion.equals("guardarPlan")){
-				try{
+				/*try{
 					boolean result = false;
 					String data = map.get("data");
 					String[] datos = data.split("\\|");
@@ -218,7 +205,7 @@ public class SControlAdquisiciones extends HttpServlet {
 						BigDecimal montoContrato = BigDecimal.ZERO;
 						if (!row[22].equals("null"))
 							montoContrato = new BigDecimal(row[22]);
-						PlanAdquisicion plan = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
+						List<PlanAdquisicion> plan = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
 						if(plan != null){
 							plan.setTipoAdquisicion(tipoAdquisicion);
 							plan.setCategoriaAdquisicion(categoriaAdquisicion);
@@ -262,9 +249,9 @@ public class SControlAdquisiciones extends HttpServlet {
 				}
 				catch (Throwable e) {
 					CLogger.write("3", SControlAdquisiciones.class, e);
-				}
+				}*/
 			}else if(accion.equals("guardarMontoContrato")){
-				Integer objetoId = Utils.String2Int(map.get("objetoId"));
+				/*Integer objetoId = Utils.String2Int(map.get("objetoId"));
 				Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
 				String numeroContrato = map.get("numeroContrato");
 				BigDecimal montoContrato = Utils.String2BigDecimal(map.get("montoContrato"), null);
@@ -272,7 +259,7 @@ public class SControlAdquisiciones extends HttpServlet {
 				PlanAdquisicion planAdquisicion = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
 				planAdquisicion.setMontoContrato(montoContrato);
 				planAdquisicion.setNumeroContrato(numeroContrato);
-				PlanAdquisicionDAO.guardarPlanAdquisicion(planAdquisicion);
+				PlanAdquisicionDAO.guardarPlanAdquisicion(planAdquisicion);*/
 				
 			}else if(accion.equals("exportarExcel")){
 				Integer idPlanAdquisicion = Utils.String2Int(map.get("idPlanAdquisicion"), null);

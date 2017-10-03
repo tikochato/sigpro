@@ -44,6 +44,14 @@
 		
 	    .cuerpoTablaNombres {
 		    overflow-y: scroll;
+		    overflow-x: scroll;
+		    display: inline-block;
+		    font-size: 13px;
+		    max-width: 215px;
+		}
+		
+		.cuerpoTablaNombresTot{
+			overflow-y: scroll;
 		    overflow-x: hidden;
 		    display: inline-block;
 		    font-size: 13px;
@@ -293,7 +301,7 @@
 						<div class="divPadreNombres">
 	    					<div class="divTabla">
 								<table class="table table-striped tablaDatos">
-									<tbody class="cuerpoTablaNombres">
+									<tbody class="cuerpoTablaNombresTot">
 										<tr style="height: 35px; max-height: 35px; min-height: 35px">
 											<td style="font-weight: bold; width: 200px; max-width: 200px; min-width: 200px;" align="right">
 												Totales: 

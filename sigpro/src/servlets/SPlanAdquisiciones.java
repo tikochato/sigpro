@@ -168,7 +168,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 					for(List<Integer> objetoHijo : hijos){
 						List<PlanAdquisicion> lstplan = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoHijo.get(1), objetoHijo.get(0));
 						
-						if(!lstplan.isEmpty()){
+						if(lstplan != null && !lstplan.isEmpty()){
 							for(PlanAdquisicion plan : lstplan){
 								for(stcategoria cat : lsttempCategorias){
 									if(cat.categoriaId == plan.getCategoriaAdquisicion().getId()){

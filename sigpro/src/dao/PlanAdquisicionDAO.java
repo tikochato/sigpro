@@ -62,6 +62,7 @@ public class PlanAdquisicionDAO {
 		}
 		finally{
 			session.close();
+			retList = (retList.size()>0) ? retList : null;
 		}
 		return retList;
 	}

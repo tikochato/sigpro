@@ -103,10 +103,6 @@
 				<span class="glyphicon glyphicon-link"></span></label>
 				<label class="btn btn-default" ng-click="producto.botones ? producto.irAActividades() : ''" uib-tooltip="Actividades" tooltip-placement="bottom" ng-disabled="!producto.botones">
 				<span class="glyphicon glyphicon-th-list"></span></label>
-				<label class="btn btn-default" ng-click="producto.botones ? producto.irARiesgos() : ''" uib-tooltip="Riesgos" tooltip-placement="bottom" ng-disabled="!producto.botones">
-				<span class="glyphicon glyphicon-warning-sign"></span></label>
-				<label class="btn btn-default" ng-click="producto.botones ? producto.irAMetas() : ''" uib-tooltip="Metas" tooltip-placement="bottom" ng-disabled="!producto.botones">
-				<span class="glyphicon glyphicon-scale"></span></label>
 			</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="21020">
@@ -122,10 +118,7 @@
 		<div class="col-sm-12" style="margin-top: 10px;">
 		<form name="producto.mForm" class="css-form">
 		<uib-tabset active="producto.activeTab">
-    	<uib-tab index="0" name="tproducto">
-		<uib-tab-heading>
-	        <i class="glyphicon glyphicon-certificate"></i> Producto
-	      </uib-tab-heading>
+    	<uib-tab index="0" name="tproducto" heading="Producto">
 		<div>
 		<div class="col-sm-12">
 					<div class="form-group">
@@ -349,10 +342,7 @@
 			</div>
 		</div>
 		</uib-tab>
-		<uib-tab index="1" ng-click="producto.metasActivo()">
-			<uib-tab-heading>
-	        	<i class="glyphicon glyphicon-scale"></i> Metas
-	      	</uib-tab-heading>
+		<uib-tab index="1" ng-click="producto.metasActivo()" heading="Metas">
 			<shiro:lacksPermission name="17010">
 				<span ng-init="producto.redireccionSinPermisos()"></span>
 			</shiro:lacksPermission>
@@ -360,10 +350,10 @@
 				<%@include file="/app/components/meta/meta.jsp" %>
 			</div>
     	</uib-tab>
-    	<uib-tab index="2">
-	      <uib-tab-heading>
-	        <i class="glyphicon glyphicon-bell"></i> Adquisiciones
-	      </uib-tab-heading>
+    	<uib-tab index="2" heading="Adquisiciones" ng-click="producto.adquisicionesActivo()">
+    		<div ng-if="producto.adquisicionesCargadas">
+				<%@include file="/app/components/adquisicion/adquisicion.jsp" %>
+			</div>
 	    </uib-tab>
 	  </uib-tabset>
 	  </form>
