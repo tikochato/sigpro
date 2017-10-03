@@ -170,7 +170,7 @@ public class SDesembolsos extends HttpServlet {
 							BigDecimal valor = (BigDecimal) ((Object[]) costos.get(0))[2];
 							costos.remove(costos.get(0));
 							lista_costo = lista_costo + (lista_costo.length()>0 ? "," :"") +  
-									 valor.toString();
+									 (valor!= null ? valor.toString() : "0");
 						}else{
 							lista_costo = lista_costo + (lista_costo.length()>0 ? "," :"") +  
 									 "0";

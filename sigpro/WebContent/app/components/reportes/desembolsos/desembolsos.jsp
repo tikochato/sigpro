@@ -5,8 +5,7 @@
 	 
 	.planificado {
 		color: #3647b2;
-		 border-right: 1px solid #ddd; 
-		
+		 border-right: 1px solid #ddd;
 	}
 	
 	.real2 {

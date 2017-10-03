@@ -854,11 +854,14 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 		mi.exportarPdf=function(){
 			 $http.post('/SDesembolsos', { 
 				 accion: 'exportarPdf', 
-				 proyectoid: mi.prestamoSeleccionado.value,
-				 anioInicial: mi.anioInicial,
-				 anioFinal: mi.anioFinal,
-				 ejercicioFiscal: mi.anio_inicio,
 				 agrupacion: mi.agrupacion,
+				 costo: JSON.stringify(mi.tabla[0].slice(0)),
+				 planificado: JSON.stringify(mi.tabla[1].slice(0)),
+				 real: JSON.stringify(mi.tabla[2].slice(0)),
+				 realdolares: JSON.stringify(mi.tabla[3].slice(0)),
+				 variacion: JSON.stringify(mi.tabla[4].slice(0)),
+				 porcentaje:  JSON.stringify(mi.tabla[5].slice(0)),
+				 headers: JSON.stringify(mi.columnas),
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
