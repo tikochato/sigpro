@@ -326,7 +326,6 @@ public class CProject {
 			boolean tieneHijos = task.getChildTasks()!=null && task.getChildTasks().size()>0;
 			
 			
-			
 			if (indetnacion == 0 && multiproyecto){
 				objeto_temp = crearPrograma(task, usuario);
 				

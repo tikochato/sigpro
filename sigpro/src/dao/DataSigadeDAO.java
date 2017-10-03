@@ -95,12 +95,14 @@ public class DataSigadeDAO {
 		return ret;
 	}
 	
-	public static List<?> getAVANCE_FISFINAN_DET_DTIRango(String codigoPresupeustario,int anio_inicio, int anio_fin){
+	public static List<?> getAVANCE_FISFINAN_DET_DTIRango(String codigoPresupeustario,int anio_inicio, int anio_fin, int tipoMoneda){
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
-			String query =String.join(" ", "select d.id.ejercicioFiscal,d.id.mesDesembolso,sum(d.id.desembolsosMesGtq) ",
+			String query =String.join(" ", "select d.id.ejercicioFiscal,d.id.mesDesembolso,sum(",
+					tipoMoneda == 1 ? "d.id.desembolsosMesGtq" : "d.id.desembolsosMesUsd",
+					") ",
 					"from DtmAvanceFisfinanDetDti d",
 					"where d.id.codigoPresupuestario = ?1",
 					"and d.id.ejercicioFiscal between ?2 and ?3",
@@ -140,13 +142,13 @@ public class DataSigadeDAO {
 		return ret;
 	}
 	
-	public static  BigDecimal totalDesembolsadoAFechaReal (String codigo_presupuestario, int anio, int mes){
+	public static  BigDecimal totalDesembolsadoAFechaReal (String codigo_presupuestario, Long anio, int mes){
 		BigDecimal ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
 			String query =String.join(" ", 
-									"select  sum(distinct d.id.desembolsosMesGtq)",
+									"select  sum (d.id.desembolsosMesGtq)",
 									"from DtmAvanceFisfinanDetDti d",
 									"where d.id.codigoPresupuestario = ?1",
 									"and (d.id.ejercicioFiscal < ?2 ",
