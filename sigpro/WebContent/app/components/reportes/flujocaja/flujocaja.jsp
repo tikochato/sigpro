@@ -63,6 +63,7 @@
 			display: flex;
 		    flex-direction: column;
 		    align-items: stretch;
+		    margin-bottom: 0px;
 		}
 		
 		.colorPlanificado{
@@ -163,15 +164,15 @@
 					<div class="form-group col-sm-1">
 						<input type="number"  class="inputText" ng-model="controller.fechaInicio" maxlength="4" 
 						ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
-						ng-change="controller.validar(2)"/>
-					  	<label for="campo.id" class="floating-label">*Año Inicial</label>
+						ng-change="controller.validar(2)">
+					  	<label for="campo.id" class="floating-label" >*Año Inicial</label>
 					</div>
 					
 					<div class="form-group col-sm-1">
 						<input type="number"  class="inputText" ng-model="controller.fechaFin" maxlength="4" 
 						ng-value="controller.fechaFin" onblur="this.setAttribute('value', this.value);"
-						ng-change="controller.validar(3)"/>
-					  	<label for="campo.id" class="floating-label">*Año Final</label>
+						ng-change="controller.validar(3)" ng-hide="true"/>
+					  	<label for="campo.id" class="floating-label" ng-hide="true">*Año Final</label>
 					</div>
 					
 					<div class="col-sm-7" align="right" ng-hide="!controller.mostrarDescargar">
@@ -199,14 +200,14 @@
 								<span>A</span></label>
 							</div>
 							<div class="btn-group" style="padding-left: 20px;">
-								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!controller.mostrarDescargar">
+								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="true">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-								<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!controller.mostrarDescargar">
+								<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="true">
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 							</div>
 						</div>
 					</div>
-    			<br><br><br><br>
+    			<br><br><br>
 	    	</div>
 	    	<div style="width: 100%; height: 100%" id="reporte">
 	    		
@@ -257,7 +258,7 @@
 							      	<tr ng-repeat="item in controller.data" style="">
 								      		<td ng-repeat="posicion in controller.columnastotales track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}">
 								      			<div>
-												<span class="colorPlanificado">{{controller.getPlanificado($parent.$index,$index).planificado}}</span>
+												<span class="colorPlanificado">{{controller.getPlanificado($parent.$index,$index).planificado  | formatoMillones : controller.enMillones}}</span>
 								      			</div>
 								      		</td>
 							      	</tr>
@@ -280,14 +281,13 @@
 									<tr ng-repeat="totales in controller.totales track by $index" style="min-height:35px; height:35px;">
 										<td ng-repeat="total in totales.anio" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
 											<div>
-											<span class="colorPlanificado">{{total.valor.planificado}}</span>
+											<span class="colorPlanificado">{{total.valor.planificado | formatoMillones : controller.enMillones}}</span>
 											</div>
 										</td>
 							      	</tr>
 								</tbody>
 							</table>
 			    		</div>
-			    		<br>
 			    		<div class="divPadreNombres"  style="height: 100%">
 			    		<div class="divTabla"  style="height: 100%"> 
 			    			<table class="table table-striped tablaDatos"  style="height: 100%">
@@ -323,30 +323,30 @@
 		    		<div class="divPadreDatos" style="max-width: {{controller.tamanoTotal}}px; height: 100%">
 	    				<div class="divTabla"  style="height: 100%">
 			    			<table class="table table-striped tablaDatos" style="max-width: {{controller.tamanoTotal}}px; height:100%;" >
-								<tbody class="cuerpoTablaDatos">
+								<tbody class="cuerpoTablaDatos" id="cuerpoTotalesDatos">
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaPlanificado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaPlanificado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaPlanificadoAcumulado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaPlanificadoAcumulado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaEjecutado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaEjecutado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaEjecutadoAcumulado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaEjecutadoAcumulado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaVariacion track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaVariacion track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaVariacionPorcentaje track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaVariacionPorcentaje track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaDesembolsos track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaDesembolsos track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaSaldo track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaSaldo track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
 							      	</tr>
 								</tbody>
 							</table>
@@ -358,42 +358,42 @@
 								<tr>
 									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
 									</td>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalPlanificado}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalPlanificado | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
 									<td style="{{controller.estiloCabecera}} text-align: right;"><span>-</span>
 									</td>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalPlanificadoAcumulado}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalPlanificadoAcumulado | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
 									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
 									</td>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalEjecutado}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalEjecutado | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
 									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
 									</td>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalEjecutadoAcumulado}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalEjecutadoAcumulado | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
 									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
 									</td>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalVariacion}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalVariacion | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
 									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
 									</td>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalVariacionPorcentaje}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalVariacionPorcentaje | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
 									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
 									</td>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalDesembolsos}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalDesembolsos | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
 									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
 									</td>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalSaldo}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalSaldo | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 							</tbody>
 						</table>

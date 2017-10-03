@@ -118,13 +118,16 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 
 	mi.anterior = function(){
 		var elemento = document.getElementById("divTablaDatos");
+		var elementoTotales = document.getElementById("cuerpoTotalesDatos");
 		if(mi.totalCabecerasAMostrar == 0){
 			elemento.scrollLeft -= mi.tamanoCelda;
+			elementoTotales.scrollLeft -= mi.tamanoCelda;
 			document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCelda;
 			mi.SiguienteActivo = true;
 		}else{
 			if(elemento.scrollLeft > 0){
 				elemento.scrollLeft -= mi.tamanoCabecera;
+				elementoTotales.scrollLeft -= mi.tamanoCabecera;
 				document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCabecera;
 				mi.SiguienteActivo = true;
 				if(elemento.scrollLeft <= 0){
@@ -137,13 +140,16 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 
 	mi.siguiente = function(){
 		var elemento = document.getElementById("divTablaDatos");
+		var elementoTotales = document.getElementById("cuerpoTotalesDatos");
 		if(mi.totalCabecerasAMostrar == 0){
 			elemento.scrollLeft += mi.tamanoCelda;
+			elementoTotales.scrollLeft += mi.tamanoCelda;
 			document.getElementById("divCabecerasDatos").scrollLeft += mi.tamanoCelda;
 			mi.AnteriorActivo = true;
 		}else{
 			if(elemento.scrollLeft < ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
 				elemento.scrollLeft += mi.tamanoCabecera;
+				elementoTotales.scrollLeft += mi.tamanoCabecera;
 				document.getElementById("divCabecerasDatos").scrollLeft += mi.tamanoCabecera;
 				mi.AnteriorActivo = true;
 				if(elemento.scrollLeft >= ((mi.tamanoCabecera * (mi.totalCabeceras - mi.totalCabecerasAMostrar)))){
@@ -155,6 +161,8 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 	}
 
 	mi.validar = function(noElemento){
+		//TODO: quitar
+		mi.fechaFin = mi.fechaInicio;
 		if(mi.prestamo.value > 0)
 		{
 			if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
@@ -433,19 +441,12 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 	};
 
 	mi.exportarExcel = function(){
-		var tipoVisualizacion = 0;
-		if (mi.grupoMostrado.planificado && mi.grupoMostrado.real){
-			tipoVisualizacion = 2;
-		}else if(mi.grupoMostrado.real){
-			tipoVisualizacion = 1;
-		}
 		$http.post('/SFlujoCaja', { 
 			accion: 'exportarExcel', 
 			proyectoid: mi.prestamo.value,
 			fechaInicio: mi.fechaInicio,
 			fechaFin: mi.fechaFin,
 			agrupacion: mi.agrupacionActual,
-			tipoVisualizacion: tipoVisualizacion,
 			t:moment().unix()
 		} ).then(
 				function successCallback(response) {

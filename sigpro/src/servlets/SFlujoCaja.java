@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import dao.DesembolsoDAO;
 import dao.EstructuraProyectoDAO;
 import dao.ProyectoDAO;
 import utilities.CExcel;
@@ -129,10 +130,9 @@ public class SFlujoCaja extends HttpServlet {
 			int anioInicio = Utils.String2Int(map.get("fechaInicio"), 0);
 			int anioFin = Utils.String2Int(map.get("fechaFin"), 0);
 			int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
-			int tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
 			
 			try{
-		        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, usuario);
+		        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, usuario);
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -253,11 +253,13 @@ public class SFlujoCaja extends HttpServlet {
 		totales.totalDesembolsos = new BigDecimal(0);
 		totales.totalSaldo = new BigDecimal(0);
 		
+		totales.filaDesembolsos = new BigDecimal[12];
+		
 		BigDecimal planificadoAcumulado = new BigDecimal(0);
 		BigDecimal ejecutadoAcumulado = new BigDecimal(0);
 		for(int i=0;i<lstPrestamo.size();i++){
 			CPrestamoCostos prestamo = lstPrestamo.get(i);
-			if(prestamo.getObjeto_tipo() == 1){
+			if(prestamo.getObjeto_tipo() == 1){				
 				for (int a=0; a<prestamo.getAnios().length;a++){
 					totales.totAnualPlanificado[a] = new BigDecimal(0);
 					totales.totAnualPlanificadoAcumulado[a] = new BigDecimal(0);
@@ -275,17 +277,30 @@ public class SFlujoCaja extends HttpServlet {
 						totales.filaPlanificadoAcumulado[m] = planificadoAcumulado;
 						totales.totAnualPlanificado[a] = totales.totAnualPlanificado[a].add(planificadoActual); 
 						totales.totalPlanificado = totales.totalPlanificado.add(planificadoActual); 
+						totales.totalPlanificadoAcumulado = planificadoAcumulado;
 						BigDecimal ejecutadoActual = prestamo.getAnios()[a].mes[m].real!=null ? prestamo.getAnios()[a].mes[m].real : new BigDecimal(0);
 						totales.filaEjecutado[m] = ejecutadoActual;
 						ejecutadoAcumulado = ejecutadoAcumulado.add(ejecutadoActual);
 						totales.filaEjecutadoAcumulado[m] = ejecutadoAcumulado;
 						totales.totAnualEjecutado[a] = totales.totAnualEjecutado[a].add(ejecutadoActual); 
 						totales.totalEjecutado = totales.totalEjecutado.add(ejecutadoActual); 
+						totales.totalEjecutadoAcumulado = ejecutadoAcumulado;
+						
 						totales.filaVariacion[m] = planificadoActual.subtract(ejecutadoActual);
 						totales.filaVariacionPorcentaje[m] = planificadoActual.compareTo(BigDecimal.ZERO)==0 ? new BigDecimal(0) : totales.filaVariacion[m].divide(planificadoActual);
 						
-						//TODO: obtener desembolsos y saldo
 					}
+				}
+				//TODO: obtener desembolsos y saldo
+				List<?> objDesembolso =DesembolsoDAO.getDesembolsosPorEjercicio(prestamo.getObjeto_id(),anioInicial,anioFinal);
+				for(int d=0; d<objDesembolso.size(); d++){
+					Integer anio = (Integer) ((Object[]) objDesembolso.get(d))[0];
+					Integer mes = (Integer) ((Object[]) objDesembolso.get(d))[1];
+					BigDecimal valor = (BigDecimal) ((Object[]) objDesembolso.get(d))[2];
+					if (anio.compareTo((anioInicial)) == 0){
+						totales.filaDesembolsos[mes-1] = totales.filaDesembolsos[mes-1]!=null ? totales.filaDesembolsos[mes-1].add(valor) : valor;
+					}
+					totales.totalDesembolsos = totales.totalDesembolsos!=null ? totales.totalDesembolsos.add(valor) : valor; 
 				}
 				break;
 			}
@@ -295,7 +310,7 @@ public class SFlujoCaja extends HttpServlet {
 		return totales;
 	}
 	
-	private byte[] exportarExcel(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, String usuario) throws IOException{
+	private byte[] exportarExcel(int prestamoId, int anioInicio, int anioFin, int agrupacion, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -304,10 +319,10 @@ public class SFlujoCaja extends HttpServlet {
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{		
-			excel = new CExcel("Metas de Préstamo", false, null);
-			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
-			datosMetas = generarDatosFlujoCaja(prestamoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-			wb=excel.generateExcelOfData(datosMetas, "Reporte de Metas - Préstamo "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
+			excel = new CExcel("Flujo de Caja", false, null);
+			headers = generarHeaders(anioInicio, anioFin, agrupacion);
+			datosMetas = generarDatosFlujoCaja(prestamoId, anioInicio, anioFin, agrupacion, headers[0].length, usuario);
+			wb=excel.generateExcelOfData(datosMetas, "Flujo de Caja - Préstamo "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
 		
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
@@ -317,7 +332,7 @@ public class SFlujoCaja extends HttpServlet {
 		return outArray;
 	}
 	
-	private String[][] generarHeaders(int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion){
+	private String[][] generarHeaders(int anioInicio, int anioFin, int agrupacion){
 		String headers[][];
 		String[][] AgrupacionesTitulo = new String[][]{{"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"},
 			{"Bimestre 1", "Bimestre 2","Bimestre 3","Bimestre 4","Bimestre 5","Bimestre 6"},
@@ -327,115 +342,48 @@ public class SFlujoCaja extends HttpServlet {
 			{"Anual"}
 		};
 		
-		int totalesCant = 3;
+		int totalesCant = 1;
 		int aniosDiferencia =(anioFin-anioInicio)+1; 
 		int columnasTotal = (aniosDiferencia*(AgrupacionesTitulo[agrupacion-1].length));
-		int factorVisualizacion = 1;
-		if(tipoVisualizacion == 2){
-			columnasTotal = columnasTotal*2;
-			totalesCant+=(aniosDiferencia*2);
-			columnasTotal += 2+totalesCant+1;
-			factorVisualizacion = 2;
-		}else{
-			totalesCant+=aniosDiferencia;
-			columnasTotal += 2+totalesCant; //Nombre, Unidad medida, totales por año, total, meta final
-		}
+		totalesCant+=aniosDiferencia;
+		columnasTotal += 1+totalesCant; 
 		
 		String titulo[] = new String[columnasTotal];
 		String tipo[] = new String[columnasTotal];
-		String subtitulo[] = new String[columnasTotal];
 		String operacionesFila[] = new String[columnasTotal];
 		String columnasOperacion[] = new String[columnasTotal];
 		String totales[] = new String[totalesCant];
 		titulo[0]="Nombre";
-		titulo[1]="Unidad de Medida";
 		tipo[0]="string";
-		tipo[1]="string";
-		subtitulo[0]="";
-		subtitulo[1]="";
 		operacionesFila[0]="";
-		operacionesFila[1]="";
 		columnasOperacion[0]="";
-		columnasOperacion[1]="";
 		for(int i=0;i<totalesCant;i++){ //Inicializar totales
 			totales[i]="";
 		}
-		int pos=2;
+		int pos=1;
 		for(int i=0; i<AgrupacionesTitulo[agrupacion-1].length; i++){
 			for (int j=0; j<aniosDiferencia; j++){
 				titulo[pos] = AgrupacionesTitulo[agrupacion-1][i] + " " + (anioInicio+j);
 				tipo[pos] = "double";
 				operacionesFila[pos]="";
 				columnasOperacion[pos]="";
-				totales[j*factorVisualizacion]+=pos+",";
-				if(tipoVisualizacion==1){
-					subtitulo[pos]="Real";
-				}else{
-					subtitulo[pos]="Planificado";
-				}
+				totales[j]+=pos+",";
 				pos++;
-				if(tipoVisualizacion == 2){
-					titulo[pos] = "";
-					tipo[pos] = "double";
-					subtitulo[pos]="Real";
-					operacionesFila[pos]="";
-					columnasOperacion[pos]="";
-					totales[(j*factorVisualizacion)+1]+=pos+",";
-					pos++;
-				}
 			}
 		}
 		for (int j=0; j<aniosDiferencia; j++){
 			titulo[pos] = "Total " + (anioInicio+j);
 			tipo[pos] = "double";
 			operacionesFila[pos]="sum";
-			columnasOperacion[pos]= totales[j*factorVisualizacion];
-			totales[totalesCant-factorVisualizacion] += pos+",";
-			if(tipoVisualizacion==1){
-				subtitulo[pos]="Real";
-			}else{
-				subtitulo[pos]="Planificado";
-			}
+			columnasOperacion[pos]= totales[j];
+			totales[totalesCant-1] += pos+",";
 			pos++;
-			if(tipoVisualizacion == 2){
-				titulo[pos] = "";
-				tipo[pos] = "double";
-				subtitulo[pos]="Real";
-				operacionesFila[pos]="sum";
-				columnasOperacion[pos]=totales[(j*factorVisualizacion)+1];
-				totales[totalesCant-1] += pos+",";
-				pos++;
-			}
 		}
 		titulo[pos] = "Total";
 		tipo[pos] = "double";
 		operacionesFila[pos]="sum";
-		columnasOperacion[pos]=totales[totalesCant-factorVisualizacion];
-		if(tipoVisualizacion==1){
-			subtitulo[pos]="Real";
-		}else{
-			subtitulo[pos]="Planificado";
-		}
+		columnasOperacion[pos]=totales[totalesCant];
 		pos++;
-		if(tipoVisualizacion == 2){
-			titulo[pos] = "";
-			tipo[pos] = "double";
-			subtitulo[pos]="Real";
-			operacionesFila[pos]="sum";
-			columnasOperacion[pos]=totales[totalesCant-1];
-			pos++;
-		}
-		titulo[pos] = "Meta Final";
-		tipo[pos] = "double";
-		subtitulo[pos]="";
-		operacionesFila[pos]="";
-		columnasOperacion[pos]="";
-		pos++;
-		titulo[pos] = "% Avance Final";
-		tipo[pos] = "double";
-		subtitulo[pos]="";
-		operacionesFila[pos]="";
-		columnasOperacion[pos]="";
 		
 		headers = new String[][]{
 			titulo,  //titulos
@@ -443,7 +391,7 @@ public class SFlujoCaja extends HttpServlet {
 			tipo, //tipo dato
 			{""}, //operaciones columnas
 			{""}, //operaciones div
-			subtitulo,
+			null,
 			operacionesFila,
 			columnasOperacion
 			};
@@ -451,10 +399,10 @@ public class SFlujoCaja extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatosFlujoCaja(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, int columnasTotal, String usuario){
+	public String[][] generarDatosFlujoCaja(int prestamoId, int anioInicio, int anioFin, int agrupacion, int columnasTotal, String usuario){
 		String[][] datos = null;
 		int columna = 0;
-//		int sumaColumnas = ((anioFin-anioInicio) + 1)*factorVisualizacion;
+//		int sumaColumnas = ((anioFin-anioInicio) + 1);
 		List<CPrestamoCostos> lstPrestamo = getFlujoCaja(prestamoId, anioInicio, anioFin, usuario);		
 		if (lstPrestamo != null && !lstPrestamo.isEmpty()){
 			datos = new String[lstPrestamo.size()][columnasTotal];

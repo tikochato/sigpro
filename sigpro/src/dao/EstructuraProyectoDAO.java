@@ -15,6 +15,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.joda.time.DateTime;
 
+import pojo.PlanAdquisicion;
 import pojo.PlanAdquisicionPago;
 import pojo.Prestamo;
 import pojo.Proyecto;
@@ -360,21 +361,40 @@ public class EstructuraProyectoDAO {
 			Object[] obj = (Object[]) objeto;
 			Integer nivel = obj[4]!=null ? (Integer)obj[4] : null;
 			if(nivel != null){
-				CPrestamoCostos tempPrestamo =  new CPrestamoCostos();
-				tempPrestamo.setObjeto_id(obj[0]!=null ? (Integer)obj[0] : null);
-				tempPrestamo.setNombre(obj[1]!=null ? (String)obj[1] : null);
-				tempPrestamo.setNivel(nivel);
-				tempPrestamo.setObjeto_tipo(obj[2]!=null ? ((BigInteger) obj[2]).intValue() : null);
-				tempPrestamo.setFecha_inicial(obj[5]!=null ? new DateTime((Timestamp)obj[5]) : null);
-				tempPrestamo.setFecha_final(obj[6]!=null ? new DateTime((Timestamp)obj[6]) : null);
+				Integer objeto_id = obj[0]!=null ? (Integer)obj[0] : null;
+				String nombre = obj[1]!=null ? (String)obj[1] : null;
+				Integer objeto_tipo = obj[2]!=null ? ((BigInteger) obj[2]).intValue() : null;
+				DateTime fecha_inicial = obj[5]!=null ? new DateTime((Timestamp)obj[5]) : null;
+				DateTime fecha_final = obj[6]!=null ? new DateTime((Timestamp)obj[6]) : null;
+				Integer acumulacion_costoid = obj[11]!=null ? Integer.valueOf(obj[11].toString()) : null;
+				BigDecimal costo = obj[9]!=null ? (BigDecimal)obj[9] : null;
+				Integer programa = obj[12]!=null ? (Integer)obj[12] : null;
+				Integer subprograma = obj[13]!=null ? (Integer)obj[13] : null;
+				Integer proyecto = obj[14]!=null ? (Integer)obj[14] : null;
+				Integer actividad = obj[15]!=null ? (Integer)obj[15] : null;
+				Integer obra = obj[16]!=null ? (Integer)obj[16] : null;
+				
+				CPrestamoCostos tempPrestamo =  new CPrestamoCostos(nombre, objeto_id, objeto_tipo, nivel, fecha_inicial, fecha_final, null,
+						acumulacion_costoid, costo, programa, subprograma, proyecto, actividad, obra);
+				
 				tempPrestamo.setAnios(tempPrestamo.inicializarStanio(anioInicial, anioFinal));
-				tempPrestamo.setAcumulacion_costoid(obj[11]!=null ? (Integer)obj[11] : null);
-				tempPrestamo.setCosto(obj[9]!=null ? (BigDecimal)obj[9] : null);
-				tempPrestamo.setObjeto_id(obj[12]!=null ? (Integer)obj[12] : null);
-				tempPrestamo.setObjeto_id(obj[13]!=null ? (Integer)obj[13] : null);
-				tempPrestamo.setObjeto_id(obj[14]!=null ? (Integer)obj[14] : null);
-				tempPrestamo.setObjeto_id(obj[15]!=null ? (Integer)obj[15] : null);
-				tempPrestamo.setObjeto_id(obj[16]!=null ? (Integer)obj[16] : null);
+				
+				
+//				CPrestamoCostos tempPrestamo =  new CPrestamoCostos();
+//				tempPrestamo.setObjeto_id(obj[0]!=null ? (Integer)obj[0] : null);
+//				tempPrestamo.setNombre(obj[1]!=null ? (String)obj[1] : null);
+//				tempPrestamo.setNivel(nivel);
+//				tempPrestamo.setObjeto_tipo(obj[2]!=null ? ((Integer) obj[2]).intValue() : null);
+//				tempPrestamo.setFecha_inicial(obj[5]!=null ? new DateTime((Timestamp)obj[5]) : null);
+//				tempPrestamo.setFecha_final(obj[6]!=null ? new DateTime((Timestamp)obj[6]) : null);
+//				tempPrestamo.setAnios(tempPrestamo.inicializarStanio(anioInicial, anioFinal));
+//				tempPrestamo.setAcumulacion_costoid(obj[11]!=null ? (Integer)obj[11] : null);
+//				tempPrestamo.setCosto(obj[9]!=null ? (BigDecimal)obj[9] : null);
+//				tempPrestamo.setPrograma(obj[12]!=null ? (Integer)obj[12] : null);
+//				tempPrestamo.setSubprograma(obj[13]!=null ? (Integer)obj[13] : null);
+//				tempPrestamo.setProyecto(obj[14]!=null ? (Integer)obj[14] : null);
+//				tempPrestamo.setActividad(obj[15]!=null ? (Integer)obj[15] : null);
+//				tempPrestamo.setObra(obj[16]!=null ? (Integer)obj[16] : null);
 				
 				try {
 					if(CMariaDB.connect()){
@@ -426,70 +446,74 @@ public class EstructuraProyectoDAO {
 	}
 	
 	private CPrestamoCostos getPresupuestoPlanificado(CPrestamoCostos prestamo, String usuario){
-		List<PlanAdquisicionPago> pagos = PlanAdquisicionPagoDAO.getPagosByObjetoTipo(prestamo.getObjeto_id(), prestamo.getObjeto_tipo());
-		Calendar fechaInicial = Calendar.getInstance();
-		CPrestamoCostos.stanio[] anios = prestamo.getAnios();
-		for(CPrestamoCostos.stanio anioObj: anios){			
-			if(pagos!= null && pagos.size() > 0){
-				for(PlanAdquisicionPago pago : pagos){
-					fechaInicial.setTime(pago.getFechaPago());
-					int mes = fechaInicial.get(Calendar.MONTH);
-					int anio = fechaInicial.get(Calendar.YEAR);					
-					if(anio == anioObj.anio){
-						anioObj.mes[mes].planificado = anioObj.mes[mes].planificado.add(pago.getPago());
-					}
-				}
-			}else{
-				DateTime fechaInicio = prestamo.getFecha_inicial();
-				DateTime fechaFin = prestamo.getFecha_final();
-				int diaInicial = fechaInicio.getDayOfMonth();
-				int mesInicial = fechaInicio.getMonthOfYear() -1;
-				int anioInicial = fechaInicio.getYear();
-				int diaFinal = fechaFin.getDayOfMonth();
-				int mesFinal = fechaFin.getMonthOfYear() -1;
-				int anioFinal = fechaFin.getYear();
-				if(anioObj.anio >= anioInicial && anioObj.anio<=anioFinal){
-					if(prestamo.getAcumulacion_costoid() != null){
-						if(prestamo.getAcumulacion_costoid() == 1){						
-							if(anioInicial == anioObj.anio){
-								anioObj.mes[mesInicial].planificado =  prestamo.getCosto() != null ? prestamo.getCosto() : new BigDecimal(0);
-							}
-						}else if(prestamo.getAcumulacion_costoid() == 2){
-							int dias = (int)((fechaFin.getMillis() - fechaInicio.getMillis())/(1000*60*60*24));
-							BigDecimal costoDiario = prestamo.getCosto() != null ? prestamo.getCosto().divide(new BigDecimal(dias),5, BigDecimal.ROUND_HALF_UP) : new BigDecimal(0);
-							int inicioActual = 0;
-							if(anioObj.anio == anioInicial){
-								inicioActual = mesInicial;
-							}
-							
-							int finMes = anioObj.anio==anioFinal ? mesFinal : 11;
-							for(int m=inicioActual; m<=finMes; m++){
-								if(anioObj.anio == anioInicial && m==mesInicial){
-									if(m==mesFinal){
-										int diasMes = diaFinal-diaInicial;
-										anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
-									}else{
-										Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
-										int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-										diasMes = diasMes-diaInicial;
-										anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
+		if(prestamo!=null && prestamo.getObjeto_id()!=null){
+			List<PlanAdquisicion> lstplan = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(prestamo.getObjeto_tipo(), prestamo.getObjeto_id());	
+				Calendar fechaInicial = Calendar.getInstance();
+				for(CPrestamoCostos.stanio anioObj: prestamo.getAnios()){
+					if(lstplan!=null && !lstplan.isEmpty()){
+						for(PlanAdquisicion plan : lstplan){
+							List<PlanAdquisicionPago> pagos = PlanAdquisicionPagoDAO.getPagosByPlan(plan.getId());
+							if(pagos!= null && pagos.size() > 0){
+								for(PlanAdquisicionPago pago : pagos){
+									fechaInicial.setTime(pago.getFechaPago());
+									int mes = fechaInicial.get(Calendar.MONTH);
+									int anio = fechaInicial.get(Calendar.YEAR);					
+									if(anio == anioObj.anio){
+										anioObj.mes[mes].planificado = anioObj.mes[mes].planificado.add(pago.getPago());
 									}
-								}else if(anioObj.anio == anioFinal && m== mesFinal){
-									anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diaFinal));
-								}else{
-									Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
-									int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-									anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
 								}
 							}
-						}else if(prestamo.getAcumulacion_costoid() ==3){
-							if(anioFinal == anioObj.anio){
-								anioObj.mes[mesFinal].planificado =  prestamo.getCosto() != null ? prestamo.getCosto() : new BigDecimal(0);
+						}
+					}else{
+						int diaInicial = prestamo.getFecha_inicial().getDayOfMonth();
+						int mesInicial = prestamo.getFecha_inicial().getMonthOfYear() -1;
+						int anioInicial = prestamo.getFecha_inicial().getYear();
+						int diaFinal = prestamo.getFecha_final().getDayOfMonth();
+						int mesFinal = prestamo.getFecha_final().getMonthOfYear() -1;
+						int anioFinal = prestamo.getFecha_final().getYear();
+						if(anioObj.anio >= anioInicial && anioObj.anio<=anioFinal){
+							if(prestamo.getAcumulacion_costoid() != null){
+								if(prestamo.getAcumulacion_costoid() == 1){						
+									if(anioInicial == anioObj.anio){
+										anioObj.mes[mesInicial].planificado =  prestamo.getCosto() != null ? prestamo.getCosto() : new BigDecimal(0);
+									}
+								}else if(prestamo.getAcumulacion_costoid() == 2){
+									int dias = (int)((prestamo.getFecha_final().getMillis() - prestamo.getFecha_inicial().getMillis())/(1000*60*60*24));
+									BigDecimal costoDiario = prestamo.getCosto() != null ? prestamo.getCosto().divide(new BigDecimal(dias),5, BigDecimal.ROUND_HALF_UP) : new BigDecimal(0);
+									int inicioActual = 0;
+									if(anioObj.anio == anioInicial){
+										inicioActual = mesInicial;
+									}
+									
+									int finMes = anioObj.anio==anioFinal ? mesFinal : 11;
+									for(int m=inicioActual; m<=finMes; m++){
+										if(anioObj.anio == anioInicial && m==mesInicial){
+											if(m==mesFinal){
+												int diasMes = diaFinal-diaInicial;
+												anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
+											}else{
+												Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
+												int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+												diasMes = diasMes-diaInicial;
+												anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
+											}
+										}else if(anioObj.anio == anioFinal && m== mesFinal){
+											anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diaFinal));
+										}else{
+											Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
+											int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+											anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
+										}
+									}
+								}else if(prestamo.getAcumulacion_costoid() ==3){
+									if(anioFinal == anioObj.anio){
+										anioObj.mes[mesFinal].planificado =  prestamo.getCosto() != null ? prestamo.getCosto() : new BigDecimal(0);
+									}
+								}
 							}
 						}
 					}
 				}
-			}
 		}
 		return prestamo;
 	}
