@@ -358,19 +358,23 @@ public class EstructuraProyectoDAO {
 				try {
 					if(CMariaDB.connect()){
 						Connection conn = CMariaDB.getConnection();
-						Connection conn_analytic = CMariaDB.getConnection_analytic();
-						if(tempPrestamo.getObjeto_tipo() == 1){
-						objPrestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(tempPrestamo.getObjeto_tipo(), 1);
-							if(objPrestamo != null ){
-								codigoPresupuestario = Long.toString(objPrestamo.getCodigoPresupuestario());
-								fuente = Utils.String2Int(codigoPresupuestario.substring(0,2));
-								organismo = Utils.String2Int(codigoPresupuestario.substring(2,6));
-								correlativo = Utils.String2Int(codigoPresupuestario.substring(6,10));
-							}
-						}			
-						tempPrestamo = getPresupuestoReal(tempPrestamo, fuente, organismo, correlativo, anioInicial, anioFinal, conn_analytic, usuario);
-						tempPrestamo = getPresupuestoPlanificado(tempPrestamo, usuario);
-						conn_analytic.close();
+						if(CMariaDB.connectAnalytic()){
+							Connection conn_analytic = CMariaDB.getConnection_analytic();
+							if(tempPrestamo.getObjeto_tipo() == 1){
+							objPrestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(tempPrestamo.getObjeto_tipo(), 1);
+								if(objPrestamo != null ){
+									codigoPresupuestario = Long.toString(objPrestamo.getCodigoPresupuestario());
+									if(codigoPresupuestario!=null && !codigoPresupuestario.isEmpty()){
+										fuente = Utils.String2Int(codigoPresupuestario.substring(0,2));
+										organismo = Utils.String2Int(codigoPresupuestario.substring(2,6));
+										correlativo = Utils.String2Int(codigoPresupuestario.substring(6,10));
+										tempPrestamo = getPresupuestoReal(tempPrestamo, fuente, organismo, correlativo, anioInicial, anioFinal, conn_analytic, usuario);
+									}
+								}
+							}			
+							tempPrestamo = getPresupuestoPlanificado(tempPrestamo, usuario);
+							conn_analytic.close();
+						}
 						conn.close();
 					}
 				} catch (SQLException e) {

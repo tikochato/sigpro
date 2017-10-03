@@ -30,7 +30,7 @@
 			overflow-y:hidden;
 			overflow-x:hidden;
 		}
-		
+				
 	    .cuerpoTablaNombres {
 		    overflow-y: scroll;
 		    overflow-x: hidden;
@@ -56,6 +56,7 @@
 		    display: inline-block;
 		    text-align: center;
 		    font-size: 13px;
+		    margin-left: -15px;
 		}
 		
 		.tablaDatos {
@@ -178,6 +179,12 @@
 						</div>
 						<div class="col-sm-11">
 							<div class="btn-group">
+								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="true" ng-click="controller.calcularTamaniosCeldas(); controller.convertirMillones();" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
+								<span>MQ</span></label>
+								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="false" ng-click="controller.calcularTamaniosCeldas(); controller.convertirMillones();" uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false">
+								<span>Q</span></label>
+							</div>
+							<div class="btn-group" style="padding-left: 20px;">
 								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="1" ng-click="controller.cambiarAgrupacion(1)" uib-tooltip="Mes" role="button" tabindex="1" aria-invalid="false">
 								<span>M</span></label>
 								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="2" ng-click="controller.cambiarAgrupacion(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
@@ -221,11 +228,11 @@
 				          				<th style="text-align: center; vertical-align: top; width:300px; height: 71px;" class="label-form">Nombre</th>
 				         			</tr>
 								</thead>
-								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo>
+								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" style="max-height: 150px;" scrollespejo>
 									<tr ng-repeat="item in controller.data">
 							      		<td nowrap style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">
 							      			<p class="nombreFormat">
-							      				<span ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.nivel-1}}em"></span>
+							      				<span ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.nivel}}em"></span>
 							      				<span uib-tooltip="{{item.nombre}}">{{item.nombre}}</span>
 							      			</p>
 							      		</td>
@@ -238,7 +245,7 @@
 	    				<div class="divTabla"  style="height: 100%">
 			    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos" 
 				    				style="max-width: {{controller.tamanoTotal}}px; height:100%;" >
-								<thead id="divCabecerasDatos" class="theadDatos">
+								<thead id="divCabecerasDatos" class="theadDatos" style="margin-left: -15px;">
 									<tr>
 				         				<th colspan={{controller.colspan}} style="{{controller.estiloCabecera}}" ng-repeat="m in controller.objetoMostrar" class="label-form">{{m.nombreMes}}</th>
 				          			</tr>
@@ -246,11 +253,11 @@
 				          				<th ng-repeat="a in controller.aniosfinales" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}" class="label-form">{{a.anio}}</th>
 							        </tr>
 								</thead>
-								<tbody class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo>
+								<tbody class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo  style="max-height: 150px;">
 							      	<tr ng-repeat="item in controller.data" style="">
 								      		<td ng-repeat="posicion in controller.columnastotales track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}">
 								      			<div>
-												<span class="colorPlanificado">{{controller.getPlanificado($parent.$index,$index, controller.VALOR_PLANIFICADO)}}</span>
+												<span class="colorPlanificado">{{controller.getPlanificado($parent.$index,$index).planificado}}</span>
 								      			</div>
 								      		</td>
 							      	</tr>
@@ -269,7 +276,7 @@
 			          					<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
 							        </tr>
 								</thead>
-							<tbody class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')" scrollespejo tot="{{mi.totales.length}}">
+							<tbody class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')"  style="max-height: 150px;" scrollespejo>
 									<tr ng-repeat="totales in controller.totales track by $index" style="min-height:35px; height:35px;">
 										<td ng-repeat="total in totales.anio" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
 											<div>
@@ -281,6 +288,116 @@
 							</table>
 			    		</div>
 			    		<br>
+			    		<div class="divPadreNombres"  style="height: 100%">
+			    		<div class="divTabla"  style="height: 100%"> 
+			    			<table class="table table-striped tablaDatos"  style="height: 100%">
+								<tbody class="cuerpoTablaNombres">
+									<tr>
+							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Planificado</td>
+							      	</tr>
+							      	<tr>
+							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Planificado Acumulado</td>
+							      	</tr>
+							      	<tr>
+							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Ejecutado</td>
+							      	</tr>
+							      	<tr>
+							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Ejecutado Acumulado</td>
+							      	</tr>
+							      	<tr>
+							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Variación</td>
+							      	</tr>
+							      	<tr>
+							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">%</td>
+							      	</tr>
+							      	<tr>
+							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Desembolsos</td>
+							      	</tr>
+							      	<tr>
+							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Saldo</td>
+							      	</tr>
+								</tbody>
+							</table>
+		    			</div>
+	    			</div>
+		    		<div class="divPadreDatos" style="max-width: {{controller.tamanoTotal}}px; height: 100%">
+	    				<div class="divTabla"  style="height: 100%">
+			    			<table class="table table-striped tablaDatos" style="max-width: {{controller.tamanoTotal}}px; height:100%;" >
+								<tbody class="cuerpoTablaDatos">
+							      	<tr>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaPlanificado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      	</tr>
+							      	<tr>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaPlanificadoAcumulado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      	</tr>
+							      	<tr>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaEjecutado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      	</tr>
+							      	<tr>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaEjecutadoAcumulado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      	</tr>
+							      	<tr>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaVariacion track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      	</tr>
+							      	<tr>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaVariacionPorcentaje track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      	</tr>
+							      	<tr>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaDesembolsos track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      	</tr>
+							      	<tr>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaSaldo track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}} </td>
+							      	</tr>
+								</tbody>
+							</table>
+						</div>
+						</div>
+			    		<div class="divTabla"  style="height: 100%">
+		    			<table class="table table-striped tablaDatos"  style="height: 100%">
+							<tbody class="cuerpoTablaTotales bordeIzquierda">
+								<tr>
+									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
+									</td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalPlanificado}}</span></td>
+								</tr>
+								<tr>
+									<td style="{{controller.estiloCabecera}} text-align: right;"><span>-</span>
+									</td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalPlanificadoAcumulado}}</span></td>
+								</tr>
+								<tr>
+									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
+									</td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalEjecutado}}</span></td>
+								</tr>
+								<tr>
+									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
+									</td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalEjecutadoAcumulado}}</span></td>
+								</tr>
+								<tr>
+									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
+									</td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalVariacion}}</span></td>
+								</tr>
+								<tr>
+									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
+									</td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalVariacionPorcentaje}}</span></td>
+								</tr>
+								<tr>
+									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
+									</td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalDesembolsos}}</span></td>
+								</tr>
+								<tr>
+									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
+									</td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalSaldo}}</span></td>
+								</tr>
+							</tbody>
+						</table>
+		    		</div>
 	    	<div class="row">
 					<div class="col-sm-3"></div>
 					<div class="col-sm-6" style="text-align: center;">
@@ -298,54 +415,7 @@
 						</ol>
 					</div>
 	    	</div>
-	    	<br>
-	    	<div ng-hide="!controller.mostrarDescargar" >
-	    		<table class="table table-striped tablaDatos">
-					<thead class="theadDatos">
-						<tr>
-	          				<th rowspan="2" style="text-align: center; vertical-align: top; width:{{controller.tamanioNombre}}px;" class="label-form">Dato</th>
-	          				<th ng-repeat="m in controller.objetoMostrar" class="label-form">{{m.nombreMes}}</th>
-	          				<th rowspan="2" style="text-align: center; vertical-align: top; width:180px; " class="label-form">Total</th>
-	         			</tr>
-	          			<tr>
-	          				<th ng-repeat="a in controller.aniosfinales" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}" class="label-form">{{a.anio}}</th>
-				        </tr>
-					</thead>
-					<tbody scrollespejo>
-						<tr>
-				      		<td nowrap style="min-height: 35px; height: 35px; width:{{controller.tamanioNombre}}px;">Total Planificado</td>
-				      		<td ng-repeat="p in controller.totalPlanificado" style="min-height: 35px; height: 35px; {{controller.estiloCelda}} {{controller.estiloAlineacion}}">{{p}}</td>
-				      	</tr>
-				      	<tr>
-				      		<td nowrap style="min-height: 35px; height: 35px; width:{{controller.tamanioNombre}}px;">Total Planificado Acumulado</td>
-				      		<td ng-repeat="pa in controller.totalPlanificadoAcumulado" style="min-height: 35px; height: 35px; {{controller.estiloCelda}} {{controller.estiloAlineacion}}">{{pa}}</td>
-				      	</tr>
-				      	<tr>
-				      		<td nowrap style="min-height: 35px; height: 35px; width:{{controller.tamanioNombre}}px;">Total Ejecutado</td>
-				      		<td ng-repeat="e in controller.totalEjecutado" style="min-height: 35px; height: 35px; {{controller.estiloCelda}} {{controller.estiloAlineacion}}">{{e}}</td>
-				      	</tr>
-				      	<tr>
-				      		<td nowrap style="min-height: 35px; height: 35px; width:{{controller.tamanioNombre}}px;">Total Ejecutado Acumulado</td>
-				      		<td ng-repeat="ea in controller.totalEjecutadoAcumulado" style="min-height: 35px; height: 35px; {{controller.estiloCelda}} {{controller.estiloAlineacion}}">{{ea}}</td>
-				      	</tr>
-				      	<tr>
-				      		<td nowrap rowspan="2" style="text-align: center; min-height: 35px; height: 35px; width:{{controller.tamanioNombre}}px;">Variacion</td>
-				      		<td ng-repeat="v in controller.totalVariacion" style="min-height: 35px; height: 35px; {{controller.estiloCelda}} {{controller.estiloAlineacion}}">{{v}}</td>
-				      	</tr>
-				      	<tr>
-				      		<td ng-repeat="vp in controller.totalVariacionPorcentaje" style="min-height: 35px; height: 35px; {{controller.estiloCelda}} {{controller.estiloAlineacion}}">{{vp}}</td>
-				      	</tr>
-				      	<tr>
-				      		<td nowrap style="min-height: 35px; height: 35px; width:{{controller.tamanioNombre}}px;">Desembolsos</td>
-				      		<td ng-repeat="d in controller.totalDesembolsos" style="min-height: 35px; height: 35px; {{controller.estiloCelda}} {{controller.estiloAlineacion}}">{{d}}</td>
-				      	</tr>
-				      	<tr>
-				      		<td nowrap style="min-height: 35px; height: 35px; width:{{controller.tamanioNombre}}px;">Saldo</td>
-				      		<td ng-repeat="s in controller.totalSaldo" style="min-height: 35px; height: 35px; {{controller.estiloCelda}} {{controller.estiloAlineacion}}">{{s}}</td>
-				      	</tr>
-					</tbody>
-				</table>
-	    	</div>
+	    	
 				</div>
 	    	</div>
    		</div>

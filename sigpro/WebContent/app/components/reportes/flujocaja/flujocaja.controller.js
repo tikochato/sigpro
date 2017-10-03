@@ -22,27 +22,10 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 	mi.data = [];
 	mi.dataOriginal = [];
 	mi.totales = [];
-	mi.totalPlanificado = [];
-	mi.totalPlanificadoAcumulado = [];
-	mi.totalEjecutado = [];
-	mi.totalEjecutadoAcumulado = [];
-	mi.totalVariacion = [];
-	mi.totalVariacionPorcentaje = [];
-	mi.totalDesembolsos = [];
-	mi.totalSaldo = [];
+	mi.resumenTotalesOriginal = [];
+	mi.resumenTotales = [];		
 	mi.scrollPosicion = 0;
 	
-	for (i=0; i<13; i++){
-		mi.totalPlanificado[i] = i;
-		mi.totalPlanificadoAcumulado[i] = i;
-		mi.totalEjecutado[i] = i;
-		mi.totalEjecutadoAcumulado[i] = i;
-		mi.totalVariacion[i] = i;
-		mi.totalVariacionPorcentaje[i] = i;
-		mi.totalDesembolsos[i] = i;
-		mi.totalSaldo[i] = i;
-	}
-
 	var AGRUPACION_MES= 1;
 	var AGRUPACION_BIMESTRE = 2;
 	var AGRUPACION_TRIMESTRE = 3;
@@ -217,58 +200,49 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 
 	mi.cargarTabla = function() {			
 		var datos = {
-				accion : 'getMetasProducto',
+				accion : 'getFlujoCaja',
 				idPrestamo: mi.prestamo.value,
 				anioInicial: mi.fechaInicio,
-				anioFinal: mi.fechaFin
+				anioFinal: mi.fechaFin,
+				t: (new Date()).getTime()
 		};
 
 		mi.mostrarCargando = true;
 		mi.mostrarDescargar = false;
 		mi.movimiento = false;
 
-		$http.post('/SPrestamoMetas', datos)
+		$http.post('/SFlujoCaja', datos)
 		.then(function(response) {
 			if (response.data.success) {
 				mi.dataOriginal = JSON.parse(JSON.stringify(response.data.prestamo));
 				mi.data = JSON.parse(JSON.stringify(response.data.prestamo));
+				mi.resumenTotalesOriginal = JSON.parse(JSON.stringify(response.data.totales));
+				mi.resumenTotales = JSON.parse(JSON.stringify(response.data.totales));
 				mi.totales = [];
 				for (x in mi.data){
-					var totalFinal = {"planificado": null, "real": null};
-					var fila = [];
-					if(mi.data[x].objeto_tipo == 0){
-						totalFinal = {"planificado": 0, "real": 0};
-						for(a in mi.data[x].anios){
-							var totalAnual = {"planificado": 0, "real": 0};
-							var anio = mi.data[x].anios[a];
-							for (m in anio){
-								if(m != "anio"){
-									totalAnual.planificado += anio[m][mi.VALOR_PLANIFICADO];
-									totalAnual.real += anio[m][mi.VALOR_REAL];
-								}
-
-							}
-							totalFinal.planificado += totalAnual.planificado;
-							totalFinal.real += totalAnual.real;
-							totalAnual.planificado = parseFloat(totalAnual.planificado).toFixed(2);
-							totalAnual.real = parseFloat(totalAnual.real).toFixed(2);
-							var tot = {"valor": totalAnual};
-							fila.push(tot);
-							mi.data[x].anios[a] = mi.agruparMeses(anio);
-							totalFinal.planificado = parseFloat(totalFinal.planificado).toFixed(2);
-							totalFinal.real = parseFloat(totalFinal.real).toFixed(2);
-						}
-					}else{
-						for(a in mi.data[x].anios){
-							var totalAnual = {"planificado": null, "real": null};
-							var tot = {"valor": totalAnual};
-							fila.push(tot);
-						}
+					if(mi.data[x].objeto_tipo==1){
+						
 					}
-					var tot = {"valor": totalFinal};
-					fila.push(tot);
-					var tot = {"anio": fila};
-					mi.totales.push(tot);
+					 var totalFinalPlanificado = 0;
+					 var totalFinalReal = 0;
+					 var fila = [];
+					 for(a in mi.data[x].anios){
+						 var totalAnualPlanificado = 0;
+						 var totalAnualReal = 0;
+						 var anio = mi.data[x].anios[a];
+						 for (m in anio.mes){
+							totalAnualPlanificado += isNaN(anio.mes[m].planificado) ? 0 : anio.mes[m].planificado;
+							totalAnualReal += isNaN(anio.mes[m].real) ? 0 : anio.mes[m].real;
+						 }
+						 totalFinalPlanificado += totalAnualPlanificado;
+						 totalFinalReal += totalAnualReal;
+						 var tot = {"valor": {"planificado": totalAnualPlanificado, "real": totalAnualReal}};
+						 fila.push(tot);
+					 }
+					 var tot = {"valor": {"planificado": totalFinalPlanificado, "real": totalFinalReal}};
+					 fila.push(tot);
+					 var tot = {"anio": fila};
+					 mi.totales.push(tot);
 				}
 				mi.renderizaTabla();
 				mi.mostrarCargando = false;
@@ -450,15 +424,12 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 		}
 	}
 
-	mi.getPlanificado=function(itemIndice, indice, tipoMeta){
+	mi.getPlanificado=function(itemIndice, indice){
 		mes = Math.floor((indice)/mi.aniosTotal.length);
 		anio = indice - (mes*mi.aniosTotal.length);
 		var item = mi.data[itemIndice];
-		var valor = Object.values(item.anios[anio])[mes];
-		if(valor[tipoMeta]==null && mi.data[itemIndice].objeto_tipo==0){
-			return 0;
-		}
-		return valor[tipoMeta];
+		var valor = item.anios[anio].mes[mes];
+		return valor;
 	};
 
 	mi.exportarExcel = function(){
@@ -468,7 +439,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 		}else if(mi.grupoMostrado.real){
 			tipoVisualizacion = 1;
 		}
-		$http.post('/SPrestamoMetas', { 
+		$http.post('/SFlujoCaja', { 
 			accion: 'exportarExcel', 
 			proyectoid: mi.prestamo.value,
 			fechaInicio: mi.fechaInicio,
@@ -482,7 +453,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 					anchor.attr({
 						href: 'data:application/ms-excel;base64,' + response.data,
 						target: '_blank',
-						download: 'MetasPrestamo.xls'
+						download: 'FlujoCaja.xls'
 					})[0].click();
 				}.bind(this), function errorCallback(response){
 				}
@@ -496,7 +467,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 		}else if(mi.grupoMostrado.real){
 			tipoVisualizacion = 1;
 		}
-		$http.post('/SPrestamoMetas', { 
+		$http.post('/SFlujoCaja', { 
 			accion: 'exportarPdf',
 			proyectoid: mi.prestamo.value,
 			fechaInicio: mi.fechaInicio,
@@ -510,7 +481,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 					anchor.attr({
 						href: 'data:application/pdf;base64,' + response.data,
 						target: '_blank',
-						download: 'PrestamoMetas.pdf'
+						download: 'FlujoCaja.pdf'
 					})[0].click();
 				}.bind(this), function errorCallback(response){
 				}
