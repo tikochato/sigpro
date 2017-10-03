@@ -249,9 +249,9 @@
 					</div>
 					<div class="operation_buttons"  style="float: right;">
 		    			<div class="btn-group" role="group" aria-label="">
-							<label class="btn btn-default" ng-click="racic.exportarExcel()" uib-tooltip="Exportar a Excel" ng-show="!racic.mostrarTabla">
+							<label class="btn btn-default" ng-click="racic.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!racic.mostrarExport">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-							<label class="btn btn-default" ng-click="racic.exportarPdf()" uib-tooltip="Exportar a PDF" ng-show="!racic.mostrarTabla">
+							<label class="btn btn-default" ng-click="racic.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!racic.mostrarExport">
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 							
 						</div>
@@ -268,7 +268,7 @@
 					</div>
 				  </div>
 				
-				<div class="divTabla" ng-show="!racic.mostrarTabla">
+				<div class="divTabla" ng-hide="!racic.mostrarExport">
 	  			
 					<table st-table="racic.matrizRaci" class="table table-header-rotated  table-striped table-hover table-condensed" >
 							<thead class="cabecera">

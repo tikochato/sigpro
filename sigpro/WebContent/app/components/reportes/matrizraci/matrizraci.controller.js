@@ -15,6 +15,7 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 	mi.mostrarTabla = false;
 	mi.mostrarcargando = false;
 	mi.sinColaboradores = false;
+	mi.mostrarExport = false;
 	
 	$window.document.title = $utilidades.sistema_nombre+' - Matriz RACI';
 	i18nService.setCurrentLang('es');
@@ -33,20 +34,28 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 	 
 	 
 	 mi.generarMatriz = function (){
-		 mi.mostrarcargando = true;
-		 mi.inicializarVariables();
-			$http.post('/SMatrizRACI', { accion: 'getMatriz', 
-				idPrestamo: mi.prestamoSeleccionado!= null ? mi.prestamoSeleccionado.value : 0 }).success(
-			
-				function(response) {
-					mi.colaboradores = response.colaboradores;
-					mi.matrizAsignacion = response.matriz;
-					mi.construirMatriz();
-					mi.motrarTabla = true;
-					mi.mostrarcargando = false;
-					mi.sinColaboradores = response.sinColaboradores;
-					
-			});	
+		 mi.mostrarTabla = false;
+		 mi.mostrarExport = false;
+		 
+		 if (mi.prestamoSeleccionado!=null && mi.prestamoSeleccionado!= undefined && mi.prestamoSeleccionado.value > 0){
+		
+			 mi.mostrarcargando = true;
+			 
+			 mi.inicializarVariables();
+				$http.post('/SMatrizRACI', { accion: 'getMatriz', 
+					idPrestamo: mi.prestamoSeleccionado!= null ? mi.prestamoSeleccionado.value : 0 }).success(
+				
+					function(response) {
+						mi.colaboradores = response.colaboradores;
+						mi.matrizAsignacion = response.matriz;
+						mi.construirMatriz();
+						mi.motrarTabla = true;
+						mi.mostrarcargando = false;
+						mi.sinColaboradores = response.sinColaboradores;
+						mi.mostrarExport = true;
+						
+				});	
+		 }
 	  };
 	  
 	  
